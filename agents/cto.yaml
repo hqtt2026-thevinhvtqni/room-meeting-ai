@@ -1,0 +1,15 @@
+id: cto
+name: CTO
+role: CTO / Tech
+provider: internal
+model: ""
+capabilities:
+  - technical_architecture
+  - api_control
+  - review
+
+permissions: {}
+authority: {}
+priority: null
+memory_scope: null
+context_scope: null

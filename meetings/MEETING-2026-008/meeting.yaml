@@ -1,0 +1,67 @@
+id: MEETING-2026-008
+topic: Secretary v0.3 Acceptance Test
+invited_participants:
+- xu
+- claude
+- me_meta
+participants:
+- xu
+- claude
+- vinh
+context_files:
+- PROJECT_STATE.md
+status: closed
+created_by: vinh
+created_at: '2026-08-17T05:46:58.762040+00:00'
+join_records:
+- event: JOIN_ACCEPTED
+  identity:
+    id: xu
+    type: ai_agent
+    auth_verified: true
+  authorization:
+    policy_source: meeting.invited_participants/created_by
+    policy_check: PASS
+    registry_check: REQUIRED_PASS
+  decided_by: MeetingManager
+  timestamp: '2026-08-17T05:57:27.533447+00:00'
+- event: JOIN_ACCEPTED
+  identity:
+    id: claude
+    type: ai_agent
+    auth_verified: true
+  authorization:
+    policy_source: meeting.invited_participants/created_by
+    policy_check: PASS
+    registry_check: REQUIRED_PASS
+  decided_by: MeetingManager
+  timestamp: '2026-08-17T05:57:36.038470+00:00'
+- event: JOIN_ACCEPTED
+  identity:
+    id: claude
+    type: ai_agent
+    auth_verified: true
+  authorization:
+    policy_source: meeting.invited_participants/created_by
+    policy_check: PASS
+    registry_check: REQUIRED_PASS
+  decided_by: MeetingManager
+  timestamp: '2026-08-17T05:57:43.681895+00:00'
+- event: JOIN_ACCEPTED
+  identity:
+    id: vinh
+    type: human_principal
+    auth_verified: true
+  authorization:
+    policy_source: meeting.invited_participants/created_by
+    policy_check: PASS
+    registry_check: NOT_APPLICABLE
+  decided_by: MeetingManager
+  timestamp: '2026-08-17T05:59:05.879368+00:00'
+decisions:
+- Secretary giữ nguyên văn transcript
+action_items:
+- Khóa acceptance test Secretary v0.3
+governance: null
+permissions: null
+message_bus_mode: null

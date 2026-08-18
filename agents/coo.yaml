@@ -1,0 +1,15 @@
+id: coo
+name: COO
+role: COO / Ops
+provider: internal
+model: ""
+capabilities:
+  - operations
+  - coordination
+  - widget_design
+
+permissions: {}
+authority: {}
+priority: null
+memory_scope: null
+context_scope: null

@@ -1,0 +1,15 @@
+id: claude
+name: Claude
+role: CTO
+provider: anthropic
+model: ""
+capabilities:
+  - technical_implementation
+  - review
+  - analysis
+
+permissions: {}
+authority: {}
+priority: null
+memory_scope: null
+context_scope: null

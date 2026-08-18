@@ -1,0 +1,15 @@
+id: kha_gpt
+name: Kha GPT
+role: CSA / Chief System Architect - GPT
+provider: internal
+model: gpt-4o
+capabilities:
+  - architecture
+  - contract_design
+  - scalability
+
+permissions: {}
+authority: {}
+priority: null
+memory_scope: null
+context_scope: null

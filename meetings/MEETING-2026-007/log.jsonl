@@ -1,0 +1,9 @@
+{"type": "event", "action": "meeting_created", "detail": "topic=TEST-001 - Secretary Recording", "timestamp": "2026-08-16T01:53:02.134949+00:00"}
+{"type": "context_loaded", "files": [], "timestamp": "2026-08-16T01:53:02.135946+00:00"}
+{"type": "event", "action": "JOIN_ACCEPTED", "detail": "{\"meeting_id\": \"MEETING-2026-007\", \"identity\": \"vinh\", \"identity_type\": \"human_principal\", \"registry_check\": \"NOT_APPLICABLE\", \"decided_by\": \"MeetingManager\"}", "timestamp": "2026-08-16T11:33:03.241976+00:00"}
+{"type": "event", "action": "JOIN_ACCEPTED", "detail": "{\"meeting_id\": \"MEETING-2026-007\", \"identity\": \"xu\", \"identity_type\": \"ai_agent\", \"registry_check\": \"REQUIRED_PASS\", \"decided_by\": \"MeetingManager\"}", "timestamp": "2026-08-16T11:33:08.866025+00:00"}
+{"type": "event", "action": "meeting_started", "detail": "starter=vinh", "timestamp": "2026-08-16T11:33:16.300442+00:00"}
+{"type": "message", "index": 10, "speaker": "vinh", "content": "SECRETARY_INTEGRATION_TEST_001", "file": "messages\\010_vinh.md", "timestamp": "2026-08-16T11:33:32.373464+00:00"}
+{"type": "message", "index": 11, "speaker": "xu", "content": "Secretary reply TEST-001", "file": "messages\\011_xu.md", "timestamp": "2026-08-16T11:33:37.843790+00:00"}
+{"type": "event", "action": "request_close", "detail": "requester=vinh", "timestamp": "2026-08-16T11:33:48.644318+00:00"}
+{"type": "event", "action": "END_OF_TRANSCRIPT", "detail": "closed_by=vinh", "timestamp": "2026-08-16T11:33:48.664752+00:00"}

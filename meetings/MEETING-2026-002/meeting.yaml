@@ -1,0 +1,21 @@
+id: MEETING-2026-002
+topic: ROOM HOP v0.2 — kiểm thử Discussion Engine với Room Stop Guard
+participants:
+- xu
+- claude
+context_files:
+- XU_CORE.md
+- XU_SESSION.md
+- PROJECT_STATE.md
+status: closed
+created_by: vinh
+created_at: '2026-08-14T11:47:55.516041+00:00'
+decisions:
+- 'TỔNG HỢP: Discussion Engine đã chứng minh cơ chế REPLY/PASS/FINAL + Room Stop Guard
+  hoạt động đúng bằng Mock. Quyết định: v0.2 PASS về mặt cơ chế, chờ xác nhận với
+  API thật trên PC Vinh trước khi coi là hoàn tất.'
+action_items:
+- Vinh gắn API key thật và chạy lại để xác nhận connector thật.
+governance: null
+permissions: null
+message_bus_mode: null

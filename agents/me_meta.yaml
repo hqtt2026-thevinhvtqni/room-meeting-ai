@@ -1,0 +1,15 @@
+id: me_meta
+name: Me
+role: CXO / Chief Experience Officer
+provider: internal
+model: meta-ai
+capabilities:
+  - ux_review
+  - workflow_bridge
+  - meeting_experience
+
+permissions: {}
+authority: {}
+priority: null
+memory_scope: null
+context_scope: null

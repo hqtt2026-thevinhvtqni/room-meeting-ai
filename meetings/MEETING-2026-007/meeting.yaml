@@ -1,0 +1,37 @@
+id: MEETING-2026-007
+topic: TEST-001 - Secretary Recording
+participants:
+- xu
+- vinh
+context_files: []
+status: closed
+created_by: vinh
+created_at: '2026-08-16T01:53:02.128479+00:00'
+decisions: []
+action_items: []
+governance: null
+permissions: null
+message_bus_mode: null
+join_records:
+- event: JOIN_ACCEPTED
+  identity:
+    id: vinh
+    type: human_principal
+    auth_verified: true
+  authorization:
+    policy_source: meeting.invited_participants/created_by
+    policy_check: PASS
+    registry_check: NOT_APPLICABLE
+  decided_by: MeetingManager
+  timestamp: '2026-08-16T11:33:03.241976+00:00'
+- event: JOIN_ACCEPTED
+  identity:
+    id: xu
+    type: ai_agent
+    auth_verified: true
+  authorization:
+    policy_source: meeting.invited_participants/created_by
+    policy_check: PASS
+    registry_check: REQUIRED_PASS
+  decided_by: MeetingManager
+  timestamp: '2026-08-16T11:33:08.858042+00:00'

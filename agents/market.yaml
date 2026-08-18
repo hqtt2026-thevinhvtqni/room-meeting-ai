@@ -1,0 +1,15 @@
+id: market
+name: Market
+role: Director Market / Flow Analyst
+provider: internal
+model: ""
+capabilities:
+  - market_flow
+  - narrative_analysis
+  - leader_focus
+
+permissions: {}
+authority: {}
+priority: null
+memory_scope: null
+context_scope: null

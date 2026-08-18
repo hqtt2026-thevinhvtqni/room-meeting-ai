@@ -1,0 +1,3 @@
+{"type": "event", "action": "meeting_created", "detail": "topic=Secretary v0.3 Lifecycle Boundary", "timestamp": "2026-08-17T06:18:56.581361+00:00"}
+{"type": "context_loaded", "files": ["PROJECT_STATE.md"], "timestamp": "2026-08-17T06:18:56.586349+00:00"}
+{"type": "event", "action": "session_opened", "detail": "", "timestamp": "2026-08-17T06:19:05.166569+00:00"}

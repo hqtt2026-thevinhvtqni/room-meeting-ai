@@ -1,0 +1,15 @@
+id: ka_csa
+name: Ka CSA
+role: CSA / Chief Strategy Architect
+provider: internal
+model: gpt
+capabilities:
+  - strategy_architecture
+  - meeting_contract
+  - system_design
+
+permissions: {}
+authority: {}
+priority: null
+memory_scope: null
+context_scope: null

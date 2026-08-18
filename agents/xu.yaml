@@ -1,0 +1,15 @@
+id: xu
+name: Xu
+role: CEO
+provider: openai
+model: ""
+capabilities:
+  - analysis
+  - decision
+  - coordination
+
+permissions: {}
+authority: {}
+priority: null
+memory_scope: null
+context_scope: null

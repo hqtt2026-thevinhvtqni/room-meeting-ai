@@ -1,0 +1,22 @@
+# MEETING SCHEMA — ROOM HOP v0.1
+# Đây là bản mô tả cấu trúc (contract). Meeting thật nằm trong
+# room_hop/meetings/<meeting_id>/meeting.yaml theo đúng cấu trúc này.
+
+# --- REQUIRED (v0.1 sử dụng) ---
+id: string                # VD: "MEETING-2026-001"
+topic: string              # chủ đề cuộc họp
+participants: [string]     # danh sách agent id tham gia. VD: [xu, claude]
+context_files: [string]    # Vinh CHỌN THỦ CÔNG file nào từ room_hop/context/
+                            # v0.1 KHÔNG có AI tự chấm relevance.
+status: string              # draft | open | closed
+created_by: string          # luôn là "vinh" ở v0.1 (người điều phối)
+created_at: string          # ISO timestamp
+
+# --- GHI NHẬN SAU KHI HỌP (v0.1 sử dụng) ---
+decisions: [string]        # danh sách quyết định rút ra (text tự do, chưa có Decision Store có cấu trúc)
+action_items: [string]     # việc cần làm sau họp (text tự do)
+
+# --- FORWARD-COMPATIBLE (khai báo sẵn, KHÔNG có engine ở v0.1) ---
+governance: null    # DEFERRED
+permissions: null    # DEFERRED
+message_bus_mode: null   # DEFERRED — hiện tại message chỉ ghi tuần tự vào file, chưa có routing

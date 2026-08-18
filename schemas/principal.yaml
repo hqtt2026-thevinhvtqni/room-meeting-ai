@@ -1,0 +1,20 @@
+# PRINCIPAL SCHEMA — ROOM HOP v0.2.1
+# Đây là bản mô tả cấu trúc (contract), không phải principal thật.
+# Mỗi human principal thật nằm trong room_hop/principals/<id>.yaml theo đúng
+# cấu trúc này.
+#
+# Principal Registry KHÁC Agent Registry (schemas/agent.yaml):
+#   - Agent Registry   -> xác thực ai_agent (AI)
+#   - Principal Registry -> xác thực human_principal (người)
+# Hai registry không trộn chung, không dùng thay cho nhau.
+# (ROOM_HOP_LIFECYCLE_v0.2.1.md — Identity Layer, FINAL_ACCEPTED)
+
+# --- REQUIRED ---
+id: string          # định danh duy nhất, viết thường, không dấu cách. VD: "vinh"
+name: string         # tên hiển thị. VD: "Vinh"
+type: human_principal   # cố định, để phân biệt tường minh với ai_agent
+
+# --- FORWARD-COMPATIBLE (khai báo sẵn field, chưa có engine xử lý thêm) ---
+role: null       # VD: "founder", "operator" — tuỳ tổ chức, không bắt buộc
+contact: null    # DEFERRED
+authority: {}    # DEFERRED — mức quyền quyết định (final say) nếu cần sau này

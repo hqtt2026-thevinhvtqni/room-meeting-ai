@@ -1,0 +1,15 @@
+id: kha_gemini
+name: Kha Gemini
+role: Lab Director / Evidence Discipline
+provider: internal
+model: gemini
+capabilities:
+  - evidence_first
+  - validation
+  - protocol_enforcement
+
+permissions: {}
+authority: {}
+priority: null
+memory_scope: null
+context_scope: null

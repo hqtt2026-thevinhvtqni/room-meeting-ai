@@ -1,0 +1,19 @@
+# AGENT SCHEMA — ROOM HOP v0.1
+# Đây là bản mô tả cấu trúc (contract), không phải agent thật.
+# Mỗi agent thật nằm trong room_hop/agents/<id>.yaml theo đúng cấu trúc này.
+
+# --- REQUIRED (v0.1 sử dụng) ---
+id: string              # định danh duy nhất, viết thường, không dấu cách. VD: "xu", "claude"
+name: string             # tên hiển thị. VD: "Xu"
+role: string             # vai trò trong tổ chức. VD: "CEO", "CTO"
+provider: string         # nhà cung cấp model. VD: "openai", "anthropic"
+model: string            # tên model cụ thể (để trống nếu chưa gọi API thật ở v0.1)
+capabilities: [string]   # danh sách năng lực. VD: [analysis, decision, coordination]
+
+# --- FORWARD-COMPATIBLE (khai báo sẵn field, KHÔNG có engine xử lý ở v0.1) ---
+# v0.1 chỉ đọc và lưu nguyên trạng các field dưới đây, không áp dụng logic gì.
+permissions: {}   # DEFERRED — sẽ định nghĩa READ/WRITE/DECIDE/EXECUTE ở v0.2+
+authority: {}     # DEFERRED — sẽ định nghĩa mức quyền quyết định (final say) ở v0.2+
+priority: null    # DEFERRED
+memory_scope: null    # DEFERRED
+context_scope: null   # DEFERRED

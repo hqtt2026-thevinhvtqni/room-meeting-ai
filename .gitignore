@@ -1,0 +1,18 @@
+# Secrets - KHONG BAO GIO commit file nay
+.env
+*.env
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+*.egg-info/
+venv/
+.venv/
+
+# OS / editor
+.DS_Store
+.vscode/
+*.log

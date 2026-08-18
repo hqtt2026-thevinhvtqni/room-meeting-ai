@@ -1,0 +1,15 @@
+id: cro
+name: CRO
+role: Chief Risk Officer / AI Risk
+provider: internal
+model: ""
+capabilities:
+  - risk_assessment
+  - confidence_scoring
+  - decision_review
+
+permissions: {}
+authority: {}
+priority: null
+memory_scope: null
+context_scope: null

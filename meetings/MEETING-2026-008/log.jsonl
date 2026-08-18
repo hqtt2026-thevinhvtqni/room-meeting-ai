@@ -1,0 +1,11 @@
+{"type": "event", "action": "meeting_created", "detail": "topic=Secretary v0.3 Acceptance Test", "timestamp": "2026-08-17T05:46:58.766035+00:00"}
+{"type": "context_loaded", "files": ["PROJECT_STATE.md"], "timestamp": "2026-08-17T05:46:58.778995+00:00"}
+{"type": "event", "action": "session_opened", "detail": "", "timestamp": "2026-08-17T05:56:58.102329+00:00"}
+{"type": "event", "action": "JOIN_ACCEPTED", "detail": "{\"meeting_id\": \"MEETING-2026-008\", \"identity\": \"xu\", \"identity_type\": \"ai_agent\", \"registry_check\": \"REQUIRED_PASS\", \"decided_by\": \"MeetingManager\"}", "timestamp": "2026-08-17T05:57:27.539430+00:00"}
+{"type": "event", "action": "JOIN_ACCEPTED", "detail": "{\"meeting_id\": \"MEETING-2026-008\", \"identity\": \"claude\", \"identity_type\": \"ai_agent\", \"registry_check\": \"REQUIRED_PASS\", \"decided_by\": \"MeetingManager\"}", "timestamp": "2026-08-17T05:57:36.044454+00:00"}
+{"type": "event", "action": "JOIN_ACCEPTED", "detail": "{\"meeting_id\": \"MEETING-2026-008\", \"identity\": \"claude\", \"identity_type\": \"ai_agent\", \"registry_check\": \"REQUIRED_PASS\", \"decided_by\": \"MeetingManager\"}", "timestamp": "2026-08-17T05:57:43.703835+00:00"}
+{"type": "event", "action": "JOIN_ACCEPTED", "detail": "{\"meeting_id\": \"MEETING-2026-008\", \"identity\": \"vinh\", \"identity_type\": \"human_principal\", \"registry_check\": \"NOT_APPLICABLE\", \"decided_by\": \"MeetingManager\"}", "timestamp": "2026-08-17T05:59:05.886350+00:00"}
+{"type": "event", "action": "meeting_started", "detail": "starter=vinh", "timestamp": "2026-08-17T05:59:17.838768+00:00"}
+{"type": "event", "action": "paste_received", "detail": "length=280", "timestamp": "2026-08-17T06:01:32.331328+00:00"}
+{"type": "event", "action": "request_close", "detail": "requester=xu", "timestamp": "2026-08-17T06:05:05.471242+00:00"}
+{"type": "event", "action": "END_OF_TRANSCRIPT", "detail": "closed_by=xu", "timestamp": "2026-08-17T06:05:05.598501+00:00"}

@@ -1,0 +1,21 @@
+id: MEETING-2026-001
+topic: Kiểm thử ROOM HOP v0.1 — cuộc họp đầu tiên chạy thật trên PC
+participants:
+- xu
+- claude
+context_files:
+- XU_CORE.md
+- XU_SESSION.md
+- PROJECT_STATE.md
+status: closed
+created_by: vinh
+created_at: '2026-08-13T17:49:44.616402+00:00'
+decisions:
+- 'ROOM HOP v0.1 (4 lõi: Meeting Manager, Agent Registry, Context Loader, Meeting
+  Log) được xác nhận chạy end-to-end.'
+action_items:
+- Vinh xem lại meetings/MEETING-2026-001/final.md để xác nhận evidence.
+- Sau khi xác nhận, Xu + Claude ngồi lại quyết định phạm vi v0.2 dựa trên log thật.
+governance: null
+permissions: null
+message_bus_mode: null

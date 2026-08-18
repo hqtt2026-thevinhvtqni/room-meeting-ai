@@ -1,0 +1,17 @@
+id: MEETING-2026-009
+topic: Secretary v0.3 Lifecycle Boundary
+invited_participants:
+- xu
+- claude
+participants: []
+context_files:
+- PROJECT_STATE.md
+status: open
+created_by: vinh
+created_at: '2026-08-17T06:18:56.558421+00:00'
+join_records: []
+decisions: []
+action_items: []
+governance: null
+permissions: null
+message_bus_mode: null

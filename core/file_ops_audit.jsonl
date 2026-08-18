@@ -1,0 +1,27 @@
+{"ts": "2026-08-15T13:34:22.109020+00:00", "agent_id": "vinh", "action": "edit_file", "path": "core/governance.py", "ok": false, "reason": "HARD BLOCKED: 'core/governance.py' không thể thao tác qua FileOpsAgent."}
+{"ts": "2026-08-15T13:34:22.109905+00:00", "agent_id": "vinh", "action": "edit_file", "path": "core/file_ops_agent.py", "ok": false, "reason": "HARD BLOCKED: 'core/file_ops_agent.py' không thể thao tác qua FileOpsAgent."}
+{"ts": "2026-08-15T13:34:22.110674+00:00", "agent_id": "vinh", "action": "delete_folder", "path": "meetings/MEETING-2026-001", "ok": false, "reason": "HARD BLOCKED: 'meetings/MEETING-2026-001' nằm trong vùng cấm (meetings/.git)."}
+{"ts": "2026-08-15T13:34:22.111585+00:00", "agent_id": "claude", "action": "create_file", "path": "agent_test/fileops_pytest/note.txt", "ok": true, "reason": "OK"}
+{"ts": "2026-08-15T13:34:22.112679+00:00", "agent_id": "claude", "action": "edit_file", "path": "context/XU_CORE.md", "ok": false, "reason": "DENY: claude cannot write core (allowed: read)"}
+{"ts": "2026-08-15T13:34:22.113528+00:00", "agent_id": "unknown_agent_xyz", "action": "create_file", "path": "agent_test/fileops_pytest/note.txt", "ok": false, "reason": "DENY: other cannot write workspace (allowed: read)"}
+{"ts": "2026-08-15T13:34:22.114593+00:00", "agent_id": "claude", "action": "create_file", "path": "agent_test/fileops_pytest/note.txt", "ok": true, "reason": "OK"}
+{"ts": "2026-08-15T13:34:22.115597+00:00", "agent_id": "xu", "action": "create_file", "path": "agents/fake_agent.yaml", "ok": false, "reason": "DENY: xu cannot write governance (allowed: read)"}
+{"ts": "2026-08-15T13:34:22.116584+00:00", "agent_id": "vinh", "action": "create_file", "path": "agent_test/fileops_pytest/lifecycle.txt", "ok": true, "reason": "OK"}
+{"ts": "2026-08-15T13:34:22.116832+00:00", "agent_id": "vinh", "action": "edit_file", "path": "agent_test/fileops_pytest/lifecycle.txt", "ok": true, "reason": "OK (overwrite)"}
+{"ts": "2026-08-15T13:34:22.117192+00:00", "agent_id": "vinh", "action": "delete_file", "path": "agent_test/fileops_pytest/lifecycle.txt", "ok": true, "reason": "OK"}
+{"ts": "2026-08-15T13:34:22.118320+00:00", "agent_id": "vinh", "action": "create_file", "path": "agent_test/fileops_pytest/dup.txt", "ok": true, "reason": "OK"}
+{"ts": "2026-08-15T13:34:22.118596+00:00", "agent_id": "vinh", "action": "create_file", "path": "agent_test/fileops_pytest/dup.txt", "ok": false, "reason": "File đã tồn tại — dùng edit_file để sửa."}
+{"ts": "2026-08-15T13:34:22.119478+00:00", "agent_id": "vinh", "action": "edit_file", "path": "agent_test/fileops_pytest/ghost.txt", "ok": false, "reason": "File chưa tồn tại — dùng create_file trước."}
+{"ts": "2026-08-15T13:34:22.120399+00:00", "agent_id": "vinh", "action": "create_file", "path": "agent_test/fileops_pytest/sub/inner.txt", "ok": true, "reason": "OK"}
+{"ts": "2026-08-15T13:34:22.120675+00:00", "agent_id": "vinh", "action": "delete_folder", "path": "agent_test/fileops_pytest/sub", "ok": false, "reason": "Thư mục không rỗng — cần recursive=True."}
+{"ts": "2026-08-15T13:34:22.120915+00:00", "agent_id": "vinh", "action": "delete_folder", "path": "agent_test/fileops_pytest/sub", "ok": true, "reason": "OK (recursive=True)"}
+{"ts": "2026-08-15T13:34:22.121874+00:00", "agent_id": "claude", "action": "create_file", "path": "agent_test/fileops_pytest/audited.txt", "ok": true, "reason": "OK"}
+{"ts": "2026-08-15T13:34:22.122777+00:00", "agent_id": "unknown_agent_xyz", "action": "create_file", "path": "agent_test/fileops_pytest/denied.txt", "ok": false, "reason": "DENY: other cannot write workspace (allowed: read)"}
+{"ts": "2026-08-15T13:58:49.498618+00:00", "agent_id": "vinh", "action": "create_folder", "path": "research/RC005", "ok": true, "reason": "OK"}
+{"ts": "2026-08-15T13:58:49.501207+00:00", "agent_id": "vinh", "action": "create_file", "path": "research/RC005/README.md", "ok": true, "reason": "OK"}
+{"ts": "2026-08-15T14:10:59.251709+00:00", "agent_id": "vinh", "action": "create_file", "path": "research/RC006/README.md", "ok": true, "reason": "OK"}
+{"ts": "2026-08-15T14:15:04.354351+00:00", "agent_id": "vinh", "action": "create_file", "path": "room_hop/claude_chat.py", "ok": true, "reason": "OK"}
+{"ts": "2026-08-15T15:12:00.313925+00:00", "agent_id": "vinh", "action": "create_folder", "path": "research/RC007", "ok": true, "reason": "OK"}
+{"ts": "2026-08-15T15:12:00.340449+00:00", "agent_id": "vinh", "action": "create_file", "path": "research/RC007/README.md", "ok": true, "reason": "OK"}
+{"ts": "2026-08-15T15:16:09.862353+00:00", "agent_id": "vinh", "action": "create_file", "path": "research/RC007/test_agent.txt", "ok": true, "reason": "OK"}
+{"ts": "2026-08-15T15:18:26.179308+00:00", "agent_id": "vinh", "action": "create_file", "path": "research/RC007/test_agent.txt", "ok": false, "reason": "File đã tồn tại — dùng edit_file để sửa."}
