@@ -23,3 +23,9 @@ Agent mới vào ROOM HOP phải đọc theo thứ tự:
 - Không tự ý sửa Protected Core hoặc baseline frozen.
 
 => Đọc đủ context rồi mới được hành động.
+
+## Known Incidents / Lessons Learned
+
+- **ROOM-2026-001 — Provenance Gate**: `docs/ROOM-2026-001-PROVENANCE-GATE-LESSON-LEARNED.md`
+  Bài học về provenance reasoning, multi-agent source independence, credential discipline và agent onboarding.
+  Đọc trước khi Agent mới xử lý dữ liệu chưa xác minh nguồn gốc (preview/cache/second-hand report).

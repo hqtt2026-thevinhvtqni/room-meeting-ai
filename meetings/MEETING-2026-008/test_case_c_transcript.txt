@@ -1,7 +1,0 @@
-BLOCK-A
-Dòng thứ hai A.
-BLOCK-B
-  Có khoảng trắng.
-
-BLOCK-C
-Kết thúc.
