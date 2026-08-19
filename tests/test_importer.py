@@ -83,7 +83,13 @@ class TestImportFileIntoSecretary:
             "Xu: 🎉 emoji test 🚀\n"
         )
         input_path = tmp_path / "input.txt"
-        input_path.write_text(text, encoding="utf-8")
+        # Ghi bang bytes de kiem soat tuyet doi noi dung goc. write_text()
+        # tren Windows (newline=None mac dinh) tu dong dich moi '\n' thanh
+        # '\r\n' LUC GHI FILE TEST - lam sai lech gia tri ky vong 'text'
+        # so voi byte thuc te tren dia, du importer/Secretary hoan toan
+        # dung. Bug nay chi lo ra tren Windows, khong tai hien duoc tren
+        # Linux vi os.linesep khac nhau.
+        input_path.write_bytes(text.encode("utf-8"))
 
         result = import_file_into_secretary(input_path, secretary, chunk_size=8)
 
@@ -166,7 +172,9 @@ class TestImportRealisticLargerFile:
     ):
         text = "Xu: đây là bản ghi dài.\n" * 10_000
         input_path = tmp_path / "input.txt"
-        input_path.write_text(text, encoding="utf-8")
+        # Cung ly do nhu tren: write_bytes() thay vi write_text() de
+        # tranh Windows tu dich '\n' -> '\r\n' luc ghi file test.
+        input_path.write_bytes(text.encode("utf-8"))
 
         out_path = tmp_path / "transcript.txt"
         s1 = Secretary(out_path)
