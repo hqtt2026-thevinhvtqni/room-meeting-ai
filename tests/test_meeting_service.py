@@ -1,13 +1,16 @@
-"""
-Tests for MeetingService (Public Service Interface).
-Uses mocks for Core components to test delegation + DTO mapping + error handling.
-"""
+"""Tests for MeetingService — Public Core Boundary."""
 import pytest
 from unittest.mock import Mock
-from datetime import datetime
+from pathlib import Path
 
-from core.meeting_service import MeetingService, MeetingNotFoundError, GovernanceDeniedError
-from room_meeting_ai.mcp.dtos import MeetingDTO, TranscriptMessageDTO
+from core.meeting_service import (
+    MeetingService,
+    MeetingNotFoundError,
+    GovernanceDeniedError,
+    MeetingDTO,
+    TranscriptMessageDTO,
+)
+from core.meeting_manager import MeetingError
 
 
 @pytest.fixture
@@ -19,13 +22,6 @@ def mock_manager():
 
 
 @pytest.fixture
-def mock_secretary():
-    secretary = Mock()
-    secretary.get_transcript.return_value = []
-    return secretary
-
-
-@pytest.fixture
 def mock_governance():
     governance = Mock()
     governance.can_access_meeting.return_value = True
@@ -33,97 +29,192 @@ def mock_governance():
 
 
 @pytest.fixture
-def service(mock_manager, mock_secretary, mock_governance):
-    return MeetingService(mock_manager, mock_secretary, mock_governance)
+def service(mock_manager, mock_governance):
+    return MeetingService(
+        manager=mock_manager,
+        governance=mock_governance,
+        requester_identity="vinh",
+    )
 
 
-def test_list_meetings_returns_dtos(service, mock_manager):
-    """Verify list_meetings delegates to manager and returns DTOs."""
-    mock_meeting = Mock()
-    mock_meeting.id = "m1"
-    mock_meeting.title = "Test Meeting"
-    mock_meeting.status = "active"
-    mock_meeting.created_at = datetime(2026, 8, 21, 10, 0, 0)
-    mock_manager.list_meetings.return_value = [mock_meeting]
+# === Identity propagation ===
 
-    result = service.list_meetings(limit=10, status="active")
+class TestIdentityPropagation:
+    def test_service_requires_identity(self, mock_manager, mock_governance):
+        """MeetingService must have requester_identity, no default."""
+        with pytest.raises(ValueError, match="requires requester_identity"):
+            MeetingService(manager=mock_manager, governance=mock_governance)
 
-    assert len(result) == 1
-    assert isinstance(result[0], MeetingDTO)
-    assert result[0].meeting_id == "m1"
-    assert result[0].title == "Test Meeting"
-    assert result[0].status == "active"
-    mock_manager.list_meetings.assert_called_once_with(limit=10, status="active")
+    def test_service_uses_provided_identity(self, mock_manager, mock_governance):
+        """Service uses the identity provided, not hard-coded."""
+        service = MeetingService(
+            manager=mock_manager,
+            governance=mock_governance,
+            requester_identity="xu",
+        )
+        assert service.requester_identity == "xu"
 
+    def test_get_meeting_checks_correct_identity(self, service, mock_manager, mock_governance):
+        """Verify governance check uses the service's identity."""
+        mock_meeting = Mock()
+        mock_meeting.data = {"id": "m1", "topic": "T", "status": "active", "created_at": "t1"}
+        mock_manager.get_meeting.return_value = mock_meeting
+        mock_governance.can_access_meeting.return_value = True
 
-def test_get_meeting_success(service, mock_manager, mock_governance):
-    """Verify get_meeting checks governance and returns DTO."""
-    mock_meeting = Mock()
-    mock_meeting.id = "m1"
-    mock_meeting.title = "Test"
-    mock_meeting.status = "active"
-    mock_meeting.created_at = datetime(2026, 8, 21)
-    mock_manager.get_meeting.return_value = mock_meeting
-    mock_governance.can_access_meeting.return_value = True
-
-    result = service.get_meeting("m1")
-
-    assert isinstance(result, MeetingDTO)
-    assert result.meeting_id == "m1"
-    mock_governance.can_access_meeting.assert_called_once_with("m1")
-
-
-def test_get_meeting_not_found(service, mock_manager):
-    """Verify get_meeting raises MeetingNotFoundError when not found."""
-    mock_manager.get_meeting.return_value = None
-
-    with pytest.raises(MeetingNotFoundError) as exc_info:
-        service.get_meeting("nonexistent")
-
-    assert exc_info.value.meeting_id == "nonexistent"
-
-
-def test_get_meeting_governance_denied(service, mock_governance):
-    """Verify get_meeting raises GovernanceDeniedError when access denied."""
-    mock_governance.can_access_meeting.return_value = False
-
-    with pytest.raises(GovernanceDeniedError):
         service.get_meeting("m1")
 
-
-def test_get_transcript_provenance(service, mock_manager, mock_secretary):
-    """Verify get_transcript preserves raw text and provenance (G9)."""
-    mock_meeting = Mock()
-    mock_manager.get_meeting.return_value = mock_meeting
-
-    mock_message = Mock()
-    mock_message.id = "msg1"
-    mock_message.speaker = "User"
-    mock_message.timestamp = datetime(2026, 8, 21, 10, 0, 0)
-    mock_message.text = "Raw text from source"
-    mock_message.source = "whisper_v1"
-    mock_secretary.get_transcript.return_value = [mock_message]
-
-    result = service.get_transcript("m1")
-
-    assert len(result) == 1
-    assert isinstance(result[0], TranscriptMessageDTO)
-    assert result[0].text == "Raw text from source"  # Raw, not modified
-    assert result[0].source == "whisper_v1"  # Provenance preserved
-    assert result[0].speaker == "User"
+        mock_governance.can_access_meeting.assert_called_once_with("vinh", "m1", "READ")
 
 
-def test_get_transcript_meeting_not_found(service, mock_manager):
-    """Verify get_transcript raises MeetingNotFoundError if meeting doesn't exist."""
-    mock_manager.get_meeting.return_value = None
+# === list_meetings ===
 
-    with pytest.raises(MeetingNotFoundError):
-        service.get_transcript("nonexistent")
+class TestListMeetings:
+    def test_empty_list(self, service, mock_manager):
+        mock_manager.list_meetings.return_value = []
+        result = service.list_meetings()
+        assert result == []
+        mock_manager.list_meetings.assert_called_once_with(limit=None, status=None)
+
+    def test_one_meeting_returns_dto(self, service, mock_manager):
+        mock_manager.list_meetings.return_value = [{
+            "id": "m1",
+            "topic": "Test Topic",
+            "status": "active",
+            "created_at": "2026-08-21T10:00:00",
+        }]
+        result = service.list_meetings()
+        assert len(result) == 1
+        assert isinstance(result[0], MeetingDTO)
+        assert result[0].meeting_id == "m1"
+        assert result[0].title == "Test Topic"
+
+    def test_multiple_meetings(self, service, mock_manager):
+        mock_manager.list_meetings.return_value = [
+            {"id": "m1", "topic": "T1", "status": "active", "created_at": "t1"},
+            {"id": "m2", "topic": "T2", "status": "closed", "created_at": "t2"},
+        ]
+        result = service.list_meetings()
+        assert len(result) == 2
+
+    def test_does_not_mutate_storage(self, service, mock_manager):
+        original_data = [{"id": "m1", "topic": "T1", "status": "active", "created_at": "t1"}]
+        mock_manager.list_meetings.return_value = original_data
+        service.list_meetings()
+        assert original_data[0] == {"id": "m1", "topic": "T1", "status": "active", "created_at": "t1"}
 
 
-def test_get_transcript_governance_denied(service, mock_governance):
-    """Verify get_transcript raises GovernanceDeniedError if access denied."""
-    mock_governance.can_access_meeting.return_value = False
+# === get_meeting ===
 
-    with pytest.raises(GovernanceDeniedError):
-        service.get_transcript("m1")
+class TestGetMeeting:
+    def test_success_returns_dto(self, service, mock_manager, mock_governance):
+        mock_meeting = Mock()
+        mock_meeting.data = {
+            "id": "m1",
+            "topic": "Test",
+            "status": "active",
+            "created_at": "2026-08-21",
+        }
+        mock_manager.get_meeting.return_value = mock_meeting
+        mock_governance.can_access_meeting.return_value = True
+
+        result = service.get_meeting("m1")
+
+        assert isinstance(result, MeetingDTO)
+        assert result.meeting_id == "m1"
+        mock_governance.can_access_meeting.assert_called_once_with("vinh", "m1", "READ")
+
+    def test_not_found_raises(self, service, mock_manager, mock_governance):
+        mock_manager.get_meeting.side_effect = MeetingError("not found")
+        mock_governance.can_access_meeting.return_value = True
+
+        with pytest.raises(MeetingNotFoundError) as exc_info:
+            service.get_meeting("nonexistent")
+        assert exc_info.value.meeting_id == "nonexistent"
+
+    def test_governance_denied_raises(self, service, mock_governance):
+        mock_governance.can_access_meeting.return_value = False
+
+        with pytest.raises(GovernanceDeniedError):
+            service.get_meeting("m1")
+
+
+# === get_transcript ===
+
+class TestGetTranscript:
+    def test_provenance_preserved(self, service, mock_manager, mock_governance):
+        mock_meeting = Mock()
+        mock_meeting.get_transcript.return_value = [
+            {
+                "index": 1,
+                "type": "message",
+                "speaker": "vinh",
+                "timestamp": "2026-08-21T10:00:00",
+                "content": "Raw content from source",
+                "file": None,
+            }
+        ]
+        mock_manager.get_meeting.return_value = mock_meeting
+        mock_governance.can_access_meeting.return_value = True
+
+        result = service.get_transcript("m1")
+
+        assert len(result) == 1
+        assert isinstance(result[0], TranscriptMessageDTO)
+        assert result[0].content == "Raw content from source"
+        assert result[0].speaker == "vinh"
+
+    def test_not_found_raises(self, service, mock_manager, mock_governance):
+        mock_manager.get_meeting.side_effect = MeetingError("not found")
+        mock_governance.can_access_meeting.return_value = True
+
+        with pytest.raises(MeetingNotFoundError):
+            service.get_transcript("nonexistent")
+
+    def test_governance_denied_raises(self, service, mock_governance):
+        mock_governance.can_access_meeting.return_value = False
+
+        with pytest.raises(GovernanceDeniedError):
+            service.get_transcript("m1")
+
+
+# === DTO Boundary ===
+
+class TestDTOBoundary:
+    def test_meeting_dto_does_not_leak_internal(self, service, mock_manager, mock_governance):
+        mock_meeting = Mock()
+        mock_meeting.data = {
+            "id": "m1",
+            "topic": "Test",
+            "status": "active",
+            "created_at": "t1",
+            "participants": ["vinh"],
+            "join_records": [],
+        }
+        mock_manager.get_meeting.return_value = mock_meeting
+        mock_governance.can_access_meeting.return_value = True
+
+        result = service.get_meeting("m1")
+        result_dict = result.to_dict()
+
+        assert set(result_dict.keys()) == {"meeting_id", "title", "status", "created_at"}
+        assert "participants" not in result_dict
+
+    def test_transcript_dto_preserves_canonical_schema(self, service, mock_manager, mock_governance):
+        mock_meeting = Mock()
+        mock_meeting.get_transcript.return_value = [
+            {
+                "index": 1,
+                "type": "message",
+                "speaker": "vinh",
+                "timestamp": "t1",
+                "content": "hello",
+                "file": None,
+            }
+        ]
+        mock_manager.get_meeting.return_value = mock_meeting
+        mock_governance.can_access_meeting.return_value = True
+
+        result = service.get_transcript("m1")
+        result_dict = result[0].to_dict()
+
+        assert set(result_dict.keys()) == {"index", "type", "speaker", "timestamp", "content", "file"}
