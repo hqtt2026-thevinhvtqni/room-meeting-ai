@@ -1,19 +1,20 @@
 """
-Public Service Interface for ROOM HOP Core.
+ROOM HOP Public Service Interface v0.1.
 
-This is the facade that MCP (and other external interfaces) must use.
-- No direct storage access
+Facade for MCP (and future external interfaces).
 - No business logic (pure delegation)
+- No direct storage access
 - Returns DTOs, not internal models
-- Enforces governance checks
+- Enforces governance via Governance.can_access_meeting()
 
 Resolves: Architecture Block G3
 """
-from typing import List, Optional
-from datetime import datetime
+from __future__ import annotations
 
-# Core DTOs (import từ MCP hoặc định nghĩa riêng trong core)
-from room_meeting_ai.mcp.dtos import MeetingDTO, TranscriptMessageDTO
+from typing import List, Optional
+
+from core.governance import GOV
+from core.meeting_manager import MeetingManager, MeetingError
 
 
 class MeetingNotFoundError(Exception):
@@ -30,92 +31,165 @@ class GovernanceDeniedError(Exception):
         self.reason = reason
 
 
+class MeetingDTO:
+    """Public DTO for meeting metadata. No internal model leakage."""
+    def __init__(
+        self,
+        meeting_id: str,
+        title: str,
+        status: str,
+        created_at: str,
+    ):
+        self.meeting_id = meeting_id
+        self.title = title
+        self.status = status
+        self.created_at = created_at
+
+    def to_dict(self) -> dict:
+        return {
+            "meeting_id": self.meeting_id,
+            "title": self.title,
+            "status": self.status,
+            "created_at": self.created_at,
+        }
+
+
+class TranscriptMessageDTO:
+    """
+    Public DTO for transcript message.
+
+    Schema follows Core canonical format:
+    index / type / speaker / timestamp / content / file
+
+    Preserves provenance. No AI modification.
+    """
+    def __init__(
+        self,
+        index: int,
+        type: str,
+        speaker: str,
+        timestamp: str,
+        content: str,
+        file: Optional[str] = None,
+    ):
+        self.index = index
+        self.type = type
+        self.speaker = speaker
+        self.timestamp = timestamp
+        self.content = content
+        self.file = file
+
+    def to_dict(self) -> dict:
+        return {
+            "index": self.index,
+            "type": self.type,
+            "speaker": self.speaker,
+            "timestamp": self.timestamp,
+            "content": self.content,
+            "file": self.file,
+        }
+
+
 class MeetingService:
     """
     Public facade for ROOM HOP Core.
 
     Delegates to:
-    - MeetingManager (meeting lifecycle)
-    - Secretary (transcript/messages)
+    - MeetingManager (meeting lifecycle + transcript)
     - Governance (access control)
 
     Returns DTOs. Raises semantic errors. No storage access.
-    """
-    def __init__(self, meeting_manager, secretary, governance):
-        self.manager = meeting_manager
-        self.secretary = secretary
-        self.governance = governance
 
-    def list_meetings(self, limit: int = 10, status: Optional[str] = None) -> List[MeetingDTO]:
+    Identity propagation:
+    - requester_identity là BẮT BUỘC, không có default
+    - MCP server phải inject identity từ config/env
+    - Nếu không có identity → raise ValueError
+    """
+
+    def __init__(
+        self,
+        manager: MeetingManager,
+        governance=GOV,
+        requester_identity: str | None = None,
+    ):
+        if not requester_identity:
+            raise ValueError(
+                "MeetingService requires requester_identity. "
+                "MCP server must inject identity from config/env."
+            )
+
+        self.manager = manager
+        self.governance = governance
+        self.requester_identity = requester_identity
+
+    def list_meetings(
+        self,
+        limit: Optional[int] = None,
+        status: Optional[str] = None,
+    ) -> List[MeetingDTO]:
         """
-        List meetings with optional status filter.
-        Delegates to MeetingManager.
+        List meetings with optional filters.
+        Delegates to MeetingManager.list_meetings().
         """
-        meetings = self.manager.list_meetings(limit=limit, status=status)
-        return [self._to_meeting_dto(m) for m in meetings]
+        raw_meetings = self.manager.list_meetings(limit=limit, status=status)
+        return [self._to_meeting_dto(data) for data in raw_meetings]
 
     def get_meeting(self, meeting_id: str) -> MeetingDTO:
         """
         Get meeting by ID.
-        Checks governance, delegates to MeetingManager.
-        Raises MeetingNotFoundError if not found.
-        Raises GovernanceDeniedError if access denied.
+        Checks governance, delegates to MeetingManager.get_meeting().
         """
-        if not self.governance.can_access_meeting(meeting_id):
-            raise GovernanceDeniedError("Access denied by governance policy")
+        if not self.governance.can_access_meeting(
+            self.requester_identity, meeting_id, "READ"
+        ):
+            raise GovernanceDeniedError(
+                f"Identity '{self.requester_identity}' cannot read meeting '{meeting_id}'"
+            )
 
-        meeting = self.manager.get_meeting(meeting_id)
-        if not meeting:
-            raise MeetingNotFoundError(meeting_id)
+        try:
+            meeting = self.manager.get_meeting(meeting_id)
+        except MeetingError as e:
+            raise MeetingNotFoundError(meeting_id) from e
 
-        return self._to_meeting_dto(meeting)
+        return self._to_meeting_dto(meeting.data)
 
     def get_transcript(self, meeting_id: str) -> List[TranscriptMessageDTO]:
         """
         Get transcript for a meeting.
-        Checks governance, delegates to Secretary.
-        Preserves provenance (speaker, timestamp, source, raw text).
-        Raises MeetingNotFoundError if meeting not found.
-        Raises GovernanceDeniedError if access denied.
+        Checks governance, delegates to Meeting.get_transcript().
+        Preserves provenance (speaker, timestamp, content, file, type).
         """
-        if not self.governance.can_access_meeting(meeting_id):
-            raise GovernanceDeniedError("Access denied by governance policy")
+        if not self.governance.can_access_meeting(
+            self.requester_identity, meeting_id, "READ"
+        ):
+            raise GovernanceDeniedError(
+                f"Identity '{self.requester_identity}' cannot read meeting '{meeting_id}'"
+            )
 
-        # Check meeting exists (delegate to manager)
-        if not self.manager.get_meeting(meeting_id):
-            raise MeetingNotFoundError(meeting_id)
+        try:
+            meeting = self.manager.get_meeting(meeting_id)
+        except MeetingError as e:
+            raise MeetingNotFoundError(meeting_id) from e
 
-        # Delegate to secretary (raw transcript, no AI modification — G9)
-        messages = self.secretary.get_transcript(meeting_id)
-        return [self._to_transcript_dto(m) for m in messages]
+        raw_entries = meeting.get_transcript()
+        return [self._to_transcript_dto(entry) for entry in raw_entries]
 
-    def _to_meeting_dto(self, meeting) -> MeetingDTO:
-        """Map internal meeting model to MeetingDTO."""
-        created_at = meeting.created_at
-        if hasattr(created_at, 'isoformat'):
-            created_at = created_at.isoformat()
-        else:
-            created_at = str(created_at)
-
+    def _to_meeting_dto(self, data: dict) -> MeetingDTO:
+        """Map internal meeting dict to MeetingDTO."""
         return MeetingDTO(
-            meeting_id=meeting.id,
-            title=meeting.title,
-            status=meeting.status,
-            created_at=created_at
+            meeting_id=data["id"],
+            title=data["topic"],
+            status=data["status"],
+            created_at=data["created_at"],
         )
 
-    def _to_transcript_dto(self, message) -> TranscriptMessageDTO:
-        """Map internal message model to TranscriptMessageDTO with provenance."""
-        timestamp = message.timestamp
-        if hasattr(timestamp, 'isoformat'):
-            timestamp = timestamp.isoformat()
-        else:
-            timestamp = str(timestamp)
-
+    def _to_transcript_dto(self, entry: dict) -> TranscriptMessageDTO:
+        """Map Core transcript entry to TranscriptMessageDTO. Preserves provenance."""
         return TranscriptMessageDTO(
-            message_id=message.id,
-            speaker=message.speaker,
-            timestamp=timestamp,
-            text=message.text,  # Raw text, no AI modification (G9)
-            source=getattr(message, 'source', 'unknown')  # Provenance
+            index=entry["index"],
+            type=entry.get("type", "message"),
+            speaker=entry["speaker"],
+            timestamp=entry["timestamp"],
+            content=entry["content"],
+            file=entry.get("file"),
         )
