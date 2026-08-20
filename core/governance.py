@@ -1,7 +1,7 @@
 # core/governance.py - V2 - Capability + Vung + Authority
 import os
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 @dataclass
@@ -9,10 +9,7 @@ class MissionContext:
     name: str = "default"
     allow_delete: bool = False
     allow_edit_protected: bool = False
-    allowed_scopes: list = None # vd: ["research/RC007/*"]
-    def __post_init__(self):
-        if self.allowed_scopes is None:
-            self.allowed_scopes = ["research/*", "docs/*", "tmp/*"]
+    allowed_scopes: list = field(default_factory=lambda: ["research/*", "docs/*", "tmp/*"])
 
 class Governance:
     # Vung cam tuyet doi - bat ke Mission nao
@@ -40,13 +37,9 @@ class Governance:
             "READ": ["research/*", "docs/*", "notes/*", "tmp/*"],
             "CREATE": ["research/*", "tmp/*", "docs/*"],
             "EDIT": ["research/*", "tmp/*", "docs/*"],
-            "DELETE": ["tmp/*", "research/draft/*", "research/RC007/tmp/*"], # Chi vung rac moi duoc xoa
+            "DELETE": ["tmp/*", "research/draft/*", "research/RC007/tmp/*"],
             "MOVE": ["research/*", "tmp/*"]
         },
-        # XU (CEO) va QUAN_GIA (Operations) can quyen EDIT tren meetings/*
-        # de dong (close) meeting - dung boi meeting_manager.py::Meeting.close().
-        # Khong dung "*" nhu vinh de tranh cap quyen ngoai y muon; chi mo rong
-        # dung pham vi can cho vong doi meeting + cac vung lam viec thong thuong.
         "xu": {
             "READ": ["*"],
             "CREATE": ["meetings/*", "research/*", "docs/*", "tmp/*"],
@@ -87,9 +80,9 @@ class Governance:
         identity = identity or "agent_llama"
         caps = self.CAPABILITIES.get(identity, self.CAPABILITIES["agent_llama"])
 
-        # 1. Kiem tra protected
+        # 1. Kiem tra protected — CHI block non-READ, cho phep READ
         if self._is_protected(path):
-            if not mission.allow_edit_protected:
+            if capability != "READ" and not mission.allow_edit_protected:
                 return False, f"DENY: {path} la Protected Artifact (core/governance, XU_CORE, meetings/). Can Authority XU."
 
         # 2. Kiem tra capability co ton tai khong
@@ -99,7 +92,6 @@ class Governance:
 
         # 3. Kiem tra path co nam trong scope duoc phep khong
         if not self._match_scope(path, allowed_scopes):
-            # Ngoai le: neu mission mo rong scope
             if not self._match_scope(path, mission.allowed_scopes):
                 return False, f"DENY: {path} nam ngoai vung {capability} cho phep cua {identity}. Vung cho phep: {allowed_scopes}"
 
@@ -117,6 +109,24 @@ class Governance:
         timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
         with open(log_path, "a", encoding="utf-8") as f:
             f.write(f"[{timestamp}] Identity={identity} | Mission={mission.name} | {capability} | {path} | {result}\n")
+
+    # === NEW: Public API for meeting access ===
+    def can_access_meeting(
+        self,
+        identity: str,
+        meeting_id: str,
+        capability: str = "READ",
+    ) -> bool:
+        """
+        Check if identity can access a meeting.
+
+        Translates meeting_id to internal path and delegates to check().
+        Used by MeetingService for MCP boundary.
+        """
+        path = f"meetings/{meeting_id}/meeting.yaml"
+        mission = MissionContext(name=f"mcp_access_{meeting_id}")
+        ok, _ = self.check(identity, capability, path, mission)
+        return ok
 
 # Singleton
 GOV = Governance()
