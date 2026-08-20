@@ -246,3 +246,49 @@ class MeetingManager:
         if not meeting_dir.exists():
             raise MeetingError(f"Không tìm thấy meeting '{meeting_id}'.")
         return Meeting(meeting_dir, self.principal_registry, self.registry)
+
+    def list_meetings(
+        self,
+        limit: int | None = None,
+        status: str | None = None,
+    ) -> list[dict]:
+        """
+        Return detached meeting metadata snapshots.
+
+        Only directories containing meeting.yaml are considered.
+        No lifecycle state is modified.
+        """
+        if limit is not None and limit < 0:
+            raise ValueError("limit phải >= 0 hoặc None.")
+
+        meetings = []
+
+        if not self.meetings_dir.exists():
+            return meetings
+
+        for meeting_dir in sorted(self.meetings_dir.iterdir()):
+            if not meeting_dir.is_dir():
+                continue
+
+            meeting_yaml = meeting_dir / "meeting.yaml"
+
+            if not meeting_yaml.is_file():
+                continue
+
+            meeting = Meeting(
+                meeting_dir,
+                self.principal_registry,
+                self.registry,
+            )
+
+            data = meeting.data
+
+            if status is not None and data.get("status") != status:
+                continue
+
+            meetings.append(dict(data))
+
+        if limit is not None:
+            return meetings[:limit]
+
+        return meetings
