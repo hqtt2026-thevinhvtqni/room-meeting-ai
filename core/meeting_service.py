@@ -15,8 +15,8 @@ class MeetingService:
     External callers must use this service instead of directly depending on
     MeetingManager/Meeting internals.
 
-    V1 deliberately delegates lifecycle behavior to the existing Core.
-    No lifecycle logic is duplicated here.
+    V1/V2 deliberately delegates lifecycle and read operations to the
+    existing Core. No lifecycle logic is duplicated here.
     """
 
     def __init__(self, manager: MeetingManager):
@@ -44,11 +44,49 @@ class MeetingService:
         )
         return self._snapshot(meeting)
 
-    def get_meeting(self, meeting_id: str) -> dict[str, Any]:
+    def get_meeting(
+        self,
+        meeting_id: str,
+    ) -> dict[str, Any]:
         meeting = self._manager.get_meeting(meeting_id)
         return self._snapshot(meeting)
 
-    def open_meeting(self, meeting_id: str) -> dict[str, Any]:
+    def list_meetings(
+        self,
+        limit: int | None = None,
+        status: str | None = None,
+    ) -> list[dict[str, Any]]:
+        """
+        Return detached meeting snapshots.
+
+        The service does not expose Meeting objects or storage internals.
+        """
+        meetings = self._manager.list_meetings(
+            limit=limit,
+            status=status,
+        )
+
+        return [dict(meeting) for meeting in meetings]
+
+    def get_transcript(
+        self,
+        meeting_id: str,
+    ) -> list[dict[str, Any]]:
+        """
+        Return the existing Core transcript evidence.
+
+        No filesystem access is exposed to callers.
+        """
+        meeting = self._manager.get_meeting(meeting_id)
+        return [
+            dict(message)
+            for message in meeting.get_transcript()
+        ]
+
+    def open_meeting(
+        self,
+        meeting_id: str,
+    ) -> dict[str, Any]:
         meeting = self._manager.get_meeting(meeting_id)
         meeting.open_session()
         return self._snapshot(meeting)
@@ -78,7 +116,10 @@ class MeetingService:
         content: str,
     ) -> str:
         meeting = self._manager.get_meeting(meeting_id)
-        path: Path = meeting.add_message(speaker, content)
+        path: Path = meeting.add_message(
+            speaker,
+            content,
+        )
         return str(path)
 
     def add_paste(
@@ -121,8 +162,13 @@ class MeetingService:
         artifact_name: str = "final.md",
     ) -> str:
         meeting = self._manager.get_meeting(meeting_id)
-        path: Path = meeting.save_artifact(artifact_name)
+        path: Path = meeting.save_artifact(
+            artifact_name,
+        )
         return str(path)
 
 
-__all__ = ["MeetingService", "MeetingError"]
+__all__ = [
+    "MeetingService",
+    "MeetingError",
+]

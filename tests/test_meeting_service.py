@@ -161,3 +161,119 @@ def test_request_close_and_close_through_service(service):
 def test_missing_meeting_preserves_core_error(service):
     with pytest.raises(MeetingError):
         service.get_meeting("NOT-EXIST")
+
+
+def test_list_meetings_returns_snapshots(service):
+    service.create_meeting(
+        meeting_id="SERVICE-LIST-001",
+        topic="First",
+        participants=["xu", "claude"],
+        context_files=[],
+    )
+
+    service.create_meeting(
+        meeting_id="SERVICE-LIST-002",
+        topic="Second",
+        participants=["xu", "claude"],
+        context_files=[],
+    )
+
+    result = service.list_meetings()
+
+    assert isinstance(result, list)
+    assert len(result) == 2
+    assert all(isinstance(item, dict) for item in result)
+
+    ids = {item["id"] for item in result}
+
+    assert ids == {
+        "SERVICE-LIST-001",
+        "SERVICE-LIST-002",
+    }
+
+
+def test_list_meetings_filters_status(service):
+    service.create_meeting(
+        meeting_id="SERVICE-LIST-003",
+        topic="Draft",
+        participants=["xu", "claude"],
+        context_files=[],
+    )
+
+    service.create_meeting(
+        meeting_id="SERVICE-LIST-004",
+        topic="Active",
+        participants=["xu", "claude"],
+        context_files=[],
+    )
+
+    _activate(
+        service,
+        "SERVICE-LIST-004",
+    )
+
+    result = service.list_meetings(
+        status="active",
+    )
+
+    assert len(result) == 1
+    assert result[0]["id"] == "SERVICE-LIST-004"
+    assert result[0]["status"] == "active"
+
+
+def test_list_meetings_respects_limit(service):
+    for index in range(3):
+        service.create_meeting(
+            meeting_id=f"SERVICE-LIMIT-{index}",
+            topic=f"Meeting {index}",
+            participants=["xu", "claude"],
+            context_files=[],
+        )
+
+    result = service.list_meetings(limit=2)
+
+    assert len(result) == 2
+    assert all(isinstance(item, dict) for item in result)
+
+
+def test_get_transcript_through_service(service):
+    service.create_meeting(
+        meeting_id="SERVICE-TRANSCRIPT-001",
+        topic="Transcript",
+        participants=["xu", "claude"],
+        context_files=[],
+    )
+
+    _activate(
+        service,
+        "SERVICE-TRANSCRIPT-001",
+    )
+
+    service.add_message(
+        "SERVICE-TRANSCRIPT-001",
+        "xu",
+        "Nội dung thứ nhất.",
+    )
+
+    service.add_message(
+        "SERVICE-TRANSCRIPT-001",
+        "claude",
+        "Nội dung thứ hai.",
+    )
+
+    result = service.get_transcript(
+        "SERVICE-TRANSCRIPT-001",
+    )
+
+    assert isinstance(result, list)
+    assert len(result) == 2
+
+    assert result[0]["speaker"] == "xu"
+    assert result[0]["content"] == "Nội dung thứ nhất."
+    assert result[0]["type"] == "message"
+    assert "timestamp" in result[0]
+    assert "index" in result[0]
+    assert "file" in result[0]
+
+    assert result[1]["speaker"] == "claude"
+    assert result[1]["content"] == "Nội dung thứ hai."
