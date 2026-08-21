@@ -27,6 +27,44 @@ class MeetingService:
         """Return a detached Meeting state snapshot."""
         return dict(meeting.data)
 
+    @staticmethod
+    def _public_meeting_list_item(
+        meeting: dict[str, Any],
+    ) -> dict[str, Any]:
+        """
+        Return the stable public DTO for a meeting list item.
+
+        This mapper prevents internal meeting metadata from leaking through
+        the public application boundary.
+        """
+        return {
+            "id": meeting["id"],
+            "title": meeting.get(
+                "title",
+                meeting.get("topic", ""),
+            ),
+            "status": meeting["status"],
+        }
+
+    @staticmethod
+    def _public_meeting(
+        meeting: dict[str, Any],
+    ) -> dict[str, Any]:
+        """
+        Return the stable public DTO for a single meeting.
+
+        Internal meeting metadata is intentionally excluded from the
+        public application boundary.
+        """
+        return {
+            "id": meeting["id"],
+            "title": meeting.get(
+                "title",
+                meeting.get("topic", ""),
+            ),
+            "status": meeting["status"],
+        }
+
     def create_meeting(
         self,
         meeting_id: str,
@@ -49,7 +87,7 @@ class MeetingService:
         meeting_id: str,
     ) -> dict[str, Any]:
         meeting = self._manager.get_meeting(meeting_id)
-        return self._snapshot(meeting)
+        return self._public_meeting(meeting.data)
 
     def list_meetings(
         self,
@@ -57,16 +95,19 @@ class MeetingService:
         status: str | None = None,
     ) -> list[dict[str, Any]]:
         """
-        Return detached meeting snapshots.
+        Return public meeting list DTOs.
 
-        The service does not expose Meeting objects or storage internals.
+        Internal MeetingManager metadata is not exposed to callers.
         """
         meetings = self._manager.list_meetings(
             limit=limit,
             status=status,
         )
 
-        return [dict(meeting) for meeting in meetings]
+        return [
+            self._public_meeting_list_item(meeting)
+            for meeting in meetings
+        ]
 
     def get_transcript(
         self,
