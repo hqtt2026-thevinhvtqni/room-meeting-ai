@@ -17,6 +17,7 @@ from core.meeting_service import MeetingService
 LIST_MEETINGS = "list_meetings"
 GET_MEETING = "get_meeting"
 GET_TRANSCRIPT = "get_transcript"
+ADD_PASTE_TO_MEETING = "add_paste_to_meeting"
 
 
 def create_server(service: MeetingService) -> Server:
@@ -64,6 +65,27 @@ def create_server(service: MeetingService) -> Server:
                     "additionalProperties": False,
                 },
             ),
+            Tool(
+                name=ADD_PASTE_TO_MEETING,
+                description="Append raw text to an active ROOM HOP meeting.",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "meeting_id": {
+                            "type": "string",
+                            "minLength": 1,
+                        },
+                        "text": {
+                            "type": "string",
+                        },
+                    },
+                    "required": [
+                        "meeting_id",
+                        "text",
+                    ],
+                    "additionalProperties": False,
+                },
+            ),
         ]
 
     @server.call_tool()
@@ -84,6 +106,16 @@ def create_server(service: MeetingService) -> Server:
         if name == GET_TRANSCRIPT:
             return {
                 "transcript": service.get_transcript(arguments["meeting_id"]),
+            }
+
+        if name == ADD_PASTE_TO_MEETING:
+            meeting_id = arguments["meeting_id"]
+            text = arguments["text"]
+
+            result = service.add_paste(meeting_id, text)
+
+            return {
+                "paste": result,
             }
 
         raise ValueError(f"Unknown ROOM HOP MCP tool: {name}")
