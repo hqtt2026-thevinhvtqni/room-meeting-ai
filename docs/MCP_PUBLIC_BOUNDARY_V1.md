@@ -157,3 +157,52 @@ Không thêm:
 ❌ audio
 ❌ summarization
 ❌ AI provider integration
+
+🔒 Recording vs Authority Operations
+
+ROOM HOP phân biệt hai loại write operations:
+
+1. RECORDING OPERATIONS (Content Ingestion)
+
+add_paste_to_meeting
+add_message (planned)
+
+Các operation này:
+✅ Ghi nội dung vào meeting transcript/log
+✅ Không thay đổi lifecycle state của meeting
+✅ Không cấp hoặc thu hồi quyền
+✅ Chỉ phải qua Core validation: meeting active? participant hợp lệ?
+❌ KHÔNG qua Governance capability authorization
+
+Rationale:
+- Recording operations là non-authoritative recording, không phải authority decisions.
+- Secretary là Record Keeper: ghi lại bằng chứng, không phải Authorization Gate.
+- Nội dung được ghi vào có thể đến từ bất kỳ nguồn nào (Agent, User, System).
+- Governance bảo vệ quyền ĐIỀU KHIỂN cuộc họp, không phải quyền GHI NỘI DUNG.
+
+2. AUTHORITY OPERATIONS (Lifecycle Control)
+
+start_meeting
+close_meeting
+(và các thao tác tương tự thay đổi trạng thái/quyền)
+
+Các operation này:
+✅ Thay đổi lifecycle state của meeting
+✅ Có thể cấp/thu hồi quyền hoặc tài nguyên
+✅ PHẢI qua Governance capability authorization (GOV.check)
+✅ PHẢI ghi audit log (GOV.audit)
+
+Phân tách này giữ được sự sạch sẽ:
+
+              ROOM HOP PUBLIC BOUNDARY
+                        │
+          ┌─────────────┴─────────────┐
+          │                           │
+    RECORDING OPERATIONS        AUTHORITY OPERATIONS
+          │                           │
+  add_message / add_paste     start / close / ...
+          │                           │
+     Core validation           GOV.check()
+          │                     GOV.audit()
+          ▼                           ▼
+    Secretary / Log            Lifecycle Control
