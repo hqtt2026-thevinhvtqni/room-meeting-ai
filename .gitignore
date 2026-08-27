@@ -1,55 +1,66 @@
-# ============================================================
-# ROOM HOP - Git Ignore Policy
-# Source code, tests, docs and canonical fixtures belong in Git.
-# Runtime data, generated artifacts and large test data do not.
-# ============================================================
-
-# ----------------------------
-# Secrets
-# ----------------------------
-.env
-*.env
-!.env.example
-
-# ----------------------------
-# Python
-# ----------------------------
+```
+# Compiled and build artifacts
+*.pyc
 __pycache__/
-*.py[cod]
-.pytest_cache/
-*.egg-info/
-venv/
+*.o
+*.obj
+dist/
+build/
+target/
+
+# Dependencies
 .venv/
+venv/
+node_modules/
+.mypy_cache/
+.pytest_cache/
+.gradle/
 
-# ----------------------------
-# OS / editor
-# ----------------------------
-.DS_Store
-.vscode/
+# Logs and temp files
 *.log
+*.tmp
+*.swp
+*.swo
 
-# ----------------------------
-# Runtime / temporary data
-# ----------------------------
-tmp/
-trash/
+# Environment
+.env
+.env.local
+.env.*
 
-# Meeting runtime data
-meetings/*/*transcript*.txt
-meetings/*/secretary*.md
-meetings/*/artifacts/
-meetings/*/evidence/
-meetings/*/audio/
+# Editors
+.vscode/
+.idea/
 
-# ----------------------------
-# Large / generated test data
-# ----------------------------
-secretary_size_tests/transcript_*.txt
-test_long_transcript.txt
-transcript_test_output.txt
+# System files
+.DS_Store
+Thumbs.db
 
-# ----------------------------
-# Generated test outputs
-# ----------------------------
-pytest_output.txt
-desktop.ini
+# Coverage
+coverage/
+htmlcov/
+.coverage
+
+# Compressed files
+*.zip
+*.gz
+*.tar
+*.tgz
+*.bz2
+*.xz
+*.7z
+*.rar
+*.zst
+*.lz4
+*.lzh
+*.cab
+*.arj
+*.rpm
+*.deb
+*.Z
+*.lz
+*.lzo
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.tar.zst
+```
