@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HQTT-AI Panel - Thế Vinh Design 🇻🇳 (+84)</title>
+  <style>
+    :root {
+      --bg-primary: #ffffff;
+      --bg-secondary: #f5f5f5;
+      --text-primary: #1a1a1a;
+      --text-secondary: #666666;
+      --border-color: #e0e0e0;
+      --accent-color: #007bff;
+      --success-color: #28a745;
+      --warning-color: #ffc107;
+      --danger-color: #dc3545;
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #1a1a1a;
+      --bg-secondary: #2d2d2d;
+      --text-primary: #ffffff;
+      --text-secondary: #b0b0b0;
+      --border-color: #404040;
+      --accent-color: #4da3ff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      transition: all 0.3s ease;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border-color);
+      background: var(--bg-secondary);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo {
+      font-size: 1.4em;
+      font-weight: bold;
+      color: var(--accent-color);
+    }
+
+    .meeting-info {
+      font-size: 0.9em;
+      color: var(--text-secondary);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sso-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 0.85em;
+    }
+
+    .flag { font-size: 1.2em; }
+
+    .toggle-btn {
+      padding: 6px 12px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85em;
+      transition: all 0.2s;
+    }
+
+    .toggle-btn:hover {
+      background: var(--bg-secondary);
+    }
+
+    /* Main Content */
+    .main-container {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Left Column - Input */
+    .left-column {
+      width: 40%;
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+      gap: 12px;
+    }
+
+    .column-header {
+      font-size: 1em;
+      font-weight: 600;
+      color: var(--text-primary);
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .shorthand-input {
+      flex: 1;
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 0.9em;
+      resize: none;
+    }
+
+    .shorthand-input:focus {
+      outline: none;
+      border-color: var(--accent-color);
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9em;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+    }
+
+    .btn-secondary {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      background: var(--border-color);
+    }
+
+    /* Right Column - Minutes */
+    .right-column {
+      width: 60%;
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+      gap: 12px;
+    }
+
+    .minutes-container {
+      flex: 1;
+      padding: 16px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: var(--bg-secondary);
+      overflow-y: auto;
+      line-height: 1.6;
+    }
+
+    .minutes-placeholder {
+      color: var(--text-secondary);
+      text-align: center;
+      padding: 40px 20px;
+      font-style: italic;
+    }
+
+    .minutes-content {
+      white-space: pre-wrap;
+    }
+
+    .minutes-content h1 { font-size: 1.5em; margin-bottom: 16px; }
+    .minutes-content h2 { font-size: 1.2em; margin: 16px 0 8px; }
+    .minutes-content ul { margin-left: 20px; margin-bottom: 12px; }
+    .minutes-content li { margin-bottom: 6px; }
+
+    /* Footer */
+    .footer {
+      padding: 10px 20px;
+      border-top: 1px solid var(--border-color);
+      background: var(--bg-secondary);
+      text-align: center;
+      font-size: 0.8em;
+      color: var(--text-secondary);
+    }
+
+    .footer a {
+      color: var(--accent-color);
+      text-decoration: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .main-container {
+        flex-direction: column;
+      }
+      .left-column, .right-column {
+        width: 100%;
+        border: none;
+        border-bottom: 1px solid var(--border-color);
+      }
+      .left-column {
+        height: 50%;
+      }
+      .right-column {
+        height: 50%;
+      }
+    }
+  </style>
+</head>
+<body data-theme="light">
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">🏛️ HQTT-AI</div>
+      <div class="meeting-info" id="meetingInfo">
+        <span data-vi="Đang họp:" data-en="Meeting:">Đang họp:</span> 
+        <strong id="currentMeetingName">Chưa có cuộc họp</strong>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="sso-badge">
+        <span class="flag">🇻🇳</span>
+        <span id="ssoUser">+84 XXX XXX XXX</span>
+      </div>
+      <button class="toggle-btn" id="langToggle" data-current="vi">VI | EN</button>
+      <button class="toggle-btn" id="themeToggle">🌙 Dark</button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-container">
+    <!-- Left Column: Shorthand Input -->
+    <section class="left-column">
+      <div class="column-header">
+        <span data-vi="Nhập Shorthand" data-en="Enter Shorthand">Nhập Shorthand</span>
+      </div>
+      <textarea 
+        class="shorthand-input" 
+        id="shorthandInput"
+        placeholder="Ví dụ: [DECISION] Phê duyệt ngân sách Q1&#10;[ACTION] @nguyenvana chuẩn bị báo cáo&#10;[NOTE] Thảo luận lúc 14h30"
+        data-vi-placeholder="Ví dụ: [DECISION] Phê duyệt ngân sách Q1&#10;[ACTION] @nguyenvana chuẩn bị báo cáo&#10;[NOTE] Thảo luận lúc 14h30"
+        data-en-placeholder="Example: [DECISION] Approve Q1 budget&#10;[ACTION] @nguyenvana prepare report&#10;[NOTE] Discussion at 2:30 PM"
+      ></textarea>
+      <div class="action-buttons">
+        <button class="btn btn-primary" id="addNoteBtn">
+          <span data-vi="Thêm Ghi Chú" data-en="Add Note">Thêm Ghi Chú</span>
+        </button>
+        <button class="btn btn-primary" id="createMinutesBtn">
+          <span data-vi="Tạo Biên Bản" data-en="Create Minutes">Tạo Biên Bản</span>
+        </button>
+        <button class="btn btn-secondary" id="clearBtn">
+          <span data-vi="Xóa Trắng" data-en="Clear">Xóa Trắng</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Right Column: Minutes Display -->
+    <section class="right-column">
+      <div class="column-header">
+        <span data-vi="Biên Bản Cuộc Họp" data-en="Meeting Minutes">Biên Bản Cuộc Họp</span>
+      </div>
+      <div class="minutes-container" id="minutesContainer">
+        <div class="minutes-placeholder" id="minutesPlaceholder">
+          <p data-vi="Chưa có biên bản. Nhập shorthand và nhấn &quot;Tạo Biên Bản&quot; để bắt đầu." 
+               data-en="No minutes yet. Enter shorthand and click &quot;Create Minutes&quot; to start.">
+            Chưa có biên bản. Nhập shorthand và nhấn "Tạo Biên Bản" để bắt đầu.
+          </p>
+        </div>
+        <div class="minutes-content" id="minutesContent" style="display: none;"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <span data-vi="Thiết kế bởi Thế Vinh - 🇻🇳 (+84) 945 562 345" 
+          data-en="Designed by Thế Vinh - 🇻🇳 (+84) 945 562 345">
+      Thiết kế bởi Thế Vinh - 🇻🇳 (+84) 945 562 345
+    </span>
+  </footer>
+
+  <script>
+    // State
+    let currentLang = 'vi';
+    let currentTheme = 'light';
+    let currentMeeting = null;
+    let currentUser = '+84 XXX XXX XXX';
+
+    // RoomHOP Bridge Interface (Placeholder - will be implemented in Phase B)
+    const RoomHOPBridge = {
+      getCurrentMeeting: () => currentMeeting,
+      getCurrentUser: () => ({ phone: currentUser, name: 'User' }),
+      getParticipants: () => [],
+      getTranscriptStream: () => null, // Observable<string>
+      getMinutes: () => null,
+      addNote: (text) => {
+        console.log('[INTENT] addNote:', text);
+        alert('Intent gửi: addNote("' + text + '")');
+      },
+      requestCreateMinutes: () => {
+        console.log('[INTENT] CREATE_MINUTES');
+        alert('Intent gửi: CREATE_MINUTES');
+      },
+      subscribe: (event, cb) => {
+        console.log('[SUBSCRIBE]', event);
+        return () => {}; // Unsubscribe function
+      }
+    };
+
+    // Theme Toggle
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+      document.body.setAttribute('data-theme', currentTheme);
+      document.getElementById('themeToggle').textContent = 
+        currentTheme === 'light' ? '🌙 Dark' : '☀️ Light';
+    });
+
+    // Language Toggle
+    document.getElementById('langToggle').addEventListener('click', () => {
+      currentLang = currentLang === 'vi' ? 'en' : 'vi';
+      document.getElementById('langToggle').setAttribute('data-current', currentLang);
+      
+      // Update all translatable elements
+      document.querySelectorAll('[data-vi]').forEach(el => {
+        el.textContent = currentLang === 'vi' ? el.getAttribute('data-vi') : el.getAttribute('data-en');
+      });
+      
+      // Update placeholders
+      document.querySelectorAll('[data-vi-placeholder]').forEach(el => {
+        const placeholder = currentLang === 'vi' 
+          ? el.getAttribute('data-vi-placeholder')
+          : el.getAttribute('data-en-placeholder');
+        el.placeholder = placeholder.replace(/&#10;/g, '\n');
+      });
+    });
+
+    // Action Buttons
+    document.getElementById('addNoteBtn').addEventListener('click', () => {
+      const input = document.getElementById('shorthandInput');
+      const text = input.value.trim();
+      if (text) {
+        RoomHOPBridge.addNote(text);
+        input.value = '';
+      } else {
+        alert(currentLang === 'vi' 
+          ? 'Vui lòng nhập nội dung shorthand' 
+          : 'Please enter shorthand content');
+      }
+    });
+
+    document.getElementById('createMinutesBtn').addEventListener('click', () => {
+      const input = document.getElementById('shorthandInput');
+      const text = input.value.trim();
+      if (text) {
+        RoomHOPBridge.requestCreateMinutes();
+        // Simulate minutes generation
+        const mockMinutes = `BIÊN BẢN CUỘC HỌP
+====================
+Thời gian: ${new Date().toLocaleString('vi-VN')}
+Người tạo: ${currentUser}
+
+NỘI DUNG:
+${text}
+
+---
+Thiết kế bởi Thế Vinh - 🇻🇳 (+84) 945 562 345`;
+        
+        document.getElementById('minutesPlaceholder').style.display = 'none';
+        const contentEl = document.getElementById('minutesContent');
+        contentEl.textContent = mockMinutes;
+        contentEl.style.display = 'block';
+        input.value = '';
+      } else {
+        alert(currentLang === 'vi' 
+          ? 'Vui lòng nhập nội dung shorthand trước khi tạo biên bản' 
+          : 'Please enter shorthand content before creating minutes');
+      }
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      document.getElementById('shorthandInput').value = '';
+      document.getElementById('minutesPlaceholder').style.display = 'block';
+      document.getElementById('minutesContent').style.display = 'none';
+    });
+
+    // Initialize
+    console.log('HQTT-AI Panel initialized - RoomHOP Architecture');
+    console.log('Bridge interface:', Object.keys(RoomHOPBridge));
+  </script>
+</body>
+</html>
