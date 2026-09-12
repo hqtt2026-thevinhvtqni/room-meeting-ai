@@ -67,12 +67,14 @@ class MeetingService:
 
     def create_meeting(
         self,
-        meeting_id: str,
+        meeting_id: str | None,
         topic: str,
         participants: list[str],
         context_files: list[str],
         created_by: str = "vinh",
     ) -> dict[str, Any]:
+        # meeting_id=None -> MeetingManager allocates MEETING-YYYY-NNN.
+        # meeting_id tường minh -> giữ backward compatibility với caller cũ.
         meeting = self._manager.create_meeting(
             meeting_id=meeting_id,
             topic=topic,

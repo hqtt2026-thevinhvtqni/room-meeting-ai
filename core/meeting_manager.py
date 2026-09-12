@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import re
 import yaml
 from datetime import datetime, timezone
 from pathlib import Path
@@ -16,6 +17,12 @@ from core.secretary import Secretary
 
 ROOM_HOP_ROOT = Path(__file__).resolve().parent.parent
 MEETINGS_DIR = ROOM_HOP_ROOT / "meetings"
+
+# ID allocation v0.1 — race-tolerant, collision-detected (KHÔNG atomic:
+# không có lock/transaction thật). Nếu 2 process tạo cùng lúc và đụng
+# đúng 1 sequence, create_meeting() sẽ raise MeetingError ở bước
+# meeting_dir.mkdir() thay vì silent overwrite. Chấp nhận được ở v0.1.
+MEETING_ID_RE = re.compile(r"^MEETING-(\d{4})-(\d{3})$")
 
 
 def _now_iso() -> str:
@@ -459,14 +466,45 @@ class MeetingManager:
             exist_ok=True,
         )
 
+    def _allocate_meeting_id(self) -> str:
+        """
+        Sinh meeting_id dạng MEETING-{YYYY}-{seq:03d} cho năm UTC hiện tại.
+
+        race-tolerant / collision-detected — KHÔNG atomic. Dùng
+        max(existing_seq) + 1, không dùng len(existing), để không bị
+        lệch nếu có thư mục meeting bị xóa thủ công giữa chừng.
+        """
+        year = datetime.now(timezone.utc).year
+        max_seq = 0
+
+        if self.meetings_dir.exists():
+            for meeting_dir in self.meetings_dir.iterdir():
+                if not meeting_dir.is_dir():
+                    continue
+
+                match = MEETING_ID_RE.match(meeting_dir.name)
+
+                if match and int(match.group(1)) == year:
+                    seq = int(match.group(2))
+                    if seq > max_seq:
+                        max_seq = seq
+
+        return f"MEETING-{year}-{max_seq + 1:03d}"
+
     def create_meeting(
         self,
-        meeting_id: str,
+        meeting_id: str | None,
         topic: str,
         participants: list[str],
         context_files: list[str],
         created_by: str = "vinh",
     ) -> Meeting:
+        # meeting_id=None -> Core allocate (v0.1 decision: ID là
+        # authority của Core, Bridge không tự sinh sequence).
+        # meeting_id tường minh -> giữ nguyên behavior cũ (backward compat).
+        if meeting_id is None:
+            meeting_id = self._allocate_meeting_id()
+
         # participants are INVITATIONS, not automatically accepted.
         for identity_id in [created_by, *participants]:
             resolution = resolve_identity(
