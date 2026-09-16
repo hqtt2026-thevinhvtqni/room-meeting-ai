@@ -12,6 +12,11 @@ from core.context_loader import package_context
 from core.meeting_log import MeetingLog
 from core.governance import GOV, MissionContext
 from core.identity_resolution import resolve_identity
+from core.message_identity import (
+    MessageIdentityError,
+    SOURCE_AI_CHAT_PASTE,
+    build_header,
+)
 from core.principal_registry import PrincipalRegistry
 from core.secretary import Secretary
 
@@ -202,6 +207,13 @@ class Meeting:
         )
 
     def add_message(self, speaker: str, content: str) -> Path:
+        """
+        Signature GIỮ NGUYÊN (speaker, content) — Message v1.0 Contract:
+        không phá add_message() legacy API. `speaker` chính là identity_id
+        (đã resolve thành công lúc JOIN_ACCEPTED); ở đây resolve LẠI qua
+        Identity/Principal/Agent Registry để dựng Header v1.0 — không có
+        kênh nào cho caller tự khai name/role.
+        """
         data = self.data
 
         if data.get("status") != "active":
@@ -216,10 +228,61 @@ class Meeting:
                 f"{data.get('participants', [])}"
             )
 
-        return self.log.log_message(speaker, content)
+        # MESSAGE v1.0: speaker đã JOIN_ACCEPTED (resolve thành công lúc
+        # JOIN), nhưng KHÔNG cache lại kết quả đó — resolve lại tại đây,
+        # trực tiếp từ Registry, đúng tinh thần "role không do caller tự
+        # khai báo". Trường hợp hiếm registry đổi giữa JOIN và message
+        # (vd. principal/agent file bị xoá) KHÔNG được phép chặn quyền
+        # nhắn tin đã được lifecycle cấp — hạ cấp về header=None/source=None
+        # (không giả danh) thay vì reject, để không phá legacy contract
+        # "participant đã JOIN_ACCEPTED thì add_message() luôn thành công".
+        header = None
+        source = None
+        try:
+            header, source_type = build_header(
+                speaker,
+                self.principal_registry,
+                self.agent_registry,
+            )
+            source = {"type": source_type}
+        except MessageIdentityError:
+            header = None
+            source = None
 
-    def add_paste(self, raw_text: str) -> dict:
-        """SECRETARY V1: ghi nguyên văn block text vào transcript."""
+        return self.log.log_message(
+            speaker,
+            content,
+            header=header,
+            source=source,
+        )
+
+    def add_paste(
+        self,
+        raw_text: str,
+        identity_id: str | None = None,
+    ) -> dict:
+        """SECRETARY V1: ghi nguyên văn block text vào transcript.
+
+        MESSAGE v1.0 (bổ sung, KHÔNG đổi hành vi cũ):
+        - `identity_id` là OPTIONAL (Architecture Gate DECISION đã khóa).
+          Không được chuyển thành required — sẽ phá backward compat của
+          Gate 2 / các caller cũ đang gọi add_paste(raw_text) không kèm
+          identity.
+        - Có `identity_id` -> resolve qua Identity/Principal/Agent
+          Registry -> Header v1.0 đầy đủ. Nếu identity_id KHÔNG resolve
+          được, REJECT (raise MeetingError) — không fallback, không giả
+          danh.
+        - Không có `identity_id` -> legacy compatibility path: Message
+          vẫn được tạo (source=ai_chat_paste, vì đây là sự kiện paste,
+          không phải tuyên bố về danh tính), nhưng `header=None` và
+          `speaker=None` — phản ánh ĐÚNG trạng thái chưa định danh,
+          TUYỆT ĐỐI không tự gán một identity mặc định (vd. vinh/claude)
+          để lấp vào Header.
+        - Return value GIỮ NGUYÊN 100%: vẫn là `self.secretary.append()`
+          (vd. {"status": "READY"}) — Message creation là side-effect
+          ghi log, không được làm caller cũ (test_secretary*,
+          test_integration_add_paste) nhận về shape khác đi.
+        """
         data = self.data
 
         if data.get("status") != "active":
@@ -228,7 +291,28 @@ class Meeting:
                 f"'{data.get('status')}', không thể PASTE."
             )
 
+        header = None
+        if identity_id is not None:
+            try:
+                header, _source_type = build_header(
+                    identity_id,
+                    self.principal_registry,
+                    self.agent_registry,
+                )
+            except MessageIdentityError as e:
+                raise MeetingError(str(e)) from None
+
+        # RAW, byte-identical — KHÔNG đổi so với hành vi trước Message v1.0.
         result = self.secretary.append(raw_text)
+
+        # MESSAGE v1.0: "một lần paste = một logical Message" — đúng một
+        # entry Message được tạo ở đây, dù có/không có identity_id.
+        self.log.log_paste_message(
+            raw_text,
+            identity_id=identity_id,
+            header=header,
+            source={"type": SOURCE_AI_CHAT_PASTE},
+        )
 
         self.log.log_event(
             "paste_received",
@@ -248,12 +332,20 @@ class Meeting:
 
         return [
             {
+                # --- Legacy fields (KHÔNG đổi) ---
                 "index": index,
                 "type": message.get("type", "message"),
                 "speaker": message["speaker"],
                 "timestamp": message["timestamp"],
                 "content": message["content"],
                 "file": message.get("file"),
+                # --- MESSAGE v1.0 fields (bổ sung, tolerant với message
+                # cũ chưa có các field này -> None qua .get(), KHÔNG
+                # rewrite lịch sử) ---
+                "id": message.get("id"),
+                "header": message.get("header"),
+                "source": message.get("source"),
+                "created_at": message.get("created_at", message.get("timestamp")),
             }
             for index, message in enumerate(messages, start=1)
         ]
@@ -335,9 +427,25 @@ class Meeting:
 
         messages = self.log.read_all_messages()
 
+        # MESSAGE v1.0 GUARD: Secretary (AI Chat Paste RAW) và final.md
+        # (dựng từ add_message()) PHẢI tách biệt hoàn toàn — đã là hành
+        # vi khoá cứng từ trước Message v1.0
+        # (tests/test_secretary_acceptance_abc.py::TestCaseC). Từ khi
+        # add_paste() cũng ghi một Message vào cùng log.jsonl (Contract
+        # target architecture — Message Store/Log), phải lọc bỏ đúng các
+        # Message nguồn ai_chat_paste trước khi render final.md, để RAW
+        # paste KHÔNG rò vào final.md. Không đổi logic close()/lifecycle
+        # nào khác.
+        messages_for_final = [
+            message
+            for message in messages
+            if (message.get("source") or {}).get("type")
+            != SOURCE_AI_CHAT_PASTE
+        ]
+
         final_content = self._render_final_md(
             data,
-            messages,
+            messages_for_final,
             decisions,
             action_items,
             summary,

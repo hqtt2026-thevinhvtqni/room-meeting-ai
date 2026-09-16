@@ -169,9 +169,13 @@ class MeetingService:
         self,
         meeting_id: str,
         raw_text: str,
+        identity_id: str | None = None,
     ) -> dict[str, Any]:
+        # identity_id: OPTIONAL (Message v1.0 Architecture Gate DECISION).
+        # Giữ backward-compat cho mọi caller cũ gọi add_paste(meeting_id,
+        # raw_text) không kèm identity.
         meeting = self._manager.get_meeting(meeting_id)
-        return meeting.add_paste(raw_text)
+        return meeting.add_paste(raw_text, identity_id=identity_id)
 
     def request_close(
         self,

@@ -78,6 +78,14 @@ def create_server(service: MeetingService) -> Server:
                         "text": {
                             "type": "string",
                         },
+                        # MESSAGE v1.0 — OPTIONAL. Không có trong
+                        # "required" -> mọi caller cũ (Gate 2, test F1-F3)
+                        # không kèm identity_id vẫn tiếp tục hoạt động
+                        # nguyên trạng (legacy compatibility path).
+                        "identity_id": {
+                            "type": "string",
+                            "minLength": 1,
+                        },
                     },
                     "required": [
                         "meeting_id",
