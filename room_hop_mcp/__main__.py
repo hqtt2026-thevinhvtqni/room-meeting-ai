@@ -7,6 +7,8 @@ Run with:  python -m room_hop_mcp   (from the room-meeting-ai project root)
 from __future__ import annotations
 
 import asyncio
+import os
+from pathlib import Path
 
 import mcp.server.stdio
 
@@ -16,7 +18,8 @@ from room_hop_mcp.adapter.server import create_server
 
 
 async def main() -> None:
-    manager = MeetingManager()
+    meetings_dir = os.environ.get("ROOM_HOP_MEETINGS_DIR")
+    manager = MeetingManager(meetings_dir=Path(meetings_dir)) if meetings_dir else MeetingManager()
     service = MeetingService(manager)
     server = create_server(service)
 
