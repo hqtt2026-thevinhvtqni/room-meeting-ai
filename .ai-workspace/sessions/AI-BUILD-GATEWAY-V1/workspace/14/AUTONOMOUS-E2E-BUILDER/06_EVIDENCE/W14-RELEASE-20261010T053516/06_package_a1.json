@@ -1,0 +1,13 @@
+{
+  "stage": "PACKAGE",
+  "attempt": 1,
+  "status": "PASS",
+  "seconds": 0.15,
+  "at": "2026-10-09T22:35:39.982624+00:00",
+  "manifest": "D:\\ROOM-HOP-CLEAN\\room-meeting-ai\\.ai-workspace\\sessions\\AI-BUILD-GATEWAY-V1\\workspace\\14\\AUTONOMOUS-E2E-BUILDER\\07_RELEASE\\W14-RELEASE-20261010T053516\\ARTIFACT_MANIFEST.json",
+  "zip": "D:\\ROOM-HOP-CLEAN\\room-meeting-ai\\.ai-workspace\\sessions\\AI-BUILD-GATEWAY-V1\\workspace\\14\\AUTONOMOUS-E2E-BUILDER\\07_RELEASE\\W14-RELEASE-20261010T053516\\W14_RELEASE_W14-RELEASE-20261010T053516.zip",
+  "zip_sha256": "0e2481713001a90f0dac209f5646ca0e62a17ef4e98e718dd03ba3dc90baf43b",
+  "manifest_sha256": "38b0c3af1e9826430596251ca9343309a093bcf08e66f0cb20962a4bc86d35bc",
+  "files": 20,
+  "release_dir": "D:\\ROOM-HOP-CLEAN\\room-meeting-ai\\.ai-workspace\\sessions\\AI-BUILD-GATEWAY-V1\\workspace\\14\\AUTONOMOUS-E2E-BUILDER\\07_RELEASE\\W14-RELEASE-20261010T053516"
+}

@@ -1,0 +1,11 @@
+{
+  "stage": "RELEASE_VERIFY",
+  "attempt": 1,
+  "status": "PASS",
+  "seconds": 0.17,
+  "at": "2026-10-09T22:35:40.154150+00:00",
+  "files_verified": 20,
+  "zip_sha256": "0e2481713001a90f0dac209f5646ca0e62a17ef4e98e718dd03ba3dc90baf43b",
+  "runtime_instance": "w13-e518b8c74c2245a7b9cffb6c9913d91c",
+  "registry_row_14": "| 14 | AUTONOMOUS-E2E-BUILDER | 14 - AUTONOMOUS-E2E-BUILDER | BLOCKED | NO | Autonomous E2E Builder; canonical execution authority/runtime unresolved |"
+}

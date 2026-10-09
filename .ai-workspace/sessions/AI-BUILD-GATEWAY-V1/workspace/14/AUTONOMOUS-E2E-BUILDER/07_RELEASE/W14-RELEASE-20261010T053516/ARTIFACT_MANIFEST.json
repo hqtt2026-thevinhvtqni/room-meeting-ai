@@ -1,0 +1,132 @@
+{
+  "work_id": "14",
+  "run_id": "W14-RELEASE-20261010T053516",
+  "created_at": "2026-10-09T22:35:39.945121+00:00",
+  "files": [
+    {
+      "path": "autonomous_builder.py",
+      "sha256": "be14f47f80ac822eec4fae49343afecf91fe226dcabd6bd88f9ddd614aa8d9a3",
+      "bytes": 6195
+    },
+    {
+      "path": "browser_provider_phase2.py",
+      "sha256": "e21b56f29da420f2bc47e5e857ad16d4b3b7c372043556d48efc473525172e4f",
+      "bytes": 551
+    },
+    {
+      "path": "browser_ui/app.js",
+      "sha256": "895d22daac24fc58b413a3c810997af42947196df0e3e801b7056b55199335c7",
+      "bytes": 2961
+    },
+    {
+      "path": "browser_ui/fixture-next.html",
+      "sha256": "04b7442452f309de42e57c85e0462a15667c43283995dab6a28b0be02046c2aa",
+      "bytes": 328
+    },
+    {
+      "path": "browser_ui/fixture.html",
+      "sha256": "5798d8009cee2ef3f8f23257f79428844aa55b1cb95e292809602fd339a3ee50",
+      "bytes": 877
+    },
+    {
+      "path": "browser_ui/index.html",
+      "sha256": "1fef11ef05304891c3d0ec7b547bb91bd3d2d08cb3f045503b5142b8373e4ecd",
+      "bytes": 2433
+    },
+    {
+      "path": "browser_ui/styles.css",
+      "sha256": "1ee2bcae95b46dbfe05297f45beef3f074618113c0082f83ebbc1f3248e5b66c",
+      "bytes": 5590
+    },
+    {
+      "path": "browser_ui_app.py",
+      "sha256": "780e61f0e208792f74a1bbdcf7c8ba67303e014d9b2e47fb5b6d476d5b5822f0",
+      "bytes": 8136
+    },
+    {
+      "path": "command_workflow_interpreter.py",
+      "sha256": "7ee1dc4c21578ccff7c8c014eb01fe621061a618b06445cf7000b9753d19fbbf",
+      "bytes": 2011
+    },
+    {
+      "path": "execution_host_bridge.py",
+      "sha256": "12b31d356c5a15f0948dc76abb7a8bd3f2837088f9839d1676ee02d42932dba2",
+      "bytes": 6638
+    },
+    {
+      "path": "git_provider_phase2.py",
+      "sha256": "8d115a08055175b122bef5eab363a2edfc7fccaa6c0343073880d58b9fa222d9",
+      "bytes": 532
+    },
+    {
+      "path": "host_command_runner.py",
+      "sha256": "ab8a9bbcb3815b2af5c7dc9f140f8a12c90fab00a5376efbf22d59d7e8fbece5",
+      "bytes": 9110
+    },
+    {
+      "path": "run_autonomous_e2e.py",
+      "sha256": "cdee3c48307309d557e4260f757ab6000961f06accfbf36687f2f2714afdaca6",
+      "bytes": 1205
+    },
+    {
+      "path": "run_browser_phase2_e2e.py",
+      "sha256": "d88ddd44ba6b586104cc23a8488df0ccb3989d33a2613433688aad3ce5a7470e",
+      "bytes": 2197
+    },
+    {
+      "path": "run_browser_ui_full_e2e.py",
+      "sha256": "65ffabdcd1f8c0211502039eedfeb5853229c969b8eaa9a8363496f415c33049",
+      "bytes": 8553
+    },
+    {
+      "path": "run_browser_ui_responsive_e2e.py",
+      "sha256": "6fc44402ff6012a65d971022d7e0797dcec59ccb2b21e46845b871c5369922b1",
+      "bytes": 1183
+    },
+    {
+      "path": "run_git_phase2_e2e.py",
+      "sha256": "999c387064e95f5a0fce71a26098f0ffe01bee051ddc1bc098eb92b3bd9001b6",
+      "bytes": 1827
+    },
+    {
+      "path": "run_phase3_full_e2e.py",
+      "sha256": "0eb9e65519b31995d6d704b8e7eec431af9e2958803c912400ed61203c34e04c",
+      "bytes": 5603
+    },
+    {
+      "path": "w14_pipeline.py",
+      "sha256": "52b705151cedbe490e3983daf7bb0b6c4313ce1519f7ea42040637a6630563fd",
+      "bytes": 41723
+    },
+    {
+      "path": "w14_pipeline.py.bak-20261010-050301",
+      "sha256": "52b705151cedbe490e3983daf7bb0b6c4313ce1519f7ea42040637a6630563fd",
+      "bytes": 41723
+    }
+  ],
+  "dependencies": {
+    "w13_build_hash": "a3ab13f49fd10501588a6da26028b1c147ba7097836884ae39264af49e124012",
+    "w12_authority_sha256": "7ab5903f1c13fbedf13ecd45779eaba1997c34a36e801b00aedecf757bb3a614",
+    "w12_contract_sha256": "0f5b2bec1d58c36aaf38ca01c1f070f6d495d9f4c8bebdf49a3f23bd413025d8",
+    "w09_1": {
+      "adapter.py": "fdfdf54875a5f48d04c665fc5ad1a67033023b095794fcb52eb610f4aed514ba",
+      "workflow_engine.py": "e15c9a0a9ea1076afd5cc7794174e43c9e71ba94843023d8615bb9c342baafc7"
+    }
+  },
+  "runtime": {
+    "w13_instance_id": "w13-e518b8c74c2245a7b9cffb6c9913d91c",
+    "w13_pid": 20456,
+    "platform": "Windows-10-10.0.19045-SP0"
+  },
+  "evidence": {
+    "e2e_result_sha256": "c793ea521920ca7bf314cc8f06d5cf7c036d97372b893a60f74399abd034308e",
+    "verify_sha256": "1b0d6d5fde2479cd935b6e42b7d456e5708e0a85b57437b587e6ebe714421259",
+    "final_result_sha256": "c714e2411cfffeed5704832e2e5a45494ef0ed06b4f03edb5db02e64627cb8e6"
+  },
+  "tests": {
+    "py_compile": "PASS",
+    "e2e": "PASS",
+    "verify": "PASS",
+    "e2e_idempotency_key": "W14-RELEASE-20261010T053516-a1"
+  }
+}

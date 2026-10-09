@@ -1,0 +1,18 @@
+{
+  "stage": "START",
+  "attempt": 1,
+  "status": "PASS",
+  "seconds": 1.83,
+  "at": "2026-10-09T22:35:25.167898+00:00",
+  "host": {
+    "instance_id": "w13-e518b8c74c2245a7b9cffb6c9913d91c",
+    "build_hash": "a3ab13f49fd10501588a6da26028b1c147ba7097836884ae39264af49e124012",
+    "pid": 20456,
+    "adopted": true,
+    "platform": "Windows-10-10.0.19045-SP0"
+  },
+  "ui": {
+    "pid": 22148
+  },
+  "browser": "Playwright Chromium verified in BUILD; launched per-run by the W09.1 adapter inside the W13 host"
+}

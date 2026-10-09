@@ -1,0 +1,140 @@
+{
+  "stage": "VERIFY",
+  "attempt": 1,
+  "status": "PASS",
+  "seconds": 1.54,
+  "at": "2026-10-09T22:35:39.833306+00:00",
+  "checks": {
+    "runtime_health": {
+      "ok": true,
+      "detail": "http=200"
+    },
+    "identity_stable_since_start": {
+      "ok": true,
+      "detail": "w13-e518b8c74c2245a7b9cffb6c9913d91c"
+    },
+    "identity_matches_source_on_disk": {
+      "ok": true,
+      "detail": "a3ab13f49fd10501588a6da26028b1c147ba7097836884ae39264af49e124012"
+    },
+    "listener_pid_equals_health_pid": {
+      "ok": true,
+      "detail": "listener=('127.0.0.1', 20456) health_pid=20456"
+    },
+    "listener_loopback_only": {
+      "ok": true,
+      "detail": "('127.0.0.1', 20456)"
+    },
+    "host_process_is_python": {
+      "ok": true,
+      "detail": "python.exe"
+    },
+    "host_process_alive": {
+      "ok": true,
+      "detail": ""
+    },
+    "final_result_for_this_run": {
+      "ok": true,
+      "detail": "key=W14-RELEASE-20261010T053516-a1"
+    },
+    "w14_final_evidence_verification": {
+      "ok": true,
+      "detail": "11/11"
+    },
+    "identity_correlated_in_evidence": {
+      "ok": true,
+      "detail": "w13-e518b8c74c2245a7b9cffb6c9913d91c"
+    },
+    "browser_steps_pass": {
+      "ok": true,
+      "detail": "['inspect', 'type', 'extract', 'screenshot']"
+    },
+    "browser_screenshot_is_png": {
+      "ok": true,
+      "detail": "['D:\\\\ROOM-HOP-CLEAN\\\\room-meeting-ai\\\\.ai-workspace\\\\sessions\\\\AI-BUILD-GATEWAY-V1\\\\workspace\\\\14\\\\AUTONOMOUS-E2E-BUILDER\\\\04_CODE\\\\.browser_ui_runtime\\\\host_workspace\\\\evidence\\\\w09_1\\\\ai-command.png']"
+    },
+    "browser_workflow_evidence_file": {
+      "ok": true,
+      "detail": "D:\\ROOM-HOP-CLEAN\\room-meeting-ai\\.ai-workspace\\sessions\\AI-BUILD-GATEWAY-V1\\workspace\\14\\AUTONOMOUS-E2E-BUILDER\\04_CODE\\.browser_ui_runtime\\host_workspace\\evidence\\w09_1\\workflow-06664fbf-6d78-4ad8-b5f6-485bc8bb2231.json"
+    },
+    "artifact_on_disk_sha": {
+      "ok": true,
+      "detail": "D:\\ROOM-HOP-CLEAN\\room-meeting-ai\\.ai-workspace\\sessions\\AI-BUILD-GATEWAY-V1\\workspace\\14\\AUTONOMOUS-E2E-BUILDER\\04_CODE\\.browser_ui_runtime\\host_workspace\\repo\\artifact.txt"
+    },
+    "git_head_is_recorded_commit": {
+      "ok": true,
+      "detail": "0a663d7a694fbd63ad0ce9258a1f62d12eebcadb"
+    },
+    "git_branch_main": {
+      "ok": true,
+      "detail": ""
+    },
+    "git_tree_clean": {
+      "ok": true,
+      "detail": ""
+    },
+    "git_object_is_commit": {
+      "ok": true,
+      "detail": ""
+    },
+    "git_committed_blob_equals_artifact": {
+      "ok": true,
+      "detail": ""
+    },
+    "git_fsck": {
+      "ok": true,
+      "detail": ""
+    },
+    "legacy_endpoint_absent/browser_execute": {
+      "ok": true,
+      "detail": "http=404"
+    },
+    "legacy_endpoint_absent/git_commit": {
+      "ok": true,
+      "detail": "http=404"
+    },
+    "legacy_endpoint_absent/git_init": {
+      "ok": true,
+      "detail": "http=404"
+    },
+    "rejects_unauthorized_context": {
+      "ok": true,
+      "detail": "http=200 status=BLOCKED reason=execution_not_authorized"
+    },
+    "rejects_non_allowlisted_executable": {
+      "ok": true,
+      "detail": "http=200 status=BLOCKED reason=forbidden_executable"
+    },
+    "rejects_command_injection_tokens": {
+      "ok": true,
+      "detail": "http=200 status=BLOCKED reason=command_injection_rejected"
+    },
+    "rejects_absolute_path_argument": {
+      "ok": true,
+      "detail": "http=200 status=BLOCKED reason=absolute_argument_rejected"
+    },
+    "rejects_workspace_escape": {
+      "ok": true,
+      "detail": "http=200 status=BLOCKED reason=workspace_escape"
+    },
+    "rejects_evidence_root_escape": {
+      "ok": true,
+      "detail": "http=200 status=BLOCKED reason=workspace_escape"
+    },
+    "runner_rejects_repository_escape": {
+      "ok": true,
+      "detail": "BLOCKED repository_escape"
+    },
+    "runner_did_not_touch_outside_repo": {
+      "ok": true,
+      "detail": ""
+    },
+    "no_secrets_in_evidence": {
+      "ok": true,
+      "detail": "[]"
+    }
+  },
+  "passed": 32,
+  "total": 32,
+  "failed": []
+}

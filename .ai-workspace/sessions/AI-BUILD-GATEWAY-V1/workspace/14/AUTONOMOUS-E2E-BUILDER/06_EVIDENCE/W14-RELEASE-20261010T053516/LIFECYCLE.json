@@ -1,0 +1,10 @@
+{
+  "owned_processes_closed": {
+    "w14_ui": {
+      "pid": 22148,
+      "port_released": true,
+      "process_gone": true
+    }
+  },
+  "adopted_host_left_running": true
+}

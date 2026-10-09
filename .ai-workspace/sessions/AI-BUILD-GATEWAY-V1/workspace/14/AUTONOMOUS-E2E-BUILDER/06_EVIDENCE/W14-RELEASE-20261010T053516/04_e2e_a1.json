@@ -1,0 +1,15 @@
+{
+  "stage": "E2E",
+  "attempt": 1,
+  "status": "PASS",
+  "seconds": 13.12,
+  "at": "2026-10-09T22:35:38.293875+00:00",
+  "exit_code": 0,
+  "idempotency_key": "W14-RELEASE-20261010T053516-a1",
+  "replay": "REPLAYED_IDEMPOTENTLY",
+  "responsive": [
+    "desktop",
+    "mobile"
+  ],
+  "result_sha256": "c793ea521920ca7bf314cc8f06d5cf7c036d97372b893a60f74399abd034308e"
+}

@@ -1,0 +1,73 @@
+{
+  "status": "PASS",
+  "url": "http://127.0.0.1:8766/",
+  "w13_health": {
+    "status": "PASS",
+    "service": "execution-host",
+    "provider": "W12_REAL_EXECUTION_HOST",
+    "runtime_provider": "REAL",
+    "runtime_enabled": true,
+    "runtime_allow_processes": true,
+    "runtime_identity": {
+      "instance_id": "w13-e518b8c74c2245a7b9cffb6c9913d91c",
+      "build_hash": "a3ab13f49fd10501588a6da26028b1c147ba7097836884ae39264af49e124012",
+      "started_at": "2026-10-09T20:30:29.561953+00:00",
+      "pid": 20456,
+      "platform": "Windows-10-10.0.19045-SP0",
+      "bind_address": "127.0.0.1:8031"
+    }
+  },
+  "idempotency_key": "W14-RELEASE-20261010T053516-a1",
+  "w13_identity": {
+    "instance_id": "w13-e518b8c74c2245a7b9cffb6c9913d91c",
+    "build_hash": "a3ab13f49fd10501588a6da26028b1c147ba7097836884ae39264af49e124012",
+    "started_at": "2026-10-09T20:30:29.561953+00:00",
+    "pid": 20456,
+    "platform": "Windows-10-10.0.19045-SP0",
+    "bind_address": "127.0.0.1:8031"
+  },
+  "final_evidence_verification": {
+    "status": "PASS",
+    "checks": {
+      "w13_calls_pass": true,
+      "w13_identity_present": true,
+      "w13_single_instance": true,
+      "w13_identity_matches_live_health": true,
+      "w13_stdout_evidence_exists": true,
+      "browser_workflow_evidence_exists": true,
+      "artifact_on_disk_matches": true,
+      "commit_head_validated": true,
+      "diff_names_commit": true,
+      "committed_blob_matches_artifact": true,
+      "lifecycle_repair_verified": true
+    },
+    "w13_instance_id": "w13-e518b8c74c2245a7b9cffb6c9913d91c"
+  },
+  "human_mode": [
+    "click",
+    "type",
+    "navigate",
+    "back",
+    "forward",
+    "reload"
+  ],
+  "ai_mode": [
+    "execute",
+    "real_browser_agent",
+    "artifact"
+  ],
+  "panels": [
+    "diff",
+    "log",
+    "preview"
+  ],
+  "replay": "REPLAYED_IDEMPOTENTLY",
+  "responsive": [
+    "desktop",
+    "mobile"
+  ],
+  "screenshots": [
+    "C:\\Users\\Admin\\AppData\\Local\\Temp\\work14-browser-ui-e2e\\desktop-full.png",
+    "C:\\Users\\Admin\\AppData\\Local\\Temp\\work14-browser-ui-e2e\\mobile.png"
+  ]
+}

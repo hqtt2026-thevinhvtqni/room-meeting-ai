@@ -1,0 +1,27 @@
+{
+  "stage": "DISCOVER",
+  "attempt": 0,
+  "status": "PASS",
+  "seconds": 0.05,
+  "at": "2026-10-09T22:35:17.110390+00:00",
+  "w12_required_fields": [
+    "work_id",
+    "work_name",
+    "repository",
+    "repository_root",
+    "branch",
+    "execution_workspace",
+    "expected_head",
+    "runtime",
+    "browser",
+    "test_entrypoint",
+    "ci_target",
+    "evidence_root"
+  ],
+  "w13_source_build_hash": "a3ab13f49fd10501588a6da26028b1c147ba7097836884ae39264af49e124012",
+  "w12_authority_sha256": "7ab5903f1c13fbedf13ecd45779eaba1997c34a36e801b00aedecf757bb3a614",
+  "w12_contract_sha256": "0f5b2bec1d58c36aaf38ca01c1f070f6d495d9f4c8bebdf49a3f23bd413025d8",
+  "execution_path": "W14 UI -> bridge -> W13 :8031 /execute -> W12 -> real execution",
+  "legacy_scan": "clean",
+  "files_checked": 12
+}
