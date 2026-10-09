@@ -1,0 +1,9 @@
+{
+  "work_id": "14",
+  "state": "COMPLETED+LOCKED",
+  "locked_at": "2026-10-09T22:35:50.007949+00:00",
+  "release_commit": "d6ce49e268abce958fe2fb51d2c98dbf51b5cf44",
+  "release_ref": "refs/heads/release/work14-w14-release-20261010t053516",
+  "manifest_sha256": "38b0c3af1e9826430596251ca9343309a093bcf08e66f0cb20962a4bc86d35bc",
+  "zip_sha256": "0e2481713001a90f0dac209f5646ca0e62a17ef4e98e718dd03ba3dc90baf43b"
+}
