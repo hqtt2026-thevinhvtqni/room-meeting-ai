@@ -1,0 +1,39 @@
+from __future__ import annotations
+from dataclasses import dataclass, asdict, field
+from typing import Any, Protocol
+from ..models import WorkContext
+
+@dataclass
+class ExecutionResult:
+    execution_id: str
+    work_id: str
+    workspace: str
+    command: list[str]
+    start_time: str
+    end_time: str
+    exit_code: int | None
+    stdout_ref: str | None
+    stderr_ref: str | None
+    artifacts: list[str] = field(default_factory=list)
+    status: str = 'FAILED'
+    provider_type: str = 'LOCAL'
+    def as_dict(self): return asdict(self)
+
+class ExecutionHost(Protocol):
+    provider_type: str
+    def discover(self, context: WorkContext) -> dict[str, Any]: ...
+    def execute(self, command: list[str], context: WorkContext) -> ExecutionResult: ...
+    def runtime_info(self, context: WorkContext) -> dict[str, Any]: ...
+    def browser_info(self, context: WorkContext) -> dict[str, Any]: ...
+    def workspace_info(self, context: WorkContext) -> dict[str, Any]: ...
+    def collect_artifact(self, path: str, execution_id: str) -> str: ...
+    def cleanup(self) -> None: ...
+
+class GitHubGateway(Protocol):
+    def capabilities(self, context: WorkContext) -> dict[str, Any]: ...
+    def verify_head(self, context: WorkContext, expected_head: str) -> dict[str, Any]: ...
+
+class CIAdapter(Protocol):
+    def trigger(self, context: WorkContext, commit_sha: str) -> dict[str, Any]: ...
+    def status(self, context: WorkContext, run_id: str) -> dict[str, Any]: ...
+    def result(self, context: WorkContext, run_id: str) -> dict[str, Any]: ...
