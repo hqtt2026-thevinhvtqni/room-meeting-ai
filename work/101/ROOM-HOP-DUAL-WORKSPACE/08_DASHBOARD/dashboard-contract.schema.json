@@ -1,32 +1,101 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "ROOM-HOP Work Dashboard Read Model",
+  "title": "ROOM-HOP Work 101 Dual Workspace Dashboard Read Model",
   "type": "object",
-  "required": ["work_id", "lifecycle", "source_status", "github_target", "sync_mode", "updated_at"],
+  "required": [
+    "work_id",
+    "lifecycle",
+    "source_status",
+    "github_target",
+    "sync_mode",
+    "parity",
+    "conflict_count",
+    "integration_state",
+    "updated_at",
+    "stale",
+    "sandbox",
+    "github",
+    "pending_items",
+    "activity"
+  ],
   "properties": {
-    "work_id": {"type": "string"},
-    "lifecycle": {"enum": ["ACTIVE", "TEST", "BLOCKED", "IN_PROGRESS", "COMPLETED", "UNKNOWN"]},
-    "source_status": {"enum": ["CONNECTED", "DISCONNECTED", "STALE", "UNKNOWN"]},
+    "work_id": { "const": "101" },
+    "lifecycle": { "enum": ["ACTIVE", "TEST", "BLOCKED", "IN_PROGRESS", "COMPLETED", "UNKNOWN"] },
+    "source_status": { "enum": ["CONNECTED", "DISCONNECTED", "STALE", "UNKNOWN"] },
     "github_target": {
       "type": "object",
       "required": ["state"],
       "properties": {
-        "state": {"enum": ["BOUND", "UNBOUND", "BLOCKED", "UNKNOWN"]},
-        "repository_full_name": {"type": ["string", "null"]},
-        "branch": {"type": ["string", "null"]},
-        "work_root": {"type": ["string", "null"]},
-        "base_revision": {"type": ["string", "null"]}
+        "state": { "enum": ["BOUND", "UNBOUND", "BLOCKED", "UNKNOWN"] },
+        "repository_full_name": { "type": ["string", "null"] },
+        "branch": { "type": ["string", "null"] },
+        "work_root": { "type": ["string", "null"] },
+        "base_revision": { "type": ["string", "null"] }
       },
       "additionalProperties": false
     },
-    "sync_mode": {"enum": ["DRY_RUN", "READ_ONLY", "WRITE_APPROVED", "DISABLED"]},
-    "parity": {"enum": ["MATCH", "DRIFT", "UNBOUND", "BLOCKED", "NOT_VERIFIED", "UNKNOWN"]},
-    "last_operation": {"type": ["object", "null"]},
-    "conflict_count": {"type": ["integer", "null"], "minimum": 0},
-    "deletion_review_count": {"type": ["integer", "null"], "minimum": 0},
-    "evidence_refs": {"type": "array", "items": {"type": "string"}},
-    "updated_at": {"type": ["string", "null"], "format": "date-time"},
-    "stale": {"type": "boolean"}
+    "sync_mode": { "enum": ["DRY_RUN", "READ_ONLY", "WRITE_APPROVED", "DISABLED"] },
+    "parity": { "enum": ["MATCH", "DRIFT", "UNBOUND", "BLOCKED", "NOT_VERIFIED", "UNKNOWN"] },
+    "parity_detail": { "type": ["string", "null"] },
+    "conflict_count": { "type": ["integer", "null"], "minimum": 0 },
+    "deletion_review_count": { "type": ["integer", "null"], "minimum": 0 },
+    "integration_state": { "enum": ["LOCKED", "PENDING_APPROVAL", "APPROVED", "BLOCKED", "UNKNOWN"] },
+    "updated_at": { "type": ["string", "null"], "format": "date-time" },
+    "stale": { "type": "boolean" },
+    "evidence_refs": { "type": "array", "items": { "type": "string" } },
+    "sandbox": { "$ref": "#/$defs/source" },
+    "github": {
+      "allOf": [
+        { "$ref": "#/$defs/source" },
+        {
+          "type": "object",
+          "properties": { "branch": { "type": ["string", "null"] } }
+        }
+      ]
+    },
+    "pending_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "kind", "status"],
+        "properties": {
+          "path": { "type": "string" },
+          "kind": { "enum": ["CONTENT_DRIFT", "CONFLICT", "DELETION", "UNTRACKED", "UNKNOWN"] },
+          "status": { "enum": ["CONFLICT_PENDING", "DELETION_PENDING", "REVIEW_PENDING", "BLOCKED", "UNKNOWN"] }
+        },
+        "additionalProperties": false
+      }
+    },
+    "activity": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["at", "event", "status"],
+        "properties": {
+          "at": { "type": ["string", "null"], "format": "date-time" },
+          "event": { "type": "string" },
+          "status": { "type": "string" },
+          "evidence_ref": { "type": ["string", "null"] }
+        },
+        "additionalProperties": false
+      }
+    },
+    "last_operation": { "type": ["object", "null"] }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": { "enum": ["CONNECTED", "DISCONNECTED", "STALE", "UNKNOWN"] },
+        "file_count": { "type": ["integer", "null"], "minimum": 0 },
+        "revision": { "type": ["string", "null"] },
+        "last_read_at": { "type": ["string", "null"], "format": "date-time" },
+        "detail": { "type": ["string", "null"] },
+        "evidence_refs": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    }
   },
   "additionalProperties": false
 }
