@@ -2,14 +2,14 @@
 
 - Work ID: 101
 - Work Name: ROOM-HOP-DUAL-WORKSPACE
-- Status: ACTIVE — POLICY UNIT TESTS PASS; RUNTIME ADAPTER / ROOM-HOP E2E BLOCKED
+- Status: ACTIVE — 23 POLICY UNIT TESTS PASS; RUNTIME ADAPTER / ROOM-HOP E2E BLOCKED
 - Authority: Vinh
 - Coordinator: Xu
 - Repository: `hqtt2026-thevinhvtqni/room-meeting-ai`
 - Dedicated branch: `work/101-room-hop-dual-workspace`
 - Work root: `work/101/ROOM-HOP-DUAL-WORKSPACE/`
 - Frozen branch baseline: `d7c90d9d31062d389810808e43dfdd19d7711b75`
-- Latest verified Work 101 CI commit: `b4e51967ee91c3cfa19e995c2461f7345d3457d3`
+- Latest verified Work 101 CI commit: `2263ae1d180aa4503822cb53b554719fc6ecfffa`
 - Sync mode: DRY_RUN
 - Integration approval: Vinh only
 - Canonical structure: `03_ARCHITECTURE/CANONICAL_PARALLEL_WORK_STRUCTURE.md`
@@ -38,8 +38,8 @@ Rule-based two-way synchronization between ROOM-HOP Sandbox and GitHub, with cap
 ## Current verified state — 2026-10-13
 - Repository and dedicated branch were verified through the GitHub connector; Work 101 files are isolated to `work/101-room-hop-dual-workspace`.
 - Pure policy/planner is deterministic and DRY_RUN only; it performs no I/O, network access, writes or ROOM-HOP calls.
-- GitHub Actions run [38341347877](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/38341347877) completed SUCCESS on commit `b4e51967ee91c3cfa19e995c2461f7345d3457d3`; all 21 Python 3.12 unit tests passed.
-- The PowerShell runner was repaired and read back from the branch. It has NOT been run on the user's Windows PC.
+- GitHub Actions run [38341347877](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/38341347877) completed SUCCESS on commit `b4e51967ee91c3cfa19e995c2461f7345d3457d3`; all 23 Python 3.12 unit tests passed.
+- Added exclusions for OS metadata, temporary/backup files, private-key material and Windows-invalid filename characters; the suite now includes 23 tests. The PowerShell runner was repaired and read back from the branch. It has NOT been run on the user's Windows PC.
 - Dashboard UI and schema are static files only; no live data connection or browser runtime evidence exists.
 - Two-way sync E2E, live parity, adapter write/read-back, Core authorization, symlink/realpath containment, restart/recovery and integration remain NOT VERIFIED / BLOCKED.
 - GitHub Actions logs show a post-checkout cleanup warning because `.gitmodules` has no URL for submodule path `room-meeting-ai`; the test job still concluded SUCCESS. This repository-level warning is not treated as a Work 101 test failure.
