@@ -20,3 +20,10 @@
 - Baseline-file deletion on either side now enters DELETION_PENDING and blocks all transfer paths.
 - Added a provider adapter contract; it deliberately has no delete method and no write implementation.
 - Added a guarded PowerShell unit-test runner for PC use and a branch-scoped GitHub Actions workflow. No CI execution result is visible, so tests remain NOT RUN.
+
+## 2026-10-13 — Remote read-back validation
+- Re-read critical branch files and validated Dashboard schema JSON plus static policy invariants.
+- 20 unit tests are authored. Python and PowerShell tests have NOT RUN.
+- GitHub combined status had no checks and no workflow run was observable through the available connector; no CI PASS is claimed.
+- Branch remains isolated from main; target config remains DRY_RUN with write/merge/release disabled.
+- See `REMOTE_READBACK_VALIDATION_20261013.md` for the exact verification boundary.
