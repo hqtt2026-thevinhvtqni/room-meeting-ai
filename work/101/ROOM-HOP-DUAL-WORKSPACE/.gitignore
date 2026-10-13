@@ -1,0 +1,38 @@
+# Local Windows metadata
+desktop.ini
+Thumbs.db
+.DS_Store
+
+# Python runtime
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+secrets.json
+
+# Local runtime state
+*.db
+*.sqlite
+*.sqlite3
+*.log
+*.tmp
+*.bak
+
+# Build outputs / dependencies
+node_modules/
+dist/
+build/
+.coverage
+.pytest_cache/
+.mypy_cache/
+
+# Never auto-sync generated evidence archives; curated evidence is governed by
+# the Work sync policy and must be explicitly allowlisted.
