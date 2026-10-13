@@ -24,7 +24,7 @@ Rule-based two-way synchronization between ROOM-HOP Sandbox and GitHub, with cap
 - Workspace :8010 remains the separate AI build workspace.
 - Reuse Work 24 (PC source/workspace bridge), Work 27 (Sandbox execution runtime / VS Code), Work 28 (MCP tooling), and Work 14 (autonomous E2E), subject to verifying live contracts and reconciling Work 14 lifecycle evidence.
 - Work 101 owns sync policy, target mapping, change ledger, conflict handling, approval binding, dashboard read model and the Sandbox-GitHub adapter contract only.
-- No parallel runtime or duplicate MCP tools without an inventory and approval.
+- No parallel runtime or duplicate MCP tools without an inventory and approval. Runtime adapter contract is documented; no provider adapter is implemented.
 
 ## Authority and safety
 - No last-write-wins. Same-path divergent edits become `CONFLICT_PENDING`.
@@ -39,9 +39,9 @@ Rule-based two-way synchronization between ROOM-HOP Sandbox and GitHub, with cap
 - Branch was created from `main`; comparison showed the branch and main identical at baseline `d7c90d9d31062d389810808e43dfdd19d7711b75` before Work 101 files were added.
 - Work 101 artifacts are being organized under `work/101/ROOM-HOP-DUAL-WORKSPACE/`; no Work files are placed at repository root.
 - Sandbox source files were read before selecting artifacts for the initial branch scaffold. Windows `desktop.ini` files are intentionally excluded.
-- Static policy and tests are ported for review; tests have NOT RUN in an approved runner.
-- Dashboard files are static only; no live data connection or browser runtime evidence.
-- Two-way sync E2E, live parity, and integration are NOT VERIFIED.
+- Pure policy classifier and deterministic DRY_RUN planner are present; the planner binds per-path base/source/destination SHA-256 hashes, allowlist, policy version, branch and base revision into the diff digest. Twenty unit tests are authored; tests have NOT RUN in an observed runner.
+- Dashboard files are static only; no live data connection or browser runtime evidence. A branch-scoped GitHub Actions test workflow was added, but no run/check result is visible yet.
+- Automatic deletion propagation is blocked as DELETION_PENDING; there is no delete adapter operation. Two-way sync E2E, live parity, and integration are NOT VERIFIED.
 - `main` is not the destination for Work 101 commits; no merge or release is authorized.
 
 ## Next gate
