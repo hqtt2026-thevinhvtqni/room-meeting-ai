@@ -11,12 +11,12 @@
 - Enforced path canonicalization, Windows reserved-name/trailing-dot checks, path allowlist, excluded secrets/database/log/cache/generated files, protected-branch denial, baseline revision binding, approval binding and idempotency fingerprint.
 - Same-path divergent edits become `CONFLICT_PENDING` with zero transfer paths.
 - Any deletion relative to baseline becomes `DELETION_PENDING`, including deletion on both sides; zero transfer paths are emitted. No delete adapter exists.
-- Added a regression test for bilateral deletion. Current suite contains 21 tests.
+- Added a regression test for bilateral deletion. Current suite contains 23 tests, including Windows-invalid filename characters, OS metadata, temporary/backup files and private-key material.
 
 ## 2026-10-13 — Runner repair and observed CI
 - Repaired malformed PowerShell runner origin validation and removed duplicated/corrupted script content. Script was read back from GitHub; it has NOT been executed on the user's Windows PC.
-- GitHub Actions run [38341347877](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/38341347877) completed SUCCESS on commit `b4e51967ee91c3cfa19e995c2461f7345d3457d3`.
-- Python 3.12.15 job log confirms `Ran 21 tests in 0.014s` and `OK`.
+- GitHub Actions run [38341525183](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/38341525183) completed SUCCESS on commit `2263ae1d180aa4503822cb53b554719fc6ecfffa`.
+- Python 3.12.15 job log confirms `Ran 23 tests in 0.004s` and `OK`.
 - Evidence recorded in `CI_POLICY_TESTS_20261013.md`.
 - Workflow emitted a non-fatal post-checkout warning because `.gitmodules` has no URL for submodule path `room-meeting-ai`, plus a Node.js 20 deprecation warning. Test job conclusion remained SUCCESS.
 
