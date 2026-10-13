@@ -31,6 +31,20 @@ class SyncPolicyTests(unittest.TestCase):
             with self.subTest(path=path), self.assertRaises(PolicyError):
                 canonical_relative_path(path)
 
+    def test_rejects_windows_invalid_filename_characters(self):
+        for path in ("04_CODE/a?.py", "04_CODE/a*.py", "04_CODE/a|b.txt", "04_CODE/a<b.txt"):
+            with self.subTest(path=path), self.assertRaises(PolicyError):
+                canonical_relative_path(path)
+
+    def test_rejects_os_metadata_temp_files_and_private_key_material(self):
+        for path in (
+            "desktop.ini", "Thumbs.db", ".DS_Store", "tmp/cache.tmp",
+            "backup/archive.bak", "secrets/private.pem", "certs/client.p12",
+            "docs/~$draft.docx",
+        ):
+            with self.subTest(path=path), self.assertRaises(PolicyError):
+                canonical_relative_path(path)
+
     def test_evidence_documents_are_allowed_but_evidence_logs_are_not(self):
         self.assertEqual(canonical_relative_path("06_EVIDENCE/report.md"), "06_EVIDENCE/report.md")
         with self.assertRaises(PolicyError):
