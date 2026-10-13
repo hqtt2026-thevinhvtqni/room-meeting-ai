@@ -184,6 +184,114 @@ def idempotency_fingerprint(operation_id: str, payload: object) -> str:
     return digest_payload({"operation_id": operation_id, "payload": payload})
 
 
+
+@dataclass(frozen=True)
+class SyncPlan:
+    """Read-only synchronization plan; it never performs transfer or writes."""
+    operation_id: str
+    work_id: str
+    destination_branch: str
+    base_revision: str
+    source_revision: str
+    destination_revision: str
+    state: ChangeState
+    source_to_destination: tuple[str, ...]
+    destination_to_source: tuple[str, ...]
+    conflict_paths: tuple[str, ...]
+    mode: str
+    diff_digest: str
+    reason: str = ""
+
+
+def build_sync_plan(
+    *,
+    operation_id: str,
+    work_id: str,
+    destination_branch: str,
+    base_revision: str,
+    base: Snapshot,
+    source: Snapshot,
+    destination: Snapshot,
+    permitted_path_roots: Iterable[str],
+) -> SyncPlan:
+    """Build a deterministic DRY_RUN plan. This function performs no I/O."""
+    if not isinstance(operation_id, str) or not operation_id.strip():
+        raise PolicyError("OPERATION_ID_REQUIRED")
+    if not isinstance(work_id, str) or not work_id.strip():
+        raise PolicyError("WORK_ID_REQUIRED")
+    if not isinstance(destination_branch, str) or not destination_branch.strip():
+        raise PolicyError("DESTINATION_BRANCH_REQUIRED")
+    if destination_branch.strip().casefold() in {"main", "master"}:
+        raise PolicyError("PROTECTED_BRANCH_NOT_ALLOWED")
+    if not isinstance(base_revision, str) or not base_revision.strip():
+        raise PolicyError("BASE_REVISION_REQUIRED")
+    if base.revision != base_revision:
+        raise PolicyError("PLAN_BASE_REVISION_MISMATCH")
+
+    roots = tuple(canonical_relative_path(r.rstrip("/")) for r in permitted_path_roots)
+    if not roots:
+        raise PolicyError("PATH_ALLOWLIST_REQUIRED")
+
+    for snap in (base, source, destination):
+        validate_snapshot(snap)
+        for path in snap.files:
+            if not any(path == root or path.startswith(root + "/") for root in roots):
+                raise PolicyError("PATH_OUTSIDE_ALLOWLIST")
+
+    decision = classify_sync(base, source, destination)
+    source_to_destination: tuple[str, ...] = ()
+    destination_to_source: tuple[str, ...] = ()
+    if decision.state not in {ChangeState.CONFLICT_PENDING, ChangeState.STALE_BASE}:
+        paths = set(base.files) | set(source.files) | set(destination.files)
+        to_destination = []
+        to_source = []
+        for path in sorted(paths):
+            base_digest = base.files.get(path)
+            source_digest = source.files.get(path)
+            destination_digest = destination.files.get(path)
+            source_changed = source_digest != base_digest
+            destination_changed = destination_digest != base_digest
+            if source_digest == destination_digest:
+                continue
+            if source_changed and not destination_changed:
+                to_destination.append(path)
+            elif destination_changed and not source_changed:
+                to_source.append(path)
+            # A divergent same-path edit is already CONFLICT_PENDING and blocks
+            # the entire plan. This branch is defensive and must never auto-pick.
+        source_to_destination = tuple(to_destination)
+        destination_to_source = tuple(to_source)
+
+    payload = {
+        "operation_id": operation_id,
+        "work_id": work_id,
+        "destination_branch": destination_branch,
+        "base_revision": base_revision,
+        "source_revision": source.revision,
+        "destination_revision": destination.revision,
+        "state": decision.state.value,
+        "source_to_destination": source_to_destination,
+        "destination_to_source": destination_to_source,
+        "conflict_paths": decision.conflict_paths,
+        "mode": "DRY_RUN",
+    }
+    return SyncPlan(
+        operation_id=operation_id,
+        work_id=work_id,
+        destination_branch=destination_branch,
+        base_revision=base_revision,
+        source_revision=source.revision,
+        destination_revision=destination.revision,
+        state=decision.state,
+        source_to_destination=source_to_destination,
+        destination_to_source=destination_to_source,
+        conflict_paths=decision.conflict_paths,
+        mode="DRY_RUN",
+        diff_digest=digest_payload(payload),
+        reason=decision.reason,
+    )
+
+
 def enforce_idempotency(existing_fingerprint: str | None, operation_id: str, payload: object) -> str:
     current = idempotency_fingerprint(operation_id, payload)
     if existing_fingerprint is not None and existing_fingerprint != current:
