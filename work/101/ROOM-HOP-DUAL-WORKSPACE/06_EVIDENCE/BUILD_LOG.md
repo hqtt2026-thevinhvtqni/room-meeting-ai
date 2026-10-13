@@ -18,7 +18,7 @@
 - GitHub Actions run [38341600485](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/38341600485) completed SUCCESS on commit `661fee7d3dc1d4aedddc247a7149ca5cd2292617`.
 - Python 3.12.15 job log confirms `Ran 23 tests in 0.005s` and `OK`.
 - Evidence recorded in `CI_POLICY_TESTS_20261013.md`.
-- Workflow emitted a non-fatal post-checkout warning because `.gitmodules` has no URL for submodule path `room-meeting-ai`, The workflow action versions were updated to Node 24-compatible releases, removing the Node.js 20 deprecation warning. Test job conclusion remained SUCCESS.
+- Workflow emitted a non-fatal post-checkout warning because `.gitmodules` has no URL for submodule path `room-meeting-ai`. The workflow action versions were updated to Node 24-compatible releases, removing the Node.js 20 deprecation warning. Test job conclusion remained SUCCESS.
 
 ## 2026-10-13 — Verification boundary
 - Static read-back and JSON schema inspection are complete; unit tests PASS in GitHub-hosted CI.
