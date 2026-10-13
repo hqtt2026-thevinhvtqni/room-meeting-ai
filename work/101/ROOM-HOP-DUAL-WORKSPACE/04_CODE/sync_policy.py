@@ -151,10 +151,8 @@ def classify_sync(base: Snapshot, source: Snapshot, destination: Snapshot) -> Sy
     # A deletion is never propagated automatically. Require explicit review whenever
     # a baseline file disappears on one side while the other side still has content.
     deleted_paths = {
-        p for p in set(base.files) | set(source.files) | set(destination.files)
-        if p in base.files
-        and source.files.get(p) != destination.files.get(p)
-        and (p not in source.files or p not in destination.files)
+        p for p in base.files
+        if p not in source.files or p not in destination.files
     }
     if deleted_paths:
         return SyncDecision(
