@@ -13,7 +13,7 @@ Review type: static source review plus observed GitHub Actions unit-test executi
 7. The PowerShell runner was repaired after static inspection found a malformed origin guard and duplicated trailing script content. Windows-invalid path characters, OS metadata, temporary/backup files and private-key material are also excluded and covered by tests.
 
 ## Test evidence
-- GitHub Actions run [38341525183](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/38341347877) completed SUCCESS.
+- GitHub Actions run [38341600485](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/38341347877) completed SUCCESS.
 - CPython 3.12.15 ran 23 tests; job log confirms `Ran 23 tests` and `OK`.
 - This verifies the pure policy unit suite only; it does not establish adapter or runtime correctness.
 
@@ -21,5 +21,5 @@ Review type: static source review plus observed GitHub Actions unit-test executi
 - Runtime adapter is not implemented. Realpath/symlink containment, atomic writes, target revision semantics, Core authorization, durable audit ledger and restart/recovery remain unverified.
 - No PowerShell execution on the Windows PC, Sandbox/GitHub round-trip, browser runtime, live Dashboard source, or ROOM-HOP E2E has been performed.
 - Work 24/27/28 live contracts must be verified and Work 14 lifecycle records reconciled before integration design.
-- CI logs contain a non-fatal checkout cleanup warning caused by `.gitmodules` lacking a URL for `room-meeting-ai`, and a Node.js 20 deprecation warning; these are tracked separately from the passing unit suite.
+- CI logs contain a non-fatal checkout cleanup warning caused by `.gitmodules` lacking a URL for `room-meeting-ai`, ; action versions were updated to Node 24-compatible releases, removing the Node.js deprecation warning.
 - No merge, release or live write is authorized. Keep sync `DRY_RUN`.
