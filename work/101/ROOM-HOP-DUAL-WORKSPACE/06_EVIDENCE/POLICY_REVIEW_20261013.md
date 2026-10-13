@@ -1,24 +1,25 @@
-# Work 101 — Policy Review (Static Review Only)
+# Work 101 — Policy Review
 
 Date: 2026-10-13
-Review type: source inspection and test coverage review; NOT runtime execution.
+Review type: static source review plus observed GitHub Actions unit-test execution.
 
 ## Issues found and corrected
-1. The denylist previously excluded the entire `06_EVIDENCE/` tree, which would prevent syncing the Work's own evidence documents. The policy now permits text evidence files while still rejecting logs and runtime/generated files by extension/name.
-2. Snapshot validation now rejects case-insensitive path collisions, protecting Windows workspaces from two Git paths that alias on common Windows filesystems.
-3. Snapshots may carry the baseline revision they were collected against. A mismatch produces `STALE_BASE` and no transfer plan.
-4. A pure `build_sync_plan` function now emits deterministic direction-specific file lists and a SHA-256 diff digest. It is DRY_RUN only, rejects `main`/`master`, checks permitted path roots, and produces no transfer paths for conflicts or stale bases.
-5. A guarded PowerShell test runner was prepared for the first PC session; it checks the repository, exact branch, and required files before running tests, then writes an evidence record.
+1. The evidence-tree denylist was too broad; ordinary evidence documents are now allowed while generated logs/runtime artifacts remain excluded.
+2. Path validation rejects non-canonical relative paths, traversal, absolute/drive paths, ADS, Windows reserved names and case-insensitive collisions within snapshots.
+3. Source/destination snapshots must explicitly identify the selected common base revision when constructing a plan; mismatches fail closed.
+4. The deterministic DRY_RUN planner binds policy version, operation/work IDs, destination branch, base/source/destination revisions, allowlist, per-path content digests, directions and conflict paths into the diff digest.
+5. `main` and `master` are rejected as destination branches; conflicts, stale baselines and deletion-pending plans emit no transfer paths.
+6. Any baseline-file deletion on either side, including matching deletion on both sides, enters `DELETION_PENDING` and requires review.
+7. The PowerShell runner was repaired after static inspection found a malformed origin guard and duplicated trailing script content.
 
-## Current boundaries
-- The policy module is pure: no filesystem writes, credentials, network calls, Core/MCP calls or GitHub writes.
-- The plan builder does not execute a transfer and is not an adapter.
-- Symlink/realpath containment, atomic write strategy, provider-specific revisions, Core authorization, audit persistence, and restart/recovery still require adapter design and runtime verification.
-- The Python unit tests have not been run in a trusted execution environment yet. Adding a GitHub Actions workflow requests a branch-scoped hosted test run, but PASS must not be claimed until a real run result is observed.
-- No merge or release. All Work changes remain on `work/101-room-hop-dual-workspace`; `main` is untouched.
+## Test evidence
+- GitHub Actions run [38341347877](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/38341347877) completed SUCCESS.
+- CPython 3.12.15 ran 21 tests; job log confirms `Ran 21 tests` and `OK`.
+- This verifies the pure policy unit suite only; it does not establish adapter or runtime correctness.
 
-## Additional hardening after first review
-6. The dry-run digest now binds the SHA-256 values for each changed path on the baseline, source and destination, plus policy version and allowlist. A changed payload cannot reuse the same approval digest just because path names and revision labels were reused.
-7. The planner requires explicit source and destination baseline markers equal to the selected base revision; missing or stale markers fail closed.
-8. Baseline-file deletion on either side now produces `DELETION_PENDING` and blocks all transfer paths. Deletion is not auto-propagated in either direction.
-9. Added test cases for digest sensitivity, required baseline markers, and source/destination deletion review. Test count in source: 20; execution remains NOT RUN until a CI result or approved local runner evidence is observed.
+## Residual risks / blockers
+- Runtime adapter is not implemented. Realpath/symlink containment, atomic writes, target revision semantics, Core authorization, durable audit ledger and restart/recovery remain unverified.
+- No PowerShell execution on the Windows PC, Sandbox/GitHub round-trip, browser runtime, live Dashboard source, or ROOM-HOP E2E has been performed.
+- Work 24/27/28 live contracts must be verified and Work 14 lifecycle records reconciled before integration design.
+- CI logs contain a non-fatal checkout cleanup warning caused by `.gitmodules` lacking a URL for `room-meeting-ai`, and a Node.js 20 deprecation warning; these are tracked separately from the passing unit suite.
+- No merge, release or live write is authorized. Keep sync `DRY_RUN`.
