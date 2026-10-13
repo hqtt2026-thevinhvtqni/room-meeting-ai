@@ -13,8 +13,8 @@ from sync_policy import (
 )
 
 
-def snap(revision, files):
-    return Snapshot(revision, {p: sha256_text(v) for p, v in files.items()})
+def snap(revision, files, base_revision=None):
+    return Snapshot(revision, {p: sha256_text(v) for p, v in files.items()}, base_revision)
 
 
 class SyncPolicyTests(unittest.TestCase):
@@ -30,6 +30,24 @@ class SyncPolicyTests(unittest.TestCase):
         for path in (".env", "data/app_workspace.db", "logs/app.log", "dist/app.js", "x/__pycache__/a.pyc"):
             with self.subTest(path=path), self.assertRaises(PolicyError):
                 canonical_relative_path(path)
+
+    def test_evidence_documents_are_allowed_but_evidence_logs_are_not(self):
+        self.assertEqual(canonical_relative_path("06_EVIDENCE/report.md"), "06_EVIDENCE/report.md")
+        with self.assertRaises(PolicyError):
+            canonical_relative_path("06_EVIDENCE/runtime.log")
+
+    def test_snapshot_rejects_case_insensitive_path_collisions(self):
+        collision = Snapshot("s1", {"Config.json": sha256_text("a"), "config.json": sha256_text("b")})
+        with self.assertRaises(PolicyError):
+            classify_sync(snap("b1", {}), collision, snap("d1", {}))
+
+    def test_stale_source_baseline_is_blocked(self):
+        base = snap("b1", {"a.txt": "old"})
+        source = snap("s1", {"a.txt": "new"}, base_revision="older-base")
+        dest = snap("d1", {"a.txt": "old"}, base_revision="b1")
+        result = classify_sync(base, source, dest)
+        self.assertEqual(result.state, ChangeState.STALE_BASE)
+        self.assertEqual(result.reason, "SOURCE_BASE_REVISION_MISMATCH")
 
     def test_source_only_change(self):
         base = snap("b1", {"a.txt": "old"})
