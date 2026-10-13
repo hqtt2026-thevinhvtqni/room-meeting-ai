@@ -38,7 +38,7 @@ main{max-width:1200px;margin:24px auto;padding:0 18px 40px}.notice{border:1px so
 06_EVIDENCE/     Báo cáo, hash, logs, bằng chứng
 07_RELEASE/      Release notes và handoff
 08_DASHBOARD/    Dashboard + data contract\n09_DASHBOARD_PREVIEW/ Static preview only</div><p class="muted">Cùng đường dẫn tương đối ở Sandbox và GitHub; cấu trúc và nội dung được kiểm tra riêng.</p></article>
-    <article class="card"><h2>Quy tắc an toàn</h2><p><span class="pill">NO LAST-WRITE-WINS</span></p><p>Thay đổi cùng tệp khác nhau → <strong>CONFLICT_PENDING</strong>.</p><p>Thiếu repo/branch/base revision → không tạo kế hoạch ghi.</p><p>Phê duyệt phải gắn với operation ID, diff digest, branch và base revision.</p><p class="muted">Dashboard chỉ đọc; mọi thao tác ghi phải đi qua Core/MCP có xác thực và phân quyền.</p></article>
+    <article class="card"><h2>Quy tắc an toàn</h2><p><span class="pill">NO LAST-WRITE-WINS</span></p><p>Thay đổi cùng tệp khác nhau → <strong>CONFLICT_PENDING</strong>.<br>File bị xóa ở một phía → <strong>DELETION_PENDING</strong>, chặn ghi hai chiều.</p><p>Thiếu repo/branch/base revision → không tạo kế hoạch ghi.</p><p>Phê duyệt phải gắn với operation ID, diff digest, branch và base revision.</p><p class="muted">Dashboard chỉ đọc; mọi thao tác ghi phải đi qua Core/MCP có xác thực và phân quyền.</p></article>
   </section>
   <p class="foot">Nguồn dữ liệu trực tiếp: chưa kết nối. Lần cập nhật live: chưa có. Trang này không phải bằng chứng runtime hoặc trạng thái đồng bộ thật.</p>
 </main>
