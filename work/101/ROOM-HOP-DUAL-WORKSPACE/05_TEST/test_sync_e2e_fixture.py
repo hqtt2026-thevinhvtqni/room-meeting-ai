@@ -78,9 +78,16 @@ class FixtureProvider:
                 files[relative] = digest_bytes(path.read_bytes())
         return Snapshot(revision, files, base_revision)
 
-    def write_cas(self, relative: str, content: bytes, expected_revision: str,
-                  current_revision: str) -> str:
-        if current_revision != expected_revision:
+    def current_revision(self) -> str:
+        """Derive a revision token from the fixture's actual current file state."""
+        manifest = self.snapshot("", "").files
+        canonical = "\n".join(f"{path}:{manifest[path]}" for path in sorted(manifest))
+        return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+    def write_cas(self, relative: str, content: bytes, expected_revision: str) -> str:
+        # Compare against provider-observed state; never trust a caller-supplied
+        # "current revision" argument as evidence of freshness.
+        if self.current_revision() != expected_revision:
             raise PolicyError("STALE_DESTINATION_REVISION")
         path = self._path(relative)
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -143,7 +150,7 @@ class Work101FixtureE2ETests(unittest.TestCase):
         source_bytes = self.source.read("04_CODE/sample.txt")
         expected = digest_bytes(source_bytes)
         observed = self.destination.write_cas(
-            "04_CODE/sample.txt", source_bytes, "destination-r2", "destination-r2"
+            "04_CODE/sample.txt", source_bytes, self.destination.current_revision()
         )
         self.assertEqual(observed, expected)
         self.assertEqual(digest_bytes(self.destination.read("04_CODE/sample.txt")), expected)
@@ -181,12 +188,19 @@ class Work101FixtureE2ETests(unittest.TestCase):
             bind_approval(approved, changed)
 
     def test_stale_destination_revision_blocks_fixture_write(self):
+        # Capture a revision, then simulate a concurrent writer changing the
+        # destination after the plan was prepared.
+        expected_revision = self.destination.current_revision()
+        self.destination._path("04_CODE/sample.txt").write_text(
+            "concurrent edit", encoding="utf-8"
+        )
         with self.assertRaises(PolicyError):
             self.destination.write_cas(
-                "04_CODE/sample.txt", b"unapproved overwrite",
-                "destination-r2", "destination-r3"
+                "04_CODE/sample.txt", b"unapproved overwrite", expected_revision
             )
-        self.assertEqual(self.destination.read("04_CODE/sample.txt"), b"baseline")
+        self.assertEqual(
+            self.destination.read("04_CODE/sample.txt"), b"concurrent edit"
+        )
 
     def test_path_escape_and_secret_are_rejected(self):
         for path in ("../outside.txt", "C:/outside.txt", ".env", "data/app_workspace.db"):
