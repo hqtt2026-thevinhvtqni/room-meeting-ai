@@ -37,6 +37,7 @@ Rule-based two-way synchronization between ROOM-HOP Sandbox and GitHub, with cap
 
 ## Current verified state — 2026-10-13
 - Repository and dedicated branch were verified through the GitHub connector; Work 101 files are isolated to `work/101-room-hop-dual-workspace`.
+- Live ROOM-HOP MCP read-back confirms Sandbox Work 101 exists, but its `00_ROOT/SYNC_TARGET.yaml` remains `UNBOUND`; its policy/test files are older than the tested GitHub-branch versions. Sandbox↔GitHub parity is NOT VERIFIED, and no sync write was performed.
 - Pure policy/planner is deterministic and DRY_RUN only; it performs no I/O, network access, writes or ROOM-HOP calls.
 - GitHub Actions run [38341600485](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/38341600485) completed SUCCESS on commit `b4e51967ee91c3cfa19e995c2461f7345d3457d3`; all 23 Python 3.12 unit tests passed.
 - Added exclusions for OS metadata, temporary/backup files, private-key material and Windows-invalid filename characters; the suite now includes 23 tests. The PowerShell runner was repaired and read back from the branch. It has NOT been run on the user's Windows PC.
