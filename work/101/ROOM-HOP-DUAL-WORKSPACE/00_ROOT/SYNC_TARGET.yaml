@@ -1,0 +1,25 @@
+schema_version: "1.0"
+work_id: "101"
+state: "BOUND"
+repository_full_name: "hqtt2026-thevinhvtqni/room-meeting-ai"
+branch: "work/101-room-hop-dual-workspace"
+work_root: "work/101/ROOM-HOP-DUAL-WORKSPACE/"
+base_revision: "d7c90d9d31062d389810808e43dfdd19d7711b75"
+permitted_path_roots:
+  - "00_ROOT/"
+  - "01_ORIGINAL/"
+  - "02_EXTENSION/"
+  - "03_ARCHITECTURE/"
+  - "04_CODE/"
+  - "05_TEST/"
+  - "06_EVIDENCE/"
+  - "07_RELEASE/"
+  - "08_DASHBOARD/"
+  - "09_DASHBOARD_PREVIEW/"
+mode: "DRY_RUN"
+write_enabled: false
+merge_enabled: false
+release_enabled: false
+approval_required:
+  principal: "Vinh"
+  binding_fields: ["operation_id", "diff_digest", "destination_branch", "base_revision"]
