@@ -1,0 +1,32 @@
+work_id: "101"
+work_name: "ROOM-HOP-DUAL-WORKSPACE"
+lifecycle: "ACTIVE"
+authority: "Vinh"
+coordinator: "Xu"
+canonical_services:
+  core: "ROOM-HOP Core :8000 (authorization/source of truth)"
+  mcp: "ROOM-HOP MCP :8020 (AI-facing boundary)"
+  workspace: "ROOM-HOP Workspace :8010"
+  pc_bridge: "Work 24 (shared bridge; live route not yet verified)"
+  execution_runtime: "Work 27 (shared runtime; tests not yet executed here)"
+  mcp_tooling: "Work 28 (tool registry status must be checked against live MCP)"
+  product_e2e: "Work 14 (lifecycle contradiction requires source-backed reconciliation)"
+sync:
+  mode: "DRY_RUN"
+  directions: ["sandbox_to_github", "github_to_sandbox"]
+  conflict_policy: "CONFLICT_PENDING; no last-write-wins"
+  integration_approval: "Vinh"
+dashboard:
+  required: true
+  entrypoint: "08_DASHBOARD/index.html"
+  preview_entrypoint: "09_DASHBOARD_PREVIEW/index.html"
+  data_policy: "authoritative reads only; unknown when not connected"
+github_target:
+  state: "BOUND"
+  repository: "hqtt2026-thevinhvtqni/room-meeting-ai"
+  branch: "work/101-room-hop-dual-workspace"
+  work_root: "work/101/ROOM-HOP-DUAL-WORKSPACE/"
+  base_revision: "d7c90d9d31062d389810808e43dfdd19d7711b75"
+  write_enabled: false
+  merge_enabled: false
+  release_enabled: false
