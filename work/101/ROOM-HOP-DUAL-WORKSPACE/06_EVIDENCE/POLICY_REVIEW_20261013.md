@@ -10,11 +10,11 @@ Review type: static source review plus observed GitHub Actions unit-test executi
 4. The deterministic DRY_RUN planner binds policy version, operation/work IDs, destination branch, base/source/destination revisions, allowlist, per-path content digests, directions and conflict paths into the diff digest.
 5. `main` and `master` are rejected as destination branches; conflicts, stale baselines and deletion-pending plans emit no transfer paths.
 6. Any baseline-file deletion on either side, including matching deletion on both sides, enters `DELETION_PENDING` and requires review.
-7. The PowerShell runner was repaired after static inspection found a malformed origin guard and duplicated trailing script content.
+7. The PowerShell runner was repaired after static inspection found a malformed origin guard and duplicated trailing script content. Windows-invalid path characters, OS metadata, temporary/backup files and private-key material are also excluded and covered by tests.
 
 ## Test evidence
-- GitHub Actions run [38341347877](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/38341347877) completed SUCCESS.
-- CPython 3.12.15 ran 21 tests; job log confirms `Ran 21 tests` and `OK`.
+- GitHub Actions run [38341525183](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/38341347877) completed SUCCESS.
+- CPython 3.12.15 ran 23 tests; job log confirms `Ran 23 tests` and `OK`.
 - This verifies the pure policy unit suite only; it does not establish adapter or runtime correctness.
 
 ## Residual risks / blockers
