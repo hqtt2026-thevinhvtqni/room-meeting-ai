@@ -9,7 +9,7 @@
 - Dedicated branch: `work/101-room-hop-dual-workspace`
 - Work root: `work/101/ROOM-HOP-DUAL-WORKSPACE/`
 - Frozen branch baseline: `d7c90d9d31062d389810808e43dfdd19d7711b75`
-- Latest verified Work 101 CI commit: `2263ae1d180aa4503822cb53b554719fc6ecfffa`
+- Latest verified Work 101 CI commit: `661fee7d3dc1d4aedddc247a7149ca5cd2292617`
 - Sync mode: DRY_RUN
 - Integration approval: Vinh only
 - Canonical structure: `03_ARCHITECTURE/CANONICAL_PARALLEL_WORK_STRUCTURE.md`
