@@ -1,29 +1,30 @@
 # Work 101 — Build Log
 
-## 2026-10-13 — GitHub target
-- Verified repository and dedicated branch.
-- Compared `main` and branch before Work artifacts were added: identical, baseline `d7c90d9d31062d389810808e43dfdd19d7711b75`.
-- Set canonical Work root to `work/101/ROOM-HOP-DUAL-WORKSPACE/`; sync remains DRY_RUN.
-- Explicitly exclude `desktop.ini`, secrets, databases, logs, caches and runtime artifacts.
-- No merge/release; tests, browser runtime, two-way sync and E2E remain NOT VERIFIED.
+## 2026-10-13 — Scope and branch isolation
+- Verified repository `hqtt2026-thevinhvtqni/room-meeting-ai` and dedicated branch `work/101-room-hop-dual-workspace`.
+- Work root: `work/101/ROOM-HOP-DUAL-WORKSPACE/`; frozen baseline recorded as `d7c90d9d31062d389810808e43dfdd19d7711b75`.
+- Sync remains DRY_RUN; `write_enabled`, `merge_enabled`, and `release_enabled` remain false.
+- Architecture preserves Core :8000 as source of truth, MCP :8020 as agent boundary, Workspace :8010 as build workspace. Work 24/27/28/14 contracts must be verified before adapter integration.
 
-## 2026-10-13 — Branch scaffold read-back
-- Canonical root and selected architecture, policy, test, evidence and Dashboard files were read back from the dedicated branch.
-- The branch is 26 commits ahead of `main` and zero commits behind; all Work 101 changes are on `work/101-room-hop-dual-workspace` only.
-- Added a focused unit-test case for a single backslash in a relative path. Test execution is still NOT RUN.
-- No merge, release, or automatic integration occurred. Sync remains DRY_RUN; write/merge/release switches remain false.
+## 2026-10-13 — Policy implementation and hardening
+- Added pure deterministic snapshot classification and DRY_RUN planning with SHA-256 content-bound diff digest.
+- Enforced path canonicalization, Windows reserved-name/trailing-dot checks, path allowlist, excluded secrets/database/log/cache/generated files, protected-branch denial, baseline revision binding, approval binding and idempotency fingerprint.
+- Same-path divergent edits become `CONFLICT_PENDING` with zero transfer paths.
+- Any deletion relative to baseline becomes `DELETION_PENDING`, including deletion on both sides; zero transfer paths are emitted. No delete adapter exists.
+- Added a regression test for bilateral deletion. Current suite contains 21 tests.
 
-## 2026-10-13 — Offline hardening (source review only)
-- Added deterministic DRY_RUN plan generation and content-bound diff digest.
-- Required explicit common-base markers for source and destination snapshots.
-- Added case-insensitive path-collision rejection and permitted ordinary evidence documents while excluding logs/runtime artifacts.
-- Baseline-file deletion on either side now enters DELETION_PENDING and blocks all transfer paths.
-- Added a provider adapter contract; it deliberately has no delete method and no write implementation.
-- Added a guarded PowerShell unit-test runner for PC use and a branch-scoped GitHub Actions workflow. No CI execution result is visible, so tests remain NOT RUN.
+## 2026-10-13 — Runner repair and observed CI
+- Repaired malformed PowerShell runner origin validation and removed duplicated/corrupted script content. Script was read back from GitHub; it has NOT been executed on the user's Windows PC.
+- GitHub Actions run [38341347877](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/38341347877) completed SUCCESS on commit `b4e51967ee91c3cfa19e995c2461f7345d3457d3`.
+- Python 3.12.15 job log confirms `Ran 21 tests in 0.014s` and `OK`.
+- Evidence recorded in `CI_POLICY_TESTS_20261013.md`.
+- Workflow emitted a non-fatal post-checkout warning because `.gitmodules` has no URL for submodule path `room-meeting-ai`, plus a Node.js 20 deprecation warning. Test job conclusion remained SUCCESS.
 
-## 2026-10-13 — Remote read-back validation
-- Re-read critical branch files and validated Dashboard schema JSON plus static policy invariants.
-- 20 unit tests are authored. Python and PowerShell tests have NOT RUN.
-- GitHub combined status had no checks and no workflow run was observable through the available connector; no CI PASS is claimed.
-- Branch remains isolated from main; target config remains DRY_RUN with write/merge/release disabled.
-- See `REMOTE_READBACK_VALIDATION_20261013.md` for the exact verification boundary.
+## 2026-10-13 — Verification boundary
+- Static read-back and JSON schema inspection are complete; unit tests PASS in GitHub-hosted CI.
+- No local Windows PowerShell run, runtime adapter, Sandbox/GitHub round-trip, Core/MCP authorization test, live Dashboard/browser test, or ROOM-HOP E2E test has been performed.
+- Work 14 lifecycle conflict remains unresolved; Work 24/27/28 live contracts remain unverified.
+- `main` has not been merged by this Work. No integration, write, merge or release is authorized.
+
+## Next gate
+Verify Work 24/27/28 live contracts and Work 14 lifecycle from authoritative ROOM-HOP sources. Then implement and test the provider adapter in an isolated disposable fixture with realpath/symlink containment, Core authorization, atomic writes, read-back digest checks, audit persistence and restart/recovery. Keep DRY_RUN until exact operation approval.
