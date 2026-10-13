@@ -13,7 +13,7 @@ Status: PLANNED; NOT RUN.
 - GitHub-only change -> Sandbox -> read-back digest matches.
 - Changes on separate paths yield deterministic non-overlapping plan.
 - Divergent same-path changes become CONFLICT_PENDING without overwrite.
-- Test delete/rename/binary/symlink/case-only rename, stale revisions, retries, restart, timeout, rate-limit and auth failures.
+- Test delete/rename/binary/symlink/case-only rename, stale revisions, retries, restart, timeout, rate-limit and auth failures. Baseline-file deletions must produce DELETION_PENDING and zero transfer actions in either direction.
 - Identical operation is idempotent; mutated payload under same operation ID is rejected.
 
 ## Security and approval
