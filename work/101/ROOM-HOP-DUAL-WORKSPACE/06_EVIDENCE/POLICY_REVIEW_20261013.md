@@ -16,3 +16,9 @@ Review type: source inspection and test coverage review; NOT runtime execution.
 - Symlink/realpath containment, atomic write strategy, provider-specific revisions, Core authorization, audit persistence, and restart/recovery still require adapter design and runtime verification.
 - The Python unit tests have not been run in a trusted execution environment yet. Adding a GitHub Actions workflow requests a branch-scoped hosted test run, but PASS must not be claimed until a real run result is observed.
 - No merge or release. All Work changes remain on `work/101-room-hop-dual-workspace`; `main` is untouched.
+
+## Additional hardening after first review
+6. The dry-run digest now binds the SHA-256 values for each changed path on the baseline, source and destination, plus policy version and allowlist. A changed payload cannot reuse the same approval digest just because path names and revision labels were reused.
+7. The planner requires explicit source and destination baseline markers equal to the selected base revision; missing or stale markers fail closed.
+8. Baseline-file deletion on either side now produces `DELETION_PENDING` and blocks all transfer paths. Deletion is not auto-propagated in either direction.
+9. Added test cases for digest sensitivity, required baseline markers, and source/destination deletion review. Test count in source: 20; execution remains NOT RUN until a CI result or approved local runner evidence is observed.
