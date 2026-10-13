@@ -18,7 +18,7 @@ Every operation declares operation_id, work_id, source/destination kind and ref,
 7. Missing credentials, network, validation or schema produce BLOCKED, not PASS.
 8. Redact credentials and sensitive environment values.
 9. Reject traversal, out-of-root paths, reserved runtime files and secrets.
-10. Every result links evidence or says evidence unavailable.
+10. Any baseline-file deletion enters DELETION_PENDING and blocks all transfers until explicit resolution is designed and approved.\n11. Every result links evidence or says evidence unavailable.
 
 ## Proposed API — not implemented
 plan_sync, execute_sync, list_conflicts, resolve_conflict, request_integration, approve_integration and verify_evidence require review against existing MCP/Core contracts before registration. Do not add duplicate tools.
