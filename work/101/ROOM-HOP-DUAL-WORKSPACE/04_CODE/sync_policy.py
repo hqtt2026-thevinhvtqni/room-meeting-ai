@@ -83,6 +83,8 @@ def canonical_relative_path(path: str) -> str:
     for part in parts:
         if part.endswith((".", " ")):
             raise PolicyError("PATH_WINDOWS_TRAILING_DOT_SPACE")
+        if any(ch in part for ch in '<>:"|?*'):
+            raise PolicyError("PATH_WINDOWS_INVALID_CHARACTER")
         if ":" in part:
             raise PolicyError("PATH_ALTERNATE_DATA_STREAM")
         stem = part.split(".", 1)[0].upper()
@@ -100,11 +102,19 @@ def is_excluded_path(path: str) -> bool:
     parts = p.split("/")
     name = parts[-1]
     if name == ".env" or name.startswith(".env.") or name in {
-        "id_rsa", "id_ed25519", "credentials.json", "secrets.json",
-        "app_workspace.db", "sqlite.db", "runtime.db",
+        "id_rsa", "id_ed25519", "credentials", "credentials.json", "secrets.json",
+        "token.json", "service-account.json", "desktop.ini", "thumbs.db",
+        "ehthumbs.db", ".ds_store", "app_workspace.db", "sqlite.db", "runtime.db",
+        "system volume information", "$recycle.bin",
     }:
         return True
-    if name.endswith((".db", ".sqlite", ".sqlite3", ".log", ".zip", ".7z", ".tar", ".gz", ".pyc")):
+    if name.startswith("~$") or name.endswith("~"):
+        return True
+    if name.endswith((
+        ".db", ".sqlite", ".sqlite3", ".log", ".zip", ".7z", ".tar", ".gz",
+        ".pyc", ".pem", ".p12", ".pfx", ".key", ".keystore", ".jks",
+        ".tmp", ".temp", ".bak", ".swp", ".swo", ".orig", ".rej",
+    )):
         return True
     if any(part in {"__pycache__", "node_modules", ".git", "dist", "build"} for part in parts):
         return True
