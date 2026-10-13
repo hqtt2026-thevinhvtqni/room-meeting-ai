@@ -227,6 +227,10 @@ def build_sync_plan(
         raise PolicyError("BASE_REVISION_REQUIRED")
     if base.revision != base_revision:
         raise PolicyError("PLAN_BASE_REVISION_MISMATCH")
+    if source.base_revision != base_revision:
+        raise PolicyError("SOURCE_BASE_REVISION_REQUIRED_OR_MISMATCH")
+    if destination.base_revision != base_revision:
+        raise PolicyError("DESTINATION_BASE_REVISION_REQUIRED_OR_MISMATCH")
 
     roots = tuple(canonical_relative_path(r.rstrip("/")) for r in permitted_path_roots)
     if not roots:
@@ -262,7 +266,13 @@ def build_sync_plan(
         source_to_destination = tuple(to_destination)
         destination_to_source = tuple(to_source)
 
+    changed_paths = sorted(
+        path for path in (set(base.files) | set(source.files) | set(destination.files))
+        if source.files.get(path) != base.files.get(path)
+        or destination.files.get(path) != base.files.get(path)
+    )
     payload = {
+        "policy_version": "work101-sync-policy-v1",
         "operation_id": operation_id,
         "work_id": work_id,
         "destination_branch": destination_branch,
@@ -270,6 +280,16 @@ def build_sync_plan(
         "source_revision": source.revision,
         "destination_revision": destination.revision,
         "state": decision.state.value,
+        "permitted_path_roots": sorted(roots),
+        "changes": [
+            {
+                "path": path,
+                "base_sha256": base.files.get(path),
+                "source_sha256": source.files.get(path),
+                "destination_sha256": destination.files.get(path),
+            }
+            for path in changed_paths
+        ],
         "source_to_destination": source_to_destination,
         "destination_to_source": destination_to_source,
         "conflict_paths": decision.conflict_paths,
