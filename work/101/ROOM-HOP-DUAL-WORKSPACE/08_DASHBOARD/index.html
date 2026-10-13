@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Work 101 · Dual Workspace</title>
+<style>
+:root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:#172033;background:#f4f6fa}
+*{box-sizing:border-box}body{margin:0}.top{background:#111827;color:#fff;padding:24px clamp(18px,4vw,48px)}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#a5b4fc;font-weight:700}
+h1{font-size:clamp(24px,3vw,34px);margin:8px 0}p{line-height:1.55}.sub{color:#cbd5e1;max-width:850px;margin:0}
+main{max-width:1200px;margin:24px auto;padding:0 18px 40px}.notice{border:1px solid #f1d39b;background:#fff8e8;border-radius:12px;padding:14px 16px;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.card{background:white;border:1px solid #e0e5ee;border-radius:12px;padding:16px;min-width:0}.label{font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:.06em}.value{font-size:18px;font-weight:750;margin-top:8px;overflow-wrap:anywhere}.muted{color:#64748b;font-size:13px}.section{margin-top:22px}.section h2{font-size:18px;margin:0 0 12px}.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}.tree{font:13px/1.85 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre-wrap;overflow-wrap:anywhere}.pill{display:inline-block;border-radius:999px;padding:4px 9px;background:#eef2f7;color:#334155;font-size:12px;font-weight:700}.foot{margin-top:18px;color:#64748b;font-size:12px}
+@media(max-width:800px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cols{grid-template-columns:1fr}}@media(max-width:440px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="eyebrow">ROOM-HOP · Work 101</div>
+  <h1>Dual Workspace Control Dashboard</h1>
+  <p class="sub">Cấu trúc Sandbox ↔ GitHub song song, đồng bộ có quy tắc, xung đột minh bạch và chỉ tích hợp sau phê duyệt của Vinh.</p>
+</header>
+<main>
+  <div class="notice"><strong>Chưa kết nối nguồn dữ liệu trực tiếp.</strong> Đây là vỏ giao diện tĩnh. Các ô trạng thái bên dưới không phải dữ liệu vận hành và không biểu thị rằng sync đã chạy. Chỉ hiển thị kết quả sau khi hợp đồng API chỉ-đọc được phê duyệt, kết nối và có dấu thời gian.</div>
+  <section class="grid" aria-label="Các nguồn dữ liệu cần kết nối">
+    <article class="card"><div class="label">Work registry</div><div class="value">NO LIVE DATA</div><p class="muted">Cần đọc trạng thái từ nguồn registry có thẩm quyền.</p></article>
+    <article class="card"><div class="label">GitHub target</div><div class="value">NO LIVE DATA</div><p class="muted">Cần repo, branch, Work root và revision đã xác minh.</p></article>
+    <article class="card"><div class="label">Structure parity</div><div class="value">NOT VERIFIED</div><p class="muted">Chỉ đánh giá sau khi đọc hai phía và đối chiếu path/hash.</p></article>
+    <article class="card"><div class="label">Runtime E2E</div><div class="value">NOT VERIFIED</div><p class="muted">Cần runner được duyệt và bằng chứng thực thi thật.</p></article>
+  </section>
+  <section class="section cols">
+    <article class="card"><h2>Cấu trúc Work chuẩn</h2><div class="tree">00_ROOT/         Manifest + context + sync target
+01_ORIGINAL/     Yêu cầu gốc và tài liệu tham chiếu
+02_EXTENSION/    Phần bổ sung đã duyệt
+03_ARCHITECTURE/ Kiến trúc, hợp đồng, ADR
+04_CODE/         Mã nguồn
+05_TEST/         Unit / contract / E2E tests
+06_EVIDENCE/     Báo cáo, hash, logs, bằng chứng
+07_RELEASE/      Release notes và handoff
+08_DASHBOARD/    Dashboard + data contract\n09_DASHBOARD_PREVIEW/ Static preview only</div><p class="muted">Cùng đường dẫn tương đối ở Sandbox và GitHub; cấu trúc và nội dung được kiểm tra riêng.</p></article>
+    <article class="card"><h2>Quy tắc an toàn</h2><p><span class="pill">NO LAST-WRITE-WINS</span></p><p>Thay đổi cùng tệp khác nhau → <strong>CONFLICT_PENDING</strong>.</p><p>Thiếu repo/branch/base revision → không tạo kế hoạch ghi.</p><p>Phê duyệt phải gắn với operation ID, diff digest, branch và base revision.</p><p class="muted">Dashboard chỉ đọc; mọi thao tác ghi phải đi qua Core/MCP có xác thực và phân quyền.</p></article>
+  </section>
+  <p class="foot">Nguồn dữ liệu trực tiếp: chưa kết nối. Lần cập nhật live: chưa có. Trang này không phải bằng chứng runtime hoặc trạng thái đồng bộ thật.</p>
+</main>
+</body>
+</html>
