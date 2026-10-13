@@ -3,7 +3,7 @@
 - Date: 2026-10-13
 - Workflow: `Work 101 policy tests`
 - Run: [38341600485](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/38341600485)
-- Job: [Work 101 unit tests (Python 3.12)](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/38341347877/job/115113361228)
+- Job: [Work 101 unit tests (Python 3.12)](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/38341600485/job/115113597090)
 - Result: PASS
 - Conclusion: `success`
 - Tested commit: `661fee7d3dc1d4aedddc247a7149ca5cd2292617`
@@ -18,6 +18,5 @@
 
 ## Warnings / limits
 - GitHub checkout post-job cleanup emitted a warning: `fatal: No url found for submodule path 'room-meeting-ai' in .gitmodules`. The job still concluded SUCCESS; this should be reviewed separately as repository metadata. The workflow now uses Node 24-compatible `actions/checkout@v5` and `actions/setup-python@v6`, eliminating the Node.js 20 deprecation warning.
-- GitHub Actions emitted a Node.js 20 deprecation warning for the current action versions.
 - This evidence proves the pure Python unit suite only. It does not prove PowerShell runner execution on Windows, Sandbox/GitHub round-trip, Core/MCP authorization, live Dashboard data, or end-to-end ROOM-HOP operation.
 - Keep sync `DRY_RUN`; no writes, merge, integration or release are authorized by this test result.
