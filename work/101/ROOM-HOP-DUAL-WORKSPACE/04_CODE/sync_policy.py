@@ -32,6 +32,8 @@ class ChangeState(str, Enum):
 class Snapshot:
     revision: str
     files: dict[str, str]  # canonical relative path -> SHA-256 hex digest
+    # Optional common-base marker captured when the snapshot was collected.
+    base_revision: str | None = None
 
 
 @dataclass(frozen=True)
@@ -93,7 +95,7 @@ def canonical_relative_path(path: str) -> str:
 
 def is_excluded_path(path: str) -> bool:
     """Conservative denylist for credentials, runtime state, generated artifacts and logs."""
-    p = path.replace("\\\\", "/").lower()
+    p = path.replace("\\", "/").lower()
     parts = p.split("/")
     name = parts[-1]
     if name == ".env" or name.startswith(".env.") or name in {
@@ -103,18 +105,30 @@ def is_excluded_path(path: str) -> bool:
         return True
     if name.endswith((".db", ".sqlite", ".sqlite3", ".log", ".zip", ".7z", ".tar", ".gz", ".pyc")):
         return True
-    if any(part in {"__pycache__", "node_modules", ".git", "dist", "build", "evidence", "06_evidence"} for part in parts):
+    if any(part in {"__pycache__", "node_modules", ".git", "dist", "build"} for part in parts):
         return True
     return False
 
 
 def validate_snapshot(snapshot: Snapshot) -> None:
-    if not snapshot.revision or not isinstance(snapshot.revision, str):
+    if not isinstance(snapshot.revision, str) or not snapshot.revision.strip():
         raise PolicyError("REVISION_REQUIRED")
+    if snapshot.base_revision is not None and (
+        not isinstance(snapshot.base_revision, str) or not snapshot.base_revision.strip()
+    ):
+        raise PolicyError("BASE_REVISION_INVALID")
+    if not isinstance(snapshot.files, dict):
+        raise PolicyError("SNAPSHOT_FILES_INVALID")
+    seen_casefolded: dict[str, str] = {}
     for path, digest in snapshot.files.items():
         if canonical_relative_path(path) != path:
             raise PolicyError("PATH_NOT_CANONICAL")
-        if not re.fullmatch(r"[0-9a-f]{64}", digest or ""):
+        collision_key = unicodedata.normalize("NFC", path).casefold()
+        previous = seen_casefolded.get(collision_key)
+        if previous is not None and previous != path:
+            raise PolicyError("PATH_CASE_COLLISION")
+        seen_casefolded[collision_key] = path
+        if not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest):
             raise PolicyError("CONTENT_DIGEST_INVALID")
 
 
@@ -122,8 +136,12 @@ def classify_sync(base: Snapshot, source: Snapshot, destination: Snapshot) -> Sy
     """Compare two sides against the same baseline. Never applies writes."""
     for snap in (base, source, destination):
         validate_snapshot(snap)
-    if not base.revision:
-        return SyncDecision(ChangeState.STALE_BASE, reason="BASE_REVISION_MISSING")
+    # If either side reports the baseline it was collected against, fail closed
+    # when it does not match the baseline selected for this comparison.
+    if source.base_revision is not None and source.base_revision != base.revision:
+        return SyncDecision(ChangeState.STALE_BASE, reason="SOURCE_BASE_REVISION_MISMATCH")
+    if destination.base_revision is not None and destination.base_revision != base.revision:
+        return SyncDecision(ChangeState.STALE_BASE, reason="DESTINATION_BASE_REVISION_MISMATCH")
     paths = set(base.files) | set(source.files) | set(destination.files)
     src_changed = {p for p in paths if source.files.get(p) != base.files.get(p)}
     dst_changed = {p for p in paths if destination.files.get(p) != base.files.get(p)}
