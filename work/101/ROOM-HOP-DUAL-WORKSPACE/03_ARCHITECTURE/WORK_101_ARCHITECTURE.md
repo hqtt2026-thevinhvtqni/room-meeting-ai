@@ -17,7 +17,7 @@ Reuse existing ROOM-HOP authority and execution boundaries. Work 101 is a synchr
 AI -> MCP :8020 -> Core :8000 -> Workspace :8010 / approved Sandbox interface. The coordinator reads a baseline, plans changes, validates policy, transfers only when authorized, verifies destination content and records evidence. AI agents do not receive unrestricted credentials.
 
 ## State and conflicts
-States include DISCOVERED, PLANNED, POLICY_CHECKED, READY_TO_TRANSFER, TRANSFERRING, DESTINATION_VERIFIED, RECORDED, BLOCKED and CONFLICT_PENDING. No last-write-wins. Same-path divergent edits require review. Missing/stale base stops the operation.
+States include DISCOVERED, PLANNED, POLICY_CHECKED, READY_TO_TRANSFER, TRANSFERRING, DESTINATION_VERIFIED, RECORDED, BLOCKED, CONFLICT_PENDING and DELETION_PENDING. Deletions of baseline files block all transfers until explicit review; no automatic delete. No last-write-wins. Same-path divergent edits require review. Missing/stale base stops the operation.
 
 ## Boundaries
 Work 24 provides/reviews PC source bridge; Work 27 execution runtime; Work 28 MCP tools and authorization; Work 14 canonical autonomous E2E. Verify these live contracts before implementation.
