@@ -2,13 +2,14 @@
 
 - Work ID: 101
 - Work Name: ROOM-HOP-DUAL-WORKSPACE
-- Status: ACTIVE — ARCHITECTURE BASELINED; IMPLEMENTATION / E2E NOT VERIFIED
+- Status: ACTIVE — POLICY UNIT TESTS PASS; RUNTIME ADAPTER / ROOM-HOP E2E BLOCKED
 - Authority: Vinh
 - Coordinator: Xu
 - Repository: `hqtt2026-thevinhvtqni/room-meeting-ai`
 - Dedicated branch: `work/101-room-hop-dual-workspace`
 - Work root: `work/101/ROOM-HOP-DUAL-WORKSPACE/`
 - Frozen branch baseline: `d7c90d9d31062d389810808e43dfdd19d7711b75`
+- Latest verified Work 101 CI commit: `b4e51967ee91c3cfa19e995c2461f7345d3457d3`
 - Sync mode: DRY_RUN
 - Integration approval: Vinh only
 - Canonical structure: `03_ARCHITECTURE/CANONICAL_PARALLEL_WORK_STRUCTURE.md`
@@ -28,21 +29,21 @@ Rule-based two-way synchronization between ROOM-HOP Sandbox and GitHub, with cap
 
 ## Authority and safety
 - No last-write-wins. Same-path divergent edits become `CONFLICT_PENDING`.
-- Never silently delete destination-only files.
+- Any deletion relative to the baseline becomes `DELETION_PENDING`, including when both sides deleted the same baseline file; no transfer paths are emitted.
 - Exclude secrets, credentials, databases, logs, caches, temporary files and OS metadata.
 - A sync plan must bind operation ID, diff digest, destination branch and frozen base revision.
 - Integration, merge and release are separate operations requiring Vinh's explicit approval.
 - Missing evidence means NOT VERIFIED, not PASS.
 
 ## Current verified state — 2026-10-13
-- Repository and dedicated branch were verified through GitHub connector.
-- Branch was created from `main`; comparison showed the branch and main identical at baseline `d7c90d9d31062d389810808e43dfdd19d7711b75` before Work 101 files were added.
-- Work 101 artifacts are being organized under `work/101/ROOM-HOP-DUAL-WORKSPACE/`; no Work files are placed at repository root.
-- Sandbox source files were read before selecting artifacts for the initial branch scaffold. Windows `desktop.ini` files are intentionally excluded.
-- Pure policy classifier and deterministic DRY_RUN planner are present; the planner binds per-path base/source/destination SHA-256 hashes, allowlist, policy version, branch and base revision into the diff digest. Twenty unit tests are authored; tests have NOT RUN in an observed runner.
-- Dashboard files are static only; no live data connection or browser runtime evidence. A branch-scoped GitHub Actions test workflow was added, but no run/check result is visible yet.
-- Automatic deletion propagation is blocked as DELETION_PENDING; there is no delete adapter operation. Two-way sync E2E, live parity, and integration are NOT VERIFIED.
-- `main` is not the destination for Work 101 commits; no merge or release is authorized.
+- Repository and dedicated branch were verified through the GitHub connector; Work 101 files are isolated to `work/101-room-hop-dual-workspace`.
+- Pure policy/planner is deterministic and DRY_RUN only; it performs no I/O, network access, writes or ROOM-HOP calls.
+- GitHub Actions run [38341347877](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/38341347877) completed SUCCESS on commit `b4e51967ee91c3cfa19e995c2461f7345d3457d3`; all 21 Python 3.12 unit tests passed.
+- The PowerShell runner was repaired and read back from the branch. It has NOT been run on the user's Windows PC.
+- Dashboard UI and schema are static files only; no live data connection or browser runtime evidence exists.
+- Two-way sync E2E, live parity, adapter write/read-back, Core authorization, symlink/realpath containment, restart/recovery and integration remain NOT VERIFIED / BLOCKED.
+- GitHub Actions logs show a post-checkout cleanup warning because `.gitmodules` has no URL for submodule path `room-meeting-ai`; the test job still concluded SUCCESS. This repository-level warning is not treated as a Work 101 test failure.
+- `main` has not been merged or modified by Work 101. No merge or release is authorized.
 
 ## Next gate
-Review source and target digest parity, execute tests through an approved runner, reconcile Work 14 lifecycle evidence, verify Work 24/27/28 live contracts, and only then design the runtime adapter. Keep sync in DRY_RUN until an exact operation is separately approved.
+Verify Work 24/27/28 live contracts and reconcile Work 14 lifecycle evidence. Then design and test the runtime adapter in an isolated disposable fixture; retain DRY_RUN until exact approval is recorded. No write, merge or release without Vinh's explicit approval bound to operation ID, diff digest, destination branch and base revision.
