@@ -23,6 +23,7 @@
     "parity": {"enum": ["MATCH", "DRIFT", "UNBOUND", "BLOCKED", "NOT_VERIFIED", "UNKNOWN"]},
     "last_operation": {"type": ["object", "null"]},
     "conflict_count": {"type": ["integer", "null"], "minimum": 0},
+    "deletion_review_count": {"type": ["integer", "null"], "minimum": 0},
     "evidence_refs": {"type": "array", "items": {"type": "string"}},
     "updated_at": {"type": ["string", "null"], "format": "date-time"},
     "stale": {"type": "boolean"}
