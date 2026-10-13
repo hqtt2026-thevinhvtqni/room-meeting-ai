@@ -2,18 +2,18 @@
 
 - Date: 2026-10-13
 - Workflow: `Work 101 policy tests`
-- Run: [38341347877](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/38341347877)
-- Job: [Work 101 unit tests (Python 3.12)](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/38341347877/job/115112806739)
+- Run: [38341525183](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/38341525183)
+- Job: [Work 101 unit tests (Python 3.12)](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/38341347877/job/115113361228)
 - Result: PASS
 - Conclusion: `success`
-- Tested commit: `b4e51967ee91c3cfa19e995c2461f7345d3457d3`
+- Tested commit: `2263ae1d180aa4503822cb53b554719fc6ecfffa`
 - Runtime: GitHub-hosted `ubuntu-latest`, CPython 3.12.15
 - Command: `python -m unittest discover -s work/101/ROOM-HOP-DUAL-WORKSPACE/05_TEST -p "test_*.py" -v`
-- Test result from job log: `Ran 21 tests in 0.014s` / `OK`
+- Test result from job log: `Ran 23 tests in 0.004s` / `OK`
 
 ## Verified
-- 21/21 pure policy unit tests passed.
-- Bilateral deletion, source deletion, destination deletion, conflict blocking, stale baseline, path allowlist, digest binding, approval binding and idempotency cases are included.
+- 23/23 pure policy unit tests passed.
+- Bilateral deletion, source deletion, destination deletion, conflict blocking, stale baseline, path allowlist, digest binding, approval binding, idempotency, Windows-invalid path characters, OS metadata, temporary/backup files and private-key material cases are included.
 - Workflow tested the dedicated Work 101 branch commit only; no merge, runtime write, or ROOM-HOP service call was performed.
 
 ## Warnings / limits
