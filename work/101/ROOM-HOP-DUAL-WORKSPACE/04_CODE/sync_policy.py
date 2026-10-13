@@ -26,6 +26,7 @@ class ChangeState(str, Enum):
     NON_OVERLAPPING = "NON_OVERLAPPING"
     CONFLICT_PENDING = "CONFLICT_PENDING"
     STALE_BASE = "STALE_BASE"
+    DELETION_PENDING = "DELETION_PENDING"
 
 
 @dataclass(frozen=True)
@@ -147,6 +148,22 @@ def classify_sync(base: Snapshot, source: Snapshot, destination: Snapshot) -> Sy
     dst_changed = {p for p in paths if destination.files.get(p) != base.files.get(p)}
     if not src_changed and not dst_changed:
         return SyncDecision(ChangeState.NO_CHANGE)
+    # A deletion is never propagated automatically. Require explicit review whenever
+    # a baseline file disappears on one side while the other side still has content.
+    deleted_paths = {
+        p for p in set(base.files) | set(source.files) | set(destination.files)
+        if p in base.files
+        and source.files.get(p) != destination.files.get(p)
+        and (p not in source.files or p not in destination.files)
+    }
+    if deleted_paths:
+        return SyncDecision(
+            ChangeState.DELETION_PENDING,
+            tuple(sorted(src_changed)),
+            tuple(sorted(dst_changed)),
+            tuple(sorted(deleted_paths)),
+            "DELETE_REQUIRES_EXPLICIT_REVIEW",
+        )
     overlap = src_changed & dst_changed
     # Same-path changes are only conflict-free when both sides independently reached
     # exactly the same content digest (including both deletions).
@@ -245,7 +262,7 @@ def build_sync_plan(
     decision = classify_sync(base, source, destination)
     source_to_destination: tuple[str, ...] = ()
     destination_to_source: tuple[str, ...] = ()
-    if decision.state not in {ChangeState.CONFLICT_PENDING, ChangeState.STALE_BASE}:
+    if decision.state not in {ChangeState.CONFLICT_PENDING, ChangeState.STALE_BASE, ChangeState.DELETION_PENDING}:
         paths = set(base.files) | set(source.files) | set(destination.files)
         to_destination = []
         to_source = []
