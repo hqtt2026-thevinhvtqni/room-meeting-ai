@@ -22,7 +22,7 @@ class SyncPolicyTests(unittest.TestCase):
         self.assertEqual(canonical_relative_path("src/module.py"), "src/module.py")
 
     def test_rejects_traversal_absolute_drive_and_ads(self):
-        for path in ("../secret.txt", "/etc/passwd", "\\rooted.txt", "src\\\\nested.txt", "C:/temp/a.py", "src/file.txt:secret"):
+        for path in ("../secret.txt", "/etc/passwd", "\\rooted.txt", "src\\nested.txt", "C:/temp/a.py", "src/file.txt:secret"):
             with self.subTest(path=path), self.assertRaises(PolicyError):
                 canonical_relative_path(path)
 
