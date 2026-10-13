@@ -131,6 +131,21 @@ class SyncPolicyTests(unittest.TestCase):
         self.assertEqual(plan.source_to_destination, ())
         self.assertEqual(plan.destination_to_source, ())
 
+    def test_bilateral_deletion_still_requires_review(self):
+        base = snap("b1", {"04_CODE/a.py": "old"})
+        source = snap("s1", {}, base_revision="b1")
+        dest = snap("d1", {}, base_revision="b1")
+        plan = build_sync_plan(
+            operation_id="op-101-delete-both", work_id="101",
+            destination_branch="work/101-room-hop-dual-workspace",
+            base_revision="b1", base=base, source=source, destination=dest,
+            permitted_path_roots=("04_CODE/",),
+        )
+        self.assertEqual(plan.state, ChangeState.DELETION_PENDING)
+        self.assertEqual(plan.conflict_paths, ("04_CODE/a.py",))
+        self.assertEqual(plan.destination_to_source, ())
+        self.assertEqual(plan.source_to_destination, ())
+
     def test_destination_deletion_requires_review(self):
         base = snap("b1", {"04_CODE/a.py": "old"})
         source = snap("s1", {"04_CODE/a.py": "old"}, base_revision="b1")
