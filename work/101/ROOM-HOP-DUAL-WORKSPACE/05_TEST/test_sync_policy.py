@@ -9,7 +9,7 @@ sys.path.insert(0, str(CODE_DIR))
 
 from sync_policy import (
     ApprovalBinding, ChangeState, PolicyError, Snapshot, bind_approval,
-    canonical_relative_path, classify_sync, enforce_idempotency, sha256_text,
+    build_sync_plan, canonical_relative_path, classify_sync, enforce_idempotency, sha256_text,
 )
 
 
@@ -48,6 +48,46 @@ class SyncPolicyTests(unittest.TestCase):
         result = classify_sync(base, source, dest)
         self.assertEqual(result.state, ChangeState.STALE_BASE)
         self.assertEqual(result.reason, "SOURCE_BASE_REVISION_MISMATCH")
+
+    def test_plan_is_dry_run_and_directional(self):
+        base = snap("b1", {"04_CODE/a.py": "old", "05_TEST/t.py": "old"})
+        source = snap("s1", {"04_CODE/a.py": "new", "05_TEST/t.py": "old"})
+        dest = snap("d1", {"04_CODE/a.py": "old", "05_TEST/t.py": "new"})
+        plan = build_sync_plan(
+            operation_id="op-101-1", work_id="101", destination_branch="work/101-room-hop-dual-workspace",
+            base_revision="b1", base=base, source=source, destination=dest,
+            permitted_path_roots=("04_CODE/", "05_TEST/"),
+        )
+        self.assertEqual(plan.mode, "DRY_RUN")
+        self.assertEqual(plan.source_to_destination, ("04_CODE/a.py",))
+        self.assertEqual(plan.destination_to_source, ("05_TEST/t.py",))
+        self.assertEqual(len(plan.diff_digest), 64)
+
+    def test_plan_blocks_conflicts_without_transfer(self):
+        base = snap("b1", {"04_CODE/a.py": "old"})
+        source = snap("s1", {"04_CODE/a.py": "source"})
+        dest = snap("d1", {"04_CODE/a.py": "destination"})
+        plan = build_sync_plan(
+            operation_id="op-101-2", work_id="101", destination_branch="work/101-room-hop-dual-workspace",
+            base_revision="b1", base=base, source=source, destination=dest,
+            permitted_path_roots=("04_CODE/",),
+        )
+        self.assertEqual(plan.state, ChangeState.CONFLICT_PENDING)
+        self.assertEqual(plan.source_to_destination, ())
+        self.assertEqual(plan.destination_to_source, ())
+        self.assertEqual(plan.conflict_paths, ("04_CODE/a.py",))
+
+    def test_plan_rejects_main_and_paths_outside_allowlist(self):
+        base = snap("b1", {"04_CODE/a.py": "old"})
+        source = snap("s1", {"04_CODE/a.py": "new"})
+        dest = snap("d1", {"04_CODE/a.py": "old"})
+        args = dict(operation_id="op-101-3", work_id="101", base_revision="b1", base=base,
+                    source=source, destination=dest, permitted_path_roots=("04_CODE/",))
+        with self.assertRaises(PolicyError):
+            build_sync_plan(destination_branch="main", **args)
+        outside = snap("s2", {"00_ROOT/config.yaml": "x"})
+        with self.assertRaises(PolicyError):
+            build_sync_plan(destination_branch="work/101-room-hop-dual-workspace", **{**args, "source": outside})
 
     def test_source_only_change(self):
         base = snap("b1", {"a.txt": "old"})
