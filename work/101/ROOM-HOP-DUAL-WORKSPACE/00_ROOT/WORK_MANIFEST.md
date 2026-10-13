@@ -2,14 +2,14 @@
 
 - Work ID: 101
 - Work Name: ROOM-HOP-DUAL-WORKSPACE
-- Status: ACTIVE — 23 POLICY UNIT TESTS PASS; RUNTIME ADAPTER / ROOM-HOP E2E BLOCKED
+- Status: ACTIVE — 31 POLICY + FIXTURE TESTS PASS; REAL SANDBOX/GITHUB E2E BLOCKED
 - Authority: Vinh
 - Coordinator: Xu
 - Repository: `hqtt2026-thevinhvtqni/room-meeting-ai`
 - Dedicated branch: `work/101-room-hop-dual-workspace`
 - Work root: `work/101/ROOM-HOP-DUAL-WORKSPACE/`
 - Frozen branch baseline: `d7c90d9d31062d389810808e43dfdd19d7711b75`
-- Latest verified Work 101 CI commit: `661fee7d3dc1d4aedddc247a7149ca5cd2292617`
+- Latest verified Work 101 CI commit: `76037e53c97d60b90b17f23f2bcd46588e118d32` (GitHub Actions run `38471661156`, SUCCESS; 31 tests passed)
 - Sync mode: DRY_RUN
 - Integration approval: Vinh only
 - Canonical structure: `03_ARCHITECTURE/CANONICAL_PARALLEL_WORK_STRUCTURE.md`
@@ -35,14 +35,19 @@ Rule-based two-way synchronization between ROOM-HOP Sandbox and GitHub, with cap
 - Integration, merge and release are separate operations requiring Vinh's explicit approval.
 - Missing evidence means NOT VERIFIED, not PASS.
 
-## Current verified state — 2026-10-13
+## Current verified state — 2026-10-14
 - Repository and dedicated branch were verified through the GitHub connector; Work 101 files are isolated to `work/101-room-hop-dual-workspace`.
 - Live ROOM-HOP MCP read-back confirms Sandbox Work 101 exists, but its `00_ROOT/SYNC_TARGET.yaml` remains `UNBOUND`; its policy/test files are older than the tested GitHub-branch versions. Sandbox↔GitHub parity is NOT VERIFIED, and no sync write was performed.
 - Pure policy/planner is deterministic and DRY_RUN only; it performs no I/O, network access, writes or ROOM-HOP calls.
 - GitHub Actions run [38341600485](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/38341600485) completed SUCCESS on commit `b4e51967ee91c3cfa19e995c2461f7345d3457d3`; all 23 Python 3.12 unit tests passed.
-- Added exclusions for OS metadata, temporary/backup files, private-key material and Windows-invalid filename characters; the suite now includes 23 tests. The PowerShell runner was repaired and read back from the branch. It has NOT been run on the user's Windows PC.
+- Added exclusions for OS metadata, temporary/backup files, private-key material and Windows-invalid filename characters. The current GitHub Actions run `38471661156` executed 31 tests on Python 3.12 and concluded SUCCESS. This includes eight disposable filesystem-fixture tests; it does NOT establish live Sandbox/GitHub E2E. The fixture CAS test now derives its current revision from actual fixture file state. The PowerShell runner was repaired and read back from the branch; it has NOT been run on the user's Windows PC.
 - Dashboard UI and schema are static files only; no live data connection or browser runtime evidence exists.
 - Two-way sync E2E, live parity, adapter write/read-back, Core authorization, symlink/realpath containment, restart/recovery and integration remain NOT VERIFIED / BLOCKED.
+- Latest CI evidence: [run 38471661156](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/38471661156), commit `76037e53c97d60b90b17f23f2bcd46588e118d32`, job `Work 101 unit tests (Python 3.12)`, 31 tests passed. GitHub Actions emitted a post-job cleanup warning because `.gitmodules` has no URL for submodule path `room-meeting-ai`; the job conclusion remains SUCCESS.
+- ROOM-HOP MCP was reachable on 2026-10-14 and Work 101 Sandbox files were read back. Sandbox `SYNC_TARGET.yaml` remains `UNBOUND` with no repository, branch, work root, or base revision. No sync write was performed.
+- Fixture CAS was hardened to derive the current revision from the fixture's actual file manifest; the stale-revision negative test passed in run 38471661156.
+- Real Sandbox↔GitHub E2E remains BLOCKED: no runtime provider adapter, no common-base binding, no live revision/ETag enforcement, and no provider write/read-back evidence. Latest PC start log reports MCP Build :8030 did not listen.
+
 - GitHub Actions logs show a post-checkout cleanup warning because `.gitmodules` has no URL for submodule path `room-meeting-ai`; the test job still concluded SUCCESS. This repository-level warning is not treated as a Work 101 test failure.
 - `main` has not been merged or modified by Work 101. No merge or release is authorized.
 
