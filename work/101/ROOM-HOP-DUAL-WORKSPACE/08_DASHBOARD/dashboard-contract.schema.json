@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ROOM-HOP Work Dashboard Read Model",
+  "type": "object",
+  "required": ["work_id", "lifecycle", "source_status", "github_target", "sync_mode", "updated_at"],
+  "properties": {
+    "work_id": {"type": "string"},
+    "lifecycle": {"enum": ["ACTIVE", "TEST", "BLOCKED", "IN_PROGRESS", "COMPLETED", "UNKNOWN"]},
+    "source_status": {"enum": ["CONNECTED", "DISCONNECTED", "STALE", "UNKNOWN"]},
+    "github_target": {
+      "type": "object",
+      "required": ["state"],
+      "properties": {
+        "state": {"enum": ["BOUND", "UNBOUND", "BLOCKED", "UNKNOWN"]},
+        "repository_full_name": {"type": ["string", "null"]},
+        "branch": {"type": ["string", "null"]},
+        "work_root": {"type": ["string", "null"]},
+        "base_revision": {"type": ["string", "null"]}
+      },
+      "additionalProperties": false
+    },
+    "sync_mode": {"enum": ["DRY_RUN", "READ_ONLY", "WRITE_APPROVED", "DISABLED"]},
+    "parity": {"enum": ["MATCH", "DRIFT", "UNBOUND", "BLOCKED", "NOT_VERIFIED", "UNKNOWN"]},
+    "last_operation": {"type": ["object", "null"]},
+    "conflict_count": {"type": ["integer", "null"], "minimum": 0},
+    "evidence_refs": {"type": "array", "items": {"type": "string"}},
+    "updated_at": {"type": ["string", "null"], "format": "date-time"},
+    "stale": {"type": "boolean"}
+  },
+  "additionalProperties": false
+}
