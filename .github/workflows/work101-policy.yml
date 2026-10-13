@@ -1,0 +1,30 @@
+name: Work 101 policy tests
+
+on:
+  push:
+    branches:
+      - work/101-room-hop-dual-workspace
+    paths:
+      - "work/101/ROOM-HOP-DUAL-WORKSPACE/04_CODE/**"
+      - "work/101/ROOM-HOP-DUAL-WORKSPACE/05_TEST/**"
+      - ".github/workflows/work101-policy.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  unit-tests:
+    name: Work 101 unit tests (Python 3.12)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout dedicated Work 101 branch
+        uses: actions/checkout@v4
+        with:
+          ref: work/101-room-hop-dual-workspace
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run pure policy tests
+        run: python -m unittest discover -s work/101/ROOM-HOP-DUAL-WORKSPACE/05_TEST -p "test_*.py" -v
