@@ -1,0 +1,3 @@
+- Keep the three ONT prototype clients on separate TanStack routes and share typed mock records plus one React state provider; this keeps relationships and ticket changes consistent without a backend.
+- Keep the sample records deterministic in a shared data module; this makes the demo repeatable and ready to replace with API reads later.
+- Deep links use URL search params (?ont=, ?ticket=, ?tab=) parsed by one shared validator; screens stay shareable without new routes and invalid IDs render an in-app not-found state.
