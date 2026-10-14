@@ -1,0 +1,35 @@
+{
+  "meta": {
+    "work_id": "98",
+    "product": "ONT Care",
+    "data_mode": "MOCK",
+    "build_status": "BLOCKED",
+    "source_path": "ont-platform/",
+    "source_revision": "UNKNOWN — chưa có Git repository/revision",
+    "generated": "2026-10-13",
+    "runtime_test": "NOT RUN",
+    "note": "Dữ liệu hiển thị là fixture minh họa, không phải trạng thái ONT thật."
+  },
+  "summary": [
+    {"label":"Tổng ONT","value":"128","hint":"DEMO fixture"},
+    {"label":"Online","value":"116","hint":"DEMO fixture"},
+    {"label":"Cảnh báo","value":"8","hint":"DEMO fixture"},
+    {"label":"Sự cố mở","value":"4","hint":"DEMO fixture"}
+  ],
+  "onts": [
+    {"id":"ONT-DEMO-001","customer":"Nguyễn Minh An","model":"iGate GW040-NS","status":"ONLINE","signal":"-21.4 dBm","data_mode":"MOCK"},
+    {"id":"ONT-DEMO-002","customer":"Trần Thu Hà","model":"iGate GW040-NS","status":"WARNING","signal":"-27.8 dBm","data_mode":"MOCK"},
+    {"id":"ONT-DEMO-003","customer":"Lê Quốc Bảo","model":"HG8245","status":"OFFLINE","signal":"UNKNOWN","data_mode":"MOCK"}
+  ],
+  "tickets": [
+    {"id":"TK-DEMO-101","title":"Internet chập chờn","status":"OPEN","priority":"HIGH"},
+    {"id":"TK-DEMO-102","title":"Kiểm tra Wi-Fi","status":"ASSIGNED","priority":"NORMAL"}
+  ],
+  "journeys": [
+    {"name":"DASH overview loads","state":"NOT RUN","detail":"Chưa có browser E2E log"},
+    {"name":"Customer creates and tracks ticket","state":"NOT RUN","detail":"Chưa có browser E2E log"},
+    {"name":"Technician accepts and closes ticket","state":"NOT RUN","detail":"Chưa có browser E2E log"},
+    {"name":"Deep-link role authorization","state":"NOT RUN","detail":"Cần xác minh trusted authorization boundary"},
+    {"name":"Direct ONT read-only diagnostics","state":"BLOCKED","detail":"Chưa kết nối ONT thật"}
+  ]
+}
