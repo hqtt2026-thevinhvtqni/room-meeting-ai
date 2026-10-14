@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.1",
+  "title": "ONT Care — Product Preview",
+  "data_mode": "MOCK",
+  "build_status": "BLOCKED",
+  "reason": "Chưa có bằng chứng chạy build trong Sandbox",
+  "screens": [
+    {"label": "DASH", "renderer": "dashboard"},
+    {"label": "APP Khách", "renderer": "customer"},
+    {"label": "APP Kỹ thuật", "renderer": "technician"},
+    {"label": "E2E Journey", "renderer": "journeys"},
+    {"label": "BUILD & EVIDENCE", "renderer": "evidence"}
+  ]
+}
