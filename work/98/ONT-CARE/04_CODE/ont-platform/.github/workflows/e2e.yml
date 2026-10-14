@@ -1,0 +1,78 @@
+name: E2E Deep Links
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deep-links:
+    name: Deep link E2E (desktop + mobile)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install app dependencies
+        run: bun install
+
+      - name: Install Playwright (Python) + Chromium
+        run: |
+          pip install playwright
+          playwright install --with-deps chromium
+
+      - name: Start dev server
+        run: |
+          nohup bun run dev > dev-server.log 2>&1 &
+          for i in $(seq 1 60); do
+            if curl -sf -o /dev/null http://localhost:8080/; then
+              echo "Dev server is up"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "Dev server failed to start"
+          cat dev-server.log
+          exit 1
+
+      - name: Run deep link E2E suite
+        id: e2e
+        run: python3 e2e/deep_links_e2e.py | tee e2e-output.txt
+
+      - name: Report results
+        if: always()
+        run: |
+          {
+            echo "## Deep link E2E results"
+            echo ""
+            echo '```'
+            cat e2e-output.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ "${{ steps.e2e.outcome }}" = "failure" ]; then
+            echo "::error::Deep link E2E suite failed — see the log above for the failing cases."
+          fi
+
+      - name: Upload artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-failure-logs
+          path: |
+            e2e-output.txt
+            dev-server.log
+          if-no-files-found: ignore

@@ -1,9 +1,0 @@
-work_id: "98"
-repository: "hqtt2026-thevinhvtqni/room-meeting-ai"
-branch: "work/98-ont-care"
-base_revision: "d7c90d9d31062d389810808e43dfdd19d7711b75"
-root: "work/98/ONT-CARE/"
-mode: "FEATURE_BRANCH_ONLY"
-merge_allowed: false
-release_allowed: false
-secrets_allowed: false
