@@ -28,14 +28,17 @@ jobs:
           python-version: "3.12"
 
       - name: Install app dependencies
+        working-directory: work/98/ONT-CARE/04_CODE/ont-platform
         run: bun install
 
       - name: Install Playwright (Python) + Chromium
+        working-directory: work/98/ONT-CARE/04_CODE/ont-platform
         run: |
           pip install playwright
           playwright install --with-deps chromium
 
       - name: Start dev server
+        working-directory: work/98/ONT-CARE/04_CODE/ont-platform
         run: |
           nohup bun run dev > dev-server.log 2>&1 &
           for i in $(seq 1 60); do
@@ -51,6 +54,7 @@ jobs:
 
       - name: Run deep link E2E suite
         id: e2e
+        working-directory: work/98/ONT-CARE/04_CODE/ont-platform
         run: python3 e2e/deep_links_e2e.py | tee e2e-output.txt
 
       - name: Report results

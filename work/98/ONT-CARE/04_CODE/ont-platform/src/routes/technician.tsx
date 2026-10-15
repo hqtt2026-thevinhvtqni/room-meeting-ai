@@ -1,34 +1,713 @@
-import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
-import { parseDeepLink } from '@/lib/deep-links';
-import { Activity, ArrowLeft, ArrowRight, Bell, Camera, Check, CheckCircle2, CircleUserRound, ClipboardList, Clock3, HardDrive, Home, MapPin, Phone, Plus, Search, UserRound, Users, Wrench, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { usePlatform } from '@/components/platform-context';
-import { customerFor, ontFor, statusLabels, technicians, type Ticket } from '@/lib/ont-data';
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { parseDeepLink } from "@/lib/deep-links";
+import {
+  Activity,
+  ArrowLeft,
+  ArrowRight,
+  Bell,
+  Camera,
+  Check,
+  CheckCircle2,
+  CircleUserRound,
+  ClipboardList,
+  Clock3,
+  HardDrive,
+  Home,
+  MapPin,
+  Phone,
+  Plus,
+  Search,
+  UserRound,
+  Users,
+  Wrench,
+  X,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { usePlatform } from "@/components/platform-context";
+import { customerFor, ontFor, statusLabels, technicians, type Ticket } from "@/lib/ont-data";
 
-export const Route = createFileRoute('/technician')({ head: () => ({meta:[{title:'App Thợ | ONT Platform'},{name:'description',content:'Công việc hiện trường, chẩn đoán ONT và xác nhận hoàn thành cho kỹ thuật viên.'},{property:'og:title',content:'App Thợ — ONT Platform'},{property:'og:description',content:'Tiếp nhận và xử lý sự cố mạng ngay tại hiện trường.'},{property:'og:type',content:'website'},{name:'twitter:card',content:'summary_large_image'}]}), validateSearch: parseDeepLink, component: TechnicianApp });
-const tabs = [{name:'Trang chủ',icon:Home},{name:'Công việc',icon:ClipboardList},{name:'Khách hàng',icon:Users},{name:'Thiết bị',icon:HardDrive},{name:'Cá nhân',icon:CircleUserRound}];
-const technician = technicians[0] ?? {id:'KT-001',name:'Kỹ thuật viên',area:'Quận 1',status:'AVAILABLE' as const,lastActive:'Vừa xong'};
-const checklist = ['Kiểm tra nguồn','Kiểm tra WAN','Kiểm tra PON','Kiểm tra optical','Kiểm tra Wi-Fi','Kiểm tra LAN','Chạy Speed Test','Kiểm tra thiết bị khách'];
-function TechnicianApp(){
- const {tickets,customers,onts,updateTicket,addCustomer,addOnt,notify}=usePlatform();
- const [tab,setTab]=useState('Trang chủ'); const [checks,setChecks]=useState<string[]>([]); const [diagnosis,setDiagnosis]=useState(''); const [action,setAction]=useState(''); const [testResult,setTestResult]=useState(''); const [confirmed,setConfirmed]=useState(false); const [query,setQuery]=useState('');
- const [addingCustomer,setAddingCustomer]=useState(false); const [newName,setNewName]=useState(''); const [newPhone,setNewPhone]=useState(''); const [newAddress,setNewAddress]=useState('');
- const [addingOnt,setAddingOnt]=useState(false); const [newSerial,setNewSerial]=useState(''); const [newModel,setNewModel]=useState('ZXHN F670L'); const [newOntCustomer,setNewOntCustomer]=useState('');
- const mine=tickets.filter(t=>t.technicianId===technician.id || t.status==='OPEN'); const sp=Route.useSearch(); const navigate=useNavigate({from:'/technician'}); const setJob=(t:Ticket|null)=>navigate({search:t?{ticket:t.id}:{}}); const current=sp.ticket ? tickets.find(t=>t.id===sp.ticket) ?? null : null; const missingTicket=sp.ticket && !current ? sp.ticket : null; const cust=current ? customerFor(current.customerId):undefined; const ont=current ? ontFor(current.ontId):undefined;
- const select=(t:Ticket)=>setJob(t);
- useEffect(()=>{const t=sp.ticket?tickets.find(x=>x.id===sp.ticket):undefined;setChecks([]);setDiagnosis(t?.diagnosis??'');setAction(t?.action??'');setTestResult(t?.testResult??'');setConfirmed(t?.confirmed??false)// eslint-disable-next-line react-hooks/exhaustive-deps
- },[sp.ticket]);
- const start=(t:Ticket)=>{updateTicket(t.id,{status:t.status==='OPEN'?'ASSIGNED':'IN_PROGRESS',technicianId:technician.id});notify(t.status==='OPEN'?'Đã nhận công việc':'Đã bắt đầu xử lý')};
- return <div className="mobile-app technician-app"><div className="mobile-top"><div className="mobile-logo"><span><Activity size={19}/></span>ONT<span>Platform</span></div><div className="mobile-top-actions"><Link to="/" title="Bảng điều hành"><HardDrive size={18}/></Link><Link to="/customer" title="App Khách"><Users size={18}/></Link><Button variant="ghost" size="icon" aria-label="Thông báo" onClick={()=>notify(`${mine.length} công việc cần theo dõi`)}><Bell size={20}/></Button><span className="mobile-avatar">KT</span></div></div>
- <div className="mobile-body">{missingTicket ? <div className="not-found-block"><span className="mini-section-title">LIÊN KẾT KHÔNG HỢP LỆ</span><h1>Không tìm thấy công việc {missingTicket}</h1><p>Công việc này không tồn tại hoặc đã bị xoá.</p><Button className="w-full" onClick={()=>{setJob(null);setTab('Công việc')}}><ArrowLeft size={17}/> Về danh sách công việc</Button></div> : current && cust && ont ? <><Button variant="ghost" className="mobile-back" onClick={()=>setJob(null)}><ArrowLeft size={18}/> Công việc</Button><div className="mobile-title-row"><div><span className="mobile-kicker">{current.id} · {current.priority.toUpperCase()}</span><h1>{current.issue}</h1></div><span className="mobile-status">{statusLabels[current.status]}</span></div><div className="mobile-info-block"><div className="mini-section-title">THÔNG TIN KHÁCH HÀNG</div><strong>{cust.name}</strong><p><MapPin size={15}/>{cust.address}</p><a href={`tel:${cust.phone}`}><Phone size={15}/>{cust.phone}</a><Link to="/" search={{ticket:current.id}} className="deep-inline">Xem ticket trên Dashboard <ArrowRight size={14}/></Link></div><div className="mobile-info-block"><div className="mini-section-title">THIẾT BỊ ONT</div><div className="mobile-device-row"><div><strong>{ont.model}</strong><small>{ont.serial} · {ont.id}</small></div><span className={`status status-${ont.status==='ONLINE'?'good':ont.status==='WARNING'?'warn':'bad'}`}><span className="status-dot"/>{statusLabels[ont.status]}</span></div><div className="mobile-device-metrics"><span>Optical <strong>{ont.optical} dBm</strong></span><span>WAN <strong>{ont.wan}</strong></span></div><Link to="/" search={{ont:ont.id}} className="deep-inline">Mở chi tiết ONT <ArrowRight size={14}/></Link></div>
- {current.status==='OPEN'||current.status==='ASSIGNED'?<div className="mobile-cta"><Button className="w-full" onClick={()=>start(current)}>{current.status==='OPEN'?'Nhận việc':'Bắt đầu xử lý'} <ArrowRight size={17}/></Button></div>:<><div className="mini-section-title checklist-heading">CHECKLIST KỸ THUẬT <span>{checks.length}/{checklist.length}</span></div><div className="checklist">{checklist.map(c=><label key={c}><input type="checkbox" checked={checks.includes(c)} onChange={()=>setChecks(prev=>prev.includes(c)?prev.filter(x=>x!==c):[...prev,c])}/><span className="check-mark"><Check size={13}/></span>{c}</label>)}</div><div className="mobile-form"><div className="mini-section-title">BÁO CÁO XỬ LÝ</div><label>1. Chẩn đoán nguyên nhân <textarea value={diagnosis} onChange={e=>setDiagnosis(e.target.value)} placeholder="Mô tả vấn đề đã xác định..."/></label><label>2. Biện pháp xử lý <textarea value={action} onChange={e=>setAction(e.target.value)} placeholder="Các bước đã thực hiện..."/></label><label>3. Kết quả kiểm tra <textarea value={testResult} onChange={e=>setTestResult(e.target.value)} placeholder="Kết quả sau xử lý..."/></label><div className="field-tools"><Button variant="outline" onClick={()=>{setTestResult(`Download ${ont.speed} Mbps · Upload ${Math.round(ont.speed*.36)} Mbps · Ping ${ont.ping} ms`);notify('Đã chạy kiểm tra tốc độ')}}><Activity size={16}/> Chạy test</Button><label className="photo-tool"><Camera size={16}/> Chụp ảnh<input type="file" accept="image/*" capture="environment" onChange={e=>notify(e.target.files?.[0]?.name ? `Đã chọn ảnh ${e.target.files[0].name}`:'')}/></label></div><label>Ghi chú thêm <textarea placeholder="Ghi chú cho đội vận hành..."/></label><label className="confirm-check"><input type="checkbox" checked={confirmed} onChange={e=>setConfirmed(e.target.checked)}/><span>Khách hàng đã xác nhận kết quả xử lý</span></label><Button className="w-full" disabled={!diagnosis.trim()||!action.trim()||!testResult.trim()||!confirmed} onClick={()=>{updateTicket(current.id,{status:'CLOSED',diagnosis,action,testResult,confirmed});notify(`${current.id} đã hoàn thành và đóng`);setJob(null);setTab('Công việc')}}><CheckCircle2 size={17}/> Xác nhận hoàn thành</Button><p className="form-hint">Cần chẩn đoán, xử lý, kiểm tra và xác nhận từ khách hàng trước khi hoàn thành.</p></div></>}
- </>:<>{tab==='Trang chủ' && <><div className="mobile-greeting"><span>THỨ HAI, 28 THÁNG 9</span><h1>Chào buổi sáng,<br/><em>{technician.name.split(' ').slice(-1)[0]}.</em></h1><p>Hôm nay bạn có {mine.filter(t=>!['CLOSED','RESOLVED'].includes(t.status)).length} công việc cần theo dõi.</p></div><div className="mobile-stat-grid"><div className="primary-mobile-stat"><small>Công việc hôm nay</small><strong>{mine.length}</strong><span>Đang chờ và được giao</span></div><div><small>Đang xử lý</small><strong>{mine.filter(t=>t.status==='IN_PROGRESS').length}</strong><span>Công việc</span></div><div><small>Hoàn thành</small><strong>{tickets.filter(t=>t.status==='CLOSED').length}</strong><span>Tháng này</span></div></div><div className="mobile-section-heading"><div><span>CÔNG VIỆC</span><h2>Cần xử lý</h2></div><Button variant="ghost" onClick={()=>setTab('Công việc')}>Xem tất cả <ArrowRight size={16}/></Button></div>{mine.slice(0,3).map(t=><JobCard key={t.id} ticket={t} open={()=>select(t)}/>)}</>}
- {tab==='Công việc' && <><div className="mobile-page-title"><span>QUẢN LÝ CÔNG VIỆC</span><h1>Công việc của tôi</h1><p>Tiếp nhận và theo dõi sự cố hiện trường.</p></div><div className="mobile-list">{mine.map(t=><JobCard key={t.id} ticket={t} open={()=>select(t)}/>)}</div></>}
- {tab==='Khách hàng' && <><div className="mobile-page-title"><span>DANH BẠ</span><h1>Khách hàng</h1></div>{addingCustomer ? <div className="mobile-form"><div className="mobile-section-heading"><div><span>THÊM MỚI</span><h2>Khách hàng mới</h2></div><Button variant="ghost" size="icon" aria-label="Đóng" onClick={()=>setAddingCustomer(false)}><X size={18}/></Button></div><label>Họ tên <Input value={newName} onChange={e=>setNewName(e.target.value)} placeholder="Nguyễn Văn A"/></label><label>Số điện thoại <Input value={newPhone} onChange={e=>setNewPhone(e.target.value)} placeholder="09xxxxxxxx" inputMode="tel"/></label><label>Địa chỉ lắp đặt <textarea value={newAddress} onChange={e=>setNewAddress(e.target.value)} placeholder="Số nhà, đường, quận/huyện..."/></label><Button className="w-full" disabled={!newName.trim()||!newPhone.trim()||!newAddress.trim()} onClick={()=>{addCustomer({name:newName.trim(),phone:newPhone.trim(),address:newAddress.trim()});setNewName('');setNewPhone('');setNewAddress('');setAddingCustomer(false)}}><Check size={17}/> Lưu khách hàng</Button></div> : <Button variant="outline" className="w-full" onClick={()=>setAddingCustomer(true)}><Plus size={17}/> Thêm khách hàng mới</Button>}<div className="mobile-search"><Search size={17}/><Input placeholder="Tìm tên, mã khách hàng..." value={query} onChange={e=>setQuery(e.target.value)}/></div><div className="mobile-rows">{customers.filter(c=>`${c.name} ${c.id}`.toLocaleLowerCase('vi').includes(query.toLocaleLowerCase('vi'))).slice(0,30).map(c=><div key={c.id}><span className="row-icon"><UserRound size={18}/></span><div><strong>{c.name}</strong><small>{c.id} · {c.phone}</small></div><span className="row-end">{c.ontId}</span></div>)}</div></>}
- {tab==='Thiết bị' && <><div className="mobile-page-title"><span>MẠNG LƯỚI</span><h1>Thiết bị ONT</h1></div>{addingOnt ? <div className="mobile-form"><div className="mobile-section-heading"><div><span>THÊM MỚI</span><h2>Thiết bị ONT mới</h2></div><Button variant="ghost" size="icon" aria-label="Đóng" onClick={()=>setAddingOnt(false)}><X size={18}/></Button></div><label>Serial number <Input value={newSerial} onChange={e=>setNewSerial(e.target.value)} placeholder="ZTEG48290001"/></label><label>Model <select value={newModel} onChange={e=>setNewModel(e.target.value)}>{['ZXHN F670L','HG8145V5','ZXHN F6600P','HG8245H'].map(m=><option key={m} value={m}>{m}</option>)}</select></label><label>Gán cho khách hàng <select value={newOntCustomer} onChange={e=>setNewOntCustomer(e.target.value)}><option value="">— Chưa gán —</option>{customers.map(c=><option key={c.id} value={c.id}>{c.id} · {c.name}</option>)}</select></label><Button className="w-full" disabled={!newSerial.trim()} onClick={()=>{addOnt({serial:newSerial.trim(),model:newModel,customerId:newOntCustomer});setNewSerial('');setNewOntCustomer('');setAddingOnt(false)}}><Check size={17}/> Lưu thiết bị</Button></div> : <Button variant="outline" className="w-full" onClick={()=>setAddingOnt(true)}><Plus size={17}/> Thêm thiết bị mới</Button>}<div className="mobile-search"><Search size={17}/><Input placeholder="Tìm ONT ID, serial..." value={query} onChange={e=>setQuery(e.target.value)}/></div><div className="mobile-rows">{onts.filter(o=>`${o.id} ${o.serial}`.toLowerCase().includes(query.toLowerCase())).slice(0,30).map(o=><div key={o.id}><span className="row-icon"><HardDrive size={18}/></span><div><strong>{o.id}</strong><small>{o.model} · {o.serial}</small></div><span className={`status status-${o.status==='ONLINE'?'good':o.status==='WARNING'?'warn':'bad'}`}><span className="status-dot"/>{statusLabels[o.status]}</span></div>)}</div></>}
- {tab==='Cá nhân' && <><div className="mobile-page-title"><span>TÀI KHOẢN</span><h1>Cá nhân</h1></div><div className="profile-block"><span className="profile-avatar">KT</span><h2>{technician.name}</h2><p>{technician.id} · {technician.area}</p><span className="status status-good"><span className="status-dot"/>Sẵn sàng</span></div><div className="mobile-rows"><div><Wrench size={19}/><div><strong>Công việc đang xử lý</strong><small>{mine.filter(t=>t.status==='IN_PROGRESS').length} ticket</small></div></div><div><Clock3 size={19}/><div><strong>Hoạt động gần nhất</strong><small>{technician.lastActive}</small></div></div></div></>}
- </> }</div><nav className="mobile-bottom-nav">{tabs.map(({name,icon:Icon})=><Button key={name} variant="ghost" className={tab===name?'active':''} onClick={()=>{setTab(name);if(sp.ticket)setJob(null);setQuery('')}}><Icon size={21}/><span>{name}</span></Button>)}</nav></div>;
+export const Route = createFileRoute("/technician")({
+  head: () => ({
+    meta: [
+      { title: "App Thợ | ONT Platform" },
+      {
+        name: "description",
+        content: "Công việc hiện trường, chẩn đoán ONT và xác nhận hoàn thành cho kỹ thuật viên.",
+      },
+      { property: "og:title", content: "App Thợ — ONT Platform" },
+      {
+        property: "og:description",
+        content: "Tiếp nhận và xử lý sự cố mạng ngay tại hiện trường.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
+  validateSearch: parseDeepLink,
+  component: TechnicianApp,
+});
+const tabs = [
+  { name: "Trang chủ", icon: Home },
+  { name: "Công việc", icon: ClipboardList },
+  { name: "Khách hàng", icon: Users },
+  { name: "Thiết bị", icon: HardDrive },
+  { name: "Cá nhân", icon: CircleUserRound },
+];
+const technician = technicians[0] ?? {
+  id: "KT-001",
+  name: "Kỹ thuật viên",
+  area: "Quận 1",
+  status: "AVAILABLE" as const,
+  lastActive: "Vừa xong",
+};
+const checklist = [
+  "Kiểm tra nguồn",
+  "Kiểm tra WAN",
+  "Kiểm tra PON",
+  "Kiểm tra optical",
+  "Kiểm tra Wi-Fi",
+  "Kiểm tra LAN",
+  "Chạy Speed Test",
+  "Kiểm tra thiết bị khách",
+];
+function TechnicianApp() {
+  const { tickets, customers, onts, updateTicket, addCustomer, addOnt, notify } = usePlatform();
+  const [tab, setTab] = useState("Trang chủ");
+  const [checks, setChecks] = useState<string[]>([]);
+  const [diagnosis, setDiagnosis] = useState("");
+  const [action, setAction] = useState("");
+  const [testResult, setTestResult] = useState("");
+  const [confirmed, setConfirmed] = useState(false);
+  const [query, setQuery] = useState("");
+  const [addingCustomer, setAddingCustomer] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [newPhone, setNewPhone] = useState("");
+  const [newAddress, setNewAddress] = useState("");
+  const [addingOnt, setAddingOnt] = useState(false);
+  const [newSerial, setNewSerial] = useState("");
+  const [newModel, setNewModel] = useState("ZXHN F670L");
+  const [newOntCustomer, setNewOntCustomer] = useState("");
+  const mine = tickets.filter((t) => t.technicianId === technician.id || t.status === "OPEN");
+  const sp = Route.useSearch();
+  const navigate = useNavigate({ from: "/technician" });
+  const setJob = (t: Ticket | null) => navigate({ search: t ? { ticket: t.id } : {} });
+  const current = sp.ticket ? (tickets.find((t) => t.id === sp.ticket) ?? null) : null;
+  const missingTicket = sp.ticket && !current ? sp.ticket : null;
+  const cust = current ? customerFor(current.customerId) : undefined;
+  const ont = current ? ontFor(current.ontId) : undefined;
+  const select = (t: Ticket) => setJob(t);
+  useEffect(() => {
+    const t = sp.ticket ? tickets.find((x) => x.id === sp.ticket) : undefined;
+    setChecks([]);
+    setDiagnosis(t?.diagnosis ?? "");
+    setAction(t?.action ?? "");
+    setTestResult(t?.testResult ?? "");
+    setConfirmed(t?.confirmed ?? false); // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sp.ticket]);
+  const start = (t: Ticket) => {
+    updateTicket(t.id, {
+      status: t.status === "OPEN" ? "ASSIGNED" : "IN_PROGRESS",
+      technicianId: technician.id,
+    });
+    notify(t.status === "OPEN" ? "Đã nhận công việc" : "Đã bắt đầu xử lý");
+  };
+  return (
+    <div className="mobile-app technician-app">
+      <div className="mobile-top">
+        <div className="mobile-logo">
+          <span>
+            <Activity size={19} />
+          </span>
+          ONT<span>Platform</span>
+        </div>
+        <div className="mobile-top-actions">
+          <Link to="/" title="Bảng điều hành">
+            <HardDrive size={18} />
+          </Link>
+          <Link to="/customer" title="App Khách">
+            <Users size={18} />
+          </Link>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Thông báo"
+            onClick={() => notify(`${mine.length} công việc cần theo dõi`)}
+          >
+            <Bell size={20} />
+          </Button>
+          <span className="mobile-avatar">KT</span>
+        </div>
+      </div>
+      <div className="mobile-body">
+        {missingTicket ? (
+          <div className="not-found-block">
+            <span className="mini-section-title">LIÊN KẾT KHÔNG HỢP LỆ</span>
+            <h1>Không tìm thấy công việc {missingTicket}</h1>
+            <p>Công việc này không tồn tại hoặc đã bị xoá.</p>
+            <Button
+              className="w-full"
+              onClick={() => {
+                setJob(null);
+                setTab("Công việc");
+              }}
+            >
+              <ArrowLeft size={17} /> Về danh sách công việc
+            </Button>
+          </div>
+        ) : current && cust && ont ? (
+          <>
+            <Button variant="ghost" className="mobile-back" onClick={() => setJob(null)}>
+              <ArrowLeft size={18} /> Công việc
+            </Button>
+            <div className="mobile-title-row">
+              <div>
+                <span className="mobile-kicker">
+                  {current.id} · {current.priority.toUpperCase()}
+                </span>
+                <h1>{current.issue}</h1>
+              </div>
+              <span className="mobile-status">{statusLabels[current.status]}</span>
+            </div>
+            <div className="mobile-info-block">
+              <div className="mini-section-title">THÔNG TIN KHÁCH HÀNG</div>
+              <strong>{cust.name}</strong>
+              <p>
+                <MapPin size={15} />
+                {cust.address}
+              </p>
+              <a href={`tel:${cust.phone}`}>
+                <Phone size={15} />
+                {cust.phone}
+              </a>
+              <Link to="/" search={{ ticket: current.id }} className="deep-inline">
+                Xem ticket trên Dashboard <ArrowRight size={14} />
+              </Link>
+            </div>
+            <div className="mobile-info-block">
+              <div className="mini-section-title">THIẾT BỊ ONT</div>
+              <div className="mobile-device-row">
+                <div>
+                  <strong>{ont.model}</strong>
+                  <small>
+                    {ont.serial} · {ont.id}
+                  </small>
+                </div>
+                <span
+                  className={`status status-${ont.status === "ONLINE" ? "good" : ont.status === "WARNING" ? "warn" : "bad"}`}
+                >
+                  <span className="status-dot" />
+                  {statusLabels[ont.status]}
+                </span>
+              </div>
+              <div className="mobile-device-metrics">
+                <span>
+                  Optical <strong>{ont.optical} dBm</strong>
+                </span>
+                <span>
+                  WAN <strong>{ont.wan}</strong>
+                </span>
+              </div>
+              <Link to="/" search={{ ont: ont.id }} className="deep-inline">
+                Mở chi tiết ONT <ArrowRight size={14} />
+              </Link>
+            </div>
+            {current.status === "OPEN" || current.status === "ASSIGNED" ? (
+              <div className="mobile-cta">
+                <Button className="w-full" onClick={() => start(current)}>
+                  {current.status === "OPEN" ? "Nhận việc" : "Bắt đầu xử lý"}{" "}
+                  <ArrowRight size={17} />
+                </Button>
+              </div>
+            ) : (
+              <>
+                <div className="mini-section-title checklist-heading">
+                  CHECKLIST KỸ THUẬT{" "}
+                  <span>
+                    {checks.length}/{checklist.length}
+                  </span>
+                </div>
+                <div className="checklist">
+                  {checklist.map((c) => (
+                    <label key={c}>
+                      <input
+                        type="checkbox"
+                        checked={checks.includes(c)}
+                        onChange={() =>
+                          setChecks((prev) =>
+                            prev.includes(c) ? prev.filter((x) => x !== c) : [...prev, c],
+                          )
+                        }
+                      />
+                      <span className="check-mark">
+                        <Check size={13} />
+                      </span>
+                      {c}
+                    </label>
+                  ))}
+                </div>
+                <div className="mobile-form">
+                  <div className="mini-section-title">BÁO CÁO XỬ LÝ</div>
+                  <label>
+                    1. Chẩn đoán nguyên nhân{" "}
+                    <textarea
+                      value={diagnosis}
+                      onChange={(e) => setDiagnosis(e.target.value)}
+                      placeholder="Mô tả vấn đề đã xác định..."
+                    />
+                  </label>
+                  <label>
+                    2. Biện pháp xử lý{" "}
+                    <textarea
+                      value={action}
+                      onChange={(e) => setAction(e.target.value)}
+                      placeholder="Các bước đã thực hiện..."
+                    />
+                  </label>
+                  <label>
+                    3. Kết quả kiểm tra{" "}
+                    <textarea
+                      value={testResult}
+                      onChange={(e) => setTestResult(e.target.value)}
+                      placeholder="Kết quả sau xử lý..."
+                    />
+                  </label>
+                  <div className="field-tools">
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setTestResult(
+                          `Download ${ont.speed} Mbps · Upload ${Math.round(ont.speed * 0.36)} Mbps · Ping ${ont.ping} ms`,
+                        );
+                        notify("Đã chạy kiểm tra tốc độ");
+                      }}
+                    >
+                      <Activity size={16} /> Chạy test
+                    </Button>
+                    <label className="photo-tool">
+                      <Camera size={16} /> Chụp ảnh
+                      <input
+                        type="file"
+                        accept="image/*"
+                        capture="environment"
+                        onChange={(e) =>
+                          notify(
+                            e.target.files?.[0]?.name
+                              ? `Đã chọn ảnh ${e.target.files[0].name}`
+                              : "",
+                          )
+                        }
+                      />
+                    </label>
+                  </div>
+                  <label>
+                    Ghi chú thêm <textarea placeholder="Ghi chú cho đội vận hành..." />
+                  </label>
+                  <label className="confirm-check">
+                    <input
+                      type="checkbox"
+                      checked={confirmed}
+                      onChange={(e) => setConfirmed(e.target.checked)}
+                    />
+                    <span>Khách hàng đã xác nhận kết quả xử lý</span>
+                  </label>
+                  <Button
+                    className="w-full"
+                    disabled={
+                      !diagnosis.trim() || !action.trim() || !testResult.trim() || !confirmed
+                    }
+                    onClick={() => {
+                      updateTicket(current.id, {
+                        status: "CLOSED",
+                        diagnosis,
+                        action,
+                        testResult,
+                        confirmed,
+                      });
+                      notify(`${current.id} đã hoàn thành và đóng`);
+                      setJob(null);
+                      setTab("Công việc");
+                    }}
+                  >
+                    <CheckCircle2 size={17} /> Xác nhận hoàn thành
+                  </Button>
+                  <p className="form-hint">
+                    Cần chẩn đoán, xử lý, kiểm tra và xác nhận từ khách hàng trước khi hoàn thành.
+                  </p>
+                </div>
+              </>
+            )}
+          </>
+        ) : (
+          <>
+            {tab === "Trang chủ" && (
+              <>
+                <div className="mobile-greeting">
+                  <span>THỨ HAI, 28 THÁNG 9</span>
+                  <h1>
+                    Chào buổi sáng,
+                    <br />
+                    <em>{technician.name.split(" ").slice(-1)[0]}.</em>
+                  </h1>
+                  <p>
+                    Hôm nay bạn có{" "}
+                    {mine.filter((t) => !["CLOSED", "RESOLVED"].includes(t.status)).length} công
+                    việc cần theo dõi.
+                  </p>
+                </div>
+                <div className="mobile-stat-grid">
+                  <div className="primary-mobile-stat">
+                    <small>Công việc hôm nay</small>
+                    <strong>{mine.length}</strong>
+                    <span>Đang chờ và được giao</span>
+                  </div>
+                  <div>
+                    <small>Đang xử lý</small>
+                    <strong>{mine.filter((t) => t.status === "IN_PROGRESS").length}</strong>
+                    <span>Công việc</span>
+                  </div>
+                  <div>
+                    <small>Hoàn thành</small>
+                    <strong>{tickets.filter((t) => t.status === "CLOSED").length}</strong>
+                    <span>Tháng này</span>
+                  </div>
+                </div>
+                <div className="mobile-section-heading">
+                  <div>
+                    <span>CÔNG VIỆC</span>
+                    <h2>Cần xử lý</h2>
+                  </div>
+                  <Button variant="ghost" onClick={() => setTab("Công việc")}>
+                    Xem tất cả <ArrowRight size={16} />
+                  </Button>
+                </div>
+                {mine.slice(0, 3).map((t) => (
+                  <JobCard key={t.id} ticket={t} open={() => select(t)} />
+                ))}
+              </>
+            )}
+            {tab === "Công việc" && (
+              <>
+                <div className="mobile-page-title">
+                  <span>QUẢN LÝ CÔNG VIỆC</span>
+                  <h1>Công việc của tôi</h1>
+                  <p>Tiếp nhận và theo dõi sự cố hiện trường.</p>
+                </div>
+                <div className="mobile-list">
+                  {mine.map((t) => (
+                    <JobCard key={t.id} ticket={t} open={() => select(t)} />
+                  ))}
+                </div>
+              </>
+            )}
+            {tab === "Khách hàng" && (
+              <>
+                <div className="mobile-page-title">
+                  <span>DANH BẠ</span>
+                  <h1>Khách hàng</h1>
+                </div>
+                {addingCustomer ? (
+                  <div className="mobile-form">
+                    <div className="mobile-section-heading">
+                      <div>
+                        <span>THÊM MỚI</span>
+                        <h2>Khách hàng mới</h2>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        aria-label="Đóng"
+                        onClick={() => setAddingCustomer(false)}
+                      >
+                        <X size={18} />
+                      </Button>
+                    </div>
+                    <label>
+                      Họ tên{" "}
+                      <Input
+                        value={newName}
+                        onChange={(e) => setNewName(e.target.value)}
+                        placeholder="Nguyễn Văn A"
+                      />
+                    </label>
+                    <label>
+                      Số điện thoại{" "}
+                      <Input
+                        value={newPhone}
+                        onChange={(e) => setNewPhone(e.target.value)}
+                        placeholder="09xxxxxxxx"
+                        inputMode="tel"
+                      />
+                    </label>
+                    <label>
+                      Địa chỉ lắp đặt{" "}
+                      <textarea
+                        value={newAddress}
+                        onChange={(e) => setNewAddress(e.target.value)}
+                        placeholder="Số nhà, đường, quận/huyện..."
+                      />
+                    </label>
+                    <Button
+                      className="w-full"
+                      disabled={!newName.trim() || !newPhone.trim() || !newAddress.trim()}
+                      onClick={() => {
+                        addCustomer({
+                          name: newName.trim(),
+                          phone: newPhone.trim(),
+                          address: newAddress.trim(),
+                        });
+                        setNewName("");
+                        setNewPhone("");
+                        setNewAddress("");
+                        setAddingCustomer(false);
+                      }}
+                    >
+                      <Check size={17} /> Lưu khách hàng
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => setAddingCustomer(true)}
+                  >
+                    <Plus size={17} /> Thêm khách hàng mới
+                  </Button>
+                )}
+                <div className="mobile-search">
+                  <Search size={17} />
+                  <Input
+                    placeholder="Tìm tên, mã khách hàng..."
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                  />
+                </div>
+                <div className="mobile-rows">
+                  {customers
+                    .filter((c) =>
+                      `${c.name} ${c.id}`
+                        .toLocaleLowerCase("vi")
+                        .includes(query.toLocaleLowerCase("vi")),
+                    )
+                    .slice(0, 30)
+                    .map((c) => (
+                      <div key={c.id}>
+                        <span className="row-icon">
+                          <UserRound size={18} />
+                        </span>
+                        <div>
+                          <strong>{c.name}</strong>
+                          <small>
+                            {c.id} · {c.phone}
+                          </small>
+                        </div>
+                        <span className="row-end">{c.ontId}</span>
+                      </div>
+                    ))}
+                </div>
+              </>
+            )}
+            {tab === "Thiết bị" && (
+              <>
+                <div className="mobile-page-title">
+                  <span>MẠNG LƯỚI</span>
+                  <h1>Thiết bị ONT</h1>
+                </div>
+                {addingOnt ? (
+                  <div className="mobile-form">
+                    <div className="mobile-section-heading">
+                      <div>
+                        <span>THÊM MỚI</span>
+                        <h2>Thiết bị ONT mới</h2>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        aria-label="Đóng"
+                        onClick={() => setAddingOnt(false)}
+                      >
+                        <X size={18} />
+                      </Button>
+                    </div>
+                    <label>
+                      Serial number{" "}
+                      <Input
+                        value={newSerial}
+                        onChange={(e) => setNewSerial(e.target.value)}
+                        placeholder="ZTEG48290001"
+                      />
+                    </label>
+                    <label>
+                      Model{" "}
+                      <select value={newModel} onChange={(e) => setNewModel(e.target.value)}>
+                        {["ZXHN F670L", "HG8145V5", "ZXHN F6600P", "HG8245H"].map((m) => (
+                          <option key={m} value={m}>
+                            {m}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                    <label>
+                      Gán cho khách hàng{" "}
+                      <select
+                        value={newOntCustomer}
+                        onChange={(e) => setNewOntCustomer(e.target.value)}
+                      >
+                        <option value="">— Chưa gán —</option>
+                        {customers.map((c) => (
+                          <option key={c.id} value={c.id}>
+                            {c.id} · {c.name}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                    <Button
+                      className="w-full"
+                      disabled={!newSerial.trim()}
+                      onClick={() => {
+                        addOnt({
+                          serial: newSerial.trim(),
+                          model: newModel,
+                          customerId: newOntCustomer,
+                        });
+                        setNewSerial("");
+                        setNewOntCustomer("");
+                        setAddingOnt(false);
+                      }}
+                    >
+                      <Check size={17} /> Lưu thiết bị
+                    </Button>
+                  </div>
+                ) : (
+                  <Button variant="outline" className="w-full" onClick={() => setAddingOnt(true)}>
+                    <Plus size={17} /> Thêm thiết bị mới
+                  </Button>
+                )}
+                <div className="mobile-search">
+                  <Search size={17} />
+                  <Input
+                    placeholder="Tìm ONT ID, serial..."
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                  />
+                </div>
+                <div className="mobile-rows">
+                  {onts
+                    .filter((o) =>
+                      `${o.id} ${o.serial}`.toLowerCase().includes(query.toLowerCase()),
+                    )
+                    .slice(0, 30)
+                    .map((o) => (
+                      <div key={o.id}>
+                        <span className="row-icon">
+                          <HardDrive size={18} />
+                        </span>
+                        <div>
+                          <strong>{o.id}</strong>
+                          <small>
+                            {o.model} · {o.serial}
+                          </small>
+                        </div>
+                        <span
+                          className={`status status-${o.status === "ONLINE" ? "good" : o.status === "WARNING" ? "warn" : "bad"}`}
+                        >
+                          <span className="status-dot" />
+                          {statusLabels[o.status]}
+                        </span>
+                      </div>
+                    ))}
+                </div>
+              </>
+            )}
+            {tab === "Cá nhân" && (
+              <>
+                <div className="mobile-page-title">
+                  <span>TÀI KHOẢN</span>
+                  <h1>Cá nhân</h1>
+                </div>
+                <div className="profile-block">
+                  <span className="profile-avatar">KT</span>
+                  <h2>{technician.name}</h2>
+                  <p>
+                    {technician.id} · {technician.area}
+                  </p>
+                  <span className="status status-good">
+                    <span className="status-dot" />
+                    Sẵn sàng (DEMO)
+                  </span>
+                </div>
+                <div className="mobile-rows">
+                  <div>
+                    <Wrench size={19} />
+                    <div>
+                      <strong>Công việc đang xử lý (MOCK)</strong>
+                      <small>{mine.filter((t) => t.status === "IN_PROGRESS").length} ticket</small>
+                    </div>
+                  </div>
+                  <div>
+                    <Clock3 size={19} />
+                    <div>
+                      <strong>Hoạt động gần nhất (MOCK)</strong>
+                      <small>{technician.lastActive}</small>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+          </>
+        )}
+      </div>
+      <nav className="mobile-bottom-nav">
+        {tabs.map(({ name, icon: Icon }) => (
+          <Button
+            key={name}
+            variant="ghost"
+            className={tab === name ? "active" : ""}
+            onClick={() => {
+              setTab(name);
+              if (sp.ticket) setJob(null);
+              setQuery("");
+            }}
+          >
+            <Icon size={21} />
+            <span>{name}</span>
+          </Button>
+        ))}
+      </nav>
+    </div>
+  );
 }
-function JobCard({ticket:t,open}:{ticket:Ticket;open:()=>void}){const c=customerFor(t.customerId);return <div className="job-card" onClick={open} role="button" tabIndex={0} onKeyDown={e=>e.key==='Enter'&&open()}><div className="job-card-top"><span>{t.id}</span><span className={`job-priority ${t.priority==='Cao'?'high':''}`}>{t.priority==='Cao'?'Ưu tiên cao':t.priority}</span></div><h3>{t.issue}</h3><strong>{c?.name}</strong><p><MapPin size={14}/>{c?.address}</p><div className="job-card-bottom"><span><Clock3 size={14}/> ETA 30 phút</span><span>{statusLabels[t.status]} <ArrowRight size={15}/></span></div></div>}
+function JobCard({ ticket: t, open }: { ticket: Ticket; open: () => void }) {
+  const c = customerFor(t.customerId);
+  return (
+    <div
+      className="job-card"
+      onClick={open}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => e.key === "Enter" && open()}
+    >
+      <div className="job-card-top">
+        <span>{t.id}</span>
+        <span className={`job-priority ${t.priority === "Cao" ? "high" : ""}`}>
+          {t.priority === "Cao" ? "Ưu tiên cao" : t.priority}
+        </span>
+      </div>
+      <h3>{t.issue}</h3>
+      <strong>{c?.name}</strong>
+      <p>
+        <MapPin size={14} />
+        {c?.address}
+      </p>
+      <div className="job-card-bottom">
+        <span>
+          <Clock3 size={14} /> ETA 30 phút
+        </span>
+        <span>
+          {statusLabels[t.status]} <ArrowRight size={15} />
+        </span>
+      </div>
+    </div>
+  );
+}

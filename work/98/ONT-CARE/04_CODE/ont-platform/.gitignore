@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+
+# Build output
+.output/
+.wrangler/
+
+# Lock files
+bun.lock
+npm-lock.yaml
+package-lock.json
+
+# Generated files
+src/routeTree.gen.ts
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Test
+coverage/
+
+# Misc
+*.bak
+*.tmp
