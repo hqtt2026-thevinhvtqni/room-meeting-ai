@@ -45,25 +45,47 @@ jobs:
           pip install playwright
           playwright install --with-deps chromium
 
-      - name: Start production build server
+      # NOTE (verified locally 2026-10-15): `node .output/server/index.mjs` is a
+      # Cloudflare-module worker (exports fetch, no listener) and srvx fails on
+      # Node 20 ("Cannot set property ip of Request"). The reliable way to serve
+      # this production build is wrangler dev with nodejs_compat. Exit code is
+      # propagated explicitly (no tee-pipeline masking); a Python traceback also
+      # fails the step because we check both $PIPESTATUS[0] and FAIL grep.
+      - name: Install wrangler
+        run: npm install --no-save wrangler
+
+      - name: Start production build server (wrangler preview of CF target)
         working-directory: work/98/ONT-CARE/04_CODE/ont-platform
         run: |
           set -euo pipefail
-          PORT=8080 nohup node .output/server/index.mjs > server.log 2>&1 &
-          for i in $(seq 1 60); do
-            if curl -sf -o /dev/null http://localhost:8080/; then echo "Server up"; exit 0; fi
+          cat > /tmp/ci-wrangler.toml <<EOF
+          name = "w98-ci-preview"
+          compatibility_date = "2026-01-01"
+          compatibility_flags = ["nodejs_compat"]
+          main = "$GITHUB_WORKSPACE/work/98/ONT-CARE/04_CODE/ont-platform/.output/server/index.mjs"
+          assets = { directory = "$GITHUB_WORKSPACE/work/98/ONT-CARE/04_CODE/ont-platform/.output/public", binding = "assets" }
+          EOF
+          npx wrangler dev --config /tmp/ci-wrangler.toml --port 8080 --ip 0.0.0.0 > server.log 2>&1 &
+          echo $! > /tmp/wrangler.pid
+          for i in $(seq 1 90); do
+            if curl -sf -o /dev/null http://localhost:8080/; then echo "Server up after \${i}s"; exit 0; fi
             sleep 1
           done
-          echo "Server failed to start"; cat server.log; exit 1
+          echo "Server failed to start"; tail -50 server.log; exit 1
 
       - name: Run deep-link E2E suite (real browser, production build)
         working-directory: work/98/ONT-CARE/04_CODE/ont-platform
         env:
           BASE: http://localhost:8080
         run: |
-          set -euo pipefail
-          python3 ../../05_TEST/e2e/deep_links_e2e.py | tee e2e-output.txt
+          set -uo pipefail
+          rc=0
+          python3 ../../05_TEST/e2e/deep_links_e2e.py | tee e2e-output.txt || rc=$?
+          py_rc=${PIPESTATUS[0]}
+          echo "python exit=$py_rc pipeline exit=$rc"
+          if [ "$py_rc" -ne 0 ] || [ "$rc" -ne 0 ]; then echo "E2E RUNNER FAILED (exit $py_rc)"; exit 1; fi
           if grep -q "FAIL" e2e-output.txt; then echo "E2E FAIL cases present"; exit 1; fi
+          grep -q "0 failure(s)" e2e-output.txt || { echo "E2E summary line missing"; exit 1; }
           echo "E2E PASS: all deep-link cases ok on production build"
 
       - name: Report results
