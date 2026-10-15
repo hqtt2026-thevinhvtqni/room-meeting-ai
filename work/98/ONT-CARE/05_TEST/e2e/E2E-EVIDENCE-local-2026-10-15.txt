@@ -1,0 +1,32 @@
+ok   [desktop] dashboard: valid ONT 
+ok   [desktop] dashboard: ONT tab LAN 
+ok   [desktop] dashboard: bad tab falls back 
+ok   [desktop] dashboard: lowercase ONT id 
+ok   [desktop] dashboard: invalid ONT 
+ok   [desktop] dashboard: valid ticket 
+ok   [desktop] dashboard: invalid ticket 
+ok   [desktop] dashboard: garbage ticket 
+ok   [desktop] technician: valid ticket 
+ok   [desktop] technician: invalid ticket 
+ok   [desktop] customer: other customer's ticket blocked 
+ok   [desktop] customer: invalid ticket 
+ok   [desktop] 404: unknown route 
+ok   [desktop] cross-app technician -> dashboard
+ok   [desktop] technician not-found recovery
+ok   [mobile] dashboard: valid ONT 
+ok   [mobile] dashboard: ONT tab LAN 
+ok   [mobile] dashboard: bad tab falls back 
+ok   [mobile] dashboard: lowercase ONT id 
+ok   [mobile] dashboard: invalid ONT 
+ok   [mobile] dashboard: valid ticket 
+ok   [mobile] dashboard: invalid ticket 
+ok   [mobile] dashboard: garbage ticket 
+ok   [mobile] technician: valid ticket 
+ok   [mobile] technician: invalid ticket 
+ok   [mobile] customer: other customer's ticket blocked 
+ok   [mobile] customer: invalid ticket 
+ok   [mobile] 404: unknown route 
+ok   [mobile] cross-app technician -> dashboard
+ok   [mobile] technician not-found recovery
+
+0 failure(s)
