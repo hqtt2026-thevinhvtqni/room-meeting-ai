@@ -1,0 +1,33 @@
+name: Work 28 MCP Tooling Tests
+
+on:
+  push:
+    branches:
+      - work/28-mcp-tooling-platform
+    paths:
+      - "work/28/**"
+      - ".github/workflows/work28-mcp-tooling.yml"
+  pull_request:
+    paths:
+      - "work/28/**"
+      - ".github/workflows/work28-mcp-tooling.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  unit-regression-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run Work 28 unit and regression tests
+        working-directory: work/28/MCP-8020-TOOLING-PLATFORM
+        env:
+          PYTHONPATH: 04_CODE
+        run: python -m unittest discover -s 05_TEST -v
