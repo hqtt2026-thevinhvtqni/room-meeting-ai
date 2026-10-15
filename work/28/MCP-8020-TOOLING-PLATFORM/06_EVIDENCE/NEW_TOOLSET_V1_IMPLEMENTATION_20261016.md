@@ -20,3 +20,15 @@ These modules are adapters/contracts, not evidence of live MCP registration. The
 - Tests are added; execute them from the target Work 28 test environment before claiming PASS.
 - Live MCP tools/list, Core authorization, sandbox provider wiring, GitHub provider wiring, runtime isolation and end-to-end readback remain unverified.
 - Work 28 remains ACTIVE / NOT LOCKED. Do not merge or claim full E2E PASS from adapter unit tests alone.
+
+
+## Registration surface added
+
+- 04_CODE/mcp_tool_registration_v1.py exposes register_work28_tools() for the existing FastMCP instance.
+- It names and registers 13 tools: 3 runtime, 4 sandbox and 6 GitHub.
+- 05_TEST/test_mcp_tool_registration_v1.py adds registration contract tests.
+- Latest recorded source commit for registration tests: 56254786f3b83565204fad45439e4a6342b5dccd.
+
+## Important boundary
+
+The registration function is ready to be called by the existing server startup, but it has not been wired into the deployed MCP :8020 entrypoint in this commit series. Therefore the 13 new tools are implemented in the Work 28 branch, not yet confirmed in live tools/list. Do not represent them as already available to agents at runtime.
