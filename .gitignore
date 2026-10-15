@@ -1,5 +1,1 @@
-node_modules/
-work/98/ONT-CARE/04_CODE/ont-platform/.output/
-work/98/ONT-CARE/04_CODE/ont-platform/.wrangler/
-.workers/
-.wrangler/
+*.bundle
