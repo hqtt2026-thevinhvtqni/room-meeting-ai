@@ -1,0 +1,1849 @@
+import { n as __toESM } from "../_runtime.mjs";
+import { n as require_react } from "../_libs/@radix-ui/react-compose-refs+[...].mjs";
+import { n as require_jsx_runtime } from "../_libs/react+tanstack__react-query.mjs";
+import { a as ontFor, d as technicians, f as usePlatform, i as lanDevices, l as statusLabels, n as customerFor, o as ontTabs, r as customers, s as onts, u as techFor } from "./deep-links-BPsBDoll.mjs";
+import { b as useNavigate, y as Link } from "../_libs/@tanstack/react-router+[...].mjs";
+import { t as Button } from "./button-DRsC1qZi.mjs";
+import { B as ArrowRight, D as Download, E as Gauge, F as ChevronDown, H as ArrowDownRight, N as ChevronRight, P as ChevronLeft, R as Bell, S as LayoutDashboard, T as HardDrive, U as Activity, a as Users, c as SlidersHorizontal, f as Search, h as Radio, i as Wifi, j as CircleQuestionMark, k as ClipboardList, l as Signal, m as RefreshCw, n as X, r as Wrench, t as Zap, u as ShieldCheck, v as Network, x as MapPin, z as ArrowUpRight } from "../_libs/lucide-react.mjs";
+import { t as Route } from "./routes-7F_TZHJU.mjs";
+import { t as Input } from "./input-DicJzR9-.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/routes-CymGhkhl.js
+var import_react = /* @__PURE__ */ __toESM(require_react());
+var import_jsx_runtime = require_jsx_runtime();
+var areas = [
+	"Quận 1",
+	"Quận 3",
+	"Bình Thạnh",
+	"Phú Nhuận",
+	"Thủ Đức"
+];
+var menu = [
+	{
+		label: "Tổng quan",
+		icon: LayoutDashboard
+	},
+	{
+		label: "Khách hàng",
+		icon: Users
+	},
+	{
+		label: "ONT",
+		icon: HardDrive
+	},
+	{
+		label: "Health Monitor",
+		icon: Activity
+	},
+	{
+		label: "Speed Test",
+		icon: Gauge
+	},
+	{
+		label: "LAN Guard",
+		icon: ShieldCheck
+	},
+	{
+		label: "Ticket / Sự cố",
+		icon: ClipboardList
+	},
+	{
+		label: "Kỹ thuật viên",
+		icon: Wrench
+	},
+	{
+		label: "Báo cáo",
+		icon: SlidersHorizontal
+	}
+];
+var tone = (s) => s === "ONLINE" || s === "RESOLVED" || s === "CLOSED" || s === "AVAILABLE" ? "good" : s === "WARNING" || s === "ASSIGNED" || s === "WAITING_CUSTOMER" || s === "BUSY" ? "warn" : s === "OFFLINE" || s === "OPEN" ? "bad" : "info";
+function Status({ value, label }) {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+		className: `status status-${tone(value)}`,
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "status-dot" }), label ?? statusLabels[value] ?? value]
+	});
+}
+function SectionHead({ eyebrow, title, action }) {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "section-head",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+			className: "eyebrow",
+			children: eyebrow
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", { children: title })] }), action]
+	});
+}
+function Empty({ text = "Không tìm thấy kết quả phù hợp." }) {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+		className: "empty",
+		children: text
+	});
+}
+var speedBars = [
+	38,
+	47,
+	42,
+	59,
+	55,
+	65,
+	60,
+	72,
+	58,
+	74,
+	69,
+	83,
+	73,
+	79,
+	70,
+	89,
+	78,
+	86,
+	73,
+	93,
+	80,
+	89,
+	76,
+	88
+];
+function Dashboard() {
+	const { tickets, updateTicket, notify } = usePlatform();
+	const [section, setSection] = (0, import_react.useState)("Tổng quan");
+	const sp = Route.useSearch();
+	const navigate = useNavigate({ from: "/" });
+	const selectedId = sp.ont ?? null;
+	const detailTab = sp.tab && ontTabs.includes(sp.tab) ? sp.tab : "Overview";
+	const setDetailTab = (tab) => navigate({ search: {
+		ont: sp.ont,
+		tab
+	} });
+	const setSelectedId = (_) => navigate({ search: {} });
+	const deepTicket = sp.ticket ? tickets.find((t) => t.id === sp.ticket) : void 0;
+	const missing = sp.ont && !ontFor(sp.ont) ? `ONT ${sp.ont}` : sp.ticket && !deepTicket ? `Ticket ${sp.ticket}` : null;
+	const [search, setSearch] = (0, import_react.useState)("");
+	const [filter, setFilter] = (0, import_react.useState)("Tất cả");
+	const [page, setPage] = (0, import_react.useState)(1);
+	const [confirm, setConfirm] = (0, import_react.useState)(null);
+	const [notifications, setNotifications] = (0, import_react.useState)(false);
+	const [sidebar, setSidebar] = (0, import_react.useState)(false);
+	const selected = selectedId ? ontFor(selectedId) : void 0;
+	const customer = selected ? customerFor(selected.customerId) : void 0;
+	const q = search.toLocaleLowerCase("vi");
+	const visibleOnts = (0, import_react.useMemo)(() => onts.filter((o) => (filter === "Tất cả" || o.status === filter) && (o.id.toLowerCase().includes(q) || o.serial.toLowerCase().includes(q) || customerFor(o.customerId)?.name.toLocaleLowerCase("vi").includes(q))), [q, filter]);
+	const go = (value) => {
+		setSection(value);
+		navigate({ search: {} });
+		setSearch("");
+		setFilter("Tất cả");
+		setPage(1);
+		setSidebar(false);
+	};
+	const openOnt = (id) => navigate({ search: { ont: id } });
+	const tableOnts = visibleOnts.slice((page - 1) * 10, page * 10);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "app-shell",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("aside", {
+				className: `sidebar ${sidebar ? "sidebar-open" : ""}`,
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "brand",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								className: "brand-icon",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Network, {
+									size: 20,
+									strokeWidth: 2.3
+								})
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("strong", { children: ["ONT", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "Platform" })] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "NETWORK OPERATIONS" })] }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+								variant: "ghost",
+								size: "icon",
+								className: "ml-auto lg:hidden",
+								onClick: () => setSidebar(false),
+								"aria-label": "Đóng menu",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(X, {})
+							})
+						]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "workspace",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								className: "workspace-avatar",
+								children: "VX"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "min-w-0",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "Vận hành mạng" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "Không gian làm việc" })]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronDown, { size: 14 })
+						]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						className: "nav-caption",
+						children: "ĐIỀU HƯỚNG"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("nav", {
+						className: "side-nav",
+						children: menu.map(({ label, icon: Icon }) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+							variant: "ghost",
+							className: `nav-item ${section === label && !selectedId && !sp.ticket ? "nav-active" : ""}`,
+							onClick: () => go(label),
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Icon, { size: 18 }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: label }),
+								label === "Ticket / Sự cố" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("em", { children: tickets.filter((t) => t.status === "OPEN").length })
+							]
+						}, label))
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "side-bottom",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "app-switch",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+										className: "nav-caption",
+										children: "GIAO DIỆN KHÁC"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link, {
+										to: "/technician",
+										children: [
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Wrench, { size: 16 }),
+											" App Thợ ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowUpRight, { size: 13 })
+										]
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link, {
+										to: "/customer",
+										children: [
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Users, { size: 16 }),
+											" App Khách ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowUpRight, { size: 13 })
+										]
+									})
+								]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "side-help",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CircleQuestionMark, { size: 17 }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "Trung tâm hỗ trợ" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "Hướng dẫn sử dụng" })] }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowUpRight, { size: 14 })
+								]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "sidebar-footer",
+								children: ["ONT PLATFORM ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "v1.0 · Prototype" })]
+							})
+						]
+					})
+				]
+			}),
+			sidebar && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				className: "mobile-overlay",
+				onClick: () => setSidebar(false)
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "main-area",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("header", {
+					className: "topbar",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "topbar-left",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+								variant: "ghost",
+								size: "icon",
+								className: "lg:hidden",
+								onClick: () => setSidebar(true),
+								"aria-label": "Mở menu",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(LayoutDashboard, {})
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								className: "breadcrumb",
+								children: "Hệ thống"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronRight, { size: 14 }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: missing ? "Không tìm thấy" : deepTicket ? "Chi tiết ticket" : selected ? "Chi tiết ONT" : section })
+						]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "topbar-right",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+								className: "system-live",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {}), " DEMO · DỮ LIỆU MẪU (MOCK)"]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "topbar-divider" }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "notification-wrap",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+										variant: "ghost",
+										size: "icon",
+										"aria-label": "Thông báo",
+										title: "Thông báo",
+										onClick: () => setNotifications(!notifications),
+										children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Bell, { size: 19 })
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { className: "notification-pip" }),
+									notifications && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										className: "notification-pop",
+										children: [
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "Thông báo" }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [tickets.filter((t) => t.status === "OPEN").length, " sự cố mới cần xử lý"] }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "12 ONT đang ở trạng thái cảnh báo" })
+										]
+									})
+								]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "user-profile",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+										className: "user-avatar",
+										children: "AD"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "Admin Operator" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "Quản trị viên" })] }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronDown, { size: 14 })
+								]
+							})
+						]
+					})]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("main", {
+					className: "content",
+					children: missing ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "panel detail-panel",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SectionHead, {
+								eyebrow: "LIÊN KẾT KHÔNG HỢP LỆ",
+								title: `Không tìm thấy ${missing}`
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+								className: "note-line",
+								children: "Mã này không tồn tại hoặc đã bị xoá. Kiểm tra lại đường dẫn hoặc quay về danh sách."
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								className: "detail-actions mt-4",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+									onClick: () => go(sp.ticket ? "Ticket / Sự cố" : "ONT"),
+									children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronLeft, { size: 17 }),
+										" Về danh sách ",
+										sp.ticket ? "ticket" : "ONT"
+									]
+								})
+							})
+						]
+					}) : deepTicket ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TicketDetail, {
+						ticket: deepTicket,
+						back: () => go("Ticket / Sự cố")
+					}) : selected && customer ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+							variant: "ghost",
+							className: "back-link",
+							onClick: () => setSelectedId(null),
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronLeft, { size: 17 }),
+								" Quay lại ",
+								section
+							]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "detail-heading",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									className: "eyebrow",
+									children: ["THIẾT BỊ / ", selected.id]
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: customer.name }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [
+									selected.id,
+									" ",
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "·" }),
+									" ",
+									selected.serial,
+									" ",
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "·" }),
+									" ",
+									selected.model
+								] })
+							] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "detail-actions",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Status, { value: selected.status }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+									variant: "outline",
+									onClick: () => notify(`Đã làm mới trạng thái ${selected.id}`),
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(RefreshCw, {}), " Làm mới"]
+								})]
+							})]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "detail-meta",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(MapPin, { size: 15 }), customer.address] }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Radio, { size: 15 }),
+									" Lần cuối: ",
+									selected.lastSeen
+								] }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Wifi, { size: 15 }),
+									" Firmware ",
+									selected.firmware
+								] })
+							]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "tab-list",
+							children: [
+								"Overview",
+								"Internet",
+								"Wi-Fi",
+								"LAN",
+								"Optical / PON",
+								"Devices",
+								"Tests",
+								"Events",
+								"Remote Actions"
+							].map((t) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+								variant: "ghost",
+								className: `tab-button ${detailTab === t ? "tab-current" : ""}`,
+								onClick: () => setDetailTab(t),
+								children: t
+							}, t))
+						}),
+						detailTab === "Overview" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "detail-grid",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									className: "panel span-2",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										className: "panel-heading",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "Tình trạng kết nối" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Status, { value: selected.status })]
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+										className: "health-grid",
+										children: [
+											[
+												"Internet",
+												selected.wan,
+												"WAN"
+											],
+											[
+												"Wi-Fi",
+												selected.wifi,
+												"2.4 / 5 GHz"
+											],
+											[
+												"Tín hiệu quang",
+												`${selected.optical} dBm`,
+												"PON"
+											],
+											[
+												"Thời gian hoạt động",
+												selected.uptime,
+												"Uptime"
+											]
+										].map(([a, b, c]) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+											className: "health-cell",
+											children: [
+												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: a }),
+												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: b }),
+												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: c })
+											]
+										}, a))
+									})]
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									className: "panel",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+										className: "panel-heading",
+										children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "Thông tin khách hàng" })
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										className: "kv",
+										children: [
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "Họ tên" }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: customer.name }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "Mã khách hàng" }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: customer.id }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "Điện thoại" }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: customer.phone }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "Địa chỉ" }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: customer.address })
+										]
+									})]
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									className: "panel span-2",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										className: "panel-heading",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "Chỉ số kết nối" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+											className: "muted-label",
+											children: "Cập nhật: Vừa xong"
+										})]
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										className: "metric-row",
+										children: [
+											/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "Download" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("strong", { children: [
+												selected.speed,
+												" ",
+												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("sub", { children: "Mbps" })
+											] })] }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "Upload" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("strong", { children: [
+												Math.round(selected.speed * .36),
+												" ",
+												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("sub", { children: "Mbps" })
+											] })] }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "Độ trễ" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("strong", { children: [
+												selected.ping || "—",
+												" ",
+												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("sub", { children: "ms" })
+											] })] }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "Packet loss" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("strong", { children: [
+												selected.status === "ONLINE" ? "0.1" : "2.4",
+												" ",
+												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("sub", { children: "%" })
+											] })] })
+										]
+									})]
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									className: "panel",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+										className: "panel-heading",
+										children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "Hoạt động gần đây" })
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Timeline, {})]
+								})
+							]
+						}),
+						detailTab === "Internet" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "panel detail-panel",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SectionHead, {
+								eyebrow: "KẾT NỐI WAN",
+								title: "Thông tin Internet"
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								className: "kv wide-kv",
+								children: [
+									["WAN IP", selected.status === "OFFLINE" ? "—" : `113.161.24.${Number(selected.id.slice(-3)) + 12}`],
+									["Trạng thái kết nối", selected.wan],
+									["VLAN", "35"],
+									["NAT", "Đang bật"],
+									["RX / TX", "1.2 GB / 428 MB"],
+									["Uptime", selected.uptime],
+									["Latency", `${selected.ping} ms`]
+								].map(([k, v]) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: k }, k), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: v }, `${k}-v`)] }))
+							})]
+						}),
+						detailTab === "Wi-Fi" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "panel detail-panel",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SectionHead, {
+								eyebrow: "MẠNG KHÔNG DÂY",
+								title: "Cấu hình Wi-Fi"
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								className: "data-table",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("table", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", { children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Băng tần" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "SSID" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Kênh" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Tín hiệu" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Thiết bị kết nối" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Trạng thái" })
+								] }) }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("tbody", { children: ["2.4GHz", "5GHz"].map((band, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", { children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: band }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("td", { children: [
+										"ONT_Home_",
+										selected.id.slice(-3),
+										i ? "_5G" : ""
+									] }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: i ? "36" : "6" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("td", { children: [i ? "-52" : "-61", " dBm"] }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: lanDevices.filter((d) => d.ontId === selected.id && d.online && d.connection.includes("Wi-Fi")).length }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Status, { value: selected.status }) })
+								] }, band)) })] })
+							})]
+						}),
+						detailTab === "LAN" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "panel detail-panel",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SectionHead, {
+								eyebrow: "CỔNG KẾT NỐI",
+								title: "Mạng LAN"
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								className: "data-table",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("table", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", { children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Cổng" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Liên kết" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Tốc độ" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Thiết bị" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Lưu lượng" })
+								] }) }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("tbody", { children: [
+									1,
+									2,
+									3,
+									4
+								].map((i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", { children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("td", {
+										className: "strong-cell",
+										children: ["LAN", i]
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Status, {
+										value: i < 3 && selected.status !== "OFFLINE" ? "ONLINE" : "OFFLINE",
+										label: i < 3 && selected.status !== "OFFLINE" ? "Kết nối" : "Ngắt"
+									}) }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: i < 3 ? "1000 Mbps" : "—" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: i === 1 ? "Smart TV" : i === 2 ? "Máy tính" : "—" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: i < 3 ? `${24 + i * 11} MB` : "—" })
+								] }, i)) })] })
+							})]
+						}),
+						detailTab === "Optical / PON" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "panel detail-panel",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SectionHead, {
+									eyebrow: "TÍN HIỆU QUANG",
+									title: "Optical / PON"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									className: "metric-row optical-metrics",
+									children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "RX power" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("strong", { children: [
+											selected.optical,
+											" ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("sub", { children: "dBm" })
+										] })] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "TX power" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("strong", { children: ["2.3 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("sub", { children: "dBm" })] })] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "OLT" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
+											className: "text-base!",
+											children: "OLT-HCM-01"
+										})] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "PON status" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Status, { value: selected.status })] })
+									]
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+									className: "note-line",
+									children: [
+										"Cảnh báo tín hiệu quang:",
+										" ",
+										selected.status === "WARNING" ? "Tín hiệu yếu, cần kiểm tra đường truyền." : selected.status === "OFFLINE" ? "Mất tín hiệu." : "Không có cảnh báo."
+									]
+								})
+							]
+						}),
+						detailTab === "Devices" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "panel detail-panel",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SectionHead, {
+								eyebrow: "LAN GUARD",
+								title: "Thiết bị đang kết nối"
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DeviceTable, { devices: lanDevices.filter((d) => d.ontId === selected.id) })]
+						}),
+						detailTab === "Tests" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "panel detail-panel",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SectionHead, {
+									eyebrow: "CHẨN ĐOÁN",
+									title: "Kiểm tra kết nối",
+									action: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+										onClick: () => notify(`Đã chạy kiểm tra ${selected.id}: ${selected.speed} Mbps, ping ${selected.ping} ms`),
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Zap, {}), " Chạy kiểm tra"]
+									})
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									className: "metric-row optical-metrics",
+									children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "Download" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("strong", { children: [
+											selected.speed,
+											" ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("sub", { children: "Mbps" })
+										] })] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "Upload" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("strong", { children: [
+											Math.round(selected.speed * .36),
+											" ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("sub", { children: "Mbps" })
+										] })] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "Ping" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("strong", { children: [
+											selected.ping,
+											" ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("sub", { children: "ms" })
+										] })] }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "Packet loss" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("strong", { children: ["0.1 ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("sub", { children: "%" })] })] })
+									]
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									className: "test-types",
+									children: [
+										"Speedtest ",
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "·" }),
+										" iPerf ",
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "·" }),
+										" Ping ",
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "·" }),
+										" Packet loss"
+									]
+								})
+							]
+						}),
+						detailTab === "Events" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "panel detail-panel",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SectionHead, {
+								eyebrow: "NHẬT KÝ HỆ THỐNG",
+								title: "Lịch sử sự kiện"
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Timeline, {})]
+						}),
+						detailTab === "Remote Actions" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "panel detail-panel",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SectionHead, {
+								eyebrow: "THAO TÁC TỪ XA",
+								title: "Điều khiển ONT"
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								className: "action-list",
+								children: [
+									[
+										"Làm mới trạng thái",
+										"Đồng bộ tình trạng thiết bị mới nhất",
+										false
+									],
+									[
+										"Chạy Speed Test",
+										"Kiểm tra tốc độ kết nối hiện tại",
+										false
+									],
+									[
+										"Chạy chẩn đoán",
+										"Kiểm tra các chỉ số WAN, Wi-Fi và PON",
+										false
+									],
+									[
+										"Cấu hình Wi-Fi",
+										"Thay đổi cài đặt mạng không dây",
+										true
+									],
+									[
+										"Khởi động lại ONT",
+										"Thiết bị sẽ tạm thời mất kết nối",
+										true
+									]
+								].map(([name, desc, danger]) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: name }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: desc })] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+									variant: "outline",
+									onClick: () => danger ? setConfirm(String(name)) : notify(`Đã thực hiện: ${name}`),
+									children: name
+								})] }, String(name)))
+							})]
+						})
+					] }) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "page-heading",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									className: "eyebrow",
+									children: [
+										"ONT PLATFORM ",
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+											className: "eyebrow-divider",
+											children: "/"
+										}),
+										" VẬN HÀNH MẠNG"
+									]
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: section }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: section === "Tổng quan" ? "Theo dõi hiệu suất mạng và tình trạng thiết bị theo thời gian thực." : subtitles[section] })
+							] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "page-heading-actions",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+									className: "updated",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {}), " Cập nhật vừa xong"]
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+									variant: "outline",
+									onClick: () => notify("Dữ liệu đã được làm mới"),
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(RefreshCw, {}), " Làm mới"]
+								})]
+							})]
+						}),
+						section === "Tổng quan" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "stats-grid",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Stat, {
+										icon: HardDrive,
+										label: "Tổng số ONT",
+										value: "100",
+										note: "Thiết bị được quản lý",
+										kind: "neutral"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Stat, {
+										icon: Signal,
+										label: "Đang online",
+										value: "80",
+										suffix: "/ 100",
+										note: "80% tổng thiết bị",
+										kind: "good"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Stat, {
+										icon: Activity,
+										label: "Cảnh báo",
+										value: "12",
+										note: "Cần theo dõi",
+										kind: "warn"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Stat, {
+										icon: Radio,
+										label: "Ngoại tuyến",
+										value: "08",
+										note: "Cần can thiệp",
+										kind: "bad"
+									})
+								]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "overview-grid",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									className: "panel trend-panel",
+									children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+											className: "panel-heading",
+											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "Tình trạng hệ thống" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "Hiệu suất kết nối trong 24 giờ qua" })] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+												className: "period",
+												children: ["24 giờ qua ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronDown, { size: 14 })]
+											})]
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+											className: "trend-chart",
+											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+												className: "chart-guide",
+												children: [
+													/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "100%" }),
+													/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "75%" }),
+													/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "50%" }),
+													/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "25%" }),
+													/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "0%" })
+												]
+											}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+												className: "chart-inner",
+												children: [
+													/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+														className: "chart-lines",
+														children: [
+															/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", {}),
+															/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", {}),
+															/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", {}),
+															/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", {}),
+															/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", {})
+														]
+													}),
+													/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+														className: "bars",
+														children: speedBars.map((v, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+															style: { height: `${v}%` },
+															title: `${v}%`
+														}, i))
+													}),
+													/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+														className: "chart-times",
+														children: [
+															/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "00:00" }),
+															/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "04:00" }),
+															/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "08:00" }),
+															/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "12:00" }),
+															/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "16:00" }),
+															/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "20:00" }),
+															/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "23:59" })
+														]
+													})
+												]
+											})]
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+											className: "chart-legend",
+											children: [
+												/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { className: "legend-good" }), " ONT Online"] }),
+												/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { className: "legend-warn" }), " Cảnh báo"] }),
+												/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { className: "legend-bad" }), " Ngoại tuyến"] })
+											]
+										})
+									]
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									className: "panel alert-panel",
+									children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+											className: "panel-heading",
+											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "Cần chú ý" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "Các vấn đề cần xử lý" })] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+												className: "alert-count",
+												children: tickets.filter((t) => t.status === "OPEN").length + 8
+											})]
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+											className: "alert-list",
+											children: [
+												/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+													/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+														className: "alert-icon bad-bg",
+														children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Radio, { size: 18 })
+													}),
+													/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "8 ONT mất kết nối" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "Cần kiểm tra kết nối & nguồn điện" })] }),
+													/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, { size: 16 })
+												] }),
+												/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+													/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+														className: "alert-icon warn-bg",
+														children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Activity, { size: 18 })
+													}),
+													/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "12 tín hiệu quang yếu" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "Chỉ số PON ngoài ngưỡng an toàn" })] }),
+													/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, { size: 16 })
+												] }),
+												/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+													/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+														className: "alert-icon info-bg",
+														children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ClipboardList, { size: 18 })
+													}),
+													/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("strong", { children: [tickets.filter((t) => t.status === "OPEN").length, " sự cố chưa phân công"] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: "Đang chờ kỹ thuật viên tiếp nhận" })] }),
+													/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, { size: 16 })
+												] })
+											]
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+											variant: "ghost",
+											className: "panel-bottom-link",
+											onClick: () => go("Ticket / Sự cố"),
+											children: ["Xem tất cả sự cố ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, { size: 16 })]
+										})
+									]
+								})]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "panel table-panel",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									className: "panel-heading",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "Thiết bị cần theo dõi" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "ONT có cảnh báo hoặc mất kết nối gần đây" })] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+										variant: "ghost",
+										onClick: () => go("ONT"),
+										children: ["Xem tất cả ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, {})]
+									})]
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(OntTable, {
+									items: onts.slice(80, 86),
+									onOpen: openOnt,
+									compact: true
+								})]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "lower-grid",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									className: "panel",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										className: "panel-heading",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "Sự cố gần đây" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "Cập nhật từ toàn hệ thống" })] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+											variant: "ghost",
+											onClick: () => go("Ticket / Sự cố"),
+											children: ["Xem tất cả ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, {})]
+										})]
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+										className: "ticket-mini-list",
+										children: tickets.slice(0, 4).map((t) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+												className: "ticket-mini-icon",
+												children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ClipboardList, { size: 16 })
+											}),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: t.issue }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("small", { children: [
+												customerFor(t.customerId)?.name,
+												" · ",
+												t.id
+											] })] }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Status, { value: t.status })
+										] }, t.id))
+									})]
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									className: "panel",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										className: "panel-heading",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "Hiệu suất vận hành" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "Tổng hợp hôm nay" })] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowUpRight, {
+											size: 17,
+											className: "text-muted-foreground"
+										})]
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										className: "performance-list",
+										children: [
+											/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "Tỷ lệ online" }),
+												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "80%" }),
+												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+													className: "progress-track",
+													children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { style: { width: "80%" } })
+												})
+											] }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "Ticket đã xử lý" }),
+												/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("strong", { children: [
+													tickets.filter((t) => ["RESOLVED", "CLOSED"].includes(t.status)).length,
+													" ",
+													"/ ",
+													tickets.length
+												] }),
+												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+													className: "progress-track",
+													children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { style: { width: "40%" } })
+												})
+											] }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "Thời gian xử lý TB" }),
+												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: "2.4 giờ" }),
+												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+													className: "progress-track",
+													children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { style: { width: "62%" } })
+												})
+											] })
+										]
+									})]
+								})]
+							})
+						] }),
+						(section === "ONT" || section === "Khách hàng") && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "panel table-panel",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									className: "panel-heading",
+									children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: section === "ONT" ? "Danh sách thiết bị" : "Danh sách khách hàng" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [visibleOnts.length, " kết quả trong hệ thống"] })] })
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									className: "table-toolbar",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										className: "search-box",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Search, { size: 17 }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
+											placeholder: section === "ONT" ? "Tìm theo ONT ID, serial, khách hàng..." : "Tìm khách hàng, mã, thiết bị...",
+											value: search,
+											onChange: (e) => {
+												setSearch(e.target.value);
+												setPage(1);
+											}
+										})]
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("select", {
+										"aria-label": "Lọc trạng thái",
+										value: filter,
+										onChange: (e) => {
+											setFilter(e.target.value);
+											setPage(1);
+										},
+										children: [
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("option", {
+												value: "Tất cả",
+												children: "Tất cả trạng thái"
+											}),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("option", {
+												value: "ONLINE",
+												children: "Online"
+											}),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("option", {
+												value: "WARNING",
+												children: "Cảnh báo"
+											}),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("option", {
+												value: "OFFLINE",
+												children: "Offline"
+											})
+										]
+									})]
+								}),
+								section === "ONT" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(OntTable, {
+									items: tableOnts,
+									onOpen: openOnt
+								}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									className: "data-table",
+									children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("table", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", { children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Mã KH" }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Khách hàng" }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Số điện thoại" }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Địa chỉ" }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "ONT" }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Internet" }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Thiết bị" }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Last Seen" })
+									] }) }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("tbody", { children: tableOnts.map((o) => {
+										const c = customerFor(o.customerId);
+										return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", {
+											onClick: () => openOnt(o.id),
+											className: "click-row",
+											children: [
+												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+													className: "mono",
+													children: c?.id
+												}),
+												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+													className: "strong-cell",
+													children: c?.name
+												}),
+												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: c?.phone }),
+												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+													className: "address-cell",
+													children: c?.address
+												}),
+												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+													className: "mono",
+													children: o.id
+												}),
+												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Status, { value: o.status }) }),
+												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: o.wan }),
+												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: o.lastSeen })
+											]
+										}, o.id);
+									}) })] })
+								}),
+								!visibleOnts.length && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Empty, {}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Pagination, {
+									page,
+									total: visibleOnts.length,
+									setPage
+								})
+							]
+						}),
+						section === "Ticket / Sự cố" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "panel table-panel",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									className: "panel-heading",
+									children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "Danh sách sự cố" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [tickets.length, " ticket đang được theo dõi"] })] })
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									className: "table-toolbar",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										className: "search-box",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Search, { size: 17 }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
+											placeholder: "Tìm ticket, khách hàng, vấn đề...",
+											value: search,
+											onChange: (e) => setSearch(e.target.value)
+										})]
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("select", {
+										"aria-label": "Lọc trạng thái",
+										value: filter,
+										onChange: (e) => setFilter(e.target.value),
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("option", {
+											value: "Tất cả",
+											children: "Tất cả trạng thái"
+										}), [
+											"OPEN",
+											"ASSIGNED",
+											"IN_PROGRESS",
+											"WAITING_CUSTOMER",
+											"RESOLVED",
+											"CLOSED"
+										].map((s) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("option", {
+											value: s,
+											children: statusLabels[s]
+										}, s))]
+									})]
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									className: "data-table",
+									children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("table", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", { children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Ticket ID" }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Khách hàng" }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "ONT" }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Sự cố" }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Ưu tiên" }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Trạng thái" }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Kỹ thuật viên" }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Tạo lúc" }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Thao tác" })
+									] }) }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("tbody", { children: tickets.filter((t) => (filter === "Tất cả" || t.status === filter) && `${t.id} ${t.issue} ${customerFor(t.customerId)?.name}`.toLocaleLowerCase("vi").includes(q)).map((t) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", { children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+											className: "mono strong-cell",
+											children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
+												to: "/",
+												search: { ticket: t.id },
+												className: "table-link",
+												children: t.id
+											})
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: customerFor(t.customerId)?.name }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+											variant: "link",
+											className: "table-link",
+											onClick: () => openOnt(t.ontId),
+											children: t.ontId
+										}) }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: t.issue }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+											className: `priority ${t.priority === "Cao" ? "priority-high" : ""}`,
+											children: t.priority
+										}) }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Status, { value: t.status }) }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: techFor(t.technicianId)?.name ?? "Chưa phân công" }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: t.created }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: t.status === "OPEN" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+											size: "sm",
+											variant: "outline",
+											onClick: () => {
+												updateTicket(t.id, {
+													status: "ASSIGNED",
+													technicianId: technicians[0]?.id ?? "KT-001"
+												});
+												notify(`Đã phân công ${t.id} cho ${technicians[0]?.name ?? "Kỹ thuật viên"}`);
+											},
+											children: "Phân công"
+										}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+											className: "muted-label",
+											children: t.updated
+										}) })
+									] }, t.id)) })] })
+								})
+							]
+						}),
+						section === "Health Monitor" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "stats-grid",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Stat, {
+										icon: Activity,
+										label: "Internet",
+										value: "80%",
+										note: "Kết nối ổn định",
+										kind: "good"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Stat, {
+										icon: Wifi,
+										label: "Wi-Fi",
+										value: "94%",
+										note: "Hoạt động bình thường",
+										kind: "good"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Stat, {
+										icon: Signal,
+										label: "Optical / PON",
+										value: "12",
+										note: "Tín hiệu cần chú ý",
+										kind: "warn"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Stat, {
+										icon: Gauge,
+										label: "Độ trễ trung bình",
+										value: "16",
+										suffix: "ms",
+										note: "Trong ngưỡng an toàn",
+										kind: "neutral"
+									})
+								]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "panel detail-panel",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SectionHead, {
+									eyebrow: "GIÁM SÁT SỨC KHỎE",
+									title: "Chỉ số thiết bị"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									className: "monitor-grid",
+									children: [
+										[
+											"WAN",
+											"80 / 100",
+											"Kết nối"
+										],
+										[
+											"LAN",
+											"96 / 100",
+											"Cổng hoạt động"
+										],
+										[
+											"Wi-Fi",
+											"94 / 100",
+											"Băng tần"
+										],
+										[
+											"CPU",
+											"28%",
+											"Sử dụng trung bình"
+										],
+										[
+											"Memory",
+											"42%",
+											"Sử dụng trung bình"
+										],
+										[
+											"Temperature",
+											"41°C",
+											"Nhiệt độ trung bình"
+										],
+										[
+											"Packet loss",
+											"0.1%",
+											"Trung bình"
+										],
+										[
+											"Latency",
+											"16 ms",
+											"Trung bình"
+										],
+										[
+											"iPerf",
+											"732 Mbps",
+											"Thông lượng"
+										],
+										[
+											"TR-069",
+											"98 / 100",
+											"Thiết bị kết nối"
+										]
+									].map(([k, v, n]) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: k }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: v }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: n })
+									] }, k))
+								})]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "panel detail-panel",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SectionHead, {
+									eyebrow: "LỊCH SỬ",
+									title: "Dòng thời gian"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Timeline, {})]
+							})
+						] }),
+						section === "Speed Test" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "stats-grid",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Stat, {
+										icon: Download,
+										label: "Download TB",
+										value: "125",
+										suffix: "Mbps",
+										note: "Tăng 8% tuần này",
+										kind: "good"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Stat, {
+										icon: ArrowUpRight,
+										label: "Upload TB",
+										value: "45",
+										suffix: "Mbps",
+										note: "Ổn định",
+										kind: "neutral"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Stat, {
+										icon: Gauge,
+										label: "Ping TB",
+										value: "12",
+										suffix: "ms",
+										note: "Độ trễ thấp",
+										kind: "neutral"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Stat, {
+										icon: Activity,
+										label: "Packet loss",
+										value: "0.1",
+										suffix: "%",
+										note: "Trong ngưỡng an toàn",
+										kind: "good"
+									})
+								]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "panel trend-panel",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										className: "panel-heading",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "Lịch sử kiểm tra tốc độ" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "Download / Upload theo thời gian" })] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+											className: "period",
+											children: ["7 ngày qua ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronDown, { size: 14 })]
+										})]
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+										className: "speed-chart",
+										children: [
+											62,
+											76,
+											68,
+											82,
+											73,
+											91,
+											85,
+											69,
+											80,
+											87,
+											76,
+											92,
+											81,
+											88
+										].map((v, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { style: { height: `${v}%` } }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { style: { height: `${v * .37}%` } })] }, i))
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										className: "chart-legend",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { className: "legend-good" }), " Download"] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { className: "legend-info" }), " Upload"] })]
+									})
+								]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "panel table-panel",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									className: "panel-heading",
+									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "Các lần kiểm tra gần đây" })
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									className: "data-table",
+									children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("table", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", { children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "ONT" }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Khách hàng" }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Download" }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Upload" }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Ping" }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Jitter" }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Packet loss" }),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Thời điểm" })
+									] }) }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("tbody", { children: onts.slice(0, 10).map((o, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", {
+										className: "click-row",
+										onClick: () => openOnt(o.id),
+										children: [
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+												className: "mono",
+												children: o.id
+											}),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: customerFor(o.customerId)?.name }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("td", { children: [o.speed, " Mbps"] }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("td", { children: [Math.round(o.speed * .36), " Mbps"] }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("td", { children: [o.ping, " ms"] }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("td", { children: [3 + i % 4, " ms"] }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("td", { children: [
+												"0.",
+												i % 4,
+												"%"
+											] }),
+											/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("td", { children: [i + 1, " phút trước"] })
+										]
+									}, o.id)) })] })
+								})]
+							})
+						] }),
+						section === "LAN Guard" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "panel table-panel",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									className: "panel-heading",
+									children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "Thiết bị trong mạng LAN" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [lanDevices.length, " thiết bị từ 100 mạng khách hàng"] })] })
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									className: "table-toolbar",
+									children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										className: "search-box",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Search, { size: 17 }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
+											placeholder: "Tìm thiết bị, IP, MAC, ONT...",
+											value: search,
+											onChange: (e) => setSearch(e.target.value)
+										})]
+									})
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DeviceTable, { devices: lanDevices.filter((d) => `${d.name} ${d.ip} ${d.mac} ${d.ontId}`.toLowerCase().includes(q)).slice(0, 30) })
+							]
+						}),
+						section === "Kỹ thuật viên" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "panel table-panel",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								className: "panel-heading",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", { children: "Đội ngũ kỹ thuật" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [technicians.length, " kỹ thuật viên trong hệ thống"] })] })
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								className: "data-table",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("table", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", { children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Mã thợ" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Kỹ thuật viên" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Khu vực" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Trạng thái" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Công việc đang xử lý" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Số ticket" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Last Active" })
+								] }) }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("tbody", { children: technicians.map((t) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", { children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+										className: "mono",
+										children: t.id
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+										className: "strong-cell",
+										children: t.name
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: t.area }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Status, {
+										value: t.status,
+										label: t.status === "AVAILABLE" ? "Sẵn sàng" : t.status === "BUSY" ? "Đang bận" : "Offline"
+									}) }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: tickets.find((tk) => tk.technicianId === t.id && tk.status === "IN_PROGRESS")?.issue ?? "—" }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: tickets.filter((tk) => tk.technicianId === t.id).length }),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: t.lastActive })
+								] }, t.id)) })] })
+							})]
+						}),
+						section === "Báo cáo" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "stats-grid",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Stat, {
+									icon: HardDrive,
+									label: "Tổng ONT",
+									value: "100",
+									note: "Thiết bị quản lý",
+									kind: "neutral"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Stat, {
+									icon: Signal,
+									label: "Online rate",
+									value: "80%",
+									note: "80 thiết bị",
+									kind: "good"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Stat, {
+									icon: Radio,
+									label: "Offline rate",
+									value: "8%",
+									note: "8 thiết bị",
+									kind: "bad"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Stat, {
+									icon: ClipboardList,
+									label: "Sự cố",
+									value: String(tickets.length),
+									note: "Tổng ticket",
+									kind: "warn"
+								})
+							]
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "lower-grid",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "panel detail-panel",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SectionHead, {
+									eyebrow: "HIỆU SUẤT",
+									title: "Chỉ số vận hành"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									className: "report-list",
+									children: [
+										["MTTR", "2.4 giờ"],
+										["Speed test TB", "125 Mbps"],
+										["Vấn đề Wi-Fi", "8"],
+										["Vấn đề LAN", "4"]
+									].map(([k, v]) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: k }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: v })] }, k))
+								})]
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "panel detail-panel",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SectionHead, {
+									eyebrow: "THEO KHU VỰC",
+									title: "Ticket theo khu vực"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									className: "report-list",
+									children: areas.map((a, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: a }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: tickets.filter((t) => customerFor(t.customerId)?.address.includes(a)).length + i })] }, a))
+								})]
+							})]
+						})] })
+					] })
+				})]
+			}),
+			confirm && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				className: "modal-backdrop",
+				onClick: () => setConfirm(null),
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "confirm-modal",
+					role: "dialog",
+					"aria-modal": "true",
+					onClick: (e) => e.stopPropagation(),
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "modal-icon",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Wrench, { size: 22 })
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h3", { children: [
+							"Xác nhận ",
+							confirm.toLowerCase(),
+							"?"
+						] }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", { children: "Thao tác này có thể tạm thời ảnh hưởng đến kết nối Internet của khách hàng. Bạn có chắc muốn tiếp tục?" }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+							variant: "outline",
+							onClick: () => setConfirm(null),
+							children: "Hủy"
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+							onClick: () => {
+								notify(`Đã gửi lệnh ${confirm} cho ${selected?.id}`);
+								setConfirm(null);
+							},
+							children: "Xác nhận"
+						})] })
+					]
+				})
+			})
+		]
+	});
+}
+var subtitles = {
+	"Tổng quan": "",
+	"Khách hàng": "Quản lý thông tin khách hàng và kết nối Internet.",
+	ONT: "Theo dõi toàn bộ thiết bị ONT trong hệ thống.",
+	"Health Monitor": "Quan sát sức khỏe mạng và chỉ số thiết bị.",
+	"Speed Test": "Theo dõi tốc độ và chất lượng đường truyền.",
+	"LAN Guard": "Giám sát thiết bị kết nối trong mạng khách hàng.",
+	"Ticket / Sự cố": "Tiếp nhận và xử lý các yêu cầu hỗ trợ.",
+	"Kỹ thuật viên": "Quản lý đội ngũ kỹ thuật hiện trường.",
+	"Báo cáo": "Tổng hợp hiệu suất và tình trạng vận hành."
+};
+function TicketDetail({ ticket: t, back }) {
+	const c = customerFor(t.customerId);
+	const tech = t.technicianId ? techFor(t.technicianId) : void 0;
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+		/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+			variant: "ghost",
+			className: "back-link",
+			onClick: back,
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronLeft, { size: 17 }), " Quay lại Ticket / Sự cố"]
+		}),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			className: "detail-heading",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "eyebrow",
+					children: ["TICKET / ", t.id]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", { children: t.issue }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", { children: [
+					c?.name,
+					" ",
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "·" }),
+					" ",
+					t.ontId,
+					" ",
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "·" }),
+					" Ưu tiên ",
+					t.priority
+				] })
+			] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				className: "detail-actions",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Status, { value: t.status })
+			})]
+		}),
+		/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			className: "detail-grid",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "panel span-2",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SectionHead, {
+					eyebrow: "THÔNG TIN XỬ LÝ",
+					title: "Báo cáo kỹ thuật"
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					className: "kv wide-kv",
+					children: [
+						["Khách hàng", c?.name ?? "—"],
+						["Địa chỉ", c?.address ?? "—"],
+						["Kỹ thuật viên", tech?.name ?? "Chưa phân công"],
+						["Tạo lúc", t.created],
+						["Cập nhật", t.updated],
+						["Chẩn đoán", t.diagnosis ?? "—"],
+						["Biện pháp", t.action ?? "—"],
+						["Kết quả kiểm tra", t.testResult ?? "—"],
+						["Khách xác nhận", t.confirmed ? "Đã xác nhận" : "Chưa"]
+					].map(([k, v]) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: k }, k), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: v }, `${k}-v`)] }))
+				})]
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "panel",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SectionHead, {
+					eyebrow: "MỞ NHANH",
+					title: "Liên kết"
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "app-switch deep-links",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link, {
+							to: "/",
+							search: { ont: t.ontId },
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(HardDrive, { size: 16 }),
+								" Chi tiết ",
+								t.ontId,
+								" ",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowUpRight, { size: 13 })
+							]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link, {
+							to: "/technician",
+							search: { ticket: t.id },
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Wrench, { size: 16 }),
+								" Mở trong App Thợ ",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowUpRight, { size: 13 })
+							]
+						}),
+						t.customerId === customers[0]?.id && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link, {
+							to: "/customer",
+							search: { ticket: t.id },
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Users, { size: 16 }),
+								" Mở trong App Khách ",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowUpRight, { size: 13 })
+							]
+						})
+					]
+				})]
+			})]
+		})
+	] });
+}
+function Stat({ icon: Icon, label, value, suffix, note, kind }) {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "stat",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "stat-top",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: label }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+					className: `stat-icon stat-${kind}`,
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Icon, { size: 18 })
+				})]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "stat-value",
+				children: [
+					value,
+					" ",
+					suffix && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: suffix })
+				]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "stat-note",
+				children: [kind === "good" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowUpRight, { size: 14 }) : kind === "bad" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowDownRight, { size: 14 }) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "note-dot" }), note]
+			})
+		]
+	});
+}
+function OntTable({ items, onOpen, compact = false }) {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+		className: "data-table",
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("table", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", { children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "ONT ID" }),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Khách hàng" }),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Model / Serial" }),
+			!compact && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Firmware" }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "WAN" }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "LAN" }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Wi-Fi" })
+			] }),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Optical" }),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Uptime" }),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Last Seen" }),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Trạng thái" }),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", {})
+		] }) }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("tbody", { children: items.map((o) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", {
+			onClick: () => onOpen(o.id),
+			className: "click-row",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+					className: "mono strong-cell",
+					children: o.id
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: customerFor(o.customerId)?.name }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+					className: "table-stack",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: o.model }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: o.serial })]
+				}) }),
+				!compact && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: o.firmware }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: o.wan }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: o.status === "OFFLINE" ? "—" : "2/4" }),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: o.wifi })
+				] }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("td", {
+					className: o.optical < -26 ? "text-warning" : "",
+					children: [o.optical, " dBm"]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: o.uptime }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: o.lastSeen }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Status, { value: o.status }) }),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronRight, { size: 16 }) })
+			]
+		}, o.id)) })] })
+	});
+}
+function DeviceTable({ devices }) {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+		className: "data-table",
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("table", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", { children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Thiết bị" }),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "ONT" }),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "IP" }),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "MAC" }),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Kết nối" }),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Trạng thái" }),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", { children: "Last Seen" })
+		] }) }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("tbody", { children: devices.map((d) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", { children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+				className: "strong-cell",
+				children: d.name
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+				className: "mono",
+				children: d.ontId
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+				className: "mono",
+				children: d.ip
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+				className: "mono",
+				children: d.mac
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: d.connection }),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Status, { value: d.online ? "ONLINE" : "OFFLINE" }) }),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", { children: d.lastSeen })
+		] }, d.id)) })] })
+	});
+}
+function Pagination({ page, total, setPage }) {
+	const max = Math.max(1, Math.ceil(total / 10));
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "pagination",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [
+			"Hiển thị ",
+			total ? (page - 1) * 10 + 1 : 0,
+			"–",
+			Math.min(page * 10, total),
+			" / ",
+			total
+		] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+				variant: "outline",
+				size: "icon",
+				disabled: page === 1,
+				onClick: () => setPage(page - 1),
+				"aria-label": "Trang trước",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronLeft, {})
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [
+				page,
+				" / ",
+				max
+			] }),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+				variant: "outline",
+				size: "icon",
+				disabled: page >= max,
+				onClick: () => setPage(page + 1),
+				"aria-label": "Trang sau",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronRight, {})
+			})
+		] })]
+	});
+}
+function Timeline() {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+		className: "timeline",
+		children: [
+			[
+				"09:12",
+				"ONT Online",
+				"Kết nối đã được khôi phục"
+			],
+			[
+				"09:10",
+				"WAN reconnect",
+				"Thiết bị kết nối lại với mạng"
+			],
+			[
+				"08:41",
+				"Speed test",
+				"Đã hoàn thành bài kiểm tra tốc độ"
+			],
+			[
+				"08:35",
+				"Thiết bị Wi-Fi kết nối",
+				"Một thiết bị mới tham gia mạng"
+			],
+			[
+				"08:32",
+				"ONT Online",
+				"Thiết bị đang hoạt động"
+			]
+		].map(([time, title, desc]) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "timeline-node" }),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("time", { children: time }),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", { children: title }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("small", { children: desc })] })
+		] }, time))
+	});
+}
+//#endregion
+export { Dashboard as component };
