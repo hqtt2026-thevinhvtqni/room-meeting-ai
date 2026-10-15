@@ -667,3 +667,11 @@ Issued detailed order `06_EVIDENCE/KA_NU_SANDBOX_FIRST_SOURCE_TRANSFER_ORDER_202
 - DONE: GitHub commit đầu tiên `0d9278b351988f38e7772bf39137fd9604eb90ce`; branch ref và readback README, journal, workflow đã xác minh.
 - CI: GitHub Actions run `38769093143` được khởi chạy theo sự kiện push; tại thời điểm ghi nhận đang `in_progress`. Chưa có kết luận test PASS/FAIL.
 - DECISION: Work 28 vẫn ACTIVE / NOT LOCKED; runtime E2E và MCP :8020 end-to-end vẫn BLOCKED cho đến khi có bằng chứng. Không merge vào `main`, không tuyên bố release.
+
+
+## 2026-10-15 — Kết quả CI đầu tiên của Work 28
+- DONE/PASS: GitHub Actions run `38769093143` cho commit `0d9278b351988f38e7772bf39137fd9604eb90ce` hoàn tất với conclusion `success`.
+- TEST PASS: `python -m unittest discover -s 05_TEST -v` — 56 tests ran, `OK`.
+- WARNING: bước post-job cleanup của checkout ghi cảnh báo `fatal: No url found for submodule path 'room-meeting-ai' in .gitmodules`; GitHub vẫn đánh dấu run/job là success. Theo dõi cảnh báo này riêng, không diễn giải nó thành test failure.
+- Phạm vi PASS: unit/regression tests trên GitHub Actions; KHÔNG phải bằng chứng MCP :8020 E2E, execution runtime, PC bridge, hay release PASS.
+- Sau lần đồng bộ nhật ký, commit mới nhất có workflow run riêng đang chạy; tiếp tục kiểm tra run mới nhất trước khi kết luận trạng thái CI hiện tại.
