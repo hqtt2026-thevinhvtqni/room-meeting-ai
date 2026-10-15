@@ -1,0 +1,67 @@
+# Work 98 - ONT Care E2E Automatic CI
+# Runs install -> typecheck -> lint -> build -> preview smoke test (real HTTP E2E)
+name: W98 ONT Care CI
+
+on:
+  push:
+    branches: [work/98-ont-care]
+  pull_request:
+    branches: [work/98-ont-care]
+  workflow_dispatch:
+
+jobs:
+  build-and-e2e:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: work/98/ONT-CARE/04_CODE/ont-platform
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: work/98/ONT-CARE/04_CODE/ont-platform/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      - name: E2E smoke test against production build (preview server)
+        run: |
+          set -euo pipefail
+          # Start the built app (TanStack Start / nitro output) on port 3000
+          (node .output/server/index.mjs > preview.log 2>&1 &) || true
+          PID=$!
+          UP=0
+          for i in $(seq 1 30); do
+            sleep 2
+            CODE=$(curl -s -o page.html -w "%{http_code}" http://localhost:3000/ || true)
+            if [ "$CODE" = "200" ]; then UP=1; break; fi
+          done
+          echo "----- preview.log -----"; cat preview.log || true
+          echo "----- HTTP status: $CODE -----"
+          if [ "$UP" != "1" ]; then echo "E2E FAIL: server did not respond 200"; exit 1; fi
+          # Assert real rendered content of the three ONT Care routes
+          grep -qi "ont" page.html || { echo "E2E FAIL: home page missing ONT content"; exit 1; }
+          curl -s -f http://localhost:3000/customer  | grep -qi "customer" || { echo "E2E FAIL: /customer route"; exit 1; }
+          curl -s -f http://localhost:3000/technician | grep -qi "technician" || { echo "E2E FAIL: /technician route"; exit 1; }
+          echo "E2E PASS: dashboard + customer + technician routes served by production build"
+
+      - name: Upload evidence artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: w98-e2e-evidence
+          path: |
+            work/98/ONT-CARE/04_CODE/ont-platform/preview.log
+            work/98/ONT-CARE/04_CODE/ont-platform/page.html
