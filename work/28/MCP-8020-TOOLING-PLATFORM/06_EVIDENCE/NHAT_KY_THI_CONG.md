@@ -650,3 +650,20 @@ Issued detailed order `06_EVIDENCE/KA_NU_SANDBOX_FIRST_SOURCE_TRANSFER_ORDER_202
 - Manifest schema: NOT VERIFIED. Work 21 có skill manifest theo audit, nhưng chưa chứng minh đó là schema Work Sandbox. Không tạo manifest cho Work 15/98.
 - Báo cáo: `06_EVIDENCE/KA_P0_API_TRACE_AND_MANIFEST_SCHEMA_REVIEW_20261015.md`.
 - Cổng: Work 28 ACTIVE / NOT LOCKED; live PC :8020 tools/list UNVERIFIED; tests/E2E NOT RUN; release NO-GO.
+
+
+## 2026-10-15 — Persisted Cla independent review: P0 API / manifest / security
+- Added `06_EVIDENCE/CLA_INDEPENDENT_P0_API_MANIFEST_SECURITY_REVIEW_20261015.md`, a structured record of the Cla review supplied by Vinh in chat.
+- F1–F4 remain BLOCKED; Work 28 remains ACTIVE / NOT LOCKED; tests NOT RUN; Release NO-GO.
+- Key gate: do not add read/search tools until authenticated-session identity binding and Core authorization are evidenced. Work 24 `source.search` is PC-source-root search, not proof of a Sandbox search equivalent. Work 21 skill schema is not the Work manifest schema.
+- No MAIN SOURCE access, live :8020 tools/list capture, code execution, PC collector execution, or live-service mutation is claimed by this entry.
+
+
+## 2026-10-15 — Đồng bộ Work 28 lên GitHub theo mô hình Work 98
+- DONE: Tạo nhánh riêng `work/28-mcp-tooling-platform` trên repository `hqtt2026-thevinhvtqni/room-meeting-ai`; giữ nguyên `main`, không merge.
+- DONE: Đồng bộ 90 tệp nguồn/tài liệu/evidence từ Sandbox Work 28 vào `work/28/`, gồm thư mục `MCP-8020-TOOLING-PLATFORM` và checkpoint tại `work/28/06_EVIDENCE/`; bỏ qua `desktop.ini`.
+- DONE: Thêm `work/28/README.md` mô tả kiến trúc, trạng thái và quy trình đồng bộ VS Code/GitHub.
+- DONE: Thêm workflow `.github/workflows/work28-mcp-tooling.yml` để GitHub Actions chạy unit/regression tests bằng Python 3.12.
+- DONE: GitHub commit đầu tiên `0d9278b351988f38e7772bf39137fd9604eb90ce`; branch ref và readback README, journal, workflow đã xác minh.
+- CI: GitHub Actions run `38769093143` được khởi chạy theo sự kiện push; tại thời điểm ghi nhận đang `in_progress`. Chưa có kết luận test PASS/FAIL.
+- DECISION: Work 28 vẫn ACTIVE / NOT LOCKED; runtime E2E và MCP :8020 end-to-end vẫn BLOCKED cho đến khi có bằng chứng. Không merge vào `main`, không tuyên bố release.
