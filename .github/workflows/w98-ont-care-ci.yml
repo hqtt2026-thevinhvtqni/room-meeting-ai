@@ -1,5 +1,4 @@
 # Work 98 - ONT Care E2E Automatic CI
-# Runs install -> typecheck -> lint -> build -> preview smoke test (real HTTP E2E)
 name: W98 ONT Care CI
 
 on:
@@ -12,6 +11,7 @@ on:
 jobs:
   build-and-e2e:
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     defaults:
       run:
         working-directory: work/98/ONT-CARE/04_CODE/ont-platform
@@ -36,26 +36,46 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: E2E smoke test against production build (preview server)
+      - name: Setup Python + Playwright (Chromium)
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Playwright
+        run: |
+          pip install playwright
+          playwright install --with-deps chromium
+
+      - name: Start production build server
+        working-directory: work/98/ONT-CARE/04_CODE/ont-platform
         run: |
           set -euo pipefail
-          # Start the built app (TanStack Start / nitro output) on port 3000
-          (node .output/server/index.mjs > preview.log 2>&1 &) || true
-          PID=$!
-          UP=0
-          for i in $(seq 1 30); do
-            sleep 2
-            CODE=$(curl -s -o page.html -w "%{http_code}" http://localhost:3000/ || true)
-            if [ "$CODE" = "200" ]; then UP=1; break; fi
+          PORT=8080 nohup node .output/server/index.mjs > server.log 2>&1 &
+          for i in $(seq 1 60); do
+            if curl -sf -o /dev/null http://localhost:8080/; then echo "Server up"; exit 0; fi
+            sleep 1
           done
-          echo "----- preview.log -----"; cat preview.log || true
-          echo "----- HTTP status: $CODE -----"
-          if [ "$UP" != "1" ]; then echo "E2E FAIL: server did not respond 200"; exit 1; fi
-          # Assert real rendered content of the three ONT Care routes
-          grep -qi "ont" page.html || { echo "E2E FAIL: home page missing ONT content"; exit 1; }
-          curl -s -f http://localhost:3000/customer  | grep -qi "customer" || { echo "E2E FAIL: /customer route"; exit 1; }
-          curl -s -f http://localhost:3000/technician | grep -qi "technician" || { echo "E2E FAIL: /technician route"; exit 1; }
-          echo "E2E PASS: dashboard + customer + technician routes served by production build"
+          echo "Server failed to start"; cat server.log; exit 1
+
+      - name: Run deep-link E2E suite (real browser, production build)
+        working-directory: work/98/ONT-CARE/04_CODE/ont-platform
+        env:
+          BASE: http://localhost:8080
+        run: |
+          set -euo pipefail
+          python3 ../../05_TEST/e2e/deep_links_e2e.py | tee e2e-output.txt
+          if grep -q "FAIL" e2e-output.txt; then echo "E2E FAIL cases present"; exit 1; fi
+          echo "E2E PASS: all deep-link cases ok on production build"
+
+      - name: Report results
+        if: always()
+        run: |
+          {
+            echo "## W98 ONT Care E2E results"
+            echo ""
+            echo '```'
+            cat e2e-output.txt || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload evidence artifacts
         if: always()
@@ -63,5 +83,6 @@ jobs:
         with:
           name: w98-e2e-evidence
           path: |
-            work/98/ONT-CARE/04_CODE/ont-platform/preview.log
-            work/98/ONT-CARE/04_CODE/ont-platform/page.html
+            work/98/ONT-CARE/04_CODE/ont-platform/e2e-output.txt
+            work/98/ONT-CARE/04_CODE/ont-platform/server.log
+          if-no-files-found: ignore
