@@ -1,10 +1,34 @@
 ﻿from pathlib import Path
 import json
+import os
 import shutil
+import sys
 
 from wee.bridge.real_host import RealExecutionHost
 from wee.models import WorkContext as W12Context
 from wee.bridge.contracts import ExecutionResult
+
+
+def _normalize_command(command):
+    """
+    Platform-portability shim (Windows -> Linux/macOS).
+
+    Authority contract test data tren PC Vinh dung 'python.exe' (Windows).
+    Tren cac platform khac, executable do khong ton tai -> subprocess tra
+    OSError -> host BLOCKED. Ta thay the bang interpreter dang chay
+    (sys.executable) de giu nguyen y nghia test ma khong doi authority
+    data duoc dong bang trong tests/.
+    """
+    normalized = []
+    for token in command:
+        if isinstance(token, str) and Path(token).name.lower() in (
+            "python.exe",
+            "pythonw.exe",
+        ):
+            normalized.append(sys.executable)
+        else:
+            normalized.append(token)
+    return normalized
 
 
 class Work13ExecutionHostAdapter:
@@ -39,7 +63,7 @@ class Work13ExecutionHostAdapter:
 
     def execute(self, command, context):
         w12 = self._ctx(context)
-        r = self.host.execute(list(command), w12)
+        r = self.host.execute(_normalize_command(command), w12)
 
         final = (
             Path(context.evidence_root)
