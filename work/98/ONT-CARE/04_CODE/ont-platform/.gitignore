@@ -6,7 +6,6 @@ node_modules/
 .wrangler/
 
 # Lock files
-bun.lock
 npm-lock.yaml
 package-lock.json
 

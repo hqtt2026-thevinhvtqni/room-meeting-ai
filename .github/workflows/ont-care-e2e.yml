@@ -1,9 +1,13 @@
-name: E2E Deep Links
+name: ONT Care E2E Deep Links
 
 on:
   pull_request:
+    paths:
+      - 'work/98/ONT-CARE/**'
   push:
-    branches: [main]
+    branches:
+      - main
+      - 'work/98-ont-care'
 
 concurrency:
   group: e2e-${{ github.ref }}
@@ -28,18 +32,16 @@ jobs:
           python-version: "3.12"
 
       - name: Install app dependencies
-        working-directory: work/98/ONT-CARE/04_CODE/ont-platform
-        run: bun install
+        run: cd work/98/ONT-CARE/04_CODE/ont-platform && bun install
 
       - name: Install Playwright (Python) + Chromium
-        working-directory: work/98/ONT-CARE/04_CODE/ont-platform
         run: |
           pip install playwright
           playwright install --with-deps chromium
 
       - name: Start dev server
-        working-directory: work/98/ONT-CARE/04_CODE/ont-platform
         run: |
+          cd work/98/ONT-CARE/04_CODE/ont-platform
           nohup bun run dev > dev-server.log 2>&1 &
           for i in $(seq 1 60); do
             if curl -sf -o /dev/null http://localhost:8080/; then
@@ -54,8 +56,7 @@ jobs:
 
       - name: Run deep link E2E suite
         id: e2e
-        working-directory: work/98/ONT-CARE/04_CODE/ont-platform
-        run: python3 e2e/deep_links_e2e.py | tee e2e-output.txt
+        run: python3 work/98/ONT-CARE/05_TEST/e2e/deep_links_e2e.py | tee e2e-output.txt
 
       - name: Report results
         if: always()
