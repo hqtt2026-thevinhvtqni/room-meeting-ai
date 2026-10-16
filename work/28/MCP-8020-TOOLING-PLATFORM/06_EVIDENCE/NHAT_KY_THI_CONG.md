@@ -675,3 +675,17 @@ Issued detailed order `06_EVIDENCE/KA_NU_SANDBOX_FIRST_SOURCE_TRANSFER_ORDER_202
 - WARNING: bước post-job cleanup của checkout ghi cảnh báo `fatal: No url found for submodule path 'room-meeting-ai' in .gitmodules`; GitHub vẫn đánh dấu run/job là success. Theo dõi cảnh báo này riêng, không diễn giải nó thành test failure.
 - Phạm vi PASS: unit/regression tests trên GitHub Actions; KHÔNG phải bằng chứng MCP :8020 E2E, execution runtime, PC bridge, hay release PASS.
 - Sau lần đồng bộ nhật ký, commit mới nhất có workflow run riêng đang chạy; tiếp tục kiểm tra run mới nhất trước khi kết luận trạng thái CI hiện tại.
+
+
+## 2026-10-16 — Xu ghi nhận blocker mới và giao Co tiếp tục E2E-Automatic
+
+- SOURCE: Báo cáo Co được cung cấp trong phiên làm việc ngày 2026-10-16; báo cáo nói đã xác nhận cấu trúc Sandbox, file blocker xuất hiện sau readback, nhưng chưa đọc được source đầy đủ và chưa có capability chạy pytest/runtime hoặc kiểm tra live MCP registry.
+- DONE (phạm vi báo cáo): Xác nhận cấu trúc Work 27/28; ghi hồ sơ `CO_AUTOMATIC_E2E_CONTINUATION_BLOCKER_20261016.md` trong Sandbox theo báo cáo Co. Xu chưa đọc trực tiếp được file này qua GitHub branch tại thời điểm cập nhật; không coi đây là xác minh độc lập nội dung file.
+- BLOCKED: RUN pytest/runtime; VERIFY kết quả thực thi/readback sau thao tác; FIX/RETEST dựa trên kết quả thật; live MCP :8020 `tools/list`; E2E Runtime/Sandbox/GitHub. Chưa có exit code, test inventory thực thi mới hoặc log runtime mới.
+- DECISION: Không tạo thêm kế hoạch thay cho sản phẩm. Co phải truy tìm và thử đúng capability thực sự có trong Sandbox, ghi tên/schema/request/response hoặc lỗi nguyên văn; không suy diễn năng lực từ việc liệt kê file.
+- ORDER TO CO: Nếu có approved runner thì tạo/chạy E2E runner giới hạn Work 28, allowlist test commands và thu stdout/stderr/exit code/test inventory/revision/log SHA-256/readback; tự sửa và retest trong phạm vi. Nếu không có runner/capability, không mô phỏng PASS; hoàn thiện code/test độc lập có thể xác minh, rồi ghi bằng chứng tái hiện blocker cụ thể.
+- SECURITY/SCOPE: Không sửa Work 13; không truy cập/sửa PC hoặc restart live services; không đổi live MCP registry; không dùng identity/authorization do caller tự khai; không thêm unrestricted shell/Python; không commit/push trừ khi đường thao tác và quyền được xác minh.
+- EVIDENCE CONTRACT: DONE = artifact được tạo và đọc lại; PASS = chạy thật có kết quả; BLOCKED = capability/quyền thiếu được chỉ rõ kèm lỗi/bằng chứng. Persistence/readback không phải test PASS.
+- STATUS: Work 28 ACTIVE / NOT RELEASED; no merge to main. E2E remains BLOCKED; release NO-GO.
+- LINKED EXECUTION ORDER: GitHub Issue #12 comment https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/issues/12#issuecomment-6208681664
+- Xu ghi nhận: bình luận chỉ đạo đã được GitHub xác nhận tạo với comment id 6208681664; điều đó không chứng minh Co đã nhận inbox hoặc thực thi tiếp.
