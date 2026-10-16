@@ -78,3 +78,87 @@ Finding: a helper registers 13 named tools on an injected MCP object, but this s
 - Journal: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/blob/work/28-mcp-tooling-platform/work/28/MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/NHAT_KY_THI_CONG.md
 
 **Decision:** Execute only through Work 28 records using Xu Plan → Vi Coder → An Tester → Ka Review. Work 28 remains ACTIVE / NOT RELEASED until the acceptance gates have evidence.
+
+
+## 6. MASTER EXECUTION BLUEPRINT — E2E AUTO (amendment 2026-10-16 21:18 ICT)
+
+**Purpose:** This file is the persistent, single team-readable execution plan for Work 28. All assigned AI must read this plan, the current journal, the relevant issue, and the current source/evidence before acting. This plan is not proof that any gate has passed. Implementation/test/review results must be recorded separately with evidence.
+
+### 6.1 End-state product behavior
+The target product is a bounded autonomous execution loop, not only a tool registry or a dashboard:
+1. Receive a task from an authorized source (Inbox/task assignment or an explicitly approved request).
+2. Load the Work identity, scope, dependencies, current state, previous decisions, known blockers and acceptance criteria from canonical records.
+3. Trace relevant source/runtime/provider paths before deciding or editing.
+4. Produce a small execution plan with allowed actions, required approvals, test plan, stop conditions and evidence destinations.
+5. Check identity, WorkContext, authorization and capability before each consequential action through Core.
+6. Execute via existing MCP :8020 → Core :8000 → authorized capability/runtime; record each action and result.
+7. Validate output with tests and observable state; preserve raw logs and immutable revision references.
+8. If a bounded, reversible fix is authorized, analyze the failure, make the smallest change, rerun affected tests and regression tests. Never retry indefinitely.
+9. Escalate when approval, missing provider, unsafe action, ambiguous ownership, isolation failure, repeated failure or insufficient evidence prevents safe continuation.
+10. Have An verify, Ka independently review, and Xu accept or return a specific evidence-linked fix.
+11. Produce a handoff with status, commit/revision, tests, evidence links, unresolved risks and next owner.
+
+### 6.2 Inbox, Proposal, Task and wake-up lifecycle
+These are separate concepts and must not be conflated:
+- **Message:** communication record; it is not automatically a task.
+- **Proposal:** a proposed action/decision; it is not authorization until accepted by the correct authority.
+- **Task / Inbox item:** an actionable unit with task ID, target AI identity, Work ID, status, scope, acceptance criteria, owner, timestamps and evidence links.
+- **Wake-up / dispatch:** mechanism that prompts an AI/runtime to inspect or claim eligible work. A read-inbox tool does not prove wake-up works.
+- **Execution record:** actual action/result evidence; it is not implied by an accepted Proposal or a task status change.
+
+Required state transition must be explicit and auditable, for example:
+message/proposal → authority decision → task created/updated → task assigned to AI identity → dispatch or AI pull → authorized execution → verification → result message + evidence → closed/blocked.
+The team must discover the existing implementation first. Do not create a duplicate Inbox, Proposal service, queue, Core or runtime. If the current canonical source does not evidence a stage, record the exact gap as BLOCKED and propose the smallest compatible change for approval.
+
+Required negative tests include: rejected proposal cannot execute; unapproved privileged action cannot execute; wrong AI identity cannot claim a task; wrong Work cannot read/write it; duplicate dispatch cannot cause duplicate consequential execution; stale/closed task cannot be rerun without a new authorized transition; missing provider/auth fails closed; runtime timeout/resource cap stops execution; result cannot be marked PASS without verifiable evidence.
+
+### 6.3 Source of truth and no-repeat protocol
+Before asking Vinh or another AI to repeat information:
+1. Read this master plan and current Work 28 journal.
+2. Read the relevant issue/comments and the latest linked artifacts.
+3. Inspect current branch/source/commit and existing test/evidence records.
+4. Compare against recorded decisions and unresolved blockers.
+5. Ask only if a genuinely missing decision is required, state exactly what was searched and why the answer changes implementation.
+6. Record any new decision once in the journal and update the plan/issue links; do not create competing copies of the same decision.
+
+For each handoff, include: named owner + role, exact task, source paths/revision, constraints, acceptance criteria, required evidence path, dependencies, stop condition, and next owner. Each AI should continue from the latest verified record rather than restart discovery or ask the user for already-recorded context.
+
+### 6.4 Security and authority invariants
+- Canonical flow: AI → MCP :8020 → Core :8000 → approved capability/runtime → output/evidence.
+- Core is the authorization and canonical state authority. No bypass or duplicate Core/runtime.
+- No arbitrary shell/Python execution, identity supplied by untrusted caller, privilege self-escalation, cross-Work access, or unapproved live configuration changes.
+- Sandbox and GitHub access are provider-backed and scope-limited; validate path, branch, ownership, payload size and write permissions.
+- Human approval is required where policy marks the action as privileged, destructive, external, security-sensitive or release-affecting.
+- Bounded retries only; stop and record BLOCKED on unsafe ambiguity, unavailable trusted provider, failed isolation or missing approval.
+- Do not touch protected Work 13, PC services or live MCP registry without explicit authorization and a reviewed change plan.
+- No merge to main or release until G1–G9 pass and Xu records acceptance.
+
+### 6.5 Required E2E evidence bundle
+For each run, store an evidence bundle under Work 28 with:
+- run ID, timestamp (ICT), initiating AI identity, task/Work IDs and authorization decision;
+- source commit/revision and configuration/provider identity (secrets excluded);
+- exact request/tool calls and relevant correlation IDs;
+- raw command/test invocation, exit code, stdout/stderr, test counts and skip/fail inventory;
+- runtime outcome and bounded resource/time details where available;
+- before/after state, readback, relevant hashes and GitHub commit/blob SHA when applicable;
+- failure/fix/retry chain, with each attempt identifiable;
+- An's test verdict, Ka's independent review, Xu's final decision;
+- links from journal and issue, plus explicit residual risks.
+Redact secrets and personal data. A summary or screenshot alone is insufficient when raw machine-readable evidence is available.
+
+### 6.6 Work 28 implementation order
+1. **Trace (Vi):** identify the actual running MCP :8020 startup entrypoint, provider construction, Core route and current tool baseline. Publish source paths/revisions and blockers.
+2. **Integrate (Vi):** register the existing 13-tool adapter set into the existing server only if the trusted wiring is evidenced; preserve pre-existing tools; fail closed if required providers are missing.
+3. **Contract/tests (Vi + An):** cover stable tool names, provider wiring, authorization, Work isolation, bounded inputs/resources, Inbox/Proposal lifecycle, duplicate/stale tasks, error paths and regression.
+4. **Live registration (An):** capture actual live tools/list, compare expected names and baseline, save raw output and timestamp.
+5. **E2E (An):** demonstrate one approved test task traversing MCP → Core → authorized runtime/capability → observable output and readback, tied to a specific commit.
+6. **Self-repair (Vi, bounded):** fix only reproducible defects in scope; every fix gets targeted and regression reruns; stop after the configured retry cap or at any authority/security boundary.
+7. **Independent review (Ka):** inspect diff, test artifacts, negative tests, runtime evidence, Inbox/Proposal transitions and residual risk.
+8. **Acceptance (Xu):** read back all evidence and decide PASS/FAIL/BLOCKED for G1–G9.
+9. **Handoff:** update journal and issue with exact status, artifact links, next owner and explicit statement whether release is permitted.
+
+### 6.7 Definition of done
+Work 28 is DONE/RELEASE-ELIGIBLE only when all applicable G1–G9 gates pass with inspectable evidence tied to the exact accepted revision; the live MCP registry preserves existing tools and exposes the approved tools; one real E2E run proves the authorized path; security/negative tests pass; Ka review is independent; Xu's acceptance is recorded. Otherwise status remains ACTIVE / NOT RELEASED, with each incomplete gate marked BLOCKED or FAIL and a concrete owner/next action.
+
+### 6.8 Current status at amendment time
+This amendment records the plan only. It does not change runtime state and does not certify implementation, Inbox/wake-up behavior, live registration, test execution or E2E. The last known source audit still does not prove actual startup wiring or live tool registration. Vi must resolve that first from repository evidence; An must prove runtime behavior; Ka must review independently.
