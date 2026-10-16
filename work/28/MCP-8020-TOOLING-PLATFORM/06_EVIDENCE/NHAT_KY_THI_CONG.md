@@ -734,3 +734,20 @@ Issued detailed order `06_EVIDENCE/KA_NU_SANDBOX_FIRST_SOURCE_TRANSFER_ORDER_202
 - **HANDOFF:** Co truy đúng startup/provider binding và triển khai vào MCP hiện hữu trong phạm vi được phép; Ka rà soát độc lập; Xu nghiệm thu theo log/readback thực tế.
 - **DONE:** Biên bản không thi công qua chat và nhật ký được ghi trên branch Work 28. Readback của journal/biên bản đã xác minh ở bước trước; tiếp tục readback audit và các issue comments.
 - **STATUS:** Work 28 ACTIVE / NOT RELEASED; live registration/full E2E BLOCKED / NOT PROVEN; no merge to `main`.
+
+
+## 2026-10-16 20:12 ICT — Vinh chuyển Work 28 sang team Xu Plan → Vi Coder → An Tester → Ka Review
+
+- **DECISION AUTHORITY:** Vinh — Work Owner / Decision Authority.
+- **RECORDED / COORDINATED BY:** Xu — Plan / Planner, Chief Strategy Architect (CSA).
+- **CODER:** Vi — Coder / Implementer.
+- **TESTER:** An — Tester / Verification.
+- **REVIEWER:** Ka — Review / Independent Reviewer.
+- **DECISION:** Team Co Builder cũ không còn là phân công thi công hiện hành cho Work 28. Phụ lục biên bản là nguồn phân công mới nhất; phần Co trong lịch sử được giữ để bảo toàn lịch sử, không còn là chủ sở hữu lane thi công hiện tại.
+- **Xu — PLAN:** đọc/truy vết hiện trạng, dependency, kiến trúc và acceptance gates; ghi kế hoạch thực thi trong Work 28; điều phối, kiểm tra readback và nghiệm thu.
+- **Vi — CODER:** thực hiện code/integration trong branch `work/28-mcp-tooling-platform`, theo kế hoạch và ranh giới an toàn.
+- **An — TESTER:** chạy test được cấp phép và ghi bằng chứng tái lập; không chạy được thì ghi BLOCKED với lỗi cụ thể.
+- **Ka — REVIEW:** review độc lập artifact, test result, security boundary và E2E; ghi finding/decision bằng bằng chứng.
+- **DONE:** Cập nhật phụ lục đính chính phân công trong biên bản; link: `work/28/MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/BIEN_BAN_THONG_NHAT_KHONG_THI_CONG_QUA_CHAT_20261016_2007ICT.md`.
+- **NEXT:** cập nhật các issue Work 28 theo đúng lane mới; không chuyển trạng thái E2E thành PASS khi chưa có log/readback thật.
+- **STATUS:** Work 28 ACTIVE / NOT RELEASED; live registration/full E2E BLOCKED / NOT PROVEN; no merge to `main`.
