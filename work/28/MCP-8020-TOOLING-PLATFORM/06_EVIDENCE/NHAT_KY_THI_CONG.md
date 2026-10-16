@@ -700,3 +700,21 @@ Issued detailed order `06_EVIDENCE/KA_NU_SANDBOX_FIRST_SOURCE_TRANSFER_ORDER_202
 - ORDER TO CO: Persist exact `tools/list` and readback evidence to the canonical Work 28 evidence path; then finish actual tool integration and authorized E2E. Capture endpoint identity, timestamp, tool names, request/response, command, exit code, stdout/stderr, test inventory, revision, log/hash and readback.
 - SECURITY: Existing MCP/Core/runtime only; Core remains authorization authority. No duplicate service, no bypass, no arbitrary shell/Python, no Work 13/PC/live registry modifications without explicit authority.
 - STATUS: MCP HTTP 200 and Sandbox readback are Co-reported observations; Xu has not independently reproduced them in this entry. Full E2E BLOCKED / NOT PROVEN; Work 28 ACTIVE / NOT RELEASED; no merge to main.
+
+
+## 2026-10-16 20:07 ICT — Vinh thống nhất không thi công qua chat; Work 28 là nơi làm việc chuẩn
+
+- **DECISION BY:** Vinh — Work Owner / Decision Authority.
+- **RECORDED / COORDINATED BY:** Xu — Planner / Chief Strategy Architect (CSA).
+- **BUILD OWNER:** Co — Builder, Work 28.
+- **INDEPENDENT REVIEW:** Ka — Chief Strategy Architect (CSA), reviewer độc lập.
+- **SCOPE:** Chỉ Work 28; branch `work/28-mcp-tooling-platform`.
+- **DECISION:** Không thi công, sửa mã, kiểm thử hoặc điều phối từng bước qua chat. Mọi triển khai, quyết định, kết quả, blocker và bàn giao phải được ghi tại repository/Work 28 bằng biên bản + nhật ký. Mỗi mục phải có tên/mã, chức danh/vai trò, thời gian ICT, hành động, kết quả, evidence link và trạng thái DONE/PASS/DECISION/BLOCKED.
+- **DONE:** Xu tạo biên bản `06_EVIDENCE/BIEN_BAN_THONG_NHAT_KHONG_THI_CONG_QUA_CHAT_20261016_2007ICT.md` và ghi rõ phân công Xu/Co/Ka, ranh giới an toàn, điều kiện nghiệm thu và yêu cầu không giả lập PASS.
+- **VERIFY:** Cần đọc lại biên bản sau khi commit để xác nhận nội dung đã được lưu; kết quả commit đơn lẻ chỉ xác nhận GitHub chấp nhận thay đổi, không xác nhận runtime.
+- **NEXT — XU:** Đọc/truy vết code, tests, issues và evidence trong Work 28; triển khai các thay đổi có căn cứ và quyền; kiểm tra/readback; ghi kết quả vào Work 28.
+- **NEXT — CO:** Ghi snapshot nguyên văn MCP `tools/list` và readback evidence vào đường dẫn chuẩn; tiếp tục tool integration và E2E thật nếu có runner được phê duyệt; ghi command, exit code, stdout/stderr, test count, revision, log/hash và readback.
+- **NEXT — KA:** Rà soát độc lập bằng bằng chứng trong Work 28, ghi PASS/FAIL/BLOCKED cùng lý do.
+- **SECURITY:** Giữ AI → MCP :8020 → Core :8000 → capability/runtime được cấp quyền; không bypass Core, không shell/Python tùy ý, không sửa Work 13/PC/live services/registry nếu chưa được cấp quyền.
+- **STATUS:** Work 28 ACTIVE / NOT RELEASED; full E2E BLOCKED / NOT PROVEN; no merge to `main`.
+- **BIÊN BẢN:** https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/blob/work/28-mcp-tooling-platform/work/28/MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/BIEN_BAN_THONG_NHAT_KHONG_THI_CONG_QUA_CHAT_20261016_2007ICT.md
