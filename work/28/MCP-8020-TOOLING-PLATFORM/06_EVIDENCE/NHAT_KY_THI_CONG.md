@@ -771,3 +771,19 @@ Issued detailed order `06_EVIDENCE/KA_NU_SANDBOX_FIRST_SOURCE_TRANSFER_ORDER_202
 
 - **2026-10-16 20:13 ICT — HANDOFF:** Xu ghi hướng dẫn thi công cụ thể cho Vi trong Issue #12 comment 6216962851; trọng tâm là truy đúng MCP :8020 startup/provider wiring trước khi sửa, sau đó mới tích hợp và bàn giao cho An.
 - **ISSUE ROUTING VERIFIED:** #12 Vi Coder; #13 Ka Review; #14 Xu Plan/acceptance; #15 An Tester. Phân công mới được ghi trong biên bản, journal và issue descriptions/comments.
+
+
+## 2026-10-16 21:18 ICT — Xu lập Master Plan E2E Auto xuyên suốt Work 28
+
+- **PLAN OWNER:** Xu — Plan / Planner, CSA.
+- **DECISION AUTHORITY:** Vinh — Work Owner / Decision Authority.
+- **TEAM FLOW:** Xu Plan → Vi Coder → An Tester → Ka Review.
+- **DONE:** Tạo Master Plan duy nhất cho quy trình E2E Auto tại: work/28/MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/XU_MASTER_E2E_AUTO_EXECUTION_PLAN_20261016_2118ICT.md
+- **PLAN URL:** https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/blob/work/28-mcp-tooling-platform/work/28/MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/XU_MASTER_E2E_AUTO_EXECUTION_PLAN_20261016_2118ICT.md
+- **SCOPE:** Nhận task/Inbox → đọc hồ sơ Work và quyết định đã có → truy vết → lập kế hoạch → kiểm tra quyền qua Core → thực thi qua MCP/Core/runtime được duyệt → kiểm tra → tự sửa có giới hạn → An test → Ka review → Xu nghiệm thu/bàn giao.
+- **INBOX/PROPOSAL:** Tách Message, Proposal, Task/Inbox, wake-up/dispatch và Execution record; yêu cầu truy vết implementation hiện hữu trước khi xây mới; không mặc định AI tự thức hoặc Inbox đang hoạt động.
+- **NO-REPEAT:** Tất cả AI phải đọc Master Plan, nhật ký, issue và evidence/source revision mới nhất trước khi hỏi lại. Chỉ hỏi Vinh khi thiếu quyết định thực sự cần thiết; nêu rõ điều đã kiểm tra và lý do cần quyết định.
+- **SECURITY:** Không bypass Core, không tạo Core/runtime/MCP trùng, không thực thi lệnh tùy ý, không vượt Work boundary; giới hạn retry; không merge/release trước khi G1–G9 được xác minh.
+- **VERIFY:** File được tạo trên branch Work 28 với commit 8d030568d9b4c804f0ea7134da3771581b136ae5. Cần readback xác nhận nội dung và cập nhật issue handoff để các lane đọc đúng bản này.
+- **STATUS:** Đây là DONE cho tài liệu/kế hoạch; KHÔNG phải PASS cho startup, live tool registration, Inbox wake-up, test hay E2E. Work 28 vẫn ACTIVE / NOT RELEASED.
+- **NEXT:** Vi đọc Master Plan và truy đúng MCP :8020 startup/provider wiring; An và Ka theo đúng lane và cổng G1–G9.
