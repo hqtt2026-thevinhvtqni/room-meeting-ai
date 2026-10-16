@@ -8,3 +8,6 @@
 - LIMITATION: Việc tạo và readback lệnh chỉ chứng minh tài liệu được lưu; không chứng minh đã dispatch/acknowledge Go/Cla/Ka, cũng không chứng minh live MCP :8020, full suite hoặc E2E PASS.
 - CURRENT STATUS: Work 28 ACTIVE / NOT LOCKED; GitHub branch work/28-mcp-tooling-platform; chưa merge/release.
 - NEXT: Tiếp tục thực thi các gate Work 28 theo lệnh; cập nhật bằng chứng thực thi, không dừng ở kế hoạch.
+
+
+- 2026-10-16: Xu cập nhật theo báo cáo Co: Sandbox inventory/file readback được báo cáo là DONE; test/runtime execution, live MCP registry, E2E verify/fix/retest vẫn BLOCKED. Đã tạo biên bản tiếp tục thi công cho Co tại `work/28/MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/BIEN_BAN_TIEP_TUC_E2E_AUTOMATIC_CO_20261016.md` và giao lệnh chi tiết qua Issue #12 comment 6208681664. Không có bằng chứng mới cho E2E PASS; Work 28 ACTIVE / NOT RELEASED.
