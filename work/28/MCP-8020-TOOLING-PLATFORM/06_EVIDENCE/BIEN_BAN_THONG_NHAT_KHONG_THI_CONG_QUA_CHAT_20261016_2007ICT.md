@@ -56,3 +56,19 @@
 - **HANDOFF:** Có biên bản, nhật ký, revision/commit, bằng chứng kiểm thử, blocker còn lại và kết luận của Xu/Ka.
 
 **Kết luận tại thời điểm ghi:** Biên bản đã được tạo trong branch Work 28; việc lưu hồ sơ không đồng nghĩa E2E đã PASS. Work 28 tiếp tục ACTIVE / NOT RELEASED.
+
+
+---
+
+## PHỤ LỤC ĐÍNH CHÍNH PHÂN CÔNG — 2026-10-16 20:12 ICT
+
+- **Người quyết định:** Vinh — Work Owner / Decision Authority.
+- **Người cập nhật và điều phối:** Xu — Planner / Chief Strategy Architect (CSA).
+- **Quyết định:** Mô hình Co Builder cũ được thay bằng team chính thức theo yêu cầu của Vinh: **Xu Plan → Vi Coder → An Tester → Ka Review**. Phụ lục này là phiên bản phân công có hiệu lực mới nhất; các dòng phân công Co trong nội dung lịch sử bên trên chỉ phản ánh trạng thái trước khi đính chính.
+- **Xu — Plan / Planner:** đọc hiện trạng, truy vết, xác định dependency và tiêu chí, lập thứ tự công việc trong Work 28; điều phối theo bằng chứng, nghiệm thu cuối và ghi nhật ký.
+- **Vi — Coder / Implementer:** thi công mã và tích hợp trong branch Work 28 theo kế hoạch đã ghi; không tự mở rộng phạm vi, không bypass Core, không sửa Work 13/PC/live registry nếu chưa được cấp quyền.
+- **An — Tester / Verification:** chạy unit/integration/regression/E2E khi có runner và quyền hợp lệ; ghi lệnh, thời gian ICT, revision, exit code, stdout/stderr, số test, log/hash và readback. Nếu không chạy được thì ghi BLOCKED kèm lỗi/capability thiếu, không giả lập PASS.
+- **Ka — Review / Independent Reviewer:** review độc lập sau khi có artifact và kết quả test; ghi nhận xét, finding và PASS/FAIL/BLOCKED với bằng chứng trong Work 28.
+- **Human gate:** Vinh giữ quyền quyết định phạm vi, quyền truy cập và phát hành; Xu không tự tuyên bố release khi chưa đủ gate.
+- **Kênh thi công:** mọi implementation, test, review, biên bản, nhật ký và handoff nằm trong Work 28/GitHub branch `work/28-mcp-tooling-platform`; không thi công qua chat.
+- **Trạng thái không đổi:** Work 28 ACTIVE / NOT RELEASED; live registration/full E2E vẫn BLOCKED / NOT PROVEN cho đến khi có bằng chứng thật.
