@@ -718,3 +718,19 @@ Issued detailed order `06_EVIDENCE/KA_NU_SANDBOX_FIRST_SOURCE_TRANSFER_ORDER_202
 - **SECURITY:** Giữ AI → MCP :8020 → Core :8000 → capability/runtime được cấp quyền; không bypass Core, không shell/Python tùy ý, không sửa Work 13/PC/live services/registry nếu chưa được cấp quyền.
 - **STATUS:** Work 28 ACTIVE / NOT RELEASED; full E2E BLOCKED / NOT PROVEN; no merge to `main`.
 - **BIÊN BẢN:** https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/blob/work/28-mcp-tooling-platform/work/28/MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/BIEN_BAN_THONG_NHAT_KHONG_THI_CONG_QUA_CHAT_20261016_2007ICT.md
+
+
+## 2026-10-16 20:08 ICT — Xu source audit và truy vết integration Work 28
+
+- **AUDITOR:** Xu — Planner / Chief Strategy Architect (CSA), điều phối và nghiệm thu Work 28.
+- **DECISION AUTHORITY:** Vinh — Work Owner / Decision Authority.
+- **BUILD OWNER:** Co — Builder, Work 28.
+- **INDEPENDENT REVIEWER:** Ka — Chief Strategy Architect (CSA).
+- **DONE:** Đọc lại `runtime_tools_v1.py`, `sandbox_tools_v1.py`, `github_tools_v1.py`, `mcp_tool_registration_v1.py`, test registration và workflow Work 28 trực tiếp từ branch GitHub.
+- **FINDING:** Helper có định nghĩa 13 tool, nhưng source đã đọc chưa chứng minh helper được gọi trong startup MCP :8020 hiện hữu; chưa chứng minh live `tools/list` có đủ 13 tool. Unit test dùng FakeMCP không phải bằng chứng live registration.
+- **BLOCKED:** Co từng báo `runtime_run_tests` và `github_read_file` không xuất hiện trong live tool list. Chưa có raw live `tools/list`, E2E runtime, hay test result mới được Xu tái xác minh trong audit này.
+- **SAFETY DECISION:** Xu không tự đoán entrypoint/provider wiring để nối mã mù; cần truy vết startup thật và trusted provider/Core routes trước khi sửa integration để không bypass Core hoặc tạo runtime/server trùng.
+- **AUDIT EVIDENCE:** `06_EVIDENCE/XU_SOURCE_AUDIT_20261016_2008ICT.md`.
+- **HANDOFF:** Co truy đúng startup/provider binding và triển khai vào MCP hiện hữu trong phạm vi được phép; Ka rà soát độc lập; Xu nghiệm thu theo log/readback thực tế.
+- **DONE:** Biên bản không thi công qua chat và nhật ký được ghi trên branch Work 28. Readback của journal/biên bản đã xác minh ở bước trước; tiếp tục readback audit và các issue comments.
+- **STATUS:** Work 28 ACTIVE / NOT RELEASED; live registration/full E2E BLOCKED / NOT PROVEN; no merge to `main`.
