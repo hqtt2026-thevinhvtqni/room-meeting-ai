@@ -767,3 +767,7 @@ Issued detailed order `06_EVIDENCE/KA_NU_SANDBOX_FIRST_SOURCE_TRANSFER_ORDER_202
 - **STATUS:** Work 28 ACTIVE / NOT RELEASED; live registration/full E2E BLOCKED / NOT PROVEN. Không merge `main`.
 - **PLAN:** https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/blob/work/28-mcp-tooling-platform/work/28/MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/XU_PLAN_TEAM_EXECUTION_20261016_2013ICT.md
 - **ISSUES:** Xu #14 https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/issues/14 ; Vi #12 https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/issues/12 ; An #15 https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/issues/15 ; Ka #13 https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/issues/13
+
+
+- **2026-10-16 20:13 ICT — HANDOFF:** Xu ghi hướng dẫn thi công cụ thể cho Vi trong Issue #12 comment 6216962851; trọng tâm là truy đúng MCP :8020 startup/provider wiring trước khi sửa, sau đó mới tích hợp và bàn giao cho An.
+- **ISSUE ROUTING VERIFIED:** #12 Vi Coder; #13 Ka Review; #14 Xu Plan/acceptance; #15 An Tester. Phân công mới được ghi trong biên bản, journal và issue descriptions/comments.
