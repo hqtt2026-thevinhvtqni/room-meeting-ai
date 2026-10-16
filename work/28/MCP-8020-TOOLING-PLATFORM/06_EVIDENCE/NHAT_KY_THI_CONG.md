@@ -689,3 +689,14 @@ Issued detailed order `06_EVIDENCE/KA_NU_SANDBOX_FIRST_SOURCE_TRANSFER_ORDER_202
 - STATUS: Work 28 ACTIVE / NOT RELEASED; no merge to main. E2E remains BLOCKED; release NO-GO.
 - LINKED EXECUTION ORDER: GitHub Issue #12 comment https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/issues/12#issuecomment-6208681664
 - Xu ghi nhận: bình luận chỉ đạo đã được GitHub xác nhận tạo với comment id 6208681664; điều đó không chứng minh Co đã nhận inbox hoặc thực thi tiếp.
+
+
+## 2026-10-16 ~13:27 ICT — Co reports live MCP :8020 and Sandbox readback; E2E still pending
+
+- REPORTED BY CO: HTTPS to MCP :8020 returned HTTP 200; `tools/list` returned tool names; Sandbox write/readback matched the probe content.
+- REPORTED GAP: The observed tool list did not include `runtime_run_tests` or `github_read_file`; full E2E has not been accepted.
+- Xu verification boundary: attempted GitHub readback of the reported file `MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/WORK28_MCP_LIVE_READBACK_EVIDENCE_20261016.md` at branch `work/28-mcp-tooling-platform`; connector returned NOT_FOUND for that repository path/ref. This does not establish whether the file exists in Sandbox; the reported evidence is not independently verified here.
+- DONE: Recorded the report and precise verification boundary in `06_EVIDENCE/CO_STATUS_UPDATE_LIVE_MCP_READBACK_20261016_1327ICT.md`.
+- ORDER TO CO: Persist exact `tools/list` and readback evidence to the canonical Work 28 evidence path; then finish actual tool integration and authorized E2E. Capture endpoint identity, timestamp, tool names, request/response, command, exit code, stdout/stderr, test inventory, revision, log/hash and readback.
+- SECURITY: Existing MCP/Core/runtime only; Core remains authorization authority. No duplicate service, no bypass, no arbitrary shell/Python, no Work 13/PC/live registry modifications without explicit authority.
+- STATUS: MCP HTTP 200 and Sandbox readback are Co-reported observations; Xu has not independently reproduced them in this entry. Full E2E BLOCKED / NOT PROVEN; Work 28 ACTIVE / NOT RELEASED; no merge to main.
