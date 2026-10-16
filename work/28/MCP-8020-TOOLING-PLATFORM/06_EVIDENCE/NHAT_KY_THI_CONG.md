@@ -751,3 +751,19 @@ Issued detailed order `06_EVIDENCE/KA_NU_SANDBOX_FIRST_SOURCE_TRANSFER_ORDER_202
 - **DONE:** Cập nhật phụ lục đính chính phân công trong biên bản; link: `work/28/MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/BIEN_BAN_THONG_NHAT_KHONG_THI_CONG_QUA_CHAT_20261016_2007ICT.md`.
 - **NEXT:** cập nhật các issue Work 28 theo đúng lane mới; không chuyển trạng thái E2E thành PASS khi chưa có log/readback thật.
 - **STATUS:** Work 28 ACTIVE / NOT RELEASED; live registration/full E2E BLOCKED / NOT PROVEN; no merge to `main`.
+
+
+## 2026-10-16 20:13 ICT — Xu phát hành execution plan cho team mới
+
+- **PLAN OWNER:** Xu — Plan / Planner, Chief Strategy Architect (CSA).
+- **DECISION AUTHORITY:** Vinh — Work Owner / Decision Authority.
+- **CODER:** Vi — Coder / Implementer.
+- **TESTER:** An — Tester / Verification.
+- **REVIEWER:** Ka — Review / Independent Reviewer.
+- **DONE:** Tạo `06_EVIDENCE/XU_PLAN_TEAM_EXECUTION_20261016_2013ICT.md` với source-trace baseline, thứ tự handoff, lane cụ thể, acceptance gates G1–G9 và blocker hiện hành.
+- **DONE:** Cập nhật issue titles/body cho Xu (#14), Vi (#12), Ka (#13); tạo issue riêng cho An Tester (#15); thêm role-transition comment vào cả bốn issue.
+- **VERIFY:** Cần readback plan, minute, journal và kiểm tra issue titles/comments trước khi coi việc đồng bộ hồ sơ đã xác minh.
+- **NEXT:** Vi truy đúng startup/provider wiring và thi công integration có căn cứ; An test theo commit; Ka review evidence; Xu nghiệm thu.
+- **STATUS:** Work 28 ACTIVE / NOT RELEASED; live registration/full E2E BLOCKED / NOT PROVEN. Không merge `main`.
+- **PLAN:** https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/blob/work/28-mcp-tooling-platform/work/28/MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/XU_PLAN_TEAM_EXECUTION_20261016_2013ICT.md
+- **ISSUES:** Xu #14 https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/issues/14 ; Vi #12 https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/issues/12 ; An #15 https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/issues/15 ; Ka #13 https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/issues/13
