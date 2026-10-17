@@ -1,3 +1,10 @@
+> **QUY ĐỊNH BẮT BUỘC — KHAI BÁO NGƯỜI THAM DỰ**
+> - Mỗi AI/người tham gia phải ghi rõ **tên/identity, chức danh/vai trò, thời điểm tham gia hoặc thời điểm nghe Xu (UTC+7)**.
+> - Khi Xu phổ biến yêu cầu, người nhận phải ghi nhận thời điểm đã nghe/đọc chỉ thị và xác nhận bằng ACK tường minh; không được suy diễn là đã nghe chỉ vì có tên trong danh sách.
+> - Mẫu ghi nhận: `[YYYY-MM-DD HH:mm:ss UTC+7] — [Tên AI/người] — [Chức danh] — Đã nghe/đọc chỉ thị của Xu — ACK: [ACK/NACK/CHƯA XÁC NHẬN]`.
+> - Thư ký phải cập nhật mục tham dự/ACK trong biên bản. Nếu không có bằng chứng, ghi `CHƯA XÁC NHẬN`, không ghi nhận là đã tham dự.
+> - Người ghi biên bản: Xu — Planner / Điều phối — thời điểm cập nhật: 2026-10-17 22:20:16 UTC+7.
+>
 # BIÊN BẢN WORK 30 — GPT-AUTONOMOUS-BUILD-TEAM
 
 - Work ID: 30
@@ -69,3 +76,22 @@ Mỗi người phải ACK theo định dạng:
 |---|---|---|---|
 | 2026-10-17 | Vinh / Chủ dự án | Yêu cầu có biên bản, nhật ký và bảng plan trên GitHub song song Sandbox | Đã tiếp nhận yêu cầu |
 | 2026-10-17 | Xu / Planner | Chuẩn bị bộ ba tài liệu điều hành trên nhánh Work 30 | Đang tạo và xác minh |
+
+## 7. Nội dung xây dựng Plan — yêu cầu ghi nhận trong biên bản
+
+Xu điều phối lập kế hoạch theo các cổng sau; đây là kế hoạch khung, chưa được xem là phê duyệt thi công:
+
+1. **Khảo sát và truy vết:** kiểm tra Sandbox, nhánh GitHub Work 30, mã nguồn, cấu hình và bằng chứng runtime; ghi rõ nguồn nào đọc được/không đọc được.
+2. **Lập kế hoạch độc lập:** Cla, Go, Qe, Vibe cùng nhận brief W30-PLAN-REQ-002; mỗi AI nộp proposal riêng, không đọc proposal của người khác trước khi nộp.
+3. **Giao việc và ACK:** mỗi task phải có task ID, người nhận, vai trò, thời điểm nghe/nhận chỉ thị, ACK tường minh, đường dẫn đầu ra và bằng chứng đọc lại. Tệp xuất hiện không thay thế ACK.
+4. **Hợp nhất:** Xu so sánh bốn đề xuất, tách sự thật đã chứng minh khỏi giả thuyết, ghi rõ điểm đồng thuận/bất đồng, blocker và quyết định cần Vinh.
+5. **Phê duyệt:** Vinh phê duyệt hoặc yêu cầu sửa kế hoạch hợp nhất. Không triển khai code trước khi có phê duyệt.
+6. **Thi công:** Nu phụ trách vòng xây dựng đầu-cuối; Vi xử lý defect có mã định danh và bằng chứng; sau hai lần sửa không hiệu quả cùng lỗi phải dừng vá lặp để phân tích nguyên nhân gốc.
+7. **Xác minh độc lập:** An kiểm thử; Cla phản biện đối kháng sau An; Ka review độc lập sau cổng Cla. Phải có unit, integration, real E2E qua MCP → Core → Workspace, security-negative và regression evidence.
+8. **Bàn giao:** Xu kết luận DONE / PASS / DECISION / BLOCKED; nêu rõ phạm vi đã xác minh, phần còn thiếu, hướng dẫn tái chạy và rollback.
+
+### Tiêu chí không được bỏ qua
+- Không có bằng chứng thì ghi NOT VERIFIED/BLOCKED, không tự nhận PASS.
+- Không được ghi AI đã nghe Xu hoặc ACK nếu chưa có bằng chứng tường minh.
+- Sandbox và GitHub là hai nguồn riêng cho đến khi có bằng chứng đồng bộ.
+- Bảng kế hoạch theo dõi tại `GPT-AUTONOMOUS-BUILD-TEAM/PLAN_W30.md`; kế hoạch hiện chưa được Vinh phê duyệt.
