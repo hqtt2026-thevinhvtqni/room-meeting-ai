@@ -38,3 +38,10 @@
 - `sandbox_read` trả `{}` với hai tệp và các tệp chính đã thử; không thể xác nhận nội dung hoặc người thực sự tạo tệp. GitHub fetch hai đường dẫn tương ứng trả 404 trên branch `work/30-gpt-autonomous-build-team`.
 - Không gộp/xóa/ghi đè; cần sửa blocker đọc Sandbox và đối chiếu trước khi chuẩn hóa.
 - Kết quả: phát hiện — DONE; xác minh nội dung/tác giả/ACK — BLOCKED / NOT VERIFIED.
+
+
+## 2026-10-17 22:49 UTC+7 — Xu / Planner — W30-MINUTES-CONSOLIDATION-003
+- Ghi thông báo yêu cầu Cla và Go hợp nhất biên bản riêng vào biên bản chính rồi hủy tệp riêng: `02_EXTENSION/NOTICE_CLA_GO_CONSOLIDATE_MINUTES_20261017.md`.
+- Không có dispatch/inbox tool khả dụng đã xác minh; chưa thể tuyên bố Cla/Go nhận hoặc ACK.
+- Chưa xóa hai biên bản riêng vì sandbox_read trả nội dung rỗng, không thể bảo toàn và hợp nhất nội dung trước khi hủy.
+- Trạng thái: ghi thông báo DONE; giao nhận/ACK và hợp nhất BLOCKED / NOT VERIFIED.
