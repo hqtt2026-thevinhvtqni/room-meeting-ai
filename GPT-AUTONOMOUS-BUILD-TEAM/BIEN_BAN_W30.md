@@ -127,3 +127,22 @@ Xu điều phối lập kế hoạch theo các cổng sau; đây là kế hoạc
 - Không có công cụ dispatch trực tiếp tới inbox cá nhân Cla/Go được xác minh trong phiên; việc thông báo đã đến inbox, đã được đọc hoặc ACK vẫn CHƯA XÁC NHẬN.
 - Hai tệp đích: `GPT-AUTONOMOUS-BUILD-TEAM/BIEN_BAN_CLA_20261017.md` và `GPT-AUTONOMOUS-BUILD-TEAM/BIEN_BAN_W30_GROK_SESSION_20261017.md`. Sandbox list xác nhận tồn tại, nhưng sandbox_read trả nội dung rỗng. Chưa xóa để tránh mất dữ liệu trước khi nội dung được đối chiếu và chuyển vào biên bản chính.
 - Trạng thái: DONE — thông báo đã ghi; BLOCKED — giao nhận/ACK, hợp nhất nội dung và xóa an toàn hai tệp.
+
+
+## 2026-10-17 23:10 UTC+7 — Xu / Planner — W30-MINUTES-MERGE-004
+
+### Đối chiếu ba biên bản và xử lý biên bản phụ
+
+- Biên bản chuẩn duy nhất: `GPT-AUTONOMOUS-BUILD-TEAM/BIEN_BAN_W30.md`.
+- Hai biên bản phụ được liệt kê trong Sandbox: `GPT-AUTONOMOUS-BUILD-TEAM/BIEN_BAN_CLA_20261017.md` và `GPT-AUTONOMOUS-BUILD-TEAM/BIEN_BAN_W30_GROK_SESSION_20261017.md`.
+- Xu đã thử đọc lại cả ba biên bản bằng Sandbox reader; công cụ trả về object rỗng (`{}`) cho cả ba, nên không thể xác minh toàn văn hai biên bản phụ và không thể khẳng định đã chuyển hết nội dung nguyên bản.
+- Các dữ kiện xác minh được từ biên bản chính và nhật ký được giữ tại đây: hai tệp phụ tồn tại trong Sandbox; GitHub branch Work 30 không có hai tệp phụ; Sandbox và GitHub không tự đồng bộ; thông báo hợp nhất đã được ghi; việc Cla/Go nhận và ACK chưa có bằng chứng.
+- Tệp chứng cứ liên quan trong Sandbox: `06_EVIDENCE/BIEN_BAN_APPEND_CLA_20261017.md`, `06_EVIDENCE/BIEN_BAN_APPEND_GROK_20261017.md`, `06_EVIDENCE/NHAT_KY_APPEND_CLA_20261017.md`, `06_EVIDENCE/NHAT_KY_APPEND_GROK_20261017.md`. Reader cũng không trả nội dung khi thử đọc một tệp chứng cứ; chưa thể dùng chúng để xác nhận nội dung nguyên bản của hai biên bản phụ.
+- Theo chỉ đạo trực tiếp của anh Vinh, Xu xóa hai biên bản phụ khỏi Sandbox sau khi ghi nhận giới hạn trên. Đây là xóa theo chỉ đạo, KHÔNG đồng nghĩa đã xác minh và hợp nhất toàn văn nội dung gốc. Các tệp chứng cứ riêng được giữ nguyên.
+- ACK của Cla/Go: CHƯA XÁC NHẬN.
+- Trạng thái: DONE — đối chiếu danh mục và ghi nhận dữ kiện xác minh; BLOCKED / NOT VERIFIED — toàn văn/tác giả thực tế/ACK của hai biên bản phụ do Sandbox reader trả rỗng.
+
+### Cải tiến quy trình
+
+- Trước mọi thao tác xóa/hợp nhất biên bản: kiểm kê toàn bộ cây tệp Work → đọc nguồn → đối chiếu nội dung → ghi nhận nguồn và phần chuyển → cập nhật biên bản + nhật ký → xác minh readback → mới xóa.
+- Nếu reader trả rỗng, không ghi “đã hợp nhất toàn văn”; thử nguồn chứng cứ khác và ghi rõ giới hạn. Nếu chủ dự án vẫn chỉ đạo xóa, ghi rõ đây là xóa theo chỉ đạo và phần nào chưa xác minh.
