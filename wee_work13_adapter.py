@@ -1,10 +1,35 @@
-﻿from pathlib import Path
+﻿import os
+import sys
+from pathlib import Path
 import json
 import shutil
 
 from wee.bridge.real_host import RealExecutionHost
 from wee.models import WorkContext as W12Context
 from wee.bridge.contracts import ExecutionResult
+
+
+def _normalize_entrypoint(command):
+    """W30-DEF-001: resolve interpreter aliases portably.
+
+    Work 13 authority files were authored on Windows and hard-code the
+    test entrypoint as ["python.exe", ...]. On POSIX hosts that binary
+    name does not exist, so RealExecutionHost fails with ENOENT and the
+    E2E result degrades to BLOCKED even though the flow itself is sound.
+
+    Smallest safe fix (repair-coder scope): map a leading python/python.exe
+    token to the *currently running* interpreter on every platform. This
+    keeps Windows behavior identical (sys.executable IS python.exe there)
+    and makes the real-host E2E reproducible on Linux/macOS without
+    touching the isolation/policy checks in RealExecutionHost.
+    """
+    cmd = list(command)
+    if not cmd:
+        return cmd
+    exe = os.path.basename(str(cmd[0])).lower()
+    if exe in ("python", "python.exe", "python3", "python3.exe"):
+        cmd[0] = sys.executable
+    return cmd
 
 
 class Work13ExecutionHostAdapter:
@@ -39,6 +64,7 @@ class Work13ExecutionHostAdapter:
 
     def execute(self, command, context):
         w12 = self._ctx(context)
+        command = _normalize_entrypoint(command)
         r = self.host.execute(list(command), w12)
 
         final = (

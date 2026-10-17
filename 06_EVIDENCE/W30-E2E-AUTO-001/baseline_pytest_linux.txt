@@ -1,0 +1,39 @@
+...........................................FF........................... [ 32%]
+........................................................................ [ 64%]
+.......................................F................................ [ 97%]
+.....F                                                                   [100%]
+=================================== FAILURES ===================================
+_______ TestF4MCPBoundary.test_add_paste_schema_declares_maximum_length ________
+tests/test_f4_resource_limits.py:236: in test_add_paste_schema_declares_maximum_length
+    assert text_schema.get("maxLength") is not None
+E   AssertionError: assert None is not None
+E    +  where None = <built-in method get of dict object at 0x7f3d5b38eb80>('maxLength')
+E    +    where <built-in method get of dict object at 0x7f3d5b38eb80> = {'type': 'string'}.get
+_______ TestF4MCPBoundary.test_add_paste_schema_limit_matches_f4_policy ________
+tests/test_f4_resource_limits.py:275: in test_add_paste_schema_limit_matches_f4_policy
+    assert text_schema.get("maxLength") == MAX_TEXT_BYTES
+E   AssertionError: assert None == 1048576
+E    +  where None = <built-in method get of dict object at 0x7f3d5b415dc0>('maxLength')
+E    +    where <built-in method get of dict object at 0x7f3d5b415dc0> = {'type': 'string'}.get
+___________________ test_t8_existing_mcp_tools_no_regression ___________________
+tests/test_message_v1.py:328: in test_t8_existing_mcp_tools_no_regression
+    assert names == sorted(
+E   AssertionError: assert ['add_paste_t...ist_meetings'] == ['add_paste_t...tart_meeting']
+E     
+E     At index 3 diff: 'list_meetings' != 'join_meeting'
+E     Right contains 2 more items, first extra item: 'list_meetings'
+E     Use -v to get more diff
+__________________________ test_work13_real_host_e2e ___________________________
+tests/test_work13_wee_integration.py:39: in test_work13_real_host_e2e
+    assert result.status=="PASS"
+E   AssertionError: assert 'BLOCKED' == 'PASS'
+E     
+E     - PASS
+E     + BLOCKED
+=========================== short test summary info ============================
+FAILED tests/test_f4_resource_limits.py::TestF4MCPBoundary::test_add_paste_schema_declares_maximum_length
+FAILED tests/test_f4_resource_limits.py::TestF4MCPBoundary::test_add_paste_schema_limit_matches_f4_policy
+FAILED tests/test_message_v1.py::test_t8_existing_mcp_tools_no_regression - A...
+FAILED tests/test_work13_wee_integration.py::test_work13_real_host_e2e - Asse...
+4 failed, 218 passed in 8.82s
+exit=1

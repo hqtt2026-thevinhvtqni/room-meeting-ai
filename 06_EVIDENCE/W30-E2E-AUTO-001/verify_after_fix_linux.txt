@@ -1,0 +1,151 @@
+Lệnh: python -m pytest tests/ -q -p no:libtmux --ignore=tests/test_browser_agent_adapter_e2e.py
+Thời điểm: 2026-10-17 (UTC+7) — phiên E2E-Automatic, branch work/30-gpt-autonomous-build-team
+
+...........................................FF........................... [ 32%]
+........................................................................ [ 64%]
+.......................................F................................ [ 97%]
+......                                                                   [100%]
+=================================== FAILURES ===================================
+_______ TestF4MCPBoundary.test_add_paste_schema_declares_maximum_length ________
+
+self = <workspace.tests.test_f4_resource_limits.TestF4MCPBoundary object at 0x7fab7edf83e0>
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-6/test_add_paste_schema_declares0')
+
+    def test_add_paste_schema_declares_maximum_length(
+        self,
+        tmp_path,
+    ):
+        """
+        MCP public schema should expose a maximum text length.
+    
+        This is a DESIGN test. It is expected to FAIL until maxLength is
+        deliberately added to the public MCP schema.
+        """
+        from room_hop_mcp.adapter.server import (
+            ADD_PASTE_TO_MEETING,
+            create_server,
+        )
+    
+        service, _ = make_service(tmp_path)
+        server = create_server(service)
+    
+        from mcp import types
+    
+        handler = server.request_handlers[types.ListToolsRequest]
+        request = types.ListToolsRequest(method="tools/list")
+    
+        import asyncio
+        result = asyncio.run(handler(request))
+    
+        tool = next(
+            tool
+            for tool in result.root.tools
+            if tool.name == ADD_PASTE_TO_MEETING
+        )
+    
+        text_schema = tool.inputSchema["properties"]["text"]
+    
+>       assert text_schema.get("maxLength") is not None
+E       AssertionError: assert None is not None
+E        +  where None = <built-in method get of dict object at 0x7fab7d713400>('maxLength')
+E        +    where <built-in method get of dict object at 0x7fab7d713400> = {'type': 'string'}.get
+
+tests/test_f4_resource_limits.py:236: AssertionError
+_______ TestF4MCPBoundary.test_add_paste_schema_limit_matches_f4_policy ________
+
+self = <workspace.tests.test_f4_resource_limits.TestF4MCPBoundary object at 0x7fab7edf8740>
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-6/test_add_paste_schema_limit_ma0')
+
+    def test_add_paste_schema_limit_matches_f4_policy(
+        self,
+        tmp_path,
+    ):
+        """
+        Once declared, MCP maxLength must equal the F4 policy.
+    
+        NOTE:
+        JSON Schema maxLength is character-based, while F4 runtime policy
+        is byte-based. Therefore this test is primarily a declaration check,
+        not the final UTF-8 enforcement mechanism.
+        """
+        from room_hop_mcp.adapter.server import (
+            ADD_PASTE_TO_MEETING,
+            create_server,
+        )
+    
+        service, _ = make_service(tmp_path)
+        server = create_server(service)
+    
+        from mcp import types
+    
+        handler = server.request_handlers[types.ListToolsRequest]
+        request = types.ListToolsRequest(method="tools/list")
+    
+        import asyncio
+        result = asyncio.run(handler(request))
+    
+        tool = next(
+            tool
+            for tool in result.root.tools
+            if tool.name == ADD_PASTE_TO_MEETING
+        )
+    
+        text_schema = tool.inputSchema["properties"]["text"]
+    
+>       assert text_schema.get("maxLength") == MAX_TEXT_BYTES
+E       AssertionError: assert None == 1048576
+E        +  where None = <built-in method get of dict object at 0x7fab7d7381c0>('maxLength')
+E        +    where <built-in method get of dict object at 0x7fab7d7381c0> = {'type': 'string'}.get
+
+tests/test_f4_resource_limits.py:275: AssertionError
+___________________ test_t8_existing_mcp_tools_no_regression ___________________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-6/test_t8_existing_mcp_tools_no_0')
+
+    def test_t8_existing_mcp_tools_no_regression(tmp_path):
+        from mcp import types
+    
+        from room_hop_mcp.adapter.server import create_server
+    
+        manager = MeetingManager(meetings_dir=tmp_path / "meetings")
+        service = MeetingService(manager)
+        server = create_server(service)
+    
+        def _call(name, arguments):
+            handler = server.request_handlers[types.CallToolRequest]
+            request = types.CallToolRequest(
+                method="tools/call",
+                params=types.CallToolRequestParams(name=name, arguments=arguments),
+            )
+            return asyncio.run(handler(request))
+    
+        def _list_tools():
+            handler = server.request_handlers[types.ListToolsRequest]
+            request = types.ListToolsRequest(method="tools/list")
+            return asyncio.run(handler(request))
+    
+        # 6 tools KHÔNG đổi, KHÔNG thêm add_message.
+        names = sorted(t.name for t in _list_tools().root.tools)
+>       assert names == sorted(
+            [
+                "add_paste_to_meeting",
+                "get_meeting",
+                "get_transcript",
+                "join_meeting",
+                "start_meeting",
+                "list_meetings",
+            ]
+        )
+E       AssertionError: assert ['add_paste_t...ist_meetings'] == ['add_paste_t...tart_meeting']
+E         
+E         At index 3 diff: 'list_meetings' != 'join_meeting'
+E         Right contains 2 more items, first extra item: 'list_meetings'
+E         Use -v to get more diff
+
+tests/test_message_v1.py:328: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_f4_resource_limits.py::TestF4MCPBoundary::test_add_paste_schema_declares_maximum_length
+FAILED tests/test_f4_resource_limits.py::TestF4MCPBoundary::test_add_paste_schema_limit_matches_f4_policy
+FAILED tests/test_message_v1.py::test_t8_existing_mcp_tools_no_regression - A...
+3 failed, 219 passed in 9.18s
+exit=0

@@ -23,3 +23,15 @@
 - Bằng chứng: fetch_file đọc lại biên bản GitHub, xác nhận quy định ở đầu tệp và mục Plan tồn tại.
 - Sandbox: đã append phần bổ sung vào biên bản, nhật ký và transcript; sandbox_list xác nhận các đường dẫn tồn tại. sandbox_read biên bản trả rỗng nên chưa xác minh được nội dung đầu tệp Sandbox.
 - Trạng thái: DONE — bổ sung nội dung ở hai môi trường; BLOCKED/PARTIAL — chưa đặt được quy định ở đầu biên bản Sandbox vì không đọc được nội dung hiện hữu; đồng bộ tự động chưa được xác minh.
+
+
+## 2026-10-17 — Agent VS Code / Engineering Operations (role Nu) — W30-E2E-AUTO-001
+- Yêu cầu của Vinh: kiểm tra GitHub Work 30, phạm vi đúng ba tệp `baseline_pytest_linux.txt`, `KE_HOACH_THI_CONG_XU.md`, `wee_work13_adapter.py` trên nhánh `work/30-gpt-autonomous-build-team`. Không xét Sandbox.
+- Phạm vi repo local `/workspace`: HEAD = b7bc31e (grafted), branch trỏ cùng commit; không có remote cấu hình → chưa đẩy lên GitHub được trong phiên này.
+- Kết quả kiểm tra ba tệp:
+  - `baseline_pytest_linux.txt`: ĐÃ CÓ dưới dạng staged (add), đường dẫn `06_EVIDENCE/W30-E2E-AUTO-001/baseline_pytest_linux.txt`; nội dung là log pytest Linux "4 failed, 218 passed", exit=1. Chưa nằm trong commit nào.
+  - `KE_HOACH_THI_CONG_XU.md`: ĐÃ CÓ dưới dạng staged (add), đường dẫn `GPT-AUTONOMOUS-BUILD-TEAM/KE_HOACH_THI_CONG_XU.md`; kế hoạch T-01..T-08, trạng thái ĐÃ LẬP. Chưa nằm trong commit nào.
+  - `wee_work13_adapter.py`: ĐÃ CÓ sửa đổi (modified so với HEAD); bản HEAD vẫn hard-code `python.exe` ở dòng 88. Bản làm việc thêm chuẩn hóa entrypoint (`sys.executable`) — khớp mô tả W30-DEF-001 / T-04.
+- Retest sau sửa (bằng chứng mới): `06_EVIDENCE/W30-E2E-AUTO-001/verify_after_fix_linux.txt` — `tests/test_work13_wee_integration.py` PASS; toàn suite còn 3 failed / 219 passed (các lỗi W30-DEF-002/003 thuộc DECISION, giữ nguyên như baseline).
+- Ghi chú môi trường khi retest: plugin `libtmux` (pytest 9.1.1) gây crash collection ("Marks cannot be applied to fixtures") → chạy với `-p no:libtmux`; `tests/test_browser_agent_adapter_e2e.py` lỗi collection do cần host cục bộ cổng 8787 (ConnectionError) → `--ignore` tệp này, ghi nhận là defect hạ tầng W30-DEF-004, NOT VERIFIED trên CI thật.
+- Trạng thái: DONE — kiểm tra ba tệp theo đúng phạm vi Vinh giao + retest W30-DEF-001; BLOCKED — push GitHub (không có remote/credentials trong phiên); DECISION mở — W30-DEF-002/003 chờ Vinh duyệt phạm vi.
