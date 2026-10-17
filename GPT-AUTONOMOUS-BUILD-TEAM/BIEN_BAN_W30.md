@@ -146,3 +146,12 @@ Xu điều phối lập kế hoạch theo các cổng sau; đây là kế hoạc
 
 - Trước mọi thao tác xóa/hợp nhất biên bản: kiểm kê toàn bộ cây tệp Work → đọc nguồn → đối chiếu nội dung → ghi nhận nguồn và phần chuyển → cập nhật biên bản + nhật ký → xác minh readback → mới xóa.
 - Nếu reader trả rỗng, không ghi “đã hợp nhất toàn văn”; thử nguồn chứng cứ khác và ghi rõ giới hạn. Nếu chủ dự án vẫn chỉ đạo xóa, ghi rõ đây là xóa theo chỉ đạo và phần nào chưa xác minh.
+
+
+## 2026-10-17 — Xu / Planner — W30-SYNC-GH-TO-SANDBOX-001
+
+- Theo yêu cầu anh Vinh, Xu dùng GitHub branch `work/30-gpt-autonomous-build-team` làm nguồn cho lượt đồng bộ về Sandbox Work 30.
+- Đã fetch/ghi 24 tệp văn bản Work 30 liên quan: 4 tài liệu điều hành được cập nhật tại đường dẫn chuẩn; 20 tài liệu còn lại được giữ dưới `08_GITHUB_MIRROR/` để tránh ghi đè các thư mục code/evidence Sandbox có nội dung chi tiết hơn bằng các README cấu trúc ngắn.
+- Mọi thao tác ghi Sandbox trả `status: ok`; danh mục sau ghi nhận các đường dẫn mirror mới. Nhật ký và báo cáo đồng bộ được cập nhật.
+- Giới hạn: Sandbox reader vẫn trả `{}`; không thể đọc lại để so sánh hash hoặc xác nhận nội dung ghi. Đây là đồng bộ theo phạm vi Work 30-related files, không phải mirror toàn bộ 300 blob của repository. Trạng thái parity tổng thể: BLOCKED / NOT VERIFIED.
+- Quy tắc: không tuyên bố PASS đồng bộ đầy đủ khi chưa có readback/hash; tiếp tục sửa reader và chạy manifest diff trước khi kết luận.
