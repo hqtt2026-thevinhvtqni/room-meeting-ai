@@ -64,3 +64,12 @@
 - Bằng chứng thao tác: 24 lệnh Sandbox write trả `status: ok`; danh mục Sandbox sau đó hiển thị các đường dẫn mirror mới. Báo cáo: `08_GITHUB_MIRROR/SYNC_REPORT_GITHUB_TO_SANDBOX_20261017.md`.
 - Giới hạn: `sandbox_read` tiếp tục trả rỗng; chưa thể so sánh byte/hash sau ghi. Không tuyên bố đồng bộ toàn bộ repository hoặc PASS parity.
 - Trạng thái: DONE — 24 tệp Work 30 được fetch/ghi; BLOCKED / NOT VERIFIED — readback, hash parity và đồng bộ toàn bộ code/evidence.
+
+
+## 2026-10-17 — Xu / Planner — W30-E2E-AUTO-PLAN-002
+- Hành động: đọc biên bản chính, nhật ký, bảng plan cũ và proposal Vibe trên GitHub; viết lại `PLAN_W30.md` thành kế hoạch E2E Automatic v2.0 với G0–G10, hard gate phê duyệt Vinh, repair loop giới hạn 2 lần/defect, bộ kiểm thử, manifest/bằng chứng, handoff và rollback.
+- Căn cứ đã đọc: `BIEN_BAN_W30.md` (blob SHA `492802007e6966f9b1f56a6a9ab6d7f8280da7fb`), `NHAT_KY_THI_CONG_W30.md` (blob SHA `6d1607d38825c92ab4bde2f04c9ff037f2e62bd2` trước mục nhật ký này), proposal Vibe (blob SHA `8dbf7f88868de554f6b1910fb3501209e36ba93d`). Proposal Qe tại đường dẫn dự kiến trả 404; Cla/Go chưa được xác minh trong lượt đọc này.
+- GitHub: cập nhật `GPT-AUTONOMOUS-BUILD-TEAM/PLAN_W30.md`; commit `a92cfdd53142368cea4e38bab197ea7b2f1a8c55`; fetch lại xác nhận nội dung Plan v2.0 và blob SHA `fb71d44532fe1d8efed6d8597e3719c2cea151f3`.
+- Sandbox Work 30: ghi cùng nội dung vào `GPT-AUTONOMOUS-BUILD-TEAM/PLAN_W30.md`; công cụ trả `status: ok`. Do Sandbox reader trước đó trả `{}`, readback/hash parity Sandbox vẫn BLOCKED / NOT VERIFIED.
+- Quyết định: kế hoạch là DRAFT chờ Vinh phê duyệt; **chưa build, chưa tuyên bố E2E PASS**.
+- Trạng thái: DONE — soạn và ghi Plan; GitHub readback verified. BLOCKED / NOT VERIFIED — Sandbox readback/parity; các proposal Cla/Go/Qe chưa đủ bằng chứng.
