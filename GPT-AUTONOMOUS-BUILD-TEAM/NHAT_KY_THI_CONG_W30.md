@@ -55,3 +55,12 @@
 - Theo chỉ đạo trực tiếp của anh Vinh, xóa hai biên bản phụ khỏi Sandbox; đây là xóa theo chỉ đạo, không phải xác nhận đã hợp nhất toàn văn.
 - Quy trình phòng ngừa: kiểm kê toàn cây → đọc/đối chiếu → ghi nhận nguồn → cập nhật biên bản và nhật ký → readback xác minh → mới xóa. Reader rỗng thì ghi BLOCKED, không tự nhận hợp nhất toàn văn.
 - Trạng thái: cập nhật ghi nhận DONE; toàn văn nguồn phụ và ACK Cla/Go NOT VERIFIED.
+
+
+## 2026-10-17 — Xu / Planner — W30-SYNC-GH-TO-SANDBOX-001
+
+- Nguồn: GitHub branch `work/30-gpt-autonomous-build-team`, tree SHA `9d13281bd2600b499760e6598c2d88c4275affba`.
+- Hành động: fetch và ghi 24 tệp văn bản Work 30 liên quan sang Sandbox Work ID 30. Bốn tệp điều hành chính được ghi đúng đường dẫn chuẩn; 20 tệp còn lại được lưu snapshot dưới `08_GITHUB_MIRROR/` để tránh ghi đè nội dung Sandbox chi tiết bằng README cấu trúc rút gọn.
+- Bằng chứng thao tác: 24 lệnh Sandbox write trả `status: ok`; danh mục Sandbox sau đó hiển thị các đường dẫn mirror mới. Báo cáo: `08_GITHUB_MIRROR/SYNC_REPORT_GITHUB_TO_SANDBOX_20261017.md`.
+- Giới hạn: `sandbox_read` tiếp tục trả rỗng; chưa thể so sánh byte/hash sau ghi. Không tuyên bố đồng bộ toàn bộ repository hoặc PASS parity.
+- Trạng thái: DONE — 24 tệp Work 30 được fetch/ghi; BLOCKED / NOT VERIFIED — readback, hash parity và đồng bộ toàn bộ code/evidence.
