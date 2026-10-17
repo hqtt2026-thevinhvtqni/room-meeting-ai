@@ -76,6 +76,7 @@ Mỗi người phải ACK theo định dạng:
 |---|---|---|---|
 | 2026-10-17 | Vinh / Chủ dự án | Yêu cầu có biên bản, nhật ký và bảng plan trên GitHub song song Sandbox | Đã tiếp nhận yêu cầu |
 | 2026-10-17 | Xu / Planner | Chuẩn bị bộ ba tài liệu điều hành trên nhánh Work 30 | Đang tạo và xác minh |
+| 2026-10-17 | Vibe / Independent Planner (GitHub route) | ACK tường minh W30-PLAN-REQ-002 và nộp `docs/work30/plan-proposals/VIBE_PLAN_PROPOSAL.md` (commit `176e0a22`); ghi nhật ký thi công (commit `da700880`); readback verified | DONE — có bằng chứng |
 
 ## 7. Nội dung xây dựng Plan — yêu cầu ghi nhận trong biên bản
 
@@ -95,3 +96,15 @@ Xu điều phối lập kế hoạch theo các cổng sau; đây là kế hoạc
 - Không được ghi AI đã nghe Xu hoặc ACK nếu chưa có bằng chứng tường minh.
 - Sandbox và GitHub là hai nguồn riêng cho đến khi có bằng chứng đồng bộ.
 - Bảng kế hoạch theo dõi tại `GPT-AUTONOMOUS-BUILD-TEAM/PLAN_W30.md`; kế hoạch hiện chưa được Vinh phê duyệt.
+
+## 8. Tham dự và ACK — cập nhật 2026-10-17 23:05:00 UTC+7
+
+> Mục bổ sung theo yêu cầu kiểm chứng của Co và chỉ đạo của anh Vinh (Vibe được phép cập nhật kèm bằng chứng). Xu là thư ký ghi biên bản; mục này chỉ ghi nhận phần bằng chứng Vibe trực tiếp nắm giữ.
+
+- `[2026-10-17 22:40:00 UTC+7] — Vibe (GLM, Mistral Vibe Work, acting for VINH MR) — Independent Planner (GitHub route) — Đã nghe/đọc chỉ thị của Xu — ACK: ACK`
+- Nội dung ACK đầy đủ: `ACK — W30-PLAN-REQ-002 — Vibe (GLM, Mistral Vibe Work, acting for VINH MR) — Independent Planner (GitHub route) — 2026-10-17 22:40:00 UTC+7`
+- Đầu ra: `docs/work30/plan-proposals/VIBE_PLAN_PROPOSAL.md` trên nhánh `work/30-gpt-autonomous-build-team`, blob SHA `8dbf7f88868de554f6b1910fb3501209e36ba93d`, commit `176e0a2267c08e2fbf5c03980d7e7bf7bda46785` (2026-10-17T15:36:14Z).
+- Bằng chứng đọc lại: get_file_contents đọc lại toàn văn proposal trên nhánh, xác nhận tiêu đề và ACK tồn tại (readback verified).
+- Nhật ký thi công: mục Vibe ghi tại `GPT-AUTONOMOUS-BUILD-TEAM/NHAT_KY_THI_CONG_W30.md`, commit `da7008808d9377519cd32cd2dd8947883523fe7c`.
+- Trạng thái: DONE — Vibe đã nộp proposal + ACK tường minh; proposal chưa được Xu hợp nhất (cổng W30-P03), chưa đọc proposal của Cla/Go/Qe tại thời điểm nộp.
+- Phạm vi của mục này: chỉ ghi nhận ACK/tham dự của Vibe. ACK của Cla, Go, Qe vẫn là `CHƯA XÁC NHẬN` cho đến khi có bằng chứng tường minh. Đồng bộ GitHub ↔ Sandbox vẫn NOT VERIFIED.
