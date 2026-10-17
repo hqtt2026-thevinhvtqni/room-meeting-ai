@@ -30,3 +30,11 @@
 - Bằng chứng: commit `176e0a2267c08e2fbf5c03980d7e7bf7bda46785` trên branch `work/30-gpt-autonomous-build-team`; blob SHA `8dbf7f88868de554f6b1910fb3501209e36ba93d`; đã fetch_file đọc lại toàn văn proposal, xác nhận ACK và nội dung đầy đủ.
 - Điểm nổi bật của proposal: pipeline 6 cổng GATE-0..GATE-5 (Survey → Approval → Build → Repair → Verify → Handoff); real E2E MCP → Core → Workspace không mock; 5 nhóm kiểm thử; tiêu chí nghiệm thu; rủi ro; rollback bằng tag theo cổng.
 - Trạng thái: DONE — nộp proposal + ACK tường minh + readback verified. Proposal chưa được Xu hợp nhất; chưa đọc proposal của Cla/Go/Qe tại thời điểm nộp.
+
+
+## 2026-10-17 22:48 UTC+7 — Xu / Planner — W30-MINUTES-AUDIT-CLA-GO-001
+- Rà soát lại `sandbox_list(work_id=30)`, phát hiện hai tệp biên bản riêng: `BIEN_BAN_CLA_20261017.md` và `BIEN_BAN_W30_GROK_SESSION_20261017.md` dưới `GPT-AUTONOMOUS-BUILD-TEAM/`.
+- Lượt trước bỏ sót vì chỉ tập trung vào biên bản chính, không kiểm kê toàn bộ cây tệp Work 30. Đây là lỗi rà soát của Xu.
+- `sandbox_read` trả `{}` với hai tệp và các tệp chính đã thử; không thể xác nhận nội dung hoặc người thực sự tạo tệp. GitHub fetch hai đường dẫn tương ứng trả 404 trên branch `work/30-gpt-autonomous-build-team`.
+- Không gộp/xóa/ghi đè; cần sửa blocker đọc Sandbox và đối chiếu trước khi chuẩn hóa.
+- Kết quả: phát hiện — DONE; xác minh nội dung/tác giả/ACK — BLOCKED / NOT VERIFIED.
