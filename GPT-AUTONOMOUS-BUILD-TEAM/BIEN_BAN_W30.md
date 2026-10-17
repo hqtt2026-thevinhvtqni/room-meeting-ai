@@ -118,3 +118,12 @@ Xu điều phối lập kế hoạch theo các cổng sau; đây là kế hoạc
 - GitHub branch Work 30 hiện không có hai đường dẫn biên bản riêng trên (fetch_file trả 404); Sandbox và GitHub không được coi là tự đồng bộ.
 - Quyết định tiếp theo: không xóa/gộp/ghi đè các tệp; cần khôi phục khả năng đọc Sandbox, đối chiếu nội dung và nguồn tạo tệp, rồi mới quyết định biên bản chuẩn và liên kết các biên bản phụ.
 - Trạng thái: DONE — phát hiện và ghi nhận thiếu sót; BLOCKED / NOT VERIFIED — nội dung và nguồn tác giả của hai biên bản riêng.
+
+
+## 2026-10-17 22:49 UTC+7 — Xu / Planner — W30-MINUTES-CONSOLIDATION-003
+
+- Theo yêu cầu anh Vinh: Cla và Go phải chuyển nội dung hữu ích từ hai biên bản riêng vào biên bản chính `GPT-AUTONOMOUS-BUILD-TEAM/BIEN_BAN_W30.md`; sau khi đối chiếu và bảo toàn nội dung cần giữ, hủy hai tệp riêng.
+- Thông báo được ghi tại `GPT-AUTONOMOUS-BUILD-TEAM/02_EXTENSION/NOTICE_CLA_GO_CONSOLIDATE_MINUTES_20261017.md` trên Sandbox và bản mirror GitHub.
+- Không có công cụ dispatch trực tiếp tới inbox cá nhân Cla/Go được xác minh trong phiên; việc thông báo đã đến inbox, đã được đọc hoặc ACK vẫn CHƯA XÁC NHẬN.
+- Hai tệp đích: `GPT-AUTONOMOUS-BUILD-TEAM/BIEN_BAN_CLA_20261017.md` và `GPT-AUTONOMOUS-BUILD-TEAM/BIEN_BAN_W30_GROK_SESSION_20261017.md`. Sandbox list xác nhận tồn tại, nhưng sandbox_read trả nội dung rỗng. Chưa xóa để tránh mất dữ liệu trước khi nội dung được đối chiếu và chuyển vào biên bản chính.
+- Trạng thái: DONE — thông báo đã ghi; BLOCKED — giao nhận/ACK, hợp nhất nội dung và xóa an toàn hai tệp.
