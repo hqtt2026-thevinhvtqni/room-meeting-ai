@@ -19,3 +19,11 @@ Timestamp: 2026-10-17 (UTC+7; exact execution time not returned by connector)
 5. Update this file and Work 30 journal with exact commit, actor/role, timestamp, counts, and exceptions.
 
 No PASS claim is made for files not read back.
+
+
+## Update — 2026-10-17 UTC+7 — W30-SYNC-GH-TO-SANDBOX-001
+
+- DONE: 24 Work 30-related text files were fetched from branch `work/30-gpt-autonomous-build-team` and written to Sandbox Work ID 30. Four canonical governance files were written to their canonical paths; 20 other branch documents were stored under `GPT-AUTONOMOUS-BUILD-TEAM/08_GITHUB_MIRROR/` to avoid overwriting richer Sandbox-only implementation/evidence with abbreviated structural README files.
+- DONE: Sandbox write operations returned `status: ok`; Sandbox inventory showed the new mirror paths.
+- BLOCKED / NOT VERIFIED: Sandbox readback still returns an empty object, so content/hash parity is not verified. This is not a full repository mirror and does not sync all code, tests, evidence, or binary assets from all 300 repository blobs.
+- Required next action: repair Sandbox readback, then generate complete path manifest and compare file contents/hashes; only then report full parity.
