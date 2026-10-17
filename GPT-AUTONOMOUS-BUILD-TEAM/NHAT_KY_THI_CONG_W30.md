@@ -45,3 +45,13 @@
 - Không có dispatch/inbox tool khả dụng đã xác minh; chưa thể tuyên bố Cla/Go nhận hoặc ACK.
 - Chưa xóa hai biên bản riêng vì sandbox_read trả nội dung rỗng, không thể bảo toàn và hợp nhất nội dung trước khi hủy.
 - Trạng thái: ghi thông báo DONE; giao nhận/ACK và hợp nhất BLOCKED / NOT VERIFIED.
+
+
+## 2026-10-17 23:10 UTC+7 — Xu / Planner — W30-MINUTES-MERGE-004
+- Kiểm kê Sandbox Work 30 và thử đọc biên bản chính + hai biên bản phụ; sandbox_read trả `{}` cho các đường dẫn đã thử.
+- Đối chiếu được bằng chứng từ bản GitHub của biên bản chính: hai đường dẫn phụ không có trên GitHub branch; thông báo hợp nhất đã được ghi; Cla/Go chưa có ACK tường minh.
+- Ghi mục hợp nhất có giới hạn bằng chứng vào biên bản chính. Không tuyên bố đã chuyển toàn văn nội dung không đọc được.
+- Giữ các tệp chứng cứ riêng `06_EVIDENCE/BIEN_BAN_APPEND_CLA_20261017.md`, `BIEN_BAN_APPEND_GROK_20261017.md`, `NHAT_KY_APPEND_CLA_20261017.md`, `NHAT_KY_APPEND_GROK_20261017.md`; nội dung các tệp này chưa đọc xác minh được.
+- Theo chỉ đạo trực tiếp của anh Vinh, xóa hai biên bản phụ khỏi Sandbox; đây là xóa theo chỉ đạo, không phải xác nhận đã hợp nhất toàn văn.
+- Quy trình phòng ngừa: kiểm kê toàn cây → đọc/đối chiếu → ghi nhận nguồn → cập nhật biên bản và nhật ký → readback xác minh → mới xóa. Reader rỗng thì ghi BLOCKED, không tự nhận hợp nhất toàn văn.
+- Trạng thái: cập nhật ghi nhận DONE; toàn văn nguồn phụ và ACK Cla/Go NOT VERIFIED.
