@@ -15,3 +15,11 @@
 - Không ghi ACK nếu người nhận chưa xác nhận tường minh.
 - Khi ghi GitHub, nêu branch và commit SHA sau khi có kết quả trả về.
 - Khi phát hiện khác biệt giữa Sandbox và GitHub, ghi rõ hai nguồn; không tự suy diễn nguồn nào đã cập nhật nguồn kia.
+
+
+## 2026-10-17 22:20:16 UTC+7 — Xu / Planner — W30-MINUTES-PLAN-ATTENDANCE-002
+- Yêu cầu: bổ sung nội dung xây dựng Plan vào biên bản tại hai môi trường và quy định khai báo tên/chức danh/thời điểm nghe Xu ở đầu biên bản.
+- GitHub: cập nhật đầu `GPT-AUTONOMOUS-BUILD-TEAM/BIEN_BAN_W30.md` với quy định tham dự/ACK; thêm mục nội dung xây dựng Plan.
+- Bằng chứng: fetch_file đọc lại biên bản GitHub, xác nhận quy định ở đầu tệp và mục Plan tồn tại.
+- Sandbox: đã append phần bổ sung vào biên bản, nhật ký và transcript; sandbox_list xác nhận các đường dẫn tồn tại. sandbox_read biên bản trả rỗng nên chưa xác minh được nội dung đầu tệp Sandbox.
+- Trạng thái: DONE — bổ sung nội dung ở hai môi trường; BLOCKED/PARTIAL — chưa đặt được quy định ở đầu biên bản Sandbox vì không đọc được nội dung hiện hữu; đồng bộ tự động chưa được xác minh.
