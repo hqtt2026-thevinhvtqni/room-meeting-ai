@@ -20,7 +20,7 @@ on:
         default: 'd7c90d9d31062d389810808e43dfdd19d7711b75'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   full-e2e:

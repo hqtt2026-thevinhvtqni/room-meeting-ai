@@ -1,4 +1,6 @@
-name: Work 101 E2E Fixture Testson:
+name: Work 101 E2E Fixture Tests
+
+on:
   push:
     branches:
       - work/101-room-hop-dual-workspace
@@ -13,7 +15,7 @@ name: Work 101 E2E Fixture Testson:
       - "work/101/ROOM-HOP-DUAL-WORKSPACE/**"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   e2e-fixture-tests:

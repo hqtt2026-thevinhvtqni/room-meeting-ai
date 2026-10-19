@@ -10,7 +10,7 @@ on:
       - ".github/workflows/work101-policy.yml"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   unit-tests:

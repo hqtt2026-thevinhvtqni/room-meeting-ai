@@ -15,7 +15,7 @@ on:
       - "work/101/ROOM-HOP-DUAL-WORKSPACE/**"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   dashboard-verification:
