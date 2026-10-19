@@ -28,3 +28,4 @@ jobs:
           python-version: "3.12"
       - name: Run pure policy tests
         run: python -m unittest discover -s work/101/ROOM-HOP-DUAL-WORKSPACE/05_TEST -p "test_*.py" -v
+# Work 101 CI trigger audit: harmless workflow-file change to exercise path filters.

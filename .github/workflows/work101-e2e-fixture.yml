@@ -130,3 +130,4 @@ EVIDENCE_EOF
             git commit -m "docs(work101): record E2E fixture test evidence ${TIMESTAMP}"
             git push origin work/101-room-hop-dual-workspace
           fi
+# Work 101 CI trigger audit: harmless workflow-file change to exercise path filters.
