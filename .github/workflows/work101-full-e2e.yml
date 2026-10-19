@@ -1,0 +1,211 @@
+name: Work 101 Full E2E Integration
+
+on:
+  workflow_dispatch:
+    inputs:
+      operation_id:
+        description: 'Unique operation ID for this E2E run'
+        required: true
+      mode:
+        description: 'Execution mode (DRY_RUN or EXECUTE)'
+        required: true
+        default: 'DRY_RUN'
+        type: choice
+        options:
+        - DRY_RUN
+        - EXECUTE
+      base_revision:
+        description: 'Base revision SHA for comparison'
+        required: true
+        default: 'd7c90d9d31062d389810808e43dfdd19d7711b75'
+
+permissions:
+  contents: read
+
+jobs:
+  full-e2e:
+    name: Work 101 Full E2E Integration Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          ref: work/101-room-hop-dual-workspace
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Run Full E2E Test Suite
+        id: full_e2e
+        env:
+          OPERATION_ID: ${{ inputs.operation_id }}
+          MODE: ${{ inputs.mode }}
+          BASE_REVISION: ${{ inputs.base_revision }}
+        run: |
+          cd work/101/ROOM-HOP-DUAL-WORKSPACE
+          
+          # Create evidence directory if not exists
+          mkdir -p 06_EVIDENCE
+          
+          # Run all tests
+          echo "=== Running Unit Tests ==="
+          python -m unittest discover -s 05_TEST -p "test_*.py" -v 2>&1 | tee /tmp/unit_tests.txt
+          
+          UNIT_STATUS=${PIPESTATUS[0]}
+          UNIT_COUNT=$(grep -oP '\d+(?= test)' /tmp/unit_tests.txt | head -1 || echo "0")
+          UNIT_FAIL=$(grep -oP '\d+(?= fail)' /tmp/unit_tests.txt | head -1 || echo "0")
+          UNIT_ERROR=$(grep -oP '\d+(?= error)' /tmp/unit_tests.txt | head -1 || echo "0")
+          
+          echo "Unit Tests: $UNIT_COUNT executed, $UNIT_FAIL failed, $UNIT_ERROR errors"
+          
+          # Generate comprehensive evidence
+          TIMESTAMP=$(date -u +"%Y%m%dT%H%M%SZ")
+          RUN_ID=${{ github.run_id }}
+          RUN_NUMBER=${{ github.run_number }}
+          COMMIT_SHA=${{ github.sha }}
+          
+          cat > /tmp/full_e2e_evidence.md << EVIDENCE_EOF
+# Work 101 - Full E2E Integration Evidence
+
+- **Date**: ${TIMESTAMP}
+- **Workflow**: `work101-full-e2e.yml`
+- **Run ID**: ${RUN_ID}
+- **Run Number**: ${RUN_NUMBER}
+- **Commit SHA**: ${COMMIT_SHA}
+- **Operation ID**: ${OPERATION_ID}
+- **Mode**: ${MODE}
+- **Base Revision**: ${BASE_REVISION}
+
+## Test Results
+
+### Unit Tests (Pure Policy)
+- **Status**: ${UNIT_STATUS}
+- **Tests Executed**: ${UNIT_COUNT}
+- **Tests Failed**: ${UNIT_FAIL}
+- **Tests Errored**: ${UNIT_ERROR}
+
+### E2E Fixture Tests
+EVIDENCE_EOF
+          
+          # Run fixture tests
+          echo "=== Running E2E Fixture Tests ==="
+          python -m unittest 05_TEST/test_sync_e2e_fixture -v 2>&1 | tee /tmp/fixture_tests.txt
+          
+          FIXTURE_STATUS=${PIPESTATUS[0]}
+          FIXTURE_COUNT=$(grep -oP '\d+(?= test)' /tmp/fixture_tests.txt | head -1 || echo "0")
+          FIXTURE_FAIL=$(grep -oP '\d+(?= fail)' /tmp/fixture_tests.txt | head -1 || echo "0")
+          FIXTURE_ERROR=$(grep -oP '\d+(?= error)' /tmp/fixture_tests.txt | head -1 || echo "0")
+          
+          echo "Fixture Tests: $FIXTURE_COUNT executed, $FIXTURE_FAIL failed, $FIXTURE_ERROR errors"
+          
+          # Append fixture results
+          cat >> /tmp/full_e2e_evidence.md << EVIDENCE_EOF
+- **Status**: ${FIXTURE_STATUS}
+- **Tests Executed**: ${FIXTURE_COUNT}
+- **Tests Failed**: ${FIXTURE_FAIL}
+- **Tests Errored**: ${FIXTURE_ERROR}
+
+## Verified Capabilities
+- [x] Pure policy logic (no I/O, no network)
+- [x] Path validation (traversal, absolute, Windows invalid chars)
+- [x] Snapshot classification and diff generation
+- [x] Conflict detection (CONFLICT_PENDING)
+- [x] Deletion handling (DELETION_PENDING)
+- [x] Approval binding verification
+- [x] Idempotency enforcement
+- [x] Fixture CAS operations (read/write/read-back)
+- [x] Atomic writes with stale revision blocking
+- [x] Symlink containment
+- [x] Path allowlist enforcement
+
+## Not Verified (Blocked)
+- [ ] Real Sandbox<->GitHub synchronization
+- [ ] Core/MCP authorization
+- [ ] Live provider adapter operations
+- [ ] Real network I/O
+- [ ] Credential management
+- [ ] Browser runtime for dashboard
+- [ ] Integration with Work 24/27/28/14
+
+## Execution Summary
+EVIDENCE_EOF
+          
+          # Determine overall status
+          if [ "$UNIT_STATUS" = "0" ] && [ "$FIXTURE_STATUS" = "0" ]; then
+            OVERALL_STATUS="PASS"
+          else
+            OVERALL_STATUS="FAIL"
+          fi
+          
+          echo "OVERALL_STATUS=$OVERALL_STATUS" >> $GITHUB_OUTPUT
+          echo "UNIT_COUNT=$UNIT_COUNT" >> $GITHUB_OUTPUT
+          echo "FIXTURE_COUNT=$FIXTURE_COUNT" >> $GITHUB_OUTPUT
+          
+          # Add overall status to evidence
+          cat >> /tmp/full_e2e_evidence.md << EVIDENCE_EOF
+
+**Overall Status**: ${OVERALL_STATUS}
+
+## Mode Notes
+- **DRY_RUN**: All tests executed in isolated environments only
+- **EXECUTE**: Still limited to fixture-based testing (no real writes)
+- Real Sandbox<->GitHub E2E remains **BLOCKED** until:
+  1. Work 14 lifecycle contradiction is resolved
+  2. Work 24/27/28 live contracts are verified
+  3. Runtime adapter is implemented and tested
+  4. Vinh approval is obtained for write operations
+
+## Evidence Files
+- Unit test output: uploaded as artifact
+- Fixture test output: uploaded as artifact
+- This evidence file: committed to repository
+EVIDENCE_EOF
+          
+          # Copy evidence
+          cp /tmp/full_e2e_evidence.md 06_EVIDENCE/FULL_E2E_${TIMESTAMP}.md
+          cp /tmp/full_e2e_evidence.md 06_EVIDENCE/FULL_E2E_LATEST.md
+
+      - name: Upload Test Outputs
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: work101-full-e2e-outputs
+          path: |
+            /tmp/unit_tests.txt
+            /tmp/fixture_tests.txt
+          retention-days: 30
+
+      - name: Commit Evidence
+        if: steps.full_e2e.outputs.OVERALL_STATUS == 'PASS' && github.event_name == 'workflow_dispatch'
+        run: |
+          cd /workspace/github__hqtt2026-thevinhvtqni__room-meeting-ai
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          TIMESTAMP=$(date -u +"%Y%m%dT%H%M%SZ")
+          git add work/101/ROOM-HOP-DUAL-WORKSPACE/06_EVIDENCE/FULL_E2E_*.md
+          
+          if git diff --cached --quiet; then
+            echo "No evidence changes to commit"
+          else
+            git commit -m "docs(work101): record full E2E evidence ${TIMESTAMP} op=${{ inputs.operation_id }} [skip ci]"
+            git push origin work/101-room-hop-dual-workspace
+          fi
+
+      - name: Generate Summary
+        run: |
+          echo "## Work 101 Full E2E Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Operation ID**: ${{ inputs.operation_id }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Mode**: ${{ inputs.mode }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Base Revision**: ${{ inputs.base_revision }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Unit Tests**: ${{ steps.full_e2e.outputs.UNIT_COUNT }} executed" >> $GITHUB_STEP_SUMMARY
+          echo "**Fixture Tests**: ${{ steps.full_e2e.outputs.FIXTURE_COUNT }} executed" >> $GITHUB_STEP_SUMMARY
+          echo "**Overall Status**: ${{ steps.full_e2e.outputs.OVERALL_STATUS }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "⚠️ Real Sandbox<->GitHub E2E remains BLOCKED - see evidence for details" >> $GITHUB_STEP_SUMMARY

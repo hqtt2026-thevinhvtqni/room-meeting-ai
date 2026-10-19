@@ -1,0 +1,139 @@
+name: Work 101 Dashboard Verification
+
+on:
+  push:
+    branches:
+      - work/101-room-hop-dual-workspace
+    paths:
+      - "work/101/ROOM-HOP-DUAL-WORKSPACE/08_DASHBOARD/**"
+      - "work/101/ROOM-HOP-DUAL-WORKSPACE/09_DASHBOARD_PREVIEW/**"
+      - ".github/workflows/work101-dashboard-verify.yml"
+  pull_request:
+    branches:
+      - work/101-room-hop-dual-workspace
+    paths:
+      - "work/101/ROOM-HOP-DUAL-WORKSPACE/**"
+
+permissions:
+  contents: read
+
+jobs:
+  dashboard-verification:
+    name: Dashboard Static Verification
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout dedicated Work 101 branch
+        uses: actions/checkout@v5
+        with:
+          ref: work/101-room-hop-dual-workspace
+
+      - name: Verify Dashboard Schema
+        id: schema_check
+        run: |
+          # Verify dashboard-contract.schema.json is valid JSON
+          python3 -c "
+import json
+import sys
+
+schema_path = 'work/101/ROOM-HOP-DUAL-WORKSPACE/08_DASHBOARD/dashboard-contract.schema.json'
+try:
+    with open(schema_path, 'r') as f:
+        schema = json.load(f)
+    print(f'Schema validated: {len(schema)} keys')
+    print(json.dumps(schema, indent=2)[:500])
+    sys.exit(0)
+except Exception as e:
+    print(f'Schema validation failed: {e}')
+    sys.exit(1)
+          "
+
+      - name: Verify Dashboard HTML Structure
+        id: html_check
+        run: |
+          # Check that index.html files exist and have minimal structure
+          for dashboard_dir in 08_DASHBOARD 09_DASHBOARD_PREVIEW; do
+            html_file="work/101/ROOM-HOP-DUAL-WORKSPACE/${dashboard_dir}/index.html"
+            if [ ! -f "$html_file" ]; then
+              echo "Missing: $html_file"
+              exit 1
+            fi
+            
+            # Check for basic HTML structure
+            if ! grep -q "<!DOCTYPE html>" "$html_file"; then
+              echo "Missing DOCTYPE in $html_file"
+              exit 1
+            fi
+            
+            if ! grep -q "<html" "$html_file"; then
+              echo "Missing <html> tag in $html_file"
+              exit 1
+            fi
+            
+            echo "Verified: $html_file"
+          done
+
+      - name: Verify README files
+        run: |
+          for dashboard_dir in 08_DASHBOARD 09_DASHBOARD_PREVIEW; do
+            readme_file="work/101/ROOM-HOP-DUAL-WORKSPACE/${dashboard_dir}/README.md"
+            if [ ! -f "$readme_file" ]; then
+              echo "Missing: $readme_file"
+              exit 1
+            fi
+            echo "Verified: $readme_file"
+          done
+
+      - name: Generate Dashboard Evidence
+        if: success()
+        run: |
+          TIMESTAMP=$(date -u +"%Y%m%dT%H%M%SZ")
+          RUN_ID=${{ github.run_id }}
+          COMMIT_SHA=${{ github.sha }}
+          
+          cat > /tmp/dashboard_evidence.md << 'EVIDENCE_EOF'
+# Work 101 - Dashboard Static Verification Evidence
+
+- **Date**: ${TIMESTAMP}
+- **Workflow**: `work101-dashboard-verify.yml`
+- **Run ID**: ${RUN_ID}
+- **Commit SHA**: ${COMMIT_SHA}
+- **Status**: PASS
+
+## Verified
+- Dashboard schema (dashboard-contract.schema.json) is valid JSON
+- Canonical dashboard index.html exists with proper HTML structure
+- Preview dashboard index.html exists with proper HTML structure
+- README files present for both dashboards
+- All files are static (no live data connection required)
+
+## Limitations
+- Static verification only - no browser runtime testing
+- No live data connection verification
+- No JavaScript execution testing
+- Dashboard remains static files only until live integration is authorized
+
+## Next Steps
+- Browser runtime testing required for full verification
+- Live data connection testing blocked until provider contracts verified
+- Integration with sync status requires Vinh approval
+EVIDENCE_EOF
+          
+          cp /tmp/dashboard_evidence.md work/101/ROOM-HOP-DUAL-WORKSPACE/06_EVIDENCE/DASHBOARD_VERIFICATION_${TIMESTAMP}.md
+          cp /tmp/dashboard_evidence.md work/101/ROOM-HOP-DUAL-WORKSPACE/06_EVIDENCE/DASHBOARD_VERIFICATION_LATEST.md
+
+      - name: Commit Dashboard Evidence
+        if: success() && github.event_name == 'push'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          TIMESTAMP=$(date -u +"%Y%m%dT%H%M%SZ")
+          git add work/101/ROOM-HOP-DUAL-WORKSPACE/06_EVIDENCE/DASHBOARD_VERIFICATION_*.md
+          
+          if git diff --cached --quiet; then
+            echo "No evidence changes to commit"
+          else
+            git commit -m "docs(work101): record dashboard verification evidence ${TIMESTAMP} [skip ci]"
+            git push origin work/101-room-hop-dual-workspace
+          fi

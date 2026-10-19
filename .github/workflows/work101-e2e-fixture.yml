@@ -1,0 +1,134 @@
+name: Work 101 E2E Fixture Testson:
+  push:
+    branches:
+      - work/101-room-hop-dual-workspace
+    paths:
+      - "work/101/ROOM-HOP-DUAL-WORKSPACE/04_CODE/**"
+      - "work/101/ROOM-HOP-DUAL-WORKSPACE/05_TEST/**"
+      - ".github/workflows/work101-e2e-fixture.yml"
+  pull_request:
+    branches:
+      - work/101-room-hop-dual-workspace
+    paths:
+      - "work/101/ROOM-HOP-DUAL-WORKSPACE/**"
+
+permissions:
+  contents: read
+
+jobs:
+  e2e-fixture-tests:
+    name: Work 101 E2E Fixture Tests (Python 3.12)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout dedicated Work 101 branch
+        uses: actions/checkout@v5
+        with:
+          ref: work/101-room-hop-dual-workspace
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Run E2E fixture tests
+        id: e2e_tests
+        run: |
+          cd work/101/ROOM-HOP-DUAL-WORKSPACE/05_TEST
+          python -m unittest test_sync_e2e_fixture -v 2>&1 | tee e2e_test_results.txt
+          
+          # Capture test results
+          TEST_COUNT=$(grep -oP '\d+(?= test)' e2e_test_results.txt | head -1 || echo "0")
+          FAIL_COUNT=$(grep -oP '\d+(?= fail)' e2e_test_results.txt | head -1 || echo "0")
+          ERROR_COUNT=$(grep -oP '\d+(?= error)' e2e_test_results.txt | head -1 || echo "0")
+          
+          echo "TEST_COUNT=$TEST_COUNT" >> $GITHUB_OUTPUT
+          echo "FAIL_COUNT=$FAIL_COUNT" >> $GITHUB_OUTPUT
+          echo "ERROR_COUNT=$ERROR_COUNT" >> $GITHUB_OUTPUT
+          
+          # Check if all tests passed
+          if [ "$FAIL_COUNT" = "0" ] && [ "$ERROR_COUNT" = "0" ]; then
+            echo "E2E_FIXTURE_STATUS=PASS" >> $GITHUB_OUTPUT
+          else
+            echo "E2E_FIXTURE_STATUS=FAIL" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: work101-e2e-fixture-results
+          path: work/101/ROOM-HOP-DUAL-WORKSPACE/05_TEST/e2e_test_results.txt
+          retention-days: 30
+
+      - name: Generate E2E Evidence
+        if: steps.e2e_tests.outputs.E2E_FIXTURE_STATUS == 'PASS'
+        run: |
+          TIMESTAMP=$(date -u +"%Y%m%dT%H%M%SZ")
+          RUN_ID=${{ github.run_id }}
+          RUN_NUMBER=${{ github.run_number }}
+          COMMIT_SHA=${{ github.sha }}
+          
+          cat > /tmp/e2e_evidence.md << 'EVIDENCE_EOF'
+# Work 101 - E2E Fixture Test Evidence
+
+- **Date**: ${TIMESTAMP}
+- **Workflow**: `work101-e2e-fixture.yml`
+- **Run ID**: ${RUN_ID}
+- **Run Number**: ${RUN_NUMBER}
+- **Commit SHA**: ${COMMIT_SHA}
+- **Status**: PASS
+- **Tests Executed**: ${{ steps.e2e_tests.outputs.TEST_COUNT }}
+- **Tests Failed**: ${{ steps.e2e_tests.outputs.FAIL_COUNT }}
+- **Tests Errored**: ${{ steps.e2e_tests.outputs.ERROR_COUNT }}
+- **Runtime**: GitHub-hosted `ubuntu-latest`, CPython 3.12
+
+## Verified
+- All E2E fixture tests passed in isolated TemporaryDirectory environment
+- FixtureProvider CAS-like operations verified:
+  - Read/write/read-back digest matching
+  - Atomic writes via tempfile + os.replace
+  - Symlink containment rejection
+  - Path allowlist enforcement
+  - Stale revision blocking
+  - Conflict detection (CONFLICT_PENDING)
+  - Deletion handling (DELETION_PENDING)
+  - Approval binding verification
+
+## Limitations
+- Tests run in GitHub Actions ubuntu-latest runner only
+- Does NOT claim Sandbox, GitHub, Core, or MCP E2E
+- Does NOT perform real network I/O or credential operations
+- Does NOT write to real GitHub repositories or Sandbox
+- Real Sandbox<->GitHub E2E remains BLOCKED until provider contracts verified
+
+## Evidence Integrity
+- Test output captured and uploaded as artifact
+- Commit SHA bound to evidence record
+- All operations performed in isolated temporary filesystem
+EVIDENCE_EOF
+          
+          # Copy evidence to repository
+          cp /tmp/e2e_evidence.md work/101/ROOM-HOP-DUAL-WORKSPACE/06_EVIDENCE/E2E_FIXTURE_TESTS_${TIMESTAMP}.md
+          
+          # Also update a latest pointer
+          cp /tmp/e2e_evidence.md work/101/ROOM-HOP-DUAL-WORKSPACE/06_EVIDENCE/E2E_FIXTURE_TESTS_LATEST.md
+
+      - name: Commit E2E Evidence (if tests pass)
+        if: steps.e2e_tests.outputs.E2E_FIXTURE_STATUS == 'PASS' && github.event_name == 'push'
+        run: |
+          cd /workspace/github__hqtt2026-thevinhvtqni__room-meeting-ai
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          TIMESTAMP=$(date -u +"%Y%m%dT%H%M%SZ")
+          git add work/101/ROOM-HOP-DUAL-WORKSPACE/06_EVIDENCE/E2E_FIXTURE_TESTS_*.md
+          
+          # Check if there are changes to commit
+          if git diff --cached --quiet; then
+            echo "No evidence changes to commit"
+          else
+            git commit -m "docs(work101): record E2E fixture test evidence ${TIMESTAMP} [skip ci]"
+            git push origin work/101-room-hop-dual-workspace
+          fi

@@ -219,6 +219,170 @@ class Work101FixtureE2ETests(unittest.TestCase):
         with self.assertRaises(PolicyError):
             self.destination._path("04_CODE/escape/payload.txt")
 
+    def test_full_sync_workflow_dry_run(self):
+        # Simulate a full sync workflow in DRY_RUN mode
+        # 1. Setup: source has changes, destination is baseline
+        self.source._path("04_CODE/module.py").write_text("updated code", encoding="utf-8")
+        self.source._path("05_TEST/test_module.py").write_text("new test", encoding="utf-8")
+        
+        # 2. Build plan
+        plan = self._plan(operation_id="full-workflow-op-1")
+        self.assertEqual(plan.state, ChangeState.SOURCE_ONLY)
+        self.assertIn("04_CODE/module.py", plan.source_to_destination)
+        self.assertIn("05_TEST/test_module.py", plan.source_to_destination)
+        
+        # 3. Verify destination unchanged (DRY_RUN)
+        self.assertEqual(
+            self.destination.read("04_CODE/sample.txt"), 
+            b"baseline"
+        )
+        
+        # 4. Verify plan is deterministic
+        plan2 = self._plan(operation_id="full-workflow-op-1")
+        self.assertEqual(plan.diff_digest, plan2.diff_digest)
+
+    def test_full_sync_workflow_with_conflict_resolution(self):
+        # Simulate conflict scenario
+        self.source._path("04_CODE/module.py").write_text("source version", encoding="utf-8")
+        self.destination._path("04_CODE/module.py").write_text("destination version", encoding="utf-8")
+        
+        plan = self._plan(operation_id="conflict-op-1")
+        self.assertEqual(plan.state, ChangeState.CONFLICT_PENDING)
+        self.assertEqual(plan.conflict_paths, ("04_CODE/module.py",))
+        self.assertEqual(plan.source_to_destination, ())
+        self.assertEqual(plan.destination_to_source, ())
+
+    def test_atomic_write_and_readback(self):
+        # Test the atomic write + read-back cycle
+        content = b"atomic write test content"
+        expected_digest = digest_bytes(content)
+        
+        # Get current revision
+        current_rev = self.destination.current_revision()
+        
+        # Write atomically
+        observed_digest = self.destination.write_cas(
+            "04_CODE/atomic.txt", 
+            content, 
+            current_rev
+        )
+        self.assertEqual(observed_digest, expected_digest)
+        
+        # Read back and verify
+        read_content = self.destination.read("04_CODE/atomic.txt")
+        self.assertEqual(read_content, content)
+        self.assertEqual(digest_bytes(read_content), expected_digest)
+
+    def test_stale_revision_blocks_all_writes(self):
+        # Capture revision
+        old_rev = self.destination.current_revision()
+        
+        # Make a change
+        self.destination._path("04_CODE/stale.txt").write_text("new", encoding="utf-8")
+        
+        # Try to write with old revision - should fail
+        with self.assertRaises(PolicyError):
+            self.destination.write_cas(
+                "04_CODE/blocked.txt",
+                b"should not write",
+                old_rev
+            )
+
+    def test_multiple_file_operations_in_sequence(self):
+        # Test sequential operations
+        files_to_create = [
+            ("04_CODE/a.py", "content a"),
+            ("04_CODE/b.py", "content b"),
+            ("05_TEST/test_a.py", "test a"),
+        ]
+        
+        for path, content in files_to_create:
+            current_rev = self.source.current_revision()
+            self.source.write_cas(
+                path,
+                content.encode("utf-8"),
+                current_rev
+            )
+        
+        # Verify all files exist
+        for path, content in files_to_create:
+            self.assertEqual(
+                self.source.read(path),
+                content.encode("utf-8")
+            )
+
+    def test_path_allowlist_enforcement_in_fixture(self):
+        # Try to access path outside allowlist
+        with self.assertRaises(PolicyError):
+            self.destination._path("00_ROOT/secret.yaml")
+        
+        with self.assertRaises(PolicyError):
+            self.destination._path("06_EVIDENCE/log.txt")
+
+    def test_nested_directory_operations(self):
+        # Create nested structure
+        nested_path = "04_CODE/subdir/nested/module.py"
+        content = b"nested content"
+        
+        current_rev = self.source.current_revision()
+        self.source.write_cas(nested_path, content, current_rev)
+        
+        # Verify write
+        self.assertEqual(
+            self.source.read(nested_path),
+            content
+        )
+        
+        # Verify in snapshot
+        snapshot = self.source.snapshot("test-rev", "base-rev")
+        self.assertIn(nested_path, snapshot.files)
+
+    def test_snapshot_includes_all_allowed_roots(self):
+        # Create files in both allowed roots
+        self.source._path("04_CODE/code.py").write_text("code", encoding="utf-8")
+        self.source._path("05_TEST/test.py").write_text("test", encoding="utf-8")
+        
+        snapshot = self.source.snapshot("test-rev", "base-rev")
+        
+        self.assertIn("04_CODE/code.py", snapshot.files)
+        self.assertIn("05_TEST/test.py", snapshot.files)
+        self.assertNotIn("00_ROOT/config.yaml", snapshot.files)
+
+    def test_empty_directory_handling(self):
+        # Test with empty allowed roots
+        empty_provider = FixtureProvider(self.destination_root, ("04_CODE/empty/",))
+        snapshot = empty_provider.snapshot("empty-rev", "base-rev")
+        
+        self.assertEqual(snapshot.files, {})
+
+    def test_approval_binding_with_fixture_plan(self):
+        # Create a plan and verify approval binding
+        self.source._path("04_CODE/approved.py").write_text("approved", encoding="utf-8")
+        
+        plan = self._plan(operation_id="approval-test-op")
+        
+        # Create approval binding matching the plan
+        approval = ApprovalBinding(
+            operation_id=plan.operation_id,
+            diff_digest=plan.diff_digest,
+            destination_branch=plan.destination_branch,
+            base_revision=plan.base_revision
+        )
+        
+        # Verify binding
+        bind_approval(approval, approval)  # Should not raise
+        
+        # Verify mismatch detection
+        wrong_approval = ApprovalBinding(
+            operation_id=plan.operation_id,
+            diff_digest="a" * 64,  # Wrong digest
+            destination_branch=plan.destination_branch,
+            base_revision=plan.base_revision
+        )
+        
+        with self.assertRaises(PolicyError):
+            bind_approval(approval, wrong_approval)
+
 
 if __name__ == "__main__":
     unittest.main()

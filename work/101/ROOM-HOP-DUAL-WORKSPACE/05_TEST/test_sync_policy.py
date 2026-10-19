@@ -216,6 +216,168 @@ class SyncPolicyTests(unittest.TestCase):
         with self.assertRaises(PolicyError):
             enforce_idempotency(first, "op-1", {"digest": "b" * 64})
 
+    def test_plan_digest_includes_all_binding_fields(self):
+        base = snap("b1", {"04_CODE/a.py": "old"})
+        source = snap("s1", {"04_CODE/a.py": "new"}, base_revision="b1")
+        dest = snap("d1", {"04_CODE/a.py": "old"}, base_revision="b1")
+        
+        plan_a = build_sync_plan(
+            operation_id="op-1", work_id="101",
+            destination_branch="work/101-room-hop-dual-workspace",
+            base_revision="b1", base=base, source=source, destination=dest,
+            permitted_path_roots=("04_CODE/",),
+        )
+        
+        plan_b = build_sync_plan(
+            operation_id="op-2", work_id="101",
+            destination_branch="work/101-room-hop-dual-workspace",
+            base_revision="b1", base=base, source=source, destination=dest,
+            permitted_path_roots=("04_CODE/",),
+        )
+        
+        plan_c = build_sync_plan(
+            operation_id="op-1", work_id="101",
+            destination_branch="work/101-other-branch",
+            base_revision="b1", base=base, source=source, destination=dest,
+            permitted_path_roots=("04_CODE/",),
+        )
+        
+        plan_d = build_sync_plan(
+            operation_id="op-1", work_id="101",
+            destination_branch="work/101-room-hop-dual-workspace",
+            base_revision="b2", base=base, source=source, destination=dest,
+            permitted_path_roots=("04_CODE/",),
+        )
+        
+        # Different operation_id = different digest
+        self.assertNotEqual(plan_a.diff_digest, plan_b.diff_digest)
+        # Different branch = different digest
+        self.assertNotEqual(plan_a.diff_digest, plan_c.diff_digest)
+        # Different base_revision = different digest
+        self.assertNotEqual(plan_a.diff_digest, plan_d.diff_digest)
+
+    def test_plan_rejects_empty_permitted_roots(self):
+        base = snap("b1", {"04_CODE/a.py": "old"})
+        source = snap("s1", {"04_CODE/a.py": "new"}, base_revision="b1")
+        dest = snap("d1", {"04_CODE/a.py": "old"}, base_revision="b1")
+        
+        with self.assertRaises(PolicyError):
+            build_sync_plan(
+                operation_id="op-1", work_id="101",
+                destination_branch="work/101-room-hop-dual-workspace",
+                base_revision="b1", base=base, source=source, destination=dest,
+                permitted_path_roots=[],
+            )
+
+    def test_plan_with_multiple_permitted_roots(self):
+        base = snap("b1", {
+            "04_CODE/a.py": "old",
+            "05_TEST/t.py": "old",
+            "06_EVIDENCE/report.md": "old"
+        })
+        source = snap("s1", {
+            "04_CODE/a.py": "new",
+            "05_TEST/t.py": "old",
+            "06_EVIDENCE/report.md": "old"
+        }, base_revision="b1")
+        dest = snap("d1", {
+            "04_CODE/a.py": "old",
+            "05_TEST/t.py": "new",
+            "06_EVIDENCE/report.md": "old"
+        }, base_revision="b1")
+        
+        plan = build_sync_plan(
+            operation_id="op-multi-root", work_id="101",
+            destination_branch="work/101-room-hop-dual-workspace",
+            base_revision="b1", base=base, source=source, destination=dest,
+            permitted_path_roots=("04_CODE/", "05_TEST/", "06_EVIDENCE/"),
+        )
+        
+        self.assertEqual(plan.state, ChangeState.NON_OVERLAPPING)
+        self.assertEqual(plan.source_to_destination, ("04_CODE/a.py",))
+        self.assertEqual(plan.destination_to_source, ("05_TEST/t.py",))
+
+    def test_path_outside_allowlist_rejected_in_snapshot(self):
+        base = snap("b1", {"04_CODE/a.py": "old", "00_ROOT/secret.txt": "x"})
+        source = snap("s1", {"04_CODE/a.py": "new"}, base_revision="b1")
+        dest = snap("d1", {"04_CODE/a.py": "old"}, base_revision="b1")
+        
+        with self.assertRaises(PolicyError):
+            build_sync_plan(
+                operation_id="op-1", work_id="101",
+                destination_branch="work/101-room-hop-dual-workspace",
+                base_revision="b1", base=base, source=source, destination=dest,
+                permitted_path_roots=("04_CODE/",),
+            )
+
+    def test_empty_snapshots_handled(self):
+        base = snap("b1", {})
+        source = snap("s1", {}, base_revision="b1")
+        dest = snap("d1", {}, base_revision="b1")
+        
+        plan = build_sync_plan(
+            operation_id="op-empty", work_id="101",
+            destination_branch="work/101-room-hop-dual-workspace",
+            base_revision="b1", base=base, source=source, destination=dest,
+            permitted_path_roots=("04_CODE/",),
+        )
+        
+        self.assertEqual(plan.state, ChangeState.NO_CHANGE)
+        self.assertEqual(plan.source_to_destination, ())
+        self.assertEqual(plan.destination_to_source, ())
+
+    def test_new_file_addition_in_source(self):
+        base = snap("b1", {"04_CODE/a.py": "old"})
+        source = snap("s1", {"04_CODE/a.py": "old", "04_CODE/b.py": "new"}, base_revision="b1")
+        dest = snap("d1", {"04_CODE/a.py": "old"}, base_revision="b1")
+        
+        plan = build_sync_plan(
+            operation_id="op-new-file", work_id="101",
+            destination_branch="work/101-room-hop-dual-workspace",
+            base_revision="b1", base=base, source=source, destination=dest,
+            permitted_path_roots=("04_CODE/",),
+        )
+        
+        self.assertEqual(plan.state, ChangeState.SOURCE_ONLY)
+        self.assertEqual(plan.source_to_destination, ("04_CODE/b.py",))
+
+    def test_new_file_addition_in_destination(self):
+        base = snap("b1", {"04_CODE/a.py": "old"})
+        source = snap("s1", {"04_CODE/a.py": "old"}, base_revision="b1")
+        dest = snap("d1", {"04_CODE/a.py": "old", "04_CODE/c.py": "new"}, base_revision="b1")
+        
+        plan = build_sync_plan(
+            operation_id="op-new-file-dest", work_id="101",
+            destination_branch="work/101-room-hop-dual-workspace",
+            base_revision="b1", base=base, source=source, destination=dest,
+            permitted_path_roots=("04_CODE/",),
+        )
+        
+        self.assertEqual(plan.state, ChangeState.DESTINATION_ONLY)
+        self.assertEqual(plan.destination_to_source, ("04_CODE/c.py",))
+
+    def test_plan_includes_work_id_in_digest(self):
+        base = snap("b1", {"04_CODE/a.py": "old"})
+        source = snap("s1", {"04_CODE/a.py": "new"}, base_revision="b1")
+        dest = snap("d1", {"04_CODE/a.py": "old"}, base_revision="b1")
+        
+        plan_101 = build_sync_plan(
+            operation_id="op-1", work_id="101",
+            destination_branch="work/101-room-hop-dual-workspace",
+            base_revision="b1", base=base, source=source, destination=dest,
+            permitted_path_roots=("04_CODE/",),
+        )
+        
+        plan_102 = build_sync_plan(
+            operation_id="op-1", work_id="102",
+            destination_branch="work/101-room-hop-dual-workspace",
+            base_revision="b1", base=base, source=source, destination=dest,
+            permitted_path_roots=("04_CODE/",),
+        )
+        
+        # Different work_id = different digest
+        self.assertNotEqual(plan_101.diff_digest, plan_102.diff_digest)
+
 
 if __name__ == "__main__":
     unittest.main()
