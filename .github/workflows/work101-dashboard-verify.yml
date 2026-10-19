@@ -31,7 +31,6 @@ jobs:
       - name: Verify Dashboard Schema
         id: schema_check
         run: |
-          # Verify dashboard-contract.schema.json is valid JSON
           python3 -c "
 import json
 import sys
@@ -41,7 +40,6 @@ try:
     with open(schema_path, 'r') as f:
         schema = json.load(f)
     print(f'Schema validated: {len(schema)} keys')
-    print(json.dumps(schema, indent=2)[:500])
     sys.exit(0)
 except Exception as e:
     print(f'Schema validation failed: {e}')
@@ -51,25 +49,20 @@ except Exception as e:
       - name: Verify Dashboard HTML Structure
         id: html_check
         run: |
-          # Check that index.html files exist and have minimal structure
           for dashboard_dir in 08_DASHBOARD 09_DASHBOARD_PREVIEW; do
             html_file="work/101/ROOM-HOP-DUAL-WORKSPACE/${dashboard_dir}/index.html"
             if [ ! -f "$html_file" ]; then
               echo "Missing: $html_file"
               exit 1
             fi
-            
-            # Check for basic HTML structure
             if ! grep -q "<!DOCTYPE html>" "$html_file"; then
               echo "Missing DOCTYPE in $html_file"
               exit 1
             fi
-            
             if ! grep -q "<html" "$html_file"; then
               echo "Missing <html> tag in $html_file"
               exit 1
             fi
-            
             echo "Verified: $html_file"
           done
 
@@ -89,14 +82,16 @@ except Exception as e:
         run: |
           TIMESTAMP=$(date -u +"%Y%m%dT%H%M%SZ")
           RUN_ID=${{ github.run_id }}
+          RUN_NUMBER=${{ github.run_number }}
           COMMIT_SHA=${{ github.sha }}
           
-          cat > /tmp/dashboard_evidence.md << 'EVIDENCE_EOF'
+          cat > /tmp/dashboard_evidence.md << EVIDENCE_EOF
 # Work 101 - Dashboard Static Verification Evidence
 
 - **Date**: ${TIMESTAMP}
-- **Workflow**: `work101-dashboard-verify.yml`
+- **Workflow**: "`work101-dashboard-verify.yml`"
 - **Run ID**: ${RUN_ID}
+- **Run Number**: ${RUN_NUMBER}
 - **Commit SHA**: ${COMMIT_SHA}
 - **Status**: PASS
 
@@ -119,6 +114,7 @@ except Exception as e:
 - Integration with sync status requires Vinh approval
 EVIDENCE_EOF
           
+          mkdir -p work/101/ROOM-HOP-DUAL-WORKSPACE/06_EVIDENCE
           cp /tmp/dashboard_evidence.md work/101/ROOM-HOP-DUAL-WORKSPACE/06_EVIDENCE/DASHBOARD_VERIFICATION_${TIMESTAMP}.md
           cp /tmp/dashboard_evidence.md work/101/ROOM-HOP-DUAL-WORKSPACE/06_EVIDENCE/DASHBOARD_VERIFICATION_LATEST.md
 
@@ -134,6 +130,6 @@ EVIDENCE_EOF
           if git diff --cached --quiet; then
             echo "No evidence changes to commit"
           else
-            git commit -m "docs(work101): record dashboard verification evidence ${TIMESTAMP} [skip ci]"
+            git commit -m "docs(work101): record dashboard verification evidence ${TIMESTAMP}"
             git push origin work/101-room-hop-dual-workspace
           fi

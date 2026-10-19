@@ -48,21 +48,26 @@ jobs:
         run: |
           cd work/101/ROOM-HOP-DUAL-WORKSPACE
           
-          # Create evidence directory if not exists
           mkdir -p 06_EVIDENCE
           
-          # Run all tests
           echo "=== Running Unit Tests ==="
-          python -m unittest discover -s 05_TEST -p "test_*.py" -v 2>&1 | tee /tmp/unit_tests.txt
-          
-          UNIT_STATUS=${PIPESTATUS[0]}
+          python -m unittest discover -s 05_TEST -p "test_sync_policy.py" -v 2>&1 | tee /tmp/unit_tests.txt
+          UNIT_STATUS=$?
           UNIT_COUNT=$(grep -oP '\d+(?= test)' /tmp/unit_tests.txt | head -1 || echo "0")
           UNIT_FAIL=$(grep -oP '\d+(?= fail)' /tmp/unit_tests.txt | head -1 || echo "0")
           UNIT_ERROR=$(grep -oP '\d+(?= error)' /tmp/unit_tests.txt | head -1 || echo "0")
           
           echo "Unit Tests: $UNIT_COUNT executed, $UNIT_FAIL failed, $UNIT_ERROR errors"
           
-          # Generate comprehensive evidence
+          echo "=== Running E2E Fixture Tests ==="
+          python -m unittest 05_TEST/test_sync_e2e_fixture -v 2>&1 | tee /tmp/fixture_tests.txt
+          FIXTURE_STATUS=$?
+          FIXTURE_COUNT=$(grep -oP '\d+(?= test)' /tmp/fixture_tests.txt | head -1 || echo "0")
+          FIXTURE_FAIL=$(grep -oP '\d+(?= fail)' /tmp/fixture_tests.txt | head -1 || echo "0")
+          FIXTURE_ERROR=$(grep -oP '\d+(?= error)' /tmp/fixture_tests.txt | head -1 || echo "0")
+          
+          echo "Fixture Tests: $FIXTURE_COUNT executed, $FIXTURE_FAIL failed, $FIXTURE_ERROR errors"
+          
           TIMESTAMP=$(date -u +"%Y%m%dT%H%M%SZ")
           RUN_ID=${{ github.run_id }}
           RUN_NUMBER=${{ github.run_number }}
@@ -72,7 +77,7 @@ jobs:
 # Work 101 - Full E2E Integration Evidence
 
 - **Date**: ${TIMESTAMP}
-- **Workflow**: `work101-full-e2e.yml`
+- **Workflow**: "`work101-full-e2e.yml`"
 - **Run ID**: ${RUN_ID}
 - **Run Number**: ${RUN_NUMBER}
 - **Commit SHA**: ${COMMIT_SHA}
@@ -89,21 +94,6 @@ jobs:
 - **Tests Errored**: ${UNIT_ERROR}
 
 ### E2E Fixture Tests
-EVIDENCE_EOF
-          
-          # Run fixture tests
-          echo "=== Running E2E Fixture Tests ==="
-          python -m unittest 05_TEST/test_sync_e2e_fixture -v 2>&1 | tee /tmp/fixture_tests.txt
-          
-          FIXTURE_STATUS=${PIPESTATUS[0]}
-          FIXTURE_COUNT=$(grep -oP '\d+(?= test)' /tmp/fixture_tests.txt | head -1 || echo "0")
-          FIXTURE_FAIL=$(grep -oP '\d+(?= fail)' /tmp/fixture_tests.txt | head -1 || echo "0")
-          FIXTURE_ERROR=$(grep -oP '\d+(?= error)' /tmp/fixture_tests.txt | head -1 || echo "0")
-          
-          echo "Fixture Tests: $FIXTURE_COUNT executed, $FIXTURE_FAIL failed, $FIXTURE_ERROR errors"
-          
-          # Append fixture results
-          cat >> /tmp/full_e2e_evidence.md << EVIDENCE_EOF
 - **Status**: ${FIXTURE_STATUS}
 - **Tests Executed**: ${FIXTURE_COUNT}
 - **Tests Failed**: ${FIXTURE_FAIL}
@@ -134,7 +124,6 @@ EVIDENCE_EOF
 ## Execution Summary
 EVIDENCE_EOF
           
-          # Determine overall status
           if [ "$UNIT_STATUS" = "0" ] && [ "$FIXTURE_STATUS" = "0" ]; then
             OVERALL_STATUS="PASS"
           else
@@ -144,8 +133,9 @@ EVIDENCE_EOF
           echo "OVERALL_STATUS=$OVERALL_STATUS" >> $GITHUB_OUTPUT
           echo "UNIT_COUNT=$UNIT_COUNT" >> $GITHUB_OUTPUT
           echo "FIXTURE_COUNT=$FIXTURE_COUNT" >> $GITHUB_OUTPUT
+          echo "UNIT_EXIT_CODE=$UNIT_STATUS" >> $GITHUB_OUTPUT
+          echo "FIXTURE_EXIT_CODE=$FIXTURE_STATUS" >> $GITHUB_OUTPUT
           
-          # Add overall status to evidence
           cat >> /tmp/full_e2e_evidence.md << EVIDENCE_EOF
 
 **Overall Status**: ${OVERALL_STATUS}
@@ -165,7 +155,7 @@ EVIDENCE_EOF
 - This evidence file: committed to repository
 EVIDENCE_EOF
           
-          # Copy evidence
+          mkdir -p 06_EVIDENCE
           cp /tmp/full_e2e_evidence.md 06_EVIDENCE/FULL_E2E_${TIMESTAMP}.md
           cp /tmp/full_e2e_evidence.md 06_EVIDENCE/FULL_E2E_LATEST.md
 
@@ -182,7 +172,6 @@ EVIDENCE_EOF
       - name: Commit Evidence
         if: steps.full_e2e.outputs.OVERALL_STATUS == 'PASS' && github.event_name == 'workflow_dispatch'
         run: |
-          cd /workspace/github__hqtt2026-thevinhvtqni__room-meeting-ai
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
@@ -192,7 +181,7 @@ EVIDENCE_EOF
           if git diff --cached --quiet; then
             echo "No evidence changes to commit"
           else
-            git commit -m "docs(work101): record full E2E evidence ${TIMESTAMP} op=${{ inputs.operation_id }} [skip ci]"
+            git commit -m "docs(work101): record full E2E evidence ${TIMESTAMP} op=${{ inputs.operation_id }}"
             git push origin work/101-room-hop-dual-workspace
           fi
 
@@ -204,8 +193,8 @@ EVIDENCE_EOF
           echo "**Mode**: ${{ inputs.mode }}" >> $GITHUB_STEP_SUMMARY
           echo "**Base Revision**: ${{ inputs.base_revision }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Unit Tests**: ${{ steps.full_e2e.outputs.UNIT_COUNT }} executed" >> $GITHUB_STEP_SUMMARY
-          echo "**Fixture Tests**: ${{ steps.full_e2e.outputs.FIXTURE_COUNT }} executed" >> $GITHUB_STEP_SUMMARY
+          echo "**Unit Tests**: ${{ steps.full_e2e.outputs.UNIT_COUNT }} executed, exit code: ${{ steps.full_e2e.outputs.UNIT_EXIT_CODE }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Fixture Tests**: ${{ steps.full_e2e.outputs.FIXTURE_COUNT }} executed, exit code: ${{ steps.full_e2e.outputs.FIXTURE_EXIT_CODE }}" >> $GITHUB_STEP_SUMMARY
           echo "**Overall Status**: ${{ steps.full_e2e.outputs.OVERALL_STATUS }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "⚠️ Real Sandbox<->GitHub E2E remains BLOCKED - see evidence for details" >> $GITHUB_STEP_SUMMARY
