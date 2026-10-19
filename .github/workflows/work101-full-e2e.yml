@@ -51,8 +51,9 @@ jobs:
           mkdir -p 06_EVIDENCE
           
           echo "=== Running Unit Tests ==="
+          set -o pipefail
           python -m unittest discover -s 05_TEST -p "test_sync_policy.py" -v 2>&1 | tee /tmp/unit_tests.txt
-          UNIT_STATUS=$?
+          UNIT_STATUS=${PIPESTATUS[0]}
           UNIT_COUNT=$(grep -oP '\d+(?= test)' /tmp/unit_tests.txt | head -1 || echo "0")
           UNIT_FAIL=$(grep -oP '\d+(?= fail)' /tmp/unit_tests.txt | head -1 || echo "0")
           UNIT_ERROR=$(grep -oP '\d+(?= error)' /tmp/unit_tests.txt | head -1 || echo "0")
@@ -61,7 +62,7 @@ jobs:
           
           echo "=== Running E2E Fixture Tests ==="
           python -m unittest 05_TEST/test_sync_e2e_fixture -v 2>&1 | tee /tmp/fixture_tests.txt
-          FIXTURE_STATUS=$?
+          FIXTURE_STATUS=${PIPESTATUS[0]}
           FIXTURE_COUNT=$(grep -oP '\d+(?= test)' /tmp/fixture_tests.txt | head -1 || echo "0")
           FIXTURE_FAIL=$(grep -oP '\d+(?= fail)' /tmp/fixture_tests.txt | head -1 || echo "0")
           FIXTURE_ERROR=$(grep -oP '\d+(?= error)' /tmp/fixture_tests.txt | head -1 || echo "0")
@@ -73,11 +74,11 @@ jobs:
           RUN_NUMBER=${{ github.run_number }}
           COMMIT_SHA=${{ github.sha }}
           
-          cat > /tmp/full_e2e_evidence.md << EVIDENCE_EOF
+          cat > /tmp/full_e2e_evidence.md << 'EVIDENCE_EOF'
 # Work 101 - Full E2E Integration Evidence
 
 - **Date**: ${TIMESTAMP}
-- **Workflow**: "`work101-full-e2e.yml`"
+- **Workflow**: work101-full-e2e.yml
 - **Run ID**: ${RUN_ID}
 - **Run Number**: ${RUN_NUMBER}
 - **Commit SHA**: ${COMMIT_SHA}
@@ -113,7 +114,7 @@ jobs:
 - [x] Path allowlist enforcement
 
 ## Not Verified (Blocked)
-- [ ] Real Sandbox<->GitHub synchronization
+- [ ] Real Sandbox to GitHub synchronization
 - [ ] Core/MCP authorization
 - [ ] Live provider adapter operations
 - [ ] Real network I/O
@@ -136,14 +137,14 @@ EVIDENCE_EOF
           echo "UNIT_EXIT_CODE=$UNIT_STATUS" >> $GITHUB_OUTPUT
           echo "FIXTURE_EXIT_CODE=$FIXTURE_STATUS" >> $GITHUB_OUTPUT
           
-          cat >> /tmp/full_e2e_evidence.md << EVIDENCE_EOF
+          cat >> /tmp/full_e2e_evidence.md << 'EVIDENCE_EOF'
 
 **Overall Status**: ${OVERALL_STATUS}
 
 ## Mode Notes
 - **DRY_RUN**: All tests executed in isolated environments only
 - **EXECUTE**: Still limited to fixture-based testing (no real writes)
-- Real Sandbox<->GitHub E2E remains **BLOCKED** until:
+- Real Sandbox to GitHub E2E remains **BLOCKED** until:
   1. Work 14 lifecycle contradiction is resolved
   2. Work 24/27/28 live contracts are verified
   3. Runtime adapter is implemented and tested
@@ -197,4 +198,4 @@ EVIDENCE_EOF
           echo "**Fixture Tests**: ${{ steps.full_e2e.outputs.FIXTURE_COUNT }} executed, exit code: ${{ steps.full_e2e.outputs.FIXTURE_EXIT_CODE }}" >> $GITHUB_STEP_SUMMARY
           echo "**Overall Status**: ${{ steps.full_e2e.outputs.OVERALL_STATUS }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "⚠️ Real Sandbox<->GitHub E2E remains BLOCKED - see evidence for details" >> $GITHUB_STEP_SUMMARY
+          echo "Real Sandbox to GitHub E2E remains BLOCKED - see evidence for details" >> $GITHUB_STEP_SUMMARY

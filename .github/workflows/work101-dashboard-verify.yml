@@ -85,11 +85,11 @@ except Exception as e:
           RUN_NUMBER=${{ github.run_number }}
           COMMIT_SHA=${{ github.sha }}
           
-          cat > /tmp/dashboard_evidence.md << EVIDENCE_EOF
+          cat > /tmp/dashboard_evidence.md << 'EVIDENCE_EOF'
 # Work 101 - Dashboard Static Verification Evidence
 
 - **Date**: ${TIMESTAMP}
-- **Workflow**: "`work101-dashboard-verify.yml`"
+- **Workflow**: work101-dashboard-verify.yml
 - **Run ID**: ${RUN_ID}
 - **Run Number**: ${RUN_NUMBER}
 - **Commit SHA**: ${COMMIT_SHA}

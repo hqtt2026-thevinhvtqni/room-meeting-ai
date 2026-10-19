@@ -38,10 +38,9 @@ jobs:
         id: e2e_tests
         run: |
           cd work/101/ROOM-HOP-DUAL-WORKSPACE/05_TEST
+          set -o pipefail
           python -m unittest test_sync_e2e_fixture -v 2>&1 | tee e2e_test_results.txt
-          
-          # Capture test results - use unittest exit code directly
-          TEST_EXIT_CODE=$?
+          TEST_EXIT_CODE=${PIPESTATUS[0]}
           TEST_COUNT=$(grep -oP '\d+(?= test)' e2e_test_results.txt | head -1 || echo "0")
           FAIL_COUNT=$(grep -oP '\d+(?= fail)' e2e_test_results.txt | head -1 || echo "0")
           ERROR_COUNT=$(grep -oP '\d+(?= error)' e2e_test_results.txt | head -1 || echo "0")
@@ -74,11 +73,11 @@ jobs:
           RUN_NUMBER=${{ github.run_number }}
           COMMIT_SHA=${{ github.sha }}
           
-          cat > /tmp/e2e_evidence.md << EVIDENCE_EOF
+          cat > /tmp/e2e_evidence.md << 'EVIDENCE_EOF'
 # Work 101 - E2E Fixture Test Evidence
 
 - **Date**: ${TIMESTAMP}
-- **Workflow**: "`work101-e2e-fixture.yml`"
+- **Workflow**: work101-e2e-fixture.yml
 - **Run ID**: ${RUN_ID}
 - **Run Number**: ${RUN_NUMBER}
 - **Commit SHA**: ${COMMIT_SHA}
@@ -86,7 +85,7 @@ jobs:
 - **Tests Executed**: ${{ steps.e2e_tests.outputs.TEST_COUNT }}
 - **Tests Failed**: ${{ steps.e2e_tests.outputs.FAIL_COUNT }}
 - **Tests Errored**: ${{ steps.e2e_tests.outputs.ERROR_COUNT }}
-- **Runtime**: GitHub-hosted "`ubuntu-latest`", CPython 3.12
+- **Runtime**: GitHub-hosted ubuntu-latest, CPython 3.12
 
 ## Verified
 - All E2E fixture tests passed in isolated TemporaryDirectory environment
@@ -105,7 +104,7 @@ jobs:
 - Does NOT claim Sandbox, GitHub, Core, or MCP E2E
 - Does NOT perform real network I/O or credential operations
 - Does NOT write to real GitHub repositories or Sandbox
-- Real Sandbox<->GitHub E2E remains BLOCKED until provider contracts verified
+- Real Sandbox to GitHub E2E remains BLOCKED until provider contracts verified
 
 ## Evidence Integrity
 - Test output captured and uploaded as artifact
