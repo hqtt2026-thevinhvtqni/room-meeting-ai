@@ -8,10 +8,12 @@ from typing import Any
 from runtime_tools_v1 import RuntimeToolsV1
 from sandbox_tools_v1 import SandboxToolsV1
 from github_tools_v1 import GitHubToolsV1
+from discovery_tools_v1 import DiscoveryToolsV1
 
 
 def register_work28_tools(mcp: Any, runtime: RuntimeToolsV1,
-                          sandbox: SandboxToolsV1, github: GitHubToolsV1) -> list[str]:
+                          sandbox: SandboxToolsV1, github: GitHubToolsV1,
+                          discovery: DiscoveryToolsV1 | None = None) -> list[str]:
     """Register stable, explicitly named tools on an existing MCP server instance."""
     required = (
         ("execution_submit", runtime.execution_submit),
@@ -28,6 +30,13 @@ def register_work28_tools(mcp: Any, runtime: RuntimeToolsV1,
         ("github_create_file", github.github_create_file),
         ("github_update_file", github.github_update_file),
     )
+    
+    # Add discovery tools if provider is available
+    if discovery is not None:
+        required = required + (
+            ("capability_discover", discovery.capability_discover),
+            ("capability_check", discovery.capability_check),
+        )
     decorator = getattr(mcp, "tool", None)
     if not callable(decorator):
         raise TypeError("existing MCP instance must expose a callable tool decorator")

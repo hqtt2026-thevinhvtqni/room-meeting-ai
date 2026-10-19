@@ -80,10 +80,13 @@ class SandboxOperation(str, Enum):
     """Sandbox file operations that require authorization."""
     LIST = "LIST"
     READ = "READ"
+    READ_RANGE = "READ_RANGE"
     CREATE = "CREATE"
     WRITE = "WRITE"
     APPEND = "APPEND"
     DELETE = "DELETE"
+    SEARCH = "SEARCH"
+    STAT = "STAT"
 
 
 def _deep_freeze(value: Any) -> Any:
