@@ -38,7 +38,7 @@ jobs:
         id: e2e_tests
         run: |
           cd work/101/ROOM-HOP-DUAL-WORKSPACE/05_TEST
-          set -o pipefail
+          set +o pipefail
           python -m unittest test_sync_e2e_fixture -v 2>&1 | tee e2e_test_results.txt
           TEST_EXIT_CODE=${PIPESTATUS[0]}
           TEST_COUNT=$(grep -oP '\d+(?= test)' e2e_test_results.txt | head -1 || echo "0")
@@ -50,7 +50,6 @@ jobs:
           echo "ERROR_COUNT=$ERROR_COUNT" >> $GITHUB_OUTPUT
           echo "TEST_EXIT_CODE=$TEST_EXIT_CODE" >> $GITHUB_OUTPUT
           
-          # Check if all tests passed (exit code 0)
           if [ "$TEST_EXIT_CODE" = "0" ] && [ "$FAIL_COUNT" = "0" ] && [ "$ERROR_COUNT" = "0" ]; then
             echo "E2E_FIXTURE_STATUS=PASS" >> $GITHUB_OUTPUT
           else
@@ -73,7 +72,7 @@ jobs:
           RUN_NUMBER=${{ github.run_number }}
           COMMIT_SHA=${{ github.sha }}
           
-          cat > /tmp/e2e_evidence.md << 'EVIDENCE_EOF'
+          cat > /tmp/e2e_evidence.md << EVIDENCE_EOF
 # Work 101 - E2E Fixture Test Evidence
 
 - **Date**: ${TIMESTAMP}
@@ -112,7 +111,6 @@ jobs:
 - All operations performed in isolated temporary filesystem
 EVIDENCE_EOF
           
-          # Copy evidence to repository
           mkdir -p work/101/ROOM-HOP-DUAL-WORKSPACE/06_EVIDENCE
           cp /tmp/e2e_evidence.md work/101/ROOM-HOP-DUAL-WORKSPACE/06_EVIDENCE/E2E_FIXTURE_TESTS_${TIMESTAMP}.md
           cp /tmp/e2e_evidence.md work/101/ROOM-HOP-DUAL-WORKSPACE/06_EVIDENCE/E2E_FIXTURE_TESTS_LATEST.md
@@ -126,7 +124,6 @@ EVIDENCE_EOF
           TIMESTAMP=$(date -u +"%Y%m%dT%H%M%SZ")
           git add work/101/ROOM-HOP-DUAL-WORKSPACE/06_EVIDENCE/E2E_FIXTURE_TESTS_*.md
           
-          # Check if there are changes to commit
           if git diff --cached --quiet; then
             echo "No evidence changes to commit"
           else

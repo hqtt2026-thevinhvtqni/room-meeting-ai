@@ -51,7 +51,7 @@ jobs:
           mkdir -p 06_EVIDENCE
           
           echo "=== Running Unit Tests ==="
-          set -o pipefail
+          set +o pipefail
           python -m unittest discover -s 05_TEST -p "test_sync_policy.py" -v 2>&1 | tee /tmp/unit_tests.txt
           UNIT_STATUS=${PIPESTATUS[0]}
           UNIT_COUNT=$(grep -oP '\d+(?= test)' /tmp/unit_tests.txt | head -1 || echo "0")
@@ -61,7 +61,7 @@ jobs:
           echo "Unit Tests: $UNIT_COUNT executed, $UNIT_FAIL failed, $UNIT_ERROR errors"
           
           echo "=== Running E2E Fixture Tests ==="
-          python -m unittest 05_TEST/test_sync_e2e_fixture -v 2>&1 | tee /tmp/fixture_tests.txt
+          python -m unittest 05_TEST.test_sync_e2e_fixture -v 2>&1 | tee /tmp/fixture_tests.txt
           FIXTURE_STATUS=${PIPESTATUS[0]}
           FIXTURE_COUNT=$(grep -oP '\d+(?= test)' /tmp/fixture_tests.txt | head -1 || echo "0")
           FIXTURE_FAIL=$(grep -oP '\d+(?= fail)' /tmp/fixture_tests.txt | head -1 || echo "0")
@@ -74,7 +74,7 @@ jobs:
           RUN_NUMBER=${{ github.run_number }}
           COMMIT_SHA=${{ github.sha }}
           
-          cat > /tmp/full_e2e_evidence.md << 'EVIDENCE_EOF'
+          cat > /tmp/full_e2e_evidence.md << EVIDENCE_EOF
 # Work 101 - Full E2E Integration Evidence
 
 - **Date**: ${TIMESTAMP}
@@ -137,7 +137,7 @@ EVIDENCE_EOF
           echo "UNIT_EXIT_CODE=$UNIT_STATUS" >> $GITHUB_OUTPUT
           echo "FIXTURE_EXIT_CODE=$FIXTURE_STATUS" >> $GITHUB_OUTPUT
           
-          cat >> /tmp/full_e2e_evidence.md << 'EVIDENCE_EOF'
+          cat >> /tmp/full_e2e_evidence.md << EVIDENCE_EOF
 
 **Overall Status**: ${OVERALL_STATUS}
 
