@@ -13,7 +13,11 @@ from mcp8020_service_v54 import V54Service
 class V54DependencyMissing(RuntimeError):
     pass
 
-def create_work28_v54_server(service: V54Service) -> Any:
+def create_work28_v54_server(service: V54Service, *, execution_gateway: Any = None) -> Any:
+    if execution_gateway is not None:
+        # Binding validates the complete gateway interface. Execution tools remain
+        # NOT_IMPLEMENTED until their catalog gate is explicitly changed.
+        service.bind_execution_gateway(execution_gateway)
     try:
         from mcp.server import Server
         from mcp.types import TextContent, Tool
