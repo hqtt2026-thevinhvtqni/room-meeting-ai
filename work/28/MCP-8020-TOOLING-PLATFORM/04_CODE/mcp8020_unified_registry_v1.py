@@ -1,4 +1,4 @@
-"""Work 28 unified MCP :8020 registry: 18 legacy operations + 3 read-only GitHub tools.
+"""Work 28 unified MCP :8020 registry: 18 legacy operations + 3 read-only GitHub tools + 10 bounded extensions.
 
 Prepared contract only; this does not prove live registration. Core remains the
 authorization authority. Caller-supplied identity fields are not proof of authority.
