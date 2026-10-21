@@ -12,3 +12,12 @@
 - Bằng chứng: branch `work/50-ai-product-delivery-standard`; các file dưới `work/50/AI-PRODUCT-DELIVERY-STANDARD/`.
 - Trạng thái kiểm chứng: CHƯA XÁC MINH — chưa xác minh Sandbox; chưa chạy đánh giá APDS trên sản phẩm mẫu; chưa phê duyệt áp dụng toàn HQTT.
 - Bước tiếp theo: khôi phục kết nối Sandbox, đối chiếu cấu trúc/nội dung, hoàn tất checklist và thử nghiệm tiêu chuẩn trên sản phẩm mẫu.
+
+## 2026-10-21 — Xu (AI-01), điều phối Work 50
+- Quyết định vận hành thống nhất với Vinh: nếu MCP không khả dụng nhưng GitHub còn truy cập, tiếp tục công việc trực tiếp trên branch Work; sau khi MCP phục hồi thì đối chiếu và đồng bộ có kiểm chứng.
+- Tạo danh mục vai trò AI chuẩn tại 01_STANDARD/AI_ROLE_CATALOG_v1.0.md (17 vai trò, trạng thái PROPOSED).
+- Cập nhật APDS v1.0 để tham chiếu danh mục vai trò và quy định quy trình dự phòng MCP.
+- Bổ sung APDS-16 đến APDS-19 vào checklist nghiệm thu.
+- Cập nhật biên bản quyết định; chưa có thao tác Sandbox vì MCP đang UNAVAILABLE.
+- Bằng chứng GitHub: catalog commit 26e6bcf; APDS commit 3d5fd9b; checklist commit 41a63d8; biên bản commit 22af83f.
+- Trạng thái: DONE cho các thay đổi GitHub; BLOCKED/CHƯA XÁC MINH cho đồng bộ Sandbox; APDS vẫn PROPOSED, chưa có phê duyệt toàn HQTT.
