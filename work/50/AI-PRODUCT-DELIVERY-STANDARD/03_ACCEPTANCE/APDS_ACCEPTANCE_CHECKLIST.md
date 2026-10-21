@@ -29,3 +29,8 @@ Trạng thái mặc định của từng mục: CHƯA XÁC MINH. Chỉ đánh PA
 | APDS-17 | Sản phẩm mẫu có ma trận phân công AI, trách nhiệm, quyền hạn, đầu ra và tiêu chí nghiệm thu | Ma trận phân công được review | CHƯA XÁC MINH |
 | APDS-18 | Khi MCP lỗi, công việc độc lập vẫn có thể tiếp tục trên GitHub và được ghi log | Commit, nhật ký và trạng thái phụ thuộc | CHƯA XÁC MINH |
 | APDS-19 | Sau khi MCP phục hồi, Sandbox/GitHub được đối chiếu trước khi đồng bộ, có kiểm tra đọc lại hai phía | Báo cáo diff/sync và bằng chứng đọc lại | CHƯA XÁC MINH |
+
+| APDS-20 | Có mô hình dashboard chuẩn dùng chung cho từng Work, tham chiếu role catalog và manifest | WORK_AI_DASHBOARD_MODEL_v1.0.md | CHƯA XÁC MINH |
+| APDS-21 | Có template dashboard tái sử dụng, phân biệt DONE/PASS và hỗ trợ drill-down tới evidence | WORK_AI_DASHBOARD_TEMPLATE.md + review | CHƯA XÁC MINH |
+| APDS-22 | Dashboard mặc định read-only, trạng thái nguồn/sync độc lập và không tạo tiến độ giả | Model review + kiểm thử khi triển khai | CHƯA XÁC MINH |
+| APDS-23 | Dashboard MVP được triển khai và kiểm thử với dữ liệu nguồn thật trước khi tuyên bố vận hành | E2E test report + evidence | CHƯA XÁC MINH |
