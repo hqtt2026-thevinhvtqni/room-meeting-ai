@@ -4,7 +4,7 @@
 Vinh has no PC access now. Continue preparing implementation/documentation; do not run PC-dependent tests or invent results. Test when PC access returns.
 
 ## Scope
-Reconstruct the 18 existing ROOM-HOP tools, three existing read-only GitHub tools, and nine explicitly requested extensions:
+Reconstruct the 18 existing ROOM-HOP tools, three existing read-only GitHub tools, and ten explicitly requested extensions:
 - github_repository
 - github_read_file
 - github_search_files
@@ -43,7 +43,7 @@ Expected unified registry: 31 unique tools (18 legacy + 3 read-only GitHub + 10 
 
 ### Required next implementation steps
 
-- Preserve the 18 legacy operations and three existing GitHub read tools; add the nine bounded extensions now explicitly requested by Vinh.
+- Preserve the 18 legacy operations and three existing GitHub read tools; add the ten bounded extensions now explicitly requested by Vinh.
 - Wire execution only through authenticated Core → Execution Host/runtime; never execute arbitrary caller-provided shell strings and never place Core 8000 inside Sandbox.
 - Require bounded approved profiles/operations, source hash binding, request/run IDs, timeout/resource limits, output size limits, and persisted stdout/stderr + exit code + test counters.
 - Expand contract tests for the 31-name registry and new runtime/Sandbox/GitHub tool schemas. Still add server/provider integration tests for fail-closed wiring, async/sync handler behavior, argument type validation, and output status normalization.
