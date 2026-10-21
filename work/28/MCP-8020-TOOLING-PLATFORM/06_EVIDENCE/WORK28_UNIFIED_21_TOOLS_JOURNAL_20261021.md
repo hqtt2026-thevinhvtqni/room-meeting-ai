@@ -60,7 +60,7 @@ Source review only. No unit test, GitHub Actions run, live MCP `tools/list`, or 
 
 - Preserved all 21 existing names and appended nine unique names: `execution_submit`, `execution_status`, `execution_output_read`, `sandbox_search`, `sandbox_stat`, `sandbox_read_range`, `github_create_branch`, `github_create_file`, and `github_update_file`.
 - Unified registry now declares 30 unique tool names, with an exact-count guard and bounded input schemas.
-- Updated the unified server factory to require an injected `runtime` provider and map the new runtime boundary. The factory still starts no listener; it must be mounted through the already-approved host only after validation.
+- Updated the unified server factory to require injected `runtime` and `sandbox_extensions` providers. The new Sandbox extension boundary is deliberately separate from the legacy `sandbox` provider, avoiding a requirement that one adapter implement two incompatible contracts. The factory still starts no listener; it must be mounted through the already-approved host only after validation.
 - Updated the registry contract test and PC validation plan to expect 30 tools.
 - Runtime submission accepts only the declared `RUN_TESTS` / `RUN_SCRIPT` operation labels, a Work ID, source SHA-256, profile ID, and request ID; no arbitrary shell command field is exposed.
 - Sandbox range reads are capped at 65,536 bytes; runtime output reads at 16,384 bytes; GitHub updates require an expected 40-character blob SHA and a non-default branch.
@@ -69,6 +69,6 @@ Source review only. No unit test, GitHub Actions run, live MCP `tools/list`, or 
 
 - These are source/contract changes committed to the Work 28 branch, not proof that the live MCP host exposes 30 tools.
 - The injected Runtime provider must route through authenticated Core to the Execution Host; Core must remain outside Sandbox. Actual execution, timeout/resource enforcement, persisted output/exit-code/test-counter evidence, and output readback still require trusted backend wiring and PC E2E validation.
-- Sandbox and GitHub providers must expose all mapped methods and enforce authorization/path/branch policy. Startup is intended to fail closed when a handler is absent.
+- Legacy Sandbox, Sandbox extension, Runtime, and GitHub providers must expose all mapped methods and enforce authorization/path/branch policy. Startup is intended to fail closed when a handler is absent.
 - Registry contract tests have been authored/updated but **NOT RUN**. Live `tools/list`, GitHub write tests, Runtime execution, and full E2E remain **NOT RUN / BLOCKED** pending PC validation.
 - Work 28 remains ACTIVE; no PASS or release claim.
