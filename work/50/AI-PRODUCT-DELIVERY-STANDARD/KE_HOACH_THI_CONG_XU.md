@@ -128,3 +128,17 @@ Luồng thay đổi: đề xuất → phân tích tác động/phụ thuộc/r�
 - Không tự sửa Protected Core hoặc baseline frozen.
 - Không tuyên bố Sandbox/GitHub đồng bộ nếu chưa đọc lại và so sánh.
 - Tất cả hoạt động quan trọng phải ghi vào NHAT_KY_HOP_THI_CONG.md.
+
+## Bổ sung phạm vi — Dashboard AI theo từng Work (2026-10-21)
+
+Mục tiêu: chuẩn hóa mô hình dashboard dùng chung để mỗi Work có một dashboard riêng theo dõi tiến độ, vai trò AI, deliverables, blocker, reviewer và evidence.
+
+Thứ tự triển khai:
+1. DONE tài liệu: tạo `01_STANDARD/WORK_AI_DASHBOARD_MODEL_v1.0.md` và `02_TEMPLATES/WORK_AI_DASHBOARD_TEMPLATE.md`.
+2. Cập nhật checklist APDS: APDS-20 đến APDS-23; các mục vẫn CHƯA XÁC MINH cho tới khi review/kiểm thử thực tế.
+3. Review cấu trúc dashboard hiện có trong ROOM-HOP trước khi chọn tái sử dụng hay xây mới; không tạo dashboard runtime trùng lặp.
+4. Chọn Work 50 làm pilot read-only MVP trên GitHub, hiển thị rõ branch/revision nguồn và trạng thái Sandbox/MCP là chưa xác minh nếu chưa truy cập được.
+5. Kiểm thử UI/API và truy vết từ summary đến role → task → deliverable → evidence; kiểm tra DONE/PASS, thiếu dữ liệu, lỗi nguồn và xung đột.
+6. Sau MCP phục hồi, thêm Sandbox như nguồn thứ hai ở chế độ đọc/đối chiếu trước; chỉ xây sync có kiểm soát sau khi có diff/conflict/approval flow.
+
+Không tuyên bố dashboard đã chạy thật: hiện mới hoàn thành tài liệu mô hình và template trên GitHub. Chưa tạo UI/API/runtime.
