@@ -203,7 +203,7 @@ class SchemaValidationTests(ServiceV54TestCase):
     def test_enum_and_bounds_are_enforced(self):
         result = self.call("sandbox_validate_path", work_id="work28", path="a", operation="EXEC")
         self.assertFalse(result["ok"])
-        self.assertIn("enum", result["error"]["message"].lower())
+        self.assertEqual(result["error"]["code"], "INVALID_INPUT")
         result = self.call("room_list_meetings", limit=0)
         self.assertFalse(result["ok"])
 
