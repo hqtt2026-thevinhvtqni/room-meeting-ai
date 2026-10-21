@@ -1,4 +1,4 @@
-"""Fail-closed low-level MCP server factory for Work 28's unified 21-tool registry.
+"""Fail-closed low-level MCP server factory for Work 28's unified 30-tool registry.
 The existing HTTP host owns transport/lifecycle. This factory does not open a listener.
 """
 from __future__ import annotations
@@ -12,11 +12,11 @@ from mcp8020_unified_registry_v1 import TOOL_SPECS, validate_registry
 class Work28ProviderBlocked(RuntimeError):
     pass
 
-_BOUNDARIES = {"core": "core", "sandbox": "sandbox", "proposal": "proposals", "github": "github"}
+_BOUNDARIES = {"core": "core", "sandbox": "sandbox", "proposal": "proposals", "github": "github", "runtime": "runtime"}
 
-def create_work28_server(*, core: Any, sandbox: Any, proposals: Any, github: Any) -> Server:
+def create_work28_server(*, core: Any, sandbox: Any, proposals: Any, github: Any, runtime: Any) -> Server:
     validate_registry()
-    providers = {"core": core, "sandbox": sandbox, "proposals": proposals, "github": github}
+    providers = {"core": core, "sandbox": sandbox, "proposals": proposals, "github": github, "runtime": runtime}
     handlers: dict[str, Any] = {}
     for spec in TOOL_SPECS:
         provider = providers[_BOUNDARIES[spec.boundary]]
