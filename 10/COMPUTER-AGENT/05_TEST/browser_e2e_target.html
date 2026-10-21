@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Work 10 Browser E2E Target</title>
+  <style>
+    body { font-family: sans-serif; min-height: 1800px; margin: 32px; }
+    #result { margin-top: 20px; padding: 16px; border: 1px solid #888; }
+    #download { margin-top: 900px; }
+  </style>
+</head>
+<body>
+  <h1>Work 10 Real Browser E2E</h1>
+  <button id="start" type="button">Start task</button>
+
+  <label for="task-name">Task name</label>
+  <input id="task-name" aria-label="Task name" />
+
+  <button id="submit" type="button">Submit task</button>
+  <div id="result">READY</div>
+
+  <a id="download" href="#" download="work10-evidence.txt">Download evidence</a>
+
+  <script>
+    document.getElementById("submit").addEventListener("click", () => {
+      const value = document.getElementById("task-name").value;
+      document.getElementById("result").textContent = "SUBMITTED: " + value;
+    });
+
+    document.getElementById("download").addEventListener("click", (event) => {
+      event.preventDefault();
+      const blob = new Blob(["Work 10 real browser evidence"], {type: "text/plain"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "work10-evidence.txt";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
+  </script>
+</body>
+</html>
