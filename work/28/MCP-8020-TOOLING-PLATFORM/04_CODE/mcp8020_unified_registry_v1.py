@@ -62,9 +62,9 @@ TOOL_SPECS = (
     ToolSpec("execution_submit", "Submit a bounded RUN_TESTS or RUN_SCRIPT request through authenticated Core; never accepts shell commands.", "runtime", "execution_submit", _schema({"request": {"type": "object", "properties": {"work_id": S, "operation": {"type": "string", "enum": ["RUN_TESTS", "RUN_SCRIPT"]}, "source_sha256": {"type": "string", "minLength": 64, "maxLength": 64}, "profile_id": S, "request_id": S}, "required": ["work_id", "operation", "source_sha256", "profile_id", "request_id"], "additionalProperties": False}}, ("request",))),
     ToolSpec("execution_status", "Read execution status through authenticated Core using a run ID.", "runtime", "execution_status", _schema({"run_id": S}, ("run_id",))),
     ToolSpec("execution_output_read", "Read bounded stdout, stderr, or combined output for a run through authenticated Core.", "runtime", "execution_output_read", _schema({"run_id": S, "stream": {"type": "string", "enum": ["stdout", "stderr", "combined"], "default": "combined"}, "max_bytes": {"type": "integer", "minimum": 1, "maximum": 16384, "default": 16384}}, ("run_id",))),
-    ToolSpec("sandbox_search", "Search filenames/content within one authorized Work Sandbox with a bounded result count.", "sandbox", "sandbox_search", _schema({"work_id": S, "query": S, "limit": {"type": "integer", "minimum": 1, "maximum": 100, "default": 20}}, ("work_id", "query"))),
-    ToolSpec("sandbox_stat", "Read metadata for a Work-relative Sandbox path.", "sandbox", "sandbox_stat", _schema({"work_id": S, "path": S}, ("work_id", "path"))),
-    ToolSpec("sandbox_read_range", "Read a bounded byte range from a text artifact in an authorized Work Sandbox.", "sandbox", "sandbox_read_range", _schema({"work_id": S, "path": S, "offset": {"type": "integer", "minimum": 0, "default": 0}, "length": {"type": "integer", "minimum": 1, "maximum": 65536, "default": 16384}}, ("work_id", "path"))),
+    ToolSpec("sandbox_search", "Search filenames/content within one authorized Work Sandbox with a bounded result count.", "sandbox_extension", "sandbox_search", _schema({"work_id": S, "query": S, "limit": {"type": "integer", "minimum": 1, "maximum": 100, "default": 20}}, ("work_id", "query"))),
+    ToolSpec("sandbox_stat", "Read metadata for a Work-relative Sandbox path.", "sandbox_extension", "sandbox_stat", _schema({"work_id": S, "path": S}, ("work_id", "path"))),
+    ToolSpec("sandbox_read_range", "Read a bounded byte range from a text artifact in an authorized Work Sandbox.", "sandbox_extension", "sandbox_read_range", _schema({"work_id": S, "path": S, "offset": {"type": "integer", "minimum": 0, "default": 0}, "length": {"type": "integer", "minimum": 1, "maximum": 65536, "default": 16384}}, ("work_id", "path"))),
     ToolSpec("github_create_branch", "Create a non-default GitHub branch from an explicit base ref.", "github", "github_create_branch", _schema({"repository": S, "branch": S, "base_ref": {"type": "string", "default": "main"}}, ("repository", "branch"))),
     ToolSpec("github_create_file", "Create a new file on a non-default branch; fails if the path already exists.", "github", "github_create_file", _schema({"repository": S, "branch": S, "path": S, "content": S, "message": S}, ("repository", "branch", "path", "content", "message"))),
     ToolSpec("github_update_file", "Update an existing file on a non-default branch using an expected blob SHA to prevent stale writes.", "github", "github_update_file", _schema({"repository": S, "branch": S, "path": S, "content": S, "message": S, "expected_blob_sha": {"type": "string", "pattern": "^[0-9a-fA-F]{40}$"}}, ("repository", "branch", "path", "content", "message", "expected_blob_sha"))),
@@ -75,7 +75,7 @@ def validate_registry() -> None:
     if names != EXPECTED_TOOL_NAMES or len(set(names)) != len(names):
         raise ValueError("unified registry must contain the exact 30 unique ordered tool names")
     for spec in TOOL_SPECS:
-        if spec.boundary not in {"core", "sandbox", "proposal", "github", "runtime"} or spec.input_schema.get("type") != "object":
+        if spec.boundary not in {"core", "sandbox", "sandbox_extension", "proposal", "github", "runtime"} or spec.input_schema.get("type") != "object":
             raise ValueError(f"invalid tool contract: {spec.name}")
 
 def export_mcp_tools() -> list[dict[str, Any]]:
