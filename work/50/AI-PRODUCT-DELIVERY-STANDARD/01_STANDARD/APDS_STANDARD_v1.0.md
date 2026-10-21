@@ -233,3 +233,17 @@ Không gom trạng thái của nhiều tiêu chí thành một PASS chung nếu 
 ## 12. Trạng thái v1.0
 
 APDS v1.0 là bản đề xuất được đưa vào Work 50 để review. Chưa có kết quả thử nghiệm sản phẩm mẫu; do đó chưa được đánh dấu PASS hoặc Approved for rollout.
+
+## 13. Danh mục vai trò AI dùng chung
+
+Danh mục vai trò chuẩn được quản lý tại [AI_ROLE_CATALOG_v1.0.md](AI_ROLE_CATALOG_v1.0.md). Đây là danh mục đề xuất, chưa có hiệu lực bắt buộc toàn HQTT cho đến khi Vinh phê duyệt.
+
+Mỗi sản phẩm/Work phải tạo ma trận phân công theo nhu cầu thực tế, tối thiểu ghi: Role ID, trạng thái áp dụng, AI ID/nhà cung cấp, người chịu trách nhiệm, người review/test, đầu ra, tiêu chí nghiệm thu, quyền hạn, trạng thái và Evidence ID/link. Không coi tên nhà cung cấp hoặc sự tồn tại của AI là bằng chứng năng lực.
+
+Có thể kiêm nhiệm nếu phù hợp và ghi rõ; các vai trò kiểm thử, kiểm toán hoặc phê duyệt cần độc lập theo mức rủi ro. Vai trò không áp dụng phải ghi N/A và lý do. Dashboard của Work nên đọc từ ma trận phân công và hiển thị rõ trạng thái báo cáo so với trạng thái đã xác minh.
+
+## 14. Quy trình dự phòng khi MCP không khả dụng
+
+Nếu MCP/ROOM-HOP không kết nối được nhưng GitHub còn truy cập, tiếp tục công việc trên branch Work được chỉ định; không dừng các đầu việc tài liệu/code không phụ thuộc trực tiếp vào Sandbox. Ghi rõ sự cố MCP, thời điểm, phạm vi ảnh hưởng, commit và các thao tác chưa thể thực hiện.
+
+Khi MCP phục hồi: đọc trạng thái thực tế từ GitHub và Sandbox; so sánh đường dẫn, phiên bản/hash và nội dung; phân loại thay đổi chỉ có ở một phía, thay đổi hai phía và xung đột; lập kế hoạch đồng bộ; không ghi đè khi chưa xác định nguồn đúng; thực hiện đồng bộ theo quyền đã cấp; đọc lại hai phía và lưu bằng chứng. Không tuyên bố đồng bộ hoàn tất nếu chưa kiểm tra cả hai phía.
