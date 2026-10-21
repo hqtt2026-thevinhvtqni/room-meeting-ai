@@ -1,18 +1,18 @@
-# Work 28 — Unified Tool Reconstruction Journal — 2026-10-21
+# Work 28 — Unified MCP Tool Reconstruction Journal — 2026-10-21
 
 ## Vinh's directive
 Vinh has no PC access now. Continue preparing implementation/documentation; do not run PC-dependent tests or invent results. Test when PC access returns.
 
 ## Scope
-Reconstruct the 18 existing ROOM-HOP tools and include three existing read-only GitHub tools:
+Reconstruct the 18 existing ROOM-HOP tools, three existing read-only GitHub tools, and nine explicitly requested extensions:
 - github_repository
 - github_read_file
 - github_search_files
 
-Expected unified registry: 21 tools. Existing GitHub write-capable adapter methods remain separate and are not added to this 21-tool surface.
+Expected unified registry: 30 unique tools (18 legacy + 3 read-only GitHub + 9 extensions). The legacy sandbox_write name is retained exactly once; its old input contract is preserved.
 
 ## Files added / updated
-- 04_CODE/mcp8020_unified_registry_v1.py — ordered registry, JSON schemas, boundary labels and exact-count validation. Argument schemas were aligned to the observed tool signatures for join/start meeting, add paste, sandbox create-work/list, pending tasks and proposal submission.
+- 04_CODE/mcp8020_unified_registry_v1.py — ordered registry, JSON schemas, boundary labels and 30-tool exact-count validation. Argument schemas were aligned to the observed tool signatures for join/start meeting, add paste, sandbox create-work/list, pending tasks and proposal submission.
 - 04_CODE/mcp8020_unified_server_v1.py — fail-closed server factory, injected providers, required/unknown argument checks and UTF-8 JSON output.
 - 05_TEST/test_mcp8020_unified_registry_v1.py — static contract tests authored; NOT RUN per Vinh's instruction.
 - 05_TEST/WORK28_PC_VALIDATION_PLAN_21_TOOLS.md — deferred PC validation plan.
@@ -36,19 +36,39 @@ Expected unified registry: 21 tools. Existing GitHub write-capable adapter metho
 
 ### Findings from reading the branch source (not runtime test evidence)
 
-1. The unified registry exports exactly 21 tools (18 legacy + 3 read-only GitHub). It does **not** register the runtime adapter methods `execution_submit`, `execution_status`, or `execution_output_read`. Therefore the 21-tool MCP surface alone cannot yet provide the requested AI-run-test / read-output / repair loop.
+1. At the time of this audit, the unified registry exported 21 tools and did not register the runtime adapter methods. Vinh then explicitly directed Xu to add the requested tools; the registry has now been expanded to 30 names, including `execution_submit`, `execution_status`, and `execution_output_read`.
 2. `runtime_tools_v1.py` explicitly forwards only `RUN_TESTS` and `RUN_SCRIPT` operation labels to an injected authenticated Core transport; it intentionally does not spawn processes. This preserves the architecture boundary, but a trusted Core/Execution Host implementation and a registered MCP-facing contract are still required before execution can work end-to-end.
 3. `mcp8020_unified_server_v1.py` imports the MCP SDK at module import time. The current Work 28 GitHub Actions workflow sets up Python 3.12 but does not install a declared dependency set before test discovery. If the workflow's discovered tests import this server module, the run may fail with missing `mcp`; this needs verification and a pinned dependency/lock or explicit install step.
 4. The workflow command is `python -m unittest discover -s 05_TEST -v`, while the documented contract runner uses `python -m unittest discover -s 05_TEST -t . -v`. The intended canonical command should be consistent so imports and discovery behave deterministically.
 
 ### Required next implementation steps
 
-- Keep the 21 legacy/GitHub registry inventory stable unless Vinh explicitly approves expanding it; add execution capabilities through a separately reviewed, bounded registry change or existing approved runtime tool surface.
+- Preserve the 18 legacy operations and three existing GitHub read tools; add the nine bounded extensions now explicitly requested by Vinh.
 - Wire execution only through authenticated Core → Execution Host/runtime; never execute arbitrary caller-provided shell strings and never place Core 8000 inside Sandbox.
 - Require bounded approved profiles/operations, source hash binding, request/run IDs, timeout/resource limits, output size limits, and persisted stdout/stderr + exit code + test counters.
-- Add contract tests for runtime tool registration, fail-closed provider wiring, async/sync handler behavior, argument type validation, and output status normalization.
+- Expand contract tests for the 30-name registry and new runtime/Sandbox/GitHub tool schemas. Still add server/provider integration tests for fail-closed wiring, async/sync handler behavior, argument type validation, and output status normalization.
 - Align CI dependencies and the canonical test command, then capture actual workflow run ID, commit SHA, test count and artifact/readback evidence.
 
 ### Honest status
 
-Source review only. No unit test, GitHub Actions run, live MCP `tools/list`, or MCP → Core → Execution Host → Sandbox → output-readback run was executed in this follow-up. No PASS claimed.
+Source review only. No unit test, GitHub Actions run, live MCP `tools/list`, or MCP → Core → Execution Host → Sandbox → output-readback run was executed in the source-only implementation phase. No PASS claimed.
+
+
+## Implementation update — 2026-10-21 (Xu / GPT-6)
+
+### Added to the unified registry
+
+- Preserved all 21 existing names and appended nine unique names: `execution_submit`, `execution_status`, `execution_output_read`, `sandbox_search`, `sandbox_stat`, `sandbox_read_range`, `github_create_branch`, `github_create_file`, and `github_update_file`.
+- Unified registry now declares 30 unique tool names, with an exact-count guard and bounded input schemas.
+- Updated the unified server factory to require an injected `runtime` provider and map the new runtime boundary. The factory still starts no listener; it must be mounted through the already-approved host only after validation.
+- Updated the registry contract test and PC validation plan to expect 30 tools.
+- Runtime submission accepts only the declared `RUN_TESTS` / `RUN_SCRIPT` operation labels, a Work ID, source SHA-256, profile ID, and request ID; no arbitrary shell command field is exposed.
+- Sandbox range reads are capped at 65,536 bytes; runtime output reads at 16,384 bytes; GitHub updates require an expected 40-character blob SHA and a non-default branch.
+
+### Remaining integration boundary / status
+
+- These are source/contract changes committed to the Work 28 branch, not proof that the live MCP host exposes 30 tools.
+- The injected Runtime provider must route through authenticated Core to the Execution Host; Core must remain outside Sandbox. Actual execution, timeout/resource enforcement, persisted output/exit-code/test-counter evidence, and output readback still require trusted backend wiring and PC E2E validation.
+- Sandbox and GitHub providers must expose all mapped methods and enforce authorization/path/branch policy. Startup is intended to fail closed when a handler is absent.
+- Registry contract tests have been authored/updated but **NOT RUN**. Live `tools/list`, GitHub write tests, Runtime execution, and full E2E remain **NOT RUN / BLOCKED** pending PC validation.
+- Work 28 remains ACTIVE; no PASS or release claim.
