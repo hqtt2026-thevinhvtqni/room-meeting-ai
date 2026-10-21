@@ -27,12 +27,16 @@ venv/
 .DS_Store
 .vscode/
 *.log
+log.jsonl
+desktop.ini
+*.bak
 
 # ----------------------------
 # Runtime / temporary data
 # ----------------------------
 tmp/
 trash/
+agent_write_test.txt
 
 # Meeting runtime data
 meetings/*/*transcript*.txt
@@ -52,4 +56,3 @@ transcript_test_output.txt
 # Generated test outputs
 # ----------------------------
 pytest_output.txt
-desktop.ini

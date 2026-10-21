@@ -1,5 +1,31 @@
 # ROOM HOP
 
+## Quickstart (developer mới)
+
+```bash
+git clone https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai.git
+cd room-meeting-ai
+python -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+Chạy regression suite mặc định:
+
+```bash
+pytest
+```
+
+Chạy riêng test của Work 28 (MCP Tooling Platform):
+
+```bash
+cd work/28/MCP-8020-TOOLING-PLATFORM
+PYTHONPATH=04_CODE python -m unittest discover -s 05_TEST -v
+```
+
+> Lưu ý: GitHub Actions cũng chạy đúng lệnh này trong workflow
+> `.github/workflows/work28-mcp-tooling.yml` khi `work/28/**` thay đổi.
+
 ## Agent onboarding
 
 Agent mới vào ROOM HOP phải đọc theo thứ tự:
