@@ -26,7 +26,7 @@ class CatalogV54Tests(unittest.TestCase):
         self.assertEqual(len(COMPUTER_TOOLS), 6)
         self.assertEqual(len(BROWSER_TOOLS), 17)
         counts = {}
-        for spec in TOOL_SPEOLS_CHECK():
+        for spec in TOOL_SPECS:
             counts[spec.group] = counts.get(spec.group, 0) + 1
         self.assertEqual(counts, EXPECTED_GROUP_COUNTS)
         self.assertEqual(ROOM_TOOLS[0], "room_get_context")
@@ -65,9 +65,6 @@ class CatalogV54Tests(unittest.TestCase):
         for spec in TOOL_SPECS:
             if spec.status == NOT_IMPLEMENTED:
                 self.assertIn("not available in this build", spec.description, spec.name)
-
-def TOOL_SPEOLS_CHECK():
-    return TOOL_SPECS
 
 if __name__ == "__main__":
     unittest.main()

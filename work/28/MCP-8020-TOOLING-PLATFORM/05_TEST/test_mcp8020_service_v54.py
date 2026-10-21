@@ -117,7 +117,7 @@ class SandboxFlowTests(ServiceV54TestCase):
         manifest = self.call("sandbox_get_manifest", work_id="work28")
         self.assertTrue(manifest["ok"], manifest)
         paths = [f["path"] for f in manifest["data"]["files"]]
-        self.assertIn("readme.md".replace("readme", os.path.join("docs", "readme").replace("docs", "docs")), paths)
+        self.assertIn(os.path.join("docs", "readme.md"), paths)
         validated = self.call("sandbox_validate_path", work_id="work28", path="docs/readme.md", operation="READ")
         self.assertTrue(validated["ok"], validated)
         self.assertTrue(validated["data"]["allowed"])
