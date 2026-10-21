@@ -16,7 +16,7 @@ Scope: 18 existing ROOM-HOP operations + 3 read-only GitHub operations + 10 boun
 2. Verify installed MCP SDK compatibility with Server, Tool and TextContent usage.
 3. Inject distinct `sandbox` (legacy) and `sandbox_extensions` (new bounded search/stat/range) providers, plus `runtime`, `core`, `proposals`, and `github`; verify all mapped methods exist and missing handlers fail startup closed.
 4. Mount through the existing approved MCP HTTP entrypoint; do not start a parallel listener.
-5. Query tools/list and compare exact 31 names/count/schemas, including the nine extensions.
+5. Query tools/list and compare exact 31 names/count/schemas, including the ten extensions.
 6. Exercise GitHub read/write calls on a disposable non-default test branch; verify expected-blob-SHA protection for updates.
 7. Exercise legacy operations through Core/Sandbox/Proposal providers and all new runtime/Sandbox/GitHub providers.
 8. Run negative security tests: unknown tool, missing/extra fields, missing provider, path traversal, spoofed identity and unauthenticated calls.
