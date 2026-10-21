@@ -7,14 +7,14 @@ Scope: 18 existing ROOM-HOP operations + 3 read-only GitHub operations + 9 bound
 - Legacy tools: 18 (meetings, sandbox, room orientation, tasks/proposal).
 - Existing GitHub tools: github_repository, github_read_file, github_search_files.
 - Runtime tools: execution_submit, execution_status, execution_output_read.
-- Additional Sandbox tools: sandbox_search, sandbox_stat, sandbox_read_range. Existing sandbox_write remains in the legacy set to avoid a duplicate name.
+- Additional Sandbox tools: sandbox_search, sandbox_stat, sandbox_read_range. Existing sandbox_write remains in the legacy set to avoid a duplicate name; inject its new read/search adapter separately as `sandbox_extensions`.
 - GitHub write tools: github_create_branch, github_create_file, github_update_file.
 - Expected unified registry: 30 unique names (18 + 3 + 9).
 
 ## PC checks when available
 1. Run unit tests for registry/provider contracts.
 2. Verify installed MCP SDK compatibility with Server, Tool and TextContent usage.
-3. Verify all injected providers expose mapped methods; missing method must fail startup closed.
+3. Inject distinct `sandbox` (legacy) and `sandbox_extensions` (new bounded search/stat/range) providers, plus `runtime`, `core`, `proposals`, and `github`; verify all mapped methods exist and missing handlers fail startup closed.
 4. Mount through the existing approved MCP HTTP entrypoint; do not start a parallel listener.
 5. Query tools/list and compare exact 30 names/count/schemas, including the nine extensions.
 6. Exercise GitHub read/write calls on a disposable non-default test branch; verify expected-blob-SHA protection for updates.
