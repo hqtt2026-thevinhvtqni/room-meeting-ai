@@ -137,6 +137,13 @@ def export_mcp_tools() -> list[dict[str, Any]]:
     validate_catalog()
     return [{"name": s.name, "description": s.description, "inputSchema": s.input_schema} for s in TOOL_SPECS]
 
+def tool_status(name: str) -> str:
+    """Return the honest catalog status (IMPLEMENTED / NOT_IMPLEMENTED) for one tool name."""
+    for spec in TOOL_SPECS:
+        if spec.name == name:
+            return spec.status
+    raise KeyError("unknown v54 catalog tool: " + name)
+
 def implemented_tool_names() -> tuple[str, ...]:
     return tuple(s.name for s in TOOL_SPECS if s.status == IMPLEMENTED)
 
