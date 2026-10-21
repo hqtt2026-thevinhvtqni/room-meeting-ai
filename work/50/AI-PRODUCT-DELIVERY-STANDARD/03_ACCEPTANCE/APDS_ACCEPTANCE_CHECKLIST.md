@@ -24,3 +24,8 @@ Trạng thái mặc định của từng mục: CHƯA XÁC MINH. Chỉ đánh PA
 - Work 50 chỉ có thể được kết luận nghiệm thu theo từng gate; không suy ra toàn bộ APDS PASS từ việc đã tạo tài liệu.
 - APDS chỉ được triển khai bắt buộc toàn HQTT sau quyết định phê duyệt của Vinh.
 - Mục chưa có evidence phải giữ CHƯA XÁC MINH hoặc BLOCKED.
+
+| APDS-16 | Có danh mục vai trò AI dùng chung và liên kết từ APDS | AI_ROLE_CATALOG_v1.0.md + tham chiếu trong APDS | CHƯA XÁC MINH |
+| APDS-17 | Sản phẩm mẫu có ma trận phân công AI, trách nhiệm, quyền hạn, đầu ra và tiêu chí nghiệm thu | Ma trận phân công được review | CHƯA XÁC MINH |
+| APDS-18 | Khi MCP lỗi, công việc độc lập vẫn có thể tiếp tục trên GitHub và được ghi log | Commit, nhật ký và trạng thái phụ thuộc | CHƯA XÁC MINH |
+| APDS-19 | Sau khi MCP phục hồi, Sandbox/GitHub được đối chiếu trước khi đồng bộ, có kiểm tra đọc lại hai phía | Báo cáo diff/sync và bằng chứng đọc lại | CHƯA XÁC MINH |
