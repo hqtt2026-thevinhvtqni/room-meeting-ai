@@ -12,11 +12,11 @@ from mcp8020_unified_registry_v1 import TOOL_SPECS, validate_registry
 class Work28ProviderBlocked(RuntimeError):
     pass
 
-_BOUNDARIES = {"core": "core", "sandbox": "sandbox", "proposal": "proposals", "github": "github", "runtime": "runtime"}
+_BOUNDARIES = {"core": "core", "sandbox": "sandbox", "sandbox_extension": "sandbox_extensions", "proposal": "proposals", "github": "github", "runtime": "runtime"}
 
-def create_work28_server(*, core: Any, sandbox: Any, proposals: Any, github: Any, runtime: Any) -> Server:
+def create_work28_server(*, core: Any, sandbox: Any, sandbox_extensions: Any, proposals: Any, github: Any, runtime: Any) -> Server:
     validate_registry()
-    providers = {"core": core, "sandbox": sandbox, "proposals": proposals, "github": github, "runtime": runtime}
+    providers = {"core": core, "sandbox": sandbox, "sandbox_extensions": sandbox_extensions, "proposals": proposals, "github": github, "runtime": runtime}
     handlers: dict[str, Any] = {}
     for spec in TOOL_SPECS:
         provider = providers[_BOUNDARIES[spec.boundary]]
