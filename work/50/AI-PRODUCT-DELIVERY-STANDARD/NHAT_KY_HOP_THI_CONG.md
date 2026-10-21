@@ -21,3 +21,11 @@
 - Cập nhật biên bản quyết định; chưa có thao tác Sandbox vì MCP đang UNAVAILABLE.
 - Bằng chứng GitHub: catalog commit 26e6bcf; APDS commit 3d5fd9b; checklist commit 41a63d8; biên bản commit 22af83f.
 - Trạng thái: DONE cho các thay đổi GitHub; BLOCKED/CHƯA XÁC MINH cho đồng bộ Sandbox; APDS vẫn PROPOSED, chưa có phê duyệt toàn HQTT.
+
+## 2026-10-21 — Xu (AI-01), điều phối Work 50 — mô hình dashboard theo từng Work
+- Tạo `01_STANDARD/WORK_AI_DASHBOARD_MODEL_v1.0.md`: mô hình 3 lớp Role Catalog → Work Manifest/Assignment → Dashboard View; gồm bố cục, schema, trạng thái, quyền hạn, sync và tiêu chí nghiệm thu.
+- Tạo `02_TEMPLATES/WORK_AI_DASHBOARD_TEMPLATE.md`: mẫu tái sử dụng cho từng Work.
+- Bổ sung APDS-20 đến APDS-23 vào checklist nghiệm thu.
+- Bổ sung lộ trình dashboard vào kế hoạch thi công: review dashboard hiện có, pilot read-only cho Work 50, kiểm thử E2E, rồi mới mở rộng đa Work và dual-source.
+- Bằng chứng: model commit c081617; template commit 21f0987; checklist commit 7217a41; kế hoạch commit 69ad321.
+- Trạng thái: DONE cho tài liệu mô hình/template/kế hoạch trên GitHub; CHƯA XÁC MINH cho review hệ thống dashboard hiện có và triển khai UI/API/runtime; BLOCKED cho đối chiếu Sandbox khi MCP chưa khả dụng.
