@@ -142,3 +142,20 @@ def implemented_tool_names() -> tuple[str, ...]:
 
 def not_implemented_tool_names() -> tuple[str, ...]:
     return tuple(s.name for s in TOOL_SPECS if s.status == NOT_IMPLEMENTED)
+
+def tool_status(name: str) -> dict[str, Any]:
+    """Return the declared status for one catalog tool; unknown names fail closed."""
+    for spec in TOOL_SPECS:
+        if spec.name == name:
+            return {
+                "name": spec.name,
+                "group": spec.group,
+                "status": spec.status,
+                "catalog_version": CATALOG_VERSION,
+            }
+    return {
+        "name": name,
+        "group": None,
+        "status": "UNKNOWN_TOOL",
+        "catalog_version": CATALOG_VERSION,
+    }
