@@ -13,7 +13,18 @@ from mcp8020_service_v54 import V54Service
 class V54DependencyMissing(RuntimeError):
     pass
 
-def create_work28_v54_server(service: V54Service) -> Any:
+def create_work28_v54_server(service: V54Service, *, client: Any = None) -> Any:
+    """Build the MCP adapter around an existing V54Service.
+
+    ``client`` is optional sugar for WP1/WP5 wiring: when supplied, a fresh
+    ExecutionGateway bound to that CoreExecutionClient is constructed and
+    injected into the service for the seven execution/evidence tools. The
+    catalog statuses stay NOT_IMPLEMENTED until implementation plus evidence
+    justify a promotion; this helper never promotes them.
+    """
+    if client is not None:
+        from mcp8020_execution_gateway_v54 import ExecutionGateway
+        service._execution = ExecutionGateway(client)
     try:
         from mcp.server import Server
         from mcp.types import TextContent, Tool

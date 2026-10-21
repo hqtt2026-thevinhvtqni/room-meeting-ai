@@ -70,9 +70,22 @@ def _validate_arguments(name: str, schema: dict[str, Any], args: Any) -> None:
     for key, value in args.items():
         _validate_property(name, key, value, properties[key])
 
+_EXECUTION_GATEWAY_TOOLS = (
+    "sandbox_run_python", "sandbox_run_command", "sandbox_get_execution_status",
+    "sandbox_get_execution_result", "sandbox_collect_artifact",
+    "sandbox_generate_evidence", "sandbox_create_handoff",
+)
+
 class V54Service:
-    def __init__(self, *, room: Any, sandbox: Any, computer: Any = None, browser: Any = None) -> None:
+    def __init__(self, *, room: Any, sandbox: Any, computer: Any = None, browser: Any = None,
+                 execution: Any = None) -> None:
         self._providers = {GROUP_ROOM: room, GROUP_SANDBOX: sandbox, GROUP_COMPUTER: computer, GROUP_BROWSER: browser}
+        # The execution gateway is an optional provider that answers the seven
+        # sandbox execution/evidence tools. It is protocol-complete but its
+        # default client stays fail-closed BLOCKED until a verified Core route
+        # exists; catalog statuses for those tools stay NOT_IMPLEMENTED either
+        # way (no status promotion without implementation + evidence).
+        self._execution = execution
         self._specs_by_name = {spec.name: spec for spec in TOOL_SPECS}
         for spec in TOOL_SPECS:
             if spec.status != IMPLEMENTED:
@@ -80,6 +93,10 @@ class V54Service:
             provider = self._providers.get(spec.group)
             if provider is None or not callable(getattr(provider, spec.name, None)):
                 raise V54BindingError("required provider handler unavailable: " + spec.name)
+        if execution is not None:
+            for tool in _EXECUTION_GATEWAY_TOOLS:
+                if not callable(getattr(execution, tool, None)):
+                    raise V54BindingError("required execution gateway handler unavailable: " + tool)
 
     def list_tools(self) -> list[dict[str, Any]]:
         return export_mcp_tools()
@@ -89,6 +106,26 @@ class V54Service:
         if spec is None:
             return {"ok": False, "tool": name, "error": {"code": "UNKNOWN_TOOL", "message": "unknown Work 28 v54 tool: " + name}}
         if spec.status == NOT_IMPLEMENTED:
+            # Honest catalog status is never promoted. When an execution
+            # gateway is injected, the seven execution/evidence tools are
+            # routed to it so the client's real answer (default: fail-closed
+            # BLOCKED) is returned instead of a generic stub message.
+            if self._execution is not None and name in _EXECUTION_GATEWAY_TOOLS:
+                args = arguments if arguments is not None else {}
+                try:
+                    _validate_arguments(name, spec.input_schema, args)
+                except ToolCallError as exc:
+                    return {"ok": False, "tool": name, "error": {"code": exc.code, "message": exc.message}}
+                handler = getattr(self._execution, name)
+                try:
+                    data = handler(**args)
+                except ToolCallError as exc:
+                    return {"ok": False, "tool": name, "error": {"code": exc.code, "message": exc.message, "status": NOT_IMPLEMENTED}}
+                except Exception as exc:  # fail-closed: never leak a raw traceback as success
+                    return {"ok": False, "tool": name, "error": {"code": "HANDLER_ERROR", "message": str(exc), "status": NOT_IMPLEMENTED}}
+                return {"ok": False, "tool": name, "data": data,
+                        "catalog_status": NOT_IMPLEMENTED,
+                        "contract_version": CATALOG_VERSION}
             return {"ok": False, "tool": name, "error": {"code": "NOT_IMPLEMENTED", "message": name + " is not implemented in this build; see the tool catalog status", "status": NOT_IMPLEMENTED}}
         args = arguments if arguments is not None else {}
         try:
@@ -104,5 +141,6 @@ class V54Service:
             return {"ok": False, "tool": name, "error": {"code": "HANDLER_ERROR", "message": str(exc)}}
         return {"ok": True, "tool": name, "data": data, "contract_version": CATALOG_VERSION}
 
-def create_v54_service(*, room: Any, sandbox: Any, computer: Any = None, browser: Any = None) -> V54Service:
-    return V54Service(room=room, sandbox=sandbox, computer=computer, browser=browser)
+def create_v54_service(*, room: Any, sandbox: Any, computer: Any = None, browser: Any = None,
+                       execution: Any = None) -> V54Service:
+    return V54Service(room=room, sandbox=sandbox, computer=computer, browser=browser, execution=execution)
