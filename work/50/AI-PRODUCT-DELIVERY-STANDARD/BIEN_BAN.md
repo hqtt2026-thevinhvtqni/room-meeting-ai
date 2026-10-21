@@ -35,3 +35,16 @@ APDS là tiêu chuẩn quản lý và tiêu chí; bản thân Work 50 không t�
 
 ## Bước tiếp theo
 Khôi phục kết nối Sandbox → đối chiếu hồ sơ → đánh giá checklist → chạy thử trên sản phẩm mẫu → trình Vinh phê duyệt.
+
+## Bổ sung quyết định — 2026-10-21 (UTC+07:00)
+
+### Thống nhất nguyên tắc dự phòng MCP
+- Khi MCP lỗi nhưng GitHub hoạt động, Xu tiếp tục các đầu việc có thể thực hiện an toàn trực tiếp trên branch Work; ghi nhận commit, bằng chứng và phần bị chặn bởi Sandbox.
+- Khi MCP phục hồi, phải đọc và đối chiếu trạng thái GitHub/Sandbox trước khi đồng bộ; phát hiện và xử lý xung đột trước khi ghi; đọc lại hai phía sau đồng bộ.
+- Không coi MCP lỗi là bằng chứng rằng mọi dịch vụ ROOM-HOP đều lỗi; xác định phạm vi ảnh hưởng theo bằng chứng.
+- Không tuyên bố Sandbox đã đồng bộ cho đến khi có bằng chứng đọc lại và so sánh thành công.
+
+### Danh mục vai trò AI
+- Đã tạo đề xuất 01_STANDARD/AI_ROLE_CATALOG_v1.0.md với 17 vai trò chuẩn.
+- APDS được bổ sung tham chiếu tới danh mục, ma trận phân công và quy trình dự phòng MCP.
+- Trạng thái vẫn PROPOSED; chưa áp dụng bắt buộc toàn HQTT cho đến khi Vinh phê duyệt.
