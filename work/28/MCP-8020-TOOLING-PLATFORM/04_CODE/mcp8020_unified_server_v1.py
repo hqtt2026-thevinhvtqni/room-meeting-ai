@@ -1,4 +1,4 @@
-"""Fail-closed low-level MCP server factory for Work 28's unified 30-tool registry.
+"""Fail-closed low-level MCP server factory for Work 28's unified 31-tool registry.
 The existing HTTP host owns transport/lifecycle. This factory does not open a listener.
 """
 from __future__ import annotations
