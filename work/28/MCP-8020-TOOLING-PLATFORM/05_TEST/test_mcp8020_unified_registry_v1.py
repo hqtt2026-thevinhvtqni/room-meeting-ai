@@ -15,10 +15,10 @@ class UnifiedRegistryTests(unittest.TestCase):
         validate_registry()
         names = tuple(item.name for item in TOOL_SPECS)
         self.assertEqual(names, EXPECTED_TOOL_NAMES)
-        self.assertEqual(len(names), 21)
+        self.assertEqual(len(names), 30)
         self.assertEqual(len(set(names)), 30)
 
-    def test_18_legacy_plus_three_github(self):
+    def test_18_legacy_three_github_plus_nine_extensions(self):
         self.assertEqual(len(LEGACY_18), 18)
         self.assertEqual(GITHUB_3, ("github_repository", "github_read_file", "github_search_files"))
         self.assertEqual(tuple(s.name for s in TOOL_SPECS[:18]), LEGACY_18)
