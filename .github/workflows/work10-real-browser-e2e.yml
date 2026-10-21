@@ -1,0 +1,60 @@
+name: Work 10 Real Browser E2E
+
+on:
+  push:
+    branches:
+      - work/10-computer-agent-mirror
+      - work-10-sandbox-handoff-20261006
+    paths:
+      - "10/COMPUTER-AGENT/**"
+      - ".github/workflows/work10-real-browser-e2e.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  real-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: 10/COMPUTER-AGENT/requirements.txt
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r 10/COMPUTER-AGENT/requirements.txt
+          python -m playwright install --with-deps chromium
+
+      - name: Syntax check
+        run: |
+          python -m py_compile 10/COMPUTER-AGENT/04_CODE/*.py
+          python -m py_compile 10/COMPUTER-AGENT/05_TEST/e2e_real_browser.py
+          python -m py_compile 10/COMPUTER-AGENT/05_TEST/test_p0_p5.py
+
+      - name: Offline contract tests
+        run: python 10/COMPUTER-AGENT/05_TEST/test_p0_p5.py
+
+      - name: Real Chromium E2E
+        run: python 10/COMPUTER-AGENT/05_TEST/e2e_real_browser.py
+
+      - name: Upload browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: work10-real-browser-evidence
+          path: |
+            10/COMPUTER-AGENT/06_EVIDENCE/real-browser-e2e-result.json
+            10/COMPUTER-AGENT/06_EVIDENCE/real-browser-e2e.png
+          if-no-files-found: warn
