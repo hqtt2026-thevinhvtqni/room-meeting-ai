@@ -26,6 +26,10 @@ class MockCoreExecutionClient:
         self.counter = 0
         self.authorized_works = {"work28"}
         self.submit_calls: list[dict] = []
+        # Core derives the caller's Work from the authenticated principal, never
+        # from caller-supplied fields; reads of runs owned by another work are
+        # indistinguishable NOT_FOUND.
+        self.caller_work = "work28"
 
     def _authorized(self, run: dict) -> bool:
         return run["work_id"] in self.authorized_works
@@ -52,9 +56,9 @@ class MockCoreExecutionClient:
         self.runs[run_id] = run
         return {"run_id": run_id, "status": run["status"]}
 
-    def _lookup(self, run_id: str, work_id: str | None = None) -> dict:
+    def _lookup(self, run_id: str) -> dict:
         run = self.runs.get(run_id)
-        if run is None or (work_id is not None and run["work_id"] != work_id):
+        if run is None or run["work_id"] != self.caller_work:
             raise ToolCallError("NOT_FOUND", "run not found")
         return run
 
@@ -169,7 +173,9 @@ class GatewaySemanticsTests(unittest.TestCase):
 
     def test_cross_work_result_read_is_indistinguishable_not_found(self):
         run = self.gateway.sandbox_run_python("work28", "print('hello work 28')")
-        self.core.runs[run["run_id"]]["work_id"] = "other"
+        # Simulate a different authenticated principal whose Core-resolved Work
+        # does not own this run; the read must be indistinguishable NOT_FOUND.
+        self.core.caller_work = "other"
         with self.assertRaises(ToolCallError) as ctx:
             self.gateway.sandbox_get_execution_status(run["run_id"])
         self.assertEqual(ctx.exception.code, "NOT_FOUND")
