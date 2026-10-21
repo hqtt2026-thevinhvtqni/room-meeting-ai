@@ -106,3 +106,22 @@ Chỉ xem xét PASS khi có kiểm thử đầu-cuối chứng minh: một lện
 - BLOCKED: đọc/đối chiếu nội dung các danh bạ Sandbox do công cụ đọc trả về đối tượng rỗng trong lần kiểm tra.
 - UNVERIFIED: đồng bộ Work 50 giữa GitHub và Sandbox; tích hợp registry vào runtime; tự động hóa end-to-end; dashboard phản ánh sự kiện runtime.
 - NEXT: phục hồi đường đọc nội dung Sandbox hoặc dùng phương thức đọc được hỗ trợ; hợp nhất danh bạ sau khi đối chiếu; sau đó kiểm tra hợp đồng Work 21/27/28/03 trước khi thi công.
+
+
+## Bổ sung trạng thái đồng bộ Work 50 — 2026-10-21 (UTC+07:00)
+
+### Kết quả thực hiện
+- Đã xác minh Work 50 canonical trên GitHub: branch `work/50-ai-product-delivery-standard`, thư mục `work/50/AI-PRODUCT-DELIVERY-STANDARD/`.
+- Đã tạo Work 50 trong ROOM-HOP Sandbox bằng identity runtime đã đăng ký `xu`. Identity HQTT `AI-01` không phải runtime identity của ROOM-HOP; lần gọi đầu với `AI-01` bị từ chối `UNKNOWN_IDENTITY`, sau đó tạo thành công với `xu`.
+- Đã chép 10 hồ sơ chuẩn từ GitHub branch sang Sandbox Work 50 bằng thao tác write thành công: BIEN_BAN.md, README.md, KE_HOACH_THI_CONG_XU.md, NHAT_KY_HOP_THI_CONG.md, APDS_STANDARD_v1.0.md, AI_ROLE_CATALOG_v1.0.md, WORK_AI_DASHBOARD_MODEL_v1.0.md, PRODUCT_CHARTER_TEMPLATE.md, WORK_AI_DASHBOARD_TEMPLATE.md, APDS_ACCEPTANCE_CHECKLIST.md.
+- Danh sách Sandbox đã xác nhận các đường dẫn trên xuất hiện. GitHub BIEN_BAN.md đã được đọc lại và xác nhận chứa phần điều phối tự động/danh bạ AI.
+
+### Giới hạn xác minh
+- `sandbox_read` tiếp tục trả về đối tượng rỗng kể cả sau khi ghi thành công. Do đó đã xác minh thao tác write và sự hiện diện qua listing, nhưng chưa thể xác nhận byte-for-byte/content readback giữa GitHub và Sandbox.
+- Trạng thái đồng bộ: PARTIAL — 10 tệp đã ghi và có mặt trong listing; content readback chưa xác minh.
+- Không tuyên bố E2E runtime orchestration đã triển khai hoặc PASS. Việc đồng bộ tài liệu không chứng minh khả năng tự khởi động và điều phối agent đã hoạt động.
+
+### Bước tiếp theo
+1. Khắc phục hoặc dùng một đường đọc được hỗ trợ để kiểm chứng nội dung Sandbox mà không lặp lại kiểm tra encoding đã được xác nhận OK trước đây.
+2. Tiếp tục đối chiếu nội dung danh bạ AI trong Work 99 sau khi đường đọc hoạt động; không ghi đè hồ sơ cũ trước khi so sánh.
+3. Thiết kế và kiểm thử hợp đồng Automatic Project Execution với Work 21/27/28/03 trước khi triển khai runtime.
