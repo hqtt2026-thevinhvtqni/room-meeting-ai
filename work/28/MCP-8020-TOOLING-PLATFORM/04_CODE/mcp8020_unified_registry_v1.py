@@ -16,12 +16,12 @@ LEGACY_18 = (
     "sandbox_append", "sandbox_delete", "get_pending_tasks", "submit_proposal",
 )
 GITHUB_3 = ("github_repository", "github_read_file", "github_search_files")
-EXTENSION_9 = (
+EXTENSION_10 = (
     "execution_submit", "execution_status", "execution_output_read",
     "sandbox_search", "sandbox_stat", "sandbox_read_range",
-    "github_create_branch", "github_create_file", "github_update_file",
+    "github_create_branch", "github_create_file", "github_update_file", "sandbox_write_verified",
 )
-EXPECTED_TOOL_NAMES = LEGACY_18 + GITHUB_3 + EXTENSION_9
+EXPECTED_TOOL_NAMES = LEGACY_18 + GITHUB_3 + EXTENSION_10
 
 @dataclass(frozen=True)
 class ToolSpec:
@@ -68,12 +68,13 @@ TOOL_SPECS = (
     ToolSpec("github_create_branch", "Create a non-default GitHub branch from an explicit base ref.", "github", "github_create_branch", _schema({"repository": S, "branch": S, "base_ref": {"type": "string", "default": "main"}}, ("repository", "branch"))),
     ToolSpec("github_create_file", "Create a new file on a non-default branch; fails if the path already exists.", "github", "github_create_file", _schema({"repository": S, "branch": S, "path": S, "content": S, "message": S}, ("repository", "branch", "path", "content", "message"))),
     ToolSpec("github_update_file", "Update an existing file on a non-default branch using an expected blob SHA to prevent stale writes.", "github", "github_update_file", _schema({"repository": S, "branch": S, "path": S, "content": S, "message": S, "expected_blob_sha": {"type": "string", "pattern": "^[0-9a-fA-F]{40}$"}}, ("repository", "branch", "path", "content", "message", "expected_blob_sha"))),
+    ToolSpec("sandbox_write_verified", "Write a Work-relative Sandbox file through the bounded extension provider and require verified readback; optional expected SHA prevents stale writes.", "sandbox_extension", "sandbox_write", _schema({"work_id": S, "path": S, "content": S, "expected_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-fA-F]{64}$"}}, ("work_id", "path", "content"))),
 )
 
 def validate_registry() -> None:
     names = tuple(spec.name for spec in TOOL_SPECS)
     if names != EXPECTED_TOOL_NAMES or len(set(names)) != len(names):
-        raise ValueError("unified registry must contain the exact 30 unique ordered tool names")
+        raise ValueError("unified registry must contain the exact 31 unique ordered tool names")
     for spec in TOOL_SPECS:
         if spec.boundary not in {"core", "sandbox", "sandbox_extension", "proposal", "github", "runtime"} or spec.input_schema.get("type") != "object":
             raise ValueError(f"invalid tool contract: {spec.name}")
