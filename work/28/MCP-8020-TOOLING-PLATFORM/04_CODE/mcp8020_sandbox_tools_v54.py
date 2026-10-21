@@ -99,10 +99,11 @@ class SandboxProvider:
                 raise ToolCallError("INVALID_PATH", "path is a directory")
             if not overwrite:
                 raise ToolCallError("ALREADY_EXISTS", "file exists and overwrite is False: " + path)
+        existed_before = target.exists()
         os.makedirs(target.parent, exist_ok=True)
         data = content.encode("utf-8")
         target.write_bytes(data)
-        return {"path": rel_norm, "sha256": _sha256_bytes(data), "bytes": len(data), "overwritten": target.exists()}
+        return {"path": rel_norm, "sha256": _sha256_bytes(data), "bytes": len(data), "overwritten": existed_before}
 
     def sandbox_append(self, work_id: str, path: str, content: str) -> dict[str, Any]:
         target, _, rel_norm = self._require_file(work_id, path)
