@@ -49,3 +49,28 @@ defined in 03_ARCHITECTURE/WORK28_TOOL_CONTRACT_CATALOG_V1_54.md.
 - No execution, evidence, computer, or browser capability is claimed.
 - CI status for this push is the only test evidence; no PASS may be recorded
   beyond what GitHub Actions actually executed.
+
+
+## Addendum 2026-10-21 (post-#68): execution gateway layer
+
+- mcp8020_execution_gateway_v54.py — ExecutionGateway binding all seven
+  execution/evidence tool handlers to a CoreExecutionClient protocol
+  (submit/status/result/cancel/artifact/evidence/handoff). Ships with
+  BlockedExecutionClient as the fail-closed default. No concrete client is
+  wired: PROPOSED_EXECUTION_TOOL_CONTRACT_V1 section 5 remains NO-GO until
+  the authenticated Core route, canonical W12/W13 runtime, and OS isolation
+  gate are evidenced. Catalog status for these tools stays NOT_IMPLEMENTED.
+- 05_TEST/test_mcp8020_execution_gateway_v54.py — semantics tests against an
+  explicit MockCoreExecutionClient (clearly labeled a fixture, not evidence):
+  truthful PASS/FAIL, TIMEOUT terminal, zero-tests FAIL, DENIED before run
+  creation, indistinguishable cross-work NOT_FOUND, evidence/handoff round
+  trip. These prove the gateway cannot weaken statuses; they do NOT prove a
+  live Core route exists.
+
+## Remaining gates (unchanged)
+
+1. Live MCP :8020 tools/list + tools/call against the real HTTP host — BLOCKED
+   pending PC runtime verification.
+2. Core :8000 route + W12/W13 runtime for the seven execution tools — NO-GO
+   by design until preconditions in the execution contract are evidenced.
+3. W14 runtimes for computer/browser groups — external dependency.
