@@ -9,7 +9,7 @@ from __future__ import annotations
 import re
 from typing import Any
 from mcp8020_catalog_v54 import (CATALOG_VERSION, GROUP_BROWSER, GROUP_COMPUTER, GROUP_ROOM, GROUP_SANDBOX,
-                                 IMPLEMENTED, NOT_IMPLEMENTED, TOOL_SPECS, ToolCallError, export_mcp_tools)
+                                 IMPLEMENTED, NOT_IMPLEMENTED, TOOL_SPECS, ToolCallError, export_mcp_tools, tool_status)
 
 class V54BindingError(RuntimeError):
     pass
@@ -71,15 +71,43 @@ def _validate_arguments(name: str, schema: dict[str, Any], args: Any) -> None:
         _validate_property(name, key, value, properties[key])
 
 class V54Service:
-    def __init__(self, *, room: Any, sandbox: Any, computer: Any = None, browser: Any = None) -> None:
+    _EXECUTION_TOOL_NAMES = frozenset({
+        "sandbox_run_python", "sandbox_run_command",
+        "sandbox_get_execution_status", "sandbox_get_execution_result",
+        "sandbox_collect_artifact", "sandbox_generate_evidence",
+        "sandbox_create_handoff",
+    })
+
+    def __init__(self, *, room: Any, sandbox: Any, computer: Any = None, browser: Any = None,
+                 execution_gateway: Any = None) -> None:
         self._providers = {GROUP_ROOM: room, GROUP_SANDBOX: sandbox, GROUP_COMPUTER: computer, GROUP_BROWSER: browser}
+        self._execution_gateway = None
         self._specs_by_name = {spec.name: spec for spec in TOOL_SPECS}
+        if execution_gateway is not None:
+            self.bind_execution_gateway(execution_gateway)
         for spec in TOOL_SPECS:
             if spec.status != IMPLEMENTED:
                 continue
-            provider = self._providers.get(spec.group)
+            provider = self._provider_for_spec(spec.name, spec.group)
             if provider is None or not callable(getattr(provider, spec.name, None)):
                 raise V54BindingError("required provider handler unavailable: " + spec.name)
+
+    @property
+    def execution_gateway(self) -> Any:
+        return self._execution_gateway
+
+    def bind_execution_gateway(self, gateway: Any) -> None:
+        """Bind a complete execution gateway, failing closed on a partial interface."""
+        required = sorted(self._EXECUTION_TOOL_NAMES)
+        missing = [name for name in required if not callable(getattr(gateway, name, None))]
+        if missing:
+            raise V54BindingError("ExecutionGateway missing required handlers: " + ", ".join(missing))
+        self._execution_gateway = gateway
+
+    def _provider_for_spec(self, name: str, group: str) -> Any:
+        if name in self._EXECUTION_TOOL_NAMES:
+            return self._execution_gateway
+        return self._providers.get(group)
 
     def list_tools(self) -> list[dict[str, Any]]:
         return export_mcp_tools()
@@ -89,13 +117,19 @@ class V54Service:
         if spec is None:
             return {"ok": False, "tool": name, "error": {"code": "UNKNOWN_TOOL", "message": "unknown Work 28 v54 tool: " + name}}
         if spec.status == NOT_IMPLEMENTED:
-            return {"ok": False, "tool": name, "error": {"code": "NOT_IMPLEMENTED", "message": name + " is not implemented in this build; see the tool catalog status", "status": NOT_IMPLEMENTED}}
+            status = tool_status(name)
+            return {"ok": False, "tool": name, "error": {"code": "NOT_IMPLEMENTED", "message": name + " is not implemented in this build; see the tool catalog status", "status": status["status"], "catalog_version": status["catalog_version"]}}
         args = arguments if arguments is not None else {}
         try:
             _validate_arguments(name, spec.input_schema, args)
         except ToolCallError as exc:
             return {"ok": False, "tool": name, "error": {"code": exc.code, "message": exc.message}}
-        handler = getattr(self._providers[spec.group], spec.name)
+        provider = self._provider_for_spec(spec.name, spec.group)
+        if provider is None:
+            return {"ok": False, "tool": name, "error": {"code": "EXECUTION_GATEWAY_UNAVAILABLE", "message": "approved ExecutionGateway is not configured"}}
+        handler = getattr(provider, spec.name, None)
+        if not callable(handler):
+            return {"ok": False, "tool": name, "error": {"code": "HANDLER_UNAVAILABLE", "message": "required provider handler unavailable: " + name}}
         try:
             data = handler(**args)
         except ToolCallError as exc:
@@ -104,5 +138,7 @@ class V54Service:
             return {"ok": False, "tool": name, "error": {"code": "HANDLER_ERROR", "message": str(exc)}}
         return {"ok": True, "tool": name, "data": data, "contract_version": CATALOG_VERSION}
 
-def create_v54_service(*, room: Any, sandbox: Any, computer: Any = None, browser: Any = None) -> V54Service:
-    return V54Service(room=room, sandbox=sandbox, computer=computer, browser=browser)
+def create_v54_service(*, room: Any, sandbox: Any, computer: Any = None, browser: Any = None,
+                       execution_gateway: Any = None) -> V54Service:
+    return V54Service(room=room, sandbox=sandbox, computer=computer, browser=browser,
+                      execution_gateway=execution_gateway)
