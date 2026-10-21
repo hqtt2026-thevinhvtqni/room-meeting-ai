@@ -9,7 +9,7 @@
 - Trạng thái: CREATED — nội dung khởi tạo; chưa được nghiệm thu/phê duyệt áp dụng toàn HQTT
 - GitHub branch: `work/50-ai-product-delivery-standard`
 - GitHub path: `work/50/AI-PRODUCT-DELIVERY-STANDARD/`
-- Sandbox: tạo/đồng bộ chưa xác minh do dịch vụ Sandbox trả lỗi kết nối trong phiên này
+- Sandbox: Work 50 đã được tạo; 10 hồ sơ chính thức đã được ghi và xác minh sự hiện diện qua listing. Đọc lại nội dung Sandbox vẫn BLOCKED vì sandbox_read trả đối tượng rỗng; chưa xác nhận byte-for-byte.
 
 ## Mục tiêu
 
@@ -52,3 +52,11 @@ Thiết lập một tiêu chuẩn dùng chung, có bằng chứng kiểm tra đ�
 3. Đánh giá checklist nghiệm thu APDS.
 4. Chọn một sản phẩm mẫu để thử nghiệm tiêu chuẩn.
 5. Trình Vinh quyết định phê duyệt, sửa đổi hoặc từ chối áp dụng toàn HQTT.
+
+
+## Cập nhật trạng thái Sandbox — 2026-10-21 (UTC+07:00)
+
+- DONE: tạo Work 50 trong ROOM-HOP Sandbox bằng runtime identity đã đăng ký `xu`.
+- DONE: ghi 10 hồ sơ cốt lõi từ branch Work 50 sang Sandbox và xác minh các đường dẫn xuất hiện qua listing.
+- PARTIAL: content readback chưa xác minh do công cụ sandbox_read trả đối tượng rỗng. Không được coi đây là đồng bộ nội dung hoàn toàn.
+- GitHub branch vẫn là nguồn chuẩn của các hồ sơ Work 50 trong giai đoạn đối chiếu; không sửa/merge vào main.
