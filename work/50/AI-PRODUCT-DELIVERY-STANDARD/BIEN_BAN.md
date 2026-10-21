@@ -48,3 +48,61 @@ Khôi phục kết nối Sandbox → đối chiếu hồ sơ → đánh giá che
 - Đã tạo đề xuất 01_STANDARD/AI_ROLE_CATALOG_v1.0.md với 17 vai trò chuẩn.
 - APDS được bổ sung tham chiếu tới danh mục, ma trận phân công và quy trình dự phòng MCP.
 - Trạng thái vẫn PROPOSED; chưa áp dụng bắt buộc toàn HQTT cho đến khi Vinh phê duyệt.
+
+
+## Bổ sung quyết định — Điều phối tự động và danh bạ AI tập trung — 2026-10-21 (UTC+07:00)
+
+### 1. Yêu cầu của Vinh
+- Mọi quyết định, mô hình, lưu đồ điều phối và quy tắc được thống nhất trong phiên làm việc phải được ghi vào hồ sơ biên bản của Work 50; không để chỉ tồn tại trong hội thoại.
+- Khi khởi động dự án, AI phải tự đọc định danh, vai trò, nhiệm vụ, Project Manifest, phụ thuộc và tiêu chí nghiệm thu; tự nhận và thực hiện nhiệm vụ trong phạm vi quyền được giao, không cần Vinh gọi từng AI hoặc nhắc từng bước nhỏ.
+- Cần một danh bạ AI tập trung, duy nhất làm nguồn tham chiếu chung cho các Work. Không để từng Work tự tạo danh bạ mâu thuẫn.
+- Quy tắc “không hỏi, không chờ” chỉ áp dụng khi đã đủ dữ liệu và quyền hạn. Nếu thiếu đầu vào thiết yếu, có xung đột, hết giới hạn thử lại hoặc cần phê duyệt bắt buộc, AI phải tự tra cứu/xử lý trong phạm vi cho phép; nếu không giải quyết được thì ghi BLOCKED, nêu nguyên nhân, bằng chứng và người cần quyết định. Không tự đoán và không vượt quyền.
+
+### 2. Lưu đồ điều phối tự động đã thống nhất về định hướng
+`START PROJECT → Load Project Manifest + AI Registry → Build Task Graph → Assign owner/output/acceptance criteria/dependencies → Run independent tasks in parallel → Integrate & review PLAN → Required approval gate → BUILD → VERIFY → HANDOFF → Update Dashboard and trigger next eligible task`
+
+Cơ chế cần có:
+- Identity/Role Loader: nạp đúng AI ID, nền tảng, chức danh, Skills, quyền và năng lực thực thi.
+- Task Graph/Scheduler: quản lý phụ thuộc và tự kích hoạt nhiệm vụ đủ điều kiện.
+- Bounded Retry: tự thử lại có giới hạn; không lặp vô hạn.
+- Policy/Approval Gate: giữ nguyên quyền hạn, ngân sách và các cổng phê duyệt.
+- Evidence/Event Log: lưu đầu ra, sự kiện, trạng thái và bằng chứng truy vết.
+- Dashboard: hiển thị trạng thái từ nguồn dữ liệu chuẩn; không tự suy diễn PASS.
+
+### 3. Quyền hạn và bàn giao
+- Vinh là chủ sở hữu và người quyết định cuối cùng; các cổng bắt buộc dành cho Vinh không được tự động bỏ qua.
+- Xu (AI-01) điều phối, phân rã, phân công, tích hợp kế hoạch, theo dõi phụ thuộc và chuyển cấp ngoại lệ; không thay Vinh phê duyệt.
+- Ka phản biện kiến trúc; Cla phụ trách tính khả thi và kỹ thuật; các AI chuyên môn chịu trách nhiệm về đầu ra thuộc lĩnh vực được giao.
+- AI thực thi chỉ nhận nhiệm vụ đủ điều kiện; kiểm thử độc lập phải có kết quả và bằng chứng riêng. Người viết mã không tự thay thế vai trò QA độc lập.
+- Mỗi Task phải có ít nhất: Task ID, Project/Work ID, owner AI ID, mục tiêu, đầu vào/tham chiếu, đầu ra, phụ thuộc, tiêu chí nghiệm thu, phạm vi quyền, giới hạn thử lại, quy tắc chuyển cấp, trạng thái, bằng chứng và bên nhận bàn giao.
+
+### 4. Danh bạ AI tập trung — trạng thái đối chiếu
+- Work 99 Sandbox có các hồ sơ: `WORK-INDEX/08_AI_TEAM/AI_IDENTITY_REGISTER_PROPOSED.md`, `AI_TEAM_DIRECTORY.md`, `AI_INTRO_CHAT.md`, và bản đề xuất mới `AI_IDENTITY_REGISTER_V1_20261021.md`.
+- Bản V1 mới được tạo thành công và đã xác minh sự hiện diện qua danh sách tệp; nó vẫn là PROPOSED, chưa phải danh bạ được phê duyệt. Các tệp cũ chưa bị ghi đè hoặc xóa.
+- Trong lần đọc hồ sơ qua Sandbox, công cụ trả về đối tượng rỗng; vì vậy chưa thể so sánh nội dung các tệp cũ. Trạng thái đối chiếu: BLOCKED/UNVERIFIED, không được suy luận rằng các tệp cũ rỗng.
+- Danh bạ chuẩn cần có: AI ID, tên ngắn, nhà cung cấp/nền tảng, chức danh, trách nhiệm, quyền hạn, Skills/công cụ, người/AI điều phối, trạng thái, ngày xác minh và bằng chứng. Trường chưa xác minh phải ghi UNVERIFIED; không tự suy đoán.
+- Không đổi/xóa/hợp nhất tệp danh bạ cũ cho đến khi đọc được và so sánh nội dung, xác định provenance (nguồn gốc), giải quyết xung đột và có quyết định phê duyệt.
+
+### 5. Vị trí Work 50 và ranh giới đồng bộ
+- Đã xác minh Work 50 tồn tại trên GitHub branch `work/50-ai-product-delivery-standard`, tại `work/50/AI-PRODUCT-DELIVERY-STANDARD/`.
+- Hồ sơ biên bản chính thức là `work/50/AI-PRODUCT-DELIVERY-STANDARD/BIEN_BAN.md`; bản bổ sung này được ghi trực tiếp vào tệp đó trên branch Work 50, không ghi vào `main`.
+- Work 50 không xuất hiện trong danh sách Work Sandbox ở lần kiểm tra hiện tại. Điều này chỉ xác nhận chưa có Work 50 trong danh sách Sandbox được trả về; không có nghĩa Work 50 không tồn tại trên GitHub.
+- Work 99: bản V1 danh bạ và báo cáo đối chiếu đã được tạo trên Sandbox. Chưa có bằng chứng đồng bộ nội dung các hồ sơ giữa Sandbox và GitHub.
+
+### 6. Các Work cần đối chiếu trước khi triển khai
+- Work 21: Skills theo vai trò.
+- Work 27: Runtime Orchestrator và năng lực thực thi.
+- Work 28: công cụ MCP cho đọc ngữ cảnh, giao việc và ghi bằng chứng.
+- Work 03: dashboard tiến độ dựa trên nguồn dữ liệu chuẩn.
+- Work 99: danh bạ AI và cổng vào ROOM.
+Không tạo bộ điều phối trùng lặp; phải đọc hồ sơ và hợp đồng hiện có trước khi phân công thi công.
+
+### 7. Tiêu chí nghiệm thu tự động hóa
+Chỉ xem xét PASS khi có kiểm thử đầu-cuối chứng minh: một lệnh khởi động tạo Project/Task Graph; registry được nạp; AI được giao đúng nhiệm vụ; task độc lập chạy song song; phụ thuộc tự kích hoạt đúng; cổng phê duyệt không bị bỏ qua; lỗi được thử lại có giới hạn hoặc chuyển BLOCKED; bằng chứng được lưu; dashboard phản ánh trạng thái thực tế. Tệp đề xuất hoặc sơ đồ riêng lẻ không chứng minh runtime đã vận hành.
+
+### 8. Trạng thái hiện tại
+- DONE: ghi nhận quyết định và lưu đồ điều phối tự động trong biên bản GitHub của Work 50.
+- DONE: tạo bản đề xuất danh bạ AI V1 và báo cáo đối chiếu trong Work 99 Sandbox.
+- BLOCKED: đọc/đối chiếu nội dung các danh bạ Sandbox do công cụ đọc trả về đối tượng rỗng trong lần kiểm tra.
+- UNVERIFIED: đồng bộ Work 50 giữa GitHub và Sandbox; tích hợp registry vào runtime; tự động hóa end-to-end; dashboard phản ánh sự kiện runtime.
+- NEXT: phục hồi đường đọc nội dung Sandbox hoặc dùng phương thức đọc được hỗ trợ; hợp nhất danh bạ sau khi đối chiếu; sau đó kiểm tra hợp đồng Work 21/27/28/03 trước khi thi công.
