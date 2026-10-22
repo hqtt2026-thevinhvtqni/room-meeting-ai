@@ -2,10 +2,10 @@
 
 - **Work ID:** W51
 - **Project:** HQTT AI Coder–Tester
-- **Status:** PLANNING / NOT IMPLEMENTED
-- **Planning lead:** Cla (AI-03) — prepare the implementation plan for review
+- **Status:** PLAN COMMITTED / QWEN CODER IMPLEMENTATION ASSIGNED — implementation not yet verified
+- **Implementation owner:** Qc — Qwen Coder; execute the canonical plan at `work/51/HQTT-AI-CODER-TESTER/01_PLAN/PLAN_WORK51_v1.0.md` end-to-end
 - **Governance:** AI contributions are assigned by role/title; Vinh retains approval authority
-- **Coordinator / record keeper:** Xu — capture decisions, handoffs, and evidence; does not replace Cla's planning responsibility
+- **Coordinator / record keeper:** Xu (AI-01) — sets scope and records handoffs/evidence; Qc owns implementation. Cla's earlier planning-lead assignment is superseded for execution.
 - **Repository:** `hqtt2026-thevinhvtqni/room-meeting-ai`
 - **Work branch:** `work/51-hqtt-coder-tester`
 - **Created:** 2026-10-22
@@ -28,17 +28,17 @@ This Work is created as a planning and implementation container. Creating this r
 
 ## 3. Role-based contribution model
 
-- **Cla (AI-03): Planning Lead.** Produce the staged implementation plan, identify dependencies and integration points, define work packages, risks, and acceptance gates. Do not claim implementation evidence without running or inspecting it.
+- **Qc (Qwen Coder): Implementation Owner.** Execute READ → TRACE → ANALYZE → DECIDE → BUILD → VERIFY → HANDOFF autonomously using the canonical plan. Do not wait for routine approvals or ask Vinh to monitor the PC. Record real blockers with evidence.
 - **Ka (AI-02): Architecture Reviewer.** Independently review boundaries, contracts, failure modes, security, versioning, and scope.
 - **Vi: Coder role.** Implement only approved work packages; provide diffs, test commands/results, commit/artifact references, and known limitations.
 - **An: Tester role.** Independently verify the original acceptance criteria against actual changes; report PASS/FAIL/BLOCKED with evidence.
-- **Qw (AI-05): QE/QA role.** Review test coverage, evidence completeness, traceability, and release-gate compliance as assigned.
-- **Xu (AI-01): HQTT coordination and records.** Maintain decision/handoff records, coordinate cross-role communication, and ensure unresolved decisions are surfaced. Xu does not replace Cla as planning lead for W51.
+- **Qw (AI-05): QE/QA only.** Independently review test coverage, evidence completeness, traceability, and release-gate compliance; not project lead.
+- **Xu (AI-01): HQTT coordination and records.** Define scope, keep records, coordinate handoff and evidence; does not replace Qc as implementation owner.
 - **Vinh: Product/architecture authority.** Approve scope, architecture decisions, risk exceptions, and gates designated for human approval.
 
 Role names above describe intended responsibilities for this Work. Do not assume a particular API/model adapter, Skill, identity mapping, or automatic inter-agent calling mechanism already exists.
 
-## 4. Initial planning deliverables required from Cla
+## 4. Canonical plan and implementation directive\n\nThe sole canonical plan is `work/51/HQTT-AI-CODER-TESTER/01_PLAN/PLAN_WORK51_v1.0.md`. Qc must follow it and update the plan in place (same filename) if a material plan change is necessary, recording a version and change log. Do not create parallel plan files.\n\nQc owns implementation and verification end-to-end. GitHub branch `work/51-hqtt-coder-tester` is the primary work channel because Qc cannot access ROOM-HOP directly. Do not claim ROOM assignment or MCP handoff without direct evidence.\n\n## 5. Initial planning deliverables (superseded by the canonical plan)
 
 1. **Current-state audit:** identify existing ROOM-HOP components and reusable interfaces; distinguish verified facts from assumptions and gaps.
 2. **Target architecture:** Orchestrator, provider/model adapter, role configuration, Work Contract, Runtime execution boundary, Evidence/Handoff.
@@ -51,7 +51,7 @@ Role names above describe intended responsibilities for this Work. Do not assume
 9. **Phased implementation plan:** dependencies, deliverables, owners by role, acceptance criteria, rollback/stop conditions, and estimated effort/cost where evidence supports it.
 10. **Decision register:** options, recommendation, impact, and explicit Vinh approval required for each unresolved architecture/security decision.
 
-## 5. Proposed workflow
+## 6. Proposed workflow
 
 1. Xu/Vinh records the goal and approved scope.
 2. Cla produces the plan and marks assumptions and decisions explicitly.
@@ -63,7 +63,7 @@ Role names above describe intended responsibilities for this Work. Do not assume
 8. ROOM-HOP records status and evidence; Xu prepares the handoff.
 9. Failed checks return to Vi within an approved retry limit; unresolved or risky cases become BLOCKED and are escalated.
 
-## 6. Initial proposed acceptance gates
+## 7. Initial proposed acceptance gates
 
 - **G1 Contract:** valid and invalid Work Contracts are tested; malformed or incomplete tasks are rejected.
 - **G2 Separation:** Coder and Tester role configurations and permissions are distinct; Tester can inspect the actual artifact independently.
@@ -78,7 +78,7 @@ Role names above describe intended responsibilities for this Work. Do not assume
 
 These gates are proposed and must be refined by Cla, reviewed by Ka/Qw, and approved by Vinh before implementation.
 
-## 7. Scope exclusions until approved
+## 8. Scope exclusions until approved
 
 - Do not expand Work 28 or alter its deliverables under W51.
 - Do not change Core/MCP/Runtime architecture without a documented impact analysis and approval.
@@ -86,18 +86,18 @@ These gates are proposed and must be refined by Cla, reviewed by Ka/Qw, and appr
 - Do not assume ChatGPT Skills can call one another or orchestrate separate chat sessions; automation requires an explicit, supported model/API/runtime adapter.
 - Do not automatically push, merge protected branches, deploy, or modify secrets.
 
-## 8. Initial status and evidence
+## 9. Initial status and evidence
 
 - Work branch creation: recorded in GitHub.
 - Planning document: this file.
-- Cla plan: **NOT RUN / AWAITING CLA CONTRIBUTION**.
+- Canonical plan: **COMMITTED** at `work/51/HQTT-AI-CODER-TESTER/01_PLAN/PLAN_WORK51_v1.0.md` (commit `a2e371ad71c6f6e55804e26d84d02473f14652f9`).
 - Architecture review: **NOT RUN**.
-- Code implementation: **NOT STARTED**.
+- Code implementation: **NOT YET VERIFIED**; Qc is assigned to implement on this branch.
 - E2E validation: **NOT RUN**.
 
-## 9. Required next handoff
+## 10. Required next handoff
 
-Cla should return a planning package with:
+Qc should execute the canonical plan and return:
 - current-state findings and evidence,
 - target component diagram and interface boundaries,
 - prioritized work packages and dependencies,
@@ -106,4 +106,4 @@ Cla should return a planning package with:
 - acceptance tests and evidence requirements,
 - a clear DONE / PASS / DECISION / BLOCKED summary.
 
-No implementation starts until the planning package has been reviewed and the required decisions are approved.
+Implementation may proceed within the authorized scope defined by the canonical plan. Stop only for a real permission, safety, infrastructure, or out-of-scope blocker; document evidence rather than asking Vinh to supervise routine steps.
