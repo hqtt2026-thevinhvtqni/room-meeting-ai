@@ -383,7 +383,13 @@ class A2AServer:
                 "typ": "JOSE",
             },
         )
-        return MessageToDict(signer(proto_card))
+        wire_card = MessageToDict(signer(proto_card))
+        # Preserve legacy top-level hints for the in-repo client. The official
+        # SDK maps and removes these before signature verification; the signed
+        # supportedInterfaces field remains authoritative.
+        wire_card["protocolVersion"] = "1.0"
+        wire_card["preferredTransport"] = "JSONRPC"
+        return wire_card
 
     def jwks(self) -> dict:
         """Publish the public key only; the private key is never serialized."""
