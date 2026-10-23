@@ -17,6 +17,8 @@ from core.meeting_service import MeetingService
 LIST_MEETINGS = "list_meetings"
 GET_MEETING = "get_meeting"
 GET_TRANSCRIPT = "get_transcript"
+JOIN_MEETING = "join_meeting"
+START_MEETING = "start_meeting"
 ADD_PASTE_TO_MEETING = "add_paste_to_meeting"
 MAX_TEXT_BYTES = 1 * 1024 * 1024
 
@@ -61,6 +63,32 @@ def create_server(service: MeetingService) -> Server:
                     "type": "object",
                     "properties": {
                         "meeting_id": {"type": "string", "minLength": 1},
+                    },
+                    "required": ["meeting_id"],
+                    "additionalProperties": False,
+                },
+            ),
+            Tool(
+                name=JOIN_MEETING,
+                description="Join a ROOM HOP meeting as an identified participant.",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "meeting_id": {"type": "string", "minLength": 1},
+                        "identity_id": {"type": "string", "minLength": 1},
+                    },
+                    "required": ["meeting_id", "identity_id"],
+                    "additionalProperties": False,
+                },
+            ),
+            Tool(
+                name=START_MEETING,
+                description="Start a ROOM HOP meeting with the named starter.",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "meeting_id": {"type": "string", "minLength": 1},
+                        "starter": {"type": "string", "minLength": 1},
                     },
                     "required": ["meeting_id"],
                     "additionalProperties": False,
@@ -120,6 +148,22 @@ def create_server(service: MeetingService) -> Server:
         if name == GET_TRANSCRIPT:
             return {
                 "transcript": service.get_transcript(arguments["meeting_id"]),
+            }
+
+        if name == JOIN_MEETING:
+            return {
+                "meeting": service.join_meeting(
+                    arguments["meeting_id"],
+                    arguments["identity_id"],
+                ),
+            }
+
+        if name == START_MEETING:
+            return {
+                "meeting": service.start_meeting(
+                    arguments["meeting_id"],
+                    arguments.get("starter", "vinh"),
+                ),
             }
 
         if name == ADD_PASTE_TO_MEETING:
