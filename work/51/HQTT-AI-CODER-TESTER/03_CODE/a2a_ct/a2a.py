@@ -25,9 +25,15 @@ import uuid
 from cryptography.hazmat.primitives.asymmetric import ec
 from google.protobuf.json_format import MessageToDict
 from jwt.algorithms import ECAlgorithm
+from jwt.api_jwk import PyJWKSet
+from jwt.exceptions import PyJWKError
 
 from a2a.client.card_resolver import parse_agent_card
-from a2a.utils.signing import create_agent_card_signer
+from a2a.utils.signing import (
+    SignatureVerificationError,
+    create_agent_card_signer,
+    create_signature_verifier,
+)
 from abc import ABC, abstractmethod
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any
@@ -439,19 +445,54 @@ class A2AClient:
         self.base_url = base_url.rstrip("/") + "/"
         self.timeout_s = timeout_s
         self._id = 0
+        self._card_verified = False
 
     def _next_id(self) -> int:
         self._id += 1
         return self._id
 
     def agent_card(self) -> dict:
+        """Fetch and verify the Agent Card using a JWKS URL pinned to base_url."""
+        trusted_jwks_url = self.base_url.rstrip("/") + JWKS_PATH
         try:
             with urllib_request.urlopen(
                 self.base_url.rstrip("/") + AGENT_CARD_PATH, timeout=self.timeout_s
             ) as resp:
-                return json.loads(resp.read().decode("utf-8"))
-        except (URLError, TimeoutError, OSError) as exc:
-            raise TransportError(f"agent_card failed: {exc}") from exc
+                raw_card = json.loads(resp.read().decode("utf-8"))
+            with urllib_request.urlopen(trusted_jwks_url, timeout=self.timeout_s) as resp:
+                jwks = PyJWKSet.from_dict(json.loads(resp.read().decode("utf-8")))
+        except (URLError, TimeoutError, OSError, ValueError) as exc:
+            raise TransportError(f"agent_card/JWKS fetch failed: {exc}") from exc
+
+        def trusted_key_provider(kid, jku):
+            # Do not follow a key URL supplied only by the unverified card.
+            if jku != trusted_jwks_url or kid != AGENT_CARD_KEY_ID:
+                raise PyJWKError("untrusted Agent Card key reference")
+            try:
+                return jwks[kid].key
+            except KeyError as exc:
+                raise PyJWKError(f"unknown Agent Card key id: {kid}") from exc
+
+        try:
+            card_proto = parse_agent_card(raw_card)
+            create_signature_verifier(
+                key_provider=trusted_key_provider,
+                algorithms=["ES256"],
+            )(card_proto)
+            interfaces = raw_card.get("supportedInterfaces") or []
+            if not any(
+                item.get("protocolBinding") == "JSONRPC"
+                and item.get("protocolVersion") == "1.0"
+                and item.get("url", "").rstrip("/") == self.base_url.rstrip("/")
+                for item in interfaces if isinstance(item, dict)
+            ):
+                raise TransportError("signed Agent Card has no matching JSON-RPC endpoint")
+        except TransportError:
+            raise
+        except (SignatureVerificationError, PyJWKError, ValueError, KeyError, TypeError) as exc:
+            raise TransportError(f"Agent Card signature verification failed: {exc}") from exc
+        self._card_verified = True
+        return raw_card
 
     def send(self, payload: dict, task_id: str | None = None) -> dict:
         """message/send with JSON payload in a single text part."""
@@ -479,6 +520,8 @@ class A2AClient:
         return self._rpc("tasks/cancel", {"id": task_id})
 
     def _rpc(self, method: str, params: dict) -> dict:
+        if not self._card_verified:
+            self.agent_card()
         body = json.dumps(
             {"jsonrpc": "2.0", "id": self._next_id(), "method": method, "params": params}
         ).encode("utf-8")
