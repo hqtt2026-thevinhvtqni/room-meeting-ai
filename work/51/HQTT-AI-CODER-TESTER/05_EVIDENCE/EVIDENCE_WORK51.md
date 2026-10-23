@@ -72,6 +72,12 @@ Scope theo plan v1.4 (không tạo Work mới, không đụng main, không rebas
 - a2a.py v1.2 (D-01b): Agent Card protocolVersion/version/preferredTransport; Task contextId/createdAt/updatedAt/status.timestamp; tasks/cancel ở server + client.
 - 15 test mới: 04_TEST/test_http.py (+4: cancel working/unknown/terminal-noop, binding v1.2 fields), 04_TEST/test_persistence.py (6), 04_TEST/test_sandbox_hardening.py (5). Kỳ vọng suite: 58.
 
-Trạng thái thực thi: **PENDING** — theo PLAN §4 P4, kết quả chỉ ghi sau khi CI chạy thật trên commit push này. Bằng chứng (run ID, số test pass) sẽ được bổ sung vào mục này sau khi có kết quả.
+Trạng thái thực thi: **PASS — CI đã chạy thật** trên commit `0dbf964bd64c2c8129bff3aaa60915c681fd403d` sau khi sửa ba dòng Python bị tách giữa token/câu lệnh ở `coder_agent.py`, `test_http.py`, `tester_agent.py`.
 
-Giới hạn còn lại không đổi: chưa container/seccomp; signed Agent Card + official A2A SDK conformance chưa chứng minh; nhánh 8 ahead / 27 behind main (D-09 — chờ quyết định Vinh).
+- CI run: [39945767381](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39945767381) — workflow kết thúc `success`.
+- Test suite: **58 passed in 10.82s**, không có test fail.
+- HTTP E2E demo: `correct → PASS`; `seeded_bug → PASS` sau 1 vòng feedback; `always_bug → BLOCKED` sau khi đạt giới hạn 2 vòng. Demo exit 0.
+- Evidence artifact: `work51-evidence-39945767381`, artifact ID `12498725031`, SHA-256 `05aa58d781682c44a84707ca8f30f4c248a01878aff21c4513bdf71771b79685`, hết hạn `2026-11-22T11:24:09Z`.
+- Các lỗi cú pháp được sửa bằng các commit `b07c6fe`, `ce76a13`, `0dbf964`; `main` không bị sửa.
+
+Giới hạn còn lại: sandbox vẫn chưa container/seccomp; signed Agent Card và khả năng tương thích với official A2A SDK/spec chưa được chứng minh; CI cleanup vẫn có cảnh báo gitlink `room-meeting-ai` không có URL trong `.gitmodules` nhưng không làm job thất bại. Nhánh hiện **17 ahead / 27 behind main**, diverged; D-09 tiếp tục chờ quyết định của Vinh, không rebase/merge.
