@@ -5,7 +5,7 @@ but the runner executes inside a locked-down Docker container when Docker
 is available:
 
   --network none                no network interfaces at all
-  --memory 512m --cpus 1.0      kernel/cgroup-enforced resource caps
+  --memory 512m --memory-swap 512m --cpus 1.0  memory/swap/CPU caps
   --pids-limit 64               fork-bomb guard
   --cap-drop ALL                no Linux capabilities
   --security-opt no-new-privileges
@@ -91,7 +91,7 @@ class ContainerSandbox:
             cmd = [
                 "docker", "run", "--rm", "--name", name, *user_args,
                 "--network", "none",
-                "--memory", "512m", "--cpus", "1.0",
+                "--memory", "512m", "--memory-swap", "512m", "--cpus", "1.0",
                 "--pids-limit", "64",
                 "--cap-drop", "ALL",
                 "--security-opt", "no-new-privileges",
