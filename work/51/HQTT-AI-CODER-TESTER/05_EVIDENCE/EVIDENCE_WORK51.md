@@ -16,9 +16,10 @@ Nguyên tắc (PLAN §4 P4): chỉ ghi PASS khi đã chạy và có bằng chứ
 
 - Workflow: `.github/workflows/work51-a2a.yml`
 - Initial code-verification run: [39930470092](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39930470092) on code commit `2645366de183e7a0905a6c9d1b378741aec7b693`.
-- Latest full-branch verification: [39930817040](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39930817040) on commit `ccbe2985c260c05582a315885d51f6d481cd6910` (plan/evidence/decision register updated; implementation unchanged).
+- Latest full-branch verification before artifact upload: [39930817040](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39930817040) on commit `ccbe2985c260c05582a315885d51f6d481cd6910` (43 passed, demo exit 0).
+- Evidence artifact verification: [run 39931057210](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39931057210) on commit `503c17c5b9fdd9a99aa436d33f599de0556924e5`; uploaded artifact `work51-evidence-39931057210` (artifact ID `12491197678`, SHA-256 `ef3182702e1070b127134302b67bd00a8e650dd07a519ba72e6e7338329f8e9f`, expires 2026-11-22).
 - Kết quả pytest: **43 passed, 0 failed** (Python 3.11; 8.58s on latest run). Pytest collection warning đã được sửa bằng `TesterBackend.__test__ = False`; test run này không còn `PytestCollectionWarning`.
-- HTTP demo: **exit code 0**; `correct → PASS` (0 vòng sửa), `seeded_bug → PASS` (1 vòng sửa), `always_bug → BLOCKED` (2 vòng sửa, `max_fix_rounds_exceeded`). Evidence JSONL đã được tạo trong workspace của runner: `03_CODE/evidence_runs/20261023T091508Z/evidence.jsonl`. GitHub Actions chưa upload file JSONL làm artifact tải xuống, vì vậy log run là bằng chứng hiện có.
+- HTTP demo: **exit code 0**; `correct → PASS` (0 vòng sửa), `seeded_bug → PASS` (1 vòng sửa), `always_bug → BLOCKED` (2 vòng sửa, `max_fix_rounds_exceeded`). Evidence JSONL được upload làm GitHub Actions artifact trên run `39931057210`; tải artifact từ trang run trước ngày hết hạn 2026-11-22. SHA-256 của archive artifact: `ef3182702e1070b127134302b67bd00a8e650dd07a519ba72e6e7338329f8e9f`.
 - Một cảnh báo cleanup vẫn còn: `fatal: No url found for submodule path 'room-meeting-ai' in .gitmodules`. Đây là gitlink sai đã xác định ở main/repo hygiene; Work 51 đang 27 commit behind và chưa tự ý xóa gitlink/rebase. Cảnh báo không làm test/demo job thất bại. Có thêm cảnh báo deprecation từ runner/action Node.js.
 
 ## Lệnh tái lập
@@ -38,7 +39,7 @@ Yêu cầu: Python ≥ 3.9, pytest. Không cần API key.
 | G1 Contract hợp lệ/lệch format được xử lý | test_contract.py | PASS — covered by 43-test CI run |
 | G2 Tách vai trò backend Coder/Tester; Tester kiểm artifact thật | test_pipeline.py, test_http.py | PASS — slice behavior only; no production identity/auth proof |
 | G3 Feedback loop có giới hạn, không vòng lặp vô hạn | test_pipeline.py + HTTP demo `always_bug` | PASS — BLOCKED after 2 rounds |
-| G4 Evidence/hash/verdict cho run | test_pipeline.py, test_evidence_log_records_full_run | PASS — test coverage; CI JSONL not uploaded as downloadable artifact |
+| G4 Evidence/hash/verdict cho run | test_pipeline.py, test_evidence_log_records_full_run | PASS — test coverage; JSONL uploaded as artifact on run `39931057210` |
 | G5 Timeout/transport/malformed được xử lý tường minh | test_sandbox.py, test_http.py, DeadClient | PASS — tested scenarios only |
 | G6 Không PASS khi thiếu evidence | test_pass_without_evidence_is_blocked | PASS — automated test |
 | G7 BLOCKED có lý do + đề xuất xử lý | RunReport.reason + DECISION_REGISTER D-04/D-08/D-09 | PASS — slice emits reason; remaining infrastructure gates are open |
