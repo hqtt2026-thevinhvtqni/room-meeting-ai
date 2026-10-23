@@ -1,20 +1,18 @@
 """Minimal A2A-compatible protocol binding (D-01 in DECISION_REGISTER).
 
 Chosen binding: JSON-RPC 2.0 over HTTP, single text part carrying a JSON
-payload. A2A concepts exposed (binding v1.2):
-  - Agent Card:   GET /.well-known/agent-card.json (protocolVersion "1.0")
-  - message/send: create or continue a Task; payload travels in a text part
-  - tasks/get:    read task state (idempotent read path)
-  - tasks/cancel: cancel a non-terminal task (state machine enforced)
-  - Task:         {id, contextId, kind:"task", state, artifacts[], status{}, metadata{}}
-  - Artifact:     {artifactId, name, parts[{type:"text", text}], metadata{sha256, version}}
+payload. A2A concepts exposed:
+  - Official A2A 1.0 JSON-RPC methods: SendMessage, GetTask, CancelTask.
+  - Legacy aliases message/send, tasks/get, tasks/cancel retained for existing clients.
+  - Agent Card: /.well-known/agent-card.json with supportedInterfaces and skills.
+  - Official Task/Artifact shapes are serialized at the HTTP boundary; internal task
+    dictionaries retain the simpler state field used by the pipeline.
 
 Task state can be persisted across restarts via PersistentTaskStore
 (task_store.py) — plug one into the backend constructor.
 
-This module is the ONLY file that knows the wire format. Swapping to the
-official A2A SDK later means re-implementing A2AServer/A2AClient here and
-leaving every other module untouched.
+The wire adapter stays isolated in this module; official SDK interoperability
+is tested independently in test_official_a2a_sdk.py.
 """
 
 from __future__ import annotations
@@ -143,19 +141,67 @@ def artifact_text(artifact: dict) -> str:
 
 
 def payload_from_message(message: Any) -> dict:
-    """Extract the JSON payload from the first text part of a message."""
+    """Extract the JSON payload from either legacy or A2A 1.0 text Parts."""
     if not isinstance(message, dict):
         raise RpcParamError("params.message must be an object")
     parts = message.get("parts")
     if not isinstance(parts, list) or not parts:
         raise RpcParamError("params.message.parts must be a non-empty list")
     for part in parts:
-        if isinstance(part, dict) and part.get("type") == "text":
+        if not isinstance(part, dict):
+            continue
+        # A2A 1.0 represents the Part union as {"text": "..."}; the legacy
+        # local binding used {"type": "text", "text": "..."}.
+        if part.get("type") == "text" or isinstance(part.get("text"), str):
             try:
                 return json.loads(part.get("text", ""))
             except (ValueError, TypeError) as exc:
                 raise RpcParamError(f"text part is not valid JSON: {exc}") from exc
     raise RpcParamError("message must contain at least one text part")
+
+
+def _to_official_task(task: dict) -> dict:
+    """Serialize an internal task to the official A2A 1.0 Task JSON shape."""
+    state_map = {
+        "submitted": "TASK_STATE_SUBMITTED",
+        "working": "TASK_STATE_WORKING",
+        "input-required": "TASK_STATE_INPUT_REQUIRED",
+        "completed": "TASK_STATE_COMPLETED",
+        "failed": "TASK_STATE_FAILED",
+        "canceled": "TASK_STATE_CANCELED",
+    }
+    internal_status = task.get("status") or {}
+    status = {
+        "state": state_map.get(task.get("state", ""), "TASK_STATE_UNSPECIFIED"),
+        "timestamp": internal_status.get("timestamp") or _utc_now_iso(),
+    }
+    status_message = internal_status.get("message")
+    if status_message:
+        status["message"] = {
+            "messageId": new_id("m"),
+            "role": "ROLE_AGENT",
+            "parts": [{"text": str(status_message)}],
+        }
+    artifacts = []
+    for artifact in task.get("artifacts") or []:
+        parts = []
+        for part in artifact.get("parts") or []:
+            if isinstance(part, dict) and isinstance(part.get("text"), str):
+                parts.append({"text": part["text"]})
+        artifacts.append({
+            "artifactId": artifact.get("artifactId") or new_id("a"),
+            "name": artifact.get("name", ""),
+            "description": artifact.get("description", ""),
+            "parts": parts,
+            "metadata": artifact.get("metadata") or {},
+        })
+    return {
+        "id": task["id"],
+        "contextId": task.get("contextId") or new_id("ctx"),
+        "status": status,
+        "artifacts": artifacts,
+        "metadata": task.get("metadata") or {},
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -178,7 +224,18 @@ class _Handler(BaseHTTPRequestHandler):
 
     def do_GET(self) -> None:
         if self.path == AGENT_CARD_PATH:
-            self._respond_json(200, self.server.backend.agent_card())
+            card = dict(self.server.backend.agent_card())
+            host, port = self.server.server_address[:2]
+            endpoint = f"http://{host}:{port}/"
+            # Agent Card URLs must be usable by a remote A2A client; backend
+            # placeholders such as in-process:// are never exposed as endpoint.
+            card["url"] = endpoint  # legacy compatibility
+            card["supportedInterfaces"] = [{
+                "url": endpoint,
+                "protocolBinding": "JSONRPC",
+                "protocolVersion": "1.0",
+            }]
+            self._respond_json(200, card)
         else:
             self._respond_json(404, {"error": "not_found"})
 
@@ -227,7 +284,8 @@ class _Handler(BaseHTTPRequestHandler):
 
     def _dispatch(self, method: str, params: dict) -> dict:
         backend = self.server.backend
-        if method == "message/send":
+        if method in ("message/send", "SendMessage"):
+            official = method == "SendMessage"
             payload = payload_from_message(params.get("message"))
             message = params.get("message") or {}
             cont_id = message.get("taskId")
@@ -240,17 +298,21 @@ class _Handler(BaseHTTPRequestHandler):
                 suggested = params.get("taskId")
                 if suggested and backend.get_task(suggested) is not None:
                     # Idempotent replay: caller reuses an allocated task id.
-                    return backend.get_task(suggested)
+                    task = backend.get_task(suggested)
+                    return {"task": _to_official_task(task)} if official else task
                 task = backend.handle_task(suggested or new_id(), payload, None)
             if not isinstance(task, dict) or "id" not in task or "state" not in task:
                 raise RpcParamError("backend produced a malformed task")
-            return backend.store(task)
-        if method == "tasks/get":
+            stored = backend.store(task)
+            return {"task": _to_official_task(stored)} if official else stored
+        if method in ("tasks/get", "GetTask"):
+            official = method == "GetTask"
             task = backend.get_task(params.get("id") or "")
             if task is None:
                 raise RpcParamError(f"unknown task: {params.get('id')!r}")
-            return task
-        if method == "tasks/cancel":
+            return _to_official_task(task) if official else task
+        if method in ("tasks/cancel", "CancelTask"):
+            official = method == "CancelTask"
             task = backend.get_task(params.get("id") or "")
             if task is None:
                 raise RpcParamError(f"unknown task: {params.get('id')!r}")
@@ -261,8 +323,8 @@ class _Handler(BaseHTTPRequestHandler):
                                       "message": "canceled by client",
                                       "timestamp": _utc_now_iso()}
                 canceled["updatedAt"] = _utc_now_iso()
-                return backend.store(canceled)
-            return task
+                task = backend.store(canceled)
+            return _to_official_task(task) if official else task
         raise MethodNotFound(f"method not supported: {method}")
 
     @staticmethod

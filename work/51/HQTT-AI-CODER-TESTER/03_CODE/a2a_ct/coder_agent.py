@@ -50,9 +50,10 @@ class CoderBackend(AgentBackend):
             "name": "work51-coder-agent",
             "description": "Produces versioned artifact per Work Contract brief/feedback.",
             "url": "in-process://work51/coder",
-            "capabilities": {"push_notifications": False, "streaming": False},
-            "default_input_modes": ["application/json"],
-            "default_output_modes": ["text/plain"],
+            "capabilities": {"pushNotifications": False, "streaming": False},
+            "defaultInputModes": ["application/json"],
+            "defaultOutputModes": ["application/json", "text/plain"],
+            "skills": [{"id": "work51-coder", "name": "Artifact generation", "description": "Generates a versioned code artifact from a Work Contract brief and feedback.", "tags": ["coding", "artifact-generation"], "examples": ["Generate a Python artifact from a brief."]}],
             "metadata": {"role": "coder", "self_approval": False},
         }
 

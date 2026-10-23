@@ -43,9 +43,10 @@ class TesterBackend(AgentBackend):
             "name": "work51-tester-agent",
             "description": "Independently verifies artifact against Work Contract acceptance programs.",
             "url": "in-process://work51/tester",
-            "capabilities": {"push_notifications": False, "streaming": False},
-            "default_input_modes": ["application/json"],
-            "default_output_modes": ["text/plain"],
+            "capabilities": {"pushNotifications": False, "streaming": False},
+            "defaultInputModes": ["application/json"],
+            "defaultOutputModes": ["application/json", "text/plain"],
+            "skills": [{"id": "work51-tester", "name": "Artifact verification", "description": "Verifies an artifact against acceptance programs and returns a verdict with evidence.", "tags": ["testing", "verification"], "examples": ["Verify a Python artifact against acceptance checks."]}],
             "metadata": {"role": "tester", "can_modify_artifact": False},
         }
 
