@@ -82,8 +82,14 @@ class ContainerSandbox:
             )
             with open(runner_path, "w", encoding="utf-8") as fh:
                 fh.write(runner)
+            # Match the host user's UID/GID on POSIX. With --cap-drop ALL,
+            # container root cannot bypass DAC permissions on a mode-0700
+            # TemporaryDirectory owned by the runner user.
+            user_args = []
+            if hasattr(os, "getuid") and hasattr(os, "getgid"):
+                user_args = ["--user", f"{os.getuid()}:{os.getgid()}"]
             cmd = [
-                "docker", "run", "--rm", "--name", name,
+                "docker", "run", "--rm", "--name", name, *user_args,
                 "--network", "none",
                 "--memory", "512m", "--cpus", "1.0",
                 "--pids-limit", "64",
