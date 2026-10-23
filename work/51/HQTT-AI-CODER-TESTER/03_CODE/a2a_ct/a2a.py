@@ -233,9 +233,9 @@ class _Handler(BaseHTTPRequestHandler):
 
     def do_GET(self) -> None:
         if self.path == AGENT_CARD_PATH:
-            self._respond_json(200, self.server.signed_agent_card())
+            self._respond_json(200, self.server.owner.signed_agent_card())
         elif self.path == JWKS_PATH:
-            self._respond_json(200, self.server.jwks())
+            self._respond_json(200, self.server.owner.jwks())
         else:
             self._respond_json(404, {"error": "not_found"})
 
@@ -343,6 +343,7 @@ class A2AServer:
         self.backend = backend
         self._httpd = ThreadingHTTPServer((host, port), _Handler)
         self._httpd.backend = backend
+        self._httpd.owner = self
         # Ephemeral signing key is suitable for CI/demo conformance only.
         # Production deployments must load a stable key from a secret manager.
         self._card_private_key = ec.generate_private_key(ec.SECP256R1())
