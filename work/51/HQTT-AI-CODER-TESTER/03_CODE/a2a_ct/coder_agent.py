@@ -44,6 +44,9 @@ class CoderBackend(AgentBackend):
 
     def agent_card(self) -> dict:
         return {
+            "protocolVersion": "1.0",
+            "version": "1.2.0",
+            "preferredTransport": "JSONRPC",
             "name": "work51-coder-agent",
             "description": "Produces versioned artifact per Work Contract brief/feedback.",
             "url": "in-process://work51/coder",
@@ -57,6 +60,7 @@ class CoderBackend(AgentBackend):
 
     def _state(self, task: dict) -> dict:
         return task.get("metadata", {}).get("coder", {})
+
 
     def handle_task(self, task_id: str, payload: dict, existing: dict | None) -> dict:
         kind = payload.get("kind")
@@ -99,7 +103,8 @@ class CoderBackend(AgentBackend):
             # On feedback: seeded_bug fixes itself; always_bug never does.
             body = bodies["buggy"] if mode == "always_bug" else bodies["correct"]
 
-        text = build_artifact_text(contract_id, objective, signature, body, version, filename)
+        text = build_artifact_text(contr
+act_id, objective, signature, body, version, filename)
         artifact = make_text_artifact(
             name=filename,
             text=text,

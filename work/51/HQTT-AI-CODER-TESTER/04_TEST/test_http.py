@@ -65,7 +65,8 @@ def test_unknown_task_raises_agent_error(coder_server):
 
 
 def test_malformed_payload_rejected_as_invalid_params(coder_server):
-    client = A2AClient(coder_server.base_url)
+    client = A2AClient(cod
+er_server.base_url)
     with pytest.raises(AgentError):
         client.send_raw_text("this is not json")
 
@@ -112,3 +113,64 @@ def test_full_pipeline_over_http(tmp_path: Path, coder_server, tester_server):
     assert report.rounds_used == 1
     events = [r["event"] for r in evidence.read_all()]
     assert events[-1] == "run_end"
+
+# ---- Iteration 2: tasks/cancel + binding v1.2 fields -----------------------
+
+from a2a_ct.a2a import make_task  # noqa: E402
+
+
+class _WorkingBackend(CoderBackend):
+    """Stays in "working" after a brief — gives cancel something to cancel."""
+
+    __test__ = False
+
+    def handle_task(self, task_id: str, payload: dict, existing: dict | None) -> dict:
+        if payload.get("kind") == "brief" and existing is None:
+            return make_task(task_id, "working",
+                             status_message="accepted, working")
+        return super().handle_task(task_id, payload, existing)
+
+
+@pytest.fixture()
+def working_server():
+    server = A2AServer(_WorkingBackend())
+    server.start()
+    yield server
+    server.stop()
+
+
+def test_cancel_working_task(working_server):
+    client = A2AClient(working_server.base_url)
+    task = client.send({"kind": "brief"})
+    assert task["state"] == "working"
+    canceled = client.cancel_task(task["id"])
+    assert canceled["state"] == "canceled"
+    assert canceled["status"]["state"] == "canceled"
+    assert canceled["updatedAt"] >= task["updatedAt"]
+
+
+def test_cancel_unknown_task_raises_agent_error(working_server):
+    client = A2AClient(working_server.base_url)
+    with pytest.raises(AgentError):
+        client.cancel_task("t-does-not-exist")
+
+
+def test_cancel_terminal_task_is_noop(coder_server):
+    client = A2AClient(coder_server.base_url)
+    task = client.send(make_demo_contract().coder_brief())
+    assert task["state"] == "completed"
+    again = client.cancel_task(task["id"])
+    assert again["state"] == "completed"
+    assert again["status"]["state"] == "completed"
+
+
+def test_agent_card_and_task_expose_binding_v12_fields(coder_server):
+    client = A2AClient(coder_server.base_url)
+    card = client.agent_card()
+    assert card["protocolVersion"] == "1.0"
+    assert card["version"] == "1.2.0"
+    assert card["preferredTransport"] == "JSONRPC"
+    task = client.send(make_demo_contract().coder_brief())
+    assert task["contextId"]
+    assert task["createdAt"] and task["updatedAt"]
+    assert task["status"]["timestamp"]

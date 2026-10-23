@@ -1,8 +1,8 @@
 # PLAN_WORK51 — HQTT AI Coder–Tester qua A2A
 
 - **Work:** 51 — HQTT AI Coder–Tester
-- **Phiên bản:** v1.3
-- **Trạng thái:** P2 VERTICAL SLICE PASS; P3 PARTIALLY VERIFIED — 43 automated tests and 3 HTTP demo scenarios PASS on GitHub Actions; overall Work 51 NOT DONE pending security/persistence/A2A-spec review and branch divergence disposition (see 05_EVIDENCE/EVIDENCE_WORK51.md)
+- **Phiên bản:** v1.4
+- **Trạng thái:** P3 EXTENDED (iteration 2) — baseline 43 tests + HTTP demo PASS on GitHub Actions; sandbox hardening, persistent task store và A2A binding v1.2 đã implement kèm 15 test mới (kỳ vọng suite 58) — test execution PENDING CI; overall Work 51 NOT DONE pending container-grade isolation, official A2A SDK / signed-card conformance và branch divergence disposition (see 05_EVIDENCE/EVIDENCE_WORK51.md)
 - **Chủ sở hữu triển khai:** Qc — Qwen Coder
 - **Điều phối / hồ sơ:** Xu — AI-01
 - **QE/QA độc lập:** Qw — AI-05 (không phải trưởng dự án)
@@ -24,7 +24,8 @@ Không dừng ở sơ đồ hoặc ví dụ minh họa: phải có implementatio
 - **Qw — QE/QA:** đánh giá độc lập về test/evidence khi được gọi; không làm trưởng dự án.
 - **Coder Agent:** tạo/sửa artifact trong workspace/branch được cấp.
 - **Tester Agent:** vai trò và ngữ cảnh tách biệt; kiểm tra artifact thực tế theo hợp đồng gốc, không được sửa code để tự cho PASS.
-- **Vinh:** chủ sở hữu HQTT. Chỉ cần escalates khi có quyết định vượt phạm vi/quyền, rủi ro không thể tự xử lý hoặc phụ thuộc hạ tầng không sẵn sàng.
+- **Vinh:** chủ sở hữu HQTT. Chỉ cần escalates kh
+i có quyết định vượt phạm vi/quyền, rủi ro không thể tự xử lý hoặc phụ thuộc hạ tầng không sẵn sàng.
 
 Role names above describe intended responsibilities for this Work. Do not assume a particular API/model adapter, Skill, identity mapping, or automatic inter-agent calling mechanism already exists.
 
@@ -46,7 +47,8 @@ A2A là giao thức, không tự cung cấp execution sandbox, bảo mật, pers
 
 ### P0 — READ / TRACE
 - Đọc charter/brief, toàn bộ cây Work 51 trên branch, cấu trúc hiện có và các interface liên quan.
-- Ghi rõ verified facts, assumptions, gaps, reuse candidates; không sửa main.
+- Ghi rõ verified facts, assumptions, gaps,
+ reuse candidates; không sửa main.
 - Xác minh đặc tả A2A, transport, message/task/artifact schema, trạng thái và khả năng SDK thực tế.
 
 ### P1 — DECIDE / CONTRACT
@@ -84,7 +86,8 @@ Chạy test thực tế, bao gồm:
 - Core :8000 là nguồn sự thật duy nhất; không tạo Core thứ hai, không đưa Core vào Sandbox.
 - Không sửa MAIN SOURCE, không thay đổi Work 28, không mở rộng sang provider/camera/voice/browser trừ khi có dependency chứng minh cần thiết và được phê duyệt.
 - Không commit vào main, không merge/triển khai production, không thay đổi secrets hoặc quyền tổ chức.
-- Dùng nhánh `work/51-hqtt-coder-tester`; commit trên nhánh này khi quyền và công cụ cho phép. Không tuyên bố đã push nếu không có bằng chứng.
+- Dùng nhánh `work/51-hqtt-c
+oder-tester`; commit trên nhánh này khi quyền và công cụ cho phép. Không tuyên bố đã push nếu không có bằng chứng.
 - Coder và Tester phải tách vai trò/ngữ cảnh/quyền. Coder không được tự phê duyệt sản phẩm của mình.
 - A2A Task `completed` không đồng nghĩa test PASS.
 - Mỗi task tối đa 2 vòng sửa sau FAIL; sau đó BLOCKED với evidence và đề xuất xử lý. Không lặp vô hạn.
@@ -110,4 +113,6 @@ Qc phải tự kiểm tra lại nguồn, công cụ và đường đi có sẵn 
 |---|---|---|---|
 | v1.1 | 2026-10-23 | Xu — AI-01 | Chuyển owner triển khai sang Qc/Qwen Coder; xác nhận GitHub branch là kênh làm việc chính; A2A là giao thức cốt lõi; Qw chỉ QE/QA độc lập; bổ sung vòng đời BUILD/VERIFY/HANDOFF và tiêu chí nghiệm thu. |
 | v1.2 | 2026-10-23 | Vibe | Commit vertical slice P2: package `03_CODE/a2a_ct`, test suite and docs. At commit time, test execution was pending. |
-| v1.3 | 2026-10-23 | Xu — AI-01 | Updated this canonical plan in place after running GitHub Actions on the actual branch: 43 tests passed; HTTP demo verified `correct → PASS`, `seeded_bug → FAIL→feedback→PASS`, `always_bug → BLOCKED` after 2 fix rounds. Added CI workflow `.github/workflows/work51-a2a.yml`; fixed pytest collection warning (`TesterBackend.__test__ = False`). Evidence run: `39930470092`, tested code commit `2645366de183e7a0905a6c9d1b378741aec7b693`. Overall Work 51 remains PARTIAL: sandbox is not containerized/network-isolated, task state is in-memory, signed A2A Agent Card and official A2A SDK/spec conformance are not proven, and branch is 27 commits behind main. No rebase/merge or production deployment performed. |
+| v1.3 | 2026-10-23 | Xu — AI-01 | Updated this canonical plan in place after running GitHub Actions on the actual branch: 43 tests passed; HTTP demo verified `co
+rrect → PASS`, `seeded_bug → FAIL→feedback→PASS`, `always_bug → BLOCKED` after 2 fix rounds. Added CI workflow `.github/workflows/work51-a2a.yml`; fixed pytest collection warning (`TesterBackend.__test__ = False`). Evidence run: `39930470092`, tested code commit `2645366de183e7a0905a6c9d1b378741aec7b693`. Overall Work 51 remains PARTIAL: sandbox is not containerized/network-isolated, task state is in-memory, signed A2A Agent Card and official A2A SDK/spec conformance are not proven, and branch is 27 commits behind main. No rebase/merge or production deployment performed. |
+| v1.4 | 2026-10-23 | Vibe | Iteration 2 theo đúng phạm vi đã duyệt: sandbox hardening D-04b (env scrub — secrets không rò vào child; POSIX rlimits CPU/AS/FSIZE/NPROC; unshare -n network isolation có availability probe; cap input 200KB); PersistentTaskStore D-08b (JSON atomic rename, task state sống qua restart, backend nhận store qua constructor); A2A binding v1.2 D-01b (Agent Card: protocolVersion 1.0, version 1.2.0, preferredTransport; Task: contextId, createdAt, updatedAt, status.timestamp; method tasks/cancel cho non-terminal task). Thêm 15 test mới (cancel qua HTTP, persistence/restart, sandbox hardening) — kỳ vọng suite 58. Test execution PENDING tại thời điểm commit; chỉ ghi PASS khi CI đã chạy thật trên push này. |

@@ -29,6 +29,9 @@ class TesterBackend(AgentBackend):
 
     def agent_card(self) -> dict:
         return {
+            "protocolVersion": "1.0",
+            "version": "1.2.0",
+            "preferredTransport": "JSONRPC",
             "name": "work51-tester-agent",
             "description": "Independently verifies artifact against Work Contract acceptance programs.",
             "url": "in-process://work51/tester",
@@ -49,7 +52,8 @@ class TesterBackend(AgentBackend):
 
         contract_id = payload.get("contract_id", "")
         programs = payload.get("acceptance_programs") or []
-        timeout_s = float(payload.get("sandbox_timeout_s", 10.0))
+        timeout_s = float(pay
+load.get("sandbox_timeout_s", 10.0))
         artifact = payload.get("artifact") or {}
         content = artifact.get("content", "")
         claimed_sha = artifact.get("sha256", "")
@@ -98,7 +102,8 @@ class TesterBackend(AgentBackend):
 
         text = json.dumps(verdict_obj, ensure_ascii=False, indent=2)
         artifact_out = make_text_artifact(
-            name="verdict.json",
+            name=
+"verdict.json",
             text=text,
             sha256=sha256_text(text),
             version=1,

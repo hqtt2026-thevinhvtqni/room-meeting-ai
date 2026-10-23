@@ -17,7 +17,8 @@ Nguyên tắc (PLAN §4 P4): chỉ ghi PASS khi đã chạy và có bằng chứ
 - Workflow: `.github/workflows/work51-a2a.yml`
 - Initial code-verification run: [39930470092](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39930470092) on code commit `2645366de183e7a0905a6c9d1b378741aec7b693`.
 - Latest full-branch verification before artifact upload: [39930817040](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39930817040) on commit `ccbe2985c260c05582a315885d51f6d481cd6910` (43 passed, demo exit 0).
-- Evidence artifact verification: [run 39931057210](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39931057210) on commit `503c17c5b9fdd9a99aa436d33f599de0556924e5`; uploaded artifact `work51-evidence-39931057210` (artifact ID `12491197678`, SHA-256 `ef3182702e1070b127134302b67bd00a8e650dd07a519ba72e6e7338329f8e9f`, expires 2026-11-22).
+- Evidence artifact verification: [run 39931057210](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39931057210) on commit `503c17c5b9fdd9a99aa436d3
+3f599de0556924e5`; uploaded artifact `work51-evidence-39931057210` (artifact ID `12491197678`, SHA-256 `ef3182702e1070b127134302b67bd00a8e650dd07a519ba72e6e7338329f8e9f`, expires 2026-11-22).
 - Kết quả pytest: **43 passed, 0 failed** (Python 3.11; 8.58s on latest run). Pytest collection warning đã được sửa bằng `TesterBackend.__test__ = False`; test run này không còn `PytestCollectionWarning`.
 - HTTP demo: **exit code 0**; `correct → PASS` (0 vòng sửa), `seeded_bug → PASS` (1 vòng sửa), `always_bug → BLOCKED` (2 vòng sửa, `max_fix_rounds_exceeded`). Evidence JSONL được upload làm GitHub Actions artifact trên run `39931057210`; tải artifact từ trang run trước ngày hết hạn 2026-11-22. SHA-256 của archive artifact: `ef3182702e1070b127134302b67bd00a8e650dd07a519ba72e6e7338329f8e9f`.
 - Một cảnh báo cleanup vẫn còn: `fatal: No url found for submodule path 'room-meeting-ai' in .gitmodules`. Đây là gitlink sai đã xác định ở main/repo hygiene; Work 51 đang 27 commit behind và chưa tự ý xóa gitlink/rebase. Cảnh báo không làm test/demo job thất bại. Có thêm cảnh báo deprecation từ runner/action Node.js.
@@ -40,7 +41,8 @@ Yêu cầu: Python ≥ 3.9, pytest. Không cần API key.
 | G2 Tách vai trò backend Coder/Tester; Tester kiểm artifact thật | test_pipeline.py, test_http.py | PASS — slice behavior only; no production identity/auth proof |
 | G3 Feedback loop có giới hạn, không vòng lặp vô hạn | test_pipeline.py + HTTP demo `always_bug` | PASS — BLOCKED after 2 rounds |
 | G4 Evidence/hash/verdict cho run | test_pipeline.py, test_evidence_log_records_full_run | PASS — test coverage; JSONL uploaded as artifact on run `39931057210` |
-| G5 Timeout/transport/malformed được xử lý tường minh | test_sandbox.py, test_http.py, DeadClient | PASS — tested scenarios only |
+| G5 Timeout/transport/malformed được xử lý tường minh | test
+_sandbox.py, test_http.py, DeadClient | PASS — tested scenarios only |
 | G6 Không PASS khi thiếu evidence | test_pass_without_evidence_is_blocked | PASS — automated test |
 | G7 BLOCKED có lý do + đề xuất xử lý | RunReport.reason + DECISION_REGISTER D-04/D-08/D-09 | PASS — slice emits reason; remaining infrastructure gates are open |
 
@@ -60,3 +62,16 @@ Yêu cầu: Python ≥ 3.9, pytest. Không cần API key.
 - CI workflow commit: `ad69c05c7c4dac6bedf3f5dced8d69e3a4ee3778`.
 - Test hygiene fix commit: `2645366de183e7a0905a6c9d1b378741aec7b693`.
 - Verified CI runs: `39930470092` (implementation test) and `39930817040` (latest full branch) — both 43 passed, HTTP demo exit 0. Latest branch head at verification: `ccbe2985c260c05582a315885d51f6d481cd6910`. Current report is a tested vertical slice, not full Work 51 acceptance.
+
+## Iteration 2 — sandbox hardening, persistence, binding v1.2 (2026-10-23)
+
+Scope theo plan v1.4 (không tạo Work mới, không đụng main, không rebase — D-09):
+
+- sandbox.py v1.2 (D-04b): env scrub (không rò secrets), POSIX rlimits (CPU 10s / AS 1GB / FSIZE 4MB / NPROC 64), unshare -n network isolation có availability probe, cap input 200KB (SandboxInputError).
+- task_store.py (D-08b): TaskStore in-memory + PersistentTaskStore JSON atomic rename; backend nhận store qua constructor; restart giữ continuation/idempotency/audit.
+- a2a.py v1.2 (D-01b): Agent Card protocolVersion/version/preferredTransport; Task contextId/createdAt/updatedAt/status.timestamp; tasks/cancel ở server + client.
+- 15 test mới: 04_TEST/test_http.py (+4: cancel working/unknown/terminal-noop, binding v1.2 fields), 04_TEST/test_persistence.py (6), 04_TEST/test_sandbox_hardening.py (5). Kỳ vọng suite: 58.
+
+Trạng thái thực thi: **PENDING** — theo PLAN §4 P4, kết quả chỉ ghi sau khi CI chạy thật trên commit push này. Bằng chứng (run ID, số test pass) sẽ được bổ sung vào mục này sau khi có kết quả.
+
+Giới hạn còn lại không đổi: chưa container/seccomp; signed Agent Card + official A2A SDK conformance chưa chứng minh; nhánh 8 ahead / 27 behind main (D-09 — chờ quyết định Vinh).

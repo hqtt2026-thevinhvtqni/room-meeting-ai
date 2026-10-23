@@ -38,7 +38,8 @@ Orchestrator      Coder                    Tester                  Sandbox
      │  message/send (brief)  │                │                     │
      ├────────────────────►│  emit artifact v1 │                     │
      │◄─────────────────────┤  (task completed) │                     │
-     │  message/send (artifact + acceptance)   │                     │
+     │  message/send (artifact + acceptance)   │          
+           │
      ├────────────────────────────────────────►│  verify hash        │
      │                                        ├────────────────────►│  run artifact+program
      │                                        │◄────────────────────┤  ok/timeout/stderr
@@ -69,7 +70,8 @@ Orchestrator      Coder                    Tester                  Sandbox
 | Malformed JSON-RPC | `-32700 / -32600` | Server trả JSON-RPC error, không crash |
 | Invalid params (payload sai, taskId lạ) | `-32602` | Như trên; test `test_http.py` lock hành vi |
 | Agent-level failure | task state `failed` + status.message | VD: payload kind không hỗ trợ |
-| Transport (agent chết, timeout) | `TransportError` -> pipeline BLOCKED reason `*_transport_error` | Không treo, không im lặng |
+| Transport (ag
+ent chết, timeout) | `TransportError` -> pipeline BLOCKED reason `*_transport_error` | Không treo, không im lặng |
 | Sandbox timeout | result `timeout:true` -> FAIL có evidence | Timeout demo: 3s trong test |
 | PASS thiếu evidence | BLOCKED `pass_without_evidence` (D-06) | Tester hỏng không được tính là PASS |
 
@@ -86,3 +88,22 @@ Orchestrator      Coder                    Tester                  Sandbox
 2. Task store in-memory: restart mất state (P3 yêu cầu "trạng thái sau restart" → cần persist layer — D-08).
 3. Agent Card chưa ký (signed Agent Card của A2A v1.0) — trust nội bộ tạm bằng base_url kiểm soát được.
 4. Coder là deterministic generator; LLM adapter là bước kế tiếp (D-03).
+
+## 7. Iteration 2 — hardening theo D-01b / D-04b / D-08b
+
+**D-04b — Sandbox hardening (sandbox.py v1.2):**
+- Env scrub: child chỉ nhận PATH, LC_ALL=C, PYTHONDONTWRITEBYTECODE (SYSTEMROOT trên Windows) — secrets/API keys của parent không rò vào untrusted code.
+- POSIX rlimits qua preexec_fn: RLIMIT_CPU 10s, RLIMIT_AS 1GB, RLIMIT_FSIZE 4MB, RLIMIT_NPROC 64 (best-effort, không fatal).
+- Network isolation "auto": trên Linux dùng unshare -n khi probe xác nhận khả dụng; result có trường network_isolated.
+- Input caps: artifact/program vượt 200KB bị chặn trước khi chạy (SandboxInputError).
+- Giới hạn còn lại: chưa container/seccomp/cgroups — D-04 vẫn cần phê duyệt trước khi chạy untrusted code thật.
+
+**D-08b — PersistentTaskStore (task_store.py):**
+- TaskStore (in-memory, thread-safe) + PersistentTaskStore (JSON file, atomic rename qua .tmp + os.replace, load + validate khi khởi tạo, reload() mô phỏng restart).
+- AgentBackend nhận store qua constructor; restart với cùng path → continuation, idempotency, audit sống lại. Giới hạn: single-writer, flush O(n) mỗi update.
+
+**D-01b — Binding v1.2 (a2a.py):**
+- Agent Card thêm protocolVersion "1.0", version "1.2.0", preferredTransport "JSONRPC".
+- Task thêm contextId, createdAt, updatedAt; status có timestamp.
+- tasks/cancel (server + A2AClient.cancel_task + LocalClient.cancel_task): chỉ task non-terminal được cancel, terminal là no-op, transition qua state machine (states.py).
+- Vẫn stdlib-only, mọi wire code gom trong a2a.py — swap sang SDK chính thức sau vẫn chỉ sửa 1 file.

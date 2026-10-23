@@ -3,6 +3,7 @@
 Components:
 - contract:    WorkContract schema + validation (P1 contract gate)
 - states:      task state machine (A2A task states)
+- task_store:  in-memory + persistent (JSON, atomic rename) task stores
 - a2a:         minimal A2A-compatible JSON-RPC 2.0 binding (server + client)
 - coder_agent: Coder Agent backend (deterministic generator, LLM-pluggable)
 - tester_agent: Tester Agent backend (independent verification in sandbox)

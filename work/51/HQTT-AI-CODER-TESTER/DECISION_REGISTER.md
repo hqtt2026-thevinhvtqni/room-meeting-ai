@@ -13,3 +13,11 @@ Quy tắc: mỗi quyết định ghi Options → Choice → Impact. Cột "Vinh 
 | D-07 | Kênh làm việc | (a) ROOM-HOP trực tiếp; (b) GitHub branch `work/51-hqtt-coder-tester` | (b) theo PLAN | Qc không truy cập ROOM-HOP; mọi hồ sơ qua Git, evidence JSONL là file xuất kèm | Không |
 | D-08 | Task persistence | (a) In-memory store; (b) Persist JSON ngay | (a) cho slice | Restart mất state; P3 "trạng thái sau restart" còn mở — cần layer persist trước khi nối vào Core :8000 | **CÓ** — khi tích hợp ROOM-HOP |
 | D-09 | Nhánh bị lệch | So sánh mới nhất: `work/51-hqtt-coder-tester` diverged — **8 commits ahead, 27 commits behind `main`** | Không tự rebase/merge; giữ nhánh làm việc riêng | Rebase/merge sẽ xử lý lịch sử nhánh chung và có thể tạo xung đột với 27 commit mới trên main. Chưa có quyết định tích hợp; main không bị sửa. | **CÓ** |
+
+## Cập nhật iteration 2 (2026-10-23)
+
+| ID | Quyết định | Options | Choice | Impact | Vinh approval |
+|---|---|---|---|---|---|
+| D-01b | Binding v1.2 | (a) giữ binding tối thiểu như iteration 1; (b) thêm protocolVersion/version/preferredTransport vào Agent Card, contextId + createdAt/updatedAt + status.timestamp vào Task, method tasks/cancel | (b) | Tiệm gần A2A spec hơn mà vẫn stdlib-only, wire code vẫn gom trong a2a.py; signed Agent Card và official SDK vẫn mở (ARCHITECTURE §6) | Không |
+| D-04b | Sandbox hardening | (a) container ngay; (b) env scrub + POSIX rlimits + unshare -n (có probe) + cap input 200KB | (b) | Chặn rò secrets, chặn cpu/mem/file/nproc, cách ly network khi khả dụng; KHÔNG coi là đủ cho untrusted code thật — D-04 giữ nguyên cần phê duyệt | CÓ (giữ nguyên — untrusted ngoài) |
+| D-08b | Task persistence | (a) in-memory; (b) TaskStore + PersistentTaskStore (JSON, atomic rename, validate khi load) | (b) | Restart-safe — đóng được yêu cầu P3 "trạng thái sau restart" ở tầng store; giới hạn single-writer, flush O(n) | Không |

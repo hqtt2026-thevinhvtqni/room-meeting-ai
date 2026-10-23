@@ -1,12 +1,16 @@
 """Minimal A2A-compatible protocol binding (D-01 in DECISION_REGISTER).
 
 Chosen binding: JSON-RPC 2.0 over HTTP, single text part carrying a JSON
-payload. A2A concepts exposed:
-  - Agent Card:   GET /.well-known/agent-card.json
+payload. A2A concepts exposed (binding v1.2):
+  - Agent Card:   GET /.well-known/agent-card.json (protocolVersion "1.0")
   - message/send: create or continue a Task; payload travels in a text part
   - tasks/get:    read task state (idempotent read path)
-  - Task:         {id, kind:"task", state, artifacts[], status{}, metadata{}}
+  - tasks/cancel: cancel a non-terminal task (state machine enforced)
+  - Task:         {id, contextId, kind:"task", state, artifacts[], status{}, metadata{}}
   - Artifact:     {artifactId, name, parts[{type:"text", text}], metadata{sha256, version}}
+
+Task state can be persisted across restarts via PersistentTaskStore
+(task_store.py) — plug one into the backend constructor.
 
 This module is the ONLY file that knows the wire format. Swapping to the
 official A2A SDK later means re-implementing A2AServer/A2AClient here and
@@ -17,12 +21,16 @@ from __future__ import annotations
 
 import json
 import threading
+import time
 import uuid
 from abc import ABC, abstractmethod
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any
 from urllib import request as urllib_request
 from urllib.error import URLError
+
+from .states import TaskStateError, assert_transition, is_terminal
+from .task_store import TaskStore
 
 AGENT_CARD_PATH = "/.well-known/agent-card.json"
 
@@ -56,28 +64,28 @@ def new_id(prefix: str = "t") -> str:
     return f"{prefix}-{uuid.uuid4().hex[:12]}"
 
 
+def _utc_now_iso() -> str:
+    return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+
+
 # ---------------------------------------------------------------------------
 # Backend contract — implement this to get an A2A server for free.
 # ---------------------------------------------------------------------------
 
 class AgentBackend(ABC):
-    """In-memory task store + agent logic. Thread-safety: tasks dict is
-    guarded by a lock because ThreadingHTTPServer serves concurrently."""
+    """Task store + agent logic. Thread-safety: the store guards its own
+    state because ThreadingHTTPServer serves concurrently."""
 
-    def __init__(self) -> None:
-        self.tasks: dict[str, dict] = {}
-        self._lock = threading.Lock()
+    def __init__(self, store: TaskStore | None = None) -> None:
+        self._store = store or TaskStore()
 
     # -- storage --------------------------------------------------------
 
     def store(self, task: dict) -> dict:
-        with self._lock:
-            self.tasks[task["id"]] = task
-        return task
+        return self._store.set(task)
 
     def get_task(self, task_id: str) -> dict | None:
-        with self._lock:
-            return self.tasks.get(task_id)
+        return self._store.get(task_id)
 
     # -- logic -------------------------------------------------------------
 
@@ -98,14 +106,20 @@ class AgentBackend(ABC):
 # ---------------------------------------------------------------------------
 
 def make_task(task_id: str, state: str, artifacts: list[dict] | None = None,
-              status_message: str | None = None, metadata: dict | None = None) -> dict:
+              status_message: str | None = None, metadata: dict | None = None,
+              context_id: str | None = None) -> dict:
+    now = _utc_now_iso()
     return {
         "id": task_id,
+        "contextId": context_id or new_id("ctx"),
         "kind": "task",
         "state": state,
         "artifacts": artifacts or [],
-        "status": {"state": state, "message": status_message},
+        "status": {"state": state, "message": status_message,
+                   "timestamp": now},
         "metadata": metadata or {},
+        "createdAt": now,
+        "updatedAt": now,
     }
 
 
@@ -149,7 +163,7 @@ def payload_from_message(message: Any) -> dict:
 # ---------------------------------------------------------------------------
 
 class _Handler(BaseHTTPRequestHandler):
-    server_version = "a2a-ct/1.0"
+    server_version = "a2a-ct/1.2"
 
     def log_message(self, *args) -> None:  # silence request logging
         return
@@ -200,7 +214,7 @@ class _Handler(BaseHTTPRequestHandler):
         except RpcParamError as exc:
             self._respond_json(200, self._rpc_error(req_id, JSONRPC_INVALID_PARAMS, str(exc)))
             return
-        except TransportError as exc:
+        except TaskStateError as exc:
             self._respond_json(200, self._rpc_error(req_id, JSONRPC_AGENT_ERROR, str(exc)))
             return
         except Exception as exc:  # pragma: no cover - defensive
@@ -235,6 +249,19 @@ class _Handler(BaseHTTPRequestHandler):
             task = backend.get_task(params.get("id") or "")
             if task is None:
                 raise RpcParamError(f"unknown task: {params.get('id')!r}")
+            return task
+        if method == "tasks/cancel":
+            task = backend.get_task(params.get("id") or "")
+            if task is None:
+                raise RpcParamError(f"unknown task: {params.get('id')!r}")
+            if not is_terminal(task.get("state", "")):
+                canceled = dict(task)
+                canceled["state"] = assert_transition(task["state"], "canceled")
+                canceled["status"] = {"state": "canceled",
+                                      "message": "canceled by client",
+                                      "timestamp": _utc_now_iso()}
+                canceled["updatedAt"] = _utc_now_iso()
+                return backend.store(canceled)
             return task
         raise MethodNotFound(f"method not supported: {method}")
 
@@ -316,6 +343,9 @@ class A2AClient:
     def get_task(self, task_id: str) -> dict:
         return self._rpc("tasks/get", {"id": task_id})
 
+    def cancel_task(self, task_id: str) -> dict:
+        return self._rpc("tasks/cancel", {"id": task_id})
+
     def _rpc(self, method: str, params: dict) -> dict:
         body = json.dumps(
             {"jsonrpc": "2.0", "id": self._next_id(), "method": method, "params": params}
@@ -360,4 +390,18 @@ class LocalClient:
         task = self.backend.get_task(task_id)
         if task is None:
             raise TransportError(f"unknown task: {task_id}")
+        return task
+
+    def cancel_task(self, task_id: str) -> dict:
+        task = self.backend.get_task(task_id)
+        if task is None:
+            raise TransportError(f"unknown task: {task_id}")
+        if not is_terminal(task.get("state", "")):
+            canceled = dict(task)
+            canceled["state"] = assert_transition(task["state"], "canceled")
+            canceled["status"] = {"state": "canceled",
+                                  "message": "canceled by client",
+                                  "timestamp": _utc_now_iso()}
+            canceled["updatedAt"] = _utc_now_iso()
+            return self.backend.store(canceled)
         return task
