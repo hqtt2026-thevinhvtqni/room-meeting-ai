@@ -39,5 +39,5 @@ jobs:
         with:
           name: work51-evidence-${{ github.run_id }}
           path: work/51/HQTT-AI-CODER-TESTER/03_CODE/evidence_runs/**/evidence.jsonl
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 30
