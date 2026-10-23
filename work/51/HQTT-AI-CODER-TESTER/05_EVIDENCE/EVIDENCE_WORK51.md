@@ -85,19 +85,19 @@ Merge commit và các cập nhật hồ sơ cần CI xác minh lại; chỉ run 
 
 ## Iteration 3 — container-grade sandbox profile (2026-10-23)
 
-Scope theo ưu tiên của Xu sau D-09 (không tạo Work mới, không đụng `main`):
+Scope theo ưu tiên của Xu sau D-09: thêm Docker ContainerSandbox D-04c, không tạo Work mới và không sửa `main`.
 
-- sandbox_container.py (D-04c): ContainerSandbox — docker run với --network none, --memory 512m, --cpus 1.0, --pids-limit 64, --cap-drop ALL, no-new-privileges, seccomp=default, --read-only, mount read-only; available() probe Docker + pre-pull image; fallback Sandbox() khi không có Docker.
-- 04_TEST/test_sandbox_container.py — 4 test: chạy program trong container; mạng bị chặn tuyệt đối; env host không rò vào container; cap input 200KB giữ nguyên. Tự skip trên host không có Docker; CI runner có Docker nên kỳ vọng suite 62.
-- __init__.py, PLAN v1.7, ARCHITECTURE §8, DECISION_REGISTER (D-04c), README cập nhật đồng bộ.
+- `sandbox_container.py`: Docker `--network none`, `--memory 512m`, `--cpus 1.0`, `--pids-limit 64`, `--cap-drop ALL`, `no-new-privileges`, Docker default seccomp profile (không override bằng `seccomp=default`), `--read-only`, mount read-only; chạy bằng UID/GID host trên POSIX để đọc tempdir mà không cần capability root.
+- `TesterBackend` chọn ContainerSandbox khi Docker và image khả dụng; nếu không, fallback về `Sandbox()`. Fallback không được xem là đủ cho mã không tin cậy từ nguồn ngoài.
+- Bốn test container đã chạy thật trên CI, không skip.
 
 Trạng thái thực thi: **PASS — CI đã chạy thật** trên commit `24e06ca66df407d2c0e2d6b285e5d8dededd8da7`.
 
 - CI run: [39948132321](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39948132321) — workflow `success`.
-- Test suite: **62 passed in 23.22s**, 0 failed, 0 skipped; 4 container tests thực sự chạy trên Docker runner.
+- Test suite: **62 passed in 23.22s**, 0 failed, 0 skipped.
 - HTTP E2E demo exit 0: `correct → PASS` (0 vòng), `seeded_bug → PASS` (1 vòng), `always_bug → BLOCKED` (2 vòng).
 - Evidence artifact: `work51-evidence-39948132321`, artifact ID `12499500891`, SHA-256 `2fa28680779adca5e14b6b18ff188b1585b9516ddb664c596b1633edeff7b7b4`; [mở run và artifact](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39948132321).
-- Lỗi ở các run trước đã được sửa: `seccomp=default` bị Docker hiểu là đường dẫn; sau khi bỏ override, `--cap-drop ALL` làm user root trong container không đọc được tempdir mode 0700, nên container được chạy bằng UID/GID của host. Các run lỗi trước không được tính là PASS.
-- GitHub Actions cleanup vẫn cảnh báo gitlink `room-meeting-ai` không có URL trong `.gitmodules`; không làm test/demo job thất bại và vẫn để ngoài phạm vi Work 51.
+- Hai lỗi container phát hiện trước khi PASS đã được sửa: Docker hiểu `seccomp=default` là đường dẫn; sau khi bỏ override, `--cap-drop ALL` làm root trong container không đọc được tempdir mode 0700, nên container được chạy bằng UID/GID host. Các run thất bại trước không được tính là PASS.
+- GitHub Actions cleanup vẫn cảnh báo gitlink `room-meeting-ai` không có URL trong `.gitmodules`; warning không làm test/demo job thất bại và được giữ ngoài phạm vi Work 51.
 
-Còn mở không đổi: signed Agent Card + official A2A SDK conformance; independent QA sign-off của Qw; gitlink .gitmodules (repo hygiene, ngoài phạm vi Work 51).
+Còn mở: signed Agent Card + official A2A SDK conformance; independent QA sign-off của Qw; custom seccomp whitelist/image digest pinning và gitlink `.gitmodules` (repo hygiene). signed Agent Card + official A2A SDK conformance; independent QA sign-off của Qw; gitlink .gitmodules (repo hygiene, ngoài phạm vi Work 51).
