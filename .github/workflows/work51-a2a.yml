@@ -33,3 +33,11 @@ jobs:
       - name: Run HTTP end-to-end demo
         working-directory: work/51/HQTT-AI-CODER-TESTER
         run: python 03_CODE/run_demo.py
+      - name: Upload reproducible evidence log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: work51-evidence-${{ github.run_id }}
+          path: work/51/HQTT-AI-CODER-TESTER/03_CODE/evidence_runs/**/evidence.jsonl
+          if-no-files-found: error
+          retention-days: 30
