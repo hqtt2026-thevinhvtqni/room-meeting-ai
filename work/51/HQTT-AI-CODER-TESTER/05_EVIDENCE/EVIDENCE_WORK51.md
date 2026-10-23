@@ -51,4 +51,4 @@ _(chưa có — An/Qc/Vinh chạy lệnh trên rồi ghi lại output + commit S
 
 ## Commit
 
-- Implementation commit: xem git log nhánh `work/51-hqtt-coder-tester`, message `feat(work51): A2A coder-tester vertical slice — contract, state machine, JSON-RPC binding, coder/tester agents, sandbox, orchestrator, tests, docs`.
+- Implementation commit: `23087dae4ff4f3eeb82a7b33be7a07c0c19b44f3` trên nhánh `work/51-hqtt-coder-tester` — message `feat(work51): A2A coder-tester vertical slice — contract, state machine, JSON-RPC binding, agents, sandbox, orchestrator, tests, docs (plan v1.2)` (21 file: 10 module code, 6 test file, 5 doc, cập nhật plan v1.2).
