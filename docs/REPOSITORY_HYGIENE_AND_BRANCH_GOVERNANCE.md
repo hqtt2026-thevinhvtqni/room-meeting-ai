@@ -12,7 +12,7 @@ Status: remediation baseline opened 2026-10-23 (UTC+07:00). This document is a c
 - The same run exposed a Work 13 portability defect (`python.exe` hard-coded on Linux). The test now uses `sys.executable`; subsequent CI no longer reports that failure.
 - F4 public schema tests failed because `add_paste_to_meeting.text` had no `maxLength`. Commit `2960367` declares `maxLength: 1048576`. This is a JSON Schema character limit; Core must continue enforcing the UTF-8 byte limit. A fresh run after this change showed `229 passed, 1 failed, 1 warning`; the remaining pytest failure was T8's missing `join_meeting` and `start_meeting` tools.
 - Commit `a17989e` restores the two existing MCP tools and schemas required by `tests/test_message_v1.py::test_t8_existing_mcp_tools_no_regression`. Fresh CI is running/not yet verified at the time of this update.
-- GitHub API tree/history inspection established that `room-meeting-ai` is a mode `160000` gitlink pointing to commit `eeb497e906b665e625a7ba7c50d93ada6ada9cfc` in this same repository. That target commit is the repository's own parentless `Initial commit clean`; its tree contains the project files but no `.gitmodules`. The gitlink itself first appears in the repository's parentless root commit `66b7ed52ed2e55581d0418b1ebd6b57a4bff5f38`. This is a self-referential, unconfigured gitlink, not a valid external submodule declaration. Its referenced commit remains preserved in Git history. The maintenance PR removes only the unusable gitlink from its own branch; no URL is guessed and `main` remains untouched.
+- GitHub API tree/history inspection established that `room-meeting-ai` was a mode `160000` gitlink pointing to commit `eeb497e906b665e625a7ba7c50d93ada6ada9cfc` in this same repository. That target commit is the repository's own parentless `Initial commit clean`; its tree contains the project files but no `.gitmodules`. The gitlink first appears in parentless root commit `66b7ed52ed2e55581d0418b1ebd6b57a4bff5f38`. This was a self-referential, unconfigured gitlink, not a valid external submodule declaration. The referenced commit remains preserved in Git history. Removed only from the maintenance PR branch in commit `b5f937912ac35c223ccb003a779142e3c3a45536`; the new successful CI run no longer logs the missing-`.gitmodules` warning. `main` remains untouched.
 
 ## Mandatory cleanup sequence
 
@@ -28,9 +28,9 @@ Status: remediation baseline opened 2026-10-23 (UTC+07:00). This document is a c
 
 - [ ] Inventory of root-level candidates with disposition and owner.
 - [ ] Work 51 branch divergence reviewed and safe synchronization plan recorded.
-- [ ] CI workflow has run and result is linked.
+- [x] CI workflow has run and result is linked: run `39929032940` on commit `b5f937912ac35c223ccb003a779142e3c3a45536`, 230 passed, job success; the malformed-submodule warning is absent.
 - [x] MCP SDK compatibility and Work 13 portability changes verified by CI.
-- [ ] F4 schema declaration and restored T8 tools verified by fresh CI.
+- [x] F4 schema declaration and restored T8 tools verified by fresh CI: 230 passed, 0 failed.
 - [x] Invalid submodule/gitlink metadata inspected; self-referential gitlink removed on maintenance branch only, referenced commit preserved.
 - [ ] Real-API integration status remains accurate and changes only after a verified run.
 - [ ] Cleanup PR reviewed; no unrelated Work or protected baseline changed.
