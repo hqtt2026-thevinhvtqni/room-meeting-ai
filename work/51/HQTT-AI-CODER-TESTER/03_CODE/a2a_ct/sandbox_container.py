@@ -9,7 +9,7 @@ is available:
   --pids-limit 64               fork-bomb guard
   --cap-drop ALL                no Linux capabilities
   --security-opt no-new-privileges
-  --security-opt seccomp=default  default Docker seccomp profile
+  Docker default seccomp profile is retained by omitting a custom seccomp override
   --read-only                   immutable container root filesystem
 
 Env scrub and the 200 KB input caps are inherited from sandbox.Sandbox by
@@ -17,7 +17,7 @@ composition. This profile is OPTIONAL: call available() and fall back to
 sandbox.Sandbox on hosts without Docker (e.g. developer laptops).
 
 Known limits (documented in DECISION_REGISTER D-04c):
-- no custom seccomp whitelist yet; image not pinned by digest yet.
+- Docker default seccomp profile is used; no custom whitelist yet; image not pinned by digest yet.
 """
 
 from __future__ import annotations
@@ -89,7 +89,6 @@ class ContainerSandbox:
                 "--pids-limit", "64",
                 "--cap-drop", "ALL",
                 "--security-opt", "no-new-privileges",
-                "--security-opt", "seccomp=default",
                 "--read-only",
                 "-e", "PYTHONDONTWRITEBYTECODE=1",
                 "-v", td + ":/work:ro", "-w", "/work",
