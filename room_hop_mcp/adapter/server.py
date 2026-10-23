@@ -18,6 +18,7 @@ LIST_MEETINGS = "list_meetings"
 GET_MEETING = "get_meeting"
 GET_TRANSCRIPT = "get_transcript"
 ADD_PASTE_TO_MEETING = "add_paste_to_meeting"
+MAX_TEXT_BYTES = 1 * 1024 * 1024
 
 
 def create_server(service: MeetingService) -> Server:
@@ -77,6 +78,11 @@ def create_server(service: MeetingService) -> Server:
                         },
                         "text": {
                             "type": "string",
+                            # JSON Schema counts Unicode characters, whereas
+                            # F4 runtime enforcement must count UTF-8 bytes.
+                            # This declared cap is an early protocol boundary;
+                            # MeetingService remains responsible for byte safety.
+                            "maxLength": MAX_TEXT_BYTES,
                         },
                         # MESSAGE v1.0 — OPTIONAL. Không có trong
                         # "required" -> mọi caller cũ (Gate 2, test F1-F3)
