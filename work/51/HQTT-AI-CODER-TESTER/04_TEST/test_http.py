@@ -65,8 +65,7 @@ def test_unknown_task_raises_agent_error(coder_server):
 
 
 def test_malformed_payload_rejected_as_invalid_params(coder_server):
-    client = A2AClient(cod
-er_server.base_url)
+    client = A2AClient(coder_server.base_url)
     with pytest.raises(AgentError):
         client.send_raw_text("this is not json")
 
