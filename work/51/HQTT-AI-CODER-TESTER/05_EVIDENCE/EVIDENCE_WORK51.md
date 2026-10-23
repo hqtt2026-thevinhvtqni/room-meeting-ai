@@ -49,7 +49,8 @@ Yêu cầu: Python ≥ 3.9, pytest. Không cần API key.
 2. Task store in-memory — restart mất state (D-08).
 3. Agent Card chưa ký theo A2A v1.0 (signed card) (D-01).
 4. Coder là deterministic generator — LLM adapter là bước kế tiếp (D-03).
-5. Nhánh `work/51` 27 commits behind main (D-09 — escalate Vinh).
+5. Full conformance với A2A spec/official SDK, signed Agent Card và interoperability với implementation A2A độc lập chưa được chứng minh; binding hiện tại là JSON-RPC 2.0 tối thiểu.
+6. Nhánh `work/51` đang phân kỳ với `main`: **8 commits ahead, 27 commits behind** tại lần so sánh mới nhất (D-09). Không rebase/merge vì chưa có quyết định riêng.
 
 ## Commit
 
