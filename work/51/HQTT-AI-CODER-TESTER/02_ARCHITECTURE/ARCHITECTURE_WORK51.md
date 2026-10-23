@@ -124,6 +124,6 @@ sandbox_container.py — ContainerSandbox cùng contract run(artifact_code, prog
 ## 9. Iteration 4 — official A2A SDK and signed Agent Card (D-01c)
 
 - Wire adapter supports official A2A 1.0 JSON-RPC method names `SendMessage`, `GetTask`, `CancelTask`, returning the official Task/Artifact field shapes. Legacy lower-case methods remain only for internal compatibility.
-- Agent Card exposes `supportedInterfaces`, `skills`, `defaultInputModes`, `defaultOutputModes` and a JWS signature. Public JWK set is served at `/.well-known/jwks.json`.
-- CI pins `a2a-sdk[signing,encryption]==1.2.3` and uses the SDK client + verifier to validate round-trip, reject a tampered signed field, and enforce official terminal-task errors.
+- Agent Card exposes `supportedInterfaces`, `skills`, `defaultInputModes`, `defaultOutputModes` and a JWS signature. Public JWK set is served at `/.well-known/jwks.json`. Internal `A2AClient` verifies the signature and endpoint before its first RPC, using a JWKS URL/key ID pinned to its configured base URL.
+- CI pins `a2a-sdk[signing,encryption]==1.2.3` and uses the SDK client + verifier to validate round-trip, reject a tampered signed field, enforce official terminal-task errors, and independently test internal-client tamper rejection.
 - Key management limit: signing key is ephemeral per server process in this prototype. Do not treat this as durable production identity; production must load a stable private key from a secret manager and enforce a trusted JWKS allowlist/rotation policy.

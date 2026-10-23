@@ -1,8 +1,8 @@
 # PLAN_WORK51 — HQTT AI Coder–Tester qua A2A
 
 - **Work:** 51 — HQTT AI Coder–Tester
-- **Phiên bản:** v1.10
-- **Trạng thái:** P3 EXTENDED (iteration 4) — latest CI run `39949967437` trên commit `2c3e61b9f325992e7f30966348155c0dd0fc8c5e` xác nhận **63/63 tests PASS trong 22.91s**; official A2A SDK `1.2.3` round-trip + ES256/JWS signature verification + tampered-card rejection PASS; terminal `CancelTask` và continuation `SendMessage` bị từ chối đúng protocol. HTTP E2E demo `PASS / PASS / BLOCKED`; artifact ID `12498829841`. Work 51 vẫn NOT DONE pending independent QA sign-off, image digest pinning/custom seccomp review và production key management.
+- **Phiên bản:** v1.11
+- **Trạng thái:** P3 EXTENDED (iteration 4) — latest code CI run `39951027907` trên commit `7168fd637199ce2468376cd5d4a42913e8a9edbc` xác nhận **64/64 tests PASS trong 21.94s**; official SDK round-trip, signed Agent Card verification/tamper rejection, internal client signature verification và terminal-task error semantics đều PASS. HTTP E2E demo `PASS / PASS / BLOCKED`; artifact ID `12500666131`. Work 51 vẫn NOT DONE pending independent Qw QA sign-off, image digest/custom seccomp review và production key management.
 - **Chủ sở hữu triển khai:** Qc — Qwen Coder
 - **Điều phối / hồ sơ:** Xu — AI-01
 - **QE/QA độc lập:** Qw — AI-05 (không phải trưởng dự án)
@@ -119,4 +119,5 @@ Qc phải tự kiểm tra lại nguồn, công cụ và đường đi có sẵn 
 | v1.7 | 2026-10-23 | Vibe | Iteration 3: thêm ContainerSandbox D-04c với Docker network none, resource caps, cap-drop ALL, no-new-privileges, Docker default seccomp profile, read-only root và mount; 4 test container. CI lúc đó còn pending. |
 | v1.8 | 2026-10-23 | Xu — AI-01 | Đã sửa lỗi container profile; CI run `39948132321` xác nhận 62 tests PASS và demo đúng 3 verdict. |
 | v1.9 | 2026-10-23 | Xu — AI-01 | Thêm adapter A2A 1.0 tương thích official SDK, ES256/JWS Agent Card và JWKS endpoint; SDK round-trip + signature/tamper test PASS. |
-| v1.10 | 2026-10-23 | Xu — AI-01 | Đối chiếu thêm terminal-task semantics với official SDK 1.2.3: `CancelTask` trên task terminal trả `TaskNotCancelableError` (-32002), `SendMessage` tiếp diễn task terminal trả `UnsupportedOperationError` (-32004); alias nội bộ legacy giữ hành vi cũ để không phá pipeline. CI run `39949967437`, commit `2c3e61b9f325992e7f30966348155c0dd0fc8c5e`: **63 passed in 22.91s**, E2E PASS/PASS/BLOCKED; artifact ID `12498829841`. Independent QA, image digest/custom seccomp và production key management còn mở. |
+| v1.10 | 2026-10-23 | Xu — AI-01 | Terminal-task semantics đã được đối chiếu với SDK: CancelTask terminal → -32002, SendMessage continuation terminal → -32004; alias legacy giữ hành vi nội bộ. CI 63 tests PASS. |
+| v1.11 | 2026-10-23 | Xu — AI-01 | Internal `A2AClient` giờ xác minh Agent Card ES256/JWS trước RPC, chỉ tin JWKS URL + key ID cố định và kiểm tra signed JSON-RPC endpoint; thêm test tamper rejection cho internal client. CI run `39951027907`, commit `7168fd637199ce2468376cd5d4a42913e8a9edbc`: **64 passed in 21.94s**, demo PASS/PASS/BLOCKED; artifact ID `12500666131`. Qw QA sign-off, image digest/custom seccomp và production key management vẫn mở. |
