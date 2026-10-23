@@ -17,6 +17,8 @@ from a2a.types import (
     Role,
     SendMessageRequest,
     TaskState,
+    TaskNotCancelableError,
+    UnsupportedOperationError,
 )
 from a2a.utils.signing import InvalidSignaturesError, create_signature_verifier
 
@@ -72,9 +74,29 @@ def test_official_a2a_sdk_jsonrpc_roundtrip():
             assert fetched.id == task.id
             assert fetched.status.state == TaskState.TASK_STATE_COMPLETED
 
-            canceled = await client.cancel_task(CancelTaskRequest(id=task.id))
-            # A completed task is terminal; cancel is a no-op, per Work 51 contract.
-            assert canceled.status.state == TaskState.TASK_STATE_COMPLETED
+            # Official A2A rejects cancellation/continuation once a task is terminal.
+            try:
+                await client.cancel_task(CancelTaskRequest(id=task.id))
+            except TaskNotCancelableError:
+                pass
+            else:
+                raise AssertionError("official CancelTask accepted a terminal task")
+
+            continuation = SendMessageRequest(
+                message=Message(
+                    message_id="official-sdk-message-2",
+                    task_id=task.id,
+                    role=Role.ROLE_USER,
+                    parts=[Part(text=json.dumps(brief, ensure_ascii=False))],
+                )
+            )
+            try:
+                async for _ in client.send_message(continuation):
+                    pass
+            except UnsupportedOperationError:
+                pass
+            else:
+                raise AssertionError("official SendMessage accepted a terminal task")
 
             # A changed signed field must be rejected by the official verifier.
             async with httpx.AsyncClient() as http_client:

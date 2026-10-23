@@ -47,6 +47,8 @@ JSONRPC_METHOD_NOT_FOUND = -32601
 JSONRPC_INVALID_PARAMS = -32602
 JSONRPC_INTERNAL_ERROR = -32603
 JSONRPC_AGENT_ERROR = -32000  # task-level application error
+JSONRPC_TASK_NOT_CANCELABLE = -32002
+JSONRPC_UNSUPPORTED_OPERATION = -32004
 
 TERMINAL_STATES = ("completed", "failed", "canceled")
 
@@ -65,6 +67,14 @@ class RpcParamError(Exception):
 
 class MethodNotFound(Exception):
     pass
+
+
+class A2ATaskNotCancelable(Exception):
+    """Official A2A error for cancellation of a terminal task."""
+
+
+class A2AUnsupportedOperation(Exception):
+    """Official A2A error for an operation not valid for the task state."""
 
 
 def new_id(prefix: str = "t") -> str:
@@ -271,6 +281,12 @@ class _Handler(BaseHTTPRequestHandler):
         except RpcParamError as exc:
             self._respond_json(200, self._rpc_error(req_id, JSONRPC_INVALID_PARAMS, str(exc)))
             return
+        except A2ATaskNotCancelable as exc:
+            self._respond_json(200, self._rpc_error(req_id, JSONRPC_TASK_NOT_CANCELABLE, str(exc)))
+            return
+        except A2AUnsupportedOperation as exc:
+            self._respond_json(200, self._rpc_error(req_id, JSONRPC_UNSUPPORTED_OPERATION, str(exc)))
+            return
         except TaskStateError as exc:
             self._respond_json(200, self._rpc_error(req_id, JSONRPC_AGENT_ERROR, str(exc)))
             return
@@ -293,6 +309,10 @@ class _Handler(BaseHTTPRequestHandler):
                 existing = backend.get_task(cont_id)
                 if existing is None:
                     raise RpcParamError(f"unknown taskId: {cont_id}")
+                if official and is_terminal(existing.get("state", "")):
+                    raise A2AUnsupportedOperation(
+                        f"Task {cont_id} is in terminal state: {existing.get('state')}"
+                    )
                 task = backend.handle_task(cont_id, payload, existing)
             else:
                 suggested = params.get("taskId")
@@ -316,14 +336,19 @@ class _Handler(BaseHTTPRequestHandler):
             task = backend.get_task(params.get("id") or "")
             if task is None:
                 raise RpcParamError(f"unknown task: {params.get('id')!r}")
-            if not is_terminal(task.get("state", "")):
-                canceled = dict(task)
-                canceled["state"] = assert_transition(task["state"], "canceled")
-                canceled["status"] = {"state": "canceled",
-                                      "message": "canceled by client",
-                                      "timestamp": _utc_now_iso()}
-                canceled["updatedAt"] = _utc_now_iso()
-                task = backend.store(canceled)
+            if is_terminal(task.get("state", "")):
+                if official:
+                    raise A2ATaskNotCancelable(
+                        f"Task cannot be canceled - current state: {task.get('state')}"
+                    )
+                return task
+            canceled = dict(task)
+            canceled["state"] = assert_transition(task["state"], "canceled")
+            canceled["status"] = {"state": "canceled",
+                                  "message": "canceled by client",
+                                  "timestamp": _utc_now_iso()}
+            canceled["updatedAt"] = _utc_now_iso()
+            task = backend.store(canceled)
             return _to_official_task(task) if official else task
         raise MethodNotFound(f"method not supported: {method}")
 
