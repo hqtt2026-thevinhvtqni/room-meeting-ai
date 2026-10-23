@@ -1,0 +1,35 @@
+name: Work 51 A2A Coder-Tester
+
+on:
+  push:
+    branches:
+      - work/51-hqtt-coder-tester
+    paths:
+      - "work/51/HQTT-AI-CODER-TESTER/**"
+      - ".github/workflows/work51-a2a.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  work51-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout Work 51 branch
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install test runner
+        run: python -m pip install --upgrade pip pytest
+      - name: Run Work 51 test suite
+        working-directory: work/51/HQTT-AI-CODER-TESTER
+        env:
+          PYTHONPATH: 03_CODE
+        run: python -m pytest 04_TEST -q
+      - name: Run HTTP end-to-end demo
+        working-directory: work/51/HQTT-AI-CODER-TESTER
+        run: python 03_CODE/run_demo.py
