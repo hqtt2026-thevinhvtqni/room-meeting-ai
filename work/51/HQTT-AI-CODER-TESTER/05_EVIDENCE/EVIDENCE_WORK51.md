@@ -15,9 +15,9 @@ Nguyên tắc (PLAN §4 P4): chỉ ghi PASS khi đã chạy và có bằng chứ
 ## Kết quả chạy — bằng chứng CI thực tế
 
 - Workflow: `.github/workflows/work51-a2a.yml`
-- Run: [39930470092](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39930470092)
-- Tested code commit: `2645366de183e7a0905a6c9d1b378741aec7b693`
-- Kết quả pytest: **43 passed, 0 failed** (Python 3.11; 8.59s). Pytest collection warning đã được sửa bằng `TesterBackend.__test__ = False`; test run này không còn `PytestCollectionWarning`.
+- Initial code-verification run: [39930470092](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39930470092) on code commit `2645366de183e7a0905a6c9d1b378741aec7b693`.
+- Latest full-branch verification: [39930817040](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39930817040) on commit `ccbe2985c260c05582a315885d51f6d481cd6910` (plan/evidence/decision register updated; implementation unchanged).
+- Kết quả pytest: **43 passed, 0 failed** (Python 3.11; 8.58s on latest run). Pytest collection warning đã được sửa bằng `TesterBackend.__test__ = False`; test run này không còn `PytestCollectionWarning`.
 - HTTP demo: **exit code 0**; `correct → PASS` (0 vòng sửa), `seeded_bug → PASS` (1 vòng sửa), `always_bug → BLOCKED` (2 vòng sửa, `max_fix_rounds_exceeded`). Evidence JSONL đã được tạo trong workspace của runner: `03_CODE/evidence_runs/20261023T091508Z/evidence.jsonl`. GitHub Actions chưa upload file JSONL làm artifact tải xuống, vì vậy log run là bằng chứng hiện có.
 - Một cảnh báo cleanup vẫn còn: `fatal: No url found for submodule path 'room-meeting-ai' in .gitmodules`. Đây là gitlink sai đã xác định ở main/repo hygiene; Work 51 đang 27 commit behind và chưa tự ý xóa gitlink/rebase. Cảnh báo không làm test/demo job thất bại. Có thêm cảnh báo deprecation từ runner/action Node.js.
 
@@ -58,4 +58,4 @@ Yêu cầu: Python ≥ 3.9, pytest. Không cần API key.
 - Evidence metadata commit: `6954db26f44aaaac3dea85f64d42256e3a1e0e32`.
 - CI workflow commit: `ad69c05c7c4dac6bedf3f5dced8d69e3a4ee3778`.
 - Test hygiene fix commit: `2645366de183e7a0905a6c9d1b378741aec7b693`.
-- Verified CI run: `39930470092` — 43 passed, HTTP demo exit 0. Current report is a tested vertical slice, not full Work 51 acceptance.
+- Verified CI runs: `39930470092` (implementation test) and `39930817040` (latest full branch) — both 43 passed, HTTP demo exit 0. Latest branch head at verification: `ccbe2985c260c05582a315885d51f6d481cd6910`. Current report is a tested vertical slice, not full Work 51 acceptance.
