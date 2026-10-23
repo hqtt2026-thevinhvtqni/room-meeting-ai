@@ -16,7 +16,7 @@ Status: PARTIAL — three confirmed machine/generated artifacts removed from thi
 | `test_secretary_*.py`, `test_closed_paste.py` | Test candidates. | Preserve; verify collection and owning Work before moving. |
 | `*_v1_backup.py` (if present) | Potential backup/source history. | Preserve until Git history and reproducibility are checked. |
 | `docs/NewFolder/NewFile.txt`, `hello.txt` | Reported placeholder candidates. | Exact paths not found on the maintenance branch; no deletion made. |
-| Invalid gitlink/submodule path `room-meeting-ai` | CI checkout cleanup logs `No url found for submodule path 'room-meeting-ai' in .gitmodules`. | **BLOCKED** pending inspection of tracked tree/history; no gitlink removal attempted. |
+| Invalid gitlink/submodule path `room-meeting-ai` | GitHub tree shows mode `160000` pointing to `eeb497e906b665e625a7ba7c50d93ada6ada9cfc`, a parentless commit in this same repository. Its tree contains the project files but no `.gitmodules`; the gitlink first appears in root commit `66b7ed52ed2e55581d0418b1ebd6b57a4bff5f38`. | **Removed from maintenance PR branch only** as a malformed self-reference. Referenced commit remains in Git history; `main` untouched. CI must verify warning is gone. |
 
 ## Rules
 
