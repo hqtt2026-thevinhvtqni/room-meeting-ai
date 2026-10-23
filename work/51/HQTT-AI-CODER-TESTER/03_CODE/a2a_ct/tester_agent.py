@@ -52,8 +52,7 @@ class TesterBackend(AgentBackend):
 
         contract_id = payload.get("contract_id", "")
         programs = payload.get("acceptance_programs") or []
-        timeout_s = float(pay
-load.get("sandbox_timeout_s", 10.0))
+        timeout_s = float(payload.get("sandbox_timeout_s", 10.0))
         artifact = payload.get("artifact") or {}
         content = artifact.get("content", "")
         claimed_sha = artifact.get("sha256", "")
