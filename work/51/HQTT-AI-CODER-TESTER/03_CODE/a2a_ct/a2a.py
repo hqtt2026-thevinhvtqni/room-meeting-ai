@@ -474,7 +474,7 @@ class A2AClient:
                 raise PyJWKError(f"unknown Agent Card key id: {kid}") from exc
 
         try:
-            card_proto = parse_agent_card(raw_card)
+            card_proto = parse_agent_card(dict(raw_card))
             create_signature_verifier(
                 key_provider=trusted_key_provider,
                 algorithms=["ES256"],
