@@ -4,4 +4,6 @@ python-dotenv>=1.0.0
 groq>=0.11.0
 requests>=2.31.0
 fastapi>=0.110.0
-mcp>=1.0.0
+# ROOM HOP adapter currently uses the MCP Python SDK 1.x Server decorator API.
+# Do not float to MCP 2.x until the adapter and its protocol tests are migrated.
+mcp>=1.0.0,<2.0.0
