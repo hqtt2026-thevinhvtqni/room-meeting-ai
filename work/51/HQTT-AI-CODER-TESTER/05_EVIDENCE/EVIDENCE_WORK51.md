@@ -100,4 +100,4 @@ Trạng thái thực thi: **PASS — CI đã chạy thật** trên commit `24e06
 - Hai lỗi container phát hiện trước khi PASS đã được sửa: Docker hiểu `seccomp=default` là đường dẫn; sau khi bỏ override, `--cap-drop ALL` làm root trong container không đọc được tempdir mode 0700, nên container được chạy bằng UID/GID host. Các run thất bại trước không được tính là PASS.
 - GitHub Actions cleanup vẫn cảnh báo gitlink `room-meeting-ai` không có URL trong `.gitmodules`; warning không làm test/demo job thất bại và được giữ ngoài phạm vi Work 51.
 
-Còn mở: signed Agent Card + official A2A SDK conformance; independent QA sign-off của Qw; custom seccomp whitelist/image digest pinning và gitlink `.gitmodules` (repo hygiene). signed Agent Card + official A2A SDK conformance; independent QA sign-off của Qw; gitlink .gitmodules (repo hygiene, ngoài phạm vi Work 51).
+Còn mở: signed Agent Card + official A2A SDK conformance; independent QA sign-off của Qw; custom seccomp whitelist/image digest pinning và gitlink `.gitmodules` (repo hygiene, ngoài phạm vi Work 51).
