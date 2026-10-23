@@ -5,7 +5,7 @@ Status: remediation baseline opened 2026-10-23 (UTC+07:00). This document is a c
 ## Findings confirmed from GitHub
 
 - The main branch has root-level runtime/test artifacts and mixed Work folders. Some may be historical evidence; none should be deleted based on filename alone.
-- `.gitignore` already contains `desktop.ini`; the remaining issue is that a tracked file remains tracked despite an ignore rule.
+- `.gitignore` already contains `desktop.ini`; tracked copies remained tracked despite the ignore rule. Content/hash inspection found 44 identical 104-byte Windows Explorer metadata files referencing a local Google Drive File Stream executable. All 44 were removed from this maintenance PR branch only; no meeting records or source files were removed by that operation.
 - `context/PROJECT_STATE.md` records mechanism/MockConnector verification but real API integration as pending.
 - The Work 51 branch is divergent from main: this review found 27 commits on main not in Work 51 and 3 commits on Work 51 not in main. Do not merge blindly.
 - The first full pytest CI run (commit `7e40351`) reported `214 passed, 16 failed`. Unbounded `mcp>=1.0.0` resolved MCP SDK 2.3.0, incompatible with the adapter's SDK 1.x `Server.list_tools()` decorator API. Pinning to `<2.0.0` resolved this API failure in subsequent CI.
