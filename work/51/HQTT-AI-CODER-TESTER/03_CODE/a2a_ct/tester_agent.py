@@ -17,15 +17,23 @@ import json
 from .a2a import AgentBackend, artifact_text, make_task, make_text_artifact
 from .evidence import sha256_text
 from .sandbox import Sandbox
+from .sandbox_container import ContainerSandbox
 
 
 class TesterBackend(AgentBackend):
     # Prevent pytest from mistaking this imported backend for a test class.
     __test__ = False
 
-    def __init__(self, sandbox: Sandbox | None = None):
+    def __init__(self, sandbox: Sandbox | ContainerSandbox | None = None):
         super().__init__()
-        self.sandbox = sandbox or Sandbox()
+        if sandbox is not None:
+            # Explicit dependency injection wins, keeping tests and deployments deterministic.
+            self.sandbox = sandbox
+        else:
+            # Prefer the container profile when Docker and its image are available;
+            # otherwise retain the portable subprocess sandbox.
+            container_sandbox = ContainerSandbox()
+            self.sandbox = container_sandbox if container_sandbox.available() else Sandbox()
 
     def agent_card(self) -> dict:
         return {
