@@ -103,8 +103,7 @@ class CoderBackend(AgentBackend):
             # On feedback: seeded_bug fixes itself; always_bug never does.
             body = bodies["buggy"] if mode == "always_bug" else bodies["correct"]
 
-        text = build_artifact_text(contr
-act_id, objective, signature, body, version, filename)
+        text = build_artifact_text(contract_id, objective, signature, body, version, filename)
         artifact = make_text_artifact(
             name=filename,
             text=text,
