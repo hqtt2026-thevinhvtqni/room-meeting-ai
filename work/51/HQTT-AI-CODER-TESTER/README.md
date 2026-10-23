@@ -1,6 +1,6 @@
 # Work 51 — HQTT AI Coder–Tester (A2A) — Quickstart
 
-Status: **IMPLEMENTATION COMMITTED — TEST EXECUTION PENDING** (xem `05_EVIDENCE/EVIDENCE_WORK51.md`).
+Status: **P2 VERTICAL SLICE PASS; P3 PARTIAL; WORK 51 NOT DONE** — 43 tests passed and HTTP demo passed in [GitHub Actions run 39930470092](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39930470092). Security isolation, task persistence/restart, official A2A spec conformance, and branch divergence remain open.
 
 ## Chạy demo end-to-end (HTTP thật)
 
@@ -10,7 +10,7 @@ python 03_CODE/run_demo.py
 ```
 
 Demo chạy 3 kịch bản qua 2 A2A server (Coder :random, Tester :random):
-`correct` → PASS ngay; `seeded_bug` → FAIL→feedback→sửa→PASS; `always_bug` → BLOCKED sau 2 vòng sửa. Evidence JSONL ghi vào `03_CODE/evidence_runs/<ts>/`.
+`correct` → PASS ngay; `seeded_bug` → FAIL→feedback→sửa→PASS; `always_bug` → BLOCKED sau 2 vòng sửa. Evidence JSONL ghi vào `03_CODE/evidence_runs/<ts>/` trong runner; CI log xác nhận kết quả, nhưng file JSONL hiện chưa được upload làm artifact.
 
 ## Chạy test suite
 
@@ -19,7 +19,7 @@ cd work/51/HQTT-AI-CODER-TESTER
 python -m pytest 04_TEST -q
 ```
 
-Chỉ cần Python ≥ 3.9 + pytest, không cần key/API ngoài. Sandbox dùng `sys.executable`.
+Chỉ cần Python ≥ 3.9 + pytest, không cần key/API ngoài. CI chạy bằng Python 3.11. Sandbox dùng `sys.executable`.
 
 ## Bố cục
 
