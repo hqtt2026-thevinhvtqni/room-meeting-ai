@@ -50,7 +50,7 @@ Orchestrator      Coder                    Tester                  Sandbox
      │  FAIL, hết lượt    -> BLOCKED (hard cap) │                   │
 ```
 
-## 3. Mapping sang A2A (D-01)
+## 3. Mapping sang A2A (D-01 / D-01c)
 
 | Khái niệm A2A | Triển khai trong slice | Ghi chú |
 |---|---|---|
@@ -118,3 +118,11 @@ sandbox_container.py — ContainerSandbox cùng contract run(artifact_code, prog
 - Env scrub và cap input 200KB tái dùng từ sandbox.Sandbox (composition).
 - `TesterBackend` gọi `ContainerSandbox.available()` và chọn profile Docker khi sẵn sàng; nếu không thì dùng `Sandbox()`. `available()` probe Docker và pre-pull image.
 - Giới hạn còn lại: chưa có seccomp whitelist tùy chỉnh; image chưa pin digest (supply-chain drift) — mở cho iteration sau.
+
+
+## 9. Iteration 4 — official A2A SDK and signed Agent Card (D-01c)
+
+- Wire adapter supports official A2A 1.0 JSON-RPC method names `SendMessage`, `GetTask`, `CancelTask`, returning the official Task/Artifact field shapes. Legacy lower-case methods remain only for internal compatibility.
+- Agent Card exposes `supportedInterfaces`, `skills`, `defaultInputModes`, `defaultOutputModes` and a JWS signature. Public JWK set is served at `/.well-known/jwks.json`.
+- CI pins `a2a-sdk[signing,encryption]==1.2.3` and uses the SDK client + verifier to validate round-trip and reject a tampered signed field.
+- Key management limit: signing key is ephemeral per server process in this prototype. Do not treat this as durable production identity; production must load a stable private key from a secret manager and enforce a trusted JWKS allowlist/rotation policy.

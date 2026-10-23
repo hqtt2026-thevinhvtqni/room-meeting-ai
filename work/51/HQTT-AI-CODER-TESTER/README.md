@@ -1,6 +1,6 @@
 # Work 51 — HQTT AI Coder–Tester (A2A) — Quickstart
 
-Status: **P3 EXTENDED (iteration 3 verified); WORK 51 NOT DONE** — CI run [39948132321](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39948132321) confirms **62 tests passed in 23.22s** and HTTP E2E demo exit 0. D-04c uses Docker ContainerSandbox when available; official A2A SDK/signed-card conformance and independent QA sign-off remain open.
+Status: **P3 EXTENDED (iteration 4 verified); WORK 51 NOT DONE** — CI run [39949544121](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39949544121) confirms **63 tests passed in 20.79s**, official A2A SDK `1.2.3` round-trip and signed Agent Card verification/tamper rejection. Independent QA and production security hardening remain open.
 
 ## Chạy demo end-to-end (HTTP thật)
 
@@ -19,7 +19,7 @@ cd work/51/HQTT-AI-CODER-TESTER
 python -m pytest 04_TEST -q
 ```
 
-Chỉ cần Python ≥ 3.9 + pytest, không cần key/API ngoài. CI chạy bằng Python 3.11. Sandbox dùng `sys.executable`.
+Yêu cầu Python ≥ 3.10, pytest và SDK dùng cho Agent Card signing/interoperability. Cài dependency bằng `python -m pip install pytest 'a2a-sdk[signing,encryption]==1.2.3'`. CI chạy bằng Python 3.11. Key ký hiện ephemeral cho demo/CI, không phải production key management.
 
 ## Bố cục
 
@@ -51,3 +51,11 @@ nistic generator bằng LLM adapter
 - `sandbox_container.py`: ContainerSandbox dùng Docker `--network none`, Docker default seccomp profile, `--cap-drop ALL`, `no-new-privileges`, `--read-only`, resource caps và mount read-only. `TesterBackend` chọn container khi Docker/image khả dụng, nếu không fallback sang `Sandbox()`.
 - 4 container tests đã chạy thật, không skip, trong CI run [39948132321](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39948132321): tổng **62 passed**; artifact ID `12499500891`.
 - Giới hạn còn lại: image chưa pin digest, chưa có seccomp whitelist riêng; cần independent security review, official A2A SDK/signed-card conformance và QA sign-off.
+
+
+## Iteration 4 — official SDK + signed Agent Card verified
+
+- CI pins `a2a-sdk[signing,encryption]==1.2.3`.
+- Official SDK client discovers the signed card, sends `SendMessage`, retrieves `GetTask`, and calls `CancelTask`; tampered card description is rejected by the signature verifier.
+- CI run [39949544121](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39949544121): **63/63 PASS**; artifact ID `12499523066`.
+- Security limit: key is ephemeral per process for demo/CI. Stable secret-managed keys, rotation, trusted JWKS policy and independent QA remain required before production.

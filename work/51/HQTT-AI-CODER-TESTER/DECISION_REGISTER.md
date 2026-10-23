@@ -4,7 +4,7 @@ Quy tắc: mỗi quyết định ghi Options → Choice → Impact. Cột "Vinh 
 
 | ID | Quyết định | Options | Choice | Impact | Vinh approval |
 |---|---|---|---|---|---|
-| D-01 | Wire binding A2A | (a) Official A2A SDK; (b) JSON-RPC 2.0 + text-part tự viết tối thiểu; (c) LangGraph/AutoGen | (b) stdlib-only, mọi wire code gom trong `a2a.py` | Chạy được không cần cài thêm gì; swap sang SDK sau chỉ sửa 1 file; rủi ro lệch spec ở chi tiết (signed card, streaming) — đã ghi trong ARCHITECTURE §6 | Không (đã swap-point) |
+| D-01 | Wire binding A2A | (a) Official SDK end-to-end; (b) adapter riêng có swap-point; (c) LangGraph/AutoGen | (b) adapter riêng vẫn giữ, nhưng wire format A2A 1.0 được kiểm bằng official SDK 1.2.3; dùng SDK signer/verifier cho Agent Card | Giữ backend Coder/Tester độc lập với transport, có interoperability test thật; chưa tuyên bố full spec conformance | Không |
 | D-02 | BLOCKED mapping | (a) Thêm state `blocked` ngoài spec; (b) BLOCKED = outcome pipeline, task nằm trong state chuẩn | (b) | Không phá A2A task lifecycle; BLOCKED rõ ràng trong RunReport + evidence | Không |
 | D-03 | Coder intelligence | (a) Gọi LLM ngay; (b) Deterministic generator + swap-point `_emit` | (b) | Slice xác minh được *protocol + loop*, không phụ thuộc API key; LLM/Qwen cắm sau mà không đổi interface | Không |
 | D-04 | Sandbox | (a) Docker/container; (b) subprocess + `python -I` + timeout + tempdir | (b) cho slice | Đủ cho demo/test local; **không an toàn cho untrusted code thật** (network egress chưa chặn) | **CÓ** — trước khi chạy artifact từ nguồn ngoài |
@@ -27,3 +27,10 @@ Quy tắc: mỗi quyết định ghi Options → Choice → Impact. Cột "Vinh 
 | ID | Quyết định | Options | Choice | Impact | Vinh approval |
 |---|---|---|---|---|---|
 | D-04c | Container-grade sandbox | (a) giữ rlimits/unshare của D-04b là đủ; (b) thêm profile Docker khóa chặt (network none, Docker default seccomp profile bằng cách không override, cap-drop ALL, read-only, memory/cpu/pids caps) làm tầng tùy chọn | (b) | Đóng khoảng cách container/seccomp cho untrusted code: mạng bị chặn trong container; resource caps do cgroup cưỡng chế; CI run `39948132321` xác nhận 4 test container. Profile được chọn khi Docker khả dụng và fallback Sandbox nếu không; còn mở: custom seccomp whitelist, pin image digest, independent security review | Xu — theo ưu tiên đã công bố sau D-09 |
+
+
+## Cập nhật iteration 4 (2026-10-23)
+
+| ID | Quyết định | Options | Choice | Impact | Vinh approval |
+|---|---|---|---|---|---|
+| D-01c | Official SDK interoperability + Agent Card signing | (a) Chỉ test binding nội bộ; (b) thêm client/verifier official SDK và chữ ký card | (b) pin `a2a-sdk[signing,encryption]==1.2.3` trong CI; ES256 JWS, JWKS endpoint, verifier chỉ tin URL/kid được pin trong test | CI chứng minh round-trip SendMessage/GetTask/CancelTask, card signature hợp lệ và tampering bị từ chối. Khóa hiện ephemeral cho test/demo, chưa production key management | Không — trong phạm vi kế hoạch |

@@ -1,6 +1,6 @@
 # WORK51 Evidence — Hồ sơ bàn giao
 
-Trạng thái: **P3 EXTENDED — ITERATION 3 CI VERIFIED — WORK 51 NOT DONE.**
+Trạng thái: **P3 EXTENDED — ITERATION 4 CI VERIFIED — WORK 51 NOT DONE.**
 
 Nguyên tắc (PLAN §4 P4): chỉ ghi PASS khi đã chạy và có bằng chứng. GitHub Actions đã chạy test suite và demo thật trên nhánh Work 51. Các kết quả dưới đây chỉ chứng minh hành vi của vertical slice đã kiểm tra; không chứng minh đủ các tiêu chí bảo mật, persistence, A2A spec conformance hoặc tích hợp production.
 
@@ -8,7 +8,7 @@ Nguyên tắc (PLAN §4 P4): chỉ ghi PASS khi đã chạy và có bằng chứ
 
 - P0 READ/TRACE: đọc charter, plan v1.1, cây Work 51, AGENTS.md, PROJECT_STATE.md, API_CONTRACT.md.
 - P1: `contract.py` (schema + validation), `states.py` (state machine A2A), decision register D-01..D-09, architecture doc.
-- P2 vertical slice: `a2a.py` (JSON-RPC 2.0 binding: Agent Card, message/send, tasks/get, continuation, error model), `coder_agent.py`, `tester_agent.py`, `sandbox.py`, `orchestrator.py`, `run_demo.py`.
+- P2 vertical slice: `a2a.py` (A2A 1.0-compatible JSON-RPC adapter: Agent Card, `SendMessage`/`GetTask`/`CancelTask` plus legacy aliases, continuation, official Task/Artifact wire shape, ES256/JWS signature + JWKS), `coder_agent.py`, `tester_agent.py`, `sandbox.py`, `orchestrator.py`, `run_demo.py`.
 - P3 automated tests: `04_TEST/` — 43 tests đã chạy thành công, phủ: happy path, seeded fail→fix→PASS, luôn fail→BLOCKED sau 2 vòng, max_fix_rounds=0, timeout sandbox, malformed payload (-32602), taskId lạ, transport error→BLOCKED, PASS thiếu evidence→BLOCKED, idempotent tasks/get, continuation feedback, hash mismatch, full pipeline qua HTTP thật.
 - P4: README, ARCHITECTURE, DECISION_REGISTER, plan v1.2 changelog, file này.
 
@@ -101,3 +101,15 @@ Trạng thái thực thi: **PASS — CI đã chạy thật** trên commit `24e06
 - GitHub Actions cleanup vẫn cảnh báo gitlink `room-meeting-ai` không có URL trong `.gitmodules`; warning không làm test/demo job thất bại và được giữ ngoài phạm vi Work 51.
 
 Còn mở: signed Agent Card + official A2A SDK conformance; independent QA sign-off của Qw; custom seccomp whitelist/image digest pinning và gitlink `.gitmodules` (repo hygiene, ngoài phạm vi Work 51).
+
+
+## Iteration 4 — official A2A SDK interoperability and signed Agent Card (2026-10-23)
+
+- Official dependency pinned in CI: `a2a-sdk[signing,encryption]==1.2.3`.
+- Agent Card: standard `supportedInterfaces`, required skill/input/output declarations, ES256 JWS signature via official SDK signer; public key served from `/.well-known/jwks.json`.
+- Trust boundary in test: verifier only accepts the expected local JWKS URL and pinned `kid`; changing the signed card description causes verification rejection. The official SDK client successfully discovers the card, sends `SendMessage`, reads `GetTask`, and calls `CancelTask` on a completed task.
+- Internal aliases `message/send`, `tasks/get`, `tasks/cancel` remain for compatibility with the Work 51 orchestrator and existing tests.
+- CI run: [39949544121](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39949544121) — `success`, **63 passed in 20.79s**, 0 failed; E2E demo exit 0: `correct → PASS`, `seeded_bug → PASS` after 1 feedback round, `always_bug → BLOCKED` after 2 rounds.
+- Evidence artifact: `work51-evidence-39949544121`, artifact ID `12499523066`; [open run/artifact](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39949544121).
+- **Security qualification:** signing key is generated ephemerally per server process for conformance tests. This proves signature interoperability and tamper detection, not durable production identity. Production requires a stable private key in secret management, key rotation, pinned/allowlisted JWKS trust and independent review.
+- Earlier failed runs `39949376189` and `39949503155` are debugging evidence only; only the successful run above counts as PASS.

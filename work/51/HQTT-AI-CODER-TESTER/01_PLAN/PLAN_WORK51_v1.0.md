@@ -1,8 +1,8 @@
 # PLAN_WORK51 — HQTT AI Coder–Tester qua A2A
 
 - **Work:** 51 — HQTT AI Coder–Tester
-- **Phiên bản:** v1.8
-- **Trạng thái:** P3 EXTENDED (iteration 3) — CI run `39948132321` trên commit `24e06ca66df407d2c0e2d6b285e5d8dededd8da7` xác nhận **62/62 tests PASS trong 23.22s**; HTTP E2E demo: `correct → PASS`, `seeded_bug → PASS` sau 1 vòng feedback, `always_bug → BLOCKED` sau 2 vòng; evidence artifact `work51-evidence-39948132321` (ID `12499500891`, SHA-256 `2fa28680779adca5e14b6b18ff188b1585b9516ddb664c596b1633edeff7b7b4`). D-04c container profile được thực thi khi Docker khả dụng, fallback sang Sandbox nếu không; overall Work 51 vẫn NOT DONE pending official A2A SDK/signed-card conformance và independent QA sign-off.
+- **Phiên bản:** v1.9
+- **Trạng thái:** P3 EXTENDED (iteration 4) — CI run `39949544121` trên commit `2c5892b1ce25a625aefe09df7bbd299c77aa6c89` xác nhận **63/63 tests PASS trong 20.79s**; official A2A Python SDK `1.2.3` round-trip PASS, Agent Card ES256/JWS signature verified, tampered card rejected; HTTP E2E demo đạt `PASS / PASS / BLOCKED` đúng thiết kế; artifact ID `12499523066`. Work 51 vẫn NOT DONE pending independent QA sign-off, custom seccomp profile/image digest pinning và hardening production cho key management.
 - **Chủ sở hữu triển khai:** Qc — Qwen Coder
 - **Điều phối / hồ sơ:** Xu — AI-01
 - **QE/QA độc lập:** Qw — AI-05 (không phải trưởng dự án)
@@ -40,7 +40,7 @@ Role names above describe intended responsibilities for this Work. Do not assume
 
 A2A là giao thức, không tự cung cấp execution sandbox, bảo mật, persistence hoặc chất lượng test. Không bắt buộc thêm LangGraph/AutoGen. Trước khi tự viết protocol wrapper, Qc phải xác minh đặc tả A2A và thư viện/SDK hiện có, chọn phương án tương thích nhỏ nhất, ghi rõ version và lý do.
 
-**Triển khai cụ thể (v1.2, ghi nhận P1/P2 xong):** các quyết định D-01..D-09 nằm trong `DECISION_REGISTER.md`; sơ đồ thành phần/sequence/error model nằm trong `02_ARCHITECTURE/ARCHITECTURE_WORK51.md`; binding chọn là JSON-RPC 2.0 + text-part tối thiểu, gom toàn bộ trong `03_CODE/a2a_ct/a2a.py` để swap sang SDK chính thức sau mà không đổi module khác.
+**Triển khai cụ thể (v1.2, ghi nhận P1/P2 xong):** các quyết định D-01..D-09 nằm trong `DECISION_REGISTER.md`; sơ đồ thành phần/sequence/error model nằm trong `02_ARCHITECTURE/ARCHITECTURE_WORK51.md`; binding hiện là adapter JSON-RPC tương thích A2A 1.0, có method chuẩn `SendMessage`, `GetTask`, `CancelTask` cùng alias nội bộ cũ; schema Task/Artifact và Agent Card được serialize theo wire format chính thức. CI dùng `a2a-sdk[signing,encryption]==1.2.3` làm client độc lập và verifier chữ ký. Backend Coder/Tester vẫn tách biệt với transport adapter.
 
 ## 4. Trình tự thực hiện
 
@@ -117,4 +117,5 @@ Qc phải tự kiểm tra lại nguồn, công cụ và đường đi có sẵn 
 
 | v1.6 | 2026-10-23 | Xu — AI-01 | Xu tự quyết định D-09 sau khi kiểm tra 27 commits chỉ thêm file dưới `10/COMPUTER-AGENT/` và không chạm đường dẫn Work 51. Tạo PR #24 theo chiều `main` → Work 51, xác nhận mergeable clean rồi merge bằng merge commit `23194b90efe993614bc961607d3d481165d56b36`; `main` không nhận code Work 51. Sau merge branch 22 ahead / 0 behind. Cần CI chạy lại trên merge head; không coi đây là nghiệm thu toàn Work. |
 | v1.7 | 2026-10-23 | Vibe | Iteration 3: thêm ContainerSandbox D-04c với Docker network none, resource caps, cap-drop ALL, no-new-privileges, Docker default seccomp profile, read-only root và mount; 4 test container. CI lúc đó còn pending. |
-| v1.8 | 2026-10-23 | Xu — AI-01 | Đã sửa hai lỗi cấu hình container phát hiện qua CI (seccomp override sai; UID/cap-drop khiến không đọc được runner), tích hợp ContainerSandbox vào TesterBackend khi Docker khả dụng và giữ Sandbox làm fallback. CI run `39948132321`, commit `24e06ca66df407d2c0e2d6b285e5d8dededd8da7`: **62 passed in 23.22s**, demo E2E đúng 3 verdict; artifact `work51-evidence-39948132321` (ID `12499500891`, SHA-256 `2fa28680779adca5e14b6b18ff188b1585b9516ddb664c596b1633edeff7b7b4`). Work 51 chưa hoàn tất: official A2A SDK/signed-card conformance và independent QA sign-off còn mở. Gitlink `.gitmodules` warning vẫn là repo hygiene ngoài phạm vi. |
+| v1.8 | 2026-10-23 | Xu — AI-01 | Đã sửa lỗi container profile; CI run `39948132321` xác nhận 62 tests PASS và demo đúng 3 verdict. |
+| v1.9 | 2026-10-23 | Xu — AI-01 | Thêm adapter A2A 1.0 tương thích official SDK: `SendMessage`/`GetTask`/`CancelTask`, Task/Artifact schema chuẩn, Agent Card có `supportedInterfaces` + skills và chữ ký ES256/JWS; JWKS endpoint công khai. CI cài `a2a-sdk[signing,encryption]==1.2.3`; independent SDK round-trip PASS, signature hợp lệ được chấp nhận, card bị sửa bị từ chối. CI run `39949544121`, commit `2c5892b1ce25a625aefe09df7bbd299c77aa6c89`: **63 passed in 20.79s**, E2E demo PASS/PASS/BLOCKED; artifact ID `12499523066`. Giới hạn: key hiện ephemeral cho demo/CI, chưa production-grade key management; independent QA, custom seccomp/image pinning còn mở. |
