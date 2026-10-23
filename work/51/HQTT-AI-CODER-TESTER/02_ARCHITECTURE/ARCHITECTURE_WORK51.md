@@ -113,7 +113,7 @@ Orchestrator      Coder                    Tester                  Sandbox
 
 sandbox_container.py — ContainerSandbox cùng contract run(artifact_code, program, timeout_s) như Sandbox nhưng chạy runner trong Docker container:
 - --network none: không có interface mạng nào (mạnh hơn unshare -n best-effort của D-04b).
-- --memory 512m, --cpus 1.0, --pids-limit 64: cap tài nguyên do kernel/cgroup cưỡng chế.
+- --memory 512m + --memory-swap 512m, --cpus 1.0, --pids-limit 64: cap RAM/swap/CPU/process do kernel/cgroup cưỡng chế.
 - --cap-drop ALL + no-new-privileges; Docker default seccomp profile được giữ nguyên bằng cách không truyền override `seccomp=default` (giá trị đó bị Docker hiểu là đường dẫn).
 - --read-only + mount nguồn read-only: filesystem bất biến trong container.
 - Env scrub và cap input 200KB tái dùng từ sandbox.Sandbox (composition).

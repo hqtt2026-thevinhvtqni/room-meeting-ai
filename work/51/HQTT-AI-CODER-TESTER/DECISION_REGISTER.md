@@ -26,7 +26,7 @@ Quy tắc: mỗi quyết định ghi Options → Choice → Impact. Cột "Vinh 
 
 | ID | Quyết định | Options | Choice | Impact | Vinh approval |
 |---|---|---|---|---|---|
-| D-04c | Container-grade sandbox | (a) giữ rlimits/unshare của D-04b là đủ; (b) thêm profile Docker khóa chặt (network none, Docker default seccomp profile bằng cách không override, cap-drop ALL, read-only, memory/cpu/pids caps) làm tầng tùy chọn | (b) | Đóng khoảng cách container/seccomp cho untrusted code: mạng bị chặn trong container; resource caps do cgroup cưỡng chế; CI run `39948132321` xác nhận 4 test container. Profile được chọn khi Docker khả dụng và fallback Sandbox nếu không; còn mở: custom seccomp whitelist, pin image digest, independent security review | Xu — theo ưu tiên đã công bố sau D-09 |
+| D-04c | Container-grade sandbox | (a) giữ rlimits/unshare của D-04b là đủ; (b) thêm profile Docker khóa chặt (network none, Docker default seccomp profile bằng cách không override, cap-drop ALL, read-only, memory/cpu/pids caps) làm tầng tùy chọn | (b) | Đóng khoảng cách container/seccomp cho untrusted code: mạng bị chặn trong container; resource caps do cgroup cưỡng chế, RAM và swap đều giới hạn 512 MB; CI run `39948132321` xác nhận 4 test container. Profile được chọn khi Docker khả dụng và fallback Sandbox nếu không; còn mở: custom seccomp whitelist, pin image digest, independent security review | Xu — theo ưu tiên đã công bố sau D-09 |
 
 
 ## Cập nhật iteration 4 (2026-10-23)

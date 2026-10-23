@@ -87,7 +87,7 @@ Merge commit và các cập nhật hồ sơ cần CI xác minh lại; chỉ run 
 
 Scope theo ưu tiên của Xu sau D-09: thêm Docker ContainerSandbox D-04c, không tạo Work mới và không sửa `main`.
 
-- `sandbox_container.py`: Docker `--network none`, `--memory 512m`, `--cpus 1.0`, `--pids-limit 64`, `--cap-drop ALL`, `no-new-privileges`, Docker default seccomp profile (không override bằng `seccomp=default`), `--read-only`, mount read-only; chạy bằng UID/GID host trên POSIX để đọc tempdir mà không cần capability root.
+- `sandbox_container.py`: Docker `--network none`, `--memory 512m`, `--memory-swap 512m` (no additional swap), `--cpus 1.0`, `--pids-limit 64`, `--cap-drop ALL`, `no-new-privileges`, Docker default seccomp profile (không override bằng `seccomp=default`), `--read-only`, mount read-only; chạy bằng UID/GID host trên POSIX để đọc tempdir mà không cần capability root.
 - `TesterBackend` chọn ContainerSandbox khi Docker và image khả dụng; nếu không, fallback về `Sandbox()`. Fallback không được xem là đủ cho mã không tin cậy từ nguồn ngoài.
 - Bốn test container đã chạy thật trên CI, không skip.
 
@@ -110,7 +110,7 @@ Còn mở: signed Agent Card + official A2A SDK conformance; independent QA sign
 - Trust boundary in test: verifier only accepts the expected local JWKS URL and pinned `kid`; changing the signed card description causes verification rejection. The official SDK client successfully discovers the card, sends `SendMessage`, reads `GetTask`, and calls `CancelTask` on a completed task.
 - The internal `A2AClient` now verifies the signed Agent Card before its first RPC, trusts only the configured base URL's JWKS endpoint and pinned key ID, and checks that the signed JSON-RPC endpoint matches the configured base URL. A dedicated test tampers with the card description and confirms rejection.
 - Official terminal-state semantics are covered: `CancelTask` on a terminal task returns `TaskNotCancelableError` (-32002); `SendMessage` continuation on a terminal task returns `UnsupportedOperationError` (-32004). Legacy aliases `message/send`, `tasks/get`, `tasks/cancel` remain for the Work 51 orchestrator; legacy cancel-terminal no-op behavior is intentionally isolated from the official method.
-- CI run: [39951027907](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39951027907) — `success`, **64 passed in 21.94s**, 0 failed; E2E demo exit 0: `correct → PASS`, `seeded_bug → PASS` after 1 feedback round, `always_bug → BLOCKED` after 2 rounds.
-- Evidence artifact: `work51-evidence-39951027907`, artifact ID `12500666131`; [open run/artifact](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39951027907).
+- CI run: [39951358448](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39951358448) — `success`, **64 passed in 25.73s**, 0 failed; E2E demo exit 0: `correct → PASS`, `seeded_bug → PASS` after 1 feedback round, `always_bug → BLOCKED` after 2 rounds.
+- Evidence artifact: `work51-evidence-39951358448`, artifact ID `12500671676`; [open run/artifact](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39951358448).
 - **Security qualification:** signing key is generated ephemerally per server process for conformance tests. This proves signature interoperability and tamper detection, not durable production identity. Production requires a stable private key in secret management, key rotation, pinned/allowlisted JWKS trust and independent review.
-- Earlier failed runs `39949376189`, `39949503155`, `39950781578` and their intermediate fixes are debugging evidence only; latest PASS proof is run `39951027907`.
+- Earlier failed runs `39949376189`, `39949503155`, `39950781578` and their intermediate fixes are debugging evidence only; latest PASS proof is run `39951358448`.

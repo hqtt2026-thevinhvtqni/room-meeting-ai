@@ -1,8 +1,8 @@
 # PLAN_WORK51 — HQTT AI Coder–Tester qua A2A
 
 - **Work:** 51 — HQTT AI Coder–Tester
-- **Phiên bản:** v1.11
-- **Trạng thái:** P3 EXTENDED (iteration 4) — latest code CI run `39951027907` trên commit `7168fd637199ce2468376cd5d4a42913e8a9edbc` xác nhận **64/64 tests PASS trong 21.94s**; official SDK round-trip, signed Agent Card verification/tamper rejection, internal client signature verification và terminal-task error semantics đều PASS. HTTP E2E demo `PASS / PASS / BLOCKED`; artifact ID `12500666131`. Work 51 vẫn NOT DONE pending independent Qw QA sign-off, image digest/custom seccomp review và production key management.
+- **Phiên bản:** v1.12
+- **Trạng thái:** P3 EXTENDED (iteration 4) — latest code CI run `39951358448` trên commit `f9261844f56bf0c4fd0813d91112a1becaf36005` xác nhận **64/64 tests PASS trong 25.73s**; official SDK round-trip, signed Agent Card verification/tamper rejection, internal client signature verification và terminal-task errors PASS. ContainerSandbox giới hạn cả RAM và swap ở 512 MB. HTTP E2E demo `PASS / PASS / BLOCKED`; artifact ID `12500671676`. Work 51 vẫn NOT DONE pending independent Qw QA sign-off, image digest/custom seccomp review và production key management.
 - **Chủ sở hữu triển khai:** Qc — Qwen Coder
 - **Điều phối / hồ sơ:** Xu — AI-01
 - **QE/QA độc lập:** Qw — AI-05 (không phải trưởng dự án)
@@ -120,4 +120,5 @@ Qc phải tự kiểm tra lại nguồn, công cụ và đường đi có sẵn 
 | v1.8 | 2026-10-23 | Xu — AI-01 | Đã sửa lỗi container profile; CI run `39948132321` xác nhận 62 tests PASS và demo đúng 3 verdict. |
 | v1.9 | 2026-10-23 | Xu — AI-01 | Thêm adapter A2A 1.0 tương thích official SDK, ES256/JWS Agent Card và JWKS endpoint; SDK round-trip + signature/tamper test PASS. |
 | v1.10 | 2026-10-23 | Xu — AI-01 | Terminal-task semantics đã được đối chiếu với SDK: CancelTask terminal → -32002, SendMessage continuation terminal → -32004; alias legacy giữ hành vi nội bộ. CI 63 tests PASS. |
-| v1.11 | 2026-10-23 | Xu — AI-01 | Internal `A2AClient` giờ xác minh Agent Card ES256/JWS trước RPC, chỉ tin JWKS URL + key ID cố định và kiểm tra signed JSON-RPC endpoint; thêm test tamper rejection cho internal client. CI run `39951027907`, commit `7168fd637199ce2468376cd5d4a42913e8a9edbc`: **64 passed in 21.94s**, demo PASS/PASS/BLOCKED; artifact ID `12500666131`. Qw QA sign-off, image digest/custom seccomp và production key management vẫn mở. |
+| v1.11 | 2026-10-23 | Xu — AI-01 | Internal `A2AClient` xác minh Agent Card ES256/JWS trước RPC, pin JWKS URL/key ID và kiểm tra signed endpoint; test tamper rejection PASS. |
+| v1.12 | 2026-10-23 | Xu — AI-01 | Bổ sung `--memory-swap 512m` cùng `--memory 512m` để không cấp swap ngoài giới hạn RAM. CI run `39951358448`, commit `f9261844f56bf0c4fd0813d91112a1becaf36005`: **64 passed in 25.73s**, demo PASS/PASS/BLOCKED; artifact ID `12500671676`. Qw QA sign-off, image digest/custom seccomp và production key management vẫn mở. |
