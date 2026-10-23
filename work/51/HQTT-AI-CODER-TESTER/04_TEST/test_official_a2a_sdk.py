@@ -3,7 +3,12 @@
 import asyncio
 import json
 
+import httpx
+from jwt.api_jwk import PyJWKSet
+from jwt.exceptions import PyJWKError
+
 from a2a.client import ClientConfig, ClientFactory
+from a2a.client.card_resolver import parse_agent_card
 from a2a.types import (
     CancelTaskRequest,
     GetTaskRequest,
@@ -13,6 +18,7 @@ from a2a.types import (
     SendMessageRequest,
     TaskState,
 )
+from a2a.utils.signing import InvalidSignaturesError, create_signature_verifier
 
 from a2a_ct.a2a import A2AServer
 from a2a_ct.coder_agent import CoderBackend
@@ -24,8 +30,26 @@ def test_official_a2a_sdk_jsonrpc_roundtrip():
     server.start()
 
     async def exercise():
+        base_url = server.base_url.rstrip("/")
+        trusted_jwks_url = f"{base_url}/.well-known/jwks.json"
+        async with httpx.AsyncClient() as http_client:
+            response = await http_client.get(trusted_jwks_url)
+            response.raise_for_status()
+            jwks = PyJWKSet.from_dict(response.json())
+
+        def trusted_key_provider(kid, jku):
+            # Never trust the JKU just because the unverified card names it.
+            if jku != trusted_jwks_url or kid != "work51-ephemeral-card-key-1":
+                raise PyJWKError("untrusted Agent Card signing key")
+            return jwks[kid].key
+
+        verifier = create_signature_verifier(
+            key_provider=trusted_key_provider,
+            algorithms=["ES256"],
+        )
         client = await ClientFactory(ClientConfig(streaming=False)).create_from_url(
-            server.base_url
+            server.base_url,
+            signature_verifier=verifier,
         )
         try:
             brief = make_demo_contract(coder_mode="correct").coder_brief()
@@ -51,6 +75,21 @@ def test_official_a2a_sdk_jsonrpc_roundtrip():
             canceled = await client.cancel_task(CancelTaskRequest(id=task.id))
             # A completed task is terminal; cancel is a no-op, per Work 51 contract.
             assert canceled.status.state == TaskState.TASK_STATE_COMPLETED
+
+            # A changed signed field must be rejected by the official verifier.
+            async with httpx.AsyncClient() as http_client:
+                raw = await http_client.get(
+                    f"{base_url}/.well-known/agent-card.json"
+                )
+                raw.raise_for_status()
+                tampered = parse_agent_card(raw.json())
+            tampered.description = "tampered after signing"
+            try:
+                verifier(tampered)
+            except InvalidSignaturesError:
+                pass
+            else:
+                raise AssertionError("tampered Agent Card unexpectedly verified")
         finally:
             await client.close()
 

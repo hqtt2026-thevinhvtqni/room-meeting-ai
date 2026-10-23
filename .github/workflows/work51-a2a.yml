@@ -24,7 +24,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: Install test runner
-        run: python -m pip install --upgrade pip pytest "a2a-sdk==1.2.3"
+        run: python -m pip install --upgrade pip pytest "a2a-sdk[signing,encryption]==1.2.3"
       - name: Run Work 51 test suite
         working-directory: work/51/HQTT-AI-CODER-TESTER
         env:

@@ -54,7 +54,6 @@ class CoderBackend(AgentBackend):
             "defaultInputModes": ["application/json"],
             "defaultOutputModes": ["application/json", "text/plain"],
             "skills": [{"id": "work51-coder", "name": "Artifact generation", "description": "Generates a versioned code artifact from a Work Contract brief and feedback.", "tags": ["coding", "artifact-generation"], "examples": ["Generate a Python artifact from a brief."]}],
-            "metadata": {"role": "coder", "self_approval": False},
         }
 
     # ------------------------------------------------------------------

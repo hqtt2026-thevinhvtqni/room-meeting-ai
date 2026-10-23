@@ -36,8 +36,10 @@ def test_agent_card_served(coder_server):
     client = A2AClient(coder_server.base_url)
     card = client.agent_card()
     assert card["name"] == "work51-coder-agent"
-    assert card["metadata"]["role"] == "coder"
-    assert card["metadata"]["self_approval"] is False
+    assert card["supportedInterfaces"][0]["protocolBinding"] == "JSONRPC"
+    assert card["supportedInterfaces"][0]["protocolVersion"] == "1.0"
+    assert card["skills"][0]["id"] == "work51-coder"
+    assert card["signatures"]
 
 
 def test_message_send_returns_completed_task_with_artifact(coder_server):

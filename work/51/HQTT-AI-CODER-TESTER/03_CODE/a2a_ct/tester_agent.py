@@ -47,7 +47,6 @@ class TesterBackend(AgentBackend):
             "defaultInputModes": ["application/json"],
             "defaultOutputModes": ["application/json", "text/plain"],
             "skills": [{"id": "work51-tester", "name": "Artifact verification", "description": "Verifies an artifact against acceptance programs and returns a verdict with evidence.", "tags": ["testing", "verification"], "examples": ["Verify a Python artifact against acceptance checks."]}],
-            "metadata": {"role": "tester", "can_modify_artifact": False},
         }
 
     def handle_task(self, task_id: str, payload: dict, existing: dict | None) -> dict:

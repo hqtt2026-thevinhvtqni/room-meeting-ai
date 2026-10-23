@@ -21,6 +21,13 @@ import json
 import threading
 import time
 import uuid
+
+from cryptography.hazmat.primitives.asymmetric import ec
+from google.protobuf.json_format import MessageToDict
+from jwt.algorithms import ECAlgorithm
+
+from a2a.client.card_resolver import parse_agent_card
+from a2a.utils.signing import create_agent_card_signer
 from abc import ABC, abstractmethod
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any
@@ -31,6 +38,8 @@ from .states import TaskStateError, assert_transition, is_terminal
 from .task_store import TaskStore
 
 AGENT_CARD_PATH = "/.well-known/agent-card.json"
+JWKS_PATH = "/.well-known/jwks.json"
+AGENT_CARD_KEY_ID = "work51-ephemeral-card-key-1"
 
 JSONRPC_PARSE_ERROR = -32700
 JSONRPC_INVALID_REQUEST = -32600
@@ -224,18 +233,9 @@ class _Handler(BaseHTTPRequestHandler):
 
     def do_GET(self) -> None:
         if self.path == AGENT_CARD_PATH:
-            card = dict(self.server.backend.agent_card())
-            host, port = self.server.server_address[:2]
-            endpoint = f"http://{host}:{port}/"
-            # Agent Card URLs must be usable by a remote A2A client; backend
-            # placeholders such as in-process:// are never exposed as endpoint.
-            card["url"] = endpoint  # legacy compatibility
-            card["supportedInterfaces"] = [{
-                "url": endpoint,
-                "protocolBinding": "JSONRPC",
-                "protocolVersion": "1.0",
-            }]
-            self._respond_json(200, card)
+            self._respond_json(200, self.server.signed_agent_card())
+        elif self.path == JWKS_PATH:
+            self._respond_json(200, self.server.jwks())
         else:
             self._respond_json(404, {"error": "not_found"})
 
@@ -343,12 +343,50 @@ class A2AServer:
         self.backend = backend
         self._httpd = ThreadingHTTPServer((host, port), _Handler)
         self._httpd.backend = backend
+        # Ephemeral signing key is suitable for CI/demo conformance only.
+        # Production deployments must load a stable key from a secret manager.
+        self._card_private_key = ec.generate_private_key(ec.SECP256R1())
+        public_jwk = ECAlgorithm.to_jwk(self._card_private_key.public_key(), as_dict=True)
+        self._jwks = {"keys": [{
+            **public_jwk,
+            "kid": AGENT_CARD_KEY_ID,
+            "alg": "ES256",
+            "use": "sig",
+        }]}
         self._thread: threading.Thread | None = None
 
     @property
     def base_url(self) -> str:
         host, bound_port = self._httpd.server_address[:2]
         return f"http://{host}:{bound_port}/"
+
+    def signed_agent_card(self) -> dict:
+        """Build and sign a standards-shaped Agent Card for this server endpoint."""
+        card = dict(self.backend.agent_card())
+        endpoint = self.base_url
+        card["url"] = endpoint  # legacy field accepted by older clients
+        card["supportedInterfaces"] = [{
+            "url": endpoint,
+            "protocolBinding": "JSONRPC",
+            "protocolVersion": "1.0",
+        }]
+        # Non-standard metadata is deliberately not included in the signed card.
+        card.pop("metadata", None)
+        proto_card = parse_agent_card(card)
+        signer = create_agent_card_signer(
+            signing_key=self._card_private_key,
+            protected_header={
+                "alg": "ES256",
+                "kid": AGENT_CARD_KEY_ID,
+                "jku": endpoint.rstrip("/") + JWKS_PATH,
+                "typ": "JOSE",
+            },
+        )
+        return MessageToDict(signer(proto_card))
+
+    def jwks(self) -> dict:
+        """Publish the public key only; the private key is never serialized."""
+        return self._jwks
 
     def start(self) -> str:
         self._thread = threading.Thread(target=self._httpd.serve_forever, daemon=True)
