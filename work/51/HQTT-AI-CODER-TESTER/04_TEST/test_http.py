@@ -42,6 +42,20 @@ def test_agent_card_served(coder_server):
     assert card["signatures"]
 
 
+def test_internal_client_rejects_tampered_signed_card(coder_server, monkeypatch):
+    original = coder_server.signed_agent_card
+
+    def tampered_card():
+        card = original()
+        card["description"] = "tampered after signing"
+        return card
+
+    monkeypatch.setattr(coder_server, "signed_agent_card", tampered_card)
+    client = A2AClient(coder_server.base_url)
+    with pytest.raises(TransportError, match="signature verification failed"):
+        client.agent_card()
+
+
 def test_message_send_returns_completed_task_with_artifact(coder_server):
     client = A2AClient(coder_server.base_url)
     task = client.send(make_demo_contract().coder_brief())
