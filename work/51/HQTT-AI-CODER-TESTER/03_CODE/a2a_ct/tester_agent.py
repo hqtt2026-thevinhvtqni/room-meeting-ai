@@ -20,6 +20,9 @@ from .sandbox import Sandbox
 
 
 class TesterBackend(AgentBackend):
+    # Prevent pytest from mistaking this imported backend for a test class.
+    __test__ = False
+
     def __init__(self, sandbox: Sandbox | None = None):
         super().__init__()
         self.sandbox = sandbox or Sandbox()
