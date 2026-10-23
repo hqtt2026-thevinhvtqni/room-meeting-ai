@@ -43,4 +43,4 @@ Chỉ cần Python ≥ 3.9 + pytest, không cần key/API ngoài. CI chạy bằ
 - sandbox.py: env scrub (child không thừa kế secrets của parent), rlimits CPU/mem/file/nproc, network isolation "auto" (unshare -n khi khả dụng), cap input 200KB.
 - task_store.py: PersistentTaskStore — JSON, atomic rename; task state sống qua restart (đóng D-08 cho slice).
 - a2a.py: binding v1.2 — Agent Card có protocolVersion "1.0"; Task có contextId + timestamps; method tasks/cancel.
-- Test: 43 đã PASS trên CI + 15 mới (kỳ vọng 58) — chờ CI run trên commit này xác thực.
+- Test: **58/58 PASS** trên CI run [39945767381](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39945767381); HTTP E2E demo PASS đúng ba kịch bản; evidence artifact ID `12498725031`. Work 51 vẫn PARTIAL, không đồng nghĩa nghiệm thu toàn Work.
