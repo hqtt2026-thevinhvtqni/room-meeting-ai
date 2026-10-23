@@ -1,6 +1,6 @@
 # Work 51 — HQTT AI Coder–Tester (A2A) — Quickstart
 
-Status: **P3 EXTENDED (iteration 4 verified); WORK 51 NOT DONE** — CI run [39949544121](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39949544121) confirms **63 tests passed in 20.79s**, official A2A SDK `1.2.3` round-trip and signed Agent Card verification/tamper rejection. Independent QA and production security hardening remain open.
+Status: **P3 EXTENDED (iteration 4 verified); WORK 51 NOT DONE** — CI run [39949967437](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39949967437) confirms **63 tests passed in 22.91s**, official A2A SDK `1.2.3` round-trip and signed Agent Card verification/tamper rejection. Independent QA and production security hardening remain open.
 
 ## Chạy demo end-to-end (HTTP thật)
 
@@ -56,6 +56,6 @@ nistic generator bằng LLM adapter
 ## Iteration 4 — official SDK + signed Agent Card verified
 
 - CI pins `a2a-sdk[signing,encryption]==1.2.3`.
-- Official SDK client discovers the signed card, sends `SendMessage`, retrieves `GetTask`, and calls `CancelTask`; tampered card description is rejected by the signature verifier.
-- CI run [39949544121](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39949544121): **63/63 PASS**; artifact ID `12499523066`.
+- Official SDK client discovers the signed card, sends `SendMessage`, retrieves `GetTask`, and verifies the terminal-task errors (`CancelTask` → -32002, terminal continuation → -32004); tampered card description is rejected by the signature verifier.
+- CI run [39949544121](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39949544121): **63/63 PASS**; artifact ID `12498829841`.
 - Security limit: key is ephemeral per process for demo/CI. Stable secret-managed keys, rotation, trusted JWKS policy and independent QA remain required before production.

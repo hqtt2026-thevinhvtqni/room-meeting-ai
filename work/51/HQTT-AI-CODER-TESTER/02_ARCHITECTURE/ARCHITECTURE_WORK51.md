@@ -71,6 +71,7 @@ Orchestrator      Coder                    Tester                  Sandbox
 | Malformed JSON-RPC | `-32700 / -32600` | Server trả JSON-RPC error, không crash |
 | Invalid params (payload sai, taskId lạ) | `-32602` | Như trên; test `test_http.py` lock hành vi |
 | Agent-level failure | task state `failed` + status.message | VD: payload kind không hỗ trợ |
+| Terminal operation | `CancelTask` → -32002; `SendMessage` continuation → -32004 | Official SDK semantics; legacy aliases remain separate |
 | Transport (agent chết, timeout) | `TransportError` -> pipeline BLOCKED reason `*_transport_error` | Không treo, không im lặng |
 | Sandbox timeout | result `timeout:true` -> FAIL có evidence | Timeout demo: 3s trong test |
 | PASS thiếu evidence | BLOCKED `pass_without_evidence` (D-06) | Tester hỏng không được tính là PASS |
@@ -124,5 +125,5 @@ sandbox_container.py — ContainerSandbox cùng contract run(artifact_code, prog
 
 - Wire adapter supports official A2A 1.0 JSON-RPC method names `SendMessage`, `GetTask`, `CancelTask`, returning the official Task/Artifact field shapes. Legacy lower-case methods remain only for internal compatibility.
 - Agent Card exposes `supportedInterfaces`, `skills`, `defaultInputModes`, `defaultOutputModes` and a JWS signature. Public JWK set is served at `/.well-known/jwks.json`.
-- CI pins `a2a-sdk[signing,encryption]==1.2.3` and uses the SDK client + verifier to validate round-trip and reject a tampered signed field.
+- CI pins `a2a-sdk[signing,encryption]==1.2.3` and uses the SDK client + verifier to validate round-trip, reject a tampered signed field, and enforce official terminal-task errors.
 - Key management limit: signing key is ephemeral per server process in this prototype. Do not treat this as durable production identity; production must load a stable private key from a secret manager and enforce a trusted JWKS allowlist/rotation policy.
