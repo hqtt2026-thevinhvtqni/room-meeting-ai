@@ -39,6 +39,7 @@ Orchestrator      Coder                    Tester                  Sandbox
      ├────────────────────►│  emit artifact v1 │                     │
      │◄─────────────────────┤  (task completed) │                     │
      │  message/send (artifact + acceptance)   │          
+
            │
      ├────────────────────────────────────────►│  verify hash        │
      │                                        ├────────────────────►│  run artifact+program
@@ -70,7 +71,8 @@ Orchestrator      Coder                    Tester                  Sandbox
 | Malformed JSON-RPC | `-32700 / -32600` | Server trả JSON-RPC error, không crash |
 | Invalid params (payload sai, taskId lạ) | `-32602` | Như trên; test `test_http.py` lock hành vi |
 | Agent-level failure | task state `failed` + status.message | VD: payload kind không hỗ trợ |
-| Transport (ag
+| Transport (a
+g
 ent chết, timeout) | `TransportError` -> pipeline BLOCKED reason `*_transport_error` | Không treo, không im lặng |
 | Sandbox timeout | result `timeout:true` -> FAIL có evidence | Timeout demo: 3s trong test |
 | PASS thiếu evidence | BLOCKED `pass_without_evidence` (D-06) | Tester hỏng không được tính là PASS |
@@ -99,7 +101,8 @@ ent chết, timeout) | `TransportError` -> pipeline BLOCKED reason `*_transport_
 - Giới hạn còn lại: chưa container/seccomp/cgroups — D-04 vẫn cần phê duyệt trước khi chạy untrusted code thật.
 
 **D-08b — PersistentTaskStore (task_store.py):**
-- TaskStore (in-memory, thread-safe) + PersistentTaskStore (JSON file, atomic rename qua .tmp + os.replace, load + validate khi khởi tạo, reload() mô phỏng restart).
+- TaskStore (in-memory, thread-safe) + PersistentTaskStore (JSON file, atomic rename qu
+a .tmp + os.replace, load + validate khi khởi tạo, reload() mô phỏng restart).
 - AgentBackend nhận store qua constructor; restart với cùng path → continuation, idempotency, audit sống lại. Giới hạn: single-writer, flush O(n) mỗi update.
 
 **D-01b — Binding v1.2 (a2a.py):**
@@ -107,3 +110,14 @@ ent chết, timeout) | `TransportError` -> pipeline BLOCKED reason `*_transport_
 - Task thêm contextId, createdAt, updatedAt; status có timestamp.
 - tasks/cancel (server + A2AClient.cancel_task + LocalClient.cancel_task): chỉ task non-terminal được cancel, terminal là no-op, transition qua state machine (states.py).
 - Vẫn stdlib-only, mọi wire code gom trong a2a.py — swap sang SDK chính thức sau vẫn chỉ sửa 1 file.
+
+## 8. Iteration 3 — container-grade sandbox profile (D-04c)
+
+sandbox_container.py — ContainerSandbox cùng contract run(artifact_code, program, timeout_s) như Sandbox nhưng chạy runner trong Docker container:
+- --network none: không có interface mạng nào (mạnh hơn unshare -n best-effort của D-04b).
+- --memory 512m, --cpus 1.0, --pids-limit 64: cap tài nguyên do kernel/cgroup cưỡng chế.
+- --cap-drop ALL + no-new-privileges + seccomp=default: không capability, chặn escalation syscall nguy hiểm.
+- --read-only + mount nguồn read-only: filesystem bất biến trong container.
+- Env scrub và cap input 200KB tái dùng từ sandbox.Sandbox (composition).
+- available() probe Docker + pre-pull image; caller fallback về Sandbox() khi không có Docker — profile tùy chọn, pipeline không phụ thuộc nó.
+- Giới hạn còn lại: chưa có seccomp whitelist tùy chỉnh; image chưa pin digest (supply-chain drift) — mở cho iteration sau.

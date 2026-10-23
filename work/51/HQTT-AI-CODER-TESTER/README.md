@@ -31,11 +31,12 @@ Chỉ cần Python ≥ 3.9 + pytest, không cần key/API ngoài. CI chạy bằ
 | `03_CODE/run_demo.py` | Demo E2E qua HTTP |
 | `04_TEST/` | pytest: contract gate, state machine, sandbox, pipeline, HTTP binding |
 | `05_EVIDENCE/EVIDENCE_WORK51.md` | Hồ sơ evidence — KHÔNG ghi PASS khi chưa chạy thật |
-| `DECISION_REGISTER.md` | QĐ kiến trúc D-01..D-09 + iteration 2 (D-01b/D-04b/D-08b) (ghi rõ cái nào cần Vinh phê duyệt) |
+| `DECISION_REGISTER.md` | QĐ kiến trúc D-01..D-09 + iteration 2, 3 (D-01b/D-04b/D-08b/D-04c) (ghi rõ cái nào cần Vinh phê duyệt) |
 
 ## Cắm LLM vào sau (không đổi protocol)
 
-`CoderBackend._emit` là điểm thay deterministic generator bằng LLM adapter
+`CoderBackend._emit` là điểm thay determi
+nistic generator bằng LLM adapter
 (Qwen Coder) — interface `handle_task(task_id, payload, existing) -> task` giữ nguyên.
 
 ## Iteration 2 mới gì?
@@ -44,3 +45,8 @@ Chỉ cần Python ≥ 3.9 + pytest, không cần key/API ngoài. CI chạy bằ
 - task_store.py: PersistentTaskStore — JSON, atomic rename; task state sống qua restart (đóng D-08 cho slice).
 - a2a.py: binding v1.2 — Agent Card có protocolVersion "1.0"; Task có contextId + timestamps; method tasks/cancel.
 - Test: **58/58 PASS** trên CI run [39945767381](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39945767381); HTTP E2E demo PASS đúng ba kịch bản; evidence artifact ID `12498725031`. Work 51 vẫn PARTIAL, không đồng nghĩa nghiệm thu toàn Work.
+
+## Iteration 3 mới gì?
+
+- sandbox_container.py: ContainerSandbox — chạy runner trong Docker container khóa chặt: --network none (không interface nào), seccomp=default, --cap-drop ALL, --read-only, memory/cpu/pids caps; available() probe và fallback về Sandbox() khi không có Docker.
+- 04_TEST/test_sandbox_container.py: 4 test tự skip khi không có Docker; trên CI (có Docker) kỳ vọng suite 62 — chờ CI xác thực trên commit này.

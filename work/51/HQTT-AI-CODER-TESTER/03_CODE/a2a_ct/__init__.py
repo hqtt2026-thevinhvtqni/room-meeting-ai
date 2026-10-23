@@ -8,6 +8,7 @@ Components:
 - coder_agent: Coder Agent backend (deterministic generator, LLM-pluggable)
 - tester_agent: Tester Agent backend (independent verification in sandbox)
 - sandbox:     execution sandbox (subprocess, isolated mode, timeout)
+- sandbox_container: optional Docker container profile (network none, seccomp, cap-drop ALL, read-only)
 - orchestrator: pipeline loop (Coder -> Tester -> feedback -> gate)
 
 Design notes: see 02_ARCHITECTURE/ARCHITECTURE_WORK51.md and DECISION_REGISTER.md.

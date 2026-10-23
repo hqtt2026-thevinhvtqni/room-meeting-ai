@@ -18,6 +18,7 @@ Nguyên tắc (PLAN §4 P4): chỉ ghi PASS khi đã chạy và có bằng chứ
 - Initial code-verification run: [39930470092](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39930470092) on code commit `2645366de183e7a0905a6c9d1b378741aec7b693`.
 - Latest full-branch verification before artifact upload: [39930817040](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39930817040) on commit `ccbe2985c260c05582a315885d51f6d481cd6910` (43 passed, demo exit 0).
 - Evidence artifact verification: [run 39931057210](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39931057210) on commit `503c17c5b9fdd9a99aa436d3
+
 3f599de0556924e5`; uploaded artifact `work51-evidence-39931057210` (artifact ID `12491197678`, SHA-256 `ef3182702e1070b127134302b67bd00a8e650dd07a519ba72e6e7338329f8e9f`, expires 2026-11-22).
 - Kết quả pytest: **43 passed, 0 failed** (Python 3.11; 8.58s on latest run). Pytest collection warning đã được sửa bằng `TesterBackend.__test__ = False`; test run này không còn `PytestCollectionWarning`.
 - HTTP demo: **exit code 0**; `correct → PASS` (0 vòng sửa), `seeded_bug → PASS` (1 vòng sửa), `always_bug → BLOCKED` (2 vòng sửa, `max_fix_rounds_exceeded`). Evidence JSONL được upload làm GitHub Actions artifact trên run `39931057210`; tải artifact từ trang run trước ngày hết hạn 2026-11-22. SHA-256 của archive artifact: `ef3182702e1070b127134302b67bd00a8e650dd07a519ba72e6e7338329f8e9f`.
@@ -42,7 +43,8 @@ Yêu cầu: Python ≥ 3.9, pytest. Không cần API key.
 | G3 Feedback loop có giới hạn, không vòng lặp vô hạn | test_pipeline.py + HTTP demo `always_bug` | PASS — BLOCKED after 2 rounds |
 | G4 Evidence/hash/verdict cho run | test_pipeline.py, test_evidence_log_records_full_run | PASS — test coverage; JSONL uploaded as artifact on run `39931057210` |
 | G5 Timeout/transport/malformed được xử lý tường minh | test
-_sandbox.py, test_http.py, DeadClient | PASS — tested scenarios only |
+_sandbox.
+py, test_http.py, DeadClient | PASS — tested scenarios only |
 | G6 Không PASS khi thiếu evidence | test_pass_without_evidence_is_blocked | PASS — automated test |
 | G7 BLOCKED có lý do + đề xuất xử lý | RunReport.reason + DECISION_REGISTER D-04/D-08/D-09 | PASS — slice emits reason; remaining infrastructure gates are open |
 
@@ -67,7 +69,8 @@ _sandbox.py, test_http.py, DeadClient | PASS — tested scenarios only |
 
 Scope theo plan v1.4 (không tạo Work mới; D-09 đã được Xu quyết định và thực hiện bằng cách đồng bộ `main` vào nhánh Work 51, không đưa Work 51 vào `main`):
 
-- sandbox.py v1.2 (D-04b): env scrub (không rò secrets), POSIX rlimits (CPU 10s / AS 1GB / FSIZE 4MB / NPROC 64), unshare -n network isolation có availability probe, cap input 200KB (SandboxInputError).
+- sandbox.py v1.2 (D-04b): env scrub (không rò secrets), POSIX rlimits (CPU 10s / AS 1GB / FSIZE 4MB / NPROC 64), unshare -n network iso
+lation có availability probe, cap input 200KB (SandboxInputError).
 - task_store.py (D-08b): TaskStore in-memory + PersistentTaskStore JSON atomic rename; backend nhận store qua constructor; restart giữ continuation/idempotency/audit.
 - a2a.py v1.2 (D-01b): Agent Card protocolVersion/version/preferredTransport; Task contextId/createdAt/updatedAt/status.timestamp; tasks/cancel ở server + client.
 - 15 test mới: 04_TEST/test_http.py (+4: cancel working/unknown/terminal-noop, binding v1.2 fields), 04_TEST/test_persistence.py (6), 04_TEST/test_sandbox_hardening.py (5). Kỳ vọng suite: 58.
@@ -80,4 +83,17 @@ Trạng thái thực thi: **PASS — CI đã chạy thật** trên commit `0dbf9
 - Evidence artifact: `work51-evidence-39945767381`, artifact ID `12498725031`, SHA-256 `05aa58d781682c44a84707ca8f30f4c248a01878aff21c4513bdf71771b79685`, hết hạn `2026-11-22T11:24:09Z`.
 - Các lỗi cú pháp được sửa bằng các commit `b07c6fe`, `ce76a13`, `0dbf964`; `main` không bị sửa.
 
-Giới hạn còn lại: sandbox vẫn chưa container/seccomp; signed Agent Card và khả năng tương thích với official A2A SDK/spec chưa được chứng minh; CI cleanup vẫn có cảnh báo gitlink `room-meeting-ai` không có URL trong `.gitmodules` nhưng không làm job thất bại. D-09: PR [#24](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/24) đã merge `main` → `work/51-hqtt-coder-tester` bằng merge commit `23194b90efe993614bc961607d3d481165d56b36`; `main` không bị thay đổi bởi code Work 51. So sánh sau merge xác nhận nhánh Work 51 **22 commits ahead / 0 behind** `main`. Merge commit và các cập nhật hồ sơ cần CI xác minh lại; chỉ run `39945767381` là bằng chứng 58/58 trên code commit `0dbf964` trước đồng bộ.
+Giới hạn còn lại: sandbox vẫn chưa container/seccomp; signed Agent Card và khả năng tương thích với official A2A SDK/spec chưa được chứng minh; CI cleanup vẫn có cảnh báo gitlink `room-meeting-ai` không có URL trong `.gitmodules` nhưng không làm job thất bại. D-09: PR [#24](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/24) đã merge `main` → `work/51-hqtt-coder-tester` bằng merge commit `23194b90efe993614bc961607d3d481165d56b36`; `main` không bị thay đổi bởi code Work 51. So sánh sau merge xác nhận nhánh Work 51 **22 commits ahead / 0 behind** `main`. 
+Merge commit và các cập nhật hồ sơ cần CI xác minh lại; chỉ run `39945767381` là bằng chứng 58/58 trên code commit `0dbf964` trước đồng bộ.
+
+## Iteration 3 — container-grade sandbox profile (2026-10-23)
+
+Scope theo ưu tiên của Xu sau D-09 (không tạo Work mới, không đụng `main`):
+
+- sandbox_container.py (D-04c): ContainerSandbox — docker run với --network none, --memory 512m, --cpus 1.0, --pids-limit 64, --cap-drop ALL, no-new-privileges, seccomp=default, --read-only, mount read-only; available() probe Docker + pre-pull image; fallback Sandbox() khi không có Docker.
+- 04_TEST/test_sandbox_container.py — 4 test: chạy program trong container; mạng bị chặn tuyệt đối; env host không rò vào container; cap input 200KB giữ nguyên. Tự skip trên host không có Docker; CI runner có Docker nên kỳ vọng suite 62.
+- __init__.py, PLAN v1.7, ARCHITECTURE §8, DECISION_REGISTER (D-04c), README cập nhật đồng bộ.
+
+Trạng thái thực thi: **PENDING** — theo PLAN §4 P4, kết quả chỉ ghi sau khi CI chạy thật trên commit push này. Bằng chứng (run ID, số test pass/skip) bổ sung sau khi có kết quả.
+
+Còn mở không đổi: signed Agent Card + official A2A SDK conformance; independent QA sign-off của Qw; gitlink .gitmodules (repo hygiene, ngoài phạm vi Work 51).
