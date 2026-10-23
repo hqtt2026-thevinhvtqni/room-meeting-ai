@@ -71,9 +71,7 @@ Orchestrator      Coder                    Tester                  Sandbox
 | Malformed JSON-RPC | `-32700 / -32600` | Server trả JSON-RPC error, không crash |
 | Invalid params (payload sai, taskId lạ) | `-32602` | Như trên; test `test_http.py` lock hành vi |
 | Agent-level failure | task state `failed` + status.message | VD: payload kind không hỗ trợ |
-| Transport (a
-g
-ent chết, timeout) | `TransportError` -> pipeline BLOCKED reason `*_transport_error` | Không treo, không im lặng |
+| Transport (agent chết, timeout) | `TransportError` -> pipeline BLOCKED reason `*_transport_error` | Không treo, không im lặng |
 | Sandbox timeout | result `timeout:true` -> FAIL có evidence | Timeout demo: 3s trong test |
 | PASS thiếu evidence | BLOCKED `pass_without_evidence` (D-06) | Tester hỏng không được tính là PASS |
 
@@ -81,13 +79,13 @@ ent chết, timeout) | `TransportError` -> pipeline BLOCKED reason `*_transport_
 
 - Coder **không bao giờ** nhận acceptance programs (`contract.coder_brief()` tách field).
 - Tester **không sửa** artifact; chỉ verify hash + chạy trong sandbox.
-- Sandbox: tempdir mới mỗi lần, `python -I`, timeout cứng, cwd=tempdir. **Chưa có** container/network egress blocking (D-04, cần phê duyệt để mở rộng).
+- Sandbox: ưu tiên `ContainerSandbox` khi Docker/image khả dụng; dùng `--network none`, Docker default seccomp profile, `--cap-drop ALL`, `no-new-privileges`, giới hạn CPU/RAM/PID, read-only filesystem và mount. Nếu Docker không khả dụng thì fallback về `Sandbox` subprocess với network isolation best-effort; không coi fallback này là đủ cho mã không tin cậy từ nguồn ngoài.
 - Không động vào Core :8000, không tạo Core thứ hai, không sửa main source (charter §2).
 
 ## 6. Giới hạn đã biết (deferred, cần quyết định)
 
-1. Sandbox chưa container hóa; untrusted code có thể gọi network.
-2. Task store in-memory: restart mất state (P3 yêu cầu "trạng thái sau restart" → cần persist layer — D-08).
+1. Container profile chưa có custom seccomp whitelist và image chưa pin theo digest; cần independent security review.
+2. PersistentTaskStore có persistence JSON, nhưng giới hạn single-writer và flush O(n) mỗi update vẫn tồn tại.
 3. Agent Card chưa ký (signed Agent Card của A2A v1.0) — trust nội bộ tạm bằng base_url kiểm soát được.
 4. Coder là deterministic generator; LLM adapter là bước kế tiếp (D-03).
 
@@ -101,8 +99,7 @@ ent chết, timeout) | `TransportError` -> pipeline BLOCKED reason `*_transport_
 - Giới hạn còn lại: chưa container/seccomp/cgroups — D-04 vẫn cần phê duyệt trước khi chạy untrusted code thật.
 
 **D-08b — PersistentTaskStore (task_store.py):**
-- TaskStore (in-memory, thread-safe) + PersistentTaskStore (JSON file, atomic rename qu
-a .tmp + os.replace, load + validate khi khởi tạo, reload() mô phỏng restart).
+- TaskStore (in-memory, thread-safe) + PersistentTaskStore (JSON file, atomic rename qua .tmp + os.replace, load + validate khi khởi tạo, reload() mô phỏng restart).
 - AgentBackend nhận store qua constructor; restart với cùng path → continuation, idempotency, audit sống lại. Giới hạn: single-writer, flush O(n) mỗi update.
 
 **D-01b — Binding v1.2 (a2a.py):**
@@ -116,8 +113,8 @@ a .tmp + os.replace, load + validate khi khởi tạo, reload() mô phỏng rest
 sandbox_container.py — ContainerSandbox cùng contract run(artifact_code, program, timeout_s) như Sandbox nhưng chạy runner trong Docker container:
 - --network none: không có interface mạng nào (mạnh hơn unshare -n best-effort của D-04b).
 - --memory 512m, --cpus 1.0, --pids-limit 64: cap tài nguyên do kernel/cgroup cưỡng chế.
-- --cap-drop ALL + no-new-privileges + seccomp=default: không capability, chặn escalation syscall nguy hiểm.
+- --cap-drop ALL + no-new-privileges; Docker default seccomp profile được giữ nguyên bằng cách không truyền override `seccomp=default` (giá trị đó bị Docker hiểu là đường dẫn).
 - --read-only + mount nguồn read-only: filesystem bất biến trong container.
 - Env scrub và cap input 200KB tái dùng từ sandbox.Sandbox (composition).
-- available() probe Docker + pre-pull image; caller fallback về Sandbox() khi không có Docker — profile tùy chọn, pipeline không phụ thuộc nó.
+- `TesterBackend` gọi `ContainerSandbox.available()` và chọn profile Docker khi sẵn sàng; nếu không thì dùng `Sandbox()`. `available()` probe Docker và pre-pull image.
 - Giới hạn còn lại: chưa có seccomp whitelist tùy chỉnh; image chưa pin digest (supply-chain drift) — mở cho iteration sau.

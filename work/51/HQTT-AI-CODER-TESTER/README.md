@@ -1,6 +1,6 @@
 # Work 51 — HQTT AI Coder–Tester (A2A) — Quickstart
 
-Status: **P3 EXTENDED (iteration 2); WORK 51 NOT DONE** — baseline 43 tests + HTTP demo passed in [GitHub Actions run 39930470092](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39930470092). Iteration 2 adds sandbox hardening (env scrub, rlimits, network isolation), PersistentTaskStore (restart-safe task state) and A2A binding v1.2 (tasks/cancel, protocolVersion, contextId, timestamps) with 15 new tests (expected 58 total) — iteration-2 execution PENDING CI. Container-grade isolation, official A2A SDK / signed-card conformance, and branch divergence (D-09) remain open.
+Status: **P3 EXTENDED (iteration 3 verified); WORK 51 NOT DONE** — CI run [39948132321](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39948132321) confirms **62 tests passed in 23.22s** and HTTP E2E demo exit 0. D-04c uses Docker ContainerSandbox when available; official A2A SDK/signed-card conformance and independent QA sign-off remain open.
 
 ## Chạy demo end-to-end (HTTP thật)
 
@@ -10,7 +10,7 @@ python 03_CODE/run_demo.py
 ```
 
 Demo chạy 3 kịch bản qua 2 A2A server (Coder :random, Tester :random):
-`correct` → PASS ngay; `seeded_bug` → FAIL→feedback→sửa→PASS; `always_bug` → BLOCKED sau 2 vòng sửa. Evidence JSONL ghi vào `03_CODE/evidence_runs/<ts>/` trong runner; CI log xác nhận kết quả, nhưng file JSONL hiện chưa được upload làm artifact.
+`correct` → PASS ngay; `seeded_bug` → FAIL→feedback→sửa→PASS; `always_bug` → BLOCKED sau 2 vòng sửa. Evidence JSONL ghi vào `03_CODE/evidence_runs/<ts>/` và được upload thành artifact trong CI run [39948132321](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39948132321).
 
 ## Chạy test suite
 
@@ -46,7 +46,8 @@ nistic generator bằng LLM adapter
 - a2a.py: binding v1.2 — Agent Card có protocolVersion "1.0"; Task có contextId + timestamps; method tasks/cancel.
 - Test: **58/58 PASS** trên CI run [39945767381](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39945767381); HTTP E2E demo PASS đúng ba kịch bản; evidence artifact ID `12498725031`. Work 51 vẫn PARTIAL, không đồng nghĩa nghiệm thu toàn Work.
 
-## Iteration 3 mới gì?
+## Iteration 3 — verified
 
-- sandbox_container.py: ContainerSandbox — chạy runner trong Docker container khóa chặt: --network none (không interface nào), seccomp=default, --cap-drop ALL, --read-only, memory/cpu/pids caps; available() probe và fallback về Sandbox() khi không có Docker.
-- 04_TEST/test_sandbox_container.py: 4 test tự skip khi không có Docker; trên CI (có Docker) kỳ vọng suite 62 — chờ CI xác thực trên commit này.
+- `sandbox_container.py`: ContainerSandbox dùng Docker `--network none`, Docker default seccomp profile, `--cap-drop ALL`, `no-new-privileges`, `--read-only`, resource caps và mount read-only. `TesterBackend` chọn container khi Docker/image khả dụng, nếu không fallback sang `Sandbox()`.
+- 4 container tests đã chạy thật, không skip, trong CI run [39948132321](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39948132321): tổng **62 passed**; artifact ID `12499500891`.
+- Giới hạn còn lại: image chưa pin digest, chưa có seccomp whitelist riêng; cần independent security review, official A2A SDK/signed-card conformance và QA sign-off.

@@ -1,8 +1,8 @@
 # PLAN_WORK51 — HQTT AI Coder–Tester qua A2A
 
 - **Work:** 51 — HQTT AI Coder–Tester
-- **Phiên bản:** v1.7
-- **Trạng thái:** P3 EXTENDED (iteration 3) — baseline 58/58 tests PASS trên CI run `39945767381` (commit `0dbf964`); D-09 đã merge `main` → nhánh Work 51 (PR #24, 22 ahead / 0 behind); iteration 3 thêm container-grade sandbox profile D-04c (Docker: --network none, seccomp=default, --cap-drop ALL, --read-only, memory/cpu/pids caps) kèm 4 test mới tự skip khi không có Docker (kỳ vọng suite 62 trên CI có Docker) — test execution PENDING CI; overall Work 51 vẫn NOT DONE pending official A2A SDK / signed-card conformance, independent QA sign-off và CI xác minh trên merge head.
+- **Phiên bản:** v1.8
+- **Trạng thái:** P3 EXTENDED (iteration 3) — CI run `39948132321` trên commit `24e06ca66df407d2c0e2d6b285e5d8dededd8da7` xác nhận **62/62 tests PASS trong 23.22s**; HTTP E2E demo: `correct → PASS`, `seeded_bug → PASS` sau 1 vòng feedback, `always_bug → BLOCKED` sau 2 vòng; evidence artifact `work51-evidence-39948132321` (ID `12499500891`, SHA-256 `2fa28680779adca5e14b6b18ff188b1585b9516ddb664c596b1633edeff7b7b4`). D-04c container profile được thực thi khi Docker khả dụng, fallback sang Sandbox nếu không; overall Work 51 vẫn NOT DONE pending official A2A SDK/signed-card conformance và independent QA sign-off.
 - **Chủ sở hữu triển khai:** Qc — Qwen Coder
 - **Điều phối / hồ sơ:** Xu — AI-01
 - **QE/QA độc lập:** Qw — AI-05 (không phải trưởng dự án)
@@ -24,8 +24,7 @@ Không dừng ở sơ đồ hoặc ví dụ minh họa: phải có implementatio
 - **Qw — QE/QA:** đánh giá độc lập về test/evidence khi được gọi; không làm trưởng dự án.
 - **Coder Agent:** tạo/sửa artifact trong workspace/branch được cấp.
 - **Tester Agent:** vai trò và ngữ cảnh tách biệt; kiểm tra artifact thực tế theo hợp đồng gốc, không được sửa code để tự cho PASS.
-- **Vinh:** chủ sở hữu HQTT. Chỉ cần escalates kh
-i có quyết định vượt phạm vi/quyền, rủi ro không thể tự xử lý hoặc phụ thuộc hạ tầng không sẵn sàng.
+- **Vinh:** chủ sở hữu HQTT. Chỉ cần escalates khi có quyết định vượt phạm vi/quyền, rủi ro không thể tự xử lý hoặc phụ thuộc hạ tầng không sẵn sàng.
 
 Role names above describe intended responsibilities for this Work. Do not assume a particular API/model adapter, Skill, identity mapping, or automatic inter-agent calling mechanism already exists.
 
@@ -86,8 +85,7 @@ Chạy test thực tế, bao gồm:
 - Core :8000 là nguồn sự thật duy nhất; không tạo Core thứ hai, không đưa Core vào Sandbox.
 - Không sửa MAIN SOURCE, không thay đổi Work 28, không mở rộng sang provider/camera/voice/browser trừ khi có dependency chứng minh cần thiết và được phê duyệt.
 - Không commit vào main, không merge/triển khai production, không thay đổi secrets hoặc quyền tổ chức.
-- Dùng nhánh `work/51-hqtt-c
-oder-tester`; commit trên nhánh này khi quyền và công cụ cho phép. Không tuyên bố đã push nếu không có bằng chứng.
+- Dùng nhánh `work/51-hqtt-coder-tester`; commit trên nhánh này khi quyền và công cụ cho phép. Không tuyên bố đã push nếu không có bằng chứng.
 - Coder và Tester phải tách vai trò/ngữ cảnh/quyền. Coder không được tự phê duyệt sản phẩm của mình.
 - A2A Task `completed` không đồng nghĩa test PASS.
 - Mỗi task tối đa 2 vòng sửa sau FAIL; sau đó BLOCKED với evidence và đề xuất xử lý. Không lặp vô hạn.
@@ -113,10 +111,10 @@ Qc phải tự kiểm tra lại nguồn, công cụ và đường đi có sẵn 
 |---|---|---|---|
 | v1.1 | 2026-10-23 | Xu — AI-01 | Chuyển owner triển khai sang Qc/Qwen Coder; xác nhận GitHub branch là kênh làm việc chính; A2A là giao thức cốt lõi; Qw chỉ QE/QA độc lập; bổ sung vòng đời BUILD/VERIFY/HANDOFF và tiêu chí nghiệm thu. |
 | v1.2 | 2026-10-23 | Vibe | Commit vertical slice P2: package `03_CODE/a2a_ct`, test suite and docs. At commit time, test execution was pending. |
-| v1.3 | 2026-10-23 | Xu — AI-01 | Updated this canonical plan in place after running GitHub Actions on the actual branch: 43 tests passed; HTTP demo verified `co
-rrect → PASS`, `seeded_bug → FAIL→feedback→PASS`, `always_bug → BLOCKED` after 2 fix rounds. Added CI workflow `.github/workflows/work51-a2a.yml`; fixed pytest collection warning (`TesterBackend.__test__ = False`). Evidence run: `39930470092`, tested code commit `2645366de183e7a0905a6c9d1b378741aec7b693`. Overall Work 51 remains PARTIAL: sandbox is not containerized/network-isolated, task state is in-memory, signed A2A Agent Card and official A2A SDK/spec conformance are not proven, and branch is 27 commits behind main. No rebase/merge or production deployment performed. |
+| v1.3 | 2026-10-23 | Xu — AI-01 | Updated this canonical plan in place after running GitHub Actions on the actual branch: 43 tests passed; HTTP demo verified `correct → PASS`, `seeded_bug → FAIL→feedback→PASS`, `always_bug → BLOCKED` after 2 fix rounds. Added CI workflow `.github/workflows/work51-a2a.yml`; fixed pytest collection warning (`TesterBackend.__test__ = False`). Evidence run: `39930470092`, tested code commit `2645366de183e7a0905a6c9d1b378741aec7b693`. Overall Work 51 remains PARTIAL: sandbox is not containerized/network-isolated, task state is in-memory, signed A2A Agent Card and official A2A SDK/spec conformance are not proven, and branch is 27 commits behind main. No rebase/merge or production deployment performed. |
 | v1.4 | 2026-10-23 | Vibe | Iteration 2 theo đúng phạm vi đã duyệt: sandbox hardening D-04b (env scrub — secrets không rò vào child; POSIX rlimits CPU/AS/FSIZE/NPROC; unshare -n network isolation có availability probe; cap input 200KB); PersistentTaskStore D-08b (JSON atomic rename, task state sống qua restart, backend nhận store qua constructor); A2A binding v1.2 D-01b (Agent Card: protocolVersion 1.0, version 1.2.0, preferredTransport; Task: contextId, createdAt, updatedAt, status.timestamp; method tasks/cancel cho non-terminal task). Thêm 15 test mới (cancel qua HTTP, persistence/restart, sandbox hardening) — kỳ vọng suite 58. Test execution PENDING tại thời điểm commit; chỉ ghi PASS khi CI đã chạy thật trên push này. |
 | v1.5 | 2026-10-23 | Xu — AI-01 | CI xác nhận iteration 2 sau khi sửa ba dòng bị tách cú pháp trong `coder_agent.py`, `test_http.py`, `tester_agent.py`: **58 passed in 10.82s**; HTTP demo `correct → PASS`, `seeded_bug → PASS` sau 1 vòng, `always_bug → BLOCKED` sau giới hạn 2 vòng; demo exit 0; evidence artifact `work51-evidence-39945767381` (ID `12498725031`). CI run `39945767381`, commit kiểm chứng `0dbf964bd64c2c8129bff3aaa60915c681fd403d`. Overall Work 51 vẫn PARTIAL: sandbox chưa container/seccomp; official A2A SDK/spec conformance chưa chứng minh; D-09 chưa xử lý, branch diverged 17 ahead / 27 behind main. Không rebase/merge, không sửa `main`, không triển khai production. |
 
 | v1.6 | 2026-10-23 | Xu — AI-01 | Xu tự quyết định D-09 sau khi kiểm tra 27 commits chỉ thêm file dưới `10/COMPUTER-AGENT/` và không chạm đường dẫn Work 51. Tạo PR #24 theo chiều `main` → Work 51, xác nhận mergeable clean rồi merge bằng merge commit `23194b90efe993614bc961607d3d481165d56b36`; `main` không nhận code Work 51. Sau merge branch 22 ahead / 0 behind. Cần CI chạy lại trên merge head; không coi đây là nghiệm thu toàn Work. |
-| v1.7 | 2026-10-23 | Vibe | Iteration 3 theo ưu tiên của Xu sau D-09: container-grade sandbox profile D-04c — sandbox_container.py chạy runner trong Docker container khóa chặt (--network none, --memory 512m, --cpus 1.0, --pids-limit 64, --cap-drop ALL, no-new-privileges, seccomp=default, --read-only, mount read-only); available() probe Docker + pre-pull image, caller fallback về Sandbox() khi không có Docker; env scrub + cap input 200KB tái dùng từ sandbox.Sandbox. Thêm 4 test (test_sandbox_container.py — tự skip khi không có Docker; kỳ vọng suite 62 trên CI). Test execution PENDING tại thời điểm commit; chỉ ghi PASS khi CI chạy thật. Cảnh báo gitlink `.gitmodules` để xử lý riêng theo repo hygiene, ngoài phạm vi Work 51. |
+| v1.7 | 2026-10-23 | Vibe | Iteration 3: thêm ContainerSandbox D-04c với Docker network none, resource caps, cap-drop ALL, no-new-privileges, Docker default seccomp profile, read-only root và mount; 4 test container. CI lúc đó còn pending. |
+| v1.8 | 2026-10-23 | Xu — AI-01 | Đã sửa hai lỗi cấu hình container phát hiện qua CI (seccomp override sai; UID/cap-drop khiến không đọc được runner), tích hợp ContainerSandbox vào TesterBackend khi Docker khả dụng và giữ Sandbox làm fallback. CI run `39948132321`, commit `24e06ca66df407d2c0e2d6b285e5d8dededd8da7`: **62 passed in 23.22s**, demo E2E đúng 3 verdict; artifact `work51-evidence-39948132321` (ID `12499500891`, SHA-256 `2fa28680779adca5e14b6b18ff188b1585b9516ddb664c596b1633edeff7b7b4`). Work 51 chưa hoàn tất: official A2A SDK/signed-card conformance và independent QA sign-off còn mở. Gitlink `.gitmodules` warning vẫn là repo hygiene ngoài phạm vi. |

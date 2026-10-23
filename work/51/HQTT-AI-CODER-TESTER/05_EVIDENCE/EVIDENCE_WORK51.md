@@ -1,6 +1,6 @@
 # WORK51 Evidence — Hồ sơ bàn giao
 
-Trạng thái: **P2 VERTICAL SLICE VERIFIED — P3 PARTIAL — WORK 51 NOT DONE.**
+Trạng thái: **P3 EXTENDED — ITERATION 3 CI VERIFIED — WORK 51 NOT DONE.**
 
 Nguyên tắc (PLAN §4 P4): chỉ ghi PASS khi đã chạy và có bằng chứng. GitHub Actions đã chạy test suite và demo thật trên nhánh Work 51. Các kết quả dưới đây chỉ chứng minh hành vi của vertical slice đã kiểm tra; không chứng minh đủ các tiêu chí bảo mật, persistence, A2A spec conformance hoặc tích hợp production.
 
@@ -42,16 +42,14 @@ Yêu cầu: Python ≥ 3.9, pytest. Không cần API key.
 | G2 Tách vai trò backend Coder/Tester; Tester kiểm artifact thật | test_pipeline.py, test_http.py | PASS — slice behavior only; no production identity/auth proof |
 | G3 Feedback loop có giới hạn, không vòng lặp vô hạn | test_pipeline.py + HTTP demo `always_bug` | PASS — BLOCKED after 2 rounds |
 | G4 Evidence/hash/verdict cho run | test_pipeline.py, test_evidence_log_records_full_run | PASS — test coverage; JSONL uploaded as artifact on run `39931057210` |
-| G5 Timeout/transport/malformed được xử lý tường minh | test
-_sandbox.
-py, test_http.py, DeadClient | PASS — tested scenarios only |
+| G5 Timeout/transport/malformed được xử lý tường minh | test_sandbox.py, test_http.py, DeadClient | PASS — tested scenarios only |
 | G6 Không PASS khi thiếu evidence | test_pass_without_evidence_is_blocked | PASS — automated test |
 | G7 BLOCKED có lý do + đề xuất xử lý | RunReport.reason + DECISION_REGISTER D-04/D-08/D-09 | PASS — slice emits reason; remaining infrastructure gates are open |
 
 ## Giới hạn còn tồn tại (blockers tương lai, không chặn slice)
 
-1. Sandbox chưa container hóa — không chạy untrusted code thật (D-04, cần phê duyệt).
-2. Task store in-memory — restart mất state (D-08).
+1. ContainerSandbox D-04c đã được chạy trong CI khi Docker khả dụng; đây chưa phải kiểm toán bảo mật độc lập. Khi Docker không khả dụng, fallback Sandbox vẫn chỉ là lớp bảo vệ best-effort và không phù hợp để chạy mã không tin cậy từ nguồn ngoài.
+2. PersistentTaskStore dùng JSON + atomic rename đã có test restart; giới hạn còn lại là single-writer và flush O(n) mỗi lần cập nhật.
 3. Agent Card chưa ký theo A2A v1.0 (signed card) (D-01).
 4. Coder là deterministic generator — LLM adapter là bước kế tiếp (D-03).
 5. Full conformance với A2A spec/official SDK, signed Agent Card và interoperability với implementation A2A độc lập chưa được chứng minh; binding hiện tại là JSON-RPC 2.0 tối thiểu.
@@ -69,8 +67,7 @@ py, test_http.py, DeadClient | PASS — tested scenarios only |
 
 Scope theo plan v1.4 (không tạo Work mới; D-09 đã được Xu quyết định và thực hiện bằng cách đồng bộ `main` vào nhánh Work 51, không đưa Work 51 vào `main`):
 
-- sandbox.py v1.2 (D-04b): env scrub (không rò secrets), POSIX rlimits (CPU 10s / AS 1GB / FSIZE 4MB / NPROC 64), unshare -n network iso
-lation có availability probe, cap input 200KB (SandboxInputError).
+- sandbox.py v1.2 (D-04b): env scrub (không rò secrets), POSIX rlimits (CPU 10s / AS 1GB / FSIZE 4MB / NPROC 64), unshare -n network isolation có availability probe, cap input 200KB (SandboxInputError).
 - task_store.py (D-08b): TaskStore in-memory + PersistentTaskStore JSON atomic rename; backend nhận store qua constructor; restart giữ continuation/idempotency/audit.
 - a2a.py v1.2 (D-01b): Agent Card protocolVersion/version/preferredTransport; Task contextId/createdAt/updatedAt/status.timestamp; tasks/cancel ở server + client.
 - 15 test mới: 04_TEST/test_http.py (+4: cancel working/unknown/terminal-noop, binding v1.2 fields), 04_TEST/test_persistence.py (6), 04_TEST/test_sandbox_hardening.py (5). Kỳ vọng suite: 58.
@@ -94,6 +91,13 @@ Scope theo ưu tiên của Xu sau D-09 (không tạo Work mới, không đụng 
 - 04_TEST/test_sandbox_container.py — 4 test: chạy program trong container; mạng bị chặn tuyệt đối; env host không rò vào container; cap input 200KB giữ nguyên. Tự skip trên host không có Docker; CI runner có Docker nên kỳ vọng suite 62.
 - __init__.py, PLAN v1.7, ARCHITECTURE §8, DECISION_REGISTER (D-04c), README cập nhật đồng bộ.
 
-Trạng thái thực thi: **PENDING** — theo PLAN §4 P4, kết quả chỉ ghi sau khi CI chạy thật trên commit push này. Bằng chứng (run ID, số test pass/skip) bổ sung sau khi có kết quả.
+Trạng thái thực thi: **PASS — CI đã chạy thật** trên commit `24e06ca66df407d2c0e2d6b285e5d8dededd8da7`.
+
+- CI run: [39948132321](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39948132321) — workflow `success`.
+- Test suite: **62 passed in 23.22s**, 0 failed, 0 skipped; 4 container tests thực sự chạy trên Docker runner.
+- HTTP E2E demo exit 0: `correct → PASS` (0 vòng), `seeded_bug → PASS` (1 vòng), `always_bug → BLOCKED` (2 vòng).
+- Evidence artifact: `work51-evidence-39948132321`, artifact ID `12499500891`, SHA-256 `2fa28680779adca5e14b6b18ff188b1585b9516ddb664c596b1633edeff7b7b4`; [mở run và artifact](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/39948132321).
+- Lỗi ở các run trước đã được sửa: `seccomp=default` bị Docker hiểu là đường dẫn; sau khi bỏ override, `--cap-drop ALL` làm user root trong container không đọc được tempdir mode 0700, nên container được chạy bằng UID/GID của host. Các run lỗi trước không được tính là PASS.
+- GitHub Actions cleanup vẫn cảnh báo gitlink `room-meeting-ai` không có URL trong `.gitmodules`; không làm test/demo job thất bại và vẫn để ngoài phạm vi Work 51.
 
 Còn mở không đổi: signed Agent Card + official A2A SDK conformance; independent QA sign-off của Qw; gitlink .gitmodules (repo hygiene, ngoài phạm vi Work 51).
