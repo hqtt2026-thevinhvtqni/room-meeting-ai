@@ -21,7 +21,7 @@ Nguyên tắc (PLAN §4 P4): chỉ ghi PASS khi đã chạy và có bằng chứ
 3f599de0556924e5`; uploaded artifact `work51-evidence-39931057210` (artifact ID `12491197678`, SHA-256 `ef3182702e1070b127134302b67bd00a8e650dd07a519ba72e6e7338329f8e9f`, expires 2026-11-22).
 - Kết quả pytest: **43 passed, 0 failed** (Python 3.11; 8.58s on latest run). Pytest collection warning đã được sửa bằng `TesterBackend.__test__ = False`; test run này không còn `PytestCollectionWarning`.
 - HTTP demo: **exit code 0**; `correct → PASS` (0 vòng sửa), `seeded_bug → PASS` (1 vòng sửa), `always_bug → BLOCKED` (2 vòng sửa, `max_fix_rounds_exceeded`). Evidence JSONL được upload làm GitHub Actions artifact trên run `39931057210`; tải artifact từ trang run trước ngày hết hạn 2026-11-22. SHA-256 của archive artifact: `ef3182702e1070b127134302b67bd00a8e650dd07a519ba72e6e7338329f8e9f`.
-- Một cảnh báo cleanup vẫn còn: `fatal: No url found for submodule path 'room-meeting-ai' in .gitmodules`. Đây là gitlink sai đã xác định ở main/repo hygiene; Work 51 đang 27 commit behind và chưa tự ý xóa gitlink/rebase. Cảnh báo không làm test/demo job thất bại. Có thêm cảnh báo deprecation từ runner/action Node.js.
+- Một cảnh báo cleanup vẫn còn: `fatal: No url found for submodule path 'room-meeting-ai' in .gitmodules`. Đây là vấn đề repo hygiene độc lập với Work 51; đã quan sát trong CI và không làm test/demo job thất bại. Không xóa gitlink trong phạm vi Work 51. Có thêm cảnh báo deprecation từ runner/action Node.js.
 
 ## Lệnh tái lập
 
@@ -53,7 +53,7 @@ _sandbox.py, test_http.py, DeadClient | PASS — tested scenarios only |
 3. Agent Card chưa ký theo A2A v1.0 (signed card) (D-01).
 4. Coder là deterministic generator — LLM adapter là bước kế tiếp (D-03).
 5. Full conformance với A2A spec/official SDK, signed Agent Card và interoperability với implementation A2A độc lập chưa được chứng minh; binding hiện tại là JSON-RPC 2.0 tối thiểu.
-6. Nhánh `work/51` đang phân kỳ với `main`: **8 commits ahead, 27 commits behind** tại lần so sánh mới nhất (D-09). Không rebase/merge vì chưa có quyết định riêng.
+6. Ảnh chụp lịch sử ban đầu ghi nhận nhánh `work/51` phân kỳ với `main` (8 ahead / 27 behind); con số này là lịch sử trước khi Xu ra quyết định D-09 và không còn là trạng thái hiện tại.
 
 ## Commit
 
@@ -65,7 +65,7 @@ _sandbox.py, test_http.py, DeadClient | PASS — tested scenarios only |
 
 ## Iteration 2 — sandbox hardening, persistence, binding v1.2 (2026-10-23)
 
-Scope theo plan v1.4 (không tạo Work mới, không đụng main, không rebase — D-09):
+Scope theo plan v1.4 (không tạo Work mới; D-09 đã được Xu quyết định và thực hiện bằng cách đồng bộ `main` vào nhánh Work 51, không đưa Work 51 vào `main`):
 
 - sandbox.py v1.2 (D-04b): env scrub (không rò secrets), POSIX rlimits (CPU 10s / AS 1GB / FSIZE 4MB / NPROC 64), unshare -n network isolation có availability probe, cap input 200KB (SandboxInputError).
 - task_store.py (D-08b): TaskStore in-memory + PersistentTaskStore JSON atomic rename; backend nhận store qua constructor; restart giữ continuation/idempotency/audit.
@@ -80,4 +80,4 @@ Trạng thái thực thi: **PASS — CI đã chạy thật** trên commit `0dbf9
 - Evidence artifact: `work51-evidence-39945767381`, artifact ID `12498725031`, SHA-256 `05aa58d781682c44a84707ca8f30f4c248a01878aff21c4513bdf71771b79685`, hết hạn `2026-11-22T11:24:09Z`.
 - Các lỗi cú pháp được sửa bằng các commit `b07c6fe`, `ce76a13`, `0dbf964`; `main` không bị sửa.
 
-Giới hạn còn lại: sandbox vẫn chưa container/seccomp; signed Agent Card và khả năng tương thích với official A2A SDK/spec chưa được chứng minh; CI cleanup vẫn có cảnh báo gitlink `room-meeting-ai` không có URL trong `.gitmodules` nhưng không làm job thất bại. Tại commit code đã kiểm chứng `0dbf964`, nhánh là **17 ahead / 27 behind main**; sau ba commit cập nhật evidence/plan/README, HEAD hiện là `791d209d0c7256aeef1677dbf6369d3e5cda9281`, **20 ahead / 27 behind main** (diverged). D-09 tiếp tục chờ quyết định của Vinh, không rebase/merge.
+Giới hạn còn lại: sandbox vẫn chưa container/seccomp; signed Agent Card và khả năng tương thích với official A2A SDK/spec chưa được chứng minh; CI cleanup vẫn có cảnh báo gitlink `room-meeting-ai` không có URL trong `.gitmodules` nhưng không làm job thất bại. D-09: PR [#24](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/24) đã merge `main` → `work/51-hqtt-coder-tester` bằng merge commit `23194b90efe993614bc961607d3d481165d56b36`; `main` không bị thay đổi bởi code Work 51. So sánh sau merge xác nhận nhánh Work 51 **22 commits ahead / 0 behind** `main`. Merge commit và các cập nhật hồ sơ cần CI xác minh lại; chỉ run `39945767381` là bằng chứng 58/58 trên code commit `0dbf964` trước đồng bộ.
