@@ -1,8 +1,8 @@
 # PLAN_WORK51 — HQTT AI Coder–Tester qua A2A
 
 - **Work:** 51 — HQTT AI Coder–Tester
-- **Phiên bản:** v1.1
-- **Trạng thái:** READY FOR QWEN CODER IMPLEMENTATION
+- **Phiên bản:** v1.2
+- **Trạng thái:** IMPLEMENTATION COMMITTED (vertical slice P2) / TEST EXECUTION PENDING — không ghi PASS khi chưa chạy test (xem 05_EVIDENCE/EVIDENCE_WORK51.md)
 - **Chủ sở hữu triển khai:** Qc — Qwen Coder
 - **Điều phối / hồ sơ:** Xu — AI-01
 - **QE/QA độc lập:** Qw — AI-05 (không phải trưởng dự án)
@@ -26,6 +26,8 @@ Không dừng ở sơ đồ hoặc ví dụ minh họa: phải có implementatio
 - **Tester Agent:** vai trò và ngữ cảnh tách biệt; kiểm tra artifact thực tế theo hợp đồng gốc, không được sửa code để tự cho PASS.
 - **Vinh:** chủ sở hữu HQTT. Chỉ cần escalates khi có quyết định vượt phạm vi/quyền, rủi ro không thể tự xử lý hoặc phụ thuộc hạ tầng không sẵn sàng.
 
+Role names above describe intended responsibilities for this Work. Do not assume a particular API/model adapter, Skill, identity mapping, or automatic inter-agent calling mechanism already exists.
+
 ## 3. Kiến trúc mục tiêu
 
 1. **Work Contract:** mục tiêu, phạm vi, acceptance criteria, phiên bản schema, giới hạn thời gian/retry, quyền và đầu ra.
@@ -37,6 +39,8 @@ Không dừng ở sơ đồ hoặc ví dụ minh họa: phải có implementatio
 7. **ROOM-HOP integration:** chỉ tích hợp qua các interface hiện có và đã xác minh; không giả định Qc có thể truy cập ROOM. GitHub branch là nơi nhận code/plan và báo cáo của Qc.
 
 A2A là giao thức, không tự cung cấp execution sandbox, bảo mật, persistence hoặc chất lượng test. Không bắt buộc thêm LangGraph/AutoGen. Trước khi tự viết protocol wrapper, Qc phải xác minh đặc tả A2A và thư viện/SDK hiện có, chọn phương án tương thích nhỏ nhất, ghi rõ version và lý do.
+
+**Triển khai cụ thể (v1.2, ghi nhận P1/P2 xong):** các quyết định D-01..D-09 nằm trong `DECISION_REGISTER.md`; sơ đồ thành phần/sequence/error model nằm trong `02_ARCHITECTURE/ARCHITECTURE_WORK51.md`; binding chọn là JSON-RPC 2.0 + text-part tối thiểu, gom toàn bộ trong `03_CODE/a2a_ct/a2a.py` để swap sang SDK chính thức sau mà không đổi module khác.
 
 ## 4. Trình tự thực hiện
 
@@ -105,3 +109,4 @@ Qc phải tự kiểm tra lại nguồn, công cụ và đường đi có sẵn 
 | Phiên bản | Ngày | Người sửa | Nội dung |
 |---|---|---|---|
 | v1.1 | 2026-10-23 | Xu — AI-01 | Chuyển owner triển khai sang Qc/Qwen Coder; xác nhận GitHub branch là kênh làm việc chính; A2A là giao thức cốt lõi; Qw chỉ QE/QA độc lập; bổ sung vòng đời BUILD/VERIFY/HANDOFF và tiêu chí nghiệm thu. |
+| v1.2 | 2026-10-23 | Vibe (thay Qc, theo chỉ thị trực tiếp của Vinh: "xây và hoàn thiện, không hỏi, không chờ") | Commit vertical slice P2: package `03_CODE/a2a_ct` (contract, states, A2A JSON-RPC binding, coder/tester agents, sandbox, orchestrator, demo), 40 test case trong `04_TEST/`, ARCHITECTURE + DECISION_REGISTER (D-01..D-09) + EVIDENCE + README. Trạng thái: implementation đã commit, **test execution PENDING** (môi trường tác giả không có runtime Python; per §4 P4 không ghi PASS khi chưa chạy) — An/Qc chạy `python -m pytest 04_TEST -q` và `python 03_CODE/run_demo.py` để sinh evidence thật. Escalate Vinh (D-09): nhánh work/51 đang 27 commits behind main, cần quyết rebase/merge. |
