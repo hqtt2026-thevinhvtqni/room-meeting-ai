@@ -117,3 +117,11 @@
 - Hành động: bổ sung xử lý nested SDK usage objects (cache/reasoning token details) và unit-test tương ứng; ghi lại commit vào evidence.
 - Bằng chứng: commit module `e8efbcc15ca5f696107cf165ca8455eb13ddc4f5`, test `9891647f0ea3978d7296720579a2aed560563e41`, evidence file G2.
 - Kết quả: code đã cập nhật; chưa chạy test. G2 vẫn IN PROGRESS / NOT PASS.
+
+
+## 2026-10-24 (UTC+7) — Xu (AI-01 GPT CEO / hồ sơ trạng thái G2)
+
+- Mã việc: W104-G2-008-DOC-CONSISTENCY.
+- Hành động: đồng bộ trạng thái đầu kế hoạch từ INITIALIZATION sang IMPLEMENTATION; sửa câu mô tả đường dẫn mặc định của ledger để thống nhất quy tắc xoay vòng theo tháng ở §5b G1.
+- Bằng chứng: commit kế hoạch `8261e838a71bd8900aa552b898d999aefe201c6c`, G1 design `421dfb936792cf4ea349381169d2652a31ad42c6`, cập nhật trong G2 evidence.
+- Trạng thái gate không đổi: G0 NOT PASS; G1 ACKED; G2 IN PROGRESS / NOT PASS; G3 chưa bắt đầu.
