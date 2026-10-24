@@ -125,3 +125,11 @@
 - Hành động: đồng bộ trạng thái đầu kế hoạch từ INITIALIZATION sang IMPLEMENTATION; sửa câu mô tả đường dẫn mặc định của ledger để thống nhất quy tắc xoay vòng theo tháng ở §5b G1.
 - Bằng chứng: commit kế hoạch `8261e838a71bd8900aa552b898d999aefe201c6c`, G1 design `421dfb936792cf4ea349381169d2652a31ad42c6`, cập nhật trong G2 evidence.
 - Trạng thái gate không đổi: G0 NOT PASS; G1 ACKED; G2 IN PROGRESS / NOT PASS; G3 chưa bắt đầu.
+
+
+## 2026-10-24 (UTC+7) — Xu (AI-01 GPT CEO / G2 retention follow-up)
+
+- Mã việc: W104-G2-008-ROTATION.
+- Hành động: bổ sung lập index cho các file ledger theo tháng đã đóng khi chuyển tháng; giữ index các file part khi file vượt ngưỡng 20 MiB; thêm test kiểm tra rotation/index.
+- Bằng chứng: module commit 355b03b3084c0c0a81feec13e91b5b6a61219010; test commit 08927a98f83f8fc85f4f698c6dd57ead71dcc14d; evidence file G2.
+- Trạng thái: code candidate cập nhật; test chưa chạy, G2 IN PROGRESS / NOT PASS.
