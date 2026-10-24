@@ -109,3 +109,11 @@
 - Kiểm tra hồ sơ: phát hiện tiêu đề G1 REV 6 còn chữ “PROPOSED, chờ Vinh ACK” dù nội dung đã ghi ACKED; sửa tiêu đề và §8 để thống nhất, vẫn giữ điều kiện môi trường test ủy quyền.
 - Bằng chứng: `06_EVIDENCE/G2_IMPLEMENTATION_PROGRESS_20261024.md`; commit `3ff659047831cbde8444536854b6fdfb3745d684`, `df7d40ddeba08f0ea9b2b35b17082e89e19d4540`, `ebad679a08bbc1fc7339f2429fd172b5b6c7c3bc`.
 - Trạng thái: G2 IN PROGRESS / NOT PASS; tests chưa chạy. #7c OPEN; gitlink giữ nguyên; G0 NOT PASS.
+
+
+## 2026-10-24 (UTC+7) — Xu (AI-01 GPT CEO / G2 code review pass, chưa phải nghiệm thu)
+
+- Mã việc: W104-G2-008-QUALITY-FIX.
+- Hành động: bổ sung xử lý nested SDK usage objects (cache/reasoning token details) và unit-test tương ứng; ghi lại commit vào evidence.
+- Bằng chứng: commit module `e8efbcc15ca5f696107cf165ca8455eb13ddc4f5`, test `9891647f0ea3978d7296720579a2aed560563e41`, evidence file G2.
+- Kết quả: code đã cập nhật; chưa chạy test. G2 vẫn IN PROGRESS / NOT PASS.
