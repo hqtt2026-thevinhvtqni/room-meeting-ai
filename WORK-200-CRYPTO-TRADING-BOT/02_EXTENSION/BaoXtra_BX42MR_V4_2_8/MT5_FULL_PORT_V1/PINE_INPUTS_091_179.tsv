@@ -1,0 +1,90 @@
+source_line	input_name	input_type	default_expression	group	port_state
+141	tp3R	float	3.0	06 | Exit Engine	PENDING_EXACT_PARITY
+142	tp1Percent	int	50	06 | Exit Engine	PENDING_EXACT_PARITY
+143	tp2Percent	int	25	06 | Exit Engine	PENDING_EXACT_PARITY
+145	useBE	bool	true	06 | Exit Engine	PENDING_EXACT_PARITY
+146	beTicks	int	2	06 | Exit Engine	PENDING_EXACT_PARITY
+150	showDash	bool	true	07 | UI Dashboard	PENDING_EXACT_PARITY
+151	showEMA	bool	true	07 | UI Dashboard	PENDING_EXACT_PARITY
+152	showZZ	bool	true	07 | UI Dashboard	PENDING_EXACT_PARITY
+153	showStruct	bool	true	07 | UI Dashboard	PENDING_EXACT_PARITY
+154	showZones	bool	true	07 | UI Dashboard	PENDING_EXACT_PARITY
+155	showMomentumZones	bool	true	07 | UI Dashboard	PENDING_EXACT_PARITY
+156	showMomentumOB	bool	true	07 | UI Dashboard	PENDING_EXACT_PARITY
+157	showMomentumFVG	bool	true	07 | UI Dashboard	PENDING_EXACT_PARITY
+158	showMomentumFib	bool	true	07 | UI Dashboard	PENDING_EXACT_PARITY
+159	momentumZoneKeep	int	2	07 | UI Dashboard	PENDING_EXACT_PARITY
+160	momentumZoneTTL	int	80	07 | UI Dashboard	PENDING_EXACT_PARITY
+161	momentumZoneMinFibATR	float	2.0	07 | UI Dashboard	PENDING_EXACT_PARITY
+163	showTradeLevels	bool	true	07 | UI Dashboard	PENDING_EXACT_PARITY
+164	showTP1Lines	bool	true	07 | UI Dashboard	PENDING_EXACT_PARITY
+165	showTP3Lines	bool	true	07 | UI Dashboard	PENDING_EXACT_PARITY
+166	showOnlyL1	bool	true	07 | UI Dashboard	PENDING_EXACT_PARITY
+167	showEntryLine	bool	true	07 | UI Dashboard	PENDING_EXACT_PARITY
+168	showManualLevels	bool	true	07 | UI Dashboard	PENDING_EXACT_PARITY
+173	maxLegs	int	3	08 | Advanced Pyramiding	PENDING_EXACT_PARITY
+174	portfolioRiskPct	float	0.75	08 | Advanced Pyramiding	PENDING_EXACT_PARITY
+176	addRiskPct	float	0.25	08 | Advanced Pyramiding	PENDING_EXACT_PARITY
+177	addAfterR	float	1.0	08 | Advanced Pyramiding	PENDING_EXACT_PARITY
+178	addSpacingATR	float	0.5	08 | Advanced Pyramiding	PENDING_EXACT_PARITY
+179	addPullback	bool	true	08 | Advanced Pyramiding	PENDING_EXACT_PARITY
+180	pullbackATR	float	0.15	08 | Advanced Pyramiding	PENDING_EXACT_PARITY
+181	requireProtected	bool	true	08 | Advanced Pyramiding	PENDING_EXACT_PARITY
+182	trailOn	bool	true	08 | Advanced Pyramiding	PENDING_EXACT_PARITY
+183	trailStartR	float	1.25	08 | Advanced Pyramiding	PENDING_EXACT_PARITY
+184	trailBufferATR	float	0.25	08 | Advanced Pyramiding	PENDING_EXACT_PARITY
+185	priceBufferTicks	int	4	08 | Advanced Pyramiding	PENDING_EXACT_PARITY
+186	reserveFeeRT	float	0.02	08 | Advanced Pyramiding	PENDING_EXACT_PARITY
+193	mrLots	float	0.01	09 | RSI Momentum / Động lượng	PENDING_EXACT_PARITY
+194	mrMaxLots	float	0.03	09 | RSI Momentum / Động lượng	PENDING_EXACT_PARITY
+195	mrMaxOpen	int	3	09 | RSI Momentum / Động lượng	PENDING_EXACT_PARITY
+196	mrRsiLen	int	14	09 | RSI Momentum / Động lượng	PENDING_EXACT_PARITY
+197	mrBuyLevel	float	50	09 | RSI Momentum / Động lượng	PENDING_EXACT_PARITY
+198	mrSellLevel	float	50	09 | RSI Momentum / Động lượng	PENDING_EXACT_PARITY
+199	mrDemaFast	int	21	09 | RSI Momentum / Động lượng	PENDING_EXACT_PARITY
+200	mrDemaSlow	int	50	09 | RSI Momentum / Động lượng	PENDING_EXACT_PARITY
+201	mrHemaFast	int	21	09 | RSI Momentum / Động lượng	PENDING_EXACT_PARITY
+202	mrHemaSlow	int	50	09 | RSI Momentum / Động lượng	PENDING_EXACT_PARITY
+203	mrTriggerTTL	int	3	09 | RSI Momentum / Động lượng	PENDING_EXACT_PARITY
+204	mrCisdWindow	int	5	09 | RSI Momentum / Động lượng	PENDING_EXACT_PARITY
+205	mrWaitBars	int	3	09 | RSI Momentum / Động lượng	PENDING_EXACT_PARITY
+206	mrAddATR	float	0.35	09 | RSI Momentum / Động lượng	PENDING_EXACT_PARITY
+207	mrRequireProfit	bool	true	09 | RSI Momentum / Động lượng	PENDING_EXACT_PARITY
+208	mrRiskEntry	float	2	09 | RSI Momentum / Động lượng	PENDING_EXACT_PARITY
+209	mrRiskTotal	float	6	09 | RSI Momentum / Động lượng	PENDING_EXACT_PARITY
+210	mrMarginPct	float	30	09 | RSI Momentum / Động lượng	PENDING_EXACT_PARITY
+211	mrLeverage	float	2000	09 | RSI Momentum / Động lượng	PENDING_EXACT_PARITY
+212	mrStopATR	float	1.25	09 | RSI Momentum / Động lượng	PENDING_EXACT_PARITY
+213	mrTP1R	float	1.0	09 | RSI Momentum / Động lượng	PENDING_EXACT_PARITY
+214	mrTP2R	float	1.8	09 | RSI Momentum / Động lượng	PENDING_EXACT_PARITY
+215	mrTP3R	float	3.0	09 | RSI Momentum / Động lượng	PENDING_EXACT_PARITY
+216	mrTP1Pct	int	50	09 | RSI Momentum / Động lượng	PENDING_EXACT_PARITY
+217	mrTP2Pct	int	25	09 | RSI Momentum / Động lượng	PENDING_EXACT_PARITY
+221	mrExitOnOppositeCI	bool	false	09 | RSI Momentum / Động lượng	PENDING_EXACT_PARITY
+222	mrPause	bool	false	09 | RSI Momentum / Động lượng	PENDING_EXACT_PARITY
+223	mrShowDashboard	bool	true	09 | RSI Momentum / Động lượng	PENDING_EXACT_PARITY
+224	mrShowLevels	bool	true	09 | RSI Momentum / Động lượng	PENDING_EXACT_PARITY
+225	mrSessionOn	bool	false	09 | RSI Momentum / Động lượng	PENDING_EXACT_PARITY
+226	mrSession	session	"0000-2359"	09 | RSI Momentum / Động lượng	PENDING_EXACT_PARITY
+232	mrFibEntryMode	string	"M5"	09B | MR Fibonacci / Fib Entry-SL-TP	PENDING_EXACT_PARITY
+234	mrFibTouchBars	int	10	09B | MR Fibonacci / Fib Entry-SL-TP	PENDING_EXACT_PARITY
+235	mrFibSwingLen	int	5	09B | MR Fibonacci / Fib Entry-SL-TP	PENDING_EXACT_PARITY
+236	mrFibRequireCI	bool	false	09B | MR Fibonacci / Fib Entry-SL-TP	PENDING_EXACT_PARITY
+237	mrStopMode	string	"ATR baseline"	09B | MR Fibonacci / Fib Entry-SL-TP	PENDING_EXACT_PARITY
+238	mrStopSwingBufATR	float	0.25	09B | MR Fibonacci / Fib Entry-SL-TP	PENDING_EXACT_PARITY
+239	mrStopSwingMaxATR	float	4.0	09B | MR Fibonacci / Fib Entry-SL-TP	PENDING_EXACT_PARITY
+240	mrFibTPMode	string	"R baseline"	09B | MR Fibonacci / Fib Entry-SL-TP	PENDING_EXACT_PARITY
+241	mrFibTP2Ext	float	1.272	09B | MR Fibonacci / Fib Entry-SL-TP	PENDING_EXACT_PARITY
+242	mrFibTP3Ext	float	1.618	09B | MR Fibonacci / Fib Entry-SL-TP	PENDING_EXACT_PARITY
+243	mrFibMaxTPR	float	6.0	09B | MR Fibonacci / Fib Entry-SL-TP	PENDING_EXACT_PARITY
+251	mrLockOn	bool	true	10 | MR Dynamic SL / Keep 20-70%	PENDING_EXACT_PARITY
+252	mrLockBEAtR	float	0.9	10 | MR Dynamic SL / Keep 20-70%	PENDING_EXACT_PARITY
+253	mrLockStartR	float	0.8	10 | MR Dynamic SL / Keep 20-70%	PENDING_EXACT_PARITY
+254	mrKeepBeforeTP1	float	20.0	10 | MR Dynamic SL / Keep 20-70%	PENDING_EXACT_PARITY
+255	mrKeepAfterTP1	float	40.0	10 | MR Dynamic SL / Keep 20-70%	PENDING_EXACT_PARITY
+256	mrKeepAfterTP2	float	60.0	10 | MR Dynamic SL / Keep 20-70%	PENDING_EXACT_PARITY
+257	mrKeepRunner	float	70.0	10 | MR Dynamic SL / Keep 20-70%	PENDING_EXACT_PARITY
+258	mrRunnerAtR	float	2.5	10 | MR Dynamic SL / Keep 20-70%	PENDING_EXACT_PARITY
+259	mrLockSlipTicks	int	4	10 | MR Dynamic SL / Keep 20-70%	PENDING_EXACT_PARITY
+260	mrLockRoundTripFeePct	float	0.02	10 | MR Dynamic SL / Keep 20-70%	PENDING_EXACT_PARITY
+261	mrLockShowLabels	bool	true	10 | MR Dynamic SL / Keep 20-70%	PENDING_EXACT_PARITY
