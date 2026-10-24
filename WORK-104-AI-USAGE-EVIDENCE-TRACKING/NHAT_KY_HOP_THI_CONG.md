@@ -141,3 +141,11 @@
 - Hành động: mở rộng test fail-safe để xác nhận fallback counter chỉ có timestamp + count, đúng G1 §3.
 - Bằng chứng: test commit 248aa94249036a87119afbd8889f8ead0b635169; G2 evidence được cập nhật.
 - Trạng thái: test code đã ghi; chưa thực thi. G2 IN PROGRESS / NOT PASS.
+
+## 2026-10-24 (UTC+7) — Vibe (agent hỗ trợ, review độc lập tĩnh thay Vi/Ka ở mức tĩnh)
+- Mã việc: W104-G2-008R1 (đối soát tĩnh độc lập G2 + bổ sung test còn thiếu).
+- Lý do: Xu đã ghi code G2 (module + tests + instrumentation 6 điểm, xem G2_IMPLEMENTATION_PROGRESS) nhưng tests chưa chạy được; việc khả thi không cần môi trường ủy quyền là review tĩnh độc lập so với G1 REV 6.
+- Hành động: Đọc toàn văn core/usage_ledger.py, tests/test_usage_ledger.py, core/connectors.py, core/gemini_intent_router.py tại commit 710a5b1; lập biên bản 05_TEST/G2_STATIC_REVIEW_20261024.md (bảng đối chiếu 8 mục ĐẠT + 5 findings F1–F5); bổ sung đúng 1 test còn thiếu theo G1 §7 mục 7: test_dual_path_failure_no_counter_no_raise (hỏng cả ledger path lẫn failures.log → không raise, không có counter, chỉ còn stderr).
+- Kết quả: REVIEW DONE (static) — code nhất quán với G1 REV 6 ở mức tĩnh; KHÔNG tuyên bố G2 PASS (tests chưa chạy, bằng chứng 0). Findings F2 (concurrency không khóa file), F3 (race xoay vòng), F4 (index nạp cả file), F5 (correlation chưa truyền từ MeetingManager — để null đúng quy tắc cấm mã giả, xử lý ở G4) ghi cho Co/Xu và G3.
+- Bằng chứng: 05_TEST/G2_STATIC_REVIEW_20261024.md; tests/test_usage_ledger.py (test kép mới); commit này.
+- Bước tiếp: Co xử lý findings F2/F3 (khóa file hoặc ghi giả định single-writer vào runbook); G3 chạy toàn bộ tests trong môi trường ủy quyền; E2E chờ model thật ở agents/*.yaml.

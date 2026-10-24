@@ -45,3 +45,5 @@ MEETING-2026-002 là CLOSED - KHÔNG được sửa khi API thật chạy.
 API thật phải tạo MEETING-2026-003 mới -> Evidence mới -> PROJECT_STATE update.
 
 MeAgent integrated - ready for MEETING-2026-003
+
+- G2: G2 IN PROGRESS — code + tests đã ghi (Xu, G2_IMPLEMENTATION_PROGRESS); Vibe review tĩnh độc lập: NHẤT QUÁN với G1 REV 6 ở mức tĩnh, KHÔNG PASS (tests chưa chạy — bằng chứng 0); findings F1–F5 (05_TEST/G2_STATIC_REVIEW: F1 test kép đã bổ sung, F2/F3 concurrency/rotation race chờ Co, F5 correlation truyền ở G4); G3 CHƯA BẮT ĐẦU chờ môi trường ủy quyền + model thật.

@@ -119,3 +119,19 @@ def test_size_rotation_indexes_completed_part_file(tmp_path, monkeypatch):
     assert len(indexed) == 1
     assert indexed[0]["file"] == str(rotated)
     assert indexed[0]["event_count"] == 1
+
+
+def test_dual_path_failure_no_counter_no_raise(tmp_path, monkeypatch, capsys):
+    # G1 REV 6 §7 item 7: both ledger path AND failures.log path are broken.
+    ledger_target = tmp_path / "blocked_ledger.jsonl"
+    ledger_target.mkdir()
+    failure_target = tmp_path / "blocked_failures.log"
+    failure_target.mkdir()
+    monkeypatch.setenv("USAGE_LEDGER_PATH", str(ledger_target))
+    monkeypatch.setenv("USAGE_LEDGER_FAILURES_PATH", str(failure_target))
+    # Must not raise; counter cannot be written; stderr carries the trace only.
+    record_usage_event(new_usage_event(provider="openai", model="test", caller="test"))
+    captured = capsys.readouterr()
+    assert "usage-ledger" in captured.err
+    # No usable counter file was created at the broken target.
+    assert failure_target.is_dir()
