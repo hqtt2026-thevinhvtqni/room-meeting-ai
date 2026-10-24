@@ -189,3 +189,14 @@
 - **Giới hạn:** README đồng bộ quy trình cũng đã tạo trên branch; chưa có daemon/webhook tự động. Chưa đồng bộ toàn bộ code/source Work 200; chưa merge branch vào main.
 - **Commit gần nhất trước entry này:** journal `63b5d82bbd0d4e96f056db662c1d2cf1fffac309`.
 - **Trạng thái tổng:** DOCUMENT SYNC VERIFIED; FULL WORK SOURCE SYNC NOT CLAIMED; BRANCH NOT MERGED.
+
+
+## Entry 012 — Đồng bộ cây Work 200 lên thư mục chuẩn GitHub
+- **Ngày:** 2026-10-25 ICT.
+- **Người ghi:** Xu — AI-01.
+- **GitHub:** `WORK-200-CRYPTO-TRADING-BOT/` trên branch `work/200-crypto-trading-bot`.
+- **Phạm vi đã chép:** các file text/source có thể đọc qua MCP trong cây `CRYPTO-TRADING-BOT/`, gồm plan gốc và master plan, brief, architecture, BX42 Pine và tài liệu, MT5 v0.1/full-port specification, Python core, dashboard, tests, acceptance criteria, các đánh giá của Cla/CFO/CRO/Ka, evidence và journal.
+- **Cách tổ chức:** giữ cấu trúc thư mục tương ứng `00_ROOT` … `07_RELEASE` bên trong thư mục Work trên GitHub; giữ thêm các file lối vào cấp Work (README, master plan, minutes, journal) để điều hướng nhanh.
+- **Loại trừ có chủ đích:** `desktop.ini` là metadata Windows không cần quản lý trong repo; file `.gdoc` là shortcut Google Docs, không phải nội dung tài liệu gốc nên không giả lập thành file nội dung. Chưa xác minh/đồng bộ các artifact ngoài danh sách MCP có thể đọc.
+- **Trạng thái:** source/document tree snapshot published on work branch. Branch chưa merge vào main. Chưa có đồng bộ tự động nền; cập nhật tiếp tục theo quy trình agent-driven/manual đã ghi trong README.
+- **Lưu ý:** thao tác đồng bộ không có nghĩa các code/test đã chạy hoặc Work 200 đã PASS; trạng thái vẫn ACTIVE / PARTIAL / NOT RELEASED.
