@@ -8,7 +8,7 @@
 
 `core/usage_ledger.py` — một hàm ghi duy nhất, non-blocking, fail-safe:
 
-- `record_usage_event(event: dict) -> None`: append 1 dòng JSON vào file JSONL (default `docs/usage_ledger.jsonl`, cấu hình qua env `USAGE_LEDGER_PATH`).
+- `record_usage_event(event: dict) -> None`: append 1 dòng JSON vào file JSONL; mặc định dùng tên theo tháng `docs/usage_ledger-YYYYMM.jsonl` như §5b, có thể override đường dẫn bằng env `USAGE_LEDGER_PATH`.
 - **Non-blocking**: lỗi ghi ledger KHÔNG BAO GIỜ làm hỏng luồng AI chính; lỗi được nuốt và ghi fallback vào `sys.stderr` (không print stdout — tránh phá MCP stdio protocol).
 - KHÔNG import MeetingManager/Discussion/Governance; chỉ module này ghi file này (không có logger thứ hai — đúng Constitution §06 chống phân tán).
 
