@@ -40,3 +40,11 @@
 ## Next gate
 
 Before G2 can be declared complete: run the new unit tests and relevant existing regression tests in an authorized Python environment; review all changes for syntax, provider SDK field compatibility, error-path accounting, concurrency/rotation behavior, and no-regression to AI request flow. G3 remains a separate verification gate with independent review.
+
+
+## Addendum — implementation delta
+
+- `core/connectors.py` also records Mock/Internal connector events as `usage_source=unavailable`, consistent with G1 §3; these are not provider-billed calls.
+- Latest follow-up commits: ledger counter scope `df7d40ddeba08f0ea9b2b35b17082e89e19d4540`; connectors including Mock/Internal `3ff659047831cbde8444536854b6fdfb3745d684`.
+- The earlier commit list above records initial commits; these two follow-up commits supersede the initial file snapshots.
+- Tests remain NOT RUN. This addendum changes no gate status.
