@@ -1,0 +1,1758 @@
+//@version=6
+strategy("BaoXtra BX42MR V4.2.8 TEST | D1-H4-H1-M15 Swing Filter | VI-EN", shorttitle="BX42 MR LCK", overlay=true,
+     initial_capital=100, currency=currency.USD, pyramiding=3, close_entries_rule="ANY",
+     commission_type=strategy.commission.percent, commission_value=0.01,
+     slippage=2, margin_long=0.05, margin_short=0.05,
+     process_orders_on_close=false, calc_on_every_tick=false, calc_on_order_fills=false,
+     max_labels_count=250, max_lines_count=350, max_boxes_count=120)
+
+// ============================================================================
+// BAOXTRA BX42 V4.2.8 TEST | BASE V4.2.7 + OPT-IN SWING CONFLUENCE; NO MT5 EXECUTION.
+// Trading logic: CONFIRMED HTF -> confirmed swing BOS/CHoCH or Sweep->CISD
+//                -> Displacement -> LOCK OB/FVG/FIB -> later retest
+//                -> candle confirmation -> Risk Gate -> simulated order.
+// Important: pivot markers are drawn at pivot location AFTER right-side confirmation.
+// Contract/lot conventions MUST match the TradingView symbol before real trading.
+// ============================================================================
+
+// 01. MODE / CHẾ ĐỘ
+G0 = "01 | Thị trường / Mode"
+market     = input.string("Forex", "Thị trường / Market", options=["Forex", "Crypto"], group=G0)
+mode       = input.string("Scalping", "Chế độ / Mode", options=["Scalping", "Swing"], group=G0)
+direction  = input.string("Both", "Hướng / Direction", options=["Both", "Long only", "Short only"], group=G0)
+trigger    = input.string("Structure or CISD", "Kích hoạt / Trigger", options=["Structure or CISD", "Sweep + CISD only", "Structure only"], group=G0)
+needHTF    = input.bool(true, "Bắt buộc xu hướng HTF / HTF mandatory", group=G0)
+
+// Execution profile / Hồ sơ thực thi. Pine CANNOT click MT5 trades or accept live confirmation buttons.
+// RSI Momentum engine is isolated from original SMC order engine.
+tradeSystem = input.string("RSI Momentum", "Bộ máy / Trading engine", options=["RSI Momentum", "Legacy SMC"], group=G0)
+isLegacy = tradeSystem == "Legacy SMC"
+isMR = tradeSystem == "RSI Momentum"
+GE = "00 | Execution / Thực thi"
+executionMode = input.string("Signal Only", "Signal / Semi-Auto / Paper Auto", options=["Signal Only", "Semi-Auto Alerts", "Auto Backtest + Alerts"], group=GE,
+     tooltip="Signal Only: visual plans, no order alerts. Semi-Auto: confirm BUY/SELL manually in MT5. Auto: TradingView strategy simulated fills; MT5 execution requires separately built & guarded bridge/EA.")
+previewBars = input.int(8, "Plan preview TTL / Số nến hiện kế hoạch", minval=1, maxval=40, group=GE)
+
+GManual = "00A | Manual Price Plan / Kế hoạch nhập tay"
+manualSide = input.string("Off", "Manual BUY / SELL", options=["Off", "BUY", "SELL"], group=GManual)
+manualEntry = input.float(0.0, "Entry / Giá vào (0=hide)", minval=0.0, group=GManual)
+manualSL = input.float(0.0, "SL1 / Dừng lỗ L1 (0=hide)", minval=0.0, group=GManual)
+manualEntry2 = input.float(0.0, "Entry L2 (optional)", minval=0.0, group=GManual)
+manualSL2 = input.float(0.0, "SL2 (optional)", minval=0.0, group=GManual)
+manualEntry3 = input.float(0.0, "Entry L3 (optional)", minval=0.0, group=GManual)
+manualSL3 = input.float(0.0, "SL3 (optional)", minval=0.0, group=GManual)
+manualTP1 = input.float(0.0, "TP1 (0=auto R)", minval=0.0, group=GManual)
+manualTP2 = input.float(0.0, "TP2 (0=auto R)", minval=0.0, group=GManual)
+manualTP3 = input.float(0.0, "TP3 (0=auto R)", minval=0.0, group=GManual)
+
+// 02. SCALPING / M1-M5
+GS = "02 | Preset Scalping"
+scHTF      = input.timeframe("15", "HTF", group=GS)
+scFast     = input.int(21, "HTF EMA nhanh / Fast", minval=1, group=GS)
+scSlow     = input.int(50, "HTF EMA chậm / Slow", minval=2, group=GS)
+scEmaFast  = input.int(9, "Chart EMA nhanh / Fast", minval=1, group=GS)
+scEmaSlow  = input.int(21, "Chart EMA chậm / Slow", minval=2, group=GS)
+scEmaTrend = input.int(50, "Chart EMA trend", minval=3, group=GS)
+scSwing    = input.int(5, "Swing length", minval=2, maxval=30, group=GS)
+scOB       = input.int(15, "OB lookback", minval=2, maxval=80, group=GS)
+scWin      = input.int(6, "Locked setup TTL (bars)", minval=2, maxval=60, group=GS)
+scMinScore = input.int(70, "Điểm tối thiểu / Min score", minval=1, maxval=100, group=GS)
+scMaxSL    = input.float(2.5, "Max SL (x ATR)", minval=0.5, step=0.25, group=GS)
+
+// 03. SWING / M15-H1
+GW = "03 | Preset Swing"
+swHTF      = input.timeframe("240", "HTF", group=GW)
+swFast     = input.int(21, "HTF EMA nhanh / Fast", minval=1, group=GW)
+swSlow     = input.int(50, "HTF EMA chậm / Slow", minval=2, group=GW)
+swEmaFast  = input.int(21, "Chart EMA nhanh / Fast", minval=1, group=GW)
+swEmaSlow  = input.int(55, "Chart EMA chậm / Slow", minval=2, group=GW)
+swEmaTrend = input.int(200, "Chart EMA trend", minval=3, group=GW)
+swSwing    = input.int(5, "Swing length", minval=2, maxval=30, group=GW)
+swOB       = input.int(20, "OB lookback", minval=2, maxval=80, group=GW)
+swWin      = input.int(10, "Locked setup TTL (bars)", minval=2, maxval=60, group=GW)
+swMinScore = input.int(70, "Điểm tối thiểu / Min score", minval=1, maxval=100, group=GW)
+swMaxSL    = input.float(4.0, "Max SL (x ATR)", minval=0.5, step=0.25, group=GW)
+
+// 03A | D1-H4-H1-M15 SWING CONFLUENCE (OPT-IN)
+// Preserves existing Legacy SMC / RSI Momentum when OFF.
+// Use chart M15, mode Swing, Trading engine Legacy SMC, HTF = 1D.
+// Original OB/FVG/Fib, TP1/2/3 and stop-risk logic stay unchanged.
+GWS = "03A | D1-H4-H1-M15 Swing Confirm"
+swConfluenceOn = input.bool(false, "Enable D1 > H4 zones > H1 confirm > M15 entry", group=GWS,
+     tooltip="Opt-in filter for Legacy SMC + Swing on M15 only. Other modes unchanged. Signal Only recommended.")
+swH4FastLen = input.int(21, "H4 EMA fast", minval=2, group=GWS)
+swH4SlowLen = input.int(50, "H4 EMA slow", minval=3, group=GWS)
+swH4TrendGate = input.bool(true, "Require H4 EMA down/up trend", group=GWS)
+swH4Pivot = input.int(3, "H4 confirmed swing pivot", minval=2, maxval=12, group=GWS)
+swH4FVGminATR = input.float(0.15, "H4 FVG minimum x ATR", minval=0.0, maxval=2.0, step=0.05, group=GWS)
+swH4OBbodyATR = input.float(0.65, "H4 OB proxy displacement x ATR", minval=0.2, maxval=3.0, step=0.05, group=GWS)
+swH4ZoneAge = input.int(30, "Max H4 FVG/OB age (H4 candles)", minval=1, maxval=180, group=GWS)
+swH4TouchTTL = input.int(24, "M15 bars after H4 zone touch", minval=1, maxval=96, group=GWS)
+swH4ZoneMode = input.string("Any FVG/OB/Fib", "H4 zones required", options=["Any FVG/OB/Fib", "FVG or OB", "Two zones touched"], group=GWS)
+swH1FastLen = input.int(21, "H1 EMA fast", minval=2, group=GWS)
+swH1SlowLen = input.int(50, "H1 EMA slow", minval=3, group=GWS)
+swH1Pivot = input.int(3, "H1 confirmed BOS pivot", minval=2, maxval=12, group=GWS)
+swH1Method = input.string("RSI + candle", "H1 confirmation", options=["RSI + candle", "RSI + EMA", "RSI + recent BOS"], group=GWS)
+swH1RsiBuy = input.float(50.0, "H1 RSI BUY above", minval=45, maxval=65, group=GWS)
+swH1RsiSell = input.float(50.0, "H1 RSI SELL below", minval=35, maxval=55, group=GWS)
+swH1BosTTL = input.int(5, "Recent BOS validity (H1 bars)", minval=1, maxval=24, group=GWS)
+swShowH4Zone = input.bool(true, "Show closest active H4 supply/demand bounds", group=GWS)
+
+// 04. SMC / CẤU TRÚC
+GM = "04 | SMC / Structure"
+sweepDepth  = input.float(0.05, "Sweep vượt swing (x ATR)", minval=0.0, step=0.05, group=GM)
+sweepTTL    = input.int(7, "Sweep -> CISD TTL (bars)", minval=1, maxval=30, group=GM)
+dispATR     = input.float(0.65, "Displacement body (x ATR)", minval=0.1, step=0.05, group=GM)
+bodyMin     = input.float(0.45, "Retest body / candle range", minval=0.1, maxval=0.95, step=0.05, group=GM)
+closePos    = input.float(0.65, "Đóng gần cực trị / Close location", minval=0.5, maxval=0.95, step=0.05, group=GM)
+minFVG      = input.float(0.2, "FVG size (x ATR)", minval=0.0, step=0.05, group=GM)
+fvgTTL      = input.int(6, "FVG max age at lock", minval=1, maxval=30, group=GM)
+fibA        = input.float(0.382, "Fib from", minval=0.0, maxval=1.0, step=0.001, group=GM)
+fibB        = input.float(0.618, "Fib to", minval=0.0, maxval=1.0, step=0.001, group=GM)
+slBuffer    = input.float(0.3, "SL structure buffer (x ATR)", minval=0.0, step=0.05, group=GM)
+maxEntryATR = input.float(1.2, "Max close beyond zone (x ATR)", minval=0.1, step=0.1, group=GM)
+
+// 05. RISK / RỦI RO
+GR = "05 | Risk Engine"
+fxRisk      = input.float(0.5, "Forex base-leg risk cap %", minval=0.05, maxval=10, step=0.05, group=GR)
+cryptoRisk  = input.float(0.5, "Crypto base-leg risk cap %", minval=0.05, maxval=10, step=0.05, group=GR)
+fxLotSize   = input.float(100.0, "Chart qty per 1 broker lot (XAU often 100)", minval=0.000001, group=GR)
+fxMinLot    = input.float(0.01, "Forex minimum lot", minval=0.000001, group=GR)
+fxStepLot   = input.float(0.01, "Forex lot step", minval=0.000001, group=GR)
+fxMaxLot    = input.float(0.10, "Forex max lot / test cap", minval=0.000001, group=GR)
+cryptoMinQ  = input.float(0.001, "Crypto min chart quantity", minval=0.000001, group=GR)
+cryptoStepQ = input.float(0.001, "Crypto chart qty step", minval=0.000001, group=GR)
+cryptoMaxQ  = input.float(1.0, "Crypto max chart quantity", minval=0.000001, group=GR)
+fxLeverage  = input.float(100, "Forex max leverage for sizing", minval=1, group=GR)
+crLeverage  = input.float(5, "Crypto max leverage for sizing", minval=1, group=GR)
+minSLatr    = input.float(0.8, "Min stop distance (x ATR)", minval=0.1, step=0.1, group=GR)
+spreadTicks = input.int(30, "Estimated spread / ticks (gate only)", minval=0, group=GR)
+maxSprATR   = input.float(0.25, "Max estimated spread / ATR", minval=0.01, maxval=1.0, step=0.01, group=GR)
+maxTrades   = input.int(6, "Entry orders/day (all legs)", minval=1, group=GR)
+maxLossDay  = input.float(2.0, "Stop new entries after day DD %", minval=0.1, step=0.1, group=GR)
+cooldown    = input.int(4, "Cooldown after close (bars)", minval=0, group=GR)
+forexSessOn = input.bool(true, "Forex session filter", group=GR)
+forexSess   = input.session("0700-2000", "Trade UTC", group=GR)
+
+// 06. EXITS / THOÁT LỆNH
+GX = "06 | Exit Engine"
+tp1R       = input.float(1.0, "TP1 target (R)", minval=0.5, step=0.1, group=GX)
+tp2R       = input.float(2.0, "TP2 target (R)", minval=1.0, step=0.1, group=GX)
+tp3R       = input.float(3.0, "TP3 target (R)", minval=1.0, step=0.1, group=GX)
+tp1Percent = input.int(50, "TP1 partial close (%)", minval=1, maxval=98, group=GX)
+tp2Percent = input.int(25, "TP2 partial close (%) of original", minval=1, maxval=98, group=GX)
+// TP3 closes all remainder: 100% - TP1% - TP2%.
+useBE      = input.bool(true, "Move stop after TP1 FILL", group=GX)
+beTicks    = input.int(2, "BE offset ticks (NOT all costs)", minval=0, group=GX)
+
+// 07. UI / HIỂN THỊ
+GV = "07 | UI Dashboard"
+showDash   = input.bool(true, "Dashboard (bottom right)", group=GV)
+showEMA    = input.bool(true, "EMA ribbons", group=GV)
+showZZ     = input.bool(true, "Confirmed ZigZag", group=GV)
+showStruct = input.bool(true, "BOS/CHoCH/Sweep/CISD labels", group=GV)
+showZones  = input.bool(true, "Show SMC OB/FVG/Fib zones / Hiện vùng", group=GV)
+showMomentumZones = input.bool(true, "Momentum: show SMC zones / Vẽ vùng dù đánh RSI", group=GV)
+showMomentumOB = input.bool(true, "Momentum: OB demand/supply", group=GV)
+showMomentumFVG = input.bool(true, "Momentum: FVG+ / FVG-", group=GV)
+showMomentumFib = input.bool(true, "Momentum: Fibonacci pullback 0.382-0.618", group=GV)
+momentumZoneKeep = input.int(2, "Recent zones per type / Số vùng gần nhất", minval=1, maxval=8, group=GV)
+momentumZoneTTL = input.int(80, "Zone history TTL (chart bars) / Tuổi vùng", minval=20, maxval=3000, group=GV)
+momentumZoneMinFibATR = input.float(2.0, "Min Fib impulse (ATR)", minval=0.1, step=0.25, group=GV)
+
+showTradeLevels = input.bool(true, "Trade levels: Entry / SL / TP1-TP3", group=GV)
+showTP1Lines = input.bool(true, "Show TP1 lines for L1-L3", group=GV)
+showTP3Lines = input.bool(true, "Show TP3 lines for L1-L3", group=GV)
+showOnlyL1 = input.bool(true, "Mobile: show only L1 levels (L2/L3 in dashboard)", group=GV)
+showEntryLine = input.bool(true, "Show entry line / Đường Entry", group=GV)
+showManualLevels = input.bool(true, "Show manual plan / Kế hoạch thủ công", group=GV)
+
+
+// 08. ADVANCED PYRAMIDING / NHỒI LỆNH THUẬN XU HƯỚNG
+GP = "08 | Advanced Pyramiding"
+maxLegs          = input.int(3, "Max legs per campaign / Số lệnh tối đa", minval=1, maxval=3, group=GP)
+portfolioRiskPct = input.float(0.75, "Portfolio STOP risk budget (%)", minval=0.05, maxval=5, step=0.05, group=GP,
+     tooltip="Only downside to ACTIVE stops for remaining quantities; conservative cost reserve added. Cannot guarantee worst-case fills.")
+addRiskPct       = input.float(0.25, "Add-on risk cap per leg (%)", minval=0.05, maxval=2, step=0.05, group=GP)
+addAfterR        = input.float(1.0, "First-leg minimum favorable R before add", minval=0.1, step=0.1, group=GP)
+addSpacingATR    = input.float(0.5, "Min distance from previous entry (ATR)", minval=0.0, step=0.1, group=GP)
+addPullback      = input.bool(true, "Require pullback to EMA fast before next BOS", group=GP)
+pullbackATR      = input.float(0.15, "EMA pullback tolerance (ATR)", minval=0.0, step=0.05, group=GP)
+requireProtected = input.bool(true, "Require L1 stop at/beyond entry before adding", group=GP)
+trailOn          = input.bool(true, "Structure trailing stop", group=GP)
+trailStartR      = input.float(1.25, "Begin trailing after favorable R", minval=0.5, step=0.25, group=GP)
+trailBufferATR   = input.float(0.25, "Swing SL buffer (ATR)", minval=0.0, step=0.05, group=GP)
+priceBufferTicks = input.int(4, "Conservative fill slip (ticks/side)", minval=0, group=GP)
+reserveFeeRT     = input.float(0.02, "RT fee reserve (%) for portfolio gate", minval=0.0, step=0.01, group=GP)
+// Reserve is separate from TradingView Properties commission (0.01% each side).
+
+
+// 09 | RSI MOMENTUM TREND FOLLOWING / XAUUSD OR BTCUSD M1 PAPER EXECUTION
+// Only chart M1 is supported: higher timeframes return last completed candle.
+GRM = "09 | RSI Momentum / Động lượng"
+mrLots = input.float(0.01, "Lot per entry / Lot mỗi lệnh", minval=0.01, maxval=1.0, step=0.01, group=GRM)
+mrMaxLots = input.float(0.03, "Max open lots / Tổng lot tối đa", minval=0.01, maxval=1.0, step=0.01, group=GRM)
+mrMaxOpen = input.int(3, "Open legs max / Số lệnh đồng thời", minval=1, maxval=3, group=GRM)
+mrRsiLen = input.int(14, "RSI length", minval=2, maxval=50, group=GRM)
+mrBuyLevel = input.float(50, "RSI BUY threshold", minval=45, maxval=65, group=GRM)
+mrSellLevel = input.float(50, "RSI SELL threshold", minval=35, maxval=55, group=GRM)
+mrDemaFast = input.int(21, "D1 EMA fast / EMA nhanh", minval=2, group=GRM)
+mrDemaSlow = input.int(50, "D1 EMA slow / EMA chậm", minval=3, group=GRM)
+mrHemaFast = input.int(21, "H1 EMA fast / EMA nhanh", minval=2, group=GRM)
+mrHemaSlow = input.int(50, "H1 EMA slow / EMA chậm", minval=3, group=GRM)
+mrTriggerTTL = input.int(3, "BOS/CHoCH validity / Số nến hiệu lực", minval=0, maxval=10, group=GRM)
+mrCisdWindow = input.int(5, "CI observation / Quan sát nến sau CI", minval=1, maxval=10, group=GRM)
+mrWaitBars = input.int(3, "Re-entry cooldown / Nến chờ vào tiếp", minval=1, maxval=30, group=GRM)
+mrAddATR = input.float(0.35, "Min price advance before add (ATR)", minval=0.0, maxval=3.0, step=0.05, group=GRM)
+mrRequireProfit = input.bool(true, "Only add when previous leg >= +1R / Chỉ thêm khi có lợi nhuận 1R", group=GRM)
+mrRiskEntry = input.float(2, "Max planned loss per new entry (%)", minval=0.1, maxval=20, step=0.1, group=GRM)
+mrRiskTotal = input.float(6, "Max TOTAL stop risk (% equity; suggested 5-7)", minval=0.2, maxval=7, step=0.1, group=GRM)
+mrMarginPct = input.float(30, "Max simulated margin / Equity (%)", minval=1, maxval=90, step=1, group=GRM)
+mrLeverage = input.float(2000, "Simulation leverage / Don bay (CHECK broker)", minval=1, maxval=2000, group=GRM)
+mrStopATR = input.float(1.25, "Stop distance (ATR)", minval=0.4, maxval=5, step=0.05, group=GRM)
+mrTP1R = input.float(1.0, "TP1 in R / Chốt lần 1", minval=0.3, maxval=5, step=0.1, group=GRM)
+mrTP2R = input.float(1.8, "TP2 in R / Chốt lần 2", minval=0.5, maxval=10, step=0.1, group=GRM)
+mrTP3R = input.float(3.0, "TP3 in R / Chốt phần còn lại", minval=1.0, maxval=15, step=0.1, group=GRM)
+mrTP1Pct = input.int(50, "TP1 close % ORIGINAL size", minval=1, maxval=95, group=GRM)
+mrTP2Pct = input.int(25, "TP2 close % ORIGINAL size", minval=1, maxval=95, group=GRM)
+mrTP3Pct = 100 - mrTP1Pct - mrTP2Pct
+if mrTP1Pct + mrTP2Pct >= 100 or mrTP2R <= mrTP1R or mrTP3R <= mrTP2R
+    runtime.error("MR TP settings: TP1% + TP2% must be < 100; TP3R > TP2R > TP1R. TP3 automatically closes the rest.")
+mrExitOnOppositeCI = input.bool(false, "EXIT when opposite CI + M5 RSI flip / Thoát khi CI ngược + RSI M5", group=GRM)
+mrPause = input.bool(false, "PAUSE new entries / Tạm ngưng lệnh mới", group=GRM)
+mrShowDashboard = input.bool(true, "RSI MTF dashboard / Bảng RSI", group=GRM)
+mrShowLevels = input.bool(true, "MR Entry SL TP1 TP2 TP3 / Hiện mức giá", group=GRM)
+mrSessionOn = input.bool(false, "Session gate UTC / Lọc phiên (tùy chọn)", group=GRM)
+mrSession = input.session("0000-2359", "Allowed UTC session", group=GRM)
+
+// 09B | MR FIB STANDARDIZATION / FIB CHUAN HOA
+// All features default to OFF / baseline for A-B comparability with V4.2.6.
+// Same Fib thresholds (fibA/fibB) as existing SMC and Momentum Fib zones.
+GF = "09B | MR Fibonacci / Fib Entry-SL-TP"
+mrFibEntryMode = input.string("M5", "Fib confirmation / Xac nhan Fib", options=["Off", "M5", "M15", "M5+M15"], group=GF,
+     tooltip="Requires a confirmed-swing Fibonacci zone touch within N M1 bars. A zone is NOT an automatic entry.")
+mrFibTouchBars = input.int(10, "Recent Fib touch TTL (M1 bars)", minval=1, maxval=60, group=GF)
+mrFibSwingLen = input.int(5, "Confirmed pivots on M5/M15 (bars each side)", minval=2, maxval=20, group=GF)
+mrFibRequireCI = input.bool(false, "Require aligned CISD within CI observation window", group=GF)
+mrStopMode = input.string("ATR baseline", "MR stop model", options=["ATR baseline", "Swing + ATR"], group=GF)
+mrStopSwingBufATR = input.float(0.25, "Swing stop additional ATR buffer", minval=0.0, maxval=2.0, step=0.05, group=GF)
+mrStopSwingMaxATR = input.float(4.0, "Maximum swing stop / ATR (block, not clamp)", minval=1.0, maxval=12.0, step=0.25, group=GF)
+mrFibTPMode = input.string("R baseline", "MR TP calculation", options=["R baseline", "R + Fib M15 extension"], group=GF)
+mrFibTP2Ext = input.float(1.272, "TP2 Fib extension", minval=1.01, maxval=3.0, step=0.001, group=GF)
+mrFibTP3Ext = input.float(1.618, "TP3 Fib extension", minval=1.02, maxval=5.0, step=0.001, group=GF)
+mrFibMaxTPR = input.float(6.0, "Max Fib extension target in R (otherwise R fallback)", minval=2.0, maxval=20.0, step=0.5, group=GF)
+if mrFibTP3Ext <= mrFibTP2Ext
+    runtime.error("MR Fibonacci extensions require TP3 > TP2.")
+
+// 10 | Peak profit retention + TP1/2/3 for RSI Momentum PAPER positions only.
+// All keep percentages below are % of the highest observed NET campaign profit,
+// NOT % of equity. TP1/TP2/TP3 percentages are ORIGINAL POSITION QUANTITY.
+GL = "10 | MR Dynamic SL / Keep 20-70%"
+mrLockOn = input.bool(true, "Dynamic peak profit lock / Khoa lai dinh", group=GL)
+mrLockBEAtR = input.float(0.9, "Move to COST BE after favorable R", minval=0.2, maxval=3.0, step=0.1, group=GL)
+mrLockStartR = input.float(0.8, "Start 20% lock after favorable R", minval=0.2, maxval=3.0, step=0.1, group=GL)
+mrKeepBeforeTP1 = input.float(20.0, "Keep before TP1 (% peak profit)", minval=0, maxval=100, step=5, group=GL)
+mrKeepAfterTP1 = input.float(40.0, "Keep after actual TP1 (% peak)", minval=0, maxval=100, step=5, group=GL)
+mrKeepAfterTP2 = input.float(60.0, "Keep after actual TP2 (% peak)", minval=0, maxval=100, step=5, group=GL)
+mrKeepRunner = input.float(70.0, "Keep on runner (% peak)", minval=0, maxval=100, step=5, group=GL)
+mrRunnerAtR = input.float(2.5, "Runner 70% from favorable R", minval=0.5, maxval=15, step=0.1, group=GL)
+mrLockSlipTicks = input.int(4, "Protective fill buffer / ticks", minval=0, maxval=1000, group=GL)
+mrLockRoundTripFeePct = input.float(0.02, "Estimated round-trip commission %", minval=0, maxval=1, step=0.01, group=GL)
+mrLockShowLabels = input.bool(true, "Show SL+ and realized TP/SL labels", group=GL)
+if mrKeepBeforeTP1 > mrKeepAfterTP1 or mrKeepAfterTP1 > mrKeepAfterTP2 or mrKeepAfterTP2 > mrKeepRunner or mrKeepRunner > 70
+    runtime.error("MR keep ratios must increase and the max runner retention is 70% in this test preset.")
+// Safety: a locked stop is ONLY a requested paper exit price. On gaps/sweeps,
+// realized profit can be lower. TV Pine cannot modify Exness/MT5 manual trades.
+
+
+// Selected preset / Chọn preset
+isScalp = mode == "Scalping"
+htfTF   = isScalp ? scHTF : swHTF
+htfFast = isScalp ? scFast : swFast
+htfSlow = isScalp ? scSlow : swSlow
+emaFLen = isScalp ? scEmaFast : swEmaFast
+emaSLen = isScalp ? scEmaSlow : swEmaSlow
+emaTLen = isScalp ? scEmaTrend : swEmaTrend
+swLen   = isScalp ? scSwing : swSwing
+obLook  = isScalp ? scOB : swOB
+lockTTL = isScalp ? scWin : swWin
+minScore = isScalp ? scMinScore : swMinScore
+maxSLatr = isScalp ? scMaxSL : swMaxSL
+
+// Fail closed on wrong timeframe instead of stopping the entire indicator.
+// Example: chart H1 with Scalping HTF M15: no trades and dashboard warning.
+bool tfOK = timeframe.in_seconds(htfTF) > timeframe.in_seconds(timeframe.period)
+if fibB <= fibA or tp2R <= tp1R or tp3R <= tp2R or tp1Percent + tp2Percent >= 100
+    runtime.error("Need Fib B > A; TP3 > TP2 > TP1; TP1% + TP2% < 100.")
+
+// Chart quantity per broker lot: for XAU/USD quote in ounces, 1 lot often = 100 oz.
+// Do NOT divide this by syminfo.pointvalue. Check broker/symbol contract size first.
+// fxLotSize above = number of TradingView qty units per broker lot (symbol-specific).
+f_costOne(float entry, float sl, int side) =>
+    float move = math.max(0.0, (entry - sl) * side)
+    float guard = (spreadTicks + 2 * priceBufferTicks) * syminfo.mintick
+    float symbolMoney = (move + guard + entry * reserveFeeRT / 100.0) * syminfo.pointvalue
+    strategy.convert_to_account(symbolMoney)
+
+f_qty(float entry, float stop, int side, float remainingRisk, float legRiskBudget, float currentNotional) =>
+    bool fx = market == "Forex"
+    float stepQ = fx ? fxStepLot * fxLotSize : cryptoStepQ
+    float minQ  = fx ? fxMinLot * fxLotSize : cryptoMinQ
+    float maxQ  = fx ? fxMaxLot * fxLotSize : cryptoMaxQ
+    float lev   = fx ? fxLeverage : crLeverage
+    float oneRisk = f_costOne(entry, stop, side)
+    float unitNotional = strategy.convert_to_account(entry * syminfo.pointvalue)
+    float remainingNotional = math.max(0.0, strategy.equity * lev - currentNotional)
+    float riskAllow = math.max(0.0, math.min(remainingRisk, legRiskBudget))
+    float byRisk = not na(oneRisk) and oneRisk > 0 ? riskAllow / oneRisk : 0.0
+    float byLeverage = not na(unitNotional) and unitNotional > 0 ? remainingNotional / unitNotional : 0.0
+    float upper = math.min(math.min(byRisk, byLeverage), maxQ)
+    float q = stepQ > 0 ? math.floor(upper / stepQ + 1e-9) * stepQ : 0.0
+    q >= minQ and q > 0 ? q : 0.0
+
+f_legID(int side, int slot) =>
+    (side == 1 ? "L" : "S") + str.tostring(slot + 1)
+
+f_slot(string id) =>
+    id == "L1" or id == "S1" ? 0 : id == "L2" or id == "S2" ? 1 : id == "L3" or id == "S3" ? 2 : -1
+
+// Technical core / Cốt lõi chỉ báo
+atr  = ta.atr(14)
+eF   = ta.ema(close, emaFLen)
+eS   = ta.ema(close, emaSLen)
+eT   = ta.ema(close, emaTLen)
+[htfClose, hF, hS] = request.security(syminfo.tickerid, htfTF,
+     [close[1], ta.ema(close, htfFast)[1], ta.ema(close, htfSlow)[1]],
+     lookahead=barmerge.lookahead_on)
+htfBull = htfClose > hS and hF > hS
+htfBear = htfClose < hS and hF < hS
+emaBull = eF > eS and close > eT
+emaBear = eF < eS and close < eT
+rangeBar = math.max(high - low, syminfo.mintick)
+body = math.abs(close - open)
+bodyRatio = body / rangeBar
+bullCandle = close > open and bodyRatio >= bodyMin and (close - low) / rangeBar >= closePos
+bearCandle = close < open and bodyRatio >= bodyMin and (high - close) / rangeBar >= closePos
+bullDisp = close > open and body >= atr * dispATR and (close - low) / rangeBar >= closePos
+bearDisp = close < open and body >= atr * dispATR and (high - close) / rangeBar >= closePos
+
+// ============================================================================
+// D1-H4-H1-M15 SWING CONFLUENCE. H4/H1 helper series are OFFSET BY ONE
+// requested timeframe bar and read with lookahead_on; no future HTF bar leak.
+// OB here is deliberately labelled PROXY: the immediately preceding opposite
+// candle before a displacement, not a guarantee of institutional order flow.
+// ============================================================================
+f_swH4() =>
+    float a4 = ta.atr(14)
+    bool downGap = high < low[2] and low[2] - high >= a4 * swH4FVGminATR
+    bool upGap = low > high[2] and low - high[2] >= a4 * swH4FVGminATR
+    bool downOB = close < open and close[1] > open[1] and open - close >= a4 * swH4OBbodyATR
+    bool upOB = close > open and close[1] < open[1] and close - open >= a4 * swH4OBbodyATR
+    float pHi = ta.pivothigh(high, swH4Pivot, swH4Pivot)
+    float pLo = ta.pivotlow(low, swH4Pivot, swH4Pivot)
+    float swingHi = ta.valuewhen(not na(pHi), pHi, 0)
+    float swingLo = ta.valuewhen(not na(pLo), pLo, 0)
+    int lastHiAge = ta.barssince(not na(pHi))
+    int lastLoAge = ta.barssince(not na(pLo))
+    bool sellFibValid = not na(lastLoAge) and not na(lastHiAge) and lastLoAge < lastHiAge and swingHi > swingLo
+    bool buyFibValid = not na(lastLoAge) and not na(lastHiAge) and lastHiAge < lastLoAge and swingHi > swingLo
+    float span = swingHi - swingLo
+    float sellFibLo = sellFibValid ? swingLo + span * fibA : na
+    float sellFibHi = sellFibValid ? swingLo + span * fibB : na
+    float buyFibLo = buyFibValid ? swingHi - span * fibB : na
+    float buyFibHi = buyFibValid ? swingHi - span * fibA : na
+    [close[1], ta.ema(close, swH4FastLen)[1], ta.ema(close, swH4SlowLen)[1],
+     ta.valuewhen(downGap, low[2], 0)[1], ta.valuewhen(downGap, high, 0)[1], ta.barssince(downGap)[1],
+     ta.valuewhen(upGap, low, 0)[1], ta.valuewhen(upGap, high[2], 0)[1], ta.barssince(upGap)[1],
+     ta.valuewhen(downOB, high[1], 0)[1], ta.valuewhen(downOB, low[1], 0)[1], ta.barssince(downOB)[1],
+     ta.valuewhen(upOB, high[1], 0)[1], ta.valuewhen(upOB, low[1], 0)[1], ta.barssince(upOB)[1],
+     sellFibHi[1], sellFibLo[1], buyFibHi[1], buyFibLo[1]]
+
+f_swH1() =>
+    float pHi = ta.pivothigh(high, swH1Pivot, swH1Pivot)
+    float pLo = ta.pivotlow(low, swH1Pivot, swH1Pivot)
+    float lastHi = ta.valuewhen(not na(pHi), pHi, 0)
+    float lastLo = ta.valuewhen(not na(pLo), pLo, 0)
+    bool breakDown = not na(lastLo) and close < lastLo and close[1] >= lastLo[1]
+    bool breakUp = not na(lastHi) and close > lastHi and close[1] <= lastHi[1]
+    [open[1], close[1], ta.ema(close, swH1FastLen)[1], ta.ema(close, swH1SlowLen)[1],
+     ta.rsi(close, 14)[1], ta.barssince(breakDown)[1], ta.barssince(breakUp)[1]]
+
+[swH4Close, swH4EF, swH4ES,
+ swBfvgTop, swBfvgBot, swBfvgAge,
+ swUfvgTop, swUfvgBot, swUfvgAge,
+ swBobTop, swBobBot, swBobAge,
+ swUobTop, swUobBot, swUobAge,
+ swBfibTop, swBfibBot, swUfibTop, swUfibBot] = request.security(syminfo.tickerid, "240", f_swH4(), lookahead=barmerge.lookahead_on)
+[swH1Open, swH1Close, swH1EF, swH1ES, swH1RSI, swH1BearBosAge, swH1BullBosAge] = request.security(syminfo.tickerid, "60", f_swH1(), lookahead=barmerge.lookahead_on)
+
+bool swRequired = swConfluenceOn and isLegacy and mode == "Swing"
+bool swM15OK = timeframe.isminutes and timeframe.multiplier == 15
+bool swDailyHTFOK = timeframe.in_seconds(htfTF) == timeframe.in_seconds("1D")
+bool swH4Short = not na(swH4ES) and swH4Close < swH4ES and swH4EF < swH4ES
+bool swH4Long = not na(swH4ES) and swH4Close > swH4ES and swH4EF > swH4ES
+bool swBfvgActive = not na(swBfvgTop) and not na(swBfvgAge) and swBfvgAge <= swH4ZoneAge and swBfvgTop > swBfvgBot and swH4Close <= swBfvgTop
+bool swUfvgActive = not na(swUfvgTop) and not na(swUfvgAge) and swUfvgAge <= swH4ZoneAge and swUfvgTop > swUfvgBot and swH4Close >= swUfvgBot
+bool swBobActive = not na(swBobTop) and not na(swBobAge) and swBobAge <= swH4ZoneAge and swBobTop > swBobBot and swH4Close <= swBobTop
+bool swUobActive = not na(swUobTop) and not na(swUobAge) and swUobAge <= swH4ZoneAge and swUobTop > swUobBot and swH4Close >= swUobBot
+bool swBfibActive = not na(swBfibTop) and swBfibTop > swBfibBot and swH4Close < swBfibTop
+bool swUfibActive = not na(swUfibTop) and swUfibTop > swUfibBot and swH4Close > swUfibBot
+bool swBfvgHit = swBfvgActive and low <= swBfvgTop and high >= swBfvgBot
+bool swUfvgHit = swUfvgActive and low <= swUfvgTop and high >= swUfvgBot
+bool swBobHit = swBobActive and low <= swBobTop and high >= swBobBot
+bool swUobHit = swUobActive and low <= swUobTop and high >= swUobBot
+bool swBfibHit = swBfibActive and low <= swBfibTop and high >= swBfibBot
+bool swUfibHit = swUfibActive and low <= swUfibTop and high >= swUfibBot
+int swBearHits = (swBfvgHit ? 1 : 0) + (swBobHit ? 1 : 0) + (swBfibHit ? 1 : 0)
+int swBullHits = (swUfvgHit ? 1 : 0) + (swUobHit ? 1 : 0) + (swUfibHit ? 1 : 0)
+bool swBearZoneHit = swH4ZoneMode == "Two zones touched" ? swBearHits >= 2 : swH4ZoneMode == "FVG or OB" ? swBfvgHit or swBobHit : swBearHits >= 1
+bool swBullZoneHit = swH4ZoneMode == "Two zones touched" ? swBullHits >= 2 : swH4ZoneMode == "FVG or OB" ? swUfvgHit or swUobHit : swBullHits >= 1
+var int swLastBearZoneBar = na
+var int swLastBullZoneBar = na
+// Invalidate old touch when the source zone changes at a new CLOSED H4 candle.
+if swBfvgTop != swBfvgTop[1] or swBobTop != swBobTop[1] or swBfibTop != swBfibTop[1]
+    swLastBearZoneBar := na
+if swUfvgBot != swUfvgBot[1] or swUobBot != swUobBot[1] or swUfibBot != swUfibBot[1]
+    swLastBullZoneBar := na
+if swRequired and swM15OK and barstate.isconfirmed
+    if swBearZoneHit
+        swLastBearZoneBar := bar_index
+    if swBullZoneHit
+        swLastBullZoneBar := bar_index
+bool swBearTouched = not na(swLastBearZoneBar) and bar_index - swLastBearZoneBar <= swH4TouchTTL
+bool swBullTouched = not na(swLastBullZoneBar) and bar_index - swLastBullZoneBar <= swH4TouchTTL
+bool swH1Bear = not na(swH1RSI) and swH1RSI < swH1RsiSell and (swH1Method == "RSI + candle" ? swH1Close < swH1Open : swH1Method == "RSI + EMA" ? swH1Close < swH1EF and swH1EF < swH1ES : not na(swH1BearBosAge) and swH1BearBosAge <= swH1BosTTL)
+bool swH1Bull = not na(swH1RSI) and swH1RSI > swH1RsiBuy and (swH1Method == "RSI + candle" ? swH1Close > swH1Open : swH1Method == "RSI + EMA" ? swH1Close > swH1EF and swH1EF > swH1ES : not na(swH1BullBosAge) and swH1BullBosAge <= swH1BosTTL)
+bool swSellPass = swM15OK and swDailyHTFOK and htfBear and (not swH4TrendGate or swH4Short) and swBearTouched and swH1Bear
+bool swBuyPass = swM15OK and swDailyHTFOK and htfBull and (not swH4TrendGate or swH4Long) and swBullTouched and swH1Bull
+// The old signal, stop, TP1/2/3, position sizing, TP lock and alerts are unchanged.
+// This optional filter only BLOCKS a Legacy Swing entry/add when confluence fails.
+
+// Confirmed pivots and ZigZag / Pivot chỉ hợp lệ sau swLen nến phía phải
+ph = ta.pivothigh(high, swLen, swLen)
+pl = ta.pivotlow(low, swLen, swLen)
+var float lastSH = na
+var float lastSL = na
+var bool shBroken = true
+var bool slBroken = true
+var int structDir = 0
+var int zzType = 0
+var int zzIdx = na
+var float zzPrice = na
+var line zzLast = na
+if not na(ph)
+    lastSH := ph
+    shBroken := false
+    int px = bar_index - swLen
+    if zzType != 1
+        if showZZ and zzType != 0 and not na(zzIdx)
+            zzLast := line.new(zzIdx, zzPrice, px, ph, color=color.new(color.silver, 30), width=1)
+        zzType := 1
+        zzIdx := px
+        zzPrice := ph
+    else if ph > zzPrice
+        zzIdx := px
+        zzPrice := ph
+        if showZZ and not na(zzLast)
+            line.set_xy2(zzLast, px, ph)
+if not na(pl)
+    lastSL := pl
+    slBroken := false
+    int px = bar_index - swLen
+    if zzType != -1
+        if showZZ and zzType != 0 and not na(zzIdx)
+            zzLast := line.new(zzIdx, zzPrice, px, pl, color=color.new(color.silver, 30), width=1)
+        zzType := -1
+        zzIdx := px
+        zzPrice := pl
+    else if pl < zzPrice
+        zzIdx := px
+        zzPrice := pl
+        if showZZ and not na(zzLast)
+            line.set_xy2(zzLast, px, pl)
+
+bullBreak = barstate.isconfirmed and not na(lastSH) and not shBroken and close > lastSH
+bearBreak = barstate.isconfirmed and not na(lastSL) and not slBroken and close < lastSL
+bool bosBull = false
+bool bosBear = false
+bool chochBull = false
+bool chochBear = false
+if bullBreak
+    shBroken := true
+    chochBull := structDir == -1
+    bosBull := not chochBull
+    structDir := 1
+if bearBreak
+    slBroken := true
+    chochBear := structDir == 1
+    bosBear := not chochBear
+    structDir := -1
+
+// Liquidity sweep / Quét swing nhưng đóng ngược trở lại
+bullSweep = barstate.isconfirmed and not na(lastSL) and low < lastSL - atr * sweepDepth and close > lastSL
+bearSweep = barstate.isconfirmed and not na(lastSH) and high > lastSH + atr * sweepDepth and close < lastSH
+// Operational CISD definition: after sweep, a candle closes through the open
+// of the latest opposite-color candle observed at the sweep (NOT institutional proof).
+lastBearOpen = ta.valuewhen(close < open, open, 0)
+lastBullOpen = ta.valuewhen(close > open, open, 0)
+var int sweepDir = 0
+var int sweepBar = na
+var float cisdLevel = na
+if bullSweep
+    sweepDir := 1
+    sweepBar := bar_index
+    cisdLevel := nz(lastBearOpen, open)
+else if bearSweep
+    sweepDir := -1
+    sweepBar := bar_index
+    cisdLevel := nz(lastBullOpen, open)
+sweepAge = not na(sweepBar) ? bar_index - sweepBar : 100000
+bullCISD = barstate.isconfirmed and sweepDir == 1 and sweepAge > 0 and sweepAge <= sweepTTL and close > cisdLevel and bullCandle
+bearCISD = barstate.isconfirmed and sweepDir == -1 and sweepAge > 0 and sweepAge <= sweepTTL and close < cisdLevel and bearCandle
+recentBullSweep = sweepDir == 1 and sweepAge <= sweepTTL
+recentBearSweep = sweepDir == -1 and sweepAge <= sweepTTL
+if bullCISD or bearCISD or sweepAge > sweepTTL
+    sweepDir := 0
+
+// FVG stores latest observed three-candle gap / Vùng gap 3 nến
+bullFVG = barstate.isconfirmed and low > high[2] and close[1] > open[1] and low - high[2] >= atr * minFVG
+bearFVG = barstate.isconfirmed and high < low[2] and close[1] < open[1] and low[2] - high >= atr * minFVG
+var float bFvgHi = na
+var float bFvgLo = na
+var int bFvgBar = na
+var float sFvgHi = na
+var float sFvgLo = na
+var int sFvgBar = na
+if bullFVG
+    bFvgHi := low
+    bFvgLo := high[2]
+    bFvgBar := bar_index
+if bearFVG
+    sFvgHi := low[2]
+    sFvgLo := high
+    sFvgBar := bar_index
+if not na(bFvgLo) and close < bFvgLo
+    bFvgHi := na
+    bFvgLo := na
+if not na(sFvgHi) and close > sFvgHi
+    sFvgHi := na
+    sFvgLo := na
+
+
+// ==========================================================================
+// 07A. VISUAL SMC ZONES FOR MOMENTUM ENGINE / VUNG DOC LAP
+// Drawing ONLY: never enters/exits a position, modifies orders or gate logic.
+// BOS/CHoCH confirmed on current chart bar; OB = latest opposite candle.
+// FVG = strict 3-candle gap, Fib = confirmed breakout impulse retracement.
+// Invalidation on confirmed close across distal edge; faded zones remain
+// historical until TTL, never considered live entry triggers by Momentum.
+// ==========================================================================
+f_mrAddZone(array<box> boxes, array<int> sides, array<int> born, array<bool> active, int dir, int leftBar, float hi, float lo, color clr, string labelName) =>
+    if not na(hi) and not na(lo) and hi > lo and leftBar >= 0
+        box z = box.new(left=leftBar, top=hi, right=bar_index + 1, bottom=lo, xloc=xloc.bar_index,
+             extend=extend.right, border_color=color.new(clr, 20), bgcolor=color.new(clr, 86),
+             text=labelName, text_size=size.tiny, text_color=clr, text_halign=text.align_left)
+        array.push(boxes, z)
+        array.push(sides, dir)
+        array.push(born, bar_index)
+        array.push(active, true)
+        if array.size(boxes) > momentumZoneKeep
+            box oldBox = array.shift(boxes)
+            box.delete(oldBox)
+            array.shift(sides)
+            array.shift(born)
+            array.shift(active)
+
+f_mrManageZones(array<box> boxes, array<int> sides, array<int> born, array<bool> active, string tagName) =>
+    int k = array.size(boxes) - 1
+    while k >= 0
+        box z = array.get(boxes, k)
+        bool expired = bar_index - array.get(born, k) > momentumZoneTTL
+        if expired
+            box.delete(z)
+            array.remove(boxes, k)
+            array.remove(sides, k)
+            array.remove(born, k)
+            array.remove(active, k)
+        else if barstate.isconfirmed and array.get(active, k)
+            int d = array.get(sides, k)
+            bool broken = d == 1 ? close < box.get_bottom(z) : close > box.get_top(z)
+            if broken
+                array.set(active, k, false)
+                box.set_extend(z, extend.none)
+                box.set_right(z, bar_index)
+                box.set_bgcolor(z, color.new(color.gray, 93))
+                box.set_border_color(z, color.new(color.gray, 80))
+                box.set_text(z, tagName + " used")
+        k -= 1
+
+var array<box> mrOBBoxes = array.new_box()
+var array<int> mrOBDirs = array.new_int()
+var array<int> mrOBBorn = array.new_int()
+var array<bool> mrOBActive = array.new_bool()
+var array<box> mrFVGBoxes = array.new_box()
+var array<int> mrFVGDirs = array.new_int()
+var array<int> mrFVGBorn = array.new_int()
+var array<bool> mrFVGActive = array.new_bool()
+var array<box> mrFibBoxes = array.new_box()
+var array<int> mrFibDirs = array.new_int()
+var array<int> mrFibBorn = array.new_int()
+var array<bool> mrFibActive = array.new_bool()
+
+bool mrVisualZones = isMR and showZones and showMomentumZones and timeframe.isintraday
+// Manage before creating: a fresh zone must not instantly self-invalidate.
+if mrVisualZones
+    f_mrManageZones(mrOBBoxes, mrOBDirs, mrOBBorn, mrOBActive, "OB")
+    f_mrManageZones(mrFVGBoxes, mrFVGDirs, mrFVGBorn, mrFVGActive, "FVG")
+    f_mrManageZones(mrFibBoxes, mrFibDirs, mrFibBorn, mrFibActive, "FIB")
+
+if mrVisualZones and barstate.isconfirmed
+    // FVG zones are independent of whether a setup is locked or a trade exists.
+    if showMomentumFVG and bullFVG
+        f_mrAddZone(mrFVGBoxes, mrFVGDirs, mrFVGBorn, mrFVGActive, 1, bar_index - 2,
+             low, high[2], color.lime, "FVG+")
+    if showMomentumFVG and bearFVG
+        f_mrAddZone(mrFVGBoxes, mrFVGDirs, mrFVGBorn, mrFVGActive, -1, bar_index - 2,
+             low[2], high, color.orange, "FVG-")
+    // Structure break confirmed by close, not ZigZag pivot printed in the past.
+    if bullBreak or bearBreak
+        int d = bullBreak ? 1 : -1
+        if showMomentumOB
+            float obTop = na
+            float obBottom = na
+            int obLeft = na
+            for j = 1 to obLook
+                bool opp = d == 1 ? close[j] < open[j] : close[j] > open[j]
+                if opp
+                    obTop := high[j]
+                    obBottom := low[j]
+                    obLeft := bar_index - j
+                    break
+            if not na(obTop)
+                f_mrAddZone(mrOBBoxes, mrOBDirs, mrOBBorn, mrOBActive, d, obLeft, obTop, obBottom,
+                     d == 1 ? color.teal : color.red, d == 1 ? "OB+ demand" : "OB- supply")
+        if showMomentumFib
+            float startSwing = d == 1 ? nz(lastSL, ta.lowest(low, obLook)) : nz(lastSH, ta.highest(high, obLook))
+            float impulse = d == 1 ? high - startSwing : startSwing - low
+            if not na(impulse) and impulse >= atr * momentumZoneMinFibATR
+                float fibTop = d == 1 ? high - impulse * fibA : low + impulse * fibB
+                float fibBottom = d == 1 ? high - impulse * fibB : low + impulse * fibA
+                f_mrAddZone(mrFibBoxes, mrFibDirs, mrFibBorn, mrFibActive, d, bar_index,
+                     fibTop, fibBottom, color.yellow, d == 1 ? "FIB+ 38.2-61.8" : "FIB- 38.2-61.8")
+
+// ==========================================================================
+// LOCKED INITIAL SETUP + THREE INDEPENDENT TRADE LEGS
+// ==========================================================================
+var int lockedDir = 0
+var int lockedBar = na
+var int lockedScore = 0
+var string lockedTrigger = "-"
+var float lockedOBHi = na
+var float lockedOBLo = na
+var float lockedFVGHi = na
+var float lockedFVGLo = na
+var float lockedFibHi = na
+var float lockedFibLo = na
+var float lockedInvalid = na
+var string gate = "WAIT"
+var string status = "WAIT"
+
+var int campaignDir = 0
+var int legCount = 0
+var int pendingSlot = -1
+var int pendingBar = na
+var bool campaignHasFilled = false
+var bool pullbackSeen = false
+var int lastAddSignalBar = na
+var int lastFlatBar = na
+var int processedClosed = 0
+var array<float> legEntry = array.new_float(3, na)
+var array<float> legStop = array.new_float(3, na)
+var array<float> legTP1 = array.new_float(3, na)
+var array<float> legTP2 = array.new_float(3, na)
+var array<float> legTP3 = array.new_float(3, na)
+var array<float> legR0 = array.new_float(3, na)
+var array<float> legQtyPlan = array.new_float(3, na)
+var array<bool> legTP1Hit = array.new_bool(3, false)
+var array<bool> legTP2Hit = array.new_bool(3, false)
+var array<bool> legWasFilled = array.new_bool(3, false)
+// Signal-only / semi-auto plan (never assumed filled).
+var int previewDir = 0
+var int previewBar = na
+var float previewEntry = na
+var float previewStop = na
+var float previewTP1 = na
+var float previewTP2 = na
+var float previewTP3 = na
+var float previewQty = na
+var bool signalLong = false
+var bool signalShort = false
+var bool signalAdd = false
+signalLong := false
+signalShort := false
+signalAdd := false
+
+// UTC date control and drawdown stop: blocks NEW entries; not a hard account guarantee.
+newUTC = ta.change(time("D", "0000-2359", "UTC")) != 0
+var int ordersToday = 0
+var float dayStartEq = na
+if na(dayStartEq) or newUTC
+    ordersToday := 0
+    dayStartEq := strategy.equity
+dailyStop = strategy.equity <= dayStartEq * (1 - maxLossDay / 100.0)
+inSession = market == "Crypto" or not forexSessOn or not na(time(timeframe.period, forexSess, "UTC"))
+spreadEstimate = spreadTicks * syminfo.mintick
+spreadOK = not na(atr) and atr > 0 and spreadEstimate / atr <= maxSprATR
+cooldownOK = na(lastFlatBar) or bar_index - lastFlatBar >= cooldown
+longOK = direction != "Short only"
+shortOK = direction != "Long only"
+float campaignBudget = math.max(0, strategy.equity * portfolioRiskPct / 100)
+float initialLegBudget = math.max(0, strategy.equity * (market == "Forex" ? fxRisk : cryptoRisk) / 100)
+float addLegBudget = math.max(0, strategy.equity * addRiskPct / 100)
+
+// A) Observe real TP1 fills; ID alone is NOT evidence of TP1 (could be STOP).
+if strategy.closedtrades > processedClosed
+    for c = processedClosed to strategy.closedtrades - 1
+        string exitID = strategy.closedtrades.exit_id(c)
+        string entryID = strategy.closedtrades.entry_id(c)
+        int k = f_slot(entryID)
+        if k >= 0
+            float target = array.get(legTP1, k)
+            float exitPx = strategy.closedtrades.exit_price(c)
+            bool firstTP = exitID == entryID + "_A" and strategy.closedtrades.exit_comment(c) == "TP1_FILLED"
+            bool targetWasReached = not na(target) and (str.startswith(entryID, "L") ? exitPx >= target - 2 * syminfo.mintick : exitPx <= target + 2 * syminfo.mintick)
+            if firstTP and targetWasReached
+                array.set(legTP1Hit, k, true)
+            float target2 = array.get(legTP2, k)
+            bool secondTP = exitID == entryID + "_B" and strategy.closedtrades.exit_comment(c) == "TP2_FILLED"
+            bool target2Reached = not na(target2) and (str.startswith(entryID, "L") ? exitPx >= target2 - 2 * syminfo.mintick : exitPx <= target2 + 2 * syminfo.mintick)
+            if secondTP and target2Reached
+                array.set(legTP2Hit, k, true)
+        campaignHasFilled := true
+    processedClosed := strategy.closedtrades
+
+// B) Read fills by ENTRY ID (not the pooled strategy.position_avg_price).
+for i = 0 to 2
+    if campaignDir != 0 and i < legCount
+        string myID = f_legID(campaignDir, i)
+        if strategy.opentrades > 0
+            for t = 0 to strategy.opentrades - 1
+                if strategy.opentrades.entry_id(t) == myID
+                    float actualEntry = strategy.opentrades.entry_price(t)
+                    if not array.get(legWasFilled, i)
+                        array.set(legEntry, i, actualEntry)
+                        array.set(legR0, i, math.max(math.abs(actualEntry - array.get(legStop, i)), syminfo.mintick))
+                        array.set(legWasFilled, i, true)
+                        campaignHasFilled := true
+                        pendingSlot := pendingSlot == i ? -1 : pendingSlot
+                        pullbackSeen := false
+                    float startR = array.get(legR0, i)
+                    array.set(legTP1, i, actualEntry + campaignDir * startR * tp1R)
+                    array.set(legTP2, i, actualEntry + campaignDir * startR * tp2R)
+                    array.set(legTP3, i, actualEntry + campaignDir * startR * tp3R)
+
+// C) Bring every live stop closer; NEVER widen. Profit is not used as a risk credit.
+if campaignDir != 0
+    for i = 0 to 2
+        if i < legCount and array.get(legWasFilled, i)
+            float thisEntry = array.get(legEntry, i)
+            float priorStop = array.get(legStop, i)
+            float startR = array.get(legR0, i)
+            float candidate = priorStop
+            if useBE and array.get(legTP1Hit, i)
+                float beStop = thisEntry + campaignDir * beTicks * syminfo.mintick
+                candidate := campaignDir == 1 ? math.max(candidate, beStop) : math.min(candidate, beStop)
+            bool favorable = campaignDir * (close - thisEntry) >= trailStartR * startR
+            if trailOn and favorable
+                float swingSL = campaignDir == 1 and not na(lastSL) ? lastSL - atr * trailBufferATR : campaignDir == -1 and not na(lastSH) ? lastSH + atr * trailBufferATR : na
+                if not na(swingSL)
+                    candidate := campaignDir == 1 ? math.max(candidate, swingSL) : math.min(candidate, swingSL)
+            // Prevent a stop placed on the wrong side of current market price.
+            if campaignDir == 1 and candidate < close - syminfo.mintick
+                array.set(legStop, i, math.max(priorStop, candidate))
+            if campaignDir == -1 and candidate > close + syminfo.mintick
+                array.set(legStop, i, math.min(priorStop, candidate))
+
+// D) Reissue exits only for remaining open quantity by specific ENTRY ID.
+// The _B bracket reserves the unallocated part via OCA-reduce (100% request).
+// DO NOT recreate _A after its TRUE take-profit fill.
+if campaignDir != 0 and strategy.opentrades > 0
+    for i = 0 to 2
+        if i < legCount
+            string id = f_legID(campaignDir, i)
+            bool found = false
+            for t = 0 to strategy.opentrades - 1
+                if strategy.opentrades.entry_id(t) == id
+                    found := true
+            if found
+                float st = array.get(legStop, i)
+                float t1 = array.get(legTP1, i)
+                float t2 = array.get(legTP2, i)
+                float t3 = array.get(legTP3, i)
+                if not na(st) and not na(t1) and not na(t2) and not na(t3)
+                    bool tp1Done = array.get(legTP1Hit, i)
+                    bool tp2Done = array.get(legTP2Hit, i)
+                    if not tp1Done
+                        strategy.exit(id + "_A", from_entry=id, stop=st, limit=t1, qty_percent=tp1Percent, comment_profit="TP1_FILLED", comment_loss="STOP_FILLED")
+                    else
+                        strategy.cancel(id + "_A")
+                    if not tp2Done
+                        // Rebase TP2's allocation after TP1 has filled.
+                        float pct2Live = tp1Done ? 100.0 * tp2Percent / (100 - tp1Percent) : tp2Percent
+                        strategy.exit(id + "_B", from_entry=id, stop=st, limit=t2, qty_percent=pct2Live, comment_profit="TP2_FILLED", comment_loss="STOP_FILLED")
+                    else
+                        strategy.cancel(id + "_B")
+                    // TP3 reserves the remainder; every slice carries the active stop.
+                    strategy.exit(id + "_C", from_entry=id, stop=st, limit=t3, qty_percent=100, comment_profit="TP3_FILLED", comment_loss="STOP_FILLED")
+
+// E) Campaign reset: no remaining position, no waiting entry.
+if campaignDir != 0 and campaignHasFilled and strategy.position_size == 0 and pendingSlot == -1
+    lastFlatBar := bar_index
+    campaignDir := 0
+    legCount := 0
+    campaignHasFilled := false
+    pullbackSeen := false
+    lockedDir := 0
+    for i = 0 to 2
+        array.set(legEntry, i, na)
+        array.set(legStop, i, na)
+        array.set(legTP1, i, na)
+        array.set(legTP2, i, na)
+        array.set(legTP3, i, na)
+        array.set(legR0, i, na)
+        array.set(legQtyPlan, i, na)
+        array.set(legTP1Hit, i, false)
+        array.set(legTP2Hit, i, false)
+        array.set(legWasFilled, i, false)
+    status := "FLAT"
+
+// Handle abnormal pending orders (cancel and block further orders until reset).
+if pendingSlot >= 0 and not na(pendingBar) and bar_index - pendingBar > 2
+    string oldID = f_legID(campaignDir, pendingSlot)
+    strategy.cancel(oldID)
+    strategy.cancel(oldID + "_A")
+    strategy.cancel(oldID + "_B")
+    strategy.cancel(oldID + "_C")
+    pendingSlot := -1
+    status := "PENDING TIMEOUT"
+    if strategy.position_size == 0 and not campaignHasFilled
+        campaignDir := 0
+        legCount := 0
+        lockedDir := 0
+        lastFlatBar := bar_index
+
+// F) Sum active downside STOP risk for all remaining open legs (no profit netting).
+float liveStopRisk = 0.0
+float liveNotional = 0.0
+int activeLegs = 0
+if strategy.opentrades > 0
+    for t = 0 to strategy.opentrades - 1
+        string tradeID = strategy.opentrades.entry_id(t)
+        int k = f_slot(tradeID)
+        if k >= 0 and campaignDir != 0
+            float remQty = math.abs(strategy.opentrades.size(t))
+            float actualEntry = strategy.opentrades.entry_price(t)
+            float st = array.get(legStop, k)
+            float perQty = f_costOne(actualEntry, st, campaignDir)
+            if na(perQty) or na(st)
+                liveStopRisk := campaignBudget + 1e12   // fail closed
+            else
+                liveStopRisk += perQty * remQty
+            float nom = strategy.convert_to_account(close * syminfo.pointvalue * remQty)
+            liveNotional += na(nom) ? strategy.equity * 1e6 : nom
+            activeLegs += 1
+float remainingBudget = math.max(0.0, campaignBudget - liveStopRisk)
+if activeLegs > 0
+    status := (campaignDir == 1 ? "LONG " : "SHORT ") + str.tostring(activeLegs) + " OPEN"
+
+// G) Locked initial trade setup: snapshot OB/FVG/Fib only when no position.
+if lockedDir != 0 and strategy.position_size == 0 and campaignDir == 0
+    bool expired = bar_index - lockedBar > lockTTL
+    bool invalid = (lockedDir == 1 and close < lockedInvalid) or (lockedDir == -1 and close > lockedInvalid)
+    bool flipped = (lockedDir == 1 and bearBreak) or (lockedDir == -1 and bullBreak)
+    if expired or invalid or flipped
+        lockedDir := 0
+        status := expired ? "LOCK EXPIRED" : "LOCK INVALID"
+
+structLong = bullBreak
+structShort = bearBreak
+pathLong = trigger == "Structure only" ? structLong : trigger == "Sweep + CISD only" ? bullCISD : (structLong or bullCISD)
+pathShort = trigger == "Structure only" ? structShort : trigger == "Sweep + CISD only" ? bearCISD : (structShort or bearCISD)
+longEvent = pathLong and bullDisp and (not needHTF or htfBull)
+shortEvent = pathShort and bearDisp and (not needHTF or htfBear)
+
+if isLegacy and tfOK and manualSide == "Off" and barstate.isconfirmed and strategy.position_size == 0 and campaignDir == 0 and lockedDir == 0 and pendingSlot == -1
+    if (longEvent and longOK) or (shortEvent and shortOK)
+        int d = longEvent and longOK ? 1 : -1
+        float oHi = na
+        float oLo = na
+        for j = 1 to obLook
+            bool opposite = d == 1 ? close[j] < open[j] : close[j] > open[j]
+            if opposite
+                oHi := high[j]
+                oLo := low[j]
+                break
+        bool fvOK = d == 1 ? not na(bFvgHi) and bar_index - bFvgBar <= fvgTTL : not na(sFvgHi) and bar_index - sFvgBar <= fvgTTL
+        float fHi = fvOK ? (d == 1 ? bFvgHi : sFvgHi) : na
+        float fLo = fvOK ? (d == 1 ? bFvgLo : sFvgLo) : na
+        float swingBase = d == 1 ? nz(lastSL, ta.lowest(low, obLook)) : nz(lastSH, ta.highest(high, obLook))
+        float leg = d == 1 ? high - swingBase : swingBase - low
+        bool fibOK = leg > atr * 2
+        float fibHi = fibOK ? (d == 1 ? high - leg * fibA : low + leg * fibB) : na
+        float fibLo = fibOK ? (d == 1 ? high - leg * fibB : low + leg * fibA) : na
+        if not na(oHi) or fvOK or fibOK
+            lockedDir := d
+            lockedBar := bar_index
+            lockedOBHi := oHi
+            lockedOBLo := oLo
+            lockedFVGHi := fHi
+            lockedFVGLo := fLo
+            lockedFibHi := fibHi
+            lockedFibLo := fibLo
+            lockedInvalid := d == 1 ? math.min(low, swingBase) - atr * slBuffer : math.max(high, swingBase) + atr * slBuffer
+            lockedTrigger := (d == 1 ? bullCISD : bearCISD) ? "SWEEP>CISD" : (d == 1 ? chochBull : chochBear) ? "CHoCH" : "BOS"
+            bool htfAgree = d == 1 ? htfBull : htfBear
+            bool emaAgree = d == 1 ? emaBull : emaBear
+            bool structAgree = d == 1 ? structLong : structShort
+            bool cisdAgree = d == 1 ? bullCISD : bearCISD
+            bool swpAgree = d == 1 ? recentBullSweep : recentBearSweep
+            lockedScore := math.min(100, (htfAgree ? 20 : 0) + (emaAgree ? 15 : 0) + (structAgree ? 20 : 0) + (cisdAgree ? 15 : 0) + (swpAgree ? 15 : 0) + 15 + (not na(oHi) ? 10 : 0) + (fvOK ? 10 : 0) + (fibOK ? 5 : 0))
+            status := d == 1 ? "LOCK LONG" : "LOCK SHORT"
+
+// H) First entry only on NEXT confirmed bar retest, subject to portfolio gate.
+bool canRetest = isLegacy and manualSide == "Off" and lockedDir != 0 and barstate.isconfirmed and bar_index > lockedBar and strategy.position_size == 0 and campaignDir == 0
+bool hitOB = canRetest and not na(lockedOBHi) and low <= lockedOBHi and high >= lockedOBLo
+bool hitFVG = canRetest and not na(lockedFVGHi) and low <= lockedFVGHi and high >= lockedFVGLo
+bool hitFib = canRetest and not na(lockedFibHi) and low <= lockedFibHi and high >= lockedFibLo
+bool hitZone = hitOB or hitFVG or hitFib
+float zHi = hitOB ? lockedOBHi : hitFVG ? lockedFVGHi : hitFib ? lockedFibHi : na
+float zLo = hitOB ? lockedOBLo : hitFVG ? lockedFVGLo : hitFib ? lockedFibLo : na
+bool confirmRetest = hitZone and (lockedDir == 1 ? bullCandle and close > zLo and close - zHi <= atr * maxEntryATR : bearCandle and close < zHi and zLo - close <= atr * maxEntryATR)
+bool htfPass = not needHTF or (lockedDir == 1 ? htfBull : htfBear)
+bool commonGate = tfOK and inSession and spreadOK and cooldownOK and not dailyStop and ordersToday < maxTrades
+bool swEntryPass = not swRequired or (lockedDir == 1 ? swBuyPass : swSellPass)
+int entryScore = math.min(100, lockedScore + (confirmRetest ? 5 : 0))
+
+if canRetest and confirmRetest
+    if not commonGate
+        gate := not tfOK ? "TF INVALID" : not inSession ? "SESSION" : not spreadOK ? "SPREAD" : dailyStop ? "DAY STOP" : not cooldownOK ? "COOLDOWN" : "MAX ORDERS"
+    else if not htfPass or entryScore < minScore or not swEntryPass
+        gate := not htfPass ? "HTF CONTRARY" : entryScore < minScore ? "SCORE LOW" : not swM15OK ? "SWING: USE M15" : not swDailyHTFOK ? "SWING: HTF=1D" : "SWING: H4/H1 WAIT"
+    else
+        int d = lockedDir
+        float structural = d == 1 ? math.min(low, zLo) : math.max(high, zHi)
+        float rawSL = structural - d * atr * slBuffer
+        float dist = math.max(math.abs(close - rawSL), atr * minSLatr)
+        float sl = close - d * dist
+        float plannedPx = close + d * (spreadTicks * 0.5 + priceBufferTicks) * syminfo.mintick
+        bool valid = dist <= maxSLatr * atr and dist > 2 * spreadEstimate and (d == 1 ? sl < close : sl > close)
+        float qty = valid ? f_qty(plannedPx, sl, d, campaignBudget, initialLegBudget, 0) : 0
+        if qty > 0 and valid
+            string id = f_legID(d, 0)
+            float initialR = math.abs(plannedPx - sl)
+            float t1Plan = plannedPx + d * initialR * tp1R
+            float t2Plan = plannedPx + d * initialR * tp2R
+            float t3Plan = plannedPx + d * initialR * tp3R
+            // Store a reusable visual plan in ALL profiles, without assuming broker fill.
+            previewDir := d
+            previewBar := bar_index
+            previewEntry := plannedPx
+            previewStop := sl
+            previewTP1 := t1Plan
+            previewTP2 := t2Plan
+            previewTP3 := t3Plan
+            previewQty := qty
+            signalLong := d == 1
+            signalShort := d == -1
+            string action = executionMode == "Auto Backtest + Alerts" ? "BACKTEST_AUTO" : executionMode == "Semi-Auto Alerts" ? "MANUAL_REVIEW" : "VISUAL_ONLY"
+            if executionMode == "Auto Backtest + Alerts"
+                campaignDir := d
+                legCount := 1
+                pendingSlot := 0
+                pendingBar := bar_index
+                lastAddSignalBar := bar_index
+                array.set(legEntry, 0, plannedPx)
+                array.set(legStop, 0, sl)
+                array.set(legR0, 0, initialR)
+                array.set(legTP1, 0, t1Plan)
+                array.set(legTP2, 0, t2Plan)
+                array.set(legTP3, 0, t3Plan)
+                array.set(legQtyPlan, 0, qty)
+                strategy.entry(id, d == 1 ? strategy.long : strategy.short, qty=qty, comment="L1 initial retest")
+                strategy.exit(id + "_A", from_entry=id, stop=sl, limit=t1Plan, qty_percent=tp1Percent, comment_profit="TP1_FILLED", comment_loss="STOP_FILLED")
+                strategy.exit(id + "_B", from_entry=id, stop=sl, limit=t2Plan, qty_percent=tp2Percent, comment_profit="TP2_FILLED", comment_loss="STOP_FILLED")
+                strategy.exit(id + "_C", from_entry=id, stop=sl, limit=t3Plan, qty_percent=100, comment_profit="TP3_FILLED", comment_loss="STOP_FILLED")
+                gate := "BACKTEST L1 ORDER"
+                status := "L1 PAPER PENDING"
+            else
+                gate := executionMode == "Semi-Auto Alerts" ? "REVIEW ON MT5" : "SIGNAL ONLY"
+                status := d == 1 ? "BUY PLAN READY" : "SELL PLAN READY"
+            ordersToday += 1  // New entry plans/day, not MT5 broker orders in semi-auto.
+            lockedDir := 0
+            if executionMode != "Signal Only"
+                alert("BX421|" + action + "|" + id + "|" + syminfo.ticker + "|" + (d == 1 ? "BUY" : "SELL") + "|ENTRY=" + str.tostring(plannedPx,format.mintick) + "|SL=" + str.tostring(sl,format.mintick) + "|TP1=" + str.tostring(t1Plan,format.mintick) + "|TP2=" + str.tostring(t2Plan,format.mintick) + "|TP3=" + str.tostring(t3Plan,format.mintick) + "|QTY_CHART=" + str.tostring(qty), alert.freq_once_per_bar_close)
+        else
+            gate := not valid ? "SL OUTSIDE GATE" : "MIN LOT / RISK"
+
+// I) Observe a pullback SINCE the previous leg filled; only new confirmed BOS can scale in.
+if campaignDir != 0 and strategy.position_size != 0 and pendingSlot == -1
+    if campaignDir == 1 and low <= eF + atr * pullbackATR
+        pullbackSeen := true
+    if campaignDir == -1 and high >= eF - atr * pullbackATR
+        pullbackSeen := true
+
+bool nextSignal = campaignDir == 1 ? bosBull and bullDisp and emaBull and close > eF : bosBear and bearDisp and emaBear and close < eF
+bool htfStillOK = not needHTF or (campaignDir == 1 ? htfBull : htfBear)
+float firstEntry = array.get(legEntry, 0)
+float firstR = array.get(legR0, 0)
+float firstStop = array.get(legStop, 0)
+bool firstProtected = campaignDir == 1 ? firstStop >= firstEntry : firstStop <= firstEntry
+float favorableR = not na(firstR) and firstR > 0 ? campaignDir * (close - firstEntry) / firstR : 0
+float lastFillRef = legCount > 0 ? array.get(legEntry, legCount - 1) : na
+bool spaced = not na(lastFillRef) and campaignDir * (close - lastFillRef) >= atr * addSpacingATR
+bool afterNewBar = na(lastAddSignalBar) or bar_index > lastAddSignalBar
+bool addCandidate = isLegacy and manualSide == "Off" and barstate.isconfirmed and campaignDir != 0 and strategy.position_size != 0 and pendingSlot == -1 and legCount < maxLegs and activeLegs > 0 and nextSignal and htfStillOK and favorableR >= addAfterR and spaced and afterNewBar and (not addPullback or pullbackSeen) and (not requireProtected or firstProtected) and (not swRequired or (campaignDir == 1 ? swBuyPass : swSellPass))
+
+if addCandidate
+    if not commonGate
+        gate := not tfOK ? "TF INVALID" : dailyStop ? "DAY STOP" : not spreadOK ? "SPREAD" : not inSession ? "SESSION" : ordersToday >= maxTrades ? "MAX ORDERS" : "COOLDOWN"
+    else if liveStopRisk >= campaignBudget
+        gate := "PORTFOLIO RISK"
+    else
+        int d = campaignDir
+        // Fresh structure SL for EACH add-on; never reuse the initial SL blindly.
+        float pivotSL = d == 1 ? nz(lastSL, low) : nz(lastSH, high)
+        float rawSL = d == 1 ? math.min(low, pivotSL) - atr * slBuffer : math.max(high, pivotSL) + atr * slBuffer
+        float dist = math.max(math.abs(close - rawSL), atr * minSLatr)
+        float sl = close - d * dist
+        float projectedEntry = close + d * (spreadTicks * 0.5 + priceBufferTicks) * syminfo.mintick
+        bool valid = dist <= maxSLatr * atr and dist > 2 * spreadEstimate
+        float q = valid ? f_qty(projectedEntry, sl, d, remainingBudget, addLegBudget, liveNotional) : 0
+        if valid and q > 0
+            int i = legCount
+            string id = f_legID(d, i)
+            float r0 = math.abs(projectedEntry - sl)
+            array.set(legEntry, i, projectedEntry)
+            array.set(legStop, i, sl)
+            array.set(legR0, i, r0)
+            array.set(legTP1, i, projectedEntry + d * r0 * tp1R)
+            array.set(legTP2, i, projectedEntry + d * r0 * tp2R)
+            array.set(legTP3, i, projectedEntry + d * r0 * tp3R)
+            array.set(legQtyPlan, i, q)
+            legCount += 1
+            pendingSlot := i
+            pendingBar := bar_index
+            lastAddSignalBar := bar_index
+            pullbackSeen := false
+            strategy.entry(id, d == 1 ? strategy.long : strategy.short, qty=q, comment="Scale-in " + id)
+            strategy.exit(id + "_A", from_entry=id, stop=sl, limit=array.get(legTP1, i), qty_percent=tp1Percent, comment_profit="TP1_FILLED", comment_loss="STOP_FILLED")
+            strategy.exit(id + "_B", from_entry=id, stop=sl, limit=array.get(legTP2, i), qty_percent=tp2Percent, comment_profit="TP2_FILLED", comment_loss="STOP_FILLED")
+            strategy.exit(id + "_C", from_entry=id, stop=sl, limit=array.get(legTP3, i), qty_percent=100, comment_profit="TP3_FILLED", comment_loss="STOP_FILLED")
+            ordersToday += 1
+            signalAdd := true
+            status := id + " PENDING"
+            gate := "ADD OK: " + id
+            alert("BX421|BACKTEST_ADD|" + id + "|" + syminfo.ticker + "|SL=" + str.tostring(sl, format.mintick) + "|TP1=" + str.tostring(array.get(legTP1,i),format.mintick) + "|TP2=" + str.tostring(array.get(legTP2,i),format.mintick) + "|TP3=" + str.tostring(array.get(legTP3,i),format.mintick), alert.freq_once_per_bar_close)
+        else
+            gate := not valid ? "ADD SL BAD" : "ADD BLOCKED BY RISK/LOT"
+
+
+// ==========================================================================
+// CONFIRMED HTF PIVOT HELPERS - evaluated inside request.security HTF.
+// [1] with lookahead_on returns only prior COMPLETED M5/M15 candle states.
+// No retroactive entry is triggered on pivot's historical drawing location.
+f_mrConfirmedHigh(int n) =>
+    float p = ta.pivothigh(high, n, n)
+    ta.valuewhen(not na(p), p, 0)[1]
+
+f_mrConfirmedLow(int n) =>
+    float p = ta.pivotlow(low, n, n)
+    ta.valuewhen(not na(p), p, 0)[1]
+
+// ========================================================================== 
+// RSI MOMENTUM ENGINE / BO SUNG: D1-H1 BIAS > M15-M5-M1 RSI > CH/BOS, CI WATCH
+// 100% independent order IDs (MB1..3 / MS1..3). Legacy SMC code is retained.
+// This engine intentionally runs orders ONLY on a 1-minute chart.
+// ==========================================================================
+bool mrChartOK = timeframe.isminutes and timeframe.multiplier == 1
+// Previous *closed* HTF candles: no historical lookahead leak.
+[dClose, dFast, dSlow] = request.security(syminfo.tickerid, "D", [close[1], ta.ema(close, mrDemaFast)[1], ta.ema(close, mrDemaSlow)[1]], lookahead=barmerge.lookahead_on)
+[hClose, hFast, hSlow] = request.security(syminfo.tickerid, "60", [close[1], ta.ema(close, mrHemaFast)[1], ta.ema(close, mrHemaSlow)[1]], lookahead=barmerge.lookahead_on)
+mrR15 = request.security(syminfo.tickerid, "15", ta.rsi(close, mrRsiLen)[1], lookahead=barmerge.lookahead_on)
+mrR5 = request.security(syminfo.tickerid, "5", ta.rsi(close, mrRsiLen)[1], lookahead=barmerge.lookahead_on)
+mrR1 = ta.rsi(close, mrRsiLen)
+bool mrDLong = dClose > dFast and dFast > dSlow
+bool mrDShort = dClose < dFast and dFast < dSlow
+bool mrHLong = hClose > hFast and hFast > hSlow
+bool mrHShort = hClose < hFast and hFast < hSlow
+bool mrBuyBias = mrDLong and mrHLong
+bool mrSellBias = mrDShort and mrHShort
+bool mrRsiLong = mrR15 > mrBuyLevel and mrR5 > mrBuyLevel and mrR1 > mrBuyLevel
+bool mrRsiShort = mrR15 < mrSellLevel and mrR5 < mrSellLevel and mrR1 < mrSellLevel
+// Signal event is on confirmation bar, never retroactively on pivot bar.
+var int mrLastBullStruct = na
+var int mrLastBearStruct = na
+var int mrLastBullCI = na
+var int mrLastBearCI = na
+if bosBull or chochBull
+    mrLastBullStruct := bar_index
+if bosBear or chochBear
+    mrLastBearStruct := bar_index
+if bullCISD
+    mrLastBullCI := bar_index
+if bearCISD
+    mrLastBearCI := bar_index
+int mrBullAge = na(mrLastBullStruct) ? 100000 : bar_index - mrLastBullStruct
+int mrBearAge = na(mrLastBearStruct) ? 100000 : bar_index - mrLastBearStruct
+int mrBullCiAge = na(mrLastBullCI) ? 100000 : bar_index - mrLastBullCI
+int mrBearCiAge = na(mrLastBearCI) ? 100000 : bar_index - mrLastBearCI
+bool mrBullCIWatch = mrBullCiAge <= mrCisdWindow
+bool mrBearCIWatch = mrBearCiAge <= mrCisdWindow
+// Stop ADD if recent opposing CI. CI does not predict fixed future candles.
+bool mrLongStructure = mrBullAge <= mrTriggerTTL and mrBullAge < mrBearAge
+bool mrShortStructure = mrBearAge <= mrTriggerTTL and mrBearAge < mrBullAge
+float mrEMA9 = ta.ema(close, 9)
+bool mrBuyCandle = close > open and close > mrEMA9 and close > close[1]
+bool mrSellCandle = close < open and close < mrEMA9 and close < close[1]
+// M5 / M15 use LAST CLOSED HTF BAR and CONFIRMED pivots; same fibA/fibB as existing zones.
+[mrSH5, mrSL5] = request.security(syminfo.tickerid, "5", [f_mrConfirmedHigh(mrFibSwingLen), f_mrConfirmedLow(mrFibSwingLen)], lookahead=barmerge.lookahead_on)
+[mrSH15, mrSL15] = request.security(syminfo.tickerid, "15", [f_mrConfirmedHigh(mrFibSwingLen), f_mrConfirmedLow(mrFibSwingLen)], lookahead=barmerge.lookahead_on)
+float mrSpan5 = mrSH5 - mrSL5
+float mrSpan15 = mrSH15 - mrSL15
+bool mrFib5Valid = not na(mrSpan5) and mrSpan5 > syminfo.mintick
+bool mrFib15Valid = not na(mrSpan15) and mrSpan15 > syminfo.mintick
+float mrBuyFibHi5 = mrFib5Valid ? mrSH5 - mrSpan5 * fibA : na
+float mrBuyFibLo5 = mrFib5Valid ? mrSH5 - mrSpan5 * fibB : na
+float mrSellFibHi5 = mrFib5Valid ? mrSL5 + mrSpan5 * fibB : na
+float mrSellFibLo5 = mrFib5Valid ? mrSL5 + mrSpan5 * fibA : na
+float mrBuyFibHi15 = mrFib15Valid ? mrSH15 - mrSpan15 * fibA : na
+float mrBuyFibLo15 = mrFib15Valid ? mrSH15 - mrSpan15 * fibB : na
+float mrSellFibHi15 = mrFib15Valid ? mrSL15 + mrSpan15 * fibB : na
+float mrSellFibLo15 = mrFib15Valid ? mrSL15 + mrSpan15 * fibA : na
+bool mrNeedFib5 = mrFibEntryMode == "M5" or mrFibEntryMode == "M5+M15"
+bool mrNeedFib15 = mrFibEntryMode == "M15" or mrFibEntryMode == "M5+M15"
+// The touch event is recorded ONLY after an M1 bar closes, and resets on new pivots.
+var int mrBullFibTouch5 = na
+var int mrBearFibTouch5 = na
+var int mrBullFibTouch15 = na
+var int mrBearFibTouch15 = na
+if mrSH5 != mrSH5[1] or mrSL5 != mrSL5[1]
+    mrBullFibTouch5 := na
+    mrBearFibTouch5 := na
+if mrSH15 != mrSH15[1] or mrSL15 != mrSL15[1]
+    mrBullFibTouch15 := na
+    mrBearFibTouch15 := na
+if barstate.isconfirmed and mrChartOK
+    if mrFib5Valid and low <= mrBuyFibHi5 and high >= mrBuyFibLo5
+        mrBullFibTouch5 := bar_index
+    if mrFib5Valid and low <= mrSellFibHi5 and high >= mrSellFibLo5
+        mrBearFibTouch5 := bar_index
+    if mrFib15Valid and low <= mrBuyFibHi15 and high >= mrBuyFibLo15
+        mrBullFibTouch15 := bar_index
+    if mrFib15Valid and low <= mrSellFibHi15 and high >= mrSellFibLo15
+        mrBearFibTouch15 := bar_index
+bool mrFib5BuyOK = mrFib5Valid and not na(mrBullFibTouch5) and bar_index - mrBullFibTouch5 <= mrFibTouchBars and close >= mrBuyFibLo5
+bool mrFib5SellOK = mrFib5Valid and not na(mrBearFibTouch5) and bar_index - mrBearFibTouch5 <= mrFibTouchBars and close <= mrSellFibHi5
+bool mrFib15BuyOK = mrFib15Valid and not na(mrBullFibTouch15) and bar_index - mrBullFibTouch15 <= mrFibTouchBars and close >= mrBuyFibLo15
+bool mrFib15SellOK = mrFib15Valid and not na(mrBearFibTouch15) and bar_index - mrBearFibTouch15 <= mrFibTouchBars and close <= mrSellFibHi15
+bool mrFibBuyOK = (not mrNeedFib5 or mrFib5BuyOK) and (not mrNeedFib15 or mrFib15BuyOK)
+bool mrFibSellOK = (not mrNeedFib5 or mrFib5SellOK) and (not mrNeedFib15 or mrFib15SellOK)
+bool mrBuySetup = mrChartOK and mrBuyBias and mrRsiLong and mrLongStructure and mrBuyCandle and not mrBearCIWatch and mrFibBuyOK and (not mrFibRequireCI or mrBullCIWatch)
+bool mrSellSetup = mrChartOK and mrSellBias and mrRsiShort and mrShortStructure and mrSellCandle and not mrBullCIWatch and mrFibSellOK and (not mrFibRequireCI or mrBearCIWatch)
+bool mrMomentumSession = not mrSessionOn or not na(time(timeframe.period, mrSession, "UTC"))
+// Chart units are 1 oz when fxLotSize=100 and broker lot=100 oz; verify symbol specs.
+float mrLotPer = math.floor(mrLots / fxStepLot + 1e-8) * fxStepLot
+float mrQtyPer = mrLotPer * fxLotSize
+float mrStopBase = math.max(atr * mrStopATR, spreadEstimate * 2.5)
+float mrEntryBuyPx = close + spreadEstimate * 0.5
+float mrEntrySellPx = close - spreadEstimate * 0.5
+// Protect a CONFIRMED current-chart swing; never pull the stop inside that swing.
+float mrStopBuyDist = mrStopMode == "Swing + ATR" and not na(lastSL) ? math.max(mrStopBase, mrEntryBuyPx - (lastSL - atr * mrStopSwingBufATR)) : mrStopBase
+float mrStopSellDist = mrStopMode == "Swing + ATR" and not na(lastSH) ? math.max(mrStopBase, (lastSH + atr * mrStopSwingBufATR) - mrEntrySellPx) : mrStopBase
+float mrStopDistance = mrBuySetup ? mrStopBuyDist : mrSellSetup ? mrStopSellDist : mrStopBase
+bool mrStopSwingOK = mrStopMode != "Swing + ATR" or (mrBuySetup ? not na(lastSL) and mrStopBuyDist <= atr * mrStopSwingMaxATR : mrSellSetup ? not na(lastSH) and mrStopSellDist <= atr * mrStopSwingMaxATR : true)
+// Potential loss in account USD incl approximate spread, slippage and RT fees.
+// Gate uses EXACT direction-specific stop distance, including the swing buffer.
+float mrRiskNew = strategy.convert_to_account((mrStopDistance + spreadEstimate + 2 * mrLockSlipTicks * syminfo.mintick + close * mrLockRoundTripFeePct / 100) * mrQtyPer * syminfo.pointvalue)
+// Simulated margin: 1:2000 => 0.05% margin; Exness broker dynamic leverage can differ.
+float mrMarginNew = mrQtyPer * close * syminfo.pointvalue / mrLeverage
+var array<float> mrEntries = array.new_float(3, na)
+var array<float> mrStops = array.new_float(3, na)
+var array<float> mrTP1s = array.new_float(3, na)
+var array<float> mrTP2s = array.new_float(3, na)
+var array<float> mrTP3s = array.new_float(3, na)
+// Entry-time M15 extension levels are FROZEN per leg. Reused on real TV fills.
+var array<float> mrExt2s = array.new_float(3, na)
+var array<float> mrExt3s = array.new_float(3, na)
+var array<float> mrEntryQty = array.new_float(3, na)
+var array<float> mrR0s = array.new_float(3, na)
+var array<bool> mrFilled = array.new_bool(3, false)
+var array<bool> mrTP1Done = array.new_bool(3, false)
+var array<bool> mrTP2Done = array.new_bool(3, false)
+var array<bool> mrTP3Done = array.new_bool(3, false)
+var array<float> mrPeakNet = array.new_float(3, 0.0)
+var array<float> mrRealized = array.new_float(3, 0.0)
+var array<float> mrLockedFloor = array.new_float(3, 0.0)
+var array<float> mrPeakPct = array.new_float(3, 0.0)
+var float mrCampaignEq = na
+// Persist TOTAL realized net from all partially/fully closed MR legs. Do not
+// calculate one full-equity lock for each open position: that over-locks L1-L3.
+var float mrCampaignRealized = 0.0
+var float mrCampaignPeakNet = 0.0
+var float mrCampaignPeakPct = 0.0
+var float mrCampaignLockPct = 0.0
+var float mrCampaignLockUSD = 0.0
+var float mrKeepRatio = 0.0
+var float mrBestFavorableR = 0.0
+var bool mrCampaignStopped = false
+var bool mrCampaignCompletedTP3 = false
+var int mrClosedProfitableBySL = 0
+var int mrClosedProfitableByTP = 0
+var int mrFinishedCampaigns = 0
+var float mrLastCampaignNet = na
+var string mrLastCampaignOutcome = "NONE"
+var bool mrLockUpdated = false
+mrLockUpdated := false
+
+// Fee/spread reserve for surviving position. Accounting unit is account currency.
+f_mrOpenExitCost(float entry, float qty) =>
+    strategy.convert_to_account(qty * syminfo.pointvalue * (spreadEstimate + 2 * mrLockSlipTicks * syminfo.mintick + entry * mrLockRoundTripFeePct / 100.0))
+
+var int mrLastEntryBar = na
+var int mrClosedSeen = 0
+var bool mrOpened = false
+var bool mrBuySignal = false
+var bool mrSellSignal = false
+var string mrGate = "WAIT"
+mrBuySignal := false
+mrSellSignal := false
+
+// Confirm ACTUAL strategy-emulated TP1 exit, not just high/low touching TP.
+if isMR and strategy.closedtrades > mrClosedSeen
+    for k = mrClosedSeen to strategy.closedtrades - 1
+        string xID = strategy.closedtrades.entry_id(k)
+        string xExit = strategy.closedtrades.exit_id(k)
+        bool fromLong = str.startswith(xID, "MB")
+        bool fromShort = str.startswith(xID, "MS")
+        if fromLong or fromShort
+            int slot = int(str.tonumber(str.substring(xID, 2, 3))) - 1
+            if slot >= 0 and slot < 3
+                float realizedNet = strategy.closedtrades.profit(k) - strategy.closedtrades.commission(k)
+                mrCampaignRealized += realizedNet
+                array.set(mrRealized, slot, array.get(mrRealized, slot) + realizedNet)
+                string closedReason = strategy.closedtrades.exit_comment(k)
+                if xExit == xID + "_TP1" and closedReason == "MR_TP1"
+                    array.set(mrTP1Done, slot, true)
+                if xExit == xID + "_TP2" and closedReason == "MR_TP2"
+                    array.set(mrTP2Done, slot, true)
+                if xExit == xID + "_TP3" and closedReason == "MR_TP3"
+                    array.set(mrTP3Done, slot, true)
+                    mrCampaignCompletedTP3 := true
+                if closedReason == "MR_SL" or closedReason == "MR_PROTECT_EXIT"
+                    mrCampaignStopped := true
+                // Actual NET fills, not virtual target touch. Even a profitable SL
+                // is classified using realized campaign PnL on final close.
+                if mrLockShowLabels and (closedReason == "MR_TP1" or closedReason == "MR_TP2" or closedReason == "MR_TP3" or closedReason == "MR_SL" or closedReason == "MR_PROTECT_EXIT")
+                    label.new(bar_index, strategy.closedtrades.exit_price(k), closedReason + " " + xID + "\nNet " + str.tostring(realizedNet, "#.2"), style=label.style_label_left, color=realizedNet >= 0 ? color.new(color.green, 35) : color.new(color.orange, 30), textcolor=color.white, size=size.tiny)
+    mrClosedSeen := strategy.closedtrades
+
+// Campaign-level net mark and SINGLE collective stop floor. Uses only closed-bar
+// prices for historical consistency; it cannot capture a transient intrabar high.
+// All MR legs are same direction by the original signal engine.
+float mrCampaignExposure = 0.0
+float mrCampaignWeightedEntrySum = 0.0
+float mrCampaignOpenGross = 0.0
+float mrCampaignExitReserve = 0.0
+int mrCampaignSide = 0
+float mrOpenFavorableR = 0.0
+if isMR and strategy.opentrades > 0
+    for n = 0 to strategy.opentrades - 1
+        string testID = strategy.opentrades.entry_id(n)
+        bool isBuyLeg = str.startswith(testID, "MB")
+        bool isSellLeg = str.startswith(testID, "MS")
+        if isBuyLeg or isSellLeg
+            float ep = strategy.opentrades.entry_price(n)
+            float qRemain = math.abs(strategy.opentrades.size(n))
+            int dirNow = isBuyLeg ? 1 : -1
+            float expo = strategy.convert_to_account(qRemain * syminfo.pointvalue)
+            int rSlot = int(str.tonumber(str.substring(testID, 2, 3))) - 1
+            float riskOne = rSlot >= 0 and rSlot < 3 ? array.get(mrR0s, rSlot) : na
+            if not na(riskOne) and riskOne > 0
+                mrOpenFavorableR := math.max(mrOpenFavorableR, dirNow * (close - ep) / riskOne)
+            mrCampaignSide := dirNow
+            mrCampaignExposure += expo
+            mrCampaignWeightedEntrySum += expo * ep
+            mrCampaignOpenGross += strategy.convert_to_account(dirNow * (close - ep) * qRemain * syminfo.pointvalue)
+            mrCampaignExitReserve += f_mrOpenExitCost(ep, qRemain)
+float mrCampaignAvgEntry = mrCampaignExposure > 0 ? mrCampaignWeightedEntrySum / mrCampaignExposure : na
+float mrCampaignNetNow = mrCampaignRealized + mrCampaignOpenGross - mrCampaignExitReserve
+if isMR and mrCampaignExposure > 0
+    mrCampaignPeakNet := math.max(mrCampaignPeakNet, mrCampaignNetNow)
+    mrBestFavorableR := math.max(mrBestFavorableR, mrOpenFavorableR)
+    float equityBase = math.max(nz(mrCampaignEq, strategy.equity), 0.01)
+    mrCampaignPeakPct := 100.0 * mrCampaignPeakNet / equityBase
+    bool someTP1Done = false
+    bool someTP2Done = false
+    for si = 0 to 2
+        someTP1Done := someTP1Done or array.get(mrTP1Done, si)
+        someTP2Done := someTP2Done or array.get(mrTP2Done, si)
+    // Raise KEEP SHARE on ACTUAL exit fills (not touching plotted TP lines).
+    float keepCandidate = mrBestFavorableR >= mrLockStartR ? mrKeepBeforeTP1 : 0.0
+    if someTP1Done
+        keepCandidate := math.max(keepCandidate, mrKeepAfterTP1)
+    if someTP2Done
+        keepCandidate := math.max(keepCandidate, mrKeepAfterTP2)
+        if mrBestFavorableR >= mrRunnerAtR
+            keepCandidate := math.max(keepCandidate, mrKeepRunner)
+    mrKeepRatio := mrLockOn ? math.max(mrKeepRatio, keepCandidate) : 0.0
+    mrCampaignLockPct := mrKeepRatio
+    // NEVER lower prior USD target when peak net or exposure changes.
+    mrCampaignLockUSD := mrLockOn ? math.max(mrCampaignLockUSD, math.max(0.0, mrCampaignPeakNet) * mrKeepRatio / 100.0) : 0.0
+// If all remaining positions stop at this shared price, aggregate projected
+// net profit approximates the campaign equity floor, including realized TP1.
+float mrSharedSL = na
+if isMR and mrLockOn and mrCampaignExposure > 0 and mrCampaignLockUSD > 0
+    mrSharedSL := mrCampaignAvgEntry + mrCampaignSide * ((mrCampaignLockUSD - mrCampaignRealized + mrCampaignExitReserve) / mrCampaignExposure)
+
+// Read live fills by their exact IDs; update targets to actual fill price.
+float mrOpenLot = 0.0
+float mrOpenRisk = 0.0
+float mrOpenMargin = 0.0
+int mrOpenCount = 0
+float mrMostRecentEntry = na
+bool mrProfitEligible = false
+bool mrOppCI = false
+if isMR and strategy.opentrades > 0
+    for k = 0 to strategy.opentrades - 1
+        string xID = strategy.opentrades.entry_id(k)
+        bool fromLong = str.startswith(xID, "MB")
+        bool fromShort = str.startswith(xID, "MS")
+        if fromLong or fromShort
+            int slot = int(str.tonumber(str.substring(xID, 2, 3))) - 1
+            if slot >= 0 and slot < 3
+                float fillPx = strategy.opentrades.entry_price(k)
+                int side = fromLong ? 1 : -1
+                float q = math.abs(strategy.opentrades.size(k))
+                if not array.get(mrFilled, slot)
+                    array.set(mrEntries, slot, fillPx)
+                    float rr = array.get(mrR0s, slot)
+                    // Swing+ATR: preserve the ENTRY-TIME absolute swing stop on fills.
+                    // Baseline ATR mode intentionally retains V4.2.6 fill rebasing.
+                    float plannedSwingStop = array.get(mrStops, slot)
+                    if mrStopMode == "Swing + ATR" and not na(plannedSwingStop)
+                        rr := math.abs(fillPx - plannedSwingStop)
+                        array.set(mrR0s, slot, rr)
+                        // A gap beyond the planned stop invalidates the swing setup.
+                        if side * (fillPx - plannedSwingStop) <= 0
+                            strategy.close(xID, comment="MR_BAD_SWING_FILL")
+                        array.set(mrStops, slot, plannedSwingStop)
+                        float riskAtFill = strategy.convert_to_account((rr + spreadEstimate + 2 * mrLockSlipTicks * syminfo.mintick + fillPx * mrLockRoundTripFeePct / 100.0) * q * syminfo.pointvalue)
+                        if na(riskAtFill) or riskAtFill > strategy.equity * mrRiskEntry / 100.0
+                            strategy.close(xID, comment="MR_FILL_RISK_GAP")
+                    else
+                        array.set(mrStops, slot, fillPx - side * rr)
+                    array.set(mrTP1s, slot, fillPx + side * rr * mrTP1R)
+                    float e2 = array.get(mrExt2s, slot)
+                    float e3 = array.get(mrExt3s, slot)
+                    float base2 = fillPx + side * rr * mrTP2R
+                    float base3 = fillPx + side * rr * mrTP3R
+                    float t2 = not na(e2) and side * (e2 - fillPx) > 0 and side * (e2 - fillPx) <= rr * mrFibMaxTPR ? (side == 1 ? math.max(base2, e2) : math.min(base2, e2)) : base2
+                    float t3 = not na(e3) and side * (e3 - fillPx) > 0 and side * (e3 - fillPx) <= rr * mrFibMaxTPR ? (side == 1 ? math.max(base3, e3) : math.min(base3, e3)) : base3
+                    array.set(mrTP2s, slot, t2)
+                    array.set(mrTP3s, slot, side == 1 ? math.max(t3, t2 + syminfo.mintick) : math.min(t3, t2 - syminfo.mintick))
+                    array.set(mrFilled, slot, true)
+                    mrOpened := true
+                float st = array.get(mrStops, slot)
+                float target1 = array.get(mrTP1s, slot)
+                float target2 = array.get(mrTP2s, slot)
+                float target3 = array.get(mrTP3s, slot)
+                float originalQ = array.get(mrEntryQty, slot)
+                float rr = array.get(mrR0s, slot)
+                // Existing feature: BE after ACTUAL TP1, never widen.
+                float initialRiskDist = math.max(rr, syminfo.mintick)
+                float priorStop = st
+                float costUsd = f_mrOpenExitCost(fillPx, q)
+                float qtyValueInAccount = strategy.convert_to_account(q * syminfo.pointvalue)
+                // Display the SAME collective account-level profit target on
+                // every open leg; the stop is not calculated as N x floor.
+                float floorPercent = mrCampaignLockPct
+                float floorUsd = mrCampaignLockUSD
+                array.set(mrPeakPct, slot, mrCampaignPeakPct)
+                array.set(mrLockedFloor, slot, floorUsd)
+                float candidate = st
+                bool lockActive = mrLockOn and (floorUsd > 0 or side * (close - fillPx) >= mrLockBEAtR * initialRiskDist)
+                if (mrLockOn and side * (close - fillPx) >= mrLockBEAtR * initialRiskDist) or array.get(mrTP1Done, slot)
+                    // BE here means projected NET ~0 after estimated transaction costs.
+                    float breakevenCostStop = fillPx + side * (costUsd / math.max(qtyValueInAccount, 0.0000001))
+                    candidate := side == 1 ? math.max(candidate, breakevenCostStop) : math.min(candidate, breakevenCostStop)
+                if mrLockOn and floorUsd > 0 and not na(mrSharedSL)
+                    // Campaign floor: ONE pooled net-profit target spread across
+                    // remaining L1-L3 quantities, not 2-20% of equity PER LEG.
+                    candidate := side == 1 ? math.max(candidate, mrSharedSL) : math.min(candidate, mrSharedSL)
+                // Stop must be on the tradable side of price, with a spread buffer.
+                float stopGuard = math.max(spreadEstimate * 0.5 + syminfo.mintick, syminfo.mintick)
+                bool stopValid = side == 1 ? candidate < close - stopGuard : candidate > close + stopGuard
+                if stopValid and not na(candidate)
+                    st := side == 1 ? math.max(st, candidate) : math.min(st, candidate)
+                    array.set(mrStops, slot, st)
+                    if mrLockOn and side * (st - priorStop) > syminfo.mintick * 0.5
+                        mrLockUpdated := true
+                        if mrLockShowLabels
+                            label.new(bar_index, st, "SL+ " + xID + "\n" + str.tostring(st, format.mintick) + "\nKeep " + str.tostring(floorPercent, "#.0") + "% PEAK", style=side == 1 ? label.style_label_up : label.style_label_down, color=color.new(color.green, 35), textcolor=color.white, size=size.tiny)
+                        if executionMode == "Auto Backtest + Alerts"
+                            alert("BX42_MR|PAPER_ONLY|SL_UPDATE|" + syminfo.ticker + "|" + xID + "|SL=" + str.tostring(st, format.mintick) + "|KEEP_PCT_PEAK=" + str.tostring(floorPercent, "#.1"), alert.freq_once_per_bar_close)
+                else if lockActive and not na(candidate) and side * (candidate - priorStop) > syminfo.mintick * 0.5
+                    // Protection target already overtaken on this closed bar: no valid
+                    // stop price at close. Simulate market close next available tick.
+                    if executionMode == "Auto Backtest + Alerts"
+                        strategy.close(xID, comment="MR_PROTECT_EXIT")
+                // THREE fixed original-quantity allocations: TP1 + TP2 + TP3 = 100%.
+                // All live allocations carry the SAME progressively tightened stop.
+                if not na(st) and not na(target1) and not na(target2) and not na(target3) and not na(originalQ)
+                    if not array.get(mrTP1Done, slot)
+                        strategy.exit(xID + "_TP1", from_entry=xID, limit=target1, stop=st, qty=originalQ * mrTP1Pct / 100.0, comment_profit="MR_TP1", comment_loss="MR_SL")
+                    else
+                        strategy.cancel(xID + "_TP1")
+                    if not array.get(mrTP2Done, slot)
+                        strategy.exit(xID + "_TP2", from_entry=xID, limit=target2, stop=st, qty=originalQ * mrTP2Pct / 100.0, comment_profit="MR_TP2", comment_loss="MR_SL")
+                    else
+                        strategy.cancel(xID + "_TP2")
+                    if not array.get(mrTP3Done, slot)
+                        strategy.exit(xID + "_TP3", from_entry=xID, limit=target3, stop=st, qty=originalQ * mrTP3Pct / 100.0, comment_profit="MR_TP3", comment_loss="MR_SL")
+                    else
+                        strategy.cancel(xID + "_TP3")
+                mrOpenLot += q / fxLotSize
+                mrOpenRisk += math.max(0.0, strategy.convert_to_account(-side * (st - fillPx) * q * syminfo.pointvalue) + f_mrOpenExitCost(fillPx, q))
+                mrOpenMargin += q * close * syminfo.pointvalue / mrLeverage
+                mrOpenCount += 1
+                mrMostRecentEntry := fillPx
+                mrProfitEligible := mrProfitEligible or (side * (close - fillPx) >= rr)
+                mrOppCI := mrOppCI or (side == 1 and bearCISD or side == -1 and bullCISD)
+                if mrExitOnOppositeCI and (side == 1 and bearCISD and mrR5 < mrSellLevel or side == -1 and bullCISD and mrR5 > mrBuyLevel)
+                    strategy.close(xID, comment="CI+RSI5 EXIT")
+// Reset per-leg state when the previous campaign has completely closed.
+if isMR and mrOpened and strategy.position_size == 0 and (na(mrLastEntryBar) or bar_index > mrLastEntryBar)
+    // On the final actual closed trade, record profit from SL as a WIN
+    // when TOTAL realized net PnL is positive (TP partials + stopped runner).
+    mrFinishedCampaigns += 1
+    mrLastCampaignNet := mrCampaignRealized
+    mrLastCampaignOutcome := mrCampaignRealized > 0 ? (mrCampaignStopped ? "WIN by SL+" : mrCampaignCompletedTP3 ? "WIN by TP3" : "WIN other exit") : mrCampaignRealized < 0 ? "LOSS" : "BREAK EVEN"
+    if mrCampaignRealized > 0
+        if mrCampaignStopped
+            mrClosedProfitableBySL += 1
+        else
+            mrClosedProfitableByTP += 1
+    if mrLockShowLabels
+        label.new(bar_index, close, "CAMPAIGN " + mrLastCampaignOutcome + "\nNET " + str.tostring(mrLastCampaignNet, "#.2") + " (account ccy)", style=label.style_label_left, color=mrCampaignRealized > 0 ? color.new(color.green, 5) : color.new(color.red, 15), textcolor=color.white, size=size.tiny)
+    for k = 0 to 2
+        array.set(mrEntries, k, na)
+        array.set(mrStops, k, na)
+        array.set(mrTP1s, k, na)
+        array.set(mrTP2s, k, na)
+        array.set(mrTP3s, k, na)
+        array.set(mrExt2s, k, na)
+        array.set(mrExt3s, k, na)
+        array.set(mrEntryQty, k, na)
+        array.set(mrR0s, k, na)
+        array.set(mrFilled, k, false)
+        array.set(mrTP1Done, k, false)
+        array.set(mrTP2Done, k, false)
+        array.set(mrTP3Done, k, false)
+        array.set(mrPeakNet, k, 0.0)
+        array.set(mrRealized, k, 0.0)
+        array.set(mrLockedFloor, k, 0.0)
+        array.set(mrPeakPct, k, 0.0)
+    mrCampaignEq := na
+    mrCampaignRealized := 0.0
+    mrCampaignPeakNet := 0.0
+    mrCampaignPeakPct := 0.0
+    mrCampaignLockPct := 0.0
+    mrCampaignLockUSD := 0.0
+    mrKeepRatio := 0.0
+    mrBestFavorableR := 0.0
+    mrCampaignStopped := false
+    mrCampaignCompletedTP3 := false
+    mrOpened := false
+    mrGate := "FLAT / RESET"
+
+bool mrDayGate = not dailyStop and ordersToday < maxTrades
+bool mrSafeToAdd = not mrRequireProfit or mrOpenCount == 0 or mrProfitEligible
+bool mrSpaceOK = mrOpenCount == 0 or (not na(mrMostRecentEntry) and math.abs(close - mrMostRecentEntry) >= atr * mrAddATR)
+bool mrCooldownOK = na(mrLastEntryBar) or bar_index - mrLastEntryBar >= mrWaitBars
+float mrMoneyRiskGate = strategy.equity * mrRiskEntry / 100
+float mrMoneyTotalGate = nz(mrCampaignEq, strategy.equity) * mrRiskTotal / 100
+bool mrQtyOK = mrLotPer >= fxMinLot and mrLotPer <= fxMaxLot and mrOpenLot + mrLotPer <= math.min(mrMaxLots, fxMaxLot) + 1e-7
+bool mrRiskOK = mrRiskNew <= mrMoneyRiskGate and mrRiskNew + mrOpenRisk <= mrMoneyTotalGate
+bool mrMarginOK = (mrMarginNew + mrOpenMargin) <= strategy.equity * mrMarginPct / 100
+bool mrRiskDistanceOK = mrStopDistance > 2 * spreadEstimate and spreadOK and mrStopSwingOK
+bool mrAllowed = isMR and mrChartOK and barstate.isconfirmed and not mrPause and mrMomentumSession and mrDayGate and mrCooldownOK and mrQtyOK and mrRiskOK and mrMarginOK and mrRiskDistanceOK and mrSafeToAdd and mrSpaceOK and mrOpenCount < mrMaxOpen and mrOpenCount < 3
+// Only one-direction campaigns. CI against current position pauses new entries.
+int mrDir = strategy.position_size > 0 ? 1 : strategy.position_size < 0 ? -1 : 0
+bool mrWantBuy = mrBuySetup and longOK and (mrDir == 0 or mrDir == 1)
+bool mrWantSell = mrSellSetup and shortOK and (mrDir == 0 or mrDir == -1)
+
+if isMR
+    mrGate := not mrChartOK ? "M1 ONLY" : mrPause ? "PAUSED" : not mrMomentumSession ? "SESSION" : dailyStop ? "DAY STOP" : ordersToday >= maxTrades ? "MAX DAY TRADES" : mrOpenCount >= mrMaxOpen ? "MAX OPEN" : not mrQtyOK ? "LOT LIMIT" : not mrRiskOK ? "RISK BLOCK" : not mrMarginOK ? "MARGIN BLOCK" : not mrRiskDistanceOK ? "SPREAD / SWING SL" : not mrSafeToAdd ? "WAIT +1R" : not mrSpaceOK ? "WAIT DISTANCE" : not mrCooldownOK ? "COOLDOWN" : mrBuyBias ? "LOOK FOR BUY" : mrSellBias ? "LOOK FOR SELL" : "D1/H1 MIXED"
+
+if mrAllowed and (mrWantBuy or mrWantSell)
+    int d = mrWantBuy ? 1 : -1
+    string id = ""
+    int freeSlot = -1
+    for k = 0 to 2
+        bool taken = false
+        if strategy.opentrades > 0
+            for n = 0 to strategy.opentrades - 1
+                string oldID = strategy.opentrades.entry_id(n)
+                if oldID == "MB" + str.tostring(k + 1) or oldID == "MS" + str.tostring(k + 1)
+                    taken := true
+        if not taken and freeSlot == -1
+            freeSlot := k
+    if freeSlot >= 0
+        id := (d == 1 ? "MB" : "MS") + str.tostring(freeSlot + 1)
+        float ePlan = close + d * spreadEstimate / 2
+        float stopPlan = ePlan - d * mrStopDistance
+        float t1Plan = ePlan + d * mrStopDistance * mrTP1R
+        float t2Plan = ePlan + d * mrStopDistance * mrTP2R
+        float t3Plan = ePlan + d * mrStopDistance * mrTP3R
+        float ext2 = na
+        float ext3 = na
+        if mrFibTPMode == "R + Fib M15 extension" and mrFib15Valid
+            ext2 := d == 1 ? mrSL15 + mrSpan15 * mrFibTP2Ext : mrSH15 - mrSpan15 * mrFibTP2Ext
+            ext3 := d == 1 ? mrSL15 + mrSpan15 * mrFibTP3Ext : mrSH15 - mrSpan15 * mrFibTP3Ext
+            // Favorable, strictly directional extensions only. Never shorten baseline R.
+            bool e2Good = d * (ext2 - ePlan) > 0 and d * (ext2 - ePlan) <= mrStopDistance * mrFibMaxTPR
+            bool e3Good = d * (ext3 - ePlan) > 0 and d * (ext3 - ePlan) <= mrStopDistance * mrFibMaxTPR
+            if e2Good
+                t2Plan := d == 1 ? math.max(t2Plan, ext2) : math.min(t2Plan, ext2)
+            if e3Good
+                t3Plan := d == 1 ? math.max(t3Plan, ext3) : math.min(t3Plan, ext3)
+        t3Plan := d == 1 ? math.max(t3Plan, t2Plan + syminfo.mintick) : math.min(t3Plan, t2Plan - syminfo.mintick)
+        array.set(mrEntries, freeSlot, ePlan)
+        array.set(mrStops, freeSlot, stopPlan)
+        array.set(mrTP1s, freeSlot, t1Plan)
+        array.set(mrTP2s, freeSlot, t2Plan)
+        array.set(mrTP3s, freeSlot, t3Plan)
+        array.set(mrExt2s, freeSlot, mrFibTPMode == "R + Fib M15 extension" ? ext2 : na)
+        array.set(mrExt3s, freeSlot, mrFibTPMode == "R + Fib M15 extension" ? ext3 : na)
+        array.set(mrEntryQty, freeSlot, mrQtyPer)
+        array.set(mrR0s, freeSlot, mrStopDistance)
+        array.set(mrFilled, freeSlot, false)
+        array.set(mrTP1Done, freeSlot, false)
+        array.set(mrTP2Done, freeSlot, false)
+        array.set(mrTP3Done, freeSlot, false)
+        array.set(mrPeakNet, freeSlot, 0.0)
+        array.set(mrRealized, freeSlot, 0.0)
+        array.set(mrLockedFloor, freeSlot, 0.0)
+        array.set(mrPeakPct, freeSlot, 0.0)
+        if na(mrCampaignEq) and executionMode == "Auto Backtest + Alerts"
+            mrCampaignEq := strategy.equity
+            mrCampaignRealized := 0.0
+            mrCampaignPeakNet := 0.0
+            mrCampaignPeakPct := 0.0
+            mrCampaignLockPct := 0.0
+            mrCampaignLockUSD := 0.0
+            mrKeepRatio := 0.0
+            mrBestFavorableR := 0.0
+            mrCampaignStopped := false
+            mrCampaignCompletedTP3 := false
+        mrLastEntryBar := bar_index
+        ordersToday += 1
+        mrBuySignal := d == 1
+        mrSellSignal := d == -1
+        mrGate := "SIGNAL " + id
+        if executionMode == "Auto Backtest + Alerts"
+            strategy.entry(id, d == 1 ? strategy.long : strategy.short, qty=mrQtyPer, comment="RSI Momentum " + id)
+            strategy.exit(id + "_TP1", from_entry=id, limit=t1Plan, stop=stopPlan, qty=mrQtyPer * mrTP1Pct / 100.0, comment_profit="MR_TP1", comment_loss="MR_SL")
+            strategy.exit(id + "_TP2", from_entry=id, limit=t2Plan, stop=stopPlan, qty=mrQtyPer * mrTP2Pct / 100.0, comment_profit="MR_TP2", comment_loss="MR_SL")
+            strategy.exit(id + "_TP3", from_entry=id, limit=t3Plan, stop=stopPlan, qty=mrQtyPer * mrTP3Pct / 100.0, comment_profit="MR_TP3", comment_loss="MR_SL")
+        if executionMode != "Signal Only"
+            alert("BX42_MR|" + (executionMode == "Auto Backtest + Alerts" ? "PAPER" : "MANUAL_REVIEW") + "|" + syminfo.ticker + "|" + (d == 1 ? "BUY" : "SELL") + "|LOT=" + str.tostring(mrLotPer, "#.##") + "|ENTRY=" + str.tostring(ePlan, format.mintick) + "|SL=" + str.tostring(stopPlan, format.mintick) + "|TP1=" + str.tostring(t1Plan, format.mintick) + "|TP2=" + str.tostring(t2Plan, format.mintick) + "|TP3=" + str.tostring(t3Plan, format.mintick) + "|TP_SHARE=" + str.tostring(mrTP1Pct) + "/" + str.tostring(mrTP2Pct) + "/" + str.tostring(mrTP3Pct), alert.freq_once_per_bar_close)
+
+// CI observation: 'continue' denotes favorable directional context, not prediction.
+string mrCIStatus = mrBullCIWatch and mrRsiLong and mrBuyBias ? "BULL CI: CONTINUE" : mrBearCIWatch and mrRsiShort and mrSellBias ? "BEAR CI: CONTINUE" : mrBullCIWatch or mrBearCIWatch ? "CI: PAUSE ADD" : "NO FRESH CI"
+string mrTradeDecision = mrDir == 1 and bearCISD and mrR5 < mrSellLevel ? "EXIT BUY / REVIEW" : mrDir == -1 and bullCISD and mrR5 > mrBuyLevel ? "EXIT SELL / REVIEW" : mrDir == 1 and (mrBearCIWatch or not mrRsiLong or not mrBuyBias) ? "PAUSE ADD BUY" : mrDir == -1 and (mrBullCIWatch or not mrRsiShort or not mrSellBias) ? "PAUSE ADD SELL" : mrDir == 1 and mrRsiLong and mrBuyBias ? "CONTINUE BUY" : mrDir == -1 and mrRsiShort and mrSellBias ? "CONTINUE SELL" : "WAIT SETUP"
+plotshape(isMR and mrBuySignal, "MR BUY", shape.labelup, location.belowbar, color=color.new(color.green, 0), text="BUY", textcolor=color.white, size=size.tiny)
+plotshape(isMR and mrSellSignal, "MR SELL", shape.labeldown, location.abovebar, color=color.new(color.red, 0), text="SELL", textcolor=color.white, size=size.tiny)
+// On the phone display levels for FIRST ACTIVE slot, not a leg already closed.
+int mrPlotSlot = 0
+if isMR and strategy.opentrades > 0
+    for k = 0 to strategy.opentrades - 1
+        string id = strategy.opentrades.entry_id(k)
+        if str.startswith(id, "MB") or str.startswith(id, "MS")
+            mrPlotSlot := int(str.tonumber(str.substring(id, 2, 3))) - 1
+            break
+float mrPEntry = isMR ? array.get(mrEntries, mrPlotSlot) : na
+float mrPSL = isMR ? array.get(mrStops, mrPlotSlot) : na
+float mrPT1 = isMR ? array.get(mrTP1s, mrPlotSlot) : na
+float mrPT2 = isMR ? array.get(mrTP2s, mrPlotSlot) : na
+float mrPT3 = isMR ? array.get(mrTP3s, mrPlotSlot) : na
+plot(isMR and mrShowLevels ? mrPEntry : na, "MR Entry L1", color=color.white, style=plot.style_linebr)
+plot(isMR and mrShowLevels ? mrPSL : na, "MR SL L1", color=color.red, style=plot.style_linebr)
+plot(isMR and mrShowLevels ? mrPT1 : na, "MR TP1 L1", color=color.aqua, style=plot.style_linebr)
+plot(isMR and mrShowLevels ? mrPT2 : na, "MR TP2 L1", color=color.lime, style=plot.style_linebr)
+plot(isMR and mrShowLevels ? mrPT3 : na, "MR TP3 L1", color=color.fuchsia, style=plot.style_linebr)
+var table mrBoard = table.new(position.bottom_right, 2, 23, bgcolor=color.new(color.black, 15), border_width=1)
+if barstate.islast and isMR and mrShowDashboard
+    table.cell(mrBoard,0,0,"BX42 MOMENTUM",bgcolor=color.new(color.blue,35),text_color=color.white,text_size=size.tiny)
+    table.cell(mrBoard,1,0,"v4.2.7 FIB | "+(executionMode=="Auto Backtest + Alerts"?"PAPER":executionMode=="Semi-Auto Alerts"?"SEMI":"SIGNAL"),bgcolor=color.new(color.blue,35),text_color=color.yellow,text_size=size.tiny)
+    table.cell(mrBoard,0,1,"D1 / H1 trend",text_color=color.silver,text_size=size.tiny)
+    table.cell(mrBoard,1,1,(mrDLong?"UP":mrDShort?"DOWN":"FLAT")+" / "+(mrHLong?"UP":mrHShort?"DOWN":"FLAT"),text_color=mrBuyBias?color.lime:mrSellBias?color.red:color.yellow,text_size=size.tiny)
+    table.cell(mrBoard,0,2,"RSI M15",text_color=color.silver,text_size=size.tiny)
+    table.cell(mrBoard,1,2,str.tostring(mrR15,"#.0"),text_color=mrR15>50?color.lime:color.red,text_size=size.tiny)
+    table.cell(mrBoard,0,3,"RSI M5",text_color=color.silver,text_size=size.tiny)
+    table.cell(mrBoard,1,3,str.tostring(mrR5,"#.0"),text_color=mrR5>50?color.lime:color.red,text_size=size.tiny)
+    table.cell(mrBoard,0,4,"RSI M1",text_color=color.silver,text_size=size.tiny)
+    table.cell(mrBoard,1,4,str.tostring(mrR1,"#.0"),text_color=mrR1>50?color.lime:color.red,text_size=size.tiny)
+    table.cell(mrBoard,0,5,"Structure / CH-BOS",text_color=color.silver,text_size=size.tiny)
+    table.cell(mrBoard,1,5,mrLongStructure?"BULL READY":mrShortStructure?"BEAR READY":"WAIT",text_color=color.yellow,text_size=size.tiny)
+    table.cell(mrBoard,0,6,"CI / Next bars",text_color=color.silver,text_size=size.tiny)
+    table.cell(mrBoard,1,6,mrCIStatus,text_color=color.yellow,text_size=size.tiny)
+    table.cell(mrBoard,0,7,"Gate / Decision",text_color=color.silver,text_size=size.tiny)
+    table.cell(mrBoard,1,7,mrTradeDecision+" / "+mrGate,text_color=color.yellow,text_size=size.tiny)
+    table.cell(mrBoard,0,8,"TV Open / Lots",text_color=color.silver,text_size=size.tiny)
+    table.cell(mrBoard,1,8,str.tostring(mrOpenCount)+" / "+str.tostring(mrOpenLot,"#.##"),text_color=color.white,text_size=size.tiny)
+    table.cell(mrBoard,0,9,"Active Entry / SL",text_color=color.silver,text_size=size.tiny)
+    table.cell(mrBoard,1,9,(na(mrPEntry)?"-":str.tostring(mrPEntry,format.mintick))+" / "+(na(mrPSL)?"-":str.tostring(mrPSL,format.mintick)),text_color=color.white,text_size=size.tiny)
+    table.cell(mrBoard,0,10,"TP1 / TP2 / TP3",text_color=color.silver,text_size=size.tiny)
+    table.cell(mrBoard,1,10,(na(mrPT1)?"-":str.tostring(mrPT1,format.mintick))+" / "+(na(mrPT2)?"-":str.tostring(mrPT2,format.mintick))+" / "+(na(mrPT3)?"-":str.tostring(mrPT3,format.mintick)),text_color=color.lime,text_size=size.tiny)
+    table.cell(mrBoard,0,11,"Stop risk / Max",text_color=color.silver,text_size=size.tiny)
+    table.cell(mrBoard,1,11,str.tostring(mrOpenRisk,"#.##")+" / "+str.tostring(mrMoneyTotalGate,"#.##"),text_color=mrRiskOK?color.lime:color.red,text_size=size.tiny)
+    table.cell(mrBoard,0,12,"Orders today / Max",text_color=color.silver,text_size=size.tiny)
+    table.cell(mrBoard,1,12,str.tostring(ordersToday)+" / "+str.tostring(maxTrades),text_color=dailyStop?color.red:color.lime,text_size=size.tiny)
+    table.cell(mrBoard,0,13,"Risk entry / total",text_color=color.silver,text_size=size.tiny)
+    table.cell(mrBoard,1,13,str.tostring(mrRiskEntry,"#.1")+"% / "+str.tostring(mrRiskTotal,"#.1")+"%",text_color=color.yellow,text_size=size.tiny)
+    table.cell(mrBoard,0,14,"Campaign peak / Eq%",text_color=color.silver,text_size=size.tiny)
+    table.cell(mrBoard,1,14,str.tostring(mrCampaignPeakPct,"#.1")+"%",text_color=color.lime,text_size=size.tiny)
+    table.cell(mrBoard,0,15,"SL lock USD / Peak share",text_color=color.silver,text_size=size.tiny)
+    table.cell(mrBoard,1,15,str.tostring(mrCampaignLockUSD,"#.2")+" / "+str.tostring(mrKeepRatio,"#.0")+"% peak"+(mrLockOn?" ON":" OFF"),text_color=mrLockOn?color.lime:color.yellow,text_size=size.tiny)
+    table.cell(mrBoard,0,16,"SL state",text_color=color.silver,text_size=size.tiny)
+    table.cell(mrBoard,1,16,mrLockUpdated?"SL+ TIGHTENED":mrOpenCount>0?"MONITOR":"NO OPEN POSITION",text_color=mrLockUpdated?color.lime:color.yellow,text_size=size.tiny)
+    table.cell(mrBoard,0,17,"TP1 / TP2 / TP3 filled",text_color=color.silver,text_size=size.tiny)
+    table.cell(mrBoard,1,17,(array.get(mrTP1Done,mrPlotSlot)?"Y":"N")+" / "+(array.get(mrTP2Done,mrPlotSlot)?"Y":"N")+" / "+(array.get(mrTP3Done,mrPlotSlot)?"Y":"N"),text_color=color.aqua,text_size=size.tiny)
+    table.cell(mrBoard,0,18,"Last campaign NET",text_color=color.silver,text_size=size.tiny)
+    table.cell(mrBoard,1,18,mrLastCampaignOutcome+" "+(na(mrLastCampaignNet)?"-":str.tostring(mrLastCampaignNet,"#.2")),text_color=na(mrLastCampaignNet)?color.yellow:mrLastCampaignNet>0?color.lime:color.red,text_size=size.tiny)
+    table.cell(mrBoard,0,19,"WIN by SL+ / other WIN",text_color=color.silver,text_size=size.tiny)
+    table.cell(mrBoard,1,19,str.tostring(mrClosedProfitableBySL)+" / "+str.tostring(mrClosedProfitableByTP)+" (N="+str.tostring(mrFinishedCampaigns)+")",text_color=color.lime,text_size=size.tiny)
+    table.cell(mrBoard,0,20,"Execution / MT5",text_color=color.silver,text_size=size.tiny)
+    table.cell(mrBoard,1,20,"TV PAPER ONLY; MT5 NOT LINKED",text_color=color.orange,text_size=size.tiny)
+    table.cell(mrBoard,0,21,"Fib gate M5/M15",text_color=color.silver,text_size=size.tiny)
+    table.cell(mrBoard,1,21,mrFibEntryMode == "Off" ? "OFF / BASELINE" : mrFibEntryMode+" / "+(mrFibBuyOK?"B+":"B-")+" "+(mrFibSellOK?"S+":"S-"),text_color=mrFibEntryMode == "Off" ? color.silver : mrFibBuyOK or mrFibSellOK ? color.lime : color.yellow,text_size=size.tiny)
+    table.cell(mrBoard,0,22,"SL / TP model",text_color=color.silver,text_size=size.tiny)
+    table.cell(mrBoard,1,22,mrStopMode+" / "+mrFibTPMode,text_color=color.aqua,text_size=size.tiny)
+
+// J) Charts: Legacy locked zones plus independent Momentum OB/FVG/FIB boxes.
+float swSellZoneHi = swBfvgActive ? swBfvgTop : swBobActive ? swBobTop : swBfibActive ? swBfibTop : na
+float swSellZoneLo = swBfvgActive ? swBfvgBot : swBobActive ? swBobBot : swBfibActive ? swBfibBot : na
+float swBuyZoneHi = swUfvgActive ? swUfvgTop : swUobActive ? swUobTop : swUfibActive ? swUfibTop : na
+float swBuyZoneLo = swUfvgActive ? swUfvgBot : swUobActive ? swUobBot : swUfibActive ? swUfibBot : na
+plot(swRequired and swShowH4Zone ? swSellZoneHi : na, "Swing H4 Supply top", color=color.new(color.red, 25), style=plot.style_linebr)
+plot(swRequired and swShowH4Zone ? swSellZoneLo : na, "Swing H4 Supply bottom", color=color.new(color.red, 45), style=plot.style_linebr)
+plot(swRequired and swShowH4Zone ? swBuyZoneHi : na, "Swing H4 Demand top", color=color.new(color.lime, 35), style=plot.style_linebr)
+plot(swRequired and swShowH4Zone ? swBuyZoneLo : na, "Swing H4 Demand bottom", color=color.new(color.lime, 55), style=plot.style_linebr)
+plot(showEMA ? eF : na, "EMA fast", color=color.new(color.aqua, 10))
+plot(showEMA ? eS : na, "EMA slow", color=color.new(color.orange, 10))
+plot(showEMA ? eT : na, "EMA trend", color=color.new(color.white, 25), linewidth=2)
+pOH = plot(isLegacy and showZones and lockedDir != 0 ? lockedOBHi : na, "Locked OB High", color=color.new(color.green, 50), style=plot.style_linebr)
+pOL = plot(isLegacy and showZones and lockedDir != 0 ? lockedOBLo : na, "Locked OB Low", color=color.new(color.green, 50), style=plot.style_linebr)
+fill(pOH,pOL,color=color.new(color.green, 91),title="OB Zone")
+pFH = plot(isLegacy and showZones and lockedDir != 0 ? lockedFVGHi : na, "Locked FVG High", color=color.new(color.teal, 65), style=plot.style_linebr)
+pFL = plot(isLegacy and showZones and lockedDir != 0 ? lockedFVGLo : na, "Locked FVG Low", color=color.new(color.teal, 65), style=plot.style_linebr)
+fill(pFH,pFL,color=color.new(color.teal, 93),title="FVG Zone")
+pFibH = plot(isLegacy and showZones and lockedDir != 0 ? lockedFibHi : na, "Locked Fib High", color=color.new(color.yellow, 60), style=plot.style_linebr)
+pFibL = plot(isLegacy and showZones and lockedDir != 0 ? lockedFibLo : na, "Locked Fib Low", color=color.new(color.yellow, 60), style=plot.style_linebr)
+fill(pFibH,pFibL,color=color.new(color.yellow, 94),title="Fib Zone")
+// Display candidates only for their preview TTL; manual levels are strictly visualization.
+bool previewLive = previewDir != 0 and not na(previewBar) and bar_index - previewBar <= previewBars
+int manualDir = manualSide == "BUY" ? 1 : manualSide == "SELL" ? -1 : 0
+bool manualValid = showManualLevels and manualDir != 0 and manualEntry > 0 and manualSL > 0 and (manualDir == 1 ? manualSL < manualEntry : manualSL > manualEntry)
+float manualR = manualValid ? math.abs(manualEntry - manualSL) : na
+float mTP1 = manualTP1 > 0 ? manualTP1 : manualEntry + manualDir * manualR * tp1R
+float mTP2 = manualTP2 > 0 ? manualTP2 : manualEntry + manualDir * manualR * tp2R
+float mTP3 = manualTP3 > 0 ? manualTP3 : manualEntry + manualDir * manualR * tp3R
+bool manualTargetsOK = manualValid and (manualDir == 1 ? mTP1 > manualEntry and mTP2 > mTP1 and mTP3 > mTP2 : mTP1 < manualEntry and mTP2 < mTP1 and mTP3 < mTP2)
+float manualQ = manualTargetsOK ? f_qty(manualEntry, manualSL, manualDir, campaignBudget, initialLegBudget, 0.0) : na
+bool manualL2OK = manualSide != "Off" and manualEntry2 > 0 and manualSL2 > 0 and (manualDir == 1 ? manualSL2 < manualEntry2 : manualSL2 > manualEntry2)
+bool manualL3OK = manualSide != "Off" and manualEntry3 > 0 and manualSL3 > 0 and (manualDir == 1 ? manualSL3 < manualEntry3 : manualSL3 > manualEntry3)
+bool paperActive = campaignDir != 0 and legCount > 0
+float aEntry = paperActive ? array.get(legEntry, 0) : previewLive ? previewEntry : na
+float aStop = paperActive ? array.get(legStop, 0) : previewLive ? previewStop : na
+float aTP1 = paperActive ? array.get(legTP1, 0) : previewLive ? previewTP1 : na
+float aTP2 = paperActive ? array.get(legTP2, 0) : previewLive ? previewTP2 : na
+float aTP3 = paperActive ? array.get(legTP3, 0) : previewLive ? previewTP3 : na
+// Manual plan takes precedence only when explicitly enabled; never auto-orders.
+float vEntry = manualTargetsOK ? manualEntry : aEntry
+float vSL = manualTargetsOK ? manualSL : aStop
+float vTP1 = manualTargetsOK ? mTP1 : aTP1
+float vTP2 = manualTargetsOK ? mTP2 : aTP2
+float vTP3 = manualTargetsOK ? mTP3 : aTP3
+float vQty = manualTargetsOK ? manualQ : paperActive ? array.get(legQtyPlan, 0) : previewLive ? previewQty : na
+plot(isLegacy and showTradeLevels and showEntryLine ? vEntry : na, "Entry / Giá vào L1", color=color.new(color.white, 0), linewidth=2, style=plot.style_linebr)
+plot(isLegacy and showTradeLevels ? vSL : na, "SL / Dừng lỗ L1", color=color.red, linewidth=2, style=plot.style_linebr)
+plot(isLegacy and showTradeLevels and showTP1Lines ? vTP1 : na, "TP1 / L1", color=color.new(color.aqua, 10), style=plot.style_linebr)
+plot(isLegacy and showTradeLevels ? vTP2 : na, "TP2 / L1", color=color.new(color.green, 10), style=plot.style_linebr)
+plot(isLegacy and showTradeLevels and showTP3Lines ? vTP3 : na, "TP3 / L1", color=color.new(color.lime, 5), style=plot.style_linebr)
+plot(isLegacy and showTradeLevels and (manualL2OK or (not showOnlyL1 and campaignDir != 0 and legCount > 1)) ? (manualL2OK ? manualEntry2 : array.get(legEntry, 1)) : na, "Entry L2", color=color.new(color.white, 35), style=plot.style_linebr)
+plot(isLegacy and showTradeLevels and (manualL2OK or (not showOnlyL1 and campaignDir != 0 and legCount > 1)) ? (manualL2OK ? manualSL2 : array.get(legStop, 1)) : na, "SL L2", color=color.new(color.red, 35), style=plot.style_linebr)
+plot(isLegacy and showTradeLevels and not showOnlyL1 and showTP1Lines and campaignDir != 0 and legCount > 1 ? array.get(legTP1, 1) : na, "TP1 L2", color=color.new(color.aqua, 35), style=plot.style_linebr)
+plot(isLegacy and showTradeLevels and not showOnlyL1 and campaignDir != 0 and legCount > 1 ? array.get(legTP2, 1) : na, "TP2 L2", color=color.new(color.green, 35), style=plot.style_linebr)
+plot(isLegacy and showTradeLevels and not showOnlyL1 and showTP3Lines and campaignDir != 0 and legCount > 1 ? array.get(legTP3, 1) : na, "TP3 L2", color=color.new(color.lime, 35), style=plot.style_linebr)
+plot(isLegacy and showTradeLevels and (manualL3OK or (not showOnlyL1 and campaignDir != 0 and legCount > 2)) ? (manualL3OK ? manualEntry3 : array.get(legEntry, 2)) : na, "Entry L3", color=color.new(color.white, 65), style=plot.style_linebr)
+plot(isLegacy and showTradeLevels and (manualL3OK or (not showOnlyL1 and campaignDir != 0 and legCount > 2)) ? (manualL3OK ? manualSL3 : array.get(legStop, 2)) : na, "SL L3", color=color.new(color.red, 60), style=plot.style_linebr)
+plot(isLegacy and showTradeLevels and not showOnlyL1 and showTP1Lines and campaignDir != 0 and legCount > 2 ? array.get(legTP1, 2) : na, "TP1 L3", color=color.new(color.aqua, 60), style=plot.style_linebr)
+plot(isLegacy and showTradeLevels and not showOnlyL1 and campaignDir != 0 and legCount > 2 ? array.get(legTP2, 2) : na, "TP2 L3", color=color.new(color.green, 55), style=plot.style_linebr)
+plot(isLegacy and showTradeLevels and not showOnlyL1 and showTP3Lines and campaignDir != 0 and legCount > 2 ? array.get(legTP3, 2) : na, "TP3 L3", color=color.new(color.lime, 60), style=plot.style_linebr)
+plotshape(showStruct and bosBull, "BOS up", shape.triangleup, location.belowbar, color=color.new(color.lime, 30), size=size.tiny, text="BOS")
+plotshape(showStruct and bosBear, "BOS down", shape.triangledown, location.abovebar, color=color.new(color.red, 30), size=size.tiny, text="BOS")
+plotshape(showStruct and chochBull, "CHoCH up", shape.triangleup, location.belowbar, color=color.lime, size=size.tiny, text="CH")
+plotshape(showStruct and chochBear, "CHoCH down", shape.triangledown, location.abovebar, color=color.red, size=size.tiny, text="CH")
+plotshape(showStruct and bullSweep, "Sweep low", shape.circle, location.belowbar, color=color.blue, size=size.tiny, text="SW")
+plotshape(showStruct and bearSweep, "Sweep high", shape.circle, location.abovebar, color=color.purple, size=size.tiny, text="SW")
+plotshape(showStruct and bullCISD, "CISD up", shape.diamond, location.belowbar, color=color.aqua, size=size.tiny, text="CI")
+plotshape(showStruct and bearCISD, "CISD down", shape.diamond, location.abovebar, color=color.fuchsia, size=size.tiny, text="CI")
+plotshape(isLegacy and signalLong, "BUY PLAN", shape.labelup, location.belowbar, color=color.lime, text="BUY?", textcolor=color.black, size=size.small)
+plotshape(isLegacy and signalShort, "SELL PLAN", shape.labeldown, location.abovebar, color=color.red, text="SELL?", textcolor=color.white, size=size.small)
+plotshape(isLegacy and signalAdd and campaignDir==1, "ADD LONG", shape.labelup, location.belowbar, color=color.teal, text="ADD", textcolor=color.white, size=size.small)
+plotshape(isLegacy and signalAdd and campaignDir==-1, "ADD SHORT", shape.labeldown, location.abovebar, color=color.orange, text="ADD", textcolor=color.black, size=size.small)
+
+// K) Compact bilingual dashboard. Values are plans/sim fills, NEVER broker confirmations.
+var table board = table.new(position.bottom_right, 2, 19, bgcolor=color.new(color.black, 18), border_width=1, border_color=color.new(color.gray, 60))
+if barstate.islast and showDash and isLegacy
+    string xMode = executionMode == "Semi-Auto Alerts" ? "SEMI / MANUAL" : executionMode == "Signal Only" ? "SIGNAL ONLY" : "AUTO / PAPER"
+    table.cell(board,0,0,"BAOXTRA SMC",bgcolor=color.new(color.blue,45),text_color=color.white,text_size=size.small)
+    table.cell(board,1,0,"V4.2.7 | " + xMode,bgcolor=color.new(color.blue,45),text_color=color.yellow,text_size=size.tiny)
+    table.cell(board,0,1,"TF / HTF",text_color=color.silver,text_size=size.tiny)
+    table.cell(board,1,1,htfTF + " / " + (tfOK ? (htfBull?"BULL":htfBear?"BEAR":"FLAT") : "INVALID TF"),text_color=tfOK?color.white:color.red,text_size=size.tiny)
+    table.cell(board,0,2,"Setup / Trigger",text_color=color.silver,text_size=size.tiny)
+    table.cell(board,1,2,lockedDir!=0?lockedTrigger:"-",text_color=color.white,text_size=size.tiny)
+    table.cell(board,0,3,"Status / Trạng thái",text_color=color.silver,text_size=size.tiny)
+    table.cell(board,1,3,tfOK?status:"CHANGE MODE/HTF",text_color=tfOK?color.yellow:color.red,text_size=size.tiny)
+    table.cell(board,0,4,"Position / Vị thế",text_color=color.silver,text_size=size.tiny)
+    table.cell(board,1,4,campaignDir==1?"PAPER LONG":campaignDir==-1?"PAPER SHORT":previewLive?(previewDir==1?"BUY PLAN":"SELL PLAN"):"WAIT",text_color=color.white,text_size=size.tiny)
+    table.cell(board,0,5,"Entry / Giá vào",text_color=color.silver,text_size=size.tiny)
+    table.cell(board,1,5,na(vEntry)?"-":str.tostring(vEntry,format.mintick),text_color=color.white,text_size=size.tiny)
+    table.cell(board,0,6,"SL / Dừng lỗ",text_color=color.silver,text_size=size.tiny)
+    table.cell(board,1,6,na(vSL)?"-":str.tostring(vSL,format.mintick),text_color=color.red,text_size=size.tiny)
+    table.cell(board,0,7,"TP1",text_color=color.silver,text_size=size.tiny)
+    table.cell(board,1,7,na(vTP1)?"-":str.tostring(vTP1,format.mintick),text_color=color.aqua,text_size=size.tiny)
+    table.cell(board,0,8,"TP2",text_color=color.silver,text_size=size.tiny)
+    table.cell(board,1,8,na(vTP2)?"-":str.tostring(vTP2,format.mintick),text_color=color.green,text_size=size.tiny)
+    table.cell(board,0,9,"TP3",text_color=color.silver,text_size=size.tiny)
+    table.cell(board,1,9,na(vTP3)?"-":str.tostring(vTP3,format.mintick),text_color=color.lime,text_size=size.tiny)
+    table.cell(board,0,10,"L1/L2/L3 / Open",text_color=color.silver,text_size=size.tiny)
+    table.cell(board,1,10,str.tostring(legCount)+" / "+str.tostring(activeLegs)+" (max "+str.tostring(maxLegs)+")",text_color=color.white,text_size=size.tiny)
+    table.cell(board,0,11,"Portfolio risk / USD",text_color=color.silver,text_size=size.tiny)
+    table.cell(board,1,11,str.tostring(liveStopRisk,"#.##")+"/"+str.tostring(campaignBudget,"#.##"),text_color=liveStopRisk<=campaignBudget?color.lime:color.red,text_size=size.tiny)
+    table.cell(board,0,12,"TP split / Tỷ lệ",text_color=color.silver,text_size=size.tiny)
+    table.cell(board,1,12,str.tostring(tp1Percent)+"/"+str.tostring(tp2Percent)+"/"+str.tostring(100-tp1Percent-tp2Percent)+"%",text_color=color.white,text_size=size.tiny)
+    table.cell(board,0,13,"Suggested qty / Chart",text_color=color.silver,text_size=size.tiny)
+    table.cell(board,1,13,na(vQty)?"-":str.tostring(vQty,"#.#####"),text_color=color.white,text_size=size.tiny)
+    table.cell(board,0,14,"Signal / Day",text_color=color.silver,text_size=size.tiny)
+    table.cell(board,1,14,str.tostring(ordersToday)+"/"+str.tostring(maxTrades)+(dailyStop?" STOP":" OK"),text_color=dailyStop?color.red:color.lime,text_size=size.tiny)
+    table.cell(board,0,15,"Decision / Gate",text_color=color.silver,text_size=size.tiny)
+    table.cell(board,1,15,manualSide!="Off"?(manualTargetsOK?"MANUAL PLAN":"CHECK MANUAL INPUTS"):(tfOK?gate:"TF INVALID"),text_color=color.yellow,text_size=size.tiny)
+    table.cell(board,0,16,"Execution / MT5",text_color=color.silver,text_size=size.tiny)
+    table.cell(board,1,16,"NO BROKER LINK",text_color=color.orange,text_size=size.tiny)
+    table.cell(board,0,17,"Swing H4/H1 / Filter",text_color=color.silver,text_size=size.tiny)
+    table.cell(board,1,17,not swRequired ? "OFF" : not swM15OK ? "USE M15" : not swDailyHTFOK ? "HTF=1D" : swSellPass ? "SELL CONFIRMED" : swBuyPass ? "BUY CONFIRMED" : "WAIT CONFLUENCE",text_color=not swRequired ? color.gray : swSellPass ? color.red : swBuyPass ? color.lime : color.yellow,text_size=size.tiny)
+    table.cell(board,0,18,"H4 zone / H1 RSI",text_color=color.silver,text_size=size.tiny)
+    table.cell(board,1,18,(swBearTouched ? "SUPPLY" : swBullTouched ? "DEMAND" : "NO TOUCH") + " / " + str.tostring(swH1RSI,"#.0"),text_color=color.white,text_size=size.tiny)
