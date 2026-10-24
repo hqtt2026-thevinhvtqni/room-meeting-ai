@@ -48,3 +48,6 @@ Before G2 can be declared complete: run the new unit tests and relevant existing
 - Latest follow-up commits: ledger counter scope `df7d40ddeba08f0ea9b2b35b17082e89e19d4540`; connectors including Mock/Internal `3ff659047831cbde8444536854b6fdfb3745d684`.
 - The earlier commit list above records initial commits; these two follow-up commits supersede the initial file snapshots.
 - Tests remain NOT RUN. This addendum changes no gate status.
+
+
+- Documentation consistency correction: G1 REV 6 content already recorded ACKED, but the title still said “PROPOSED, chờ Vinh ACK” and §8 still listed ACK as pending. Updated the title/prerequisite wording to match the ACK record while retaining the authorized-test-environment blocker. Commit: `ebad679a08bbc1fc7339f2429fd172b5b6c7c3bc`.
