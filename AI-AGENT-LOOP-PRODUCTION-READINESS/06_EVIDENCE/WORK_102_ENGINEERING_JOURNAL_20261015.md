@@ -1,5 +1,3 @@
-<!-- GitHub branch mirror of the canonical ROOM-HOP Sandbox engineering journal. During this session the Sandbox journal remains the operational source of truth; synchronize updates deliberately. -->
-
 # NHẬT KÝ THI CÔNG — WORK 102
 TÊN: Co
 CHỨC DANH: Builder / Coder — Work 102
@@ -586,3 +584,36 @@ Status: `ENV_BLOCKED / PENDING EVIDENCE`; Work 102 remains `ACTIVE / NOT PASS / 
 3. Continue Gate A independently: canonical Core task authority/dispatcher, durable state/events, delivery and ACK, leases/fencing/idempotency/recovery, and canonical Execution Host binding remain `NOT_VERIFIED / BLOCKED`.
 
 This entry records successful Sandbox write/read-back and hash matching only. It does not claim test execution, Ka ACK, live E2E, PASS, or release.
+
+
+## XU — STATUS SUMMARY SNAPSHOT / FOLLOW-UP TO OWNER ASSESSMENT — 2026-10-24
+**Owner:** Vinh — Final Authority
+**Coordinator:** Xu — HQTT CEO / Lead Architect
+**Build owner:** Co
+**Independent reviewer:** Ka
+**Status:** ACTIVE / NOT PASS / NOT RELEASED. No production release authorized.
+
+### Current gate snapshot (this section is the latest summary; older entries remain historical)
+- **Patch V2 source/hash binding:** Co's journal entry records baseline MATCH for all 6 original files and candidate MATCH for all 7 RUN_BUNDLE files after Sandbox write/read-back. This is hash/read-back evidence as reported in the journal, not test execution and not proof of canonical production equivalence. Candidate adoption in Sandbox is recorded; production adoption is NOT authorized.
+- **Candidate tests:** ENV_BLOCKED / PENDING EVIDENCE. No post-adoption pytest collection/full-suite/demo, raw stdout/stderr, JUnit, or exit code exists in this session. The separate 62/62 bundle remains LOCAL_REFERENCE_SNAPSHOT_ONLY and does not certify the adopted Sandbox candidate.
+- **Ka review:** independent verdict for the exact seven-file candidate remains pending/not evidenced. Do not infer ACK from a request, transcript, or tool READY response.
+- **Gate A / production task authority:** BLOCKED / NOT_VERIFIED. Generic canonical task create/dispatch, receiver inbox + correlated ACK/result, durable task/event ownership, lease/fencing, idempotency, dependency wake-up/recovery worker, and live Core :8000 route/build identity remain unproven. Do not build a second dispatcher.
+- **Work 14 / Work 12 / Work 13 host trace:** SOURCE MAPPING PARTIAL. GitHub source at base commit `0958c723a76d0f3e878f1e13883860b9b768de00` contains `wee_work13_adapter.py` (blob SHA `73cfda2167219c5b6fbf6719e6066ed230dfa52c`), `wee/authority.py` (blob SHA `31375a230005e224a22039d80bda0dda3433203c`), `wee/readiness.py` (blob SHA `f765568e4567476b36ba21090b5fc06663abdb00`), and `w14_w13_real_execution_test.py` (blob SHA `dc06add529e21246dfaf91b54fb5f3238f371e73`). Static read shows Work13 adapter delegates to `wee.bridge.real_host.RealExecutionHost`, identifies provider `W12_REAL_EXECUTION_HOST`, and writes FINAL_RESULT.json. Work14's sample script creates a Work 14 context directly and invokes `python --version`; it is not evidence of Core-authorized Work 102 pytest execution. `CanonicalWorkAuthority` resolves a Sandbox-provided binding file; this is an explicit binding seam, not proof that a production Core authority supplies/enforces it. `wee/readiness.py` reports capabilities of LocalExecutionHost, not live Core readiness. The requested named documents `PHASE4_COMMAND_EXECUTION_HOST_MAPPING.md` and `W12_EXECUTION_CONTRACT.md` were not found by the performed GitHub code searches; search results are inconclusive and do not prove repository-wide absence.
+- **Authorized execution environment:** BLOCKED / NOT_VERIFIED. The connected MCP surface used in this session provides file read/write/read-back but no verified process/Python/pytest/PowerShell execution action. GitHub source presence does not itself authorize or provide execution.
+
+### Xu's concrete directions — continue in parallel, no routine questions to Vinh
+1. **Co — hash-bound candidate handoff:** preserve the seven candidate files and manifest; report exact candidate hash set and any drift. Do not overwrite concurrent edits. Do not run or claim tests without an authorized execution-capable host. If such a host becomes available, first record authorization, identity, workspace, interpreter, and command, then run collection and the approved test sequence with raw artifacts.
+2. **Ka — independent V2 review:** review the exact seven-file candidate and patch, focusing on rejected resume preserving the prior checkpoint, terminal/corrupt/mismatched resume, audit-event policy, cost-budget fixture, checkpoint-store error classification, and final-step retry semantics. Record PASS/CONDITIONAL/BLOCKED with cited source and unresolved risks. No test PASS without independent raw execution evidence.
+3. **Xu — Work 14/12/13 trace:** continue locating authoritative Work 12 contract and Work 14 mapping by actual repository paths/branches and trace the host adapter to its authority source and evidence persistence. Distinguish static adapter capability from a live authorized production binding. Do not assume WEE LocalExecutionHost is Core's canonical host.
+4. **Gate A — no proxy closure:** obtain source-backed owner and live route/build identity for Core :8000, then trace task identity through dispatch → authenticated inbox → ACK/result → durable event/audit → lease/fencing/idempotency/recovery → Work 12/13/14 execution host. If no authoritative owner/path is available, retain BLOCKED with exact missing evidence; do not implement a parallel queue.
+5. **Journal hygiene:** this appended snapshot is the newest status summary but does not rewrite historical records. Older “DECISION PENDING” entries are superseded by Vinh's approved repair budget: max 2 repair rounds and max 3 test runs per related defect cycle.
+
+### Acceptance conditions for the next gate movement
+- Hash binding: exact candidate source hashes and patch/run-bundle manifest reconcile; any drift is explicitly resolved.
+- Independent review: Ka records an evidence-based verdict on the same candidate.
+- Test gate: authorized host identity + exact command/cwd/interpreter + candidate hash + raw stdout/stderr + JUnit/manifest + exit code; no inferred test success.
+- Production Gate A: authoritative Core route/build identity and task/host lifecycle trace are demonstrated with real evidence.
+- Release: remains prohibited until all applicable acceptance gates are PASS and Vinh authorizes release.
+
+**Recorded by:** Xu — Coordinator / Lead Architect
+**Evidence boundary:** This entry records static source mapping and directions only; it does not claim test execution, Core runtime verification, Ka ACK, Gate A PASS, or release.
