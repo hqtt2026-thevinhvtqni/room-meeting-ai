@@ -54,3 +54,6 @@ Before G2 can be declared complete: run the new unit tests and relevant existing
 
 
 - Follow-up quality fix: normalize nested SDK usage objects for Groq/OpenAI cached/reasoning token fields and add a matching unit-test case. Commits: `e8efbcc15ca5f696107cf165ca8455eb13ddc4f5` (module), `9891647f0ea3978d7296720579a2aed560563e41` (test). Test execution remains pending.
+
+
+- Documentation consistency follow-up: plan header now says ACTIVE — IMPLEMENTATION and distinguishes G0 NOT PASS / G1 ACKED / G2 IN PROGRESS; G1 §1 path default now matches monthly naming in §5b. Commits: `8261e838a71bd8900aa552b898d999aefe201c6c` (plan), `421dfb936792cf4ea349381169d2652a31ad42c6` (G1 design).
