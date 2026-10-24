@@ -57,3 +57,6 @@ Before G2 can be declared complete: run the new unit tests and relevant existing
 
 
 - Documentation consistency follow-up: plan header now says ACTIVE — IMPLEMENTATION and distinguishes G0 NOT PASS / G1 ACKED / G2 IN PROGRESS; G1 §1 path default now matches monthly naming in §5b. Commits: `8261e838a71bd8900aa552b898d999aefe201c6c` (plan), `421dfb936792cf4ea349381169d2652a31ad42c6` (G1 design).
+
+
+- Retention follow-up: index completed monthly JSONL files on month transition and add a unit test for size-based `.partN` rotation/index metadata. Commits: `355b03b3084c0c0a81feec13e91b5b6a61219010` (module), `08927a98f83f8fc85f4f698c6dd57ead71dcc14d` (test). Tests remain NOT RUN.
