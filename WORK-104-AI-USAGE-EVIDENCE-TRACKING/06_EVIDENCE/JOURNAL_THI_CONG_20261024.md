@@ -1,5 +1,7 @@
 # Work 104 — Nhật ký thi công
 
+> **SUPERSEDED (2026-10-24):** Nhật ký này đã được hợp nhất có kiểm soát vào `../NHAT_KY_HOP_THI_CONG.md` (bản chính thức theo AGENTS.md §06). File này được giữ lại làm bằng chứng lịch sử, KHÔNG ghi tiếp vào đây.
+
 - Thời điểm: 2026-10-24 (UTC+7)
 - Người thực hiện: Xu — AI-01 GPT CEO / điều phối
 - Sự kiện: Khởi tạo Work 104 trên ROOM-HOP Sandbox qua MCP 8030; tạo nhánh GitHub work/104-ai-usage-evidence-tracking trong repository hqtt2026-thevinhvtqni/room-meeting-ai.

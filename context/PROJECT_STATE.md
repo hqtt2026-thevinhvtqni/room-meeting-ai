@@ -17,6 +17,10 @@ ROOM HOP v0.2
 - Integration Real API: 🟡 PENDING
 - v0.2 Hoàn tất toàn bộ: 🔴 CHƯA
 
+### ACTIVE WORKS (cập nhật 2026-10-24, theo AGENTS.md §06)
+- Work 102 — AI Agent Loop Production Readiness (nhánh `work/102-ai-agent-loop-production-readiness`): 🔴 ACTIVE / NOT PASS / NOT RELEASED. Blocker: môi trường pytest ủy quyền, review độc lập của Ka theo hash candidate, Gate A (Core task authority, dispatch/ACK, leases/fencing, W14 Host binding).
+- Work 104 — AI Usage & Evidence Tracking (nhánh `work/104-ai-usage-evidence-tracking`): 🟡 ACTIVE — PLAN / INITIALIZATION. Gate hiện tại: G0 Discovery. Kiến trúc là PROPOSED, chưa có implementation/test evidence; hồ sơ điều hành (BIEN_BAN / KE_HOACH / NHAT_KY) đã chuẩn hóa 2026-10-24. Không gate nào PASS.
+
 ### LAST VERIFIED EVENT
 MEETING-2026-002 - 2026-08-14 - CLOSED / IMMUTABLE
 - Participants: xu, claude
@@ -24,10 +28,12 @@ MEETING-2026-002 - 2026-08-14 - CLOSED / IMMUTABLE
 - Decision: v0.2 PASS về mặt cơ chế, chờ xác nhận với API thật
 - Final: meetings/MEETING-2026-002/final.md
 
-### PENDING ACTION (Duy nhất)
-Vinh gắn API key thật và chạy MEETING-2026-003 để verify Real API
-- Nếu PASS -> v0.2 = FULL PASS
-- Nếu FAIL -> v0.2 vẫn = MECHANISM PASS, ghi BLOCKED
+### PENDING ACTION
+- Vinh gắn API key thật và chạy MEETING-2026-003 để verify Real API
+  - Nếu PASS -> v0.2 = FULL PASS
+  - Nếu FAIL -> v0.2 vẫn = MECHANISM PASS, ghi BLOCKED
+- Work 104: thi công G0 Discovery (xem WORK-104.../KE_HOACH_THI_CONG_XU.md #5).
+- Work 102: đóng blocker pytest/review/Gate A trước khi mở rộng mặt bằng.
 
 ### GOVERNANCE PRINCIPLE (Xu phát hiện - thêm vào AGENTS.md)
 Agent autonomy ≠ unlimited authority
