@@ -63,3 +63,5 @@ Before G2 can be declared complete: run the new unit tests and relevant existing
 
 
 - Retention follow-up: index completed monthly JSONL files on month transition and add a unit test for size-based part-file rotation/index metadata. Commits: 355b03b3084c0c0a81feec13e91b5b6a61219010 (module), 08927a98f83f8fc85f4f698c6dd57ead71dcc14d (test). Tests remain NOT RUN.
+
+- Failure-path test follow-up: assert the best-effort counter contains only timestamp + count. Test commit: 248aa94249036a87119afbd8889f8ead0b635169. Tests remain NOT RUN.
