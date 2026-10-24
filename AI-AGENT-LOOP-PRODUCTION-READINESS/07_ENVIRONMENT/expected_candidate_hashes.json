@@ -1,0 +1,13 @@
+{
+  "note": "Expected SHA-256 of the adopted seven-file candidate (source: Co journal entry 2026-10-24 / RUN_BUNDLE.json). Update only via journal-recorded candidate change.",
+  "candidate": "work102-patch-v2-adopted-20261024",
+  "files": {
+    "04_CODE/agent_loop_runtime.py": "789e25e99711915fd26cfa3b50cacfaef809b1f6cd2a751a169d5f0a721f3c74",
+    "05_TEST/test_agent_loop_runtime.py": "a26d0682d49ba2a41883b481388bdccf6a08cfb28e046c756f5773f4ee8c7d73",
+    "05_TEST/test_recovery_regressions_vi.py": "545e93f36b2a21e4763101c43f37dab1a5300dc066b9ffc3d4194003202f52ff",
+    "04_CODE/run_agent_loop.py": "7cd54c100437566d1d1d8a6fa17db92086bcd591a24243c47a57e89ab7904057",
+    "04_CODE/agent_loop_contract.py": "97b42907505ed7209f7db172fb81566bae3d49edff30b55b6135fdd7fc702609",
+    "05_TEST/RUN_WORK102_E2E.ps1": "4925fb285100e2ddff6333ff5a6e25f5de53f120138a6b778b00dc29d7f882ba",
+    "05_TEST/test_agent_loop_contract.py": "9ddf9d8f33270b741210962d22ab9a80958bdcf4d2d04a0a7600b6c901caa6c6"
+  }
+}
