@@ -21,3 +21,11 @@
 - Kết quả: Hồ sơ điều hành chuẩn hóa. Trạng thái: DONE — hồ sơ; PHẠM VI KHÔNG TỰ KHAI BÁO PASS cho bất kỳ gate G nào.
 - Bằng chứng: Commit tạo 3 hồ sơ + cập nhật PROJECT_STATE.md/README trên nhánh `work/104-ai-usage-evidence-tracking`; diff so với commit trước (ad84291).
 - Người phụ trách bước tiếp theo: Cla/C — thi công G0 Discovery (#5 trong KE_HOACH_THI_CONG_XU.md).
+
+## 2026-10-24 (UTC+7) — Vibe (agent hỗ trợ, ủy quyền tự chủ của Vinh "hoàn thiện không chờ không hỏi")
+- Mã việc: W104-G0-005 (+ W104-CLEAN-012 một phần).
+- Lý do: Kế hoạch chỉ định bước tiếp theo là thi công #5 G0 Discovery; Vinh ủy quyền hoàn thiện tự chủ.
+- Hành động: (1) Đọc trực tiếp code trên nhánh work/104 (commit c750ad6f): core/connectors.py, core/intent_router refs, core/llama_intent_router.py, core/gemini_intent_router.py, core/groq_config.py, agents/*.yaml, room_hop_mcp/adapter/server.py, execution_host/server.py. (2) Lập bản ghi G0 Discovery: 06_EVIDENCE/G0_DISCOVERY_INVENTORY_20261024.md — 7 đường invocation, 6 usage-discard points, kiến nghị integration point nhỏ nhất (module usage_ledger tại các discard point, không cần proxy). (3) Xóa 3 file desktop.ini rác Windows (tmp/, core/, agents/) theo ủy quyền của Vinh — giữ nguyên toàn bộ trash/ là bằng chứng đã cách ly. (4) Cập nhật KE_HOACH #5, #12 và PROJECT_STATE.
+- Kết quả: Discovery record tồn tại. Trạng thái: DONE — bản ghi; KHÔNG tự khai PASS gate G0 (chờ Cla/Xu phê duyệt #6).
+- Bằng chứng: 06_EVIDENCE/G0_DISCOVERY_INVENTORY_20261024.md; commit này trên nhánh work/104-ai-usage-evidence-tracking.
+- Người phụ trách bước tiếp theo: Cla/Xu — phê duyệt G0 + quyết định integration point (#6), rồi #7 G1 Design approve → Vinh ACK.

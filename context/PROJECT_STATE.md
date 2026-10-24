@@ -19,7 +19,7 @@ ROOM HOP v0.2
 
 ### ACTIVE WORKS (cập nhật 2026-10-24, theo AGENTS.md §06)
 - Work 102 — AI Agent Loop Production Readiness (nhánh `work/102-ai-agent-loop-production-readiness`): 🔴 ACTIVE / NOT PASS / NOT RELEASED. Blocker: môi trường pytest ủy quyền, review độc lập của Ka theo hash candidate, Gate A (Core task authority, dispatch/ACK, leases/fencing, W14 Host binding).
-- Work 104 — AI Usage & Evidence Tracking (nhánh `work/104-ai-usage-evidence-tracking`): 🟡 ACTIVE — PLAN / INITIALIZATION. Gate hiện tại: G0 Discovery. Kiến trúc là PROPOSED, chưa có implementation/test evidence; hồ sơ điều hành (BIEN_BAN / KE_HOACH / NHAT_KY) đã chuẩn hóa 2026-10-24. Không gate nào PASS.
+- Work 104 — AI Usage & Evidence Tracking (nhánh `work/104-ai-usage-evidence-tracking`): 🟡 ACTIVE — G0 DISCOVERY RECORDED 2026-10-24 (06_EVIDENCE/G0_DISCOVERY_INVENTORY_20261024.md: 7 invocation paths, 6 usage-discard points; kiến nghị integration point = usage_ledger module, không proxy). Bản ghi discovery CHƯA PHÊ DUYỆT — chờ Cla/Xu quyết #6, sau đó #7 G1 Design → Vinh ACK. Kiến trúc vẫn PROPOSED; chưa có implementation/test evidence. Không gate nào PASS.
 
 ### LAST VERIFIED EVENT
 MEETING-2026-002 - 2026-08-14 - CLOSED / IMMUTABLE
@@ -32,7 +32,7 @@ MEETING-2026-002 - 2026-08-14 - CLOSED / IMMUTABLE
 - Vinh gắn API key thật và chạy MEETING-2026-003 để verify Real API
   - Nếu PASS -> v0.2 = FULL PASS
   - Nếu FAIL -> v0.2 vẫn = MECHANISM PASS, ghi BLOCKED
-- Work 104: thi công G0 Discovery (xem WORK-104.../KE_HOACH_THI_CONG_XU.md #5).
+- Work 104: phê duyệt G0 + quyết định integration point (KE_HOACH #6), rồi G1 Design (#7) → Vinh ACK. Blocker mới: agents/xu.yaml và claude.yaml còn model rỗng → chưa có usage thật từ P1/P2.
 - Work 102: đóng blocker pytest/review/Gate A trước khi mở rộng mặt bằng.
 
 ### GOVERNANCE PRINCIPLE (Xu phát hiện - thêm vào AGENTS.md)
