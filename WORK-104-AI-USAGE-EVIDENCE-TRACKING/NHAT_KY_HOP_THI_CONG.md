@@ -38,3 +38,12 @@
 - Kết quả: DONE — quyết định hướng kiến trúc cho G1. Không phải PASS triển khai và không đóng G0.
 - Giới hạn/blocker: discovery mới là static-only; còn invocation paths chưa khảo sát; usage thật bị chặn với xu.yaml/claude.yaml nếu model rỗng; Work 102 vẫn NOT PASS/NOT RELEASED.
 - Bước tiếp: G1 design hoàn chỉnh và chờ Vinh ACK; mở rộng inventory trước khi tuyên bố coverage toàn hệ thống.
+
+## 2026-10-24 (UTC+7) — Vibe (agent hỗ trợ, ủy quyền tự chủ của Vinh)
+- Mã việc: W104-G0-005B (mở rộng discovery) + W104-G1-007DRAFT (soạn thảo G1 design).
+- Lý do: Decision W104-G0-006 yêu cầu mở rộng inventory trước khi tuyên bố coverage; Kế hoạch bước tiếp theo là #7 G1 Design chờ ACK.
+- Hành động: (1) Đọc trực tiếp integration/room_hop_integration.py, 10/COMPUTER-AGENT/04_CODE (4 file), 30/README.md, research/RC005-007, core/secretary.py, docs/secretary_log.jsonl, docs/schemas/principals/wee/context listing. (2) Ghi bản mở rộng: 06_EVIDENCE/G0_DISCOVERY_INVENTORY_EXPANSION_20261024.md — không thêm provider path mới (vẫn 7); 3 tool-activity paths (:8030/:8031/:8787); 2 đính chính: Integration yêu cầu 5 tool MCP (adapter static chỉ thấy 4), room-meeting-ai/ ở gốc là GIT SUBMODULE chưa kiểm kê. (3) Soạn thảo 03_ARCHITECTURE/G1_DESIGN_USAGE_LEDGER_20261024.md: envelope schema v1, extraction map 4 provider, idempotency, fail-safe, redaction, test plan G3, pricing provenance để sau.
+- Kết quả: DONE — bản ghi + bản thảo thiết kế. KHÔNG khai PASS G0 (submodule chưa kiểm kê) và KHÔNG tự coi G1 đã approve.
+- Bằng chứng: 2 file mới trong 06_EVIDENCE và 03_ARCHITECTURE; commit này; docs/secretary_log.jsonl (chứng cứ 429 Groq 2026-08-15 xác nhận P5 chạy thật).
+- Blocker: (a) submodule room-meeting-ai/ (SHA eeb497e9) chưa kiểm kê — G0 chưa thể PASS coverage toàn hệ thống; (b) runtime verify 5 tool MCP cần môi trường ủy quyền; (c) chờ Vinh ACK G1 trước implementation.
+- Bước tiếp: Vinh ACK/chỉnh G1 design; kiểm kê submodule; sau đó #8 G2 Implementation (Co).

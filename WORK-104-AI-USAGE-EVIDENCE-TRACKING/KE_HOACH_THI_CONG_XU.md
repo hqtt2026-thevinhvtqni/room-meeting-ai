@@ -14,9 +14,9 @@ ACTIVE — PLAN / INITIALIZATION. Gate hiện tại: G0 Discovery. Chưa có gat
 | 2 | Kiến trúc đề xuất + Acceptance plan | Cla/Xu | Envelope, gates G0–G5 chốt | 03_ARCHITECTURE; 05_TEST | DONE (PROPOSED) |
 | 3 | Chuẩn hóa 3 hồ sơ điều hành theo §06 | Vibe (ủy quyền Vinh) | BIEN_BAN/KE_HOACH/NHAT_KY tồn tại, journal cũ đánh dấu SUPERSEDED | Commit hợp nhất; link tương hỗ | DONE 2026-10-24 |
 | 4 | Cập nhật PROJECT_STATE.md phản ánh Work 104 | Vibe (ủy quyền Vinh) | Truth Table có mục Work 104 | Commit; diff | DONE 2026-10-24 |
-| 5 | G0 Discovery: inventory invocation paths, adapters, usage-discard points | Cla | Mỗi path có file/API evidence; danh sách điểm mất usage | 06_EVIDENCE/G0_DISCOVERY_INVENTORY_20261024.md | DONE 2026-10-24 (bản ghi; chờ phê duyệt #6) |
+| 5 | G0 Discovery: inventory invocation paths, adapters, usage-discard points | Cla | Mỗi path có file/API evidence; danh sách điểm mất usage | 06_EVIDENCE/G0_DISCOVERY_INVENTORY_20261024.md + EXPANSION (mở rộng 2026-10-24: không thêm provider path; 2 errata; submodule chưa kiểm kê) | DONE — bản ghi + mở rộng; G0 vẫn NOT PASS vì submodule room-meeting-ai/ (SHA eeb497e9) chưa kiểm kê |
 | 6 | G0: quyết định integration point nhỏ nhất | Cla → Xu phê | Decision record có so sánh phương án | 01_ORIGINAL/DECISION_G0_INTEGRATION_POINT_20261024.md | DONE — DECISION 2026-10-24; không phải G0 PASS |
-| 7 | G1 Design approve: schema + privacy + pricing provenance | Xu → Vinh | Vinh ACK | Meeting/ACK record | CHƯA XÁC MINH |
+| 7 | G1 Design approve: schema + privacy + pricing provenance | Xu → Vinh | Vinh ACK | Bản thảo: 03_ARCHITECTURE/G1_DESIGN_USAGE_LEDGER_20261024.md (envelope v1, extraction 4 provider, idempotency, fail-safe, redaction, test plan G3; pricing provenance tách #7b) | BẢN THẢO SẴN 2026-10-24 — CHỜ VINH ACK |
 | 8 | G2 Implementation: instrumentation + ledger + fail-safe | Co (build owner) | Code chạy, logging failure không mất event, idempotent | Test log, changed-file list | CHƯA XÁC MINH |
 | 9 | G3 Verification: unit/integration/retry/idempotency/reconciliation | Co + Ka (independent) | Test tái hiện được PASS trong môi trường ủy quyền | Test report + reviewer Ka | CHƯA XÁC MINH |
 | 10 | G4 E2E: trace AI → task → usage/cost → artifact → acceptance | Ka | 1 luồng end-to-end đầy đủ có hash/link | E2E report trong 06_EVIDENCE | CHƯA XÁC MINH |
