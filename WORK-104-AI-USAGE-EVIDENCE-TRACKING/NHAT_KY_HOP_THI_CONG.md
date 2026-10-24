@@ -133,3 +133,11 @@
 - Hành động: bổ sung lập index cho các file ledger theo tháng đã đóng khi chuyển tháng; giữ index các file part khi file vượt ngưỡng 20 MiB; thêm test kiểm tra rotation/index.
 - Bằng chứng: module commit 355b03b3084c0c0a81feec13e91b5b6a61219010; test commit 08927a98f83f8fc85f4f698c6dd57ead71dcc14d; evidence file G2.
 - Trạng thái: code candidate cập nhật; test chưa chạy, G2 IN PROGRESS / NOT PASS.
+
+
+## 2026-10-24 (UTC+7) — Xu (AI-01 GPT CEO / G2 failure-counter test)
+
+- Mã việc: W104-G2-008-FAILSAFE-TEST.
+- Hành động: mở rộng test fail-safe để xác nhận fallback counter chỉ có timestamp + count, đúng G1 §3.
+- Bằng chứng: test commit 248aa94249036a87119afbd8889f8ead0b635169; G2 evidence được cập nhật.
+- Trạng thái: test code đã ghi; chưa thực thi. G2 IN PROGRESS / NOT PASS.
