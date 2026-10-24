@@ -47,3 +47,11 @@
 - Bằng chứng: 2 file mới trong 06_EVIDENCE và 03_ARCHITECTURE; commit này; docs/secretary_log.jsonl (chứng cứ 429 Groq 2026-08-15 xác nhận P5 chạy thật).
 - Blocker: (a) submodule room-meeting-ai/ (SHA eeb497e9) chưa kiểm kê — G0 chưa thể PASS coverage toàn hệ thống; (b) runtime verify 5 tool MCP cần môi trường ủy quyền; (c) chờ Vinh ACK G1 trước implementation.
 - Bước tiếp: Vinh ACK/chỉnh G1 design; kiểm kê submodule; sau đó #8 G2 Implementation (Co).
+
+## 2026-10-24 (UTC+7) — Vibe (agent hỗ trợ, ủy quyền tự chủ của Vinh)
+- Mã việc: W104-G1-007REV2 (chỉnh G1 theo 5 điểm thẩm định của Xu).
+- Lý do: Xu kết luận G1 "cần bổ sung" 5 mục: retention, cấu trúc pricing provenance, correlation, usage theo giai đoạn lỗi, trạng thái verify MCP 5 tool.
+- Hành động: Sửa CHÍNH BẢN 03_ARCHITECTURE/G1_DESIGN_USAGE_LEDGER_20261024.md lên REV 2 (không tạo file cạnh tranh): (1) §5b Retention — xoay vòng theo tháng + ngưỡng 20MB, lưu tối thiểu 365 ngày, xóa chỉ khi Vinh phê duyệt, index JSONL kèm sha256 đầu-cuối cho reconciliation; (2) §5 — chốt cấu trúc pricing_provenance.json + 4 trường cost đưa vào envelope schema v1 ngay (điền giá là #7b, không phá schema sau); (3) §4.2 Correlation — chỉ điền mã có sẵn từ caller, cấm sinh mã giả, attempt_id/parent_event_id cho retry; (4) §3 — 3 giai đoạn lỗi tách rõ: lỗi trước phản hồi (token null), lỗi có usage (trích đúng), lỗi ghi ledger (counter failures.log + đối chiếu G4); (5) §7b — ghi rõ mâu thuẫn 4-vs-5 tool MỚI là static, KHÔNG kết luận tương thích trước runtime check.
+- Kết quả: DONE — bản REV 2. G1 vẫn PROPOSED, CHỜ VINH ACK. G0 vẫn NOT PASS (submodule chưa kiểm kê). Không gate nào PASS.
+- Bằng chứng: Commit này trên nhánh work/104-ai-usage-evidence-tracking; diff REV1→REV2 trong file G1.
+- Bước tiếp: Vinh ACK G1 REV 2 (hoặc yêu cầu chỉnh tiếp); song song: kiểm kê submodule room-meeting-ai/ (SHA eeb497e9); sau ACK mới bắt đầu #8 (Co).
