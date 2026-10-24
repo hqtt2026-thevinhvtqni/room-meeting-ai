@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import os
 import re
+import time
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum
@@ -21,6 +22,7 @@ from enum import Enum
 import requests
 
 from core.agent_registry import Agent
+from core.usage_ledger import extract_usage, new_usage_event, record_usage_event, sha256_text
 
 
 class TurnStatus(str, Enum):
@@ -172,6 +174,11 @@ class AnthropicConnector(AgentConnector):
     def send_turn(self, context: MeetingContextForAgent) -> AgentResponse:
         system_prompt = build_system_prompt(self.agent, context.topic, context.context_text)
         user_message = build_user_message(context.history)
+        started = time.monotonic()
+        usage_event = new_usage_event(
+            provider="anthropic", model=self.agent.model, ai_id=self.agent.id,
+            ai_role=self.agent.role, caller="meeting_turn",
+        )
 
         try:
             resp = requests.post(
@@ -193,7 +200,26 @@ class AnthropicConnector(AgentConnector):
             data = resp.json()
             text_blocks = [b["text"] for b in data.get("content", []) if b.get("type") == "text"]
             raw_text = "\n".join(text_blocks)
+            usage_event.update(extract_usage("anthropic", data.get("usage")))
+            usage_event["provider_request_id"] = data.get("id") or resp.headers.get("request-id")
+            usage_event["latency_ms"] = round((time.monotonic() - started) * 1000)
+            usage_event["content_hash"] = sha256_text(raw_text)
+            record_usage_event(usage_event)
         except requests.RequestException as e:
+            error_response = getattr(e, "response", None)
+            error_data = {}
+            if error_response is not None:
+                try:
+                    error_data = error_response.json()
+                except Exception:
+                    error_data = {}
+            usage = error_data.get("usage") if isinstance(error_data, dict) else None
+            usage_event.update(extract_usage("anthropic", usage))
+            usage_event.update(status="error", error_class=type(e).__name__,
+                               latency_ms=round((time.monotonic() - started) * 1000))
+            if error_response is not None:
+                usage_event["provider_request_id"] = error_response.headers.get("request-id")
+            record_usage_event(usage_event)
             raise ConnectorError(f"Anthropic API call thất bại cho agent '{self.agent.id}': {e}") from e
 
         return parse_agent_output(raw_text)
@@ -260,6 +286,11 @@ class OpenAIConnector(AgentConnector):
     def send_turn(self, context: MeetingContextForAgent) -> AgentResponse:
         system_prompt = build_system_prompt(self.agent, context.topic, context.context_text)
         user_message = build_user_message(context.history)
+        started = time.monotonic()
+        usage_event = new_usage_event(
+            provider="openai", model=self.agent.model, ai_id=self.agent.id,
+            ai_role=self.agent.role, caller="meeting_turn",
+        )
 
         try:
             resp = requests.post(
@@ -281,7 +312,26 @@ class OpenAIConnector(AgentConnector):
             resp.raise_for_status()
             data = resp.json()
             raw_text = data["choices"][0]["message"]["content"]
+            usage_event.update(extract_usage("openai", data.get("usage")))
+            usage_event["provider_request_id"] = data.get("id") or resp.headers.get("x-request-id")
+            usage_event["latency_ms"] = round((time.monotonic() - started) * 1000)
+            usage_event["content_hash"] = sha256_text(raw_text)
+            record_usage_event(usage_event)
         except requests.RequestException as e:
+            error_response = getattr(e, "response", None)
+            error_data = {}
+            if error_response is not None:
+                try:
+                    error_data = error_response.json()
+                except Exception:
+                    error_data = {}
+            usage = error_data.get("usage") if isinstance(error_data, dict) else None
+            usage_event.update(extract_usage("openai", usage))
+            usage_event.update(status="error", error_class=type(e).__name__,
+                               latency_ms=round((time.monotonic() - started) * 1000))
+            if error_response is not None:
+                usage_event["provider_request_id"] = error_response.headers.get("x-request-id")
+            record_usage_event(usage_event)
             raise ConnectorError(f"OpenAI API call thất bại cho agent '{self.agent.id}': {e}") from e
 
         return parse_agent_output(raw_text)
