@@ -51,3 +51,6 @@ Before G2 can be declared complete: run the new unit tests and relevant existing
 
 
 - Documentation consistency correction: G1 REV 6 content already recorded ACKED, but the title still said “PROPOSED, chờ Vinh ACK” and §8 still listed ACK as pending. Updated the title/prerequisite wording to match the ACK record while retaining the authorized-test-environment blocker. Commit: `ebad679a08bbc1fc7339f2429fd172b5b6c7c3bc`.
+
+
+- Follow-up quality fix: normalize nested SDK usage objects for Groq/OpenAI cached/reasoning token fields and add a matching unit-test case. Commits: `e8efbcc15ca5f696107cf165ca8455eb13ddc4f5` (module), `9891647f0ea3978d7296720579a2aed560563e41` (test). Test execution remains pending.
