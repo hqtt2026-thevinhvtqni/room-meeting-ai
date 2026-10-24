@@ -31,8 +31,10 @@ GEMINI_API_KEY hoặc GOOGLE_API_KEY (đúng cách gemini_chat.py đang làm).
 from __future__ import annotations
 
 import os
+import time
 
 from core.intent_router import ALLOWED_ACTIONS, IntentRouterError
+from core.usage_ledger import extract_usage, new_usage_event, record_usage_event
 
 # Model alias hoạt động cho key mới (giống gemini_chat.py) - tự fallback
 # sang các model khác nếu bị 404/chặn.
@@ -123,10 +125,22 @@ class GeminiIntentRouter:
         last_err = None
         response = None
         for m in models_to_try:
+            started = time.monotonic()
+            usage_event = new_usage_event(
+                provider="google", model=m, ai_id="gemini_intent_router",
+                ai_role="intent_router", caller="intent_router",
+            )
             try:
                 response = client.models.generate_content(model=m, contents=contents, config=config)
+                usage_event.update(extract_usage("google", getattr(response, "usage_metadata", None)))
+                usage_event["provider_request_id"] = getattr(response, "response_id", None)
+                usage_event["latency_ms"] = round((time.monotonic() - started) * 1000)
+                record_usage_event(usage_event)
                 break
             except Exception as e:
+                usage_event.update(status="error", error_class=type(e).__name__,
+                                   latency_ms=round((time.monotonic() - started) * 1000))
+                record_usage_event(usage_event)
                 last_err = e
                 # 404/NOT_FOUND -> model nay khong dung duoc voi key, thu model ke tiep.
                 # Cac loi khac (het quota, mang, key sai...) cung fail-fast ve chat.py.
