@@ -629,3 +629,14 @@ This entry records successful Sandbox write/read-back and hash matching only. It
 - Scope boundary: this sync covers the three Git-tracked Work 102 planning/journal files, not every Sandbox source/evidence artifact. Sandbox Patch V2 candidate files and detailed evidence have not all been mirrored to GitHub; no claim of full Sandbox-to-GitHub repository mirroring is made.
 - Status: SYNC OF THE THREE BRANCH DOCUMENTS = PENDING FINAL READ-BACK until the final comparison below; no production status change, no test execution, no merge/release.
 - Recorded by: Xu — Coordinator / Lead Architect.
+AUTHORIZATION — WORK 102 PYTHON EXECUTION HOST
+
+- Decision owner: Vinh — Final Authority.
+- Decision: AUTHORIZED for candidate testing only.
+- Scope: Work 102 "07_ENVIRONMENT" Python test runner; Python 3.12.14 and pytest 8.3.5; read/write workspace copy only.
+- Conditions: The runner must verify all seven expected candidate SHA-256 hashes before execution. Any hash mismatch or missing file must abort the run. Preserve raw stdout, raw stderr, JUnit XML, hash-check output, command, working directory, interpreter/package versions, and exit code.
+- Restrictions: No modification of canonical Sandbox source during testing; no Core/dispatcher creation; no merge to "main"; no release authorization. A local test PASS does not close Gate A.
+- Effective date: 2026-10-24.
+- Authorized by: Vinh — Final Authority.
+
+This authorization applies only to the candidate test environment and does not declare the Work 102 candidate PASS or production-ready.
