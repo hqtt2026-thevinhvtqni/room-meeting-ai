@@ -165,3 +165,16 @@
 - **Các track tiếp theo:** backtest/reporting; dashboard read-only; Pine parity; MT5 compile/replay/parity theo gate riêng.
 - **An toàn:** live trading vẫn NO-GO; không credentials; không tuyên bố test PASS khi chưa chạy trong môi trường có bằng chứng.
 - **Trạng thái:** MASTER PLAN SAVED / READY FOR CODER TASKING. Chưa có implementation/test/release PASS nào được suy ra từ việc lưu plan.
+
+
+## Entry 010 — Đồng bộ Work 200 lên GitHub
+- **Ngày:** 2026-10-25 ICT.
+- **Người thực hiện:** Xu — AI-01 / điều phối HQTT.
+- **Repository:** `hqtt2026-thevinhvtqni/room-meeting-ai`.
+- **Branch:** `work/200-crypto-trading-bot` (tạo từ `main`; chưa merge vào main).
+- **Thư mục chuẩn:** `WORK-200-CRYPTO-TRADING-BOT/`, theo quy ước thư mục Work đã kiểm tra trên các branch Work khác.
+- **Đã đồng bộ từ Sandbox MCP 8030 sang GitHub:** `README.md`, `PLAN_WORK200_MASTER_v1.0.md`, `WORK200_MINUTES_20261025_01.md`, `WORK_JOURNAL_20261024.md`.
+- **Commit SHA cho các lần ghi file:** README `14e9bd7d6123946c51cff89627a8626cc4a21ec3`; master plan `89cb280e4716606bf3df47ccb57f474d772c84f3`; minutes `1023840e509e183e81ba664e984c1272d0f89b94`; journal initial sync `cf18878a2b8447ec2153b1517a815b71d2eed863`.
+- **Quy tắc đồng bộ hai chiều:** khi một artifact đổi ở Sandbox hoặc GitHub, AI phụ trách phải đối chiếu revision trước, đồng bộ bản mới sang nơi còn lại, đọc lại hai bản và ghi hash/commit/evidence vào journal. README nêu rõ hiện chưa cài daemon/webhook đồng bộ tự động; không được tuyên bố auto-sync.
+- **Giới hạn:** thao tác này đồng bộ tài liệu/biên bản/nhật ký; chưa đồng bộ toàn bộ mã nguồn Work 200 từ Sandbox sang GitHub, chưa mở PR và chưa merge main.
+- **Trạng thái:** BRANCH CREATED / DOCUMENTS PUBLISHED; cần read-back verification trước khi kết luận sync PASS.
