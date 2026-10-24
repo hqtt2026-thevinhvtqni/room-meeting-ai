@@ -7,7 +7,8 @@
 **Build owner:** Co  
 **Independent reviewer:** Ka  
 **Canonical operational journal:** [WORK_102_ENGINEERING_JOURNAL_20261015.md](06_EVIDENCE/WORK_102_ENGINEERING_JOURNAL_20261015.md)  
-**Status snapshot:** [STATUS_SNAPSHOT_20261024.md](06_EVIDENCE/STATUS_SNAPSHOT_20261024.md)
+**Status snapshot:** [STATUS_SNAPSHOT_20261024.md](06_EVIDENCE/STATUS_SNAPSHOT_20261024.md)  
+**Execution environment (candidate):** [07_ENVIRONMENT/SETUP_PYTHON_ENV.md](07_ENVIRONMENT/SETUP_PYTHON_ENV.md)
 
 ## Objective
 
@@ -25,7 +26,7 @@ Establish an evidence-backed, bounded Agent Loop contract that can be integrated
 ## Current gates (updated 2026-10-24 — see status snapshot)
 
 - Patch V2 adoption (Co): DONE in Sandbox only — baseline 6/6 hash MATCH; post-adoption candidate 7/7 hash MATCH vs RUN_BUNDLE. Read the status snapshot for exact hashes.
-- Post-adoption test execution: ENV_BLOCKED / PENDING EVIDENCE — no authorized Python/pytest execution path verified in the current MCP surface. The isolated 62/62 V2 result remains LOCAL_REFERENCE_SNAPSHOT_ONLY and does not certify the adopted candidate.
+- Execution environment: CANDIDATE READY — 07_ENVIRONMENT provides venv setup (Python 3.12, pytest 8.3.5 pinned), hash-gated runner, and RUN_MANIFEST evidence format. It becomes the authorized execution host only after Vinh records authorization in the journal; until then the test gate remains ENV_BLOCKED.
 - Ka independent review: PENDING — must bind to the exact adopted candidate hashes.
 - Gate A: PARTIAL / BLOCKED pending authoritative Core task/dispatch contract, authenticated delivery/ACK/result correlation, persistence, idempotency, leases/fencing, recovery, and Work 14 Execution Host binding.
 - Repair budget (approved by Vinh): max 2 repair rounds / max 3 test runs per related defect cycle.
