@@ -1,7 +1,7 @@
 # G1 Design — Usage Ledger (PROPOSED, chờ Vinh ACK)
 
 - Thời điểm: 2026-10-24 (UTC+7). Người soạn: Vibe (ủy quyền tự chủ của Vinh); thẩm định: Cla/Xu; ACK: Vinh.
-- Trạng thái: **PROPOSED — REV 4** (REV 3 + 3 khép lỗ hổng theo thẩm định vòng 3 của Xu 2026-10-24: giới hạn tuyên bố về crash/event treo, khớp quy tắc giá §2=§5, nguồn thu thập stderr + test kép vào §7). Đây là bản thiết kế cho #7, KHÔNG phải phê duyệt triển khai. KHÔNG tạo file thiết kế cạnh tranh — các REV thay thế nhau tại cùng đường dẫn.
+- Trạng thái: **PROPOSED — REV 5** (REV 4 + 1 khép điểm cuối theo thẩm định vòng cuối của Xu 2026-10-24: nguồn xác định khoảng thời gian thất thoát không xác định là do người vận hành cung cấp/xác nhận, hệ thống KHÔNG tự phát hiện). Đây là bản thiết kế cho #7, KHÔNG phải phê duyệt triển khai. KHÔNG tạo file thiết kế cạnh tranh — các REV thay thế nhau tại cùng đường dẫn.
 - Căn cứ: DECISION_G0_INTEGRATION_POINT_20261024.md (hướng in-process `core/usage_ledger.py` + append-only JSONL, không proxy); G0 inventory gốc + expansion.
 
 ## 1. Module và nguyên tắc
@@ -61,7 +61,12 @@ Mỗi dòng JSONL gồm (trường thiếu = `null`, KHÔNG BAO GIỜ điền 0 
   - **Giới hạn bộ đếm dự phòng (REV 3):** `failures.log` nằm CÙNG ổ/file hệ thống → có thể hỏng theo. Nó chỉ là **best-effort**, KHÔNG phải bằng chứng độc lập tuyệt đối. Quy tắc:
     a. Nếu ghi `failures.log` cũng lỗi → chỉ còn stderr; event đó KHÔNG có đường ghi bền vững nào.
     b. **Nguồn thu thập stderr (REV 4 — khai báo thẳng):** trong v1, KHÔNG có cơ chế thu thập stderr vào nguồn truy vấn được — stderr đi về môi trường khởi chạy tiến trình (terminal/service journal) và Work 104 KHÔNG kiểm soát được nó. Do đó khi cả hai path hỏng, G4 **không có số đếm loss chính xác từ bất kỳ nguồn nào của hệ thống**.
-    c. Báo cáo/query layer (G4) PHẢI hiển thị rõ 3 mức: `số event trong ledger` / `số loss theo counter (nếu counter ghi được)` / `đoạn thời gian + phạm vi MẤT KHÔNG XÁC ĐỊNH được đếm (khi counter cũng hỏng)` — mức 3 ghi bằng **khoảng thời gian và phạm vi**, KHÔNG ghi bằng số đếm bịa; kèm chú thích "stderr tại thời điểm đó chưa được thu thập vào nguồn truy vấn được — nếu có service journal bên ngoài, đối soát thủ công là việc của người vận hành, không phải output tự động của hệ thống".
+    c. Báo cáo/query layer (G4) PHẢI hiển thị rõ 3 mức: `số event trong ledger` / `số loss theo counter (nếu counter ghi được)` / `mất không xác định được đếm (khi counter cũng hỏng)`.
+    d. **Nguồn xác định khoảng mất (REV 5 — điểm cuối theo thẩm định Xu):** hệ thống KHÔNG có nguồn quan sát độc lập nào để tự phát hiện khoảng thời gian mất khi cả hai đường ghi hỏng. Quy tắc:
+       - Khoảng thời gian ghi trong báo cáo PHẢI là **khoảng vận hành được người vận hành xác nhận** (ví dụ "tiến trình chạy 14:00–15:00, người vận hành xác nhận ledger hỏng từ ~14:20") hoặc **khoảng nghi ngờ do người vận hành cung cấp** — KHÔNG PHẢI khoảng hệ thống tự phát hiện. Mỗi khoảng phải ghi kèm nguồn cung cấp (ai xác nhận, dựa trên gì).
+       - Nếu không có căn cứ xác định thời điểm bắt đầu/kết thúc → báo cáo ghi thẳng **"thời gian và phạm vi thất thoát KHÔNG xác định được"**, không ghi khoảng suy đoán.
+       - **KHÔNG tự suy ra** thời gian, số lượng hoặc phạm vi từ việc chỉ biết hai đường ghi đã hỏng; biết "cả hai path hỏng" chỉ cho phép phát biểu giới hạn, không cho phép phát biểu đo lường.
+       - Việc đối soát service journal/đầu ra tiến trình bên ngoài (nếu có) là **đầu vào thủ công của người vận hành** cho báo cáo, không phải output tự động của hệ thống; báo cáo phải ghi rõ đấy là căn cứ ngoài hệ thống.
     c. **KHÔNG BAO GIỜ tuyên bố completeness** khi tồn tại loss "không xác định"; completeness chỉ phát biểu khi đối soát ledger + counter (+ index xoay vòng §5b) khớp nhau trong khoảng thời gian báo cáo.
     d. Kiểm thử G3 phải có bài: làm hỏng CẢ ledger path VÀ failures.log path → luồng AI chính vẫn PASS và báo cáo ghi đúng "không đối soát được", không treo, không bịa.
 

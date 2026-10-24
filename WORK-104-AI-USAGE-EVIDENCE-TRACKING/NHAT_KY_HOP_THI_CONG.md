@@ -71,3 +71,11 @@
 - Kết quả: DONE — REV 4. G1 vẫn PROPOSED CHỜ XU THẨM ĐỊNH LẦN CUỐI rồi Vinh ACK. G0 vẫn NOT PASS (submodule chưa kiểm kê). Không gate nào PASS.
 - Bằng chứng: Commit này trên nhánh work/104-ai-usage-evidence-tracking; diff REV3→REV4 (§4 giới hạn, §5 quy tắc 3 nhánh, §3 mục b-c stderr, §7 test 7-8, Kế hoạch dòng #7).
 - Bước tiếp: Xu thẩm định lần cuối REV 4 → gửi Vinh ACK; song song: kiểm kê submodule room-meeting-ai/ (SHA eeb497e9), quyết định #7c.
+
+## 2026-10-24 (UTC+7) — Vibe (agent hỗ trợ, ủy quyền tự chủ của Vinh)
+- Mã việc: W104-G1-007REV5 (khép điểm cuối theo thẩm định vòng cuối của Xu) + W104-G0-SUBPROBE (thăm dò submodule).
+- Lý do: Xu duyệt nội dung chính REV 4, chỉ còn 1 điểm: nguồn nào xác định "khoảng thời gian và phạm vi mất" khi cả ledger lẫn failures.log đều hỏng — hệ thống không tự phát hiện được, không được suy đoán.
+- Hành động: (1) Sửa §3 mục d (REV 5): khoảng mất PHẢI do người vận hành xác nhận/cung cấp kèm nguồn cung cấp; không có căn cứ → ghi thẳng "KHÔNG xác định được thời gian và phạm vi thất thoát"; cấm suy ra thời gian/số lượng/phạm vi từ việc chỉ biết 2 path hỏng; đối soát journal ngoài là đầu vào thủ công, không phải output tự động. (2) Thăm dò đầu việc kiểm kê submodule: truy vấn Git tree qua GitHub API xác nhận gitlink room-meeting-ai (SHA eeb497e906b6b65e625a7ba7c50d93ada6ada9cfc) — và phát hiện repo KHÔNG có file .gitmodules → đây là ORPHANED GITLINK, không phân giải được URL submodule từ repo chính. Kiểm kê submodule BLOCKED chờ Vinh cung cấp URL nguồn (hoặc quyết định gỡ gitlink nếu là commit lỗi thời đẩy nhánh).
+- Kết quả: DONE — REV 5 (khép điểm cuối). G1 PROPOSED REV 5 — đủ điều kiện Xu đọc lại bản cuối và trình Vinh ACK. G0 vẫn NOT PASS; kiểm kê submodule BLOCKED vì orphaned gitlink.
+- Bằng chứng: Commit này trên nhánh work/104 (diff §3d); truy vấn API Git tree trả {type: submodule, sha eeb497e9...} và .gitmodules 404.
+- Bước tiếp: Xu đọc lại REV 5 → trình Vinh ACK (kèm 2 quyết định Xu đã đề xuất: #7c giữ mở chưa triển khai; kiểm kê submodule trước #8 — nhưng cần Vinh cho URL vì orphaned gitlink). Sau ACK: #8 G2 Implementation (Co).
