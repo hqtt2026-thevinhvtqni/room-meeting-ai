@@ -29,3 +29,12 @@
 - Kết quả: Discovery record tồn tại. Trạng thái: DONE — bản ghi; KHÔNG tự khai PASS gate G0 (chờ Cla/Xu phê duyệt #6).
 - Bằng chứng: 06_EVIDENCE/G0_DISCOVERY_INVENTORY_20261024.md; commit này trên nhánh work/104-ai-usage-evidence-tracking.
 - Người phụ trách bước tiếp theo: Cla/Xu — phê duyệt G0 + quyết định integration point (#6), rồi #7 G1 Design approve → Vinh ACK.
+
+
+## 2026-10-24 (UTC+7) — Xu (AI-01 GPT CEO / điều phối kiến trúc)
+- Mã việc: W104-G0-006.
+- Hành động: Đọc trực tiếp G0 inventory, kế hoạch, nhật ký và PROJECT_STATE trên nhánh work/104; ghi quyết định chọn hướng in-process `core/usage_ledger.py` + append-only JSONL cho G1 design, chưa dùng proxy.
+- Căn cứ: 06_EVIDENCE/G0_DISCOVERY_INVENTORY_20261024.md; decision record 01_ORIGINAL/DECISION_G0_INTEGRATION_POINT_20261024.md.
+- Kết quả: DONE — quyết định hướng kiến trúc cho G1. Không phải PASS triển khai và không đóng G0.
+- Giới hạn/blocker: discovery mới là static-only; còn invocation paths chưa khảo sát; usage thật bị chặn với xu.yaml/claude.yaml nếu model rỗng; Work 102 vẫn NOT PASS/NOT RELEASED.
+- Bước tiếp: G1 design hoàn chỉnh và chờ Vinh ACK; mở rộng inventory trước khi tuyên bố coverage toàn hệ thống.
