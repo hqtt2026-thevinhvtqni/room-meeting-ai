@@ -15,7 +15,7 @@ ACTIVE — PLAN / INITIALIZATION. Gate hiện tại: G0 Discovery. Chưa có gat
 | 3 | Chuẩn hóa 3 hồ sơ điều hành theo §06 | Vibe (ủy quyền Vinh) | BIEN_BAN/KE_HOACH/NHAT_KY tồn tại, journal cũ đánh dấu SUPERSEDED | Commit hợp nhất; link tương hỗ | DONE 2026-10-24 |
 | 4 | Cập nhật PROJECT_STATE.md phản ánh Work 104 | Vibe (ủy quyền Vinh) | Truth Table có mục Work 104 | Commit; diff | DONE 2026-10-24 |
 | 5 | G0 Discovery: inventory invocation paths, adapters, usage-discard points | Cla | Mỗi path có file/API evidence; danh sách điểm mất usage | 06_EVIDENCE/G0_DISCOVERY_INVENTORY_20261024.md | DONE 2026-10-24 (bản ghi; chờ phê duyệt #6) |
-| 6 | G0: quyết định integration point nhỏ nhất | Cla → Xu phê | Decision record có so sánh phương án | 01_ORIGINAL/decision record | CHƯA XÁC MINH |
+| 6 | G0: quyết định integration point nhỏ nhất | Cla → Xu phê | Decision record có so sánh phương án | 01_ORIGINAL/DECISION_G0_INTEGRATION_POINT_20261024.md | DONE — DECISION 2026-10-24; không phải G0 PASS |
 | 7 | G1 Design approve: schema + privacy + pricing provenance | Xu → Vinh | Vinh ACK | Meeting/ACK record | CHƯA XÁC MINH |
 | 8 | G2 Implementation: instrumentation + ledger + fail-safe | Co (build owner) | Code chạy, logging failure không mất event, idempotent | Test log, changed-file list | CHƯA XÁC MINH |
 | 9 | G3 Verification: unit/integration/retry/idempotency/reconciliation | Co + Ka (independent) | Test tái hiện được PASS trong môi trường ủy quyền | Test report + reviewer Ka | CHƯA XÁC MINH |
@@ -28,4 +28,4 @@ ACTIVE — PLAN / INITIALIZATION. Gate hiện tại: G0 Discovery. Chưa có gat
 - Work 102 (AI Agent Loop Production Readiness) vẫn NOT PASS/NOT RELEASED trên nhánh riêng; không khai báo dependency chéo giữa 102 và 104 ngoài evidence đã ghi.
 
 ## Bước tiếp theo ngay
-Thi công #5 (G0 Discovery). Agent nhận việc phải đọc BIEN_BAN.md + NHAT_KY_HOP_THI_CONG.md (mục mới nhất) trước khi bắt đầu.
+#7 G1 Design: hoàn thiện event schema, provider-specific usage extraction, privacy/redaction, failure isolation, idempotency, retention và pricing provenance; gửi Vinh ACK trước implementation. Mở rộng G0 inventory các invocation paths chưa khảo sát trước khi tuyên bố coverage toàn hệ thống. Agent nhận việc phải đọc BIEN_BAN.md + NHAT_KY_HOP_THI_CONG.md (mục mới nhất) trước khi bắt đầu.
