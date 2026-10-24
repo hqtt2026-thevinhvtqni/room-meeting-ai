@@ -629,14 +629,19 @@ This entry records successful Sandbox write/read-back and hash matching only. It
 - Scope boundary: this sync covers the three Git-tracked Work 102 planning/journal files, not every Sandbox source/evidence artifact. Sandbox Patch V2 candidate files and detailed evidence have not all been mirrored to GitHub; no claim of full Sandbox-to-GitHub repository mirroring is made.
 - Status: SYNC OF THE THREE BRANCH DOCUMENTS = PENDING FINAL READ-BACK until the final comparison below; no production status change, no test execution, no merge/release.
 - Recorded by: Xu — Coordinator / Lead Architect.
-AUTHORIZATION — WORK 102 PYTHON EXECUTION HOST
 
-- Decision owner: Vinh — Final Authority.
-- Decision: AUTHORIZED for candidate testing only.
-- Scope: Work 102 "07_ENVIRONMENT" Python test runner; Python 3.12.14 and pytest 8.3.5; read/write workspace copy only.
-- Conditions: The runner must verify all seven expected candidate SHA-256 hashes before execution. Any hash mismatch or missing file must abort the run. Preserve raw stdout, raw stderr, JUnit XML, hash-check output, command, working directory, interpreter/package versions, and exit code.
-- Restrictions: No modification of canonical Sandbox source during testing; no Core/dispatcher creation; no merge to "main"; no release authorization. A local test PASS does not close Gate A.
-- Effective date: 2026-10-24.
-- Authorized by: Vinh — Final Authority.
 
-This authorization applies only to the candidate test environment and does not declare the Work 102 candidate PASS or production-ready.
+## XU — EXECUTION HOST AUTHORIZATION READ-BACK & RUNNER HARDENING — 2026-10-24
+- Coordinator: Xu — CEO / Lead Architect / Planner.
+- Final Authority: Vinh. User confirmed: “Đã ủy quyền Work 102, Xu kiểm tra và tiếp tục.”
+- Authorization check: GitHub branch journal contains the explicit entry “AUTHORIZATION — WORK 102 PYTHON EXECUTION HOST”, scope limited to candidate testing, Python 3.12.14 / pytest 8.3.5, separate read/write workspace copy, seven-file hash gate, raw streams/JUnit/manifest/exit code, no canonical Sandbox modification, no main merge/release. This is a journal read-back; it is not proof a machine has been configured or a test has run.
+- Runner review: found earlier setup only warned on Python version mismatch; runner combined stdout/stderr and docs described demo evidence not actually invoked; workspace-path instructions were inconsistent.
+- BUILD on GitHub branch only (not yet mirrored to Sandbox because branch is the available editable surface):
+  1. `07_ENVIRONMENT/setup_env.ps1` now requires exact Python 3.12.14 and refuses to overwrite an existing `.venv-work102`; installs pinned pytest 8.3.5 and verifies versions.
+  2. `07_ENVIRONMENT/run_full_suite.ps1` now checks the seven expected file hashes before pytest, refuses missing/drifted files, separates stdout/stderr, emits JUnit and a manifest with per-file hashes, command/cwd, versions and exit code.
+  3. `07_ENVIRONMENT/SETUP_PYTHON_ENV.md` updated to align workspace root and actual runner behavior; removed unsupported claim that the runner executes a deterministic demo.
+- GitHub commits returned by connector: setup `d7e2d7303d16e66b100460c9d618a22a1bdcd7dd`; runner `31960aee9f0bc92532afd0af7bc00906280ed98e`; docs `9e715d564c11ddb5a2468cd2cd2648b34e9ee8a5`. Final verification read-back: setup blob `4f68686e35c1d68eb4430a40ffe73be6bb675508`; runner blob `2dd16cd83219e67abf5cccb8a6424c6d4f5e914e`; docs blob `54dfc057c8953c34b058f53ea53a6ba87d10a20d`. Branch compare: 16 ahead, 0 behind `main`; no merge performed.
+- LIMITATION: no PowerShell execution environment is available in this session; the scripts were statically edited and fetched back from GitHub, not executed. No pytest run, no RUN_MANIFEST from an actual run, no Ka review verdict, no Gate A closure.
+- NEXT: Co/authorized Windows host must run the exact branch scripts against a separate workspace copy. Preserve all artifacts. Ka independently reviews the exact manifest and hashes. Xu must mirror the corrected runner/docs into Sandbox and read back once MCP write is available; current Sandbox MCP returned read success but write/append has not yet been verified for this entry.
+- STATUS: authorization recorded; runner/docs hardening committed to Work 102 branch; execution remains `ENV_BLOCKED / PENDING EVIDENCE` until real host execution evidence exists. Work 102 remains ACTIVE / NOT PASS / NOT RELEASED.
+[KÝ: Xu — CEO / Lead Architect / Planner]
