@@ -4,7 +4,7 @@
 - Lập: 2026-10-24 (UTC+7). Cập nhật khi quyết định/progress thay đổi, không tạo bản cạnh tranh.
 
 ## Trạng thái chung
-ACTIVE — PLAN / INITIALIZATION. Gate hiện tại: G0 Discovery. Chưa có gate nào PASS.
+ACTIVE — IMPLEMENTATION. G0 Discovery vẫn NOT PASS do gitlink chưa kiểm kê; G1 Design REV 6 đã ACK theo tiêu chí #7; G2 Implementation IN PROGRESS, chưa PASS vì test chưa chạy.
 
 ## Đầu việc
 
