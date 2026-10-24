@@ -1,4 +1,5 @@
 import json
+from types import SimpleNamespace
 
 from core.usage_ledger import extract_usage, new_usage_event, record_usage_event
 
@@ -25,6 +26,19 @@ def test_openai_usage_maps_cached_and_reasoning_tokens():
 def test_groq_usage_maps_prompt_completion_tokens():
     actual = extract_usage("groq", {"prompt_tokens": 9, "completion_tokens": 6})
     assert (actual["input_tokens"], actual["output_tokens"]) == (9, 6)
+
+
+def test_groq_usage_maps_sdk_nested_objects():
+    usage = SimpleNamespace(
+        prompt_tokens=9,
+        completion_tokens=6,
+        prompt_tokens_details=SimpleNamespace(cached_tokens=2),
+        completion_tokens_details=SimpleNamespace(reasoning_tokens=3),
+    )
+    actual = extract_usage("groq", usage)
+    assert (actual["input_tokens"], actual["output_tokens"]) == (9, 6)
+    assert actual["cached_input_tokens"] == 2
+    assert actual["reasoning_tokens"] == 3
 
 
 def test_google_usage_metadata_maps_token_counts():
