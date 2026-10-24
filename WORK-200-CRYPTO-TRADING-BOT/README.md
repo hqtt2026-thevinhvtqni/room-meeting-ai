@@ -26,3 +26,10 @@ This work follows the same top-level work-folder convention as other Work branch
 ## Safety and acceptance
 
 Paper-only/review-only by default. Live trading remains NO-GO. No PASS without execution evidence; source inspection and local tests are not proof that the entire Work passes.
+
+
+## Snapshot sync record (2026-10-25)
+- Sandbox file manifest coverage: **58/58 text/source files** listed by Work 200 MCP inventory are present under the mirrored numbered folder structure on this branch.
+- Windows `desktop.ini` metadata and a `.gdoc` shortcut are excluded intentionally; no original Google Docs content was fabricated.
+- The consolidated plan, minutes, project README, and current journal were read back from both Sandbox and GitHub and compared for exact text equality.
+- This is a verified snapshot plus a documented agent-driven two-way sync procedure, **not** a continuously running auto-sync service.
