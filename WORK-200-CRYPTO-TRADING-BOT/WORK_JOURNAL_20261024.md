@@ -200,3 +200,13 @@
 - **Loại trừ có chủ đích:** `desktop.ini` là metadata Windows không cần quản lý trong repo; file `.gdoc` là shortcut Google Docs, không phải nội dung tài liệu gốc nên không giả lập thành file nội dung. Chưa xác minh/đồng bộ các artifact ngoài danh sách MCP có thể đọc.
 - **Trạng thái:** source/document tree snapshot published on work branch. Branch chưa merge vào main. Chưa có đồng bộ tự động nền; cập nhật tiếp tục theo quy trình agent-driven/manual đã ghi trong README.
 - **Lưu ý:** thao tác đồng bộ không có nghĩa các code/test đã chạy hoặc Work 200 đã PASS; trạng thái vẫn ACTIVE / PARTIAL / NOT RELEASED.
+
+
+## Entry 013 — Hoàn tất đối soát manifest và kiểm chứng chiều GitHub → Sandbox
+- **Ngày:** 2026-10-25 ICT.
+- **Người xác minh:** Xu — AI-01.
+- **Manifest coverage:** 58/58 file text/source được liệt kê trong inventory MCP Work 200 đã có đường dẫn tương ứng trên branch GitHub. Các file `desktop.ini` và shortcut `.gdoc` được loại trừ có chủ đích.
+- **Đọc lại và so khớp chính xác:** master plan, README nguồn, minutes và journal; đã xác minh thêm nội dung README sau khi cập nhật trên GitHub rồi ghi ngược về Sandbox, kết quả exact-match.
+- **GitHub branch:** `work/200-crypto-trading-bot`.
+- **Kết luận:** PASS cho snapshot coverage và các đối chiếu nội dung đã nêu. Không tuyên bố đã băm/so khớp toàn bộ 58 file sau ghi; việc tạo file thành công và manifest coverage được xác minh riêng.
+- **Giới hạn còn lại:** không có daemon/webhook đồng bộ nền; sync hai chiều là quy trình agent-driven, phải thực hiện mỗi khi thay đổi. Branch chưa merge vào main. Nội dung không đồng nghĩa code/test đã chạy.
