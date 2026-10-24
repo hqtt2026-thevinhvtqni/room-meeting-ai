@@ -55,3 +55,11 @@
 - Kết quả: DONE — bản REV 2. G1 vẫn PROPOSED, CHỜ VINH ACK. G0 vẫn NOT PASS (submodule chưa kiểm kê). Không gate nào PASS.
 - Bằng chứng: Commit này trên nhánh work/104-ai-usage-evidence-tracking; diff REV1→REV2 trong file G1.
 - Bước tiếp: Vinh ACK G1 REV 2 (hoặc yêu cầu chỉnh tiếp); song song: kiểm kê submodule room-meeting-ai/ (SHA eeb497e9); sau ACK mới bắt đầu #8 (Co).
+
+## 2026-10-24 (UTC+7) — Vibe (agent hỗ trợ, ủy quyền tự chủ của Vinh)
+- Mã việc: W104-G1-007REV3 (sửa 3 điểm chưa nhất quán theo thẩm định vòng 2 của Xu).
+- Lý do: Xu xác minh REV 2 và chỉ 3 điểm: (a) ghi chú "cost chưa thêm" mâu thuẫn với 4 trường cost đã trong schema; (b) event_id gắn lúc nhận response → mất dấu lần gọi không có response; (c) failures.log cùng hệ thống lưu trữ → không được mặc định bộ đếm vẫn ghi được.
+- Hành động: Sửa chính bản G1 (REV 3, không tạo file cạnh tranh): (1) Bỏ ghi chú mâu thuẫn; định nghĩa cost_status 3 giá trị actual/estimated/unavailable với điều kiện rõ ràng từng loại. (2) Vòng đời event mới: khởi tạo event_id lúc BẮT ĐẦU cuộc gọi, kết thúc bằng nhánh có-response hoặc nhánh hết-timeout/không-response (vẫn ghi dòng hoàn chỉnh, status=error, token null); 1 cuộc gọi = đúng 1 dòng; occurred_at ≠ ingested_at làm dấu vết reconciliation phát hiện event treo. (3) Giới hạn bộ đếm: failures.log chỉ best-effort; nếu nó cũng hỏng thì đánh dấu "không đối soát được"; báo cáo G4 hiển thị 3 mức (trong ledger / loss theo counter / loss không xác định); cấm tuyên bố completeness khi còn loss không xác định; thêm bài test G3: hỏng cả 2 path → luồng chính vẫn PASS.
+- Kết quả: DONE — REV 3. G1 vẫn PROPOSED CHỜ VINH ACK. Retention 365 ngày là chính sách thiết kế, chưa phải bằng chứng triển khai. G0 vẫn NOT PASS (submodule chưa kiểm kê). Không gate nào PASS.
+- Bằng chứng: Commit này trên nhánh work/104-ai-usage-evidence-tracking; diff REV2→REV3 trong file G1 (mục §2 cost, §4 lifecycle, §3 mục 3).
+- Bước tiếp: Xu thẩm định lại REV 3 → gửi Vinh ACK; song song kiểm kê submodule room-meeting-ai/ (SHA eeb497e9); sau ACK mới #8 (Co).

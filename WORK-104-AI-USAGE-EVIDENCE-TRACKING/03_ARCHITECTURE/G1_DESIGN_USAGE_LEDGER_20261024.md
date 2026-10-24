@@ -1,7 +1,7 @@
 # G1 Design — Usage Ledger (PROPOSED, chờ Vinh ACK)
 
 - Thời điểm: 2026-10-24 (UTC+7). Người soạn: Vibe (ủy quyền tự chủ của Vinh); thẩm định: Cla/Xu; ACK: Vinh.
-- Trạng thái: **PROPOSED — REV 2** (bổ sung theo yêu cầu thẩm định của Xu 2026-10-24: retention, pricing provenance structure, correlation, usage-theo-giai-đoạn-lỗi, trạng thái verify MCP 5 tool). Đây là bản thiết kế cho #7, KHÔNG phải phê duyệt triển khai. KHÔNG tạo file thiết kế cạnh tranh — bản này thay thế nội dung rev 1 tại cùng đường dẫn.
+- Trạng thái: **PROPOSED — REV 3** (REV 2 + 3 sửa nhất quán theo thẩm định vòng 2 của Xu 2026-10-24: bỏ mâu thuẫn cost trong schema, vòng đời event tạo lúc bắt đầu gọi, giới hạn bộ đếm dự phòng). Đây là bản thiết kế cho #7, KHÔNG phải phê duyệt triển khai. KHÔNG tạo file thiết kế cạnh tranh — các REV thay thế nhau tại cùng đường dẫn.
 - Căn cứ: DECISION_G0_INTEGRATION_POINT_20261024.md (hướng in-process `core/usage_ledger.py` + append-only JSONL, không proxy); G0 inventory gốc + expansion.
 
 ## 1. Module và nguyên tắc
@@ -36,7 +36,10 @@ Mỗi dòng JSONL gồm (trường thiếu = `null`, KHÔNG BAO GIỜ điền 0 
 }
 ```
 
-- Cost field **chưa thêm** ở v1: chưa có pricing provenance → ghi `cost_status: "unavailable"` chỉ khi triển khai bảng giá (xem §5).
+- **Cost trong schema v1 NGAY** (không phải chờ): 4 trường `cost_amount / cost_currency / pricing_version / cost_status` đã nằm trong envelope từ REV 2. Định nghĩa `cost_status`:
+  - `"actual"`: match pricing entry `status: "verified"` (nguồn chính thức + người xác thực ghi tên) → `cost_amount` là số tính được.
+  - `"estimated"`: dùng giá chưa xác thực → `cost_amount` là ước tính, bắt buộc kèm `pricing_version` để truy nguồn.
+  - `"unavailable"`: không match pricing (hoặc lỗi tính) → `cost_amount: null`. KHÔNG bao giờ lấp 0. Ban đầu (chưa có #7b) mọi event đều `"unavailable"`.
 - `content_hash` = SHA-256 của response text (không lưu text). KHÔNG lưu prompt/response raw (Request_and_Scope loại trừ).
 
 ## 3. Trích usage theo từng provider (provider-specific extraction)
@@ -54,11 +57,21 @@ Mỗi dòng JSONL gồm (trường thiếu = `null`, KHÔNG BAO GIỜ điền 0 
 - **Usage theo từng giai đoạn lỗi (3 trường hợp KHÔNG gộp chung):**
   1. **Lỗi trước khi có phản hồi** (timeout, DNS, connection refused, 429/5xx trả về nhưng body không có usage): ghi event `status="error"`, mọi token `null`, `usage_source="unavailable"` — KHÔNG bịa số token cho lần gọi thất bại.
   2. **Lỗi có phản hồi kèm usage** (response/headers chứa usage — ví dụ Groq 429 có rate-limit headers, hoặc HTTP error body có `usage`): ghi `status="error"`, trích token đúng như §3, `usage_source="provider_reported"`. Lần gọi hỏng mà provider vẫn đếm token phải hiện đúng trong ledger.
-  3. **Lỗi khi ghi ledger** (file readonly, đĩa đầy): event đó KHÔNG vào JSONL (mất có kiểm soát); ghi 1 dòng đếm vào `docs/usage_ledger_failures.log` (chỉ timestamp + count, không log nội dung) + stderr. Reconciliation ở G4 đối chiếu counter này trước khi tuyên bố completeness — đúng "no completeness claim without reconciliation".
+  3. **Lỗi khi ghi ledger** (file readonly, đĩa đầy): event đó KHÔNG vào JSONL — **mất CÓ KIỂM SOÁT nhưng KHÔNG được coi là mất 0**: ghi 1 dòng đếm vào `docs/usage_ledger_failures.log` (chỉ timestamp + count) + stderr.
+  - **Giới hạn bộ đếm dự phòng (REV 3):** `failures.log` nằm CÙNG ổ/file hệ thống → có thể hỏng theo. Nó chỉ là **best-effort**, KHÔNG phải bằng chứng độc lập tuyệt đối. Quy tắc:
+    a. Nếu ghi `failures.log` cũng lỗi → chỉ còn stderr; event đó được đánh dấu "không đối soát được" trong báo cáo — không giả vờ có counter.
+    b. Báo cáo/query layer (G4) PHẢI hiển thị rõ 3 mức: `số event trong ledger` / `số loss theo counter (nếu counter ghi được)` / `số loss không xác định (khi counter cũng hỏng)`.
+    c. **KHÔNG BAO GIỜ tuyên bố completeness** khi tồn tại loss "không xác định"; completeness chỉ phát biểu khi đối soát ledger + counter (+ index xoay vòng §5b) khớp nhau trong khoảng thời gian báo cáo.
+    d. Kiểm thử G3 phải có bài: làm hỏng CẢ ledger path VÀ failures.log path → luồng AI chính vẫn PASS và báo cáo ghi đúng "không đối soát được", không treo, không bịa.
 
 ## 4. Idempotency & ghi trùng
 
-- `event_id = uuid4` ghi lúc nhận response → 1 response = 1 event; retry caller tạo request mới = event mới (billed retry), KHÔNG phải duplicate logging.
+- **Vòng đời event (event lifecycle — QUAN TRỌNG REV 3):**
+  1. **KHỞI TẠO lúc bắt đầu cuộc gọi** (trước khi gửi request): cấp `event_id = uuid4`, ghi `occurred_at`, `ai_id/provider/model/caller`, correlation. Lúc này event là bản nháp trong bộ nhớ caller.
+  2. **KẾT THÚC khi có một trong hai**: (a) nhận response (thành công hoặc lỗi-có-response) → điền token/usage/latency/content_hash rồi ghi 1 dòng hoàn chỉnh vào JSONL; (b) **hết thời gian/kết nối thất bại, KHÔNG có response** → ghi event với `status="error"`, `error_class`, mọi token null, `usage_source="unavailable"`. Cả hai nhánh đều ghi — **lần gọi không bao giờ "mất dấu" dù không có response**.
+  3. **Ghi một lần, dòng hoàn chỉnh** (không ghi bản nháp dở dang vào JSONL) → 1 cuộc gọi = đúng 1 dòng.
+  - `ingested_at` = thời điểm ghi dòng vào JSONL (khác `occurred_at` = lúc bắt đầu gọi) — chênh lệch 2 mốc này chính là dấu vết để reconciliation phát hiện event treo (call bắt đầu mà không có dòng kết thúc).
+  - Retry của caller = cuộc gọi mới = `event_id` mới + `parent_event_id` trỏ event lần thử trước (billed retry), KHÔNG phải duplicate logging.
 - Không dedupe trong module (JSONL append-only); dedupe/reconciliation là việc của query layer (G4) dựa trên `provider_request_id` khi có.
 
 ## 4.2 Correlation (liên kết sự kiện — KHÔNG tạo mã giả)
