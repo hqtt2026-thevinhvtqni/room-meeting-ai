@@ -1,0 +1,13 @@
+# WORK MANIFEST — Work 200
+- **Work ID:** 200
+- **Work name:** CRYPTO-TRADING-BOT
+- **Display name:** 200 - CRYPTO-TRADING-BOT
+- **Created:** 2026-10-24
+- **Created via:** ROOM-HOP MCP 8030
+- **Status:** ACTIVE — PLAN / BUILD / VERIFY not yet complete
+- **Purpose:** Build a modular cryptocurrency trading bot with a testable strategy engine, historical backtesting, paper trading, risk controls, and auditable results.
+- **Initial operating mode:** Research + backtest + paper trading only. Live trading is out of scope until separately approved and gated.
+- **Hard rules:** No profit guarantees; no hardcoded secrets/API keys; no live order execution in the initial milestone; risk limits and kill switch required; preserve evidence; no PASS without test evidence.
+- **Architecture boundary:** Work in Sandbox only; working source is read-only. AI cannot merge, commit, or push.
+- **Workflow:** READ → TRACE → ANALYZE → DECIDE → BUILD → VERIFY → HANDOFF.
+- **Acceptance principle:** Define necessary prerequisites and sufficient, evidence-verifiable acceptance criteria before declaring a milestone complete.
