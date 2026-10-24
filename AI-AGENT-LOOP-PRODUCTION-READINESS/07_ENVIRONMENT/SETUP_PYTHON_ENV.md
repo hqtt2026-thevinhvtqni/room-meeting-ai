@@ -1,48 +1,55 @@
-# 07_ENVIRONMENT — Authorized Python Execution Environment — Work 102
+# 07_ENVIRONMENT — Work 102 candidate Python execution environment
 
-**Status:** PROPOSED — becomes ACTIVE only after Vinh (Final Authority) authorizes this environment as the Work 102 execution host.  
-**Purpose:** Resolve the ENV_BLOCKED test gate by providing a reproducible, evidence-producing Python environment bound to the exact seven-file candidate hashes recorded in [STATUS_SNAPSHOT_20261024.md](../06_EVIDENCE/STATUS_SNAPSHOT_20261024.md).
+**Status:** AUTHORIZED FOR CANDIDATE TESTING ONLY — authorization recorded in the engineering journal. This does not declare the candidate PASS or production-ready.
 
-## 1. Authorization rule
+## 1. Scope and authority
 
-- The engineering journal requires an "authorized execution host". This environment is a candidate until Vinh records authorization (a single journal line naming this setup, the machine class, and the date is sufficient).
-- The environment is a test runner only. It does NOT modify Sandbox source, does not create Core/dispatcher/Host, does not merge/release. Repair budget remains max 2 repair rounds / 3 test runs per cycle.
+- Final authority: Vinh. This runner is authorized only for Work 102 candidate testing on a separate read/write workspace copy.
+- It does not modify canonical Sandbox source, create Core/dispatcher/Host, merge to `main`, or authorize release.
+- Repair budget remains at most 2 repair rounds and 3 test runs per related defect cycle.
 
 ## 2. Prerequisites
 
-- Windows PC with PowerShell 5.1+ (or pwsh), Python **3.12.14** (exact version used for the reference bundle), internet access for one pip install.
-- A read/write copy of the Work 102 Sandbox workspace (folder containing 04_CODE/ and 05_TEST/). Copy it out of the Sandbox first; do not run against the canonical Sandbox in place unless Vinh explicitly authorizes that.
+- Windows with PowerShell 5.1+ or PowerShell 7.
+- Python **3.12.14 exactly** and network access to install pinned `pytest==8.3.5`.
+- A copy of the Work 102 candidate workspace whose root contains `04_CODE/`, `05_TEST/`, and `06_EVIDENCE/`. Do not run against the canonical Sandbox in place.
+- The environment scripts and `expected_candidate_hashes.json` from this GitHub branch.
 
-## 3. Setup (one time)
+## 3. Setup
 
-```powershell
-cd <workspace-copy>
-pwsh -File AI-AGENT-LOOP-PRODUCTION-READINESS/07_ENVIRONMENT/setup_env.ps1
-```
-
-Creates `.venv-work102` with pinned pytest 8.3.5 and records versions.
-
-## 4. Evidence run
+From a PowerShell terminal, point `$workspace` to the candidate workspace root and `$tools` to this branch's `07_ENVIRONMENT` directory:
 
 ```powershell
-pwsh -File AI-AGENT-LOOP-PRODUCTION-READINESS/07_ENVIRONMENT/run_full_suite.ps1 -Workspace <workspace-copy>
+$workspace = 'C:\path\to\work102-candidate'
+$tools = 'C:\path\to\repo\AI-AGENT-LOOP-PRODUCTION-READINESS\07_ENVIRONMENT'
+pwsh -File "$tools\setup_env.ps1" -Workspace $workspace
 ```
 
-The script, in order:
-1. Computes SHA-256 of the 7 candidate files and reports MATCH / DRIFT / NOT_VERIFIED against the pinned expected hashes (drift ⇒ abort with exit 2; do not test drifted source).
-2. Runs pytest collection + full suite + deterministic demo where available, emitting JUnit XML.
-3. Preserves raw stdout/stderr, exit codes, interpreter + package versions, per-file hashes.
-4. Writes `06_EVIDENCE/AUTHORIZED_RUN_<timestamp>/RUN_MANIFEST.json` ready to be copied back into Sandbox evidence and appended to the journal.
+The setup script refuses any base Python version other than 3.12.14 and does not overwrite an existing `.venv-work102`.
 
-Exit 0 = suite passed on hash-matched source; Exit 1 = tests ran and failed (evidence still valid); Exit 2 = hash drift or environment failure (not a valid run).
+## 4. Hash-gated test run
 
-## 5. After a run
+```powershell
+pwsh -File "$tools\run_full_suite.ps1" -Workspace $workspace
+$LASTEXITCODE
+```
 
-- Append the run result to the journal as an evidence entry (command, cwd, versions, hashes, counts, exit code).
-- Ka reviews the same RUN_MANIFEST and hashes; record Ka verdict only after actual read-back.
-- A passing local run still does NOT close Gate A (Core authority, dispatch/ACK, leases/fencing, W14 Host binding). Keep gates separate.
+Before executing pytest, the runner checks all seven candidate SHA-256 hashes against `expected_candidate_hashes.json`. Missing or mismatched files abort the run with exit code 2. A successful hash check is not itself a test result.
 
-## 6. Scope
+The runner executes `python -m pytest 05_TEST -v` with JUnit XML output and records:
+- `HASH_CHECK.json`: expected and actual SHA-256 per file.
+- `pytest_stdout.txt` and `pytest_stderr.txt`: separate raw process streams.
+- `junit.xml`: test report when produced.
+- `RUN_MANIFEST.json`: candidate ID, exact command, working directory, interpreter/package versions, per-file hashes, artifacts, and exit code.
 
-- No new dispatcher/queue/Core/Host. No canonical main source changes. This folder is runner tooling + documentation only.
-- Expected hashes live in `expected_candidate_hashes.json` here; update it ONLY with a journal-recorded candidate change (new RUN_BUNDLE from Co), never ad hoc.
+Exit 0 means pytest exited successfully on the hash-matched candidate; exit 1 means tests ran and failed; exit 2 means hash/environment/pre-run failure. Preserve all evidence even for a failing test run.
+
+## 5. After the run
+
+Copy the complete `AUTHORIZED_RUN_<timestamp>` evidence directory back to Work 102 Sandbox through the approved workflow, read it back, and append a journal entry with the actual command, workspace, versions, seven hashes, test counts, exit code, and evidence paths. Ka must independently inspect the exact manifest and files before recording a review verdict.
+
+A local test PASS does **not** close Gate A (Core authority, task dispatch/ACK, leases/fencing, persistence/recovery, or Work 14 Host binding). Keep the gates separate.
+
+## 6. Candidate hash policy
+
+The seven expected hashes are pinned in `expected_candidate_hashes.json` from the journal-recorded Patch V2 candidate. Update them only after a new candidate is formally recorded in the engineering journal; never update hashes just to make a drifted run pass.
