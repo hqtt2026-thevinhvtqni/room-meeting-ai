@@ -21,8 +21,11 @@ from __future__ import annotations
 import json
 import os
 import re
+import time
 
 import requests
+
+from core.usage_ledger import extract_usage, new_usage_event, record_usage_event, sha256_text
 
 API_URL = "https://api.anthropic.com/v1/messages"
 DEFAULT_MODEL = "claude-sonnet-4-5-20250929"
@@ -99,6 +102,11 @@ class IntentRouter:
         history = history or []
         convo = "\n".join(history[-6:])
         user_msg = f"{convo}\nVinh: {text}" if convo else f"Vinh: {text}"
+        started = time.monotonic()
+        usage_event = new_usage_event(
+            provider="anthropic", model=self.model, ai_id="claude_intent_router",
+            ai_role="intent_router", caller="intent_router",
+        )
 
         try:
             resp = requests.post(
@@ -118,6 +126,20 @@ class IntentRouter:
             )
             resp.raise_for_status()
         except requests.RequestException as e:
+            error_response = getattr(e, "response", None)
+            error_data = {}
+            if error_response is not None:
+                try:
+                    error_data = error_response.json()
+                except Exception:
+                    error_data = {}
+            usage = error_data.get("usage") if isinstance(error_data, dict) else None
+            usage_event.update(extract_usage("anthropic", usage))
+            usage_event.update(status="error", error_class=type(e).__name__,
+                               latency_ms=round((time.monotonic() - started) * 1000))
+            if error_response is not None:
+                usage_event["provider_request_id"] = error_response.headers.get("request-id")
+            record_usage_event(usage_event)
             raise IntentRouterError(f"Loi goi Anthropic API: {e}") from e
 
         data = resp.json()
@@ -126,6 +148,11 @@ class IntentRouter:
             for block in data.get("content", [])
             if block.get("type") == "text"
         ).strip()
+        usage_event.update(extract_usage("anthropic", data.get("usage")))
+        usage_event["provider_request_id"] = data.get("id") or resp.headers.get("request-id")
+        usage_event["latency_ms"] = round((time.monotonic() - started) * 1000)
+        usage_event["content_hash"] = sha256_text(raw)
+        record_usage_event(usage_event)
 
         # Claude đôi khi vẫn bọc ```json ... ``` dù đã dặn không làm vậy — dọn cho chắc.
         cleaned = re.sub(r"^```(?:json)?\s*|\s*```$", "", raw).strip()
