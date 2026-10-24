@@ -1,7 +1,7 @@
 # G1 Design — Usage Ledger (PROPOSED, chờ Vinh ACK)
 
 - Thời điểm: 2026-10-24 (UTC+7). Người soạn: Vibe (ủy quyền tự chủ của Vinh); thẩm định: Cla/Xu; ACK: Vinh.
-- Trạng thái: **PROPOSED — REV 3** (REV 2 + 3 sửa nhất quán theo thẩm định vòng 2 của Xu 2026-10-24: bỏ mâu thuẫn cost trong schema, vòng đời event tạo lúc bắt đầu gọi, giới hạn bộ đếm dự phòng). Đây là bản thiết kế cho #7, KHÔNG phải phê duyệt triển khai. KHÔNG tạo file thiết kế cạnh tranh — các REV thay thế nhau tại cùng đường dẫn.
+- Trạng thái: **PROPOSED — REV 4** (REV 3 + 3 khép lỗ hổng theo thẩm định vòng 3 của Xu 2026-10-24: giới hạn tuyên bố về crash/event treo, khớp quy tắc giá §2=§5, nguồn thu thập stderr + test kép vào §7). Đây là bản thiết kế cho #7, KHÔNG phải phê duyệt triển khai. KHÔNG tạo file thiết kế cạnh tranh — các REV thay thế nhau tại cùng đường dẫn.
 - Căn cứ: DECISION_G0_INTEGRATION_POINT_20261024.md (hướng in-process `core/usage_ledger.py` + append-only JSONL, không proxy); G0 inventory gốc + expansion.
 
 ## 1. Module và nguyên tắc
@@ -59,8 +59,9 @@ Mỗi dòng JSONL gồm (trường thiếu = `null`, KHÔNG BAO GIỜ điền 0 
   2. **Lỗi có phản hồi kèm usage** (response/headers chứa usage — ví dụ Groq 429 có rate-limit headers, hoặc HTTP error body có `usage`): ghi `status="error"`, trích token đúng như §3, `usage_source="provider_reported"`. Lần gọi hỏng mà provider vẫn đếm token phải hiện đúng trong ledger.
   3. **Lỗi khi ghi ledger** (file readonly, đĩa đầy): event đó KHÔNG vào JSONL — **mất CÓ KIỂM SOÁT nhưng KHÔNG được coi là mất 0**: ghi 1 dòng đếm vào `docs/usage_ledger_failures.log` (chỉ timestamp + count) + stderr.
   - **Giới hạn bộ đếm dự phòng (REV 3):** `failures.log` nằm CÙNG ổ/file hệ thống → có thể hỏng theo. Nó chỉ là **best-effort**, KHÔNG phải bằng chứng độc lập tuyệt đối. Quy tắc:
-    a. Nếu ghi `failures.log` cũng lỗi → chỉ còn stderr; event đó được đánh dấu "không đối soát được" trong báo cáo — không giả vờ có counter.
-    b. Báo cáo/query layer (G4) PHẢI hiển thị rõ 3 mức: `số event trong ledger` / `số loss theo counter (nếu counter ghi được)` / `số loss không xác định (khi counter cũng hỏng)`.
+    a. Nếu ghi `failures.log` cũng lỗi → chỉ còn stderr; event đó KHÔNG có đường ghi bền vững nào.
+    b. **Nguồn thu thập stderr (REV 4 — khai báo thẳng):** trong v1, KHÔNG có cơ chế thu thập stderr vào nguồn truy vấn được — stderr đi về môi trường khởi chạy tiến trình (terminal/service journal) và Work 104 KHÔNG kiểm soát được nó. Do đó khi cả hai path hỏng, G4 **không có số đếm loss chính xác từ bất kỳ nguồn nào của hệ thống**.
+    c. Báo cáo/query layer (G4) PHẢI hiển thị rõ 3 mức: `số event trong ledger` / `số loss theo counter (nếu counter ghi được)` / `đoạn thời gian + phạm vi MẤT KHÔNG XÁC ĐỊNH được đếm (khi counter cũng hỏng)` — mức 3 ghi bằng **khoảng thời gian và phạm vi**, KHÔNG ghi bằng số đếm bịa; kèm chú thích "stderr tại thời điểm đó chưa được thu thập vào nguồn truy vấn được — nếu có service journal bên ngoài, đối soát thủ công là việc của người vận hành, không phải output tự động của hệ thống".
     c. **KHÔNG BAO GIỜ tuyên bố completeness** khi tồn tại loss "không xác định"; completeness chỉ phát biểu khi đối soát ledger + counter (+ index xoay vòng §5b) khớp nhau trong khoảng thời gian báo cáo.
     d. Kiểm thử G3 phải có bài: làm hỏng CẢ ledger path VÀ failures.log path → luồng AI chính vẫn PASS và báo cáo ghi đúng "không đối soát được", không treo, không bịa.
 
@@ -68,9 +69,13 @@ Mỗi dòng JSONL gồm (trường thiếu = `null`, KHÔNG BAO GIỜ điền 0 
 
 - **Vòng đời event (event lifecycle — QUAN TRỌNG REV 3):**
   1. **KHỞI TẠO lúc bắt đầu cuộc gọi** (trước khi gửi request): cấp `event_id = uuid4`, ghi `occurred_at`, `ai_id/provider/model/caller`, correlation. Lúc này event là bản nháp trong bộ nhớ caller.
-  2. **KẾT THÚC khi có một trong hai**: (a) nhận response (thành công hoặc lỗi-có-response) → điền token/usage/latency/content_hash rồi ghi 1 dòng hoàn chỉnh vào JSONL; (b) **hết thời gian/kết nối thất bại, KHÔNG có response** → ghi event với `status="error"`, `error_class`, mọi token null, `usage_source="unavailable"`. Cả hai nhánh đều ghi — **lần gọi không bao giờ "mất dấu" dù không có response**.
-  3. **Ghi một lần, dòng hoàn chỉnh** (không ghi bản nháp dở dang vào JSONL) → 1 cuộc gọi = đúng 1 dòng.
-  - `ingested_at` = thời điểm ghi dòng vào JSONL (khác `occurred_at` = lúc bắt đầu gọi) — chênh lệch 2 mốc này chính là dấu vết để reconciliation phát hiện event treo (call bắt đầu mà không có dòng kết thúc).
+  2. **KẾT THÚC khi có một trong hai**: (a) nhận response (thành công hoặc lỗi-có-response) → điền token/usage/latency/content_hash rồi ghi 1 dòng hoàn chỉnh vào JSONL; (b) **hết thời gian/kết nối thất bại, KHÔNG có response** → ghi event với `status="error"`, `error_class`, mọi token null, `usage_source="unavailable"`.
+  3. **Ghi một lần, dòng hoàn chỉnh** (không ghi bản nháp dở dang vào JSONL).
+  - **Giới hạn tuyên bố (REV 4 — quan trọng):**
+    - "1 cuộc gọi = 1 dòng" **CHỈ đúng cho cuộc gọi mà tiến trình sống đến lúc ghi dòng**. Bản nháp nằm trong bộ nhớ; **nếu tiến trình crash/kill giữa lúc bắt đầu gọi và lúc ghi, event biến mất cùng bộ nhớ và ledger KHÔNG có dấu vết nào về cuộc gọi đó** — đây là mất-không-dấu-vết được thiết kế chấp nhận ở v1.
+    - Do đó `occurred_at`/`ingested_at` **KHÔNG tự phát hiện được mọi cuộc gọi bị treo**: chênh lệch 2 mốc chỉ là dấu vết *trên event đã ghi* (phát hiện ghi muộn/luồng bị nghẽn), KHÔNG phát hiện cuộc gọi crashed chưa từng ghi.
+    - Phát hiện cuộc gọi crashed trong tương lai (nếu Vinh yêu cầu) phải đến từ **nguồn độc lập ngoài tiến trình** — ví dụ đối soát billing/usage từ provider, hoặc start-marker bền vững (ghi file trước khi gọi). Cả hai đều NGOÀI scope v1; ghi nhận đây là **đầu việc mở #7c — "crash-detection decision"**, chỉ làm khi có phê duyệt.
+    - Mọi báo cáo reconciliation PHẢI ghi rõ giới hạn: "số liệu không bao gồm các cuộc gọi bị crash trước khi ghi".
   - Retry của caller = cuộc gọi mới = `event_id` mới + `parent_event_id` trỏ event lần thử trước (billed retry), KHÔNG phải duplicate logging.
 - Không dedupe trong module (JSONL append-only); dedupe/reconciliation là việc của query layer (G4) dựa trên `provider_request_id` khi có.
 
@@ -98,7 +103,11 @@ Mỗi dòng JSONL gồm (trường thiếu = `null`, KHÔNG BAO GIỜ điền 0 
 }
 ```
 
-- Quy tắc: event ghi `cost_amount` CHỈ khi match được entry có `status: "verified"` (nguồn chính thức, người xác thực ghi tên); không match → `cost_amount=null, cost_status="unavailable"`. Giá chưa xác thực → `cost_status="estimated"` kèm `pricing_version` để truy nguồn. Không bao giờ lấp số 0.
+- **Quy tắc tính giá (REV 4 — khớp §2, một nguồn chân lý duy nhất):**
+  - Match entry `status: "verified"` → `cost_status="actual"`, `cost_amount` = số tính được từ giá đã xác minh.
+  - Match entry `status: "unverified"` → `cost_status="estimated"`, `cost_amount` = ước tính, **bắt buộc** kèm `pricing_version` để truy nguồn.
+  - Không match entry nào → `cost_status="unavailable"`, `cost_amount=null`. KHÔNG bao giờ lấp số 0.
+  - (Đã bỏ câu "cost_amount CHỈ khi verified" cũ — quy tắc duy nhất là 3 nhánh trên, khớp đúng định nghĩa cost_status ở §2.)
 - Envelope đã có sẵn 4 trường cost từ schema v1 (xem §2) — điền giá về sau KHÔNG phá schema.
 
 ## 5b. Retention & xoay vòng file ledger
@@ -122,6 +131,8 @@ Mỗi dòng JSONL gồm (trường thiếu = `null`, KHÔNG BAO GIỜ điền 0 
 4. Fail-safe: ledger path không ghi được (readonly/permission) → luồng chính vẫn PASS, stderr có dấu vết.
 5. Redaction: quét ledger输出 không chứa key/prompt raw.
 6. E2E (điều kiện Decision #3): 1 lần gọi thật (hoặc test-provider) → 1 event correlated trong ledger + 1 query tổng hợp được.
+7. **Test kép (REV 4, từ §3 mục 3d):** làm hỏng CẢ ledger path VÀ failures.log path → luồng AI chính vẫn PASS, stderr có dấu vết, và báo cáo reconciliation ghi đúng "đoạn thời gian mất không xác định được đếm" — không treo, không bịa số.
+8. **Test crash-limit (REV 4, từ §4):** kill tiến trình giữa lúc bắt đầu gọi và lúc ghi dòng → xác nhận (a) ledger KHÔNG có dòng cho cuộc gọi đó, (b) báo cáo reconciliation ghi đúng giới hạn "không bao gồm cuộc gọi bị crash trước khi ghi" — xác minh tuyên bố giới hạn là đúng bằng chứng, không phải tuyên bố suông.
 
 ## 7b. Trạng thái verify MCP 5 tool (KHÔNG kết luận tương thích)
 
