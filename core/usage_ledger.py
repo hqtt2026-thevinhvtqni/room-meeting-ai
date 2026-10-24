@@ -162,7 +162,8 @@ def _rotate_if_needed(path: Path) -> Path:
 def _fallback(message: str, exc: BaseException) -> None:
     stamp = _now()
     try:
-        _append_jsonl(Path("docs/usage_ledger_failures.log"), {"timestamp": stamp, "count": 1, "reason": message})
+        failure_path = Path(os.environ.get("USAGE_LEDGER_FAILURES_PATH", "docs/usage_ledger_failures.log"))
+        _append_jsonl(failure_path, {"timestamp": stamp, "count": 1, "reason": message})
     except Exception:
         pass
     try:
