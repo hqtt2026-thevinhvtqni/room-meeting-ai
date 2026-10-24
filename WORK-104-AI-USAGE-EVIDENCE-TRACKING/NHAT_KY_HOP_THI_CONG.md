@@ -100,3 +100,12 @@
 - Blocker/giới hạn: model rỗng ở `agents/xu.yaml` và `agents/claude.yaml`; môi trường test ủy quyền chưa xác định/khả dụng; G0 vẫn NOT PASS do gitlink chưa kiểm kê; pricing #7b chưa triển khai.
 - Ranh giới: #7c giữ OPEN, chưa triển khai; gitlink `room-meeting-ai/` giữ nguyên; Work 102 không đổi.
 - Bước tiếp: kiểm tra cú pháp + unit/regression tests trong môi trường ủy quyền, sửa lỗi dựa trên kết quả thật, rồi giao Ka review độc lập trước khi xét G3. Không tuyên bố PASS trước khi có test report.
+
+
+## 2026-10-24 (UTC+7) — Xu (AI-01 GPT CEO / điều phối G2, cập nhật)
+
+- Mã việc: W104-G2-008-UPDATE.
+- Hành động: bổ sung ghi event `usage_source=unavailable` cho Mock/Internal connector theo G1 §3; thu hẹp failure counter để chỉ đếm lỗi append ledger (lỗi index/rotation chỉ stderr, không ghi thành loss event); cập nhật evidence.
+- Kiểm tra hồ sơ: phát hiện tiêu đề G1 REV 6 còn chữ “PROPOSED, chờ Vinh ACK” dù nội dung đã ghi ACKED; sửa tiêu đề và §8 để thống nhất, vẫn giữ điều kiện môi trường test ủy quyền.
+- Bằng chứng: `06_EVIDENCE/G2_IMPLEMENTATION_PROGRESS_20261024.md`; commit `3ff659047831cbde8444536854b6fdfb3745d684`, `df7d40ddeba08f0ea9b2b35b17082e89e19d4540`, `ebad679a08bbc1fc7339f2429fd172b5b6c7c3bc`.
+- Trạng thái: G2 IN PROGRESS / NOT PASS; tests chưa chạy. #7c OPEN; gitlink giữ nguyên; G0 NOT PASS.
