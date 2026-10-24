@@ -178,3 +178,14 @@
 - **Quy tắc đồng bộ hai chiều:** khi một artifact đổi ở Sandbox hoặc GitHub, AI phụ trách phải đối chiếu revision trước, đồng bộ bản mới sang nơi còn lại, đọc lại hai bản và ghi hash/commit/evidence vào journal. README nêu rõ hiện chưa cài daemon/webhook đồng bộ tự động; không được tuyên bố auto-sync.
 - **Giới hạn:** thao tác này đồng bộ tài liệu/biên bản/nhật ký; chưa đồng bộ toàn bộ mã nguồn Work 200 từ Sandbox sang GitHub, chưa mở PR và chưa merge main.
 - **Trạng thái:** BRANCH CREATED / DOCUMENTS PUBLISHED; cần read-back verification trước khi kết luận sync PASS.
+
+
+## Entry 011 — Read-back verification GitHub ↔ Sandbox
+- **Ngày:** 2026-10-25 ICT.
+- **Người xác minh:** Xu — AI-01.
+- **Kết quả:** PASS cho đồng bộ tài liệu trong phạm vi đã nêu.
+- **Bằng chứng:** đọc lại trực tiếp từ Sandbox MCP 8030 và GitHub branch `work/200-crypto-trading-bot`; nội dung khớp chính xác từng ký tự cho master plan, minutes và journal sau cập nhật.
+- **GitHub paths:** `WORK-200-CRYPTO-TRADING-BOT/PLAN_WORK200_MASTER_v1.0.md`, `WORK-200-CRYPTO-TRADING-BOT/WORK200_MINUTES_20261025_01.md`, `WORK-200-CRYPTO-TRADING-BOT/WORK_JOURNAL_20261024.md`.
+- **Giới hạn:** README đồng bộ quy trình cũng đã tạo trên branch; chưa có daemon/webhook tự động. Chưa đồng bộ toàn bộ code/source Work 200; chưa merge branch vào main.
+- **Commit gần nhất trước entry này:** journal `63b5d82bbd0d4e96f056db662c1d2cf1fffac309`.
+- **Trạng thái tổng:** DOCUMENT SYNC VERIFIED; FULL WORK SOURCE SYNC NOT CLAIMED; BRANCH NOT MERGED.
