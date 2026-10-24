@@ -6,6 +6,8 @@ from core.governance import MissionContext
 from core.secretary import Secretary
 from core.identity import verify_identity_claim
 import json
+import time
+from core.usage_ledger import extract_usage, new_usage_event, record_usage_event, sha256_text
 
 IDENTITY = "agent_llama" # Agent chay duoi identity nay, khong phai vinh
 
@@ -82,8 +84,25 @@ while True:
 
     messages.append({"role": "user", "content": user_text})
     try:
-        response = client.chat.completions.create(model="llama-3.3-70b-versatile", messages=messages, tools=TOOLS, tool_choice="auto", temperature=0.2)
+        started = time.monotonic()
+        usage_event = new_usage_event(
+            provider="groq", model="llama-3.3-70b-versatile", ai_id=IDENTITY,
+            ai_role="chat_agent", caller="chat",
+        )
+        try:
+            response = client.chat.completions.create(model="llama-3.3-70b-versatile", messages=messages, tools=TOOLS, tool_choice="auto", temperature=0.2)
+        except Exception as provider_error:
+            usage_event.update(status="error", error_class=type(provider_error).__name__,
+                               latency_ms=round((time.monotonic() - started) * 1000))
+            record_usage_event(usage_event)
+            raise
         msg = response.choices[0].message
+        groq_usage = getattr(getattr(response, "x_groq", None), "usage", None) or getattr(response, "usage", None)
+        usage_event.update(extract_usage("groq", groq_usage))
+        usage_event["provider_request_id"] = getattr(response, "id", None)
+        usage_event["latency_ms"] = round((time.monotonic() - started) * 1000)
+        usage_event["content_hash"] = sha256_text(getattr(msg, "content", None))
+        record_usage_event(usage_event)
         if msg.tool_calls:
             messages.append(msg)
             for tool_call in msg.tool_calls:
@@ -93,9 +112,27 @@ while True:
                 result = execute_tool(func_name, args)
                 print(f"[Governance] {result}")
                 messages.append({"role": "tool", "tool_call_id": tool_call.id, "content": result})
-            final_resp = client.chat.completions.create(model="llama-3.3-70b-versatile", messages=messages, temperature=0.2)
-            print(f"\nLlama: {final_resp.choices[0].message.content}")
-            messages.append({"role": "assistant", "content": final_resp.choices[0].message.content})
+            final_started = time.monotonic()
+            final_event = new_usage_event(
+                provider="groq", model="llama-3.3-70b-versatile", ai_id=IDENTITY,
+                ai_role="chat_agent", caller="chat",
+            )
+            try:
+                final_resp = client.chat.completions.create(model="llama-3.3-70b-versatile", messages=messages, temperature=0.2)
+            except Exception as provider_error:
+                final_event.update(status="error", error_class=type(provider_error).__name__,
+                                   latency_ms=round((time.monotonic() - final_started) * 1000))
+                record_usage_event(final_event)
+                raise
+            final_message = final_resp.choices[0].message
+            final_usage = getattr(getattr(final_resp, "x_groq", None), "usage", None) or getattr(final_resp, "usage", None)
+            final_event.update(extract_usage("groq", final_usage))
+            final_event["provider_request_id"] = getattr(final_resp, "id", None)
+            final_event["latency_ms"] = round((time.monotonic() - final_started) * 1000)
+            final_event["content_hash"] = sha256_text(getattr(final_message, "content", None))
+            record_usage_event(final_event)
+            print(f"\nLlama: {final_message.content}")
+            messages.append({"role": "assistant", "content": final_message.content})
         else:
             print(f"\nLlama: {msg.content}")
             messages.append({"role": "assistant", "content": msg.content})
