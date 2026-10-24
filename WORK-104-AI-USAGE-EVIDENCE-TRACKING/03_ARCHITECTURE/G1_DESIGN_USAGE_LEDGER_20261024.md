@@ -1,4 +1,4 @@
-# G1 Design — Usage Ledger (PROPOSED, chờ Vinh ACK)
+# G1 Design — Usage Ledger (ACKED — REV 6 FINAL)
 
 - Thời điểm: 2026-10-24 (UTC+7). Người soạn: Vibe (ủy quyền tự chủ của Vinh); thẩm định: Cla/Xu; ACK: Vinh.
 - Trạng thái: **ACKED — REV 6 (FINAL)**. REV 5 đã được Xu thẩm định vòng cuối; Vinh ACK có điều kiện ngày 2026-10-24 (qua Vibe, điều kiện: chuẩn hóa nhãn §3 bị lặp — đã hoàn tất ở REV 6 này). Quyết định kèm theo ACK: #7c giữ mở, chưa cấp quyền triển khai; gitlink room-meeting-ai/ giữ nguyên, kiểm kê tiếp tục BLOCKED chờ URL nguồn. Nội dung thiết kế không đổi từ REV 5. KHÔNG tạo file thiết kế cạnh tranh — các REV thay thế nhau tại cùng đường dẫn.
@@ -147,4 +147,4 @@ Mỗi dòng JSONL gồm (trường thiếu = `null`, KHÔNG BAO GIỜ điền 0 
 
 ## 8. Điều kiện trước khi triển khai (lặp lại từ Decision W104-G0-006)
 
-1. Vinh ACK bản G1 này. 2. Môi trường test ủy quyền. 3. Triển khai trên đúng nhánh work/104, không đụng Protected Core authority. 4. agents/*.yaml cần model thật cho đường P1/P2 trước khi kỳ vọng usage thật.
+1. Vinh ACK bản G1 này — đã được ghi nhận có điều kiện ngày 2026-10-24, điều kiện chuẩn hóa nhãn §3 hoàn tất trong REV 6. 2. Môi trường test ủy quyền vẫn là điều kiện bắt buộc cho G3; hiện chưa được xác minh trong phiên này. 3. Triển khai trên đúng nhánh work/104, không đụng Protected Core authority. 4. agents/*.yaml cần model thật cho đường P1/P2 trước khi kỳ vọng usage thật.
