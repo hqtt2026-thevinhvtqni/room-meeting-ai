@@ -79,3 +79,11 @@
 - Kết quả: DONE — REV 5 (khép điểm cuối). G1 PROPOSED REV 5 — đủ điều kiện Xu đọc lại bản cuối và trình Vinh ACK. G0 vẫn NOT PASS; kiểm kê submodule BLOCKED vì orphaned gitlink.
 - Bằng chứng: Commit này trên nhánh work/104 (diff §3d); truy vấn API Git tree trả {type: submodule, sha eeb497e9...} và .gitmodules 404.
 - Bước tiếp: Xu đọc lại REV 5 → trình Vinh ACK (kèm 2 quyết định Xu đã đề xuất: #7c giữ mở chưa triển khai; kiểm kê submodule trước #8 — nhưng cần Vinh cho URL vì orphaned gitlink). Sau ACK: #8 G2 Implementation (Co).
+
+## 2026-10-24 (UTC+7) — Vibe (agent hỗ trợ, ghi thay vì Xu vì thao tác ghi của Xu bị chặn)
+- Mã việc: W104-G1-007FINAL (chuẩn hóa nhãn §3 + ghi nhận ACK).
+- Lý do: Xu xác nhận nội dung chính REV 4/5 đạt; Vinh ACK CÓ ĐIỀU KIỆN với 3 điều kiện: (1) chuẩn hóa nhãn §3 bị lặp; (2) #7c giữ mở, chưa triển khai; (3) gitlink room-meeting-ai/ giữ nguyên, chưa có URL nguồn nên kiểm kê tiếp tục BLOCKED, không tự gỡ. Xu không đẩy được commit (thao tác ghi bị chặn) nên Vibe ghi thay theo ủy quyền của Vinh.
+- Hành động: (1) Chuẩn hóa §3: hai mục cuối trùng nhãn c./d. đổi thành e./f., mục test kép tham chiếu mục #7 trong test plan §7 — nội dung kỹ thuật KHÔNG đổi từ REV 5. Nâng bản thành REV 6 (FINAL). (2) Ghi nhận ACK có điều kiện của Vinh vào header G1, Kế hoạch #7 và PROJECT_STATE.
+- Kết quả: DECISION — G1 Design REV 6 (FINAL) ACKED bởi Vinh 2026-10-24 (ACK có điều kiện, điều kiện chuẩn hóa đã hoàn tất trong cùng commit). KHÔNG tự nâng bất kỳ gate nào: G0 vẫn NOT PASS; G2 chưa bắt đầu.
+- Bằng chứng: Commit này trên nhánh work/104 (diff nhãn §3 + header ACK); ACK phát biểu bởi Vinh trong phiên Vibe ngày 2026-10-24, Xu đã xác nhận điều kiện trước đó.
+- Bước tiếp: #8 G2 Implementation (Co): viết core/usage_ledger.py + instrumentation 6 discard points theo REV 6. Lưu ý điều kiện §8: G3 Verification cần môi trường test ủy quyền (chưa có) và model thật ở agents/*.yaml cho usage thật; code G2 có thể bắt đầu nhưng KHÔNG khai PASS khi chưa test được. Kiểm kê submodule tiếp tục BLOCKED chờ Vinh cung cấp URL.

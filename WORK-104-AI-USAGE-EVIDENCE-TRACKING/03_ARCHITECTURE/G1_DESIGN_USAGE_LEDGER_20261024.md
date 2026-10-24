@@ -1,7 +1,7 @@
 # G1 Design — Usage Ledger (PROPOSED, chờ Vinh ACK)
 
 - Thời điểm: 2026-10-24 (UTC+7). Người soạn: Vibe (ủy quyền tự chủ của Vinh); thẩm định: Cla/Xu; ACK: Vinh.
-- Trạng thái: **PROPOSED — REV 5** (REV 4 + 1 khép điểm cuối theo thẩm định vòng cuối của Xu 2026-10-24: nguồn xác định khoảng thời gian thất thoát không xác định là do người vận hành cung cấp/xác nhận, hệ thống KHÔNG tự phát hiện). Đây là bản thiết kế cho #7, KHÔNG phải phê duyệt triển khai. KHÔNG tạo file thiết kế cạnh tranh — các REV thay thế nhau tại cùng đường dẫn.
+- Trạng thái: **ACKED — REV 6 (FINAL)**. REV 5 đã được Xu thẩm định vòng cuối; Vinh ACK có điều kiện ngày 2026-10-24 (qua Vibe, điều kiện: chuẩn hóa nhãn §3 bị lặp — đã hoàn tất ở REV 6 này). Quyết định kèm theo ACK: #7c giữ mở, chưa cấp quyền triển khai; gitlink room-meeting-ai/ giữ nguyên, kiểm kê tiếp tục BLOCKED chờ URL nguồn. Nội dung thiết kế không đổi từ REV 5. KHÔNG tạo file thiết kế cạnh tranh — các REV thay thế nhau tại cùng đường dẫn.
 - Căn cứ: DECISION_G0_INTEGRATION_POINT_20261024.md (hướng in-process `core/usage_ledger.py` + append-only JSONL, không proxy); G0 inventory gốc + expansion.
 
 ## 1. Module và nguyên tắc
@@ -67,8 +67,8 @@ Mỗi dòng JSONL gồm (trường thiếu = `null`, KHÔNG BAO GIỜ điền 0 
        - Nếu không có căn cứ xác định thời điểm bắt đầu/kết thúc → báo cáo ghi thẳng **"thời gian và phạm vi thất thoát KHÔNG xác định được"**, không ghi khoảng suy đoán.
        - **KHÔNG tự suy ra** thời gian, số lượng hoặc phạm vi từ việc chỉ biết hai đường ghi đã hỏng; biết "cả hai path hỏng" chỉ cho phép phát biểu giới hạn, không cho phép phát biểu đo lường.
        - Việc đối soát service journal/đầu ra tiến trình bên ngoài (nếu có) là **đầu vào thủ công của người vận hành** cho báo cáo, không phải output tự động của hệ thống; báo cáo phải ghi rõ đấy là căn cứ ngoài hệ thống.
-    c. **KHÔNG BAO GIỜ tuyên bố completeness** khi tồn tại loss "không xác định"; completeness chỉ phát biểu khi đối soát ledger + counter (+ index xoay vòng §5b) khớp nhau trong khoảng thời gian báo cáo.
-    d. Kiểm thử G3 phải có bài: làm hỏng CẢ ledger path VÀ failures.log path → luồng AI chính vẫn PASS và báo cáo ghi đúng "không đối soát được", không treo, không bịa.
+    e. **KHÔNG BAO GIỜ tuyên bố completeness** khi tồn tại loss "không xác định"; completeness chỉ phát biểu khi đối soát ledger + counter (+ index xoay vòng §5b) khớp nhau trong khoảng thời gian báo cáo.
+    f. Kiểm thử G3 cho trường hợp kép được định nghĩa thành mục riêng #7 trong test plan §7 (REV 6: bỏ nhãn trùng lặp ở đây, chỉ giữ tham chiếu).
 
 ## 4. Idempotency & ghi trùng
 
