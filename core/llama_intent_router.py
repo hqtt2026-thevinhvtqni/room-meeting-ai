@@ -30,8 +30,10 @@ from __future__ import annotations
 
 import json
 import os
+import time
 
 from core.intent_router import ALLOWED_ACTIONS, IntentRouterError
+from core.usage_ledger import extract_usage, new_usage_event, record_usage_event, sha256_text
 
 DEFAULT_MODEL = "llama-3.3-70b-versatile"
 
@@ -143,6 +145,11 @@ class LlamaIntentRouter:
             )
 
         client = self._get_client()
+        started = time.monotonic()
+        usage_event = new_usage_event(
+            provider="groq", model=self.model, ai_id="llama_intent_router",
+            ai_role="intent_router", caller="intent_router",
+        )
         messages = [{"role": "system", "content": SYSTEM_PROMPT}]
         for line in (history or [])[-6:]:
             # history đang lưu dạng "Vinh: ..." / "Agent: ..." (string đơn giản
@@ -162,9 +169,18 @@ class LlamaIntentRouter:
                 temperature=0.2,
             )
         except Exception as e:
+            usage_event.update(status="error", error_class=type(e).__name__,
+                               latency_ms=round((time.monotonic() - started) * 1000))
+            record_usage_event(usage_event)
             raise IntentRouterError(f"Loi goi Groq API: {e}") from e
 
         msg = resp.choices[0].message
+        groq_usage = getattr(getattr(resp, "x_groq", None), "usage", None) or getattr(resp, "usage", None)
+        usage_event.update(extract_usage("groq", groq_usage))
+        usage_event["provider_request_id"] = getattr(resp, "id", None)
+        usage_event["latency_ms"] = round((time.monotonic() - started) * 1000)
+        usage_event["content_hash"] = sha256_text(getattr(msg, "content", None))
+        record_usage_event(usage_event)
 
         if not msg.tool_calls:
             # Llama không gọi tool nào -> coi là hội thoại tự do.
