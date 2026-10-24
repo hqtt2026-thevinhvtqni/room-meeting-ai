@@ -87,3 +87,16 @@
 - Kết quả: DECISION — G1 Design REV 6 (FINAL) ACKED bởi Vinh 2026-10-24 (ACK có điều kiện, điều kiện chuẩn hóa đã hoàn tất trong cùng commit). KHÔNG tự nâng bất kỳ gate nào: G0 vẫn NOT PASS; G2 chưa bắt đầu.
 - Bằng chứng: Commit này trên nhánh work/104 (diff nhãn §3 + header ACK); ACK phát biểu bởi Vinh trong phiên Vibe ngày 2026-10-24, Xu đã xác nhận điều kiện trước đó.
 - Bước tiếp: #8 G2 Implementation (Co): viết core/usage_ledger.py + instrumentation 6 discard points theo REV 6. Lưu ý điều kiện §8: G3 Verification cần môi trường test ủy quyền (chưa có) và model thật ở agents/*.yaml cho usage thật; code G2 có thể bắt đầu nhưng KHÔNG khai PASS khi chưa test được. Kiểm kê submodule tiếp tục BLOCKED chờ Vinh cung cấp URL.
+
+
+## 2026-10-24 (UTC+7) — Xu (AI-01 GPT CEO / điều phối G2)
+
+- Mã việc: W104-G2-008-START.
+- Chỉ thị: Vinh ra lệnh “bắt đầu G2”; phạm vi theo G1 REV 6, không triển khai #7c, không đổi gitlink, không khai PASS khi thiếu bằng chứng.
+- Truy cập: MCP 8030 trả lỗi kết nối trong phiên này; chuyển sang GitHub connector và chỉ ghi trên nhánh `work/104-ai-usage-evidence-tracking`.
+- Hành động: tạo `core/usage_ledger.py` + `tests/test_usage_ledger.py`; tích hợp usage vào `core/connectors.py` (Anthropic/OpenAI), `core/intent_router.py` (Claude), `core/llama_intent_router.py` (Groq), `core/gemini_intent_router.py` (Gemini), và `llama_chat_v2.py` (hai lần gọi Groq trong đường chat dùng chung client).
+- Evidence: `06_EVIDENCE/G2_IMPLEMENTATION_PROGRESS_20261024.md` (danh sách commit và giới hạn).
+- Kết quả: code được ghi lên nhánh; **G2 IN PROGRESS / NOT PASS**. Unit tests và regression tests chưa chạy trong môi trường ủy quyền; không có provider call thật nào được chạy.
+- Blocker/giới hạn: model rỗng ở `agents/xu.yaml` và `agents/claude.yaml`; môi trường test ủy quyền chưa xác định/khả dụng; G0 vẫn NOT PASS do gitlink chưa kiểm kê; pricing #7b chưa triển khai.
+- Ranh giới: #7c giữ OPEN, chưa triển khai; gitlink `room-meeting-ai/` giữ nguyên; Work 102 không đổi.
+- Bước tiếp: kiểm tra cú pháp + unit/regression tests trong môi trường ủy quyền, sửa lỗi dựa trên kết quả thật, rồi giao Ka review độc lập trước khi xét G3. Không tuyên bố PASS trước khi có test report.
