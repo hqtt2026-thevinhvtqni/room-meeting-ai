@@ -19,3 +19,13 @@ Build a maintainable cryptocurrency trading bot that can ingest market data, gen
 
 ## Status
 ACTIVE. Project created in ROOM-HOP Sandbox. Implementation and verification remain pending.
+
+
+## GitHub mirror / two-way synchronization
+- Repository: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai
+- Work branch: `work/200-crypto-trading-bot`
+- Canonical Work folder on GitHub: `WORK-200-CRYPTO-TRADING-BOT/`
+- The Work source tree and evidence are mirrored under the same numbered folders (`00_ROOT` through `07_RELEASE`) where text/source files are available through Sandbox MCP 8030.
+- After changes in either location, compare the affected revisions before overwriting, sync the changed files to the counterpart, then record verification in the Work journal.
+- This is an agent-driven/manual two-way sync workflow. No always-on daemon or webhook has been configured; do not claim continuous automatic synchronization.
+- GitHub branch is not merged into `main`. Do not place secrets or exchange credentials in the repository.
