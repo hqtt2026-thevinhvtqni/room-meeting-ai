@@ -152,20 +152,21 @@ def _rotate_if_needed(path: Path) -> Path:
             }
             _append_jsonl(Path("docs/usage_ledger_index.jsonl"), index_row)
         except Exception as exc:
-            _fallback("ledger index write failed", exc)
+            _fallback("ledger index write failed", exc, count_loss=False)
         return path
     except Exception as exc:
-        _fallback("ledger rotation failed", exc)
+        _fallback("ledger rotation failed", exc, count_loss=False)
         return path
 
 
-def _fallback(message: str, exc: BaseException) -> None:
+def _fallback(message: str, exc: BaseException, *, count_loss: bool = True) -> None:
     stamp = _now()
-    try:
-        failure_path = Path(os.environ.get("USAGE_LEDGER_FAILURES_PATH", "docs/usage_ledger_failures.log"))
-        _append_jsonl(failure_path, {"timestamp": stamp, "count": 1, "reason": message})
-    except Exception:
-        pass
+    if count_loss:
+        try:
+            failure_path = Path(os.environ.get("USAGE_LEDGER_FAILURES_PATH", "docs/usage_ledger_failures.log"))
+            _append_jsonl(failure_path, {"timestamp": stamp, "count": 1})
+        except Exception:
+            pass
     try:
         sys.stderr.write(f"[usage-ledger] {stamp} {message}: {type(exc).__name__}\n")
         sys.stderr.flush()
