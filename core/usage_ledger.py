@@ -71,8 +71,8 @@ def extract_usage(provider: str, usage: Any) -> dict[str, Any]:
     if not isinstance(usage, Mapping):
         usage = {k: getattr(usage, k) for k in (
             "prompt_tokens", "completion_tokens", "input_tokens", "output_tokens",
-            "cached_tokens", "prompt_tokens_details", "cache_read_input_tokens",
-            "thoughts_token_count", "candidates_token_count", "prompt_token_count",
+            "cached_tokens", "prompt_tokens_details", "completion_tokens_details", "cache_read_input_tokens",
+            "cache_creation_input_tokens", "thoughts_token_count", "candidates_token_count", "prompt_token_count",
             "cached_content_token_count",
         ) if hasattr(usage, k)}
     p = (provider or "").lower()
@@ -85,11 +85,12 @@ def extract_usage(provider: str, usage: Any) -> dict[str, Any]:
         result["output_tokens"] = usage.get("completion_tokens", usage.get("output_tokens"))
         details = usage.get("prompt_tokens_details") or {}
         if not isinstance(details, Mapping):
-            details = {}
+            details = {"cached_tokens": getattr(details, "cached_tokens", None)}
         result["cached_input_tokens"] = details.get("cached_tokens", usage.get("cached_tokens"))
         completion_details = usage.get("completion_tokens_details") or {}
-        if isinstance(completion_details, Mapping):
-            result["reasoning_tokens"] = completion_details.get("reasoning_tokens")
+        if not isinstance(completion_details, Mapping):
+            completion_details = {"reasoning_tokens": getattr(completion_details, "reasoning_tokens", None)}
+        result["reasoning_tokens"] = completion_details.get("reasoning_tokens")
     elif p in ("google", "gemini"):
         result["input_tokens"] = usage.get("prompt_token_count")
         result["output_tokens"] = usage.get("candidates_token_count")
