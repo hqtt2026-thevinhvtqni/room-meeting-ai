@@ -17,6 +17,7 @@ from typing import Any, Mapping
 _VN_TZ = timezone(timedelta(hours=7))
 _SCHEMA_VERSION = "1"
 _MAX_FILE_BYTES = 20 * 1024 * 1024
+_LAST_MONTHLY_INDEX_SCAN: str | None = None
 _FIELDS = (
     "event_id", "occurred_at", "event_type", "ingested_at", "ai_id", "ai_role",
     "provider", "model", "usage_source", "input_tokens", "output_tokens",
@@ -131,6 +132,51 @@ def _append_jsonl(path: Path, row: Mapping[str, Any]) -> None:
         handle.flush()
 
 
+def _index_path() -> Path:
+    return Path(os.environ.get("USAGE_LEDGER_INDEX_PATH", "docs/usage_ledger_index.jsonl"))
+
+
+def _write_index_for_file(path: Path) -> None:
+    lines = path.read_bytes().splitlines()
+    first = json.loads(lines[0]) if lines else {}
+    last = json.loads(lines[-1]) if lines else {}
+    index_row = {
+        "file": str(path), "first_event_at": first.get("occurred_at"),
+        "last_event_at": last.get("occurred_at"), "event_count": len(lines),
+        "sha256_first_line": hashlib.sha256(lines[0]).hexdigest() if lines else None,
+        "sha256_last_line": hashlib.sha256(lines[-1]).hexdigest() if lines else None,
+        "indexed_at": _now(),
+    }
+    _append_jsonl(_index_path(), index_row)
+
+
+def _index_completed_month_files(active_path: Path) -> None:
+    global _LAST_MONTHLY_INDEX_SCAN
+    if os.environ.get("USAGE_LEDGER_PATH"):
+        return
+    current_month = active_path.stem.rsplit("-", 1)[-1]
+    if _LAST_MONTHLY_INDEX_SCAN == current_month:
+        return
+    try:
+        index_path = _index_path()
+        indexed: set[str] = set()
+        if index_path.exists():
+            for line in index_path.read_text(encoding="utf-8").splitlines():
+                try:
+                    item = json.loads(line)
+                    if item.get("file"):
+                        indexed.add(str(item["file"]))
+                except (json.JSONDecodeError, AttributeError):
+                    continue
+        for candidate in active_path.parent.glob("usage_ledger-*.jsonl"):
+            month = candidate.name[len("usage_ledger-"):len("usage_ledger-") + 6]
+            if candidate != active_path and month.isdigit() and month < current_month and str(candidate) not in indexed:
+                _write_index_for_file(candidate)
+        _LAST_MONTHLY_INDEX_SCAN = current_month
+    except Exception as exc:
+        _fallback("monthly ledger index scan failed", exc, count_loss=False)
+
+
 def _rotate_if_needed(path: Path) -> Path:
     try:
         if not path.exists() or path.stat().st_size < _MAX_FILE_BYTES:
@@ -141,17 +187,7 @@ def _rotate_if_needed(path: Path) -> Path:
         rotated = path.with_name(f"{path.stem}.part{suffix}{path.suffix}")
         path.replace(rotated)
         try:
-            lines = rotated.read_bytes().splitlines()
-            first = json.loads(lines[0]) if lines else {}
-            last = json.loads(lines[-1]) if lines else {}
-            index_row = {
-                "file": str(rotated), "first_event_at": first.get("occurred_at"),
-                "last_event_at": last.get("occurred_at"), "event_count": len(lines),
-                "sha256_first_line": hashlib.sha256(lines[0]).hexdigest() if lines else None,
-                "sha256_last_line": hashlib.sha256(lines[-1]).hexdigest() if lines else None,
-                "indexed_at": _now(),
-            }
-            _append_jsonl(Path("docs/usage_ledger_index.jsonl"), index_row)
+            _write_index_for_file(rotated)
         except Exception as exc:
             _fallback("ledger index write failed", exc, count_loss=False)
         return path
@@ -189,7 +225,9 @@ def record_usage_event(event: Mapping[str, Any]) -> None:
             row["cost_amount"] = None
         row["redaction_status"] = "metadata_only"
         row["schema_version"] = _SCHEMA_VERSION
-        path = _rotate_if_needed(_active_path(row))
+        path = _active_path(row)
+        _index_completed_month_files(path)
+        path = _rotate_if_needed(path)
         _append_jsonl(path, row)
     except Exception as exc:
         _fallback("ledger append failed", exc)
