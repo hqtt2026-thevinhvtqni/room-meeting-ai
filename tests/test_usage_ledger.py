@@ -1,6 +1,7 @@
 import json
 from types import SimpleNamespace
 
+from core import usage_ledger
 from core.usage_ledger import extract_usage, new_usage_event, record_usage_event
 
 
@@ -95,3 +96,22 @@ def test_ledger_write_failure_never_raises(tmp_path, monkeypatch):
     monkeypatch.setenv("USAGE_LEDGER_PATH", str(target))
     monkeypatch.setenv("USAGE_LEDGER_FAILURES_PATH", str(tmp_path / "failures.log"))
     record_usage_event(new_usage_event(provider="openai", model="test", caller="test"))
+
+
+
+def test_size_rotation_indexes_completed_part_file(tmp_path, monkeypatch):
+    ledger_path = tmp_path / "usage.jsonl"
+    index_path = tmp_path / "index.jsonl"
+    monkeypatch.setenv("USAGE_LEDGER_PATH", str(ledger_path))
+    monkeypatch.setenv("USAGE_LEDGER_INDEX_PATH", str(index_path))
+    monkeypatch.setattr(usage_ledger, "_MAX_FILE_BYTES", 1)
+
+    record_usage_event(new_usage_event(provider="openai", model="test", caller="test"))
+    record_usage_event(new_usage_event(provider="openai", model="test", caller="test"))
+
+    rotated = tmp_path / "usage.part2.jsonl"
+    assert rotated.exists()
+    indexed = [json.loads(line) for line in index_path.read_text(encoding="utf-8").splitlines()]
+    assert len(indexed) == 1
+    assert indexed[0]["file"] == str(rotated)
+    assert indexed[0]["event_count"] == 1
