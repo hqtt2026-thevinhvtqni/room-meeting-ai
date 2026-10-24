@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Work 200 · Crypto Trading Dashboard</title>
+<style>
+:root{--bg:#0b1020;--panel:#111a2e;--panel2:#151f36;--line:#263451;--text:#eef3ff;--muted:#92a1bd;--green:#42d6a4;--red:#ff7185;--amber:#ffc66d;--blue:#80aaff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top left,#17264a 0,transparent 42%),var(--bg);color:var(--text);font:14px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+button,select{font:inherit}button{cursor:pointer;border:1px solid var(--line);border-radius:10px;background:#1a2947;color:var(--text);padding:9px 12px}button:hover{border-color:var(--blue)}.app{max-width:1440px;margin:auto;padding:22px}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:12px}.logo{display:grid;place-items:center;width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#5a8cff,#6cddc0);color:#091326;font-weight:900;font-size:18px}.eyebrow{color:var(--muted);font-size:11px;letter-spacing:.14em;text-transform:uppercase}.title{font-size:23px;font-weight:750;letter-spacing:-.03em}.actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.pill{border:1px solid #66502b;background:#2a241a;color:var(--amber);padding:7px 10px;border-radius:999px;font-size:12px;font-weight:700}.subtle{color:var(--muted)}.grid{display:grid;gap:14px}.metrics{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:14px}.card{background:linear-gradient(145deg,rgba(21,31,54,.96),rgba(15,23,41,.96));border:1px solid var(--line);border-radius:16px;padding:17px;min-width:0;box-shadow:0 10px 28px #00000015}.metric-label{font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:8px}.metric-value{font-size:26px;font-weight:750;letter-spacing:-.04em;margin:8px 0 3px}.positive{color:var(--green)}.negative{color:var(--red)}.small{font-size:12px;color:var(--muted)}.main-grid{grid-template-columns:minmax(0,1.65fr) minmax(280px,.85fr);margin-bottom:14px}.card-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px}.card-title{font-size:15px;font-weight:700}.tabs{display:flex;gap:5px}.tabs button{padding:6px 9px;font-size:12px;color:var(--muted);background:transparent}.tabs button.active{background:#243757;color:var(--text);border-color:#3b527b}.chart-wrap{height:230px;position:relative}.chart-wrap svg{width:100%;height:100%;overflow:visible}.chart-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-top:8px}.chart-note{display:flex;gap:15px;font-size:12px;color:var(--muted);flex-wrap:wrap}.dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;background:var(--green)}.risk-score{display:flex;align-items:center;gap:14px;margin:8px 0 16px}.ring{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--green) 0 78%,#283653 78% 100%);position:relative}.ring:before{content:"";position:absolute;inset:7px;background:var(--panel);border-radius:50%}.ring strong{position:relative;font-size:20px}.risk-list{display:grid;gap:13px}.risk-row{display:flex;justify-content:space-between;gap:12px;font-size:12px}.bar{height:6px;background:#283653;border-radius:99px;margin-top:7px;overflow:hidden}.bar span{display:block;height:100%;background:var(--green);border-radius:99px}.bar.warn span{background:var(--amber)}.bar.danger span{background:var(--red)}.bottom-grid{grid-template-columns:minmax(0,1.25fr) minmax(280px,.75fr)}table{width:100%;border-collapse:collapse;font-size:12px}th{text-align:left;color:var(--muted);font-weight:500;padding:10px 8px;border-bottom:1px solid var(--line)}td{padding:12px 8px;border-bottom:1px solid #202d47}tbody tr:last-child td{border-bottom:0}.asset{display:flex;align-items:center;gap:9px;font-weight:650}.coin{width:29px;height:29px;border-radius:50%;display:grid;place-items:center;background:#253554;color:#c7d9ff;font-size:11px}.tag{font-size:10px;font-weight:750;padding:4px 7px;border-radius:6px;display:inline-block}.tag.paper{color:var(--blue);background:#1d2b49}.tag.buy{color:var(--green);background:#15382f}.tag.sell{color:var(--red);background:#3a202b}.trade-list{display:grid;gap:0}.trade{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.trade:last-child{border-bottom:0}.trade-left{display:flex;align-items:center;gap:10px}.trade-symbol{font-weight:700}.trade-meta{font-size:11px;color:var(--muted)}.empty{padding:20px;text-align:center;color:var(--muted)}.footer{margin:16px 2px 0;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:11px;color:var(--muted)}.notice{border:1px solid #5e4a28;background:#282216;color:#f6d59b;padding:11px 13px;border-radius:12px;margin-bottom:14px;font-size:12px}.section-label{margin:22px 0 10px;color:var(--muted);font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+@media(max-width:900px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.main-grid,.bottom-grid{grid-template-columns:1fr}}@media(max-width:520px){.app{padding:13px}.title{font-size:19px}.metric-value{font-size:22px}.card{padding:13px}.chart-wrap{height:190px}.table-wrap{overflow-x:auto}table{min-width:500px}.actions{width:100%}.actions button{flex:1}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="brand"><div class="logo">W2</div><div><div class="eyebrow">ROOM-HOP · WORK 200</div><div class="title">Crypto Trading Dashboard</div><div class="small">Bảng điều khiển bot giao dịch · bản giao diện thử nghiệm</div></div></div>
+  <div class="actions"><span class="pill">● PAPER MODE · MÔ PHỎNG</span><button id="refreshBtn">↻ Làm mới demo</button></div>
+</header>
+<div class="notice">⚠ DỮ LIỆU MINH HỌA — không phải giá thị trường trực tiếp, không phải lợi nhuận thực tế. Dashboard hiện chưa kết nối sàn và không thể đặt lệnh bằng tiền thật.</div>
+<div class="grid metrics">
+  <section class="card"><div class="metric-label">Giá trị danh mục <span>◈</span></div><div class="metric-value" id="equity">$10,248.60</div><div class="small"><span class="positive">+$248.60</span> · mô phỏng từ vốn giả định $10,000</div></section>
+  <section class="card"><div class="metric-label">Lãi/lỗ mô phỏng <span>↗</span></div><div class="metric-value positive" id="pnl">+$248.60</div><div class="small">+2.49% từ vốn ban đầu (demo)</div></section>
+  <section class="card"><div class="metric-label">Drawdown tối đa <span>⌁</span></div><div class="metric-value" id="drawdown">-3.2%</div><div class="small">Ngưỡng cấu hình minh họa: -10%</div></section>
+  <section class="card"><div class="metric-label">Lệnh paper đã khớp <span>⇄</span></div><div class="metric-value" id="fills">18</div><div class="small">12 BUY · 6 SELL · dữ liệu demo</div></section>
+</div>
+<div class="grid main-grid">
+  <section class="card">
+    <div class="card-head"><div><div class="card-title">Đường vốn mô phỏng</div><div class="small">Equity curve · chưa phải kết quả backtest xác thực</div></div><div class="tabs" id="rangeTabs"><button class="active" data-range="1D">1D</button><button data-range="1W">1W</button><button data-range="1M">1M</button></div></div>
+    <div class="chart-wrap"><svg id="equityChart" viewBox="0 0 720 240" role="img" aria-label="Biểu đồ vốn mô phỏng"><defs><linearGradient id="area" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#42d6a4" stop-opacity=".25"/><stop offset="100%" stop-color="#42d6a4" stop-opacity="0"/></linearGradient></defs><g stroke="#263451" stroke-width="1"><line x1="12" y1="25" x2="710" y2="25"/><line x1="12" y1="80" x2="710" y2="80"/><line x1="12" y1="135" x2="710" y2="135"/><line x1="12" y1="190" x2="710" y2="190"/></g><path id="areaPath" fill="url(#area)" d=""/><path id="linePath" fill="none" stroke="#42d6a4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d=""/></svg></div>
+    <div class="chart-labels"><span id="startLabel">00:00</span><span>Vốn mô phỏng (USD)</span><span id="endLabel">Hiện tại</span></div>
+    <div class="chart-note" style="margin-top:12px"><span><i class="dot"></i>Danh mục mô phỏng</span><span>— Không có dữ liệu sàn trực tiếp</span></div>
+  </section>
+  <section class="card">
+    <div class="card-head"><div><div class="card-title">Giám sát rủi ro</div><div class="small">Các chỉ báo minh họa</div></div><span class="tag paper">PAPER</span></div>
+    <div class="risk-score"><div class="ring"><strong>78</strong></div><div><div style="font-weight:700">Risk score (demo)</div><div class="small">Điểm giao diện, chưa được tính từ dữ liệu thực</div></div></div>
+    <div class="risk-list">
+      <div><div class="risk-row"><span>Hạn mức lệnh</span><strong>$250 / $500</strong></div><div class="bar"><span style="width:50%"></span></div></div>
+      <div><div class="risk-row"><span>Giới hạn vị thế</span><strong>$1,200 / $2,000</strong></div><div class="bar warn"><span style="width:60%"></span></div></div>
+      <div><div class="risk-row"><span>Ngưỡng lỗ ngày</span><strong>$12 / $200</strong></div><div class="bar"><span style="width:6%"></span></div></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:18px"><button id="killBtn" style="flex:1;border-color:#793747;background:#351d2a;color:#ff9aa8">■ Kích hoạt dừng demo</button></div>
+    <div id="killStatus" class="small" style="margin-top:9px">Công tắc giao diện chưa kích hoạt. Không gửi lệnh nào.</div>
+  </section>
+</div>
+<div class="grid bottom-grid">
+  <section class="card">
+    <div class="card-head"><div><div class="card-title">Thị trường theo dõi</div><div class="small">Giá minh họa · không phải quote trực tiếp</div></div><span class="tag paper">DEMO FEED</span></div>
+    <div class="table-wrap"><table><thead><tr><th>Tài sản</th><th>Giá demo</th><th>24h demo</th><th>Trạng thái</th></tr></thead><tbody id="marketRows"></tbody></table></div>
+  </section>
+  <section class="card">
+    <div class="card-head"><div><div class="card-title">Giao dịch mô phỏng gần đây</div><div class="small">Lịch sử mẫu, không phải lệnh thật</div></div><button id="clearTrades">Ẩn lịch sử</button></div>
+    <div id="tradeList" class="trade-list"></div>
+  </section>
+</div>
+<div class="section-label">Tình trạng hệ thống</div>
+<div class="grid metrics">
+  <section class="card"><div class="metric-label">Nguồn dữ liệu</div><div class="metric-value" style="font-size:18px">Chưa kết nối</div><div class="small">Cần chọn nguồn và xác minh API</div></section>
+  <section class="card"><div class="metric-label">Strategy engine</div><div class="metric-value" style="font-size:18px">Baseline</div><div class="small">MA crossover · nghiên cứu</div></section>
+  <section class="card"><div class="metric-label">Backtest</div><div class="metric-value" style="font-size:18px">Chưa chạy</div><div class="small">Chưa có kết quả đã xác minh</div></section>
+  <section class="card"><div class="metric-label">Test suite</div><div class="metric-value" style="font-size:18px">Chưa xác minh</div><div class="small">Tệp test đã viết, chưa thực thi trong Sandbox</div></section>
+</div>
+<footer class="footer"><span>Work 200 · CRYPTO-TRADING-BOT · Dashboard prototype v0.1</span><span>Local static UI · no API · no real trading · <span id="updated">Chưa cập nhật</span></span></footer>
+</div>
+<script>
+const market=[
+ {symbol:"BTC",name:"Bitcoin",price:67420.50,change:2.18},
+ {symbol:"ETH",name:"Ethereum",price:3528.12,change:1.04},
+ {symbol:"SOL",name:"Solana",price:182.77,change:-0.82},
+ {symbol:"BNB",name:"BNB",price:592.40,change:0.36}
+];
+let trades=[
+ {side:"BUY",symbol:"BTC/USDT",qty:"0.003",price:"$67,100",time:"09:42",pnl:"+$4.20"},
+ {side:"SELL",symbol:"ETH/USDT",qty:"0.12",price:"$3,510",time:"09:18",pnl:"+$8.10"},
+ {side:"BUY",symbol:"SOL/USDT",qty:"1.50",price:"$181.20",time:"08:56",pnl:"—"},
+ {side:"BUY",symbol:"BTC/USDT",qty:"0.002",price:"$66,850",time:"08:31",pnl:"—"}
+];
+const $=id=>document.getElementById(id);
+function drawChart(range="1D"){
+ let n=range==="1D"?24:range==="1W"?28:30, vals=[],v=10000;
+ for(let i=0;i<n;i++){v+=((Math.sin(i*1.7)+Math.cos(i*.63)) * (range==="1D"?9:range==="1W"?17:24))+(i%5===0?-14:5);vals.push(v)}
+ const min=Math.min(...vals)-18,max=Math.max(...vals)+18;
+ const pts=vals.map((v,i)=>[12+i*(698/(n-1)),215-((v-min)/(max-min))*190]);
+ const path=pts.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ");
+ $("linePath").setAttribute("d",path);
+ $("areaPath").setAttribute("d",path+" L "+pts[pts.length-1][0]+" 225 L "+pts[0][0]+" 225 Z");
+ $("startLabel").textContent=range==="1D"?"00:00":range==="1W"?"7 ngày trước":"30 ngày trước";
+ $("endLabel").textContent=range==="1D"?"Hiện tại":"Kết thúc kỳ demo";
+}
+function renderMarket(){
+ $("marketRows").innerHTML=market.map(m=>'<tr><td><div class="asset"><span class="coin">'+m.symbol.slice(0,2)+'</span><span>'+m.symbol+'<div class="small">'+m.name+'</div></span></div></td><td>$'+m.price.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})+'</td><td class="'+(m.change>=0?"positive":"negative")+'">'+(m.change>=0?"+":"")+m.change.toFixed(2)+'%</td><td><span class="tag paper">DEMO</span></td></tr>').join("");
+}
+function renderTrades(){
+ $("tradeList").innerHTML=trades.length?trades.map(t=>'<div class="trade"><div class="trade-left"><span class="tag '+(t.side==="BUY"?"buy":"sell")+'">'+t.side+'</span><div><div class="trade-symbol">'+t.symbol+'</div><div class="trade-meta">'+t.qty+' · '+t.time+'</div></div></div><div style="text-align:right"><div style="font-weight:650">'+t.price+'</div><div class="trade-meta">'+t.pnl+'</div></div></div>').join(""):'<div class="empty">Lịch sử demo đang được ẩn.</div>';
+}
+document.querySelectorAll("[data-range]").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll("[data-range]").forEach(x=>x.classList.remove("active"));b.classList.add("active");drawChart(b.dataset.range)}));
+$("killBtn").addEventListener("click",()=>{$("killStatus").textContent="DỪNG DEMO ĐÃ KÍCH HOẠT — chỉ đổi trạng thái giao diện; chưa nối engine hoặc lệnh thật.";$("killStatus").style.color="var(--red)";$("killBtn").textContent="✓ DEMO ĐÃ DỪNG";});
+$("clearTrades").addEventListener("click",()=>{trades=[];renderTrades()});
+$("refreshBtn").addEventListener("click",()=>{$("updated").textContent="Làm mới giao diện lúc "+new Date().toLocaleTimeString("vi-VN");drawChart(document.querySelector("[data-range].active")?.dataset.range||"1D");renderMarket();});
+drawChart();renderMarket();renderTrades();
+</script>
+</body>
+</html>
