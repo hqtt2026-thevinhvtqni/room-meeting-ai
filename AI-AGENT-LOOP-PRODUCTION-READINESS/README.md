@@ -6,7 +6,8 @@
 **Coordinator:** Xu — CEO / Lead Architect / Planner  
 **Build owner:** Co  
 **Independent reviewer:** Ka  
-**Canonical operational journal:** [WORK_102_ENGINEERING_JOURNAL_20261015.md](06_EVIDENCE/WORK_102_ENGINEERING_JOURNAL_20261015.md)
+**Canonical operational journal:** [WORK_102_ENGINEERING_JOURNAL_20261015.md](06_EVIDENCE/WORK_102_ENGINEERING_JOURNAL_20261015.md)  
+**Status snapshot:** [STATUS_SNAPSHOT_20261024.md](06_EVIDENCE/STATUS_SNAPSHOT_20261024.md)
 
 ## Objective
 
@@ -21,9 +22,12 @@ Establish an evidence-backed, bounded Agent Loop contract that can be integrated
 - Sandbox is an AI build zone. Do not modify canonical main source or merge/commit/push/release unless explicitly authorized for the relevant task.
 - Work 102 changes must remain scoped; no Core-in-Sandbox, Core 2, or new dispatcher.
 
-## Current gates
+## Current gates (updated 2026-10-24 — see status snapshot)
 
-- Local patch V2: proposed candidate only; Co adoption and Ka independent review pending.
-- Source hash comparison: NOT VERIFIED.
-- Test evidence: existing 62/62 isolated V2 result is candidate-only and not proof of production runtime.
+- Patch V2 adoption (Co): DONE in Sandbox only — baseline 6/6 hash MATCH; post-adoption candidate 7/7 hash MATCH vs RUN_BUNDLE. Read the status snapshot for exact hashes.
+- Post-adoption test execution: ENV_BLOCKED / PENDING EVIDENCE — no authorized Python/pytest execution path verified in the current MCP surface. The isolated 62/62 V2 result remains LOCAL_REFERENCE_SNAPSHOT_ONLY and does not certify the adopted candidate.
+- Ka independent review: PENDING — must bind to the exact adopted candidate hashes.
 - Gate A: PARTIAL / BLOCKED pending authoritative Core task/dispatch contract, authenticated delivery/ACK/result correlation, persistence, idempotency, leases/fencing, recovery, and Work 14 Execution Host binding.
+- Repair budget (approved by Vinh): max 2 repair rounds / max 3 test runs per related defect cycle.
+
+Work 102 remains ACTIVE / NOT PASS / NOT RELEASED.
