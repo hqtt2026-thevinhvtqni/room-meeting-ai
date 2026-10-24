@@ -94,8 +94,12 @@ def test_ledger_write_failure_never_raises(tmp_path, monkeypatch):
     target = tmp_path / "blocked.jsonl"
     target.mkdir()
     monkeypatch.setenv("USAGE_LEDGER_PATH", str(target))
-    monkeypatch.setenv("USAGE_LEDGER_FAILURES_PATH", str(tmp_path / "failures.log"))
+    failure_path = tmp_path / "failures.log"
+    monkeypatch.setenv("USAGE_LEDGER_FAILURES_PATH", str(failure_path))
     record_usage_event(new_usage_event(provider="openai", model="test", caller="test"))
+    assert failure_path.exists()
+    failure_row = json.loads(failure_path.read_text(encoding="utf-8").splitlines()[0])
+    assert failure_row == {"timestamp": failure_row["timestamp"], "count": 1}
 
 
 
