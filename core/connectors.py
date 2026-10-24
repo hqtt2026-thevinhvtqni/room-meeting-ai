@@ -141,11 +141,18 @@ class MockConnector(AgentConnector):
         self._idx = 0
 
     def send_turn(self, context: MeetingContextForAgent) -> AgentResponse:
+        usage_event = new_usage_event(
+            provider="internal", model=self.agent.model or None, ai_id=self.agent.id,
+            ai_role=self.agent.role, caller="meeting_turn",
+        )
         if self._idx >= len(self._script):
             # Hết kịch bản mà vẫn bị gọi tiếp -> PASS an toàn, không raise
-            return AgentResponse(status=TurnStatus.PASS, content="", raw="(mock: hết kịch bản)")
-        response = self._script[self._idx]
-        self._idx += 1
+            response = AgentResponse(status=TurnStatus.PASS, content="", raw="(mock: hết kịch bản)")
+        else:
+            response = self._script[self._idx]
+            self._idx += 1
+        usage_event.update(usage_source="unavailable", content_hash=sha256_text(response.content))
+        record_usage_event(usage_event)
         return response
 
 
@@ -249,15 +256,23 @@ class InternalConnector(AgentConnector):
         self.local_agent = local_agent
 
     def send_turn(self, context: MeetingContextForAgent) -> AgentResponse:
+        usage_event = new_usage_event(
+            provider="internal", model=self.agent.model or None, ai_id=self.agent.id,
+            ai_role=self.agent.role, caller="meeting_turn",
+        )
         try:
             raw_text = self.local_agent.execute(
                 task=context.topic,
                 history=context.history,
             )
         except Exception as e:
+            usage_event.update(status="error", error_class=type(e).__name__)
+            record_usage_event(usage_event)
             raise ConnectorError(
                 f"Internal agent '{self.agent.id}' lỗi khi execute: {e}"
             ) from e
+        usage_event.update(usage_source="unavailable", content_hash=sha256_text(raw_text))
+        record_usage_event(usage_event)
         return parse_agent_output(raw_text)
 
 
