@@ -5,6 +5,7 @@
 * Fix commit: 1f0e6916bf317b0e5bebed819f100ec08ac35945
 * Follow-up commit: 5d52cf2e6b4e4e5d758327c5925ea7c5345a1822
 * Bootstrap wiring commit: dc91ffc71bc5985ac1056c78182708f87a039ba2
+* Bootstrap syntax fix commit: 769b13fed8b070d8cacf987cb8729eab5c8df998
 * Provenance: repository source audit only. This file records what was read
   and changed on this branch; no Sandbox state was accessed or claimed.
 
@@ -23,7 +24,7 @@
 
 * New `authenticate_caller(provided, auth_token)` in `execution_host/server.py`:
   constant-time comparison via `hmac.compare_digest`; an unarmed server
-  (no configured token) never authenticates; non-string inputs fail closed.
+  (no token configured) never authenticates; non-string inputs fail closed.
 * POST /execute now requires header `X-Room-Hop-Execution-Auth` to match the
   deployment-issued token, otherwise 401 BLOCKED `caller_authentication_failed`
   before the host is invoked.
@@ -100,6 +101,23 @@ the service loaded them, because the `__main__` entrypoint still called
   loading, fail-loud behavior, the pinned Work id format, token non-leakage
   into errors/output, and that `main()` forwards the configuration to
   `serve()` (with `serve` monkeypatched, so no server is started in CI).
+
+## 7. Incident record (2026-10-25): CI red on dc91ffc, fixed in 769b13f
+
+* Commit dc91ffc introduced an unterminated string literal in
+  `load_execution_auth_config` (missing closing quote on the
+  ' (comma-separated, e.g. W28) line), causing an import-time SyntaxError.
+* CI runs #128 and #129 (both against dc91ffc / 9b6e082) FAILED: the test
+  step exited with code 1 in ~2s, consistent with a collection-time import
+  error, not test assertions.
+* Commit 769b13f closes the string literal. Note: because the workflow is
+  filtered to `work/28/**` path changes, a server.py-only commit does not
+  trigger CI by itself; this evidence update triggers the run that must
+  confirm the fix. The passing CI run referenced by this entry is the run
+  triggered by this commit (recorded below once green).
+* Lesson: `execution_host/**` is outside the workflow path filter; handler
+  changes need an accompanying `work/28/**` change (or workflow_dispatch)
+  to be CI-verified.
 
 Still NOT claimed: verification that a deployed service process actually
 loaded the configuration. That requires booting the service in the trusted
