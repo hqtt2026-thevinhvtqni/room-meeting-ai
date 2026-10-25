@@ -31,3 +31,13 @@
 This CI run proves only staged unit/regression behavior with mocks. It does **not** prove live Core authorization, source bytes are actually snapshotted and hashed by a trusted resolver, W13 executes that exact snapshot, approved runtime identity is cryptographically/trustworthily pinned, process-tree cleanup is real, or live E2E works.
 
 Keep all seven public execution/evidence tools `NOT_IMPLEMENTED`. Do not wire this adapter or enable tools until trusted implementations exist and W13 unit tests plus authorized live E2E prove the complete evidence chain. No second execution host is authorized.
+
+
+## Follow-up: W13 contract-boundary regression (2026-10-25)
+
+- Commit under test: `8d8514a87e3e39cf5fc69d2ff4e5b937bd678bea`
+- CI run: [40150494323](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/40150494323)
+- Result: **PASS — 200 tests, 4 skipped** (`Ran 200 tests`, `OK (skipped=4)`).
+- New coverage: reject caller-provided command/authority/cwd/shell fields; reject traversal, absolute and Windows-ambiguous paths; reject invalid operation/hash/timeout; bind snapshot bytes to SHA-256; reject mismatched authoritative Work, hash mismatch, and symlink components.
+- Source staged for the canonical W13 host: `execution_host/work28_contract.py` on branch `work/13-execution-host-hardening`; mirrored into the Work 28 branch for regression execution.
+- Important limitation: this is contract/snapshot unit coverage only. The module is **not wired to HTTP :8031**, does not authenticate the Core caller, does not execute scripts, does not attest runtime identity, and does not prove process-tree cleanup. No live host request was sent. All seven execution/evidence MCP tools remain `NOT_IMPLEMENTED`.
