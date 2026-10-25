@@ -3,6 +3,7 @@
 * Date: 2026-10-25
 * Branch: work/28-mcp-tooling-platform
 * Fix commit: 1f0e6916bf317b0e5bebed819f100ec08ac35945
+* Follow-up commit: 5d52cf2e6b4e4e5d758327c5925ea7c5345a1822
 * Provenance: repository source audit only. This file records what was read
   and changed on this branch; no Sandbox state was accessed or claimed.
 
@@ -55,3 +56,29 @@ transport), so the fail-closed default breaks no regression test.
 1. Sandbox evidence sync to this branch.
 2. Live MCP 8020/8030 connectivity re-verification.
 3. E2E: MCP -> Core -> approved runtime -> evidence, under the new auth gate.
+
+## 5. Addendum (2026-10-25, second pass after independent review)
+
+The independent review correctly separated three evidence levels: CI green,
+source fix, real deployment verification. Two review findings were accepted
+and addressed in commit 5d52cf2:
+
+1. The first regression pass only exercised unit-level seams; it did not
+   prove that a real HTTP request with a missing/wrong token receives 401
+   and that the host is never invoked. Fixed: `05_TEST/test_w13_execute_handler_http_boundary.py`
+   now POSTs real HTTP requests into a ThreadingHTTPServer with a recording
+   fake host and asserts, per case, both the status code and that
+   `host.calls` is empty for 401/403 paths. The earlier wording that the
+   first test 'locked the gate' overstated its scope; the live HTTP test
+   closes that gap at the handler level.
+2. A valid token must not grant execution of every Work. Fixed:
+   `authorize_work(work_id, authorized_works)` now enforces a fail-closed
+   per-Work allow-list injected from the trusted deployment configuration;
+   handler returns 403 `caller_not_authorized_for_work` before invoking the
+   host when the Work is not allow-listed or the allow-list is not configured.
+   `serve(..., authorized_works=...)` is the trusted injection point.
+
+Still NOT claimed after this addendum: token issuance from protected
+deployment configuration, absence of token leakage, or verification of the
+actually deployed service. These remain open gates. Work 28 remains
+ACTIVE / BLOCKED / NOT RELEASED.
