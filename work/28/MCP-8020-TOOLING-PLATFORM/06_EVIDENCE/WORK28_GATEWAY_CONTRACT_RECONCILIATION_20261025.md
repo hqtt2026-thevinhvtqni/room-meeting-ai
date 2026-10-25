@@ -77,3 +77,13 @@ The new test file checks seven unique tools, fail-closed statuses, closed schema
 - CI run including the new catalog test file: [40149729939](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/40149729939) — launched for commit `801a340b3dd33b6252dfed9b4750ace72895b9dc`; result must be checked before reporting its final status.
 
 This is schema staging and repository-level validation only. It does not satisfy Core authorization, source snapshot/hash verification, canonical W12/W13 runtime identity, process-tree cleanup, or live E2E. No execution tool is enabled.
+
+### CI result for staged v1 catalog tests
+
+- Run: [40149729939](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/40149729939)
+- Commit tested: `801a340b3dd33b6252dfed9b4750ace72895b9dc`
+- Conclusion: **success**
+- Log: `Ran 178 tests`; `OK (skipped=4)`.
+- The five new `test_mcp8020_execution_catalog_v1` cases all passed, including closed schemas, hash-bound run requests, seven unique entries, all entries remaining `NOT_IMPLEMENTED`, and explicit absence of the legacy arbitrary-command tool in the staged v1 catalog.
+
+This passing run validates the staged schema module and repository test suite only. It is not a live MCP registration, Core/runtime integration, or authorization/E2E PASS.
