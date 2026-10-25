@@ -78,7 +78,9 @@ class ExecutionContractV1Tests(unittest.TestCase):
                 self.assertFalse(result_is_verified_pass(changed, HASH, "RUN_SCRIPT", "work28"))
         changed = dict(result)
         changed["exit_code"] = True
-        self.assertFalse(result_is_verified_pass(changed, HASH, "RUN_SCRIPT"))
+        self.assertFalse(result_is_verified_pass(changed, HASH, "RUN_SCRIPT", "work28"))
+        self.assertFalse(result_is_verified_pass(result, HASH, "RUN_SCRIPT", "work999"))
+        self.assertFalse(result_is_verified_pass(result, "not-a-hash", "RUN_SCRIPT", "work28"))
 
     def test_test_run_requires_nonzero_test_count_and_no_failures(self):
         result = {
