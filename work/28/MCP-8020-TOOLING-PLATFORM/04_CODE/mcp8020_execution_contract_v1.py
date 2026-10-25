@@ -48,7 +48,8 @@ def validate_python_run_request(payload: Any) -> dict[str, Any]:
         raise ExecutionContractError("invalid work_id")
 
     entry_path = payload["entry_path"]
-    if not isinstance(entry_path, str) or not entry_path or "\x00" in entry_path:
+    if (not isinstance(entry_path, str) or not entry_path
+            or any(ord(char) < 32 or ord(char) == 127 for char in entry_path)):
         raise ExecutionContractError("invalid entry_path")
     # Use a platform-independent lexical check. The authoritative server must
     # still reject symlinks/reparse points and prove resolved containment.
