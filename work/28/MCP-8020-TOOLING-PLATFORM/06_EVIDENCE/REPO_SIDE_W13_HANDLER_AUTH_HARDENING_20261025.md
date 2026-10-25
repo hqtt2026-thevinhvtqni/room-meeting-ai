@@ -394,3 +394,48 @@ verifiable linkage; additive mount inside the Core authority boundary).
 Final approval remains with Vinh and has NOT been given. The v54 execution
 tools remain NOT_IMPLEMENTED. Work 28 remains ACTIVE / BLOCKED /
 NOT RELEASED.
+
+## 16. Gate 2 opened: Core execution authority implemented (2026-10-25)
+
+The owner (Vinh) opened Gate 2 ("Ok Gate 2 mở"). The Core-side implementation
+per the approved contract V1.2 was committed as de0667b:
+
+* Package `core/execution_authority/` — inside the Core package boundary per
+  DR-4 (code ownership and governance under Core), with a SEPARATE HTTP mount
+  (`http_server.py`, its own process/port via EXECUTION_AUTHORITY_PORT) so
+  fail-closed startup/shutdown can never regress the LOCKED v0.1 meeting API.
+* DR-1: `load_enrolled_identities` parses deployment-injected
+  `EXECUTION_AUTHORITY_ENROLLED_IDENTITIES` (name=credential); enrollment is
+  by identity name, not port or process. Per-Work rights come from the works
+  registry (`EXECUTION_AUTHORITY_WORKS_FILE`: work fields plus
+  `allowed_identities`). Port migration or adapter replacement requires no
+  authority redesign.
+* DR-2: grants carry a separate short-lived token
+  (`secrets.token_urlsafe`); records store ONLY its SHA-256; the token value
+  is returned exactly once to the caller;
+  `validate_grant_token` performs the server-side check (active grant AND
+  constant-time token hash match) and every run recording goes through it;
+  the HTTP handler never logs headers and never echoes secrets.
+* DR-3 proof obligations, as tests:
+  `05_TEST/test_core_execution_authority_v1.py` (26 tests) proves
+  restart recovery (a fresh store/authority over the same directory reloads
+  grants and runs), append-only (duplicate record ids refused; the public
+  store surface exposes append/get/records only — no mutation or deletion
+  path), durability (append flushes and fsyncs), and full run linkage
+  (grant id, work, identity, source hash, exit status, output refs,
+  evidence refs — required non-empty — and handoff ids).
+* DR-4 boundary tests over a live ThreadingHTTPServer on an ephemeral port:
+  401 missing/wrong identity, 403 enrolled-but-not-allowed-for-Work,
+  404 unknown work/route, 409 duplicate active grant, grant status
+  round-trip without token exposure, run recording with forged-token
+  rejection, and credential/token non-leakage into errors and records.
+* Fail-closed configuration: `main()` raises loudly on missing/malformed
+  identity, works registry, or data dir; work ids pinned to W<number>.
+
+Scope discipline (unchanged): this is the CORE side only. It does NOT wire
+`W13CoreExecutionClientV1`, does NOT touch the v54 catalog (the seven
+execution tools remain NOT_IMPLEMENTED), and does NOT claim any deployment
+or Sandbox state. Gates 3-4 (runtime verification in the Sandbox, live
+probes, E2E) remain BLOCKED; Gate 5 (gateway/catalog wiring) remains NOT
+OPENED. CI result for de0667b: recorded below once observed.
+Work 28 remains ACTIVE / BLOCKED / NOT RELEASED.
