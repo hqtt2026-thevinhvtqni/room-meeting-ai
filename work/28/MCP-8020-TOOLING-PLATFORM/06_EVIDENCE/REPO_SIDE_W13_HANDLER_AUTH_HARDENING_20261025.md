@@ -354,3 +354,43 @@ skippable.
 Nothing was implemented, wired, or claimed: the v54 execution tools remain
 NOT_IMPLEMENTED. No CI pass is interpreted as a production pass. Work 28
 remains ACTIVE / BLOCKED / NOT RELEASED.
+
+## 15. Xu review of the decision requests; contract V1.2 (2026-10-25)
+
+The architecture reviewer (Xu) reviewed DR-1..DR-4 as presented in V1.1 and
+returned a conditional endorsement, recorded here verbatim in substance:
+
+* DR-2 (grant token): agreed in principle — short-lived separate token,
+  with the added condition that rights, Work, action scope, and expiry are
+  validated server-side, and the token value never appears in logs or
+  evidence.
+* DR-3 (durable store): agreed that Core manages append-only records, with
+  the added condition that durability, restart recovery, and run/result/
+  evidence/handoff linkage must be PROVEN; the existence of the
+  `meeting_log` pattern is precedent, not proof.
+* DR-4 (deployment separation): agreed on separation from the LOCKED v0.1
+  meeting API, with the added condition that the new component remains
+  inside the Core authority boundary — not a second Core and not an
+  independent execution route.
+* DR-1 (caller identity): REVISED DIRECTION REQUIRED. Service identity is
+  agreed, but it must be an identity that Core itself enrolls and
+  authorizes — not hardcoded to port 8020 or 8030 — so that port
+  migrations or adapter replacements never require redesigning the
+  authority mechanism.
+
+Gate status recorded per the reviewer: Gate 1 (decision lock) IN REVIEW;
+Gate 2 (Core implementation) BLOCKED; Gates 3-4 (runtime verification,
+security/E2E) BLOCKED; Gate 5 (gateway/catalog wiring) NOT OPENED. No PC or
+Sandbox action is required from the owner at this stage; the pending item
+is the architecture decision itself.
+
+Response on this branch (commit 98808c5): the contract was revised to V1.2 —
+still DESIGN ONLY, NOT APPROVED, NOT IMPLEMENTED, NOT WIRED. DR-1 now
+specifies a Core-enrolled, port-agnostic service identity registry with
+per-deployment credential injection; DR-2/DR-3/DR-4 carry the reviewer's
+conditions as explicit, testable proof obligations (server-side validation
+and token non-leak; restart persistence, append-only history, and
+verifiable linkage; additive mount inside the Core authority boundary).
+Final approval remains with Vinh and has NOT been given. The v54 execution
+tools remain NOT_IMPLEMENTED. Work 28 remains ACTIVE / BLOCKED /
+NOT RELEASED.
