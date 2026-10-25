@@ -61,3 +61,19 @@ The initial CI run exposed a mismatch in the test fixture: two path cases used r
 Interpretation: the Work 28 branch's automated unit/regression suite passed at commit `1d8a48c544842d4e566a74c2684ec83d577cbd13`, with four tests skipped. This verifies repository-level tests only. It does **not** verify live Core/runtime integration or authorize activation of execution tools. A checkout post-job warning about the repository's `.gitmodules` entry was logged, but the workflow's final conclusion was success.
 
 Execution tools remain `NOT_IMPLEMENTED` pending canonical runtime, authorization, source-hash binding, cleanup, and end-to-end evidence.
+
+## Versioned contract migration staged — 2026-10-25
+
+To avoid silently changing the public v54 catalog, a separate draft execution catalog was added:
+
+- `04_CODE/mcp8020_execution_catalog_v1.py` — commit `6bc20a64de1529409df8515c500863a6e8957927`.
+- `05_TEST/test_mcp8020_execution_catalog_v1.py` — commit `801a340b3dd33b6252dfed9b4750ace72895b9dc`.
+
+The staged v1 catalog defines seven future execution/evidence tool schemas. The two run operations require Work ID, Work-relative entry path, and lowercase SHA-256 source binding. The arbitrary `sandbox_run_command` shape is intentionally absent from the staged v1 catalog; the existing v54 public catalog remains unchanged. All staged v1 entries are hard-coded `NOT_IMPLEMENTED`; the module is not registered with MCP and cannot activate execution.
+
+The new test file checks seven unique tools, fail-closed statuses, closed schemas, required hash binding, forbidden free-form execution fields, and the explicit staged rename from `sandbox_run_command` to `sandbox_run_tests`.
+
+- CI run for the catalog module alone: [40149717872](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/40149717872) — success on commit `6bc20a64de1529409df8515c500863a6e8957927`. That run occurred before the new catalog test file was committed, so it does not validate the new tests.
+- CI run including the new catalog test file: [40149729939](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/40149729939) — launched for commit `801a340b3dd33b6252dfed9b4750ace72895b9dc`; result must be checked before reporting its final status.
+
+This is schema staging and repository-level validation only. It does not satisfy Core authorization, source snapshot/hash verification, canonical W12/W13 runtime identity, process-tree cleanup, or live E2E. No execution tool is enabled.
