@@ -100,7 +100,8 @@ def result_is_verified_pass(result: Any, expected_source_sha256: str,
         return False
     if result.get("status") != "PASS":
         return False
-    if result.get("exit_code") != 0 or isinstance(result.get("exit_code"), bool):
+    exit_code = result.get("exit_code")
+    if isinstance(exit_code, bool) or not isinstance(exit_code, int) or exit_code != 0:
         return False
     if result.get("source_sha256") != expected_source_sha256:
         return False
