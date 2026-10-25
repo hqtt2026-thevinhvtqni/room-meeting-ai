@@ -12,12 +12,21 @@ from mcp.types import (
 )
 
 from core.meeting_service import MeetingService
+from core.secretary import MAX_TEXT_BYTES
 
+
+# F4 boundary declaration: JSON Schema maxLength is character-based,
+# while the F4 runtime policy (core.secretary) is UTF-8 byte-based.
+# Declaring maxLength == MAX_TEXT_BYTES keeps the public schema limit
+# aligned with the runtime policy ceiling (see test_f4_resource_limits).
+ADD_PASTE_MAX_LENGTH = MAX_TEXT_BYTES
 
 LIST_MEETINGS = "list_meetings"
 GET_MEETING = "get_meeting"
 GET_TRANSCRIPT = "get_transcript"
 ADD_PASTE_TO_MEETING = "add_paste_to_meeting"
+JOIN_MEETING = "join_meeting"
+START_MEETING = "start_meeting"
 
 
 def create_server(service: MeetingService) -> Server:
@@ -77,6 +86,8 @@ def create_server(service: MeetingService) -> Server:
                         },
                         "text": {
                             "type": "string",
+                            # F4 resource limit declaration (public schema).
+                            "maxLength": ADD_PASTE_MAX_LENGTH,
                         },
                         # MESSAGE v1.0 — OPTIONAL. Không có trong
                         # "required" -> mọi caller cũ (Gate 2, test F1-F3)
@@ -91,6 +102,50 @@ def create_server(service: MeetingService) -> Server:
                         "meeting_id",
                         "text",
                     ],
+                    "additionalProperties": False,
+                },
+            ),
+            Tool(
+                name=JOIN_MEETING,
+                description=(
+                    "Join an active ROOM HOP meeting as a resolved identity "
+                    "(JOIN_ACCEPTED or policy-rejected)."
+                ),
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "meeting_id": {
+                            "type": "string",
+                            "minLength": 1,
+                        },
+                        "identity_id": {
+                            "type": "string",
+                            "minLength": 1,
+                        },
+                    },
+                    "required": ["meeting_id", "identity_id"],
+                    "additionalProperties": False,
+                },
+            ),
+            Tool(
+                name=START_MEETING,
+                description=(
+                    "Start an open ROOM HOP meeting (lifecycle transition "
+                    "open -> active) initiated by the given identity."
+                ),
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "meeting_id": {
+                            "type": "string",
+                            "minLength": 1,
+                        },
+                        "starter": {
+                            "type": "string",
+                            "minLength": 1,
+                        },
+                    },
+                    "required": ["meeting_id"],
                     "additionalProperties": False,
                 },
             ),
@@ -125,6 +180,20 @@ def create_server(service: MeetingService) -> Server:
             return {
                 "paste": result,
             }
+
+        if name == JOIN_MEETING:
+            join_record = service.join_meeting(
+                arguments["meeting_id"],
+                arguments["identity_id"],
+            )
+            return {"join_record": join_record}
+
+        if name == START_MEETING:
+            meeting = service.start_meeting(
+                arguments["meeting_id"],
+                starter=arguments.get("starter", "vinh"),
+            )
+            return {"meeting": meeting}
 
         raise ValueError(f"Unknown ROOM HOP MCP tool: {name}")
 

@@ -1,0 +1,18 @@
+{
+  "execution_id": "W14-W13-REAL-EXECUTION-001",
+  "work_id": "14",
+  "status": "PASS",
+  "exit_code": 0,
+  "workspace": "/workspace/.ai-workspace/sessions/AI-BUILD-GATEWAY-V1/workspace/14/AUTONOMOUS-E2E-BUILDER",
+  "command": [
+    "python",
+    "--version"
+  ],
+  "stdout_ref": "/workspace/.ai-workspace/sessions/AI-BUILD-GATEWAY-V1/workspace/14/AUTONOMOUS-E2E-BUILDER/06_EVIDENCE/W14-W13-REAL-EXECUTION-001/runtime/stdout.log",
+  "stderr_ref": "/workspace/.ai-workspace/sessions/AI-BUILD-GATEWAY-V1/workspace/14/AUTONOMOUS-E2E-BUILDER/06_EVIDENCE/W14-W13-REAL-EXECUTION-001/runtime/stderr.log",
+  "artifacts": [
+    "/workspace/.ai-workspace/sessions/AI-BUILD-GATEWAY-V1/workspace/14/AUTONOMOUS-E2E-BUILDER/06_EVIDENCE/W14-W13-REAL-EXECUTION-001/runtime/stdout.log",
+    "/workspace/.ai-workspace/sessions/AI-BUILD-GATEWAY-V1/workspace/14/AUTONOMOUS-E2E-BUILDER/06_EVIDENCE/W14-W13-REAL-EXECUTION-001/runtime/stderr.log"
+  ],
+  "provider_type": "W12_REAL_EXECUTION_HOST"
+}
