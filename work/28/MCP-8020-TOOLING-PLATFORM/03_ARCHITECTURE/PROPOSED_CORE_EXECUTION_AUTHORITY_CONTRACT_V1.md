@@ -1,14 +1,15 @@
-# PROPOSED Core Execution Authority Contract — V1.1 (DESIGN ONLY)
+# PROPOSED Core Execution Authority Contract — V1.2 (DESIGN ONLY)
 
 * Work: W28 (MCP Tooling Platform)
 * Stage: **DESIGN / PROPOSED — NOT APPROVED, NOT IMPLEMENTED, NOT WIRED**
-* Date: 2026-10-25 (V1.1 same day: incorporates the independent reviewer's
-  architectural principles as the normative invariant set, and converts the
-  open questions into decision requests)
-* Approver required: architecture owner (Xu/Mê + Vinh). This document
-  requests decisions; it grants nothing.
+* History: V1 (241bdba) initial proposal; V1.1 (1936ad3) principles as
+  invariants + decision requests; V1.2 (this revision) incorporates the
+  architecture reviewer's (Xu) conditions on DR-2/DR-3/DR-4 and the amended
+  DR-1. Awaiting final approval by Vinh.
+* Approver: Vinh (with Xu). This document requests decisions; it grants
+  nothing.
 
-## 1. Audit finding that motivates this document (unchanged from V1)
+## 1. Audit finding that motivates this document (unchanged)
 
 Repository source audit on branch `work/28-mcp-tooling-platform` confirmed:
 
@@ -20,20 +21,11 @@ Repository source audit on branch `work/28-mcp-tooling-platform` confirmed:
   authority. `work_id` / `WorkContext` / `execute` appear nowhere in
   the Core package.
 
-Conclusion: the MCP -> Core :8000 -> W13 route cannot be wired today,
-because the Core half of the route does not exist. Guessing an endpoint is
-prohibited by the Work 28 discipline; therefore the contract below is
-proposed explicitly for review, not implemented.
-
-## 2. Normative architectural invariants (adopted from the independent
-review round of 2026-10-25; PENDING APPROVAL)
-
-These five principles are proposed as the common base for every decision in
-section 5, so each decision can be taken once instead of re-litigated:
+## 2. Normative architectural invariants (INV-1..INV-5, unchanged in V1.2)
 
 * **INV-1 — Core decides, MCP never self-authorizes.** Core :8000 is the
   sole authority that decides whether a caller may run executions for a
-  given Work. MCP 8020/8030, the WEE bridge, and any client may not grant
+  given Work. MCP services, the WEE bridge, and any client may not grant
   rights or construct a trusted WorkContext themselves. Caller identity
   comes from authenticated middleware, never from request body fields.
 * **INV-2 — Grants are bound and verifiable.** A grant binds ALL of:
@@ -42,18 +34,15 @@ section 5, so each decision can be taken once instead of re-litigated:
   one Work conveys nothing about any other Work.
 * **INV-3 — Durable authoritative state.** Run status, results,
   evidence, and handoffs must live in an authoritative store that
-  survives restarts and is queryable by id. An in-process in-memory
-  registry is never the source of truth (this is an acknowledged
-  limitation of the staged `W13CoreExecutionClientV1`, evidence 11.2).
+  survives restarts and is queryable by id.
 * **INV-4 — One canonical runtime.** W13/W12 remains the only execution
   site, under its OS isolation, snapshot, hash, and timeout gates. No
-  second execution host is created, and MCP never bypasses Core by talking
-  to the Execution Host directly.
+  second execution host; MCP never bypasses Core.
 * **INV-5 — Fail closed on every failure branch.** Authentication
   failure, expired grant, wrong Work, missing configuration, or missing
   evidence must all deny with stable error codes. No partial arming.
 
-## 3. Proposed surface (for review)
+## 3. Proposed surface (for review; unchanged from V1.1)
 
 ### 3.1 POST /works/{work_id}/execution-grants
 
@@ -82,65 +71,65 @@ Errors: 401 `caller_authentication_failed`, 403 `caller_not_authorized_for_work`
 
 ### 3.2 GET /works/{work_id}/execution-grants/{grant_id}
 
-Authoritative grant status. Required by INV-2/INV-3: durable, restart-safe,
-revocation-capable.
+Authoritative grant status (active/expired/revoked). Required by INV-2/INV-3.
 
 ### 3.3 POST /works/{work_id}/execution-runs (record-only, phase 2)
 
 Records run outcomes bound to a grant + source hash + exit status + output
-refs. This is the authoritative store that `generate_evidence` and
-`create_handoff` must write to (INV-3), instead of assembling local
-dictionaries.
+refs. The authoritative store that `generate_evidence` and
+`create_handoff` must write to.
 
 ## 4. Integration seam (once approved AND implemented AND verified)
 
 `W13CoreExecutionClientV1.work_context_provider(work_id)` becomes the
-caller of 3.1: it derives the WorkContext from a live grant, never from the
-public request. The bridge token continues to authenticate the W13 boundary;
-the grant authenticates the Work rights. Both are required, in that order
-(INV-1, INV-4). Wiring remains prohibited until the gates in section 6 pass.
+caller of 3.1 on behalf of an ENROLLED service identity (see DR-1): it
+derives the WorkContext from a live grant, never from the public request.
+The bridge token authenticates the W13 boundary; the grant authenticates
+the Work rights. Both are required, in that order.
 
-## 5. Decision requests (each with a recommended default; recommendations
-are proposals, not approvals)
+## 5. Decision requests — reviewer conditions incorporated (V1.2)
 
-* **DR-1 — Caller identity between services.** Which identity does Core
-  accept for the grant call: (a) the MCP 8020 service identity (deployment
-  token, mTLS, or signed header), or (b) an end-user identity propagated
-  through MCP?
-  *Recommended: (a) service identity first.* MCP 8020 is the only integrator
-  today; user-identity propagation can be added later without changing the
-  grant shape. Satisfies INV-1 with the smallest trusted surface.
-* **DR-2 — Credential model for W13.** Does the grant carry its own
-  short-lived execution token (separate from the deployment bridge token),
-  or does the deployment token remain the only credential with Core-side
-  Work allow-listing?
-  *Recommended: separate short-lived grant token.* It bounds blast radius:
-  leaking a W13-boundary credential does not outlive the grant expiry, and
-  the W13 handler can validate expiry locally (INV-2, INV-5). The existing
-  `X-Room-Hop-Execution-Auth` header stays as the transport; the token
-  VALUE becomes grant-scoped.
-* **DR-3 — Durable store for grants, runs, evidence, handoffs.** Where do
-  grant state and run/evidence records live: (a) files under the Work
-  evidence root with a lock protocol, (b) a Core-managed data file
-  (`core/meeting_log.py` pattern), or (c) an external store?
-  *Recommended: (b), Core-managed append-only record.* Core already owns
-  durable append-only records; keeping authority state inside Core means
-  INV-3 holds with no new infrastructure, and 3.2 can be honest across
-  restarts.
-* **DR-4 — Composer and mounting.** Which process composes
-  `W13CoreExecutionClientV1` into the running service, and is the
-  execution authority mounted inside the existing Core app or a separate
-  service instance?
-  *Recommended: separate app mount (same codebase, distinct process/port).*
-  The meeting contract `API_CONTRACT.md` is LOCKED v0.1; an additive
-  separate mount cannot regress it, and fail-closed startup of the
-  execution authority cannot take the meeting service down (INV-5).
+* **DR-1 — Caller identity: Core-enrolled service identity, port-agnostic.
+  STATUS: revised per Xu (2026-10-25).**
+  The grant call is made by a **service identity that Core itself has
+  enrolled and authorized**. Enrollment is by identity, not by port or
+  process: the identity registry lives in Core configuration, and any MCP
+  instance (8020, 8030, or a future adapter) presenting an enrolled
+  identity may request grants; any instance without one is denied
+  fail-closed. Migrating ports or replacing adapters therefore never
+  requires redesigning the authority mechanism. The identity credential
+  must be injectable per deployment (env/secret), never hardcoded.
+* **DR-2 — Grant token: separate, short-lived, server-validated.
+  STATUS: Xu condition added.**
+  The grant carries its own short-lived execution token, separate from any
+  transport credential. CONDITIONS: the W13 boundary validates rights,
+  Work, action scope, and expiry SERVER-SIDE on every call; the token
+  value is never written to logs, blockers, or evidence (non-leak property
+  is testable the same way as the existing bridge token tests).
+* **DR-3 — Durable store: Core-managed append-only, with proof obligations.
+  STATUS: Xu condition added.**
+  Grant state and run/evidence/handoff records are Core-managed
+  append-only records. The existence of the `meeting_log` pattern is a
+  PRECEDENT, not proof. PROOF OBLIGATIONS before any wiring: (a) records
+  persist across a service restart and remain queryable by id; (b) history
+  is append-only (no mutation or deletion of past records); (c) each run
+  record links grant id, source hash, exit status, output refs, evidence
+  refs, and handoff ids — linkage is verifiable by reading the store.
+* **DR-4 — Deployment separation: additive mount inside Core's authority.
+  STATUS: Xu condition added.**
+  The execution authority is a separate mount/process (fail-closed startup
+  cannot affect the LOCKED v0.1 meeting API), BUT it remains inside the
+  Core authority boundary: it is not a second Core, not an independent
+  execution route, and it holds no authority of its own beyond what this
+  contract grants. Its configuration, code ownership, and evidence live
+  under the Core package's governance.
 
 ## 6. Gates before any wiring (in order; none may be skipped)
 
-1. This contract APPROVED (DR-1..DR-4 answered) by the architecture owner.
+1. This contract APPROVED (DR-1..DR-4 as revised in V1.2) by Vinh.
 2. Core-side implementation per the approved contract; no endpoint created
-   merely to make the staged adapter appear to work.
+   merely to make the staged adapter appear to work; DR-2/DR-3 proof
+   obligations hold in tests.
 3. W13 Sandbox alignment verified at runtime (not by reading files):
    hardened source deployed and proven active.
 4. Security tests + E2E: live 401/403 probes, wrong-Work, expired-grant,
@@ -154,6 +143,6 @@ are proposals, not approvals)
 * No endpoint exists. No code implements this. No test asserts it.
 * Nothing here changes the v54 catalog: the seven execution tools remain
   NOT_IMPLEMENTED.
-* The recommendations in section 5 are proposals by the repo-side agent
-  for the architecture owner to accept, reject, or replace.
+* Xu's review comments are incorporated as proposed contract text; final
+  approval belongs to Vinh and has NOT been given yet.
 * Work 28 remains ACTIVE / BLOCKED / NOT RELEASED.
