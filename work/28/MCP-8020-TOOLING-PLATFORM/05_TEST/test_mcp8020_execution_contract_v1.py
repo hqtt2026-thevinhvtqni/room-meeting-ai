@@ -39,7 +39,7 @@ class ExecutionContractV1Tests(unittest.TestCase):
 
     def test_rejects_traversal_absolute_drive_and_ambiguous_paths(self):
         for path in ("../secret.py", "/tmp/a.py", r"C:\temp\a.py",
-                     "a/../b.py", "folder./x.py", "folder /x.py", "a//b.py", "a\\nb.py", "a\\x7fb.py"):
+                     "a/../b.py", "folder./x.py", "folder /x.py", "a//b.py", "a\nb.py", "a\x7fb.py"):
             with self.subTest(path=path):
                 req = self.valid_request()
                 req["entry_path"] = path
