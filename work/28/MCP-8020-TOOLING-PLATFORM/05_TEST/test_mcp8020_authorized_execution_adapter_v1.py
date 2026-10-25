@@ -128,6 +128,19 @@ class AuthorizedAdapterTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "runtime identity mismatch"):
             adapter.run(dict(REQUEST), trusted_caller=object())
 
+    def test_nonpass_status_and_nonzero_or_boolean_exit_code_are_rejected(self):
+        cases = (
+            {"status": "FAILED"},
+            {"exit_code": 1},
+            {"exit_code": True},
+            {"exit_code": None},
+        )
+        for overrides in cases:
+            with self.subTest(overrides=overrides):
+                adapter = self.make_adapter(runtime_overrides=overrides)
+                with self.assertRaises(RuntimeError):
+                    adapter.run(dict(REQUEST), trusted_caller=object())
+
     def test_runtime_must_attest_same_snapshot(self):
         adapter = self.make_adapter(runtime_overrides={"snapshot_ref": "snapshot://other"})
         with self.assertRaisesRegex(RuntimeError, "exact immutable snapshot"):
