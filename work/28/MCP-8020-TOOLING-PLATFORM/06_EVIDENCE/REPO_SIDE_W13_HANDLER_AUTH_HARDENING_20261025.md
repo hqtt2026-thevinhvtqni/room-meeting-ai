@@ -538,3 +538,44 @@ remain BLOCKED; Gate 5 remains NOT OPENED. The v54 execution tools remain
 NOT_IMPLEMENTED.
 
 Work 28 remains ACTIVE / BLOCKED / NOT RELEASED.
+
+## 19. Gate 4 prep: E2E client seam over a live authority process (2026-10-25)
+
+Commit d4e6f3f adds `05_TEST/test_w13_client_live_authority_e2e_v1.py`:
+the STAGED, UNWIRED `W13CoreExecutionClientV1` (no v54 registration —
+unchanged) is driven end-to-end through a real HTTP bridge against a REAL
+`core.execution_authority.http_server` subprocess booted in-test with
+fail-loud env (enrolled identities, works registry W12+W13, data dir, port).
+
+Proven at CI-runtime level:
+
+* submit: the client obtains a real grant from the live authority and
+  records a run; the append-only JSONL store ON DISK shows exactly one
+  grant and one run record, with the run linked to the grant id, work W13,
+  source hash, and evidence refs; the grant token VALUE and the credential
+  appear nowhere in the store (only token SHA-256).
+* the full seven-method client surface over the live boundary:
+  get_status, get_result, collect_artifact, generate_evidence,
+  create_handoff (W12 PASS handoff with evidence refs), cancel refused
+  (BLOCKED), unknown run id BLOCKED.
+* fail-closed path: a bridge with a WRONG credential gets 401 from the
+  live authority, the client surfaces BLOCKED, and the store stays EMPTY
+  (no partial grant or run records).
+* live security probes: malformed JSON body -> 400; unknown route -> 404;
+  GET grant status without the service-identity header -> 401.
+
+**Verification:** CI run #174 (commit d4e6f3f): completed successfully in
+~18s (longer runs consistent with three real process boots in the suite),
+verified via the public actions list on 2026-10-25.
+
+**Evidence level — repo-side CI E2E, NOT the full Gate 4.** This proves
+the client seam -> Core authority HTTP boundary works end-to-end as code
+against a real process. It does NOT prove: v54 gateway registration, the
+real W13 execution host executing payloads, deployment on the trusted
+Sandbox/Core host, or a production E2E run with bound production evidence.
+Gate 3 (trusted runtime verification) and Gate 4 (deployment-grade
+security + production E2E) remain BLOCKED pending trusted-environment
+evidence; Gate 5 (wiring v54 execution tools to IMPLEMENTED) remains NOT
+OPENED — flipping it without that evidence would violate the gate rules.
+
+Work 28 remains ACTIVE / BLOCKED / NOT RELEASED.
