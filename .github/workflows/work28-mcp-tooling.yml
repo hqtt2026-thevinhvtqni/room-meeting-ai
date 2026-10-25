@@ -37,13 +37,15 @@ jobs:
         if: failure()
         working-directory: work/28/MCP-8020-TOOLING-PLATFORM
         run: |
+          ls -la unittest-output.txt || true
           {
             echo "## Unittest failure details"
             echo ""
             echo '~~~'
-            tail -n 120 unittest-output.txt
+            tail -n 150 unittest-output.txt || true
             echo '~~~'
-          } >> "$GITHUB_STEP_SUMMARY"
-          grep -E "(FAIL:|ERROR:|Traceback|Error|error|FAILED|line [0-9]+|File ")" unittest-output.txt | tail -n 30 | while IFS= read -r line; do
-            printf '::error::%s\n' "$line"
-          done
+          } >> "$GITHUB_STEP_SUMMARY" || true
+          grep -A10 "ImportError: Failed to import" unittest-output.txt | head -40 | while IFS= read -r line; do
+            printf '::error::%s\n' "$line" || true
+          done || true
+          exit 0
