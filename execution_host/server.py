@@ -1,6 +1,8 @@
 from __future__ import annotations
 import hmac
 import json
+import os
+import re
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from .host import ExecutionHost
 from .identity import RuntimeIdentity
@@ -8,6 +10,26 @@ from .models import WorkContext, ExecutionRequest
 
 # Trusted header that carries the deployment-issued execution token.
 AUTH_HEADER = 'X-Room-Hop-Execution-Auth'
+
+# Trusted environment variables for the deployment configuration. The token
+# value is never logged, echoed, or written into evidence.
+AUTH_TOKEN_ENV = 'ROOM_HOP_EXECUTION_AUTH_TOKEN'
+AUTHORIZED_WORKS_ENV = 'ROOM_HOP_AUTHORIZED_WORKS'
+
+# Canonical Work id format pinned for the execution boundary: W<number>.
+WORK_ID_PATTERN = re.compile(r'W\d+')
+
+def normalize_work_id(value):
+    """Validate and normalize a Work id against the pinned W<number> format."""
+    if not isinstance(value, str):
+        raise ValueError('work_id must be a string')
+    normalized = value.strip().upper()
+    if not normalized or not WORK_ID_PATTERN.fullmatch(normalized):
+        raise ValueError(
+            'Work id must match the canonical W<number> format, e.g. W28;'
+            ' got: %r' % (value,)
+        )
+    return normalized
 
 def authenticate_caller(provided, auth_token):
     """Fail-closed caller authentication for the POST /execute boundary.
@@ -35,6 +57,31 @@ def authorize_work(work_id, authorized_works):
     if not isinstance(authorized_works, (set, frozenset)):
         return False
     return work_id in authorized_works
+
+def load_execution_auth_config(environ=None):
+    """Load and validate the trusted execution auth configuration at startup.
+
+    Raises loudly on missing or malformed configuration so an unconfigured
+    service can never start silently. The token value never appears in the
+    error messages.
+    """
+    env = os.environ if environ is None else environ
+    token = env.get(AUTH_TOKEN_ENV)
+    if not isinstance(token, str) or not token.strip():
+        raise RuntimeError(
+            AUTH_TOKEN_ENV + ' must be set to a non-empty execution token'
+            ' issued by the trusted deployment configuration'
+        )
+    raw_works = env.get(AUTHORIZED_WORKS_ENV)
+    if not isinstance(raw_works, str) or not raw_works.strip():
+        raise RuntimeError(
+            AUTHORIZED_WORKS_ENV + ' must list at least one canonical Work id'
+            ' (comma-separated, e.g. W28)
+        )
+    works = frozenset(
+        normalize_work_id(part) for part in raw_works.split(',')
+    )
+    return {'auth_token': token.strip(), 'authorized_works': works}
 
 class Handler(BaseHTTPRequestHandler):
     host: ExecutionHost | None = None
@@ -72,4 +119,12 @@ def serve(host='127.0.0.1',port=8031,auth_token: str | None = None, authorized_w
     Handler.authorized_works=frozenset(authorized_works) if authorized_works else None
     ThreadingHTTPServer((host,port),Handler).serve_forever()
 
-if __name__=='__main__': serve()
+def main():
+    config = load_execution_auth_config()
+    # The token value is never printed or logged; only the authorized
+    # Work ids and the bind address are announced at startup.
+    announced = ', '.join(sorted(config['authorized_works']))
+    print('execution-host: armed; authorized works: ' + announced, flush=True)
+    serve('127.0.0.1', 8031, **config)
+
+if __name__=='__main__': main()
