@@ -61,6 +61,8 @@ class Runtime:
             "status": "PASS", "work_id": "work28", "source_sha256": HASH,
             "snapshot_ref": "snapshot://work28/sha256",
             "runtime_identity": "approved-runtime-8031",
+            "request_id": "REQ-1", "run_id": "RUN-1",
+            "evidence_ref": "evidence://RUN-1", "exit_code": 0,
             "process_tree_cleanup_verified": True,
         }
         result.update(self.overrides)
@@ -129,6 +131,11 @@ class AuthorizedAdapterTests(unittest.TestCase):
     def test_runtime_must_attest_same_snapshot(self):
         adapter = self.make_adapter(runtime_overrides={"snapshot_ref": "snapshot://other"})
         with self.assertRaisesRegex(RuntimeError, "exact immutable snapshot"):
+            adapter.run(dict(REQUEST), trusted_caller=object())
+
+    def test_missing_evidence_binding_is_rejected(self):
+        adapter = self.make_adapter(runtime_overrides={"evidence_ref": ""})
+        with self.assertRaisesRegex(RuntimeError, "missing trusted evidence_ref"):
             adapter.run(dict(REQUEST), trusted_caller=object())
 
     def test_failed_process_tree_cleanup_is_rejected(self):
