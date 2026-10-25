@@ -38,5 +38,5 @@ def run_snapshot(*, snapshot: SourceSnapshot, operation: str, timeout_seconds: i
         stderr = exc.stderr.decode(errors="replace") if isinstance(exc.stderr, bytes) else (exc.stderr or "")
         return SnapshotRunResult("BLOCKED", operation, snapshot.work_id, snapshot.snapshot_ref, snapshot.source_sha256, None, True, False, stdout, stderr)
     except OSError as exc:
-        return SnapshotRunResult("BLOCKED", operation, snapshot.work_id, snapshot.snapshot_ref, snapshot.source_sha256, None, False, True, "", str(exc))
-    return SnapshotRunResult("PASS" if result.returncode == 0 else "FAILED", operation, snapshot.work_id, snapshot.snapshot_ref, snapshot.source_sha256, result.returncode, False, True, result.stdout, result.stderr)
+        return SnapshotRunResult("BLOCKED", operation, snapshot.work_id, snapshot.snapshot_ref, snapshot.source_sha256, None, False, False, "", str(exc))
+    return SnapshotRunResult("BLOCKED", operation, snapshot.work_id, snapshot.snapshot_ref, snapshot.source_sha256, result.returncode, False, False, result.stdout, result.stderr)
