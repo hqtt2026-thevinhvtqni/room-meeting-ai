@@ -56,6 +56,8 @@ class CoreAuthorityAuthorizer:
                  work_id_validator: Callable[[Any], str] = require_core_canonical_work_id) -> None:
         if not callable(getattr(authority, "authenticate", None)):
             raise TypeError("authority must provide authenticate(credential)")
+        if not callable(getattr(authority, "is_identity_allowed_for_work", None)):
+            raise TypeError("authority must provide is_identity_allowed_for_work(identity, work_id)")
         if not callable(work_id_validator):
             raise TypeError("work_id_validator must be callable(work_id)")
         self._authority = authority
@@ -70,13 +72,7 @@ class CoreAuthorityAuthorizer:
             identity = self._authority.authenticate(credential)
         except PermissionError:
             return False
-        work = getattr(self._authority, "_works", {}).get(work_id)
-        if not isinstance(work, dict):
-            return False
-        allowed = work.get("allowed_identities")
-        if not isinstance(allowed, list):
-            return False
-        return identity in allowed
+        return self._authority.is_identity_allowed_for_work(identity, work_id) is True
 
 
 __all__ = ["CoreWorkIdError", "require_core_canonical_work_id", "CoreAuthorityAuthorizer"]

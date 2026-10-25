@@ -103,6 +103,21 @@ class ExecutionAuthority:
                 return name
         raise PermissionError("caller_authentication_failed")
 
+    def is_identity_allowed_for_work(self, service_identity: str | None, work_id: str | None) -> bool:
+        """Public read-only authorization surface (contract V1.2, DR-1).
+
+        True only when the authenticated service identity is enrolled in the
+        work's allowed_identities. Read-only, no side effects, and no detail
+        is disclosed on denial: callers get a bare False.
+        """
+        work = self._works.get(work_id)
+        if not isinstance(work, dict):
+            return False
+        allowed = work.get("allowed_identities")
+        if not isinstance(allowed, list):
+            return False
+        return isinstance(service_identity, str) and service_identity in allowed
+
     def _grant_state(self, grant: dict[str, Any]) -> str:
         for record in self._store.records("revoke"):
             if record.get("grant_id") == grant["record_id"]:
