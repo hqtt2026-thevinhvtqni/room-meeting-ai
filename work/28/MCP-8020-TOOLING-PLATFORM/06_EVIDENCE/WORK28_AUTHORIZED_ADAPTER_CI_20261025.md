@@ -20,8 +20,10 @@
 ## CI evidence
 
 - Run: [Work 28 MCP Tooling Tests #104](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/40150058368)
-- Commit: `d61d6a33dded605a74bce1d128a94f611fc68ac8`
-- Result: **PASS** — 191 tests, 4 skipped.
+- Latest commit: `bb196eefdd1c459f4d26069e1d11aa1dd57cf727`
+- Latest run: [CI #106](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/40150157499)
+- Result: **PASS** — 192 tests, 4 skipped.
+- Added negative checks: non-PASS runtime status and nonzero, boolean, or missing exit code are rejected.
 - The earlier run at `01f9269fafc12560cba088b88e5cf739a0c435b8` failed because its commit snapshot contained the pre-update test fixture; the subsequent test commit above ran the updated source and fixture successfully. No failure was concealed.
 
 ## Boundary / next gate
