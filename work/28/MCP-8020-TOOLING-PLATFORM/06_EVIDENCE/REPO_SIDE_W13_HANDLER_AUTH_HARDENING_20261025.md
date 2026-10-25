@@ -4,6 +4,7 @@
 * Branch: work/28-mcp-tooling-platform
 * Fix commit: 1f0e6916bf317b0e5bebed819f100ec08ac35945
 * Follow-up commit: 5d52cf2e6b4e4e5d758327c5925ea7c5345a1822
+* Bootstrap wiring commit: dc91ffc71bc5985ac1056c78182708f87a039ba2
 * Provenance: repository source audit only. This file records what was read
   and changed on this branch; no Sandbox state was accessed or claimed.
 
@@ -78,7 +79,30 @@ and addressed in commit 5d52cf2:
    host when the Work is not allow-listed or the allow-list is not configured.
    `serve(..., authorized_works=...)` is the trusted injection point.
 
-Still NOT claimed after this addendum: token issuance from protected
-deployment configuration, absence of token leakage, or verification of the
-actually deployed service. These remain open gates. Work 28 remains
+## 6. Addendum (2026-10-25, third pass: startup configuration wiring)
+
+Review finding accepted: setting environment variables alone did not prove
+the service loaded them, because the `__main__` entrypoint still called
+`serve()` with no arguments. Addressed in commit dc91ffc:
+
+* `load_execution_auth_config()` reads `ROOM_HOP_EXECUTION_AUTH_TOKEN` and
+  `ROOM_HOP_AUTHORIZED_WORKS` from the environment and validates them at
+  startup: missing, blank, or malformed configuration raises loudly, so an
+  unconfigured service can never start silently in a half-armed state.
+* Work id format is pinned to canonical `W<number>` (e.g. W28); `28` is
+  deliberately rejected with an explicit error message.
+* `main()` is the new entrypoint; the `__main__` block calls `main()`, which
+  passes the loaded configuration into `serve()` as explicit arguments.
+* Token confidentiality: the token value never appears in error messages,
+  startup output, or evidence; startup announces only the armed Work ids
+  and the bind address. Locked by test:
+  `05_TEST/test_w13_execution_auth_config_bootstrap.py` covers config
+  loading, fail-loud behavior, the pinned Work id format, token non-leakage
+  into errors/output, and that `main()` forwards the configuration to
+  `serve()` (with `serve` monkeypatched, so no server is started in CI).
+
+Still NOT claimed: verification that a deployed service process actually
+loaded the configuration. That requires booting the service in the trusted
+environment (e.g. checking the armed-works startup line and a live 401/403
+probe), which remains a deployment-level gate. Work 28 remains
 ACTIVE / BLOCKED / NOT RELEASED.
