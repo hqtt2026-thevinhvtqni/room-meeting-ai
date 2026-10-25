@@ -217,6 +217,25 @@ class HttpBoundaryTests(unittest.TestCase):
         self.assertEqual(code, 403)
         self.assertEqual(payload["error"], "caller_not_authorized_for_work")
 
+    def test_grant_status_is_scoped_to_issuing_identity(self):
+        code, payload = self.request("/works/W28/execution-grants", {"purpose": "pytest_run"})
+        grant = payload["grant"]
+        code, payload = self.request(
+            "/works/W28/execution-grants/" + grant["grant_id"],
+            credential="secret-b", method="GET")
+        self.assertEqual(code, 404)
+        self.assertEqual(payload["error"], "unknown_grant")
+
+    def test_run_requires_identity_bound_to_grant(self):
+        code, payload = self.request("/works/W28/execution-grants", {"purpose": "pytest_run"})
+        grant = payload["grant"]
+        body = {"grant_id": grant["grant_id"], "grant_token": grant["grant_token"],
+                "source_sha256": "a" * 64, "exit_status": "PASS",
+                "output_refs": [], "evidence_refs": ["ev-1"], "handoff_ids": []}
+        code, payload = self.request("/works/W28/execution-runs", body, credential="secret-b")
+        self.assertEqual(code, 403)
+        self.assertEqual(payload["error"], "caller_not_authorized_for_grant")
+
     def test_unknown_work_404_and_duplicate_grant_409(self):
         code, payload = self.request("/works/W99/execution-grants", {"purpose": "pytest_run"})
         self.assertEqual(code, 404)
