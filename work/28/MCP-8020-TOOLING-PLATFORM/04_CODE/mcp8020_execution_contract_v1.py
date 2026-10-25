@@ -62,7 +62,7 @@ def validate_python_run_request(payload: Any) -> dict[str, Any]:
         raise ExecutionContractError("entry_path contains Windows-ambiguous names")
 
     operation = payload["operation"]
-    if operation not in _ALLOWED_OPERATIONS:
+    if not isinstance(operation, str) or operation not in _ALLOWED_OPERATIONS:
         raise ExecutionContractError("unsupported operation")
 
     expected_hash = payload["expected_source_sha256"]
@@ -92,7 +92,7 @@ def result_is_verified_pass(result: Any, expected_source_sha256: str,
     """
     if not isinstance(result, dict):
         return False
-    if operation not in _ALLOWED_OPERATIONS:
+    if not isinstance(operation, str) or operation not in _ALLOWED_OPERATIONS:
         return False
     if result.get("status") != "PASS":
         return False
