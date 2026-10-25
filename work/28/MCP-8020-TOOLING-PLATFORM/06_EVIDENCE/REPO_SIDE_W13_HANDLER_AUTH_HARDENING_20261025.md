@@ -148,3 +148,17 @@ ACTIVE / BLOCKED / NOT RELEASED.
 Still NOT claimed: deployment-level verification (service boot, token loaded
 from protected configuration, live 401/403 probe). Work 28 remains
 ACTIVE / BLOCKED / NOT RELEASED.
+
+
+## 9. Confirmation (2026-10-25): CI green after clean rebuild
+
+* CI run for commit b1b9f71 (work/28 path change triggering the workflow,
+  with the clean server.py from c46655a on the branch): the unit and
+  regression suite PASSED in ~7s. All W13 boundary tests now run: unit auth
+  gates, live HTTP 401/403 boundary with recording host, and the startup
+  configuration bootstrap tests (config loading, fail-loud behavior, pinned
+  W<number> work id format, token non-leakage, main() -> serve() wiring).
+* The wrapped-line corruption is fully remediated at commit c46655a.
+* Evidence levels reached so far: source fix + CI green + handler-level live
+  HTTP verification. Deployment-level verification and E2E remain open;
+  Work 28 remains ACTIVE / BLOCKED / NOT RELEASED.
