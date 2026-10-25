@@ -461,8 +461,23 @@ OPENED. CI result for de0667b: FAILED (see incident 16.1 below).
   records, not a mutation path for history).
 * Because `core/**` is outside the workflow path filter, commit 337d64f
   does not trigger CI by itself; this evidence update (work/28 path change)
-  triggers the run that must confirm the fix. CI outcome for the fixed
-  tree: recorded in the next addendum once observed.
+  triggers the run that must confirm the fix.
+
+### 16.2 Confirmation (2026-10-25): CI green for the fixed tree
+
+* CI run #168 (commit 36c89fe, the branch carrying fix 337d64f plus this
+  evidence file): the unit-regression-tests job completed successfully in
+  ~13s (full suite — duration consistent with the full test set, not a
+  collection error). Verified via the public actions list on 2026-10-25.
+* All 26 authority/HTTP-boundary tests for the Core execution authority now
+  pass, including the 11 that previously raised KeyError on the missing
+  `grant_id` field.
+* Evidence levels reached: Core-side implementation per contract V1.2 +
+  CI green. Still NOT claimed: deployment of the authority service (env
+  configuration, boot, armed startup line), live 401/403 probes against a
+  real process, Sandbox W13 runtime verification, and E2E
+  MCP -> Core -> W13/W12. Gates 3-4 remain BLOCKED; Gate 5 remains NOT
+  OPENED.
 * Lesson: contract-facing identifiers must appear in contract-facing
   fields (`grant_id`), not only as internal record bookkeeping
   (`record_id`); and the public annotation channel covers import errors
