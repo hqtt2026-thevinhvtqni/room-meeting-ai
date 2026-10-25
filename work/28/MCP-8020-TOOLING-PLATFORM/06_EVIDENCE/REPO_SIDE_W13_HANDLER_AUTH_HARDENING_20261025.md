@@ -498,3 +498,43 @@ Work 28 remains ACTIVE / BLOCKED / NOT RELEASED.
 **Verification:** GitHub Actions run #170 completed `success` for test commit `136a346ec6326b621f1b31efe3d4537218270bfd`: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/40200480561
 
 **Scope limit:** this is repository/CI evidence only. It does not prove the authority process is deployed or armed, that the live W13/W12 runtime is verified, or that MCP → Core → W13/W12 E2E is operational. Gate 3–4 remain BLOCKED; Gate 5 remains CLOSED.
+
+## 18. Gate 3 preparation: live boot probe as a real process (2026-10-25)
+
+Commit 7cf14f1 adds `05_TEST/test_core_execution_authority_boot_v1.py`,
+which boots `core.execution_authority.http_server` as a REAL subprocess
+(`python -m core.execution_authority.http_server`, fail-loud env:
+identities, works registry, data dir, port), waits for the process to arm
+(the port answers on TCP, within a 15s deadline), and then probes the LIVE
+boundary over a real socket:
+
+* 401 with missing and with wrong service-identity credential;
+* 403 for an enrolled-but-unauthorized identity (`caller_not_authorized_for_work`);
+* 404 unknown work; 200 grant issue (token + `grant_id` present);
+* 409 duplicate active grant; 403 forged grant token; 200 valid run
+  recording with run linkage to W13;
+* fail-closed boot: a second process started WITHOUT the env configuration
+  exits non-zero with the loud config error;
+* non-leakage: the process output contains the armed startup line but never
+  any credential value.
+
+**Verification:** CI run #172 (commit 7cf14f1, on the tree that includes
+the cross-identity binding fix df7463f): completed successfully in ~15s
+(full suite), verified via the public actions list on 2026-10-25.
+
+**Evidence level — CI-runtime, NOT Sandbox deployment.** This proves the
+authority service arms from real process boot under real environment
+configuration and answers live probes on a real socket inside the CI
+runner. It does NOT prove: deployment in the trusted Sandbox/Core host,
+the armed startup line of a production process, the canonical W13/W12
+runtime, or E2E MCP -> Core -> W13/W12.
+
+**Channel constraint, recorded:** the repo-side session that produced this
+section has NO connector capable of reaching the MCP 8030 / Sandbox
+runtime (available surfaces are repository read/push and CI only). Sandbox
+runtime verification therefore cannot be performed or claimed from this
+session. Gate 3 (W13/W12 runtime verification) and Gate 4 (security + E2E)
+remain BLOCKED; Gate 5 remains NOT OPENED. The v54 execution tools remain
+NOT_IMPLEMENTED.
+
+Work 28 remains ACTIVE / BLOCKED / NOT RELEASED.
