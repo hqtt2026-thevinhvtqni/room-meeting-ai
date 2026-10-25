@@ -83,7 +83,7 @@ def validate_python_run_request(payload: Any) -> dict[str, Any]:
 
 
 def result_is_verified_pass(result: Any, expected_source_sha256: str,
-                            operation: str) -> bool:
+                            operation: str, expected_work_id: str | None = None) -> bool:
     """Return True only for a complete, evidence-backed successful result.
 
     This is a result-shape guard, not proof that the evidence itself is trusted.
@@ -94,11 +94,17 @@ def result_is_verified_pass(result: Any, expected_source_sha256: str,
         return False
     if not isinstance(operation, str) or operation not in _ALLOWED_OPERATIONS:
         return False
+    if not isinstance(expected_source_sha256, str) or not _SHA256_RE.fullmatch(expected_source_sha256):
+        return False
+    if expected_work_id is not None and (not isinstance(expected_work_id, str) or not _WORK_ID_RE.fullmatch(expected_work_id)):
+        return False
     if result.get("status") != "PASS":
         return False
     if result.get("exit_code") != 0 or isinstance(result.get("exit_code"), bool):
         return False
     if result.get("source_sha256") != expected_source_sha256:
+        return False
+    if expected_work_id is not None and result.get("work_id") != expected_work_id:
         return False
     for key in ("request_id", "run_id", "work_id", "runtime_identity", "evidence_ref"):
         value = result.get(key)
@@ -111,8 +117,10 @@ def result_is_verified_pass(result: Any, expected_source_sha256: str,
         total = summary.get("total")
         if isinstance(total, bool) or not isinstance(total, int) or total < 1:
             return False
-        failed = summary.get("failed", 0)
-        errors = summary.get("errors", 0)
+        if "failed" not in summary or "errors" not in summary:
+            return False
+        failed = summary["failed"]
+        errors = summary["errors"]
         if any(isinstance(n, bool) or not isinstance(n, int) or n < 0
                for n in (failed, errors)):
             return False
