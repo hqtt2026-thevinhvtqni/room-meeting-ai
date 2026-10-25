@@ -579,3 +579,59 @@ evidence; Gate 5 (wiring v54 execution tools to IMPLEMENTED) remains NOT
 OPENED — flipping it without that evidence would violate the gate rules.
 
 Work 28 remains ACTIVE / BLOCKED / NOT RELEASED.
+
+## 20. Contract cross-check Core vs W12/W13 and authorizer bridge (2026-10-25)
+
+Context: the owner relayed a continuation audit performed via MCP 8030
+(recorded by that session as
+`06_EVIDENCE/XU_CONTINUATION_AUDIT_31_TESTS_AND_RUNTIME_BLOCKER_20261025.md`
+in the Sandbox list; this repo-side session cannot read the Sandbox
+directly, so its findings are taken from the owner's relayed summary and
+verified against repo source). Reported state: 31/31 local contract /
+boundary / adapter tests PASS; runtime integration still BLOCKED; nothing
+wired or released.
+
+Source cross-check performed on the repo (commit fde7fbe tree) confirms
+the reported gaps and found one concrete contract drift:
+
+* `mcp8020_execution_contract_v1.validate_python_run_request` accepts
+  free-form work ids (`^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$`, e.g.
+  "work28"), while the Core authority works registry pins the canonical
+  form `W[0-9]+` and answers any other id with unknown_work. A request
+  valid per the execution contract could therefore never be authorized by
+  Core.
+* `AuthorizedExecutionAdapterV1` requires an injected
+  `CoreAuthorizer`, but no Core-backed implementation existed.
+* The v54 gateway request shape ({operation, work_id, entry, args...})
+  does not satisfy the adapter contract (entry_path +
+  expected_source_sha256, extra fields refused) — the legacy v54 shape is
+  already pinned as rejected by `assert_not_legacy_v54_shape`, so the
+  gateway remains correctly UNWIRED pending a reviewed migration.
+
+Fix at the authorized boundary only — commit 8e41ef8:
+
+* `04_CODE/mcp8020_core_authority_authorizer_v1.py`:
+  `require_core_canonical_work_id` refuses non-`W<number>` work ids
+  BEFORE they reach Core; `CoreAuthorityAuthorizer` implements the
+  adapter's CoreAuthorizer protocol on top of the Core
+  ExecutionAuthority (DR-1 enrolled identities, per-Work
+  allowed_identities), fail-closed: wrong/missing credential -> False,
+  enrolled-but-not-allowed -> False, unknown work -> False, non-canonical
+  work id -> CoreWorkIdError. Credentials are never stored; the authority
+  keeps only SHA-256 digests.
+* `05_TEST/test_mcp8020_core_authority_authorizer_v1.py`: pins the
+  documented drift (contract accepts "work28"; Core cannot), covers the
+  canonical-form gate, all denial branches, constructor surface checks.
+* STAGED and NOT WIRED: no MCP registration, no v54 change — the catalog
+  test still asserts all seven execution tools are NOT_IMPLEMENTED.
+
+**Verification:** CI run #176 (commit 8e41ef8): completed successfully in
+~17s (full suite including the three subprocess-boot test modules),
+verified via the public actions list on 2026-10-25.
+
+**Evidence level:** repo-side source cross-check + staged bridge + CI
+green. NOT claimed: adapter wired into the MCP service flow, gateway
+wiring, Execution Host :8031 integration, Sandbox runtime verification,
+or E2E. Gates 3-4 remain BLOCKED; Gate 5 remains NOT OPENED.
+
+Work 28 remains ACTIVE / BLOCKED / NOT RELEASED.
