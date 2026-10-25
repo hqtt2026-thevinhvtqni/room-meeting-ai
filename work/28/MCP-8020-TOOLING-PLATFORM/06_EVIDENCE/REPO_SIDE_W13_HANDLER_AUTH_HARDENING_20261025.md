@@ -224,6 +224,6 @@ staged seam, NOT a wiring:
   boundary tests + staged seam with unit coverage.
 * NOT reached: deployment-level verification (service boot actually loading
   token/allow-list, live probe) and E2E through Core :8000.
-* CI for 4da5752: pending at the time of this write; to be recorded when the
-  run completes.
+* CI for 4da5752: unit-regression-tests SUCCEEDED in ~9s (verified via the
+  public checks page on 2026-10-25; no test-failure annotations).
 * Work 28 remains ACTIVE / BLOCKED / NOT RELEASED.
