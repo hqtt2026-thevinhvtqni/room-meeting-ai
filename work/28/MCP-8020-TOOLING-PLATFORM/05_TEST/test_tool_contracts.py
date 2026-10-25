@@ -8,8 +8,16 @@ Cover: Trust Boundary, Authorization fail-closed, Path security, Resource limits
 """
 import importlib
 import math
+import sys
 import unittest
+from pathlib import Path
 from types import MappingProxyType
+
+# Resolve imports from the canonical Work 28 platform root regardless of cwd.
+# This keeps pytest collection reliable when invoked from the repository root.
+_PLATFORM_ROOT = Path(__file__).resolve().parents[1]
+if str(_PLATFORM_ROOT) not in sys.path:
+    sys.path.insert(0, str(_PLATFORM_ROOT))
 
 _c = importlib.import_module("04_CODE.tool_contracts")
 ToolResult = _c.ToolResult
