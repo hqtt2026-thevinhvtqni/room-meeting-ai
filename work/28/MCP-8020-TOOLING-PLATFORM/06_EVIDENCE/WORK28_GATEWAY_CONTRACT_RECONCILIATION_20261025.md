@@ -18,3 +18,32 @@ The service currently returns NOT_IMPLEMENTED for tools whose catalog status is 
 
 ## Status
 Static mismatch confirmed. Runtime not wired. Tests not run in this session. No PASS claimed.
+
+## Follow-up implementation evidence — 2026-10-25
+
+Two staged files were added on this branch after the static finding:
+
+- `04_CODE/mcp8020_strict_execution_gateway_v1.py` — commit `0935bc7b3838cf5bc5e1ce8152a2b06daef19112`.
+- `05_TEST/test_mcp8020_strict_execution_gateway_v1.py` — commit `b265230c1393ca10fd1f7639466b05fd3d35d6c1`.
+
+The adapter validates the narrow request envelope before calling an injected `submit(request)` client. The accompanying tests cover accepted request forwarding, rejection-before-submit for malformed/forbidden fields, source/Work binding in the shape-level PASS guard, and non-empty test summaries.
+
+### Explicit integration boundary
+
+This is a staged adapter, **not a replacement for** `mcp8020_execution_gateway_v54.py`. It does not implement the seven v54 execution/evidence handler names and must not be passed to `V54Service.bind_execution_gateway()`. The v54 catalog schemas still expose the older `script`/`command` shapes, and the service still short-circuits every `NOT_IMPLEMENTED` tool before dispatch. These remain known blockers; no catalog status was changed.
+
+### Verification status
+
+- Source files committed: DONE.
+- Unit tests authored: DONE.
+- Unit tests executed: NOT VERIFIED in this session.
+- GitHub Actions run/status for commit `b265230c1393ca10fd1f7639466b05fd3d35d6c1`: no run/status was returned by the queried endpoints. This is not a PASS and does not establish that Actions did not run, because the workflow-run connector query is limited to pull-request-triggered runs.
+- Live Core :8000 → canonical W12/W13 runtime route, authorization, source snapshot/hash binding, process-tree cleanup, and E2E: NOT VERIFIED.
+- Execution catalog: remains `NOT_IMPLEMENTED`.
+
+## Next bounded tasks
+
+1. Add the strict contract as a separately versioned catalog schema or a deliberate catalog migration; do not silently change v54 public schemas.
+2. Add explicit regression coverage proving all seven execution/evidence tools remain `NOT_IMPLEMENTED` even when a gateway object is injected, until an approved activation gate is introduced.
+3. Run the branch workflow through an observable GitHub Actions run and preserve the run URL/result as evidence.
+4. Continue the canonical runtime attestation and security/E2E gates through the existing W12/W13 route; do not create a second execution host.
