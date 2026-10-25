@@ -7,7 +7,7 @@
 
 ## Decision
 
-**Do not reopen Work 12 or Work 13 by default. Integrate their existing contracts/components into Work 28, and open a source Work only if implementation evidence proves a change to that Work's owned boundary is necessary.**
+**Do not reopen Work 12. Reopen Work 13 narrowly for runtime-boundary hardening, while Work 28 remains the owner of MCP integration and acceptance.** Static source evidence already shows that the existing W13 host path cannot currently guarantee the exact snapshot/hash, trusted runtime pinning, and verified process-tree cleanup required by Work 28. These controls cannot be honestly supplied by a Work 28 wrapper alone while the canonical host still accepts arbitrary command vectors and does not expose the required guarantees. This is a bounded W13 change request, not a restart of Work 13 or permission to build another host.
 
 ### Work 12 — keep frozen
 
@@ -16,12 +16,12 @@
 - Work 28 must consume the canonical interfaces already agreed for the execution path.
 - Reopen Work 12 only if a concrete incompatibility is proven to require changing a Work 12-owned contract; record the exact incompatible field/behavior and obtain an explicit scope decision before modifying it.
 
-### Work 13 — reuse the canonical execution host
+### Work 13 — reuse the canonical host and reopen only its runtime boundary
 
 - Reuse the existing Work 13 Execution Host at :8031 and its bridge/adapter; do not build a parallel runtime.
 - Work 28 owns the public narrow request contract, MCP service/connector integration, fail-closed gates, result/evidence binding, and integration tests.
-- Work 13 should be reopened only for changes to its owned runtime boundary that cannot safely be implemented in the Work 28 integration layer. Current static evidence identifies such gaps in the existing :8031 path: authenticated Core authorization is not established by the inspected HTTP handler; command-vector interface does not match the narrow Work 28 contract; expected source hash/immutable snapshot is not enforced; runtime identity is not pinned by the bridge; process-tree cleanup is not verified.
-- First implement a Work 28-side adapter/protocol and tests against the existing host contract. If a required control necessarily belongs inside the canonical W13 host (snapshot execution, timeout/process-tree cleanup, or trusted runtime identity enforcement), record a narrowly scoped W13 change request instead of silently changing W13 from Work 28.
+- **Required bounded W13 scope:** establish trusted Core authorization at the canonical request boundary; replace arbitrary command-vector forwarding with the narrow Work 28 operation mapping; enforce Work-relative immutable snapshot/hash verification; pin runtime identity from trusted configuration; enforce timeout and verify process-tree cleanup. Keep these changes confined to the existing W13 host/bridge; no new host and no Work 12 changes.
+- Work 28 must implement and test the caller-facing contract/adapter and end-to-end evidence checks in parallel. Do not silently fake host guarantees in the Work 28 wrapper; the wrapper must fail closed until W13 exposes enforceable guarantees.
 
 ## Required integration contract
 
@@ -34,7 +34,13 @@ The external Work 28 request is limited to:
 
 Do not accept caller-supplied command/argv/script/cwd/shell/env/principal/authorized fields. Caller identity must originate from authenticated server middleware; Work authorization must be established by trusted Core. The exact immutable snapshot whose SHA-256 was checked must be the snapshot executed. Results must bind request/run IDs, Work ID, snapshot, source hash, approved runtime identity, exit code, evidence reference, and verified process-tree cleanup. A test run can pass only with total > 0 and failed = errors = 0.
 
-## Activation gate
+## Ownership split and activation gate
+
+- Work 13 reopened scope: only canonical host/bridge runtime-boundary controls listed above.
+- Work 28 scope: adapter contract, MCP registration/service, connector guard coordination, regression tests, evidence package, and final activation decision.
+- Work 12: remains frozen and untouched.
+
+
 
 Until both unit/regression tests and authorized live Core → existing W13 HTTP :8031 end-to-end verification pass with inspectable evidence:
 - Keep all seven execution/evidence MCP tools `NOT_IMPLEMENTED`.
@@ -47,4 +53,4 @@ Until both unit/regression tests and authorized live Core → existing W13 HTTP 
 - `03_ARCHITECTURE/WORK28_W13_ADAPTER_IMPLEMENTATION_PLAN_V1.md`
 - `06_EVIDENCE/WORK28_W13_STATIC_RECONCILIATION_20261025.md`
 
-The cited findings are static source review, not live runtime evidence. This decision does not declare Work 12 or Work 13 newly completed, and does not claim Work 28 integration is complete.
+The cited findings are static source review, not live runtime evidence. This decision authorizes a narrowly scoped Work 13 continuation for the identified host-boundary gaps; it does not reopen Work 12, restart all of Work 13, or claim Work 28 integration is complete.
