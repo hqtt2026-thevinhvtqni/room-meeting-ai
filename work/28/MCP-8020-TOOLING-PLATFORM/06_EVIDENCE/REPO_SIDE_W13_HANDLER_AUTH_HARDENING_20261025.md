@@ -259,3 +259,23 @@ Therefore “implements all seven methods” is accurate only at the Python inte
 5. Only then evaluate gateway composition and catalog status changes. Release gate still requires deployment startup proof, live auth probes, canonical runtime/isolation evidence, and an E2E run whose evidence binds Work, source hash, run ID, exit status and output refs.
 
 **Decision:** do not wire `W13CoreExecutionClientV1` into the live v54 service yet. The remaining blocker is not merely deployment evidence; the adapter's status/result/evidence/handoff methods currently lack authoritative Core backing. Work 28 remains ACTIVE / BLOCKED / NOT RELEASED.
+
+
+## 12. Cross-Work canonical Work 13 Sandbox comparison (2026-10-25)
+
+Read-only cross-Work probes via MCP 8030 inspected the current Work 13 Sandbox files:
+- `13/EXECUTION-HOST-INFRASTRUCTURE/04_CODE/execution_host/server.py`
+- `13/EXECUTION-HOST-INFRASTRUCTURE/04_CODE/execution_host/models.py`
+- `13/EXECUTION-HOST-INFRASTRUCTURE/04_CODE/execution_host/wee_bridge.py`
+- `13/EXECUTION-HOST-INFRASTRUCTURE/06_EVIDENCE/W13-CANONICAL-RUNTIME-IDENTITY/W13_CANONICAL_RUNTIME_IDENTITY_FINAL_RESULT.json`
+
+Findings:
+
+1. **The Work 13 Sandbox's canonical `server.py` is not the hardened branch version.** The readable Sandbox copy's `do_POST /execute` accepts the JSON body, constructs `WorkContext` and `ExecutionRequest`, and invokes the host without the token-authentication or per-Work allow-list checks present in the Work 28 branch copy. This is a source comparison, not a live request.
+2. **The Work 13 Sandbox's `wee_bridge.py` is also the pre-token version.** Its constructor has no `auth_token` parameter, does not load `ROOM_HOP_EXECUTION_AUTH_TOKEN`, and sends only Content-Type/Accept headers. Therefore the b132df29 bridge fix and hardened server in the Work 28 repository branch have NOT been shown to be synchronized into the canonical Work 13 Sandbox or deployed runtime.
+3. The Work 13 Sandbox's recorded canonical runtime identity result says `BLOCKED`: canonical startup, `/health`, `/execute`, runtime identity and build hash were NOT OBSERVED; the record says the available Room-HOP tool inventory lacks process-start/attach-runtime capability.
+4. A historical `EXECUTION-CURRENT.json` labels a narrower HTTP-host E2E as PASS, but that does not establish that the current source revision is running, that the new token/allow-list hardening is deployed, or that the required Work 28 → authenticated Core → canonical W13/W12 route passes today.
+
+**Consequence:** do not interpret CI-green repository changes as hardening the canonical Work 13 Sandbox/runtime. The outstanding work is a controlled cross-Work source synchronization/review followed by an authorized deployment and live verification in the trusted environment. No secret token is to be copied into source or evidence, and no deployment or runtime activation was attempted in this audit.
+
+This adds a separate, concrete gate to sections 10–11: **canonical Work 13 source/runtime alignment is unverified and the Sandbox source currently read is pre-hardening.** Work 28 remains ACTIVE / BLOCKED / NOT RELEASED.
