@@ -279,3 +279,38 @@ Findings:
 **Consequence:** do not interpret CI-green repository changes as hardening the canonical Work 13 Sandbox/runtime. The outstanding work is a controlled cross-Work source synchronization/review followed by an authorized deployment and live verification in the trusted environment. No secret token is to be copied into source or evidence, and no deployment or runtime activation was attempted in this audit.
 
 This adds a separate, concrete gate to sections 10–11: **canonical Work 13 source/runtime alignment is unverified and the Sandbox source currently read is pre-hardening.** Work 28 remains ACTIVE / BLOCKED / NOT RELEASED.
+
+## 13. Repo-side audit (2026-10-25): Core :8000 has no execution authority; proposed contract
+
+Follow-up to section 11.3 step 1 ("identify the already-deployed authenticated
+Core :8000 execution API"). The repository-side answer is: **no such API
+exists in code today.**
+
+* `room_hop_mcp/adapter/http_server.py` and `core/meeting_service.py` were
+  read directly on this branch. Core :8000 is a meeting lifecycle service
+  only (`API_CONTRACT.md`, LOCKED v0.1). Its full HTTP surface is
+  `GET /identities`, `GET /meetings`, `GET /meetings/{id}`,
+  `GET /meetings/{id}/transcript`, `POST /meetings`,
+  `POST /meetings/{id}/paste|open|join|start|close`. The strings
+  `execute`, `work_id`, `WorkContext` do not appear in the Core package.
+* The canonical Work 13 source tree (`13/EXECUTION-HOST-INFRASTRUCTURE/`)
+  does NOT exist in this repository — confirmed by direct path lookup. The
+  canonical Work 13 source lives only in the Sandbox (section 12). Its
+  synchronization/review is therefore Sandbox-owned and cannot be performed
+  or verified from this branch.
+* Consequence: the MCP -> Core :8000 -> W13 route cannot be wired yet,
+  because the Core half of the route does not exist. Per the discipline
+  "do not invent an endpoint", the response was to PROPOSE a contract for
+  architecture-owner review, not to implement one:
+  `03_ARCHITECTURE/PROPOSED_CORE_EXECUTION_AUTHORITY_CONTRACT_V1.md`
+  (commit 241bdba) defines a Work-scoped, time-bounded execution grant
+  surface (POST /works/{work_id}/execution-grants, grant status lookup,
+  record-only run outcomes), authority invariants, the integration seam
+  with `W13CoreExecutionClientV1.work_context_provider`, and open questions
+  (token model, durability, composer, separation from the LOCKED v0.1
+  meeting contract).
+* Nothing was implemented, wired, or claimed: the v54 execution tools
+  remain NOT_IMPLEMENTED. The staged client (section 11.2) keeps its
+  acknowledged semantic limits until the contract is approved, implemented,
+  and verified live.
+* Work 28 remains ACTIVE / BLOCKED / NOT RELEASED.
