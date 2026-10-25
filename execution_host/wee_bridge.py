@@ -3,6 +3,7 @@ import json, os
 from dataclasses import asdict, dataclass, is_dataclass
 from typing import Any, Callable
 from urllib import error, request
+from .server import AUTH_HEADER
 
 @dataclass(frozen=True)
 class BridgeResult:
@@ -28,11 +29,17 @@ class BridgeResult:
 
 class ExecutionHostBridge:
     """Reusable WEE boundary adapter; it never invents WorkContext authority."""
-    def __init__(self, endpoint: str | None = None, timeout: float = 30.0, transport: Callable[[str, bytes, float], tuple[int, bytes]] | None = None):
-        self.endpoint=(endpoint or os.getenv('EXECUTION_HOST_URL','http://127.0.0.1:8031')).rstrip('/'); self.timeout=timeout; self.transport=transport or self._http_transport
-    @staticmethod
-    def _http_transport(url: str, body: bytes, timeout: float) -> tuple[int, bytes]:
-        req=request.Request(url,data=body,headers={'Content-Type':'application/json','Accept':'application/json'},method='POST')
+    def __init__(self, endpoint: str | None = None, timeout: float = 30.0, transport: Callable[[str, bytes, float], tuple[int, bytes]] | None = None, auth_token: str | None = None):
+        self.endpoint=(endpoint or os.getenv('EXECUTION_HOST_URL','http://127.0.0.1:8031')).rstrip('/')
+        self.timeout=timeout
+        self.transport=transport or self._http_transport
+        # Trusted execution token: explicit argument, or the deployment
+        # environment variable. Never logged, echoed, or returned.
+        self.auth_token=(auth_token if auth_token is not None else (os.getenv('ROOM_HOP_EXECUTION_AUTH_TOKEN') or None))
+    def _http_transport(self, url: str, body: bytes, timeout: float) -> tuple[int, bytes]:
+        headers={'Content-Type':'application/json','Accept':'application/json'}
+        if self.auth_token: headers[AUTH_HEADER]=self.auth_token
+        req=request.Request(url,data=body,headers=headers,method='POST')
         with request.urlopen(req,timeout=timeout) as response: return response.status,response.read()
     @staticmethod
     def _to_dict(value: Any) -> dict[str, Any]:
@@ -50,7 +57,11 @@ class ExecutionHostBridge:
             if not isinstance(data,dict): return BridgeResult(None,context.get('work_id'),'BLOCKED',blocker='invalid_execution_host_response')
             result=data.get('result') if isinstance(data.get('result'),dict) else data; status=result.get('status','BLOCKED'); status='BLOCKED' if code < 200 or code >= 300 else status
             return BridgeResult(result.get('execution_id') or context.get('execution_id'),result.get('work_id') or context.get('work_id'),status,result.get('evidence_ref'),result.get('exit_code'),result.get('stdout_ref'),result.get('stderr_ref'),result.get('artifacts') or [],result.get('blocker') or (None if code < 300 else 'execution_host_http_'+str(code)),result.get('cleanup') or {},result.get('provider_type','HTTP_EXECUTION_HOST'),result.get('runtime_instance_id'),result.get('runtime_build_hash'),result.get('runtime_started_at'),result.get('runtime_pid'),result.get('runtime_platform'),result.get('runtime_bind_address'),data)
+        except error.HTTPError as exc:
+            # HTTP status from the boundary is surfaced exactly; the token
+            # value never appears in the blocker.
+            return BridgeResult(context.get('execution_id'),context.get('work_id'),'BLOCKED',blocker='execution_host_http_'+str(exc.code),cleanup={'process_reaped':False})
         except (TimeoutError,error.URLError,OSError) as exc: return BridgeResult(context.get('execution_id'),context.get('work_id'),'BLOCKED',blocker='execution_host_unreachable:'+type(exc).__name__,cleanup={'process_reaped':False})
         except (ValueError,UnicodeError) as exc: return BridgeResult(context.get('execution_id'),context.get('work_id'),'BLOCKED',blocker='invalid_execution_host_json:'+type(exc).__name__,cleanup={'process_reaped':False})
 
-def execute_work(work_context: Any,execution_request: Any,*,endpoint: str|None=None,timeout: float=30.0,transport=None)->BridgeResult: return ExecutionHostBridge(endpoint,timeout,transport).invoke(work_context,execution_request)
+def execute_work(work_context: Any,execution_request: Any,*,endpoint: str|None=None,timeout: float=30.0,transport=None,auth_token: str|None=None)->BridgeResult: return ExecutionHostBridge(endpoint,timeout,transport,auth_token).invoke(work_context,execution_request)
