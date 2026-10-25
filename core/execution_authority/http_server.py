@@ -67,7 +67,7 @@ class ExecutionAuthorityHandler(BaseHTTPRequestHandler):
             return
         work_id, grant_id = parts[1], parts[3]
         try:
-            self.authority.authenticate(self.headers.get(SERVICE_IDENTITY_HEADER))
+            caller = self.authority.authenticate(self.headers.get(SERVICE_IDENTITY_HEADER))
             status = self.authority.grant_status(grant_id)
         except PermissionError as exc:
             self._error(401, str(exc))
@@ -75,7 +75,8 @@ class ExecutionAuthorityHandler(BaseHTTPRequestHandler):
         except LookupError:
             self._error(404, "unknown_grant")
             return
-        if status.get("work_id") != work_id:
+        # Grant metadata is scoped to the service identity that owns it.
+        if status.get("work_id") != work_id or status.get("service_identity") != caller:
             self._error(404, "unknown_grant")
             return
         self._send(200, {"status": "ok", "grant": status})
@@ -124,7 +125,7 @@ class ExecutionAuthorityHandler(BaseHTTPRequestHandler):
 
     def _handle_run(self, work_id: str) -> None:
         try:
-            self.authority.authenticate(self.headers.get(SERVICE_IDENTITY_HEADER))
+            caller = self.authority.authenticate(self.headers.get(SERVICE_IDENTITY_HEADER))
         except PermissionError as exc:
             self._error(401, str(exc))
             return
@@ -148,6 +149,9 @@ class ExecutionAuthorityHandler(BaseHTTPRequestHandler):
             return
         if grant.get("work_id") != work_id:
             self._error(404, "unknown_grant")
+            return
+        if grant.get("service_identity") != caller:
+            self._error(403, "caller_not_authorized_for_grant")
             return
         try:
             run = self.authority.record_run(
