@@ -30,4 +30,13 @@ jobs:
         working-directory: work/28/MCP-8020-TOOLING-PLATFORM
         env:
           PYTHONPATH: 04_CODE
-        run: python -m unittest discover -s 05_TEST -v
+        run: |
+          set -o pipefail
+          python -m unittest discover -s 05_TEST -v 2>&1 | tee unittest-output.txt
+      - name: Surface failure details as public annotations
+        if: failure()
+        working-directory: work/28/MCP-8020-TOOLING-PLATFORM
+        run: |
+          grep -E "(FAIL:|ERROR:|Traceback|AssertionError|ImportError|SyntaxError|FAILED|exit code)" unittest-output.txt | tail -n 10 | while IFS= read -r line; do
+            printf '::error::%s\n' "$line"
+          done
