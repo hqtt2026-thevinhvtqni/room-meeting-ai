@@ -485,3 +485,16 @@ OPENED. CI result for de0667b: FAILED (see incident 16.1 below).
   source audit.
 
 Work 28 remains ACTIVE / BLOCKED / NOT RELEASED.
+
+
+## 17. Cross-identity grant access hardening
+
+**Finding (source audit):** the first Gate 2 implementation authenticated an enrolled service identity and validated the bearer grant token, but the HTTP run-recording route did not require the authenticated identity to match the identity bound to the grant. The grant-status GET route also returned grant metadata to any enrolled identity that knew the grant ID. This violated the caller-identity binding invariant.
+
+**Fix:**
+- Commit `df7463fa45e8f6c212234b254a06fe295e72b93a`: bind grant-status reads to the issuing service identity (otherwise return non-disclosing `404 unknown_grant`); bind run recording to the grant's service identity (otherwise return `403 caller_not_authorized_for_grant`).
+- Commit `136a346ec6326b621f1b31efe3d4537218270bfd`: add regression tests for cross-identity grant-status reads and run recording.
+
+**Verification:** GitHub Actions run #170 completed `success` for test commit `136a346ec6326b621f1b31efe3d4537218270bfd`: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/40200480561
+
+**Scope limit:** this is repository/CI evidence only. It does not prove the authority process is deployed or armed, that the live W13/W12 runtime is verified, or that MCP → Core → W13/W12 E2E is operational. Gate 3–4 remain BLOCKED; Gate 5 remains CLOSED.
