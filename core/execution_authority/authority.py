@@ -125,8 +125,10 @@ class ExecutionAuthority:
                 raise FileExistsError("grant_already_active")
         work = self._works[work_id]
         token = secrets.token_urlsafe(32)
+        grant_id = "GRANT-" + str(uuid.uuid4())
         grant = {
-            "record_id": "GRANT-" + str(uuid.uuid4()),
+            "record_id": grant_id,
+            "grant_id": grant_id,
             "record_type": "grant",
             "service_identity": service_identity,
             "work_id": work_id,
