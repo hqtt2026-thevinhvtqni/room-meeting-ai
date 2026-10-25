@@ -33,10 +33,17 @@ jobs:
         run: |
           set -o pipefail
           python -m unittest discover -s 05_TEST -v 2>&1 | tee unittest-output.txt
-      - name: Surface failure details as public annotations
+      - name: Surface failure details as public annotations and summary
         if: failure()
         working-directory: work/28/MCP-8020-TOOLING-PLATFORM
         run: |
-          grep -E "(FAIL:|ERROR:|Traceback|Error|error|FAILED|line [0-9]+|File \")" unittest-output.txt | tail -n 30 | while IFS= read -r line; do
+          {
+            echo "## Unittest failure details"
+            echo ""
+            echo '~~~'
+            tail -n 120 unittest-output.txt
+            echo '~~~'
+          } >> "$GITHUB_STEP_SUMMARY"
+          grep -E "(FAIL:|ERROR:|Traceback|Error|error|FAILED|line [0-9]+|File ")" unittest-output.txt | tail -n 30 | while IFS= read -r line; do
             printf '::error::%s\n' "$line"
           done
