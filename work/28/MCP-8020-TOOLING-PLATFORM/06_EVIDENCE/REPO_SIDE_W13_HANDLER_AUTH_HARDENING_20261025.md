@@ -437,5 +437,36 @@ Scope discipline (unchanged): this is the CORE side only. It does NOT wire
 execution tools remain NOT_IMPLEMENTED), and does NOT claim any deployment
 or Sandbox state. Gates 3-4 (runtime verification in the Sandbox, live
 probes, E2E) remain BLOCKED; Gate 5 (gateway/catalog wiring) remains NOT
-OPENED. CI result for de0667b: recorded below once observed.
+OPENED. CI result for de0667b: FAILED (see incident 16.1 below).
+
+### 16.1 Incident record (2026-10-25): CI red on de0667b / 9a8124d, fixed in 337d64f
+
+* CI run #166 (commit de0667b) and run #167 (commit 9a8124d, docs-only over
+  the same tree) FAILED in ~13-15s. The public checks page showed
+  "1 error, 2 warnings, 1 notice" with no test-level annotation: the
+  annotation step only surfaces collection-time ImportError lines, not
+  assertion/KeyError failures, so the failing tests were located by direct
+  source audit of the test module against the authority implementation.
+* Root cause: `ExecutionAuthority.issue_grant` returned the grant keyed as
+  `record_id` only; the issued-grant response carried no `grant_id` field.
+  Every test reading `grant["grant_id"]` — 8 direct authority tests and 3
+  HTTP boundary tests — raised KeyError at the client, so 11 of the 26 new
+  tests failed; the run still took >10s because the remainder of the suite,
+  including the other 15 new tests, executed to completion.
+* Fix commit 337d64f: the stored grant record now carries an explicit
+  `grant_id` field (same canonical value as `record_id`), so the once-only
+  token response, the grant status endpoint, and the run linkage all expose
+  the stable `grant_id` that the contract API surface promises. No other
+  behavior changed; the store remains append-only (a new field on new
+  records, not a mutation path for history).
+* Because `core/**` is outside the workflow path filter, commit 337d64f
+  does not trigger CI by itself; this evidence update (work/28 path change)
+  triggers the run that must confirm the fix. CI outcome for the fixed
+  tree: recorded in the next addendum once observed.
+* Lesson: contract-facing identifiers must appear in contract-facing
+  fields (`grant_id`), not only as internal record bookkeeping
+  (`record_id`); and the public annotation channel covers import errors
+  only, so assertion failures must be diagnosed from the run summary or by
+  source audit.
+
 Work 28 remains ACTIVE / BLOCKED / NOT RELEASED.
