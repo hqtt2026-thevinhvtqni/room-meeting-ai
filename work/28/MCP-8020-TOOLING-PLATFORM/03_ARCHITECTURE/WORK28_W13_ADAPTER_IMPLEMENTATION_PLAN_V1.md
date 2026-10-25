@@ -2,7 +2,7 @@
 
 - Date: 2026-10-25
 - Owner: Xu (AI-01), architecture and integration coordination
-- Status: DESIGN / NOT WIRED / NOT RELEASED
+- Status: PARTIAL IMPLEMENTATION / NOT WIRED / NOT RELEASED
 - Scope: adapt Work 28's narrow execution contract to the existing Work 13 canonical Execution Host. Do not create a second host; do not modify Work 12's frozen contract.
 
 ## 1. Evidence-based current state
@@ -39,6 +39,25 @@ Do not accept public `command`, `script`, `argv`, `cwd`, `shell`, `env`, `princi
 6. **Negative tests first** — unauthorized caller, cross-Work path, traversal, symlink/reparse escape, changed source after snapshot, hash mismatch, runtime mismatch, timeout, failed child cleanup, missing evidence, nonzero exit, empty test suite, and false/boolean numeric fields must fail closed.
 7. **Live authorized E2E** — only after unit tests pass, use a controlled authorized test Work through the canonical Core → existing W13 HTTP :8031 route; prove request-to-evidence identity and exact snapshot hash; verify cleanup after both success and timeout.
 8. **Activation gate** — only after all evidence is reviewed may the MCP service and connector guard be changed together. Until then all seven public execution/evidence tools remain `NOT_IMPLEMENTED`.
+
+
+## 3A. Implementation progress (2026-10-25)
+
+**Implemented and regression-tested in the Work 28 branch:**
+- `execution_host/work28_contract.py` — strict request schema plus Work-bound source snapshot creation, exact SHA-256 verification, symlink-component rejection, and read-only snapshot permissions.
+- `05_TEST/test_w13_contract_boundary.py` — rejection cases for caller-controlled command/authority/cwd/shell fields, unsafe paths, invalid operation/hash/timeout, Work mismatch, hash mismatch, and symlink paths.
+- CI run [40150494323](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/40150494323) passed: 200 tests, 4 skipped.
+- Identical staged source file is also present on branch `work/13-execution-host-hardening` for the bounded W13 continuation.
+
+**Still not implemented or verified:**
+- Trusted Core caller authentication and authoritative Work-root resolution in the live HTTP handler.
+- Execution of the exact snapshot through a constrained runtime entrypoint.
+- Independently pinned runtime identity at dispatch and result verification.
+- Verified process-tree containment/cleanup, including timeout behavior.
+- Authenticated live Core → existing W13 HTTP :8031 end-to-end test and evidence.
+- Wiring into the MCP v54 service and connector.
+
+The staged module is intentionally not wired to `/execute`; the current command-oriented route remains incompatible. Its read-only file permissions are defense-in-depth, not OS-enforced immutable storage. CI proves only repository unit/regression tests, not live execution security.
 
 ## 4. Acceptance criteria
 
