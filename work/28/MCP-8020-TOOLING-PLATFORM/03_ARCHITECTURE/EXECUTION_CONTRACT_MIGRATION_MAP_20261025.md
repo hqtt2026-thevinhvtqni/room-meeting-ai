@@ -49,3 +49,12 @@ No catalog status flip, no endpoint activation, and no release until every neces
 - Post-job cleanup emitted: `fatal: No url found for submodule path 'room-meeting-ai' in .gitmodules`, exit code 128. GitHub still marked the job/workflow successful, but the submodule metadata warning is a separate repository hygiene issue and should be investigated rather than silently treated as clean.
 - CI verdict: UNIT/REGRESSION PASS for the recorded commit; LIVE EXECUTION INTEGRATION remains BLOCKED / NOT RELEASED.
 - Release gate unchanged: keep all seven execution/evidence tools `NOT_IMPLEMENTED`; do not activate from unit-test success alone.
+
+
+## Follow-up verification — 2026-10-25
+
+- Latest documentation commit `afd767b69884e1a9c1af3d784cdea172af149f5b` triggered workflow run https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/40151508676.
+- Latest run completed with conclusion `success`; job `unit-regression-tests` reported `Ran 201 tests in 0.053s`; `OK`.
+- The same post-job warning remains: `fatal: No url found for submodule path 'room-meeting-ai' in .gitmodules`. A direct read of `.gitmodules` on this branch returns 404 (file absent). This establishes the missing metadata but does not establish the intended submodule URL or whether the gitlink is accidental.
+- Repository hygiene disposition: INVESTIGATE / DO NOT MUTATE. Do not add a guessed submodule URL or remove the gitlink until its origin and intended target are identified from repository tree/commit history.
+- This follow-up CI run remains unit/regression evidence only. Runtime integration and release gates remain BLOCKED / NOT RELEASED; all seven execution/evidence tools remain `NOT_IMPLEMENTED`.
