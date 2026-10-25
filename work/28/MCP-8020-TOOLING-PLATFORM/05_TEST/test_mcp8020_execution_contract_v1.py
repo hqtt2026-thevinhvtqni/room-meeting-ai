@@ -108,5 +108,27 @@ class ExecutionContractV1Tests(unittest.TestCase):
         self.assertFalse(result_is_verified_pass(missing, HASH, "RUN_TESTS", "work28"))
 
 
+    def test_execution_contract_is_not_accidentally_live_in_legacy_catalog(self):
+        # The candidate contract intentionally differs from v54's legacy
+        # script/command schema. Do not activate execution tools by merely
+        # injecting a gateway; an explicit reviewed migration is required.
+        from mcp8020_catalog_v54 import TOOL_SPECS, NOT_IMPLEMENTED
+
+        by_name = {spec.name: spec for spec in TOOL_SPECS}
+        execution_names = (
+            "sandbox_run_python", "sandbox_run_command",
+            "sandbox_get_execution_status", "sandbox_get_execution_result",
+            "sandbox_collect_artifact", "sandbox_generate_evidence",
+            "sandbox_create_handoff",
+        )
+        for name in execution_names:
+            with self.subTest(tool=name):
+                self.assertEqual(by_name[name].status, NOT_IMPLEMENTED)
+        legacy = by_name["sandbox_run_python"].input_schema["properties"]
+        self.assertIn("script", legacy)
+        self.assertNotIn("entry_path", legacy)
+        self.assertNotIn("expected_source_sha256", legacy)
+
+
 if __name__ == "__main__":
     unittest.main()
