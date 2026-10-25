@@ -59,7 +59,7 @@ Do not accept public `command`, `script`, `argv`, `cwd`, `shell`, `env`, `princi
 
 The staged module is intentionally not wired to `/execute`; the current command-oriented route remains incompatible. Its read-only file permissions are defense-in-depth, not OS-enforced immutable storage. CI proves only repository unit/regression tests, not live execution security.
 
-A follow-on W13 branch additionally stages `execution_host/work28_snapshot_runner_v1.py`. It accepts only `RUN_SCRIPT`/`RUN_TESTS`, rechecks the snapshot hash before dispatch, uses a fixed Python/pytest mapping, and applies a bounded subprocess timeout. It intentionally returns `BLOCKED` with `cleanup_verified=false` because process-tree cleanup is not independently verified. Draft review PR: [#25](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/25). This runner has not yet earned an independent completed CI PASS and is not wired to the live endpoint.
+A follow-on W13 branch additionally stages `execution_host/work28_snapshot_runner_v1.py`. It accepts only `RUN_SCRIPT`/`RUN_TESTS`, rechecks the snapshot hash before dispatch, uses a fixed Python/pytest mapping, and applies a bounded subprocess timeout. It intentionally returns `BLOCKED` with `cleanup_verified=false` because process-tree cleanup is not independently verified. Draft review PR: [#25](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/25). The W13 boundary workflow completed [run 40150852661](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/40150852661) with **28 tests passed** on the PR merge ref. This verifies the repository-level boundary tests only; the runner remains not wired to the live endpoint.
 
 ## 4. Acceptance criteria
 
