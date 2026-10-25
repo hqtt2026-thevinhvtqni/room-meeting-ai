@@ -124,3 +124,27 @@ loaded the configuration. That requires booting the service in the trusted
 environment (e.g. checking the armed-works startup line and a live 401/403
 probe), which remains a deployment-level gate. Work 28 remains
 ACTIVE / BLOCKED / NOT RELEASED.
+
+
+## 8. Incident record (2026-10-25): wrapped-line corruption in 769b13f, rebuilt in c46655a
+
+* Commit 769b13f closed the missing quote from section 7 but was built by
+  re-fetching the file through a web fetch layer that hard-wraps long lines
+  near column 70. The wrapped text was committed as-is, breaking three long
+  lines (e.g. the `self._send(200, ...)` line split into `self._s` /
+  `end(200, ...)`), producing a SyntaxError at line 98.
+* CI runs #128-#133 all failed on this import-time error; the public
+  annotation steps added to the workflow surfaced the failing line, which
+  located the root cause.
+* Commit c46655aa rebuilds server.py from the clean original source (not from
+  any fetched copy) and verifies, before pushing, that no continuation
+  fragments exist and the fixed string literal has balanced quotes.
+* Lesson recorded for future pushes: never rebuild a file by round-tripping
+  content through a fetching layer that may reformat it; always assemble from
+  the original source and assert structural invariants before committing.
+* The workflow now also publishes failure details as public annotations and
+  a job summary so future incidents are diagnosable without log access.
+
+Still NOT claimed: deployment-level verification (service boot, token loaded
+from protected configuration, live 401/403 probe). Work 28 remains
+ACTIVE / BLOCKED / NOT RELEASED.
