@@ -91,6 +91,11 @@ class AuthorizedExecutionAdapterV1:
             raise RuntimeError("runtime returned a non-object result")
         if result.get("runtime_identity") != self._approved_runtime_identity:
             raise RuntimeError("runtime identity mismatch")
+        if result.get("status") != "PASS":
+            raise RuntimeError("runtime did not report PASS")
+        exit_code = result.get("exit_code")
+        if isinstance(exit_code, bool) or not isinstance(exit_code, int) or exit_code != 0:
+            raise RuntimeError("runtime exit_code must be integer zero")
         if result.get("work_id") != normalized["work_id"]:
             raise RuntimeError("runtime result Work binding mismatch")
         if result.get("source_sha256") != normalized["expected_source_sha256"]:
@@ -101,9 +106,6 @@ class AuthorizedExecutionAdapterV1:
             value = result.get(key)
             if not isinstance(value, str) or not value.strip():
                 raise RuntimeError(f"runtime result missing trusted {key}")
-        exit_code = result.get("exit_code")
-        if isinstance(exit_code, bool) or not isinstance(exit_code, int):
-            raise RuntimeError("runtime result must include an integer exit_code")
         if result.get("process_tree_cleanup_verified") is not True:
             raise RuntimeError("process-tree cleanup is not verified")
         if normalized["operation"] == "RUN_TESTS":
