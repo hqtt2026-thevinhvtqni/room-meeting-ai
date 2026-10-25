@@ -47,3 +47,17 @@ This is a staged adapter, **not a replacement for** `mcp8020_execution_gateway_v
 2. Add explicit regression coverage proving all seven execution/evidence tools remain `NOT_IMPLEMENTED` even when a gateway object is injected, until an approved activation gate is introduced.
 3. Run the branch workflow through an observable GitHub Actions run and preserve the run URL/result as evidence.
 4. Continue the canonical runtime attestation and security/E2E gates through the existing W12/W13 route; do not create a second execution host.
+
+## CI regression run — 2026-10-25
+
+The initial CI run exposed a mismatch in the test fixture: two path cases used raw strings containing the literal sequences `\\n` and `\\x7f`, rather than actual newline/DEL control characters. The contract validator was strengthened to reject all ASCII control characters (U+0000–U+001F and U+007F); the test cases were corrected to contain the actual characters.
+
+- Validator fix commit: `93d977c249e80d2033344a966dd7b8e13f6c9a76`.
+- Test-fixture correction commit: `1d8a48c544842d4e566a74c2684ec83d577cbd13`.
+- GitHub Actions run: [run 40149449011](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/40149449011).
+- Final workflow conclusion: **success**.
+- Test output: `Ran 171 tests`; `OK (skipped=4)`.
+
+Interpretation: the Work 28 branch's automated unit/regression suite passed at commit `1d8a48c544842d4e566a74c2684ec83d577cbd13`, with four tests skipped. This verifies repository-level tests only. It does **not** verify live Core/runtime integration or authorize activation of execution tools. A checkout post-job warning about the repository's `.gitmodules` entry was logged, but the workflow's final conclusion was success.
+
+Execution tools remain `NOT_IMPLEMENTED` pending canonical runtime, authorization, source-hash binding, cleanup, and end-to-end evidence.
