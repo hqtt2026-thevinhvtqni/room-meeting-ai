@@ -49,7 +49,8 @@ def authorize_work(work_id, authorized_works):
     """Fail-closed per-Work authorization for an already authenticated caller.
 
     authorized_works comes only from the trusted deployment configuration
-    (the Core :8000 authority chain). Authentication alone never grants
+    
+(the Core :8000 authority chain). Authentication alone never grants
     execution rights; a Work must be explicitly allow-listed.
     """
     if not isinstance(work_id, str) or not work_id:
@@ -76,7 +77,7 @@ def load_execution_auth_config(environ=None):
     if not isinstance(raw_works, str) or not raw_works.strip():
         raise RuntimeError(
             AUTHORIZED_WORKS_ENV + ' must list at least one canonical Work id'
-            ' (comma-separated, e.g. W28)
+            ' (comma-separated, e.g. W28)'
         )
     works = frozenset(
         normalize_work_id(part) for part in raw_works.split(',')
@@ -92,7 +93,8 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path=='/health':
             if self.host is None: self._send(503,{'status':'BLOCKED','reason':'runtime_not_initialized'}); return
-            self._send(200,{'status':'PASS','service':'execution-host','provider':self.host.provider_type,**self.host.identity()}); return
+            self._s
+end(200,{'status':'PASS','service':'execution-host','provider':self.host.provider_type,**self.host.identity()}); return
         self._send(404,{'status':'NOT_FOUND'})
     def do_POST(self):
         if self.path!='/execute': self._send(404,{'status':'NOT_FOUND'}); return
@@ -122,7 +124,8 @@ def serve(host='127.0.0.1',port=8031,auth_token: str | None = None, authorized_w
 def main():
     config = load_execution_auth_config()
     # The token value is never printed or logged; only the authorized
-    # Work ids and the bind address are announced at startup.
+    # Work ids
+ and the bind address are announced at startup.
     announced = ', '.join(sorted(config['authorized_works']))
     print('execution-host: armed; authorized works: ' + announced, flush=True)
     serve('127.0.0.1', 8031, **config)
