@@ -6,7 +6,7 @@ on:
       - work/13-execution-host-hardening
     paths:
       - "execution_host/work28_contract.py"
-      - "tests/test_work28_contract.py"
+      - "tests/test_work28_contract.py"\n      - "execution_host/work28_snapshot_runner_v1.py"\n      - "tests/test_work28_snapshot_runner_v1.py"
       - ".github/workflows/work13-contract-tests.yml"
   pull_request:
     paths:
@@ -28,4 +28,4 @@ jobs:
           python-version: "3.12"
       - run: python -m pip install pytest
       - name: Run Work 13 / Work 28 boundary tests
-        run: python -m pytest -q tests/test_work28_contract.py
+        run: python -m pytest -q tests/test_work28_contract.py tests/test_work28_snapshot_runner_v1.py
