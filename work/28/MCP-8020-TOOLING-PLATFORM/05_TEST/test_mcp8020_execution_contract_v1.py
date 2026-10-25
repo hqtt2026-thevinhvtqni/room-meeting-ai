@@ -69,13 +69,13 @@ class ExecutionContractV1Tests(unittest.TestCase):
             "request_id": "req-1", "run_id": "run-1", "work_id": "work28",
             "runtime_identity": "w13-build-a", "evidence_ref": "evidence://run-1",
         }
-        self.assertTrue(result_is_verified_pass(result, HASH, "RUN_SCRIPT"))
-        self.assertFalse(result_is_verified_pass(result, "b" * 64, "RUN_SCRIPT"))
+        self.assertTrue(result_is_verified_pass(result, HASH, "RUN_SCRIPT", "work28"))
+        self.assertFalse(result_is_verified_pass(result, "b" * 64, "RUN_SCRIPT", "work28"))
         for field in ("request_id", "run_id", "work_id", "runtime_identity", "evidence_ref"):
             changed = dict(result)
             changed[field] = ""
             with self.subTest(field=field):
-                self.assertFalse(result_is_verified_pass(changed, HASH, "RUN_SCRIPT"))
+                self.assertFalse(result_is_verified_pass(changed, HASH, "RUN_SCRIPT", "work28"))
         changed = dict(result)
         changed["exit_code"] = True
         self.assertFalse(result_is_verified_pass(changed, HASH, "RUN_SCRIPT"))
@@ -87,19 +87,20 @@ class ExecutionContractV1Tests(unittest.TestCase):
             "runtime_identity": "w13-build-a", "evidence_ref": "evidence://run-1",
             "test_summary": {"total": 2, "failed": 0, "errors": 0},
         }
-        self.assertTrue(result_is_verified_pass(result, HASH, "RUN_TESTS"))
+        self.assertTrue(result_is_verified_pass(result, HASH, "RUN_TESTS", "work28"))
         for summary in (
             {"total": 0, "failed": 0, "errors": 0},
             {"total": 2, "failed": 1, "errors": 0},
             {"total": 2, "failed": 0, "errors": 1},
             {"total": True, "failed": 0, "errors": 0},
+            {"total": 2},
         ):
             changed = dict(result, test_summary=summary)
             with self.subTest(summary=summary):
-                self.assertFalse(result_is_verified_pass(changed, HASH, "RUN_TESTS"))
+                self.assertFalse(result_is_verified_pass(changed, HASH, "RUN_TESTS", "work28"))
         missing = dict(result)
         del missing["test_summary"]
-        self.assertFalse(result_is_verified_pass(missing, HASH, "RUN_TESTS"))
+        self.assertFalse(result_is_verified_pass(missing, HASH, "RUN_TESTS", "work28"))
 
 
 if __name__ == "__main__":
