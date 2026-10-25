@@ -6,12 +6,16 @@ on:
       - work/13-execution-host-hardening
     paths:
       - "execution_host/work28_contract.py"
-      - "tests/test_work28_contract.py"\n      - "execution_host/work28_snapshot_runner_v1.py"\n      - "tests/test_work28_snapshot_runner_v1.py"
+      - "tests/test_work28_contract.py"
+      - "execution_host/work28_snapshot_runner_v1.py"
+      - "tests/test_work28_snapshot_runner_v1.py"
       - ".github/workflows/work13-contract-tests.yml"
   pull_request:
     paths:
       - "execution_host/work28_contract.py"
       - "tests/test_work28_contract.py"
+      - "execution_host/work28_snapshot_runner_v1.py"
+      - "tests/test_work28_snapshot_runner_v1.py"
       - ".github/workflows/work13-contract-tests.yml"
   workflow_dispatch:
 
