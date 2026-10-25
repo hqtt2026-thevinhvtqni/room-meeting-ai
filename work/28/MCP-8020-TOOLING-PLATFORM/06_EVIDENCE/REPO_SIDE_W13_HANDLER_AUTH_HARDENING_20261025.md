@@ -227,3 +227,35 @@ staged seam, NOT a wiring:
 * CI for 4da5752: unit-regression-tests SUCCEEDED in ~9s (verified via the
   public checks page on 2026-10-25; no test-failure annotations).
 * Work 28 remains ACTIVE / BLOCKED / NOT RELEASED.
+
+
+## 11. Independent architecture trace (2026-10-25): staged seam is not a Core adapter yet
+
+Audit scope: current branch source at `c04c2e0041d587128f331c0e4e17ac0487a62772`, including the v54 service, v54 gateway, staged client, WEE bridge, and W13 handler. This is static source inspection; no live deployment or Sandbox process execution was performed.
+
+### 11.1 Confirmed fixes and boundaries
+
+* `execution_host/wee_bridge.py` now conditionally sends `X-Room-Hop-Execution-Auth` when a trusted token is supplied or loaded from `ROOM_HOP_EXECUTION_AUTH_TOKEN`; its `HTTPError` handler preserves 401/403 as `execution_host_http_<code>`. This is source-level confirmation, backed by bridge tests and the reported green CI run.
+* `mcp8020_w13_core_client_v1.py` exists and structurally satisfies the seven-method Protocol. Its tests use a recording fake bridge; they do not call a deployed W13 service or Core.
+* `mcp8020_service_v54.py` only binds an execution gateway when explicitly injected. Its public catalog status remains the controlling gate; this client is not imported or composed by the service.
+
+### 11.2 Additional semantic gap: the staged client does not implement seven authoritative Core operations
+
+The current adapter passes a protocol-shape test, but several methods are local projections rather than authoritative execution/evidence operations:
+
+* `get_status` and `get_result` read the in-memory submission record; they do not query Core or W13 for an authoritative current status/result. The process-local registry also cannot survive service restart or coordinate multiple MCP workers.
+* `generate_evidence` returns a newly assembled dictionary around an existing `evidence_ref`; it does not call an evidence service, persist an evidence record, or independently verify the referenced evidence.
+* `create_handoff` validates and returns a dictionary; it does not persist a handoff in Core/Work state or verify that each evidence reference belongs to the specified Work/run.
+* `submit` delegates WorkContext derivation and request construction to injected callables, but this repository does not show a concrete trusted Core :8000 provider/composition supplying them. The bridge itself posts directly to the W13 `/execute` endpoint; it is not proof of the required MCP -> Core -> canonical W12/W13 path.
+
+Therefore “implements all seven methods” is accurate only at the Python interface/signature level, not at the semantic/authority level required for release. The fake-bridge tests establish fail-closed local behavior, not production correctness.
+
+### 11.3 Required next implementation slice
+
+1. Identify the already-deployed authenticated Core :8000 execution API and its exact contract, deployed SHA, caller identity and WorkContext derivation. Do not invent a route or let request arguments supply authority.
+2. Implement the adapter against that Core API, including server-side Work-scoped run authorization and durable status/result lookup. Keep direct MCP -> standalone W13 host calls prohibited unless the architecture owner explicitly revises the approved contract.
+3. Route evidence generation and handoff creation through the authoritative evidence/Work service, with ownership checks and durable references; do not treat locally assembled dictionaries as persisted evidence.
+4. Add integration tests using a real Core test instance or contract-faithful test server, including 401, 403, unknown/cross-Work run IDs, restart/multi-worker behavior, evidence-ref mismatch, and downstream timeout/cleanup cases.
+5. Only then evaluate gateway composition and catalog status changes. Release gate still requires deployment startup proof, live auth probes, canonical runtime/isolation evidence, and an E2E run whose evidence binds Work, source hash, run ID, exit status and output refs.
+
+**Decision:** do not wire `W13CoreExecutionClientV1` into the live v54 service yet. The remaining blocker is not merely deployment evidence; the adapter's status/result/evidence/handoff methods currently lack authoritative Core backing. Work 28 remains ACTIVE / BLOCKED / NOT RELEASED.
