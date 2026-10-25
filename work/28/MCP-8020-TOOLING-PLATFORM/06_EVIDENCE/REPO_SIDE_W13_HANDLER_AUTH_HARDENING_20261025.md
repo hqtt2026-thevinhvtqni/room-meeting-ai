@@ -635,3 +635,58 @@ wiring, Execution Host :8031 integration, Sandbox runtime verification,
 or E2E. Gates 3-4 remain BLOCKED; Gate 5 remains NOT OPENED.
 
 Work 28 remains ACTIVE / BLOCKED / NOT RELEASED.
+
+## 21. Integration slice: Core authorization surface, grant session, adapter on real Core (2026-10-25)
+
+Per the approved three-step slice (public Core authorizer surface -> closed
+grant lifecycle -> adapter tested against the real Core authority), commit
+a6b14c9, with the gateway v54 UNWIRED, RUN_COMMAND disabled, and the v54
+catalog unchanged (the catalog NOT_IMPLEMENTED pin test still runs).
+
+Step 1 — public Core authorization surface:
+
+* `ExecutionAuthority.is_identity_allowed_for_work(identity, work_id)`:
+  read-only, no side effects, bare False on any denial (not enrolled,
+  work unknown, malformed input). No HTTP route added; the LOCKED v0.1
+  meeting API and the execution-authority routes are untouched.
+* `CoreAuthorityAuthorizer` no longer reads the internal
+  `authority._works` attribute; the constructor now REQUIRES the public
+  method, so the bridge depends only on a stable Core interface.
+
+Step 2 — closed grant lifecycle:
+
+* `mcp8020_core_execution_session_v1.CoreGrantExecutionSession`: builds
+  a Work-scoped grant only after canonical W<number> validation,
+  authentication, and per-Work authorization; holds the grant token in
+  memory ONLY; re-validates it server-side (DR-2) BEFORE every run
+  recording; revoke clears the token. Session denial tests prove the
+  append-only store stays EMPTY on every pre-authorization failure, and
+  that a revoked grant can never record a second run.
+
+Step 3 — adapter against the real Core authority (mocks removed at the
+Core boundary; snapshot provider and runtime remain injected test doubles
+BY DESIGN until Gate 3/4 evidence exists):
+
+* full slice: grant session -> adapter.run (snapshot hash verified BEFORE
+  runtime dispatch; dispatch only on the fully attested result) -> run
+  recorded against the live grant; on-disk linkage grant_id -> run,
+  source hash, evidence refs; credentials and token values absent from
+  the store blob.
+* denial order: authorization failure raises BEFORE the snapshot provider
+  is called (0 snapshot calls, 0 runtime calls); snapshot hash mismatch
+  raises with 0 runtime calls.
+* revoked grant: validate_for_run and record_run both fail closed.
+
+**Verification:** CI run #178 (commit a6b14c9): completed successfully in
+~16s (full suite including the three subprocess-boot modules), verified
+via the public actions list on 2026-10-25.
+
+**Evidence level:** repo-side integration slice + CI green. NOT claimed:
+wiring into the MCP service flow, the v54 catalog, the Execution Host
+:8031 integration, Sandbox runtime verification, or E2E via MCP 8030.
+Gates 3-4 remain BLOCKED; Gate 5 remains NOT OPENED. The next slice in
+the approved order is the runtime W12/W13 integration (trusted
+snapshot/runtime implementations), which requires the trusted
+environment.
+
+Work 28 remains ACTIVE / BLOCKED / NOT RELEASED.
