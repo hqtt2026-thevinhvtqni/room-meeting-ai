@@ -58,6 +58,36 @@ class ToolsListCallFlowTests(ServiceV54TestCase):
         self.assertFalse(result["ok"])
         self.assertEqual(result["error"]["code"], "UNKNOWN_TOOL")
 
+    def test_execution_tools_stay_not_implemented_even_if_gateway_is_injected(self):
+        class GatewayStub:
+            def sandbox_run_python(self, **kwargs): return {"status": "PASS"}
+            def sandbox_run_command(self, **kwargs): return {"status": "PASS"}
+            def sandbox_get_execution_status(self, **kwargs): return {"status": "PASS"}
+            def sandbox_get_execution_result(self, **kwargs): return {"status": "PASS"}
+            def sandbox_collect_artifact(self, **kwargs): return {"status": "PASS"}
+            def sandbox_generate_evidence(self, **kwargs): return {"status": "PASS"}
+            def sandbox_create_handoff(self, **kwargs): return {"status": "PASS"}
+
+        # Injection alone must not activate catalog entries. The service's
+        # NOT_IMPLEMENTED catalog gate remains authoritative until a separately
+        # reviewed activation change and runtime evidence exist.
+        service = create_v54_service(
+            room=self.room, sandbox=self.sandbox, execution_gateway=GatewayStub()
+        )
+        for name, args in (
+            ("sandbox_run_python", {"work_id": "work28", "script": "print('x')"}),
+            ("sandbox_run_command", {"work_id": "work28", "command": "python"}),
+            ("sandbox_get_execution_status", {"run_id": "RUN-1"}),
+            ("sandbox_get_execution_result", {"run_id": "RUN-1"}),
+            ("sandbox_collect_artifact", {"run_id": "RUN-1", "artifact_path": "out.txt"}),
+            ("sandbox_generate_evidence", {"run_id": "RUN-1", "evidence_type": "TEST"}),
+            ("sandbox_create_handoff", {"work_id": "work28", "status": "BLOCKED", "next_action": "verify"}),
+        ):
+            with self.subTest(tool=name):
+                result = service.call_tool(name, args)
+                self.assertFalse(result["ok"])
+                self.assertEqual(result["error"]["code"], "NOT_IMPLEMENTED")
+
 class RoomFlowTests(ServiceV54TestCase):
     def test_meeting_and_proposal_flow(self):
         started = self.call("room_start_meeting", title="Work 28 review", identity_id="agent-x")
