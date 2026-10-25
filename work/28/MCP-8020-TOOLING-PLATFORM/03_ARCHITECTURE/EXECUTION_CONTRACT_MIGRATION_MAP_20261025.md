@@ -37,3 +37,15 @@ Keep all seven execution/evidence tools marked NOT_IMPLEMENTED until the canonic
 
 ## Release rule
 No catalog status flip, no endpoint activation, and no release until every necessary condition above has evidence attached to the exact deployed revisions. Missing/stale runtime identity, absent evidence, source hash mismatch, zero tests, timeout, malformed results, or incomplete process cleanup must never produce PASS.
+
+
+## CI evidence reconciliation — 2026-10-25
+
+- Workflow run: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/40150948532
+- Tested commit: `cff08f2f3f3adf166ce53cd899903d99dce46856`.
+- GitHub Actions job `unit-regression-tests`: completed, conclusion `success`.
+- Test log: `Ran 201 tests in 0.075s`; `OK (skipped=4)`.
+- Test scope is repository unit/regression tests, including Work 13 contract-boundary, source snapshot/hash, path-safety and tool-contract tests. This is CI evidence, not proof of live MCP 8030 -> Core :8000 -> canonical W12/W13 execution, current Windows runtime identity, or production OS isolation.
+- Post-job cleanup emitted: `fatal: No url found for submodule path 'room-meeting-ai' in .gitmodules`, exit code 128. GitHub still marked the job/workflow successful, but the submodule metadata warning is a separate repository hygiene issue and should be investigated rather than silently treated as clean.
+- CI verdict: UNIT/REGRESSION PASS for the recorded commit; LIVE EXECUTION INTEGRATION remains BLOCKED / NOT RELEASED.
+- Release gate unchanged: keep all seven execution/evidence tools `NOT_IMPLEMENTED`; do not activate from unit-test success alone.
