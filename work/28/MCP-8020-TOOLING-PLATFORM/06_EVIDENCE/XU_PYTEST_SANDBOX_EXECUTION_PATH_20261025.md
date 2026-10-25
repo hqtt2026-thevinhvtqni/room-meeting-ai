@@ -62,3 +62,8 @@ Expose a governed `python_test` / `python_run` action on the existing canonical 
 
 ## Next action
 Continue wiring `python_test` through the existing authorized execution architecture. Once that action is callable, run the canonical command, fix collection/import failures based on real output, and record the full test summary and exit code.
+
+## Follow-up implementation (2026-10-25)
+- **DONE — Import-path hardening:** updated `05_TEST/test_tool_contracts.py` to add the canonical platform root (`Path(__file__).resolve().parents[1]`) to `sys.path` before importing `04_CODE.tool_contracts`. This removes dependence on the caller's current working directory for this test's import.
+- **PASS — Sync/readback:** exact updated test content was read back from both Sandbox and GitHub. GitHub test blob SHA: `af20321adfd2eace85951b5457911afdb59ab113`.
+- **Still BLOCKED:** no authorized Python execution action is exposed by the current MCP 8030 tool surface, so neither the patched test nor the full pytest suite has been executed in Sandbox. The import-path fix is not a test PASS.
