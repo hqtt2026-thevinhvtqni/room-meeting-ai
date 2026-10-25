@@ -39,7 +39,7 @@ class ExecutionContractV1Tests(unittest.TestCase):
 
     def test_rejects_traversal_absolute_drive_and_ambiguous_paths(self):
         for path in ("../secret.py", "/tmp/a.py", r"C:\temp\a.py",
-                     "a/../b.py", "folder./x.py", "folder /x.py", "a//b.py"):
+                     "a/../b.py", "folder./x.py", "folder /x.py", "a//b.py", "a\\nb.py", "a\\x7fb.py"):
             with self.subTest(path=path):
                 req = self.valid_request()
                 req["entry_path"] = path
@@ -78,6 +78,9 @@ class ExecutionContractV1Tests(unittest.TestCase):
                 self.assertFalse(result_is_verified_pass(changed, HASH, "RUN_SCRIPT", "work28"))
         changed = dict(result)
         changed["exit_code"] = True
+        self.assertFalse(result_is_verified_pass(changed, HASH, "RUN_SCRIPT", "work28"))
+        changed = dict(result)
+        changed["exit_code"] = 0.0
         self.assertFalse(result_is_verified_pass(changed, HASH, "RUN_SCRIPT", "work28"))
         self.assertFalse(result_is_verified_pass(result, HASH, "RUN_SCRIPT", "work999"))
         self.assertFalse(result_is_verified_pass(result, "not-a-hash", "RUN_SCRIPT", "work28"))
