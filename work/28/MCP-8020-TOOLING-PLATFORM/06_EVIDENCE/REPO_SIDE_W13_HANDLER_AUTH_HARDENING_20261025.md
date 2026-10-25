@@ -314,3 +314,43 @@ exists in code today.**
   acknowledged semantic limits until the contract is approved, implemented,
   and verified live.
 * Work 28 remains ACTIVE / BLOCKED / NOT RELEASED.
+
+## 14. Independent review verdict and contract V1.1 (2026-10-25)
+
+The independent reviewer evaluated the round that produced sections 13 and
+the V1 contract and returned a bounded verdict:
+
+* Step 1 (Work 13 source alignment): PASS, repo-side scope only. The
+  canonical Work 13/12 trees are not on the branch; their source lives in
+  the Sandbox and no claim of synchronization or deployment verification
+  may be made from this repository.
+* Step 2 (Core :8000 route search): PASS, static inspection. Core source
+  shows meeting-lifecycle and identity APIs only; no WorkContext execution
+  grant contract exists in the audited scope.
+* CI green on commits 241bdba and 6038072 is CI-quality evidence only: it
+  does not prove Core can grant execution authority, nor that a production
+  execution path works.
+
+The reviewer proposed five architectural principles (Core decides and MCP
+never self-authorizes; grants bound to Work/caller/purpose/expiry/checkable
+status; durable authoritative storage for runs/evidence/handoffs rather
+than an in-process registry; W13/W12 remains the only canonical runtime
+with no MCP-to-Execution-Host bypass; fail-closed on every error branch)
+and a five-step sequence (approve contract, implement Core side, verify W13
+in the Sandbox at runtime, security + E2E testing, only then wire the
+gateway/catalog).
+
+Response on this branch (commit 1936ad3): the proposed contract was revised
+to V1.1 — DESIGN ONLY, NOT APPROVED, NOT IMPLEMENTED, NOT WIRED. The five
+principles are recorded as normative invariants INV-1..INV-5 (pending
+approval), and the four open questions were converted into decision
+requests DR-1..DR-4, each with a recommended default from the repo-side
+agent (service identity first; separate short-lived grant token;
+Core-managed append-only store; separate app mount) and an explicit note
+that recommendations are proposals for the architecture owner. Section 6
+of the contract restates the reviewer's five gates in order, none
+skippable.
+
+Nothing was implemented, wired, or claimed: the v54 execution tools remain
+NOT_IMPLEMENTED. No CI pass is interpreted as a production pass. Work 28
+remains ACTIVE / BLOCKED / NOT RELEASED.
