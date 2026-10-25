@@ -162,3 +162,68 @@ ACTIVE / BLOCKED / NOT RELEASED.
 * Evidence levels reached so far: source fix + CI green + handler-level live
   HTTP verification. Deployment-level verification and E2E remain open;
   Work 28 remains ACTIVE / BLOCKED / NOT RELEASED.
+
+## 10. Addendum (2026-10-25, fourth pass: bridge token fix + staged Core client seam)
+
+### 10.1 WEE bridge authentication gap (found and fixed in b132df29)
+
+Source audit after the handler hardening found that
+`execution_host/wee_bridge.py` still POSTed to /execute WITHOUT the
+`X-Room-Hop-Execution-Auth` header, so every bridge caller would have
+received 401 from the hardened server — the hardening silently broke the
+legitimate bridge path. Two defects fixed in commit b132df29:
+
+* The bridge now accepts `auth_token` (explicit argument, defaulting to the
+  `ROOM_HOP_EXECUTION_AUTH_TOKEN` environment variable) and sends it via the
+  pinned `AUTH_HEADER` imported from `execution_host.server`. The token
+  value is never logged, echoed, or returned in any blocker.
+* `error.HTTPError` is now mapped to the exact blocker
+  `execution_host_http_<code>` BEFORE the URLError clause, so 401/403 from
+  the boundary are distinguishable from genuine unreachability. Previously
+  every HTTP failure surfaced as `execution_host_unreachable`, hiding the
+  real status.
+* Locked by `05_TEST/test_w13_bridge_execution_token.py` (6 tests: pinned
+  header, no-header-without-token, env default, exact 401/403 codes, token
+  non-leakage).
+* CI for b132df29: the unit-regression-tests job SUCCEEDED in ~7s (full
+  suite, verified via the public checks page on 2026-10-25). Root bridge
+  tests (`tests/test_wee_8031_bridge.py`) use a FakeTransport with the same
+  `(url, body, timeout)` signature and remained green.
+
+### 10.2 Staged CoreExecutionClient seam (commit 4da5752)
+
+The architecture blocker traced by the Sandbox reviewer — the v54 execution
+gateway is UNWIRED (only `BlockedExecutionClient`) — is now answered by a
+staged seam, NOT a wiring:
+
+* `04_CODE/mcp8020_w13_core_client_v1.py` implements
+  `W13CoreExecutionClientV1`: the seven-method CoreExecutionClient protocol
+  expected by `ExecutionGateway`, over the token-carrying
+  `ExecutionHostBridge`. Fail-closed properties: construction validates
+  the injected `bridge` / `work_context_provider` / `request_builder`
+  callables; `submit` requires a non-empty work_id and refuses results
+  without an execution_id (surfacing the exact blocker); unknown run_ids
+  answer BLOCKED; unknown host statuses map to BLOCKED; `cancel` is refused
+  (`cancel_not_supported_synchronous_boundary`) until a verified
+  process-tree cancellation path exists; artifacts must appear in the run
+  manifest; evidence generation requires a bound evidence_ref; handoff status
+  is restricted to PASS/FAIL/BLOCKED/TIMEOUT with non-empty refs.
+* `05_TEST/test_mcp8020_w13_core_client_v1.py` (15 tests) locks all of the
+  above against a recording fake bridge, and proves the client satisfies
+  `ExecutionGateway` construction (the gateway accepts it as a
+  CoreExecutionClient).
+* This module is deliberately NOT imported by any MCP registration, catalog,
+  or v54 service code. The v54 execution tools remain NOT_IMPLEMENTED.
+  Wiring it requires deployment evidence: armed startup line, live 401/403
+  probe against the deployed service, and one E2E Core :8000 -> W13 run with
+  bound evidence, per the Work 28 gate rules.
+
+### 10.3 Evidence levels (explicit, unchanged discipline)
+
+* Reached: source fix + CI green (b132df29) + handler/bridge-level live
+  boundary tests + staged seam with unit coverage.
+* NOT reached: deployment-level verification (service boot actually loading
+  token/allow-list, live probe) and E2E through Core :8000.
+* CI for 4da5752: pending at the time of this write; to be recorded when the
+  run completes.
+* Work 28 remains ACTIVE / BLOCKED / NOT RELEASED.
