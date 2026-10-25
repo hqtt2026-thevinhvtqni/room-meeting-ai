@@ -97,6 +97,13 @@ class AuthorizedExecutionAdapterV1:
             raise RuntimeError("runtime result source hash mismatch")
         if result.get("snapshot_ref") != snapshot_ref:
             raise RuntimeError("runtime did not attest the exact immutable snapshot")
+        for key in ("request_id", "run_id", "evidence_ref"):
+            value = result.get(key)
+            if not isinstance(value, str) or not value.strip():
+                raise RuntimeError(f"runtime result missing trusted {key}")
+        exit_code = result.get("exit_code")
+        if isinstance(exit_code, bool) or not isinstance(exit_code, int):
+            raise RuntimeError("runtime result must include an integer exit_code")
         if result.get("process_tree_cleanup_verified") is not True:
             raise RuntimeError("process-tree cleanup is not verified")
         if normalized["operation"] == "RUN_TESTS":
