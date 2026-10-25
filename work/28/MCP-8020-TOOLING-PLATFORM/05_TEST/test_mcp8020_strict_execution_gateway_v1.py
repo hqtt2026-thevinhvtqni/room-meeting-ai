@@ -66,6 +66,19 @@ class StrictGatewayTests(unittest.TestCase):
                     self.gateway.run(payload)
         self.assertEqual(self.client.calls, [])
 
+    def test_non_object_core_response_is_rejected(self):
+        class BadResponseClient:
+            def submit(self, request):
+                return ["PASS"]
+
+        gateway = StrictExecutionGatewayV1(BadResponseClient())
+        with self.assertRaises(RuntimeError):
+            gateway.run(dict(VALID))
+
+    def test_client_without_submit_is_rejected_at_construction(self):
+        with self.assertRaises(TypeError):
+            StrictExecutionGatewayV1(object())
+
     def test_missing_required_field_is_rejected_before_submit(self):
         payload = dict(VALID)
         del payload["expected_source_sha256"]
