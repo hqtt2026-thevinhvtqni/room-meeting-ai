@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "work_id": "29",
+  "name": "HQTT-AI-VIDEO-STUDIO",
+  "status": "IN_PROGRESS",
+  "authority": "Vinh",
+  "build_owner": "Xu",
+  "default_mode": "mock",
+  "paid_provider_calls_enabled": false,
+  "publishing_requires_human_approval": true,
+  "outputs": ["mp4", "project_manifest.json", "quality_report.json", "build_evidence.json"],
+  "room_hop_boundary": ["MCP:8020", "Core:8000", "Workspace:8010"],
+  "quality_gates": ["schema_validation", "render_decode", "duration_ratio", "audio_policy", "secret_redaction", "evidence_complete"]
+}
