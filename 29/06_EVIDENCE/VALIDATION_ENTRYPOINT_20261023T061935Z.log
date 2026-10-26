@@ -1,0 +1,11 @@
+=== WORK29 VALIDATION 20261023T061935Z ROOT=/tmp/w29 ===
+PYTHON=Python 3.12.3
+--- unit_tests ---
+.........                                                                [100%]
+9 passed in 3.43s
+STEP unit_tests PASS exit=0
+--- no_release_token ---
+STEP no_release_token PASS exit=0
+STEP core_8000 BLOCKED http=000
+STEP mcp_build PARTIAL http=406
+SUMMARY offline=OFFLINE_VALIDATION_PASS integration=INTEGRATION_BLOCKED release=NO_RELEASE exit=0 log_sha=b2b835d1f33e271900903d3fdd91586c2366516f99a940b75e53ea0d168ef1cc
