@@ -1,0 +1,7 @@
+# WORK MANIFEST
+
+Work ID: 29
+Work Name: HQTT-AI-VIDEO-STUDIO
+Display Name: 29 - HQTT-AI-VIDEO-STUDIO
+Status: ACTIVE
+Created: 2026-10-12
