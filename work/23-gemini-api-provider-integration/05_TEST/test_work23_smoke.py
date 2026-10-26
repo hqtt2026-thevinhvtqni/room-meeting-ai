@@ -1,7 +1,13 @@
 """Offline tests for the Work 23 smoke classifier. No network, no key."""
+import importlib.util
+from pathlib import Path
+
 import pytest
 
-import work23_gemini_smoke as smoke
+_smoke_path = Path(__file__).with_name("work23_gemini_smoke.py")
+_spec = importlib.util.spec_from_file_location("work23_gemini_smoke", _smoke_path)
+smoke = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(smoke)
 
 SECRET = "AIzaSyFAKEFAKEFAKEFAKEFAKEFAKEFAKE12345"
 
