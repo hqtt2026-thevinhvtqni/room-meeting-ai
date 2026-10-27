@@ -55,6 +55,10 @@ class PlaywrightBrowserAdapter(BrowserAdapter):
             self.start()
         return self.page
 
+    def _default_evidence_dir(self) -> Path:
+        # Anchor to Work 10 evidence dir regardless of current working directory.
+        return Path(__file__).resolve().parents[1] / "06_EVIDENCE"
+
     def observe(self):
         p = self._ensure()
         return {"url": p.url, "title": p.title(), "text": p.locator("body").inner_text(timeout=3000)[:12000]}
@@ -78,7 +82,15 @@ class PlaywrightBrowserAdapter(BrowserAdapter):
 
     def type(self, target, text):
         p = self._ensure()
-        loc = p.locator(target) if target.startswith(("css=", "xpath=")) else p.get_by_label(target).or_(p.locator(target))
+        if target.startswith(("css=", "xpath=")):
+            loc = p.locator(target)
+        else:
+            # Label-first resolution. Never pass raw label text through locator():
+            # labels with special characters (e.g. "Task #1") are invalid CSS and
+            # would raise even when get_by_label matches.
+            loc = (p.get_by_label(target)
+                   .or_(p.get_by_placeholder(target))
+                   .or_(p.get_by_role("textbox", name=target)))
         loc.first.fill(text)
         return {"typed": text, "target": target}
 
@@ -103,10 +115,15 @@ class PlaywrightBrowserAdapter(BrowserAdapter):
 
     def screenshot(self, path=None):
         p = self._ensure()
-        out = path or "06_EVIDENCE/latest.png"
-        Path(out).parent.mkdir(parents=True, exist_ok=True)
-        p.screenshot(path=out, full_page=True)
-        return {"path": out}
+        if path:
+            out = Path(path)
+            if not out.is_absolute():
+                out = self._default_evidence_dir() / out
+        else:
+            out = self._default_evidence_dir() / "latest.png"
+        out.parent.mkdir(parents=True, exist_ok=True)
+        p.screenshot(path=str(out), full_page=True)
+        return {"path": str(out)}
 
     def download(self, target):
         p = self._ensure()

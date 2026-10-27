@@ -9,7 +9,9 @@ HEADLESS = os.getenv("COMPUTER_AGENT_HEADLESS", "0") == "1"
 
 class Handler(BaseHTTPRequestHandler):
     def _send(self, status, payload):
-        raw = json.dumps(payload, ensure_ascii=False).encode()
+        # default=str: TaskResult.steps contains ActionResult dataclasses which are
+        # not natively JSON-serializable. Without it /agent/execute returns 500.
+        raw = json.dumps(payload, ensure_ascii=False, default=str).encode()
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(raw)))
