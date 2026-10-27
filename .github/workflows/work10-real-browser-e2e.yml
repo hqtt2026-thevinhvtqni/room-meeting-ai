@@ -15,7 +15,11 @@ permissions:
 
 jobs:
   real-browser:
-    runs-on: ubuntu-latest
+    # Pinned on purpose: ubuntu-latest now resolves to ubuntu-26.04, which
+    # playwright 1.55.0 does not support ("Playwright does not support
+    # chromium on ubuntu26.04-x64"). 24.04 is the newest LTS supported by
+    # the pinned playwright version. Re-evaluate when upgrading playwright.
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     defaults:
       run:
