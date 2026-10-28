@@ -152,10 +152,13 @@ def evaluate(index: RetrievalIndex, labeled: list[dict], no_answer: list[dict],
         recs.append(recall_at_k(retrieved, expected, top_k))
         mrrs.append(mrr(retrieved, expected))
         answered.append(1 if results else 0)
-        if not hit_at_k(retrieved, expected, top_k):
-            misses.append(item["query"])
-        elif not results:
+        # False abstention is recorded independently of ranking misses:
+        # an empty result set is a false abstention even when the query would
+        # also be counted as a ranking miss.
+        if not results:
             misses.append(f"(false abstention) {item['query']}")
+        elif not hit_at_k(retrieved, expected, top_k):
+            misses.append(item["query"])
 
     start = time.perf_counter()
     for item in labeled:

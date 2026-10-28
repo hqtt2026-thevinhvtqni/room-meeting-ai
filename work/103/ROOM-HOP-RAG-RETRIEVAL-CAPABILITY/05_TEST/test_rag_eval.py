@@ -146,28 +146,68 @@ class SchemaValidationTests(unittest.TestCase):
 
 
 class BehaviorTests(unittest.TestCase):
+    """Engineered fixtures with MEASURED behaviour (verified before writing):
+
+    - answerable control "vé máy bay cần phê duyệt của quản lý trực tiếp"
+      retrieves a/cong-tac.md with score ~0.858 at min_score 0.35;
+    - near-miss "vé máy bay du lịch có cần phê duyệt của quản lý không"
+      leaks (retrieves a/cong-tac.md, score ~0.462) although the answer
+      is absent (du lịch is not covered by the công tác policy).
+
+    These tests pin the REPORTING of leaks and false abstentions.
+    If the fixture stops leaking, the assertion fails with instructions to
+    re-measure — the test must not be satisfied by tuning numbers.
+    """
+
     def setUp(self):
         docs = [
-            Document("a/travel.md", "travel.md",
-                     "Vé máy bay cần phê duyệt của quản lý\nHỗ trợ per diem mỗi ngày"),
-            Document("b/other.md", "other.md", "Kỷ luật họp tuần của phòng"),
+            Document("a/cong-tac.md", "cong-tac.md",
+                     "Quy định công tác xa của công ty\n"
+                     "Vé máy bay cần phê duyệt của quản lý trực tiếp\n"
+                     "Hỗ trợ per diem 500 nghìn mỗi ngày\n"
+                     "Khách sạn hoàn qua kế toán\n"
+                     "Báo cáo công tác trong 3 ngày sau khi về"),
+            Document("b/ky-luat.md", "ky-luat.md",
+                     "Kỷ luật họp tuần của phòng\nĐi muộn họp phạt 50 nghìn\n"
+                     "Điện thoại để chế độ im lặng trong họp"),
+            Document("c/bao-mat.md", "bao-mat.md",
+                     "Chính sách bảo mật thông tin công ty\n"
+                     "Không chia sẻ mật khẩu qua email\n"
+                     "Token truy cập phải lưu trong vault"),
         ]
         self.index = RetrievalIndex(index_documents(docs, max_chars=300, overlap_chars=40))
+        self.answerable = "vé máy bay cần phê duyệt của quản lý trực tiếp"
+        self.near_miss = "vé máy bay du lịch có cần phê duyệt của quản lý không"
+
+    def test_answerable_control_hits_expected_source(self):
+        results = self.index.search(self.answerable, top_k=5, min_score=0.35)
+        self.assertTrue(results, "fixture regression: answerable control no longer retrieves")
+        self.assertEqual(results[0].source_id, "a/cong-tac.md")
 
     def test_answered_rate_detects_false_abstention(self):
-        labeled = [{"query": "vé máy bay phê duyệt", "expected": ["a/travel.md"]},
-                   {"query": "zzzqqq xyzzyy không tồn tại", "expected": ["a/travel.md"]}]
-        no_answer = [{"query": "football", "kind": "easy"}] * 5
+        labeled = [
+            {"query": self.answerable, "expected": ["a/cong-tac.md"]},
+            {"query": "zzzqqq xyzzyy không tồn tại ở đâu cả", "expected": ["a/cong-tac.md"]},
+        ]
+        no_answer = [{"query": "football score last night", "kind": "easy"}] * 5
         m = evaluate(self.index, labeled, no_answer, top_k=5, min_score=0.35)
         self.assertLess(m["answered_rate"], 1.0)
-        self.assertTrue(any("false abstention" in s for s in m["ranked_misses"]))
+        self.assertTrue(any("false abstention" in s for s in m["ranked_misses"]),
+                        "false abstention must be labelled independently of ranking misses")
 
     def test_near_miss_leak_is_reported_not_hidden(self):
-        no_answer = [{"query": "đặt vé máy bay đi Đà Nẵng", "kind": "near_miss"}] * 5
-        labeled = [{"query": "vé máy bay phê duyệt", "expected": ["a/travel.md"]}] * 10
+        # Control first: the leak must actually leak at the operating threshold.
+        self.assertTrue(
+            self.index.search(self.near_miss, top_k=5, min_score=0.35),
+            "fixture regression: near-miss query no longer leaks; re-measure "
+            "before changing this test — do not tune the fixture to pass",
+        )
+        labeled = [{"query": self.answerable, "expected": ["a/cong-tac.md"]}] * 10
+        no_answer = [{"query": self.near_miss, "kind": "near_miss"}] * 5
         m = evaluate(self.index, labeled, no_answer, top_k=5, min_score=0.35)
         self.assertLess(m["no_answer_accuracy"], 1.0)
         self.assertEqual(len(m["near_miss_leaks"]), 5)
+        self.assertEqual(m["easy_leaks"], [])
 
 
 class CommittedSetTests(unittest.TestCase):
