@@ -1,62 +1,73 @@
-# Work 28 — OFF-01/OFF-02 offline test deployment & CI evidence
+# Work 28 — OFF-01/OFF-02/OFF-04 offline test deployment & CI evidence
+
 Date: 2026-10-28 (UTC)
-Deployed by: Vibe (Work agent, per Xu deployment order for OFF-01/OFF-02)
-Branch: work/28-mcp-tooling-platform
-Commit: ce1fb954c981a14da12f16e4f0f29d57941fde0d
-Commit message: test(work28): OFF-01/OFF-02 - unified server factory fail-closed tests + HEAD v54 contract tests
+Canonical branch: `work/28-mcp-tooling-platform`
+Work status: `ACTIVE / INTEGRATION BLOCKED / NOT RELEASED`
+Execution gate: `CLOSED`
 
-## Scope
+## Scope and changes
 
-Per Xu decision (backlog 2026-10-28), only offline test additions were
-deployed. No runtime code, no W27 bridge wiring, no execution gate change.
+- OFF-01 factory tests: `05_TEST/test_mcp8020_unified_server_v1.py`
+- OFF-02 HEAD v54 service/catalog contract tests: `05_TEST/test_mcp8020_service_head_contract_v1.py`
+- OFF-04 v1 boundary negative tests: `05_TEST/test_mcp8020_execution_contract_v1.py`
+- CI now installs the official MCP SDK 1.x before running Work 28 tests, so OFF-01 is exercised instead of silently skipped: `.github/workflows/work28-mcp-tooling.yml`
 
-## Files added (05_TEST only)
+Relevant commits:
+- `ce1fb954c981a14da12f16e4f0f29d57941fde0` — initial OFF-01/OFF-02 tests
+- `6e87fe46d0558542a965197d342850dfa2169371` — initial evidence
+- `6c9488a0a22c218d1115d28ce85168497e4a7ab4` — OFF-04 negative tests
+- `921b446cc8188324490e094b2878bc210a60b9a1` — install MCP SDK in CI to execute OFF-01
 
-1. test_mcp8020_unified_server_v1.py — OFF-01
-   - factory builds server with complete providers (31-tool registry)
-   - fail-closed when a provider is None (Work28ProviderBlocked)
-   - fail-closed when a required handler is missing (Work28ProviderBlocked)
-   - class guarded by @unittest.skipUnless(HAS_MCP): skips in CI where the
-     mcp package is not installed; full factory verification requires a
-     Sandbox-side runner with mcp installed.
+## CI evidence
 
-2. test_mcp8020_service_head_contract_v1.py — OFF-02 (protocol-agnostic, runs in CI)
-   - list_tools returns 54 catalog entries, first tool room_get_context
-   - honest NOT_IMPLEMENTED envelope for execution tools with current HEAD
-     shape: error.code, error.status, error.catalog_version (54.0.0-draft1)
-   - binding a complete ExecutionGateway does NOT promote tool status
-   - partial gateway binding is rejected fail-closed (V54BindingError)
-   - unknown tool returns UNKNOWN_TOOL envelope
-   These restate the two durable intents of superseded PR #18 against the
-   HEAD contract (integration slice a6b14c9).
+### Run #185 — baseline before adding MCP SDK
 
-## CI result (read from GitHub, run #184)
+- Run ID: `40722707346`
+- URL: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/40722707346
+- Commit: `6e87fe46d0558542a965197d342850dfa2169371`
+- Result: `success`
+- Raw job log: `Ran 319 tests in 8.700s`; `OK (skipped=7)`
+- OFF-02: all 5 contract tests executed and passed.
+- OFF-01: 3 factory tests skipped because `mcp` was absent. Skip was not treated as PASS.
 
-- Workflow: Work 28 MCP Tooling Tests (path-filtered: work/28/**)
-- Run #184 on commit ce1fb95: COMPLETED SUCCESSFULLY, duration 19s
-- Previous run #183 (commit 599bb59): completed successfully, 17s
-- Known CI annotations (unchanged, release checklist REL-01): Node 20
-  deprecation for checkout@v4 / setup-python@v5; ubuntu-latest label
-  migration notice.
+### Run #187 — factory tests and OFF-04 tests enabled
 
-## Limitations (honest boundary)
+- Run ID: `40724748310`
+- URL: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/40724748310
+- Commit: `921b446cc8188324490e094b2878bc210a60b9a1`
+- Result: `success`
+- Raw job log: `Ran 321 tests in 8.708s`; `OK` (no skipped count in the unittest summary).
+- OFF-01: all 3 tests executed and passed:
+  - factory constructs a named unified MCP server with complete providers;
+  - factory fails closed when a required handler is missing;
+  - factory fails closed when a provider is `None`.
+- OFF-02: all 5 v54 HEAD-contract tests remain in the suite and passed.
+- OFF-04: both new negative tests passed:
+  - missing `expected_source_sha256` is rejected by the v1 validator;
+  - the legacy v54-style request carrying caller-supplied `script/args` is rejected at the v1 boundary.
+- Known non-fatal cleanup warning remains: `fatal: No url found for submodule path 'room-meeting-ai' in .gitmodules`. The workflow conclusion is still success. Node.js action deprecation warning also remains.
 
-- The exact unittest counters (tests run / skipped) for run #184 were not
-  retrieved in this pass: raw job logs require an authenticated session and
-  the public API was rate-limited at the time of reading. CI conclusion
-  (success) is read from the GitHub Actions run listing, not inferred.
-- OFF-01 tests are expected to SKIP in CI (mcp package not installed in the
-  contract runner). Skip is not PASS: full factory verification must be
-  produced by the Sandbox-side runner with mcp available, per the two-source
-  evidence rule (OFF-05).
-- CI green on offline tests is NOT evidence of runtime integration. No E2E
-  claim is made.
+## OFF-04 interpretation
 
-## Status
+These tests establish rejection at the contract boundary only. They do not implement a v54→v1→W13 transformation, do not authorize a caller, do not map `entry_path` to a caller-controlled `command`, and do not prove any live execution. A reviewed fixed-policy mapping and the required source/hash/runtime evidence remain mandatory before any wiring.
 
-- Work 28: ACTIVE / INTEGRATION BLOCKED / NOT RELEASED
-- Execution gate: CLOSED
-- PR #18: still open; superseded by a6b14c9; closing remains a separate
-  authorized action, not performed here.
-- Next candidates per Xu backlog: OFF-03 (Sandbox side), OFF-04, RUN-01..04
-  remain runtime-gated.
+## OFF-03 Sandbox read-response diagnostic
+
+Same-path probes against Work ID `28` reproduced two distinct behaviors:
+
+1. For an existing file, `sandbox_read` returned an empty object `{}`, while `sandbox_read_probe` returned the file contents. Reproduced for:
+   - `MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/XU_SYNC_RECHECK_20261028_2037.md`
+   - `MCP-8020-TOOLING-PLATFORM/04_CODE/mcp8020_w13_core_client_v1.py`
+2. For `MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/OFFLINE_TEST_OFF01_OFF02_CI_20261028.md`, both read functions returned `FileNotFoundError` in Sandbox although the file exists on GitHub. This indicates that particular evidence file is not present at that Sandbox-relative path; it is not evidence that the read-response bug explains every failure.
+
+Conclusion: ordinary `sandbox_read` response handling is unreliable for existing files; use the probe only as a diagnostic cross-check, not as proof of a general fix. No source was overwritten and no Sandbox file was deleted. The underlying tool/server response-shape defect remains unresolved.
+
+## Status and boundaries
+
+- OFF-01 factory tests: `PASS in GitHub CI`; independent Sandbox-side runner corroboration remains pending.
+- OFF-02 contract tests: `PASS in GitHub CI`.
+- OFF-04 negative boundary tests: `PASS in GitHub CI`; no transformation/wiring implemented.
+- OFF-03: `BLOCKED` — read/probe response inconsistency reproduced; server/tool fix not yet made.
+- Work 28: `ACTIVE / INTEGRATION BLOCKED / NOT RELEASED`.
+- Execution gate: `CLOSED`.
+- No claim of runtime integration or end-to-end execution is made.
