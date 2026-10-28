@@ -1,10 +1,23 @@
-"""Source-aware lexical retrieval baseline for Work 103.
+"""Source-aware lexical retrieval for Work 103 (v2, BM25-lite ranking).
 
 This is an isolated Sandbox prototype, not yet wired into ROOM-HOP Core/MCP.
 Only pass explicitly approved text/Markdown files to index_documents().
+
+v2 changes (2026-10-28):
+- RetrievalIndex: cached per-chunk term frequencies, document frequencies,
+  and average length; BM25-lite scoring (k1=1.2, b=0.75) with IDF weighting
+  and length normalization, replacing the raw set-overlap score.
+- Scores are normalized to (0, 1] by dividing by the sum of query-term IDFs,
+  so min_score thresholds remain comparable across corpora.
+- chunk_document(): unchanged public behaviour; a single line longer than
+  max_chars becomes its own (oversized) chunk instead of looping forever.
+- search(): now a thin wrapper over RetrievalIndex for backward compatibility.
 """
+
 from __future__ import annotations
 
+import math
+from collections import Counter
 from dataclasses import asdict, dataclass
 from pathlib import Path
 import re
@@ -12,6 +25,11 @@ from typing import Iterable, Sequence
 
 
 TOKEN_RE = re.compile(r"[\w'-]+", re.UNICODE)
+
+# BM25 parameters. k1 controls term-frequency saturation, b controls
+# length normalization (0 = none, 1 = full).
+K1 = 1.2
+B = 0.75
 
 
 @dataclass(frozen=True)
@@ -50,6 +68,11 @@ def tokenize(text: str) -> list[str]:
 
 
 def chunk_document(document: Document, max_chars: int = 1200, overlap_chars: int = 160) -> list[Chunk]:
+    """Split a document into line-aligned chunks.
+
+    A single line longer than max_chars becomes one oversized chunk
+    (documented behaviour: never loop forever, never split a line).
+    """
     if max_chars <= 0:
         raise ValueError("max_chars must be > 0")
     if overlap_chars < 0 or overlap_chars >= max_chars:
@@ -122,33 +145,73 @@ def load_approved_text_files(paths: Sequence[Path], allowed_roots: Sequence[Path
     return docs
 
 
+class RetrievalIndex:
+    """BM25-lite in-memory index with cached statistics.
+
+    Scores are normalized to (0, 1] by dividing the raw BM25 sum by the
+    sum of query-term IDFs. The score is a ranking signal, not a
+    calibrated probability; calibrate min_score on a labeled set.
+    """
+
+    def __init__(self, chunks: Sequence[Chunk]):
+        self.chunks = list(chunks)
+        self._tf: list[Counter[str]] = []
+        self._len: list[int] = []
+        self._df: Counter[str] = Counter()
+        for chunk in self.chunks:
+            counts = Counter(tokenize(chunk.text))
+            self._tf.append(counts)
+            self._len.append(sum(counts.values()))
+            self._df.update(counts.keys())
+        total = sum(self._len)
+        self._avg_len = (total / len(self._len)) if self._len else 0.0
+
+    def idf(self, term: str) -> float:
+        n = len(self.chunks)
+        df = self._df.get(term, 0)
+        return math.log(1 + (n - df + 0.5) / (df + 0.5))
+
+    def search(self, query: str, top_k: int = 5, min_score: float = 0.15) -> list[SearchResult]:
+        if not query.strip():
+            raise ValueError("query must not be empty")
+        if top_k < 1:
+            raise ValueError("top_k must be >= 1")
+        query_terms = sorted(set(tokenize(query)))
+        if not query_terms:
+            return []
+        idf_sum = sum(self.idf(term) for term in query_terms) or 1.0
+        results: list[SearchResult] = []
+        for i, chunk in enumerate(self.chunks):
+            raw = 0.0
+            for term in query_terms:
+                freq = self._tf[i].get(term, 0)
+                if not freq:
+                    continue
+                if self._avg_len:
+                    norm = freq * (K1 + 1) / (
+                        freq + K1 * (1 - B + B * (self._len[i] / self._avg_len))
+                    )
+                else:
+                    norm = float(freq)
+                raw += self.idf(term) * norm
+            score = round(raw / idf_sum, 6)
+            if score >= min_score:
+                results.append(SearchResult(
+                    source_id=chunk.source_id,
+                    title=chunk.title,
+                    chunk_id=chunk.chunk_id,
+                    start_line=chunk.start_line,
+                    end_line=chunk.end_line,
+                    text=chunk.text,
+                    score=score,
+                ))
+        results.sort(key=lambda item: (-item.score, item.source_id, item.start_line, item.chunk_id))
+        return results[:top_k]
+
+
 def search(chunks: Sequence[Chunk], query: str, top_k: int = 5, min_score: float = 0.15) -> list[SearchResult]:
-    """Simple normalized term-overlap baseline; score is not a probability."""
-    if not query.strip():
-        raise ValueError("query must not be empty")
-    if top_k < 1:
-        raise ValueError("top_k must be >= 1")
-    query_terms = set(tokenize(query))
-    if not query_terms:
-        return []
-    results: list[SearchResult] = []
-    for chunk in chunks:
-        chunk_terms = set(tokenize(chunk.text))
-        if not chunk_terms:
-            continue
-        score = len(query_terms & chunk_terms) / len(query_terms)
-        if score >= min_score:
-            results.append(SearchResult(
-                source_id=chunk.source_id,
-                title=chunk.title,
-                chunk_id=chunk.chunk_id,
-                start_line=chunk.start_line,
-                end_line=chunk.end_line,
-                text=chunk.text,
-                score=round(score, 6),
-            ))
-    results.sort(key=lambda item: (-item.score, item.source_id, item.start_line, item.chunk_id))
-    return results[:top_k]
+    """Backward-compatible wrapper: builds a RetrievalIndex over chunks."""
+    return RetrievalIndex(chunks).search(query, top_k=top_k, min_score=min_score)
 
 
 def build_context(results: Sequence[SearchResult]) -> dict:

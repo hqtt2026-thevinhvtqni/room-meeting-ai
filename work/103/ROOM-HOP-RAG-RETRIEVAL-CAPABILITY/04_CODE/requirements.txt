@@ -1,0 +1,5 @@
+# Work 103 - RAG Retrieval prototype
+# The prototype intentionally uses only the Python standard library
+# (re, math, collections, dataclasses, pathlib, typing, unittest).
+# No third-party runtime dependencies are required to run:
+#   python -m unittest discover -s 05_TEST -p "test_rag_retrieval.py"
