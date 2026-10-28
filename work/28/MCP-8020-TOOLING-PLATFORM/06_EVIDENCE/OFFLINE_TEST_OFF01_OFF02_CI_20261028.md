@@ -41,6 +41,7 @@ Relevant commits:
   - factory constructs a named unified MCP server with complete providers;
   - factory fails closed when a required handler is missing;
   - factory fails closed when a provider is `None`.
+
 - OFF-02: all 5 v54 HEAD-contract tests remain in the suite and passed.
 - OFF-04: both new negative tests passed:
   - missing `expected_source_sha256` is rejected by the v1 validator;
@@ -64,7 +65,8 @@ Conclusion: ordinary `sandbox_read` response handling is unreliable for existing
 
 ## Status and boundaries
 
-- OFF-01 factory tests: `PASS in GitHub CI`; independent Sandbox-side runner corroboration remains pending.
+- OFF-01 factory tests: `PASS in GitHub CI`; in
+dependent Sandbox-side runner corroboration remains pending.
 - OFF-02 contract tests: `PASS in GitHub CI`.
 - OFF-04 negative boundary tests: `PASS in GitHub CI`; no transformation/wiring implemented.
 - OFF-03: `BLOCKED` — read/probe response inconsistency reproduced; server/tool fix not yet made.
@@ -89,6 +91,59 @@ The currently exposed MCP 8030 Work 28 tool surface in this session provides lis
 
 ### Disposition
 
-- OFF-03: `BLOCKED` — reproduced at the tool response boundary; no evidence that the deployed MCP 8030 handler was changed or restarted. The Work 28 helper module `tool_sandbox_read_harden.py` is a source artifact, not proof of deployment.
+- OFF-03: `BLOCKED` — reproduced at the tool response boundary; no evidence that the deployed MCP 8030 handler was changed or restarted. The Work 28 helper module `tool_sandbox_read_harden.py` is a source artifact, 
+not proof of deployment.
 - Independent Sandbox runner for OFF-01/OFF-05: `BLOCKED` — execution capability is not exposed through the available MCP 8030 tools in this session.
 - No execution gate change; Work 28 remains `ACTIVE / INTEGRATION BLOCKED / NOT RELEASED`.
+
+
+---
+
+# Addendum 3 — REL-01 CI hygiene & OFF-04 review — 2026-10-28 (UTC)
+
+Owner: Vibe (Work agent). Read-then-act pass; no runtime or deployment change.
+
+## OFF-04 review verdict: COMPLETE, no gaps found
+
+Source-reviewed 05_TEST/test_mcp8020_execution_contract_v1.py at HEAD
+(commit 6c9488a "test(work28): OFF-04 reject unbound legacy execution requests").
+Coverage verified against the four documented integration blockers:
+
+- request missing expected_source_sha256 -> rejected with exact message;
+- legacy v54 shape (caller-supplied script/args, no hash) -> rejected at the
+  v1 boundary (blocker #1 of XU_INTEGRATION_TRACE_V54_TO_W13_W12_20261025);
+- traversal / absolute / drive / ambiguous entry paths -> rejected;
+- verified PASS requires matching hash + complete evidence fields; RUN_TESTS
+  additionally requires a nonzero test count (anti "green zero tests" rule);
+- catalog regression guard: the 7 execution tools stay NOT_IMPLEMENTED even
+  after gateway injection; legacy schema intentionally differs.
+
+No additional test needed. OFF-04 is not amended in this pass.
+
+## REL-01 executed: CI workflow hygiene (commit 58601d4)
+
+- runs-on: ubuntu-latest -> ubuntu-24.04 (pinned; removes the
+  ubuntu-latest->Ubuntu 26 migration warning and future silent drift);
+- actions/checkout@v4 -> v5; actions/setup-python@v5 -> v6
+  (both were forced onto Node 24 after Node 20 deprecation; now native);
+- no change to test commands, permissions, or path filters.
+
+## CI result (read from GitHub, run #190)
+
+- Work 28 MCP Tooling Tests #190 on commit 58601d4:
+  COMPLETED SUCCESSFULLY, 28s, on ubuntu-24.04 with the bumped actions.
+- Run #190 is the first run on the pinned runner; its green result validates
+  the REL-01 change on the actual target environment, not just by lint.
+
+## Remaining CI warning (out of Work 28 scope, recorded not fixed)
+
+- Log cleanup warning about a nested "room-meeting-ai" Git directory
+  (checkout treats it as a submodule; no .gitmodules at repo root).
+  This artifact lives outside work/28/** and is NOT touched in this pass;
+  it needs a separate repo-hygiene decision by Xu/Vinh.
+
+## Honest boundary
+
+- CI green (GitHub source) is not Sandbox-side verification. OFF-03 and the
+  Sandbox-runner requirement remain BLOCKED exactly as recorded in
+  Addendum 2. Execution gate stays CLOSED; no E2E claim.
