@@ -1,31 +1,58 @@
 # ROOM HOP
 
-## Agent onboarding
+ROOM HOP is an experimental multi-agent meeting engine. It coordinates agent turns, records meeting messages and decisions, and applies room-level stop guards so agent autonomy does not mean unlimited authority.
 
-Agent mới vào ROOM HOP phải đọc theo thứ tự:
+> **Project status:** the canonical state record currently marks the discussion mechanism and MockConnector as verified, while real-API integration remains pending verification. Do not treat the project as end-to-end complete until a real-API run produces reviewable evidence. See [project state](context/PROJECT_STATE.md).
 
-1. `AGENTS.md` — Constitution / Governance Contract
-2. `context/PROJECT_STATE.md` — Verified Project State / Truth
-3. `context/XU_CORE.md` — Xu Identity / Authority
-4. `context/XU_SESSION.md` — Current Working State
-5. `context/XU_MEMORY.md` — Long-term Memory
-6. `meetings/{latest}/` — Historical Evidence, chỉ tham khảo; không dùng làm project state
-7. `ROOM-2026-001-BASELINE-FROZEN-v0.2.1.md` — Regression baseline hiện hành
-8. `SECRETARY_LARGE_FILE_IMPORT_SIGNOFF.md` — Secretary + Large File Import evidence
+## What it does
 
-### Context rules
+- Coordinates a meeting lifecycle and participant turns.
+- Supports agent decisions such as `REPLY`, `PASS`, and `FINAL`, subject to room-level limits.
+- Separates current project state from meeting logs and historical evidence.
+- Defines a public service boundary and API expectations in [API_CONTRACT.md](API_CONTRACT.md).
 
-- `AGENTS.md` là Constitution.
-- `context/PROJECT_STATE.md` là nguồn truth về trạng thái dự án.
-- `context/XU_SESSION.md` là working memory của phiên hiện tại.
-- Meeting log là evidence, không phải state.
-- Authority hierarchy: `VINH > XU > AGENT`.
-- Không tự ý sửa Protected Core hoặc baseline frozen.
+## Quickstart
 
-=> Đọc đủ context rồi mới được hành động.
+Requirements: Python 3.10+ recommended; use the Python version supported by the project's dependencies.
 
-## Known Incidents / Lessons Learned
+```bash
+git clone https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai.git
+cd room-meeting-ai
+python -m venv .venv
+# Activate the virtual environment:
+# Windows PowerShell: .venv\Scripts\Activate.ps1
+# macOS/Linux: source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+pytest -q
+```
 
-- **ROOM-2026-001 — Provenance Gate**: `docs/ROOM-2026-001-PROVENANCE-GATE-LESSON-LEARNED.md`
-  Bài học về provenance reasoning, multi-agent source independence, credential discipline và agent onboarding.
-  Đọc trước khi Agent mới xử lý dữ liệu chưa xác minh nguồn gốc (preview/cache/second-hand report).
+The repository includes scripted/demo meeting runners, but some are explicitly **not real-API runs**. For example, `python run_meeting.py` uses a scripted exchange; it must not be used as evidence that real model connectors work.
+
+For API-backed experiments, copy `.env.example` to `.env` and supply valid credentials for the provider being tested. Never commit secrets or real `.env` files.
+
+## Architecture at a glance
+
+- `core/` — meeting and discussion domain logic.
+- `agents/` and provider adapter modules — agent/provider integration.
+- `room_hop_mcp/` — MCP integration surface.
+- `tests/` — automated tests.
+- `context/PROJECT_STATE.md` — canonical verified project state.
+- `AGENTS.md` — governance and agent operating rules.
+- `API_CONTRACT.md` — API boundary and contract decisions.
+- `meetings/` — meeting records and supporting evidence.
+
+This is a high-level orientation, not a claim that every integration path is complete.
+
+## Development and verification
+
+- Run tests with `pytest -q`.
+- CI is configured to run the test suite on pushes and pull requests.
+- Mark a result `PASS` only when the relevant test or real integration has run and its evidence is linked.
+- Do not merge a Work branch solely because it is behind `main`; inspect divergence, conflicts, scope, and verification first.
+
+## Governance and contribution
+
+Start with [AGENTS.md](AGENTS.md), then [the verified project state](context/PROJECT_STATE.md), and [the API contract](API_CONTRACT.md). The detailed internal agent onboarding notes are in [docs/AGENT_ONBOARDING.md](docs/AGENT_ONBOARDING.md).
+
+Contributions should be isolated on a named branch and reviewed through a pull request that states scope, tests run, evidence, and known blockers. Work-specific changes must remain within that Work's declared scope. Do not merge directly to `main` without the required review and verification.
