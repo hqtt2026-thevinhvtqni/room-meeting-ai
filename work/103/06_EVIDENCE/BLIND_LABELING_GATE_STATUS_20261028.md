@@ -28,3 +28,12 @@ Ka will not manufacture or backfill Qw's blind labels. The experiment's scores/r
 **Do not mark blind labeling or independent disagreement review PASS.** Current state is BLOCKED pending the Qw first-pass artifact and an identifiable corpus/query-pool snapshot. Existing retrieval replication findings do not substitute for this evidence. No production threshold, Core/MCP contract, or release gate is changed.
 
 **Signature:** Ka | CSA / Independent Reviewer
+
+
+## Ka independent review update — 2026-10-29 (UTC+07:00)
+- Work Sandbox artifact `06_EVIDENCE/QW_BLIND_LABELS_50_QUERIES_20261029.md` structurally validates: 50 rows, Q001–Q050 unique, six required columns present, 39 ANSWERABLE / 11 NO_ANSWER, no per-query score/rank/retrieval-output fields.
+- Independent review record: `work/103/06_EVIDENCE/KA_INDEPENDENT_REVIEW_QW_LABELS_20261029.md`.
+- Gate remains BLOCKED: referenced `docs/network.md`, `docs/sales.md`, `docs/architecture.md`, `docs/security.md`, and `docs/evidence.md` are not present in the visible Work 103 Sandbox inventory as approved/versioned corpus artifacts. Existing unit-test fixtures are not a substitute for a canonical corpus snapshot.
+- Row-level flags: Q030 has a direct label/rationale contradiction; Q040's source is absent; Q041 claims Unicode test coverage not shown in the inspected test file; Q050 has an undefined “this document” referent. See the independent review record.
+- Xu's corpus identity, blind-process attestation, and freeze/hash confirmation are not evidenced in this review session. Qw's first-pass artifact was not modified.
+- Decision: structural validation PASS; corpus-grounded adjudication BLOCKED; blind-label gate NOT PASS; Work 103 remains ACTIVE / BLOCKED. No E2E PASS claim.
