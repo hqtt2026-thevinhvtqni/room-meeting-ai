@@ -67,3 +67,9 @@ Status: INCOMPLETE / NOT RELEASED
 
 ## Required per-Work follow-up
 For every row determine canonical GitHub repo/ref/commit, exact manifest path, source tree/path, Sandbox path and readback, active PR/CI, mismatch class, owner, blocker, next action, and evidence timestamp. Preserve legacy files; do not create a generic manifest before inspecting the Work's own convention.
+
+
+## Follow-up discovery — GitHub mapping still unproven
+- Branch search finds a branch named work/98-ont-care. A read of its root shows the general ROOM HOP repository structure (README.md, AGENTS.md, Core, MCP, meetings, etc.), not evidence that it is the canonical GitHub source for Sandbox Work 98's ONT Care project. Treat it as an unverified candidate, not a match.
+- Branch search returned no branch candidate for Work 15. A numbered-path query against main also returned 404. Canonical GitHub repo/ref for Work 15 remains BLOCKED / NOT LOCATED.
+- Therefore Work 15 and Work 98 must remain unresolved; do not create manifests or sync code until their true source is identified.
