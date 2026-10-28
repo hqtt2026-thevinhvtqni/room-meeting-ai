@@ -39,3 +39,46 @@ The Sandbox inventory currently lists 53 Work IDs. GitHub root listing on `main`
 2. Transfer missing source files to common root folders only after identifying canonical source and checking for duplicates.
 3. Independently verify paths and content hashes after every transfer.
 4. Record each Work as `REGISTERED`, `SOURCE SYNC VERIFIED`, or `BLOCKED`; these states are not interchangeable.
+
+
+## Work 15 source transfer — 2026-10-28
+
+**Status: PARTIAL SOURCE SYNC VERIFIED** (not full Work sync, not acceptance PASS).
+
+The following 19 text/source files were copied from Sandbox Work 15 and independently fetched from the same GitHub branch. Every source string compared equal to the GitHub readback:
+
+1. `WEBSITE-BUILDER/README.md`
+2. `WEBSITE-BUILDER/WORK.md`
+3. `WEBSITE-BUILDER/docs/ARCHITECTURE.md`
+4. `WEBSITE-BUILDER/docs/REQUIREMENTS.md`
+5. `WEBSITE-BUILDER/docs/UX.md`
+6. `WEBSITE-BUILDER/docs/E2E.md`
+7. `WEBSITE-BUILDER/docs/WORK_STRUCTURE_STANDARD.md`
+8. `WEBSITE-BUILDER/src/frontend/roomhop/TODO.md`
+9. `WEBSITE-BUILDER/src/frontend/roomhop/app.config.ts`
+10. `WEBSITE-BUILDER/src/frontend/roomhop/index.html`
+11. `WEBSITE-BUILDER/src/frontend/roomhop/manus-routes.json`
+12. `WEBSITE-BUILDER/src/frontend/roomhop/plan.md`
+13. `WEBSITE-BUILDER/src/frontend/roomhop/public/manus-routes.json`
+14. `WEBSITE-BUILDER/src/frontend/roomhop/roomhop-logo.svg`
+15. `WEBSITE-BUILDER/src/frontend/roomhop/script.js`
+16. `WEBSITE-BUILDER/src/frontend/roomhop/styles.css`
+17. `WEBSITE-BUILDER/scripts/e2e.ps1`
+18. `WEBSITE-BUILDER/scripts/start.ps1`
+19. `WEBSITE-BUILDER/scripts/test.ps1`
+
+The common-root index `15/README.md` was also created. The project files are located under `15/WEBSITE-BUILDER/`, matching the numeric Work-root pattern used by existing `10/` and `30/` entries.
+
+Not yet copied: all other files/directories in Work 15, including backend/shared trees and test directories. These remain **NOT SYNCED** until individually inventoried and transferred. No tests or runtime were executed as part of this file transfer.
+
+## Work 98 status after source review
+
+- Common-root landing entry exists at `98/ONT-CARE/README.md` on this branch and has been read back from GitHub.
+- Sandbox Work 98 still reports `manifest_exists=false`; do not create a manifest in this pass.
+- The existing GitHub branch `work/98-ont-care` is accessible, but its top-level listing resembles the general `room-meeting-ai` repository root and does not establish canonical Work 98 source equivalence. The full Work 98 project source remains **NOT SYNCED / BLOCKED FOR CANONICAL ROOT MAPPING**.
+
+## PR / merge state
+
+- PR #30: open, draft, unmerged; branch `work/missing-work-roots-20261028` targeting `main`.
+- No direct writes to `main`.
+- PR #27 remains out of scope and must not be merged.
