@@ -78,7 +78,7 @@ def summarize(index, data, threshold):
     top1 = []
     start = time.perf_counter()
     for item in data["labeled_queries"]:
-        got = index.search(item["query"], top_k=1, min_score=threshold)
+        got = index.search(item["query"], top_k=K, min_score=threshold)
         top1.append(int(bool(got) and got[0].source_id in item["expected"]))
     latency = (time.perf_counter() - start) * 1000 / max(1, len(top1))
     return {
