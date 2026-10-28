@@ -15,8 +15,8 @@ The Sandbox inventory currently lists 53 Work IDs. GitHub root listing on `main`
 
 | Work | Common location | Sandbox evidence | Registration status | Full source sync |
 |---|---|---|---|---|
-| 15 — WEBSITE-BUILDER | `15/WEBSITE-BUILDER/README.md` | Work 15 tree exists; `WEBSITE-BUILDER/WORK.md` readback 607 bytes; manifest_exists=false | Landing entry added | NOT DONE |
-| 98 — ONT care | `98/ONT-CARE/README.md` | Work 98 tree exists; `WORK_98_README.md` readback 1,261 bytes; manifest_exists=false | Landing entry added | NOT DONE |
+| 15 — WEBSITE-BUILDER | `15/WEBSITE-BUILDER/` | Work 15 tree exists; `WEBSITE-BUILDER/WORK.md` readback 607 bytes; manifest_exists=false | Landing entry + 21 files content-equality verified | PARTIAL; remaining tree not yet copied |
+| 98 — ONT care | `98/ONT-CARE/README.md` | Work 98 tree exists; `WORK_98_README.md` readback 1,261 bytes; manifest_exists=false | Landing entry added | NOT DONE; canonical root unresolved |
 
 ## Known root folders already present on main
 
@@ -86,3 +86,9 @@ Not yet copied: all other files/directories in Work 15, including backend/shared
 
 20. `WEBSITE-BUILDER/decisions/DECISIONS.md`
 21. `WEBSITE-BUILDER/evidence/reports/AI_DEBUG_HANDOFF_README.md`
+
+
+### Candidate repository review for Work 98
+
+- The separate GitHub repository `hqtt2026-thevinhvtqni/004.ont-customer-protection-platform` exists and its README describes an ONT/customer protection platform with mock customer data and three apps.
+- This is a plausible related project, but the inspected README alone does not prove it is the canonical GitHub counterpart of Sandbox Work 98. No source files were copied from this repository into Work 98, to avoid mixing projects before the mapping is confirmed.
