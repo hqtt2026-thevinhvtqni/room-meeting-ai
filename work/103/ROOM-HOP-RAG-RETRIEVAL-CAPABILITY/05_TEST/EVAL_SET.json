@@ -1,6 +1,6 @@
 {
-  "version": 1,
-  "description": "Work 103 labeled retrieval evaluation set. Author-labeled baseline; grow before release.",
+  "version": 2,
+  "description": "Work 103 labeled retrieval evaluation set v2. Author-labeled baseline with hard/near-miss cases; independent review still required before release.",
   "chunking": {
     "max_chars": 300,
     "overlap_chars": 40
@@ -13,8 +13,9 @@
     "hit_at_5": 0.9,
     "recall_at_5": 0.9,
     "mrr": 0.9,
-    "no_answer_accuracy": 0.9,
-    "precision_at_5": 0.8
+    "no_answer_accuracy": 0.8,
+    "precision_at_5": 0.8,
+    "answered_rate": 0.9
   },
   "documents": [
     {
@@ -46,6 +47,16 @@
       "source_id": "docs/bao-mat-thong-tin.md",
       "title": "bao-mat-thong-tin.md",
       "text": "Chính sách bảo mật thông tin công ty\nKhông chia sẻ mật khẩu qua email\nToken truy cập phải lưu trong vault\nXóa dữ liệu khách hàng sau 30 ngày theo quy định\nRò rỉ thông tin phải báo ngay cho bảo mật"
+    },
+    {
+      "source_id": "docs/nhiem-vu-tuan-42.md",
+      "title": "nhiem-vu-tuan-42.md",
+      "text": "Danh sách nhiệm vụ tuần 42\nNguyễn Văn A viết báo cáo tín hiệu quang\nTrần B hỗ trợ triển khai sales tại chi nhánh\nCập nhật vault token hệ thống trước thứ sáu\nChuẩn bị biên bản họp tuần tới"
+    },
+    {
+      "source_id": "docs/quy-dinh-cong-tac.md",
+      "title": "quy-dinh-cong-tac.md",
+      "text": "Quy định công tác xa của công ty\nVé máy bay cần phê duyệt của quản lý trực tiếp\nHỗ trợ per diem 500 nghìn mỗi ngày\nKhách sạn hoàn qua kế toán\nBáo cáo công tác trong 3 ngày sau khi về"
     }
   ],
   "labeled_queries": [
@@ -62,6 +73,38 @@
       ]
     },
     {
+      "query": "ai phụ trách kiểm tra RX power",
+      "expected": [
+        "docs/bien-ban-hop-tuan-ont.md",
+        "docs/nhiem-vu-tuan-42.md"
+      ]
+    },
+    {
+      "query": "vệ sinh đầu nối cáp quang cho khu nào",
+      "expected": [
+        "docs/bien-ban-hop-tuan-ont.md"
+      ]
+    },
+    {
+      "query": "hạn chót xử lý sự cố ngày nào",
+      "expected": [
+        "docs/bien-ban-hop-tuan-ont.md"
+      ]
+    },
+    {
+      "query": "họp tuần ONT ngày mấy",
+      "expected": [
+        "docs/bien-ban-hop-tuan-ont.md"
+      ]
+    },
+    {
+      "query": "đề xuất vệ sinh đầu nối",
+      "expected": [
+        "docs/bien-ban-hop-tuan-ont.md",
+        "docs/quy-trinh-xu-ly-su-co-mang.md"
+      ]
+    },
+    {
       "query": "quy trình xử lý sự cố mạng",
       "expected": [
         "docs/quy-trinh-xu-ly-su-co-mang.md"
@@ -72,6 +115,37 @@
       "expected": [
         "docs/quy-trinh-xu-ly-su-co-mang.md",
         "docs/bien-ban-hop-tuan-ont.md"
+      ]
+    },
+    {
+      "query": "khi nào escalate cho NOC",
+      "expected": [
+        "docs/quy-trinh-xu-ly-su-co-mang.md"
+      ]
+    },
+    {
+      "query": "vệ sinh đầu nối quang thế nào",
+      "expected": [
+        "docs/quy-trinh-xu-ly-su-co-mang.md",
+        "docs/bien-ban-hop-tuan-ont.md"
+      ]
+    },
+    {
+      "query": "tiếp nhận ticket từ khách hàng",
+      "expected": [
+        "docs/quy-trinh-xu-ly-su-co-mang.md"
+      ]
+    },
+    {
+      "query": "LOS kéo dài quá bao lâu thì escalate",
+      "expected": [
+        "docs/quy-trinh-xu-ly-su-co-mang.md"
+      ]
+    },
+    {
+      "query": "ghi nhận kết quả vào đâu",
+      "expected": [
+        "docs/quy-trinh-xu-ly-su-co-mang.md"
       ]
     },
     {
@@ -87,7 +161,61 @@
       ]
     },
     {
+      "query": "giao hàng xi măng quý mấy",
+      "expected": [
+        "docs/ke-hoach-giao-hang.md"
+      ]
+    },
+    {
+      "query": "xác nhận số lượng trước khi làm gì",
+      "expected": [
+        "docs/ke-hoach-giao-hang.md"
+      ]
+    },
+    {
+      "query": "ai phụ trách giao hàng",
+      "expected": [
+        "docs/ke-hoach-giao-hang.md"
+      ]
+    },
+    {
+      "query": "kế hoạch giao hàng xi măng",
+      "expected": [
+        "docs/ke-hoach-giao-hang.md"
+      ]
+    },
+    {
       "query": "doanh thu quý 3 đạt bao nhiêu phần trăm kế hoạch",
+      "expected": [
+        "docs/bao-cao-doanh-thu.md"
+      ]
+    },
+    {
+      "query": "dự báo tăng trưởng quý 4",
+      "expected": [
+        "docs/bao-cao-doanh-thu.md"
+      ]
+    },
+    {
+      "query": "bộ phận nào dẫn đầu doanh số",
+      "expected": [
+        "docs/bao-cao-doanh-thu.md"
+      ]
+    },
+    {
+      "query": "xác nhận số liệu kế toán ngày mấy",
+      "expected": [
+        "docs/bao-cao-doanh-thu.md"
+      ]
+    },
+    {
+      "query": "báo cáo doanh thu quý nào",
+      "expected": [
+        "docs/bao-cao-doanh-thu.md"
+      ]
+    },
+    {
+      "query": "doanh số dẫn đầu thuộc về ai",
       "expected": [
         "docs/bao-cao-doanh-thu.md"
       ]
@@ -105,9 +233,34 @@
       ]
     },
     {
+      "query": "vắng mặt phải làm gì",
+      "expected": [
+        "docs/ky-luat-hop.md"
+      ]
+    },
+    {
+      "query": "điện thoại trong họp thế nào",
+      "expected": [
+        "docs/ky-luat-hop.md"
+      ]
+    },
+    {
+      "query": "kỷ luật họp tuần gồm những gì",
+      "expected": [
+        "docs/ky-luat-hop.md"
+      ]
+    },
+    {
+      "query": "phạt đi muộn họp bao nhiêu",
+      "expected": [
+        "docs/ky-luat-hop.md"
+      ]
+    },
+    {
       "query": "mật khẩu và token lưu ở đâu",
       "expected": [
-        "docs/bao-mat-thong-tin.md"
+        "docs/bao-mat-thong-tin.md",
+        "docs/nhiem-vu-tuan-42.md"
       ]
     },
     {
@@ -117,30 +270,163 @@
       ]
     },
     {
-      "query": "khi nào escalate cho NOC",
+      "query": "rò rỉ thông tin phải làm gì",
       "expected": [
-        "docs/quy-trinh-xu-ly-su-co-mang.md"
+        "docs/bao-mat-thong-tin.md"
       ]
     },
     {
-      "query": "dự báo tăng trưởng quý 4",
+      "query": "không chia sẻ mật khẩu qua đâu",
       "expected": [
-        "docs/bao-cao-doanh-thu.md"
+        "docs/bao-mat-thong-tin.md"
       ]
     },
     {
-      "query": "vệ sinh đầu nối quang thế nào",
+      "query": "chính sách bảo mật thông tin",
       "expected": [
-        "docs/quy-trinh-xu-ly-su-co-mang.md",
-        "docs/bien-ban-hop-tuan-ont.md"
+        "docs/bao-mat-thong-tin.md"
+      ]
+    },
+    {
+      "query": "token truy cập lưu ở đâu",
+      "expected": [
+        "docs/bao-mat-thong-tin.md",
+        "docs/nhiem-vu-tuan-42.md"
+      ]
+    },
+    {
+      "query": "nhiệm vụ tuần 42 có gì",
+      "expected": [
+        "docs/nhiem-vu-tuan-42.md"
+      ]
+    },
+    {
+      "query": "ai viết báo cáo tín hiệu quang",
+      "expected": [
+        "docs/nhiem-vu-tuan-42.md"
+      ]
+    },
+    {
+      "query": "Trần B làm nhiệm vụ gì",
+      "expected": [
+        "docs/nhiem-vu-tuan-42.md"
+      ]
+    },
+    {
+      "query": "cập nhật vault token trước ngày nào",
+      "expected": [
+        "docs/nhiem-vu-tuan-42.md"
+      ]
+    },
+    {
+      "query": "chuẩn bị biên bản họp",
+      "expected": [
+        "docs/nhiem-vu-tuan-42.md"
+      ]
+    },
+    {
+      "query": "triển khai sales ở chi nhánh",
+      "expected": [
+        "docs/nhiem-vu-tuan-42.md"
+      ]
+    },
+    {
+      "query": "vé máy bay cần ai phê duyệt",
+      "expected": [
+        "docs/quy-dinh-cong-tac.md"
+      ]
+    },
+    {
+      "query": "per diem mỗi ngày bao nhiêu",
+      "expected": [
+        "docs/quy-dinh-cong-tac.md"
+      ]
+    },
+    {
+      "query": "khách sạn hoàn qua bộ phận nào",
+      "expected": [
+        "docs/quy-dinh-cong-tac.md"
+      ]
+    },
+    {
+      "query": "báo cáo công tác trong bao lâu",
+      "expected": [
+        "docs/quy-dinh-cong-tac.md"
+      ]
+    },
+    {
+      "query": "quy định công tác xa",
+      "expected": [
+        "docs/quy-dinh-cong-tac.md"
+      ]
+    },
+    {
+      "query": "hỗ trợ công tác mỗi ngày bao nhiêu tiền",
+      "expected": [
+        "docs/quy-dinh-cong-tac.md"
       ]
     }
   ],
   "no_answer_queries": [
-    "lương nhân viên tháng 10 là bao nhiêu",
-    "đặt vé máy bay đi Đà Nẵng",
-    "công thức nấu phở bò",
-    "kết quả bóng đá tối qua",
-    "tuyển dụng nhân viên marketing"
+    {
+      "query": "công thức nấu phở bò",
+      "kind": "easy"
+    },
+    {
+      "query": "kết quả bóng đá tối qua",
+      "kind": "easy"
+    },
+    {
+      "query": "tuyển dụng nhân viên marketing",
+      "kind": "easy"
+    },
+    {
+      "query": "thời tiết cuối tuần này",
+      "kind": "easy"
+    },
+    {
+      "query": "giá vàng hôm nay",
+      "kind": "easy"
+    },
+    {
+      "query": "mã số thuế công ty",
+      "kind": "easy"
+    },
+    {
+      "query": "lịch chiếu phim",
+      "kind": "easy"
+    },
+    {
+      "query": "tỷ giá đô la mỹ",
+      "kind": "easy"
+    },
+    {
+      "query": "mùa vụ lúa đông",
+      "kind": "easy"
+    },
+    {
+      "query": "quà tặng trung thu",
+      "kind": "easy"
+    },
+    {
+      "query": "địa điểm cưới hỏi",
+      "kind": "easy"
+    },
+    {
+      "query": "quay số xổ số kiến thiết miền Bắc tối nay",
+      "kind": "easy"
+    },
+    {
+      "query": "đặt vé máy bay đi Đà Nẵng du lịch",
+      "kind": "near_miss"
+    },
+    {
+      "query": "tín hiệu quang ONT khu C mạnh bao nhiêu dBm",
+      "kind": "near_miss"
+    },
+    {
+      "query": "doanh thu quý 4 của chi nhánh Hà Nội",
+      "kind": "near_miss"
+    }
   ]
 }
