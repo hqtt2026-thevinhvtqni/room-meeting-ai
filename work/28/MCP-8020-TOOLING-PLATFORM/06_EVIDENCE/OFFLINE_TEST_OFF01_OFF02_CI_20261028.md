@@ -71,3 +71,24 @@ Conclusion: ordinary `sandbox_read` response handling is unreliable for existing
 - Work 28: `ACTIVE / INTEGRATION BLOCKED / NOT RELEASED`.
 - Execution gate: `CLOSED`.
 - No claim of runtime integration or end-to-end execution is made.
+
+## Follow-up verification by Xu — 2026-10-28
+
+### OFF-03 recheck using the correct Work-relative paths
+
+A fresh same-path check against existing Sandbox files reproduced the response-shape discrepancy:
+
+- `MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/XU_SYNC_RECHECK_20261028_2037.md`: `sandbox_read` returned an empty object; `sandbox_read_probe` returned `status=ok` with the full text (3,260 bytes).
+- `MCP-8020-TOOLING-PLATFORM/04_CODE/mcp8020_w13_core_client_v1.py`: `sandbox_read` returned an empty object; `sandbox_read_probe` returned `status=ok` with the full text (6,915 bytes).
+
+The initial failed attempt used the wrong Work-relative prefix and is not counted as evidence of a read defect. The two results above use the correct path beneath Work ID `28`.
+
+### Independent Sandbox-runner availability
+
+The currently exposed MCP 8030 Work 28 tool surface in this session provides list/read/probe/create/write/append/delete operations, but no callable `run_python`, `run_tests`, or equivalent execution tool. Therefore Xu cannot truthfully claim independent Sandbox-side test execution from this interface. GitHub CI remains the only newly verified test-runner evidence for OFF-01/OFF-02/OFF-04 in this pass. The separate Sandbox-runner evidence requirement remains BLOCKED pending an approved runner capability.
+
+### Disposition
+
+- OFF-03: `BLOCKED` — reproduced at the tool response boundary; no evidence that the deployed MCP 8030 handler was changed or restarted. The Work 28 helper module `tool_sandbox_read_harden.py` is a source artifact, not proof of deployment.
+- Independent Sandbox runner for OFF-01/OFF-05: `BLOCKED` — execution capability is not exposed through the available MCP 8030 tools in this session.
+- No execution gate change; Work 28 remains `ACTIVE / INTEGRATION BLOCKED / NOT RELEASED`.
