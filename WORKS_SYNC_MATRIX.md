@@ -45,7 +45,7 @@ The Sandbox inventory currently lists 53 Work IDs. GitHub root listing on `main`
 
 **Status: PARTIAL SOURCE SYNC VERIFIED** (not full Work sync, not acceptance PASS).
 
-The following 19 text/source files were copied from Sandbox Work 15 and independently fetched from the same GitHub branch. Every source string compared equal to the GitHub readback:
+The following 21 text/source files were copied from Sandbox Work 15 and independently fetched from the same GitHub branch. Every source string compared equal to the GitHub readback:
 
 1. `WEBSITE-BUILDER/README.md`
 2. `WEBSITE-BUILDER/WORK.md`
@@ -67,7 +67,7 @@ The following 19 text/source files were copied from Sandbox Work 15 and independ
 18. `WEBSITE-BUILDER/scripts/start.ps1`
 19. `WEBSITE-BUILDER/scripts/test.ps1`
 
-The common-root index `15/README.md` was also created. The project files are located under `15/WEBSITE-BUILDER/`, matching the numeric Work-root pattern used by existing `10/` and `30/` entries.
+Additional files `WEBSITE-BUILDER/decisions/DECISIONS.md` and `WEBSITE-BUILDER/evidence/reports/AI_DEBUG_HANDOFF_README.md` were also copied and read back successfully. The common-root index `15/README.md` was also created. The project files are located under `15/WEBSITE-BUILDER/`, matching the numeric Work-root pattern used by existing `10/` and `30/` entries.
 
 Not yet copied: all other files/directories in Work 15, including backend/shared trees and test directories. These remain **NOT SYNCED** until individually inventoried and transferred. No tests or runtime were executed as part of this file transfer.
 
@@ -82,3 +82,7 @@ Not yet copied: all other files/directories in Work 15, including backend/shared
 - PR #30: open, draft, unmerged; branch `work/missing-work-roots-20261028` targeting `main`.
 - No direct writes to `main`.
 - PR #27 remains out of scope and must not be merged.
+
+
+22. `WEBSITE-BUILDER/decisions/DECISIONS.md`
+23. `WEBSITE-BUILDER/evidence/reports/AI_DEBUG_HANDOFF_README.md`
