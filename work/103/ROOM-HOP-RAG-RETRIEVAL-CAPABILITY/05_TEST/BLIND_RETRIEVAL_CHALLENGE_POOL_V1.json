@@ -1,0 +1,466 @@
+{
+  "schema_version": 1,
+  "title": "Work 103 blinded retrieval challenge candidate pool V1",
+  "created_date": "2026-10-28",
+  "status": "CANDIDATE_POOL_NOT_LABELED_NOT_FOR_METRIC_REPORTING",
+  "purpose": "Independent annotators label answerability and expected source IDs without retrieval scores, rankings, or system outputs.",
+  "labeling_rules": [
+    "Do not inspect model/retrieval outputs before assigning labels.",
+    "For each query assign answerable=true only if the committed corpus explicitly supports the requested fact; otherwise answerable=false.",
+    "For answerable queries list every source_id that materially supports the answer; use [] for no-answer.",
+    "Record rationale and annotator ID separately; resolve disagreements before unblinding.",
+    "This is a candidate pool, not a validated evaluation set; do not report metrics from it until labels are independently reviewed and frozen."
+  ],
+  "items": [
+    {
+      "id": "NM01",
+      "query": "doanh thu quý 4 của chi nhánh Hà Nội",
+      "category": "near_miss_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "NM02",
+      "query": "tín hiệu quang ONT khu C mạnh bao nhiêu dBm",
+      "category": "near_miss_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "NM03",
+      "query": "văn phòng chi nhánh Đà Nẵng đạt doanh thu quý 4 bao nhiêu",
+      "category": "near_miss_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "NM04",
+      "query": "LOS ở khu C xuất hiện lúc mấy giờ",
+      "category": "near_miss_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "NM05",
+      "query": "RX power của ONT khu A là bao nhiêu dBm",
+      "category": "near_miss_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "NM06",
+      "query": "ai phê duyệt vé máy bay cho chuyến đi Hà Nội tuần sau",
+      "category": "near_miss_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "NM07",
+      "query": "doanh thu quý 4 của bộ phận marketing đạt bao nhiêu tiền",
+      "category": "near_miss_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "NM08",
+      "query": "lịch giao xi măng cho khách hàng chi nhánh miền Trung tháng 12",
+      "category": "near_miss_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "NM09",
+      "query": "ai chịu trách nhiệm xử lý sự cố ONT khu C trước 15/11",
+      "category": "near_miss_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "NM10",
+      "query": "mức phạt đi muộn họp của chi nhánh Hà Nội",
+      "category": "near_miss_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "NM11",
+      "query": "token API phải đổi bao nhiêu ngày một lần",
+      "category": "near_miss_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "NM12",
+      "query": "khách sạn công tác được hoàn tối đa bao nhiêu tiền mỗi đêm",
+      "category": "near_miss_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "NM13",
+      "query": "doanh thu quý 3 của chi nhánh Hà Nội bằng bao nhiêu phần trăm",
+      "category": "near_miss_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "NM14",
+      "query": "NOC phải xử lý LOS trong bao nhiêu giờ theo SLA",
+      "category": "near_miss_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "NM15",
+      "query": "danh sách khách hàng nợ quá hạn quý 4",
+      "category": "near_miss_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "NM16",
+      "query": "ai duyệt chi phí taxi đi công tác",
+      "category": "near_miss_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "NM17",
+      "query": "ONT khu B được thay thiết bị vào ngày nào",
+      "category": "near_miss_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "NM18",
+      "query": "lịch họp tuần của chi nhánh Hà Nội chiều thứ sáu",
+      "category": "near_miss_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "NM19",
+      "query": "doanh thu từng nhân viên sales trong tháng 10",
+      "category": "near_miss_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "NM20",
+      "query": "mật khẩu vault phải có tối thiểu bao nhiêu ký tự",
+      "category": "near_miss_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "NM21",
+      "query": "số lượng xi măng đã giao thực tế ngày 19/11",
+      "category": "near_miss_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "NM22",
+      "query": "ai ký xác nhận doanh thu quý 4",
+      "category": "near_miss_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "NM23",
+      "query": "quy trình xử lý sự cố điện tại văn phòng",
+      "category": "near_miss_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "NM24",
+      "query": "mức hỗ trợ per diem ở Nhật Bản",
+      "category": "near_miss_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "NM25",
+      "query": "tín hiệu quang ONT khu C đã khắc phục xong chưa",
+      "category": "near_miss_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "NM26",
+      "query": "ngày kế toán xác nhận doanh thu quý 4",
+      "category": "near_miss_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "NM27",
+      "query": "số ticket LOS khách hàng gửi tuần 42",
+      "category": "near_miss_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "NM28",
+      "query": "quy định bảo mật khi chia sẻ file qua Zalo",
+      "category": "near_miss_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "NM29",
+      "query": "chi nhánh nào đạt doanh số cao nhất quý 4",
+      "category": "near_miss_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "NM30",
+      "query": "ai trực NOC lúc 3 giờ sáng ngày 12/10",
+      "category": "near_miss_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "LT01",
+      "query": "kỷ luật họp tuần gồm những gì",
+      "category": "list_type_answerable_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "LT02",
+      "query": "quy trình xử lý sự cố mạng gồm các bước nào",
+      "category": "list_type_answerable_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "LT03",
+      "query": "quy định công tác xa gồm những nội dung gì",
+      "category": "list_type_answerable_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "LT04",
+      "query": "chính sách bảo mật thông tin có những quy định nào",
+      "category": "list_type_answerable_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "LT05",
+      "query": "kế hoạch giao hàng xi măng gồm những mốc nào",
+      "category": "list_type_answerable_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "LT06",
+      "query": "báo cáo doanh thu nêu những kết quả gì",
+      "category": "list_type_answerable_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "LT07",
+      "query": "nhiệm vụ tuần 42 gồm những việc nào",
+      "category": "list_type_answerable_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "LT08",
+      "query": "các bước cần làm khi nhận ticket khách hàng là gì",
+      "category": "list_type_answerable_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "LT09",
+      "query": "các biện pháp xử lý tín hiệu quang yếu được nêu là gì",
+      "category": "list_type_answerable_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "LT10",
+      "query": "những trường hợp nào cần báo cho bộ phận bảo mật",
+      "category": "list_type_answerable_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "LT11",
+      "query": "các khoản hỗ trợ trong chuyến công tác gồm những gì",
+      "category": "list_type_answerable_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "LT12",
+      "query": "các mốc giao hàng trong kế hoạch là ngày nào",
+      "category": "list_type_answerable_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "LT13",
+      "query": "những việc nào cần hoàn thành trước thứ sáu",
+      "category": "list_type_answerable_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "LT14",
+      "query": "các thông tin nào liên quan đến token được nhắc đến",
+      "category": "list_type_answerable_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "LT15",
+      "query": "các quy định về tham gia họp tuần là gì",
+      "category": "list_type_answerable_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "LT16",
+      "query": "các thông tin nào được nêu về doanh thu và sales",
+      "category": "list_type_answerable_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "LT17",
+      "query": "những công việc nào liên quan đến biên bản họp",
+      "category": "list_type_answerable_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "LT18",
+      "query": "các bước cuối của quy trình xử lý sự cố là gì",
+      "category": "list_type_answerable_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "LT19",
+      "query": "những nghĩa vụ sau chuyến công tác gồm những gì",
+      "category": "list_type_answerable_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    },
+    {
+      "id": "LT20",
+      "query": "các thông tin nào về lịch họp và giờ họp được ghi lại",
+      "category": "list_type_answerable_candidate",
+      "answerable": null,
+      "expected_source_ids": null,
+      "annotator_rationale": null,
+      "annotation_status": "UNLABELED"
+    }
+  ]
+}
