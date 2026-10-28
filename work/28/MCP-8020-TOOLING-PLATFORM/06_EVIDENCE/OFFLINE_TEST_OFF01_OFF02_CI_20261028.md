@@ -65,8 +65,7 @@ Conclusion: ordinary `sandbox_read` response handling is unreliable for existing
 
 ## Status and boundaries
 
-- OFF-01 factory tests: `PASS in GitHub CI`; in
-dependent Sandbox-side runner corroboration remains pending.
+- OFF-01 factory tests: `PASS in GitHub CI`; independent Sandbox-side runner corroboration remains pending.
 - OFF-02 contract tests: `PASS in GitHub CI`.
 - OFF-04 negative boundary tests: `PASS in GitHub CI`; no transformation/wiring implemented.
 - OFF-03: `BLOCKED` — read/probe response inconsistency reproduced; server/tool fix not yet made.
@@ -147,3 +146,14 @@ No additional test needed. OFF-04 is not amended in this pass.
 - CI green (GitHub source) is not Sandbox-side verification. OFF-03 and the
   Sandbox-runner requirement remain BLOCKED exactly as recorded in
   Addendum 2. Execution gate stays CLOSED; no E2E claim.
+
+
+---
+
+# Addendum 4 — Evidence-commit CI verification — 2026-10-28 (UTC)
+
+- Evidence update commit `b71109d36d1c54350697910c283903a6e4db0da9` was independently checked in GitHub Actions run #191.
+- Run ID: `40728067987`; result: `completed / success`; job `unit-regression-tests` completed successfully.
+- Raw job log confirms runner image `ubuntu-24.04`, `actions/checkout@v5`, and `actions/setup-python@v6`; unittest summary: `Ran 321 tests in 9.238s`.
+- Non-fatal warnings still visible: Python `ResourceWarning` for unclosed files/sockets, and checkout cleanup reports `fatal: No url found for submodule path 'room-meeting-ai' in .gitmodules`. Workflow conclusion remains success. Nested-repository cleanup is not modified here because it is outside `work/28/**` and requires a separate repository-hygiene decision.
+- This CI result verifies the evidence commit in GitHub CI only; OFF-03, independent Sandbox execution, and release status are unchanged. Execution gate remains `CLOSED`.
