@@ -26,6 +26,8 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Install MCP SDK for unified-server factory tests
+        run: python -m pip install "mcp>=1.0.0,<2.0.0"
       - name: Run Work 28 unit and regression tests
         working-directory: work/28/MCP-8020-TOOLING-PLATFORM
         env:
