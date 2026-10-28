@@ -63,6 +63,25 @@ class ExecutionContractV1Tests(unittest.TestCase):
                 with self.assertRaises(ExecutionContractError):
                     validate_python_run_request(req)
 
+    def test_rejects_request_missing_source_sha256(self):
+        # OFF-04: v1 must fail closed when the hash binding is absent.
+        req = self.valid_request()
+        del req["expected_source_sha256"]
+        with self.assertRaisesRegex(ExecutionContractError, "missing required fields: expected_source_sha256"):
+            validate_python_run_request(req)
+
+    def test_rejects_legacy_v54_script_request_at_v1_boundary(self):
+        # The v54 legacy shape has caller-supplied script/args and no source hash.
+        # Do not translate this into W13 command input; reject at the v1 boundary.
+        legacy_request = {
+            "work_id": "work28",
+            "script": "print('not executed')",
+            "args": [],
+            "operation": "RUN_SCRIPT",
+        }
+        with self.assertRaisesRegex(ExecutionContractError, "unsupported request fields: args, script"):
+            validate_python_run_request(legacy_request)
+
     def test_accepts_only_complete_hash_bound_script_pass(self):
         result = {
             "status": "PASS", "exit_code": 0, "source_sha256": HASH,
