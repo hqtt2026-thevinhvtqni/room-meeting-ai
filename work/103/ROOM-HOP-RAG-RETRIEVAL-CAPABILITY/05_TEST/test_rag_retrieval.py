@@ -1,6 +1,10 @@
+import sys
 import tempfile
 import unittest
 from pathlib import Path
+
+# Make the suite runnable from any working directory (04_CODE, 05_TEST, repo root):
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "04_CODE"))
 
 from rag_retrieval import (
     Document,

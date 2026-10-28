@@ -1,0 +1,33 @@
+name: Work 103 RAG Retrieval CI
+
+on:
+  push:
+    branches: ["work/103-rag-retrieval-capability"]
+    paths: ["work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/**", ".github/workflows/work-103-rag-ci.yml"]
+  workflow_dispatch:
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Syntax compile (py_compile)
+        run: |
+          python -m py_compile work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/04_CODE/rag_retrieval.py \
+            work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/05_TEST/test_rag_retrieval.py
+          echo "py_compile exit code: 0"
+
+      - name: Unit tests (21 tests, verbose)
+        working-directory: work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/04_CODE
+        run: python -m unittest discover -s ../05_TEST -p "test_rag_retrieval.py" -v
