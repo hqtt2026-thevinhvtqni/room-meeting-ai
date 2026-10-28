@@ -39,3 +39,15 @@ jobs:
       - name: Labeled retrieval evaluation (baseline gate, fails CI if below baseline)
         working-directory: work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/04_CODE
         run: python rag_eval.py
+
+      - name: Controlled retrieval experiment sweep
+        working-directory: work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/04_CODE
+        run: python rag_experiment.py > rag_experiment_results.json
+
+      - name: Upload controlled experiment results
+        uses: actions/upload-artifact@v4
+        with:
+          name: work-103-retrieval-experiment-py${{ matrix.python-version }}
+          path: work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/04_CODE/rag_experiment_results.json
+          if-no-files-found: error
+          retention-days: 30
