@@ -1,0 +1,146 @@
+{
+  "version": 1,
+  "description": "Work 103 labeled retrieval evaluation set. Author-labeled baseline; grow before release.",
+  "chunking": {
+    "max_chars": 300,
+    "overlap_chars": 40
+  },
+  "retrieval": {
+    "top_k": 5,
+    "operating_min_score": 0.35
+  },
+  "baseline_gate": {
+    "hit_at_5": 0.9,
+    "recall_at_5": 0.9,
+    "mrr": 0.9,
+    "no_answer_accuracy": 0.9,
+    "precision_at_5": 0.8
+  },
+  "documents": [
+    {
+      "source_id": "docs/bien-ban-hop-tuan-ont.md",
+      "title": "bien-ban-hop-tuan-ont.md",
+      "text": "Biên bản họp tuần ONT ngày 12/10\nThảo luận tín hiệu quang ONT yếu ở khu B\nLOS alarm xuất hiện lúc 3 giờ sáng\nNguyễn Văn A phụ trách kiểm tra RX power\nĐề xuất vệ sinh đầu nối cáp quang cho khu B\nHạn chót xử lý sự cố: 20/10"
+    },
+    {
+      "source_id": "docs/quy-trinh-xu-ly-su-co-mang.md",
+      "title": "quy-trinh-xu-ly-su-co-mang.md",
+      "text": "Quy trình xử lý sự cố mạng\nBước 1: tiếp nhận ticket từ khách hàng\nBước 2: kiểm tra LOS và đo RX power trên ONT\nBước 3: vệ sinh đầu nối quang\nBước 4: escalate cho NOC nếu LOS kéo dài quá 30 phút\nBước 5: ghi nhận kết quả vào biên bản"
+    },
+    {
+      "source_id": "docs/ke-hoach-giao-hang.md",
+      "title": "ke-hoach-giao-hang.md",
+      "text": "Kế hoạch giao hàng xi măng quý 4\nKhách hàng đặt 5000 tấn xi măng\nLịch giao: 5/11, 12/11 và 19/11\nXác nhận số lượng trước khi xuất kho\nPhụ trách giao hàng: bộ phận sales"
+    },
+    {
+      "source_id": "docs/bao-cao-doanh-thu.md",
+      "title": "bao-cao-doanh-thu.md",
+      "text": "Báo cáo doanh thu quý 3\nDoanh thu đạt 120 phần trăm kế hoạch\nBộ phận sales dẫn đầu doanh số\nDự báo quý 4 tăng trưởng ổn định\nXác nhận số liệu kế toán ngày 5/10"
+    },
+    {
+      "source_id": "docs/ky-luat-hop.md",
+      "title": "ky-luat-hop.md",
+      "text": "Kỷ luật họp tuần của phòng\nĐi muộn họp phạt 50 nghìn\nĐiện thoại để chế độ im lặng trong họp\nVắng mặt phải báo trước 1 ngày\nHọp diễn ra 8 giờ sáng thứ hai"
+    },
+    {
+      "source_id": "docs/bao-mat-thong-tin.md",
+      "title": "bao-mat-thong-tin.md",
+      "text": "Chính sách bảo mật thông tin công ty\nKhông chia sẻ mật khẩu qua email\nToken truy cập phải lưu trong vault\nXóa dữ liệu khách hàng sau 30 ngày theo quy định\nRò rỉ thông tin phải báo ngay cho bảo mật"
+    }
+  ],
+  "labeled_queries": [
+    {
+      "query": "tín hiệu quang ONT yếu ở khu B",
+      "expected": [
+        "docs/bien-ban-hop-tuan-ont.md"
+      ]
+    },
+    {
+      "query": "LOS alarm xuất hiện lúc mấy giờ",
+      "expected": [
+        "docs/bien-ban-hop-tuan-ont.md"
+      ]
+    },
+    {
+      "query": "quy trình xử lý sự cố mạng",
+      "expected": [
+        "docs/quy-trinh-xu-ly-su-co-mang.md"
+      ]
+    },
+    {
+      "query": "kiểm tra RX power trên ONT",
+      "expected": [
+        "docs/quy-trinh-xu-ly-su-co-mang.md",
+        "docs/bien-ban-hop-tuan-ont.md"
+      ]
+    },
+    {
+      "query": "khách hàng đặt bao nhiêu tấn xi măng",
+      "expected": [
+        "docs/ke-hoach-giao-hang.md"
+      ]
+    },
+    {
+      "query": "lịch giao hàng tháng 11",
+      "expected": [
+        "docs/ke-hoach-giao-hang.md"
+      ]
+    },
+    {
+      "query": "doanh thu quý 3 đạt bao nhiêu phần trăm kế hoạch",
+      "expected": [
+        "docs/bao-cao-doanh-thu.md"
+      ]
+    },
+    {
+      "query": "đi muộn họp phạt bao nhiêu tiền",
+      "expected": [
+        "docs/ky-luat-hop.md"
+      ]
+    },
+    {
+      "query": "họp lúc mấy giờ thứ hai",
+      "expected": [
+        "docs/ky-luat-hop.md"
+      ]
+    },
+    {
+      "query": "mật khẩu và token lưu ở đâu",
+      "expected": [
+        "docs/bao-mat-thong-tin.md"
+      ]
+    },
+    {
+      "query": "xóa dữ liệu khách hàng sau bao lâu",
+      "expected": [
+        "docs/bao-mat-thong-tin.md"
+      ]
+    },
+    {
+      "query": "khi nào escalate cho NOC",
+      "expected": [
+        "docs/quy-trinh-xu-ly-su-co-mang.md"
+      ]
+    },
+    {
+      "query": "dự báo tăng trưởng quý 4",
+      "expected": [
+        "docs/bao-cao-doanh-thu.md"
+      ]
+    },
+    {
+      "query": "vệ sinh đầu nối quang thế nào",
+      "expected": [
+        "docs/quy-trinh-xu-ly-su-co-mang.md",
+        "docs/bien-ban-hop-tuan-ont.md"
+      ]
+    }
+  ],
+  "no_answer_queries": [
+    "lương nhân viên tháng 10 là bao nhiêu",
+    "đặt vé máy bay đi Đà Nẵng",
+    "công thức nấu phở bò",
+    "kết quả bóng đá tối qua",
+    "tuyển dụng nhân viên marketing"
+  ]
+}

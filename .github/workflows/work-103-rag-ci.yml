@@ -25,9 +25,17 @@ jobs:
       - name: Syntax compile (py_compile)
         run: |
           python -m py_compile work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/04_CODE/rag_retrieval.py \
-            work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/05_TEST/test_rag_retrieval.py
+            work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/04_CODE/rag_eval.py \
+            work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/05_TEST/test_rag_retrieval.py \
+            work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/05_TEST/test_rag_eval.py
           echo "py_compile exit code: 0"
 
-      - name: Unit tests (21 tests, verbose)
+      - name: Unit tests (verbose)
         working-directory: work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/04_CODE
-        run: python -m unittest discover -s ../05_TEST -p "test_rag_retrieval.py" -v
+        run: |
+          python -m unittest discover -s ../05_TEST -p "test_rag_retrieval.py" -v
+          python -m unittest discover -s ../05_TEST -p "test_rag_eval.py" -v
+
+      - name: Labeled retrieval evaluation (baseline gate, fails CI if below baseline)
+        working-directory: work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/04_CODE
+        run: python rag_eval.py
