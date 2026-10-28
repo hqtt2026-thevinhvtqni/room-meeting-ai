@@ -18,12 +18,16 @@ permissions:
 
 jobs:
   unit-regression-tests:
-    runs-on: ubuntu-latest
+    # REL-01: pinned to ubuntu-24.04 so the ubuntu-latest label migration
+    # (announced for October 2026) cannot change the runner underneath us.
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        # REL-01: v5 runs on the supported Node runtime (v4 targeted Node 20, deprecated).
+        uses: actions/checkout@v5
       - name: Set up Python
-        uses: actions/setup-python@v5
+        # REL-01: v6 runs on the supported Node runtime (v5 targeted Node 20, deprecated).
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
       - name: Install MCP SDK for unified-server factory tests
