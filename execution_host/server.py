@@ -13,6 +13,8 @@ from .work28_grant_registry import load_grant_registry
 from .work28_core_grant_client import build_grant_source
 from .work28_readback import ReadbackError, load_sealed_result
 from .work28_evidence import EvidenceError
+from .work28_readiness import readiness_report
+from .work28_bounds import MAX_SNAPSHOT_BYTES, MAX_OUTPUT_CHARS, MAX_GLOBAL_CONCURRENT
 
 AUTH_HEADER = 'X-Room-Hop-Execution-Auth'
 AUTH_TOKEN_ENV = 'ROOM_HOP_EXECUTION_AUTH_TOKEN'
@@ -77,7 +79,29 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path=='/health':
             if self.host is None: self._send(503,{'status':'BLOCKED','reason':'runtime_not_initialized'}); return
-            self._send(200,{'status':'PASS','service':'execution-host','provider':self.host.provider_type,**self.host.identity()}); return
+            grants = Handler.grant_registry or {}
+            ready = readiness_report(
+                grant_count=len(grants),
+                evidence_root_configured=bool(Handler.evidence_root),
+                snapshot_only=bool(Handler.snapshot_only),
+                core_grant_url_set=bool(os.environ.get('ROOM_HOP_CORE_GRANT_URL')),
+            )
+            payload = {
+                'status': 'PASS',
+                'service': 'execution-host',
+                'provider': self.host.provider_type,
+                **self.host.identity(),
+                'snapshot_only': bool(Handler.snapshot_only),
+                'grants_loaded': len(grants),
+                'evidence_root_configured': bool(Handler.evidence_root),
+                'bounds': {
+                    'max_snapshot_bytes': MAX_SNAPSHOT_BYTES,
+                    'max_output_chars': MAX_OUTPUT_CHARS,
+                    'max_global_concurrent': MAX_GLOBAL_CONCURRENT,
+                },
+                'readiness': ready,
+            }
+            self._send(200, payload); return
         if self.path.startswith('/evidence/'):
             if not authenticate_caller(self.headers.get(AUTH_HEADER), Handler.auth_token):
                 self._send(401,{'status':'BLOCKED','reason':'caller_authentication_failed'}); return
