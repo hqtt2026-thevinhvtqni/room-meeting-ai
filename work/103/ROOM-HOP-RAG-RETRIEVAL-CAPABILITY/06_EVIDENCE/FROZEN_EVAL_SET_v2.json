@@ -1,0 +1,89 @@
+{
+  "record_type": "WORK103_FROZEN_LABELED_EVAL_SET",
+  "status": "FROZEN_IMMUTABLE",
+  "work": "103 ROOM-HOP-RAG-RETRIEVAL-CAPABILITY",
+  "procedure_ref": "05_TEST/ACCEPTANCE_AND_E2E_PLAN.md + BIEN_BAN.md gate G3",
+  "frozen_at_utc": "2026-10-28T15:48:32+00:00",
+  "frozen_at_vn": "2026-10-28T22:48:32+07:00",
+  "tool": "04_CODE/freeze_eval_set.py",
+  "git": {
+    "commit": "5f91f3ea2143dafaa5af958dc2bb431399e93621",
+    "tree": "8c05feccedb83e2d44d01b09d1c9a63fbd12cb5d",
+    "branch": "qwen-code-8e198444-54af-4eed-9770-f7cfccb3ce19",
+    "dirty_worktree_at_freeze": true
+  },
+  "fingerprints": {
+    "eval_set_path": "EVAL_SET.json",
+    "file_bytes": 11641,
+    "file_sha256": "ab60cabdeee6254e11ee6889c20b6f2e68cd5072687bafcb314fb7c9a37c9f07",
+    "canonical_sha256": "03d1c964ce3368b89d5fcfcc56c6b1c2d0a8079b109055f78e183d4fd17e15ae",
+    "version": 2,
+    "corpus_source_ids": [
+      "docs/bao-cao-doanh-thu.md",
+      "docs/bao-mat-thong-tin.md",
+      "docs/bien-ban-hop-tuan-ont.md",
+      "docs/ke-hoach-giao-hang.md",
+      "docs/ky-luat-hop.md",
+      "docs/nhiem-vu-tuan-42.md",
+      "docs/quy-dinh-cong-tac.md",
+      "docs/quy-trinh-xu-ly-su-co-mang.md"
+    ],
+    "corpus_canonical_sha256": "8ec8e622e32c1be4e2454efce3408780cdd237b3a8f972ffe532b1930e3f5ce1",
+    "n_labeled_queries": 50,
+    "n_no_answer_queries": 15,
+    "labeled_canonical_sha256": "c44eded3b829c180dd63ae155721231c8f226f4442e49011769c95040a07d9e4",
+    "no_answer_canonical_sha256": "82116d0279cd469592a9d33743dbe83833e0aafa715e22c97b0b39de5af54228",
+    "chunking": {
+      "max_chars": 300,
+      "overlap_chars": 40
+    },
+    "retrieval": {
+      "top_k": 5,
+      "operating_min_score": 0.35
+    },
+    "baseline_gate": {
+      "hit_at_5": 0.9,
+      "recall_at_5": 0.9,
+      "mrr": 0.9,
+      "no_answer_accuracy": 0.8,
+      "precision_at_5": 0.8,
+      "answered_rate": 0.9
+    }
+  },
+  "index_summary": {
+    "n_documents": 8,
+    "n_chunks": 8
+  },
+  "run_environment": {
+    "python": "3.12.10",
+    "platform": "linux",
+    "elapsed_ms": 5.6
+  },
+  "metrics_at_operating_threshold": {
+    "min_score": 0.35,
+    "n_labeled": 50,
+    "n_no_answer": 15,
+    "hit_at_5": 1,
+    "precision_at_5": 0.86,
+    "recall_at_5": 0.97,
+    "mrr": 1.0,
+    "answered_rate": 1,
+    "no_answer_accuracy": 0.8666666666666667,
+    "easy_leaks": [],
+    "near_miss_leaks": [
+      "tín hiệu quang ONT khu C mạnh bao nhiêu dBm",
+      "doanh thu quý 4 của chi nhánh Hà Nội"
+    ],
+    "ranked_misses": [],
+    "avg_latency_ms": 0.034
+  },
+  "gate_verdict": "PASS",
+  "gate_failures": [],
+  "artifacts": {
+    "eval_operating_metrics": {
+      "path": "06_EVIDENCE/frozen/FROZEN_EVAL_SET_v2/eval_operating_metrics.json",
+      "file_sha256": "a37947a9a5f8b6f69de126bbc9d94a89c0a6b2dae00396c06691c97baba1556f"
+    }
+  },
+  "policy": "Any change to EVAL_SET.json requires a new version number and a new freeze record; this file must never be edited in place after freeze. Verify with: python 04_CODE/verify_frozen_eval_set.py"
+}

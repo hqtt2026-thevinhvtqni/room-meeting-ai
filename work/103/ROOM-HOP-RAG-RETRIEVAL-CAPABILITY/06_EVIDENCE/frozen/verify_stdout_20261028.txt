@@ -1,0 +1,4 @@
+EVAL_SET file_sha256:      ab60cabdeee6254e11ee6889c20b6f2e68cd5072687bafcb314fb7c9a37c9f07
+EVAL_SET canonical_sha256: 03d1c964ce3368b89d5fcfcc56c6b1c2d0a8079b109055f78e183d4fd17e15ae
+Gate verdict now:          PASS
+VERIFY RESULT: ✅ FROZEN SET INTACT — hashes match, results reproduce exactly
