@@ -78,13 +78,18 @@ class MainWiringTests(unittest.TestCase):
         captured = {}
         real_serve = eh_server.serve
 
-        def fake_serve(host, port, auth_token, authorized_works):
-            captured.update(host=host, port=port,
-                             auth_token=auth_token, authorized_works=authorized_works)
+        def fake_serve(host, port, auth_token, authorized_works, **kwargs):
+            # main() may pass grant_registry, evidence_root, snapshot_only (WP18+)
+            captured.update(
+                host=host,
+                port=port,
+                auth_token=auth_token,
+                authorized_works=authorized_works,
+                **kwargs,
+            )
 
         eh_server.serve = fake_serve
         env = {AUTH_TOKEN_ENV: 'trusted-token', AUTHORIZED_WORKS_ENV: 'W28, W13'}
-        original = dict
         try:
             import os
             saved = dict(os.environ)
@@ -100,6 +105,8 @@ class MainWiringTests(unittest.TestCase):
             eh_server.serve = real_serve
         self.assertEqual(captured['auth_token'], 'trusted-token')
         self.assertEqual(captured['authorized_works'], frozenset({'W28', 'W13'}))
+        self.assertIn('grant_registry', captured)
+        self.assertIn('snapshot_only', captured)
         # Startup announces the armed works but never the token.
         self.assertIn('W28', output)
         self.assertIn('W13', output)
