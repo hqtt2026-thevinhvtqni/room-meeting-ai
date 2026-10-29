@@ -1,0 +1,36 @@
+{
+  "schema": "work103.corpus-fixture-freeze.v2",
+  "work_id": "103",
+  "reviewer": "Ka (CSA / Independent Reviewer)",
+  "date": "2026-10-29",
+  "scope": "BENCHMARK_FIXTURE_ONLY",
+  "snapshot": {
+    "repository": "hqtt2026-thevinhvtqni/room-meeting-ai",
+    "branch": "work/103-rag-retrieval-capability",
+    "commit": "2c92d932a5b2a440c4997a3a060126bce802d01d",
+    "raw_content_hash_method": "SHA-256 over UTF-8 bytes returned by GitHub raw-content endpoint; LF line endings verified for published source files."
+  },
+  "corpus_sources": [
+    {"path":"00_CORPUS/network.md","utf8_bytes":720,"sha256":"f7c0b4c2c9f88a39ac5bea73d99d8e2593b6c634273b668ed5f8e2ae19a55089"},
+    {"path":"00_CORPUS/sales.md","utf8_bytes":651,"sha256":"a25b613d6d30be1b6f283d74ace9ccbee41a608bae75c5758fc019366b0f2fbc"},
+    {"path":"00_CORPUS/architecture.md","utf8_bytes":1367,"sha256":"5910ffb71f423a908f471f9ad093cea5e1c550c8e6353b61335d2e1a1a7ad530"},
+    {"path":"00_CORPUS/security.md","utf8_bytes":1070,"sha256":"56c166ebc8699696ac0f4c470409101444aaa62ac9872c905d85f52afc14d71f"},
+    {"path":"00_CORPUS/evidence.md","utf8_bytes":1127,"sha256":"f0b03afc3b3504139ef1d3b60441d054c0b5e6e674d86d65dca47322fd624538"},
+    {"path":"03_ARCHITECTURE/RAG_RETRIEVAL_ARCHITECTURE.md","utf8_bytes":2606,"sha256":"ef51fa32722cfcb11c630e3f39c83ac1ee25036e1201ac856a4d586f86adb27e"}
+  ],
+  "artifacts": {
+    "manifest_v4": {"path":"00_CORPUS/CORPUS_MANIFEST_v4.0.md","git_blob_sha":"5832e9a51b2531637473c59e7f70ef371ed24872","sha256_utf8_lf":"52a843c800cbc503c8f429f6e21b8b0fe55d293b87e535f7272bd22cd3f4a666"},
+    "qw_v5_immutable": {"path":"06_EVIDENCE/QW_BLIND_LABELS_50_QUERIES_V5_20261029.md","git_blob_sha":"cc5c8d39725bac8d51237adcbd9ee96a0d094db8","sha256_utf8_lf":"48d100372bb3e4b88f541dee750e62f82f9642ee2fd0e481553ef43cfaa281f2"},
+    "ka_adjudicated_v3": {"path":"06_EVIDENCE/KA_ADJUDICATED_LABELS_50_QUERIES_V3_20261029.json","git_blob_sha":"787abdc83a88aacbe4f8d0445c6c16f6c69cde1a","canonical_dataset_sha256":"4a1e11221f623030fc95632fa39b386eb7612e5ead244693b1d7c171d7089fa5","rows":50,"row_hashes_verified":50,"corrected_labels":1},
+    "eval_set_v2": {"path":"05_TEST/EVAL_SET.json","git_blob_sha":"da3c0169479abcd3da539daf1d59061fe9ca02e4","sha256_utf8_lf":"ab60cabdeee6254e11ee6889c20b6f2e68cd5072687bafcb314fb7c9a37c9f07","documents":8,"labeled_queries":50,"no_answer_queries":15}
+  },
+  "decisions": {
+    "fixture_snapshot": "PINNED_BY_KA_FOR_BENCHMARK_FIXTURE_USE",
+    "adjudicated_labels": "ROW_BY_ROW_SOURCE_REVIEW_COMPLETE; Q009 corrected to ANSWERABLE; Qw V5 unchanged",
+    "blind_annotation_process": "UNVERIFIED",
+    "production_corpus_approval": "NOT_GRANTED",
+    "evaluation_alignment": "BLOCKED: existing EVAL_SET v2 uses a different eight-document synthetic corpus from the six-source Manifest V4 fixture and Ka's 50-query labels",
+    "live_mcp_core_e2e": "NOT RUN"
+  },
+  "note": "This v2 pin supersedes the v1 pin's provisional label artifact reference. It freezes a reproducible GitHub fixture snapshot only; it does not certify the original Sandbox raw bytes, blind annotation provenance, production corpus approval, or live integration."
+}
