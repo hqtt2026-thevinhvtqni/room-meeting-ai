@@ -22,16 +22,16 @@ Hash scope: Ka fetched the published files through GitHub's raw-content endpoint
 
 ## 2. Canonical adjudicated label artifact
 
-Created:
-`06_EVIDENCE/KA_ADJUDICATED_LABELS_50_QUERIES_V1_20261029.json`
+Created the first canonical representation and then completed row-by-row source adjudication in:
+`06_EVIDENCE/KA_ADJUDICATED_LABELS_50_QUERIES_V2_20261029.json`
 
-- Parsed row count: 50/50.
+- Parsed/reviewed row count: 50/50.
 - Per-row canonical SHA-256 fields: 50/50 independently recomputed and matched on GitHub readback.
-- Canonical dataset SHA-256 (compact JSON serialization of normalized rows, including source SHA fields and excluding per-row hash fields): `066b1ec65947820336035327b14b8aab563e7f217a558a282e918310149522a7`.
+- Canonical dataset SHA-256 (compact JSON serialization of adjudicated rows, including source SHA and Ka review fields, excluding per-row hash fields): `579c61bda1df8b643795f58da733f8fc3c2b4132438588da1f7e32a7c1c404d3`.
 - Recomputed dataset hash on GitHub readback: same value.
-- Q009 adjudication: Qw V5 labels it `NO_ANSWER`, but `sales.md` explicitly assigns the two confirmations, including cement quantity, to the sales employee. New adjudicated version changes Q009 to `ANSWERABLE`; original Qw V5 is unchanged.
+- Three adjudications against the explicit answerability rule: Q009 `NO_ANSWER` -> `ANSWERABLE` (sales employee is named); Q016 `NO_ANSWER` -> `ANSWERABLE` (architecture says ChromaDB is an extension gate and lists prerequisites, so immediate addition is not supported); Q046 `NO_ANSWER` -> `ANSWERABLE` (the corpus answers that immediate configuration is not available and requires the extension gate, though it provides no configuration recipe). Qw V5 remains unchanged.
 
-This verifies integrity of the new canonical JSON representation. It does not prove that the annotation process was blind or authorize freezing the dataset.
+This verifies the canonical JSON representation and records Ka's row-by-row source review. It does not prove that the annotation process was blind or authorize freezing the dataset.
 
 ## 3. Critical evaluation alignment finding
 
@@ -45,7 +45,7 @@ Therefore, the reported retrieval metrics for EVAL_SET v2 must not be presented 
 
 1. **Raw-byte integrity:** still not verified; available read APIs return decoded text and size metadata.
 2. **Blinding provenance:** still not verified; no independent process attestation proves Qw did not view retrieval outputs.
-3. **Adjudication:** Q009 is corrected in a new version. Treat remaining rows as provisional until the row-by-row source review and disagreement resolution are formally closed.
+3. **Adjudication:** Ka has completed a source-based review of all 50 rows and recorded three corrections in V2. The blind-process provenance remains unverified, so the set is adjudicated but not certified as a blind evaluation.
 4. **Evaluation alignment:** choose and freeze one explicit source snapshot for the benchmark, bind labels and metrics to it, and rerun metrics against that exact dataset.
 5. **Runtime integration:** `rag_retrieval.py` describes itself as an isolated Sandbox prototype, not wired into Core/MCP. The acceptance plan still has the live integration and negative E2E checklist unchecked.
 6. **Testing:** this review verified source hashes and label hashes from GitHub readback; it did not execute Python tests or live MCP/Core E2E in this session. Existing test/CI claims are not newly re-run by this report.
