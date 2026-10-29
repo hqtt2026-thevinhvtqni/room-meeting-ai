@@ -74,3 +74,20 @@ Per-query miss and no-answer diagnostics have been added to `04_CODE/rag_eval.py
 **Corpus-aligned retrieval baseline: FAIL.** Unit tests and the legacy synthetic benchmark pass, but neither overrides this failure. Work 103 stays **ACTIVE / BLOCKED**. No production corpus approval, blind-process certification, final freeze, or live RAG E2E PASS is granted.
 
 — Ka | CSA / Independent Reviewer
+
+
+## Follow-up experiment — query normalization and weighted aliases
+
+- Changes tested: query-only Vietnamese/English grammatical stopword filtering and a small weighted bilingual alias map for terms such as “luồng dữ liệu” / “data flow”, “xóa tệp” / “execute commands”, and line-range metadata.
+- CI: [run #49](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/40799030826), both Python versions pass unit tests but the corpus-aligned gate still fails.
+- At the existing operating threshold 0.35: Hit@5=0.950, Precision@5=0.880, Recall@5=0.950, MRR=0.9375, answered rate=0.975. These five metrics now meet their floors, but strict no-answer accuracy is only 0.300 and fails.
+- Sweep trade-off: at 0.45, no-answer accuracy rises only to 0.700 while Hit@5=0.875, Recall@5=0.875, MRR=0.863 and answered rate=0.900 fall below floors. No tested threshold passes the full gate.
+- This is an experiment, not a PASS. Do not merge the retrieval prototype into Core based on answerable-query scores alone.
+
+### Label-review candidate (not silently changed)
+
+Q037 asks what the AI caller receives from RAG retrieval. The RAG architecture source explicitly describes an authorized AI caller receiving a grounded answer with citations/abstention, while V3 currently lists only `00_CORPUS/architecture.md` as the expected source. Ka flags this as a candidate for multi-source adjudication, but V3 remains immutable pending a separately versioned label decision.
+
+### Interpretation caution
+
+The strict no-answer metric counts every non-empty retrieval as a leak. For Q004 (RX threshold), Q008 (delivery-schedule change process), and Q044 (default score), the retrieved topic source also explicitly says the requested detail is not specified. That source can support a grounded abstention rather than an unsupported answer. Preserve the strict metric for comparability, but add a separately named grounded-abstention metric before using this benchmark for a release decision; do not silently redefine the existing metric.
