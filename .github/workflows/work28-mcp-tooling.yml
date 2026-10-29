@@ -51,9 +51,6 @@ jobs:
             tail -n 150 unittest-output.txt || true
             echo '~~~'
           } >> "$GITHUB_STEP_SUMMARY" || true
-          grep -A10 "ImportError: Failed to import" unittest-output.txt | head -40 | while IFS= read -r line; do
-            printf '::error::%s\n' "$line" || true
-          done || true
           exit 0
 
   execution-host-lifecycle-linux:
@@ -63,7 +60,7 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-      - name: Run execution_host lifecycle + WP14/WP15 tests (Linux)
+      - name: Run execution_host lifecycle + WP14/WP15/WP16 tests (Linux)
         env:
           PYTHONPATH: .
         run: |
@@ -72,12 +69,12 @@ jobs:
           python -m unittest discover -s tests -p 'test_work28_contract.py' -v 2>&1 | tee -a lifecycle-output.txt
           python -m unittest discover -s tests -p 'test_execution_host_auth.py' -v 2>&1 | tee -a lifecycle-output.txt
           python -m unittest discover -s tests -p 'test_work28_grant.py' -v 2>&1 | tee -a lifecycle-output.txt
+          python -m unittest discover -s tests -p 'test_work28_dispatch.py' -v 2>&1 | tee -a lifecycle-output.txt
       - name: Surface lifecycle failure details
         if: failure()
         run: |
           {
-            echo "## Execution host lifecycle test failure details (Linux)"
-            echo ""
+            echo "## Lifecycle failure (Linux)"
             echo '~~~'
             tail -n 100 lifecycle-output.txt || true
             echo '~~~'
@@ -91,7 +88,7 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-      - name: Run execution_host lifecycle + WP14/WP15 tests (Windows)
+      - name: Run execution_host lifecycle + WP14/WP15/WP16 tests (Windows)
         env:
           PYTHONPATH: .
         run: |
@@ -99,12 +96,11 @@ jobs:
           python -m unittest discover -s tests -p 'test_work28_contract.py' -v 2>&1 | Tee-Object -FilePath lifecycle-output-wp14.txt
           python -m unittest discover -s tests -p 'test_execution_host_auth.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp15-auth.txt
           python -m unittest discover -s tests -p 'test_work28_grant.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp15-grant.txt
+          python -m unittest discover -s tests -p 'test_work28_dispatch.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp16-dispatch.txt
         shell: pwsh
       - name: Surface lifecycle failure details (Windows)
         if: failure()
         run: |
-          Get-Content lifecycle-output.txt -Tail 100 -ErrorAction SilentlyContinue | Out-File -Append $env:GITHUB_STEP_SUMMARY
-          Get-Content lifecycle-output-wp14.txt -Tail 100 -ErrorAction SilentlyContinue | Out-File -Append $env:GITHUB_STEP_SUMMARY
-          Get-Content lifecycle-wp15-auth.txt -Tail 50 -ErrorAction SilentlyContinue | Out-File -Append $env:GITHUB_STEP_SUMMARY
-          Get-Content lifecycle-wp15-grant.txt -Tail 50 -ErrorAction SilentlyContinue | Out-File -Append $env:GITHUB_STEP_SUMMARY
+          Get-Content lifecycle-output.txt -Tail 80 -ErrorAction SilentlyContinue | Out-File -Append $env:GITHUB_STEP_SUMMARY
+          Get-Content lifecycle-wp16-dispatch.txt -Tail 80 -ErrorAction SilentlyContinue | Out-File -Append $env:GITHUB_STEP_SUMMARY
         shell: pwsh
