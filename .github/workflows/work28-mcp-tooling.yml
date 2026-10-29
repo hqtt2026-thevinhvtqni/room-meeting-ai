@@ -60,7 +60,7 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-      - name: Run execution_host lifecycle + WP14/WP15/WP16 tests (Linux)
+      - name: Run execution_host lifecycle + WP14–WP18 tests (Linux)
         env:
           PYTHONPATH: .
         run: |
@@ -70,6 +70,7 @@ jobs:
           python -m unittest discover -s tests -p 'test_execution_host_auth.py' -v 2>&1 | tee -a lifecycle-output.txt
           python -m unittest discover -s tests -p 'test_work28_grant.py' -v 2>&1 | tee -a lifecycle-output.txt
           python -m unittest discover -s tests -p 'test_work28_dispatch.py' -v 2>&1 | tee -a lifecycle-output.txt
+          python -m unittest discover -s tests -p 'test_work28_evidence.py' -v 2>&1 | tee -a lifecycle-output.txt
       - name: Surface lifecycle failure details
         if: failure()
         run: |
@@ -88,7 +89,7 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-      - name: Run execution_host lifecycle + WP14/WP15/WP16 tests (Windows)
+      - name: Run execution_host lifecycle + WP14–WP18 tests (Windows)
         env:
           PYTHONPATH: .
         run: |
@@ -97,10 +98,11 @@ jobs:
           python -m unittest discover -s tests -p 'test_execution_host_auth.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp15-auth.txt
           python -m unittest discover -s tests -p 'test_work28_grant.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp15-grant.txt
           python -m unittest discover -s tests -p 'test_work28_dispatch.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp16-dispatch.txt
+          python -m unittest discover -s tests -p 'test_work28_evidence.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp18-evidence.txt
         shell: pwsh
       - name: Surface lifecycle failure details (Windows)
         if: failure()
         run: |
           Get-Content lifecycle-output.txt -Tail 80 -ErrorAction SilentlyContinue | Out-File -Append $env:GITHUB_STEP_SUMMARY
-          Get-Content lifecycle-wp16-dispatch.txt -Tail 80 -ErrorAction SilentlyContinue | Out-File -Append $env:GITHUB_STEP_SUMMARY
+          Get-Content lifecycle-wp18-evidence.txt -Tail 80 -ErrorAction SilentlyContinue | Out-File -Append $env:GITHUB_STEP_SUMMARY
         shell: pwsh
