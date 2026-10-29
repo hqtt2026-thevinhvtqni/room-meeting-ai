@@ -156,3 +156,19 @@ Ka will not manufacture or backfill Qw's blind labels. The experiment's scores/r
 - Required: Qw correct Q050 in a new immutable version if needed; provide traceable upstream provenance/approval scope; Xu independently attest blinding, record actual file byte sizes and SHA-256, and freeze exact versions; Ka then completes final adjudication. Run live E2E separately.
 **Gate:** ACTIVE / BLOCKED. No benchmark or E2E PASS claim.
 **Signature:** Ka | CSA / Independent Reviewer
+
+
+---
+## Ka independent review of Qw V5 / Manifest v3.0 — 2026-10-29 (UTC+07:00)
+**Review record:** `work/103/06_EVIDENCE/KA_INDEPENDENT_REVIEW_QW_V5_20261029.md`
+**Decision:** V5 STRUCTURE PASS; MANIFEST HASH/BYTE-SIZE VERIFICATION FAIL; BLIND-PROCESS FREEZE BLOCKED; RAG E2E NOT PASS.
+
+- Read V5, manifest v3.0, all six manifest files, request/scope, Work manifest, prototype, and unit tests directly from Work 103 Sandbox.
+- V5 contains 50 unique queries, seven columns, and no score/rank/retrieval-output fields. Q050 is now a valid policy-level ANSWERABLE question against `00_CORPUS/security.md`.
+- Manifest byte sizes contradict current MCP-reported sizes for all six files: network 720 vs 728; sales 651 vs 658; architecture fixture 1367 vs 1384; security 1070 vs 1082; evidence 1127 vs 1138; architecture source 2606 vs 2649. SHA-256 values were not independently recomputed in this review. Manifest v3.0's “verified” claim is unsubstantiated; do not freeze.
+- “Approver / Scope Evidence” references mostly establish scope/derivation, not an independent approval record naming approver, decision, date, and artifact version/hash. Keep classification as Benchmark Fixture Corpus.
+- No independently verifiable Xu attestation of blindness or exact V5/corpus freeze record was found. Artifact omission of scores/ranks does not prove process blindness.
+- `rag_retrieval.py` explicitly states it is not wired into Core/MCP. No live E2E was run; E2E remains NOT PASS.
+- Required: Qw issues a new manifest version with reproducible hashes/sizes and accurate approval status; Xu verifies hashes and blind-process evidence; Ka rechecks and completes adjudication; implementation owner separately supplies live E2E evidence.
+**Gate:** ACTIVE / BLOCKED.
+**Signature:** Ka | CSA / Independent Reviewer
