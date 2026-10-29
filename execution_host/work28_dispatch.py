@@ -1,4 +1,4 @@
-"""WP16–WP18 — Authenticated dispatch: grant → snapshot → execute + sealed evidence.
+"""WP16–WP19 — Authenticated dispatch: grant → snapshot → execute + sealed evidence.
 
 Server-side only. Client cannot inject grants. MCP execution tools remain closed.
 """
@@ -26,6 +26,7 @@ def dispatch_execute(
     work_context: dict[str, Any],
     body: dict[str, Any],
     grant_registry: dict[str, ExecutionGrant] | None,
+    snapshot_only: bool = False,
 ) -> dict[str, Any]:
     if not isinstance(body, dict):
         raise DispatchError("body_must_be_object")
@@ -40,6 +41,9 @@ def dispatch_execute(
         )
     if mode != "command":
         raise DispatchError("unsupported_mode:" + str(mode))
+
+    if snapshot_only:
+        raise DispatchError("command_mode_disabled_snapshot_only")
 
     if "work28_request" in body or "execution_grant_id" in body:
         raise DispatchError("work28_fields_require_mode_work28_snapshot")
