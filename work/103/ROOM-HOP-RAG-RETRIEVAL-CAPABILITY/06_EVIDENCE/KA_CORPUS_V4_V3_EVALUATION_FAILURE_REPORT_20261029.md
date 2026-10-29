@@ -91,3 +91,8 @@ Q037 asks what the AI caller receives from RAG retrieval. The RAG architecture s
 ### Interpretation caution
 
 The strict no-answer metric counts every non-empty retrieval as a leak. For Q004 (RX threshold), Q008 (delivery-schedule change process), and Q044 (default score), the retrieved topic source also explicitly says the requested detail is not specified. That source can support a grounded abstention rather than an unsupported answer. Preserve the strict metric for comparability, but add a separately named grounded-abstention metric before using this benchmark for a release decision; do not silently redefine the existing metric.
+
+
+## Grounded-abstention diagnostic added
+
+A report-only script, `05_TEST/grounded_abstention_eval.py`, now compares strict empty-retrieval accuracy with a separately named grounded-abstention measure. It credits retrieval only when all returned sources are explicitly annotated as evidence that the requested detail is unspecified. It does not modify labels, ranking, the existing `no_answer_accuracy` gate, or baseline thresholds. CI runs this diagnostic before the strict corpus-aligned gate and prints the result for review.
