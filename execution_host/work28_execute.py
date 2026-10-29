@@ -1,12 +1,11 @@
-"""Work 28 offline execution against a verified SourceSnapshot (WP14).
+"""Work 28 offline execution against a verified SourceSnapshot (WP14/WP17).
 
 Rules (Xu):
 - Run only bytes already hashed into SourceSnapshot — never re-read work_root entry.
-- Stage a verified copy under the authorized execution workspace (relative path only;
-  host security rejects absolute args).
+- Stage a verified copy under the authorized execution workspace (relative path only).
 - Use host.execute_command so lifecycle goes through spawn_managed / Job Object.
-- Do NOT authorize callers here; Core supplies authoritative work binding upstream.
-- Do NOT wire this module into HTTP / MCP registration in this slice.
+- Work id W28 and 28 are equivalent for binding checks.
+- Do NOT authorize callers here; do NOT wire MCP registration in this module.
 """
 from __future__ import annotations
 
@@ -20,6 +19,7 @@ from .host import ExecutionHost
 from .models import WorkContext
 from .security import validate_context
 from .work28_contract import SourceSnapshot, Work28ContractError, Work28RunRequest
+from .work28_work_id import work_ids_equivalent
 
 
 def run_verified_snapshot(
@@ -28,8 +28,7 @@ def run_verified_snapshot(
     request: Work28RunRequest,
     snapshot: SourceSnapshot,
 ) -> dict[str, Any]:
-    """Execute Python against verified snapshot bytes only."""
-    if ctx.work_id != request.work_id:
+    if not work_ids_equivalent(ctx.work_id, request.work_id):
         raise Work28ContractError("context_work_binding_mismatch")
     if snapshot.work_id != request.work_id:
         raise Work28ContractError("snapshot_work_binding_mismatch")

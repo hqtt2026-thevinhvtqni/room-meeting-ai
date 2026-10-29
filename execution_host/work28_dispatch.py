@@ -1,4 +1,4 @@
-"""WP16 — Authenticated dispatch: grant → snapshot → execute (or legacy command).
+"""WP16/WP17 — Authenticated dispatch: grant → snapshot → execute (or legacy command).
 
 Server-side only. Client cannot inject grants. MCP execution tools remain closed.
 """
@@ -12,6 +12,7 @@ from .models import ExecutionRequest, WorkContext, new_execution_id
 from .work28_contract import create_source_snapshot
 from .work28_execute import run_verified_snapshot
 from .work28_grant import ExecutionGrant, GrantError, bind_grant_to_request
+from .work28_work_id import work_ids_equivalent
 
 
 class DispatchError(ValueError):
@@ -25,12 +26,6 @@ def dispatch_execute(
     body: dict[str, Any],
     grant_registry: dict[str, ExecutionGrant] | None,
 ) -> dict[str, Any]:
-    """Route an already-authenticated, Work-authorized request.
-
-    Modes:
-    - work28_snapshot: requires execution_grant_id + work28_request + grant in registry
-    - command (default): legacy ExecutionRequest.command vector
-    """
     if not isinstance(body, dict):
         raise DispatchError("body_must_be_object")
 
@@ -82,7 +77,7 @@ def _dispatch_work28_snapshot(
     request = bind_grant_to_request(grant, payload)
 
     ctx_data = dict(work_context)
-    if ctx_data.get("work_id") != grant.work_id:
+    if not work_ids_equivalent(ctx_data.get("work_id"), grant.work_id):
         raise GrantError("context_grant_work_mismatch")
 
     if not ctx_data.get("execution_id"):
