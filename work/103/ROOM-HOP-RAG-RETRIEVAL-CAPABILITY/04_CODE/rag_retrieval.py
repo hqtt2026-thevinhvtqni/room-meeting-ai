@@ -26,6 +26,24 @@ from typing import Iterable, Sequence
 
 TOKEN_RE = re.compile(r"[\w'-]+", re.UNICODE)
 
+# Query-only function words: removing these avoids diluting BM25-lite scores
+# when Vietnamese/English questions contain grammatical tokens absent from
+# the source text. Keep domain terms, negation, numbers, and technical IDs.
+QUERY_STOPWORDS = {
+    "ai", "bao", "bằng", "bắt", "các", "cái", "cho", "chính", "có", "của",
+    "đã", "đang", "đâu", "để", "điều", "được", "gì", "hay", "hoặc", "khi",
+    "khách", "làm", "là", "mà", "mỗi", "một", "nào", "này", "nếu", "như",
+    "ở", "ra", "sao", "sẽ", "theo", "thế", "thì", "từ", "và", "vào", "về",
+    "vậy", "với", "xảy", "what", "does", "the", "is", "how", "can", "to",
+    "from", "and", "or", "if", "into", "of", "are", "be", "do", "which",
+    "would", "should", "could",
+}
+
+def tokenize_query(text: str) -> list[str]:
+    """Tokenize a query while excluding grammatical stopwords only."""
+    return [token for token in tokenize(text) if token not in QUERY_STOPWORDS]
+
+
 # BM25 parameters. k1 controls term-frequency saturation, b controls
 # length normalization (0 = none, 1 = full).
 K1 = 1.2
@@ -176,7 +194,7 @@ class RetrievalIndex:
             raise ValueError("query must not be empty")
         if top_k < 1:
             raise ValueError("top_k must be >= 1")
-        query_terms = sorted(set(tokenize(query)))
+        query_terms = sorted(set(tokenize_query(query)))
         if not query_terms:
             return []
         idf_sum = sum(self.idf(term) for term in query_terms) or 1.0
