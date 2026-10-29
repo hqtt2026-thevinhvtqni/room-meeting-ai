@@ -101,3 +101,13 @@ This latest addendum supersedes earlier interim adjudication/status statements w
 - [Run #54](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/40799292123): grounded no-answer accuracy is 0.600 at threshold 0.35 and 0.800 at thresholds 0.45–0.60. However, at 0.45 answerable metrics fall below baseline (Hit@5=0.875, Recall@5=0.875, MRR=0.863). No tested threshold satisfies both sides.
 - The grounded metric is supplemental and reviewer-mapped; it is not a replacement for strict `no_answer_accuracy` and is not release-certified.
 - Latest status: answerable retrieval improves with query normalization/aliases, but strict no-answer gate fails; overall W103 remains ACTIVE / BLOCKED. Live MCP/Core E2E remains CLOSED / NOT RUN.
+
+
+### Follow-up after no-answer leak analysis — 2026-10-29
+
+- Local reproduction reported at HEAD `5756a6e`: 44 unit tests pass; corpus-aligned V4/V3 gate fails at `min_score=0.35` with strict no-answer accuracy 0.300; grounded-abstention remains report-only at 0.600.
+- Q008, Q035 and Q010 persist as lexical collisions. Threshold-only tuning is closed as the primary remediation path because it does not satisfy both answer retrieval and abstention floors.
+- Design proposal created: `06_EVIDENCE/KA_EVIDENCE_SUPPORT_STAGE_DESIGN_PROPOSAL_V1_20261029.md`. It is proposal only, not implemented or architecture-approved. It defines a separate support decision stage, provenance, fail-closed behavior, independent adjudication and offline test gates.
+- The reported local leak-analysis commit `36f9a6e` was not present at GitHub branch HEAD when checked. This entry records the findings supplied in-session; it does not claim that artifact was synced.
+- No change to retrieval/evaluator code, fixture, thresholds, Qw V5 or labels V3. Q008 remains borderline; Q037 remains pending any separately versioned adjudication.
+- Decision: **W103 ACTIVE / BLOCKED**. No implementation approval, production approval, merge, or live MCP :8020 → Core :8000 E2E authorization.
