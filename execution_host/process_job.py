@@ -39,8 +39,6 @@ class CleanupResult:
 
 
 class _WinJob:
-    """Thin handle wrapper around a Windows Job Object."""
-
     def __init__(self, handle: int):
         self.handle = handle
 
@@ -60,35 +58,22 @@ def _load_kernel32():
     from ctypes import wintypes
 
     k = ctypes.WinDLL("kernel32", use_last_error=True)
-
     k.CreateJobObjectW.argtypes = [wintypes.LPVOID, wintypes.LPCWSTR]
     k.CreateJobObjectW.restype = wintypes.HANDLE
-
     k.AssignProcessToJobObject.argtypes = [wintypes.HANDLE, wintypes.HANDLE]
     k.AssignProcessToJobObject.restype = wintypes.BOOL
-
     k.TerminateJobObject.argtypes = [wintypes.HANDLE, wintypes.UINT]
     k.TerminateJobObject.restype = wintypes.BOOL
-
     k.CloseHandle.argtypes = [wintypes.HANDLE]
     k.CloseHandle.restype = wintypes.BOOL
-
-    k.SetInformationJobObject.argtypes = [
-        wintypes.HANDLE,
-        ctypes.c_int,
-        wintypes.LPVOID,
-        wintypes.DWORD,
-    ]
+    k.SetInformationJobObject.argtypes = [wintypes.HANDLE, ctypes.c_int, wintypes.LPVOID, wintypes.DWORD]
     k.SetInformationJobObject.restype = wintypes.BOOL
-
     k.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
     k.OpenProcess.restype = wintypes.HANDLE
-
     return k
 
 
 _kernel32 = _load_kernel32()
-
 _JobObjectExtendedLimitInformation = 9
 _JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE = 0x00002000
 _PROCESS_SET_QUOTA = 0x0100
@@ -96,7 +81,6 @@ _PROCESS_TERMINATE = 0x0001
 
 
 def _create_job_object() -> tuple:
-    """Create a Job Object with KILL_ON_JOB_CLOSE. Returns (job, notes)."""
     notes: list[str] = []
     if _kernel32 is None:
         notes.append("kernel32_unavailable")
@@ -145,16 +129,12 @@ def _create_job_object() -> tuple:
     info = JOBOBJECT_EXTENDED_LIMIT_INFORMATION()
     info.BasicLimitInformation.LimitFlags = _JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE
     ok = _kernel32.SetInformationJobObject(
-        handle,
-        _JobObjectExtendedLimitInformation,
-        ctypes.byref(info),
-        ctypes.sizeof(info),
+        handle, _JobObjectExtendedLimitInformation, ctypes.byref(info), ctypes.sizeof(info)
     )
     if not ok:
         notes.append(f"SetInformationJobObject_failed_err={ctypes.get_last_error()}")
         _kernel32.CloseHandle(handle)
         return None, notes
-
     return _WinJob(handle), notes
 
 
@@ -164,13 +144,10 @@ def _assign_pid_to_job(job, pid: int) -> list:
         notes.append("assign_skipped_no_job")
         return notes
     import ctypes
-
     PROCESS_ALL_ACCESS = 0x1F0FFF
     proc = _kernel32.OpenProcess(PROCESS_ALL_ACCESS, False, pid)
     if not proc:
-        proc = _kernel32.OpenProcess(
-            _PROCESS_SET_QUOTA | _PROCESS_TERMINATE | 0x1000, False, pid
-        )
+        proc = _kernel32.OpenProcess(_PROCESS_SET_QUOTA | _PROCESS_TERMINATE | 0x1000, False, pid)
     if not proc:
         notes.append(f"OpenProcess_failed_err={ctypes.get_last_error()}")
         return notes
@@ -191,7 +168,6 @@ def _terminate_job(job, exit_code: int = 1) -> list:
         notes.append("terminate_job_skipped")
         return notes
     import ctypes
-
     ok = _kernel32.TerminateJobObject(job.handle, exit_code)
     if not ok:
         notes.append(f"TerminateJobObject_failed_err={ctypes.get_last_error()}")
@@ -201,26 +177,19 @@ def _terminate_job(job, exit_code: int = 1) -> list:
 
 
 def _posix_group_members(pgid: int) -> int:
-    """Count processes in process group *pgid* (POSIX)."""
     if pgid <= 0:
         return 0
     try:
         completed = subprocess.run(
             ["ps", "-o", "pid=", "-g", str(pgid)],
-            capture_output=True,
-            text=True,
-            timeout=5,
-            check=False,
+            capture_output=True, text=True, timeout=5, check=False,
         )
     except (OSError, subprocess.TimeoutExpired):
         return 0
-
     n = 0
     for line in (completed.stdout or "").splitlines():
         token = line.strip()
-        if not token:
-            continue
-        if not token.isdigit():
+        if not token or not token.isdigit():
             continue
         n += 1
     return n
@@ -228,12 +197,6 @@ def _posix_group_members(pgid: int) -> int:
 
 @dataclass
 class ManagedProcess:
-    """Process started under spawn_managed (preferred) or explicitly wrapped.
-
-    isolation is never PASS here — only reaping/attestation.
-    job_object is ATTACHED only when CreateJobObject + Assign succeeded at spawn.
-    """
-
     process: subprocess.Popen
     platform: str = field(default_factory=lambda: sys.platform)
     session_leader: bool = False
@@ -406,26 +369,14 @@ def spawn_managed(
     env: dict[str, str],
     text: bool = True,
 ) -> ManagedProcess:
-    """Create a process with session leadership (POSIX) or Job Object (Windows).
-
-    On Windows: CreateJobObject + AssignProcessToJobObject at spawn time.
-    job_object becomes ATTACHED only when assignment succeeds.
-    """
     is_win = sys.platform.startswith("win")
     process = subprocess.Popen(
-        list(args),
-        cwd=str(cwd),
-        env=env,
-        text=text,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        start_new_session=not is_win,
+        list(args), cwd=str(cwd), env=env, text=text,
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE, start_new_session=not is_win,
     )
-
     job = None
     job_status = "NOT_ATTACHED"
     spawn_notes: list[str] = []
-
     if is_win and process.pid:
         job, create_notes = _create_job_object()
         spawn_notes.extend(create_notes)
@@ -440,28 +391,55 @@ def spawn_managed(
                 spawn_notes.append("job_object_attach_failed")
         else:
             spawn_notes.append("job_object_create_failed")
-
     managed = ManagedProcess(
-        process=process,
-        platform=sys.platform,
-        session_leader=not is_win,
-        created_via_spawn=True,
-        job_object=job_status,
-        _job=job,
+        process=process, platform=sys.platform, session_leader=not is_win,
+        created_via_spawn=True, job_object=job_status, _job=job,
+    )
+    managed._spawn_notes = tuple(spawn_notes)  # type: ignore[attr-defined]
+    return managed
+
+
+def spawn_managed_service(
+    args: Sequence[str],
+    *,
+    cwd: str | Path,
+    env: dict[str, str],
+) -> ManagedProcess:
+    """Long-lived service spawn: DEVNULL streams + Job Object / session at create."""
+    is_win = sys.platform.startswith("win")
+    process = subprocess.Popen(
+        list(args), cwd=str(cwd), env=env,
+        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=not is_win,
+    )
+    job = None
+    job_status = "NOT_ATTACHED"
+    spawn_notes: list[str] = []
+    if is_win and process.pid:
+        job, create_notes = _create_job_object()
+        spawn_notes.extend(create_notes)
+        if job is not None:
+            assign_notes = _assign_pid_to_job(job, process.pid)
+            spawn_notes.extend(assign_notes)
+            if "job_object_assigned" in assign_notes:
+                job_status = "ATTACHED"
+            else:
+                job.close()
+                job = None
+                spawn_notes.append("job_object_attach_failed")
+        else:
+            spawn_notes.append("job_object_create_failed")
+    managed = ManagedProcess(
+        process=process, platform=sys.platform, session_leader=not is_win,
+        created_via_spawn=True, job_object=job_status, _job=job,
     )
     managed._spawn_notes = tuple(spawn_notes)  # type: ignore[attr-defined]
     return managed
 
 
 def wrap_existing_popen(process: subprocess.Popen) -> ManagedProcess:
-    """Explicit post-hoc wrap — does NOT claim Job Object or isolation."""
     return ManagedProcess(
-        process=process,
-        platform=sys.platform,
-        session_leader=False,
-        created_via_spawn=False,
-        job_object="NOT_ATTACHED",
-        _job=None,
+        process=process, platform=sys.platform, session_leader=False,
+        created_via_spawn=False, job_object="NOT_ATTACHED", _job=None,
     )
 
 
@@ -471,6 +449,7 @@ __all__ = [
     "CleanupResult",
     "ManagedProcess",
     "spawn_managed",
+    "spawn_managed_service",
     "wrap_existing_popen",
     "_posix_group_members",
     "ISOLATION_STATUS",
