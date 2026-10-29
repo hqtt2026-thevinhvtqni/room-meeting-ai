@@ -146,9 +146,14 @@ class ManagedProcess:
                         except (subprocess.TimeoutExpired, OSError) as exc:
                             notes.append(f"force_kill_failed:{type(exc).__name__}")
                 elif terminate_first:
-                    try:
-                        os.killpg(os.getpgid(leader), signal.SIGTERM)
-                    except (OSError, ProcessLookupError):
+                    # killpg only when we created a new session; otherwise we
+                    # would signal the test runner's process group.
+                    if self.session_leader:
+                        try:
+                            os.killpg(os.getpgid(leader), signal.SIGTERM)
+                        except (OSError, ProcessLookupError):
+                            self.process.terminate()
+                    else:
                         self.process.terminate()
                     terminate_sent = True
                     try:
@@ -156,9 +161,12 @@ class ManagedProcess:
                         waited = True
                     except subprocess.TimeoutExpired:
                         notes.append("wait_timeout_after_terminate")
-                        try:
-                            os.killpg(os.getpgid(leader), signal.SIGKILL)
-                        except (OSError, ProcessLookupError):
+                        if self.session_leader:
+                            try:
+                                os.killpg(os.getpgid(leader), signal.SIGKILL)
+                            except (OSError, ProcessLookupError):
+                                self.process.kill()
+                        else:
                             self.process.kill()
                         kill_sent = True
                         try:
@@ -167,9 +175,12 @@ class ManagedProcess:
                         except (subprocess.TimeoutExpired, OSError) as exc:
                             notes.append(f"force_kill_failed:{type(exc).__name__}")
                 else:
-                    try:
-                        os.killpg(os.getpgid(leader), signal.SIGKILL)
-                    except (OSError, ProcessLookupError):
+                    if self.session_leader:
+                        try:
+                            os.killpg(os.getpgid(leader), signal.SIGKILL)
+                        except (OSError, ProcessLookupError):
+                            self.process.kill()
+                    else:
                         self.process.kill()
                     kill_sent = True
                     try:
