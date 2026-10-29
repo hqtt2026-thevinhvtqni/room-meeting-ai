@@ -51,12 +51,15 @@ def authorize_work(work_id, authorized_works):
     authorized_works comes only from the trusted deployment configuration
     (the Core :8000 authority chain). Authentication alone never grants
     execution rights; a Work must be explicitly allow-listed.
+    Work ids are normalized to the canonical W<number> form before comparison.
     """
-    if not isinstance(work_id, str) or not work_id:
+    if not isinstance(authorized_works, (set, frozenset)) or not authorized_works:
         return False
-    if not isinstance(authorized_works, (set, frozenset)):
+    try:
+        normalized = normalize_work_id(work_id)
+    except (TypeError, ValueError):
         return False
-    return work_id in authorized_works
+    return normalized in authorized_works
 
 def load_execution_auth_config(environ=None):
     """Load and validate the trusted execution auth configuration at startup.
