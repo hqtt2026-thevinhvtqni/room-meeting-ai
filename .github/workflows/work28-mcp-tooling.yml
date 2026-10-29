@@ -22,15 +22,11 @@ permissions:
 
 jobs:
   unit-regression-tests:
-    # REL-01: pinned to ubuntu-24.04 so the ubuntu-latest label migration
-    # (announced for October 2026) cannot change the runner underneath us.
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout repository
-        # REL-01: v5 runs on the supported Node runtime (v4 targeted Node 20, deprecated).
         uses: actions/checkout@v5
       - name: Set up Python
-        # REL-01: v6 runs on the supported Node runtime (v5 targeted Node 20, deprecated).
         uses: actions/setup-python@v6
         with:
           python-version: "3.12"
@@ -61,21 +57,19 @@ jobs:
           exit 0
 
   execution-host-lifecycle-linux:
-    # Evidence for execute_command -> host_run -> spawn_managed lifecycle
-    # (commit 0abb082 code path). Previously these tests never ran in CI
-    # because the paths filter did not include execution_host/ or tests/.
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-      - name: Run execution_host process lifecycle tests (Linux)
+      - name: Run execution_host lifecycle + WP14 contract tests (Linux)
         env:
           PYTHONPATH: .
         run: |
           set -o pipefail
           python -m unittest discover -s tests -p 'test_process_job.py' -v 2>&1 | tee lifecycle-output.txt
+          python -m unittest discover -s tests -p 'test_work28_contract.py' -v 2>&1 | tee -a lifecycle-output.txt
       - name: Surface lifecycle failure details
         if: failure()
         run: |
@@ -89,25 +83,22 @@ jobs:
           exit 0
 
   execution-host-lifecycle-windows:
-    # WP2 blocker evidence: Windows Job Object / child process tree.
-    # This job makes Windows lifecycle status VISIBLE instead of assumed.
-    # It is allowed to fail: a red run is honest evidence that Windows
-    # isolation/cleanup is NOT verified. It must never be marked as a pass
-    # without a green run on this platform.
     runs-on: windows-2025
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-      - name: Run execution_host process lifecycle tests (Windows)
+      - name: Run execution_host lifecycle + WP14 contract tests (Windows)
         env:
           PYTHONPATH: .
         run: |
           python -m unittest discover -s tests -p 'test_process_job.py' -v 2>&1 | Tee-Object -FilePath lifecycle-output.txt
+          python -m unittest discover -s tests -p 'test_work28_contract.py' -v 2>&1 | Tee-Object -FilePath lifecycle-output-wp14.txt
         shell: pwsh
       - name: Surface lifecycle failure details (Windows)
         if: failure()
         run: |
-          Get-Content lifecycle-output.txt -Tail 100 | Out-File -Append $env:GITHUB_STEP_SUMMARY
+          Get-Content lifecycle-output.txt -Tail 100 -ErrorAction SilentlyContinue | Out-File -Append $env:GITHUB_STEP_SUMMARY
+          Get-Content lifecycle-output-wp14.txt -Tail 100 -ErrorAction SilentlyContinue | Out-File -Append $env:GITHUB_STEP_SUMMARY
         shell: pwsh
