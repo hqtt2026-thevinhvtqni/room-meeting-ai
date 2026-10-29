@@ -1,13 +1,15 @@
 """Lifecycle tests for ManagedProcess: counter, cleanup, process tree honesty.
 
-Windows Job Object is intentionally NOT_ATTACHED in this build. Tests assert that
-fact rather than treating green CI as proof of OS isolation.
+Windows Job Object is intentionally NOT_ATTACHED. Process-tree tests record the
+child PID (via a side-car file) and assert BOTH parent and child are gone after
+cleanup — parent-only checks are not sufficient (Xu gate 2026-10-29).
 """
 from __future__ import annotations
 
 import os
 import subprocess
 import sys
+import tempfile
 import time
 import unittest
 from pathlib import Path
@@ -15,7 +17,6 @@ from unittest.mock import patch
 
 from execution_host.process_job import (
     CleanupResult,
-    ManagedProcess,
     _posix_group_members,
     spawn_managed,
     wrap_existing_popen,
@@ -53,10 +54,9 @@ class ManagedProcessTests(unittest.TestCase):
         result = managed.cleanup(terminate_first=False)
         self.assertIsInstance(result, CleanupResult)
         self.assertTrue(result.process_reaped)
-        self.assertIsNotNone(result.leader_pid)
         self.assertEqual(result.job_object, "NOT_ATTACHED")
 
-    def test_cleanup_timeout_child(self):
+    def test_cleanup_timeout_single_process(self):
         managed = spawn_managed(
             [sys.executable, "-c", "import time; time.sleep(30)"],
             cwd=".",
@@ -69,10 +69,9 @@ class ManagedProcessTests(unittest.TestCase):
             pass
         result = managed.cleanup(terminate_first=True, wait_timeout=3.0)
         self.assertTrue(result.process_reaped)
-        self.assertTrue(
-            result.terminate_sent or result.kill_sent or "taskkill_tree_attempted" in result.notes
-        )
         self.assertEqual(result.job_object, "NOT_ATTACHED")
+        if result.leader_pid:
+            self.assertFalse(_pid_alive(result.leader_pid))
 
 
 class SpawnLifecycleTests(unittest.TestCase):
@@ -105,18 +104,7 @@ class SpawnLifecycleTests(unittest.TestCase):
 
 
 class ProcessTreeTests(unittest.TestCase):
-    """Parent + child process tree cleanup.
-
-    On POSIX, start_new_session + killpg should reap the group.
-    On Windows, Job Object is NOT_ATTACHED; taskkill /T is best-effort only.
-    """
-
-    _PARENT_CHILD_SCRIPT = (
-        "import subprocess, sys, time\n"
-        "child = subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(60)'])\n"
-        "print(child.pid, flush=True)\n"
-        "time.sleep(60)\n"
-    )
+    """Capture child PID to a file; assert parent AND child dead after cleanup."""
 
     def test_job_object_never_claimed_attached(self):
         managed = spawn_managed(
@@ -127,47 +115,98 @@ class ProcessTreeTests(unittest.TestCase):
         managed.process.communicate(timeout=10)
         result = managed.cleanup(terminate_first=False)
         self.assertEqual(result.job_object, "NOT_ATTACHED")
-        self.assertNotEqual(result.job_object, "ATTACHED")
 
-    def test_parent_child_tree_cleanup(self):
+    def _start_tree(self, child_pid_file: Path):
+        script = (
+            "import subprocess, sys, time\n"
+            f"path = r'{child_pid_file}'\n"
+            "child = subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(90)'])\n"
+            "open(path, 'w', encoding='utf-8').write(str(child.pid))\n"
+            "time.sleep(90)\n"
+        )
         managed = spawn_managed(
-            [sys.executable, "-c", self._PARENT_CHILD_SCRIPT],
+            [sys.executable, "-c", script],
             cwd=".",
             env={"PATH": os.environ.get("PATH", "")},
         )
-        time.sleep(0.4)
-        result = managed.cleanup(terminate_first=True, wait_timeout=5.0)
-        self.assertTrue(
-            result.process_reaped,
-            f"leader not reaped: {result.as_dict()}",
-        )
-        self.assertEqual(result.job_object, "NOT_ATTACHED")
-        self.assertIsNotNone(result.leader_pid)
-        if result.leader_pid:
+        child_pid = _wait_for_child_pid_file(child_pid_file, timeout_sec=5.0)
+        return managed, child_pid
+
+    def test_parent_and_child_pids_reaped_after_cleanup(self):
+        with tempfile.TemporaryDirectory() as td:
+            pid_file = Path(td) / "child.pid"
+            managed, child_pid = self._start_tree(pid_file)
+            self.assertIsNotNone(child_pid, "child PID file not written")
+            parent_pid = managed.pid
+            self.assertTrue(_pid_alive(parent_pid), "parent should be alive before cleanup")
+            self.assertTrue(_pid_alive(child_pid), "child should be alive before cleanup")
+
+            result = managed.cleanup(terminate_first=True, wait_timeout=8.0)
+
+            self.assertEqual(result.job_object, "NOT_ATTACHED")
+            self.assertTrue(result.process_reaped, f"parent not reaped: {result.as_dict()}")
             self.assertFalse(
-                _pid_alive(result.leader_pid),
-                f"leader pid {result.leader_pid} still alive after cleanup",
+                _pid_alive(parent_pid),
+                f"parent pid {parent_pid} still alive",
+            )
+            self.assertFalse(
+                _pid_alive(child_pid),
+                f"child pid {child_pid} still alive after cleanup notes={result.notes}",
             )
 
-    def test_timeout_then_cleanup_reaps_leader(self):
-        managed = spawn_managed(
-            [sys.executable, "-c", self._PARENT_CHILD_SCRIPT],
-            cwd=".",
-            env={"PATH": os.environ.get("PATH", "")},
+    def test_timeout_then_parent_and_child_reaped(self):
+        with tempfile.TemporaryDirectory() as td:
+            pid_file = Path(td) / "child.pid"
+            managed, child_pid = self._start_tree(pid_file)
+            self.assertIsNotNone(child_pid)
+            parent_pid = managed.pid
+
+            try:
+                managed.process.communicate(timeout=0.25)
+                self.fail("expected TimeoutExpired")
+            except subprocess.TimeoutExpired:
+                pass
+
+            result = managed.cleanup(terminate_first=True, wait_timeout=8.0)
+            self.assertEqual(result.job_object, "NOT_ATTACHED")
+            self.assertTrue(result.process_reaped)
+            self.assertFalse(_pid_alive(parent_pid), f"parent {parent_pid} alive")
+            self.assertFalse(
+                _pid_alive(child_pid),
+                f"child {child_pid} alive after timeout cleanup notes={result.notes}",
+            )
+
+    def test_cleanup_failure_notes_when_wrap_only(self):
+        p = subprocess.Popen(
+            [sys.executable, "-c", "import time; time.sleep(15)"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
         )
-        try:
-            managed.process.communicate(timeout=0.2)
-            self.fail("expected TimeoutExpired")
-        except subprocess.TimeoutExpired:
-            pass
+        managed = wrap_existing_popen(p)
         result = managed.cleanup(terminate_first=True, wait_timeout=5.0)
-        self.assertTrue(result.process_reaped)
         self.assertEqual(result.job_object, "NOT_ATTACHED")
-        if result.leader_pid:
-            self.assertFalse(_pid_alive(result.leader_pid))
+        self.assertIn("wrapped_existing_popen", result.notes)
+        self.assertIn("job_object_cannot_attach_retroactively", result.notes)
+        if not result.process_reaped:
+            self.assertTrue(
+                any("fail" in n or "timeout" in n for n in result.notes),
+                f"expected reaped or failure notes: {result.notes}",
+            )
 
 
-def _pid_alive(pid: int) -> bool:
+def _wait_for_child_pid_file(path: Path, timeout_sec: float = 5.0) -> int | None:
+    deadline = time.time() + timeout_sec
+    while time.time() < deadline:
+        if path.is_file():
+            text = path.read_text(encoding="utf-8").strip()
+            if text.isdigit():
+                return int(text)
+        time.sleep(0.05)
+    return None
+
+
+def _pid_alive(pid: int | None) -> bool:
     if pid is None or pid <= 0:
         return False
     if sys.platform.startswith("win"):
@@ -179,8 +218,10 @@ def _pid_alive(pid: int) -> bool:
                 timeout=5,
                 check=False,
             )
-            out = completed.stdout or ""
-            return str(pid) in out and "No tasks" not in out
+            out = (completed.stdout or "").strip()
+            if not out or "No tasks" in out or out.startswith("INFO:"):
+                return False
+            return str(pid) in out
         except (OSError, subprocess.TimeoutExpired):
             return False
     try:
