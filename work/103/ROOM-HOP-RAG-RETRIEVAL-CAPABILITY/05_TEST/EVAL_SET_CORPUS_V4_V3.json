@@ -1,0 +1,401 @@
+{
+  "version": 1,
+  "description": "Work 103 benchmark evaluation fixture built from Manifest V4 six-source corpus and Ka adjudicated labels V3. Benchmark-only, not production-approved. Corpus texts are pinned to the branch snapshot current when this file was created.",
+  "source_snapshot": {
+    "repository": "hqtt2026-thevinhvtqni/room-meeting-ai",
+    "branch": "work/103-rag-retrieval-capability",
+    "corpus_manifest": "00_CORPUS/CORPUS_MANIFEST_v4.0.md",
+    "labels": "work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/06_EVIDENCE/KA_ADJUDICATED_LABELS_50_QUERIES_V3_20261029.json",
+    "labels_canonical_sha256": "4a1e11221f623030fc95632fa39b386eb7612e5ead244693b1d7c171d7089fa5",
+    "source_ids": [
+      "00_CORPUS/network.md",
+      "00_CORPUS/sales.md",
+      "00_CORPUS/architecture.md",
+      "00_CORPUS/security.md",
+      "00_CORPUS/evidence.md",
+      "03_ARCHITECTURE/RAG_RETRIEVAL_ARCHITECTURE.md"
+    ]
+  },
+  "chunking": {
+    "max_chars": 300,
+    "overlap_chars": 40
+  },
+  "retrieval": {
+    "top_k": 5,
+    "operating_min_score": 0.35
+  },
+  "baseline_gate": {
+    "hit_at_5": 0.9,
+    "recall_at_5": 0.9,
+    "mrr": 0.9,
+    "no_answer_accuracy": 0.8,
+    "precision_at_5": 0.8,
+    "answered_rate": 0.9
+  },
+  "documents": [
+    {
+      "source_id": "00_CORPUS/network.md",
+      "title": "network.md",
+      "text": "# Hướng dẫn xử lý sự cố mạng ONT\n\n## Kiểm tra tín hiệu quang\nKhi thiết bị đầu cuối (modem ONT) mất tín hiệu hoặc gặp sự cố kết nối, cần thực hiện các bước kiểm tra sau:\n1. Kiểm tra công suất RX (Receive Power) trên thiết bị.\n2. Kiểm tra cảnh báo LOS (Loss of Signal) trên giao diện quản trị.\n3. Kiểm tra vật lý đầu nối sợi quang, đảm bảo không bị gãy, uốn cong quá mức hoặc bám bụi.\n\n*Lưu ý:* Tài liệu này không quy định ngưỡng công suất RX cụ thể (ví dụ: -27dBm đến -8dBm). Việc đánh giá ngưỡng cần tham khảo tài liệu kỹ thuật của nhà sản xuất thiết bị."
+    },
+    {
+      "source_id": "00_CORPUS/sales.md",
+      "title": "sales.md",
+      "text": "# Quy trình xác nhận đơn hàng xi măng\n\n## Xác nhận đơn hàng\nKhi tiếp nhận yêu cầu từ khách hàng, nhân viên kinh doanh cần thực hiện hai bước xác nhận chính:\n1. Xác nhận lịch giao hàng cho đơn đặt hàng của khách hàng (Customer order delivery schedule).\n2. Xác nhận số lượng xi măng trong đơn hàng (Confirm cement quantity).\n\n*Lưu ý:* Tài liệu này không quy định chi tiết về quy trình xử lý khi khách hàng yêu cầu thay đổi lịch giao hàng, cũng như không chỉ định tên hoặc vai trò cụ thể của người phụ trách phê duyệt thay đổi."
+    },
+    {
+      "source_id": "00_CORPUS/architecture.md",
+      "title": "architecture.md",
+      "text": "# Kiến trúc RAG Retrieval ROOM-HOP\n\n## Phân bổ Port và Dịch vụ\n- Core service: chạy trên port 8000, sở hữu ngữ nghĩa ứng dụng và truy cập dữ liệu chính tắc.\n- MCP tool contract: expose trên port 8020, không truy cập storage trực tiếp, mọi thứ phải qua Core.\n- Workspace Sandbox: chạy trên port 8010, dùng cho build artifacts và evidence, không phải canonical production corpus.\n- Dashboard: render-only trên port 3000.\n\n## Hợp đồng RAG (Initial contracts)\n- `rag_index`: lập chỉ mục tài liệu.\n- `rag_search(query, top_k=5)`: trả về kết quả tìm kiếm. Tham số `top_k` mặc định là 5 và phải là số dương (ném lỗi ValueError nếu <= 0).\n- `rag_get_context`: trả về `context`, `citations[]`, `sufficient_evidence`, và `abstention_reason?` khi không đủ bằng chứng.\n\n## Nguyên tắc xử lý\n- Query rỗng hoặc chỉ có khoảng trắng sẽ bị từ chối (fail safely).\n- Từ chối lập chỉ mục nếu phát hiện `duplicate source_ids`.\n- Chunking phải giữ lại metadata nguồn: `source path`, `chunk number`, `start_line`, và `end_line`.\n- Điểm số (score) trong lexical retrieval là baseline, không phải xác suất đã hiệu chỉnh. Cần hiệu chuẩn ngưỡng chấp nhận trên bộ đánh giá được gán nhãn."
+    },
+    {
+      "source_id": "00_CORPUS/security.md",
+      "title": "security.md",
+      "text": "# Nguyên tắc bảo mật và an toàn RAG\n\n## Quy tắc lập chỉ mục\n- TUYỆT ĐỐI KHÔNG lập chỉ mục các tệp `.env`, thông tin xác thực (credentials), token, khóa riêng (private keys) hoặc các đường dẫn hệ thống không được phép.\n- Hệ thống không được phép lưu trữ hoặc trả về mật khẩu quản trị của hệ thống.\n\n## Xử lý nội dung không đáng tin cậy\n- Mọi nội dung được retrieve từ tài liệu đều được coi là dữ liệu không đáng tin cậy (untrusted evidence).\n- LLM không được thực thi các chỉ thị nhúng trong tài liệu (prompt injection). Retrieval không cấp quyền thực thi lệnh cho hệ thống.\n\n## Xử lý lỗi và quyền hạn\n- Lỗi MCP không được phép phơi bày stack trace hoặc thông tin bí mật ra bên ngoài.\n- RAG chỉ có nhiệm vụ trả về bằng chứng (evidence retrieval), không trở thành cơ quan quyết định (decision authority) hoặc hệ thống ghi chép chính (system of record)."
+    },
+    {
+      "source_id": "00_CORPUS/evidence.md",
+      "title": "evidence.md",
+      "text": "# Quy trình đánh giá và vai trò trong Work 103\n\n## Vai trò và trách nhiệm\n- **Qw (QE/QA)**: Có nhiệm vụ tạo bộ nhãn mù (blind labels) first-pass cho các truy vấn đánh giá, đảm bảo không xem kết quả truy xuất thực tế.\n- **Ka (CSA / Independent Reviewer)**: Tiến hành rà soát độc lập, đối chiếu nhãn với nguồn corpus chuẩn, phát hiện mâu thuẫn và ghi nhận biên bản mà không sửa đè trực tiếp lên bản gốc của Qw.\n- **Xu (Coordinator)**: Điều phối quy trình, xác nhận snapshot corpus, đảm bảo tệp nhãn được tạo đúng quy trình, và thực hiện đóng băng (freeze/hash) phiên bản nhãn trước khi mở cổng đánh giá retrieval.\n\n## Trạng thái cổng (Gate Status)\nCổng đánh giá retrieval (RAG E2E) chỉ được mở khi:\n1. Corpus chuẩn đã được xác định, có phiên bản và hash rõ ràng.\n2. Bộ nhãn first-pass đã được Ka rà soát và các bất đồng đã được giải quyết (adjudication).\n3. Xu đã xác nhận và khóa (freeze) bộ nhãn cuối cùng."
+    },
+    {
+      "source_id": "03_ARCHITECTURE/RAG_RETRIEVAL_ARCHITECTURE.md",
+      "title": "RAG_RETRIEVAL_ARCHITECTURE.md",
+      "text": "# Work 103 — RAG Retrieval Architecture\n\n## Decision 1: prove retrieval quality before adding vector infrastructure\nThe first increment uses deterministic lexical retrieval and source metadata. This keeps the baseline small, inspectable, cheap, and easy to evaluate. ChromaDB and embeddings remain an evidence-based extension, not an assumption.\n\n## Data flow\nApproved source registry\n  -> ingestion adapter\n  -> normalized documents + source metadata\n  -> deterministic chunks\n  -> retrieval index\n  -> Core-owned retrieval service\n  -> MCP :8020 tool contract\n  -> authorized AI caller\n  -> grounded answer with citations / abstention.\n\n## Boundaries\n- Core :8000 owns application semantics and access to canonical data.\n- MCP :8020 exposes schema-validated tools and delegates to Core; it does not access storage directly.\n- Workspace :8010 / Work Sandbox is for build artifacts and evidence, not a new canonical production corpus.\n- Dashboard :3000 is render-only.\n- RAG returns evidence; it does not become an agent, decision authority, or system of record.\n\n## Initial contracts (proposed; must be reconciled with Work 28)\nrag_index(source_scope, source_ids?, incremental=true) -> indexed_count, skipped_count, errors[]\nrag_search(query, source_scope?, top_k=5) -> results[{source_id, title, path_or_uri, chunk_id, start_line, end_line, text, score}]\nrag_get_context(query, source_scope?, max_tokens?) -> context, citations[], sufficient_evidence, abstention_reason?\n\nAll source scopes must be explicit and allowlisted. Never index .env, credentials, tokens, private keys, or unrestricted filesystem paths. MCP errors must not expose stack traces or secrets.\n\n## Ranking and abstention\nInitial lexical score is a baseline, not a calibrated probability. Do not reuse the lab's 0.36 vector-distance threshold for lexical scores. Calibrate acceptance thresholds on a labeled evaluation set. Return no evidence when the threshold is not met.\n\n## Prompt-injection handling\nRetrieved passages are untrusted evidence. The answer-generation prompt must explicitly instruct the LLM not to follow commands embedded in retrieved documents. Retrieval does not grant authority to execute document instructions.\n\n## Extension gate for embeddings/vector DB\nOnly consider embeddings/ChromaDB after:\n1. a labeled query set exists;\n2. lexical baseline precision/recall and no-answer behavior are measured;\n3. representative queries demonstrate a material retrieval gap;\n4. privacy, persistence, deletion, rebuild, and cost are reviewed;\n5. the new backend remains behind Core and preserves the same public contract.\n"
+    }
+  ],
+  "labeled_queries": [
+    {
+      "query_id": "Q001",
+      "query": "Làm thế nào để kiểm tra tín hiệu quang của modem ONT?",
+      "expected": [
+        "00_CORPUS/network.md"
+      ]
+    },
+    {
+      "query_id": "Q002",
+      "query": "Cảnh báo LOS trên modem ONT nghĩa là gì và cần kiểm tra gì?",
+      "expected": [
+        "00_CORPUS/network.md"
+      ]
+    },
+    {
+      "query_id": "Q003",
+      "query": "Các bước kiểm tra đầu nối sợi quang khi mất tín hiệu?",
+      "expected": [
+        "00_CORPUS/network.md"
+      ]
+    },
+    {
+      "query_id": "Q005",
+      "query": "Làm sao để xử lý lỗi mất tín hiệu quang trên thiết bị đầu cuối?",
+      "expected": [
+        "00_CORPUS/network.md"
+      ]
+    },
+    {
+      "query_id": "Q006",
+      "query": "Lịch giao hàng cho đơn đặt hàng của khách hàng được xác nhận như thế nào?",
+      "expected": [
+        "00_CORPUS/sales.md"
+      ]
+    },
+    {
+      "query_id": "Q007",
+      "query": "Làm thế nào để xác nhận số lượng xi măng trong đơn hàng?",
+      "expected": [
+        "00_CORPUS/sales.md"
+      ]
+    },
+    {
+      "query_id": "Q009",
+      "query": "Ai là người phụ trách xác nhận số lượng xi măng?",
+      "expected": [
+        "00_CORPUS/sales.md"
+      ]
+    },
+    {
+      "query_id": "Q011",
+      "query": "Cổng MCP sử dụng port nào trong kiến trúc ROOM-HOP?",
+      "expected": [
+        "00_CORPUS/architecture.md"
+      ]
+    },
+    {
+      "query_id": "Q012",
+      "query": "Core service chạy trên port nào?",
+      "expected": [
+        "00_CORPUS/architecture.md"
+      ]
+    },
+    {
+      "query_id": "Q013",
+      "query": "Dashboard render chạy trên port nào?",
+      "expected": [
+        "00_CORPUS/architecture.md"
+      ]
+    },
+    {
+      "query_id": "Q014",
+      "query": "Workspace Sandbox sử dụng port nào?",
+      "expected": [
+        "00_CORPUS/architecture.md"
+      ]
+    },
+    {
+      "query_id": "Q015",
+      "query": "MCP có được phép truy cập trực tiếp vào storage không?",
+      "expected": [
+        "00_CORPUS/architecture.md"
+      ]
+    },
+    {
+      "query_id": "Q017",
+      "query": "Các hợp đồng (contracts) đề xuất cho RAG retrieval là gì?",
+      "expected": [
+        "00_CORPUS/architecture.md"
+      ]
+    },
+    {
+      "query_id": "Q018",
+      "query": "Tham số top_k mặc định trong rag_search là bao nhiêu?",
+      "expected": [
+        "00_CORPUS/architecture.md"
+      ]
+    },
+    {
+      "query_id": "Q019",
+      "query": "Làm sao để RAG trả về lý do từ chối (abstention)?",
+      "expected": [
+        "00_CORPUS/architecture.md"
+      ]
+    },
+    {
+      "query_id": "Q020",
+      "query": "Điểm số (score) trong lexical retrieval có phải là xác suất đã hiệu chỉnh không?",
+      "expected": [
+        "00_CORPUS/architecture.md"
+      ]
+    },
+    {
+      "query_id": "Q021",
+      "query": "Hệ thống có được phép lập chỉ mục các tệp .env không?",
+      "expected": [
+        "00_CORPUS/security.md"
+      ]
+    },
+    {
+      "query_id": "Q022",
+      "query": "Làm thế nào để xử lý nội dung tài liệu có chứa prompt injection?",
+      "expected": [
+        "00_CORPUS/security.md"
+      ]
+    },
+    {
+      "query_id": "Q023",
+      "query": "Lỗi MCP có được phép hiển thị stack trace không?",
+      "expected": [
+        "00_CORPUS/security.md"
+      ]
+    },
+    {
+      "query_id": "Q024",
+      "query": "AI có được phép đưa ra quyết định thay thế Core không?",
+      "expected": [
+        "00_CORPUS/security.md"
+      ]
+    },
+    {
+      "query_id": "Q026",
+      "query": "RAG retrieval có trả về abstention_reason khi không đủ bằng chứng không?",
+      "expected": [
+        "00_CORPUS/architecture.md"
+      ]
+    },
+    {
+      "query_id": "Q027",
+      "query": "Điều gì xảy ra nếu top_k được đặt là 0 hoặc số âm?",
+      "expected": [
+        "00_CORPUS/architecture.md"
+      ]
+    },
+    {
+      "query_id": "Q028",
+      "query": "Metadata của chunk có bao gồm đường dẫn nguồn (source path) không?",
+      "expected": [
+        "00_CORPUS/architecture.md"
+      ]
+    },
+    {
+      "query_id": "Q029",
+      "query": "Làm thế nào để đảm bảo chunking giữ nguyên metadata nguồn?",
+      "expected": [
+        "00_CORPUS/architecture.md"
+      ]
+    },
+    {
+      "query_id": "Q031",
+      "query": "Tín hiệu quang LOS có liên quan đến đầu nối sợi quang không?",
+      "expected": [
+        "00_CORPUS/network.md"
+      ]
+    },
+    {
+      "query_id": "Q033",
+      "query": "Tài liệu nào hướng dẫn kiểm tra công suất RX?",
+      "expected": [
+        "00_CORPUS/network.md"
+      ]
+    },
+    {
+      "query_id": "Q034",
+      "query": "Quy trình xác nhận đơn hàng xi măng bao gồm những bước nào?",
+      "expected": [
+        "00_CORPUS/sales.md"
+      ]
+    },
+    {
+      "query_id": "Q036",
+      "query": "Luồng dữ liệu RAG bắt đầu từ đâu và đi qua những thành phần nào?",
+      "expected": [
+        "03_ARCHITECTURE/RAG_RETRIEVAL_ARCHITECTURE.md"
+      ]
+    },
+    {
+      "query_id": "Q037",
+      "query": "AI caller nhận được gì từ RAG retrieval?",
+      "expected": [
+        "00_CORPUS/architecture.md"
+      ]
+    },
+    {
+      "query_id": "Q038",
+      "query": "Port 8020 được sử dụng cho dịch vụ nào?",
+      "expected": [
+        "00_CORPUS/architecture.md"
+      ]
+    },
+    {
+      "query_id": "Q039",
+      "query": "Port 8000 được sử dụng cho dịch vụ nào?",
+      "expected": [
+        "00_CORPUS/architecture.md"
+      ]
+    },
+    {
+      "query_id": "Q040",
+      "query": "Có thể sử dụng RAG để tự động xóa tệp trên ổ đĩa không?",
+      "expected": [
+        "00_CORPUS/security.md"
+      ]
+    },
+    {
+      "query_id": "Q041",
+      "query": "Chunking có giữ lại thông tin dòng bắt đầu và kết thúc không?",
+      "expected": [
+        "00_CORPUS/architecture.md"
+      ]
+    },
+    {
+      "query_id": "Q042",
+      "query": "Metadata của chunk có bao gồm số thứ tự chunk không?",
+      "expected": [
+        "00_CORPUS/architecture.md"
+      ]
+    },
+    {
+      "query_id": "Q043",
+      "query": "Làm sao để biết một chunk bắt đầu và kết thúc ở dòng nào?",
+      "expected": [
+        "00_CORPUS/architecture.md"
+      ]
+    },
+    {
+      "query_id": "Q045",
+      "query": "rag_get_context trả về những trường thông tin nào?",
+      "expected": [
+        "00_CORPUS/architecture.md"
+      ]
+    },
+    {
+      "query_id": "Q047",
+      "query": "Ai là người chịu trách nhiệm chính cho việc review nhãn mù độc lập?",
+      "expected": [
+        "00_CORPUS/evidence.md"
+      ]
+    },
+    {
+      "query_id": "Q048",
+      "query": "Qw có nhiệm vụ gì trong quy trình đánh giá RAG?",
+      "expected": [
+        "00_CORPUS/evidence.md"
+      ]
+    },
+    {
+      "query_id": "Q049",
+      "query": "Xu có vai trò gì trong quy trình này?",
+      "expected": [
+        "00_CORPUS/evidence.md"
+      ]
+    },
+    {
+      "query_id": "Q050",
+      "query": "Chính sách bảo mật có cấm việc lưu trữ hoặc trả về mật khẩu quản trị trong hệ thống RAG không?",
+      "expected": [
+        "00_CORPUS/security.md"
+      ]
+    }
+  ],
+  "no_answer_queries": [
+    {
+      "query_id": "Q004",
+      "query": "Ngưỡng công suất RX bình thường cụ thể của modem ONT là bao nhiêu?",
+      "kind": "near_miss"
+    },
+    {
+      "query_id": "Q008",
+      "query": "Quy trình xử lý khi khách hàng yêu cầu thay đổi lịch giao xi măng?",
+      "kind": "easy"
+    },
+    {
+      "query_id": "Q010",
+      "query": "Lịch giao hàng được lưu trữ ở đâu trong hệ thống?",
+      "kind": "easy"
+    },
+    {
+      "query_id": "Q016",
+      "query": "Làm thế nào để thêm ChromaDB vào hệ thống RAG hiện tại ngay lập tức?",
+      "kind": "easy"
+    },
+    {
+      "query_id": "Q025",
+      "query": "Làm sao để xóa một tài liệu khỏi chỉ mục RAG một cách an toàn?",
+      "kind": "near_miss"
+    },
+    {
+      "query_id": "Q030",
+      "query": "Truy vấn \"lượng tử tàu ngầm thiên thạch\" sẽ trả về kết quả gì?",
+      "kind": "easy"
+    },
+    {
+      "query_id": "Q032",
+      "query": "Làm thế nào để khắc phục sự cố modem ONT không lên đèn nguồn?",
+      "kind": "near_miss"
+    },
+    {
+      "query_id": "Q035",
+      "query": "Khách hàng A có đơn hàng nào trong hệ thống không?",
+      "kind": "easy"
+    },
+    {
+      "query_id": "Q044",
+      "query": "Điểm số (score) mặc định tối thiểu để trả về kết quả là bao nhiêu?",
+      "kind": "near_miss"
+    },
+    {
+      "query_id": "Q046",
+      "query": "Làm thế nào để cấu hình ChromaDB cho ROOM-HOP ngay bây giờ?",
+      "kind": "easy"
+    }
+  ]
+}
