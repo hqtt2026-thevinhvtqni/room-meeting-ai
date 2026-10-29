@@ -1,0 +1,53 @@
+name: Work 28 WP0 Capture Digest
+
+on:
+  push:
+    branches:
+      - work/28/wp0-evidence-handoff-20261029
+    paths:
+      - "work/28/MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/WP0_MCP8030_tools_list_capture_20261029.txt"
+      - ".github/workflows/work28-wp0-capture-digest.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  digest:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: true
+      - name: Compute digests of the committed capture bytes
+        working-directory: work/28/MCP-8020-TOOLING-PLATFORM/06_EVIDENCE
+        run: |
+          set -euo pipefail
+          F=WP0_MCP8030_tools_list_capture_20261029.txt
+          {
+            echo "# WP0 capture digest — CI-computed over exact committed bytes"
+            echo ""
+            echo "- file: $F"
+            echo "- byte_count: $(wc -c < "$F")"
+            echo "- sha256: $(sha256sum "$F" | cut -d' ' -f1 | tr 'a-f' 'A-F')"
+            echo "- git_blob_sha1: $(git hash-object "$F")"
+            echo "- computed_at_utc: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            echo "- runner: $(uname -sr)"
+            echo ""
+            echo "Method: computed inside CI on the actions/checkout working tree;"
+            echo "no text-fetch channel, no normalization. Independent of operator tools."
+          } > WP0_CAPTURE_DIGEST_CI_20261029.md
+          cat WP0_CAPTURE_DIGEST_CI_20261029.md
+      - name: Commit digest evidence
+        run: |
+          set -euo pipefail
+          git config user.name "work28-ci-digest"
+          git config user.email "actions@github.com"
+          git add work/28/MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/WP0_CAPTURE_DIGEST_CI_20261029.md
+          if git diff --cached --quiet; then
+            echo "digest unchanged; nothing to commit"
+          else
+            git commit -m "docs(work28): CI-computed digest of WP0 capture bytes"
+            git push
+          fi
