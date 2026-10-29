@@ -49,9 +49,13 @@ def tokenize_query(text: str) -> list[str]:
 # query terms; they are not added to the denominator or treated as new evidence.
 QUERY_EXPANSIONS = {
     "luồng dữ liệu": ("data", "flow", "ingestion", "adapter", "retrieval", "index"),
+    "đi qua": ("ingestion", "adapter", "retrieval", "index", "service", "contract"),
     "thành phần": ("components",),
     "bắt đầu": ("approved", "source", "registry", "start_line"),
+    "bắt đầu và kết thúc": ("start_line", "end_line"),
+    "dòng nào": ("line", "start_line", "end_line"),
     "xóa tệp": ("thực", "thi", "lệnh", "execute", "commands"),
+    "ai caller": ("authorized", "grounded", "answer", "citations", "abstention"),
     "dòng bắt đầu": ("start_line",),
     "dòng kết thúc": ("end_line",),
     "trường thông tin": ("context", "citations", "sufficient_evidence", "abstention_reason", "fields"),
@@ -243,7 +247,7 @@ class RetrievalIndex:
                     )
                 else:
                     norm = float(freq)
-                raw += 0.35 * self.idf(term) * norm
+                raw += 0.75 * self.idf(term) * norm
             score = round(min(raw / idf_sum, 1.0), 6)
             if score >= min_score:
                 results.append(SearchResult(
