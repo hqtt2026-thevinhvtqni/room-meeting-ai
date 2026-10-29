@@ -83,3 +83,13 @@ This latest addendum supersedes earlier interim adjudication/status statements w
 - Corpus production approval and blind annotation provenance: BLOCKED / not certified.
 - MCP :8020 → Core :8000 → retrieval → source-readback and negative E2E: CLOSED / NOT RUN.
 - Overall Work 103: **ACTIVE / BLOCKED**. Next work is error analysis and a measured retrieval improvement on the same fixture; do not claim release readiness until all metrics and integration gates have their own evidence.
+
+
+### Ka follow-up experiment — 2026-10-29
+
+- Query-only stopword filtering and weighted bilingual aliases were tested in [Actions run #49](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/40799030826).
+- At `min_score=0.35`, Hit@5=0.950, Precision@5=0.880, Recall@5=0.950, MRR=0.9375, answered rate=0.975; all five answerable-query metrics meet their floors.
+- Strict no-answer accuracy remains 0.300, so the corpus-aligned CI gate still FAILS. At threshold 0.45, no-answer accuracy is only 0.700 and answerable metrics fall below their floors. No single tested threshold passes the full gate.
+- This iteration is experimental; no release PASS. The failure report records the full sweep and diagnostic caveats.
+- The strict no-answer metric may overcount a leak when a retrieved source explicitly states the requested detail is not specified (e.g., RX threshold, schedule-change procedure, default lexical score). Preserve the old metric for comparability and add a separately named grounded-abstention metric before any future release decision.
+- Overall W103 remains **ACTIVE / BLOCKED**. Live MCP/Core E2E remains CLOSED / NOT RUN.
