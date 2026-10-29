@@ -48,7 +48,7 @@ Therefore, the reported retrieval metrics for EVAL_SET v2 must not be presented 
 3. **Adjudication:** Ka has completed a source-based review of all 50 rows and recorded three corrections in V2. The blind-process provenance remains unverified, so the set is adjudicated but not certified as a blind evaluation.
 4. **Evaluation alignment:** choose and freeze one explicit source snapshot for the benchmark, bind labels and metrics to it, and rerun metrics against that exact dataset.
 5. **Runtime integration:** `rag_retrieval.py` describes itself as an isolated Sandbox prototype, not wired into Core/MCP. The acceptance plan still has the live integration and negative E2E checklist unchecked.
-6. **Testing:** this review verified source hashes and label hashes from GitHub readback; it did not execute Python tests or live MCP/Core E2E in this session. Existing test/CI claims are not newly re-run by this report.
+6. **CI / baseline:** Ka did not execute Python tests directly. GitHub Actions run #32 completed successfully on Python 3.11 and 3.12; retrieval unit tests and the labeled evaluation gate passed. The metrics apply only to EVAL_SET v2 (8 embedded documents, 50 labeled queries and 15 no-answer queries), not to the six-source Manifest V4 corpus or the newly adjudicated 50-query dataset. No live MCP/Core E2E was executed.
 
 ## Decision
 **Work 103 remains ACTIVE / BLOCKED.** GitHub sync and logical-text hash consistency for the six Manifest V4 sources are verified. Do not declare corpus FROZEN, final blind-label PASS, retrieval evaluation PASS on the 50-query set, or RAG E2E PASS until the remaining gates have their own evidence.
