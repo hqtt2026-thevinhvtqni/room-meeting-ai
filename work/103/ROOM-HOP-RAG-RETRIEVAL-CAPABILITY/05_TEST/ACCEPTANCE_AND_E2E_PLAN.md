@@ -58,3 +58,28 @@ This addendum corrects stale descriptive counts without deleting the earlier his
 - Unit-test and baseline claims in the earlier plan are historical plan entries, not a new test execution in this Ka session.
 - Ka did not execute Python tests directly in the connected review surface. GitHub Actions run #32 on commit `5bf30e6cf2593da19c8e33eb4714de0752375dec` completed SUCCESS on Python 3.11 and 3.12: syntax compile, retrieval unit tests, eval test step, labeled retrieval baseline gate, and controlled experiment sweep passed. Baseline metrics for EVAL_SET v2: Hit@5=1.000, Precision@5=0.860, Recall@5=0.970, MRR=1.000, answered rate=1.000, no-answer accuracy=0.8667, avg latency=0.028 ms. The log records two near-miss leaks. These metrics apply only to EVAL_SET v2, not Manifest V4 or the newly adjudicated 50-query dataset. No live MCP/Core E2E was executed; the workflow had a post-job submodule-cleanup warning despite overall SUCCESS.
 - Corpus freeze, blind-process provenance, selection of the release benchmark snapshot, and live integration/negative E2E remain BLOCKED.
+
+
+## Ka execution addendum — corpus-aligned evaluation, 2026-10-29 (UTC+07:00)
+
+This latest addendum supersedes earlier interim adjudication/status statements where they conflict; historical entries above are retained as history.
+
+### Explicit corpus-aligned benchmark
+- Added `05_TEST/EVAL_SET_CORPUS_V4_V3.json`: 6 embedded source documents from Manifest V4; 40 ANSWERABLE and 10 NO_ANSWER queries derived from Ka's final row-by-row adjudication V3.
+- Added optional `--eval-set` to `04_CODE/rag_eval.py`; CI runs this corpus-aligned benchmark as a separate gate, leaving the existing synthetic `EVAL_SET.json` unchanged.
+- Ka's final adjudication V3 is `06_EVIDENCE/KA_ADJUDICATED_LABELS_50_QUERIES_V3_20261029.json`. Q009 is ANSWERABLE; Q016 and Q046 remain NO_ANSWER. V2 is retained as historical/provisional. Qw V5 remains unchanged.
+- Detailed failure record: `06_EVIDENCE/KA_CORPUS_V4_V3_EVALUATION_FAILURE_REPORT_20261029.md`.
+
+### Latest observed CI
+- [GitHub Actions run #41](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/40798293268), commit `5c85f5fac442074a300569bb33e283792db0441a`: both Python 3.11 and 3.12 passed syntax compile, retrieval/eval unit tests, and the legacy synthetic benchmark; both failed the new corpus-aligned V4/V3 gate.
+- At `min_score=0.35`: Hit@5=0.775, Precision@5=0.754, Recall@5=0.775, MRR=0.775, answered rate=0.800, no-answer accuracy=0.500. All six baseline floors fail.
+- Sweep evidence shows no tested threshold meets all six floors: at 0.25 no-answer accuracy is 0.400; at 0.45 Hit@5/Recall@5/MRR/answered rate are each 0.600. Do not lower the baseline or tune the fixture to make CI green.
+- CI run: `https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/40798293268`.
+
+### Updated gate decision
+- Unit tests: PASS.
+- Existing synthetic benchmark: PASS, limited to its own eight-document fixture.
+- Manifest V4 + Ka V3 corpus-aligned retrieval baseline: **FAIL**.
+- Corpus production approval and blind annotation provenance: BLOCKED / not certified.
+- MCP :8020 → Core :8000 → retrieval → source-readback and negative E2E: CLOSED / NOT RUN.
+- Overall Work 103: **ACTIVE / BLOCKED**. Next work is error analysis and a measured retrieval improvement on the same fixture; do not claim release readiness until all metrics and integration gates have their own evidence.
