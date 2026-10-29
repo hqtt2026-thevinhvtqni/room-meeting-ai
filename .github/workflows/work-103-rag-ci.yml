@@ -40,6 +40,10 @@ jobs:
         working-directory: work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/04_CODE
         run: python rag_eval.py
 
+      - name: Grounded-abstention diagnostic (report-only; strict gate unchanged)
+        working-directory: work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/04_CODE
+        run: python ../05_TEST/grounded_abstention_eval.py > ../06_EVIDENCE/grounded_abstention_diagnostic.json
+
       - name: Manifest V4 + Ka V3 corpus-aligned evaluation (independent gate)
         working-directory: work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/04_CODE
         run: python rag_eval.py --eval-set ../05_TEST/EVAL_SET_CORPUS_V4_V3.json --diagnostics
