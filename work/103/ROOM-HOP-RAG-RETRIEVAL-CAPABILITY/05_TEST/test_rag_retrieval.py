@@ -14,6 +14,7 @@ from rag_retrieval import (
     index_documents,
     load_approved_text_files,
     search,
+    tokenize_query,
 )
 
 
@@ -68,6 +69,14 @@ class RagRetrievalTests(unittest.TestCase):
     def test_vietnamese_query_ranks_vietnamese_document(self):
         self.assertEqual(self.index.search("báo động LOS modem", top_k=3)[0].source_id, "docs/vn.md")
         self.assertEqual(self.index.search("tín hiệu quang yếu", top_k=3)[0].source_id, "docs/vn.md")
+
+    def test_query_tokenization_filters_grammar_but_preserves_domain_terms(self):
+        terms = tokenize_query("Điều gì xảy ra nếu top_k được đặt là 0 hoặc số âm?")
+        self.assertIn("top_k", terms)
+        self.assertIn("0", terms)
+        self.assertIn("âm", terms)
+        self.assertNotIn("được", terms)
+        self.assertNotIn("nếu", terms)
 
     def test_length_normalization_focused_beats_diluted(self):
         filler = "\n".join(["lorem ipsum dolor sit amet consectetur"] * 100)
