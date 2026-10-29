@@ -35,3 +35,26 @@ No DONE/PASS claim until all required gates have evidence. Sandbox artifact crea
 Status per Xu decision 2026-10-28: unit-side PASS (CI-enforced, self-renewing);
 labeled baseline recorded with documented limits; integration gates CLOSED
 until opened deliberately after baseline acceptance. Work 103 stays IN DEVELOPMENT.
+
+
+## Ka audit addendum — 2026-10-29 (UTC+07:00)
+
+This addendum corrects stale descriptive counts without deleting the earlier history.
+
+### Verified current EVAL_SET.json v2 shape
+- `documents`: 8 embedded synthetic benchmark documents.
+- `labeled_queries`: 50.
+- `no_answer_queries`: 15.
+- Therefore, the earlier statement above describing `EVAL_SET.json v1` as “14 labeled + 5 no-answer” is historical/stale and must not be used to describe the current v2 file.
+- `EVAL_SET.json` v2 is a self-contained synthetic retrieval benchmark. Its documents and query set differ from the six-source corpus fixture in `00_CORPUS/CORPUS_MANIFEST_v4.0.md` and the 50-query Qw V5 label artifact. Results from one set must not be reported as measured on the other.
+
+### Adjudication and integrity evidence
+- Ka's row-by-row source adjudication is recorded in `06_EVIDENCE/KA_ADJUDICATED_LABELS_50_QUERIES_V2_20261029.json`.
+- 50/50 row hashes and the canonical dataset hash were independently recomputed after GitHub readback.
+- Adjudications: Q009, Q016 and Q046 change from `NO_ANSWER` to `ANSWERABLE` in Ka's new version; Qw V5 remains immutable.
+- Six Manifest V4 source hashes match SHA-256 computed from the published GitHub raw-content representation (UTF-8/LF). This proves the published GitHub snapshot matches the declared logical hashes; it does not prove the original Sandbox's raw bytes or blind annotation provenance.
+
+### Gate status
+- Unit-test and baseline claims in the earlier plan are historical plan entries, not a new test execution in this Ka session.
+- This session did not execute Python tests or live MCP/Core E2E; no CI run was returned for the documentation-only audit commit.
+- Corpus freeze, blind-process provenance, selection of the release benchmark snapshot, and live integration/negative E2E remain BLOCKED.
