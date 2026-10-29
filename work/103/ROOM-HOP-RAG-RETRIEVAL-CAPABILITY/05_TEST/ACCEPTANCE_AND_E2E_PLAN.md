@@ -93,3 +93,11 @@ This latest addendum supersedes earlier interim adjudication/status statements w
 - This iteration is experimental; no release PASS. The failure report records the full sweep and diagnostic caveats.
 - The strict no-answer metric may overcount a leak when a retrieved source explicitly states the requested detail is not specified (e.g., RX threshold, schedule-change procedure, default lexical score). Preserve the old metric for comparability and add a separately named grounded-abstention metric before any future release decision.
 - Overall W103 remains **ACTIVE / BLOCKED**. Live MCP/Core E2E remains CLOSED / NOT RUN.
+
+
+### Grounded-abstention diagnostic — CI #54
+
+- Added report-only `05_TEST/grounded_abstention_eval.py`; CI runs it before the unchanged strict baseline gate.
+- [Run #54](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/40799292123): grounded no-answer accuracy is 0.600 at threshold 0.35 and 0.800 at thresholds 0.45–0.60. However, at 0.45 answerable metrics fall below baseline (Hit@5=0.875, Recall@5=0.875, MRR=0.863). No tested threshold satisfies both sides.
+- The grounded metric is supplemental and reviewer-mapped; it is not a replacement for strict `no_answer_accuracy` and is not release-certified.
+- Latest status: answerable retrieval improves with query normalization/aliases, but strict no-answer gate fails; overall W103 remains ACTIVE / BLOCKED. Live MCP/Core E2E remains CLOSED / NOT RUN.
