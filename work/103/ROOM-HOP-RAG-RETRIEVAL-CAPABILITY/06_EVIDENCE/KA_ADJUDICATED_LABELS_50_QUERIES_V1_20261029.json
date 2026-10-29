@@ -4,7 +4,7 @@
   "source_label_artifact": "QW_BLIND_LABELS_50_QUERIES_V5_20261029.md",
   "source_label_artifact_sha256": "48d100372bb3e4b88f541dee750e62f82f9642ee2fd0e481553ef43cfaa281f2",
   "corpus_manifest": "CORPUS_MANIFEST_v4.0.md",
-  "corpus_hash_convention": "SHA-256 over UTF-8/LF logical text returned from GitHub content; this does not attest raw storage bytes",
+  "corpus_hash_convention": "SHA-256 over UTF-8 bytes fetched from GitHub raw-content endpoint; LF line endings were verified for the published branch. This does not attest original Sandbox stored bytes.",
   "row_hash_convention": "SHA-256 of compact UTF-8 JSON.stringify(row) with fixed property order: query_id,query_text,label,expected_source_id,category_stratum,evidence_span_rationale,ambiguity_flag,source_sha256",
   "dataset_hash_convention": "SHA-256 of compact UTF-8 JSON.stringify(rows) including source_sha256 and excluding per-row label_canonical_sha256 fields",
   "canonical_dataset_sha256": "066b1ec65947820336035327b14b8aab563e7f217a558a282e918310149522a7",
