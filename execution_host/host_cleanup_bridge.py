@@ -11,6 +11,7 @@ from .process_job import (
     ISOLATION_STATUS,
     CleanupResult,
     ManagedProcess,
+    job_object_gate,
     spawn_managed,
     wrap_existing_popen,
 )
@@ -22,6 +23,7 @@ __all__ = [
     "wrap_existing_popen",
     "ManagedProcess",
     "CleanupResult",
+    "job_object_gate",
 ]
 
 

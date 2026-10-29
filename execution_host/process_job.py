@@ -443,6 +443,20 @@ def wrap_existing_popen(process: subprocess.Popen) -> ManagedProcess:
     )
 
 
+def job_object_gate(managed: ManagedProcess) -> str | None:
+    """Fail-closed Windows Job Object gate for execution paths (WP2).
+
+    Returns a blocker string when process-tree containment is NOT
+    guaranteed: on Windows an execution must NOT proceed when the Job
+    Object could not be created or attached. POSIX uses the session
+    process group established at spawn and passes. This gate NEVER claims
+    OS isolation: ISOLATION_STATUS stays NOT_VERIFIED.
+    """
+    if managed.platform.startswith("win") and managed.job_object != "ATTACHED":
+        return "job_object_attach_failed"
+    return None
+
+
 ISOLATION_STATUS = "NOT_VERIFIED"
 
 __all__ = [
@@ -453,4 +467,5 @@ __all__ = [
     "wrap_existing_popen",
     "_posix_group_members",
     "ISOLATION_STATUS",
+    "job_object_gate",
 ]

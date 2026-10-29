@@ -76,6 +76,7 @@ jobs:
           python -m unittest discover -s tests -p 'test_work28_audit_readiness.py' -v 2>&1 | tee -a lifecycle-output.txt
           python -m unittest discover -s tests -p 'test_work28_http_limits.py' -v 2>&1 | tee -a lifecycle-output.txt
           python -m unittest discover -s tests -p 'test_work28_http_schema.py' -v 2>&1 | tee -a lifecycle-output.txt
+          python -m unittest discover -s tests -p 'test_process_job_gate.py' -v 2>&1 | tee -a lifecycle-output.txt
       - name: Surface lifecycle failure details
         if: failure()
         run: |
@@ -109,6 +110,7 @@ jobs:
           python -m unittest discover -s tests -p 'test_work28_audit_readiness.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp21-audit.txt
           python -m unittest discover -s tests -p 'test_work28_http_limits.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp22-limits.txt
           python -m unittest discover -s tests -p 'test_work28_http_schema.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp23-schema.txt
+          python -m unittest discover -s tests -p 'test_process_job_gate.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp2-gate.txt
         shell: pwsh
       - name: Surface lifecycle failure details (Windows)
         if: failure()

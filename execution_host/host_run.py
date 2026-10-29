@@ -7,7 +7,7 @@ from typing import Any
 
 from .models import WorkContext
 from .security import HostError, redact, safe_env, validate_command, validate_context, validate_cwd
-from .host_cleanup_bridge import ISOLATION_STATUS, attested_cleanup, spawn_managed
+from .host_cleanup_bridge import ISOLATION_STATUS, attested_cleanup, job_object_gate, spawn_managed
 
 
 def run_execute_command(host: Any, ctx: WorkContext, command: list[str], timeout_seconds: float = 30.0) -> dict[str, Any]:
@@ -39,11 +39,18 @@ def run_execute_command(host: Any, ctx: WorkContext, command: list[str], timeout
     try:
         managed = spawn_managed(args, cwd=workspace, env=env)
         process = managed.process
-        stdout, stderr = process.communicate(timeout=timeout_seconds)
-        exit_code = process.returncode
-        stdout = redact(stdout or "")
-        stderr = redact(stderr or "")
-        status = "PASS" if exit_code == 0 else "FAILED"
+        gate_blocker = job_object_gate(managed)
+        if gate_blocker is not None:
+            managed.cleanup(terminate_first=False)
+            blocker = gate_blocker
+            status = "BLOCKED"
+            exit_code = process.poll()
+        else:
+            stdout, stderr = process.communicate(timeout=timeout_seconds)
+            exit_code = process.returncode
+            stdout = redact(stdout or "")
+            stderr = redact(stderr or "")
+            status = "PASS" if exit_code == 0 else "FAILED"
     except subprocess.TimeoutExpired:
         blocker = "timeout"
         status = "TIMEOUT"
