@@ -60,7 +60,7 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-      - name: Run execution_host lifecycle + WP14–WP20 tests (Linux)
+      - name: Run execution_host lifecycle + WP14–WP21 tests (Linux)
         env:
           PYTHONPATH: .
         run: |
@@ -73,6 +73,7 @@ jobs:
           python -m unittest discover -s tests -p 'test_work28_evidence.py' -v 2>&1 | tee -a lifecycle-output.txt
           python -m unittest discover -s tests -p 'test_work28_readback.py' -v 2>&1 | tee -a lifecycle-output.txt
           python -m unittest discover -s tests -p 'test_work28_bounds.py' -v 2>&1 | tee -a lifecycle-output.txt
+          python -m unittest discover -s tests -p 'test_work28_audit_readiness.py' -v 2>&1 | tee -a lifecycle-output.txt
       - name: Surface lifecycle failure details
         if: failure()
         run: |
@@ -91,7 +92,7 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-      - name: Run execution_host lifecycle + WP14–WP20 tests (Windows)
+      - name: Run execution_host lifecycle + WP14–WP21 tests (Windows)
         env:
           PYTHONPATH: .
         run: |
@@ -103,10 +104,11 @@ jobs:
           python -m unittest discover -s tests -p 'test_work28_evidence.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp18-evidence.txt
           python -m unittest discover -s tests -p 'test_work28_readback.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp19-readback.txt
           python -m unittest discover -s tests -p 'test_work28_bounds.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp20-bounds.txt
+          python -m unittest discover -s tests -p 'test_work28_audit_readiness.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp21-audit.txt
         shell: pwsh
       - name: Surface lifecycle failure details (Windows)
         if: failure()
         run: |
           Get-Content lifecycle-output.txt -Tail 80 -ErrorAction SilentlyContinue | Out-File -Append $env:GITHUB_STEP_SUMMARY
-          Get-Content lifecycle-wp20-bounds.txt -Tail 80 -ErrorAction SilentlyContinue | Out-File -Append $env:GITHUB_STEP_SUMMARY
+          Get-Content lifecycle-wp21-audit.txt -Tail 80 -ErrorAction SilentlyContinue | Out-File -Append $env:GITHUB_STEP_SUMMARY
         shell: pwsh
