@@ -216,9 +216,11 @@ def gate_verdict(metrics: dict, baseline: dict) -> tuple[bool, list[str]]:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--json", action="store_true", help="print JSON summary only")
+    parser.add_argument("--eval-set", type=Path, default=EVAL_SET_PATH,
+                        help="path to a labeled evaluation JSON file (default: 05_TEST/EVAL_SET.json)")
     args = parser.parse_args()
 
-    data = load_eval_set()  # load + validate; raises on any schema violation
+    data = load_eval_set(args.eval_set)  # load + validate; raises on any schema violation
     docs = [Document(d["source_id"], d["title"], d["text"]) for d in data["documents"]]
     chunks = index_documents(docs, **data["chunking"])
     index = RetrievalIndex(chunks)
