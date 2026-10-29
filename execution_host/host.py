@@ -149,12 +149,7 @@ class ExecutionHost:
         *,
         terminate_first: bool = False,
     ) -> tuple[str, str]:
-        """
-        Windows-safe process cleanup.
-
-        Returns:
-            stdout, stderr
-        """
+        """Windows-safe process cleanup for long-lived services."""
 
         if process.poll() is None:
             try:
@@ -194,159 +189,9 @@ class ExecutionHost:
         command: list[str],
         timeout_seconds: float = 30.0,
     ) -> dict[str, Any]:
-
-        root, workspace, evidence = validate_context(ctx)
-
-        args = validate_command(command)
-
-        validate_cwd(workspace, workspace)
-
-        if timeout_seconds <= 0 or timeout_seconds > 3600:
-            raise HostError("invalid_timeout")
-
-        started = datetime.now(timezone.utc).isoformat()
-
-        out_path = (
-            evidence
-            / ctx.execution_id
-            / "runtime"
-            / "stdout.log"
-        )
-
-        err_path = (
-            evidence
-            / ctx.execution_id
-            / "runtime"
-            / "stderr.log"
-        )
-
-        out_path.parent.mkdir(
-            parents=True,
-            exist_ok=True,
-        )
-
-        env = safe_env()
-
-        env.update(
-            {
-                "ROOM_HOP_EXECUTION_ID": ctx.execution_id,
-                "ROOM_HOP_WORK_ID": ctx.work_id,
-            }
-        )
-
-        process = None
-
-        status = "FAILED"
-        exit_code = None
-        stdout = ""
-        stderr = ""
-        blocker = None
-
-        try:
-            process = subprocess.Popen(
-                args,
-                cwd=workspace,
-                env=env,
-                text=True,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                start_new_session=True,
-            )
-
-            stdout, stderr = process.communicate(
-                timeout=timeout_seconds
-            )
-
-            exit_code = process.returncode
-
-            stdout = redact(stdout or "")
-            stderr = redact(stderr or "")
-
-            status = (
-                "PASS"
-                if exit_code == 0
-                else "FAILED"
-            )
-
-        except subprocess.TimeoutExpired:
-            blocker = "timeout"
-            status = "TIMEOUT"
-
-            if process is not None:
-                stdout, stderr = self._cleanup_process(
-                    process,
-                    terminate_first=False,
-                )
-
-                stdout = redact(stdout)
-                stderr = redact(stderr)
-
-                exit_code = process.returncode
-
-        except OSError as exc:
-            blocker = redact(str(exc))
-            status = "BLOCKED"
-
-        out_path.write_text(
-            stdout,
-            encoding="utf-8",
-        )
-
-        err_path.write_text(
-            stderr,
-            encoding="utf-8",
-        )
-
-        result = {
-            "execution_id": ctx.execution_id,
-            "work_id": ctx.work_id,
-            "workspace_root": str(root),
-            "execution_workspace": str(workspace),
-            "command": args,
-            "started_at": started,
-            "finished_at": datetime.now(
-                timezone.utc
-            ).isoformat(),
-            "exit_code": exit_code,
-            "stdout_summary": stdout[-4000:],
-            "stderr_summary": stderr[-4000:],
-            "status": status,
-            "blocker": blocker,
-            "isolation": "PASS",
-            "authorization": ctx.authorized,
-            "artifacts": [],
-            "cleanup": {
-                "process_reaped": (
-                    process is None
-                    or process.poll() is not None
-                )
-            },
-            "runtime_instance_id": (
-                self.runtime_identity.instance_id
-            ),
-            "runtime_build_hash": (
-                self.runtime_identity.build_hash
-            ),
-            "runtime_started_at": (
-                self.runtime_identity.started_at
-            ),
-            "runtime_pid": self.runtime_identity.pid,
-            "runtime_platform": self.runtime_identity.platform,
-            "runtime_bind_address": (
-                self.runtime_identity.bind_address
-            ),
-        }
-
-        result["stdout_ref"] = str(out_path)
-        result["stderr_ref"] = str(err_path)
-
-        result["evidence_ref"] = self._evidence(
-            evidence,
-            ctx.execution_id,
-            result,
-        )
-
-        return result
+        # Delegate to host_run: spawn_managed at creation; isolation NOT_VERIFIED.
+        from .host_run import run_execute_command
+        return run_execute_command(self, ctx, command, timeout_seconds)
 
     def execute_work(
         self,
