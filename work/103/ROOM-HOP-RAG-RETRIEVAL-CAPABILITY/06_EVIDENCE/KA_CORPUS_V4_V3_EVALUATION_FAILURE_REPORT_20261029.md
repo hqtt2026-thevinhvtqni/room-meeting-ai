@@ -1,0 +1,76 @@
+# WORK 103 — Manifest V4 / Ka V3 Evaluation Failure Report
+
+- Reviewer: Ka (CSA / Independent Reviewer)
+- Date-time: 2026-10-29 (UTC+07:00)
+- Branch: `work/103-rag-retrieval-capability`
+- CI baseline run: [GitHub Actions #41](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/40798293268)
+- Latest diagnostic run: [GitHub Actions #43](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/40798530306)
+- Decision: **FAIL baseline / Work 103 remains ACTIVE-BLOCKED**.
+
+## 1. Fixture and provenance
+
+`05_TEST/EVAL_SET_CORPUS_V4_V3.json` contains six source documents, 40 ANSWERABLE queries, and 10 NO_ANSWER queries derived from `06_EVIDENCE/KA_ADJUDICATED_LABELS_50_QUERIES_V3_20261029.json`. Canonical label dataset SHA-256: `4a1e11221f623030fc95632fa39b386eb7612e5ead244693b1d7c171d7089fa5`.
+
+The evaluation harness accepts `--eval-set`; CI runs the corpus-aligned fixture as a separate gate without replacing the existing synthetic benchmark. Run #41 and #43 both show Python 3.11/3.12 syntax compilation and unit tests PASS, the old synthetic benchmark PASS, and the new corpus-aligned gate FAIL.
+
+## 2. Operating threshold 0.35
+
+| Metric | Actual | Baseline | Result |
+|---|---:|---:|---|
+| Hit@5 | 0.775 | 0.900 | FAIL |
+| Precision@5 | 0.754 | 0.800 | FAIL |
+| Recall@5 | 0.775 | 0.900 | FAIL |
+| MRR | 0.775 | 0.900 | FAIL |
+| Answered rate | 0.800 | 0.900 | FAIL |
+| No-answer accuracy | 0.500 | 0.800 | FAIL |
+
+The evaluator reports nine answerable-query misses/false abstentions and five no-answer leaks (three easy, two near-miss).
+
+## 3. Threshold trade-off
+
+| min_score | Hit@5 | Precision@5 | Recall@5 | MRR | Answered rate | No-answer accuracy |
+|---:|---:|---:|---:|---:|---:|---:|
+| 0.25 | 0.900 | 0.798 | 0.900 | 0.887 | 0.925 | 0.400 |
+| 0.35 | 0.775 | 0.754 | 0.775 | 0.775 | 0.800 | 0.500 |
+| 0.45 | 0.600 | 0.579 | 0.600 | 0.600 | 0.600 | 0.800 |
+
+No tested threshold satisfies all six floors. Lower thresholds improve retrieval coverage but worsen no-answer accuracy; higher thresholds improve abstention but cause unacceptable false abstentions. Do not change baselines or tune the fixture just to make CI green.
+
+## 4. Representative failures
+
+Answerable misses include:
+- Q027: top_k zero/negative handling; expected `00_CORPUS/architecture.md`.
+- Q036: RAG data flow; expected `03_ARCHITECTURE/RAG_RETRIEVAL_ARCHITECTURE.md`.
+- Q037: AI caller output; expected `00_CORPUS/architecture.md`.
+- Q040: whether RAG can delete files; expected `00_CORPUS/security.md`.
+- Q041–Q043: chunk metadata and line ranges; expected `00_CORPUS/architecture.md`.
+- Q045: `rag_get_context` fields; expected `00_CORPUS/architecture.md`.
+- Q047: responsibility for independent blind-label review; expected `00_CORPUS/evidence.md`.
+
+No-answer leaks include:
+- Q008: process for changing a cement delivery schedule.
+- Q010: where delivery schedules are stored.
+- Q035: whether “Customer A” has an order.
+- Q004: concrete normal RX power threshold.
+- A near-miss asking the default minimum retrieval score.
+
+The failures indicate that lexical overlap alone struggles with Vietnamese phrasing, technical identifiers, implicit/negative safety questions, and distinguishing topic overlap from evidence that answers the question. Inspect exact retrieved chunk IDs and scores before changing ranking behavior.
+
+## 5. Remediation
+
+1. Preserve the failing run as baseline evidence.
+2. Capture per-query diagnostics (expected source, retrieved source/chunk IDs, line ranges, scores and abstention reason) without including full document text in CI logs.
+3. Review every miss/leak against the immutable V3 labels and source spans. If a label is wrong, issue a new adjudication version; do not edit Qw V5 or silently rewrite V3.
+4. Test retrieval changes on the same fixture and compare all six metrics plus the error list. Keep the synthetic benchmark separate.
+5. Accept a threshold only if all gates pass on the fixed fixture and CI reproduces the result. If lexical retrieval cannot meet both answerability and abstention requirements, propose a separately scoped evidence-support stage rather than claiming lexical retrieval PASS.
+6. Keep live MCP :8020 → Core :8000 → retrieval → source-readback CLOSED until an actual end-to-end run is captured.
+
+## Diagnostic instrumentation
+
+Per-query miss and no-answer diagnostics have been added to `04_CODE/rag_eval.py`; the current workflow invocation uses `--diagnostics`. Run #43 was created from the preceding code commit, so its logs did not include that later workflow argument. A subsequent run must verify that diagnostics are present. Instrumentation does not change ranking, labels, thresholds, or verdicts.
+
+## Decision
+
+**Corpus-aligned retrieval baseline: FAIL.** Unit tests and the legacy synthetic benchmark pass, but neither overrides this failure. Work 103 stays **ACTIVE / BLOCKED**. No production corpus approval, blind-process certification, final freeze, or live RAG E2E PASS is granted.
+
+— Ka | CSA / Independent Reviewer
