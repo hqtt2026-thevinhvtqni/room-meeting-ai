@@ -23,6 +23,7 @@ from execution_host.process_job import (
     ISOLATION_STATUS,
     _posix_group_members,
     spawn_managed,
+    spawn_managed_service,
     wrap_existing_popen,
 )
 
@@ -126,8 +127,6 @@ class SpawnLifecycleTests(unittest.TestCase):
 
 
 class ProcessTreeTests(unittest.TestCase):
-    """Capture child PID; assert parent AND child dead after cleanup."""
-
     def _start_tree(self, child_pid_file: Path):
         script = (
             "import subprocess, sys, time\n"
@@ -172,12 +171,9 @@ class ProcessTreeTests(unittest.TestCase):
             parent_pid = managed.pid
             self.assertTrue(_pid_alive(parent_pid))
             self.assertTrue(_pid_alive(child_pid))
-
             if _IS_WIN:
                 self.assertEqual(managed.job_object, "ATTACHED")
-
             result = managed.cleanup(terminate_first=True, wait_timeout=8.0)
-
             self.assertTrue(result.process_reaped, f"parent not reaped: {result.as_dict()}")
             self.assertFalse(_pid_alive(parent_pid), f"parent {parent_pid} alive")
             self.assertFalse(
@@ -194,13 +190,11 @@ class ProcessTreeTests(unittest.TestCase):
             managed, child_pid = self._start_tree(pid_file)
             self.assertIsNotNone(child_pid)
             parent_pid = managed.pid
-
             try:
                 managed.process.communicate(timeout=0.25)
                 self.fail("expected TimeoutExpired")
             except subprocess.TimeoutExpired:
                 pass
-
             result = managed.cleanup(terminate_first=True, wait_timeout=8.0)
             self.assertTrue(result.process_reaped)
             self.assertFalse(_pid_alive(parent_pid))
@@ -223,6 +217,31 @@ class ProcessTreeTests(unittest.TestCase):
         self.assertEqual(result.job_object, "NOT_ATTACHED")
         self.assertIn("wrapped_existing_popen", result.notes)
         self.assertIn("job_object_cannot_attach_retroactively", result.notes)
+
+
+class ServiceSpawnTests(unittest.TestCase):
+    def test_spawn_managed_service_job_object_rules(self):
+        managed = spawn_managed_service(
+            [sys.executable, "-c", "import time; time.sleep(20)"],
+            cwd=".",
+            env={"PATH": os.environ.get("PATH", "")},
+        )
+        try:
+            self.assertTrue(managed.created_via_spawn)
+            if _IS_WIN:
+                self.assertEqual(
+                    managed.job_object,
+                    "ATTACHED",
+                    f"spawn_notes={getattr(managed, '_spawn_notes', ())}",
+                )
+            else:
+                self.assertEqual(managed.job_object, "NOT_ATTACHED")
+            self.assertIsNone(managed.poll())
+        finally:
+            result = managed.cleanup(terminate_first=True, wait_timeout=5.0)
+            self.assertTrue(result.process_reaped)
+            if _IS_WIN:
+                self.assertIn("TerminateJobObject_ok", result.notes)
 
 
 def _wait_for_child_pid_file(path: Path, timeout_sec: float = 5.0):

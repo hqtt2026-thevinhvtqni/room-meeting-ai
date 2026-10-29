@@ -34,4 +34,15 @@ def test_missing_git_authority_and_unavailable_adapters(tmp_path):
 def test_artifact_isolation(tmp_path):
     c=ctx(tmp_path); (Path(c.execution_workspace)/'a.txt').write_text('a'); r=ExecutionHost().execute_work(c,ExecutionRequest(command=('python3','-c','print(1)'),collect_artifacts=('a.txt',))); assert len(r.artifacts)==1; assert Path(r.artifacts[0]).is_relative_to(Path(c.evidence_root))
 def test_service_lifecycle(tmp_path):
-    c=ctx(tmp_path); h=ExecutionHost(); s=h.start_service('x',['python3','-c','import time; time.sleep(5)'],c); assert s['status']=='PASS'; assert h.service_status('x',c)['status']=='PASS'; assert h.stop_service('x',c)['status']=='PASS'
+    import sys
+    c=ctx(tmp_path); h=ExecutionHost()
+    # Use sys.executable so Windows CI does not depend on a "python3" shim.
+    s=h.start_service('x',[sys.executable,'-c','import time; time.sleep(5)'],c)
+    assert s['status']=='PASS'
+    assert s.get('job_object') in ('ATTACHED','NOT_ATTACHED')
+    if sys.platform.startswith('win'):
+        assert s.get('job_object')=='ATTACHED'
+    assert h.service_status('x',c)['status']=='PASS'
+    stop=h.stop_service('x',c)
+    assert stop['status']=='PASS'
+    assert stop.get('process_reaped') is True
