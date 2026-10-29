@@ -1,4 +1,4 @@
-"""WP16/WP17 — Authenticated dispatch: grant → snapshot → execute (or legacy command).
+"""WP16–WP18 — Authenticated dispatch: grant → snapshot → execute + sealed evidence.
 
 Server-side only. Client cannot inject grants. MCP execution tools remain closed.
 """
@@ -13,6 +13,7 @@ from .work28_contract import create_source_snapshot
 from .work28_execute import run_verified_snapshot
 from .work28_grant import ExecutionGrant, GrantError, bind_grant_to_request
 from .work28_work_id import work_ids_equivalent
+from .work28_evidence import seal_evidence
 
 
 class DispatchError(ValueError):
@@ -98,6 +99,23 @@ def _dispatch_work28_snapshot(
     result = run_verified_snapshot(host, ctx, request, snapshot)
     result["dispatch_mode"] = "work28_snapshot"
     result["grant_id"] = grant.grant_id
+    result["snapshot_ref"] = snapshot.snapshot_ref
+    result["source_sha256"] = snapshot.source_sha256
+    sealed = seal_evidence(
+        evidence_root=ctx.evidence_root,
+        execution_id=ctx.execution_id or "unknown",
+        payload={
+            "grant_id": grant.grant_id,
+            "work_id": grant.work_id,
+            "snapshot_ref": snapshot.snapshot_ref,
+            "source_sha256": snapshot.source_sha256,
+            "dispatch_mode": "work28_snapshot",
+            "status": result.get("status"),
+            "exit_code": result.get("exit_code"),
+            "execution_id": ctx.execution_id,
+        },
+    )
+    result.update(sealed)
     return result
 
 
