@@ -10,6 +10,7 @@ from .models import WorkContext, ExecutionRequest
 from .work28_dispatch import DispatchError, dispatch_execute
 from .work28_grant import ExecutionGrant, GrantError
 from .work28_grant_registry import load_grant_registry
+from .work28_core_grant_client import build_grant_source
 
 AUTH_HEADER = 'X-Room-Hop-Execution-Auth'
 AUTH_TOKEN_ENV = 'ROOM_HOP_EXECUTION_AUTH_TOKEN'
@@ -108,7 +109,10 @@ def serve(host='127.0.0.1',port=8031,auth_token: str | None = None, authorized_w
 def main():
     config = load_execution_auth_config()
     announced = ', '.join(sorted(config['authorized_works']))
-    grants = load_grant_registry()
+    try:
+        grants = build_grant_source().fetch_grants()
+    except Exception:
+        grants = load_grant_registry()
     print('execution-host: armed; authorized works: ' + announced +
           '; grants=' + str(len(grants)), flush=True)
     serve('127.0.0.1', 8031, grant_registry=grants, **config)
