@@ -56,5 +56,5 @@ This addendum corrects stale descriptive counts without deleting the earlier his
 
 ### Gate status
 - Unit-test and baseline claims in the earlier plan are historical plan entries, not a new test execution in this Ka session.
-- This session did not execute Python tests or live MCP/Core E2E; no CI run was returned for the documentation-only audit commit.
+- Ka did not execute Python tests directly in the connected review surface. GitHub Actions run #32 on commit `5bf30e6cf2593da19c8e33eb4714de0752375dec` completed SUCCESS on Python 3.11 and 3.12: syntax compile, retrieval unit tests, eval test step, labeled retrieval baseline gate, and controlled experiment sweep passed. Baseline metrics for EVAL_SET v2: Hit@5=1.000, Precision@5=0.860, Recall@5=0.970, MRR=1.000, answered rate=1.000, no-answer accuracy=0.8667, avg latency=0.028 ms. The log records two near-miss leaks. These metrics apply only to EVAL_SET v2, not Manifest V4 or the newly adjudicated 50-query dataset. No live MCP/Core E2E was executed; the workflow had a post-job submodule-cleanup warning despite overall SUCCESS.
 - Corpus freeze, blind-process provenance, selection of the release benchmark snapshot, and live integration/negative E2E remain BLOCKED.
