@@ -1,0 +1,131 @@
+{
+  "operating": {
+    "min_score": 0.35,
+    "n_labeled": 50,
+    "n_no_answer": 15,
+    "hit_at_5": 1,
+    "precision_at_5": 0.86,
+    "recall_at_5": 0.97,
+    "mrr": 1.0,
+    "answered_rate": 1,
+    "no_answer_accuracy": 0.8666666666666667,
+    "easy_leaks": [],
+    "near_miss_leaks": [
+      "tín hiệu quang ONT khu C mạnh bao nhiêu dBm",
+      "doanh thu quý 4 của chi nhánh Hà Nội"
+    ],
+    "ranked_misses": [],
+    "avg_latency_ms": 0.031
+  },
+  "verdict": "PASS",
+  "sweep": [
+    {
+      "min_score": 0.05,
+      "hit_at_5": 1,
+      "precision_at_5": 0.352,
+      "recall_at_5": 0.99,
+      "mrr": 1.0,
+      "answered_rate": 1,
+      "no_answer_accuracy": 0.26666666666666666
+    },
+    {
+      "min_score": 0.1,
+      "hit_at_5": 1,
+      "precision_at_5": 0.51,
+      "recall_at_5": 0.99,
+      "mrr": 1.0,
+      "answered_rate": 1,
+      "no_answer_accuracy": 0.3333333333333333
+    },
+    {
+      "min_score": 0.15,
+      "hit_at_5": 1,
+      "precision_at_5": 0.645,
+      "recall_at_5": 0.98,
+      "mrr": 1.0,
+      "answered_rate": 1,
+      "no_answer_accuracy": 0.4
+    },
+    {
+      "min_score": 0.2,
+      "hit_at_5": 1,
+      "precision_at_5": 0.77,
+      "recall_at_5": 0.98,
+      "mrr": 1.0,
+      "answered_rate": 1,
+      "no_answer_accuracy": 0.5333333333333333
+    },
+    {
+      "min_score": 0.25,
+      "hit_at_5": 1,
+      "precision_at_5": 0.7916666666666666,
+      "recall_at_5": 0.97,
+      "mrr": 1.0,
+      "answered_rate": 1,
+      "no_answer_accuracy": 0.7333333333333333
+    },
+    {
+      "min_score": 0.3,
+      "hit_at_5": 1,
+      "precision_at_5": 0.8266666666666667,
+      "recall_at_5": 0.97,
+      "mrr": 1.0,
+      "answered_rate": 1,
+      "no_answer_accuracy": 0.8
+    },
+    {
+      "min_score": 0.35,
+      "hit_at_5": 1,
+      "precision_at_5": 0.86,
+      "recall_at_5": 0.97,
+      "mrr": 1.0,
+      "answered_rate": 1,
+      "no_answer_accuracy": 0.8666666666666667
+    },
+    {
+      "min_score": 0.4,
+      "hit_at_5": 1,
+      "precision_at_5": 0.9,
+      "recall_at_5": 0.97,
+      "mrr": 1.0,
+      "answered_rate": 1,
+      "no_answer_accuracy": 0.9333333333333333
+    },
+    {
+      "min_score": 0.45,
+      "hit_at_5": 1,
+      "precision_at_5": 0.96,
+      "recall_at_5": 0.97,
+      "mrr": 1.0,
+      "answered_rate": 1,
+      "no_answer_accuracy": 0.9333333333333333
+    },
+    {
+      "min_score": 0.5,
+      "hit_at_5": 0.88,
+      "precision_at_5": 0.88,
+      "recall_at_5": 0.85,
+      "mrr": 0.88,
+      "answered_rate": 0.88,
+      "no_answer_accuracy": 0.9333333333333333
+    },
+    {
+      "min_score": 0.55,
+      "hit_at_5": 0.82,
+      "precision_at_5": 0.82,
+      "recall_at_5": 0.79,
+      "mrr": 0.82,
+      "answered_rate": 0.82,
+      "no_answer_accuracy": 1
+    },
+    {
+      "min_score": 0.6,
+      "hit_at_5": 0.66,
+      "precision_at_5": 0.66,
+      "recall_at_5": 0.63,
+      "mrr": 0.66,
+      "answered_rate": 0.66,
+      "no_answer_accuracy": 1
+    }
+  ]
+}
