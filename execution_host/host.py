@@ -26,6 +26,7 @@ from .security import (
 from .adapters import unavailable
 from .git_adapter import GitAdapter
 from .identity import RuntimeIdentity
+from .process_job import ManagedProcess, spawn_managed_service
 
 
 class ExecutionHost:
@@ -43,7 +44,7 @@ class ExecutionHost:
         self.github = github
         self.ci = ci
         self.runtime_identity = runtime_identity or RuntimeIdentity()
-        self.processes: dict[str, subprocess.Popen] = {}
+        self.processes: dict[str, ManagedProcess] = {}
 
     def identity(self) -> dict[str, Any]:
         return self.runtime_identity.as_dict()
@@ -309,6 +310,7 @@ class ExecutionHost:
                 "pid": existing.pid,
                 "already_running": True,
                 "execution_id": ctx.execution_id,
+                "job_object": getattr(existing, "job_object", "NOT_ATTACHED"),
                 **self.identity(),
             }
 
@@ -321,23 +323,16 @@ class ExecutionHost:
             }
         )
 
-        process = subprocess.Popen(
-            args,
-            cwd=workspace,
-            env=env,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True,
-            start_new_session=True,
-        )
-
-        self.processes[name] = process
+        # Job Object (Windows) / session leader (POSIX) at spawn — Xu service path.
+        managed = spawn_managed_service(args, cwd=workspace, env=env)
+        self.processes[name] = managed
 
         return {
             "status": "PASS",
             "name": name,
-            "pid": process.pid,
+            "pid": managed.pid,
             "execution_id": ctx.execution_id,
+            "job_object": managed.job_object,
             **self.identity(),
         }
 
@@ -373,9 +368,9 @@ class ExecutionHost:
         ctx: WorkContext,
     ) -> dict[str, Any]:
 
-        process = self.processes.pop(name, None)
+        managed = self.processes.pop(name, None)
 
-        if not process:
+        if not managed:
             return {
                 "status": "STOPPED",
                 "name": name,
@@ -383,18 +378,26 @@ class ExecutionHost:
                 **self.identity(),
             }
 
-        if process.poll() is None:
-            stdout, stderr = self._cleanup_process(
-                process,
-                terminate_first=True,
-            )
+        cleanup: dict = {}
+        if isinstance(managed, ManagedProcess):
+            result = managed.cleanup(terminate_first=True, wait_timeout=5.0)
+            cleanup = result.as_dict()
+            reaped = result.process_reaped
+            returncode = managed.process.returncode
+        else:
+            process = managed
+            if process.poll() is None:
+                self._cleanup_process(process, terminate_first=True)
+            reaped = process.poll() is not None
+            returncode = process.returncode
 
         return {
-            "status": "PASS",
+            "status": "PASS" if reaped else "FAILED",
             "name": name,
-            "returncode": process.returncode,
+            "returncode": returncode,
             "execution_id": ctx.execution_id,
-            "process_reaped": process.poll() is not None,
+            "process_reaped": reaped,
+            "cleanup": cleanup,
             **self.identity(),
         }
 
