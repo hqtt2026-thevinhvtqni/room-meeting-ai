@@ -20,6 +20,7 @@ AUTH_HEADER = 'X-Room-Hop-Execution-Auth'
 AUTH_TOKEN_ENV = 'ROOM_HOP_EXECUTION_AUTH_TOKEN'
 AUTHORIZED_WORKS_ENV = 'ROOM_HOP_AUTHORIZED_WORKS'
 WORK_ID_PATTERN = re.compile(r'W\d+')
+MAX_REQUEST_BODY_BYTES = 262_144  # 256 KiB hard cap on POST /execute
 
 def normalize_work_id(value):
     if not isinstance(value, str):
@@ -127,7 +128,10 @@ class Handler(BaseHTTPRequestHandler):
             self._send(401,{'status':'BLOCKED','reason':'caller_authentication_failed'}); return
         try:
             if self.host is None: raise RuntimeError('runtime_not_initialized')
-            body=json.loads(self.rfile.read(int(self.headers.get('Content-Length','0'))))
+            raw_len = int(self.headers.get('Content-Length', '0') or '0')
+            if raw_len < 0 or raw_len > MAX_REQUEST_BODY_BYTES:
+                self._send(413, {'status': 'BLOCKED', 'reason': 'request_body_too_large'}); return
+            body=json.loads(self.rfile.read(raw_len))
             work_context=dict(body['work_context'])
             if not authorize_work(work_context.get('work_id'), Handler.authorized_works):
                 self._send(403,{'status':'BLOCKED','reason':'caller_not_authorized_for_work'}); return
