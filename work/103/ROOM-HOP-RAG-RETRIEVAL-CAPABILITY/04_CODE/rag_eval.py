@@ -143,6 +143,7 @@ def evaluate(index: RetrievalIndex, labeled: list[dict], no_answer: list[dict],
              top_k: int, min_score: float) -> dict:
     hits, precs, recs, mrrs, answered = [], [], [], [], []
     misses: list[str] = []
+    miss_details: list[dict] = []
     for item in labeled:
         results = index.search(item["query"], top_k=top_k, min_score=min_score)
         retrieved = [r.source_id for r in results]
@@ -157,8 +158,12 @@ def evaluate(index: RetrievalIndex, labeled: list[dict], no_answer: list[dict],
         # also be counted as a ranking miss.
         if not results:
             misses.append(f"(false abstention) {item['query']}")
+            miss_details.append({"query": item["query"], "expected": expected, "failure": "FALSE_ABSTENTION", "results": []})
         elif not hit_at_k(retrieved, expected, top_k):
             misses.append(item["query"])
+            miss_details.append({"query": item["query"], "expected": expected, "failure": "RANKING_MISS",
+                                 "results": [{"source_id": r.source_id, "chunk_id": r.chunk_id, "score": r.score,
+                                              "start_line": r.start_line, "end_line": r.end_line} for r in results]})
 
     start = time.perf_counter()
     for item in labeled:
@@ -168,10 +173,15 @@ def evaluate(index: RetrievalIndex, labeled: list[dict], no_answer: list[dict],
     abstained = []
     near_miss_leaks: list[str] = []
     easy_leaks: list[str] = []
+    no_answer_details: list[dict] = []
     for item in no_answer:
         q = item["query"]
-        empty = not index.search(q, top_k=top_k, min_score=min_score)
+        results = index.search(q, top_k=top_k, min_score=min_score)
+        empty = not results
         abstained.append(1 if empty else 0)
+        no_answer_details.append({"query": q, "kind": item["kind"], "abstained": empty,
+                                  "results": [{"source_id": r.source_id, "chunk_id": r.chunk_id, "score": r.score,
+                                               "start_line": r.start_line, "end_line": r.end_line} for r in results]})
         if not empty:
             if item["kind"] == "near_miss":
                 near_miss_leaks.append(q)
@@ -191,6 +201,8 @@ def evaluate(index: RetrievalIndex, labeled: list[dict], no_answer: list[dict],
         "easy_leaks": easy_leaks,
         "near_miss_leaks": near_miss_leaks,
         "ranked_misses": misses,
+        "miss_details": miss_details,
+        "no_answer_details": no_answer_details,
         "avg_latency_ms": round(latency_ms, 3),
     }
 
@@ -218,6 +230,8 @@ def main() -> int:
     parser.add_argument("--json", action="store_true", help="print JSON summary only")
     parser.add_argument("--eval-set", type=Path, default=EVAL_SET_PATH,
                         help="path to a labeled evaluation JSON file (default: 05_TEST/EVAL_SET.json)")
+    parser.add_argument("--diagnostics", action="store_true",
+                        help="include per-query expected/retrieved source IDs, chunk IDs, and scores")
     args = parser.parse_args()
 
     data = load_eval_set(args.eval_set)  # load + validate; raises on any schema violation
@@ -233,11 +247,14 @@ def main() -> int:
     verdict = "PASS" if passed else "FAIL"
 
     if args.json:
-        print(json.dumps({"operating": metrics, "verdict": verdict,
-                          "sweep": [{k: r[k] for k in ("min_score", "hit_at_5", "precision_at_5",
-                                                        "recall_at_5", "mrr", "answered_rate",
-                                                        "no_answer_accuracy")} for r in rows]},
-                         ensure_ascii=False, indent=2))
+        payload = {"operating": metrics, "verdict": verdict,
+                   "sweep": [{k: r[k] for k in ("min_score", "hit_at_5", "precision_at_5",
+                                                 "recall_at_5", "mrr", "answered_rate",
+                                                 "no_answer_accuracy")} for r in rows]}
+        if not args.diagnostics:
+            payload["operating"].pop("miss_details", None)
+            payload["operating"].pop("no_answer_details", None)
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
     else:
         print("min_score  hit@5  prec@5  rec@5   mrr    ansrd  no_ans")
         for r in rows:
@@ -253,6 +270,9 @@ def main() -> int:
             print("Easy no-answer leaks:", metrics["easy_leaks"])
         if metrics["near_miss_leaks"]:
             print("Near-miss leaks (known lexical gap, evidence for extension gate):", metrics["near_miss_leaks"])
+        if args.diagnostics:
+            print("Miss diagnostics:", json.dumps(metrics["miss_details"], ensure_ascii=False, indent=2))
+            print("No-answer diagnostics:", json.dumps(metrics["no_answer_details"], ensure_ascii=False, indent=2))
         print("Baseline gate:", verdict)
         for f in failures:
             print("  BELOW BASELINE:", f)
