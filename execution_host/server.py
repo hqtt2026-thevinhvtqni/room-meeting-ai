@@ -21,6 +21,10 @@ AUTH_TOKEN_ENV = 'ROOM_HOP_EXECUTION_AUTH_TOKEN'
 AUTHORIZED_WORKS_ENV = 'ROOM_HOP_AUTHORIZED_WORKS'
 WORK_ID_PATTERN = re.compile(r'W\d+')
 MAX_REQUEST_BODY_BYTES = 262_144  # 256 KiB hard cap on POST /execute
+# Top-level keys allowed on POST /execute (fail-closed on unknown).
+EXECUTE_BODY_KEYS = frozenset({
+    'work_context', 'mode', 'execution_request', 'execution_grant_id', 'work28_request',
+})
 
 def normalize_work_id(value):
     if not isinstance(value, str):
@@ -128,10 +132,20 @@ class Handler(BaseHTTPRequestHandler):
             self._send(401,{'status':'BLOCKED','reason':'caller_authentication_failed'}); return
         try:
             if self.host is None: raise RuntimeError('runtime_not_initialized')
+            ctype = (self.headers.get('Content-Type') or '').split(';')[0].strip().lower()
+            if ctype != 'application/json':
+                self._send(415, {'status': 'BLOCKED', 'reason': 'content_type_must_be_application_json'}); return
             raw_len = int(self.headers.get('Content-Length', '0') or '0')
             if raw_len < 0 or raw_len > MAX_REQUEST_BODY_BYTES:
                 self._send(413, {'status': 'BLOCKED', 'reason': 'request_body_too_large'}); return
             body=json.loads(self.rfile.read(raw_len))
+            if not isinstance(body, dict):
+                self._send(400, {'status': 'BLOCKED', 'reason': 'body_must_be_object'}); return
+            unknown = set(body.keys()) - EXECUTE_BODY_KEYS
+            if unknown:
+                self._send(400, {'status': 'BLOCKED', 'reason': 'unknown_body_keys:' + ','.join(sorted(unknown))}); return
+            if 'work_context' not in body or not isinstance(body.get('work_context'), dict):
+                self._send(400, {'status': 'BLOCKED', 'reason': 'work_context_required'}); return
             work_context=dict(body['work_context'])
             if not authorize_work(work_context.get('work_id'), Handler.authorized_works):
                 self._send(403,{'status':'BLOCKED','reason':'caller_not_authorized_for_work'}); return
@@ -147,6 +161,12 @@ class Handler(BaseHTTPRequestHandler):
         except (DispatchError, GrantError) as exc:
             self._send(400, {'status': 'BLOCKED', 'reason': type(exc).__name__ + ':' + str(exc)})
         except Exception as exc: self._send(400,{'status':'BLOCKED','reason':type(exc).__name__+':'+str(exc)})
+    def do_PUT(self):
+        self._send(405, {'status': 'BLOCKED', 'reason': 'method_not_allowed'})
+    def do_DELETE(self):
+        self._send(405, {'status': 'BLOCKED', 'reason': 'method_not_allowed'})
+    def do_PATCH(self):
+        self._send(405, {'status': 'BLOCKED', 'reason': 'method_not_allowed'})
     def log_message(self,*args): pass
 
 def serve(host='127.0.0.1',port=8031,auth_token: str | None = None, authorized_works=None, grant_registry=None, evidence_root=None, snapshot_only=False):
