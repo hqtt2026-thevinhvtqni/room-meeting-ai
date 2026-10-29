@@ -18,7 +18,7 @@ The five domain/policy fixture files are present under `00_CORPUS/`; the sixth s
 | `00_CORPUS/evidence.md` | `f0b03afc3b3504139ef1d3b60441d054c0b5e6e674d86d65dca47322fd624538` | MATCH |
 | `03_ARCHITECTURE/RAG_RETRIEVAL_ARCHITECTURE.md` | `ef51fa32722cfcb11c630e3f39c83ac1ee25036e1201ac856a4d586f86adb27e` | MATCH |
 
-Hash scope is deliberately limited: SHA-256 was computed over the UTF-8/LF text returned by GitHub content readback. This does not prove raw stored-byte hashes or a byte-identical local Sandbox/GitHub checkout. The manifest's own SHA-256 over its UTF-8/LF text is `52a843c800cbc503c8f429f6e21b8b0fe55d293b87e535f7272bd22cd3f4a666`; V5 label text SHA-256 is `48d100372bb3e4b88f541dee750e62f82f9642ee2fd0e481553ef43cfaa281f2`.
+Hash scope: Ka fetched the published files through GitHub's raw-content endpoint, confirmed LF line endings (no CRLF), re-encoded the returned UTF-8 text, and computed SHA-256. All six source hashes and UTF-8 byte lengths match Manifest V4. This verifies the published GitHub branch's raw text representation; it does not verify the original Sandbox's stored bytes or prove a byte-identical local Sandbox/GitHub checkout. The manifest's own SHA-256 over the published UTF-8/LF bytes is `52a843c800cbc503c8f429f6e21b8b0fe55d293b87e535f7272bd22cd3f4a666`; V5 label text SHA-256 is `48d100372bb3e4b88f541dee750e62f82f9642ee2fd0e481553ef43cfaa281f2`.
 
 ## 2. Canonical adjudicated label artifact
 
