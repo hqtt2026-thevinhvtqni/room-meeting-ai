@@ -22,30 +22,30 @@ Hash scope: Ka fetched the published files through GitHub's raw-content endpoint
 
 ## 2. Canonical adjudicated label artifact
 
-Created the first canonical representation and then completed row-by-row source adjudication in:
-`06_EVIDENCE/KA_ADJUDICATED_LABELS_50_QUERIES_V2_20261029.json`
+The authoritative refined row-by-row adjudication is:
+`06_EVIDENCE/KA_ADJUDICATED_LABELS_50_QUERIES_V3_20261029.json`
 
 - Parsed/reviewed row count: 50/50.
 - Per-row canonical SHA-256 fields: 50/50 independently recomputed and matched on GitHub readback.
-- Canonical dataset SHA-256 (compact JSON serialization of adjudicated rows, including source SHA and Ka review fields, excluding per-row hash fields): `579c61bda1df8b643795f58da733f8fc3c2b4132438588da1f7e32a7c1c404d3`.
-- Recomputed dataset hash on GitHub readback: same value.
-- Three adjudications against the explicit answerability rule: Q009 `NO_ANSWER` -> `ANSWERABLE` (sales employee is named); Q016 `NO_ANSWER` -> `ANSWERABLE` (architecture says ChromaDB is an extension gate and lists prerequisites, so immediate addition is not supported); Q046 `NO_ANSWER` -> `ANSWERABLE` (the corpus answers that immediate configuration is not available and requires the extension gate, though it provides no configuration recipe). Qw V5 remains unchanged.
+- Canonical dataset SHA-256: `4a1e11221f623030fc95632fa39b386eb7612e5ead244693b1d7c171d7089fa5`; recomputation on readback matches.
+- Final adjudication: Q009 changes from `NO_ANSWER` to `ANSWERABLE` because `sales.md` explicitly names the sales employee as responsible for both confirmations. Q016 and Q046 remain `NO_ANSWER`: the architecture source gives ChromaDB extension-gate criteria but no implementation/configuration procedure answering these how-to queries.
+- V2 is retained as historical/provisional; V3 supersedes it. Qw V5 remains unchanged.
 
-This verifies the canonical JSON representation and records Ka's row-by-row source review. It does not prove that the annotation process was blind or authorize freezing the dataset.
+This verifies the canonical V3 JSON representation and records Ka's row-by-row source review. It does not prove that the original annotation process was blind.
 
 ## 3. Critical evaluation alignment finding
 
 The 50-query adjudication corpus (Manifest V4) is not the same corpus as `05_TEST/EVAL_SET.json` on the Work 103 branch:
 - Manifest V4 enumerates six source documents: five fixture policy/domain files plus the RAG architecture document.
-- `EVAL_SET.json` is version 2 and embeds eight different synthetic documents with its own 14 labeled plus 5 no-answer query baseline, according to the acceptance plan.
+- `EVAL_SET.json` is version 2 and embeds eight synthetic documents with 50 labeled queries and 15 no-answer queries. The earlier plan's “14 labeled + 5 no-answer” statement is stale for this v2 file.
 
 Therefore, the reported retrieval metrics for EVAL_SET v2 must not be presented as measured performance on the 50-query Manifest V4 corpus. The two datasets have different sources and different purposes. Before any release-quality retrieval score is accepted, define the evaluation corpus/snapshot explicitly and run the evaluation against that exact snapshot and its matching labels. Do not silently replace EVAL_SET or conflate its metrics with the 50-query adjudication set.
 
 ## 4. Remaining gates / actions
 
-1. **Raw-byte integrity:** still not verified; available read APIs return decoded text and size metadata.
+1. **Raw-byte integrity:** published GitHub raw-content bytes are verified against the six declared source hashes (UTF-8/LF). Original Sandbox stored bytes are still not independently verified.
 2. **Blinding provenance:** still not verified; no independent process attestation proves Qw did not view retrieval outputs.
-3. **Adjudication:** Ka has completed a source-based review of all 50 rows and recorded three corrections in V2. The blind-process provenance remains unverified, so the set is adjudicated but not certified as a blind evaluation.
+3. **Adjudication:** Ka has completed a source-based review of all 50 rows; V3 records one final correction (Q009) and preserves Q016/Q046 as NO_ANSWER. The blind-process provenance remains unverified, so the set is adjudicated but not certified as a blind evaluation.
 4. **Evaluation alignment:** choose and freeze one explicit source snapshot for the benchmark, bind labels and metrics to it, and rerun metrics against that exact dataset.
 5. **Runtime integration:** `rag_retrieval.py` describes itself as an isolated Sandbox prototype, not wired into Core/MCP. The acceptance plan still has the live integration and negative E2E checklist unchecked.
 6. **CI / baseline:** Ka did not execute Python tests directly. GitHub Actions run #32 completed successfully on Python 3.11 and 3.12; retrieval unit tests and the labeled evaluation gate passed. The metrics apply only to EVAL_SET v2 (8 embedded documents, 50 labeled queries and 15 no-answer queries), not to the six-source Manifest V4 corpus or the newly adjudicated 50-query dataset. No live MCP/Core E2E was executed.
