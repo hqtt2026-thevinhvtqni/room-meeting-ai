@@ -6,10 +6,14 @@ on:
       - work/28-mcp-tooling-platform
     paths:
       - "work/28/**"
+      - "execution_host/**"
+      - "tests/**"
       - ".github/workflows/work28-mcp-tooling.yml"
   pull_request:
     paths:
       - "work/28/**"
+      - "execution_host/**"
+      - "tests/**"
       - ".github/workflows/work28-mcp-tooling.yml"
   workflow_dispatch:
 
@@ -55,3 +59,55 @@ jobs:
             printf '::error::%s\n' "$line" || true
           done || true
           exit 0
+
+  execution-host-lifecycle-linux:
+    # Evidence for execute_command -> host_run -> spawn_managed lifecycle
+    # (commit 0abb082 code path). Previously these tests never ran in CI
+    # because the paths filter did not include execution_host/ or tests/.
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Run execution_host process lifecycle tests (Linux)
+        env:
+          PYTHONPATH: .
+        run: |
+          set -o pipefail
+          python -m unittest discover -s tests -p 'test_process_job.py' -v 2>&1 | tee lifecycle-output.txt
+      - name: Surface lifecycle failure details
+        if: failure()
+        run: |
+          {
+            echo "## Execution host lifecycle test failure details (Linux)"
+            echo ""
+            echo '~~~'
+            tail -n 100 lifecycle-output.txt || true
+            echo '~~~'
+          } >> "$GITHUB_STEP_SUMMARY" || true
+          exit 0
+
+  execution-host-lifecycle-windows:
+    # WP2 blocker evidence: Windows Job Object / child process tree.
+    # This job makes Windows lifecycle status VISIBLE instead of assumed.
+    # It is allowed to fail: a red run is honest evidence that Windows
+    # isolation/cleanup is NOT verified. It must never be marked as a pass
+    # without a green run on this platform.
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Run execution_host process lifecycle tests (Windows)
+        env:
+          PYTHONPATH: .
+        run: |
+          python -m unittest discover -s tests -p 'test_process_job.py' -v 2>&1 | Tee-Object -FilePath lifecycle-output.txt
+        shell: pwsh
+      - name: Surface lifecycle failure details (Windows)
+        if: failure()
+        run: |
+          Get-Content lifecycle-output.txt -Tail 100 | Out-File -Append $env:GITHUB_STEP_SUMMARY
+        shell: pwsh
