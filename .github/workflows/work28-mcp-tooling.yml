@@ -60,7 +60,7 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-      - name: Run execution_host lifecycle + WP14–WP22 tests (Linux)
+      - name: Run execution_host lifecycle + WP14–WP23 tests (Linux)
         env:
           PYTHONPATH: .
         run: |
@@ -75,6 +75,7 @@ jobs:
           python -m unittest discover -s tests -p 'test_work28_bounds.py' -v 2>&1 | tee -a lifecycle-output.txt
           python -m unittest discover -s tests -p 'test_work28_audit_readiness.py' -v 2>&1 | tee -a lifecycle-output.txt
           python -m unittest discover -s tests -p 'test_work28_http_limits.py' -v 2>&1 | tee -a lifecycle-output.txt
+          python -m unittest discover -s tests -p 'test_work28_http_schema.py' -v 2>&1 | tee -a lifecycle-output.txt
       - name: Surface lifecycle failure details
         if: failure()
         run: |
@@ -93,7 +94,7 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-      - name: Run execution_host lifecycle + WP14–WP22 tests (Windows)
+      - name: Run execution_host lifecycle + WP14–WP23 tests (Windows)
         env:
           PYTHONPATH: .
         run: |
@@ -107,10 +108,11 @@ jobs:
           python -m unittest discover -s tests -p 'test_work28_bounds.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp20-bounds.txt
           python -m unittest discover -s tests -p 'test_work28_audit_readiness.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp21-audit.txt
           python -m unittest discover -s tests -p 'test_work28_http_limits.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp22-limits.txt
+          python -m unittest discover -s tests -p 'test_work28_http_schema.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp23-schema.txt
         shell: pwsh
       - name: Surface lifecycle failure details (Windows)
         if: failure()
         run: |
           Get-Content lifecycle-output.txt -Tail 80 -ErrorAction SilentlyContinue | Out-File -Append $env:GITHUB_STEP_SUMMARY
-          Get-Content lifecycle-wp22-limits.txt -Tail 80 -ErrorAction SilentlyContinue | Out-File -Append $env:GITHUB_STEP_SUMMARY
+          Get-Content lifecycle-wp23-schema.txt -Tail 80 -ErrorAction SilentlyContinue | Out-File -Append $env:GITHUB_STEP_SUMMARY
         shell: pwsh
