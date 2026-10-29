@@ -1,4 +1,4 @@
-"""WP16–WP19 — Authenticated dispatch: grant → snapshot → execute + sealed evidence.
+"""WP16–WP21 — Authenticated dispatch: grant → snapshot → execute + seal + audit.
 
 Server-side only. Client cannot inject grants. MCP execution tools remain closed.
 """
@@ -14,6 +14,7 @@ from .work28_execute import run_verified_snapshot
 from .work28_grant import ExecutionGrant, GrantError, bind_grant_to_request
 from .work28_work_id import work_ids_equivalent
 from .work28_evidence import seal_evidence
+from .work28_audit import record_audit
 
 
 class DispatchError(ValueError):
@@ -120,6 +121,17 @@ def _dispatch_work28_snapshot(
         },
     )
     result.update(sealed)
+    record_audit(
+        {
+            "event": "work28_snapshot_dispatch",
+            "grant_id": grant.grant_id,
+            "work_id": grant.work_id,
+            "execution_id": ctx.execution_id,
+            "status": result.get("status"),
+            "dispatch_mode": "work28_snapshot",
+            "source_sha256": snapshot.source_sha256,
+        }
+    )
     return result
 
 
