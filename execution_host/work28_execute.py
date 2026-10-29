@@ -1,10 +1,11 @@
-"""Work 28 offline execution against a verified SourceSnapshot (WP14/WP17).
+"""Work 28 offline execution against a verified SourceSnapshot (WP14/WP17/WP20).
 
 Rules (Xu):
 - Run only bytes already hashed into SourceSnapshot — never re-read work_root entry.
 - Stage a verified copy under the authorized execution workspace (relative path only).
 - Use host.execute_command so lifecycle goes through spawn_managed / Job Object.
 - Work id W28 and 28 are equivalent for binding checks.
+- Bound snapshot size, truncate outputs, limit concurrent runs per work.
 - Do NOT authorize callers here; do NOT wire MCP registration in this module.
 """
 from __future__ import annotations
@@ -20,6 +21,7 @@ from .models import WorkContext
 from .security import validate_context
 from .work28_contract import SourceSnapshot, Work28ContractError, Work28RunRequest
 from .work28_work_id import work_ids_equivalent
+from .work28_bounds import assert_snapshot_size, truncate_output, execution_slot, BoundsError
 
 
 def run_verified_snapshot(
@@ -41,6 +43,11 @@ def run_verified_snapshot(
     if not path.is_file():
         raise Work28ContractError("snapshot_path_missing")
 
+    try:
+        assert_snapshot_size(path.stat().st_size)
+    except BoundsError as exc:
+        raise Work28ContractError(str(exc)) from exc
+
     live = hashlib.sha256(path.read_bytes()).hexdigest()
     if live != snapshot.source_sha256:
         raise Work28ContractError("snapshot_tampered_or_mutated")
@@ -61,11 +68,12 @@ def run_verified_snapshot(
 
     try:
         command = [sys.executable, staged_name]
-        result = host.execute_command(
-            ctx,
-            command,
-            timeout_seconds=float(request.timeout_seconds),
-        )
+        with execution_slot(str(request.work_id)):
+            result = host.execute_command(
+                ctx,
+                command,
+                timeout_seconds=float(request.timeout_seconds),
+            )
     finally:
         try:
             staged.unlink(missing_ok=True)
@@ -73,10 +81,20 @@ def run_verified_snapshot(
             pass
 
     result = dict(result)
+    if "stdout" in result:
+        result["stdout"] = truncate_output(result.get("stdout"))
+    if "stderr" in result:
+        result["stderr"] = truncate_output(result.get("stderr"))
+    if "stdout_summary" in result:
+        result["stdout_summary"] = truncate_output(result.get("stdout_summary"), limit=4096)
     result["snapshot_ref"] = snapshot.snapshot_ref
     result["source_sha256"] = snapshot.source_sha256
     result["operation"] = request.operation
     result["wp14_path"] = "verified_snapshot_only"
+    result["bounds"] = {
+        "max_snapshot_bytes": 1_048_576,
+        "max_output_chars": 32_768,
+    }
     return result
 
 
