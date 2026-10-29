@@ -7,8 +7,7 @@
 
 ## 1. GitHub readback and source hashes
 
-The six corpus source files are now present under:
-`work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/00_CORPUS/`
+The five domain/policy fixture files are present under `00_CORPUS/`; the sixth source is the architecture document at `03_ARCHITECTURE/RAG_RETRIEVAL_ARCHITECTURE.md`. All six are present under the Work 103 root `work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/`.
 
 | Source | SHA-256 over UTF-8/LF logical text | Match to Manifest V4 |
 |---|---|---|
