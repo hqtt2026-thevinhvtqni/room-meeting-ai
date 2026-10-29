@@ -105,3 +105,10 @@ A report-only script, `05_TEST/grounded_abstention_eval.py`, now compares strict
 - At threshold 0.45–0.60: grounded no-answer accuracy = 0.800, but the answerable-query sweep is below baseline (at 0.45: Hit@5=0.875, Recall@5=0.875, MRR=0.863, answered rate=0.900).
 - Thus, even the supplemental interpretation does not yield a threshold that satisfies both answer retrieval and no-answer behavior. The strict gate remains unchanged and fails. The diagnostic mapping is an explicit reviewer interpretation and must be independently reviewed before being used for any release gate.
 - Run #54: unit tests PASS on Python 3.11/3.12; corpus-aligned strict gate FAIL on both.
+
+
+## Follow-up: per-query no-answer leak analysis
+
+The reproduced seven-leak analysis is recorded in [KA_NO_ANSWER_LEAK_ANALYSIS_20261029.md](KA_NO_ANSWER_LEAK_ANALYSIS_20261029.md). The main conclusion is that threshold-only tuning has no tested setting satisfying both answerable retrieval and strict no-answer floors. Q008 remains a borderline grounded-absence case and must not be credited without independent exact-span review.
+
+The separately scoped response is documented in [KA_EVIDENCE_SUPPORT_STAGE_DESIGN_PROPOSAL_V1_20261029.md](KA_EVIDENCE_SUPPORT_STAGE_DESIGN_PROPOSAL_V1_20261029.md). It is proposal-only; no implementation or architecture approval is granted. Fixture, retrieval/evaluator code, thresholds, and labels V3 remain unchanged.
