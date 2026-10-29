@@ -1,4 +1,4 @@
-"""W12 adapter must propagate CleanupResult fields (never hard-coded {})."""
+"""W12 adapter: cleanup always attested; isolation never false PASS."""
 from __future__ import annotations
 
 import sys
@@ -36,9 +36,11 @@ class W12AdapterTests(unittest.TestCase):
             )
             self.assertIn(result["status"], ("PASS", "FAILED"))
             self.assertIsInstance(result["cleanup"], dict)
+            self.assertTrue(result["cleanup"])
             self.assertIn("process_reaped", result["cleanup"])
             self.assertNotEqual(result["cleanup"], {})
             self.assertEqual(result["isolation"], "NOT_VERIFIED")
+            self.assertEqual(result["provider_type"], "W12_MANAGED_PROCESS")
 
     def test_cleanup_on_timeout(self):
         import tempfile
@@ -52,6 +54,23 @@ class W12AdapterTests(unittest.TestCase):
             )
             self.assertEqual(result["status"], "TIMEOUT")
             self.assertTrue(result["cleanup"].get("process_reaped"))
+            self.assertEqual(result["isolation"], "NOT_VERIFIED")
+            self.assertTrue(
+                result["cleanup"].get("terminate_sent")
+                or result["cleanup"].get("kill_sent")
+            )
+
+    def test_unauthorized_context_raises(self):
+        import tempfile
+
+        from execution_host.security import HostError
+
+        with tempfile.TemporaryDirectory() as td:
+            ctx = _ctx(Path(td), authorized=False)
+            with self.assertRaises(HostError):
+                W12ExecutionAdapter().execute(
+                    ctx, [sys.executable, "-c", "print(1)"], timeout_seconds=5
+                )
 
 
 if __name__ == "__main__":

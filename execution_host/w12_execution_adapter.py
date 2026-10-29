@@ -1,6 +1,7 @@
 """W12-oriented execution adapter: maps ManagedProcess cleanup into results.
 
 Does not claim OS isolation PASS. Does not open network listeners.
+Always attaches a real CleanupResult dict (never hard-coded {}).
 """
 from __future__ import annotations
 
@@ -12,7 +13,7 @@ from .security import HostError, redact, safe_env, validate_command, validate_co
 
 
 class W12ExecutionAdapter:
-    """Run one command under WorkContext; attach real cleanup attestation."""
+    """Run one command under WorkContext; attach attested cleanup."""
 
     provider_type = "W12_MANAGED_PROCESS"
 
@@ -43,28 +44,39 @@ class W12ExecutionAdapter:
         stdout = ""
         stderr = ""
         blocker = None
-        cleanup: dict[str, Any] = CleanupResult(process_reaped=True).as_dict()
+        members_at_start: int | None = None
+        cleanup: dict[str, Any] = CleanupResult(
+            process_reaped=True, notes=("not_started",)
+        ).as_dict()
 
         try:
             managed = spawn_managed(args, cwd=workspace, env=env)
+            members_at_start = managed.members_count()
             try:
                 stdout, stderr = managed.process.communicate(timeout=timeout_seconds)
                 exit_code = managed.process.returncode
                 status = "PASS" if exit_code == 0 else "FAILED"
-                # Process already exited; still record attested cleanup snapshot.
-                cleanup = managed.cleanup(terminate_first=False).as_dict()
-            except subprocess.TimeoutExpired:
+            except subprocess.TimeoutExpired as exc:
                 blocker = "timeout"
                 status = "TIMEOUT"
-                cleanup = managed.cleanup(terminate_first=False).as_dict()
-                exit_code = managed.process.returncode
-                stdout = stdout or ""
-                stderr = stderr or ""
+                if getattr(exc, "output", None):
+                    stdout = exc.output if isinstance(exc.output, str) else (stdout or "")
+                if getattr(exc, "stderr", None):
+                    stderr = exc.stderr if isinstance(exc.stderr, str) else (stderr or "")
+            cleanup = managed.cleanup(terminate_first=(status == "TIMEOUT")).as_dict()
+            if members_at_start is not None and cleanup.get("members_before") in (None, 0):
+                cleanup["members_before"] = members_at_start
+            exit_code = managed.process.returncode if exit_code is None else exit_code
         except OSError as exc:
             blocker = redact(str(exc))
             status = "BLOCKED"
             if managed is not None:
                 cleanup = managed.cleanup(terminate_first=False).as_dict()
+                if members_at_start is not None:
+                    cleanup["members_before"] = members_at_start
+
+        if not isinstance(cleanup, dict) or not cleanup:
+            cleanup = CleanupResult(process_reaped=False, notes=("cleanup_missing",)).as_dict()
 
         return {
             "status": status,
@@ -72,11 +84,12 @@ class W12ExecutionAdapter:
             "stdout": redact(stdout or ""),
             "stderr": redact(stderr or ""),
             "blocker": blocker,
-            "cleanup": cleanup,  # never hard-coded {}
-            "isolation": "NOT_VERIFIED",  # honest: process reaping ≠ OS sandbox
+            "cleanup": cleanup,
+            "isolation": "NOT_VERIFIED",
             "provider_type": self.provider_type,
             "workspace_root": str(root),
             "execution_workspace": str(workspace),
+            "evidence_root": str(evidence),
             "command": list(args),
         }
 
