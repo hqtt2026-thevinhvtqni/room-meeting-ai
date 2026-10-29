@@ -690,3 +690,52 @@ snapshot/runtime implementations), which requires the trusted
 environment.
 
 Work 28 remains ACTIVE / BLOCKED / NOT RELEASED.
+
+## 22. Real immutable source snapshot provider (2026-10-29)
+
+Follows the owner-relayed W12/W13 runtime audit: do NOT create a new
+Execution Host, do NOT wire MCP to :8031, do NOT turn entry_path into a
+shell command. This slice implements step 2 of the relayed plan — a REAL
+SourceSnapshotProvider — plus the repo-side counterpart of step 4 (grant
+- run integration over the real provider). Commit 81da690.
+
+`04_CODE/mcp8020_source_snapshot_provider_v1.py`
+(`ImmutableSourceSnapshotProvider`), fail-closed on a REAL filesystem:
+
+* containment: canonical W<number> work id; entry_path Work-relative
+  only — absolute, drive-like, traversal, empty/dot components, control
+  characters, and Windows-ambiguous names all refused;
+* anti-symlink: every parent component is lstat-checked (symlink or
+  non-directory component -> refusal); the entry file is opened with
+  O_NOFOLLOW where available, and non-regular files and over-limit sizes
+  are refused;
+* immutability: content bytes are copied into a per-run snapshot
+  directory (unique run id) and fsync-ed; the SHA-256 is computed FROM THE
+  ACTUAL BYTES and re-verified against the copy; metadata binds work id,
+  entry path, hash, size, and creation time;
+* refusal on drift: the provider reports the hash of the real content;
+  the adapter refuses dispatch when it differs from the expected hash.
+
+Tests (`05_TEST/test_mcp8020_source_snapshot_provider_v1.py`) on a real
+filesystem in CI: hash-from-content; per-run copy stays immutable when the
+workspace file is later tampered (and a re-snapshot reports the drifted
+hash); unsafe path and unknown-work refusals; symlink-component refusal;
+and the full slice over the REAL provider + REAL Core authority: grant
+session -> adapter.run -> run recorded against the live grant with
+on-disk grant/run linkage and credential non-leakage; expected-hash
+mismatch and tampered-source cases both refuse dispatch with ZERO runtime
+calls and ZERO run records.
+
+**Verification:** CI run #239 (commit 81da690): completed successfully in
+~29s (the suite has grown with all subprocess-boot modules), verified via
+the public actions list on 2026-10-29.
+
+**Evidence level:** repo-side real-filesystem provider + CI green. NOT
+claimed: the W13 Execution Host deployment, OS-level isolation of the
+canonical runtime (the relayed audit's finding stands: the host's
+`isolation: PASS` field is NOT sufficient evidence and remains BLOCKED
+until verified in the trusted environment), the trusted snapshot/runtime
+composition, gateway/catalog wiring, or E2E via MCP 8030. Gates 3-4
+remain BLOCKED; Gate 5 remains NOT OPENED.
+
+Work 28 remains ACTIVE / BLOCKED / NOT RELEASED.
