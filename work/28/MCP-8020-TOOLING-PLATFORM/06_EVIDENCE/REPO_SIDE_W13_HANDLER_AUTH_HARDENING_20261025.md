@@ -738,4 +738,35 @@ until verified in the trusted environment), the trusted snapshot/runtime
 composition, gateway/catalog wiring, or E2E via MCP 8030. Gates 3-4
 remain BLOCKED; Gate 5 remains NOT OPENED.
 
+
+
+---
+
+## §23. WP2 completion — fail-closed Job Object gate on execution paths (2026-10-29)
+
+Commit: `3c6aefa7b8c4e76069d201a0fa696367b295d7cb` — "feat(work28): WP2 completion - fail-closed Job Object gate on execution paths (Windows: BLOCKED when job object not attached)".
+
+### Gap found (WP2)
+
+The parallel work package already delivered a REAL Windows Job Object (`execution_host/process_job.py`: CreateJobObjectW + SetInformationJobObject KILL_ON_JOB_CLOSE + AssignProcessToJobObject + TerminateJobObject via ctypes), parent/child PID reaping tests, and the 3-job CI workflow. Audit found one remaining gap: on Windows, when the Job Object could not be created/attached, `spawn_managed` labeled `job_object=NOT_ATTACHED` but `run_execute_command` still EXECUTED the command — labeling without failing closed.
+
+### Fix (this commit)
+
+- `execution_host/process_job.py`: new public `job_object_gate(managed)` — returns blocker `"job_object_attach_failed"` when platform is Windows AND `job_object != "ATTACHED"`; POSIX (session process group established at spawn) passes. The gate never claims OS isolation: `ISOLATION_STATUS` stays `NOT_VERIFIED`.
+- `execution_host/host_run.py`: `run_execute_command` applies the gate AFTER spawn, BEFORE communicate: if blocked → `managed.cleanup(terminate_first=False)` (kills + reaps the process), `status="BLOCKED"`, `blocker="job_object_attach_failed"`, `exit_code=process.poll()`; command output is NOT run. Re-exported via `host_cleanup_bridge`.
+- `tests/test_process_job_gate.py` (new): unit tests of the gate (win32/NOT_ATTACHED blocks; win32/ATTACHED passes; linux passes) + `ExecuteCommandFailClosedTests` — patched `spawn_managed` returning synthetic Windows NOT_ATTACHED ManagedProcess wrapping a real sleeping process → asserts status BLOCKED, blocker `job_object_attach_failed`, cleanup attestation `job_object=NOT_ATTACHED`, process reaped, evidence file written; plus an unpatched PASS test on the actual CI platform.
+- `.github/workflows/work28-mcp-tooling.yml`: gate test added to BOTH lifecycle jobs (Linux `tee -a lifecycle-output.txt`; Windows `Tee-Object -FilePath lifecycle-wp2-gate.txt`).
+
+### CI observed (public pages/API)
+
+- Actions list (cache-busted): run **#241** "completed successfully", 28s, commit `3c6aefa`.
+- Commit checks page: `execution-host-lifecycle-windows` job present; Linux job "succeeded Oct 29, 2026 in 13s".
+- GitHub API jobs for run 40901605414: `unit-regression-tests` success, `execution-host-lifecycle-linux` success, `execution-host-lifecycle-windows` success (runner windows-2025). Evidence level: real CI OS runners, including Windows — Windows Job Object ATTACHED spawn path and the fail-closed gate both exercised on windows-2025.
+
+### NOT claimed (unchanged)
+
+- OS isolation stays `NOT_VERIFIED` — Job Object containment ≠ OS sandbox; per Xu's sequence, isolation status changes only after Cla/Qw independent review, then Xu review.
+- No Sandbox deployment claimed; no Core grant live claimed; no execute/readback with seal claimed (PC-side, pending).
+- Gateway v54 stays UNWIRED; catalog v54 execution tools stay NOT_IMPLEMENTED; RUN_COMMAND stays disabled.
+
 Work 28 remains ACTIVE / BLOCKED / NOT RELEASED.
