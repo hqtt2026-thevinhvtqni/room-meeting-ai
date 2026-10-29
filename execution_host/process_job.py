@@ -1,7 +1,9 @@
-"""Process group / job helpers for Execution Host cleanup attestation.
+"""Process group helpers for Execution Host cleanup attestation.
 
-Fail-closed counting: never report zero members when the leader still exists
-and is observable. Isolation is NOT claimed here — only process-tree reaping.
+Lifecycle rule: create processes only via spawn_managed() so session/group
+membership is established at start. Wrapping an existing Popen cannot attach a
+Windows Job Object retroactively — that path is labeled explicitly and never
+claims isolation PASS.
 """
 from __future__ import annotations
 
@@ -9,7 +11,6 @@ import os
 import signal
 import subprocess
 import sys
-import time
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Sequence
@@ -25,6 +26,8 @@ class CleanupResult:
     kill_sent: bool = False
     waited: bool = False
     platform: str = ""
+    job_object: str = "NOT_ATTACHED"
+    session_leader: bool = False
     notes: tuple[str, ...] = ()
 
     def as_dict(self) -> dict[str, Any]:
@@ -32,12 +35,7 @@ class CleanupResult:
 
 
 def _posix_group_members(pgid: int) -> int:
-    """Count processes in process group *pgid* (POSIX).
-
-    Uses ``ps -o pid= -g <pgid>``. Empty/invalid lines are skipped with
-    ``continue``; the counter is incremented only for valid PID lines
-    (must not sit under the ``continue`` branch).
-    """
+    """Count processes in process group *pgid* (POSIX)."""
     if pgid <= 0:
         return 0
     try:
@@ -56,7 +54,6 @@ def _posix_group_members(pgid: int) -> int:
         token = line.strip()
         if not token:
             continue
-        # Valid PID token only — increment is NOT under continue.
         if not token.isdigit():
             continue
         n += 1
@@ -65,10 +62,16 @@ def _posix_group_members(pgid: int) -> int:
 
 @dataclass
 class ManagedProcess:
-    """Wrap a Popen with attested cleanup (no OS sandbox claim)."""
+    """Process started under spawn_managed (preferred) or explicitly wrapped.
+
+    isolation is never PASS here — only reaping/attestation.
+    """
 
     process: subprocess.Popen
     platform: str = field(default_factory=lambda: sys.platform)
+    session_leader: bool = False
+    created_via_spawn: bool = False
+    job_object: str = "NOT_ATTACHED"
 
     @property
     def pid(self) -> int | None:
@@ -88,6 +91,12 @@ class ManagedProcess:
 
     def cleanup(self, *, terminate_first: bool = True, wait_timeout: float = 5.0) -> CleanupResult:
         notes: list[str] = []
+        if not self.created_via_spawn:
+            notes.append("wrapped_existing_popen")
+            notes.append("job_object_cannot_attach_retroactively")
+        if self.job_object != "ATTACHED":
+            notes.append("job_object_not_attached")
+
         leader = self.process.pid
         before = self.members_count()
         terminate_sent = False
@@ -163,6 +172,8 @@ class ManagedProcess:
             kill_sent=kill_sent,
             waited=waited,
             platform=self.platform,
+            job_object=self.job_object,
+            session_leader=self.session_leader,
             notes=tuple(notes),
         )
 
@@ -174,6 +185,12 @@ def spawn_managed(
     env: dict[str, str],
     text: bool = True,
 ) -> ManagedProcess:
+    """Create a process with session leadership on POSIX at spawn time.
+
+    Windows Job Object is not attached in this build — job_object stays
+    NOT_ATTACHED and callers must keep isolation at NOT_VERIFIED.
+    """
+    is_win = sys.platform.startswith("win")
     process = subprocess.Popen(
         list(args),
         cwd=str(cwd),
@@ -181,14 +198,35 @@ def spawn_managed(
         text=text,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        start_new_session=not sys.platform.startswith("win"),
+        start_new_session=not is_win,
     )
-    return ManagedProcess(process=process)
+    return ManagedProcess(
+        process=process,
+        platform=sys.platform,
+        session_leader=not is_win,
+        created_via_spawn=True,
+        job_object="NOT_ATTACHED",
+    )
 
+
+def wrap_existing_popen(process: subprocess.Popen) -> ManagedProcess:
+    """Explicit post-hoc wrap — does NOT claim Job Object or isolation."""
+    return ManagedProcess(
+        process=process,
+        platform=sys.platform,
+        session_leader=False,
+        created_via_spawn=False,
+        job_object="NOT_ATTACHED",
+    )
+
+
+ISOLATION_STATUS = "NOT_VERIFIED"
 
 __all__ = [
     "CleanupResult",
     "ManagedProcess",
     "spawn_managed",
+    "wrap_existing_popen",
     "_posix_group_members",
+    "ISOLATION_STATUS",
 ]
