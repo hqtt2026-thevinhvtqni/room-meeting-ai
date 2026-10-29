@@ -1,0 +1,36 @@
+{
+  "schema": "work103.corpus-fixture-freeze.v1",
+  "work_id": "103",
+  "reviewer": "Ka (CSA / Independent Reviewer)",
+  "date": "2026-10-29",
+  "scope": "BENCHMARK_FIXTURE_ONLY",
+  "snapshot": {
+    "repository": "hqtt2026-thevinhvtqni/room-meeting-ai",
+    "branch": "work/103-rag-retrieval-capability",
+    "commit": "57c230a88a0d459c283ecb589432c8f673a9fddb",
+    "raw_content_hash_method": "SHA-256 over UTF-8 bytes returned by the GitHub raw-content endpoint; LF line endings verified."
+  },
+  "corpus_sources": [
+    {"path":"00_CORPUS/network.md","utf8_bytes":720,"sha256":"f7c0b4c2c9f88a39ac5bea73d99d8e2593b6c634273b668ed5f8e2ae19a55089"},
+    {"path":"00_CORPUS/sales.md","utf8_bytes":651,"sha256":"a25b613d6d30be1b6f283d74ace9ccbee41a608bae75c5758fc019366b0f2fbc"},
+    {"path":"00_CORPUS/architecture.md","utf8_bytes":1367,"sha256":"5910ffb71f423a908f471f9ad093cea5e1c550c8e6353b61335d2e1a1a7ad530"},
+    {"path":"00_CORPUS/security.md","utf8_bytes":1070,"sha256":"56c166ebc8699696ac0f4c470409101444aaa62ac9872c905d85f52afc14d71f"},
+    {"path":"00_CORPUS/evidence.md","utf8_bytes":1127,"sha256":"f0b03afc3b3504139ef1d3b60441d054c0b5e6e674d86d65dca47322fd624538"},
+    {"path":"03_ARCHITECTURE/RAG_RETRIEVAL_ARCHITECTURE.md","utf8_bytes":2606,"sha256":"ef51fa32722cfcb11c630e3f39c83ac1ee25036e1201ac856a4d586f86adb27e"}
+  ],
+  "artifact_hashes": {
+    "00_CORPUS/CORPUS_MANIFEST_v4.0.md": {"utf8_bytes":3613,"sha256":"52a843c800cbc503c8f429f6e21b8b0fe55d293b87e535f7272bd22cd3f4a666"},
+    "06_EVIDENCE/QW_BLIND_LABELS_50_QUERIES_V5_20261029.md": {"utf8_bytes":14256,"sha256":"48d100372bb3e4b88f541dee750e62f82f9642ee2fd0e481553ef43cfaa281f2"},
+    "06_EVIDENCE/KA_ADJUDICATED_LABELS_50_QUERIES_V2_20261029.json": {"utf8_bytes":39196,"sha256":"318d444fb76bfb209636fcebad7c71fc0eccb814b81805a2d1011a0071a78879","canonical_dataset_sha256":"579c61bda1df8b643795f58da733f8fc3c2b4132438588da1f7e32a7c1c404d3"},
+    "05_TEST/EVAL_SET.json": {"utf8_bytes":11641,"sha256":"ab60cabdeee6254e11ee6889c20b6f2e68cd5072687bafcb314fb7c9a37c9f07","documents":8,"labeled_queries":50,"no_answer_queries":15}
+  },
+  "decisions": {
+    "fixture_snapshot": "PINNED_BY_KA_FOR_BENCHMARK_FIXTURE_USE",
+    "production_corpus_approval": "NOT_GRANTED",
+    "blind_annotation_process": "UNVERIFIED",
+    "adjudicated_labels": "ROW_BY_ROW_REVIEWED; 3 LABEL CORRECTIONS IN V2; NOT CERTIFIED AS BLIND",
+    "evaluation_alignment": "BLOCKED: existing EVAL_SET.json v2 uses a different eight-document synthetic corpus from this six-source fixture and its 50-query adjudicated labels",
+    "live_mcp_core_e2e": "NOT RUN"
+  },
+  "note": "This pin is a reproducible GitHub snapshot for benchmark-fixture work only. It does not claim that original Sandbox stored bytes are identical, does not ratify a production corpus, and does not open the live integration gate."
+}
