@@ -1,4 +1,4 @@
-"""Unit tests for process_job POSIX counter and ManagedProcess cleanup."""
+"""Unit tests for process_job POSIX counter and ManagedProcess lifecycle."""
 from __future__ import annotations
 
 import subprocess
@@ -11,6 +11,7 @@ from execution_host.process_job import (
     ManagedProcess,
     _posix_group_members,
     spawn_managed,
+    wrap_existing_popen,
 )
 
 
@@ -61,6 +62,34 @@ class ManagedProcessTests(unittest.TestCase):
         result = managed.cleanup(terminate_first=True, wait_timeout=3.0)
         self.assertTrue(result.process_reaped)
         self.assertTrue(result.terminate_sent or result.kill_sent)
+
+
+class SpawnLifecycleTests(unittest.TestCase):
+    def test_spawn_marks_created_via_spawn(self):
+        managed = spawn_managed(
+            [sys.executable, "-c", "print(1)"],
+            cwd=".",
+            env={"PATH": __import__("os").environ.get("PATH", "")},
+        )
+        managed.process.communicate(timeout=10)
+        self.assertTrue(managed.created_via_spawn)
+        result = managed.cleanup(terminate_first=False)
+        self.assertEqual(result.job_object, "NOT_ATTACHED")
+        self.assertNotIn("wrapped_existing_popen", result.notes)
+
+    def test_wrap_existing_is_labeled(self):
+        p = subprocess.Popen(
+            [sys.executable, "-c", "print(1)"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+        p.communicate(timeout=10)
+        managed = wrap_existing_popen(p)
+        self.assertFalse(managed.created_via_spawn)
+        result = managed.cleanup(terminate_first=False)
+        self.assertIn("wrapped_existing_popen", result.notes)
+        self.assertIn("job_object_cannot_attach_retroactively", result.notes)
 
 
 if __name__ == "__main__":
