@@ -42,7 +42,7 @@ jobs:
 
       - name: Manifest V4 + Ka V3 corpus-aligned evaluation (independent gate)
         working-directory: work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/04_CODE
-        run: python rag_eval.py --eval-set ../05_TEST/EVAL_SET_CORPUS_V4_V3.json
+        run: python rag_eval.py --eval-set ../05_TEST/EVAL_SET_CORPUS_V4_V3.json --diagnostics
 
       - name: Controlled retrieval experiment sweep
         working-directory: work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/04_CODE
