@@ -34,6 +34,31 @@ class CleanupResult:
         return asdict(self)
 
 
+def _windows_kill_tree(pid: int) -> list[str]:
+    """Best-effort kill process tree on Windows via taskkill /T.
+
+    This is NOT a Job Object. Callers must keep job_object=NOT_ATTACHED.
+    """
+    notes: list[str] = []
+    if pid <= 0:
+        return notes
+    try:
+        completed = subprocess.run(
+            ["taskkill", "/F", "/T", "/PID", str(pid)],
+            capture_output=True,
+            text=True,
+            timeout=15,
+            check=False,
+        )
+        if completed.returncode != 0:
+            notes.append(f"taskkill_rc={completed.returncode}")
+        else:
+            notes.append("taskkill_tree_attempted")
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        notes.append(f"taskkill_failed:{type(exc).__name__}")
+    return notes
+
+
 def _posix_group_members(pgid: int) -> int:
     """Count processes in process group *pgid* (POSIX)."""
     if pgid <= 0:
@@ -105,42 +130,59 @@ class ManagedProcess:
 
         if self.process.poll() is None:
             try:
-                if terminate_first:
-                    if self.platform.startswith("win"):
-                        self.process.terminate()
-                    else:
+                if self.platform.startswith("win"):
+                    notes.extend(_windows_kill_tree(leader))
+                    terminate_sent = terminate_first
+                    kill_sent = True
+                    try:
+                        self.process.wait(timeout=wait_timeout)
+                        waited = True
+                    except subprocess.TimeoutExpired:
+                        notes.append("wait_timeout_after_taskkill")
                         try:
-                            os.killpg(os.getpgid(leader), signal.SIGTERM)
-                        except (OSError, ProcessLookupError):
-                            self.process.terminate()
+                            self.process.kill()
+                            self.process.wait(timeout=wait_timeout)
+                            waited = True
+                        except (subprocess.TimeoutExpired, OSError) as exc:
+                            notes.append(f"force_kill_failed:{type(exc).__name__}")
+                elif terminate_first:
+                    try:
+                        os.killpg(os.getpgid(leader), signal.SIGTERM)
+                    except (OSError, ProcessLookupError):
+                        self.process.terminate()
                     terminate_sent = True
-                else:
-                    if self.platform.startswith("win"):
-                        self.process.kill()
-                    else:
+                    try:
+                        self.process.wait(timeout=wait_timeout)
+                        waited = True
+                    except subprocess.TimeoutExpired:
+                        notes.append("wait_timeout_after_terminate")
                         try:
                             os.killpg(os.getpgid(leader), signal.SIGKILL)
                         except (OSError, ProcessLookupError):
                             self.process.kill()
-                    kill_sent = True
-                try:
-                    self.process.wait(timeout=wait_timeout)
-                    waited = True
-                except subprocess.TimeoutExpired:
-                    notes.append("wait_timeout_after_terminate")
-                    try:
-                        if self.platform.startswith("win"):
-                            self.process.kill()
-                        else:
-                            try:
-                                os.killpg(os.getpgid(leader), signal.SIGKILL)
-                            except (OSError, ProcessLookupError):
-                                self.process.kill()
                         kill_sent = True
+                        try:
+                            self.process.wait(timeout=wait_timeout)
+                            waited = True
+                        except (subprocess.TimeoutExpired, OSError) as exc:
+                            notes.append(f"force_kill_failed:{type(exc).__name__}")
+                else:
+                    try:
+                        os.killpg(os.getpgid(leader), signal.SIGKILL)
+                    except (OSError, ProcessLookupError):
+                        self.process.kill()
+                    kill_sent = True
+                    try:
                         self.process.wait(timeout=wait_timeout)
                         waited = True
-                    except (subprocess.TimeoutExpired, OSError) as exc:
-                        notes.append(f"force_kill_failed:{type(exc).__name__}")
+                    except subprocess.TimeoutExpired:
+                        notes.append("wait_timeout_after_kill")
+                        try:
+                            self.process.kill()
+                            self.process.wait(timeout=wait_timeout)
+                            waited = True
+                        except (subprocess.TimeoutExpired, OSError) as exc:
+                            notes.append(f"force_kill_failed:{type(exc).__name__}")
             except OSError as exc:
                 notes.append(f"signal_failed:{type(exc).__name__}")
 
