@@ -96,3 +96,12 @@ The strict no-answer metric counts every non-empty retrieval as a leak. For Q004
 ## Grounded-abstention diagnostic added
 
 A report-only script, `05_TEST/grounded_abstention_eval.py`, now compares strict empty-retrieval accuracy with a separately named grounded-abstention measure. It credits retrieval only when all returned sources are explicitly annotated as evidence that the requested detail is unspecified. It does not modify labels, ranking, the existing `no_answer_accuracy` gate, or baseline thresholds. CI runs this diagnostic before the strict corpus-aligned gate and prints the result for review.
+
+
+## Supplemental grounded-abstention run — CI #54
+
+- [GitHub Actions run #54](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/40799292123) executed the report-only grounded-abstention analysis before the strict gate.
+- At threshold 0.35: strict empty-retrieval accuracy = 0.300; grounded no-answer accuracy = 0.600.
+- At threshold 0.45–0.60: grounded no-answer accuracy = 0.800, but the answerable-query sweep is below baseline (at 0.45: Hit@5=0.875, Recall@5=0.875, MRR=0.863, answered rate=0.900).
+- Thus, even the supplemental interpretation does not yield a threshold that satisfies both answer retrieval and no-answer behavior. The strict gate remains unchanged and fails. The diagnostic mapping is an explicit reviewer interpretation and must be independently reviewed before being used for any release gate.
+- Run #54: unit tests PASS on Python 3.11/3.12; corpus-aligned strict gate FAIL on both.
