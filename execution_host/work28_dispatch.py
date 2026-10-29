@@ -1,9 +1,10 @@
-"""WP16–WP21 — Authenticated dispatch: grant → snapshot → execute + seal + audit.
+"""WP16–WP22 — Authenticated dispatch: grant → snapshot → execute + seal + audit.
 
 Server-side only. Client cannot inject grants. MCP execution tools remain closed.
 """
 from __future__ import annotations
 
+import os
 from pathlib import Path
 from typing import Any
 
@@ -130,7 +131,8 @@ def _dispatch_work28_snapshot(
             "status": result.get("status"),
             "dispatch_mode": "work28_snapshot",
             "source_sha256": snapshot.source_sha256,
-        }
+        },
+        sink_path=os.environ.get("ROOM_HOP_AUDIT_LOG") or None,
     )
     return result
 
