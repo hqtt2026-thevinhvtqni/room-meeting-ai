@@ -9,20 +9,14 @@ from .identity import RuntimeIdentity
 from .models import WorkContext, ExecutionRequest
 from .work28_dispatch import DispatchError, dispatch_execute
 from .work28_grant import ExecutionGrant, GrantError
+from .work28_grant_registry import load_grant_registry
 
-# Trusted header that carries the deployment-issued execution token.
 AUTH_HEADER = 'X-Room-Hop-Execution-Auth'
-
-# Trusted environment variables for the deployment configuration. The token
-# value is never logged, echoed, or written into evidence.
 AUTH_TOKEN_ENV = 'ROOM_HOP_EXECUTION_AUTH_TOKEN'
 AUTHORIZED_WORKS_ENV = 'ROOM_HOP_AUTHORIZED_WORKS'
-
-# Canonical Work id format pinned for the execution boundary: W<number>.
 WORK_ID_PATTERN = re.compile(r'W\d+')
 
 def normalize_work_id(value):
-    """Validate and normalize a Work id against the pinned W<number> format."""
     if not isinstance(value, str):
         raise ValueError('work_id must be a string')
     normalized = value.strip().upper()
@@ -34,7 +28,6 @@ def normalize_work_id(value):
     return normalized
 
 def authenticate_caller(provided, auth_token):
-    """Fail-closed caller authentication for the POST /execute boundary."""
     if not isinstance(auth_token, str) or not auth_token:
         return False
     if not isinstance(provided, str) or not provided:
@@ -42,7 +35,6 @@ def authenticate_caller(provided, auth_token):
     return hmac.compare_digest(provided, auth_token)
 
 def authorize_work(work_id, authorized_works):
-    """Fail-closed per-Work authorization; normalize W<number>."""
     if not isinstance(authorized_works, (set, frozenset)) or not authorized_works:
         return False
     try:
@@ -90,7 +82,6 @@ class Handler(BaseHTTPRequestHandler):
             if self.host is None: raise RuntimeError('runtime_not_initialized')
             body=json.loads(self.rfile.read(int(self.headers.get('Content-Length','0'))))
             work_context=dict(body['work_context'])
-            # Client-supplied authorized flag is never trusted.
             if not authorize_work(work_context.get('work_id'), Handler.authorized_works):
                 self._send(403,{'status':'BLOCKED','reason':'caller_not_authorized_for_work'}); return
             work_context['authorized']=True
@@ -117,7 +108,9 @@ def serve(host='127.0.0.1',port=8031,auth_token: str | None = None, authorized_w
 def main():
     config = load_execution_auth_config()
     announced = ', '.join(sorted(config['authorized_works']))
-    print('execution-host: armed; authorized works: ' + announced, flush=True)
-    serve('127.0.0.1', 8031, **config)
+    grants = load_grant_registry()
+    print('execution-host: armed; authorized works: ' + announced +
+          '; grants=' + str(len(grants)), flush=True)
+    serve('127.0.0.1', 8031, grant_registry=grants, **config)
 
 if __name__=='__main__': main()
