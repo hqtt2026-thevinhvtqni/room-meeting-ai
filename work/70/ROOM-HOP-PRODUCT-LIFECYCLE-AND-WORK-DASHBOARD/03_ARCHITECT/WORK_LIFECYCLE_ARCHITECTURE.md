@@ -1,7 +1,7 @@
 # WORK LIFECYCLE ARCHITECTURE — CANONICAL V1.1
 
 ## Domain model
-ROOM-HOP → Work (stable product/lifecycle aggregate) → nine lifecycle phases. The Work owns exactly one lifecycle. 05_BUILD is the engineering workspace with its nine fixed child directories. Work Packages are logical delivery records maintained in 05_BUILD/00_ROOT/BUILD_REGISTER.md; they reference branches, build areas and artifacts rather than creating another lifecycle or mandatory per-WP folder tree. Top-level 06_EVIDENCE is the cross-phase evidence index. DASHBOARD is read-only.
+ROOM-HOP → Work (stable product/lifecycle aggregate) → nine lifecycle phases. The Work owns exactly one lifecycle. 05_BUILD is the engineering workspace with its nine fixed child directories. Work Packages are logical delivery records maintained in 05_BUILD/00_ROOT/BUILD_REGISTER.json (human-readable mirror: BUILD_REGISTER.md), validated by BUILD_REGISTER.schema.json and WORK_PACKAGE.schema.json; they reference branches, build areas and artifacts rather than creating another lifecycle or mandatory per-WP folder tree. Top-level 06_EVIDENCE is the cross-phase evidence index. DASHBOARD is read-only.
 
 ## Canonical directory ownership
 - 00_ROOT: Work identity, manifest, authority, standard version and glossary.
