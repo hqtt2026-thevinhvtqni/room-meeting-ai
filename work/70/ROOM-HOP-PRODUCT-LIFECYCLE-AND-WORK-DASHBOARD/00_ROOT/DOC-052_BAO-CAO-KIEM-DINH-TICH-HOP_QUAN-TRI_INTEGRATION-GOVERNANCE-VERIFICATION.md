@@ -4,7 +4,7 @@
 - **Read order / Thứ tự đọc:** 52
 - **Depends on / Phụ thuộc:** DOC-001; DOC-003; DOC-004; DOC-005; DOC-011; DOC-014; DOC-015; DOC-019; DOC-033; DOC-036; DOC-041; DOC-047; DOC-048; DOC-049; DOC-050; DOC-051
 - **Status / Trạng thái:** ACTIVE — AUDIT REPORT / GATE NOT PASSED
-- **Version / Updated:** 1.0 / 2026-10-30
+- **Version / Updated:** 1.1 / 2026-10-30
 - **Author:** Xu / AI-01
 - **Authority:** Vinh — Product Owner
 
@@ -81,6 +81,14 @@ Manifest remains at 03_ARCHITECT (design baseline; exit gate not passed). The cr
 
 **Action:** Keep current phase and all downstream statuses unchanged until required criteria, evidence and authorized decisions are recorded. Product Owner retains gate authority.
 
+### F-052-07 — Gate numbering mismatch across acceptance/release/operations standards
+**Severity:** CRITICAL / governance consistency defect  
+Cross-checking DOC-049..051 against authoritative DOC-004 found a one-step gate offset: acceptance was labelled G7 instead of G6; release G8 instead of G7; operations entry G9 instead of G8. DOC-004 defines G6 VERIFY→ACCEPT, G7 ACCEPT→RELEASE, G8 RELEASE→OPERATE and G9 OPERATE→improvement.
+
+**Correction performed:** DOC-049, DOC-050 and DOC-051 updated to v1.1. Their gate IDs now align with DOC-004. DOC-051 explicitly distinguishes G8 entry to OPERATE from G9 periodic operational improvement review. Change histories were repaired to retain valid Markdown table structure.
+
+**Remaining action:** Independent reviewer must verify all gate references across DOC-004, DOC-042..051, DOC-020..022 and Dashboard data before any gate decision. This correction does not pass any gate.
+
 ## 4. Evidence and validation results
 
 | Check | Result | Scope / limitation |
@@ -115,10 +123,10 @@ Manifest remains at 03_ARCHITECT (design baseline; exit gate not passed). The cr
 - G3 ARCHITECT exit: NOT PASS.
 - G4 PLAN exit: NOT PASS.
 - G5 BUILD exit: NOT PASS.
-- G6 VERIFY exit: NOT PASS.
-- G7 ACCEPT: PENDING.
-- G8 RELEASE: NOT RELEASED.
-- G9 OPERATE: NOT ACTIVE.
+- G6 VERIFY → ACCEPT: NOT PASS / ACCEPTANCE PENDING.
+- G7 ACCEPT → RELEASE: NOT AUTHORIZED / NOT RELEASED.
+- G8 RELEASE → OPERATE: NOT ACTIVE.
+- G9 OPERATE → IMPROVEMENT: NOT RUN / NOT ASSESSED.
 - Product acceptance: NOT GRANTED.
 - Independent QE: PENDING.
 - Sandbox synchronization: NOT VERIFIED.
@@ -129,4 +137,5 @@ This report is advisory and records observations/remediation. It does not approv
 
 | Version | Date | Change |
 |---|---|---|
+| 1.1 | 2026-10-30 | Corrected gate numbering across DOC-049..051 to match DOC-004; recorded F-052-07 and updated gate-state interpretation. |
 | 1.0 | 2026-10-30 | Initial bounded GitHub integration/governance audit; recorded WP authority gap, evidence schema v1.1 remediation, verification/Core/Sandbox blockers and gate truth. |
