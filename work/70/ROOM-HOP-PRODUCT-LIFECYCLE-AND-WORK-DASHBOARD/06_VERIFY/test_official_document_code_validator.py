@@ -1,0 +1,45 @@
+import unittest
+from validate_official_document_codes import validate
+
+REGISTER = """| DOC-034 | P2 | 31 | Minutes | 00_ROOT/BIEN_BAN.md | DOC-001 | ACTIVE | Minutes |
+| DOC-040 | P0 | 10 | Code Register | 00_ROOT/DOC-040.md | DOC-039 | ACTIVE | Ledger |
+"""
+
+def ledger(rows):
+    header = "| STT | Mã văn bản | DOC-ID | Loại | Tiêu đề | Ngày cấp | Người soạn | Người ban hành/phê duyệt | Văn bản liên quan/gốc | Trạng thái | Đường dẫn chuẩn | Bằng chứng |"
+    separator = "|---:|---|---|---|---|---|---|---|---|---|---|---|"
+    return "\n".join([header, separator, *rows])
+
+class ValidatorTests(unittest.TestCase):
+    def test_legacy_reference_is_allowed_but_not_counted_as_new(self):
+        row = "| 001 | BB-70-001 | DOC-034 | BB | Minutes | 2026-10-30 | Xu | Vinh | D70-011 | LEGACY_REFERENCE — historical | 00_ROOT/BIEN_BAN.md | Original minutes |"
+        errors, counts = validate(REGISTER, ledger([row]))
+        self.assertEqual(errors, [])
+        self.assertEqual(counts, {"records": 1, "legacy": 1, "new": 0, "issued": 0})
+
+    def test_valid_new_code(self):
+        row = "| 002 | BB-W70-20261030-001 | DOC-034 | BB | Minutes | 2026-10-30 | Xu | Vinh | D70-011 | ISSUED | 00_ROOT/BIEN_BAN.md | Approval evidence |"
+        errors, counts = validate(REGISTER, ledger([row]))
+        self.assertEqual(errors, [])
+        self.assertEqual(counts["issued"], 1)
+
+    def test_rejects_invalid_format_and_unknown_doc_id(self):
+        row = "| 002 | BB-W70-20260230-000 | DOC-099 | BB | Minutes | 2026-02-30 | Xu | — | — | DRAFT | — | — |"
+        errors, _ = validate(REGISTER, ledger([row]))
+        self.assertTrue(any("absent from Document Register" in e for e in errors))
+        self.assertTrue(any("invalid issue date" in e for e in errors))
+        self.assertTrue(any("sequence must start at 001" in e for e in errors))
+
+    def test_rejects_duplicate_code(self):
+        row = "| 002 | BB-W70-20261030-001 | DOC-034 | BB | Minutes | 2026-10-30 | Xu | Vinh | D70-011 | DRAFT | 00_ROOT/BIEN_BAN.md | — |"
+        errors, _ = validate(REGISTER, ledger([row, row]))
+        self.assertTrue(any("duplicate document code" in e for e in errors))
+
+    def test_issued_requires_approver_and_evidence(self):
+        row = "| 002 | BB-W70-20261030-001 | DOC-034 | BB | Minutes | 2026-10-30 | Xu | — | D70-011 | ISSUED | 00_ROOT/BIEN_BAN.md | — |"
+        errors, _ = validate(REGISTER, ledger([row]))
+        self.assertTrue(any("has no approver" in e for e in errors))
+        self.assertTrue(any("has no issuance evidence" in e for e in errors))
+
+if __name__ == "__main__":
+    unittest.main()
