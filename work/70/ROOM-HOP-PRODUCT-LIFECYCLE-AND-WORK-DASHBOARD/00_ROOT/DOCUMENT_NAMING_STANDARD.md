@@ -57,6 +57,8 @@ Ngay dưới tiêu đề phải có:
 Với JSON, YAML hoặc schema, không chèn metadata làm sai cú pháp; khai báo trong schema hoặc Document Register. Với bản vẽ/mô hình nhị phân, metadata nằm trong title block, trang thông tin hoặc sidecar manifest được đăng ký.
 
 ## 5. Quy tắc theo loại tài liệu / Naming by artifact type
+
+Với văn bản phát hành chính thức có mã loại (BB, QD, LENH, PL...), áp dụng thêm DOC-039 và đặt tên theo mẫu DOC-NNN_MA-VAN-BAN_TEN-VIET_ENGLISH.ext. DOC-ID và mã văn bản nghiệp vụ là hai lớp mã khác nhau; không thay thế nhau.
 | Loại / Type | Quy tắc tên / Naming pattern |
 |---|---|
 | Biên bản / Minutes | DOC-NNN_BIEN-BAN_CHU-DE_MINUTES_TOPIC |
