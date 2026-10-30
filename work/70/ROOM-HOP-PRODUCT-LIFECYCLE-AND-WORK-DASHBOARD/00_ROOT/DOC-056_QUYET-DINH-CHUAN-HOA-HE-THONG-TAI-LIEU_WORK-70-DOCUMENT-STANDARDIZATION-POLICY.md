@@ -1,7 +1,7 @@
 # QUYẾT ĐỊNH CHUẨN HÓA HỆ THỐNG TÀI LIỆU WORK 70 / WORK 70 DOCUMENT STANDARDIZATION POLICY
 - **STT / Document ID:** DOC-056
 - **Priority:** P0
-- **Read order:** 55
+- **Read order:** 56
 - **Depends on:** DOC-001; DOC-033; DOC-038; DOC-039; DOC-040; DOC-055
 - **Status:** ACTIVE — MIGRATION IN PROGRESS
 - **Version / Updated:** 1.0 / 2026-10-31
