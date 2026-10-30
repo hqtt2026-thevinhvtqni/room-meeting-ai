@@ -1,5 +1,5 @@
 # WORK 70 — DOCUMENT REGISTER
-Register version: 1.9
+Register version: 2.0
 Owner: Xu / AI-01
 Authority: Vinh
 Rule: STT is a stable identity; Priority is importance; Read order is sequence. File paths are not renamed by this register.
@@ -47,6 +47,7 @@ Rule: STT is a stable identity; Priority is importance; Read order is sequence. 
 | DOC-032 | P3 | 39 | Dashboard README | DASHBOARD/README.md | DOC-010 | ACTIVE | Dashboard usage and limitations |
 | DOC-037 | P3 | 40 | Work 70 README | README.md | DOC-001; DOC-033; DOC-036 | ACTIVE | Human-readable entry point; subordinate to Manifest and standards |
 | DOC-041 | P1 | 41 | Báo cáo rà soát quản trị Work 70 / Work 70 Governance Audit Report | 00_ROOT/DOC-041_BAO-CAO-RA-SOAT-QUAN-TRI_GOVERNANCE-AUDIT-REPORT.md | DOC-001; DOC-003; DOC-004; DOC-005; DOC-006; DOC-033; DOC-038; DOC-039; DOC-040 | ACTIVE — AUDIT OPEN | Confirmed governance findings and remediation backlog; not product acceptance |
+| DOC-042 | P1 | 42 | Quy trình Khám phá / Discover Process | 00_ROOT/DOC-042_QUY-TRINH-KHAM-PHA_DISCOVER-PROCESS.md | DOC-001; DOC-002; DOC-004; DOC-007; DOC-033; DOC-038 | ACTIVE — PROCESS STANDARD | End-to-end D01–D08 procedure, evidence rules, G1 review, outcomes, risk-based research and handoff |
 
 ## AI reading rule
 Read DOC-001 through DOC-006, then DOC-033, DOC-038, DOC-039 and DOC-040. Then read relevant P1 documents in ascending read order. Read P2 only for the active task. Read P3 when clarification, operations or historical trace requires it. Read DOC-041 when reconciling governance or closing its remediation backlog. Never infer PASS from the register or presence of a file.
