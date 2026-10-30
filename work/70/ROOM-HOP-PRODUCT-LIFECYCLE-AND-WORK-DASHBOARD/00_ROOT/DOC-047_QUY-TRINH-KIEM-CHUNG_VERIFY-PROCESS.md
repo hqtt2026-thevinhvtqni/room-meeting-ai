@@ -244,7 +244,5 @@ DOC-047 là chuẩn quy trình. Vinh giữ authority đối với G6 và residua
 ## Change History
 | Version | Date | Change |
 |---|---|---|
-| 1.1 | 2026-10-30 | Align downstream gate references with DOC-004: G6 verification/acceptance transition, G7 release, G8 operations. |
-| Version | Date | Change |
-|---|---|---|
-| 1.0 | 2026-10-30 | Ban hành V01–V10, risk-based verification, evidence integrity, independent QE, G6 and handoff standard. |
+| 1.1 | 2026-10-30 | Xu / AI-01 | Align downstream gate references with DOC-004: G6 verification/acceptance transition, G7 release, G8 operations. |
+| 1.0 | 2026-10-30 | Xu / AI-01 | Ban hành V01–V10, risk-based verification, evidence integrity, independent QE, G6 and handoff standard. |
