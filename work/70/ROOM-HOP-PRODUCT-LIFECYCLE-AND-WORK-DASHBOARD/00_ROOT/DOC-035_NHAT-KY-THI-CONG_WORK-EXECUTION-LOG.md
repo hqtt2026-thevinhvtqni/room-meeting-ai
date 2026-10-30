@@ -194,3 +194,17 @@ Co đề nghị dùng 00_ROOT/NHAT_KY_THI_CONG.md làm kênh bàn giao vận hà
 - PASS — DOC-058 incident report và DOC-057 Entry Gate standard được đồng bộ GitHub main; DOC-055 register ghi DOC-057/058. Exact readback đã xác minh DOC-058, DOC-055, DOC-057 và hai tài liệu Ka branch.
 - BLOCKED — Sandbox API chỉ hỗ trợ xóa file, không hỗ trợ xóa thư mục; hai thư mục rỗng ngoài root (00_ROOT và 05_BUILD/03_ARCHITECT, cùng cha 05_BUILD) vẫn còn entry rỗng. Không có thao tác xóa thư mục khả dụng trong MCP 8030. Cây lồng work/70/... được giữ nguyên theo DOC-003, chờ kế hoạch cleanup riêng và so sánh đầy đủ.
 - Trạng thái tổng: STRUCTURAL RESTORATION PARTIAL / CONTENT RESTORED / GITHUB BRANCH BOUNDARY RESTORED / EMPTY SANDBOX DIRS + NESTED MIRROR CLEANUP BLOCKED. Không tuyên bố toàn bộ cấu trúc PASS.
+
+
+## 2026-10-31 — Xu / AI-01 — Ghi nhận chỉ thị DENY-to-RECOVERY và xử lý nhật ký
+- Người ghi: Xu / AI-01 — Điều phối Work 70.
+- Chỉ thị của Vinh: ghi nhận, ký và triển khai tiếp nguyên tắc mọi DENY/BLOCKED phải có hướng dẫn khắc phục; không được chỉ chặn đứng tiến trình. Vinh nhắc lại yêu cầu phải ghi nội dung vào Nhật ký thi công DOC-035.
+- Quyết định: xác lập nguyên tắc **DENY ≠ DEAD END** ở mức P0, áp dụng xuyên suốt Work Entry Gate DOC-057, Lifecycle Engine, State Machine, Authorization, Execution Host, AI Adapters và Dashboard.
+- Hợp đồng phản hồi bắt buộc: (1) hành động bị từ chối; (2) lý do; (3) bằng chứng/điều kiện chưa đạt; (4) phạm vi ảnh hưởng; (5) hướng dẫn khắc phục theo bước; (6) hoạt động an toàn vẫn được phép; (7) owner; (8) cách kiểm tra lại; (9) điều kiện mở khóa; (10) đường hỗ trợ/tài liệu liên quan.
+- Quy tắc giới hạn: chỉ từ chối hành động không đủ điều kiện hoặc nguy hiểm; không chặn các hoạt động độc lập, an toàn và được cấp quyền. Không cho phép phương án thay thế vượt qua kiểm soát bảo mật. Với rủi ro bảo mật khẩn cấp, khóa hành động nguy hiểm nhưng vẫn phải hướng dẫn xử lý an toàn.
+- Hồ sơ chính sách: Xu đã soạn nội dung DOC-059 — DENY-TO-RECOVERY STANDARD v1.0, P0, ngày 2026-10-31; ghi nhận Xu/AI-01 là người soạn và điều phối triển khai, chỉ thị của Vinh là chấp thuận tiếp tục. Đây mới là nội dung soạn thảo trong phiên; chưa xác nhận file DOC-059 đã được ghi vào Sandbox hoặc GitHub, chưa đăng ký vào DOC-055.
+- Thao tác Sandbox: gọi sandbox_read_probe/sandbox_read và sandbox_write qua MCP 8030 nhưng các lệnh bị lớp an toàn từ chối hoặc trả kết quả rỗng; không có bằng chứng ghi DOC-059/DOC-035 vào Sandbox trong lượt này.
+- Khôi phục kênh nhật ký: fetch DOC-035 canonical trên GitHub main thành công tại `work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/00_ROOT/DOC-035_NHAT-KY-THI-CONG_WORK-EXECUTION-LOG.md`; blob SHA trước cập nhật: `c7a6f3f2a3600d720e50fddb41345f323335948a`. Nội dung hiện tại được giữ nguyên và bổ sung entry này theo nguyên tắc append-only.
+- Trạng thái tại thời điểm ghi: POLICY DECISION CONFIRMED / DOC-059 DRAFTED / SANDBOX WRITE BLOCKED / GITHUB JOURNAL UPDATE IN PROGRESS / TECHNICAL ENFORCEMENT NOT VERIFIED.
+- Kế hoạch tiếp theo: (1) xác minh readback commit DOC-035 sau cập nhật; (2) ghi DOC-059 vào Sandbox và GitHub main; (3) cập nhật DOC-055 đăng ký DOC-059; (4) triển khai DenyResponse contract + Recovery Catalog; (5) kiểm thử positive, negative, continuity, recovery và security; (6) Qw kiểm thử độc lập. Không tuyên bố technical PASS trước khi có evidence.
+- Chữ ký ghi nhật ký: **Xu / AI-01 — Work 70 Coordinator**. Chấp thuận triển khai được ghi nhận theo chỉ thị trực tiếp của **Vinh**, không diễn giải thành nghiệm thu kỹ thuật.
