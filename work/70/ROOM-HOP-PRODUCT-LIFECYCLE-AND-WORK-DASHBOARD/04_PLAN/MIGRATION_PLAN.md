@@ -2,7 +2,7 @@
 # Kế hoạch chuyển đổi các Work hiện hữu
 - **STT / Document ID:** DOC-018
 - **Priority:** P2
-- **Read order:** 20
+- **Read order:** 23
 - **Depends on:** DOC-012; DOC-033; DOC-036
 - **Status:** ACTIVE / DESIGN PLAN — NO MIGRATION EXECUTED
 - **Version / Updated:** 1.1 / 2026-10-30
