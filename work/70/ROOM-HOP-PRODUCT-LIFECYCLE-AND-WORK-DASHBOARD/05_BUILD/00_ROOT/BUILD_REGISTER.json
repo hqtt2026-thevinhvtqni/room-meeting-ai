@@ -1,0 +1,167 @@
+{
+  "work_id": "70",
+  "schema_version": "1.0",
+  "work_packages": [
+    {
+      "wp_id": "WP-70-01",
+      "title": "Canonical Work standard",
+      "objective": "Align canonical Work structure, lifecycle, gates and authority.",
+      "owner": "Xu / AI-01",
+      "reviewer": "Qw / AI-05",
+      "build_areas": [
+        "00_ROOT",
+        "03_ARCHITECTURE"
+      ],
+      "dependencies": [],
+      "acceptance_criteria": [
+        "README, manifest and architecture define the same top-level and 05_BUILD structures.",
+        "Lifecycle, gates and state machine do not contradict one another.",
+        "No existing Work is modified."
+      ],
+      "evidence_refs": [
+        "README.md",
+        "00_ROOT/WORK_MANIFEST.md",
+        "03_ARCHITECTURE/WORK_LIFECYCLE_ARCHITECTURE.md"
+      ],
+      "status": "IN_PROGRESS",
+      "branch": "work/70/05-build"
+    },
+    {
+      "wp_id": "WP-70-02",
+      "title": "Work Package registry",
+      "objective": "Define structured WP records, schema and fixed build-area mapping.",
+      "owner": "Xu / AI-01",
+      "reviewer": "Qw / AI-05",
+      "build_areas": [
+        "00_ROOT"
+      ],
+      "dependencies": [
+        "WP-70-01"
+      ],
+      "acceptance_criteria": [
+        "BUILD_REGISTER.json validates against BUILD_REGISTER.schema.json.",
+        "Every WP record validates against WORK_PACKAGE.schema.json.",
+        "Markdown register matches the JSON source."
+      ],
+      "evidence_refs": [
+        "00_ROOT/BUILD_REGISTER.json",
+        "00_ROOT/BUILD_REGISTER.schema.json",
+        "00_ROOT/BUILD_REGISTER.md",
+        "00_ROOT/WORK_PACKAGE.schema.json"
+      ],
+      "status": "IN_PROGRESS",
+      "branch": "work/70/05-build"
+    },
+    {
+      "wp_id": "WP-70-03",
+      "title": "Dashboard reference and data contract",
+      "objective": "Align Dashboard schema, local snapshot and read-only UI.",
+      "owner": "Xu / AI-01",
+      "reviewer": "Qw / AI-05",
+      "build_areas": [
+        "03_ARCHITECTURE",
+        "04_CODE",
+        "05_TEST"
+      ],
+      "dependencies": [
+        "WP-70-01"
+      ],
+      "acceptance_criteria": [
+        "PRODUCT_STATUS.json validates against schema.",
+        "Dashboard renders phases, owners, WPs, blockers, risks, decisions and evidence refs.",
+        "Local snapshot is never represented as Core live."
+      ],
+      "evidence_refs": [
+        "DASHBOARD/README.md",
+        "DASHBOARD/PRODUCT_STATUS.json",
+        "DASHBOARD/PRODUCT_STATUS.schema.json",
+        "DASHBOARD/index.html"
+      ],
+      "status": "IN_PROGRESS",
+      "branch": "work/70/05-build"
+    },
+    {
+      "wp_id": "WP-70-04",
+      "title": "Core read integration",
+      "objective": "Inspect actual Core endpoints, authorization and freshness before integration.",
+      "owner": "Xu / Core owner TBD",
+      "reviewer": "Qw / AI-05",
+      "build_areas": [
+        "03_ARCHITECTURE",
+        "04_CODE",
+        "05_TEST"
+      ],
+      "dependencies": [
+        "WP-70-03"
+      ],
+      "acceptance_criteria": [
+        "Actual Core route and implementation are identified.",
+        "401/403/404 and Work-scoping behavior are verified.",
+        "No live claim without end-to-end evidence."
+      ],
+      "evidence_refs": [
+        "03_ARCHITECTURE/DASHBOARD_CORE_READ_CONTRACT.md"
+      ],
+      "status": "BLOCKED",
+      "branch": "work/70/05-build"
+    },
+    {
+      "wp_id": "WP-70-05",
+      "title": "Evidence storage and file export",
+      "objective": "Define and later implement controlled persistent storage and JSON/CSV/Markdown exports.",
+      "owner": "Xu / AI-01",
+      "reviewer": "Qw / AI-05",
+      "build_areas": [
+        "03_ARCHITECTURE",
+        "04_CODE",
+        "05_TEST",
+        "06_EVIDENCE"
+      ],
+      "dependencies": [
+        "WP-70-04"
+      ],
+      "acceptance_criteria": [
+        "Storage/export architecture is approved against actual Core contract.",
+        "Artifacts are immutable/versioned and hash-verified.",
+        "Exports are authorized, audited and secret-safe.",
+        "All storage/export acceptance tests pass."
+      ],
+      "evidence_refs": [
+        "03_ARCHITECTURE/STORAGE_AND_EXPORT_ARCHITECTURE.md",
+        "05_TEST/STORAGE_AND_EXPORT_ACCEPTANCE.md"
+      ],
+      "status": "IN_PROGRESS",
+      "branch": "work/70/05-build"
+    },
+    {
+      "wp_id": "WP-70-06",
+      "title": "Independent verification and handoff",
+      "objective": "Run independent regression and prepare acceptance evidence.",
+      "owner": "Xu / AI-01",
+      "reviewer": "Qw / AI-05",
+      "build_areas": [
+        "05_TEST",
+        "06_EVIDENCE",
+        "10_AI_DEBUG_HANDOFF"
+      ],
+      "dependencies": [
+        "WP-70-01",
+        "WP-70-02",
+        "WP-70-03",
+        "WP-70-04",
+        "WP-70-05"
+      ],
+      "acceptance_criteria": [
+        "All required tests executed with reproducible evidence.",
+        "Independent QE report and defect disposition exist.",
+        "Handoff and release recommendation are traceable."
+      ],
+      "evidence_refs": [
+        "../../06_VERIFY/VERIFICATION_PLAN.md",
+        "../../06_VERIFY/VERIFICATION_CHECKLIST.md"
+      ],
+      "status": "PLANNED",
+      "branch": "work/70/05-build"
+    }
+  ]
+}
