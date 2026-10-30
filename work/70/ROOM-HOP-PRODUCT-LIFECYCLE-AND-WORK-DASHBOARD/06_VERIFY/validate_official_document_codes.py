@@ -13,7 +13,7 @@ from datetime import datetime
 from pathlib import Path
 
 TYPE_CODES = {
-    "BB", "QD", "LENH", "PL", "KH", "YC", "TK", "QT", "HD", "BC",
+    "BB", "BC", "QD", "QDY", "PL", "HD", "QT", "TC", "LENH", "KH", "YC", "TK",
     "BM", "HS", "TB", "CV",
 }
 NEW_CODE_RE = re.compile(
