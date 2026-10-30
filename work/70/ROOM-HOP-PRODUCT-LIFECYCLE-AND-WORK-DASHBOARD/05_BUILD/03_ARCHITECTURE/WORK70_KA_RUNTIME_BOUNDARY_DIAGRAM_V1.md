@@ -5,6 +5,7 @@ Owner: Ka / AI-02
 Date: 2026-10-31
 
 ## Component and authority map
+
 ```mermaid
 flowchart LR
   UI[Dashboard / Client<br/>Read-only] -->|Read request| API[Core Work API]
@@ -22,6 +23,7 @@ flowchart LR
 ```
 
 ## Command sequence
+
 ```mermaid
 sequenceDiagram
   participant C as Client
