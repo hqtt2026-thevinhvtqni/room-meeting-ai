@@ -165,3 +165,8 @@ Current status: **DESIGN ONLY — implementation and runtime verification pendin
 ---
 Maintainer: Xu (AI-01)
 Final authority: Vinh (Product Owner)
+
+
+## 10. Existing Core capability boundary
+
+A read-only review of the current repository found a Meeting-specific `Meeting.save_artifact()` operation: it is allowed only after Meeting close, copies a file into that Meeting's `artifacts/` directory, changes Meeting status to completed and records a `SAVE_ARTIFACT` event. `MeetingService.save_artifact()` wraps this method, but the reviewed `room_hop_mcp/adapter/http_server.py` does not expose a generic Work upload/export route. The reviewed `API_CONTRACT.md` and HTTP router document Meeting routes, not generic Work evidence/storage/export routes. This Meeting artifact operation must not be treated as a Work storage service. See `CORE_CAPABILITY_GAP_ASSESSMENT.md`. Until generic Work APIs and authorization are verified, Work storage/export remains DESIGN ONLY.
