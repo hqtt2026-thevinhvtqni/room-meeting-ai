@@ -61,3 +61,10 @@
 - Added E70-DASH-SCHEMA-SUBSET-001 and E70-DASH-STATIC-001 as RECORDED, pending independent QE review.
 - Semantic discrepancy remains OPEN: Manifest current phase 03_ARCHITECT; Dashboard local snapshot current_phase 01_DISCOVER. No automatic state change made.
 - Fresh Sandbox inventory still shows 27 desktop.ini files in Work 70 tree; cleanup deferred pending controlled disposition.
+
+
+## 2026-10-30 — Lifecycle pointer reconciliation
+- Manifest and Dashboard disagreed: Manifest named 03_ARCHITECT while Dashboard snapshot named 01_DISCOVER / PLANNED.
+- Reconciled the Manifest pointer to 01_DISCOVER / PLANNED, G0/G1 NOT_READY, phase not formally started. This follows predecessor-gate invariants; no gate was marked PASS and no phase advancement was claimed.
+- Recorded binding consistency decision D70-017. Manifest version advanced to 1.4.
+- Inventory correction: 22 desktop.ini files are inside the canonical Work 70 tree; 3 are in the non-canonical nested mirror; 1 at Sandbox root and 1 under work/ are outside the canonical Work tree. The earlier total 27 was a broad Sandbox count, not a canonical Work count. No files deleted.
