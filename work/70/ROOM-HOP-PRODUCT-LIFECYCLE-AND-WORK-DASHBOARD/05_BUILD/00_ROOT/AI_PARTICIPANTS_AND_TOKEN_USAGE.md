@@ -1,5 +1,5 @@
 # AI Project Participants, Roles & Token Usage
-Version: 1.0
+Version: 1.1
 Date: 2026-10-30
 Scope: Work 70 / 05_BUILD
 Status: ACTIVE REGISTER — actual participation and token figures must be evidence-backed.
@@ -36,6 +36,8 @@ Xu may make routine architecture and implementation decisions within scope. Xu m
 | AI-06 | Qc — Qwen Coder | Implementation Engineer | Assigned code/UI/backend implementation and Git-based delivery within the authorized branch/scope | Assigned |
 | AI-07 | Go — Grok | CFO / Cost & Resource Analyst | Token/cost analysis, resource efficiency and cost reporting | Assigned |
 | AI-08 | Co — GPT | Coding Assistant / Integration Support | Supporting implementation, code review and integration tasks delegated by Xu | Assigned |
+| AI-09 | Vi — GPT | Coder / Implementation Engineer | Implements assigned code changes under the approved plan and branch; records changed paths and commits | Assigned |
+| AI-10 | An — GPT | Tester / Test Engineer | Executes assigned tests, records reproducible results and evidence, and reports defects; does not self-approve implementation | Assigned |
 | Support | Vibe — Mistral | External Coding Support | Optional GitHub-based coding support when explicitly assigned | Optional |
 
 Provider/model names must be made more specific in each session record (exact model/version when visible). A role label alone is not proof of a model invocation.
