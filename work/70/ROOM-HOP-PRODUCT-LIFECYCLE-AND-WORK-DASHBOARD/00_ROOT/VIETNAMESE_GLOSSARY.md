@@ -1,0 +1,23 @@
+# GLOSSARY — THUẬT NGỮ ANH–VIỆT
+- Product lifecycle — Vòng đời sản phẩm.
+- Work Package (WP) — Gói thi công/gói bàn giao có mục tiêu và tiêu chí nghiệm thu riêng.
+- Build area — Khu vực thư mục thi công cố định trong 05_BUILD.
+- Gate — Cổng kiểm soát; điều kiện bắt buộc trước khi chuyển giai đoạn.
+- Evidence — Bằng chứng có thể kiểm tra và truy xuất.
+- Evidence Registry — Sổ đăng ký bằng chứng.
+- Source of truth — Nguồn dữ liệu chuẩn có thẩm quyền.
+- Read-only projection — Màn hình/bản chiếu chỉ đọc.
+- State machine — Máy trạng thái.
+- Waiver — Ngoại lệ được người có thẩm quyền phê duyệt.
+- Migration — Chuyển đổi dữ liệu/cấu trúc.
+- Dry run — Chạy thử không ghi thay đổi thật.
+- Rollback — Quay lui.
+- Freshness / Stale — Độ mới / dữ liệu cũ.
+- Traceability — Khả năng truy vết.
+- Acceptance / Release / Operate — Nghiệm thu / Phát hành / Vận hành.
+- Storage Adapter — Bộ chuyển đổi lưu trữ.
+- Export Service — Dịch vụ tạo file xuất có phân quyền và dấu vết.
+- SHA-256 — Mã băm kiểm tra tính toàn vẹn.
+- Idempotency — Tính lặp an toàn, không tạo tác động trùng.
+- UNKNOWN — Chưa xác định; không phải PASS.
+- BLOCKED — Bị chặn do thiếu điều kiện hoặc phụ thuộc.
