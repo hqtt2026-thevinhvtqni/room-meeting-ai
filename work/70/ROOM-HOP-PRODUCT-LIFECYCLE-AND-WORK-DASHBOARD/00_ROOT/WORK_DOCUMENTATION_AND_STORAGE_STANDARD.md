@@ -14,12 +14,12 @@ Every Work uses the following coordinated records. They are logical records, not
 
 | STT | Record | Purpose | Canonical owner |
 |---|---|---|---|
-| 01 | BIÊN BẢN | Meeting minutes, agreements, decisions, approvals and change history | 00_ROOT / DECISION_LOG and relevant phase record |
-| 02 | KẾ HOẠCH | Work scope, milestones, tasks, owners, dependencies, priorities and acceptance criteria | 04_PLAN |
-| 03 | BẢN VẼ / MÔ HÌNH SẢN PHẨM (when needed) | Approved architecture, workflows, data models, UI, technical drawings or 3D models | 03_ARCHITECT |
-| 04 | NHẬT KÝ THI CÔNG | Chronological record of actual work, changes, tests, blockers and handoffs | 00_ROOT; technical details may be linked from build mappings |
+| 01 | BIÊN BẢN | Meeting minutes, agreements, approvals and change history | 00_ROOT/BIEN_BAN.md; binding decisions are referenced by ID in DECISION_LOG.md |
+| 02 | KẾ HOẠCH | Work scope, milestones, tasks, owners, dependencies, priorities and acceptance criteria | 04_PLAN/IMPLEMENTATION_ROADMAP.md plus registered supporting plans |
+| 03 | BẢN VẼ / MÔ HÌNH SẢN PHẨM (when needed) | Approved architecture, workflows, data models, UI, technical drawings or 3D models | 03_ARCHITECT/WORK_LIFECYCLE_ARCHITECTURE.md and registered design artifacts |
+| 04 | NHẬT KÝ THI CÔNG | Chronological record of actual work, changes, tests, blockers and handoffs | 00_ROOT/NHAT_KY_THI_CONG.md; technical details may be linked from build mappings |
 
-Each Work must identify the canonical file/path for these records in its Manifest or Document Register. If the record does not apply (for example no drawing/model is needed), mark NOT REQUIRED with a reason; do not create an empty placeholder.
+For Work 70, the canonical records are 00_ROOT/BIEN_BAN.md, 04_PLAN/IMPLEMENTATION_ROADMAP.md, 03_ARCHITECT/WORK_LIFECYCLE_ARCHITECTURE.md (and other registered drawings/models when needed), and 00_ROOT/NHAT_KY_THI_CONG.md. Each new Work declares its own canonical paths in its Manifest or Document Register. If a drawing/model is not needed, mark NOT REQUIRED with a reason; do not create an empty placeholder.
 
 ## 3. Canonical ownership by lifecycle
 - 00_ROOT: Manifest, standards, Document Register, Decision Log, minutes and Work-wide execution log.
