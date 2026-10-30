@@ -1,5 +1,5 @@
 # WORK 70 — DOCUMENT REGISTER
-Register version: 1.3
+Register version: 1.4
 Owner: Xu / AI-01
 Authority: Vinh
 Rule: STT is a stable identity; Priority is importance; Read order is sequence. File paths are not renamed by this register.
@@ -13,6 +13,7 @@ Rule: STT is a stable identity; Priority is importance; Read order is sequence. 
 | DOC-005 | P0 | 5 | State Machine | 00_ROOT/STATE_MACHINE.md | DOC-004 | ACTIVE | Legal states and transitions |
 | DOC-006 | P0 | 6 | Decision Log | 00_ROOT/DECISION_LOG.md | DOC-001 | ACTIVE | Binding decisions and rationale |
 | DOC-033 | P0 | 7 | Work Documentation & Storage Standard | 00_ROOT/WORK_DOCUMENTATION_AND_STORAGE_STANDARD.md | DOC-001; DOC-002; DOC-003 | ACTIVE | Four official records, canonical ownership, mapping and storage rules |
+| DOC-038 | P0 | 38 | Quy trình đặt tên tài liệu / Document Naming Standard | 00_ROOT/DOCUMENT_NAMING_STANDARD.md | DOC-001; DOC-002; DOC-003; DOC-033 | ACTIVE | Vietnamese-first bilingual naming, stable IDs, filename pattern and controlled legacy renames |
 | DOC-007 | P1 | 8 | Discover Brief | 01_DISCOVER/DISCOVER_BRIEF.md | DOC-001 | ACTIVE | Problem, users, evidence and assumptions |
 | DOC-008 | P1 | 9 | Product Requirements | 02_DEFINE/PRODUCT_REQUIREMENTS.md | DOC-007 | ACTIVE | Scope, requirements and acceptance criteria |
 | DOC-009 | P1 | 10 | Work Lifecycle Architecture | 03_ARCHITECT/WORK_LIFECYCLE_ARCHITECTURE.md | DOC-008 | ACTIVE | Product lifecycle and system architecture |
