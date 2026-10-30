@@ -174,3 +174,13 @@ Co đề nghị dùng 00_ROOT/NHAT_KY_THI_CONG.md làm kênh bàn giao vận hà
 - Đọc lại DOC-055 và danh sách Sandbox sau di trú: có 26 dòng đăng ký liên quan 00_ROOT; 25 đường dẫn kiểm tra trực tiếp tồn tại. DOC-013 có trường path ghép nhiều artifact nên cần xử lý parser/mapping riêng, không kết luận là file thiếu.
 - DOC-041 đã cập nhật trạng thái R-11: 13 canonical docs đã tạo, 13 legacy aliases đã chuyển pointer, nhưng link integrity toàn Work, exact GitHub parity/hash, validator và independent QE vẫn PENDING.
 - Trạng thái: SANDBOX ROOT INVENTORY PARTIAL CHECK COMPLETED / BATCH 1 NOT PASS / QE PENDING.
+
+
+## 2026-10-31 — Xu / AI-01 — Khôi phục và ghi nhận sự cố lệch đường dẫn
+- Đối chiếu DOC-003 với Sandbox listing, DOC-035, GitHub main và branch work/70/05-build.
+- Xác nhận nguyên nhân chính: thao tác Sandbox dùng relative_path không có tiền tố canonical Work root; API Sandbox không tự chặn đường dẫn ngoài root. DOC-035 ghi Xu / AI-01 đã tạo/ghi nhận cây lồng sai trong lần sync trước; fragment ở Sandbox root ghi Ka / AI-02 đã ghi hai bản nháp kiến trúc tại 05_BUILD/03_ARCHITECTURE ngoài Work root. Chưa có bằng chứng quy trách nhiệm cho VS Code hoặc xác định phiên/người khởi phát thao tác.
+- Đã sao chép hai bản nháp Ka vào canonical Sandbox Work root và đang đồng bộ sang branch work/70/05-build; giữ trạng thái DRAFT, không coi là hợp đồng được phê duyệt.
+- Đã tạo DOC-058 làm hồ sơ sự cố. DOC-055 được bổ sung DOC-057 và DOC-058.
+- GitHub main có 05_BUILD chỉ chứa .gitkeep; xử lý loại bỏ scaffold rỗng khỏi main, không xóa nội dung thật trên branch.
+- Cây Sandbox lồng work/70/... được giữ nguyên theo DOC-003 cho tới khi có đối chiếu nội dung và kế hoạch dọn riêng.
+- Trạng thái: ROOT CAUSE CONFIRMED / CANONICAL COPIES CREATED / GITHUB SYNC AND READBACK IN PROGRESS / CLEANUP NOT YET CLOSED.
