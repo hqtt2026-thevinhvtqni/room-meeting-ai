@@ -1,4 +1,10 @@
 # WORK 70 — BUILD REGISTER
+- **STT / Document ID:** DOC-013
+- **Priority:** P1
+- **Read order:** 17
+- **Depends on:** DOC-033; DOC-011
+- **Status:** MIGRATION PENDING
+- **Version / Updated:** 1.0 / 2026-10-30
 
 Machine-readable source: `BUILD_REGISTER.json`, validated by `BUILD_REGISTER.schema.json` and `WORK_PACKAGE.schema.json`. This Markdown table is the human-readable mirror.
 
