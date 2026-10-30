@@ -62,13 +62,15 @@ These are navigation/mapping/execution areas, not independent canonical source r
 - Release: NOT RELEASED.
 
 ## Document numbering, naming and reading priority
-- 00_ROOT/DOCUMENT_REGISTER.md is the canonical catalogue for all Work documents.
+- 00_ROOT/DOC-055_SO-DANG-KY-TAI-LIEU_WORK-70-DOCUMENT-REGISTER.md is the single canonical catalogue for all Work documents. DOCUMENT_REGISTER.md is a temporary compatibility pointer only.
 - Every document has a stable STT/Document ID, priority P0-P3 and read order.
-- New documents follow DOC-038 (00_ROOT/DOC-038_QUY-TRINH-DAT-TEN-TAI-LIEU_DOCUMENT-NAMING-STANDARD.md): Vietnamese first, English second, ASCII filename and stable DOC ID.
+- New and updated documents follow DOC-038 and DOC-056: Vietnamese first, English second, ASCII filename, stable DOC ID, one canonical path; no new legacy-style names.
 - Official record classification and issuance follow DOC-039 and DOC-040; operational codes are separate from DOC-ID.
 - Sandbox relative paths start at ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/; the repository prefix is not included in Sandbox paths.
-- Existing filenames remain unchanged until a controlled rename migration is approved.
+- All controlled documents must use DOC-NNN-prefixed canonical filenames. Legacy filenames remain only as temporary aliases during the batch migration defined by DOC-056.
 - AI must follow the register's reading sequence and dependencies.
+
+- DOC-055 is the sole document register; DOC-040 is the separate operational document-code register. DOC-056 governs migration and exceptions.
 
 ## Mandatory AI operating standard
 - All AI participants must follow 00_ROOT/AI_PROJECT_INTAKE_STANDARD.md v1.0 and 00_ROOT/WORK_DOCUMENTATION_AND_STORAGE_STANDARD.md v1.0 before material changes.
