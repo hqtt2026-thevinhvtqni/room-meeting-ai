@@ -215,3 +215,13 @@ Co đề nghị dùng 00_ROOT/NHAT_KY_THI_CONG.md làm kênh bàn giao vận hà
 - GitHub commit ghi DOC-035: `e5b3b05afc6ce6bca1a975d4ad02c28ceb983789`.
 - Blob SHA readback: `f06baef5f25e11a2f18eed4dfbdeb0c5ad93826c`; nội dung entry được xác minh có mặt.
 - Trạng thái: **GITHUB JOURNAL UPDATE PASS / SANDBOX JOURNAL SYNC NOT VERIFIED / DOC-059 FILE NOT YET PERSISTED / TECHNICAL ENFORCEMENT NOT VERIFIED**.
+
+
+## 2026-10-31 — Xu / AI-01 — Chuẩn hóa danh mục mã loại văn bản
+- Chỉ thị của Vinh: chuẩn hóa các mã BB (Biên bản), BC (Báo cáo), QD (Quyết định), QDY (Quy định), PL (Phụ lục), HD (Hướng dẫn); Xu rà soát và bổ sung các loại còn thiếu.
+- Đối chiếu DOC-039 hiện hành: danh mục đã có BB, QD, LENH, PL, KH, YC, TK, QT, HD, BC, BM, HS, TB, CV; tuy nhiên QT đang gộp Quy trình/Quy chuẩn và chưa có mã riêng cho Quy định.
+- Chuẩn hóa đề xuất/triển khai: QD = Quyết định; QDY = Quy định (mã máy ASCII, nhãn hiển thị có thể viết QĐY); QT = Quy trình; TC = Tiêu chuẩn/Quy chuẩn. Bổ sung phân biệt ngữ nghĩa giữa QD/QDY, QT/TC và HD/QDY. Giữ các mã còn lại đã có: BB, BC, PL, HD, LENH, KH, YC, TK, BM, HS, TB, CV.
+- Quy tắc: mã máy và filename dùng ASCII không dấu, viết hoa nhất quán; không dùng biến thể QĐy trong mã lưu trữ. DOC-ID vẫn là định danh tài liệu độc lập, không bị thay thế bởi mã loại văn bản.
+- Phạm vi thay đổi tài liệu: cập nhật DOC-039 (danh mục mã và định nghĩa), DOC-038 (dẫn chiếu mã loại) và DOC-055 (mô tả đăng ký). Chưa đổi tên hàng loạt các tài liệu hiện hữu, chưa cấp mã phát hành mới, chưa sửa sổ cấp số DOC-040; việc di trú filename và tham chiếu phải theo batch có mapping và QE.
+- Trạng thái: STANDARD TEXT UPDATED ON GITHUB MAIN / READBACK PENDING / SANDBOX PARITY PENDING / LEGACY MIGRATION NOT STARTED / QE PENDING.
+- Người ghi: Xu / AI-01 — Work 70 Coordinator. Thẩm quyền chuẩn hóa: Vinh.
