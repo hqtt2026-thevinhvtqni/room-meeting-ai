@@ -1,4 +1,6 @@
-# WORK 70 — EVIDENCE REGISTER\n\nMachine-readable source: `EVIDENCE_REGISTER.json`, validated by `EVIDENCE_REGISTER.schema.json`. This Markdown file is the human-readable index and must remain consistent with the JSON source.
+# WORK 70 — EVIDENCE REGISTER
+
+Machine-readable source: `EVIDENCE_REGISTER.json`, validated by `EVIDENCE_REGISTER.schema.json`. This Markdown file is the human-readable index and must remain consistent with the JSON source.
 
 Version: 1.0
 Status: ACTIVE INDEX / EVIDENCE MUST BE VERIFIED
@@ -21,5 +23,6 @@ Purpose: Cross-phase index of inspectable evidence. This file indexes artifacts;
 | E70-DASH-001 | DASHBOARD/index.html + PRODUCT_STATUS.json + schema | WP-70-03 / G3-G5 | Xu AI-01 | 2026-10-30 | Pending runtime/schema validation | Qw pending | RECORDED |
 | E70-STOR-001 | 05_BUILD/03_ARCHITECTURE/STORAGE_AND_EXPORT_ARCHITECTURE.md | WP-70-05 | Xu AI-01 | 2026-10-30 | GitHub/Sandbox readback matched | Qw pending | RECORDED |
 | E70-STOR-002 | 05_BUILD/05_TEST/STORAGE_AND_EXPORT_ACCEPTANCE.md | WP-70-05 | Xu AI-01 | 2026-10-30 | GitHub/Sandbox readback matched | Qw pending | RECORDED |
+| E70-CORE-001 | 05_BUILD/03_ARCHITECTURE/CORE_CAPABILITY_GAP_ASSESSMENT.md | WP-70-04 | Xu AI-01 | 2026-10-30 | Source review captured; no runtime verification | Qw pending | RECORDED |
 
 No evidence item is marked VERIFIED until its artifact is independently checked against the claim it supports.
