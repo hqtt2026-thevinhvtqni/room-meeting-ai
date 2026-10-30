@@ -1,4 +1,11 @@
 # DASHBOARD — BẢNG ĐIỀU KHIỂN RIÊNG CHO TỪNG WORK
+- **STT / Document ID:** DOC-032
+- **Priority:** P3
+- **Read order:** 39
+- **Depends on:** DOC-010
+- **Status:** ACTIVE
+- **Version / Updated:** 1.0 / 2026-10-30
+
 
 ## Mục đích
 Mỗi Work có một Dashboard để theo dõi vòng đời, gate, WP, blockers, risks, decisions, evidence và độ mới dữ liệu.
