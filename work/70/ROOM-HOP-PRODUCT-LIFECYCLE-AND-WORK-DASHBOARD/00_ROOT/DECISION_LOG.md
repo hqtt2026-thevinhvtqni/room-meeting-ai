@@ -31,3 +31,5 @@ Final authority: Vinh
 | D70-016 | Sandbox relative paths are rooted at the Work 70 root without a `work/70/` prefix; GitHub repository paths retain the `work/70/` prefix. The accidental nested Sandbox tree is non-canonical and must not be used. | Prevents two competing Sandbox roots and false-positive synchronization checks. | ACTIVE PATH CONTRACT v1.0 — 2026-10-30 |
 
 Material changes to product scope, authority, security policy, recurring cost, canonical schema or release require Vinh's decision. Routine reversible implementation decisions remain with Xu within approved scope.
+
+| D70-017 | Current lifecycle phase pointer is 01_DISCOVER / PLANNED; G0/G1 remain NOT_READY and no phase has formally started. Supersede the prior manifest pointer to 03_ARCHITECT. | Dashboard snapshot identifies 01_DISCOVER as PLANNED; gate/evidence records show G0/G1 unresolved; state machine forbids skipping unresolved predecessor gates. This is a consistency correction, not a gate PASS or phase advancement. | ACTIVE — GOVERNANCE RECONCILIATION 2026-10-30 |
