@@ -21,10 +21,10 @@ This register is the navigation and mapping index for the 05_BUILD layer. It doe
 
 | Build item | Current branch path | Classification | Intended canonical owner/target | Exact target/version | Status / next action |
 |---|---|---|---|---|---|
-| Build Register Markdown | 00_ROOT/BUILD_REGISTER.md | CANONICAL CANDIDATE | 04_PLAN — Work Package plan/register | NOT ESTABLISHED | Compare WP data with roadmap; decide canonical WP registry path before moving or rewriting |
-| Build Register JSON | 00_ROOT/BUILD_REGISTER.json | CANONICAL CANDIDATE | 04_PLAN — Work Package plan/register | NOT ESTABLISHED | Preserve current data; validate and reconcile against approved plan |
+| Build Register Markdown | 00_ROOT/BUILD_REGISTER.md | LEGACY SOURCE / RECONCILIATION REQUIRED | 04_PLAN/DOC-053 proposal (not approved) | Proposed target only; no canonical promotion | Reconcile six WP records against draft Work-level register; preserve original branch file until Vinh approves baseline and migration plan |
+| Build Register JSON | 00_ROOT/BUILD_REGISTER.json | LEGACY SOURCE / RECONCILIATION REQUIRED | 04_PLAN/WORK_PACKAGE_REGISTER.json (draft proposal) | Proposed data commit 6ab6a8636b6d14abc5210ecdf7a0103e4698e5bd; NOT APPROVED | Compare IDs, dependencies, criteria and legacy_status; no overwrite/delete until approval |
 | Build Register schema | 00_ROOT/BUILD_REGISTER.schema.json | CANONICAL CANDIDATE | 03_ARCHITECT — Work Package data contract | NOT ESTABLISHED | Determine canonical schema path and references |
-| Work Package schema | 00_ROOT/WORK_PACKAGE.schema.json | CANONICAL CANDIDATE | 03_ARCHITECT — Work Package data contract | NOT ESTABLISHED | Determine canonical schema path and references |
+| Work Package schema | 00_ROOT/WORK_PACKAGE.schema.json | LEGACY SOURCE / RECONCILIATION REQUIRED | 03_ARCHITECT/WORK_PACKAGE.schema.json (draft proposal) | Proposed schema commit ac09e2c3f14c97579a154784d0afc5f60f45a28e; NOT APPROVED | Compare validation rules; preserve legacy schema until Product Owner approves proposed contract |
 | AI Participants & Token Usage | 00_ROOT/AI_PARTICIPANTS_AND_TOKEN_USAGE.md | LEGACY / REFERENCE | 00_ROOT governance reference, if still needed | NOT ESTABLISHED | Audit factual accuracy and decide retain/archive; do not treat roster as participation proof |
 | Storage & Export Architecture | 03_ARCHITECTURE/STORAGE_AND_EXPORT_ARCHITECTURE.md | CANONICAL CANDIDATE | 03_ARCHITECT — architecture/design | NOT ESTABLISHED | Compare with top-level architecture; reconcile into one canonical document |
 | Core Capability Gap Assessment | 03_ARCHITECTURE/CORE_CAPABILITY_GAP_ASSESSMENT.md | CANONICAL CANDIDATE | 03_ARCHITECT or 06_VERIFY — assessment/evidence | NOT ESTABLISHED | Verify source commit freshness and choose one canonical home |
@@ -37,7 +37,8 @@ Directory marker files (.gitkeep) are structural placeholders, not canonical pro
 - 05_BUILD is designated as a mapping/engineering coordination layer.
 - This inventory is an initial classification, not proof that the target documents have been migrated.
 - No legacy file has been moved, deleted or rewritten as part of this register creation.
-- All CANONICAL CANDIDATE items remain UNVERIFIED until their target path, exact content/version and ownership are reconciled.
+- WP register/schema now have proposed Work-level targets, but remain DRAFT_NOT_APPROVED; no source migration or canonical promotion has occurred.
+- Other CANONICAL CANDIDATE items remain UNVERIFIED until their target path, exact content/version and ownership are reconciled.
 - Work 70 status for 05_BUILD normalization: ACTIVE / MIGRATION NOT VERIFIED.
 
 ## 5. Next controlled actions
