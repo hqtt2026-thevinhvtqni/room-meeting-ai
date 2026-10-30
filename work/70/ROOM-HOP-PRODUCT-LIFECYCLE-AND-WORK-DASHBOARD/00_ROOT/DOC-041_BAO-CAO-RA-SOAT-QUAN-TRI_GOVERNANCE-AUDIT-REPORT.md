@@ -84,6 +84,7 @@ Không thay đổi các trạng thái này chỉ vì chuẩn hóa tài liệu.
 - Mỗi remediation phải có bằng chứng, commit/version, người thực hiện, reviewer và trạng thái.
 
 ## 6. Trạng thái tổng thể
+- R-11: Mâu thuẫn naming/register được xử lý bằng DOC-056; DOC-055 trở thành register chuẩn có DOC-ID; DOCUMENT_REGISTER.md là compatibility pointer. Di trú filename/link toàn Work 70 chưa hoàn tất; theo dõi batch 1–4, không đóng audit trước QE.
 **AUDIT OPEN / NOT FULLY VERIFIED.** DOC-038/039/040 đã thiết lập được khung quản trị; các phát hiện G-001 đến G-007 và backlog R-01 đến R-10 vẫn cần đóng bằng kiểm chứng tương ứng.
 
 **English summary:** Work 70 governance is partially reconciled, not fully verified. The audit records path duplication, document metadata drift, branch-specific mapping references, and remaining runtime/QE/acceptance gaps.
