@@ -14,13 +14,37 @@ Sổ duy nhất ghi nhận việc cấp, phát hành, thay thế, thu hồi và 
 ## 2. Trạng thái ban đầu
 Chưa có mã nào được phát hành theo cấu trúc mới của DOC-039. Mã lịch sử có định dạng cũ được lưu riêng với trạng thái LEGACY_REFERENCE, không tính là mã mới đã cấp.
 
-## 3. Sổ cấp mã
+## 3. Danh mục mã loại áp dụng
+Danh mục mã loại có thẩm quyền được duy trì tại DOC-039. Bảng dưới đây là bảng tra cứu nhanh, không phải nguồn độc lập và không cấp thêm mã:
+
+| Mã lưu trữ | Tên loại | Phân biệt chính |
+|---|---|---|
+| BB | Biên bản | Ghi nhận sự kiện/cuộc họp/xác nhận |
+| BC | Báo cáo | Phản ánh tình hình hoặc kết quả theo kỳ/phạm vi |
+| QD | Quyết định | Phê duyệt hoặc ấn định một vấn đề cụ thể |
+| QDY | Quy định | Quy tắc ổn định, áp dụng lặp lại trong phạm vi xác định |
+| PL | Phụ lục | Tài liệu gắn với văn bản gốc |
+| HD | Hướng dẫn | Cách thực hiện; không thay thế quy định/quy trình |
+| QT | Quy trình | Trình tự, bước, vai trò, đầu vào/đầu ra |
+| TC | Tiêu chuẩn/Quy chuẩn | Tiêu chí, ngưỡng hoặc đặc tính cần đáp ứng |
+| LENH | Lệnh/Chỉ thị | Yêu cầu điều hành có tính bắt buộc |
+| KH | Kế hoạch | Trình tự và mốc dự kiến thực hiện |
+| YC | Yêu cầu | Nhu cầu/nghiệp vụ/kỹ thuật cần đáp ứng |
+| TK | Thiết kế | Kiến trúc, thiết kế, bản vẽ, mô hình |
+| BM | Biểu mẫu | Mẫu trống để ghi nhận |
+| HS | Hồ sơ | Tập hợp tài liệu có liên kết |
+| TB | Thông báo | Thông tin chính thức |
+| CV | Công văn | Trao đổi chính thức |
+
+Mã lưu trữ dùng ASCII viết hoa, không dấu. Nhãn hiển thị có thể dùng tiếng Việt có dấu; riêng Quyết định = QD, Quy định = QDY (nhãn QĐ/QĐY). Không dùng QĐy làm mã máy. QD khác QDY; QT khác TC.
+
+## 4. Sổ cấp mã
 | STT | Mã văn bản | DOC-ID | Loại | Tiêu đề | Ngày cấp | Người soạn | Người ban hành/phê duyệt | Văn bản liên quan/gốc | Trạng thái | Đường dẫn chuẩn | Bằng chứng |
 |---:|---|---|---|---|---|---|---|---|---|---|---|
 | 001 | BB-70-001 | DOC-034 | BB | Biên bản thống nhất bộ hồ sơ Work và ranh giới Work / 05_BUILD | 2026-10-30 | Xu / AI-01 | Vinh (chủ trì; xác nhận tại phiên làm việc) | D70-011; D70-012; D70-013 | LEGACY_REFERENCE — mã lịch sử, không theo DOC-039 | 00_ROOT/BIEN_BAN.md | Biên bản gốc; không tái cấp mã hồi tố |
 | — | — | — | — | Chưa có mã phát hành theo cấu trúc DOC-039 | — | — | — | — | EMPTY | — | — |
 
-## 4. Quy tắc vận hành
+## 5. Quy tắc vận hành
 1. Kiểm tra mã gần nhất theo đúng loại + Work ID + ngày phát hành trước khi cấp số.
 2. Cấp số tiếp theo, không bỏ qua để tái sử dụng và không cấp trùng.
 3. Ghi dòng đăng ký trước hoặc đồng thời với thời điểm phát hành; không ghi nhận ngược một mã chưa có bằng chứng.
@@ -29,14 +53,14 @@ Chưa có mã nào được phát hành theo cấu trúc mới của DOC-039. M�
 6. Cập nhật sổ này và Document Register khi thêm DOC-ID/path mới.
 7. Chỉ đánh dấu ISSUED khi có bằng chứng ban hành/phê duyệt hợp lệ; nếu thiếu, giữ DRAFT hoặc NOT VERIFIED.
 
-## 5. Kiểm tra định kỳ
+## 6. Kiểm tra định kỳ
 - Không trùng mã.
 - Mã khớp loại, Work ID, ngày và số thứ tự.
 - DOC-ID và đường dẫn tồn tại trong Document Register.
 - Văn bản gốc/phụ lục liên kết đúng.
 - Trạng thái khớp bằng chứng thực tế.
 
-## 6. Kiểm tra tự động
+## 7. Kiểm tra tự động
 Mã nguồn kiểm tra sổ:
 - `06_VERIFY/validate_official_document_codes.py` — kiểm tra mã trùng, cấu trúc mã mới theo DOC-039, ngày phát hành, loại văn bản, DOC-ID có trong Document Register và bằng chứng đối với trạng thái ISSUED/EFFECTIVE.
 - `06_VERIFY/test_official_document_code_validator.py` — bộ kiểm thử các trường hợp hợp lệ, mã lịch sử, mã trùng, định dạng/ngày/số thứ tự sai, DOC-ID không tồn tại và thiếu bằng chứng phát hành.
