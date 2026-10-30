@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark">
+<title>ROOM-HOP — Work Dashboard</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1220;--panel:#121d30;--line:#26364e;--text:#e8eef8;--muted:#9aabc2;--blue:#78aaff;--green:#65d6a0;--amber:#f4c66b;--red:#ff8585}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:1180px;margin:auto;padding:26px 18px 56px}.top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap}
+h1{font-size:25px;margin:0 0 5px}.muted,small{color:var(--muted)}.pill{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:5px 10px;font-size:12px;color:var(--amber)}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:18px 0}.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;min-width:0}
+.k{font-size:12px;color:var(--muted);letter-spacing:.05em}.v{font-size:21px;font-weight:650;margin-top:5px}h2{font-size:17px;margin:0 0 13px}
+.stages{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.stage{border:1px solid var(--line);border-radius:10px;padding:11px;background:#0e1829}.stage.active{border-color:var(--blue);box-shadow:inset 0 0 0 1px var(--blue)}.stage b,.stage small{display:block}
+.row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding:10px 0}.row:last-child{border:0}
+.state{font-size:12px;font-weight:650;white-space:nowrap}.ok{color:var(--green)}.warn{color:var(--amber)}.bad{color:var(--red)}
+.notice{border:1px solid #826a36;background:#2a2417;color:#f7d995;padding:12px 14px;border-radius:10px;margin:16px 0}
+.two{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;margin-top:14px}.evidence-list{margin:0;padding-left:18px}.evidence-list li{padding:4px 0;overflow-wrap:anywhere}
+footer{margin-top:18px;color:var(--muted);font-size:12px}
+@media(max-width:760px){.grid{grid-template-columns:1fr}.stages{grid-template-columns:repeat(2,minmax(0,1fr))}.two{grid-template-columns:1fr}}
+</style></head>
+<body><main>
+<header class="top"><div><div class="k">ROOM-HOP / PRODUCT CONTROL · QUẢN TRỊ SẢN PHẨM</div><h1 id="product">Đang tải dữ liệu Work…</h1><div class="muted" id="summary">Bảng điều khiển vòng đời sản phẩm theo từng Work.</div></div><span class="pill" id="source">ĐANG XÁC ĐỊNH NGUỒN</span></header>
+<div class="notice" id="warning">Đang đọc Product Status. Nếu không tải được nguồn dữ liệu, Dashboard hiển thị UNKNOWN.</div>
+<section class="grid">
+<article class="card"><div class="k">Giai đoạn hiện tại · CURRENT PHASE</div><div class="v" id="current">UNKNOWN</div><div class="muted">Vị trí trong vòng đời sản phẩm</div></article>
+<article class="card"><div class="k">Gói thi công · WORK PACKAGES</div><div class="v" id="wpcount">—</div><div class="muted">Tổng số WP trong dữ liệu</div></article>
+<article class="card"><div class="k">Điểm nghẽn · BLOCKERS</div><div class="v" id="blockcount">—</div><div class="muted">Vấn đề đang mở</div></article>
+</section>
+<section class="card"><h2>Vòng đời sản phẩm · 9 giai đoạn</h2><div class="stages" id="stages"></div></section>
+<div class="two">
+<section class="card"><h2>Gói thi công · 05 BUILD</h2><div id="packages"><p class="muted">Chưa có dữ liệu.</p></div></section>
+<section class="card"><h2>Điểm nghẽn & rủi ro · BLOCKERS & RISKS</h2><div id="blockers"><p class="muted">Chưa có dữ liệu.</p></div></section>
+</div>
+<section class="card" style="margin-top:14px"><h2>Bằng chứng tham chiếu · EVIDENCE REFERENCES</h2><div id="evidence"><p class="muted">Chưa có dữ liệu.</p></div></section>
+<section class="card" style="margin-top:14px"><h2>Quyết định · DECISIONS</h2><div id="decisions"></div><div class="row"><span>Nguồn dữ liệu</span><span class="state warn" id="sourceMode">UNKNOWN</span></div><div class="row"><span>Thời điểm cập nhật</span><span id="asof">UNKNOWN</span></div><div class="row"><span>Độ mới dữ liệu</span><span id="freshness">UNKNOWN</span></div></section>
+<footer>Dashboard chỉ đọc · Read-only projection. Không có quyền thay đổi trạng thái Work. Không coi local snapshot là Core live.</footer>
+</main>
+<script>
+const phases=[["01_DISCOVER","Khám phá"],["02_DEFINE","Định nghĩa"],["03_ARCHITECT","Kiến trúc"],["04_PLAN","Kế hoạch"],["05_BUILD","Thi công"],["06_VERIFY","Kiểm chứng"],["07_ACCEPT","Nghiệm thu"],["08_RELEASE","Phát hành"],["09_OPERATE","Vận hành"]];
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const label=s=>({NOT_STARTED:"Chưa bắt đầu",ACTIVE:"Đang thực hiện",BLOCKED:"Bị chặn",COMPLETE:"Hoàn tất",DONE:"Hoàn tất",UNKNOWN:"Chưa xác định",NOT_READY:"Chưa sẵn sàng",READY_FOR_REVIEW:"Chờ review",PASS:"ĐẠT",FAIL:"KHÔNG ĐẠT",WAIVED:"Ngoại lệ được duyệt",PLANNED:"Đã lên kế hoạch",IN_PROGRESS:"Đang thực hiện",IN_REVIEW:"Đang review",DRAFT:"Bản nháp",READY:"Sẵn sàng",CANCELLED:"Đã hủy",OPEN:"Đang mở",PENDING:"Đang chờ",FRESH:"Mới cập nhật",STALE:"Dữ liệu cũ"}[s]||s||"UNKNOWN");
+const cls=s=>["PASS","COMPLETE","DONE","FRESH"].includes(s)?"ok":["FAIL","BLOCKED","STALE"].includes(s)?"bad":"warn";
+function render(d){
+ $("product").textContent="Work "+d.work_id+" — "+d.product_name;
+ $("summary").textContent=d.summary||"";
+ const mode=d.source_mode||"UNKNOWN";
+ $("source").textContent=({sample:"SAMPLE · DỮ LIỆU MẪU",local_snapshot:"LOCAL SNAPSHOT · BẢN CHỤP CỤC BỘ",core_live:"CORE LIVE · DỮ LIỆU TRỰC TIẾP",core_cached:"CORE CACHED · DỮ LIỆU CACHE"}[mode]||mode);
+ $("sourceMode").textContent=mode;
+ $("warning").textContent=d.warning_vi||("Nguồn dữ liệu: "+mode+".");
+ const current=(d.lifecycle?.phases||[]).find(p=>p.phase_id===d.lifecycle?.current_phase);
+ $("current").textContent=(d.lifecycle?.current_phase||"UNKNOWN")+" · "+label(current?.status);
+ const wps=d.work_packages||[], blockers=(d.blockers||[]).filter(x=>x.status!=="CLOSED");
+ $("wpcount").textContent=wps.length;$("blockcount").textContent=blockers.length;
+ const byId=Object.fromEntries((d.lifecycle?.phases||[]).map(p=>[p.phase_id,p]));
+ $("stages").innerHTML=phases.map(([id,vi])=>{const p=byId[id]||{};return '<div class="stage '+(id===d.lifecycle?.current_phase?"active":"")+'"><b>'+id+'</b><small>'+vi+' · '+label(p.status)+'</small><small>Owner: '+esc(p.owner||"Chưa phân công")+'</small><small class="state '+cls(p.gate_status)+'">Gate: '+label(p.gate_status)+'</small></div>'}).join("");
+ $("packages").innerHTML=wps.length?wps.map(p=>'<div class="row"><span><b>'+esc(p.wp_id)+'</b> · '+esc(p.title_vi||p.title)+'<br><small>Owner: '+esc(p.owner||"—")+' · Reviewer: '+esc(p.reviewer||"—")+'</small></span><span class="state '+cls(p.status)+'">'+label(p.status)+'</span></div>').join(""):'<p class="muted">Chưa có Work Package.</p>';
+ $("blockers").innerHTML=blockers.length?blockers.map(b=>'<div class="row"><span>'+esc(b.title)+'<br><small>'+esc(b.detail_vi||b.owner||"")+'</small></span><span class="state '+cls(b.status)+'">'+label(b.status)+'</span></div>').join(""):'<p class="muted">Không có blocker được ghi nhận.</p>';
+ const risks=d.risks||[];$("blockers").innerHTML+=(risks.length?'<h3>Rủi ro · Risks</h3>'+risks.map(r=>'<p>'+esc(r.title)+' — '+esc(r.mitigation_vi||"")+'</p>').join(""):"");
+ const evidence=[...(d.lifecycle?.phases||[]).flatMap(p=>(p.evidence_refs||[]).map(ref=>({ref,source:p.phase_id}))),...wps.flatMap(w=>(w.evidence_refs||[]).map(ref=>({ref,source:w.wp_id})))];
+ $("evidence").innerHTML=evidence.length?'<ul class="evidence-list">'+evidence.map(e=>'<li><b>'+esc(e.source)+'</b> · '+esc(e.ref)+'</li>').join("")+'</ul>':'<p class="muted">Chưa có tham chiếu bằng chứng.</p>';
+ const decisions=d.decisions_needed||[];$("decisions").innerHTML=decisions.length?decisions.map(x=>'<div class="row"><span>'+esc(x.decision_vi||x.id)+'</span><span class="state warn">'+label(x.status)+'</span></div>').join(""):'<p class="muted">Không có quyết định đang chờ.</p>';
+ $("asof").textContent=d.as_of||"UNKNOWN";$("freshness").textContent=label(d.freshness||"UNKNOWN");
+}
+fetch("./PRODUCT_STATUS.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw new Error("HTTP "+r.status);return r.json()}).then(render).catch(e=>{
+ $("product").textContent="Work Dashboard — Không tải được dữ liệu";$("source").textContent="UNKNOWN · KHÔNG CÓ NGUỒN";
+ $("warning").textContent="Không thể tải PRODUCT_STATUS.json ("+e.message+"). Trạng thái giữ UNKNOWN; không hiển thị dữ liệu giả.";
+ $("current").textContent="UNKNOWN";$("wpcount").textContent="—";$("blockcount").textContent="—";
+ $("stages").innerHTML=phases.map(([id,vi])=>'<div class="stage"><b>'+id+'</b><small>'+vi+' · UNKNOWN</small></div>').join("");
+});
+</script></body></html>
