@@ -1,4 +1,10 @@
 # 01 — DISCOVER / KHÁM PHÁ
+- **STT / Document ID:** DOC-007
+- **Priority:** P1
+- **Read order:** 11
+- **Depends on:** DOC-001
+- **Status:** ACTIVE
+- **Version / Updated:** 1.0 / 2026-10-30
 
 ## Problem statement
 
