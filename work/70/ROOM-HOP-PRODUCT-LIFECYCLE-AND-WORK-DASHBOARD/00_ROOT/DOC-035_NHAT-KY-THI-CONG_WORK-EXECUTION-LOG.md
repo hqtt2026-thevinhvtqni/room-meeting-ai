@@ -161,3 +161,11 @@ Co đề nghị dùng 00_ROOT/NHAT_KY_THI_CONG.md làm kênh bàn giao vận hà
 - Readback xác nhận các tài liệu chính trên GitHub chứa các định danh/quy tắc mới. Sandbox write/readback đã xác nhận các cập nhật tương ứng.
 - Chưa thực hiện bulk rename và chưa đóng batch 1: đây là phần việc tiếp theo theo DOC-056, cần inventory + mapping + link update + QE; không được đánh dấu toàn bộ chuẩn hóa hoàn tất.
 - Trạng thái: POLICY/REGISTER/MANIFEST/JOURNAL SYNCED AND READBACK CONFIRMED / BULK MIGRATION OPEN / QE PENDING.
+
+## 2026-10-31 — Xu / AI-01 — Thực thi Batch 1 chuẩn hóa tên file 00_ROOT
+- Đã tạo canonical DOC-prefixed filenames và chuyển các tên cũ thành compatibility pointer (không xóa dữ liệu, giữ liên kết cũ) cho 13 hồ sơ: DOC-001, DOC-002, DOC-003, DOC-004, DOC-005, DOC-006, DOC-023, DOC-026, DOC-027, DOC-028, DOC-033, DOC-034, DOC-035.
+- DOC-055 được cập nhật canonical path cho 13 hồ sơ; DOC-001 Manifest được cập nhật các tham chiếu tới DOC-002, DOC-033, DOC-035. DOC-023 được bổ sung metadata còn thiếu và chuẩn hóa tham chiếu tới DOC-002.
+- Tên cũ được giữ dưới dạng pointer tạm thời, không còn là bản nội dung độc lập. Những tệp đã có DOC-NNN filename (DOC-038 đến DOC-043, DOC-055, DOC-056) được giữ nguyên. DOCUMENT_REGISTER.md và ba tên chuẩn cũ cũng là pointer; desktop.ini được phân loại technical/system artifact, không ép DOC prefix.
+- GitHub main đã tạo canonical copies cho DOC-001 đến DOC-006, DOC-023, DOC-026 đến DOC-028, DOC-033 đến DOC-035; các alias cũ được chuyển thành pointer. Các commit tạo canonical lần lượt gồm: DOC-001 ec0e64b; DOC-002 e925fdd; DOC-003 1688ad3; DOC-004 27208f3; DOC-005 79b368d; DOC-006 c160a89; DOC-023 e5013e4; DOC-026 8339f8f; DOC-027 2bad695; DOC-028 45bce5a; DOC-033 bc9e160; DOC-034 af08f8d; DOC-035 2109518.
+- DOC-055 và DOC-001 đã được đồng bộ sau khi cập nhật canonical paths; các alias cũ trên Sandbox/GitHub được cập nhật. Chưa chạy link checker toàn Work, chưa QE độc lập, chưa kiểm tra từng nội dung canonical-vs-source bằng hash; do đó chưa tuyên bố Batch 1 PASS.
+- Trạng thái: 13 CANONICAL COPIES CREATED / 13 LEGACY POINTERS RETAINED / REGISTER PATHS UPDATED / LINK-INTEGRITY & QE PENDING.
