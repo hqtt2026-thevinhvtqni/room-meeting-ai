@@ -29,3 +29,6 @@ No evidence item is marked VERIFIED until its artifact is independently checked 
 | E70-CONSOL-001 | 06_EVIDENCE/WORK70_CONSOLIDATION_CHECK_20261030.md | WP-70-01..06 | Xu AI-01 | 2026-10-30 | GitHub/Sandbox readback pending | Qw pending | RECORDED |
 
 | E70-OPS-001 | DOC-042..DOC-053; nine phase playbooks; Document Register; execution journal | WP-70-01 / G0-G4 preparation | Xu AI-01 | 2026-10-30 | Sandbox writes + selected readback; GitHub commits recorded in NHAT_KY_THI_CONG.md | Qw pending | RECORDED |
+
+| E70-DASH-SCHEMA-SUBSET-001 | DASHBOARD/PRODUCT_STATUS.json + schema | WP-70-03 | Xu AI-01 | 2026-10-30 | JSON parse + custom subset validator PASS; full Draft 2020-12 validator NOT RUN | Qw pending | RECORDED |
+| E70-DASH-STATIC-001 | DASHBOARD/index.html | WP-70-03 | Xu AI-01 | 2026-10-30 | Static source inspection only; browser E2E NOT RUN | Qw pending | RECORDED |
