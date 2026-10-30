@@ -4,7 +4,7 @@
 - **Read order / Thứ tự đọc:** 47
 - **Depends on / Phụ thuộc:** DOC-001; DOC-002; DOC-004; DOC-005; DOC-008; DOC-009; DOC-014; DOC-015; DOC-019; DOC-033; DOC-038; DOC-046
 - **Status / Trạng thái:** ACTIVE — PROCESS STANDARD
-- **Version / Updated:** 1.0 / 2026-10-30
+- **Version / Updated:** 1.1 / 2026-10-30
 - **Owner / Phụ trách:** Xu / AI-01
 - **Authority / Thẩm quyền:** Vinh — Product Owner
 
@@ -38,7 +38,7 @@ Nếu G5 chưa PASS, chỉ được thực hiện test chuẩn bị hoặc explo
 7. Fail honestly: NOT RUN/SKIPPED/BLOCKED không phải PASS.
 8. Defect transparency: không che giấu flaky test, known issue hoặc residual risk.
 9. No scope drift: requirement thay đổi phải về DEFINE; design change theo ARCHITECT.
-10. No gate inflation: G6 VERIFY không phải Product Acceptance (G7), Release (G8) hay Operations readiness (G9).
+10. No gate inflation: kết quả kiểm chứng G6 là đầu vào cho quyết định chuyển VERIFY→ACCEPT tại G6; không tự động cho phép RELEASE tại G7 hoặc OPERATE tại G8.
 
 ## 3. Đầu vào bắt buộc
 
@@ -191,7 +191,7 @@ Trạng thái:
 - **FAIL:** verification cho thấy không đáp ứng acceptance/quality.
 - **WAIVED:** chỉ theo DOC-004, đúng authority, rationale, scope, residual risk và expiry/review date.
 
-G6 PASS là xác nhận verification scope đã đạt, không thay thế G7 Product Acceptance.
+G6 verification result PASS chỉ xác nhận phạm vi kiểm chứng đã đạt; G6 transition chỉ đóng khi QE/owner decision theo DOC-004 được ghi nhận. G7 là ACCEPT→RELEASE, G8 là RELEASE→OPERATE.
 
 ## 9. Handoff sang 07_ACCEPT
 
@@ -242,6 +242,9 @@ Một endpoint đọc Work status cần test caller không đăng nhập (401), 
 DOC-047 là chuẩn quy trình. Vinh giữ authority đối với G6 và residual risk trọng yếu. QE/Verifier chịu trách nhiệm kết quả kiểm chứng độc lập; Xu điều phối hồ sơ và handoff, không tự thay QE hoặc Product Owner.
 
 ## Change History
+| Version | Date | Change |
+|---|---|---|
+| 1.1 | 2026-10-30 | Align downstream gate references with DOC-004: G6 verification/acceptance transition, G7 release, G8 operations. |
 | Version | Date | Change |
 |---|---|---|
 | 1.0 | 2026-10-30 | Ban hành V01–V10, risk-based verification, evidence integrity, independent QE, G6 and handoff standard. |
