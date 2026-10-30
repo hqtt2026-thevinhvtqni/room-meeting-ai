@@ -1,4 +1,11 @@
 # GLOSSARY — THUẬT NGỮ ANH–VIỆT
+- **STT / Document ID:** DOC-028
+- **Priority:** P3
+- **Read order:** 35
+- **Depends on:** DOC-002
+- **Status:** ACTIVE
+- **Version / Updated:** 1.0 / 2026-10-30
+
 - Product lifecycle — Vòng đời sản phẩm.
 - Work Package (WP) — Gói thi công/gói bàn giao có mục tiêu và tiêu chí nghiệm thu riêng.
 - Build area — Khu vực thư mục thi công cố định bên trong 05_BUILD.
