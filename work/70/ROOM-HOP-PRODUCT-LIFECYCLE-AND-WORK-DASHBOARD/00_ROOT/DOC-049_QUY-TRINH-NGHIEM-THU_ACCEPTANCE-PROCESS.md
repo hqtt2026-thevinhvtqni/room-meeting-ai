@@ -4,7 +4,7 @@
 - **Read order / Thứ tự đọc:** 49
 - **Depends on / Phụ thuộc:** DOC-001; DOC-002; DOC-004; DOC-005; DOC-008; DOC-014; DOC-020; DOC-033; DOC-038; DOC-047; DOC-048
 - **Status / Trạng thái:** ACTIVE — PROCESS STANDARD
-- **Version / Updated:** 1.0 / 2026-10-30
+- **Version / Updated:** 1.1 / 2026-10-30
 - **Owner / Phụ trách:** Xu / AI-01
 - **Authority / Thẩm quyền:** Vinh — Product Owner
 
@@ -14,7 +14,7 @@ DOC-049 quy định 07_ACCEPT (Nghiệm thu): quyết định chính thức sả
 
 Acceptance là quyết định có thẩm quyền, không phải hoạt động test. VERIFY cung cấp kết quả kiểm chứng và recommendation; Product Owner quyết định chấp nhận, chấp nhận có điều kiện nếu policy cho phép, từ chối hoặc yêu cầu sửa.
 
-Acceptance không đồng nghĩa RELEASE hoặc OPERATE. G7 PASS chỉ xác nhận quyết định chấp nhận trong scope được ghi; không tự cho phép phát hành production.
+Acceptance không đồng nghĩa RELEASE hoặc OPERATE. G6 PASS chỉ xác nhận quyết định chấp nhận trong scope được ghi; không tự cho phép phát hành production.
 
 ## 2. Điều kiện đầu vào
 
@@ -42,7 +42,7 @@ Nếu G6 chưa PASS, chỉ được chuẩn bị acceptance pack; không ghi ACC
 
 | Vai trò | Trách nhiệm |
 |---|---|
-| Product Owner (Vinh) | Quyết định G7, scope, exception và residual risk |
+| Product Owner (Vinh) | Quyết định G6, scope, exception và residual risk |
 | Acceptance Coordinator (Xu / AI-01) | Chuẩn bị pack, kiểm tra completeness, ghi decision và handoff |
 | Independent QE | Trình bày verification coverage, defects và confidence |
 | WP/Delivery Owner | Giải trình deliverables, known limitations và remediation |
@@ -90,7 +90,7 @@ Các quyết định có thể gồm:
 - **REJECT:** không đáp ứng criteria hoặc risk không chấp nhận.
 - **DEFER:** chưa đủ evidence/decision/context.
 Product Owner ghi decision, rationale, scope, timestamp, authority và evidence refs.
-**Đầu ra:** G7 Decision Record.
+**Đầu ra:** G6 Decision Record.
 
 ### AC07 — Ghi nhận và thông báo
 - Cập nhật DOC-020 Acceptance Record và Decision Log.
@@ -105,7 +105,7 @@ Product Owner ghi decision, rationale, scope, timestamp, authority và evidence 
 - Nếu REJECT/DEFER: tạo remediation/change requests, quay về phase phù hợp.
 **Đầu ra:** Release Handoff hoặc Remediation Plan.
 
-## 6. G7 — Gate VERIFY → ACCEPT
+## 6. G6 — Gate VERIFY → ACCEPT
 
 - [ ] G6 PASS có authority và evidence.
 - [ ] Acceptance scope/version/commit/environment xác định.
@@ -115,9 +115,9 @@ Product Owner ghi decision, rationale, scope, timestamp, authority và evidence 
 - [ ] Defects, waivers, limitations và residual risks có disposition.
 - [ ] Security/privacy/data/operations obligations được đánh giá khi liên quan.
 - [ ] Handover ownership và outstanding obligations rõ.
-- [ ] Product Owner/authorized authority ghi quyết định G7.
+- [ ] Product Owner/authorized authority ghi quyết định G6.
 
-G7 trạng thái: PASS / NOT READY / BLOCKED / REJECTED / CONDITIONAL (nếu policy cho phép). Không có quyết định ghi nhận thì acceptance vẫn PENDING.
+G6 trạng thái: PASS / NOT READY / BLOCKED / REJECTED / CONDITIONAL (nếu policy cho phép). Không có quyết định ghi nhận thì acceptance vẫn PENDING.
 
 ## 7. Acceptance record tối thiểu
 
@@ -148,9 +148,10 @@ Một Dashboard có thể vượt qua functional tests nhưng chưa có browser 
 
 ## 10. Kiểm soát và thay đổi
 
-DOC-049 là chuẩn quy trình. Vinh giữ final authority đối với G7. Xu chuẩn bị hồ sơ và điều phối; QE đưa ra bằng chứng/recommendation; không vai trò nào được tự nâng quyền thành Product Owner.
+DOC-049 là chuẩn quy trình. Vinh giữ final authority đối với G6. Xu chuẩn bị hồ sơ và điều phối; QE đưa ra bằng chứng/recommendation; không vai trò nào được tự nâng quyền thành Product Owner.
 
 ## Change History
+| 1.1 | 2026-10-30 | Xu / AI-01 | Align acceptance gate with DOC-004: G6 VERIFY→ACCEPT. |
 | Version | Date | Change |
 |---|---|---|
-| 1.0 | 2026-10-30 | Ban hành AC01–AC08, acceptance decision, G7, evidence/defect review and handoff standard. |
+| 1.0 | 2026-10-30 | Ban hành AC01–AC08, acceptance decision, G6, evidence/defect review and handoff standard. |
