@@ -2,33 +2,48 @@
 - Work ID: 70
 - Work Name: ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD
 - Product: ROOM-HOP Work Master Standard & Per-Work Dashboard
-- Standard version: 1.1
+- Standard version: 1.2
 - Work status: ACTIVE / DESIGN BASELINE
 - Created: 2026-10-30
 - Product Owner / Final Authority: Vinh
 - Lifecycle Orchestrator: Xu (AI-01)
 - Sandbox: Work 70 via MCP 8030
 - GitHub repository: hqtt2026-thevinhvtqni/room-meeting-ai
-- Build branch: work/70/05-build (scope: 05_BUILD subtree only)
+- Build branch: work/70/05-build (scope: 05_BUILD mapping/execution subtree only; not a canonical source repository)
+- Canonical product/source repositories: must be declared per Work and artifact in this Manifest or its controlled register; do not infer from the presence of a folder.
 - Scope: reusable Work lifecycle, WP model, evidence/gates, dashboard reference, storage/export design and future migration standard.
 
 ## Canonical top-level directory set
 00_ROOT, 01_DISCOVER, 02_DEFINE, 03_ARCHITECT, 04_PLAN, 05_BUILD, 06_VERIFY, 06_EVIDENCE, 07_ACCEPT, 08_RELEASE, 09_OPERATE, DASHBOARD.
 
+## 05_BUILD role
+05_BUILD is a mapping and engineering coordination layer, not the canonical home of original Work documents or product source files. It may contain mapping registers, execution pointers, temporary working copies, build/test coordination metadata and links to canonical artifacts. Each mapping must identify the canonical path/URI and exact version/commit. A file physically present in 05_BUILD is not automatically an original or authoritative source.
+
+## Canonical ownership
+- Work governance and official records belong to the relevant lifecycle folders at the Work root.
+- Biên bản (minutes/decisions): 00_ROOT and the relevant phase decision record.
+- Kế hoạch (plan): 04_PLAN.
+- Bản vẽ/mô hình sản phẩm (design/model): 03_ARCHITECT.
+- Nhật ký thi công (execution log): 00_ROOT as the Work-wide chronological record; technical detail may be linked from 05_BUILD.
+- Product source code and tests belong to the canonical source repository/path explicitly declared for that Work; 05_BUILD only maps to them.
+- Cross-phase verified evidence belongs to top-level 06_EVIDENCE. 05_BUILD/06_EVIDENCE may stage temporary build evidence before it is registered canonically.
+- Acceptance, release and operations records belong to 07_ACCEPT, 08_RELEASE and 09_OPERATE respectively.
+
 ## Canonical 05_BUILD child directory set
 00_ROOT, 01_ORIGINAL, 02_EXTENSION, 03_ARCHITECTURE, 04_CODE, 05_TEST, 06_EVIDENCE, 07_RELEASE, 10_AI_DEBUG_HANDOFF.
-
-These nine build directories are the approved engineering workspace layout. They are not additional lifecycle phases and must remain nested under 05_BUILD.
+These are navigation/mapping/execution areas, not independent canonical source roots.
 
 ## Authority and invariants
 1. Vinh is Product Owner and final authority.
 2. Xu coordinates end-to-end work and makes routine decisions within approved scope.
 3. Core is the intended authoritative system for identity, authorization, lifecycle state and canonical evidence metadata.
 4. Dashboard is read-only.
-5. Work Packages are records in 05_BUILD/00_ROOT/BUILD_REGISTER.md, validated by WORK_PACKAGE.schema.json; they reference build areas and artifacts.
-6. Top-level 06_EVIDENCE is the cross-phase evidence index; 05_BUILD/06_EVIDENCE is build-specific evidence staging.
+5. Work Packages are planned/owned at Work level; 05_BUILD may map each WP to engineering areas and source artifacts.
+6. Top-level 06_EVIDENCE is the cross-phase evidence index; 05_BUILD/06_EVIDENCE is build-specific staging only.
 7. No evidence, no PASS. Unknown is not PASS. File creation is not product verification.
 8. No migration of other Works is included in this Work's current scope.
+9. No file in 05_BUILD becomes canonical merely by being copied, committed or referenced there.
+10. Never delete or silently move legacy files during the transition; classify, map, verify and obtain approval where canonical ownership changes.
 
 ## Current truth
 - Current lifecycle phase: 03_ARCHITECT (design baseline; exit gate not passed).
@@ -40,11 +55,11 @@ These nine build directories are the approved engineering workspace layout. They
 - Release: NOT RELEASED.
 
 ## Document numbering and reading priority
-- `00_ROOT/DOCUMENT_REGISTER.md` is the canonical catalogue for all Work documents.
+- 00_ROOT/DOCUMENT_REGISTER.md is the canonical catalogue for all Work documents.
 - Every document has a stable STT/Document ID, priority P0-P3 and read order; filenames remain unchanged unless migration is approved.
 - AI must follow the register's reading sequence and dependencies.
 
 ## Mandatory AI operating standard
-- All AI participants must follow `00_ROOT/AI_PROJECT_INTAKE_STANDARD.md` v1.0 before material changes.
-- Use `00_ROOT/PROJECT_INTAKE_REPORT_TEMPLATE.md` for a consistent intake report.
-- Work-specific instructions may add constraints but may not weaken the shared evidence, authority and status rules.
+- All AI participants must follow 00_ROOT/AI_PROJECT_INTAKE_STANDARD.md v1.0 and 00_ROOT/WORK_DOCUMENTATION_AND_STORAGE_STANDARD.md v1.0 before material changes.
+- Use 00_ROOT/PROJECT_INTAKE_REPORT_TEMPLATE.md for a consistent intake report.
+- Work-specific instructions may add constraints but may not weaken the shared evidence, authority, storage and status rules.
