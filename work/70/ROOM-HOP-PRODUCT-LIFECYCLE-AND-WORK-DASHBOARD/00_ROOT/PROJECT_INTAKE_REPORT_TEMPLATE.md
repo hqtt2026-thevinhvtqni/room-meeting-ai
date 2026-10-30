@@ -1,4 +1,10 @@
 # PROJECT INTAKE REPORT — TEMPLATE
+- **STT / Document ID:** DOC-023
+- **Priority:** P2
+- **Read order:** 28
+- **Depends on:** DOC-001; DOC-002
+- **Status:** ACTIVE
+- **Version / Updated:** 1.0 / 2026-10-30
 Template version: 1.0
 Standard: AI_PROJECT_INTAKE_STANDARD.md v1.0
 
