@@ -1,18 +1,28 @@
 # WORK STATE MACHINE — V1.1
-Work: NOT_STARTED → ACTIVE → (BLOCKED ↔ ACTIVE) → ACCEPTED → RELEASED → OPERATING → CLOSED. CANCELLED requires authorized owner and reason.
 
-Phase: NOT_STARTED | PLANNED | ACTIVE | BLOCKED | DONE | CANCELLED. Exactly one current phase is selected. A phase becomes DONE only after its exit gate is PASS. A later phase cannot become current while its predecessor gate is unresolved.
+## Work lifecycle
+NOT_STARTED → ACTIVE → (BLOCKED ↔ ACTIVE) → ACCEPTED → RELEASED → OPERATING → CLOSED.
+CANCELLED requires an authorized owner and recorded reason. Reopening a closed Work requires an audited transition and reason.
 
-Gate: NOT_READY | PENDING | PASS | FAIL | WAIVED. PASS requires verified evidence and authorized evaluation. WAIVED is exceptional and is not PASS.
+## Phase state
+NOT_STARTED | PLANNED | ACTIVE | BLOCKED | DONE | CANCELLED.
+Exactly one current phase is selected. A phase becomes DONE only after its exit gate is PASS. A later phase cannot become current while the predecessor gate is unresolved.
 
-WP: DRAFT → READY → IN_PROGRESS → IN_REVIEW → DONE. Any active state may become BLOCKED. Rejected review returns to IN_PROGRESS. DONE requires acceptance criteria and evidence.
+## Gate state
+NOT_READY | PENDING | PASS | FAIL | WAIVED.
+PASS requires mandatory criteria satisfied by verified evidence and authorized evaluation. WAIVED is exceptional and is not equivalent to PASS.
 
-Invariants:
-1. Server-side identity and permission check for every state-changing request.
-2. Optimistic version/state check to prevent concurrent lost updates.
-3. Enforce predecessor gate and required evidence.
-4. Record actor, role, timestamp, reason, correlation ID and evidence refs.
-5. Reject unknown/illegal transitions (fail closed).
-6. Idempotency keys for retries.
-7. Dashboard/adapters cannot directly mutate authoritative state.
-Progress percentage is not gate status. UNKNOWN must never default to zero, DONE or PASS.
+## Work Package state
+DRAFT → READY → IN_PROGRESS → IN_REVIEW → DONE.
+Any active state may become BLOCKED. Rejected review returns to IN_PROGRESS with findings. CANCELLED requires owner decision and reason. DONE requires WP acceptance criteria and evidence.
+
+## Transition invariants
+1. Validate actor identity and server-side permission on every state-changing request.
+2. Validate expected current version/state to prevent concurrent lost updates.
+3. Enforce predecessor gate and required evidence before advancing.
+4. Record actor, role, timestamp, reason, correlation ID and evidence references.
+5. Reject unknown states and illegal transitions (fail closed).
+6. Use idempotency keys for retried commands.
+7. Never allow Dashboard or adapter clients to write authoritative state directly.
+
+Progress percentage is not gate status. UNKNOWN is valid. Missing data must not default to zero, DONE or PASS.
