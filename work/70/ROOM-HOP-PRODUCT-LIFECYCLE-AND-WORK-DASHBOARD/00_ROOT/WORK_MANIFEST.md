@@ -58,7 +58,9 @@ These are navigation/mapping/execution areas, not independent canonical source r
 ## Document numbering, naming and reading priority
 - 00_ROOT/DOCUMENT_REGISTER.md is the canonical catalogue for all Work documents.
 - Every document has a stable STT/Document ID, priority P0-P3 and read order.
-- New documents follow 00_ROOT/DOCUMENT_NAMING_STANDARD.md: Vietnamese first, English second, ASCII filename and stable DOC ID.
+- New documents follow DOC-038 (00_ROOT/DOC-038_QUY-TRINH-DAT-TEN-TAI-LIEU_DOCUMENT-NAMING-STANDARD.md): Vietnamese first, English second, ASCII filename and stable DOC ID.
+- Official record classification and issuance follow DOC-039 and DOC-040; operational codes are separate from DOC-ID.
+- Sandbox relative paths start at ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/; the repository prefix is not included in Sandbox paths.
 - Existing filenames remain unchanged until a controlled rename migration is approved.
 - AI must follow the register's reading sequence and dependencies.
 
