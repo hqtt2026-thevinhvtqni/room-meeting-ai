@@ -49,6 +49,7 @@ These are navigation/mapping/execution areas, not independent canonical source r
 - Current lifecycle phase: 03_ARCHITECT (design baseline; exit gate not passed).
 - Core integration: NOT VERIFIED.
 - Dashboard: local snapshot prototype; browser E2E NOT VERIFIED.
+- 05_BUILD normalization: ACTIVE / MIGRATION NOT VERIFIED; legacy candidates are classified but no source files have been moved or deleted.
 - Storage/export: DESIGN ONLY; no backend implementation verified.
 - Independent QE: PENDING.
 - Acceptance: PENDING.
