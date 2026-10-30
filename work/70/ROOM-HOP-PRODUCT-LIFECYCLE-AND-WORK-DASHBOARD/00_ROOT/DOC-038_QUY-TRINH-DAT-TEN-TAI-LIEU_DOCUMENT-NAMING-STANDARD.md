@@ -58,7 +58,7 @@ Với JSON, YAML hoặc schema, không chèn metadata làm sai cú pháp; khai b
 
 ## 5. Quy tắc theo loại tài liệu / Naming by artifact type
 
-Với văn bản phát hành chính thức có mã loại (BB, QD, LENH, PL...), áp dụng thêm DOC-039 và đặt tên theo mẫu DOC-NNN_MA-VAN-BAN_TEN-VIET_ENGLISH.ext. DOC-ID và mã văn bản nghiệp vụ là hai lớp mã khác nhau; không thay thế nhau.
+Với văn bản phát hành chính thức có mã loại (BB, BC, QD, QDY, PL, HD, QT, TC, LENH...), áp dụng thêm DOC-039 và đặt tên theo mẫu DOC-NNN_MA-VAN-BAN_TEN-VIET_ENGLISH.ext. DOC-ID và mã văn bản nghiệp vụ là hai lớp mã khác nhau; không thay thế nhau.
 | Loại / Type | Quy tắc tên / Naming pattern |
 |---|---|
 | Biên bản / Minutes | DOC-NNN_BIEN-BAN_CHU-DE_MINUTES_TOPIC |
