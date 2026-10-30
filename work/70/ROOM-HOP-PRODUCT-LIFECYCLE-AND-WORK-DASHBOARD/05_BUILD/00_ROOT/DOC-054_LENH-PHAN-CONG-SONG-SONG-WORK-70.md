@@ -1,4 +1,12 @@
 # DOC-054 — LỆNH PHÂN CÔNG SONG SONG WORK 70
+- **STT / Document ID:** DOC-054
+- **Priority:** P0
+- **Read order:** 54
+- **Depends on:** DOC-001; DOC-042; DOC-043; DOC-044
+- **Status:** ACTIVE / ASSIGNMENT READY
+- **Version / Updated:** 1.0 / 2026-10-31
+- **Owner:** Xu / AI-01
+- **Authority:** Vinh
 - Work: 70 — Bộ máy Room
 - Ngày: 2026-10-31
 - Điều phối: Xu / AI-01
