@@ -1,5 +1,5 @@
 # WORK 70 — DOCUMENT REGISTER
-Register version: 2.5
+Register version: 2.6
 Owner: Xu / AI-01
 Authority: Vinh
 Rule: STT is a stable identity; Priority is importance; Read order is sequence. File paths are not renamed by this register.
@@ -53,6 +53,7 @@ Rule: STT is a stable identity; Priority is importance; Read order is sequence. 
 | DOC-045 | P1 | 45 | Quy trình Lập Kế hoạch / Plan Process | 00_ROOT/DOC-045_QUY-TRINH-LAP-KE-HOACH_PLAN-PROCESS.md | DOC-001; DOC-002; DOC-004; DOC-005; DOC-008; DOC-009; DOC-011; DOC-012; DOC-033; DOC-038; DOC-044 | ACTIVE — PROCESS STANDARD | End-to-end P01–P10 planning, WP lifecycle, DoR/DoD, estimates, dependencies, risks, G4 and handoff to BUILD |
 | DOC-046 | P1 | 46 | Quy trình Thi công / Build Process | 00_ROOT/DOC-046_QUY-TRINH-THI-CONG_BUILD-PROCESS.md | DOC-001; DOC-002; DOC-004; DOC-005; DOC-009; DOC-011; DOC-033; DOC-036; DOC-038; DOC-044; DOC-045 | ACTIVE — PROCESS STANDARD | End-to-end B01–B10 build execution, canonical source rules, tests, independent review, CI, mapping, G5 and handoff to VERIFY |
 | DOC-047 | P1 | 47 | Quy trình Kiểm chứng / Verify Process | 00_ROOT/DOC-047_QUY-TRINH-KIEM-CHUNG_VERIFY-PROCESS.md | DOC-001; DOC-002; DOC-004; DOC-005; DOC-008; DOC-009; DOC-014; DOC-015; DOC-019; DOC-033; DOC-038; DOC-046 | ACTIVE — PROCESS STANDARD | End-to-end V01–V10 verification, risk-based coverage, test evidence, independent QE, defects, G6 and handoff to ACCEPT |
+| DOC-048 | P1 | 48 | Quy trình Quản lý Bằng chứng / Evidence Process | 00_ROOT/DOC-048_QUY-TRINH-QUAN-LY-BANG-CHUNG_EVIDENCE-PROCESS.md | DOC-001; DOC-002; DOC-004; DOC-005; DOC-014; DOC-015; DOC-033; DOC-038; DOC-047 | ACTIVE — CROSS-PHASE PROCESS STANDARD | End-to-end E01–E07 evidence lifecycle, provenance, integrity, verification states, retention, conflict handling and gate usage |
 
 ## AI reading rule
 Read DOC-001 through DOC-006, then DOC-033, DOC-038, DOC-039 and DOC-040. Then read relevant P1 documents in ascending read order. Read P2 only for the active task. Read P3 when clarification, operations or historical trace requires it. Read DOC-041 when reconciling governance or closing its remediation backlog. Never infer PASS from the register or presence of a file.
