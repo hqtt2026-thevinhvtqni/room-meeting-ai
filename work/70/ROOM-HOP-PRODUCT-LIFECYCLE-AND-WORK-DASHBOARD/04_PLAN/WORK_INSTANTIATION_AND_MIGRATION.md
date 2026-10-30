@@ -1,7 +1,7 @@
 # WORK INSTANTIATION & MIGRATION STANDARD — V1.2
 - **STT / Document ID:** DOC-012
 - **Priority:** P1
-- **Read order:** 13
+- **Read order:** 16
 - **Depends on:** DOC-003; DOC-009; DOC-033
 - **Status:** ACTIVE
 - **Version / Updated:** 1.2 / 2026-10-30
