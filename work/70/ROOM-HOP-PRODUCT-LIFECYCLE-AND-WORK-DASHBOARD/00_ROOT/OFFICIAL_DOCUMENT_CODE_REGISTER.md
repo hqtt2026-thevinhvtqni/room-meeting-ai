@@ -17,7 +17,7 @@ Chưa ghi nhận mã văn bản nghiệp vụ nào được phát hành theo DOC
 ## 3. Sổ cấp mã
 | STT | Mã văn bản | DOC-ID | Loại | Tiêu đề | Ngày cấp | Người soạn | Người ban hành/phê duyệt | Văn bản liên quan/gốc | Trạng thái | Đường dẫn chuẩn | Bằng chứng |
 |---:|---|---|---|---|---|---|---|---|---|---|---|
-| — | — | — | — | Chưa có văn bản được cấp mã | — | — | — | — | EMPTY | — | — |
+| 001 | BB-70-001 | DOC-034 | BB | Biên bản thống nhất bộ hồ sơ Work và ranh giới Work / 05_BUILD | 2026-10-30 | Xu / AI-01 | Vinh (chủ trì; xác nhận tại phiên làm việc) | D70-011; D70-012; D70-013 | LEGACY_REFERENCE — mã lịch sử, không theo DOC-039 | 00_ROOT/BIEN_BAN.md | Biên bản gốc; không tái cấp mã hồi tố |
 
 ## 4. Quy tắc vận hành
 1. Kiểm tra mã gần nhất theo đúng loại + Work ID + ngày phát hành trước khi cấp số.
