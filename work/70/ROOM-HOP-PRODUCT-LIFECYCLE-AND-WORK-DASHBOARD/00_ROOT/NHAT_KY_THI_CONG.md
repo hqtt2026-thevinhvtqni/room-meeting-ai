@@ -68,3 +68,10 @@
 - Reconciled the Manifest pointer to 01_DISCOVER / PLANNED, G0/G1 NOT_READY, phase not formally started. This follows predecessor-gate invariants; no gate was marked PASS and no phase advancement was claimed.
 - Recorded binding consistency decision D70-017. Manifest version advanced to 1.4.
 - Inventory correction: 22 desktop.ini files are inside the canonical Work 70 tree; 3 are in the non-canonical nested mirror; 1 at Sandbox root and 1 under work/ are outside the canonical Work tree. The earlier total 27 was a broad Sandbox count, not a canonical Work count. No files deleted.
+
+
+## 2026-10-30 — Work Package register contract check
+- Parsed BUILD_REGISTER.json, BUILD_REGISTER.schema.json and WORK_PACKAGE.schema.json.
+- Ran custom validator covering local WORK_PACKAGE.schema.json reference plus declared required/type/enum/const/pattern/minItems/uniqueItems/additionalProperties rules: PASS for all six WPs, no violations.
+- Full standards-compliant JSON Schema Draft 2020-12 validator remains NOT RUN; independent QE review remains pending.
+- Recorded E70-WP-SCHEMA-SUBSET-001 as RECORDED.
