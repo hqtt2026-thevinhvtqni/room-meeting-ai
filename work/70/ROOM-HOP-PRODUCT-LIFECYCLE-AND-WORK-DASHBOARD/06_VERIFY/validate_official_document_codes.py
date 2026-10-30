@@ -17,7 +17,7 @@ TYPE_CODES = {
     "BM", "HS", "TB", "CV",
 }
 NEW_CODE_RE = re.compile(
-    r"^(BB|QD|LENH|PL|KH|YC|TK|QT|HD|BC|BM|HS|TB|CV)-W70-(\d{8})-(\d{3})$"
+    r"^(BB|BC|QD|QDY|PL|HD|QT|TC|LENH|KH|YC|TK|BM|HS|TB|CV)-W70-(\d{8})-(\d{3})$"
 )
 DOC_ID_RE = re.compile(r"^\|\s*(DOC-\d{3})\s*\|")
 
