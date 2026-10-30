@@ -4,7 +4,7 @@
 - **Read order / Thứ tự đọc:** 50
 - **Depends on / Phụ thuộc:** DOC-001; DOC-002; DOC-004; DOC-005; DOC-014; DOC-020; DOC-021; DOC-033; DOC-038; DOC-048; DOC-049
 - **Status / Trạng thái:** ACTIVE — PROCESS STANDARD
-- **Version / Updated:** 1.0 / 2026-10-30
+- **Version / Updated:** 1.1 / 2026-10-30
 - **Owner / Phụ trách:** Xu / AI-01
 - **Authority / Thẩm quyền:** Vinh — Product Owner
 
@@ -12,7 +12,7 @@
 
 DOC-050 quy định 08_RELEASE (Phát hành): chuẩn bị, phê duyệt, triển khai và xác minh một release có kiểm soát từ sản phẩm đã được nghiệm thu. RELEASE quản lý version, package, deployment, rollout, rollback, communication và post-release checks.
 
-G7 ACCEPT là điều kiện đầu vào; G8 RELEASE là quyết định phát hành riêng. ACCEPTED không tự động có nghĩa RELEASED. Một release chỉ được công bố sau khi có authority approval và deployment evidence.
+G7 ACCEPT là điều kiện đầu vào; G7 RELEASE là quyết định phát hành riêng. ACCEPTED không tự động có nghĩa RELEASED. Một release chỉ được công bố sau khi có authority approval và deployment evidence.
 
 Nếu sản phẩm chỉ là prototype/reference design hoặc chưa có production environment, ghi rõ NOT RELEASED; không dựng release record giả để hoàn tất checklist.
 
@@ -46,13 +46,13 @@ Thiếu acceptance hoặc production target thì chỉ được lập release pr
 
 | Vai trò | Trách nhiệm |
 |---|---|
-| Product Owner (Vinh) | Phê duyệt G8, scope và risk/exception trọng yếu |
+| Product Owner (Vinh) | Phê duyệt G7, scope và risk/exception trọng yếu |
 | Release Manager | Điều phối release candidate, checklist, approvals và communication |
 | Engineering/Platform Owner | Build/deploy, configuration, rollback và technical evidence |
 | Security Reviewer | Security posture, secret/dependency scan và residual risk |
 | Operations Owner | Monitoring, incident response, support và runbook readiness |
 | QE | Xác nhận acceptance/verification evidence và smoke/regression scope |
-| Xu / AI-01 | Điều phối hồ sơ, release traceability và handoff; không tự approve G8 |
+| Xu / AI-01 | Điều phối hồ sơ, release traceability và handoff; không tự approve G7 |
 
 ## 5. Quy trình — R01 đến R10
 
@@ -86,11 +86,11 @@ Thiếu acceptance hoặc production target thì chỉ được lập release pr
 - Data migration/destructive changes cần backward compatibility hoặc explicit recovery path.
 **Đầu ra:** Backup/Rollback Plan & Evidence.
 
-### R06 — G8 approval
+### R06 — G7 approval
 - Tổng hợp acceptance, candidate manifest, readiness, deployment, rollback và residual risk.
-- Reviewer xác nhận; Product Owner/authorized authority quyết định G8.
+- Reviewer xác nhận; Product Owner/authorized authority quyết định G7.
 - Không deploy production trước approval trừ emergency procedure đã được policy cho phép và audit.
-**Đầu ra:** G8 Release Authorization.
+**Đầu ra:** G7 Release Authorization.
 
 ### R07 — Deploy và rollout
 - Deploy đúng approved artifact/config/environment.
@@ -118,7 +118,7 @@ Thiếu acceptance hoặc production target thì chỉ được lập release pr
 - Theo dõi hypercare/early-life support nếu cần.
 **Đầu ra:** Operations Handoff Package.
 
-## 6. G8 — Gate ACCEPT → RELEASE
+## 6. G7 — Gate ACCEPT → RELEASE
 
 - [ ] G7 ACCEPT PASS và DOC-020 decision được xác minh.
 - [ ] Release scope/version/candidate exact identity rõ.
@@ -130,15 +130,15 @@ Thiếu acceptance hoặc production target thì chỉ được lập release pr
 - [ ] Monitoring/alerting/incident/support readiness được xác nhận.
 - [ ] Defects/waivers/residual risks được authority chấp nhận.
 - [ ] Release communication và operations handoff plan sẵn sàng.
-- [ ] Product Owner/authorized authority ghi G8 approval.
+- [ ] Product Owner/authorized authority ghi G7 approval.
 
-G8 trạng thái: PASS / NOT READY / BLOCKED / CANCELLED / WAIVED theo DOC-004. Chỉ G8 PASS mới cho phép release trong scope được duyệt.
+G7 trạng thái: PASS / NOT READY / BLOCKED / CANCELLED / WAIVED theo DOC-004. Chỉ G7 PASS mới cho phép release trong scope được duyệt.
 
 ## 7. Release record tối thiểu
 
 - Release ID, semantic/version label, date/time và status.
 - Product scope, audience, environment/region.
-- Acceptance/G7 reference và G8 approval.
+- Acceptance/G7 reference và G7 approval.
 - Source commit/tag, artifact URI/hash, build provenance.
 - Deployment config/version, actor, tool/run ID và logs.
 - Backup/rollback reference và outcome.
@@ -154,7 +154,7 @@ Rollback bắt buộc khi trigger đã định nghĩa xảy ra: critical securit
 - Ghi artifact/config/data version trước và sau rollback.
 - Kiểm tra data consistency và service health sau rollback.
 - Mở incident/postmortem và corrective action.
-Emergency release chỉ theo policy có sẵn, có authority, scope/time limit, audit và post-release review; không dùng emergency label để né G8.
+Emergency release chỉ theo policy có sẵn, có authority, scope/time limit, audit và post-release review; không dùng emergency label để né G7.
 
 ## 9. AI instructions
 
@@ -167,13 +167,14 @@ Emergency release chỉ theo policy có sẵn, có authority, scope/time limit, 
 
 ## 10. Ví dụ minh họa (giả định)
 
-Một bản Dashboard được tag và deploy lên staging chưa phải production release. Release record phải phân biệt candidate, staging deployment và production deployment; chỉ khi G8 được duyệt, đúng artifact được triển khai production và post-deploy verification có evidence mới được ghi RELEASED. Đây là ví dụ phương pháp.
+Một bản Dashboard được tag và deploy lên staging chưa phải production release. Release record phải phân biệt candidate, staging deployment và production deployment; chỉ khi G7 được duyệt, đúng artifact được triển khai production và post-deploy verification có evidence mới được ghi RELEASED. Đây là ví dụ phương pháp.
 
 ## 11. Kiểm soát và thay đổi
 
-DOC-050 là chuẩn quy trình. Vinh giữ authority G8. Release Manager/Operations/Engineering chịu trách nhiệm execution trong phạm vi; Xu điều phối và ghi nhận, không tự phê duyệt hoặc tuyên bố production release.
+DOC-050 là chuẩn quy trình. Vinh giữ authority G7. Release Manager/Operations/Engineering chịu trách nhiệm execution trong phạm vi; Xu điều phối và ghi nhận, không tự phê duyệt hoặc tuyên bố production release.
 
 ## Change History
+| 1.1 | 2026-10-30 | Xu / AI-01 | Align release gate with DOC-004: G7 ACCEPT→RELEASE. |
 | Version | Date | Change |
 |---|---|---|
-| 1.0 | 2026-10-30 | Ban hành R01–R10, release candidate, readiness, rollout, rollback, G8 and operations handoff. |
+| 1.0 | 2026-10-30 | Ban hành R01–R10, release candidate, readiness, rollout, rollback, G7 and operations handoff. |
