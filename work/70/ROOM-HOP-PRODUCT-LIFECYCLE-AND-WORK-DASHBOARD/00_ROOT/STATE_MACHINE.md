@@ -1,4 +1,10 @@
 # WORK STATE MACHINE — V1.1
+- **STT / Document ID:** DOC-005
+- **Priority:** P0
+- **Read order:** 5
+- **Depends on:** DOC-004
+- **Status:** ACTIVE
+- **Version / Updated:** 1.2 / 2026-10-30
 
 ## Work lifecycle
 NOT_STARTED → ACTIVE → (BLOCKED ↔ ACTIVE) → ACCEPTED → RELEASED → OPERATING → CLOSED.
