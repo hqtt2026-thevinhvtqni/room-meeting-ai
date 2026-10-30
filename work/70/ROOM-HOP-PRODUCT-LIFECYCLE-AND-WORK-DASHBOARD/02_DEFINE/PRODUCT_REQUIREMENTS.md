@@ -1,4 +1,10 @@
 # PRODUCT REQUIREMENTS — WORK 70 / VERSION 1.1
+- **STT / Document ID:** DOC-008
+- **Priority:** P1
+- **Read order:** 12
+- **Depends on:** DOC-007
+- **Status:** ACTIVE
+- **Version / Updated:** 1.0 / 2026-10-30
 
 ## Product objective
 Provide a reusable, auditable product lifecycle standard for ROOM-HOP Works, with one consistent Work manifest, controlled build workspace, WP registry, evidence/gate model, read-only Dashboard, and future Core-backed storage/export.
