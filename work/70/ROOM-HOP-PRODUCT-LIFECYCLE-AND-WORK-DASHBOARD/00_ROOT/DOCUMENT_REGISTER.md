@@ -1,5 +1,5 @@
 # WORK 70 — DOCUMENT REGISTER
-Register version: 2.2
+Register version: 2.3
 Owner: Xu / AI-01
 Authority: Vinh
 Rule: STT is a stable identity; Priority is importance; Read order is sequence. File paths are not renamed by this register.
@@ -50,6 +50,7 @@ Rule: STT is a stable identity; Priority is importance; Read order is sequence. 
 | DOC-042 | P1 | 42 | Quy trình Khám phá / Discover Process | 00_ROOT/DOC-042_QUY-TRINH-KHAM-PHA_DISCOVER-PROCESS.md | DOC-001; DOC-002; DOC-004; DOC-007; DOC-033; DOC-038 | ACTIVE — PROCESS STANDARD | End-to-end D01–D08 procedure, evidence rules, G1 review, outcomes, risk-based research and handoff |
 | DOC-043 | P1 | 43 | Quy trình Xác định Yêu cầu / Define Process | 00_ROOT/DOC-043_QUY-TRINH-XAC-DINH-YEU-CAU_DEFINE-PROCESS.md | DOC-001; DOC-002; DOC-004; DOC-005; DOC-007; DOC-008; DOC-042 | ACTIVE — PROCESS STANDARD | End-to-end F01–F09 procedure, requirements quality, traceability, G2, change control and handoff |
 | DOC-044 | P1 | 44 | Quy trình Thiết kế Kiến trúc / Architect Process | 00_ROOT/DOC-044_QUY-TRINH-THIET-KE-KIEN-TRUC_ARCHITECT-PROCESS.md | DOC-001; DOC-002; DOC-004; DOC-005; DOC-008; DOC-009; DOC-010; DOC-033; DOC-038; DOC-043 | ACTIVE — PROCESS STANDARD | End-to-end A01–A10 architecture process, architecture views/contracts, security, resilience, ADR, traceability, G3 and handoff to PLAN |
+| DOC-045 | P1 | 45 | Quy trình Lập Kế hoạch / Plan Process | 00_ROOT/DOC-045_QUY-TRINH-LAP-KE-HOACH_PLAN-PROCESS.md | DOC-001; DOC-002; DOC-004; DOC-005; DOC-008; DOC-009; DOC-011; DOC-012; DOC-033; DOC-038; DOC-044 | ACTIVE — PROCESS STANDARD | End-to-end P01–P10 planning, WP lifecycle, DoR/DoD, estimates, dependencies, risks, G4 and handoff to BUILD |
 
 ## AI reading rule
 Read DOC-001 through DOC-006, then DOC-033, DOC-038, DOC-039 and DOC-040. Then read relevant P1 documents in ascending read order. Read P2 only for the active task. Read P3 when clarification, operations or historical trace requires it. Read DOC-041 when reconciling governance or closing its remediation backlog. Never infer PASS from the register or presence of a file.
