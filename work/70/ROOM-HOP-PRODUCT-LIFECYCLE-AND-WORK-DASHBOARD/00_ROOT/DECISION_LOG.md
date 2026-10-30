@@ -17,4 +17,4 @@ Final authority: Vinh
 
 Changes to product scope, authority, security policy, material cost or release require Vinh's decision. Routine structural and implementation decisions remain with Xu within approved scope.
 
-| D70-009 | Adopt a common AI Project Intake & Execution Standard and one intake report template for all AI participants. | Prevents inconsistent project discovery, evidence handling, status reporting and handoffs across AI models. | PROPOSED STANDARD v1.0 — Vinh confirmation recorded in conversation; formal governance approval pending |
+| D70-009 | Adopt a common AI Project Intake & Execution Standard and one intake report template for all AI participants. | Prevents inconsistent project discovery, evidence handling, status reporting and handoffs across AI models. | ACTIVE STANDARD v1.0 — adopted by Vinh on 2026-10-30 |
