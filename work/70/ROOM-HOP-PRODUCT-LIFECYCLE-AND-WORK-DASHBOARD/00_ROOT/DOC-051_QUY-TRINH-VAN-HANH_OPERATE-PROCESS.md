@@ -204,4 +204,4 @@ DOC-051 là chuẩn quy trình. Operations Owner chịu trách nhiệm vận hà
 | Version | Date | Change |
 |---|---|---|
 | 1.1 | 2026-10-30 | Xu / AI-01 | Align operations entry gate with DOC-004: G8 RELEASE→OPERATE; G9 is periodic operational improvement review. |
-| 1.0 | 2026-10-30 | Ban hành O01–O10, service health, incidents, recovery, changes, security, learning, G8 and retirement standard. |
+| 1.0 | 2026-10-30 | Xu / AI-01 | Ban hành O01–O10, service health, incidents, recovery, changes, security, learning, G8 and retirement standard. |
