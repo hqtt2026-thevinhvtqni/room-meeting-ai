@@ -1,0 +1,251 @@
+{
+  "work_id": "70",
+  "product_name": "ROOM-HOP Work Master Standard & Per-Work Dashboard",
+  "summary": "Work 70 là bộ chuẩn tham chiếu. Dữ liệu này là local snapshot; các tài liệu của những giai đoạn sau là bản thiết kế chuẩn bị, không đồng nghĩa các gate trước đã PASS.",
+  "standard_id": "ROOM-HOP-WORK-MASTER",
+  "standard_version": "1.1",
+  "work_status": "ACTIVE",
+  "lifecycle": {
+    "current_phase": "01_DISCOVER",
+    "phases": [
+      {
+        "phase_id": "01_DISCOVER",
+        "name_vi": "Khám phá",
+        "status": "PLANNED",
+        "gate_status": "NOT_READY",
+        "owner": "Vinh / Xu",
+        "evidence_refs": [
+          "01_DISCOVER/DISCOVER_BRIEF.md"
+        ],
+        "note_vi": "G0 khởi tạo và G1 khám phá chưa được xác minh độc lập; phase chưa được coi là đã bắt đầu chính thức."
+      },
+      {
+        "phase_id": "02_DEFINE",
+        "name_vi": "Định nghĩa",
+        "status": "PLANNED",
+        "gate_status": "NOT_READY",
+        "owner": "Vinh / Xu",
+        "evidence_refs": [
+          "02_DEFINE/PRODUCT_REQUIREMENTS.md"
+        ],
+        "note_vi": "Tài liệu yêu cầu là bản dự thảo chuẩn bị; chưa được gate G2 phê duyệt."
+      },
+      {
+        "phase_id": "03_ARCHITECT",
+        "name_vi": "Kiến trúc",
+        "status": "PLANNED",
+        "gate_status": "NOT_READY",
+        "owner": "Xu / Ka / Cla",
+        "evidence_refs": [
+          "03_ARCHITECT/WORK_LIFECYCLE_ARCHITECTURE.md",
+          "03_ARCHITECT/DASHBOARD_CORE_READ_CONTRACT.md"
+        ],
+        "note_vi": "Có thiết kế kiến trúc; chưa được phép coi là gate đã thông qua."
+      },
+      {
+        "phase_id": "04_PLAN",
+        "name_vi": "Kế hoạch",
+        "status": "PLANNED",
+        "gate_status": "NOT_READY",
+        "owner": "Xu / La",
+        "evidence_refs": [
+          "04_PLAN/IMPLEMENTATION_ROADMAP.md",
+          "04_PLAN/MIGRATION_PLAN.md"
+        ],
+        "note_vi": "Roadmap và migration plan đã được chuẩn hóa; còn chờ gate."
+      },
+      {
+        "phase_id": "05_BUILD",
+        "name_vi": "Thi công",
+        "status": "PLANNED",
+        "gate_status": "NOT_READY",
+        "owner": "Xu",
+        "evidence_refs": [
+          "05_BUILD/00_ROOT/BUILD_REGISTER.md"
+        ],
+        "note_vi": "Đã có cấu trúc và hồ sơ thiết kế; chưa có backend lưu trữ/xuất file được xác minh."
+      },
+      {
+        "phase_id": "06_VERIFY",
+        "name_vi": "Kiểm chứng",
+        "status": "NOT_STARTED",
+        "gate_status": "NOT_READY",
+        "owner": "Qw / An",
+        "evidence_refs": [
+          "06_VERIFY/VERIFICATION_CHECKLIST.md"
+        ],
+        "note_vi": "Kiểm thử tích hợp và QE độc lập chưa thực hiện."
+      },
+      {
+        "phase_id": "07_ACCEPT",
+        "name_vi": "Nghiệm thu",
+        "status": "NOT_STARTED",
+        "gate_status": "NOT_READY",
+        "owner": "Vinh",
+        "evidence_refs": [
+          "07_ACCEPT/ACCEPTANCE_RECORD.md"
+        ],
+        "note_vi": "Chưa có quyết định nghiệm thu."
+      },
+      {
+        "phase_id": "08_RELEASE",
+        "name_vi": "Phát hành",
+        "status": "NOT_STARTED",
+        "gate_status": "NOT_READY",
+        "owner": "Vinh / Xu",
+        "evidence_refs": [
+          "08_RELEASE/RELEASE_PLAN.md"
+        ],
+        "note_vi": "Chưa phát hành."
+      },
+      {
+        "phase_id": "09_OPERATE",
+        "name_vi": "Vận hành",
+        "status": "NOT_STARTED",
+        "gate_status": "NOT_READY",
+        "owner": "Operations Owner TBD",
+        "evidence_refs": [
+          "09_OPERATE/OPERATIONS_MODEL.md"
+        ],
+        "note_vi": "Mô hình vận hành tương lai; chưa triển khai."
+      }
+    ]
+  },
+  "work_packages": [
+    {
+      "wp_id": "WP-70-01",
+      "title": "Canonical Work standard",
+      "status": "IN_PROGRESS",
+      "owner": "Xu / AI-01",
+      "reviewer": "Qw / AI-05",
+      "evidence_refs": [
+        "README.md",
+        "00_ROOT/WORK_MANIFEST.md",
+        "03_ARCHITECT/WORK_LIFECYCLE_ARCHITECTURE.md"
+      ]
+    },
+    {
+      "wp_id": "WP-70-02",
+      "title": "Work Package registry",
+      "status": "IN_PROGRESS",
+      "owner": "Xu / AI-01",
+      "reviewer": "Qw / AI-05",
+      "evidence_refs": [
+        "05_BUILD/00_ROOT/BUILD_REGISTER.md",
+        "05_BUILD/00_ROOT/WORK_PACKAGE.schema.json"
+      ]
+    },
+    {
+      "wp_id": "WP-70-03",
+      "title": "Dashboard reference and data contract",
+      "status": "IN_PROGRESS",
+      "owner": "Xu / AI-01",
+      "reviewer": "Qw / AI-05",
+      "evidence_refs": [
+        "DASHBOARD/README.md",
+        "DASHBOARD/PRODUCT_STATUS.json",
+        "DASHBOARD/PRODUCT_STATUS.schema.json",
+        "DASHBOARD/index.html"
+      ]
+    },
+    {
+      "wp_id": "WP-70-04",
+      "title": "Core read integration",
+      "status": "BLOCKED",
+      "owner": "Xu / Core owner TBD",
+      "reviewer": "Qw / AI-05",
+      "evidence_refs": [
+        "03_ARCHITECT/DASHBOARD_CORE_READ_CONTRACT.md"
+      ]
+    },
+    {
+      "wp_id": "WP-70-05",
+      "title": "Evidence storage and file export",
+      "status": "IN_PROGRESS",
+      "owner": "Xu / AI-01",
+      "reviewer": "Qw / AI-05",
+      "evidence_refs": [
+        "05_BUILD/03_ARCHITECTURE/STORAGE_AND_EXPORT_ARCHITECTURE.md",
+        "05_BUILD/05_TEST/STORAGE_AND_EXPORT_ACCEPTANCE.md"
+      ]
+    },
+    {
+      "wp_id": "WP-70-06",
+      "title": "Independent verification and handoff",
+      "status": "PLANNED",
+      "owner": "Xu / AI-01",
+      "reviewer": "Qw / AI-05",
+      "evidence_refs": [
+        "06_VERIFY/VERIFICATION_PLAN.md",
+        "06_VERIFY/VERIFICATION_CHECKLIST.md"
+      ]
+    }
+  ],
+  "blockers": [
+    {
+      "id": "B-70-01",
+      "title": "Core read API and authorization contract not verified",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "owner": "Xu / Core owner TBD",
+      "detail_vi": "Chưa xác minh route thật, quyền truy cập, freshness và audit từ mã Core."
+    },
+    {
+      "id": "B-70-02",
+      "title": "Dashboard schema and browser E2E not executed",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "owner": "Xu / An",
+      "detail_vi": "Cần kiểm tra schema và chạy giao diện thực tế trên desktop/mobile."
+    },
+    {
+      "id": "B-70-03",
+      "title": "Independent QE review pending",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "owner": "Qw",
+      "detail_vi": "Chưa có báo cáo kiểm chứng độc lập và bằng chứng test."
+    },
+    {
+      "id": "B-70-04",
+      "title": "Storage/export backend not implemented",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "owner": "Xu / Core owner TBD",
+      "detail_vi": "Mới có kiến trúc và test plan; chưa có storage adapter hoặc export service thật."
+    },
+    {
+      "id": "B-70-05",
+      "title": "G0/G1 lifecycle gates pending independent verification",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "owner": "Xu / Qw",
+      "detail_vi": "Cần kiểm tra manifest, owner, scope và bằng chứng khám phá trước khi mở phase chính thức."
+    }
+  ],
+  "risks": [
+    {
+      "id": "R-70-01",
+      "title": "Conflicting folder and lifecycle definitions",
+      "severity": "HIGH",
+      "mitigation_vi": "Đã chuẩn hóa README, manifest và architecture theo một cấu trúc; cần kiểm tra lại toàn bộ sau đồng bộ."
+    },
+    {
+      "id": "R-70-02",
+      "title": "Local snapshot mistaken for Core live",
+      "severity": "HIGH",
+      "mitigation_vi": "Gắn source_mode=local_snapshot và cảnh báo rõ trong Dashboard."
+    },
+    {
+      "id": "R-70-03",
+      "title": "Export may leak restricted data or secrets",
+      "severity": "HIGH",
+      "mitigation_vi": "Bắt buộc server-side authorization, secret scanning, audit và kiểm thử CSV injection."
+    }
+  ],
+  "decisions_needed": [],
+  "source_mode": "local_snapshot",
+  "freshness": "FRESH",
+  "as_of": "2026-10-30T09:10:00+07:00",
+  "warning_vi": "Bản chụp cục bộ trong Sandbox. Không phải dữ liệu Core trực tiếp. Trạng thái phase/gate chưa được QE độc lập xác minh."
+}
