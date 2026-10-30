@@ -39,6 +39,11 @@ These nine build directories are the approved engineering workspace layout. They
 - Acceptance: PENDING.
 - Release: NOT RELEASED.
 
+## Document numbering and reading priority
+- `00_ROOT/DOCUMENT_REGISTER.md` is the canonical catalogue for all Work documents.
+- Every document has a stable STT/Document ID, priority P0-P3 and read order; filenames remain unchanged unless migration is approved.
+- AI must follow the register's reading sequence and dependencies.
+
 ## Mandatory AI operating standard
 - All AI participants must follow `00_ROOT/AI_PROJECT_INTAKE_STANDARD.md` v1.0 before material changes.
 - Use `00_ROOT/PROJECT_INTAKE_REPORT_TEMPLATE.md` for a consistent intake report.
