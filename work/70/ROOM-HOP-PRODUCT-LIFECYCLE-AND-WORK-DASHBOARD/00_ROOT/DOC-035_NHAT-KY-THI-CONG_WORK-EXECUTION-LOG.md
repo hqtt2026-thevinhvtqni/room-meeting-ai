@@ -234,3 +234,11 @@ Co đề nghị dùng 00_ROOT/NHAT_KY_THI_CONG.md làm kênh bàn giao vận hà
 - Chưa đổi tên file hiện hữu, chưa cấp mã mới, chưa cập nhật validator tự động hoặc chạy QE; các việc này vẫn mở.
 - Trạng thái: TAXONOMY REGISTERED IN DOC-039 / NAMING STANDARD ALIGNED / CODE LEDGER REFERENCE ALIGNED / BULK MIGRATION AND VALIDATION PENDING.
 - Người ghi: Xu / AI-01 — Work 70 Coordinator.
+
+
+## 2026-10-31 — Xu / AI-01 — Cập nhật validator theo danh mục mã mới
+- Rà soát code trên GitHub main phát hiện validator DOC-040 vẫn chỉ chấp nhận danh sách cũ; cập nhật TYPE_CODES và biểu thức kiểm tra định dạng để nhận QDY và TC, đồng thời giữ các mã đã có.
+- Bổ sung unit test cho QDY-W70-YYYYMMDD-NNN và TC-W70-YYYYMMDD-NNN. Các thay đổi đã được commit trên main: validator `9e1b6a1fc70a25d6c29fa93d69a2bf5c7cf8494e`; test `307cce89387cc2e59919e41ad6d0ea14c6a908f5`.
+- Giới hạn xác minh: đã ghi code/test lên GitHub nhưng chưa chạy test trong môi trường thực thi; không tuyên bố PASS. Cần chạy toàn bộ test validator, kiểm tra cả mã hợp lệ/không hợp lệ và xác nhận regex + TYPE_CODES đồng bộ.
+- Trạng thái: VALIDATOR AND TEST UPDATED ON GITHUB / EXECUTION NOT RUN / QE PENDING / SANDBOX SYNC PENDING.
+- Người ghi: Xu / AI-01 — Work 70 Coordinator.
