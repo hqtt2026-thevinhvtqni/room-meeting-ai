@@ -1,0 +1,270 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ROOM-HOP Work Package Registry — Proposal Schema",
+  "description": "Draft schema for Work-level WP planning. Not an approved execution baseline until Product Owner approval and G4.",
+  "type": "object",
+  "required": [
+    "work_id",
+    "schema_version",
+    "baseline_status",
+    "work_packages"
+  ],
+  "properties": {
+    "work_id": {
+      "const": "70"
+    },
+    "schema_version": {
+      "const": "0.1-draft"
+    },
+    "baseline_status": {
+      "const": "DRAFT_NOT_APPROVED"
+    },
+    "source_record": {
+      "type": "string"
+    },
+    "work_packages": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "wp_id",
+          "title",
+          "objective",
+          "owner",
+          "reviewer",
+          "owner_assignment_status",
+          "reviewer_assignment_status",
+          "build_areas",
+          "dependencies",
+          "requirement_refs",
+          "architecture_refs",
+          "deliverables",
+          "acceptance_criteria",
+          "definition_of_ready",
+          "definition_of_done",
+          "priority",
+          "estimate",
+          "legacy_status",
+          "baseline_status",
+          "status",
+          "legacy_source_refs"
+        ],
+        "properties": {
+          "wp_id": {
+            "type": "string",
+            "pattern": "^WP-70-[0-9]{2}$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "objective": {
+            "type": "string",
+            "minLength": 1
+          },
+          "owner": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reviewer": {
+            "type": "string",
+            "minLength": 1
+          },
+          "owner_assignment_status": {
+            "enum": [
+              "PROPOSED",
+              "CONFIRMED"
+            ]
+          },
+          "reviewer_assignment_status": {
+            "enum": [
+              "PROPOSED_NOT_CONFIRMED",
+              "CONFIRMED"
+            ]
+          },
+          "build_areas": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "00_ROOT",
+                "01_ORIGINAL",
+                "02_EXTENSION",
+                "03_ARCHITECTURE",
+                "04_CODE",
+                "05_TEST",
+                "06_EVIDENCE",
+                "07_RELEASE",
+                "10_AI_DEBUG_HANDOFF"
+              ]
+            }
+          },
+          "dependencies": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^WP-70-[0-9]{2}$"
+            }
+          },
+          "requirement_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "architecture_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "deliverables": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          },
+          "acceptance_criteria": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          },
+          "definition_of_ready": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          },
+          "definition_of_done": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          },
+          "priority": {
+            "enum": [
+              "P0",
+              "P1",
+              "P2",
+              "P3",
+              "UNASSESSED"
+            ]
+          },
+          "estimate": {
+            "type": "object",
+            "required": [
+              "status",
+              "confidence"
+            ],
+            "properties": {
+              "status": {
+                "enum": [
+                  "NOT_ESTIMATED",
+                  "RANGE_ESTIMATE",
+                  "COMMITTED"
+                ]
+              },
+              "effort_min": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "effort_max": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "unit": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "confidence": {
+                "enum": [
+                  "UNKNOWN",
+                  "LOW",
+                  "MEDIUM",
+                  "HIGH"
+                ]
+              },
+              "basis": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "assumptions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "additionalProperties": false
+          },
+          "milestone": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "legacy_status": {
+            "type": "string"
+          },
+          "baseline_status": {
+            "const": "DRAFT_NOT_APPROVED"
+          },
+          "status": {
+            "const": "DRAFT"
+          },
+          "blockers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "risks": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "evidence_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "legacy_source_refs": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          },
+          "change_history": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
