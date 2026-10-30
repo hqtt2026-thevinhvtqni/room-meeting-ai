@@ -4,9 +4,11 @@
 - **Read order:** 19
 - **Depends on:** DOC-004; DOC-033
 - **Status:** ACTIVE
-- **Version / Updated:** 1.0 / 2026-10-30
+- **Version / Updated:** 1.1 / 2026-10-30
 
-Machine-readable source: `EVIDENCE_REGISTER.json`, validated by `EVIDENCE_REGISTER.schema.json`. This Markdown file is the human-readable index and must remain consistent with the JSON source.
+Machine-readable source: `EVIDENCE_REGISTER.json` (schema_version 1.1), validated by `EVIDENCE_REGISTER.schema.json` v1.1. This Markdown file is the human-readable index and must remain consistent with the JSON source.
+
+Schema v1.1 adds optional claim/requirement/test/decision references, artifact version/source commit, verifier and verification metadata, limitations, counter-evidence, supersession, access classification and retention. Existing v1.0 records remain compatible. A record in state VERIFIED now requires verifier, verified_at, verification_method and verification_scope. Existing records remain RECORDED until independently verified.
 
 Version: 1.0
 Status: ACTIVE INDEX / EVIDENCE MUST BE VERIFIED
