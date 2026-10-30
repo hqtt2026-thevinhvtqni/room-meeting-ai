@@ -1,7 +1,7 @@
 # WORK STANDARD VERSIONING
 - **STT / Document ID:** DOC-027
 - **Priority:** P3
-- **Read order:** 31
+- **Read order:** 34
 - **Depends on:** DOC-001; DOC-033
 - **Status:** ACTIVE
 - **Version / Updated:** 1.2 / 2026-10-30
