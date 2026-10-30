@@ -22,4 +22,6 @@ Final authority: Vinh
 | D70-014 | All Work documents use Vietnamese-first bilingual titles and the canonical DOC-NNN_VIETNAMESE_ENGLISH filename pattern; stable DOC IDs, ASCII filenames and controlled legacy renames are mandatory. | Makes documents readable to Vietnamese users and consistently discoverable by AI/tools without breaking existing links. | ACTIVE STANDARD v1.0 — adopted 2026-10-30 |
 | D70-015 | Official records use a controlled document-type code (BB, QD, LENH, PL, KH, YC, TK, QT, HD, BC, BM, HS, TB, CV) separate from the stable DOC-ID; issue codes follow TYPE-WORKID-YYYYMMDD-NNN and are recorded in a register. | Separates document identity from operational classification and prevents ambiguous or duplicate official records. | ACTIVE STANDARD v1.0 — adopted 2026-10-30 |
 
+| D70-016 | Sandbox relative paths are rooted at the Work 70 root without a `work/70/` prefix; GitHub repository paths retain the `work/70/` prefix. The accidental nested Sandbox tree is non-canonical and must not be used. | Prevents two competing Sandbox roots and false-positive synchronization checks. | ACTIVE PATH CONTRACT v1.0 — 2026-10-30 |
+
 Material changes to product scope, authority, security policy, recurring cost, canonical schema or release require Vinh's decision. Routine reversible implementation decisions remain with Xu within approved scope.
