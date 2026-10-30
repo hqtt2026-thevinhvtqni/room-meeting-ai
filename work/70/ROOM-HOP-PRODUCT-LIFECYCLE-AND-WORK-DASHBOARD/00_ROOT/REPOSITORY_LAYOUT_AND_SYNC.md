@@ -31,6 +31,6 @@ Sandbox Work 70 / 05_BUILD → GitHub branch work/70/05-build:
 7. Keep branch scope and Sandbox mapping explicit in handoff notes.
 
 ## Current sync checkpoint
-- Root and Dashboard files have been written to GitHub main and readback checks are being recorded.
-- 05_BUILD files are synchronized to `work/70/05-build`; its nine canonical child directories are represented by .gitkeep markers.
+- Root and Dashboard files are synchronized to GitHub main; exact readback comparisons matched for the audited root and Dashboard paths.
+- 05_BUILD files are synchronized to `work/70/05-build`; exact readback comparisons matched for the audited build files, and all nine canonical child directories have .gitkeep markers.
 - This checkpoint does not assert that the feature branch is merged, the Dashboard is runtime-tested, or Core is integrated.
