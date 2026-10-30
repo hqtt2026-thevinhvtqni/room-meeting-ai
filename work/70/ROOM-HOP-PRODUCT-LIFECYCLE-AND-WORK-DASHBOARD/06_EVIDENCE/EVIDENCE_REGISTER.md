@@ -1,14 +1,6 @@
 # WORK 70 — EVIDENCE REGISTER
-- **STT / Document ID:** DOC-014
-- **Priority:** P1
-- **Read order:** 19
-- **Depends on:** DOC-004; DOC-033
-- **Status:** ACTIVE
-- **Version / Updated:** 1.1 / 2026-10-30
 
-Machine-readable source: `EVIDENCE_REGISTER.json` (schema_version 1.1), validated by `EVIDENCE_REGISTER.schema.json` v1.1. This Markdown file is the human-readable index and must remain consistent with the JSON source.
-
-Schema v1.1 adds optional claim/requirement/test/decision references, artifact version/source commit, verifier and verification metadata, limitations, counter-evidence, supersession, access classification and retention. Existing v1.0 records remain compatible. A record in state VERIFIED now requires verifier, verified_at, verification_method and verification_scope. Existing records remain RECORDED until independently verified.
+Machine-readable source: `EVIDENCE_REGISTER.json`, validated by `EVIDENCE_REGISTER.schema.json`. This Markdown file is the human-readable index and must remain consistent with the JSON source.
 
 Version: 1.0
 Status: ACTIVE INDEX / EVIDENCE MUST BE VERIFIED
@@ -35,3 +27,5 @@ Purpose: Cross-phase index of inspectable evidence. This file indexes artifacts;
 
 No evidence item is marked VERIFIED until its artifact is independently checked against the claim it supports.
 | E70-CONSOL-001 | 06_EVIDENCE/WORK70_CONSOLIDATION_CHECK_20261030.md | WP-70-01..06 | Xu AI-01 | 2026-10-30 | GitHub/Sandbox readback pending | Qw pending | RECORDED |
+
+| E70-OPS-001 | DOC-042..DOC-053; nine phase playbooks; Document Register; execution journal | WP-70-01 / G0-G4 preparation | Xu AI-01 | 2026-10-30 | Sandbox writes + selected readback; GitHub commits recorded in NHAT_KY_THI_CONG.md | Qw pending | RECORDED |
