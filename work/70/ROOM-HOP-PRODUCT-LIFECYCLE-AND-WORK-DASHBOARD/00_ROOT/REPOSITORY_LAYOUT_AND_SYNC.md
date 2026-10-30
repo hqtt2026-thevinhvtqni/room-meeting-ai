@@ -11,6 +11,8 @@ Status: ACTIVE — readback verification required after every sync
 - Product source repositories and canonical artifact stores must be declared explicitly in the Work Manifest or mapping register. Never infer canonical ownership from a folder or branch name.
 
 ## Sync mapping
+
+**Path rule:** MCP 8030 `relative_path` is relative to the Work 70 root. Use `ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/...` for Sandbox operations. The `work/70/` prefix is used only in GitHub repository paths. Never create a second Sandbox tree under `work/70/`.
 Sandbox Work 70 root → GitHub main:
 - README.md, LEGACY_SCAFFOLD_NOTICE.md
 - 00_ROOT, 01_DISCOVER, 02_DEFINE, 03_ARCHITECT, 04_PLAN
@@ -35,6 +37,9 @@ Sandbox Work 70 / 05_BUILD → GitHub branch work/70/05-build:
 11. A successful write response is not a verification result.
 12. Do not merge work/70/05-build into main or claim release until scoped review and acceptance.
 13. Do not use MCP 8020 for Work 70; MCP 8030 is the approved Sandbox route.
+
+## Duplicate-path incident and resolution
+A previous sync attempt wrote some new governance files under the erroneous Sandbox-relative prefix `work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/`. This is a duplicate working tree, not the canonical Sandbox path. Do not read from or write to it as a source of truth. Preserve it temporarily until a separately verified cleanup plan is approved. The direct Work root path above is canonical in Sandbox.
 
 ## Current sync checkpoint
 - Root and Dashboard files were synchronized to GitHub main; exact readback comparisons matched for audited paths.
