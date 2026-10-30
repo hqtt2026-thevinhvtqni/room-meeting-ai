@@ -1,31 +1,190 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "ROOM-HOP Work Evidence Register",
+  "title": "ROOM-HOP Work Evidence Register — Schema v1.1",
   "type": "object",
-  "required": ["work_id", "evidence"],
+  "required": [
+    "work_id",
+    "evidence",
+    "schema_version"
+  ],
   "properties": {
-    "work_id": {"type": "string", "minLength": 1},
+    "work_id": {
+      "type": "string",
+      "minLength": 1
+    },
     "evidence": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["evidence_id", "artifact_ref", "state"],
+        "required": [
+          "evidence_id",
+          "artifact_ref",
+          "state"
+        ],
         "properties": {
-          "evidence_id": {"type": "string", "minLength": 1},
-          "artifact_ref": {"type": "string", "minLength": 1},
-          "wp_id": {"type": "string"},
-          "gate_id": {"type": "string"},
-          "producer": {"type": "string"},
-          "created_at": {"type": "string", "format": "date-time"},
-          "sha256": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"},
-          "media_type": {"type": "string"},
-          "source_environment": {"type": "string"},
-          "reviewer": {"type": "string"},
-          "state": {"enum": ["MISSING", "RECORDED", "VERIFIED", "REJECTED"]}
+          "evidence_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "artifact_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "wp_id": {
+            "type": "string"
+          },
+          "gate_id": {
+            "type": "string"
+          },
+          "producer": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{64}$"
+          },
+          "media_type": {
+            "type": "string"
+          },
+          "source_environment": {
+            "type": "string"
+          },
+          "reviewer": {
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "MISSING",
+              "RECORDED",
+              "VERIFIED",
+              "REJECTED"
+            ]
+          },
+          "evidence_type": {
+            "type": "string",
+            "enum": [
+              "SOURCE",
+              "TEST",
+              "RUNTIME",
+              "REVIEW",
+              "DOCUMENT",
+              "DATA",
+              "SECURITY",
+              "OPERATION",
+              "EXTERNAL"
+            ]
+          },
+          "requirement_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "test_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "decision_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "claim_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "artifact_version": {
+            "type": "string"
+          },
+          "source_commit": {
+            "type": "string"
+          },
+          "verifier": {
+            "type": "string"
+          },
+          "verified_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "verification_method": {
+            "type": "string"
+          },
+          "verification_scope": {
+            "type": "string"
+          },
+          "limitations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "counter_evidence_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "supersedes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "access_classification": {
+            "type": "string",
+            "enum": [
+              "PUBLIC",
+              "INTERNAL",
+              "CONFIDENTIAL",
+              "RESTRICTED"
+            ]
+          },
+          "retention_until": {
+            "type": "string",
+            "format": "date"
+          }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "const": "VERIFIED"
+                }
+              },
+              "required": [
+                "state"
+              ]
+            },
+            "then": {
+              "required": [
+                "verifier",
+                "verified_at",
+                "verification_method",
+                "verification_scope"
+              ]
+            }
+          }
+        ]
       }
+    },
+    "schema_version": {
+      "type": "string",
+      "enum": [
+        "1.1"
+      ]
     }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "description": "Backward-compatible optional provenance and verification metadata. VERIFIED records require verifier, verified_at, verification_method and verification_scope."
 }
