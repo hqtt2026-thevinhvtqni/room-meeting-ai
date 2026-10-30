@@ -20,7 +20,7 @@ Rà soát sự thống nhất của cấu trúc Work 70, nguồn chuẩn GitHub/
 - GitHub canonical repository path: `work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/`.
 - Sandbox Work 70 relative path bắt đầu từ `ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/`, không thêm tiền tố `work/70/`.
 - Một số thao tác trước đó đã tạo bản phụ dưới tiền tố `work/70/` trong Sandbox. Bản này không phải nguồn chuẩn; đã được ghi nhận tại D70-016 và hợp đồng đồng bộ. Chưa xóa để bảo toàn lịch sử; cleanup cần kế hoạch riêng.
-- Trạng thái: CORRECTIVE RULE RECORDED; direct-root synchronization and full readback still in progress.
+- Trạng thái: CORRECTIVE RULE RECORDED; các hồ sơ quản trị chính đã được ghi vào direct Sandbox root. Exact readback đã xác nhận cho Document Register; các file khác còn cần đối chiếu từng file.
 
 ### G-002 — DOC-038 từng có hai đường dẫn cùng nhận diện một tài liệu
 - Đường dẫn chuẩn được chốt tại `00_ROOT/DOC-038_QUY-TRINH-DAT-TEN-TAI-LIEU_DOCUMENT-NAMING-STANDARD.md`.
@@ -37,12 +37,13 @@ Rà soát sự thống nhất của cấu trúc Work 70, nguồn chuẩn GitHub/
 
 ### G-004 — Metadata và Read order có sai lệch
 - Đã đồng bộ Read order theo Document Register cho DOC-009, DOC-011, DOC-012, DOC-015, DOC-018, DOC-034 và DOC-035.
-- Một số tài liệu cũ vẫn chưa có đủ metadata ngay dưới tiêu đề; ví dụ Manifest, Sync Contract, Gate Matrix, State Machine, Decision Log, Discover Brief, Product Requirements và Dashboard Read Contract.
+- Đã bổ sung/đồng bộ metadata cho Manifest, AI Intake, Sync Contract, Gate Matrix, State Machine, Decision Log, Discover Brief, Product Requirements, Dashboard Read Contract, Architecture, Roadmap, Instantiation, Verification Plan, Migration Plan, Minutes, Execution Log, Evidence Register, Verification Checklist, Acceptance Record, Release Plan, Operations Model và Intake Template.
+- Vẫn cần kiểm tra toàn bộ các tài liệu còn lại, đặc biệt các hồ sơ branch-only trong 05_BUILD, các tài liệu P3 và ngoại lệ JSON/schema/binary.
 - Document Register là nguồn chuẩn cho DOC-ID, Priority, Read order, dependencies và canonical path. Metadata trong file phải được đồng bộ theo Register.
-- Trạng thái: PARTIAL; cần kiểm kê và sửa toàn bộ 40 hồ sơ đăng ký, không chỉ các file vừa nêu.
+- Trạng thái: PARTIAL; chưa có bằng chứng 40/40 tài liệu và artifact metadata đều khớp.
 
 ### G-005 — Register cần chỉ rõ branch đối với tài liệu thuộc 05_BUILD
-Các mục DOC-013, DOC-016, DOC-017, DOC-024, DOC-025, DOC-030 và DOC-036 thuộc nhánh `work/70/05-build`, không nằm trên GitHub main. Document Register phải ghi branch rõ ràng để người đọc không tìm nhầm trên main. 05_BUILD vẫn là mapping/engineering coordination, không trở thành canonical source chỉ vì file nằm ở branch này.
+Các mục DOC-013, DOC-016, DOC-017, DOC-024, DOC-025, DOC-030 và DOC-036 thuộc nhánh `work/70/05-build`, không nằm trên GitHub main. Document Register v1.9 đã ghi rõ branch cho 7 hồ sơ này để người đọc không tìm nhầm trên main. 05_BUILD vẫn là mapping/engineering coordination, không trở thành canonical source chỉ vì file nằm ở branch này.
 
 ### G-006 — Trạng thái sản phẩm chưa đủ điều kiện nghiệm thu
 Theo Manifest và Roadmap hiện tại:
