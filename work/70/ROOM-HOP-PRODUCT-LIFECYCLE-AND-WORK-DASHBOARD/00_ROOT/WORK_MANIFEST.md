@@ -55,9 +55,11 @@ These are navigation/mapping/execution areas, not independent canonical source r
 - Acceptance: PENDING.
 - Release: NOT RELEASED.
 
-## Document numbering and reading priority
+## Document numbering, naming and reading priority
 - 00_ROOT/DOCUMENT_REGISTER.md is the canonical catalogue for all Work documents.
-- Every document has a stable STT/Document ID, priority P0-P3 and read order; filenames remain unchanged unless migration is approved.
+- Every document has a stable STT/Document ID, priority P0-P3 and read order.
+- New documents follow 00_ROOT/DOCUMENT_NAMING_STANDARD.md: Vietnamese first, English second, ASCII filename and stable DOC ID.
+- Existing filenames remain unchanged until a controlled rename migration is approved.
 - AI must follow the register's reading sequence and dependencies.
 
 ## Mandatory AI operating standard
