@@ -23,6 +23,15 @@ class ValidatorTests(unittest.TestCase):
         self.assertEqual(errors, [])
         self.assertEqual(counts["issued"], 1)
 
+    def test_accepts_new_qdy_and_tc_codes(self):
+        rows = [
+            "| 002 | QDY-W70-20261031-001 | DOC-034 | QDY | Rules | 2026-10-31 | Xu | Vinh | — | DRAFT | 00_ROOT/DOC-034.md | — |",
+            "| 003 | TC-W70-20261031-001 | DOC-040 | TC | Standard | 2026-10-31 | Xu | Vinh | — | DRAFT | 00_ROOT/DOC-040.md | — |",
+        ]
+        errors, counts = validate(REGISTER, ledger(rows))
+        self.assertEqual(errors, [])
+        self.assertEqual(counts["new"], 2)
+
     def test_rejects_invalid_format_and_unknown_doc_id(self):
         row = "| 002 | BB-W70-20260230-000 | DOC-099 | BB | Minutes | 2026-02-30 | Xu | — | — | DRAFT | — | — |"
         errors, _ = validate(REGISTER, ledger([row]))
