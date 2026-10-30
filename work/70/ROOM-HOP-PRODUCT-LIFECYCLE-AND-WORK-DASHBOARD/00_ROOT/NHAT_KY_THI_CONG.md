@@ -75,3 +75,19 @@
 - Ran custom validator covering local WORK_PACKAGE.schema.json reference plus declared required/type/enum/const/pattern/minItems/uniqueItems/additionalProperties rules: PASS for all six WPs, no violations.
 - Full standards-compliant JSON Schema Draft 2020-12 validator remains NOT RUN; independent QE review remains pending.
 - Recorded E70-WP-SCHEMA-SUBSET-001 as RECORDED.
+
+
+## 2026-10-31 — Phân công triển khai song song Work 70
+- Người điều phối: Xu / AI-01. Phạm vi: chuyển Work 70 từ chuẩn hóa governance/tài liệu sang xây dựng bộ máy thực thi Work Lifecycle thật.
+- Theo yêu cầu của Vinh, phân chia module để triển khai song song:
+  - Ka / AI-02: kiến trúc runtime, state machine, API contract, event/audit model, concurrency/idempotency; bàn giao contract v1.
+  - Co / AI-07: Lifecycle Engine độc lập LLM; Work/WP registry, transition guard, dependency validation, assignment lifecycle, event/audit trail, idempotent commands; bàn giao source, unit tests, hướng dẫn chạy và evidence.
+  - Vi: điều tra Core routes/capability gap; API adapter và Dashboard read-only theo contract; mock fixtures phải phân biệt rõ mock/snapshot/live; không tự mở rộng Core hoặc sửa engine của Co.
+  - Qw / AI-05 (Test độc lập): test strategy/matrix, contract tests, negative/security, race/idempotency, regression/E2E và báo cáo QE độc lập; không tự sửa code để làm test xanh.
+  - Xu / AI-01: điều phối dependency, review contract, tích hợp, đối soát evidence, quản lý blockers và báo cáo Vinh.
+- Quy tắc phối hợp: một module/một owner; thay đổi trên nhánh/PR riêng; không cùng sửa một file; bàn giao phải có commit/PR, danh sách file, lệnh test, kết quả thực chạy, evidence refs và known gaps; không dùng MCP 8020; không ghi PASS/DONE nếu chưa có bằng chứng.
+- Gate tích hợp: G0 Ka contract v1; G1 Co unit tests + Qw contract tests; G2 Vi adapter/Dashboard khớp contract; G3 integrated E2E + auth/negative + persistence/recovery; G4 Qw independent QE, Xu đối soát, Vinh quyết định nghiệm thu.
+- Đã tạo DOC-054_LENH-PHAN-CONG-SONG-SONG-WORK-70.md tại 05_BUILD/00_ROOT trong Sandbox Work 70; sandbox write status=ok. Đã tạo cùng tài liệu trên GitHub branch work/70/05-build; commit 83a88e0610d8a3ccc8deaac913635ad1901b24b7; GitHub fetch readback xác nhận tài liệu chứa các track Co và QA; Sandbox readback status=ok.
+- Giới hạn kênh điều phối được xác minh: MCP 8030 trong phiên cung cấp Sandbox và Meeting operations, không có công cụ dispatch trực tiếp tới Co/Vi/Ka/Qw. Vì vậy DOC-054 ở trạng thái ASSIGNMENT READY; CHƯA xác nhận đã gửi lệnh, AI đã nhận việc hoặc bắt đầu thi công. Cần chuyển lệnh qua kênh làm việc thực tế của từng AI và ghi nhận phản hồi/artefact định danh.
+- Trạng thái thực tế: ASSIGNMENT DOCUMENTED / DISPATCH NOT VERIFIED / IMPLEMENTATION NOT STARTED OR NOT VERIFIED. Không đánh dấu bất kỳ WP hay gate nào DONE/PASS chỉ dựa trên việc tạo tài liệu phân công.
+- Next action: dispatch DOC-054 qua kênh được xác minh; ghi nhận ACK riêng từng AI; sau đó theo dõi commit/PR và evidence theo từng WP.
