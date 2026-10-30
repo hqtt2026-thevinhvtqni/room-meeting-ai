@@ -32,3 +32,5 @@ No evidence item is marked VERIFIED until its artifact is independently checked 
 
 | E70-DASH-SCHEMA-SUBSET-001 | DASHBOARD/PRODUCT_STATUS.json + schema | WP-70-03 | Xu AI-01 | 2026-10-30 | JSON parse + custom subset validator PASS; full Draft 2020-12 validator NOT RUN | Qw pending | RECORDED |
 | E70-DASH-STATIC-001 | DASHBOARD/index.html | WP-70-03 | Xu AI-01 | 2026-10-30 | Static source inspection only; browser E2E NOT RUN | Qw pending | RECORDED |
+
+| E70-WP-SCHEMA-SUBSET-001 | BUILD_REGISTER.json + BUILD_REGISTER.schema.json + WORK_PACKAGE.schema.json | WP-70-02 | Xu AI-01 | 2026-10-30 | JSON parse + custom local-ref/schema-subset validation PASS; full Draft 2020-12 validator NOT RUN | Qw pending | RECORDED |
