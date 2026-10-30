@@ -7,7 +7,7 @@
 4. Set product name, owner, authority, scope, standard version and source references.
 5. Create the manifest and an explicitly labelled SAMPLE or LOCAL SNAPSHOT dashboard payload.
 6. Define lifecycle gates, risks, dependencies and success metrics.
-7. Record WPs in 05_BUILD/00_ROOT/BUILD_REGISTER.md and validate against WORK_PACKAGE.schema.json.
+7. Record WPs in 05_BUILD/00_ROOT/BUILD_REGISTER.json, validate against BUILD_REGISTER.schema.json and WORK_PACKAGE.schema.json, and keep BUILD_REGISTER.md synchronized as the human-readable view.
 8. Store cross-phase evidence references in top-level 06_EVIDENCE; build evidence may be staged in 05_BUILD/06_EVIDENCE.
 9. Confirm permissions, evidence paths and auditability before execution.
 
