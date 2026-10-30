@@ -1,5 +1,5 @@
 # WORK 70 — DOCUMENT REGISTER
-Register version: 1.1
+Register version: 1.2
 Owner: Xu / AI-01
 Authority: Vinh
 Rule: STT is a stable identity; Priority is importance; Read order is sequence. File paths are not renamed by this register.
@@ -32,13 +32,15 @@ Rule: STT is a stable identity; Priority is importance; Read order is sequence. 
 | DOC-023 | P2 | 24 | Project Intake Report Template | 00_ROOT/PROJECT_INTAKE_REPORT_TEMPLATE.md | DOC-001; DOC-002 | ACTIVE | Required consistent intake report |
 | DOC-024 | P2 | 25 | Storage & Export Acceptance | 05_BUILD/05_TEST/STORAGE_AND_EXPORT_ACCEPTANCE.md | DOC-016; DOC-015 | ACTIVE | Legacy test plan; not executed |
 | DOC-025 | P2 | 26 | AI Participants & Token Usage | 05_BUILD/00_ROOT/AI_PARTICIPANTS_AND_TOKEN_USAGE.md | DOC-002 | ACTIVE | AI role roster; participation/token values require evidence |
-| DOC-026 | P3 | 27 | Lifecycle Guide (Vietnamese) | 00_ROOT/LIFECYCLE_GUIDE_VI.md | DOC-004; DOC-005 | ACTIVE | Human-readable explanation of lifecycle |
-| DOC-027 | P3 | 28 | Work Standard Versioning | 00_ROOT/WORK_STANDARD_VERSIONING.md | DOC-001 | ACTIVE | Version history and compatibility |
-| DOC-028 | P3 | 29 | Vietnamese Glossary | 00_ROOT/VIETNAMESE_GLOSSARY.md | DOC-002 | ACTIVE | Terminology reference |
-| DOC-029 | P3 | 30 | Legacy Scaffold Notice | LEGACY_SCAFFOLD_NOTICE.md | DOC-001 | ACTIVE | Historical/legacy context |
-| DOC-030 | P3 | 31 | Work 70 Session Log | 05_BUILD/10_AI_DEBUG_HANDOFF/WORK70_SESSION_LOG_20261030.md | DOC-002; DOC-033 | ACTIVE | Historical build log; canonical chronological log belongs at Work root |
-| DOC-031 | P3 | 32 | Consolidation Evidence Report | 06_EVIDENCE/WORK70_CONSOLIDATION_CHECK_20261030.md | DOC-014 | ACTIVE | Historical evidence of Work 70 consolidation |
-| DOC-032 | P3 | 33 | Dashboard README | DASHBOARD/README.md | DOC-010 | ACTIVE | Dashboard usage and limitations |
+| DOC-034 | P2 | 27 | Biên bản Work | 00_ROOT/BIEN_BAN.md | DOC-001; DOC-006; DOC-033 | ACTIVE | Official minutes register; binding decisions link to DECISION_LOG |
+| DOC-035 | P2 | 28 | Nhật ký thi công Work | 00_ROOT/NHAT_KY_THI_CONG.md | DOC-001; DOC-002; DOC-033 | ACTIVE | Chronological Work-wide execution record |
+| DOC-026 | P3 | 29 | Lifecycle Guide (Vietnamese) | 00_ROOT/LIFECYCLE_GUIDE_VI.md | DOC-004; DOC-005 | ACTIVE | Human-readable explanation of lifecycle |
+| DOC-027 | P3 | 30 | Work Standard Versioning | 00_ROOT/WORK_STANDARD_VERSIONING.md | DOC-001 | ACTIVE | Version history and compatibility |
+| DOC-028 | P3 | 31 | Vietnamese Glossary | 00_ROOT/VIETNAMESE_GLOSSARY.md | DOC-002 | ACTIVE | Terminology reference |
+| DOC-029 | P3 | 32 | Legacy Scaffold Notice | LEGACY_SCAFFOLD_NOTICE.md | DOC-001 | ACTIVE | Historical/legacy context |
+| DOC-030 | P3 | 33 | Work 70 Session Log | 05_BUILD/10_AI_DEBUG_HANDOFF/WORK70_SESSION_LOG_20261030.md | DOC-002; DOC-033 | ACTIVE | Historical build log; canonical chronological log belongs at Work root |
+| DOC-031 | P3 | 34 | Consolidation Evidence Report | 06_EVIDENCE/WORK70_CONSOLIDATION_CHECK_20261030.md | DOC-014 | ACTIVE | Historical evidence of Work 70 consolidation |
+| DOC-032 | P3 | 35 | Dashboard README | DASHBOARD/README.md | DOC-010 | ACTIVE | Dashboard usage and limitations |
 
 ## AI reading rule
 Read DOC-001 through DOC-006, then DOC-033. Then read relevant P1 documents in ascending read order. Read P2 only for the active task. Read P3 when clarification, operations or historical trace requires it. Never infer PASS from the register or presence of a file.
