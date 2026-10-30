@@ -1,4 +1,10 @@
 # WORK 70 — EVIDENCE REGISTER
+- **STT / Document ID:** DOC-014
+- **Priority:** P1
+- **Read order:** 19
+- **Depends on:** DOC-004; DOC-033
+- **Status:** ACTIVE
+- **Version / Updated:** 1.0 / 2026-10-30
 
 Machine-readable source: `EVIDENCE_REGISTER.json`, validated by `EVIDENCE_REGISTER.schema.json`. This Markdown file is the human-readable index and must remain consistent with the JSON source.
 
