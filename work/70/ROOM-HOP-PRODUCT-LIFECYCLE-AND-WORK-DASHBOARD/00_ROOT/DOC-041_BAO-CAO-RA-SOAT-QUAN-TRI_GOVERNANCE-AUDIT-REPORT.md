@@ -40,7 +40,7 @@ Rà soát sự thống nhất của cấu trúc Work 70, nguồn chuẩn GitHub/
 - Đã bổ sung/đồng bộ metadata cho Manifest, AI Intake, Sync Contract, Gate Matrix, State Machine, Decision Log, Discover Brief, Product Requirements, Dashboard Read Contract, Architecture, Roadmap, Instantiation, Verification Plan, Migration Plan, Minutes, Execution Log, Evidence Register, Verification Checklist, Acceptance Record, Release Plan, Operations Model và Intake Template.
 - Vẫn cần kiểm tra toàn bộ các tài liệu còn lại, đặc biệt các hồ sơ branch-only trong 05_BUILD, các tài liệu P3 và ngoại lệ JSON/schema/binary.
 - Document Register là nguồn chuẩn cho DOC-ID, Priority, Read order, dependencies và canonical path. Metadata trong file phải được đồng bộ theo Register.
-- Trạng thái: PARTIAL; chưa có bằng chứng 40/40 tài liệu và artifact metadata đều khớp.
+- Trạng thái: PARTIAL; chưa có bằng chứng 41/41 tài liệu và artifact metadata đều khớp.
 
 ### G-005 — Register cần chỉ rõ branch đối với tài liệu thuộc 05_BUILD
 Các mục DOC-013, DOC-016, DOC-017, DOC-024, DOC-025, DOC-030 và DOC-036 thuộc nhánh `work/70/05-build`, không nằm trên GitHub main. Document Register v1.9 đã ghi rõ branch cho 7 hồ sơ này để người đọc không tìm nhầm trên main. 05_BUILD vẫn là mapping/engineering coordination, không trở thành canonical source chỉ vì file nằm ở branch này.
@@ -67,7 +67,7 @@ Không thay đổi các trạng thái này chỉ vì chuẩn hóa tài liệu.
 |---|---|---|
 | R-01 | Đồng bộ toàn bộ hồ sơ mới/cập nhật vào đúng Sandbox root trực tiếp | Exact GitHub ↔ direct Sandbox readback cho từng file |
 | R-02 | Giữ bản Sandbox lồng sai đường dẫn ở trạng thái non-canonical; lập kế hoạch cleanup an toàn | Inventory, checksum/backup, kiểm tra tham chiếu, phê duyệt và readback sau cleanup |
-| R-03 | Kiểm kê 40 DOC-ID và đối chiếu metadata từng file | 40/40 DOC-ID, Priority, Read order, Depends, Status, Version khớp Register; ngoại lệ JSON/schema/binary được ghi rõ |
+| R-03 | Kiểm kê 41 DOC-ID và đối chiếu metadata từng file | 41/41 DOC-ID, Priority, Read order, Depends, Status, Version khớp Register; ngoại lệ JSON/schema/binary được ghi rõ |
 | R-04 | Bổ sung metadata cho tài liệu chưa có | Mỗi file Markdown có metadata chuẩn hoặc có ngoại lệ được ghi trong Register |
 | R-05 | Bổ sung branch/path đầy đủ cho các mục 05_BUILD | Tất cả mục branch-only có branch, path, commit/version và trạng thái |
 | R-06 | Rà soát mọi liên kết DOC-038/039/040 và pointer cũ | Không có link gãy; một canonical path cho mỗi DOC-ID |
@@ -84,6 +84,6 @@ Không thay đổi các trạng thái này chỉ vì chuẩn hóa tài liệu.
 - Mỗi remediation phải có bằng chứng, commit/version, người thực hiện, reviewer và trạng thái.
 
 ## 6. Trạng thái tổng thể
-**AUDIT OPEN / NOT FULLY VERIFIED.** DOC-038/039/040 đã thiết lập được khung quản trị; các phát hiện G-001 đến G-006 và backlog R-01 đến R-09 vẫn cần đóng bằng kiểm chứng tương ứng.
+**AUDIT OPEN / NOT FULLY VERIFIED.** DOC-038/039/040 đã thiết lập được khung quản trị; các phát hiện G-001 đến G-007 và backlog R-01 đến R-10 vẫn cần đóng bằng kiểm chứng tương ứng.
 
 **English summary:** Work 70 governance is partially reconciled, not fully verified. The audit records path duplication, document metadata drift, branch-specific mapping references, and remaining runtime/QE/acceptance gaps.
