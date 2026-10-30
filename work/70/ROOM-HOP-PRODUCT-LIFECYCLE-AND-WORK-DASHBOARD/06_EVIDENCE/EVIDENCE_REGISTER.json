@@ -84,6 +84,24 @@
       "source_environment": "Sandbox Work 70; GitHub main; GitHub branch work/70/05-build",
       "reviewer": "Qw pending",
       "state": "RECORDED"
+    },
+    {
+      "evidence_id": "E70-DASH-SCHEMA-SUBSET-001",
+      "artifact_ref": "DASHBOARD/PRODUCT_STATUS.json + DASHBOARD/PRODUCT_STATUS.schema.json",
+      "wp_id": "WP-70-03",
+      "producer": "Xu / AI-01",
+      "source_environment": "Sandbox Work 70; custom JavaScript validator for declared JSON Schema keywords (object/array/string/required/enum/additionalProperties/min-max items/date-time pattern)",
+      "reviewer": "Qw pending",
+      "state": "RECORDED"
+    },
+    {
+      "evidence_id": "E70-DASH-STATIC-001",
+      "artifact_ref": "DASHBOARD/index.html",
+      "wp_id": "WP-70-03",
+      "producer": "Xu / AI-01",
+      "source_environment": "Sandbox source inspection; dynamic text escaping observed; data fetch is GET of local PRODUCT_STATUS.json; no server write path identified in inspected HTML",
+      "reviewer": "Qw pending",
+      "state": "RECORDED"
     }
   ]
 }
