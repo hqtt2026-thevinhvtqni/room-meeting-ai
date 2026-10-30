@@ -1,7 +1,7 @@
 # WORK 70 — BIÊN BẢN
 - **STT / Document ID:** DOC-034
 - **Priority:** P2
-- **Read order:** 27
+- **Read order:** 31
 - **Depends on:** DOC-001; DOC-006; DOC-033
 - **Status:** ACTIVE
 - **Version / Updated:** 1.0 / 2026-10-30
