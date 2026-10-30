@@ -177,4 +177,4 @@ DOC-050 là chuẩn quy trình. Vinh giữ authority G7. Release Manager/Operati
 | Version | Date | Change |
 |---|---|---|
 | 1.1 | 2026-10-30 | Xu / AI-01 | Align release gate with DOC-004: G7 ACCEPT→RELEASE. |
-| 1.0 | 2026-10-30 | Ban hành R01–R10, release candidate, readiness, rollout, rollback, G7 and operations handoff. |
+| 1.0 | 2026-10-30 | Xu / AI-01 | Ban hành R01–R10, release candidate, readiness, rollout, rollback, G7 and operations handoff. |
