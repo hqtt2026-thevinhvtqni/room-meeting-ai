@@ -1,7 +1,7 @@
 # AI PROJECT INTAKE & EXECUTION STANDARD
 Version: 1.0
 Effective date: 2026-10-30
-Status: PROPOSED FOR ROOM-HOP-WIDE ADOPTION
+Status: ACTIVE / ADOPTED BY PRODUCT OWNER
 Owner: Vinh (Product Owner / final authority)
 Process owner: Xu (AI-01 / lifecycle orchestrator)
 
