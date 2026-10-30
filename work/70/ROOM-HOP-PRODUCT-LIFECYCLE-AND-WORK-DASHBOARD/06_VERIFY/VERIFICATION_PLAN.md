@@ -1,7 +1,7 @@
 # 06 — VERIFY / KIỂM CHỨNG
 - **STT / Document ID:** DOC-015
 - **Priority:** P1
-- **Read order:** 17
+- **Read order:** 20
 - **Depends on:** DOC-008; DOC-013; DOC-014; DOC-033; DOC-036
 - **Status:** PLANNED — NOT EXECUTED
 - **Version / Updated:** 1.1 / 2026-10-30
