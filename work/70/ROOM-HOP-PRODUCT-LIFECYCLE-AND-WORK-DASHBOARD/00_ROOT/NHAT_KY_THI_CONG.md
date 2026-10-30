@@ -52,3 +52,12 @@
 - Lifecycle status conflict remains: Manifest says current phase 03_ARCHITECT (design baseline), Dashboard snapshot says 01_DISCOVER (PLANNED), snapshot timestamp 2026-10-30T09:10:00+07:00. No phase/gate state changed; reconciliation required before status update.
 - Not claimed: full JSON Schema validation, Dashboard browser E2E, Core live integration, storage/export backend, independent QE, acceptance or release.
 - Next: reconcile manifest/dashboard/decision evidence; controlled desktop.ini disposition; run schema and UI tests; verify GitHub readback and complete remaining sync evidence.
+
+
+## 2026-10-30 — Work 70 dashboard static/schema checks
+- Parsed DASHBOARD/PRODUCT_STATUS.json and PRODUCT_STATUS.schema.json successfully.
+- Executed a custom validator covering the schema keywords used by this contract (object, array, string, required, enum, additionalProperties, minItems/maxItems and date-time shape): PASS, no violations found. This is NOT a full standards-compliant Draft 2020-12 validator; full validator remains NOT RUN.
+- Static source inspection of DASHBOARD/index.html: observed local JSON GET, escaped dynamic text output, and no server-side state-write path in inspected HTML. Browser execution, responsive and failure-path E2E remain NOT RUN.
+- Added E70-DASH-SCHEMA-SUBSET-001 and E70-DASH-STATIC-001 as RECORDED, pending independent QE review.
+- Semantic discrepancy remains OPEN: Manifest current phase 03_ARCHITECT; Dashboard local snapshot current_phase 01_DISCOVER. No automatic state change made.
+- Fresh Sandbox inventory still shows 27 desktop.ini files in Work 70 tree; cleanup deferred pending controlled disposition.
