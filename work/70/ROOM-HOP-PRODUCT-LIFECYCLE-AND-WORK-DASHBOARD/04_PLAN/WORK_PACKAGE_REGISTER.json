@@ -1,0 +1,498 @@
+{
+  "work_id": "70",
+  "schema_version": "0.1-draft",
+  "baseline_status": "DRAFT_NOT_APPROVED",
+  "source_record": "DOC-053 proposal; source candidate branch work/70/05-build",
+  "work_packages": [
+    {
+      "wp_id": "WP-70-01",
+      "title": "Canonical Work standard",
+      "objective": "Align canonical Work structure, lifecycle, gates and authority.",
+      "owner": "Xu / AI-01",
+      "reviewer": "Qw / AI-05",
+      "build_areas": [
+        "00_ROOT",
+        "03_ARCHITECTURE"
+      ],
+      "dependencies": [],
+      "legacy_status": "IN_PROGRESS",
+      "deliverables": [
+        "Canonical Work structure and ownership rules",
+        "Lifecycle gate matrix and state machine",
+        "Manifest, README and architecture alignment"
+      ],
+      "acceptance_criteria": [
+        "README, manifest and architecture define the same top-level and 05_BUILD structures.",
+        "Lifecycle, gates and state machine do not contradict one another.",
+        "No existing Work is modified."
+      ],
+      "evidence_refs": [
+        "README.md",
+        "00_ROOT/WORK_MANIFEST.md",
+        "03_ARCHITECT/WORK_LIFECYCLE_ARCHITECTURE.md"
+      ],
+      "blockers": [],
+      "owner_assignment_status": "PROPOSED",
+      "reviewer_assignment_status": "PROPOSED_NOT_CONFIRMED",
+      "requirement_refs": [],
+      "architecture_refs": [
+        "DOC-009",
+        "DOC-044"
+      ],
+      "definition_of_ready": [
+        "G4 PLAN→BUILD is authorized for the Work and this WP is included in the approved baseline.",
+        "Approved requirements and architecture references are identified; unresolved decisions and assumptions are explicit.",
+        "Owner and independent reviewer are confirmed; self-review is not represented as independent review.",
+        "Dependencies and predecessor exit conditions are satisfied or explicitly accepted with contingency.",
+        "Canonical source repository/path, branch strategy, access and execution environment are verified.",
+        "Deliverables, acceptance criteria, verification method and evidence location are defined.",
+        "Estimate range, confidence and basis are recorded, or explicitly marked NOT_ESTIMATED with an owner/action."
+      ],
+      "definition_of_done": [
+        "All listed deliverables are present at the declared canonical source and exact commit/version is recorded.",
+        "Acceptance criteria are verified with reproducible test/review evidence linked by Evidence ID.",
+        "Independent reviewer has completed review and recorded findings; unresolved defects have disposition.",
+        "Requirements, architecture, build mapping and evidence references are traceable and current.",
+        "Documentation, operational/security implications and handoff obligations are updated.",
+        "WP owner records completion recommendation; authorized reviewer/authority records final status."
+      ],
+      "priority": "UNASSESSED",
+      "estimate": {
+        "status": "NOT_ESTIMATED",
+        "effort_min": null,
+        "effort_max": null,
+        "unit": null,
+        "confidence": "UNKNOWN",
+        "basis": null,
+        "assumptions": [
+          "No capacity or historical estimate evidence has been verified; estimate intentionally left open."
+        ]
+      },
+      "milestone": null,
+      "baseline_status": "DRAFT_NOT_APPROVED",
+      "status": "DRAFT",
+      "risks": [],
+      "legacy_source_refs": [
+        "branch work/70/05-build: 05_BUILD/00_ROOT/BUILD_REGISTER.json",
+        "branch work/70/05-build: 05_BUILD/00_ROOT/BUILD_REGISTER.md",
+        "branch work/70/05-build: 05_BUILD/00_ROOT/WORK_PACKAGE.schema.json"
+      ],
+      "change_history": [
+        "0.1-draft — transcribed for reconciliation; legacy_status preserved; no baseline approval implied."
+      ]
+    },
+    {
+      "wp_id": "WP-70-02",
+      "title": "Work Package registry",
+      "objective": "Define structured WP records, schema and fixed build-area mapping.",
+      "owner": "Xu / AI-01",
+      "reviewer": "Qw / AI-05",
+      "build_areas": [
+        "00_ROOT"
+      ],
+      "dependencies": [
+        "WP-70-01"
+      ],
+      "legacy_status": "IN_PROGRESS",
+      "deliverables": [
+        "Work-level WP register and schema proposal",
+        "05_BUILD mapping contract",
+        "Validated Markdown/JSON consistency"
+      ],
+      "acceptance_criteria": [
+        "BUILD_REGISTER.json validates against BUILD_REGISTER.schema.json.",
+        "Every WP record validates against WORK_PACKAGE.schema.json.",
+        "Markdown register matches the JSON source."
+      ],
+      "evidence_refs": [
+        "00_ROOT/BUILD_REGISTER.json",
+        "00_ROOT/BUILD_REGISTER.schema.json",
+        "00_ROOT/BUILD_REGISTER.md",
+        "00_ROOT/WORK_PACKAGE.schema.json"
+      ],
+      "blockers": [],
+      "owner_assignment_status": "PROPOSED",
+      "reviewer_assignment_status": "PROPOSED_NOT_CONFIRMED",
+      "requirement_refs": [],
+      "architecture_refs": [
+        "DOC-009",
+        "DOC-045"
+      ],
+      "definition_of_ready": [
+        "G4 PLAN→BUILD is authorized for the Work and this WP is included in the approved baseline.",
+        "Approved requirements and architecture references are identified; unresolved decisions and assumptions are explicit.",
+        "Owner and independent reviewer are confirmed; self-review is not represented as independent review.",
+        "Dependencies and predecessor exit conditions are satisfied or explicitly accepted with contingency.",
+        "Canonical source repository/path, branch strategy, access and execution environment are verified.",
+        "Deliverables, acceptance criteria, verification method and evidence location are defined.",
+        "Estimate range, confidence and basis are recorded, or explicitly marked NOT_ESTIMATED with an owner/action."
+      ],
+      "definition_of_done": [
+        "All listed deliverables are present at the declared canonical source and exact commit/version is recorded.",
+        "Acceptance criteria are verified with reproducible test/review evidence linked by Evidence ID.",
+        "Independent reviewer has completed review and recorded findings; unresolved defects have disposition.",
+        "Requirements, architecture, build mapping and evidence references are traceable and current.",
+        "Documentation, operational/security implications and handoff obligations are updated.",
+        "WP owner records completion recommendation; authorized reviewer/authority records final status."
+      ],
+      "priority": "UNASSESSED",
+      "estimate": {
+        "status": "NOT_ESTIMATED",
+        "effort_min": null,
+        "effort_max": null,
+        "unit": null,
+        "confidence": "UNKNOWN",
+        "basis": null,
+        "assumptions": [
+          "No capacity or historical estimate evidence has been verified; estimate intentionally left open."
+        ]
+      },
+      "milestone": null,
+      "baseline_status": "DRAFT_NOT_APPROVED",
+      "status": "DRAFT",
+      "risks": [],
+      "legacy_source_refs": [
+        "branch work/70/05-build: 05_BUILD/00_ROOT/BUILD_REGISTER.json",
+        "branch work/70/05-build: 05_BUILD/00_ROOT/BUILD_REGISTER.md",
+        "branch work/70/05-build: 05_BUILD/00_ROOT/WORK_PACKAGE.schema.json"
+      ],
+      "change_history": [
+        "0.1-draft — transcribed for reconciliation; legacy_status preserved; no baseline approval implied."
+      ]
+    },
+    {
+      "wp_id": "WP-70-03",
+      "title": "Dashboard reference and data contract",
+      "objective": "Align Dashboard schema, local snapshot and read-only UI.",
+      "owner": "Xu / AI-01",
+      "reviewer": "Qw / AI-05",
+      "build_areas": [
+        "03_ARCHITECTURE",
+        "04_CODE",
+        "05_TEST"
+      ],
+      "dependencies": [
+        "WP-70-01"
+      ],
+      "legacy_status": "IN_PROGRESS",
+      "deliverables": [
+        "Dashboard data schema and validated local snapshot",
+        "Read-only UI behavior",
+        "Browser and responsive verification evidence"
+      ],
+      "acceptance_criteria": [
+        "PRODUCT_STATUS.json validates against schema.",
+        "Dashboard renders phases, owners, WPs, blockers, risks, decisions and evidence refs.",
+        "Local snapshot is never represented as Core live."
+      ],
+      "evidence_refs": [
+        "DASHBOARD/README.md",
+        "DASHBOARD/PRODUCT_STATUS.json",
+        "DASHBOARD/PRODUCT_STATUS.schema.json",
+        "DASHBOARD/index.html"
+      ],
+      "blockers": [
+        "Browser E2E and schema validation have not been evidenced in this audit."
+      ],
+      "owner_assignment_status": "PROPOSED",
+      "reviewer_assignment_status": "PROPOSED_NOT_CONFIRMED",
+      "requirement_refs": [],
+      "architecture_refs": [
+        "DOC-009",
+        "DOC-010",
+        "DOC-044"
+      ],
+      "definition_of_ready": [
+        "G4 PLAN→BUILD is authorized for the Work and this WP is included in the approved baseline.",
+        "Approved requirements and architecture references are identified; unresolved decisions and assumptions are explicit.",
+        "Owner and independent reviewer are confirmed; self-review is not represented as independent review.",
+        "Dependencies and predecessor exit conditions are satisfied or explicitly accepted with contingency.",
+        "Canonical source repository/path, branch strategy, access and execution environment are verified.",
+        "Deliverables, acceptance criteria, verification method and evidence location are defined.",
+        "Estimate range, confidence and basis are recorded, or explicitly marked NOT_ESTIMATED with an owner/action."
+      ],
+      "definition_of_done": [
+        "All listed deliverables are present at the declared canonical source and exact commit/version is recorded.",
+        "Acceptance criteria are verified with reproducible test/review evidence linked by Evidence ID.",
+        "Independent reviewer has completed review and recorded findings; unresolved defects have disposition.",
+        "Requirements, architecture, build mapping and evidence references are traceable and current.",
+        "Documentation, operational/security implications and handoff obligations are updated.",
+        "WP owner records completion recommendation; authorized reviewer/authority records final status."
+      ],
+      "priority": "UNASSESSED",
+      "estimate": {
+        "status": "NOT_ESTIMATED",
+        "effort_min": null,
+        "effort_max": null,
+        "unit": null,
+        "confidence": "UNKNOWN",
+        "basis": null,
+        "assumptions": [
+          "No capacity or historical estimate evidence has been verified; estimate intentionally left open."
+        ]
+      },
+      "milestone": null,
+      "baseline_status": "DRAFT_NOT_APPROVED",
+      "status": "DRAFT",
+      "risks": [],
+      "legacy_source_refs": [
+        "branch work/70/05-build: 05_BUILD/00_ROOT/BUILD_REGISTER.json",
+        "branch work/70/05-build: 05_BUILD/00_ROOT/BUILD_REGISTER.md",
+        "branch work/70/05-build: 05_BUILD/00_ROOT/WORK_PACKAGE.schema.json"
+      ],
+      "change_history": [
+        "0.1-draft — transcribed for reconciliation; legacy_status preserved; no baseline approval implied."
+      ]
+    },
+    {
+      "wp_id": "WP-70-04",
+      "title": "Core read integration",
+      "objective": "Inspect actual Core endpoints, authorization and freshness before integration.",
+      "owner": "Xu / Core owner TBD",
+      "reviewer": "Qw / AI-05",
+      "build_areas": [
+        "03_ARCHITECTURE",
+        "04_CODE",
+        "05_TEST"
+      ],
+      "dependencies": [
+        "WP-70-03"
+      ],
+      "legacy_status": "BLOCKED",
+      "deliverables": [
+        "Verified Core route/auth contract",
+        "Work-scoped read integration if supported",
+        "Negative authorization and freshness tests"
+      ],
+      "acceptance_criteria": [
+        "Actual Core route and implementation are identified.",
+        "401/403/404 and Work-scoping behavior are verified.",
+        "No live claim without end-to-end evidence."
+      ],
+      "evidence_refs": [
+        "03_ARCHITECTURE/DASHBOARD_CORE_READ_CONTRACT.md",
+        "03_ARCHITECTURE/CORE_CAPABILITY_GAP_ASSESSMENT.md"
+      ],
+      "blockers": [
+        "Core owner is TBD; actual route/auth and E2E evidence are not verified."
+      ],
+      "owner_assignment_status": "PROPOSED",
+      "reviewer_assignment_status": "PROPOSED_NOT_CONFIRMED",
+      "requirement_refs": [],
+      "architecture_refs": [
+        "DOC-009",
+        "DOC-010",
+        "DOC-044"
+      ],
+      "definition_of_ready": [
+        "G4 PLAN→BUILD is authorized for the Work and this WP is included in the approved baseline.",
+        "Approved requirements and architecture references are identified; unresolved decisions and assumptions are explicit.",
+        "Owner and independent reviewer are confirmed; self-review is not represented as independent review.",
+        "Dependencies and predecessor exit conditions are satisfied or explicitly accepted with contingency.",
+        "Canonical source repository/path, branch strategy, access and execution environment are verified.",
+        "Deliverables, acceptance criteria, verification method and evidence location are defined.",
+        "Estimate range, confidence and basis are recorded, or explicitly marked NOT_ESTIMATED with an owner/action."
+      ],
+      "definition_of_done": [
+        "All listed deliverables are present at the declared canonical source and exact commit/version is recorded.",
+        "Acceptance criteria are verified with reproducible test/review evidence linked by Evidence ID.",
+        "Independent reviewer has completed review and recorded findings; unresolved defects have disposition.",
+        "Requirements, architecture, build mapping and evidence references are traceable and current.",
+        "Documentation, operational/security implications and handoff obligations are updated.",
+        "WP owner records completion recommendation; authorized reviewer/authority records final status."
+      ],
+      "priority": "UNASSESSED",
+      "estimate": {
+        "status": "NOT_ESTIMATED",
+        "effort_min": null,
+        "effort_max": null,
+        "unit": null,
+        "confidence": "UNKNOWN",
+        "basis": null,
+        "assumptions": [
+          "No capacity or historical estimate evidence has been verified; estimate intentionally left open."
+        ]
+      },
+      "milestone": null,
+      "baseline_status": "DRAFT_NOT_APPROVED",
+      "status": "DRAFT",
+      "risks": [],
+      "legacy_source_refs": [
+        "branch work/70/05-build: 05_BUILD/00_ROOT/BUILD_REGISTER.json",
+        "branch work/70/05-build: 05_BUILD/00_ROOT/BUILD_REGISTER.md",
+        "branch work/70/05-build: 05_BUILD/00_ROOT/WORK_PACKAGE.schema.json"
+      ],
+      "change_history": [
+        "0.1-draft — transcribed for reconciliation; legacy_status preserved; no baseline approval implied."
+      ]
+    },
+    {
+      "wp_id": "WP-70-05",
+      "title": "Evidence storage and file export",
+      "objective": "Define and later implement controlled persistent storage and JSON/CSV/Markdown exports.",
+      "owner": "Xu / AI-01",
+      "reviewer": "Qw / AI-05",
+      "build_areas": [
+        "03_ARCHITECTURE",
+        "04_CODE",
+        "05_TEST",
+        "06_EVIDENCE"
+      ],
+      "dependencies": [
+        "WP-70-04"
+      ],
+      "legacy_status": "IN_PROGRESS",
+      "deliverables": [
+        "Approved storage/export architecture",
+        "Authorized immutable artifact storage",
+        "JSON/CSV/Markdown export with audit and integrity tests"
+      ],
+      "acceptance_criteria": [
+        "Storage/export architecture is approved against actual Core contract.",
+        "Artifacts are immutable/versioned and hash-verified.",
+        "Exports are authorized, audited and secret-safe.",
+        "All storage/export acceptance tests pass."
+      ],
+      "evidence_refs": [
+        "03_ARCHITECTURE/STORAGE_AND_EXPORT_ARCHITECTURE.md",
+        "05_TEST/STORAGE_AND_EXPORT_ACCEPTANCE.md"
+      ],
+      "blockers": [
+        "Storage/export implementation and tests are NOT RUN; actual Core contract is not verified."
+      ],
+      "owner_assignment_status": "PROPOSED",
+      "reviewer_assignment_status": "PROPOSED_NOT_CONFIRMED",
+      "requirement_refs": [],
+      "architecture_refs": [
+        "DOC-009",
+        "DOC-044"
+      ],
+      "definition_of_ready": [
+        "G4 PLAN→BUILD is authorized for the Work and this WP is included in the approved baseline.",
+        "Approved requirements and architecture references are identified; unresolved decisions and assumptions are explicit.",
+        "Owner and independent reviewer are confirmed; self-review is not represented as independent review.",
+        "Dependencies and predecessor exit conditions are satisfied or explicitly accepted with contingency.",
+        "Canonical source repository/path, branch strategy, access and execution environment are verified.",
+        "Deliverables, acceptance criteria, verification method and evidence location are defined.",
+        "Estimate range, confidence and basis are recorded, or explicitly marked NOT_ESTIMATED with an owner/action."
+      ],
+      "definition_of_done": [
+        "All listed deliverables are present at the declared canonical source and exact commit/version is recorded.",
+        "Acceptance criteria are verified with reproducible test/review evidence linked by Evidence ID.",
+        "Independent reviewer has completed review and recorded findings; unresolved defects have disposition.",
+        "Requirements, architecture, build mapping and evidence references are traceable and current.",
+        "Documentation, operational/security implications and handoff obligations are updated.",
+        "WP owner records completion recommendation; authorized reviewer/authority records final status."
+      ],
+      "priority": "UNASSESSED",
+      "estimate": {
+        "status": "NOT_ESTIMATED",
+        "effort_min": null,
+        "effort_max": null,
+        "unit": null,
+        "confidence": "UNKNOWN",
+        "basis": null,
+        "assumptions": [
+          "No capacity or historical estimate evidence has been verified; estimate intentionally left open."
+        ]
+      },
+      "milestone": null,
+      "baseline_status": "DRAFT_NOT_APPROVED",
+      "status": "DRAFT",
+      "risks": [],
+      "legacy_source_refs": [
+        "branch work/70/05-build: 05_BUILD/00_ROOT/BUILD_REGISTER.json",
+        "branch work/70/05-build: 05_BUILD/00_ROOT/BUILD_REGISTER.md",
+        "branch work/70/05-build: 05_BUILD/00_ROOT/WORK_PACKAGE.schema.json"
+      ],
+      "change_history": [
+        "0.1-draft — transcribed for reconciliation; legacy_status preserved; no baseline approval implied."
+      ]
+    },
+    {
+      "wp_id": "WP-70-06",
+      "title": "Independent verification and handoff",
+      "objective": "Run independent regression and prepare acceptance evidence.",
+      "owner": "Xu / AI-01",
+      "reviewer": "Qw / AI-05",
+      "build_areas": [
+        "05_TEST",
+        "06_EVIDENCE",
+        "10_AI_DEBUG_HANDOFF"
+      ],
+      "dependencies": [
+        "WP-70-01",
+        "WP-70-02",
+        "WP-70-03",
+        "WP-70-04",
+        "WP-70-05"
+      ],
+      "legacy_status": "PLANNED",
+      "deliverables": [
+        "Executed verification report and coverage matrix",
+        "Independent QE report and defect disposition",
+        "Acceptance/handoff package"
+      ],
+      "acceptance_criteria": [
+        "All required tests executed with reproducible evidence.",
+        "Independent QE report and defect disposition exist.",
+        "Handoff and release recommendation are traceable."
+      ],
+      "evidence_refs": [
+        "../../06_VERIFY/VERIFICATION_PLAN.md",
+        "../../06_VERIFY/VERIFICATION_CHECKLIST.md"
+      ],
+      "blockers": [
+        "Prerequisite WP-70-04 is blocked; independent QE remains pending."
+      ],
+      "owner_assignment_status": "PROPOSED",
+      "reviewer_assignment_status": "PROPOSED_NOT_CONFIRMED",
+      "requirement_refs": [],
+      "architecture_refs": [
+        "DOC-009",
+        "DOC-045"
+      ],
+      "definition_of_ready": [
+        "G4 PLAN→BUILD is authorized for the Work and this WP is included in the approved baseline.",
+        "Approved requirements and architecture references are identified; unresolved decisions and assumptions are explicit.",
+        "Owner and independent reviewer are confirmed; self-review is not represented as independent review.",
+        "Dependencies and predecessor exit conditions are satisfied or explicitly accepted with contingency.",
+        "Canonical source repository/path, branch strategy, access and execution environment are verified.",
+        "Deliverables, acceptance criteria, verification method and evidence location are defined.",
+        "Estimate range, confidence and basis are recorded, or explicitly marked NOT_ESTIMATED with an owner/action."
+      ],
+      "definition_of_done": [
+        "All listed deliverables are present at the declared canonical source and exact commit/version is recorded.",
+        "Acceptance criteria are verified with reproducible test/review evidence linked by Evidence ID.",
+        "Independent reviewer has completed review and recorded findings; unresolved defects have disposition.",
+        "Requirements, architecture, build mapping and evidence references are traceable and current.",
+        "Documentation, operational/security implications and handoff obligations are updated.",
+        "WP owner records completion recommendation; authorized reviewer/authority records final status."
+      ],
+      "priority": "UNASSESSED",
+      "estimate": {
+        "status": "NOT_ESTIMATED",
+        "effort_min": null,
+        "effort_max": null,
+        "unit": null,
+        "confidence": "UNKNOWN",
+        "basis": null,
+        "assumptions": [
+          "No capacity or historical estimate evidence has been verified; estimate intentionally left open."
+        ]
+      },
+      "milestone": null,
+      "baseline_status": "DRAFT_NOT_APPROVED",
+      "status": "DRAFT",
+      "risks": [],
+      "legacy_source_refs": [
+        "branch work/70/05-build: 05_BUILD/00_ROOT/BUILD_REGISTER.json",
+        "branch work/70/05-build: 05_BUILD/00_ROOT/BUILD_REGISTER.md",
+        "branch work/70/05-build: 05_BUILD/00_ROOT/WORK_PACKAGE.schema.json"
+      ],
+      "change_history": [
+        "0.1-draft — transcribed for reconciliation; legacy_status preserved; no baseline approval implied."
+      ]
+    }
+  ]
+}
