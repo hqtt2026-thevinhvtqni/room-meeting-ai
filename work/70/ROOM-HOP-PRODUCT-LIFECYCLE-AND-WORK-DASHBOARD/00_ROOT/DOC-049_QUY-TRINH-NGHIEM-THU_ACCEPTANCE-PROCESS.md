@@ -154,4 +154,4 @@ DOC-049 là chuẩn quy trình. Vinh giữ final authority đối với G6. Xu c
 | Version | Date | Change |
 |---|---|---|
 | 1.1 | 2026-10-30 | Xu / AI-01 | Align acceptance gate with DOC-004: G6 VERIFY→ACCEPT. |
-| 1.0 | 2026-10-30 | Ban hành AC01–AC08, acceptance decision, G6, evidence/defect review and handoff standard. |
+| 1.0 | 2026-10-30 | Xu / AI-01 | Ban hành AC01–AC08, acceptance decision, G6, evidence/defect review and handoff standard. |
