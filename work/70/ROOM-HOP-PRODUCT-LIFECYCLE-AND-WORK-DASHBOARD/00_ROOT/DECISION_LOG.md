@@ -1,4 +1,10 @@
 # WORK 70 — DECISION LOG
+- **STT / Document ID:** DOC-006
+- **Priority:** P0
+- **Read order:** 6
+- **Depends on:** DOC-001
+- **Status:** ACTIVE
+- **Version / Updated:** 1.1 / 2026-10-30
 
 Date: 2026-10-30
 Maintainer: Xu / AI-01
