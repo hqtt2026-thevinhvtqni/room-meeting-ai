@@ -1,4 +1,4 @@
-# WORK 70 — EVIDENCE REGISTER
+# WORK 70 — EVIDENCE REGISTER\n\nMachine-readable source: `EVIDENCE_REGISTER.json`, validated by `EVIDENCE_REGISTER.schema.json`. This Markdown file is the human-readable index and must remain consistent with the JSON source.
 
 Version: 1.0
 Status: ACTIVE INDEX / EVIDENCE MUST BE VERIFIED
