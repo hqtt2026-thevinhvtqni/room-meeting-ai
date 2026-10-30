@@ -102,6 +102,15 @@
       "source_environment": "Sandbox source inspection; dynamic text escaping observed; data fetch is GET of local PRODUCT_STATUS.json; no server write path identified in inspected HTML",
       "reviewer": "Qw pending",
       "state": "RECORDED"
+    },
+    {
+      "evidence_id": "E70-WP-SCHEMA-SUBSET-001",
+      "artifact_ref": "05_BUILD/00_ROOT/BUILD_REGISTER.json + BUILD_REGISTER.schema.json + WORK_PACKAGE.schema.json",
+      "wp_id": "WP-70-02",
+      "producer": "Xu / AI-01",
+      "source_environment": "Sandbox Work 70; custom JavaScript validator with local WORK_PACKAGE.schema.json $ref and declared schema keywords",
+      "reviewer": "Qw pending",
+      "state": "RECORDED"
     }
   ]
 }
