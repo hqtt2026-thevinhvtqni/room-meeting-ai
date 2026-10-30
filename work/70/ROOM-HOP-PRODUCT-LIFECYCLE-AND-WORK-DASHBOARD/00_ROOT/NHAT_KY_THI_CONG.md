@@ -1,7 +1,7 @@
 # WORK 70 — NHẬT KÝ THI CÔNG
 - **STT / Document ID:** DOC-035
 - **Priority:** P2
-- **Read order:** 28
+- **Read order:** 32
 - **Depends on:** DOC-001; DOC-002; DOC-033
 - **Status:** ACTIVE
 - **Version / Updated:** 1.0 / 2026-10-30
