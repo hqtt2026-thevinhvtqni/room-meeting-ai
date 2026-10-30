@@ -26,3 +26,4 @@ Purpose: Cross-phase index of inspectable evidence. This file indexes artifacts;
 | E70-CORE-001 | 05_BUILD/03_ARCHITECTURE/CORE_CAPABILITY_GAP_ASSESSMENT.md | WP-70-04 | Xu AI-01 | 2026-10-30 | Source review captured; no runtime verification | Qw pending | RECORDED |
 
 No evidence item is marked VERIFIED until its artifact is independently checked against the claim it supports.
+| E70-CONSOL-001 | 06_EVIDENCE/WORK70_CONSOLIDATION_CHECK_20261030.md | WP-70-01..06 | Xu AI-01 | 2026-10-30 | GitHub/Sandbox readback pending | Qw pending | RECORDED |
