@@ -1,4 +1,10 @@
 # 07 — ACCEPT / NGHIỆM THU
+- **STT / Document ID:** DOC-020
+- **Priority:** P2
+- **Read order:** 25
+- **Depends on:** DOC-015; DOC-019
+- **Status:** ACTIVE
+- **Version / Updated:** 1.0 / 2026-10-30
 
 Status: PENDING — NOT ACCEPTED
 
