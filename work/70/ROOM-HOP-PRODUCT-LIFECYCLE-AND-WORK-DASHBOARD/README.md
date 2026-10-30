@@ -35,7 +35,7 @@ WORK-<id>-<name>/
 The nine child directories under 05_BUILD are the approved engineering workspace layout. They are not a second product lifecycle and must not be replaced with per-WP folder trees. Preserve this exact layout for the Work 70 build branch.
 
 ## 3. Work Package model
-A WP is a logical, trackable delivery record, not a separate lifecycle and not a mandatory directory tree. The canonical register is `05_BUILD/00_ROOT/BUILD_REGISTER.md`; validate records against `05_BUILD/00_ROOT/WORK_PACKAGE.schema.json`. A WP references its branch, assigned build area(s), owner, independent reviewer, dependencies, acceptance criteria, tests and evidence.
+A WP is a logical, trackable delivery record, not a separate lifecycle and not a mandatory directory tree. The canonical machine-readable register is `05_BUILD/00_ROOT/BUILD_REGISTER.json`, validated by `BUILD_REGISTER.schema.json` and `WORK_PACKAGE.schema.json`; `BUILD_REGISTER.md` is its human-readable mirror. A WP references its branch, assigned build area(s), owner, independent reviewer, dependencies, acceptance criteria, tests and evidence.
 
 ## 4. Evidence model
 Top-level `06_EVIDENCE` is the cross-phase evidence index for the Work. `05_BUILD/06_EVIDENCE` holds evidence produced by build activities before it is indexed at Work level. Evidence records must retain provenance, timestamp, source, integrity hash and verification state. Creating a file is not equivalent to verifying its claim.
