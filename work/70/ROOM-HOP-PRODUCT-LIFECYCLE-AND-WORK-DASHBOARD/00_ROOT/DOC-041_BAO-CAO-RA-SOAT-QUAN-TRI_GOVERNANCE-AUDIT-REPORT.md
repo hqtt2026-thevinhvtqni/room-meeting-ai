@@ -45,6 +45,12 @@ Rà soát sự thống nhất của cấu trúc Work 70, nguồn chuẩn GitHub/
 ### G-005 — Register cần chỉ rõ branch đối với tài liệu thuộc 05_BUILD
 Các mục DOC-013, DOC-016, DOC-017, DOC-024, DOC-025, DOC-030 và DOC-036 thuộc nhánh `work/70/05-build`, không nằm trên GitHub main. Document Register v1.9 đã ghi rõ branch cho 7 hồ sơ này để người đọc không tìm nhầm trên main. 05_BUILD vẫn là mapping/engineering coordination, không trở thành canonical source chỉ vì file nằm ở branch này.
 
+### G-007 — Quy tắc cho register và artifact máy đọc chưa hoàn chỉnh
+- Document Register là control index nhưng hiện chưa tự có DOC-ID/metadata; cần quyết định rõ register được miễn DOC-ID hay được cấp một ID riêng.
+- Các file JSON/schema/HTML và các file branch-only cần quy tắc metadata tương đương (metadata trong schema/register/sidecar), không thể áp dụng máy móc header Markdown.
+- DOC-040 hiện là sổ Markdown thủ công; chưa có JSON schema hoặc bộ kiểm tra tự động để phát hiện mã trùng, sai cấu trúc và tham chiếu DOC-ID không tồn tại.
+- Trạng thái: OPEN — cần chốt quy tắc và triển khai kiểm tra.
+
 ### G-006 — Trạng thái sản phẩm chưa đủ điều kiện nghiệm thu
 Theo Manifest và Roadmap hiện tại:
 - Lifecycle phase: 03_ARCHITECT; exit gate chưa PASS.
@@ -68,6 +74,7 @@ Không thay đổi các trạng thái này chỉ vì chuẩn hóa tài liệu.
 | R-07 | Kiểm tra JSON/schema cho BUILD_REGISTER, EVIDENCE_REGISTER và PRODUCT_STATUS | Parser/schema validation thực thi và có evidence |
 | R-08 | Kiểm tra runtime Dashboard và Core integration | E2E trên môi trường xác định, API/auth/scope/freshness/error evidence |
 | R-09 | Independent QE và acceptance/release | Reviewer độc lập, defect disposition, Vinh phê duyệt; không tự PASS |
+| R-10 | Chốt chính sách DOC-ID cho Document Register và metadata ngoại lệ cho JSON/schema/HTML/binary | Quyết định ghi trong Decision Log; schema/sidecar và validator được đăng ký, kiểm chứng |
 
 ## 5. Nguyên tắc đóng phát hiện
 - Không xóa hoặc di chuyển bản cũ trước khi có inventory, backup và kiểm tra liên kết.
