@@ -151,7 +151,7 @@ Một Dashboard có thể vượt qua functional tests nhưng chưa có browser 
 DOC-049 là chuẩn quy trình. Vinh giữ final authority đối với G6. Xu chuẩn bị hồ sơ và điều phối; QE đưa ra bằng chứng/recommendation; không vai trò nào được tự nâng quyền thành Product Owner.
 
 ## Change History
-| 1.1 | 2026-10-30 | Xu / AI-01 | Align acceptance gate with DOC-004: G6 VERIFY→ACCEPT. |
 | Version | Date | Change |
 |---|---|---|
+| 1.1 | 2026-10-30 | Xu / AI-01 | Align acceptance gate with DOC-004: G6 VERIFY→ACCEPT. |
 | 1.0 | 2026-10-30 | Ban hành AC01–AC08, acceptance decision, G6, evidence/defect review and handoff standard. |
