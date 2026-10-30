@@ -1,7 +1,7 @@
 # SỔ ĐĂNG KÝ TÀI LIỆU WORK 70 / WORK 70 DOCUMENT REGISTER
 - **STT / Document ID:** DOC-055
 - **Priority:** P0
-- **Read order:** 54
+- **Read order:** 55
 - **Depends on:** DOC-001; DOC-038; DOC-039; DOC-040; DOC-056
 - **Status:** ACTIVE — SINGLE SOURCE OF TRUTH
 - **Version / Updated:** 2.0 / 2026-10-31
@@ -75,5 +75,6 @@ When adding a document: allocate the next unused DOC ID, set priority/read order
 | DOC-051 | P1 | 51 | Hướng dẫn thực thi giai đoạn Nghiệm thu / Accept Execution Playbook | 07_ACCEPT/PHASE_EXECUTION_PLAYBOOK.md | DOC-042; DOC-004; DOC-005 | ACTIVE / EXECUTION PLAYBOOK | Quy trình đầu vào, thực thi, đầu ra, exit checks và điều cấm của phase 07_ACCEPT |
 | DOC-052 | P1 | 52 | Hướng dẫn thực thi giai đoạn Phát hành / Release Execution Playbook | 08_RELEASE/PHASE_EXECUTION_PLAYBOOK.md | DOC-042; DOC-004; DOC-005 | ACTIVE / EXECUTION PLAYBOOK | Quy trình đầu vào, thực thi, đầu ra, exit checks và điều cấm của phase 08_RELEASE |
 | DOC-053 | P1 | 53 | Hướng dẫn thực thi giai đoạn Vận hành / Operate Execution Playbook | 09_OPERATE/PHASE_EXECUTION_PLAYBOOK.md | DOC-042; DOC-004; DOC-005 | ACTIVE / EXECUTION PLAYBOOK | Quy trình đầu vào, thực thi, đầu ra, exit checks và điều cấm của phase 09_OPERATE |
-| DOC-055 | P0 | 54 | Sổ đăng ký tài liệu Work 70 / Work 70 Document Register | 00_ROOT/DOC-055_SO-DANG-KY-TAI-LIEU_WORK-70-DOCUMENT-REGISTER.md | DOC-001; DOC-038; DOC-039; DOC-040; DOC-056 | ACTIVE / SINGLE SOURCE OF TRUTH | Sổ duy nhất cho DOC-ID, metadata, canonical paths, branch/ref và trạng thái |
-| DOC-056 | P0 | 55 | Quyết định chuẩn hóa hệ thống tài liệu Work 70 / Work 70 Document Standardization Policy | 00_ROOT/DOC-056_QUYET-DINH-CHUAN-HOA-HE-THONG-TAI-LIEU_WORK-70-DOCUMENT-STANDARDIZATION-POLICY.md | DOC-001; DOC-033; DOC-038; DOC-039; DOC-040; DOC-055 | ACTIVE / MIGRATION IN PROGRESS | Quy tắc thống nhất và batch migration toàn Work 70 |
+| DOC-054 | P0 | 54 | Lệnh phân công song song Work 70 / Work 70 Parallel Assignment Order | 05_BUILD/00_ROOT/DOC-054_LENH-PHAN-CONG-SONG-SONG-WORK-70.md (branch: work/70/05-build) | DOC-001; DOC-042; DOC-043; DOC-044 | ACTIVE / ASSIGNMENT READY | Phân công Ka, Co, Vi, Qw; trạng thái nhận việc phải xác minh riêng |
+| DOC-055 | P0 | 55 | Sổ đăng ký tài liệu Work 70 / Work 70 Document Register | 00_ROOT/DOC-055_SO-DANG-KY-TAI-LIEU_WORK-70-DOCUMENT-REGISTER.md | DOC-001; DOC-038; DOC-039; DOC-040; DOC-056 | ACTIVE / SINGLE SOURCE OF TRUTH | Sổ duy nhất cho DOC-ID, metadata, canonical paths, branch/ref và trạng thái |
+| DOC-056 | P0 | 56 | Quyết định chuẩn hóa hệ thống tài liệu Work 70 / Work 70 Document Standardization Policy | 00_ROOT/DOC-056_QUYET-DINH-CHUAN-HOA-HE-THONG-TAI-LIEU_WORK-70-DOCUMENT-STANDARDIZATION-POLICY.md | DOC-001; DOC-033; DOC-038; DOC-039; DOC-040; DOC-055 | ACTIVE / MIGRATION IN PROGRESS | Quy tắc thống nhất và batch migration toàn Work 70 |
