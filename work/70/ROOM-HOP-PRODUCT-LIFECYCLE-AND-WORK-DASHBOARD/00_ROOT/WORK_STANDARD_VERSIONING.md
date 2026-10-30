@@ -5,4 +5,6 @@
 - Change authority: Vinh
 - Maintainer: Xu (AI-01)
 
-Version 1.1 clarifies the canonical top-level structure, nine fixed 05_BUILD areas, WP registry/schema, cross-phase evidence index and storage/export boundaries. Each instantiated Work records the standard version. Existing Works are not silently upgraded. Breaking changes require migration notes, compatibility assessment and explicit rollout decision.
+Version 1.1 clarifies the exact top-level Work structure, the nine fixed 05_BUILD child directories, WP register/schema location, separation between build evidence staging and the Work-level evidence index, and storage/export design boundaries.
+
+Every instantiated Work records the standard version used. Template changes are versioned and documented. Existing Works are not silently upgraded when the master template changes. Breaking changes require migration notes, compatibility assessment and explicit rollout decision.
