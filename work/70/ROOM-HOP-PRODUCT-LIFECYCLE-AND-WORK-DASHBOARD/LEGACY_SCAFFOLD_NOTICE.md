@@ -1,4 +1,11 @@
 # LEGACY SCAFFOLD NOTICE — WORK 70
+- **STT / Document ID:** DOC-029
+- **Priority:** P3
+- **Read order:** 36
+- **Depends on:** DOC-001
+- **Status:** ACTIVE
+- **Version / Updated:** 1.0 / 2026-10-30
+
 
 This notice supersedes earlier scaffold guidance that incorrectly prohibited all nested folders under 05_BUILD.
 
