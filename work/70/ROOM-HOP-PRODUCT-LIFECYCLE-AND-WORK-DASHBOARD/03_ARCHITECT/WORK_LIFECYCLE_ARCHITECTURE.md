@@ -1,7 +1,7 @@
 # WORK LIFECYCLE ARCHITECTURE — CANONICAL V1.2
 - **STT / Document ID:** DOC-009
 - **Priority:** P1
-- **Read order:** 10
+- **Read order:** 13
 - **Depends on:** DOC-008; DOC-033
 - **Status:** ACTIVE
 - **Version / Updated:** 1.2 / 2026-10-30
