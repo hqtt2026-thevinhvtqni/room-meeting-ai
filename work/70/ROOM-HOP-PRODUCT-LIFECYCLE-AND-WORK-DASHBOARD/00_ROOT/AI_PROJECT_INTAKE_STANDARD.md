@@ -165,3 +165,32 @@ Run the full applicable workflow to completion within the approved scope. Do not
 - [ ] Establish baseline tests and runtime evidence safely.
 - [ ] Produce Project Intake Report before material implementation.
 - [ ] State blockers and next actions; do not claim unverified status.
+
+## 11. Document numbering and reading priority (mandatory)
+Every Work document must be indexed in `00_ROOT/DOCUMENT_REGISTER.md`. The register is the canonical catalogue for document sequence, reading order and priority. Do not rely on alphabetical file order.
+
+### 11.1 Required document metadata
+Every newly created or materially revised Markdown document must begin with this metadata block immediately below its title:
+- **STT / Document ID:** stable unique ID in the Work, format `DOC-001`, `DOC-002` ...; never reuse an ID.
+- **Priority:** `P0` to `P3` using the definitions below.
+- **Read order:** integer indicating the recommended reading sequence; lower number first.
+- **Depends on:** prerequisite Document IDs, or `NONE`.
+- **Status:** DRAFT / ACTIVE / SUPERSEDED / ARCHIVED.
+- **Version / Updated:** document version and date.
+
+### 11.2 Priority definitions
+- **P0 — BẮT BUỘC TRƯỚC:** authority, safety, scope, manifest, operating rules and blockers that must be understood before work starts.
+- **P1 — NỀN TẢNG:** product brief, requirements, architecture, data/API contracts and decisions needed to understand the system.
+- **P2 — TRIỂN KHAI:** plans, WP details, code/test/review instructions and operational procedures used when performing work.
+- **P3 — THAM KHẢO / LỊCH SỬ:** supporting notes, session logs, legacy material and superseded records; read when relevant or when tracing history.
+
+Priority and read order are separate: priority determines importance; read order determines sequence. A P2 document may need to be read before another P1 document only when its dependency explicitly requires it; document that exception in the register.
+
+### 11.3 Numbering and change rules
+- STT is a stable identity, not a rank. Never renumber existing documents merely because a new document is added.
+- Read order may change when dependencies or lifecycle needs change; record the reason and update the register.
+- Filenames and canonical paths remain unchanged unless an authorized migration explicitly approves a rename.
+- Legacy documents without metadata must still receive a register ID and priority. Add metadata when next materially edited; do not mass-rewrite legacy files just to insert headers.
+- JSON schemas/data records must carry equivalent fields in their schema/register where applicable; do not insert Markdown front matter into machine-readable JSON.
+- The orchestrator must tell each AI which P0/P1 documents to read first and which P2/P3 documents are conditional.
+- If the register is missing or conflicts with a document, stop and reconcile the register before relying on the conflicting reading order.
