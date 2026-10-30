@@ -100,7 +100,8 @@
         "No live claim without end-to-end evidence."
       ],
       "evidence_refs": [
-        "03_ARCHITECTURE/DASHBOARD_CORE_READ_CONTRACT.md"
+        "03_ARCHITECTURE/DASHBOARD_CORE_READ_CONTRACT.md",
+        "03_ARCHITECTURE/CORE_CAPABILITY_GAP_ASSESSMENT.md"
       ],
       "status": "BLOCKED",
       "branch": "work/70/05-build"
