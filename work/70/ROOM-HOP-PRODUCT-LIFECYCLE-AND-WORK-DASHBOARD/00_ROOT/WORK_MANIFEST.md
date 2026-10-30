@@ -4,7 +4,7 @@
 - **Read order:** 1
 - **Depends on:** NONE
 - **Status:** ACTIVE
-- **Version / Updated:** 1.3 / 2026-10-30
+- **Version / Updated:** 1.4 / 2026-10-30
 - Work ID: 70
 - Work Name: ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD
 - Product: ROOM-HOP Work Master Standard & Per-Work Dashboard
@@ -52,7 +52,7 @@ These are navigation/mapping/execution areas, not independent canonical source r
 10. Never delete or silently move legacy files during the transition; classify, map, verify and obtain approval where canonical ownership changes.
 
 ## Current truth
-- Current lifecycle phase: 03_ARCHITECT (design baseline; exit gate not passed).
+- Current lifecycle phase pointer: 01_DISCOVER (PLANNED; G0/G1 NOT_READY; phase not formally started). This supersedes the prior 03_ARCHITECT pointer because predecessor gates are unresolved.
 - Core integration: NOT VERIFIED.
 - Dashboard: local snapshot prototype; browser E2E NOT VERIFIED.
 - 05_BUILD normalization: ACTIVE / MIGRATION NOT VERIFIED; legacy candidates are classified but no source files have been moved or deleted.
