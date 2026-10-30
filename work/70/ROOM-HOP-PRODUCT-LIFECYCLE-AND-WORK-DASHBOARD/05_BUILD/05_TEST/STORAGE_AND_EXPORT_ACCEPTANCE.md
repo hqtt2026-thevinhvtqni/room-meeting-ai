@@ -1,4 +1,10 @@
 # STORAGE & EXPORT — ACCEPTANCE / VERIFICATION PLAN
+- **STT / Document ID:** DOC-024
+- **Priority:** P2
+- **Read order:** 29
+- **Depends on:** DOC-016; DOC-015
+- **Status:** PLANNED — NOT EXECUTED
+- **Version / Updated:** 1.0 / 2026-10-30
 
 Version: 1.0
 Date: 2026-10-30
