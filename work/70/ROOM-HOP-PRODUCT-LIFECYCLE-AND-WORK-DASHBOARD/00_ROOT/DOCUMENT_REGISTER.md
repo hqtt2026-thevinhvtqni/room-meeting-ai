@@ -16,7 +16,6 @@ Rule: STT is a stable identity; Priority is importance; Read order is sequence. 
 | DOC-038 | P0 | 8 | Quy trình đặt tên tài liệu / Document Naming Standard | 00_ROOT/DOC-038_QUY-TRINH-DAT-TEN-TAI-LIEU_DOCUMENT-NAMING-STANDARD.md | DOC-001; DOC-002; DOC-003; DOC-033 | ACTIVE | Vietnamese-first bilingual naming, stable IDs, filename pattern and controlled legacy renames |
 | DOC-039 | P0 | 9 | Quy chuẩn mã loại văn bản / Document Type Code Standard | 00_ROOT/DOC-039_QUY-CHUAN-MA-LOAI-VAN-BAN_DOCUMENT-TYPE-CODE-STANDARD.md | DOC-001; DOC-006; DOC-033; DOC-034; DOC-038 | ACTIVE | Controlled prefixes for minutes, decisions, directives, appendices and other formal records |
 | DOC-040 | P0 | 10 | Sổ đăng ký mã văn bản / Official Document Code Register | 00_ROOT/DOC-040_SO-DANG-KY-MA-VAN-BAN_OFFICIAL-DOCUMENT-CODE-REGISTER.md | DOC-001; DOC-006; DOC-039 | ACTIVE | Single issuance ledger for all operational document codes; no code issued without evidence |
-| DOC-041 | P1 | 41 | Báo cáo rà soát quản trị Work 70 / Work 70 Governance Audit Report | 00_ROOT/DOC-041_BAO-CAO-RA-SOAT-QUAN-TRI_GOVERNANCE-AUDIT-REPORT.md | DOC-001; DOC-003; DOC-004; DOC-005; DOC-006; DOC-033; DOC-038; DOC-039; DOC-040 | ACTIVE — AUDIT OPEN | Confirmed governance findings and remediation backlog; not product acceptance |
 | DOC-007 | P1 | 11 | Discover Brief | 01_DISCOVER/DISCOVER_BRIEF.md | DOC-001 | ACTIVE | Problem, users, evidence and assumptions |
 | DOC-008 | P1 | 12 | Product Requirements | 02_DEFINE/PRODUCT_REQUIREMENTS.md | DOC-007 | ACTIVE | Scope, requirements and acceptance criteria |
 | DOC-009 | P1 | 13 | Work Lifecycle Architecture | 03_ARCHITECT/WORK_LIFECYCLE_ARCHITECTURE.md | DOC-008 | ACTIVE | Product lifecycle and system architecture |
@@ -47,6 +46,7 @@ Rule: STT is a stable identity; Priority is importance; Read order is sequence. 
 | DOC-031 | P3 | 38 | Consolidation Evidence Report | 06_EVIDENCE/WORK70_CONSOLIDATION_CHECK_20261030.md | DOC-014 | ACTIVE | Historical evidence of Work 70 consolidation |
 | DOC-032 | P3 | 39 | Dashboard README | DASHBOARD/README.md | DOC-010 | ACTIVE | Dashboard usage and limitations |
 | DOC-037 | P3 | 40 | Work 70 README | README.md | DOC-001; DOC-033; DOC-036 | ACTIVE | Human-readable entry point; subordinate to Manifest and standards |
+| DOC-041 | P1 | 41 | Báo cáo rà soát quản trị Work 70 / Work 70 Governance Audit Report | 00_ROOT/DOC-041_BAO-CAO-RA-SOAT-QUAN-TRI_GOVERNANCE-AUDIT-REPORT.md | DOC-001; DOC-003; DOC-004; DOC-005; DOC-006; DOC-033; DOC-038; DOC-039; DOC-040 | ACTIVE — AUDIT OPEN | Confirmed governance findings and remediation backlog; not product acceptance |
 
 ## AI reading rule
 Read DOC-001 through DOC-006, then DOC-033, DOC-038, DOC-039 and DOC-040. Then read relevant P1 documents in ascending read order. Read P2 only for the active task. Read P3 when clarification, operations or historical trace requires it. Read DOC-041 when reconciling governance or closing its remediation backlog. Never infer PASS from the register or presence of a file.
