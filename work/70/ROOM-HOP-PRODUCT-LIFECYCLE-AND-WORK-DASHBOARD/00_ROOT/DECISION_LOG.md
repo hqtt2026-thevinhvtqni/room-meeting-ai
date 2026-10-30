@@ -16,3 +16,5 @@ Final authority: Vinh
 | D70-008 | GitHub main stores Work 70 lifecycle/root/Dashboard; work/70/05-build stores only the 05_BUILD subtree. | Keeps the branch scope explicit and avoids duplicating the whole Work as a child branch. | ACTIVE SYNC CONTRACT |
 
 Changes to product scope, authority, security policy, material cost or release require Vinh's decision. Routine structural and implementation decisions remain with Xu within approved scope.
+
+| D70-009 | Adopt a common AI Project Intake & Execution Standard and one intake report template for all AI participants. | Prevents inconsistent project discovery, evidence handling, status reporting and handoffs across AI models. | PROPOSED STANDARD v1.0 — Vinh confirmation recorded in conversation; formal governance approval pending |
