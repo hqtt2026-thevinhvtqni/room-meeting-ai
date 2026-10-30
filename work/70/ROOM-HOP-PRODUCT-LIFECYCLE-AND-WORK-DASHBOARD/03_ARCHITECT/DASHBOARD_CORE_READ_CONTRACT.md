@@ -1,4 +1,10 @@
 # DASHBOARD ↔ ROOM-HOP CORE READ CONTRACT
+- **STT / Document ID:** DOC-010
+- **Priority:** P1
+- **Read order:** 14
+- **Depends on:** DOC-009
+- **Status:** ACTIVE
+- **Version / Updated:** 1.0 / 2026-10-30
 # Hợp đồng đọc dữ liệu giữa Dashboard và ROOM-HOP Core
 
 ## 1. Nguyên tắc
