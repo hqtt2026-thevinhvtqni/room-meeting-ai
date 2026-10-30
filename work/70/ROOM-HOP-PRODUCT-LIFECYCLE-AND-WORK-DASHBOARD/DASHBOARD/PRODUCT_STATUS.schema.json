@@ -167,7 +167,9 @@
           "status": {
             "enum": [
               "DRAFT",
+              "PLANNED",
               "READY",
+              "ACTIVE",
               "IN_PROGRESS",
               "IN_REVIEW",
               "DONE",
