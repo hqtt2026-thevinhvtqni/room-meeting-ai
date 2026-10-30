@@ -4,7 +4,7 @@
 - **Read order / Thứ tự đọc:** 52
 - **Depends on / Phụ thuộc:** DOC-001; DOC-003; DOC-004; DOC-005; DOC-011; DOC-014; DOC-015; DOC-019; DOC-033; DOC-036; DOC-041; DOC-047; DOC-048; DOC-049; DOC-050; DOC-051
 - **Status / Trạng thái:** ACTIVE — AUDIT REPORT / GATE NOT PASSED
-- **Version / Updated:** 1.3 / 2026-10-30
+- **Version / Updated:** 1.4 / 2026-10-30
 - **Author:** Xu / AI-01
 - **Authority:** Vinh — Product Owner
 
@@ -17,7 +17,7 @@ This report records a bounded, source-backed integration and governance inspecti
 Confirmed:
 - Work Manifest still declares ACTIVE / DESIGN BASELINE, current phase 03_ARCHITECT, exit gate not passed.
 - Document Register v2.9 contained 51 DOC IDs and 51 unique Read orders (1–51) before this report was registered.
-- DOC-011 has six delivery-package summaries (WP-70-01..06), but the full structured WP records and schema remain on branch work/70/05-build as migration candidates; DOC-036 says the canonical target/version is NOT ESTABLISHED.
+- DOC-011 has six delivery-package summaries (WP-70-01..06). The full structured WP records and schema remain on branch work/70/05-build as legacy candidates; a Work-level draft proposal now exists at DOC-053 with 6 WP records, schema and mapping updates. It is explicitly DRAFT_NOT_APPROVED; DOC-036 still preserves the branch source and no canonical promotion/migration is approved.
 - DOC-015 remains PLANNED — NOT EXECUTED; DOC-019 remains OPEN — NOT YET EXECUTED.
 - Evidence Register contained 8 records, all in RECORDED; no evidence was marked VERIFIED.
 - Dashboard/Core integration and browser E2E remain NOT VERIFIED; the Core read contract explicitly labels its endpoints as proposals, not verified live routes.
@@ -47,7 +47,7 @@ DOC-011 provides six WP summary rows. The detailed JSON records and WORK_PACKAGE
 
 **Impact:** DOC-045 planning process requires WP lifecycle, owner/reviewer, DoR/DoD, dependencies, estimates, outputs and acceptance evidence, but the current Work-level plan is not yet a complete structured WP baseline.
 
-**Action:** Create and approve the canonical Work-level WP registry/schema in 04_PLAN/03_ARCHITECT; reconcile all six records and their dependencies against DOC-011; update DOC-036 mapping pointers only after target/version is verified. Preserve branch originals until explicit migration approval. Do not mark any WP DONE or G4 PASS from this report.
+**Action:** Review/approve or revise DOC-053 proposal; reconcile all six records, dependencies and requirement traceability against DOC-011; then authorize any baseline promotion/migration separately. Preserve branch originals until explicit migration approval. Do not mark any WP DONE or G4 PASS from this report.
 
 ### F-052-02 — Evidence schema metadata gap partially remediated
 **Severity:** MEDIUM  
@@ -117,7 +117,7 @@ GitHub main readback shows DOC-001 Manifest current phase = 03_ARCHITECT (design
 
 | ID | Priority | Action | Owner | Exit evidence |
 |---|---|---|---|---|
-| R-052-01 | P0 | Establish canonical Work-level WP registry and schema; reconcile six WP records without deleting branch source | Xu; Vinh approval for baseline | Approved DOC-011/WP baseline, schema validation, DOC-036 mapping |
+| R-052-01 | P0 | Review/approve or revise DOC-053 draft Work-level WP registry; reconcile six records and requirement traceability; authorize baseline promotion/migration separately | Vinh for baseline approval; Xu for preparation | Approved DOC-011/WP baseline, standards-compliant schema validation, DOC-036 mapping and migration authorization |
 | R-052-02 | P0 | Run full verification plan with independent QE | Xu + independent QE | DOC-015 execution report, DOC-019 closure evidence, registered test artifacts |
 | R-052-03 | P0 | Verify Core API/auth and Dashboard browser behavior | Core owner TBD + QE | Real route/auth/E2E evidence; no inferred endpoints |
 | R-052-04 | P1 | Run standards-compliant JSON Schema validator in CI for evidence v1.1 | Engineering/QE | Reproducible CI run, positive and negative fixtures |
@@ -145,6 +145,7 @@ This report is advisory and records observations/remediation. It does not approv
 
 | Version | Date | Change |
 |---|---|---|
+| 1.4 | 2026-10-30 | Updated F-052-01 and R-052-01 after DOC-053 draft WP registry proposal was created; branch originals remain preserved and approval pending. |
 | 1.3 | 2026-10-30 | Added F-052-08 for Dashboard local snapshot vs Manifest phase/WP status conflict; clarified freshness label limitation and protected write boundary. |
 | 1.2 | 2026-10-30 | Extended gate-reference correction to DOC-047 and normalized change-history tables for DOC-047/049/050/051. |
 | 1.1 | 2026-10-30 | Corrected gate numbering across DOC-049..051 to match DOC-004; recorded F-052-07 and updated gate-state interpretation. |
