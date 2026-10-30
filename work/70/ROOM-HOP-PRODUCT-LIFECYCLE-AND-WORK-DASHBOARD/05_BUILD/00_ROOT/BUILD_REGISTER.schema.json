@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ROOM-HOP Work Package Register",
+  "type": "object",
+  "required": [
+    "work_id",
+    "schema_version",
+    "work_packages"
+  ],
+  "properties": {
+    "work_id": {
+      "type": "string",
+      "const": "70"
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "work_packages": {
+      "type": "array",
+      "items": {
+        "$ref": "WORK_PACKAGE.schema.json"
+      }
+    }
+  },
+  "additionalProperties": false
+}
