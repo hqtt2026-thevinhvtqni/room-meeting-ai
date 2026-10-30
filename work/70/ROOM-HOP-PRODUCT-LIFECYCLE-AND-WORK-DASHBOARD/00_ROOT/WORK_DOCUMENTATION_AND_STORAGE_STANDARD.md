@@ -68,5 +68,8 @@ Existing 05_BUILD content is not to be deleted, moved or rewritten merely becaus
 
 For every CANONICAL CANDIDATE, identify or establish its Work-root/source-repository canonical location, compare content and version, then update 05_BUILD to a mapping. Preserve old commit/history. Any physical move, deletion, branch rewrite or merge requires a separately verified migration plan and approval.
 
+## 11. Naming and bilingual documentation
+All Work documents follow 00_ROOT/DOCUMENT_NAMING_STANDARD.md (DOC-038). Vietnamese appears first and English second in titles and new filenames. Every official document has a stable DOC ID, ASCII filename, bilingual title and required metadata. Existing paths remain unchanged until a controlled rename plan updates all references and passes verification. Source-code filenames follow repository conventions; they are tracked as artifacts rather than forced into the DOC filename pattern.
+
 ## 10. Compliance and status
 A successful file write is not verification. A mapping is valid only after its target is read and exact version/hash is checked. No evidence, no PASS; a mapping cannot prove the target artifact works. Until legacy classification is complete, 05_BUILD transition status is ACTIVE / MIGRATION NOT VERIFIED. This standard applies to all new Works; existing Works adopt it through controlled, non-destructive migration.
