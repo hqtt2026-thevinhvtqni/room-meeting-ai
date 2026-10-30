@@ -208,3 +208,10 @@ Co đề nghị dùng 00_ROOT/NHAT_KY_THI_CONG.md làm kênh bàn giao vận hà
 - Trạng thái tại thời điểm ghi: POLICY DECISION CONFIRMED / DOC-059 DRAFTED / SANDBOX WRITE BLOCKED / GITHUB JOURNAL UPDATE IN PROGRESS / TECHNICAL ENFORCEMENT NOT VERIFIED.
 - Kế hoạch tiếp theo: (1) xác minh readback commit DOC-035 sau cập nhật; (2) ghi DOC-059 vào Sandbox và GitHub main; (3) cập nhật DOC-055 đăng ký DOC-059; (4) triển khai DenyResponse contract + Recovery Catalog; (5) kiểm thử positive, negative, continuity, recovery và security; (6) Qw kiểm thử độc lập. Không tuyên bố technical PASS trước khi có evidence.
 - Chữ ký ghi nhật ký: **Xu / AI-01 — Work 70 Coordinator**. Chấp thuận triển khai được ghi nhận theo chỉ thị trực tiếp của **Vinh**, không diễn giải thành nghiệm thu kỹ thuật.
+
+
+## 2026-10-31 — Xu / AI-01 — Xác minh ghi nhật ký DENY-to-RECOVERY
+- Đã fetch lại DOC-035 từ GitHub main sau cập nhật; xác nhận entry “Ghi nhận chỉ thị DENY-to-RECOVERY và xử lý nhật ký” hiện diện trong nội dung.
+- GitHub commit ghi DOC-035: `e5b3b05afc6ce6bca1a975d4ad02c28ceb983789`.
+- Blob SHA readback: `f06baef5f25e11a2f18eed4dfbdeb0c5ad93826c`; nội dung entry được xác minh có mặt.
+- Trạng thái: **GITHUB JOURNAL UPDATE PASS / SANDBOX JOURNAL SYNC NOT VERIFIED / DOC-059 FILE NOT YET PERSISTED / TECHNICAL ENFORCEMENT NOT VERIFIED**.
