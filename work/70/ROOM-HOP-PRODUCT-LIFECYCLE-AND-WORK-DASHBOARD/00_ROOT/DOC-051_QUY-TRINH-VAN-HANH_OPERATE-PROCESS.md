@@ -169,6 +169,8 @@ Mỗi record có environment, version, period, producer, verifier, integrity và
 
 G8 trạng thái: PASS / NOT READY / BLOCKED / WAIVED. Nếu không có production deployment, trạng thái OPERATE là NOT ACTIVE.
 
+G9 trong DOC-004 là periodic OPERATE → improvement review, không phải gate mở phase OPERATE. O10 cung cấp đầu ra và bằng chứng cho đánh giá G9; decision/learning record phải được ghi nhận theo authority tương ứng.
+
 ## 9. Change, incident và retirement control
 
 - Incident không tự động cho phép thay đổi requirement/architecture; remediation đi qua change control tương ứng.
@@ -199,7 +201,7 @@ Một dashboard có thể có giao diện hiển thị health xanh nhưng không
 DOC-051 là chuẩn quy trình. Operations Owner chịu trách nhiệm vận hành thực tế; Vinh quyết định product/risk trọng yếu; Xu điều phối records và learning loop, không thay thế người trực vận hành hoặc authority.
 
 ## Change History
-| 1.1 | 2026-10-30 | Xu / AI-01 | Align operations entry gate with DOC-004: G8 RELEASE→OPERATE; G9 is periodic operational improvement review. |
 | Version | Date | Change |
 |---|---|---|
+| 1.1 | 2026-10-30 | Xu / AI-01 | Align operations entry gate with DOC-004: G8 RELEASE→OPERATE; G9 is periodic operational improvement review. |
 | 1.0 | 2026-10-30 | Ban hành O01–O10, service health, incidents, recovery, changes, security, learning, G8 and retirement standard. |
