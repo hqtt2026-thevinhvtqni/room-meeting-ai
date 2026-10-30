@@ -1,4 +1,11 @@
 # STORAGE & FILE EXPORT ARCHITECTURE — WORK 70
+- **STT / Document ID:** DOC-016
+- **Priority:** P1
+- **Read order:** 21
+- **Depends on:** DOC-009; DOC-010; DOC-033
+- **Status:** CANONICAL CANDIDATE / MIGRATION PENDING
+- **Version / Updated:** 1.0 / 2026-10-30
+
 
 Version: 1.0
 Date: 2026-10-30
