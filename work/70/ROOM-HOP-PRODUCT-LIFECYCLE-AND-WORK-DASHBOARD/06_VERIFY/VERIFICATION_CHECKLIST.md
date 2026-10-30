@@ -1,4 +1,10 @@
 # WORK 70 — VERIFICATION CHECKLIST
+- **STT / Document ID:** DOC-019
+- **Priority:** P2
+- **Read order:** 24
+- **Depends on:** DOC-015
+- **Status:** ACTIVE
+- **Version / Updated:** 1.0 / 2026-10-30
 Status: OPEN — NOT YET EXECUTED
 
 ## A. Structure and governance
