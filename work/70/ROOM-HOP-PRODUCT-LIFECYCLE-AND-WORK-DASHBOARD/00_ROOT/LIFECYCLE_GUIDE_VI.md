@@ -1,7 +1,7 @@
 # HƯỚNG DẪN TIẾNG VIỆT — 9 GIAI ĐOẠN VÒNG ĐỜI SẢN PHẨM
 - **STT / Document ID:** DOC-026
 - **Priority:** P3
-- **Read order:** 30
+- **Read order:** 33
 - **Depends on:** DOC-004; DOC-005; DOC-033; DOC-036
 - **Status:** ACTIVE
 - **Version / Updated:** 1.1 / 2026-10-30
