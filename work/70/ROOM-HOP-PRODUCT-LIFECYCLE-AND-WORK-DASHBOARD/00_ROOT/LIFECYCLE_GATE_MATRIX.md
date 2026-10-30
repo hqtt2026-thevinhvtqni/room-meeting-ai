@@ -1,4 +1,10 @@
 # LIFECYCLE GATE MATRIX — V1.1
+- **STT / Document ID:** DOC-004
+- **Priority:** P0
+- **Read order:** 4
+- **Depends on:** DOC-001
+- **Status:** ACTIVE
+- **Version / Updated:** 1.2 / 2026-10-30
 
 | Gate | Phase exit | Minimum evidence | Decision authority |
 |---|---|---|---|
