@@ -15,6 +15,8 @@
 
 ## Danh mục biên bản
 
+**Lưu ý mã lịch sử:** `BB-70-001` là mã tham chiếu lịch sử được ghi trước khi DOC-039 có hiệu lực; không phải mã phát hành theo cấu trúc mới. Không chuyển đổi hoặc cấp lại mã này hồi tố. Biên bản mới áp dụng cấu trúc tại DOC-039 và được đăng ký trong DOC-040.
+
 ### BB-70-001 — Thống nhất bộ hồ sơ Work và ranh giới Work / 05_BUILD
 - **Ngày:** 2026-10-30
 - **Chủ trì:** Vinh
