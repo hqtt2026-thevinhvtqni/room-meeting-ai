@@ -72,3 +72,11 @@ Các endpoint trên là thiết kế hợp đồng, KHÔNG phải endpoint đã 
 
 ## 8. Điều kiện nghiệm thu tích hợp
 Chỉ đánh dấu tích hợp PASS khi có: endpoint thật trong mã Core, test quyền 401/403/404, test dữ liệu Work scope, test stale/network failure, test không có write path, log/correlation evidence và kiểm thử UI hiển thị source mode chính xác.
+
+
+## 9. Observed Core baseline — 2026-10-30
+A read-only inspection of the current default-branch implementation found that `room_hop_mcp/adapter/http_server.py` registers `/identities` and Meeting routes only. The reviewed `API_CONTRACT.md` describes the Meeting lifecycle. No Work-scoped product-status endpoint was found in the reviewed router/contract. The proposed `/api/v1/works/{work_id}/...` paths above remain design proposals, not verified routes.
+
+The Meeting-specific `MeetingService.save_artifact()` and `Meeting.save_artifact()` are not a generic Work evidence API. They are tied to a closed Meeting and its artifact directory. Do not reuse them as Work storage/export without a separately approved Core contract.
+
+Source review: `core/meeting_manager.py`, `core/meeting_service.py`, `room_hop_mcp/adapter/http_server.py` and `API_CONTRACT.md` at the reviewed default-branch revisions. Work 70 integration remains NOT VERIFIED.
