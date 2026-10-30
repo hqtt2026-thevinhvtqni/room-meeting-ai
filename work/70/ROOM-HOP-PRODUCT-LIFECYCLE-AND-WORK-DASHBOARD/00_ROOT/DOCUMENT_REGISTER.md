@@ -1,5 +1,5 @@
 # WORK 70 — DOCUMENT REGISTER
-Register version: 2.9
+Register version: 3.0
 Owner: Xu / AI-01
 Authority: Vinh
 Rule: STT is a stable identity; Priority is importance; Read order is sequence. File paths are not renamed by this register.
@@ -57,6 +57,7 @@ Rule: STT is a stable identity; Priority is importance; Read order is sequence. 
 | DOC-049 | P1 | 49 | Quy trình Nghiệm thu / Acceptance Process | 00_ROOT/DOC-049_QUY-TRINH-NGHIEM-THU_ACCEPTANCE-PROCESS.md | DOC-001; DOC-002; DOC-004; DOC-005; DOC-008; DOC-014; DOC-020; DOC-033; DOC-038; DOC-047; DOC-048 | ACTIVE — PROCESS STANDARD | End-to-end AC01–AC08 acceptance scope, evidence/defect review, Product Owner decision, G7 and handoff to RELEASE |
 | DOC-050 | P1 | 50 | Quy trình Phát hành / Release Process | 00_ROOT/DOC-050_QUY-TRINH-PHAT-HANH_RELEASE-PROCESS.md | DOC-001; DOC-002; DOC-004; DOC-005; DOC-014; DOC-020; DOC-021; DOC-033; DOC-038; DOC-048; DOC-049 | ACTIVE — PROCESS STANDARD | End-to-end R01–R10 release readiness, candidate provenance, G8 approval, deployment, rollout, rollback and operations handoff |
 | DOC-051 | P1 | 51 | Quy trình Vận hành / Operate Process | 00_ROOT/DOC-051_QUY-TRINH-VAN-HANH_OPERATE-PROCESS.md | DOC-001; DOC-002; DOC-004; DOC-005; DOC-014; DOC-022; DOC-033; DOC-038; DOC-048; DOC-050 | ACTIVE — PROCESS STANDARD | End-to-end O01–O10 service operations, SLO/monitoring, incident/recovery, change, security, learning, G9 and retirement |
+| DOC-052 | P1 | 52 | Báo cáo Kiểm định Tích hợp và Quản trị / Integration & Governance Verification Report | 00_ROOT/DOC-052_BAO-CAO-KIEM-DINH-TICH-HOP_QUAN-TRI_INTEGRATION-GOVERNANCE-VERIFICATION.md | DOC-001; DOC-003; DOC-004; DOC-005; DOC-011; DOC-014; DOC-015; DOC-019; DOC-033; DOC-036; DOC-041; DOC-047; DOC-048; DOC-049; DOC-050; DOC-051 | ACTIVE — AUDIT REPORT / GATE NOT PASSED | Bounded GitHub audit, evidence schema v1.1 compatibility result, WP authority gap, verification/Core/Sandbox blockers and remediation backlog |
 
 ## AI reading rule
 Read DOC-001 through DOC-006, then DOC-033, DOC-038, DOC-039 and DOC-040. Then read relevant P1 documents in ascending read order. Read P2 only for the active task. Read P3 when clarification, operations or historical trace requires it. Read DOC-041 when reconciling governance or closing its remediation backlog. Never infer PASS from the register or presence of a file.
