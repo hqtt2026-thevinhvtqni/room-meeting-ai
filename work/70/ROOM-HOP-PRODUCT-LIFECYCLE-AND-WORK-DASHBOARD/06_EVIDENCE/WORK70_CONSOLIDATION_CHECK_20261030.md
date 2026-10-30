@@ -1,4 +1,11 @@
 # WORK 70 — CONSOLIDATION CHECKPOINT
+- **STT / Document ID:** DOC-031
+- **Priority:** P3
+- **Read order:** 38
+- **Depends on:** DOC-014
+- **Status:** ACTIVE / HISTORICAL EVIDENCE
+- **Version / Updated:** 1.0 / 2026-10-30
+
 Date: 2026-10-30
 Status: STRUCTURE & DOCUMENTATION CONSOLIDATED / PRODUCT RUNTIME NOT VERIFIED
 
