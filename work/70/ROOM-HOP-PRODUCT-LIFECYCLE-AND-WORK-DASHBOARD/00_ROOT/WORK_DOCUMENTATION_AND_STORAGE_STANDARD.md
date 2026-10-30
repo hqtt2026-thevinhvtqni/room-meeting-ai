@@ -69,6 +69,8 @@ Existing 05_BUILD content is not to be deleted, moved or rewritten merely becaus
 For every CANONICAL CANDIDATE, identify or establish its Work-root/source-repository canonical location, compare content and version, then update 05_BUILD to a mapping. Preserve old commit/history. Any physical move, deletion, branch rewrite or merge requires a separately verified migration plan and approval.
 
 ## 11. Naming and bilingual documentation
+
+Official record classification codes are governed by DOC-039. Keep the stable DOC-ID separate from the operational document code; record issued codes in the Work document register. A code alone does not confer approval authority or legal effect.
 All Work documents follow 00_ROOT/DOCUMENT_NAMING_STANDARD.md (DOC-038). Vietnamese appears first and English second in titles and new filenames. Every official document has a stable DOC ID, ASCII filename, bilingual title and required metadata. Existing paths remain unchanged until a controlled rename plan updates all references and passes verification. Source-code filenames follow repository conventions; they are tracked as artifacts rather than forced into the DOC filename pattern.
 
 ## 10. Compliance and status
