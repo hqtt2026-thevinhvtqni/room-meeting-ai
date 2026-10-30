@@ -4,7 +4,7 @@
 - **Read order / Thứ tự đọc:** 51
 - **Depends on / Phụ thuộc:** DOC-001; DOC-002; DOC-004; DOC-005; DOC-014; DOC-022; DOC-033; DOC-038; DOC-048; DOC-050
 - **Status / Trạng thái:** ACTIVE — PROCESS STANDARD
-- **Version / Updated:** 1.0 / 2026-10-30
+- **Version / Updated:** 1.1 / 2026-10-30
 - **Owner / Phụ trách:** Xu / AI-01
 - **Authority / Thẩm quyền:** Vinh — Product Owner
 
@@ -153,7 +153,7 @@ Incident record tối thiểu: ID, severity, impact, timestamps, detection sourc
 
 Mỗi record có environment, version, period, producer, verifier, integrity và scope. Không ghi VERIFIED chỉ vì dashboard hiển thị xanh.
 
-## 8. G9 — Gate RELEASE → OPERATE
+## 8. G8 — Gate RELEASE → OPERATE
 
 - [ ] G8 RELEASE PASS và production deployment exact version được xác minh.
 - [ ] Operations Owner/backup và service boundaries được xác nhận.
@@ -165,9 +165,9 @@ Mỗi record có environment, version, period, producer, verifier, integrity và
 - [ ] Capacity/cost/vendor dependencies có owner.
 - [ ] Known limitations, open risks và support obligations được chấp nhận.
 - [ ] Operations handoff record được xác nhận bởi receiving owner.
-- [ ] Authority ghi G9 decision theo DOC-004.
+- [ ] Authority ghi G8 decision theo DOC-004.
 
-G9 trạng thái: PASS / NOT READY / BLOCKED / WAIVED. Nếu không có production deployment, trạng thái OPERATE là NOT ACTIVE.
+G8 trạng thái: PASS / NOT READY / BLOCKED / WAIVED. Nếu không có production deployment, trạng thái OPERATE là NOT ACTIVE.
 
 ## 9. Change, incident và retirement control
 
@@ -199,6 +199,7 @@ Một dashboard có thể có giao diện hiển thị health xanh nhưng không
 DOC-051 là chuẩn quy trình. Operations Owner chịu trách nhiệm vận hành thực tế; Vinh quyết định product/risk trọng yếu; Xu điều phối records và learning loop, không thay thế người trực vận hành hoặc authority.
 
 ## Change History
+| 1.1 | 2026-10-30 | Xu / AI-01 | Align operations entry gate with DOC-004: G8 RELEASE→OPERATE; G9 is periodic operational improvement review. |
 | Version | Date | Change |
 |---|---|---|
-| 1.0 | 2026-10-30 | Ban hành O01–O10, service health, incidents, recovery, changes, security, learning, G9 and retirement standard. |
+| 1.0 | 2026-10-30 | Ban hành O01–O10, service health, incidents, recovery, changes, security, learning, G8 and retirement standard. |
