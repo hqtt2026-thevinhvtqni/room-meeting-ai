@@ -32,3 +32,14 @@ Root-cause confidence: HIGH for path-contract enforcement failure; MEDIUM for co
 - Add Sandbox path preflight, root allow-list, branch allow-list, structural CI and post-write readback gate.
 
 This report is an incident record, not a release or acceptance statement.
+
+
+## 9. Actual remediation result — 2026-10-31
+- DONE: two Ka architecture drafts copied to canonical Sandbox Work-root 05_BUILD/03_ARCHITECTURE and exact-synced to GitHub branch work/70/05-build; exact content equality verified.
+- DONE: misplaced journal fragment summarized in canonical DOC-035; canonical journal synced to GitHub main.
+- DONE: three misplaced files removed from direct Sandbox root only after canonical copies/readback were confirmed.
+- DONE: nine empty .gitkeep placeholders removed from GitHub main; current main tree contains no Work 70 05_BUILD path. Actual branch content remains on work/70/05-build.
+- DONE: DOC-057, DOC-058 and updated DOC-055 synced/read back on GitHub main.
+- BLOCKED: Sandbox 8030 exposes file deletion only; attempts to delete empty directories return IsADirectoryError. Empty direct Sandbox directories 00_ROOT and 05_BUILD/03_ARCHITECT (and parent 05_BUILD) remain. No directory-delete capability was found.
+- PRESERVED: nested Sandbox duplicate work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD remains quarantined per DOC-003; it has not been deleted or treated as canonical.
+- Overall: PARTIAL RESTORATION — canonical content restored and GitHub branch boundary corrected; Sandbox directory cleanup and nested duplicate reconciliation remain open.
