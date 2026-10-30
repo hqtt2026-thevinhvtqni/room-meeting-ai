@@ -1,10 +1,10 @@
-# IMPLEMENTATION ROADMAP — WORK 70 / VERSION 1.2
+# IMPLEMENTATION ROADMAP — WORK 70 / VERSION 1.3
 - **STT / Document ID:** DOC-011
 - **Priority:** P1
 - **Read order:** 15
 - **Depends on:** DOC-008; DOC-009; DOC-033; DOC-036
 - **Status:** ACTIVE
-- **Version / Updated:** 1.2 / 2026-10-30
+- **Version / Updated:** 1.3 / 2026-10-30
 
 ## Delivery packages
 | WP | Objective | Owner | Reviewer | Current state |
@@ -15,6 +15,14 @@
 | WP-70-04 | Core read integration discovery and verification | Xu / Core owner TBD | Qw | BLOCKED / NOT VERIFIED |
 | WP-70-05 | Evidence registry, storage and file export architecture | Xu | Qw | DESIGN ONLY |
 | WP-70-06 | Independent verification, acceptance preparation and release readiness | Xu | Qw | PLANNED |
+
+
+## Work Package registry authority
+- Proposed Work-level data: `04_PLAN/WORK_PACKAGE_REGISTER.json` (schema_version 0.1-draft).
+- Proposed contract: `03_ARCHITECT/WORK_PACKAGE.schema.json`.
+- Proposal and approval checklist: `04_PLAN/DOC-053_DE-XUAT-SO-DANG-KY-GOI-CONG-VIEC_WORK-PACKAGE-REGISTER-PROPOSAL.md`.
+- Status: DRAFT_NOT_APPROVED. The six legacy records and their legacy statuses are preserved for reconciliation only; all proposed WP statuses remain DRAFT, estimates remain NOT_ESTIMATED and reviewer assignments remain unconfirmed.
+- The proposal does not supersede this roadmap, does not authorize migration and does not open G4. Until Vinh approves the WP baseline, DOC-011 remains the planning authority and the proposal is non-authoritative.
 
 ## End-to-end sequence
 1. Reconcile canonical structure, four official records and source ownership contracts.
