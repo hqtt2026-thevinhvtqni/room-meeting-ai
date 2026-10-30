@@ -1,4 +1,4 @@
-# WORK 70 — BUILD REGISTER
+# WORK 70 — BUILD REGISTER\n\nMachine-readable source: `BUILD_REGISTER.json`, validated by `BUILD_REGISTER.schema.json` and `WORK_PACKAGE.schema.json`. This Markdown table is the human-readable mirror.
 
 Version: 1.0
 Scope: 05_BUILD only. WP records are logical delivery units and reference the fixed build areas.
