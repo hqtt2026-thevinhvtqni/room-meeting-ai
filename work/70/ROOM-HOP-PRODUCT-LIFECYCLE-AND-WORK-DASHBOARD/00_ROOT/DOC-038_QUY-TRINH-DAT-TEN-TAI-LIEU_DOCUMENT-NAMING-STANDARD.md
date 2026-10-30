@@ -21,7 +21,7 @@ Standardize names for every document, record, drawing, model, template and hando
 5. Tên ngắn, có nghĩa, mô tả đúng loại và chủ đề; cấm tên mơ hồ như FINAL, NEW, FIXED, LATEST, COPY.
 6. Tên file chuẩn không đổi theo mỗi lần cập nhật. Phiên bản nằm trong metadata và lịch sử Git.
 7. Một tài liệu chỉ có một đường dẫn chuẩn được khai báo trong Document Register.
-8. Không tự ý đổi tên tài liệu cũ; phải có kế hoạch cập nhật toàn bộ liên kết và kiểm chứng.
+8. Tên file của tài liệu được kiểm soát phải luôn theo mẫu canonical. Tài liệu cũ phải được di trú theo batch có inventory, mapping, cập nhật liên kết, alias chuyển tiếp và QE theo DOC-056; không đổi tên thủ công lẻ tẻ.
 
 ## 3. Mẫu tên file chuẩn / Canonical filename pattern
 DOC-NNN_TEN-TIENG-VIET-KHONG-DAU_ENGLISH-DOCUMENT-NAME.ext
@@ -92,7 +92,7 @@ Với biên bản hoặc nhật ký định kỳ, có thể thêm ngày ISO YYYY
 10. Chỉ báo PASS khi có đủ bằng chứng kiểm tra.
 
 ## 8. Đổi tên tài liệu hiện hữu / Legacy rename workflow
-Không đổi tên hàng loạt ngay khi ban hành chuẩn. Mỗi đợt đổi tên phải:
+Di trú theo batch có kiểm soát theo DOC-056. Không đổi tên thủ công lẻ tẻ. Mỗi batch phải:
 1. Lập bảng đường dẫn cũ → đường dẫn mới.
 2. Kiểm tra DOC ID, nội dung, lịch sử, nhánh và tất cả tham chiếu.
 3. Có backup/commit khôi phục được.
