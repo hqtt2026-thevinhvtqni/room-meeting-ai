@@ -1,0 +1,305 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ROOM-HOP Work Product Status",
+  "description": "Local/read-model payload for a Work lifecycle Dashboard; source_mode must distinguish local snapshots from Core responses.",
+  "type": "object",
+  "required": [
+    "work_id",
+    "product_name",
+    "standard_id",
+    "standard_version",
+    "work_status",
+    "lifecycle",
+    "work_packages",
+    "blockers",
+    "risks",
+    "decisions_needed",
+    "source_mode",
+    "freshness",
+    "as_of",
+    "warning_vi"
+  ],
+  "properties": {
+    "work_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "product_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "summary": {
+      "type": "string"
+    },
+    "standard_id": {
+      "type": "string"
+    },
+    "standard_version": {
+      "type": "string"
+    },
+    "work_status": {
+      "enum": [
+        "NOT_STARTED",
+        "ACTIVE",
+        "BLOCKED",
+        "ACCEPTED",
+        "RELEASED",
+        "OPERATING",
+        "CLOSED",
+        "CANCELLED"
+      ]
+    },
+    "lifecycle": {
+      "type": "object",
+      "required": [
+        "current_phase",
+        "phases"
+      ],
+      "properties": {
+        "current_phase": {
+          "enum": [
+            "01_DISCOVER",
+            "02_DEFINE",
+            "03_ARCHITECT",
+            "04_PLAN",
+            "05_BUILD",
+            "06_VERIFY",
+            "07_ACCEPT",
+            "08_RELEASE",
+            "09_OPERATE"
+          ]
+        },
+        "phases": {
+          "type": "array",
+          "minItems": 9,
+          "maxItems": 9,
+          "items": {
+            "type": "object",
+            "required": [
+              "phase_id",
+              "name_vi",
+              "status",
+              "gate_status",
+              "owner",
+              "evidence_refs"
+            ],
+            "properties": {
+              "phase_id": {
+                "enum": [
+                  "01_DISCOVER",
+                  "02_DEFINE",
+                  "03_ARCHITECT",
+                  "04_PLAN",
+                  "05_BUILD",
+                  "06_VERIFY",
+                  "07_ACCEPT",
+                  "08_RELEASE",
+                  "09_OPERATE"
+                ]
+              },
+              "name_vi": {
+                "type": "string"
+              },
+              "status": {
+                "enum": [
+                  "NOT_STARTED",
+                  "PLANNED",
+                  "ACTIVE",
+                  "BLOCKED",
+                  "DONE",
+                  "CANCELLED"
+                ]
+              },
+              "gate_status": {
+                "enum": [
+                  "NOT_READY",
+                  "PENDING",
+                  "PASS",
+                  "FAIL",
+                  "WAIVED"
+                ]
+              },
+              "owner": {
+                "type": "string"
+              },
+              "evidence_refs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "verified_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "note_vi": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "work_packages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "wp_id",
+          "title",
+          "status",
+          "owner",
+          "reviewer",
+          "evidence_refs"
+        ],
+        "properties": {
+          "wp_id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "title_vi": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "DRAFT",
+              "READY",
+              "IN_PROGRESS",
+              "IN_REVIEW",
+              "DONE",
+              "BLOCKED",
+              "CANCELLED"
+            ]
+          },
+          "owner": {
+            "type": "string"
+          },
+          "reviewer": {
+            "type": "string"
+          },
+          "evidence_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "severity",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "severity": {
+            "enum": [
+              "LOW",
+              "MEDIUM",
+              "HIGH",
+              "CRITICAL"
+            ]
+          },
+          "status": {
+            "enum": [
+              "OPEN",
+              "IN_PROGRESS",
+              "BLOCKED",
+              "CLOSED"
+            ]
+          },
+          "owner": {
+            "type": "string"
+          },
+          "detail_vi": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "severity",
+          "mitigation_vi"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "severity": {
+            "enum": [
+              "LOW",
+              "MEDIUM",
+              "HIGH",
+              "CRITICAL"
+            ]
+          },
+          "mitigation_vi": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "decisions_needed": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "source_mode": {
+      "enum": [
+        "core_live",
+        "core_cached",
+        "local_snapshot",
+        "sample"
+      ]
+    },
+    "freshness": {
+      "enum": [
+        "FRESH",
+        "STALE",
+        "UNKNOWN"
+      ]
+    },
+    "as_of": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "warning_vi": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}
