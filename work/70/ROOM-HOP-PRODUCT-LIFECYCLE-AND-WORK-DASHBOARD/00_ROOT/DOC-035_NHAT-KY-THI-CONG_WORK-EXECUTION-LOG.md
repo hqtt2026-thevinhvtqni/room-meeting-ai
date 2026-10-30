@@ -225,3 +225,12 @@ Co đề nghị dùng 00_ROOT/NHAT_KY_THI_CONG.md làm kênh bàn giao vận hà
 - Phạm vi thay đổi tài liệu: cập nhật DOC-039 (danh mục mã và định nghĩa), DOC-038 (dẫn chiếu mã loại) và DOC-055 (mô tả đăng ký). Chưa đổi tên hàng loạt các tài liệu hiện hữu, chưa cấp mã phát hành mới, chưa sửa sổ cấp số DOC-040; việc di trú filename và tham chiếu phải theo batch có mapping và QE.
 - Trạng thái: STANDARD TEXT UPDATED ON GITHUB MAIN / READBACK PENDING / SANDBOX PARITY PENDING / LEGACY MIGRATION NOT STARTED / QE PENDING.
 - Người ghi: Xu / AI-01 — Work 70 Coordinator. Thẩm quyền chuẩn hóa: Vinh.
+
+
+## 2026-10-31 — Xu / AI-01 — Bổ sung bảng tra cứu mã tại DOC-040
+- Sau khi rà soát DOC-040, nhận thấy đây là sổ cấp mã nghiệp vụ và cần có bảng tra cứu để tránh danh mục vận hành bị lệch khỏi DOC-039.
+- Đã bổ sung bảng tra cứu mã loại BB, BC, QD, QDY, PL, HD, QT, TC, LENH, KH, YC, TK, BM, HS, TB, CV vào DOC-040; ghi rõ DOC-039 là nguồn thẩm quyền duy nhất, DOC-040 chỉ là bảng tra cứu + sổ cấp số.
+- Commit DOC-040: a508f232764b33b79849877e895776bf103c3118. Readback DOC-040 và kiểm tra đồng bộ bốn tài liệu DOC-038/039/040/055 cùng DOC-035 đang được thực hiện.
+- Chưa đổi tên file hiện hữu, chưa cấp mã mới, chưa cập nhật validator tự động hoặc chạy QE; các việc này vẫn mở.
+- Trạng thái: TAXONOMY REGISTERED IN DOC-039 / NAMING STANDARD ALIGNED / CODE LEDGER REFERENCE ALIGNED / BULK MIGRATION AND VALIDATION PENDING.
+- Người ghi: Xu / AI-01 — Work 70 Coordinator.
