@@ -184,3 +184,13 @@ Co đề nghị dùng 00_ROOT/NHAT_KY_THI_CONG.md làm kênh bàn giao vận hà
 - GitHub main có 05_BUILD chỉ chứa .gitkeep; xử lý loại bỏ scaffold rỗng khỏi main, không xóa nội dung thật trên branch.
 - Cây Sandbox lồng work/70/... được giữ nguyên theo DOC-003 cho tới khi có đối chiếu nội dung và kế hoạch dọn riêng.
 - Trạng thái: ROOT CAUSE CONFIRMED / CANONICAL COPIES CREATED / GITHUB SYNC AND READBACK IN PROGRESS / CLEANUP NOT YET CLOSED.
+
+
+## 2026-10-31 — Xu / AI-01 — Kết quả phục hồi sự cố path drift
+- PASS — Hai tài liệu Ka đã được đặt lại đúng canonical Sandbox path dưới Work root và đồng bộ exact-content sang branch work/70/05-build: WORK70_KA_ARCHITECTURE_CONTRACT_V1.md; WORK70_KA_RUNTIME_BOUNDARY_DIAGRAM_V1.md. GitHub branch commit sau exact sync: 085d209703d982c0754bf508fe32535b2e4abfcd và a8c890bb32f775dbe135687f4bc7c9435e8c8af2.
+- PASS — Nhật ký fragment ngoài root đã được nội dung hóa thành sự kiện trong DOC-035 canonical; DOC-035 đã sync GitHub main commit 3656d592df2d9c5f415dbcd8e5c1567895263905.
+- PASS — Xóa 3 file đặt sai vị trí sau khi bản chuẩn được ghi và xác minh: 00_ROOT/NHAT_KY_THI_CONG.md và hai file Ka dưới 05_BUILD/03_ARCHITECTURE ở Sandbox root.
+- PASS — Xóa 9 file .gitkeep thuộc scaffold 05_BUILD rỗng khỏi GitHub main; main không còn path Work 70/05_BUILD. Nội dung thật vẫn nằm trên branch work/70/05-build.
+- PASS — DOC-058 incident report và DOC-057 Entry Gate standard được đồng bộ GitHub main; DOC-055 register ghi DOC-057/058. Exact readback đã xác minh DOC-058, DOC-055, DOC-057 và hai tài liệu Ka branch.
+- BLOCKED — Sandbox API chỉ hỗ trợ xóa file, không hỗ trợ xóa thư mục; hai thư mục rỗng ngoài root (00_ROOT và 05_BUILD/03_ARCHITECT, cùng cha 05_BUILD) vẫn còn entry rỗng. Không có thao tác xóa thư mục khả dụng trong MCP 8030. Cây lồng work/70/... được giữ nguyên theo DOC-003, chờ kế hoạch cleanup riêng và so sánh đầy đủ.
+- Trạng thái tổng: STRUCTURAL RESTORATION PARTIAL / CONTENT RESTORED / GITHUB BRANCH BOUNDARY RESTORED / EMPTY SANDBOX DIRS + NESTED MIRROR CLEANUP BLOCKED. Không tuyên bố toàn bộ cấu trúc PASS.
