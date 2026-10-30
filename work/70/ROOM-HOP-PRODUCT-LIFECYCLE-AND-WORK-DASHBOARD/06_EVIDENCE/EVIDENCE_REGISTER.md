@@ -1,0 +1,25 @@
+# WORK 70 — EVIDENCE REGISTER
+
+Version: 1.0
+Status: ACTIVE INDEX / EVIDENCE MUST BE VERIFIED
+Purpose: Cross-phase index of inspectable evidence. This file indexes artifacts; it does not itself prove their claims.
+
+## Evidence rules
+- Every evidence item has a unique evidence_id and stable Work ID.
+- Record artifact path/URI, SHA-256 when available, media type, producer, timestamp, environment/source, related requirement/WP/gate, reviewer and verification state.
+- Verification states: MISSING, RECORDED, VERIFIED, REJECTED.
+- A file write or a contributor statement is RECORDED at most; independent inspection/test is required for VERIFIED.
+- Do not store credentials, API keys, passwords, private prompts or unnecessary personal data.
+- Preserve historical records. Corrections create a new record/version; do not silently rewrite the past.
+
+## Work 70 evidence index
+| Evidence ID | Artifact | Related WP/Gate | Producer | Timestamp | Integrity | Reviewer | State |
+|---|---|---|---|---|---|---|---|
+| E70-DOC-001 | README.md / Work standard v1.1 | WP-70-01 / G0-G3 | Xu AI-01 | 2026-10-30 | Sandbox readback available; hash not recorded | Pending | RECORDED |
+| E70-DOC-002 | 00_ROOT/WORK_MANIFEST.md | WP-70-01 / G0 | Xu AI-01 | 2026-10-30 | Sandbox readback available; hash not recorded | Pending | RECORDED |
+| E70-ARCH-001 | 03_ARCHITECT/WORK_LIFECYCLE_ARCHITECTURE.md | WP-70-01 / G3 | Xu AI-01 | 2026-10-30 | Sandbox readback available; hash not recorded | Pending | RECORDED |
+| E70-DASH-001 | DASHBOARD/index.html + PRODUCT_STATUS.json + schema | WP-70-03 / G3-G5 | Xu AI-01 | 2026-10-30 | Pending runtime/schema validation | Qw pending | RECORDED |
+| E70-STOR-001 | 05_BUILD/03_ARCHITECTURE/STORAGE_AND_EXPORT_ARCHITECTURE.md | WP-70-05 | Xu AI-01 | 2026-10-30 | GitHub/Sandbox readback matched | Qw pending | RECORDED |
+| E70-STOR-002 | 05_BUILD/05_TEST/STORAGE_AND_EXPORT_ACCEPTANCE.md | WP-70-05 | Xu AI-01 | 2026-10-30 | GitHub/Sandbox readback matched | Qw pending | RECORDED |
+
+No evidence item is marked VERIFIED until its artifact is independently checked against the claim it supports.
