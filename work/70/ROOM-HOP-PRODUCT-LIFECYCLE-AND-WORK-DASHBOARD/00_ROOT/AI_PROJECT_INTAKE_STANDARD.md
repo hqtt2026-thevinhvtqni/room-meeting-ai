@@ -1,4 +1,10 @@
 # AI PROJECT INTAKE & EXECUTION STANDARD
+- **STT / Document ID:** DOC-002
+- **Priority:** P0
+- **Read order:** 2
+- **Depends on:** DOC-001
+- **Status:** ACTIVE
+- **Version / Updated:** 1.2 / 2026-10-30
 Version: 1.1
 Effective date: 2026-10-30
 Status: ACTIVE / ADOPTED BY PRODUCT OWNER
@@ -24,7 +30,7 @@ This standard applies to every AI role: orchestrator, architect, coder, tester, 
 
 ## 3. Mandatory intake sequence
 ### Stage A — Identify the Work
-Read, in order: Manifest; AI execution and documentation/storage standards; Document Register; repository/Sandbox sync contract; lifecycle gates/state machine; decision log; relevant P0/P1 requirements and architecture; relevant plans/WP/evidence/acceptance; then conditional P2/P3 history.
+Read, in order: DOC-001 Manifest; DOC-002 intake; DOC-033 documentation/storage; Document Register; DOC-003 sync contract; DOC-004 gates; DOC-005 state machine; DOC-006 decision log; DOC-038 naming; DOC-039 type-code standard; DOC-040 issuance ledger; then relevant P1 requirements/architecture/plans and relevant evidence/acceptance; P2/P3 only when task-relevant.
 
 ### Stage B — Read the Work structure and data model
 Map lifecycle phases, WP ownership/dependencies, state transitions, evidence provenance, decisions, risks, source-of-truth boundaries, canonical storage paths, mapping references, branch/environment and permissions. Directory presence is not proof of implementation or authority.
