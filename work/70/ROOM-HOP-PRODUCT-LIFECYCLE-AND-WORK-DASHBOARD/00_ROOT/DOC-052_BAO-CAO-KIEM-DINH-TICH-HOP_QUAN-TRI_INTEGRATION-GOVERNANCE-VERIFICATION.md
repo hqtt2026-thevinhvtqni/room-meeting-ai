@@ -4,7 +4,7 @@
 - **Read order / Thứ tự đọc:** 52
 - **Depends on / Phụ thuộc:** DOC-001; DOC-003; DOC-004; DOC-005; DOC-011; DOC-014; DOC-015; DOC-019; DOC-033; DOC-036; DOC-041; DOC-047; DOC-048; DOC-049; DOC-050; DOC-051
 - **Status / Trạng thái:** ACTIVE — AUDIT REPORT / GATE NOT PASSED
-- **Version / Updated:** 1.2 / 2026-10-30
+- **Version / Updated:** 1.3 / 2026-10-30
 - **Author:** Xu / AI-01
 - **Authority:** Vinh — Product Owner
 
@@ -89,6 +89,14 @@ Cross-checking DOC-049..051 against authoritative DOC-004 found a one-step gate 
 
 **Remaining action:** Independent reviewer must verify all gate references across DOC-004, DOC-042..051, DOC-020..022 and Dashboard data before any gate decision. This correction does not pass any gate.
 
+### F-052-08 — Dashboard local snapshot conflicts with authoritative Manifest
+**Severity:** CRITICAL / source-of-truth presentation defect  
+GitHub main readback shows DOC-001 Manifest current phase = 03_ARCHITECT (design baseline; exit gate not passed), while DASHBOARD/PRODUCT_STATUS.json declares lifecycle.current_phase = 01_DISCOVER. The Dashboard payload identifies source_mode = local_snapshot, as_of = 2026-10-30T09:10:00+07:00 and warns that it is not live Core data and has not been independently verified. Its WP status labels also reflect legacy progress states, whereas the new Work-level WP proposal intentionally sets all proposed statuses to DRAFT.
+
+**Impact:** A user could see two different current phases and contradictory WP progress. The local snapshot cannot override Manifest, approved decisions or gate records. The freshness label FRESH has no TTL/measurement policy evidenced here, so this audit does not independently validate that label.
+
+**Action:** Treat Manifest + authorized gate/decision records as authoritative. Keep Dashboard visibly marked LOCAL SNAPSHOT and NOT VERIFIED; reconcile the payload only through the approved source contract and authorized write path. Do not alter the protected PRODUCT_STATUS file through alternate routes. Define freshness TTL and derive phase/WP status from a single authorized projection before claiming consistency.
+
 ## 4. Evidence and validation results
 
 | Check | Result | Scope / limitation |
@@ -115,7 +123,7 @@ Cross-checking DOC-049..051 against authoritative DOC-004 found a one-step gate 
 | R-052-04 | P1 | Run standards-compliant JSON Schema validator in CI for evidence v1.1 | Engineering/QE | Reproducible CI run, positive and negative fixtures |
 | R-052-05 | P1 | Exact Sandbox/GitHub reconciliation and nested-tree audit | Xu | Content/path manifest, hashes, duplicate classification; no deletion without approval |
 | R-052-06 | P1 | Reconcile all 05_BUILD candidate files into canonical Work paths and update mapping | Xu + QE | Target commit/version/hash, approved migration and independent review |
-| R-052-07 | P1 | Resolve Dashboard status snapshot vs Manifest source-of-truth mismatch | Xu; Vinh for policy decisions | Single declared source, revision/freshness and conflict-free status contract |
+| R-052-07 | P0 | Reconcile Dashboard local snapshot current_phase=01_DISCOVER with Manifest current_phase=03_ARCHITECT; define freshness TTL and canonical WP projection | Xu; Vinh for policy decisions | Authorized source contract, conflict-free projection and browser evidence; no alternate write path |
 
 ## 6. Decision and gate status
 
@@ -137,6 +145,7 @@ This report is advisory and records observations/remediation. It does not approv
 
 | Version | Date | Change |
 |---|---|---|
+| 1.3 | 2026-10-30 | Added F-052-08 for Dashboard local snapshot vs Manifest phase/WP status conflict; clarified freshness label limitation and protected write boundary. |
 | 1.2 | 2026-10-30 | Extended gate-reference correction to DOC-047 and normalized change-history tables for DOC-047/049/050/051. |
 | 1.1 | 2026-10-30 | Corrected gate numbering across DOC-049..051 to match DOC-004; recorded F-052-07 and updated gate-state interpretation. |
 | 1.0 | 2026-10-30 | Initial bounded GitHub integration/governance audit; recorded WP authority gap, evidence schema v1.1 remediation, verification/Core/Sandbox blockers and gate truth. |
