@@ -70,8 +70,8 @@ For every CANONICAL CANDIDATE, identify or establish its Work-root/source-reposi
 
 ## 11. Naming and bilingual documentation
 
-Official record classification codes are governed by DOC-039. Keep the stable DOC-ID separate from the operational document code; record issued codes in the Work document register. A code alone does not confer approval authority or legal effect.
-All Work documents follow 00_ROOT/DOCUMENT_NAMING_STANDARD.md (DOC-038). Vietnamese appears first and English second in titles and new filenames. Every official document has a stable DOC ID, ASCII filename, bilingual title and required metadata. Existing paths remain unchanged until a controlled rename plan updates all references and passes verification. Source-code filenames follow repository conventions; they are tracked as artifacts rather than forced into the DOC filename pattern.
+Official record classification codes are governed by DOC-039 and recorded in DOC-040. Keep the stable DOC-ID separate from the operational document code; record issued codes in the Official Document Code Register. A code alone does not confer approval authority or legal effect.
+All Work documents follow DOC-038 (00_ROOT/DOC-038_QUY-TRINH-DAT-TEN-TAI-LIEU_DOCUMENT-NAMING-STANDARD.md). Vietnamese appears first and English second in titles and new filenames. Every official document has a stable DOC ID, ASCII filename, bilingual title and required metadata. Existing paths remain unchanged until a controlled rename plan updates all references and passes verification. Source-code filenames follow repository conventions; they are tracked as artifacts rather than forced into the DOC filename pattern.
 
 ## 10. Compliance and status
 A successful file write is not verification. A mapping is valid only after its target is read and exact version/hash is checked. No evidence, no PASS; a mapping cannot prove the target artifact works. Until legacy classification is complete, 05_BUILD transition status is ACTIVE / MIGRATION NOT VERIFIED. This standard applies to all new Works; existing Works adopt it through controlled, non-destructive migration.
