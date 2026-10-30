@@ -23,10 +23,20 @@ Read: Dashboard -> authorized Core read API -> Work projection with state, phase
 Rejected commands must not mutate authoritative state. Dashboard must display unknown/not-verified/stale distinctly and must not optimistically report a committed transition.
 
 ## 4. Logical command contract
-Request fields: work_id, command_id, expected_version, target_state, reason, evidence_refs; actor identity is derived from authenticated principal, never trusted from caller text.
+Request fields:
+- work_id: stable Work identifier.
+- command_id: idempotency key.
+- expected_version: optimistic concurrency precondition.
+- target_state: requested destination, constrained by canonical state machine.
+- reason: rationale where policy requires it.
+- evidence_refs: immutable evidence identifiers required by applicable guards.
+- actor identity: derived from authenticated principal, never trusted from caller text.
+
 Accepted result: command_id, work_id, accepted outcome, previous/current state, new version, transition ID, timestamp, audit reference.
+
 Rejected result: rejected outcome, stable reason code, current state/version where safe, and explicit no-mutation semantics.
-Candidate reason codes: UNAUTHENTICATED, FORBIDDEN, WORK_NOT_FOUND, INVALID_TRANSITION, GUARD_NOT_SATISFIED, EVIDENCE_REQUIRED, VERSION_CONFLICT, IDEMPOTENCY_CONFLICT, VALIDATION_ERROR. These are proposals, not approved API literals.
+
+Candidate reason codes for contract mapping: UNAUTHENTICATED, FORBIDDEN, WORK_NOT_FOUND, INVALID_TRANSITION, GUARD_NOT_SATISFIED, EVIDENCE_REQUIRED, VERSION_CONFLICT, IDEMPOTENCY_CONFLICT, VALIDATION_ERROR. These are proposals, not approved API literals.
 
 ## 5. Mandatory invariants
 1. Authorization and all transition guards pass before mutation.
@@ -40,23 +50,57 @@ Candidate reason codes: UNAUTHENTICATED, FORBIDDEN, WORK_NOT_FOUND, INVALID_TRAN
 9. Missing evidence, failed reads, or unavailable dependencies remain unknown/not verified, never PASS by default.
 
 ## 6. Failure and concurrency behavior
-Invalid edge/failed guard: reject, no mutation. Stale expected version: conflict. Exact duplicate: return original outcome. Reused command ID with changed payload: reject. Persistence failure: no accepted result or partial state/audit. Event outage: retain durable event for retry. Stale projection: disclose freshness/version. Unauthorized actor: reject before mutation.
+- Invalid edge or failed guard: reject, no mutation.
+- Stale expected version: conflict, return current version when safe.
+- Duplicate exact request: return original outcome, no duplicate transition.
+- Idempotency key reused with changed payload: reject conflict.
+- Persistence failure: no accepted result and no partial state/audit write.
+- Event transport outage: retain event durably for retry; expose pending delivery where relevant.
+- Stale read projection: disclose version/as-of or freshness; do not claim current.
+- Unauthorized actor: reject before mutation; security audit follows existing policy.
 
 ## 7. Audit/event minimum
-Candidate attributes: event_id, transition_id, work_id, command_id, authenticated_actor_id, from_state, to_state, aggregate_version, occurred_at, reason, evidence_refs, correlation_id, schema_version. Audit history is append-only.
+Candidate attributes: event_id, transition_id, work_id, command_id, authenticated_actor_id, from_state, to_state, aggregate_version, occurred_at, reason, evidence_refs, correlation_id, schema_version. Audit history is append-only; corrections are additional records.
 
 ## 8. Dashboard projection minimum
-Candidate fields: work_id, display_name, lifecycle_state, phase, gate_status, aggregate_version, updated_at, last_transition, evidence_summary, verification_status, data_freshness. Lifecycle state, lifecycle gate, integration gate, and verification result remain separate concepts.
+Candidate fields: work_id, display_name, lifecycle_state, phase, gate_status, aggregate_version, updated_at, last_transition, evidence_summary, verification_status, data_freshness. Lifecycle state, lifecycle gate, integration gate, and verification result must remain separate concepts.
 
 ## 9. Independent verification matrix
-LC-01 valid authorized transition; LC-02 illegal edge no mutation; LC-03 missing evidence no mutation; LC-04 unauthorized actor no mutation; LC-05 exact replay one effect; LC-06 changed payload conflict; LC-07 concurrent same-version requests at most one commit; LC-08 persistence failure no partial commit; LC-09 event outage durable recovery; LC-10 Dashboard mutation/bypass denied; LC-11 stale projection freshness disclosed; LC-12 missing dependency never PASS. Every test needs fixture, independent oracle, request/response, authoritative before/after state and reproducible evidence.
+- LC-01: valid authorized transition -> exactly one committed transition and audit.
+- LC-02: illegal edge -> reject; state/version unchanged.
+- LC-03: required evidence absent -> reject; state/version unchanged.
+- LC-04: unauthorized actor -> reject; no mutation.
+- LC-05: same command and payload replay -> same outcome; one effect.
+- LC-06: same command ID, changed payload -> idempotency conflict.
+- LC-07: concurrent requests on same version -> at most one commit.
+- LC-08: persistence failure -> no partial state/audit commit.
+- LC-09: event transport unavailable -> durable recoverable event.
+- LC-10: Dashboard mutation/bypass attempt -> no supported write path; server denies.
+- LC-11: stale projection -> freshness/version disclosed.
+- LC-12: missing evidence/dependency -> unknown or not verified, never PASS.
+
+Every test must define fixture, independent oracle, request/response, authoritative before/after state, and reproducible evidence.
 
 ## 10. Decisions still requiring reconciliation
-Canonical states/edges, gate taxonomy/ownership, existing Core routes/auth/versioning, sync/async command semantics, event schema/delivery/replay/retention, evidence reference/storage contract, Dashboard freshness/pagination/filtering and existing implementations.
+- Canonical state labels and allowed edges from the current state machine.
+- Gate taxonomy and gate ownership.
+- Existing Core route, auth/permission model, transaction/version strategy.
+- Synchronous versus asynchronous command semantics.
+- Existing event schema, delivery/replay/retention guarantees.
+- Evidence reference and immutable storage contract.
+- Dashboard projection freshness, pagination, filtering.
+- Existing implementations that already satisfy any proposed behavior.
 
 No new lifecycle state, gate, route, permission, threshold, or API schema is approved by this draft. Existing source contracts take precedence.
 
 ## 11. Acceptance criteria
-Reconcile against current architecture/state machine/gate matrix/assignment contract/decision log; cite exact sources; confirm owner boundaries; align API/event names to actual Core; QE independently verifies rejection/retry/race/audit/read-only behavior. Unresolved matters remain OPEN/BLOCKED.
+- Reconcile this draft against current architecture, state machine, gate matrix, assignment contract, and decision log.
+- Record exact source references for each adopted contract.
+- Xu and relevant owners confirm ownership boundaries and unresolved decisions.
+- API/event names align with actual Core conventions before implementation.
+- QE independently verifies rejection, retry, race, audit, and Dashboard read-only behavior.
+- Unresolved matters remain OPEN/BLOCKED; this draft is not a PASS.
 
-Prepared by Ka / AI-02. DRAFT — NOT PASS.
+Prepared by: Ka / AI-02
+Title: CSA / Architecture & Independent Review
+Signature: [KÝ: KA / AI-02 | CSA / ARCHITECTURE & INDEPENDENT REVIEW]
