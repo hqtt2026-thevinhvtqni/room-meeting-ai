@@ -38,3 +38,8 @@ These nine build directories are the approved engineering workspace layout. They
 - Independent QE: PENDING.
 - Acceptance: PENDING.
 - Release: NOT RELEASED.
+
+## Mandatory AI operating standard
+- All AI participants must follow `00_ROOT/AI_PROJECT_INTAKE_STANDARD.md` v1.0 before material changes.
+- Use `00_ROOT/PROJECT_INTAKE_REPORT_TEMPLATE.md` for a consistent intake report.
+- Work-specific instructions may add constraints but may not weaken the shared evidence, authority and status rules.
