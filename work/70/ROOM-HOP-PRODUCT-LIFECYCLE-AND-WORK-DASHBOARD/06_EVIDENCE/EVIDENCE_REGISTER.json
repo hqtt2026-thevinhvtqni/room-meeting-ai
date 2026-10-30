@@ -57,6 +57,16 @@
       "source_environment": "Sandbox Work 70 + GitHub work/70/05-build",
       "reviewer": "Qw pending",
       "state": "RECORDED"
+    },
+    {
+      "evidence_id": "E70-CORE-001",
+      "artifact_ref": "05_BUILD/03_ARCHITECTURE/CORE_CAPABILITY_GAP_ASSESSMENT.md",
+      "wp_id": "WP-70-04",
+      "producer": "Xu / AI-01",
+      "created_at": "2026-10-30T09:20:00+07:00",
+      "source_environment": "GitHub default branch source review + Sandbox Work 70",
+      "reviewer": "Qw pending",
+      "state": "RECORDED"
     }
   ]
 }
