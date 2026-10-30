@@ -1,4 +1,10 @@
 # AI Project Participants, Roles & Token Usage
+- **STT / Document ID:** DOC-025
+- **Priority:** P2
+- **Read order:** 30
+- **Depends on:** DOC-002
+- **Status:** LEGACY / REFERENCE
+- **Version / Updated:** 1.3 / 2026-10-30
 Version: 1.3
 Date: 2026-10-30
 Scope: Work 70 / 05_BUILD
