@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ROOM-HOP Work Evidence Register",
+  "type": "object",
+  "required": ["work_id", "evidence"],
+  "properties": {
+    "work_id": {"type": "string", "minLength": 1},
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["evidence_id", "artifact_ref", "state"],
+        "properties": {
+          "evidence_id": {"type": "string", "minLength": 1},
+          "artifact_ref": {"type": "string", "minLength": 1},
+          "wp_id": {"type": "string"},
+          "gate_id": {"type": "string"},
+          "producer": {"type": "string"},
+          "created_at": {"type": "string", "format": "date-time"},
+          "sha256": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"},
+          "media_type": {"type": "string"},
+          "source_environment": {"type": "string"},
+          "reviewer": {"type": "string"},
+          "state": {"enum": ["MISSING", "RECORDED", "VERIFIED", "REJECTED"]}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
