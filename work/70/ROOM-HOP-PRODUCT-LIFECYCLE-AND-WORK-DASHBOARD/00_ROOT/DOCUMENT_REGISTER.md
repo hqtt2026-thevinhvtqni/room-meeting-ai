@@ -25,16 +25,16 @@ Rule: STT is a stable identity; Priority is importance; Read order is sequence. 
 | DOC-015 | P1 | 17 | Verification Plan | 06_VERIFY/VERIFICATION_PLAN.md | DOC-008; DOC-013; DOC-014 | ACTIVE | Verification strategy and coverage |
 | DOC-016 | P1 | 18 | Storage & Export Architecture | 05_BUILD/03_ARCHITECTURE/STORAGE_AND_EXPORT_ARCHITECTURE.md | DOC-009; DOC-010; DOC-033 | ACTIVE | Legacy technical design; canonical-source classification/migration pending |
 | DOC-017 | P1 | 19 | Core Capability Gap Assessment | 05_BUILD/03_ARCHITECTURE/CORE_CAPABILITY_GAP_ASSESSMENT.md | DOC-010; DOC-033 | ACTIVE | Evidence-based Core capability gaps; classification/migration pending |
-| DOC-018 | P2 | 21 | Migration Plan | 04_PLAN/MIGRATION_PLAN.md | DOC-012; DOC-033 | ACTIVE | Execution steps for approved migration |
-| DOC-019 | P2 | 22 | Verification Checklist | 06_VERIFY/VERIFICATION_CHECKLIST.md | DOC-015 | ACTIVE | Operational verification checklist |
-| DOC-020 | P2 | 23 | Acceptance Record | 07_ACCEPT/ACCEPTANCE_RECORD.md | DOC-015; DOC-019 | ACTIVE | Authorized acceptance decision |
-| DOC-021 | P2 | 24 | Release Plan | 08_RELEASE/RELEASE_PLAN.md | DOC-020 | ACTIVE | Controlled release preparation |
-| DOC-022 | P2 | 25 | Operations Model | 09_OPERATE/OPERATIONS_MODEL.md | DOC-021 | ACTIVE | Post-release operations |
-| DOC-023 | P2 | 26 | Project Intake Report Template | 00_ROOT/PROJECT_INTAKE_REPORT_TEMPLATE.md | DOC-001; DOC-002 | ACTIVE | Required consistent intake report |
-| DOC-024 | P2 | 27 | Storage & Export Acceptance | 05_BUILD/05_TEST/STORAGE_AND_EXPORT_ACCEPTANCE.md | DOC-016; DOC-015 | ACTIVE | Legacy test plan; not executed |
-| DOC-025 | P2 | 28 | AI Participants & Token Usage | 05_BUILD/00_ROOT/AI_PARTICIPANTS_AND_TOKEN_USAGE.md | DOC-002 | ACTIVE | AI role roster; participation/token values require evidence |
-| DOC-034 | P2 | 27 | Biên bản Work | 00_ROOT/BIEN_BAN.md | DOC-001; DOC-006; DOC-033 | ACTIVE | Official minutes register; binding decisions link to DECISION_LOG |
-| DOC-035 | P2 | 28 | Nhật ký thi công Work | 00_ROOT/NHAT_KY_THI_CONG.md | DOC-001; DOC-002; DOC-033 | ACTIVE | Chronological Work-wide execution record |
+| DOC-018 | P2 | 20 | Migration Plan | 04_PLAN/MIGRATION_PLAN.md | DOC-012; DOC-033 | ACTIVE | Execution steps for approved migration |
+| DOC-019 | P2 | 21 | Verification Checklist | 06_VERIFY/VERIFICATION_CHECKLIST.md | DOC-015 | ACTIVE | Operational verification checklist |
+| DOC-020 | P2 | 22 | Acceptance Record | 07_ACCEPT/ACCEPTANCE_RECORD.md | DOC-015; DOC-019 | ACTIVE | Authorized acceptance decision |
+| DOC-021 | P2 | 23 | Release Plan | 08_RELEASE/RELEASE_PLAN.md | DOC-020 | ACTIVE | Controlled release preparation |
+| DOC-022 | P2 | 24 | Operations Model | 09_OPERATE/OPERATIONS_MODEL.md | DOC-021 | ACTIVE | Post-release operations |
+| DOC-023 | P2 | 25 | Project Intake Report Template | 00_ROOT/PROJECT_INTAKE_REPORT_TEMPLATE.md | DOC-001; DOC-002 | ACTIVE | Required consistent intake report |
+| DOC-024 | P2 | 26 | Storage & Export Acceptance | 05_BUILD/05_TEST/STORAGE_AND_EXPORT_ACCEPTANCE.md | DOC-016; DOC-015 | ACTIVE | Legacy test plan; not executed |
+| DOC-025 | P2 | 27 | AI Participants & Token Usage | 05_BUILD/00_ROOT/AI_PARTICIPANTS_AND_TOKEN_USAGE.md | DOC-002 | ACTIVE | AI role roster; participation/token values require evidence |
+| DOC-034 | P2 | 28 | Biên bản Work | 00_ROOT/BIEN_BAN.md | DOC-001; DOC-006; DOC-033 | ACTIVE | Official minutes register; binding decisions link to DECISION_LOG |
+| DOC-035 | P2 | 29 | Nhật ký thi công Work | 00_ROOT/NHAT_KY_THI_CONG.md | DOC-001; DOC-002; DOC-033 | ACTIVE | Chronological Work-wide execution record |
 | DOC-026 | P3 | 30 | Lifecycle Guide (Vietnamese) | 00_ROOT/LIFECYCLE_GUIDE_VI.md | DOC-004; DOC-005 | ACTIVE | Human-readable explanation of lifecycle |
 | DOC-027 | P3 | 31 | Work Standard Versioning | 00_ROOT/WORK_STANDARD_VERSIONING.md | DOC-001 | ACTIVE | Version history and compatibility |
 | DOC-028 | P3 | 32 | Vietnamese Glossary | 00_ROOT/VIETNAMESE_GLOSSARY.md | DOC-002 | ACTIVE | Terminology reference |
