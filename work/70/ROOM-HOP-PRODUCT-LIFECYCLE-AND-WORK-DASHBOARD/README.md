@@ -1,8 +1,13 @@
 # WORK 70 — ROOM-HOP WORK MASTER STANDARD
-Version: 1.1 | Date: 2026-10-30 | Status: ACTIVE / DESIGN BASELINE
+- **STT / Document ID:** DOC-037
+- **Priority:** P3
+- **Read order:** 37
+- **Depends on:** DOC-001; DOC-033; DOC-036
+- **Status:** ACTIVE
+- **Version / Updated:** 1.2 / 2026-10-30
 
 ## 1. Purpose and product boundary
-Work 70 defines the reusable product lifecycle standard, Work Package (WP — gói thi công) model, evidence/gate rules and per-Work Dashboard reference for ROOM-HOP. It is a master standard and reference product. It does not mean existing Works have been migrated or that Core integration is live.
+Work 70 defines the reusable product lifecycle standard, Work Package (WP — gói thi công) model, evidence/gate rules, documentation/storage standard and per-Work Dashboard reference for ROOM-HOP. It is a master standard and reference product. It does not mean existing Works have been migrated or that Core integration is live.
 
 ## 2. Canonical Work structure
 Every Work uses exactly these top-level directories:
@@ -32,44 +37,57 @@ WORK-<id>-<name>/
 └── DASHBOARD/
 ```
 
-The nine child directories under 05_BUILD are the approved engineering workspace layout. They are not a second product lifecycle and must not be replaced with per-WP folder trees. Preserve this exact layout for the Work 70 build branch.
+The nine child directories under 05_BUILD are fixed navigation/mapping/engineering coordination areas. They are not a second product lifecycle and do not own canonical original documents or product source code.
 
-## 3. Work Package model
-A WP is a logical, trackable delivery record, not a separate lifecycle and not a mandatory directory tree. The canonical machine-readable register is `05_BUILD/00_ROOT/BUILD_REGISTER.json`, validated by `BUILD_REGISTER.schema.json` and `WORK_PACKAGE.schema.json`; `BUILD_REGISTER.md` is its human-readable mirror. A WP references its branch, assigned build area(s), owner, independent reviewer, dependencies, acceptance criteria, tests and evidence.
+## 3. Four official Work records
+Every Work maintains three required records and one conditional design record:
+1. BIÊN BẢN — official minutes and agreement register.
+2. KẾ HOẠCH — scope, milestones, WPs, owners, dependencies and acceptance criteria.
+3. NHẬT KÝ THI CÔNG — chronological record of actual execution and handoffs.
+4. BẢN VẼ / MÔ HÌNH SẢN PHẨM — when the product requires architecture, workflows, data models, UI, technical drawings or 3D models.
 
-## 4. Evidence model
-Top-level `06_EVIDENCE` is the cross-phase evidence index for the Work. `05_BUILD/06_EVIDENCE` holds evidence produced by build activities before it is indexed at Work level. Evidence records must retain provenance, timestamp, source, integrity hash and verification state. Creating a file is not equivalent to verifying its claim.
+Canonical paths are declared in each Work Manifest and Document Register. Do not create duplicate files for the same record.
 
-## 5. Lifecycle
+## 4. Source and storage ownership
+- Work root owns official lifecycle records, approved requirements, plans, drawings/models, acceptance/release records and cross-phase evidence index.
+- Product source code and test source live in the canonical source repository/path explicitly declared by the Work Manifest.
+- Sandbox is a working/execution environment, not an independent source of truth.
+- 05_BUILD is a mapping layer: it links WPs and engineering areas to canonical source artifacts using stable IDs, repository/path, exact branch/commit/version and hashes where available.
+- Temporary copies required by tools must be labelled TEMPORARY and traceable to the source version.
+- A file's presence in 05_BUILD does not make it canonical.
+
+## 5. Work Package model
+A WP is a logical, trackable delivery record, not a separate lifecycle and not a mandatory directory tree. WP planning is owned at Work level in 04_PLAN. The 05_BUILD mapping register links each WP to engineering areas, canonical source files and evidence. Legacy Build Register files under 05_BUILD are migration candidates until reconciled; they are not a second canonical plan.
+
+## 6. Evidence model
+Top-level 06_EVIDENCE is the cross-phase evidence index for the Work. 05_BUILD/06_EVIDENCE may stage temporary build evidence before it is registered at Work level. Evidence records retain provenance, timestamp, source, integrity hash and verification state. Creating a file is not equivalent to verifying its claim.
+
+## 7. Lifecycle
 01_DISCOVER → 02_DEFINE → 03_ARCHITECT → 04_PLAN → 05_BUILD → 06_VERIFY → 07_ACCEPT → 08_RELEASE → 09_OPERATE.
 
 Each Work has exactly one current phase. A phase becomes DONE only after its exit gate is PASS. Work progress and gate readiness are separate.
 
-## 6. Authority and system boundaries
+## 8. Authority and system boundaries
 - Vinh: Product Owner and final decision authority.
 - Xu / AI-01: end-to-end lifecycle orchestration and routine decisions within approved scope.
 - Implementer: owns submitted changes and records exact paths/commits.
 - Independent QE/reviewer: verifies implementation and evidence; does not self-certify.
 - ROOM-HOP Core: intended authoritative source for identity, permissions, lifecycle state, decisions and canonical evidence metadata.
 - Dashboard: read-only projection; never mutates authoritative state.
-- Storage adapter: stores file bytes only under Core-governed metadata, authorization and retention.
 - Sandbox/local JSON: design/build artifacts or snapshots, not production truth.
 
-## 7. Status and truth rules
+## 9. Status and truth rules
 Work/phase/WP: NOT_STARTED, PLANNED, ACTIVE, BLOCKED, DONE, CANCELLED (WP may additionally use DRAFT, READY, IN_PROGRESS, IN_REVIEW).
 Gate: NOT_READY, PENDING, PASS, FAIL, WAIVED.
 Evidence: MISSING, RECORDED, VERIFIED, REJECTED.
 UNKNOWN is not PASS. Missing, stale, conflicting or unverifiable evidence blocks PASS. WAIVED requires authorized approver, rationale, scope, expiry/review and accepted risk.
 
-## 8. Standard delivery loop
+## 10. Standard delivery loop
 READ → TRACE → ANALYZE → DECIDE → ARCHITECT → PLAN → BUILD → INTEGRATE → VERIFY → DEBUG → REGRESSION → ACCEPTANCE PREPARATION → HANDOFF.
 Proceed end-to-end without routine micro-approvals. Stop only for missing authority, irreversible action, material scope/security/cost risk, required credentials/payment or an external blocker.
 
-## 9. Storage and export
-Core remains the Single Source of Truth (nguồn dữ liệu chuẩn duy nhất). Evidence artifacts are versioned and immutable; metadata includes stable ID, Work/WP scope, producer, timestamp, source, media type, size, SHA-256, classification and retention. Initial export formats are JSON, CSV and Markdown metadata/indexes. PDF/ZIP are deferred. No secrets in artifacts or exports. Storage/export design is documented under 05_BUILD/03_ARCHITECTURE and tests under 05_BUILD/05_TEST; both are design-only until integrated tests pass.
+## 11. Migration and reuse
+New Works are instantiated from this exact directory structure and current standard version. Existing Works require inventory, mapping, backup/checksum, dry run, independent review, owner approval, migration log, reconciliation, verification and rollback plan. Never bulk-migrate, renumber, overwrite or delete history silently. Work 10/15/28 remain untouched unless separately authorized.
 
-## 10. Migration and reuse
-New Works are instantiated from this exact directory structure and current standard version. Existing Works require inventory, mapping, backup/checksum, dry run, owner approval, migration log, reconciliation, verification and rollback plan. Never bulk-migrate, renumber, overwrite or delete history silently. Work 10/15/28 remain untouched unless separately authorized.
-
-## 11. Current truth boundary
+## 12. Current truth boundary
 Work 70 is ACTIVE / DESIGN BASELINE. Dashboard currently reads a local PRODUCT_STATUS.json snapshot. Core API, persistent storage, export service, independent QE, browser E2E and release are not verified. No existing Work is migrated. Do not claim CORE LIVE, RELEASED or overall PASS until evidence is attached and reviewed.
