@@ -1,7 +1,7 @@
 # IMPLEMENTATION ROADMAP — WORK 70 / VERSION 1.2
 - **STT / Document ID:** DOC-011
 - **Priority:** P1
-- **Read order:** 12
+- **Read order:** 15
 - **Depends on:** DOC-008; DOC-009; DOC-033; DOC-036
 - **Status:** ACTIVE
 - **Version / Updated:** 1.2 / 2026-10-30
