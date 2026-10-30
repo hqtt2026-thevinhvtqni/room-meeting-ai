@@ -1,4 +1,10 @@
 # WORK MANIFEST — WORK 70
+- **STT / Document ID:** DOC-001
+- **Priority:** P0
+- **Read order:** 1
+- **Depends on:** NONE
+- **Status:** ACTIVE
+- **Version / Updated:** 1.3 / 2026-10-30
 - Work ID: 70
 - Work Name: ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD
 - Product: ROOM-HOP Work Master Standard & Per-Work Dashboard
