@@ -174,7 +174,7 @@ Một bản Dashboard được tag và deploy lên staging chưa phải producti
 DOC-050 là chuẩn quy trình. Vinh giữ authority G7. Release Manager/Operations/Engineering chịu trách nhiệm execution trong phạm vi; Xu điều phối và ghi nhận, không tự phê duyệt hoặc tuyên bố production release.
 
 ## Change History
-| 1.1 | 2026-10-30 | Xu / AI-01 | Align release gate with DOC-004: G7 ACCEPT→RELEASE. |
 | Version | Date | Change |
 |---|---|---|
+| 1.1 | 2026-10-30 | Xu / AI-01 | Align release gate with DOC-004: G7 ACCEPT→RELEASE. |
 | 1.0 | 2026-10-30 | Ban hành R01–R10, release candidate, readiness, rollout, rollback, G7 and operations handoff. |
