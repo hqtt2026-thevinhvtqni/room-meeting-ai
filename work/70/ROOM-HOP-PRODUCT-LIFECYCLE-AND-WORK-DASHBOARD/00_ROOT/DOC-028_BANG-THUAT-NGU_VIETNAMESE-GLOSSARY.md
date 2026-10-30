@@ -1,0 +1,36 @@
+# GLOSSARY — THUẬT NGỮ ANH–VIỆT
+- **STT / Document ID:** DOC-028
+- **Priority:** P3
+- **Read order:** 35
+- **Depends on:** DOC-002
+- **Status:** ACTIVE
+- **Version / Updated:** 1.0 / 2026-10-30
+
+- Product lifecycle — Vòng đời sản phẩm.
+- Work Package (WP) — Gói thi công/gói bàn giao có mục tiêu và tiêu chí nghiệm thu riêng.
+- Build area — Khu vực thư mục thi công cố định bên trong 05_BUILD.
+- Gate — Cổng kiểm soát; điều kiện bắt buộc trước khi chuyển giai đoạn.
+- Entry criteria — Điều kiện đầu vào.
+- Exit criteria — Điều kiện thoát/điều kiện hoàn tất.
+- Evidence — Bằng chứng có thể kiểm tra và truy xuất.
+- Evidence Registry — Sổ đăng ký bằng chứng.
+- Source of truth — Nguồn dữ liệu chuẩn có thẩm quyền.
+- Read-only projection — Màn hình/bản chiếu chỉ đọc.
+- State machine — Máy trạng thái và quy tắc chuyển trạng thái.
+- Waiver — Ngoại lệ được người có thẩm quyền phê duyệt.
+- Reopen — Mở lại giai đoạn đã qua khi phát hiện vấn đề.
+- Migration — Chuyển đổi dữ liệu/cấu trúc.
+- Dry run — Chạy thử không ghi thay đổi thật.
+- Rollback — Quay lui về trạng thái trước thay đổi.
+- Freshness — Độ mới của dữ liệu.
+- Stale — Dữ liệu cũ, không còn bảo đảm cập nhật.
+- Traceability — Khả năng truy vết yêu cầu, công việc, kiểm thử và bằng chứng.
+- Acceptance — Nghiệm thu/chấp nhận chính thức.
+- Release — Phát hành.
+- Operate — Vận hành.
+- Storage Adapter — Bộ chuyển đổi lưu trữ file.
+- Export Service — Dịch vụ tạo file xuất có phân quyền và dấu vết.
+- SHA-256 — Mã băm dùng kiểm tra tính toàn vẹn dữ liệu.
+- Idempotency — Tính lặp an toàn; gửi lại yêu cầu không tạo tác động trùng.
+- UNKNOWN — Chưa xác định; không được hiểu là PASS.
+- BLOCKED — Bị chặn do thiếu điều kiện hoặc phụ thuộc.
