@@ -4,7 +4,7 @@
 - **Read order / Thứ tự đọc:** 52
 - **Depends on / Phụ thuộc:** DOC-001; DOC-003; DOC-004; DOC-005; DOC-011; DOC-014; DOC-015; DOC-019; DOC-033; DOC-036; DOC-041; DOC-047; DOC-048; DOC-049; DOC-050; DOC-051
 - **Status / Trạng thái:** ACTIVE — AUDIT REPORT / GATE NOT PASSED
-- **Version / Updated:** 1.1 / 2026-10-30
+- **Version / Updated:** 1.2 / 2026-10-30
 - **Author:** Xu / AI-01
 - **Authority:** Vinh — Product Owner
 
@@ -85,7 +85,7 @@ Manifest remains at 03_ARCHITECT (design baseline; exit gate not passed). The cr
 **Severity:** CRITICAL / governance consistency defect  
 Cross-checking DOC-049..051 against authoritative DOC-004 found a one-step gate offset: acceptance was labelled G7 instead of G6; release G8 instead of G7; operations entry G9 instead of G8. DOC-004 defines G6 VERIFY→ACCEPT, G7 ACCEPT→RELEASE, G8 RELEASE→OPERATE and G9 OPERATE→improvement.
 
-**Correction performed:** DOC-049, DOC-050 and DOC-051 updated to v1.1. Their gate IDs now align with DOC-004. DOC-051 explicitly distinguishes G8 entry to OPERATE from G9 periodic operational improvement review. Change histories were repaired to retain valid Markdown table structure.
+**Correction performed:** DOC-047, DOC-049, DOC-050 and DOC-051 updated to v1.1. Their gate references now align with DOC-004. DOC-047 clarifies verification result versus the G6 transition; DOC-051 distinguishes G8 entry to OPERATE from G9 periodic operational improvement review. Change-history tables were normalized.
 
 **Remaining action:** Independent reviewer must verify all gate references across DOC-004, DOC-042..051, DOC-020..022 and Dashboard data before any gate decision. This correction does not pass any gate.
 
@@ -137,5 +137,6 @@ This report is advisory and records observations/remediation. It does not approv
 
 | Version | Date | Change |
 |---|---|---|
+| 1.2 | 2026-10-30 | Extended gate-reference correction to DOC-047 and normalized change-history tables for DOC-047/049/050/051. |
 | 1.1 | 2026-10-30 | Corrected gate numbering across DOC-049..051 to match DOC-004; recorded F-052-07 and updated gate-state interpretation. |
 | 1.0 | 2026-10-30 | Initial bounded GitHub integration/governance audit; recorded WP authority gap, evidence schema v1.1 remediation, verification/Core/Sandbox blockers and gate truth. |
