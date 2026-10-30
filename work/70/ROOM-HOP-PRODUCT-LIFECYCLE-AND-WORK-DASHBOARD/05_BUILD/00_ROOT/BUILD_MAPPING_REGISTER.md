@@ -1,7 +1,7 @@
 # WORK 70 — BUILD MAPPING REGISTER
 - **STT / Document ID:** DOC-036
 - **Priority:** P1
-- **Read order:** 19
+- **Read order:** 18
 - **Depends on:** DOC-001; DOC-003; DOC-033
 - **Status:** ACTIVE / LEGACY CLASSIFICATION IN PROGRESS
 - **Version / Updated:** 1.0 / 2026-10-30
