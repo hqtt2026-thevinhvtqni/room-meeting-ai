@@ -21,7 +21,7 @@ Status: STRUCTURE & DOCUMENTATION CONSOLIDATED / PRODUCT RUNTIME NOT VERIFIED
 | Canonical 05_BUILD child directories | 9 present: 00_ROOT, 01_ORIGINAL, 02_EXTENSION, 03_ARCHITECTURE, 04_CODE, 05_TEST, 06_EVIDENCE, 07_RELEASE, 10_AI_DEBUG_HANDOFF |
 | Work 70 desktop.ini files | 0 remaining |
 | Work Package records | 6 |
-| Evidence register records | 7 |
+| Evidence register records | 8 (including this checkpoint record) |
 | Lifecycle phases in Dashboard payload | 9 |
 
 ## 3. Data contract checks
@@ -33,7 +33,7 @@ Status: STRUCTURE & DOCUMENTATION CONSOLIDATED / PRODUCT RUNTIME NOT VERIFIED
 ## 4. GitHub ↔ Sandbox synchronization
 - GitHub main: Work 70 root/lifecycle/evidence/Dashboard files.
 - GitHub branch `work/70/05-build`: only the 05_BUILD subtree.
-- Exact content readback matched for the audited main and branch files.
+- Exact content readback matched for the audited main and branch files, including this checkpoint record.
 - All nine 05_BUILD .gitkeep directory markers are present on the branch.
 - Branch has not been merged; no release or production claim is made.
 
