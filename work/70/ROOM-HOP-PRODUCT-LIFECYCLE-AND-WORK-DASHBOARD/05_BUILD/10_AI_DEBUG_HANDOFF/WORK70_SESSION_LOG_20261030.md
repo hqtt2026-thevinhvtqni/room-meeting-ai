@@ -1,4 +1,11 @@
 # WORK 70 — SESSION / CHANGE LOG
+- **STT / Document ID:** DOC-030
+- **Priority:** P3
+- **Read order:** 37
+- **Depends on:** DOC-002; DOC-033
+- **Status:** LEGACY / HISTORICAL
+- **Version / Updated:** 1.0 / 2026-10-30
+
 
 Date: 2026-10-30
 AI: AI-01 Xu — GPT-6
