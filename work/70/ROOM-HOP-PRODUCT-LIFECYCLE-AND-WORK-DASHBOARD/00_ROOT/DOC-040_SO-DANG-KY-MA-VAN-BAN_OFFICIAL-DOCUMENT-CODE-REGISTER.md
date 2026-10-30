@@ -4,7 +4,7 @@
 - **Read order / Thứ tự đọc:** 10
 - **Depends on / Phụ thuộc:** DOC-001; DOC-006; DOC-039
 - **Status / Trạng thái:** ACTIVE
-- **Version / Updated:** 1.1 / 2026-10-30
+- **Version / Updated:** 1.2 / 2026-10-30
 - **Owner / Phụ trách:** Xu / AI-01
 - **Authority / Thẩm quyền:** Vinh
 
@@ -35,5 +35,18 @@ Chưa có mã nào được phát hành theo cấu trúc mới của DOC-039. M�
 - DOC-ID và đường dẫn tồn tại trong Document Register.
 - Văn bản gốc/phụ lục liên kết đúng.
 - Trạng thái khớp bằng chứng thực tế.
+
+## 6. Kiểm tra tự động
+Mã nguồn kiểm tra sổ:
+- `06_VERIFY/validate_official_document_codes.py` — kiểm tra mã trùng, cấu trúc mã mới theo DOC-039, ngày phát hành, loại văn bản, DOC-ID có trong Document Register và bằng chứng đối với trạng thái ISSUED/EFFECTIVE.
+- `06_VERIFY/test_official_document_code_validator.py` — bộ kiểm thử các trường hợp hợp lệ, mã lịch sử, mã trùng, định dạng/ngày/số thứ tự sai, DOC-ID không tồn tại và thiếu bằng chứng phát hành.
+
+Lệnh chạy từ Work root:
+```bash
+python 06_VERIFY/validate_official_document_codes.py
+python -m unittest discover -s 06_VERIFY -p "test_official_document_code_validator.py"
+```
+
+Công cụ không tự cấp mã, không thay đổi sổ và không thay thế quyền phê duyệt của Vinh. Kết quả kiểm tra hiện tại trong môi trường phát triển: một dòng LEGACY_REFERENCE được nhận diện; không có mã mới được phát hành. Việc chạy lại trên Sandbox/PC và lưu evidence vẫn cần thực hiện trước khi đóng R-10.
 
 **English summary:** This is the single issuance ledger for Work 70 operational document codes. No code is considered issued without supporting approval/issuance evidence.
