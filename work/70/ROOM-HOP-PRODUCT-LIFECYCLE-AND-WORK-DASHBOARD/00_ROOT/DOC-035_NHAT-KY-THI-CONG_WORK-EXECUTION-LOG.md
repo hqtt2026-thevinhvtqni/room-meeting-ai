@@ -396,3 +396,10 @@ Co đề nghị dùng 00_ROOT/NHAT_KY_THI_CONG.md làm kênh bàn giao vận hà
 - DOC-006 GitHub commit `ecd321687343e8ca36a6c89485f49e1ca2969fb1`, blob SHA `a60bc4f8de1d39788ef0f16e2260790eb1fde502`; Sandbox/GitHub exact readback đã xác nhận.
 - Trạng thái: DOC-006 RESTORED D70-001..016 / D70-015 RECONCILIATION PASS / DOC-060 PROPOSAL ONLY / GATE NAMESPACE DECISION PENDING / DISPATCH & ACK NOT VERIFIED / TECHNICAL ENFORCEMENT NOT VERIFIED.
 - Người ghi: Xu / AI-01 — Work 70 Coordinator.
+
+
+## 2026-10-31 — Xu / AI-01 — Gate reference impact inventory
+- Đã lập inventory sơ bộ trong DOC-060 từ GitHub search: DOC-001, DOC-004, DOC-054, DOC-057; DOC-048; DOC-046/047; DOC-052; 06_EVIDENCE/EVIDENCE_REGISTER.md; 06_VERIFY/VERIFICATION_CHECKLIST.md; DASHBOARD/README.md; DASHBOARD/PRODUCT_STATUS.json; DOC-035 historical references.
+- DOC-060 được cập nhật trong Sandbox và GitHub main; commit `17e92b4e8f568d876e2edc3d5603c27e7f955486`, blob SHA `0f3f781007e827c9db286b125cfbcb7318bc2613`; exact readback=true, 3,913 bytes.
+- Inventory là sơ bộ, chưa thay thế full-repository scan. Không cập nhật mã gate hiện hành cho đến khi Vinh quyết định DOC-060. Không sửa dữ liệu lịch sử.
+- Người ghi: Xu / AI-01 — Work 70 Coordinator.
