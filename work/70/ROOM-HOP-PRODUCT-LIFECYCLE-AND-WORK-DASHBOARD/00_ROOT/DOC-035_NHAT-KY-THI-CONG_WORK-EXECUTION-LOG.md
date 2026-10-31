@@ -293,3 +293,14 @@ Co đề nghị dùng 00_ROOT/NHAT_KY_THI_CONG.md làm kênh bàn giao vận hà
 - Tập file được đối chiếu trong đợt này gồm DOC-038, DOC-039, DOC-040, DOC-041, DOC-055, DOC-035, validator và unit test; trạng thái các file trước đó 7/7 exact, DOC-041 + DOC-035 mới exact 2/2. Tổng parity hiện tại 9/9 file.
 - Trạng thái: GITHUB/SANDBOX PARITY 9/9 PASS / LOCAL UNIT TEST 8/8 PASS / CLI FIXTURE + PY_COMPILE PASS / CI NOT OBSERVED / QE INDEPENDENT PENDING / R-10 OPEN.
 - Người ghi: Xu / AI-01 — Work 70 Coordinator.
+
+
+
+## 2026-10-31 — Xu / AI-01 — Chốt phương thức ghi nhận và giao nhiệm vụ kiến trúc cho Ka
+- Vinh chỉ đạo: nội dung phân công phải được ghi vào nhật ký/hồ sơ chính thức; không giao nhiệm vụ qua ô chat.
+- Xu xác nhận nguyên tắc: không dùng tin nhắn chat làm kênh giao việc hoặc bằng chứng nhận việc. Kênh có thẩm quyền là lệnh phân công DOC-054 và các hồ sơ liên quan trong Work 70; nhật ký DOC-035 ghi nhận quyết định, trạng thái và bằng chứng.
+- Phạm vi kiến trúc dự kiến cho Ka / AI-02: (1) Runtime Architecture; (2) hợp đồng Lifecycle Engine, State Machine, Work, Task, Assignment, Gate và Evidence; (3) ranh giới Core, Dashboard, AI Adapter, Execution Host; (4) thiết kế DENY-to-RECOVERY; (5) luồng lỗi, phục hồi, quyền hạn, điều kiện chuyển trạng thái; (6) tiêu chí nghiệm thu và kiểm thử kiến trúc.
+- Ràng buộc: Ka chỉ nghiên cứu/thiết kế/đề xuất trong phạm vi được ghi nhận; không tự ý sửa Core, không tự công nhận PASS, không phát hành. Mọi thay đổi cần đi theo quy trình và quyền hạn đã quy định.
+- Trạng thái giao việc: APPROVED TO FORMALIZE IN DOC-054 / NOT DISPATCHED OR ACCEPTED. Chưa có bằng chứng hệ thống đã chuyển lệnh tới Ka hoặc Ka đã xác nhận nhận việc; không được hiểu việc ghi nhật ký là đã giao/đã nhận.
+- Việc tiếp theo: cập nhật DOC-054 thành lệnh phân công chính thức, bảo đảm đúng canonical path và branch; sau đó dùng cơ chế giao việc được Work 70 hỗ trợ để chuyển lệnh và thu bằng chứng ACK/nhận việc. Nếu chưa có cơ chế dispatch, ghi rõ BLOCKED kèm hướng khắc phục, không thay bằng chat.
+- Người ghi: Xu / AI-01 — Work 70 Coordinator.
