@@ -339,3 +339,25 @@ Co đề nghị dùng 00_ROOT/NHAT_KY_THI_CONG.md làm kênh bàn giao vận hà
 - Điều phối: Ka được tiếp tục đọc, phân tích và hoàn thiện bản đối chiếu kiến trúc; Vi được tiếp tục điều tra Core ở chế độ read-only; Co chỉ được tiếp tục domain-model/test-skeleton không khóa interface nếu kênh/assignment thực tế của Co đã xác nhận. Không có bằng chứng Xu đã dispatch hoặc Co/Vi ACK trong MCP hiện tại; không cấp quyền ghi/code qua nhật ký.
 - Trạng thái: DOC-005 RESTORED / GITHUB-SANDBOX EXACT MATCH / ARCHITECTURE RECONCILIATION OPEN / DISPATCH & PARTICIPANT ACK NOT VERIFIED / TECHNICAL ENTRY ENFORCEMENT NOT VERIFIED.
 - Người thực hiện: Xu / AI-01 — Work 70 Coordinator.
+
+
+## 2026-10-31 — Xu / AI-01 — Tiếp tục xử lý lỗi toàn trình Work 70
+- Phạm vi: tiếp tục sau khi khôi phục DOC-005; rà soát tính nhất quán giữa nguồn chuẩn, sổ quyết định, sổ đăng ký, phân công và điều kiện phối hợp participant.
+- DONE: DOC-005 đã phục hồi nguyên văn từ blob lịch sử SHA `5f7a6e15910186872c10a639c43ebc04498c3585`; GitHub main và Sandbox exact-content match. Commit phục hồi `031a7df75f0ccc4b69d96543764d5ee0feda5044`.
+- FINDING P0: DOC-006 canonical trong Sandbox có nội dung quyết định D70-001..D70-013 và phần quy tắc duy trì, nhưng đường dẫn DOC-006 trên GitHub main tại lần kiểm tra gần nhất vẫn trả về compatibility pointer tự tham chiếu (blob SHA `9e2ca8fb83824f1aa6f13836d786e6fdde425101`). Lịch sử GitHub xác nhận nội dung D70-001..D70-015 tồn tại trong file DECISION_LOG.md ở commit `6555a9ab0eaea1130e0e9dc12344595c0299e0a0`; bản DOC-006 Sandbox ghi rõ nguồn khôi phục D70-001..D70-013 từ commit `27ed78444bf4a7ee705b0362e3b9359fc7397b3a`. Cần đối chiếu phần D70-014..015 và đồng bộ canonical DOC-006 lên GitHub main; thao tác cập nhật vừa thử bị safety layer chặn, chưa có commit/readback mới, do đó chưa ghi DONE.
+- FINDING P1: DOC-055 canonical có metadata phiên bản mâu thuẫn (Version 2.2 nhưng dòng Register version 2.0) và hai cặp đăng ký DOC-057/DOC-058 bị lặp. Cần loại bỏ đúng các dòng trùng, giữ một bản ghi cho mỗi DOC-ID, nâng version và xác minh Sandbox/GitHub exact match. Lượt cập nhật vừa thử bị safety layer chặn; chưa có thay đổi được xác nhận.
+- FINDING P1: DOC-054 vẫn ghi ASSIGNMENT READY, chưa xác nhận AI đã nhận việc. Không có dispatch tool đã xác minh trong MCP 8030. Không coi việc ghi hồ sơ là dispatch hoặc ACK.
+- FINDING P1: DOC-017 Core Capability Gap Assessment và DOC-016 Storage & Export Architecture đang là candidate/design, chưa được migrate thành Work-level canonical architecture; không được dùng làm bằng chứng endpoint/storage đã tồn tại. Việc kiểm tra Core phải dựa trên router/service/auth/schema/test thật; Dashboard giữ read-only và tách MOCK / LOCAL SNAPSHOT / CORE LIVE.
+- FINDING P1: DOC-057 là policy ACTIVE nhưng technical enforcement NOT VERIFIED. Chưa có positive/negative tests chứng minh G0–G5 được thực thi tại write boundary.
+- Kế hoạch xử lý toàn trình, theo thứ tự và không mở rộng phạm vi:
+  1. Khóa/khôi phục DOC-006: đối chiếu lịch sử D70-001..015 với Sandbox; bảo toàn quyết định, đồng bộ đúng canonical path trên main; readback hash/exact match.
+  2. Sửa DOC-055: một DOC-ID/một row, metadata/version nhất quán, kiểm tra mọi canonical path/branch và DOC-057/058; cập nhật DOC-035.
+  3. Rà DOC-004 ↔ DOC-005 ↔ DOC-006 ↔ DOC-057 ↔ DOC-001; lập discrepancy matrix, không tự ý thay đổi quyết định cần Vinh.
+  4. Cập nhật DOC-054/DOC-044 theo đúng scope, output, source revision, permissions, expiry, acceptance và recovery; tìm kênh dispatch có bằng chứng. Nếu không có dispatch thì ghi BLOCKED cùng phương án chuyển lệnh qua hệ thống hỗ trợ, không dùng chat.
+  5. Lập Work Entry G0–G5 riêng cho Ka, Vi, Co, Qw. Trong lúc chưa PASS: Ka đọc/đối chiếu kiến trúc; Vi read-only Core audit; Co chuẩn bị domain model/test skeleton không khóa interface; Qw chuẩn bị test plan độc lập. Không cấp quyền code chỉ bằng nhật ký.
+  6. Ka hoàn thành architecture reconciliation/contract; Vi nộp capability matrix kèm đường dẫn, symbol, route, auth, test và bằng chứng không tìm thấy; Co đối chiếu domain engine với contract; Qw chuẩn bị test độc lập. Mỗi kết quả phải có AI identity/ACK hoặc artifact attribution rõ.
+  7. Sau contract được duyệt: chạy unit, contract, negative/security, race/idempotency, persistence/recovery, integration và E2E; ghi raw output, commit, môi trường và người chạy. Không PASS khi test không chạy hoặc chỉ dùng mock.
+  8. Chỉ mở GATE tiếp theo khi có evidence; sau đó mới review, accept, release. Không đổi trạng thái Work hoặc phát hành trong lượt này.
+- Recovery khi thao tác ghi bị chặn: không lặp lại cùng payload; giữ nguyên bản hiện hành, tách thao tác thành một file/lần, fetch SHA mới, thử qua action ghi file tương ứng nếu được hỗ trợ; nếu tiếp tục bị chặn, chuyển thành BLOCKED có bằng chứng và yêu cầu quyền/kênh phù hợp.
+- Trạng thái: DOC-005 RESTORED / DOC-006 GITHUB CANONICAL SYNC BLOCKED / DOC-055 DEDUPLICATION BLOCKED / CROSS-DOC RECONCILIATION OPEN / DISPATCH & ACK NOT VERIFIED / TECHNICAL G0-G5 ENFORCEMENT NOT VERIFIED / END-TO-END REMEDIATION ACTIVE.
+- Người ghi: Xu / AI-01 — Work 70 Coordinator.
