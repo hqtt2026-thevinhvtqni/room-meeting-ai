@@ -4,7 +4,7 @@
 - **Read order / Thứ tự đọc:** 8
 - **Depends on / Phụ thuộc:** DOC-001; DOC-002; DOC-003; DOC-033
 - **Status / Trạng thái:** ACTIVE
-- **Version / Updated:** 1.1 / 2026-10-31
+- **Version / Updated:** 1.2 / 2026-10-31
 - **Owner / Phụ trách:** Xu / AI-01
 - **Authority / Thẩm quyền:** Vinh
 
