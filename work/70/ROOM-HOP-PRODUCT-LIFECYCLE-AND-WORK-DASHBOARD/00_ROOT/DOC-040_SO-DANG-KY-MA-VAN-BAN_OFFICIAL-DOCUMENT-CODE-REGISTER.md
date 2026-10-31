@@ -4,7 +4,7 @@
 - **Read order / Thứ tự đọc:** 10
 - **Depends on / Phụ thuộc:** DOC-001; DOC-006; DOC-039
 - **Status / Trạng thái:** ACTIVE
-- **Version / Updated:** 1.3 / 2026-10-31
+- **Version / Updated:** 1.4 / 2026-10-31
 - **Owner / Phụ trách:** Xu / AI-01
 - **Authority / Thẩm quyền:** Vinh
 
@@ -78,6 +78,6 @@ python 06_VERIFY/validate_official_document_codes.py
 python -m unittest discover -s 06_VERIFY -p "test_official_document_code_validator.py"
 ```
 
-Công cụ không tự cấp mã, không thay đổi sổ và không thay thế quyền phê duyệt của Vinh. Xác minh cục bộ ngày 2026-10-31 trên bản validator/test cập nhật: 8/8 unit tests PASS; py_compile PASS; CLI fixture với DOC-055 canonical path + DOC-040 nhận diện đúng 1 dòng LEGACY_REFERENCE, 0 mã mới, 0 mã ISSUED/EFFECTIVE và trả exit code 0. Đây là kết quả harness cục bộ, không phải GitHub CI hoặc QE độc lập. GitHub commit chưa có workflow run/status check được trả về; chạy lại trong PC/Sandbox và lưu evidence độc lập vẫn cần thực hiện trước khi đóng R-10.
+Công cụ không tự cấp mã, không thay đổi sổ và không thay thế quyền phê duyệt của Vinh. Xác minh cục bộ ngày 2026-10-31 trên bản validator/test cập nhật, bao gồm QDY, TC, NQ, TTR, CT, PA, PH và HDONG: 8/8 unit tests PASS; py_compile PASS; CLI fixture với DOC-055 canonical path + DOC-040 nhận diện đúng 1 dòng LEGACY_REFERENCE, 0 mã mới, 0 mã ISSUED/EFFECTIVE và trả exit code 0. Đây là kết quả harness cục bộ, không phải GitHub CI hoặc QE độc lập. GitHub commit chưa có workflow run/status check được trả về; chạy lại trong PC/Sandbox và lưu evidence độc lập vẫn cần thực hiện trước khi đóng R-10.
 
 **English summary:** This is the single issuance ledger for Work 70 operational document codes. No code is considered issued without supporting approval/issuance evidence.
