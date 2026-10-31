@@ -43,8 +43,17 @@ Tên namespace là định danh máy đọc được; tên tiếng Việt tươn
 7. Đối soát Sandbox/GitHub exact readback; ghi evidence và DOC-035.
 8. Chỉ bật enforcement sau khi QE độc lập xác nhận.
 
-## 6. Ngoài phạm vi
+## 6. Kiểm kê tham chiếu sơ bộ
+Kết quả tìm kiếm GitHub main ngày 2026-10-31; đây là inventory sơ bộ, chưa thay thế full-repository scan:
+- Nguồn định nghĩa: DOC-004 (Lifecycle G0–G9), DOC-057 (Work Entry G0–G5), DOC-054 trên branch work/70/05-build (Integration G0–G4).
+- Con trỏ trạng thái: DOC-001 hiện ghi 01_DISCOVER với G0/G1 NOT_READY.
+- Hồ sơ/bằng chứng: 06_EVIDENCE/EVIDENCE_REGISTER.md có tham chiếu G0–G3; DOC-048 có mục G0 Evidence readiness; 06_VERIFY/VERIFICATION_CHECKLIST.md có G0.
+- Quy trình pha: 01_DISCOVER/PHASE_EXECUTION_PLAYBOOK.md; DOC-046 Build Process có G5 BUILD→VERIFY; DOC-047 Verify Process có G5 entry criterion; DOC-052 ghi nhận các tham chiếu G3/G4/G5 lifecycle đã được chỉnh khớp DOC-004.
+- Dashboard: DASHBOARD/README.md mô tả 9 phase/gate; DASHBOARD/PRODUCT_STATUS.json và blocker B-70-05 hiển thị trạng thái G0/G1.
+- Hồ sơ lịch sử: DOC-035 có các dòng G0–G4 cho integration trong DOC-054. Không sửa lịch sử; chỉ chuẩn hóa record mới và bổ sung alias mapping khi migration được duyệt.
+
+## 7. Ngoài phạm vi
 Không thay đổi tiêu chí gate, authority, state machine, lifecycle, policy bảo mật, quyền thực thi, release condition hoặc trạng thái hiện tại của Work.
 
-## 7. Quyết định cần có
+## 8. Quyết định cần có
 Vinh quyết định APPROVE / REJECT / REVISE. Trước khi có quyết định, tài liệu hiện hành tiếp tục có hiệu lực; các mã LC-G*, WE-G*, INT-G* chỉ là đề xuất, không được dùng để cấp quyền hoặc đánh giá PASS.
