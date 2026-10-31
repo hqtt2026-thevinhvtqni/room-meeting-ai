@@ -4,7 +4,7 @@
 - **Read order / Thứ tự đọc:** 41
 - **Depends on / Phụ thuộc:** DOC-001; DOC-003; DOC-004; DOC-005; DOC-006; DOC-033; DOC-038; DOC-039; DOC-040
 - **Status / Trạng thái:** ACTIVE — AUDIT OPEN / REMEDIATION IN PROGRESS
-- **Version / Updated:** 1.2 / 2026-10-30
+- **Version / Updated:** 1.3 / 2026-10-31
 - **Owner / Phụ trách:** Xu / AI-01
 - **Authority / Thẩm quyền:** Vinh
 
@@ -48,8 +48,14 @@ Các mục DOC-013, DOC-016, DOC-017, DOC-024, DOC-025, DOC-030 và DOC-036 thu�
 ### G-007 — Quy tắc cho register và artifact máy đọc chưa hoàn chỉnh
 - Document Register là control index nhưng hiện chưa tự có DOC-ID/metadata; cần quyết định rõ register được miễn DOC-ID hay được cấp một ID riêng.
 - Các file JSON/schema/HTML và các file branch-only cần quy tắc metadata tương đương (metadata trong schema/register/sidecar), không thể áp dụng máy móc header Markdown.
-- DOC-040 vẫn là sổ Markdown thủ công; đã bổ sung validator Python chuẩn thư viện tại `06_VERIFY/validate_official_document_codes.py` và 5 test case tại `06_VERIFY/test_official_document_code_validator.py`. Bộ kiểm tra phát hiện mã trùng, sai định dạng/ngày/loại/số, DOC-ID không tồn tại và thiếu approver/evidence với ISSUED/EFFECTIVE. Test harness đã chạy 5/5 PASS; dữ liệu DOC-040 hiện tại được kiểm tra: 1 LEGACY_REFERENCE, 0 mã mới, 0 ISSUED. Chưa có evidence chạy trực tiếp trên PC/Sandbox và chưa có JSON Schema cho sổ.
-- Trạng thái: PARTIAL — validator và unit tests đã có; vẫn cần chạy trên PC/Sandbox, lưu evidence, quyết định self-ID của Document Register và chốt metadata exception/sidecar.
+- DOC-040 vẫn là sổ Markdown thủ công; validator Python chuẩn thư viện tại `06_VERIFY/validate_official_document_codes.py` và 8 test case tại `06_VERIFY/test_official_document_code_validator.py` đã được cập nhật. DOC-039 hiện định nghĩa 22 mã loại, trong đó QD/QDY, HD/HDONG và QT/TC được tách nghĩa; validator sinh regex từ TYPE_CODES và đọc trực tiếp DOC-055 canonical path thay vì alias DOCUMENT_REGISTER.md. Unit tests cục bộ 8/8 PASS; py_compile PASS; CLI fixture nhận diện 1 LEGACY_REFERENCE, 0 mã mới, 0 ISSUED/EFFECTIVE và exit code 0. DOC-038/039/040/055, DOC-035, validator và test đã exact-content sync GitHub main ↔ Sandbox 7/7. Không có GitHub CI workflow/status check evidence; chưa chạy validator trực tiếp trên PC/Sandbox, chưa QE độc lập và chưa có JSON Schema cho sổ.
+- Trạng thái: PARTIAL — taxonomy/validator/test đã cập nhật và đồng bộ 7/7; vẫn cần chạy trên PC/Sandbox, CI/QE độc lập, lưu evidence, quyết định self-ID của Document Register và chốt metadata exception/sidecar.
+
+### R-10 progress update — 2026-10-31
+- DOC-039 mở rộng danh mục từ các mã gốc BB/BC/QD/QDY/PL/HD thành 22 mã: BB, BC, QD, QDY, NQ, TTR, PL, HD, HDONG, QT, TC, CT, PA, PH, LENH, KH, YC, TK, BM, HS, TB, CV.
+- DOC-038, DOC-039, DOC-040, DOC-055, validator, test và DOC-035 đã exact-content sync GitHub main ↔ Sandbox 7/7. Validator đọc DOC-055 canonical path, không đọc compatibility pointer DOCUMENT_REGISTER.md.
+- Local verification: 8/8 unit tests PASS; py_compile PASS; CLI fixture PASS. GitHub CI chưa có run/status evidence; direct execution trên PC/Sandbox và independent QE vẫn pending.
+- R-10 remains OPEN vì self-ID của DOC-055, JSON Schema/sidecar policy, direct runtime execution và independent verification chưa đóng.
 
 ### G-006 — Trạng thái sản phẩm chưa đủ điều kiện nghiệm thu
 Theo Manifest và Roadmap hiện tại:
@@ -74,7 +80,7 @@ Không thay đổi các trạng thái này chỉ vì chuẩn hóa tài liệu.
 | R-07 | Kiểm tra JSON/schema cho BUILD_REGISTER, EVIDENCE_REGISTER và PRODUCT_STATUS | Parser/schema validation thực thi và có evidence |
 | R-08 | Kiểm tra runtime Dashboard và Core integration | E2E trên môi trường xác định, API/auth/scope/freshness/error evidence |
 | R-09 | Independent QE và acceptance/release | Reviewer độc lập, defect disposition, Vinh phê duyệt; không tự PASS |
-| R-10 | Chốt chính sách DOC-ID cho Document Register và metadata ngoại lệ cho JSON/schema/HTML/binary | Validator Python + 5 test case đã được tạo; còn thiếu chạy trực tiếp trên PC/Sandbox, evidence, JSON Schema/sidecar policy và quyết định DOC-ID cho Document Register |
+| R-10 | Chốt chính sách DOC-ID cho Document Register và metadata ngoại lệ cho JSON/schema/HTML/binary; hoàn thiện kiểm chứng DOC-040 | DOC-039 có 22 mã loại; DOC-038/039/040/055 và validator/test đã cập nhật; 8/8 unit tests + py_compile + CLI fixture PASS trong harness cục bộ; GitHub/Sandbox exact parity 7/7. Còn thiếu chạy trực tiếp trên PC/Sandbox, GitHub CI/QE độc lập, JSON Schema/sidecar policy và quyết định DOC-ID cho Document Register |
 
 ## 5. Nguyên tắc đóng phát hiện
 - Không xóa hoặc di chuyển bản cũ trước khi có inventory, backup và kiểm tra liên kết.
