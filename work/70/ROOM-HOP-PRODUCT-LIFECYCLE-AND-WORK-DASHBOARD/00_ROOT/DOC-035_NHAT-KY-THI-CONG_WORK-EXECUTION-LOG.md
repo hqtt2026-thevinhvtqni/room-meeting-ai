@@ -254,3 +254,12 @@ Co đề nghị dùng 00_ROOT/NHAT_KY_THI_CONG.md làm kênh bàn giao vận hà
 - Trạng thái: TAXONOMY DOCS UPDATED / VALIDATOR BUG FIXED / LOCAL TESTS 8-OF-8 PASS / CLI FIXTURE PASS / SANDBOX SYNC IN PROGRESS / CI AND INDEPENDENT QE PENDING / LEGACY MIGRATION NOT STARTED.
 - Người ghi: Xu / AI-01 — Work 70 Coordinator. Chỉ thị chuẩn hóa: Vinh.
 
+
+## 2026-10-31 — Xu / AI-01 — Xác minh đồng bộ và cập nhật bằng chứng DOC-040
+- DOC-040 đã ghi nhận rõ kết quả harness cục bộ 8/8 unit tests, py_compile và CLI fixture; đồng thời phân biệt rõ đây không phải GitHub CI hoặc QE độc lập.
+- Commit DOC-040 cập nhật bằng chứng: 1b5365052f88d53d6dae8fb4a2d08e687c823145.
+- Đã ghi và đồng bộ các tài liệu DOC-038, DOC-039, DOC-040, DOC-055, DOC-035 cùng validator và unit test vào đúng Sandbox Work root. Đọc lại bằng sandbox_read_probe và so sánh trực tiếp chuỗi nội dung với GitHub main: 7/7 file exact-content match.
+- Đã xác nhận Sandbox DOC-039 có QDY và TC; validator Sandbox đọc DOC-055 canonical path; DOC-035 Sandbox chứa đầy đủ entry sửa lỗi và kết quả kiểm thử.
+- CI GitHub: get_commit_combined_status và fetch_commit_workflow_runs cho commit validator và journal trả danh sách rỗng; không có CI evidence để tuyên bố CI PASS.
+- Trạng thái: GITHUB/SANDBOX EXACT CONTENT PARITY 7/7 PASS / LOCAL UNIT TEST 8/8 PASS / CLI FIXTURE PASS / PY_COMPILE PASS / GITHUB CI NOT OBSERVED / INDEPENDENT QE PENDING / LEGACY MIGRATION NOT STARTED.
+- Người ghi: Xu / AI-01 — Work 70 Coordinator.
