@@ -4,12 +4,12 @@
 - **Read order / Thứ tự đọc:** 9
 - **Depends on / Phụ thuộc:** DOC-001; DOC-006; DOC-033; DOC-034; DOC-038
 - **Status / Trạng thái:** ACTIVE
-- **Version / Updated:** 1.0 / 2026-10-30
+- **Version / Updated:** 1.1 / 2026-10-31
 - **Owner / Phụ trách:** Xu / AI-01
 - **Authority / Thẩm quyền:** Vinh
 
 ## 1. Mục đích / Purpose
-Thiết lập hệ mã thống nhất để phân loại, cấp số, tra cứu, liên kết và lưu vết văn bản chính thức trong mọi ROOM-HOP Work. Áp dụng cho biên bản, quyết định, lệnh/chỉ thị, phụ lục và các hồ sơ nghiệp vụ liên quan.
+Thiết lập hệ mã thống nhất để phân loại, cấp số, tra cứu, liên kết và lưu vết văn bản chính thức trong mọi ROOM-HOP Work. Áp dụng cho biên bản, báo cáo, quyết định, quy định, phụ lục, hướng dẫn, quy trình, tiêu chuẩn/quy chuẩn, lệnh/chỉ thị và các hồ sơ nghiệp vụ liên quan.
 
 ## 2. Hai lớp mã bắt buộc phải phân biệt
 1. DOC-ID (DOC-NNN): định danh tài liệu trong Document Register. DOC-ID duy nhất, ổn định, không tái sử dụng; dùng quản lý vòng đời và đường dẫn tài liệu.
@@ -52,9 +52,14 @@ Trong đó:
 
 Ví dụ:
 - BB-W70-20261030-001
+- BC-W70-20261030-001
 - QD-W70-20261030-001
-- LENH-W70-20261030-001
+- QDY-W70-20261030-001
 - PL-W70-20261030-001
+- HD-W70-20261030-001
+- QT-W70-20261030-001
+- TC-W70-20261030-001
+- LENH-W70-20261030-001
 
 Mỗi tổ hợp mã loại + Work + ngày có bộ đếm riêng. Không cấp trùng, không tái sử dụng số đã cấp, kể cả khi văn bản bị hủy hoặc thu hồi. Số đã cấp phải được ghi vào sổ đăng ký văn bản.
 
