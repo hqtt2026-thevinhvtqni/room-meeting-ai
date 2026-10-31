@@ -23,6 +23,12 @@ Hai mã không thay thế nhau. Tài liệu chính thức có DOC-ID phải có 
 | BB | Biên bản | Biên bản họp, làm việc, nghiệm thu, bàn giao |
 | QD | Quyết định | Quyết định đã được người có thẩm quyền phê duyệt; không dùng cho quy định thường trực |
 | QDY | Quy định | Quy tắc, yêu cầu hoặc điều khoản có tính áp dụng ổn định trong một phạm vi; không dùng cho quyết định cá biệt |
+| NQ | Nghị quyết | Quyết nghị tập thể của tổ chức/cơ quan có thẩm quyền |
+| TTR | Tờ trình | Văn bản trình cấp có thẩm quyền xem xét, phê duyệt hoặc quyết định |
+| CT | Chương trình | Khung mục tiêu, nội dung, hoạt động và mốc triển khai theo chủ đề/kỳ |
+| PA | Phương án | Phương án lựa chọn, tổ chức hoặc xử lý một vấn đề cụ thể |
+| PH | Phiếu | Phiếu đề xuất, xác nhận, đánh giá, kiểm tra hoặc luân chuyển theo mẫu |
+| HDONG | Hợp đồng | Thỏa thuận có điều khoản, chủ thể, quyền/nghĩa vụ và hiệu lực; phân biệt với HD = Hướng dẫn |
 | LENH | Lệnh / Chỉ thị | Yêu cầu điều hành có tính bắt buộc, xác định người thực hiện và thời hạn/phạm vi |
 | PL | Phụ lục | Tài liệu bổ sung, đính kèm và dẫn chiếu văn bản gốc |
 | KH | Kế hoạch | Kế hoạch công việc, triển khai, kiểm thử, di chuyển |
@@ -37,7 +43,7 @@ Hai mã không thay thế nhau. Tài liệu chính thức có DOC-ID phải có 
 | TB | Thông báo | Thông tin chính thức, không mặc nhiên tạo quyền phê duyệt hay mệnh lệnh |
 | CV | Công văn / Trao đổi chính thức | Văn bản trao đổi chính thức với bên ngoài hoặc đơn vị khác |
 
-Không tự tạo mã viết tắt mới. Nếu loại văn bản chưa có, đề xuất mã và chỉ áp dụng sau khi Vinh phê duyệt, cập nhật quy chuẩn và danh mục mã. Mã lưu trữ và trao đổi máy phải dùng ASCII không dấu; dạng hiển thị có dấu chỉ là nhãn tiếng Việt. Vì vậy Quyết định dùng QD, Quy định dùng QDY (nhãn hiển thị QĐ, QĐY), không dùng QĐy lẫn hoa/thường trong mã máy.
+Không tự tạo mã viết tắt mới. Nếu loại văn bản chưa có, đề xuất mã và chỉ áp dụng sau khi Vinh phê duyệt, cập nhật quy chuẩn và danh mục mã. Mã lưu trữ và trao đổi máy phải dùng ASCII không dấu; dạng hiển thị có dấu chỉ là nhãn tiếng Việt. Vì vậy Quyết định dùng QD, Quy định dùng QDY (nhãn hiển thị QĐ, QĐY), không dùng QĐy lẫn hoa/thường trong mã máy. Hướng dẫn dùng HD; Hợp đồng dùng HDONG, tuyệt đối không dùng chung một mã.
 
 ## 4. Cấu trúc mã văn bản / Document code format
 Mẫu chuẩn:
@@ -55,6 +61,12 @@ Ví dụ:
 - BC-W70-20261030-001
 - QD-W70-20261030-001
 - QDY-W70-20261030-001
+- NQ-W70-20261030-001
+- TTR-W70-20261030-001
+- CT-W70-20261030-001
+- PA-W70-20261030-001
+- PH-W70-20261030-001
+- HDONG-W70-20261030-001
 - PL-W70-20261030-001
 - HD-W70-20261030-001
 - QT-W70-20261030-001
@@ -69,6 +81,12 @@ Mỗi tổ hợp mã loại + Work + ngày có bộ đếm riêng. Không cấp 
 - QT — Quy trình: mô tả cách làm theo trình tự, có bước, vai trò, đầu vào, đầu ra và điểm kiểm soát.
 - TC — Tiêu chuẩn/Quy chuẩn: mô tả tiêu chí, ngưỡng, đặc tính hoặc mức chất lượng cần đáp ứng.
 - HD — Hướng dẫn: giải thích cách thực hiện một nhiệm vụ; không được tự tạo quyền hoặc thay thế quy định/quy trình cấp trên.
+- HDONG — Hợp đồng: ghi nhận thỏa thuận và quyền/nghĩa vụ giữa các bên; không nhầm với HD.
+- NQ — Nghị quyết: thể hiện quyết nghị tập thể đúng thẩm quyền.
+- TTR — Tờ trình: đề xuất nội dung để cấp có thẩm quyền xem xét/quyết định; bản thân tờ trình không phải quyết định.
+- CT — Chương trình: tổ chức mục tiêu, hoạt động và mốc triển khai.
+- PA — Phương án: mô tả lựa chọn và cách xử lý một vấn đề.
+- PH — Phiếu: biểu ghi nhận/luân chuyển/đánh giá theo một quy trình xác định.
 - BC — Báo cáo: phản ánh tình hình/kết quả theo kỳ hoặc phạm vi, phải nêu nguồn và thời điểm chốt.
 - BB — Biên bản: ghi nhận sự kiện, trao đổi, xác nhận; không mặc nhiên là quyết định.
 
