@@ -4,10 +4,9 @@
 - **Read order:** 55
 - **Depends on:** DOC-001; DOC-038; DOC-039; DOC-040; DOC-056
 - **Status:** ACTIVE — SINGLE SOURCE OF TRUTH
-- **Version / Updated:** 2.2 / 2026-10-31
+- **Version / Updated:** 2.3 / 2026-10-31
 - **Owner:** Xu / AI-01
 - **Authority:** Vinh
-Register version: 2.0
 Owner: Xu / AI-01
 Authority: Vinh
 Rule: DOC-ID is stable identity; Priority is importance; Read order is sequence. Every controlled document has one canonical path. Legacy paths are aliases only.
@@ -82,5 +81,3 @@ When adding a document: allocate the next unused DOC ID, set priority/read order
 | DOC-057 | P0 | 57 | Quy định cổng kiểm soát đầu vào Work / Work Entry Gate Standard | 00_ROOT/DOC-057_QUY-DINH-CONG-KIEM-SOAT-DAU-VAO_WORK-ENTRY-GATE-STANDARD.md | DOC-001; DOC-002; DOC-042; DOC-043; DOC-055 | ACTIVE / TECHNICAL ENFORCEMENT NOT VERIFIED | Cổng G0–G5, bằng chứng, quyền thao tác và hướng dẫn xử lý BLOCKED |
 | DOC-058 | P1 | 58 | Báo cáo sự cố lệch đường dẫn Work 70 / Work 70 Path Drift Incident Report | 00_ROOT/DOC-058_BAO-CAO-SU-CO-LECH-DUONG-DAN_WORK-70-PATH-DRIFT-INCIDENT-REPORT.md | DOC-003; DOC-035; DOC-055; DOC-056 | INCIDENT CONFIRMED / REMEDIATION IN PROGRESS | Ghi nhận nguyên nhân, phạm vi ảnh hưởng, tác nhân đã được nhật ký xác nhận và phục hồi có kiểm soát |
 
-| DOC-057 | P0 | 57 | Quy định cổng kiểm soát đầu vào Work / Work Entry Gate Standard | 00_ROOT/DOC-057_QUY-DINH-CONG-KIEM-SOAT-DAU-VAO_WORK-ENTRY-GATE-STANDARD.md | DOC-001; DOC-002; DOC-042; DOC-043; DOC-055 | ACTIVE / TECHNICAL ENFORCEMENT NOT VERIFIED | Cổng G0–G5, bằng chứng, quyền thao tác và hướng dẫn xử lý BLOCKED |
-| DOC-058 | P1 | 58 | Báo cáo sự cố lệch đường dẫn Work 70 / Work 70 Path Drift Incident Report | 00_ROOT/DOC-058_BAO-CAO-SU-CO-LECH-DUONG-DAN_WORK-70-PATH-DRIFT-INCIDENT-REPORT.md | DOC-003; DOC-035; DOC-055; DOC-056 | INCIDENT CONFIRMED / REMEDIATION IN PROGRESS | Ghi nhận nguyên nhân, phạm vi ảnh hưởng, tác nhân được nhật ký xác nhận và phục hồi có kiểm soát |
