@@ -32,6 +32,16 @@ class ValidatorTests(unittest.TestCase):
         self.assertEqual(errors, [])
         self.assertEqual(counts["new"], 2)
 
+    def test_rejects_unknown_type_prefix(self):
+        row = "| 004 | ABC-W70-20261031-001 | DOC-034 | ABC | Unknown | 2026-10-31 | Xu | Vinh | — | DRAFT | 00_ROOT/DOC-034.md | — |"
+        errors, _ = validate(REGISTER, ledger([row]))
+        self.assertTrue(any("invalid new-code format" in e for e in errors))
+
+    def test_rejects_prefix_type_column_mismatch(self):
+        row = "| 005 | QDY-W70-20261031-001 | DOC-034 | QD | Wrong type | 2026-10-31 | Xu | Vinh | — | DRAFT | 00_ROOT/DOC-034.md | — |"
+        errors, _ = validate(REGISTER, ledger([row]))
+        self.assertTrue(any("does not match type column" in e for e in errors))
+
     def test_rejects_invalid_format_and_unknown_doc_id(self):
         row = "| 002 | BB-W70-20260230-000 | DOC-099 | BB | Minutes | 2026-02-30 | Xu | — | — | DRAFT | — | — |"
         errors, _ = validate(REGISTER, ledger([row]))
