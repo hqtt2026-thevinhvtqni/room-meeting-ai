@@ -23,14 +23,20 @@ class ValidatorTests(unittest.TestCase):
         self.assertEqual(errors, [])
         self.assertEqual(counts["issued"], 1)
 
-    def test_accepts_new_qdy_and_tc_codes(self):
+    def test_accepts_expanded_document_type_codes(self):
         rows = [
             "| 002 | QDY-W70-20261031-001 | DOC-034 | QDY | Rules | 2026-10-31 | Xu | Vinh | — | DRAFT | 00_ROOT/DOC-034.md | — |",
             "| 003 | TC-W70-20261031-001 | DOC-040 | TC | Standard | 2026-10-31 | Xu | Vinh | — | DRAFT | 00_ROOT/DOC-040.md | — |",
+            "| 004 | NQ-W70-20261031-001 | DOC-034 | NQ | Resolution | 2026-10-31 | Xu | Vinh | — | DRAFT | 00_ROOT/DOC-034.md | — |",
+            "| 005 | TTR-W70-20261031-001 | DOC-034 | TTR | Submission | 2026-10-31 | Xu | Vinh | — | DRAFT | 00_ROOT/DOC-034.md | — |",
+            "| 006 | CT-W70-20261031-001 | DOC-034 | CT | Program | 2026-10-31 | Xu | Vinh | — | DRAFT | 00_ROOT/DOC-034.md | — |",
+            "| 007 | PA-W70-20261031-001 | DOC-034 | PA | Proposal | 2026-10-31 | Xu | Vinh | — | DRAFT | 00_ROOT/DOC-034.md | — |",
+            "| 008 | PH-W70-20261031-001 | DOC-034 | PH | Form slip | 2026-10-31 | Xu | Vinh | — | DRAFT | 00_ROOT/DOC-034.md | — |",
+            "| 009 | HDONG-W70-20261031-001 | DOC-034 | HDONG | Contract | 2026-10-31 | Xu | Vinh | — | DRAFT | 00_ROOT/DOC-034.md | — |"
         ]
         errors, counts = validate(REGISTER, ledger(rows))
         self.assertEqual(errors, [])
-        self.assertEqual(counts["new"], 2)
+        self.assertEqual(counts["new"], 8)
 
     def test_rejects_unknown_type_prefix(self):
         row = "| 004 | ABC-W70-20261031-001 | DOC-034 | ABC | Unknown | 2026-10-31 | Xu | Vinh | — | DRAFT | 00_ROOT/DOC-034.md | — |"
