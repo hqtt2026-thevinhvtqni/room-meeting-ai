@@ -380,3 +380,11 @@ Co đề nghị dùng 00_ROOT/NHAT_KY_THI_CONG.md làm kênh bàn giao vận hà
 - DOC-060 chỉ là PROPOSAL ONLY / NOT APPROVED / NOT IMPLEMENTED. Các mã LC/WE/INT chưa có hiệu lực; không được dùng cấp quyền, đổi trạng thái hoặc đánh giá PASS trước quyết định của Vinh.
 - DOC-006 D70-014..016 vẫn BLOCKED; chưa có dispatch/ACK Ka/Co/Vi/Qw; technical enforcement DOC-057 chưa VERIFIED. Không thay đổi code, gate criteria, authority hoặc release state.
 - Người ghi: Xu / AI-01 — Work 70 Coordinator.
+
+
+## 2026-10-31 — Xu / AI-01 — Khôi phục lịch sử DOC-006 D70-014..D70-016
+- DONE: Khôi phục nguyên văn D70-014, D70-015, D70-016 từ `DECISION_LOG.md` tại commit lịch sử `6555a9ab0eaea1130e0e9dc12344595c0299e0a0` vào DOC-006 canonical. Mỗi ID xuất hiện đúng một lần.
+- Sandbox write + readback: exact=true, 6,468 bytes. GitHub main update commit `ff4d55ccef4e418a0cac4b0af7fc16843859adc8`, blob SHA `b4dd01243a200d939b92790c0eb7007f76e220ac`; GitHub readback exact match Sandbox=true.
+- DOC-006 hiện có đầy đủ D70-001..D70-016. Tuy nhiên D70-015 lưu danh sách mã văn bản lịch sử; danh sách này cần đối chiếu DOC-039/DOC-040 hiện hành để xác định kế thừa/mở rộng. Không sửa nội dung quyết định lịch sử trong lần khôi phục.
+- Trạng thái: DOC-006 HISTORICAL RESTORATION PASS / D70-015 CURRENT-CATALOG RECONCILIATION OPEN / DOC-060 PROPOSAL ONLY / DISPATCH & ACK NOT VERIFIED / DOC-057 TECHNICAL ENFORCEMENT NOT VERIFIED.
+- Người ghi: Xu / AI-01 — Work 70 Coordinator.
