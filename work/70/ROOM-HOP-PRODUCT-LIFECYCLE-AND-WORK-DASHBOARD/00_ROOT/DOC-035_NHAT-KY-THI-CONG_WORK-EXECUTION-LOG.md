@@ -361,3 +361,12 @@ Co đề nghị dùng 00_ROOT/NHAT_KY_THI_CONG.md làm kênh bàn giao vận hà
 - Recovery khi thao tác ghi bị chặn: không lặp lại cùng payload; giữ nguyên bản hiện hành, tách thao tác thành một file/lần, fetch SHA mới, thử qua action ghi file tương ứng nếu được hỗ trợ; nếu tiếp tục bị chặn, chuyển thành BLOCKED có bằng chứng và yêu cầu quyền/kênh phù hợp.
 - Trạng thái: DOC-005 RESTORED / DOC-006 GITHUB CANONICAL SYNC BLOCKED / DOC-055 DEDUPLICATION BLOCKED / CROSS-DOC RECONCILIATION OPEN / DISPATCH & ACK NOT VERIFIED / TECHNICAL G0-G5 ENFORCEMENT NOT VERIFIED / END-TO-END REMEDIATION ACTIVE.
 - Người ghi: Xu / AI-01 — Work 70 Coordinator.
+
+
+## 2026-10-31 — Xu / AI-01 — Kết quả xử lý tiếp DOC-006 và DOC-055
+- DONE: Khôi phục nội dung canonical DOC-006 từ Sandbox lên GitHub main. GitHub commit `2ef9fefc520750e702570ef5a57053847ebb60a0`; content SHA `00f3048df44e92ef0b656f40602a6aebad9c9d3b`. Đã readback GitHub và Sandbox: exact-content match, 5,171 bytes. Nội dung hiện tại có D70-001 đến D70-013.
+- Phát hiện bổ sung khi truy lịch sử: file DECISION_LOG.md tại commit `6555a9ab0eaea1130e0e9dc12344595c0299e0a0` còn có các quyết định D70-014, D70-015 và D70-016. Chúng chưa có trong DOC-006 hiện tại. Thao tác bổ sung ba dòng lịch sử vừa bị safety layer chặn; chưa có cập nhật/readback. Không đánh dấu DOC-006 history reconciliation DONE; giữ BLOCKED cho đến khi bảo toàn đủ D70-001..016.
+- DONE: Sửa DOC-055: xóa đúng một bản ghi trùng cho DOC-057 và DOC-058, giữ một dòng duy nhất mỗi DOC-ID; bỏ metadata phụ Register version 2.0 gây mâu thuẫn; nâng metadata canonical lên 2.3. GitHub commit `8a7383546b8503ecaf15b7bcd831025298e93594`; content SHA `b1396b9ad94eca758d454f252771bd1269b7b686`. Đã ghi cùng nội dung vào Sandbox; readback hai phía exact match, 14,655 bytes; DOC-057 rows=1, DOC-058 rows=1.
+- Trạng thái cập nhật: DOC-005 RESTORED / DOC-006 CANONICAL SYNC PASS BUT HISTORICAL RECONCILIATION BLOCKED (D70-014..016) / DOC-055 DEDUPLICATED AND EXACT MATCH / JOURNAL SYNC PASS / CROSS-DOC RECONCILIATION OPEN / DISPATCH & ACK NOT VERIFIED / TECHNICAL G0-G5 ENFORCEMENT NOT VERIFIED.
+- Next recovery: khôi phục D70-014..016 bằng thao tác ghi riêng, một file/lần, không viết lại các quyết định cũ; sau đó đối chiếu DOC-038/039/040 và DOC-003 để bảo đảm quyết định lịch sử không mâu thuẫn với tiêu chuẩn mới hơn.
+- Người ghi: Xu / AI-01 — Work 70 Coordinator.
