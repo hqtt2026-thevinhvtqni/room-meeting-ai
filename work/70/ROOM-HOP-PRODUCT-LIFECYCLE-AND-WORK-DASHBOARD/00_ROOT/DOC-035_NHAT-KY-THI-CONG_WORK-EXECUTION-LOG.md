@@ -388,3 +388,11 @@ Co đề nghị dùng 00_ROOT/NHAT_KY_THI_CONG.md làm kênh bàn giao vận hà
 - DOC-006 hiện có đầy đủ D70-001..D70-016. Tuy nhiên D70-015 lưu danh sách mã văn bản lịch sử; danh sách này cần đối chiếu DOC-039/DOC-040 hiện hành để xác định kế thừa/mở rộng. Không sửa nội dung quyết định lịch sử trong lần khôi phục.
 - Trạng thái: DOC-006 HISTORICAL RESTORATION PASS / D70-015 CURRENT-CATALOG RECONCILIATION OPEN / DOC-060 PROPOSAL ONLY / DISPATCH & ACK NOT VERIFIED / DOC-057 TECHNICAL ENFORCEMENT NOT VERIFIED.
 - Người ghi: Xu / AI-01 — Work 70 Coordinator.
+
+
+## 2026-10-31 — Xu / AI-01 — Đối chiếu D70-015 với DOC-039/DOC-040
+- READ/TRACE: DOC-039 v1.2 có danh mục chuẩn 22 mã; DOC-040 v1.4 lặp lại đủ 22 mã làm bảng tra cứu. 14 mã được nêu trong D70-015 đều còn trong danh mục; DOC-039 bổ sung/chuẩn hóa thêm QDY, NQ, TTR, CT, PA, PH, HDONG và TC.
+- Kết luận: không có xung đột nội dung bắt buộc sửa quyết định lịch sử. D70-015 được giữ nguyên; DOC-039/DOC-040 là danh mục chi tiết hiện hành. Đã cập nhật phần ghi chú khôi phục tại DOC-006, không thay đổi nội dung dòng quyết định.
+- DOC-006 GitHub commit `ecd321687343e8ca36a6c89485f49e1ca2969fb1`, blob SHA `a60bc4f8de1d39788ef0f16e2260790eb1fde502`; Sandbox/GitHub exact readback đã xác nhận.
+- Trạng thái: DOC-006 RESTORED D70-001..016 / D70-015 RECONCILIATION PASS / DOC-060 PROPOSAL ONLY / GATE NAMESPACE DECISION PENDING / DISPATCH & ACK NOT VERIFIED / TECHNICAL ENFORCEMENT NOT VERIFIED.
+- Người ghi: Xu / AI-01 — Work 70 Coordinator.
