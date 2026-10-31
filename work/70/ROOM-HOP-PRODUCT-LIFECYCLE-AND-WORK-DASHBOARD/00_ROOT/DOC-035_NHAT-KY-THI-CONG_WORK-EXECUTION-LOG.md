@@ -286,3 +286,10 @@ Co đề nghị dùng 00_ROOT/NHAT_KY_THI_CONG.md làm kênh bàn giao vận hà
 - Cập nhật DOC-041 v1.3, mục G-007/R-10: ghi nhận danh mục DOC-039 gồm 22 mã; validator/test 8/8; py_compile và CLI fixture PASS; exact-content parity 7/7; đồng thời giữ R-10 OPEN do chưa có direct PC/Sandbox execution, CI/QE độc lập, JSON Schema/sidecar policy và quyết định self-ID DOC-055.
 - GitHub main commit DOC-041: f38f6d004cc32be19c791e0f3218f6cb7fc3f59d.
 - Người ghi: Xu / AI-01 — Work 70 Coordinator.
+
+
+## 2026-10-31 — Xu / AI-01 — Xác minh cuối sau cập nhật DOC-041
+- Đã đồng bộ DOC-041 v1.3 và DOC-035 mới nhất sang Sandbox Work root; readback exact-content xác nhận cả hai file.
+- Tập file được đối chiếu trong đợt này gồm DOC-038, DOC-039, DOC-040, DOC-041, DOC-055, DOC-035, validator và unit test; trạng thái các file trước đó 7/7 exact, DOC-041 + DOC-035 mới exact 2/2. Tổng parity hiện tại 9/9 file.
+- Trạng thái: GITHUB/SANDBOX PARITY 9/9 PASS / LOCAL UNIT TEST 8/8 PASS / CLI FIXTURE + PY_COMPILE PASS / CI NOT OBSERVED / QE INDEPENDENT PENDING / R-10 OPEN.
+- Người ghi: Xu / AI-01 — Work 70 Coordinator.
