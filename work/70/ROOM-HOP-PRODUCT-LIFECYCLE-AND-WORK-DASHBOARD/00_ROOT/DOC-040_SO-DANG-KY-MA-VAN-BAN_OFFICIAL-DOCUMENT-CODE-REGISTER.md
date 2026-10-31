@@ -71,6 +71,6 @@ python 06_VERIFY/validate_official_document_codes.py
 python -m unittest discover -s 06_VERIFY -p "test_official_document_code_validator.py"
 ```
 
-Công cụ không tự cấp mã, không thay đổi sổ và không thay thế quyền phê duyệt của Vinh. Kết quả kiểm tra hiện tại trong môi trường phát triển: một dòng LEGACY_REFERENCE được nhận diện; không có mã mới được phát hành. Việc chạy lại trên Sandbox/PC và lưu evidence vẫn cần thực hiện trước khi đóng R-10.
+Công cụ không tự cấp mã, không thay đổi sổ và không thay thế quyền phê duyệt của Vinh. Xác minh cục bộ ngày 2026-10-31 trên bản validator/test cập nhật: 8/8 unit tests PASS; py_compile PASS; CLI fixture với DOC-055 canonical path + DOC-040 nhận diện đúng 1 dòng LEGACY_REFERENCE, 0 mã mới, 0 mã ISSUED/EFFECTIVE và trả exit code 0. Đây là kết quả harness cục bộ, không phải GitHub CI hoặc QE độc lập. GitHub commit chưa có workflow run/status check được trả về; chạy lại trong PC/Sandbox và lưu evidence độc lập vẫn cần thực hiện trước khi đóng R-10.
 
 **English summary:** This is the single issuance ledger for Work 70 operational document codes. No code is considered issued without supporting approval/issuance evidence.
