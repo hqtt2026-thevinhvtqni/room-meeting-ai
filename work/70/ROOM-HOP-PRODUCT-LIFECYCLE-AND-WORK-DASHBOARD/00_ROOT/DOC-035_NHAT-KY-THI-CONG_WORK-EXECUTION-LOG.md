@@ -370,3 +370,13 @@ Co đề nghị dùng 00_ROOT/NHAT_KY_THI_CONG.md làm kênh bàn giao vận hà
 - Trạng thái cập nhật: DOC-005 RESTORED / DOC-006 CANONICAL SYNC PASS BUT HISTORICAL RECONCILIATION BLOCKED (D70-014..016) / DOC-055 DEDUPLICATED AND EXACT MATCH / JOURNAL SYNC PASS / CROSS-DOC RECONCILIATION OPEN / DISPATCH & ACK NOT VERIFIED / TECHNICAL G0-G5 ENFORCEMENT NOT VERIFIED.
 - Next recovery: khôi phục D70-014..016 bằng thao tác ghi riêng, một file/lần, không viết lại các quyết định cũ; sau đó đối chiếu DOC-038/039/040 và DOC-003 để bảo đảm quyết định lịch sử không mâu thuẫn với tiêu chuẩn mới hơn.
 - Người ghi: Xu / AI-01 — Work 70 Coordinator.
+
+
+## 2026-10-31 — Xu / AI-01 — DOC-060 gate namespace proposal
+- READ/TRACE xác nhận ba bộ mã gate độc lập đang trùng G0…: DOC-004 Lifecycle G0–G9; DOC-057 Work Entry G0–G5; DOC-054 Integration G0–G4. DOC-001 hiện ghi G0/G1 NOT_READY nên cần cập nhật tham chiếu sau khi quyết định được duyệt.
+- Tạo DOC-060 đề xuất namespace: LC-G0…LC-G9; WE-G0…WE-G5; INT-G0…INT-G4. Giữ nguyên tiêu chí/authority; dữ liệu lịch sử không đổi; cấm mã gate trần trong record mới; migration có inventory, alias mapping, validator và QE regression.
+- DOC-060 được tạo trong Sandbox và GitHub main; GitHub commit `c5fb2a1fd48cb6cacdec16dd69a1ffb9aef65b0f`, blob SHA `c9ecb0381c8ae68182f28aa5493161cb5574a18f`; readback exact=true, 2,892 bytes.
+- DOC-055 đăng ký DOC-060 duy nhất một dòng; GitHub commit `012e76ec0ecca3f162d57e089fe685051713d4d5`, blob SHA `8e593ecfd969c47d6cb9f848105cf52cd09cb768`; Sandbox/GitHub exact match=true, 15,035 bytes.
+- DOC-060 chỉ là PROPOSAL ONLY / NOT APPROVED / NOT IMPLEMENTED. Các mã LC/WE/INT chưa có hiệu lực; không được dùng cấp quyền, đổi trạng thái hoặc đánh giá PASS trước quyết định của Vinh.
+- DOC-006 D70-014..016 vẫn BLOCKED; chưa có dispatch/ACK Ka/Co/Vi/Qw; technical enforcement DOC-057 chưa VERIFIED. Không thay đổi code, gate criteria, authority hoặc release state.
+- Người ghi: Xu / AI-01 — Work 70 Coordinator.
