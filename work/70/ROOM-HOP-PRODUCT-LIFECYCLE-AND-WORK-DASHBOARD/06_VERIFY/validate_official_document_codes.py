@@ -14,7 +14,7 @@ from pathlib import Path
 
 TYPE_CODES = {
     "BB", "BC", "QD", "QDY", "PL", "HD", "QT", "TC", "LENH", "KH", "YC", "TK",
-    "BM", "HS", "TB", "CV",
+    "NQ", "TTR", "CT", "PA", "PH", "HDONG", "BM", "HS", "TB", "CV",
 }
 NEW_CODE_RE = re.compile(
     rf"^({'|'.join(sorted(TYPE_CODES, key=len, reverse=True))})-W70-(\d{{8}})-(\d{{3}})$"
