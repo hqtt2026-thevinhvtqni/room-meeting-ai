@@ -4,7 +4,7 @@
 - **Read order:** 55
 - **Depends on:** DOC-001; DOC-038; DOC-039; DOC-040; DOC-056
 - **Status:** ACTIVE — SINGLE SOURCE OF TRUTH
-- **Version / Updated:** 2.1 / 2026-10-31
+- **Version / Updated:** 2.2 / 2026-10-31
 - **Owner:** Xu / AI-01
 - **Authority:** Vinh
 Register version: 2.0
@@ -22,7 +22,7 @@ Rule: DOC-ID is stable identity; Priority is importance; Read order is sequence.
 | DOC-006 | P0 | 6 | Decision Log | 00_ROOT/DOC-006_SO-QUYET-DINH_DECISION-LOG.md | DOC-001 | ACTIVE | Binding decisions and rationale |
 | DOC-033 | P0 | 7 | Work Documentation & Storage Standard | 00_ROOT/DOC-033_TIEU-CHUAN-TAI-LIEU-VA-LUU-TRU_WORK-DOCUMENTATION-AND-STORAGE-STANDARD.md | DOC-001; DOC-002; DOC-003 | ACTIVE | Four official records, canonical ownership, mapping and storage rules |
 | DOC-038 | P0 | 8 | Quy trình đặt tên tài liệu / Document Naming Standard | 00_ROOT/DOC-038_QUY-TRINH-DAT-TEN-TAI-LIEU_DOCUMENT-NAMING-STANDARD.md | DOC-001; DOC-002; DOC-003; DOC-033 | ACTIVE | Vietnamese-first bilingual naming, stable IDs, filename pattern and controlled legacy renames |
-| DOC-039 | P0 | 9 | Quy chuẩn mã loại văn bản / Document Type Code Standard | 00_ROOT/DOC-039_QUY-CHUAN-MA-LOAI-VAN-BAN_DOCUMENT-TYPE-CODE-STANDARD.md | DOC-001; DOC-006; DOC-033; DOC-034; DOC-038 | ACTIVE | Controlled prefixes include BB, BC, QD, QDY, NQ, TTR, PL, HD, HDONG, QT, TC, CT, PA, PH, LENH and other formal records; QD/QDY, HD/HDONG and QT/TC are distinct. Canonical validator reads DOC-055 directly; legacy DOCUMENT_REGISTER.md is pointer only |
+| DOC-039 | P0 | 9 | Quy chuẩn mã loại văn bản / Document Type Code Standard | 00_ROOT/DOC-039_QUY-CHUAN-MA-LOAI-VAN-BAN_DOCUMENT-TYPE-CODE-STANDARD.md | DOC-001; DOC-006; DOC-033; DOC-034; DOC-038 | ACTIVE | Controlled prefixes include BB, BC, QD, QDY, NQ, TTR, PL, HD, HDONG, QT, TC, CT, PA, PH, LENH, KH, YC, TK, BM, HS, TB and CV; QD/QDY, HD/HDONG and QT/TC are distinct. Canonical validator reads DOC-055 directly; legacy DOCUMENT_REGISTER.md is pointer only |
 | DOC-040 | P0 | 10 | Sổ đăng ký mã văn bản / Official Document Code Register | 00_ROOT/DOC-040_SO-DANG-KY-MA-VAN-BAN_OFFICIAL-DOCUMENT-CODE-REGISTER.md | DOC-001; DOC-006; DOC-039 | ACTIVE | Single issuance ledger for all operational document codes; no code issued without evidence |
 | DOC-007 | P1 | 11 | Discover Brief | 01_DISCOVER/DISCOVER_BRIEF.md | DOC-001 | ACTIVE | Problem, users, evidence and assumptions |
 | DOC-008 | P1 | 12 | Product Requirements | 02_DEFINE/PRODUCT_REQUIREMENTS.md | DOC-007 | ACTIVE | Scope, requirements and acceptance criteria |
