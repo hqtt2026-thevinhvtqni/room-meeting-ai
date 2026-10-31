@@ -280,3 +280,9 @@ Co đề nghị dùng 00_ROOT/NHAT_KY_THI_CONG.md làm kênh bàn giao vận hà
 - Bộ kiểm thử cục bộ trên bản mở rộng: 8/8 unit tests PASS; CI GitHub vẫn không có workflow run/status check trả về; QE độc lập chưa được thực hiện.
 - Trạng thái: DOCUMENT CODE STANDARDIZATION BASELINE COMPLETE / GITHUB-SANDBOX PARITY 7/7 PASS / LOCAL TESTS 8/8 PASS / CI NOT OBSERVED / INDEPENDENT QE PENDING / LEGACY FILENAME MIGRATION NOT STARTED.
 - Người ghi: Xu / AI-01 — Work 70 Coordinator.
+
+
+## 2026-10-31 — Xu / AI-01 — Cập nhật DOC-041 theo bằng chứng chuẩn mã mới
+- Cập nhật DOC-041 v1.3, mục G-007/R-10: ghi nhận danh mục DOC-039 gồm 22 mã; validator/test 8/8; py_compile và CLI fixture PASS; exact-content parity 7/7; đồng thời giữ R-10 OPEN do chưa có direct PC/Sandbox execution, CI/QE độc lập, JSON Schema/sidecar policy và quyết định self-ID DOC-055.
+- GitHub main commit DOC-041: f38f6d004cc32be19c791e0f3218f6cb7fc3f59d.
+- Người ghi: Xu / AI-01 — Work 70 Coordinator.
