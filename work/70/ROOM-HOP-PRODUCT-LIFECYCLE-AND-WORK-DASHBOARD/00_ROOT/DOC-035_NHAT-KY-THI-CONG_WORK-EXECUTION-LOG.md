@@ -263,3 +263,12 @@ Co đề nghị dùng 00_ROOT/NHAT_KY_THI_CONG.md làm kênh bàn giao vận hà
 - CI GitHub: get_commit_combined_status và fetch_commit_workflow_runs cho commit validator và journal trả danh sách rỗng; không có CI evidence để tuyên bố CI PASS.
 - Trạng thái: GITHUB/SANDBOX EXACT CONTENT PARITY 7/7 PASS / LOCAL UNIT TEST 8/8 PASS / CLI FIXTURE PASS / PY_COMPILE PASS / GITHUB CI NOT OBSERVED / INDEPENDENT QE PENDING / LEGACY MIGRATION NOT STARTED.
 - Người ghi: Xu / AI-01 — Work 70 Coordinator.
+
+## 2026-10-31 — Xu / AI-01 — Mở rộng và kiểm thử danh mục mã loại văn bản
+- Mở rộng DOC-039 theo nhu cầu dùng chung cho hồ sơ quản trị/điều hành: NQ = Nghị quyết; TTR = Tờ trình; CT = Chương trình; PA = Phương án; PH = Phiếu; HDONG = Hợp đồng. Phân biệt bắt buộc HD = Hướng dẫn với HDONG = Hợp đồng; QD/QDY và QT/TC tiếp tục tách biệt.
+- Cập nhật DOC-040 bảng tra cứu; DOC-038 danh sách mã loại dùng trong quy tắc tên file; DOC-055 mô tả danh mục và quy tắc phân biệt; cập nhật version DOC-038 v1.2, DOC-039 v1.2, DOC-040 v1.4, DOC-055 v2.2.
+- Cập nhật TYPE_CODES trong validator. Regex được sinh từ TYPE_CODES để chỉ có một nguồn danh sách prefix; không còn phải duy trì hai danh sách độc lập. Test chấp nhận QDY, TC, NQ, TTR, CT, PA, PH, HDONG và tiếp tục từ chối prefix không biết/mismatch cột Loại.
+- Kiểm thử cục bộ sau mở rộng: 8/8 unit tests PASS. CLI fixture trước đó PASS; py_compile trước đó PASS. Không có GitHub CI workflow/status evidence cho các commit này, không tuyên bố CI PASS hoặc QE độc lập.
+- GitHub main commits đợt mở rộng: DOC-039 babeb1d3d4ddd41122916f94b1fb8cac4052bc03; DOC-040 c1c005cef42b0fc42bde1c5357a80e8ff84cf860; DOC-038 922cddb64a73809fb64cae074a9d8b0031e16686; DOC-055 992f2c5db67a6270b5e16d194f1e3b5749d5323c; validator 28971140abea99831eaa1702c223c062f0afeb87; tests 5247202e445971117710691f6b9c6ecaebaa2e54. Các commit version metadata sau đó được ghi ở từng tài liệu.
+- Trạng thái: TAXONOMY EXPANDED / LOCAL TESTS 8-OF-8 PASS / GITHUB CI NOT OBSERVED / SANDBOX SYNC FOR THIS EXPANSION PENDING / LEGACY MIGRATION NOT STARTED.
+- Người ghi: Xu / AI-01 — Work 70 Coordinator.
