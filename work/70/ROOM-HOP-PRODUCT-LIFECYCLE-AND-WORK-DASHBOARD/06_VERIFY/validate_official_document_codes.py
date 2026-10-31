@@ -17,7 +17,7 @@ TYPE_CODES = {
     "BM", "HS", "TB", "CV",
 }
 NEW_CODE_RE = re.compile(
-    rf"^({'|'.join(sorted(TYPE_CODES, key=len, reverse=True))})-W70-(\d{8})-(\d{3})$"
+    rf"^({'|'.join(sorted(TYPE_CODES, key=len, reverse=True))})-W70-(\d{{8}})-(\d{{3}})$"
 )
 DOC_ID_RE = re.compile(r"^\|\s*(DOC-\d{3})\s*\|")
 
