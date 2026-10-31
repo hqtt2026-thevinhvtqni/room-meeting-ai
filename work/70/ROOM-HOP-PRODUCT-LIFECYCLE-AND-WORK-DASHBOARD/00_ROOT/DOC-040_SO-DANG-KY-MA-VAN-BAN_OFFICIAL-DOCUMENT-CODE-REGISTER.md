@@ -4,7 +4,7 @@
 - **Read order / Thứ tự đọc:** 10
 - **Depends on / Phụ thuộc:** DOC-001; DOC-006; DOC-039
 - **Status / Trạng thái:** ACTIVE
-- **Version / Updated:** 1.2 / 2026-10-30
+- **Version / Updated:** 1.3 / 2026-10-31
 - **Owner / Phụ trách:** Xu / AI-01
 - **Authority / Thẩm quyền:** Vinh
 
@@ -62,7 +62,7 @@ Mã lưu trữ dùng ASCII viết hoa, không dấu. Nhãn hiển thị có th�
 
 ## 7. Kiểm tra tự động
 Mã nguồn kiểm tra sổ:
-- `06_VERIFY/validate_official_document_codes.py` — kiểm tra mã trùng, cấu trúc mã mới theo DOC-039, ngày phát hành, loại văn bản, DOC-ID có trong Document Register và bằng chứng đối với trạng thái ISSUED/EFFECTIVE.
+- `06_VERIFY/validate_official_document_codes.py` — kiểm tra mã trùng, cấu trúc mã mới theo danh mục DOC-039, ngày phát hành, loại văn bản, DOC-ID có trong DOC-055 (đọc trực tiếp canonical path, không dùng alias DOCUMENT_REGISTER.md) và bằng chứng đối với trạng thái ISSUED/EFFECTIVE.
 - `06_VERIFY/test_official_document_code_validator.py` — bộ kiểm thử các trường hợp hợp lệ, mã lịch sử, mã trùng, định dạng/ngày/số thứ tự sai, DOC-ID không tồn tại và thiếu bằng chứng phát hành.
 
 Lệnh chạy từ Work root:
