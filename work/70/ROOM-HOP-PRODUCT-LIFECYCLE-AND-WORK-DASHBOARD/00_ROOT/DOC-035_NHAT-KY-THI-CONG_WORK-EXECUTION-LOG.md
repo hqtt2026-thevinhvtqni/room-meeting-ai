@@ -242,3 +242,15 @@ Co đề nghị dùng 00_ROOT/NHAT_KY_THI_CONG.md làm kênh bàn giao vận hà
 - Giới hạn xác minh: đã ghi code/test lên GitHub nhưng chưa chạy test trong môi trường thực thi; không tuyên bố PASS. Cần chạy toàn bộ test validator, kiểm tra cả mã hợp lệ/không hợp lệ và xác nhận regex + TYPE_CODES đồng bộ.
 - Trạng thái: VALIDATOR AND TEST UPDATED ON GITHUB / EXECUTION NOT RUN / QE PENDING / SANDBOX SYNC PENDING.
 - Người ghi: Xu / AI-01 — Work 70 Coordinator.
+
+## 2026-10-31 — Xu / AI-01 — Đồng bộ Sandbox và sửa lỗi validator mã loại
+- Đối chiếu Sandbox bằng sandbox_list + sandbox_read_probe phát hiện DOC-039 trong Sandbox vẫn là phiên bản cũ, chưa có QDY/TC; DOC-038/040/055 và validator cũng cần được đồng bộ lại theo GitHub main. Không xóa dữ liệu cũ; thực hiện ghi đè đúng canonical paths theo DOC-003.
+- Phát hiện validator dùng alias 00_ROOT/DOCUMENT_REGISTER.md làm đầu vào, trong khi alias này chỉ là compatibility pointer; sửa sang đọc trực tiếp 00_ROOT/DOC-055_SO-DANG-KY-TAI-LIEU_WORK-70-DOCUMENT-REGISTER.md.
+- Sửa nguồn danh sách prefix để regex được sinh từ TYPE_CODES, tránh danh sách prefix bị lệch; bổ sung test từ chối prefix không hợp lệ và mismatch giữa prefix với cột Loại.
+- Trong lần chạy kiểm thử đầu, phát hiện f-string regex làm mất quantifier {8} và {3}; đã sửa thành {{8}}/{{3}} trong f-string. Đây là lỗi thực tế được test bắt, không che giấu.
+- Kiểm thử Python cục bộ trên nội dung validator/test đã cập nhật: 8/8 unit tests PASS; py_compile PASS; chạy CLI với fixture canonical DOC-055 + DOC-040 có 1 legacy reference cho kết quả Records: 1; legacy references: 1; new codes: 0; issued/effective: 0 và PASS. Đây là xác minh bằng harness cục bộ, chưa phải CI trên GitHub runner hay QE độc lập.
+- GitHub main commits trong đợt: validator path/type source 1724b4cbe2686ac55d9564562114397bf5d0581f; tests 28cf8f4c9c8a714fa679fd76c789aa2908555544; regex fix 6f2665acb1f26af9a4bfa9eb83adf609f7cf14de; tài liệu DOC-038 5d9a53cc8da0e21a62df8b4a8a0d6c754a1b58db, DOC-039 922be0fedd5e83431e80415abee75c8e086b75fc, DOC-040 26cb66d7770f8b17bbbc01dd14241b2702dd648f, DOC-055 582061593979c7682b1ad0421cec1348b7d56284.
+- Phạm vi chưa làm: chưa bulk rename tài liệu lịch sử; chưa đổi DOC-ID; chưa tạo số phát hành mới; chưa chạy CI runner hoặc QE độc lập; chưa xác minh exact-content parity Sandbox cho đến khi readback.
+- Trạng thái: TAXONOMY DOCS UPDATED / VALIDATOR BUG FIXED / LOCAL TESTS 8-OF-8 PASS / CLI FIXTURE PASS / SANDBOX SYNC IN PROGRESS / CI AND INDEPENDENT QE PENDING / LEGACY MIGRATION NOT STARTED.
+- Người ghi: Xu / AI-01 — Work 70 Coordinator. Chỉ thị chuẩn hóa: Vinh.
+
