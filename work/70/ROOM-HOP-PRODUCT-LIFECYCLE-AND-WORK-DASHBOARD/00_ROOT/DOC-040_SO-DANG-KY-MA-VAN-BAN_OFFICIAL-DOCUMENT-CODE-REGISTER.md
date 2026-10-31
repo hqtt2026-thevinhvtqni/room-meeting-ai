@@ -23,6 +23,13 @@ Danh mục mã loại có thẩm quyền được duy trì tại DOC-039. Bảng
 | BC | Báo cáo | Phản ánh tình hình hoặc kết quả theo kỳ/phạm vi |
 | QD | Quyết định | Phê duyệt hoặc ấn định một vấn đề cụ thể |
 | QDY | Quy định | Quy tắc ổn định, áp dụng lặp lại trong phạm vi xác định |
+| NQ | Nghị quyết | Quyết nghị tập thể đúng thẩm quyền |
+| TTR | Tờ trình | Đề xuất cấp có thẩm quyền xem xét/quyết định |
+| CT | Chương trình | Khung hoạt động và mốc triển khai |
+| PA | Phương án | Cách lựa chọn/xử lý vấn đề |
+| PH | Phiếu | Phiếu đề xuất, xác nhận, đánh giá hoặc luân chuyển |
+| HDONG | Hợp đồng | Thỏa thuận quyền/nghĩa vụ giữa các bên; khác HD |
+
 | PL | Phụ lục | Tài liệu gắn với văn bản gốc |
 | HD | Hướng dẫn | Cách thực hiện; không thay thế quy định/quy trình |
 | QT | Quy trình | Trình tự, bước, vai trò, đầu vào/đầu ra |
