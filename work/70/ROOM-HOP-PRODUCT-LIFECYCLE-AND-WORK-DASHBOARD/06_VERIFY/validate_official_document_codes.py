@@ -17,7 +17,7 @@ TYPE_CODES = {
     "BM", "HS", "TB", "CV",
 }
 NEW_CODE_RE = re.compile(
-    r"^(BB|BC|QD|QDY|PL|HD|QT|TC|LENH|KH|YC|TK|BM|HS|TB|CV)-W70-(\d{8})-(\d{3})$"
+    rf"^({'|'.join(sorted(TYPE_CODES, key=len, reverse=True))})-W70-(\d{8})-(\d{3})$"
 )
 DOC_ID_RE = re.compile(r"^\|\s*(DOC-\d{3})\s*\|")
 
@@ -102,7 +102,7 @@ def main() -> int:
     parser.add_argument("--work-root", type=Path,
                         default=Path(__file__).resolve().parents[1])
     args = parser.parse_args()
-    register_path = args.work_root / "00_ROOT" / "DOCUMENT_REGISTER.md"
+    register_path = args.work_root / "00_ROOT" / "DOC-055_SO-DANG-KY-TAI-LIEU_WORK-70-DOCUMENT-REGISTER.md"
     code_path = args.work_root / "00_ROOT" / "DOC-040_SO-DANG-KY-MA-VAN-BAN_OFFICIAL-DOCUMENT-CODE-REGISTER.md"
 
     try:
