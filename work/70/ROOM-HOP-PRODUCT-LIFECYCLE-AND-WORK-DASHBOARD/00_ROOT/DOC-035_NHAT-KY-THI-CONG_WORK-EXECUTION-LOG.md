@@ -823,3 +823,21 @@ HTTP Adapter → MeetingService → MeetingManager (Meeting domain only).
 - DOC-061 correction synchronized to GitHub branch work/70/05-build: commit 3869ce66ab6af304e95d584d57ec71dddf08514b, blob a54dc2202e56cfb9737395fd523a5488ab35b0f3; fetched GitHub content matched Sandbox text exactly (PASS).
 - DOC-035 correction synchronized to GitHub main: commit f518c76d08f184f3e5c1af5eab4a4f8877a4a2bf, blob 23a3d92b1377596afa7e415bd834ce00dbbbe276; fetched GitHub content matched Sandbox text exactly (PASS). This follow-up entry will be synced in the next journal commit.
 - No code, process, firewall, service, runtime, permission, Gate or release state changed.
+
+
+## 2026-11-02 06:53 +07:00 — Xu / AI-01 — DOC-068 roadmap reconciliation
+
+- **Phạm vi:** Work 70 roadmap, single delivery mandate, Hybrid AI Dispatch, independent QE.
+- **Đã đọc trực tiếp từ Sandbox:** DOC-011, DOC-062, DOC-064, DOC-065, DOC-066, DOC-067 và WORK70_SINGLE_DELIVERY_MANDATE.md. Readback trả status=ok; nội dung đã được đối chiếu.
+- **Kết luận:** DOC-011 là roadmap hiện hành 6 WP; DOC-062 là đề xuất giữ 6 WP và G4 NOT READY; mandate 8 package là proposed delivery baseline; DOC-064/065 là proposal; DOC-066 implementation NOT AUTHORIZED/tests NOT RUN; DOC-067 Qw ACK, preparation complete, execution blocked, QA-01..QA-08 NOT RUN.
+- **Tạo DOC-068:** đề xuất giữ 6 WP ID hiện hành và ánh xạ 8 sub-deliverables SD-01..SD-08 vào 6 WP cha. DOC-068 ghi rõ cần Product Owner decision trước khi cập nhật DOC-011/DOC-006/DOC-055.
+- **Kết quả:** sandbox_create status=ok; sandbox_read_probe readback status=ok, size_bytes=8709; xác minh có phương án giữ 6 WP, quyết định D-068-01 và G4/BUILD NOT READY.
+- **Không thực hiện:** không sửa DOC-011, DOC-006, DOC-055, Manifest, Gate, assignment, source code hoặc GitHub; không mở BUILD; không dispatch AI mới; không sử dụng MCP 8020.
+- **Trạng thái:** SOURCE RECONCILIATION COMPLETE / DOC-068 CREATED AND READBACK VERIFIED / PRODUCT OWNER DECISION PENDING / G4 NOT READY / IMPLEMENTATION NOT AUTHORIZED.
+
+## 2026-11-02 06:54 +07:00 — Xu / AI-01 — Core route source trace and DOC-068 registration
+- GitHub main HEAD at start of source trace: bb700982f5e01f6eda0d258c2af1f1b3351e8867.
+- Read `room_hop_mcp/adapter/http_server.py`, blob 54cb3ecbce2e6b13083f31c14f0c1f0738f1457d. Router exposes identity and Meeting routes; no Work-scoped Work/WP/Assignment/Evidence routes appear in this router. Scope-limited finding; other routers/services still need inspection.
+- DOC-068 amended with exact source revision and route inventory; DOC-055 appended with DOC-068 row. Sandbox append operations returned status=ok.
+- WP-70-04 / SD-05 remains BLOCKED pending full Core route/service/owner discovery. No guessed endpoints used.
+- No code, gate, permission, assignment, or GitHub file changed in this action.
