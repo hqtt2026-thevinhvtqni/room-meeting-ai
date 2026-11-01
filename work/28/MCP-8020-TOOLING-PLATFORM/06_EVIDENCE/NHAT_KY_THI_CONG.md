@@ -677,113 +677,651 @@ Issued detailed order `06_EVIDENCE/KA_NU_SANDBOX_FIRST_SOURCE_TRANSFER_ORDER_202
 - Sau lần đồng bộ nhật ký, commit mới nhất có workflow run riêng đang chạy; tiếp tục kiểm tra run mới nhất trước khi kết luận trạng thái CI hiện tại.
 
 
-## 2026-10-16 — Xu ghi nhận blocker mới và giao Co tiếp tục E2E-Automatic
-
-- SOURCE: Báo cáo Co được cung cấp trong phiên làm việc ngày 2026-10-16; báo cáo nói đã xác nhận cấu trúc Sandbox, file blocker xuất hiện sau readback, nhưng chưa đọc được source đầy đủ và chưa có capability chạy pytest/runtime hoặc kiểm tra live MCP registry.
-- DONE (phạm vi báo cáo): Xác nhận cấu trúc Work 27/28; ghi hồ sơ `CO_AUTOMATIC_E2E_CONTINUATION_BLOCKER_20261016.md` trong Sandbox theo báo cáo Co. Xu chưa đọc trực tiếp được file này qua GitHub branch tại thời điểm cập nhật; không coi đây là xác minh độc lập nội dung file.
-- BLOCKED: RUN pytest/runtime; VERIFY kết quả thực thi/readback sau thao tác; FIX/RETEST dựa trên kết quả thật; live MCP :8020 `tools/list`; E2E Runtime/Sandbox/GitHub. Chưa có exit code, test inventory thực thi mới hoặc log runtime mới.
-- DECISION: Không tạo thêm kế hoạch thay cho sản phẩm. Co phải truy tìm và thử đúng capability thực sự có trong Sandbox, ghi tên/schema/request/response hoặc lỗi nguyên văn; không suy diễn năng lực từ việc liệt kê file.
-- ORDER TO CO: Nếu có approved runner thì tạo/chạy E2E runner giới hạn Work 28, allowlist test commands và thu stdout/stderr/exit code/test inventory/revision/log SHA-256/readback; tự sửa và retest trong phạm vi. Nếu không có runner/capability, không mô phỏng PASS; hoàn thiện code/test độc lập có thể xác minh, rồi ghi bằng chứng tái hiện blocker cụ thể.
-- SECURITY/SCOPE: Không sửa Work 13; không truy cập/sửa PC hoặc restart live services; không đổi live MCP registry; không dùng identity/authorization do caller tự khai; không thêm unrestricted shell/Python; không commit/push trừ khi đường thao tác và quyền được xác minh.
-- EVIDENCE CONTRACT: DONE = artifact được tạo và đọc lại; PASS = chạy thật có kết quả; BLOCKED = capability/quyền thiếu được chỉ rõ kèm lỗi/bằng chứng. Persistence/readback không phải test PASS.
-- STATUS: Work 28 ACTIVE / NOT RELEASED; no merge to main. E2E remains BLOCKED; release NO-GO.
-- LINKED EXECUTION ORDER: GitHub Issue #12 comment https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/issues/12#issuecomment-6208681664
-- Xu ghi nhận: bình luận chỉ đạo đã được GitHub xác nhận tạo với comment id 6208681664; điều đó không chứng minh Co đã nhận inbox hoặc thực thi tiếp.
+## 2026-10-15 23:32 +07 — Cla security review update recorded
+- Persisted Cla's supplied review as `06_EVIDENCE/CLA_SECURITY_REVIEW_UPDATE_20261015_2332.md`.
+- MAIN SOURCE contents and live :8020 initialize/tools/list remain unverified. The current 18-tool connector surface is not proof of live endpoint state.
+- Security gate remains BLOCKED; no identity-spoofing tests against live services. Proposed Sandbox tests remain NOT RUN pending source review and approved isolated runner.
+- Recording-vs-Authority contradiction unresolved. Work 28 ACTIVE / NOT LOCKED; F1–F4 BLOCKED; Release NO-GO.
+- This entry records supplied review content; it does not claim source access, test execution, or live-service validation.
 
 
-## 2026-10-16 ~13:27 ICT — Co reports live MCP :8020 and Sandbox readback; E2E still pending
+## 2026-10-15 — Ka continued execution: Recording-vs-Authority decision proposal
+- Read back the Work 28 source-snapshot intake contract, PC-to-Work28 source gate, status reconciliation, existing Cla proposed red tests, test plan, tool-gap decision, and current `tool_contracts.py` from Sandbox.
+- Recorded `06_EVIDENCE/KA_RECORDING_VS_AUTHORITY_DECISION_PROPOSAL_20261015.md` based on the explicit policy distinction in `get_room_context`: add_paste is non-authoritative recording; lifecycle/control operations are authority operations. Work 01's static `meeting:write` mapping is treated as a conflict to reconcile, not as authority to override context.
+- Proposal requires Vinh/Xu written confirmation and does not close F3a/F3b. No implementation or live behavior is claimed.
+- Source snapshot remains not imported; PC collector/live service changes remain unauthorized; tests not run; Work 28 ACTIVE / NOT LOCKED; Release NO-GO.
 
-- REPORTED BY CO: HTTPS to MCP :8020 returned HTTP 200; `tools/list` returned tool names; Sandbox write/readback matched the probe content.
-- REPORTED GAP: The observed tool list did not include `runtime_run_tests` or `github_read_file`; full E2E has not been accepted.
-- Xu verification boundary: attempted GitHub readback of the reported file `MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/WORK28_MCP_LIVE_READBACK_EVIDENCE_20261016.md` at branch `work/28-mcp-tooling-platform`; connector returned NOT_FOUND for that repository path/ref. This does not establish whether the file exists in Sandbox; the reported evidence is not independently verified here.
-- DONE: Recorded the report and precise verification boundary in `06_EVIDENCE/CO_STATUS_UPDATE_LIVE_MCP_READBACK_20261016_1327ICT.md`.
-- ORDER TO CO: Persist exact `tools/list` and readback evidence to the canonical Work 28 evidence path; then finish actual tool integration and authorized E2E. Capture endpoint identity, timestamp, tool names, request/response, command, exit code, stdout/stderr, test inventory, revision, log/hash and readback.
-- SECURITY: Existing MCP/Core/runtime only; Core remains authorization authority. No duplicate service, no bypass, no arbitrary shell/Python, no Work 13/PC/live registry modifications without explicit authority.
-- STATUS: MCP HTTP 200 and Sandbox readback are Co-reported observations; Xu has not independently reproduced them in this entry. Full E2E BLOCKED / NOT PROVEN; Work 28 ACTIVE / NOT RELEASED; no merge to main.
+## 2026-10-15 — Ka static review WP6 runner from GitHub branch
+- Reviewed fetched branch files: runner SHA `fe7ae49136a4b59dd4b1ebcb89bdc8f1199718a8`, tests SHA `7cf5e03f826df70230a937391a81d87b304b1bc8`, Test Plan SHA `224790586eddde11f47858634e77d7c03d2696ce`.
+- Report: `06_EVIDENCE/KA_WP6_RUNNER_STATIC_REVIEW_20261015.md`.
+- Static findings: persisted readback metadata is stale (high); parser can accept incomplete output as PASS (high); evidence path containment is lexical and does not stop symlink/junction escape (high); stdout/stderr capture is unbounded and unredacted (medium); arbitrary --root allows executing tests from another directory (medium); current tests are pure-logic and do not exercise actual runner/evidence failures (medium).
+- Status: STATIC REVIEW ONLY; tests NOT RUN; no PC/live service accessed. WP6 runner not approved for PC execution; G3 remains BLOCKED; Work 28 release remains NO-GO.
 
-
-## 2026-10-16 20:07 ICT — Vinh thống nhất không thi công qua chat; Work 28 là nơi làm việc chuẩn
-
-- **DECISION BY:** Vinh — Work Owner / Decision Authority.
-- **RECORDED / COORDINATED BY:** Xu — Planner / Chief Strategy Architect (CSA).
-- **BUILD OWNER:** Co — Builder, Work 28.
-- **INDEPENDENT REVIEW:** Ka — Chief Strategy Architect (CSA), reviewer độc lập.
-- **SCOPE:** Chỉ Work 28; branch `work/28-mcp-tooling-platform`.
-- **DECISION:** Không thi công, sửa mã, kiểm thử hoặc điều phối từng bước qua chat. Mọi triển khai, quyết định, kết quả, blocker và bàn giao phải được ghi tại repository/Work 28 bằng biên bản + nhật ký. Mỗi mục phải có tên/mã, chức danh/vai trò, thời gian ICT, hành động, kết quả, evidence link và trạng thái DONE/PASS/DECISION/BLOCKED.
-- **DONE:** Xu tạo biên bản `06_EVIDENCE/BIEN_BAN_THONG_NHAT_KHONG_THI_CONG_QUA_CHAT_20261016_2007ICT.md` và ghi rõ phân công Xu/Co/Ka, ranh giới an toàn, điều kiện nghiệm thu và yêu cầu không giả lập PASS.
-- **VERIFY:** Cần đọc lại biên bản sau khi commit để xác nhận nội dung đã được lưu; kết quả commit đơn lẻ chỉ xác nhận GitHub chấp nhận thay đổi, không xác nhận runtime.
-- **NEXT — XU:** Đọc/truy vết code, tests, issues và evidence trong Work 28; triển khai các thay đổi có căn cứ và quyền; kiểm tra/readback; ghi kết quả vào Work 28.
-- **NEXT — CO:** Ghi snapshot nguyên văn MCP `tools/list` và readback evidence vào đường dẫn chuẩn; tiếp tục tool integration và E2E thật nếu có runner được phê duyệt; ghi command, exit code, stdout/stderr, test count, revision, log/hash và readback.
-- **NEXT — KA:** Rà soát độc lập bằng bằng chứng trong Work 28, ghi PASS/FAIL/BLOCKED cùng lý do.
-- **SECURITY:** Giữ AI → MCP :8020 → Core :8000 → capability/runtime được cấp quyền; không bypass Core, không shell/Python tùy ý, không sửa Work 13/PC/live services/registry nếu chưa được cấp quyền.
-- **STATUS:** Work 28 ACTIVE / NOT RELEASED; full E2E BLOCKED / NOT PROVEN; no merge to `main`.
-- **BIÊN BẢN:** https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/blob/work/28-mcp-tooling-platform/work/28/MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/BIEN_BAN_THONG_NHAT_KHONG_THI_CONG_QUA_CHAT_20261016_2007ICT.md
+## 2026-10-15 — Continuous execution: PC test card prepared
+- Created `06_EVIDENCE/KA_PC_TEST_EXECUTION_CARD_20261015.md`.
+- The card provides PowerShell commands to verify repo/branch/HEAD and run the canonical unittest discovery command directly, capturing stdout/stderr, exit code, test summary and SHA-256 in a TEMP folder.
+- This intentionally avoids invoking the statically unapproved WP6 runner and does not edit/commit/push source or touch live MCP/Core services.
+- Execution status: commands NOT RUN by Ka; waiting only for the PC evidence artifact to evaluate the runtime-dependent gate. No PASS claimed.
 
 
-## 2026-10-16 20:08 ICT — Xu source audit và truy vết integration Work 28
+## KA — PC UNIT TEST RESULT — 2026-10-15
 
-- **AUDITOR:** Xu — Planner / Chief Strategy Architect (CSA), điều phối và nghiệm thu Work 28.
-- **DECISION AUTHORITY:** Vinh — Work Owner / Decision Authority.
-- **BUILD OWNER:** Co — Builder, Work 28.
-- **INDEPENDENT REVIEWER:** Ka — Chief Strategy Architect (CSA).
-- **DONE:** Đọc lại `runtime_tools_v1.py`, `sandbox_tools_v1.py`, `github_tools_v1.py`, `mcp_tool_registration_v1.py`, test registration và workflow Work 28 trực tiếp từ branch GitHub.
-- **FINDING:** Helper có định nghĩa 13 tool, nhưng source đã đọc chưa chứng minh helper được gọi trong startup MCP :8020 hiện hữu; chưa chứng minh live `tools/list` có đủ 13 tool. Unit test dùng FakeMCP không phải bằng chứng live registration.
-- **BLOCKED:** Co từng báo `runtime_run_tests` và `github_read_file` không xuất hiện trong live tool list. Chưa có raw live `tools/list`, E2E runtime, hay test result mới được Xu tái xác minh trong audit này.
-- **SAFETY DECISION:** Xu không tự đoán entrypoint/provider wiring để nối mã mù; cần truy vết startup thật và trusted provider/Core routes trước khi sửa integration để không bypass Core hoặc tạo runtime/server trùng.
-- **AUDIT EVIDENCE:** `06_EVIDENCE/XU_SOURCE_AUDIT_20261016_2008ICT.md`.
-- **HANDOFF:** Co truy đúng startup/provider binding và triển khai vào MCP hiện hữu trong phạm vi được phép; Ka rà soát độc lập; Xu nghiệm thu theo log/readback thực tế.
-- **DONE:** Biên bản không thi công qua chat và nhật ký được ghi trên branch Work 28. Readback của journal/biên bản đã xác minh ở bước trước; tiếp tục readback audit và các issue comments.
-- **STATUS:** Work 28 ACTIVE / NOT RELEASED; live registration/full E2E BLOCKED / NOT PROVEN; no merge to `main`.
-
-
-## 2026-10-16 20:12 ICT — Vinh chuyển Work 28 sang team Xu Plan → Vi Coder → An Tester → Ka Review
-
-- **DECISION AUTHORITY:** Vinh — Work Owner / Decision Authority.
-- **RECORDED / COORDINATED BY:** Xu — Plan / Planner, Chief Strategy Architect (CSA).
-- **CODER:** Vi — Coder / Implementer.
-- **TESTER:** An — Tester / Verification.
-- **REVIEWER:** Ka — Review / Independent Reviewer.
-- **DECISION:** Team Co Builder cũ không còn là phân công thi công hiện hành cho Work 28. Phụ lục biên bản là nguồn phân công mới nhất; phần Co trong lịch sử được giữ để bảo toàn lịch sử, không còn là chủ sở hữu lane thi công hiện tại.
-- **Xu — PLAN:** đọc/truy vết hiện trạng, dependency, kiến trúc và acceptance gates; ghi kế hoạch thực thi trong Work 28; điều phối, kiểm tra readback và nghiệm thu.
-- **Vi — CODER:** thực hiện code/integration trong branch `work/28-mcp-tooling-platform`, theo kế hoạch và ranh giới an toàn.
-- **An — TESTER:** chạy test được cấp phép và ghi bằng chứng tái lập; không chạy được thì ghi BLOCKED với lỗi cụ thể.
-- **Ka — REVIEW:** review độc lập artifact, test result, security boundary và E2E; ghi finding/decision bằng bằng chứng.
-- **DONE:** Cập nhật phụ lục đính chính phân công trong biên bản; link: `work/28/MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/BIEN_BAN_THONG_NHAT_KHONG_THI_CONG_QUA_CHAT_20261016_2007ICT.md`.
-- **NEXT:** cập nhật các issue Work 28 theo đúng lane mới; không chuyển trạng thái E2E thành PASS khi chưa có log/readback thật.
-- **STATUS:** Work 28 ACTIVE / NOT RELEASED; live registration/full E2E BLOCKED / NOT PROVEN; no merge to `main`.
+- Work: 28 / MCP-8020-TOOLING-PLATFORM.
+- Execution location reported by Vinh: `D:\ROOM-HOP-CLEAN\room-meeting-ai\.ai-workspace\sessions\AI-BUILD-GATEWAY-V1\workspace\28\MCP-8020-TOOLING-PLATFORM`.
+- Command reported: `python -B -m unittest discover -s 05_TEST -t . -v`.
+- Result observed in supplied terminal output: `Ran 56 tests in 0.053s`, `OK`; `$Code` displayed `0`.
+- Evidence directory: `C:\Users\Admin\AppData\Local\Temp\W28_UNIT_RETRY_20261015_235416`.
+- Reported repository HEAD: `d7c90d9d31062d389810808e43dfdd19d7711b75`.
+- Log SHA-256 values reported:
+  - `stdout.txt`: `E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855` (empty stdout; verbose unittest output was in stderr).
+  - `stderr.txt`: `1A47D0B6883514E16894383578B74A9A734058C23C2D3B970BE6B7860F695060`.
+  - `metadata.txt`: `50B75804B2BA8C9C3B0D77427DD91433057DCC31C99CF5A213E61BC74536A6EA`.
+- Evidence qualification: the terminal paste shows an incomplete `try/finally` block and does not expose the full metadata contents; therefore this is recorded as **reported unit-test PASS (56 tests, exit 0)**, not independently reproduced or a fully validated execution attestation.
+- Scope: this does NOT close Work 28. Live PC MCP `tools/list`, authenticated caller identity/Core authorization, W24 PC bridge transport, runtime security tests, WP6 runner remediation/approved runner execution, and E2E remain UNVERIFIED/BLOCKED until separate evidence is supplied.
+- No source edits, branch changes, reset/stash, commit/push, or live MCP service calls were performed by Ka during this review.
 
 
-## 2026-10-16 20:13 ICT — Xu phát hành execution plan cho team mới
+## 2026-10-16 — Co triển khai P0 read-only capability contract slice
 
-- **PLAN OWNER:** Xu — Plan / Planner, Chief Strategy Architect (CSA).
-- **DECISION AUTHORITY:** Vinh — Work Owner / Decision Authority.
-- **CODER:** Vi — Coder / Implementer.
-- **TESTER:** An — Tester / Verification.
-- **REVIEWER:** Ka — Review / Independent Reviewer.
-- **DONE:** Tạo `06_EVIDENCE/XU_PLAN_TEAM_EXECUTION_20261016_2013ICT.md` với source-trace baseline, thứ tự handoff, lane cụ thể, acceptance gates G1–G9 và blocker hiện hành.
-- **DONE:** Cập nhật issue titles/body cho Xu (#14), Vi (#12), Ka (#13); tạo issue riêng cho An Tester (#15); thêm role-transition comment vào cả bốn issue.
-- **VERIFY:** Cần readback plan, minute, journal và kiểm tra issue titles/comments trước khi coi việc đồng bộ hồ sơ đã xác minh.
-- **NEXT:** Vi truy đúng startup/provider wiring và thi công integration có căn cứ; An test theo commit; Ka review evidence; Xu nghiệm thu.
-- **STATUS:** Work 28 ACTIVE / NOT RELEASED; live registration/full E2E BLOCKED / NOT PROVEN. Không merge `main`.
-- **PLAN:** https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/blob/work/28-mcp-tooling-platform/work/28/MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/XU_PLAN_TEAM_EXECUTION_20261016_2013ICT.md
-- **ISSUES:** Xu #14 https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/issues/14 ; Vi #12 https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/issues/12 ; An #15 https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/issues/15 ; Ka #13 https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/issues/13
-
-
-- **2026-10-16 20:13 ICT — HANDOFF:** Xu ghi hướng dẫn thi công cụ thể cho Vi trong Issue #12 comment 6216962851; trọng tâm là truy đúng MCP :8020 startup/provider wiring trước khi sửa, sau đó mới tích hợp và bàn giao cho An.
-- **ISSUE ROUTING VERIFIED:** #12 Vi Coder; #13 Ka Review; #14 Xu Plan/acceptance; #15 An Tester. Phân công mới được ghi trong biên bản, journal và issue descriptions/comments.
+- DONE: Đọc lại `TOOL_GAP_DECISION_20261015.md`, contract hiện tại `04_CODE/tool_contracts.py`, test hiện tại và các quyết định liên quan. P0 đang nhắm tới search, stat, range-read và capability discovery; canonical Core/PC source vẫn chưa được nhập và xác minh.
+- DONE: Tạo `04_CODE/p0_readonly_capability_contract.py` trong Work 28 Sandbox. Đây là contract scaffold cho bốn capability read-only, có giới hạn query/bytes/results, scope check và request validation.
+- HARDENING: Path validation tái sử dụng `04_CODE.tool_contracts.validate_relative_work_path`, không tạo một policy path song song.
+- DONE: Tạo `05_TEST/test_p0_readonly_capability_contract.py` gồm 5 test methods cho permission/query, traversal/path, offset, resource caps và capability discovery arguments.
+- DONE: Ghi báo cáo `06_EVIDENCE/CO_P0_READONLY_CAPABILITY_CONTRACT_SLICE_20261016.md`.
+- DONE: Đọc lại hai file source/test và báo cáo sau khi ghi qua MCP Sandbox; persistence/readback verified.
+- NOT RUN: Không có approved Python runner trong connector; chưa chạy test. Không có exit code, stdout/stderr, test count thực tế hoặc SHA-256; không tuyên bố PASS.
+- NOT IMPLEMENTED: Chưa có tool adapter, Core route, live MCP registration, filesystem search/stat/range-read hoặc live capability discovery. Contract scope không xác thực principal và không thay Core authorization.
+- BLOCKED: Canonical PC/Core source snapshot chưa nhập/xác minh; chưa đối chiếu được với live PC MCP registry; chưa có MCP → Core → runtime E2E evidence.
+- DECISION: Tiếp tục Sandbox-only. Không truy cập/sửa PC, không restart service, không sửa live registry, không chạy collector, không transfer/import source.
+- STATUS: Artifact write/readback DONE; contract scaffold WRITTEN / REVIEW PENDING; tests NOT RUN; live registration UNVERIFIED; E2E BLOCKED; Work 28 ACTIVE / NOT LOCKED; RELEASE NO-GO.
+- NEXT: Khi có approved runner và canonical source snapshot, chạy test trên đúng revision và thu command, runner identity, stdout/stderr, exit code, counters, digest; sau đó đối chiếu capability hiện hữu trước khi viết adapter/đăng ký tool.
 
 
-## 2026-10-16 21:18 ICT — Xu lập Master Plan E2E Auto xuyên suốt Work 28
+## 2026-10-16 — Co — Builder — Work 28 E2E Runner Implementation Slice
+**Action:** Wrote `04_CODE/e2e_runner.py` and `05_TEST/test_e2e_runner.py` in Work 28 Sandbox. Runner implements capability discovery, Issue #12 read, Sandbox write/readback, GitHub source hash comparison, strict runtime test-result validation, bounded retry configuration, and per-step evidence manifest. Tests cover happy path and denial/tamper/failure gates.
+**Readback:** Sandbox write acknowledgements returned `status=ok` for both paths. Full subsequent source readback is pending in this entry; do not mark DONE WITH READBACK until read-back confirms exact contents.
+**Execution:** NOT RUN. No approved runner bound to the exact artifact revision is exposed through this connector. No live MCP tool registration, Core authorization binding, canonical runtime execution, or protected evidence readback is claimed.
+**Boundary:** No Work 13 changes, no live PC/service/registry mutation, no commit/push, no release.
+**Status:** IMPLEMENTED IN SANDBOX / NOT EXECUTED / NOT RELEASED.
 
-- **PLAN OWNER:** Xu — Plan / Planner, CSA.
-- **DECISION AUTHORITY:** Vinh — Work Owner / Decision Authority.
-- **TEAM FLOW:** Xu Plan → Vi Coder → An Tester → Ka Review.
-- **DONE:** Tạo Master Plan duy nhất cho quy trình E2E Auto tại: work/28/MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/XU_MASTER_E2E_AUTO_EXECUTION_PLAN_20261016_2118ICT.md
-- **PLAN URL:** https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/blob/work/28-mcp-tooling-platform/work/28/MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/XU_MASTER_E2E_AUTO_EXECUTION_PLAN_20261016_2118ICT.md
-- **SCOPE:** Nhận task/Inbox → đọc hồ sơ Work và quyết định đã có → truy vết → lập kế hoạch → kiểm tra quyền qua Core → thực thi qua MCP/Core/runtime được duyệt → kiểm tra → tự sửa có giới hạn → An test → Ka review → Xu nghiệm thu/bàn giao.
-- **INBOX/PROPOSAL:** Tách Message, Proposal, Task/Inbox, wake-up/dispatch và Execution record; yêu cầu truy vết implementation hiện hữu trước khi xây mới; không mặc định AI tự thức hoặc Inbox đang hoạt động.
-- **NO-REPEAT:** Tất cả AI phải đọc Master Plan, nhật ký, issue và evidence/source revision mới nhất trước khi hỏi lại. Chỉ hỏi Vinh khi thiếu quyết định thực sự cần thiết; nêu rõ điều đã kiểm tra và lý do cần quyết định.
-- **SECURITY:** Không bypass Core, không tạo Core/runtime/MCP trùng, không thực thi lệnh tùy ý, không vượt Work boundary; giới hạn retry; không merge/release trước khi G1–G9 được xác minh.
-- **VERIFY:** File được tạo trên branch Work 28 với commit 8d030568d9b4c804f0ea7134da3771581b136ae5. Cần readback xác nhận nội dung và cập nhật issue handoff để các lane đọc đúng bản này.
-- **STATUS:** Đây là DONE cho tài liệu/kế hoạch; KHÔNG phải PASS cho startup, live tool registration, Inbox wake-up, test hay E2E. Work 28 vẫn ACTIVE / NOT RELEASED.
-- **NEXT:** Vi đọc Master Plan và truy đúng MCP :8020 startup/provider wiring; An và Ka theo đúng lane và cổng G1–G9.
+
+## 2026-10-16 — Co — Builder — Work 28 E2E Automatic Product Assembly
+**Action:** Continued product implementation without requesting step-by-step approval. Added `04_CODE/mcp_provider_adapter.py` (closed MCP adapter contract), `04_CODE/tool_registry_contract.py` (structural registry validation), `04_CODE/e2e_product.py` (product assembly entrypoint), `05_TEST/test_mcp_provider_adapter.py`, `05_TEST/test_tool_registry_contract.py`, and `README_E2E_AUTOMATIC.md`. Hardened result normalization so trusted evidence references are retained in normalized test data.
+**Build behavior:** Capability discovery before mutation; Work 28-only Sandbox writes; independent readback; GitHub source hash equality; strict test counter/inventory gate; bounded runtime timeout and retest count; no arbitrary shell/command interface; no silent patching without a trusted approval capability.
+**Write acknowledgements:** ROOM-HOP Sandbox returned `status=ok` for the newly written product and test files. Targeted readback has confirmed the runner, adapter test, registry test, README and assembly files in the next verification pass.
+**Execution status:** Source tests are authored but NOT RUN because the available connector actions do not expose an approved revision-bound runtime runner. Live MCP registration, Core authorization, GitHub capability presence, OS isolation and protected evidence readback remain NOT VERIFIED. No PASS or release claim.
+**Boundary:** No Work 13 change, no live PC/service/registry mutation, no commit/push.
+**Status:** PRODUCT SOURCE ASSEMBLED IN SANDBOX / TESTS NOT EXECUTED / LIVE INTEGRATION BLOCKED.
+
+
+## 2026-10-16 — Co — Builder — E2E Product Readback Checkpoint
+**Readback:** Sandbox read operations returned `status=ok` and non-empty content with expected markers for the runner, tests, adapter, registry validator, product entrypoint and README. Added `06_EVIDENCE/WORK28_E2E_AUTOMATIC_BUILD_MANIFEST_20261016.md` with source inventory and evidence limitations.
+**Test inventory:** 21 test methods authored across four test modules; source inventory count only, NOT a runner-discovered or executed count.
+**Unresolved integration:** Approved runtime execution, live GitHub tools, deployed registry inspection, OS isolation proof and protected evidence readback remain unavailable/unverified in this session. Tests NOT RUN; live E2E NOT RUN; release NO-GO.
+
+
+## 2026-10-16 — Co — Builder — Live Capability Reconciliation Gate
+
+- Added `04_CODE/live_capability_reconciliation.py` to reconcile an injected tool inventory against the minimum E2E capabilities.
+- Added `05_TEST/test_live_capability_reconciliation.py` with four unit-test cases authored; they have not been executed in this session.
+- Added `06_EVIDENCE/CO_LIVE_CAPABILITY_RECONCILIATION_20261016.md` documenting current tool-surface evidence and remaining integration gates.
+- Current connected ROOM-HOP surface provides Sandbox operations but does not expose GitHub issue/source read or canonical revision-bound runtime test execution tools. Result: integration remains BLOCKED; no live registration or E2E PASS is claimed.
+- Scope preserved: no changes to MAIN SOURCE, Work 13, PC services, commits, or pushes.
+
+
+## 2026-10-16 08:06 +07:00 — Co — Builder — Work 28 Capability Gate and Manifest Refresh
+
+- Added capability reconciliation module and four test methods; source readback confirmed.
+- Added acceptance execution runbook and refreshed build manifest; manifest readback confirmed.
+- Updated test inventory to 25 authored methods across five test files. This remains authored-source count only; no approved runner execution occurred.
+- Observed connector capability gap: required GitHub issue/source read and revision-bound runtime test tools are absent from the exposed tool surface. Work 28 stays ACTIVE / NOT RELEASED.
+
+
+## 2026-10-21 — Xu ghi nhận mở rộng danh mục tool Work 28 theo chỉ đạo anh Vinh
+- Chỉ đạo: bổ sung toàn bộ tool cần có; không dừng để đối chiếu danh sách hiện hữu; nội dung/chi tiết từng tool sẽ xây dựng sau.
+- Đã tạo danh mục phạm vi tại `MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/WORK28_FULL_TOOL_SCOPE_54_20261021.md`.
+- Chỉ tiêu lập kế hoạch: 54 mục (31 nền tảng + 19 Computer/Browser + 4 hỗ trợ bổ sung).
+- Lưu ý trạng thái: đây là danh mục phạm vi, chưa phải bằng chứng các tool đã được code, đăng ký trên MCP 8020 hoặc kiểm thử PASS.
+- Kiến trúc: không triển khai Core :8000 trong Sandbox.
+
+
+## 2026-10-21 — Tạo Contract Catalog V1 cho 54 tool
+- Đã ghi `MCP-8020-TOOLING-PLATFORM/03_ARCHITECTURE/WORK28_TOOL_CONTRACT_CATALOG_V1_54.md`.
+- Nội dung gồm input/output sơ bộ, quyền hạn, lỗi, an toàn, giới hạn và tiêu chí kiểm thử cho 54 tool trong phạm vi.
+- Đây là tài liệu thiết kế contract, chưa phải code đã đăng ký/chạy trên MCP 8020; chưa có kết quả test nên chưa đánh dấu PASS.
+- Bước tiếp theo: tạo module schema/registry dùng chung từ catalog rồi triển khai handler theo từng nhóm, không đưa Core :8000 vào Sandbox.
+
+
+## 2026-10-22 — Go nhận lệnh Continuous Takeover và bắt đầu thi công
+- DONE: Đọc lệnh `06_EVIDENCE/GO_WORK28_CONTINUOUS_TAKEOVER_ORDER_20261022.md` (readback OK).
+- DONE: Đọc continuation plan, handoff Vi, catalog parity, blockers, baseline, manifest, catalog/service/sandbox/room/gateway source + tests liên quan.
+- DONE: Ghi nhận việc tại `06_EVIDENCE/GO_TAKEOVER_ACK_AND_PROGRESS_20261022.md`.
+- DONE: Thu inventory live connector ROOM HOP 8030 trong phiên Go: **17 tools** (room + sandbox); không có execution/computer/browser. Cập nhật `MCP8030_TOOLS_LIST_BASELINE_20261022.md` (ghi rõ connector-surface, không phải JSON-RPC PC).
+- DONE: Cập nhật `WORK28_BLOCKERS_AND_DECISIONS.md` — WP0 = PARTIAL; các blocker còn lại giữ OPEN.
+- DECISION: Tiếp tục hardening source/test; execution giữ fail-closed; không tắt 8020; không đưa Core vào Sandbox.
+- BLOCKED: PC JSON-RPC tools/list; approved runner trong MCP connector; Core route + OS isolation; quyết định contract 18/21/54 (Vinh).
+- NEXT: Làm entrypoint validation tái lập được; chạy unit tests khi có runner; sửa defect source nếu phát hiện; bàn giao lát tiếp theo bằng evidence.
+- Work 28 = ACTIVE / NOT RELEASED.
+
+
+## 2026-10-22 (~05:50 ICT) — Go tiếp tục: service integration tests
+- DONE: Viết và chạy harness tích hợp v54 (catalog+service+room+sandbox) trong session Linux.
+- DONE: **16/16 tests PASS, exit=0** (fail-closed binding, path/symlink/cross-work, schema, room flow, sandbox CRUD, NOT_IMPLEMENTED).
+- DONE: Evidence `GO_UNIT_TEST_SERVICE_INTEGRATION_20261022.md` (SHA source 58382b42…, log 7699a585…).
+- DONE: Entrypoint `05_TEST/run_go_v54_validation.sh`.
+- DONE: Slice handoff `GO_SLICE_HANDOFF_20261022_0550.md`.
+- BLOCKED (không đổi): PC tools/list JSON-RPC, Core route, OS isolation, contract 18/21/54, execution tools.
+- Phân loại: PASS unit/integration **session-only**; không phải live E2E / G3 PC.
+- NEXT: chạy official test_mcp8020_* khi import được 04_CODE trên runner; mapping adapter connector↔catalog; chờ PC evidence để đóng WP0.
+- Work 28 = ACTIVE / NOT RELEASED.
+
+
+## 2026-10-22 (~05:55 ICT) — Go: gateway tests + connector↔catalog mapping
+- DONE: Chạy official-style `test_mcp8020_execution_gateway_v54`: **12/12 PASS, exit=0** (BlockedExecutionClient, PASS/FAIL/TIMEOUT truthful, zero-tests FAIL, cross-work NOT_FOUND, denied work/command).
+- DONE: Evidence `GO_UNIT_TEST_EXECUTION_GATEWAY_20261022.md`.
+- DONE: Bảng mapping connector 8030 (17) ↔ catalog v54: `GO_CONNECTOR_CATALOG_MAPPING_20261022.md` — không rewire live.
+- Tổng unit phiên Go: **32 tests PASS** (4 catalog + 16 service + 12 gateway), session runner only.
+- DECISION: Execution tools vẫn NOT_IMPLEMENTED/NO-GO; mock Core không phải live Core.
+- BLOCKED: PC tools/list JSON-RPC, Core route, OS isolation, ARCH-01.
+- Work 28 = ACTIVE / NOT RELEASED.
+
+
+## 2026-10-22 (~06:00 ICT) — Go: schema parity connector vs catalog
+- DONE: So sánh schema live connector 8030 (search_connected_tools) với v54 catalog.
+- FINDING (risk):
+  1. path vs relative_path rename
+  2. catalog có confirm_delete / overwrite; connector không có → connector permissive hơn
+  3. identity_id required trên connector create_work; catalog optional
+  4. pagination/filter chỉ có trên catalog
+- DONE: Evidence `GO_SCHEMA_PARITY_CONNECTOR_VS_CATALOG_20261022.md`
+- DONE: Static tests 6/6 PASS — `test_go_schema_parity_static.py` + `GO_UNIT_TEST_SCHEMA_PARITY_20261022.md`
+- NOTE: PC_VALIDATION_V54_20261021 summary = UNIT_TESTS_FAIL exit=1 (log UTF-16?); Go session unit = 38 PASS, không claim PC PASS.
+- Quyết định adapter: **không làm yếu catalog** để khớp connector; adapter phải dịch tên + giữ fail-closed.
+- Work 28 ACTIVE / NOT RELEASED.
+
+
+## 2026-10-22 (~06:05 ICT) — Go: official catalog + service unit tests
+- DONE: Materialize Sandbox-equivalent `04_CODE` modules (catalog, room, sandbox, service) trên session runner.
+- DONE: `test_mcp8020_catalog_v54.py` **6/6 PASS exit=0**.
+- DONE: `test_mcp8020_service_v54.py` **21/21 PASS exit=0**.
+- Evidence: `GO_UNIT_TEST_OFFICIAL_CATALOG_SERVICE_20261022.md`
+- Tổng unit phiên Go: **65 PASS** (4+16+12+6+6+21).
+- Không claim PC PASS; W28-PC-UNIT-01 vẫn OPEN.
+- Execution tools vẫn NOT_IMPLEMENTED.
+- Work 28 ACTIVE / NOT RELEASED.
+
+
+## 2026-10-22 (~06:15 ICT) — Go: server tests + adapter design
+- DONE: Rebuild session modules; `test_mcp8020_catalog_v54` 6/6 PASS.
+- DONE: `test_mcp8020_server_v54` 2 ok + 4 skip (mcp không cài), exit=0.
+- DONE: Adapter design connector↔v54 (design only): `GO_ADAPTER_DESIGN_CONNECTOR_V54_20261022.md`.
+- FINDING: PC UNIT_TESTS_FAIL có thể do thiếu package `mcp` / PYTHONPATH — không kết luận defect sản phẩm cho đến khi đọc được log PC.
+- Evidence server: `GO_UNIT_TEST_SERVER_V54_20261022.md`.
+- Không implement adapter live; không bật execution.
+- Work 28 ACTIVE / NOT RELEASED.
+
+
+## 2026-10-22 (~06:25) — Go auto: adapter impl
+- `mcp8020_connector_v54_adapter.py` + tests 12/12 PASS exit=0
+- Evidence: GO_ADAPTER_IMPL_20261022.md
+- Không bind live host. Execution vẫn OFF.
+
+
+## 2026-10-22 — Go: ghi rõ adapter connector↔v54
+- Spec đầy đủ: `06_EVIDENCE/ADAPTER_CONNECTOR_V54_SPEC.md`
+- Source: `04_CODE/mcp8020_connector_v54_adapter.py`
+- Tests 12/12 PASS (đã ghi trước).
+
+
+## 2026-10-22 — Connector ↔ v54 mapping CLEAR
+- File: `06_EVIDENCE/CONNECTOR_V54_MAPPING_CLEAR.md`
+- Bảng tên tool 15 cặp + param rename + cấm execution + connector-only/catalog-only gaps.
+
+
+## 2026-10-22 — Policy rejection logic ghi vào source
+- `04_CODE/mcp8020_connector_v54_adapter.py`: module docstring + constants + comments đầy đủ
+  (FORBIDDEN, confirm_delete, overwrite=false, identity_id, UNKNOWN_TOOL, TRANSPORT_ERROR).
+
+
+## 2026-10-22 — Full source audit v54
+- Evidence: `06_EVIDENCE/GO_SOURCE_FULL_AUDIT_20261022.md`
+- Verdict: catalog/service/gateway/adapter aligned; fail-closed OK; no unit-blocking defect.
+- ARCH-01 (18/21/54) và live PC/Core vẫn ngoài scope source.
+
+
+## 2026-10-22 — Go (AI-06) continuous takeover · tổng hợp nhật ký
+
+### Lệnh & phạm vi
+- DONE: Nhận `GO_WORK28_CONTINUOUS_TAKEOVER_ORDER_20261022.md` — Go chịu build toàn trình từ source sẵn có; Xu điều phối; không giả PASS; không đưa Core vào Sandbox; giữ MCP 8020 đến khi Vinh duyệt.
+- DONE: Ack + inventory live connector 8030 (~17 tool ROOM/Sandbox; **không** có python_run).
+
+### Unit / source đã chạy (session Go — không phải G3 PC canonical)
+- DONE: Catalog invariants + official catalog tests — PASS.
+- DONE: Service integration + official service — PASS.
+- DONE: Execution gateway unit — PASS (UNWIRED / fail-closed).
+- DONE: Schema parity static connector↔catalog — PASS.
+- DONE: Server v54 (mcp package = False) — 2 ok + 4 skip, exit=0; không giả live MCP.
+- DONE: Connector adapter unit — **12/12 PASS**, exit=0.
+- Ghi chú: Tổng session ~65+ unit tests PASS trước đó; PC_VALIDATION_V54_20261021 exit=1 vẫn **chưa** re-verify trong slice này (W28-PC-UNIT-01).
+
+### Adapter connector ↔ v54
+- DONE: Design — `GO_ADAPTER_DESIGN_CONNECTOR_V54_20261022.md`
+- DONE: Implement — `04_CODE/mcp8020_connector_v54_adapter.py`
+- DONE: Spec — `ADAPTER_CONNECTOR_V54_SPEC.md`, `CONNECTOR_V54_MAPPING_CLEAR.md`
+- DONE: Policy rejection logic ghi **toàn bộ** vào module docstring + constants + comment từng nhánh:
+  - FORBIDDEN_TOOLS (7 execution) → NOT_IMPLEMENTED, không gọi transport
+  - delete không confirm_delete → POLICY_REFUSED
+  - write overwrite=false → POLICY_REFUSED
+  - create_work thiếu identity_id → INVALID_INPUT
+  - path→relative_path; content→text (paste)
+- DONE: Tests `05_TEST/test_mcp8020_connector_v54_adapter.py`
+- CHƯA: Wire transport live 8030; chưa đăng ký PC MCP host.
+
+### Full source audit
+- DONE: `GO_SOURCE_FULL_AUDIT_20261022.md`
+- Verdict: catalog / service / gateway / adapter **aligned**; fail-closed OK; không defect unit-blocking.
+- Asymmetry cố ý: 18/21/54 song song (ARCH-01); adapter chặt hơn catalog về identity_id & overwrite=false.
+
+### BLOCKED (không đổi — ngoài quyền session Go)
+- Live PC tools/list JSON-RPC + listener identity
+- Core :8000 authenticated execution route + OS isolation
+- Bật / đăng ký `sandbox_run_python` (NO-GO)
+- PC_VALIDATION exit=1 chưa decode xong
+- Quyết định hợp nhất contract 18 vs 21 vs 54 (Vinh)
+
+### Trạng thái trung thực
+- **DONE (source/unit session):** adapter + docs + audit + nhật ký.
+- **KHÔNG claim:** live E2E PASS, G3, execution tool, RELEASE.
+- Work 28 = **ACTIVE / NOT RELEASED**.
+
+
+## 2026-10-22 (~08:55 ICT) — Go thi công theo WORK28_CODER_CONTINUATION_PLAN
+- DONE: Đọc kế hoạch coder; bắt đầu SLICE A ngay.
+- DONE SLICE A: `GO_HANDLER_BINDING_AUDIT_20261022.md`
+  - Path A v54: 24/24 IMPLEMENTED có handler RoomProvider/SandboxProvider; không gap binding.
+  - Path B 18-tool registry riêng (tên connector-style); bind_handlers fail-closed.
+  - 3 inventory 18/54/(connector) — ARCH-01 vẫn DECISION Vinh.
+  - Không patch kiến trúc; không defect binding cần sửa source.
+- DONE SLICE B (đã có sẵn + evidence): `GO_SCHEMA_ADAPTER_IMPLEMENTATION_20261022.md` + adapter source/tests.
+- DONE SLICE C: sửa `run_go_v54_validation.sh` — bỏ `|| true` (không nuốt exit code); `GO_VALIDATION_ENTRYPOINT_REVIEW_20261022.md`.
+- DONE SLICE D (partial): cập nhật `WORK28_BLOCKERS_AND_DECISIONS.md`.
+- BLOCKED: PC tools/list, Core route, G3 runner, ARCH-01.
+- Work 28 = ACTIVE / NOT RELEASED.
+
+
+## 2026-10-22 (~09:38 ICT) — /build/mcp RECOVERED (Go probe)
+- DONE: `sandbox_list_works` ok; Work 28 visible (manifest_exists=true).
+- DONE: HTTP POST initialize → 200; serverInfo name=`room-hop-build` version=`1.28.1`.
+- DONE: GET without SSE Accept → 406 (expected streamable MCP behaviour).
+- Evidence: `06_EVIDENCE/GO_MCP_BUILD_RECOVERY_20261022.md`.
+- Prior timeout 08:57–09:03: recovered; root cause UNKNOWN (needs PC logs).
+- Vẫn BLOCKED: raw tools/list hash, Core route, G3, ARCH-01.
+- Work 28 = ACTIVE / NOT RELEASED.
+
+
+## 2026-10-22 (~09:53 ICT) — Raw tools/list PASS (Go)
+- DONE: JSON-RPC tools/list trên https://admin-pc.tail7d6101.ts.net/build/mcp
+- tool_count=17; SHA-256 raw body=`c214e1e5d4447ef6a16675c93c392e24d1ae4fa1e487a15724776508f63268c0`
+- Không có python_run/execution tool trên live list.
+- Evidence: `GO_MCP_TOOLS_LIST_RAW_20261022.md`; baseline cập nhật `MCP8030_TOOLS_LIST_BASELINE_20261022.md`
+- Vẫn BLOCKED/PENDING: Core route, G3, ARCH-01, outage RCA.
+- Work 28 = ACTIVE / NOT RELEASED.
+
+
+## 2026-10-22 (~09:59 ICT) — Go continuous chain (không chờ nhắc từng bước)
+- Nguyên tắc Xu: đầu–cuối; chỉ dừng DONE hoặc BLOCKED thật.
+- PASS giữ nguyên: /build/mcp recovery; tools/list 17 + SHA-256; readback evidence file OK (không rỗng).
+- BLOCKED có probe: Core :8000 unreachable từ session (127.0.0.1 fail; tailscale:8000 timeout; /core /api 404).
+- BLOCKED: G3 (không runner trên live list); ARCH-01 (Vinh); outage RCA; PC_UNIT.
+- NO-GO execution theo contract §5 — không bịa route.
+- Báo cáo chuỗi: `06_EVIDENCE/GO_CHAIN_CONTINUATION_20261022.md`
+- Work 28 = ACTIVE / NOT RELEASED.
+
+
+## 2026-10-23 — Go nhận phân công Xu; Fix cross-work NOT_FOUND
+- Phân công: Go coder chính; Xu kiến trúc; Qw QA sau sửa; Cla chỉ khi blocked.
+- FIX: củng cố `test_cross_work_result_read_is_indistinguishable_not_found` +
+  `test_missing_and_cross_work_share_identical_error_surface` — không hạ chuẩn
+  (caller_work binding; NOT_FOUND giống hệt missing).
+- Session run: 4 related tests OK exit=0.
+- Evidence: `GO_FIX_CROSS_WORK_NOT_FOUND_20261023.md`, `GO_INTEGRATE_54_MATRIX_20261023.md`
+- GitHub sync: CHƯA (cần quyền/push path).
+- Core/G3/ARCH-01/Release: vẫn BLOCKED / DECISION.
+- Work 28 = ACTIVE / NOT RELEASED.
+
+
+## 2026-10-23 — Qw QA PASS Fix#1 + Integrate matrix; Go tiếp tục
+- Qw: Fix cross-work NOT_FOUND = PASS VERIFIED (anti-enumeration đúng spec).
+- Qw: GO_INTEGRATE_54_MATRIX = PASS VERIFIED (honest capability).
+- Go: không rework #1/#2; status file `GO_STATUS_AFTER_QW_QA_20261023.md`.
+- Còn BLOCKED thật: ARCH-01 (Vinh), Core route, G3 PC, GitHub push.
+- Work 28 = ACTIVE / NOT RELEASED.
+
+
+## 2026-10-23 (~04:40 ICT) — Go full regression + tools/list
+- tools/list: 17 tools, SHA `c214e1e5…268c0` — **identical** prior evidence; no python_run.
+- Session regression: adapter 12 + gateway 12 = **24 OK exit=0**.
+- Không lỗi mới; không rework Fix#1 / matrix (Qw PASS).
+- Evidence: `GO_REGRESSION_AND_TOOLS_LIST_20261023.md`
+- G3/Core/ARCH-01/GitHub: vẫn BLOCKED/DECISION.
+- Work 28 = ACTIVE / NOT RELEASED.
+
+
+## 2026-10-23 (~08:05 ICT) — Go theo lệnh Xu: giữ PASS, inventory suite
+- Không sửa code (không lỗi mới).
+- Handoff Vinh đọc được tại `06_EVIDENCE/HANDOFF_TO_VINH_ARCH01_20261023.md`; mirror dưới MCP-8020 path.
+- Làm rõ: regression 24 = **partial**, không gọi full suite.
+- Evidence: `GO_SUITE_INVENTORY_20261023.md`.
+- Confirm re-run compact 7 tests OK.
+- BLOCKED: G3, Core, GitHub — chờ ARCH-01 / owner.
+- Work 28 = ACTIVE / NOT RELEASED.
+
+
+## 2026-10-23 (~08:15 ICT) — Go AUTONOMOUS COMPLETION REPORT
+- Không sửa source (không lỗi mới).
+- Báo cáo cuối: `GO_WORK28_AUTONOMOUS_COMPLETION_REPORT_20261023.md`
+- PASS giữ: Fix#1, matrix 54, 24 handlers, partial regression 24, tools/list 17 (SHA probe mới `c6fb00ab…` — count/names unchanged).
+- BLOCKED thật: G3 PC, Core :8000, GitHub branch/PR (không có repo Work 28 MCP trong scope).
+- RELEASE: **không**.
+- Work 28 = ACTIVE / NOT RELEASED.
+
+
+## 2026-10-23 (~09:05 ICT) — Go ACK Xu autonomous protocol
+- READ protocol `XU_AUTONOMOUS_BUILD_HANDOFF_PROTOCOL_20261023.md` — OK.
+- ACK: `GO_ACK_XU_PROTOCOL_20261023.md`.
+- MCP tools/list probe **this session**: **UNREACHABLE** (3 retries, no body) — **NOT RUN**, không suy PASS từ probe cũ.
+- Không start Chromium/Wave2 live; không Core trong Sandbox; không fake PASS.
+- BLOCKED giữ: G3, Core, GitHub PR, full suite materialize.
+- Work 28 = ACTIVE / NOT RELEASED.
+
+
+## 2026-10-23 (~09:50 ICT) — Go tiếp tục sau khi MCP bật lại · Slice A T0+T1
+- MCP tools/list: **17**, HTTP 200, no python_run, no browser_*.
+- T0: `GO_SLICE_A_T0_W09_CAPABILITY_MATRIX_20261023.md` — W09 live E2E BLOCKED; :8787 unverified.
+- T1: `test_wave1_browser_contracts_offline.py` + `GO_SLICE_A_T1_WAVE1_OFFLINE_20261023.md`.
+- Test runner full exit code: **NOT RUN** (cần PC/materialize).
+- Không Chromium PASS; catalog browser_* vẫn NOT_IMPLEMENTED.
+- Work 28 = ACTIVE / NOT RELEASED.
+
+
+## 2026-10-23 (~10:00 ICT) — Go Slice B offline (T3 note + T4)
+- T4: `mcp8020_browser_tools_v54.py` + `test_mcp8020_browser_provider_offline.py`.
+- FakeBrowserService offline; BlockedBrowserService fail-closed; Wave2 POLICY_REFUSED.
+- Catalog browser_* vẫn NOT_IMPLEMENTED; service vẫn trả NOT_IMPLEMENTED trước provider.
+- T3: chỉ ghi yêu cầu cho W09 owner — không sửa W09 runtime.
+- Evidence: `GO_SLICE_B_T3_T4_OFFLINE_20261023.md`.
+- Runner exit: NOT RUN.
+- Work 28 = ACTIVE / NOT RELEASED.
+
+
+## 2026-10-23 (~10:20 ICT) — Go Slice C validation entrypoint
+- Cập nhật `run_go_v54_validation.sh`: fail-fast, aggregate FAILED, include wave1 + browser provider offline, log GO_VALIDATION_RUN_*.log, exit 1 nếu fail.
+- Cập nhật `run_work28_v54_validation.ps1`: PYTHONPATH, thêm suite offline browser, giữ exit pytest.
+- Evidence: `GO_SLICE_C_VALIDATION_ENTRYPOINT_20261023.md`.
+- Runner full: **NOT RUN** phiên này.
+- Work 28 = ACTIVE / NOT RELEASED.
+
+
+## 2026-10-23 (~10:36 ICT) — Go Slice D baseline + blockers
+- tools/list probe: HTTP 200, **17**, SHA `c6fb00ab7598252982fd67d3886dfe40d5d59c8e8e8f16472729a1bf2c9fc314`, no python_run.
+- Updated `MCP8030_TOOLS_LIST_BASELINE_20261022.md` (A≠B≠C≠D).
+- Updated `WORK28_BLOCKERS_AND_DECISIONS.md`.
+- Evidence: `GO_SLICE_D_BLOCKERS_BASELINE_20261023.md`.
+- Work 28 = ACTIVE / NOT RELEASED.
+
+
+## 2026-10-23 (~10:40 ICT) — Go Slice E independent test handoff
+- `GO_SLICE_E_INDEPENDENT_TEST_HANDOFF_20261023.md` → An/Qw/Ka/Cla/Xu.
+- Cập nhật `WORK28_HANDOFF_CONTINUATION_20261022.md`.
+- Go không tự ký Tester PASS; full G3/Core/RELEASE vẫn BLOCKED.
+- Work 28 = ACTIVE / NOT RELEASED.
+- Chuỗi Slice A→E (source/offline) hoàn tất phía coder; chờ independent run + external gates.
+
+
+## 2026-10-23 (~10:45 ICT) — Go G3/Core/Release gate
+- Core probes: loopback fail; admin-pc /core /api /health → 404. **BLOCKED**.
+- G3: runner NOT RUN this agent; no python_run on live list. **BLOCKED**.
+- RELEASE: **NO** — criteria unmet (independent test, G3, Core, Vinh).
+- Evidence: `GO_G3_CORE_RELEASE_GATE_20261023.md`.
+- Work 28 = ACTIVE / NOT RELEASED.
+
+
+## 2026-10-23 (~11:00 ICT) — Go fix Xu browser static review
+- Session continuity: active run_id reused on Wave1 reads; Fake keyed by run_id.
+- URL policy at provider: validate_browser_url (scheme, localhost, private IP).
+- Regression tests updated in test_mcp8020_browser_provider_offline.py.
+- Evidence: GO_FIX_BROWSER_SESSION_URL_POLICY_20261023.md.
+- Catalog browser_* vẫn NOT_IMPLEMENTED; runner NOT RUN.
+- Work 28 = ACTIVE / NOT RELEASED.
+
+
+## 2026-10-23 (~11:25 ICT) — Go test run session/URL/adapter
+- Ran 13 tests, exit=0, failures=0, errors=0.
+- Covers: session continuity, URL policy, adapter POLICY_REFUSED, gateway BLOCKED.
+- Evidence: GO_TEST_RUN_SESSION_URL_ADAPTER_20261023.md.
+- Full run_go_v54_validation.sh / PC G3: NOT RUN.
+- Work 28 = ACTIVE / NOT RELEASED.
+
+
+## 2026-10-23 (~11:30 ICT) — Full run_go_v54_validation.sh
+- Materialized 04_CODE + 05_TEST from MCP Sandbox.
+- RESULT=PASS exit=0 · ran=7 failed=0 skipped=3(optional).
+- Evidence: GO_FULL_VALIDATION_RUN_20261023.md.
+- PC G3 / Core / RELEASE: still NOT claimed.
+- Work 28 = ACTIVE / NOT RELEASED.
+
+
+## 2026-10-23 (~11:55 ICT) — Go continuation order T1–T5
+- T1 PARTIAL: URL userinfo/.local harden + tests exit=0; DNS/redirect → W09+Cla.
+- T2 runner OPTIONAL_NOT_PRESENT + semantics tests PASS.
+- T3 tools/list 17 SHA c6fb00ab…
+- T4 W09 BLOCKED (8787 fail, /browser 404).
+- T5 Qw handoff + Cla request written.
+- Evidence: GO_CONTINUATION_RESULT_20261023.md.
+- Work 28 ACTIVE / NOT RELEASED.
+
+
+## 2026-10-23 (~13:15 ICT) — Validation Entrypoint single command
+- Script: scripts/run_work28_validation_entrypoint.sh
+- OFFLINE_VALIDATION_PASS exit=0 · INTEGRATION_BLOCKED · NO_RELEASE
+- Log SHA fa0670c93f8840d3423b008f5fe5e89e7c61dbfa81f7e34f989898485d867589
+- QA handoff written for Qw/Cla.
+- Work 28 ACTIVE / NOT RELEASED.
+
+
+### Co — Core → W13 source-trace continuation
+**TÊN:** Co  
+**CHỨC DANH:** Coder / ROOM-HOP  
+**NGÀY:** 25/10/2026  
+**GIỜ - PHÚT:** 10:53 (UTC+7)
+
+Đã đọc trực tiếp qua MCP 8030 các nguồn Work 13 `models.py`, `server.py`; Work 28 envelope mapper; và Work 01 gateway proxy, authorization adapter, MCP boundary, authorization runtime, Work 99 entry-gate prototype.
+
+Kết luận tĩnh:
+- Mapper Work 28 không tương thích schema dataclass W13; W13 trực tiếp khởi tạo dataclass từ JSON.
+- W13 `POST /execute` trong source đã đọc không thể hiện xác thực principal HTTP; `authorized=True` do client gửi không phải bằng chứng ủy quyền.
+- Gateway runtime source đã đọc là reverse proxy chuyển tiếp request đến MCP 8020/8030; chưa thấy nó gọi authorization boundary/Work99 gate. Các module authorization hiện có không tự chứng minh runtime đang dùng chúng.
+- Không thể sửa an toàn bằng cách đổi `entry_path` thành `command`; làm vậy có nguy cơ biến entrypoint thành lệnh tùy ý và mất đảm bảo hash-bound.
+- Không kích hoạt bảy tool execution/evidence; giữ `NOT_IMPLEMENTED`, giữ `sandbox_run_command=POLICY_REFUSED`.
+
+Đã ghi báo cáo:
+`06_EVIDENCE/CO_CORE_W13_SOURCE_TRACE_CONTINUATION_20261025.md`
+
+Giới hạn: MCP 8030 hiện chỉ cung cấp thao tác file/context; không có tool chạy Python/pytest hoặc triển khai vào Core/W13 trong phiên này. Vì vậy chưa có test run mới, chưa sửa/deploy runtime và chưa tuyên bố E2E PASS. Work 28 tiếp tục ACTIVE / BLOCKED / NOT RELEASED.
+
+
+### Co — Work 28 canonical W13 compatibility guard and mapper correction
+**TÊN:** Co  
+**CHỨC DANH:** Coder / ROOM-HOP  
+**NGÀY:** 25/10/2026  
+**GIỜ - PHÚT:** 11:20 (UTC+7)
+
+Đã tiếp tục sửa mã nguồn trong Sandbox Work 28:
+1. Thêm `04_CODE/mcp8020_w13_contract_compatibility_v1.py` để đối chiếu trường bắt buộc của `WorkContext` và trường hợp lệ của `ExecutionRequest` từ mã nguồn W13 đã đọc.
+2. Thêm `05_TEST/test_mcp8020_w13_contract_compatibility_v1.py` với 5 regression test cho schema không tương thích, context thiếu trường, cờ `authorized=True` do caller gửi, cấm ánh xạ `entry_path` thành `command`, và SHA-256 không hợp lệ.
+3. Sửa `04_CODE/mcp8020_w13_execute_envelope_v1.py` để fail-closed: không trả envelope giả định là tương thích khi schema hiện tại không khớp; không chuyển entry path thành command.
+4. Sửa `05_TEST/test_mcp8020_integration_boundary_v1.py`: thay test happy-path giả định bằng test xác nhận mapper từ chối schema W13 hiện tại.
+5. Ghi bằng chứng `06_EVIDENCE/CO_W13_CANONICAL_COMPATIBILITY_GUARD_20261025.md` và `06_EVIDENCE/CO_W13_MAPPER_FAIL_CLOSED_FIX_20261025.md`.
+
+Đã nhận xác nhận ghi thành công từ MCP 8030. Đang đọc lại các file để kiểm tra nội dung đã lưu. Chưa chạy Python/pytest trong phiên này vì không có tool thực thi lệnh; không tuyên bố test PASS. Chưa deploy Core/W13, chưa mở catalog tool; bảy tool execution/evidence vẫn NOT_IMPLEMENTED và `sandbox_run_command` vẫn POLICY_REFUSED. Work 28 tiếp tục ACTIVE / BLOCKED / NOT RELEASED.
+
+### Co — Work 28 authorized-adapter negative tests authored
+**TÊN:** Co  
+**CHỨC DANH:** Coder / ROOM-HOP  
+**NGÀY:** 25/10/2026  
+**GIỜ - PHÚT:** 11:21 UTC+7  
+- Đọc lại source adapter có ủy quyền mcp8020_authorized_execution_adapter_v1.py, gateway/service/catalog v54 và connector adapter qua MCP 8030.
+- Truy vết thấy v54 service kiểm tra trạng thái catalog NOT_IMPLEMENTED trước dispatch; chỉ bind gateway không tự mở các tool đang bị khóa. Gateway v54 vẫn tạo payload legacy (entry/args) không tương thích hợp đồng hash-bound v1; giữ nguyên gate, không nối đường legacy vào runtime.
+- Tạo 05_TEST/test_mcp8020_authorized_execution_adapter_v1.py với 8 kiểm thử hợp đồng offline dùng fake cho caller, authorizer, snapshot và runtime; bao phủ thứ tự gate, hash snapshot, immutable flag, runtime identity, cleanup và test summary.
+- Ghi báo cáo 06_EVIDENCE/CO_WORK28_AUTHORIZED_ADAPTER_NEGATIVE_TESTS_20261025.md.
+- Trạng thái: test mới CHƯA CHẠY; không claim PASS; chưa wiring/deploy; bảy execution/evidence tools vẫn NOT_IMPLEMENTED; sandbox_run_command=POLICY_REFUSED; Work 28 ACTIVE / BLOCKED / NOT RELEASED.
+
+## 2026-10-26 06:20 (UTC+7) — Ka independent assessment
+- **Tên:** Ka
+- **Chức danh:** CSA / Independent Reviewer
+- **DONE:** Đọc lại inventory Work 28, báo cáo T00–T15, kế hoạch V1.0, các đối soát Xu/Go ngày 2026-10-26 và nhật ký qua MCP Sandbox readback.
+- **Kết luận:** ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; execution gate CLOSED.
+- **Điểm khó nhất:** Chưa chứng minh trust chain end-to-end giữa MCP → Core :8000 authorization server-side → runtime canonical W12/W13 :8031 với OS isolation → evidence store bảo vệ → readback ràng buộc cùng run/candidate. Đây là blocker kiến trúc/runtime, không thể giải quyết chỉ bằng thêm unit tests.
+- **BLOCKED:** T01 test evidence mismatch (source 6 test functions, log Go chỉ 5); Core auth route, runtime identity, OS isolation, lifecycle/evidence integration và live E2E chưa được chứng minh.
+- **GO:** Tiếp tục Wave A trong Sandbox: khóa candidate/hash; chạy đúng 6 test với command/runner/exit code/hash; xử lý snapshot TOCTOU và semantics immutable; đối soát contract/adapter fail-closed.
+- **NO-GO:** Không bật execution tools, không nối MCP trực tiếp :8031, không tạo Core/runtime thứ hai, không ghi FULL PASS/RELEASE trước khi đủ live evidence và review độc lập.
+- **Biên bản:** KA_INDEPENDENT_WORK28_ASSESSMENT_20261026_0620.md.
+
+## 2026-10-26 06:25 UTC+7 — Ka independent readback review of Go Wave A
+- **Tên:** Ka
+- **Chức danh:** CSA / Independent Reviewer
+- **Kết quả:** Wave A chưa được chấp nhận là đã khép hoàn toàn; trạng thái PARTIAL, cần xử lý các finding.
+- **Bằng chứng đọc trực tiếp qua MCP 8030:** báo cáo Wave A của Xu, đối soát hardening của Xu, fingerprint candidate V2, source Snapshot Provider / Grant-Run Binding / Execution Contract và test files liên quan.
+- **Finding 1:** Snapshot provider hash file qua descriptor, đóng rồi mở lại source path để copy. Hash bản copy có kiểm tra, nhưng TOCTOU chưa được loại bỏ; cần copy từ cùng descriptor an toàn hoặc cơ chế OS tương đương.
+- **Finding 2:** test Grant-Run hiện có 6 test function, trong khi log cũ được Xu đối soát chỉ có 5. Báo cáo 6/6 mới chưa kèm command/runner/exit code/fingerprint để tái lập độc lập.
+- **Finding 3:** metadata `immutable: True` vẫn được trả kể cả khi `is_read_only_enforced=False`; cần sửa metadata trung thực và downstream strict gate fail-closed.
+- **Runtime blocker:** Core :8000 authorization, W12/W13 :8031 OS isolation, protected evidence/readback và live E2E chưa được chứng minh.
+- **Quyết định:** Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; execution gate CLOSED. Không kích hoạt execution tools.
+- **Biên bản:** `06_EVIDENCE/KA_INDEPENDENT_WAVE_A_READBACK_REVIEW_20261026_0625.md`.
+
+## 2026-10-26 — Ka (CSA / Independent Reviewer): quyết định thực thi và đối soát entrypoint
+
+- DONE (readback): Đọc inventory Work 28, các báo cáo T00–T15, Go hardening, Xu snapshot/grant-binding audit và Wave A hardening qua MCP 8030.
+- CONFIRMED: V54 service trả NOT_IMPLEMENTED trước dispatch khi catalog entry ở trạng thái đó; chỉ tạo module đăng ký handler không đủ để bật thực thi. V54 server factory không tự mở listener.
+- DONE (source cross-check): Đọc GitHub main qua connector. room_hop_mcp/__main__.py (blob SHA 43adaa746f8e51a6ecce762a7b01694d0411d105) khởi động stdio server qua room_hop_mcp.adapter.server.create_server. Danh sách room_hop_mcp trên main không có mcp_http_main.py hoặc mcp_build_http_main.py. room_hop_mcp/adapter/http_server.py có SHA 54cb3ecbce2e6b13083f31c14f0c1f0738f1457d và chỉ khai báo route identity/global source/meeting trong phần đã kiểm tra.
+- SOURCE MISMATCH: PC evidence trong cuộc hội thoại cho thấy tiến trình đang chạy bằng python -m room_hop_mcp.mcp_http_main trên :8020; entrypoint đó không có trong cây GitHub main đã đọc. Chưa đủ bằng chứng để kết luận file untracked hoặc xác định revision thực tế trên PC.
+- DECISION: Không tạo Core/runtime thứ hai; không nối trực tiếp MCP → :8031; không đổi catalog NOT_IMPLEMENTED thành IMPLEMENTED; không đăng ký placeholder để làm đẹp tools/list; giữ sandbox_run_command POLICY_REFUSED.
+- BLOCKED: Chưa đối soát được file/path/hash/revision chính xác của module đang chạy trên PC; chưa có Core-derived auth route, OS isolation, process-tree cleanup và protected evidence proof; MCP 8030 toolset hiện tại không có runner để Ka chạy Python/pytest độc lập.
+- ARTIFACT: 06_EVIDENCE/KA_WORK28_EXECUTION_DECISION_AND_SOURCE_RECONCILIATION_20261026.md đã tạo và được xác nhận bởi phản hồi status=ok của sandbox_create. Chưa thực hiện readback riêng sau tạo trong mục này.
+- STATUS: ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; execution gate CLOSED. Không tuyên bố E2E PASS.
+
+**Ka — CSA / Independent Reviewer | 2026-10-26**
+
+- READBACK CORRECTION (2026-10-26): Sau khi append nhật ký, Ka đã gọi sandbox_read_probe cho cả KA_WORK28_EXECUTION_DECISION_AND_SOURCE_RECONCILIATION_20261026.md, NHAT_KY_THI_CONG.md và BIEN_BAN_W28.md. Cả ba trả status=ok; file evidence size_bytes=6507; phần cuối Nhật ký và Biên bản chứa đúng nội dung Ka vừa ghi. Vì vậy readback sau ghi đã được xác minh thành công.
+
+
+## 2026-10-26 — Ka CSA — Live MCP 8020 entrypoint audit
+- Evidence: local HEAD d7c90d9d31062d389810808e43dfdd19d7711b75; branch main; `room_hop_mcp/mcp_http_main.py` exists but is untracked; SHA-256 `8DDE9069DB8AC2C7E5B51AA9742C8508D0055461F0D39AA5AE1687A16B4E288E`.
+- Source confirms the FastMCP entrypoint registers legacy meeting/sandbox/agent tools and does not import/register v54 service/server or the seven execution/evidence tools.
+- `_client_meta` is telemetry only, not authentication. Caller-supplied identity validation is not equivalent to Core authorization.
+- Decision: do not add cosmetic NOT_IMPLEMENTED registrations or directly expose W13 `POST /execute`. Reconcile the untracked runtime entrypoint and implement the reviewed Core-authorized, snapshot/hash-bound, fixed-operation route with OS isolation and evidence gates.
+- Status remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED. No execution was dispatched and no production source was changed.
+- Evidence report: `MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/KA_WORK28_LIVE_ENTRYPOINT_AUDIT_20261026.md`.
+- Signature: Ka — CSA / Independent Reviewer.
+
+
+## 2026-10-26 — Ka independent readback of Xu V54 integration report
+- Name/Title: Ka — CSA / Independent Reviewer.
+- Method: read-only list and readback through MCP 8030; no PC edit, no MCP restart, no Execution Host request.
+- Work ID confirmed: 28 (MCP-8020-TOOLING-PLATFORM).
+- Five reported files could not be found in Work 28: `04_CODE/mcp8020_v54_entrypoint_adapter_v1.py`, `04_CODE/mcp8020_v54_tool_registration_v1.py`, `05_TEST/test_mcp8020_v54_integration_v1.py`, `01_PLAN/INTEGRATION_GUIDE_FOR_ENTRYPOINT_20261026.md`, `06_EVIDENCE/XU_V54_INTEGRATION_AND_TOOL_REGISTRATION_20261026.md`. Both with and without the `MCP-8020-TOOLING-PLATFORM/` prefix, readback returned FileNotFoundError; the Work listing did not include these names.
+- This establishes only that the files were not found at the reported paths in Work 28 during this check; it does not establish they cannot exist elsewhere.
+- Therefore the six claimed static test results and the claimed adapter/registration implementation are NOT VERIFIED by this MCP readback. No test source was available to inspect.
+- Existing Xu task log still records no catalog activation, no execution gateway wiring and no release action. Prior Ka live-entrypoint audit remains applicable: PC entrypoint was reported untracked and without V54 registrations.
+- Decision: do not reconstruct/overwrite missing code from claims; request no restart or execution. Keep fail-closed. Work 28 remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; execution gate CLOSED.
+- Evidence: `MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/KA_INDEPENDENT_V54_REPORT_READBACK_20261026.md`.
+- Signature: Ka — CSA / Independent Reviewer; date 2026-10-26 UTC+7.
+
+
+## 2026-10-26 — Ka independent V54 artifact read-back audit
+- Re-ran direct MCP 8030 `sandbox_read_probe` for the five exact V54 paths reported as created by Xu/Go: adapter, tool registration, integration test, entrypoint guide, and integration evidence report.
+- All five exact-path reads returned `FileNotFoundError`. Their reported byte counts, read-back claims, and six static-test PASS results are therefore NOT independently verified in this check. This finding is limited to the exact paths checked; it does not prove absence elsewhere.
+- `XU_WORK28_TASK_LOG_20261026.md` was readable, but its existence does not prove the five source/artifact files exist or that their tests passed.
+- No code execution, MCP 8020 restart, catalog activation, direct request to :8031, or release action occurred.
+- V54 artifact acceptance and W28-INT-01 remain BLOCKED; W28-INT-02 and W28-SEC-03 remain BLOCKED. Work 28 stays ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; execution gate CLOSED.
+- Audit report: `MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/KA_WORK28_V54_READBACK_AUDIT_20261026.md`.
+- Signed: Ka — CSA / Independent Reviewer — 2026-10-26 (UTC+7).
+
+
+## 2026-10-26 — Ka V54 static review corrections (canonical nested evidence path)
+- Canonical historical Work 28 log/meeting records are under MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/ (the task log is long and contains prior Work 28 history). During this turn, an append was also made to two previously absent top-level paths 06_EVIDENCE/NHAT_KY_THI_CONG.md and 06_EVIDENCE/BIEN_BAN_W28.md, creating duplicate short files. Those two accidental duplicate files were removed; this record is written to the established nested paths.
+- Top-level V54 source files were independently read via MCP 8030. Pre-edit sizes: adapter 5722, registry 5885, tests 5255, guide 3316, evidence report 3572 bytes.
+- Corrections persisted to top-level adapter, registry, tests, and guide. Registry tool names now match catalog; result envelope matches V54 service error shape; adapter checks callable auth provider and required request/hash/path shape, but still is not a real auth integration and is not wired to execution.
+- Unit suite now uses unittest discovery and checks catalog names, fail-closed envelope, audit log content, request/path/hash rejection, Core deny/unavailable, and no listener.
+- Post-edit readback: adapter 4413 bytes; registry 3514 bytes; test 4960 bytes; guide 2729 bytes. Readback confirms persistence, not execution.
+- Tests were NOT RUN: no authorized Python/pytest runner is exposed in the current MCP 8030 tool set. No syntax/runtime PASS is claimed.
+- No PC entrypoint modification/restart, no catalog activation, no Core :8000 / Execution Host :8031 live request, no release. W28-INT-01, W28-INT-02, W28-SEC-03 remain BLOCKED; execution gate CLOSED.
+- Signed: Ka — CSA / Independent Reviewer — 2026-10-26 (UTC+7).
+
+
+## 2026-10-27 — Ka rapid continuation: live MCP entrypoint is the blocker
+- Name/Title: Ka — CSA / Independent Reviewer.
+- Method: read-only MCP 8030 Sandbox readback of `KA_WORK28_LIVE_ENTRYPOINT_AUDIT_20261026.md`, `XU_INTEGRATION_TRACE_V54_TO_W13_W12_20261025.md`, the V54 adapter/registry/envelope/transport bridge, and Xu task log. No source edits, test runs, MCP 8020 restart, or request to Execution Host.
+- Runtime build hash ↔ Work 13 source-tree hash: PASS (10 Python files, exact match to `/health` hash; recorded in the follow-up evidence file).
+- Decisive integration finding: the audited PC `room_hop_mcp/mcp_http_main.py` at HEAD `d7c90d9d31062d389810808e43dfdd19d7711b75` was reported as **untracked** (`?? room_hop_mcp/mcp_http_main.py`). Its source registers legacy meeting/sandbox/agent tools but does not import/register the V54 server/service or seven execution/evidence tools. The entrypoint therefore lacks the intended V54 execution registration in the audited candidate.
+- The V54 tool registry in Sandbox is fail-closed: `sandbox_run_command` returns `POLICY_REFUSED`; other execution/evidence handlers return `NOT_IMPLEMENTED`, even if optional Core pre-check succeeds. This is intentionally not an execution path.
+- The W13 envelope builder explicitly raises `W13_SAFE_SERVER_SIDE_ENTRYPOINT_ADAPTER_NOT_IMPLEMENTED`; the reviewed transport bridge only delegates an already-formed two-part W13 envelope. These modules are contract seams, not a wired deployed path.
+- Core-derived Work authorization → W13 `:8031/execute`, authenticated MCP-to-host dispatch, OS isolation, cleanup, and integrated E2E remain NOT PROVEN. Do not bypass by posting directly to unauthenticated `/execute` or by registering stubs as if they execute.
+- Fastest next required PC evidence/action: inspect the currently running 8020 listener's actual `tools/list` and exact command line/source path; then reconcile that entrypoint into a tracked/reproducible candidate and wire only the reviewed Core-authorized adapter after the Core route and auth configuration are proven. Keep execution fail-closed meanwhile.
+- Decision: Runtime health/hash slice PASS; integration entrypoint gate BLOCKED; authorization/security gate BLOCKED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+- Signature: Ka — CSA / Independent Reviewer — 2026-10-27.
+
+## 2026-11-01 23:09 UTC+7 — Co — Coder / AI Build Assistant
+- Consolidated Ka's independently reviewed WP2 fail-closed correction into Co's suspended-spawn candidate under `10_AI_DEBUG_HANDOFF/02_PATCH_CANDIDATES/20261030_WP2_SUSPENDED_SPAWN/execution_host/process_job.py`.
+- Unknown Windows Job Object member count now remains unknown and causes drain verification to fail closed; no leader-only fallback for an attached Job Object.
+- Sandbox write/readback succeeded for the isolated candidate. Focused tests were not run because the current MCP 8030 tool surface has no approved Python/pytest execution action.
+- No production/live MCP source, GitHub branch, PR, or execution gate changed. WP2 remains BLOCKED; OS isolation remains NOT_VERIFIED.
+- Evidence: `10_AI_DEBUG_HANDOFF/01_REVIEW/CO_WP2_FAIL_CLOSED_CONSOLIDATION_20261101.md`.
+
+
+## 2026-11-01 23:35 UTC+7 — Co — Coder / AI Build Assistant
+- Synced WP2 fail-closed candidate, focused pytest and evidence report to GitHub branch `work/28-mcp-tooling-platform`; final commit `1064fbd76183df72e1d8018db2aa3ba01ee295f2`.
+- GitHub readback verified all four synced files (candidate, pytest, evidence, workflow).
+- Focused GitHub pytest: 2 passed in 0.35s, exit 0 (run 41327090595). Initial attempt failed at collection due import collision; corrected test to load the isolated candidate by exact path and reran successfully.
+- Existing Work 28 CI at same commit: 3/3 jobs successful, Linux + Windows lifecycle + unit/regression (run 41327090671).
+- This does not prove native Windows Job Object containment, OS isolation, or live deployment. Execution gate remains CLOSED; no E2E/release PASS.
+
+
+## CI FOLLOW-UP — 2026-11-01 23:xx UTC+7
+- **Người thực hiện:** Co — AI Build Assistant / Coder.
+- **Phạm vi:** xác minh lại GitHub Actions trên HEAD `work/28-mcp-tooling-platform` sau commit cập nhật báo cáo `049f6a7aa4b75dd3f351ae2bb41effb9756833d9`.
+- **Run:** `41327186592` — Work28 regression CI; cả 3 job `unit-regression-tests`, `execution-host-lifecycle-windows`, `execution-host-lifecycle-linux` đều `completed / success`.
+- **Kết luận:** CI trên HEAD mới nhất xanh 3/3. Kết quả này không thay thế kiểm chứng native Windows Job Object, suspended-spawn containment, OS isolation hoặc E2E trên Execution Host thật. Work28 vẫn ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; execution gate CLOSED.
+- **Bằng chứng:** https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/41327186592
+- **Ghi chú thời gian:** cần chuẩn hóa phút UTC+7 chính xác khi hoàn tất lần đồng bộ này.
+
+
+**Đính chính thời điểm ghi mục CI FOLLOW-UP ngay phía trên:** mốc `23:xx` là placeholder phát sinh khi ghi; thời điểm thực tế của lần ghi và xác minh là **2026-11-01 23:38 UTC+7**. Các kết quả CI và kết luận kỹ thuật không thay đổi.
+
+
+## 2026-11-01 23:41 UTC+7 — Co mở rộng kiểm thử native Windows cho WP2 candidate
+**TÊN:** Co  
+**CHỨC DANH:** Coder / AI Build Assistant  
+**NGÀY:** 2026-11-01  
+**GIỜ - PHÚT:** 23:41 (UTC+7)
+
+- Finding: focused WP2 pytest hiện tại chỉ kiểm tra hai nhánh fail-closed bằng mocked Job Object query failure; workflow đó chạy trên Ubuntu. CI tổng thể Windows trước đây chạy `tests/test_process_job.py` nhưng import production `execution_host`, không chứng minh candidate cô lập.
+- Change: thêm `execution_host/__init__.py` vào candidate để có thể import độc lập; mở rộng `.github/workflows/work28-wp2-fail-closed-pytest.yml` thêm job `wp2-native-windows-process-tree` trên `windows-2022`, chạy `tests/test_process_job.py` với working directory đặt tại candidate root, do đó import module candidate thay vì package production.
+- GitHub sync: workflow commit `82518469181a5ad5b7474356d0de914dda931c5a`; candidate package marker commit `2997100cc90a90f27be87cab4103adeafc4b9944`. Branch `work/28-mcp-tooling-platform`. Cần poll CI sau commit cuối để xác nhận job có chạy và kết quả thực tế.
+- Sandbox write xác nhận thành công cho package marker. Không có production source, live MCP entrypoint, PR merge hoặc execution gate nào thay đổi.
+- Gate: đây là candidate-level native Windows validation attempt, không phải OS sandbox isolation proof hoặc E2E. Giữ Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; execution gate CLOSED.
+
+
+## 2026-11-01 23:42 UTC+7 — Co xác minh native Windows WP2 candidate
+**TÊN:** Co  
+**CHỨC DANH:** Coder / AI Build Assistant  
+**NGÀY:** 2026-11-01  
+**GIỜ - PHÚT:** 23:42 (UTC+7)
+
+- Thêm `execution_host/__init__.py` cho candidate cô lập và mở rộng workflow WP2 với job Windows Server 2022 chạy `tests/test_process_job.py` từ thư mục candidate; nhờ vậy import đúng candidate thay vì production package.
+- Run `41327587057`: job native Windows hoàn tất SUCCESS; log ghi **13 passed in 1.06s** trên Windows Server 2022 / CPython 3.12.10. Test gồm Job Object attachment và cleanup process tree parent/child trên runner Windows thật.
+- Run mới nhất `41327592086` trên commit `2997100cc90a90f27be87cab4103adeafc4b9944`: cả Ubuntu fail-closed job và Windows native candidate job đều SUCCESS.
+- Work28 general CI `41327592075` trên cùng commit: 3/3 job Linux lifecycle, Windows lifecycle, unit/regression đều SUCCESS.
+- Đây là bằng chứng native Windows Job Object/process-tree lifecycle cho candidate trên GitHub-hosted runner, mạnh hơn mocked-only test; chưa chứng minh adversarial scheduling race closure, live Execution Host deployment hoặc OS sandbox isolation.
+- Không sửa production source/live MCP, không merge PR, không mở execution gate. Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+- Evidence: `10_AI_DEBUG_HANDOFF/01_REVIEW/CO_WP2_NATIVE_WINDOWS_VALIDATION_20261101.md`.
