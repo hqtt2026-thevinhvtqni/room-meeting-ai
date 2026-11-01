@@ -1,167 +1,85 @@
-# KHÁM PHÁ / DISCOVER BRIEF
+# 01 — DISCOVER / KHÁM PHÁ
 - **STT / Document ID:** DOC-007
-- **Priority / Mức ưu tiên:** P1
-- **Read order / Thứ tự đọc:** 11
-- **Depends on / Phụ thuộc:** DOC-001
-- **Status / Trạng thái:** ACTIVE — MASTER BRIEF TEMPLATE
-- **Version / Updated:** 1.1 / 2026-10-30
-- **Process / Quy trình áp dụng:** DOC-042 — Quy trình Khám phá / Discover Process
-- **Owner / Phụ trách:** Xu / AI-01
-- **Authority / Thẩm quyền:** Vinh — Product Owner
+- **Priority:** P1
+- **Read order:** 11
+- **Depends on:** DOC-001
+- **Status:** ACTIVE
+- **Version / Updated:** 1.0 / 2026-10-30
 
-## 1. Work Overview — Tổng quan Work
-- Work ID:
-- Work name:
-- Product / outcome:
-- Requester:
-- Product Owner:
-- Discover Coordinator:
-- Date opened:
-- Brief version:
-- Research depth: LIGHT / STANDARD / DEEP
-- Current status: DRAFT / RESEARCHING / READY FOR G1 REVIEW / CLOSED
+## Problem statement
 
-## 2. Initial Request — Yêu cầu ban đầu
-- Original request (verbatim):
-- Source / received date:
-- Desired outcome stated by requester:
-- Proposed solution (if any; not yet approved):
-- Initial constraints:
-- Clarifications / unresolved questions:
+ROOM-HOP tracks many Works and child branches, but the current Work-centric folder structure does not consistently reveal the lifecycle position and readiness of the whole product. A completed child task can be mistaken for product-level completion.
 
-## 3. Background & AS-IS — Bối cảnh và hiện trạng
-- Organization / product context:
-- Current workflow:
-- Existing systems / data / tools:
-- Known limitations:
-- In-scope:
-- Out-of-scope:
-- Observed facts vs stakeholder reports:
+## Product outcome
 
-## 4. Users & Stakeholders — Người dùng và bên liên quan
+Every Work can answer, from one place:
+1. What product is this Work building?
+2. Which lifecycle phase is active?
+3. What has been verified?
+4. What is blocked, by whom, and by what dependency?
+5. What evidence is required for the next gate?
 
-| Person / group | Role / affected interest | Need / concern | Decision authority | Evidence / source |
+## Users
+
+- Vinh: portfolio/product oversight and final authority.
+- Xu / lifecycle coordinator: planning, coordination, decision preparation.
+- Builders: execute assigned work packages.
+- Independent QE/QA: verify outputs and evidence.
+- Reviewers / release owners: inspect gate readiness and decisions.
+
+## Non-goals
+
+- Do not rebuild the agent framework as the product.
+- Do not migrate all existing Works in this initial Work 70 pass.
+- Do not claim live dashboard integration before a real data source is connected.
+- Do not replace Core with per-Work local state files.
+
+
+## Addendum — Discovery evidence, assumptions and unresolved questions (2026-11-01)
+
+### A. Evidence register (internal / user-stated only)
+
+| ID | Classification | Evidence / source | Supported finding | Limitation |
 |---|---|---|---|---|
-| | | | | |
+| D70-DISC-E01 | User-stated product intent | Vinh's prior Work 70 discussions (2026-10-29 onward): wants a machine that runs plan → code → test → review; AI models are adapters attached to the machine, not the machine itself | Product problem is lifecycle execution/orchestration, not merely adding more autonomous agents | One product-owner statement; not external market research |
+| D70-DISC-E02 | Current system baseline | DOC-001 Manifest v1.4 | Work 70 scope includes reusable lifecycle, WP model, evidence/gates, dashboard reference, storage/export design and future migration standard | Manifest says current phase 01_DISCOVER PLANNED; G0/G1 NOT_READY |
+| D70-DISC-E03 | Governance requirement | DOC-004 Lifecycle Gate Matrix v1.2 | Nine lifecycle gates have defined phase exits, evidence minima and decision authorities | Policy document; does not prove technical enforcement |
+| D70-DISC-E04 | State model requirement | DOC-005 State Machine v1.2 | Work, Phase, Gate and WP states are distinct; illegal transitions must fail closed; progress is not gate status | Historical baseline not yet reconciled against live runtime implementation |
+| D70-DISC-E05 | Product boundary | DOC-010 Dashboard/Core Read Contract | Dashboard must be read-only; local snapshot/sample must not be represented as Core live | Contract is not evidence that Core endpoints exist |
+| D70-DISC-E06 | Technical capability observation | DOC-017 Core Capability Gap Assessment and DOC-061 runtime reconciliation | Reviewed Core router is Meeting-centric; Work-scoped registry/read/write/evidence capabilities remain NOT VERIFIED | Read-only review of identified source/revisions; absence in reviewed router is not proof no implementation exists elsewhere |
+| D70-DISC-E07 | Planning baseline | DOC-011 Roadmap and DOC-062 WP baseline proposal | Six WP candidates cover governance, WP registry, Dashboard, Core read integration, evidence/storage-export and independent verification | DOC-062 remains DRAFT; no approved execution baseline |
 
-## 5. Problem Statement — Phát biểu vấn đề
-- Who is affected?
-- What is happening / not happening?
-- In what context?
-- Frequency / scale / severity:
-- Consequence / cost of current state:
-- Why does this matter now?
-- Problem statement (solution-neutral):
+### B. Problem statement refinement
 
-## 6. Evidence Summary — Tổng hợp bằng chứng
+The current operational problem is that Work planning, assignments, execution, verification, acceptance and release are represented across documents, branches, tools and AI participants without one verified authoritative runtime enforcing the lifecycle. This creates risk of confusing a written assignment with accepted work, a local snapshot with live state, a file write with verified evidence, and a completed child task with product-level completion.
 
-| Evidence ID | Claim / observation | Class (CONFIRMED / OBSERVED / REPORTED / ASSUMED / UNKNOWN / CONFLICTED) | Source / link | Date / collector | Scope / method / limitation | Counter-evidence |
-|---|---|---|---|---|---|---|
-| | | | | | | |
+The product opportunity is a provider-neutral lifecycle engine and authoritative Work control plane that can accept interchangeable AI/tool adapters while retaining deterministic state, authorization, evidence, audit, recovery and independent verification.
 
-Evidence rules:
-- Every material claim must link to a source or be explicitly marked as inference/assumption.
-- AI consensus is not evidence.
-- Do not treat repeated copies of one source as independent corroboration.
-- Preserve conflicting evidence and state its scope.
+### C. Assumptions — not yet validated
 
-## 7. Root Cause Analysis — Phân tích nguyên nhân
-- Symptoms:
-- Confirmed direct causes:
-- Confirmed root causes:
-- Hypotheses (not confirmed):
-- Method used (if any):
-- Confidence and falsification conditions:
+1. Vinh is the primary Product Owner and first operational user; additional builders/reviewers/QE roles are represented by the planned operating model.
+2. Existing ROOM-HOP Core should remain the authority for identity, authorization and persistent Work state if its capabilities can be extended safely.
+3. AI providers may change independently without changing lifecycle rules or authoritative Work data.
+4. Work/WP/evidence volume, concurrency, retention, availability and latency requirements are not yet quantified.
+5. A read-only Dashboard is sufficient for the initial product control surface; all state-changing commands should pass through an authorized service boundary.
 
-## 8. Impact — Tác động
-- Affected people / systems:
-- Frequency / scale:
-- Operational / financial / user impact:
-- Risk of doing nothing:
-- Impact evidence and uncertainty:
+### D. Unknowns requiring discovery or architecture decisions
 
-## 9. Opportunity Assessment — Đánh giá cơ hội
-- Desired value / outcome:
-- Option A — keep current state / do nothing:
-- Option B — process or policy improvement:
-- Option C — configure / reuse / integrate existing capability:
-- Option D — build new capability (only if justified):
-- Value, cost, risk, reversibility and dependency comparison:
-- Preferred direction and rationale (recommendation, not approval):
+- Which Core owner/team is accountable for Work lifecycle APIs and authorization?
+- What are the actual authentication principal, role, permission and revocation interfaces in current Core?
+- Which database and object/file storage services are approved for authoritative Work state and evidence bytes?
+- What retention, backup, recovery, data classification and audit requirements apply?
+- What workload targets are expected: number of concurrent Works/WPs, AI participants, evidence size, event rate and latency?
+- Which AI adapters and tool execution environments are required for the first production slice, and what existing entitlements can be reused?
+- What is the minimum useful first release: Work/WP registry and gates, or also evidence storage/export and Dashboard live read?
 
-## 10. Assumptions — Giả định
+### E. G1 readiness assessment
 
-| ID | Assumption | Why it matters | Confidence | Impact if wrong | Verification method | Owner / due condition | Status |
-|---|---|---|---|---|---|---|---|
-| | | | | | | | |
+- Problem and intended product outcome: DEFINED from product-owner statement and internal operating evidence.
+- User roles and non-goals: IDENTIFIED at a preliminary level.
+- Evidence provenance: RECORDED above; all evidence is internal or user-stated, not external customer research.
+- Assumptions and unknowns: EXPLICIT.
+- External user validation, operational metrics and workload baselines: NOT AVAILABLE / NOT RUN.
+- Product Owner confirmation of this refined discovery brief: PENDING.
 
-## 11. Unknowns & Conflicts — Điều chưa biết và mâu thuẫn
-
-| ID | Unknown / conflict | Why it matters | Evidence on each side | Resolution plan | Owner | Closure condition |
-|---|---|---|---|---|---|---|
-| | | | | | | |
-
-## 12. Constraints & Dependencies — Ràng buộc và phụ thuộc
-- Time / schedule:
-- Budget / cost:
-- People / skills:
-- Technical / platform:
-- Data / privacy / security:
-- Legal / compliance:
-- External dependencies:
-- Non-negotiable constraints:
-
-## 13. Risks — Rủi ro ban đầu
-
-| Risk ID | Risk | Likelihood | Impact | Mitigation / verification | Owner | Residual risk |
-|---|---|---|---|---|---|---|
-| | | | | | | |
-
-## 14. Recommendation — Khuyến nghị
-- Recommended Discover outcome: PROCEED / RESEARCH MORE / STOP-REJECT / REDEFINE
-- Rationale:
-- Alternatives considered:
-- Conditions / caveats:
-- Decision requested from Product Owner:
-- This section is advisory; it is not a gate decision.
-
-## 15. G1 Assessment — Đánh giá Gate DISCOVER → DEFINE
-
-| G1 criterion | Evidence / reference | Reviewer finding | Status (PASS / GAP / N/A with reason) |
-|---|---|---|---|
-| Original request and requester traceable | | | |
-| Users, stakeholders and context identified | | | |
-| Clear solution-neutral problem statement | | | |
-| Evidence or explicit evidence gaps | | | |
-| Assumptions, unknowns and conflicts classified | | | |
-| Opportunity, impact and alternatives assessed | | | |
-| Constraints, dependencies and risks recorded | | | |
-| Brief complete under DOC-042 | | | |
-| Review appropriate to risk completed | | | |
-| Product Owner decision recorded | | | |
-
-- Overall G1 status: NOT READY / NEEDS RESEARCH / BLOCKED / PASS / WAIVED
-- Reviewer(s), role and date:
-- Product Owner decision / scope:
-- Decision record reference:
-- Waiver authority, rationale, scope, expiry and residual risk (if applicable):
-- Next phase authorized: YES / NO
-- Gate decision date:
-
-**Rule:** PASS is valid only when mandatory criteria are met and the authorized Product Owner/authority records the decision. A Dashboard label, AI consensus or completed child task does not open G1.
-
-## 16. Discover Outcome & Handoff — Kết quả và bàn giao
-- Outcome: PROCEED / RESEARCH MORE / STOP-REJECT / REDEFINE
-- Handoff package:
-- Open research tasks:
-- Assumptions / risks transferred to DEFINE:
-- Explicit exclusions:
-- Receiving owner:
-- Handoff date / acknowledgement:
-
-## 17. Change History — Lịch sử thay đổi
-
-| Version | Date | Author | Change |
-|---|---|---|---|
-| 1.0 | 2026-10-30 | Xu / AI-01 | Initial problem statement, product outcome, users and non-goals |
-| 1.1 | 2026-10-30 | Xu / AI-01 | Converted into governed Discover Brief template aligned with DOC-042; added evidence provenance, assumptions, unknowns, risks, opportunity alternatives, G1 assessment and handoff |
+**Conclusion: DISCOVER OUTPUT PREPARED — G1 NOT EVALUATED / NOT PASS.** This addendum does not start the phase, change the Manifest, or grant entry to DEFINE. G1 may be evaluated only by the authorized Product Owner after reviewing the evidence, assumptions and unknowns.
