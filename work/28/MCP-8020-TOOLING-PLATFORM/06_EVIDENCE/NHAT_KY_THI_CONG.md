@@ -1351,3 +1351,17 @@ Giới hạn: MCP 8030 hiện chỉ cung cấp thao tác file/context; không c�
 - WP2 run `41327810082` on evidence update commit `b63f9a86a3c09991860260e09859c9342946a32d`: focused pytest **4 passed in 0.42s**; native Windows candidate **13 passed in 1.17s**; both jobs SUCCESS.
 - General Work28 CI run `41327810152` on the same commit: Linux lifecycle, Windows lifecycle, unit/regression all completed SUCCESS (3/3).
 - This rerun confirms the evidence-report commit did not disturb either candidate test lane. Latest journal sync commit follows separately; source/test candidate unchanged.
+
+
+## 2026-11-01 23:46 UTC+7 — Co xác minh native suspended-spawn execution ordering
+**TÊN:** Co  
+**CHỨC DANH:** Coder / AI Build Assistant  
+**NGÀY:** 2026-11-01  
+**GIỜ - PHÚT:** 23:46 (UTC+7)
+
+- Bổ sung native Windows test `test_native_windows_child_cannot_execute_before_job_assignment`: dùng child process thật ghi marker ngay khi chạy; wrapper kiểm tra marker chưa tồn tại trước và sau `AssignProcessToJobObject`, tiếp tục xác nhận marker chưa tồn tại ngay trước `ResumeThread`; sau resume, child phải ghi marker thành công. Test chạy trực tiếp trên candidate cô lập.
+- Cập nhật workflow WP2 để Windows Server 2022 job chạy cả lifecycle suite và candidate validation file. Test source + workflow đã sync GitHub trên branch `work/28-mcp-tooling-platform`; code commit `b1b6d207dd7a134c398eff342ab5db34319710e6`.
+- WP2 run `41327946366`: Ubuntu focused **4 passed, 1 skipped**; Windows native candidate **18 passed in 1.34s**; cả hai job SUCCESS. Windows run bao gồm 13 lifecycle/process-tree tests và native ordering test mới.
+- Work28 general CI run `41327946426`: Linux lifecycle, Windows lifecycle, unit/regression đều SUCCESS (3/3).
+- Kết luận giới hạn: đã quan sát native Windows child không thực thi trước khi Job Object assignment hoàn tất và chỉ bắt đầu sau resume trên GitHub-hosted Windows Server 2022. Chưa phải stress/adversarial scheduler proof, chưa deploy candidate vào Execution Host live, chưa chứng minh OS sandbox isolation.
+- Không sửa production source/live MCP; không merge PR; execution gate CLOSED. Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
