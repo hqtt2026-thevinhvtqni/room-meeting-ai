@@ -690,3 +690,46 @@ HTTP Adapter → MeetingService → MeetingManager (Meeting domain only).
 - Inspected `wee/cli.py` (blob `e745cfcd10a03b6cf87153bdf9321a207246fd18`): CLI resolves authority then calls LifecycleController.run(). Inspected `wee/readiness.py` (blob `f765568e4567476b36ba21090b5fc06663abdb00`): readiness only runs LocalExecutionHost.discover(); WEE READY is capability readiness, not proof of lifecycle/test completion.
 - Added test-source inventory and explicit not-executed/not-QE classification to DOC-061 for An's independent test plan.
 - No tests executed; no code or runtime changed. This source inventory does not pre-empt An's assigned QE report.
+
+
+## 2026-11-02 — An Tester — WP70-AN-CONTROLLER-QA — Tiếp tục đối chiếu source/test inventory
+
+- **Người thực hiện:** An Tester.
+- **Chức danh:** TESTER / Independent QA.
+- **Thời điểm:** 2026-11-02; MCP continuation (công cụ không cung cấp timestamp chính xác hơn trong lượt này).
+- **Work / Assignment:** Work 70 — WP70-AN-CONTROLLER-QA, theo DOC-054 Addendum 2026-11-02.
+- **Hành động thực tế:** đọc lại DOC-035, DOC-054 Addendum, DOC-055, DOC-057, DOC-061 và bản nháp trace của Vi; xem danh sách Meetings qua MCP 8030; đối chiếu các phát hiện source-level của Xu với ma trận QA hiện có.
+- **Bằng chứng mới đã đối chiếu:** DOC-035 ghi các source blob revisions cho WEE LifecycleController, ExecutionHost, bridge, Core router và test inventory. DOC-035 cũng ghi 10 test tên trong `tests/test_execution_host.py` cùng các vùng chưa được thấy trong test inventory: controller E2E/bound test entrypoint, primary-success + test-failure aggregation, server-boundary authorization spoofing, bridge Work/execution ID mismatch, revocation/version race, audit/evidence failure và idempotent duplicate command.
+- **Phân loại bằng chứng:** đây là kết quả source/test inventory của Xu, không phải raw runtime output hoặc test result của An. Không kết luận test FAIL chỉ từ việc chưa thấy test tương ứng trong inventory.
+- **Cập nhật hồ sơ QA:** bổ sung mục “Continuation update — 2026-11-02” vào `ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/05_BUILD/10_AI_DEBUG_HANDOFF/DRAFT_AN_WP70_CONTROLLER_QA_20261102.md`, bao gồm source revisions đã được DOC-035 ghi, các khoảng trống coverage, trạng thái từng nhóm và lệnh bắt đầu dự kiến `python -m pytest tests/test_execution_host.py -q`. Lệnh này chỉ là đề xuất, **NOT RUN / chưa xác thực trong môi trường hiện tại**.
+- **Kết quả lưu hồ sơ:** sẽ xác minh bằng readback sau khi ghi. Không sửa mã nguồn hay test implementation.
+- **Work Entry / runtime:** G0–G5 của An vẫn BLOCKED; MCP 8030 trong lượt này chỉ xác minh được Sandbox/Meeting operations, không có runtime/code execution runner hoặc dispatch/ACK mechanism đã xác minh. DOC-054 vẫn ASSIGNMENT READY / ACK PENDING / NOT A BUILD AUTHORIZATION.
+- **Trạng thái phép thử:** runtime cases vẫn NOT RUN; overall QA PREPARATION COMPLETE / EXECUTION BLOCKED / NOT ACCEPTED. Không chuyển nhận định của Xu/Ka thành PASS/FAIL của An.
+- **Không thực hiện:** không sửa source/Core/API/Engine/Dashboard; không commit/push/merge; không đổi Gate, Work state, permission; không nghiệm thu/phát hành.
+- **Bước gỡ chặn:** Xu/source owner cần cung cấp canonical repo path, branch/commit chính xác, môi trường thực thi được phép và test command có thể tái lập; đồng thời xác minh assignment ACK và Work Entry G0–G5. Sau đó An sẽ ghi raw stdout/stderr, exit code và evidence cho từng test.
+- **Chữ ký:** **An Tester — TESTER / Independent QA** — `[KÝ: AN | TESTER]`.
+
+
+## 2026-11-02 02:36 +07:00 — Ka / AI-02 — Tiếp tục kiểm tra và đối chiếu WP70-KA-RUNTIME
+- Người thực hiện: Ka / AI-02. Chức danh: CSA / Independent Architecture Reviewer. Work 70.
+- Đã kiểm tra DOC-035 trên GitHub default branch; ghi nhận các mục An 02:23 và Xu source spot-check/inventory mới nhất. Kết quả An: hoàn tất chuẩn bị ma trận và xác minh readback; runtime tests NOT RUN; EXECUTION BLOCKED. Kết quả Xu: source spot-check xác nhận một số phát hiện của Ka; không phải runtime QE.
+- Đã kiểm tra DOC-005: state-changing request cần server-side authorization, expected version, predecessor gate/evidence, audit provenance và idempotency; Dashboard/adapter không ghi authoritative state.
+- Đã kiểm tra DOC-060: đề xuất namespace vẫn PROPOSAL ONLY, chưa phê duyệt/triển khai. DOC-063 vẫn DESIGN ONLY theo hồ sơ hiện có.
+- Sandbox inventory xác nhận DOC-035 và các draft DOC-061, báo cáo An, báo cáo Vi hiện diện. Không đọc sandbox_read theo chỉ đạo hiện hành. GitHub fetch trực tiếp DOC-061/DOC-016/DOC-017 ở branch được thử vẫn NOT_FOUND; chưa xác minh được bản nội dung trực tiếp của các tài liệu này trong lượt này.
+- Việc cần Xu điều phối: xác minh ACK và Work Entry; cung cấp branch/ref/commit và đường dẫn đọc được cho DOC-061/DOC-016/DOC-017; xác nhận Core owner và môi trường runtime để An thực hiện QE độc lập.
+- Không sửa code/Core/API/DB/Engine/Dashboard; không đổi Gate/state/permission/namespace; không chạy runtime test; không commit/push/merge; không cấp BUILD.
+- Kết luận: KA REVIEW CONTINUED / VI TRACE NOT VERIFIED / AN RUNTIME QE NOT RUN / G4 NOT READY — NOT PASS / BUILD NOT AUTHORIZED / WORK 70 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+- Chữ ký: Ka / AI-02 — CSA / Independent Architecture Reviewer.
+
+
+## 2026-11-02 02:46 +07:00 — Xu / AI-01 — Reconcile Vi Core Trace with DOC-016/DOC-017 and Ka/An evidence
+
+- **READ:** DOC-035, DOC-054, DOC-061, DOC-016, DOC-017; Vi draft `05_BUILD/10_AI_DEBUG_HANDOFF/DRAFT_VI_WP70_CORE_TRACE_20261102.md`; An draft `05_BUILD/10_AI_DEBUG_HANDOFF/DRAFT_AN_WP70_CONTROLLER_QA_20261102.md`.
+- **TRACE:** Vi's source observations agree with DOC-016/DOC-017 and Ka/Xu bounded source review: inspected Core HTTP router/API contract is Identity/Meeting scoped; Meeting `save_artifact` is not a generic Work evidence service; Dashboard reads local `PRODUCT_STATUS.json` with `source_mode=local_snapshot`; proposed Work endpoints remain design-only. Search/router absence is not generalized to repository-wide absence.
+- **DECIDE:** No contradiction requiring DOC-016/DOC-017 design change was identified. Preserve both as design/read-only candidate records, not approved implementation contracts. Core owner must identify any Work registry/evidence service outside inspected router or own a proposal. No third execution host; no guessed API route; no Dashboard live claim.
+- **BUILD (documentation only):** appended a reconciliation addendum to `05_BUILD/03_ARCHITECTURE/DOC-061_RA-SOAT-DOI-CHIEU-HOP-DONG-KIEN-TRUC-RUNTIME-WORK-70.md`, including evidence refs, bounded conclusions, remaining owners and gate disposition. Sandbox write returned status=ok; readback verification recorded separately below.
+- **VERIFY:** Vi report remains DRAFT; participant-specific Work Entry G0-G5/implementation authorization not evidenced. An runtime QE remains NOT RUN / EXECUTION BLOCKED. Ka/Xu source review is not runtime QE. DOC-060 remains PROPOSAL ONLY pending Vinh decision.
+- **No change:** no source/Core/database/Engine/Dashboard implementation; no Gate/state/assignment/permission change; no release/acceptance.
+- **Disposition:** Core Work API/auth/persistence/evidence/export NOT VERIFIED in inspected scope; Dashboard Core-live BLOCKED; G4 NOT READY / NOT PASS; BUILD NOT AUTHORIZED; Work 70 ACTIVE / NOT ACCEPTED / NOT RELEASED.
+- **Next:** complete DOC-061 contract reconciliation and ownership map; obtain actual Core owner/source evidence; provide An an authorized canonical checkout + runtime; keep Vi adapter work blocked until approved contract and entry authorization exist.
+
