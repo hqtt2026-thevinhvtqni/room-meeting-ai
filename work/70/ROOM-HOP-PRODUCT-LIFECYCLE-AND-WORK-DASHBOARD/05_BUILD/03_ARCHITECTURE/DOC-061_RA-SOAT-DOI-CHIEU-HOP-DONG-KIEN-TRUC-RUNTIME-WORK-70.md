@@ -476,3 +476,36 @@ Additional source inspected:
 - Race/revocation/idempotency/audit atomicity: NOT COVERED by the inspected named tests.
 
 This inventory informs An's independent QA assignment; it does not pre-empt An's test conclusions and does not claim tests failed or passed.
+
+
+## Addendum 2026-11-02 — Xu reconciliation of Vi Core trace with DOC-016/DOC-017
+
+**Classification:** READ-ONLY SOURCE RECONCILIATION / DESIGN ONLY / NOT IMPLEMENTATION AUTHORIZATION.
+
+### Evidence integrated
+- Vi / WP70-VI-CORE-TRACE draft: `05_BUILD/10_AI_DEBUG_HANDOFF/DRAFT_VI_WP70_CORE_TRACE_20261102.md`, dated 2026-11-02, signature `[KÝ: VI | CODER]`. It records router blob `54cb3ecbce2e6b13083f31c14f0c1f0738f1457d`, MeetingService blob `0b80a81663c1be328c41878a6762d16d95378aab`, API_CONTRACT blob `29b33cfd4aca4252d9786965f7e54b519a77f72b`, and Dashboard snapshot blob `2c4fd26b833147e0e9e39747a5bfa95d70ba2a8d`.
+- DOC-016 — Storage & File Export Architecture: `05_BUILD/03_ARCHITECTURE/STORAGE_AND_EXPORT_ARCHITECTURE.md`, design proposal only.
+- DOC-017 — Core Capability Gap Assessment: `05_BUILD/03_ARCHITECTURE/CORE_CAPABILITY_GAP_ASSESSMENT.md`, read-only source review; integration not verified.
+- DOC-035 records Ka's runtime review, Xu's source spot-check and An's QA preparation. These remain distinct evidence classes.
+
+### Reconciliation result
+1. **Core API boundary — CONSISTENT.** Vi's fetched router/API contract observations agree with DOC-016/DOC-017 and Ka/Xu's bounded source review: inspected HTTP router and API contract expose Identity/Meeting capabilities; no Work/WP/lifecycle/evidence/export routes were found in that inspected scope. This is not proof that no implementation exists elsewhere in the repository.
+2. **Meeting artifact boundary — CONSISTENT.** MeetingService.save_artifact is Meeting-domain behavior and is not a generic Work Evidence Registry or storage/export service. Do not repurpose it.
+3. **Dashboard data source — CONFIRMED LOCAL SNAPSHOT.** Vi traced Dashboard index to relative `PRODUCT_STATUS.json`; the snapshot declares `source_mode=local_snapshot`, timestamp `2026-10-30T09:10:00+07:00`, and WP70-04 Core read integration BLOCKED. Dashboard is not Core-live and must not be represented as such.
+4. **Proposed API routes — DESIGN ONLY.** Routes in DASHBOARD_CORE_READ_CONTRACT remain proposed and are not verified endpoints. No adapter should call guessed routes or silently fall back to a local snapshot while claiming live data.
+5. **Storage/export — DESIGN ONLY.** DOC-016's Core-owned metadata, managed Storage Adapter, immutable evidence, integrity/read-after-write, audit and export requirements remain target design. No generic Core Work evidence registry, storage or export implementation is evidenced by the inspected sources.
+6. **Scope limits — PRESERVED.** Vi's code-search absence and router inspection are bounded observations, not repository-wide proof. Runtime Core behavior was NOT RUN. DOC-016/DOC-017 retain their canonical-candidate/migration-pending status; this addendum does not promote them to approved implementation contracts.
+
+### Remaining reconciliation / decision items
+- Core owner must identify whether a Work registry/evidence service exists outside the inspected router and provide canonical source paths, revisions, auth boundary and tests; if absent, the Core owner must own the proposal and implementation decision.
+- Ka/Xu must finish selecting one authoritative lifecycle/execution-host path and reconcile the target contract with DOC-005, DOC-010, DOC-016, DOC-017, DOC-054, DOC-057 and DOC-063. Do not create a third execution host.
+- Vi's report remains DRAFT and explicitly reports Work Entry G0-G5 not all PASS; no participant-specific implementation authorization is evidenced. Dashboard adapter implementation remains NOT AUTHORIZED.
+- An's runtime QA remains NOT RUN / EXECUTION BLOCKED. Source inventories are not runtime test results.
+- DOC-060 gate namespace remains PROPOSAL ONLY and requires Vinh's decision. No gate IDs or authority changed here.
+
+### Xu disposition
+- Core Work API/auth/persistence/evidence/export: NOT VERIFIED in inspected scope.
+- Dashboard Core-live integration: BLOCKED; local snapshot only.
+- DOC-016/DOC-017: consistent with Vi/Ka/Xu evidence; no conflict requiring a design change identified in this reconciliation.
+- G4: NOT READY / NOT PASS. BUILD: NOT AUTHORIZED. Work 70: ACTIVE / NOT ACCEPTED / NOT RELEASED.
+- No source code, Core, database, Engine, Dashboard, Gate, state, assignment, permission or release status changed.
