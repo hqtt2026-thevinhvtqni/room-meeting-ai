@@ -4,7 +4,7 @@
 - **Read order:** 55
 - **Depends on:** DOC-001; DOC-038; DOC-039; DOC-040; DOC-056
 - **Status:** ACTIVE — SINGLE SOURCE OF TRUTH
-- **Version / Updated:** 2.3 / 2026-10-31
+- **Version / Updated:** 2.4 / 2026-11-02
 - **Owner:** Xu / AI-01
 - **Authority:** Vinh
 Owner: Xu / AI-01
@@ -84,3 +84,9 @@ When adding a document: allocate the next unused DOC ID, set priority/read order
 | DOC-061 | P1 | 61 | Rà soát đối chiếu hợp đồng kiến trúc runtime Work 70 / Work 70 Runtime Architecture Contract Reconciliation | Sandbox: ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/05_BUILD/03_ARCHITECTURE/DOC-061_RA-SOAT-DOI-CHIEU-HOP-DONG-KIEN-TRUC-RUNTIME-WORK-70.md; GitHub: work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/05_BUILD/03_ARCHITECTURE/DOC-061_RA-SOAT-DOI-CHIEU-HOP-DONG-KIEN-TRUC-RUNTIME-WORK-70.md @ work/70/05-build | DOC-004; DOC-005; DOC-010; DOC-033; DOC-049; DOC-054; DOC-055; DOC-060 | DRAFT — SOURCE RECONCILIATION COMPLETE / CONTRACT APPROVAL PENDING | Đối chiếu state machine, gate, Core runtime baseline, WEE/execution-host source, Dashboard authority, branch divergence và test contract; bổ sung Ka source review: controller TEST BLOCKED, execution-host authorization boolean chưa đủ, aggregate test PASS risk, bridge identity binding và local evidence; target contract/Vi trace/An QE còn pending; không phê duyệt implementation |
 | DOC-062 | P0 | 62 | Đề xuất chuẩn hóa gói công việc / Work Package Baseline Reconciliation Proposal | 04_PLAN/DOC-062_DE-XUAT-CHUAN-HOA-GOI-CONG-VIEC_WORK-PACKAGE-BASELINE-RECONCILIATION-PROPOSAL.md | DOC-001; DOC-004; DOC-005; DOC-006; DOC-011; DOC-036; DOC-042; DOC-043; DOC-044; DOC-054; DOC-055; DOC-057; DOC-061 | DRAFT — APPROVAL PENDING / G4 NOT READY | Reconcile sáu WP giữa Work-level roadmap và Build Register candidate; không cấp quyền BUILD |
 | DOC-063 | P0 | 63 | Kiến trúc thực thi Work Entry Authorization và DENY-to-RECOVERY / Work Entry Authorization & Deny Recovery Enforcement Blueprint | 03_ARCHITECT/DOC-063_KIEN-TRUC-THUC-THI_WORK-ENTRY-AUTHORIZATION-AND-DENY-RECOVERY.md | DOC-001; DOC-004; DOC-005; DOC-043; DOC-044; DOC-057; DOC-061; DOC-062 | DRAFT — DESIGN ONLY / NOT APPROVED / NOT IMPLEMENTED | Hợp đồng kỹ thuật đề xuất cho authorization tại điểm thực thi; bổ sung yêu cầu tách Recovery/Protected scope và commit-time authorization theo review Ka; P0.3/P0.4 DESIGN ONLY, chờ Core owner, Vi trace và An QE; không cấp quyền BUILD |
+
+
+## Addendum 2026-11-02 — đăng ký DOC-068
+| STT | Priority | Read order | Document | Path | Depends on | Status | Purpose / reading instruction |
+|---|---|---:|---|---|---|---|---|
+| DOC-068 | P0 | 68 | Đề xuất hợp nhất roadmap và đích bàn giao Work 70 / Work 70 Roadmap & Delivery Target Reconciliation Proposal | 04_PLAN/DOC-068_DE-XUAT-HOP-NHAT-ROADMAP-WORK-70.md | DOC-001; DOC-006; DOC-011; DOC-062; DOC-064; DOC-065; DOC-066; DOC-067 | DRAFT — SOURCE RECONCILIATION COMPLETE / PRODUCT OWNER DECISION PENDING / G4 NOT READY | Giữ 6 WP IDs hiện hành, ánh xạ 8 sub-deliverables SD-01..SD-08; chưa thay DOC-011 hoặc cấp quyền BUILD |
