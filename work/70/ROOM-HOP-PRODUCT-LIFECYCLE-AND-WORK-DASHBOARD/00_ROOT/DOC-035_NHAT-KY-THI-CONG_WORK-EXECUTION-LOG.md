@@ -470,3 +470,12 @@ Xu ghi nhận phần cuối nhật ký vừa được bổ sung đã lặp lại
 - Cập nhật DOC-055 đăng ký DOC-063. Không sửa Manifest, gate, WP state, permission hoặc Core code; không cấp quyền BUILD.
 - Trạng thái: DOC-063 CREATED IN SANDBOX / DESIGN ONLY / REGISTER UPDATE ACKNOWLEDGED / READBACK PENDING / G4 NOT READY / IMPLEMENTATION NOT AUTHORIZED.
 - Người ghi: Xu / AI-01.
+
+
+## 2026-11-01 — Xu / AI-01 — Discovery evidence and G1 readiness preparation
+- Đọc lại DOC-001, DOC-004, DOC-005, DOC-007, DOC-010, DOC-011, DOC-017, DOC-061 và DOC-062.
+- Bổ sung vào DISCOVER_BRIEF evidence register có phân loại rõ user-stated intent, tài liệu governance, state model, Dashboard boundary, Core capability observation và planning baseline; tách riêng assumptions, unknowns và giới hạn bằng chứng.
+- Ghi rõ không có external customer research hoặc workload baseline; không suy diễn nhu cầu thị trường hay khả năng Core ngoài phạm vi đã kiểm tra.
+- Kết luận: DISCOVER OUTPUT PREPARED; G1 NOT EVALUATED / NOT PASS; Manifest không đổi; không tự mở DEFINE hoặc BUILD.
+- Trạng thái: DISCOVER BRIEF APPEND ACKNOWLEDGED / READBACK & GITHUB SYNC PENDING.
+- Người ghi: Xu / AI-01.
