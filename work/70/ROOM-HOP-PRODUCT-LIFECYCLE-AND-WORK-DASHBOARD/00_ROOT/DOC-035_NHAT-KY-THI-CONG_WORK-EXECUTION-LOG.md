@@ -577,3 +577,79 @@ The fragment was not present verbatim in the canonical DOC-035. It is preserved 
 - DOC-035: commit d0cf28c6ee5b79367361b31a82afa76bde7db926; blob fd6fbe98755b9b102b9dfda1c5a3f16e5db792da; exact readback PASS.
 - DOC-054 assignment progress was not changed: Ka's received review covers the Gate P0.3/P0.4 subtask only; full Ka runtime reconciliation, Vi Core trace and An independent QA remain pending evidence.
 - Status: SANDBOX/GITHUB MAIN EXACT CONTENT MATCH VERIFIED FOR DOC-063, DOC-055, DOC-035. No code/runtime test or BUILD authorization.
+
+
+## 2026-11-02 02:17:51 +07:00 — Ka / AI-02 — WP70-KA-RUNTIME: source-level architecture reconciliation (READ-ONLY)
+- Người thực hiện: Ka / AI-02 — CSA / Independent Architecture Reviewer.
+- Chức danh: Architecture Reviewer — WP70-KA-RUNTIME.
+- Thời điểm: 2026-11-02 02:17:51 UTC+07:00.
+- Cơ sở phân công: DOC-054, ADDENDUM 2026-11-02 — WP70-KA-RUNTIME; trạng thái ASSIGNMENT READY / ACK PENDING / NOT A BUILD AUTHORIZATION.
+- Phạm vi đã thực hiện: đọc DOC-054 addendum và DOC-063 hiện hành trên GitHub; truy vết source-level ở GitHub main theo baseline được Xu ghi trong DOC-035: main HEAD 21190f8449656ac65a2b5682621e1c4f75a0d6dd. Đã kiểm tra wee/controller.py, wee/authority.py, wee/models.py, wee/cli.py, wee/readiness.py, wee/bridge/contracts.py, wee/bridge/local_host.py, wee/bridge/real_host.py, wee_work13_adapter.py, execution_host/host.py, execution_host/security.py, execution_host/models.py, execution_host/identity.py, execution_host/wee_bridge.py, tests/test_work13_wee_integration.py, tests/test_execution_host.py, tests/test_wee_8031_bridge.py, room_hop_mcp/adapter/http_server.py và API_CONTRACT.md.
+- Giới hạn nguồn: DOC-061 canonical nằm trong Sandbox/Build branch theo DOC-055 và DOC-035; GitHub fetch cho DOC-061 trên branch work/70/05-build trả NOT_FOUND trong phiên này. Không gọi lại sandbox_read theo chỉ đạo trước đó về sandbox_read. Vì vậy phần DOC-061 chưa được đối chiếu trực tiếp trong lượt này; không suy diễn nội dung chưa đọc. DOC-016/DOC-017 cũng chưa lấy được nội dung từ branch source trong lượt này. Source review dưới đây độc lập, không thay thế các tài liệu trên.
+
+### Findings — lifecycle orchestration and execution boundary
+1. **WEE LifecycleController is not yet a real execution controller.** In wee/controller.py, run() records RESOLVE/BIND as PASS from the supplied WorkContext, validates only that repository/repository_root/branch/expected_head are non-empty, records PREPARE PASS without a demonstrated workspace preparation/validation step, calls host.discover(), then records EXECUTE PASS from the discovery report. Capability discovery is not process execution. If test_entrypoint is missing, TEST is BLOCKED; if present, TEST is still BLOCKED with reason 'execution adapter must run the bound entrypoint'. Controller never invokes host.execute(), host.run_test(), or a bound test runner. _finish() consequently returns overall BLOCKED and TEST BLOCKED in the inspected flow. This is a concrete stage-semantics defect: EXECUTE must not be PASS on discovery alone.
+2. **Existing Work 13 integration test is a direct adapter test, not controller E2E.** tests/test_work13_wee_integration.py imports LifecycleController but creates Work13ExecutionHostAdapter and calls host.execute(context.test_entrypoint, context) directly. It verifies adapter/process/evidence behavior for that direct call; it does not instantiate/run LifecycleController. Therefore it cannot prove RESOLVE→BIND→VALIDATE→PREPARE→EXECUTE→TEST orchestration.
+3. **Two execution implementations overlap; integration ownership is unresolved.** wee/bridge/real_host.py implements a RealExecutionHost with process execution and run_test(). Separately execution_host/host.py implements ExecutionHost with command execution, test option, artifacts, service lifecycle, Git adapter and optional browser/GitHub/CI adapters. wee_work13_adapter.py adapts the former for Work 13. execution_host/wee_bridge.py is an HTTP client bridge to :8031. No source evidence reviewed proves which of these is the single Work 70 execution boundary, nor that the HTTP server endpoint is bound to the same authority/evidence contract. Do not create a third engine; owner decision and end-to-end integration proof are required.
+4. **ExecutionHost authorization input is weaker than DOC-063 contract.** execution_host/models.py carries authorized: bool; ExecutionHostBridge.invoke() requires caller context field authorized to equal True and forwards the entire context to /execute; execution_host/security.py::validate_context() checks that boolean before command execution. In the inspected bridge/host path, no signed/scoped authorization proof or server-side re-resolution of principal, assignment, source revision, Gate/WP snapshot, expiry/revocation or policy version is visible. The HTTP server/auth middleware implementation was not located in the inspected files, so this is a confirmed gap in the reviewed client/model/host contract, not a claim that no external perimeter exists.
+5. **Potential false overall PASS in ExecutionHost test mode.** ExecutionHost.execute_work() executes the primary command and, when run_test=True, attaches the test execution as nested result['test']; the returned ExecutionResult.status is still taken from the primary command's result['status']. Thus a successful primary command with a failing test can still yield top-level PASS unless another unreviewed caller overrides it. Existing tests fetched do not exercise run_test=True with a failing test. This requires a regression test and explicit aggregate-result contract before use as LifecycleController backend.
+6. **Bridge response binding is not strict.** ExecutionHostBridge.invoke() accepts response work_id/execution_id from host and falls back to caller context when absent; inspected code does not reject a response whose returned Work/execution IDs differ from the request. Fake-transport tests cover happy path, nested response, HTTP 403, missing local authorized flag and transport timeout, but not mismatched identity binding or forged response correlation.
+7. **Core is not the Work authority in the inspected router.** room_hop_mcp/adapter/http_server.py exposes Identity and Meeting routes through MeetingService, plus read-only identity discovery. No Work/WP registry, assignment/ACK, lifecycle transition, Work authorization, evidence registry or export route appears in that inspected router. Xu's DOC-035 source recheck reports the same; Core Work capability remains NOT VERIFIED, not a claim that no such capability exists elsewhere in the repository.
+8. **Evidence persistence is currently local-file based in these components.** wee/models.py::EvidenceStore writes JSON files to a filesystem path; execution_host/host.py writes stdout/stderr and FINAL_RESULT.json under evidence_root. No Core-backed Evidence Registry contract, durable transactional audit coupling, command idempotency store, commit-time authorization recheck or outbox/reconciliation path is demonstrated in the reviewed files.
+
+### Component ownership / current capability matrix
+| Component | Source-level responsibility observed | Current classification | Boundary / gap |
+|---|---|---|---|
+| CanonicalWorkAuthority | Resolve WorkBinding from a JSON authority file | EXISTING / LOCAL FILE AUTHORITY | Does not demonstrate Core-backed identity, assignment, ACK, Gate or permission resolution |
+| WEE LifecycleController | Orchestrate lifecycle stages and evidence | PARTIAL / CONTROLLER TEST BLOCKED | Marks EXECUTE PASS after discover; never invokes bound test entrypoint |
+| WEE LocalExecutionHost | Capability discovery and local subprocess helper | EXISTING / LOCAL | Local helper; not evidence of Work 70 production integration |
+| WEE RealExecutionHost | Real process execution, test helper, workspace isolation | EXISTING / SEPARATE IMPLEMENTATION | Overlaps ExecutionHost; Work 70 ownership/authority integration unverified |
+| Work13ExecutionHostAdapter | Adapts Work 13 context to WEE RealExecutionHost | EXISTING / WORK13-SPECIFIC | Direct adapter E2E test does not test LifecycleController |
+| ExecutionHost | Process execution, security checks, evidence files, artifact collection, services | EXISTING / STANDALONE HOST | authorized boolean trust; no visible scoped proof/revalidation in reviewed path; test aggregation gap |
+| ExecutionHostBridge | HTTP request/response adapter to :8031 | EXISTING / CLIENT BRIDGE | Does not itself establish server authority; response identity binding not strict |
+| Core HTTP adapter | Identity + Meeting routes | VERIFIED FOR INSPECTED ROUTER ONLY | Work/WP/AuthZ/Evidence/Export routes NOT FOUND IN INSPECTED ROUTER |
+| Evidence Registry | No Core-backed Work registry endpoint found in inspected router | NOT VERIFIED | Local filesystem evidence is not a canonical Work Evidence Registry |
+| Dashboard | DOC-010 read-only contract | CONTRACT EXISTS / LIVE INTEGRATION NOT VERIFIED | Must not become a second Core or claim local fixture as Core live |
+| Independent QE | Test files exist for direct adapter/host paths | PARTIAL TEST COVERAGE | Controller E2E, auth boundary, test failure aggregation, response identity and race/revocation not evidenced |
+
+### Runtime flow observed (not an approved target architecture)
+CanonicalWorkAuthority(JSON) → WorkContext → LifecycleController → LocalExecutionHost.discover() → EXECUTE marked PASS → TEST BLOCKED
+Separate path:
+Work13ExecutionHostAdapter → WEE RealExecutionHost.execute() → local evidence files
+Separate path:
+ExecutionHostBridge → HTTP :8031 /execute → ExecutionHost → local evidence files
+Core path observed:
+HTTP Adapter → MeetingService → MeetingManager (Meeting domain only).
+
+### Architecture decisions / actions recommended to Xu
+- Retain DOC-063 P0.3/P0.4 addendum as design requirements; do not represent as implemented.
+- Keep WEE LifecycleController as orchestration candidate, but change stage semantics in the future approved contract: DISCOVER is a capability stage, never EXECUTE; TEST PASS requires actual bound test invocation, exit code/result, correct Work/execution correlation and persisted evidence.
+- Select one authoritative execution-host implementation after comparing the actual server/runtime deployment, security model, process boundary, test runner and evidence path. Reuse/adapt; do not build a third host.
+- Require server-side authorization resolution and commit/execution-time validity bound to authenticated principal, Work/WP/assignment, action/resource, source revision, Gate/WP version, policy version, expiry/revocation and idempotency key. Caller boolean authorized=true is not sufficient evidence.
+- Require aggregate result semantics: overall PASS only when required command AND bound test entrypoint AND required evidence/artifact checks all pass; test failure/timeout/missing evidence must make the overall result FAIL/BLOCKED.
+- Require bridge response identity binding: returned Work ID and execution ID must match the request; mismatches are rejected and audited.
+- Keep Core Work routes, storage and Dashboard live integration NOT VERIFIED pending Vi's independent source trace; no Core changes or new database proposed by Ka.
+- An's independent test scope should include controller E2E (not just adapter), discovery-vs-execution false PASS, failing test after successful command, missing test runner, authorization boolean spoofing, wrong Work/execution response, revocation/source/Gate version changes, audit/evidence failure and idempotent retry.
+- Xu to reconcile with DOC-061 and Vi/An reports when available; Ka has not received evidence of Vi/An ACK or execution in this review.
+
+### Disposition
+- Ka source-level architecture review: FINDINGS RECORDED / DESIGN REVIEW ONLY.
+- DOC-061 direct read: BLOCKED — branch fetch NOT_FOUND; no sandbox_read retry.
+- Core owner and actual :8031 server auth contract: NOT VERIFIED.
+- Controller end-to-end: NOT VERIFIED / inspected code path returns TEST BLOCKED.
+- Independent QE: NOT RUN BY KA.
+- No code, Core, Engine, Dashboard, Gate, state, assignment, or permissions changed.
+- G4: NOT READY / NOT PASS. BUILD implementation: NOT AUTHORIZED. Work 70 remains ACTIVE / NOT ACCEPTED / NOT RELEASED.
+- Handoff: Xu integrates this architecture review with DOC-061 and obtains Vi Core trace + An independent QE evidence; Vinh retains DOC-060, WP baseline, Gate and BUILD authority.
+- Chữ ký: **Ka / AI-02 — CSA / Architecture Reviewer — WP70-KA-RUNTIME**.
+
+
+## 2026-11-02 — Xu / AI-01 — Integrate Ka WP70-KA-RUNTIME source-level architecture reconciliation
+
+- READ: latest canonical DOC-035; DOC-054 assignment; DOC-061; DOC-063; DOC-055. Found Ka's signed source-level report at 2026-11-02 02:17:51 +07:00, based on GitHub main `21190f8449656ac65a2b5682621e1c4f75a0d6dd`.
+- Ka reviewed WEE controller/authority/models/bridges, ExecutionHost host/security/models/bridge, Work13 adapter/tests, Core HTTP adapter and API_CONTRACT.md. Ka explicitly could not fetch DOC-061 on branch `work/70/05-build` and did not read DOC-016/DOC-017 in that review; these limitations are preserved, not inferred away.
+- Key findings integrated into DOC-061: LifecycleController marks EXECUTE PASS after capability discovery and stops TEST BLOCKED without invoking bound test entrypoint; multiple execution hosts have unclear ownership; ExecutionHost path trusts caller `authorized: bool` in inspected model/bridge/security path; potential top-level PASS despite nested test failure; bridge response Work/execution identity not strictly bound; Core Work routes/auth/evidence/export not found in inspected router; evidence is local-file based in inspected components; independent controller E2E/race/security coverage not demonstrated.
+- Added capability/ownership matrix, observed runtime paths, required architecture decisions and negative test requirements to DOC-061. This is source review/design evidence only; not target architecture approval.
+- Updated DOC-055 DOC-061 register description to disclose Ka findings and remaining gaps.
+- DOC-054 assignment status is not changed in this entry: Ka's report provides substantive source-review evidence, but DOC-061/DOC-016/DOC-017 reconciliation and final target diagram/contract remain incomplete; Vi Core trace and An independent QE remain pending evidence. No ACK/progress inferred for Vi or An.
+- No source code/Core/API/database/Engine/Dashboard/Gate/state/permission changes. No runtime tests executed by Xu. G4 NOT READY / NOT PASS; BUILD NOT AUTHORIZED; Work 70 ACTIVE / NOT RELEASED.
