@@ -118,3 +118,10 @@ Prepared by Xu / AI-01. Source content read from Work 70 Sandbox on 2026-11-02.
 - Không merge, rebase hoặc cherry-pick. Chênh lệch 42/399 làm cho thao tác hợp nhất mù có rủi ro cao.
 - Main HEAD tại lần kiểm tra: `bb700982f5e01f6eda0d258c2af1f1b3351e8867`. Các commit DOC-068, DOC-055, DOC-035 sau đó được tạo trên main theo chuỗi riêng; không thay đổi branch work/70/05-build.
 - Hệ quả: GitHub branch sync của DOC-068/055/035 hiện có thể xác minh trên main; không có bằng chứng branch work/70/05-build đã nhận các tài liệu mới hoặc source implementation. Cần lập controlled sync plan riêng, không merge/rebase tự động.
+
+## 11. Bổ sung quét HTTP route trên main — 2026-11-02
+- GitHub code search trên main cho `@app.get`, `@app.post`, `FastAPI(` và `create_http_app` trả về các adapter files: `room_hop_mcp/adapter/http_server.py`, `room_hop_mcp/adapter/browser_server.py`, `room_hop_mcp/browser_agent_adapter/adapter.py`.
+- Đã đọc `room_hop_mcp/adapter/browser_server.py`, blob SHA `1b9dfe4b9d3f62e08a324ff146a9a50bb63e1313`; chỉ thấy các route Meeting list/get/transcript/paste.
+- Đã đọc `room_hop_mcp/browser_agent_adapter/adapter.py`, blob SHA `0ced9207c1897b9a7b572b7fefa44fec2dd92b76`; đây là browser workflow adapter, không phải Work/WP/Assignment registry API.
+- Search `APIRouter`, `include_router`, `WorkRegistry`, `EvidenceRegistry` không trả kết quả trong phạm vi GitHub code search hiện tại.
+- Kết luận giới hạn: các HTTP adapter files được tìm thấy trên main hiện không cung cấp Work-scoped lifecycle APIs. Cần kiểm tra thêm service/runtime composition và xác định Core owner; không tuyên bố toàn repository không có implementation nếu chưa quét toàn bộ.
