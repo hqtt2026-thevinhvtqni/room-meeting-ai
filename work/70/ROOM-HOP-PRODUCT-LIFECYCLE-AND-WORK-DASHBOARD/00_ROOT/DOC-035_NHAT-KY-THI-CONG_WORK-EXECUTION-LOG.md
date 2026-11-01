@@ -489,3 +489,31 @@ Xu ghi nhận phần cuối nhật ký vừa được bổ sung đã lặp lại
 - Core: inspected HTTP router still exposes Identity/Meeting routes only; no Work-scoped API in that router; Core Work auth/evidence remains NOT VERIFIED.
 - Decision: no blind merge/rebase; no duplicate engine implementation until architecture comparison; no BUILD authorization; G4 remains NOT READY / NOT PASS.
 - Persistence: DOC-061 addendum records current source findings. This is read-only analysis, not independent QE or architecture approval.
+
+
+## RECOVERED PATH-DRIFT FRAGMENT — PRESERVED ORIGINAL ATTRIBUTION
+
+Source found at non-canonical Sandbox path: `00_ROOT/DOC-035_NHAT-KY-THI-CONG_WORK-EXECUTION-LOG.md`.
+The fragment was not present verbatim in the canonical DOC-035. It is preserved below without changing the original author attribution or treating its claims as independently re-verified.
+
+| 2026-11-01 | Ka / AI-02 | WP baseline contract test design + gate namespace audit | Đối chiếu DOC-011 v1.3, DOC-036 v1.0, DOC-045 v1.0, DOC-052 v1.4, DOC-060 draft và DOC-046; thiết kế K70-WP-01..14 gồm positive/negative fixtures, state guard, provenance, source mapping và independent QE. | DONE — design only; NOT EXECUTED; no baseline/gate/BUILD authorization | GitHub blob SHAs: DOC-011 1ed01cf7405c4e962c1d250ca82572b2fad5c069; DOC-036 a9a14fb845328c3e1273769f502b3486465c3bbd; DOC-045 3748b5c6510156ad513dc56d7c23d2148f98a1c5; DOC-052 a29b8bcc3d29a39e1657ac14263b777e9245fee8; DOC-060 proposal only; DOC-061 Addendum 12 Sandbox append acknowledgement |
+
+
+## KA — ROOM REPAIR SOURCE AUDIT — 2026-11-01 (ICT)
+
+- Đã kiểm tra GitHub main bằng recursive tree: 509 entries, commit 65a7a3f2be2f44c058c4f48c7d90fde710ec7bb7. Không có mã nguồn backend Sandbox 8020/8030 tại các đường dẫn mcp_http_main.py, sandbox_tools.py, sandbox_service.py.
+- MCP stdio trong main hiện nối MeetingManager → MeetingService → adapter/server.py; không phải backend Sandbox đang chạy.
+- Work 89: đã xóa 19 desktop.ini chính xác; readback vẫn còn 677. Một tệp trong .git bị safety guard chặn. Không bypass.
+- Work10 P1 CORS/Origin/auth issue được xác nhận qua read-probe; SAFETY_POLICY.md giữ LOCKED; chưa promote bản vá vì phiên MCP không có shell/test runner.
+- Work28 fail-closed patch vẫn là candidate chưa chạy test/chưa promote.
+- ROOM-HOP-8030 hiện chỉ có thao tác Sandbox/meeting; không có deploy backend, restart process hoặc test-run. Vì vậy không thể tuyên bố đã sửa write-time filter hoặc runtime backend.
+- **Trạng thái tổng thể: BLOCKED / NOT COMPLETE; không claim PASS.** Bằng chứng: 06_EVIDENCE/KA_ROOM_REPAIR_AUDIT_20261101.md.
+- **Ký:** KA | CSA
+
+
+## 2026-11-01 — Xu / AI-01 — Recover displaced DOC-035 journal fragment
+
+- READ/TRACE: Sandbox inventory exposed a non-canonical root-level file `00_ROOT/DOC-035_NHAT-KY-THI-CONG_WORK-EXECUTION-LOG.md` outside the Work root.
+- Comparison: its 1,745-character content was not present verbatim in canonical DOC-035. A separate displaced DOC-061 addendum fragment (5,817 characters) was confirmed fully contained in canonical DOC-061.
+- Action: preserved the DOC-035 fragment in canonical DOC-035 with an explicit recovery note; original Ka / AI-02 attribution retained. No claim was made that Ka's reported actions were independently re-executed.
+- Cleanup: no source file deleted. Non-canonical copies remain classified pending controlled cleanup and full path audit.
