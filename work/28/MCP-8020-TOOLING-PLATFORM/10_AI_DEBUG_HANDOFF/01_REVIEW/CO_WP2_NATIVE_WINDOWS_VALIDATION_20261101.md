@@ -29,3 +29,19 @@
 This is stronger than the previous mocked-only test: native Windows Job Object attachment and process-tree cleanup have now passed against the isolated candidate on a GitHub-hosted Windows runner. It does **not** prove the suspended-spawn race is closed under adversarial scheduling, that every Windows host policy behaves identically, that the candidate is deployed to the live Execution Host, or that OS sandbox isolation exists.
 
 No production source or live MCP entrypoint was changed. No PR was merged. Execution gate remains CLOSED. Work 28 remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED. No full E2E or release PASS is claimed.
+
+
+## Follow-up: suspended-spawn order regression tests (2026-11-01 23:43 UTC+7)
+
+Two deterministic regression tests were added to the focused candidate test file:
+1. Assert the exact sequence `CREATE_SUSPENDED` → `AssignProcessToJobObject` → `ResumeThread`.
+2. Assert that Job Object assignment failure aborts the suspended process and never calls the resume function.
+
+GitHub commit: `13fb5878c206436c8c164cd4e1c5a221e04a2f37`.
+
+Validation:
+- Focused Ubuntu WP2 run [41327747250](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/41327747250): **4 passed in 0.38s**.
+- Native Windows candidate job in the same run: **13 passed in 1.28s** on Windows Server 2022 / CPython 3.12.10.
+- Work28 general CI run [41327747396](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/41327747396): **3/3 jobs successful** (Linux lifecycle, Windows lifecycle, unit/regression).
+
+These results verify mocked ordering/fail-closed behavior and real Windows Job Object/process-tree lifecycle in the hosted runner. They still do not prove adversarial scheduling race closure, live Execution Host deployment, or OS sandbox isolation. No production/live MCP changes, PR merge, or gate opening occurred.
