@@ -1337,3 +1337,11 @@ Giới hạn: MCP 8030 hiện chỉ cung cấp thao tác file/context; không c�
 - Test file đã ghi vào Sandbox và đồng bộ GitHub bằng commit `13fb5878c206436c8c164cd4e1c5a221e04a2f37` trên branch `work/28-mcp-tooling-platform`.
 - Trạng thái test mới: CHỜ GitHub Actions chạy; chưa ghi PASS. Hai test là deterministic mocked-order checks, bổ sung cho native Windows lifecycle 13/13 đã PASS trên run `41327587057`; không thay thế native adversarial race testing.
 - Gate giữ nguyên: no production deploy, no live MCP change, no PR merge, execution gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+
+### Kết quả chạy test bổ sung — 2026-11-01 23:43 UTC+7
+- Focused WP2 run `41327747250`: **4 passed in 0.38s** (Ubuntu 24.04 / Python 3.12).
+- Native Windows candidate job cùng run: **13 passed in 1.28s** (Windows Server 2022 / Python 3.12.10).
+- Work28 general CI run `41327747396`: 3/3 job SUCCESS (Linux lifecycle, Windows lifecycle, unit/regression).
+- Kết quả test mới xác nhận thứ tự spawn bằng mock và fail-closed khi assign thất bại; native Windows suite xác nhận Job Object attachment và cleanup process tree trên runner Windows. Chưa chứng minh adversarial scheduling race, live Execution Host deployment hoặc OS sandbox isolation.
+- Báo cáo chi tiết đã được cập nhật và đồng bộ: `10_AI_DEBUG_HANDOFF/01_REVIEW/CO_WP2_NATIVE_WINDOWS_VALIDATION_20261101.md`.
