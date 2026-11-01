@@ -824,6 +824,72 @@ HTTP Adapter → MeetingService → MeetingManager (Meeting domain only).
 - DOC-035 correction synchronized to GitHub main: commit f518c76d08f184f3e5c1af5eab4a4f8877a4a2bf, blob 23a3d92b1377596afa7e415bd834ce00dbbbe276; fetched GitHub content matched Sandbox text exactly (PASS). This follow-up entry will be synced in the next journal commit.
 - No code, process, firewall, service, runtime, permission, Gate or release state changed.
 
+## 2026-11-02 — Xu / AI-01 — Chốt thiết kế Hybrid AI Dispatch
+- **Work:** 70 — Bộ máy ROOM-HOP
+- **Decision:** D70-017 — Hybrid AI Dispatch; giữ conversation/session, ưu tiên quyền/connector hiện có, hạn chế API.
+- **Artifacts:** DOC-064 architecture; DOC-065 dispatch contract; DOC-066 implementation and test plan.
+- **Sandbox evidence:** write operation returned status=ok for all three documents; DOC-006 and DOC-055 addenda appended.
+- **Scope:** Documentation and architecture planning only. No source code, Core, database, Engine, Dashboard or permission changed.
+- **Dispatch/ACK:** No AI dispatch performed; no ACK received.
+- **Tests:** Not run. GitHub synchronization not verified.
+- **Status:** DESIGN RECORDED / IMPLEMENTATION BLOCKED pending source/Core owner reconciliation and Work Entry authorization.
+
+
+## 2026-11-02 — An Tester — Sandbox inventory check
+Vai tro: An Tester / QA doc lap. Thoi diem: 2026-11-02, khong co gio chinh xac tu cong cu.
+Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work Entry Gate Standard va ban nhap QA cua An. Day chi la bang chung ton tai trong Sandbox, khong xac minh noi dung hay revision tren nhanh Git chuan. Thu muc 05_BUILD/04_CODE trong danh muc chi co .gitkeep; khong suy ra khong co ma nguon o noi khac. Khong co runtime/test runner trong phien nay, nen runtime QE NOT RUN; G0-G5 NOT VERIFIED; G4 NOT READY / NOT PASS; BUILD NOT AUTHORIZED; Work 70 ACTIVE / NOT ACCEPTED / NOT RELEASED. Khong sua code, Gate, quyen; khong commit/push/merge. Ky: AN | TESTER.
+
+ 
+## 2026-11-02 03:24:56 +07:00 — Co / AI-07 — WP70-CO nhận việc và tạo domain spike ban đầu
+
+- **Người thực hiện:** Co / AI-07 — AI Coder.
+- **Phạm vi nhận việc:** WP70-CO — Lifecycle Engine, theo DOC-054 trên branch `work/70/05-build`.
+- **Đối chiếu trước khi làm:** DOC-005 v1.2 và DOC-004 v1.2 trên GitHub `main`; DOC-009 v1.2; DOC-054. Ka architecture contract V1 vẫn DRAFT / SOURCE RECONCILIATION OPEN; Work Package Register trên main vẫn `DRAFT_NOT_APPROVED`. DOC-054 addendum runtime reconciliation vẫn ACK PENDING / NOT A BUILD AUTHORIZATION. Do đó Co chỉ thực hiện phần chuẩn bị độc lập, không khóa API/contract và không tuyên bố mở G4/BUILD.
+- **Đã tạo trong Sandbox W70, không sửa GitHub source:**
+  1. `05_BUILD/04_CODE/wp70_co_domain_spike.py` — vocabulary tách biệt Work/Phase/Gate/WP và ordinary transition graph theo DOC-005.
+  2. `05_BUILD/04_CODE/test_wp70_co_domain_spike.py` — unit-test skeleton cho vocabulary, forward edges, blocked recovery, review rejection và illegal skips.
+  3. `05_BUILD/04_CODE/WP70_CO_SPIKE_README.md` — mô tả phạm vi, giới hạn, lệnh chạy và các phần cố ý chưa triển khai.
+- **Kết quả thao tác:** cả ba lệnh Sandbox create trả `status=ok`; thao tác `sandbox_list` trước đó xác nhận thư mục 04_CODE tồn tại. Chưa có readback nội dung do Sandbox read endpoint trong phiên trả payload rỗng với file hiện hữu; vì vậy chưa xác nhận byte-for-byte nội dung đã ghi.
+- **Kiểm thử:** NOT RUN. Chưa có Python runner/runtime được xác minh trong phiên này. Lệnh dự kiến: `python -m unittest -v test_wp70_co_domain_spike.py` từ thư mục `05_BUILD/04_CODE`. Không ghi PASS.
+- **Giới hạn có chủ ý:** chưa cài cancellation/reopen policy; chưa thêm actor authorization, gate evaluator, persistence, audit transaction, idempotency, concurrency, events, API, Core/Dashboard integration hoặc execution-host call. Các nội dung đó cần contract được duyệt và nguồn authority thực tế.
+- **Không thực hiện:** không sửa Core/Dashboard/WEE/Execution Host :8031; không đổi gate/state/permission; không chạy runtime; không commit/push/merge; không yêu cầu hay tự cấp BUILD/PASS/ACCEPT/RELEASE.
+- **Trạng thái:** WP70-CO ACKNOWLEDGED / PREPARATORY DOMAIN SPIKE CREATED IN SANDBOX / CONTENT READBACK NOT VERIFIED / TEST NOT RUN / INTERFACE NOT LOCKED / BUILD AUTHORIZATION NOT CLAIMED.
+- **Bước tiếp theo:** chờ Xu/Ka chốt và phê duyệt contract v1 + canonical baseline/branch và xác nhận điều kiện G4; sau đó Co tiếp tục domain engine theo contract, chạy unit tests và bàn giao evidence cho Qw/An độc lập kiểm thử.
+- **Chữ ký:** Co / AI-07 — AI Coder.
+
+
+## 2026-11-02 — Qw / AI-05 — WP70-QA: Acknowledgment and Independent QA Test Plan Creation
+- **Người thực hiện:** Qw / AI-05 — TESTER / Independent QA.
+- **Thời điểm:** 2026-11-02.
+- **Work / Assignment:** Work 70 — WP70-QA, theo DOC-054 (Lệnh phân công song song Work 70).
+- **Hành động thực tế:** 
+  1. Đọc và xác nhận phân công WP70-QA: test strategy/matrix, contract tests, negative/security, race/idempotency, regression/E2E và báo cáo QE độc lập.
+  2. Tạo tài liệu DOC-067_KE-HOACH-KIEM-THU-DOC-LAP_WP70-QA_INDEPENDENT_QA_TEST_PLAN.md tại 06_VERIFY.
+  3. Cập nhật DOC-055 (Document Register) để đăng ký DOC-067.
+- **Kết quả lưu hồ sơ:** Sandbox write trả về `status=ok` cho cả việc tạo DOC-067 và append DOC-055.
+- **Work Entry / runtime:** G0–G5 của Qw vẫn BLOCKED; MCP 8030 trong lượt này chỉ xác minh được Sandbox operations, không có runtime/code execution runner hoặc dispatch/ACK mechanism đã xác minh cho việc chạy test thật. DOC-054 vẫn ASSIGNMENT READY / ACK PENDING / NOT A BUILD AUTHORIZATION.
+- **Trạng thái phép thử:** Runtime cases vẫn NOT RUN; overall QA PREPARATION COMPLETE / EXECUTION BLOCKED / NOT ACCEPTED. Không suy diễn PASS/FAIL từ source review của Ka/Xu/Co.
+- **Không thực hiện:** Không sửa source/Core/API/Engine/Dashboard; không commit/push/merge; không đổi Gate, Work state, permission; không nghiệm thu/phát hành.
+- **Bước gỡ chặn:** Xu/source owner cần cung cấp canonical repo path, branch/commit chính xác, môi trường thực thi được phép và test command có thể tái lập; đồng thời xác minh assignment ACK và Work Entry G0-G5. Sau đó Qw sẽ ghi raw stdout/stderr, exit code và evidence cho từng test case.
+- **Chữ ký:** **Qw / AI-05 — TESTER / Independent QA**.
+
+## 2026-11-02 06:38:00 +07:00 — Co / AI-07 — WP70-CO lifecycle domain guard increment
+
+- **Người thực hiện:** Co / AI-07 — AI Coder.
+- **Chức danh:** AI Coder.
+- **Cơ sở đối chiếu:** DOC-005 v1.2 (state machine), DOC-044 v1.0 (assignment contract), DOC-054 v1.0 (parallel assignment), Ka Architecture Contract V1 (DRAFT — SOURCE RECONCILIATION OPEN). DOC-054 addendum vẫn ACK PENDING / NOT A BUILD AUTHORIZATION; G4/Work Entry chưa được xác nhận. Vì vậy chỉ làm pure domain guard, không khóa API hoặc tích hợp.
+- **Đã tạo trong Sandbox W70 / 05_BUILD/04_CODE:**
+  1. `lifecycle_domain.py` — Work/WP transition evaluation; phase completion requires exit Gate PASS; WP DONE requires acceptance criteria + evidence; dependency validation fail-closed; DOC-044 assignment READY completeness check; reopen/cancel guards.
+  2. `test_lifecycle_domain.py` — 10 test cases covering ordinary edges, illegal skip, reopen owner/reason/audit preconditions, cancellation policy, phase gate, WP completion evidence, dependencies and assignment completeness.
+  3. `WP70_CO_DOMAIN_GUARD_README.md` — implementation boundary and reproducible test command.
+- **Kiểm thử:** đã chạy Python unittest trong temporary local test directory trên đúng source payload được gửi tạo Sandbox: **10 tests PASS, exit code 0**. Đây là kết quả local của payload; không phải test chạy trực tiếp trên Sandbox. Python startup có cảnh báo phụ từ spreadsheet warmup, nhưng unittest suite hoàn tất 10/10 và process exit 0.
+- **SHA-256 của payload đã test/gửi:** module `8d7b8b955cc593b9b7c3e1ebb4f160b1ca73a295d2d679564d2e00a95273f6d8`; tests `03c0aba525da990bd612bbf06a915a9533693414a174f732bcac6f522906ff78`.
+- **Xác minh Sandbox:** ba thao tác create trả `status=ok`; `sandbox_list` sau đó liệt kê đủ cả ba đường dẫn. Nội dung byte-for-byte chưa readback được; không tuyên bố Sandbox runtime test.
+- **Ranh giới bảo vệ:** module không xác thực actor; `owner_authorized` là policy fact đầu vào phải do Core suy ra từ authenticated principal. Module không persist state/audit, không thực hiện idempotency/concurrency, không expose API, không gọi Core/Dashboard/Execution Host. Guard ALLOWED không đồng nghĩa transition đã commit hoặc Gate PASS.
+- **Không thực hiện:** không sửa Core, Dashboard, WEE, :8031; không đổi Gate/state/permission; không commit/push/merge GitHub; không tạo PR; không tuyên bố BUILD/G4/ACCEPT/RELEASE.
+- **Trạng thái:** DOMAIN GUARD PAYLOAD CREATED / LOCAL UNIT TEST 10 PASS / SANDBOX PATHS LISTED / SANDBOX CONTENT READBACK NOT VERIFIED / API NOT LOCKED / INTEGRATION NOT RUN / BUILD AUTHORIZATION NOT CLAIMED.
+- **Tiếp theo:** chờ Xu xác nhận Work Entry/G4 và Ka phát hành contract được duyệt; sau đó Co sẽ đối chiếu guard với contract chính thức, mở rộng persistence/idempotency/audit theo đúng owner boundary và chạy lại test trong canonical workspace.
+- **Chữ ký:** Co / AI-07 — AI Coder.
 
 ## 2026-11-02 06:53 +07:00 — Xu / AI-01 — DOC-068 roadmap reconciliation
 
@@ -835,9 +901,17 @@ HTTP Adapter → MeetingService → MeetingManager (Meeting domain only).
 - **Không thực hiện:** không sửa DOC-011, DOC-006, DOC-055, Manifest, Gate, assignment, source code hoặc GitHub; không mở BUILD; không dispatch AI mới; không sử dụng MCP 8020.
 - **Trạng thái:** SOURCE RECONCILIATION COMPLETE / DOC-068 CREATED AND READBACK VERIFIED / PRODUCT OWNER DECISION PENDING / G4 NOT READY / IMPLEMENTATION NOT AUTHORIZED.
 
+
 ## 2026-11-02 06:54 +07:00 — Xu / AI-01 — Core route source trace and DOC-068 registration
-- GitHub main HEAD at start of source trace: bb700982f5e01f6eda0d258c2af1f1b3351e8867.
+- GitHub main HEAD: bb700982f5e01f6eda0d258c2af1f1b3351e8867.
 - Read `room_hop_mcp/adapter/http_server.py`, blob 54cb3ecbce2e6b13083f31c14f0c1f0738f1457d. Router exposes identity and Meeting routes; no Work-scoped Work/WP/Assignment/Evidence routes appear in this router. Scope-limited finding; other routers/services still need inspection.
 - DOC-068 amended with exact source revision and route inventory; DOC-055 appended with DOC-068 row. Sandbox append operations returned status=ok.
 - WP-70-04 / SD-05 remains BLOCKED pending full Core route/service/owner discovery. No guessed endpoints used.
 - No code, gate, permission, assignment, or GitHub file changed in this action.
+
+
+## 2026-11-02 — Xu / AI-01 — GitHub branch divergence recheck
+- Repository `hqtt2026-thevinhvtqni/room-meeting-ai`; compare `main...work/70/05-build` returned DIVERGED, ahead 42 / behind 399, merge base `fc6a19888765d174aea9aea839620338ac9f71e8`.
+- Compare lists 14 files added on Work 70 branch; all are documentation/schema/mapping artifacts. No Core/Engine/Dashboard source change appears in this compare response.
+- No merge/rebase/cherry-pick performed. Branch integration remains BLOCKED pending controlled reconciliation.
+- DOC-068 updated with this compare evidence; Sandbox append status=ok. Main branch docs were synchronized separately; work/70/05-build remains untouched.
