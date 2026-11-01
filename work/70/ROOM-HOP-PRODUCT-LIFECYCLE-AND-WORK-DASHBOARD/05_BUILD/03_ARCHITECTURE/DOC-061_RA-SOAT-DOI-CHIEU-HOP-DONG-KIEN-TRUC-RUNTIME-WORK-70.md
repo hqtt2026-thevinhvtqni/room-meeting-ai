@@ -509,3 +509,38 @@ This inventory informs An's independent QA assignment; it does not pre-empt An's
 - DOC-016/DOC-017: consistent with Vi/Ka/Xu evidence; no conflict requiring a design change identified in this reconciliation.
 - G4: NOT READY / NOT PASS. BUILD: NOT AUTHORIZED. Work 70: ACTIVE / NOT ACCEPTED / NOT RELEASED.
 - No source code, Core, database, Engine, Dashboard, Gate, state, assignment, permission or release status changed.
+
+
+## Correction / Addendum 2026-11-02 — Xu locates the :8031 HTTP server entrypoint
+
+**Supersedes the earlier bounded statement that the authoritative :8031 server handler was not identified.** The earlier search was incomplete; this addendum corrects the record without erasing the prior audit trail.
+
+### Newly inspected source
+| Path | Branch | Blob SHA | Finding |
+|---|---|---|---|
+| `execution_host/server.py` | `main` | `45aec57525b5d55bb63544b7bd7fd23062e06151` | Defines `POST /execute`; parses request JSON; constructs `WorkContext(**body['work_context'])` and `ExecutionRequest`; calls `self.host.execute_work(ctx, req)`; returns result. |
+| `execution_host/identity.py` | `main` | `517dbb36bbdbfa3b606a6dec98c82612e12eeefa` | RuntimeIdentity includes instance/build hash/process metadata; default bind address string is 127.0.0.1:8031. Identity is runtime metadata, not caller authentication. |
+| `execution_host/models.py` | `main` | `2488b7c95cf3784fc26eaf677044fe5ab0866420` | WorkContext contains caller-populated `authorized: bool`. |
+| `execution_host/security.py` | `main` | `4aa20fbc9c5939c49c85222916dc28fb8dd8075b` | `validate_context()` checks required fields and `ctx.authorized`; no signed/scoped authorization proof is represented in this contract. |
+
+### Confirmed source observations and limits
+1. `server.py`'s Handler checks the path and runtime initialization, but the inspected `do_POST()` contains no authentication header/token/principal validation or server-side Work/assignment/Gate authorization resolution before constructing WorkContext and invoking the host.
+2. `serve(host='127.0.0.1', port=8031)` binds a standard `ThreadingHTTPServer` to the supplied host/port; default is loopback. This reduces default network exposure but is not an authorization mechanism. A reverse proxy, OS boundary, firewall or external perimeter may exist elsewhere; that deployment perimeter was NOT VERIFIED.
+3. The handler trusts request-body `work_context` fields, including `authorized`; the host security layer validates that boolean, not a signed/scoped authority proof. The previously confirmed client-side boolean gap therefore reaches the inspected server entrypoint.
+4. `GET /health` returns runtime identity metadata; it does not authenticate a caller or prove Core authorization.
+5. GitHub code searches for `execution_host.server`, `python -m execution_host.server`, `execution_host/server.py`, and `serve(port=8031)` did not locate a repository launch/deployment reference. Search is not exhaustive; actual process startup, reverse proxy, network exposure and PC deployment remain NOT VERIFIED.
+
+### Security disposition
+- **Confirmed source-level concern:** the inspected HTTP handler has no visible request authentication or server-side authorization re-resolution; caller-controlled `authorized: bool` is passed to host validation.
+- **Not established:** whether the deployed PC process is actually running this server, whether it is exposed beyond loopback, or whether a separate trusted perimeter wraps it.
+- **Required before any Work 70 execution integration:** identify the deployed process/build hash and bind address; inspect any proxy/firewall/service wrapper; establish authenticated principal binding; server-side resolve Work/WP/assignment/action/source/Gate/policy/expiry/revocation; revalidate at commit/execute boundary; reject caller-supplied authority booleans; add positive and negative HTTP-boundary tests.
+- This strengthens DOC-063 design requirements but does not implement them. Do not enable :8031 for Work 70 or treat health PASS as authorization.
+
+### Test gaps to assign to An after authorized runner exists
+- POST /execute with `authorized=true` but no authenticated principal must be DENIED.
+- Spoofed Work ID, assignment, role, Gate PASS, source revision, expiry or policy version must be rejected/re-resolved server-side.
+- Missing/malformed/duplicate JSON keys and oversized bodies must fail safely (additional review; not yet tested).
+- Runtime identity/build hash must be captured and bound to the execution evidence.
+- Loopback-only binding and any proxy exposure must be verified in the deployed environment.
+
+**Status:** SOURCE TRACE UPDATED / STATIC ONLY / NO RUNTIME TEST / NO CODE CHANGE. Work 70 G4 remains NOT READY / NOT PASS; BUILD NOT AUTHORIZED.
