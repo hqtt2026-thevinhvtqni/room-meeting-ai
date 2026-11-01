@@ -528,3 +528,42 @@ The fragment was not present verbatim in the canonical DOC-035. It is preserved 
 - Tất cả là assignment-ready, ACK PENDING. Chưa có bằng chứng dispatch hoặc xác nhận nhận việc từ Ka/Vi/An.
 - Không sửa code, không đổi Gate, không mở BUILD; G4 vẫn NOT READY / NOT PASS.
 - Người ghi: Xu / AI-01.
+
+
+## 2026-11-02 — Xu / AI-01 — Corrective audit of two Sandbox root-level drift folders
+
+- Canonical root is `ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/`; all Sandbox writes must include this prefix. No top-level `00_ROOT/` or `05_BUILD/` is part of the approved Work 70 tree.
+- Inventory found exactly two files under the two non-canonical top-level folders:
+  1. `00_ROOT/DOC-035_NHAT-KY-THI-CONG_WORK-EXECUTION-LOG.md` (1,745 chars). Its entire content was verified as contained in canonical `00_ROOT/DOC-035...`.
+  2. `05_BUILD/03_ARCHITECTURE/DOC-061_RA-SOAT-DOI-CHIEU-HOP-DONG-KIEN-TRUC-RUNTIME-WORK-70.md` (5,817 chars). Its entire content was verified as contained in canonical `05_BUILD/03_ARCHITECTURE/DOC-061...`.
+- The canonical DOC-054 assignment file is under `ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/05_BUILD/00_ROOT/`; its Ka/Vi/An assignment was verified in that canonical file and GitHub Build branch.
+- Corrected DOC-055 DOC-061 location to show the complete canonical Sandbox root prefix and the explicit GitHub branch path.
+- No files or folders were deleted in this operation. The two non-canonical top-level folders now contain only redundant copies whose complete contents are preserved in canonical files. Vinh may remove those two folders after this verification.
+- Prevention: before every Sandbox write/append, construct and validate `relative_path = canonical_root + approved_relative_path`; reject paths beginning `00_ROOT/` or `05_BUILD/` without the canonical prefix. After writes, inventory and verify canonical destination before reporting completion.
+- Status: CONTENT PRESERVATION VERIFIED / NON-CANONICAL COPIES READY FOR USER CLEANUP / NO DELETE PERFORMED.
+
+
+## 2026-11-02 02:01:53 +07:00 — Ka / AI-02 — Phản biện độc lập Work Entry Gate và phản hồi chỉ đạo của Xu
+- Người thực hiện: Ka / AI-02 — CSA / Independent Architecture Reviewer.
+- Thời điểm: 2026-11-02 02:01:53 UTC+07:00.
+- Phạm vi: Work 70; review DOC-057 Work Entry Gate Standard, DOC-063 Work Entry Authorization & Deny-to-Recovery blueprint, DOC-060 Gate Namespace proposal; phản hồi điều phối của Xu về năm điểm P0.
+- Tài liệu/quy trình đã đối chiếu: DOC-033 (P0, Read order 7), DOC-035 (P2, Read order 32), DOC-038 (P0, Read order 8), DOC-039 (P0, Read order 9), DOC-040 (P0, Read order 10), DOC-042 (P0, Read order 42), DOC-043 (P0, Read order 43), DOC-055 (P0, Read order 55), DOC-056 (P0, Read order 56), DOC-057 (P0, Read order 57), DOC-063 (P0, Read order 63). DOC-055 là nguồn sự thật về Document ID/Priority/Read order/canonical path; DOC-035 là nhật ký Work-wide append-only.
+- Kết luận kiến trúc: đồng thuận với Xu giữ DOC-057 làm policy baseline và DOC-063 ở trạng thái DRAFT; không mở BUILD, không sửa Core và không tự phê duyệt DOC-060. Nguyên tắc trust boundary được xác nhận: không Dashboard, AI Adapter, MCP, Execution Host hoặc đường ghi nào tự quyết định/cấp quyền cho chính nó; Core Authorization là authority xác minh, Execution Boundary cưỡng chế trước protected mutation.
+- Phản biện P0.3: đề xuất tách Work Entry/Recovery Store khỏi Protected Product Store. Quyền ghi hồ sơ Gate, evidence bổ sung, DENY/Recovery Guidance và lịch sử recheck phải là scope riêng, không được kế thừa thành quyền ghi source/artifact/Work-WP state/configuration/release. AI được nộp evidence nhưng không tự ghi GATE_PASS hoặc sửa kết quả evaluator. Chưa có implementation/evidence xác minh vùng lưu trữ tách biệt.
+- Phản biện P0.4: yêu cầu authorization còn hợp lệ tại thời điểm commit, không chỉ lúc nhận request. Cần ràng buộc principal, assignment/scope, source revision, Gate snapshot/version và resource; chống thu hồi quyền giữa kiểm tra và mutation; dùng transaction/locking hoặc fencing/version check phù hợp với topology; mutation và audit phải nhất quán; retry/idempotency không được tạo ghi trùng. Side effect ngoài database cần outbox/reconciliation/compensation được phê duyệt. Đây là yêu cầu thiết kế, chưa có kiểm thử runtime.
+- P0.1/P0.2/P0.5: giữ yêu cầu Xu đã nêu — DOC-060 chờ Vinh quyết định; Vi truy vết tất cả đường ghi Core/Service/Storage/API và điểm bypass; An thực hiện independent QE cho ALLOW/DENY/bypass/forged identity/revocation/retry/evidence failure. Không ghi nhận Vi/An đã ACK hoặc đã bắt đầu khi chưa có bằng chứng.
+- Kết quả review: ARCHITECTURE DIRECTION AGREED / P0.3-P0.4 REVIEW FINDINGS RECORDED / IMPLEMENTATION NOT VERIFIED / G4 PLAN→BUILD NOT READY. Không có code, Core, API, state machine, policy hay quyền nào được thay đổi trong lượt này; không có test runtime được chạy.
+- Bằng chứng/tham chiếu: DOC-057, DOC-063, DOC-060, DOC-042, DOC-043, DOC-055; phản hồi điều phối của Xu do Vinh cung cấp trong phiên ngày 2026-11-02. GitHub đối chiếu DOC-063 tại commit 99f20fb1457390d1e44dccbc613aef7938b61b08; các tài liệu quản trị được fetch từ GitHub main. Sandbox inventory xác nhận canonical journal path.
+- Handoff cho Xu: dùng entry này làm ghi nhận review P0.3/P0.4 của Ka; tiếp tục đối chiếu báo cáo Vi/An và phiên bản DOC-063 hiện hành trước khi tích hợp. Assignment ACK của Ka/Vi/An vẫn không được suy diễn từ entry này; cần ACK evidence theo DOC-054/DOC-035.
+- Chữ ký: **Ka / AI-02 — CSA / Independent Architecture Reviewer**. Authority về policy, namespace và mở BUILD vẫn thuộc **Vinh**; Xu tiếp tục điều phối tích hợp.
+
+
+## 2026-11-02 — Xu / AI-01 — Integrate Ka P0.3/P0.4 review into DOC-063 (design only)
+
+- READ: DOC-035 latest journal; DOC-054 assignment addendum; current DOC-063; DOC-060; DOC-055. Confirmed Ka's signed independent review is recorded at 2026-11-02 02:01:53 +07:00.
+- Scope interpretation: Ka's journal entry is evidence of completed independent review findings for P0.3/P0.4, but it does not complete the broader WP70-KA-RUNTIME architecture reconciliation assignment. Vi and An ACK/progress remain unverified.
+- Updated canonical DOC-063 with Addendum 2026-11-02: (1) separate Work Entry/Recovery authorization scope from Protected Product scope; participant evidence submission cannot set GATE_PASS or mutate evaluator/authoritative state; (2) authorization must remain valid at commit time; define concurrency/revocation/version/idempotency/audit consistency requirements and tests; (3) assign Core owner, Ka, Vi, An and Xu evidence responsibilities.
+- Updated DOC-055 DOC-063 register description to disclose P0.3/P0.4 are design-only and pending Core owner, Vi trace and An QE.
+- No source code, Core, API, database, state machine, Gate policy or permissions changed. No runtime tests executed. No namespace activated. No BUILD authorized.
+- Status: DOC-063 ADDENDUM WRITTEN / SANDBOX READBACK REQUIRED; DOC-063 DRAFT ONLY; DOC-060 PROPOSAL ONLY; G4 NOT READY / NOT PASS.
+- Next: obtain and verify Vi Core trace and An independent test report; compare actual current GitHub revisions; then integrate findings without assuming Core contract or execution enforcement.
