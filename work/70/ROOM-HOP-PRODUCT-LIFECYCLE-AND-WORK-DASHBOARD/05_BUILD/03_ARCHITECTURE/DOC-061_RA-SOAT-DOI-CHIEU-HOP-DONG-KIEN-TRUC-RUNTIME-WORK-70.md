@@ -453,3 +453,26 @@ These paths must not be conflated into one verified Work 70 lifecycle runtime.
 - G4: NOT READY / NOT PASS. BUILD implementation: NOT AUTHORIZED. Work 70: ACTIVE / NOT ACCEPTED / NOT RELEASED.
 
 This addendum records Ka's source review without turning findings into implementation approval or changing any Gate/authority.
+
+
+## Addendum 2026-11-02 — Existing test inventory for controller / ExecutionHost gap
+
+**Classification:** TEST-SOURCE INVENTORY ONLY / NOT EXECUTED / NOT QE.
+
+Additional source inspected:
+- `tests/test_execution_host.py`, blob `183cba2959db9d9fb00751055efdeddd09c14a64`.
+- `wee/cli.py`, blob `e745cfcd10a03b6cf87153bdf9321a207246fd18`.
+- `wee/readiness.py`, blob `f765568e4567476b36ba21090b5fc06663abdb00`.
+
+`tests/test_execution_host.py` contains 10 named tests: valid execution/evidence; invalid context/unauthorized; workspace escape; cwd escape; forbidden command/injection; timeout/cleanup; secret redaction; missing Git authority/unavailable adapters; artifact isolation; service lifecycle. The inspected test names do not include `run_test=True` with a failing test, top-level aggregate status, caller-boolean spoofing across a server boundary, bridge response Work/execution ID mismatch, commit-time revocation, Gate/source version race, audit persistence failure or idempotent duplicate command behavior.
+
+`wee/cli.py` directly resolves a `CanonicalWorkAuthority` binding, constructs `WorkContext`, then calls `LifecycleController(...).run()`. `wee/readiness.py` runs only `LocalExecutionHost.discover()` and reports capability readiness; WEE READY is not evidence of a completed Work lifecycle or test execution.
+
+**Test gap classification:**
+- ExecutionHost unit coverage: PARTIAL (10 named tests; actual test run not performed by Xu).
+- LifecycleController E2E: NOT VERIFIED in this source inventory.
+- Test result aggregation: NOT COVERED by named existing tests inspected.
+- Server authorization and response binding: NOT COVERED by the inspected bridge/host test files.
+- Race/revocation/idempotency/audit atomicity: NOT COVERED by the inspected named tests.
+
+This inventory informs An's independent QA assignment; it does not pre-empt An's test conclusions and does not claim tests failed or passed.
