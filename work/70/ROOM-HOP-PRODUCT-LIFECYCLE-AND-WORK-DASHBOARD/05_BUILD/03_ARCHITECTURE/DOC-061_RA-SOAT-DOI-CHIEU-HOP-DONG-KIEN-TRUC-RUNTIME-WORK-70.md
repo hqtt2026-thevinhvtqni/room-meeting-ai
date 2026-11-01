@@ -544,3 +544,50 @@ This inventory informs An's independent QA assignment; it does not pre-empt An's
 - Loopback-only binding and any proxy exposure must be verified in the deployed environment.
 
 **Status:** SOURCE TRACE UPDATED / STATIC ONLY / NO RUNTIME TEST / NO CODE CHANGE. Work 70 G4 remains NOT READY / NOT PASS; BUILD NOT AUTHORIZED.
+
+
+## Reconciliation correction 2026-11-02 — Recheck Co's prior Work 28 :8031 trace
+
+**Reason:** Xu's previous addendum inspected GitHub main only and repeated a source-level conclusion without reconciling Co's earlier Work 28 hardening. That was incomplete. This correction supersedes the prior unqualified statement about the :8031 boundary. No historical journal entry is deleted.
+
+### 1. Work 28 source and Co evidence located
+- Work 28 branch: work/28-mcp-tooling-platform, HEAD at time of review a652c49fdc738424a27c6408b386df2dd1af4540.
+- Co's evidence: work/28/MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/REPO_SIDE_W13_HANDLER_AUTH_HARDENING_20261025.md, blob 8e420fa16000eaa9d480a112a813c678e69a6331.
+- Current hardened branch execution_host/server.py, blob 87644127a9a2df638b5677758cfc4d0c883b2985.
+- Co's record identifies handler auth fix 1f0e6916bf317b0e5bebed819f100ec08ac35945, per-Work allow-list follow-up 5d52cf2e6b4e4e5d758327c5925ea7c5345a1822, startup bootstrap dc91ffc71bc5985ac1056c78182708f87a039ba2, syntax correction 769b13fed8b070d8cacf987cb8729eab5c8df998, plus later bridge token and staged client work. Co explicitly records source/CI evidence separately from deployment proof.
+
+### 2. What Co implemented on Work 28 branch
+- POST /execute requires X-Room-Hop-Execution-Auth; token compare uses hmac.compare_digest; absent/unarmed/wrong token returns 401 before host invocation.
+- Server-side Work allow-list uses ROOM_HOP_AUTHORIZED_WORKS, canonical W<number>; an unlisted Work or missing allow-list returns 403 before host invocation. Handler overwrites work_context.authorized=True only after token + allow-list checks; caller-supplied boolean is not the gate.
+- main() loads ROOM_HOP_EXECUTION_AUTH_TOKEN and ROOM_HOP_AUTHORIZED_WORKS; missing/blank/malformed config raises before startup. The __main__ path calls main(), which forwards the loaded values into serve(). Token is not printed.
+- Handler also limits request body to 256 KiB, requires JSON, rejects unknown top-level keys, and returns 405 for PUT/DELETE/PATCH. Evidence readback route requires the same token.
+- Co's test inventory: test_w13_execute_handler_http_boundary.py covers real local HTTP handler behavior (401 missing/wrong/unarmed, 403 unlisted Work, authenticated + allow-listed call reaches fake host); test_w13_execution_auth_config_bootstrap.py checks env loading, fail-loud, Work ID normalization and main→serve wiring; test_w13_execute_handler_auth.py covers token comparison and API seam. Co's report records CI green after the clean rebuild and handler-level tests, not deployed service proof.
+
+### 3. Important remaining limits in the hardened Work 28 source
+- Authentication is a shared bearer token, not a caller identity: the handler proves possession of one configured token; it does not itself resolve a distinct AI/principal identity or assignment from Core.
+- Work allow-list is static deployment configuration: it scopes the token to a set of Work IDs, but is not a dynamic per-assignment/role/action decision.
+- Core grant source is optional and has a fallback: build_grant_source() uses ROOM_HOP_CORE_GRANT_URL when configured, otherwise a local file registry. main() catches any Core grant fetch exception and falls back to load_grant_registry(). Therefore the code does not prove that live Core grants are being used; a Core outage can fall back to a local registry. The inspected Work 28 audit says the Core :8000 execution-grant API did not exist in the audited Core package; proposed contract remained design-only.
+- Command mode remains possible by default: dispatch_execute() defaults to mode='command'; this calls the general ExecutionHost.execute_work() with caller-supplied execution_request. snapshot_only is enabled only when ROOM_HOP_SNAPSHOT_ONLY is set to a truthy value; its default is false. The stricter grant/hash-bound work28_snapshot path is a separate mode. Do not equate token + allow-list with mandatory immutable-snapshot execution.
+- Network boundary: Work 28 main() explicitly binds 127.0.0.1:8031 over the standard HTTP server (not TLS). No reverse-proxy, remote ingress, Windows service, scheduled task or firewall policy configuration was identified in the inspected Work 28 repository tree. Actual PC firewall/proxy/service-manager state remains NOT VERIFIED.
+- Readiness is not release proof: work28_readiness.py reports os_isolation=NOT_VERIFIED, release=NOT_RELEASED, and core_grant_live=BLOCKED when the Core grant URL is not set. /health reports readiness metadata; it does not prove the deployed process has the intended source or a secure network perimeter.
+
+### 4. Cross-check against canonical Work 13 Sandbox and PC evidence
+- Current Work 13 Sandbox file EXECUTION-HOST-INFRASTRUCTURE/04_CODE/execution_host/server.py is the pre-hardening implementation: it has no auth header check, no token configuration, and directly deserializes caller WorkContext/ExecutionRequest before calling the host. This agrees with Co's section 12 cross-Work comparison.
+- Work 13 handoff 03_ARCHITECTURE/PC_INTEGRATION_HANDOFF.md identifies intended package startup as python -m execution_host.server, default bind 127.0.0.1:8031. It includes a manual command but is not a Windows service/automatic startup registration.
+- Sandbox execution_host_start.err.log records a failed direct-file launch (python .../server.py) with ImportError: attempted relative import with no known parent package; that failure is consistent with invoking a package module as a file rather than python -m. It is not proof the correct module startup succeeded.
+- 06_EVIDENCE/W13_CANONICAL_PC_RUNTIME_ATTESTATION_BLOCKER_LOG.md records a historical PID 5188, listener 127.0.0.1:8031 and /health PASS on 2026-10-08, but explicitly says /execute was not validly exercised in that attestation. W13_CANONICAL_RUNTIME_IDENTITY_FINAL_RESULT.json later records canonical startup NOT_EXECUTED, health/execute/runtime identity NOT_OBSERVED. EXECUTION-CURRENT.json contains an older narrower HTTP E2E PASS, but it does not prove the current source revision or Work 28 hardening is deployed.
+- Xu's MCP read of the canonical Work 13 Sandbox confirms its current stored server.py is still the old unauthenticated version. This is source-state evidence, not a live PC process inspection.
+
+### 5. Corrected disposition
+| Layer | Correct status |
+|---|---|
+| Work 28 hardened source + tests | SOURCE HARDENING PRESENT; CI/handler-level evidence recorded by Co |
+| GitHub main | STALE relative to Work 28 hardened server; still contains old handler at reviewed revision |
+| Work 13 canonical Sandbox source | PRE-HARDENING / NOT SYNCED |
+| Work 13 deployed PC process and exact build hash | NOT VERIFIED against Work 28 hardened source |
+| Startup configuration on actual PC | Intended module entrypoint known; actual service manager/autostart/config loading NOT VERIFIED |
+| Network exposure / firewall / proxy | Default source bind loopback; actual host firewall/proxy state NOT VERIFIED |
+| Core identity/grant authority | NOT VERIFIED; Work 28 static allow-list + shared token are not full DOC-063 principal/assignment authorization |
+| Work 70 use of :8031 | NOT AUTHORIZED until source sync, trusted startup config, deployed identity, scoped authorization, snapshot mode, isolation and live negative/positive E2E are verified |
+
+**Xu's corrected conclusion:** Co's prior Work 28 trace is valid and materially more complete than Xu's previous main-only check. Do not repeat the source audit. The remaining Work 70 task is a controlled source/revision alignment and deployment attestation of the canonical Work 13 runtime, plus verification of actual network/service configuration. No code or deployment changes are made by this addendum.
