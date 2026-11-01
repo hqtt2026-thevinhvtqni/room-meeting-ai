@@ -110,3 +110,11 @@ Prepared by Xu / AI-01. Source content read from Work 70 Sandbox on 2026-11-02.
 - Không thấy Work-scoped Work/WP/Assignment/Evidence routes trong router này. Đây là kết luận giới hạn ở router/file/revision đã đọc, không phải khẳng định toàn repository không có route khác.
 - Search GitHub cho thấy `DASHBOARD_CORE_READ_CONTRACT.md` ghi các route Work là endpoint đề xuất, không khẳng định tồn tại.
 - Hệ quả: WP-70-04/SD-05 tiếp tục BLOCKED; không được dùng các route đề xuất làm API thật. Cần xác định Core owner và kiểm tra router/service khác trước khi kết luận toàn hệ thống.
+
+## 10. Bổ sung kiểm tra GitHub branch — 2026-11-02
+- Repository: `hqtt2026-thevinhvtqni/room-meeting-ai`.
+- Compare `main...work/70/05-build`: status `diverged`, ahead_by=42, behind_by=399, merge base `fc6a19888765d174aea9aea839620338ac9f71e8`.
+- Compare response liệt kê 14 file Work 70 được thêm trên branch, đều là hồ sơ/tài liệu/schema/mapping; không có file source Core/Engine/Dashboard được thay đổi trong danh sách compare này.
+- Không merge, rebase hoặc cherry-pick. Chênh lệch 42/399 làm cho thao tác hợp nhất mù có rủi ro cao.
+- Main HEAD tại lần kiểm tra: `bb700982f5e01f6eda0d258c2af1f1b3351e8867`. Các commit DOC-068, DOC-055, DOC-035 sau đó được tạo trên main theo chuỗi riêng; không thay đổi branch work/70/05-build.
+- Hệ quả: GitHub branch sync của DOC-068/055/035 hiện có thể xác minh trên main; không có bằng chứng branch work/70/05-build đã nhận các tài liệu mới hoặc source implementation. Cần lập controlled sync plan riêng, không merge/rebase tự động.
