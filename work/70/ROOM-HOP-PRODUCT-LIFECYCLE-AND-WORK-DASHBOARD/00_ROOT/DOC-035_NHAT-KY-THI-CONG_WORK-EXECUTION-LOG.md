@@ -517,3 +517,14 @@ The fragment was not present verbatim in the canonical DOC-035. It is preserved 
 - Comparison: its 1,745-character content was not present verbatim in canonical DOC-035. A separate displaced DOC-061 addendum fragment (5,817 characters) was confirmed fully contained in canonical DOC-061.
 - Action: preserved the DOC-035 fragment in canonical DOC-035 with an explicit recovery note; original Ka / AI-02 attribution retained. No claim was made that Ka's reported actions were independently re-executed.
 - Cleanup: no source file deleted. Non-canonical copies remain classified pending controlled cleanup and full path audit.
+
+
+## 2026-11-02 — Xu / AI-01 — Assignment ready: Ka / Vi / An runtime reconciliation
+
+- Ghi nhận phân công bổ sung trong DOC-054 cho ba track độc lập:
+  1. Ka / AI-02: đối chiếu kiến trúc `wee/`, `execution_host/`, Work 70 Lifecycle Engine, Core, Evidence và Dashboard; deliver capability/ownership matrix, runtime diagram, contract delta.
+  2. Vi: truy vết Core router/service/schema/auth/persistence/tests; deliver route/capability matrix và API gap, chỉ đọc, không sửa Core.
+  3. An: kiểm thử độc lập execution path của LifecycleController/execution_host; phân biệt controller E2E với direct adapter test; negative cases, raw output và defect report.
+- Tất cả là assignment-ready, ACK PENDING. Chưa có bằng chứng dispatch hoặc xác nhận nhận việc từ Ka/Vi/An.
+- Không sửa code, không đổi Gate, không mở BUILD; G4 vẫn NOT READY / NOT PASS.
+- Người ghi: Xu / AI-01.
