@@ -653,3 +653,31 @@ HTTP Adapter → MeetingService → MeetingManager (Meeting domain only).
 - Updated DOC-055 DOC-061 register description to disclose Ka findings and remaining gaps.
 - DOC-054 assignment status is not changed in this entry: Ka's report provides substantive source-review evidence, but DOC-061/DOC-016/DOC-017 reconciliation and final target diagram/contract remain incomplete; Vi Core trace and An independent QE remain pending evidence. No ACK/progress inferred for Vi or An.
 - No source code/Core/API/database/Engine/Dashboard/Gate/state/permission changes. No runtime tests executed by Xu. G4 NOT READY / NOT PASS; BUILD NOT AUTHORIZED; Work 70 ACTIVE / NOT RELEASED.
+
+
+## 2026-11-02 02:23:00 +07:00 — An Tester — WP70-AN-CONTROLLER-QA — Nhật ký triển khai kiểm thử độc lập
+
+- **Người thực hiện:** An Tester.
+- **Chức danh:** TESTER / Independent QA.
+- **Work:** 70 — ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD.
+- **Kênh:** ROOM-HOP MCP 8030 Sandbox.
+- **Cơ sở phân công:** DOC-054, ADDENDUM 2026-11-02 — WP70-AN-CONTROLLER-QA.
+- **Phạm vi thực tế trong lượt này:** đọc DOC-054, DOC-055, DOC-015, DOC-019 và nhật ký DOC-035; kiểm tra cấu trúc Sandbox; lập ma trận kiểm thử độc lập; ghi báo cáo dự thảo và đọc lại để xác minh nội dung đã lưu.
+- **Báo cáo:** `ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/05_BUILD/10_AI_DEBUG_HANDOFF/DRAFT_AN_WP70_CONTROLLER_QA_20261102.md`. MCP write trả `status=ok`; MCP readback trả lại `file_content` với ma trận CTRL-01..05, AUTH-01, BIND-01..02, EXEC-01, EVID-01, RETRY-01 và QE-01.
+- **Quan sát baseline:** thư mục `05_BUILD/04_CODE` trong Sandbox được liệt kê chỉ có `.gitkeep`; tài liệu Storage & Export Acceptance ghi PLANNED — NOT EXECUTED. Đây là quan sát theo phạm vi Sandbox đã kiểm tra, không khẳng định mã nguồn không tồn tại ở nơi khác.
+- **Kết quả:** DONE — chuẩn bị ma trận và ghi hồ sơ; PASS — xác minh đọc lại được báo cáo; BLOCKED — chưa chạy runtime test vì chưa có nguồn/phiên bản controller và test harness được xác minh trong môi trường thực thi hiện có, đồng thời chưa xác nhận đủ Work Entry G0–G5 và quyền thực thi cho assignment này.
+- **Các phép thử runtime:** toàn bộ NOT RUN. Không tự chuyển nhận định source-level của Ka thành kết quả kiểm thử của An; các nghi vấn về EXECUTE PASS sau capability discovery, TEST chưa được gọi, aggregate result, authorization và binding được giữ làm mục tiêu cần tái lập độc lập.
+- **Giới hạn kênh:** MCP 8030 được dùng cho Sandbox read/write; lượt này không xác minh được runtime/code execution runner hoặc cơ chế dispatch/ACK riêng cho An. Không suy diễn đã nhận quyền BUILD.
+- **Không thực hiện:** không sửa source code; không sửa Core/API/Engine/Dashboard; không commit/push/merge; không thay đổi Gate, trạng thái Work hoặc quyền; không nghiệm thu và không tuyên bố runtime PASS.
+- **Handoff:** Xu / AI-01 cần xác minh assignment ACK và Work Entry G0–G5, cung cấp source/branch/commit chuẩn cùng lệnh/môi trường chạy tái lập. Sau khi đủ điều kiện, An chạy từng test, lưu raw stdout/stderr, exit code và evidence; báo PASS/FAIL/BLOCKED/NOT RUN theo từng tiêu chí.
+- **Trạng thái tổng:** PREPARATION COMPLETE / EXECUTION BLOCKED / NOT ACCEPTED.
+- **Chữ ký:** **An Tester — TESTER / Independent QA** — `[KÝ: AN | TESTER]`.
+
+
+## 2026-11-02 — Xu / AI-01 — Independent source spot-check of Ka WP70-KA-RUNTIME findings
+
+- Fetched current default-branch source files directly from GitHub and captured blob SHAs in DOC-061 Addendum: wee/controller.py `fb2cbd2d`; execution_host/host.py `977b5bc5`; security.py `4aa20fbc`; models.py `2488b7c9`; wee_bridge.py `eec29b8f`; wee/bridge/real_host.py `0f9b37af`; Core http_server.py `54cb3ecb`; bridge tests `58df3061`.
+- Independently confirmed from source: LifecycleController records EXECUTE PASS after discovery and TEST BLOCKED without invoking bound entrypoint; ExecutionHost.execute_work() keeps top-level status from primary command while storing test result nested; caller-supplied authorized boolean is the inspected host/bridge authorization contract; bridge accepts response Work/execution IDs without mismatch rejection; Core inspected router only exposes Identity/Meeting routes.
+- Searched for an authoritative :8031 `/execute` server handler but did not identify one. Server endpoint registration/auth middleware therefore remains NOT VERIFIED; do not infer from client bridge defaults.
+- This is Xu source inspection only, not runtime test and not independent QE. It does not substitute for An's assigned test report or Vi's Core trace.
+- Updated DOC-061 with exact source revisions, confirmed findings, limitations and evidence classification. No code/Core/Gate/state/permission changes.
