@@ -1365,3 +1365,16 @@ Giới hạn: MCP 8030 hiện chỉ cung cấp thao tác file/context; không c�
 - Work28 general CI run `41327946426`: Linux lifecycle, Windows lifecycle, unit/regression đều SUCCESS (3/3).
 - Kết luận giới hạn: đã quan sát native Windows child không thực thi trước khi Job Object assignment hoàn tất và chỉ bắt đầu sau resume trên GitHub-hosted Windows Server 2022. Chưa phải stress/adversarial scheduler proof, chưa deploy candidate vào Execution Host live, chưa chứng minh OS sandbox isolation.
 - Không sửa production source/live MCP; không merge PR; execution gate CLOSED. Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+
+## 2026-11-02 01:39 UTC+7 — Co xác minh CI rerun sau cập nhật tài liệu
+**TÊN:** Co  
+**CHỨC DANH:** Coder / AI Build Assistant  
+**NGÀY:** 2026-11-02  
+**GIỜ - PHÚT:** 01:39 (UTC+7)
+
+- Kiểm tra lại WP2 workflow run `41328023264`: cả hai job `wp2-native-windows-process-tree` và `wp2-fail-closed-pytest` đều `completed / success`.
+- Kiểm tra Work28 general CI run `41328023256`: cả ba job `execution-host-lifecycle-linux`, `execution-host-lifecycle-windows`, `unit-regression-tests` đều `completed / success`.
+- Đây là CI rerun sau các commit tài liệu/nhật ký; xác nhận các lần cập nhật không làm hỏng các lane kiểm thử. Không có test source mới trong hai lượt rerun này; bằng chứng native Windows 18 passed vẫn là run `41327946366`, general CI 3/3 trước đó là run `41327946426`.
+- Bước rà soát tiếp theo: xác định canonical/live Execution Host source và so sánh với candidate; chưa tìm thấy canonical `process_job.py` tại hai đường dẫn dự kiến trong prefix Work28. Không suy diễn rằng candidate đã được tích hợp.
+- Gate: candidate chưa deploy; OS sandbox isolation chưa được chứng minh; execution gate CLOSED; không merge PR; Work28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
