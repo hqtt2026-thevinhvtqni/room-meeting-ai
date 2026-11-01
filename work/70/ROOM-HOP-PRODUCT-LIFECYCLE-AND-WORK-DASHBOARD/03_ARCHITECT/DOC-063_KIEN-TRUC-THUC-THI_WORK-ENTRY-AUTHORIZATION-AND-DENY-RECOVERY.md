@@ -176,3 +176,76 @@ Thiếu bất kỳ điều kiện nào: giữ DRAFT / NOT AUTHORIZED. Read-only 
 - ACCEPT/RELEASE: NOT GRANTED / NOT RELEASED.
 
 **Nguyên tắc khóa:** DENY phải chỉ ra đường khắc phục; nhưng recovery guidance không phải quyền thực thi. Chỉ authorization evaluation mới có thể mở khóa protected action.
+
+
+---
+
+## ADDENDUM 2026-11-02 — KA INDEPENDENT REVIEW: RECOVERY STORE SEPARATION & COMMIT-TIME AUTHORIZATION
+
+**Status:** DESIGN REQUIREMENTS ADDED / NOT APPROVED / NOT IMPLEMENTED  
+**Reviewer:** Ka / AI-02 — CSA / Independent Architecture Reviewer  
+**Source record:** DOC-035, entry “2026-11-02 02:01:53 +07:00 — Ka / AI-02 — Phản biện độc lập Work Entry Gate và phản hồi chỉ đạo của Xu”  
+**Authority:** Vinh; Core owner approval required for Core/API/storage contract.
+
+### 13.1 P0.3 — Separate Work Entry / Recovery data from protected product data
+
+The system MUST distinguish at least two authorization scopes and storage boundaries:
+
+1. **Work Entry / Recovery scope:** submission of participant evidence, Work Entry evaluation inputs, DENY records, recovery guidance, remediation evidence and recheck requests.
+2. **Protected Product scope:** source files, product artifacts, Work/WP authoritative state, configuration, lifecycle transitions, release records and other protected mutations.
+
+Rules:
+- Permission to submit Work Entry or remediation evidence MUST NOT imply permission to write protected product resources.
+- A participant may submit evidence but MUST NOT set GATE_PASS, overwrite evaluator decisions, alter authoritative gate state, or change another participant's evidence.
+- Gate evaluation and state transition remain server/authority-owned operations, not caller-controlled fields.
+- The recovery store may be a logically isolated namespace/service or a physically separate store. The implementation choice requires Core owner architecture approval; this document does not assume a database or storage technology.
+- Every record must carry provenance: authenticated principal, Work/assignment/scope, source revision, evidence hash/reference, timestamp, policy/evaluator version and correlation/command ID as applicable.
+- Read/write permissions for this scope must be independently tested against protected product endpoints and resources.
+
+Required tests:
+- Recovery-evidence submission is allowed for an authorized remediation scope while protected product mutation remains denied.
+- Caller-supplied GATE_PASS, evaluator result or authoritative state mutation is rejected.
+- Evidence for another Work/participant or outside assignment scope is rejected.
+- Recovery-store unavailability does not silently fall back to protected product storage or local/client storage.
+
+### 13.2 P0.4 — Authorization validity at commit time; race and revocation safety
+
+Authorization MUST remain valid at the point the protected mutation commits, not merely when the request first arrives.
+
+Required contract:
+1. Bind the authorization decision to principal, Work, WP, assignment, action, resource, source revision, policy version and authoritative Gate/WP snapshot/version.
+2. Revalidate or enforce an equivalent concurrency guarantee at commit time. If assignment is revoked, scope changes, source revision changes, Gate/WP state changes, or authorization expires before commit, the mutation MUST fail without changing authoritative state.
+3. Use a Core-owner-approved transaction, lock, compare-and-swap, fencing token or equivalent mechanism appropriate to the actual persistence topology. No specific mechanism is presumed until Core is traced.
+4. Protected mutation and its audit record MUST be atomic or have an explicitly approved durable outbox/reconciliation protocol. Missing audit/persistence dependency MUST fail closed.
+5. Retry with the same command/idempotency key and same payload MUST return the recorded outcome without duplicate mutation. Same key with different payload MUST be rejected.
+6. External side effects that cannot participate in the Core transaction require an approved outbox, reconciliation and/or compensation design; do not claim atomicity without evidence.
+
+Required tests:
+- Revoke assignment after initial authorization but before commit; mutation is denied.
+- Change source revision or Gate/WP snapshot between validation and commit; stale command is rejected.
+- Two concurrent commands target the same expected version; at most one commits and the other receives a deterministic conflict.
+- Simulate audit write failure and persistence failure; no un-audited protected mutation is committed.
+- Retry same command/payload; exactly one mutation. Retry same key/different payload; reject.
+- Exercise partial external side effect and prove approved reconciliation/compensation behavior, or explicitly classify the path unsupported and fail closed.
+
+### 13.3 Ownership and evidence boundary
+
+- **Core owner:** approve authoritative identity/authorization, transaction/concurrency, persistence and audit contract; identify actual enforcement boundary.
+- **Ka / AI-02:** independent architecture review of trust boundary, storage separation and commit-time validity; no implementation ownership implied by this addendum.
+- **Vi:** source-trace all Core write paths and report actual transaction/auth/audit behavior with file/symbol/test evidence.
+- **An:** independent negative/race/idempotency/evidence-failure tests; distinguish test design from executed runtime evidence.
+- **Xu / AI-01:** integrate findings and maintain DOC-063/DOC-055/DOC-035; no unilateral Core contract approval.
+- **Vinh:** policy, Gate namespace and BUILD authorization decisions.
+
+### 13.4 Current disposition
+
+- Ka review findings P0.3/P0.4: RECORDED AS DESIGN REQUIREMENTS.
+- Recovery/Protected data separation: NOT IMPLEMENTED / NOT VERIFIED.
+- Commit-time authorization and race safety: NOT IMPLEMENTED / NOT VERIFIED.
+- Core owner contract: PENDING.
+- Vi source trace and An independent QE: PENDING EVIDENCE.
+- DOC-063 remains DRAFT / DESIGN ONLY / NOT APPROVED.
+- DOC-060 remains PROPOSAL ONLY; no namespace activation.
+- G4 remains NOT READY / NOT PASS; BUILD remains NOT AUTHORIZED.
+
+This addendum refines the design requirements only. It does not change DOC-057 policy, authorize Core changes, grant permissions, alter Gate state, or claim runtime enforcement.
