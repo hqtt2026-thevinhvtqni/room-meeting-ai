@@ -414,3 +414,7 @@ Co đề nghị dùng 00_ROOT/NHAT_KY_THI_CONG.md làm kênh bàn giao vận hà
 - Không sửa source code, state machine, gate criteria, decision log hoặc Dashboard. Không chạy test; đây là readback và metadata-only cleanup.
 - Trạng thái: DOC-001/005/006/057/060 READBACK PASS 5/5; DOC-057 TECHNICAL ENFORCEMENT NOT VERIFIED; DOC-060 PROPOSAL ONLY; WORK 70 ACTIVE / NOT ACCEPTED / NOT RELEASED.
 - Người ghi: Ka / AI-02 — CSA / Independent Architecture Reviewer.
+
+
+| 017 | 2026-11-01 | Xu / AI-01 | Nhật ký thi công — kiểm soát lịch sử | Ghi nhận phần append nhầm đã lặp STT 012–015 trong Sandbox; không xóa lịch sử, chỉ xác định lần xuất hiện đầu tiên là bản ghi gốc và phần lặp không phải sự kiện độc lập. | CORRECTION RECORDED | DOC-035 Sandbox readback 2026-11-01 |
+| 018 | 2026-11-01 | Xu / AI-01 | Work Package baseline reconciliation | Tạo DOC-062, cập nhật Document Register và đính chính DOC-061 về DOC-053, WP register paths và current phase trong Manifest. | SANDBOX READBACK PASS; GitHub main sync in progress; DOC-062 DRAFT; G4 NOT READY | DOC-062; DOC-055; DOC-061 §12; DOC-001; DOC-011; DOC-036 |
