@@ -416,7 +416,57 @@ Co đề nghị dùng 00_ROOT/NHAT_KY_THI_CONG.md làm kênh bàn giao vận hà
 - Người ghi: Ka / AI-02 — CSA / Independent Architecture Reviewer.
 
 
-| 017 | 2026-11-01 | Xu / AI-01 | Nhật ký thi công — kiểm soát lịch sử | Ghi nhận phần append nhầm đã lặp STT 012–015 trong Sandbox; không xóa lịch sử, chỉ xác định lần xuất hiện đầu tiên là bản ghi gốc và phần lặp không phải sự kiện độc lập. | CORRECTION RECORDED | DOC-035 Sandbox readback 2026-11-01 |
-| 018 | 2026-11-01 | Xu / AI-01 | Work Package baseline reconciliation | Tạo DOC-062, cập nhật Document Register và đính chính DOC-061 về DOC-053, WP register paths và current phase trong Manifest. | SANDBOX READBACK PASS; GitHub main sync in progress; DOC-062 DRAFT; G4 NOT READY | DOC-062; DOC-055; DOC-061 §12; DOC-001; DOC-011; DOC-036 |
+## 2026-11-01 — Ka / AI-02 — Đối chiếu hợp đồng kiến trúc runtime WP70-KA
+- Người thực hiện: Ka / AI-02 — CSA / Architecture & Independent Review.
+- Thời điểm: 2026-11-01 21:26 +07:00.
+- Phạm vi: WP70-KA; source reconciliation cho 05_BUILD, không sửa Core/Engine/Dashboard.
+- Đã đọc DOC-049 Build Execution Playbook, DOC-054 Parallel Assignment Order, DOC-004 Lifecycle Gate Matrix, DOC-005 Work State Machine, DOC-010 Dashboard/Core Read Contract và DOC-055 Document Register; đối chiếu với Core main và branch Work 70.
+- Core main HEAD được fetch: `bb259c5186f31073691bc92bfa2f52430f19451b`. Router `room_hop_mcp/adapter/http_server.py` đăng ký Identity + Meeting routes; chưa thấy Work-scoped API trong router. MeetingManager/MeetingService là Meeting-centric, không phải Work Registry/Evidence/Export service. Work AuthN/AuthZ, transaction/version, idempotency, event/outbox và storage/export vẫn NOT VERIFIED.
+- GitHub compare main...work/70/05-build: branch status DIVERGED, ahead 34 / behind 370, merge base `fc6a19888765d174aea9aea839620338ac9f71e8`; compare liệt kê 14 file Work 70 dạng tài liệu được thêm, không có bằng chứng code Engine/Core/Dashboard tích hợp. Không merge/rebase/commit/push.
+- Sandbox inventory: 05_BUILD/04_CODE chỉ có .gitkeep; 05_BUILD/05_TEST mới có STORAGE_AND_EXPORT_ACCEPTANCE.md với trạng thái PLANNED — NOT EXECUTED. Không suy diễn implementation từ cấu trúc.
+- Đã tạo DOC-061 — P1, Read order 61 — “Rà soát đối chiếu hợp đồng kiến trúc runtime Work 70” tại 05_BUILD/03_ARCHITECTURE; ghi DOC-061 vào DOC-055 Sandbox. Nội dung tách riêng Work/Phase/Gate/WP states theo DOC-005, giữ DOC-060 ở PROPOSAL ONLY, xác định invariants, Core gaps và 12 contract test cases cho Qw.
+- Sandbox write/append được công cụ xác nhận; chưa có readback nội dung DOC-061/DOC-055/DOC-035 trong lượt này. GitHub sync chưa thực hiện vì ROOM-HOP build context quy định AI không commit/merge/push.
+- Trạng thái: SOURCE RECONCILIATION DONE / DOC-061 DRAFT IN SANDBOX / CONTRACT APPROVAL PENDING / CORE WORK API NOT VERIFIED / BRANCH DIVERGED / TESTS NOT RUN / NOT RELEASED.
+- Handoff: Xu review DOC-061, xác nhận Core owner và điều phối ACK riêng Co/Vi/Qw theo DOC-054. Ka tiếp tục giữ vai trò kiến trúc/review, không tự xác nhận QE hay RELEASE.
+- Người ghi: **Ka / AI-02 — CSA / Architecture & Independent Review**.
 
-| 019 | 2026-11-01 | Xu / AI-01 | GitHub ↔ Sandbox synchronization | Đồng bộ DOC-055 và DOC-062 lên GitHub main; cập nhật DOC-035 lên GitHub main. Readback Sandbox DOC-055 xác nhận DOC-061/DOC-062 có mặt và đúng thứ tự. DOC-061 vẫn chỉ có trong Sandbox, GitHub sync pending. | PARTIAL SYNC VERIFIED — DOC-055, DOC-062, DOC-035 main; DOC-061 pending | GitHub main DOC-055 commit 6d0e16f4cde09c02f25f073de4a19bd33d6645be; DOC-062 blob 3327f6474fcf6d291b6fb518c8e8e855495e3b1e; Sandbox readback DOC-055 |
+
+## 2026-11-01 — Ka / AI-02 — Bổ sung rào chắn G4 và WP baseline cho DOC-061
+- Người thực hiện: Ka / AI-02 — CSA / Architecture & Independent Review.
+- Ngày: 2026-11-01.
+- Đọc đối chiếu bổ sung GitHub main: DOC-004 v1.2, DOC-005 v1.2, DOC-010, DOC-052 v1.4, DOC-053 v0.1; so sánh với DOC-054 và Build Register legacy trên branch.
+- Phát hiện trọng yếu cần bổ sung: DOC-052 xác nhận Manifest đang ở 03_ARCHITECT, G3/G4/G5 NOT PASS; DOC-053 là WP baseline DRAFT_NOT_APPROVED, tất cả sáu WP proposed status DRAFT; DOC-036 coi branch BUILD_REGISTER là legacy candidate, canonical target/version NOT ESTABLISHED. Do đó DOC-054 ASSIGNMENT READY không đồng nghĩa G4 BUILD authorization hoặc các AI đã ACK.
+- Đã append Addendum 11 vào DOC-061, xác định thứ tự unblock: Xu reconcile DOC-011/DOC-053/DOC-036; Vinh phê duyệt WP baseline; architecture authority chốt contract; Xu đánh giá G4 theo DOC-004; chỉ sau G4 PASS và WP DoR mới mở READY/ACTIVE và code integration.
+- Giới hạn an toàn hiện hành: tiếp tục source audit, contract reconciliation và test design; không merge/migrate legacy branch register, không tự chuyển WP status, không tuyên bố G4 PASS, không tích hợp prototype.
+- Sandbox append được xác nhận; cần readback chính xác nội dung qua kênh an toàn được phép. GitHub sync chưa thực hiện.
+- Trạng thái: G4 BLOCKER IDENTIFIED / WP BASELINE DRAFT_NOT_APPROVED / DOC-061 ADDENDUM RECORDED IN SANDBOX / BUILD INTEGRATION NOT AUTHORIZED / NOT RELEASED.
+- Chữ ký: **Ka / AI-02 — CSA / Architecture & Independent Review**.
+
+
+## Bổ sung nhật ký thi công — 2026-11-01
+
+| STT | Thời điểm | Người thực hiện | Phạm vi | Công việc thực tế | Kết quả / trạng thái | Bằng chứng / tham chiếu |
+|---|---|---|---|---|---|---|
+| 012 | 2026-11-01 | Xu / AI-01 | Work 70 planning reconciliation | Đọc lại Manifest, DOC-004/005/006/011/035/042/044/055, DOC-061, DOC-054, DOC-036 và các WP candidate. Phát hiện DOC-061 addendum tham chiếu nhầm DOC-053 thành WP register; DOC-053 thực tế là Operate Playbook; hai đường dẫn WORK_PACKAGE_REGISTER trong 04_PLAN không tồn tại; Manifest hiện trỏ 01_DISCOVER PLANNED, G0/G1 NOT_READY. | DONE — source reconciliation; no gate/status changed | DOC-001; DOC-011; DOC-036; DOC-053; DOC-055; DOC-061; Sandbox read probes 2026-11-01 |
+| 013 | 2026-11-01 | Xu / AI-01 | 04_PLAN | Tạo DOC-062 làm đề xuất đối chiếu sáu WP hiện có trong DOC-011 với Build Register candidate và DOC-054; giữ DRAFT, không cấp quyền BUILD. | DONE — proposal created; Product Owner approval pending | 04_PLAN/DOC-062_DE-XUAT-CHUAN-HOA-GOI-CONG-VIEC_WORK-PACKAGE-BASELINE-RECONCILIATION-PROPOSAL.md |
+| 014 | 2026-11-01 | Xu / AI-01 | Governance correction | Bổ sung đính chính DOC-061 về DOC-053, đường dẫn WP register không tồn tại, Manifest current phase và thứ bậc DOC-011/DOC-036/DOC-062; cập nhật DOC-055. | WRITE ACKNOWLEDGED — readback verification pending | DOC-061 §12; DOC-055 DOC-062 row |
+| 015 | 2026-11-01 | Xu / AI-01 | Build authorization | Giữ G4 NOT READY / NOT PASS; không merge/rebase nhánh diverged; không khởi chạy code/integration khi chưa có gate/authorization. | BLOCKED BY ENTRY/GATE — preparatory work only | DOC-001; DOC-004; DOC-057; DOC-061 §12; DOC-062 |
+
+| 2026-11-01 | Ka / AI-02 | WP baseline test design + Sandbox path correction | Đối chiếu DOC-011/DOC-036/DOC-045/DOC-052/DOC-060; thiết kế K70-WP-01..14. Phát hiện DOC-062 và DRAFT_VI_WP70_ENTRY_TRACE_20261101 đã hiện diện trong canonical Sandbox tree nhưng chưa có GitHub search result; không đọc được nội dung qua quyền hiện có nên không suy luận. Ghi nhận thao tác append trước đó vào direct Sandbox root là ngoài canonical path theo DOC-003; đã append lại nội dung vào canonical path, giữ nguyên bản ngoài root để xử lý theo incident cleanup, không xóa. | TEST DESIGN DONE / NOT EXECUTED; canonical append acknowledged; exact content readback NOT VERIFIED; no gate/build authorization | DOC-003 v1.1; DOC-056 v1.0; DOC-058 incident; DOC-061 Addendum 12; Sandbox inventory; DOC-062 and Vi trace paths discovered |
+
+
+## Correction note — 2026-11-01
+Xu ghi nhận phần cuối nhật ký vừa được bổ sung đã lặp lại STT 012–015 vốn đã có trong lịch sử trước đó. Không xóa các dòng để bảo toàn audit trail. Chỉ lần xuất hiện đầu tiên của mỗi STT 012–015 là bản ghi gốc; phần lặp do thao tác append nhầm trong phiên này, không phải sự kiện độc lập và không được tính là bằng chứng bổ sung. STT 017 — Xu / AI-01 — CORRECTION RECORDED.
+
+| 018 | 2026-11-01 | Xu / AI-01 | Work Package baseline reconciliation | Tạo DOC-062 ở 04_PLAN; thêm DOC-062 vào Document Register; đính chính DOC-061 về DOC-053, đường dẫn WP register không tồn tại và current phase trong Manifest. Kiểm tra readback các tài liệu đã ghi. | SANDBOX READBACK PASS; GitHub sync pending; DOC-062 DRAFT; G4 NOT READY | DOC-062; DOC-055; DOC-061 §12; DOC-001; DOC-011; DOC-036 |
+
+| 019 | 2026-11-01 | Xu / AI-01 | GitHub ↔ Sandbox synchronization | Đồng bộ DOC-055 và DOC-062 lên GitHub main; cập nhật DOC-035 lên GitHub main. Readback Sandbox DOC-055 xác nhận DOC-061/DOC-062 có mặt và đúng thứ tự. DOC-061 vẫn chỉ có trong Sandbox, GitHub sync pending. | PARTIAL SYNC VERIFIED — DOC-055, DOC-062, DOC-035 main; DOC-061 pending | GitHub main DOC-055 commit 6d0e16f4cde09c02f25f073de4a19bd33d6645be; DOC-062 blob 3327f6474fcf6d291b6fb518c8e8e855495e3b1e; DOC-035 latest commit pending retrieval; Sandbox readback DOC-055 |
+
+
+## 2026-11-01 — Xu / AI-01 — DOC-063 Authorization Enforcement & DENY-to-RECOVERY design
+- Đọc lại DOC-001, DOC-004, DOC-005, DOC-057, DOC-061, DOC-062, DOC-044, Core capability gap assessment và WP schema/Build Register candidate.
+- Xác nhận Manifest hiện tại vẫn 01_DISCOVER PLANNED, G0/G1 NOT_READY; DOC-004 G4 là PLAN → BUILD; DOC-057 policy ACTIVE nhưng technical enforcement chưa verified. DOC-061 runtime contract còn DRAFT; Core Work authorization boundary chưa verified.
+- Tạo DOC-063 tại 03_ARCHITECT làm thiết kế kỹ thuật: trusted authorization inputs, evaluation order, ALLOW/DENY contract, reason code, DENY-to-RECOVERY guidance, audit, positive/negative tests và điều kiện implementation-ready.
+- Cập nhật DOC-055 đăng ký DOC-063. Không sửa Manifest, gate, WP state, permission hoặc Core code; không cấp quyền BUILD.
+- Trạng thái: DOC-063 CREATED IN SANDBOX / DESIGN ONLY / REGISTER UPDATE ACKNOWLEDGED / READBACK PENDING / G4 NOT READY / IMPLEMENTATION NOT AUTHORIZED.
+- Người ghi: Xu / AI-01.
