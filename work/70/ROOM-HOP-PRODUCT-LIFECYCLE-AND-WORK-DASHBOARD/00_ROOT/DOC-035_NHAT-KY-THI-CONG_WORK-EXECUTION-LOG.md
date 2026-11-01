@@ -403,3 +403,14 @@ Co đề nghị dùng 00_ROOT/NHAT_KY_THI_CONG.md làm kênh bàn giao vận hà
 - DOC-060 được cập nhật trong Sandbox và GitHub main; commit `17e92b4e8f568d876e2edc3d5603c27e7f955486`, blob SHA `0f3f781007e827c9db286b125cfbcb7318bc2613`; exact readback=true, 3,913 bytes.
 - Inventory là sơ bộ, chưa thay thế full-repository scan. Không cập nhật mã gate hiện hành cho đến khi Vinh quyết định DOC-060. Không sửa dữ liệu lịch sử.
 - Người ghi: Xu / AI-01 — Work 70 Coordinator.
+
+
+
+## 2026-11-01 — Ka / AI-02 — Work 70 canonical readback and metadata cleanup
+- Đối chiếu trực tiếp Sandbox Work 70 với GitHub main tại canonical paths theo DOC-001/DOC-003: DOC-001, DOC-005, DOC-006, DOC-057 và DOC-060 đều exact-content match (5/5).
+- SHA/blob GitHub đã đọc: DOC-001 `3099cc00ba27dbdfd04ec1ef4f59ba05d97cd332`; DOC-005 `5f7a6e15910186872c10a639c43ebc04498c3585`; DOC-006 `a60bc4f8de1d39788ef0f16e2260790eb1fde502`; DOC-057 `23798cc1ff90445ab8c1593c283cd6a1b83a1fca`; DOC-060 `0f3f781007e827c9db286b125cfbcb7318bc2613`.
+- DOC-060 vẫn PROPOSAL ONLY / NOT APPROVED / NOT IMPLEMENTED; không sử dụng namespace LC/WE/INT như định danh có hiệu lực. DOC-057 là policy ACTIVE nhưng TECHNICAL ENFORCEMENT NOT VERIFIED; chưa có bằng chứng G0–G5 được enforce tại write boundary. Không cấp Work Entry PASS và không thay đổi gate.
+- Dọn metadata Windows trong Sandbox Work 70. Sau thao tác, inventory `sandbox_list` xác nhận không còn `desktop.ini` trong Work 70. Không xóa tài liệu, source, evidence hoặc cây duplicate đã được quarantine.
+- Không sửa source code, state machine, gate criteria, decision log hoặc Dashboard. Không chạy test; đây là readback và metadata-only cleanup.
+- Trạng thái: DOC-001/005/006/057/060 READBACK PASS 5/5; DOC-057 TECHNICAL ENFORCEMENT NOT VERIFIED; DOC-060 PROPOSAL ONLY; WORK 70 ACTIVE / NOT ACCEPTED / NOT RELEASED.
+- Người ghi: Ka / AI-02 — CSA / Independent Architecture Reviewer.
