@@ -923,3 +923,11 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - DOC-035 synchronization: initial updates committed d489f626f0060171ab6655b593b3c993b967878a, later branch-trace update a24a4c59b3347e46a09ef55f0f6eee4ef97810f8; exact readback was verified before this entry. This entry will be synced in the next update.
 - Work 70 Sandbox/GitHub main documentation now reconciled for DOC-068/DOC-055/DOC-035. Branch work/70/05-build remains diverged; no merge/rebase/cherry-pick.
 - No source implementation, Work Entry gate, authorization, assignment ACK, acceptance or release changed.
+
+
+## 2026-11-02 — Xu / AI-01 — Extended Core HTTP adapter inventory
+- GitHub main code search for `@app.get`, `@app.post`, `FastAPI(`, `create_http_app` found three adapter files: Core HTTP adapter, browser server and browser-agent adapter.
+- Read browser server blob 1b9dfe4b9d3f62e08a324ff146a9a50bb63e1313: only Meeting list/get/transcript/paste routes.
+- Read browser-agent adapter blob 0ced9207c1897b9a7b572b7fefa44fec2dd92b76: generic browser workflow adapter, not Work/WP/Assignment registry API.
+- Search for APIRouter, include_router, WorkRegistry and EvidenceRegistry returned no results in current GitHub code search. This is bounded search evidence, not proof about all runtime composition or unindexed code.
+- Core owner and any alternate service composition remain unidentified. WP-70-04/SD-05 remains BLOCKED; no endpoint invented and no code changed.
