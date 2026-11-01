@@ -85,6 +85,16 @@ When adding a document: allocate the next unused DOC ID, set priority/read order
 | DOC-062 | P0 | 62 | Đề xuất chuẩn hóa gói công việc / Work Package Baseline Reconciliation Proposal | 04_PLAN/DOC-062_DE-XUAT-CHUAN-HOA-GOI-CONG-VIEC_WORK-PACKAGE-BASELINE-RECONCILIATION-PROPOSAL.md | DOC-001; DOC-004; DOC-005; DOC-006; DOC-011; DOC-036; DOC-042; DOC-043; DOC-044; DOC-054; DOC-055; DOC-057; DOC-061 | DRAFT — APPROVAL PENDING / G4 NOT READY | Reconcile sáu WP giữa Work-level roadmap và Build Register candidate; không cấp quyền BUILD |
 | DOC-063 | P0 | 63 | Kiến trúc thực thi Work Entry Authorization và DENY-to-RECOVERY / Work Entry Authorization & Deny Recovery Enforcement Blueprint | 03_ARCHITECT/DOC-063_KIEN-TRUC-THUC-THI_WORK-ENTRY-AUTHORIZATION-AND-DENY-RECOVERY.md | DOC-001; DOC-004; DOC-005; DOC-043; DOC-044; DOC-057; DOC-061; DOC-062 | DRAFT — DESIGN ONLY / NOT APPROVED / NOT IMPLEMENTED | Hợp đồng kỹ thuật đề xuất cho authorization tại điểm thực thi; bổ sung yêu cầu tách Recovery/Protected scope và commit-time authorization theo review Ka; P0.3/P0.4 DESIGN ONLY, chờ Core owner, Vi trace và An QE; không cấp quyền BUILD |
 
+## Addendum 2026-11-02 — đăng ký DOC-064 đến DOC-066
+| STT | Priority | Read order | Document | Path | Depends on | Status | Purpose / reading instruction |
+|---|---|---:|---|---|---|---|---|
+| DOC-064 | P0 | 64 | Kiến trúc điều phối giao việc AI kết hợp / Hybrid AI Dispatch Architecture | 05_BUILD/03_ARCHITECT/DOC-064_KIEN-TRUC_DIEU-PHOI-GIAO-VIEC-AI_HYBRID-AI-DISPATCH-ARCHITECTURE.md | DOC-005; DOC-033; DOC-042; DOC-043; DOC-044; DOC-057; DOC-061; DOC-063 | DRAFT — TARGET ARCHITECTURE / IMPLEMENTATION NOT AUTHORIZED | Kiến trúc control plane, adapter modes, trust boundary, session continuity và rollout constraints |
+| DOC-065 | P0 | 65 | Hợp đồng điều phối giao việc AI kết hợp / Hybrid AI Dispatch Contract | 05_BUILD/03_ARCHITECT/DOC-065_HOP-DONG_DIEU-PHOI-GIAO-VIEC-AI_HYBRID-DISPATCH-CONTRACT.md | DOC-043; DOC-044; DOC-057; DOC-064 | DRAFT — CONTRACT PROPOSAL | Logical payload, dispatch, ACK, progress, result, review, events, error model và acceptance invariants |
+| DOC-066 | P0 | 66 | Kế hoạch triển khai và kiểm thử điều phối giao việc AI / AI Dispatch Implementation & Test Plan | 04_PLAN/DOC-066_KE-HOACH_TRIEN-KHAI-VA-KIEM-THU_DIEU-PHOI-GIAO-VIEC-AI.md | DOC-043; DOC-044; DOC-057; DOC-064; DOC-065 | PLANNED — TESTS NOT RUN / IMPLEMENTATION NOT AUTHORIZED | Các phase triển khai, phân công track, 30 test scenarios và release criteria |
+
+Ghi chú: DOC-064–066 đã được ghi vào Sandbox ngày 2026-11-02. GitHub sync và test execution chưa được xác minh. DOC-064–066 không phải bằng chứng dispatch hoặc AI ACK.
+
+| DOC-067 | P0 | 67 | Kế hoạch kiểm thử độc lập WP70-QA / Independent QA Test Plan | 06_VERIFY/DOC-067_KE-HOACH-KIEM-THU-DOC-LAP_WP70-QA_INDEPENDENT_QA_TEST_PLAN.md | DOC-001; DOC-004; DOC-005; DOC-042; DOC-043; DOC-054; DOC-061; DOC-063 | ACTIVE / PREPARATION COMPLETE / EXECUTION BLOCKED | Test strategy, contract tests, negative/security, race/idempotency, E2E matrix; không sửa code để làm test xanh |
 
 ## Addendum 2026-11-02 — đăng ký DOC-068
 | STT | Priority | Read order | Document | Path | Depends on | Status | Purpose / reading instruction |
