@@ -43,4 +43,4 @@ jobs:
         run: python -m pip install pytest
       - name: Run native Windows lifecycle tests against isolated WP2 candidate
         working-directory: work/28/MCP-8020-TOOLING-PLATFORM/10_AI_DEBUG_HANDOFF/02_PATCH_CANDIDATES/20261030_WP2_SUSPENDED_SPAWN
-        run: python -m pytest -q "${{ github.workspace }}/tests/test_process_job.py"
+        run: python -m pytest -q "${{ github.workspace }}/tests/test_process_job.py" "${{ github.workspace }}/work/28/MCP-8020-TOOLING-PLATFORM/10_AI_DEBUG_HANDOFF/03_VALIDATION/test_process_job_fail_closed_review.py"
