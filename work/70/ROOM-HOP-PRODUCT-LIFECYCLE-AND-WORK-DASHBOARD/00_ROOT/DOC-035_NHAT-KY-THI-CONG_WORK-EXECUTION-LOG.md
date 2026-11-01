@@ -681,3 +681,12 @@ HTTP Adapter → MeetingService → MeetingManager (Meeting domain only).
 - Searched for an authoritative :8031 `/execute` server handler but did not identify one. Server endpoint registration/auth middleware therefore remains NOT VERIFIED; do not infer from client bridge defaults.
 - This is Xu source inspection only, not runtime test and not independent QE. It does not substitute for An's assigned test report or Vi's Core trace.
 - Updated DOC-061 with exact source revisions, confirmed findings, limitations and evidence classification. No code/Core/Gate/state/permission changes.
+
+
+## 2026-11-02 — Xu / AI-01 — Inventory existing execution-host tests and WEE readiness semantics
+
+- Inspected `tests/test_execution_host.py` (blob `183cba2959db9d9fb00751055efdeddd09c14a64`): 10 named tests cover valid execution/evidence, unauthorized/invalid context, workspace/cwd escape, forbidden command/injection, timeout/cleanup, redaction, missing Git authority/adapters, artifact isolation and service lifecycle.
+- The inspected test inventory does not include run_test=True with failing test/top-level aggregation, bridge Work/execution ID mismatch, server-boundary authorization spoofing, commit-time revocation/Gate/source-version race, audit failure or idempotent duplicate command cases.
+- Inspected `wee/cli.py` (blob `e745cfcd10a03b6cf87153bdf9321a207246fd18`): CLI resolves authority then calls LifecycleController.run(). Inspected `wee/readiness.py` (blob `f765568e4567476b36ba21090b5fc06663abdb00`): readiness only runs LocalExecutionHost.discover(); WEE READY is capability readiness, not proof of lifecycle/test completion.
+- Added test-source inventory and explicit not-executed/not-QE classification to DOC-061 for An's independent test plan.
+- No tests executed; no code or runtime changed. This source inventory does not pre-empt An's assigned QE report.
