@@ -72,3 +72,55 @@ Không tự động mở release khi bất kỳ gate nào chưa đạt.
 
 ## 6. Giới hạn năng lực điều phối hiện tại
 MCP 8030 hiện cung cấp thao tác Sandbox và Meeting, không có công cụ dispatch trực tiếp Co/Vi/Ka/Qw trong phiên này. Tài liệu này là lệnh phân công đã chuẩn bị và lưu vào Sandbox; chưa được xem là đã gửi/được nhận bởi các AI. Xu phải chuyển lệnh qua kênh làm việc thực tế của từng AI hoặc công cụ điều phối được xác minh, rồi ghi nhận phản hồi nhận việc.
+
+
+---
+
+## ADDENDUM 2026-11-02 — PHÂN CÔNG BỔ SUNG KA / VI / AN: RUNTIME RECONCILIATION
+
+**Trạng thái:** ASSIGNMENT READY — ACK PENDING — NOT A BUILD AUTHORIZATION  
+**Điều phối:** Xu / AI-01  
+**Quyền quyết định:** Vinh
+
+### WP70-KA-RUNTIME — Architecture reconciliation
+**Owner:** Ka / AI-02  
+**Mục tiêu:** chốt ranh giới trách nhiệm giữa `wee/`, `execution_host/`, Work 70 Lifecycle Engine, Core, Evidence Registry và Dashboard; không thiết kế lại từ đầu nếu có thể tái sử dụng.
+**Việc phải làm:**
+1. Đọc DOC-005, DOC-016, DOC-017, DOC-060, DOC-061, DOC-063 và source hiện hành.
+2. Lập capability matrix: existing / partial / missing / unverified, kèm file + symbol + test evidence.
+3. Vẽ luồng runtime và trust boundary; chỉ rõ ai giữ state, authorization, persistence, evidence và audit.
+4. Đề xuất phần tái sử dụng, phần adapter cần nối, phần còn thiếu; nêu migration/integration risks.
+5. Xác định tối thiểu contract và test cần có để chứng minh controller thật sự gọi execution/test entrypoint.
+**Bàn giao:** architecture delta/ADR, diagram, component ownership matrix, decision list.
+**Giới hạn:** read-only; không sửa code, không đổi Gate, không tuyên bố G4 PASS.
+
+### WP70-VI-CORE-TRACE — Core capability and integration trace
+**Owner:** Vi  
+**Mục tiêu:** xác minh Core hiện có gì bằng source-level evidence, không suy diễn từ tài liệu hoặc API dự kiến.
+**Việc phải làm:**
+1. Truy vết router → service → model/schema → authorization → persistence → tests.
+2. Lập endpoint/capability inventory cho Work, Work Package, assignment/ACK, lifecycle transition, evidence upload/read/version, audit, export.
+3. Mỗi capability ghi rõ VERIFIED / PARTIAL / NOT FOUND IN INSPECTED SCOPE / NOT VERIFIED; kèm path, symbol, route, test và lý do.
+4. Đánh giá khả năng dùng Core hiện tại; không tạo database/parallel store, không dùng Meeting artifact làm Work evidence nếu chưa có contract.
+5. Đề xuất adapter/API gap tối thiểu, phân biệt mock / snapshot / live và điều kiện để Dashboard đọc đúng nguồn.
+**Bàn giao:** Core trace report, route/service/schema/auth matrix, API gap list, đề xuất tích hợp.
+**Giới hạn:** read-only; không thêm route, migration, database, Dashboard live claim hoặc sửa Core.
+
+### WP70-AN-CONTROLLER-QA — Independent execution-path test
+**Owner:** An — Tester  
+**Mục tiêu:** kiểm tra độc lập tuyên bố thực thi của WEE LifecycleController và execution_host, tìm false PASS và đường đi bị bỏ qua.
+**Việc phải làm:**
+1. Xây test matrix cho RESOLVE → BIND → VALIDATE → PREPARE → EXECUTE → TEST; xác minh mỗi stage có hành vi thật và evidence.
+2. Kiểm tra controller có thực sự gọi bound test entrypoint hay chỉ ghi PASS sau capability discovery.
+3. Negative tests: authority missing/expired/mismatch; wrong Work/repo/branch/HEAD; command denied; timeout; process failure; test entrypoint missing; evidence write/hash failure; retry/idempotency; partial execution.
+4. Tách rõ unit test, integration test, direct adapter test và controller E2E; không dùng test của adapter để kết luận controller PASS.
+5. Chạy test khi có runtime phù hợp; nếu không có test runner/quyền truy cập, ghi BLOCKED cùng lệnh cần chạy và evidence còn thiếu, không giả lập PASS.
+**Bàn giao:** test matrix, reproducible test commands, raw outputs, defect list, evidence refs và kết luận PASS/FAIL/BLOCKED theo từng stage.
+**Giới hạn:** không sửa implementation để làm test xanh; không tự nghiệm thu code của mình; không mở G4/BUILD.
+
+### Thứ tự và quy tắc phối hợp
+- Ka định nghĩa ownership và integration contract; Vi cung cấp Core trace độc lập; An kiểm tra execution behavior theo source hiện hành.
+- Ba track chạy song song, không sửa cùng file. Mọi đề xuất thay đổi phải nêu file, lý do, tác động và owner trước khi thực hiện.
+- Mỗi AI phải xác nhận ACK bằng phản hồi/artefact định danh. Lệnh này chưa chứng minh AI đã nhận việc.
+- Xu tổng hợp kết quả, xử lý xung đột và trình Vinh quyết định; không chuyển sang BUILD chỉ vì ba báo cáo hoàn tất.
+- Exit condition: đủ ba báo cáo có evidence; unresolved gaps được phân loại; Ka/Vi/An không tự cấp Gate hoặc quyền BUILD.
