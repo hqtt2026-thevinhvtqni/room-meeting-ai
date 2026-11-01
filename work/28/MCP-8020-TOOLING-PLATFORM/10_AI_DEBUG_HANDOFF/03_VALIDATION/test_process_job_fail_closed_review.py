@@ -1,7 +1,10 @@
 import importlib.util
+import os
 import sys
 from pathlib import Path
 from unittest.mock import patch
+
+import pytest
 
 PATCH_ROOT = (
     Path(__file__).resolve().parents[1]
@@ -144,3 +147,44 @@ def test_windows_spawn_never_resumes_when_job_assignment_fails():
         ("abort", False),
     ]
     assert not any(event[0] == "UNEXPECTED_RESUME" for event in events)
+
+
+@pytest.mark.skipif(not sys.platform.startswith("win"), reason="requires native Windows Job Object")
+def test_native_windows_child_cannot_execute_before_job_assignment(tmp_path):
+    marker = tmp_path / "child-started.txt"
+    script = f"from pathlib import Path; Path({str(marker)!r}).write_text('started', encoding='utf-8')"
+    events = []
+    real_assign = candidate_process_job._assign_pid_to_job
+    real_resume = candidate_process_job._resume_suspended_process
+
+    def observed_assign(job, pid):
+        assert not marker.exists(), "child code ran before Job Object assignment"
+        events.append("assign_begin")
+        notes = real_assign(job, pid)
+        assert "job_object_assigned" in notes, notes
+        events.append("assigned")
+        assert not marker.exists(), "child code ran before ResumeThread"
+        return notes
+
+    def observed_resume(pid):
+        assert events == ["assign_begin", "assigned"]
+        assert not marker.exists(), "child code ran before ResumeThread"
+        events.append("resume")
+        return real_resume(pid)
+
+    with (
+        patch.object(candidate_process_job, "_assign_pid_to_job", side_effect=observed_assign),
+        patch.object(candidate_process_job, "_resume_suspended_process", side_effect=observed_resume),
+    ):
+        managed = candidate_process_job.spawn_managed(
+            [sys.executable, "-c", script],
+            cwd=tmp_path,
+            env=os.environ.copy(),
+        )
+
+    try:
+        assert events == ["assign_begin", "assigned", "resume"]
+        managed.process.wait(timeout=10)
+        assert marker.is_file(), "child did not execute after successful resume"
+    finally:
+        managed.cleanup(terminate_first=True, wait_timeout=5.0)
