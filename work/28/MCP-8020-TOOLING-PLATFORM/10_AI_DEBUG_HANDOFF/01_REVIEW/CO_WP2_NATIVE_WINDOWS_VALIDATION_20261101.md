@@ -45,3 +45,20 @@ Validation:
 - Work28 general CI run [41327747396](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/41327747396): **3/3 jobs successful** (Linux lifecycle, Windows lifecycle, unit/regression).
 
 These results verify mocked ordering/fail-closed behavior and real Windows Job Object/process-tree lifecycle in the hosted runner. They still do not prove adversarial scheduling race closure, live Execution Host deployment, or OS sandbox isolation. No production/live MCP changes, PR merge, or gate opening occurred.
+
+
+## Native pre-assignment execution check (2026-11-01 23:46 UTC+7)
+
+Added a native Windows test that launches a real child whose first instruction writes a marker file. The test observes the actual candidate assign and resume calls and asserts:
+- marker absent before Job Object assignment;
+- Job Object assignment succeeds;
+- marker remains absent immediately before resume;
+- marker appears after successful resume.
+
+GitHub commit: `b1b6d207dd7a134c398eff342ab5db34319710e6`.
+
+Validation:
+- WP2 run [41327946366](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/41327946366): Ubuntu focused tests **4 passed, 1 skipped**; native Windows candidate suite **18 passed in 1.34s**.
+- Work28 general CI run [41327946426](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/41327946426): all 3 jobs successful (Linux lifecycle, Windows lifecycle, unit/regression).
+
+This provides direct hosted-Windows evidence that the child did not execute before successful Job Object assignment and only executed after resume. It is not an adversarial scheduler stress proof and does not prove live Execution Host deployment or OS sandbox isolation. Production/live MCP source remains untouched; execution gate remains CLOSED.
