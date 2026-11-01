@@ -765,3 +765,11 @@ HTTP Adapter → MeetingService → MeetingManager (Meeting domain only).
 - Runtime QE: NOT RUN. Không suy ra PASS/FAIL từ source review. Cần chốt canonical branch/commit, Work Entry standard và môi trường test được phép trước khi chạy.
 - Không sửa mã nguồn, không đổi Gate/quyền, không commit/push/merge, không nghiệm thu/phát hành.
 - Thời điểm ghi: 2026-11-02; thời gian chính xác không được công cụ cung cấp. Chữ ký: An Tester — [KÝ: AN | TESTER].
+
+
+## 2026-11-02 02:51 +07:00 — Xu / AI-01 — Verify GitHub synchronization of source-trace reconciliation
+
+- DOC-061 Sandbox canonical readback contains both Vi/DOC-016/DOC-017 reconciliation and corrected :8031 server-entrypoint trace.
+- DOC-061 synced to GitHub branch `work/70/05-build`: commit `8584a2eaea97ffd50d3574e730d52193eb5dde48`, blob `a9a63ab4e4ab2a342cb182d8dd4ae37f38245a76`; subsequent fetch exact-content comparison: PASS.
+- DOC-035 synced to GitHub `main`: commit `a534d7e0331978e8b9782d33513f54908ff81417`, blob `c6592d41b90421269be232357047c695503cbf24`; subsequent fetch exact-content comparison: PASS.
+- No code/runtime/gate/state/permission change. Documentation synchronization only.
