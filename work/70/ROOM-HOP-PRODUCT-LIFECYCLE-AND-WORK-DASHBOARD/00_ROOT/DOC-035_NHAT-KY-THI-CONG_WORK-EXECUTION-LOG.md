@@ -733,3 +733,35 @@ HTTP Adapter → MeetingService → MeetingManager (Meeting domain only).
 - **Disposition:** Core Work API/auth/persistence/evidence/export NOT VERIFIED in inspected scope; Dashboard Core-live BLOCKED; G4 NOT READY / NOT PASS; BUILD NOT AUTHORIZED; Work 70 ACTIVE / NOT ACCEPTED / NOT RELEASED.
 - **Next:** complete DOC-061 contract reconciliation and ownership map; obtain actual Core owner/source evidence; provide An an authorized canonical checkout + runtime; keep Vi adapter work blocked until approved contract and entry authorization exist.
 
+
+
+## 2026-11-02 02:50 +07:00 — Ka / AI-02 — WP70 runtime reconciliation
+- DOC-035 / P2 / Read order 32. Người thực hiện: Ka / AI-02, CSA / Independent Architecture Reviewer.
+- Đã fetch trực tiếp trên branch work/70/05-build: DOC-061, DOC-054, DOC-016, DOC-017, Architecture Contract V1 và Runtime Boundary Diagram V1. DOC-061 vẫn DRAFT; DOC-054 vẫn ASSIGNMENT READY / ACK PENDING / NOT A BUILD AUTHORIZATION.
+- GitHub compare hiện tại: main và work/70/05-build DIVERGED; ahead 40 / behind 392; merge base fc6a19888765d174aea9aea839620338ac9f71e8. Số 34/379 trong DOC-061 đã cũ. Không merge/rebase mù.
+- DOC-057 không fetch được từ main và không có trong branch tree đã kiểm tra; Work Entry Standard chưa được xác minh trực tiếp. Không suy diễn G0-G5 đã PASS.
+- Không sửa source/Core/API/DB/Engine/Dashboard; không đổi Gate/state/assignment/permission; không chạy test; không commit/push/merge; không cấp BUILD. Không dùng sandbox_read hoặc sandbox_read_probe.
+- Handoff Xu: cập nhật divergence, cung cấp bản chuẩn DOC-057 và xác minh ACK/Work Entry; xác định Core owner/runtime cho An QE. Ka tiếp tục read-only.
+- Kết luận: AN RUNTIME QE NOT RUN / WORK ENTRY NOT VERIFIED / G4 NOT READY — NOT PASS / BUILD NOT AUTHORIZED / WORK 70 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+- Chữ ký: Ka / AI-02 — CSA / Independent Architecture Reviewer.
+
+
+## 2026-11-02 02:49 +07:00 — Xu / AI-01 — Corrected :8031 server-boundary source trace
+
+- **Correction:** earlier DOC-035/DOC-061 stated that the authoritative :8031 server handler had not been identified. That search was incomplete. This new entry supersedes the earlier bounded observation; the historical entry remains intact.
+- **READ:** GitHub main `execution_host/server.py` blob `45aec57525b5d55bb63544b7bd7fd23062e06151`; `execution_host/identity.py` blob `517dbb36bbdbfa3b606a6dec98c82612e12eeefa`; `execution_host/models.py` blob `2488b7c95cf3784fc26eaf677044fe5ab0866420`; `execution_host/security.py` blob `4aa20fbc9c5939c49c85222916dc28fb8dd8075b`.
+- **TRACE:** `server.py` defines POST /execute, parses caller JSON into WorkContext/ExecutionRequest, then calls ExecutionHost.execute_work. In inspected handler no request authentication, principal binding or server-side Work/assignment/Gate authorization re-resolution is visible. WorkContext includes caller-provided `authorized: bool`; security.validate_context checks that boolean. `serve()` defaults to 127.0.0.1:8031; loopback default is not an authorization mechanism. /health returns runtime metadata, not caller authorization.
+- **LIMITATION:** repository launch/deployment reference was not located by targeted code searches. Whether deployed process uses this handler, whether a reverse proxy/firewall/OS boundary wraps it, actual bind address/build hash and network exposure remain NOT VERIFIED. Do not generalize source inspection to deployed runtime.
+- **SECURITY DISPOSITION:** confirmed source-level concern at inspected HTTP boundary; no runtime probe/test was run. DOC-063 remains design-only. Do not enable :8031 for Work 70 until authenticated principal + server-side scoped authorization + commit-time revalidation + audit/evidence + negative HTTP tests are implemented and independently verified.
+- **DOC UPDATE:** appended correction/addendum to DOC-061; Sandbox write returned status=ok. Readback and GitHub sync to follow.
+- **No change:** no code/Core/permissions/Gate/state/runtime changes. G4 NOT READY / NOT PASS; BUILD NOT AUTHORIZED; Work 70 ACTIVE / NOT ACCEPTED / NOT RELEASED.
+
+
+
+## 2026-11-02 — An Tester — Cập nhật blocker theo ghi nhận Ka 02:50 +07
+- Người thực hiện: An Tester — TESTER / Independent QA.
+- Ka ghi nhận branch main và work/70/05-build đang phân kỳ; số liệu mới là ahead 40 / behind 392, merge base fc6a19888765d174aea9aea839620338ac9f71e8; số liệu cũ trong DOC-061 không còn hiện hành.
+- Ka chưa xác minh trực tiếp DOC-057 từ main hoặc branch đã kiểm tra. Vì vậy Work Entry G0-G5 của An vẫn NOT VERIFIED; DOC-054 vẫn ACK PENDING / NOT A BUILD AUTHORIZATION.
+- Runtime QE: NOT RUN. Không suy ra PASS/FAIL từ source review. Cần chốt canonical branch/commit, Work Entry standard và môi trường test được phép trước khi chạy.
+- Không sửa mã nguồn, không đổi Gate/quyền, không commit/push/merge, không nghiệm thu/phát hành.
+- Thời điểm ghi: 2026-11-02; thời gian chính xác không được công cụ cung cấp. Chữ ký: An Tester — [KÝ: AN | TESTER].
