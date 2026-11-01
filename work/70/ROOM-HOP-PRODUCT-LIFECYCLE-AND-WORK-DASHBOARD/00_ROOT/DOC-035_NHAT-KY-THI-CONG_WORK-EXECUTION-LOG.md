@@ -479,3 +479,13 @@ Xu ghi nhận phần cuối nhật ký vừa được bổ sung đã lặp lại
 - Kết luận: DISCOVER OUTPUT PREPARED; G1 NOT EVALUATED / NOT PASS; Manifest không đổi; không tự mở DEFINE hoặc BUILD.
 - Trạng thái: DISCOVER BRIEF APPEND ACKNOWLEDGED / READBACK & GITHUB SYNC PENDING.
 - Người ghi: Xu / AI-01.
+
+
+## 2026-11-01 — Xu / AI-01 — DOC-061 source recheck: WEE, Execution Host and branch divergence
+
+- Action: READ → TRACE → ANALYZE. Rechecked current GitHub main and Work 70 Build branch; inspected `wee/controller.py`, `wee/authority.py`, `wee/models.py`, `wee/cli.py`, `wee/readiness.py`, `wee/bridge/real_host.py`, `wee/bridge/local_host.py`, `tests/test_work13_wee_integration.py`, `execution_host/host.py`, `room_hop_mcp/adapter/http_server.py` and `API_CONTRACT.md`.
+- Evidence: main HEAD `21190f8449656ac65a2b5682621e1c4f75a0d6dd`; Build branch 34 ahead / 379 behind; merge base `fc6a19888765d174aea9aea839620338ac9f71e8`; compare reports 14 added files under Work 70 05_BUILD.
+- Finding: WEE primitives exist on main, but `LifecycleController.run()` performs capability discovery then returns TEST BLOCKED without invoking the bound test entrypoint. The Work 13 integration test calls the adapter directly and does not exercise the controller. Separate `execution_host/` source exists but Work 70 integration is NOT VERIFIED.
+- Core: inspected HTTP router still exposes Identity/Meeting routes only; no Work-scoped API in that router; Core Work auth/evidence remains NOT VERIFIED.
+- Decision: no blind merge/rebase; no duplicate engine implementation until architecture comparison; no BUILD authorization; G4 remains NOT READY / NOT PASS.
+- Persistence: DOC-061 addendum records current source findings. This is read-only analysis, not independent QE or architecture approval.
