@@ -1325,3 +1325,15 @@ Giới hạn: MCP 8030 hiện chỉ cung cấp thao tác file/context; không c�
 - Đây là bằng chứng native Windows Job Object/process-tree lifecycle cho candidate trên GitHub-hosted runner, mạnh hơn mocked-only test; chưa chứng minh adversarial scheduling race closure, live Execution Host deployment hoặc OS sandbox isolation.
 - Không sửa production source/live MCP, không merge PR, không mở execution gate. Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
 - Evidence: `10_AI_DEBUG_HANDOFF/01_REVIEW/CO_WP2_NATIVE_WINDOWS_VALIDATION_20261101.md`.
+
+
+## 2026-11-01 23:43 UTC+7 — Co bổ sung regression test cho thứ tự suspended-spawn
+**TÊN:** Co  
+**CHỨC DANH:** Coder / AI Build Assistant  
+**NGÀY:** 2026-11-01  
+**GIỜ - PHÚT:** 23:43 (UTC+7)
+
+- Bổ sung 2 test vào `10_AI_DEBUG_HANDOFF/03_VALIDATION/test_process_job_fail_closed_review.py`: (1) khẳng định thứ tự tạo process với `CREATE_SUSPENDED` → assign Job Object → resume; (2) khi assign thất bại, yêu cầu abort suspended process và tuyệt đối không gọi resume.
+- Test file đã ghi vào Sandbox và đồng bộ GitHub bằng commit `13fb5878c206436c8c164cd4e1c5a221e04a2f37` trên branch `work/28-mcp-tooling-platform`.
+- Trạng thái test mới: CHỜ GitHub Actions chạy; chưa ghi PASS. Hai test là deterministic mocked-order checks, bổ sung cho native Windows lifecycle 13/13 đã PASS trên run `41327587057`; không thay thế native adversarial race testing.
+- Gate giữ nguyên: no production deploy, no live MCP change, no PR merge, execution gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
