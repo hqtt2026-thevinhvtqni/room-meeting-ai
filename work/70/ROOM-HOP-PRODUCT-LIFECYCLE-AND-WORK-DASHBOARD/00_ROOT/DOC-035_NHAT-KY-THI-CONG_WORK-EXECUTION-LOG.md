@@ -567,3 +567,13 @@ The fragment was not present verbatim in the canonical DOC-035. It is preserved 
 - No source code, Core, API, database, state machine, Gate policy or permissions changed. No runtime tests executed. No namespace activated. No BUILD authorized.
 - Status: DOC-063 ADDENDUM WRITTEN / SANDBOX READBACK REQUIRED; DOC-063 DRAFT ONLY; DOC-060 PROPOSAL ONLY; G4 NOT READY / NOT PASS.
 - Next: obtain and verify Vi Core trace and An independent test report; compare actual current GitHub revisions; then integrate findings without assuming Core contract or execution enforcement.
+
+
+## 2026-11-02 — Xu / AI-01 — GitHub synchronization evidence for Ka Gate review integration
+
+- Synced the canonical Sandbox revisions of DOC-063, DOC-055 and DOC-035 to GitHub main and fetched each file again.
+- DOC-063: commit 33b5dff5f20ada72350584b001beeea0f45ade9e; blob 55be0bbcd6c215f5f1158a4e74738b9a4a750cfd; exact readback PASS.
+- DOC-055: commit 09d834ffab67f6cd3f08f78be3883595ad9fd03b; blob f9828cb0037c814168ad3abaff098ee99a91bc11; exact readback PASS.
+- DOC-035: commit d0cf28c6ee5b79367361b31a82afa76bde7db926; blob fd6fbe98755b9b102b9dfda1c5a3f16e5db792da; exact readback PASS.
+- DOC-054 assignment progress was not changed: Ka's received review covers the Gate P0.3/P0.4 subtask only; full Ka runtime reconciliation, Vi Core trace and An independent QA remain pending evidence.
+- Status: SANDBOX/GITHUB MAIN EXACT CONTENT MATCH VERIFIED FOR DOC-063, DOC-055, DOC-035. No code/runtime test or BUILD authorization.
