@@ -1345,3 +1345,9 @@ Giới hạn: MCP 8030 hiện chỉ cung cấp thao tác file/context; không c�
 - Work28 general CI run `41327747396`: 3/3 job SUCCESS (Linux lifecycle, Windows lifecycle, unit/regression).
 - Kết quả test mới xác nhận thứ tự spawn bằng mock và fail-closed khi assign thất bại; native Windows suite xác nhận Job Object attachment và cleanup process tree trên runner Windows. Chưa chứng minh adversarial scheduling race, live Execution Host deployment hoặc OS sandbox isolation.
 - Báo cáo chi tiết đã được cập nhật và đồng bộ: `10_AI_DEBUG_HANDOFF/01_REVIEW/CO_WP2_NATIVE_WINDOWS_VALIDATION_20261101.md`.
+
+
+### Revalidation after evidence-report commit — 2026-11-01 23:44 UTC+7
+- WP2 run `41327810082` on evidence update commit `b63f9a86a3c09991860260e09859c9342946a32d`: focused pytest **4 passed in 0.42s**; native Windows candidate **13 passed in 1.17s**; both jobs SUCCESS.
+- General Work28 CI run `41327810152` on the same commit: Linux lifecycle, Windows lifecycle, unit/regression all completed SUCCESS (3/3).
+- This rerun confirms the evidence-report commit did not disturb either candidate test lane. Latest journal sync commit follows separately; source/test candidate unchanged.
