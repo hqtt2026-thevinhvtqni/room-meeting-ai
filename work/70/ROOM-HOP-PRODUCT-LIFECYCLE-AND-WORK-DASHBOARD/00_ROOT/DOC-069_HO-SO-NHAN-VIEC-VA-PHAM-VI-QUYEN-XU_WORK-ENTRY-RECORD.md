@@ -34,8 +34,8 @@
 - Sandbox: Work ID `70`; root `ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/`.
 - GitHub repository: `hqtt2026-thevinhvtqni/room-meeting-ai`.
 - Canonical documentation branch: `main`.
-- Main HEAD tại lúc đánh giá: `82115ddaf46b24ffd3c77b5f88a531e962240a8b`.
-- Build coordination branch: `work/70/05-build`; latest compare: DIVERGED, ahead 42 / behind 411, merge base `fc6a19888765d174aea9aea839620338ac9f71e8`.
+- Main HEAD tại lần recheck 2026-11-02 trước bản cập nhật hồ sơ này: `7aad60163e85ef702dcf72f8830c191f1d5b0557`.
+- Build coordination branch: `work/70/05-build`; latest compare tại cùng thời điểm: DIVERGED, ahead 42 / behind 426, merge base `fc6a19888765d174aea9aea839620338ac9f71e8`.
 - Tool capability observed: Sandbox read/write và GitHub read/update file trong phiên hiện tại. Đây là bằng chứng capability của connector, **không phải bằng chứng Work Entry authorization được enforce server-side**.
 - No API/network execution, Core mutation, database mutation hoặc runtime deployment được cấp trong assignment này.
 
@@ -82,3 +82,10 @@ Các mã WE-G0…WE-G5 dưới đây chỉ tham chiếu sáu bước Work Entry 
 **Recorded by:** Xu / AI-01  
 **Decision basis:** D70-018 — Vinh's explicit delegation  
 **Assessment timestamp:** 2026-11-02 (UTC+07:00)
+
+
+## 7. Addendum — source baseline refresh after isolated DOC-061 sync (2026-11-02)
+- DOC-061 đã được đồng bộ độc lập từ `work/70/05-build` sang `main`; không merge/rebase/cherry-pick toàn nhánh.
+- Main HEAD trước cập nhật hồ sơ này: `7aad60163e85ef702dcf72f8830c191f1d5b0557`. Compare `main...work/70/05-build`: DIVERGED, ahead 42 / behind 426; merge base `fc6a19888765d174aea9aea839620338ac9f71e8`.
+- Các commit sau snapshot này là cập nhật tài liệu Work 70 trên main; không có code/runtime change được thực hiện trong assignment của Xu.
+- Scope của ASG-W70-XU-20261102-01 vẫn chỉ là document control/read-only trace. Không mở quyền Core/API/code/runtime, không cấp quyền cho participant khác, không mở G4/BUILD.
