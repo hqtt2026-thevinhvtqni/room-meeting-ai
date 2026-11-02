@@ -4,7 +4,7 @@
 - **Read order:** 55
 - **Depends on:** DOC-001; DOC-038; DOC-039; DOC-040; DOC-056
 - **Status:** ACTIVE — SINGLE SOURCE OF TRUTH
-- **Version / Updated:** 2.7 / 2026-11-02
+- **Version / Updated:** 2.8 / 2026-11-02
 - **Owner:** Xu / AI-01
 - **Authority:** Vinh
 Owner: Xu / AI-01
@@ -109,6 +109,7 @@ Ghi chú cập nhật 2026-11-02: DOC-054, DOC-064, DOC-065 và DOC-067 đã đ�
 
 | DOC-070 | P1 | 70 | Đề xuất sổ đăng ký gói công việc / Work Package Register Proposal | 04_PLAN/DOC-070_DE-XUAT-SO-DANG-KY-GOI-CONG-VIEC_WORK-PACKAGE-REGISTER-PROPOSAL.md | DOC-001; DOC-006; DOC-011; DOC-036; DOC-055; DOC-061 | DRAFT — NOT APPROVED / SUPPORTING RECONCILIATION ONLY | Đề xuất cấu trúc sổ WP cấp Work; dữ liệu và schema hỗ trợ vẫn là draft, không thay DOC-011 và không mở G4/BUILD |
 | DOC-071 | P0 | 71 | Báo cáo truy vết Core authority, runtime composition và persistence / Core Authority, Runtime Composition & Persistence Trace | 06_EVIDENCE/DOC-071_BAO-CAO-TRUY-VET_CORE-AUTHORITY-RUNTIME-AND-PERSISTENCE.md | DOC-001; DOC-011; DOC-035; DOC-055; DOC-061; DOC-066 | SOURCE TRACE COMPLETE — READ-ONLY / CORE OWNER NOT IDENTIFIED / RUNTIME NOT VERIFIED | Xác định ranh giới Meeting/Identity với Work authority; ghi rõ HTTP factory chưa xác minh được wiring runtime, Meeting file persistence không chứng minh Work persistence; không cấp BUILD |
+| DOC-072 | P0 | 72 | Đối chiếu hợp đồng kiến trúc DOC-061/063/064/065 / Architecture Contract Reconciliation | 06_EVIDENCE/DOC-072_DOI-CHIEU_HOP-DONG-KIEN-TRUC_DOC-061_063_064_065.md | DOC-004; DOC-005; DOC-010; DOC-011; DOC-035; DOC-054; DOC-057; DOC-061; DOC-063; DOC-064; DOC-065; DOC-066; DOC-071 | RECONCILIATION COMPLETE — DESIGN ONLY / NOT APPROVED / NOT IMPLEMENTED | Làm rõ Core authority, Work Entry auth, Hybrid Dispatch và logical contract là các lớp mục tiêu; không chứng minh API/runtime/adapter, không mở G4/BUILD |
 
 ## Supporting data artifacts — WP registry draft (2026-11-02)
 - `04_PLAN/WORK_PACKAGE_REGISTER.json` — GitHub main blob `462cf3528375d59c322a4efbdbc9b2f7eecb8cf9`; six records, schema_version `0.1-draft`, baseline `DRAFT_NOT_APPROVED`; Sandbox copy restored during this reconciliation.
