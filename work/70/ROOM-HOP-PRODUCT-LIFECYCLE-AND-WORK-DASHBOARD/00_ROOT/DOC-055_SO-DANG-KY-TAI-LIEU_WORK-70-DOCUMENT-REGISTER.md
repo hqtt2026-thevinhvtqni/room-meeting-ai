@@ -106,3 +106,11 @@ Ghi chú cập nhật 2026-11-02: DOC-054, DOC-064, DOC-065 và DOC-067 đã đ�
 | STT | Priority | Read order | Document | Path | Depends on | Status | Purpose / reading instruction |
 |---|---|---:|---|---|---|---|---|
 | DOC-069 | P0 | 69 | Hồ sơ nhận việc và phạm vi quyền Xu / Xu Work Entry Record | 00_ROOT/DOC-069_HO-SO-NHAN-VIEC-VA-PHAM-VI-QUYEN-XU_WORK-ENTRY-RECORD.md | DOC-001; DOC-006; DOC-033; DOC-038; DOC-039; DOC-040; DOC-042; DOC-043; DOC-044; DOC-055; DOC-056; DOC-057 | PASS — LIMITED DOCUMENTATION / READ-ONLY TRACE SCOPE | Xác định participant AI-01, assignment ASG-W70-XU-20261102-01, WE-G0..WE-G5 theo DOC-057; không mở G4 BUILD hoặc quyền code/runtime. |
+
+| DOC-070 | P1 | 70 | Đề xuất sổ đăng ký gói công việc / Work Package Register Proposal | 04_PLAN/DOC-070_DE-XUAT-SO-DANG-KY-GOI-CONG-VIEC_WORK-PACKAGE-REGISTER-PROPOSAL.md | DOC-001; DOC-006; DOC-011; DOC-036; DOC-055; DOC-061 | DRAFT — NOT APPROVED / SUPPORTING RECONCILIATION ONLY | Đề xuất cấu trúc sổ WP cấp Work; dữ liệu và schema hỗ trợ vẫn là draft, không thay DOC-011 và không mở G4/BUILD |
+
+## Supporting data artifacts — WP registry draft (2026-11-02)
+- `04_PLAN/WORK_PACKAGE_REGISTER.json` — GitHub main blob `462cf3528375d59c322a4efbdbc9b2f7eecb8cf9`; six records, schema_version `0.1-draft`, baseline `DRAFT_NOT_APPROVED`; Sandbox copy restored during this reconciliation.
+- `03_ARCHITECT/WORK_PACKAGE.schema.json` — GitHub main blob `47a2e881ad6ed28af1aaf4795585346a4c8881d4`; draft envelope schema for the Work-level register; Sandbox copy restored during this reconciliation.
+- `05_BUILD/00_ROOT/WORK_PACKAGE.schema.json` on `work/70/05-build` — blob `28ee2a1d6ba952c2fa1a1d737c5ff8892319a55e`; distinct per-record candidate schema, not interchangeable with the envelope schema.
+- These files are discoverable supporting artifacts, not an approved registry/schema baseline. DOC-011 remains the active planning authority; G0/G1/G4 statuses are unchanged.
