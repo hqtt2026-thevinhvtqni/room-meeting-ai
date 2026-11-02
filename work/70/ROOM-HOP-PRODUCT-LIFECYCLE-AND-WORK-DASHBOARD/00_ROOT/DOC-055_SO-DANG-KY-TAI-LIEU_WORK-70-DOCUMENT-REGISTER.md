@@ -137,3 +137,9 @@ Affected legacy GitHub main paths:
 - `00_ROOT/DOC-052_BAO-CAO-KIEM-DINH-TICH-HOP_QUAN-TRI_INTEGRATION-GOVERNANCE-VERIFICATION.md`
 
 No DOC-ID has been reassigned and no legacy content has been overwritten or deleted. Keep the register in DRAFT reconciliation status for this issue until Vinh decides the identity disposition. See DOC-041 G-008 and DOC-035 event 031.
+
+
+## Addendum 2026-11-02 — PO-delegated DOC-ID disposition and partial migration
+**Decision: APPROVED BY XU UNDER EXPLICIT DELEGATION FROM VINH.** Preserve the current Work 70 canonical DOC-042..DOC-053 assignments. Re-identify the 11 substantive legacy GitHub main process documents as DOC-073..DOC-083, preserving their original contents and history. Mapping: old DOC-042→new DOC-073 Discover; DOC-043→DOC-074 Define; DOC-044→DOC-075 Architect; DOC-045→DOC-076 Plan; DOC-046→DOC-077 Build; DOC-047→DOC-078 Verify; DOC-048→DOC-079 Evidence; DOC-049→DOC-080 Acceptance; DOC-050→DOC-081 Release; DOC-051→DOC-082 Operate; DOC-052→DOC-083 Integration & Governance Verification.
+
+**Execution status: PARTIAL / MIGRATION NOT COMPLETE.** GitHub main currently contains newly created copies DOC-073, DOC-074, DOC-075 and DOC-077. DOC-076 and DOC-078..DOC-083 have not been created because tool safety checks blocked those write attempts. Original DOC-042..DOC-052 files remain unchanged; no aliases, renames or deletions have been performed. Do not treat this addendum as proof of completed migration or Sandbox synchronization. Continue only through permitted operations; do not attempt to bypass a safety block. Reconcile remaining files, inbound links, aliases, exact readback and Sandbox parity before declaring completion.
