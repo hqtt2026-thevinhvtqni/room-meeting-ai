@@ -132,3 +132,20 @@ Prepared by Xu / AI-01. Source content read from Work 70 Sandbox on 2026-11-02.
 - DOC-011 được cập nhật lên version 1.4; DOC-006 ghi nhận ủy quyền; DOC-055 đã đăng ký DOC-068 ở version 2.4.
 - Quyết định chỉ phê duyệt baseline quản trị/điều phối. **G0/G1 NOT_READY; G4 BUILD NOT READY; implementation authorization for Core integration NOT GRANTED; Work 70 NOT ACCEPTED / NOT RELEASED.**
 - Xu tiếp tục tự quyết tác nghiệp, cập nhật hồ sơ, thực hiện read-only tracing và chuẩn bị implementation. Mọi code change, runtime test hoặc integration vẫn phải có Work Entry hợp lệ, canonical source/owner, approved contract và environment permission. Không suy diễn ACK từ handoff.
+
+
+## 10. Evidence refresh — source traces and branch state (2026-11-02)
+### 10.1 Vi source-trace findings
+- **Core HTTP/API:** Vi's draft trace confirms the inspected http_server.py and API_CONTRACT.md expose Identity/Meeting scope; no Work/WP/Assignment/Evidence API appears in those inspected artifacts. This remains a bounded source finding, not proof about every possible service composition.
+- **WEE:** Vi's lifecycle trace identifies reusable local Work context, local JSON authority and filesystem EvidenceStore, but no Core-backed identity/assignment/gate authority. The inspected controller marks EXECUTE PASS after capability discovery without invoking the bound test entrypoint; TEST remains BLOCKED. WEE READY is not E2E PASS.
+- **Work 28 auth reuse:** Vi confirms hardened HTTP caller-token handling and Work allow-list exist on the divergent Work 28 branch, but do not prove participant identity/ACK/Gate revocation. The grant client/server contract mismatch and local-registry fallback remain. This branch is not Work 70 canonical source/runtime.
+- **Co lifecycle guard:** Sandbox contains lifecycle_domain.py, test_lifecycle_domain.py and README. Co's journal reports 10 local unit tests PASS against the payload sent to Sandbox, but Sandbox byte-for-byte content verification and canonical runtime test are not proven. Treat as preparatory domain artifact only.
+- **An independent QA:** preparation/test matrix exists; runtime QE remains EXECUTION BLOCKED / NOT RUN. No independent acceptance evidence.
+### 10.2 Current branch divergence recheck
+- Repository hqtt2026-thevinhvtqni/room-meeting-ai; latest compare main...work/70/05-build at main HEAD 878942047b7d17bbd2ac16f86844cb7705dc8f90 reports DIVERGED: Work 70 branch ahead 42 / behind 409, merge base fc6a19888765d174aea9aea839620338ac9f71e8.
+- Compare lists 14 added paths, all Work 70 05_BUILD documentation/schema/mapping/handoff artifacts; no Core/Engine/Dashboard implementation appears in the returned file list.
+- Earlier 42/399 and 42/396 counts are superseded by this fresh compare. No merge/rebase/cherry-pick performed.
+### 10.3 Updated disposition
+- D-068-01 remains DECIDED BY XU UNDER D70-018; six WP IDs and SD-01..SD-08 mapping are the planning baseline.
+- G0/G1 NOT_READY; G4 BUILD NOT READY; Core authority and Work read API NOT VERIFIED; Dashboard Core-live BLOCKED; storage/export DESIGN ONLY; independent QE NOT RUN; Work 70 NOT ACCEPTED / NOT RELEASED.
+- Next critical work is canonical source/owner discovery, gate-entry evidence and controlled branch reconciliation. No guessed endpoint, no local fallback as Core authority, no API spend, no scope spill to Work 10/15/28.
