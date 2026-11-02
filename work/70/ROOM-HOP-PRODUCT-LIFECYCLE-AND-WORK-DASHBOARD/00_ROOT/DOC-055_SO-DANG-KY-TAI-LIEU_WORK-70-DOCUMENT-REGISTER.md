@@ -4,7 +4,7 @@
 - **Read order:** 55
 - **Depends on:** DOC-001; DOC-038; DOC-039; DOC-040; DOC-056
 - **Status:** ACTIVE — SINGLE SOURCE OF TRUTH
-- **Version / Updated:** 2.4 / 2026-11-02
+- **Version / Updated:** 2.5 / 2026-11-02
 - **Owner:** Xu / AI-01
 - **Authority:** Vinh
 Owner: Xu / AI-01
@@ -99,4 +99,10 @@ Ghi chú: DOC-064–066 đã được ghi vào Sandbox ngày 2026-11-02. GitHub 
 ## Addendum 2026-11-02 — đăng ký DOC-068
 | STT | Priority | Read order | Document | Path | Depends on | Status | Purpose / reading instruction |
 |---|---|---:|---|---|---|---|---|
-| DOC-068 | P0 | 68 | Đề xuất hợp nhất roadmap và đích bàn giao Work 70 / Work 70 Roadmap & Delivery Target Reconciliation Proposal | 04_PLAN/DOC-068_DE-XUAT-HOP-NHAT-ROADMAP-WORK-70.md | DOC-001; DOC-006; DOC-011; DOC-062; DOC-064; DOC-065; DOC-066; DOC-067 | DRAFT — SOURCE RECONCILIATION COMPLETE / PRODUCT OWNER DECISION PENDING / G4 NOT READY | Giữ 6 WP IDs hiện hành, ánh xạ 8 sub-deliverables SD-01..SD-08; chưa thay DOC-011 hoặc cấp quyền BUILD |
+| DOC-068 | P0 | 68 | Đề xuất hợp nhất roadmap và đích bàn giao Work 70 / Work 70 Roadmap & Delivery Target Reconciliation Proposal | 04_PLAN/DOC-068_DE-XUAT-HOP-NHAT-ROADMAP-WORK-70.md | DOC-001; DOC-006; DOC-011; DOC-062; DOC-064; DOC-065; DOC-066; DOC-067 | DECIDED BY XU UNDER D70-018 / G4 BUILD NOT READY | Giữ 6 WP IDs chuẩn, ánh xạ 8 sub-deliverables SD-01..SD-08; quyết định baseline điều phối, không mở BUILD |
+
+
+## Addendum 2026-11-02 — đăng ký DOC-069
+| STT | Priority | Read order | Document | Path | Depends on | Status | Purpose / reading instruction |
+|---|---|---:|---|---|---|---|---|
+| DOC-069 | P0 | 69 | Hồ sơ nhận việc và phạm vi quyền Xu / Xu Work Entry Record | 00_ROOT/DOC-069_HO-SO-NHAN-VIEC-VA-PHAM-VI-QUYEN-XU_WORK-ENTRY-RECORD.md | DOC-001; DOC-006; DOC-033; DOC-038; DOC-039; DOC-040; DOC-042; DOC-043; DOC-044; DOC-055; DOC-056; DOC-057 | PASS — LIMITED DOCUMENTATION / READ-ONLY TRACE SCOPE | Xác định participant AI-01, assignment ASG-W70-XU-20261102-01, WE-G0..WE-G5 theo DOC-057; không mở G4 BUILD hoặc quyền code/runtime. |
