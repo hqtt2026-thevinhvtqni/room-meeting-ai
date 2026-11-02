@@ -961,3 +961,5 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 ## 2026-11-02 — Xu / AI-01 — Branch compare evidence correction
 - Re-ran compare after the DOC-069/DOC-055/DOC-068 documentation commits. At main HEAD `4e6fd19f7b30392a49e64de864c05d2c64fe3cb7`, `main...work/70/05-build` was DIVERGED, ahead 42 / behind 415; merge base `fc6a19888765d174aea9aea839620338ac9f71e8`.
 - DOC-068 now pins this exact comparison baseline and supersedes the previous behind-411 observation. The count naturally changes as main advances; no merge/rebase/cherry-pick performed.
+
+| 020 | 2026-11-02 | Xu / AI-01 | Đồng bộ DOC-061 kiến trúc runtime từ work/70/05-build sang main bằng thao tác thêm file độc lập; không merge/rebase nhánh. Xác minh readback main khớp blob SHA a54dc2202e56cfb9737395fd523a5488ab35b0f3, 54,895 ký tự; DOC-055 cập nhật đường dẫn main. | DONE — DOCUMENT SYNC ONLY; DRAFT; contract approval pending; G4 NOT READY; no implementation/release authorization |
