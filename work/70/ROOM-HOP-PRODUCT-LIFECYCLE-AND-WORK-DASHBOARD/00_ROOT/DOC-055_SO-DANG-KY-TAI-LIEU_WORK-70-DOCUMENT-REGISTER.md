@@ -167,3 +167,12 @@ No DOC-ID has been reassigned and no legacy content has been overwritten or dele
 ## Bounded inbound-reference search — 2026-11-02
 
 Exact-basename GitHub code searches were run for each of the 11 legacy source filenames. Each query returned only this register as a match, because the register itself lists the legacy paths. This is a bounded search-index result, not proof that no inbound references exist: code-search indexing/coverage may be incomplete and the query was not a full repository-wide parsed-link audit. Therefore inbound-link reconciliation remains OPEN. Keep original source paths valid and do not replace references with uncreated DOC-076 or DOC-078..DOC-083 paths. For the four created copies, links may be updated only where a verified source reference is identified and the target path is confirmed.
+
+
+## Sandbox canonical-path correction — 2026-11-02
+
+**Correction to prior synchronization evidence:** A subsequent full Sandbox listing and dual-path probe showed that the earlier DOC-073/074/075/077 copies and one prior set of metadata snapshots had been written/read under the nested Sandbox path `work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/00_ROOT/`, not the Work Sandbox canonical root `ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/00_ROOT/`. The earlier exact-readback result therefore verified the nested copies, not the canonical root. This is a path-selection error; do not rely on the earlier event 033 statement as proof of canonical-root parity.
+
+**Remediation performed:** DOC-041 and DOC-073, DOC-074, DOC-075, DOC-077 were copied from GitHub main into the canonical Sandbox root and read back byte-for-byte. DOC-035 and DOC-055 were independently probed and already matched the current GitHub main content at the canonical root. Thus all seven relevant documents (DOC-035, DOC-041, DOC-055, DOC-073, DOC-074, DOC-075, DOC-077) now have exact canonical-root Sandbox parity.
+
+**Residual path drift:** The nested `work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/00_ROOT/` copies remain as duplicate/orphaned paths. They are preserved pending an explicit cleanup authorization and verified impact assessment; no deletion was performed. The canonical path remains the top-level Work root path stated above. Future Sandbox operations must omit the extra `work/70/` prefix.
