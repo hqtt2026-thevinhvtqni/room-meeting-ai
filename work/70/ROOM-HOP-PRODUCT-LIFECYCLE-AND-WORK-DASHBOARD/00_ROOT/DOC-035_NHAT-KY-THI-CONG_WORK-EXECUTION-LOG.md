@@ -956,3 +956,8 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - Corrected stale DOC-068 row in DOC-055: D-068-01 is DECIDED BY XU UNDER D70-018; G4 BUILD remains NOT READY. Registered DOC-069 and advanced DOC-055 to v2.5.
 - Branch compare refreshed: main...work/70/05-build = DIVERGED, ahead 42 / behind 411, merge base fc6a19888765d174aea9aea839620338ac9f71e8. No merge/rebase/cherry-pick.
 - Technical enforcement of Work Entry authorization is NOT VERIFIED; connector capability does not prove server-side policy enforcement. No code/runtime/Core mutation or independent QE execution performed.
+
+
+## 2026-11-02 — Xu / AI-01 — Branch compare evidence correction
+- Re-ran compare after the DOC-069/DOC-055/DOC-068 documentation commits. At main HEAD `4e6fd19f7b30392a49e64de864c05d2c64fe3cb7`, `main...work/70/05-build` was DIVERGED, ahead 42 / behind 415; merge base `fc6a19888765d174aea9aea839620338ac9f71e8`.
+- DOC-068 now pins this exact comparison baseline and supersedes the previous behind-411 observation. The count naturally changes as main advances; no merge/rebase/cherry-pick performed.
