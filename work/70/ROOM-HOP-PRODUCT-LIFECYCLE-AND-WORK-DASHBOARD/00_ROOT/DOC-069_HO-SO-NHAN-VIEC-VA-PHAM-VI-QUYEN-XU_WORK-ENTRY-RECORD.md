@@ -89,3 +89,11 @@ Các mã WE-G0…WE-G5 dưới đây chỉ tham chiếu sáu bước Work Entry 
 - Main HEAD trước cập nhật hồ sơ này: `7aad60163e85ef702dcf72f8830c191f1d5b0557`. Compare `main...work/70/05-build`: DIVERGED, ahead 42 / behind 426; merge base `fc6a19888765d174aea9aea839620338ac9f71e8`.
 - Các commit sau snapshot này là cập nhật tài liệu Work 70 trên main; không có code/runtime change được thực hiện trong assignment của Xu.
 - Scope của ASG-W70-XU-20261102-01 vẫn chỉ là document control/read-only trace. Không mở quyền Core/API/code/runtime, không cấp quyền cho participant khác, không mở G4/BUILD.
+
+
+## 8. Addendum — post-sync source baseline (2026-11-02)
+- Main HEAD before this source-record update: `ba3c61a27310699f1b11642ebae1bc53b266b373`.
+- Compare `main...work/70/05-build`: DIVERGED, branch ahead 42 / behind 436; merge base `fc6a19888765d174aea9aea839620338ac9f71e8`.
+- DOC-054, DOC-064, DOC-065 and DOC-067 were copied as individual files to main. No branch merge/rebase was performed.
+- DOC-066 is listed in DOC-055 but Sandbox readback returned FileNotFoundError; plan content is not verified.
+- This update does not expand Xu's limited document-control/read-only scope or authorize code, Core/API, runtime, participant dispatch, BUILD, QE execution, acceptance or release.
