@@ -116,3 +116,24 @@ Ghi chú cập nhật 2026-11-02: DOC-054, DOC-064, DOC-065 và DOC-067 đã đ�
 - `03_ARCHITECT/WORK_PACKAGE.schema.json` — GitHub main blob `47a2e881ad6ed28af1aaf4795585346a4c8881d4`; draft envelope schema for the Work-level register; Sandbox copy restored during this reconciliation.
 - `05_BUILD/00_ROOT/WORK_PACKAGE.schema.json` on `work/70/05-build` — blob `28ee2a1d6ba952c2fa1a1d737c5ff8892319a55e`; distinct per-record candidate schema, not interchangeable with the envelope schema.
 - These files are discoverable supporting artifacts, not an approved registry/schema baseline. DOC-011 remains the active planning authority; G0/G1/G4 statuses are unchanged.
+
+
+## Unresolved DOC-ID collision — 2026-11-02
+**Status: CONFIRMED / DECISION REQUIRED / NO FILE MUTATION**
+
+Inventory found 11 substantive root-level GitHub main documents named DOC-042..DOC-052 whose titles/content differ from the current canonical assignments in this register. The Sandbox contains the current canonical DOC-042..044 and phase playbooks DOC-045..DOC-053; GitHub main still contains the older root-level files. The current register rows remain the planning baseline, but this does not resolve the identity collision or authorize renumbering/deletion.
+
+Affected legacy GitHub main paths:
+- `00_ROOT/DOC-042_QUY-TRINH-KHAM-PHA_DISCOVER-PROCESS.md`
+- `00_ROOT/DOC-043_QUY-TRINH-XAC-DINH-YEU-CAU_DEFINE-PROCESS.md`
+- `00_ROOT/DOC-044_QUY-TRINH-THIET-KE-KIEN-TRUC_ARCHITECT-PROCESS.md`
+- `00_ROOT/DOC-045_QUY-TRINH-LAP-KE-HOACH_PLAN-PROCESS.md`
+- `00_ROOT/DOC-046_QUY-TRINH-THI-CONG_BUILD-PROCESS.md`
+- `00_ROOT/DOC-047_QUY-TRINH-KIEM-CHUNG_VERIFY-PROCESS.md`
+- `00_ROOT/DOC-048_QUY-TRINH-QUAN-LY-BANG-CHUNG_EVIDENCE-PROCESS.md`
+- `00_ROOT/DOC-049_QUY-TRINH-NGHIEM-THU_ACCEPTANCE-PROCESS.md`
+- `00_ROOT/DOC-050_QUY-TRINH-PHAT-HANH_RELEASE-PROCESS.md`
+- `00_ROOT/DOC-051_QUY-TRINH-VAN-HANH_OPERATE-PROCESS.md`
+- `00_ROOT/DOC-052_BAO-CAO-KIEM-DINH-TICH-HOP_QUAN-TRI_INTEGRATION-GOVERNANCE-VERIFICATION.md`
+
+No DOC-ID has been reassigned and no legacy content has been overwritten or deleted. Keep the register in DRAFT reconciliation status for this issue until Vinh decides the identity disposition. See DOC-041 G-008 and DOC-035 event 031.
