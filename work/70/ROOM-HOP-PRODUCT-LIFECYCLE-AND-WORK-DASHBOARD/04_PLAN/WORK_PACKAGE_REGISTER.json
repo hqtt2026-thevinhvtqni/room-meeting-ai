@@ -2,7 +2,7 @@
   "work_id": "70",
   "schema_version": "0.1-draft",
   "baseline_status": "DRAFT_NOT_APPROVED",
-  "source_record": "DOC-053 proposal; source candidate branch work/70/05-build",
+  "source_record": "DOC-070 proposal; source candidate branch work/70/05-build",
   "work_packages": [
     {
       "wp_id": "WP-70-01",
