@@ -45,3 +45,19 @@ Các thay đổi trọng yếu về phạm vi sản phẩm, thẩm quyền, chí
 
 ## 5. Khôi phục lịch sử
 Bản ghi D70-001 đến D70-013 được khôi phục từ nội dung GitHub lịch sử tại commit `27ed78444bf4a7ee705b0362e3b9359fc7397b3a`. Các quyết định D70-014 đến D70-016 được khôi phục nguyên văn từ `00_ROOT/DECISION_LOG.md` tại commit `6555a9ab0eaea1130e0e9dc12344595c0299e0a0`. Nội dung quyết định và trạng thái lịch sử được giữ nguyên. Đối chiếu hoàn tất ngày 2026-10-31: DOC-039 v1.2 và DOC-040 v1.4 hiện quy định danh mục đầy đủ 22 mã; 14 mã được liệt kê trong D70-015 đều còn nằm trong danh mục hiện hành, 8 mã bổ sung được chuẩn hóa ở DOC-039. Vì vậy D70-015 được giữ nguyên như quyết định lịch sử về nguyên tắc; DOC-039/DOC-040 là danh mục chi tiết hiện hành. Không có mã lịch sử nào bị xóa hoặc tái diễn giải.
+
+
+## 6. Addendum — quyết định D70-017 (2026-11-02)
+| Decision ID | Decision / Quyết định | Rationale / Lý do | Status / Trạng thái |
+|---|---|---|---|
+| D70-017 | Chọn Hybrid AI Dispatch: ROOM-HOP quản lý Work/WP/assignment/quyền/audit/evidence; AI tiếp tục trong conversation/session hiện có qua adapter được xác minh; ưu tiên native permission và manual session handoff, hạn chế API; không tự tạo API cost. | Giữ continuity của phiên AI, tránh phát sinh chi phí không cần thiết, đồng thời đưa giao việc/ACK/tiến độ/kết quả về một luồng có kiểm soát. | DECIDED BY VINH — TARGET ARCHITECTURE; IMPLEMENTATION NOT AUTHORIZED |
+
+Ràng buộc: DOC-064/065 là thiết kế; DOC-066 là kế hoạch. Không suy diễn connector hoạt động, ACK hoặc dispatch tự động. Không tạo API key/phí mới; không mở BUILD khi Work Entry chưa đạt.
+
+
+## 7. Quyết định D70-018 — Ủy quyền điều phối và hoàn thiện Work 70 (2026-11-02)
+| Decision ID | Decision / Quyết định | Rationale / Lý do | Status / Trạng thái |
+|---|---|---|---|
+| D70-018 | Theo chỉ thị trực tiếp của Vinh ngày 2026-11-02, Xu / AI-01 được toàn quyền điều phối và quyết định các công việc cần thiết để hoàn thiện Work 70 trong phạm vi Work 70; không yêu cầu Vinh duyệt từng bước. Xu được quyết định các thay đổi kế hoạch, tài liệu, phân rã WP/SD và triển khai kỹ thuật thông thường có thể đảo ngược, với điều kiện ghi nhật ký và có bằng chứng. | Giảm thời gian tham gia vận hành của Product Owner, duy trì một đầu mối chịu trách nhiệm đầu-cuối và tránh chờ duyệt các bước tác nghiệp thông thường. | ACTIVE — DELEGATED EXECUTION AUTHORITY |
+
+**Ranh giới bắt buộc:** D70-018 không miễn trừ Work Entry/G0–G5, không tự tạo quyền cho AI khác, không xác nhận ACK, không cho phép giả lập danh tính/ủy quyền, không cho phép phát sinh API cost hoặc secret mới, không cho phép sửa ngoài Work 70, không thay thế độc lập QE, và không cho phép Xu tự nghiệm thu cuối cùng hoặc tự phát hành. Core vẫn là nguồn dữ liệu có thẩm quyền; mọi thay đổi phải fail-closed khi thiếu identity/permission/evidence. Những việc thuộc quyền riêng của Vinh theo chính sách sản phẩm, bảo mật, chi phí định kỳ và phát hành cuối cùng vẫn được bảo lưu.
