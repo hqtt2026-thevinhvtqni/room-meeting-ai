@@ -162,3 +162,8 @@ No DOC-ID has been reassigned and no legacy content has been overwritten or dele
 | DOC-052 `00_ROOT/DOC-052_BAO-CAO-KIEM-DINH-TICH-HOP_QUAN-TRI_INTEGRATION-GOVERNANCE-VERIFICATION.md` | DOC-083 | `00_ROOT/DOC-083_BAO-CAO-KIEM-DINH-TICH-HOP_QUAN-TRI_INTEGRATION-GOVERNANCE-VERIFICATION.md` | BLOCKED — safety check | NOT CREATED | PRESERVED — unchanged |
 
 **Control note:** DOC-073..DOC-083 are reserved mappings under the PO-delegated decision; reservation is not proof that a file exists. Only DOC-073, DOC-074, DOC-075 and DOC-077 have verified copies in GitHub main and Sandbox 8030. The seven blocked copies remain uncreated. No legacy file has been renamed, deleted, overwritten or converted into an alias. Inbound-link reconciliation and alias registration remain OPEN. Do not use an absent new path as a replacement link; retain the original source path until a corresponding copy is created and verified.
+
+
+## Bounded inbound-reference search — 2026-11-02
+
+Exact-basename GitHub code searches were run for each of the 11 legacy source filenames. Each query returned only this register as a match, because the register itself lists the legacy paths. This is a bounded search-index result, not proof that no inbound references exist: code-search indexing/coverage may be incomplete and the query was not a full repository-wide parsed-link audit. Therefore inbound-link reconciliation remains OPEN. Keep original source paths valid and do not replace references with uncreated DOC-076 or DOC-078..DOC-083 paths. For the four created copies, links may be updated only where a verified source reference is identified and the target path is confirmed.
