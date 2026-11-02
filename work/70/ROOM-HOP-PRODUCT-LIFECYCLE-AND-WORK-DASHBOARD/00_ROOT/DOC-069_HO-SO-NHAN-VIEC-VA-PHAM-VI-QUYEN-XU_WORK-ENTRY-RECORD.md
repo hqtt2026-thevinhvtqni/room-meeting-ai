@@ -92,8 +92,15 @@ Các mã WE-G0…WE-G5 dưới đây chỉ tham chiếu sáu bước Work Entry 
 
 
 ## 8. Addendum — post-sync source baseline (2026-11-02)
-- Main HEAD before this source-record update: `ba3c61a27310699f1b11642ebae1bc53b266b373`.
-- Compare `main...work/70/05-build`: DIVERGED, branch ahead 42 / behind 436; merge base `fc6a19888765d174aea9aea839620338ac9f71e8`.
+- Main HEAD before this source-record update: `50209aba2a88864ac23ab434d6d0954049ae1e0a`.
+- Compare `main...work/70/05-build`: DIVERGED, branch ahead 42 / behind 438; merge base `fc6a19888765d174aea9aea839620338ac9f71e8`.
 - DOC-054, DOC-064, DOC-065 and DOC-067 were copied as individual files to main. No branch merge/rebase was performed.
 - DOC-066 is listed in DOC-055 but Sandbox readback returned FileNotFoundError; plan content is not verified.
 - This update does not expand Xu's limited document-control/read-only scope or authorize code, Core/API, runtime, participant dispatch, BUILD, QE execution, acceptance or release.
+
+
+## 9. Addendum — participant evidence distinction (2026-11-02)
+- DOC-054 has been updated against observed artifacts: Ka architecture review, Co preparatory domain/test artifacts, Vi signed source-trace reports, Qw explicit ACK in DOC-067, and An signed QA preparation report.
+- Deliverable received is not automatically a formal ACK; only Qw's explicit ACK is recorded as confirmed in DOC-067. For Ka/Co/Vi/An, artifacts are evidence of activity/delivery, but a separate explicit ACK receipt was not found in DOC-054.
+- No participant-specific Work Entry G0–G5 PASS is established. An's QA runtime remains BLOCKED; Qw's QA execution remains BLOCKED; Co's reported local test result is not independently reproduced by Xu.
+- This is document/evidence reconciliation only. No participant permission, Core access, code execution authorization, G4 BUILD, acceptance or release is granted.
