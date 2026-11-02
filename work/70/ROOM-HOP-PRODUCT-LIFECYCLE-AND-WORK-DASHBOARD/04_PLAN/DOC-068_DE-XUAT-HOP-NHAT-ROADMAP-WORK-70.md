@@ -4,7 +4,7 @@
 - Date: 2026-11-02
 - Owner: Xu / AI-01
 - Authority: Vinh
-- Status: DRAFT / SOURCE RECONCILIATION COMPLETE / PRODUCT OWNER DECISION REQUIRED / G4 NOT READY
+- Status: DECIDED D-068-01 BY XU UNDER DELEGATION D70-018 / G4 NOT READY
 - Depends on: DOC-001, DOC-004, DOC-005, DOC-006, DOC-011, DOC-043, DOC-044, DOC-054, DOC-055, DOC-057, DOC-061, DOC-062, DOC-064, DOC-065, DOC-066, DOC-067, WORK70_SINGLE_DELIVERY_MANDATE.md
 
 ## 1. Kết luận điều hành
@@ -125,3 +125,10 @@ Prepared by Xu / AI-01. Source content read from Work 70 Sandbox on 2026-11-02.
 - Đã đọc `room_hop_mcp/browser_agent_adapter/adapter.py`, blob SHA `0ced9207c1897b9a7b572b7fefa44fec2dd92b76`; đây là browser workflow adapter, không phải Work/WP/Assignment registry API.
 - Search `APIRouter`, `include_router`, `WorkRegistry`, `EvidenceRegistry` không trả kết quả trong phạm vi GitHub code search hiện tại.
 - Kết luận giới hạn: các HTTP adapter files được tìm thấy trên main hiện không cung cấp Work-scoped lifecycle APIs. Cần kiểm tra thêm service/runtime composition và xác định Core owner; không tuyên bố toàn repository không có implementation nếu chưa quét toàn bộ.
+
+
+## 9. Quyết định và hiệu lực triển khai — 2026-11-02
+- **D-068-01: DECIDED BY XU UNDER VINH'S EXPLICIT DELEGATION (D70-018).** Giữ 6 WP ID chuẩn; thông qua mapping 8 sub-deliverables SD-01..SD-08 theo mục 3.
+- DOC-011 được cập nhật lên version 1.4; DOC-006 ghi nhận ủy quyền; DOC-055 đã đăng ký DOC-068 ở version 2.4.
+- Quyết định chỉ phê duyệt baseline quản trị/điều phối. **G0/G1 NOT_READY; G4 BUILD NOT READY; implementation authorization for Core integration NOT GRANTED; Work 70 NOT ACCEPTED / NOT RELEASED.**
+- Xu tiếp tục tự quyết tác nghiệp, cập nhật hồ sơ, thực hiện read-only tracing và chuẩn bị implementation. Mọi code change, runtime test hoặc integration vẫn phải có Work Entry hợp lệ, canonical source/owner, approved contract và environment permission. Không suy diễn ACK từ handoff.
