@@ -4,8 +4,8 @@
 - **Priority:** P0
 - **Read order:** 62
 - **Depends on:** DOC-001; DOC-004; DOC-005; DOC-006; DOC-011; DOC-036; DOC-042; DOC-043; DOC-044; DOC-054; DOC-055; DOC-057; DOC-061
-- **Status:** DRAFT — RECONCILIATION COMPLETE / PRODUCT OWNER APPROVAL PENDING / G4 NOT READY
-- **Version / Updated:** 1.0 / 2026-11-01
+- **Status:** HISTORICAL DRAFT — SUPERSEDED FOR BASELINE BY D68-01 / G4 NOT READY
+- **Version / Updated:** 1.1 / 2026-11-02
 - **Owner:** Xu / AI-01
 - **Authority:** Vinh
 
@@ -107,3 +107,11 @@ Cho đến khi có quyết định: DOC-062 DRAFT, G4 NOT READY, BUILD implement
 
 ---
 Prepared by Xu / AI-01 — 2026-11-01.
+
+
+## Addendum — baseline decision reconciliation (2026-11-02)
+- D-068-01 is DECIDED BY XU under Vinh's explicit delegation D70-018, as recorded in DOC-006 and DOC-068.
+- The six WP-70-01..WP-70-06 IDs remain the Work-level planning identifiers; SD-01..SD-08 are mapped beneath them in DOC-011 v1.5.
+- The earlier phrase “Product Owner approval pending” is superseded for this internal planning baseline. DOC-062 remains a historical proposal and is not an approved standalone WP registry or schema.
+- DOC-011 is the active Work-level plan; DOC-036/Build Register artifacts remain Build-layer candidates only.
+- This decision does not change the Manifest's 01_DISCOVER pointer, does not pass lifecycle G0/G1/G4, does not authorize BUILD implementation, and does not authorize RELEASE.
