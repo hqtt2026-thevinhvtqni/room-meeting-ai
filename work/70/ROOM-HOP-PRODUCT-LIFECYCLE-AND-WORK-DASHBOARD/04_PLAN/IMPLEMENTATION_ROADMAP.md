@@ -1,10 +1,10 @@
-# IMPLEMENTATION ROADMAP — WORK 70 / VERSION 1.4
+# IMPLEMENTATION ROADMAP — WORK 70 / VERSION 1.5
 - **STT / Document ID:** DOC-011
 - **Priority:** P1
 - **Read order:** 15
 - **Depends on:** DOC-008; DOC-009; DOC-033; DOC-036
 - **Status:** ACTIVE
-- **Version / Updated:** 1.4 / 2026-11-02
+- **Version / Updated:** 1.5 / 2026-11-02
 
 ## Delivery packages
 | WP | Objective | Owner | Reviewer | Current state |
@@ -17,12 +17,15 @@
 | WP-70-06 | Independent verification, acceptance preparation and release readiness | Xu | Qw | PLANNED |
 
 
-## Work Package registry authority
-- Proposed Work-level data: `04_PLAN/WORK_PACKAGE_REGISTER.json` (schema_version 0.1-draft).
-- Proposed contract: `03_ARCHITECT/WORK_PACKAGE.schema.json`.
-- Proposal and approval checklist: `04_PLAN/DOC-053_DE-XUAT-SO-DANG-KY-GOI-CONG-VIEC_WORK-PACKAGE-REGISTER-PROPOSAL.md`.
-- Status: DRAFT_NOT_APPROVED. The six legacy records and their legacy statuses are preserved for reconciliation only; all proposed WP statuses remain DRAFT, estimates remain NOT_ESTIMATED and reviewer assignments remain unconfirmed.
-- The proposal does not supersede this roadmap, does not authorize migration and does not open G4. Until Vinh approves the WP baseline, DOC-011 remains the planning authority and the proposal is non-authoritative.
+## Work Package registry authority — reconciled 2026-11-02
+- **Canonical Work-level plan:** this DOC-011 roadmap is the active planning source for the six WP-70-01..WP-70-06 IDs, objectives, owners, reviewers and current states.
+- **Baseline decision:** D-068-01 was decided by Xu under Vinh's explicit delegation D70-018. DOC-011 retains the six WP IDs and maps the eight sub-deliverables SD-01..SD-08. This is an internal planning/coordination baseline; it does not pass G0/G1/G4 or authorize BUILD.
+- **No separate approved WP registry exists:** the earlier proposed path `04_PLAN/WORK_PACKAGE_REGISTER.json` was not found in the Work 70 Sandbox listing or GitHub main. Do not refer to it as an existing canonical registry.
+- **Schema location correction:** `WORK_PACKAGE.schema.json` is present only as a Build-branch candidate under `05_BUILD/00_ROOT/`; the previously stated `03_ARCHITECT/WORK_PACKAGE.schema.json` path is not the verified location. It is not an approved Work-level schema.
+- **DOC-053 correction:** the earlier reference to `04_PLAN/DOC-053_DE-XUAT-SO-DANG-KY-GOI-CONG-VIEC_WORK-PACKAGE-REGISTER-PROPOSAL.md` is invalid. The observed DOC-053 is `09_OPERATE/PHASE_EXECUTION_PLAYBOOK.md`, not a WP-register proposal.
+- **Build mapping authority:** DOC-036 and the Build Register/schema files remain Build-layer mapping/candidate artifacts; they do not replace DOC-011 or create a second Work-level plan.
+- **Historical proposal:** DOC-062 is retained as a reconciliation proposal record and is superseded for baseline decisions by D-068-01; see its dated addendum. No separate registry migration is implied.
+- **Gate boundary:** G0/G1 remain NOT_READY and G4 remains NOT READY / NOT PASS. No implementation or release authorization is granted by this section.
 
 ## End-to-end sequence
 1. Reconcile canonical structure, four official records and source ownership contracts.
