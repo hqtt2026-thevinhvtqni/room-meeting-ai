@@ -124,3 +124,17 @@ MCP 8030 hiện cung cấp thao tác Sandbox và Meeting, không có công cụ 
 - Mỗi AI phải xác nhận ACK bằng phản hồi/artefact định danh. Lệnh này chưa chứng minh AI đã nhận việc.
 - Xu tổng hợp kết quả, xử lý xung đột và trình Vinh quyết định; không chuyển sang BUILD chỉ vì ba báo cáo hoàn tất.
 - Exit condition: đủ ba báo cáo có evidence; unresolved gaps được phân loại; Ka/Vi/An không tự cấp Gate hoặc quyền BUILD.
+
+
+## Evidence-based assignment status update — 2026-11-02
+This update separates deliverable evidence from formal ACK and from Work Entry authorization.
+
+| Participant | Evidence observed in Work 70 Sandbox | ACK disposition | Execution / permission disposition |
+|---|---|---|---|
+| Ka / AI-02 | DOC-063 addendum 13.1–13.4 records independent architecture review and P0.3/P0.4 requirements; DOC-035 contains the source-review record. | REVIEW DELIVERABLE RECEIVED; explicit ACK receipt not separately evidenced in DOC-054. | Read-only architecture review only; no implementation authority. |
+| Co / AI-07 | `05_BUILD/04_CODE/lifecycle_domain.py`, `test_lifecycle_domain.py`, spike files and README identify Co as author. README reports 10 local tests passed for lifecycle_domain, but this has not been independently reproduced here. | CODE/TEST ARTIFACTS RECEIVED; explicit ACK receipt not separately evidenced. | Preparatory domain logic only; not integrated, not production, no Core/API/persistence permission. |
+| Vi / coder | Signed draft reports: Core route trace, WEE lifecycle trace and Work 28 auth reuse reconciliation. | TRACE DELIVERABLES RECEIVED; explicit ACK receipt not separately evidenced in DOC-054. | Read-only source trace; Dashboard/Core adapter implementation remains blocked. |
+| Qw / AI-05 | DOC-067 explicitly records Qw confirmation of receipt of WP70-QA assignment. | ACK CONFIRMED (as recorded in DOC-067). | Test plan prepared; runtime execution BLOCKED pending canonical source, authorized environment and Work Entry G0–G5. |
+| An / Tester | Signed draft independent controller QA matrix and follow-up source inventory. | QA PREPARATION DELIVERABLE RECEIVED; explicit ACK receipt not separately evidenced in DOC-054. | Execution BLOCKED; no tests run by An; no independent QE PASS. |
+
+**Overall:** deliverables have been received from all five tracks at different levels, but ACK evidence is mixed and does not equal Work Entry PASS. No participant-specific G0–G5 PASS is established by this status table. G0/G1 lifecycle gates remain NOT_READY; G4 BUILD remains NOT READY / NOT PASS. No code integration, Core mutation, runtime deployment, acceptance or release is authorized.
