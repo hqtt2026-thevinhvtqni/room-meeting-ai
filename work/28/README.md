@@ -1,25 +1,40 @@
 # Work 28 — MCP Tooling Platform
 
-Work 28 is maintained in parallel in the ROOM-HOP Sandbox and this repository branch, following the Work 98 ONT Care layout convention.
+**Current authority:** Vinh  
+**Coordinator / technical decision owner:** Xu  
+**Approved team:** Xu, Vi, Ka, An only  
+**Status:** ACTIVE / INTEGRATION BLOCKED / NOT RELEASED  
+**Execution Gate:** CLOSED
+
+## Canonical location
 
 - Repository: `hqtt2026-thevinhvtqni/room-meeting-ai`
 - Branch: `work/28-mcp-tooling-platform`
 - Work path: `work/28/MCP-8020-TOOLING-PLATFORM/`
-- Evidence path: `work/28/06_EVIDENCE/`
-- Authorization authority: Core :8000
-- MCP adapter: :8020
-- Execution must use an approved isolated runtime; no unrestricted shell, duplicate execution host, or Core bypass.
+- Manifest: `00_ROOT/WORK_MANIFEST.md`
+- Official minutes: `00_ROOT/BIEN_BAN.md`
+- Master plan: `01_PLAN/WORK28_MASTER_EXECUTION_PLAN_V2.0.md`
+- Architecture decision: `03_ARCHITECTURE/WORK28_ARCHITECTURE_DECISION_V2.md`
+- Work-wide journal: `00_ROOT/NHAT_KY_THI_CONG.md`
+- Document register: `00_ROOT/WORK_DOCUMENT_REGISTER.md`
 
-## Current state (2026-10-15)
+## Product mission
 
-- Work status: ACTIVE / NOT LOCKED.
-- The PC startup script reported MCP Meeting :8020 started, but the assistant connector returned `UNAVAILABLE: Connection failed` on a recent attempt; end-to-end connectivity remains BLOCKED pending re-verification.
-- MCP Build :8030 did not listen during that startup attempt; tracked separately.
-- Python/runtime execution, full MCP → Core → approved runtime → evidence E2E, source transfer/import gates, and release remain BLOCKED/NO-GO wherever stated in the evidence.
-- GitHub source synchronization does not mean tests passed or runtime is deployed.
+Deliver a secure, typed and auditable MCP tooling platform across discovery, tool registry/contracts, Build/Verification, a clean Runtime MCP rebuild, Core-authorized execution through Execution Host :8031, evidence and end-to-end verification.
 
-## Layout and workflow
+## Architecture guardrails
 
-The `MCP-8020-TOOLING-PLATFORM` directory preserves the Work structure, including architecture, code, tests, evidence, and the append-only journal. Sandbox-root checkpoints are copied to `work/28/06_EVIDENCE/`.
+- Core :8000 is the sole authorization and application authority.
+- MCP Build/Verification :8030 remains the supported build lane.
+- Historical MCP :8020 listener is quarantined and **DO NOT USE**. Do not probe, restart, activate, modify or route traffic to it.
+- Runtime MCP is a separate clean rebuild; no reuse of the historical listener/process/state.
+- Execution Host :8031 is the approved execution boundary. No arbitrary shell, direct Workspace/DB access or Core bypass.
+- Job Object process-tree containment and OS sandbox isolation are separate controls; neither may be claimed without its own evidence.
 
-Edit in VS Code on this branch, push changes to this branch, and use GitHub Actions results as test evidence. Do not merge to `main` or lock Work 28 until acceptance gates pass.
+## Delivery workflow
+
+READ → TRACE → ANALYZE → DECIDE → BUILD → RUN → VERIFY → HANDOFF.
+
+GitHub is the canonical source and document store. GitHub Actions is the primary CI evidence lane. Sandbox/MCP 8030 is supporting verification only. Preserve legacy evidence; do not treat old AI handoffs as current assignments. Co is excluded.
+
+See the manifest and master plan for roles, work packages, acceptance gates and release requirements. Work 28 is not released until all required gates pass.
