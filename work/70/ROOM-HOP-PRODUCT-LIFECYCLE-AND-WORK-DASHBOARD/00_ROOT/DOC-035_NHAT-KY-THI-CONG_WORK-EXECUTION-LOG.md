@@ -940,3 +940,10 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - **Technical evidence reviewed:** Vi's read-only Core trace confirms inspected HTTP adapter/API contract are Meeting/Identity scoped; WEE is local orchestration/evidence, not Core authority; Work 28 auth hardening exists on a divergent branch and is not a Work 70 canonical runtime. Co's lifecycle guard payload has 10 local unit tests PASS, but Sandbox content readback/runtime integration are not proven. An's QA prep exists; independent runtime QE remains NOT RUN.
 - **Disposition:** G0/G1 NOT_READY; G4 BUILD NOT READY; Core read integration BLOCKED; Dashboard Core-live BLOCKED; evidence/export DESIGN ONLY; independent QE NOT RUN; Work 70 NOT ACCEPTED / NOT RELEASED.
 - **No action:** no Core/API/DB/permission/gate/runtime/source changes, no API spend, no branch merge/rebase/cherry-pick, no modification to Work 10/15/28, no MCP 8020 use.
+
+
+## 2026-11-02 — Xu / AI-01 — Vi/Co/An evidence reconciliation and branch divergence refresh
+- Read Vi drafts: Core route trace, WEE lifecycle trace, Work 28 auth reuse reconciliation; read An controller QA preparation and Co lifecycle guard artifacts.
+- Findings: inspected Core HTTP/API contract remains Identity/Meeting scoped; WEE is local execution/evidence, not Core authority; Work 28 hardening is on a divergent branch and is not Work 70 canonical runtime; Co reports 10 local unit tests PASS on payload but Sandbox content verification/canonical runtime tests are not established; An runtime QE remains NOT RUN.
+- Fresh GitHub compare main...work/70/05-build: main HEAD 878942047b7d17bbd2ac16f86844cb7705dc8f90; Work 70 branch DIVERGED, ahead 42 / behind 409; merge base fc6a19888765d174aea9aea839620338ac9f71e8; 14 returned files are Build docs/schema/mapping/handoff artifacts. Earlier behind counts are superseded. No merge/rebase/cherry-pick.
+- Updated DOC-068 evidence refresh and DOC-035 journal. Work 70 remains G0/G1 NOT_READY, G4 BUILD NOT READY, Core read integration BLOCKED, QE NOT RUN, NOT ACCEPTED / NOT RELEASED.
