@@ -94,3 +94,29 @@ Không thay đổi các trạng thái này chỉ vì chuẩn hóa tài liệu.
 **AUDIT OPEN / NOT FULLY VERIFIED.** DOC-038/039/040 đã thiết lập được khung quản trị; các phát hiện G-001 đến G-007 và backlog R-01 đến R-10 vẫn cần đóng bằng kiểm chứng tương ứng.
 
 **English summary:** Work 70 governance is partially reconciled, not fully verified. The audit records path duplication, document metadata drift, branch-specific mapping references, and remaining runtime/QE/acceptance gaps.
+
+
+## G-008 — DOC-ID collision between canonical register and legacy process documents (2026-11-02)
+**Status: CONFIRMED / DECISION REQUIRED / NO FILE MUTATION**
+
+A fresh inventory compared Work 70 Sandbox with GitHub main at HEAD `d16fa1db5fdda8848b6af0b3316e895b625a6c4d`. The Sandbox contains the canonical DOC-042, DOC-043 and DOC-044 files named in DOC-055, plus phase playbooks DOC-045..DOC-053. GitHub main instead still contains 11 root-level documents named DOC-042..DOC-052 with different titles and substantive contents. These are not compatibility pointers: the retrieved GitHub blobs have non-trivial bodies (8,240–19,142 characters), and their paths are not the canonical paths assigned to those IDs in DOC-055 v2.8.
+
+| Existing GitHub main legacy file | Current DOC-055 assignment |
+|---|---|
+| DOC-042 Discover Process | DOC-042 End-to-End Execution Orchestration |
+| DOC-043 Define Process | DOC-043 AI Role & Permission Matrix |
+| DOC-044 Architect Process | DOC-044 Work Assignment Contract |
+| DOC-045 Plan Process | DOC-045 Discover Execution Playbook |
+| DOC-046 Build Process | DOC-046 Define Execution Playbook |
+| DOC-047 Verify Process | DOC-047 Architect Execution Playbook |
+| DOC-048 Evidence Process | DOC-048 Plan Execution Playbook |
+| DOC-049 Acceptance Process | DOC-049 Build Execution Playbook |
+| DOC-050 Release Process | DOC-050 Verify Execution Playbook |
+| DOC-051 Operate Process | DOC-051 Accept Execution Playbook |
+| DOC-052 Integration & Governance Verification Report | DOC-052 Release Execution Playbook |
+
+This violates the one-DOC-ID/one-canonical-document rule in DOC-056 and the no-reuse rule in this audit. DOC-055 currently registers the newer canonical set but does not account for the 11 substantive legacy documents. The 3 canonical DOC-042..044 files are present and readable in Sandbox but are absent from GitHub main; the 8 canonical phase playbooks DOC-045..052 are present at their registered phase paths.
+
+**Required disposition:** Vinh must decide the identity policy for the 11 legacy documents versus the current DOC-042..053 set (e.g. preserve original IDs and re-identify the later set, or explicitly retire/reclassify the legacy set under a controlled decision). Xu must not renumber, overwrite, delete, or silently convert these substantive documents into pointers before that decision. Preserve all contents and history.
+
+**Evidence:** Sandbox read-probe succeeded for canonical DOC-042..044 and phase playbooks DOC-045..053; GitHub main fetch returned the 11 legacy files and blob SHAs; DOC-055 v2.8 maps the current canonical assignments; DOC-056 §§1–4 requires one stable ID, one canonical path, controlled aliases and non-destructive migration. Branch comparison at this snapshot: main HEAD `d16fa1db5fdda8848b6af0b3316e895b625a6c4d`; `work/70/05-build` DIVERGED, 42 ahead / 462 behind; merge base `fc6a19888765d174aea9aea839620338ac9f71e8`. No merge/rebase/cherry-pick performed.
