@@ -4,7 +4,7 @@
 - **Read order:** 55
 - **Depends on:** DOC-001; DOC-038; DOC-039; DOC-040; DOC-056
 - **Status:** ACTIVE — SINGLE SOURCE OF TRUTH
-- **Version / Updated:** 2.6 / 2026-11-02
+- **Version / Updated:** 2.7 / 2026-11-02
 - **Owner:** Xu / AI-01
 - **Authority:** Vinh
 Owner: Xu / AI-01
@@ -90,9 +90,9 @@ When adding a document: allocate the next unused DOC ID, set priority/read order
 |---|---|---:|---|---|---|---|---|
 | DOC-064 | P0 | 64 | Kiến trúc điều phối giao việc AI kết hợp / Hybrid AI Dispatch Architecture | 05_BUILD/03_ARCHITECT/DOC-064_KIEN-TRUC_DIEU-PHOI-GIAO-VIEC-AI_HYBRID-AI-DISPATCH-ARCHITECTURE.md | DOC-005; DOC-033; DOC-042; DOC-043; DOC-044; DOC-057; DOC-061; DOC-063 | DRAFT — TARGET ARCHITECTURE / IMPLEMENTATION NOT AUTHORIZED | Kiến trúc control plane, adapter modes, trust boundary, session continuity và rollout constraints |
 | DOC-065 | P0 | 65 | Hợp đồng điều phối giao việc AI kết hợp / Hybrid AI Dispatch Contract | 05_BUILD/03_ARCHITECT/DOC-065_HOP-DONG_DIEU-PHOI-GIAO-VIEC-AI_HYBRID-DISPATCH-CONTRACT.md | DOC-043; DOC-044; DOC-057; DOC-064 | DRAFT — CONTRACT PROPOSAL | Logical payload, dispatch, ACK, progress, result, review, events, error model và acceptance invariants |
-| DOC-066 | P0 | 66 | Kế hoạch triển khai và kiểm thử điều phối giao việc AI / AI Dispatch Implementation & Test Plan | 04_PLAN/DOC-066_KE-HOACH_TRIEN-KHAI-VA-KIEM-THU_DIEU-PHOI-GIAO-VIEC-AI.md | DOC-043; DOC-044; DOC-057; DOC-064; DOC-065 | PATH NOT FOUND IN SANDBOX READBACK — PLAN NOT VERIFIED / IMPLEMENTATION NOT AUTHORIZED | Chỉ có dòng đăng ký trong DOC-055; đường dẫn không đọc được bằng Sandbox read_probe, nội dung kế hoạch chưa xác minh |
+| DOC-066 | P0 | 66 | Kế hoạch triển khai và kiểm thử điều phối giao việc AI / AI Dispatch Implementation & Test Plan | 04_PLAN/DOC-066_KE-HOACH_TRIEN-KHAI-VA-KIEM-THU_DIEU-PHOI-GIAO-VIEC-AI.md | DOC-043; DOC-044; DOC-057; DOC-064; DOC-065 | DRAFT — PLANNED / IMPLEMENTATION NOT AUTHORIZED / TESTS NOT RUN | Nội dung đã được xác minh bằng Sandbox read_probe và đồng bộ độc lập lên GitHub main (commit bd55e162d8065efc7214ea8a08cf41c9e6bf84de); chưa có dispatch, ACK hoặc test thực thi |
 
-Ghi chú cập nhật 2026-11-02: DOC-054, DOC-064, DOC-065 và DOC-067 đã được đồng bộ độc lập từ Sandbox/Build branch sang GitHub main, không merge/rebase toàn nhánh. DOC-064/065 là DRAFT; DOC-067 là test plan, execution BLOCKED. DOC-066 chỉ xuất hiện trong dòng đăng ký nhưng Sandbox read_probe trả FileNotFoundError; nội dung kế hoạch chưa xác minh, không được coi là tài liệu tồn tại. Không tài liệu nào ở đây tự chứng minh dispatch, ACK (ngoại trừ Qw ACK được ghi rõ trong DOC-067), runtime test hoặc quyền BUILD.
+Ghi chú cập nhật 2026-11-02: DOC-054, DOC-064, DOC-065 và DOC-067 đã được đồng bộ độc lập từ Sandbox/Build branch sang GitHub main, không merge/rebase toàn nhánh. DOC-064/065 là DRAFT; DOC-067 là test plan, execution BLOCKED. DOC-066 từng không đọc được ở lần probe trước; lần kiểm tra tiếp theo xác minh file thực sự tồn tại trong Sandbox và đã đồng bộ nguyên văn lên GitHub main (commit bd55e162d8065efc7214ea8a08cf41c9e6bf84de). DOC-066 vẫn là kế hoạch DRAFT, chưa có dispatch, ACK hoặc test thực thi. Không tài liệu nào ở đây tự chứng minh runtime test hoặc quyền BUILD.
 
 | DOC-067 | P0 | 67 | Kế hoạch kiểm thử độc lập WP70-QA / Independent QA Test Plan | 06_VERIFY/DOC-067_KE-HOACH-KIEM-THU-DOC-LAP_WP70-QA_INDEPENDENT_QA_TEST_PLAN.md | DOC-001; DOC-004; DOC-005; DOC-042; DOC-043; DOC-054; DOC-061; DOC-063 | ACTIVE / PREPARATION COMPLETE / EXECUTION BLOCKED | Test strategy, contract tests, negative/security, race/idempotency, E2E matrix; không sửa code để làm test xanh |
 
@@ -108,6 +108,7 @@ Ghi chú cập nhật 2026-11-02: DOC-054, DOC-064, DOC-065 và DOC-067 đã đ�
 | DOC-069 | P0 | 69 | Hồ sơ nhận việc và phạm vi quyền Xu / Xu Work Entry Record | 00_ROOT/DOC-069_HO-SO-NHAN-VIEC-VA-PHAM-VI-QUYEN-XU_WORK-ENTRY-RECORD.md | DOC-001; DOC-006; DOC-033; DOC-038; DOC-039; DOC-040; DOC-042; DOC-043; DOC-044; DOC-055; DOC-056; DOC-057 | PASS — LIMITED DOCUMENTATION / READ-ONLY TRACE SCOPE | Xác định participant AI-01, assignment ASG-W70-XU-20261102-01, WE-G0..WE-G5 theo DOC-057; không mở G4 BUILD hoặc quyền code/runtime. |
 
 | DOC-070 | P1 | 70 | Đề xuất sổ đăng ký gói công việc / Work Package Register Proposal | 04_PLAN/DOC-070_DE-XUAT-SO-DANG-KY-GOI-CONG-VIEC_WORK-PACKAGE-REGISTER-PROPOSAL.md | DOC-001; DOC-006; DOC-011; DOC-036; DOC-055; DOC-061 | DRAFT — NOT APPROVED / SUPPORTING RECONCILIATION ONLY | Đề xuất cấu trúc sổ WP cấp Work; dữ liệu và schema hỗ trợ vẫn là draft, không thay DOC-011 và không mở G4/BUILD |
+| DOC-071 | P0 | 71 | Báo cáo truy vết Core authority, runtime composition và persistence / Core Authority, Runtime Composition & Persistence Trace | 06_EVIDENCE/DOC-071_BAO-CAO-TRUY-VET_CORE-AUTHORITY-RUNTIME-AND-PERSISTENCE.md | DOC-001; DOC-011; DOC-035; DOC-055; DOC-061; DOC-066 | SOURCE TRACE COMPLETE — READ-ONLY / CORE OWNER NOT IDENTIFIED / RUNTIME NOT VERIFIED | Xác định ranh giới Meeting/Identity với Work authority; ghi rõ HTTP factory chưa xác minh được wiring runtime, Meeting file persistence không chứng minh Work persistence; không cấp BUILD |
 
 ## Supporting data artifacts — WP registry draft (2026-11-02)
 - `04_PLAN/WORK_PACKAGE_REGISTER.json` — GitHub main blob `462cf3528375d59c322a4efbdbc9b2f7eecb8cf9`; six records, schema_version `0.1-draft`, baseline `DRAFT_NOT_APPROVED`; Sandbox copy restored during this reconciliation.
