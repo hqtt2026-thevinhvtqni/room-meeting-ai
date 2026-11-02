@@ -931,3 +931,12 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - Read browser-agent adapter blob 0ced9207c1897b9a7b572b7fefa44fec2dd92b76: generic browser workflow adapter, not Work/WP/Assignment registry API.
 - Search for APIRouter, include_router, WorkRegistry and EvidenceRegistry returned no results in current GitHub code search. This is bounded search evidence, not proof about all runtime composition or unindexed code.
 - Core owner and any alternate service composition remain unidentified. WP-70-04/SD-05 remains BLOCKED; no endpoint invented and no code changed.
+
+
+## 2026-11-02 — Xu / AI-01 — Delegated execution decision D70-018 and roadmap baseline D-068-01
+- **Authority:** Vinh explicitly delegated full Work 70 coordination and decision-making to Xu, with instruction not to involve Vinh in routine step-by-step approvals.
+- **Decision:** D70-018 recorded in DOC-006. Xu approves D-068-01: retain six canonical WP IDs and map eight target packages to SD-01..SD-08. This is a Work 70 planning/coordination baseline decision, not a Gate pass.
+- **Roadmap:** DOC-011 advanced to v1.4 with the SD mapping, dependency boundaries and truthful statuses. DOC-068 status changed to DECIDED BY XU UNDER DELEGATION D70-018. DOC-055 already contains DOC-068 registration at v2.4.
+- **Technical evidence reviewed:** Vi's read-only Core trace confirms inspected HTTP adapter/API contract are Meeting/Identity scoped; WEE is local orchestration/evidence, not Core authority; Work 28 auth hardening exists on a divergent branch and is not a Work 70 canonical runtime. Co's lifecycle guard payload has 10 local unit tests PASS, but Sandbox content readback/runtime integration are not proven. An's QA prep exists; independent runtime QE remains NOT RUN.
+- **Disposition:** G0/G1 NOT_READY; G4 BUILD NOT READY; Core read integration BLOCKED; Dashboard Core-live BLOCKED; evidence/export DESIGN ONLY; independent QE NOT RUN; Work 70 NOT ACCEPTED / NOT RELEASED.
+- **No action:** no Core/API/DB/permission/gate/runtime/source changes, no API spend, no branch merge/rebase/cherry-pick, no modification to Work 10/15/28, no MCP 8020 use.
