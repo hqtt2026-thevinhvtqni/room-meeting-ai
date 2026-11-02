@@ -57,6 +57,14 @@ Không lặp lại audit chi tiết Execution Host `:8031`; phần đó tiếp t
 
 Search là bounded theo GitHub code search/index và source paths đã kiểm tra; không phải chứng minh không tồn tại entrypoint ngoài phạm vi.
 
+### 3.4 Accountable Core owner search
+
+- Recursive GitHub main tree at source baseline HEAD contained no `CODEOWNERS` file.
+- GitHub issue searches for `"Core owner"` and `"Work 70" Core API` returned no results.
+- GitHub pull-request search for `"Core" Work 70` returned no results.
+- This is bounded repository metadata/search evidence only. It does not establish that no maintainer exists outside the indexed issues/PRs or connected repository surface.
+- **Disposition:** accountable Core owner remains NOT IDENTIFIED; do not infer ownership from commit authors or registry entries.
+
 ## 4. Persistence and authority boundary
 
 - **Meeting persistence:** VERIFIED — file-backed trong phạm vi MeetingManager: thư mục `meetings/<meeting_id>/`, metadata `meeting.yaml`, log/transcript/artifact theo Meeting.
