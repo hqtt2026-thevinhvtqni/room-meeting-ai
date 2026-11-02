@@ -1,10 +1,10 @@
-# IMPLEMENTATION ROADMAP — WORK 70 / VERSION 1.5
+# IMPLEMENTATION ROADMAP — WORK 70 / VERSION 1.7
 - **STT / Document ID:** DOC-011
 - **Priority:** P1
 - **Read order:** 15
 - **Depends on:** DOC-008; DOC-009; DOC-033; DOC-036
 - **Status:** ACTIVE
-- **Version / Updated:** 1.6 / 2026-11-02
+- **Version / Updated:** 1.7 / 2026-11-02
 
 ## Delivery packages
 | WP | Objective | Owner | Reviewer | Current state |
@@ -21,10 +21,11 @@
 - **Canonical Work-level plan:** this DOC-011 roadmap is the active planning source for the six WP-70-01..WP-70-06 IDs, objectives, owners, reviewers and current states.
 - **Baseline decision:** D-068-01 was decided by Xu under Vinh's explicit delegation D70-018. DOC-011 retains the six WP IDs and maps the eight sub-deliverables SD-01..SD-08. This is an internal planning/coordination baseline; it does not pass G0/G1/G4 or authorize BUILD.
 - **Registry status correction:** GitHub `main` contains `04_PLAN/WORK_PACKAGE_REGISTER.json` (blob `462cf3528375d59c322a4efbdbc9b2f7eecb8cf9`), schema_version `0.1-draft`, baseline_status `DRAFT_NOT_APPROVED`. It contains six WP records, all `DRAFT`; owner assignments are `PROPOSED`, reviewer assignments `PROPOSED_NOT_CONFIRMED`, and requirement_refs are empty. The file was absent from the corresponding Sandbox read-probe at this review. It is a real draft artifact, not an approved registry; DOC-011 remains the canonical Work-level plan.
-- **Schema location correction:** GitHub `main` contains the draft envelope schema at `03_ARCHITECT/WORK_PACKAGE.schema.json` (blob `47a2e881ad6ed28af1aaf4795585346a4c8881d4`), corresponding to the draft Work-level register; its Sandbox read-probe was NOT_FOUND at this review. The Build branch separately contains `05_BUILD/00_ROOT/WORK_PACKAGE.schema.json` (blob `28ee2a1d6ba952c2fa1a1d737c5ff8892319a55e`), a different per-WP-record schema. They are not interchangeable. Both remain unapproved candidates until contract approval and independent full validation.
+- **Schema location correction:** GitHub `main` contains the draft envelope schema at `03_ARCHITECT/WORK_PACKAGE.schema.json` (blob `47a2e881ad6ed28af1aaf4795585346a4c8881d4`), corresponding to the draft Work-level register; its Sandbox read-probe was NOT_FOUND in the earlier review, then the file was restored to Sandbox and exact synchronization was verified. The Build branch separately contains `05_BUILD/00_ROOT/WORK_PACKAGE.schema.json` (blob `28ee2a1d6ba952c2fa1a1d737c5ff8892319a55e`), a different per-WP-record schema. They are not interchangeable. Both remain unapproved candidates until contract approval and independent full validation.
 - **Document ID collision correction:** DOC-053 is assigned to `09_OPERATE/PHASE_EXECUTION_PLAYBOOK.md`. The separate, previously unregistered WP Register proposal at `04_PLAN/` had reused DOC-053; it has been re-identified as DOC-070 and registered in DOC-055. Its status remains DRAFT / NOT APPROVED.
 - **Build mapping authority:** DOC-036 and the Build Register/schema files remain Build-layer mapping/candidate artifacts; they do not replace DOC-011 or create a second Work-level plan.
 - **Historical proposal:** DOC-062 is retained as a reconciliation proposal record and is superseded for baseline decisions by D-068-01; see its dated addendum. No separate registry migration is implied.
+- **Core runtime and persistence trace (DOC-071):** source inspection at main HEAD `9ab3b80a979c1952f0b2b45a168e8ea94d73d424` confirms the STDIO and browser entrypoints compose Meeting-only services; the HTTP app factory exists but its runtime wiring is NOT VERIFIED. Meeting persistence is file-backed under `meetings/` and includes a documented non-atomic ID allocation; this does not establish Work/WP/Assignment/Evidence persistence. No Work-scoped API/authority or accountable Core owner was identified in inspected scope. DOC-071 is read-only evidence; WP-70-04 / SD-05 remains BLOCKED.
 - **Gate boundary:** G0/G1 remain NOT_READY and G4 remains NOT READY / NOT PASS. No implementation or release authorization is granted by this section.
 
 ## End-to-end sequence
