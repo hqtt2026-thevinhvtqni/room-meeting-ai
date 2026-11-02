@@ -83,3 +83,34 @@ The product opportunity is a provider-neutral lifecycle engine and authoritative
 - Product Owner confirmation of this refined discovery brief: PENDING.
 
 **Conclusion: DISCOVER OUTPUT PREPARED — G1 NOT EVALUATED / NOT PASS.** This addendum does not start the phase, change the Manifest, or grant entry to DEFINE. G1 may be evaluated only by the authorized Product Owner after reviewing the evidence, assumptions and unknowns.
+
+
+## Addendum — lifecycle G0/G1 readiness evidence (2026-11-02)
+
+### G0 — Work initialized
+| Criterion (DOC-004) | Evidence | Assessment |
+|---|---|---|
+| Stable Work ID and name | DOC-001: Work ID 70 and canonical Work name | PRESENT |
+| Owner and authority | DOC-001: Vinh as Product Owner/final authority; Xu as lifecycle orchestrator | PRESENT |
+| Manifest and source identity | DOC-001: Manifest, Sandbox Work 70, GitHub repository and scoped Build branch | PRESENT |
+| Scope boundary | DOC-001: lifecycle/WP/evidence/gates/Dashboard reference/storage-export design; no migration of other Works | PRESENT |
+| Initial permissions | DOC-043 is a role policy, not proof of per-participant technical grants. DOC-069 records only Xu's limited document-control/read-only assignment. Other participants' Work-specific scope/permissions/ACK and server-side enforcement are not verified. | PARTIAL / NOT VERIFIED |
+
+**G0 disposition: NOT_READY / NOT PASS.** Identity, owner, manifest and scope are documented; initial permissions are not yet sufficiently evidenced for the Work as a whole. The Work Owner must confirm the initial permission baseline and authorized participant scopes. A limited Work Entry for Xu does not grant permission to other participants.
+
+### G1 — DISCOVER → DEFINE
+| Criterion (DOC-004) | Evidence | Assessment |
+|---|---|---|
+| Problem statement and product outcome | Discover Brief sections “Problem statement”, “Product outcome” and addendum B | PREPARED |
+| User/context evidence | D70-DISC-E01..E07; evidence is user-stated/internal operating evidence | RECORDED — INTERNAL ONLY |
+| Opportunity | Addendum B: provider-neutral lifecycle engine and authoritative Work control plane | PREPARED |
+| Assumptions and unknowns | Addendum C and D | EXPLICIT |
+| Product Owner confirmation | Addendum E states confirmation pending; no G1 decision record found | PENDING |
+
+**G1 disposition: NOT_READY / NOT PASS.** The discovery package is prepared but relies on internal/user-stated evidence, has unvalidated workload and external-user assumptions, and lacks the required Product Owner decision. Vinh retains G1 authority under DOC-004; D70-018 does not delegate Product Owner gate approval to Xu.
+
+### Allowed continuation and exit conditions
+- Xu may continue read-only source tracing, evidence reconciliation, documentation correction and preparation of downstream plans.
+- Do not advance the Manifest phase pointer, mark G0/G1 PASS, enter DEFINE/ARCHITECT as an active phase, or open G4/BUILD until the authorized gate decisions are recorded.
+- G0 exit: Work Owner confirms initial participant/role/scope permissions and the evidence is recorded.
+- G1 exit: Product Owner reviews this Discover Brief and records an explicit G1 decision (PASS, FAIL or a reasoned request for additional discovery).
