@@ -171,3 +171,16 @@
 - Đối chiếu lại artifacts theo run ID: artifact `13197759403` thuộc run trước `41565074858` (37 PASS); artifact đúng của expanded run `41565286414` là `13199005568`, SHA-256 `c1c9666271021cd430e4eceb39a991bf6b2d68d6c047b39177bf041bbc46887e`.
 - Đã thêm correction addendum vào W32-EVIDENCE-001; không thay đổi kết quả test 201 PASS / 1 FAIL.
 - Trạng thái: EVIDENCE LINK CORRECTED / CI GATE BLOCKED.
+
+
+## W32-LOG-20261103-08 — Đồng bộ hồ sơ Work 32 lên GitHub
+- **Document No.:** W32-LOG-20261103-08
+- **Priority order:** P1 — GitHub mirror / evidence traceability
+- **Name:** Ka
+- **Title:** CSA / Architecture & Backend Owner (delegated)
+- **Date-Time:** 2026-11-03 20:53 +07:00
+- **Action:** Đồng bộ 29 tệp hồ sơ Work 32 từ Sandbox Work ID `32` lên `work/32/CI-CD-ROOM-HOP-PYTHON-NO-DOCKER/` trong repository `hqtt2026-thevinhvtqni/room-meeting-ai`; giữ nguyên nội dung nguồn đọc được từ Sandbox.
+- **GitHub branch:** `work/32-ci-cd-python-ci-v2`.
+- **Verification:** Compare `main...work/32-ci-cd-python-ci-v2` xác nhận 36 commits ahead, 0 behind; diff liệt kê 32 file thay đổi gồm 29 hồ sơ Work 32 và 3 file CI/code đã có trên nhánh.
+- **Boundary:** Không merge, không cập nhật `main`, không thay đổi production. CI gate vẫn BLOCKED theo bằng chứng W32-EVIDENCE-001; CD chưa triển khai.
+- **Status:** SYNCED TO FEATURE BRANCH — NOT MERGED.
