@@ -19,3 +19,11 @@
 - Verification: fetched README, Manifest, Source Import Register, Import Status and Dashboard back from GitHub main; all five reads succeeded.
 - Integrity: recorded source archive SHA-256 `fca16fb3a1f4fce72526f4424c993b8fa39fe4e0a8d758ddec95ac9126d2c20f`.
 - Limitation: only intake metadata and structure have been synchronized. The original ZIP bytes and all nested archive members have NOT yet been copied into GitHub. Work remains ACTIVE / 01_DISCOVER / Gate PENDING.
+
+
+## LOG-0001-003 — 2026-11-04
+- Actor: Xu (AI-01)
+- TRACE: extracted 22 Markdown file instances from the uploaded archive, totaling 268,680 bytes; retained duplicate paths and conflicting versions; computed source SHA-256 evidence and appended it to SOURCE_IMPORT_REGISTER.
+- BLOCKED: ROOM-HOP Sandbox has text create/write/append/read/list operations only, with no binary ZIP upload/import. GitHub Contents writer accepts UTF-8 text only. Git Data offers base64 blob creation but there is no direct local-file byte bridge in this tool chain.
+- DECISION: do not claim migration complete. Original ZIP bytes and extracted Markdown payloads remain pending transfer.
+- STATUS: INVENTORY DONE; SOURCE TRANSFER BLOCKED; Work ACTIVE / 01_DISCOVER / Gate PENDING. Implementation/Experiment/Benchmark remain LOCKED.
