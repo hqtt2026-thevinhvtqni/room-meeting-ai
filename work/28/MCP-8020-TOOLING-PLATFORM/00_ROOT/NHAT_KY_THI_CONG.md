@@ -216,3 +216,41 @@ This entry is the formal assignment record under the agreed journal-based workfl
 - Core authorization and live MCP → Core → W13 E2E: BLOCKED / NOT PROVEN.
 - Execution Gate: CLOSED.
 - No release, deployment, runtime activation or acceptance is claimed.
+
+
+## 2026-11-04 04:06 UTC+07:00 — JRN-W28-007 — WP2 suspended-spawn integration checkpoint
+
+**Role:** VI | CODER  
+**Signature:** [KÝ: VI | CODER]  
+**Branch:** `work/28-mcp-tooling-platform`
+
+### READ / TRACE
+- Reconciled canonical branch source `execution_host/process_job.py` (prior blob `47ab511151e81aef120527a2524fb01f4d6cb87b`) against the reviewed suspended-spawn candidate at GitHub blob `85f4866df7710aa2ad0fe1601ae319c470f1718a`.
+- Confirmed the candidate blob and the corresponding Sandbox candidate file are byte-for-byte identical at the text-content level (750 lines); no Sandbox-only delta was promoted.
+- Candidate lifecycle is: create/configure Job Object before process creation; create Windows process suspended; assign it to the Job Object; resume only after assignment; abort suspended process and raise `JobObjectUnavailable` on failure. POSIX spawn path remains session-based.
+- Adapted the 17-case focused validation file to import the canonical `execution_host.process_job` module rather than loading a patch-candidate path.
+
+### BUILD — GITHUB FIRST
+- Updated canonical `execution_host/process_job.py` on the official branch. Source commit: `2306b2899537ed40b56630d66abf69674c3cda4c`; resulting blob: `85f4866df7710aa2ad0fe1601ae319c470f1718a`.
+- Added `tests/test_process_job_suspended_spawn.py` with 17 focused tests. Test commit: `25a6d96cbf8d7b2c08ef0d907417d9cc5ce640b6`; resulting blob: `831691a44a56d8634a4b13243d664b21b47f64ae`.
+- No unrelated files were intentionally changed in this code slice.
+
+### SYNC — GITHUB → ROOM-HOP MCP 8030 SANDBOX
+- Synchronized the exact GitHub source blob to `MCP-8020-TOOLING-PLATFORM/04_CODE/execution_host/process_job.py`.
+- Synchronized the exact GitHub test blob to `MCP-8020-TOOLING-PLATFORM/05_TEST/test_process_job_suspended_spawn.py`.
+- Both Sandbox writes returned `status: ok`; diagnostic readback returned `status: ok` and exact text-content equality with the fetched GitHub file for both artifacts.
+
+### VERIFY / LIMITATIONS
+- GitHub Actions run `41718726116` was observed IN_PROGRESS for source commit `2306b2899537ed40b56630d66abf69674c3cda4c` when checked. The test-file commit followed; the final branch-head workflow result is still pending. No test PASS is claimed here.
+- No local or Sandbox execution of the 17 tests is claimed. Native Windows behavior must be confirmed by the Windows CI job and, for release acceptance, the required process-tree tests.
+- Concurrency/repeated spawn-cleanup race coverage remains an open gap; verify and extend before closing WP2.
+- `start_service()` outer API mapping of `JobObjectUnavailable` still requires independent confirmation that callers surface structured BLOCKED rather than an uncaught error.
+
+### NEXT
+1. Read final GitHub Actions run for the latest branch HEAD and inspect all Linux/Windows job results and logs.
+2. If CI fails, diagnose from raw logs and fix only the failing contract; rerun CI.
+3. Send An the exact branch HEAD, changed paths, 17-test suite and raw CI evidence for independent verification; acknowledgement is pending until An records it.
+4. Ask Ka to review the actual canonical diff and failure cleanup semantics; no review PASS is assumed.
+5. Add concurrency/repeated cleanup tests and verify service-start error mapping.
+
+**STATUS:** WP2 SOURCE INTEGRATED / CI VERIFICATION PENDING / INDEPENDENT REVIEW PENDING. Work remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED. Execution Gate CLOSED.
