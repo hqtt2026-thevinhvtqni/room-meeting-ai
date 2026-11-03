@@ -431,3 +431,14 @@ E0000-022 (ghi sau append này).
 - **Blockers:** Core/Platform owner và runtime ingress/poller chưa được xác định; authoritative persistence/audit chưa có bằng chứng; Work70 Entry Gate chưa cấp quyền code/runtime; hai path GitHub DOC-003 còn lệch tên và nội dung.
 - **Giới hạn:** Không tạo DOC-025 trong Work70; không sửa hoặc xóa hai file DOC-003 trên GitHub; không triển khai worker, webhook, database hoặc automation schedule.
 - **Trạng thái:** DISCOVERY COMPLETE; DOC-025 CREATED; REGISTER UPDATE PENDING READBACK; IMPLEMENTATION NOT AUTHORIZED; TESTS NOT RUN; RELEASE NOT RELEASED.
+
+
+## 050 | 2026-11-03 | Xu / AI-01 | Đồng bộ DOC-002 và DOC-025 lên nhánh GitHub canonical
+
+- **Hành động:** tạo bản sao GitHub của Work0000 DOC-002 và DOC-025 trên branch `work/0000-governance-baseline`; không sửa `main`.
+- **Đường dẫn DOC-002:** `work/0000-governance/00_ROOT/DOC-002_SO-DANG-KY-TAI-LIEU_DOCUMENT-REGISTER.md`.
+- **Đường dẫn DOC-025:** `work/0000-governance/01_DISCOVER/DOC-025_BAO-CAO-KHAM-SAT_GITHUB-INBOUND-MONITOR-DISCOVERY.md`.
+- **Kết quả đối chiếu:** DOC-002 Sandbox/GitHub exact content parity = TRUE, 5,876 ký tự; Git blob SHA `d1e5507f08dc9457339ae229f1b053fe3f9f950d`. DOC-025 exact content parity = TRUE, 6,054 ký tự; Git blob SHA `3826dd5b5e79a563528ae2ba45420ece403f0223`.
+- **Branch compare:** main...work/0000-governance-baseline = ahead 13 / behind 0; không merge.
+- **Còn tồn tại:** hai path DOC-003 khác tên; path hyphen có nội dung mới, path underscore còn stale; lần thử cập nhật path underscore bị safety-blocked. Không xóa hoặc retry/bypass.
+- **Trạng thái:** DOC-002 MIRROR PASS; DOC-025 MIRROR PASS; DOC-003 MIRROR PASS tại path hyphen; DUPLICATE PATH RECONCILIATION BLOCKED; BRANCH NOT MERGED.
