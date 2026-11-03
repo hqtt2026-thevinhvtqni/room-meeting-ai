@@ -11,6 +11,8 @@
 | `STD-W28` — `00_ROOT/WORK_STRUCTURE_STANDARD.md` | Standard | Work 70-aligned documentation/storage rules | Current |
 | `MAN-W28` — `00_ROOT/WORK_MANIFEST.md` | Manifest | Work identity, authority, status, roles and boundaries | Current |
 
+| `A2E-W28-20261104-001` — `01_PLAN/WORK28_AUTO_E2E_RUNBOOK_V2.0.md` | Auto E2E runbook | GitHub Actions pipeline, fail-closed stages, machine evidence gate and remaining live integration dependencies | Current |
+
 ## Supporting evidence classification
 
 The existing files in `06_EVIDENCE/` and `10_AI_DEBUG_HANDOFF/` are retained. Their filenames and content may describe earlier AI assignments, proposed architecture, patch candidates, CI runs, diagnostics, reviews or handoffs. They are not automatically current instructions and do not change the approved four-AI team.
