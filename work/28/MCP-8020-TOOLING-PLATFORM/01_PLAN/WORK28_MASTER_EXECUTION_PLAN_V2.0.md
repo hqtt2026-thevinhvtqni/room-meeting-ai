@@ -85,6 +85,25 @@ The product is not merely a collection of tool schemas. It must work end-to-end 
 
 **Exit:** source provenance closed, runtime registry parity, safe read/write smoke evidence and repeatable verification.
 
+#### WP3 feature package — Binary file upload to Work Sandbox
+**Feature ID:** W28-WP3-F01 — `sandbox_upload_file`
+**Implementation:** Vi; **architecture/security review:** Ka; **independent verification:** An; **coordination and acceptance:** Xu.
+
+**Objective:** Provide an authorized, auditable way to transfer original binary files (including ZIP archives and nested source bundles) into the correct Work Sandbox without converting them to text or changing their bytes. This is a shared platform capability, not a Work 0001-only workaround.
+
+**Required behavior and contract:**
+- Add a registered, versioned `sandbox_upload_file` tool (or a formally documented streaming upload contract if the transport cannot safely carry a single large payload). Tool discovery, schema, handler and runtime implementation must agree; no placeholder handler or false success.
+- Accept binary content without UTF-8/text conversion. Preserve exact bytes, filename and authorized destination path; support ZIP and common document/data/image formats without format-specific mutation.
+- Enforce Core-authorized identity, Work ID and destination scope. Reject traversal, absolute-path escape, symlink escape, unauthorized overwrite and cross-Work writes. Default to no overwrite unless an explicit authorized overwrite contract is approved.
+- Apply configurable per-file and per-Work quotas, maximum size, bounded streaming/chunking, timeouts, cancellation and safe temporary staging. Do not buffer unbounded payloads in memory.
+- Verify byte count and SHA-256 before atomic promotion to the destination. On interruption or mismatch, clean up the partial object and return BLOCKED/FAIL with correlation ID and evidence; never report success for a partial upload.
+- Return a stable result containing Work ID, normalized destination, byte count, SHA-256, upload ID, service/build identity and final status. Do not expose secrets or local host paths.
+- Record append-only audit evidence for actor, authorization decision, destination, size, checksum, timestamps, outcome and correlation ID.
+- Provide a readback/metadata verification path that confirms stored size and SHA-256. Test duplicate filenames, large files, zero-byte files, invalid names, traversal, symlinks, quota limits, interrupted transfers, checksum mismatch, cancellation, concurrent uploads and overwrite denial.
+- Define Sandbox-to-GitHub publication as a separate controlled operation. Do not claim automatic two-way synchronization until binary Git object creation, commit, readback and checksum parity are implemented and tested. Keep GitHub as canonical source for controlled code/documents; Sandbox remains supporting storage/verification.
+
+**Acceptance evidence:** exact source commit and deployed build identity; registered tool/schema parity; authorization and path-isolation tests; bounded-memory/large-file tests; failure-injection results; byte-for-byte readback and matching SHA-256; independent Ka review and An reproduction; CI run references. Until all evidence exists, mark the feature NOT VERIFIED and retain the source file at its original location.
+
 ### WP4 — New Runtime MCP (clean rebuild)
 **Lead:** Vi; **review:** Ka; **verification:** An.
 
@@ -146,7 +165,7 @@ The product is not merely a collection of tool schemas. It must work end-to-end 
 | G0 Source truth | branch/commit/provenance inventory | OPEN |
 | G1 Contracts | approved registry, schemas, version and parity tests | NOT VERIFIED |
 | G2 Execution safety | pre-execution containment, fail-closed and native Linux/Windows evidence | NOT VERIFIED |
-| G3 Build MCP | :8030 provenance, tools/list parity and safe I/O evidence | NOT VERIFIED |
+| G3 Build MCP | :8030 provenance, tools/list parity, safe I/O and binary upload/readback with SHA-256 evidence | NOT VERIFIED |
 | G4 Runtime MCP | clean rebuild, identity, contract and security tests | NOT VERIFIED |
 | G5 Core authority | authenticated Core integration and denial tests | NOT VERIFIED |
 | G6 E2E | complete request-to-evidence trace and independent reproduction | NOT VERIFIED |
@@ -158,6 +177,7 @@ The product is not merely a collection of tool schemas. It must work end-to-end 
 - The current Windows process lifecycle implementation calls process creation before Job Object attachment, then evaluates the gate. This leaves a possible pre-attachment execution race and must be fixed before WP2 acceptance.
 - Existing unit tests include simulated missing-Job-Object gate tests; those do not prove the native Windows process is suspended until containment is attached.
 - `ISOLATION_STATUS` is explicitly `NOT_VERIFIED`; Job Object containment is not OS sandboxing.
+- Binary Sandbox upload is an explicit WP3 feature requirement (W28-WP3-F01); implementation and runtime evidence are pending. Do not claim `sandbox_upload_file` exists until verified.
 - The historical MCP :8020 listener is not a valid test target.
 - Existing architecture and continuation documents contain older assumptions about :8020 and prior team roles. This V2 plan and the current manifest supersede conflicting older instructions; preserve old files as historical context.
 
