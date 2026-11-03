@@ -5,8 +5,8 @@
 | Code / Path | Type | Authority / purpose | Status |
 |---|---|---|---|
 | `BB-W28-20261103-001` — `00_ROOT/BIEN_BAN.md` | BB — Biên bản / Minutes | Governance reset and four-AI team decision | Current |
-| `PL-W28-20261103-001` — `01_PLAN/WORK28_MASTER_EXECUTION_PLAN_V2.0.md` | PL — Kế hoạch / Plan | End-to-end scope, sequencing, owners and acceptance | Current |
-| `AD-W28-20261103-001` — `03_ARCHITECTURE/WORK28_ARCHITECTURE_DECISION_V2.md` | Architecture decision | Authority boundaries and dual-MCP direction | Current |
+| `PL-W28-20261103-001` — `01_PLAN/WORK28_MASTER_EXECUTION_PLAN_V2.0.md` | PL — Kế hoạch / Plan | End-to-end scope, sequencing, owners, WP3 binary upload feature and acceptance | Updated 2026-11-04 |
+| `AD-W28-20261103-001` — `03_ARCHITECTURE/WORK28_ARCHITECTURE_DECISION_V2.md` | Architecture decision | Authority boundaries, dual-MCP direction and WP3 binary upload security contract | Updated 2026-11-04 |
 | `JRN-W28` — `00_ROOT/NHAT_KY_THI_CONG.md` | Journal | Chronological Work-wide execution record | Current |
 | `STD-W28` — `00_ROOT/WORK_STRUCTURE_STANDARD.md` | Standard | Work 70-aligned documentation/storage rules | Current |
 | `MAN-W28` — `00_ROOT/WORK_MANIFEST.md` | Manifest | Work identity, authority, status, roles and boundaries | Current |
