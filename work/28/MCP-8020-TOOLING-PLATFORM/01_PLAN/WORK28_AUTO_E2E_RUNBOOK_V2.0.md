@@ -104,18 +104,18 @@ For every completed implementation/evidence slice:
 
 ## 9. Current state
 
-**AUTOMATED CI PRECONDITIONS:** first full pipeline run PASS — run `41722405589`, source commit `952f85bb29e5c67b89d32109cc2c3cf59fa6eae7`.  
+**AUTOMATED CI PRECONDITIONS:** verified after HMAC hardening — run `41723033942`, source commit `ae722bd5e2cbbff4112358d6f62c701760afe940`.  
 **LIVE DEPLOYED AUTO E2E:** BLOCKED — trusted deployed identity/route/isolation/evidence integration not yet wired.  
 **WP2:** focused suspended-spawn Linux/Windows CI verified; concurrency and service error mapping remain open.  
 **WP3:** binary upload source gap confirmed; secure Core authorization contract proposal exists; implementation pending.  
 **Execution Gate:** CLOSED. **Work:** ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
 
-### First automated pipeline evidence
-- Run: `41722405589` — all four jobs SUCCESS (`unit-regression-tests`, Linux lifecycle, Windows lifecycle, `automatic-e2e-gate-report`).
-- Unit/regression discovery: **341 tests, OK**. The live Core authority boot test launched a real local subprocess/socket on the CI runner; this is not the deployed Core service.
-- Linux suspended-spawn: **13 passed, 4 skipped** (native-Windows-only cases).
-- Windows suspended-spawn: **17 passed**.
-- Machine report artifact: `work28-auto-e2e-report-41722405589`, artifact ID `13273471450`.
+### Automated pipeline verification evidence
+- Initial run: `41722405589` — all four jobs SUCCESS; 341 unit/regression tests; Linux 13 passed / 4 skipped; Windows suspended-spawn 17 passed.
+- HMAC-hardened run: `41723033942` on commit `ae722bd5e2cbbff4112358d6f62c701760afe940` — all four jobs SUCCESS.
+- HMAC-hardened unit/regression discovery: **344 tests, OK**, including 16 Auto E2E evidence-gate cases (signed valid evidence, missing key, tampering, wrong key ID, authorization denial, snapshot/hash mismatch, zero tests, nonzero exit, runtime mismatch, secret leakage, missing isolation/cleanup, protected evidence and readback checks).
+- HMAC-hardened Linux suspended-spawn: **13 passed, 4 skipped** (native-Windows-only cases); Windows suspended-spawn: **17 passed**.
+- Machine report artifact: `work28-auto-e2e-report-41723033942`, artifact ID `13271878443`.
 - Report correctly keeps deployed MCP → Core → Runtime E2E **BLOCKED**, Execution Gate **CLOSED**, Release **NOT RELEASED**.
 - Windows/Linux job logs include a post-checkout cleanup warning about `.gitmodules` (`No url found for submodule path 'room-meeting-ai'`); it did not change job conclusions, but remains a repository maintenance item.
 
