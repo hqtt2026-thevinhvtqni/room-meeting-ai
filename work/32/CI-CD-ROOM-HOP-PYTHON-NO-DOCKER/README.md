@@ -21,8 +21,8 @@
 
 ## Exact validated evidence
 
-- Final validated SHA: `ecb263a2d53786e71bdca8eed336b303506c06b4`.
-- Successful GitHub Actions run #65: `41722744353`.
+- Final validated SHA: `e451764d4bc900a98f4d0b2d00a1e863ea86b22c`.
+- Successful GitHub Actions run #68: `41723597131`.
 - CI architecture/security hardening run #58: `41719864578` (SUCCESS, SHA-pinned workflow), SHA `4d70e2fce18982cfdd8c3487dee1d15c2ca51fd3`, SUCCESS; 157 unit passed and 38 E2E passed (1 warning).
 - The workflow fetches the exact triggering SHA without submodule recursion, uses Python 3.12, read-only `contents: read`, bounded job timeouts, `pip check`, `compileall`, independent unit/E2E jobs, immutable source archive build + checksum verification, extracted-artifact product E2E, and 14-day evidence artifacts.
 - GitHub Actions dependencies are pinned to audited commit SHAs; see `03_ARCHITECTURE/CICD_TARGET_ARCHITECTURE.md`.
@@ -32,7 +32,7 @@
 
 No Docker requirement. No Core or live-service architecture change. No two-way Sandbox↔GitHub sync. No automatic merge, secrets mutation or production deploy. Vinh authorized Ka to implement and push Work 32 changes only to the dedicated feature branch and activate branch-scoped CI; that authorization does not authorize main merge or production release.
 
-The Work branch is currently diverged from main (66 ahead / 32 behind at the latest comparison); no merge, rebase or cherry-pick has been performed. Independent Vibe review and safe branch reconciliation remain required before integration.
+The Work branch is currently diverged from main (68 ahead / 32 behind at the latest comparison); no merge, rebase or cherry-pick has been performed. Independent Vibe review and safe branch reconciliation remain required before integration.
 
 
 ## Product-level evidence and boundary
@@ -50,3 +50,12 @@ The Work branch is currently diverged from main (66 ahead / 32 behind at the lat
 - Source archive built from that SHA, checksum verified, extracted into a clean directory, dependencies checked, packages compiled and product E2E run against extracted artifact (1 passed).
 - Artifact ID `13272918198`, uploaded artifact ZIP digest `fa059d00b74fe7e884c98ca95dc9ec283dcb940ffaa0b3b6eec4c25761a299f6`.
 - This is a retained release-candidate artifact, not a staging/production deployment.
+
+
+## Exact-SHA immutable artifact verification — PASS
+
+- Final tested source SHA: `e451764d4bc900a98f4d0b2d00a1e863ea86b22c`; Actions run #68 `41723597131` SUCCESS.
+- Unit: 157 passed; Product Auto E2E: 39 passed, 1 warning; extracted artifact E2E: 1 passed in 2.15s.
+- Source archive SHA-256: `76d77939c43b33727a534cbccd06e4240eb106458659b9186f9fb125ca59f0ae`.
+- Artifact ID `13271449355`; uploaded ZIP digest `9a688cc80b97e428a2d1b9c39a3c4bc97aa854e7b0715b64e8a7d39aa98c6062`.
+- Retention: 14 days. Artifact is a release candidate, not deployed.

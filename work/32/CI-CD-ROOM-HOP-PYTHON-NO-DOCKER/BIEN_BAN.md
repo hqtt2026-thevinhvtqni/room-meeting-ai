@@ -151,3 +151,21 @@ Ngày giờ: 2026-10-21, Asia/Ho_Chi_Minh (UTC+07:00)
 - **Artifact:** ID `13272918198`; uploaded ZIP digest `fa059d00b74fe7e884c98ca95dc9ec283dcb940ffaa0b3b6eec4c25761a299f6`.
 - **Boundary:** release-candidate artifact only. Dashboard→Core browser integration remains NOT RUN because Dashboard still uses a mock bridge. CD/staging/production remains NOT RUN; no target/approval/rollback evidence.
 - **Disposition:** Core product Auto E2E + immutable artifact E2E PASS; Dashboard integration BLOCKED; CD BLOCKED; NOT RELEASED.
+
+
+---
+
+## W32-DECISION-20261104-07 — P0 — Exact-SHA product artifact acceptance evidence
+
+- **Document Number:** W32-DECISION-20261104-07
+- **Priority order:** P0 — Product E2E and immutable artifact
+- **Name:** Ka
+- **Title:** CSA / Architecture & Backend Owner (delegated)
+- **Date-Time:** 2026-11-04 04:39 UTC+07:00
+- **Exact source SHA:** `e451764d4bc900a98f4d0b2d00a1e863ea86b22c`.
+- **Actions run:** #68 / `41723597131` — SUCCESS.
+- **Unit:** 157 PASS; **Product Auto E2E:** 39 PASS, 1 warning; **Artifact E2E:** 1 PASS against extracted archive.
+- **Source archive SHA-256:** `76d77939c43b33727a534cbccd06e4240eb106458659b9186f9fb125ca59f0ae`.
+- **Release-candidate artifact ID:** `13271449355`; upload digest `9a688cc80b97e428a2d1b9c39a3c4bc97aa854e7b0715b64e8a7d39aa98c6062`.
+- **Boundary:** no staging/production deployment. Dashboard→Core integrated browser E2E remains NOT RUN pending approved architecture/bridge. Main remains untouched.
+- **Disposition:** Core product CI + Auto E2E + artifact-level E2E PASS; Dashboard integration BLOCKED; CD BLOCKED; NOT RELEASED.

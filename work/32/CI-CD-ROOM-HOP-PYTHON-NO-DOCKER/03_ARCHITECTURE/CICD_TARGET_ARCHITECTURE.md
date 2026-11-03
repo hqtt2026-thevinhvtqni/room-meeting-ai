@@ -19,3 +19,12 @@ The GitHub Actions used by the workflow are pinned to the exact audited commit S
 Current successful exact-code evidence: run `41720062142`, commit `6ec0ca6aa9d8c32c912c9dfac140fab141c5b3aa`, 157 unit tests and 38 Auto E2E tests passed (one warning).
 
 CD remains a separate, non-executable release gate. No deployment workflow is activated without a verified staging target, target owner, protected environment approval, credentials/host trust, health check, and tested rollback. A green CI workflow is not release approval.
+
+
+## Product artifact pipeline implementation — 2026-11-04
+
+The workflow now has three dependent gates: bounded Unit tests; Product Auto E2E over live HTTP + actual MCP stdio + persisted Core evidence; and immutable product artifact build after both gates pass. The artifact job creates an exact-SHA source archive, generates/verifies SHA-256, extracts into a clean directory, installs/checks dependencies, compiles application packages and reruns product E2E against the extracted artifact.
+
+Run #68 (`41723597131`), SHA `e451764d4bc900a98f4d0b2d00a1e863ea86b22c`: Unit 157 PASS; Product Auto E2E 39 PASS (1 warning); artifact-level E2E 1 PASS. Source archive SHA-256 `76d77939c43b33727a534cbccd06e4240eb106458659b9186f9fb125ca59f0ae`. Product artifact ID `13271449355`, upload digest `9a688cc80b97e428a2d1b9c39a3c4bc97aa854e7b0715b64e8a7d39aa98c6062`.
+
+This is a CI release-candidate artifact, not a deployment. Dashboard→Core integration and CD remain blocked as separately recorded.
