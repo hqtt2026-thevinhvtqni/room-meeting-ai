@@ -41,7 +41,7 @@
 - [x] Retain JUnit artifacts for both unit and E2E jobs.
 - Exit: Core product-level Auto E2E PASS on SHA `a39438caa694549a7918d3a86878ee5ff95338de`, Actions run `41722337882`; 39 E2E tests passed, 1 warning. See `06_EVIDENCE/W32-EVIDENCE-005-PRODUCT-AUTO-E2E-20261104.md`. Dashboard→Core E2E remains BLOCKED / NOT RUN.
 
-## Phase D — CD / Release readiness
+## Phase D — Immutable product artifact
 
 - [ ] Identify and attest an actual staging/VPS target, owner, OS/runtime and deployment path.
 - [ ] Establish protected GitHub Environment with explicit human approval.
@@ -66,7 +66,7 @@ Exit: BLOCKED / NOT RUN. No staging host, deployment credentials, protected envi
 - Product Auto E2E: 39 passed, 1 warning.
 - Unit artifact: `13272412907`; SHA-256 `b80f706f8f91833ccdf69c0102b201957645c77ff346837c4cbdc0dc698f648b`.
 - E2E artifact: `13272817780`; SHA-256 `ae028bf6c2a5c95247fd950ee70ad7a51e69c0801ff5cf2aad5dd9729b3140f3`.
-- Main HEAD observed: `4d2788158b08a48c39abf3d9c74c57314eea3ff4`; branch compare: 65 ahead / 32 behind; merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`.
+- Main HEAD observed: `4d2788158b08a48c39abf3d9c74c57314eea3ff4`; branch compare: 66 ahead / 32 behind; merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`.
 - No main merge, rebase, cherry-pick, production deployment or secrets mutation.
 
 ## Overall
@@ -81,3 +81,11 @@ Exit: BLOCKED / NOT RUN. No staging host, deployment credentials, protected envi
 ### Product boundary note
 
 The Core product E2E is PASS for the exact scope in W32-EVIDENCE-005. The separate Dashboard is still mock-backed at inspected HEAD `32e41f43d2fdd6b8314185bbaa57bc8b04b41641`; its end-user browser-to-Core flow is NOT RUN. The dashboard bridge contract and the locked Core/Workspace ownership contract must be reconciled before adding a truthful integrated UI test. Do not bypass Core or create a second source of meeting state.
+
+
+### Product artifact evidence
+
+- Artifact source SHA: `0069157d24d6748cff69f162147b892242d9726f`.
+- Workflow run #67: `41723138912` — SUCCESS (unit 157; Product Auto E2E 39; artifact-level E2E 1 passed).
+- Immutable release-candidate artifact: `13272918198`, ZIP digest `fa059d00b74fe7e884c98ca95dc9ec283dcb940ffaa0b3b6eec4c25761a299f6`.
+- Full artifact evidence: `06_EVIDENCE/W32-EVIDENCE-006-PRODUCT-ARTIFACT-20261104.md`.

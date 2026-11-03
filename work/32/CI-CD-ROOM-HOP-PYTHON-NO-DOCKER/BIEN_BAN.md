@@ -134,3 +134,20 @@ Ngày giờ: 2026-10-21, Asia/Ho_Chi_Minh (UTC+07:00)
 - **Decision:** accept CI and Auto E2E gates as PASS for the Work branch. Do not equate this with CD or release acceptance.
 - **CD:** BLOCKED / NOT RUN until a verified staging target, protected approval, deployment credentials, health check and tested rollback exist.
 - **Overall:** CI PASS; Auto E2E PASS; CD BLOCKED; NOT RELEASED. Vibe independent review and branch reconciliation remain pending.
+
+
+---
+
+## W32-DECISION-20261104-06 — P0 — Product artifact gate
+
+- **Document Number:** W32-DECISION-20261104-06
+- **Priority order:** P0 — Build artifact provenance and end-to-end verification
+- **Name:** Ka
+- **Title:** CSA / Architecture & Backend Owner (delegated)
+- **Date-Time:** 2026-11-04 04:36 UTC+07:00
+- **Authority:** Vinh — Product Owner; implementation executed under explicit Work 32 branch-scoped authorization.
+- **Decision/evidence:** Run #67 / `41723138912`, exact SHA `0069157d24d6748cff69f162147b892242d9726f`, SUCCESS.
+- **Product path:** Unit 157 PASS; Product Auto E2E 39 PASS (1 warning); immutable source archive built, checksum verified, extracted and product E2E run against the extracted artifact (1 PASS).
+- **Artifact:** ID `13272918198`; uploaded ZIP digest `fa059d00b74fe7e884c98ca95dc9ec283dcb940ffaa0b3b6eec4c25761a299f6`.
+- **Boundary:** release-candidate artifact only. Dashboard→Core browser integration remains NOT RUN because Dashboard still uses a mock bridge. CD/staging/production remains NOT RUN; no target/approval/rollback evidence.
+- **Disposition:** Core product Auto E2E + immutable artifact E2E PASS; Dashboard integration BLOCKED; CD BLOCKED; NOT RELEASED.

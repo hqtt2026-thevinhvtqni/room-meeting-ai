@@ -163,7 +163,7 @@ jobs:
           BUNDLE="room-hop-${REVISION}.tar.gz"
           git archive --format=tar.gz --prefix="room-hop-${REVISION}/" "${REVISION}" > "dist/${BUNDLE}"
           cd dist
-          sha256sum "${BUNDLE}" > "${BUNDLE}.sha256"
+          sha256sum "${BUNDLE}" | tee "${BUNDLE}.sha256"
           sha256sum --check "${BUNDLE}.sha256"
           cd ..
 

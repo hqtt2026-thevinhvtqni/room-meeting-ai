@@ -296,3 +296,20 @@
 - **Artifacts:** Unit `13272412907`, SHA-256 `b80f706f8f91833ccdf69c0102b201957645c77ff346837c4cbdc0dc698f648b`; E2E `13272817780`, SHA-256 `ae028bf6c2a5c95247fd950ee70ad7a51e69c0801ff5cf2aad5dd9729b3140f3`.
 - **Branch comparison:** 65 ahead / 32 behind main; no merge/rebase/cherry-pick.
 - **Disposition:** Core product Auto E2E PASS; Dashboard→Core integration BLOCKED / NOT RUN; CD BLOCKED / NOT RUN; Work 32 ACTIVE — NOT RELEASED.
+
+
+## W32-LOG-20261104-08 — P0 — Immutable product artifact build and artifact-level E2E
+
+- **Document Number:** W32-LOG-20261104-08
+- **Priority order:** P0 — Product artifact provenance and executable verification
+- **Name:** Ka
+- **Title:** CSA / Architecture & Backend Owner (delegated)
+- **Date-Time:** 2026-11-04 04:36 UTC+07:00 (GitHub Actions completion 2026-11-03 21:36 UTC)
+- **Action:** Added a dependent GitHub Actions job that builds an immutable source archive from the exact triggering SHA only after Unit and Product Auto E2E gates pass.
+- **Build:** `git archive` generated `room-hop-0069157d24d6748cff69f162147b892242d9726f.tar.gz`; SHA-256 checksum generated and verified.
+- **Artifact execution:** archive extracted into a clean directory; dependencies installed; `pip check`; `compileall`; product E2E run against extracted artifact.
+- **Result:** 1 artifact-level product E2E passed in 1.76s.
+- **Actions run:** #67 / `41723138912` — SUCCESS; source SHA `0069157d24d6748cff69f162147b892242d9726f`.
+- **Release-candidate artifact:** ID `13272918198`; uploaded ZIP digest `fa059d00b74fe7e884c98ca95dc9ec283dcb940ffaa0b3b6eec4c25761a299f6`; 14-day retention.
+- **Other gates:** Unit 157 passed; Product Auto E2E 39 passed, 1 warning.
+- **Disposition:** immutable artifact build and artifact-level E2E PASS. No staging deployment, production release, main merge or branch rebase performed. Dashboard→Core integrated E2E remains BLOCKED / NOT RUN.

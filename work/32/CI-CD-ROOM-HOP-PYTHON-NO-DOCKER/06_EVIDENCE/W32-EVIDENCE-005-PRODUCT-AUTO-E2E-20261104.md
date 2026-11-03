@@ -89,3 +89,15 @@ The final evidence/documentation commit was independently rerun on its exact SHA
 - Unit artifact ID `13272412907`; SHA-256 `b80f706f8f91833ccdf69c0102b201957645c77ff346837c4cbdc0dc698f648b`.
 - E2E artifact ID `13272817780`; SHA-256 `ae028bf6c2a5c95247fd950ee70ad7a51e69c0801ff5cf2aad5dd9729b3140f3`.
 - Artifact retention: 14 days.
+
+
+## Artifact-level validation extension
+
+Run #67 adds a dependent product-artifact job after the Unit and Product Auto E2E gates. The exact source commit was archived, its SHA-256 checksum generated and verified, the archive extracted into a clean directory, dependencies installed and checked, packages compiled, and the complete product E2E rerun against the extracted artifact.
+
+- Source SHA: `0069157d24d6748cff69f162147b892242d9726f`.
+- Run #67: `41723138912` — SUCCESS.
+- Artifact-level product E2E: 1 passed in 1.76s.
+- Immutable release-candidate artifact ID `13272918198`; uploaded ZIP digest `fa059d00b74fe7e884c98ca95dc9ec283dcb940ffaa0b3b6eec4c25761a299f6`.
+- Separate unit and source E2E: 157 passed; 39 passed, 1 warning.
+- The release-candidate artifact is not deployed. CD remains BLOCKED / NOT RUN.
