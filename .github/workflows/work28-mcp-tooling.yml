@@ -1,4 +1,4 @@
-name: Work 28 MCP Tooling Tests
+name: Work 28 Automatic E2E Gate
 
 on:
   push:
@@ -7,6 +7,8 @@ on:
     paths:
       - "work/28/**"
       - "execution_host/**"
+      - "core/execution_authority/**"
+      - "room_hop_mcp/**"
       - "tests/**"
       - ".github/workflows/work28-mcp-tooling.yml"
   pull_request:
@@ -137,3 +139,70 @@ jobs:
           Get-Content lifecycle-output.txt -Tail 80 -ErrorAction SilentlyContinue | Out-File -Append $env:GITHUB_STEP_SUMMARY
           Get-Content lifecycle-wp23-schema.txt -Tail 80 -ErrorAction SilentlyContinue | Out-File -Append $env:GITHUB_STEP_SUMMARY
         shell: pwsh
+
+  automatic-e2e-gate-report:
+    if: always()
+    needs:
+      - unit-regression-tests
+      - execution-host-lifecycle-linux
+      - execution-host-lifecycle-windows
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Calculate evidence-backed Auto E2E gate state
+        env:
+          UNIT_RESULT: ${{ needs.unit-regression-tests.result }}
+          LINUX_RESULT: ${{ needs.execution-host-lifecycle-linux.result }}
+          WINDOWS_RESULT: ${{ needs.execution-host-lifecycle-windows.result }}
+          SOURCE_COMMIT: ${{ github.sha }}
+          WORKFLOW_RUN_ID: ${{ github.run_id }}
+        run: |
+          python - <<'PY'
+          import json, os
+          jobs = {
+              "unit_regression": os.environ["UNIT_RESULT"],
+              "execution_host_linux": os.environ["LINUX_RESULT"],
+              "execution_host_windows": os.environ["WINDOWS_RESULT"],
+          }
+          ci_ok = all(value == "success" for value in jobs.values())
+          report = {
+              "schema_version": 1,
+              "workflow": "work28-auto-e2e",
+              "workflow_run_id": os.environ["WORKFLOW_RUN_ID"],
+              "source_commit": os.environ["SOURCE_COMMIT"],
+              "ci_preconditions": "PASS" if ci_ok else "FAIL",
+              "jobs": jobs,
+              "deployed_mcp_core_runtime_e2e": "BLOCKED",
+              "blockers": [
+                  "No verified live MCP 8030 build/process identity and tools/list parity artifact is wired to this workflow.",
+                  "No trusted deployed Core principal/WorkContext authorization evidence is available to this runner.",
+                  "No approved canonical Runtime MCP and Execution Host deployment/isolation attestation is wired to this workflow.",
+                  "No complete deployed request-to-protected-evidence readback chain is available; local CI and mocks cannot substitute."
+              ],
+              "overall_status": "BLOCKED" if ci_ok else "FAIL",
+              "execution_gate": "CLOSED",
+              "release_status": "NOT_RELEASED",
+              "note": "A green CI result is not live deployed MCP-to-Core-to-Runtime E2E acceptance."
+          }
+          with open("work28-auto-e2e-report.json", "w", encoding="utf-8", newline="\n") as f:
+              json.dump(report, f, indent=2, sort_keys=True)
+              f.write("\n")
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as f:
+              f.write("# Work 28 Automatic E2E Gate\n\n")
+              f.write(f"- Source commit: `{report['source_commit']}`\n")
+              f.write(f"- CI preconditions: **{report['ci_preconditions']}**\n")
+              for name, result in jobs.items():
+                  f.write(f"- {name}: **{result}**\n")
+              f.write("- Deployed MCP → Core → Runtime E2E: **BLOCKED**\n")
+              f.write("- Execution Gate: **CLOSED**\n")
+              f.write("- Release: **NOT RELEASED**\n\n")
+              f.write("## Blockers\n")
+              for item in report["blockers"]:
+                  f.write(f"- {item}\n")
+          PY
+      - name: Upload machine-readable Auto E2E report
+        uses: actions/upload-artifact@v4
+        with:
+          name: work28-auto-e2e-report-${{ github.run_id }}
+          path: work28-auto-e2e-report.json
+          if-no-files-found: error
+          retention-days: 30
