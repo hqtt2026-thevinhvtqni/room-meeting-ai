@@ -38,7 +38,7 @@ def evaluate_e2e_evidence(
     required_strings = (
         "source_commit", "mcp_build_identity", "mcp_process_identity",
         "mcp_tools_list_sha256", "core_build_identity", "principal_ref",
-        "core_authorization_ref", "attestation_key_id", "work_id", "capability",
+        "core_authorization_ref", "attestation_key_id", "work_id", "capability", "entry_path",
         "snapshot_ref", "expected_source_sha256", "snapshot_sha256", "source_sha256",
         "runtime_identity", "approved_runtime_identity", "isolation_profile",
         "execution_host_identity", "request_id", "run_id", "evidence_ref",
@@ -77,6 +77,10 @@ def evaluate_e2e_evidence(
         failed.append("core_work_id_not_canonical")
     if record.get("authorization_decision") != "ALLOW":
         return {"status": "DENIED", "blockers": ["core_authorization_not_allow"], "failed_checks": failed}
+    if record.get("path_containment_verified") is not True:
+        blockers.append("work_path_containment_not_verified")
+    if record.get("symlink_rejection_verified") is not True:
+        blockers.append("symlink_rejection_not_verified")
     if record.get("snapshot_immutable") is not True:
         blockers.append("immutable_snapshot_not_attested")
     if not (record["expected_source_sha256"] == record["snapshot_sha256"] == record["source_sha256"]):
