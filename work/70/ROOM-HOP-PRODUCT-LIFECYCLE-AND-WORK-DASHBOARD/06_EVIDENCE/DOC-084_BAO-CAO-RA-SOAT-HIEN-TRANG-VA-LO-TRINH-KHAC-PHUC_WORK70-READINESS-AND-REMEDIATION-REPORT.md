@@ -119,3 +119,14 @@ Compared all 15 files returned by the current `main...work/70/05-build` GitHub c
 - **Mismatch 2 — `00_ROOT/DOC-054_LENH-PHAN-CONG-SONG-SONG-WORK-70.md`:** Sandbox contains an evidence-based assignment status update for Ka/Co/Vi/Qw/An dated 2026-11-02; GitHub branch copy ends before that addendum. This changes ACK/deliverable/authorization interpretation; neither version was overwritten in this audit.
 
 **Disposition:** 13/15 parity is verified for the listed sample only. The two mismatches are OPEN reconciliation items. Do not declare the whole branch synchronized. The branch remains DIVERGED from main (42 ahead / 483 behind); no merge/rebase/cherry-pick/force push performed.
+
+
+## 10. Addendum — remediation of the two 05_BUILD parity mismatches (2026-11-03)
+
+The two mismatches identified in §9 have now been reconciled without merging or rebasing the branch:
+1. `BUILD_MAPPING_REGISTER.md`: copied the more recent GitHub `work/70/05-build` version into the canonical Sandbox path. The GitHub version classifies the legacy Build Register/JSON/schema as legacy/reconciliation-required and marks proposed Work-level targets as draft/not approved.
+2. `DOC-054_LENH-PHAN-CONG-SONG-SONG-WORK-70.md`: synchronized the Sandbox evidence-based assignment status addendum to GitHub branch `work/70/05-build`, preserving the branch's existing content and adding the recorded evidence table.
+
+Exact readback now confirms both files match byte-for-byte. Combined with the 13/15 exact matches from §9, the **15 files returned by the current branch compare are now 15/15 exact between GitHub `work/70/05-build` and canonical Sandbox 05_BUILD paths**.
+
+Updated branch comparison: DIVERGED, ahead 43 / behind 483; merge base remains `fc6a19888765d174aea9aea839620338ac9f71e8`; main HEAD `9e4002cbd93a6b92684b17623d79a1adda161d37`. This parity result applies only to those 15 branch-only files; it does not make the branch safe to merge. No merge/rebase/cherry-pick/force push was performed.
