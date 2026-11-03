@@ -331,3 +331,21 @@
 - **Artifact bundle:** ID `13271449355`; upload ZIP digest `9a688cc80b97e428a2d1b9c39a3c4bc97aa854e7b0715b64e8a7d39aa98c6062`.
 - **Branch compare:** 68 ahead / 32 behind main; no merge/rebase/cherry-pick.
 - **Disposition:** Core product Auto E2E + immutable artifact E2E PASS; Dashboard→Core integration BLOCKED / NOT RUN; CD BLOCKED / NOT RUN; NOT RELEASED.
+
+
+## W32-LOG-20261104-10 — P0 — Final branch exact-SHA product pipeline verification
+
+- **Document Number:** W32-LOG-20261104-10
+- **Priority order:** P0 — Final source, product E2E and artifact provenance
+- **Name:** Ka
+- **Title:** CSA / Architecture & Backend Owner (delegated)
+- **Date-Time:** 2026-11-04 04:43 UTC+07:00 (GitHub Actions completion 2026-11-03 21:43 UTC)
+- **Exact branch SHA:** `4a931a351432a1ce6a06b84f05ed6fa3c788a1eb`.
+- **Actions run:** #70 / `41724182414` — SUCCESS.
+- **Unit:** 157 passed in 1.90s.
+- **Product Auto E2E:** 39 passed, 1 warning in 2.74s.
+- **Artifact E2E:** 1 passed in 2.52s against extracted source archive.
+- **Archive:** `room-hop-4a931a351432a1ce6a06b84f05ed6fa3c788a1eb.tar.gz`; SHA-256 `0b14943b1a85201fa0dc02ba0f823b5fa15440ed0935d7da5a020aa29c3861a2`.
+- **Product artifact:** ID `13272004526`; uploaded ZIP digest `24221ef509286698cc73ce3edbe0fd20650cbf5cdd89745e86b3f728996f4d21`.
+- **Branch compare:** 70 ahead / 32 behind main; no merge/rebase/cherry-pick.
+- **Disposition:** Core product Auto E2E + immutable artifact E2E PASS; Dashboard→Core integration BLOCKED / NOT RUN; CD BLOCKED / NOT RUN; NOT RELEASED.
