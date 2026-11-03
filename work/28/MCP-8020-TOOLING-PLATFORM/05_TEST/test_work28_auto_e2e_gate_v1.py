@@ -24,6 +24,9 @@ def valid_record():
         "attestation_key_id": TEST_KEY_ID,
         "work_id": "W28",
         "capability": "execution.run_tests",
+        "entry_path": "04_CODE/smoke.py",
+        "path_containment_verified": True,
+        "symlink_rejection_verified": True,
         "authorization_decision": "ALLOW",
         "snapshot_ref": "snapshot://run-1",
         "snapshot_immutable": True,
@@ -77,6 +80,17 @@ class Work28AutoE2EGateTests(unittest.TestCase):
         record = valid_record()
         record["authorization_decision"] = "DENY"
         self.assertEqual(evaluate(record)["status"], "DENIED")
+
+
+    def test_path_containment_missing_blocks(self):
+        record = valid_record()
+        record["path_containment_verified"] = False
+        self.assertEqual(evaluate(record)["status"], "BLOCKED")
+
+    def test_symlink_rejection_missing_blocks(self):
+        record = valid_record()
+        record["symlink_rejection_verified"] = False
+        self.assertEqual(evaluate(record)["status"], "BLOCKED")
 
     def test_unattested_isolation_blocks(self):
         record = valid_record()
