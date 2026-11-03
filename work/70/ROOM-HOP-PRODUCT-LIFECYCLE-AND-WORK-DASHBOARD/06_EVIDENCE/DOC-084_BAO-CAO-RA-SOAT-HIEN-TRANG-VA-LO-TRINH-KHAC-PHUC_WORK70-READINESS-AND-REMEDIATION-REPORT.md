@@ -95,3 +95,17 @@ After the initial writes, exact-path `sandbox_read_probe` returned `status=ok` f
 - `00_ROOT/DOC-035_...`: readiness-audit journal entry present.
 
 **Verification result:** PASS — exact-path readback and targeted content assertions for these four Sandbox artifacts only. This does not establish GitHub parity, full schema validation, browser/runtime behavior, independent QE, or product acceptance.
+
+
+## 8. Addendum — GitHub documentation PR synchronization (2026-11-03)
+
+The four Sandbox artifacts were synchronized to a short-lived documentation PR branch created from the current `main` baseline, without touching `main`:
+- `00_ROOT/DOC-035_NHAT-KY-THI-CONG_WORK-EXECUTION-LOG.md`
+- `00_ROOT/DOC-055_SO-DANG-KY-TAI-LIEU_WORK-70-DOCUMENT-REGISTER.md`
+- `DASHBOARD/PRODUCT_STATUS.json`
+- `06_EVIDENCE/DOC-084_BAO-CAO-RA-SOAT-HIEN-TRANG-VA-LO-TRINH-KHAC-PHUC_WORK70-READINESS-AND-REMEDIATION-REPORT.md`
+
+Branch: `work/70/docs-readiness-20261103`, based on main `9e4002cbd93a6b92684b17623d79a1adda161d37`.
+PR: [#37 — Work 70: readiness audit and dashboard freshness correction](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/37).
+GitHub readback on the PR branch confirmed all four target files and their expected markers. Compare reports branch `ahead 4 / behind 0`; PR state OPEN, DRAFT, `mergeable=true`, `mergeable_state=clean`, 4 changed files.
+No merge was performed. PR review and merge remain pending; GitHub main is unchanged by this PR.
