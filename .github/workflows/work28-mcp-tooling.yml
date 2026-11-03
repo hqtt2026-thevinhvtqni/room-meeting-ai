@@ -105,18 +105,31 @@ jobs:
           PYTHONPATH: .
         run: |
           python -m unittest discover -s tests -p 'test_process_job.py' -v 2>&1 | Tee-Object -FilePath lifecycle-output.txt
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -m pytest tests/test_process_job_suspended_spawn.py -q 2>&1 | Tee-Object -FilePath lifecycle-wp2-suspended-spawn.txt
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -m unittest discover -s tests -p 'test_work28_contract.py' -v 2>&1 | Tee-Object -FilePath lifecycle-output-wp14.txt
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -m unittest discover -s tests -p 'test_execution_host_auth.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp15-auth.txt
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -m unittest discover -s tests -p 'test_work28_grant.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp15-grant.txt
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -m unittest discover -s tests -p 'test_work28_dispatch.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp16-dispatch.txt
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -m unittest discover -s tests -p 'test_work28_evidence.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp18-evidence.txt
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -m unittest discover -s tests -p 'test_work28_readback.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp19-readback.txt
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -m unittest discover -s tests -p 'test_work28_bounds.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp20-bounds.txt
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -m unittest discover -s tests -p 'test_work28_audit_readiness.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp21-audit.txt
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -m unittest discover -s tests -p 'test_work28_http_limits.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp22-limits.txt
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -m unittest discover -s tests -p 'test_work28_http_schema.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp23-schema.txt
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -m unittest discover -s tests -p 'test_process_job_gate.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp2-gate.txt
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
         shell: pwsh
       - name: Surface lifecycle failure details (Windows)
         if: failure()
