@@ -50,7 +50,7 @@ jobs:
       - name: Run bounded deterministic pilot tests
         run: |
           mkdir -p test-results
-          python -m pytest -q tests/test_agent_registry.py tests/test_connectors.py tests/test_context_loader.py tests/test_discussion.py tests/test_e2e.py tests/test_meeting.py --junitxml=test-results/junit.xml
+          python -m pytest -q tests/test_agent_registry.py tests/test_connectors.py tests/test_context_loader.py tests/test_discussion.py tests/test_e2e.py tests/test_meeting.py tests/test_execution_host.py tests/test_file_ops_agent.py tests/test_governance.py tests/test_identity.py tests/test_importer.py tests/test_intent_router.py tests/test_llama_intent_router.py tests/test_meeting_lifecycle_v021.py tests/test_meeting_manager_allocator.py tests/test_meeting_service.py tests/test_message_v1.py tests/test_secretary.py tests/test_secretary_acceptance_abc.py tests/test_secretary_meeting_acceptance.py tests/test_wee_8031_bridge.py --junitxml=test-results/junit.xml
 
       - name: Retain test evidence
         if: always()
