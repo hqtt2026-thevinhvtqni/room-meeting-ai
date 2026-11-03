@@ -42,3 +42,13 @@ Candidate tests only (not yet executed against current HEAD): tests/test_agent_r
 ## Current disposition
 
 Architecture decision: DECIDED. CI: DRAFT / NOT ACTIVATED. Current-main baseline: NOT RUN. CD/VPS: NOT RUN. Production release: NOT AUTHORIZED.
+
+
+## Implementation addendum — 2026-11-04
+
+- The CI-first architecture has been implemented on `work/32-ci-cd-python-ci-v2`.
+- Vinh explicitly authorized branch-scoped CI implementation and push for Work 32 on 2026-11-04; this does not authorize main merge, production deployment, or secrets changes.
+- Exact-SHA code validation: commit `fa625d1d7b99f5b326c0ff87641e6c3344d2dd73`, Actions run `41719444619` SUCCESS; unit 157 passed; Auto E2E 38 passed, 1 warning.
+- GitHub Actions dependencies are pinned to audited commit SHAs. Workflow permissions remain `contents: read`.
+- Current branch is still diverged from main (52 ahead / 31 behind at the last recorded comparison); no merge/rebase/cherry-pick has been performed.
+- CD remains NOT RUN / BLOCKED pending an attested staging target and deployment safety controls. Production remains NOT AUTHORIZED.
