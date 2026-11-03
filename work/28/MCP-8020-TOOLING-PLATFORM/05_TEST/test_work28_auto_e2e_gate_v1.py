@@ -14,11 +14,14 @@ def valid_record():
         "mcp_tools_list_sha256": "b" * 64,
         "core_build_identity": "core-build-1",
         "principal_ref": "service:mcp8030",
+        "core_authorization_ref": "core-authz://req-1",
         "work_id": "W28",
         "capability": "execution.run_tests",
         "authorization_decision": "ALLOW",
         "snapshot_ref": "snapshot://run-1",
         "snapshot_immutable": True,
+        "expected_source_sha256": "c" * 64,
+        "snapshot_sha256": "c" * 64,
         "source_sha256": "c" * 64,
         "runtime_identity": "runtime-w13-build-1",
         "approved_runtime_identity": "runtime-w13-build-1",
@@ -33,7 +36,9 @@ def valid_record():
         "test_summary": {"total": 12, "failures": 0, "errors": 0},
         "evidence_ref": "protected-evidence://run-1",
         "evidence_sha256": "d" * 64,
+        "evidence_protected": True,
         "readback_ref": "protected-evidence://run-1",
+        "readback_verified": True,
         "readback_sha256": "d" * 64,
         # Deliberately ignored: status text cannot grant PASS.
         "reported_status": "PASS",
@@ -83,6 +88,22 @@ class Work28AutoE2EGateTests(unittest.TestCase):
         record = valid_record()
         record["grant_token"] = "must-not-be-recorded"
         self.assertEqual(evaluate_e2e_evidence(record)["status"], "FAIL")
+
+
+    def test_snapshot_hash_mismatch_fails(self):
+        record = valid_record()
+        record["snapshot_sha256"] = "e" * 64
+        self.assertEqual(evaluate_e2e_evidence(record)["status"], "FAIL")
+
+    def test_unprotected_evidence_blocks(self):
+        record = valid_record()
+        record["evidence_protected"] = False
+        self.assertEqual(evaluate_e2e_evidence(record)["status"], "BLOCKED")
+
+    def test_unverified_readback_blocks(self):
+        record = valid_record()
+        record["readback_verified"] = False
+        self.assertEqual(evaluate_e2e_evidence(record)["status"], "BLOCKED")
 
     def test_missing_cleanup_blocks(self):
         record = valid_record()
