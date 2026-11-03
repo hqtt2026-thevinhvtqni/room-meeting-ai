@@ -109,3 +109,13 @@ Branch: `work/70/docs-readiness-20261103`, based on main `9e4002cbd93a6b92684b17
 PR: [#37 — Work 70: readiness audit and dashboard freshness correction](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/37).
 GitHub readback on the PR branch confirmed all four target files and their expected markers. Compare reports branch `ahead 4 / behind 0`; PR state OPEN, DRAFT, `mergeable=true`, `mergeable_state=clean`, 4 changed files.
 No merge was performed. PR review and merge remain pending; GitHub main is unchanged by this PR.
+
+
+## 9. Addendum — 05_BUILD branch-to-Sandbox parity sample (2026-11-03)
+
+Compared all 15 files returned by the current `main...work/70/05-build` GitHub compare result against their matching canonical Work 70 Sandbox paths:
+- **13/15 exact content matches.**
+- **Mismatch 1 — `00_ROOT/BUILD_MAPPING_REGISTER.md`:** GitHub branch contains five additional lines that classify the legacy Build Register/JSON/schema as LEGACY SOURCE / RECONCILIATION REQUIRED and identify the Work-level register/schema as DRAFT_NOT_APPROVED. Sandbox has an older CANONICAL CANDIDATE classification. This is a substantive governance difference; neither version was overwritten in this audit.
+- **Mismatch 2 — `00_ROOT/DOC-054_LENH-PHAN-CONG-SONG-SONG-WORK-70.md`:** Sandbox contains an evidence-based assignment status update for Ka/Co/Vi/Qw/An dated 2026-11-02; GitHub branch copy ends before that addendum. This changes ACK/deliverable/authorization interpretation; neither version was overwritten in this audit.
+
+**Disposition:** 13/15 parity is verified for the listed sample only. The two mismatches are OPEN reconciliation items. Do not declare the whole branch synchronized. The branch remains DIVERGED from main (42 ahead / 483 behind); no merge/rebase/cherry-pick/force push performed.
