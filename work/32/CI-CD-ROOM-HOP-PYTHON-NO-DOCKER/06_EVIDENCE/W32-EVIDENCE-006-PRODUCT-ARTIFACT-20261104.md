@@ -44,3 +44,18 @@
 - No main merge, rebase, cherry-pick, secrets mutation or production deployment.
 
 **Status:** Core product CI + Auto E2E + immutable artifact verification PASS; Dashboard integration and CD remain BLOCKED; NOT RELEASED.
+
+
+## Final exact-SHA artifact pipeline validation — PASS
+
+- Final branch SHA: `e451764d4bc900a98f4d0b2d00a1e863ea86b22c`.
+- GitHub Actions run #68: `41723597131` — SUCCESS on exact SHA.
+- Unit: 157 passed in 2.68s.
+- Product Auto E2E: 39 passed, 1 warning in 3.94s.
+- Immutable artifact job: archive built, SHA-256 generated and verified, extracted to clean directory, dependencies installed, `pip check`, `compileall`, artifact-level product E2E: 1 passed in 2.15s.
+- Product source archive SHA-256: `76d77939c43b33727a534cbccd06e4240eb106458659b9186f9fb125ca59f0ae`.
+- Archive: `room-hop-e451764d4bc900a98f4d0b2d00a1e863ea86b22c.tar.gz`.
+- Product artifact ID: `13271449355`; uploaded ZIP SHA-256: `9a688cc80b97e428a2d1b9c39a3c4bc97aa854e7b0715b64e8a7d39aa98c6062`.
+- Unit artifact ID `13271834116`; ZIP digest `ace199d3ba5a5993933397ab711820a864f18849b7f206bd0fd7544b05cfe520`.
+- Product E2E artifact ID `13273572459`; ZIP digest `ef3e55a390d5534c9325cbd88163eb3fb87679528428cf782c900bd46fe2f7fa`.
+- Retention: 14 days.

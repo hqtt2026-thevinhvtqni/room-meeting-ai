@@ -31,7 +31,7 @@ No Docker requirement; no live-service or MAIN SOURCE changes; no auto-merge or 
 - Python 3.12 bounded unit gate: 157 passed.
 - Product Auto E2E gate: 39 passed, 1 warning; includes one complete live HTTP → MCP stdio → persistent transcript → HTTP close → MCP readback journey. Immutable source artifact was extracted and re-tested: 1 product E2E passed.
 - Artifact evidence and SHA-256 digests: `06_EVIDENCE/W32-EVIDENCE-004-MCP-CONTRACT-STDIO-E2E-20261104.md`.
-- Main HEAD observed: `4d2788158b08a48c39abf3d9c74c57314eea3ff4`; branch comparison: 66 ahead / 32 behind; merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`.
+- Main HEAD observed: `4d2788158b08a48c39abf3d9c74c57314eea3ff4`; branch comparison: 68 ahead / 32 behind; merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`.
 - No merge/rebase/cherry-pick; main unchanged.
 - CD / deployment remains BLOCKED until a real staging target, ownership, approved credentials/environment, health check, and tested rollback are evidenced.
 - Release status: ACTIVE — NOT RELEASED.
@@ -52,3 +52,20 @@ No Docker requirement; no live-service or MAIN SOURCE changes; no auto-merge or 
 - Extracted archive; installed declared dependencies; `pip check`; `compileall`; product E2E against extracted artifact: 1 passed in 1.76s.
 - Release-candidate artifact bundle ID `13272918198`, uploaded ZIP digest `fa059d00b74fe7e884c98ca95dc9ec283dcb940ffaa0b3b6eec4c25761a299f6`, 14-day retention.
 - This is a CI release-candidate artifact only, not a deployed release.
+
+
+## Final exact-SHA artifact pipeline validation — PASS
+
+- Final branch SHA: `e451764d4bc900a98f4d0b2d00a1e863ea86b22c`.
+- GitHub Actions run #68: `41723597131` — SUCCESS on exact SHA.
+- Unit: 157 passed in 2.68s.
+- Product Auto E2E: 39 passed, 1 warning in 3.94s.
+- Immutable artifact job: archive built, SHA-256 generated and verified, extracted to clean directory, dependencies installed, `pip check`, `compileall`, artifact-level product E2E: 1 passed in 2.15s.
+- Product source archive SHA-256: `76d77939c43b33727a534cbccd06e4240eb106458659b9186f9fb125ca59f0ae`.
+- Archive: `room-hop-e451764d4bc900a98f4d0b2d00a1e863ea86b22c.tar.gz`.
+- Product artifact ID: `13271449355`; uploaded ZIP SHA-256: `9a688cc80b97e428a2d1b9c39a3c4bc97aa854e7b0715b64e8a7d39aa98c6062`.
+- Unit artifact ID `13271834116`; ZIP digest `ace199d3ba5a5993933397ab711820a864f18849b7f206bd0fd7544b05cfe520`.
+- Product E2E artifact ID `13273572459`; ZIP digest `ef3e55a390d5534c9325cbd88163eb3fb87679528428cf782c900bd46fe2f7fa`.
+- Retention: 14 days.
+
+- Main HEAD: `157e88e2cd821a0b53bdcabd6483956e6bc2074a`; merge base: `9e4002cbd93a6b92684b17623d79a1adda161d37`. No merge/rebase/cherry-pick.

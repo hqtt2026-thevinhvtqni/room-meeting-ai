@@ -60,13 +60,13 @@ Exit: BLOCKED / NOT RUN. No staging host, deployment credentials, protected envi
 
 - Repository: `hqtt2026-thevinhvtqni/room-meeting-ai`
 - Branch: `work/32-ci-cd-python-ci-v2`
-- Validated SHA: `ecb263a2d53786e71bdca8eed336b303506c06b4`
-- Actions run: `41722744353` (run #65, SUCCESS)
+- Validated SHA: `e451764d4bc900a98f4d0b2d00a1e863ea86b22c`
+- Actions run: `41723597131` (run #68, SUCCESS)
 - Unit: 157 passed.
 - Product Auto E2E: 39 passed, 1 warning.
-- Unit artifact: `13272412907`; SHA-256 `b80f706f8f91833ccdf69c0102b201957645c77ff346837c4cbdc0dc698f648b`.
-- E2E artifact: `13272817780`; SHA-256 `ae028bf6c2a5c95247fd950ee70ad7a51e69c0801ff5cf2aad5dd9729b3140f3`.
-- Main HEAD observed: `4d2788158b08a48c39abf3d9c74c57314eea3ff4`; branch compare: 66 ahead / 32 behind; merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`.
+- Unit artifact: `13271834116`; SHA-256 `ace199d3ba5a5993933397ab711820a864f18849b7f206bd0fd7544b05cfe520`.
+- E2E artifact: `13273572459`; SHA-256 `ef3e55a390d5534c9325cbd88163eb3fb87679528428cf782c900bd46fe2f7fa`.
+- Main HEAD observed: `4d2788158b08a48c39abf3d9c74c57314eea3ff4`; branch compare: 68 ahead / 32 behind; merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`.
 - No main merge, rebase, cherry-pick, production deployment or secrets mutation.
 
 ## Overall
@@ -89,3 +89,20 @@ The Core product E2E is PASS for the exact scope in W32-EVIDENCE-005. The separa
 - Workflow run #67: `41723138912` — SUCCESS (unit 157; Product Auto E2E 39; artifact-level E2E 1 passed).
 - Immutable release-candidate artifact: `13272918198`, ZIP digest `fa059d00b74fe7e884c98ca95dc9ec283dcb940ffaa0b3b6eec4c25761a299f6`.
 - Full artifact evidence: `06_EVIDENCE/W32-EVIDENCE-006-PRODUCT-ARTIFACT-20261104.md`.
+
+
+## Final exact-SHA artifact pipeline validation — PASS
+
+- Final branch SHA: `e451764d4bc900a98f4d0b2d00a1e863ea86b22c`.
+- GitHub Actions run #68: `41723597131` — SUCCESS on exact SHA.
+- Unit: 157 passed in 2.68s.
+- Product Auto E2E: 39 passed, 1 warning in 3.94s.
+- Immutable artifact job: archive built, SHA-256 generated and verified, extracted to clean directory, dependencies installed, `pip check`, `compileall`, artifact-level product E2E: 1 passed in 2.15s.
+- Product source archive SHA-256: `76d77939c43b33727a534cbccd06e4240eb106458659b9186f9fb125ca59f0ae`.
+- Archive: `room-hop-e451764d4bc900a98f4d0b2d00a1e863ea86b22c.tar.gz`.
+- Product artifact ID: `13271449355`; uploaded ZIP SHA-256: `9a688cc80b97e428a2d1b9c39a3c4bc97aa854e7b0715b64e8a7d39aa98c6062`.
+- Unit artifact ID `13271834116`; ZIP digest `ace199d3ba5a5993933397ab711820a864f18849b7f206bd0fd7544b05cfe520`.
+- Product E2E artifact ID `13273572459`; ZIP digest `ef3e55a390d5534c9325cbd88163eb3fb87679528428cf782c900bd46fe2f7fa`.
+- Retention: 14 days.
+
+- Product artifact ID `13271449355`; archive SHA-256 `76d77939c43b33727a534cbccd06e4240eb106458659b9186f9fb125ca59f0ae`; upload bundle digest `9a688cc80b97e428a2d1b9c39a3c4bc97aa854e7b0715b64e8a7d39aa98c6062`.
