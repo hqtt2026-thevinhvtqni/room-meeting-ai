@@ -74,3 +74,76 @@ Each entry must include date, task/decision ID, READ/TRACE evidence, action, cha
 - **Scope:** the repository's currently configured Work 28 unit/regression and lifecycle suites on the exact commit above.
 - **Interpretation:** this confirms the current configured CI suites pass on Linux and Windows. It does not prove live MCP 8030 provenance, new Runtime MCP deployment, Core E2E, pre-execution Windows containment, OS sandbox isolation, independent Ka review, or release acceptance.
 - **Work status:** ACTIVE / INTEGRATION BLOCKED / NOT RELEASED. Execution Gate CLOSED.
+
+
+## 2026-11-03 — JRN-W28-004 — Formal work assignments through the canonical journal
+
+**Assignment authority:** Vinh's delegation to Xu.  
+**Assignment channel:** This canonical Work 28 journal on GitHub.  
+**Scope:** Master Execution Plan V2.0, WP0–WP7.  
+**Team limit:** Xu, Vi, Ka and An only. Co is excluded.
+
+### ASSIGNMENT W28-VI-001 — Implementation and integration lead
+**Owner:** Vi  
+**Status:** ASSIGNED — acknowledgement / execution evidence PENDING  
+**Priority:** P0 — start with current branch HEAD; no waiting for PC access.
+
+**Mission:** Execute the approved Work 28 plan end-to-end, WP0 through WP7, within the architecture and safety constraints.
+
+**First deliverables:**
+1. Reconcile current branch HEAD and inspect the full source/test/workflow surface; publish an evidence-based WP0 inventory with exact paths and commit.
+2. Trace all process creation paths and fix WP2 so Windows Job Object containment is established before untrusted code can execute; POSIX process-group containment must also be verified.
+3. Implement in reviewable commits with focused tests and CI evidence. Do not change unrelated scope.
+4. Continue WP1, WP3, WP4, WP5 and WP6 according to the master plan; identify true dependencies and do not represent mocks as live integration.
+5. Deliver an integrated release-candidate handoff for WP7, including changed paths, commits, commands, test output, known risks and rollback notes.
+
+**Acceptance:** Each package has code-level evidence, reproducible tests and a handoff to Ka and An. No unsupported PASS. Do not touch the historical MCP :8020 listener.
+
+### ASSIGNMENT W28-KA-001 — Independent architecture and security review
+**Owner:** Ka  
+**Status:** ASSIGNED — acknowledgement / review evidence PENDING  
+**Independence:** Review Vi's actual branch diffs and evidence; do not approve based only on descriptions.
+
+**Mission:**
+1. Independently review the Work 28 architecture and identify conflicts with Core :8000 authority, MCP :8030 Build/Verification, clean Runtime MCP rebuild and Execution Host :8031.
+2. Review WP2 process lifecycle, especially proof that Windows containment exists before command execution and fail-closed behavior on every failure path.
+3. Review WP1 registry/contracts, WP3 provenance and sandbox boundaries, WP4 runtime identity, WP5 authorization boundaries, and WP6 audit/evidence controls as their implementation becomes available.
+4. Record findings by severity with exact file/line or commit evidence, exploit/failure scenario, required remediation and retest criteria.
+5. Issue a final independent architecture/security assessment before release recommendation.
+
+**Acceptance:** Review report references exact commit SHAs and test evidence; unresolved critical/high findings remain explicit blockers. Do not interact with historical MCP :8020.
+
+### ASSIGNMENT W28-AN-001 — Independent QA and verification
+**Owner:** An  
+**Status:** ASSIGNED — acknowledgement / execution evidence PENDING  
+**Independence:** Reproduce results independently; developer test claims are not QA evidence.
+
+**Mission:**
+1. Establish the test baseline for the current branch and record exact workflow/run IDs and commit SHAs.
+2. Independently run/reproduce unit and regression tests on Linux and Windows CI.
+3. Build adversarial/failure-injection coverage for WP2: process spawn failure, Job Object creation/assignment failure, child-process escape, timeout, cancellation, cleanup failure and concurrent jobs.
+4. Verify WP1 schema/registry parity and invalid-input behavior; WP3 runtime tools/list and safe I/O evidence; WP4 authorization denial and service identity; WP5 Core authorization and cross-Work isolation; WP6 evidence correlation and redaction.
+5. Run end-to-end acceptance tests only against approved, identified services. Never test the quarantined historical MCP :8020 listener.
+
+**Acceptance:** QA report lists exact commit, environment, command, result, logs/artifacts and untested areas. Separate unit, integration, live E2E and security claims.
+
+### COORDINATION W28-XU-001 — End-to-end coordination and acceptance control
+**Owner:** Xu  
+**Status:** ACTIVE
+
+- Maintain the master plan, canonical minutes, this journal and document register.
+- Resolve implementation decisions within the delegated scope; keep the four-AI limit.
+- Review Vi handoffs, obtain Ka's independent review and An's independent verification, reconcile findings and assign bounded remediation.
+- Keep the release gate CLOSED until all required acceptance evidence exists.
+- Report only material blockers or verified milestones to Vinh; do not ask for routine step-by-step approvals.
+
+### Dispatch and acknowledgement rule
+
+This entry is the formal assignment record under the agreed journal-based workflow. GitHub persistence confirms the tasks are recorded and available in the canonical Work 28 location. It does **not** prove that Vi, Ka or An have opened, acknowledged or started them. Each owner must create an acknowledgement/execution artifact referencing the assignment ID. Until that evidence appears, the assignment state remains **ASSIGNED — ACKNOWLEDGEMENT PENDING**.
+
+### Immediate execution order
+
+1. Vi: W28-VI-001 / WP0 inventory and WP2 containment fix.
+2. An: W28-AN-001 / independent baseline and native Linux/Windows test plan, in parallel.
+3. Ka: W28-KA-001 / architecture and WP2 security review against current source, then review Vi's patch.
+4. Xu: coordinate integration, record evidence and resolve blockers across all packages.
