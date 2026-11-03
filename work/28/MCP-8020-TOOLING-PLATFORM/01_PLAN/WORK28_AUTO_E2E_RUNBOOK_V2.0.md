@@ -116,6 +116,7 @@ For every completed implementation/evidence slice:
 - HMAC-hardened unit/regression discovery: **344 tests, OK**, including 16 Auto E2E evidence-gate cases (signed valid evidence, missing key, tampering, wrong key ID, authorization denial, snapshot/hash mismatch, zero tests, nonzero exit, runtime mismatch, secret leakage, missing isolation/cleanup, protected evidence and readback checks).
 - HMAC-hardened Linux suspended-spawn: **13 passed, 4 skipped** (native-Windows-only cases); Windows suspended-spawn: **17 passed**.
 - Machine report artifact: `work28-auto-e2e-report-41723033942`, artifact ID `13271878443`.
+- Latest hardening run after path/symlink checks and recursive secret rejection: `41723678492` on commit `a8c7ead911ef88334942175c3c8cd7c1df78c662`; all four jobs SUCCESS; **347 unit/regression tests, OK** (19 Auto E2E gate cases); Linux suspended-spawn 13 passed / 4 skipped; Windows suspended-spawn 17 passed; report artifact ID `13272063957`.
 - Report correctly keeps deployed MCP → Core → Runtime E2E **BLOCKED**, Execution Gate **CLOSED**, Release **NOT RELEASED**.
 - Windows/Linux job logs include a post-checkout cleanup warning about `.gitmodules` (`No url found for submodule path 'room-meeting-ai'`); it did not change job conclusions, but remains a repository maintenance item.
 
