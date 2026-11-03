@@ -22,18 +22,35 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: work28-auto-e2e-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   unit-regression-tests:
     runs-on: ubuntu-24.04
+    timeout-minutes: 20
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
+      - name: Fetch exact triggering revision without submodule recursion
+        env:
+          REPOSITORY: ${{ github.repository }}
+          REVISION: ${{ github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${REPOSITORY}.git"
+          git fetch --no-tags --depth=1 origin "${REVISION}"
+          git checkout --detach FETCH_HEAD
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.12"
-      - name: Install MCP SDK for unified-server factory tests
-        run: python -m pip install "mcp>=1.0.0,<2.0.0"
+      - name: Install declared project dependencies
+        run: |
+          python -m pip install -r requirements.txt
+          python -m pip check
+      - name: Compile Work 28 and execution packages
+        run: |
+          python -m compileall -q core execution_host room_hop_mcp work/28/MCP-8020-TOOLING-PLATFORM/04_CODE
       - name: Run Work 28 unit and regression tests
         working-directory: work/28/MCP-8020-TOOLING-PLATFORM
         env:
@@ -57,9 +74,18 @@ jobs:
 
   execution-host-lifecycle-linux:
     runs-on: ubuntu-24.04
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v6
+      - name: Fetch exact triggering revision without submodule recursion
+        env:
+          REPOSITORY: ${{ github.repository }}
+          REVISION: ${{ github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${REPOSITORY}.git"
+          git fetch --no-tags --depth=1 origin "${REVISION}"
+          git checkout --detach FETCH_HEAD
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.12"
       - name: Install pytest for suspended-spawn lifecycle tests (Linux)
@@ -95,9 +121,18 @@ jobs:
 
   execution-host-lifecycle-windows:
     runs-on: windows-2025
+    timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v6
+      - name: Fetch exact triggering revision without submodule recursion
+        env:
+          REPOSITORY: ${{ github.repository }}
+          REVISION: ${{ github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${REPOSITORY}.git"
+          git fetch --no-tags --depth=1 origin "${REVISION}"
+          git checkout --detach FETCH_HEAD
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.12"
       - name: Install pytest for suspended-spawn lifecycle tests (Windows)
@@ -140,12 +175,65 @@ jobs:
           Get-Content lifecycle-wp23-schema.txt -Tail 80 -ErrorAction SilentlyContinue | Out-File -Append $env:GITHUB_STEP_SUMMARY
         shell: pwsh
 
+  immutable-source-artifact:
+    name: Build and retest exact-SHA Work 28 source artifact
+    needs:
+      - unit-regression-tests
+      - execution-host-lifecycle-linux
+      - execution-host-lifecycle-windows
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Fetch exact triggering revision without submodule recursion
+        env:
+          REPOSITORY: ${{ github.repository }}
+          REVISION: ${{ github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${REPOSITORY}.git"
+          git fetch --no-tags --depth=1 origin "${REVISION}"
+          git checkout --detach FETCH_HEAD
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+      - name: Build and verify immutable exact-SHA archive
+        run: |
+          mkdir -p dist extracted
+          ARCHIVE="work28-${GITHUB_SHA}.tar.gz"
+          git archive --format=tar.gz --prefix="work28-${GITHUB_SHA}/" "${GITHUB_SHA}" > "dist/${ARCHIVE}"
+          cd dist
+          sha256sum "${ARCHIVE}" | tee "${ARCHIVE}.sha256"
+          sha256sum --check "${ARCHIVE}.sha256"
+          cd ..
+          tar -xzf "dist/${ARCHIVE}" -C extracted
+      - name: Install and verify extracted artifact
+        working-directory: extracted/work28-${{ github.sha }}
+        run: |
+          python -m pip install -r requirements.txt
+          python -m pip check
+          python -m compileall -q core execution_host room_hop_mcp work/28/MCP-8020-TOOLING-PLATFORM/04_CODE
+          mkdir -p test-results
+          python -m unittest discover -s work/28/MCP-8020-TOOLING-PLATFORM/05_TEST -v 2>&1 | tee test-results/artifact-unittest.log
+      - name: Retain immutable source archive, checksum and artifact test log
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: work28-source-artifact-${{ github.sha }}
+          path: |
+            dist/work28-${{ github.sha }}.tar.gz
+            dist/work28-${{ github.sha }}.tar.gz.sha256
+            extracted/work28-${{ github.sha }}/test-results/artifact-unittest.log
+          if-no-files-found: warn
+          retention-days: 14
+
   automatic-e2e-gate-report:
     if: always()
     needs:
       - unit-regression-tests
       - execution-host-lifecycle-linux
       - execution-host-lifecycle-windows
+      - immutable-source-artifact
     runs-on: ubuntu-24.04
     steps:
       - name: Calculate evidence-backed Auto E2E gate state
@@ -153,6 +241,7 @@ jobs:
           UNIT_RESULT: ${{ needs.unit-regression-tests.result }}
           LINUX_RESULT: ${{ needs.execution-host-lifecycle-linux.result }}
           WINDOWS_RESULT: ${{ needs.execution-host-lifecycle-windows.result }}
+          ARTIFACT_RESULT: ${{ needs.immutable-source-artifact.result }}
           SOURCE_COMMIT: ${{ github.sha }}
           WORKFLOW_RUN_ID: ${{ github.run_id }}
         run: |
@@ -162,6 +251,7 @@ jobs:
               "unit_regression": os.environ["UNIT_RESULT"],
               "execution_host_linux": os.environ["LINUX_RESULT"],
               "execution_host_windows": os.environ["WINDOWS_RESULT"],
+              "immutable_source_artifact": os.environ["ARTIFACT_RESULT"],
           }
           ci_ok = all(value == "success" for value in jobs.values())
           report = {
@@ -200,7 +290,7 @@ jobs:
                   f.write(f"- {item}\n")
           PY
       - name: Upload machine-readable Auto E2E report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: work28-auto-e2e-report-${{ github.run_id }}
           path: work28-auto-e2e-report.json
