@@ -1009,3 +1009,6 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 
 
 | 044 | 2026-11-03 | Xu / AI-01 | Khắc phục hai sai lệch parity trong 05_BUILD | Cập nhật Sandbox BUILD_MAPPING_REGISTER.md theo phiên bản GitHub branch mới hơn; đồng bộ addendum trạng thái bằng chứng/ACK trong DOC-054 từ Sandbox lên branch work/70/05-build. Đọc lại hai file và xác nhận exact match. Tổng hợp với 13 file đã exact trước đó: 15/15 file branch-only trong compare hiện khớp Sandbox canonical 05_BUILD. | PASS — bounded 15/15 file parity; branch vẫn DIVERGED 43 ahead / 483 behind; không merge/rebase/cherry-pick/force push; không kết luận branch merge-safe | DOC-084 §10; GitHub fetch branch work/70/05-build; Sandbox read_probe; commit DOC-054 branch f2b19142facc512a0e20f93b6d7933cdedcf8c90; compare result |
+
+
+| 045 | 2026-11-03 | Xu / AI-01 | Kiểm tra CI/status của PR #37 | Truy vấn commit status và check-runs tại PR head `1a43fd4bee6f7f1dc954fa0430ab7e05c6645646`; status pending, total_count=0; check-runs total_count=0. | NOT RUN / NO CHECKS — không có CI PASS/FAIL; PR vẫn OPEN/DRAFT, mergeable=true; chỉ có manual readback/compare evidence | DOC-084 §11; GitHub commit status API; GitHub check-runs API; PR #37 |
