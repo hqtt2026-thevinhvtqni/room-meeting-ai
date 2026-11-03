@@ -22,9 +22,10 @@
 - [x] Run Python 3.12 compile/import validation and bounded deterministic unit tests.
 - [x] Run pip dependency consistency check.
 - [x] Publish test evidence artifacts without secrets.
+- [x] Pin external GitHub Actions to audited immutable commit SHAs.
 - [x] Verify push-triggered execution against exact triggering SHA.
 - [ ] Verify required-check enforcement on main — NOT APPLIED; main branch protection is not enabled and no admin settings change was authorized.
-- Exit: PASS on exact SHA `fa625d1d7b99f5b326c0ff87641e6c3344d2dd73`, Actions run `41719444619`; 157 unit tests passed.
+- Exit: PASS on final exact SHA `6ec0ca6aa9d8c32c912c9dfac140fab141c5b3aa`, Actions run `41720062142`; 157 unit tests passed.
 
 ## Phase C — Integration / Auto E2E
 
@@ -34,7 +35,7 @@
 - [x] Verify exact four-tool MCP Public V1 inventory.
 - [x] Verify legacy paste compatibility and optional identity metadata propagation/readback.
 - [x] Retain JUnit artifacts for both unit and E2E jobs.
-- Exit: PASS on exact SHA `fa625d1d7b99f5b326c0ff87641e6c3344d2dd73`; 38 E2E tests passed, 1 warning. See `06_EVIDENCE/W32-EVIDENCE-004-MCP-CONTRACT-STDIO-E2E-20261104.md`.
+- Exit: PASS on final exact SHA `6ec0ca6aa9d8c32c912c9dfac140fab141c5b3aa`, Actions run `41720062142`; 38 E2E tests passed, 1 warning. See `06_EVIDENCE/W32-EVIDENCE-004-MCP-CONTRACT-STDIO-E2E-20261104.md`.
 
 ## Phase D — CD / Release readiness
 
@@ -56,12 +57,12 @@ Exit: BLOCKED / NOT RUN. No staging host, deployment credentials, protected envi
 - Repository: `hqtt2026-thevinhvtqni/room-meeting-ai`
 - Branch: `work/32-ci-cd-python-ci-v2`
 - Validated SHA: `fa625d1d7b99f5b326c0ff87641e6c3344d2dd73`
-- Actions run: `41719444619` (run #50, SUCCESS)
+- Actions run: `41720062142` (run #61, SUCCESS)
 - Unit: 157 passed.
 - Auto E2E: 38 passed, 1 warning.
-- Unit artifact: `13271935444`; SHA-256 `f65f5ded755fc64c51baa876e604e5f8d0cde2b67d748a6f6db46792a35bf9c5`.
-- E2E artifact: `13271058785`; SHA-256 `6e2a5149466a56b938d0e59ef5be93b533117c98d5d0b35477cf341481c938c9`.
-- Main HEAD observed: `4d2788158b08a48c39abf3d9c74c57314eea3ff4`; branch compare: 52 ahead / 31 behind; merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`.
+- Unit artifact: `13271771079`; SHA-256 `b792ec86244662b23a8ced58422500795d5324759ee7ae4dce67d7a7b0d36773`.
+- E2E artifact: `13272230927`; SHA-256 `1315a1e2a74f760ed538ccd3e207e8f1ec3f549b3f05f7d2ba3c29420db6936e`.
+- Main HEAD observed: `4d2788158b08a48c39abf3d9c74c57314eea3ff4`; branch compare: 61 ahead / 31 behind; merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`.
 - No main merge, rebase, cherry-pick, production deployment or secrets mutation.
 
 ## Overall

@@ -16,6 +16,6 @@ The GitHub Actions used by the workflow are pinned to the exact audited commit S
 - `actions/setup-python`: `a26af69be951a213d495a4c3e4e4022e16d87065` (v5)
 - `actions/upload-artifact`: `ea165f8d65b6e75b540449e92b4886f43607fa02` (v4)
 
-Current successful exact-code evidence: run `41719444619`, commit `fa625d1d7b99f5b326c0ff87641e6c3344d2dd73`, 157 unit tests and 38 Auto E2E tests passed (one warning).
+Current successful exact-code evidence: run `41720062142`, commit `6ec0ca6aa9d8c32c912c9dfac140fab141c5b3aa`, 157 unit tests and 38 Auto E2E tests passed (one warning).
 
 CD remains a separate, non-executable release gate. No deployment workflow is activated without a verified staging target, target owner, protected environment approval, credentials/host trust, health check, and tested rollback. A green CI workflow is not release approval.

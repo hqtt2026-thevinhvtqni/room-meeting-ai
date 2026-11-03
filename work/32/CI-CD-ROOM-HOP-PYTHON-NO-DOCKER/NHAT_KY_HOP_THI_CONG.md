@@ -241,3 +241,22 @@
 - **Prior failure retained:** Run #49 `41718781204` failed three legacy adapter tests; the compatibility fix resolves that observed failure. Tests were not deleted or skipped.
 - **Status:** CI UNIT = PASS; AUTO E2E = PASS; CD = NOT RUN / BLOCKED pending verified staging target, protected approval, credentials and rollback; Work 32 = ACTIVE — NOT RELEASED.
 - **Next gates:** Complete branch governance/reconciliation; obtain independent Vibe review; survey and attest a staging deployment target before any CD activation. No merge to main, production deployment, or secrets change performed.
+
+
+## W32-LOG-20261104-05 — P1 — Final exact-SHA validation and workflow hardening
+
+- **Document Number:** W32-LOG-20261104-05
+- **Priority order:** P1 — CI/Auto E2E final verification and reproducibility
+- **Name:** Ka
+- **Title:** CSA / Architecture & Backend Owner (delegated)
+- **Date-Time:** 2026-11-04 04:16 UTC+07:00 (GitHub Actions completion 2026-11-03 21:16 UTC)
+- **Action:** Verified final branch commit `6ec0ca6aa9d8c32c912c9dfac140fab141c5b3aa` through GitHub Actions run #61 (`41720062142`).
+- **Unit gate:** PASS — 157 passed in 2.82s.
+- **Auto E2E gate:** PASS — 38 passed, 1 warning in 2.70s.
+- **Workflow checks:** exact triggering SHA fetch; Python 3.12; dependency install; `pip check`; `compileall`; independent unit/E2E jobs; JUnit artifacts.
+- **Supply-chain hardening:** setup-python and upload-artifact actions pinned to audited immutable commit SHAs. Run #58 (`41719864578`) independently verified both gates PASS after pinning.
+- **Artifacts for run #61:** Unit `13271771079`, SHA-256 `b792ec86244662b23a8ced58422500795d5324759ee7ae4dce67d7a7b0d36773`; E2E `13272230927`, SHA-256 `1315a1e2a74f760ed538ccd3e207e8f1ec3f549b3f05f7d2ba3c29420db6936e`; 14-day retention.
+- **Automatic behavior:** push-triggered run executed on each feature-branch update; PR-to-main and manual dispatch triggers are configured. No scheduled timer is needed for event-driven CI.
+- **Branch governance:** main HEAD `4d2788158b08a48c39abf3d9c74c57314eea3ff4`; Work branch 61 ahead / 31 behind; merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`. No merge, rebase or cherry-pick.
+- **CD:** NOT RUN / BLOCKED — no attested staging target, protected deployment approval, deployment credentials, health check or rollback evidence. No production mutation.
+- **Status:** CI = PASS; AUTO E2E = PASS; CD = BLOCKED / NOT RUN; Work 32 = ACTIVE — NOT RELEASED.

@@ -106,7 +106,7 @@ Ngày giờ: 2026-10-21, Asia/Ho_Chi_Minh (UTC+07:00)
 
 - CD is NOT RUN / BLOCKED because no real staging/VPS target, target owner, deployment credentials, protected environment approval, health-check target or tested rollback has been attested.
 - No deploy scaffold with guessed host/command/secret was created.
-- Main HEAD last observed: `4d2788158b08a48c39abf3d9c74c57314eea3ff4`; Work branch comparison: 59 ahead / 31 behind; merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`.
+- Main HEAD last observed: `4d2788158b08a48c39abf3d9c74c57314eea3ff4`; Work branch comparison: 61 ahead / 31 behind; merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`.
 - No main merge, rebase, cherry-pick, production deployment or secrets mutation.
 - Independent Vibe review and safe branch reconciliation remain pending.
 
@@ -117,3 +117,20 @@ Ngày giờ: 2026-10-21, Asia/Ho_Chi_Minh (UTC+07:00)
 - CD: BLOCKED / NOT RUN.
 - Release: NOT RELEASED.
 - Work 32: ACTIVE — NOT RELEASED.
+
+
+## W32-DECISION-20261104-05 — P1 — Final automated CI acceptance
+
+- **Document Number:** W32-DECISION-20261104-05
+- **Priority order:** P1 — Final CI/Auto E2E verification
+- **Name:** Ka
+- **Title:** CSA / Architecture & Backend Owner (delegated)
+- **Date-Time:** 2026-11-04 04:16 UTC+07:00
+- **Exact source SHA:** `6ec0ca6aa9d8c32c912c9dfac140fab141c5b3aa`.
+- **GitHub Actions:** run #61 / `41720062142` — SUCCESS.
+- **Unit:** 157 passed. **Auto E2E:** 38 passed, 1 warning.
+- **Supply-chain control:** workflow actions pinned to audited commit SHAs; independently validated by run #58 `41719864578`.
+- **Branch state:** 61 ahead / 31 behind main; merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`; no main merge/rebase/cherry-pick.
+- **Decision:** accept CI and Auto E2E gates as PASS for the Work branch. Do not equate this with CD or release acceptance.
+- **CD:** BLOCKED / NOT RUN until a verified staging target, protected approval, deployment credentials, health check and tested rollback exist.
+- **Overall:** CI PASS; Auto E2E PASS; CD BLOCKED; NOT RELEASED. Vibe independent review and branch reconciliation remain pending.

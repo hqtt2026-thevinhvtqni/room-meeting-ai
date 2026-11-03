@@ -50,5 +50,14 @@ Architecture decision: DECIDED. CI: DRAFT / NOT ACTIVATED. Current-main baseline
 - Vinh explicitly authorized branch-scoped CI implementation and push for Work 32 on 2026-11-04; this does not authorize main merge, production deployment, or secrets changes.
 - Exact-SHA code validation: commit `fa625d1d7b99f5b326c0ff87641e6c3344d2dd73`, Actions run `41719444619` SUCCESS; unit 157 passed; Auto E2E 38 passed, 1 warning.
 - GitHub Actions dependencies are pinned to audited commit SHAs. Workflow permissions remain `contents: read`.
-- Current branch is still diverged from main (52 ahead / 31 behind at the last recorded comparison); no merge/rebase/cherry-pick has been performed.
+- Current branch is still diverged from main (61 ahead / 31 behind at the last recorded comparison); no merge/rebase/cherry-pick has been performed.
 - CD remains NOT RUN / BLOCKED pending an attested staging target and deployment safety controls. Production remains NOT AUTHORIZED.
+
+
+## Final validation addendum — 2026-11-04
+
+- Final branch SHA `6ec0ca6aa9d8c32c912c9dfac140fab141c5b3aa` passed Actions run #61 (`41720062142`).
+- Unit gate: 157 passed; Auto E2E gate: 38 passed, 1 warning.
+- The immutable action pins were exercised by run #58 (`41719864578`), also SUCCESS.
+- Current branch remains 61 ahead / 31 behind main. Do not merge or rebase without independent review and a fresh exact-SHA reconciliation.
+- CD / release remains BLOCKED / NOT RUN; production is not authorized.

@@ -26,12 +26,12 @@ No Docker requirement; no live-service or MAIN SOURCE changes; no auto-merge or 
 ## Current evidence snapshot — 2026-11-04
 
 - Canonical implementation branch: `work/32-ci-cd-python-ci-v2`.
-- Validated commit: `fa625d1d7b99f5b326c0ff87641e6c3344d2dd73`.
-- GitHub Actions run #50 / `41719444619`: SUCCESS.
+- Final exact-SHA validation: `6ec0ca6aa9d8c32c912c9dfac140fab141c5b3aa` (Actions run #61, `41720062142`, SUCCESS).
+- GitHub Actions run #61 / `41720062142`: SUCCESS on final exact SHA; run #58 / `41719864578`: SUCCESS after action SHA pinning.
 - Python 3.12 bounded unit gate: 157 passed.
 - Auto E2E gate: 38 passed, 1 warning; includes live HTTP roundtrip and isolated MCP stdio subprocess roundtrip.
 - Artifact evidence and SHA-256 digests: `06_EVIDENCE/W32-EVIDENCE-004-MCP-CONTRACT-STDIO-E2E-20261104.md`.
-- Main HEAD observed: `4d2788158b08a48c39abf3d9c74c57314eea3ff4`; branch comparison: 52 ahead / 31 behind; merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`.
+- Main HEAD observed: `4d2788158b08a48c39abf3d9c74c57314eea3ff4`; branch comparison: 61 ahead / 31 behind; merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`.
 - No merge/rebase/cherry-pick; main unchanged.
 - CD / deployment remains BLOCKED until a real staging target, ownership, approved credentials/environment, health check, and tested rollback are evidenced.
 - Release status: ACTIVE — NOT RELEASED.

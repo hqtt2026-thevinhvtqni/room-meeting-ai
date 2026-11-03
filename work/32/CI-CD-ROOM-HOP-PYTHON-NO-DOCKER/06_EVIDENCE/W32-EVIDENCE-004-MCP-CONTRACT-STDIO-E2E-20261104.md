@@ -4,7 +4,7 @@
 - Priority: P1
 - Author: Ka — CSA / Architecture & Backend Owner (delegated)
 - Date-Time: 2026-11-04 (hour/minute not captured; not inferred)
-- Status: SOURCE CONTRACT RESOLVED; RUNTIME VALIDATION PENDING
+- Status: CI / AUTO E2E VALIDATED; CD BLOCKED / NOT RUN
 
 ## Evidence
 - T8 failed because it expected six MCP tools while the adapter exposed four.
@@ -58,3 +58,25 @@
 - CD deployment: NOT RUN — no verified staging/VPS target, deployment credentials, protected environment approval, or tested rollback evidence is present.
 - Main merge / production release: NOT AUTHORIZED by this evidence. Branch reconciliation and independent Vibe review remain required.
 - Overall Work 32: CI VALIDATED; CD / RELEASE BLOCKED; ACTIVE — NOT RELEASED.
+
+
+## Final pinned-workflow exact-SHA validation — PASS
+
+- Final documentation/source branch SHA: `6ec0ca6aa9d8c32c912c9dfac140fab141c5b3aa`.
+- GitHub Actions run #61: `41720062142` — SUCCESS on the exact SHA above.
+- Unit job: PASS — 157 passed in 2.82s.
+- Auto E2E job: PASS — 38 passed, 1 warning in 2.70s.
+- Both jobs completed exact-SHA checkout, Python 3.12 setup, dependency installation, `pip check`, `compileall`, test execution and artifact retention.
+- Unit artifact ID `13271771079`; SHA-256 `b792ec86244662b23a8ced58422500795d5324759ee7ae4dce67d7a7b0d36773`; expires `2026-11-17T21:15:58Z`.
+- E2E artifact ID `13272230927`; SHA-256 `1315a1e2a74f760ed538ccd3e207e8f1ec3f549b3f05f7d2ba3c29420db6936e`; expires `2026-11-17T21:15:57Z`.
+- Workflow hardening was separately validated on run #58, SHA `4d70e2fce18982cfdd8c3487dee1d15c2ca51fd3`, SUCCESS with the same 157 / 38 passing counts. The workflow uses audited SHA-pinned actions: setup-python `a26af69be951a213d495a4c3e4e4022e16d87065`; upload-artifact `ea165f8d65b6e75b540449e92b4886f43607fa02`.
+- Run #59, SHA `64f6d2bc019052402a8e76bd5849e05a58824e37`, also passed after the executable workflow was mirrored into Work evidence.
+- The branch push trigger was exercised repeatedly; every new push automatically queued the workflow. Pull requests targeting `main` and manual `workflow_dispatch` are also configured.
+
+## Final disposition
+
+- CI unit: PASS.
+- Auto E2E: PASS.
+- CD: BLOCKED / NOT RUN pending a verified staging target, protected approval, deployment credentials/host trust, health check and tested rollback.
+- Main merge / production release: NOT AUTHORIZED by these CI results.
+- Work 32: CI VALIDATED; CD / RELEASE BLOCKED; ACTIVE — NOT RELEASED.
