@@ -82,7 +82,6 @@ jobs:
 
   e2e:
     name: Auto E2E (in-process suites + live HTTP roundtrip)
-    needs: unit
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
