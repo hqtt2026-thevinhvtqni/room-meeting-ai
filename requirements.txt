@@ -8,5 +8,5 @@ pytest>=7.0
 # LLM providers (only needed for chat/intent-router entry points)
 groq>=0.11.0
 
-# Work 28 MCP server (room_hop_mcp adapter :8020)
+# Work 28 MCP Python SDK v1 Server decorator API
 mcp>=1.2.0,<2.0.0  # Work 28 currently uses MCP Python SDK v1 Server decorator API
