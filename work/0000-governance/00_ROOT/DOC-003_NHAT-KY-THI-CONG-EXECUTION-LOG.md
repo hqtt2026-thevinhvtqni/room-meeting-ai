@@ -420,3 +420,14 @@ E0000-022 (ghi sau append này).
 - **Quyết định xử lý:** giữ hiện trạng PULL-ON-CHECK / MANUAL TRIGGER; kiến trúc monitor chỉ là đề xuất, chưa triển khai. Cần hoàn tất source/owner/gate discovery và Work Package/authorization trước khi giao code.
 - **Trạng thái:** DISCOVERY DONE; DESIGN PROPOSAL ONLY; IMPLEMENTATION NOT AUTHORIZED; TESTS NOT RUN; RELEASE NOT RELEASED.
 - **Bằng chứng:** Work0000 DOC-002/DOC-003/DOC-004/SYNC_STATUS; Work70 DOC-064/DOC-066/DOC-072/DOC-084; GitHub fetch DOC-003 mirror.
+
+
+## 049 | 2026-11-03 | Xu / AI-01 | Hoàn tất khảo sát GitHub Inbound Monitor và đăng ký DOC-025
+
+- **Phạm vi:** Work0000 governance discovery; không sửa Work70, Core, API, database, permission hoặc runtime.
+- **Đã đọc:** Work70 DOC-057 (policy approved, enforcement required), DOC-063 (design only), DOC-069 (Xu limited documentation/read-only trace scope), DOC-071 (Core owner NOT IDENTIFIED; Work API/persistence NOT VERIFIED), DOC-072 và DOC-084 (implementation not authorized; lifecycle gates not ready).
+- **Đã xác minh:** GitHub canonical repo/branch; connector read access và write capability trong phiên; hiện tại Xu phải chủ động fetch GitHub. Không có bằng chứng webhook ingress hoặc scheduled poller nền.
+- **Đầu ra:** Tạo DOC-025 tại Work0000/01_DISCOVER, đăng ký DOC-025 trong DOC-002. Kiến trúc khuyến nghị webhook-first, poller fallback; PULL-ON-CHECK tiếp tục là chế độ duy nhất đã có bằng chứng vận hành.
+- **Blockers:** Core/Platform owner và runtime ingress/poller chưa được xác định; authoritative persistence/audit chưa có bằng chứng; Work70 Entry Gate chưa cấp quyền code/runtime; hai path GitHub DOC-003 còn lệch tên và nội dung.
+- **Giới hạn:** Không tạo DOC-025 trong Work70; không sửa hoặc xóa hai file DOC-003 trên GitHub; không triển khai worker, webhook, database hoặc automation schedule.
+- **Trạng thái:** DISCOVERY COMPLETE; DOC-025 CREATED; REGISTER UPDATE PENDING READBACK; IMPLEMENTATION NOT AUTHORIZED; TESTS NOT RUN; RELEASE NOT RELEASED.
