@@ -31,8 +31,13 @@ MCP :8030 remains the separate Build/Verification lane. It is not a substitute f
 6. Process-tree containment must be established before untrusted command code executes. On Windows, spawning normally and assigning a Job Object afterward is not sufficient because it creates a race.
 7. OS sandboxing is a separate control from process-tree containment. Keep OS isolation NOT_VERIFIED until independently evidenced.
 8. Secrets must not enter logs, artifacts or tool responses.
+9. Binary Sandbox uploads must be Work-authorized, bounded, staged safely, checksum-verified (SHA-256), atomically committed and auditable. Partial or checksum-mismatched uploads must fail closed; path traversal, symlink escape and unauthorized overwrite must be rejected.
 
-## 4. Service and deployment identity
+## 4. Sandbox binary upload contract (WP3)
+
+The Build/Verification MCP :8030 must provide a registered binary upload capability for authorized Work-scoped storage. The implementation may use bounded streaming/chunking when required by transport limits, but must preserve original bytes. It must enforce identity/Work scope, destination containment, quotas and no-overwrite-by-default; stage incomplete content outside the final destination; verify byte count and SHA-256; atomically promote only after successful verification; and write append-only audit evidence. The result must include upload/correlation ID, Work ID, normalized destination, size, SHA-256, service/build identity and final status. A readback check must independently confirm size and checksum. GitHub publication/synchronization is a separate operation and is not implied by Sandbox upload.
+
+## 5. Service and deployment identity
 
 Each service must expose a non-secret build identity and service identity. Evidence must bind:
 - repository and commit SHA;
@@ -45,13 +50,13 @@ Each service must expose a non-secret build identity and service identity. Evide
 
 A matching port or endpoint string alone is not proof that the intended binary is running.
 
-## 5. Compatibility and migration
+## 6. Compatibility and migration
 
 - Do not change existing consumers or production routing as a side effect of source changes.
 - Do not touch the quarantined historical MCP :8020 listener.
 - A new Runtime MCP deployment requires clean process identity, clean deployment path, verified contracts, security tests and rollback plan.
 - Cutover is a separate gated decision. No migration or release is implied by this architecture decision.
 
-## 6. Supersession
+## 7. Supersession
 
 This decision supersedes conflicting statements in older Work 28 plans/architecture notes that treat the historical MCP :8020 listener as a supported live test target or the current runtime. Older documents remain preserved as historical evidence and must be interpreted through this decision and the current Work Manifest.
