@@ -82,6 +82,12 @@ class Work28AutoE2EGateTests(unittest.TestCase):
         self.assertEqual(evaluate(record)["status"], "DENIED")
 
 
+
+    def test_nested_secret_material_is_rejected(self):
+        record = valid_record()
+        record["metadata"] = {"runtime": {"token": "must-not-be-recorded"}}
+        self.assertEqual(evaluate(record)["status"], "FAIL")
+
     def test_path_containment_missing_blocks(self):
         record = valid_record()
         record["path_containment_verified"] = False
