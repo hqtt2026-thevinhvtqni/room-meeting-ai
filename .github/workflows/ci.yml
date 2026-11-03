@@ -22,10 +22,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Checkout triggering revision
-        uses: actions/checkout@v4
-        with:
-          persist-credentials: false
+      - name: Fetch exact triggering revision without submodule recursion
+        env:
+          REPOSITORY: ${{ github.repository }}
+          REVISION: ${{ github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${REPOSITORY}.git"
+          git fetch --no-tags --depth=1 origin "${REVISION}"
+          git checkout --detach FETCH_HEAD
 
       - name: Set up Python
         uses: actions/setup-python@v5
