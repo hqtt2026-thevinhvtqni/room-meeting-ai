@@ -81,7 +81,7 @@ jobs:
           retention-days: 14
 
   e2e:
-    name: Auto E2E (in-process suites + live HTTP roundtrip)
+    name: Product Auto E2E (live HTTP + MCP stdio + persisted evidence)
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
@@ -94,6 +94,7 @@ jobs:
         tests/test_http_recording.py
         tests/test_ci_live_e2e.py
         tests/test_ci_mcp_stdio_e2e.py
+        tests/test_ci_product_e2e.py
     steps:
       - name: Fetch exact triggering revision without submodule recursion
         env:
