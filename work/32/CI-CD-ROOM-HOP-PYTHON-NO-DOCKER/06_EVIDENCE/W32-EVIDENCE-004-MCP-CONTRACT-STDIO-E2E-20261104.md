@@ -36,3 +36,25 @@
 - Work branch compare: 48 ahead / 31 behind; merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`.
 - No merge, rebase, cherry-pick, main update, deployment, secrets, or production mutation.
 - Overall Work 32: ACTIVE — NOT RELEASED.
+
+
+## Final exact-SHA validation — PASS
+
+- Validation commit: `fa625d1d7b99f5b326c0ff87641e6c3344d2dd73`
+- GitHub Actions run: `41719444619` (run #50), event `push`, conclusion `success`.
+- Unit job: `Python 3.12 compile and bounded unit tests` — PASS; `157 passed`.
+- Auto E2E job: `Auto E2E (in-process suites + live HTTP roundtrip)` — PASS; `38 passed, 1 warning`.
+- Both jobs completed dependency installation, `pip check`, application `compileall`, and test execution successfully.
+- MCP stdio subprocess E2E: PASS, including exact four-tool inventory, legacy paste path, identified paste path and transcript readback.
+- Unit artifact: ID `13271935444`, SHA-256 `f65f5ded755fc64c51baa876e604e5f8d0cde2b67d748a6f6db46792a35bf9c5`, expires `2026-11-17T21:11:22Z`.
+- E2E artifact: ID `13271058785`, SHA-256 `6e2a5149466a56b938d0e59ef5be93b533117c98d5d0b35477cf341481c938c9`, expires `2026-11-17T21:11:23Z`.
+- Regression correction: the adapter now omits the optional `identity_id` keyword when it is absent, preserving the legacy `add_paste(meeting_id, raw_text)` service-call contract; when supplied, identity metadata is forwarded. This fixes the three failures observed on prior run #49 without weakening or skipping tests.
+- Prior run #49 (`41718781204`, SHA `66a2b664...`) is retained as failed diagnostic evidence; run #50 validates the corrected exact SHA and supersedes it for current CI status.
+
+## Scope and release boundary
+
+- CI / bounded unit gate: PASS.
+- Auto E2E / HTTP and MCP stdio gates: PASS.
+- CD deployment: NOT RUN — no verified staging/VPS target, deployment credentials, protected environment approval, or tested rollback evidence is present.
+- Main merge / production release: NOT AUTHORIZED by this evidence. Branch reconciliation and independent Vibe review remain required.
+- Overall Work 32: CI VALIDATED; CD / RELEASE BLOCKED; ACTIVE — NOT RELEASED.
