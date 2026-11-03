@@ -48,7 +48,7 @@ Jobs:
 3. `execution-host-lifecycle-windows` — the same Windows-relevant suites on a native Windows runner. Every Python command propagates its own nonzero exit code.
 4. `automatic-e2e-gate-report` — runs even when an upstream job fails; emits `work28-auto-e2e-report.json` as a 30-day artifact and a GitHub Actions summary. It reports CI preconditions PASS/FAIL independently from deployed E2E.
 
-The evidence evaluator is `04_CODE/work28_auto_e2e_gate_v1.py`. Its contract requires exact source commit, MCP/Core/runtime/Execution Host identities, registered tool-list digest, trusted principal and Core authorization, canonical Work ID, immutable snapshot, matching source hash, approved runtime identity, OS-isolation attestation, actual exit code, process cleanup, non-empty test summary for RUN_TESTS, protected evidence and matching readback SHA-256. Secret material is rejected. A string such as `reported_status: PASS` cannot grant PASS.
+The evidence evaluator is `04_CODE/work28_auto_e2e_gate_v1.py`. Its contract requires exact source commit, MCP/Core/runtime/Execution Host identities, registered tool-list digest, trusted principal and Core authorization reference, canonical Work ID, immutable snapshot, equality of expected/snapshot/runtime SHA-256, approved runtime identity, OS-isolation attestation, actual integer exit code, process cleanup, non-empty test summary for RUN_TESTS, protected evidence, explicit readback verification and matching readback SHA-256. Secret material is rejected. A string such as `reported_status: PASS` cannot grant PASS.
 
 ## 4. Current boundary — do not mislabel CI as live E2E
 
@@ -104,7 +104,7 @@ For every completed implementation/evidence slice:
 
 ## 9. Current state
 
-**AUTOMATED CI PRECONDITIONS:** implemented; first run pending.  
+**AUTOMATED CI PRECONDITIONS:** implementation committed; Actions verification pending.  
 **LIVE DEPLOYED AUTO E2E:** BLOCKED — trusted deployed identity/route/isolation/evidence integration not yet wired.  
 **WP2:** focused suspended-spawn Linux/Windows CI verified; concurrency and service error mapping remain open.  
 **WP3:** binary upload source gap confirmed; secure Core authorization contract proposal exists; implementation pending.  
