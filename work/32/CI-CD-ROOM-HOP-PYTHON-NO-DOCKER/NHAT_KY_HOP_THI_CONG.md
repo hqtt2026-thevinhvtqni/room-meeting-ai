@@ -196,3 +196,15 @@
 - Evidence: GitHub commits `c45e16362b63e5e10c2915aa7cad7465b7635a78`, `754b5087fca32f48a000651580c2f1eabb0eed6c`, `c541846b7a3d581a1934a9712cb08a390af9f30f`.
 - Guardrail: No Core/MCP application source modified; T8 not skipped/deleted; no main merge or deployment.
 - Status: WORKFLOW UPDATE COMMITTED; UPDATED RUN NOT YET VERIFIED; WORK 32 ACTIVE — NOT RELEASED.
+
+## W32-LOG-20261104-02 — Auto E2E Run 41 result
+
+- Document Number: W32-LOG-20261104-02
+- Priority: P1 — CI quality gate and MCP contract resolution
+- Name: Ka
+- Title: CSA / Architecture & Backend Owner (delegated)
+- Date-Time: 2026-11-04 (hour/minute not captured; not inferred)
+- Action: Verified GitHub Actions run 41718006637 at commit 6e56836c3c0b20f39dc59a562e49342c15f0afa4. Auto E2E passed 37/37 with one warning, including live Uvicorn HTTP roundtrip. Unit gate failed 1 test; 156 passed. Exact failure is T8 expecting six MCP tools while adapter currently registers four. Logged a separate unexecuted T8 identity_id propagation mismatch.
+- Evidence: W32-EVIDENCE-003; run https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/41718006637; E2E artifact 13270472546.
+- Decision: preserve T8; no speculative MCP API expansion; reconcile approved Contract #1 and client code before application change. CI overall remains FAIL; CD NOT STARTED.
+- Status: AUTO E2E PASS; UNIT BLOCKED/FAIL; WORK 32 ACTIVE — NOT RELEASED.
