@@ -19,8 +19,8 @@ Record the controlled Work 14 → Work 70 governance alignment assessment and it
    - Branch: `release/work14-w14-release-20261010t053516`
    - Commit: `f4f8dbc17db36a74d4c956282129b105a9d14a51`
    - Blob: `b7ecfb0fcd10ef3b95c2a3cf359fc81be5f4ba16`
-   - GitHub path: `work/14/06_EVIDENCE/W14_RESTORATION_CONTINUATION_20261103_ADDENDUM2.md`
-   - URL: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/blob/release/work14-w14-release-20261010t053516/work/14/06_EVIDENCE/W14_RESTORATION_CONTINUATION_20261103_ADDENDUM2.md
+   - GitHub path: `work/14/06_EVIDENCE/W14_W70_COMPLIANCE_MAPPING_20261103.md`
+   - URL: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/blob/release/work14-w14-release-20261010t053516/work/14/06_EVIDENCE/W14_W70_COMPLIANCE_MAPPING_20261103.md
 
 ## Findings
 - Work 70 is adopted as W14's governing lifecycle, documentation, evidence and Work Entry standard.
