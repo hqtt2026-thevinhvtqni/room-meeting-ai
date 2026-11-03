@@ -68,3 +68,52 @@ Ngày giờ: 2026-10-21, Asia/Ho_Chi_Minh (UTC+07:00)
 - Phạm vi không triển khai: không merge vào main, không bật branch protection trong lượt này, không cấu hình SSH/secrets, không CD/VPS.
 - Trạng thái: CI WORKFLOW OPERATIONAL / CI GATE BLOCKED / CD NOT STARTED / NOT RELEASED.
 - Chi tiết: `06_EVIDENCE/W32-EVIDENCE-001-CI-PILOT-RESULTS-20261103.md`.
+
+
+---
+
+## W32-DECISION-20261104-04 — P1 — Authorization and CI/Auto E2E acceptance evidence
+
+- **Document Number:** W32-DECISION-20261104-04
+- **Priority order:** P1 — CI activation, exact-SHA evidence and release boundary
+- **Name:** Ka
+- **Title:** CSA / Architecture & Backend Owner (delegated)
+- **Date-Time:** 2026-11-04 (project date; exact local time not inferred)
+- **Owner / final authority:** Vinh
+- **Decision context:** Vinh explicitly instructed Ka to continue and set up automatic execution to completion. This authorizes Work 32 implementation and branch-scoped CI only; it does not authorize main merge, production deployment, secrets changes or bypass of independent review.
+
+### 1. CI implementation and result
+
+- Repository: `hqtt2026-thevinhvtqni/room-meeting-ai`.
+- Branch: `work/32-ci-cd-python-ci-v2`.
+- Code-validation SHA: `fa625d1d7b99f5b326c0ff87641e6c3344d2dd73`.
+- Actions run #50: `41719444619` — SUCCESS.
+- Python 3.12 bounded unit suite: 157 passed.
+- Auto E2E suite: 38 passed, 1 warning.
+- Auto E2E includes actual Uvicorn HTTP roundtrip and actual MCP stdio subprocess roundtrip with exact four-tool public inventory, legacy paste and identity metadata readback.
+- The three legacy adapter failures from run #49 were fixed by preserving the two-argument service-call path when optional identity_id is absent; tests were not skipped or removed.
+
+### 2. Workflow hardening
+
+- Independent unit and E2E jobs; both execute even if the other fails.
+- Exact triggering SHA checkout without recursive submodule handling.
+- Python 3.12, dependency install + `pip check`, `compileall`, bounded tests and JUnit artifact retention for 14 days.
+- Least-privilege `contents: read`.
+- GitHub Actions dependencies pinned to the audited commit SHAs recorded in the architecture addendum.
+- Actions run #58 at SHA `4d70e2fce18982cfdd8c3487dee1d15c2ca51fd3`: SUCCESS; 157 unit passed, 38 E2E passed, 1 warning.
+
+### 3. CD / release boundary
+
+- CD is NOT RUN / BLOCKED because no real staging/VPS target, target owner, deployment credentials, protected environment approval, health-check target or tested rollback has been attested.
+- No deploy scaffold with guessed host/command/secret was created.
+- Main HEAD last observed: `4d2788158b08a48c39abf3d9c74c57314eea3ff4`; Work branch comparison: 59 ahead / 31 behind; merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`.
+- No main merge, rebase, cherry-pick, production deployment or secrets mutation.
+- Independent Vibe review and safe branch reconciliation remain pending.
+
+### 4. Disposition
+
+- CI: PASS.
+- Auto E2E: PASS.
+- CD: BLOCKED / NOT RUN.
+- Release: NOT RELEASED.
+- Work 32: ACTIVE — NOT RELEASED.
