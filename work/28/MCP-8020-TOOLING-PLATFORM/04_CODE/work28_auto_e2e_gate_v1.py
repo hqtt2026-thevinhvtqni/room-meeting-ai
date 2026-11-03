@@ -29,8 +29,8 @@ def evaluate_e2e_evidence(record: Any) -> dict[str, Any]:
 
     required_strings = (
         "source_commit", "mcp_build_identity", "mcp_process_identity",
-        "mcp_tools_list_sha256", "core_build_identity", "principal_ref",
-        "work_id", "capability", "snapshot_ref", "source_sha256",
+        "mcp_tools_list_sha256", "core_build_identity", "principal_ref", "core_authorization_ref",
+        "work_id", "capability", "snapshot_ref", "expected_source_sha256", "snapshot_sha256", "source_sha256",
         "runtime_identity", "approved_runtime_identity", "isolation_profile",
         "execution_host_identity", "request_id", "run_id", "evidence_ref",
         "evidence_sha256", "readback_ref", "readback_sha256",
@@ -45,7 +45,7 @@ def evaluate_e2e_evidence(record: Any) -> dict[str, Any]:
     blockers: list[str] = []
     if not _COMMIT.fullmatch(record["source_commit"]):
         failed.append("source_commit_invalid")
-    for key in ("mcp_tools_list_sha256", "source_sha256", "evidence_sha256", "readback_sha256"):
+    for key in ("mcp_tools_list_sha256", "expected_source_sha256", "snapshot_sha256", "source_sha256", "evidence_sha256", "readback_sha256"):
         if not _SHA256.fullmatch(record[key]):
             failed.append(key + "_invalid")
     if not _WORK.fullmatch(record["work_id"]):
@@ -54,6 +54,8 @@ def evaluate_e2e_evidence(record: Any) -> dict[str, Any]:
         return {"status": "DENIED", "blockers": ["core_authorization_not_allow"], "failed_checks": failed}
     if record.get("snapshot_immutable") is not True:
         blockers.append("immutable_snapshot_not_attested")
+    if not (record["expected_source_sha256"] == record["snapshot_sha256"] == record["source_sha256"]):
+        failed.append("expected_snapshot_runtime_source_hash_mismatch")
     if record.get("isolation_attested") is not True:
         blockers.append("runtime_os_isolation_not_attested")
     if record["runtime_identity"] != record["approved_runtime_identity"]:
@@ -62,6 +64,10 @@ def evaluate_e2e_evidence(record: Any) -> dict[str, Any]:
         failed.append("evidence_readback_checksum_mismatch")
     if record["evidence_ref"] != record["readback_ref"]:
         failed.append("evidence_readback_reference_mismatch")
+    if record.get("evidence_protected") is not True:
+        blockers.append("evidence_not_proven_protected")
+    if record.get("readback_verified") is not True:
+        blockers.append("evidence_readback_not_verified")
     if isinstance(record.get("exit_code"), bool) or not isinstance(record.get("exit_code"), int):
         blockers.append("actual_integer_exit_code_missing")
     elif record["exit_code"] != 0:
