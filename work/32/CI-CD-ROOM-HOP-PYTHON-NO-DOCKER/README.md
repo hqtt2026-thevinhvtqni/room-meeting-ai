@@ -1,25 +1,35 @@
 # Work 32 — CI/CD for ROOM-HOP (Python, no Docker)
 
-Status: **DESIGN / SURVEY REQUIRED**  
-Owner: Vinh · Coordinator: Xu (AI-01)  
-Sandbox Work ID: 32  
-GitHub branch: `work/32-ci-cd-room-hop-python-no-docker`  
-GitHub path: `work/32/CI-CD-ROOM-HOP-PYTHON-NO-DOCKER/`
+- Document Number: W32-README-001
+- Priority order: P1 — Work overview and current acceptance state
+- Owner / final authority: Vinh
+- Coordinator: Xu (AI-01)
+- Execution owner: Ka — CSA / Architecture & Backend Owner (delegated)
+- Sandbox Work ID: 32
+- GitHub repository: `hqtt2026-thevinhvtqni/room-meeting-ai`
+- Canonical implementation branch: `work/32-ci-cd-python-ci-v2`
+- Work documents: `work/32/CI-CD-ROOM-HOP-PYTHON-NO-DOCKER/`
 
-## Objective
-Survey and design evidence-first CI/CD for existing Python ROOM-HOP without Docker. No PC changes or CI activation before approval.
+## Current status — 2026-11-04
 
-## Contents
-- `00_ROOT/WORK_MANIFEST.md`
-- `00_ROOT/CHAT_TRANSFER_INDEX.md`
-- `01_ORIGINAL/USER_REQUEST_AND_DESIGN_BRIEF.md`
-- `02_EXTENSION/ROLE_TOOL_ROUTING.md`
-- `03_ARCHITECTURE/CICD_TARGET_ARCHITECTURE.md`
-- `03_ARCHITECTURE/SURVEY_AND_BASELINE_PLAN.md`
-- `05_TEST/ACCEPTANCE_PLAN.md`
-- `05_TEST/CI_GATE_MATRIX.md`
-- `06_EVIDENCE/EVIDENCE_REPORT_TEMPLATE.md`
-- `06_EVIDENCE/INITIAL_EVIDENCE_LOG.md`
-- `07_RELEASE/RELEASE_POLICY_DRAFT.md`
+- **CI:** PASS — GitHub Actions push / pull-request / manual-dispatch workflow operational.
+- **Unit gate:** PASS — 157 deterministic Python 3.12 tests.
+- **Auto E2E:** PASS — 38 tests, including live local HTTP and isolated MCP stdio subprocess roundtrip; 1 warning.
+- **CD:** BLOCKED / NOT RUN — no attested staging/VPS target, protected deployment environment, deployment credentials, health-check target or tested rollback.
+- **Release:** NOT RELEASED.
+- **Overall:** ACTIVE — NOT RELEASED pending CD target evidence, branch governance and independent review.
 
-No Docker, PC/live-service changes, automatic merge/commit/push/deploy. MAIN SOURCE remains read-only for AI build operations.
+## Exact validated evidence
+
+- Code-validation SHA: `fa625d1d7b99f5b326c0ff87641e6c3344d2dd73`.
+- Successful GitHub Actions run #50: `41719444619`.
+- CI architecture/security hardening run #58: `41719864578`, SHA `4d70e2fce18982cfdd8c3487dee1d15c2ca51fd3`, SUCCESS; 157 unit passed and 38 E2E passed (1 warning).
+- The workflow fetches the exact triggering SHA without submodule recursion, uses Python 3.12, read-only `contents: read`, bounded job timeouts, `pip check`, `compileall`, independent unit/E2E jobs and 14-day JUnit artifacts.
+- GitHub Actions dependencies are pinned to audited commit SHAs; see `03_ARCHITECTURE/CICD_TARGET_ARCHITECTURE.md`.
+- Full artifact digests and MCP contract evidence: `06_EVIDENCE/W32-EVIDENCE-004-MCP-CONTRACT-STDIO-E2E-20261104.md`.
+
+## Scope / guardrails
+
+No Docker requirement. No Core or live-service architecture change. No two-way Sandbox↔GitHub sync. No automatic merge, secrets mutation or production deploy. Vinh authorized Ka to implement and push Work 32 changes only to the dedicated feature branch and activate branch-scoped CI; that authorization does not authorize main merge or production release.
+
+The Work branch is currently diverged from main (59 ahead / 31 behind at the latest comparison); no merge, rebase or cherry-pick has been performed. Independent Vibe review and safe branch reconciliation remain required before integration.
