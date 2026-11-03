@@ -147,3 +147,34 @@ This entry is the formal assignment record under the agreed journal-based workfl
 2. An: W28-AN-001 / independent baseline and native Linux/Windows test plan, in parallel.
 3. Ka: W28-KA-001 / architecture and WP2 security review against current source, then review Vi's patch.
 4. Xu: coordinate integration, record evidence and resolve blockers across all packages.
+
+## 2026-11-04 — JRN-W28-005 — Add Work Sandbox binary upload to WP3
+
+**Instruction:** Vinh approved adding a reusable Sandbox binary upload capability to the Work 28 build plan.
+
+**READ / TRACE**
+- Read current Work 28 Master Execution Plan V2.0, Manifest, Architecture Decision V2 and Controlled Document Register on branch `work/28-mcp-tooling-platform`.
+- Existing WP3 already requires Sandbox path containment, Work isolation, read/write authorization, size limits and readback, but did not explicitly define binary upload, byte preservation or checksum verification as a feature/acceptance item.
+- Earlier source audit evidence in Work 0001 records that the exposed Sandbox operations were text-oriented and that the uploaded source ZIP had not been transferred byte-for-byte. This is evidence of the gap, not proof of the current deployed service state.
+
+**DECIDE**
+- Add shared platform feature W28-WP3-F01 — `sandbox_upload_file` under WP3, not a Work 0001-only workaround.
+- Required controls: binary-safe bounded streaming/chunking, Core-authorized Work scope, path/symlink containment, quotas, no-overwrite-by-default, temporary staging, atomic promotion, byte count, SHA-256, readback, audit and failure cleanup.
+- Sandbox-to-GitHub publication is a separate controlled capability. Do not claim bidirectional synchronization until implementation and checksum-parity tests exist.
+- Keep Work 28 status ACTIVE / INTEGRATION BLOCKED / NOT RELEASED and Execution Gate CLOSED. No tool availability or implementation PASS is claimed by this planning change.
+
+**BUILD**
+- Update Master Execution Plan V2.0 with feature scope, ownership, contract and acceptance evidence.
+- Update Architecture Decision V2 with mandatory binary upload security properties and service contract.
+- Update this canonical journal and controlled document register.
+
+**ASSIGNMENTS (journal-based; dispatch acknowledgement remains pending)**
+- Vi: implement W28-WP3-F01 end-to-end after reconciling current branch HEAD, actual MCP 8030 source provenance and transport constraints; deliver code, registry/schema, tests and evidence.
+- Ka: independently review upload threat model, authorization, path containment, staging/atomicity, quota and checksum design/diff.
+- An: independently test binary fidelity, SHA-256 readback, large/zero-byte files, traversal, symlinks, overwrite, quotas, interrupted/chunked transfer, cancellation and concurrent uploads.
+- Xu: coordinate WP3 integration, maintain evidence and prevent unsupported claims; keep the feature NOT VERIFIED until acceptance is met.
+
+**VERIFY**
+- This journal entry records the approved scope and formal assignments only. Implementation, runtime deployment, live upload, checksum readback, CI and AI acknowledgement have not yet been demonstrated by this change.
+
+**STATUS:** PLAN UPDATED / IMPLEMENTATION PENDING / WP3 GATE NOT VERIFIED.
