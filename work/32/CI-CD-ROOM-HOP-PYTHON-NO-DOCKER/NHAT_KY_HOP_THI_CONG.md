@@ -208,3 +208,18 @@
 - Evidence: W32-EVIDENCE-003; run https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/41718006637; E2E artifact 13270472546.
 - Decision: preserve T8; no speculative MCP API expansion; reconcile approved Contract #1 and client code before application change. CI overall remains FAIL; CD NOT STARTED.
 - Status: AUTO E2E PASS; UNIT BLOCKED/FAIL; WORK 32 ACTIVE — NOT RELEASED.
+
+## W32-LOG-20261104-03 — MCP public contract reconciliation and stdio E2E
+
+- Document Number: W32-LOG-20261104-03
+- Priority: P1 — Resolve CI contract failure / prove MCP process boundary
+- Name: Ka
+- Title: CSA / Architecture & Backend Owner (delegated)
+- Date-Time: 2026-11-04 (hour/minute not captured; not inferred)
+- Action: Reconciled the T8 failure against repository evidence. The original MCP Public Boundary V1 contract defined three read tools; the later add_paste tool made the locked V1 inventory four. Core lifecycle join/start operations are HTTP endpoints, not MCP tools. Updated the T8 inventory to four tools; removed the contradictory join_meeting method/requirement from the Integration MCP client; corrected the MCP adapter to forward optional identity_id to MeetingService.add_paste; strengthened T8 to verify both legacy unidentified paste and identified paste metadata. Added an isolated real stdio subprocess E2E test and included it in the Auto E2E workflow.
+- Source evidence: MCP V1 contract introduced in commit 73a454b4a806a47a738ab323b50ce4154a65d6b6; add_paste public tool introduced in d9b0a1a5baea1498a940e8d4652c9e875915c05a; Message v1.0/T8 introduced in a799106199976334ef740c80f566f801fb00c667; HTTP lifecycle API_CONTRACT.md explicitly maps join/start to HTTP routes.
+- Implementation commits: 9adce9b54e4c9a9394472c959d1e56cf25911169; b070c59d18f17b0b194caf6b36818aa8a482af53; f692dbd0fcc01d4507bb0f57a47745119164abb4; 15503d0794d77e6a20d7594e3556c3dd2721f410; 5309f89984e5ab61d85c22e404babec88ace5995.
+- CI: latest workflow run 41718470071 is queued/pending at SHA 5309f89984e5ab61d85c22e404babec88ace5995; no PASS claim until its jobs finish. Earlier run 41718406486 was based on an intermediate SHA and must not be used as validation of the final changes.
+- Branch compare: main current HEAD 4d2788158b08a48c39abf3d9c74c57314eea3ff4; Work branch ahead 48 / behind 31; merge base remains 9e4002cbd93a6b92684b17623d79a1adda161d37. No merge/rebase/cherry-pick.
+- Guardrails: no Core source changes; no secrets; no deployment; no production mutation.
+- Status: MCP CONTRACT RECONCILED IN BRANCH; STDIO E2E ADDED; VALIDATION PENDING; WORK 32 ACTIVE — NOT RELEASED.
