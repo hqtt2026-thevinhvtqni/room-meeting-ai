@@ -1,12 +1,15 @@
 """Fail-closed acceptance gate for Work 28 automatic E2E evidence.
 
-This module evaluates evidence produced by a trusted deployed runner. It does
-not authorize, dispatch, or execute work. Caller-supplied status text is never
-used to calculate PASS.
+Evaluates a record produced by a trusted deployed runner. It does not
+authorize, dispatch, or execute work. PASS requires a deployment-held HMAC
+attestation; caller-supplied status text is never authoritative.
 """
 from __future__ import annotations
 
+import hashlib
+import hmac
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -18,8 +21,13 @@ _WORK = re.compile(r"^W[0-9]+$")
 _SECRET_KEYS = {"credential", "grant_token", "token", "authorization_header", "secret"}
 
 
-def evaluate_e2e_evidence(record: Any) -> dict[str, Any]:
-    """Return PASS only when every Auto-E2E stage has verifiable evidence."""
+def evaluate_e2e_evidence(
+    record: Any,
+    *,
+    attestation_key: str | None = None,
+    expected_key_id: str | None = None,
+) -> dict[str, Any]:
+    """Return PASS only when complete evidence and its HMAC are verified."""
     if not isinstance(record, dict):
         return {"status": "BLOCKED", "blockers": ["evidence_record_must_be_object"], "failed_checks": []}
 
@@ -29,8 +37,9 @@ def evaluate_e2e_evidence(record: Any) -> dict[str, Any]:
 
     required_strings = (
         "source_commit", "mcp_build_identity", "mcp_process_identity",
-        "mcp_tools_list_sha256", "core_build_identity", "principal_ref", "core_authorization_ref",
-        "work_id", "capability", "snapshot_ref", "expected_source_sha256", "snapshot_sha256", "source_sha256",
+        "mcp_tools_list_sha256", "core_build_identity", "principal_ref",
+        "core_authorization_ref", "attestation_key_id", "work_id", "capability",
+        "snapshot_ref", "expected_source_sha256", "snapshot_sha256", "source_sha256",
         "runtime_identity", "approved_runtime_identity", "isolation_profile",
         "execution_host_identity", "request_id", "run_id", "evidence_ref",
         "evidence_sha256", "readback_ref", "readback_sha256",
@@ -43,6 +52,22 @@ def evaluate_e2e_evidence(record: Any) -> dict[str, Any]:
 
     failed: list[str] = []
     blockers: list[str] = []
+
+    signature = record.get("attestation_signature")
+    if not isinstance(attestation_key, str) or not attestation_key or not isinstance(expected_key_id, str) or not expected_key_id:
+        blockers.append("trusted_attestation_verifier_not_configured")
+    elif record["attestation_key_id"] != expected_key_id:
+        failed.append("attestation_key_id_mismatch")
+    elif not isinstance(signature, str) or not _SHA256.fullmatch(signature):
+        failed.append("attestation_signature_missing_or_invalid")
+    else:
+        unsigned = dict(record)
+        unsigned.pop("attestation_signature", None)
+        canonical = json.dumps(unsigned, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+        expected_signature = hmac.new(attestation_key.encode("utf-8"), canonical, hashlib.sha256).hexdigest()
+        if not hmac.compare_digest(signature, expected_signature):
+            failed.append("attestation_signature_verification_failed")
+
     if not _COMMIT.fullmatch(record["source_commit"]):
         failed.append("source_commit_invalid")
     for key in ("mcp_tools_list_sha256", "expected_source_sha256", "snapshot_sha256", "source_sha256", "evidence_sha256", "readback_sha256"):
@@ -97,10 +122,12 @@ def evaluate_e2e_evidence(record: Any) -> dict[str, Any]:
         status = "BLOCKED"
     else:
         status = "PASS"
-    return {"status": status, "blockers": blockers, "failed_checks": failed,
-            "source_commit": record["source_commit"], "work_id": record["work_id"],
-            "request_id": record["request_id"], "run_id": record["run_id"],
-            "evidence_ref": record["evidence_ref"], "evidence_sha256": record["evidence_sha256"]}
+    return {
+        "status": status, "blockers": blockers, "failed_checks": failed,
+        "source_commit": record["source_commit"], "work_id": record["work_id"],
+        "request_id": record["request_id"], "run_id": record["run_id"],
+        "evidence_ref": record["evidence_ref"], "evidence_sha256": record["evidence_sha256"],
+    }
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -113,7 +140,11 @@ def main(argv: list[str] | None = None) -> int:
     except (OSError, ValueError):
         print(json.dumps({"status": "BLOCKED", "blockers": ["evidence_file_unreadable_or_invalid_json"]}))
         return 2
-    result = evaluate_e2e_evidence(record)
+    result = evaluate_e2e_evidence(
+        record,
+        attestation_key=os.environ.get("WORK28_E2E_ATTESTATION_HMAC_KEY"),
+        expected_key_id=os.environ.get("WORK28_E2E_ATTESTATION_KEY_ID"),
+    )
     print(json.dumps(result, sort_keys=True))
     return 0 if result["status"] == "PASS" else (1 if result["status"] in ("FAIL", "DENIED") else 2)
 
