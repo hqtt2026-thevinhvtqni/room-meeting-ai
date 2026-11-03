@@ -4,7 +4,7 @@
 - **Read order:** 55
 - **Depends on:** DOC-001; DOC-038; DOC-039; DOC-040; DOC-056
 - **Status:** ACTIVE — SINGLE SOURCE OF TRUTH
-- **Version / Updated:** 2.8 / 2026-11-02
+- **Version / Updated:** 2.9 / 2026-11-03
 - **Owner:** Xu / AI-01
 - **Authority:** Vinh
 Owner: Xu / AI-01
@@ -176,3 +176,12 @@ Exact-basename GitHub code searches were run for each of the 11 legacy source fi
 **Remediation performed:** DOC-041 and DOC-073, DOC-074, DOC-075, DOC-077 were copied from GitHub main into the canonical Sandbox root and read back byte-for-byte. DOC-035 and DOC-055 were independently probed and already matched the current GitHub main content at the canonical root. Thus all seven relevant documents (DOC-035, DOC-041, DOC-055, DOC-073, DOC-074, DOC-075, DOC-077) now have exact canonical-root Sandbox parity.
 
 **Residual path drift:** The nested `work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/00_ROOT/` copies remain as duplicate/orphaned paths. They are preserved pending an explicit cleanup authorization and verified impact assessment; no deletion was performed. The canonical path remains the top-level Work root path stated above. Future Sandbox operations must omit the extra `work/70/` prefix.
+
+
+## Bổ sung đăng ký tài liệu — 2026-11-03
+
+| DOC-ID | Priority | Read order | Tên tài liệu | Đường dẫn chuẩn | Phụ thuộc | Trạng thái | Ghi chú |
+|---|---|---:|---|---|---|---|---|
+| DOC-084 | P0 | 84 | Báo cáo rà soát hiện trạng và lộ trình khắc phục Work 70 / Work 70 Readiness and Remediation Report | 06_EVIDENCE/DOC-084_BAO-CAO-RA-SOAT-HIEN-TRANG-VA-LO-TRINH-KHAC-PHUC_WORK70-READINESS-AND-REMEDIATION-REPORT.md | DOC-001; DOC-004; DOC-005; DOC-035; DOC-055; DOC-057; DOC-063; DOC-067; DOC-071; DOC-072 | ACTIVE — AUDIT RECORDED / REMEDIATION OPEN | Snapshot freshness correction, WP structure checks, Gate/QE status and GitHub branch divergence at 2026-11-03; not acceptance or release evidence |
+
+**Registration note:** DOC-084 is a new audit record. DOC-073..DOC-083 remain governed by the allocation ledger above; reserved IDs and blocked copies are not treated as completed documents. This supplemental row does not close the outstanding DOC-055 main-table/addendum reconciliation.
