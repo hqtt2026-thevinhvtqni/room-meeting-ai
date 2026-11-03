@@ -1012,3 +1012,8 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 
 
 | 045 | 2026-11-03 | Xu / AI-01 | Kiểm tra CI/status của PR #37 | Truy vấn commit status và check-runs tại PR head `1a43fd4bee6f7f1dc954fa0430ab7e05c6645646`; status pending, total_count=0; check-runs total_count=0. | NOT RUN / NO CHECKS — không có CI PASS/FAIL; PR vẫn OPEN/DRAFT, mergeable=true; chỉ có manual readback/compare evidence | DOC-084 §11; GitHub commit status API; GitHub check-runs API; PR #37 |
+
+
+**Bổ sung số thứ tự hồi tố — 2026-11-03:** Mục rà soát readiness ban đầu được ghi dưới dạng tiêu đề sự kiện không có STT trước mục 041. Để khôi phục chuỗi số nhật ký, ghi nhận định danh logic của sự kiện đó là STT 040; nội dung gốc vẫn được giữ nguyên ở vị trí ban đầu.
+
+| 040 | 2026-11-03 | Xu / AI-01 | Readiness audit and Dashboard freshness correction | Đọc Manifest, DOC-055, DOC-054, DOC-066, DOC-067, DOC-071, DOC-072, DOC-063, BUILD register/schema, Dashboard data/schema và verification checklist; kiểm tra cấu trúc 6 WP; phát hiện Dashboard snapshot as_of 2026-10-30 nhưng freshness FRESH; so sánh GitHub main với work/70/05-build. | DONE — audit event recorded; Dashboard freshness corrected to STALE; branch divergence identified; no code/runtime/gate mutation | DOC-084 §§1–5; Sandbox read probes; GitHub compare main...work/70/05-build |
