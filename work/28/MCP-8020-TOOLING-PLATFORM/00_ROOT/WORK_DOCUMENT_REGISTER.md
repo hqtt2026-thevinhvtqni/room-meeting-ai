@@ -27,3 +27,5 @@ Classify legacy material as follows when it is inventoried:
 
 ## Registration rules
 Assign controlled codes only to official Work documents. Supporting evidence may retain descriptive filenames and be linked here by path. Do not invent historical approvals, test outcomes or AI acknowledgements. Update this register when new official documents are approved or when a legacy item is formally superseded.
+
+| `A2E-W28-W32-ADOPTION-20261104-001` — `01_PLAN/WORK28_WORK32_PRODUCT_AUTO_E2E_ADOPTION_20261104.md` | Auto E2E adoption decision | Adaptation of Work 32 exact-SHA, product journey, evidence readback and immutable artifact pipeline to Work 28 security boundaries | Current |
