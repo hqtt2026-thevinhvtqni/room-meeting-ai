@@ -396,3 +396,16 @@ E0000-022 (ghi sau append này).
 - **Canonical journal mapping:** Sandbox Work 0000 DOC-003 → GitHub room-meeting-ai/work/0000-governance-baseline/work/0000-governance/00_ROOT/DOC-003_NHAT-KY-THI-CONG_EXECUTION-LOG.md.
 - **GitHub DOC-003 mirror:** cập nhật nguyên bản sau mục 046 và fetch/readback exact compare. Commit mirror sẽ được ghi nhận trong Evidence Register E0000-023; không tạo một nhật ký GitHub thứ hai để ghi commit của chính nhật ký.
 - **Kết quả:** ONE PRIMARY JOURNAL; LEGACY GITHUB JOURNALS ARCHIVED; GITHUB DOC-003 IS VERBATIM MIRROR; CHAT IS NOT A JOURNAL. D0000-008 recorded.
+
+
+## 047 | 2026-11-03 | Xu / AI-01 | Bổ sung luồng tiếp nhận sự kiện GitHub ngược về nhật ký chính Sandbox
+
+- **Vấn đề được Founder nêu:** nếu AI làm việc trên nhánh GitHub thì làm thế nào để Xu tiếp nhận và ghi lại vào nhật ký chính Sandbox.
+- **Nguyên tắc giữ nguyên:** không cho AI ghi trực tiếp vào bản mirror DOC-003 trên GitHub như một nhật ký độc lập. Sandbox DOC-003 vẫn là Primary Journal; GitHub DOC-003 vẫn là mirror nguyên nội dung.
+- **Luồng GitHub → Sandbox (inbound):** (1) AI thực hiện công việc trên branch/PR được giao; (2) khi bàn giao, AI để lại một bản ghi sự kiện trong commit message body hoặc PR description/comment theo mẫu bắt buộc; (3) Xu kiểm tra commit/PR, actor, branch, diff, file thay đổi, test/evidence và đối chiếu phạm vi task; (4) Xu append kết quả đã xác minh vào Sandbox DOC-003 với link/commit SHA/PR và mức độ bằng chứng; (5) Xu readback Sandbox; (6) Xu mirror lại toàn bộ DOC-003 lên GitHub và xác minh exact content parity.
+- **Mẫu receipt bắt buộc:** Work ID; Task/Assignment ID; Actor + AI ID/runtime nếu xác minh được; branch; commit SHA hoặc PR URL; thời gian; thay đổi thực tế (paths); test/evidence và kết quả; blocker/remaining work; trạng thái ACK/IN_PROGRESS/READY_FOR_REVIEW/DONE (không tự claim PASS nếu chưa có bằng chứng). Receipt là gói bàn giao/evidence, không phải nhật ký thứ hai.
+- **Nếu AI không có quyền ghi commit:** gửi receipt qua PR comment hoặc issue comment trên GitHub trong cùng repository/branch workflow; Xu vẫn xác minh trước khi nhập. Không dùng chat làm nguồn thay thế cho bằng chứng GitHub.
+- **Chống giả mạo/nhầm actor:** không tin tên hiển thị hoặc chữ ký tự khai đơn lẻ; ghi actor là DECLARED nếu chưa xác minh account/runtime. Commit tồn tại chỉ chứng minh thay đổi được commit, không chứng minh người/AI nào thực sự thực hiện hay test đã PASS.
+- **Cơ chế Xu tiếp nhận:** hiện tại có thể kiểm tra GitHub bằng connector khi Xu chạy lượt xử lý; chưa có bằng chứng webhook/event listener hoặc bộ poller tự động được cấu hình để đẩy commit về Sandbox. Vì vậy inbound hiện là `PULL-ON-CHECK / MANUAL TRIGGER`, không được gọi là realtime/automatic. Muốn tự động phải có webhook hoặc scheduled poller được triển khai, xác thực và kiểm thử riêng.
+- **Không xử lý trực tiếp:** commit/PR không liên quan, ngoài branch được giao, không có receipt tối thiểu, hoặc không có bằng chứng đủ thì ghi trạng thái UNVERIFIED/NEEDS_CLARIFICATION; không tự nhập thành DONE/PASS.
+- **Kết quả:** BIDIRECTIONAL EVENT FLOW DEFINED; ONE PRIMARY JOURNAL RETAINED; AUTOMATIC WEBHOOK/POLLING NOT IMPLEMENTED OR VERIFIED.
