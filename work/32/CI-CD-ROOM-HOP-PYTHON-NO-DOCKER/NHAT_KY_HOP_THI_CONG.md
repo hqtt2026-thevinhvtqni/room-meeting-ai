@@ -260,3 +260,23 @@
 - **Branch governance:** main HEAD `4d2788158b08a48c39abf3d9c74c57314eea3ff4`; Work branch 61 ahead / 31 behind; merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`. No merge, rebase or cherry-pick.
 - **CD:** NOT RUN / BLOCKED — no attested staging target, protected deployment approval, deployment credentials, health check or rollback evidence. No production mutation.
 - **Status:** CI = PASS; AUTO E2E = PASS; CD = BLOCKED / NOT RUN; Work 32 = ACTIVE — NOT RELEASED.
+
+
+## W32-LOG-20261104-06 — P0 — Complete Core product Auto E2E
+
+- **Document Number:** W32-LOG-20261104-06
+- **Priority order:** P0 — Full product journey and cross-boundary verification
+- **Name:** Ka
+- **Title:** CSA / Architecture & Backend Owner (delegated)
+- **Date-Time:** 2026-11-04 04:31 UTC+07:00 (GitHub Actions completion 2026-11-03 21:30 UTC)
+- **Action:** Added `tests/test_ci_product_e2e.py` and wired it into the automatic Product Auto E2E job.
+- **Product flow:** identity discovery → Core ID allocation → create → open → unauthorized JOIN rejection → quorum START rejection → valid JOIN/START → actual MCP stdio subprocess → identified and legacy recording → transcript readback and byte-integrity → HTTP close → official final artifact → post-close MCP readback.
+- **No green-washing:** the test uses a live Uvicorn HTTP server, real MeetingService/Core, actual MCP stdio subprocess and isolated on-disk meeting directory; no FakeMeetingService or fake transport is used for this journey.
+- **Exact source SHA:** `a39438caa694549a7918d3a86878ee5ff95338de`.
+- **GitHub Actions:** run #64 / `41722337882` — SUCCESS.
+- **Unit:** 157 passed in 2.49s.
+- **Product Auto E2E:** 39 passed, 1 warning in 4.39s.
+- **Artifacts:** Unit `13271603230`, SHA-256 `d53fefde32748e5c8bc5cbb44090d041c402b6faeb076fb8bf8533fd274dee18`; E2E `13273077743`, SHA-256 `ff7c5cc0e63d39dedd83031cebe6c1a4aa501f153a98cf32eb137b819ceaa729`.
+- **Dashboard boundary finding:** the separate Dashboard repo/branch at HEAD `32e41f43d2fdd6b8314185bbaa57bc8b04b41641` still defaults to `createMockBridge()`; its documented HTTP bridge is not implemented and does not match the locked Core/Workspace contract. Dashboard→Core browser E2E is therefore BLOCKED / NOT RUN, not reported as PASS.
+- **CD:** BLOCKED / NOT RUN; no attested staging target, deployment authority, credentials, health check or tested rollback.
+- **Disposition:** Core product Auto E2E PASS; Dashboard integration NOT RUN; CD NOT RUN; Work 32 ACTIVE — NOT RELEASED.

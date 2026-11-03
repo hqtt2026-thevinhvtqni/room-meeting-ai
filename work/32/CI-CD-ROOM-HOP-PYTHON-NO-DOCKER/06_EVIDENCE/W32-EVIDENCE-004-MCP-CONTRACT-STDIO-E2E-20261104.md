@@ -80,3 +80,8 @@
 - CD: BLOCKED / NOT RUN pending a verified staging target, protected approval, deployment credentials/host trust, health check and tested rollback.
 - Main merge / production release: NOT AUTHORIZED by these CI results.
 - Work 32: CI VALIDATED; CD / RELEASE BLOCKED; ACTIVE — NOT RELEASED.
+
+
+## Superseding product-level coverage
+
+The MCP stdio boundary remains covered by this evidence. The broader complete Core product journey is recorded in `W32-EVIDENCE-005-PRODUCT-AUTO-E2E-20261104.md`, Actions run #64 (`41722337882`), SHA `a39438caa694549a7918d3a86878ee5ff95338de`: 157 unit passed; 39 Product Auto E2E passed, 1 warning. Evidence 005 supersedes this document only for the overall Core product journey; this document remains the MCP contract-specific record.
