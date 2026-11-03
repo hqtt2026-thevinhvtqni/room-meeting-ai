@@ -30,8 +30,10 @@ def seal_evidence(
     digest = hashlib.sha256(body.encode("utf-8")).hexdigest()
     result_path = dest_dir / "FINAL_RESULT.json"
     seal_path = dest_dir / "FINAL_RESULT.sha256"
-    result_path.write_text(body, encoding="utf-8")
-    seal_path.write_text(digest + "\n", encoding="utf-8")
+    # Write exact UTF-8 bytes: text-mode newline translation on Windows
+    # would turn LF into CRLF after hashing and make the seal unverifiable.
+    result_path.write_bytes(body.encode("utf-8"))
+    seal_path.write_bytes((digest + "\n").encode("ascii"))
     return {
         "evidence_ref": str(result_path),
         "evidence_seal": str(seal_path),
