@@ -245,7 +245,7 @@
   ],
   "decisions_needed": [],
   "source_mode": "local_snapshot",
-  "freshness": "FRESH",
+  "freshness": "STALE",
   "as_of": "2026-10-30T09:10:00+07:00",
-  "warning_vi": "Bản chụp cục bộ trong Sandbox. Không phải dữ liệu Core trực tiếp. Trạng thái phase/gate chưa được QE độc lập xác minh."
+  "warning_vi": "Bản chụp cục bộ trong Sandbox, không phải dữ liệu Core trực tiếp. Mốc dữ liệu gốc: 2026-10-30T09:10:00+07:00; đã quá hạn tại lần rà soát 2026-11-03. Không dùng freshness hoặc trạng thái phase/gate này như bằng chứng realtime hay QE độc lập."
 }
