@@ -178,3 +178,41 @@ This entry is the formal assignment record under the agreed journal-based workfl
 - This journal entry records the approved scope and formal assignments only. Implementation, runtime deployment, live upload, checksum readback, CI and AI acknowledgement have not yet been demonstrated by this change.
 
 **STATUS:** PLAN UPDATED / IMPLEMENTATION PENDING / WP3 GATE NOT VERIFIED.
+
+## 2026-11-04 04:03 UTC+07:00 — JRN-W28-006 — Resume implementation and reconcile GitHub → Sandbox
+
+**Role:** VI | CODER  
+**Signature:** [KÝ: VI | CODER]  
+**Source branch:** `work/28-mcp-tooling-platform`  
+**Observed HEAD before this journal update:** `af025659baea1a1fdd319e6d57ec3b3a18d664bc`
+
+### READ / TRACE
+- Re-read Work 28 through ROOM-HOP MCP 8030 Sandbox and the canonical GitHub branch.
+- Confirmed the Work Manifest identifies GitHub branch `work/28-mcp-tooling-platform` as the canonical source; MCP 8030 Sandbox is the controlled build/verification and evidence environment, not an independent source of truth.
+- Confirmed the latest observed GitHub HEAD before this journal update was `af025659baea1a1fdd319e6d57ec3b3a18d664bc`.
+- Confirmed GitHub Actions run `41716789801` completed with three successful jobs: unit-regression-tests, execution-host-lifecycle-linux and execution-host-lifecycle-windows. This CI result is for the observed HEAD and is not live MCP → Core → W13 E2E evidence.
+- Re-read `execution_host/process_job.py` on the branch (blob `47ab511151e81aef120527a2524fb01f4d6cb87b`). The current source still starts the process with Popen before creating/assigning the Windows Job Object; the suspended-spawn candidate is not yet integrated into this canonical source.
+- Re-read the Sandbox WP2 validation candidate: 17 test functions are present. They have NOT been executed. Four native-Windows cases require a real Windows runner; concurrent spawn/cleanup race coverage remains absent.
+- Re-read the latest WP3 journal decision: shared feature W28-WP3-F01 `sandbox_upload_file` is approved for planning, but implementation, runtime availability, byte-preservation and SHA-256 readback have NOT been demonstrated.
+- Sandbox journal readback was behind the GitHub journal: its readable copy ended before the 2026-11-04 WP3 entry. This is a journal synchronization gap, not evidence that GitHub changes were absent.
+
+### ANALYZE / DECIDE
+- GitHub remains the canonical source. Continue writing controlled Work 28 source and records to the official branch first; then synchronize the verified corresponding artifacts into Sandbox and read them back.
+- Do not bulk-copy an unverified Sandbox candidate over GitHub. Reconcile exact branch HEAD and file blob SHA before each source edit.
+- Prioritize WP2 suspended-spawn integration because the canonical source still contains the start-before-Job-Object race. Preserve fail-closed behavior; do not weaken the Job Object gate. Add missing concurrent/repeated cleanup coverage before claiming adequate test coverage.
+- Continue WP3-F01 as a separate bounded implementation slice after tracing the live MCP 8030 Sandbox provider/transport and authorization contract. Do not invent an upload endpoint or claim binary capability from the plan alone.
+- Keep Core :8000 as the sole authorization authority; do not probe or activate the quarantined historical MCP :8020 listener.
+
+### BUILD / VERIFY — THIS CHECKPOINT
+- Appended this continuation record to the canonical GitHub journal first.
+- Next implementation slice: reconcile current WP2 candidate against branch HEAD, inspect all spawn/cleanup callsites, port only reviewed changes to the official branch, add/run focused tests on Linux and native Windows, then hand the exact commit and raw outputs to An for independent verification.
+- In parallel, trace WP3 binary-upload provider capability and document the exact missing contract/source components before implementing.
+- After each GitHub artifact is persisted, synchronize that exact artifact to Work 28 Sandbox and verify readback. This checkpoint synchronizes the canonical journal only; it does not claim source-code synchronization.
+
+### GATES / STATUS
+- Work: ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+- WP2: HIGH / OPEN / RELEASE BLOCKER; candidate tests NOT RUN; source integration pending.
+- WP3-F01: PLAN APPROVED / IMPLEMENTATION NOT VERIFIED.
+- Core authorization and live MCP → Core → W13 E2E: BLOCKED / NOT PROVEN.
+- Execution Gate: CLOSED.
+- No release, deployment, runtime activation or acceptance is claimed.
