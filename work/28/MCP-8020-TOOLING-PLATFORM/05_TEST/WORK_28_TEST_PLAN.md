@@ -19,7 +19,9 @@ Acceptance requires exact command, exit code 0, test count > 0 and captured outp
 - execution with nonzero exit, zero tests, malformed summary, missing evidence or nonzero test failure/error must not PASS.
 
 ## 3. Automatic E2E matrix
-See `03_ARCHITECTURE/WORK_28_AUTOMATIC_E2E_BLUEPRINT.md` for A01-A18. Must exercise the deployed MCP entry point through Core to the canonical runtime and protected evidence; unit tests and direct runtime calls do not substitute.
+The canonical operating pipeline is `01_PLAN/WORK28_AUTO_E2E_RUNBOOK_V2.0.md`; A01-A18 acceptance cases remain in `03_ARCHITECTURE/WORK_28_AUTOMATIC_E2E_BLUEPRINT.md`. GitHub Actions `Work 28 Automatic E2E Gate` runs source/contract regression and native Linux/Windows lifecycle suites on every relevant push/PR and emits a machine-readable gate report. The deployed MCP → Core → canonical Runtime → Execution Host → protected evidence/readback path remains BLOCKED until deployed identities and trusted route/isolation evidence are wired. CI PASS is not live E2E PASS.
+
+The gate evaluator `04_CODE/work28_auto_e2e_gate_v1.py` must calculate PASS only from a complete evidence record. Its tests are contract tests for the evaluator, not evidence that a deployed E2E execution occurred.
 
 ## 4. Security/runtime tests — BLOCKED
 - Authenticated principal derivation and Core WorkContext resolution.
