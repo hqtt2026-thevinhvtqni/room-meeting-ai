@@ -120,7 +120,11 @@ def create_server(service: MeetingService) -> Server:
             meeting_id = arguments["meeting_id"]
             text = arguments["text"]
 
-            result = service.add_paste(meeting_id, text)
+            result = service.add_paste(
+                meeting_id,
+                text,
+                identity_id=arguments.get("identity_id"),
+            )
 
             return {
                 "paste": result,
