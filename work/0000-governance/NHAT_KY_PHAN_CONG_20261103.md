@@ -1,3 +1,8 @@
+> **ARCHIVAL / NON-AUTHORITATIVE COORDINATION NOTE — 2026-11-03**
+> This file is retained for historical context only. It is NOT an execution journal and must not receive new progress/ACK/implementation records. The sole authoritative execution journal is the Sandbox Work 0000 DOC-003, mirrored verbatim at [DOC-003](00_ROOT/DOC-003_NHAT-KY-THI-CONG_EXECUTION-LOG.md) on this branch. All new tasks, ACKs, progress, evidence and handoffs must be appended to Sandbox DOC-003 first via ROOM-HOP MCP, then mirrored to GitHub.
+
+---
+
 # NHAT KY PHAN CONG & GIAO VIEC — WORK 0000 GOVERNANCE BASELINE
 - Ngay ghi: 2026-11-03 (UTC)
 - Nguoi ghi: Vibe (GitHub side), theo uy quyen cua Vinh (final authority)
