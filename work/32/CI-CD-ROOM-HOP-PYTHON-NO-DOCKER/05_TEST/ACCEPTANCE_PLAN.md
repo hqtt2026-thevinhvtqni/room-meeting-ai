@@ -60,13 +60,13 @@ Exit: BLOCKED / NOT RUN. No staging host, deployment credentials, protected envi
 
 - Repository: `hqtt2026-thevinhvtqni/room-meeting-ai`
 - Branch: `work/32-ci-cd-python-ci-v2`
-- Validated SHA: `a39438caa694549a7918d3a86878ee5ff95338de`
-- Actions run: `41722337882` (run #64, SUCCESS)
+- Validated SHA: `ecb263a2d53786e71bdca8eed336b303506c06b4`
+- Actions run: `41722744353` (run #65, SUCCESS)
 - Unit: 157 passed.
 - Product Auto E2E: 39 passed, 1 warning.
-- Unit artifact: `13271603230`; SHA-256 `d53fefde32748e5c8bc5cbb44090d041c402b6faeb076fb8bf8533fd274dee18`.
-- E2E artifact: `13273077743`; SHA-256 `ff7c5cc0e63d39dedd83031cebe6c1a4aa501f153a98cf32eb137b819ceaa729`.
-- Main HEAD observed: `4d2788158b08a48c39abf3d9c74c57314eea3ff4`; branch compare: 64 ahead / 32 behind; merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`.
+- Unit artifact: `13272412907`; SHA-256 `b80f706f8f91833ccdf69c0102b201957645c77ff346837c4cbdc0dc698f648b`.
+- E2E artifact: `13272817780`; SHA-256 `ae028bf6c2a5c95247fd950ee70ad7a51e69c0801ff5cf2aad5dd9729b3140f3`.
+- Main HEAD observed: `4d2788158b08a48c39abf3d9c74c57314eea3ff4`; branch compare: 65 ahead / 32 behind; merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`.
 - No main merge, rebase, cherry-pick, production deployment or secrets mutation.
 
 ## Overall

@@ -76,3 +76,16 @@ No fake MeetingService, mocked transport, in-memory replacement service or skipp
 - Work 32: ACTIVE — NOT RELEASED.
 
 This evidence supports a complete automated E2E of the ROOM HOP Core product path, not acceptance of the separate Dashboard integration or production release.
+
+
+## Final branch SHA revalidation — PASS
+
+The final evidence/documentation commit was independently rerun on its exact SHA:
+
+- Final branch SHA: `ecb263a2d53786e71bdca8eed336b303506c06b4`.
+- GitHub Actions run #65: `41722744353` — SUCCESS.
+- Unit: 157 passed in 2.07s.
+- Product Auto E2E: 39 passed, 1 warning in 3.89s.
+- Unit artifact ID `13272412907`; SHA-256 `b80f706f8f91833ccdf69c0102b201957645c77ff346837c4cbdc0dc698f648b`.
+- E2E artifact ID `13272817780`; SHA-256 `ae028bf6c2a5c95247fd950ee70ad7a51e69c0801ff5cf2aad5dd9729b3140f3`.
+- Artifact retention: 14 days.

@@ -280,3 +280,19 @@
 - **Dashboard boundary finding:** the separate Dashboard repo/branch at HEAD `32e41f43d2fdd6b8314185bbaa57bc8b04b41641` still defaults to `createMockBridge()`; its documented HTTP bridge is not implemented and does not match the locked Core/Workspace contract. Dashboard→Core browser E2E is therefore BLOCKED / NOT RUN, not reported as PASS.
 - **CD:** BLOCKED / NOT RUN; no attested staging target, deployment authority, credentials, health check or tested rollback.
 - **Disposition:** Core product Auto E2E PASS; Dashboard integration NOT RUN; CD NOT RUN; Work 32 ACTIVE — NOT RELEASED.
+
+
+## W32-LOG-20261104-07 — P0 — Final exact-SHA revalidation of product Auto E2E
+
+- **Document Number:** W32-LOG-20261104-07
+- **Priority order:** P0 — Final exact-SHA verification
+- **Name:** Ka
+- **Title:** CSA / Architecture & Backend Owner (delegated)
+- **Date-Time:** 2026-11-04 04:33 UTC+07:00 (GitHub Actions completion 2026-11-03 21:33 UTC)
+- **Exact SHA:** `ecb263a2d53786e71bdca8eed336b303506c06b4`.
+- **GitHub Actions:** run #65 / `41722744353` — SUCCESS.
+- **Unit:** 157 passed in 2.07s.
+- **Product Auto E2E:** 39 passed, 1 warning in 3.89s.
+- **Artifacts:** Unit `13272412907`, SHA-256 `b80f706f8f91833ccdf69c0102b201957645c77ff346837c4cbdc0dc698f648b`; E2E `13272817780`, SHA-256 `ae028bf6c2a5c95247fd950ee70ad7a51e69c0801ff5cf2aad5dd9729b3140f3`.
+- **Branch comparison:** 65 ahead / 32 behind main; no merge/rebase/cherry-pick.
+- **Disposition:** Core product Auto E2E PASS; Dashboard→Core integration BLOCKED / NOT RUN; CD BLOCKED / NOT RUN; Work 32 ACTIVE — NOT RELEASED.
