@@ -1,4 +1,7 @@
 # WORK 28 — AUTOMATIC E2E IMPLEMENTATION BLUEPRINT
+
+> **SUPERSEDED OPERATING NOTICE — 2026-11-04:** This file retains the A01–A18 technical acceptance matrix. Its historical owner/participant assignments and runtime assumptions are not current instructions. Follow `00_ROOT/WORK_MANIFEST.md`, `01_PLAN/WORK28_MASTER_EXECUTION_PLAN_V2.0.md` and `01_PLAN/WORK28_AUTO_E2E_RUNBOOK_V2.0.md`. Current team: Xu (coordinator), Vi (implementation), An (independent QA), Ka (independent security/architecture review). Co and all other historical participants are excluded. Historical MCP :8020 is DO NOT USE. CI success is not live deployed E2E acceptance.
+
 Revision: 1.2 — 2026-10-12
 Owner/coordinator: Ka (CSA), delegated by Vinh
 Status: PLAN + CONTRACT IN SANDBOX; live runtime remains BLOCKED
