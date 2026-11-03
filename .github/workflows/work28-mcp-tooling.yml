@@ -60,12 +60,15 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+      - name: Install pytest for suspended-spawn lifecycle tests (Linux)
+        run: python -m pip install pytest
       - name: Run execution_host lifecycle + WP14–WP23 tests (Linux)
         env:
           PYTHONPATH: .
         run: |
           set -o pipefail
           python -m unittest discover -s tests -p 'test_process_job.py' -v 2>&1 | tee lifecycle-output.txt
+          python -m pytest tests/test_process_job_suspended_spawn.py -q 2>&1 | tee -a lifecycle-output.txt
           python -m unittest discover -s tests -p 'test_work28_contract.py' -v 2>&1 | tee -a lifecycle-output.txt
           python -m unittest discover -s tests -p 'test_execution_host_auth.py' -v 2>&1 | tee -a lifecycle-output.txt
           python -m unittest discover -s tests -p 'test_work28_grant.py' -v 2>&1 | tee -a lifecycle-output.txt
@@ -95,11 +98,14 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+      - name: Install pytest for suspended-spawn lifecycle tests (Windows)
+        run: python -m pip install pytest
       - name: Run execution_host lifecycle + WP14–WP23 tests (Windows)
         env:
           PYTHONPATH: .
         run: |
           python -m unittest discover -s tests -p 'test_process_job.py' -v 2>&1 | Tee-Object -FilePath lifecycle-output.txt
+          python -m pytest tests/test_process_job_suspended_spawn.py -q 2>&1 | Tee-Object -FilePath lifecycle-wp2-suspended-spawn.txt
           python -m unittest discover -s tests -p 'test_work28_contract.py' -v 2>&1 | Tee-Object -FilePath lifecycle-output-wp14.txt
           python -m unittest discover -s tests -p 'test_execution_host_auth.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp15-auth.txt
           python -m unittest discover -s tests -p 'test_work28_grant.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp15-grant.txt
