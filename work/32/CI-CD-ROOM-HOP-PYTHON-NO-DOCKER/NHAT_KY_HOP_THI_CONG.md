@@ -223,3 +223,21 @@
 - Branch compare: main current HEAD 4d2788158b08a48c39abf3d9c74c57314eea3ff4; Work branch ahead 48 / behind 31; merge base remains 9e4002cbd93a6b92684b17623d79a1adda161d37. No merge/rebase/cherry-pick.
 - Guardrails: no Core source changes; no secrets; no deployment; no production mutation.
 - Status: MCP CONTRACT RECONCILED IN BRANCH; STDIO E2E ADDED; VALIDATION PENDING; WORK 32 ACTIVE — NOT RELEASED.
+
+
+## W32-LOG-20261104-04 — P1 — Exact-SHA Auto E2E validation PASS
+
+- **Document Number:** W32-LOG-20261104-04
+- **Priority order:** P1 — CI gate validation / MCP legacy compatibility
+- **Name:** Ka
+- **Title:** CSA / Architecture & Backend Owner (delegated)
+- **Date-Time:** 2026-11-04 (GitHub Actions timestamp: 2026-11-03 21:11 UTC; local Work log date follows current project date; no unobserved local time inferred)
+- **Action:** Inspected failed run #49 logs. Root cause was the adapter always passing `identity_id=None` as a keyword, breaking the established legacy service-call contract. Updated the MCP adapter to use the two-argument legacy call when identity_id is absent and pass the optional keyword only when supplied.
+- **Commit:** `fa625d1d7b99f5b326c0ff87641e6c3344d2dd73`.
+- **Exact-SHA run:** GitHub Actions run `41719444619` (#50) — SUCCESS.
+- **Evidence:** Unit job PASS — 157 passed; Auto E2E job PASS — 38 passed, 1 warning. Both jobs completed Python 3.12 setup, dependency installation, pip check, compileall, and test suites.
+- **MCP boundary:** Actual stdio subprocess E2E PASS; four locked public tools, legacy paste, identity-aware paste, transcript readback.
+- **Artifacts:** Unit ID `13271935444`, SHA-256 `f65f5ded755fc64c51baa876e604e5f8d0cde2b67d748a6f6db46792a35bf9c5`; E2E ID `13271058785`, SHA-256 `6e2a5149466a56b938d0e59ef5be93b533117c98d5d0b35477cf341481c938c9`; 14-day retention.
+- **Prior failure retained:** Run #49 `41718781204` failed three legacy adapter tests; the compatibility fix resolves that observed failure. Tests were not deleted or skipped.
+- **Status:** CI UNIT = PASS; AUTO E2E = PASS; CD = NOT RUN / BLOCKED pending verified staging target, protected approval, credentials and rollback; Work 32 = ACTIVE — NOT RELEASED.
+- **Next gates:** Complete branch governance/reconciliation; obtain independent Vibe review; survey and attest a staging deployment target before any CD activation. No merge to main, production deployment, or secrets change performed.
