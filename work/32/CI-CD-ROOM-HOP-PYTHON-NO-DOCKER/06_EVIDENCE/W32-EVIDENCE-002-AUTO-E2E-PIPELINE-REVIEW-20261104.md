@@ -3,7 +3,7 @@
 - Document Number: W32-EVIDENCE-002
 - Priority: P1
 - Author: Ka — CSA / Architecture & Backend Owner (delegated)
-- Date-Time: 2026-11-04 03:xx +07:00
+- Date-Time: 2026-11-04 (hour/minute not captured; not inferred)
 - Status: REVIEW RECORDED; EXECUTION PENDING
 
 ## Scope
