@@ -375,3 +375,13 @@ E0000-022 (ghi sau append này).
 - **Hồ sơ GitHub cũ:** NHAT_KY_PHAN_CONG_20261103.md và NHAT_KY_XU_BAN_GIAO_VIBE_20261103.md chỉ còn là tài liệu điều phối/di sản lịch sử, không phải execution journal có thẩm quyền. Từ thời điểm quyết định này, mọi giao việc và phản hồi phải được ghi trước vào DOC-003; các file cũ không được tiếp tục dùng làm nhật ký song song.
 - **Phạm vi:** áp dụng ngay cho Work 0000. Đề xuất đưa thành quy định bắt buộc cấp công ty qua Work 70; các Work khác áp dụng theo bản tiêu chuẩn Work 70 đã được phê duyệt, không tự sửa tiêu chuẩn khi chưa có quyết định kiểm soát tài liệu.
 - **Kết quả:** PRIMARY JOURNAL = SANDBOX DOC-003; GITHUB = EXACT-CONTENT MIRROR; CHAT = NOT A JOURNAL. GitHub mirror commit cho mục 044 sẽ được ghi ở mục DOC-003 kế tiếp sau khi mirror được tạo và xác minh.
+
+
+## 045 | 2026-11-03 | Xu / AI-01 | Đồng bộ DOC-003 chính từ Sandbox lên GitHub và xác minh parity
+
+- **Primary source:** Sandbox Work 0000 / DOC-003; nội dung được đọc qua ROOM-HOP 8030 MCP sau khi append mục 044.
+- **Mirror destination:** hqtt2026-thevinhvtqni/room-meeting-ai, branch work/0000-governance-baseline, path work/0000-governance/00_ROOT/DOC-003_NHAT-KY-THI-CONG_EXECUTION-LOG.md.
+- **Initial mirror commit:** 3d10e50c243fdda6eb32ee5c63f8837fe2234ff2.
+- **Verification:** GitHub fetch_file và Sandbox read_probe cho kết quả cùng 40,707 ký tự, nội dung bằng nhau tuyệt đối (exact string equality = true) tại thời điểm kiểm tra.
+- **Quy tắc từ đây:** mọi thay đổi tiếp theo append vào Sandbox DOC-003 trước; sau readback mới cập nhật nguyên nội dung DOC-003 lên đúng GitHub path này; fetch lại để so sánh. Không tạo journal riêng.
+- **Kết quả:** PRIMARY JOURNAL VERIFIED; GITHUB MIRROR INITIAL SYNC VERIFIED; commit hash/verification được lưu ở đây; chat chỉ thông báo.
