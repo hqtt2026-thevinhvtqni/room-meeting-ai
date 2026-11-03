@@ -385,3 +385,14 @@ E0000-022 (ghi sau append này).
 - **Verification:** GitHub fetch_file và Sandbox read_probe cho kết quả cùng 40,707 ký tự, nội dung bằng nhau tuyệt đối (exact string equality = true) tại thời điểm kiểm tra.
 - **Quy tắc từ đây:** mọi thay đổi tiếp theo append vào Sandbox DOC-003 trước; sau readback mới cập nhật nguyên nội dung DOC-003 lên đúng GitHub path này; fetch lại để so sánh. Không tạo journal riêng.
 - **Kết quả:** PRIMARY JOURNAL VERIFIED; GITHUB MIRROR INITIAL SYNC VERIFIED; commit hash/verification được lưu ở đây; chat chỉ thông báo.
+
+
+## 046 | 2026-11-03 | Xu / AI-01 | Loại bỏ nhật ký GitHub song song và hoàn tất chuẩn một nguồn nhật ký
+
+- **Thực hiện:** Đánh dấu hai file lịch sử trên canonical GitHub branch là tài liệu điều phối lưu trữ, không có thẩm quyền ghi tiến độ mới:
+  - NHAT_KY_PHAN_CONG_20261103.md — commit cập nhật 0f35e11033950bd6b22a751c0b97a0af44d6a9ba.
+  - NHAT_KY_XU_BAN_GIAO_VIBE_20261103.md — commit cập nhật e4d6c2a04d6589a381ae895020baa92466277698.
+- **Chỉ dẫn trong hai file:** chỉ giữ lịch sử; không append task/ACK/progress mới; mọi ghi nhận mới phải vào Sandbox DOC-003 trước rồi mirror nguyên nội dung sang GitHub.
+- **Canonical journal mapping:** Sandbox Work 0000 DOC-003 → GitHub room-meeting-ai/work/0000-governance-baseline/work/0000-governance/00_ROOT/DOC-003_NHAT-KY-THI-CONG_EXECUTION-LOG.md.
+- **GitHub DOC-003 mirror:** cập nhật nguyên bản sau mục 046 và fetch/readback exact compare. Commit mirror sẽ được ghi nhận trong Evidence Register E0000-023; không tạo một nhật ký GitHub thứ hai để ghi commit của chính nhật ký.
+- **Kết quả:** ONE PRIMARY JOURNAL; LEGACY GITHUB JOURNALS ARCHIVED; GITHUB DOC-003 IS VERBATIM MIRROR; CHAT IS NOT A JOURNAL. D0000-008 recorded.
