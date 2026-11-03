@@ -184,3 +184,15 @@
 - **Verification:** Compare `main...work/32-ci-cd-python-ci-v2` xác nhận 36 commits ahead, 0 behind; diff liệt kê 32 file thay đổi gồm 29 hồ sơ Work 32 và 3 file CI/code đã có trên nhánh.
 - **Boundary:** Không merge, không cập nhật `main`, không thay đổi production. CI gate vẫn BLOCKED theo bằng chứng W32-EVIDENCE-001; CD chưa triển khai.
 - **Status:** SYNCED TO FEATURE BRANCH — NOT MERGED.
+
+## W32-LOG-20261104-01 — Auto E2E pipeline review
+
+- Document Number: W32-LOG-20261104-01
+- Priority: P1 — Auto E2E execution reliability
+- Name: Ka
+- Title: CSA / Architecture & Backend Owner (delegated)
+- Date-Time: 2026-11-04 (hour/minute not captured; not inferred)
+- Action: Reviewed the GitHub CI workflow, MCP adapter source, T8 contract test, and current MCP server tests. Removed the `needs: unit` dependency from the E2E job so E2E evidence can be collected even when unit tests fail. Recorded two separate unresolved T8 discrepancies: public tool inventory (test expects six; adapter currently exposes four) and optional identity_id declared in schema but not forwarded by the handler.
+- Evidence: GitHub commits `c45e16362b63e5e10c2915aa7cad7465b7635a78`, `754b5087fca32f48a000651580c2f1eabb0eed6c`, `c541846b7a3d581a1934a9712cb08a390af9f30f`.
+- Guardrail: No Core/MCP application source modified; T8 not skipped/deleted; no main merge or deployment.
+- Status: WORKFLOW UPDATE COMMITTED; UPDATED RUN NOT YET VERIFIED; WORK 32 ACTIVE — NOT RELEASED.
