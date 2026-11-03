@@ -1,0 +1,13 @@
+{
+  "work_id": "0001",
+  "work_name": "TRADING-DECISION-LAB-REBUILD",
+  "standard": "WORK-70-DOC-037-v1.2",
+  "status": "ACTIVE",
+  "current_phase": "01_DISCOVER",
+  "gate": "PENDING",
+  "source_import": "INVENTORIED_NOT_MIGRATED",
+  "implementation_authorized": false,
+  "experiment_authorized": false,
+  "benchmark_authorized": false,
+  "last_updated": "2026-11-04"
+}
