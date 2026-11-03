@@ -1,0 +1,59 @@
+# DRAFT ONLY — not an active GitHub Actions workflow.
+# Do not rename to .yml or copy into .github/workflows until the exact-SHA baseline and change-control gates are satisfied.
+name: ROOM HOP CI Pilot (Draft)
+
+on:
+  push:
+    branches:
+      - work/32-ci-cd-python-ci-v2
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: room-hop-ci-pilot
+  cancel-in-progress: true
+
+jobs:
+  python-ci-pilot:
+    name: Python 3.12 compile and bounded unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout triggering revision
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install declared dependencies
+        run: |
+          python -m pip install -r requirements.txt
+          python -m pip check
+
+      - name: Compile application packages
+        run: python -m compileall -q core agents
+
+      - name: Run bounded deterministic pilot tests
+        run: |
+          mkdir -p test-results
+          python -m pytest -q tests/test_agent_registry.py tests/test_connectors.py tests/test_context_loader.py tests/test_discussion.py tests/test_e2e.py tests/test_meeting.py --junitxml=test-results/junit.xml
+
+      - name: Retain test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: room-hop-ci-evidence
+          path: test-results/junit.xml
+          if-no-files-found: warn
+          retention-days: 14
