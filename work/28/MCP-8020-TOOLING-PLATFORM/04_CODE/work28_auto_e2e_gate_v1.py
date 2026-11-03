@@ -21,6 +21,21 @@ _WORK = re.compile(r"^W[0-9]+$")
 _SECRET_KEYS = {"credential", "grant_token", "token", "authorization_header", "secret"}
 
 
+def _secret_paths(value: Any, prefix: str = "") -> list[str]:
+    found: list[str] = []
+    if isinstance(value, dict):
+        for key, child in value.items():
+            name = str(key).lower()
+            current = f"{prefix}.{name}" if prefix else name
+            if name in _SECRET_KEYS:
+                found.append(current)
+            found.extend(_secret_paths(child, current))
+    elif isinstance(value, list):
+        for index, child in enumerate(value):
+            found.extend(_secret_paths(child, f"{prefix}[{index}]"))
+    return found
+
+
 def evaluate_e2e_evidence(
     record: Any,
     *,
@@ -31,7 +46,7 @@ def evaluate_e2e_evidence(
     if not isinstance(record, dict):
         return {"status": "BLOCKED", "blockers": ["evidence_record_must_be_object"], "failed_checks": []}
 
-    leaked = sorted(_SECRET_KEYS.intersection(record))
+    leaked = sorted(_secret_paths(record))
     if leaked:
         return {"status": "FAIL", "blockers": [], "failed_checks": ["secret_material_must_not_be_in_evidence:" + ",".join(leaked)]}
 
