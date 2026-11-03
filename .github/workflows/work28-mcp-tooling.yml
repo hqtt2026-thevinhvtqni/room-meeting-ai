@@ -10,12 +10,16 @@ on:
       - "core/execution_authority/**"
       - "room_hop_mcp/**"
       - "tests/**"
+      - "requirements.txt"
       - ".github/workflows/work28-mcp-tooling.yml"
   pull_request:
     paths:
       - "work/28/**"
       - "execution_host/**"
+      - "core/execution_authority/**"
+      - "room_hop_mcp/**"
       - "tests/**"
+      - "requirements.txt"
       - ".github/workflows/work28-mcp-tooling.yml"
   workflow_dispatch:
 
