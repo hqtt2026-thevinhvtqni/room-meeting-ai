@@ -17,10 +17,29 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  python-ci-pilot:
+  unit:
     name: Python 3.12 compile and bounded unit tests
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
+    env:
+      UNIT_TESTS: >-
+        tests/test_agent_registry.py
+        tests/test_connectors.py
+        tests/test_context_loader.py
+        tests/test_discussion.py
+        tests/test_file_ops_agent.py
+        tests/test_governance.py
+        tests/test_identity.py
+        tests/test_importer.py
+        tests/test_intent_router.py
+        tests/test_llama_intent_router.py
+        tests/test_meeting_lifecycle_v021.py
+        tests/test_meeting_manager_allocator.py
+        tests/test_meeting_service.py
+        tests/test_message_v1.py
+        tests/test_secretary.py
+        tests/test_secretary_acceptance_abc.py
+        tests/test_secretary_meeting_acceptance.py
     steps:
       - name: Fetch exact triggering revision without submodule recursion
         env:
@@ -45,18 +64,72 @@ jobs:
           python -m pip check
 
       - name: Compile application packages
-        run: python -m compileall -q core agents
+        run: python -m compileall -q core agents execution_host room_hop_mcp
 
-      - name: Run bounded deterministic pilot tests
+      - name: Run bounded deterministic unit tests
         run: |
           mkdir -p test-results
-          python -m pytest -q tests/test_agent_registry.py tests/test_connectors.py tests/test_context_loader.py tests/test_discussion.py tests/test_e2e.py tests/test_meeting.py tests/test_execution_host.py tests/test_file_ops_agent.py tests/test_governance.py tests/test_http_lifecycle.py tests/test_http_recording.py tests/test_identity.py tests/test_importer.py tests/test_intent_router.py tests/test_llama_intent_router.py tests/test_meeting_lifecycle_v021.py tests/test_meeting_manager_allocator.py tests/test_meeting_service.py tests/test_mcp_server.py tests/test_message_v1.py tests/test_secretary.py tests/test_secretary_acceptance_abc.py tests/test_secretary_meeting_acceptance.py tests/test_wee_8031_bridge.py --junitxml=test-results/junit.xml
+          python -m pytest -q ${UNIT_TESTS} --junitxml=test-results/junit-unit.xml
 
-      - name: Retain test evidence
+      - name: Retain unit test evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: room-hop-ci-evidence
-          path: test-results/junit.xml
+          name: room-hop-ci-evidence-unit
+          path: test-results/junit-unit.xml
+          if-no-files-found: warn
+          retention-days: 14
+
+  e2e:
+    name: Auto E2E (in-process suites + live HTTP roundtrip)
+    needs: unit
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      E2E_TESTS: >-
+        tests/test_e2e.py
+        tests/test_execution_host.py
+        tests/test_wee_8031_bridge.py
+        tests/test_mcp_server.py
+        tests/test_http_lifecycle.py
+        tests/test_http_recording.py
+        tests/test_ci_live_e2e.py
+    steps:
+      - name: Fetch exact triggering revision without submodule recursion
+        env:
+          REPOSITORY: ${{ github.repository }}
+          REVISION: ${{ github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${REPOSITORY}.git"
+          git fetch --no-tags --depth=1 origin "${REVISION}"
+          git checkout --detach FETCH_HEAD
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install declared dependencies
+        run: |
+          python -m pip install -r requirements.txt
+          python -m pip check
+
+      - name: Compile application packages
+        run: python -m compileall -q core agents execution_host room_hop_mcp
+
+      - name: Run auto E2E suites
+        run: |
+          mkdir -p test-results
+          python -m pytest -v ${E2E_TESTS} --junitxml=test-results/junit-e2e.xml
+
+      - name: Retain E2E test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: room-hop-ci-evidence-e2e
+          path: test-results/junit-e2e.xml
           if-no-files-found: warn
           retention-days: 14
