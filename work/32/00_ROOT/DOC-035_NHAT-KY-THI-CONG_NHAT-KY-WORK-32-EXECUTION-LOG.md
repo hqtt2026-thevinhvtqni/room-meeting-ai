@@ -231,3 +231,54 @@
 - **Giới hạn giữ nguyên:** browser-adapter E2E phụ thuộc live :8787 = NOT RUN nếu service không có; F4 unresolved-policy tests giữ nguyên; coverage report-only; `CHECK_STRICT=1` NOT AUTHORIZED. Không main merge, rebase/cherry-pick, secrets/branch protection change, CD, deploy, production, acceptance hoặc release. Track B vẫn BLOCKED / NOT APPROVED.
 - **Handoff:** Ka là execution owner và phải ghi từng thay đổi, commit SHA, run ID, job conclusion, test totals, artifact ID/digest và trạng thái coverage trực tiếp vào DOC-035; cập nhật Sandbox mirror và DOC-036. Vibe chỉ review độc lập sau khi Ka có kết quả; không sửa source.
 - **Trạng thái:** Track A ACTIVE — AUTHORIZED / IMPLEMENTATION NOT YET VERIFIED; Track B BLOCKED; Work 32 ACTIVE — NOT RELEASED.
+
+
+## W32-LOG-20261104-32 — P0 — TRACK A TEST ISOLATION, WORK13 PORTABILITY AND EXACT-SHA CI PASS
+
+- **Document Number:** W32-LOG-20261104-32 / DOC-060
+- **Priority order:** P0 — Close the remaining deterministic CI test harness blockers authorized by Xu
+- **Name:** Ka
+- **Title:** CSA / Work 32 execution owner
+- **Date-Time:** 2026-11-04 13:34 Asia/Ho_Chi_Minh
+- **Authority:** Xu W32-ADR-003 and W32-LOG-20261104-31; Track A only.
+
+### BIÊN BẢN
+- Verified current branch HEAD `c3079bbb73edc84b2e05c2767cf9bb135a754e42` on `work/32-ci-cd-python-ci-v2`.
+- Updated `tests/test_integration.py` so every MCP test uses a test-owned temporary meetings directory; seeded meetings are created by the test, not selected from persisted repository state. The session smoke test now verifies capabilities after the session-managed initialization handshake.
+- Updated `tests/test_work13_wee_integration.py` to use `sys.executable`, not the hardcoded Windows-only `python.exe`.
+- Added both suites to the hardening workflow E2E list. Verified the hardening workflow retains push, pull_request-to-main and workflow_dispatch triggers, then retired duplicate `.github/workflows/ci.yml`.
+- Compare from baseline `3cc8e6e945528c4acda631e9dd3e2f4e50bc983f`: ahead 12 / behind 0; source changes limited to approved test harness and workflow paths; no product runtime/Core/Dashboard source changes.
+
+### NHẬT KÝ
+- GitHub Actions run #16 / ID `41786170213`, exact SHA `c3079bbb73edc84b2e05c2767cf9bb135a754e42`: completed SUCCESS, 4/4 jobs.
+- Unit 167 PASS; tooling 20 PASS; Product Auto E2E 45 PASS / 1 warning; immutable artifact E2E 1 PASS and checksum OK.
+- Five MCP integration tests and one Work13 real-host E2E test are explicitly present in the passing E2E log.
+- Coverage report: `unaccounted_test_files=2`, `missing_whitelisted_files=0`; only browser-adapter E2E and F4 resource-limits tests remain report-only. No strict mode enabled.
+- Artifacts: unit `13301297909`; E2E `13301032553`; tooling `13300693695`; immutable product `13301007709`. Digests are recorded in DOC-060.
+- Sandbox mirrors updated and readback compared byte-for-byte against GitHub for active workflow, Work32 workflow mirror, integration test and Work13 test. DOC-036 updated.
+- **Boundaries:** no merge/main, strict coverage, secrets/branch-protection changes, CD, deployment, release, production/PC, Dashboard/Workspace/Core implementation or acceptance.
+- **Status:** Track A CI hardening = PASS on exact SHA; Track B = BLOCKED / NOT APPROVED; CD = BLOCKED; Work 32 = ACTIVE — NOT RELEASED.
+
+
+## 2026-11-04 — W32-LOG-20261104-33 — Xu đánh giá tiến độ Track A sau Ka và xác nhận exact-SHA run mới nhất
+
+- **Người ghi:** Xu — AI-01 / Work coordinator.
+- **Yêu cầu:** Vinh hỏi khối lượng Work 32 đã đạt và công việc tiếp theo.
+- **HEAD hiện tại:** `d0906794dfb348565389ca54ad328f0cf67f1ac2` trên `work/32-ci-cd-python-ci-v2`; commit message `chore(work-32): remove retired CI workflow draft`.
+- **Đối chiếu source:** so với baseline `3cc8e6e945528c4acda631e9dd3e2f4e50bc983f`: 13 commits ahead / 0 behind. Các thay đổi đã duyệt gồm retire duplicate `.github/workflows/ci.yml`, thêm hai test suites vào E2E, cô lập `tests/test_integration.py` bằng temporary meetings store, đổi Work13 test sang `sys.executable`, và cleanup CI draft. Không thấy thay đổi product runtime trong các file changed của compare.
+- **Exact-SHA verification mới nhất:** GitHub Actions run `41786820432`, SHA `d0906794dfb348565389ca54ad328f0cf67f1ac2`, conclusion SUCCESS; 4/4 jobs SUCCESS: unit, tooling, Product Auto E2E, immutable product artifact.
+- **Test evidence từ runner logs:** Unit 167 passed; tooling 20 passed; Product Auto E2E 45 passed / 1 warning; immutable artifact E2E 1 passed; tổng cộng 233 lượt test PASS theo các job (không gộp trùng lặp giữa suites). Năm MCP integration tests và một Work13 real-host E2E test đều xuất hiện trong log E2E và PASS.
+- **Coverage report:** `unaccounted_test_files=2`, `missing_whitelisted_files=0`. Hai file còn report-only: `tests/test_browser_agent_adapter_e2e.py` (cần browser adapter runtime) và `tests/test_f4_resource_limits.py` (policy unresolved). Không bật `CHECK_STRICT=1`; đây chưa phải full coverage PASS.
+- **Artifact evidence run 41786820432:** unit artifact ID `13300954626`, digest `sha256:52fa066825dde0107548b0aed593501319828c9d7b7c4909829581d7d1a843ba`; E2E artifact ID `13301820965`, digest `sha256:979a9980301562c0326b5826cf8cd876495b55b0d696ec77e47c549ffafaf841`; tooling artifact ID `13301333675`, digest `sha256:f62452deb87627a3bff5e35aea5f2cad3797ceac6577dc1a08e7bd9944703e58`; immutable product artifact ID `13301467056`, digest `sha256:6aea6206a13f152312b7819d8981c612810b9649b11ea72ddc555edbe4fff2ae`. Artifacts have 14-day retention. Latest immutable artifact was built from exact SHA `d090679...`, checksum verified, extracted, dependencies checked, compileall passed and artifact E2E 1 passed.
+- **Current branch governance:** compare `main...`branch` shows DIVERGED: 93 ahead / 35 behind; merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`. Branch protection currently reports disabled / not enabled. No merge/rebase/cherry-pick or main mutation is authorized; branch reconciliation and required-check enforcement remain pending human governance approval.
+- **Warnings:** Product Auto E2E has one Starlette/httpx deprecation warning; GitHub runner reports Node.js 20 deprecation for pinned actions running under Node.js 24. These are warnings, not test failures; assess action/runtime compatibility and update pins only through a separate reviewed change.
+- **Đánh giá khối lượng:** Track A CI pipeline and bounded Core product E2E are operational and have fresh exact-SHA PASS evidence. The authorized two test-harness blockers and duplicate workflow have been fixed and verified. This is a substantial CI milestone, not completion of Work 32 as a whole.
+- **Công việc tiếp theo theo thứ tự ưu tiên:**
+  1. **P0 — Evidence/document reconciliation:** update DOC-036, DOC-014 and W32 evidence records (including DOC-060/061) with run `41786820432`, SHA `d090679...`, current artifact IDs/digests and two-file coverage disposition; reconcile stale README/Manifest/Acceptance Plan snapshots so there is one current status.
+  2. **P0 — Independent review:** Vibe/independent reviewer inspects the exact diff from baseline through `d090679...`, verifies test isolation, workflow triggers/action SHAs, runner logs/artifacts, dependency constraints and no unintended product runtime changes. Record review findings and disposition in evidence/journal.
+  3. **P1 — Remaining CI scope:** retain browser-adapter and F4 tests as visible NOT RUN/BLOCKED until their runtime/policy owners provide prerequisites; do not fake PASS or enable strict coverage. Assess Node runtime deprecation warning and Starlette/httpx warning; make changes only with evidence and review.
+  4. **P0 — Track B product integration:** remain BLOCKED until canonical Dashboard/Workspace source and revision, runtime owner, persistence, authentication/identity, Bridge/Application Service contract and Core owner signoff are evidenced. Do not invent routes or adapters.
+  5. **P0 — Branch governance:** obtain a reviewed reconciliation plan for 93-ahead/35-behind divergence and decide required-check/branch protection with Vinh. No rebase/merge until explicit approval.
+  6. **P1 — CD readiness:** identify an actual staging target and owner, protected environment, least-privilege credentials/host trust, deployment procedure, health checks and tested rollback. Until these exist, CD = BLOCKED / NOT RUN.
+  7. **Acceptance/release:** complete independent review, evidence traceability, human approval and acceptance record; only then consider release. No deploy or release now.
+- **Status:** Track A implementation and latest exact-SHA CI = PASS; evidence package reconciliation = IN PROGRESS; independent review = PENDING; Track B = BLOCKED; branch governance = BLOCKED/PENDING APPROVAL; CD = BLOCKED / NOT RUN; Work 32 = ACTIVE — NOT RELEASED.
