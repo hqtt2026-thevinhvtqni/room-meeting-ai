@@ -25,7 +25,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from core.agent_registry import AgentRegistry
-from core.meeting_manager import MeetingError
+from core.meeting_manager import MeetingError, MeetingRateLimitError
 from core.meeting_service import MeetingService
 from core.principal_registry import PrincipalRegistry
 
@@ -36,6 +36,7 @@ from core.principal_registry import PrincipalRegistry
 
 class AddPasteRequest(BaseModel):
     text: str
+    identity_id: Optional[str] = None
 
 
 class CreateMeetingRequest(BaseModel):
@@ -142,7 +143,24 @@ def create_http_app(
 
     @app.post("/meetings/{meeting_id}/paste")
     def add_paste(meeting_id: str, body: AddPasteRequest) -> dict:
-        return service.add_paste(meeting_id, body.text)
+        try:
+            # Preserve the legacy service call when identity is omitted.
+            if body.identity_id is None:
+                return service.add_paste(meeting_id, body.text)
+            return service.add_paste(
+                meeting_id,
+                body.text,
+                identity_id=body.identity_id,
+            )
+        except MeetingRateLimitError as exc:
+            raise HTTPException(
+                status_code=429,
+                detail={
+                    "code": "RATE_LIMIT_EXCEEDED",
+                    "retry_after_seconds": exc.retry_after_seconds,
+                },
+                headers={"Retry-After": str(exc.retry_after_seconds)},
+            ) from exc
 
     # -----------------------------------------------------------------
     # Lifecycle routes — MỚI.

@@ -18,6 +18,11 @@ from core.message_identity import (
     build_header,
 )
 from core.principal_registry import PrincipalRegistry
+from core.paste_rate_limiter import (
+    LEGACY_UNIDENTIFIED_PRINCIPAL,
+    PasteRateLimitExceeded,
+    SQLitePasteRateLimiter,
+)
 from core.secretary import Secretary
 
 ROOM_HOP_ROOT = Path(__file__).resolve().parent.parent
@@ -38,12 +43,24 @@ class MeetingError(Exception):
     pass
 
 
+class MeetingRateLimitError(MeetingError):
+    """Domain error carrying retry guidance for F4 quota rejection."""
+
+    def __init__(self, retry_after_seconds: int):
+        self.retry_after_seconds = max(1, int(retry_after_seconds))
+        super().__init__(
+            "RATE_LIMIT_EXCEEDED "
+            f"retry_after_seconds={self.retry_after_seconds}"
+        )
+
+
 class Meeting:
     def __init__(
         self,
         meeting_dir: Path,
         principal_registry: PrincipalRegistry | None = None,
         agent_registry: AgentRegistry | None = None,
+        paste_rate_limiter: SQLitePasteRateLimiter | None = None,
     ):
         self.meeting_dir = Path(meeting_dir)
         self.meeting_yaml_path = self.meeting_dir / "meeting.yaml"
@@ -52,6 +69,9 @@ class Meeting:
 
         # SECRETARY V1: raw transcript record keeper.
         self.secretary = Secretary(self.meeting_dir / "transcript.txt")
+        self.paste_rate_limiter = paste_rate_limiter or SQLitePasteRateLimiter(
+            self.meeting_dir.parent / ".room_hop_paste_rate_limits.sqlite3"
+        )
 
         self.principal_registry = principal_registry or PrincipalRegistry()
         self.agent_registry = agent_registry or AgentRegistry()
@@ -291,6 +311,9 @@ class Meeting:
                 f"'{data.get('status')}', không thể PASTE."
             )
 
+        # Validate before quota reservation: invalid requests do not consume quota.
+        raw_text = self.secretary.validate_text(raw_text)
+
         header = None
         if identity_id is not None:
             try:
@@ -302,8 +325,22 @@ class Meeting:
             except MessageIdentityError as e:
                 raise MeetingError(str(e)) from None
 
-        # RAW, byte-identical — KHÔNG đổi so với hành vi trước Message v1.0.
-        result = self.secretary.append(raw_text)
+        # Legacy callers remain supported but share one per-meeting anonymous
+        # bucket, so omitting identity_id cannot bypass the quota.
+        principal_key = (
+            f"resolved:{identity_id}"
+            if identity_id is not None
+            else LEGACY_UNIDENTIFIED_PRINCIPAL
+        )
+        try:
+            with self.paste_rate_limiter.admission(
+                data["id"], principal_key
+            ) as admission:
+                # Count only after Secretary successfully appends raw transcript.
+                result = self.secretary.append(raw_text)
+                admission.commit()
+        except PasteRateLimitExceeded as exc:
+            raise MeetingRateLimitError(exc.retry_after_seconds) from None
 
         # MESSAGE v1.0: "một lần paste = một logical Message" — đúng một
         # entry Message được tạo ở đây, dù có/không có identity_id.
@@ -573,6 +610,9 @@ class MeetingManager:
             parents=True,
             exist_ok=True,
         )
+        self.paste_rate_limiter = SQLitePasteRateLimiter(
+            self.meetings_dir / ".room_hop_paste_rate_limits.sqlite3"
+        )
 
     def _allocate_meeting_id(self) -> str:
         """
@@ -670,6 +710,7 @@ class MeetingManager:
             meeting_dir,
             self.principal_registry,
             self.registry,
+            self.paste_rate_limiter,
         )
 
         meeting.log.log_event(
@@ -700,6 +741,7 @@ class MeetingManager:
             meeting_dir,
             self.principal_registry,
             self.registry,
+            self.paste_rate_limiter,
         )
 
     def list_meetings(
@@ -734,6 +776,7 @@ class MeetingManager:
                 meeting_dir,
                 self.principal_registry,
                 self.registry,
+                self.paste_rate_limiter,
             )
 
             data = meeting.data

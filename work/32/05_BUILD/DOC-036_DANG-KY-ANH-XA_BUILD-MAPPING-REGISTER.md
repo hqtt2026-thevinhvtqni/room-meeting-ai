@@ -58,3 +58,18 @@ Byte-for-byte Sandbox↔GitHub readback is PASS for active workflow MAP-32-002 a
 - Workflow mapping remains one canonical `.github/workflows/ci-validation.yml`; 44 dependency pins remain unchanged. No action or Python dependency was upgraded.
 - Branch divergence current at this check: 103 ahead / 35 behind main; merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`. No reconciliation mutation authorized.
 - Historical mappings remain intact; this addendum does not claim full tree sync or whole-product acceptance.
+
+
+## 2026-11-04 — W32-LOG-41 F4 implementation source mapping
+- **Name:** Ka
+- **Title:** CSA / Backend execution owner delegated by Xu
+- **Date-Time:** 2026-11-04 (Asia/Ho_Chi_Minh; exact minute not captured)
+- **Priority Order:** P0 — Core resource protection
+- `core/paste_rate_limiter.py`: new SQLite same-host atomic rolling-window store; source SHA and CI outcome pending exact-SHA verification.
+- `core/secretary.py`: central UTF-8 byte validation; existing 1 MiB behavior retained.
+- `core/meeting_manager.py`: Core paste admission after active/text/identity validation; commit quota only after successful transcript append; domain rate-limit error carries retry seconds.
+- `room_hop_mcp/adapter/server.py`: MCP text schema maxLength=1,048,576; runtime byte guard remains authoritative.
+- `room_hop_mcp/adapter/http_server.py`: optional identity propagation; rate rejection maps to HTTP 429 and Retry-After.
+- `tests/test_f4_resource_limits.py`: F4 policy, atomic concurrency, scope isolation, rolling expiry, persistence, rollback and HTTP/Core tests.
+- `.github/workflows/ci-validation.yml`: dedicated F4 test module included in bounded unit gate; strict coverage remains disabled.
+- SQLite scope is same-host local filesystem only; no multi-host claim or deployment authorization.

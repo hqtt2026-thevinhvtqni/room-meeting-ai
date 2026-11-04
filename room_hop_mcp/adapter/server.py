@@ -77,6 +77,12 @@ def create_server(service: MeetingService) -> Server:
                         },
                         "text": {
                             "type": "string",
+                            "maxLength": 1048576,
+                            "description": (
+                                "Maximum 1 MiB UTF-8 at Core runtime. "
+                                "JSON Schema maxLength counts characters; "
+                                "Core enforces the authoritative byte limit."
+                            ),
                         },
                         # MESSAGE v1.0 — OPTIONAL. Không có trong
                         # "required" -> mọi caller cũ (Gate 2, test F1-F3)

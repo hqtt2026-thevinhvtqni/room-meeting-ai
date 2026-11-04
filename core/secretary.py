@@ -2,8 +2,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from core.paste_rate_limiter import MAX_PASTE_REQUESTS_PER_WINDOW
+
 MAX_TEXT_BYTES = 1 * 1024 * 1024
-MAX_PASTE_REQUESTS_PER_WINDOW = 100
 
 class Secretary:
     """
@@ -29,17 +30,20 @@ class Secretary:
     def __init__(self, transcript_path: str | Path = "docs/transcript.txt"):
         self._transcript_path = Path(transcript_path)
 
-    def append(self, text: str) -> dict:
+    @staticmethod
+    def validate_text(text: str) -> str:
+        """Normalize and validate the authoritative UTF-8 byte ceiling."""
         text = "" if text is None else str(text)
-
-        # F4.1: gioi han input theo UTF-8 bytes.
-        # Kiem tra truoc khi mo file de dam bao khong co partial write.
         text_bytes = len(text.encode("utf-8"))
         if text_bytes > MAX_TEXT_BYTES:
             raise ValueError(
                 f"Transcript input exceeds {MAX_TEXT_BYTES} UTF-8 bytes"
             )
+        return text
 
+    def append(self, text: str) -> dict:
+        # Validate before opening the transcript to prevent partial writes.
+        text = self.validate_text(text)
         self._transcript_path.parent.mkdir(parents=True, exist_ok=True)
 
         # newline="" : khong de Python tu dich CRLF<->LF (universal newline

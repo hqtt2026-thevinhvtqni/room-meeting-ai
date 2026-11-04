@@ -527,3 +527,20 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - Full-content readback comparison returned **byteEqual=true for all 4/4 files**. GitHub blob SHAs: DOC-035 `885e49f3e9d69567e8c5b9e11b1a2e325415e855`; DOC-014 `395759e219e7eb2c74c30a844ad5c02837288808`; DOC-036 `79290dee711b162545660165ec8121d420dba579`; DOC-063 `d9d17898b43e1053bb8296ab623742416a667b6e`.
 - Documentation-triggered run #31 / `41803741497` validated exact HEAD `9e196d6c2113c596ff2ce97e9a1a39326f270d99`: COMPLETED / SUCCESS, 4/4 jobs SUCCESS.
 - This addendum is documentation-only. It does not alter the exact product-source SHA, F4 policy, Browser Adapter status, Track B approval, branch governance or release status.
+
+
+## 2026-11-04 — W32-LOG-20261104-41 — Xu authorizes F4 Option A; implementation and CI gate
+- **Document Number:** W32-LOG-20261104-41
+- **Priority Order:** P0 — Core resource protection / Track A CI gate
+- **Name:** Ka
+- **Title:** CSA / Backend execution owner delegated by Xu
+- **Date-Time:** 2026-11-04 (Asia/Ho_Chi_Minh; exact minute not captured)
+- **Authority:** Xu's latest Work 32 coordination decision; Vinh retains main merge, CD, production and release approval.
+- **Decision:** F4 Option A AUTHORIZED — 100 accepted paste requests per resolved identity per meeting per rolling 60 seconds.
+- **Architecture adjustment:** Core has file-based meeting persistence and no approved Redis/PostgreSQL/shared quota service. Implement same-host SQLite in `meetings/.room_hop_paste_rate_limits.sqlite3`, using `BEGIN IMMEDIATE` to serialize admissions across local processes. Do not claim multi-host coordination; a future multi-host target requires a shared atomic store before deployment.
+- **Identity caveat:** Current HTTP/MCP contract has optional `identity_id`, resolved by registry but not independently authenticated at transport. Use resolved identity as quota key; legacy no-identity callers share one per-meeting anonymous bucket. This is a contract limitation, not authenticated identity proof.
+- **Implementation:** add SQLite rate limiter; retain and centralize 1 MiB UTF-8 byte guard; add MCP maxLength; propagate optional HTTP identity; return HTTP 429 + Retry-After; count only successful transcript appends; add quota scope, expiry, persistence, rollback, concurrency, Core/HTTP tests; include F4 tests in unit CI.
+- **Exact baseline:** branch HEAD before patch `c21b59e23d0a9c03f05aad86170ff20c577f4bf6`. New commit SHA and Actions result will be appended after GitHub reports them.
+- **Document:** DOC-065 records the decision, implementation boundary and limitations.
+- **No change:** no main merge/rebase/cherry-pick, no strict coverage, no CD/deployment, no Browser Adapter false PASS, no Track B API invention, no release.
+- **Current disposition:** F4 implementation in progress; exact-SHA validation pending; Work 32 ACTIVE — NOT RELEASED.
