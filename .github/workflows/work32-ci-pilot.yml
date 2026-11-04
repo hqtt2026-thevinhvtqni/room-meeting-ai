@@ -80,7 +80,7 @@ jobs:
             work32-pip-freeze.txt
           if-no-files-found: warn
           retention-days: 14
-      - name: G6 — Publish evidence summary (step summary + tracking issue)
+      - name: G6 — Publish evidence summary (step summary + tracking issue #39)
         if: always()
         env:
           GH_TOKEN: ${{ github.token }}
@@ -96,12 +96,12 @@ jobs:
             fi
             echo "- G3 integration / G5 E2E: BLOCKED (excluded files: \`$G3_G5_EXCLUDED\`)"
           } >> "$GITHUB_STEP_SUMMARY"
+          # Canonical tracking issue for Work 32 CI evidence.
           TITLE="Work 32 CI Evidence Log"
-          # Deterministic lookup: filter by exact title (no search-index dependency).
-          IID=$(gh issue list --state all --limit 100 --json number,title --jq ".[] | select(.title == \\"$TITLE\\") | .number" | head -n 1)
+          IID=$(gh issue list --state all --limit 100 --json number,title --jq '.[] | select(.title == "'"$TITLE"'") | .number' | sort -n | tail -n 1)
           if [ -z "$IID" ]; then
-            gh issue create -t "$TITLE" -b "Evidence trail for Work 32 CI pilot runs (branch `work/32-ci-cd-room-hop-python-no-docker`). Auto-maintained by the CI workflow." > /dev/null
-            IID=$(gh issue list --state all --limit 100 --json number,title --jq ".[] | select(.title == \"$TITLE\") | .number" | head -n 1)
+            gh issue create -t "$TITLE" -b "Evidence trail for Work 32 CI pilot runs (branch \`work/32-ci-cd-room-hop-python-no-docker\`). Auto-maintained by the CI workflow." > /dev/null
+            IID=$(gh issue list --state all --limit 100 --json number,title --jq '.[] | select(.title == "'"$TITLE"'") | .number' | sort -n | tail -n 1)
           fi
           echo "Tracking issue: #$IID"
           {

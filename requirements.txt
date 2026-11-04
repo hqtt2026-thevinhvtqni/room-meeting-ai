@@ -2,3 +2,10 @@ pyyaml>=6.0
 pytest>=7.0
 python-dotenv>=1.0.0
 groq>=0.11.0
+# --- Work 32 Phase B G4 finding (2026-11-04) ---
+# Modules imported by core/tests but previously undeclared. Verified via CI run #3
+# evidence (issue #39) and GitHub code search before adding.
+requests>=2.31
+fastapi>=0.110
+uvicorn>=0.29
+mcp>=1.0
