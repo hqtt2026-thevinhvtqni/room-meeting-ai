@@ -1052,3 +1052,9 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - DOC-035: Sandbox direct-root có 1.049 dòng; GitHub main có 990 dòng. 990 dòng đầu khớp liên tục; Sandbox có thêm 59 dòng ở cuối (các mục nhật ký mới hơn). GitHub blob SHA: `c92d68cc5425bfac360d8a0b891790b487b0648b`. Đây là phần append-only có thể tách riêng để review, không cần thay toàn bộ lịch sử.
 - DOC-055: Sandbox direct-root có 188 dòng, version 2.9 / 2026-11-03; GitHub main có 179 dòng, version 2.8 / 2026-11-02. Chỉ 6 dòng đầu giống nhau trước khi nội dung phân kỳ; không thể coi là chênh lệch append-only đơn giản. GitHub blob SHA: `fa257d8d403eec97ee886fc27a89caaa8ece462e`.
 - **DECISION:** ưu tiên xử lý DOC-035 bằng append có kiểm soát sau khi review 59 dòng mới; DOC-055 phải đối chiếu cấu trúc từng mục/DOC-ID/read order/path trước khi đồng bộ. Không ghi đè main và không dùng update toàn file cho DOC-055 khi chưa có bản diff được duyệt.
+
+
+## 2026-11-04 — Xu / AI-01 — GitHub main synchronization verified
+- DOC-035 append-only update committed as `7b4fdb63bc12a503b354264ac7d87ccc8cf79521`; GitHub readback matches Sandbox canonical content exactly (content SHA `00c6fdffb04cc1da1c026f180d5e19772d0f7512`).
+- DOC-084 published to GitHub main in commit `28012f88f303ff08bab0e7b91d845de7fb2f9498`; GitHub readback matches Sandbox canonical content exactly (blob SHA `f17ec48909ba9ee40ac89c8e7c68e7bb3c43ccf3`).
+- DOC-055 remains unsynchronized pending controlled reconciliation; no claim of full Work 70 sync or acceptance.
