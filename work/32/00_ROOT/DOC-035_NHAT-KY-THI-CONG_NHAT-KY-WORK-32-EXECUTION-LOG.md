@@ -210,3 +210,10 @@
 - **Xác minh:** DOC-035 Sandbox và GitHub đã được đọc lại và so sánh toàn bộ; byte-for-byte equal = TRUE. Commit đồng bộ cuối chỉ cập nhật nhật ký, không thay đổi workflow, test hay product source.
 - **Điều chỉnh handoff cho Ka:** exact source baseline đã được kiểm tra là `3cc8e6e945528c4acda631e9dd3e2f4e50bc983f`; branch HEAD hiện tại sau các commit nhật ký là `6c1016e00056f85b277d33da6b731b787b65f817`. Ka phải bắt đầu từ HEAD hiện tại, kiểm tra diff từ source baseline để xác nhận chỉ có journal changes trước khi build. Nếu phát hiện bất kỳ source/workflow change nào khác, dừng và báo Xu.
 - **Trạng thái:** W32-LOG-28 ASSIGNMENT vẫn ACTIVE; Ka được tiếp tục Track A ngay trên branch hiện tại. Không merge/rebase/cherry-pick; Track B BLOCKED; Work 32 ACTIVE — NOT RELEASED.
+
+
+## 2026-11-04 — W32-LOG-20261104-30 — Chốt nguyên tắc lấy HEAD thực tế cho Ka
+- **Người ghi:** Xu — AI-01.
+- **Bổ sung bàn giao:** Các commit `c736273a6d14d64362561cb98e9a3b85c566d97b`, `6c1016e00056f85b277d33da6b731b787b65f817` và `d821c89fc0a4bf4223917ff0e102ff78796bde43` chỉ cập nhật DOC-035; không thay đổi source, workflow hoặc test.
+- **Chỉ thị có hiệu lực cho Ka:** Không dùng SHA HEAD cũ trong các mục 28/29 làm HEAD cố định. Khi bắt đầu, fetch branch `work/32-ci-cd-python-ci-v2`, lấy HEAD thực tế mới nhất, đối chiếu diff từ source baseline `3cc8e6e945528c4acda631e9dd3e2f4e50bc983f`; xác nhận các commit mới chỉ là journal/documentation. Nếu đúng, tiếp tục từ HEAD thực tế. Nếu có source/workflow/test change ngoài journal, dừng và báo Xu.
+- **Trạng thái:** Ka tiếp tục Track A ngay; không cần hỏi lại qua chat. Các giới hạn và phạm vi đã nêu tại W32-LOG-28 vẫn giữ nguyên.
