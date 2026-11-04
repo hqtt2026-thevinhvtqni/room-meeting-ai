@@ -897,3 +897,15 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **Interpretation:** HTTP adapter surface is alive, but its source provenance is not verified. Parent launch command points at WORK09 rather than the Work32 branch; classify this as a likely wrong-runtime/source-context finding, not as a definitive loaded-module proof. The Work32 adapter blob match remains NOT RUN.
 - **Next action:** Ka to review the supplied evidence independently, determine whether the observed WORK09 launch context is sufficient to mark the current PC adapter as outside Work32 provenance, and recommend a safe remediation/next proof step. Do not ask Vinh to repeat PID/listener/branch/HEAD/dirty-tree checks. No second PC command until Ka review and Xu source-level repair of the script-paste issue.
 - **Overall:** Work 32 ACTIVE — NOT RELEASED. PC provenance BLOCKED / NOT VERIFIED; HTTP surface GET checks PASS.
+
+
+### W32-LOG-20261105-61 — Xu ghi nhận kết quả đo PC
+- Căn cứ: W32-LOG-57 đến W32-LOG-60.
+- PID 20468 trên :8787 trả HTTP 200 cho GET /health và GET /openapi.json. Parent PID 9108 có command line đặt working directory và PYTHONPATH vào .ai-workspace/release/WORK09 trước khi chạy uvicorn adapter:app. Đây là bằng chứng mạnh về ngữ cảnh khởi chạy WORK09, chưa chứng minh CWD hiện tại hoặc module đã nạp trong PID.
+- Provenance Work 32: BLOCKED / NOT VERIFIED. psutil không cung cấp CWD; import origin, Git blob hash và so sánh với adapter blob Work 32 8cd73faca62057cbfbbd0ac03c07254c02e8df6c đều NOT RUN.
+- HTTP GET PASS chỉ xác nhận HTTP surface; không chứng minh MCP handshake, ADR-002 tool inventory hoặc transcript persistence. /mcp không được gọi.
+- Ghi nhận lỗi integrity: dòng Git metadata của lệnh PowerShell bị biến dạng khi dán. Xu phải sửa script và kiểm tra tĩnh trước khi phát hành lệnh PC khác; hiện không yêu cầu Vinh chạy lại.
+- An toàn: không dừng/khởi động lại PID 20468; không POST, /mcp, transcript/meeting; không dùng :8020 hoặc PID 15048.
+- Xu: sửa work/32/06_EVIDENCE/W32-PC-ONE-SHOT-DIAGNOSTIC.ps1, kiểm tra tĩnh, gửi Ka thẩm định độc lập W32-LOG-60 và bản sửa. Chỉ quyết định lệnh PC tiếp theo sau phản hồi Ka.
+- Ka: đánh giá bằng chứng WORK09, giới hạn provenance, rủi ro vận hành và phương án xác minh/chuyển đổi ít gián đoạn; không yêu cầu đo lại PID/listener/branch/HEAD/dirty tree.
+- Live MCP E2E NOT RUN; Work 32 ACTIVE — NOT RELEASED. Không merge main, CD/deploy/release; strict coverage vẫn tắt.
