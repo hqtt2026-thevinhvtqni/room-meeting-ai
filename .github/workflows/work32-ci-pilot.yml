@@ -63,7 +63,7 @@ jobs:
           set -e
           echo "exit=$code" >> "$GITHUB_OUTPUT"
           echo "G2 pytest exit code: $code"
-          tail -n 40 work32-pytest.log
+          tail -n 60 work32-pytest.log
           if [ "$code" -ne 0 ]; then echo "G2 FAIL: pytest exit $code (see work32-pytest.log tail above)"; exit 1; fi
           echo "G2 PASS"
       - name: G6 — Prepare evidence files
@@ -97,11 +97,13 @@ jobs:
             echo "- G3 integration / G5 E2E: BLOCKED (excluded files: \`$G3_G5_EXCLUDED\`)"
           } >> "$GITHUB_STEP_SUMMARY"
           TITLE="Work 32 CI Evidence Log"
-          IID=$(gh issue list --search "$TITLE" --json number --jq '.[0].number' 2>/dev/null || true)
+          # Deterministic lookup: filter by exact title (no search-index dependency).
+          IID=$(gh issue list --state all --limit 100 --json number,title --jq ".[] | select(.title == \\"$TITLE\\") | .number" | head -n 1)
           if [ -z "$IID" ]; then
             gh issue create -t "$TITLE" -b "Evidence trail for Work 32 CI pilot runs (branch `work/32-ci-cd-room-hop-python-no-docker`). Auto-maintained by the CI workflow." > /dev/null
-            IID=$(gh issue list --search "$TITLE" --json number --jq '.[0].number')
+            IID=$(gh issue list --state all --limit 100 --json number,title --jq ".[] | select(.title == \"$TITLE\") | .number" | head -n 1)
           fi
+          echo "Tracking issue: #$IID"
           {
             echo "### Run #${{ github.run_number }} — ${{ job.status }}"
             echo "- URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
@@ -112,10 +114,10 @@ jobs:
             fi
             echo "- G3/G5: BLOCKED (live-service & e2e files excluded this phase)"
             echo ""
-            echo "<details><summary>pytest log tail (40 lines)</summary>"
+            echo "<details><summary>pytest log tail (60 lines)</summary>"
             echo ""
             echo '~~~'
-            tail -n 40 work32-pytest.log 2>/dev/null || echo "(no pytest log)"
+            tail -n 60 work32-pytest.log 2>/dev/null || echo "(no pytest log)"
             echo '~~~'
             echo "</details>"
           } > work32-issue-comment.md
