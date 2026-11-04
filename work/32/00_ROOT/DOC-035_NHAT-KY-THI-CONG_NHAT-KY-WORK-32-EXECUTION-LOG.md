@@ -282,3 +282,47 @@
   6. **P1 — CD readiness:** identify an actual staging target and owner, protected environment, least-privilege credentials/host trust, deployment procedure, health checks and tested rollback. Until these exist, CD = BLOCKED / NOT RUN.
   7. **Acceptance/release:** complete independent review, evidence traceability, human approval and acceptance record; only then consider release. No deploy or release now.
 - **Status:** Track A implementation and latest exact-SHA CI = PASS; evidence package reconciliation = IN PROGRESS; independent review = PENDING; Track B = BLOCKED; branch governance = BLOCKED/PENDING APPROVAL; CD = BLOCKED / NOT RUN; Work 32 = ACTIVE — NOT RELEASED.
+
+
+## W32-LOG-20261104-34 — P0 — BROWSER ADAPTER :8787 RECHECK + EXACT-SHA RUN #18
+- **Document Number:** W32-LOG-20261104-34 / DOC-062
+- **Priority order:** P0 — Resolve the remaining browser E2E execution gap using real service evidence
+- **Name:** Ka
+- **Title:** CSA / Work 32 execution owner
+- **Date-Time:** 2026-11-04 13:45:29 Asia/Ho_Chi_Minh
+
+### BIÊN BẢN
+- Verified branch HEAD `450c0b2409c0d19c68931cb0331652bac6f3b5df`, run #18 / `41787301060`, all four jobs SUCCESS.
+- Test `tests/test_browser_agent_adapter_e2e.py` posts to `http://127.0.0.1:8787/browser/execute_workflow`; adapter code requires `ROOMHOP_MCP_URL`, and deterministic meeting selection requires `ROOMHOP_MEETING_ID=MEETING-MCP-LIFECYCLE-001` because the test asserts that exact ID.
+- Vinh reports port 8787 open. Ka records this as user-provided context; no health response was obtained from the current execution plane. GitHub-hosted runner loopback is not the user's PC loopback. Current connected MCP surface has no PC terminal/SSH/port-forward/remote command facility.
+- Run #18 coverage report still lists browser-adapter E2E and F4 resource-limit tests as NOT RUN BY CI; `unaccounted_test_files=2`, `missing_whitelisted_files=0`.
+- Evidence and exact artifact IDs/digests are in DOC-062.
+
+### NHẬT KÝ
+- **Action:** Read Xu ADR-003, active workflow, browser test and adapter implementation; checked all run #18 job results, E2E/unit logs, coverage output and artifact digests.
+- **Result:** Hosted CI exact SHA PASS (167 unit, 20 tooling, 45 Product Auto E2E, 1 immutable artifact); browser adapter test not run; F4 still unresolved. No false PASS assigned.
+- **Boundary:** No product runtime, Core, Dashboard, Workspace, main branch, strict coverage, CD, deployment or production mutation.
+- **Next:** Execute the existing browser test on the same PC/runtime as the listening 127.0.0.1:8787 service, with MCP endpoint and deterministic meeting ID configured; retain actual adapter evidence and transcript read-back. Do not add a GitHub-hosted job that points to its own loopback.
+- **Status:** Track A hosted CI PASS; Browser Adapter E2E READY FOR SAME-HOST EXECUTION / NOT VERIFIED; F4 BLOCKED; Track B BLOCKED; CD BLOCKED; Work 32 ACTIVE — NOT RELEASED.
+
+- **Addendum 13:47:** ROOM-HOP MCP `list_meetings` read confirmed `MEETING-MCP-LIFECYCLE-001` is ACTIVE. Other active meetings also exist, so Browser Adapter must have `ROOMHOP_MEETING_ID=MEETING-MCP-LIFECYCLE-001` at process startup; otherwise fallback selection may differ from the test assertion. This confirms meeting prerequisite only, not port health or browser E2E PASS.
+
+
+## W32-LOG-20261104-35 — P0 — DEFER BROWSER E2E UNTIL PC ACCESS; F4 SOURCE AUDIT
+- **Document Number:** W32-LOG-20261104-35 / DOC-063
+- **Priority order:** P0 — Record user availability and isolate remaining resource-policy gaps
+- **Name:** Ka
+- **Title:** CSA / Work 32 execution owner
+- **Date-Time:** 2026-11-04 14:02 Asia/Ho_Chi_Minh
+
+### BIÊN BẢN
+- Vinh confirmed he is not currently at the PC. Browser Adapter E2E targeting the PC loopback `127.0.0.1:8787` is set to DEFERRED — WAITING FOR PC ACCESS; this is not a failure or PASS.
+- Audited exact commit `450c0b2409c0d19c68931cb0331652bac6f3b5df`: Secretary has a 1 MiB UTF-8 byte guard before transcript write; MCP add-paste schema lacks maxLength; `MAX_PASTE_REQUESTS_PER_WINDOW=100` is a declaration only and is not enforced by a counter/window/rejection path.
+- F4 tests explicitly identify themselves as design/baseline tests and some failures as expected until implementation.
+
+### NHẬT KÝ
+- **Action:** Read `core/secretary.py`, `core/meeting_service.py`, `core/meeting_manager.py`, `room_hop_mcp/adapter/server.py`, and `tests/test_f4_resource_limits.py` at exact commit; compared code against test contract.
+- **Result:** F4.1 source guard present; F4.2 delegation present; F4.3 MCP schema gap; F4.4 rate policy constant exists but no enforcement. Dedicated F4 test is not in CI and has not been executed.
+- **Boundary:** No inferred rate window, quota scope, state model or Core implementation. No test skipped/weakened; no CI gate, strict coverage, merge, CD or deployment changes.
+- **Next:** Obtain formal architecture decision for F4 repeated-request policy; implement and test only after approval. Resume browser E2E same-host when PC access returns.
+- **Status:** Browser E2E DEFERRED — WAITING FOR PC ACCESS; F4 BLOCKED pending policy; hosted CI PASS on exact SHA run #18; Work 32 ACTIVE — NOT RELEASED.
