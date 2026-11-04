@@ -50,6 +50,8 @@ env:
     tests/test_ci_live_e2e.py
     tests/test_ci_mcp_stdio_e2e.py
     tests/test_ci_product_e2e.py
+    tests/test_integration.py
+    tests/test_work13_wee_integration.py
 
 jobs:
   unit:
