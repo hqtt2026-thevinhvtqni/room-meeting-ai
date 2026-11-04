@@ -62,3 +62,6 @@ Evidence is immutable by reference. Corrections add a new evidence record; faile
 
 
 | W32-EVIDENCE-022 | Node.js 24 Actions runtime pin update and exact-SHA verification | DOC-066; `.github/workflows/ci-validation.yml` | Exact SHA 7984d167a1eec935f062dd17894d89ff90503619; Actions run 41806199038; 4/4 jobs SUCCESS; raw logs: zero Node.js 20 deprecation warnings | PASS — setup-python v7.1.0 and upload-artifact v7.0.1 pinned by immutable commit SHA; Starlette warning remains separate |
+
+
+| W32-EVIDENCE-023 | Starlette TestClient httpx2 compatibility remediation and exact-SHA validation | DOC-067; requirements.txt; constraints-ci.txt | Exact SHA 17d7d87c9e09b08026fd8bdda29578c04bd1aa35; run 41806906885; 4/4 jobs SUCCESS; pip check pass; raw logs zero StarletteDeprecationWarning and zero Node.js 20 warnings | PASS — httpx2 2.16.0, httpcore2 2.16.0, truststore 0.10.5 pinned; existing httpx/FastAPI/Starlette retained |

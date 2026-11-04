@@ -48,3 +48,11 @@
 - Raw unit and E2E logs contain zero StarletteDeprecationWarning and zero Node.js 20 Actions warnings.
 - Observed transitive dependencies from the exact CI install: `httpcore2==2.16.0`, `truststore==0.10.5`. These are now pinned in constraints-ci.txt for deterministic repeat validation.
 - Final dependency disposition awaits the next exact-SHA run with these transitive pins.
+
+
+## Final exact-SHA validation — Starlette/httpx2 remediation PASS
+- Run #39 / `41806906885`, exact SHA `17d7d87c9e09b08026fd8bdda29578c04bd1aa35`, COMPLETED / SUCCESS, 4/4 jobs.
+- Unit 189 passed; Product Auto E2E 45 passed; tooling 20 OK; immutable product artifact verified; extracted artifact E2E 1 passed.
+- `pip check` passed. Raw unit and E2E logs contain zero StarletteDeprecationWarning and zero Node.js 20 Actions warnings.
+- Exact installed versions observed and pinned: `httpx2==2.16.0`, `httpcore2==2.16.0`, `truststore==0.10.5`. Existing `httpx==0.28.1`, FastAPI 0.162.0 and Starlette 1.10.0 were retained.
+- **Disposition:** Starlette/httpx deprecation remediation PASS. Node.js Actions runtime remediation PASS independently in run #36. No unrelated framework upgrades.

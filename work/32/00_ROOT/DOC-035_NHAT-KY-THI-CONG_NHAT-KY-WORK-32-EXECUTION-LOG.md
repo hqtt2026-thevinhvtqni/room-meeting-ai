@@ -636,3 +636,19 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **Observed install versions:** `httpx2==2.16.0`, `httpcore2==2.16.0`, `truststore==0.10.5`; existing `httpx==0.28.1`, FastAPI 0.162.0 and Starlette 1.10.0 remain unchanged.
 - **Reproducibility correction:** pin the two newly observed transitive packages in constraints-ci.txt; do not guess versions. DOC-067 records the observed matrix. Exact-SHA validation after transitive pinning pending.
 - **Boundary:** no FastAPI/Starlette upgrade, no main merge, no strict coverage, no CD/deployment/release.
+
+
+## 2026-11-04 — W32-LOG-20261104-48 — Starlette/httpx2 remediation exact-SHA PASS
+- **Document Number:** W32-LOG-20261104-48
+- **Priority Order:** P1 — CI dependency compatibility
+- **Name:** Ka
+- **Title:** CSA / Backend execution owner delegated by Xu
+- **Date-Time:** 2026-11-04 (Asia/Ho_Chi_Minh; exact minute not captured)
+- **Exact branch SHA:** `17d7d87c9e09b08026fd8bdda29578c04bd1aa35`
+- **GitHub Actions:** run #39 / `41806906885`, COMPLETED / SUCCESS, 4/4 jobs.
+- **Results:** unit 189 passed; Product Auto E2E 45 passed; tooling 20 tests OK; immutable artifact verified and extracted-artifact E2E 1 passed.
+- **Warnings:** raw unit and E2E logs contain zero StarletteDeprecationWarning and zero Node.js 20 Actions warnings. `pip check` passed.
+- **Resolved package matrix:** `httpx2==2.16.0`, `httpcore2==2.16.0`, `truststore==0.10.5`; existing `httpx==0.28.1`, FastAPI 0.162.0 and Starlette 1.10.0 retained.
+- **Artifact IDs:** product RC `13309927869`, SHA-256 `473ff48bb4d11880042b7ead3e853110ed601de5a3e1217ef028b9f60990695b`; unit `13310197019`, digest `a15e5ffa686906ae5abf1a6ccbf27067463d1067788106a5bc99e891517cd194`; E2E `13310875205`, digest `2b49e904232cb224b86bc19527e712235a1a1039e66fae7244199a19b7ea3b40`; tooling `13308824936`, digest `41ce5edc4e1cd5e0e4120f042a6b304d97ee738251ddc1795baf12ffb7276c5c`.
+- **Disposition:** Starlette/httpx TestClient deprecation warning RESOLVED; Node.js 20 Actions warning remains RESOLVED from run #36. Both changes validated independently.
+- **Boundary:** no main merge/rebase/cherry-pick, strict coverage, CD, deployment, final acceptance or release. Work 32 ACTIVE — NOT RELEASED.

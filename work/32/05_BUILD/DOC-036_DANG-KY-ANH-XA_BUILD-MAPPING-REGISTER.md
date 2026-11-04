@@ -124,3 +124,14 @@ Byte-for-byte Sandbox↔GitHub readback is PASS for active workflow MAP-32-002 a
 - Run #38 / `41806667551` at exact SHA `0065dbe54eff7282d6eec8eb56f104927ba1e9c4`: 4/4 SUCCESS; 189 unit, 45 Product Auto E2E, 20 tooling, artifact E2E 1 passed.
 - Raw unit/E2E logs: zero StarletteDeprecationWarning and zero Node.js 20 Actions warnings.
 - Observed transitive packages: `httpcore2==2.16.0`, `truststore==0.10.5`; pin both in constraints-ci.txt. Exact updated constraints SHA and validation run pending.
+
+
+## 2026-11-04 — W32-LOG-48 Starlette/httpx2 exact-SHA mapping
+- **Name:** Ka
+- **Title:** CSA / Backend execution owner delegated by Xu
+- **Date-Time:** 2026-11-04 (Asia/Ho_Chi_Minh; exact minute not captured)
+- **Priority Order:** P1 — CI dependency compatibility
+- `requirements.txt` blob SHA `f82b95fb1e6fe695e3f0409d78e19f4255dba8b1`; `constraints-ci.txt` blob SHA `a43c0404408b4a0d2e5406d3e8d3c25ff7c78593`.
+- Direct and transitive pins: httpx2 2.16.0; httpcore2 2.16.0; truststore 0.10.5. Existing httpx 0.28.1 retained.
+- Exact-SHA run #39 / `41806906885`, SHA `17d7d87c9e09b08026fd8bdda29578c04bd1aa35`: 4/4 SUCCESS; unit 189, Product Auto E2E 45, tooling 20, artifact E2E 1 passed.
+- pip check passed; raw unit/E2E logs show zero StarletteDeprecationWarning and zero Node.js 20 Actions warnings.
