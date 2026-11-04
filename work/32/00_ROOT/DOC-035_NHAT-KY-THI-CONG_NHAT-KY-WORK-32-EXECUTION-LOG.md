@@ -343,3 +343,31 @@
 - **G7 terminology cross-check:** Work 70 DOC-004 defines G7 as ACCEPT→RELEASE. It is a lifecycle gate, not an MCP protocol version. Work 32 remains NOT RELEASED; no G7 release transition is being requested or approved here.
 - **Next:** (1) obtain Vibe's independent source/evidence review; (2) keep Browser Adapter E2E DEFERRED until same-host PC access; (3) obtain explicit F4 rate-policy decision before implementation; (4) keep Track B blocked pending canonical contracts/owners; (5) prepare branch reconciliation proposal without executing it.
 - **Status:** Track A hosted CI = PASS on exact run #23; evidence sync = PASS; Browser Adapter = DEFERRED; F4 = BLOCKED; Vibe independent review = PENDING; Track B = BLOCKED; CD = BLOCKED / NOT RUN; Work 32 = ACTIVE — NOT RELEASED.
+
+## W32-LOG-20261104-37 — P0 — VIBE INDEPENDENT VERIFICATION OF CI RUNS #23/#24 AND F4 SOURCE AUDIT
+
+- **Người ghi:** Vibe (GLM via Mistral) — Independent Reviewer, per W32-LOG-36 item (1).
+- **Thời điểm:** 2026-11-04 (UTC+07:00).
+- **Phạm vi:** Read-only verification only. No source, workflow, policy, branch or release change.
+
+### 1. CI verification (GitHub Actions, branch work/32-ci-cd-python-ci-v2)
+- Run #23 / 41788992658, SHA 64575ef4b897ef2d26216bf90ff886d48e7712f0, workflow ci-validation.yml, commit message "docs(work-32): publish F4 resource limits source audit": **Status Success, 4/4 jobs (unit, tooling, Product Auto E2E, immutable product artifact)** — MATCHES W32-LOG-36. Verified via the GitHub Actions run page and commit push record.
+- Run #24 / 41789201999, SHA b92e91500e6caebd3d2b19039d67dc9e69295666, commit "docs(work-32): record evidence sync and exact-sha run 23": at verification time **COMPLETED with Status Success, 4/4 jobs, total duration 42s**. This updates Xu's interim observation ("đang chạy"): run #24 finished PASS. Documentation-only change; product code unchanged since 450c0b2 (F4 audit commit).
+
+### 2. F4 source audit cross-check (DOC-063) — INDEPENDENTLY CONFIRMED
+Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb0331652bac6f3b5df:
+- core/secretary.py: `MAX_TEXT_BYTES = 1 * 1024 * 1024`; `append()` computes `len(text.encode("utf-8"))` and raises **before** opening the transcript file → F4.1 byte-ceiling enforcement CONFIRMED at source level.
+- core/secretary.py: `MAX_PASTE_REQUESTS_PER_WINDOW = 100` declared with **no other reference in the file** → F4.4 "constant without enforcement" CONFIRMED.
+- room_hop_mcp/adapter/server.py: `add_paste_to_meeting` inputSchema declares `"text": {"type": "string"}` with **no maxLength** → F4.3 schema gap CONFIRMED.
+- DOC-063 disposition (F4 BLOCKED pending policy; no invented semantics; dedicated F4 test not in CI) is accurate and consistent with the source.
+
+### 3. Records check
+- DOC-035 on GitHub now contains W32-LOG-36 (reconciliation + run #23) — the Sandbox↔GitHub divergence reported earlier is resolved.
+- DOC-062 (Browser Adapter :8787 / run #18) and DOC-063 (F4 audit) present under work/32/06_EVIDENCE/; DOC-014 evidence register present.
+- Note: Vibe's earlier independent audit W32-LOG-20261104-14 + W32-EVIDENCE-010 (action-SHA false-positive clearance, P1 workflow-duplication proposal) is recorded in the legacy journal `CI-CD-ROOM-HOP-PYTHON-NO-DOCKER/NHAT_KY_HOP_THI_CONG.md` (commit cb7fdb13af94732468c291d6768137db3b4c549b); it remains open for Xu's APPROVED/REVISE/BLOCKED decision.
+
+### 4. Verdict
+- **Vibe independent review: COMPLETED for this scope** — CI evidence on exact SHAs VERIFIED (runs #23, #24), F4 source findings REPRODUCED, records sync CONFIRMED.
+- NOT verified (out of scope, unchanged): Browser Adapter :8787 E2E (DEFERRED — needs same-host PC access), F4 policy (BLOCKED — needs architecture decision), Track B (BLOCKED), CD/release (NOT RUN).
+- Boundary: read-only + this log write; no merge/rebase/cherry-pick; no strict coverage; no CI gate change; Work 32 remains ACTIVE — NOT RELEASED.
+- Next: Xu records the disposition of this verification; Xu/Vinh decide the P1 workflow-consolidation proposal (W32-EVIDENCE-010) and F4 rate policy; Ka continues Track A documentation/acceptance prep.
