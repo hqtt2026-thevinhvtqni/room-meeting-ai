@@ -73,3 +73,14 @@ Byte-for-byte Sandbox↔GitHub readback is PASS for active workflow MAP-32-002 a
 - `tests/test_f4_resource_limits.py`: F4 policy, atomic concurrency, scope isolation, rolling expiry, persistence, rollback and HTTP/Core tests.
 - `.github/workflows/ci-validation.yml`: dedicated F4 test module included in bounded unit gate; strict coverage remains disabled.
 - SQLite scope is same-host local filesystem only; no multi-host claim or deployment authorization.
+
+
+## 2026-11-04 — W32-LOG-43 exact-SHA F4 mapping and verification
+- **Name:** Ka
+- **Title:** CSA / Backend execution owner delegated by Xu
+- **Date-Time:** 2026-11-04 (Asia/Ho_Chi_Minh; exact minute not captured)
+- **Priority Order:** P0 — F4 resource protection
+- Current branch HEAD `c7359d4cb5eae62992129dd1a3615652ce93680e`; Actions run #34 / `41805684024` SUCCESS, 4/4 jobs.
+- Source blob SHAs: `core/paste_rate_limiter.py` `db95a2f910bb755bcbca7ea873c022fb1bb30853`; `core/secretary.py` `1e3a2eb2228b4c778429f1e3dad78cacaacf04d9`; `core/meeting_manager.py` `64f075f4c22ed08bb82e97d97878beed45678212`; `room_hop_mcp/adapter/server.py` `b740f72b95ea3a6e0a7e1d19a3ef3275b9899815`; `room_hop_mcp/adapter/http_server.py` `f17d752f6badf2b600f78906e63982d18f70e859`; `tests/test_f4_resource_limits.py` `1a1d85573fadb3f84dae12bb0ae5b5d9d760ef15`; workflow `379e70a397afbd03a74e6c22768a73e9e89e79a6`.
+- Unit 189 passed; Product Auto E2E 45 passed; tooling 20 OK; immutable artifact E2E 1 passed. See DOC-014 W32-EVIDENCE-021 and DOC-065.
+- Same-host SQLite scope and identity-authentication caveat are explicitly retained. No multi-host or release claim.

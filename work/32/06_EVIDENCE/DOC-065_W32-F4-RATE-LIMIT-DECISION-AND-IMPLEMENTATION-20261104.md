@@ -71,3 +71,12 @@ Source audit at branch HEAD `c21b59e23d0a9c03f05aad86170ff20c577f4bf6` found:
 - Raw logs identified two concrete defects: SQLite connection cleanup after quota rejection, and violating Secretary's locked three-method public API by adding a validation method.
 - Corrected by keeping validation as module-level `validate_transcript_text` and consolidating SQLite rollback/close handling. No tests were weakened or removed.
 - Status: F4 implementation remains IN PROGRESS; next exact-SHA validation pending.
+
+
+## Exact-SHA validation addendum — F4 PASS
+- **Run:** GitHub Actions #34 / `41805684024`, exact SHA `c7359d4cb5eae62992129dd1a3615652ce93680e`, COMPLETED / SUCCESS, 4/4 jobs.
+- **Results:** Unit 189 passed (1 Starlette/httpx warning); Product Auto E2E 45 passed (1 warning); tooling 20 tests OK; immutable product artifact verified and extracted-artifact E2E 1 passed.
+- **F4 status:** PASS for same-host implementation scope. Dedicated F4 tests cover 100/101 boundary, per-identity/per-meeting scope, rolling expiry, persistence across limiter instances, rollback, concurrent admission, Core quota enforcement, oversized-input non-counting and HTTP 429/Retry-After.
+- **Artifacts:** product RC ID 13309367495, SHA-256 `27e6cb702d8cc56c49b8a438878f78678085a8ca9ea9609de97f25b5ee4c6dd1`; unit ID 13310185300; E2E ID 13308994396; tooling ID 13308869618.
+- **Known limitations:** identity_id is registry-resolved but not independent transport authentication; unidentified legacy calls share an anonymous per-meeting bucket; SQLite is same-host/local-filesystem only. Multi-host deployment requires a shared atomic store and separate approval.
+- **Remaining:** Node.js Actions runtime warning and Starlette/httpx deprecation are separate remediation items; Browser Adapter :8787 remains deferred; Track B blocked; branch governance pending; CD/release blocked. Work 32 remains ACTIVE — NOT RELEASED.

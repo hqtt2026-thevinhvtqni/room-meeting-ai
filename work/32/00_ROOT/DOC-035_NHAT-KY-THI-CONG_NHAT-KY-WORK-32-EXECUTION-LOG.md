@@ -560,3 +560,24 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **Correction:** move UTF-8 validation to module-level `validate_transcript_text`, keep Secretary public API unchanged, and let common exception cleanup close the SQLite connection exactly once after rollback.
 - **No weakening:** no tests removed, skipped or relabeled; bounded unit gate remains mandatory.
 - **Next:** exact-SHA rerun after correction. Work 32 remains ACTIVE — NOT RELEASED.
+
+
+## 2026-11-04 — W32-LOG-20261104-43 — F4 exact-SHA validation PASS
+- **Document Number:** W32-LOG-20261104-43
+- **Priority Order:** P0 — Core resource protection / exact-SHA CI evidence
+- **Name:** Ka
+- **Title:** CSA / Backend execution owner delegated by Xu
+- **Date-Time:** 2026-11-04 (Asia/Ho_Chi_Minh; exact minute not captured)
+- **Exact branch SHA:** `c7359d4cb5eae62992129dd1a3615652ce93680e`
+- **GitHub Actions:** run #34 / `41805684024`, COMPLETED / SUCCESS, 4/4 jobs.
+- **Unit:** 189 passed, 1 Starlette/httpx deprecation warning. The F4 dedicated test module is now part of the unit gate.
+- **Product Auto E2E:** 45 passed, 1 Starlette/httpx deprecation warning.
+- **Tooling:** 20 tests, OK.
+- **Immutable product artifact:** exact-SHA archive checksum verified; extracted artifact-level product E2E 1 passed.
+- **Artifacts:** product RC ID `13309367495`, ZIP SHA-256 `27e6cb702d8cc56c49b8a438878f78678085a8ca9ea9609de97f25b5ee4c6dd1`; unit ID `13310185300`, digest `b54890ab8d9481038fa637c72fa828abb70534848e4adeae3ecc6a960e420d7f`; E2E ID `13308994396`, digest `3ad4bc51844f639ca57f04d99f9e7cddcc7690595033bf08232d037233b4c375`; tooling ID `13308869618`, digest `d98582addaed4469d33d013989ea74a2b2c86b58afb7cc83cc2148e667908344`.
+- **F4 disposition:** PASS for implemented same-host Core scope: 100 accepted requests per resolved identity per meeting per rolling 60 seconds; SQLite atomic admission; HTTP 429 + Retry-After; MCP maxLength declaration; authoritative UTF-8 byte guard; scope/expiry/persistence/rollback/concurrency/Core/HTTP tests passed.
+- **Limitations retained:** resolved registry identity is not independent transport authentication; legacy unidentified calls share a per-meeting anonymous bucket; SQLite coordination is same-host/local-filesystem only. Multi-host deployment is not certified.
+- **Correction history:** run #33 failure was preserved in W32-LOG-42; defects fixed without removing or weakening tests.
+- **Warnings remain separate:** Node.js 20 Actions warning and Starlette/httpx deprecation remain for independent remediation commits.
+- **No change:** no main merge/rebase/cherry-pick, no strict coverage, no CD/deployment, no Browser Adapter false PASS, no Track B implementation, no final acceptance or release.
+- **Disposition:** F4 implementation and exact-SHA CI validation PASS; Work 32 remains ACTIVE — NOT RELEASED.
