@@ -124,3 +124,45 @@ For every completed implementation/evidence slice:
 ---
 **Record owner:** Vi | CODER  
 **Signature:** [KÝ: VI | CODER]
+
+
+---
+
+## 2026-11-04 adoption addendum — Work 32 product Auto E2E pattern applied
+
+The Work 32 product-level delivery pattern has now been translated into Work 28's own contracts. This addendum supersedes the earlier four-job CI description above.
+
+### Current automatic pipeline
+
+The workflow `.github/workflows/work28-mcp-tooling.yml` now has five jobs:
+
+1. `unit-regression-tests` — exact triggering SHA, Python 3.12, declared dependency installation, `pip check`, `compileall`, and the full Work 28 unittest suite.
+2. `execution-host-lifecycle-linux` — Linux process lifecycle and Work 28 contract/security regression suites.
+3. `execution-host-lifecycle-windows` — native Windows process lifecycle and Work 28 contract/security regression suites.
+4. `immutable-source-artifact` — build a tar.gz from the exact triggering SHA, verify SHA-256, extract to a clean directory, reinstall dependencies, run `pip check` and `compileall`, then rerun the complete Work 28 unittest suite against the extracted artifact.
+5. `automatic-e2e-gate-report` — runs after all four gates, records every job result and retains the machine-readable report. It cannot convert missing/failed upstream evidence into PASS.
+
+Actions used for Python setup and artifact upload are pinned to audited commit SHAs. Exact source checkout is explicit and avoids recursive submodule checkout. Root `requirements.txt` constrains the MCP Python SDK to `mcp>=1.2.0,<2.0.0`: the current Work 28 server uses the v1 `Server.list_tools()` decorator API. The unbounded dependency resolved to SDK 2.3.0 and produced three reproducible factory errors; SDK 1.30.0 is the tested compatible version.
+
+### MCP stdio contract gate
+
+`05_TEST/test_mcp8020_unified_server_stdio_contract_v1.py` starts the actual Work 28 MCP server factory in a child Python process over the real MCP stdio transport, then checks the exact 31 registered tool names and every input schema against the canonical registry.
+
+The providers in this test are deliberately inert test doubles. This proves the MCP stdio transport and public tool/schema contract only (G3). It does **not** prove Core authorization, provider business behavior, Sandbox mutation, Runtime dispatch, Execution Host execution, or deployed product E2E.
+
+### Exact-SHA validation evidence
+
+- Final tested source SHA: `e835a13ae0cddd84a077e17055cd9354a874f212`.
+- GitHub Actions run: `41743292650` — SUCCESS; all five jobs SUCCESS.
+- Unit/regression: **348 tests, OK**; includes the real MCP stdio subprocess contract test.
+- Artifact-level retest: **348 tests, OK** against the cleanly extracted exact-SHA source archive.
+- Linux lifecycle: SUCCESS (13 suspended-spawn tests passed; 4 native-Windows-only cases skipped).
+- Windows lifecycle: SUCCESS (17 suspended-spawn tests passed).
+- Source archive SHA-256: `23dc6b188eb381569f476b6e043b5a12290f4ae610183d926e8a1ab7da3348d6`.
+- Source artifact ID: `13282017725`; uploaded ZIP digest: `d41c32f237c795c17892b721e847577e584ca0d89666b8b54863fd706a13fd9c`.
+- Machine report artifact ID: `13283075166`; ZIP digest: `eb2db5b266f542f7fb2d0e7f1b1c6cdbe02ea38339cabae2a124ac72380e2b23`.
+- Run URL: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/41743292650
+
+### Boundary remains unchanged
+
+CI preconditions, the MCP stdio contract test and artifact-level regression are verified. The full deployed Work 28 product journey remains BLOCKED until the live MCP 8030 identity/tool inventory, trusted Core :8000 WorkContext grant, approved Runtime MCP, Execution Host :8031 isolation identity, protected evidence persistence and authorized checksum readback are connected and proven. Execution Gate remains CLOSED; Work remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.

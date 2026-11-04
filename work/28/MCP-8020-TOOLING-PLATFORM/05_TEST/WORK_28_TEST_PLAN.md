@@ -40,3 +40,30 @@ The gate evaluator `04_CODE/work28_auto_e2e_gate_v1.py` must calculate PASS only
 - G4 auth/path/isolation: BLOCKED.
 - G5 live MCP -> Core -> canonical runtime -> protected evidence: BLOCKED.
 - G6 compatibility and full E2E: BLOCKED.
+
+
+---
+
+## Current Work 32 adoption / exact-SHA CI addendum — 2026-11-04
+
+The Work 32 product Auto E2E pattern has been adopted without importing Work 32 meeting-domain endpoints or weakening Work 28 security boundaries.
+
+- Exact-SHA pipeline: `41743292650`, source `e835a13ae0cddd84a077e17055cd9354a874f212`, all five jobs SUCCESS.
+- Unit/regression suite: **348 passed / OK**.
+- New G3 test: `test_mcp8020_unified_server_stdio_contract_v1.py` launches the Work 28 MCP server factory as a real child process over MCP stdio and checks the exact 31 tool names and all schemas. Inert providers are used only to isolate transport/contract; this is not product execution or deployed E2E.
+- Linux suspended-spawn: 13 passed, 4 Windows-only skipped. Windows suspended-spawn: 17 passed.
+- Immutable artifact job: exact-SHA tar.gz SHA-256 verified, clean extraction, dependency check, compileall and **348 tests passed** against extracted artifact.
+- Source archive SHA-256: `23dc6b188eb381569f476b6e043b5a12290f4ae610183d926e8a1ab7da3348d6`.
+- Source artifact ID `13282017725`; report artifact ID `13283075166`.
+
+### Current gate disposition
+
+- G0 provenance / exact SHA: PASS for this CI run.
+- G1 dependency / compile: PASS.
+- G2 unit and Linux/Windows lifecycle regression: PASS.
+- G3 MCP stdio transport + exact tool/schema contract: PASS (contract-only scope).
+- G4 trusted Core authorization + approved Runtime + Execution Host deployed product journey: BLOCKED / NOT RUN.
+- G5 protected evidence persistence and authorized readback on deployed route: BLOCKED / NOT RUN.
+- Artifact extraction and retest: PASS.
+- Independent An QA and Ka architecture/security review: pending separate reports; not self-certified by Vi.
+- Execution Gate: CLOSED. Release: NOT RELEASED.
