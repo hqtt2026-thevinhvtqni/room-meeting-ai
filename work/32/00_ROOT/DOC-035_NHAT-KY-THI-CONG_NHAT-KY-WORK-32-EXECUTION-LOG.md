@@ -202,3 +202,11 @@
 - **Ka:** thực hiện các mục được duyệt, ghi từng bước/commit SHA/job/artifact/test/coverage vào DOC-035, cập nhật mirror và Evidence/DOC-036; không tuyên bố byte-for-byte nếu chưa so sánh đầy đủ.
 - **Xu:** giám sát và ra quyết định phát sinh. **Vibe:** reviewer độc lập sau khi Ka hoàn tất; chỉ review, không sửa source.
 - **Status:** Track A ACTIVE — authorized to continue; Track B BLOCKED; Work 32 ACTIVE — NOT RELEASED.
+
+
+## 2026-11-04 — W32-LOG-20261104-29 — Cập nhật SHA bàn giao sau đồng bộ nhật ký
+- **Người ghi:** Xu — AI-01.
+- **Lý do:** Sau khi ghi W32-LOG-20261104-28, Xu đã tạo các commit chỉ cập nhật DOC-035 trên cùng branch: `c736273a6d14d64362561cb98e9a3b85c566d97b` và commit đồng bộ cuối `6c1016e00056f85b277d33da6b731b787b65f817`.
+- **Xác minh:** DOC-035 Sandbox và GitHub đã được đọc lại và so sánh toàn bộ; byte-for-byte equal = TRUE. Commit đồng bộ cuối chỉ cập nhật nhật ký, không thay đổi workflow, test hay product source.
+- **Điều chỉnh handoff cho Ka:** exact source baseline đã được kiểm tra là `3cc8e6e945528c4acda631e9dd3e2f4e50bc983f`; branch HEAD hiện tại sau các commit nhật ký là `6c1016e00056f85b277d33da6b731b787b65f817`. Ka phải bắt đầu từ HEAD hiện tại, kiểm tra diff từ source baseline để xác nhận chỉ có journal changes trước khi build. Nếu phát hiện bất kỳ source/workflow change nào khác, dừng và báo Xu.
+- **Trạng thái:** W32-LOG-28 ASSIGNMENT vẫn ACTIVE; Ka được tiếp tục Track A ngay trên branch hiện tại. Không merge/rebase/cherry-pick; Track B BLOCKED; Work 32 ACTIVE — NOT RELEASED.
