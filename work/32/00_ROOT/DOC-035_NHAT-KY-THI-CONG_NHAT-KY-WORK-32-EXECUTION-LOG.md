@@ -881,3 +881,19 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **Status:** Ka review PASS WITH CORRECTIONS; script recorded; PC provenance BLOCKED / NOT VERIFIED pending one user-side execution. Work 32 ACTIVE — NOT RELEASED.
 
 - **W32-LOG-59 implementation correction:** Before issuing the PC script, Xu added a strict comparison between CIM process creation time and the existing-psutil process creation timestamp (2-second tolerance). A mismatch reports `PID_REUSE_OR_PROCESS_CHANGED_CIM_PSUTIL_START_TIME_MISMATCH` and suppresses CWD/import reconstruction. This closes the PID-reuse race noted by Ka. Script updated in Sandbox and GitHub; no PC action performed.
+
+### W32-LOG-20261105-60 — Kết quả chạy gói đo PC lần 1
+- **Date-Time:** 2026-11-05 06:45:18 +07:00 (timestamp from supplied PC output).
+- **Executor:** Vinh, PowerShell terminal in VS Code.
+- **Artifact:** `work/32/06_EVIDENCE/W32-PC-ONE-SHOT-DIAGNOSTIC.ps1`.
+- **PID 20468:** FOUND; executable Python 3.12 path `C:\Users\Admin\AppData\Local\Programs\Python\Python312\python.exe`; parent PID 9108; creation time shown as 2026-11-05 03:29:38; owner ADMIN-PC\Admin.
+- **Parent PID 9108:** FOUND; parent PID 3208; PowerShell command line explicitly sets working directory and `PYTHONPATH` to `D:\ROOM-HOP-CLEAN\room-meeting-ai\.ai-workspace\release\WORK09`, then starts `python -m uvicorn adapter:app --host 127.0.0.1 --port 8787`. This is strong launch-context evidence pointing to WORK09. It is not direct inspection of PID 20468's current CWD or its already-loaded in-memory module.
+- **Grandparent PID 3208:** FOUND; VS Code shell integration PowerShell.
+- **CWD / import resolution:** BLOCKED / NOT VERIFIED. Script returned `CWD_UNAVAILABLE_PSUTIL_MISSING_OR_ACCESS_DENIED`; no CWD, import origin, Python version from child resolution, Git blob, repo metadata or blob comparison was produced. Do not guess CWD from the parent command line and do not treat reconstructed launch context as direct module provenance.
+- **HTTP GET /health:** PASS, HTTP 200; service `room-hop-browser-agent-adapter`; `ok=true`; `browser_started=true`.
+- **HTTP GET /openapi.json:** PASS, HTTP 200; title `ROOM-HOP Browser Agent Adapter`; version `1.1.0`; paths include the browser API surface and a documented `/mcp` path. The `/mcp` path was only listed from OpenAPI; it was NOT called. No POST, MCP handshake, transcript API or meeting mutation occurred.
+- **Safety:** Output confirms no process changes, environment dump, writes, POST, /mcp request, transcript access or :8020 access.
+- **Output integrity note:** The pasted terminal command visibly contains a malformed/truncated line in the Git metadata block (`rev-parse --show-toplevel ...)st 1)`). Because CWD was unavailable, the Git block was not expected to run; however, preserve this as a script-paste integrity defect to fix in source before any future use. No rerun is authorized or needed now.
+- **Interpretation:** HTTP adapter surface is alive, but its source provenance is not verified. Parent launch command points at WORK09 rather than the Work32 branch; classify this as a likely wrong-runtime/source-context finding, not as a definitive loaded-module proof. The Work32 adapter blob match remains NOT RUN.
+- **Next action:** Ka to review the supplied evidence independently, determine whether the observed WORK09 launch context is sufficient to mark the current PC adapter as outside Work32 provenance, and recommend a safe remediation/next proof step. Do not ask Vinh to repeat PID/listener/branch/HEAD/dirty-tree checks. No second PC command until Ka review and Xu source-level repair of the script-paste issue.
+- **Overall:** Work 32 ACTIVE — NOT RELEASED. PC provenance BLOCKED / NOT VERIFIED; HTTP surface GET checks PASS.
