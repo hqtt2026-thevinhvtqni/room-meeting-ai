@@ -104,3 +104,13 @@ Byte-for-byte Sandbox↔GitHub readback is PASS for active workflow MAP-32-002 a
 - Workflow blob SHA: `5cf513349e953a9991c5856496702597a45a110c`.
 - Exact-SHA run #36 / `41806199038` at `7984d167a1eec935f062dd17894d89ff90503619`: 4/4 SUCCESS; 189 unit, 45 Product Auto E2E, 20 tooling, artifact E2E 1 passed.
 - Raw logs across all four jobs: zero Node.js 20 Actions deprecation warnings. Node runtime remediation PASS. Starlette/httpx warning remains independent.
+
+
+## 2026-11-04 — W32-LOG-46 httpx2 dependency mapping
+- **Name:** Ka
+- **Title:** CSA / Backend execution owner delegated by Xu
+- **Date-Time:** 2026-11-04 (Asia/Ho_Chi_Minh; exact minute not captured)
+- **Priority Order:** P1 — Test runtime compatibility
+- `requirements.txt`: add `httpx2>=2.16.0`; retain `httpx>=0.27.0`.
+- `constraints-ci.txt`: add `httpx2==2.16.0`; retain `httpx==0.28.1`.
+- No FastAPI/Starlette upgrade. Exact-SHA validation and transitive pip-freeze inspection pending.

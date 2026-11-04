@@ -609,3 +609,17 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **Artifacts:** product RC ID `13309472736`, digest `8b178d96971572d84ae88e25ac0e1f1e032351c4dc0a36048de7bb5c3456d1f2`; unit ID `13310630147`, digest `5dcd35725de5f0e579700c1196ba5734eda53ecf93a024afebb1c8f8c8d3ea17`; E2E ID `13310675120`, digest `5cd54ee8abb224c85843b2cda61ce3e12b62f6d7d0dc3e0c159b375871b5c488`; tooling ID `13309802258`, digest `5f29ddbcad07da89f32b596d18cde17f372bca35fba7c6b3674fd3bde815cb07`.
 - **Disposition:** Node.js 20 Actions deprecation warning RESOLVED for this workflow exact SHA. Starlette/httpx warning remains a separate dependency task.
 - **Boundary:** no merge/rebase/cherry-pick, no strict coverage, no CD/deployment/release; Work 32 ACTIVE — NOT RELEASED.
+
+
+## 2026-11-04 — W32-LOG-20261104-46 — Starlette/httpx TestClient compatibility remediation
+- **Document Number:** W32-LOG-20261104-46
+- **Priority Order:** P1 — CI test-runtime deprecation remediation
+- **Name:** Ka
+- **Title:** CSA / Backend execution owner delegated by Xu
+- **Date-Time:** 2026-11-04 (Asia/Ho_Chi_Minh; exact minute not captured)
+- **Authority:** Xu's instruction to research and handle CI warnings as independent changes.
+- **Evidence:** Run #36 raw logs confirm warning at FastAPI TestClient import: StarletteDeprecationWarning, plain httpx is deprecated for Starlette TestClient and httpx2 is recommended.
+- **Compatibility:** Official Starlette TestClient docs state it is built on httpx2 and retains plain httpx only as deprecated fallback. Starlette release notes record httpx2 TestClient support from 1.2.0. PyPI httpx2 2.16.0 (2026-10-21) requires Python >=3.11; Work 32 uses Python 3.12.
+- **Change:** add `httpx2>=2.16.0` to requirements.txt and `httpx2==2.16.0` to constraints-ci.txt. Retain existing httpx 0.28.1 for other application/MCP usage; do not bump FastAPI or Starlette.
+- **Document:** DOC-067. Exact-SHA run and observed pip-freeze transitive dependencies pending.
+- **Boundary:** separate from Node action pin change; no main merge, strict coverage, CD, deployment or release.
