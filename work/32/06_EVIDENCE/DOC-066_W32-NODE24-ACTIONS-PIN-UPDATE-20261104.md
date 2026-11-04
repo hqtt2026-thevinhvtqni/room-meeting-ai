@@ -6,7 +6,7 @@
 - **Name:** Ka
 - **Title:** CSA / Backend execution owner delegated by Xu
 - **Date-Time:** 2026-11-04 (Asia/Ho_Chi_Minh; exact minute not captured)
-- **Status:** IMPLEMENTED ON WORK BRANCH — EXACT-SHA VALIDATION PENDING
+- **Status:** PASS — exact-SHA run #36; zero Node.js 20 Actions warnings
 
 ## 1. Verified release evidence
 - `actions/setup-python` v7.1.0 official release is immutable and points to commit `6d4fd22b20465ccc0f7354476588e8df7c9ca0e0`. Its exact `action.yml` blob is `645de4f5108b28bcc7ed043ee171770b0754cc35` and declares `runs.using: node24`.

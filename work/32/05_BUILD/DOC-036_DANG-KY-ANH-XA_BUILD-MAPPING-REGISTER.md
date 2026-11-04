@@ -135,3 +135,16 @@ Byte-for-byte Sandbox↔GitHub readback is PASS for active workflow MAP-32-002 a
 - Direct and transitive pins: httpx2 2.16.0; httpcore2 2.16.0; truststore 0.10.5. Existing httpx 0.28.1 retained.
 - Exact-SHA run #39 / `41806906885`, SHA `17d7d87c9e09b08026fd8bdda29578c04bd1aa35`: 4/4 SUCCESS; unit 189, Product Auto E2E 45, tooling 20, artifact E2E 1 passed.
 - pip check passed; raw unit/E2E logs show zero StarletteDeprecationWarning and zero Node.js 20 Actions warnings.
+
+
+## 2026-11-04 — W32-LOG-49 evidence document status reconciliation
+- **Name:** Ka
+- **Title:** CSA / Backend execution owner delegated by Xu
+- **Date-Time:** 2026-11-04 (Asia/Ho_Chi_Minh; exact minute not captured)
+- **Priority Order:** P1 — Documentation consistency
+- Canonical warning disposition: DOC-064 (now present on GitHub branch and Sandbox).
+- F4 decision/implementation: DOC-065 header status PASS — run #34.
+- Node.js 24 action remediation: DOC-066 header status PASS — run #36.
+- Starlette/httpx2 remediation: DOC-067 header status PASS — run #39.
+- The exact-SHA evidence records remain W32-EVIDENCE-021/022/023 in DOC-014.
+- No product source changed in this documentation reconciliation.

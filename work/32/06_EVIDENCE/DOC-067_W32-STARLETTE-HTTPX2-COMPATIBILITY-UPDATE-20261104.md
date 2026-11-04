@@ -6,7 +6,7 @@
 - **Name:** Ka
 - **Title:** CSA / Backend execution owner delegated by Xu
 - **Date-Time:** 2026-11-04 (Asia/Ho_Chi_Minh; exact minute not captured)
-- **Status:** IMPLEMENTED ON WORK BRANCH — EXACT-SHA VALIDATION PENDING
+- **Status:** PASS — exact-SHA run #39; zero StarletteDeprecationWarning
 
 ## 1. Confirmed warning and compatibility evidence
 - Exact run #36 / `41806199038` logs report `StarletteDeprecationWarning` at `fastapi/testclient.py:1`: using plain `httpx` with `starlette.testclient` is deprecated; install `httpx2`.

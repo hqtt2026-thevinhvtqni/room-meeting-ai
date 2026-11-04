@@ -6,7 +6,7 @@
 - **Decision owner:** Xu — CEO / Lead Architect / Work coordinator
 - **Implementation owner:** Ka — CSA / Backend execution
 - **Date-Time:** 2026-11-04 (Asia/Ho_Chi_Minh; exact minute not captured)
-- **Status:** AUTHORIZED FOR IMPLEMENTATION — EXACT-SHA CI VALIDATION PENDING
+- **Status:** PASS — exact-SHA run #34; same-host SQLite scope; multi-host not certified
 - **Baseline decision:** Option A — 100 accepted paste requests per resolved identity per meeting per rolling 60 seconds.
 
 ## 1. Xu decision received

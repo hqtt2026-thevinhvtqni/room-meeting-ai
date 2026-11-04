@@ -652,3 +652,15 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **Artifact IDs:** product RC `13309927869`, SHA-256 `473ff48bb4d11880042b7ead3e853110ed601de5a3e1217ef028b9f60990695b`; unit `13310197019`, digest `a15e5ffa686906ae5abf1a6ccbf27067463d1067788106a5bc99e891517cd194`; E2E `13310875205`, digest `2b49e904232cb224b86bc19527e712235a1a1039e66fae7244199a19b7ea3b40`; tooling `13308824936`, digest `41ce5edc4e1cd5e0e4120f042a6b304d97ee738251ddc1795baf12ffb7276c5c`.
 - **Disposition:** Starlette/httpx TestClient deprecation warning RESOLVED; Node.js 20 Actions warning remains RESOLVED from run #36. Both changes validated independently.
 - **Boundary:** no main merge/rebase/cherry-pick, strict coverage, CD, deployment, final acceptance or release. Work 32 ACTIVE — NOT RELEASED.
+
+
+## 2026-11-04 — W32-LOG-20261104-49 — Final warning/evidence document status reconciliation
+- **Document Number:** W32-LOG-20261104-49
+- **Priority Order:** P1 — Evidence/document consistency
+- **Name:** Ka
+- **Title:** CSA / Backend execution owner delegated by Xu
+- **Date-Time:** 2026-11-04 (Asia/Ho_Chi_Minh; exact minute not captured)
+- Reconciled document header statuses with their completed exact-SHA evidence: DOC-065 F4 PASS (run #34); DOC-066 Node.js 24 Actions PASS (run #36); DOC-067 Starlette/httpx2 PASS (run #39).
+- Published DOC-064 warning disposition to the Work 32 GitHub branch; DOC-064 records both warnings resolved.
+- DOC-055 Sandbox register records DOC-064 through DOC-067 as PASS. DOC-020 remains NOT ACCEPTED because Browser Adapter, Track B, branch governance and CD/release gates remain open.
+- No source change, main merge, strict coverage, CD, deployment or release.
