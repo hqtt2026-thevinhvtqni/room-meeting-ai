@@ -39,7 +39,7 @@ async def _test_integration_session_init(tmp_path):
     integration, _ = _isolated_integration(tmp_path)
 
     async with integration.session() as mcp_session:
-        await mcp_session.initialize()
+        await integration.verify_capabilities(mcp_session)
         assert mcp_session is not None
 
 
