@@ -623,3 +623,16 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **Change:** add `httpx2>=2.16.0` to requirements.txt and `httpx2==2.16.0` to constraints-ci.txt. Retain existing httpx 0.28.1 for other application/MCP usage; do not bump FastAPI or Starlette.
 - **Document:** DOC-067. Exact-SHA run and observed pip-freeze transitive dependencies pending.
 - **Boundary:** separate from Node action pin change; no main merge, strict coverage, CD, deployment or release.
+
+
+## 2026-11-04 — W32-LOG-20261104-47 — httpx2 compatibility test PASS; transitive pins
+- **Document Number:** W32-LOG-20261104-47
+- **Priority Order:** P1 — Dependency reproducibility and deprecation removal
+- **Name:** Ka
+- **Title:** CSA / Backend execution owner delegated by Xu
+- **Date-Time:** 2026-11-04 (Asia/Ho_Chi_Minh; exact minute not captured)
+- **Evidence:** Run #38 / `41806667551`, exact SHA `0065dbe54eff7282d6eec8eb56f104927ba1e9c4`, COMPLETED / SUCCESS, 4/4 jobs.
+- **Results:** Unit 189 passed; Product Auto E2E 45 passed; tooling 20 tests OK; immutable artifact E2E 1 passed. Raw unit and E2E logs contain zero StarletteDeprecationWarning and zero Node.js 20 Actions warnings.
+- **Observed install versions:** `httpx2==2.16.0`, `httpcore2==2.16.0`, `truststore==0.10.5`; existing `httpx==0.28.1`, FastAPI 0.162.0 and Starlette 1.10.0 remain unchanged.
+- **Reproducibility correction:** pin the two newly observed transitive packages in constraints-ci.txt; do not guess versions. DOC-067 records the observed matrix. Exact-SHA validation after transitive pinning pending.
+- **Boundary:** no FastAPI/Starlette upgrade, no main merge, no strict coverage, no CD/deployment/release.

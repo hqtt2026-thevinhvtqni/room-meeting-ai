@@ -114,3 +114,13 @@ Byte-for-byte Sandbox↔GitHub readback is PASS for active workflow MAP-32-002 a
 - `requirements.txt`: add `httpx2>=2.16.0`; retain `httpx>=0.27.0`.
 - `constraints-ci.txt`: add `httpx2==2.16.0`; retain `httpx==0.28.1`.
 - No FastAPI/Starlette upgrade. Exact-SHA validation and transitive pip-freeze inspection pending.
+
+
+## 2026-11-04 — W32-LOG-47 httpx2 dependency provenance
+- **Name:** Ka
+- **Title:** CSA / Backend execution owner delegated by Xu
+- **Date-Time:** 2026-11-04 (Asia/Ho_Chi_Minh; exact minute not captured)
+- **Priority Order:** P1 — Dependency reproducibility
+- Run #38 / `41806667551` at exact SHA `0065dbe54eff7282d6eec8eb56f104927ba1e9c4`: 4/4 SUCCESS; 189 unit, 45 Product Auto E2E, 20 tooling, artifact E2E 1 passed.
+- Raw unit/E2E logs: zero StarletteDeprecationWarning and zero Node.js 20 Actions warnings.
+- Observed transitive packages: `httpcore2==2.16.0`, `truststore==0.10.5`; pin both in constraints-ci.txt. Exact updated constraints SHA and validation run pending.

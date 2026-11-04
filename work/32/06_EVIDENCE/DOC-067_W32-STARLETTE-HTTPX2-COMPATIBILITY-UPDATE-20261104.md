@@ -40,3 +40,11 @@
 - **Date-Time:** 2026-11-04 (Asia/Ho_Chi_Minh; exact minute not captured)
 - **Action:** Matched raw warning to official Starlette TestClient documentation and PyPI httpx2 release; applied only the additive httpx2 dependency and exact direct pin.
 - **Result:** Work branch commit and exact-SHA CI validation pending.
+
+
+## Initial exact-SHA compatibility result — RUN #38
+- Exact SHA `0065dbe54eff7282d6eec8eb56f104927ba1e9c4`, run #38 / `41806667551`: COMPLETED / SUCCESS, 4/4 jobs.
+- Unit 189 passed; Product Auto E2E 45 passed; tooling 20 OK; immutable artifact E2E 1 passed.
+- Raw unit and E2E logs contain zero StarletteDeprecationWarning and zero Node.js 20 Actions warnings.
+- Observed transitive dependencies from the exact CI install: `httpcore2==2.16.0`, `truststore==0.10.5`. These are now pinned in constraints-ci.txt for deterministic repeat validation.
+- Final dependency disposition awaits the next exact-SHA run with these transitive pins.
