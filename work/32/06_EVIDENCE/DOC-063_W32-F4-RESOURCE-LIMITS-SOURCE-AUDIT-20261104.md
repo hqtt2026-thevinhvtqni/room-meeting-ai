@@ -61,3 +61,41 @@ The test file does not specify the window duration, whether the quota is per cal
 - **Result:** F4.1 source present; F4.2 delegated path present; F4.3 schema gap; F4.4 constant exists but enforcement absent. Dedicated F4 test file remains NOT RUN BY CI. No false PASS assigned.
 - **Boundary:** No Core code, MCP schema, CI gate, strict coverage, merge, CD or deployment changes. No policy inferred.
 - **Disposition:** F4 = BLOCKED pending explicit policy decision and implementation; Browser Adapter E2E = DEFERRED — WAITING FOR PC ACCESS; Work 32 = ACTIVE — NOT RELEASED.
+
+
+## 4. Xu architecture decision brief — F4 repeated-request policy (2026-11-04)
+
+**Status: DECISION REQUESTED — NOT APPROVED. No implementation authorization.**
+
+### 4.1 What the source and current tests actually define
+- The 1 MiB policy is a UTF-8 byte ceiling. Secretary enforces it before opening/writing the transcript, preventing partial transcript writes for an oversized block.
+- The MCP schema test expects `maxLength == 1,048,576`; JSON Schema maxLength is character-based, so it is an early boundary only and cannot replace UTF-8 byte enforcement.
+- The current rate-policy test only checks that a named constant exists. It does not assert a functioning rate limiter, time window, caller/meeting scope, concurrency, shared persistence, or rejection response. These semantics are not specified by the test contract.
+- `MAX_PASTE_REQUESTS_PER_WINDOW=100` is currently a declaration, not an enforcement mechanism.
+
+### 4.2 Candidate policies for Vinh's decision
+
+| Candidate | Scope | Proposed limit/window | Trade-off |
+|---|---|---|---|
+| A — recommended for decision | Authenticated principal + meeting | 100 accepted requests / rolling 60 seconds | Isolates one user's behavior within one meeting; needs shared atomic store across workers |
+| B | Authenticated principal, service-wide | 100 accepted requests / rolling 60 seconds | Strong global protection; activity in one meeting consumes budget for all meetings |
+| C | Meeting-wide, all participants combined | 100 accepted requests / rolling 60 seconds | Simple shared meeting ceiling; one participant can exhaust quota for everyone |
+
+These are decision alternatives only; none is the approved product policy.
+
+### 4.3 Required fields to approve
+1. Scope key: principal+meeting, principal-wide, or meeting-wide.
+2. Fixed window or rolling window; exact duration and maximum.
+3. Whether malformed, unauthorized, inactive-meeting, oversized and rate-rejected requests count.
+4. Error contract, status/code, retry metadata and client behavior.
+5. Atomic concurrency behavior and whether multiple workers/instances are supported.
+6. Persistence technology, owner, TTL, restart behavior and outage behavior.
+7. Metrics/audit fields, correlation ID, privacy and retention.
+
+### 4.4 Implementation conditions after approval
+- Keep Secretary UTF-8 byte guard as authoritative; add MCP maxLength as early rejection only.
+- Implement rate limiting at the approved authority boundary, with atomic behavior matching deployment topology; do not use an unshared process-local counter if the service can run multiple workers.
+- Add tests for boundary values, concurrent calls, scope isolation, window expiry, restart/multi-worker behavior, rejection response and transcript non-mutation.
+- Run dedicated F4 tests plus full regression/CI on exact SHA; only then reconsider promotion into mandatory CI.
+
+**Current disposition:** F4 BLOCKED pending explicit policy approval. No source, schema, test, dependency or CI gate changed by this brief.
