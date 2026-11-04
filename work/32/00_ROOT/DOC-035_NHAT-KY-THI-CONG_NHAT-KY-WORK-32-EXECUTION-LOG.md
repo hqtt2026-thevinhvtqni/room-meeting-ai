@@ -664,3 +664,61 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - Published DOC-064 warning disposition to the Work 32 GitHub branch; DOC-064 records both warnings resolved.
 - DOC-055 Sandbox register records DOC-064 through DOC-067 as PASS. DOC-020 remains NOT ACCEPTED because Browser Adapter, Track B, branch governance and CD/release gates remain open.
 - No source change, main merge, strict coverage, CD, deployment or release.
+
+
+---
+
+### 2026-11-05 — DOC-068 / P1 — Consolidated test and runtime evidence for Xu review
+
+- **Name:** Ka
+- **Title:** CSA / Backend & Repository Custodian
+- **Date-Time:** 2026-11-05; exact clock time not captured in source evidence
+- **Evidence:** DOC-068, `06_EVIDENCE/DOC-068_W32-TEST-AND-SYSTEM-STRUCTURE-EVIDENCE-CONSOLIDATION-20261105.md`.
+- **Recorded:** GitHub CI runs #34/#36/#39/#41; F4 test scope and limitations; Browser Adapter local browser PASS but ROOM HOP submission DEFERRED and overall E2E assertion FAIL on dirty local main; clean Work 32 clone at exact SHA; PC listeners and Adapter health; MCP runtime source/transport mismatch still unresolved.
+- **Architecture note for Xu:** Work 32 ADR-002 public MCP V1 inventory remains exactly `list_meetings`, `get_meeting`, `get_transcript`, `add_paste_to_meeting`; `join_meeting` and `start_meeting` remain Core HTTP boundary operations. PID 15048 launches `room_hop_mcp.mcp_http_main`, a module absent from the Work 32 tree at SHA `c601c18712ed1d58990314d517409478f41ee11b`. Actual runtime source provenance and transport compatibility must be verified before E2E.
+- **Disposition:** No test result promoted beyond its actual scope. No process restart, transcript mutation, merge, deployment or release.
+- **Overall:** Work 32 ACTIVE — NOT RELEASED.
+
+
+### 2026-11-05 — DOC-068 Addendum A — P1 — PC MCP source inspection
+
+- **Name:** Ka
+- **Title:** CSA / Backend & Repository Custodian
+- **Date-Time:** 2026-11-05; exact clock time not present in supplied capture
+- **Evidence:** User-supplied PowerShell output resolves PID 15048's module to `D:\\ROOM-HOP-CLEAN\\room-meeting-ai\\room_hop_mcp\\mcp_http_main.py`; parent PID 1684 launches it from the original local repository with `ROOM_HOP_MCP_PORT=8020`.
+- **Finding:** Source configures FastMCP Streamable HTTP at `/mcp`, and registers substantially more tools than Work 32 ADR-002's exact four-tool public MCP V1 contract, including `join_meeting`, `start_meeting`, sandbox and agent-runtime tools.
+- **Classification:** PC PID 15048 is attributable to the original local source tree, not the Work 32 branch tree at SHA `c601c18712ed1d58990314d517409478f41ee11b`. Actual live MCP handshake and PID 20468 adapter module provenance remain unverified. This is a public-boundary drift risk for Xu review.
+- **Safety:** No service restart/termination, source modification, live MCP request or transcript mutation.
+- **Overall:** Work 32 ACTIVE — NOT RELEASED.
+
+
+### W32-LOG-20261105-50 — Browser Adapter exact-SHA source audit
+- Document Number: W32-LOG-20261105-50
+- Priority Order: P0 — MCP public contract and Browser Adapter E2E safety
+- Name: Ka
+- Title: CSA / Backend & Repository Custodian
+- Date-Time: 2026-11-05; exact minute not captured
+- Branch/SHA: work/32-ci-cd-python-ci-v2 / c601c18712ed1d58990314d517409478f41ee11b.
+- GitHub branch HEAD unchanged. Run #41 (41807578306) SUCCESS, 4/4 jobs SUCCESS; exact SHA confirmed.
+- Source audit: MCP server and stdio CI test enforce exact four ADR-002 tools. Browser Adapter only requires three tools, does not enforce exact inventory, may fall back to the first active meeting, and defaults identity to xu. Its live E2E test can append to a real transcript.
+- CI workflow E2E list excludes tests/test_browser_agent_adapter_e2e.py; run #41 is not Browser Adapter E2E evidence.
+- Status: Browser Adapter contract enforcement GAP / NOT VERIFIED; live handoff/readback BLOCKED / NOT RUN.
+- Safety: read-only GitHub source audit; no source edits, live MCP requests, process restart, meeting selection, transcript mutation, commit or push.
+- Next: Xu decides whether Browser Adapter is Track A scope; Ka prepares bounded patch only after that decision. Work 32 ACTIVE — NOT RELEASED.
+
+
+### W32-LOG-20261105-51 — Xu review and Ka execution assignment: ROOM-HOP runtime / room-structure alignment
+- **Document Number:** W32-LOG-20261105-51
+- **Priority:** P0 — Public MCP boundary, runtime provenance and safe E2E
+- **Date:** 2026-11-05 (Asia/Ho_Chi_Minh)
+- **Owner:** Xu — coordination, architecture decision and acceptance review; Ka — source audit, implementation proposal and verification; Vinh retains reserved high-risk approvals.
+- **Input evidence:** DOC-068 and W32-LOG-50 plus DOC-068 Addendum A in Sandbox. GitHub branch `work/32-ci-cd-python-ci-v2` HEAD observed as `c601c18712ed1d58990314d517409478f41ee11b`; run #41 / `41807578306` SUCCESS 4/4 on that SHA.
+- **Xu decision:** ADR-002 remains authoritative: MCP Public V1 exposes exactly four tools — `list_meetings`, `get_meeting`, `get_transcript`, `add_paste_to_meeting`. Do not expand this public contract to accommodate legacy runtime tools. `join_meeting` and `start_meeting` remain Core HTTP lifecycle operations, not MCP Public V1 tools. Port :8020 remains prohibited; do not call, restart, terminate or use its process as the Work 32 standard runtime.
+- **Ka — P0 task 1 (read-only provenance):** inspect PID 20468 module path, executable, parent, command line and working directory using an authorized PC-local inspection method. Compare the loaded module and repository root with the exact Work 32 branch source. If PC-local inspection is unavailable, record BLOCKED with the missing execution capability; do not infer provenance.
+- **Ka — P0 task 2 (contract audit):** compare the Browser Adapter's required tool inventory, meeting selection and identity behavior with ADR-002 and the Work 32 source. Prepare a minimal compatibility patch proposal that enforces the exact four-tool inventory, explicit dedicated test meeting and explicit test identity; no fallback to first active meeting and no implicit `xu` identity.
+- **Ka — P0 task 3 (safe E2E):** define and run E2E only against the verified Work 32 runtime/source, using a dedicated disposable test meeting and test identity. Permit transcript append only to that test meeting; then read back and compare the exact submitted content plus execution/evidence identifiers. No writes to real meetings. If the runtime endpoint or provenance cannot be proven, mark NOT RUN/BLOCKED rather than redirecting to a guessed endpoint.
+- **Ka — P1 task 4 (evidence):** publish DOC-068 and this journal update to the Work 32 branch, then fetch both back and compare full content byte-for-byte with Sandbox. Record exact Git commit/blob SHAs and the Actions run on the documentation commit. Do not claim sync before readback.
+- **Acceptance criteria:** (1) runtime source provenance tied to exact Work 32 SHA; (2) live MCP tool inventory exactly matches ADR-002; (3) adapter enforces explicit meeting and identity without unsafe fallback; (4) isolated E2E append/readback equality proven; (5) evidence and canonical journal synchronized and readback-verified. Each criterion reported separately.
+- **Boundaries:** no :8020 requests; no PID/service restart or termination; no real-meeting transcript mutation; no invented route/API; no main merge/rebase/cherry-pick; no CD, deployment, production or release; no strict coverage enablement. Any patch stays on the authorized Work 32 branch and must be evidence-backed.
+- **Current status:** GitHub Actions run #41 PASS 4/4 is CI baseline only, not Browser Adapter E2E. Browser navigation PASS is limited to browser navigation; MCP handoff DEFERRED; transcript readback NOT PROVEN; full E2E NOT PASS. PID 20468 provenance and live four-tool contract remain NOT VERIFIED. Work 32 ACTIVE — NOT RELEASED.
+- **Next review:** Ka reports each task with source paths, exact SHA, raw evidence, PASS/BLOCKED/NOT RUN and remaining risk. Xu reconciles results before any acceptance recommendation; Vinh retains final authority.
