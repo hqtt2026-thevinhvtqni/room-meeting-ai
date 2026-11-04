@@ -6,6 +6,18 @@ from core.paste_rate_limiter import MAX_PASTE_REQUESTS_PER_WINDOW
 
 MAX_TEXT_BYTES = 1 * 1024 * 1024
 
+
+def validate_transcript_text(text: str) -> str:
+    """Normalize and validate the authoritative UTF-8 byte ceiling."""
+    text = "" if text is None else str(text)
+    text_bytes = len(text.encode("utf-8"))
+    if text_bytes > MAX_TEXT_BYTES:
+        raise ValueError(
+            f"Transcript input exceeds {MAX_TEXT_BYTES} UTF-8 bytes"
+        )
+    return text
+
+
 class Secretary:
     """
     ROOM HOP Secretary v0.3 — Raw Transcript Record Keeper.
@@ -30,20 +42,9 @@ class Secretary:
     def __init__(self, transcript_path: str | Path = "docs/transcript.txt"):
         self._transcript_path = Path(transcript_path)
 
-    @staticmethod
-    def validate_text(text: str) -> str:
-        """Normalize and validate the authoritative UTF-8 byte ceiling."""
-        text = "" if text is None else str(text)
-        text_bytes = len(text.encode("utf-8"))
-        if text_bytes > MAX_TEXT_BYTES:
-            raise ValueError(
-                f"Transcript input exceeds {MAX_TEXT_BYTES} UTF-8 bytes"
-            )
-        return text
-
     def append(self, text: str) -> dict:
         # Validate before opening the transcript to prevent partial writes.
-        text = self.validate_text(text)
+        text = validate_transcript_text(text)
         self._transcript_path.parent.mkdir(parents=True, exist_ok=True)
 
         # newline="" : khong de Python tu dich CRLF<->LF (universal newline

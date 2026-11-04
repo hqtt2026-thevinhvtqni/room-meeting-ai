@@ -64,3 +64,10 @@ Source audit at branch HEAD `c21b59e23d0a9c03f05aad86170ff20c577f4bf6` found:
 - **Date-Time:** 2026-11-04 (Asia/Ho_Chi_Minh; exact minute not captured)
 - **Action:** Re-read Work 32 structure policy, ADR-001/002/003, DOC-063, source tree, Meeting/MeetingService/Secretary/MCP/HTTP contracts and F4 tests. Prepared SQLite same-host adaptation and dedicated concurrency/integration tests.
 - **Result:** Implementation committed for exact-SHA CI validation; no main merge, CD, deployment or release.
+
+
+## CI correction addendum — RUN #33
+- Run #33 / `41805259568` on exact SHA `409ba7f382f46372484fa967867f4e5b8c6fdd5f`: Unit failed (181 passed, 8 failed), E2E PASS, tooling PASS, immutable artifact job skipped.
+- Raw logs identified two concrete defects: SQLite connection cleanup after quota rejection, and violating Secretary's locked three-method public API by adding a validation method.
+- Corrected by keeping validation as module-level `validate_transcript_text` and consolidating SQLite rollback/close handling. No tests were weakened or removed.
+- Status: F4 implementation remains IN PROGRESS; next exact-SHA validation pending.

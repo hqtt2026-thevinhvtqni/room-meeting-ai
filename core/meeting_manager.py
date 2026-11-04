@@ -23,7 +23,7 @@ from core.paste_rate_limiter import (
     PasteRateLimitExceeded,
     SQLitePasteRateLimiter,
 )
-from core.secretary import Secretary
+from core.secretary import Secretary, validate_transcript_text
 
 ROOM_HOP_ROOT = Path(__file__).resolve().parent.parent
 MEETINGS_DIR = ROOM_HOP_ROOT / "meetings"
@@ -312,7 +312,7 @@ class Meeting:
             )
 
         # Validate before quota reservation: invalid requests do not consume quota.
-        raw_text = self.secretary.validate_text(raw_text)
+        raw_text = validate_transcript_text(raw_text)
 
         header = None
         if identity_id is not None:

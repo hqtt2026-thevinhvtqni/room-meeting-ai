@@ -125,7 +125,6 @@ class SQLitePasteRateLimiter:
             if len(events) >= self.limit:
                 retry = math.ceil(events[0][0] + self.window_seconds - now)
                 connection.rollback()
-                connection.close()
                 raise PasteRateLimitExceeded(retry)
             connection.execute(
                 """

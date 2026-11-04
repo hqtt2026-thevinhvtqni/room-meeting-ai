@@ -544,3 +544,19 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **Document:** DOC-065 records the decision, implementation boundary and limitations.
 - **No change:** no main merge/rebase/cherry-pick, no strict coverage, no CD/deployment, no Browser Adapter false PASS, no Track B API invention, no release.
 - **Current disposition:** F4 implementation in progress; exact-SHA validation pending; Work 32 ACTIVE — NOT RELEASED.
+
+
+## 2026-11-04 — W32-LOG-20261104-42 — RUN #33 failure analysis and F4 correction
+- **Document Number:** W32-LOG-20261104-42
+- **Priority Order:** P0 — CI regression correction
+- **Name:** Ka
+- **Title:** CSA / Backend execution owner delegated by Xu
+- **Date-Time:** 2026-11-04 (Asia/Ho_Chi_Minh; exact minute not captured)
+- **Evidence:** Run #33 / `41805259568`, exact SHA `409ba7f382f46372484fa967867f4e5b8c6fdd5f`; Unit job `126490568300` failed, 181 passed / 8 failed; E2E and tooling jobs passed; immutable artifact job skipped because unit gate failed.
+- **Root causes from raw job log:**
+  1. F4 rate-limit path closed SQLite connection before raising and the exception handler then queried `connection.in_transaction`, masking the intended rate-limit exception with `sqlite3.ProgrammingError`.
+  2. A public `Secretary.validate_text` method expanded a deliberately locked public API (only append/read/export). Validation must be a module-level helper, not a new Secretary method.
+  3. The same two defects caused quota service/Core/HTTP tests to fail; no test failure is hidden or removed.
+- **Correction:** move UTF-8 validation to module-level `validate_transcript_text`, keep Secretary public API unchanged, and let common exception cleanup close the SQLite connection exactly once after rollback.
+- **No weakening:** no tests removed, skipped or relabeled; bounded unit gate remains mandatory.
+- **Next:** exact-SHA rerun after correction. Work 32 remains ACTIVE — NOT RELEASED.
