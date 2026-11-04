@@ -765,3 +765,20 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - Product implementation remains validated by run #50 at exact SHA `0a5f68083ea534c5fe3dd5651cd926756119e5e1`; documentation commits do not change that source result.
 - PID 20468 local Windows source provenance and live MCP handoff/readback remain BLOCKED / NOT RUN; no PC-local process inspection is available through connected tools.
 - Work 32 ACTIVE — NOT RELEASED; no main merge, deployment or release.
+
+
+### W32-LOG-20261105-55 — PC inspection result and consolidated one-shot handoff
+- **Document Number:** W32-LOG-20261105-55
+- **Priority:** P0 — PC runtime provenance / eliminate repeated user-side measurements
+- **Date-Time:** 2026-11-05, user supplied PowerShell capture; exact execution minute not present in capture.
+- **Requested operating rule (Vinh):** Every measurement and test must be recorded in the canonical journal so Ka can read what was executed and its result. Xu must consolidate PC-side checks into one planned run; do not ask Vinh to repeat already completed measurements.
+- **Evidence source:** User-supplied PowerShell transcript, 342 lines, received in this conversation.
+- **Observed PID 20468:** Exists; parent PID 9108; process python.exe; command line: Python312\\python.exe -m uvicorn adapter:app --host 127.0.0.1 --port 8787. Listener-owner query independently resolves to the same Python executable and command.
+- **Port 8787:** Listener bound only to 127.0.0.1:8787; owning PID is 20468.
+- **PC repository state:** D:\\ROOM-HOP-CLEAN\\room-meeting-ai exists, but checked-out branch is main, HEAD d7c90d9d31062d389810808e43dfdd19d7711b75, tracking origin/main [behind 34]. Working tree is heavily dirty, with many modified tracked files, deleted agents/quan_gia.yaml, and numerous untracked files/directories including runtime/MCP artifacts. This is not the authorized Work 32 branch work/32-ci-cd-python-ci-v2.
+- **Not established by this capture:** PID 20468 actual working directory; resolved adapter Python module file (adapter.__file__); whether loaded module is from this repository or another path; parent PID 9108 provenance; live MCP handshake/tool inventory; live transcript append/readback.
+- **Assessment:** PID/listener identity confirmed, runtime source provenance NOT VERIFIED. Local checkout is main, 34 commits behind origin and extensively dirty; it must not be treated as the Work 32 exact-SHA runtime. Do not restart, terminate, reconfigure or send MCP requests to this process until Ka completes source-origin assessment and Xu reviews it.
+- **Safety:** Read-only inspection only. No files changed by this measurement, no process restarted/terminated, no HTTP/MCP request, no meeting/transcript mutation. Port :8020 and PID 15048 were not accessed.
+- **Ka handoff — one consolidated next action:** Read this entry and DOC-068 before any further PC request. Determine the minimum single-run diagnostic needed to establish PID 20468 working directory/module provenance and parent process provenance, then combine it with any safe read-only adapter health/config checks that are justified. Reuse the already captured PID, listener, command line, branch, HEAD and dirty-tree evidence; do not ask Vinh to rerun them. Do not attempt live MCP or transcript mutation until exact Work 32 source/runtime provenance and a dedicated disposable meeting/identity are established.
+- **Xu next action:** Reconcile Ka findings with ADR-002 and exact Work 32 branch SHA; then issue at most one consolidated PC-side script if a user action remains necessary. The script must print all required evidence in one output and be recorded here before Vinh runs it.
+- **Status:** PID 20468 and port 8787 ownership CONFIRMED; source provenance BLOCKED / NOT VERIFIED; live MCP E2E NOT RUN. Work 32 ACTIVE — NOT RELEASED.
