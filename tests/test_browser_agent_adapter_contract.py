@@ -1,6 +1,22 @@
 import json
+import importlib
+import sys
+import types
 
-from room_hop_mcp.browser_agent_adapter import adapter as browser_adapter
+try:
+    from room_hop_mcp.browser_agent_adapter import adapter as browser_adapter
+except ModuleNotFoundError as exc:
+    if exc.name != "playwright":
+        raise
+    playwright = types.ModuleType("playwright")
+    sync_api = types.ModuleType("playwright.sync_api")
+    sync_api.sync_playwright = lambda: None
+    sync_api.Browser = type("Browser", (), {})
+    sync_api.Page = type("Page", (), {})
+    playwright.sync_api = sync_api
+    sys.modules["playwright"] = playwright
+    sys.modules["playwright.sync_api"] = sync_api
+    browser_adapter = importlib.import_module("room_hop_mcp.browser_agent_adapter.adapter")
 
 EXPECTED_TOOLS = {
     "list_meetings", "get_meeting", "get_transcript", "add_paste_to_meeting"
