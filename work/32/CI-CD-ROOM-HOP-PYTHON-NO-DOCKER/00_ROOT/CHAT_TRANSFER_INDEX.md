@@ -11,7 +11,11 @@ Design CI/CD for Python-based ROOM-HOP, no Docker, survey first and no PC change
 - Proposed repair loop: maximum 3 attempts, then BLOCKED for human review.
 
 ## Current
-Sandbox Work 32 exists. GitHub branch `work/32-ci-cd-room-hop-python-no-docker` exists. Canonical GitHub path: `work/32/CI-CD-ROOM-HOP-PYTHON-NO-DOCKER/`.
+- Phase A (survey) COMPLETE: mirror verified via GitHub read-back; baseline inventory done (requirements, pytest.ini, no prior workflows).
+- Phase B (minimal CI pilot) IN PROGRESS: workflow `work32-ci-pilot.yml` added on the Work branch on 2026-11-04, authorized by Vinh ("triển khai tiếp").
+- Main head moved since branch base: `d7266eb9bfedfc534fc87d56548e47841bb583b9` vs base `cc3100c835ad87ac9670a2ba38dc2c2dfae63755` — integration plan must be revisited.
+- CI engine: GitHub Actions, Python 3.11 hosted runner, no Docker.
 
-## Known blocker
-`sandbox_list` lists files, but `sandbox_read` returns an empty object. Content read-back is not verified. Next: confirm mirror contents, fix/read around the read endpoint, complete read-only repository survey, then ask Vinh to approve implementation.
+## Known blockers
+- `sandbox_read` MCP endpoint still returns empty content (worked around via GitHub read-back; not blocking this Work).
+- Gates G3/G5 BLOCKED by design until Phase C approval.

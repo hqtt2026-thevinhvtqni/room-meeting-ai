@@ -1,0 +1,70 @@
+name: Work 32 CI Pilot (ROOM-HOP, no Docker)
+
+# Phase B pilot — scoped ONLY to the Work 32 branch.
+# No deployment, no secrets, no MAIN SOURCE mutation, no Docker.
+on:
+  push:
+    branches: [work/32-ci-cd-room-hop-python-no-docker]
+  pull_request:
+    branches: [work/32-ci-cd-room-hop-python-no-docker]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: work32-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci-pilot:
+    name: "G0-G2 gates (Python, no Docker)"
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: G0 — Record source and environment
+        run: |
+          echo "G0: repo=${{ github.repository }} branch=${{ github.ref_name }} sha=${{ github.sha }} event=${{ github.event_name }}"
+          git --version || true
+      - name: G0 — Checkout (read-only intent)
+        uses: actions/checkout@v4
+      - name: G0 — Emit changed paths (PR) or full list (push)
+        run: |
+          echo "G0: event=${{ github.event_name }}"
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: G4 — Show toolchain versions
+        run: |
+          python --version
+          pip --version
+          pip list
+      - name: G1 — Install declared dependencies (no Docker)
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: G1 — Syntax gate (compileall)
+        run: |
+          python -m compileall -q . && echo "G1 PASS: compileall exit 0" || { echo "G1 FAIL: compileall nonzero"; exit 1; }
+      - name: G2 — Unit test gate (pytest, isolated, no network)
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+          CI: 'true'
+        run: |
+          pytest tests/ --junitxml=work32-junit.xml -q || { code=$?; echo "G2 FAIL: pytest exit $code"; exit $code; }
+          echo "G2 PASS"
+      - name: G6 — Upload evidence (junit + pip freeze)
+        if: always()
+        run: |
+          pip freeze > work32-pip-freeze.txt || true
+      - name: G6 — Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: work32-ci-evidence-${{ github.run_id }}
+          path: |
+            work32-junit.xml
+            work32-pip-freeze.txt
+          if-no-files-found: warn
+          retention-days: 14
