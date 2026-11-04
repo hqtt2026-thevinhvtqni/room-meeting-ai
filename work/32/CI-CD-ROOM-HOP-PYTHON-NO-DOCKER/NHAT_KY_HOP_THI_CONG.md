@@ -377,3 +377,21 @@
 - **Boundary:** Request only; NOT APPROVED and NOT an ADR. No route, schema, adapter or service implementation created. No Core/Dashboard changes.
 - **Result:** Architecture decision PENDING; Workspace runtime/source NOT PROVEN in inspected source; whole-product Browser Auto E2E NOT RUN.
 - **Next:** Xu/Mê to identify canonical source/revision and return explicit APPROVED / REVISE / BLOCKED decision. Ka continues read-only verification and does not infer an implementation contract.
+
+## W32-LOG-20261104-14 — P0 — Independent verification of CI action-SHA claim and P1 workflow-duplication finding
+
+- **Document Number:** W32-LOG-20261104-14
+- **Priority order:** P0 (Xu review item "SHA setup-python sai lệch") → P1 (workflow duplication proposal)
+- **Name:** Vibe (GLM via Mistral)
+- **Title:** Independent Reviewer — Work 32 CI/CD audit (per Xu's W32 review order)
+- **Date-Time:** 2026-11-04 Asia/Ho_Chi_Minh
+- **Action:** Read raw blobs of .github/workflows/ci.yml and ci-validation.yml at branch head via GitHub API (no page rendering); cross-checked every action pin against upstream release history (actions/setup-python, actions/upload-artifact).
+- **Findings:**
+  1. P0 SHA claim from Xu's review: NOT REPRODUCED — FALSE POSITIVE. Both files pin setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 (v5.6.0) at all 5 occurrences (ci.yml: 3; ci-validation.yml: 5... 3 in ci-validation + product job; total 8 across both) and upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 (v4.6.2) at all 7 upload steps. No occurrence of ea165… on a setup-python step.
+  2. Root cause of the false positive: GitHub's rendered page splits long "uses:" lines mid-token when extracted/copied (reproduced: "actions/" + "setup-python@a26af69…", "acti" + "ons/setup-python@…"), which can visually pair the upload-artifact SHA with setup-python. Read raw blobs (raw.githubusercontent or API) to avoid this artifact.
+  3. Independent upstream confirmation: a26af69… = setup-python v5.6.0 (dependabot bump commits in Apache Arrow-go, hass-nabucasa); ea165f8d… = upload-artifact v4.6.2 (Arrow, Grails dependabot logs).
+  4. P1 CONFIRMED: ci.yml (Pilot) and ci-validation.yml (Hardening) both trigger on push to work/32-ci-cd-python-ci-v2 → duplicate runs and config drift (ci-validation adds tests/test_meeting.py, constraints-ci.txt, tooling job; ci.yml does not).
+- **Proposal (pending Xu/Vinh approval — NOT executed):** Keep ci-validation.yml as the single standard workflow; disable ci.yml Pilot auto-trigger (either remove push trigger, keep workflow_dispatch only, or delete the file). Implement only after Xu's explicit APPROVED decision and DOC-035 logging.
+- **Boundary:** Read-only audit + this log/evidence write. No workflow file changed; no merge/rebase/cherry-pick; no CD/release; strict coverage left OFF per Xu's decision; no branch divergence action.
+- **Result:** CI Hardening run #4 SUCCESS remains VALID (no SHA defect). P0 cleared. P1 duplication awaiting Xu/Vinh decision.
+- **Next:** Xu reads this log + W32-EVIDENCE-010; returns APPROVED / REVISE / BLOCKED on the workflow-consolidation proposal; Ka (or Vibe on approval) implements the single-workflow change in a new commit on the Work 32 branch.
