@@ -84,3 +84,13 @@ Byte-for-byte Sandbox↔GitHub readback is PASS for active workflow MAP-32-002 a
 - Source blob SHAs: `core/paste_rate_limiter.py` `db95a2f910bb755bcbca7ea873c022fb1bb30853`; `core/secretary.py` `1e3a2eb2228b4c778429f1e3dad78cacaacf04d9`; `core/meeting_manager.py` `64f075f4c22ed08bb82e97d97878beed45678212`; `room_hop_mcp/adapter/server.py` `b740f72b95ea3a6e0a7e1d19a3ef3275b9899815`; `room_hop_mcp/adapter/http_server.py` `f17d752f6badf2b600f78906e63982d18f70e859`; `tests/test_f4_resource_limits.py` `1a1d85573fadb3f84dae12bb0ae5b5d9d760ef15`; workflow `379e70a397afbd03a74e6c22768a73e9e89e79a6`.
 - Unit 189 passed; Product Auto E2E 45 passed; tooling 20 OK; immutable artifact E2E 1 passed. See DOC-014 W32-EVIDENCE-021 and DOC-065.
 - Same-host SQLite scope and identity-authentication caveat are explicitly retained. No multi-host or release claim.
+
+
+## 2026-11-04 — W32-LOG-44 Node 24 action mapping
+- **Name:** Ka
+- **Title:** CSA / Backend execution owner delegated by Xu
+- **Date-Time:** 2026-11-04 (Asia/Ho_Chi_Minh; exact minute not captured)
+- **Priority Order:** P1 — CI runtime compatibility
+- `.github/workflows/ci-validation.yml`: setup-python v7.1.0 pinned to `6d4fd22b20465ccc0f7354476588e8df7c9ca0e0`; upload-artifact v7.0.1 pinned to `043fb46d1a93c77aae656e7c1c64a875d1fc6a0a`. Both exact action.yml files declare node24.
+- Workflow blob SHA and exact-SHA Actions result pending validation.
+- No dependency, test, trigger, permission, artifact-retention or product source change in this action-only patch.

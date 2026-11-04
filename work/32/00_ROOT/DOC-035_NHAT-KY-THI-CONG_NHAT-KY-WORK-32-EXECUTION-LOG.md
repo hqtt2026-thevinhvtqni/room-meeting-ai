@@ -581,3 +581,16 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **Warnings remain separate:** Node.js 20 Actions warning and Starlette/httpx deprecation remain for independent remediation commits.
 - **No change:** no main merge/rebase/cherry-pick, no strict coverage, no CD/deployment, no Browser Adapter false PASS, no Track B implementation, no final acceptance or release.
 - **Disposition:** F4 implementation and exact-SHA CI validation PASS; Work 32 remains ACTIVE — NOT RELEASED.
+
+
+## 2026-11-04 — W32-LOG-20261104-44 — Node.js 24 Actions pin update
+- **Document Number:** W32-LOG-20261104-44
+- **Priority Order:** P1 — CI runtime compatibility
+- **Name:** Ka
+- **Title:** CSA / Backend execution owner delegated by Xu
+- **Date-Time:** 2026-11-04 (Asia/Ho_Chi_Minh; exact minute not captured)
+- **Authority:** Xu's instruction to research and handle CI warnings independently; Work 32 branch-only scope.
+- **Verified release pins:** setup-python v7.1.0 SHA `6d4fd22b20465ccc0f7354476588e8df7c9ca0e0`, action.yml declares node24; upload-artifact v7.0.1 SHA `043fb46d1a93c77aae656e7c1c64a875d1fc6a0a`, action.yml declares node24.
+- **Change:** replaced 4 setup-python and 4 upload-artifact Node20 pins with exact Node24-compatible commit SHAs. No workflow inputs/triggers/permissions/artifact settings changed.
+- **Document:** DOC-066. New workflow blob and exact-SHA run will be recorded after CI.
+- **Boundary:** no main merge/rebase/cherry-pick, no secrets, no strict coverage, no CD/deployment/release.
