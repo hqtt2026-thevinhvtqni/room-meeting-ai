@@ -247,3 +247,16 @@ Exact branch HEAD c601c18712ed1d58990314d517409478f41ee11b; run #41 / 4180757830
 - Date-Time: 2026-11-05; exact minute not captured
 - Action: Rechecked exact branch SHA and GitHub Actions jobs; audited MCP server, Browser Adapter client, Browser Adapter E2E test and CI workflow at the exact SHA.
 - Disposition: Recorded source-level contract gap and transcript-mutation safety risk. No code or workflow changed; no live request or transcript mutation performed. Xu decision required before implementation.
+
+
+## Addendum C — Browser Adapter hardening / CI evidence (2026-11-05)
+- Adapter source `room_hop_mcp/browser_agent_adapter/adapter.py` now enforces the exact ADR-002 four-tool inventory and rejects extras/missing tools.
+- Submission requires `ROOMHOP_TEST_MODE=1`, `ROOMHOP_TEST_MEETING_ID`, and `ROOMHOP_TEST_IDENTITY_ID`; it no longer chooses the first active meeting or defaults identity to xu. The configured test meeting must exist and be active.
+- Each browser workflow now has an `evidence_id`; readback checks the exact marker and execution/evidence/work/file identifiers.
+- Five deterministic tests were added to `tests/test_browser_agent_adapter_contract.py` and included in CI. The PC live E2E test is guarded and skips without explicit disposable test configuration.
+- Run #48 / 41922846395 at SHA `48abd852540621ac31ae46b311749d1959b58771`: E2E failed 49 passed / 1 failed due to comparing a raw marker after JSON escaping. The failure was retained and corrected by searching decoded transcript string values.
+- Run #49 / 41923038244 at SHA `b4c6ba4e0d9cbe86cb5b300b8d315f051ecdfc81`: SUCCESS 4/4; Unit 189 passed; E2E 50 passed; tooling and product artifact PASS.
+- Run #50 / 41923112138 at exact SHA `0a5f68083ea534c5fe3dd5651cd926756119e5e1`: SUCCESS 4/4; Unit 189 passed; E2E 50 passed including five Browser Adapter tests; tooling and immutable product artifact PASS.
+- Run #50 artifacts: unit 13368101835; E2E 13367437810; tooling 13366784637; product 13367787377. SHA-256 digests are recorded in the canonical Work 32 journal W32-LOG-53.
+- Still BLOCKED / NOT VERIFIED: Windows-local module origin and working directory for PID 20468; live MCP handshake and live transcript readback. Available connected tools cannot inspect the user's local Windows process table. CI contract tests mock MCP calls and do not prove live PC transport.
+- PID 15048 is the legacy runtime on prohibited port :8020; no request was made to that port. No process restart/termination or real-meeting transcript mutation occurred. Work 32 ACTIVE — NOT RELEASED.
