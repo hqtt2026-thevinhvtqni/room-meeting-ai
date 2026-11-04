@@ -53,3 +53,6 @@ Evidence is immutable by reference. Corrections add a new evidence record; faile
 | W32-EVIDENCE-023 | CI warning disposition: Node.js 20 deprecation + Starlette/httpx warning | 00_ROOT/DOC-035 W32-LOG-20261104-39 | Pinned stack: starlette==1.10.0, httpx==0.28.1, fastapi==0.162.0; actions setup-python@v5.6.0, upload-artifact@v4.6.2 | ANALYSIS RECORDED; no pin/dependency change; Starlette/httpx root cause NOT CONFIRMED pending raw-log review |
 
 - 2026-11-04 addendum (Vibe, per Vinh delegation recorded in W32-LOG-39): registered W32-EVIDENCE-020 through 023; no historical row was edited or removed. Evidence is immutable by reference; corrections add new records only.
+
+
+| W32-EVIDENCE-024 | Run #27 exact-SHA hosted CI and raw warning trace | GitHub Actions run 41802775140, SHA 14d0257b90e8a5c886268aa941123e96b455641d; raw E2E job 126482333884; W32-LOG-40 | 4/4 jobs PASS; Unit 167; Product E2E 45 passed/1 Starlette warning; tooling PASS; immutable artifact E2E 1 PASS; artifact ID 13307834500 digest sha256:ae916dd53a4edb474aba0aa9b4c2982b0020e3541f64ea6e04d4104ddf3db8ed | VERIFIED; Starlette warning source confirmed at fastapi/testclient.py:1; no dependency/action pin changes |
