@@ -364,3 +364,16 @@
 - **Boundary:** No Dashboard/Core/Workspace source changed; no route/schema invented; no direct bypass; no merge/rebase/cherry-pick/deployment.
 - **Result:** Workspace source/runtime NOT PROVEN; Xu/Mê contract sign-off PENDING; Dashboard→Workspace→Core Browser Auto E2E NOT RUN. Work 32 ACTIVE — NOT RELEASED.
 - **Next:** Obtain Xu/Mê's authoritative contract decision and canonical Workspace source/revision; then audit runtime/persistence/auth and implement only within the approved boundary.
+
+## W32-LOG-20261104-13 — P1 — Xu/Mê architecture decision request
+
+- **Document Number:** W32-LOG-20261104-13
+- **Priority order:** P1 — Whole-product Browser Auto E2E integration gate
+- **Name:** Ka
+- **Title:** CSA / Work 32 execution owner
+- **Date-Time:** 2026-11-04 07:15 Asia/Ho_Chi_Minh
+- **Action:** Created W32-REQ-001 to request Xu/Mê decisions on canonical Workspace :8010 source/runtime, persistence authority, Bridge/Application Service orchestration, identity/auth, data semantics, failure safety and Dashboard adapter migration.
+- **Evidence:** W32-REQ-001-XU-ARCHITECTURE-DECISION-REQUEST.md; GitHub commit 34272d62e9d3dedb9c36ccc23ebe4156c170301e.
+- **Boundary:** Request only; NOT APPROVED and NOT an ADR. No route, schema, adapter or service implementation created. No Core/Dashboard changes.
+- **Result:** Architecture decision PENDING; Workspace runtime/source NOT PROVEN in inspected source; whole-product Browser Auto E2E NOT RUN.
+- **Next:** Xu/Mê to identify canonical source/revision and return explicit APPROVED / REVISE / BLOCKED decision. Ka continues read-only verification and does not infer an implementation contract.
