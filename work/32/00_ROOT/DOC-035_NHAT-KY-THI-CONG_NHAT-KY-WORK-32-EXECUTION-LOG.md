@@ -457,3 +457,66 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - Chỉ đổi hồ sơ (DOC-014, DOC-036, DOC-035); **không** sửa source/workflow/test/constraints; không merge/rebase/cherry-pick; không strict coverage; không CD/release; Work 32 giữ **ACTIVE — NOT RELEASED**.
 - Các gate khác giữ nguyên: Browser Adapter :8787 DEFERRED; F4 BLOCKED chờ decision brief của Xu; Track B BLOCKED; branch 101-ahead/35-behind BLOCKED chờ phương án reconciliation và duyệt của anh.
 - **Next:** Xu đọc và ghi disposition mục 3.2 (yêu cầu raw log); Xu hoàn tất F4 decision brief trình anh; mọi nâng pin/dependency chờ review riêng.
+
+
+
+## W32-LOG-20261104-40 — P0 — XU VERIFY RUN #26/#27; TRACE CI WARNING; F4 DECISION BRIEF
+
+- **Người ghi:** Xu — AI-01 / Work coordinator.
+- **Thời điểm:** 2026-11-04 15:57 Asia/Ho_Chi_Minh.
+- **Branch:** `work/32-ci-cd-python-ci-v2`.
+- **HEAD trước khi ghi:** `14d0257b90e8a5c886268aa941123e96b455641d`.
+- **Căn cứ:** W32-LOG-38/39; raw GitHub Actions job logs run #27; source/test blobs on exact branch HEAD.
+
+### 1. READ / TRACE — latest hosted CI
+- Rechecked run #26 / `41792043382`, exact SHA `14cb29a5228abe9b9195f2bee44c96b92f5c2a32`: COMPLETED / SUCCESS, 4/4 jobs SUCCESS.
+- Rechecked latest run #27 / `41802775140`, exact SHA `14d0257b90e8a5c886268aa941123e96b455641d`: COMPLETED / SUCCESS, 4/4 jobs SUCCESS.
+- Run #27 logs confirm Unit 167 passed; Product Auto E2E 45 passed / 1 warning; Work 32 tooling job SUCCESS; immutable product artifact E2E 1 passed. These are per-job test counts, not a claim that every Work 32 test is covered.
+- Immutable product artifact: ID `13307834500`, digest `sha256:ae916dd53a4edb474aba0aa9b4c2982b0020e3541f64ea6e04d4104ddf3db8ed`; artifact E2E 1 passed. Evidence artifacts: tooling ID `13308760879`, unit ID `13308341736`, E2E ID `13308088634` (14-day retention).
+- Product source/workflow/test/constraints are unchanged by the Vibe docs-only commit according to W32-LOG-39 and the recorded mapping; run #27 validates the exact docs HEAD. Do not interpret docs-only CI as new product-source validation beyond the unchanged source SHA.
+
+### 2. TRACE — warning root cause corrected
+- Retrieved raw Product Auto E2E job log for run #27, job `126482333884`.
+- **Starlette warning ROOT CAUSE CONFIRMED:** pytest warning summary points to installed `fastapi/testclient.py:1` and emits: `StarletteDeprecationWarning: Using httpx with starlette.testclient is deprecated; install httpx2 instead.` This is not merely a guessed generic TestClient/transport interaction. The exact warning is emitted at FastAPI's TestClient import path with Starlette's deprecation notice.
+- **Remediation NOT APPROVED / NOT IMPLEMENTED:** do not add httpx2, remove httpx, or bump FastAPI/Starlette until dependency compatibility, MCP SDK compatibility, test behavior and constraints freeze are checked in an isolated reviewed change. The warning is non-failing (45 passed / 1 warning).
+- **Node runtime warning CONFIRMED:** run logs explicitly state `actions/setup-python@a26af69...` and `actions/upload-artifact@ea165f8...` target Node.js 20 but are forced to run on Node.js 24. Separate Node runtime output also includes DEP0040 (`punycode`) and DEP0169 (`url.parse()`). These are action/runtime notices, not Python test failures. Keep pins unchanged until reviewed compatible releases are identified.
+
+### 3. F4 — architecture decision brief (NOT A DECISION)
+- Re-read `tests/test_f4_resource_limits.py` exact blob `f4808b3307dfb3bd4a1a29ad183d9f5af699df3b` and `core/secretary.py` exact blob `b6bba7b7db0b76ad55e3cd9e15638827a4fc0944`.
+- Test contract explicitly checks 1 MiB byte ceiling, no partial writes, MCP `maxLength == 1,048,576`, existence of a named rate-policy constant, and baseline append integrity. **It does not currently test an actual rate limiter, window, identity/meeting scope, concurrency, shared persistence or rejection response.** Therefore the current test suite does not define those semantics.
+- F4.1: UTF-8 byte guard is present before transcript file open/write.
+- F4.3: MCP schema maxLength missing. JSON Schema maxLength counts characters, not UTF-8 bytes; retain runtime byte guard as authoritative.
+- F4.4: constant `MAX_PASTE_REQUESTS_PER_WINDOW=100` exists but is not enforced.
+- **Candidate A (recommended for decision, not approved):** 100 accepted paste requests per authenticated principal per meeting per rolling 60 seconds; atomic shared store if multiple workers/instances; return a documented rate-limit response with retry metadata; count only requests that pass authentication and identify an active meeting, while counting accepted attempts consistently. This binds abuse control to the actual caller+meeting and avoids a process-local counter pretending to be global.
+- **Candidate B:** 100 per authenticated principal across the service per rolling 60 seconds; shared atomic store. Stronger global protection but one busy meeting can consume a user's budget for all meetings.
+- **Candidate C:** 100 per meeting per rolling 60 seconds independent of caller. Simple but allows one caller to consume the shared meeting quota and affect others.
+- Required decision fields before implementation: selected scope key; fixed vs rolling window; limit and duration; whether rejected/invalid requests count; response/error contract and retry metadata; atomicity/concurrency; single-process vs multi-worker deployment; shared persistence technology/owner/TTL; metrics/audit and privacy handling.
+- Candidate A is a proposal only. No quota semantics are approved by this log. No source/schema/test/CI changes made.
+
+### 4. Governance and remaining gates
+- Branch compare main...Work branch: **103 ahead / 35 behind**, merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`. This count is current at this check and supersedes earlier 101/35 snapshots. No merge/rebase/cherry-pick.
+- Vibe's DOC-014/DOC-036/W32-LOG-39 work is accepted as documentation/evidence work; no product source or dependency pins changed.
+- Browser Adapter E2E :8787 remains **DEFERRED — WAITING FOR SAME-HOST PC ACCESS**.
+- F4 remains **BLOCKED — POLICY DECISION REQUIRED**.
+- Track B Workspace :8010 remains **BLOCKED / NOT APPROVED** pending canonical source/revision/runtime owner, persistence, identity/auth and Bridge/Application Service contract signoff.
+- Branch governance remains **BLOCKED / PENDING HUMAN APPROVAL**; branch protection remains unchanged.
+- CD/deployment/release remain **BLOCKED / NOT RUN**. Work 32 remains **ACTIVE — NOT RELEASED**.
+
+### 5. NEXT EXECUTION
+1. Xu records the F4 candidate policy brief for Vinh decision; no implementation before approval.
+2. Ka performs a compatibility research/change proposal for the Starlette/httpx2 warning, without changing constraints or source until a reviewed matrix and exact-SHA test plan exist.
+3. Ka identifies compatible Node-24-capable action releases and prepares a pin-update proposal only; no pin bump without review.
+4. Ka continues canonical evidence/acceptance preparation, preserving historical records and avoiding duplicate folder trees.
+5. Xu continues Workspace source/contract provenance audit; no invented routes/adapters/persistence.
+6. Browser Adapter remains deferred until PC same-host execution is available.
+
+### 6. STATUS
+- Run #26: PASS exact SHA, 4/4.
+- Run #27: PASS exact SHA, 4/4.
+- CI warning root cause: Starlette warning CONFIRMED at FastAPI TestClient import; remediation NOT RUN.
+- Node 20 action deprecation: CONFIRMED; action pin update NOT RUN.
+- F4: BLOCKED pending Vinh policy decision.
+- Browser Adapter: DEFERRED.
+- Track B: BLOCKED / NOT APPROVED.
+- CD: BLOCKED / NOT RUN.
+- Work 32: ACTIVE — NOT RELEASED.
