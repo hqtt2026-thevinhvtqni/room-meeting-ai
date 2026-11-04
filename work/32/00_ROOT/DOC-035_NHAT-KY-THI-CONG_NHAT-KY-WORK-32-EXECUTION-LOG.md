@@ -187,3 +187,50 @@
 - **Chat handoff:** Vinh temporarily hands this chat to Vibe for Work 32 independent review. This journal remains the only official assignment and evidence channel; Vibe must write its findings in a Vibe-authored record under Work 32 and link it from DOC-035. Chat messages alone are not evidence and do not authorize source changes.
 - **Git synchronization authorization:** Vinh explicitly requested Git synchronization in this turn. This is limited to mirroring the journal/evidence records on branch work/32-ci-cd-python-ci-v2; it does not authorize changes to main, source/workflow repairs, rebase, merge, cherry-pick, CD, deployment, acceptance or release. If canonical GitHub path cannot be established safely, record the exact blocker and do not invent a path.
 - **Disposition:** Critical setup-python action-pin defect FOUND — repair NOT YET AUTHORIZED / NOT EXECUTED. Run #4 workflow provenance REQUIRES RECONCILIATION. Vibe review PENDING. Track B remains BLOCKED / NOT APPROVED. Work 32 ACTIVE — NOT RELEASED.
+
+
+## 2026-11-04 — W32-LOG-20261104-28 — Xu quyết định mở lại Track A và giao Ka tiếp tục
+
+- **Document Number:** W32-LOG-20261104-28
+- **Priority:** P0 — Resume authorized CI hardening; resolve duplicate workflow execution
+- **Name / Role:** Xu — AI-01 / Work coordinator and architecture owner
+- **Date-Time:** 2026-11-04, Asia/Ho_Chi_Minh
+- **Authority:** Vinh giao Xu điều phối Work 32 theo DOC-035 và W32-ADR-003. Ka là delegated execution owner của Track A. Vinh giữ quyền phê duyệt strict coverage, main merge, CD, acceptance và release.
+
+### 1. READ / TRACE — đính chính kết quả kiểm tra SHA
+- Đọc DOC-035 đến W32-LOG-20261104-27 và kiểm tra trực tiếp GitHub blob tại branch `work/32-ci-cd-python-ci-v2`, exact commit `3cc8e6e945528c4acda631e9dd3e2f4e50bc983f`.
+- `.github/workflows/ci.yml`: blob `3552d08e1adec7025afdc7fb6213dc17dbaa86b4`; mọi `actions/setup-python` dùng SHA `a26af69be951a213d495a4c3e4e4022e16d87065`; mọi `actions/upload-artifact` dùng SHA `ea165f8d65b6e75b540449e92b4886f43607fa02`.
+- `.github/workflows/ci-validation.yml`: blob `b52be3533304675800cab4c968d32338fbd28be4`; mọi `actions/setup-python` dùng SHA `a26af69be951a213d495a4c3e4e4022e16d87065`; mọi `actions/upload-artifact` dùng SHA `ea165f8d65b6e75b540449e92b4886f43607fa02`.
+- **ĐÍNH CHÍNH:** kết luận tại W32-LOG-20261104-27 rằng hardening workflow gán nhầm SHA upload-artifact cho setup-python là SAI. Nguyên nhân là Xu đọc nhầm phần hiển thị HTML bị ngắt dòng, không phải lỗi source. Không có lỗi SHA trong hai workflow. Không sửa action pin và không tạo repair commit cho lỗi không tồn tại. Giữ mục 27 như lịch sử; mục 28 là bản đính chính.
+
+### 2. VERIFY — trạng thái CI tại exact SHA
+- Hardening run `41762690300`, commit `3cc8e6e945528c4acda631e9dd3e2f4e50bc983f`: 4/4 jobs completed/success.
+- Pilot run `41762690279`, cùng commit: 3/3 jobs completed/success.
+- Hardening artifact sản phẩm ID `13291790800`, SHA-256 `522fdd518171a6ba115d3846b8d4ec14413a64f0f546f592b8fae73e09d6d62e`, chưa expired tại lần kiểm tra.
+- Branch comparison: `work/32-ci-cd-python-ci-v2` diverged, 81 commits ahead / 35 behind `main`. Không rebase/merge/cherry-pick để xử lý độ lệch này.
+
+### 3. DECISION — Ka được tiếp tục Track A, không phải chờ thêm
+- **APPROVED:** Ka tiếp tục CI hardening trên đúng branch `work/32-ci-cd-python-ci-v2`, bắt đầu từ exact HEAD `3cc8e6e945528c4acda631e9dd3e2f4e50bc983f`. Nếu HEAD đã đổi, Ka phải ghi SHA mới và rà soát thay đổi trước khi build.
+- **Workflow chuẩn:** chọn `.github/workflows/ci-validation.yml` làm workflow CI canonical (chuẩn duy nhất) của Work 32 vì đã có tooling tests, dependency constraints, coverage report, bounded unit/E2E và immutable artifact verification.
+- **Cho phép loại bỏ workflow kích hoạt trùng:** Ka được phép retire file active `.github/workflows/ci.yml` sau khi xác nhận trong cùng thay đổi rằng `ci-validation.yml` giữ đủ trigger cần thiết: push branch Work 32, pull_request vào main và workflow_dispatch. Giữ bản lịch sử/mirror trong hồ sơ Work 32 nếu có; không xóa bằng chứng các run cũ. Không sửa action SHA vì không có lỗi.
+- **Cho phép sửa test harness phạm vi hẹp:** điều tra và chỉ sửa test isolation cho integration tests đang dùng persisted `meetings[0]`, và tính portable cho test Work13 đang hardcode `python.exe` (ưu tiên interpreter hiện tại qua `sys.executable`). Không thay đổi hành vi sản phẩm Work13 hoặc Meeting runtime. Nếu cần sửa product source, dừng và xin quyết định riêng của Xu.
+- **Không đưa vào CI gate hiện tại:** browser-adapter E2E cần service :8787 chưa có trong hosted runner; giữ NOT RUN / external prerequisite, không giả lập PASS. F4 resource tests đang phản ánh unresolved policy failures; giữ nguyên, không xóa, không skip âm thầm, không đổi expected failure thành PASS trước khi policy owner chốt expected behavior.
+- **Coverage:** report-only tiếp tục; `CHECK_STRICT=1` NOT AUTHORIZED. Không sửa whitelist để che test chưa chạy.
+- **Ngoài quyền Ka:** main merge/rebase/cherry-pick, branch protection, secrets, CD, deployment, production, acceptance/release; Track B Dashboard–Bridge–Workspace :8010–Core :8000 vẫn BLOCKED.
+
+### 4. EXECUTION CONTRACT — Ka ghi tiếp mọi bước trong DOC-035
+1. Đọc mục 28 và kiểm tra branch HEAD trước khi sửa.
+2. Retire pilot workflow trùng trigger, bảo đảm workflow canonical giữ đủ trigger và gate đã duyệt.
+3. Sửa hai test harness nêu trên trong phạm vi cho phép; không sửa product runtime.
+4. Chạy test liên quan; để GitHub Actions chạy trên exact SHA mới.
+5. Ghi bằng chứng từng job, số test, warnings, artifact ID/digest và coverage còn unaccounted.
+6. Cập nhật mirror Sandbox và hồ sơ Evidence/DOC-036 theo cấu trúc Work 70; ghi commit SHA và readback. Không tuyên bố byte-for-byte nếu chưa so sánh toàn bộ nội dung.
+7. Nếu phát hiện rủi ro ngoài phạm vi, ghi BLOCKED cùng nguyên nhân, bằng chứng và lựa chọn; không tự mở rộng thẩm quyền.
+
+### 5. ASSIGNMENT / STATUS
+- **Ka:** ASSIGNED — RESUME TRACK A NOW; không cần chờ xác nhận chat. Ghi mọi bước/kết quả vào DOC-035.
+- **Xu:** OWN — giám sát kiến trúc, đọc kết quả Ka, xử lý quyết định phát sinh và kiểm soát Track B.
+- **Vibe:** REVIEWER — kiểm tra độc lập sau khi Ka hoàn tất workflow consolidation/test harness; ghi review trong Work 32 journal/evidence, không sửa source.
+- **Track A:** ACTIVE — CI hardening in progress. Run #4/#80 chỉ chứng minh exact SHA cũ, không tự động chứng minh commit mới.
+- **Track B:** BLOCKED / NOT APPROVED.
+- **Work 32:** ACTIVE — NOT RELEASED.
