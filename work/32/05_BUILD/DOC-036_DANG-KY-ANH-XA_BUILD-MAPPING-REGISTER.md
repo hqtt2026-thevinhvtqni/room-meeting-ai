@@ -94,3 +94,13 @@ Byte-for-byte Sandbox↔GitHub readback is PASS for active workflow MAP-32-002 a
 - `.github/workflows/ci-validation.yml`: setup-python v7.1.0 pinned to `6d4fd22b20465ccc0f7354476588e8df7c9ca0e0`; upload-artifact v7.0.1 pinned to `043fb46d1a93c77aae656e7c1c64a875d1fc6a0a`. Both exact action.yml files declare node24.
 - Workflow blob SHA and exact-SHA Actions result pending validation.
 - No dependency, test, trigger, permission, artifact-retention or product source change in this action-only patch.
+
+
+## 2026-11-04 — W32-LOG-45 Node 24 Actions exact-SHA mapping
+- **Name:** Ka
+- **Title:** CSA / Backend execution owner delegated by Xu
+- **Date-Time:** 2026-11-04 (Asia/Ho_Chi_Minh; exact minute not captured)
+- **Priority Order:** P1 — CI runtime compatibility
+- Workflow blob SHA: `5cf513349e953a9991c5856496702597a45a110c`.
+- Exact-SHA run #36 / `41806199038` at `7984d167a1eec935f062dd17894d89ff90503619`: 4/4 SUCCESS; 189 unit, 45 Product Auto E2E, 20 tooling, artifact E2E 1 passed.
+- Raw logs across all four jobs: zero Node.js 20 Actions deprecation warnings. Node runtime remediation PASS. Starlette/httpx warning remains independent.

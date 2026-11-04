@@ -59,3 +59,6 @@ Evidence is immutable by reference. Corrections add a new evidence record; faile
 
 
 | W32-EVIDENCE-021 | F4 Option A implementation and exact-SHA CI validation | DOC-065; source files core/paste_rate_limiter.py, core/secretary.py, core/meeting_manager.py, MCP/HTTP adapters; Actions run 41805684024 | Exact SHA c7359d4cb5eae62992129dd1a3615652ce93680e; unit 189 passed; Product Auto E2E 45 passed; tooling 20 OK; immutable artifact E2E 1 passed | PASS — 100 accepted requests / resolved identity / meeting / rolling 60 seconds; same-host SQLite atomic store; multi-host not certified |
+
+
+| W32-EVIDENCE-022 | Node.js 24 Actions runtime pin update and exact-SHA verification | DOC-066; `.github/workflows/ci-validation.yml` | Exact SHA 7984d167a1eec935f062dd17894d89ff90503619; Actions run 41806199038; 4/4 jobs SUCCESS; raw logs: zero Node.js 20 deprecation warnings | PASS — setup-python v7.1.0 and upload-artifact v7.0.1 pinned by immutable commit SHA; Starlette warning remains separate |

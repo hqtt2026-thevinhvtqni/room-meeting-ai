@@ -594,3 +594,18 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **Change:** replaced 4 setup-python and 4 upload-artifact Node20 pins with exact Node24-compatible commit SHAs. No workflow inputs/triggers/permissions/artifact settings changed.
 - **Document:** DOC-066. New workflow blob and exact-SHA run will be recorded after CI.
 - **Boundary:** no main merge/rebase/cherry-pick, no secrets, no strict coverage, no CD/deployment/release.
+
+
+## 2026-11-04 — W32-LOG-20261104-45 — Node.js 24 Actions exact-SHA validation PASS
+- **Document Number:** W32-LOG-20261104-45
+- **Priority Order:** P1 — CI runtime compatibility evidence
+- **Name:** Ka
+- **Title:** CSA / Backend execution owner delegated by Xu
+- **Date-Time:** 2026-11-04 (Asia/Ho_Chi_Minh; exact minute not captured)
+- **Exact branch SHA:** `7984d167a1eec935f062dd17894d89ff90503619`
+- **GitHub Actions:** run #36 / `41806199038`, COMPLETED / SUCCESS, 4/4 jobs.
+- **Results:** unit 189 passed / 1 Starlette warning; Product Auto E2E 45 passed / 1 Starlette warning; tooling 20 tests OK; immutable artifact verified and extracted-artifact E2E 1 passed.
+- **Node warning verification:** raw logs for all four jobs contain **zero** `Node.js 20 is deprecated` warnings. The updated setup-python v7.1.0 and upload-artifact v7.0.1 pins both execute Node 24.
+- **Artifacts:** product RC ID `13309472736`, digest `8b178d96971572d84ae88e25ac0e1f1e032351c4dc0a36048de7bb5c3456d1f2`; unit ID `13310630147`, digest `5dcd35725de5f0e579700c1196ba5734eda53ecf93a024afebb1c8f8c8d3ea17`; E2E ID `13310675120`, digest `5cd54ee8abb224c85843b2cda61ce3e12b62f6d7d0dc3e0c159b375871b5c488`; tooling ID `13309802258`, digest `5f29ddbcad07da89f32b596d18cde17f372bca35fba7c6b3674fd3bde815cb07`.
+- **Disposition:** Node.js 20 Actions deprecation warning RESOLVED for this workflow exact SHA. Starlette/httpx warning remains a separate dependency task.
+- **Boundary:** no merge/rebase/cherry-pick, no strict coverage, no CD/deployment/release; Work 32 ACTIVE — NOT RELEASED.

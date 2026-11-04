@@ -37,3 +37,10 @@
 - **Date-Time:** 2026-11-04 (Asia/Ho_Chi_Minh; exact minute not captured)
 - **Action:** Verified official release refs and exact action.yml runtime declarations, then updated only action SHA pins in the Work 32 workflow.
 - **Result:** Change committed to Work branch; exact-SHA CI validation pending.
+
+
+## Exact-SHA validation addendum — Node.js 24 runtime PASS
+- Run #36 / `41806199038`, exact SHA `7984d167a1eec935f062dd17894d89ff90503619`, COMPLETED / SUCCESS, 4/4 jobs.
+- Raw logs from all four jobs were inspected: zero `Node.js 20 is deprecated` warnings. setup-python v7.1.0 and upload-artifact v7.0.1 exact action.yml files declare node24.
+- Unit 189 passed / 1 Starlette warning; Product Auto E2E 45 passed / 1 Starlette warning; tooling 20 OK; immutable artifact E2E 1 passed.
+- Node.js warning disposition: **RESOLVED** for this workflow SHA. Starlette/httpx deprecation remains open and is being handled as a separate dependency change.
