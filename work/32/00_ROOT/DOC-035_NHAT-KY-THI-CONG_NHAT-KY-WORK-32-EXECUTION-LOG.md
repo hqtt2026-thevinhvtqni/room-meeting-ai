@@ -742,3 +742,17 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **Verification required:** Fetch both GitHub files from the canonical branch and compare full contents with Sandbox. Record resulting commit/blob SHAs after readback.
 - **Boundaries:** Documentation-only commits on authorized Work 32 branch. No product source/workflow change, no main mutation, merge/rebase/cherry-pick, no process/runtime action, no transcript mutation, no deployment or release.
 - **Status:** DOC-068 create operation SUCCESS; DOC-035 journal update pending at time of entry creation. Work 32 remains ACTIVE — NOT RELEASED.
+
+
+### W32-LOG-20261105-53 — Browser Adapter hardening and CI verification
+- **Priority:** P0 — Safe MCP boundary / E2E
+- **Owner:** Xu; Ka retains PC-local provenance check when PC evidence is available.
+- **Decision:** ADR-002 remains exactly four MCP Public V1 tools. Adapter now rejects missing/extra tools; no first-active-meeting fallback; no implicit xu identity. Transcript append requires explicit test mode, dedicated meeting ID and test identity.
+- **Implementation:** updated `room_hop_mcp/browser_agent_adapter/adapter.py`; added per-run `evidence_id`; exact transcript marker/readback checks; added five deterministic contract tests to CI; guarded PC live E2E behind explicit disposable target configuration.
+- **Failure retained:** Run #48 / 41922846395 at SHA `48abd852540621ac31ae46b311749d1959b58771` failed 49/50 E2E because JSON serialization escaped marker quotes. Corrected readback to inspect decoded transcript strings; no tests removed or weakened.
+- **PASS:** Run #49 / 41923038244, SHA `b4c6ba4e0d9cbe86cb5b300b8d315f051ecdfc81`, SUCCESS 4/4; Unit 189; E2E 50; tooling and product artifact PASS.
+- **PASS:** Run #50 / 41923112138, SHA `0a5f68083ea534c5fe3dd5651cd926756119e5e1`, SUCCESS 4/4; Unit 189; E2E 50 including five new contract tests; tooling and immutable artifact PASS.
+- **Evidence:** DOC-068 Addendum C; run #50 artifacts unit 13368101835, E2E 13367437810, tooling 13366784637, product 13367787377.
+- **BLOCKED / NOT VERIFIED:** PID 20468 module origin and working directory on the user's Windows PC; live MCP handshake and live transcript readback. Available tools do not expose the local process table. CI contract tests use mocks and do not prove live PC transport compatibility.
+- **Safety:** no request to port :8020; no process restart/termination; no real-meeting transcript mutation.
+- **Boundary:** no main merge, deployment, production mutation, strict coverage or release. Work 32 ACTIVE — NOT RELEASED.
