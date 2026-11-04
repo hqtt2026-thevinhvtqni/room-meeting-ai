@@ -50,3 +50,11 @@ Byte-for-byte Sandbox↔GitHub readback is PASS for active workflow MAP-32-002 a
 - MAP-32-002 remains VALID: `.github/workflows/` contains exactly one file, `ci-validation.yml`; no workflow changes since commit c3079bbb73edc84b2e05c2767cf9bb135a754e42 (blob 48c3a649e31f97285530fdedf730718ace5622a9 per MAP-32-002); retired `ci.yml` is not restored.
 - MAP-32-010 remains VALID at HEAD: constraints-ci.txt unchanged (44 pins; starlette==1.10.0, httpx==0.28.1, fastapi==0.162.0 among them), matching pip-freeze evidence of runs #2/#3.
 - No physical moves or deletions performed in this addendum. All historical mappings preserved.
+
+
+## 2026-11-04 — Xu current-state addendum after Vibe W32-LOG-39
+- Current verified branch HEAD before this addendum: `14d0257b90e8a5c886268aa941123e96b455641d`; run #27 / `41802775140` completed SUCCESS, 4/4 jobs on that exact SHA.
+- DOC-014 includes W32-EVIDENCE-020 through 024; W32-LOG-40 records raw run #27 log verification and the corrected Starlette warning root cause.
+- Workflow mapping remains one canonical `.github/workflows/ci-validation.yml`; 44 dependency pins remain unchanged. No action or Python dependency was upgraded.
+- Branch divergence current at this check: 103 ahead / 35 behind main; merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`. No reconciliation mutation authorized.
+- Historical mappings remain intact; this addendum does not claim full tree sync or whole-product acceptance.
