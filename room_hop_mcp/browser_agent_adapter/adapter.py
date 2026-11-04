@@ -175,6 +175,7 @@ class Adapter:
 
         final = {
             "execution_id": str(uuid.uuid4()),
+            "evidence_id": str(uuid.uuid4()),
             "work_id": req.work_id,
             "ok": True,
             "final_url": self.page.url,
@@ -410,40 +411,65 @@ def submit_to_roomhop(result: dict[str, Any]):
             "local_evidence": result["evidence_json"],
         }
 
+    # Transcript writes are opt-in and test-only. Never infer a meeting or identity.
+    if os.getenv("ROOMHOP_TEST_MODE") != "1":
+        return {
+            "status": "blocked",
+            "reason": "ROOM-HOP transcript submission requires ROOMHOP_TEST_MODE=1",
+            "endpoint": endpoint,
+        }
+
+    meeting_id = os.getenv("ROOMHOP_TEST_MEETING_ID")
+    identity_id = os.getenv("ROOMHOP_TEST_IDENTITY_ID")
+    if not meeting_id or not identity_id:
+        return {
+            "status": "blocked",
+            "reason": "Explicit ROOMHOP_TEST_MEETING_ID and ROOMHOP_TEST_IDENTITY_ID are required",
+            "endpoint": endpoint,
+        }
+
+    expected_tools = {
+        "list_meetings",
+        "get_meeting",
+        "get_transcript",
+        "add_paste_to_meeting",
+    }
+
     try:
         tools = roomhop_tools_list()
         names = _tool_names(tools)
-        required = {"list_meetings", "add_paste_to_meeting", "get_transcript"}
-        missing = sorted(required - names)
-        if missing:
+        if names != expected_tools:
             return {
                 "status": "blocked",
-                "reason": "ROOM-HOP MCP public contract missing required recording/read tools",
-                "missing_tools": missing,
+                "reason": "ROOM-HOP MCP tool inventory does not exactly match ADR-002 Public V1",
+                "expected_tools": sorted(expected_tools),
+                "actual_tools": sorted(names),
                 "endpoint": endpoint,
             }
 
         meetings = _extract_tool_result(roomhop_tool_call("list_meetings"))
         meeting_items = meetings.get("meetings", []) if isinstance(meetings, dict) else []
-        preferred = os.getenv("ROOMHOP_MEETING_ID")
-        meeting = next((m for m in meeting_items if m.get("id") == preferred), None) if preferred else None
-
-        if meeting is None:
-            meeting = next(
-                (m for m in meeting_items if str(m.get("status", "")).lower() in {"active", "open", "started"}),
-                None,
-            )
+        meeting = next((item for item in meeting_items if item.get("id") == meeting_id), None)
         if meeting is None:
             return {
                 "status": "blocked",
-                "reason": "No active ROOM-HOP meeting available for recording",
+                "reason": "Configured dedicated test meeting was not found; no fallback is permitted",
+                "meeting_id": meeting_id,
+                "endpoint": endpoint,
+            }
+        if str(meeting.get("status", "")).lower() not in {"active", "open", "started"}:
+            return {
+                "status": "blocked",
+                "reason": "Configured dedicated test meeting is not active",
+                "meeting_id": meeting_id,
+                "meeting_status": meeting.get("status"),
                 "endpoint": endpoint,
             }
 
-        meeting_id = meeting["id"]
         artifact = {
             "artifact_type": "browser_workflow_execution",
             "execution_id": result["execution_id"],
+            "evidence_id": result["evidence_id"],
             "work_id": result["work_id"],
             "evidence_json": Path(result["evidence_json"]).name,
             "final_url": result["final_url"],
@@ -459,7 +485,7 @@ def submit_to_roomhop(result: dict[str, Any]):
                 {
                     "meeting_id": meeting_id,
                     "text": marker,
-                    "identity_id": os.getenv("ROOMHOP_IDENTITY_ID", "xu"),
+                    "identity_id": identity_id,
                 },
             )
         )
@@ -467,16 +493,23 @@ def submit_to_roomhop(result: dict[str, Any]):
         transcript = _extract_tool_result(
             roomhop_tool_call("get_transcript", {"meeting_id": meeting_id})
         )
-        transcript_text = json.dumps(transcript, ensure_ascii=False)
-        read_back = all(
+        transcript_text = json.dumps(transcript, ensure_ascii=False, sort_keys=True)
+        read_back = marker in transcript_text and all(
             token in transcript_text
-            for token in [result["execution_id"], result["work_id"], Path(result["evidence_json"]).name]
+            for token in [
+                result["execution_id"],
+                result["evidence_id"],
+                result["work_id"],
+                Path(result["evidence_json"]).name,
+            ]
         )
 
         return {
             "status": "pass" if read_back else "blocked",
+            "reason": None if read_back else "Exact execution artifact was not found in transcript readback",
             "endpoint": endpoint,
             "meeting_id": meeting_id,
+            "identity_id": identity_id,
             "handoff": handoff,
             "read_back": read_back,
             "artifact": artifact,
