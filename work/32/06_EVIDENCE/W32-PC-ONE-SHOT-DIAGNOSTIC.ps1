@@ -56,7 +56,14 @@ except Exception as e:
  $cwdObj=$null
  if($cwdRaw){try{$cwdObj=($cwdRaw -join [Environment]::NewLine)|ConvertFrom-Json}catch{}}
  if($cwdObj -and $cwdObj.cwd){
-  $result.cwd_status='AVAILABLE_VIA_EXISTING_PSUTIL';$result.cwd=[string]$cwdObj.cwd;$result.psutil_create_time=$cwdObj.create_time
+  $result.psutil_create_time=$cwdObj.create_time
+  # Compare CIM process creation time with psutil's timestamp to guard against PID reuse.
+  $cimStart=[System.Management.ManagementDateTimeConverter]::ToDateTime([string]$target.creation_date)
+  $cimUnix=([DateTimeOffset]$cimStart).ToUnixTimeMilliseconds()/1000.0
+  if([Math]::Abs([double]$cwdObj.create_time-[double]$cimUnix) -gt 2.0){
+   $result.cwd_status='PID_REUSE_OR_PROCESS_CHANGED_CIM_PSUTIL_START_TIME_MISMATCH'
+  } else {
+  $result.cwd_status='AVAILABLE_VIA_EXISTING_PSUTIL';$result.cwd=[string]$cwdObj.cwd
   $resolveCode=@'
 import importlib.util,json,sys,platform
 s=importlib.util.find_spec("adapter")
@@ -76,6 +83,7 @@ print(json.dumps({"origin":(s.origin if s else None),"python_version":platform.p
     $root=(& git -C $sourceDir rev-parse --show-toplevel 2>$null|Select-Object -First 1)
     if($LASTEXITCODE -eq 0 -and $root){$bn=(& git -C $root branch --show-current 2>$null|Select-Object -First 1);$head=(& git -C $root rev-parse HEAD 2>$null|Select-Object -First 1);$st=@(& git -C $root status --short 2>$null);$result.source_repository=[ordered]@{root=[string]$root;branch=[string]$bn;head=[string]$head;working_tree_entry_count=$st.Count;working_tree_status_first_20=@($st|Select-Object -First 20)}}else{$result.source_repository='GIT_METADATA_NOT_FOUND_FOR_RESOLVED_FILE'}
    } catch {$result.git_inspection_error=$_.Exception.GetType().Name}
+  }
   }
  } else {$result.cwd_status='CWD_UNAVAILABLE_PSUTIL_MISSING_OR_ACCESS_DENIED';if($cwdObj -and $cwdObj.error){$result.cwd_detail=[string]$cwdObj.error}}
 }
