@@ -33,6 +33,7 @@ env:
     tests/test_intent_router.py
     tests/test_llama_intent_router.py
     tests/test_meeting_lifecycle_v021.py
+    tests/test_meeting.py
     tests/test_meeting_manager_allocator.py
     tests/test_meeting_service.py
     tests/test_message_v1.py
