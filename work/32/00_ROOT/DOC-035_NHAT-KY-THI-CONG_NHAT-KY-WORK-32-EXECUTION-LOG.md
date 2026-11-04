@@ -879,3 +879,5 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **PC action status:** SCRIPT PREPARED — NOT EXECUTED. Xu did not perform PC-side measurements. Prior W32-LOG-55 evidence is retained without repeating it.
 - **Next action:** Vinh may run the script once in PowerShell and return the complete JSON output. Xu records it; Ka independently compares file hash and repository evidence with Work 32 source. No rerun unless process changes or a specific new error justifies it.
 - **Status:** Ka review PASS WITH CORRECTIONS; script recorded; PC provenance BLOCKED / NOT VERIFIED pending one user-side execution. Work 32 ACTIVE — NOT RELEASED.
+
+- **W32-LOG-59 implementation correction:** Before issuing the PC script, Xu added a strict comparison between CIM process creation time and the existing-psutil process creation timestamp (2-second tolerance). A mismatch reports `PID_REUSE_OR_PROCESS_CHANGED_CIM_PSUTIL_START_TIME_MISMATCH` and suppresses CWD/import reconstruction. This closes the PID-reuse race noted by Ka. Script updated in Sandbox and GitHub; no PC action performed.
