@@ -494,7 +494,18 @@ def submit_to_roomhop(result: dict[str, Any]):
             roomhop_tool_call("get_transcript", {"meeting_id": meeting_id})
         )
         transcript_text = json.dumps(transcript, ensure_ascii=False, sort_keys=True)
-        read_back = marker in transcript_text and all(
+        # JSON serialization escapes quotes inside transcript strings; compare
+        # the exact marker against decoded string values as well as its IDs.
+        def contains_marker(value: Any) -> bool:
+            if isinstance(value, str):
+                return marker in value
+            if isinstance(value, dict):
+                return any(contains_marker(item) for item in value.values())
+            if isinstance(value, list):
+                return any(contains_marker(item) for item in value)
+            return False
+
+        read_back = contains_marker(transcript) and all(
             token in transcript_text
             for token in [
                 result["execution_id"],
