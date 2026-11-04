@@ -799,3 +799,40 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **Decision / safety:** Do not restart or terminate PID 20468. Do not call MCP `/mcp` or attempt transcript append/readback until source provenance and dedicated disposable target are established and separately authorized. If process CWD cannot be obtained, mark provenance BLOCKED and do not guess a directory.
 - **Ka action:** Review this complete measurement design against DOC-068, ADR-002 and exact source. Record acceptance or precise corrections in DOC-035 before Xu asks Vinh to execute anything. Ka must not ask Vinh to repeat already captured PID/listener/branch/HEAD/dirty-tree checks.
 - **Status:** Run #53 PASS 4/4; exact adapter source blob verified on Work 32 branch; PID 20468 source provenance still BLOCKED / NOT VERIFIED; live MCP E2E NOT RUN. Work 32 ACTIVE — NOT RELEASED.
+
+
+### W32-LOG-20261105-57 — Ka thẩm định gói đo PC một lần theo chỉ đạo Xu
+- **Document Number:** W32-LOG-20261105-57
+- **Priority Order:** P0 — Runtime provenance and safe PC measurement
+- **Name:** Ka
+- **Title:** CSA / Backend & Repository Custodian
+- **Date-Time:** 2026-11-05 06:32 Asia/Ho_Chi_Minh
+- **Authority:** Xu W32-LOG-20261105-56; ADR-002; Vinh retains reserved high-risk approvals.
+- **Reviewed sources:** DOC-035 through W32-LOG-56; DOC-068 Addenda A/B/C; Work 32 ADR-002; exact GitHub blobs for Browser Adapter, contract tests, opt-in PC E2E and CI workflow.
+- **Exact source references:** ADR-002 blob `b32a0122135167b56b580094c1461b807bcf5dd0`; Browser Adapter `room_hop_mcp/browser_agent_adapter/adapter.py` blob `8cd73faca62057cbfbbd0ac03c07254c02e8df6c`; contract tests blob `4151ea6eda790716b238806a35f11ba8c76b8a11`; guarded PC E2E blob `83c1b69655b972f9cdbe98b177d3f1168706518d`; active CI workflow blob `d7a9096bc7330c4047aca3afbe688ee3edc68155`.
+- **Contract review:** ADR-002 requires exactly four public MCP tools: `list_meetings`, `get_meeting`, `get_transcript`, `add_paste_to_meeting`. The current Browser Adapter source enforces exact set equality, requires `ROOMHOP_TEST_MODE=1`, explicit `ROOMHOP_TEST_MEETING_ID` and `ROOMHOP_TEST_IDENTITY_ID`, rejects missing/inactive dedicated meeting and has no first-active-meeting or implicit-identity fallback. The opt-in PC E2E is guarded by explicit target configuration. This confirms the source-level safety hardening; it does not prove live PC transport.
+- **Measurement design decision:** ACCEPT WITH THE FOLLOWING PRECISIONS.
+  1. Capture PID 20468 and parent PID 9108 using read-only process metadata: PID, creation/start time, executable path, parent PID, command line. Capture the same fields for PID 9108 and its parent PID if still present. Use creation time to guard against PID reuse. Never print process environment variables.
+  2. Obtain PID 20468 CWD only through `psutil.Process(20468).cwd()` if psutil is already installed for the inspected Python interpreter. Do not install packages. If unavailable or access denied, print `CWD_UNAVAILABLE` and stop source-path reconstruction; do not guess.
+  3. Using the executable path and observed CWD, run a child-process `find_spec('adapter').origin` resolution check. Label it **RECONSTRUCTED IMPORT RESOLUTION ONLY**: it is corroborating evidence, not direct inspection of the already-loaded module object or its in-memory `__file__`/sys.path. Do not promote it to direct provenance.
+  4. If an origin file is resolved, calculate its Git blob hash and compare it with Work 32 adapter blob `8cd73faca62057cbfbbd0ac03c07254c02e8df6c`. Record the containing repository root, branch, HEAD and concise working-tree status where Git metadata exists. A matching file blob proves byte equality for that file only; branch/HEAD and process provenance must be reported separately.
+  5. Perform only GET `http://127.0.0.1:8787/health` and GET `http://127.0.0.1:8787/openapi.json`; report HTTP status and limited non-secret fields (health service/ok/browser_started; OpenAPI title/version/path names). Do not print full environment, tokens, credentials or unrelated OpenAPI content.
+  6. Do not call `:8020`, `/mcp`, any POST endpoint, or any transcript API. No service restart/termination, environment mutation or meeting write.
+- **Important distinction:** GET health/OpenAPI is only an adapter HTTP surface check. It does not prove the process's loaded Python module, MCP handshake, public tool inventory, or transcript persistence. A child import-resolution result is not proof of the already-running process's in-memory import.
+- **Current result:** Design review PASS WITH CORRECTIONS. No PC-side command was run in this turn; PID 20468 provenance remains BLOCKED / NOT VERIFIED; live MCP E2E remains NOT RUN. The five Xu acceptance criteria remain separately gated.
+- **Next action:** Xu may issue one consolidated PC-side script using the above constraints. After its output is returned, Ka will compare the resolved file hash and repository evidence against the exact Work 32 source, then report each criterion independently. No request for repeating PID/listener/branch/HEAD/dirty-tree measurements already captured in W32-LOG-55.
+- **Boundaries:** No source or workflow edits; no branch mutation; no MCP request; no process restart/termination; no transcript mutation; no merge/deploy/release; strict coverage remains disabled.
+- **Overall:** Work 32 ACTIVE — NOT RELEASED.
+
+**BIÊN BẢN**
+- **Name:** Ka
+- **Title:** CSA / Backend & Repository Custodian
+- **Date-Time:** 2026-11-05 06:32 Asia/Ho_Chi_Minh
+- **Disposition:** Xu's one-shot PC measurement design reviewed and accepted with explicit provenance, PID-reuse, secret-redaction and GET-only corrections.
+
+**NHẬT KÝ**
+- **Name:** Ka
+- **Title:** CSA / Backend & Repository Custodian
+- **Date-Time:** 2026-11-05 06:32 Asia/Ho_Chi_Minh
+- **Action:** Read Xu W32-LOG-56, checked ADR-002 and exact Work 32 Browser Adapter/contract-test/PC-E2E/CI blobs, and recorded the bounded measurement review.
+- **Evidence boundary:** Source-level contract verified from GitHub blobs; no PC execution or live MCP evidence obtained.
