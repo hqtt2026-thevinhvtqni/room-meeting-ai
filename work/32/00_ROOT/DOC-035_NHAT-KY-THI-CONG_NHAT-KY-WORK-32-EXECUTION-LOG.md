@@ -899,13 +899,11 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **Overall:** Work 32 ACTIVE — NOT RELEASED. PC provenance BLOCKED / NOT VERIFIED; HTTP surface GET checks PASS.
 
 
-### W32-LOG-20261105-61 — Xu ghi nhận kết quả đo PC
-- Căn cứ: W32-LOG-57 đến W32-LOG-60.
-- PID 20468 trên :8787 trả HTTP 200 cho GET /health và GET /openapi.json. Parent PID 9108 có command line đặt working directory và PYTHONPATH vào .ai-workspace/release/WORK09 trước khi chạy uvicorn adapter:app. Đây là bằng chứng mạnh về ngữ cảnh khởi chạy WORK09, chưa chứng minh CWD hiện tại hoặc module đã nạp trong PID.
-- Provenance Work 32: BLOCKED / NOT VERIFIED. psutil không cung cấp CWD; import origin, Git blob hash và so sánh với adapter blob Work 32 8cd73faca62057cbfbbd0ac03c07254c02e8df6c đều NOT RUN.
-- HTTP GET PASS chỉ xác nhận HTTP surface; không chứng minh MCP handshake, ADR-002 tool inventory hoặc transcript persistence. /mcp không được gọi.
-- Ghi nhận lỗi integrity: dòng Git metadata của lệnh PowerShell bị biến dạng khi dán. Xu phải sửa script và kiểm tra tĩnh trước khi phát hành lệnh PC khác; hiện không yêu cầu Vinh chạy lại.
-- An toàn: không dừng/khởi động lại PID 20468; không POST, /mcp, transcript/meeting; không dùng :8020 hoặc PID 15048.
-- Xu: sửa work/32/06_EVIDENCE/W32-PC-ONE-SHOT-DIAGNOSTIC.ps1, kiểm tra tĩnh, gửi Ka thẩm định độc lập W32-LOG-60 và bản sửa. Chỉ quyết định lệnh PC tiếp theo sau phản hồi Ka.
-- Ka: đánh giá bằng chứng WORK09, giới hạn provenance, rủi ro vận hành và phương án xác minh/chuyển đổi ít gián đoạn; không yêu cầu đo lại PID/listener/branch/HEAD/dirty tree.
-- Live MCP E2E NOT RUN; Work 32 ACTIVE — NOT RELEASED. Không merge main, CD/deploy/release; strict coverage vẫn tắt.
+### W32-LOG-20261105-61 — Xu ghi nhận kết quả PC
+- PID 20468: GET /health và GET /openapi.json trả HTTP 200.
+- Parent PID 9108 khởi chạy tiến trình từ ngữ cảnh .ai-workspace/release/WORK09. Đây là bằng chứng về launch context, chưa chứng minh module đã nạp trong PID.
+- Work 32 provenance: BLOCKED / NOT VERIFIED; CWD không lấy được, import origin và Git blob comparison NOT RUN.
+- Lệnh PowerShell bị biến dạng ở dòng Git metadata khi dán. Xu sửa script và kiểm tra tĩnh trước khi cân nhắc lệnh PC tiếp theo; không yêu cầu chạy lại ngay.
+- Không restart PID 20468; không POST, không gọi /mcp, không truy cập meeting/transcript, không dùng :8020 hoặc PID 15048.
+- Xu chuyển Ka thẩm định W32-LOG-60 và script đã sửa. Ka đánh giá ranh giới bằng chứng và phương án xử lý an toàn; không đo lại dữ liệu đã có.
+- Live MCP E2E NOT RUN. Work 32 ACTIVE — NOT RELEASED.
