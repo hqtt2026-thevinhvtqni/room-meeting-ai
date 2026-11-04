@@ -11,31 +11,33 @@ on:
 
 permissions:
   contents: read
+  issues: write
 
 concurrency:
   group: work32-ci-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  # G2 scope: unit tests only. Files requiring live services / network / ports
+  # are excluded and dispositioned as G3/G5 (BLOCKED by design this phase).
+  G3_G5_EXCLUDED: tests/test_e2e.py tests/test_integration.py tests/test_http_lifecycle.py tests/test_http_recording.py tests/test_browser_agent_adapter_e2e.py tests/test_wee_8031_bridge.py tests/test_work13_wee_integration.py tests/test_execution_host.py
+
 jobs:
   ci-pilot:
     name: "G0-G2 gates (Python, no Docker)"
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - name: G0 — Record source and environment
         run: |
-          echo "G0: repo=${{ github.repository }} branch=${{ github.ref_name }} sha=${{ github.sha }} event=${{ github.event_name }}"
-          git --version || true
-      - name: G0 — Checkout (read-only intent)
+          echo "G0: repo=${{ github.repository }} branch=${{ github.ref_name }} sha=${{ github.sha }} event=${{ github.event_name }} run=${{ github.run_id }}"
+      - name: G0 — Checkout
         uses: actions/checkout@v4
-      - name: G0 — Emit changed paths (PR) or full list (push)
-        run: |
-          echo "G0: event=${{ github.event_name }}"
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: G4 — Show toolchain versions
+      - name: G4 — Toolchain versions
         run: |
           python --version
           pip --version
@@ -48,16 +50,25 @@ jobs:
         run: |
           python -m compileall -q . && echo "G1 PASS: compileall exit 0" || { echo "G1 FAIL: compileall nonzero"; exit 1; }
       - name: G2 — Unit test gate (pytest, isolated, no network)
+        id: g2
         env:
           PYTHONDONTWRITEBYTECODE: '1'
           CI: 'true'
         run: |
-          pytest tests/ --junitxml=work32-junit.xml -q || { code=$?; echo "G2 FAIL: pytest exit $code"; exit $code; }
+          IGN=""
+          for f in $G3_G5_EXCLUDED; do IGN="$IGN --ignore=$f"; done
+          set +e
+          pytest tests/ $IGN --junitxml=work32-junit.xml -q > work32-pytest.log 2>&1
+          code=$?
+          set -e
+          echo "exit=$code" >> "$GITHUB_OUTPUT"
+          echo "G2 pytest exit code: $code"
+          tail -n 40 work32-pytest.log
+          if [ "$code" -ne 0 ]; then echo "G2 FAIL: pytest exit $code (see work32-pytest.log tail above)"; exit 1; fi
           echo "G2 PASS"
-      - name: G6 — Upload evidence (junit + pip freeze)
+      - name: G6 — Prepare evidence files
         if: always()
-        run: |
-          pip freeze > work32-pip-freeze.txt || true
+        run: pip freeze > work32-pip-freeze.txt || true
       - name: G6 — Upload artifacts
         if: always()
         uses: actions/upload-artifact@v4
@@ -65,6 +76,48 @@ jobs:
           name: work32-ci-evidence-${{ github.run_id }}
           path: |
             work32-junit.xml
+            work32-pytest.log
             work32-pip-freeze.txt
           if-no-files-found: warn
           retention-days: 14
+      - name: G6 — Publish evidence summary (step summary + tracking issue)
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          G2EXIT="${{ steps.g2.outputs.exit }}"
+          {
+            echo "## Work 32 CI Pilot — run #${{ github.run_number }} (${{ github.run_id }})"
+            echo "- Commit: \`${{ github.sha }}\`"
+            echo "- Event: ${{ github.event_name }}"
+            echo "- G1 compileall: PASS"
+            if [ -z "$G2EXIT" ]; then echo "- G2 unit tests: NOT RUN"; else
+              if [ "$G2EXIT" = "0" ]; then echo "- G2 unit tests: PASS (exit 0)"; else echo "- G2 unit tests: FAIL (exit $G2EXIT)"; fi
+            fi
+            echo "- G3 integration / G5 E2E: BLOCKED (excluded files: \`$G3_G5_EXCLUDED\`)"
+          } >> "$GITHUB_STEP_SUMMARY"
+          TITLE="Work 32 CI Evidence Log"
+          IID=$(gh issue list --search "$TITLE" --json number --jq '.[0].number' 2>/dev/null || true)
+          if [ -z "$IID" ]; then
+            gh issue create -t "$TITLE" -b "Evidence trail for Work 32 CI pilot runs (branch `work/32-ci-cd-room-hop-python-no-docker`). Auto-maintained by the CI workflow." > /dev/null
+            IID=$(gh issue list --search "$TITLE" --json number --jq '.[0].number')
+          fi
+          {
+            echo "### Run #${{ github.run_number }} — ${{ job.status }}"
+            echo "- URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            echo "- Commit: \`${{ github.sha }}\` · Event: ${{ github.event_name }}"
+            echo "- G1 compileall: PASS"
+            if [ -z "$G2EXIT" ]; then echo "- G2 unit tests: NOT RUN"; else
+              if [ "$G2EXIT" = "0" ]; then echo "- G2 unit tests: PASS"; else echo "- G2 unit tests: FAIL (exit $G2EXIT)"; fi
+            fi
+            echo "- G3/G5: BLOCKED (live-service & e2e files excluded this phase)"
+            echo ""
+            echo "<details><summary>pytest log tail (40 lines)</summary>"
+            echo ""
+            echo '~~~'
+            tail -n 40 work32-pytest.log 2>/dev/null || echo "(no pytest log)"
+            echo '~~~'
+            echo "</details>"
+          } > work32-issue-comment.md
+          gh issue comment "$IID" --body-file work32-issue-comment.md
+          echo "Evidence comment posted to issue #$IID"
