@@ -349,3 +349,18 @@
 - **Product artifact:** ID `13272004526`; uploaded ZIP digest `24221ef509286698cc73ce3edbe0fd20650cbf5cdd89745e86b3f728996f4d21`.
 - **Branch compare:** 70 ahead / 32 behind main; no merge/rebase/cherry-pick.
 - **Disposition:** Core product Auto E2E + immutable artifact E2E PASS; Dashboard→Core integration BLOCKED / NOT RUN; CD BLOCKED / NOT RUN; NOT RELEASED.
+
+
+## W32-LOG-20261104-12 — P1 — Workspace :8010 source and contract audit
+
+- **Document Number:** W32-LOG-20261104-12
+- **Priority order:** P1 — Prerequisite for whole-product Browser Auto E2E
+- **Name:** Ka
+- **Title:** CSA / Architecture & Backend Audit Owner — Work 32
+- **Date-Time:** 2026-11-04 07:10 Asia/Ho_Chi_Minh
+- **Action:** Read-only inspection of Dashboard branch `hqtt-ai-project-structure-082c9`, its App/bridge/bridge-contract/discovery docs, Core `API_CONTRACT.md` and `room_hop_mcp/adapter/http_server.py`; searched Core for Workspace service, working-state persistence, `core_meeting_id`, and :8010 routes; checked installed repository discovery.
+- **Findings:** Dashboard App still defaults to `createMockBridge()`; no HTTP adapter exists in the inspected Dashboard tree; Dashboard's proposed `/api/meetings/{id}/hqtt-bridge` API is documented as not implemented. Core contract describes Workspace :8010 as working-state owner but is marked pending Xu/Mê final sign-off; inspected Core HTTP router exposes identity/Meeting routes and no Workspace router. Bounded searches found no Workspace service implementation or :8010 routes in the inspected Core repository; this does not claim absence from uninspected PC-only/private sources.
+- **Evidence:** `W32-EVIDENCE-009-WORKSPACE-8010-SOURCE-AUDIT-20261104.md`; GitHub commit `30b72ae582cbf60a071b8075a5cff2ab00662d1f`.
+- **Boundary:** No Dashboard/Core/Workspace source changed; no route/schema invented; no direct bypass; no merge/rebase/cherry-pick/deployment.
+- **Result:** Workspace source/runtime NOT PROVEN; Xu/Mê contract sign-off PENDING; Dashboard→Workspace→Core Browser Auto E2E NOT RUN. Work 32 ACTIVE — NOT RELEASED.
+- **Next:** Obtain Xu/Mê's authoritative contract decision and canonical Workspace source/revision; then audit runtime/persistence/auth and implement only within the approved boundary.
