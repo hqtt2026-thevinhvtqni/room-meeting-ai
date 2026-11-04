@@ -43,3 +43,13 @@ Evidence is immutable by reference. Corrections add a new evidence record; faile
 
 
 | W32-EVIDENCE-019 | F4 source audit and PC-access deferral disposition | 06_EVIDENCE/DOC-063_W32-F4-RESOURCE-LIMITS-SOURCE-AUDIT-20261104.md | Exact audited SHA 450c0b2409c0d19c68931cb0331652bac6f3b5df; source blob SHAs recorded in DOC-063 | SOURCE AUDIT COMPLETE; F4 NOT PASS; browser E2E DEFERRED |
+
+| W32-EVIDENCE-020 | Vibe independent CI action-SHA audit (false-positive clearance + P1 consolidation proposal) | CI-CD-ROOM-HOP-PYTHON-NO-DOCKER/06_EVIDENCE/W32-EVIDENCE-010-CI-ACTION-SHA-INDEPENDENT-AUDIT-20261104.md (legacy path); legacy journal W32-LOG-14, commit cb7fdb13af94732468c291d6768137db3b4c549b | setup-python@a26af69 (v5.6.0) and upload-artifact@ea165f8d (v4.6.2) verified correct in both workflows | FALSE POSITIVE CLEARED; consolidation proposal later APPROVED in W32-LOG-38. NOTE: legacy filename reuses ID-010; canonical register ID-010 remains the CTO classifier record. New records must not reuse existing IDs |
+
+| W32-EVIDENCE-021 | Vibe independent verification of runs #23/#24 and F4 source audit | 00_ROOT/DOC-035 W32-LOG-20261104-37, commit e279ca918ffbe27d149b8a0f174f1e80f268361a | Runs 41788992658 (64575ef4) and 41789201999 (b92e9150) SUCCESS 4/4; F4 findings reproduced at 450c0b2 | VERIFIED; ACCEPTED by Xu in W32-LOG-38 |
+
+| W32-EVIDENCE-022 | Documentation-only exact-SHA CI runs #25/#26 | GitHub Actions run #25 41789850424 (e279ca918ffbe27d149b8a0f174f1e80f268361a); run #26 on 14cb29a5228abe9b9195f2bee44c96b92f5c2a32 | Docs-only commits on work/32-ci-cd-python-ci-v2; product source unchanged since 450c0b2409c0d19c68931cb0331652bac6f3b5df | PASS — 4/4 jobs each; no source/workflow/test claim |
+
+| W32-EVIDENCE-023 | CI warning disposition: Node.js 20 deprecation + Starlette/httpx warning | 00_ROOT/DOC-035 W32-LOG-20261104-39 | Pinned stack: starlette==1.10.0, httpx==0.28.1, fastapi==0.162.0; actions setup-python@v5.6.0, upload-artifact@v4.6.2 | ANALYSIS RECORDED; no pin/dependency change; Starlette/httpx root cause NOT CONFIRMED pending raw-log review |
+
+- 2026-11-04 addendum (Vibe, per Vinh delegation recorded in W32-LOG-39): registered W32-EVIDENCE-020 through 023; no historical row was edited or removed. Evidence is immutable by reference; corrections add new records only.

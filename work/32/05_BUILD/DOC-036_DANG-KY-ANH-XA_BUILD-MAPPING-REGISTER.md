@@ -44,3 +44,9 @@ Byte-for-byte Sandbox↔GitHub readback is PASS for active workflow MAP-32-002 a
 - Current CI status: 167 unit PASS; 20 tooling PASS; 45 Product Auto E2E PASS / 1 warning; immutable artifact E2E 1 PASS. Two tests remain report-only; strict coverage unauthorized.
 - Branch governance remains DIVERGED (94 ahead / 35 behind main at current read); no merge/rebase/cherry-pick authorized.
 - Preserve all historical mappings and files. This addendum supersedes stale HEAD/test status above without rewriting historical evidence.
+
+## 2026-11-04 — W32-LOG-39 mapping addendum (Vibe, per Vinh delegation)
+- Branch HEAD at this addendum: `14cb29a5228abe9b9195f2bee44c96b92f5c2a32` (docs-only commits after 450c0b2409c0d19c68931cb0331652bac6f3b5df; commits 64575ef4 / b92e9150 / e279ca91 / 14cb29a5 are journal/evidence/documentation changes only).
+- MAP-32-002 remains VALID: `.github/workflows/` contains exactly one file, `ci-validation.yml`; no workflow changes since commit c3079bbb73edc84b2e05c2767cf9bb135a754e42 (blob 48c3a649e31f97285530fdedf730718ace5622a9 per MAP-32-002); retired `ci.yml` is not restored.
+- MAP-32-010 remains VALID at HEAD: constraints-ci.txt unchanged (44 pins; starlette==1.10.0, httpx==0.28.1, fastapi==0.162.0 among them), matching pip-freeze evidence of runs #2/#3.
+- No physical moves or deletions performed in this addendum. All historical mappings preserved.

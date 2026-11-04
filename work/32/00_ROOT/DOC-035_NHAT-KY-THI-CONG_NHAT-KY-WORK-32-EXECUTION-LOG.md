@@ -427,3 +427,33 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **Branch governance:** BLOCKED / PENDING HUMAN APPROVAL.
 - **CD:** BLOCKED / NOT RUN.
 - **Work 32:** ACTIVE — NOT RELEASED.
+
+## W32-LOG-20261104-39 — P0/P1 — VIBE EXECUTION PER VINH DELEGATION: DOC-014/DOC-036 SYNC + CI WARNING DISPOSITION
+
+- **Người ghi:** Vibe (GLM via Mistral) — executing per direct delegation of Vinh (acceptance authority), covering the DOC-014/DOC-036 sync and CI warning items assigned at W32-LOG-38 §5.1/§5.2.
+- **Thời điểm:** 2026-11-04 (UTC+07:00).
+- **Branch / HEAD khi ghi:** `work/32-ci-cd-python-ci-v2` / `14cb29a5228abe9b9195f2bee44c96b92f5c2a32` (trước commit này).
+- **Thẩm quyền:** Vinh chỉ đạo trực tiếp trong phiên chat này ("bạn là Vibe, bạn thực hiện trên GitHub giùm"); phạm vi giới hạn trong các hạng mục evidence/documentation đã được Xu giao tại W32-LOG-38; không mở rộng sang source/policy/release.
+
+### 1. DOC-014 — Evidence Register cập nhật
+- Đã đăng ký W32-EVIDENCE-020 (Vibe action-SHA audit — lưu ý trùng ID-010 ở legacy filename, không sửa lịch sử), W32-EVIDENCE-021 (Vibe verification runs #23/#24 + F4), W32-EVIDENCE-022 (runs #25/#26 docs-only PASS), W32-EVIDENCE-023 (warning disposition).
+- Không sửa/xóa dòng lịch sử nào; chỉ thêm mới theo nguyên tắc "evidence is immutable by reference".
+
+### 2. DOC-036 — Build Mapping cập nhật
+- Addendum xác nhận MAP-32-002 và MAP-32-010 còn đúng tại HEAD: workflow duy nhất ci-validation.yml, constraints 44 pins không đổi; các commit sau 450c0b2 đều là hồ sơ/tài liệu.
+
+### 3. CI warning disposition (W32-LOG-38 §5.2)
+**3.1 Node.js 20 deprecation (4 notices/run):**
+- Nguyên nhân: GitHub Actions runner đang chuyển sang Node 24; hai action đang pin — `actions/setup-python@v5.6.0` (a26af69…) và `actions/upload-artifact@v4.6.2` (ea165f8d…) — hiện khai báo runtime Node 20, nên runner phát notice deprecation.
+- Mức độ: **warning/notice, không phải failure**; không ảnh hưởng kết quả 4/4 jobs.
+- Xử lý đề xuất: theo dõi release mới của hai action có runtime Node 24; nâng pin **trong một thay đổi được review riêng** (đúng ràng buộc W32-LOG-38: không tự bump). Không có việc cần làm ngay.
+
+**3.2 Starlette/httpx deprecation (1 warning trong Product Auto E2E, ổn định từ run #2 đến #26):**
+- Stack đang pin (constraints-ci.txt): `starlette==1.10.0`, `httpx==0.28.1`, `fastapi==0.162.0`, `mcp==1.28.1`, `uvicorn==0.54.0`.
+- Giả thuyết (chưa xác nhận vì raw log run yêu cầu đăng nhập tải về): deprecation phát sinh từ tương tác TestClient/transport giữa starlette 1.10 và httpx 0.28 trong test HTTP lifecycle/recording — dạng cảnh báo tương thích đã biết của cặp phiên bản này. **ROOT CAUSE NOT CONFIRMED** do Vibe không truy cập được raw log runner.
+- Hành động yêu cầu: Ka/Xu tải raw log của một run (vd. run #25) hoặc chạy `pytest -W error::DeprecationWarning` cục bộ để chọc đúng dòng warning; sau đó quyết định nâng phiên bản trong constraints qua thay đổi được review. Không bump dependency trong commit này.
+
+### 4. Boundary & Status
+- Chỉ đổi hồ sơ (DOC-014, DOC-036, DOC-035); **không** sửa source/workflow/test/constraints; không merge/rebase/cherry-pick; không strict coverage; không CD/release; Work 32 giữ **ACTIVE — NOT RELEASED**.
+- Các gate khác giữ nguyên: Browser Adapter :8787 DEFERRED; F4 BLOCKED chờ decision brief của Xu; Track B BLOCKED; branch 101-ahead/35-behind BLOCKED chờ phương án reconciliation và duyệt của anh.
+- **Next:** Xu đọc và ghi disposition mục 3.2 (yêu cầu raw log); Xu hoàn tất F4 decision brief trình anh; mọi nâng pin/dependency chờ review riêng.
