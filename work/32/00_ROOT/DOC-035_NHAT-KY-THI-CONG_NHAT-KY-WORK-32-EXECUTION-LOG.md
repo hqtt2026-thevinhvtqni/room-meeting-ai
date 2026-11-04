@@ -863,3 +863,19 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **Title:** CSA / Backend & Repository Custodian
 - **Date-Time:** 2026-11-05 (time not captured; not inferred)
 - **Action:** Recorded Vinh's approval and preserved the distinction between source-level contract verification and unverified PC runtime evidence.
+
+### W32-LOG-20261105-59 — Xu phát hành gói PowerShell đo PC một lần sau thẩm định Ka
+- **Document Number:** W32-LOG-20261105-59
+- **Owner:** Xu — orchestration / implementation; Ka — independent evidence review; Vinh — execute once if required.
+- **Authority:** Ka W32-LOG-20261105-57 (ACCEPT WITH CORRECTIONS), owner-approved confirmation W32-LOG-58.
+- **Read/reconciled:** DOC-035 through W32-LOG-58; Ka's six measurement precisions; ADR-002 and exact Work 32 adapter blob `8cd73faca62057cbfbbd0ac03c07254c02e8df6c`.
+- **Artifact:** `work/32/06_EVIDENCE/W32-PC-ONE-SHOT-DIAGNOSTIC.ps1`.
+- **Purpose:** One consolidated, read-only Windows PowerShell run to collect remaining PID 20468 runtime provenance evidence, reusing prior PID/listener/branch/HEAD/dirty-tree observations.
+- **Included checks:** Read-only CIM metadata for PID 20468, parent and grandparent; creation time, executable, parent PID and redacted command line; existing-interpreter psutil CWD lookup without installation; child-process import resolution under observed CWD labeled RECONSTRUCTED IMPORT RESOLUTION ONLY; resolved-file Git blob comparison and containing repo metadata; GET-only /health and /openapi.json with limited non-secret fields.
+- **PID reuse/provenance:** Current creation time and parent chain are captured. CWD is accepted only from psutil for PID 20468. If unavailable/access denied, script reports CWD_UNAVAILABLE and does not guess.
+- **Secret handling:** No process environment query/output. Common command-line credential arguments are redacted. HTTP output is restricted to selected fields.
+- **Safety:** No installation, file writes, process restart/termination, environment mutation, POST, :8020, /mcp, transcript API or meeting mutation. Only GET to 127.0.0.1:8787/health and /openapi.json.
+- **Evidence limitations:** Child-process import resolution is corroborating only, not proof of the running process's in-memory module. Matching Git blob proves byte equality of that file only. GET health/OpenAPI proves only HTTP surface, not MCP handshake/tool inventory/transcript persistence.
+- **PC action status:** SCRIPT PREPARED — NOT EXECUTED. Xu did not perform PC-side measurements. Prior W32-LOG-55 evidence is retained without repeating it.
+- **Next action:** Vinh may run the script once in PowerShell and return the complete JSON output. Xu records it; Ka independently compares file hash and repository evidence with Work 32 source. No rerun unless process changes or a specific new error justifies it.
+- **Status:** Ka review PASS WITH CORRECTIONS; script recorded; PC provenance BLOCKED / NOT VERIFIED pending one user-side execution. Work 32 ACTIVE — NOT RELEASED.
