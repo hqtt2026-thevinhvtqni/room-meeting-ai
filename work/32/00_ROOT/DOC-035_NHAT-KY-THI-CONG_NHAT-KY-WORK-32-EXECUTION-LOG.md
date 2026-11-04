@@ -371,3 +371,59 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - NOT verified (out of scope, unchanged): Browser Adapter :8787 E2E (DEFERRED — needs same-host PC access), F4 policy (BLOCKED — needs architecture decision), Track B (BLOCKED), CD/release (NOT RUN).
 - Boundary: read-only + this log write; no merge/rebase/cherry-pick; no strict coverage; no CI gate change; Work 32 remains ACTIVE — NOT RELEASED.
 - Next: Xu records the disposition of this verification; Xu/Vinh decide the P1 workflow-consolidation proposal (W32-EVIDENCE-010) and F4 rate policy; Ka continues Track A documentation/acceptance prep.
+
+
+
+## W32-LOG-20261104-38 — P0 — XU DISPOSITION VIBE REVIEW; ACCEPT WORKFLOW CONSOLIDATION; RESUME TRACK A
+
+- **Người ghi:** Xu — AI-01 / Work coordinator.
+- **Thời điểm:** 2026-11-04 14:22 Asia/Ho_Chi_Minh.
+- **Căn cứ:** DOC-035 W32-LOG-37; Vibe independent review; GitHub Actions runs #23–#25; W32-LOG-31 authorization.
+- **Branch:** `work/32-ci-cd-python-ci-v2`.
+- **HEAD khi ghi:** `e279ca918ffbe27d149b8a0f174f1e80f268361a`.
+
+### 1. READ / TRACE — Vibe review and CI
+- Đọc đầy đủ W32-LOG-37. Vibe đã hoàn tất review độc lập đúng phạm vi read-only: CI evidence runs #23/#24, F4 source audit, và hồ sơ DOC-035/DOC-062/DOC-063/DOC-014.
+- Xu kiểm tra lại GitHub Actions run #24 / `41789201999`: COMPLETED / SUCCESS, 4/4 jobs SUCCESS.
+- Xu kiểm tra commit `e279ca918ffbe27d149b8a0f174f1e80f268361a` đã ghi W32-LOG-37 và run #25 / `41789850424`: COMPLETED / SUCCESS, exact SHA `e279ca918ffbe27d149b8a0f174f1e80f268361a`, 4/4 jobs SUCCESS (tooling, Product Auto E2E, Python compile+bounded unit, immutable product artifact).
+- Run #23 / `41788992658` vẫn SUCCESS 4/4 theo W32-LOG-36/37. Runs #20–22 là cancelled do commit mới thay thế, không tính là failure hoặc PASS.
+- Branch HEAD hiện tại là `e279ca9...`; CI latest exact-SHA PASS đã được xác nhận cho commit này.
+
+### 2. DECISION — Vibe P1 workflow consolidation
+- **APPROVED / IMPLEMENTED / VERIFIED.** Xu xác nhận phương án chỉ giữ `.github/workflows/ci-validation.yml` làm workflow chuẩn là đúng với chỉ thị triển khai Track A đã ghi tại W32-LOG-31 và phạm vi Track A được Vinh cho phép.
+- Kiểm tra thư mục `.github/workflows` trên branch hiện tại chỉ còn `ci-validation.yml`; workflow Pilot `ci.yml` không còn trong danh sách.
+- Workflow chuẩn vẫn giữ đủ trigger: push vào Work 32 branch, pull_request vào main và workflow_dispatch.
+- Kết luận action-SHA P0 của Vibe: FALSE POSITIVE, đã được ghi nhận; không thay đổi SHA pins chỉ dựa trên nhận định cũ.
+- Không cần mở thêm thay đổi source cho đề xuất workflow duplication; tiếp tục theo dõi warning Node.js 20/runtime compatibility như hạng mục riêng, không tự ý bump action.
+
+### 3. DECISION — Vibe review disposition
+- **ACCEPTED** đối với phạm vi Vibe đã kiểm tra: CI evidence exact SHA, F4 source findings và hồ sơ đối chiếu.
+- Review này không thay thế acceptance toàn Work 32 và không xác nhận các hạng mục ngoài phạm vi.
+- Vibe không có quyền phê duyệt F4 policy, Track B architecture, branch reconciliation, CD, deployment hoặc release.
+
+### 4. Remaining gates — giữ nguyên trạng thái trung thực
+- Browser Adapter E2E :8787: **DEFERRED — WAITING FOR PC ACCESS**; chỉ chạy trên cùng host với adapter, không dùng hosted runner localhost thay thế.
+- F4 resource policy: **BLOCKED — ARCHITECTURE DECISION REQUIRED**. Đã xác nhận 1 MiB byte guard; MCP schema thiếu maxLength; quota 100 request/window chưa được enforce. Chưa tự đặt quota scope, window, response code hoặc persistence.
+- Track B Dashboard → Bridge → Workspace :8010 → Core :8000: **BLOCKED / NOT APPROVED** đến khi có canonical Workspace source/revision/runtime owner, persistence, auth/identity contract, Bridge/Application Service contract và Core owner signoff.
+- Branch governance: compare main...Work branch **101 ahead / 35 behind**, merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`. Không merge/rebase/cherry-pick; branch protection chưa được bật và không tự thay đổi.
+- CD/deployment/release: **BLOCKED / NOT RUN**. Work 32 vẫn **ACTIVE — NOT RELEASED**.
+
+### 5. NEXT EXECUTION — giao việc qua nhật ký
+1. **Ka — P0 evidence/acceptance preparation:** tiếp tục Track A trên đúng branch; cập nhật DOC-014, DOC-036 và các evidence/acceptance snapshots để phản ánh W32-LOG-37/38, latest exact SHA `e279ca9...`, run #25 và 4/4 jobs. Đối chiếu các snapshot cũ, không tạo thêm bộ thư mục trùng. Không sửa product runtime.
+2. **Ka — P1 CI warning disposition:** lập evidence ngắn về Node.js 20 deprecation của pinned Actions khi runner dùng Node.js 24 và Starlette/httpx deprecation; chỉ đề xuất thay đổi, chưa bump pins/dependencies nếu chưa có kiểm chứng tương thích và review.
+3. **Xu — F4 architecture:** chuẩn bị decision brief về quota semantics (scope, window, counting point, concurrency, persistence, rejection response, schema maxLength) để Vinh quyết định; tuyệt đối chưa triển khai enforcement trước quyết định.
+4. **Xu — Track B:** tiếp tục truy xuất canonical Workspace source/owner và hợp đồng; không tự tạo route, adapter hoặc persistence.
+5. **Browser Adapter:** giữ deferred cho đến khi có PC access; khi có điều kiện, chạy test hiện hữu trên cùng host :8787, lưu request/response/transcript read-back làm evidence.
+6. **Branch governance:** chuẩn bị phương án reconciliation có phân loại commit và rủi ro cho 101-ahead/35-behind; chỉ trình duyệt, không thực thi.
+
+### 6. BOUNDARY / STATUS
+- No main merge, rebase/cherry-pick, strict coverage, secrets/branch-protection change, CD, deployment, production/PC mutation, acceptance toàn Work hoặc release.
+- **Vibe independent review:** COMPLETED / ACCEPTED (limited scope).
+- **Track A hosted CI:** PASS on exact SHA `e279ca9...`, run #25, 4/4 jobs.
+- **Workflow consolidation:** APPROVED / IMPLEMENTED / VERIFIED.
+- **Browser Adapter:** DEFERRED — WAITING FOR PC ACCESS.
+- **F4:** BLOCKED — architecture decision required.
+- **Track B:** BLOCKED / NOT APPROVED.
+- **Branch governance:** BLOCKED / PENDING HUMAN APPROVAL.
+- **CD:** BLOCKED / NOT RUN.
+- **Work 32:** ACTIVE — NOT RELEASED.
