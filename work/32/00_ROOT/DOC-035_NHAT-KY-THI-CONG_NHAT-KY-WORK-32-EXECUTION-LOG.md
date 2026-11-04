@@ -326,3 +326,20 @@
 - **Boundary:** No inferred rate window, quota scope, state model or Core implementation. No test skipped/weakened; no CI gate, strict coverage, merge, CD or deployment changes.
 - **Next:** Obtain formal architecture decision for F4 repeated-request policy; implement and test only after approval. Resume browser E2E same-host when PC access returns.
 - **Status:** Browser E2E DEFERRED — WAITING FOR PC ACCESS; F4 BLOCKED pending policy; hosted CI PASS on exact SHA run #18; Work 32 ACTIVE — NOT RELEASED.
+
+
+## W32-LOG-20261104-36 — P0 — SANDBOX/GITHUB EVIDENCE RECONCILIATION AND RUN #23
+
+- **Người ghi:** Xu — AI-01 / Work coordinator.
+- **Thời điểm:** 2026-11-04.
+- **Phạm vi:** Đồng bộ hồ sơ W32-LOG-34/35 lên nhánh Work 32; xác minh lại CI sau cập nhật tài liệu.
+- **Branch:** `work/32-ci-cd-python-ci-v2`.
+- **Commit nguồn được kiểm chứng gần nhất:** `d0906794dfb348565389ca54ad328f0cf67f1ac2` (code tested in run #17); run #18 validates exact HEAD `450c0b2409c0d19c68931cb0331652bac6f3b5df`.
+- **Hồ sơ GitHub:** DOC-035 synced through W32-LOG-35; DOC-014, DOC-036, DOC-062 and DOC-063 published under canonical `work/32/` lifecycle folders. DOC-036 Sandbox readback was then aligned to the exact GitHub content.
+- **Readback:** DOC-035, DOC-014, DOC-036, DOC-062 and DOC-063 compared Sandbox↔GitHub; all five byte-equal after DOC-036 alignment.
+- **Documentation-triggered CI:** run #23 / `41788992658`, exact docs HEAD `64575ef4b897ef2d26216bf90ff886d48e7712f0`, conclusion SUCCESS; 4/4 jobs SUCCESS (unit, tooling, Product Auto E2E, immutable product artifact). Runs #20–22 were cancelled as newer commits superseded them; they are not counted as failures or passes.
+- **Branch governance:** compare main...Work branch remains DIVERGED, 99 ahead / 35 behind; merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`. No merge/rebase/cherry-pick authorized.
+- **Independent review:** Vibe review of source diff and exact evidence remains PENDING; no independent review result is claimed by this entry.
+- **G7 terminology cross-check:** Work 70 DOC-004 defines G7 as ACCEPT→RELEASE. It is a lifecycle gate, not an MCP protocol version. Work 32 remains NOT RELEASED; no G7 release transition is being requested or approved here.
+- **Next:** (1) obtain Vibe's independent source/evidence review; (2) keep Browser Adapter E2E DEFERRED until same-host PC access; (3) obtain explicit F4 rate-policy decision before implementation; (4) keep Track B blocked pending canonical contracts/owners; (5) prepare branch reconciliation proposal without executing it.
+- **Status:** Track A hosted CI = PASS on exact run #23; evidence sync = PASS; Browser Adapter = DEFERRED; F4 = BLOCKED; Vibe independent review = PENDING; Track B = BLOCKED; CD = BLOCKED / NOT RUN; Work 32 = ACTIVE — NOT RELEASED.
