@@ -71,11 +71,13 @@ jobs:
         with:
           python-version: '3.12'
           cache: pip
-          cache-dependency-path: requirements.txt
+          cache-dependency-path: |
+            requirements.txt
+            constraints-ci.txt
 
       - name: Install declared dependencies
         run: |
-          python -m pip install -r requirements.txt
+          python -m pip install -r requirements.txt -c constraints-ci.txt
           python -m pip check
           mkdir -p test-results
           python -m pip freeze > test-results/pip-freeze-unit.txt
@@ -160,11 +162,13 @@ jobs:
         with:
           python-version: '3.12'
           cache: pip
-          cache-dependency-path: requirements.txt
+          cache-dependency-path: |
+            requirements.txt
+            constraints-ci.txt
 
       - name: Install declared dependencies
         run: |
-          python -m pip install -r requirements.txt
+          python -m pip install -r requirements.txt -c constraints-ci.txt
           python -m pip check
           mkdir -p test-results
           python -m pip freeze > test-results/pip-freeze-e2e.txt
@@ -223,7 +227,7 @@ jobs:
           BUNDLE="room-hop-${REVISION}.tar.gz"
           tar -xzf "dist/${BUNDLE}" -C product
           cd "product/room-hop-${REVISION}"
-          python -m pip install -r requirements.txt
+          python -m pip install -r requirements.txt -c constraints-ci.txt
           python -m pip check
           python -m compileall -q core agents execution_host room_hop_mcp
           mkdir -p test-results
