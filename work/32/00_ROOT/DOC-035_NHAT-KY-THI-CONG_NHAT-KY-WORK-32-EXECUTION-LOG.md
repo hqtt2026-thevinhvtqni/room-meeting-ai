@@ -520,3 +520,10 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - Track B: BLOCKED / NOT APPROVED.
 - CD: BLOCKED / NOT RUN.
 - Work 32: ACTIVE — NOT RELEASED.
+
+
+### W32-LOG-40 addendum — canonical document sync readback
+- After W32-LOG-40 was recorded, Xu published updated DOC-035, DOC-014, DOC-036 and DOC-063 to the Work 32 branch and wrote the exact GitHub contents to the corresponding Sandbox canonical paths.
+- Full-content readback comparison returned **byteEqual=true for all 4/4 files**. GitHub blob SHAs: DOC-035 `885e49f3e9d69567e8c5b9e11b1a2e325415e855`; DOC-014 `395759e219e7eb2c74c30a844ad5c02837288808`; DOC-036 `79290dee711b162545660165ec8121d420dba579`; DOC-063 `d9d17898b43e1053bb8296ab623742416a667b6e`.
+- Documentation-triggered run #31 / `41803741497` validated exact HEAD `9e196d6c2113c596ff2ce97e9a1a39326f270d99`: COMPLETED / SUCCESS, 4/4 jobs SUCCESS.
+- This addendum is documentation-only. It does not alter the exact product-source SHA, F4 policy, Browser Adapter status, Track B approval, branch governance or release status.
