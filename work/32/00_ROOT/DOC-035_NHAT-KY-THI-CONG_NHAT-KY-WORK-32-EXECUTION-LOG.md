@@ -1110,3 +1110,19 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - KA REVIEW ASSIGNMENT: review W32-LOG-66/67, ADR-002 Addendum, DOC-068 Addendum G, adapter and tests. Assess async boundary, asyncio.run, subprocess/session lifecycle, concurrency, environment/store isolation, sentinel, coverage and PC provenance gate. Return ACCEPT / ACCEPT WITH CORRECTIONS / REJECT with evidence.
 - No PC command until Ka review and source provenance are resolved. PID 20468 remains untouched. The committed diagnostic script has a valid Git rev-parse line; corruption was observed in the pasted terminal command.
 - PC live E2E NOT RUN. No MCP call, transcript mutation, :8020, main merge, deploy or release. Work32 ACTIVE — NOT RELEASED.
+
+
+### W32-LOG-20261105-71 — Xu xử lý các gap P0 theo review độc lập của Ka
+
+- **Review input:** Ka Sandbox W32-LOG-67 và W32-LOG-70; DOC-068 Addendum K; candidate v2 timeout và real stdio E2E.
+- **Reconciliation:** Sandbox và GitHub hiện có collision append-only ở W32-LOG-66/67 do Xu và Ka ghi độc lập. Không ghi đè/đổi lịch sử; entry này dùng ID duy nhất W32-LOG-71. Khi hợp nhất hồ sơ, phải giữ nguyên hai bản và đối chiếu theo nội dung/commit.
+- **Ka findings accepted:** Mocked contract tests chưa chứng minh Browser Adapter gọi real RoomHopIntegration stdio child; thiếu timeout/cancellation bound; asyncio.run cần nested-loop guard. Global Adapter singleton có thể chia sẻ browser/page/log state khi concurrent workflow; Ka xếp P2 và yêu cầu xử lý riêng.
+- **Xu BUILD:** Thêm ROOMHOP_MCP_TIMEOUT_SECONDS (default 30s, max 120s); asyncio.wait_for; timeout trả BLOCKED với append outcome uncertain và cấm auto-retry; running-loop guard chạy trước khi tạo coroutine. Không nuốt cancellation bên trong Integration context manager.
+- **Xu BUILD:** Tạo tests/test_browser_agent_adapter_stdio_e2e.py. Test tạo temporary store + sentinel, provision meeting thử nghiệm active, gọi chính submit_to_roomhop, khởi chạy real MCP stdio child qua RoomHopIntegration, kiểm tra đúng 4 tools, identity, artifact marker và transcript readback từ Core service.
+- **CI registration:** Thêm real stdio E2E vào E2E_TESTS của .github/workflows/ci-validation.yml.
+- **Commits:** timeout/nested-loop source 6d395577; tests c9676d4e; real stdio E2E test 49d72375; CI registration c291bca9; DOC-068 Addendum H c8c9adc6.
+- **VERIFY:** CI run #83 / 41950707518 SUCCESS 4/4 cho timeout/nested-loop changes. Run #85 / 41950798975 và #86 / 41950816354 đang running/pending lúc ghi nhận, có chứa real stdio E2E mới. Chưa tuyên bố PASS cho real stdio E2E trước khi exact SHA hoàn tất.
+- **P2 DEFERRED:** Global Adapter singleton/browser page/log concurrency. Transport sessions per workflow riêng biệt không chứng minh Browser Adapter global state thread-safe. Không tự ý thay đổi concurrency semantics trong patch P0.
+- **SAFETY:** Không tác động PID 20468, không gọi :8787 hoặc /mcp, không dùng :8020, không truy cập/ghi meeting thật. Không merge main, deploy hoặc release.
+- **NEXT:** Theo dõi CI exact SHA; nếu real stdio E2E PASS, chuyển Ka review lại implementation mới. PC runtime vẫn chờ Ka review và xác minh source provenance.
+- **STATUS:** Timeout/nested-loop BUILD committed; real stdio E2E CI validation pending; P2 concurrency deferred; Work32 ACTIVE — NOT RELEASED.
