@@ -9,7 +9,11 @@ Design CI/CD for Python-based ROOM-HOP, no Docker, survey first and no PC change
 - Status semantics: PASS = executed with evidence; FAIL = executed and failed; BLOCKED = prerequisite unavailable; NOT RUN = not executed.
 - Repair loop: max 3 attempts, then BLOCKED for human review.
 
-## Current (2026-11-05 — Phase B CI pilot COMPLETE)
+## Current (2026-11-05 — Phase C step 1: G3/G5 exploration DONE)
+- Run #13 (commit c6dc8a7): G3/G5 exploration job SUCCESS — 6/8 excluded files PASS in isolation (test_e2e, test_integration, test_http_lifecycle, test_http_recording, test_wee_8031_bridge, test_execution_host); 2 FAIL need live services (test_browser_agent_adapter_e2e → :8787; test_work13_wee_integration → WEE). Per-file evidence on issue #39.
+- Anomaly: run #13 ci-pilot job posted no evidence comment — verdict NOT CONFIRMED; Xu to check job log (G0–G2 code unchanged since run #10, regression unlikely).
+
+## Previous (2026-11-05 — Phase B CI pilot COMPLETE)
 - **G2 GREEN**: run [#10](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/41944927224) — 188 passed / 0 failed, commit `c37040c`. Evidence auto-published to issue #39.
 - Fixes delivered on the Work branch: requirements.txt (requests/fastapi/uvicorn/mcp>=1.14,<2.0), 6-tool MCP contract (join_meeting/start_meeting registered), add_paste maxLength 1048576 (F4).
 - Gates: G0/G1/G2/G6/G7 PASS. G3/G5 BLOCKED by design (Phase C). CD NOT RUN.
@@ -18,8 +22,8 @@ Design CI/CD for Python-based ROOM-HOP, no Docker, survey first and no PC change
 - Draft PR #40 (work/32 → main) opened 2026-11-05; skipped gates disclosed; awaiting review.
 
 ## NOT DONE — for Xu
-1. G3 integration gate (isolated fixtures, Phase C approval).
-2. G5 E2E gate (8 excluded test files unexecuted).
+1. G3 integration gate — 6/8 excluded files now PASS isolated (run #13); Xu/Vinh decide which to fold into CI; 2 live-service files need fixtures/stubs (browser-agent :8787, WEE).
+2. G5 E2E gate — exploration evidence recorded (run #13); promotion to hard gate pending decision. Also: inspect run #13 ci-pilot missing evidence comment (see anomaly).
 3. Main-head reconciliation (`cc3100c…` base vs `d7266eb…` main) + port dependency/contract fixes to main (main still fails the same tests).
 4. ~~PR~~ DONE: draft PR [#40](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/40) opened 2026-11-05 (base main). Merge decision: Reviewer + Vinh.
 5. CD/release (Phase D, not authorized).

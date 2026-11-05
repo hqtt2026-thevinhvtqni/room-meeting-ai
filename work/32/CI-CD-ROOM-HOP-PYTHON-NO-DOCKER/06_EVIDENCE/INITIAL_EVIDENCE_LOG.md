@@ -86,3 +86,21 @@ Workflow: `.github/workflows/work32-ci-pilot.yml` — Work-branch-only; permissi
 - Main's own CI workflows (if configured on PRs to main) will also run on this PR; treat their results as additional evidence, not a substitute for review.
 - Phase B acceptance item "Verify PR behavior and disclose skipped gates" satisfied: PR opened, skipped gates disclosed in the PR body (G3/G5 NOT RUN by design; CD NOT RUN).
 - Remaining NOT-DONE list unchanged — see "NOT DONE — remaining items for Xu" above.
+
+### Phase C step 1 — G3/G5 isolated exploration (2026-11-05, per Vinh: "Tiếp đi")
+- Commit `c6dc8a787732ca530528bad841b9415ab76bc7d5`: added `g3-g5-exploration` job (continue-on-error) to `work32-ci-pilot.yml` — runs each of the 8 previously-excluded integration/e2e test files in isolation on the hosted runner, uploads per-file logs as artifacts (`work32-g35-evidence-<run_id>`), and posts per-file dispositions to issue #39. Evidence-only; no hard gate; no live-PC changes.
+- Runs #11 (5d7fbff) and #12 (9625400) — doc-only commits under the pre-Phase-C workflow: SUCCESS (G0–G2 re-verified green; evidence in issue #39).
+- **Run #13 (G3/G5 exploration, commit c6dc8a7) — job success. Per-file dispositions (isolated runner, evidence-only):**
+  | Test file | Verdict |
+  |---|---|
+  | tests/test_e2e.py | **PASS** (exit 0, 1 passed) |
+  | tests/test_integration.py | **PASS** (exit 0, 5 passed) |
+  | tests/test_http_lifecycle.py | **PASS** (exit 0, 7 passed) |
+  | tests/test_http_recording.py | **PASS** (exit 0, 4 passed) |
+  | tests/test_browser_agent_adapter_e2e.py | **FAIL** (exit 2, collection error: connection refused to 127.0.0.1:8787 /browser/execute_workflow — requires live browser-agent service) |
+  | tests/test_wee_8031_bridge.py | **PASS** (exit 0) |
+  | tests/test_work13_wee_integration.py | **FAIL** (exit 1 — requires live WEE service/fixtures) |
+  | tests/test_execution_host.py | **PASS** (exit 0) |
+- **Interpretation (for Xu)**: 6 of 8 excluded files PASS in a plain isolated runner — safe candidates to fold into the CI (G2/G3) scope. The 2 FAILs are live-service dependencies (browser-agent :8787, WEE), NOT CI defects; keep them excluded or wire up service stubs/fixtures (Phase C scope decision for Xu + Vinh).
+- **Anomaly — ci-pilot job of run #13**: no "Run #13 (G0–G2)" evidence comment appeared on issue #39 after extended monitoring (the G3/G5 comment posted normally; runs #11/#12 ci-pilot comments are present). ci-pilot verdict for run #13 = **NOT CONFIRMED** (missing evidence comment; job log needs admin to inspect). Note: the G0–G2 code path is unchanged since run #10 (only the workflow file changed), so a G2 regression is unlikely — but per evidence-first doctrine this is recorded as unconfirmed, not assumed PASS. Xu should inspect run #13's ci-pilot job log; if the comment step failed (e.g. secondary rate limit from the concurrent `gh issue comment`), add retry/backoff to both comment steps.
+- Gate impact: G3/G5 now have exploration-level executed evidence. Promoting any file into a hard gate still requires Xu/Vinh decision (Phase C scope).
