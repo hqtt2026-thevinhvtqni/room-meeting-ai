@@ -260,3 +260,51 @@ Exact branch HEAD c601c18712ed1d58990314d517409478f41ee11b; run #41 / 4180757830
 - Run #50 artifacts: unit 13368101835; E2E 13367437810; tooling 13366784637; product 13367787377. SHA-256 digests are recorded in the canonical Work 32 journal W32-LOG-53.
 - Still BLOCKED / NOT VERIFIED: Windows-local module origin and working directory for PID 20468; live MCP handshake and live transcript readback. Available connected tools cannot inspect the user's local Windows process table. CI contract tests mock MCP calls and do not prove live PC transport.
 - PID 15048 is the legacy runtime on prohibited port :8020; no request was made to that port. No process restart/termination or real-meeting transcript mutation occurred. Work 32 ACTIVE — NOT RELEASED.
+
+
+---
+
+## Addendum D — independent review of PC runtime provenance (2026-11-05)
+
+- **Document Number:** DOC-068 / Addendum D
+- **Priority:** P0 — Runtime provenance and prevention of false Work32 E2E acceptance
+- **Prepared by:** Ka — CSA / Backend & Repository Custodian
+- **Authority:** Xu W32-LOG-20261105-61; Ka W32-LOG-20261105-62; PC evidence supplied by Vinh in W32-LOG-60.
+
+### Evidence classification
+
+1. PID 20468 returned HTTP 200 for GET `/health` and GET `/openapi.json`. This confirms the HTTP surface responded at the time of capture only.
+2. Parent PID 9108 command line sets launch working directory and `PYTHONPATH` to `.ai-workspace/release/WORK09` before starting `uvicorn adapter:app`. This is strong WORK09 launch-context evidence, but not direct proof of the loaded module object's in-memory `__file__`.
+3. PID 20468 CWD was unavailable. No import origin, source Git blob, containing repository metadata or comparison with Work32 Browser Adapter blob was produced.
+4. Corrected diagnostic's child-process `find_spec('adapter')` is reconstructed import resolution only; it cannot inspect the target PID's already-loaded module or reproduce its private process environment.
+5. Exact Work32 Browser Adapter source blob remains `8cd73faca62057cbfbbd0ac03c07254c02e8df6c`; no equality comparison against PID 20468's loaded source is available.
+
+### Decision and next gate
+
+- Existing PID 20468 is **NOT ACCEPTED as a verified Work32 runtime**. Work32 runtime provenance remains BLOCKED / NOT VERIFIED.
+- Do not restart, terminate, reconfigure or repoint PID 20468. Do not use the legacy MCP process on `:8020`; do not call `/mcp`, POST endpoints, transcript APIs or mutate a meeting.
+- The next safe path is a separate, isolated Browser Adapter process launched from the clean Work32 clone/authorized branch on a separately selected port. The old WORK09-context process remains untouched.
+- Before any live MCP or transcript-writing E2E, establish the new process executable, CWD, launch command, exact source Git blob, compatible MCP endpoint/transport, exact ADR-002 four-tool inventory, and a dedicated disposable meeting plus identity. Keep each criterion independently evidenced.
+- No isolated process was created or tested in this addendum. Live MCP handshake, live tool inventory and transcript readback remain NOT RUN.
+
+### Overall status
+
+- HTTP surface of existing PID 20468: PASS for GET checks only.
+- Work32 runtime provenance: BLOCKED / NOT VERIFIED.
+- Live MCP transport and transcript persistence: NOT RUN.
+- Work 32: ACTIVE — NOT RELEASED.
+
+### BIÊN BẢN
+
+- **Name:** Ka
+- **Title:** CSA / Backend & Repository Custodian
+- **Date-Time:** 2026-11-05 (exact time not captured)
+- **Disposition:** Addendum records independently reviewed evidence and safe next gate; no runtime or architecture mutation.
+
+### NHẬT KÝ
+
+- **Name:** Ka
+- **Title:** CSA / Backend & Repository Custodian
+- **Date-Time:** 2026-11-05 (exact time not captured)
+- **Action:** Reconciled PC result W32-LOG-60 and independent review W32-LOG-62 into DOC-068 without promoting launch-context evidence to in-memory provenance.
+- **Result:** Existing adapter not accepted as Work32 runtime; isolated runtime is the next controlled step. No PC execution, MCP call, transcript mutation, code change, merge, deployment or release.
