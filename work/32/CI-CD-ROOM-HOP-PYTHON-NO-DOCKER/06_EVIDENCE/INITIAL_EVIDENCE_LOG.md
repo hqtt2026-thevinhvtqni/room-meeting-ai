@@ -80,3 +80,9 @@ Workflow: `.github/workflows/work32-ci-pilot.yml` — Work-branch-only; permissi
 - G2: FAIL — remaining 3 failures are product-drift (see finding above); CI-side work complete.
 - G3/G5: BLOCKED by design (Phase C).
 - Next: Vinh decides product-repair path (Coder scope) or main-head reconciliation first.
+
+## PR handoff record (2026-11-05)
+- Draft PR [#40](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/40) opened: `work/32-ci-cd-room-hop-python-no-docker` → `main`. Draft on purpose — no AI auto-merge; Reviewer checks diff/risks (noting branch base `cc3100c…` vs main `d7266eb…`), Vinh decides integration.
+- Main's own CI workflows (if configured on PRs to main) will also run on this PR; treat their results as additional evidence, not a substitute for review.
+- Phase B acceptance item "Verify PR behavior and disclose skipped gates" satisfied: PR opened, skipped gates disclosed in the PR body (G3/G5 NOT RUN by design; CD NOT RUN).
+- Remaining NOT-DONE list unchanged — see "NOT DONE — remaining items for Xu" above.
