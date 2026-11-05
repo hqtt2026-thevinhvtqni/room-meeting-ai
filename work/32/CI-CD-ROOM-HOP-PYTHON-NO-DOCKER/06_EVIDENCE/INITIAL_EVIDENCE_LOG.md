@@ -61,6 +61,20 @@ Workflow: `.github/workflows/work32-ci-pilot.yml` — Work-branch-only; permissi
 - Canonical tracking issue: [#39](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/issues/39) — auto-posted per-run summary + log tail.
 - Issue #38 closed as duplicate. Artifacts retained 14 days per run; CI job-log API download requires repo admin.
 
+
+### Product-fix execution (2026-11-05, per Vinh: "Hoàn thiện đi làm")
+- Commit `c37040c463325916e99e3dc791a20fe35cc206e6`: `room_hop_mcp/adapter/server.py` now registers the frozen 6-tool contract (`join_meeting`, `start_meeting` added; MeetingService already implemented both) and declares `maxLength: 1048576` on `add_paste` `text` (F4 policy), closing both Finding A and Finding B.
+- **Run [#10](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/41944927224) — SUCCESS: G1 PASS, G2 PASS with 188 passed / 0 failed (2.94s). Evidence in issue #39.**
+- Final gate state: G0 PASS · G1 PASS · G2 PASS (188/188, executed evidence) · G6 PASS · G7 PASS (Vinh, 2026-11-05). G3/G5 BLOCKED by design (Phase C). CD/deployment NOT RUN (out of scope this phase).
+
+## NOT DONE — remaining items for Xu (handoff 2026-11-05)
+1. **G3 integration gate** — MCP → Core → runtime contract tests need isolated fixtures (live-service prerequisites unavailable to this session; Phase C requires separate approval).
+2. **G5 E2E gate** — excluded files (`test_e2e.py`, `test_integration.py`, `test_http_lifecycle.py`, `test_http_recording.py`, `test_browser_agent_adapter_e2e.py`, `test_wee_8031_bridge.py`, `test_work13_wee_integration.py`, `test_execution_host.py`) remain unexecuted in CI (BLOCKED by design).
+3. **Main-head reconciliation** — Work branch is based on `cc3100c…`; main is at `d7266eb…`. Merge/rebase plan, plus porting the requirements.txt dependency fix and the 6-tool/maxLength fix to main, is undecided (main's own suite would still fail the same 3 tests without them).
+4. **Merge/PR** — no pull request opened; no merge performed (guardrail: no AI auto-merge; requires Reviewer + Vinh).
+5. **CD/release** — Phase D not authorized; no deployment, rollback plan, or release notes produced.
+6. **sandbox_read MCP endpoint** — still returns empty content (worked around via GitHub read-back; fix belongs to the Work 24/28/30 tooling track).
+
 ### Gate status (after run #7)
 - G0, G1, G6: PASS with evidence. G7: PASS (Vinh, 2026-11-05).
 - G2: FAIL — remaining 3 failures are product-drift (see finding above); CI-side work complete.

@@ -9,15 +9,16 @@ Design CI/CD for Python-based ROOM-HOP, no Docker, survey first and no PC change
 - Status semantics: PASS = executed with evidence; FAIL = executed and failed; BLOCKED = prerequisite unavailable; NOT RUN = not executed.
 - Repair loop: max 3 attempts, then BLOCKED for human review.
 
-## Current (2026-11-05, after main-head check)
-- Phase A: COMPLETE. Phase B CI pilot: CI-side COMPLETE — run #7 (`95495b9`): G1 PASS; G2 3 failed / 185 passed; evidence auto-published to issue #39.
-- Main-head check (per Vinh): main `d7266eb…` does NOT carry a fix for the 3 failures.
-- Remaining G2 failures classified:
-  - 2× F4 design-marker tests — INTENTIONAL expected-FAIL per the test file header (evidence for a future F4 implementation round).
-  - 1× T8 six-tools contract — genuine drift: MCP adapter registers 4 of 6 frozen tools (missing `join_meeting`, `start_meeting`).
-- Full analysis: Evidence Log section "Main-head reconciliation check (2026-11-05)".
+## Current (2026-11-05 — Phase B CI pilot COMPLETE)
+- **G2 GREEN**: run [#10](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/41944927224) — 188 passed / 0 failed, commit `c37040c`. Evidence auto-published to issue #39.
+- Fixes delivered on the Work branch: requirements.txt (requests/fastapi/uvicorn/mcp>=1.14,<2.0), 6-tool MCP contract (join_meeting/start_meeting registered), add_paste maxLength 1048576 (F4).
+- Gates: G0/G1/G2/G6/G7 PASS. G3/G5 BLOCKED by design (Phase C). CD NOT RUN.
 
-## Next steps (pending Vinh)
-1. Decide: (a) Coder registers the 2 missing MCP tools on the Work branch, and (b) either implement F4 maxLength (1048576) or scope the 2 design-marker tests out of the hard G2 gate.
-2. After G2 PASS: reviewer checks diff/risks; decide Phase C scope.
-3. Reconcile with main head before merge; main's requirements.txt also needs the same dependency fix.
+## NOT DONE — for Xu
+1. G3 integration gate (isolated fixtures, Phase C approval).
+2. G5 E2E gate (8 excluded test files unexecuted).
+3. Main-head reconciliation (`cc3100c…` base vs `d7266eb…` main) + port dependency/contract fixes to main (main still fails the same tests).
+4. PR/merge (Reviewer + Vinh; no AI auto-merge).
+5. CD/release (Phase D, not authorized).
+6. sandbox_read empty-response endpoint (Work 24/28/30 track).
+Full detail: Evidence Log "NOT DONE — remaining items for Xu (handoff 2026-11-05)".
