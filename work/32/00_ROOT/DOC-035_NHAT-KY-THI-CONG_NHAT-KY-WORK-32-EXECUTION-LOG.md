@@ -1031,3 +1031,46 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **Date-Time:** 2026-11-05 (exact time not captured)
 - **Action:** Completed source-level transport audit and recorded decision options in DOC-068 Addendum E and this journal.
 - **Status:** Work 32 ACTIVE — NOT RELEASED.
+
+
+### W32-LOG-20261105-65 — Ka thẩm định khả năng tái sử dụng MCP stdio Integration
+
+- **Document Number:** W32-LOG-20261105-65
+- **Priority Order:** P0 — Transport selection / Browser Adapter integration lifecycle
+- **Name:** Ka
+- **Title:** CSA / Backend & Repository Custodian
+- **Date-Time:** 2026-11-05 (exact time not captured)
+- **Authority:** Vinh “OK tiếp”; W32-LOG-64; W32-ADR-002.
+
+**Source reviewed**
+- `integration/room_hop_integration.py` blob `dd0f544178f84e7b45cf9f7654af608e7ad2944c`.
+- `tests/test_ci_mcp_stdio_e2e.py` blob `b78d69e3a6f35c7c573c9fd699a9d3993b883c74`.
+- Browser Adapter source blob `8cd73faca62057cbfbbd0ac03c07254c02e8df6c`.
+
+**Finding**
+- Work32 already has `RoomHopIntegration`, which starts `python -m room_hop_mcp` through MCP stdio, initializes a ClientSession and closes the child process/session on context exit.
+- Config supports explicit Python executable, repository-root CWD and environment; existing CI E2E uses a dedicated temporary `ROOM_HOP_MEETINGS_DIR`.
+- This provides a concrete basis for Option A without adding a network MCP listener.
+- `verify_capabilities()` checks required tools are present, not exact equality. Browser Adapter reuse must preserve exact set equality against the four ADR-002 tools.
+- Browser Adapter is synchronous at its FastAPI/Playwright workflow boundary, while RoomHopIntegration is asynchronous. Safe event-loop/thread ownership, session lifecycle, timeout, cleanup, concurrency and test-store isolation remain design decisions.
+
+**Recommendation**
+- Xu should evaluate Option A first: reuse the existing stdio Integration boundary, with explicit lifecycle and exact-tool validation.
+- Do not implement until Xu records a transport decision. Option B (new Streamable HTTP MCP endpoint) requires explicit architecture approval and transport-parity tests.
+- No direct Core REST shortcut, no legacy :8020, no widened tool inventory.
+
+**Safety**
+- Source review only. No PC changes, no service requests, no MCP network call, no transcript/meeting mutation, no process changes, no code/workflow edit, no merge/deploy/release.
+
+**BIÊN BẢN**
+- **Name:** Ka
+- **Title:** CSA / Backend & Repository Custodian
+- **Date-Time:** 2026-11-05 (exact time not captured)
+- **Disposition:** Option A feasibility grounded in current code; Xu decision remains pending.
+
+**NHẬT KÝ**
+- **Name:** Ka
+- **Title:** CSA / Backend & Repository Custodian
+- **Date-Time:** 2026-11-05 (exact time not captured)
+- **Action:** Reviewed existing stdio client/session implementation and CI test to refine transport recommendation.
+- **Status:** Work 32 ACTIVE — NOT RELEASED.
