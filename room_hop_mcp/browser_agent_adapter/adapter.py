@@ -348,6 +348,17 @@ def submit_to_roomhop(result: dict[str, Any]):
             "reason": "Configured disposable test meetings directory does not exist",
             "meetings_dir": str(meetings_dir),
         }
+    store_marker = meetings_dir / ".roomhop-disposable-test-store"
+    try:
+        marker_value = store_marker.read_text(encoding="utf-8").strip()
+    except OSError:
+        marker_value = ""
+    if marker_value != "ROOM-HOP-WORK32-DISPOSABLE-TEST-STORE":
+        return {
+            "status": "blocked",
+            "reason": "Disposable test store marker is missing or invalid; no MCP subprocess was started",
+            "meetings_dir": str(meetings_dir),
+        }
 
     try:
         return asyncio.run(
