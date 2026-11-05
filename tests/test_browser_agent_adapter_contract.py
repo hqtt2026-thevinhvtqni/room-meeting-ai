@@ -1,3 +1,4 @@
+import asyncio
 import importlib
 import sys
 import types
@@ -189,6 +190,37 @@ def test_submission_rejects_inactive_disposable_meeting(monkeypatch, tmp_path):
         "list_meetings", "get_meeting"
     ]
     assert instances[0].session_closed is True
+
+
+def test_submission_timeout_is_blocked_and_never_retried(monkeypatch, tmp_path):
+    _configure_test_target(monkeypatch, tmp_path)
+    monkeypatch.setenv("ROOMHOP_MCP_TIMEOUT_SECONDS", "0.01")
+
+    async def slow_submission(*args, **kwargs):
+        await asyncio.sleep(0.1)
+        return {"status": "pass"}
+
+    monkeypatch.setattr(browser_adapter, "_submit_to_roomhop_stdio", slow_submission)
+    result = browser_adapter.submit_to_roomhop(RESULT)
+    assert result["status"] == "blocked"
+    assert "outcome is uncertain" in result["reason"]
+    assert "do not retry automatically" in result["reason"]
+
+
+def test_submission_fails_closed_inside_running_event_loop(monkeypatch, tmp_path):
+    _configure_test_target(monkeypatch, tmp_path)
+
+    def must_not_start(*args, **kwargs):
+        raise AssertionError("coroutine must not be created in a running loop")
+
+    monkeypatch.setattr(browser_adapter, "_submit_to_roomhop_stdio", must_not_start)
+
+    async def invoke():
+        return browser_adapter.submit_to_roomhop(RESULT)
+
+    result = asyncio.run(invoke())
+    assert result["status"] == "blocked"
+    assert "Nested event loops are not allowed" in result["reason"]
 
 
 def test_submission_uses_exact_target_stdio_and_verifies_readback(monkeypatch, tmp_path):
