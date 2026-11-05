@@ -1331,3 +1331,18 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - Dashboard→Core E2E: NOT RUN.
 - CD / deployment / release: NOT RUN.
 - Work 32: ACTIVE — NOT RELEASED.
+
+
+## 2026-11-06 — W32-LOG-20261106-81 — Xác minh hiện trạng Git local sau lỗi bad object refs
+
+- **Người ghi:** Xu / AI-01, Work coordinator.
+- **Nguồn bằng chứng:** PowerShell diagnostic do Vinh gửi ngày 2026-11-06; nội dung đầy đủ được lưu trong cuộc hội thoại.
+- **READ — Repository:** Root local là `D:/ROOM-HOP-CLEAN/room-meeting-ai`; HEAD `d7c90d9d31062d389810808e43dfdd19d7711b75`; current branch `main`; remote `origin` trỏ đúng `https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai.git`.
+- **READ — Contamination footprint:** Diagnostic liệt kê hàng loạt `.git/**/desktop.ini`, mỗi file 106 bytes, thuộc tính `Hidden, System`; xuất hiện trong `.git` root, `refs`, `logs`, `objects` (bao gồm các fan-out object directories), `hooks`, `info`, `pack` và worktree metadata. Đây là bằng chứng mạnh về file metadata ngoài Git được ghi vào thư mục nội bộ; chưa có nội dung/hash của từng file trong diagnostic này nên chưa coi việc xóa đã được xác minh.
+- **TRACE — Git integrity:** Kết hợp với log trước đó có `git fsck --full` báo `bad sha1 file` tại các đường dẫn `.git/objects/**/desktop.ini` và thao tác xóa một file refs bị `PermissionDenied`. Kết luận: local Git metadata đang không đáng tin cậy; không được fetch/push từ working copy này cho đến khi cách ly và kiểm tra.
+- **TRACE — Branch mismatch:** Local đang ở `main`, không phải `work/32-ci-cd-python-ci-v2`. Không có cơ sở để coi local HEAD hoặc working tree là bản Work 32 cần đẩy lên GitHub.
+- **GitHub independent check:** CI run #111, ID `42119558089`, SHA `623615f79c38d6ca543a611f9ee34e35909afd37`, completed SUCCESS. CI run #112, ID `42119617856`, SHA `ae4cb097e367d826388ce0aabcf905d3c7207b99`, completed SUCCESS. Hai kết quả này xác nhận branch GitHub Work 32 tiếp tục chạy CI độc lập; không xác nhận local PC đã đồng bộ.
+- **DECISION:** HOLD local Git recovery. Không xóa hàng loạt `desktop.ini`, không xóa/rebuild `.git`, không `reset --hard`, không `git clean -fd`, không force-push. Giữ nguyên local data và metadata để bảo toàn khả năng phục hồi.
+- **Next diagnostic required:** Chỉ đọc nội dung/hash của một vài file `desktop.ini` đại diện ở root, `refs`, `objects`; lấy ACL/owner và kiểm tra process/handle đang giữ file; xác minh D: có được Google Drive File Stream/backup/sync client quản lý hay không. Sau đó chọn phương án an toàn: tạo bản sao lưu đầy đủ, tách repo khỏi sync scope, rồi phục hồi Git metadata từ GitHub trên một clone sạch riêng; giữ working tree hiện tại ở chế độ forensic/read-only cho đến khi đối chiếu dữ liệu chưa commit.
+- **Handoff:** Vinh chạy diagnostic read-only tiếp theo trên PC; Xu tiếp tục kiểm tra GitHub branch/CI độc lập. Không cần Ka sửa code ở bước này.
+- **STATUS:** GitHub Work 32 branch CI #111/#112 PASS; local Git integrity BLOCKED; local↔GitHub synchronization NOT VERIFIED; Work 32 ACTIVE — NOT RELEASED.
