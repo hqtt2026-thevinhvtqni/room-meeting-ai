@@ -46,6 +46,14 @@ Workflow: `.github/workflows/work32-ci-pilot.yml` — Work-branch-only; permissi
 2. `tests/test_f4_resource_limits.py` (2 tests): `add_paste` inputSchema is `{'type': 'string'}` without `maxLength`; F4 policy contract requires `maxLength == 1048576`.
 - These are product/test-contract mismatches in the source under test — outside the CI pilot's repair scope. Candidate paths: (a) Coder restores the 2 missing tool registrations + `maxLength` in server.py after Vinh's approval; or (b) Reviewer/QE confirms whether main head `d7266eb…` already carries the fix (branch divergence from base `cc3100c…` is a plausible cause and must be checked first).
 
+
+### Main-head reconciliation check (2026-11-05, after run #7 — per Vinh's instruction)
+- Read `room_hop_mcp/adapter/server.py` and the failing tests on main head `d7266eb9bfedfc534fc87d56548e47841bb583b9`.
+- **Main does NOT carry a fix**: main's server.py also registers only 4 tools (list_meetings, get_meeting, get_transcript, add_paste_to_meeting) and its add_paste schema has no maxLength.
+- **Finding A — the 2 F4 failures are INTENTIONAL design markers**: `tests/test_f4_resource_limits.py` states in its header that some tests SHOULD FAIL until F4 resource limits are implemented; the failing pair (`test_add_paste_schema_declares_maximum_length`, `test_add_paste_schema_limit_matches_f4_policy`) is exactly that documented "expected FAIL" evidence. They are not regressions and arguably should not gate G2 as hard FAILs (candidate: deselect/mark as design markers in the G2 scope, or implement F4 maxLength to turn them green).
+- **Finding B — test T8 is genuine contract drift**: `tests/test_message_v1.py::test_t8_existing_mcp_tools_no_regression` asserts the frozen 6-tool contract (incl. `join_meeting`, `start_meeting`), but server.py (both branch and main) exposes only 4. `MeetingService` has join/start methods; the MCP adapter simply does not register them. Fix path: register the 2 missing tools in `room_hop_mcp/adapter/server.py` (Coder scope, after Vinh's approval), or amend the frozen contract (Reviewer + Vinh decision; test comment says "KHÔNG đổi").
+- Gate impact: G2 could reach PASS-with-evidence by (1) registering the 2 tools, and (2) either implementing the F4 maxLength (per policy MAX_TEXT_BYTES = 1048576) or scoping the 2 design-marker tests out of the hard gate.
+
 ### G7 decision record
 - 2026-11-05: Vinh instructed "triển khai tiếp w32" → recorded as approval to apply the proposed mcp pin from this session and verify via CI (executed, run #7).
 
