@@ -536,3 +536,18 @@ Status: cancellation propagation and deterministic unwind test committed; CI run
 - Contract test injects a private test variable and confirms it is absent from child config while the two required values are exact.
 - CI run #106 / 41953015065 validated SHA 4d95b237a46986cf13bf7e0992a582f59b40817a; all four jobs SUCCESS. Product Auto E2E 58 passed, including real stdio transcript roundtrip and real child timeout termination; Unit 189, tooling 20 and artifact E2E 1 passed.
 - This is Linux CI evidence. Windows PC runtime and PID 20468 provenance remain unverified. Ka re-review requested. P2 global Adapter singleton concurrency remains deferred.
+
+
+---
+
+## Addendum — current branch-head and governance reconciliation (2026-11-06)
+
+- **Current branch:** `work/32-ci-cd-python-ci-v2`.
+- **Current observed HEAD:** `3dc65a4603823f58543f5216af2b0885df3a1627` (W32-LOG-78 documentation/audit commit).
+- **Last completed full CI before this checkpoint:** run #108 / `41953241351`, SHA `442ef9eb0623a610378433705d4baf5663e6ca2b`, 4/4 jobs SUCCESS. The run covers Python 3.12 compile/unit, Product Auto E2E, Work 32 tooling and immutable product artifact. The subsequent journal commit triggered run #109 / `42118931381`, which was IN PROGRESS at audit time; no PASS is assigned to it yet.
+- **Latest detailed test counts with exact recorded evidence:** run #106 / `41953015065`, SHA `4d95b237a46986cf13bf7e0992a582f59b40817a`: Unit 189, Product Auto E2E 58, tooling 20, immutable artifact E2E 1; 4/4 jobs SUCCESS.
+- **Branch governance:** main HEAD `d7266eb9bfedfc534fc87d56548e47841bb583b9`; v2 is 184 ahead / 35 behind, DIVERGED, merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`, 74 changed files. PR #40 remains an older OPEN / DRAFT pilot PR with no reviews; it does not represent the v2 implementation.
+- **Disposition:** retain v2 as the canonical build/CI branch. Do not merge v2 directly, rebase it, or merge PR #40. Main integration requires a new branch from current main, an explicitly selected/reviewed Work 32-only patch set, independent Ka review, and full exact-SHA CI on the integration branch.
+- **Outstanding boundaries:** Ka's final independent review of the latest adapter lifecycle/cleanup implementation; shared Browser Adapter singleton concurrency contract; PC Windows source provenance/live E2E; Dashboard→Core integration; CD/staging/deployment and release.
+- Historical content above remains preserved as a dated record; this addendum is the current checkpoint, not a retroactive rewrite of earlier evidence.
+- **Status:** Work 32 ACTIVE — NOT RELEASED.

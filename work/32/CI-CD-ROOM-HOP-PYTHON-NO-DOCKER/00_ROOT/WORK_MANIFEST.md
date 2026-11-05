@@ -86,3 +86,13 @@ No Docker requirement; no live-service or MAIN SOURCE changes; no auto-merge or 
 - All artifacts retained for 14 days.
 - Main HEAD `157e88e2cd821a0b53bdcabd6483956e6bc2074a`; Work branch 70 ahead / 32 behind; merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`. No merge/rebase/cherry-pick.
 - Core product Auto E2E + immutable artifact E2E: PASS. Dashboard→Core browser integration: BLOCKED / NOT RUN. CD/staging/production: BLOCKED / NOT RUN. Release: NOT RELEASED.
+
+ 
+## Current checkpoint — 2026-11-06 (canonical branch correction)
+
+- **Canonical GitHub implementation branch:** `work/32-ci-cd-python-ci-v2`.
+- The previous top-level branch value naming `work/32-ci-cd-room-hop-python-no-docker` referred to the original CI pilot branch and is superseded for current implementation work.
+- Current audit HEAD: `3dc65a4603823f58543f5216af2b0885df3a1627`; last completed full CI: run #108 / `41953241351`, SHA `442ef9eb0623a610378433705d4baf5663e6ca2b`, SUCCESS 4/4. Run #109 / `42118931381` validates the subsequent journal-only commit and is still in progress at checkpoint.
+- Main comparison: 184 ahead / 35 behind, merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`; 74 changed files. Do not merge directly.
+- PR #40 is the old pilot PR, OPEN / DRAFT, and has no review submissions. It is not the current v2 branch review.
+- Keep Work 32 ACTIVE — NOT RELEASED. Main integration requires independent review and a clean integration branch based on current main; PC runtime, Dashboard→Core and CD gates remain separate.

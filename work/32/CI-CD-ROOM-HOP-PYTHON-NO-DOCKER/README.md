@@ -59,3 +59,15 @@ The Work branch is currently diverged from main (68 ahead / 32 behind at the lat
 - Source archive SHA-256: `76d77939c43b33727a534cbccd06e4240eb106458659b9186f9fb125ca59f0ae`.
 - Artifact ID `13271449355`; uploaded ZIP digest `9a688cc80b97e428a2d1b9c39a3c4bc97aa854e7b0715b64e8a7d39aa98c6062`.
 - Retention: 14 days. Artifact is a release candidate, not deployed.
+
+
+## Current checkpoint — 2026-11-06 (supersedes earlier status snapshots)
+
+- Canonical implementation branch: `work/32-ci-cd-python-ci-v2`.
+- Branch HEAD at checkpoint: `3dc65a4603823f58543f5216af2b0885df3a1627` (W32-LOG-78 audit commit).
+- Latest completed full branch-head CI at this checkpoint: run #108 / `41953241351`, exact SHA `442ef9eb0623a610378433705d4baf5663e6ca2b`, SUCCESS 4/4 jobs. Run #109 / `42118931381` for the W32-LOG-78 documentation commit is IN PROGRESS; do not count it as PASS until it completes on its exact SHA.
+- Main HEAD: `d7266eb9bfedfc534fc87d56548e47841bb583b9`; branch comparison: DIVERGED, 184 ahead / 35 behind, merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`, 74 changed files.
+- Earlier snapshot (68 ahead / 32 behind; 157 unit / 39 E2E) is historical and must not be used as current status.
+- PR #40 is an earlier pilot PR from `work/32-ci-cd-room-hop-python-no-docker`; it remains OPEN / DRAFT with no submitted review. It is not the current v2 implementation PR.
+- Integration decision: no direct merge to main, no rebase/force-push and no merge of PR #40. Prepare a separately reviewed integration branch from current main and transplant only the approved Work 32 change set; run exact-SHA CI and open a fresh PR after independent review.
+- Work 32 remains ACTIVE — NOT RELEASED. PC Windows runtime provenance, Dashboard→Core E2E, CD/staging and release remain separate unresolved gates.
