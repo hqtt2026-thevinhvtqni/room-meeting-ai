@@ -1168,3 +1168,12 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - Unit 189 passed; tooling 20 passed; product artifact E2E 1 passed.
 - Direct cancellation test verifies both async context exits. OS process termination and PC live runtime remain unverified.
 - Ka review requested. P2 Browser Adapter singleton concurrency remains deferred. Work32 ACTIVE — NOT RELEASED.
+
+
+### W32-LOG-20261105-76 — Real stdio child process cleanup PASS
+- Exact source SHA 1b3c3b1892aabcb8bbb6eb78efb314f7c5357c94; GitHub Actions run #102 / 41952585714 SUCCESS, 4/4 jobs.
+- Product Auto E2E 58 passed. Real Browser Adapter stdio transcript roundtrip PASS. Real timeout cleanup test PASS: actual MCP child process started, paste call delayed before append, timeout fired, captured process handle showed returncode set after async context teardown; disposable transcript had no artifact marker.
+- Other CI: Unit 189 passed; tooling 20 passed; immutable product artifact E2E 1 passed; dependencies clean.
+- Evidence proves actual child termination on timeout in Linux CI for this tested path. Windows PC behavior and PID 20468 provenance remain unverified.
+- Ka re-review requested on final source and real-process cleanup evidence. P2 global Browser Adapter singleton concurrency remains deferred.
+- No PC process/service action, no :8020, no real meeting mutation, no main merge/deploy/release. Work32 ACTIVE — NOT RELEASED.
