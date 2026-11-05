@@ -7,7 +7,7 @@ import requests
 
 
 REQUIRED_ENV = (
-    "ROOMHOP_MCP_URL",
+    "ROOMHOP_TEST_MEETINGS_DIR",
     "ROOMHOP_TEST_MODE",
     "ROOMHOP_TEST_MEETING_ID",
     "ROOMHOP_TEST_IDENTITY_ID",
@@ -55,5 +55,6 @@ def test_browser_workflow_handoff_and_readback():
     submission = data["roomhop_submission"]
     assert submission["status"] == "pass", submission
     assert submission["read_back"] is True
+    assert submission["transport"] == "stdio"
     assert submission["meeting_id"] == os.environ["ROOMHOP_TEST_MEETING_ID"]
     assert submission["identity_id"] == os.environ["ROOMHOP_TEST_IDENTITY_ID"]
