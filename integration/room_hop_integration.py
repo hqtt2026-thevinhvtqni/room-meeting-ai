@@ -33,7 +33,6 @@ Hard boundary (do not cross without a new Gate):
 
 from __future__ import annotations
 
-import asyncio
 import json
 import sys
 from contextlib import asynccontextmanager
@@ -140,14 +139,8 @@ class RoomHopIntegration:
                     yield mcp_session
         except IntegrationError:
             raise
-        except asyncio.CancelledError:
-            # Preserve cancellation so outer timeouts can unwind this context
-            # and close the stdio client/subprocess instead of masking timeout.
-            raise
         except BaseExceptionGroup as eg:
             leaf = self._first_leaf(eg)
-            if isinstance(leaf, asyncio.CancelledError):
-                raise leaf from None
             if isinstance(leaf, IntegrationError):
                 raise leaf from None
             raise IntegrationError(
