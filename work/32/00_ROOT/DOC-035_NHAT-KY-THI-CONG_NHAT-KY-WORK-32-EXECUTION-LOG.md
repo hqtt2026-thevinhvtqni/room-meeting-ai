@@ -1177,3 +1177,13 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - Evidence proves actual child termination on timeout in Linux CI for this tested path. Windows PC behavior and PID 20468 provenance remain unverified.
 - Ka re-review requested on final source and real-process cleanup evidence. P2 global Browser Adapter singleton concurrency remains deferred.
 - No PC process/service action, no :8020, no real meeting mutation, no main merge/deploy/release. Work32 ACTIVE — NOT RELEASED.
+
+
+### W32-LOG-20261105-77 — Minimal child environment và branch-head CI PASS
+- Adapter child env chỉ truyền ROOM_HOP_MEETINGS_DIR và PYTHONPATH; MCP SDK tự thêm safe default environment. Không chuyển toàn bộ environment của Browser Adapter sang child.
+- Contract test đặt một private test variable và xác nhận biến này không được forward; hai giá trị bắt buộc được kiểm tra chính xác.
+- Exact branch source SHA 4d95b237a46986cf13bf7e0992a582f59b40817a; GitHub Actions run #106 / 41953015065 SUCCESS, 4/4 jobs.
+- Product Auto E2E 58 passed, gồm real stdio transcript roundtrip và real child timeout termination; Unit 189, tooling 20, artifact E2E 1 passed.
+- Đây là bằng chứng Linux CI. Windows PC runtime và PID 20468 provenance vẫn chưa xác minh. Ka re-review được yêu cầu. P2 global Adapter singleton concurrency DEFERRED.
+- Reconciliation correction: append-only ID collisions tồn tại ở W32-LOG-66, 67 và 68 giữa GitHub và Sandbox; DOC-068 Addendum G cũng có hai bản khác tác giả. Không ghi đè/đổi lịch sử; các entry mới dùng ID duy nhất từ 71 trở đi. Cần giữ cả hai nguồn khi hợp nhất.
+- Không PC action, không :8020, không main merge/deploy/release. Work32 ACTIVE — NOT RELEASED.
