@@ -529,3 +529,10 @@ Status: cancellation propagation and deterministic unwind test committed; CI run
 - Python 3.12 unit 189 passed; tooling 20 passed; immutable product artifact E2E 1 passed; dependency check clean.
 - This establishes child-process termination behavior in the Linux CI environment for the tested path. Windows PC runtime behavior and PID 20468 provenance remain unverified; no PC process was touched.
 - Ka re-review requested for the complete implementation and new real-process test. P2 global Browser Adapter singleton concurrency remains deferred.
+
+
+## Addendum O — Minimal child environment and branch-head CI PASS (2026-11-05)
+- Browser Adapter now passes only ROOM_HOP_MEETINGS_DIR and PYTHONPATH to the MCP child; the MCP SDK supplies its safe default environment. The Browser Adapter's full environment is not forwarded.
+- Contract test injects a private test variable and confirms it is absent from child config while the two required values are exact.
+- CI run #106 / 41953015065 validated SHA 4d95b237a46986cf13bf7e0992a582f59b40817a; all four jobs SUCCESS. Product Auto E2E 58 passed, including real stdio transcript roundtrip and real child timeout termination; Unit 189, tooling 20 and artifact E2E 1 passed.
+- This is Linux CI evidence. Windows PC runtime and PID 20468 provenance remain unverified. Ka re-review requested. P2 global Adapter singleton concurrency remains deferred.
