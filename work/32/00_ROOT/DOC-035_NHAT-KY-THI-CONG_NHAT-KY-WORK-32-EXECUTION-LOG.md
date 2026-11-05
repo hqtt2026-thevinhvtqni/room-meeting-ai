@@ -1187,3 +1187,52 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - Đây là bằng chứng Linux CI. Windows PC runtime và PID 20468 provenance vẫn chưa xác minh. Ka re-review được yêu cầu. P2 global Adapter singleton concurrency DEFERRED.
 - Reconciliation correction: append-only ID collisions tồn tại ở W32-LOG-66, 67 và 68 giữa GitHub và Sandbox; DOC-068 Addendum G cũng có hai bản khác tác giả. Không ghi đè/đổi lịch sử; các entry mới dùng ID duy nhất từ 71 trở đi. Cần giữ cả hai nguồn khi hợp nhất.
 - Không PC action, không :8020, không main merge/deploy/release. Work32 ACTIVE — NOT RELEASED.
+
+
+
+### W32-LOG-20261106-78 — Xu kiểm tra GitHub, CI và đối soát nhánh Work 32
+
+- **Name:** Xu (AI-01) — Coordinator / Lead Architect.
+- **Date:** 2026-11-06 (Asia/Ho_Chi_Minh; exact clock time not captured).
+- **Authority:** User instruction “ok tiếp” following the request to continue the GitHub audit and prepare safe branch reconciliation.
+- **Scope:** Read-only audit of GitHub repository, canonical Work 32 branch, CI run, pilot PR and branch divergence. No source-code, workflow, branch-ref or PR mutation in this audit.
+
+**READ — exact GitHub evidence**
+- Repository: `hqtt2026-thevinhvtqni/room-meeting-ai`.
+- Canonical implementation branch observed: `work/32-ci-cd-python-ci-v2`.
+- Branch HEAD at audit: `442ef9eb0623a610378433705d4baf5663e6ca2b`.
+- Latest branch-head GitHub Actions run observed: #108 / ID `41953241351`, conclusion SUCCESS, 4/4 jobs SUCCESS: Python 3.12 compile/unit; Product Auto E2E; Work 32 tooling; immutable product artifact.
+- Run #108 URL: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/41953241351.
+- Previous exact code/test evidence W32-LOG-77: run #106 / ID `41953015065`, SHA `4d95b237a46986cf13bf7e0992a582f59b40817a`, 4/4 SUCCESS; Unit 189, Product Auto E2E 58, tooling 20, artifact E2E 1. The run #108 job result is confirmed, but test counts are not re-attributed to #108 without reading its retained JUnit artifacts.
+- Main HEAD observed: `d7266eb9bfedfc534fc87d56548e47841bb583b9`. Compare `main...work/32-ci-cd-python-ci-v2`: DIVERGED, branch 184 commits ahead / 35 behind, merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`, 74 changed files (53 Work 32 records and 21 workflow/runtime/test files in the returned diff).
+- Pilot PR #40 remains OPEN / DRAFT, head `work/32-ci-cd-room-hop-python-no-docker` at `d93402a4c0c6a6875e73c0240f168fb4be73cfb4`, base main. No submitted reviews and no inline review threads were returned. PR #40's scope is the earlier CI pilot and its description still reports G3/G5 blocked by design.
+- Comparison of v2 against the pilot branch is also DIVERGED; do not treat PR #40 as a current PR for the v2 implementation.
+
+**TRACE — governance/document drift**
+- The Work 32 README identifies v2 as canonical but its status/evidence snapshot is still dated 2026-11-04 and cites older counts/branch divergence (68 ahead / 32 behind).
+- The Work Manifest still names the pilot branch in its top-level GitHub branch field, despite its later snapshot naming v2 canonical.
+- DOC-068 evidence consolidation records branch SHA `c601c18712ed1d58990314d517409478f41ee11b` as its latest confirmed SHA; this is behind the observed current branch HEAD.
+- These are stale-documentation findings, not evidence that the current CI run failed. Historical entries must remain preserved; updates should be append-only/current-state addenda.
+
+**DECISION — safe integration**
+- Keep `work/32-ci-cd-python-ci-v2` as the canonical implementation branch for continued Work 32 build and CI.
+- Do NOT merge v2 directly to main, do NOT rebase/force-push, and do NOT merge PR #40. The 184/35 divergence and 74-file diff require an explicit integration plan and independent review.
+- Recommended integration method for later approval: create a new integration branch from the then-current main; select and cherry-pick only reviewed Work 32 implementation/documentation commits (or reconstruct the minimal reviewed patch set); run full CI on the resulting exact SHA; open a fresh non-draft PR to main. Preserve the original v2 and pilot branches as evidence until reconciliation is accepted.
+- Before integration: obtain Ka's independent ACCEPT / ACCEPT WITH CORRECTIONS / REJECT for the final Browser Adapter stdio lifecycle and cleanup changes; close the deferred global Browser Adapter singleton concurrency contract; update the stale README/Manifest/DOC-068 snapshots; verify PC runtime source provenance and Windows live E2E separately.
+- Dashboard→Core integration, CD/staging/deployment and release remain distinct gates. Green branch CI does not close them.
+
+**SAFETY / non-actions**
+- Read-only GitHub inspection only. No file, branch, PR, secret, workflow, deployment or main mutation was performed in this audit.
+- No PC process/service action, no call to :8020, no live endpoint call, no meeting/transcript mutation.
+- No merge, rebase, cherry-pick, deploy, release or strict coverage enablement.
+
+**HANDOFF**
+- Xu continues branch-governance and documentation reconciliation on the authorized Work 32 branch, then requests/records Ka's independent review. Any integration branch or PR to main remains a separate gated action and is not authorized by this audit.
+
+**STATUS**
+- Branch-head CI: PASS (run #108, 4/4 jobs).
+- Work 32: ACTIVE — NOT RELEASED.
+- Main integration: BLOCKED pending independent review and safe branch reconciliation.
+- PC runtime provenance / Windows live E2E: BLOCKED / NOT VERIFIED.
+- Dashboard→Core E2E: BLOCKED / NOT RUN.
+- CD / deployment: NOT RUN.
