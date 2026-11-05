@@ -90,6 +90,9 @@ class FakeIntegration:
 def _configure_test_target(monkeypatch, tmp_path):
     meetings_dir = tmp_path / "disposable-meetings"
     meetings_dir.mkdir()
+    (meetings_dir / ".roomhop-disposable-test-store").write_text(
+        "ROOM-HOP-WORK32-DISPOSABLE-TEST-STORE", encoding="utf-8"
+    )
     monkeypatch.setenv("ROOMHOP_TEST_MODE", "1")
     monkeypatch.setenv("ROOMHOP_TEST_MEETING_ID", "MEETING-W32-DISPOSABLE")
     monkeypatch.setenv("ROOMHOP_TEST_IDENTITY_ID", "identity-w32-e2e")
@@ -137,6 +140,16 @@ def test_submission_rejects_nonexistent_disposable_store(monkeypatch, tmp_path):
     result = browser_adapter.submit_to_roomhop(RESULT)
     assert result["status"] == "blocked"
     assert "does not exist" in result["reason"]
+
+
+def test_submission_rejects_store_without_disposable_sentinel(monkeypatch, tmp_path):
+    meetings_dir = _configure_test_target(monkeypatch, tmp_path)
+    (meetings_dir / ".roomhop-disposable-test-store").unlink()
+    instances = _install_fake(monkeypatch)
+    result = browser_adapter.submit_to_roomhop(RESULT)
+    assert result["status"] == "blocked"
+    assert "marker is missing or invalid" in result["reason"]
+    assert instances == []
 
 
 def test_submission_rejects_extra_or_missing_public_tools(monkeypatch, tmp_path):
