@@ -236,6 +236,10 @@ def test_stdio_session_preserves_cancellation_and_unwinds(monkeypatch):
             lifecycle["stdio_closed"] = True
 
     class FakeClientSession:
+        def __init__(self, read, write):
+            self.read = read
+            self.write = write
+
         async def __aenter__(self):
             return self
 
