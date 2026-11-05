@@ -434,3 +434,17 @@ Prefer evaluating **Option A first** because the stdio MCP boundary and its subp
 - **Date-Time:** 2026-11-05 (exact time not captured)
 - **Action:** Inspected RoomHopIntegration configuration/session lifecycle and existing stdio E2E to refine Xu's transport decision.
 - **Result:** Option A is grounded in existing code but requires Xu decision on async lifecycle, process ownership, isolation and exact tool inventory.
+
+
+---
+
+## Addendum G — Xu transport decision (2026-11-05)
+
+- Xu selected Option A: reuse RoomHopIntegration over canonical stdio; no HTTP MCP listener.
+- Browser Adapter source removes its independent HTTP JSON-RPC/SSE client and ROOMHOP_MCP_URL. Each workflow owns one stdio session through RoomHopIntegration; exact four-tool equality, exact active test meeting, explicit identity and transcript readback are required.
+- Isolation requires ROOMHOP_TEST_MODE=1, explicit meeting and identity, absolute ROOMHOP_TEST_MEETINGS_DIR, an existing directory and exact .roomhop-disposable-test-store sentinel. Child ROOM_HOP_MEETINGS_DIR, CWD and PYTHONPATH are explicitly pinned.
+- Contract tests now cover stdio lifecycle, store sentinel, explicit target, exact tools, missing/inactive meeting and readback. PC E2E requires the disposable store.
+- CI validation is pending for the current implementation. No PASS claim until exact-SHA checks complete.
+- PID 20468 remains untouched; its Work32 provenance is still unverified. No PC runtime action, MCP call, transcript mutation, :8020 use, merge, deploy or release.
+- Next: inspect exact-SHA CI, repair failures, then submit implementation to Ka for independent review. PC runtime remains gated by Ka review and source provenance.
+- Work32 ACTIVE — NOT RELEASED.
