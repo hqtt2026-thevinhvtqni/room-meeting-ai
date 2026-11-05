@@ -1160,3 +1160,11 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - CI run #96 / 41951719158 cho test đã sửa đang queued tại thời điểm ghi nhật ký. Chưa claim PASS.
 - Giới hạn: chứng minh context cleanup có kiểm soát, chưa chứng minh OS child PID termination. Real stdio E2E vẫn PASS tại run #86 / c291bca9. P2 Browser Adapter singleton concurrency DEFERRED.
 - DOC-068 Addendum L commit 35648199. Không PC action, không :8020, không main merge/deploy/release. Work32 ACTIVE — NOT RELEASED.
+
+
+### W32-LOG-20261105-75 — CI confirmation
+- Source SHA 9d799e5bf6853ee0e7d3e3ecce6c9d19ccae9e0a; GitHub Actions run #99 / 41952001890 SUCCESS, 4/4 jobs.
+- E2E 57 passed, including cancellation cleanup and real Browser Adapter stdio transcript roundtrip.
+- Unit 189 passed; tooling 20 passed; product artifact E2E 1 passed.
+- Direct cancellation test verifies both async context exits. OS process termination and PC live runtime remain unverified.
+- Ka review requested. P2 Browser Adapter singleton concurrency remains deferred. Work32 ACTIVE — NOT RELEASED.
