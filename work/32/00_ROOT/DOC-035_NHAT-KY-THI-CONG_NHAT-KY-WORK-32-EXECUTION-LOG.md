@@ -991,3 +991,43 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **Date-Time:** 2026-11-05 (exact time not captured)
 - **Action:** Added DOC-068 Addendum D in Sandbox and GitHub, then recorded this continuation entry.
 - **Evidence boundary:** GitHub readback confirms Addendum D. Sandbox append acknowledged; byte-for-byte full-file parity was not checked because sandbox_read remains isolated.
+
+
+### W32-LOG-20261105-64 — Ka phát hiện transport mismatch và chuyển Xu quyết định kiến trúc
+
+- **Document Number:** W32-LOG-20261105-64
+- **Priority Order:** P0 — Browser Adapter ↔ MCP transport compatibility
+- **Name:** Ka
+- **Title:** CSA / Backend & Repository Custodian
+- **Date-Time:** 2026-11-05 (exact time not captured)
+- **Authority:** Vinh “OK tiếp”; Work32 original design brief; W32-ADR-002; DOC-068 Addendum D.
+- **Source audit:** Browser Adapter blob `8cd73faca62057cbfbbd0ac03c07254c02e8df6c`; MCP stdio entrypoint `43adaa746f8e51a6ecce762a7b01694d0411d105`; MCP server factory `b740f72b95ea3a6e0a7e1d19a3ef3275b9899815`; Core REST adapter `f17d752f6badf2b600f78906e63982d18f70e859`; CI stdio E2E `b78d69e3a6f35c7c573c9fd699a9d3993b883c74`; Browser Adapter contract tests `4151ea6eda790716b238806a35f11ba8c76b8a11`.
+
+**Finding**
+- Browser Adapter client sends HTTP JSON-RPC POST to `ROOMHOP_MCP_URL` and expects MCP HTTP/SSE session behavior.
+- Reviewed Work32 MCP entrypoint runs `mcp.server.stdio.stdio_server()`; CI integration verifies the stdio session and exact four ADR-002 tools.
+- `room_hop_mcp/adapter/http_server.py` is the Core REST adapter, not an MCP Streamable HTTP endpoint.
+- Consequently, launching the Browser Adapter as a separate process on a new port is insufficient: the Work32 MCP server-side transport required by its client is not present in the reviewed entrypoint. Do not point the client at Core REST, legacy :8020 or the Browser Adapter's own /mcp route.
+
+**Decision requested from Xu**
+- Option A: preserve stdio as canonical and adapt Browser Adapter through the existing stdio MCP client/session boundary; Xu must define subprocess/session lifecycle, shared meetings directory, concurrency and cleanup.
+- Option B: approve a dedicated Work32 Streamable HTTP MCP entrypoint reusing `create_server(MeetingService)`, with loopback binding, endpoint, auth/access controls, test-only data directory, session lifecycle and transport-parity tests.
+- Direct Core REST shortcut, expanded MCP tool inventory, legacy :8020 reuse, or Core lifecycle/business changes are not accepted.
+
+**Safety / scope**
+- Original Work32 design brief explicitly excludes PC changes and live-service changes. No PC process was created or changed.
+- No request to :8020, :8787 or /mcp; no POST; no transcript/meeting mutation; no environment/source/workflow change; no merge/deploy/release.
+- Browser Adapter live integration remains BLOCKED until Xu selects the transport and the resulting contract/tests are reviewed.
+
+**BIÊN BẢN**
+- **Name:** Ka
+- **Title:** CSA / Backend & Repository Custodian
+- **Date-Time:** 2026-11-05 (exact time not captured)
+- **Disposition:** Transport mismatch submitted to Xu for architecture decision; no implementation or runtime mutation.
+
+**NHẬT KÝ**
+- **Name:** Ka
+- **Title:** CSA / Backend & Repository Custodian
+- **Date-Time:** 2026-11-05 (exact time not captured)
+- **Action:** Completed source-level transport audit and recorded decision options in DOC-068 Addendum E and this journal.
+- **Status:** Work 32 ACTIVE — NOT RELEASED.
