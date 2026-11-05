@@ -8,4 +8,7 @@ groq>=0.11.0
 requests>=2.31
 fastapi>=0.110
 uvicorn>=0.29
-mcp>=1.0
+# G4 finding 2 (run #4): code targets the mcp 1.x Server API (list_tools/call_tool
+# decorators). mcp 2.x removed them, breaking 10 unit tests. Pin to the 1.x line
+# (latest 1.x: 1.14.0). Approved by Vinh (G7) on 2026-11-05: "triển khai tiếp w32".
+mcp>=1.14,<2.0
