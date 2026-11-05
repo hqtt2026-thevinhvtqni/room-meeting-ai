@@ -2,7 +2,7 @@
 
 Date: 2026-10-19 (Asia/Ho_Chi_Minh). Executor: Xu (AI-01), coordinator.
 Updated: 2026-11-04 (Vibe agent; Phase B runs #1–#4, repair loop, handoff proposal).
-Updated: 2026-11-05 (Vibe agent; G7 approval, mcp pin, run #5–#7 record).
+Updated: 2026-11-05 (Vibe agent; G7 approval, mcp pin, run #5–#7 verdicts + product-drift finding).
 
 ## Phase A — Survey evidence
 - Reviewed available ROOM-HOP architecture context and repository metadata read-only.
@@ -30,30 +30,31 @@ Workflow: `.github/workflows/work32-ci-pilot.yml` — Work-branch-only; permissi
 | [#1](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/41786211574) | 39e6191 | PASS | FAIL (scope too broad) | artifacts only | Repair 1/3: G2 scoped to unit tests only |
 | [#2](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/41786558557) | d54626e | PASS | FAIL | FAIL (issue lookup) | Repair 2/3: deterministic evidence lookup |
 | [#3](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/41786658982) | fd93d3e | PASS | FAIL (exit 2, collection errors) | PASS → issue #39 | G4 finding 1: undeclared deps |
-| [#4](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/41787560785) | 750c08d | PASS | FAIL (exit 1; 10 failed, rest of suite green) | PASS → issue #39 | G4 finding 2: mcp 2.x API break |
-| #5, #6 | be6e7c3 / 2374ce5 (docs-only pushes) | PASS | FAIL (same 10 mcp tests; 178 passed) | PASS → issue #39 | No code change; expected repeat while BLOCKED |
+| [#4](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/41787560785) | 750c08d | PASS | FAIL (exit 1; 10 failed) | PASS → issue #39 | G4 finding 2: mcp 2.x API break |
+| #5, #6 | be6e7c3 / 2374ce5 (docs-only pushes) | PASS | FAIL (same 10 mcp tests; 178 passed) | PASS → issue #39 | No code change; expected repeat |
+| [#7](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/41941796297) | 95495b9 | PASS | **FAIL (exit 1; 3 failed, 185 passed)** | PASS → issue #39 | mcp pin effective (10→3); remaining = product-drift finding (below) |
 
-### G4 finding 1 (run #3, fixed): undeclared dependencies
-- Code imports `requests`, `mcp`, `fastapi`, `uvicorn` — none declared.
-- Fix: added to requirements.txt (repair 3/3).
+### G4 finding 1 (fixed 2026-11-04): undeclared dependencies
+- Code imports `requests`, `mcp`, `fastapi`, `uvicorn` — none declared. Fixed via requirements.txt.
 
-### G4 finding 2 (runs #4–#6, fixed 2026-11-05): mcp SDK major-version incompatibility
-- `mcp>=1.0` resolved to 2.x, whose `Server` API removed `@server.list_tools()` used by `room_hop_mcp/adapter/server.py` → exactly 10 unit tests FAIL; 178 others PASS.
-- Resolution researched on PyPI: latest mcp = 2.3.0; last 1.x release = 1.14.0.
-- Fix: pin `mcp>=1.14,<2.0` in requirements.txt.
+### G4 finding 2 (fixed 2026-11-05): mcp SDK major-version incompatibility
+- `mcp>=1.0` resolved to 2.x (removed `@server.list_tools()`); pinned to `mcp>=1.14,<2.0` after G7 approval.
+- Effect: 10 failing tests → 3 failing tests (185 passed).
 
-### G7 decision record (2026-11-05)
-- 2026-11-04: repair loop exhausted 3/3 → BLOCKED; proposal `02_EXTENSION/PHASE_B_HANDOFF_XU.md` recorded for Xu (per Vinh: no chat-side implementation).
-- 2026-11-05: Vinh instructed "triển khai tiếp w32" → recorded as G7 approval to apply the proposed mcp pin from this session and verify via CI.
-- Run #7 (this commit): verdict recorded below after execution.
+### Product-drift finding (run #7 — G5 scope, OPEN — requires Coder under approval, NOT a CI defect)
+1. `tests/test_message_v1.py::test_t8_existing_mcp_tools_no_regression`: `room_hop_mcp/adapter/server.py` registers only 4 tools (`add_paste_to_meeting`, `get_meeting`, `get_transcript`, `list_meetings`); the frozen contract ("6 tools KHÔNG đổi, KHÔNG thêm add_message") requires also `join_meeting` and `start_meeting`.
+2. `tests/test_f4_resource_limits.py` (2 tests): `add_paste` inputSchema is `{'type': 'string'}` without `maxLength`; F4 policy contract requires `maxLength == 1048576`.
+- These are product/test-contract mismatches in the source under test — outside the CI pilot's repair scope. Candidate paths: (a) Coder restores the 2 missing tool registrations + `maxLength` in server.py after Vinh's approval; or (b) Reviewer/QE confirms whether main head `d7266eb…` already carries the fix (branch divergence from base `cc3100c…` is a plausible cause and must be checked first).
 
-### Run #7 verdict
-- Pending at commit time; update with conclusion + URL after completion.
+### G7 decision record
+- 2026-11-05: Vinh instructed "triển khai tiếp w32" → recorded as approval to apply the proposed mcp pin from this session and verify via CI (executed, run #7).
 
 ### Evidence channels
 - Canonical tracking issue: [#39](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/issues/39) — auto-posted per-run summary + log tail.
-- Issue #38 closed as duplicate.
-- Artifacts retained 14 days per run; CI job-log API download requires repo admin.
+- Issue #38 closed as duplicate. Artifacts retained 14 days per run; CI job-log API download requires repo admin.
 
-### Gate status after run #7
-- G0, G1, G6: PASS with evidence. G2: recorded after run #7. G3/G5: BLOCKED by design (Phase C). G7: PASS (Vinh, 2026-11-05).
+### Gate status (after run #7)
+- G0, G1, G6: PASS with evidence. G7: PASS (Vinh, 2026-11-05).
+- G2: FAIL — remaining 3 failures are product-drift (see finding above); CI-side work complete.
+- G3/G5: BLOCKED by design (Phase C).
+- Next: Vinh decides product-repair path (Coder scope) or main-head reconciliation first.
