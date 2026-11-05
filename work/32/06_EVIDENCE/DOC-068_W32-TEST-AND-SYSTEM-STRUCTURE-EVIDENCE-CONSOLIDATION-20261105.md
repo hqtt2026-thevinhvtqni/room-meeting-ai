@@ -513,3 +513,10 @@ Status: cancellation propagation and deterministic unwind test committed; CI run
 - Xu restored integration/room_hop_integration.py to its established blob dd0f544178f84e7b45cf9f7654af608e7ad2944c. No change to shared Integration error semantics is retained.
 - The test now models direct task cancellation and asserts that the stdio and ClientSession context exits run before wait_for reports timeout.
 - Run #96 / 41951719158 for the corrected test was queued; verification pending. This is context cleanup evidence, not OS process termination proof.
+
+
+## Addendum M — CI confirmation (2026-11-05)
+- Run #99 / 41952001890 validated source SHA 9d799e5bf6853ee0e7d3e3ecce6c9d19ccae9e0a; all four jobs passed.
+- E2E 57 passed, including direct cancellation cleanup and real Browser Adapter stdio transcript roundtrip. Unit 189, tooling 20, product artifact E2E 1 passed.
+- Direct cancellation test verifies async context exits. OS process termination and PC live runtime remain unverified.
+- Ka review requested. P2 Browser Adapter singleton concurrency remains deferred.
