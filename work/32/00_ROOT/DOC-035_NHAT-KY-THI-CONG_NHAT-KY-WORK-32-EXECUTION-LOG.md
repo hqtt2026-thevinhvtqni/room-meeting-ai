@@ -946,3 +946,48 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **Action:** Read Xu LOG-60/61 evidence, inspected the corrected PowerShell diagnostic source and compared the evidence boundary with the exact Work32 adapter source.
 - **Result:** Recorded WORK09 launch-context signal, CWD/import/blob gap, and isolated-runtime recommendation. No PC execution, MCP request, transcript mutation, source change, merge, deployment or release.
 - **Overall:** Work 32 ACTIVE — NOT RELEASED.
+
+
+### W32-LOG-20261105-63 — Ka cập nhật DOC-068 và khóa cổng runtime Work32 cô lập
+
+- **Document Number:** W32-LOG-20261105-63
+- **Priority Order:** P0 — PC runtime provenance / Browser Adapter live E2E gate
+- **Name:** Ka
+- **Title:** CSA / Backend & Repository Custodian
+- **Date-Time:** 2026-11-05 (exact time not captured)
+- **Authority:** Owner instruction “OK tiếp”; Xu W32-LOG-20261105-61; Ka W32-LOG-20261105-62.
+- **Previous evidence:** PC output W32-LOG-60; corrected diagnostic source blob `fdd56aca7e1fda2a191f505f4f2b564eb44dfee5`; Work32 adapter blob `8cd73faca62057cbfbbd0ac03c07254c02e8df6c`.
+
+**Actions completed**
+1. Re-read the current Work32 journal and Sandbox Work 32 inventory. Reviewed the existing DOC-068 consolidation and the exact Work32 Browser Adapter source.
+2. Independently confirmed the LOG-62 evidence boundary: PID 20468 GET health/OpenAPI PASS only; parent launch context points to WORK09; CWD/import origin/Git blob comparison unavailable. Existing PID 20468 is not accepted as a verified Work32 runtime.
+3. Appended **DOC-068 Addendum D** with the PC provenance assessment, explicit evidence limitations, safe isolated-runtime next gate and BIÊN BẢN/NHẬT KÝ.
+4. Wrote Addendum D to Sandbox path `06_EVIDENCE/DOC-068_W32-TEST-AND-SYSTEM-STRUCTURE-EVIDENCE-CONSOLIDATION-20261105.md` and GitHub branch path `work/32/06_EVIDENCE/DOC-068_W32-TEST-AND-SYSTEM-STRUCTURE-EVIDENCE-CONSOLIDATION-20261105.md`.
+5. GitHub readback confirms Addendum D exists. GitHub commit: `7fb596c245a973fed1f16179d296ec82178681e7`; DOC-068 blob: `34bcdfb54de4c2f6f34efb6e91fbdfe85aed673b`.
+
+**Next implementation gate**
+- Xu to prepare the separate isolated Work32 Browser Adapter runtime from the clean Work32 clone/authorized branch, using a separately selected port and explicit test-only configuration. This is a recommendation recorded for Xu's orchestration, not a claim that the runtime has been created.
+- Before live E2E, Ka must verify process executable, CWD, launch command, exact adapter Git blob, MCP endpoint/transport compatibility, exact ADR-002 four-tool inventory, and a dedicated disposable meeting/identity.
+- Keep PID 20468 and legacy PID 15048 untouched. No `:8020`, `/mcp`, POST, transcript read/write, process restart/termination, environment mutation, code change, merge, deploy or release was performed.
+- Do not repeat the previous one-shot PC diagnostic; its child-process import-resolution approach cannot prove the target process's in-memory module.
+
+**Status**
+- DOC-068 Addendum D: written to Sandbox and GitHub; GitHub readback PASS.
+- Existing PID 20468 HTTP GET checks: PASS for HTTP surface only.
+- Work32 runtime provenance: BLOCKED / NOT VERIFIED.
+- Isolated Work32 runtime: NOT CREATED / NOT TESTED.
+- Live MCP handshake/tool inventory/transcript readback: NOT RUN.
+- Work 32: ACTIVE — NOT RELEASED.
+
+**BIÊN BẢN**
+- **Name:** Ka
+- **Title:** CSA / Backend & Repository Custodian
+- **Date-Time:** 2026-11-05 (exact time not captured)
+- **Disposition:** Evidence consolidation updated. No runtime mutation or release decision.
+
+**NHẬT KÝ**
+- **Name:** Ka
+- **Title:** CSA / Backend & Repository Custodian
+- **Date-Time:** 2026-11-05 (exact time not captured)
+- **Action:** Added DOC-068 Addendum D in Sandbox and GitHub, then recorded this continuation entry.
+- **Evidence boundary:** GitHub readback confirms Addendum D. Sandbox append acknowledged; byte-for-byte full-file parity was not checked because sandbox_read remains isolated.
