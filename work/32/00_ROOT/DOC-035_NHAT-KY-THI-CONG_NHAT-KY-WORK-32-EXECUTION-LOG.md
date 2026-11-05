@@ -1074,3 +1074,18 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **Date-Time:** 2026-11-05 (exact time not captured)
 - **Action:** Reviewed existing stdio client/session implementation and CI test to refine transport recommendation.
 - **Status:** Work 32 ACTIVE — NOT RELEASED.
+
+
+### W32-LOG-20261105-66 — Xu quyết định transport và triển khai Option A
+
+- READ: DOC-068 Addendum E/F; W32-LOG-64/65; W32-ADR-002; integration.RoomHopIntegration, Browser Adapter, CI stdio E2E and contract tests.
+- DECISION: SELECT OPTION A. Keep Work32 Public V1 stdio-only and reuse RoomHopIntegration; no new HTTP MCP listener, no Core REST shortcut, no :8020.
+- BUILD: Browser Adapter no longer uses its independent requests-based JSON-RPC/SSE transport or ROOMHOP_MCP_URL. Each workflow opens one existing Integration stdio session; exact four-tool equality is checked before calls; explicit meeting must exist and be active; explicit identity is passed; transcript readback verifies the exact execution artifact.
+- LIFECYCLE: One subprocess/session per workflow. Existing Integration async context manager owns initialization and cleanup. Browser Adapter synchronous workflow invokes the async session locally; no global MCP session/process. Child CWD and PYTHONPATH are pinned to source repository root.
+- ISOLATION: Requires test mode, explicit meeting, identity, absolute test-store path, pre-existing directory and exact sentinel .roomhop-disposable-test-store. Child ROOM_HOP_MEETINGS_DIR is forcibly set to that store. No automatic directory creation, meeting provisioning or fallback.
+- TESTS: Contract tests expanded for store sentinel, missing store, exact tools, missing/inactive meeting, target/identity, transcript readback and session cleanup. PC E2E now requires explicit disposable store rather than ROOMHOP_MCP_URL.
+- CODE COMMITS: adapter integration ff7646b9; contract tests aac76204; PC E2E guard f211a81a; import-root pin 07acbedd; store sentinel dcb8915f; sentinel tests 07bcf0bb. Latest implementation SHA: 07bcf0bbf31a79a9b84592c4cc53cbb306a2825c. ADR-002 decision addendum commit 8a9bfc8a; DOC-068 Addendum G commit 57dd181f.
+- VERIFY: Push CI for implementation SHA was pending at last observation; later documentation commits also trigger CI. No PASS claim until exact final branch SHA completes required jobs.
+- SAFETY: PID 20468 untouched; no PC process/service start/stop/restart, no HTTP MCP, no /mcp, no transcript mutation, no :8020. PC source provenance remains BLOCKED / NOT VERIFIED.
+- HANDOFF: Xu checks exact-SHA CI and repairs failures, then sends implementation and evidence to Ka for independent review. PC runtime execution remains gated by Ka review and verified source provenance.
+- STATUS: Architecture DECISION; BUILD committed; VERIFY pending; live PC E2E NOT RUN; Work32 ACTIVE — NOT RELEASED.
