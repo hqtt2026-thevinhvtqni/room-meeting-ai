@@ -506,3 +506,10 @@ Status: Real Browser Adapter -> Work32 MCP stdio -> Core transcript CI E2E PASS 
 - P2 global Browser Adapter singleton concurrency remains deferred. No PC action, live endpoint call, :8020, main merge, deploy or release.
 
 Status: cancellation propagation and deterministic unwind test committed; CI run #92 pending; OS-level PC child termination NOT VERIFIED. Work32 ACTIVE — NOT RELEASED.
+
+
+## Addendum L — Cancellation test correction (2026-11-05)
+- Run #92 failed 1 of 57 E2E tests. The test injected a synthetic exception group containing cancellation during teardown, which masked the timeout signal.
+- Xu restored integration/room_hop_integration.py to its established blob dd0f544178f84e7b45cf9f7654af608e7ad2944c. No change to shared Integration error semantics is retained.
+- The test now models direct task cancellation and asserts that the stdio and ClientSession context exits run before wait_for reports timeout.
+- Run #96 / 41951719158 for the corrected test was queued; verification pending. This is context cleanup evidence, not OS process termination proof.
