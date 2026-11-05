@@ -1346,3 +1346,17 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **Next diagnostic required:** Chỉ đọc nội dung/hash của một vài file `desktop.ini` đại diện ở root, `refs`, `objects`; lấy ACL/owner và kiểm tra process/handle đang giữ file; xác minh D: có được Google Drive File Stream/backup/sync client quản lý hay không. Sau đó chọn phương án an toàn: tạo bản sao lưu đầy đủ, tách repo khỏi sync scope, rồi phục hồi Git metadata từ GitHub trên một clone sạch riêng; giữ working tree hiện tại ở chế độ forensic/read-only cho đến khi đối chiếu dữ liệu chưa commit.
 - **Handoff:** Vinh chạy diagnostic read-only tiếp theo trên PC; Xu tiếp tục kiểm tra GitHub branch/CI độc lập. Không cần Ka sửa code ở bước này.
 - **STATUS:** GitHub Work 32 branch CI #111/#112 PASS; local Git integrity BLOCKED; local↔GitHub synchronization NOT VERIFIED; Work 32 ACTIVE — NOT RELEASED.
+
+
+## 2026-11-06 — W32-LOG-20261106-82 — Xác nhận desktop.ini là metadata Google Drive File Stream
+
+- **Người ghi:** Xu / AI-01, Work coordinator.
+- **Nguồn:** PowerShell output do Vinh cung cấp trong phiên làm việc ngày 2026-11-06.
+- **READ — Nội dung:** Ba file `.git/desktop.ini`, `.git/refs/desktop.ini`, `.git/objects/00/desktop.ini` đều có Length=106, Attributes=`Hidden, System`; nội dung chính xác là `[.ShellClassInfo]` và `IconResource=C:\Program Files\Google\Drive File Stream\133.0.2.0\GoogleDriveFS.exe,27`.
+- **TRACE — Nguồn gốc:** Nội dung xác nhận đây là metadata biểu tượng thư mục do Google Drive File Stream tạo ra, không phải Git ref/object hợp lệ. Cùng loại file xuất hiện trong vùng nội bộ `.git` và trước đó `git fsck --full` báo `bad sha1 file` ở các đường dẫn `.git/objects/**/desktop.ini`; nguyên nhân gây lỗi Git metadata đã được xác định với độ tin cậy cao.
+- **READ — ACL:** Ba file hiển thị owner `ADMIN-PC\Admin`; Administrators có FullControl; Authenticated Users có Modify/Synchronize; Users có ReadAndExecute/Synchronize. Chưa có bằng chứng thiếu quyền ACL là nguyên nhân từ chối xóa trước đó.
+- **READ — Process check:** Lệnh `Get-Process` không trả tiến trình khớp GoogleDriveFS/GoogleDrive/DriveFS/OneDrive/Dropbox tại thời điểm kiểm tra. Đây chỉ là snapshot tiến trình; chưa chứng minh service, scheduled task hoặc sync provider đã dừng.
+- **Tooling issue:** PowerShell PSReadLine phát sinh `System.ArgumentOutOfRangeException` khi render/nhận dòng lệnh dài. Các lệnh đọc sau đó vẫn chạy và trả nội dung ba file; không xem lỗi render này là lỗi Git.
+- **DECISION:** Root cause đã xác định; vẫn HOLD thao tác xóa. Không xóa thủ công từng file khi chưa cách ly sync provider và chưa có backup. Không xóa/rebuild toàn bộ `.git`, không reset/clean/force-push.
+- **NEXT:** Cách ly repo khỏi Google Drive File Stream/sync scope trước; tạo bản sao lưu nguyên trạng repo và working tree. Sau đó tạo clone sạch độc lập từ GitHub ở thư mục không được đồng bộ; đối chiếu local changes và các file chưa commit trước khi quyết định phục hồi. Nếu cần dọn bản repo cũ, chỉ loại bỏ đúng các file đã xác nhận là `desktop.ini` metadata sau khi backup và ngăn sync provider tái tạo chúng; chạy `git fsck --full` và kiểm tra refs sau xử lý.
+- **STATUS:** Root cause desktop.ini = Google Drive File Stream metadata CONFIRMED; local Git recovery NOT STARTED; local↔GitHub sync NOT VERIFIED; GitHub Work 32 branch remains independent; Work 32 ACTIVE — NOT RELEASED.
