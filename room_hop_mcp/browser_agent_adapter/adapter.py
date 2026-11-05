@@ -1,17 +1,20 @@
 from __future__ import annotations
 
+import asyncio
 import json
 import os
+import sys
 import time
 import uuid
 from pathlib import Path
 from typing import Any
 
-import requests
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from playwright.sync_api import sync_playwright, Browser, Page
+
+from integration.room_hop_integration import RoomHopIntegration, RoomHopIntegrationConfig
 
 
 ROOT = Path(__file__).resolve().parent
@@ -196,237 +199,34 @@ class Adapter:
 adapter = Adapter()
 
 
-def _roomhop_endpoint() -> str:
-    endpoint = os.getenv("ROOMHOP_MCP_URL")
-    if not endpoint:
-        raise RuntimeError("ROOMHOP_MCP_URL not configured")
-    return endpoint.rstrip("/")
+def _contains_exact_marker(value: Any, marker: str) -> bool:
+    if isinstance(value, str):
+        return marker in value
+    if isinstance(value, dict):
+        return any(_contains_exact_marker(item, marker) for item in value.values())
+    if isinstance(value, list):
+        return any(_contains_exact_marker(item, marker) for item in value)
+    return False
 
 
-_ROOMHOP_SESSION_ID: str | None = None
-_ROOMHOP_PROTOCOL_VERSION: str | None = None
-
-
-def _parse_mcp_response(response: requests.Response) -> dict[str, Any]:
-    content_type = response.headers.get("content-type", "").lower()
-    raw = response.text
-
-    if not raw.strip():
-        raise RuntimeError(
-            "ROOM-HOP MCP empty response: "
-            f"status={response.status_code} content_type={content_type!r} "
-            f"headers={{k: v for k, v in response.headers.items() if k.lower() in ['content-type', 'mcp-session-id', 'mcp-protocol-version']}}"
+async def _submit_to_roomhop_stdio(
+    result: dict[str, Any],
+    meeting_id: str,
+    identity_id: str,
+    meetings_dir: Path,
+) -> dict[str, Any]:
+    """Use the canonical Work32 Public V1 stdio client for one isolated handoff."""
+    repo_root = Path(__file__).resolve().parents[2]
+    child_env = dict(os.environ)
+    # Force the MCP child onto the explicitly selected disposable test store.
+    child_env["ROOM_HOP_MEETINGS_DIR"] = str(meetings_dir)
+    integration = RoomHopIntegration(
+        RoomHopIntegrationConfig(
+            python_executable=sys.executable,
+            cwd=str(repo_root),
+            env=child_env,
         )
-
-    if "application/json" in content_type:
-        data = response.json()
-    elif "text/event-stream" in content_type:
-        data = None
-        for line in raw.splitlines():
-            if line.startswith("data:"):
-                event_data = line[5:].strip()
-                if not event_data:
-                    continue
-                try:
-                    candidate = json.loads(event_data)
-                except json.JSONDecodeError:
-                    continue
-                if isinstance(candidate, dict) and ("result" in candidate or "error" in candidate):
-                    data = candidate
-        if data is None:
-            raise RuntimeError(
-                "ROOM-HOP MCP SSE contained no JSON-RPC result/error: "
-                f"status={response.status_code} body={raw[:1000]!r}"
-            )
-    else:
-        try:
-            data = json.loads(raw)
-        except json.JSONDecodeError as exc:
-            raise RuntimeError(
-                "ROOM-HOP MCP unexpected response: "
-                f"status={response.status_code} content_type={content_type!r} body={raw[:1000]!r}"
-            ) from exc
-
-    if not isinstance(data, dict):
-        raise RuntimeError(f"ROOM-HOP MCP returned non-object response: {data!r}")
-    if "error" in data:
-        raise RuntimeError(f"ROOM-HOP MCP error: {data['error']}")
-    return data
-
-
-def _roomhop_headers() -> dict[str, str]:
-    headers = {
-        "Content-Type": "application/json",
-        "Accept": "application/json, text/event-stream",
-    }
-    if _ROOMHOP_SESSION_ID:
-        headers["Mcp-Session-Id"] = _ROOMHOP_SESSION_ID
-    if _ROOMHOP_PROTOCOL_VERSION:
-        headers["MCP-Protocol-Version"] = _ROOMHOP_PROTOCOL_VERSION
-    return headers
-
-
-def _roomhop_post(payload: dict[str, Any]) -> dict[str, Any]:
-    global _ROOMHOP_SESSION_ID, _ROOMHOP_PROTOCOL_VERSION
-
-    response = requests.post(
-        _roomhop_endpoint(),
-        json=payload,
-        headers=_roomhop_headers(),
-        timeout=float(os.getenv("ROOMHOP_MCP_TIMEOUT", "20")),
     )
-    response.raise_for_status()
-
-    session_id = response.headers.get("Mcp-Session-Id")
-    if session_id:
-        _ROOMHOP_SESSION_ID = session_id
-
-    protocol_version = response.headers.get("MCP-Protocol-Version")
-    if protocol_version:
-        _ROOMHOP_PROTOCOL_VERSION = protocol_version
-
-    return _parse_mcp_response(response)
-
-
-def _roomhop_notification(payload: dict[str, Any]) -> None:
-    global _ROOMHOP_SESSION_ID, _ROOMHOP_PROTOCOL_VERSION
-
-    response = requests.post(
-        _roomhop_endpoint(),
-        json=payload,
-        headers=_roomhop_headers(),
-        timeout=float(os.getenv("ROOMHOP_MCP_TIMEOUT", "20")),
-    )
-    response.raise_for_status()
-
-    session_id = response.headers.get("Mcp-Session-Id")
-    if session_id:
-        _ROOMHOP_SESSION_ID = session_id
-
-    protocol_version = response.headers.get("MCP-Protocol-Version")
-    if protocol_version:
-        _ROOMHOP_PROTOCOL_VERSION = protocol_version
-
-
-def _roomhop_initialize() -> None:
-    global _ROOMHOP_SESSION_ID, _ROOMHOP_PROTOCOL_VERSION
-
-    if _ROOMHOP_SESSION_ID:
-        return
-
-    versions = [
-        os.getenv("ROOMHOP_MCP_PROTOCOL_VERSION", "2025-03-26"),
-        "2025-06-18",
-    ]
-    last_error: Exception | None = None
-
-    for version in versions:
-        try:
-            data = _roomhop_post(
-                {
-                    "jsonrpc": "2.0",
-                    "id": str(uuid.uuid4()),
-                    "method": "initialize",
-                    "params": {
-                        "protocolVersion": version,
-                        "capabilities": {},
-                        "clientInfo": {
-                            "name": "room-hop-browser-agent-adapter",
-                            "version": "1.1.0",
-                        },
-                    },
-                }
-            )
-            negotiated = data.get("result", {}).get("protocolVersion")
-            if negotiated:
-                _ROOMHOP_PROTOCOL_VERSION = str(negotiated)
-            _roomhop_notification(
-                {
-                    "jsonrpc": "2.0",
-                    "method": "notifications/initialized",
-                }
-            )
-            return
-        except Exception as exc:
-            last_error = exc
-            _ROOMHOP_SESSION_ID = None
-            _ROOMHOP_PROTOCOL_VERSION = None
-
-    raise RuntimeError(f"ROOM-HOP MCP initialize failed: {last_error}")
-
-
-def roomhop_rpc(method: str, params: dict[str, Any] | None = None, request_id: str | None = None):
-    if method not in {"initialize", "notifications/initialized"}:
-        _roomhop_initialize()
-
-    payload = {
-        "jsonrpc": "2.0",
-        "id": request_id or str(uuid.uuid4()),
-        "method": method,
-    }
-    if params is not None:
-        payload["params"] = params
-
-    return _roomhop_post(payload)
-
-
-def roomhop_tools_list() -> list[dict[str, Any]]:
-    data = roomhop_rpc("tools/list")
-    return data.get("result", {}).get("tools", [])
-
-
-def roomhop_tool_call(name: str, arguments: dict[str, Any] | None = None):
-    return roomhop_rpc(
-        "tools/call",
-        {"name": name, "arguments": arguments or {}},
-    )
-
-
-def _tool_names(tools: list[dict[str, Any]]) -> set[str]:
-    return {str(tool.get("name")) for tool in tools}
-
-
-def _extract_tool_result(data: dict[str, Any]) -> Any:
-    result = data.get("result", {})
-    content = result.get("content", [])
-    for item in content:
-        if item.get("type") in {"json", "application/json"}:
-            if "json" in item:
-                return item["json"]
-        if "text" in item:
-            raw = item["text"]
-            try:
-                return json.loads(raw)
-            except Exception:
-                return raw
-    return result
-
-
-def submit_to_roomhop(result: dict[str, Any]):
-    endpoint = os.getenv("ROOMHOP_MCP_URL")
-    if not endpoint:
-        return {
-            "status": "deferred",
-            "reason": "ROOMHOP_MCP_URL not configured",
-            "local_evidence": result["evidence_json"],
-        }
-
-    # Transcript writes are opt-in and test-only. Never infer a meeting or identity.
-    if os.getenv("ROOMHOP_TEST_MODE") != "1":
-        return {
-            "status": "blocked",
-            "reason": "ROOM-HOP transcript submission requires ROOMHOP_TEST_MODE=1",
-            "endpoint": endpoint,
-        }
-
-    meeting_id = os.getenv("ROOMHOP_TEST_MEETING_ID")
-    identity_id = os.getenv("ROOMHOP_TEST_IDENTITY_ID")
-    if not meeting_id or not identity_id:
-        return {
-            "status": "blocked",
-            "reason": "Explicit ROOMHOP_TEST_MEETING_ID and ROOMHOP_TEST_IDENTITY_ID are required",
-            "endpoint": endpoint,
-        }
 
     expected_tools = {
         "list_meetings",
@@ -435,35 +235,41 @@ def submit_to_roomhop(result: dict[str, Any]):
         "add_paste_to_meeting",
     }
 
-    try:
-        tools = roomhop_tools_list()
-        names = _tool_names(tools)
-        if names != expected_tools:
+    async with integration.session() as session:
+        tools_result = await session.list_tools()
+        actual_tools = {tool.name for tool in tools_result.tools}
+        if actual_tools != expected_tools:
             return {
                 "status": "blocked",
                 "reason": "ROOM-HOP MCP tool inventory does not exactly match ADR-002 Public V1",
                 "expected_tools": sorted(expected_tools),
-                "actual_tools": sorted(names),
-                "endpoint": endpoint,
+                "actual_tools": sorted(actual_tools),
+                "meeting_id": meeting_id,
+                "identity_id": identity_id,
             }
 
-        meetings = _extract_tool_result(roomhop_tool_call("list_meetings"))
-        meeting_items = meetings.get("meetings", []) if isinstance(meetings, dict) else []
-        meeting = next((item for item in meeting_items if item.get("id") == meeting_id), None)
-        if meeting is None:
+        meetings = await integration.list_meetings(session)
+        target = next(
+            (item for item in meetings if item.get("id") == meeting_id),
+            None,
+        )
+        if target is None:
             return {
                 "status": "blocked",
-                "reason": "Configured dedicated test meeting was not found; no fallback is permitted",
+                "reason": "Configured disposable test meeting was not found; no fallback is permitted",
                 "meeting_id": meeting_id,
-                "endpoint": endpoint,
+                "identity_id": identity_id,
             }
-        if str(meeting.get("status", "")).lower() not in {"active", "open", "started"}:
+
+        meeting = await integration.get_meeting(session, meeting_id)
+        status = str(meeting.get("status", "")).lower()
+        if status not in {"active", "open", "started"}:
             return {
                 "status": "blocked",
-                "reason": "Configured dedicated test meeting is not active",
+                "reason": "Configured disposable test meeting is not active",
                 "meeting_id": meeting_id,
                 "meeting_status": meeting.get("status"),
-                "endpoint": endpoint,
+                "identity_id": identity_id,
             }
 
         artifact = {
@@ -479,58 +285,85 @@ def submit_to_roomhop(result: dict[str, Any]):
             artifact, ensure_ascii=False, sort_keys=True
         )
 
-        handoff = _extract_tool_result(
-            roomhop_tool_call(
-                "add_paste_to_meeting",
-                {
-                    "meeting_id": meeting_id,
-                    "text": marker,
-                    "identity_id": identity_id,
-                },
-            )
+        handoff = await integration.add_paste_to_meeting(
+            session,
+            meeting_id,
+            marker,
+            identity_id=identity_id,
         )
-
-        transcript = _extract_tool_result(
-            roomhop_tool_call("get_transcript", {"meeting_id": meeting_id})
-        )
+        transcript = await integration.get_transcript(session, meeting_id)
         transcript_text = json.dumps(transcript, ensure_ascii=False, sort_keys=True)
-        # JSON serialization escapes quotes inside transcript strings; compare
-        # the exact marker against decoded string values as well as its IDs.
-        def contains_marker(value: Any) -> bool:
-            if isinstance(value, str):
-                return marker in value
-            if isinstance(value, dict):
-                return any(contains_marker(item) for item in value.values())
-            if isinstance(value, list):
-                return any(contains_marker(item) for item in value)
-            return False
-
-        read_back = contains_marker(transcript) and all(
+        read_back = _contains_exact_marker(transcript, marker) and all(
             token in transcript_text
-            for token in [
+            for token in (
                 result["execution_id"],
                 result["evidence_id"],
                 result["work_id"],
                 Path(result["evidence_json"]).name,
-            ]
+            )
         )
 
         return {
             "status": "pass" if read_back else "blocked",
             "reason": None if read_back else "Exact execution artifact was not found in transcript readback",
-            "endpoint": endpoint,
             "meeting_id": meeting_id,
             "identity_id": identity_id,
             "handoff": handoff,
             "read_back": read_back,
             "artifact": artifact,
-            "contract_tools": sorted(names),
+            "contract_tools": sorted(actual_tools),
+            "transport": "stdio",
+            "meetings_dir": str(meetings_dir),
         }
+
+
+def submit_to_roomhop(result: dict[str, Any]):
+    """Synchronous Browser Adapter boundary; each handoff owns one stdio session."""
+    if os.getenv("ROOMHOP_TEST_MODE") != "1":
+        return {
+            "status": "blocked",
+            "reason": "ROOM-HOP transcript submission requires ROOMHOP_TEST_MODE=1",
+        }
+
+    meeting_id = os.getenv("ROOMHOP_TEST_MEETING_ID")
+    identity_id = os.getenv("ROOMHOP_TEST_IDENTITY_ID")
+    test_store = os.getenv("ROOMHOP_TEST_MEETINGS_DIR")
+    if not meeting_id or not identity_id or not test_store:
+        return {
+            "status": "blocked",
+            "reason": "Explicit ROOMHOP_TEST_MEETING_ID, ROOMHOP_TEST_IDENTITY_ID and ROOMHOP_TEST_MEETINGS_DIR are required",
+        }
+
+    meetings_dir = Path(test_store).expanduser()
+    if not meetings_dir.is_absolute():
+        return {
+            "status": "blocked",
+            "reason": "ROOMHOP_TEST_MEETINGS_DIR must be an absolute path",
+        }
+    meetings_dir = meetings_dir.resolve()
+    if not meetings_dir.is_dir():
+        return {
+            "status": "blocked",
+            "reason": "Configured disposable test meetings directory does not exist",
+            "meetings_dir": str(meetings_dir),
+        }
+
+    try:
+        return asyncio.run(
+            _submit_to_roomhop_stdio(
+                result,
+                meeting_id=meeting_id,
+                identity_id=identity_id,
+                meetings_dir=meetings_dir,
+            )
+        )
     except Exception as exc:
         return {
             "status": "blocked",
-            "reason": str(exc),
-            "endpoint": endpoint,
+            "reason": f"{type(exc).__name__}: {exc}",
+            "meeting_id": meeting_id,
+            "identity_id": identity_id,
+            "transport": "stdio",
         }
 
 
