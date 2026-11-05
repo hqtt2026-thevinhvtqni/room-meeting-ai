@@ -1,7 +1,7 @@
 name: Work 32 CI Pilot (ROOM-HOP, no Docker)
 
-# Phase B pilot — scoped ONLY to the Work 32 branch.
-# No deployment, no secrets, no MAIN SOURCE mutation, no Docker.
+# Phase B pilot + Phase C G3/G5 exploration — scoped ONLY to the Work 32 branch.
+# No deployment, no secrets, no MAIN SOURCE mutation, no Docker, no live-PC changes.
 on:
   push:
     branches: [work/32-ci-cd-room-hop-python-no-docker]
@@ -18,9 +18,8 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  # G2 scope: unit tests only. Files requiring live services / network / ports
-  # are excluded and dispositioned as G3/G5 (BLOCKED by design this phase).
-  G3_G5_EXCLUDED: tests/test_e2e.py tests/test_integration.py tests/test_http_lifecycle.py tests/test_http_recording.py tests/test_browser_agent_adapter_e2e.py tests/test_wee_8031_bridge.py tests/test_work13_wee_integration.py tests/test_execution_host.py
+  # G3/G5 exploration scope: the files previously excluded from G2.
+  G3_G5_FILES: tests/test_e2e.py tests/test_integration.py tests/test_http_lifecycle.py tests/test_http_recording.py tests/test_browser_agent_adapter_e2e.py tests/test_wee_8031_bridge.py tests/test_work13_wee_integration.py tests/test_execution_host.py
 
 jobs:
   ci-pilot:
@@ -56,15 +55,15 @@ jobs:
           CI: 'true'
         run: |
           IGN=""
-          for f in $G3_G5_EXCLUDED; do IGN="$IGN --ignore=$f"; done
+          for f in $G3_G5_FILES; do IGN="$IGN --ignore=$f"; done
           set +e
           pytest tests/ $IGN --junitxml=work32-junit.xml -q > work32-pytest.log 2>&1
           code=$?
           set -e
           echo "exit=$code" >> "$GITHUB_OUTPUT"
           echo "G2 pytest exit code: $code"
-          tail -n 60 work32-pytest.log
-          if [ "$code" -ne 0 ]; then echo "G2 FAIL: pytest exit $code (see work32-pytest.log tail above)"; exit 1; fi
+          tail -n 40 work32-pytest.log
+          if [ "$code" -ne 0 ]; then echo "G2 FAIL: pytest exit $code"; exit 1; fi
           echo "G2 PASS"
       - name: G6 — Prepare evidence files
         if: always()
@@ -80,7 +79,7 @@ jobs:
             work32-pip-freeze.txt
           if-no-files-found: warn
           retention-days: 14
-      - name: G6 — Publish evidence summary (step summary + tracking issue #39)
+      - name: G6 — Publish evidence summary (step summary + tracking issue)
         if: always()
         env:
           GH_TOKEN: ${{ github.token }}
@@ -94,32 +93,99 @@ jobs:
             if [ -z "$G2EXIT" ]; then echo "- G2 unit tests: NOT RUN"; else
               if [ "$G2EXIT" = "0" ]; then echo "- G2 unit tests: PASS (exit 0)"; else echo "- G2 unit tests: FAIL (exit $G2EXIT)"; fi
             fi
-            echo "- G3 integration / G5 E2E: BLOCKED (excluded files: \`$G3_G5_EXCLUDED\`)"
+            echo "- G3/G5: explored in the g3-g5 job"
           } >> "$GITHUB_STEP_SUMMARY"
-          # Canonical tracking issue for Work 32 CI evidence.
           TITLE="Work 32 CI Evidence Log"
           IID=$(gh issue list --state all --limit 100 --json number,title --jq '.[] | select(.title == "'"$TITLE"'") | .number' | sort -n | tail -n 1)
           if [ -z "$IID" ]; then
-            gh issue create -t "$TITLE" -b "Evidence trail for Work 32 CI pilot runs (branch \`work/32-ci-cd-room-hop-python-no-docker\`). Auto-maintained by the CI workflow." > /dev/null
+            gh issue create -t "$TITLE" -b "Evidence trail for Work 32 CI pilot runs (branch `work/32-ci-cd-room-hop-python-no-docker`). Auto-maintained by the CI workflow." > /dev/null
             IID=$(gh issue list --state all --limit 100 --json number,title --jq '.[] | select(.title == "'"$TITLE"'") | .number' | sort -n | tail -n 1)
           fi
-          echo "Tracking issue: #$IID"
           {
-            echo "### Run #${{ github.run_number }} — ${{ job.status }}"
+            echo "### Run #${{ github.run_number }} (G0–G2) — ${{ job.status }}"
             echo "- URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
             echo "- Commit: \`${{ github.sha }}\` · Event: ${{ github.event_name }}"
             echo "- G1 compileall: PASS"
             if [ -z "$G2EXIT" ]; then echo "- G2 unit tests: NOT RUN"; else
               if [ "$G2EXIT" = "0" ]; then echo "- G2 unit tests: PASS"; else echo "- G2 unit tests: FAIL (exit $G2EXIT)"; fi
             fi
-            echo "- G3/G5: BLOCKED (live-service & e2e files excluded this phase)"
-            echo ""
-            echo "<details><summary>pytest log tail (60 lines)</summary>"
+            echo "- G2 log tail:"
             echo ""
             echo '~~~'
-            tail -n 60 work32-pytest.log 2>/dev/null || echo "(no pytest log)"
+            tail -n 20 work32-pytest.log 2>/dev/null || echo "(no pytest log)"
             echo '~~~'
-            echo "</details>"
           } > work32-issue-comment.md
           gh issue comment "$IID" --body-file work32-issue-comment.md
-          echo "Evidence comment posted to issue #$IID"
+
+  g3-g5-exploration:
+    name: "G3/G5 isolated integration & e2e exploration"
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    continue-on-error: true
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      CI: 'true'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install declared dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: G3/G5 — Run each excluded test file in isolation (evidence only, no hard gate)
+        id: g35
+        run: |
+          rm -f work32-g35-summary.txt work32-g35-full.log
+          PASS_FILES=0; FAIL_FILES=0
+          for f in $G3_G5_FILES; do
+            echo "===== pytest $f =====" | tee -a work32-g35-full.log
+            set +e
+            pytest "$f" -q > "work32-g35-$(basename $f).log" 2>&1
+            code=$?
+            set -e
+            if [ "$code" -eq 0 ]; then st="PASS"; PASS_FILES=$((PASS_FILES+1)); else st="FAIL"; FAIL_FILES=$((FAIL_FILES+1)); fi
+            echo "$f => $st (exit $code)" | tee -a work32-g35-summary.txt
+            tail -n 5 "work32-g35-$(basename $f).log" >> work32-g35-full.log
+          done
+          echo "pass_files=$PASS_FILES fail_files=$FAIL_FILES" >> "$GITHUB_OUTPUT"
+          cat work32-g35-summary.txt
+      - name: G6 — Upload G3/G5 artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: work32-g35-evidence-${{ github.run_id }}
+          path: |
+            work32-g35-summary.txt
+            work32-g35-full.log
+            work32-g35-*.log
+          if-no-files-found: warn
+          retention-days: 14
+      - name: G6 — Publish G3/G5 evidence to tracking issue
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TITLE="Work 32 CI Evidence Log"
+          IID=$(gh issue list --state all --limit 100 --json number,title --jq '.[] | select(.title == "'"$TITLE"'") | .number' | sort -n | tail -n 1)
+          [ -z "$IID" ] && IID=39
+          {
+            echo "### Run #${{ github.run_number }} (G3/G5 exploration) — ${{ job.status }}"
+            echo "- Commit: \`${{ github.sha }}\`"
+            echo "Per-file dispositions (isolated runner; no live-PC changes):"
+            echo ""
+            echo '~~~'
+            cat work32-g35-summary.txt 2>/dev/null || echo "(no summary)"
+            echo '~~~'
+            echo ""
+            echo "<details><summary>log tails</summary>"
+            echo ""
+            echo '~~~'
+            tail -n 60 work32-g35-full.log 2>/dev/null || true
+            echo '~~~'
+            echo "</details>"
+          } > work32-g35-comment.md
+          gh issue comment "$IID" --body-file work32-g35-comment.md
