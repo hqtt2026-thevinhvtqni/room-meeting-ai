@@ -907,3 +907,42 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - Không restart PID 20468; không POST, không gọi /mcp, không truy cập meeting/transcript, không dùng :8020 hoặc PID 15048.
 - Xu chuyển Ka thẩm định W32-LOG-60 và script đã sửa. Ka đánh giá ranh giới bằng chứng và phương án xử lý an toàn; không đo lại dữ liệu đã có.
 - Live MCP E2E NOT RUN. Work 32 ACTIVE — NOT RELEASED.
+
+
+### W32-LOG-20261105-62 — Ka thẩm định kết quả PC và script chẩn đoán đã sửa
+
+- **Document Number:** W32-LOG-20261105-62
+- **Priority Order:** P0 — Runtime provenance / ngăn xác nhận nhầm Browser Adapter là Work32
+- **Name:** Ka
+- **Title:** CSA / Backend & Repository Custodian
+- **Date-Time:** 2026-11-05 (time not captured; not inferred)
+- **Authority:** Xu W32-LOG-20261105-61; kết quả PC do Vinh cung cấp tại W32-LOG-60.
+- **Sources reviewed:** DOC-035 through W32-LOG-61; script `work/32/06_EVIDENCE/W32-PC-ONE-SHOT-DIAGNOSTIC.ps1` (GitHub blob `fdd56aca7e1fda2a191f505f4f2b564eb44dfee5`); Work32 Browser Adapter source blob `8cd73faca62057cbfbbd0ac03c07254c02e8df6c`.
+
+**Independent evidence assessment**
+1. PID 20468 GET `/health` and GET `/openapi.json` returned HTTP 200 in the supplied PC output. This establishes that the local Browser Adapter HTTP surface responded at measurement time; it does not establish Work32 source provenance or MCP transport.
+2. Parent PID 9108 command line explicitly sets the launch working directory and `PYTHONPATH` to `.ai-workspace/release/WORK09` before starting `uvicorn adapter:app`. This is strong evidence of a WORK09 launch context. It is not direct proof of the already-loaded module object's in-memory `__file__`; therefore do not state as fact that the loaded module is WORK09.
+3. PID 20468 CWD remains unavailable (`CWD_UNAVAILABLE_PSUTIL_MISSING_OR_ACCESS_DENIED`). Import origin, source Git blob, repository metadata and comparison with the Work32 adapter blob were not produced. Work32 provenance remains BLOCKED / NOT VERIFIED.
+4. The corrected script's Git metadata block is syntactically readable in the fetched source. However, child `find_spec('adapter')` executes in a new process and does not reproduce the target PID's private environment/`PYTHONPATH`; it remains reconstructed import resolution only. It cannot close the in-memory provenance gap even if it returns an origin.
+5. The script is read-only by design and limits HTTP calls to GET health/OpenAPI. No need to repeat the prior checks; no PC command was executed by Ka during this review.
+
+**Decision**
+- Current PID 20468 is **NOT ACCEPTED as a verified Work32 runtime**. Classify the Work32 runtime provenance gate as BLOCKED / NOT VERIFIED; the WORK09 launch context is a likely runtime/source-context mismatch, not conclusive in-memory module proof.
+- Do not restart, terminate, reconfigure or repoint PID 20468. Do not call `:8020`, `/mcp`, POST endpoints, transcript APIs, or mutate any meeting.
+- Do not ask Vinh to rerun the same diagnostic. The corrected script's child import resolution would not provide the missing direct provenance.
+- Safe next implementation path: Xu should plan a separate, isolated Work32 Browser Adapter process launched explicitly from the clean Work32 clone/branch, with its own port and test-only configuration. Before any transcript-writing E2E, independently verify the new process's executable, CWD, launch command, exact source blob and dedicated disposable meeting/identity. Keep the existing WORK09-context process untouched. No such process has been created or tested in this entry.
+- Source-level Browser Adapter guardrails remain verified; live MCP handshake, exact runtime tool inventory and transcript readback remain NOT RUN.
+
+**BIÊN BẢN**
+- **Name:** Ka
+- **Title:** CSA / Backend & Repository Custodian
+- **Date-Time:** 2026-11-05 (time not captured; not inferred)
+- **Disposition:** PC evidence independently reviewed. Existing adapter HTTP surface is responsive, but Work32 runtime provenance is not established. No runtime mutation authorized or performed.
+
+**NHẬT KÝ**
+- **Name:** Ka
+- **Title:** CSA / Backend & Repository Custodian
+- **Date-Time:** 2026-11-05 (time not captured; not inferred)
+- **Action:** Read Xu LOG-60/61 evidence, inspected the corrected PowerShell diagnostic source and compared the evidence boundary with the exact Work32 adapter source.
+- **Result:** Recorded WORK09 launch-context signal, CWD/import/blob gap, and isolated-runtime recommendation. No PC execution, MCP request, transcript mutation, source change, merge, deployment or release.
+- **Overall:** Work 32 ACTIVE — NOT RELEASED.
