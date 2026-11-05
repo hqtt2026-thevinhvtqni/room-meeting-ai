@@ -1089,3 +1089,14 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - SAFETY: PID 20468 untouched; no PC process/service start/stop/restart, no HTTP MCP, no /mcp, no transcript mutation, no :8020. PC source provenance remains BLOCKED / NOT VERIFIED.
 - HANDOFF: Xu checks exact-SHA CI and repairs failures, then sends implementation and evidence to Ka for independent review. PC runtime execution remains gated by Ka review and verified source provenance.
 - STATUS: Architecture DECISION; BUILD committed; VERIFY pending; live PC E2E NOT RUN; Work32 ACTIVE — NOT RELEASED.
+
+
+### W32-LOG-20261105-67 — CI xác nhận Option A
+- Code SHA: 07bcf0bbf31a79a9b84592c4cc53cbb306a2825c.
+- GitHub Actions run #77, ID 41949968361: SUCCESS; 4/4 jobs completed.
+- Evidence: Unit 189 passed; Product Auto E2E 53 passed; tooling 20 tests OK; product artifact E2E 1 passed. All 8 Browser Adapter contract tests passed.
+- Artifacts: unit 13380845990; E2E 13380367878; tooling 13379814803; product 13379894011. Product artifact SHA-256: 1243659cf300f25a1c85c3e6423e176e46ec29b90a37f76946d101c446a01cd4.
+- Boundary: this proves CI branch source only. PC Browser Adapter live E2E remains NOT RUN; PID 20468 provenance remains unverified and process untouched.
+- Ka review requested for Option A lifecycle, subprocess cleanup/concurrency, store isolation and eight contract tests. Await independent disposition before PC runtime action.
+- Branch-head CI run #80 for ea3b48ab3078e830347100a711af3883cb111e5d was still in progress at observation.
+- Work32 ACTIVE — NOT RELEASED.
