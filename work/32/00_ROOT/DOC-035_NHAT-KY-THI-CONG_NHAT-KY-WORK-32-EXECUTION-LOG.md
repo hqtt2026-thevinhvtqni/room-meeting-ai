@@ -1360,3 +1360,14 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **DECISION:** Root cause đã xác định; vẫn HOLD thao tác xóa. Không xóa thủ công từng file khi chưa cách ly sync provider và chưa có backup. Không xóa/rebuild toàn bộ `.git`, không reset/clean/force-push.
 - **NEXT:** Cách ly repo khỏi Google Drive File Stream/sync scope trước; tạo bản sao lưu nguyên trạng repo và working tree. Sau đó tạo clone sạch độc lập từ GitHub ở thư mục không được đồng bộ; đối chiếu local changes và các file chưa commit trước khi quyết định phục hồi. Nếu cần dọn bản repo cũ, chỉ loại bỏ đúng các file đã xác nhận là `desktop.ini` metadata sau khi backup và ngăn sync provider tái tạo chúng; chạy `git fsck --full` và kiểm tra refs sau xử lý.
 - **STATUS:** Root cause desktop.ini = Google Drive File Stream metadata CONFIRMED; local Git recovery NOT STARTED; local↔GitHub sync NOT VERIFIED; GitHub Work 32 branch remains independent; Work 32 ACTIVE — NOT RELEASED.
+
+
+## 2026-11-06 — W32-LOG-20261106-83 — Chốt xử lý desktop.ini metadata rác trong .git
+
+- **Người ghi:** Xu / AI-01 — Work coordinator.
+- **Chỉ đạo:** Vinh xác nhận Google Drive đã gỡ khỏi PC; yêu cầu không tiếp tục truy nguyên nguyên nhân, phân loại các file `desktop.ini` đã xác minh là metadata rác và chuẩn bị một lệnh PowerShell duy nhất để xóa.
+- **Căn cứ:** W32-LOG-20261106-81/82 và PowerShell evidence: ba mẫu tại `.git/desktop.ini`, `.git/refs/desktop.ini`, `.git/objects/00/desktop.ini` đều dài 106 bytes, Hidden/System, chứa `[.ShellClassInfo]` và đường dẫn biểu tượng Google Drive File Stream. Các file này không phải Git refs/objects hợp lệ; Git trước đó báo `bad sha1 file` tại các đường dẫn `.git/objects/**/desktop.ini`.
+- **DECISION:** Chốt phân loại `desktop.ini` nằm bên trong thư mục metadata `.git` là file rác cần dọn. Không tiếp tục điều tra tiến trình/service/sync provider. Phạm vi xóa được giới hạn trong `D:\\ROOM-HOP-CLEAN\\room-meeting-ai\\.git`; không xóa `.git`, không xóa file cùng tên bên ngoài `.git`, không đụng working tree/source files.
+- **EXECUTION COMMAND:** Đã chuẩn bị một lệnh PowerShell có kiểm tra thư mục đích trước khi xóa, chỉ tìm file đúng tên `desktop.ini` bên dưới `.git`, bao gồm file Hidden/System. Lệnh được giao cho Vinh chạy trên PC; Xu không có quyền thực thi trực tiếp trên PC trong phiên này.
+- **SAFETY:** Không dùng `git clean`, `git reset`, xóa/rebuild `.git`, force-push hoặc thao tác thay đổi branch. Sau khi chạy lệnh, cần lấy kết quả số file còn lại và chạy `git fsck --full` riêng ở bước xác minh; việc xóa file không tự chứng minh Git metadata đã phục hồi.
+- **STATUS:** Root cause classification CONFIRMED; Google Drive removal CONFIRMED BY USER; cleanup command PREPARED / PC EXECUTION PENDING; Git integrity NOT YET VERIFIED; Work 32 ACTIVE — NOT RELEASED.
