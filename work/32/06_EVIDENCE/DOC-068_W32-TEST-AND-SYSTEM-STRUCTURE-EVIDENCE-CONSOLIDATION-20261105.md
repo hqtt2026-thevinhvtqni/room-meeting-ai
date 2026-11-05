@@ -376,3 +376,61 @@ Xu should select and define one supported transport path before implementation:
 - **Date-Time:** 2026-11-05 (exact time not captured)
 - **Action:** Audited Browser Adapter HTTP client, Work32 stdio MCP entrypoint, shared MCP server factory, Core REST adapter and CI stdio E2E test.
 - **Result:** Isolated Browser Adapter process alone cannot connect to the reviewed Work32 MCP runtime. Submitted Option A/Option B transport decision to Xu; retained no-PC-change and no-live-service-mutation boundaries.
+
+
+---
+
+## Addendum F — Feasibility refinement for stdio reuse (2026-11-05)
+
+- **Document Number:** DOC-068 / Addendum F
+- **Priority:** P0 — Xu transport decision support
+- **Prepared by:** Ka — CSA / Backend & Repository Custodian
+- **Authority:** W32-LOG-64; exact Work32 source review.
+
+### Additional source evidence
+
+- `integration/room_hop_integration.py`, blob `dd0f544178f84e7b45cf9f7654af608e7ad2944c`, already provides an MCP client over the canonical stdio transport.
+- Its `RoomHopIntegrationConfig` explicitly carries Python executable, module (`room_hop_mcp`), repository-root CWD and environment.
+- `RoomHopIntegration.session()` starts `python -m room_hop_mcp` through `mcp.client.stdio.stdio_client`, performs MCP initialization, yields a `ClientSession`, and closes the subprocess/session on context exit.
+- It provides 1:1 methods for the four ADR-002 tools. The CI stdio E2E uses this same integration boundary and an isolated `ROOM_HOP_MEETINGS_DIR`.
+- Important limitation: `verify_capabilities()` currently checks that required tools exist but does not reject extra tools. Exact set equality is asserted by `tests/test_ci_mcp_stdio_e2e.py`; any Browser Adapter reuse must retain an exact four-tool check before tool calls.
+
+### Feasibility assessment
+
+Option A from Addendum E is technically grounded in an existing Work32 client and does not require a new MCP network listener. It is the lower-surface-area candidate because it reuses the already tested stdio server and client boundary. It is not yet approved or implemented.
+
+Before choosing Option A, Xu must resolve:
+1. Whether Browser Adapter is allowed to use the existing `integration.RoomHopIntegration` client boundary, rather than maintaining a second independent MCP client.
+2. How the synchronous FastAPI/Playwright Browser Adapter invokes the asynchronous stdio session safely (thread/event-loop ownership and error propagation).
+3. Whether a subprocess/session is opened per browser workflow or held by a managed lifecycle; define timeout, cleanup, concurrency and shutdown behavior.
+4. The exact isolated `ROOM_HOP_MEETINGS_DIR` and test meeting/identity provisioning, with no default to production or real meetings.
+5. Exact four-tool equality validation and transport/readback tests using the same semantic assertions as the existing stdio E2E.
+
+Option B remains possible only with an explicit Xu decision and a new transport-parity test suite. No evidence currently supports an existing Work32 Streamable HTTP MCP server.
+
+### Recommendation to Xu
+
+Prefer evaluating **Option A first** because the stdio MCP boundary and its subprocess lifecycle already exist and are exercised in CI. Do not implement until Xu records the decision and the synchronous/asynchronous lifecycle, data isolation and exact-tool validation are specified. Option B should be selected only if a real requirement for HTTP MCP transport is confirmed.
+
+### Boundaries and status
+
+- This is a source-level feasibility assessment only; no source changes or runtime execution.
+- No PC changes, service calls, MCP network requests, transcript mutation, process changes, merge, deployment or release.
+- Transport decision remains PENDING Xu.
+- Browser Adapter live handoff remains BLOCKED / NOT RUN.
+- Work 32 ACTIVE — NOT RELEASED.
+
+### BIÊN BẢN
+
+- **Name:** Ka
+- **Title:** CSA / Backend & Repository Custodian
+- **Date-Time:** 2026-11-05 (exact time not captured)
+- **Disposition:** Existing stdio client identified as a feasible lower-surface-area option; no implementation authority inferred.
+
+### NHẬT KÝ
+
+- **Name:** Ka
+- **Title:** CSA / Backend & Repository Custodian
+- **Date-Time:** 2026-11-05 (exact time not captured)
+- **Action:** Inspected RoomHopIntegration configuration/session lifecycle and existing stdio E2E to refine Xu's transport decision.
+- **Result:** Option A is grounded in existing code but requires Xu decision on async lifecycle, process ownership, isolation and exact tool inventory.
