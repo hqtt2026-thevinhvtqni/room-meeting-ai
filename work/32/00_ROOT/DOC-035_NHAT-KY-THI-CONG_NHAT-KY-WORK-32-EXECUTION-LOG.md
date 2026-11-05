@@ -1283,3 +1283,51 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - PC runtime provenance / Windows live E2E: NOT VERIFIED.
 - Dashboard→Core E2E: NOT RUN.
 - CD / deployment / release: NOT RUN.
+
+
+### W32-LOG-20261106-80 — Source trace Browser Adapter: xác nhận rủi ro singleton concurrency
+
+- **Name:** Xu (AI-01) — Coordinator / Lead Architect.
+- **Date:** 2026-11-06 (Asia/Ho_Chi_Minh; exact clock time not captured).
+- **Authority:** Tiếp tục sau yêu cầu “ghi nhật ký và tiếp tục”.
+- **Scope:** Read-only source trace on canonical branch after CI #110. Files inspected: `room_hop_mcp/browser_agent_adapter/adapter.py`, `tests/test_browser_agent_adapter_contract.py`, `tests/test_browser_agent_adapter_stdio_e2e.py`, and historical gate evidence DOC-062. No code mutation.
+
+**TRACE — observed source facts**
+- Module creates one process-global `adapter = Adapter()`.
+- HTTP routes and MCP `tools/call` routes both invoke methods on this same object.
+- Adapter stores mutable shared `pw`, `browser`, `context`, `page`, `started_at`, and `logs` fields.
+- `workflow()` resets shared `self.logs`, then calls shared `start/navigate/inspect/click/type/wait/extract/screenshot` methods and reads shared `self.page`.
+- There is no visible lock, request-scoped browser/context, or per-workflow isolation around the shared object and its mutable page/log state in the inspected module.
+- The current contract/E2E tests cover stdio handoff, exact disposable target, timeout cleanup and readback. The inspected tests do not establish concurrent workflow isolation or concurrent close-vs-workflow behavior.
+- This is a source-level concurrency risk. No concurrent race was executed or observed in this audit; therefore it is not recorded as a reproduced defect.
+
+**RISK / IMPACT**
+- Concurrent HTTP/MCP calls can interleave navigation and browser actions on the same page.
+- Concurrent workflows can reset or mix the same log list and may report another request's final URL/title.
+- A close request can race with an active workflow and invalidate its browser/page handles.
+- The current CI PASS does not close this concurrency contract because the present evidence set does not test these interleavings.
+
+**DECISION — required closure contract**
+1. Define ownership: either serialize all operations on the singleton with a re-entrant process lock, or move to request/workflow-scoped browser contexts with explicit lifecycle ownership. Do not mix both models without a documented boundary.
+2. Ensure a workflow is atomic relative to navigation/action/close operations; no unrelated request may mutate its page or logs while it is active.
+3. Make logs and execution metadata request-scoped; one request must not reset or consume another request's evidence.
+4. Define close semantics: reject/defer close while a workflow is active, or cancel and await cleanup deterministically.
+5. Add deterministic concurrent tests: two overlapping workflows with distinct URLs/markers; concurrent close during a delayed workflow; independent log/evidence assertions; cleanup after exception/cancellation.
+6. Run the full four-job Work 32 CI on the exact fix SHA and retain test artifacts.
+7. Ka must independently review and issue ACCEPT / ACCEPT WITH CORRECTIONS / REJECT. Xu's source trace is not a substitute for Ka's review.
+
+**DISPOSITION**
+- Keep this P2 concurrency item OPEN / DEFERRED pending architecture decision and implementation.
+- Do not claim Browser Adapter concurrency safety.
+- Do not alter code in this source-trace step. The current Linux stdio lifecycle/timeout evidence remains valid for its tested serial path only.
+- No PC action, no :8020, no meeting/transcript mutation, no main merge, no deployment or release.
+
+**STATUS**
+- CI run #110: PASS, 4/4 jobs on exact SHA `a7c24ded47ffb4a56f6180885d5b059b396d61b2`.
+- Browser Adapter serial stdio lifecycle/timeout path: PASS in Linux CI evidence.
+- Browser Adapter concurrent request isolation: OPEN / NOT VERIFIED.
+- Ka independent review: PENDING.
+- PC runtime provenance / Windows live E2E: NOT VERIFIED.
+- Dashboard→Core E2E: NOT RUN.
+- CD / deployment / release: NOT RUN.
+- Work 32: ACTIVE — NOT RELEASED.
