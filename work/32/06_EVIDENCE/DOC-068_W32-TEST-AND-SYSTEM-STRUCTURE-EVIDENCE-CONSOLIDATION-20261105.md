@@ -491,3 +491,18 @@ Status: timeout/nested-loop implementation committed; real stdio E2E added to CI
 - No PC process/service action, no live endpoint call, no :8020, no real meeting mutation, no main merge, deploy or release.
 
 Status: Real Browser Adapter -> Work32 MCP stdio -> Core transcript CI E2E PASS at the exact commit; Ka re-review pending; PC provenance remains BLOCKED / NOT VERIFIED. Work32 ACTIVE — NOT RELEASED.
+
+
+---
+
+## Addendum J — Explicit cancellation propagation and cleanup test (2026-11-05)
+
+- Follow-up to Ka's W32-LOG-67/70 findings: bounded timeout alone is insufficient if RoomHopIntegration masks cancellation while unwinding its nested async context managers.
+- Updated integration/room_hop_integration.py to preserve asyncio.CancelledError directly and to unwrap a CancelledError leaf from BaseExceptionGroup instead of converting cancellation into IntegrationError.
+- Added a deterministic lifecycle test that simulates task-group cancellation during stdio teardown, asserts cancellation propagates to asyncio.wait_for, and verifies both ClientSession and stdio context exit paths run.
+- The test exercises context-manager unwind behavior with a controlled fake stdio context; it does not independently prove OS-level child PID termination on the Windows PC. Actual PC process lifecycle remains gated.
+- CI run #92 / ID 41951379259 for the test commit was pending at the time of this addendum. Run #91 for the preceding implementation commit was superseded/cancelled by the next push; do not count it as validation.
+- The real Browser Adapter -> stdio -> Core transcript E2E remains PASS at run #86 / exact commit c291bca97369ff15e7f867a51e3b8e1b89f0fe77.
+- P2 global Browser Adapter singleton concurrency remains deferred. No PC action, live endpoint call, :8020, main merge, deploy or release.
+
+Status: cancellation propagation and deterministic unwind test committed; CI run #92 pending; OS-level PC child termination NOT VERIFIED. Work32 ACTIVE — NOT RELEASED.
