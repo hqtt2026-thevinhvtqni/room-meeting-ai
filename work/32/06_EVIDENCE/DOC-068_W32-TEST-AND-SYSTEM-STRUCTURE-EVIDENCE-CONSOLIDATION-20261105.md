@@ -520,3 +520,12 @@ Status: cancellation propagation and deterministic unwind test committed; CI run
 - E2E 57 passed, including direct cancellation cleanup and real Browser Adapter stdio transcript roundtrip. Unit 189, tooling 20, product artifact E2E 1 passed.
 - Direct cancellation test verifies async context exits. OS process termination and PC live runtime remain unverified.
 - Ka review requested. P2 Browser Adapter singleton concurrency remains deferred.
+
+
+## Addendum N — Real stdio child termination on timeout verified in CI (2026-11-05)
+- Run #102 / 41952585714 validated source SHA 1b3c3b1892aabcb8bbb6eb78efb314f7c5357c94; all four jobs SUCCESS.
+- Product Auto E2E 58 passed. Both real Browser Adapter stdio transcript roundtrip and real stdio child timeout cleanup tests passed.
+- Timeout test starts the actual MCP stdio subprocess, delays the paste operation before any append, lets the bounded timeout fire, captures the actual child process handle and asserts its returncode is set after context teardown. It also verifies no artifact marker was appended to the disposable transcript.
+- Python 3.12 unit 189 passed; tooling 20 passed; immutable product artifact E2E 1 passed; dependency check clean.
+- This establishes child-process termination behavior in the Linux CI environment for the tested path. Windows PC runtime behavior and PID 20468 provenance remain unverified; no PC process was touched.
+- Ka re-review requested for the complete implementation and new real-process test. P2 global Browser Adapter singleton concurrency remains deferred.
