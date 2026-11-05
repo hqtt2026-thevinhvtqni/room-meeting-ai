@@ -448,3 +448,29 @@ Prefer evaluating **Option A first** because the stdio MCP boundary and its subp
 - PID 20468 remains untouched; its Work32 provenance is still unverified. No PC runtime action, MCP call, transcript mutation, :8020 use, merge, deploy or release.
 - Next: inspect exact-SHA CI, repair failures, then submit implementation to Ka for independent review. PC runtime remains gated by Ka review and source provenance.
 - Work32 ACTIVE — NOT RELEASED.
+
+
+---
+
+## Addendum H — Ka review findings and Xu corrective implementation (2026-11-05)
+
+### Ka independent review
+- Ka's Sandbox review W32-LOG-67 and W32-LOG-70 confirms the Option A stdio migration, exact tool inventory, explicit disposable target and mocked contract tests are present.
+- Ka identified two remaining P0 gaps: no bounded timeout/cancellation policy around the async stdio session, and no real Browser Adapter -> RoomHopIntegration child -> Core transcript E2E in CI. The existing stdio E2E tested the MCP client independently, not the Browser Adapter submission function.
+- Nested event-loop use also needed to fail closed before constructing the coroutine. The global Browser Adapter singleton (page/context/log state) may interleave under concurrent workflow calls; Ka marked this P2 and requested a separate concurrency contract rather than mixing it into the transport patch.
+
+### Xu corrective implementation
+- Added ROOMHOP_MCP_TIMEOUT_SECONDS with default 30 seconds and maximum 120 seconds.
+- Wrapped the stdio submission in asyncio.wait_for. Timeout returns BLOCKED with an explicit uncertain-append outcome and no automatic retry.
+- Added a running-event-loop guard before coroutine construction. Cancellation is not swallowed inside the stdio session, allowing the existing async context manager to unwind and clean up.
+- Added tests for timeout/no-retry and nested-loop fail-closed behavior.
+- Added tests/test_browser_agent_adapter_stdio_e2e.py. It creates a temporary store and sentinel, provisions an active disposable meeting, invokes the actual Browser Adapter submit_to_roomhop function, starts the real Work32 MCP stdio child through RoomHopIntegration, and verifies exact four tools, identity, artifact marker and Core transcript readback.
+- Registered the real stdio E2E in ci-validation.yml E2E_TESTS.
+
+### Validation boundary
+- CI run #83 / ID 41950707518 passed all four jobs for the bounded-timeout/nested-loop source commit.
+- CI run #85 / ID 41950798975 and #86 / ID 41950816354 were still running/pending when this addendum was prepared; these runs include the real stdio E2E addition. No PASS claim is made for the new real stdio test until an exact-SHA run completes.
+- The global Adapter singleton concurrency concern remains DEFERRED / P2. Per-submission MCP sessions are isolated, but that does not prove the shared browser/page/log state is concurrency-safe.
+- No PC process/service action, no live :8787 call, no transcript mutation outside CI's temporary test store, no :8020, no main merge, deploy or release.
+
+Status: timeout/nested-loop implementation committed; real stdio E2E added to CI; exact-SHA validation pending; P2 browser singleton concurrency review deferred. Work32 ACTIVE — NOT RELEASED.
