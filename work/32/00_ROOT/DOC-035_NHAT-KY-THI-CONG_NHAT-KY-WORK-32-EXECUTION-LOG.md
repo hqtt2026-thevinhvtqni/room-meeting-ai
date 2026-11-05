@@ -1126,3 +1126,17 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **SAFETY:** Không tác động PID 20468, không gọi :8787 hoặc /mcp, không dùng :8020, không truy cập/ghi meeting thật. Không merge main, deploy hoặc release.
 - **NEXT:** Theo dõi CI exact SHA; nếu real stdio E2E PASS, chuyển Ka review lại implementation mới. PC runtime vẫn chờ Ka review và xác minh source provenance.
 - **STATUS:** Timeout/nested-loop BUILD committed; real stdio E2E CI validation pending; P2 concurrency deferred; Work32 ACTIVE — NOT RELEASED.
+
+
+### W32-LOG-20261105-72 — Real Browser Adapter stdio E2E PASS
+
+- **Exact validation commit:** c291bca97369ff15e7f867a51e3b8e1b89f0fe77.
+- **GitHub Actions:** run #86 / ID 41950816354; 4/4 jobs SUCCESS.
+- **Product Auto E2E:** 56 passed. Ten Browser Adapter contract tests passed, including timeout/no-auto-retry and nested-loop guard. Real test tests/test_browser_agent_adapter_stdio_e2e.py::test_browser_adapter_real_stdio_submission_roundtrip PASSED.
+- **What the real test proves:** temporary disposable store + sentinel; active test meeting provisioned in that store; actual submit_to_roomhop called; actual RoomHopIntegration starts MCP stdio child; exact four tools and identity checked; transcript read back through Core service and exact artifact marker verified.
+- **Other CI:** Python 3.12 unit 189 passed; tooling 20 tests OK; immutable product artifact E2E 1 passed; dependency check clean.
+- **Limit:** this is CI with a temporary store, not PC :8787 live E2E. PID 20468 source provenance remains BLOCKED / NOT VERIFIED. Timeout/no-retry behavior is tested, but OS-level child termination during an actual timed-out stdio operation is not separately measured. Keep this as a review limitation, not a PASS claim.
+- **P2 DEFERRED:** shared global Browser Adapter singleton (page/context/log state) may interleave concurrent workflows; separate concurrency contract needed.
+- **Ka re-review:** requested on updated timeout, real stdio E2E, session cleanup and remaining process-termination evidence boundary. Ka to return explicit disposition and evidence.
+- **Safety:** no PC process/service action, no live endpoint call, no :8020, no real meeting mutation, no main merge, deploy or release.
+- **STATUS:** Real Browser Adapter -> Work32 MCP stdio -> Core transcript CI E2E PASS at exact commit; Ka re-review PENDING; PC provenance BLOCKED / NOT VERIFIED; Work32 ACTIVE — NOT RELEASED.
