@@ -270,6 +270,7 @@ def test_stdio_session_preserves_cancellation_and_unwinds(monkeypatch):
 
 def test_submission_uses_exact_target_stdio_and_verifies_readback(monkeypatch, tmp_path):
     meetings_dir = _configure_test_target(monkeypatch, tmp_path)
+    monkeypatch.setenv("ROOMHOP_PRIVATE_TEST_VALUE", "must-not-forward")
     instances = _install_fake(monkeypatch)
     result = browser_adapter.submit_to_roomhop(RESULT)
 
@@ -283,6 +284,11 @@ def test_submission_uses_exact_target_stdio_and_verifies_readback(monkeypatch, t
     assert instances[0].session_closed is True
     assert instances[0].config.cwd == str(Path(browser_adapter.__file__).resolve().parents[2])
     assert instances[0].config.env["ROOM_HOP_MEETINGS_DIR"] == str(meetings_dir.resolve())
+    assert instances[0].config.env == {
+        "ROOM_HOP_MEETINGS_DIR": str(meetings_dir.resolve()),
+        "PYTHONPATH": str(Path(browser_adapter.__file__).resolve().parents[2]),
+    }
+    assert "ROOMHOP_PRIVATE_TEST_VALUE" not in instances[0].config.env
     assert [call[0] for call in instances[0].calls] == [
         "list_meetings",
         "get_meeting",
