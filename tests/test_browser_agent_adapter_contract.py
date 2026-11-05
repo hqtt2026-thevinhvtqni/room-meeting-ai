@@ -5,6 +5,8 @@ import types
 from contextlib import asynccontextmanager
 from pathlib import Path
 from types import SimpleNamespace
+from integration import room_hop_integration as integration_module
+from integration.room_hop_integration import RoomHopIntegration, RoomHopIntegrationConfig
 
 try:
     from room_hop_mcp.browser_agent_adapter import adapter as browser_adapter
@@ -221,6 +223,49 @@ def test_submission_fails_closed_inside_running_event_loop(monkeypatch, tmp_path
     result = asyncio.run(invoke())
     assert result["status"] == "blocked"
     assert "Nested event loops are not allowed" in result["reason"]
+
+
+def test_stdio_session_preserves_cancellation_and_unwinds(monkeypatch):
+    lifecycle = {"stdio_closed": False, "session_closed": False}
+
+    @asynccontextmanager
+    async def fake_stdio_client(params):
+        try:
+            yield object(), object()
+        finally:
+            lifecycle["stdio_closed"] = True
+            raise BaseExceptionGroup(
+                "simulated stdio task-group cancellation",
+                [asyncio.CancelledError()],
+            )
+
+    class FakeClientSession:
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, exc, tb):
+            lifecycle["session_closed"] = True
+
+        async def initialize(self):
+            return None
+
+    monkeypatch.setattr(integration_module, "stdio_client", fake_stdio_client)
+    monkeypatch.setattr(integration_module, "ClientSession", FakeClientSession)
+    integration = RoomHopIntegration(RoomHopIntegrationConfig())
+
+    async def blocked_session():
+        async with integration.session():
+            await asyncio.sleep(5)
+
+    async def exercise_timeout():
+        try:
+            await asyncio.wait_for(blocked_session(), timeout=0.01)
+        except asyncio.TimeoutError:
+            return
+        raise AssertionError("session timeout was not propagated")
+
+    asyncio.run(exercise_timeout())
+    assert lifecycle == {"stdio_closed": True, "session_closed": True}
 
 
 def test_submission_uses_exact_target_stdio_and_verifies_readback(monkeypatch, tmp_path):
