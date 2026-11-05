@@ -217,10 +217,12 @@ async def _submit_to_roomhop_stdio(
 ) -> dict[str, Any]:
     """Use the canonical Work32 Public V1 stdio client for one isolated handoff."""
     repo_root = Path(__file__).resolve().parents[2]
-    child_env = dict(os.environ)
-    # Force the MCP child onto the explicitly selected disposable test store.
-    child_env["ROOM_HOP_MEETINGS_DIR"] = str(meetings_dir)
-    child_env["PYTHONPATH"] = str(repo_root)
+    # Pass only the two required values; stdio_client adds its safe default
+    # environment. Never forward the Browser Adapter's full environment.
+    child_env = {
+        "ROOM_HOP_MEETINGS_DIR": str(meetings_dir),
+        "PYTHONPATH": str(repo_root),
+    }
     integration = RoomHopIntegration(
         RoomHopIntegrationConfig(
             python_executable=sys.executable,
