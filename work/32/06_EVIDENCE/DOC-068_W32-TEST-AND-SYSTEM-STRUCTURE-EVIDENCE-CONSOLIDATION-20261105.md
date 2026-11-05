@@ -308,3 +308,71 @@ Exact branch HEAD c601c18712ed1d58990314d517409478f41ee11b; run #41 / 4180757830
 - **Date-Time:** 2026-11-05 (exact time not captured)
 - **Action:** Reconciled PC result W32-LOG-60 and independent review W32-LOG-62 into DOC-068 without promoting launch-context evidence to in-memory provenance.
 - **Result:** Existing adapter not accepted as Work32 runtime; isolated runtime is the next controlled step. No PC execution, MCP call, transcript mutation, code change, merge, deployment or release.
+
+
+---
+
+## Addendum E — Transport compatibility review for isolated Work32 Browser Adapter (2026-11-05)
+
+- **Document Number:** DOC-068 / Addendum E
+- **Priority:** P0 — MCP transport compatibility / prevent an unusable isolated runtime
+- **Prepared by:** Ka — CSA / Backend & Repository Custodian
+- **Authority:** Vinh “OK tiếp”; prior gate DOC-068 Addendum D and W32-LOG-62/63.
+
+### Exact Work32 source evidence reviewed
+
+| Source | Git blob | Observed contract |
+|---|---|---|
+| `room_hop_mcp/browser_agent_adapter/adapter.py` | `8cd73faca62057cbfbbd0ac03c07254c02e8df6c` | Browser Adapter client sends HTTP JSON-RPC POST through `requests.post` to `ROOMHOP_MCP_URL`; negotiates MCP session/protocol headers; expects JSON or SSE response. |
+| `room_hop_mcp/__main__.py` | `43adaa746f8e51a6ecce762a7b01694d0411d105` | Work32 MCP entrypoint creates the public server and runs `mcp.server.stdio.stdio_server()`; documented invocation is `python -m room_hop_mcp`. |
+| `room_hop_mcp/adapter/server.py` | `b740f72b95ea3a6e0a7e1d19a3ef3275b9899815` | Shared MCP server factory registers exactly four ADR-002 tools and delegates to MeetingService. |
+| `room_hop_mcp/adapter/http_server.py` | `f17d752f6badf2b600f78906e63982d18f70e859` | FastAPI Core HTTP routes; this is not an MCP Streamable HTTP server and does not expose the MCP `/mcp` JSON-RPC endpoint. |
+| `tests/test_ci_mcp_stdio_e2e.py` | `b78d69e3a6f35c7c573c9fd699a9d3993b883c74` | CI integration launches the MCP stdio client/session and asserts the exact four-tool inventory plus persisted test transcript roundtrip. |
+| `tests/test_browser_agent_adapter_contract.py` | `4151ea6eda790716b238806a35f11ba8c76b8a11` | Browser Adapter contract tests mock MCP calls; they do not establish a live HTTP MCP server. |
+
+### Finding
+
+A separate Browser Adapter process on another HTTP port, by itself, does **not** solve the integration gap. The Browser Adapter's current client expects an HTTP MCP endpoint, while the reviewed Work32 MCP entrypoint serves stdio. The existing Core HTTP adapter is a different REST contract and cannot be relabeled as MCP. The legacy process on `:8020` is not an acceptable substitute: its source inventory is broader than ADR-002 and it is outside the Work32 branch source.
+
+Therefore the proposed isolated runtime is **BLOCKED pending an explicit transport decision**. Do not set `ROOMHOP_MCP_URL` to the Core REST base URL, the legacy `:8020` root, or the Browser Adapter's own `/mcp` route.
+
+### Xu architecture decision required
+
+Xu should select and define one supported transport path before implementation:
+
+**Option A — retain Work32 MCP stdio as the only public transport.** Adapt the Browser Adapter integration to use the existing MCP stdio client/session boundary (or a bounded stdio bridge) while preserving the exact four-tool inventory. Xu must define subprocess/session lifecycle, shared `ROOM_HOP_MEETINGS_DIR`, concurrency, process ownership and cleanup. Do not introduce a network MCP endpoint.
+
+**Option B — add a dedicated Work32 MCP Streamable HTTP entrypoint.** Reuse the existing `create_server(MeetingService)` factory so tool semantics and ADR-002 inventory remain identical. Define loopback binding, endpoint path, process lifecycle, test-only data directory, authentication/access controls, session behavior, and tests proving HTTP transport parity with the existing stdio contract. This is a new transport surface and requires Xu's architecture approval before code changes.
+
+**Not accepted:** calling Core REST routes directly from Browser Adapter as a shortcut; widening the four-tool MCP inventory; using the legacy `:8020` runtime; or changing Core business/lifecycle semantics to make a client pass.
+
+### Scope and safety boundary
+
+- Work32 original design brief states PC changes and live-service changes are out of scope. No PC process was created, started, stopped or reconfigured in this review.
+- No HTTP request was sent to `:8020`, `:8787`, or any `/mcp` endpoint.
+- No POST, transcript read/write, meeting mutation, environment change, source/workflow edit, merge, deployment or release occurred.
+- After Xu decides transport, Ka will review the implementation contract and deterministic tests. Any PC runtime execution remains separately gated and must not violate the no-PC-change boundary without explicit owner authorization.
+
+### Status
+
+- Browser Adapter source-level test guardrails: PASS for the tested CI scope.
+- Work32 MCP stdio contract: source and CI test path confirmed.
+- Work32 MCP Streamable HTTP endpoint: NOT PRESENT in the reviewed entrypoint/source.
+- Browser Adapter ↔ Work32 transport compatibility: BLOCKED pending Xu decision.
+- Isolated PC runtime: NOT CREATED / NOT TESTED.
+- Work32: ACTIVE — NOT RELEASED.
+
+### BIÊN BẢN
+
+- **Name:** Ka
+- **Title:** CSA / Backend & Repository Custodian
+- **Date-Time:** 2026-11-05 (exact time not captured)
+- **Disposition:** Transport mismatch identified from exact Work32 source. No transport implementation or PC runtime action authorized/performed.
+
+### NHẬT KÝ
+
+- **Name:** Ka
+- **Title:** CSA / Backend & Repository Custodian
+- **Date-Time:** 2026-11-05 (exact time not captured)
+- **Action:** Audited Browser Adapter HTTP client, Work32 stdio MCP entrypoint, shared MCP server factory, Core REST adapter and CI stdio E2E test.
+- **Result:** Isolated Browser Adapter process alone cannot connect to the reviewed Work32 MCP runtime. Submitted Option A/Option B transport decision to Xu; retained no-PC-change and no-live-service-mutation boundaries.
