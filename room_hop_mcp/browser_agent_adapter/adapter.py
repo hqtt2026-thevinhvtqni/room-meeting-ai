@@ -220,6 +220,7 @@ async def _submit_to_roomhop_stdio(
     child_env = dict(os.environ)
     # Force the MCP child onto the explicitly selected disposable test store.
     child_env["ROOM_HOP_MEETINGS_DIR"] = str(meetings_dir)
+    child_env["PYTHONPATH"] = str(repo_root)
     integration = RoomHopIntegration(
         RoomHopIntegrationConfig(
             python_executable=sys.executable,
