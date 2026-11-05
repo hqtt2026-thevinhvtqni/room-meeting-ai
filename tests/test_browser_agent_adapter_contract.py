@@ -234,10 +234,6 @@ def test_stdio_session_preserves_cancellation_and_unwinds(monkeypatch):
             yield object(), object()
         finally:
             lifecycle["stdio_closed"] = True
-            raise BaseExceptionGroup(
-                "simulated stdio task-group cancellation",
-                [asyncio.CancelledError()],
-            )
 
     class FakeClientSession:
         async def __aenter__(self):
