@@ -1140,3 +1140,14 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **Ka re-review:** requested on updated timeout, real stdio E2E, session cleanup and remaining process-termination evidence boundary. Ka to return explicit disposition and evidence.
 - **Safety:** no PC process/service action, no live endpoint call, no :8020, no real meeting mutation, no main merge, deploy or release.
 - **STATUS:** Real Browser Adapter -> Work32 MCP stdio -> Core transcript CI E2E PASS at exact commit; Ka re-review PENDING; PC provenance BLOCKED / NOT VERIFIED; Work32 ACTIVE — NOT RELEASED.
+
+
+### W32-LOG-20261105-73 — Bổ sung propagation của cancellation và kiểm thử cleanup
+- Theo review Ka, timeout phải bảo đảm cancellation đi xuyên qua RoomHopIntegration thay vì bị chuyển thành IntegrationError.
+- Sửa integration/room_hop_integration.py: giữ nguyên asyncio.CancelledError; nếu BaseExceptionGroup chứa CancelledError thì unwrapping và phát lại cancellation để asyncio.wait_for hoàn tất timeout và context manager unwind.
+- Thêm deterministic test mô phỏng cancellation trong stdio teardown, xác nhận ClientSession và stdio context đều chạy exit path.
+- Giới hạn: test kiểm tra context-manager unwind bằng stdio context giả lập; chưa chứng minh OS-level child PID termination trên PC Windows. PC lifecycle vẫn NOT VERIFIED.
+- Code commit integration 341b1c0c; cancellation test 8ccecdb6; DOC-068 Addendum J 08365881.
+- CI run #92 / 41951379259 đang pending cho test commit; run #91 trước đó bị supersede/cancel. Không tính run #91 là validation.
+- Real Browser Adapter stdio -> Core transcript E2E vẫn PASS tại run #86 / commit c291bca97369ff15e7f867a51e3b8e1b89f0fe77.
+- P2 Browser Adapter singleton concurrency DEFERRED. Không tác động PC, không :8020, không merge main/deploy/release. Work32 ACTIVE — NOT RELEASED.
