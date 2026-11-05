@@ -39,3 +39,30 @@ Only the MCP adapter, Integration client, T8 contract test, and CI E2E test/work
 ## Release boundary
 
 No merge/rebase/cherry-pick to main, no secrets, no deployment, and no production mutation. Work 32 remains ACTIVE — NOT RELEASED.
+
+
+---
+
+## Addendum — Decision A: Browser Adapter reuses canonical MCP stdio (2026-11-05)
+
+- Decision owner: Xu / AI-01, under Vinh's delegated Work32 execution authority.
+- Decision: SELECT OPTION A. Work32 Public V1 remains stdio-only. Browser Adapter uses the existing integration.RoomHopIntegration client/session boundary. No Streamable HTTP MCP listener is added.
+- Reason: Work32 already has a tested stdio subprocess/session client and CI E2E. This avoids creating a second network transport and preserves the existing server factory and ADR-002 public boundary.
+
+### Implementation contract
+1. Each Browser Adapter workflow submission opens one RoomHopIntegration.session(); context exit closes the session and child process.
+2. Browser Adapter remains a synchronous FastAPI/Playwright boundary. Its sync submission function uses local asyncio.run to execute one async stdio session per workflow. No shared event loop, MCP session, or subprocess is stored globally. Concurrent workflows own separate child processes/sessions.
+3. Child CWD and PYTHONPATH are pinned to the repository root derived from the Browser Adapter source location. The child environment explicitly overrides ROOM_HOP_MEETINGS_DIR with ROOMHOP_TEST_MEETINGS_DIR.
+4. Submission is blocked unless ROOMHOP_TEST_MODE=1, explicit ROOMHOP_TEST_MEETING_ID, ROOMHOP_TEST_IDENTITY_ID, and absolute ROOMHOP_TEST_MEETINGS_DIR are present.
+5. The selected store must already exist and contain .roomhop-disposable-test-store with exact content ROOM-HOP-WORK32-DISPOSABLE-TEST-STORE. Missing/invalid marker blocks before subprocess creation. No automatic store creation or meeting provisioning is performed.
+6. Before any tool call, actual MCP tool names must equal exactly the four ADR-002 names. The exact configured meeting must be present and active. No fallback meeting or identity is permitted.
+7. Handoff calls only add_paste_to_meeting with the configured identity, then reads transcript and verifies the exact marker plus execution/evidence/work IDs and evidence filename.
+8. No Core REST shortcut, HTTP MCP endpoint, :8020, or Browser Adapter's own /mcp route is used.
+
+### Verification and limits
+- Deterministic contract tests cover test-mode guard, required explicit store/identity, missing store, sentinel guard, exact tool inventory, no meeting fallback, inactive meeting rejection, exact target/identity, readback, and session cleanup.
+- PC/live Browser Adapter E2E remains opt-in and requires the disposable-store marker plus explicit test target.
+- This decision and code implementation do not prove the currently running PC PID 20468 is Work32. No PC process/service is started, stopped, restarted, or reconfigured here.
+- No MCP live call, transcript mutation, merge to main, CD/deploy, production release, or strict coverage enablement is authorized by this addendum.
+
+Status: Architecture decision RECORDED; implementation committed to Work32 branch; CI validation pending. Work32 remains ACTIVE — NOT RELEASED.
