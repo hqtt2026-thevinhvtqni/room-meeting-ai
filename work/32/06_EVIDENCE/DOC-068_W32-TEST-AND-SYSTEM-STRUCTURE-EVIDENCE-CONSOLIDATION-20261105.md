@@ -474,3 +474,20 @@ Prefer evaluating **Option A first** because the stdio MCP boundary and its subp
 - No PC process/service action, no live :8787 call, no transcript mutation outside CI's temporary test store, no :8020, no main merge, deploy or release.
 
 Status: timeout/nested-loop implementation committed; real stdio E2E added to CI; exact-SHA validation pending; P2 browser singleton concurrency review deferred. Work32 ACTIVE — NOT RELEASED.
+
+
+---
+
+## Addendum I — Real Browser Adapter stdio E2E passes CI (2026-11-05)
+
+- CI run #86 / ID 41950816354 validated commit c291bca97369ff15e7f867a51e3b8e1b89f0fe77. All four jobs completed SUCCESS.
+- Product Auto E2E: 56 passed. The ten Browser Adapter contract tests all passed, including timeout/no-auto-retry and nested-loop guard. The new tests/test_browser_agent_adapter_stdio_e2e.py::test_browser_adapter_real_stdio_submission_roundtrip passed.
+- The real test creates a temporary disposable store with the exact sentinel, provisions an active meeting through MeetingManager/MeetingService, calls the actual Browser Adapter submit_to_roomhop boundary, launches the real MCP stdio child through RoomHopIntegration, validates exact four tools and identity, then reads the Core transcript and verifies the artifact marker.
+- Python 3.12 bounded unit tests: 189 passed. Tooling: 20 tests OK. Immutable product artifact E2E: 1 passed. Dependencies check clean.
+- This is CI execution in a temporary isolated test store; it is not PC :8787 live E2E and does not validate PID 20468 provenance.
+- Timeout behavior and no-auto-retry are covered by a deterministic test. Nested event-loop rejection is covered. Actual OS-level child-process termination under a real timed-out stdio operation is not independently measured yet; retain as a lifecycle verification limitation for Ka to assess.
+- P2 global Browser Adapter singleton concurrency (page/context/log state) remains deferred pending a separate service concurrency contract.
+- Ka is requested to independently review the updated timeout and real stdio E2E implementation, including the remaining cancellation/process-cleanup evidence boundary.
+- No PC process/service action, no live endpoint call, no :8020, no real meeting mutation, no main merge, deploy or release.
+
+Status: Real Browser Adapter -> Work32 MCP stdio -> Core transcript CI E2E PASS at the exact commit; Ka re-review pending; PC provenance remains BLOCKED / NOT VERIFIED. Work32 ACTIVE — NOT RELEASED.
