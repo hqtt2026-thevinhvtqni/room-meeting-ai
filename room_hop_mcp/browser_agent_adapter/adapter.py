@@ -318,8 +318,25 @@ async def _submit_to_roomhop_stdio(
         }
 
 
+DEFAULT_MCP_TIMEOUT_SECONDS = 30.0
+MAX_MCP_TIMEOUT_SECONDS = 120.0
+
+
+def _mcp_timeout_seconds() -> float:
+    raw = os.getenv("ROOMHOP_MCP_TIMEOUT_SECONDS", str(DEFAULT_MCP_TIMEOUT_SECONDS))
+    try:
+        timeout = float(raw)
+    except (TypeError, ValueError) as exc:
+        raise ValueError("ROOMHOP_MCP_TIMEOUT_SECONDS must be numeric") from exc
+    if not (0 < timeout <= MAX_MCP_TIMEOUT_SECONDS):
+        raise ValueError(
+            f"ROOMHOP_MCP_TIMEOUT_SECONDS must be greater than 0 and at most {MAX_MCP_TIMEOUT_SECONDS:g}"
+        )
+    return timeout
+
+
 def submit_to_roomhop(result: dict[str, Any]):
-    """Synchronous Browser Adapter boundary; each handoff owns one stdio session."""
+    """Synchronous Browser Adapter boundary; each handoff owns one bounded stdio session."""
     if os.getenv("ROOMHOP_TEST_MODE") != "1":
         return {
             "status": "blocked",
@@ -361,14 +378,43 @@ def submit_to_roomhop(result: dict[str, Any]):
         }
 
     try:
+        timeout_seconds = _mcp_timeout_seconds()
+    except ValueError as exc:
+        return {"status": "blocked", "reason": str(exc)}
+
+    # Guard before constructing the coroutine: asyncio.run cannot be nested.
+    try:
+        asyncio.get_running_loop()
+    except RuntimeError:
+        pass
+    else:
+        return {
+            "status": "blocked",
+            "reason": "Nested event loops are not allowed; call from the synchronous Browser Adapter worker",
+        }
+
+    try:
         return asyncio.run(
-            _submit_to_roomhop_stdio(
-                result,
-                meeting_id=meeting_id,
-                identity_id=identity_id,
-                meetings_dir=meetings_dir,
+            asyncio.wait_for(
+                _submit_to_roomhop_stdio(
+                    result,
+                    meeting_id=meeting_id,
+                    identity_id=identity_id,
+                    meetings_dir=meetings_dir,
+                ),
+                timeout=timeout_seconds,
             )
         )
+    except asyncio.TimeoutError:
+        # The append may have reached Core before timeout; never retry automatically.
+        return {
+            "status": "blocked",
+            "reason": "MCP stdio submission timed out; append outcome is uncertain; do not retry automatically",
+            "meeting_id": meeting_id,
+            "identity_id": identity_id,
+            "timeout_seconds": timeout_seconds,
+            "transport": "stdio",
+        }
     except Exception as exc:
         return {
             "status": "blocked",
