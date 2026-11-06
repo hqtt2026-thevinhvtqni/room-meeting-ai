@@ -8,6 +8,7 @@ on:
   pull_request:
     branches:
       - main
+      - work/32-ci-cd-python-ci-v2
   workflow_dispatch:
 
 permissions:
@@ -40,6 +41,7 @@ env:
     tests/test_secretary.py
     tests/test_secretary_acceptance_abc.py
     tests/test_secretary_meeting_acceptance.py
+    tests/test_f4_resource_limits.py
   E2E_TESTS: >-
     tests/test_e2e.py
     tests/test_execution_host.py
@@ -49,7 +51,13 @@ env:
     tests/test_http_recording.py
     tests/test_ci_live_e2e.py
     tests/test_ci_mcp_stdio_e2e.py
+    tests/test_browser_agent_adapter_contract.py
+    tests/test_browser_agent_adapter_stdio_e2e.py
     tests/test_ci_product_e2e.py
+    tests/test_integration.py
+    tests/test_work13_wee_integration.py
+  WINDOWS_LANE_TESTS: >-
+    tests/test_browser_agent_adapter_e2e.py
 
 jobs:
   unit:
@@ -68,7 +76,7 @@ jobs:
           git checkout --detach FETCH_HEAD
 
       - name: Set up Python
-        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: '3.12'
           cache: pip
@@ -97,7 +105,7 @@ jobs:
 
       - name: Retain unit test evidence
         if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: room-hop-ci-evidence-unit
           path: |
@@ -108,7 +116,7 @@ jobs:
           retention-days: 14
 
   tooling:
-    name: Work 32 tooling tests (classifier and coverage checker)
+    name: Work 32 tooling tests (classifier, coverage and workflow mirror)
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -123,7 +131,7 @@ jobs:
           git checkout --detach FETCH_HEAD
 
       - name: Set up Python
-        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: '3.12'
 
@@ -132,11 +140,16 @@ jobs:
           set -o pipefail
           mkdir -p test-results
           cd "${W32_DIR}/05_TEST"
-          python -m unittest -v test_result_classifier test_check_test_coverage 2>&1 | tee "${GITHUB_WORKSPACE}/test-results/tooling-unittest.txt"
+          python -m unittest -v test_result_classifier test_check_test_coverage test_check_workflow_mirror 2>&1 | tee "${GITHUB_WORKSPACE}/test-results/tooling-unittest.txt"
+
+      - name: Check active workflow and Work 32 mirror (report-only)
+        run: |
+          set -o pipefail
+          python "${W32_DIR}/04_CODE/ci_tools/check_workflow_mirror.py" | tee test-results/workflow-mirror-report.txt
 
       - name: Retain tooling test evidence
         if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: room-hop-ci-evidence-tooling
           path: test-results/tooling-unittest.txt
@@ -159,7 +172,7 @@ jobs:
           git checkout --detach FETCH_HEAD
 
       - name: Set up Python
-        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: '3.12'
           cache: pip
@@ -183,7 +196,7 @@ jobs:
 
       - name: Retain E2E test evidence
         if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: room-hop-ci-evidence-e2e
           path: |
@@ -191,6 +204,146 @@ jobs:
             test-results/pip-freeze-e2e.txt
           if-no-files-found: warn
           retention-days: 14
+
+  windows_browser_adapter:
+    name: Windows Browser Adapter E2E (dedicated disposable runner)
+    if: ${{ vars.W32_WINDOWS_RUNNER_READY == 'true' }}
+    runs-on: [self-hosted, Windows, X64, room-hop-w32]
+    timeout-minutes: 12
+    env:
+      ROOMHOP_TEST_MODE: "1"
+      ROOMHOP_TEST_MEETINGS_DIR: ${{ vars.ROOMHOP_TEST_MEETINGS_DIR }}
+      ROOMHOP_TEST_MEETING_ID: ${{ vars.ROOMHOP_TEST_MEETING_ID }}
+      ROOMHOP_TEST_IDENTITY_ID: ${{ vars.ROOMHOP_TEST_IDENTITY_ID }}
+      ROOMHOP_BROWSER_ADAPTER_PID: ${{ vars.ROOMHOP_BROWSER_ADAPTER_PID }}
+      ROOMHOP_BROWSER_ADAPTER_EXE: ${{ vars.ROOMHOP_BROWSER_ADAPTER_EXE }}
+      ROOMHOP_BROWSER_ADAPTER_OWNER: ${{ vars.ROOMHOP_BROWSER_ADAPTER_OWNER }}
+    steps:
+      - name: Fetch exact triggering revision without submodule recursion
+        env:
+          REPOSITORY: ${{ github.repository }}
+          REVISION: ${{ github.sha }}
+        shell: pwsh
+        run: |
+          git init .
+          git remote add origin "https://github.com/$env:REPOSITORY.git"
+          git fetch --no-tags --depth=1 origin "$env:REVISION"
+          git checkout --detach FETCH_HEAD
+
+      - name: Set up Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+
+      - name: Fail-closed Browser Adapter and disposable-store preflight
+        shell: pwsh
+        run: |
+          $required = @(
+            "ROOMHOP_TEST_MEETINGS_DIR", "ROOMHOP_TEST_MEETING_ID",
+            "ROOMHOP_TEST_IDENTITY_ID", "ROOMHOP_BROWSER_ADAPTER_PID",
+            "ROOMHOP_BROWSER_ADAPTER_EXE", "ROOMHOP_BROWSER_ADAPTER_OWNER"
+          )
+          foreach ($name in $required) {
+            if ([string]::IsNullOrWhiteSpace([Environment]::GetEnvironmentVariable($name))) {
+              throw "BLOCKED: required runner variable $name is missing"
+            }
+          }
+          $store = (Resolve-Path -LiteralPath $env:ROOMHOP_TEST_MEETINGS_DIR -ErrorAction Stop).Path
+          $workspace = (Resolve-Path -LiteralPath $env:GITHUB_WORKSPACE).Path
+          if ($store.StartsWith($workspace, [StringComparison]::OrdinalIgnoreCase)) {
+            throw "BLOCKED: disposable store must be outside GITHUB_WORKSPACE"
+          }
+          $sentinel = Join-Path $store ".roomhop-disposable-test-store"
+          if (-not (Test-Path -LiteralPath $sentinel -PathType Leaf)) {
+            throw "BLOCKED: disposable-store sentinel is missing"
+          }
+          $expectedPid = [int]$env:ROOMHOP_BROWSER_ADAPTER_PID
+          $listeners = @(Get-NetTCPConnection -State Listen -LocalPort 8787 -ErrorAction Stop |
+            Where-Object { $_.OwningProcess -eq $expectedPid -and $_.LocalAddress -eq "127.0.0.1" })
+          if ($listeners.Count -ne 1) {
+            throw "BLOCKED: expected PID does not own exactly one 127.0.0.1:8787 listener"
+          }
+          $proc = Get-CimInstance Win32_Process -Filter "ProcessId = $expectedPid"
+          if (-not $proc -or -not $proc.ExecutablePath -or -not $proc.CommandLine) {
+            throw "BLOCKED: process provenance is incomplete"
+          }
+          if (-not [string]::Equals([IO.Path]::GetFullPath($proc.ExecutablePath),
+            [IO.Path]::GetFullPath($env:ROOMHOP_BROWSER_ADAPTER_EXE),
+            [StringComparison]::OrdinalIgnoreCase)) {
+            throw "BLOCKED: executable path does not match approved runner value"
+          }
+          if ($proc.CommandLine -notlike "*$store*") {
+            throw "BLOCKED: service command line does not identify the disposable store"
+          }
+          if ($proc.CommandLine -notlike "*$env:GITHUB_SHA*") {
+            throw "BLOCKED: service command line does not attest the exact source SHA"
+          }
+          $owner = Invoke-CimMethod -InputObject $proc -MethodName GetOwner
+          $actualOwner = if ($owner.ReturnValue -eq 0) { "$($owner.Domain)\$($owner.User)" } else { "" }
+          if ($actualOwner -ne $env:ROOMHOP_BROWSER_ADAPTER_OWNER) {
+            throw "BLOCKED: process owner does not match approved runner value"
+          }
+          $parent = Get-CimInstance Win32_Process -Filter "ProcessId = $($proc.ParentProcessId)"
+          if (-not $parent) { throw "BLOCKED: parent process provenance is unavailable" }
+          Write-Host "runner=$env:COMPUTERNAME"
+          Write-Host "store=$store"
+          Write-Host "sentinel=$sentinel"
+          Write-Host "meeting_id=$env:ROOMHOP_TEST_MEETING_ID"
+          Write-Host "identity_id=$env:ROOMHOP_TEST_IDENTITY_ID"
+          Write-Host "service_pid=$($proc.ProcessId)"
+          Write-Host "service_owner=$actualOwner"
+          Write-Host "service_executable=$($proc.ExecutablePath)"
+          Write-Host "service_command_line=$($proc.CommandLine)"
+          Write-Host "service_parent_pid=$($proc.ParentProcessId)"
+          Write-Host "service_parent_name=$($parent.Name)"
+          Write-Host "service_source_sha=$env:GITHUB_SHA"
+
+      - name: Run Browser Adapter live E2E
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force test-results | Out-Null
+          python -m pip install pytest requests
+          python -m pytest -v tests/test_browser_agent_adapter_e2e.py --junitxml=test-results/junit-browser-adapter-windows.xml
+
+      - name: Verify disposable-store sentinel after run
+        if: always()
+        shell: pwsh
+        run: |
+          $store = $env:ROOMHOP_TEST_MEETINGS_DIR
+          $sentinel = if ($store) { Join-Path $store ".roomhop-disposable-test-store" } else { "" }
+          if (-not $sentinel -or -not (Test-Path -LiteralPath $sentinel -PathType Leaf)) {
+            throw "BLOCKED: disposable-store sentinel disappeared after test"
+          }
+
+      - name: Upload Windows Browser Adapter evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: room-hop-ci-evidence-windows-browser-adapter
+          path: test-results/junit-browser-adapter-windows.xml
+          if-no-files-found: warn
+          retention-days: 14
+
+  release_gate:
+    name: Work 32 release acceptance gate
+    if: always()
+    needs: [unit, tooling, e2e, windows_browser_adapter, product_artifact]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require all mandatory lanes
+        env:
+          UNIT_RESULT: ${{ needs.unit.result }}
+          TOOLING_RESULT: ${{ needs.tooling.result }}
+          E2E_RESULT: ${{ needs.e2e.result }}
+          WINDOWS_RESULT: ${{ needs.windows_browser_adapter.result }}
+          ARTIFACT_RESULT: ${{ needs.product_artifact.result }}
+        run: |
+          printf 'unit=%s\ntooling=%s\ne2e=%s\nwindows_browser_adapter=%s\nproduct_artifact=%s\n' "$UNIT_RESULT" "$TOOLING_RESULT" "$E2E_RESULT" "$WINDOWS_RESULT" "$ARTIFACT_RESULT"
+          test "$UNIT_RESULT" = success
+          test "$TOOLING_RESULT" = success
+          test "$E2E_RESULT" = success
+          test "$WINDOWS_RESULT" = success
+          test "$ARTIFACT_RESULT" = success
 
   product_artifact:
     name: Build and verify immutable ROOM HOP product artifact
@@ -209,7 +362,7 @@ jobs:
           git checkout --detach FETCH_HEAD
 
       - name: Set up Python
-        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: '3.12'
 
@@ -236,7 +389,7 @@ jobs:
 
       - name: Retain immutable product artifact, checksum and artifact-level E2E evidence
         if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: room-hop-product-release-candidate
           path: |
