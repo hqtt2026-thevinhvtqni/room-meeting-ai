@@ -1,0 +1,252 @@
+{
+  "work_id": "76",
+  "product_name": "AI Trigger Engine & Automation Framework",
+  "summary": "Nền tảng dùng chung để đăng ký, đánh giá điều kiện và kích hoạt nhiệm vụ AI có kiểm soát. Hiện ở baseline khám phá; chưa có runtime implementation.",
+  "standard_id": "ROOM-HOP-WORK-MASTER",
+  "standard_version": "1.2",
+  "work_status": "ACTIVE",
+  "current_phase": "01_DISCOVER",
+  "source_mode": "local_snapshot",
+  "warning_vi": "Bản chụp cục bộ. G0/G1 chưa được xác minh; chưa triển khai Trigger runtime; không phải Core live.",
+  "updated_at": "2026-11-06T00:00:00Z",
+  "phases": [
+    {
+      "phase_id": "01_DISCOVER",
+      "name_vi": "Khám phá",
+      "status": "IN_PROGRESS",
+      "gate_status": "NOT_READY",
+      "owner": "Xu / Vinh",
+      "evidence_refs": []
+    },
+    {
+      "phase_id": "02_DEFINE",
+      "name_vi": "Định nghĩa",
+      "status": "PLANNED",
+      "gate_status": "NOT_READY",
+      "owner": "Xu / Vinh",
+      "evidence_refs": []
+    },
+    {
+      "phase_id": "03_ARCHITECT",
+      "name_vi": "Kiến trúc",
+      "status": "PLANNED",
+      "gate_status": "NOT_READY",
+      "owner": "Xu / Ka",
+      "evidence_refs": []
+    },
+    {
+      "phase_id": "04_PLAN",
+      "name_vi": "Kế hoạch",
+      "status": "PLANNED",
+      "gate_status": "NOT_READY",
+      "owner": "Xu",
+      "evidence_refs": []
+    },
+    {
+      "phase_id": "05_BUILD",
+      "name_vi": "Thi công",
+      "status": "NOT_STARTED",
+      "gate_status": "NOT_READY",
+      "owner": "TBD",
+      "evidence_refs": []
+    },
+    {
+      "phase_id": "06_VERIFY",
+      "name_vi": "Kiểm chứng",
+      "status": "NOT_STARTED",
+      "gate_status": "NOT_READY",
+      "owner": "Qw / An",
+      "evidence_refs": []
+    },
+    {
+      "phase_id": "07_ACCEPT",
+      "name_vi": "Nghiệm thu",
+      "status": "NOT_STARTED",
+      "gate_status": "NOT_READY",
+      "owner": "Vinh",
+      "evidence_refs": []
+    },
+    {
+      "phase_id": "08_RELEASE",
+      "name_vi": "Phát hành",
+      "status": "NOT_STARTED",
+      "gate_status": "NOT_READY",
+      "owner": "Vinh / Xu",
+      "evidence_refs": []
+    },
+    {
+      "phase_id": "09_OPERATE",
+      "name_vi": "Vận hành",
+      "status": "NOT_STARTED",
+      "gate_status": "NOT_READY",
+      "owner": "TBD",
+      "evidence_refs": []
+    }
+  ],
+  "work_packages": [
+    {
+      "wp_id": "WP-76-01",
+      "title": "Trigger Registry and schema",
+      "status": "PLANNED",
+      "owner": "Xu / TBD",
+      "reviewer": "Qw / TBD",
+      "evidence_refs": [
+        "05_BUILD/00_ROOT/BUILD_REGISTER.md"
+      ]
+    },
+    {
+      "wp_id": "WP-76-02",
+      "title": "Event Gateway and source validation",
+      "status": "PLANNED",
+      "owner": "TBD",
+      "reviewer": "Qw / TBD",
+      "evidence_refs": [
+        "04_PLAN/DOC-005_IMPLEMENTATION-ROADMAP.md"
+      ]
+    },
+    {
+      "wp_id": "WP-76-03",
+      "title": "Scheduler and TIME triggers",
+      "status": "PLANNED",
+      "owner": "TBD",
+      "reviewer": "Qw / TBD",
+      "evidence_refs": [
+        "04_PLAN/DOC-005_IMPLEMENTATION-ROADMAP.md"
+      ]
+    },
+    {
+      "wp_id": "WP-76-04",
+      "title": "Typed Condition Evaluator",
+      "status": "PLANNED",
+      "owner": "TBD",
+      "reviewer": "Qw / TBD",
+      "evidence_refs": [
+        "03_ARCHITECTURE/DOC-004_TRIGGER-ENGINE-ARCHITECTURE.md"
+      ]
+    },
+    {
+      "wp_id": "WP-76-05",
+      "title": "Policy adapter and approval",
+      "status": "PLANNED",
+      "owner": "TBD",
+      "reviewer": "Qw / TBD",
+      "evidence_refs": [
+        "03_ARCHITECTURE/DOC-004_TRIGGER-ENGINE-ARCHITECTURE.md"
+      ]
+    },
+    {
+      "wp_id": "WP-76-06",
+      "title": "Orchestration, dedupe and retry",
+      "status": "PLANNED",
+      "owner": "TBD",
+      "reviewer": "Qw / TBD",
+      "evidence_refs": [
+        "03_ARCHITECTURE/DOC-004_TRIGGER-ENGINE-ARCHITECTURE.md"
+      ]
+    },
+    {
+      "wp_id": "WP-76-07",
+      "title": "Verified AI dispatch adapter",
+      "status": "BLOCKED",
+      "owner": "Xu / Core owner TBD",
+      "reviewer": "Qw / TBD",
+      "evidence_refs": [
+        "03_ARCHITECTURE/DOC-004_TRIGGER-ENGINE-ARCHITECTURE.md"
+      ]
+    },
+    {
+      "wp_id": "WP-76-08",
+      "title": "Audit and evidence store",
+      "status": "PLANNED",
+      "owner": "TBD",
+      "reviewer": "Qw / TBD",
+      "evidence_refs": [
+        "06_EVIDENCE/EVIDENCE_REGISTER.md"
+      ]
+    },
+    {
+      "wp_id": "WP-76-09",
+      "title": "Read-only dashboard",
+      "status": "PLANNED",
+      "owner": "Xu / TBD",
+      "reviewer": "An / Qw",
+      "evidence_refs": [
+        "DASHBOARD/README.md"
+      ]
+    }
+  ],
+  "blockers": [
+    {
+      "id": "B-76-01",
+      "title": "Core identity, authorization and audit contracts not verified",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "owner": "Xu / Core owner TBD",
+      "detail_vi": "Cần truy nguyên API/schema thật và xác minh quyền trước khi thực thi protected actions."
+    },
+    {
+      "id": "B-76-02",
+      "title": "AI dispatch transport and ACK contract not verified",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "owner": "Xu / Work 70 integration",
+      "detail_vi": "Không giả định có thể gửi nhiệm vụ vào private ChatGPT sessions; cần transport và ACK evidence."
+    },
+    {
+      "id": "B-76-03",
+      "title": "Event sources and scheduler infrastructure not inventoried",
+      "severity": "MEDIUM",
+      "status": "OPEN",
+      "owner": "Xu",
+      "detail_vi": "Cần discovery hệ thống hiện hữu để tránh tạo scheduler/broker trùng lặp."
+    },
+    {
+      "id": "B-76-04",
+      "title": "G0/G1 entry and discovery gates pending",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "owner": "Vinh / Xu",
+      "detail_vi": "Manifest và tài liệu khởi tạo đã có; gate vẫn cần đánh giá độc lập."
+    }
+  ],
+  "risks": [
+    {
+      "id": "R-76-01",
+      "title": "Untrusted event payload may contain prompt injection",
+      "severity": "HIGH",
+      "mitigation_vi": "Treat payload as data; validate source/schema; never let event payload override policy."
+    },
+    {
+      "id": "R-76-02",
+      "title": "Duplicate/replayed event may cause duplicate side effects",
+      "severity": "HIGH",
+      "mitigation_vi": "Idempotency key, replay window, dedupe store and execution audit."
+    },
+    {
+      "id": "R-76-03",
+      "title": "Trigger may execute with stale/revoked permissions",
+      "severity": "HIGH",
+      "mitigation_vi": "Re-authorize at execution time; fail closed if policy is unavailable."
+    }
+  ],
+  "decisions_needed": [
+    {
+      "id": "D-76-01",
+      "title": "Approve initial event-source and integration inventory",
+      "owner": "Vinh / Xu",
+      "status": "PENDING"
+    },
+    {
+      "id": "D-76-02",
+      "title": "Approve protected-action classes and human-approval matrix",
+      "owner": "Vinh",
+      "status": "PENDING"
+    },
+    {
+      "id": "D-76-03",
+      "title": "Approve runtime/queue/storage technology after discovery",
+      "owner": "Vinh / Xu / Ka",
+      "status": "PENDING"
+    }
+  ]
+}
