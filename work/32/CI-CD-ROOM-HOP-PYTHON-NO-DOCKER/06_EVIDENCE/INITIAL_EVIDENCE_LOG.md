@@ -104,3 +104,43 @@ Workflow: `.github/workflows/work32-ci-pilot.yml` — Work-branch-only; permissi
 - **Interpretation (for Xu)**: 6 of 8 excluded files PASS in a plain isolated runner — safe candidates to fold into the CI (G2/G3) scope. The 2 FAILs are live-service dependencies (browser-agent :8787, WEE), NOT CI defects; keep them excluded or wire up service stubs/fixtures (Phase C scope decision for Xu + Vinh).
 - **Anomaly — ci-pilot job of run #13**: no "Run #13 (G0–G2)" evidence comment appeared on issue #39 after extended monitoring (the G3/G5 comment posted normally; runs #11/#12 ci-pilot comments are present). ci-pilot verdict for run #13 = **NOT CONFIRMED** (missing evidence comment; job log needs admin to inspect). Note: the G0–G2 code path is unchanged since run #10 (only the workflow file changed), so a G2 regression is unlikely — but per evidence-first doctrine this is recorded as unconfirmed, not assumed PASS. Xu should inspect run #13's ci-pilot job log; if the comment step failed (e.g. secondary rate limit from the concurrent `gh issue comment`), add retry/backoff to both comment steps.
 - Gate impact: G3/G5 now have exploration-level executed evidence. Promoting any file into a hard gate still requires Xu/Vinh decision (Phase C scope).
+
+
+## Execution journal — 2026-11-06 (Asia/Ho_Chi_Minh)
+Coordinator: Xu (AI-01). Requested by Vinh: record the current test evidence and continue Work 32 with Ka (AI-02 / CSA reviewer).
+
+### READ / TRACE — current GitHub baseline
+- Work branch: `work/32-ci-cd-room-hop-python-no-docker`.
+- Branch HEAD verified: `d93402a4c0c6a6875e73c0240f168fb4be73cfb4`.
+- PR [#40](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/40) remains OPEN + DRAFT, base `main` at `d7266eb9bfedfc534fc87d56548e47841bb583b9`; not merged. No merge/deploy performed.
+- Canonical CI evidence tracker: [Issue #39](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/issues/39).
+
+### Latest verified CI evidence
+- Push run [#14](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/41979573352), commit `d93402a4c0c6a6875e73c0240f168fb4be73cfb4`: workflow conclusion SUCCESS. Both jobs succeeded: G0–G2 and G3/G5 isolated exploration. This is a workflow/job status, not a claim that every explored test passed.
+- PR validation run [#18](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/42169429080), commit `edde8ee0b2fa4a0ae7e944adc69db4d249ada641` (PR event): G0–G2 PASS, **190 passed / 0 failed**. Treat this as PR validation evidence; it does not change the Work branch HEAD recorded above.
+- Latest per-file G3/G5 exploration published to Issue #39 (run #18): **6/8 files PASS; 2/8 FAIL**. PASS: `test_e2e.py`, `test_integration.py`, `test_http_lifecycle.py`, `test_http_recording.py`, `test_wee_8031_bridge.py`, `test_execution_host.py`. FAIL: `test_browser_agent_adapter_e2e.py` (connection refused at `127.0.0.1:8787/browser/execute_workflow`); `test_work13_wee_integration.py` (real WEE host reports `BLOCKED`, while test expects `PASS`). These remain exploration-only; do not label G3/G5 fully PASS.
+- Two Starlette deprecation warnings were emitted by HTTP lifecycle/recording tests; non-fatal in the observed run.
+- A cleanup log previously exposed `fatal: No url found for submodule path 'room-meeting-ai' in .gitmodules`; the job still concluded SUCCESS. Treat this as a separate cleanup/configuration defect to investigate, not as a passing cleanup check.
+
+### DECISION / current gate posture
+- G0–G2: PASS with executed CI evidence (latest PR run #18: 190/190).
+- G3/G5: PARTIAL EXPLORATION EVIDENCE (6/8 pass; 2 service-dependent failures). Not accepted as fully passing gates.
+- G6: artifacts/evidence publication succeeded in observed runs.
+- G7: prior Vinh approval remains recorded; no new approval inferred for merge or deployment.
+- PR #40: OPEN + DRAFT; human review and Vinh integration decision remain required.
+- CD/deployment: NOT RUN.
+
+### Ka handoff — AI-02 / CSA review (next execution)
+Objective: turn the exploration evidence into a safe, reviewable Phase C plan without weakening tests or claiming unsupported PASS.
+
+1. **Baseline and divergence review:** compare Work branch `d93402a` with current `main` `d7266eb`; identify changed files, merge-base, conflicts and any main-only changes. Deliver a file-level risk matrix and a recommended integration sequence. Do not rebase, force-push, merge or alter main.
+2. **G3/G5 classification:** review the eight test files and classify each as hermetic (self-contained), fixture-backed, or live-service dependent. Recommend which of the six passing files can be promoted into a deterministic CI gate, with exact commands and dependencies. Do not delete or skip failing tests to obtain green.
+3. **Service contract plan:** specify the minimum isolated service/fixture contract for Browser Agent `:8787/browser/execute_workflow` and Work13/WEE. Identify owners, required startup/health checks, teardown, and what constitutes real evidence. Do not replace live integration with a fake PASS.
+4. **Submodule cleanup diagnosis:** trace the `.gitmodules` warning to its source and propose a minimal safe repair with a regression check.
+5. **Acceptance handoff:** produce a review report listing evidence, unresolved risks, test matrix, recommended owners (Cla/Vi for code changes; An/Qw for verification), and explicit human decision points. Keep PR #40 DRAFT until the review is complete and Vinh decides integration.
+
+### Xu coordination guardrails
+- Ka is assigned review/architecture/acceptance planning as CSA; implementation changes require a separate scoped coder task and review.
+- No edits to production code, no merge, no CD/deployment, no secrets, no Docker, and no use of ROOM-HOP :8020.
+- Next evidence must be linked from Issue #39 and this log. A green workflow alone is not sufficient; report per-gate and per-file outcomes.
+- Status at journal close: **ACTIVE — REVIEW/HANDOFF IN PROGRESS — NOT RELEASED**.
