@@ -4,7 +4,7 @@
 - **Read order:** 12
 - **Depends on:** DOC-001; DOC-002; DOC-033
 - **Status:** ACTIVE — CANONICAL WORK-WIDE LOG
-- **Version / Updated:** 1.6 / 2026-11-06
+- **Version / Updated:** 1.7 / 2026-11-06
 
 ## 2026-11-04 — W32-LOG-20261104-16 — Chuẩn hóa Work theo Work 70
 - **Người thực hiện:** Ka
@@ -1432,3 +1432,18 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **NEXT — read-only classification:** (1) export a complete path inventory grouped by top-level directory and file extension; (2) inspect diff names and selected diffs for the 63 modified tracked files, starting with application source/config/tests and separating desktop.ini; (3) inspect untracked directory tree and identify generated vs unique source/evidence; (4) determine a preservation destination with sufficient free space before any backup/copy; (5) only after preservation, refresh remote refs in a separate safe clone or otherwise isolated repository, not by mutating this working copy.
 - **NON-ACTIONS:** no local PC file was read or changed by Xu; no fetch/pull, commit, branch mutation, deletion, service/process action, :8020 call, deployment or release.
 - **STATUS:** Git object database PASS (from prior fsck evidence); working tree inventory COMPLETE at summary level but content classification PENDING; preservation/backup NOT YET DONE; local↔GitHub sync BLOCKED; Work 32 ACTIVE — NOT RELEASED.
+
+## 2026-11-06 — W32-LOG-20261106-88 — Phân nhóm tracked diff và untracked inventory local
+
+- **Người ghi:** Xu / AI-01 — Work 32 Coordinator.
+- **Nguồn:** PowerShell output do Vinh cung cấp; chỉ đọc, không sửa file.
+- **READ — Tracked diff:** thay đổi tập trung vào .gitignore, mã Core (discussion.py, governance.py, identity.py, meeting_log.py, meeting_manager.py, meeting_service.py), Execution Host (host.py, models.py, server.py), chat connectors, MCP adapter (http_server.py, server.py), tests và nhiều desktop.ini. File tracked duy nhất bị xóa là agents/quan_gia.yaml. Có cập nhật meetings/MEETING-2026-009/log.jsonl và meeting.yaml; requirements.txt cũng thay đổi.
+- **READ — Untracked top-level distribution:** ROOT 86; meetings 30; tests 29; dashboard 27; room_hop_mcp 27; evidence 17; core 16; integration 16; execution_host backup 9; READ_EVIDENCE 9; work 8; qe_snapshot 8; execution_host 8; _archive 7; runtime 6; app_workspace 6; tools 4; bridge 2; src 2; các nhóm nhỏ khác.
+- **READ — Extension distribution:** 119 .py, 42 .txt, 27 .json, 17 .yaml, 17 .tsx, 15 .bak, 14 .jsonl, 13 .ps1, 11 .md, 10 .ts, 6 .csv, 5 .png, 3 .zip, cùng nhiều loại backup/patch khác.
+- **High-value candidates:** untracked source/test files under core/, execution_host/, room_hop_mcp/, dashboard/, app_workspace/, integration/, tests/, plus package.json, package-lock.json, start-dev.ps1, vite.config.js, tsconfig.json, meeting records and evidence archives. Đây là ứng viên cần bảo toàn/đối chiếu, chưa khẳng định là source chuẩn.
+- **Special cases:** ?? -ErrorAction là một untracked path bất thường, cần kiểm tra tên chính xác, loại file, kích thước và nội dung trước khi phân loại. agents/quan_gia.yaml là tracked deletion cần xác minh ý định và đối chiếu lịch sử. Nhiều tracked desktop.ini nằm ngoài .git; không được suy rộng kết luận về metadata .git trước đây thành quyền xóa mọi desktop.ini trong working tree.
+- **TRACE:** local repo chứa nhiều lớp lịch sử triển khai, runtime, test, evidence, build output và backup. Inventory hiện mới phân nhóm theo path/extension; chưa có hash/content provenance, chưa xác định bản nào trùng GitHub hoặc có thể tái tạo.
+- **DECISION:** tiếp tục preservation-first. Không xóa desktop.ini ngoài .git, không xóa backups/archive, không phục hồi hoặc bỏ file agents/quan_gia.yaml một cách tự động. Không stage/commit các nhóm lớn, không fetch/pull/reset/clean/switch/rebase.
+- **NEXT:** thực hiện một vòng read-only tập trung: (1) kiểm tra chính xác -ErrorAction; (2) đọc metadata/nội dung và hash của một vài desktop.ini đại diện ngoài .git; (3) lấy diff nội dung có giới hạn cho .gitignore, Core, Execution Host, MCP adapter, requirements và tests; (4) xác định lịch sử/xuất xứ file agents/quan_gia.yaml; (5) lập danh sách ưu tiên backup cho source, meeting data và evidence trước các file sinh tự động.
+- **NON-ACTIONS:** không thao tác trên PC; không thay đổi file/branch; không xóa, stage, commit, fetch, pull, deploy hoặc release; không gọi :8020.
+- **STATUS:** inventory path/extension PASS; source/evidence provenance PENDING; preservation/backup NOT DONE; local↔GitHub sync BLOCKED; Work 32 ACTIVE — NOT RELEASED.
