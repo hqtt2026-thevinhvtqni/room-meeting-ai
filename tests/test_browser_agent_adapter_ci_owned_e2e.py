@@ -122,7 +122,8 @@ def ci_owned_browser_adapter(tmp_path: Path):
         "sock.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1); "
         "sock.bind(('127.0.0.1',0)); sock.listen(128); "
         "open(sys.argv[1],'w',encoding='utf-8').write(str(sock.getsockname()[1])); "
-        "uvicorn.run(app,sockets=[sock],log_level='warning')"
+        "config=uvicorn.Config(app,host='127.0.0.1',port=0,log_level='warning'); "
+        "uvicorn.Server(config).run(sockets=[sock])"
     )
     child_env = os.environ.copy()
     child_env.update(
