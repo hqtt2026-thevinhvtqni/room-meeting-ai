@@ -49,7 +49,7 @@ def _assert_ci_owned_listener(pid: int, port: int, source_sha: str) -> None:
     assert process.ppid() == os.getpid(), (
         f"adapter parent PID {process.ppid()} != CI test PID {os.getpid()}"
     )
-    assert os.path.normcase(process.exe()) == os.path.normcase(sys.executable)
+    assert Path(process.exe()).resolve() == Path(sys.executable).resolve()
     command_line = " ".join(process.cmdline())
     assert source_sha in command_line, "adapter command line does not attest exact source SHA"
     assert process.environ().get("ROOMHOP_CI_SOURCE_SHA") == source_sha
