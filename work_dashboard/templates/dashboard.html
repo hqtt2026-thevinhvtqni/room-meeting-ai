@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROOM HOP — Work Dashboard</title>
+<style>
+  :root{
+    --bg:#0b1020; --panel:#131a2e; --panel2:#1a2340; --line:#26304f;
+    --txt:#dbe4ff; --muted:#8b98c4; --accent:#5b8cff;
+    --ok:#2ecc71; --warn:#f1c40f; --bad:#e74c3c; --info:#5dade2; --gray:#7f8fa6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;min-height:100vh}
+  header{padding:20px 28px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:linear-gradient(180deg,#101832,var(--bg))}
+  header h1{font-size:20px;font-weight:700;letter-spacing:.5px}
+  header .sub{color:var(--muted);font-size:13px}
+  header .spacer{flex:1}
+  .btn{background:var(--accent);border:none;color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600}
+  .btn:hover{filter:brightness(1.15)}
+  .meta{color:var(--muted);font-size:12px}
+
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;padding:20px 28px}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+  .kpi .num{font-size:28px;font-weight:800}
+  .kpi .lbl{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+
+  .toolbar{padding:0 28px 14px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .toolbar input{background:var(--panel);border:1px solid var(--line);color:var(--txt);padding:8px 12px;border-radius:8px;font-size:13px;min-width:240px}
+  .chip{padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--panel);font-size:12px;cursor:pointer;color:var(--muted)}
+  .chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+  main{padding:0 28px 40px;display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));gap:18px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+  .card-head{padding:16px 18px;background:var(--panel2);display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line)}
+  .sbx{background:#0e1428;border:1px solid var(--line);color:var(--info);font-weight:800;font-size:12px;border-radius:8px;padding:4px 9px}
+  .card-head .name{font-weight:700;font-size:15px;word-break:break-word}
+  .badge{margin-left:auto;font-size:11px;font-weight:800;padding:4px 10px;border-radius:999px;letter-spacing:.5px;white-space:nowrap}
+  .b-pass,.b-done{background:rgba(46,204,113,.15);color:var(--ok);border:1px solid var(--ok)}
+  .b-blocked,.b-failed{background:rgba(231,76,60,.15);color:var(--bad);border:1px solid var(--bad)}
+  .b-design,.b-survey,.b-pending{background:rgba(241,196,15,.15);color:var(--warn);border:1px solid var(--warn)}
+  .b-progress,.b-wip,.b-decision{background:rgba(93,173,226,.15);color:var(--info);border:1px solid var(--info)}
+  .b-default{background:rgba(127,143,166,.15);color:var(--gray);border:1px solid var(--gray)}
+
+  .card-body{padding:16px 18px;display:flex;flex-direction:column;gap:14px;flex:1}
+  .sec-title{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin-bottom:8px}
+  .records{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+  .rec{border:1px solid var(--line);border-radius:10px;padding:10px;background:#0e1428;font-size:12px}
+  .rec .rname{font-weight:700;margin-bottom:4px}
+  .rec.ok{border-color:rgba(46,204,113,.5)}
+  .rec.missing{border-style:dashed;opacity:.75}
+  .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+  .dot.g{background:var(--ok)} .dot.r{background:var(--bad)} .dot.y{background:var(--warn)}
+
+  .gov{font-size:12px;color:var(--muted);background:#0e1428;border:1px solid var(--line);border-radius:10px;padding:10px}
+  .gov b{color:var(--warn)}
+
+  .folders{display:flex;flex-wrap:wrap;gap:6px}
+  .folder{background:#0e1428;border:1px solid var(--line);border-radius:8px;padding:5px 10px;font-size:11px;color:var(--muted)}
+  .folder b{color:var(--txt)}
+
+  .stats{display:flex;gap:16px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+  .stats span b{color:var(--txt)}
+  .path{font-size:11px;color:var(--gray);font-family:Consolas,monospace;word-break:break-all}
+  .empty{text-align:center;color:var(--muted);padding:60px;grid-column:1/-1}
+  footer{padding:14px 28px;border-top:1px solid var(--line);color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<header>
+  <h1>🏛️ ROOM HOP — Work Management Dashboard</h1>
+  <span class="sub">Hồ sơ điều hành theo AGENTS.md §06 · Read-only</span>
+  <div class="spacer"></div>
+  <span class="meta" id="genAt"></span>
+  <button class="btn" onclick="load()">↻ Làm mới</button>
+</header>
+
+<div class="kpis" id="kpis"></div>
+
+<div class="toolbar">
+  <input id="search" placeholder="🔍 Tìm Work, sandbox, trạng thái…" oninput="render()">
+  <span class="chip active" data-f="ALL" onclick="setFilter(this)">Tất cả</span>
+  <span class="chip" data-f="PASS_DONE" onclick="setFilter(this)">Done/Pass</span>
+  <span class="chip" data-f="DESIGN_PENDING" onclick="setFilter(this)">Design/Pending</span>
+  <span class="chip" data-f="BLOCKED" onclick="setFilter(this)">Blocked/Failed</span>
+  <span class="chip" data-f="MISSING_RECORDS" onclick="setFilter(this)">Thiếu hồ sơ chuẩn</span>
+</div>
+
+<main id="cards"><div class="empty">Đang quét work/ …</div></main>
+
+<footer>Dashboard chỉ đọc · Nguồn sự thật: <code>work/&lt;sandbox&gt;/&lt;WORK&gt;/</code> (BIEN_BAN.md · KE_HOACH_THI_CONG_XU.md · NHAT_KY_HOP_THI_CONG.md) + WORK_MANIFEST.md · Múi giờ hiển thị: UTC+07:00</footer>
+
+<script>
+let DATA = null, filter = 'ALL';
+
+const CORE = [
+  {key:'BIEN_BAN', label:'BIÊN BẢN', owner:'Co'},
+  {key:'KE_HOACH', label:'KẾ HOẠCH', owner:'Xu'},
+  {key:'NHAT_KY',  label:'NHẬT KÝ',  owner:'Mọi AI'},
+];
+
+function badgeClass(s){
+  s=(s||'').toUpperCase();
+  if(/PASS|DONE/.test(s)) return 'b-pass';
+  if(/BLOCKED|FAILED/.test(s)) return 'b-blocked';
+  if(/DESIGN|SURVEY|PENDING/.test(s)) return 'b-design';
+  if(/PROGRESS|WIP|DECISION/.test(s)) return 'b-progress';
+  return 'b-default';
+}
+function fmtTime(t){ if(!t) return '—'; try{ const d=new Date(t); return d.toLocaleString('vi-VN',{timeZone:'Asia/Ho_Chi_Minh'});}catch(e){return t;} }
+
+function missingCore(w){ return CORE.some(c=>!(w.records[c.key]&&w.records[c.key].exists)); }
+
+function setFilter(el){
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active'); filter=el.dataset.f; render();
+}
+
+function load(){
+  fetch('/api/works').then(r=>r.json()).then(d=>{DATA=d; render();});
+}
+
+function render(){
+  if(!DATA) return;
+  document.getElementById('genAt').textContent = 'Cập nhật: '+fmtTime(DATA.generated_at);
+  const q=(document.getElementById('search').value||'').toLowerCase();
+  let works = DATA.works.filter(w=>{
+    const hay=(w.sandbox_id+' '+w.work_name+' '+w.status+' '+w.path).toLowerCase();
+    if(q && !hay.includes(q)) return false;
+    if(filter==='PASS_DONE') return /PASS|DONE/.test(w.status);
+    if(filter==='DESIGN_PENDING') return /DESIGN|SURVEY|PENDING/.test(w.status);
+    if(filter==='BLOCKED') return /BLOCKED|FAILED/.test(w.status);
+    if(filter==='MISSING_RECORDS') return missingCore(w);
+    return true;
+  });
+
+  // KPIs
+  const total=DATA.works.length;
+  const done=DATA.works.filter(w=>/PASS|DONE/.test(w.status)).length;
+  const blocked=DATA.works.filter(w=>/BLOCKED|FAILED/.test(w.status)).length;
+  const missing=DATA.works.filter(missingCore).length;
+  const files=DATA.works.reduce((a,w)=>a+(w.total_files||0),0);
+  document.getElementById('kpis').innerHTML=[
+    ['Tổng số Work',total],['Đạt / Hoàn tất',done],['Bị chặn / Lỗi',blocked],
+    ['Thiếu hồ sơ chuẩn',missing],['File hồ sơ',files],
+  ].map(([l,n])=>`<div class="kpi"><div class="num">${n}</div><div class="lbl">${l}</div></div>`).join('');
+
+  // Cards
+  const el=document.getElementById('cards');
+  if(!works.length){ el.innerHTML='<div class="empty">Không có Work nào khớp bộ lọc.</div>'; return; }
+  el.innerHTML = works.map(w=>{
+    const recs = CORE.map(c=>{
+      const r=w.records[c.key]||{};
+      const ok=r.exists;
+      const extra = c.key==='NHAT_KY'&&ok ? ` · ${r.entries||0} mục ghi` : '';
+      return `<div class="rec ${ok?'ok':'missing'}">
+        <div class="rname"><span class="dot ${ok?'g':'r'}"></span>${c.label}</div>
+        <div style="color:var(--muted)">Chủ trì: ${c.owner}${extra}</div>
+        ${ok?`<div class="path" style="margin-top:4px">${r.path}</div>`:`<div style="color:var(--bad);margin-top:4px">❌ Chưa có bản chính thức</div>`}
+      </div>`;
+    }).join('');
+
+    const man=w.records.MANIFEST;
+    const gov = missingCore(w)
+      ? `<div class="gov">⚠️ Theo <b>AGENTS.md §06</b>, Work này còn thiếu hồ sơ điều hành chuẩn ở thư mục gốc Work. Cần kiểm kê và hợp nhất có kiểm soát.</div>` : '';
+
+    const folders=(w.folders||[]).map(f=>`<span class="folder"><b>${f.name}</b> · ${f.files} file</span>`).join('');
+
+    return `<div class="card">
+      <div class="card-head">
+        <span class="sbx">SBX ${w.sandbox_id}</span>
+        <span class="name">${w.work_name}</span>
+        <span class="badge ${badgeClass(w.status)}">${w.status}</span>
+      </div>
+      <div class="card-body">
+        <div class="path">📁 ${w.path}</div>
+        <div>
+          <div class="sec-title">Ba hồ sơ điều hành chính thức (§06.1)</div>
+          <div class="records">${recs}</div>
+        </div>
+        ${gov}
+        ${man?`<div class="stats"><span>Manifest: ✅ <b>${fmtTime(man.modified)}</b></span></div>`:''}
+        <div>
+          <div class="sec-title">Cấu trúc thư mục</div>
+          <div class="folders">${folders||'<span class="folder">(chưa có thư mục con)</span>'}</div>
+        </div>
+        <div class="stats">
+          <span>Tổng file: <b>${w.total_files}</b></span>
+          <span>Markdown: <b>${w.md_files}</b></span>
+          <span>Evidence/Test: <b>${w.evidence_files}</b></span>
+          <span>Hoạt động cuối: <b>${fmtTime(w.last_activity)}</b></span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+load();
+setInterval(load, 60000); // tự làm mới mỗi 60s
+</script>
+</body>
+</html>
