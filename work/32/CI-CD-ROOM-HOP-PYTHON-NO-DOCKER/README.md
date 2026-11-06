@@ -71,3 +71,16 @@ The Work branch is currently diverged from main (68 ahead / 32 behind at the lat
 - PR #40 is an earlier pilot PR from `work/32-ci-cd-room-hop-python-no-docker`; it remains OPEN / DRAFT with no submitted review. It is not the current v2 implementation PR.
 - Integration decision: no direct merge to main, no rebase/force-push and no merge of PR #40. Prepare a separately reviewed integration branch from current main and transplant only the approved Work 32 change set; run exact-SHA CI and open a fresh PR after independent review.
 - Work 32 remains ACTIVE — NOT RELEASED. PC Windows runtime provenance, Dashboard→Core E2E, CD/staging and release remain separate unresolved gates.
+
+
+## Verification update — 2026-11-06 (supersedes the earlier 3dc65a / run #109 checkpoint)
+
+- Canonical implementation branch remains `work/32-ci-cd-python-ci-v2`.
+- Current canonical branch HEAD verified from GitHub: `f5ea569c918d8ebfc94e52eab631cb514a198101`.
+- Latest completed active-branch CI at this verification: run #115 / `42123995682`, exact SHA `f5ea569c918d8ebfc94e52eab631cb514a198101`, conclusion SUCCESS. All four jobs completed successfully: unit, tooling, Product Auto E2E, and immutable product artifact verification.
+- Workflow mirror candidate `work/32-sync-workflow-mirror-20261106` was at `74fa891d72639a7d881811d2e17bd27f85a3fe6c` before the append-only journal update. It contained one workflow-mirror commit relative to canonical HEAD; the only implementation-path change was `04_CODE/ci-validation.yml`.
+- On the mirror candidate, `04_CODE/ci-validation.yml` and root `.github/workflows/ci-validation.yml` are byte-identical (blob SHA `4787d5899250d9a903402e4c4b8f1247da902e61`). The root workflow blob is also identical on the canonical implementation branch. The canonical branch's older `04_CODE/ci-validation.yml` copy remains distinct; the mirror candidate is the branch carrying the proposed synchronization.
+- No run on the mirror candidate is expected under the current push branch filters; CI is executed on the canonical implementation branch. Do not treat zero mirror-branch runs as a trigger failure.
+- The append-only journal entry `W32-LOG-20261106-01` records the exact branch, blob and run evidence, including correction of the earlier premature trigger diagnosis.
+- **Status:** workflow mirror synchronization PASS; canonical active-branch CI PASS (4/4 jobs); Work 32 remains ACTIVE — NOT RELEASED. No merge/rebase/cherry-pick, CD or production deployment is authorized by this verification.
+- **Remaining gates:** independent review and safe integration strategy; Windows PC runtime provenance; Dashboard→Core product integration E2E; attested staging/CD target, health check and rollback.
