@@ -8,6 +8,7 @@ on:
   pull_request:
     branches:
       - main
+      - work/32-ci-cd-python-ci-v2
   workflow_dispatch:
 
 permissions:
