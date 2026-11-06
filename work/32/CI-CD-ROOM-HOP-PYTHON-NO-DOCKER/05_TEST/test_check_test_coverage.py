@@ -57,7 +57,7 @@ class TestCoverage(unittest.TestCase):
         os.environ["UNIT_TESTS"] = "tests/test_a.py"
         self.assertEqual(
             c.find_unaccounted(self.root),
-            ["tests/test_b.py", "tests/test_c.py", "tests/browser/test_nested.py"],
+            ["tests/browser/test_nested.py", "tests/test_b.py", "tests/test_c.py"],
         )
 
     def test_pytest_norecursedirs_are_respected(self):
