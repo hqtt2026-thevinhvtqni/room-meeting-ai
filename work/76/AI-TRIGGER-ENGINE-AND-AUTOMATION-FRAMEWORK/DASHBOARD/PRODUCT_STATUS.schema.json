@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Work 76 Product Status",
+  "title": "Work 76 Product Status — Dashboard v0.2",
   "type": "object",
   "required": [
     "work_id",
@@ -10,7 +10,13 @@
     "source_mode",
     "phases",
     "work_packages",
-    "blockers"
+    "blockers",
+    "release_status",
+    "freshness",
+    "revision",
+    "ai_assignments",
+    "recent_activity",
+    "evidence"
   ],
   "properties": {
     "work_id": {
@@ -122,13 +128,185 @@
       }
     },
     "blockers": {
-      "type": "array"
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "severity",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "detail_vi": {
+            "type": "string"
+          }
+        }
+      }
     },
     "risks": {
-      "type": "array"
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "severity"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string"
+          },
+          "mitigation_vi": {
+            "type": "string"
+          }
+        }
+      }
     },
     "decisions_needed": {
-      "type": "array"
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "release_status": {
+      "enum": [
+        "NOT_RELEASED",
+        "RELEASED",
+        "ROLLBACK",
+        "UNKNOWN"
+      ]
+    },
+    "freshness": {
+      "type": "string"
+    },
+    "revision": {
+      "type": "string"
+    },
+    "ai_assignments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "ai_id",
+          "name",
+          "role",
+          "assignment_status"
+        ],
+        "properties": {
+          "ai_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "assignment_status": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "recent_activity": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "date",
+          "actor",
+          "title",
+          "status"
+        ],
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "actor": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "evidence_id",
+          "title",
+          "claim",
+          "path",
+          "status"
+        ],
+        "properties": {
+          "evidence_id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "claim": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      }
     }
   },
   "additionalProperties": true
