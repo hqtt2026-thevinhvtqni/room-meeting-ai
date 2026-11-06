@@ -11,7 +11,7 @@
   "freshness": "LOCAL_SNAPSHOT",
   "revision": "W76-DASHBOARD-0.2",
   "warning_vi": "LOCAL SNAPSHOT — GitHub main/Sandbox; chưa kết nối Core live. G0/G1 chưa xác minh. Trigger runtime chưa triển khai. Dashboard source sync đã read-back; browser/mobile E2E chưa chạy.",
-  "updated_at": "2026-11-06T07:10:00Z",
+  "updated_at": "2026-11-06T07:15:00Z",
   "phases": [
     {
       "phase_id": "01_DISCOVER",
@@ -363,6 +363,13 @@
       "claim": "Dashboard v0.2 HTML, JSON và README đã ghi lên GitHub main và được fetch/read-back thành công; JSON parse PASS.",
       "path": "DASHBOARD/index.html · PRODUCT_STATUS.json · README.md",
       "status": "VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-007",
+      "title": "Dashboard browser/mobile verification",
+      "claim": "Browser rendering, mobile layout and interaction checks have not been run; source sync alone is insufficient.",
+      "path": "DASHBOARD/README.md §6 Manual verification checklist",
+      "status": "NOT_AVAILABLE"
     }
   ]
 }
