@@ -15,3 +15,13 @@
 - Verification: đọc lại Manifest, architecture, execution log, discover brief, requirements, roadmap, verification plan, build register, evidence register và Dashboard từ GitHub; PRODUCT_STATUS.json và PRODUCT_STATUS.schema.json parse JSON thành công; index.html fetch thành công.
 - Status: GitHub sync VERIFIED cho baseline artifacts. Runtime Trigger Engine chưa được triển khai; CI, browser E2E, Core integration, AI dispatch và independent QE chưa chạy.
 - Next: hoàn tất G0/G1 evidence; kiểm kê event source/scheduler/Core authorization/audit/dispatch; không mở 05_BUILD implementation trước khi gate cho phép.
+
+## 2026-11-06 — Ưu tiên hoàn thiện Dashboard Work 76
+- Actor: Xu / runtime identity xu.
+- Decision: theo yêu cầu Vinh, ưu tiên Dashboard trước Trigger runtime; Work 70 tiếp tục là chuẩn tham chiếu.
+- READ: kiểm tra index.html, PRODUCT_STATUS.json, schema, Manifest, execution log, evidence register, roadmap trên GitHub; đọc Dashboard README/index.html Work 70.
+- TRACE: Dashboard cũ mới có tổng quan, phase, WP và blocker; thiếu AI assignment, activity log, evidence panel, freshness/revision, tìm kiếm/lọc WP và trạng thái lỗi đầy đủ.
+- BUILD: nâng cấp Dashboard v0.2 theo hướng responsive PC/mobile, read-only, filter/search WP, refresh JSON, phase/gate, AI roster, blocker/risk/decision, activity và evidence.
+- VERIFY: chờ ghi GitHub, read-back từng file; browser rendering và mobile E2E chưa được xác nhận trong lượt này.
+- Status: Dashboard v0.2 source implementation IN_REVIEW cho đến khi read-back và kiểm thử trình duyệt hoàn tất. Work lifecycle vẫn ACTIVE / 01_DISCOVER; G0/G1 NOT VERIFIED; NOT RELEASED.
+- Guardrail: local_snapshot không phải Core live; assignment PLANNED không phải AI dispatch; không tự nâng PASS khi chưa có evidence.
