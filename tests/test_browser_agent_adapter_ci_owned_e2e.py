@@ -22,6 +22,7 @@ import pytest
 import requests
 
 from core.meeting_manager import MeetingManager
+from core.meeting_service import MeetingService
 from integration.room_hop_integration import (
     RoomHopIntegration,
     RoomHopIntegrationConfig,
@@ -82,17 +83,18 @@ def ci_owned_browser_adapter(tmp_path: Path):
 
     meeting_id = "CI-BROWSER-OWNED-001"
     manager = MeetingManager(meetings_dir=meetings_dir)
-    manager.create_meeting(
+    service = MeetingService(manager)
+    service.create_meeting(
         meeting_id=meeting_id,
         topic="Work 32 CI-owned Browser Adapter E2E",
         participants=["xu"],
         context_files=[],
         created_by="vinh",
     )
-    manager.open_meeting(meeting_id)
-    manager.join_meeting(meeting_id, "vinh")
-    manager.join_meeting(meeting_id, "xu")
-    manager.start_meeting(meeting_id, "vinh")
+    service.open_meeting(meeting_id)
+    service.join_meeting(meeting_id, "vinh")
+    service.join_meeting(meeting_id, "xu")
+    service.start_meeting(meeting_id, "vinh")
 
     fixture_dir = tmp_path / "html-fixture"
     fixture_dir.mkdir()
