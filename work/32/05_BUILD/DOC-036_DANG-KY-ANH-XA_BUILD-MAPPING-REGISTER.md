@@ -4,7 +4,7 @@
 - Read order: 18
 - Depends on: DOC-001, DOC-003, DOC-033, DOC-011
 - Status: ACTIVE — LEGACY CLASSIFICATION IN PROGRESS
-- Version: 1.5 / 2026-11-04
+- Version: 1.6 / 2026-11-06
 
 05_BUILD is a mapping and engineering coordination layer, not a canonical source-code or original-document store.
 
@@ -148,3 +148,12 @@ Byte-for-byte Sandbox↔GitHub readback is PASS for active workflow MAP-32-002 a
 - Starlette/httpx2 remediation: DOC-067 header status PASS — run #39.
 - The exact-SHA evidence records remain W32-EVIDENCE-021/022/023 in DOC-014.
 - No product source changed in this documentation reconciliation.
+
+
+## 2026-11-06 — Current GitHub source and workflow mirror verification
+
+- **MAP-32-001 refresh:** canonical implementation branch `work/32-ci-cd-python-ci-v2`, verified HEAD `f5ea569c918d8ebfc94e52eab631cb514a198101`; exact-SHA Actions run #115 / `42123995682` SUCCESS 4/4.
+- **MAP-32-002 refresh:** root `.github/workflows/ci-validation.yml` on the canonical branch has blob SHA `4787d5899250d9a903402e4c4b8f1247da902e61`. The same blob exists in the mirror candidate's `04_CODE/ci-validation.yml` and root workflow, confirming byte-identical mirror at `work/32-sync-workflow-mirror-20261106`.
+- **Important distinction:** the canonical branch's own `work/32/CI-CD-ROOM-HOP-PYTHON-NO-DOCKER/04_CODE/ci-validation.yml` is still the older blob `b52be3533304675800cab4c968d32338fbd28be4`; the mirror candidate carries the synchronized copy. Do not claim Sandbox↔GitHub parity from these GitHub-only reads.
+- **Governance:** main integration remains BLOCKED (191 ahead / 35 behind); branch protection is disabled; no current v2 PR exists. No merge/rebase or release action.
+- **Evidence:** DOC-035 W32-LOG-20261106-84/85; DOC-014 W32-EVIDENCE-025.
