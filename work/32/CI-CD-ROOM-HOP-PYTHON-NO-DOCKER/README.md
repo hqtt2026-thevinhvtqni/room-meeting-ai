@@ -84,3 +84,15 @@ The Work branch is currently diverged from main (68 ahead / 32 behind at the lat
 - The append-only journal entry `W32-LOG-20261106-01` records the exact branch, blob and run evidence, including correction of the earlier premature trigger diagnosis.
 - **Status:** workflow mirror synchronization PASS; canonical active-branch CI PASS (4/4 jobs); Work 32 remains ACTIVE — NOT RELEASED. No merge/rebase/cherry-pick, CD or production deployment is authorized by this verification.
 - **Remaining gates:** independent review and safe integration strategy; Windows PC runtime provenance; Dashboard→Core product integration E2E; attested staging/CD target, health check and rollback.
+
+
+## Main integration gate — 2026-11-06
+
+- Current main HEAD: `d7266eb9bfedfc534fc87d56548e47841bb583b9`.
+- Current canonical Work 32 branch HEAD: `f5ea569c918d8ebfc94e52eab631cb514a198101`.
+- Main comparison: DIVERGED, 191 ahead / 35 behind; merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`.
+- Canonical branch protection is disabled and no required status checks are configured.
+- PR #40 is the old pilot branch PR (OPEN / DRAFT), not the canonical v2 branch. No PR for the canonical v2 branch was found.
+- **Integration gate: BLOCKED.** Do not merge/rebase the canonical branch directly or merge PR #40. The approved safe path is a separate integration branch from current main, minimal approved change-set transplant, exact-SHA CI and fresh independent-review PR.
+- This gate does not invalidate the successful run #115; CI PASS and main-integration readiness are separate decisions.
+- Detailed evidence: `W32-LOG-20261106-02` in `NHAT_KY_HOP_THI_CONG.md`.
