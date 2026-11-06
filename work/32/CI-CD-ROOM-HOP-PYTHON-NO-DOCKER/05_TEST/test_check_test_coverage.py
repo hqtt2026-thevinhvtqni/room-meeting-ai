@@ -71,7 +71,7 @@ class TestCoverage(unittest.TestCase):
         self.assertEqual(c.find_unaccounted(self.root), [])
 
     def test_multiline_folded_value(self):
-        os.environ["UNIT_TESTS"] = "tests/test_a.py\\n tests/test_b.py tests/test_c.py"
+        os.environ["UNIT_TESTS"] = "tests/test_a.py\n tests/test_b.py tests/test_c.py"
         self.assertEqual(c.find_unaccounted(self.root), [])
 
     def test_missing_whitelisted_file_detected(self):
