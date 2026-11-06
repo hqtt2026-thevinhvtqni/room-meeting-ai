@@ -4,7 +4,7 @@
 - **Read order:** 19
 - **Depends on:** DOC-004; DOC-033
 - **Status:** ACTIVE
-- **Version / Updated:** 1.6 / 2026-11-04
+- **Version / Updated:** 1.7 / 2026-11-06
 
 | Evidence ID | Claim / scope | Source path | Exact source/version | Result / status |
 |---|---|---|---|---|
@@ -65,3 +65,6 @@ Evidence is immutable by reference. Corrections add a new evidence record; faile
 
 
 | W32-EVIDENCE-023 | Starlette TestClient httpx2 compatibility remediation and exact-SHA validation | DOC-067; requirements.txt; constraints-ci.txt | Exact SHA 17d7d87c9e09b08026fd8bdda29578c04bd1aa35; run 41806906885; 4/4 jobs SUCCESS; pip check pass; raw logs zero StarletteDeprecationWarning and zero Node.js 20 warnings | PASS — httpx2 2.16.0, httpcore2 2.16.0, truststore 0.10.5 pinned; existing httpx/FastAPI/Starlette retained |
+
+
+| W32-EVIDENCE-025 | Canonical Work 32 branch exact-SHA CI run #115 | GitHub Actions run 42123995682; canonical branch `work/32-ci-cd-python-ci-v2`; exact SHA `f5ea569c918d8ebfc94e52eab631cb514a198101`; W32-LOG-20261106-84 | 4/4 jobs completed SUCCESS: Python 3.12 compile/unit, tooling, Product Auto E2E, immutable product artifact | PASS — CI pipeline scope only; does not establish Windows PC runtime, Dashboard integration, independent review, CD or release |
