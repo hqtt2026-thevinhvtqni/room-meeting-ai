@@ -4,7 +4,7 @@
 - **Read order:** 12
 - **Depends on:** DOC-001; DOC-002; DOC-033
 - **Status:** ACTIVE — CANONICAL WORK-WIDE LOG
-- **Version / Updated:** 1.5 / 2026-11-06
+- **Version / Updated:** 1.6 / 2026-11-06
 
 ## 2026-11-04 — W32-LOG-20261104-16 — Chuẩn hóa Work theo Work 70
 - **Người thực hiện:** Ka
@@ -1415,3 +1415,20 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **Decision / safety:** BLOCK destructive or state-changing Git operations. Do not run `git pull`, `git reset --hard`, `git clean`, branch checkout/switch, rebase, or mass-delete until a read-only inventory and preservation/backup plan are completed. Do not classify all untracked files as disposable; many may be active source or evidence.
 - **Next action:** collect a machine-readable inventory of tracked changes, untracked paths, sizes, and current remote refs without modifying files; group candidates by source/evidence/archive/Windows metadata and identify the smallest safe preservation plan. Then inspect divergence against a freshly fetched remote only after the working tree is safely preserved.
 - **Status:** Git object database PASS; local working tree DIRTY; local main freshness UNVERIFIED (reported 572 behind); PC-to-GitHub synchronization BLOCKED pending preservation and inventory.
+
+
+## 2026-11-06 — W32-LOG-20261106-87 — Kiểm kê phạm vi thay đổi local sau xác minh Git integrity
+
+- **Người ghi:** Xu / AI-01 — Work 32 Coordinator.
+- **Nguồn:** PowerShell inventory do Vinh cung cấp từ `D:\\ROOM-HOP-CLEAN\\room-meeting-ai`; chỉ đọc, không sửa file.
+- **READ — Tracked diff:** `git diff --shortstat` báo 64 files changed, 1,930 insertions(+), 744 deletions(-). `git diff --cached --shortstat` không có output; staging area trống.
+- **READ — Porcelain inventory:** 63 modified, 1 deleted, 331 untracked, tổng 395 mục trong `git status --porcelain=v1 -uall`.
+- **READ — Largest untracked files:** có browser E2E evidence (ảnh và dữ liệu Wikipedia headless/browser), built frontend assets trong `dist/assets/`, `package-lock.json`, `WORK09_1_BROWSER_WORKFLOW_ENGINE.zip`, evidence GATE_0_1, PowerShell transcript, meeting logs, `core/agent_runtime.py`, test backups, runtime decision log và các snapshot/diff QE. Các mục này có giá trị/loại hình khác nhau; không thể kết luận là rác chỉ từ tên hoặc kích thước.
+- **READ — Git remote:** `origin` fetch/push đều trỏ tới `https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai.git`.
+- **READ — Local branches:** `main` = `d7c90d9d31062d389810808e43dfdd19d7711b75`; `fix/operational-baseline-2026-08-18` = `d2855e337e9d2df5e132b62a72e5dda043f848ff`; `mcp-public-boundary-v1` = `888c2bd8333b90a7455b7a3248cc71b6feca0462`; `release/work14-w14-release-20261010t053516` = `7d32dc6e4a92f8a91a1603b1dadc0e4eac31dfd4`.
+- **Warnings:** Git emitted LF→CRLF normalization warnings for several modified text files. These are line-ending warnings, not proof of corruption. No fresh fetch was run; reported `behind 572` remains relative to the local tracking ref only.
+- **TRACE / assessment:** working tree is materially dirty and mixed: source changes, tests, build outputs, runtime data, evidence, backups and Windows metadata. The untracked set includes both small and potentially important artifacts. Current inventory does not identify ownership, provenance or whether each file is reproducible.
+- **DECISION:** preservation-first. No `git pull`, `reset --hard`, `clean -fd`, checkout/switch, rebase, force-push, broad deletion, or mass removal of `desktop.ini`. Do not treat `dist/`, backups, evidence, logs or unknown files as disposable without content/provenance checks.
+- **NEXT — read-only classification:** (1) export a complete path inventory grouped by top-level directory and file extension; (2) inspect diff names and selected diffs for the 63 modified tracked files, starting with application source/config/tests and separating desktop.ini; (3) inspect untracked directory tree and identify generated vs unique source/evidence; (4) determine a preservation destination with sufficient free space before any backup/copy; (5) only after preservation, refresh remote refs in a separate safe clone or otherwise isolated repository, not by mutating this working copy.
+- **NON-ACTIONS:** no local PC file was read or changed by Xu; no fetch/pull, commit, branch mutation, deletion, service/process action, :8020 call, deployment or release.
+- **STATUS:** Git object database PASS (from prior fsck evidence); working tree inventory COMPLETE at summary level but content classification PENDING; preservation/backup NOT YET DONE; local↔GitHub sync BLOCKED; Work 32 ACTIVE — NOT RELEASED.
