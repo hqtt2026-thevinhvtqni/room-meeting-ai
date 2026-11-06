@@ -4,7 +4,7 @@
 - **Read order:** 12
 - **Depends on:** DOC-001; DOC-002; DOC-033
 - **Status:** ACTIVE — CANONICAL WORK-WIDE LOG
-- **Version / Updated:** 1.4 / 2026-11-04
+- **Version / Updated:** 1.5 / 2026-11-06
 
 ## 2026-11-04 — W32-LOG-20261104-16 — Chuẩn hóa Work theo Work 70
 - **Người thực hiện:** Ka
@@ -1371,3 +1371,32 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **EXECUTION COMMAND:** Đã chuẩn bị một lệnh PowerShell có kiểm tra thư mục đích trước khi xóa, chỉ tìm file đúng tên `desktop.ini` bên dưới `.git`, bao gồm file Hidden/System. Lệnh được giao cho Vinh chạy trên PC; Xu không có quyền thực thi trực tiếp trên PC trong phiên này.
 - **SAFETY:** Không dùng `git clean`, `git reset`, xóa/rebuild `.git`, force-push hoặc thao tác thay đổi branch. Sau khi chạy lệnh, cần lấy kết quả số file còn lại và chạy `git fsck --full` riêng ở bước xác minh; việc xóa file không tự chứng minh Git metadata đã phục hồi.
 - **STATUS:** Root cause classification CONFIRMED; Google Drive removal CONFIRMED BY USER; cleanup command PREPARED / PC EXECUTION PENDING; Git integrity NOT YET VERIFIED; Work 32 ACTIVE — NOT RELEASED.
+
+
+## 2026-11-06 — W32-LOG-20261106-84 — Xác minh workflow mirror và CI nhánh triển khai chính
+
+- **Người ghi:** Xu / AI-01 — Work coordinator.
+- **Nguồn:** GitHub repository API, branch comparison, file blob SHA, Actions run metadata/job summaries; PowerShell validation do Vinh cung cấp trong phiên.
+- **Nhánh chuẩn:** `work/32-ci-cd-python-ci-v2`, HEAD `f5ea569c918d8ebfc94e52eab631cb514a198101`.
+- **Nhánh đồng bộ mirror:** `work/32-sync-workflow-mirror-20261106`, trước các commit nhật ký/tài liệu là `74fa891d72639a7d881811d2e17bd27f85a3fe6c`, parent là HEAD nhánh chuẩn tại thời điểm đối chiếu.
+- **Đối chiếu:** nhánh mirror ban đầu ahead 1 / behind 0; chỉ thay đổi `work/32/CI-CD-ROOM-HOP-PYTHON-NO-DOCKER/04_CODE/ci-validation.yml` (+13/-8).
+- **Blob verification:** trên nhánh mirror, `04_CODE/ci-validation.yml` và root `.github/workflows/ci-validation.yml` cùng blob SHA `4787d5899250d9a903402e4c4b8f1247da902e61`; root workflow trên nhánh chuẩn cũng cùng SHA. Bản `04_CODE/ci-validation.yml` cũ trên nhánh chuẩn vẫn có SHA `b52be3533304675800cab4c968d32338fbd28be4`.
+- **CI:** run #115 / `42123995682`, event push, exact SHA `f5ea569c918d8ebfc94e52eab631cb514a198101`, completed SUCCESS; cả 4 job unit, tooling, Product Auto E2E và immutable product artifact đều SUCCESS.
+- **Correction:** không có CI run trên nhánh mirror là phù hợp với vai trò nhánh đồng bộ; không kết luận trigger hỏng. Kết luận trước đó về lỗi push filter đã được rút lại.
+- **Không thực hiện:** không đổi workflow trigger, không dispatch run thủ công, không merge/rebase/cherry-pick/force-push, không deploy.
+- **Kết quả:** workflow mirror sync PASS; CI nhánh chuẩn PASS 4/4; Work 32 vẫn ACTIVE — NOT RELEASED.
+
+
+## 2026-11-06 — W32-LOG-20261106-85 — Đánh giá cổng tích hợp main và phạm vi diff
+
+- **Người ghi:** Xu / AI-01 — Work coordinator.
+- **Nguồn:** GitHub compare API `main...work/32-ci-cd-python-ci-v2`, branch metadata, PR inventory, read-only source diff inspection.
+- **Main HEAD:** `d7266eb9bfedfc534fc87d56548e47841bb583b9`.
+- **Work 32 canonical HEAD:** `f5ea569c918d8ebfc94e52eab631cb514a198101`.
+- **Branch compare:** DIVERGED, 191 commits ahead / 35 behind; merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`; 74 changed files returned. 53 files are under `work/32/`; remaining 21 include workflow/dependency configuration, Core/MCP/integration source, tests and supporting evidence.
+- **Governance:** canonical branch protection disabled; required status checks off. PR #40 remains OPEN / DRAFT from the old pilot branch `work/32-ci-cd-room-hop-python-no-docker`; no PR for canonical v2 branch found.
+- **Source trace (preliminary, not independent acceptance):** observed F4 rate-limit/UTF-8 validation changes in Core, HTTP/MCP handling of identity and 429 retry guidance, and Browser Adapter migration to the Work 32 stdio integration client. CI run #115 validates the configured test suite but does not prove Windows PC runtime provenance, concurrent Browser Adapter safety, Dashboard→Core integration or CD.
+- **Known open boundaries:** Browser Adapter singleton concurrency remains OPEN / NOT VERIFIED; PC Windows runtime/PID provenance NOT VERIFIED; Dashboard→Workspace(:8010)→Core browser E2E NOT RUN because real Workspace source/runtime and approved contract are not proven; CD/staging/deployment/release BLOCKED.
+- **DECISION:** direct integration to main BLOCKED. Do not merge/rebase canonical v2 directly and do not merge PR #40. Safe path: create a separate integration branch from current main, select and independently review the minimal approved Work 32 change set, transplant only that set, run exact-SHA CI, then open a fresh PR.
+- **Không thực hiện:** no source changes, no branch protection mutation, no PR creation/merge, no main mutation, no deployment.
+- **Kết quả:** CI PASS does not equal integration/release PASS. Work 32 remains ACTIVE — NOT RELEASED.
