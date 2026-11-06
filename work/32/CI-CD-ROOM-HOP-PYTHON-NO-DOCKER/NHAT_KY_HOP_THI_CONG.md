@@ -395,3 +395,31 @@
 - **Boundary:** Read-only audit + this log/evidence write. No workflow file changed; no merge/rebase/cherry-pick; no CD/release; strict coverage left OFF per Xu's decision; no branch divergence action.
 - **Result:** CI Hardening run #4 SUCCESS remains VALID (no SHA defect). P0 cleared. P1 duplication awaiting Xu/Vinh decision.
 - **Next:** Xu reads this log + W32-EVIDENCE-010; returns APPROVED / REVISE / BLOCKED on the workflow-consolidation proposal; Ka (or Vibe on approval) implements the single-workflow change in a new commit on the Work 32 branch.
+
+
+## W32-LOG-20261106-01 — P0 — Verify workflow mirror synchronization and active-branch CI
+
+- **Document Number:** W32-LOG-20261106-01
+- **Priority order:** P0 — CI workflow provenance, branch alignment and exact-SHA verification
+- **Name:** Xu
+- **Title:** AI-01 / Work 32 Coordinator
+- **Date-Time:** 2026-11-06, Asia/Ho_Chi_Minh
+- **Action:** Read-only inspection through the connected GitHub repository API. Inspected the mirror branch ref, canonical implementation branch ref, both workflow locations, branch comparison, latest active-branch Actions run and its four job summaries. The PowerShell YAML parse and four-job/artifact-step assertions previously supplied by Vinh were also retained as local validation evidence.
+- **Branch evidence:**
+  1. Mirror branch `work/32-sync-workflow-mirror-20261106` HEAD: `74fa891d72639a7d881811d2e17bd27f85a3fe6c`; commit message: `W32: sync workflow mirror to active (make byte-identical)`.
+  2. Canonical implementation branch `work/32-ci-cd-python-ci-v2` HEAD: `f5ea569c918d8ebfc94e52eab631cb514a198101`.
+  3. GitHub compare (canonical branch → mirror branch): mirror is 1 commit ahead / 0 behind; the only changed path is `work/32/CI-CD-ROOM-HOP-PYTHON-NO-DOCKER/04_CODE/ci-validation.yml` (13 additions / 8 deletions).
+- **Workflow identity evidence:**
+  1. Mirror-branch `04_CODE/ci-validation.yml` blob SHA: `4787d5899250d9a903402e4c4b8f1247da902e61`.
+  2. Mirror-branch root `.github/workflows/ci-validation.yml` has the same blob SHA; the code mirror is byte-identical to the active workflow file.
+  3. Root `.github/workflows/ci-validation.yml` on the canonical implementation branch has the same blob SHA, so the active workflow itself is unchanged between these two refs.
+  4. Canonical-branch `04_CODE/ci-validation.yml` remains a different older copy (blob SHA `b52be3533304675800cab4c968d32338fbd28be4`); the mirror commit specifically updates this copy. Do not confuse this source/template mirror with the root Actions workflow.
+- **CI evidence:**
+  1. Latest active-branch run observed: #115 / `42123995682`, event `push`, exact SHA `f5ea569c918d8ebfc94e52eab631cb514a198101`, status `completed`, conclusion `success`.
+  2. All four jobs completed successfully: Python 3.12 compile and bounded unit tests; Work 32 tooling tests; Product Auto E2E; Build and verify immutable ROOM HOP product artifact.
+  3. No workflow run on the mirror branch is expected from the current branch filters: the canonical implementation branch is `work/32-ci-cd-python-ci-v2`; the mirror branch is a synchronization candidate, not the active CI execution branch. The earlier interpretation that zero mirror-branch runs proved a trigger defect is withdrawn.
+  4. Vinh's local PowerShell verification returned `YAML_PARSE: PASS`, `EXPECTED_JOBS: PASS`, `PRODUCT_ARTIFACT_UPLOAD_STEP: PASS`, and exit code 0. This validates workflow structure, not a CI run by itself.
+- **Correction:** Earlier assistant wording that attributed the absence of mirror-branch runs to a broken push filter was premature. Branch role and README canonical-branch designation were subsequently checked; this log supersedes that interpretation.
+- **Boundary:** Read-only verification plus append-only journal update. No workflow trigger changed; no Actions run dispatched manually; no merge, rebase, cherry-pick, force-push, secrets change, CD or release action.
+- **Result:** Workflow mirror synchronization: PASS. Canonical active-branch CI run #115: PASS (4/4 jobs). Work 32 overall: ACTIVE — NOT RELEASED. Dashboard→Core integration, PC runtime provenance and CD/staging/release gates remain separate and are not cleared by this CI result.
+- **Next:** Reconcile the stale Work 32 README checkpoint (which still cites HEAD `3dc65a4603823f58543f5216af2b0885df3a1627` / run #109) against current canonical HEAD `f5ea569c918d8ebfc94e52eab631cb514a198101` / run #115; then continue the independent integration/release-gate review without merging to main.
