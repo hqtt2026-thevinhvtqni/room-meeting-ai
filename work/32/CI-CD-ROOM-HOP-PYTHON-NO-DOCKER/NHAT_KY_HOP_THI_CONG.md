@@ -423,3 +423,23 @@
 - **Boundary:** Read-only verification plus append-only journal update. No workflow trigger changed; no Actions run dispatched manually; no merge, rebase, cherry-pick, force-push, secrets change, CD or release action.
 - **Result:** Workflow mirror synchronization: PASS. Canonical active-branch CI run #115: PASS (4/4 jobs). Work 32 overall: ACTIVE — NOT RELEASED. Dashboard→Core integration, PC runtime provenance and CD/staging/release gates remain separate and are not cleared by this CI result.
 - **Next:** Reconcile the stale Work 32 README checkpoint (which still cites HEAD `3dc65a4603823f58543f5216af2b0885df3a1627` / run #109) against current canonical HEAD `f5ea569c918d8ebfc94e52eab631cb514a198101` / run #115; then continue the independent integration/release-gate review without merging to main.
+
+
+## W32-LOG-20261106-02 — P0 — Main integration and branch-governance gate assessment
+
+- **Document Number:** W32-LOG-20261106-02
+- **Priority order:** P0 — Main integration safety / independent review / branch governance
+- **Name:** Xu
+- **Title:** AI-01 / Work 32 Coordinator
+- **Date-Time:** 2026-11-06, Asia/Ho_Chi_Minh
+- **Action:** Read-only comparison of the canonical Work 32 implementation branch against current main; inspected branch protection and all open/closed repository PR metadata.
+- **Findings:**
+  1. Main HEAD: `d7266eb9bfedfc534fc87d56548e47841bb583b9`.
+  2. Canonical implementation branch HEAD: `f5ea569c918d8ebfc94e52eab631cb514a198101`.
+  3. Compare main → canonical Work 32 branch: DIVERGED; 191 commits ahead / 35 behind; merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`. This is not a fast-forward integration.
+  4. Canonical implementation branch protection: disabled; required status checks are off. CI success therefore does not itself enforce a merge gate.
+  5. PR inventory: PR #40 is OPEN / DRAFT from the old pilot branch `work/32-ci-cd-room-hop-python-no-docker`; it is not the canonical v2 implementation branch. No PR for `work/32-ci-cd-python-ci-v2` was found in the repository PR listing.
+- **Decision:** BLOCKED for direct main integration. Do not merge, rebase, force-push, cherry-pick broadly, or repurpose PR #40. Preserve the current canonical branch and CI evidence. Safe path remains: create a separately reviewed integration branch from current main; identify and approve the minimal Work 32 change set; transplant only that approved set; run exact-SHA CI; then open a fresh PR for independent review.
+- **Boundary:** Read-only gate assessment and append-only journal update. No branch protection, PR, workflow, or source changes.
+- **Result:** CI and workflow mirror checks remain PASS; main integration remains BLOCKED pending independent review and safe reconciliation. Work 32 remains ACTIVE — NOT RELEASED.
+- **Next:** Perform a scoped source/diff inventory against main and reconcile the current README checkpoint; do not start integration until the change set and independent reviewer are explicitly identified.
