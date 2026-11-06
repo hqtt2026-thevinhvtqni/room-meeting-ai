@@ -25,3 +25,7 @@
 - VERIFY: chờ ghi GitHub, read-back từng file; browser rendering và mobile E2E chưa được xác nhận trong lượt này.
 - Status: Dashboard v0.2 source implementation IN_REVIEW cho đến khi read-back và kiểm thử trình duyệt hoàn tất. Work lifecycle vẫn ACTIVE / 01_DISCOVER; G0/G1 NOT VERIFIED; NOT RELEASED.
 - Guardrail: local_snapshot không phải Core live; assignment PLANNED không phải AI dispatch; không tự nâng PASS khi chưa có evidence.
+
+- Verification addendum: GitHub read-back successful for Dashboard/index.html, PRODUCT_STATUS.json, README.md, execution log and evidence register; PRODUCT_STATUS.json parse PASS; source feature checks found WP search/filter, AI team, activity, evidence, refresh and UNKNOWN error state. PRODUCT_STATUS.schema.json expanded for v0.2.
+- Evidence: EV-76-006 VERIFIED (source sync/read-back); EV-76-007 NOT_AVAILABLE (browser/mobile rendering not run).
+- Remaining: browser check on PC and Android/mobile; verify search/filter/refresh and error states; independent An/Qw review. Until then WP-76-09 remains IN_REVIEW, not DONE.
