@@ -1,14 +1,17 @@
 {
   "work_id": "76",
   "product_name": "AI Trigger Engine & Automation Framework",
-  "summary": "Nền tảng dùng chung để đăng ký, đánh giá điều kiện và kích hoạt nhiệm vụ AI có kiểm soát. Hiện ở baseline khám phá; chưa có runtime implementation.",
+  "summary": "Nền tảng dùng chung để đăng ký, tiếp nhận sự kiện, đánh giá điều kiện và kích hoạt nhiệm vụ AI có kiểm soát. Ưu tiên hiện tại: hoàn thiện Dashboard theo chuẩn Work 70 trước khi mở triển khai runtime.",
   "standard_id": "ROOM-HOP-WORK-MASTER",
   "standard_version": "1.2",
   "work_status": "ACTIVE",
+  "release_status": "NOT_RELEASED",
   "current_phase": "01_DISCOVER",
   "source_mode": "local_snapshot",
-  "warning_vi": "Bản chụp cục bộ. G0/G1 chưa được xác minh; chưa triển khai Trigger runtime; không phải Core live.",
-  "updated_at": "2026-11-06T00:00:00Z",
+  "freshness": "LOCAL_SNAPSHOT",
+  "revision": "W76-DASHBOARD-0.2",
+  "warning_vi": "LOCAL SNAPSHOT — Dữ liệu đọc từ PRODUCT_STATUS.json trong GitHub/Sandbox; chưa kết nối Core live. G0/G1 chưa xác minh. Trigger runtime chưa triển khai. Dashboard chỉ đọc.",
+  "updated_at": "2026-11-06T07:00:00Z",
   "phases": [
     {
       "phase_id": "01_DISCOVER",
@@ -16,7 +19,9 @@
       "status": "IN_PROGRESS",
       "gate_status": "NOT_READY",
       "owner": "Xu / Vinh",
-      "evidence_refs": []
+      "evidence_refs": [
+        "01_DISCOVER/DOC-002_DISCOVER-BRIEF.md"
+      ]
     },
     {
       "phase_id": "02_DEFINE",
@@ -24,7 +29,9 @@
       "status": "PLANNED",
       "gate_status": "NOT_READY",
       "owner": "Xu / Vinh",
-      "evidence_refs": []
+      "evidence_refs": [
+        "02_DEFINE/DOC-003_PRODUCT-REQUIREMENTS.md"
+      ]
     },
     {
       "phase_id": "03_ARCHITECT",
@@ -32,7 +39,9 @@
       "status": "PLANNED",
       "gate_status": "NOT_READY",
       "owner": "Xu / Ka",
-      "evidence_refs": []
+      "evidence_refs": [
+        "03_ARCHITECT/DOC-004_TRIGGER-ENGINE-ARCHITECTURE.md"
+      ]
     },
     {
       "phase_id": "04_PLAN",
@@ -40,15 +49,19 @@
       "status": "PLANNED",
       "gate_status": "NOT_READY",
       "owner": "Xu",
-      "evidence_refs": []
+      "evidence_refs": [
+        "04_PLAN/DOC-005_IMPLEMENTATION-ROADMAP.md"
+      ]
     },
     {
       "phase_id": "05_BUILD",
       "name_vi": "Thi công",
       "status": "NOT_STARTED",
       "gate_status": "NOT_READY",
-      "owner": "TBD",
-      "evidence_refs": []
+      "owner": "Chưa phân công",
+      "evidence_refs": [
+        "05_BUILD/00_ROOT/BUILD_REGISTER.md"
+      ]
     },
     {
       "phase_id": "06_VERIFY",
@@ -56,7 +69,9 @@
       "status": "NOT_STARTED",
       "gate_status": "NOT_READY",
       "owner": "Qw / An",
-      "evidence_refs": []
+      "evidence_refs": [
+        "06_VERIFY/DOC-006_VERIFICATION-PLAN.md"
+      ]
     },
     {
       "phase_id": "07_ACCEPT",
@@ -79,7 +94,7 @@
       "name_vi": "Vận hành",
       "status": "NOT_STARTED",
       "gate_status": "NOT_READY",
-      "owner": "TBD",
+      "owner": "Chưa phân công",
       "evidence_refs": []
     }
   ],
@@ -98,7 +113,7 @@
       "wp_id": "WP-76-02",
       "title": "Event Gateway and source validation",
       "status": "PLANNED",
-      "owner": "TBD",
+      "owner": "Chưa phân công",
       "reviewer": "Qw / TBD",
       "evidence_refs": [
         "04_PLAN/DOC-005_IMPLEMENTATION-ROADMAP.md"
@@ -108,7 +123,7 @@
       "wp_id": "WP-76-03",
       "title": "Scheduler and TIME triggers",
       "status": "PLANNED",
-      "owner": "TBD",
+      "owner": "Chưa phân công",
       "reviewer": "Qw / TBD",
       "evidence_refs": [
         "04_PLAN/DOC-005_IMPLEMENTATION-ROADMAP.md"
@@ -118,30 +133,30 @@
       "wp_id": "WP-76-04",
       "title": "Typed Condition Evaluator",
       "status": "PLANNED",
-      "owner": "TBD",
+      "owner": "Chưa phân công",
       "reviewer": "Qw / TBD",
       "evidence_refs": [
-        "03_ARCHITECTURE/DOC-004_TRIGGER-ENGINE-ARCHITECTURE.md"
+        "03_ARCHITECT/DOC-004_TRIGGER-ENGINE-ARCHITECTURE.md"
       ]
     },
     {
       "wp_id": "WP-76-05",
       "title": "Policy adapter and approval",
       "status": "PLANNED",
-      "owner": "TBD",
+      "owner": "Chưa phân công",
       "reviewer": "Qw / TBD",
       "evidence_refs": [
-        "03_ARCHITECTURE/DOC-004_TRIGGER-ENGINE-ARCHITECTURE.md"
+        "03_ARCHITECT/DOC-004_TRIGGER-ENGINE-ARCHITECTURE.md"
       ]
     },
     {
       "wp_id": "WP-76-06",
       "title": "Orchestration, dedupe and retry",
       "status": "PLANNED",
-      "owner": "TBD",
+      "owner": "Chưa phân công",
       "reviewer": "Qw / TBD",
       "evidence_refs": [
-        "03_ARCHITECTURE/DOC-004_TRIGGER-ENGINE-ARCHITECTURE.md"
+        "03_ARCHITECT/DOC-004_TRIGGER-ENGINE-ARCHITECTURE.md"
       ]
     },
     {
@@ -151,14 +166,14 @@
       "owner": "Xu / Core owner TBD",
       "reviewer": "Qw / TBD",
       "evidence_refs": [
-        "03_ARCHITECTURE/DOC-004_TRIGGER-ENGINE-ARCHITECTURE.md"
+        "03_ARCHITECT/DOC-004_TRIGGER-ENGINE-ARCHITECTURE.md"
       ]
     },
     {
       "wp_id": "WP-76-08",
       "title": "Audit and evidence store",
       "status": "PLANNED",
-      "owner": "TBD",
+      "owner": "Chưa phân công",
       "reviewer": "Qw / TBD",
       "evidence_refs": [
         "06_EVIDENCE/EVIDENCE_REGISTER.md"
@@ -166,11 +181,13 @@
     },
     {
       "wp_id": "WP-76-09",
-      "title": "Read-only dashboard",
-      "status": "PLANNED",
-      "owner": "Xu / TBD",
+      "title": "Read-only Work 76 dashboard v0.2",
+      "status": "IN_REVIEW",
+      "owner": "Xu",
       "reviewer": "An / Qw",
       "evidence_refs": [
+        "DASHBOARD/index.html",
+        "DASHBOARD/PRODUCT_STATUS.json",
         "DASHBOARD/README.md"
       ]
     }
@@ -214,38 +231,137 @@
       "id": "R-76-01",
       "title": "Untrusted event payload may contain prompt injection",
       "severity": "HIGH",
-      "mitigation_vi": "Treat payload as data; validate source/schema; never let event payload override policy."
+      "mitigation_vi": "Coi payload là dữ liệu; xác thực nguồn/schema; không cho payload ghi đè policy."
     },
     {
       "id": "R-76-02",
       "title": "Duplicate/replayed event may cause duplicate side effects",
       "severity": "HIGH",
-      "mitigation_vi": "Idempotency key, replay window, dedupe store and execution audit."
+      "mitigation_vi": "Idempotency key, replay window, dedupe store và execution audit."
     },
     {
       "id": "R-76-03",
       "title": "Trigger may execute with stale/revoked permissions",
       "severity": "HIGH",
-      "mitigation_vi": "Re-authorize at execution time; fail closed if policy is unavailable."
+      "mitigation_vi": "Ủy quyền lại tại thời điểm thực thi; fail-closed nếu policy không khả dụng."
     }
   ],
   "decisions_needed": [
     {
       "id": "D-76-01",
-      "title": "Approve initial event-source and integration inventory",
+      "title": "Phê duyệt kiểm kê event-source và hệ thống tích hợp ban đầu",
       "owner": "Vinh / Xu",
       "status": "PENDING"
     },
     {
       "id": "D-76-02",
-      "title": "Approve protected-action classes and human-approval matrix",
+      "title": "Phê duyệt nhóm protected-action và ma trận human-approval",
       "owner": "Vinh",
       "status": "PENDING"
     },
     {
       "id": "D-76-03",
-      "title": "Approve runtime/queue/storage technology after discovery",
+      "title": "Phê duyệt công nghệ runtime/queue/storage sau discovery",
       "owner": "Vinh / Xu / Ka",
+      "status": "PENDING"
+    }
+  ],
+  "ai_assignments": [
+    {
+      "ai_id": "AI-01",
+      "name": "Xu",
+      "role": "Điều phối Work, kiến trúc Dashboard, nhật ký và phê duyệt luồng",
+      "assignment_status": "ACTIVE"
+    },
+    {
+      "ai_id": "AI-02",
+      "name": "Ka",
+      "role": "CSA · rà soát kiến trúc, gate và hợp đồng",
+      "assignment_status": "PLANNED"
+    },
+    {
+      "ai_id": "AI-05",
+      "name": "Qw",
+      "role": "QE/QA · thiết kế kiểm thử và rà soát bằng chứng",
+      "assignment_status": "PLANNED"
+    },
+    {
+      "ai_id": "AI-AN",
+      "name": "An",
+      "role": "Tester · kiểm thử giao diện Dashboard",
+      "assignment_status": "PLANNED"
+    },
+    {
+      "ai_id": "AI-OWNER",
+      "name": "Vinh",
+      "role": "Product Owner · quyết định cuối và nghiệm thu",
+      "assignment_status": "OWNER"
+    }
+  ],
+  "recent_activity": [
+    {
+      "date": "2026-11-06",
+      "actor": "Xu",
+      "title": "Rà soát Dashboard hiện hữu và đối chiếu Work 70",
+      "detail": "Xác định phần còn thiếu: lọc WP, AI assignment, activity, evidence, decisions và freshness.",
+      "status": "DONE"
+    },
+    {
+      "date": "2026-11-06",
+      "actor": "Xu",
+      "title": "Nâng cấp Dashboard v0.2",
+      "detail": "Đang cập nhật giao diện responsive, dữ liệu trạng thái và hướng dẫn kiểm thử.",
+      "status": "IN_PROGRESS"
+    },
+    {
+      "date": "2026-11-06",
+      "actor": "Xu",
+      "title": "Đồng bộ baseline Work 76 lên GitHub main",
+      "detail": "Tài liệu nền, manifest, kế hoạch, evidence register và dashboard baseline đã được đồng bộ.",
+      "status": "VERIFIED"
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "EV-76-001",
+      "title": "Work Sandbox created",
+      "claim": "Work Sandbox 76 được tạo và authorization ALLOW cho identity xu.",
+      "path": "MCP 8030 sandbox_create_work response · 2026-11-06",
+      "status": "VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-002",
+      "title": "Work 70 reference inspected",
+      "claim": "Đã kiểm tra cấu trúc Work 70 và chuẩn Dashboard.",
+      "path": "Work 70 GitHub main / DASHBOARD",
+      "status": "VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-003",
+      "title": "Baseline documents synchronized",
+      "claim": "Tài liệu nền và Dashboard baseline đã đồng bộ GitHub; JSON parse và read-back thành công.",
+      "path": "GitHub main · Work 76 baseline",
+      "status": "VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-004",
+      "title": "Trigger runtime implementation",
+      "claim": "Runtime chưa được triển khai.",
+      "path": "Not implemented",
+      "status": "NOT_AVAILABLE"
+    },
+    {
+      "evidence_id": "EV-76-005",
+      "title": "CI and automated tests",
+      "claim": "CI, browser E2E và independent QE chưa chạy.",
+      "path": "Not run",
+      "status": "NOT_AVAILABLE"
+    },
+    {
+      "evidence_id": "EV-76-006",
+      "title": "Dashboard v0.2 source sync",
+      "claim": "HTML, JSON và README phiên bản Dashboard v0.2 đã ghi và cần read-back kiểm tra.",
+      "path": "DASHBOARD/index.html · PRODUCT_STATUS.json · README.md",
       "status": "PENDING"
     }
   ]
