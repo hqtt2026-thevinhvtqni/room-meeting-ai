@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0",
+  "work_id": "75",
+  "work_name": "AI-NETWORK-GUARDIAN",
+  "status": "ACTIVE",
+  "release_status": "NOT_RELEASED",
+  "phase": "01_DISCOVER",
+  "platforms": ["MOBILE", "PC"],
+  "ai_participation": "EVIDENCE_GROUNDED_ADVISORY",
+  "source_mode": "github_documentation_snapshot",
+  "freshness": "SNAPSHOT",
+  "sandbox_parity": "NOT_VERIFIED",
+  "network_monitoring_live": false,
+  "work_packages": [
+    {"id":"WP75-01","name":"Work progress dashboard and product baseline","status":"ACTIVE","owner":"Xu / AI-01","reviewer":"Qw / AI-05"},
+    {"id":"WP75-02","name":"Router and office LAN discovery","status":"BLOCKED","owner":"Xu + Vinh","reviewer":"Ka / AI-02"},
+    {"id":"WP75-03","name":"Read-only collector and router adapter","status":"PLANNED","owner":"Cla / AI-03","reviewer":"Ka / AI-02"},
+    {"id":"WP75-04","name":"Deterministic network conflict detection","status":"PLANNED","owner":"Vi (capability to verify)","reviewer":"Qw / AI-05"},
+    {"id":"WP75-05","name":"Evidence-grounded local AI diagnosis","status":"PLANNED","owner":"Xu + local AI engineer TBD","reviewer":"Ka / AI-02"},
+    {"id":"WP75-06","name":"Mobile/PC integration, security, QA and release","status":"PLANNED","owner":"Qw + An","reviewer":"Vinh"}
+  ],
+  "blockers": [
+    {"id":"B75-01","description":"Router vendor/model/firmware and office LAN topology are unknown","status":"OPEN"},
+    {"id":"B75-02","description":"Full Sandbox 8030 to GitHub synchronization and parity are not verified","status":"OPEN"},
+    {"id":"B75-03","description":"Sandbox scaffold contains legacy folders inconsistent with Work 70 canonical structure; cleanup not performed","status":"OPEN"},
+    {"id":"B75-04","description":"Dashboard browser E2E and formal JSON Schema validation are not evidenced","status":"OPEN"}
+  ],
+  "decisions": [
+    {"id":"DEC-75-001","title":"Mobile + PC application with shared backend and AI assistance","status":"RECORDED"},
+    {"id":"DEC-75-002","title":"Local-first, passive/read-only initial release; no autonomous remediation","status":"RECORDED"},
+    {"id":"DEC-75-003","title":"Store Work 75 under work/75 on main, following Work 70","status":"APPLIED"}
+  ],
+  "evidence": {
+    "github_repository": "https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai",
+    "pre_bootstrap_main_sha": "d7266eb9bfedfc534fc87d56548e47841bb583b9",
+    "sandbox_parity_verified": false
+  }
+}
