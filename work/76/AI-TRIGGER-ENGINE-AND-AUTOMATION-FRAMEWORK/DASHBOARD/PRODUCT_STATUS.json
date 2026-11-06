@@ -10,8 +10,8 @@
   "source_mode": "local_snapshot",
   "freshness": "LOCAL_SNAPSHOT",
   "revision": "W76-DASHBOARD-0.2",
-  "warning_vi": "LOCAL SNAPSHOT — Dữ liệu đọc từ PRODUCT_STATUS.json trong GitHub/Sandbox; chưa kết nối Core live. G0/G1 chưa xác minh. Trigger runtime chưa triển khai. Dashboard chỉ đọc.",
-  "updated_at": "2026-11-06T07:00:00Z",
+  "warning_vi": "LOCAL SNAPSHOT — GitHub main/Sandbox; chưa kết nối Core live. G0/G1 chưa xác minh. Trigger runtime chưa triển khai. Dashboard source sync đã read-back; browser/mobile E2E chưa chạy.",
+  "updated_at": "2026-11-06T07:10:00Z",
   "phases": [
     {
       "phase_id": "01_DISCOVER",
@@ -360,9 +360,9 @@
     {
       "evidence_id": "EV-76-006",
       "title": "Dashboard v0.2 source sync",
-      "claim": "HTML, JSON và README phiên bản Dashboard v0.2 đã ghi và cần read-back kiểm tra.",
+      "claim": "Dashboard v0.2 HTML, JSON và README đã ghi lên GitHub main và được fetch/read-back thành công; JSON parse PASS.",
       "path": "DASHBOARD/index.html · PRODUCT_STATUS.json · README.md",
-      "status": "PENDING"
+      "status": "VERIFIED"
     }
   ]
 }
