@@ -1,24 +1,99 @@
 <!doctype html>
-<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><title>Work 76 — AI Trigger Engine</title>
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark">
+<title>Work 76 — AI Trigger Engine Dashboard</title>
 <style>
-:root{color-scheme:dark;--bg:#0b1220;--panel:#121d30;--line:#26364e;--text:#e8eef8;--muted:#9aabc2;--blue:#78aaff;--green:#65d6a0;--amber:#f4c66b;--red:#ff8585}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,Segoe UI,sans-serif}main{max-width:1100px;margin:auto;padding:24px 16px 48px}.top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}h1{font-size:25px;margin:4px 0}.muted,small{color:var(--muted)}.pill{border:1px solid var(--line);border-radius:30px;padding:5px 10px;font-size:12px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}.card{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:15px;min-width:0}.k{font-size:12px;color:var(--muted)}.v{font-size:22px;font-weight:700}.notice{margin:14px 0;padding:12px;border:1px solid #806a36;border-radius:10px;color:#f4d895;background:#2a2417}.phases{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.phase{padding:10px;border:1px solid var(--line);border-radius:9px}.phase.active{border-color:var(--blue)}.row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding:10px 0}.row:last-child{border:0}.state{font-size:12px;white-space:nowrap}.ok{color:var(--green)}.warn{color:var(--amber)}.bad{color:var(--red)}.two{display:grid;grid-template-columns:1.2fr .8fr;gap:12px;margin-top:12px}footer{font-size:12px;color:var(--muted);margin-top:16px}@media(max-width:700px){.grid,.two{grid-template-columns:1fr}.phases{grid-template-columns:repeat(2,1fr)}}
-</style></head><body><main>
-<header class="top"><div><div class="k">ROOM-HOP / WORK CONTROL</div><h1>Work 76 — AI Trigger Engine</h1><div class="muted">Hệ thống đăng ký, đánh giá điều kiện và kích hoạt AI có kiểm soát</div></div><span class="pill" id="source">LOCAL SNAPSHOT</span></header>
-<div class="notice" id="warning">Đang đọc trạng thái…</div>
-<section class="grid"><article class="card"><div class="k">CURRENT PHASE</div><div class="v" id="current">UNKNOWN</div></article><article class="card"><div class="k">WORK PACKAGES</div><div class="v" id="wpcount">—</div></article><article class="card"><div class="k">OPEN BLOCKERS</div><div class="v" id="blockcount">—</div></article></section>
-<section class="card"><h2>Vòng đời Work</h2><div class="phases" id="phases"></div></section>
-<div class="two"><section class="card"><h2>Work Packages</h2><div id="wps"></div></section><section class="card"><h2>Blockers</h2><div id="blockers"></div></section></div>
-<section class="card" style="margin-top:12px"><h2>Risks & Decisions</h2><div id="risks"></div><div id="decisions"></div></section>
-<footer>Read-only dashboard. Không cấp quyền, không kích hoạt Trigger và không thay đổi trạng thái Work. UNKNOWN khi không xác minh được nguồn dữ liệu.</footer>
-</main><script>
-const $=id=>document.getElementById(id),esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const phases=["01_DISCOVER","02_DEFINE","03_ARCHITECT","04_PLAN","05_BUILD","06_VERIFY","07_ACCEPT","08_RELEASE","09_OPERATE"];
-function render(d){$("source").textContent=d.source_mode||"UNKNOWN";$("warning").textContent=d.warning_vi||"Local snapshot; not Core live."; $("current").textContent=d.current_phase||"UNKNOWN";$("wpcount").textContent=(d.work_packages||[]).length;$("blockcount").textContent=(d.blockers||[]).filter(x=>x.status!=="CLOSED").length;
-$("phases").innerHTML=phases.map(id=>{let p=(d.phases||[]).find(x=>x.phase_id===id)||{};return '<div class="phase '+(id===d.current_phase?"active":"")+'"><b>'+id+'</b><br><small>'+esc(p.name_vi||"")+' · '+esc(p.status||"UNKNOWN")+'</small><br><small>Gate: '+esc(p.gate_status||"UNKNOWN")+'</small></div>'}).join("");
-$("wps").innerHTML=(d.work_packages||[]).map(w=>'<div class="row"><span><b>'+esc(w.wp_id)+'</b><br><small>'+esc(w.title)+'</small></span><span class="state">'+esc(w.status)+'</span></div>').join("")||"No WP";
-$("blockers").innerHTML=(d.blockers||[]).map(b=>'<div class="row"><span>'+esc(b.title)+'<br><small>'+esc(b.detail_vi||b.owner)+'</small></span><span class="state bad">'+esc(b.status)+'</span></div>').join("")||"No blockers";
-$("risks").innerHTML=(d.risks||[]).map(r=>'<p><b>'+esc(r.title)+'</b><br><small>'+esc(r.mitigation_vi)+'</small></p>').join("");
-$("decisions").innerHTML=(d.decisions_needed||[]).map(x=>'<div class="row"><span>'+esc(x.title)+'</span><span class="state warn">'+esc(x.status)+'</span></div>').join("");
+:root{color-scheme:dark;--bg:#09111f;--panel:#111d30;--panel2:#0d1728;--line:#263852;--text:#e8eef8;--muted:#9aabc2;--blue:#78aaff;--green:#65d6a0;--amber:#f4c66b;--red:#ff8585;--purple:#c4a5ff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}button,input,select{font:inherit}button,select,input{color:var(--text);background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:9px 11px}button{cursor:pointer}button:hover{border-color:var(--blue)}a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}
+main{max-width:1440px;margin:auto;padding:24px 18px 56px}.top{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;flex-wrap:wrap}.eyebrow,.k{font-size:11px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}h1{font-size:25px;line-height:1.25;margin:4px 0 7px}h2{font-size:16px;margin:0 0 13px}h3{font-size:14px;margin:18px 0 8px}.sub,.muted,small{color:var(--muted)}.sub{max-width:780px}.top-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.pill,.tag{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:99px;padding:4px 9px;font-size:11px;white-space:nowrap}.pill{color:var(--amber)}.tag{color:var(--muted)}.notice{margin:16px 0;padding:12px 14px;border:1px solid #806a36;border-radius:10px;background:#292316;color:#f4d895}.notice.error{border-color:#7d4148;background:#28171c;color:#ffb5b5}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:14px 0}.card{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:15px;min-width:0}.metric{font-size:25px;font-weight:720;margin:5px 0 2px}.metric-sub{font-size:12px;color:var(--muted)}.layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,.85fr);gap:12px;margin-top:12px}.stack{display:grid;gap:12px;align-content:start}.phases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.phase{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px;min-width:0}.phase.active{border-color:var(--blue);box-shadow:inset 0 0 0 1px var(--blue)}.phase b,.phase small{display:block}.phase small{margin-top:3px}.state{font-size:11px;font-weight:650;white-space:nowrap}.ok{color:var(--green)}.warn{color:var(--amber)}.bad{color:var(--red)}.info{color:var(--blue)}.purple{color:var(--purple)}
+.progress{height:7px;background:#202e43;border-radius:20px;overflow:hidden;margin:10px 0 3px}.progress span{display:block;height:100%;background:var(--blue);border-radius:20px}.section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}.filters{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px}.filters input{flex:1;min-width:180px}.filters select{min-width:140px}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:620px}th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}th{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase}td small{display:block;margin-top:3px}.list{display:grid;gap:0}.item{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}.item:last-child{border-bottom:0}.item-main{min-width:0}.item-title{font-weight:650;overflow-wrap:anywhere}.item-detail{font-size:12px;color:var(--muted);margin-top:3px;overflow-wrap:anywhere}.empty{padding:15px 0;color:var(--muted)}.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}.ai-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.ai{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:10px}.ai b{display:block}.ai small{display:block}.evidence{display:flex;gap:9px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--line)}.evidence:last-child{border:0}.dot{width:8px;height:8px;border-radius:50%;background:var(--green);margin-top:6px;flex:none}.dot.pending{background:var(--amber)}.dot.na{background:var(--muted)}.footer{font-size:11px;color:var(--muted);margin-top:16px;border-top:1px solid var(--line);padding-top:12px}.hidden{display:none!important}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.layout{grid-template-columns:1fr}}
+@media(max-width:600px){main{padding:18px 12px 38px}h1{font-size:21px}.grid{gap:8px}.card{padding:12px}.metric{font-size:22px}.phases{grid-template-columns:repeat(2,minmax(0,1fr))}.two-col,.ai-grid{grid-template-columns:1fr}.top-actions{width:100%}.top-actions button{flex:1}}
+</style>
+</head>
+<body><main>
+<header class="top">
+ <div><div class="eyebrow">ROOM-HOP · WORK CONTROL / BẢNG ĐIỀU HÀNH</div><h1 id="title">Work 76 — AI Trigger Engine</h1><div class="sub" id="summary">Đang tải trạng thái Work…</div></div>
+ <div class="top-actions"><span class="pill" id="source">SOURCE: UNKNOWN</span><button id="refresh" type="button">↻ Làm mới dữ liệu</button><a class="tag" href="../00_ROOT/DOC-001_WORK-MANIFEST.md">Manifest</a><a class="tag" href="../00_ROOT/DOC-035_NHAT-KY-THI-CONG_EXECUTION-LOG.md">Nhật ký</a></div>
+</header>
+<div class="notice" id="warning" role="status">Đang đọc PRODUCT_STATUS.json…</div>
+<section class="grid" aria-label="Tổng quan Work">
+ <article class="card"><div class="k">Trạng thái Work</div><div class="metric" id="workStatus">UNKNOWN</div><div class="metric-sub" id="releaseStatus">Release: UNKNOWN</div></article>
+ <article class="card"><div class="k">Giai đoạn hiện tại</div><div class="metric" id="currentPhase">UNKNOWN</div><div class="metric-sub" id="phaseName">Chưa xác định</div></article>
+ <article class="card"><div class="k">Work Packages</div><div class="metric" id="wpCount">—</div><div class="metric-sub" id="wpBreakdown">Chưa có dữ liệu</div></article>
+ <article class="card"><div class="k">Blockers đang mở</div><div class="metric" id="blockCount">—</div><div class="metric-sub" id="criticalCount">Chưa có dữ liệu</div></article>
+</section>
+<section class="card"><div class="section-head"><h2>Vòng đời Work · 9 giai đoạn & Gate</h2><span class="tag" id="gateSummary">Gate: UNKNOWN</span></div><div class="phases" id="phases"></div></section>
+<div class="layout">
+ <div class="stack">
+  <section class="card">
+   <div class="section-head"><h2>Work Packages · Tiến độ gói công việc</h2><span class="tag" id="wpShown">0 mục</span></div>
+   <div class="filters"><input id="wpSearch" type="search" placeholder="Tìm WP, tên công việc, AI phụ trách…" aria-label="Tìm Work Package"><select id="wpStatus" aria-label="Lọc trạng thái"><option value="">Tất cả trạng thái</option><option>PLANNED</option><option>IN_PROGRESS</option><option>IN_REVIEW</option><option>BLOCKED</option><option>DONE</option></select></div>
+   <div class="table-wrap"><table><thead><tr><th>Gói công việc</th><th>Phụ trách / Review</th><th>Trạng thái</th></tr></thead><tbody id="wps"><tr><td colspan="3" class="empty">Đang tải…</td></tr></tbody></table></div>
+  </section>
+  <section class="card"><h2>Nhật ký hoạt động gần đây</h2><div id="activity" class="list"><div class="empty">Chưa có dữ liệu nhật ký.</div></div></section>
+  <section class="card"><h2>Bằng chứng & kiểm chứng</h2><div id="evidence"><div class="empty">Chưa có dữ liệu bằng chứng.</div></div></section>
+ </div>
+ <aside class="stack">
+  <section class="card"><h2>AI tham gia Work 76</h2><div id="aiTeam" class="ai-grid"><div class="empty">Chưa có phân công AI.</div></div><p class="metric-sub" style="margin-top:10px">Phân công hiển thị là vai trò dự kiến; không đồng nghĩa AI đã nhận hoặc thực thi nhiệm vụ.</p></section>
+  <section class="card"><h2>Blockers · Điểm nghẽn</h2><div id="blockers" class="list"><div class="empty">Chưa có dữ liệu.</div></div></section>
+  <section class="card"><h2>Risks · Rủi ro</h2><div id="risks" class="list"><div class="empty">Chưa có dữ liệu.</div></div></section>
+  <section class="card"><h2>Decisions · Quyết định chờ</h2><div id="decisions" class="list"><div class="empty">Chưa có dữ liệu.</div></div></section>
+  <section class="card"><h2>Nguồn dữ liệu & độ mới</h2><div class="list"><div class="item"><span>Nguồn</span><b id="sourceMode">UNKNOWN</b></div><div class="item"><span>Cập nhật lúc</span><b id="updatedAt">UNKNOWN</b></div><div class="item"><span>Revision</span><b id="revision">UNKNOWN</b></div><div class="item"><span>Freshness</span><b id="freshness">UNKNOWN</b></div></div></section>
+ </aside>
+</div>
+<footer class="footer">Read-only projection · Bảng điều khiển chỉ đọc. Không cấp quyền, không dispatch AI, không thay đổi trạng thái Work. local_snapshot không phải Core live. Mọi trạng thái PASS/DONE phải có bằng chứng tương ứng. Khi không tải được nguồn dữ liệu, Dashboard hiển thị UNKNOWN thay vì dữ liệu dự phòng.</footer>
+</main>
+<script>
+"use strict";
+const PHASES=[["01_DISCOVER","Khám phá"],["02_DEFINE","Định nghĩa"],["03_ARCHITECT","Kiến trúc"],["04_PLAN","Kế hoạch"],["05_BUILD","Thi công"],["06_VERIFY","Kiểm chứng"],["07_ACCEPT","Nghiệm thu"],["08_RELEASE","Phát hành"],["09_OPERATE","Vận hành"]];
+const $=id=>document.getElementById(id), esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const LABEL={DRAFT:"Bản nháp",PLANNED:"Đã lên kế hoạch",NOT_STARTED:"Chưa bắt đầu",IN_PROGRESS:"Đang thực hiện",ACTIVE:"Đang hoạt động",IN_REVIEW:"Đang review",READY:"Sẵn sàng",READY_FOR_REVIEW:"Chờ review",PASS:"ĐẠT",DONE:"Hoàn tất",COMPLETE:"Hoàn tất",BLOCKED:"Bị chặn",FAIL:"KHÔNG ĐẠT",NOT_READY:"Chưa sẵn sàng",NOT_VERIFIED:"Chưa xác minh",OPEN:"Đang mở",PENDING:"Đang chờ",CLOSED:"Đã đóng",NOT_AVAILABLE:"Chưa có",UNKNOWN:"Chưa xác định",NOT_RELEASED:"Chưa phát hành",FRESH:"Mới",STALE:"Cũ"};
+const label=s=>LABEL[s]||s||"UNKNOWN";
+const cls=s=>["PASS","DONE","COMPLETE","CLOSED","VERIFIED"].includes(s)?"ok":["FAIL","BLOCKED","OPEN"].includes(s)?"bad":["UNKNOWN","NOT_AVAILABLE","NOT_VERIFIED"].includes(s)?"warn":"info";
+let DATA=null;
+function listItems(items,renderEmpty){return items.length?items.join(""):('<div class="empty">'+renderEmpty+'</div>')}
+function render(d){
+ DATA=d;
+ $("title").textContent="Work "+d.work_id+" — "+d.product_name;
+ $("summary").textContent=d.summary||"";
+ const mode=d.source_mode||"UNKNOWN";
+ $("source").textContent=mode.toUpperCase().replace("_"," ");
+ $("sourceMode").textContent=mode;
+ $("warning").textContent=d.warning_vi||("Nguồn dữ liệu: "+mode+".");
+ $("workStatus").textContent=label(d.work_status);
+ $("releaseStatus").textContent="Release: "+label(d.release_status||"NOT_RELEASED");
+ const phases=d.phases||[], current=phases.find(p=>p.phase_id===d.current_phase);
+ $("currentPhase").textContent=d.current_phase||"UNKNOWN";
+ $("phaseName").textContent=current?.name_vi||"Chưa xác định";
+ const wps=d.work_packages||[], blockers=(d.blockers||[]).filter(x=>x.status!=="CLOSED");
+ $("wpCount").textContent=wps.length;
+ const counts={};wps.forEach(w=>counts[w.status]=(counts[w.status]||0)+1);
+ $("wpBreakdown").textContent=Object.entries(counts).map(([k,v])=>label(k)+": "+v).join(" · ")||"Chưa có WP";
+ $("blockCount").textContent=blockers.length;
+ $("criticalCount").textContent=blockers.filter(b=>b.severity==="HIGH"||b.severity==="CRITICAL").length+" mức độ cao/khẩn";
+ $("gateSummary").textContent="Gate đạt: "+phases.filter(p=>p.gate_status==="PASS").length+"/"+phases.length;
+ $("phases").innerHTML=PHASES.map(([id,vi])=>{const p=phases.find(x=>x.phase_id===id)||{};return '<div class="phase '+(id===d.current_phase?"active":"")+'"><b>'+id+'</b><small>'+vi+' · '+label(p.status)+'</small><small>Owner: '+esc(p.owner||"Chưa phân công")+'</small><small class="state '+cls(p.gate_status)+'">Gate: '+label(p.gate_status)+'</small></div>'}).join("");
+ renderWps();
+ $("blockers").innerHTML=listItems(blockers.map(b=>'<div class="item"><div class="item-main"><div class="item-title">'+esc(b.title)+'</div><div class="item-detail">'+esc(b.detail_vi||"")+' · Owner: '+esc(b.owner||"—")+'</div></div><span class="state '+cls(b.status)+'">'+label(b.severity||"")+'</span></div>'),"Không có blocker đang mở trong dữ liệu.");
+ $("risks").innerHTML=listItems((d.risks||[]).map(r=>'<div class="item"><div class="item-main"><div class="item-title">'+esc(r.title)+'</div><div class="item-detail">'+esc(r.mitigation_vi||"Chưa có biện pháp giảm thiểu")+'</div></div><span class="state '+cls(r.severity)+'">'+esc(r.severity||"UNKNOWN")+'</span></div>'),"Chưa ghi nhận rủi ro.");
+ $("decisions").innerHTML=listItems((d.decisions_needed||[]).map(x=>'<div class="item"><div class="item-main"><div class="item-title">'+esc(x.title)+'</div><div class="item-detail">Owner: '+esc(x.owner||"—")+'</div></div><span class="state '+cls(x.status)+'">'+label(x.status)+'</span></div>'),"Không có quyết định chờ.");
+ $("aiTeam").innerHTML=listItems((d.ai_assignments||[]).map(a=>'<div class="ai"><b>'+esc(a.ai_id)+' · '+esc(a.name)+'</b><small>'+esc(a.role)+'</small><small class="state '+cls(a.assignment_status)+'">'+label(a.assignment_status)+'</small></div>'),"Chưa có phân công AI.");
+ $("activity").innerHTML=listItems((d.recent_activity||[]).map(a=>'<div class="item"><div class="item-main"><div class="item-title">'+esc(a.title)+'</div><div class="item-detail">'+esc(a.date||"")+' · '+esc(a.actor||"")+'<br>'+esc(a.detail||"")+'</div></div><span class="state '+cls(a.status)+'">'+label(a.status)+'</span></div>'),"Chưa có hoạt động được ghi nhận.");
+ $("evidence").innerHTML=listItems((d.evidence||[]).map(e=>'<div class="evidence"><span class="dot '+(e.status==="VERIFIED"?"":e.status==="NOT_AVAILABLE"?"na":"pending")+'"></span><div><b>'+esc(e.evidence_id)+' · '+esc(e.title)+'</b><div class="item-detail">'+esc(e.claim||"")+'<br>Ref: '+esc(e.path||"—")+' · <span class="'+cls(e.status)+'">'+label(e.status)+'</span></div></div></div>'),"Chưa có bản ghi evidence.");
+ $("updatedAt").textContent=d.updated_at||"UNKNOWN";
+ $("revision").textContent=d.revision||"UNKNOWN";
+ $("freshness").textContent=label(d.freshness||"UNKNOWN");
 }
-fetch("./PRODUCT_STATUS.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw Error("HTTP "+r.status);return r.json()}).then(render).catch(e=>{$("warning").textContent="UNKNOWN — không tải được Product Status: "+e.message;$("current").textContent="UNKNOWN"});
+function renderWps(){
+ if(!DATA)return;
+ const q=$("wpSearch").value.trim().toLowerCase(),status=$("wpStatus").value;
+ const filtered=(DATA.work_packages||[]).filter(w=>(!status||w.status===status)&&(!q||[w.wp_id,w.title,w.owner,w.reviewer].join(" ").toLowerCase().includes(q)));
+ $("wpShown").textContent=filtered.length+"/"+(DATA.work_packages||[]).length+" mục";
+ $("wps").innerHTML=filtered.length?filtered.map(w=>'<tr><td><b>'+esc(w.wp_id)+'</b><small>'+esc(w.title)+'</small></td><td>'+esc(w.owner||"—")+'<small>Review: '+esc(w.reviewer||"—")+'</small></td><td><span class="state '+cls(w.status)+'">'+label(w.status)+'</span></td></tr>').join(""):'<tr><td colspan="3" class="empty">Không tìm thấy Work Package phù hợp.</td></tr>';
+}
+async function load(){const b=$("refresh");b.disabled=true;b.textContent="Đang tải…";$("warning").classList.remove("error");$("warning").textContent="Đang đồng bộ bản trạng thái từ PRODUCT_STATUS.json…";try{const r=await fetch("./PRODUCT_STATUS.json?ts="+Date.now(),{cache:"no-store"});if(!r.ok)throw Error("HTTP "+r.status);const d=await r.json();if(d.work_id!=="76")throw Error("work_id không khớp");render(d);$("warning").textContent=d.warning_vi||"Đã tải dữ liệu."; }catch(e){DATA=null;$("warning").classList.add("error");$("warning").textContent="UNKNOWN — Không tải được dữ liệu trạng thái: "+e.message+". Không dùng dữ liệu cũ để giả lập trạng thái.";["workStatus","currentPhase","phaseName","wpCount","wpBreakdown","blockCount","criticalCount"].forEach(id=>$(id).textContent="UNKNOWN");["phases","wps","blockers","risks","decisions","aiTeam","activity","evidence"].forEach(id=>$(id).innerHTML='<div class="empty">UNKNOWN · Không có dữ liệu đã xác minh.</div>');$("source").textContent="UNKNOWN";}finally{b.disabled=false;b.textContent="↻ Làm mới dữ liệu";}}
+$("refresh").addEventListener("click",load);$("wpSearch").addEventListener("input",renderWps);$("wpStatus").addEventListener("change",renderWps);load();
 </script></body></html>
