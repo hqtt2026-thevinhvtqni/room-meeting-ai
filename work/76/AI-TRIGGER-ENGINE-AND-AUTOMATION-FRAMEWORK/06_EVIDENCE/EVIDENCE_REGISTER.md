@@ -10,5 +10,5 @@
 
 Rules: artifact existence is not runtime verification; a planned test is not a passed test; dashboard status must not upgrade evidence status.
 
-| EV-76-006 | Dashboard v0.2 source files updated and synchronized | DASHBOARD/index.html, PRODUCT_STATUS.json, README.md; GitHub read-back pending | PENDING |
+| EV-76-006 | Dashboard v0.2 source files updated and synchronized | DASHBOARD/index.html, PRODUCT_STATUS.json, README.md; GitHub read-back successful; JSON parse PASS | VERIFIED |
 | EV-76-007 | Dashboard browser/mobile rendering and interaction | Manual browser + mobile E2E not yet run | NOT_AVAILABLE |
