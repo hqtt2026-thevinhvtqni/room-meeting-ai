@@ -255,7 +255,6 @@ jobs:
   release_gate:
     name: Work 32 release acceptance gate (Windows runner enabled)
     if: ${{ always() && vars.W32_WINDOWS_RUNNER_READY == 'true' }}
-    if: always()
     needs: [unit, tooling, e2e, windows_browser_adapter, product_artifact]
     runs-on: ubuntu-latest
     steps:
