@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Work 76 Product Status",
+  "type": "object",
+  "required": [
+    "work_id",
+    "product_name",
+    "work_status",
+    "current_phase",
+    "source_mode",
+    "phases",
+    "work_packages",
+    "blockers"
+  ],
+  "properties": {
+    "work_id": {
+      "const": "76"
+    },
+    "product_name": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "work_status": {
+      "enum": [
+        "DRAFT",
+        "ACTIVE",
+        "BLOCKED",
+        "DONE",
+        "NOT_RELEASED"
+      ]
+    },
+    "current_phase": {
+      "enum": [
+        "01_DISCOVER",
+        "02_DEFINE",
+        "03_ARCHITECT",
+        "04_PLAN",
+        "05_BUILD",
+        "06_VERIFY",
+        "07_ACCEPT",
+        "08_RELEASE",
+        "09_OPERATE"
+      ]
+    },
+    "source_mode": {
+      "enum": [
+        "local_snapshot",
+        "core_cached",
+        "core_live",
+        "sample"
+      ]
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "phases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "phase_id",
+          "status",
+          "gate_status"
+        ],
+        "properties": {
+          "phase_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "gate_status": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "evidence_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "work_packages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "wp_id",
+          "title",
+          "status"
+        ],
+        "properties": {
+          "wp_id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "reviewer": {
+            "type": "string"
+          },
+          "evidence_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "blockers": {
+      "type": "array"
+    },
+    "risks": {
+      "type": "array"
+    },
+    "decisions_needed": {
+      "type": "array"
+    }
+  },
+  "additionalProperties": true
+}
