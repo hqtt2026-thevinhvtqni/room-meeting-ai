@@ -182,3 +182,8 @@ Exact-basename GitHub code searches were run for each of the 11 legacy source fi
 
 
 | DOC-087 | P1 | 87 | Kế hoạch triển khai sổ đăng ký năng lực AI / AI Capability Registry Implementation Plan | 04_PLAN/DOC-087_KE-HOACH_TRIEN-KHAI-SO-DANG-KY-NANG-LUC-AI_AI-CAPABILITY-REGISTRY-IMPLEMENTATION-PLAN.md | DOC-001; DOC-006; DOC-035; DOC-043; DOC-055; DOC-086 | PHASE 1 DATA CONTRACT CREATED — RUNTIME/API/UI NOT STARTED | Quy trình triển khai, trạng thái năng lực, quy tắc an toàn, test plan và điều kiện mở rộng Registry |
+
+
+| DOC-088 | P1 | 88 | Báo cáo rà soát hợp đồng Dashboard Work 70 của Ka / Ka Work 70 Dashboard Contract Review | 05_BUILD/03_ARCHITECTURE/DOC-088_KA_WORK70_DASHBOARD_CONTRACT_REVIEW_20261107.md | DOC-010; DOC-085; DOC-061; DOC-063; DOC-035 | ACCEPT WITH CONDITIONS — STATIC BROWSER E2E ONLY; FORMAL QE BLOCKED | Kết quả rà soát kiến trúc, provenance, schema, freshness và điều kiện E2E |
+| DOC-089 | P0 | 89 | Kiến trúc hệ thống Preview Host dùng chung / Shared Dashboard Preview Host Architecture | 05_BUILD/03_ARCHITECTURE/DOC-089_KIEN-TRUC_HE-THONG_PREVIEW-HOST_DASHBOARD-PREVIEW-HOST-ARCHITECTURE.md | DOC-001; DOC-003; DOC-009; DOC-010; DOC-085; DOC-088 | DESIGN BASELINE — DEPLOYMENT NOT VERIFIED | Kiến trúc phục vụ Dashboard HTML thực cho nhiều Work, read-only, registry allowlist và private access |
+| DOC-090 | P0 | 90 | Kế hoạch triển khai và nghiệm thu Preview Host / Preview Host Implementation and Acceptance Plan | 04_PLAN/DOC-090_KE-HOACH_TRIEN-KHAI_PREVIEW-HOST_IMPLEMENTATION-AND-ACCEPTANCE-PLAN.md | DOC-035; DOC-088; DOC-089 | ACTIVE — LOCAL HOST AND PC/MOBILE E2E NOT RUN | Lộ trình triển khai P1, test matrix, bảo vệ và tiêu chí nghiệm thu |
