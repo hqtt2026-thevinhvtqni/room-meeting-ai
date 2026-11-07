@@ -34,3 +34,24 @@
 - **Trạng thái:** RECORDED / ACTIVE STANDARD.
 - **Hành động tiếp theo:** Xu hoàn thiện quy tắc lưu trữ, tạo mapping register, phân loại nội dung 05_BUILD và xác minh đồng bộ.
 
+
+
+### BB-W70-20261107-001 — Biên bản điều chỉnh và khóa nguyên tắc quản lý văn bản Work 70
+- **Ngày:** 2026-11-07 (giờ Việt Nam)
+- **Chủ trì / thẩm quyền:** Vinh
+- **Điều phối / ghi biên bản:** Xu / AI-01
+- **Thành phần khác:** Không ghi nhận tham gia độc lập trong phiên này.
+- **Căn cứ:** Chỉ thị trực tiếp của Vinh trong phiên làm việc ngày 2026-11-07; DOC-001; DOC-033; DOC-034; DOC-038; DOC-039; DOC-040; DOC-055; DOC-056.
+- **Nội dung điều chỉnh và thống nhất:**
+  1. Trong một Work, mỗi văn bản lưu hành chính thức chỉ có **một DOC-ID, một mã văn bản đúng một loại, một đường dẫn chuẩn và một bản nội dung canonical**. Không tạo thêm bản song song, sổ phụ, register khác, tên file tự đặt hoặc nguồn dữ liệu mới chỉ để thuận tiện cho AI.
+  2. Mã loại văn bản phải lấy từ danh mục đã được quy định tại DOC-039; mã cấp/phát hành phải được kiểm tra và ghi vào DOC-040. Không tự đặt loại, tiền tố, số hoặc quy tắc đánh số mới.
+  3. DOC-055 là sổ duy nhất quản lý DOC-ID và đường dẫn chuẩn. DOC-040 là sổ duy nhất cấp mã văn bản nghiệp vụ. Hai sổ có phạm vi khác nhau, không thay thế và không nhân bản nhau.
+  4. DOC-034 là sổ biên bản duy nhất; DOC-035 là nhật ký thi công duy nhất; Kế hoạch và bản vẽ/mô hình tiếp tục dùng đúng hồ sơ canonical đã khai báo tại DOC-033/DOC-001. Mọi cập nhật phải ghi vào hồ sơ hiện hữu, không tạo hồ sơ cạnh tranh.
+  5. Tài liệu kỹ thuật bắt buộc của phần mềm (README, schema, source, config, generated/runtime file) chỉ được tồn tại theo yêu cầu kỹ thuật và phải được phân loại/ánh xạ; không được giả danh văn bản lưu hành, không được tự cấp DOC-ID hoặc mã loại khi không thuộc danh mục.
+  6. Tài liệu cũ, alias, bản staging hoặc bản sao chỉ được giữ theo trạng thái và thời hạn/mapping được quản lý; không được coi là nguồn có thẩm quyền. Không xóa dữ liệu lịch sử/canonical nếu chưa kiểm kê, kiểm tra tham chiếu, bảo toàn lịch sử và xác minh theo DOC-056.
+  7. Khi AI gặp tài liệu trùng số, trùng loại, khác nội dung hoặc không xác định được nguồn chuẩn, phải dừng sử dụng bản mơ hồ, báo Xu, ghi BLOCKED/UNKNOWN và truy về DOC-001/DOC-055/DOC-039/DOC-040; tuyệt đối không tự chọn hoặc tự tạo nguồn mới.
+  8. Không đánh số lặp ở cùng cấp cho thư mục, đề mục hoặc danh mục. Một số thứ tự chỉ được dùng một lần trong cùng phạm vi/cấp; nếu là mã định danh thì tuân theo sổ cấp mã tương ứng.
+  9. AI phải kiểm tra hồ sơ hiện hữu trước khi tạo tài liệu; mặc định cập nhật văn bản canonical. Chỉ tạo văn bản mới khi thực sự thuộc loại được phép, chưa có văn bản tương đương, đã được cấp DOC-ID/mã hợp lệ và đăng ký đúng sổ.
+- **Quyết định liên quan:** D70-020.
+- **Trạng thái:** RECORDED — chỉ thị của Vinh; áp dụng ngay như nguyên tắc điều hành trong Work 70. Không tự tuyên bố toàn bộ cây tài liệu đã được chuẩn hóa.
+- **Hành động:** Xu duy trì một nguồn canonical cho mỗi hồ sơ; rà soát và hợp nhất alias/trùng lặp theo DOC-056; cập nhật validator/CI để chặn DOC-ID, mã văn bản, canonical path và số mục trùng; ghi mọi thao tác vào DOC-035.
