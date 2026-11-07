@@ -4,7 +4,7 @@
 - **Read order:** 55
 - **Depends on:** DOC-001; DOC-038; DOC-039; DOC-040; DOC-056
 - **Status:** ACTIVE — SINGLE SOURCE OF TRUTH
-- **Version / Updated:** 3.1 / 2026-11-07
+- **Version / Updated:** 3.2 / 2026-11-07
 - **Owner:** Xu / AI-01
 - **Authority:** Vinh
 Owner: Xu / AI-01
@@ -48,7 +48,7 @@ Rule: DOC-ID is stable identity; Priority is importance; Read order is sequence.
 | DOC-026 | P3 | 33 | Lifecycle Guide (Vietnamese) | 00_ROOT/DOC-026_HUONG-DAN-VONG-DOI_LIFECYCLE-GUIDE-VI.md | DOC-004; DOC-005 | ACTIVE | Human-readable explanation of lifecycle |
 | DOC-027 | P3 | 34 | Work Standard Versioning | 00_ROOT/DOC-027_QUAN-LY-PHIEN-BAN_TIEU-CHUAN-WORK-STANDARD-VERSIONING.md | DOC-001 | ACTIVE | Version history and compatibility |
 | DOC-028 | P3 | 35 | Vietnamese Glossary | 00_ROOT/DOC-028_BANG-THUAT-NGU_VIETNAMESE-GLOSSARY.md | DOC-002 | ACTIVE | Terminology reference |
-| DOC-029 | P3 | 36 | Legacy Scaffold Notice | LEGACY_SCAFFOLD_NOTICE.md | DOC-001 | ACTIVE | Historical/legacy context |
+| DOC-029 | P3 | 36 | Thông báo cấu trúc cũ / Legacy Scaffold Notice | 00_ROOT/DOC-029_THONG-BAO-CAU-TRUC-CU_LEGACY-SCAFFOLD-NOTICE.md | DOC-001 | ACTIVE / HISTORICAL STRUCTURE NOTICE | Historical scaffold rules and 2026-11-07 evidence-path correction; canonical DOC-prefixed file |
 | DOC-030 | P3 | 37 | Work 70 Session Log | branch work/70/05-build: 05_BUILD/10_AI_DEBUG_HANDOFF/WORK70_SESSION_LOG_20261030.md | DOC-002; DOC-033 | LEGACY / HISTORICAL | Preserve detail; Work-wide chronological record is 00_ROOT/DOC-035_NHAT-KY-THI-CONG_WORK-EXECUTION-LOG.md |
 | DOC-031 | P3 | 38 | Báo cáo kiểm tra hợp nhất Work 70 / Work 70 Consolidation Checkpoint | EVIDENCE/DOC-031_BAO-CAO-KIEM-TRA-HOP-NHAT_WORK70-CONSOLIDATION-CHECKPOINT.md | DOC-014 | ACTIVE / HISTORICAL EVIDENCE | Historical consolidation checkpoint; one canonical DOC-ID and path |
 | DOC-032 | P3 | 39 | Dashboard README | DASHBOARD/README.md | DOC-010 | ACTIVE | Dashboard usage and limitations |
