@@ -9,7 +9,7 @@
 ## Domain model
 ROOM-HOP → Work (stable product/lifecycle aggregate) → nine lifecycle phases. The Work owns exactly one lifecycle. 05_BUILD is a mapping and engineering coordination layer with nine fixed child areas. It does not own canonical original Work records or product source files.
 
-Work Packages are defined and planned at Work level in 04_PLAN. The current 05_BUILD/00_ROOT/BUILD_REGISTER files are legacy candidates under reconciliation and are not an independent canonical plan. Until a schema-backed WP registry is separately approved, the Work-level roadmap and registered plan documents remain the authoritative planning records. 05_BUILD/00_ROOT/BUILD_MAPPING_REGISTER.md maps engineering work to canonical Work/source artifacts. Top-level 06_EVIDENCE is the cross-phase evidence index. DASHBOARD is read-only.
+Work Packages are defined and planned at Work level in 04_PLAN. The current 05_BUILD/00_ROOT/BUILD_REGISTER files are legacy candidates under reconciliation and are not an independent canonical plan. Until a schema-backed WP registry is separately approved, the Work-level roadmap and registered plan documents remain the authoritative planning records. 05_BUILD/00_ROOT/BUILD_MAPPING_REGISTER.md maps engineering work to canonical Work/source artifacts. Top-level EVIDENCE is the cross-phase evidence index. DASHBOARD is read-only.
 
 ## Canonical directory ownership
 - 00_ROOT: Work identity, manifest, authority, standards, minutes, decisions, document register and Work-wide execution journal.
@@ -19,7 +19,7 @@ Work Packages are defined and planned at Work level in 04_PLAN. The current 05_B
 - 04_PLAN: canonical roadmap, Work Package plan, dependencies, priorities and milestones.
 - 05_BUILD: mapping/indexes, engineering coordination and clearly labelled temporary working copies only; its child folders are navigation/mapping areas.
 - 06_VERIFY: verification strategy, procedures, checklists and test plans.
-- 06_EVIDENCE: Work-level canonical evidence index across every phase.
+- EVIDENCE: Work-level canonical evidence index across every phase.
 - 07_ACCEPT: formal acceptance decision and record.
 - 08_RELEASE: controlled release package and approval.
 - 09_OPERATE: operational ownership, monitoring and improvement.
@@ -41,7 +41,7 @@ Work Packages are defined and planned at Work level in 04_PLAN. The current 05_B
 These are logical boundaries, not claims that all services or APIs already exist in Core.
 
 ## State and event flow
-Owner defines scope → Work-level plan records WPs → 05_BUILD mapping links WPs to engineering areas and canonical source artifacts → adapter executes within permission scope → source artifacts are updated only in their declared canonical repository → evidence is indexed in top-level 06_EVIDENCE → independent verifier reviews → gate evaluator checks criteria → authorized lifecycle service records transition → dashboard reflects recorded state.
+Owner defines scope → Work-level plan records WPs → 05_BUILD mapping links WPs to engineering areas and canonical source artifacts → adapter executes within permission scope → source artifacts are updated only in their declared canonical repository → evidence is indexed in top-level EVIDENCE → independent verifier reviews → gate evaluator checks criteria → authorized lifecycle service records transition → dashboard reflects recorded state.
 
 ## Data ownership
 Core owns authoritative identity, authorization, lifecycle transitions, decisions and canonical evidence metadata. Work root owns approved Work documentation and plans. Product source repositories are declared per Work/artifact. Artifact bytes may live in an approved managed store. Sandbox files and local PRODUCT_STATUS.json are working copies or snapshots, not production truth.
