@@ -164,3 +164,12 @@ Bounded GitHub code-search inventory confirmed references to top-level 06_EVIDEN
 D70-021 establishes `EVIDENCE/` as the sole canonical top-level cross-phase evidence directory. `06_VERIFY/` remains phase 06; `05_BUILD/06_EVIDENCE/` remains build staging. The former top-level `06_EVIDENCE/` content has been copied to canonical `EVIDENCE/` paths and its former files converted to non-authoritative compatibility pointers. DOC-055 v3.0 records DOC-014 with one canonical JSON path; the Markdown index is read-only projection and schema is technical artifact. DOC-031/071/072/084 now have DOC-prefixed canonical paths under EVIDENCE/.
 
 **Verification boundary:** source copies and pointer writes were accepted by GitHub and canonical files are present, but exact readback for every migrated file, JSON/schema validation, automated link check, CI regression, Sandbox/PC parity and independent QE are not yet complete. The old directory is not deleted. G-001 path naming disposition = IMPLEMENTED PARTIALLY; migration closure = OPEN.
+
+
+## G-001 / EVIDENCE migration verification update — 2026-11-07
+
+**Verified on GitHub main:** DOC-055 v3.0 has 81 registered rows, 81 unique DOC-IDs, unique Read orders and unique canonical paths. DOC-014 has one canonical JSON source at `EVIDENCE/EVIDENCE_REGISTER.json`; DOC-031, DOC-071, DOC-072 and DOC-084 have registered canonical paths under `EVIDENCE/`. The top-level `06_EVIDENCE/` now contains only compatibility pointers; `05_BUILD/06_EVIDENCE/` remains the unchanged build-staging area. Manifest, repository layout, storage standard, README and Dashboard execution source now distinguish the canonical EVIDENCE path from phase `06_VERIFY/`.
+
+The evidence JSON initially lacked required `schema_version`; it was corrected to `1.1`. JSON/schema parsing and a schema-keyword subset validation passed with 0 errors; 12 evidence IDs are unique. GitHub Actions runs 42365135562, 42365138494 and 42365141735 completed SUCCESS, including document validator, unit tests, register CLI validation, evidence JSON identity checks, and Ubuntu/Windows Preview Host jobs.
+
+**Remaining boundary:** no full Draft 2020-12 engine was run; no full parsed repository-wide link check or independent QE has closed the migration; Sandbox/PC parity is unverified; old pointer directory is intentionally retained. G-001 path normalization = IMPLEMENTED / AUTOMATED CHECKS PASS / MIGRATION CLOSURE OPEN.
