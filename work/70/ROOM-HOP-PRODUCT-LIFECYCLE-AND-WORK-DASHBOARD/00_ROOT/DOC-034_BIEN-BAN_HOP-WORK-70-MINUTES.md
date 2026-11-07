@@ -9,7 +9,7 @@
 ## Quy định sử dụng
 - Đây là sổ biên bản thống nhất của Work 70; mỗi phiên họp/thống nhất có một mã biên bản duy nhất.
 - Ghi ngày giờ, người/AI tham gia, vấn đề, ý kiến chính, kết luận, quyết định liên quan, người chịu trách nhiệm và hành động tiếp theo.
-- Quyết định có tính ràng buộc phải được ghi thêm vào DECISION_LOG.md; biên bản tham chiếu Decision ID, không tạo một nguồn quyết định thứ hai.
+- Quyết định có tính ràng buộc phải được ghi thêm vào DOC-006_SO-QUYET-DINH_DECISION-LOG.md; biên bản tham chiếu Decision ID, không tạo một nguồn quyết định thứ hai.
 - Không ghi ý kiến chưa được thống nhất thành quyết định.
 - Không sửa âm thầm biên bản đã chốt; đính chính bằng mục bổ sung có ngày giờ và lý do.
 
