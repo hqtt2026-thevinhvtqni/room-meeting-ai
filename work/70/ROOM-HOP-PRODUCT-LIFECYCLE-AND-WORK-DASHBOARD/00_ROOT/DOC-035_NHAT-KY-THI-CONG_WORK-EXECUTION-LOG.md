@@ -1362,3 +1362,8 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - **GitHub main exact tree:** tree SHA `e8293adffb5be786032b3172d14cc1aa966f37aa`, `truncated=false`; Work 70 has 138 blob files. Canonical `EVIDENCE/` contains 7 files; legacy `06_EVIDENCE/` contains 8 pointer-only files.
 - **Sandbox parity boundary:** DOC-055's 2026-11-02 migration addendum records prior byte-for-byte canonical-root Sandbox parity for DOC-035, DOC-041, DOC-055, DOC-073, DOC-074, DOC-075 and DOC-077. This turn did not repeat Sandbox 8030 readback for the newly relocated EVIDENCE files or updated documents; therefore EVIDENCE migration Sandbox parity is NOT RE-VERIFIED in this turn. Do not overwrite the earlier recorded evidence or claim new parity.
 - **Status:** GitHub main canonical path and CI checks = PASS; EVIDENCE Sandbox parity = NOT RE-VERIFIED THIS TURN; pointer retirement and DOC-042..DOC-052 identity migration = OPEN.
+
+
+## 2026-11-07 — Final CI after evidence-boundary correction
+
+- GitHub Actions run **42366331930** — COMPLETED / SUCCESS after the latest DOC-035/DOC-041 corrections. Document Register and Code Validation = PASS; validator compile + 12 unit tests + DOC-040/DOC-055 CLI + EVIDENCE JSON/identity checks = PASS; Preview Host Ubuntu = PASS; Preview Host Windows black-box + bootstrap + local HTTP host = PASS.
