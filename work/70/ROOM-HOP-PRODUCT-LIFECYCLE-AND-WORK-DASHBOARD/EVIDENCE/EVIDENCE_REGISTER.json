@@ -12,7 +12,7 @@
     },
     {
       "evidence_id": "E70-DOC-002",
-      "artifact_ref": "00_ROOT/WORK_MANIFEST.md",
+      "artifact_ref": "00_ROOT/DOC-001_BAN-TUYEN-NGON_WORK-MANIFEST.md",
       "wp_id": "WP-70-01",
       "producer": "Xu / AI-01",
       "created_at": "2026-10-30T09:00:00+07:00",
@@ -70,7 +70,7 @@
     },
     {
       "evidence_id": "E70-CONSOL-001",
-      "artifact_ref": "EVIDENCE/WORK70_CONSOLIDATION_CHECK_20261030.md",
+      "artifact_ref": "EVIDENCE/DOC-031_BAO-CAO-KIEM-TRA-HOP-NHAT_WORK70-CONSOLIDATION-CHECKPOINT.md",
       "producer": "Xu / AI-01",
       "created_at": "2026-10-30T09:30:00+07:00",
       "source_environment": "Sandbox Work 70 + GitHub main readback",
@@ -78,7 +78,7 @@
     },
     {
       "evidence_id": "E70-OPS-001",
-      "artifact_ref": "DOC-042..DOC-053 + 9 phase execution playbooks + updated 00_ROOT/DOCUMENT_REGISTER.md + 00_ROOT/NHAT_KY_THI_CONG.md",
+      "artifact_ref": "DOC-042..DOC-053 + 9 phase execution playbooks + updated 00_ROOT/DOC-055_SO-DANG-KY-TAI-LIEU_WORK-70-DOCUMENT-REGISTER.md + 00_ROOT/DOC-035_NHAT-KY-THI-CONG_WORK-EXECUTION-LOG.md",
       "wp_id": "WP-70-01",
       "producer": "Xu / AI-01",
       "source_environment": "Sandbox Work 70; GitHub main; GitHub branch work/70/05-build",
