@@ -138,3 +138,72 @@ This update separates deliverable evidence from formal ACK and from Work Entry a
 | An / Tester | Signed draft independent controller QA matrix and follow-up source inventory. | QA PREPARATION DELIVERABLE RECEIVED; explicit ACK receipt not separately evidenced in DOC-054. | Execution BLOCKED; no tests run by An; no independent QE PASS. |
 
 **Overall:** deliverables have been received from all five tracks at different levels, but ACK evidence is mixed and does not equal Work Entry PASS. No participant-specific G0–G5 PASS is established by this status table. G0/G1 lifecycle gates remain NOT_READY; G4 BUILD remains NOT READY / NOT PASS. No code integration, Core mutation, runtime deployment, acceptance or release is authorized.
+
+
+---
+
+## ADDENDUM 2026-11-07 21:11 +07:00 — Vinh giao Vi hoàn thiện Dashboard Work 70
+
+**Assignment ID:** ASG-W70-VI-DASHBOARD-COMPLETION-20261107-01  
+**Authority:** Vinh / Product Owner  
+**Coordinator:** Xu / AI-01  
+**Assignee:** Vi / Coder  
+**Priority:** P0  
+**Status:** ASSIGNMENT ISSUED IN GOVERNANCE RECORD — AI RECEIPT/ACK NOT YET VERIFIED
+
+### 1. Objective and scope
+
+Vi được giao trực tiếp hoàn thiện Dashboard Work 70, ưu tiên Dashboard chính, Execution view, Product/Capability view và khả năng chạy trên Preview Host hiện có. Đây là phạm vi triển khai Dashboard; không mở rộng sang sửa Core, database, authentication/authorization, Lifecycle Engine, Execution Host hoặc production configuration.
+
+Các nguồn hiện hữu cần đọc trước khi sửa:
+- `DASHBOARD/index.html` và `DASHBOARD/PRODUCT_STATUS.json` (legacy Work Dashboard projection).
+- `DASHBOARD/execution/index.html`, `EXECUTION_STATUS.json`, schema tương ứng.
+- `DASHBOARD/product/index.html`, `PRODUCT_CAPABILITY_STATUS.json`, schema tương ứng.
+- `DASHBOARD/DATA_INTEGRITY_VERIFICATION_20261107.md`.
+- DOC-088, DOC-089, DOC-090, DOC-010, DOC-085, DOC-061 và DOC-035.
+
+### 2. Required remediation from DOC-088
+
+Vi phải xử lý và kiểm chứng từng finding, không được bỏ qua hoặc tự đổi trạng thái:
+- **F-01 — Provenance:** bổ sung source revision/commit hoặc Sandbox content hash SHA-256, source authority, retrieved_at; metric phải truy ngược được về nguồn cụ thể. Không bịa revision/hash.
+- **F-02 — Freshness:** định nghĩa quy tắc freshness và aggregation; UNKNOWN/STALE ở bất kỳ nguồn bắt buộc nào không được âm thầm tạo global FRESH. Hiển thị as_of và freshness theo từng nguồn.
+- **F-03 — Schema:** bổ sung schema cho blockers, primary_sources, capability entries; khai báo property types, controlled enums và additionalProperties policy; thêm deterministic cross-field validator cho entries_count == entries.length và các invariant liên quan. Full Draft 2020-12 chỉ được ghi PASS khi thực sự chạy validator có phiên bản và raw output.
+- **F-04 — RECORDED:** đổi sang neutral styling, không dùng màu success/green cho RECORDED; có legend phân biệt RECORDED, VERIFIED, ACCEPTED.
+- **F-05 — no_mock_data:** render class theo giá trị boolean thực; false/unknown phải cảnh báo; không xem cờ này là bằng chứng tự xác thực.
+- **F-06 — Product provenance:** hiển thị source ID, path, type, last_updated, retrieved_at, verification status, revision/hash hoặc liên kết tới provenance detail read-only.
+- **F-07 — generated_by:** loại bỏ nhãn dễ gây hiểu nhầm `live_collector_v1`; dùng định danh snapshot collector trung tính và nêu rõ chưa phải Core live.
+
+### 3. Functional completion requirements
+
+- Các trang có navigation đúng, link tương đối đúng trên Preview Host, responsive PC/mobile.
+- Fetch đúng sibling JSON; xử lý HTTP lỗi, JSON malformed, source missing, empty, UNKNOWN, STALE và refresh; không để dữ liệu lỗi hiển thị như dữ liệu hợp lệ.
+- Thể hiện rõ nguồn local/mixed snapshot; tuyệt đối không tự nhận Core live, authorization verified hoặc persistence verified.
+- Số liệu và danh sách phải lấy từ payload, không hard-code metric trong HTML.
+- Không tạo nguồn dữ liệu thứ hai; không ghi dữ liệu từ Dashboard về Core.
+- Không xóa hoặc ghi đè legacy Dashboard trước khi chứng minh đường dẫn tương thích và có kế hoạch chuyển đổi an toàn.
+
+### 4. Execution autonomy and testing
+
+Vi chủ động đọc, truy vết, thiết kế, sửa, chạy kiểm tra tự động, sửa lỗi và chạy regression liên tục trong phạm vi được giao. Không hỏi Vinh từng bước, không chờ xác nhận cho quyết định kỹ thuật thông thường và không dừng ở báo cáo phân tích.
+
+Tự động hóa kiểm tra phù hợp với repository (ưu tiên công cụ hiện có; dùng Playwright nếu dependency/runtime sẵn có hoặc có thể bổ sung an toàn trong phạm vi). Bao gồm route/navigation, data fetch, desktop/mobile viewport, loading/empty/error, malformed/missing JSON, freshness states, RECORDED vs VERIFIED, no_mock_data true/false và regression. Lưu raw output, exit code, screenshot/console/network evidence và source revision.
+
+Đây là kiểm thử của tác giả để tự sửa lỗi, không thay thế Independent QE của Qw/An. Không tự nhận Independent QE PASS hoặc Gate PASS.
+
+### 5. Source control and safety
+
+- Trước khi sửa, xác định exact source revision, Git status và bảo toàn thay đổi chưa commit.
+- Chỉ sửa Dashboard artifacts, schema, validator/test và tài liệu trực tiếp cần thiết trong phạm vi này.
+- Không sửa Core/API/DB/auth/runtime/Execution Host hoặc cổng/bind dùng chung.
+- Không expose Preview Host ra public; giữ cấu hình local hiện hữu trừ khi có phê duyệt riêng.
+- Không dùng MCP 8020.
+- Tuân thủ cơ chế branch/PR và quyền ghi đang áp dụng; không ghi đè thay đổi của Go hoặc người khác. Nếu ownership/xung đột file chưa giải quyết, ghi rõ và chỉ tiếp tục trên bản làm việc tách biệt an toàn.
+- Không merge, release, mở Gate hoặc tự nghiệm thu.
+
+### 6. Required handoff
+
+Bàn giao commit/PR hoặc artifact revision có thể truy vết; danh sách file thay đổi; lệnh test và kết quả thực chạy; evidence register; defect đã sửa/còn mở; known gaps; trạng thái từng F-01..F-07; hướng dẫn chạy Dashboard/Preview Host. Cập nhật DOC-035 bằng dữ liệu thực tế.
+
+**Completion status:** DONE chỉ khi các tiêu chí Dashboard trong assignment được xác minh. Nếu phụ thuộc Core chưa có, Dashboard vẫn phải hoàn thiện theo snapshot/read-only contract và hiển thị giới hạn rõ ràng; không lấy thiếu Core làm lý do trì hoãn toàn bộ UI.
+
+**Chỉ thị:** Vi tập trung hoàn thiện Dashboard Work 70 đến mức chạy được và dùng được; tự động kiểm tra và tự khắc phục, không hỏi từng bước. Vinh giữ quyền nghiệm thu cuối cùng.
