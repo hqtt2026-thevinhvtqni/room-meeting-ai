@@ -4,7 +4,7 @@
 - **Read order:** 40
 - **Depends on:** DOC-001; DOC-033; DOC-036
 - **Status:** ACTIVE
-- **Version / Updated:** 1.2 / 2026-10-30
+- **Version / Updated:** 1.3 / 2026-11-07
 
 ## 1. Purpose and product boundary
 Work 70 defines the reusable product lifecycle standard, Work Package (WP — gói thi công) model, evidence/gate rules, documentation/storage standard and per-Work Dashboard reference for ROOM-HOP. It is a master standard and reference product. It does not mean existing Works have been migrated or that Core integration is live.
@@ -26,11 +26,11 @@ WORK-<id>-<name>/
 │   ├── 03_ARCHITECTURE/
 │   ├── 04_CODE/
 │   ├── 05_TEST/
-│   ├── 06_EVIDENCE/
+│   ├── EVIDENCE/
 │   ├── 07_RELEASE/
 │   └── 10_AI_DEBUG_HANDOFF/
 ├── 06_VERIFY/
-├── 06_EVIDENCE/
+├── EVIDENCE/
 ├── 07_ACCEPT/
 ├── 08_RELEASE/
 ├── 09_OPERATE/
@@ -60,7 +60,7 @@ Canonical paths are declared in each Work Manifest and Document Register. Do not
 A WP is a logical, trackable delivery record, not a separate lifecycle and not a mandatory directory tree. WP planning is owned at Work level in 04_PLAN. The 05_BUILD mapping register links each WP to engineering areas, canonical source files and evidence. Legacy Build Register files under 05_BUILD are migration candidates until reconciled; they are not a second canonical plan.
 
 ## 6. Evidence model
-Top-level 06_EVIDENCE is the cross-phase evidence index for the Work. 05_BUILD/06_EVIDENCE may stage temporary build evidence before it is registered at Work level. Evidence records retain provenance, timestamp, source, integrity hash and verification state. Creating a file is not equivalent to verifying its claim.
+Top-level EVIDENCE is the cross-phase evidence index for the Work. 05_BUILD/06_EVIDENCE may stage temporary build evidence before it is registered at Work level. Evidence records retain provenance, timestamp, source, integrity hash and verification state. Creating a file is not equivalent to verifying its claim.
 
 ## 7. Lifecycle
 01_DISCOVER → 02_DEFINE → 03_ARCHITECT → 04_PLAN → 05_BUILD → 06_VERIFY → 07_ACCEPT → 08_RELEASE → 09_OPERATE.
@@ -91,3 +91,7 @@ New Works are instantiated from this exact directory structure and current stand
 
 ## 12. Current truth boundary
 Work 70 is ACTIVE / DESIGN BASELINE. Dashboard currently reads a local PRODUCT_STATUS.json snapshot. Core API, persistent storage, export service, independent QE, browser E2E and release are not verified. No existing Work is migrated. Do not claim CORE LIVE, RELEASED or overall PASS until evidence is attached and reviewed.
+
+
+## 2026-11-07 folder naming correction
+The canonical cross-phase evidence directory is `EVIDENCE/` (not numbered). `06_VERIFY/` is the phase-06 verification folder. `05_BUILD/06_EVIDENCE/` remains build staging only. The former top-level `06_EVIDENCE/` is a legacy compatibility path; do not create new records there. See DOC-001, DOC-033, DOC-055 and DOC-056.
