@@ -1344,3 +1344,13 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - **CI:** run 42365911872 = COMPLETED / SUCCESS; document validator compile, 11 unit tests, DOC-040/DOC-055 CLI, EVIDENCE JSON/identity check, Preview Host Ubuntu/Windows đều PASS.
 - **Giới hạn:** chưa có parsed repository-wide inbound-link checker trên toàn bộ 686 entries; search là bounded index search. Do đó không xóa pointer files. Sandbox/PC parity và independent QE vẫn OPEN.
 - **Kết quả:** ACTIVE POINTER REFERENCES — PARTIALLY RECONCILED; HISTORICAL POINTER REFERENCES PRESERVED; CI = PASS; POINTER RETIREMENT = BLOCKED pending full link audit/QE.
+
+
+## 2026-11-07 — Xu / AI-01 — Khóa một canonical path trong từng dòng DOC-055
+
+- **Phạm vi:** DOC-055 v3.3, DOC-061, validator và unit tests.
+- **Điều chỉnh:** DOC-061 path column đã rút về một canonical path trên main; Sandbox và branch `work/70/05-build` được mô tả là sync/mirror locations trong phần Purpose, không còn liệt kê thành nhiều path. DOC-013 và DOC-014 cũng chỉ có một canonical JSON path; Markdown là read-only projection.
+- **Validator:** bổ sung từ chối path cell chứa nhiều path phân tách bằng dấu chấm phẩy; test negative tương ứng. Validator hiện kiểm tra duplicate DOC-ID, duplicate/non-numeric Read order, missing path, duplicate path giữa rows và multiple paths trong một row.
+- **CI:** run 42366138648 — COMPLETED / SUCCESS. Document Register and Code Validation: validator compile PASS, 12/12 unit tests PASS, canonical DOC-040/DOC-055 CLI validation PASS, EVIDENCE JSON/identity validation PASS. Preview Host Ubuntu PASS; Preview Host Windows compile, black-box tests, bootstrap và local HTTP host PASS.
+- **Exact DOC-055 readback:** 81 rows; 81 unique DOC-IDs; no duplicate Read order; no duplicate canonical path; no multi-path path cells. DOC-013, DOC-014 và DOC-061 mỗi dòng chỉ có một canonical path.
+- **Trạng thái:** DOC-055 one-ID/one-type/one-path register checks = PASS; CI run 42366138648 = PASS. Repository-wide unregistered legacy duplicate IDs DOC-042..DOC-052 remain unresolved; do not delete/overwrite source originals.
