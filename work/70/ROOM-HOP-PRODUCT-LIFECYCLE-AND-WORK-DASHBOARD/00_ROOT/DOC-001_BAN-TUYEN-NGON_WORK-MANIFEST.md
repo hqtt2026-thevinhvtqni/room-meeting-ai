@@ -4,7 +4,7 @@
 - **Read order:** 1
 - **Depends on:** NONE
 - **Status:** ACTIVE
-- **Version / Updated:** 1.5 / 2026-11-07
+- **Version / Updated:** 1.6 / 2026-11-07
 - Work ID: 70
 - Work Name: ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD
 - Product: ROOM-HOP Work Master Standard & Per-Work Dashboard
