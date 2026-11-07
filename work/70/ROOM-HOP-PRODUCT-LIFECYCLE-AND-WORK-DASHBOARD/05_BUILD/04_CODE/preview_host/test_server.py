@@ -66,6 +66,8 @@ class PreviewHostTests(unittest.TestCase):
         self.assertEqual(status,200); self.assertIn(b"EXECUTION",body)
         self.assertIn(b"PREVIEW / READ-ONLY",body)
         self.assertIn(b"Freshness UNKNOWN",body)
+        self.assertLess(body.index(b"<body>"),body.index(b"PREVIEW / READ-ONLY"))
+        self.assertLess(body.index(b"PREVIEW / READ-ONLY"),body.index(b"</body>"))
 
     def test_relative_json_asset_served(self):
         status,body,_=self.request("/work/70/execution/status.json")
