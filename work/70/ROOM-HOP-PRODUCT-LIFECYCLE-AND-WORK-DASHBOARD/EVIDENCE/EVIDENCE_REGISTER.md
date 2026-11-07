@@ -18,7 +18,7 @@ Purpose: Cross-phase index of inspectable evidence. This file indexes artifacts;
 | Evidence ID | Artifact | Related WP/Gate | Producer | Timestamp | Integrity | Reviewer | State |
 |---|---|---|---|---|---|---|---|
 | E70-DOC-001 | README.md / Work standard v1.1 | WP-70-01 / G0-G3 | Xu AI-01 | 2026-10-30 | Sandbox readback available; hash not recorded | Pending | RECORDED |
-| E70-DOC-002 | 00_ROOT/WORK_MANIFEST.md | WP-70-01 / G0 | Xu AI-01 | 2026-10-30 | Sandbox readback available; hash not recorded | Pending | RECORDED |
+| E70-DOC-002 | 00_ROOT/DOC-001_BAN-TUYEN-NGON_WORK-MANIFEST.md | WP-70-01 / G0 | Xu AI-01 | 2026-10-30 | Sandbox readback available; hash not recorded | Pending | RECORDED |
 | E70-ARCH-001 | 03_ARCHITECT/WORK_LIFECYCLE_ARCHITECTURE.md | WP-70-01 / G3 | Xu AI-01 | 2026-10-30 | Sandbox readback available; hash not recorded | Pending | RECORDED |
 | E70-DASH-001 | DASHBOARD/index.html + PRODUCT_STATUS.json + schema | WP-70-03 / G3-G5 | Xu AI-01 | 2026-10-30 | Pending runtime/schema validation | Qw pending | RECORDED |
 | E70-STOR-001 | 05_BUILD/03_ARCHITECTURE/STORAGE_AND_EXPORT_ARCHITECTURE.md | WP-70-05 | Xu AI-01 | 2026-10-30 | GitHub/Sandbox readback matched | Qw pending | RECORDED |
@@ -26,9 +26,9 @@ Purpose: Cross-phase index of inspectable evidence. This file indexes artifacts;
 | E70-CORE-001 | 05_BUILD/03_ARCHITECTURE/CORE_CAPABILITY_GAP_ASSESSMENT.md | WP-70-04 | Xu AI-01 | 2026-10-30 | Source review captured; no runtime verification | Qw pending | RECORDED |
 
 No evidence item is marked VERIFIED until its artifact is independently checked against the claim it supports.
-| E70-CONSOL-001 | EVIDENCE/WORK70_CONSOLIDATION_CHECK_20261030.md | WP-70-01..06 | Xu AI-01 | 2026-10-30 | GitHub/Sandbox readback pending | Qw pending | RECORDED |
+| E70-CONSOL-001 | EVIDENCE/DOC-031_BAO-CAO-KIEM-TRA-HOP-NHAT_WORK70-CONSOLIDATION-CHECKPOINT.md | WP-70-01..06 | Xu AI-01 | 2026-10-30 | GitHub/Sandbox readback pending | Qw pending | RECORDED |
 
-| E70-OPS-001 | DOC-042..DOC-053; nine phase playbooks; Document Register; execution journal | WP-70-01 / G0-G4 preparation | Xu AI-01 | 2026-10-30 | Sandbox writes + selected readback; GitHub commits recorded in NHAT_KY_THI_CONG.md | Qw pending | RECORDED |
+| E70-OPS-001 | DOC-042..DOC-053; nine phase playbooks; Document Register; execution journal | WP-70-01 / G0-G4 preparation | Xu AI-01 | 2026-10-30 | Sandbox writes + selected readback; GitHub commits recorded in 00_ROOT/DOC-035_NHAT-KY-THI-CONG_WORK-EXECUTION-LOG.md | Qw pending | RECORDED |
 
 | E70-DASH-SCHEMA-SUBSET-001 | DASHBOARD/PRODUCT_STATUS.json + schema | WP-70-03 | Xu AI-01 | 2026-10-30 | JSON parse + custom subset validator PASS; full Draft 2020-12 validator NOT RUN | Qw pending | RECORDED |
 | E70-DASH-STATIC-001 | DASHBOARD/index.html | WP-70-03 | Xu AI-01 | 2026-10-30 | Static source inspection only; browser E2E NOT RUN | Qw pending | RECORDED |
