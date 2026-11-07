@@ -212,7 +212,7 @@ class PreviewHandler(BaseHTTPRequestHandler):
             try:
                 page = data.decode("utf-8")
                 if re.search(r"</body\s*>", page, flags=re.IGNORECASE):
-                    page = re.sub(r"</body\\s*>", banner + "</body>", page, count=1, flags=re.IGNORECASE)
+                    page = re.sub(r"</body\s*>", banner + "</body>", page, count=1, flags=re.IGNORECASE)
                 else:
                     page = banner + page
                 data = page.encode("utf-8")
