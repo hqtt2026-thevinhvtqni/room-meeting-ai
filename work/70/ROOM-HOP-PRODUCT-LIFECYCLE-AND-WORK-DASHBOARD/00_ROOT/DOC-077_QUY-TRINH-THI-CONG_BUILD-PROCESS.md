@@ -121,7 +121,7 @@ AI/adapter chỉ thực hiện action được permission/tool thực tế cho p
 ### B08 — Mapping và evidence registration
 - Cập nhật DOC-036/05_BUILD mapping: WP → build area → canonical source path → exact branch/ref/commit.
 - Đăng ký cross-phase evidence tại top-level EVIDENCE theo DOC-014.
-- 05_BUILD/EVIDENCE chỉ là staging; evidence chính thức phải có canonical reference.
+- 05_BUILD/06_EVIDENCE chỉ là staging; evidence chính thức phải có canonical reference.
 - Working copy phải ghi TEMPORARY, source version/hash và cleanup condition.
 **Đầu ra:** Verified Mapping Update và Evidence References.
 
