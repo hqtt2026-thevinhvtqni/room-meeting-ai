@@ -173,3 +173,10 @@ D70-021 establishes `EVIDENCE/` as the sole canonical top-level cross-phase evid
 The evidence JSON initially lacked required `schema_version`; it was corrected to `1.1`. JSON/schema parsing and a schema-keyword subset validation passed with 0 errors; 12 evidence IDs are unique. GitHub Actions runs 42365135562, 42365138494 and 42365141735 completed SUCCESS, including document validator, unit tests, register CLI validation, evidence JSON identity checks, and Ubuntu/Windows Preview Host jobs.
 
 **Remaining boundary:** no full Draft 2020-12 engine was run; no full parsed repository-wide link check or independent QE has closed the migration; Sandbox/PC parity is unverified; old pointer directory is intentionally retained. G-001 path normalization = IMPLEMENTED / AUTOMATED CHECKS PASS / MIGRATION CLOSURE OPEN.
+
+
+## G-007 verification update — 2026-11-07 — one canonical path enforcement
+
+DOC-055 v3.1 now records DOC-013 with one canonical path (`BUILD_REGISTER.json` on the 05_BUILD mapping branch); `BUILD_REGISTER.md` is a read-only projection, schemas are technical artifacts. DOC-014 likewise has one canonical JSON source. The existing validator now rejects duplicate DOC-ID, duplicate/non-numeric Read order, missing canonical path and duplicate canonical path. CI run 42365466946 completed SUCCESS: 11/11 unit tests, CLI validation of DOC-040/DOC-055, EVIDENCE JSON/identity checks, Preview Host Ubuntu and Windows all passed. The preceding run 42365401117 failed only because the new test fixture used an escaped literal newline; the fixture was corrected and the later run passed.
+
+**Current register snapshot:** 81 DOC-ID rows; 81 unique IDs; no duplicate Read orders; no duplicate canonical path values. This validates the DOC-055 register snapshot, not the entire repository's unregistered legacy files. The substantive DOC-042..DOC-052 legacy collision remains OPEN because seven re-identified copies are absent and original sources have not been converted to pointers. Full parsed link audit and independent QE remain OPEN.
