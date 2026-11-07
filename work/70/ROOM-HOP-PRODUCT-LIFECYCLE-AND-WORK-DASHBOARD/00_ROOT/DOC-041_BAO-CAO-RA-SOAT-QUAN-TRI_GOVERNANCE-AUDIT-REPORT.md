@@ -146,3 +146,9 @@ A current GitHub main tree inspection (truncated=false) and exact file fetch con
 **Next actions:** (1) run a repository-wide parsed inbound-link scan for all 11 old/new paths; (2) verify each legacy source and its new copy by content/hash and Git history; (3) determine a safe alias/pointer treatment that preserves history and complies with DOC-056; (4) resolve DOC-076 before declaring DOC-077 dependency-ready; (5) update Manifest/read-order guidance and dashboard projections only after the path map is verified; (6) independent QE and exact readback before closing G-008/G-009.
 
 **Evidence:** GitHub main recursive tree SHA 2257bcc2e3dbc3980911d95ff1e58a08245d7cf7, truncated=false; DOC-073 blob 2877ecd80c41c8b1da998b283c7dc863e9fb67a3; DOC-074 blob ae54489c90c0608612b6a54bd8ab4fd180ad8bb1; DOC-075 blob 06d4a5d884bd77d92e5b6df933cab0e4123d4422; DOC-077 blob b62ae3d8ba41bb9ce60bd657dcdcdf7b56d9dc90; updated DOC-055 blob recorded in GitHub commit cfe399ee2b97ebf8714ee8fc22f9e8a2209184e3.
+
+## G-009 verification update — 2026-11-07
+
+**Automated document governance validation: PASS.** The existing official-code validator now also checks duplicate DOC-IDs and duplicate/non-numeric Read orders in DOC-055. Two negative tests cover duplicate DOC-ID and duplicate Read order. GitHub Actions run 42363535711 completed SUCCESS: document validator compile, all 10 unit tests, canonical DOC-040/DOC-055 CLI validation, Preview Host Ubuntu tests, Preview Host Windows tests, and Windows bootstrap/local HTTP host check all passed.
+
+**Scope boundary:** this closes the automated DOC-ID/read-order validation gap for the current DOC-055 register snapshot. It does not close G-008/G-009 migration work: the seven reserved copies DOC-076 and DOC-078..DOC-083 are absent; DOC-077 still depends on absent DOC-076; inbound-link scan, legacy alias conversion, Sandbox parity and independent migration QE remain OPEN.
