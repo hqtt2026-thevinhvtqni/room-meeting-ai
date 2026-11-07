@@ -1261,3 +1261,9 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - **Trạng thái:** DOCUMENT GOVERNANCE VALIDATOR = PASS trên Ubuntu CI; DOCUMENT REGISTER UNIQUENESS = PASS; PREVIEW HOST WINDOWS = IN PROGRESS; LEGACY MIGRATION / INBOUND LINKS / ALIAS CONVERSION = OPEN.
 - **Bằng chứng:** workflow run https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/42363535711; validator blob d94e8f723afbd78582db37cc4629ce19cc69ac5e; test blob 3999d5f9910b1bce41ae5e696712554224b55886; workflow blob cae9008669d2ff27baa47371bd2baaa1cab9bfae.
 - **Bước tiếp theo:** xác nhận Windows job hoàn tất; tiếp tục inbound-link scan và đối soát canonical/legacy paths theo DOC-056. Không xóa hoặc đổi tên file trước khi các kiểm tra migration PASS.
+
+## Correction — 2026-11-07 — Xu / AI-01 — Hoàn tất CI Work 70 run 42363535711
+- **Kết quả cập nhật:** workflow run 42363535711 đã COMPLETED / SUCCESS. Job Document Register and Code Validation = SUCCESS; Preview Host Ubuntu = SUCCESS; Preview Host Windows = SUCCESS.
+- **Windows evidence:** compile Preview Host PASS; black-box tests PASS; Windows bootstrap và local HTTP host check PASS.
+- **Kết luận:** toàn bộ workflow run 42363535711 = PASS. Correction này thay thế trạng thái Windows IN PROGRESS được ghi tại thời điểm tạo mục CI trước đó; không thay đổi kết luận legacy migration vẫn OPEN.
+- **Readback:** DOC-035 đã được fetch lại từ GitHub main sau lần ghi trước; blob SHA tại thời điểm kiểm tra là 314a8068fd34fcb11573f82cfbb237cd08e1f760. Dòng correction này được bổ sung sau đó và cần exact readback riêng.
