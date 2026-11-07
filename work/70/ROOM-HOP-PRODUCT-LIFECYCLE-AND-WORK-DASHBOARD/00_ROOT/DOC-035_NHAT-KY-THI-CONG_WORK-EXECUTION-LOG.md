@@ -1267,3 +1267,12 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - **Windows evidence:** compile Preview Host PASS; black-box tests PASS; Windows bootstrap và local HTTP host check PASS.
 - **Kết luận:** toàn bộ workflow run 42363535711 = PASS. Correction này thay thế trạng thái Windows IN PROGRESS được ghi tại thời điểm tạo mục CI trước đó; không thay đổi kết luận legacy migration vẫn OPEN.
 - **Readback:** DOC-035 đã được fetch lại từ GitHub main sau lần ghi trước; blob SHA tại thời điểm kiểm tra là 314a8068fd34fcb11573f82cfbb237cd08e1f760. Dòng correction này được bổ sung sau đó và cần exact readback riêng.
+
+## 2026-11-07 — Xu / AI-01 — Bounded inbound-reference search cho DOC-042..DOC-052 legacy paths
+
+- **Phạm vi:** 11 exact-basename queries trên GitHub code search, giới hạn repository hqtt2026-thevinhvtqni/room-meeting-ai, branch mặc định main.
+- **Phương pháp:** tìm từng legacy basename DOC-042..DOC-052; lấy số lượng kết quả và đường dẫn match.
+- **Kết quả quan sát:** DOC-042..DOC-051 mỗi query trả về 1 match tại DOC-055; query DOC-052 trả về 0 match. Các excerpts DOC-055 xác nhận các tên file xuất hiện trong danh sách legacy và allocation ledger. Không có file khác được search engine trả về trong batch này.
+- **Giới hạn quan trọng:** đây là kết quả bounded code-search/index, không phải parsed repository-wide link scan; GitHub search có thể không index đầy đủ, không chứng minh không tồn tại inbound links trong HTML/JSON/source/history/branch khác. Không dùng kết quả này để xóa, đổi tên hoặc biến file cũ thành pointer.
+- **Trạng thái:** BOUNDED SEARCH COMPLETE; INBOUND-LINK RECONCILIATION = OPEN; DESTRUCTIVE CLEANUP = NOT RUN.
+- **Bước tiếp theo:** cần quét nội dung các file có khả năng tham chiếu trong tree và kiểm tra cả branch/ref liên quan; sau đó lập mapping link cũ → canonical path mới, kiểm tra broken links và independent QE trước cleanup.
