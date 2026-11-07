@@ -8,7 +8,7 @@
     "current_phase": "01_DISCOVER",
     "phase_status": "PLANNED",
     "gate_status": "NOT_READY",
-    "note_vi": "Theo DOC-001 v1.4 và PRODUCT_STATUS reconciled: G0/G1 NOT_READY; phase chưa chính thức bắt đầu."
+    "note_vi": "Theo DOC-001 v1.5 và PRODUCT_STATUS reconciled: G0/G1 NOT_READY; phase chưa chính thức bắt đầu."
   },
   "work_packages": {
     "total": 6,
@@ -80,7 +80,7 @@
   },
   "evidence": {
     "total_recorded": 12,
-    "source": "06_EVIDENCE/EVIDENCE_REGISTER.json",
+    "source": "EVIDENCE/EVIDENCE_REGISTER.json",
     "note_vi": "Tất cả state=RECORDED; chưa có VERIFIED từ independent QE."
   },
   "data_integrity": {
@@ -107,7 +107,7 @@
       {
         "source_id": "SRC-EVIDENCE-REGISTER",
         "source_type": "github_file",
-        "source_path": "06_EVIDENCE/EVIDENCE_REGISTER.json",
+        "source_path": "EVIDENCE/EVIDENCE_REGISTER.json",
         "last_updated": "UNKNOWN",
         "retrieved_at": "2026-11-07T10:15:00+07:00",
         "calculation_method": "direct_read_count",
