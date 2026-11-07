@@ -37,7 +37,7 @@ Initial inventory has identified the following classes; this is classification o
 - Storage & Export Architecture and Core Capability Gap Assessment: CANONICAL CANDIDATE; reconcile into 03_ARCHITECT or another justified Work-level location.
 - Storage & Export Acceptance: CANONICAL CANDIDATE; reconcile into 06_VERIFY.
 - AI Participants & Token Usage: LEGACY / REFERENCE; audit accuracy and retention need.
-- Work 70 Session Log: LEGACY / HISTORICAL; Work-wide chronological events are summarized in 00_ROOT/NHAT_KY_THI_CONG.md.
+- Work 70 Session Log: LEGACY / HISTORICAL; Work-wide chronological events are summarized in 00_ROOT/DOC-035_NHAT-KY-THI-CONG_WORK-EXECUTION-LOG.md.
 - BUILD_MAPPING_REGISTER.md: canonical mapping index for the 05_BUILD layer; not an original artifact.
 
 No source file has been moved, deleted or overwritten in this batch. The exact source inventory and proposed target mapping are recorded in 05_BUILD/00_ROOT/BUILD_MAPPING_REGISTER.md.
