@@ -20,7 +20,7 @@ Status: ACTIVE — readback verification required after every sync
 
 **Path rule:** MCP 8030 `relative_path` is relative to the Work 70 root. Use `ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/...` for Sandbox operations. The `work/70/` prefix is used only in GitHub repository paths. Never create a second Sandbox tree under `work/70/`.
 Sandbox Work 70 root → GitHub main:
-- README.md, LEGACY_SCAFFOLD_NOTICE.md
+- README.md, 00_ROOT/DOC-029_THONG-BAO-CAU-TRUC-CU_LEGACY-SCAFFOLD-NOTICE.md
 - 00_ROOT, 01_DISCOVER, 02_DEFINE, 03_ARCHITECT, 04_PLAN
 - 06_VERIFY, EVIDENCE, 07_ACCEPT, 08_RELEASE, 09_OPERATE
 - DASHBOARD
