@@ -4,7 +4,7 @@
 - **Read order / Thứ tự đọc:** 41
 - **Depends on / Phụ thuộc:** DOC-001; DOC-003; DOC-004; DOC-005; DOC-006; DOC-033; DOC-038; DOC-039; DOC-040
 - **Status / Trạng thái:** ACTIVE — AUDIT OPEN / REMEDIATION IN PROGRESS
-- **Version / Updated:** 1.3 / 2026-10-31
+- **Version / Updated:** 1.4 / 2026-11-07
 - **Owner / Phụ trách:** Xu / AI-01
 - **Authority / Thẩm quyền:** Vinh
 
@@ -126,3 +126,23 @@ This violates the one-DOC-ID/one-canonical-document rule in DOC-056 and the no-r
 **Decision:** Vinh explicitly delegated the DOC-ID disposition to Xu. Xu decided to preserve current canonical DOC-042..DOC-053 and re-identify the 11 substantive legacy GitHub main documents as DOC-073..DOC-083, in accordance with DOC-056 non-destructive migration rules. The identity-policy decision is therefore no longer pending Product Owner disposition.
 
 **Remediation status: IN PROGRESS / NOT CLOSED.** GitHub main copies currently exist for DOC-073, DOC-074, DOC-075 and DOC-077 only. Attempts to create DOC-076 and DOC-078..DOC-083 were blocked by the platform safety mechanism; no bypass was attempted. Original DOC-042..DOC-052 files remain untouched. No alias conversion, rename, deletion or inbound-link reconciliation has been performed. The four created copies and updated DOC-055/DOC-041/DOC-035 were subsequently synchronized to Sandbox 8030 and exact readback matched GitHub content; remaining seven copies and full link/alias reconciliation are still outstanding. DOC-055 records the complete mapping and partial status. G-008 remains OPEN until all 11 new canonical copies are created and verified, originals are safely converted to controlled aliases if permitted, links are reconciled, and GitHub/Sandbox exact parity is established.
+
+
+## G-009 — Canonical DOC-ID migration register reconciliation (2026-11-07)
+
+**Status: PARTIAL / REGISTER UPDATED / MIGRATION OPEN**
+
+A current GitHub main tree inspection (truncated=false) and exact file fetch confirmed:
+- DOC-042 remains End-to-End Execution Orchestration.
+- DOC-043 remains AI Role & Permission Matrix.
+- DOC-044 remains Work Assignment Contract Template.
+- The migrated process copies DOC-073 Discover, DOC-074 Define, DOC-075 Architect and DOC-077 Build exist as separate files, each with its new DOC-ID metadata.
+- DOC-076 and DOC-078..DOC-083 are absent from the current Work 70 tree. DOC-077 declares DOC-076 as a dependency; this dependency is therefore unresolved.
+
+**Register correction:** DOC-055 v2.9 now has explicit canonical rows for DOC-073, DOC-074, DOC-075 and DOC-077. The entries identify their preserved legacy source paths, distinguish the new canonical IDs from the existing DOC-042..044 assignments, and mark DOC-077 as not ready while DOC-076 is absent. The seven not-created IDs remain reserved mappings only and are not represented as available documents.
+
+**Safety boundary:** No legacy source file DOC-042..DOC-052 was renamed, overwritten, deleted or converted to a pointer. This entry does not claim inbound-link reconciliation, alias conversion, Sandbox parity, full migration completion, or phase-process coverage for the seven absent copies. The old substantive sources remain preserved until DOC-056 migration checks can be completed without loss.
+
+**Next actions:** (1) run a repository-wide parsed inbound-link scan for all 11 old/new paths; (2) verify each legacy source and its new copy by content/hash and Git history; (3) determine a safe alias/pointer treatment that preserves history and complies with DOC-056; (4) resolve DOC-076 before declaring DOC-077 dependency-ready; (5) update Manifest/read-order guidance and dashboard projections only after the path map is verified; (6) independent QE and exact readback before closing G-008/G-009.
+
+**Evidence:** GitHub main recursive tree SHA 2257bcc2e3dbc3980911d95ff1e58a08245d7cf7, truncated=false; DOC-073 blob 2877ecd80c41c8b1da998b283c7dc863e9fb67a3; DOC-074 blob ae54489c90c0608612b6a54bd8ab4fd180ad8bb1; DOC-075 blob 06d4a5d884bd77d92e5b6df933cab0e4123d4422; DOC-077 blob b62ae3d8ba41bb9ce60bd657dcdcdf7b56d9dc90; updated DOC-055 blob recorded in GitHub commit cfe399ee2b97ebf8714ee8fc22f9e8a2209184e3.
