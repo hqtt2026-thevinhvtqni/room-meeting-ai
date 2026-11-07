@@ -1,0 +1,111 @@
+{
+  "dashboard_type": "PRODUCT",
+  "work_id": "70",
+  "product_name": "ROOM-HOP Work Master Standard & Per-Work Dashboard",
+  "product_id": "ROOM-HOP-WORK-MASTER",
+  "standard_version": "1.1",
+  "product_lifecycle": {
+    "note_vi": "Theo DOC-085: Product Dashboard là deliverable của sản phẩm. Hiện tại chỉ có Work Dashboard prototype. Product Dashboard độc lập: NOT_CREATED / NOT_VERIFIED.",
+    "status": "NOT_CREATED",
+    "canonical_source": "NOT_DECLARED",
+    "verification_status": "NOT_VERIFIED"
+  },
+  "ai_capability_registry": {
+    "registry_id": "ROOM-HOP-AI-CAPABILITY-REGISTRY",
+    "schema_version": "1.0",
+    "registry_status": "INITIALIZED_EMPTY",
+    "updated_at": "2026-11-07",
+    "source_architecture": "DOC-086",
+    "entries_count": 0,
+    "entries": [],
+    "source_path": "05_BUILD/04_CODE/ai_capability_registry/data/registry.json",
+    "claim": "No model capability has been verified by this registry.",
+    "verification_status": "RECORDED",
+    "note_vi": "Registry tồn tại dưới dạng data contract tĩnh. entries=[]. Không có VERIFIED, PARTIAL hay UNSUPPORTED entry nào."
+  },
+  "modules": {
+    "work_dashboard_prototype": {
+      "path": "DASHBOARD/index.html",
+      "status": "PRESENT",
+      "source_mode": "local_snapshot",
+      "verification_status": "RECORDED",
+      "note_vi": "UI tĩnh đọc PRODUCT_STATUS.json; browser E2E NOT RUN."
+    },
+    "product_dashboard_independent": {
+      "status": "NOT_CREATED",
+      "verification_status": "NOT_VERIFIED",
+      "note_vi": "Theo DOC-085 mục 8: chưa có source, domain contract, user acceptance và release evidence độc lập."
+    },
+    "ai_capability_registry_static": {
+      "path": "05_BUILD/04_CODE/ai_capability_registry/",
+      "status": "PRESENT",
+      "verification_status": "RECORDED",
+      "note_vi": "Phase 1 static contract only. No DB/API/UI/runtime."
+    }
+  },
+  "room_hop_integration": {
+    "core_live": "NOT_VERIFIED",
+    "authorization": "NOT_VERIFIED",
+    "storage_export": "DESIGN_ONLY",
+    "note_vi": "WP-70-04 BLOCKED; storage/export backend chưa triển khai."
+  },
+  "data_integrity": {
+    "source_mode": "github_derived+sandbox_derived",
+    "primary_sources": [
+      {
+        "source_id": "SRC-AI-REGISTRY",
+        "source_type": "github_file",
+        "source_path": "05_BUILD/04_CODE/ai_capability_registry/data/registry.json",
+        "last_updated": "2026-11-07",
+        "retrieved_at": "2026-11-07T10:22:00+07:00",
+        "calculation_method": "direct_read; entries_count = len(entries)",
+        "verification_status": "RECORDED"
+      },
+      {
+        "source_id": "SRC-DOC-085",
+        "source_type": "sandbox_file",
+        "source_path": "03_ARCHITECT/DOC-085_KIEN-TRUC_HAI-LOAI-DASHBOARD_WORK-VA-SAN-PHAM.md",
+        "last_updated": "2026-11-06",
+        "retrieved_at": "2026-11-07T10:25:00+07:00",
+        "calculation_method": "direct_read",
+        "verification_status": "RECORDED"
+      },
+      {
+        "source_id": "SRC-AI-README",
+        "source_type": "github_file",
+        "source_path": "05_BUILD/04_CODE/ai_capability_registry/README.md",
+        "last_updated": "UNKNOWN",
+        "retrieved_at": "2026-11-07T10:22:00+07:00",
+        "calculation_method": "direct_read",
+        "verification_status": "RECORDED"
+      }
+    ],
+    "freshness": "FRESH",
+    "as_of": "2026-11-07",
+    "retrieved_at": "2026-11-07T10:25:00+07:00",
+    "warning_vi": "Product view chỉ phản ánh registry tĩnh và trạng thái tài liệu. Không có metric vận hành sản phẩm vì chưa có domain data / live product."
+  },
+  "metrics": {
+    "capability_entries": {
+      "value": 0,
+      "calculation_method": "len(entries) from registry.json",
+      "source_id": "SRC-AI-REGISTRY",
+      "verification_status": "RECORDED"
+    },
+    "verified_capabilities": {
+      "value": 0,
+      "calculation_method": "count entries where status==VERIFIED; registry empty",
+      "source_id": "SRC-AI-REGISTRY",
+      "verification_status": "RECORDED"
+    },
+    "product_dashboard_status": {
+      "value": "NOT_CREATED",
+      "calculation_method": "DOC-085 section 8 explicit statement",
+      "source_id": "SRC-DOC-085",
+      "verification_status": "RECORDED"
+    }
+  },
+  "ai_executor": "Go / AI-06",
+  "generated_by": "live_collector_v1",
+  "no_mock_data": true
+}
