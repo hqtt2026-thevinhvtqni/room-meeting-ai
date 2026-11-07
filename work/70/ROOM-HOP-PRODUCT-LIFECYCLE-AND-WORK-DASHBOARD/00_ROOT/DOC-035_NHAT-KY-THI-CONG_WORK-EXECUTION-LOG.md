@@ -1172,3 +1172,15 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - **GitHub:** README cập nhật commit 1b78947d4e8091da7e31a5b86b53af5094305fdc. Workflow CI đã có run evidence trên GitHub.
 - **Trạng thái:** PYTHON CI PASS 2 OS × 11 tests; code/readme synced; local PC bootstrap NOT RUN; local host NOT STARTED; Tailscale Serve NOT CONFIGURED; Android E2E NOT RUN; NOT ACCEPTED/NOT RELEASED; no Gate PASS.
 - **Bước tiếp theo / blocker:** cần thao tác trên PC Windows có local checkout, Git, Python và Tailscale đã đăng nhập. Chạy bootstrap script; sau health PASS mới bật Tailscale Serve và mở URL HTTPS riêng trên Android.
+
+## 2026-11-07 2026-11-07T04:54:52.769Z UTC — Xu / AI-01 — PASS Windows bootstrap + local Preview Host trên CI
+- **Run ID:** 42340429498; workflow commit: d9a43aa7a703a97e0a0fd199abd7fc74254f1a67.
+- **Windows job:** conclusion SUCCESS; Ubuntu job SUCCESS.
+- **Windows Python:** compile PASS; black-box tests 11/11 PASS; bootstrap chạy lại py_compile + unittest 11/11 PASS.
+- **Bootstrap thực tế:** lệnh tương đương bootstrap_preview_host.ps1 -SyncMain -Start -Port 18060 hoàn tất; output LOCAL_TESTS=PASS, HOST=RUNNING, HEALTH=PASS.
+- **HTTP smoke test:** GET /work/70/execution/ trên 127.0.0.1:18060 trả HTTP 200; finally gọi preview_host.ps1 -Action Stop.
+- **Ubuntu:** py_compile PASS; 11/11 black-box tests PASS; bước Windows-only được skip đúng điều kiện.
+- **Cảnh báo ngoài phạm vi:** post-checkout cleanup vẫn báo .gitmodules thiếu URL cho submodule path room-meeting-ai; GitHub job vẫn SUCCESS. Không sửa cấu hình submodule trong task này.
+- **Kết luận:** Python service, Windows bootstrap, local process start/health, HTTP route và stop lifecycle đã được kiểm chứng trên Windows CI runner. Đây chưa phải bằng chứng PC cá nhân của Vinh hoặc Android/Tailscale.
+- **Trạng thái:** CI WINDOWS + UBUNTU PASS; WINDOWS LOCAL HOST SMOKE PASS; USER PC DEPLOYMENT NOT RUN; TAILSCALE SERVE NOT CONFIGURED; ANDROID E2E NOT RUN; NOT ACCEPTED/NOT RELEASED; no Gate PASS.
+- **Bước tiếp theo:** Vinh chạy bootstrap trên PC local; xác minh hai localhost route; sau đó mới cấu hình Tailscale Serve private HTTPS và mở trên Android.
