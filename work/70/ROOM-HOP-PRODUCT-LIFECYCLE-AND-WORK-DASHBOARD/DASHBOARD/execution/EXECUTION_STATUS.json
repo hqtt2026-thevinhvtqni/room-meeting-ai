@@ -1,0 +1,160 @@
+{
+  "dashboard_type": "WORK_EXECUTION",
+  "work_id": "70",
+  "work_name": "ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD",
+  "product_name": "ROOM-HOP Work Master Standard & Per-Work Dashboard",
+  "work_status": "ACTIVE",
+  "lifecycle": {
+    "current_phase": "01_DISCOVER",
+    "phase_status": "PLANNED",
+    "gate_status": "NOT_READY",
+    "note_vi": "Theo DOC-001 v1.4 và PRODUCT_STATUS reconciled: G0/G1 NOT_READY; phase chưa chính thức bắt đầu."
+  },
+  "work_packages": {
+    "total": 6,
+    "by_status": {
+      "IN_PROGRESS": 4,
+      "BLOCKED": 1,
+      "PLANNED": 1
+    },
+    "items": [
+      {
+        "wp_id": "WP-70-01",
+        "title": "Canonical Work standard",
+        "status": "IN_PROGRESS",
+        "owner": "Xu / AI-01",
+        "reviewer": "Qw / AI-05",
+        "evidence_refs": ["README.md", "00_ROOT/WORK_MANIFEST.md", "03_ARCHITECT/WORK_LIFECYCLE_ARCHITECTURE.md"]
+      },
+      {
+        "wp_id": "WP-70-02",
+        "title": "Work Package registry",
+        "status": "IN_PROGRESS",
+        "owner": "Xu / AI-01",
+        "reviewer": "Qw / AI-05",
+        "evidence_refs": ["05_BUILD/00_ROOT/BUILD_REGISTER.md", "05_BUILD/00_ROOT/WORK_PACKAGE.schema.json"]
+      },
+      {
+        "wp_id": "WP-70-03",
+        "title": "Dashboard reference and data contract",
+        "status": "IN_PROGRESS",
+        "owner": "Xu / AI-01",
+        "reviewer": "Qw / AI-05",
+        "evidence_refs": ["DASHBOARD/README.md", "DASHBOARD/PRODUCT_STATUS.json", "DASHBOARD/PRODUCT_STATUS.schema.json", "DASHBOARD/index.html"]
+      },
+      {
+        "wp_id": "WP-70-04",
+        "title": "Core read integration",
+        "status": "BLOCKED",
+        "owner": "Xu / Core owner TBD",
+        "reviewer": "Qw / AI-05",
+        "evidence_refs": ["03_ARCHITECT/DASHBOARD_CORE_READ_CONTRACT.md"]
+      },
+      {
+        "wp_id": "WP-70-05",
+        "title": "Evidence storage and file export",
+        "status": "IN_PROGRESS",
+        "owner": "Xu / AI-01",
+        "reviewer": "Qw / AI-05",
+        "evidence_refs": ["05_BUILD/03_ARCHITECTURE/STORAGE_AND_EXPORT_ARCHITECTURE.md", "05_BUILD/05_TEST/STORAGE_AND_EXPORT_ACCEPTANCE.md"]
+      },
+      {
+        "wp_id": "WP-70-06",
+        "title": "Independent verification and handoff",
+        "status": "PLANNED",
+        "owner": "Xu / AI-01",
+        "reviewer": "Qw / AI-05",
+        "evidence_refs": ["06_VERIFY/VERIFICATION_PLAN.md", "06_VERIFY/VERIFICATION_CHECKLIST.md"]
+      }
+    ]
+  },
+  "blockers": {
+    "open_count": 5,
+    "items": [
+      {"id": "B-70-01", "title": "Core read API and authorization contract not verified", "severity": "HIGH", "status": "OPEN", "owner": "Xu / Core owner TBD"},
+      {"id": "B-70-02", "title": "Dashboard schema and browser E2E not executed", "severity": "HIGH", "status": "OPEN", "owner": "Xu / An"},
+      {"id": "B-70-03", "title": "Independent QE review pending", "severity": "HIGH", "status": "OPEN", "owner": "Qw"},
+      {"id": "B-70-04", "title": "Storage/export backend not implemented", "severity": "HIGH", "status": "OPEN", "owner": "Xu / Core owner TBD"},
+      {"id": "B-70-05", "title": "G0/G1 lifecycle gates pending independent verification", "severity": "HIGH", "status": "OPEN", "owner": "Xu / Qw"}
+    ]
+  },
+  "evidence": {
+    "total_recorded": 12,
+    "source": "06_EVIDENCE/EVIDENCE_REGISTER.json",
+    "note_vi": "Tất cả state=RECORDED; chưa có VERIFIED từ independent QE."
+  },
+  "data_integrity": {
+    "source_mode": "github_derived+sandbox_derived",
+    "primary_sources": [
+      {
+        "source_id": "SRC-PRODUCT-STATUS",
+        "source_type": "local_snapshot",
+        "source_path": "DASHBOARD/PRODUCT_STATUS.json",
+        "last_updated": "2026-10-30T09:10:00+07:00",
+        "retrieved_at": "2026-11-07T10:20:00+07:00",
+        "calculation_method": "direct_read",
+        "verification_status": "STALE"
+      },
+      {
+        "source_id": "SRC-BUILD-REGISTER",
+        "source_type": "sandbox_file",
+        "source_path": "05_BUILD/00_ROOT/BUILD_REGISTER.json",
+        "last_updated": "UNKNOWN",
+        "retrieved_at": "2026-11-07T10:20:00+07:00",
+        "calculation_method": "direct_read",
+        "verification_status": "RECORDED"
+      },
+      {
+        "source_id": "SRC-EVIDENCE-REGISTER",
+        "source_type": "github_file",
+        "source_path": "06_EVIDENCE/EVIDENCE_REGISTER.json",
+        "last_updated": "UNKNOWN",
+        "retrieved_at": "2026-11-07T10:15:00+07:00",
+        "calculation_method": "direct_read_count",
+        "verification_status": "RECORDED"
+      },
+      {
+        "source_id": "SRC-MANIFEST",
+        "source_type": "github_file",
+        "source_path": "00_ROOT/DOC-001_BAN-TUYEN-NGON_WORK-MANIFEST.md",
+        "last_updated": "2026-10-30",
+        "retrieved_at": "2026-11-07T10:10:00+07:00",
+        "calculation_method": "direct_read",
+        "verification_status": "RECORDED"
+      }
+    ],
+    "freshness": "STALE",
+    "as_of": "2026-10-30T09:10:00+07:00",
+    "retrieved_at": "2026-11-07T10:25:00+07:00",
+    "warning_vi": "Dữ liệu tổng hợp từ snapshot 2026-10-30 và register hiện có. Không phải Core live. Không có số liệu tiến độ % tự tính. WP count = len(work_packages). Open blockers = count(status==OPEN). Evidence total = len(evidence array)."
+  },
+  "metrics": {
+    "wp_total": {
+      "value": 6,
+      "calculation_method": "COUNT work_packages from BUILD_REGISTER.json and PRODUCT_STATUS.json (both agree)",
+      "source_id": "SRC-BUILD-REGISTER",
+      "verification_status": "RECORDED"
+    },
+    "open_blockers": {
+      "value": 5,
+      "calculation_method": "COUNT blockers where status != CLOSED from PRODUCT_STATUS.json",
+      "source_id": "SRC-PRODUCT-STATUS",
+      "verification_status": "RECORDED"
+    },
+    "evidence_recorded": {
+      "value": 12,
+      "calculation_method": "COUNT evidence array in EVIDENCE_REGISTER.json",
+      "source_id": "SRC-EVIDENCE-REGISTER",
+      "verification_status": "RECORDED"
+    },
+    "gate_pass_count": {
+      "value": 0,
+      "calculation_method": "COUNT phases where gate_status == PASS; currently all NOT_READY",
+      "source_id": "SRC-PRODUCT-STATUS",
+      "verification_status": "RECORDED"
+    }
+  },
+  "ai_executor": "Go / AI-06",
+  "generated_by": "live_collector_v1",
+  "no_mock_data": true
+}
