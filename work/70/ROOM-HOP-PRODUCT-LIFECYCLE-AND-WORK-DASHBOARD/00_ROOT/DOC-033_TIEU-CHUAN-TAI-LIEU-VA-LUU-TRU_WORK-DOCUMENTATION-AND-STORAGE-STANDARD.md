@@ -4,7 +4,7 @@
 - **Read order:** 7
 - **Depends on:** DOC-001; DOC-002; DOC-003
 - **Status:** ACTIVE
-- **Version / Updated:** 1.0 / 2026-10-30
+- **Version / Updated:** 1.1 / 2026-11-07
 
 ## 1. Purpose and scope
 This standard defines the shared documentation, source ownership, file storage and mapping rules for every ROOM-HOP Work. It prevents duplicate originals, competing registers, inconsistent AI reporting and confusion between the Work lifecycle tree and 05_BUILD.
@@ -14,12 +14,12 @@ Every Work uses the following coordinated records. They are logical records, not
 
 | STT | Record | Purpose | Canonical owner |
 |---|---|---|---|
-| 01 | BIÊN BẢN | Meeting minutes, agreements, approvals and change history | 00_ROOT/BIEN_BAN.md; binding decisions are referenced by ID in DECISION_LOG.md |
+| 01 | BIÊN BẢN | Meeting minutes, agreements, approvals and change history | 00_ROOT/DOC-034_BIEN-BAN_HOP-WORK-70-MINUTES.md; binding decisions are referenced by ID in DOC-006 |
 | 02 | KẾ HOẠCH | Work scope, milestones, tasks, owners, dependencies, priorities and acceptance criteria | 04_PLAN/IMPLEMENTATION_ROADMAP.md plus registered supporting plans |
 | 03 | BẢN VẼ / MÔ HÌNH SẢN PHẨM (when needed) | Approved architecture, workflows, data models, UI, technical drawings or 3D models | 03_ARCHITECT/WORK_LIFECYCLE_ARCHITECTURE.md and registered design artifacts |
-| 04 | NHẬT KÝ THI CÔNG | Chronological record of actual work, changes, tests, blockers and handoffs | 00_ROOT/NHAT_KY_THI_CONG.md; technical details may be linked from build mappings |
+| 04 | NHẬT KÝ THI CÔNG | Chronological record of actual work, changes, tests, blockers and handoffs | 00_ROOT/DOC-035_NHAT-KY-THI-CONG_WORK-EXECUTION-LOG.md; technical details may be linked from build mappings |
 
-For Work 70, the canonical records are 00_ROOT/BIEN_BAN.md, 04_PLAN/IMPLEMENTATION_ROADMAP.md, 03_ARCHITECT/WORK_LIFECYCLE_ARCHITECTURE.md (and other registered drawings/models when needed), and 00_ROOT/NHAT_KY_THI_CONG.md. Each new Work declares its own canonical paths in its Manifest or Document Register. If a drawing/model is not needed, mark NOT REQUIRED with a reason; do not create an empty placeholder.
+For Work 70, the canonical records are 00_ROOT/DOC-034_BIEN-BAN_HOP-WORK-70-MINUTES.md, 04_PLAN/IMPLEMENTATION_ROADMAP.md, 03_ARCHITECT/WORK_LIFECYCLE_ARCHITECTURE.md (and other registered drawings/models when needed), and 00_ROOT/DOC-035_NHAT-KY-THI-CONG_WORK-EXECUTION-LOG.md. Each new Work declares its own canonical paths in its Manifest or Document Register. If a drawing/model is not needed, mark NOT REQUIRED with a reason; do not create an empty placeholder.
 
 ## 3. Canonical ownership by lifecycle
 - 00_ROOT: Manifest, standards, Document Register, Decision Log, minutes and Work-wide execution log.
@@ -29,7 +29,7 @@ For Work 70, the canonical records are 00_ROOT/BIEN_BAN.md, 04_PLAN/IMPLEMENTATI
 - 04_PLAN: canonical plans, roadmap, WP plan and dependencies.
 - 05_BUILD: mapping and engineering coordination only; never the canonical home of original Work documents or product source code.
 - 06_VERIFY: verification plans, procedures and checklists.
-- 06_EVIDENCE: cross-phase canonical evidence index and verified evidence references.
+- EVIDENCE: cross-phase canonical evidence index and verified evidence references.
 - 07_ACCEPT: acceptance decision and record.
 - 08_RELEASE: approved release record and release manifest.
 - 09_OPERATE: operating procedures, incidents and maintenance records.
@@ -75,3 +75,7 @@ All Work documents follow DOC-038 (00_ROOT/DOC-038_QUY-TRINH-DAT-TEN-TAI-LIEU_DO
 
 ## 10. Compliance and status
 A successful file write is not verification. A mapping is valid only after its target is read and exact version/hash is checked. No evidence, no PASS; a mapping cannot prove the target artifact works. Until legacy classification is complete, 05_BUILD transition status is ACTIVE / MIGRATION NOT VERIFIED. This standard applies to all new Works; existing Works adopt it through controlled, non-destructive migration.
+
+
+## 2026-11-07 canonical-path correction
+For Work 70, the sole canonical minutes record is `00_ROOT/DOC-034_BIEN-BAN_HOP-WORK-70-MINUTES.md`; the sole Work-wide execution log is `00_ROOT/DOC-035_NHAT-KY-THI-CONG_WORK-EXECUTION-LOG.md`. `BIEN_BAN.md` and `NHAT_KY_THI_CONG.md` are legacy compatibility pointers only and must not be edited as independent records. The sole cross-phase evidence source is `EVIDENCE/EVIDENCE_REGISTER.json`; its Markdown view is read-only and its schema is a technical validation artifact. `05_BUILD/06_EVIDENCE/` remains staging only.
