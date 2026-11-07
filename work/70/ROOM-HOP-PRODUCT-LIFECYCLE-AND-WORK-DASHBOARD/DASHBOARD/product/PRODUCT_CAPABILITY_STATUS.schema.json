@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://room-hop.local/schemas/work-70/product-capability-status.json",
+  "title": "Work 70 Product Capability Status",
+  "description": "Work-level Product/Capability projection. This is NOT the independent Product Dashboard defined in DOC-085 §2.2. Independent Product Dashboard remains NOT_CREATED until canonical product source, domain contract and acceptance exist.",
+  "type": "object",
+  "required": [
+    "dashboard_type",
+    "work_id",
+    "product_name",
+    "product_lifecycle",
+    "ai_capability_registry",
+    "modules",
+    "room_hop_integration",
+    "data_integrity",
+    "metrics",
+    "no_mock_data"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "dashboard_type": { "const": "PRODUCT" },
+    "work_id": { "type": "string", "minLength": 1 },
+    "product_name": { "type": "string" },
+    "product_id": { "type": "string" },
+    "standard_version": { "type": "string" },
+    "product_lifecycle": {
+      "type": "object",
+      "required": ["status", "verification_status"],
+      "additionalProperties": true,
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["NOT_CREATED", "NOT_APPLICABLE", "NOT_VERIFIED", "PROTOTYPE", "ACTIVE", "RELEASED"]
+        },
+        "canonical_source": { "type": "string" },
+        "verification_status": {
+          "type": "string",
+          "enum": ["VERIFIED", "RECORDED", "NOT_VERIFIED", "STALE", "MISSING", "UNKNOWN"]
+        },
+        "note_vi": { "type": "string" }
+      }
+    },
+    "ai_capability_registry": {
+      "type": "object",
+      "required": ["registry_id", "registry_status", "entries_count", "entries", "verification_status"],
+      "additionalProperties": true,
+      "properties": {
+        "registry_id": { "type": "string" },
+        "schema_version": { "type": "string" },
+        "registry_status": { "type": "string" },
+        "updated_at": { "type": "string" },
+        "source_architecture": { "type": "string" },
+        "entries_count": { "type": "integer", "minimum": 0 },
+        "entries": { "type": "array" },
+        "source_path": { "type": "string" },
+        "claim": { "type": "string" },
+        "verification_status": { "type": "string" },
+        "note_vi": { "type": "string" }
+      }
+    },
+    "modules": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["status", "verification_status"],
+        "additionalProperties": true
+      }
+    },
+    "room_hop_integration": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "data_integrity": {
+      "type": "object",
+      "required": ["source_mode", "primary_sources", "freshness", "retrieved_at"],
+      "additionalProperties": true,
+      "properties": {
+        "source_mode": { "type": "string" },
+        "primary_sources": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["source_id", "source_type", "source_path", "retrieved_at", "calculation_method", "verification_status"],
+            "additionalProperties": true
+          }
+        },
+        "freshness": { "type": "string", "enum": ["FRESH", "STALE", "UNKNOWN"] },
+        "as_of": { "type": "string" },
+        "retrieved_at": { "type": "string" },
+        "warning_vi": { "type": "string" }
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["value", "calculation_method", "source_id", "verification_status"],
+        "properties": {
+          "value": {},
+          "calculation_method": { "type": "string", "minLength": 1 },
+          "source_id": { "type": "string" },
+          "verification_status": {
+            "type": "string",
+            "enum": ["VERIFIED", "RECORDED", "NOT_VERIFIED", "STALE", "MISSING", "UNKNOWN"]
+          }
+        }
+      }
+    },
+    "ai_executor": { "type": "string" },
+    "generated_by": { "type": "string" },
+    "no_mock_data": { "const": true }
+  }
+}
