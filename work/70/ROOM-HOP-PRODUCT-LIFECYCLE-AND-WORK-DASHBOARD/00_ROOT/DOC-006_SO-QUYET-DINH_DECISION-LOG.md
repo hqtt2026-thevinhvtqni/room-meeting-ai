@@ -77,3 +77,11 @@ Phạm vi phê duyệt: tài liệu kiến trúc và phân loại tri thức tro
 | D70-020 | Theo chỉ thị trực tiếp của Vinh, mỗi văn bản lưu hành chính thức trong Work chỉ có một DOC-ID, một mã văn bản thuộc đúng một loại đã quy định, một canonical path và một bản nội dung có thẩm quyền. DOC-055 là register duy nhất cho DOC-ID/path; DOC-039 là chuẩn loại văn bản; DOC-040 là sổ cấp mã nghiệp vụ; DOC-034 và DOC-035 lần lượt là sổ biên bản và nhật ký duy nhất. Không tạo nguồn lạ, register song song, tài liệu trùng nội dung hoặc bản sao có thẩm quyền. AI phải dừng và báo Xu khi phát hiện xung đột; không tự chọn hoặc tự phát sinh mã/loại/nguồn. | Ngăn AI mới và người vận hành hiểu nhầm, tránh nhiều nguồn sự thật, trùng số, sai loại và quyết định dựa trên tài liệu không có thẩm quyền. | APPROVED BY VINH — ACTIVE WORK 70 DOCUMENT CONTROL RULE |
 
 **Ranh giới:** Quyết định này củng cố và áp dụng các chuẩn DOC-033/038/039/040/055/056 hiện có; không tạo loại văn bản mới, không tạo register mới, không tự động cho phép xóa lịch sử hoặc tài liệu đang có tham chiếu. Di trú/xóa alias phải theo DOC-056 và có bằng chứng.
+
+
+## 8. Quyết định D70-021 — Tách tên kho Evidence khỏi số thứ tự phase (2026-11-07)
+| Decision ID | Decision / Quyết định | Rationale / Lý do | Status / Trạng thái |
+|---|---|---|---|
+| D70-021 | Đổi tên thư mục bằng chứng xuyên pha cấp Work từ `06_EVIDENCE/` thành `EVIDENCE/`; giữ `06_VERIFY/` là phase 06; giữ `05_BUILD/06_EVIDENCE/` là staging kỹ thuật. | Tránh hai thư mục cấp Work cùng mang tiền tố 06, giúp AI/con người phân biệt phase 06 với kho evidence xuyên phase, không thay đổi ownership hoặc DOC-ID. | ACTIVE STANDARD — MIGRATION IN PROGRESS; old path non-canonical |
+
+D70-021 supersedes only the top-level folder-name portion of D70-001 and D70-004. It does not change the 05_BUILD child directory set or the canonical evidence ownership rule. New artifacts and references use `EVIDENCE/`; old top-level `06_EVIDENCE/` remains compatibility-only until link reconciliation and QE permit retirement. No historical decision text is rewritten.
