@@ -152,3 +152,9 @@ A current GitHub main tree inspection (truncated=false) and exact file fetch con
 **Automated document governance validation: PASS.** The existing official-code validator now also checks duplicate DOC-IDs and duplicate/non-numeric Read orders in DOC-055. Two negative tests cover duplicate DOC-ID and duplicate Read order. GitHub Actions run 42363535711 completed SUCCESS: document validator compile, all 10 unit tests, canonical DOC-040/DOC-055 CLI validation, Preview Host Ubuntu tests, Preview Host Windows tests, and Windows bootstrap/local HTTP host check all passed.
 
 **Scope boundary:** this closes the automated DOC-ID/read-order validation gap for the current DOC-055 register snapshot. It does not close G-008/G-009 migration work: the seven reserved copies DOC-076 and DOC-078..DOC-083 are absent; DOC-077 still depends on absent DOC-076; inbound-link scan, legacy alias conversion, Sandbox parity and independent migration QE remain OPEN.
+
+## G-001 path-collision follow-up — 2026-11-07
+
+Bounded GitHub code-search inventory confirmed references to top-level 06_EVIDENCE in Work 70 README, DOC-002, DOC-035, DOC-055, DOC-060, DOC-061, DOC-084, DOC-088, Evidence Register files and Dashboard JSON; some search results also belong to other Works. The 06_VERIFY phase playbook path is separately referenced in DOC-055. The top-level 06_EVIDENCE and 06_VERIFY folders serve different purposes but share the numeric prefix 06.
+
+**Disposition:** retain both paths unchanged for now. The duplicate prefix is confirmed; rename is not yet safe because the search was bounded/topn-limited and not a complete parsed inbound-link scan. A non-numbered canonical root name such as EVIDENCE/ remains a migration candidate, not an executed change. Require full path inventory, old→new mapping, reference updates, link checker, exact readback and independent QE under DOC-056 before rename or deletion.
