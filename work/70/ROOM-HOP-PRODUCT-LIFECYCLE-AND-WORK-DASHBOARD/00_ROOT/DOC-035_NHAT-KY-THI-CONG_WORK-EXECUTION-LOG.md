@@ -1322,3 +1322,12 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - **CI xác nhận:** run 42365466946 — COMPLETED / SUCCESS. Document Register and Code Validation: compile PASS, 11/11 unit tests PASS, canonical DOC-040/DOC-055 CLI validation PASS, EVIDENCE JSON/identity check PASS. Preview Host Ubuntu PASS; Preview Host Windows compile, black-box tests, bootstrap và local HTTP host PASS.
 - **Register exact readback:** 81 dòng DOC-ID; 81 ID duy nhất; không trùng Read order; không trùng canonical path. DOC-014 có một JSON path; DOC-013 có một JSON path; Markdown views không được xem là nguồn thứ hai.
 - **Trạng thái:** DOC-ID/Read-order/canonical-path uniqueness validator = PASS; CI run 42365466946 = PASS. Full parsed inbound-link scan, independent QE, Sandbox/PC parity và dọn pointer cũ vẫn OPEN.
+
+
+## 2026-11-07 — Xu / AI-01 — Chuẩn hóa DOC-029 và hoàn tất kiểm tra batch
+
+- **Thao tác:** di chuyển nội dung DOC-029 từ root-level `LEGACY_SCAFFOLD_NOTICE.md` sang canonical `00_ROOT/DOC-029_THONG-BAO-CAU-TRUC-CU_LEGACY-SCAFFOLD-NOTICE.md`; cập nhật version 1.1; đổi đường dẫn cũ thành compatibility pointer; cập nhật DOC-055 v3.2.
+- **Kiểm tra register:** 81 DOC-ID rows, 81 unique IDs, không duplicate Read order, không duplicate canonical path; DOC-013 chỉ còn một canonical JSON source path; DOC-014 chỉ còn một canonical JSON source path.
+- **CI:** run 42365603990 — COMPLETED / SUCCESS. Document Register and Code Validation = SUCCESS (validator compile, 11 unit tests, DOC-040/DOC-055 CLI, EVIDENCE JSON/identity check); Preview Host Ubuntu = SUCCESS; Preview Host Windows = SUCCESS (black-box + bootstrap + local HTTP host).
+- **Compatibility pointer inventory:** đã đọc xác nhận 17 file tên cũ trong 00_ROOT là pointer-only; `LEGACY_SCAFFOLD_NOTICE.md` và 8 file cũ trong top-level `06_EVIDENCE/` cũng là pointer-only. Không xóa pointer nào trong lượt này vì chưa đóng full inbound-link scan/QE.
+- **Trạng thái:** DOC-029 canonical path = PASS; DOC-055 identity/path/read-order uniqueness = PASS; CI run 42365603990 = PASS. DOC-042..DOC-052 legacy identity migration, full link audit, Sandbox/PC parity và independent QE vẫn OPEN.
