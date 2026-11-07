@@ -1331,3 +1331,16 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - **CI:** run 42365603990 — COMPLETED / SUCCESS. Document Register and Code Validation = SUCCESS (validator compile, 11 unit tests, DOC-040/DOC-055 CLI, EVIDENCE JSON/identity check); Preview Host Ubuntu = SUCCESS; Preview Host Windows = SUCCESS (black-box + bootstrap + local HTTP host).
 - **Compatibility pointer inventory:** đã đọc xác nhận 17 file tên cũ trong 00_ROOT là pointer-only; `LEGACY_SCAFFOLD_NOTICE.md` và 8 file cũ trong top-level `06_EVIDENCE/` cũng là pointer-only. Không xóa pointer nào trong lượt này vì chưa đóng full inbound-link scan/QE.
 - **Trạng thái:** DOC-029 canonical path = PASS; DOC-055 identity/path/read-order uniqueness = PASS; CI run 42365603990 = PASS. DOC-042..DOC-052 legacy identity migration, full link audit, Sandbox/PC parity và independent QE vẫn OPEN.
+
+
+## 2026-11-07 — Xu / AI-01 — Đối soát tham chiếu pointer và nguồn canonical
+
+- **Phạm vi:** 17 legacy pointer files trong 00_ROOT, pointer DOC-029, hồ sơ DOC-001/002/003/033/034, Verification Checklist, Dashboard PRODUCT_STATUS/EXECUTION_STATUS và Work Package Register JSON.
+- **Phương pháp:** GitHub code search theo 18 tên alias; fetch exact các hồ sơ có kết quả; phân loại ACTIVE reference, HISTORICAL reference, pointer self-reference và test fixture.
+- **Thay đổi active references:** DOC-001 trỏ intake template về DOC-023; DOC-002 trỏ Manifest/Register/Decision Log/Documentation Standard về DOC-001/055/006/033; DOC-003 trỏ scaffold notice về DOC-029 canonical; DOC-034 bổ sung correction note cho DECISION_LOG.md (historical line giữ nguyên, canonical DOC-006 được chỉ rõ); Verification Checklist, Dashboard PRODUCT_STATUS/EXECUTION_STATUS và WORK_PACKAGE_REGISTER trỏ về DOC-001 thay cho WORK_MANIFEST.md.
+- **Global guidance:** AGENTS.md được sửa để quy định mỗi Work lấy canonical path từ Manifest/Document Register; ghi rõ Work 70 dùng DOC-034, IMPLEMENTATION_ROADMAP và DOC-035, còn BIEN_BAN.md/KE_HOACH_THI_CONG_XU.md/NHAT_KY_HOP_THI_CONG.md không được hiểu là các nguồn độc lập cho Work70.
+- **Historical references intentionally retained:** DOC-040 legacy BB-70-001 vẫn trỏ tới BIEN_BAN.md như bằng chứng lịch sử; DOC-058 giữ path drift incident; DOC-035/DOC-041 giữ lịch sử; test fixture giữ legacy path để kiểm tra tương thích; DOC-033/AGENTS.md ghi rõ alias/pointer. Không sửa/xóa lịch sử đã phát hành.
+- **Exact readback:** DOC-002, Verification Checklist, Dashboard PRODUCT_STATUS, Dashboard EXECUTION_STATUS và WORK_PACKAGE_REGISTER được fetch lại; không còn các alias WORK_MANIFEST/DOCUMENT_REGISTER/DECISION_LOG/WORK_DOCUMENTATION trong các nội dung active đó. GitHub search index còn trả kết quả cũ ở thời điểm kiểm tra, nên dùng exact fetch làm bằng chứng cho phiên bản mới.
+- **CI:** run 42365911872 = COMPLETED / SUCCESS; document validator compile, 11 unit tests, DOC-040/DOC-055 CLI, EVIDENCE JSON/identity check, Preview Host Ubuntu/Windows đều PASS.
+- **Giới hạn:** chưa có parsed repository-wide inbound-link checker trên toàn bộ 686 entries; search là bounded index search. Do đó không xóa pointer files. Sandbox/PC parity và independent QE vẫn OPEN.
+- **Kết quả:** ACTIVE POINTER REFERENCES — PARTIALLY RECONCILED; HISTORICAL POINTER REFERENCES PRESERVED; CI = PASS; POINTER RETIREMENT = BLOCKED pending full link audit/QE.
