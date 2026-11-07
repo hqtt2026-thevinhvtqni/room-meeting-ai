@@ -1068,3 +1068,28 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - **Kết quả:** DOC-086 được tạo trên GitHub main; D70-019 được thêm vào DOC-006; DOC-086 được đăng ký trong DOC-055. Chờ fetch readback xác minh nội dung và commit.
 - **Trạng thái:** DOCUMENT BASELINE CREATED; registry database/API/UI NOT STARTED; model/provider capability NOT VERIFIED; không thay đổi code, Core, runtime, permission, Dashboard, Work khác hoặc release.
 - **Bằng chứng dự kiến:** GitHub commit SHA từ create/update và fetch readback từng file.
+
+
+## 2026-11-07 09:55–10:05 +07:00 — Xu / AI-01 — Triển khai Phase 1 AI Model Capability Registry
+- **Chỉ đạo:** Vinh đồng ý tiếp tục triển khai AI Model Capability Registry theo DOC-086; thực hiện trong Work 70, không tạo Work mới.
+- **Phạm vi triển khai:** tạo DOC-087; tạo data contract tĩnh tại `05_BUILD/04_CODE/ai_capability_registry/`; cập nhật trạng thái DOC-086; đăng ký DOC-087 tại DOC-055; ghi nhật ký tại DOC-035.
+- **Hiện vật tạo mới:**
+  1. `04_PLAN/DOC-087_KE-HOACH_TRIEN-KHAI-SO-DANG-KY-NANG-LUC-AI_AI-CAPABILITY-REGISTRY-IMPLEMENTATION-PLAN.md` — commit `630e9271f20d46a76a4f2a54848797cd16324769`.
+  2. `05_BUILD/04_CODE/ai_capability_registry/schema/capability-registry.schema.json` — JSON Schema Draft 2020-12; commit `c1ce80312dc480e7b4473e37f99c004346c7178e`.
+  3. `05_BUILD/04_CODE/ai_capability_registry/data/registry.json` — registry khởi tạo rỗng; commit `3f0d4f9e77e809b9defc406b0a6bffde4e1831ba`.
+  4. `05_BUILD/04_CODE/ai_capability_registry/templates/capability-record.template.json` — mẫu bản ghi UNVERIFIED; commit `08a276bfcfa1824b9bb713e4b63e96107f09a5be`.
+  5. `05_BUILD/04_CODE/ai_capability_registry/README.md` — quy tắc vận hành, an toàn và kiểm tra; commit `c31cdcd471014aeb6d18dbfda03d17337b478cda`.
+- **Cập nhật hồ sơ:** DOC-086 cập nhật trạng thái Phase 1 tại commit `54a1fcc495d52803be3394b80c7e513188d66a71`; DOC-055 đăng ký DOC-087 tại commit `fb1128e4edfec0095ac539db55781c5fd880066d`.
+- **Phương pháp kiểm tra:** fetch/readback từng file trên GitHub main; parse JSON bằng JavaScript; kiểm tra metadata registry, mảng entries, trường bắt buộc template, status UNVERIFIED, freshness UNVERIFIED và quét mẫu chuỗi secret phổ biến trên các file registry.
+- **Kết quả kiểm tra:**
+  - JSON parse schema: PASS.
+  - JSON parse registry: PASS.
+  - JSON parse template: PASS.
+  - Registry metadata (schema_version, registry_id, source_architecture): PASS.
+  - Registry entries là mảng rỗng, không có capability tự khai báo: PASS.
+  - Template có đủ 23 trường bắt buộc, trạng thái UNVERIFIED và freshness UNVERIFIED: PASS.
+  - Quét mẫu secret phổ biến: PASS — không phát hiện chuỗi khớp; đây không thay thế secret scanner chuyên dụng.
+  - GitHub readback: 7/7 file được đọc lại thành công; blob SHA lần lượt: DOC-087 `193f9dcc2f2708f9ff0368d8790be29ae41203b7`; schema `243221dda8673927a79d1f41507dc68a2d153bac`; registry `2cdb4d01ba534c2c97363c2f17aefb539e8d71ea`; template `f39fb3655cc287497d1f8406f25cf033cbf36434`; README `85495753af51d6b4346ba6a7dbbcdf793c5c19f7`; DOC-086 `1078e5333abfab6979d09190ce148cbc59b4ca03`; DOC-055 `41eddeda4dd7774b5eeb1089307cb96d937415bd`.
+- **Giới hạn kiểm chứng:** chưa chạy JSON Schema validator Draft 2020-12 độc lập; chưa có validator được phê duyệt trong môi trường thao tác. REG-010 = NOT RUN / BLOCKED chờ validator. Chưa chạy benchmark AI/model; chưa tạo capability record VERIFIED; chưa tạo database/API/UI; chưa tích hợp Core, Dashboard, dispatch hoặc provider; chưa đo latency/chi phí.
+- **Kết luận:** Phase 1 static data contract CREATED; các kiểm tra cấu trúc thủ công và GitHub readback nêu trên PASS. Không tuyên bố full schema validation, model capability PASS hoặc runtime integration PASS.
+- **Bước tiếp theo:** chọn/cài validator JSON Schema Draft 2020-12 được phê duyệt; chạy negative/positive test cho schema; sau đó lập bộ test capability đầu tiên cho các AI participant với provider/model/version được xác nhận và evidence độc lập. Mọi capability giữ UNVERIFIED cho tới khi hoàn tất test.
