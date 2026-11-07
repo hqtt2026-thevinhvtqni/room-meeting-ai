@@ -57,7 +57,7 @@ Each Work uses the approved lifecycle locations:
 - 04_PLAN/ — canonical plans, roadmap, dependencies and WP plan.
 - 05_BUILD/ — mapping and engineering coordination only; not canonical original source.
 - 06_VERIFY/ — verification strategy and checklist.
-- 06_EVIDENCE/ — cross-phase canonical evidence index and verified evidence references.
+- EVIDENCE/ — cross-phase canonical evidence index and verified evidence references.
 - 07_ACCEPT/, 08_RELEASE/, 09_OPERATE/ — acceptance, release and operations records.
 - DASHBOARD/ — read-only status projection, never an independent authority.
 
