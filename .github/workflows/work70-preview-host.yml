@@ -8,7 +8,17 @@ on:
       - "work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/05_BUILD/04_CODE/preview_host/**"
       - "work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/DASHBOARD/**"
       - "work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/00_ROOT/DOC-040_*.md"
+      - "work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/00_ROOT/DOC-001_*.md"
+      - "work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/00_ROOT/DOC-002_*.md"
+      - "work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/00_ROOT/DOC-003_*.md"
+      - "work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/00_ROOT/DOC-006_*.md"
+      - "work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/00_ROOT/DOC-033_*.md"
+      - "work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/00_ROOT/DOC-035_*.md"
+      - "work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/00_ROOT/DOC-041_*.md"
       - "work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/00_ROOT/DOC-055_*.md"
+      - "work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/00_ROOT/DOC-056_*.md"
+      - "work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/EVIDENCE/**"
+      - "work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/06_EVIDENCE/**"
       - "work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/06_VERIFY/validate_official_document_codes.py"
       - "work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/06_VERIFY/test_official_document_code_validator.py"
       - ".github/workflows/work70-preview-host.yml"
@@ -86,3 +96,10 @@ jobs:
       - name: Validate canonical Work 70 registers
         working-directory: work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/06_VERIFY
         run: python validate_official_document_codes.py
+
+      - name: Validate canonical evidence register JSON and identities
+        working-directory: work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD
+        run: |
+          python -m json.tool EVIDENCE/EVIDENCE_REGISTER.json > /dev/null
+          python -m json.tool EVIDENCE/EVIDENCE_REGISTER.schema.json > /dev/null
+          python -c "import json; d=json.load(open('EVIDENCE/EVIDENCE_REGISTER.json', encoding='utf-8')); ids=[x['evidence_id'] for x in d['evidence']]; assert d['work_id']=='70'; assert len(ids)==len(set(ids)), 'duplicate evidence_id'; assert all(x.get('state') in {'MISSING','RECORDED','VERIFIED','REJECTED'} for x in d['evidence']), 'invalid evidence state'"
