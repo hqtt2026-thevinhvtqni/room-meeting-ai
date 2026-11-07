@@ -1367,3 +1367,15 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 ## 2026-11-07 — Final CI after evidence-boundary correction
 
 - GitHub Actions run **42366331930** — COMPLETED / SUCCESS after the latest DOC-035/DOC-041 corrections. Document Register and Code Validation = PASS; validator compile + 12 unit tests + DOC-040/DOC-055 CLI + EVIDENCE JSON/identity checks = PASS; Preview Host Ubuntu = PASS; Preview Host Windows black-box + bootstrap + local HTTP host = PASS.
+
+
+## 2026-11-07 18:22 +07:00 — Xu / AI-01 — Tiếp tục đóng Work 70: rà soát migration và Preview Host
+
+- **Phạm vi:** GitHub `main`; DOC-055/DOC-041/DOC-035; nhóm legacy DOC-042..DOC-052; Dashboard và Preview Host.
+- **Nguồn và revision:** repository `hqtt2026-thevinhvtqni/room-meeting-ai`; latest commit được xác định qua commit search là `5d79acdce41a49e0862f6d41fb4a8b6e12b7b74f`. Exact fetch xác nhận DOC-055 SHA `c437180fb690379334ef0b8f4edb1cda375df79e`, DOC-041 SHA `289c58a849b10e7191f380af00dee13abece6916`, DOC-035 trước cập nhật SHA `310b217d06c96e9918114568e1b080202b80d00d`.
+- **DOC-042..DOC-052:** DOC-055 v3.3 ghi rõ canonical DOC-042..DOC-053 được giữ nguyên; 11 tài liệu legacy được tái định danh theo mapping DOC-073..DOC-083. Hiện đã exact-fetch thấy các bản canonical DOC-073/074/075/077; DOC-076 và DOC-078..DOC-083 vẫn vắng khỏi GitHub tree; DOC-077 còn phụ thuộc DOC-076. Không ghi đè, xóa, hoặc biến các bản gốc thành pointer. Các thao tác tạo bản còn thiếu từng bị lớp an toàn chặn; không thử đường vòng. Inbound-link closure, legacy alias conversion và independent QE vẫn OPEN.
+- **Dashboard:** exact-fetch `DASHBOARD/README.md`, `DASHBOARD/index.html`, `DASHBOARD/PRODUCT_STATUS.json`. Giao diện tĩnh tồn tại; README và JSON xác định dữ liệu là local snapshot, Core live/authentication/authorization chưa xác minh. Do đó Dashboard product = SOURCE PRESENT / LOCAL SNAPSHOT ONLY / NOT ACCEPTED.
+- **Preview Host:** DOC-089/DOC-090 và `05_BUILD/04_CODE/preview_host` tồn tại. CI run `42366397068` exact jobs: Document Register and Code Validation SUCCESS; Preview Host Windows SUCCESS (compile, black-box tests, bootstrap + local HTTP host); Preview Host Ubuntu SUCCESS (compile, black-box tests). Đây là runner CI evidence, không phải bằng chứng PC cá nhân hoặc Android E2E. DOC-090 còn ghi local host và PC/mobile E2E chưa chạy; private tailnet URL chưa được xác minh.
+- **Không thực hiện:** không probe/đổi Core, không sửa auth/runtime, không mở BUILD, không public host/Funnel, không xóa pointer hay legacy source, không xác nhận parity Sandbox/PC khi chưa readback.
+- **Kết quả:** governance validator/CI = PASS theo run nêu trên; migration DOC-042..DOC-052 = BLOCKED/PARTIAL; Dashboard static source = PRESENT; Preview Host CI = PASS; PC/Android private preview = NOT VERIFIED; Work 70 = ACTIVE / NOT RELEASED.
+- **Bước tiếp theo:** xử lý theo luồng an toàn được phép đối với 7 bản legacy còn thiếu và full inbound-link inventory; đồng thời cần chạy bootstrap Preview Host trên PC theo DOC-090, xác nhận local HTTP rồi mới bật Tailscale Serve private và kiểm tra Android. Không có cơ sở tự kết luận DONE/RELEASED.
