@@ -2,7 +2,7 @@
 
 Canonical machine-readable source: `EVIDENCE_REGISTER.json`. This Markdown file is a read-only human-readable projection; edit the JSON source only. Schema: `EVIDENCE_REGISTER.schema.json`.
 
-Version: 1.0
+Version: 1.1
 Status: ACTIVE INDEX / EVIDENCE MUST BE VERIFIED
 Purpose: Cross-phase index of inspectable evidence. This file indexes artifacts; it does not itself prove their claims.
 
