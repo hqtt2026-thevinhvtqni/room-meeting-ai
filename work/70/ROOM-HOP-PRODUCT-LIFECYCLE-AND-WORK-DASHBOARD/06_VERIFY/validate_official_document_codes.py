@@ -54,6 +54,10 @@ def document_register_issues(document_register: str) -> list[str]:
         canonical_path = cells[4]
         if not canonical_path:
             errors.append(f"Document Register line {line_no}: missing canonical path for {doc_id}")
+        elif ";" in canonical_path:
+            errors.append(
+                f"Document Register line {line_no}: multiple canonical paths listed for {doc_id}"
+            )
         elif canonical_path in seen_paths:
             errors.append(
                 f"Document Register line {line_no}: duplicate canonical path {canonical_path} "
