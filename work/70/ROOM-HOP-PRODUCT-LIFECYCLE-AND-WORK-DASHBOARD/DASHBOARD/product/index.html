@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>ROOM-HOP — Product / Capability Dashboard · Work 70</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1220;--panel:#121d30;--line:#26364e;--text:#e8eef8;--muted:#9aabc2;--blue:#78aaff;--green:#65d6a0;--amber:#f4c66b;--red:#ff8585}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:1180px;margin:auto;padding:26px 18px 56px}
+.top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap}
+h1{font-size:24px;margin:0 0 5px}.muted,small{color:var(--muted)}
+.pill{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:5px 10px;font-size:12px;color:var(--amber)}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;min-width:0}
+.k{font-size:11px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}.v{font-size:20px;font-weight:650;margin-top:4px}
+h2{font-size:16px;margin:0 0 12px}
+.row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding:9px 0}.row:last-child{border:0}
+.state{font-size:12px;font-weight:650;white-space:nowrap}.ok{color:var(--green)}.warn{color:var(--amber)}.bad{color:var(--red)}
+.notice{border:1px solid #826a36;background:#2a2417;color:#f7d995;padding:12px 14px;border-radius:10px;margin:14px 0;font-size:13px}
+.nav{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.nav a{color:var(--blue);text-decoration:none;border:1px solid var(--line);padding:6px 12px;border-radius:8px;font-size:13px}
+.nav a.active{background:#1a2a45;border-color:var(--blue)}
+footer{margin-top:20px;color:var(--muted);font-size:12px}
+@media(max-width:760px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main>
+<nav class="nav">
+  <a href="../index.html">Work Dashboard (legacy)</a>
+  <a href="../execution/index.html">Work Execution</a>
+  <a class="active" href="./index.html">Product / Capability</a>
+</nav>
+<header class="top">
+  <div>
+    <div class="k">ROOM-HOP · PRODUCT / AI CAPABILITY VIEW</div>
+    <h1 id="title">Product — đang tải…</h1>
+    <div class="muted" id="subtitle">Theo dõi năng lực & tình trạng sản phẩm, tách biệt tiến độ thi công Work.</div>
+  </div>
+  <span class="pill" id="sourcePill">ĐANG XÁC ĐỊNH NGUỒN</span>
+</header>
+<div class="notice" id="warning">Đang đọc PRODUCT_CAPABILITY_STATUS.json. Registry trống là sự thật hiện tại, không phải lỗi hiển thị.</div>
+<section class="grid">
+  <article class="card"><div class="k">Product Dashboard Status</div><div class="v" id="prodStatus">—</div><div class="muted">Independent deliverable</div></article>
+  <article class="card"><div class="k">AI Capability Entries</div><div class="v" id="capCount">—</div><div class="muted">registry entries</div></article>
+  <article class="card"><div class="k">Verified Capabilities</div><div class="v" id="verified">—</div><div class="muted">status = VERIFIED</div></article>
+</section>
+<section class="card">
+  <h2>AI Capability Registry</h2>
+  <div id="registry"></div>
+</section>
+<section class="card" style="margin-top:14px">
+  <h2>Modules & Integration</h2>
+  <div id="modules"></div>
+</section>
+<section class="card" style="margin-top:14px">
+  <h2>Data Integrity & Provenance</h2>
+  <div id="integrity"></div>
+</section>
+<footer>Product / Capability view · Read-only · Nguồn: registry.json + DOC-085 · Go/AI-06 · Không trộn metric tiến độ Work.</footer>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&","<":"<",">":">",'"':""","'":"&#39;"}[c]));
+const cls=s=>["PASS","DONE","FRESH","PRESENT","RECORDED","VERIFIED"].includes(s)?"ok":["FAIL","BLOCKED","STALE","NOT_CREATED","NOT_VERIFIED","OPEN"].includes(s)?"bad":"warn";
+function render(d){
+  $("title").textContent=esc(d.product_name||"Product");
+  $("subtitle").textContent="Work "+esc(d.work_id)+" · Product ID: "+esc(d.product_id||"—");
+  const di=d.data_integrity||{};
+  $("sourcePill").textContent=(di.source_mode||"UNKNOWN").toUpperCase();
+  $("warning").textContent=di.warning_vi||"Nguồn đã đọc.";
+  const pl=d.product_lifecycle||{};
+  $("prodStatus").innerHTML='<span class="state '+cls(pl.status)+'">'+esc(pl.status||"UNKNOWN")+'</span>';
+  const reg=d.ai_capability_registry||{};
+  $("capCount").textContent=reg.entries_count!=null?reg.entries_count:"—";
+  const m=d.metrics||{};
+  $("verified").textContent=(m.verified_capabilities&&m.verified_capabilities.value!=null)?m.verified_capabilities.value:"—";
+  $("registry").innerHTML=
+    '<div class="row"><span>Registry ID</span><span>'+esc(reg.registry_id||"—")+'</span></div>'+
+    '<div class="row"><span>Status</span><span class="state warn">'+esc(reg.registry_status||"UNKNOWN")+'</span></div>'+
+    '<div class="row"><span>updated_at</span><span>'+esc(reg.updated_at||"—")+'</span></div>'+
+    '<div class="row"><span>Claim</span><span>'+esc(reg.claim||"")+'</span></div>'+
+    '<div class="row"><span>Source path</span><span>'+esc(reg.source_path||"—")+'</span></div>'+
+    '<p class="muted" style="margin-top:10px">'+esc(reg.note_vi||"")+'</p>';
+  const mods=d.modules||{};
+  $("modules").innerHTML=Object.entries(mods).map(([k,v])=>'<div class="row"><span><b>'+esc(k)+'</b><br><small>'+esc(v.path||v.note_vi||"")+'</small></span><span class="state '+cls(v.status)+'">'+esc(v.status)+'</span></div>').join("")||'<p class="muted">Không có module.</p>';
+  const integ=d.room_hop_integration||{};
+  $("integrity").innerHTML=
+    '<div class="row"><span>Core live</span><span class="state '+cls(integ.core_live)+'">'+esc(integ.core_live||"UNKNOWN")+'</span></div>'+
+    '<div class="row"><span>Authorization</span><span class="state '+cls(integ.authorization)+'">'+esc(integ.authorization||"UNKNOWN")+'</span></div>'+
+    '<div class="row"><span>Storage/export</span><span class="state warn">'+esc(integ.storage_export||"UNKNOWN")+'</span></div>'+
+    '<div class="row"><span>Freshness</span><span class="state '+cls(di.freshness)+'">'+esc(di.freshness||"UNKNOWN")+'</span></div>'+
+    '<div class="row"><span>retrieved_at</span><span>'+esc(di.retrieved_at||"UNKNOWN")+'</span></div>'+
+    '<div class="row"><span>no_mock_data</span><span class="state ok">'+esc(String(d.no_mock_data))+'</span></div>'+
+    '<p class="muted" style="margin-top:8px">'+esc(integ.note_vi||"")+'</p>';
+}
+fetch("./PRODUCT_CAPABILITY_STATUS.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw new Error("HTTP "+r.status);return r.json()}).then(render).catch(e=>{
+  $("title").textContent="Product view — Không tải được dữ liệu";
+  $("sourcePill").textContent="UNKNOWN";
+  $("warning").textContent="Không thể tải PRODUCT_CAPABILITY_STATUS.json ("+e.message+"). Giữ UNKNOWN.";
+});
+</script>
+</body>
+</html>
