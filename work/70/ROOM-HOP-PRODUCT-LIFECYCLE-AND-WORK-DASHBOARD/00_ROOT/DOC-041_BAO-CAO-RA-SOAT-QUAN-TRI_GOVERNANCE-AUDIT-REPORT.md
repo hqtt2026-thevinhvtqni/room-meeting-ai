@@ -194,3 +194,10 @@ CI run 42365603990 completed SUCCESS with 11/11 document validator tests, DOC-04
 A bounded alias-name search was followed by exact fetches of active standards and machine-readable Dashboard/WP files. Active references were corrected to DOC-001/006/023/033/034/035/055 canonical paths where applicable. Work 70's global AGENTS guidance now states that each Work's Manifest/Register defines its canonical record paths; Work 70's minutes, plan and journal are DOC-034, 04_PLAN/IMPLEMENTATION_ROADMAP.md and DOC-035. Historical references in DOC-040 (BB-70-001), DOC-058, DOC-035, DOC-041 and test fixtures are intentionally preserved. The 17 00_ROOT legacy-name files remain pointers only.
 
 Exact readback confirms the active DOC-002, verification checklist, Dashboard PRODUCT_STATUS/EXECUTION_STATUS and Work Package register no longer rely on WORK_MANIFEST.md / DOCUMENT_REGISTER.md / DECISION_LOG.md aliases. GitHub code-search index may lag; exact fetch is the authoritative verification. CI run 42365911872 completed SUCCESS. Pointer retirement remains BLOCKED pending full parsed inbound-link audit, Sandbox/PC parity and independent QE.
+
+
+## G-007 final path-column verification — 2026-11-07
+
+DOC-055 v3.3 removed the multi-location path cell from DOC-061 and identifies one main canonical path; Sandbox and `work/70/05-build` are sync/mirror locations only. DOC-013 and DOC-014 each have one canonical JSON source path, with Markdown read-only projections. Validator now rejects semicolon-separated multiple paths in one row as well as duplicate paths between rows. CI run 42366138648 completed SUCCESS with 12/12 unit tests, canonical register validation, EVIDENCE JSON identity checks, and Preview Host Ubuntu/Windows checks.
+
+**Boundary:** this PASS covers the DOC-055 register contract. It does not prove every unregistered legacy file in the repository has unique DOC-ID. DOC-042..DOC-052 legacy collision remains OPEN until the seven absent migrated copies and inbound-link mapping are resolved. No source originals were deleted or converted.
