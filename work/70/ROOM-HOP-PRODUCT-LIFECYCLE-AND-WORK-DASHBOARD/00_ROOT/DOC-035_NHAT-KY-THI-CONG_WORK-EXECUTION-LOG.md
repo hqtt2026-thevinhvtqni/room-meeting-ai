@@ -1423,3 +1423,10 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - **Trạng thái ACK:** ASSIGNMENT ISSUED IN GOVERNANCE RECORD; Vi receipt/ACK và bắt đầu thực thi = NOT VERIFIED. Không ghi nhận Vi đã nhận việc khi chưa có phản hồi/artefact từ chính Vi.
 - **Kết quả:** DOC-054 assignment addendum đã được ghi trên GitHub main. DOC-035 entry đang được ghi trong lượt này; cần exact read-back sau commit để xác nhận. Work 70 vẫn ACTIVE / NOT RELEASED; Dashboard chưa ACCEPTED; browser E2E và Independent QE chưa PASS.
 - **Bước tiếp theo:** chuyển assignment ID và DOC-054 addendum vào phiên làm việc thực tế của Vi; Vi thực hiện liên tục, cập nhật source/test/evidence và DOC-035. Xu sẽ đối soát commit, read-back, raw test evidence và trạng thái F-01..F-07; An/Qw thực hiện kiểm thử độc lập theo quyền được xác lập.
+
+
+### Read-back verification addendum — 2026-11-07 21:12 +07:00
+
+- Exact fetch từ GitHub `main` xác nhận DOC-054 có assignment ID `ASG-W70-VI-DASHBOARD-COMPLETION-20261107-01`; blob SHA `ccf3353edf846d560ff8239d671400cded099a98`.
+- Exact fetch từ GitHub `main` xác nhận DOC-035 chứa entry “Đọc nhật ký, giao Vi hoàn thiện Dashboard Work 70”; blob SHA sau cập nhật `4927a4e4eff405973d8e178b31e761c7fffdeb4e`.
+- **Correction trạng thái:** DOC-035 entry đã được exact read-back thành công; thay câu “cần exact read-back sau commit” ở phần ghi kết quả bằng xác nhận read-back PASS tại addendum này. Đây chỉ là xác minh hồ sơ GitHub, không phải xác nhận Vi đã ACK hoặc bắt đầu code.
