@@ -1299,3 +1299,14 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - **Giới hạn:** chưa chạy lại JSON Schema validation, unit tests/CI sau migration; chưa quét link checker độc lập sau cập nhật; chưa xác minh Sandbox/PC parity; các historical logs/decisions còn ghi path cũ có chủ đích để bảo toàn lịch sử. Old folder remains pointer-only; no deletion.
 - **Kết quả:** CANONICAL PATH MIGRATION = PARTIAL; new canonical source established; pointer conversion recorded; link/CI/QE/Sandbox verification still OPEN. Không tuyên bố PASS toàn batch.
 - **Bước tiếp theo:** exact readback tất cả file canonical/pointers; kiểm tra DOC-055 path uniqueness và JSON/schema; xác minh dashboard source path; chạy CI regression; kiểm tra remaining active references và link integrity; independent QE; chỉ sau đó mới xem xét loại bỏ pointer directory.
+
+
+## Correction / verification update — 2026-11-07 — EVIDENCE schema alignment and CI regression
+
+- **Phát hiện mới:** exact readback của `EVIDENCE/EVIDENCE_REGISTER.json` cho thấy source cũ thiếu trường bắt buộc `schema_version`, trong khi `EVIDENCE_REGISTER.schema.json` yêu cầu `schema_version="1.1"` và `additionalProperties=false`.
+- **Khắc phục:** thêm `"schema_version": "1.1"` vào JSON canonical; cập nhật Version 1.1 trên Markdown read-only projection; cập nhật CI để assert schema_version cùng Work ID, unique evidence_id và allowed evidence states.
+- **Validation:** JSON source và schema đều parse được; kiểm tra schema subset trên dữ liệu hiện tại (required/type/enum/pattern/minLength/array bounds/additionalProperties/date-time shape) trả 0 lỗi; 12 evidence_id duy nhất. Đây là kiểm tra subset cho schema hiện tại, không tuyên bố đã chạy full Draft 2020-12 validator.
+- **GitHub Actions:** runs 42365135562, 42365138494 và 42365141735 đều COMPLETED / SUCCESS. Run 42365141735 có job Document Register and Code Validation = SUCCESS; các bước compile validator, unit tests, canonical register CLI validation và canonical evidence JSON/identity validation đều SUCCESS; Preview Host Ubuntu và Windows đều SUCCESS.
+- **Register/path readback:** DOC-055 v3.0 có 81 dòng DOC-ID, 81 ID duy nhất, không trùng Read order và không trùng canonical path. DOC-014 có một canonical JSON path; DOC-031/071/072/084 đều có canonical path dưới EVIDENCE/.
+- **Pointer readback:** old `06_EVIDENCE/` files are pointer-only; old JSON register is pointer metadata, old schema uses relative `$ref`, old Markdown and DOC files point to EVIDENCE/. No old canonical evidence content was deleted.
+- **Kết quả:** EVIDENCE JSON/schema consistency = PASS for the checked schema subset; CI regression = PASS; DOC-ID/path/read-order uniqueness = PASS. Full parsed link checker, independent QE, Sandbox/PC parity and retirement of the old pointer directory remain OPEN.
