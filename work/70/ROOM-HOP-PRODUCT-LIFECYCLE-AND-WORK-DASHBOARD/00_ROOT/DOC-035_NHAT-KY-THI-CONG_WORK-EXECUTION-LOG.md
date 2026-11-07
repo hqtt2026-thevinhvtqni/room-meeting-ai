@@ -1058,3 +1058,13 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - DOC-035 append-only update committed as `7b4fdb63bc12a503b354264ac7d87ccc8cf79521`; GitHub readback matches Sandbox canonical content exactly (content SHA `00c6fdffb04cc1da1c026f180d5e19772d0f7512`).
 - DOC-084 published to GitHub main in commit `28012f88f303ff08bab0e7b91d845de7fb2f9498`; GitHub readback matches Sandbox canonical content exactly (blob SHA `f17ec48909ba9ee40ac89c8e7c68e7bb3c43ccf3`).
 - DOC-055 remains unsynchronized pending controlled reconciliation; no claim of full Work 70 sync or acceptance.
+
+
+## 2026-11-07 — Xu / AI-01 — Bổ sung kho tri thức công nghệ và năng lực AI (DOC-086)
+- **Chỉ đạo / quyết định:** Vinh chấp thuận bổ sung nội dung vào Work 70; không tạo Work mới. Ghi nhận quyết định D70-019 trong DOC-006.
+- **Phạm vi:** tài liệu kiến trúc và taxonomy công nghệ AI dùng chung; đăng ký DOC-086 tại DOC-055; liên kết định hướng tới Work 75, 76, 103, 26 và 29.
+- **Thực hiện:** tạo DOC-086 tại `03_ARCHITECT/`; mô tả AI Fundamentals, ML, Deep Learning, LLM, Generative AI, Multimodal AI, Diffusion, RAG, AI Agents, Speech/Audio, Computer Vision, Robotics, Evaluation/Safety/Governance; phân biệt technology family/model/capability/tool/runtime; xác định trường dữ liệu tối thiểu và quy trình xác minh capability.
+- **Hiệu chỉnh kỹ thuật:** ghi rõ diffusion training/inference, mục tiêu dự đoán nhiễu/khử nhiễu, latent diffusion và lưu ý không phải mọi hệ sinh ảnh đều dùng diffusion; không giản lược thành bộ lọc nhiễu thông thường.
+- **Kết quả:** DOC-086 được tạo trên GitHub main; D70-019 được thêm vào DOC-006; DOC-086 được đăng ký trong DOC-055. Chờ fetch readback xác minh nội dung và commit.
+- **Trạng thái:** DOCUMENT BASELINE CREATED; registry database/API/UI NOT STARTED; model/provider capability NOT VERIFIED; không thay đổi code, Core, runtime, permission, Dashboard, Work khác hoặc release.
+- **Bằng chứng dự kiến:** GitHub commit SHA từ create/update và fetch readback từng file.
