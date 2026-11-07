@@ -225,6 +225,23 @@ def test_submission_fails_closed_inside_running_event_loop(monkeypatch, tmp_path
     assert "Nested event loops are not allowed" in result["reason"]
 
 
+def test_submission_worker_isolates_playwright_event_loop_thread(monkeypatch):
+    def fake_submission(result):
+        return {
+            "status": "pass",
+            "worker_name": __import__("threading").current_thread().name,
+        }
+
+    monkeypatch.setattr(browser_adapter, "submit_to_roomhop", fake_submission)
+
+    async def invoke_from_loop():
+        return browser_adapter.submit_to_roomhop_worker(RESULT)
+
+    result = asyncio.run(invoke_from_loop())
+    assert result["status"] == "pass"
+    assert result["worker_name"] == "roomhop-mcp-submission"
+
+
 def test_stdio_session_preserves_cancellation_and_unwinds(monkeypatch):
     lifecycle = {"stdio_closed": False, "session_closed": False}
 
