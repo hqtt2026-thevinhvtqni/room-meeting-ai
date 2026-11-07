@@ -1,36 +1,7 @@
-# WORK 70 — EVIDENCE REGISTER
+# LEGACY COMPATIBILITY POINTER
 
-Machine-readable source: `EVIDENCE_REGISTER.json`, validated by `EVIDENCE_REGISTER.schema.json`. This Markdown file is the human-readable index and must remain consistent with the JSON source.
+**Status:** SUPERSEDED — POINTER ONLY  
+**Canonical source:** [EVIDENCE/EVIDENCE_REGISTER.json](../EVIDENCE/EVIDENCE_REGISTER.json)  
+**Human-readable view:** [EVIDENCE/EVIDENCE_REGISTER.md](../EVIDENCE/EVIDENCE_REGISTER.md)
 
-Version: 1.0
-Status: ACTIVE INDEX / EVIDENCE MUST BE VERIFIED
-Purpose: Cross-phase index of inspectable evidence. This file indexes artifacts; it does not itself prove their claims.
-
-## Evidence rules
-- Every evidence item has a unique evidence_id and stable Work ID.
-- Record artifact path/URI, SHA-256 when available, media type, producer, timestamp, environment/source, related requirement/WP/gate, reviewer and verification state.
-- Verification states: MISSING, RECORDED, VERIFIED, REJECTED.
-- A file write or a contributor statement is RECORDED at most; independent inspection/test is required for VERIFIED.
-- Do not store credentials, API keys, passwords, private prompts or unnecessary personal data.
-- Preserve historical records. Corrections create a new record/version; do not silently rewrite the past.
-
-## Work 70 evidence index
-| Evidence ID | Artifact | Related WP/Gate | Producer | Timestamp | Integrity | Reviewer | State |
-|---|---|---|---|---|---|---|---|
-| E70-DOC-001 | README.md / Work standard v1.1 | WP-70-01 / G0-G3 | Xu AI-01 | 2026-10-30 | Sandbox readback available; hash not recorded | Pending | RECORDED |
-| E70-DOC-002 | 00_ROOT/WORK_MANIFEST.md | WP-70-01 / G0 | Xu AI-01 | 2026-10-30 | Sandbox readback available; hash not recorded | Pending | RECORDED |
-| E70-ARCH-001 | 03_ARCHITECT/WORK_LIFECYCLE_ARCHITECTURE.md | WP-70-01 / G3 | Xu AI-01 | 2026-10-30 | Sandbox readback available; hash not recorded | Pending | RECORDED |
-| E70-DASH-001 | DASHBOARD/index.html + PRODUCT_STATUS.json + schema | WP-70-03 / G3-G5 | Xu AI-01 | 2026-10-30 | Pending runtime/schema validation | Qw pending | RECORDED |
-| E70-STOR-001 | 05_BUILD/03_ARCHITECTURE/STORAGE_AND_EXPORT_ARCHITECTURE.md | WP-70-05 | Xu AI-01 | 2026-10-30 | GitHub/Sandbox readback matched | Qw pending | RECORDED |
-| E70-STOR-002 | 05_BUILD/05_TEST/STORAGE_AND_EXPORT_ACCEPTANCE.md | WP-70-05 | Xu AI-01 | 2026-10-30 | GitHub/Sandbox readback matched | Qw pending | RECORDED |
-| E70-CORE-001 | 05_BUILD/03_ARCHITECTURE/CORE_CAPABILITY_GAP_ASSESSMENT.md | WP-70-04 | Xu AI-01 | 2026-10-30 | Source review captured; no runtime verification | Qw pending | RECORDED |
-
-No evidence item is marked VERIFIED until its artifact is independently checked against the claim it supports.
-| E70-CONSOL-001 | 06_EVIDENCE/WORK70_CONSOLIDATION_CHECK_20261030.md | WP-70-01..06 | Xu AI-01 | 2026-10-30 | GitHub/Sandbox readback pending | Qw pending | RECORDED |
-
-| E70-OPS-001 | DOC-042..DOC-053; nine phase playbooks; Document Register; execution journal | WP-70-01 / G0-G4 preparation | Xu AI-01 | 2026-10-30 | Sandbox writes + selected readback; GitHub commits recorded in NHAT_KY_THI_CONG.md | Qw pending | RECORDED |
-
-| E70-DASH-SCHEMA-SUBSET-001 | DASHBOARD/PRODUCT_STATUS.json + schema | WP-70-03 | Xu AI-01 | 2026-10-30 | JSON parse + custom subset validator PASS; full Draft 2020-12 validator NOT RUN | Qw pending | RECORDED |
-| E70-DASH-STATIC-001 | DASHBOARD/index.html | WP-70-03 | Xu AI-01 | 2026-10-30 | Static source inspection only; browser E2E NOT RUN | Qw pending | RECORDED |
-
-| E70-WP-SCHEMA-SUBSET-001 | BUILD_REGISTER.json + BUILD_REGISTER.schema.json + WORK_PACKAGE.schema.json | WP-70-02 | Xu AI-01 | 2026-10-30 | JSON parse + custom local-ref/schema-subset validation PASS; full Draft 2020-12 validator NOT RUN | Qw pending | RECORDED |
+This path is retained for backward compatibility only. The JSON file under `EVIDENCE/` is the sole canonical evidence register. Do not edit or create a second register here.
