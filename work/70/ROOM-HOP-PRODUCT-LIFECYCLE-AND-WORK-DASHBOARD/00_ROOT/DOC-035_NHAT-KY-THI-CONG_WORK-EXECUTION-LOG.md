@@ -1310,3 +1310,15 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - **Register/path readback:** DOC-055 v3.0 có 81 dòng DOC-ID, 81 ID duy nhất, không trùng Read order và không trùng canonical path. DOC-014 có một canonical JSON path; DOC-031/071/072/084 đều có canonical path dưới EVIDENCE/.
 - **Pointer readback:** old `06_EVIDENCE/` files are pointer-only; old JSON register is pointer metadata, old schema uses relative `$ref`, old Markdown and DOC files point to EVIDENCE/. No old canonical evidence content was deleted.
 - **Kết quả:** EVIDENCE JSON/schema consistency = PASS for the checked schema subset; CI regression = PASS; DOC-ID/path/read-order uniqueness = PASS. Full parsed link checker, independent QE, Sandbox/PC parity and retirement of the old pointer directory remain OPEN.
+
+
+## 2026-11-07 — Xu / AI-01 — Mở rộng validator kiểm tra canonical path
+
+- **Phạm vi:** DOC-055 v3.1; DOC-013 path declaration; validator và unit tests trong 06_VERIFY; GitHub Actions.
+- **Điều chỉnh register:** DOC-013 trước đó liệt kê `BUILD_REGISTER.json; BUILD_REGISTER.md` trong cùng trường Path. Đã chuẩn hóa thành một canonical source duy nhất: `branch work/70/05-build: 05_BUILD/00_ROOT/BUILD_REGISTER.json`. BUILD_REGISTER.md là read-only projection; schema là technical validator. DOC-013 vẫn là migration candidate, không thay DOC-011/04_PLAN.
+- **Validator:** `document_register_issues()` hiện kiểm tra duplicate DOC-ID, duplicate/non-numeric Read order, thiếu canonical path và duplicate canonical path. Thêm negative test cho duplicate path; bộ test hiện có 11 test.
+- **CI lần đầu:** run 42365401117, commit 13379e3bac99ff3494b2406d7b52c41e81cd4b33 — FAIL ở test mới do fixture nối literal backslash-n thay vì newline; 10 test khác PASS; compile PASS; Preview Host Ubuntu/Windows PASS. Đây là lỗi test fixture.
+- **Khắc phục:** sửa fixture tạo newline thật; commit ad87c10ea1824198f4ba65204db1c47a149fcefc.
+- **CI xác nhận:** run 42365466946 — COMPLETED / SUCCESS. Document Register and Code Validation: compile PASS, 11/11 unit tests PASS, canonical DOC-040/DOC-055 CLI validation PASS, EVIDENCE JSON/identity check PASS. Preview Host Ubuntu PASS; Preview Host Windows compile, black-box tests, bootstrap và local HTTP host PASS.
+- **Register exact readback:** 81 dòng DOC-ID; 81 ID duy nhất; không trùng Read order; không trùng canonical path. DOC-014 có một JSON path; DOC-013 có một JSON path; Markdown views không được xem là nguồn thứ hai.
+- **Trạng thái:** DOC-ID/Read-order/canonical-path uniqueness validator = PASS; CI run 42365466946 = PASS. Full parsed inbound-link scan, independent QE, Sandbox/PC parity và dọn pointer cũ vẫn OPEN.
