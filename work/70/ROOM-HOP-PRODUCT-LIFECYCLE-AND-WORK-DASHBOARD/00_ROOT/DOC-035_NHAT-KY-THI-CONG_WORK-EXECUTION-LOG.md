@@ -1136,3 +1136,11 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - **Kiểm thử thực thi:** Python compile/unit test NOT RUN; PowerShell NOT RUN; host NOT STARTED; browser PC/mobile NOT RUN; Tailscale HTTPS NOT CONFIGURED. Readback/source inspection không được xem là runtime PASS.
 - **Trạng thái:** CODE + BOOTSTRAP RECORDED; SANDBOX READBACK CONFIRMED; GITHUB MAIN SYNCED; RUNTIME NOT VERIFIED; NOT ACCEPTED/NOT RELEASED; NO GATE PASS.
 - **Bước tiếp theo:** chạy bootstrap trên PC Windows với tham số SyncMain và Start; xử lý mọi test failure trước khi mở truy cập Tailnet. Chỉ xác nhận URL sau khi health check, PC browser và Android Tailnet E2E đều có bằng chứng.
+
+## 2026-11-07 2026-11-07T04:51:20.684Z UTC — Xu / AI-01 — Thiết lập CI kiểm thử Preview Host trên Linux và Windows
+- **Tệp workflow:** .github/workflows/work70-preview-host.yml; chạy khi thay đổi Preview Host/Dashboard trên main hoặc manual dispatch.
+- **Ma trận:** ubuntu-latest và windows-latest; Python 3.11; py_compile server.py/test_server.py; unittest black-box.
+- **Run evidence:** GitHub Actions run ID 42340198572, head commit 684e35c0c23c20c2d9bafb37c2f23d5f6ca6204b. Lần đọc đầu: Windows job IN_PROGRESS; Ubuntu job QUEUED. Chưa có kết luận PASS/FAIL.
+- **Mục đích:** kiểm chứng Python service và HTTP contract trên hai OS; không thay thế PowerShell deployment hoặc Android/Tailscale E2E.
+- **Trạng thái:** CI CONFIGURED; RUNNING/QUEUED AT FIRST OBSERVATION; RESULTS PENDING; local PC host NOT STARTED; NOT ACCEPTED/NOT RELEASED; no Gate PASS.
+- **Bước tiếp theo:** đọc kết quả từng job và xử lý lỗi nếu có; sau CI mới chuyển sang triển khai trên PC.
