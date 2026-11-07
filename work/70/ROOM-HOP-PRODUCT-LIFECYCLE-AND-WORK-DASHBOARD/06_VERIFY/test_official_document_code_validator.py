@@ -21,6 +21,11 @@ class ValidatorTests(unittest.TestCase):
         errors, _ = validate(duplicate_order_register, ledger([]))
         self.assertTrue(any("duplicate read order 31" in e for e in errors))
 
+    def test_rejects_duplicate_canonical_paths_in_document_register(self):
+        duplicate_path_register = REGISTER + "\\n| DOC-041 | P1 | 41 | Duplicate path | 00_ROOT/BIEN_BAN.md | — | ACTIVE | Duplicate path |"
+        errors, _ = validate(duplicate_path_register, ledger([]))
+        self.assertTrue(any("duplicate canonical path 00_ROOT/BIEN_BAN.md" in e for e in errors))
+
     def test_legacy_reference_is_allowed_but_not_counted_as_new(self):
         row = "| 001 | BB-70-001 | DOC-034 | BB | Minutes | 2026-10-30 | Xu | Vinh | D70-011 | LEGACY_REFERENCE — historical | 00_ROOT/BIEN_BAN.md | Original minutes |"
         errors, counts = validate(REGISTER, ledger([row]))
