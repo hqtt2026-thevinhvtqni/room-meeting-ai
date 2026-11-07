@@ -61,3 +61,11 @@ Ràng buộc: DOC-064/065 là thiết kế; DOC-066 là kế hoạch. Không suy
 | D70-018 | Theo chỉ thị trực tiếp của Vinh ngày 2026-11-02, Xu / AI-01 được toàn quyền điều phối và quyết định các công việc cần thiết để hoàn thiện Work 70 trong phạm vi Work 70; không yêu cầu Vinh duyệt từng bước. Xu được quyết định các thay đổi kế hoạch, tài liệu, phân rã WP/SD và triển khai kỹ thuật thông thường có thể đảo ngược, với điều kiện ghi nhật ký và có bằng chứng. | Giảm thời gian tham gia vận hành của Product Owner, duy trì một đầu mối chịu trách nhiệm đầu-cuối và tránh chờ duyệt các bước tác nghiệp thông thường. | ACTIVE — DELEGATED EXECUTION AUTHORITY |
 
 **Ranh giới bắt buộc:** D70-018 không miễn trừ Work Entry/G0–G5, không tự tạo quyền cho AI khác, không xác nhận ACK, không cho phép giả lập danh tính/ủy quyền, không cho phép phát sinh API cost hoặc secret mới, không cho phép sửa ngoài Work 70, không thay thế độc lập QE, và không cho phép Xu tự nghiệm thu cuối cùng hoặc tự phát hành. Core vẫn là nguồn dữ liệu có thẩm quyền; mọi thay đổi phải fail-closed khi thiếu identity/permission/evidence. Những việc thuộc quyền riêng của Vinh theo chính sách sản phẩm, bảo mật, chi phí định kỳ và phát hành cuối cùng vẫn được bảo lưu.
+
+
+## 8. Quyết định D70-019 — Bổ sung kho tri thức công nghệ và năng lực AI (2026-11-07)
+| Decision ID | Decision / Quyết định | Rationale / Lý do | Status / Trạng thái |
+|---|---|---|---|
+| D70-019 | Bổ sung vào Work 70 một lớp quản trị tri thức dùng chung về công nghệ AI, taxonomy, capability registry và liên kết tới các Work ứng dụng; lấy DOC-086 làm kiến trúc baseline. Không tạo Work mới. | Tránh phân tán kiến thức công nghệ; phân biệt họ công nghệ, mô hình, năng lực đã kiểm chứng và ứng dụng thực tế; giúp các Work tái sử dụng tri thức nhưng giữ quyền sở hữu và kiểm thử tại từng Work. | APPROVED BY VINH — KNOWLEDGE ARCHITECTURE BASELINE; REGISTRY IMPLEMENTATION NOT STARTED |
+
+Phạm vi phê duyệt: tài liệu kiến trúc và phân loại tri thức trong Work 70. Không phê duyệt tự động triển khai database/API/UI, phát sinh API cost, tích hợp model/provider, thay đổi Work 75/76/103/26/29, hoặc tuyên bố capability VERIFIED. Mọi năng lực phải có model/version, phương pháp test và evidence; UNKNOWN không phải PASS.
