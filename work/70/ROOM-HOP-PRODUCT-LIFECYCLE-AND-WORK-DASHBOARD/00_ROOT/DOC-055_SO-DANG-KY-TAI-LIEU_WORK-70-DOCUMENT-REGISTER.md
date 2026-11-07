@@ -4,7 +4,7 @@
 - **Read order:** 55
 - **Depends on:** DOC-001; DOC-038; DOC-039; DOC-040; DOC-056
 - **Status:** ACTIVE — SINGLE SOURCE OF TRUTH
-- **Version / Updated:** 3.0 / 2026-11-07
+- **Version / Updated:** 3.1 / 2026-11-07
 - **Owner:** Xu / AI-01
 - **Authority:** Vinh
 Owner: Xu / AI-01
@@ -29,7 +29,7 @@ Rule: DOC-ID is stable identity; Priority is importance; Read order is sequence.
 | DOC-010 | P1 | 14 | Dashboard Core Read Contract | 03_ARCHITECT/DASHBOARD_CORE_READ_CONTRACT.md | DOC-009 | ACTIVE | Core/Dashboard boundary and read-only contract |
 | DOC-011 | P1 | 15 | Implementation Roadmap | 04_PLAN/IMPLEMENTATION_ROADMAP.md | DOC-008; DOC-009 | ACTIVE | Delivery sequence and milestones |
 | DOC-012 | P1 | 16 | Work Instantiation & Migration | 04_PLAN/WORK_INSTANTIATION_AND_MIGRATION.md | DOC-003; DOC-009 | ACTIVE | How to create/migrate a Work safely |
-| DOC-013 | P1 | 17 | Legacy Build Register (WP candidate) | branch work/70/05-build: 05_BUILD/00_ROOT/BUILD_REGISTER.json; BUILD_REGISTER.md | DOC-033; DOC-011 | MIGRATION PENDING | Existing WP records; candidate for reconciliation into Work-level plan, not yet a canonical mapping |
+| DOC-013 | P1 | 17 | Sổ gói công việc Build / Build Register (WP candidate) | branch work/70/05-build: 05_BUILD/00_ROOT/BUILD_REGISTER.json | DOC-033; DOC-011 | MIGRATION PENDING | JSON is the single machine-readable canonical source for this branch-scoped candidate; BUILD_REGISTER.md is a read-only projection and schemas are technical validators; reconcile WP records into Work-level plan before promotion |
 | DOC-036 | P1 | 18 | Build Mapping Register | branch work/70/05-build: 05_BUILD/00_ROOT/BUILD_MAPPING_REGISTER.md | DOC-001; DOC-003; DOC-033 | ACTIVE / MIGRATION IN PROGRESS | Maps engineering artifacts to canonical Work/source paths and classifies legacy build files |
 | DOC-014 | P1 | 19 | Sổ bằng chứng / Evidence Register | EVIDENCE/EVIDENCE_REGISTER.json | DOC-004; DOC-033 | ACTIVE — SINGLE CANONICAL JSON SOURCE | Canonical machine-readable source; EVIDENCE_REGISTER.md is a read-only projection and EVIDENCE_REGISTER.schema.json is its technical schema |
 | DOC-015 | P1 | 20 | Verification Plan | 06_VERIFY/VERIFICATION_PLAN.md | DOC-008; DOC-013; DOC-014 | ACTIVE | Verification strategy and coverage |
@@ -208,3 +208,7 @@ The PO-delegated disposition recorded in the 2026-11-02 addendum remains in forc
 
 ## Canonical evidence-path migration — 2026-11-07
 D70-021 changes the top-level cross-phase evidence directory to `EVIDENCE/`. DOC-014 has exactly one canonical path: `EVIDENCE/EVIDENCE_REGISTER.json`. The Markdown file is a read-only projection and the schema is a technical validator, not another register. DOC-031, DOC-071, DOC-072 and DOC-084 canonical paths now begin with `EVIDENCE/`. `05_BUILD/06_EVIDENCE/` remains staging and is not changed. Old top-level `06_EVIDENCE/` paths are compatibility-only pending link closure and QE.
+
+
+## One-source clarification — DOC-013 (2026-11-07)
+DOC-013 has one canonical artifact path only: `branch work/70/05-build: 05_BUILD/00_ROOT/BUILD_REGISTER.json`. `BUILD_REGISTER.md` is a read-only projection; schema files are technical validation artifacts, not additional registers. DOC-013 remains a migration candidate and is not the canonical Work-level WP plan; DOC-011/04_PLAN remain the planning authority.
