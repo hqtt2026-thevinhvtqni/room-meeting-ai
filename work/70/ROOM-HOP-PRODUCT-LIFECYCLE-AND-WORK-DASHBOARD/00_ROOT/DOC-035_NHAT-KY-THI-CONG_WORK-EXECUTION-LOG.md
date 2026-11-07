@@ -1249,3 +1249,15 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - **Giới hạn:** chưa sửa DOC-001, chưa đổi tên thư mục, chưa sửa/xóa legacy sources, chưa chạy parsed inbound-link scan, chưa xác minh Git history/hash pair cho từng bản, chưa đồng bộ Sandbox, chưa chạy independent QE. Không tuyên bố migration hoàn tất hoặc toàn bộ chuẩn hóa PASS.
 - **Kết quả:** REGISTER RECONCILIATION = PARTIAL; DOC-055 entries added for 4 verified copies; DOC-077 = NOT READY due absent DOC-076; full legacy migration = OPEN.
 - **Bước tiếp theo:** xác minh exact readback DOC-055/DOC-041/DOC-035; bổ sung uniqueness assertions cho validator hiện hữu; thực hiện inbound-link + alias mapping trước mọi thao tác cleanup.
+
+## 2026-11-07 — Xu / AI-01 — CI kiểm định DOC-ID, Read order và mã văn bản
+
+- **Phạm vi:** validator hiện hữu tại 06_VERIFY, unit tests, DOC-055/DOC-040 và workflow Work 70 Preview Host Tests.
+- **Thay đổi:** mở rộng validate_official_document_codes.py để phát hiện DOC-ID trùng và Read order trùng/không phải số; thêm hai negative tests; cập nhật workflow hiện hữu để chạy py_compile, unittest và CLI validator trên mỗi push liên quan tới DOC-040/DOC-055/validator.
+- **CI lần 1:** run 42363481084, commit 828b628937c2e966e446ad181306449ec4eb3d9a — FAIL tại 2 test mới. Phân tích log xác định fixture dùng literal backslash-n thay vì newline; compile PASS, các test cũ PASS. Đây là lỗi test fixture, chưa phải bằng chứng validator logic sai.
+- **Khắc phục:** sửa fixture để nối dòng bằng newline thật; commit ffece2ef07095f68d8eb593b3b172f5880792ebe.
+- **CI lần 2:** run 42363535711, commit ffece2ef07095f68d8eb593b3b172f5880792ebe — job Document Register and Code Validation = PASS; các bước compile, 10 unit tests và CLI validate canonical registers đều PASS. Job Preview Host Ubuntu = PASS. Job Preview Host Windows còn RUNNING tại thời điểm ghi mục này; chưa kết luận toàn workflow PASS.
+- **Kết quả kiểm tra sổ:** DOC-055 có 80 dòng DOC-ID, 80 ID duy nhất và 80 Read order duy nhất; bốn bản DOC-073/074/075/077 đã đăng ký. DOC-076 và DOC-078..083 vẫn absent/reserved.
+- **Trạng thái:** DOCUMENT GOVERNANCE VALIDATOR = PASS trên Ubuntu CI; DOCUMENT REGISTER UNIQUENESS = PASS; PREVIEW HOST WINDOWS = IN PROGRESS; LEGACY MIGRATION / INBOUND LINKS / ALIAS CONVERSION = OPEN.
+- **Bằng chứng:** workflow run https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/42363535711; validator blob d94e8f723afbd78582db37cc4629ce19cc69ac5e; test blob 3999d5f9910b1bce41ae5e696712554224b55886; workflow blob cae9008669d2ff27baa47371bd2baaa1cab9bfae.
+- **Bước tiếp theo:** xác nhận Windows job hoàn tất; tiếp tục inbound-link scan và đối soát canonical/legacy paths theo DOC-056. Không xóa hoặc đổi tên file trước khi các kiểm tra migration PASS.
