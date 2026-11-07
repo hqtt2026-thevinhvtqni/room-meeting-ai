@@ -179,3 +179,6 @@ Exact-basename GitHub code searches were run for each of the 11 legacy source fi
 
 
 | DOC-086 | P1 | 86 | Kiến trúc kho tri thức công nghệ và năng lực AI / AI Technology Knowledge & Capability Architecture | 03_ARCHITECT/DOC-086_KIEN-TRUC_KHO-TRI-THUC-CONG-NGHE-VA-NANG-LUC-AI_AI-TECHNOLOGY-KNOWLEDGE-AND-CAPABILITY-ARCHITECTURE.md | DOC-001; DOC-002; DOC-006; DOC-028; DOC-033; DOC-043; DOC-055 | BASELINE APPROVED — REGISTRY IMPLEMENTATION NOT STARTED | Taxonomy công nghệ AI, quy tắc capability registry, bằng chứng xác minh và liên kết ứng dụng với các Work; không tự phê duyệt tích hợp/model/API |
+
+
+| DOC-087 | P1 | 87 | Kế hoạch triển khai sổ đăng ký năng lực AI / AI Capability Registry Implementation Plan | 04_PLAN/DOC-087_KE-HOACH_TRIEN-KHAI-SO-DANG-KY-NANG-LUC-AI_AI-CAPABILITY-REGISTRY-IMPLEMENTATION-PLAN.md | DOC-001; DOC-006; DOC-035; DOC-043; DOC-055; DOC-086 | PHASE 1 DATA CONTRACT CREATED — RUNTIME/API/UI NOT STARTED | Quy trình triển khai, trạng thái năng lực, quy tắc an toàn, test plan và điều kiện mở rộng Registry |
