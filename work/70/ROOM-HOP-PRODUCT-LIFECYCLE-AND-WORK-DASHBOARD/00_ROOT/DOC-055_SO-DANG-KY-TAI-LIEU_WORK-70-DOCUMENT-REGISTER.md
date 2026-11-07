@@ -4,7 +4,7 @@
 - **Read order:** 55
 - **Depends on:** DOC-001; DOC-038; DOC-039; DOC-040; DOC-056
 - **Status:** ACTIVE — SINGLE SOURCE OF TRUTH
-- **Version / Updated:** 2.9 / 2026-11-07
+- **Version / Updated:** 3.0 / 2026-11-07
 - **Owner:** Xu / AI-01
 - **Authority:** Vinh
 Owner: Xu / AI-01
@@ -31,7 +31,7 @@ Rule: DOC-ID is stable identity; Priority is importance; Read order is sequence.
 | DOC-012 | P1 | 16 | Work Instantiation & Migration | 04_PLAN/WORK_INSTANTIATION_AND_MIGRATION.md | DOC-003; DOC-009 | ACTIVE | How to create/migrate a Work safely |
 | DOC-013 | P1 | 17 | Legacy Build Register (WP candidate) | branch work/70/05-build: 05_BUILD/00_ROOT/BUILD_REGISTER.json; BUILD_REGISTER.md | DOC-033; DOC-011 | MIGRATION PENDING | Existing WP records; candidate for reconciliation into Work-level plan, not yet a canonical mapping |
 | DOC-036 | P1 | 18 | Build Mapping Register | branch work/70/05-build: 05_BUILD/00_ROOT/BUILD_MAPPING_REGISTER.md | DOC-001; DOC-003; DOC-033 | ACTIVE / MIGRATION IN PROGRESS | Maps engineering artifacts to canonical Work/source paths and classifies legacy build files |
-| DOC-014 | P1 | 19 | Evidence Register | 06_EVIDENCE/EVIDENCE_REGISTER.json; EVIDENCE_REGISTER.md | DOC-004; DOC-033 | ACTIVE | Cross-phase canonical evidence and provenance |
+| DOC-014 | P1 | 19 | Sổ bằng chứng / Evidence Register | EVIDENCE/EVIDENCE_REGISTER.json | DOC-004; DOC-033 | ACTIVE — SINGLE CANONICAL JSON SOURCE | Canonical machine-readable source; EVIDENCE_REGISTER.md is a read-only projection and EVIDENCE_REGISTER.schema.json is its technical schema |
 | DOC-015 | P1 | 20 | Verification Plan | 06_VERIFY/VERIFICATION_PLAN.md | DOC-008; DOC-013; DOC-014 | ACTIVE | Verification strategy and coverage |
 | DOC-016 | P1 | 21 | Storage & Export Architecture | branch work/70/05-build: 05_BUILD/03_ARCHITECTURE/STORAGE_AND_EXPORT_ARCHITECTURE.md | DOC-009; DOC-010; DOC-033 | CANONICAL CANDIDATE / MIGRATION PENDING | Technical design; reconcile into 03_ARCHITECT before any build copy is retired |
 | DOC-017 | P1 | 22 | Core Capability Gap Assessment | branch work/70/05-build: 05_BUILD/03_ARCHITECTURE/CORE_CAPABILITY_GAP_ASSESSMENT.md | DOC-010; DOC-033 | CANONICAL CANDIDATE / MIGRATION PENDING | Evidence-based Core capability assessment; reconcile into Work-level architecture/verification record |
@@ -50,7 +50,7 @@ Rule: DOC-ID is stable identity; Priority is importance; Read order is sequence.
 | DOC-028 | P3 | 35 | Vietnamese Glossary | 00_ROOT/DOC-028_BANG-THUAT-NGU_VIETNAMESE-GLOSSARY.md | DOC-002 | ACTIVE | Terminology reference |
 | DOC-029 | P3 | 36 | Legacy Scaffold Notice | LEGACY_SCAFFOLD_NOTICE.md | DOC-001 | ACTIVE | Historical/legacy context |
 | DOC-030 | P3 | 37 | Work 70 Session Log | branch work/70/05-build: 05_BUILD/10_AI_DEBUG_HANDOFF/WORK70_SESSION_LOG_20261030.md | DOC-002; DOC-033 | LEGACY / HISTORICAL | Preserve detail; Work-wide chronological record is 00_ROOT/DOC-035_NHAT-KY-THI-CONG_WORK-EXECUTION-LOG.md |
-| DOC-031 | P3 | 38 | Consolidation Evidence Report | 06_EVIDENCE/WORK70_CONSOLIDATION_CHECK_20261030.md | DOC-014 | ACTIVE | Historical evidence of Work 70 consolidation |
+| DOC-031 | P3 | 38 | Báo cáo kiểm tra hợp nhất Work 70 / Work 70 Consolidation Checkpoint | EVIDENCE/DOC-031_BAO-CAO-KIEM-TRA-HOP-NHAT_WORK70-CONSOLIDATION-CHECKPOINT.md | DOC-014 | ACTIVE / HISTORICAL EVIDENCE | Historical consolidation checkpoint; one canonical DOC-ID and path |
 | DOC-032 | P3 | 39 | Dashboard README | DASHBOARD/README.md | DOC-010 | ACTIVE | Dashboard usage and limitations |
 | DOC-037 | P3 | 40 | Work 70 README | README.md | DOC-001; DOC-033; DOC-036 | ACTIVE | Human-readable entry point; subordinate to Manifest and standards |
 | DOC-041 | P1 | 41 | Báo cáo rà soát quản trị Work 70 / Work 70 Governance Audit Report | 00_ROOT/DOC-041_BAO-CAO-RA-SOAT-QUAN-TRI_GOVERNANCE-AUDIT-REPORT.md | DOC-001; DOC-003; DOC-004; DOC-005; DOC-006; DOC-033; DOC-038; DOC-039; DOC-040 | ACTIVE — AUDIT OPEN | Confirmed governance findings and remediation backlog; not product acceptance |
@@ -108,8 +108,8 @@ Ghi chú cập nhật 2026-11-02: DOC-054, DOC-064, DOC-065 và DOC-067 đã đ�
 | DOC-069 | P0 | 69 | Hồ sơ nhận việc và phạm vi quyền Xu / Xu Work Entry Record | 00_ROOT/DOC-069_HO-SO-NHAN-VIEC-VA-PHAM-VI-QUYEN-XU_WORK-ENTRY-RECORD.md | DOC-001; DOC-006; DOC-033; DOC-038; DOC-039; DOC-040; DOC-042; DOC-043; DOC-044; DOC-055; DOC-056; DOC-057 | PASS — LIMITED DOCUMENTATION / READ-ONLY TRACE SCOPE | Xác định participant AI-01, assignment ASG-W70-XU-20261102-01, WE-G0..WE-G5 theo DOC-057; không mở G4 BUILD hoặc quyền code/runtime. |
 
 | DOC-070 | P1 | 70 | Đề xuất sổ đăng ký gói công việc / Work Package Register Proposal | 04_PLAN/DOC-070_DE-XUAT-SO-DANG-KY-GOI-CONG-VIEC_WORK-PACKAGE-REGISTER-PROPOSAL.md | DOC-001; DOC-006; DOC-011; DOC-036; DOC-055; DOC-061 | DRAFT — NOT APPROVED / SUPPORTING RECONCILIATION ONLY | Đề xuất cấu trúc sổ WP cấp Work; dữ liệu và schema hỗ trợ vẫn là draft, không thay DOC-011 và không mở G4/BUILD |
-| DOC-071 | P0 | 71 | Báo cáo truy vết Core authority, runtime composition và persistence / Core Authority, Runtime Composition & Persistence Trace | 06_EVIDENCE/DOC-071_BAO-CAO-TRUY-VET_CORE-AUTHORITY-RUNTIME-AND-PERSISTENCE.md | DOC-001; DOC-011; DOC-035; DOC-055; DOC-061; DOC-066 | SOURCE TRACE COMPLETE — READ-ONLY / CORE OWNER NOT IDENTIFIED / RUNTIME NOT VERIFIED | Xác định ranh giới Meeting/Identity với Work authority; ghi rõ HTTP factory chưa xác minh được wiring runtime, Meeting file persistence không chứng minh Work persistence; không cấp BUILD |
-| DOC-072 | P0 | 72 | Đối chiếu hợp đồng kiến trúc DOC-061/063/064/065 / Architecture Contract Reconciliation | 06_EVIDENCE/DOC-072_DOI-CHIEU_HOP-DONG-KIEN-TRUC_DOC-061_063_064_065.md | DOC-004; DOC-005; DOC-010; DOC-011; DOC-035; DOC-054; DOC-057; DOC-061; DOC-063; DOC-064; DOC-065; DOC-066; DOC-071 | RECONCILIATION COMPLETE — DESIGN ONLY / NOT APPROVED / NOT IMPLEMENTED | Làm rõ Core authority, Work Entry auth, Hybrid Dispatch và logical contract là các lớp mục tiêu; không chứng minh API/runtime/adapter, không mở G4/BUILD |
+| DOC-071 | P0 | 71 | Báo cáo truy vết Core authority, runtime composition và persistence / Core Authority, Runtime Composition & Persistence Trace | EVIDENCE/DOC-071_BAO-CAO-TRUY-VET_CORE-AUTHORITY-RUNTIME-AND-PERSISTENCE.md | DOC-001; DOC-011; DOC-035; DOC-055; DOC-061; DOC-066 | SOURCE TRACE COMPLETE — READ-ONLY / CORE OWNER NOT IDENTIFIED / RUNTIME NOT VERIFIED | Xác định ranh giới Meeting/Identity với Work authority; ghi rõ HTTP factory chưa xác minh được wiring runtime, Meeting file persistence không chứng minh Work persistence; không cấp BUILD |
+| DOC-072 | P0 | 72 | Đối chiếu hợp đồng kiến trúc DOC-061/063/064/065 / Architecture Contract Reconciliation | EVIDENCE/DOC-072_DOI-CHIEU_HOP-DONG-KIEN-TRUC_DOC-061_063_064_065.md | DOC-004; DOC-005; DOC-010; DOC-011; DOC-035; DOC-054; DOC-057; DOC-061; DOC-063; DOC-064; DOC-065; DOC-066; DOC-071 | RECONCILIATION COMPLETE — DESIGN ONLY / NOT APPROVED / NOT IMPLEMENTED | Làm rõ Core authority, Work Entry auth, Hybrid Dispatch và logical contract là các lớp mục tiêu; không chứng minh API/runtime/adapter, không mở G4/BUILD |
 
 ## Supporting data artifacts — WP registry draft (2026-11-02)
 - `04_PLAN/WORK_PACKAGE_REGISTER.json` — GitHub main blob `462cf3528375d59c322a4efbdbc9b2f7eecb8cf9`; six records, schema_version `0.1-draft`, baseline `DRAFT_NOT_APPROVED`; Sandbox copy restored during this reconciliation.
@@ -203,3 +203,7 @@ The PO-delegated disposition recorded in the 2026-11-02 addendum remains in forc
 **Registration boundary:** DOC-076 and DOC-078..DOC-083 remain reserved mappings only; their canonical files do not exist in the current GitHub tree and they are not registered as available documents. Do not link to or claim those paths as present. DOC-042 remains End-to-End Execution Orchestration, DOC-043 remains AI Role & Permission Matrix, and DOC-044 remains Work Assignment Contract Template at their respective registered paths. This reconciles identity at the register level without rewriting or deleting preserved legacy source files.
 
 **Verification scope:** GitHub `main` tree inspection (`truncated=false`) and exact file fetch confirmed the four canonical copies DOC-073, DOC-074, DOC-075 and DOC-077 exist. This is not proof of inbound-link closure, legacy alias conversion, Sandbox parity, or full migration completion; those remain OPEN under DOC-056 and the migration ledger above.
+
+
+## Canonical evidence-path migration — 2026-11-07
+D70-021 changes the top-level cross-phase evidence directory to `EVIDENCE/`. DOC-014 has exactly one canonical path: `EVIDENCE/EVIDENCE_REGISTER.json`. The Markdown file is a read-only projection and the schema is a technical validator, not another register. DOC-031, DOC-071, DOC-072 and DOC-084 canonical paths now begin with `EVIDENCE/`. `05_BUILD/06_EVIDENCE/` remains staging and is not changed. Old top-level `06_EVIDENCE/` paths are compatibility-only pending link closure and QE.
