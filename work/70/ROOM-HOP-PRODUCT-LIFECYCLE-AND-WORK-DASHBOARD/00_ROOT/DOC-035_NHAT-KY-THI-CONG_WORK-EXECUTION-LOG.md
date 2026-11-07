@@ -1117,3 +1117,12 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - **Giới hạn:** GitHub sync không chứng minh local checkout đã pull/sync; Python unit test, PowerShell, browser PC/mobile, security QE và Android HTTPS E2E vẫn NOT RUN. Không có URL live.
 - **Trạng thái:** GITHUB MAIN FILE SYNC DONE — readback pending; runtime NOT VERIFIED; NOT ACCEPTED; NOT RELEASED; không có Gate PASS.
 - **Bước tiếp theo:** kiểm tra commit/ref và readback file trên main; sau đó chạy local PC host và E2E. Không tự mở port công khai.
+
+
+## 2026-11-07 2026-11-07T04:44:30.987Z UTC — Xu / AI-01 — Xác minh đồng bộ Preview Host P1 trên GitHub main
+- **GitHub branch:** main; HEAD sau đồng bộ tài liệu: 92258283911a16a858db9ab56814a4063366d96b.
+- **Kết quả tree audit:** recursive Git tree truncated=false; xác nhận đủ DOC-088, DOC-089, DOC-090; preview_host server/registry/schema/README/PowerShell/tests; hai Dashboard view execution/product và JSON/schema; Data Integrity note; DOC-035/DOC-055.
+- **Readback GitHub:** fetch_file status thành công cho server.py (11,415 chars), test_server.py (4,579), execution/index.html (7,205), product/index.html (7,012), DOC-089 (7,224), DOC-090 (5,127), DOC-035 (186,933), DOC-055 (34,024). Blob SHA được trả về cho từng file; marker kiểm tra nội dung đều hiện diện.
+- **Register/log:** DOC-055 đã đăng ký DOC-088/089/090; DOC-035 đã có entry ghi nhận thao tác sync. Entry này tiếp tục ghi nhận xác minh readback; không sửa lịch sử.
+- **Trạng thái:** GITHUB MAIN SYNC + TREE AUDIT + SELECTED FILE READBACK PASS. Local PC pull/sync NOT VERIFIED; Python/PowerShell runtime tests NOT RUN; browser PC/mobile NOT RUN; Tailscale HTTPS NOT CONFIGURED; no live URL; not accepted/released; no Gate PASS.
+- **Bước tiếp theo:** local repo cần pull main, kiểm tra working tree trước khi cập nhật; chạy Python compile/unit tests và PowerShell start/status/stop; sau đó mở PC browser và Tailscale private HTTPS từ Android. Không cấu hình port/public exposure nếu chưa có xác minh firewall/access.
