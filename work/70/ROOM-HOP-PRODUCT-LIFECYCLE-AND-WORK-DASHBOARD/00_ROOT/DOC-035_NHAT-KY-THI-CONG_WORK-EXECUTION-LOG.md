@@ -1153,3 +1153,12 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - **Remediation:** chuyển stdout/stderr của tiến trình server test sang DEVNULL; Sandbox readback status=ok; cập nhật GitHub main commit dae5cc99b4b5dccc1ddc954c9d7cb7aedb196e25.
 - **Regression run:** 42340279493 được kích hoạt tự động sau commit remediation; lần quan sát tiếp theo cả Windows và Ubuntu đang IN_PROGRESS. Chưa kết luận regression PASS.
 - **Trạng thái:** CI RUN 1 PASS 2/2 OS; warning remediation recorded; regression run pending; local PC host/PowerShell/Android Tailnet E2E NOT RUN.
+
+## 2026-11-07 2026-11-07T04:52:42.971Z UTC — Xu / AI-01 — Regression CI Preview Host PASS sau remediation
+- **Run ID:** 42340279493; head commit: dae5cc99b4b5dccc1ddc954c9d7cb7aedb196e25.
+- **Windows job:** SUCCESS; py_compile PASS; 11/11 unittest PASS.
+- **Ubuntu job:** SUCCESS; py_compile PASS; 11/11 unittest PASS.
+- **Regression:** cả hai job hoàn thành; không còn ResourceWarning unclosed subprocess PIPE trong log sau khi đổi sang DEVNULL.
+- **Non-blocking repository warning:** post-checkout cleanup của actions/checkout báo submodule path room-meeting-ai thiếu URL trong .gitmodules; job conclusion vẫn SUCCESS. Đây là cấu hình submodule sẵn có ngoài phạm vi Preview Host; không tự sửa để tránh tác động repo khác.
+- **Kết luận có giới hạn:** Python service/HTTP contract đã có CI evidence PASS trên Windows và Ubuntu. Không suy rộng thành PowerShell bootstrap PASS, local PC host PASS, Browser UI PASS, Android/Tailscale HTTPS PASS hoặc release.
+- **Trạng thái:** PREVIEW HOST PYTHON CI PASS 2/2 OS × 11/11 TESTS; LOCAL DEPLOYMENT NOT RUN; NOT ACCEPTED/NOT RELEASED; no Gate PASS.
