@@ -22,7 +22,7 @@ Status: ACTIVE — readback verification required after every sync
 Sandbox Work 70 root → GitHub main:
 - README.md, LEGACY_SCAFFOLD_NOTICE.md
 - 00_ROOT, 01_DISCOVER, 02_DEFINE, 03_ARCHITECT, 04_PLAN
-- 06_VERIFY, 06_EVIDENCE, 07_ACCEPT, 08_RELEASE, 09_OPERATE
+- 06_VERIFY, EVIDENCE, 07_ACCEPT, 08_RELEASE, 09_OPERATE
 - DASHBOARD
 
 Sandbox Work 70 / 05_BUILD → GitHub branch work/70/05-build:
@@ -35,7 +35,7 @@ Sandbox Work 70 / 05_BUILD → GitHub branch work/70/05-build:
 3. Product source code is canonical only in the source repository/path declared for the Work or artifact. The 05_BUILD branch is not automatically the source repository.
 4. A mapping is not a copy. Do not create or maintain a second authoritative document/source file under 05_BUILD.
 5. If a tool requires a local working copy, label it TEMPORARY, record its origin and version, and discard or reconcile it under the approved workflow; never publish it as canonical.
-6. Cross-phase verified evidence is registered at top-level 06_EVIDENCE. 05_BUILD/06_EVIDENCE is staging only.
+6. Cross-phase verified evidence is registered at top-level EVIDENCE. 05_BUILD/06_EVIDENCE is staging only.
 7. Preserve existing 05_BUILD files during transition. Classify them as canonical candidate, mapping, temporary copy or legacy/unclassified before any move, rewrite or deletion.
 8. No silent moves, renames, deletes, branch changes or merges.
 9. Before updating an existing GitHub file, fetch its current blob SHA.
