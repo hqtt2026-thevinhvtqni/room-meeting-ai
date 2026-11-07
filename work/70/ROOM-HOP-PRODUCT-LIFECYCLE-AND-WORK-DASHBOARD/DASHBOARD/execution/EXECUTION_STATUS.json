@@ -24,7 +24,7 @@
         "status": "IN_PROGRESS",
         "owner": "Xu / AI-01",
         "reviewer": "Qw / AI-05",
-        "evidence_refs": ["README.md", "00_ROOT/WORK_MANIFEST.md", "03_ARCHITECT/WORK_LIFECYCLE_ARCHITECTURE.md"]
+        "evidence_refs": ["README.md", "00_ROOT/DOC-001_BAN-TUYEN-NGON_WORK-MANIFEST.md", "03_ARCHITECT/WORK_LIFECYCLE_ARCHITECTURE.md"]
       },
       {
         "wp_id": "WP-70-02",
