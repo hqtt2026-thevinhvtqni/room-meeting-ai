@@ -1144,3 +1144,12 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - **Mục đích:** kiểm chứng Python service và HTTP contract trên hai OS; không thay thế PowerShell deployment hoặc Android/Tailscale E2E.
 - **Trạng thái:** CI CONFIGURED; RUNNING/QUEUED AT FIRST OBSERVATION; RESULTS PENDING; local PC host NOT STARTED; NOT ACCEPTED/NOT RELEASED; no Gate PASS.
 - **Bước tiếp theo:** đọc kết quả từng job và xử lý lỗi nếu có; sau CI mới chuyển sang triển khai trên PC.
+
+## 2026-11-07 2026-11-07T04:52:13.290Z UTC — Xu / AI-01 — Kết quả CI Preview Host lần 1 và khắc phục cảnh báo test
+- **Run ID:** 42340198572; commit workflow: 684e35c0c23c20c2d9bafb37c2f23d5f6ca6204b.
+- **Windows job:** conclusion SUCCESS; py_compile PASS; 11/11 unittest PASS.
+- **Ubuntu job:** conclusion SUCCESS; py_compile PASS; 11/11 unittest PASS.
+- **Finding sau test:** Python ResourceWarning do stdout/stderr PIPE của subprocess test chưa đóng; không làm fail test nhưng tạo cảnh báo chất lượng.
+- **Remediation:** chuyển stdout/stderr của tiến trình server test sang DEVNULL; Sandbox readback status=ok; cập nhật GitHub main commit dae5cc99b4b5dccc1ddc954c9d7cb7aedb196e25.
+- **Regression run:** 42340279493 được kích hoạt tự động sau commit remediation; lần quan sát tiếp theo cả Windows và Ubuntu đang IN_PROGRESS. Chưa kết luận regression PASS.
+- **Trạng thái:** CI RUN 1 PASS 2/2 OS; warning remediation recorded; regression run pending; local PC host/PowerShell/Android Tailnet E2E NOT RUN.
