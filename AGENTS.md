@@ -48,11 +48,11 @@ Phạm vi: áp dụng cho TOÀN BỘ ROOM và mọi Work. Mục tiêu là một 
 
 Mỗi Work có đúng một bản chính thức cho từng loại hồ sơ sau, đặt tập trung tại thư mục gốc của Work:
 
-1. `BIEN_BAN.md` — **Co quản lý.** Ghi nội dung đã trao đổi/họp, phạm vi, phương án và quyết định đã thống nhất. Khi quyết định thay đổi phương án kỹ thuật, Co cập nhật quyết định mới vào chính bản Biên bản hiện hữu, ghi người quyết định, thời điểm, lý do và nội dung thay đổi. Không ghi diễn biến thi công thường nhật vào Biên bản.
-2. `KE_HOACH_THI_CONG_XU.md` — **Xu quản lý.** Lập sau khi có Biên bản thống nhất; duy trì kế hoạch xuyên suốt đến bàn giao, gồm đầu việc, phụ thuộc, người/AI phụ trách, tiêu chí nghiệm thu, bằng chứng cần có và bước tiếp theo. Khi quyết định hoặc tiến độ thay đổi, cập nhật bản Kế hoạch hiện hữu, không tạo bản kế hoạch cạnh tranh.
-3. `NHAT_KY_HOP_THI_CONG.md` — **Toàn bộ AI cùng ghi.** Một dòng thời gian liên tục từ lúc khởi động đến khi kết thúc. Mọi AI, kể cả Co và Xu, phải nối tiếp ghi phần việc của mình vào cùng bản Nhật ký; không tạo nhật ký riêng theo cá nhân, vai trò hay phiên làm việc.
+1. `BIÊN BẢN` — **Co quản lý.** Mỗi Work có đúng một file canonical do Manifest/Document Register của Work đó chỉ định. Với Work 70, canonical là `work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/00_ROOT/DOC-034_BIEN-BAN_HOP-WORK-70-MINUTES.md`; `BIEN_BAN.md` chỉ là compatibility pointer, không phải bản độc lập. Ghi nội dung đã trao đổi/họp, phạm vi, phương án và quyết định đã thống nhất; không ghi diễn biến thi công thường nhật.
+2. `KẾ HOẠCH` — **Xu quản lý.** Mỗi Work có đúng một file canonical do Manifest/Document Register chỉ định. Với Work 70, canonical plan là `04_PLAN/IMPLEMENTATION_ROADMAP.md`; tên `KE_HOACH_THI_CONG_XU.md` chỉ là legacy/default alias nếu được Work đăng ký. Duy trì đầu việc, phụ thuộc, người/AI phụ trách, tiêu chí nghiệm thu, bằng chứng và bước tiếp theo; cập nhật file hiện hữu, không tạo bản cạnh tranh.
+3. `NHẬT KÝ THI CÔNG` — **Toàn bộ AI cùng ghi.** Mỗi Work có đúng một file canonical do Manifest/Document Register chỉ định. Với Work 70, canonical là `00_ROOT/DOC-035_NHAT-KY-THI-CONG_WORK-EXECUTION-LOG.md`; `NHAT_KY_THI_CONG.md` là pointer, không phải nhật ký thứ hai. Mọi AI ghi nối tiếp vào cùng một dòng thời gian.
 
-Tên file ở trên là tên chuẩn. Với Work đang tồn tại, trước khi đổi tên hoặc di chuyển phải kiểm kê hồ sơ hiện có, chọn bản chính thức, liên kết hồ sơ lịch sử và đánh dấu bản trùng/hết hiệu lực là `SUPERSEDED`; không xóa bằng chứng lịch sử tùy tiện. Nếu Work chưa thể chuẩn hóa ngay, ghi rõ vị trí bản chính thức hiện hành trong hồ sơ điều hành đang dùng, rồi hợp nhất có kiểm soát.
+Canonical path do Manifest/Document Register của từng Work khai báo là nguồn sự thật; không áp đặt tên file mặc định lên Work đã có canonical path được kiểm soát. Với Work đang tồn tại, trước khi đổi tên hoặc di chuyển phải kiểm kê, lập mapping inbound links, giữ lịch sử và chuyển đường dẫn cũ thành pointer có kiểm soát. Không tạo nhiều bản độc lập cùng loại và không xóa bằng chứng lịch sử tùy tiện.
 
 ### 06.2 Nội dung bắt buộc của Nhật ký
 
