@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://room-hop.local/schemas/work-70/execution-status.json",
+  "title": "Work 70 Execution Status",
+  "description": "Provenance-carrying payload for Work Execution Dashboard. No mock data. All metrics must declare calculation_method and source_id.",
+  "type": "object",
+  "required": [
+    "dashboard_type",
+    "work_id",
+    "work_status",
+    "lifecycle",
+    "work_packages",
+    "blockers",
+    "evidence",
+    "data_integrity",
+    "metrics",
+    "no_mock_data"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "dashboard_type": { "const": "WORK_EXECUTION" },
+    "work_id": { "type": "string", "minLength": 1 },
+    "work_name": { "type": "string" },
+    "product_name": { "type": "string" },
+    "work_status": {
+      "type": "string",
+      "enum": ["NOT_STARTED", "ACTIVE", "BLOCKED", "ACCEPTED", "RELEASED", "OPERATING", "CLOSED", "CANCELLED"]
+    },
+    "lifecycle": {
+      "type": "object",
+      "required": ["current_phase", "phase_status", "gate_status"],
+      "additionalProperties": true,
+      "properties": {
+        "current_phase": {
+          "type": "string",
+          "enum": ["01_DISCOVER", "02_DEFINE", "03_ARCHITECT", "04_PLAN", "05_BUILD", "06_VERIFY", "07_ACCEPT", "08_RELEASE", "09_OPERATE"]
+        },
+        "phase_status": { "type": "string" },
+        "gate_status": {
+          "type": "string",
+          "enum": ["NOT_READY", "PENDING", "PASS", "FAIL", "WAIVED"]
+        },
+        "note_vi": { "type": "string" }
+      }
+    },
+    "work_packages": {
+      "type": "object",
+      "required": ["total", "items"],
+      "additionalProperties": true,
+      "properties": {
+        "total": { "type": "integer", "minimum": 0 },
+        "by_status": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0 } },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["wp_id", "title", "status", "owner", "reviewer"],
+            "additionalProperties": true,
+            "properties": {
+              "wp_id": { "type": "string" },
+              "title": { "type": "string" },
+              "status": { "type": "string" },
+              "owner": { "type": "string" },
+              "reviewer": { "type": "string" },
+              "evidence_refs": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        }
+      }
+    },
+    "blockers": {
+      "type": "object",
+      "required": ["open_count", "items"],
+      "additionalProperties": true,
+      "properties": {
+        "open_count": { "type": "integer", "minimum": 0 },
+        "items": { "type": "array" }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["total_recorded"],
+      "additionalProperties": true,
+      "properties": {
+        "total_recorded": { "type": "integer", "minimum": 0 },
+        "source": { "type": "string" },
+        "note_vi": { "type": "string" }
+      }
+    },
+    "data_integrity": {
+      "type": "object",
+      "required": ["source_mode", "primary_sources", "freshness", "retrieved_at"],
+      "additionalProperties": true,
+      "properties": {
+        "source_mode": { "type": "string" },
+        "primary_sources": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["source_id", "source_type", "source_path", "retrieved_at", "calculation_method", "verification_status"],
+            "additionalProperties": true
+          }
+        },
+        "freshness": { "type": "string", "enum": ["FRESH", "STALE", "UNKNOWN"] },
+        "as_of": { "type": "string" },
+        "retrieved_at": { "type": "string" },
+        "warning_vi": { "type": "string" }
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["value", "calculation_method", "source_id", "verification_status"],
+        "properties": {
+          "value": {},
+          "calculation_method": { "type": "string", "minLength": 1 },
+          "source_id": { "type": "string" },
+          "verification_status": {
+            "type": "string",
+            "enum": ["VERIFIED", "RECORDED", "NOT_VERIFIED", "STALE", "MISSING", "UNKNOWN"]
+          }
+        }
+      }
+    },
+    "ai_executor": { "type": "string" },
+    "generated_by": { "type": "string" },
+    "no_mock_data": { "const": true }
+  }
+}
