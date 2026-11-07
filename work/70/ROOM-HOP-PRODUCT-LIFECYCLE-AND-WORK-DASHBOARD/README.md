@@ -1,7 +1,7 @@
 # WORK 70 — ROOM-HOP WORK MASTER STANDARD
 - **STT / Document ID:** DOC-037
 - **Priority:** P3
-- **Read order:** 37
+- **Read order:** 40
 - **Depends on:** DOC-001; DOC-033; DOC-036
 - **Status:** ACTIVE
 - **Version / Updated:** 1.2 / 2026-10-30
