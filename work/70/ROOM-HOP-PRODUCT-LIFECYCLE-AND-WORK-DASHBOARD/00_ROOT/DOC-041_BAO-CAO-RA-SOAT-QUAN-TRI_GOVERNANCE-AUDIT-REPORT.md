@@ -201,3 +201,10 @@ Exact readback confirms the active DOC-002, verification checklist, Dashboard PR
 DOC-055 v3.3 removed the multi-location path cell from DOC-061 and identifies one main canonical path; Sandbox and `work/70/05-build` are sync/mirror locations only. DOC-013 and DOC-014 each have one canonical JSON source path, with Markdown read-only projections. Validator now rejects semicolon-separated multiple paths in one row as well as duplicate paths between rows. CI run 42366138648 completed SUCCESS with 12/12 unit tests, canonical register validation, EVIDENCE JSON identity checks, and Preview Host Ubuntu/Windows checks.
 
 **Boundary:** this PASS covers the DOC-055 register contract. It does not prove every unregistered legacy file in the repository has unique DOC-ID. DOC-042..DOC-052 legacy collision remains OPEN until the seven absent migrated copies and inbound-link mapping are resolved. No source originals were deleted or converted.
+
+
+## Verification boundary clarification — 2026-11-07
+
+CI run 42366201370 completed SUCCESS after the latest governance-log changes. GitHub main tree SHA `e8293adffb5be786032b3172d14cc1aa966f37aa` is complete (`truncated=false`), with 7 canonical files under `EVIDENCE/` and 8 pointer-only files under legacy `06_EVIDENCE/`.
+
+DOC-055's 2026-11-02 addendum remains the evidence for earlier Sandbox 8030 byte-for-byte parity of DOC-035/041/055/073/074/075/077. The current EVIDENCE path migration and latest documents were not re-read from Sandbox 8030 in this turn. Accordingly, prior parity evidence is preserved, but new EVIDENCE migration Sandbox parity is NOT RE-VERIFIED. This does not affect the GitHub main/CI PASS results.
