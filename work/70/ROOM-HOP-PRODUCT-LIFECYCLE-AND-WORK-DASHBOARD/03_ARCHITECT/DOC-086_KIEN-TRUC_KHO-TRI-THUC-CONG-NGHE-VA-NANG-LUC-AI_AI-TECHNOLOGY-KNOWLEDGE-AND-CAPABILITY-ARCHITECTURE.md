@@ -88,7 +88,8 @@ Các liên kết là định hướng khám phá, không phải phê duyệt tha
 - Có kiểm tra liên kết, schema và lịch rà soát; không tuyên bố hoàn tất chỉ vì tạo tài liệu.
 
 ## 9. Trạng thái triển khai
-- DOC-086 được thiết lập làm kiến trúc baseline cho kho tri thức AI tại Work 70.
+- DOC-086 là kiến trúc baseline cho kho tri thức AI tại Work 70.
 - Taxonomy và liên kết Work ban đầu đã được mô tả.
-- Chưa tạo database/API/UI capability registry; chưa nhập danh mục model cụ thể; chưa chạy benchmark; chưa xác minh capability của bất kỳ provider/model nào trong phạm vi tài liệu này.
-- Trạng thái: **DOCUMENT BASELINE CREATED — REGISTRY IMPLEMENTATION NOT STARTED — NO MODEL CAPABILITY PASS CLAIMED**.
+- Phase 1 AI Capability Registry đã có data contract tĩnh: DOC-087, JSON Schema, registry rỗng, record template và README trong `05_BUILD/04_CODE/ai_capability_registry/`.
+- Chưa tạo database/API/UI; chưa tích hợp model/provider; chưa chạy benchmark; chưa xác minh capability của bất kỳ provider/model nào.
+- Trạng thái: **KNOWLEDGE BASELINE + STATIC REGISTRY DATA CONTRACT CREATED — RUNTIME/API/UI NOT STARTED — NO MODEL CAPABILITY VERIFIED**.
