@@ -1,0 +1,41 @@
+name: Work 70 Preview Host Tests
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/05_BUILD/04_CODE/preview_host/**"
+      - "work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/DASHBOARD/**"
+      - ".github/workflows/work70-preview-host.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  preview-host-tests:
+    name: Preview Host / ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Compile Preview Host
+        working-directory: work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/05_BUILD/04_CODE/preview_host
+        run: python -m py_compile server.py test_server.py
+
+      - name: Run black-box tests
+        working-directory: work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/05_BUILD/04_CODE/preview_host
+        run: python -m unittest -v test_server.py
