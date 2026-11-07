@@ -1276,3 +1276,12 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - **Giới hạn quan trọng:** đây là kết quả bounded code-search/index, không phải parsed repository-wide link scan; GitHub search có thể không index đầy đủ, không chứng minh không tồn tại inbound links trong HTML/JSON/source/history/branch khác. Không dùng kết quả này để xóa, đổi tên hoặc biến file cũ thành pointer.
 - **Trạng thái:** BOUNDED SEARCH COMPLETE; INBOUND-LINK RECONCILIATION = OPEN; DESTRUCTIVE CLEANUP = NOT RUN.
 - **Bước tiếp theo:** cần quét nội dung các file có khả năng tham chiếu trong tree và kiểm tra cả branch/ref liên quan; sau đó lập mapping link cũ → canonical path mới, kiểm tra broken links và independent QE trước cleanup.
+
+## 2026-11-07 — Xu / AI-01 — Bounded reference inventory cho thư mục 06_EVIDENCE
+
+- **Phạm vi:** GitHub code search các cụm 06_EVIDENCE/, 06_VERIFY/PHASE_EXECUTION_PLAYBOOK.md, DOC-014 Evidence Register và EVIDENCE_REGISTER trong repository.
+- **Kết quả quan sát:** truy vấn 06_EVIDENCE/ trả 20 kết quả đầu tiên, gồm README Work 70, DOC-002, DOC-035, DOC-055, DOC-060, DOC-061, DOC-084, DOC-088, Evidence Register, execution dashboard JSON và một số file thuộc Work khác; truy vấn 06_VERIFY/PHASE_EXECUTION_PLAYBOOK.md trả 1 match ở DOC-055. Các truy vấn DOC-014/EVIDENCE_REGISTER cho thấy thêm các tham chiếu trong DOC-041, DOC-047..DOC-052, DOC-077, DOC-088 và Dashboard.
+- **Giới hạn:** kết quả topn=20 bị giới hạn, có thể thiếu kết quả; đây không phải parsed link scan toàn repository và không xác nhận đầy đủ refs trên mọi branch.
+- **Kết luận:** không đổi tên 06_EVIDENCE trong lượt này. Prefix 06 trùng với 06_VERIFY ở Work root đã được xác nhận; nhưng các references đang tồn tại trong nhiều hồ sơ và Dashboard nên rename chỉ được phép sau full path mapping + update links + link checker + QE theo DOC-056.
+- **Trạng thái:** PATH COLLISION CONFIRMED; MIGRATION NOT RUN; NO FILES DELETED/RENAMED.
+- **Bước tiếp theo:** hoàn tất full inbound path inventory cho 06_EVIDENCE, phân biệt canonical cross-phase evidence với phase 06_VERIFY; đề xuất tên root không mang số phase (ví dụ EVIDENCE/) rồi lập batch migration và regression trước khi thay đổi.
