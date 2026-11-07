@@ -57,3 +57,7 @@ Không thay đổi tiêu chí gate, authority, state machine, lifecycle, policy 
 
 ## 8. Quyết định cần có
 Vinh quyết định APPROVE / REJECT / REVISE. Trước khi có quyết định, tài liệu hiện hành tiếp tục có hiệu lực; các mã LC-G*, WE-G*, INT-G* chỉ là đề xuất, không được dùng để cấp quyền hoặc đánh giá PASS.
+
+
+## Path correction — 2026-11-07
+References to the Work 70 cross-phase evidence register now resolve under `EVIDENCE/`. This note updates the current path only; the 2026-10-31 historical inventory above is preserved as written. `05_BUILD/06_EVIDENCE/` remains staging.
