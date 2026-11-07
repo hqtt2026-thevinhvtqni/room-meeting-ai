@@ -8,7 +8,7 @@
 Status: OPEN — NOT YET EXECUTED
 
 ## A. Structure and governance
-- [ ] Canonical top-level structure matches 00_ROOT/WORK_MANIFEST.md.
+- [ ] Canonical top-level structure matches 00_ROOT/DOC-001_BAN-TUYEN-NGON_WORK-MANIFEST.md.
 - [ ] All nine fixed 05_BUILD child directories exist.
 - [ ] No duplicate/competing WP folder structure is populated.
 - [ ] Manifest, README, version and authority agree.
