@@ -50,6 +50,7 @@ Mã lưu trữ dùng ASCII viết hoa, không dấu. Nhãn hiển thị có th�
 |---:|---|---|---|---|---|---|---|---|---|---|---|
 | 001 | BB-70-001 | DOC-034 | BB | Biên bản thống nhất bộ hồ sơ Work và ranh giới Work / 05_BUILD | 2026-10-30 | Xu / AI-01 | Vinh (chủ trì; xác nhận tại phiên làm việc) | D70-011; D70-012; D70-013 | LEGACY_REFERENCE — mã lịch sử, không theo DOC-039 | 00_ROOT/BIEN_BAN.md | Biên bản gốc; không tái cấp mã hồi tố |
 | — | — | — | — | Chưa có mã phát hành theo cấu trúc DOC-039 | — | — | — | — | EMPTY | — | — |
+| 002 | BB-W70-20261107-001 | DOC-034 | BB | Biên bản điều chỉnh và khóa nguyên tắc quản lý văn bản Work 70 | 2026-11-07 | Xu / AI-01 | Vinh (chỉ thị trực tiếp trong phiên làm việc; biên bản ghi nhận) | D70-020; DOC-001; DOC-033; DOC-039; DOC-055; DOC-056 | ISSUED — RECORDED FROM VINH DIRECTIVE | 00_ROOT/DOC-034_BIEN-BAN_HOP-WORK-70-MINUTES.md | Phiên làm việc 2026-11-07; biên bản trong sổ DOC-034 |
 
 ## 5. Quy tắc vận hành
 1. Kiểm tra mã gần nhất theo đúng loại + Work ID + ngày phát hành trước khi cấp số.
