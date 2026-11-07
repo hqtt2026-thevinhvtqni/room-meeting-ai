@@ -69,3 +69,11 @@ Ràng buộc: DOC-064/065 là thiết kế; DOC-066 là kế hoạch. Không suy
 | D70-019 | Bổ sung vào Work 70 một lớp quản trị tri thức dùng chung về công nghệ AI, taxonomy, capability registry và liên kết tới các Work ứng dụng; lấy DOC-086 làm kiến trúc baseline. Không tạo Work mới. | Tránh phân tán kiến thức công nghệ; phân biệt họ công nghệ, mô hình, năng lực đã kiểm chứng và ứng dụng thực tế; giúp các Work tái sử dụng tri thức nhưng giữ quyền sở hữu và kiểm thử tại từng Work. | APPROVED BY VINH — KNOWLEDGE ARCHITECTURE BASELINE; REGISTRY IMPLEMENTATION NOT STARTED |
 
 Phạm vi phê duyệt: tài liệu kiến trúc và phân loại tri thức trong Work 70. Không phê duyệt tự động triển khai database/API/UI, phát sinh API cost, tích hợp model/provider, thay đổi Work 75/76/103/26/29, hoặc tuyên bố capability VERIFIED. Mọi năng lực phải có model/version, phương pháp test và evidence; UNKNOWN không phải PASS.
+
+
+## 9. Quyết định D70-020 — Một định danh, một loại văn bản, một nguồn canonical (2026-11-07)
+| Decision ID | Decision / Quyết định | Rationale / Lý do | Status / Trạng thái |
+|---|---|---|---|
+| D70-020 | Theo chỉ thị trực tiếp của Vinh, mỗi văn bản lưu hành chính thức trong Work chỉ có một DOC-ID, một mã văn bản thuộc đúng một loại đã quy định, một canonical path và một bản nội dung có thẩm quyền. DOC-055 là register duy nhất cho DOC-ID/path; DOC-039 là chuẩn loại văn bản; DOC-040 là sổ cấp mã nghiệp vụ; DOC-034 và DOC-035 lần lượt là sổ biên bản và nhật ký duy nhất. Không tạo nguồn lạ, register song song, tài liệu trùng nội dung hoặc bản sao có thẩm quyền. AI phải dừng và báo Xu khi phát hiện xung đột; không tự chọn hoặc tự phát sinh mã/loại/nguồn. | Ngăn AI mới và người vận hành hiểu nhầm, tránh nhiều nguồn sự thật, trùng số, sai loại và quyết định dựa trên tài liệu không có thẩm quyền. | APPROVED BY VINH — ACTIVE WORK 70 DOCUMENT CONTROL RULE |
+
+**Ranh giới:** Quyết định này củng cố và áp dụng các chuẩn DOC-033/038/039/040/055/056 hiện có; không tạo loại văn bản mới, không tạo register mới, không tự động cho phép xóa lịch sử hoặc tài liệu đang có tham chiếu. Di trú/xóa alias phải theo DOC-056 và có bằng chứng.
