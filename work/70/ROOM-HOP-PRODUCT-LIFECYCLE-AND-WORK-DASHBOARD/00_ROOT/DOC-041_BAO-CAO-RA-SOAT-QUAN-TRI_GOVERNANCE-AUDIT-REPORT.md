@@ -187,3 +187,10 @@ DOC-055 v3.1 now records DOC-013 with one canonical path (`BUILD_REGISTER.json` 
 DOC-029 is now stored at canonical DOC-prefixed path `00_ROOT/DOC-029_THONG-BAO-CAU-TRUC-CU_LEGACY-SCAFFOLD-NOTICE.md`; the former root-level path is a pointer only. A direct sample-by-file readback of the 17 non-DOC-prefixed files under 00_ROOT confirmed they are compatibility pointers to canonical DOC files (not independent sources). The old `06_EVIDENCE/` directory likewise contains only pointer files; `EVIDENCE/` holds the canonical evidence records. These pointers remain until full inbound-link inventory and independent QE confirm safe retirement.
 
 CI run 42365603990 completed SUCCESS with 11/11 document validator tests, DOC-040/DOC-055 CLI validation, evidence JSON identity check, and Ubuntu/Windows Preview Host tests. DOC-055 v3.2 currently has 81 unique DOC-ID rows and no duplicate Read orders or canonical paths.
+
+
+## G-002 / active pointer reference reconciliation — 2026-11-07
+
+A bounded alias-name search was followed by exact fetches of active standards and machine-readable Dashboard/WP files. Active references were corrected to DOC-001/006/023/033/034/035/055 canonical paths where applicable. Work 70's global AGENTS guidance now states that each Work's Manifest/Register defines its canonical record paths; Work 70's minutes, plan and journal are DOC-034, 04_PLAN/IMPLEMENTATION_ROADMAP.md and DOC-035. Historical references in DOC-040 (BB-70-001), DOC-058, DOC-035, DOC-041 and test fixtures are intentionally preserved. The 17 00_ROOT legacy-name files remain pointers only.
+
+Exact readback confirms the active DOC-002, verification checklist, Dashboard PRODUCT_STATUS/EXECUTION_STATUS and Work Package register no longer rely on WORK_MANIFEST.md / DOCUMENT_REGISTER.md / DECISION_LOG.md aliases. GitHub code-search index may lag; exact fetch is the authoritative verification. CI run 42365911872 completed SUCCESS. Pointer retirement remains BLOCKED pending full parsed inbound-link audit, Sandbox/PC parity and independent QE.
