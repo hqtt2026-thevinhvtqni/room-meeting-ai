@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ROOM-HOP Preview Registry",
+  "type": "object",
+  "required": ["schema_version", "works"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "works": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["work_id", "display_name", "enabled", "dashboard_root", "views"],
+        "additionalProperties": false,
+        "properties": {
+          "work_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,31}$"},
+          "display_name": {"type": "string", "minLength": 1},
+          "enabled": {"type": "boolean"},
+          "dashboard_root": {"type": "string", "minLength": 1},
+          "source_revision": {"type": ["string", "null"]},
+          "freshness_status": {"enum": ["FRESH", "STALE", "UNKNOWN"]},
+          "last_verified_at": {"type": ["string", "null"], "format": "date-time"},
+          "views": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    }
+  }
+}
