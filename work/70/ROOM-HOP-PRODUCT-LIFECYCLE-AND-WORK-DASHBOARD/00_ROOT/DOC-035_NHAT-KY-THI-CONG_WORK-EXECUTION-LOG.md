@@ -1236,3 +1236,16 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - **Trạng thái trước ghi:** GitHub main readback đã xác nhận DOC-034, DOC-039, DOC-040, DOC-033, DOC-056; DOC-006 và DOC-035 là canonical. Không có thao tác xóa hoặc di trú file trong lần ghi này.
 - **Trạng thái sau ghi:** chờ hoàn tất ghi và exact readback của DOC-034, DOC-040, DOC-006, DOC-035. Không tuyên bố toàn bộ chuẩn hóa cây thư mục đã PASS.
 - **Bước tiếp theo:** chạy đối soát một mã–một loại–một DOC-ID–một canonical path trên toàn Work; cập nhật validator/CI hiện hữu; chỉ xử lý alias sau kiểm tra inbound references và DOC-056.
+
+
+## 2026-11-07 — Xu / AI-01 — Đối soát DOC-ID và cập nhật đăng ký canonical DOC-073..DOC-077
+
+- **Phạm vi:** GitHub main, cây Work 70, DOC-055, DOC-056, DOC-041, các hồ sơ DOC-042..DOC-077 và validator mã văn bản hiện hữu.
+- **Phương pháp:** đọc recursive tree qua GitHub API (response truncated=false); fetch exact các hồ sơ DOC-040, DOC-055, DOC-056, DOC-042/043/044, DOC-073/074/075/077; phân tích các dòng DOC-ID/read-order trong DOC-055.
+- **Bằng chứng inventory:** Work 70 tree SHA 2257bcc2e3dbc3980911d95ff1e58a08245d7cf7. DOC-073/074/075/077 hiện có trên main; DOC-076 và DOC-078..DOC-083 không có trong tree. DOC-077 vẫn khai báo DOC-076 trong Depends on.
+- **Phát hiện:** DOC-055 v2.8 đã có mapping disposition cũ nhưng chưa có các hàng đăng ký canonical cho DOC-073/074/075/077. DOC-042/043/044 đang được dùng hợp lệ cho orchestration, AI role matrix và assignment contract; các bản process cũ phải được nhận diện qua DOC-073/074/075, không chiếm các ID hiện hành.
+- **Thao tác thực tế:** cập nhật DOC-055 lên v2.9, thêm bốn hàng canonical đã xác minh; nêu rõ DOC-076 và DOC-078..DOC-083 chỉ là reserved mappings, không phải file có sẵn; đánh dấu DOC-077 dependency unresolved / not ready. Cập nhật DOC-041 lên v1.4, thêm G-009 ghi nhận phạm vi đã xác minh và backlog.
+- **Commit:** DOC-055 cfe399ee2b97ebf8714ee8fc22f9e8a2209184e3; DOC-041 commit sẽ được ghi bổ sung sau khi GitHub xác nhận.
+- **Giới hạn:** chưa sửa DOC-001, chưa đổi tên thư mục, chưa sửa/xóa legacy sources, chưa chạy parsed inbound-link scan, chưa xác minh Git history/hash pair cho từng bản, chưa đồng bộ Sandbox, chưa chạy independent QE. Không tuyên bố migration hoàn tất hoặc toàn bộ chuẩn hóa PASS.
+- **Kết quả:** REGISTER RECONCILIATION = PARTIAL; DOC-055 entries added for 4 verified copies; DOC-077 = NOT READY due absent DOC-076; full legacy migration = OPEN.
+- **Bước tiếp theo:** xác minh exact readback DOC-055/DOC-041/DOC-035; bổ sung uniqueness assertions cho validator hiện hữu; thực hiện inbound-link + alias mapping trước mọi thao tác cleanup.
