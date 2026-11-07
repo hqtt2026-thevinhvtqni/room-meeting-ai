@@ -11,6 +11,10 @@ from pathlib import Path
 
 SERVER = Path(__file__).with_name("server.py")
 
+class NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
 class PreviewHostTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
@@ -31,6 +35,7 @@ class PreviewHostTests(unittest.TestCase):
              "--repo-root",str(self.root),"--host","127.0.0.1","--port",str(self.port)],
             stdout=subprocess.PIPE,stderr=subprocess.PIPE)
         self.base = f"http://127.0.0.1:{self.port}"
+        self.opener = urllib.request.build_opener(NoRedirect)
         for _ in range(40):
             if self.proc.poll() is not None:
                 self.fail("Preview Host exited during startup")
@@ -58,7 +63,7 @@ class PreviewHostTests(unittest.TestCase):
     def request(self,path,method="GET"):
         req=urllib.request.Request(self.base+path,method=method)
         try:
-            with urllib.request.urlopen(req,timeout=2) as r: return r.status,r.read(),r.headers
+            with self.opener.open(req,timeout=2) as r: return r.status,r.read(),r.headers
         except urllib.error.HTTPError as e: return e.code,e.read(),e.headers
 
     def test_work_route_serves_html(self):
