@@ -4,7 +4,7 @@
 - **Read order:** 1
 - **Depends on:** NONE
 - **Status:** ACTIVE
-- **Version / Updated:** 1.4 / 2026-10-30
+- **Version / Updated:** 1.5 / 2026-11-07
 - Work ID: 70
 - Work Name: ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD
 - Product: ROOM-HOP Work Master Standard & Per-Work Dashboard
@@ -20,7 +20,7 @@
 - Scope: reusable Work lifecycle, WP model, evidence/gates, dashboard reference, storage/export design and future migration standard.
 
 ## Canonical top-level directory set
-00_ROOT, 01_DISCOVER, 02_DEFINE, 03_ARCHITECT, 04_PLAN, 05_BUILD, 06_VERIFY, 06_EVIDENCE, 07_ACCEPT, 08_RELEASE, 09_OPERATE, DASHBOARD.
+00_ROOT, 01_DISCOVER, 02_DEFINE, 03_ARCHITECT, 04_PLAN, 05_BUILD, 06_VERIFY, EVIDENCE, 07_ACCEPT, 08_RELEASE, 09_OPERATE, DASHBOARD.
 
 ## 05_BUILD role
 05_BUILD is a mapping and engineering coordination layer, not the canonical home of original Work documents or product source files. It may contain mapping registers, execution pointers, temporary working copies, build/test coordination metadata and links to canonical artifacts. Each mapping must identify the canonical path/URI and exact version/commit. A file physically present in 05_BUILD is not automatically an original or authoritative source.
@@ -32,7 +32,7 @@
 - Bản vẽ/mô hình sản phẩm (design/model): 03_ARCHITECT.
 - Nhật ký thi công (execution log): 00_ROOT as the Work-wide chronological record; technical detail may be linked from 05_BUILD.
 - Product source code and tests belong to the canonical source repository/path explicitly declared for that Work; 05_BUILD only maps to them.
-- Cross-phase verified evidence belongs to top-level 06_EVIDENCE. 05_BUILD/06_EVIDENCE may stage temporary build evidence before it is registered canonically.
+- Cross-phase verified evidence belongs to top-level EVIDENCE. 05_BUILD/06_EVIDENCE may stage temporary build evidence before it is registered canonically.
 - Acceptance, release and operations records belong to 07_ACCEPT, 08_RELEASE and 09_OPERATE respectively.
 
 ## Canonical 05_BUILD child directory set
@@ -45,7 +45,7 @@ These are navigation/mapping/execution areas, not independent canonical source r
 3. Core is the intended authoritative system for identity, authorization, lifecycle state and canonical evidence metadata.
 4. Dashboard is read-only.
 5. Work Packages are planned/owned at Work level; 05_BUILD may map each WP to engineering areas and source artifacts.
-6. Top-level 06_EVIDENCE is the cross-phase evidence index; 05_BUILD/06_EVIDENCE is build-specific staging only.
+6. Top-level EVIDENCE/ is the cross-phase evidence index; 05_BUILD/06_EVIDENCE is build-specific staging only.
 7. No evidence, no PASS. Unknown is not PASS. File creation is not product verification.
 8. No migration of other Works is included in this Work's current scope.
 9. No file in 05_BUILD becomes canonical merely by being copied, committed or referenced there.
@@ -76,3 +76,7 @@ These are navigation/mapping/execution areas, not independent canonical source r
 - All AI participants must follow 00_ROOT/DOC-002_TIEU-CHUAN-TIEP-NHAN-DU-AN_AI-PROJECT-INTAKE-STANDARD.md v1.0 and 00_ROOT/DOC-033_TIEU-CHUAN-TAI-LIEU-VA-LUU-TRU_WORK-DOCUMENTATION-AND-STORAGE-STANDARD.md v1.0 before material changes.
 - Use 00_ROOT/PROJECT_INTAKE_REPORT_TEMPLATE.md for a consistent intake report.
 - Work-specific instructions may add constraints but may not weaken the shared evidence, authority, storage and status rules.
+
+
+## 2026-11-07 structure correction
+The canonical cross-phase evidence directory is `EVIDENCE/` (un-numbered), not `06_EVIDENCE/`. `06_VERIFY/` remains the only top-level item numbered 06 and owns verification procedures/tests. `05_BUILD/06_EVIDENCE/` remains a separate temporary build-staging area. The former top-level `06_EVIDENCE/` is a legacy compatibility path only during controlled migration; do not write new evidence there. See D70-021, DOC-055 and DOC-056.
