@@ -4,7 +4,7 @@
 - **Read order:** 2
 - **Depends on:** DOC-001
 - **Status:** ACTIVE
-- **Version / Updated:** 1.3 / 2026-11-07
+- **Version / Updated:** 1.4 / 2026-11-07
 Version: 1.1
 Effective date: 2026-10-30
 Status: ACTIVE / ADOPTED BY PRODUCT OWNER
