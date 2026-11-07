@@ -17,7 +17,7 @@ Status: OPEN — NOT YET EXECUTED
 ## B. WP and evidence
 - [ ] BUILD_REGISTER validates against WORK_PACKAGE.schema.json.
 - [ ] Each WP has owner, independent reviewer, objective, build areas, dependencies and acceptance criteria.
-- [ ] Top-level 06_EVIDENCE register/schema validate.
+- [ ] Top-level EVIDENCE register/schema validate.
 - [ ] Evidence states distinguish RECORDED from VERIFIED.
 - [ ] No secrets or private credentials are present.
 
