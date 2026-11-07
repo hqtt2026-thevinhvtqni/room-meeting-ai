@@ -11,6 +11,16 @@ def ledger(rows):
     return "\n".join([header, separator, *rows])
 
 class ValidatorTests(unittest.TestCase):
+    def test_rejects_duplicate_doc_ids_in_document_register(self):
+        duplicate_register = REGISTER + "\\n| DOC-034 | P2 | 32 | Duplicate | 00_ROOT/DOC-034.md | — | ACTIVE | Duplicate ID |"
+        errors, _ = validate(duplicate_register, ledger([]))
+        self.assertTrue(any("duplicate DOC-ID DOC-034" in e for e in errors))
+
+    def test_rejects_duplicate_read_order_in_document_register(self):
+        duplicate_order_register = REGISTER + "\\n| DOC-041 | P1 | 31 | Duplicate order | 00_ROOT/DOC-041.md | — | ACTIVE | Duplicate order |"
+        errors, _ = validate(duplicate_order_register, ledger([]))
+        self.assertTrue(any("duplicate read order 31" in e for e in errors))
+
     def test_legacy_reference_is_allowed_but_not_counted_as_new(self):
         row = "| 001 | BB-70-001 | DOC-034 | BB | Minutes | 2026-10-30 | Xu | Vinh | D70-011 | LEGACY_REFERENCE — historical | 00_ROOT/BIEN_BAN.md | Original minutes |"
         errors, counts = validate(REGISTER, ledger([row]))
