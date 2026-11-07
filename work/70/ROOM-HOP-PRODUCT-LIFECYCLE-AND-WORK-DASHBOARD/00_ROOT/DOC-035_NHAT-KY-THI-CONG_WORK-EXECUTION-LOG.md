@@ -1390,3 +1390,22 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - **Không thực hiện:** không sửa source, không đổi port/bind, không restart/stop PID 17572, không thay registry, không mở host ra mạng, không cấu hình Tailscale, không thay đổi Gate/acceptance/release.
 - **Bước tiếp theo:** đọc trực tiếp nội dung `%TEMP%\work70-dashboard.html` hoặc trích xuất script bằng phương pháp không phụ thuộc PSReadLine; xác định chính xác fetch URL và JSON nguồn; kiểm tra các asset/link tương đối; sau đó mới lập test dữ liệu và browser interaction. Tiếp tục giữ Preview Host bind local `127.0.0.1:8060` cho đến khi có quyết định triển khai private access riêng.
 - **Trạng thái Work:** Work 70 vẫn **ACTIVE / NOT RELEASED**; chưa mở Gate hoặc đánh dấu Dashboard ACCEPTED.
+
+
+## 2026-11-07 — Xu / AI-01 — Kiểm tra route và JSON của Preview Host Work 70
+
+- **Phạm vi:** PC Windows; Preview Host local tại `127.0.0.1:8060`; kiểm tra health endpoint, Execution Dashboard, JSON snapshot và các đường dẫn liên quan.
+- **Phương pháp:** người dùng thực chạy PowerShell `Invoke-WebRequest` với timeout 10 giây cho 7 URL: `/healthz`, `/work/70/`, `/work/70/execution/`, `/work/70/execution/EXECUTION_STATUS.json`, `/work/70/EXECUTION_STATUS.json`, `/work/70/index.html`, `/work/70/product/index.html`.
+- **Kết quả HTTP thực tế:**
+  - `/healthz`: HTTP 200, `application/json; charset=utf-8`, 98 bytes.
+  - `/work/70/`: HTTP 200, `text/html; charset=utf-8`, 7,617 bytes.
+  - `/work/70/execution/`: HTTP 200, `text/html; charset=utf-8`, 7,617 bytes.
+  - `/work/70/execution/EXECUTION_STATUS.json`: HTTP 200, `application/json; charset=utf-8`, 6,443 bytes; parse JSON thành công, `work_id=70`, `data_integrity.freshness=STALE`.
+  - `/work/70/EXECUTION_STATUS.json`: HTTP 404.
+  - `/work/70/index.html`: HTTP 404.
+  - `/work/70/product/index.html`: HTTP 200, `text/html; charset=utf-8`, 7,422 bytes.
+- **Đánh giá:** health endpoint và các route dashboard được kiểm tra thành công. Execution Dashboard có route chuẩn `/work/70/execution/`; JSON được phục vụ tại sibling path `/work/70/execution/EXECUTION_STATUS.json`. Hai URL thiếu segment `execution` trả 404, phù hợp với route mapping hiện quan sát được; không xem đây là lỗi của route chuẩn. JSON xác nhận snapshot freshness là STALE, không phải dữ liệu Core live.
+- **Trạng thái:** HTTP route smoke test = **PASS** cho 5/7 URL; hai URL còn lại = **EXPECTED 404 / NON-CANONICAL PATH**. JSON parse/identity/freshness read = **PASS**. Browser rendering, JavaScript fetch thực tế từ trình duyệt, interaction, auto-refresh, Core live integration và E2E = **NOT VERIFIED**.
+- **Không thực hiện:** không sửa source/registry, không restart hoặc dừng Preview Host, không đổi bind/port, không expose ra mạng, không thay đổi Gate/acceptance/release.
+- **Bước tiếp theo:** kiểm tra trong trình duyệt DevTools (công cụ nhà phát triển) xem Execution Dashboard thực sự fetch JSON từ URL nào khi mở từng route; đối chiếu relative links và sửa chỉ khi có bằng chứng lỗi thực tế. Giữ host ở `127.0.0.1:8060`.
+- **Trạng thái Work:** Work 70 vẫn **ACTIVE / NOT RELEASED**; Dashboard chưa được nghiệm thu.
