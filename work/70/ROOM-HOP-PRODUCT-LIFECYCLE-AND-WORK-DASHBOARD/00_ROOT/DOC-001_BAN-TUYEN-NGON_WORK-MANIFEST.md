@@ -74,7 +74,7 @@ These are navigation/mapping/execution areas, not independent canonical source r
 
 ## Mandatory AI operating standard
 - All AI participants must follow 00_ROOT/DOC-002_TIEU-CHUAN-TIEP-NHAN-DU-AN_AI-PROJECT-INTAKE-STANDARD.md v1.0 and 00_ROOT/DOC-033_TIEU-CHUAN-TAI-LIEU-VA-LUU-TRU_WORK-DOCUMENTATION-AND-STORAGE-STANDARD.md v1.0 before material changes.
-- Use 00_ROOT/PROJECT_INTAKE_REPORT_TEMPLATE.md for a consistent intake report.
+- Use 00_ROOT/DOC-023_BIEU-MAU-BAO-CAO-TIEP-NHAN_DU-AN-PROJECT-INTAKE-REPORT-TEMPLATE.md for a consistent intake report.
 - Work-specific instructions may add constraints but may not weaken the shared evidence, authority, storage and status rules.
 
 
