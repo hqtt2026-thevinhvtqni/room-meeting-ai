@@ -57,4 +57,4 @@
 - **Hành động:** Xu duy trì một nguồn canonical cho mỗi hồ sơ; rà soát và hợp nhất alias/trùng lặp theo DOC-056; cập nhật validator/CI để chặn DOC-ID, mã văn bản, canonical path và số mục trùng; ghi mọi thao tác vào DOC-035.
 
 
-**Đính chính đường dẫn hiện hành — 2026-11-07:** nội dung lịch sử ở trên giữ nguyên tham chiếu `DECISION_LOG.md`. Theo chuẩn DOC-056, đường dẫn này hiện chỉ là compatibility pointer; sổ quyết định canonical duy nhất là `00_ROOT/DECISION_LOG.md`. Không ghi quyết định mới vào pointer.
+**Đính chính đường dẫn hiện hành — 2026-11-07:** nội dung lịch sử ở trên giữ nguyên tham chiếu `DECISION_LOG.md`. Theo chuẩn DOC-056, đường dẫn này hiện chỉ là compatibility pointer; sổ quyết định canonical duy nhất là `00_ROOT/DOC-006_SO-QUYET-DINH_DECISION-LOG.md`. Không ghi quyết định mới vào pointer.
