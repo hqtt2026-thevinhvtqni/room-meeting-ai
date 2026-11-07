@@ -4,7 +4,7 @@
 - **Read order:** 3
 - **Depends on:** DOC-001
 - **Status:** ACTIVE
-- **Version / Updated:** 1.1 / 2026-10-30
+- **Version / Updated:** 1.2 / 2026-11-07
 
 Date: 2026-10-30
 Status: ACTIVE — readback verification required after every sync
