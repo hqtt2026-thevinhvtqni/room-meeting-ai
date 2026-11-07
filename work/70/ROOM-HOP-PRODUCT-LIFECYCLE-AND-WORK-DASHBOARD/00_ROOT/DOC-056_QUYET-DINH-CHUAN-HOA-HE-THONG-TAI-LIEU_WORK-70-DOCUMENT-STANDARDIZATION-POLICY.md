@@ -4,7 +4,7 @@
 - **Read order:** 56
 - **Depends on:** DOC-001; DOC-033; DOC-038; DOC-039; DOC-040; DOC-055
 - **Status:** ACTIVE — MIGRATION IN PROGRESS
-- **Version / Updated:** 1.0 / 2026-10-31
+- **Version / Updated:** 1.1 / 2026-11-07
 - **Owner:** Xu / AI-01
 - **Authority:** Vinh
 
@@ -49,7 +49,7 @@ Không đổi tên theo kiểu sửa lẻ từng file khi phát hiện. Thực h
 ## 5. Phạm vi ưu tiên
 Batch 1: 00_ROOT — tài liệu quản trị và compatibility pointers.
 Batch 2: 01_DISCOVER–09_OPERATE — tài liệu theo phase.
-Batch 3: 05_BUILD, 06_EVIDENCE, DASHBOARD — tài liệu kỹ thuật, schemas, runtime assets và mapping.
+Batch 3: 05_BUILD, EVIDENCE, DASHBOARD — tài liệu kỹ thuật, schemas, runtime assets và mapping.
 Batch 4: cross-links, branch refs, automated validators, independent QE.
 Không tuyên bố “toàn bộ Work 70 chuẩn hóa xong” cho đến khi tất cả batch được kiểm tra.
 
@@ -60,3 +60,7 @@ Ngoại lệ phải có lý do kỹ thuật, loại artifact, canonical path, ow
 Vinh là thẩm quyền cuối cùng. Xu được quyền tự thực hiện các thay đổi chuẩn hóa thường lệ trong phạm vi này, bao gồm cập nhật register, tên file, liên kết và aliases theo migration plan; không được tự ý xóa dữ liệu gốc hoặc thay đổi nội dung đã phát hành. Báo cáo kết quả theo bằng chứng, không xin duyệt từng file nhỏ.
 
 **English summary:** One stable DOC ID, one canonical path, one register, one naming rule, controlled aliases, automated validation and evidence-backed migration batches.
+
+
+## 8. 2026-11-07 canonical evidence-path correction
+The canonical cross-phase evidence directory is `EVIDENCE/` (un-numbered). `06_VERIFY/` remains the phase-06 verification directory. `05_BUILD/06_EVIDENCE/` remains build-only staging and is not the cross-phase evidence source. The former top-level `06_EVIDENCE/` is a legacy compatibility path during this migration; no new canonical artifacts may be written there. Migration uses the existing files and DOC IDs, updates DOC-055 and all active references, retains old paths as non-authoritative pointers where technically valid, and requires exact readback/link/CI checks before closure. This correction changes paths, not document identity or official-record type.
