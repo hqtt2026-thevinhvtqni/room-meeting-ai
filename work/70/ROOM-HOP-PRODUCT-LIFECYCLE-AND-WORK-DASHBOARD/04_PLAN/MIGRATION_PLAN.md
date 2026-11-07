@@ -27,7 +27,7 @@ Each existing Work may be standardized into the nine-phase lifecycle and receive
 - Product source code/tests live only in the source repository/path declared by the Work Manifest or controlled artifact register.
 - 05_BUILD is a mapping and engineering coordination layer. It may contain mapping registers, WP-to-build-area links, temporary working copies and technical execution pointers.
 - A 05_BUILD file is not canonical merely because it exists in the branch or Sandbox.
-- Top-level 06_EVIDENCE is the canonical cross-phase index; 05_BUILD/06_EVIDENCE is temporary staging only.
+- Top-level EVIDENCE is the canonical cross-phase index; 05_BUILD/06_EVIDENCE is temporary staging only.
 - Unknown destination → MIGRATION_REVIEW_QUEUE; do not guess.
 - Preserve historical evidence references and original timestamps/authors.
 
