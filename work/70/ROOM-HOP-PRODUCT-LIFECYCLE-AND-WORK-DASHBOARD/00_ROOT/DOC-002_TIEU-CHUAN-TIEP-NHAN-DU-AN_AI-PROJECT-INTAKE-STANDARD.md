@@ -46,9 +46,9 @@ Produce a concise intake report with confirmed facts/source references, assumpti
 
 ## 4. Standard output artifacts
 Each Work uses the approved lifecycle locations:
-- 00_ROOT/WORK_MANIFEST.md — identity, authority, scope, status, source repositories and sync boundaries.
-- 00_ROOT/DOCUMENT_REGISTER.md — stable document IDs, priority, read order and dependencies.
-- 00_ROOT/DECISION_LOG.md — binding decisions, rationale, authority and date.
+- 00_ROOT/DOC-001_BAN-TUYEN-NGON_WORK-MANIFEST.md — identity, authority, scope, status, source repositories and sync boundaries.
+- 00_ROOT/DOC-055_SO-DANG-KY-TAI-LIEU_WORK-70-DOCUMENT-REGISTER.md — stable document IDs, priority, read order and dependencies.
+- 00_ROOT/DOC-006_SO-QUYET-DINH_DECISION-LOG.md — binding decisions, rationale, authority and date.
 - 00_ROOT/DOC-034_BIEN-BAN_HOP-WORK-70-MINUTES.md — official meeting/minutes register (create only when adopting the Work's standard file set).
 - 00_ROOT/DOC-035_NHAT-KY-THI-CONG_WORK-EXECUTION-LOG.md — chronological Work-wide execution log.
 - 01_DISCOVER/DISCOVER_BRIEF.md — problem, users, context and evidence.
@@ -61,7 +61,7 @@ Each Work uses the approved lifecycle locations:
 - 07_ACCEPT/, 08_RELEASE/, 09_OPERATE/ — acceptance, release and operations records.
 - DASHBOARD/ — read-only status projection, never an independent authority.
 
-The four standard Work records are: BIÊN BẢN, KẾ HOẠCH, BẢN VẼ/MÔ HÌNH (when needed), and NHẬT KÝ THI CÔNG. Their exact canonical paths and ownership are defined by WORK_DOCUMENTATION_AND_STORAGE_STANDARD.md. Do not create competing copies.
+The four standard Work records are: BIÊN BẢN, KẾ HOẠCH, BẢN VẼ/MÔ HÌNH (when needed), and NHẬT KÝ THI CÔNG. Their exact canonical paths and ownership are defined by DOC-033_TIEU-CHUAN-TAI-LIEU-VA-LUU-TRU_WORK-DOCUMENTATION-AND-STORAGE-STANDARD.md. Do not create competing copies.
 
 ## 5. Mandatory AI handoff/report format
 Every AI contribution states: AI identity/role; Work/WP/scope; branch and starting commit; inspected files/evidence; changes (or read-only); commands/tests and exact results; status with evidence; risks/dependencies/next owner; ending commit and sync status.
