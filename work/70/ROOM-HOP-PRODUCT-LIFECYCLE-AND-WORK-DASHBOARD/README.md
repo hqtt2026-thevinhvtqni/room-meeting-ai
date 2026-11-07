@@ -26,7 +26,7 @@ WORK-<id>-<name>/
 │   ├── 03_ARCHITECTURE/
 │   ├── 04_CODE/
 │   ├── 05_TEST/
-│   ├── EVIDENCE/
+│   ├── 06_EVIDENCE/
 │   ├── 07_RELEASE/
 │   └── 10_AI_DEBUG_HANDOFF/
 ├── 06_VERIFY/
