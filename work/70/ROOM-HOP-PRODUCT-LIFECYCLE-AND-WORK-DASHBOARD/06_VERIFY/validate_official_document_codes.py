@@ -31,8 +31,40 @@ def registered_doc_ids(register_text: str) -> set[str]:
             if (m := DOC_ID_RE.match(line))}
 
 
-def validate(document_register: str, code_register: str) -> tuple[list[str], dict[str, int]]:
+def document_register_issues(document_register: str) -> list[str]:
+    """Detect duplicate DOC IDs and duplicate/non-numeric read orders in DOC-055."""
     errors: list[str] = []
+    seen_ids: set[str] = set()
+    seen_orders: set[str] = set()
+
+    for line_no, line in enumerate(document_register.splitlines(), start=1):
+        if not (m := DOC_ID_RE.match(line)):
+            continue
+        cells = split_table_row(line)
+        doc_id = m.group(1)
+        if doc_id in seen_ids:
+            errors.append(f"Document Register line {line_no}: duplicate DOC-ID {doc_id}")
+        seen_ids.add(doc_id)
+
+        if len(cells) < 3:
+            errors.append(f"Document Register line {line_no}: incomplete DOC-ID row")
+            continue
+        read_order = cells[2]
+        if not read_order.isdigit():
+            errors.append(
+                f"Document Register line {line_no}: non-numeric read order {read_order!r} for {doc_id}"
+            )
+        elif read_order in seen_orders:
+            errors.append(
+                f"Document Register line {line_no}: duplicate read order {read_order} for {doc_id}"
+            )
+        seen_orders.add(read_order)
+
+    return errors
+
+
+def validate(document_register: str, code_register: str) -> tuple[list[str], dict[str, int]]:
+    errors: list[str] = document_register_issues(document_register)
     known_doc_ids = registered_doc_ids(document_register)
     seen_codes: set[str] = set()
     counts = {"records": 0, "legacy": 0, "new": 0, "issued": 0}
