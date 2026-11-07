@@ -1126,3 +1126,13 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - **Register/log:** DOC-055 đã đăng ký DOC-088/089/090; DOC-035 đã có entry ghi nhận thao tác sync. Entry này tiếp tục ghi nhận xác minh readback; không sửa lịch sử.
 - **Trạng thái:** GITHUB MAIN SYNC + TREE AUDIT + SELECTED FILE READBACK PASS. Local PC pull/sync NOT VERIFIED; Python/PowerShell runtime tests NOT RUN; browser PC/mobile NOT RUN; Tailscale HTTPS NOT CONFIGURED; no live URL; not accepted/released; no Gate PASS.
 - **Bước tiếp theo:** local repo cần pull main, kiểm tra working tree trước khi cập nhật; chạy Python compile/unit tests và PowerShell start/status/stop; sau đó mở PC browser và Tailscale private HTTPS từ Android. Không cấu hình port/public exposure nếu chưa có xác minh firewall/access.
+
+## 2026-11-07 2026-11-07T04:49:09.833Z UTC — Xu / AI-01 — Hoàn thiện gói bootstrap và sửa lỗi Preview Host trước runtime test
+- **Sửa lỗi:** đồng nhất regex chèn nhãn PREVIEW / READ-ONLY vào trước thẻ đóng body; bổ sung assertion yêu cầu nhãn nằm bên trong body.
+- **Cải thiện kiểm thử:** urllib test client dùng NoRedirect để quan sát đúng HTTP 308 thay vì tự follow redirect; nếu không sửa, các test redirect sẽ nhận nhầm 200.
+- **Vận hành Windows:** PID/log chuyển ra %LOCALAPPDATA%/ROOM-HOP/PreviewHost, tránh làm bẩn Git working tree. Tạo bootstrap_preview_host.ps1: kiểm tra Git root, yêu cầu branch main + working tree sạch; tùy chọn fetch/pull --ff-only; py_compile; unittest; tùy chọn start và kiểm tra /healthz.
+- **Readback Sandbox:** server.py, test_server.py, preview_host.ps1, README.md và bootstrap script đã được đọc lại; marker của regex, assertion, LocalAppData, bootstrap và ff-only đều hiện diện.
+- **GitHub main:** các file sửa và bootstrap đã được cập nhật tuần tự; commit gần nhất của test_server.py: 3f31111b667433439e6823c114c3950f6919a52b. Các thay đổi trước đó đã đồng bộ DOC-088/089/090, Preview Host, Execution/Product Dashboard, schemas, Data Integrity note và cập nhật DOC-055/DOC-035.
+- **Kiểm thử thực thi:** Python compile/unit test NOT RUN; PowerShell NOT RUN; host NOT STARTED; browser PC/mobile NOT RUN; Tailscale HTTPS NOT CONFIGURED. Readback/source inspection không được xem là runtime PASS.
+- **Trạng thái:** CODE + BOOTSTRAP RECORDED; SANDBOX READBACK CONFIRMED; GITHUB MAIN SYNCED; RUNTIME NOT VERIFIED; NOT ACCEPTED/NOT RELEASED; NO GATE PASS.
+- **Bước tiếp theo:** chạy bootstrap trên PC Windows với tham số SyncMain và Start; xử lý mọi test failure trước khi mở truy cập Tailnet. Chỉ xác nhận URL sau khi health check, PC browser và Android Tailnet E2E đều có bằng chứng.
