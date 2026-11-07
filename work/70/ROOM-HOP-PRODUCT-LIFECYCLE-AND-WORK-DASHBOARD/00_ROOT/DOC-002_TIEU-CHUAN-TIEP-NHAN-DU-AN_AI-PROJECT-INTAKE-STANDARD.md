@@ -4,7 +4,7 @@
 - **Read order:** 2
 - **Depends on:** DOC-001
 - **Status:** ACTIVE
-- **Version / Updated:** 1.2 / 2026-10-30
+- **Version / Updated:** 1.3 / 2026-11-07
 Version: 1.1
 Effective date: 2026-10-30
 Status: ACTIVE / ADOPTED BY PRODUCT OWNER
@@ -49,8 +49,8 @@ Each Work uses the approved lifecycle locations:
 - 00_ROOT/WORK_MANIFEST.md — identity, authority, scope, status, source repositories and sync boundaries.
 - 00_ROOT/DOCUMENT_REGISTER.md — stable document IDs, priority, read order and dependencies.
 - 00_ROOT/DECISION_LOG.md — binding decisions, rationale, authority and date.
-- 00_ROOT/BIEN_BAN.md — official meeting/minutes register (create only when adopting the Work's standard file set).
-- 00_ROOT/NHAT_KY_THI_CONG.md — chronological Work-wide execution log.
+- 00_ROOT/DOC-034_BIEN-BAN_HOP-WORK-70-MINUTES.md — official meeting/minutes register (create only when adopting the Work's standard file set).
+- 00_ROOT/DOC-035_NHAT-KY-THI-CONG_WORK-EXECUTION-LOG.md — chronological Work-wide execution log.
 - 01_DISCOVER/DISCOVER_BRIEF.md — problem, users, context and evidence.
 - 02_DEFINE/PRODUCT_REQUIREMENTS.md — requirements, non-goals, constraints and acceptance criteria.
 - 03_ARCHITECT/ — canonical drawings, models, architecture and contracts.
