@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>ROOM-HOP — Work Execution Dashboard · Work 70</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1220;--panel:#121d30;--line:#26364e;--text:#e8eef8;--muted:#9aabc2;--blue:#78aaff;--green:#65d6a0;--amber:#f4c66b;--red:#ff8585}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:1180px;margin:auto;padding:26px 18px 56px}
+.top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap}
+h1{font-size:24px;margin:0 0 5px}.muted,small{color:var(--muted)}
+.pill{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:5px 10px;font-size:12px;color:var(--amber)}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;min-width:0}
+.k{font-size:11px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}.v{font-size:22px;font-weight:650;margin-top:4px}
+h2{font-size:16px;margin:0 0 12px}
+.row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding:9px 0}.row:last-child{border:0}
+.state{font-size:12px;font-weight:650;white-space:nowrap}.ok{color:var(--green)}.warn{color:var(--amber)}.bad{color:var(--red)}
+.notice{border:1px solid #826a36;background:#2a2417;color:#f7d995;padding:12px 14px;border-radius:10px;margin:14px 0;font-size:13px}
+.nav{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.nav a{color:var(--blue);text-decoration:none;border:1px solid var(--line);padding:6px 12px;border-radius:8px;font-size:13px}
+.nav a.active{background:#1a2a45;border-color:var(--blue)}
+.source-box{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.4}
+footer{margin-top:20px;color:var(--muted);font-size:12px}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main>
+<nav class="nav">
+  <a href="../index.html">Work Dashboard (legacy)</a>
+  <a class="active" href="./index.html">Work Execution</a>
+  <a href="../product/index.html">Product / Capability</a>
+</nav>
+<header class="top">
+  <div>
+    <div class="k">ROOM-HOP · WORK EXECUTION DASHBOARD</div>
+    <h1 id="title">Work 70 — đang tải…</h1>
+    <div class="muted" id="subtitle">Theo dõi tiến độ xây dựng Work, không phải metric vận hành sản phẩm.</div>
+  </div>
+  <span class="pill" id="sourcePill">ĐANG XÁC ĐỊNH NGUỒN</span>
+</header>
+<div class="notice" id="warning">Đang đọc EXECUTION_STATUS.json. Nếu thiếu nguồn → UNKNOWN. Không dùng mock data.</div>
+<section class="grid">
+  <article class="card"><div class="k">Current Phase</div><div class="v" id="phase">—</div><div class="muted" id="phaseDetail">—</div></article>
+  <article class="card"><div class="k">Work Packages</div><div class="v" id="wpTotal">—</div><div class="muted" id="wpDetail">—</div></article>
+  <article class="card"><div class="k">Open Blockers</div><div class="v" id="blockers">—</div><div class="muted">status ≠ CLOSED</div></article>
+  <article class="card"><div class="k">Evidence Recorded</div><div class="v" id="evidence">—</div><div class="muted">RECORDED only</div></article>
+</section>
+<section class="card">
+  <h2>Work Packages</h2>
+  <div id="wpList"><p class="muted">Chưa có dữ liệu.</p></div>
+</section>
+<section class="card" style="margin-top:14px">
+  <h2>Open Blockers</h2>
+  <div id="blockerList"><p class="muted">Chưa có dữ liệu.</p></div>
+</section>
+<section class="card" style="margin-top:14px">
+  <h2>Data Integrity & Provenance</h2>
+  <div id="integrity"></div>
+  <div class="source-box" id="sources"></div>
+</section>
+<footer>Work Execution Dashboard · Read-only · Nguồn: GitHub + Sandbox MCP 8030 · Go/AI-06 · Không có quyền đổi gate/state.</footer>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&","<":"<",">":">",'"':""","'":"&#39;"}[c]));
+const cls=s=>["PASS","DONE","FRESH","IN_PROGRESS","RECORDED"].includes(s)?"ok":["FAIL","BLOCKED","STALE","OPEN"].includes(s)?"bad":"warn";
+function render(d){
+  $("title").textContent="Work "+d.work_id+" — "+(d.work_name||d.product_name||"");
+  $("subtitle").textContent="Dashboard tiến độ xây dựng Work · "+(d.work_status||"");
+  const di=d.data_integrity||{};
+  $("sourcePill").textContent=(di.source_mode||"UNKNOWN").toUpperCase();
+  $("warning").textContent=di.warning_vi||"Nguồn đã đọc. Kiểm tra provenance bên dưới.";
+  const lc=d.lifecycle||{};
+  $("phase").textContent=lc.current_phase||"UNKNOWN";
+  $("phaseDetail").innerHTML=esc(lc.phase_status||"")+" · Gate: <span class=\"state "+cls(lc.gate_status)+"\">"+esc(lc.gate_status||"UNKNOWN")+"</span>";
+  const wps=d.work_packages||{};
+  $("wpTotal").textContent=wps.total!=null?wps.total:"—";
+  const bs=wps.by_status||{};
+  $("wpDetail").textContent=Object.entries(bs).map(([k,v])=>k+": "+v).join(" · ")||"—";
+  $("blockers").textContent=(d.blockers&&d.blockers.open_count!=null)?d.blockers.open_count:"—";
+  $("evidence").textContent=(d.evidence&&d.evidence.total_recorded!=null)?d.evidence.total_recorded:"—";
+  const items=wps.items||[];
+  $("wpList").innerHTML=items.length?items.map(p=>'<div class="row"><span><b>'+esc(p.wp_id)+'</b> · '+esc(p.title)+'<br><small>Owner: '+esc(p.owner)+' · Reviewer: '+esc(p.reviewer)+'</small></span><span class="state '+cls(p.status)+'">'+esc(p.status)+'</span></div>').join(""):'<p class="muted">Không có WP.</p>';
+  const bl=(d.blockers&&d.blockers.items)||[];
+  $("blockerList").innerHTML=bl.length?bl.map(b=>'<div class="row"><span><b>'+esc(b.id)+'</b> · '+esc(b.title)+'<br><small>'+esc(b.owner||"")+' · '+esc(b.severity||"")+'</small></span><span class="state '+cls(b.status)+'">'+esc(b.status)+'</span></div>').join(""):'<p class="muted">Không có blocker mở.</p>';
+  $("integrity").innerHTML=
+    '<div class="row"><span>Freshness</span><span class="state '+cls(di.freshness)+'">'+esc(di.freshness||"UNKNOWN")+'</span></div>'+
+    '<div class="row"><span>as_of (source)</span><span>'+esc(di.as_of||"UNKNOWN")+'</span></div>'+
+    '<div class="row"><span>retrieved_at</span><span>'+esc(di.retrieved_at||"UNKNOWN")+'</span></div>'+
+    '<div class="row"><span>no_mock_data</span><span class="state ok">'+esc(String(d.no_mock_data))+'</span></div>';
+  const srcs=di.primary_sources||[];
+  $("sources").innerHTML='<b>Primary sources</b><br>'+(srcs.length?srcs.map(s=>esc(s.source_id)+' · '+esc(s.source_path)+' · '+esc(s.verification_status)+' · retrieved '+esc(s.retrieved_at)).join('<br>'):'NONE');
+}
+fetch("./EXECUTION_STATUS.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw new Error("HTTP "+r.status);return r.json()}).then(render).catch(e=>{
+  $("title").textContent="Work Execution — Không tải được dữ liệu";
+  $("sourcePill").textContent="UNKNOWN";
+  $("warning").textContent="Không thể tải EXECUTION_STATUS.json ("+e.message+"). Giữ UNKNOWN; không hiển thị số liệu giả.";
+});
+</script>
+</body>
+</html>
