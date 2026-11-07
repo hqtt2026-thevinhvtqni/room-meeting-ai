@@ -1106,3 +1106,14 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - **Trạng thái hiện tại:** ACKNOWLEDGED — REVIEW NOT YET PERFORMED — NO PRODUCT CHANGE.
 - **Kết quả thao tác hồ sơ:** append-only entry vào DOC-035 trên GitHub main; không sửa nội dung lịch sử trước entry này. Chưa tuyên bố Sandbox parity hoặc readback sau commit cho đến khi xác minh.
 - **Người nhận/điều phối:** Xu / AI-01; quyền quyết định và nghiệm thu cuối: Vinh.
+
+
+## 2026-11-07 2026-11-07T04:43:48.416Z UTC — Xu / AI-01 — Đồng bộ gói Preview Host P1 lên GitHub main
+- **Phạm vi:** Shared Dashboard Preview Host, Work 70 pilot; đồng bộ DOC-088/089/090, Preview Host source và hai dashboard view.
+- **Nguồn:** Sandbox Work 70, đọc bằng sandbox_read_probe; tất cả file nguồn được readback status=ok trước khi ghi GitHub.
+- **Thay đổi Git:** các file được tạo tuần tự trên nhánh main gồm DOC-088, DOC-089, DOC-090; Preview Host server/registry/schema/README/PowerShell/test; Execution Dashboard HTML/JSON/schema; Product/Capability Dashboard HTML/JSON/schema; Data Integrity note.
+- **Kiểm tra trước đồng bộ:** JSON.parse PASS cho preview_registry.json, EXECUTION_STATUS.json, PRODUCT_CAPABILITY_STATUS.json. Đây là kiểm tra cú pháp JSON; không thay thế JSON Schema validation hoặc runtime test.
+- **Bảo vệ:** server bind mặc định 127.0.0.1; chỉ GET/HEAD; registry allowlist; path confinement; extension allowlist; security headers; không public exposure. Tailscale HTTPS chưa cấu hình.
+- **Giới hạn:** GitHub sync không chứng minh local checkout đã pull/sync; Python unit test, PowerShell, browser PC/mobile, security QE và Android HTTPS E2E vẫn NOT RUN. Không có URL live.
+- **Trạng thái:** GITHUB MAIN FILE SYNC DONE — readback pending; runtime NOT VERIFIED; NOT ACCEPTED; NOT RELEASED; không có Gate PASS.
+- **Bước tiếp theo:** kiểm tra commit/ref và readback file trên main; sau đó chạy local PC host và E2E. Không tự mở port công khai.
