@@ -36,6 +36,7 @@ def document_register_issues(document_register: str) -> list[str]:
     errors: list[str] = []
     seen_ids: set[str] = set()
     seen_orders: set[str] = set()
+    seen_paths: dict[str, str] = {}
 
     for line_no, line in enumerate(document_register.splitlines(), start=1):
         if not (m := DOC_ID_RE.match(line)):
@@ -46,9 +47,21 @@ def document_register_issues(document_register: str) -> list[str]:
             errors.append(f"Document Register line {line_no}: duplicate DOC-ID {doc_id}")
         seen_ids.add(doc_id)
 
-        if len(cells) < 3:
+        if len(cells) < 5:
             errors.append(f"Document Register line {line_no}: incomplete DOC-ID row")
             continue
+
+        canonical_path = cells[4]
+        if not canonical_path:
+            errors.append(f"Document Register line {line_no}: missing canonical path for {doc_id}")
+        elif canonical_path in seen_paths:
+            errors.append(
+                f"Document Register line {line_no}: duplicate canonical path {canonical_path} "
+                f"for {seen_paths[canonical_path]} and {doc_id}"
+            )
+        else:
+            seen_paths[canonical_path] = doc_id
+
         read_order = cells[2]
         if not read_order.isdigit():
             errors.append(
