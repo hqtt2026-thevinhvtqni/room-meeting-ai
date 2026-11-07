@@ -263,7 +263,12 @@ def test_ci_owned_browser_fixture_and_mcp_transcript_readback(ci_owned_browser_a
             return await integration.get_transcript(session, runtime["meeting_id"])
 
     transcript = asyncio.run(read_back_transcript())
-    transcript_text = json.dumps(transcript, ensure_ascii=False, sort_keys=True)
+    assert isinstance(transcript, list), transcript
+    transcript_text = "\\n".join(
+        str(item.get("content", ""))
+        for item in transcript
+        if isinstance(item, dict)
+    )
     assert marker in transcript_text
     assert result["execution_id"] in transcript_text
     assert result["evidence_id"] in transcript_text
