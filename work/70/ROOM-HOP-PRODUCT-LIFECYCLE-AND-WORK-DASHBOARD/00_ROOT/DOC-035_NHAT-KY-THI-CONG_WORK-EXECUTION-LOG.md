@@ -1093,3 +1093,16 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - **Giới hạn kiểm chứng:** chưa chạy JSON Schema validator Draft 2020-12 độc lập; chưa có validator được phê duyệt trong môi trường thao tác. REG-010 = NOT RUN / BLOCKED chờ validator. Chưa chạy benchmark AI/model; chưa tạo capability record VERIFIED; chưa tạo database/API/UI; chưa tích hợp Core, Dashboard, dispatch hoặc provider; chưa đo latency/chi phí.
 - **Kết luận:** Phase 1 static data contract CREATED; các kiểm tra cấu trúc thủ công và GitHub readback nêu trên PASS. Không tuyên bố full schema validation, model capability PASS hoặc runtime integration PASS.
 - **Bước tiếp theo:** chọn/cài validator JSON Schema Draft 2020-12 được phê duyệt; chạy negative/positive test cho schema; sau đó lập bộ test capability đầu tiên cho các AI participant với provider/model/version được xác nhận và evidence độc lập. Mọi capability giữ UNVERIFIED cho tới khi hoàn tất test.
+
+
+## 2026-11-07 10:57 +07:00 — Ka / AI-02 — ACK nhận nhiệm vụ Data Integrity (REVIEW / ARCHITECTURE ONLY)
+- **Record ID:** W70-KA-DATA-INTEGRITY-ACK-20261107-1057
+- **Priority:** P0
+- **Assignment:** Data Integrity — review và phản biện kiến trúc; không phải lệnh BUILD hoặc thay đổi sản phẩm.
+- **Xác nhận nhận việc:** Ka / AI-02 xác nhận đã nhận phạm vi REVIEW / ARCHITECTURE ONLY theo chỉ đạo của Vinh.
+- **Phạm vi được phép:** đọc, kiểm tra, đối chiếu bằng chứng; phân tích tính toàn vẹn dữ liệu ở mức kiến trúc; lập findings, risk, assumptions, evidence gaps và đề xuất/ADR để Xu/Vinh xem xét.
+- **Giới hạn bắt buộc:** không sửa sản phẩm/source; không thay đổi Core, API, DB/schema/data, runtime, Dashboard, permission hoặc deployment; không BUILD, migrate, execute mutation, merge, release hay tự nâng gate. Không mở rộng phạm vi ngoài chỉ đạo.
+- **Nguyên tắc bằng chứng:** mỗi finding phải có nguồn/path/ref/version hoặc commit SHA, phương pháp kiểm tra, kết quả quan sát và giới hạn; phân biệt VERIFIED / NOT VERIFIED / BLOCKED; không suy diễn PASS khi thiếu bằng chứng.
+- **Trạng thái hiện tại:** ACKNOWLEDGED — REVIEW NOT YET PERFORMED — NO PRODUCT CHANGE.
+- **Kết quả thao tác hồ sơ:** append-only entry vào DOC-035 trên GitHub main; không sửa nội dung lịch sử trước entry này. Chưa tuyên bố Sandbox parity hoặc readback sau commit cho đến khi xác minh.
+- **Người nhận/điều phối:** Xu / AI-01; quyền quyết định và nghiệm thu cuối: Vinh.
