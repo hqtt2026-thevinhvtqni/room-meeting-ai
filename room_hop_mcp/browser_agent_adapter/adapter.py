@@ -3,7 +3,9 @@ from __future__ import annotations
 import asyncio
 import json
 import os
+import queue
 import sys
+import threading
 import time
 import uuid
 from pathlib import Path
@@ -193,7 +195,9 @@ class Adapter:
         out = EVIDENCE / f"{req.work_id}-{int(time.time())}.json"
         out.write_text(json.dumps(final, indent=2, ensure_ascii=False), encoding="utf-8")
         final["evidence_json"] = str(out)
-        final["roomhop_submission"] = submit_to_roomhop(final)
+        # Playwright's synchronous API owns an event loop on this worker
+        # thread. Keep the MCP asyncio.run handoff on a separate worker.
+        final["roomhop_submission"] = submit_to_roomhop_worker(final)
         return final
 
 
@@ -336,6 +340,44 @@ def _mcp_timeout_seconds() -> float:
             f"ROOMHOP_MCP_TIMEOUT_SECONDS must be greater than 0 and at most {MAX_MCP_TIMEOUT_SECONDS:g}"
         )
     return timeout
+
+
+def submit_to_roomhop_worker(result: dict[str, Any]) -> dict[str, Any]:
+    """Run the synchronous MCP handoff away from Playwright's event-loop thread."""
+    outcome: queue.Queue[dict[str, Any]] = queue.Queue(maxsize=1)
+
+    def run_submission() -> None:
+        try:
+            outcome.put(submit_to_roomhop(result))
+        except Exception as exc:
+            outcome.put({
+                "status": "blocked",
+                "reason": f"MCP submission worker failed: {type(exc).__name__}: {exc}",
+            })
+
+    worker = threading.Thread(
+        target=run_submission,
+        name="roomhop-mcp-submission",
+        daemon=True,
+    )
+    worker.start()
+    # submit_to_roomhop enforces a maximum 120-second stdio timeout.
+    worker.join(timeout=MAX_MCP_TIMEOUT_SECONDS + 5)
+    if worker.is_alive():
+        return {
+            "status": "blocked",
+            "reason": "MCP submission worker did not exit within its bounded deadline; outcome is uncertain; do not retry automatically",
+            "worker_name": worker.name,
+            "timeout_seconds": MAX_MCP_TIMEOUT_SECONDS + 5,
+        }
+    try:
+        return outcome.get_nowait()
+    except queue.Empty:
+        return {
+            "status": "blocked",
+            "reason": "MCP submission worker exited without returning an outcome",
+            "worker_name": worker.name,
+        }
 
 
 def submit_to_roomhop(result: dict[str, Any]):
