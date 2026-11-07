@@ -26,6 +26,11 @@ class ValidatorTests(unittest.TestCase):
         errors, _ = validate(duplicate_path_register, ledger([]))
         self.assertTrue(any("duplicate canonical path 00_ROOT/BIEN_BAN.md" in e for e in errors))
 
+    def test_rejects_multiple_canonical_paths_in_one_register_row(self):
+        multi_path_register = REGISTER + "\n| DOC-041 | P1 | 41 | Multiple paths | 00_ROOT/ONE.md; 00_ROOT/TWO.md | — | ACTIVE | Multiple paths |"
+        errors, _ = validate(multi_path_register, ledger([]))
+        self.assertTrue(any("multiple canonical paths listed for DOC-041" in e for e in errors))
+
     def test_legacy_reference_is_allowed_but_not_counted_as_new(self):
         row = "| 001 | BB-70-001 | DOC-034 | BB | Minutes | 2026-10-30 | Xu | Vinh | D70-011 | LEGACY_REFERENCE — historical | 00_ROOT/BIEN_BAN.md | Original minutes |"
         errors, counts = validate(REGISTER, ledger([row]))
