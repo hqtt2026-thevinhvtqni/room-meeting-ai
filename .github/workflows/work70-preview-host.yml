@@ -26,6 +26,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+        with:
+          ref: main
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -39,3 +41,17 @@ jobs:
       - name: Run black-box tests
         working-directory: work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/05_BUILD/04_CODE/preview_host
         run: python -m unittest -v test_server.py
+
+      - name: Exercise Windows bootstrap and local HTTP host
+        if: runner.os == 'Windows'
+        shell: pwsh
+        working-directory: work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/05_BUILD/04_CODE/preview_host
+        run: |
+          .\bootstrap_preview_host.ps1 -SyncMain -Start -Port 18060
+          try {
+            $response = Invoke-WebRequest -Uri 'http://127.0.0.1:18060/work/70/execution/' -TimeoutSec 5
+            if ($response.StatusCode -ne 200) { throw 'Execution Dashboard HTTP check failed.' }
+          }
+          finally {
+            .\preview_host.ps1 -Action Stop -Port 18060
+          }
