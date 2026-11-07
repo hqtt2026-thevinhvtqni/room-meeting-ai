@@ -33,7 +33,7 @@ class PreviewHostTests(unittest.TestCase):
         self.proc = subprocess.Popen(
             [sys.executable,str(SERVER),"--registry",str(self.registry),
              "--repo-root",str(self.root),"--host","127.0.0.1","--port",str(self.port)],
-            stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+            stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
         self.base = f"http://127.0.0.1:{self.port}"
         self.opener = urllib.request.build_opener(NoRedirect)
         for _ in range(40):
