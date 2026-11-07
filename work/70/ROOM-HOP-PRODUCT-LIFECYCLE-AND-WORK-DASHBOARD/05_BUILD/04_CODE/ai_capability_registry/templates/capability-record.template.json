@@ -1,0 +1,31 @@
+{
+  "capability_id": "CAP-EXAMPLE-001",
+  "technology_family": "UNKNOWN",
+  "task": "Describe one narrowly testable capability",
+  "modality_in": [
+    "UNKNOWN"
+  ],
+  "modality_out": [
+    "UNKNOWN"
+  ],
+  "provider": "UNKNOWN",
+  "model_id": "UNKNOWN",
+  "model_version": "UNKNOWN",
+  "deployment_mode": "UNKNOWN",
+  "tool_or_endpoint": "UNKNOWN",
+  "capability_status": "UNVERIFIED",
+  "verification_date": null,
+  "test_method": "NOT_RUN",
+  "test_dataset_or_case": "NOT_RUN",
+  "result": "NOT_RUN — no capability claim",
+  "limitations": [
+    "Not tested; do not use as evidence for task assignment."
+  ],
+  "latency_cost_resource_notes": "NOT MEASURED",
+  "security_privacy_constraints": "UNKNOWN — security/privacy review required before use",
+  "evidence_uri": null,
+  "evidence_hash": null,
+  "reviewer": "UNKNOWN",
+  "next_review_date": null,
+  "freshness_status": "UNVERIFIED"
+}
