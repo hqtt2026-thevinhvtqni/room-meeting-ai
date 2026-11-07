@@ -102,4 +102,4 @@ jobs:
         run: |
           python -m json.tool EVIDENCE/EVIDENCE_REGISTER.json > /dev/null
           python -m json.tool EVIDENCE/EVIDENCE_REGISTER.schema.json > /dev/null
-          python -c "import json; d=json.load(open('EVIDENCE/EVIDENCE_REGISTER.json', encoding='utf-8')); ids=[x['evidence_id'] for x in d['evidence']]; assert d['work_id']=='70'; assert len(ids)==len(set(ids)), 'duplicate evidence_id'; assert all(x.get('state') in {'MISSING','RECORDED','VERIFIED','REJECTED'} for x in d['evidence']), 'invalid evidence state'"
+          python -c "import json; d=json.load(open('EVIDENCE/EVIDENCE_REGISTER.json', encoding='utf-8')); ids=[x['evidence_id'] for x in d['evidence']]; assert d['work_id']=='70'; assert d['schema_version']=='1.1'; assert len(ids)==len(set(ids)), 'duplicate evidence_id'; assert all(x.get('state') in {'MISSING','RECORDED','VERIFIED','REJECTED'} for x in d['evidence']), 'invalid evidence state'"
