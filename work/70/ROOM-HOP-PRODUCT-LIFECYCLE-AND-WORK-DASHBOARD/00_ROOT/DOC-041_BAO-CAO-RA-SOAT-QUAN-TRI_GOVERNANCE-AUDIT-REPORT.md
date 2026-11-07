@@ -180,3 +180,10 @@ The evidence JSON initially lacked required `schema_version`; it was corrected t
 DOC-055 v3.1 now records DOC-013 with one canonical path (`BUILD_REGISTER.json` on the 05_BUILD mapping branch); `BUILD_REGISTER.md` is a read-only projection, schemas are technical artifacts. DOC-014 likewise has one canonical JSON source. The existing validator now rejects duplicate DOC-ID, duplicate/non-numeric Read order, missing canonical path and duplicate canonical path. CI run 42365466946 completed SUCCESS: 11/11 unit tests, CLI validation of DOC-040/DOC-055, EVIDENCE JSON/identity checks, Preview Host Ubuntu and Windows all passed. The preceding run 42365401117 failed only because the new test fixture used an escaped literal newline; the fixture was corrected and the later run passed.
 
 **Current register snapshot:** 81 DOC-ID rows; 81 unique IDs; no duplicate Read orders; no duplicate canonical path values. This validates the DOC-055 register snapshot, not the entire repository's unregistered legacy files. The substantive DOC-042..DOC-052 legacy collision remains OPEN because seven re-identified copies are absent and original sources have not been converted to pointers. Full parsed link audit and independent QE remain OPEN.
+
+
+## G-002 / compatibility-path inventory update — 2026-11-07
+
+DOC-029 is now stored at canonical DOC-prefixed path `00_ROOT/DOC-029_THONG-BAO-CAU-TRUC-CU_LEGACY-SCAFFOLD-NOTICE.md`; the former root-level path is a pointer only. A direct sample-by-file readback of the 17 non-DOC-prefixed files under 00_ROOT confirmed they are compatibility pointers to canonical DOC files (not independent sources). The old `06_EVIDENCE/` directory likewise contains only pointer files; `EVIDENCE/` holds the canonical evidence records. These pointers remain until full inbound-link inventory and independent QE confirm safe retirement.
+
+CI run 42365603990 completed SUCCESS with 11/11 document validator tests, DOC-040/DOC-055 CLI validation, evidence JSON identity check, and Ubuntu/Windows Preview Host tests. DOC-055 v3.2 currently has 81 unique DOC-ID rows and no duplicate Read orders or canonical paths.
