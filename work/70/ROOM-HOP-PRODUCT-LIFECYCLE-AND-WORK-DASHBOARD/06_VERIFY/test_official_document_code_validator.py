@@ -22,7 +22,7 @@ class ValidatorTests(unittest.TestCase):
         self.assertTrue(any("duplicate read order 31" in e for e in errors))
 
     def test_rejects_duplicate_canonical_paths_in_document_register(self):
-        duplicate_path_register = REGISTER + "\\n| DOC-041 | P1 | 41 | Duplicate path | 00_ROOT/BIEN_BAN.md | — | ACTIVE | Duplicate path |"
+        duplicate_path_register = REGISTER + "\n| DOC-041 | P1 | 41 | Duplicate path | 00_ROOT/BIEN_BAN.md | — | ACTIVE | Duplicate path |"
         errors, _ = validate(duplicate_path_register, ledger([]))
         self.assertTrue(any("duplicate canonical path 00_ROOT/BIEN_BAN.md" in e for e in errors))
 
