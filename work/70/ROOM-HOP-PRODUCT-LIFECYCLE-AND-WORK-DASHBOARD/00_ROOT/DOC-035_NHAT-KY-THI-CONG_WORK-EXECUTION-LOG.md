@@ -1354,3 +1354,11 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - **CI:** run 42366138648 — COMPLETED / SUCCESS. Document Register and Code Validation: validator compile PASS, 12/12 unit tests PASS, canonical DOC-040/DOC-055 CLI validation PASS, EVIDENCE JSON/identity validation PASS. Preview Host Ubuntu PASS; Preview Host Windows compile, black-box tests, bootstrap và local HTTP host PASS.
 - **Exact DOC-055 readback:** 81 rows; 81 unique DOC-IDs; no duplicate Read order; no duplicate canonical path; no multi-path path cells. DOC-013, DOC-014 và DOC-061 mỗi dòng chỉ có một canonical path.
 - **Trạng thái:** DOC-055 one-ID/one-type/one-path register checks = PASS; CI run 42366138648 = PASS. Repository-wide unregistered legacy duplicate IDs DOC-042..DOC-052 remain unresolved; do not delete/overwrite source originals.
+
+
+## Final verification correction — 2026-11-07 — GitHub main and prior Sandbox evidence boundary
+
+- **CI after governance-log updates:** run 42366201370 — COMPLETED / SUCCESS; Document Register and Code Validation, 12 unit tests, DOC-040/DOC-055 CLI validation, EVIDENCE JSON/identity check, Preview Host Ubuntu and Windows all passed.
+- **GitHub main exact tree:** tree SHA `e8293adffb5be786032b3172d14cc1aa966f37aa`, `truncated=false`; Work 70 has 138 blob files. Canonical `EVIDENCE/` contains 7 files; legacy `06_EVIDENCE/` contains 8 pointer-only files.
+- **Sandbox parity boundary:** DOC-055's 2026-11-02 migration addendum records prior byte-for-byte canonical-root Sandbox parity for DOC-035, DOC-041, DOC-055, DOC-073, DOC-074, DOC-075 and DOC-077. This turn did not repeat Sandbox 8030 readback for the newly relocated EVIDENCE files or updated documents; therefore EVIDENCE migration Sandbox parity is NOT RE-VERIFIED in this turn. Do not overwrite the earlier recorded evidence or claim new parity.
+- **Status:** GitHub main canonical path and CI checks = PASS; EVIDENCE Sandbox parity = NOT RE-VERIFIED THIS TURN; pointer retirement and DOC-042..DOC-052 identity migration = OPEN.
