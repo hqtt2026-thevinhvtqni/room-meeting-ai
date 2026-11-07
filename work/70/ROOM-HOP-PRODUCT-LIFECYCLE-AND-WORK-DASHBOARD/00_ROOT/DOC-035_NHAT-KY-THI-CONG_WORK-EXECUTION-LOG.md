@@ -1223,3 +1223,16 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - **Quyết định an toàn:** chưa xóa dữ liệu/tài liệu trong lần rà soát này. DOC-056 yêu cầu inventory, old→canonical mapping, inbound-link update, hash/history preservation, link check, independent QE và exact readback trước khi loại bỏ alias. Xóa trước các bước này có thể làm mất liên kết và tạo thêm nguồn sự thật không rõ ràng.
 - **Trạng thái:** AUDIT FINDINGS RECORDED; README DOC-037 READ ORDER RECONCILED. STRUCTURE NORMALIZATION = BLOCKED / NOT COMPLETE; DOC-ID REGISTER RECONCILIATION = BLOCKED; AUTOMATED STRUCTURE VALIDATOR = NOT IMPLEMENTED; DESTRUCTIVE CLEANUP = NOT RUN. Không tuyên bố PASS hoặc hoàn tất chuẩn hóa.
 - **Bước tiếp theo:** lập mapping canonical DOC-042..DOC-077; xác định và đăng ký DOC-073..DOC-077; chốt quy tắc đặt tên thư mục evidence cấp Work không trùng số phase; cập nhật Manifest/README/DOC-002/DOC-055 và toàn bộ links; thêm validator cấu trúc + DOC-ID uniqueness vào CI; sau đó mới loại bỏ các alias được chứng minh không còn inbound references và chạy independent QE.
+
+
+## 2026-11-07 — Xu / AI-01 — Ghi biên bản điều chỉnh và khóa nguyên tắc một văn bản / một nguồn
+- **Yêu cầu:** Vinh chỉ thị ghi biên bản điều chỉnh và nhật ký; nhấn mạnh văn bản lưu hành trong Work chỉ có một số, một loại, không phát sinh nguồn lạ.
+- **Phạm vi:** Work 70 GitHub `main`; cập nhật đúng các hồ sơ canonical đã đăng ký, không tạo DOC-ID mới hoặc file biên bản riêng.
+- **Biên bản:** bổ sung mục `BB-W70-20261107-001` vào sổ biên bản canonical DOC-034.
+- **Mã văn bản:** cấp mã BB theo DOC-039: `BB-W70-20261107-001`; đăng ký vào DOC-040. DOC-ID của sổ biên bản vẫn là DOC-034, không tạo DOC-ID khác cho cùng sổ.
+- **Quyết định:** ghi D70-020 vào DOC-006 theo chỉ thị trực tiếp của Vinh.
+- **Nguyên tắc khóa:** DOC-055 duy nhất cho DOC-ID/canonical path; DOC-039 duy nhất cho danh mục mã loại; DOC-040 duy nhất cho cấp mã nghiệp vụ; DOC-034 duy nhất cho biên bản; DOC-035 duy nhất cho nhật ký. Không tạo register, alias có nội dung, loại văn bản hoặc nguồn sự thật song song. File kỹ thuật chỉ là artifact kỹ thuật được phân loại/ánh xạ, không phải văn bản lưu hành.
+- **Kiểm soát xung đột:** phát hiện trùng số/loại/nội dung/đường dẫn hoặc không rõ thẩm quyền thì dừng, ghi UNKNOWN/BLOCKED, báo Xu; không tự chọn hoặc tự tạo nguồn mới.
+- **Trạng thái trước ghi:** GitHub main readback đã xác nhận DOC-034, DOC-039, DOC-040, DOC-033, DOC-056; DOC-006 và DOC-035 là canonical. Không có thao tác xóa hoặc di trú file trong lần ghi này.
+- **Trạng thái sau ghi:** chờ hoàn tất ghi và exact readback của DOC-034, DOC-040, DOC-006, DOC-035. Không tuyên bố toàn bộ chuẩn hóa cây thư mục đã PASS.
+- **Bước tiếp theo:** chạy đối soát một mã–một loại–một DOC-ID–một canonical path trên toàn Work; cập nhật validator/CI hiện hữu; chỉ xử lý alias sau kiểm tra inbound references và DOC-056.
