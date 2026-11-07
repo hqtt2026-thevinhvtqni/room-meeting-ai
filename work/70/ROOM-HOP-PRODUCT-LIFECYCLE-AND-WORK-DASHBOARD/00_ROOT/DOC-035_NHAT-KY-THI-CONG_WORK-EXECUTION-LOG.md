@@ -1162,3 +1162,13 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - **Non-blocking repository warning:** post-checkout cleanup của actions/checkout báo submodule path room-meeting-ai thiếu URL trong .gitmodules; job conclusion vẫn SUCCESS. Đây là cấu hình submodule sẵn có ngoài phạm vi Preview Host; không tự sửa để tránh tác động repo khác.
 - **Kết luận có giới hạn:** Python service/HTTP contract đã có CI evidence PASS trên Windows và Ubuntu. Không suy rộng thành PowerShell bootstrap PASS, local PC host PASS, Browser UI PASS, Android/Tailscale HTTPS PASS hoặc release.
 - **Trạng thái:** PREVIEW HOST PYTHON CI PASS 2/2 OS × 11/11 TESTS; LOCAL DEPLOYMENT NOT RUN; NOT ACCEPTED/NOT RELEASED; no Gate PASS.
+
+## 2026-11-07 2026-11-07T04:53:24.634Z UTC — Xu / AI-01 — Kết luận regression CI và hướng dẫn private HTTPS
+- **Regression Run ID:** 42340279493; commit code test: dae5cc99b4b5dccc1ddc954c9d7cb7aedb196e25.
+- **Windows:** SUCCESS; py_compile PASS; 11/11 tests PASS.
+- **Ubuntu:** SUCCESS; py_compile PASS; 11/11 tests PASS.
+- **Log review:** không còn ResourceWarning về unclosed subprocess PIPE. Còn cảnh báo post-checkout từ actions/checkout: submodule path room-meeting-ai thiếu URL trong .gitmodules; không ảnh hưởng conclusion SUCCESS và không thuộc phạm vi Preview Host.
+- **README:** bổ sung lệnh Tailscale Serve riêng tailnet: tailscale serve --bg 8060; kiểm tra bằng tailscale serve status; dừng bằng tailscale serve off. Ghi rõ không dùng Funnel, ACL vẫn áp dụng và HTTPS certificates phải được bật trong tailnet.
+- **GitHub:** README cập nhật commit 1b78947d4e8091da7e31a5b86b53af5094305fdc. Workflow CI đã có run evidence trên GitHub.
+- **Trạng thái:** PYTHON CI PASS 2 OS × 11 tests; code/readme synced; local PC bootstrap NOT RUN; local host NOT STARTED; Tailscale Serve NOT CONFIGURED; Android E2E NOT RUN; NOT ACCEPTED/NOT RELEASED; no Gate PASS.
+- **Bước tiếp theo / blocker:** cần thao tác trên PC Windows có local checkout, Git, Python và Tailscale đã đăng nhập. Chạy bootstrap script; sau health PASS mới bật Tailscale Serve và mở URL HTTPS riêng trên Android.
