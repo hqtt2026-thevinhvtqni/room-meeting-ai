@@ -14,7 +14,7 @@
 5. Create the Work Manifest, Document Register and the four coordinated records: Biên bản, Kế hoạch, Nhật ký thi công, and Bản vẽ/Mô hình when needed. Use the canonical paths defined by the Work's documentation/storage standard; do not create duplicate records.
 6. Define lifecycle gates, risks, dependencies and measurable acceptance criteria.
 7. Record the canonical Work Package plan in 04_PLAN. The 05_BUILD mapping register links each WP to build areas, canonical source files, exact versions and evidence references. Do not treat a 05_BUILD Build Register copy as the authoritative plan.
-8. Store cross-phase evidence references in top-level 06_EVIDENCE. 05_BUILD/06_EVIDENCE may stage temporary build evidence before canonical registration.
+8. Store cross-phase evidence references in top-level EVIDENCE. 05_BUILD/06_EVIDENCE may stage temporary build evidence before canonical registration.
 9. Confirm permissions, evidence paths, source ownership and auditability before execution.
 10. Verify GitHub/Sandbox synchronization for every governed write; write success alone is not PASS.
 
