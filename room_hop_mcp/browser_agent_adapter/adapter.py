@@ -11,6 +11,7 @@ from typing import Any
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
+from starlette.concurrency import run_in_threadpool
 from pydantic import BaseModel, Field
 from playwright.sync_api import sync_playwright, Browser, Page
 
@@ -482,9 +483,11 @@ def download(body: dict):
 
 
 @app.post("/browser/execute_workflow")
-def execute(req: WorkflowRequest):
+async def execute(req: WorkflowRequest):
     try:
-        return adapter.workflow(req)
+        # Keep synchronous Playwright and asyncio.run-based MCP handoff off
+        # the ASGI event-loop thread. The worker owns the complete workflow.
+        return await run_in_threadpool(adapter.workflow, req)
     except Exception as exc:
         raise HTTPException(500, detail={"error": str(exc), "logs": adapter.logs})
 
