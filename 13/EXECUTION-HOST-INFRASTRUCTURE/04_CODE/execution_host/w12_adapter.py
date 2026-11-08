@@ -182,7 +182,7 @@ class W12ExecutionAdapter:
             blocker=(
                 None
                 if result.status != "BLOCKED"
-                else "w12_execution_blocked"
+                else (getattr(result, "blocker", None) or "w12_execution_blocked")
             ),
             cleanup={
                 "timed_out": getattr(result, "timed_out", False),
