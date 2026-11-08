@@ -26,8 +26,10 @@ jobs:
         run: |
           python -m py_compile work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/04_CODE/rag_retrieval.py \
             work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/04_CODE/rag_eval.py \
+            work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/04_CODE/rag_evidence_support.py \
             work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/05_TEST/test_rag_retrieval.py \
-            work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/05_TEST/test_rag_eval.py
+            work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/05_TEST/test_rag_eval.py \
+            work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/05_TEST/test_rag_evidence_support.py
           echo "py_compile exit code: 0"
 
       - name: Unit tests (verbose)
@@ -35,6 +37,11 @@ jobs:
         run: |
           python -m unittest discover -s ../05_TEST -p "test_rag_retrieval.py" -v
           python -m unittest discover -s ../05_TEST -p "test_rag_eval.py" -v
+          python -m unittest discover -s ../05_TEST -p "test_rag_evidence_support.py" -v
+
+      - name: Evidence-support decision-set gate (Gate B; fails CI on any per-case mismatch)
+        working-directory: work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/04_CODE
+        run: python rag_evidence_support.py
 
       - name: Labeled retrieval evaluation (baseline gate, fails CI if below baseline)
         working-directory: work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/04_CODE

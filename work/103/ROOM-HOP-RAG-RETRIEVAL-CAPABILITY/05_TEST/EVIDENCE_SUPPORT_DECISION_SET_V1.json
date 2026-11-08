@@ -1,0 +1,515 @@
+{
+  "dataset_id": "work103.evidence-support-decisions.v1",
+  "version": 1,
+  "created": "2026-11-08 (UTC+07:00)",
+  "schema": "Per 03_ARCHITECTURE/EVIDENCE_SUPPORT_STAGE_CONTRACT_V3.md. Each row is one fact request: query, expected five-state decision, fact spec (declared, reviewed patterns), retrieved candidate spans with exact provenance, rationale, and adjudication record.",
+  "scope_matching_rule": "A source_scope covers a query_scope iff the strings are equal or source_scope is '*'. Any wider interpretation must be declared explicitly in a reviewed pattern row; there are no implicit scope hierarchies.",
+  "value_conflict_rule": "Two usable spans conflict iff they extract different casefolded values with the same fact_id and the same value_scope. A candidate only contributes a value when its declared 'scope' equals the pattern's 'value_scope' (or the value_scope is 'default'). Scoped differences (e.g. 'legacy' vs 'current') are NOT conflicts; no authority/recency resolution policy is approved, so any same-scope value difference fails closed as CONFLICTING_EVIDENCE.",
+  "required_case_families": [
+    "T1", "T2", "T3", "T4a", "T4b", "T5", "T6", "T7",
+    "C_SUPPORTED", "C_NO_CANDIDATES", "C_SCOPED_DIFFERENCE"
+  ],
+  "required_decisions": [
+    "SUPPORTED", "EXPLICITLY_UNSPECIFIED", "CONTRADICTED",
+    "CONFLICTING_EVIDENCE", "INSUFFICIENT_EVIDENCE"
+  ],
+  "adjudication_record": {
+    "protocol": "Contract section B5: the dataset author may not be the sole adjudicator of any expected label. Initial label, independent decision, rationale, resolution, and reviewer identity are preserved per row. If reviewers disagree, the row stays unresolved and Gate A stays BLOCKED for release use.",
+    "author": "Vibe (GLM 5.3 via Vibe Work agent), 2026-11-08, under explicit build authorization from Vinh in the Work 103 coordination conversation.",
+    "independent_reviewer": null,
+    "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION",
+    "note": "Gate A sign-off by Xu/Ka (or a designated reviewer who did not author this dataset) is OPEN. Gate B CI execution on this dataset is build evidence only and is NOT a release claim. Q008 and Q037 are carried as non-gate-counted pending rows per Proposal V2 section 6."
+  },
+  "rows": [
+    {
+      "row_id": "T1",
+      "case_family": "T1",
+      "query": "Ngưỡng công suất RX cụ thể là bao nhiêu?",
+      "expected_decision": "EXPLICITLY_UNSPECIFIED",
+      "scope_limited_answers_enabled": true,
+      "gate_counted": true,
+      "fact": {
+        "fact_id": "ont.rx.threshold.value",
+        "query_scope": "00_CORPUS/network.md",
+        "absence_patterns": [
+          {
+            "regex": "không quy định ngưỡng công suất RX",
+            "source_scope": "00_CORPUS/network.md"
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "source_id": "00_CORPUS/network.md",
+          "chunk_id": "00_CORPUS/network.md#chunk-2",
+          "start_line": 4,
+          "end_line": 9,
+          "scope": "00_CORPUS/network.md",
+          "score": 0.41,
+          "text": "Khi thiết bị đầu cuối (modem ONT) mất tín hiệu hoặc gặp sự cố kết nối, cần thực hiện các bước kiểm tra sau:\n1. Kiểm tra công suất RX (Receive Power) trên thiết bị.\n2. Kiểm tra cảnh báo LOS (Loss of Signal) trên giao diện quản trị.\n3. Kiểm tra vật lý đầu nối sợi quang, đảm bảo không bị gãy, uốn cong quá mức hoặc bám bụi.\n\n*Lưu ý:* Tài liệu này không quy định ngưỡng công suất RX cụ thể (ví dụ: -27dBm đến -8dBm). Việc đánh giá ngưỡng cần tham khảo tài liệu kỹ thuật của nhà sản xuất thiết bị."
+        }
+      ],
+      "rationale": "Contract case T1: the retrieved span contains an explicit absence statement for the requested detail, and the query scope equals the statement's source scope, so a scope-limited EXPLICITLY_UNSPECIFIED answer citing the exact span is permitted.",
+      "adjudication": {
+        "author": "Vibe (GLM 5.3 via Vibe Work agent)",
+        "independent_reviewer": null,
+        "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION",
+        "initial_label": "EXPLICITLY_UNSPECIFIED",
+        "resolution": null
+      }
+    },
+    {
+      "row_id": "T2",
+      "case_family": "T2",
+      "query": "Ngưỡng công suất RX cụ thể là bao nhiêu?",
+      "expected_decision": "INSUFFICIENT_EVIDENCE",
+      "scope_limited_answers_enabled": true,
+      "gate_counted": true,
+      "fact": {
+        "fact_id": "ont.rx.threshold.value",
+        "query_scope": "00_CORPUS/network.md",
+        "absence_patterns": [
+          {
+            "regex": "không quy định ngưỡng công suất RX",
+            "source_scope": "00_CORPUS/network.md"
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "source_id": "00_CORPUS/architecture.md",
+          "chunk_id": "00_CORPUS/architecture.md#chunk-2",
+          "start_line": 9,
+          "end_line": 12,
+          "scope": "00_CORPUS/architecture.md",
+          "score": 0.31,
+          "text": "## Hợp đồng RAG (Initial contracts)\n- `rag_index`: lập chỉ mục tài liệu.\n- `rag_search(query, top_k=5)`: trả về kết quả tìm kiếm. Tham số `top_k` mặc định là 5 và phải là số dương (ném lỗi ValueError nếu <= 0).\n- `rag_get_context`: trả về `context`, `citations[]`, `sufficient_evidence`, và `abstention_reason?` khi không đủ bằng chứng."
+        }
+      ],
+      "rationale": "Contract case T2: same query as T1 but the chunk containing the absence statement is NOT retrieved. Absence of retrieval is never evidence that the source says 'not specified'; the stage must abstain without asserting absence.",
+      "adjudication": {
+        "author": "Vibe (GLM 5.3 via Vibe Work agent)",
+        "independent_reviewer": null,
+        "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION",
+        "initial_label": "INSUFFICIENT_EVIDENCE",
+        "resolution": null
+      }
+    },
+    {
+      "row_id": "T3",
+      "case_family": "T3",
+      "query": "Quy trình xử lý khi khách hàng yêu cầu thay đổi lịch giao hàng là gì?",
+      "expected_decision": "INSUFFICIENT_EVIDENCE",
+      "scope_limited_answers_enabled": true,
+      "gate_counted": true,
+      "fact": {
+        "fact_id": "sales.change_schedule_process",
+        "query_scope": "00_CORPUS/sales.md",
+        "absence_patterns": [
+          {
+            "regex": "không quy định chi tiết về quy trình xử lý khi khách hàng yêu cầu thay đổi lịch giao hàng",
+            "source_scope": "00_CORPUS/sales.md"
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "source_id": "00_CORPUS/sales.md",
+          "chunk_id": "00_CORPUS/sales.md#chunk-1",
+          "start_line": 1,
+          "end_line": 6,
+          "scope": "00_CORPUS/sales.md",
+          "score": 0.99,
+          "text": "# Quy trình xác nhận đơn hàng xi măng\n\n## Xác nhận đơn hàng\nKhi tiếp nhận yêu cầu từ khách hàng, nhân viên kinh doanh cần thực hiện hai bước xác nhận chính:\n1. Xác nhận lịch giao hàng cho đơn đặt hàng của khách hàng (Customer order delivery schedule).\n2. Xác nhận số lượng xi măng trong đơn hàng (Confirm cement quantity)."
+        }
+      ],
+      "rationale": "Contract case T3: high-scoring topically-related retrieval (schedule confirmation text) that does not contain the answer and does not contain the absence statement. Independence check: the decision must abstain despite score 0.99; the score may never act as a support signal.",
+      "adjudication": {
+        "author": "Vibe (GLM 5.3 via Vibe Work agent)",
+        "independent_reviewer": null,
+        "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION",
+        "initial_label": "INSUFFICIENT_EVIDENCE",
+        "resolution": null
+      }
+    },
+    {
+      "row_id": "T4a",
+      "case_family": "T4a",
+      "query": "Trong toàn bộ quy trình bán hàng, ai phê duyệt thay đổi lịch giao hàng?",
+      "expected_decision": "EXPLICITLY_UNSPECIFIED",
+      "scope_limited_answers_enabled": true,
+      "gate_counted": true,
+      "fact": {
+        "fact_id": "sales.change_approver",
+        "query_scope": "corpus",
+        "absence_patterns": [
+          {
+            "regex": "không quy định chi tiết về quy trình xử lý khi khách hàng yêu cầu thay đổi lịch giao hàng",
+            "source_scope": "00_CORPUS/sales.md"
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "source_id": "00_CORPUS/sales.md",
+          "chunk_id": "00_CORPUS/sales.md#chunk-2",
+          "start_line": 8,
+          "end_line": 8,
+          "scope": "00_CORPUS/sales.md",
+          "score": 0.52,
+          "text": "*Lưu ý:* Tài liệu này không quy định chi tiết về quy trình xử lý khi khách hàng yêu cầu thay đổi lịch giao hàng, cũng như không chỉ định tên hoặc vai trò cụ thể của người phụ trách phê duyệt thay đổi."
+        }
+      ],
+      "rationale": "Contract case T4a (B1 split): query scope exceeds the absence statement's source scope, but the pipeline CAN emit a scope-limited answer citing sales.md, so EXPLICITLY_UNSPECIFIED is admissible with scope_limited=true and the exact citation. The local absence statement is never generalized to the corpus.",
+      "adjudication": {
+        "author": "Vibe (GLM 5.3 via Vibe Work agent)",
+        "independent_reviewer": null,
+        "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION",
+        "initial_label": "EXPLICITLY_UNSPECIFIED",
+        "resolution": null
+      }
+    },
+    {
+      "row_id": "T4b",
+      "case_family": "T4b",
+      "query": "Trong toàn bộ quy trình bán hàng, ai phê duyệt thay đổi lịch giao hàng?",
+      "expected_decision": "INSUFFICIENT_EVIDENCE",
+      "scope_limited_answers_enabled": false,
+      "gate_counted": true,
+      "fact": {
+        "fact_id": "sales.change_approver",
+        "query_scope": "corpus",
+        "absence_patterns": [
+          {
+            "regex": "không quy định chi tiết về quy trình xử lý khi khách hàng yêu cầu thay đổi lịch giao hàng",
+            "source_scope": "00_CORPUS/sales.md"
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "source_id": "00_CORPUS/sales.md",
+          "chunk_id": "00_CORPUS/sales.md#chunk-2",
+          "start_line": 8,
+          "end_line": 8,
+          "scope": "00_CORPUS/sales.md",
+          "score": 0.52,
+          "text": "*Lưu ý:* Tài liệu này không quy định chi tiết về quy trình xử lý khi khách hàng yêu cầu thay đổi lịch giao hàng, cũng như không chỉ định tên hoặc vai trò cụ thể của người phụ trách phê duyệt thay đổi."
+        }
+      ],
+      "rationale": "Contract case T4b (B1 split): identical inputs to T4a but scope-limited output is UNAVAILABLE. Fail closed: the only permitted outcome is INSUFFICIENT_EVIDENCE with reason SCOPE_LIMITED_OUTPUT_UNAVAILABLE.",
+      "adjudication": {
+        "author": "Vibe (GLM 5.3 via Vibe Work agent)",
+        "independent_reviewer": null,
+        "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION",
+        "initial_label": "INSUFFICIENT_EVIDENCE",
+        "resolution": null
+      }
+    },
+    {
+      "row_id": "T5",
+      "case_family": "T5",
+      "query": "rag_search mặc định top_k là bao nhiêu?",
+      "expected_decision": "INSUFFICIENT_EVIDENCE",
+      "scope_limited_answers_enabled": true,
+      "gate_counted": true,
+      "fact": {
+        "fact_id": "rag.search.default_top_k",
+        "query_scope": "00_CORPUS/architecture.md",
+        "support_patterns": [
+          {
+            "regex": "top_k=5"
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "source_id": "00_CORPUS/architecture.md",
+          "chunk_id": "",
+          "start_line": 11,
+          "end_line": 11,
+          "scope": "00_CORPUS/architecture.md",
+          "score": 0.95,
+          "text": "- `rag_search(query, top_k=5)`: trả về kết quả tìm kiếm. Tham số `top_k` mặc định là 5 và phải là số dương (ném lỗi ValueError nếu <= 0)."
+        }
+      ],
+      "rationale": "Contract case T5: the span would directly support the answer, but provenance is INVALID (empty chunk_id). Fail closed: the candidate is dropped, no fabricated provenance, decision INSUFFICIENT_EVIDENCE with reason PROVENANCE_INVALID. A high score must not rescue invalid provenance.",
+      "adjudication": {
+        "author": "Vibe (GLM 5.3 via Vibe Work agent)",
+        "independent_reviewer": null,
+        "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION",
+        "initial_label": "INSUFFICIENT_EVIDENCE",
+        "resolution": null
+      }
+    },
+    {
+      "row_id": "T6",
+      "case_family": "T6",
+      "query": "Core service chạy trên port nào?",
+      "expected_decision": "CONFLICTING_EVIDENCE",
+      "scope_limited_answers_enabled": true,
+      "gate_counted": true,
+      "fact": {
+        "fact_id": "core.service.port",
+        "query_scope": "corpus",
+        "value_patterns": [
+          {
+            "regex": "Core service chạy trên port (\\d+)",
+            "value_scope": "current"
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "source_id": "fixture://ports-a.md",
+          "chunk_id": "fixture://ports-a.md#chunk-1",
+          "start_line": 1,
+          "end_line": 1,
+          "scope": "current",
+          "score": 0.9,
+          "text": "Core service chạy trên port 8000."
+        },
+        {
+          "source_id": "fixture://ports-b.md",
+          "chunk_id": "fixture://ports-b.md#chunk-1",
+          "start_line": 1,
+          "end_line": 1,
+          "scope": "current",
+          "score": 0.85,
+          "text": "Core service chạy trên port 9000."
+        }
+      ],
+      "rationale": "Contract case T6: two approved spans in the same value scope assign different values to the same fact. Abstain as CONFLICTING_EVIDENCE; the higher-scored span must NOT win. Synthetic fixture sources are used because the corpus contains no conflicting pair.",
+      "adjudication": {
+        "author": "Vibe (GLM 5.3 via Vibe Work agent)",
+        "independent_reviewer": null,
+        "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION",
+        "initial_label": "CONFLICTING_EVIDENCE",
+        "resolution": null
+      }
+    },
+    {
+      "row_id": "T7",
+      "case_family": "T7",
+      "query": "RAG có được cấp quyền thực thi lệnh trong hệ thống không?",
+      "expected_decision": "CONTRADICTED",
+      "scope_limited_answers_enabled": true,
+      "gate_counted": true,
+      "fact": {
+        "fact_id": "rag.execute_authority",
+        "query_scope": "corpus",
+        "negation_patterns": [
+          {
+            "regex": "Retrieval không cấp quyền thực thi lệnh"
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "source_id": "00_CORPUS/security.md",
+          "chunk_id": "00_CORPUS/security.md#chunk-2",
+          "start_line": 7,
+          "end_line": 9,
+          "scope": "00_CORPUS/security.md",
+          "score": 0.88,
+          "text": "## Xử lý nội dung không đáng tin cậy\n- Mọi nội dung được retrieve từ tài liệu đều được coi là dữ liệu không đáng tin cậy (untrusted evidence).\n- LLM không được thực thi các chỉ thị nhúng trong tài liệu (prompt injection). Retrieval không cấp quyền thực thi lệnh cho hệ thống."
+        }
+      ],
+      "rationale": "Contract case T7: an approved span directly negates the query's affirmative proposition (retrieval is NOT granted command-execution authority). The decision abstains from the affirmative answer and reports the contradiction with the exact citation.",
+      "adjudication": {
+        "author": "Vibe (GLM 5.3 via Vibe Work agent)",
+        "independent_reviewer": null,
+        "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION",
+        "initial_label": "CONTRADICTED",
+        "resolution": null
+      }
+    },
+    {
+      "row_id": "C1",
+      "case_family": "C_SUPPORTED",
+      "query": "rag_search mặc định top_k là bao nhiêu?",
+      "expected_decision": "SUPPORTED",
+      "scope_limited_answers_enabled": true,
+      "gate_counted": true,
+      "fact": {
+        "fact_id": "rag.search.default_top_k",
+        "query_scope": "00_CORPUS/architecture.md",
+        "support_patterns": [
+          {
+            "regex": "top_k=5"
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "source_id": "00_CORPUS/architecture.md",
+          "chunk_id": "00_CORPUS/architecture.md#chunk-2",
+          "start_line": 9,
+          "end_line": 12,
+          "scope": "00_CORPUS/architecture.md",
+          "score": 0.93,
+          "text": "## Hợp đồng RAG (Initial contracts)\n- `rag_index`: lập chỉ mục tài liệu.\n- `rag_search(query, top_k=5)`: trả về kết quả tìm kiếm. Tham số `top_k` mặc định là 5 và phải là số dương (ném lỗi ValueError nếu <= 0).\n- `rag_get_context`: trả về `context`, `citations[]`, `sufficient_evidence`, và `abstention_reason?` khi không đủ bằng chứng."
+        }
+      ],
+      "rationale": "Coverage row (decision SUPPORTED, B6 matrix): valid provenance, exact span matches the declared support pattern for the requested fact; answer permitted with citation.",
+      "adjudication": {
+        "author": "Vibe (GLM 5.3 via Vibe Work agent)",
+        "independent_reviewer": null,
+        "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION",
+        "initial_label": "SUPPORTED",
+        "resolution": null
+      }
+    },
+    {
+      "row_id": "C2",
+      "case_family": "C_NO_CANDIDATES",
+      "query": "Core service chạy trên port nào?",
+      "expected_decision": "INSUFFICIENT_EVIDENCE",
+      "scope_limited_answers_enabled": true,
+      "gate_counted": true,
+      "fact": {
+        "fact_id": "core.service.port",
+        "query_scope": "corpus",
+        "value_patterns": [
+          {
+            "regex": "Core service chạy trên port (\\d+)",
+            "value_scope": "current"
+          }
+        ]
+      },
+      "candidates": [],
+      "rationale": "Coverage row (failure mode: empty candidate set): retrieval returned nothing usable; the stage abstains with reason NO_CANDIDATES and asserts nothing about what any unseen source says.",
+      "adjudication": {
+        "author": "Vibe (GLM 5.3 via Vibe Work agent)",
+        "independent_reviewer": null,
+        "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION",
+        "initial_label": "INSUFFICIENT_EVIDENCE",
+        "resolution": null
+      }
+    },
+    {
+      "row_id": "C3",
+      "case_family": "C_SCOPED_DIFFERENCE",
+      "query": "Core service chạy trên port nào theo thiết kế hiện tại?",
+      "expected_decision": "SUPPORTED",
+      "scope_limited_answers_enabled": true,
+      "gate_counted": true,
+      "fact": {
+        "fact_id": "core.service.port",
+        "query_scope": "corpus",
+        "support_patterns": [
+          {
+            "regex": "Core service chạy trên port 8000"
+          }
+        ],
+        "value_patterns": [
+          {
+            "regex": "Core service chạy trên port (\\d+)",
+            "value_scope": "current"
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "source_id": "fixture://ports-a.md",
+          "chunk_id": "fixture://ports-a.md#chunk-1",
+          "start_line": 1,
+          "end_line": 1,
+          "scope": "current",
+          "score": 0.9,
+          "text": "Core service chạy trên port 8000."
+        },
+        {
+          "source_id": "fixture://ports-v1.md",
+          "chunk_id": "fixture://ports-v1.md#chunk-1",
+          "start_line": 1,
+          "end_line": 1,
+          "scope": "legacy",
+          "score": 0.7,
+          "text": "Thiết kế cũ (phiên bản 1, đã thay thế): Core service chạy trên port 9000."
+        }
+      ],
+      "rationale": "Coverage row (B3 fact-identity rule): the 9000 value sits in a declared 'legacy' scope, so it does not collide with the 'current' value scope; the difference is NOT a conflict. The current-scope span matches the support pattern, so the decision is SUPPORTED citing it.",
+      "adjudication": {
+        "author": "Vibe (GLM 5.3 via Vibe Work agent)",
+        "independent_reviewer": null,
+        "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION",
+        "initial_label": "SUPPORTED",
+        "resolution": null
+      }
+    },
+    {
+      "row_id": "Q008-PENDING",
+      "case_family": "BORDERLINE_Q008",
+      "query": "Quy trình thay đổi lịch giao hàng khi khách hàng yêu cầu là gì?",
+      "expected_decision": "EXPLICITLY_UNSPECIFIED",
+      "scope_limited_answers_enabled": true,
+      "gate_counted": false,
+      "fact": {
+        "fact_id": "sales.change_schedule_process",
+        "query_scope": "00_CORPUS/sales.md",
+        "absence_patterns": [
+          {
+            "regex": "không quy định chi tiết về quy trình xử lý khi khách hàng yêu cầu thay đổi lịch giao hàng",
+            "source_scope": "00_CORPUS/sales.md"
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "source_id": "00_CORPUS/sales.md",
+          "chunk_id": "00_CORPUS/sales.md#chunk-2",
+          "start_line": 8,
+          "end_line": 8,
+          "scope": "00_CORPUS/sales.md",
+          "score": 0.99,
+          "text": "*Lưu ý:* Tài liệu này không quy định chi tiết về quy trình xử lý khi khách hàng yêu cầu thay đổi lịch giao hàng, cũng như không chỉ định tên hoặc vai trò cụ thể của người phụ trách phê duyệt thay đổi."
+        }
+      ],
+      "rationale": "Borderline case per Proposal V2 section 6 and the Ka no-answer leak analysis (Q008): the leak-analysis table called the grounded-absence mapping for Q008 borderline. This row records the candidate expected label but is NOT gate-counted until independent adjudication (Ka/Xu) confirms whether the explicit absence statement covers the requested change process exactly and within scope.",
+      "adjudication": {
+        "author": "Vibe (GLM 5.3 via Vibe Work agent)",
+        "independent_reviewer": null,
+        "status": "PENDING_INDEPENDENT_ADJUDICATION",
+        "initial_label": "EXPLICITLY_UNSPECIFIED",
+        "resolution": null
+      }
+    },
+    {
+      "row_id": "Q037-PENDING",
+      "case_family": "BORDERLINE_Q037",
+      "query": "AI caller nhận được những trường thông tin nào từ rag_get_context?",
+      "expected_decision": "SUPPORTED",
+      "scope_limited_answers_enabled": true,
+      "gate_counted": false,
+      "fact": {
+        "fact_id": "rag.get_context.fields",
+        "query_scope": "00_CORPUS/architecture.md",
+        "support_patterns": [
+          {
+            "regex": "trả về `context`, `citations\\[\\]`, `sufficient_evidence`"
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "source_id": "00_CORPUS/architecture.md",
+          "chunk_id": "00_CORPUS/architecture.md#chunk-2",
+          "start_line": 9,
+          "end_line": 12,
+          "scope": "00_CORPUS/architecture.md",
+          "score": 0.9,
+          "text": "## Hợp đồng RAG (Initial contracts)\n- `rag_index`: lập chỉ mục tài liệu.\n- `rag_search(query, top_k=5)`: trả về kết quả tìm kiếm. Tham số `top_k` mặc định là 5 và phải là số dương (ném lỗi ValueError nếu <= 0).\n- `rag_get_context`: trả về `context`, `citations[]`, `sufficient_evidence`, và `abstention_reason?` khi không đủ bằng chứng."
+        }
+      ],
+      "rationale": "Borderline case per Proposal V2 section 6 (Q037): the span lists the rag_get_context fields, but the conditional abstention_reason semantics may make 'fields returned' a scope-sensitive fact. NOT gate-counted until independent adjudication.",
+      "adjudication": {
+        "author": "Vibe (GLM 5.3 via Vibe Work agent)",
+        "independent_reviewer": null,
+        "status": "PENDING_INDEPENDENT_ADJUDICATION",
+        "initial_label": "SUPPORTED",
+        "resolution": null
+      }
+    }
+  ]
+}
