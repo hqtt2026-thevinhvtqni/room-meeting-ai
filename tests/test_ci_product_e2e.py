@@ -267,7 +267,7 @@ def test_complete_room_hop_product_journey_http_mcp_storage_and_close(
             ]
             assert [item["content"] for item in entries] == [
                 raw_identified,
-                raw_legacy,
+                raw_vinh,
             ]
 
     asyncio.run(read_back_closed())
