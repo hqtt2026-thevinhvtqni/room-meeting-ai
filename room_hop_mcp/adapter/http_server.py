@@ -158,6 +158,8 @@ def create_http_app(
                 },
                 headers={"Retry-After": str(exc.retry_after_seconds)},
             ) from exc
+        except MeetingError as exc:
+            _raise_as_bad_request(exc)
 
     # -----------------------------------------------------------------
     # Lifecycle routes — MỚI.
