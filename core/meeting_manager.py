@@ -671,9 +671,8 @@ class MeetingManager:
         """
         Sinh meeting_id dạng MEETING-{YYYY}-{seq:03d} cho năm UTC hiện tại.
 
-        race-tolerant / collision-detected — KHÔNG atomic. Dùng
-        max(existing_seq) + 1, không dùng len(existing), để không bị
-        lệch nếu có thư mục meeting bị xóa thủ công giữa chừng.
+        Scan is process-serialized; create_meeting reserves the candidate
+        with atomic mkdir(exist_ok=False) and retries on a collision.
         """
         with _ID_ALLOCATION_LOCK:
             year = datetime.now(timezone.utc).year
