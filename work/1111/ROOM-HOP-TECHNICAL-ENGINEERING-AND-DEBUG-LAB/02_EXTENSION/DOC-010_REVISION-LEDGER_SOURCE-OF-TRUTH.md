@@ -90,3 +90,18 @@ Computed from exact Sandbox readback using Git blob framing (`blob <UTF-8 byte l
 - DOC-003 GitHub main was not changed.
 - W1111 source/docs Sandbox ↔ GitHub branch parity is NOT VERIFIED for all eight files above; the table is a Sandbox hash baseline only.
 - PC source/runtime parity remains NOT VERIFIED. No PC or runtime action was performed.
+
+
+## ADDENDUM — 2026-11-09 — C08 HASH COMPLETION + LATEST DOC-003 REVISION
+
+- Branch head immediately before this ledger update: `c8e325b318277cad727865d9597750ba7aed7fad`.
+- Latest DOC-003 branch blob after appending the post-C05 journal delta: `6732228d0e0ff6d8e777b4b1ead1da1da1ef2fcc`; readback confirms C08 completion correction is present.
+- Latest Sandbox canonical journal Git blob SHA-1: `53ba2e336b53a031081b43f0a4e9487123772299` (64,757 UTF-8 bytes).
+- Latest W09/W102 inventory + duplicate-hash manifest Sandbox Git blob SHA-1: `a942ff67e4de487774878e312d9fdd089250ae72` (23,224 UTF-8 bytes).
+- W102 pair 3 correction: file-only counts are 61 files vs 62; 61 common paths SHA-256 MATCH 61/61; archive-only README.md. Across all four W102 pairs, 73/73 shared files SHA-256 MATCH. Tree-shape extras remain; no cleanup performed.
+- C08 final disposition: W09 inventory 4,127/4,127 classified; W102 duplicate hash inventory complete; READY FOR CLA REVIEW.
+
+### CI query qualification correction
+- The workflow file `.github/workflows/core-execution-authority.yml` defines both `pull_request` and `push` triggers for branch `work/w1111-core-execution-authority-v1-2`, plus `workflow_dispatch`.
+- The GitHub connector's `fetch_commit_workflow_runs` action explicitly filters to pull-request-triggered runs only. Its empty result for C02 commit `e2c9e7e1508eacff390f4ac2e9117230601df7ab` therefore means **no PR-triggered run was returned**, not proof that no push-triggered run exists.
+- No general workflow-run listing/dispatch action is exposed in the connected GitHub toolset, and the public Actions page could not be fetched in this session. Exact-SHA CI status for C02 remains **NOT VERIFIED**. Do not claim CI failure or PASS from the empty filtered result.
