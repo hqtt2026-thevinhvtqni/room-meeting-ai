@@ -44,8 +44,8 @@ class FakeMeetingService:
         self.calls.append(("get_transcript", meeting_id))
         return []
 
-    def add_paste(self, meeting_id, text):
-        self.calls.append(("add_paste", meeting_id, text))
+    def add_paste(self, meeting_id, text, identity_id):
+        self.calls.append(("add_paste", meeting_id, text, identity_id))
         return {"status": "READY"}
 
     def create_meeting(self, topic, participants, context_files, created_by, meeting_id=None):
@@ -202,6 +202,23 @@ def test_open_join_start_close_happy_path(client):
     body = r.json()
     assert body["final_md_path"] == "/fake/meetings/M1/final.md"
     assert body["meeting"]["id"] == "M1"
+
+
+def test_paste_requires_and_forwards_identity(client):
+    response = client.post(
+        "/meetings/M1/paste",
+        json={"text": "hello", "identity_id": "vinh"},
+    )
+    assert response.status_code == 200
+    assert ("add_paste", "M1", "hello", "vinh") in client.fake_service.calls
+
+
+def test_paste_rejects_missing_identity(client):
+    response = client.post(
+        "/meetings/M1/paste",
+        json={"text": "hello"},
+    )
+    assert response.status_code == 422
 
 
 # ---------------------------------------------------------------------------
