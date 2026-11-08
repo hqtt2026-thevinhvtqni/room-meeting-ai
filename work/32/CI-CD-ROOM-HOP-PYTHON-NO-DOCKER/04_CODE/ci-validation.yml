@@ -249,9 +249,12 @@ jobs:
       - name: Create per-run disposable Core meeting and dynamic loopback port
         shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
         run: |
-          & $env:W32_PYTHON_EXE scripts/w32_windows_browser_adapter_fixture.py | Tee-Object -FilePath test-results/windows-fixture-provision.log
-          if (-not $env:ROOMHOP_TEST_MEETING_ID -and (Test-Path $env:GITHUB_ENV)) {
-            Write-Host "Fixture values exported for subsequent steps."
+          & $env:W32_PYTHON_EXE scripts/w32_windows_browser_adapter_fixture.py 2>&1 | Tee-Object -FilePath test-results/windows-fixture-provision.log
+          if ($LASTEXITCODE -ne 0) {
+            throw "BLOCKED: disposable Core fixture provisioning failed (exit $LASTEXITCODE)"
+          }
+          if (-not (Test-Path -LiteralPath $env:GITHUB_ENV -PathType Leaf)) {
+            throw "BLOCKED: GITHUB_ENV was not available after fixture provisioning"
           }
 
       - name: Start Browser Adapter from this exact checkout
