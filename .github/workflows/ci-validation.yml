@@ -208,7 +208,7 @@ jobs:
 
   windows_browser_adapter:
     name: Windows Browser Adapter E2E (runner-owned disposable fixture)
-    if: \${{ vars.W32_WINDOWS_RUNNER_READY == 'true' }}
+    if: ${{ vars.W32_WINDOWS_RUNNER_READY == 'true' }}
     runs-on: [self-hosted, Windows, X64, room-hop-w32]
     timeout-minutes: 15
     env:
@@ -217,8 +217,8 @@ jobs:
     steps:
       - name: Fetch exact triggering revision without submodule recursion
         env:
-          REPOSITORY: \${{ github.repository }}
-          REVISION: \${{ github.sha }}
+          REPOSITORY: ${{ github.repository }}
+          REVISION: ${{ github.sha }}
         shell: pwsh
         run: |
           git init .
