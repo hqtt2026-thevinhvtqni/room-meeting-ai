@@ -5,6 +5,7 @@ on:
     branches:
       - work/32-ci-cd-python-ci-v2
       - 'work/32-ci-*'
+      - 'work/32-windows-*'
   pull_request:
     branches:
       - main
@@ -282,11 +283,11 @@ jobs:
           $proc = Start-Process -FilePath $pythonExe -ArgumentList $arguments -WorkingDirectory $env:GITHUB_WORKSPACE -PassThru -WindowStyle Hidden -RedirectStandardOutput $stdout -RedirectStandardError $stderr
           $createdUtc = $proc.StartTime.ToUniversalTime().ToString("o")
           @"
-W32_ADAPTER_PID=$($proc.Id)
-W32_ADAPTER_CREATED_UTC=$createdUtc
-W32_ADAPTER_EXE=$pythonExe
-W32_ADAPTER_PARENT_PID=$PID
-"@ | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          W32_ADAPTER_PID=$($proc.Id)
+          W32_ADAPTER_CREATED_UTC=$createdUtc
+          W32_ADAPTER_EXE=$pythonExe
+          W32_ADAPTER_PARENT_PID=$PID
+          "@ | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           $procInfo = Get-CimInstance Win32_Process -Filter "ProcessId = $($proc.Id)"
           if (-not $procInfo -or -not $procInfo.ExecutablePath -or -not $procInfo.CommandLine) { throw "BLOCKED: launched adapter process provenance is incomplete" }
           if ([IO.Path]::GetFullPath($procInfo.ExecutablePath) -ne [IO.Path]::GetFullPath($pythonExe)) { throw "BLOCKED: launched adapter executable differs from selected Python" }
