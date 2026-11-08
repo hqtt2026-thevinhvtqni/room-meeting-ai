@@ -110,3 +110,17 @@
 - **Trạng thái:** GitHub Work scaffold = CREATED; GitHub readback = PASS (14/14); Sandbox↔GitHub content parity = PASS cho 6 tài liệu mirror đã so sánh; DOC-003 journal = prefix parity + GitHub addenda; agent ACK = NOT VERIFIED; pytest/runtime = NOT RUN.
 - **Giới hạn:** chưa kiểm tra live PC, deployed :8031, workflow CI, pytest hoặc branch/source execution.
 - **Bước tiếp theo:** các AI agent đọc DOC-001/DOC-004, claim task trên AI_TASK_BOARD bằng entry journal; Xu điều phối kiến trúc và xử lý task theo exact branch/SHA.
+
+
+## 2026-11-08 11:41 (UTC+7) — W1111-T01 CLAIM / REVISION LEDGER BASELINE
+
+- **Người thực hiện:** Xu (registered ROOM-HOP identity: xu).
+- **Task:** W1111-T01 — GitHub–Sandbox–PC source-of-truth map.
+- **Starting revision:** GitHub main observed latest commit by commit search: c3ba11597563d2dc62d031d169a457c4d29276b3. Đây là revision anchor của hồ sơ Work tại thời điểm truy vấn, không phải PC/runtime attestation.
+- **Phương pháp:** GitHub fetch_file(ref=main) cho README, DOC-003, DOC-005, DOC-006, DOC-007, DOC-008 và AI_TASK_BOARD; GitHub search_commits(query empty, sort committer-date desc); ROOM-HOP MCP 8030 sandbox_list + sandbox_read_probe cho hồ sơ canonical Sandbox.
+- **Kết quả:** GitHub fetch readback PASS cho các file nêu trên. Blob SHA được ghi tại DOC-010 Revision Ledger. Sandbox readback PASS cho WORK_MANIFEST, KE_HOACH_TRIEN_KHAI, NHAT_KY_THI_CONG, AI_WORKING_RULES và TECHNICAL_INVENTORY. Một số hồ sơ Sandbox và GitHub có tên/path khác nhau; chỉ 6 tài liệu được xác nhận byte-for-byte theo journal trước đó. Không mở rộng parity claim.
+- **Revision boundary:** PC hiện tại chưa được truy cập; GitHub↔PC và Sandbox↔PC = NOT VERIFIED. Live :8031 = NOT VERIFIED.
+- **Thay đổi hồ sơ:** phát hành DOC-010 Revision Ledger; đăng ký DOC-010 trong DOC-009; cập nhật W1111-T01 sang IN_PROGRESS vì Xu đã claim bằng nhật ký này.
+- **Không thực hiện:** không sửa source code, không tạo branch/PR, không chạy pytest, không gọi /execute, không thao tác PC, không thay đổi Work khác.
+- **Trạng thái:** W1111-T01 = IN_PROGRESS; Revision Ledger initial snapshot = RECORDED; parity toàn hệ = NOT VERIFIED; tests/runtime = NOT RUN.
+- **Bước tiếp theo:** tiếp tục exact-path inventory và phân tích dependency; chỉ mở rộng trạng thái khi có hash/readback mới từ từng layer.
