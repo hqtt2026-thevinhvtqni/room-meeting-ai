@@ -59,10 +59,10 @@ def test_mcp_stdio_public_boundary_roundtrip(tmp_path):
             assert meeting["id"] == meeting_id
             assert meeting["status"] == "active"
 
-            legacy_result = await integration.add_paste_to_meeting(
-                session, meeting_id, "legacy stdio paste"
+            vinh_result = await integration.add_paste_to_meeting(
+                session, meeting_id, "Vinh stdio paste", identity_id="vinh"
             )
-            assert legacy_result == {"status": "READY"}
+            assert vinh_result == {"status": "READY"}
 
             identified_result = await integration.add_paste_to_meeting(
                 session,
@@ -79,14 +79,14 @@ def test_mcp_stdio_public_boundary_roundtrip(tmp_path):
             ]
             legacy = next(
                 message for message in paste_entries
-                if message["content"] == "legacy stdio paste"
+                if message["content"] == "Vinh stdio paste"
             )
             identified = next(
                 message for message in paste_entries
                 if message["content"] == "identified stdio paste"
             )
-            assert legacy["speaker"] is None
-            assert legacy["header"] is None
+            assert legacy["speaker"] == "vinh"
+            assert legacy["header"]["name"] == "Vinh"
             assert identified["speaker"] == "xu"
             assert identified["header"]["name"] == "Xu"
             assert identified["header"]["role"]
