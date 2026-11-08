@@ -153,7 +153,7 @@ class ExecutionAuthority:
             allowed = policy.get("allowed_identities")
             if not isinstance(allowed, list) or not allowed or any(x not in self._credential_digests for x in allowed):
                 raise ExecutionAuthorityConfigError("invalid_work_identity_binding")
-            required = ("work_name", "workspace_root", "execution_workspace", "evidence_root")
+            required = ("work_name", "workspace_root", "execution_workspace", "evidence_root", "source_sha256")
             if any(not isinstance(policy.get(k), str) or not policy[k].strip() for k in required):
                 raise ExecutionAuthorityConfigError("incomplete_work_execution_binding")
             root = Path(policy["workspace_root"]).resolve()
@@ -163,6 +163,8 @@ class ExecutionAuthority:
                     child.relative_to(root)
                 except ValueError as exc:
                     raise ExecutionAuthorityConfigError("work_path_outside_root") from exc
+            if not isinstance(policy.get("source_sha256"), str) or not _SHA256.fullmatch(policy["source_sha256"]):
+                raise ExecutionAuthorityConfigError("invalid_work_source_sha256")
             purposes = policy.get("allowed_purposes", ["pytest_run", "build", "diagnostic"])
             if not isinstance(purposes, list) or not purposes or any(not isinstance(x, str) or not x.strip() for x in purposes):
                 raise ExecutionAuthorityConfigError("invalid_allowed_purposes")
@@ -239,6 +241,7 @@ class ExecutionAuthority:
             "workspace_root": policy["workspace_root"],
             "execution_workspace": policy["execution_workspace"],
             "evidence_root": policy["evidence_root"],
+            "source_sha256": policy["source_sha256"],
             "purpose": purpose,
             "expires_at": _iso(expires),
             "authorized": True,
@@ -272,7 +275,7 @@ class ExecutionAuthority:
             "expires_at": issued["expires_at"],
             "status": "active",
             **{k: self._work_policies[issued["work_id"]][k] for k in (
-                "work_name", "workspace_root", "execution_workspace", "evidence_root"
+                "work_name", "workspace_root", "execution_workspace", "evidence_root", "source_sha256"
             )},
         }
 
