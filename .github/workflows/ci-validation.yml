@@ -259,10 +259,10 @@ jobs:
           python scripts/w32_windows_fixture.py --store "$store" --meeting-id "$meetingId" --identity-id "xu" --runner-temp "$env:RUNNER_TEMP" --workspace "$env:GITHUB_WORKSPACE" | Tee-Object -FilePath test-results/windows-fixture-setup.txt
           if ($LASTEXITCODE -ne 0) { throw "BLOCKED: disposable Core fixture creation failed" }
           @"
-ROOMHOP_TEST_MEETINGS_DIR=$store
-ROOMHOP_TEST_MEETING_ID=$meetingId
-ROOMHOP_TEST_IDENTITY_ID=xu
-"@ | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          ROOMHOP_TEST_MEETINGS_DIR=$store
+          ROOMHOP_TEST_MEETING_ID=$meetingId
+          ROOMHOP_TEST_IDENTITY_ID=xu
+          "@ | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Launch exact-SHA Browser Adapter and verify ownership
         shell: pwsh
@@ -315,20 +315,20 @@ W32_ADAPTER_PARENT_PID=$PID
           $listeners = @(Get-NetTCPConnection -State Listen -LocalPort $port -ErrorAction SilentlyContinue)
           if ($listeners.Count -ne 1 -or $listeners[0].OwningProcess -ne $proc.Id -or $listeners[0].LocalAddress -ne "127.0.0.1") { throw "BLOCKED: selected port is not owned by exactly one adapter loopback listener" }
           @"
-runner=$env:COMPUTERNAME
-source_sha=$env:GITHUB_SHA
-adapter_port=$port
-adapter_pid=$($procInfo.ProcessId)
-adapter_owner=$adapterOwner
-adapter_executable=$($procInfo.ExecutablePath)
-adapter_parent_pid=$($procInfo.ParentProcessId)
-adapter_command_line=$($procInfo.CommandLine)
-fixture_store=$env:ROOMHOP_TEST_MEETINGS_DIR
-fixture_meeting=$env:ROOMHOP_TEST_MEETING_ID
-fixture_identity=$env:ROOMHOP_TEST_IDENTITY_ID
-health=PASS
-listener=PASS
-"@ | Out-File -FilePath test-results/windows-preflight.txt -Encoding utf8
+          runner=$env:COMPUTERNAME
+          source_sha=$env:GITHUB_SHA
+          adapter_port=$port
+          adapter_pid=$($procInfo.ProcessId)
+          adapter_owner=$adapterOwner
+          adapter_executable=$($procInfo.ExecutablePath)
+          adapter_parent_pid=$($procInfo.ParentProcessId)
+          adapter_command_line=$($procInfo.CommandLine)
+          fixture_store=$env:ROOMHOP_TEST_MEETINGS_DIR
+          fixture_meeting=$env:ROOMHOP_TEST_MEETING_ID
+          fixture_identity=$env:ROOMHOP_TEST_IDENTITY_ID
+          health=PASS
+          listener=PASS
+          "@ | Out-File -FilePath test-results/windows-preflight.txt -Encoding utf8
 
       - name: Run deterministic local Browser Adapter E2E
         shell: pwsh
