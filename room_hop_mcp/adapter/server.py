@@ -11,6 +11,7 @@ from mcp.types import (
     Tool,
 )
 
+from core.meeting_manager import MeetingRateLimitError
 from core.meeting_service import MeetingService
 
 
@@ -124,11 +125,28 @@ def create_server(service: MeetingService) -> Server:
             meeting_id = arguments["meeting_id"]
             text = arguments["text"]
 
-            result = service.add_paste(
-                meeting_id,
-                text,
-                identity_id=arguments["identity_id"],
-            )
+            try:
+                result = service.add_paste(
+                    meeting_id,
+                    text,
+                    identity_id=arguments["identity_id"],
+                )
+            except MeetingRateLimitError as exc:
+                return types.CallToolResult(
+                    content=[
+                        types.TextContent(
+                            type="text",
+                            text="RATE_LIMIT_EXCEEDED",
+                        )
+                    ],
+                    structuredContent={
+                        "error": {
+                            "code": "RATE_LIMIT_EXCEEDED",
+                            "retry_after_seconds": exc.retry_after_seconds,
+                        }
+                    },
+                    isError=True,
+                )
 
             return {
                 "paste": result,
