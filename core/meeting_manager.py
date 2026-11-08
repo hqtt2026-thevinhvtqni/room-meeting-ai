@@ -19,8 +19,8 @@ from core.message_identity import (
 )
 from core.principal_registry import PrincipalRegistry
 from core.paste_rate_limiter import (
-    LEGACY_UNIDENTIFIED_PRINCIPAL,
     PasteRateLimitExceeded,
+    PasteRateStoreUnavailable,
     SQLitePasteRateLimiter,
 )
 from core.secretary import Secretary, validate_transcript_text
@@ -52,6 +52,14 @@ class MeetingRateLimitError(MeetingError):
             "RATE_LIMIT_EXCEEDED "
             f"retry_after_seconds={self.retry_after_seconds}"
         )
+
+
+class MeetingRateStoreUnavailable(MeetingError):
+    """Controlled service-unavailable error for local quota-store failures."""
+
+    def __init__(self, retry_after_seconds: int = 1):
+        self.retry_after_seconds = max(1, int(retry_after_seconds))
+        super().__init__("PASTE_RATE_STORE_UNAVAILABLE")
 
 
 class Meeting:
@@ -342,6 +350,8 @@ class Meeting:
                 admission.commit()
         except PasteRateLimitExceeded as exc:
             raise MeetingRateLimitError(exc.retry_after_seconds) from None
+        except PasteRateStoreUnavailable as exc:
+            raise MeetingRateStoreUnavailable(exc.retry_after_seconds) from None
 
         # MESSAGE v1.0: "một lần paste = một logical Message" — đúng một
         # entry Message được tạo ở đây, dù có/không có identity_id.
