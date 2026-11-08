@@ -35,9 +35,16 @@ jobs:
       - name: Unit tests (verbose)
         working-directory: work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/04_CODE
         run: |
+          set +e
+          python -m unittest discover -s ../05_TEST -p "test_rag_evidence_support.py" -v > /tmp/es.log 2>&1
+          ES=$?
+          if [ $ES -ne 0 ]; then
+            MSG=$(tail -n 30 /tmp/es.log | tr '\n' ' ' | tr -d '%')
+            echo "::error::ESDIAG $MSG"
+            exit 1
+          fi
           python -m unittest discover -s ../05_TEST -p "test_rag_retrieval.py" -v
           python -m unittest discover -s ../05_TEST -p "test_rag_eval.py" -v
-          python -m unittest discover -s ../05_TEST -p "test_rag_evidence_support.py" -v
 
       - name: Evidence-support decision-set gate (Gate B; fails CI on any per-case mismatch)
         working-directory: work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/04_CODE
