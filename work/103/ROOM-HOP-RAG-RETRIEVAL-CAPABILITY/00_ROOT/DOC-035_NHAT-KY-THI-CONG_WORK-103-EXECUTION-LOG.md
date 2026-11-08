@@ -62,3 +62,32 @@ Các commit d7f1963 và 4f83c5b được tạo trong một môi trường shell 
 - **Interpretation:** The failure is not evidence that the new document structure caused the regression; the failing step evaluates the existing corpus/evaluation data path. Root cause needs investigation before any code/data change.
 - **Status:** FAIL for this CI run; standardization remains IN_PROGRESS / NOT PASS.
 - **Next:** Trace Manifest V4, Ka V3 labels/corpus alignment and the exact failing no-answer cases. Do not weaken the gate, change min_score or promote hybrid to force green CI.
+
+## LOG-W103-20261108-005 — Evidence-Support Stage: Contract V3 + Gate A dataset + Gate B build (Vibe)
+- **Time:** 2026-11-08 17:35 UTC+07
+- **Actor:** Vibe (GLM 5.3 via Vibe Work agent), under explicit build and journaling authorization from Vinh in the Work 103 coordination conversation.
+- **Scope:** Evidence-support stage only (Sandbox prototype). No Core :8000, MCP :8020, dashboard or immutable changes; labels V3, fixture freezes, baseline thresholds, Qw V5, rag_retrieval.py and rag_eval.py untouched.
+- **Background read:** KA_EVIDENCE_SUPPORT_STAGE_DESIGN_PROPOSAL_V2_20261029.md and the V2 technical pre-review (BLOCKED with gaps B1-B6) were read in full before building; the build follows exactly the contract-completion path those documents prescribe.
+- **Actions:**
+  1. Authored 03_ARCHITECTURE/EVIDENCE_SUPPORT_STAGE_CONTRACT_V3.md closing B1-B6: T4a/T4b deterministic split (B1); frozen request/response schema with 9 reason codes and locked precedence provenance -> absence -> negation -> conflict -> support -> insufficient (B2); fact-identity/scope/value-conflict rules, fail-closed, no implicit authority policy (B3); metamorphic score-independence protocol (B4); adjudication protocol (B5); coverage matrix enforced structurally by the runner (B6).
+  2. Authored 05_TEST/EVIDENCE_SUPPORT_DECISION_SET_V1.json (Gate A dataset, separate from labels V3): 11 gate-counted rows (T1-T7 including the T4a/T4b split, C_SUPPORTED, C_NO_CANDIDATES, C_SCOPED_DIFFERENCE) plus 2 pending non-gate-counted rows for the borderline cases Q008/Q037 required by V2 section 6.
+  3. Implemented 04_CODE/rag_evidence_support.py: five-state deterministic decision engine; the retrieval score is accepted for candidate ordering but never read in the decision path; strict schema validation with structural coverage checks; per-case gate runner (exit 1 on any row mismatch or coverage gap, no aggregate hiding).
+  4. Added 05_TEST/test_rag_evidence_support.py: 34 tests including the B4 metamorphic battery (score perturbation/reorder/removal invariance plus span-text sensitivity), provenance fail-closed cases and schema-rejection mutations.
+  5. Extended .github/workflows/work-103-rag-ci.yml: py_compile and a third unit suite now include the new files; a dedicated Gate B step runs BEFORE the known-failing corpus-aligned gate so its verdict is observable; no existing step weakened, reordered or removed.
+  6. Authored 06_EVIDENCE/VIBE_103_EVIDENCE_SUPPORT_GATEA_GATEB_20261108.md with the full build and CI history.
+- **Method note (honesty):** the build environment executed TypeScript, not Python; the decision algorithm and all 13 dataset rows were ported to TypeScript and executed first (11/11 expected decisions and reason codes reproduced; metamorphic battery: zero decision changes) before writing the Python. CI is the binding verification: two real defects were found and fixed through CI, not through simulation.
+- **Execution history:**
+  - Commit b2bc262 (initial build), run 42467238385: 2 defects, 32/34 tests passing: (a) compile_pattern let re.error escape instead of a controlled ValueError; (b) one self-authored mutation test removed both the requirement and its coverage, so nothing was rejected.
+  - Commit bf7a741 (temporary annotation diagnostic, reverted in the fix commit): surfaced exact tracebacks via CI annotations because admin log download was unavailable.
+  - Commit 3512690 (fix + diagnostic revert), run 42467375198: py_compile, all three unit suites (retrieval + eval + the new 34-test evidence-support suite), the Gate B decision-set step (11/11 rows) and the EVAL_V2 baseline gate PASS on Python 3.11 AND 3.12; the Manifest V4 + Ka V3 corpus-aligned gate FAILED as before (no_answer_accuracy=0.300 vs floor 0.8) and is preserved unchanged.
+  - Commit eee3668: execution evidence recorded in 06_EVIDENCE.
+- **Cross-reference:** LOG-W103-20261108-004 (Xu) independently observed Gate B succeeding in run 42467546737; consistent with this entry.
+- **Status:** DONE for Contract V3 + Gate A dataset + Gate B implementation/tests/CI. Gate A independent adjudication OPEN; Gate C NOT BUILT (deliberate: circular before adjudication); Gate D OPEN; E2E MCP :8020 -> Core :8000 CLOSED. No release claim.
+- **DEBTS (ghi nợ) — for Xu / Ka to read and continue:**
+  - DEBT-ES-01 (Ka, HIGH): independent architecture review of EVIDENCE_SUPPORT_STAGE_CONTRACT_V3.md. The reviewer must not be the V2/V3 author (V2 review section 4 boundary applies).
+  - DEBT-ES-02 (Ka): independent adjudication of every EVIDENCE_SUPPORT_DECISION_SET_V1.json row, especially pending Q008/Q037; freeze with SHA-256 per the B5 protocol. Gate A stays BLOCKED for release use until done. CI green on this dataset is build evidence only, not adjudication.
+  - DEBT-ES-03 (Xu): after DEBT-ES-02, design/approve Gate C (corpus-aligned five-state evaluation over the V3 query set). Do not build it before adjudication.
+  - DEBT-ES-04 (Xu): separately recorded integration decision for MCP :8020 -> Core :8000. E2E stays CLOSED until offline gates pass.
+  - DEBT-ES-05 (Xu): DOC-055/DOC-057 mapping of the four new artifacts (contract under the architecture mapping; implementation and tests under TECH-003/004; dataset under TECH-004; evidence report already EVD-005). This commit appends EVD-008 (Gate A/B CI runs) to DOC-057.
+  - DEBT-ES-06 (Ka/Qw, pre-existing, restated): the lexical no-answer leaks Q008/Q035/Q010 in the retrieval baseline remain the open retrieval-side limitation; the evidence-support stage is the separately scoped remediation path, not a retrieval fix. QUERY_EXPANSIONS in rag_retrieval.py remains a flagged overfitting risk for generalization.
+- **Next:** Ka picks up DEBT-ES-01 and DEBT-ES-02; Xu sequences DEBT-ES-03/04/05 and continues the standardization batches (DOC-056). Record outcomes as new DOC-035 entries with run IDs and commit SHAs.
