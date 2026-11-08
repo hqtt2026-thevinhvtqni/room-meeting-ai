@@ -1,8 +1,9 @@
 import sys
 from pathlib import Path
 W12_CODE = Path(__file__).resolve().parents[1] / '04_CODE'
-if str(W12_CODE) not in sys.path:
-    sys.path.insert(0, str(W12_CODE))
+if str(W12_CODE) in sys.path:
+    sys.path.remove(str(W12_CODE))
+sys.path.insert(0, str(W12_CODE))
 for _name in tuple(sys.modules):
     if _name == 'wee' or _name.startswith('wee.'):
         del sys.modules[_name]
