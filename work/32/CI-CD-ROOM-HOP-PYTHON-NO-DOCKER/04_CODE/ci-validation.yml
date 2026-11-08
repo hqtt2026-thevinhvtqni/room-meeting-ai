@@ -276,6 +276,12 @@ jobs:
           $ownerResult = Invoke-CimMethod -InputObject $process -MethodName GetOwner
           if ($ownerResult.ReturnValue -ne 0) { throw "BLOCKED: cannot resolve adapter process owner" }
           $owner = "$($ownerResult.Domain)\$($ownerResult.User)"
+          $runnerProcess = Get-CimInstance Win32_Process -Filter "ProcessId = $PID"
+          if (-not $runnerProcess) { throw "BLOCKED: current runner shell process is unavailable" }
+          $runnerOwnerResult = Invoke-CimMethod -InputObject $runnerProcess -MethodName GetOwner
+          if ($runnerOwnerResult.ReturnValue -ne 0) { throw "BLOCKED: cannot resolve runner shell owner" }
+          $runnerOwner = "$($runnerOwnerResult.Domain)\$($runnerOwnerResult.User)"
+          if ($owner -ne $runnerOwner) { throw "BLOCKED: adapter is not owned by the current runner job identity" }
           $creation = $process.CreationDate.ToUniversalTime().ToString("o")
           @(
             "ROOMHOP_BROWSER_ADAPTER_PID=$($process.ProcessId)",
