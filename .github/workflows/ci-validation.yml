@@ -337,8 +337,8 @@ jobs:
           if ($listeners.Count -ne 1) {
             throw "BLOCKED: adapter PID must own exactly one 127.0.0.1 listener on configured port $port"
           }
-          $parent = Get-CimInstance Win32_Process -Filter "ProcessId = $($process.ParentProcessId)"
-          if (-not $parent) { throw "BLOCKED: adapter parent process is unavailable" }
+          # Parent shell may exit between Actions steps; the recorded parent PID is
+          # compared to the exact process instance during cleanup instead.
           $health = $null
           for ($attempt = 0; $attempt -lt 30; $attempt++) {
             try {
