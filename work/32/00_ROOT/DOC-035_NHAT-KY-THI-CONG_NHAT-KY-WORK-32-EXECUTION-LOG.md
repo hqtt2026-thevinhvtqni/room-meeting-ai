@@ -1516,3 +1516,25 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 
 **Disposition:** S10 implementation present; exact-SHA validation pending. Core local-only boundary retained. Work32 ACTIVE — NOT RELEASED.
 
+
+
+## W32-LOG-20261109-101 — Run #277 PASS và mở rộng kiểm thử Core HTTP
+
+- **Document Number:** W32-LOG-20261109-101
+- **Priority Order:** P0 — Exact-SHA S10 verification and CI test coverage
+- **Name:** Ka
+- **Title:** CSA / Delegated Work32 Execution Owner
+- **Date-Time:** 2026-11-09 (Asia/Ho_Chi_Minh)
+- **Run #277:** `42522681112`, exact PR head `d72b68659e9717d8ea33a5c41b2d379fc15064e2`, conclusion SUCCESS — all six jobs PASS.
+- **Unit:** 204 passed; this includes `tests/test_w32_atomic_state.py` (the workflow's bounded unit list explicitly includes it).
+- **Product Auto E2E:** 89 passed.
+- **Windows Browser Adapter E2E:** 10 passed; disposable fixture/preflight PASS; browser context cleanup PASS; Adapter PID 6264 cleanup PASS.
+- **Work32 tooling/workflow mirror:** PASS.
+- **Immutable product artifact:** build, extracted dependency verification and artifact E2E PASS.
+- **Work32 release acceptance gate:** PASS.
+- **Coverage report:** one existing test file was still unaccounted by CI: `tests/test_core_http_main.py`. Ka read the test; it verifies the Core HTTP meeting API and fail-closed behavior when execution authority is absent. It uses a temporary meetings directory and isolated environment, so it is added to the deterministic Unit lane rather than left report-only.
+- **CI change:** added `tests/test_core_http_main.py` to `UNIT_TESTS` in the active workflow and synchronized Work32 workflow mirror byte-for-byte. New exact-SHA validation is required; Run #277 does not include this additional test.
+- **S10 disposition:** atomic YAML replacement, same-process per-meeting serialization, atomic generated-ID directory reservation/retry and the three focused tests are validated by Run #277. Cross-process state read-modify-write remains unproven; one Core process per local store remains the operational restriction. Multi-process/multi-host remain BLOCKED.
+- **Review gates:** Xu/Cla post-remediation re-review and attributable Qw W32 QE report remain to be linked into the evidence chain; Vinh has reported the reviews completed, but their exact re-review/QE artifacts are not yet traceable in the checked Work32 Sandbox/PR records.
+- **Product gate:** Dashboard → Workspace → Core E2E remains NOT RUN pending canonical Workspace source and approved Xu/Mê contract.
+- **Status:** Run #277 CI PASS 6/6; next CI run pending for Core HTTP test coverage addition. PR #49 remains DRAFT; main unchanged; no remote exposure, CD, staging, production, merge or release.
