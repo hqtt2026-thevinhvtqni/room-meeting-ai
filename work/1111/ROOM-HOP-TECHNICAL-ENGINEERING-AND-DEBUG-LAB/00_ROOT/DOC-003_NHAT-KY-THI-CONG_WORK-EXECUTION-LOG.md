@@ -99,3 +99,14 @@
 - **Boundaries:** Work governance and coordination records only. No application source code changed; no branch created; no PR/merge; no pytest, runtime or PC command executed.
 - **Status:** GitHub file writes = ACKNOWLEDGED; exact readback verification = PENDING at time of this entry; agent participation/ACK = NOT VERIFIED.
 - **Next:** Fetch all 14 canonical paths from GitHub main; verify file presence and content; compare mirrored records against Sandbox; append a readback result with exact ending commit.
+
+
+## 2026-11-08 — GitHub readback verification
+
+- **Phạm vi:** 14 file canonical/supporting artifacts vừa tạo trong Work 1111 trên GitHub main.
+- **Phương pháp:** fetch_file từng path từ ref main; đối chiếu chính xác nội dung GitHub với Sandbox cho DOC-002, DOC-004, DOC-005, DOC-006, DOC-007 và DOC-008; kiểm tra journal GitHub giữ nguyên toàn bộ journal Sandbox rồi nối addendum GitHub.
+- **Kết quả:** 14/14 file trả nội dung khi fetch từ GitHub main. Sáu hồ sơ DOC-002/004/005/006/007/008 khớp byte-for-byte với Sandbox. DOC-003 GitHub giữ nguyên prefix 12,928 bytes từ Sandbox và có addendum khởi tạo GitHub. Các file README, DOC-001, DOC-009, AI_TASK_BOARD, handoff README, verification checklist và evidence register đều đọc lại được.
+- **GitHub revision:** lần lượt có các commit tạo file được liệt kê ở entry GitHub initialization; DOC-009 vừa được bổ sung bảng support artifacts. Journal entry này được ghi để xác nhận readback, không tuyên bố runtime/test đã chạy.
+- **Trạng thái:** GitHub Work scaffold = CREATED; GitHub readback = PASS (14/14); Sandbox↔GitHub content parity = PASS cho 6 tài liệu mirror đã so sánh; DOC-003 journal = prefix parity + GitHub addenda; agent ACK = NOT VERIFIED; pytest/runtime = NOT RUN.
+- **Giới hạn:** chưa kiểm tra live PC, deployed :8031, workflow CI, pytest hoặc branch/source execution.
+- **Bước tiếp theo:** các AI agent đọc DOC-001/DOC-004, claim task trên AI_TASK_BOARD bằng entry journal; Xu điều phối kiến trúc và xử lý task theo exact branch/SHA.
