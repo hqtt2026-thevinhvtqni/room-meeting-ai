@@ -1428,3 +1428,23 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **NHẬT KÝ:** Ka đã tạo launcher, fixture provisioner, deterministic E2E test, runner validation tests và đồng bộ workflow mirror. Tiếp theo: kiểm tra diff/CI trên exact SHA; xử lý lỗi source nếu có; sau đó mới yêu cầu PC xác nhận runner readiness và chạy một Windows pilot.
 - **STATUS:** IMPLEMENTED ON FEATURE BRANCH / STATIC READBACK PASS / AUTOMATED TESTS NOT RUN / WINDOWS E2E NOT RUN / RELEASE NOT ACCEPTED. Work32 remains ACTIVE — NOT RELEASED.
 
+
+
+## 2026-11-08 — W32-LOG-20261108-87 — Static readback sau hardening runner bootstrap và Windows workflow
+
+- **Người ghi:** Ka
+- **Chức danh:** CSA / Delegated Execution Owner
+- **Date-Time:** 2026-11-08 12:18 (Asia/Ho_Chi_Minh)
+- **Branch:** `work/32-windows-runner-owned-fixture`
+- **Latest source commit before this journal update:** `1b92fe175364fe2267420064fe8636d1bad4ec9a`.
+- **READBACK — Files:** `.github/workflows/ci-validation.yml`, workflow mirror, `room_hop_mcp/browser_agent_adapter/runner.py`, `scripts/w32_windows_fixture.py`, `tests/test_browser_agent_adapter_e2e.py`, `tests/test_browser_agent_adapter_runner.py`.
+- **PASS — Mirror:** Active workflow và Work32 mirror có cùng blob SHA `9c5209eb8855e12eebbc0a81a852b3db66a7fea2`.
+- **PASS — Gate/config:** Workflow không còn static PID/EXE/OWNER, không hardcode port 8787; chỉ còn opt-in `W32_WINDOWS_RUNNER_READY`; port loopback động được truyền qua `ROOMHOP_BROWSER_ADAPTER_PORT` và bắt buộc khớp ở launcher/test.
+- **PASS — Process safety:** Exact SHA, disposable store, runner temp/workspace boundary, sentinel, identity allowlist, PID/executable/owner/parent/command line/listener/health được kiểm tra; cleanup xác minh creation time + executable + parent + owner, gọi browser close và chỉ terminate process tree thuộc job.
+- **PASS — Determinism:** E2E dùng HTTP fixture local; không còn Wikipedia/external navigation dependency. Fixture script dùng Core MeetingManager/MeetingService và store riêng.
+- **PASS — Test wiring:** Runner bootstrap unit test được thêm vào UNIT_TESTS; các test bao gồm SHA mismatch, invalid/missing port, store mismatch/outside RUNNER_TEMP, missing sentinel và identity không được duyệt.
+- **NOT RUN:** Chưa chạy pytest, compileall, actionlint/yaml parser hoặc GitHub Actions trên exact SHA từ môi trường assistant. Static readback chỉ xác nhận cấu trúc/nội dung, không chứng minh runtime.
+- **NOT RUN:** Windows runner, label/group/service identity, Playwright/Chromium trên PC và Windows E2E. Không bật readiness variable. Không đụng WORK09.
+- **NEXT:** Mở draft PR vào `work/32-ci-cd-python-ci-v2` để GitHub Actions xác minh hosted lanes, tooling/workflow mirror và release gate. Sau đó đọc jobs/artifacts; sửa lỗi source phát hiện được. Chỉ khi runner readiness được chứng minh mới cho phép Windows job chạy.
+- **STATUS:** Static source readback PASS; automated test execution PENDING; Windows E2E NOT RUN; Release Acceptance NOT PASSED; Work32 ACTIVE — NOT RELEASED.
+
