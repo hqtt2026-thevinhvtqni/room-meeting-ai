@@ -48,7 +48,7 @@ def test_add_paste_to_meeting_tool_schema(tmp_path):
     assert schema["properties"]["meeting_id"]["type"] == "string"
     assert schema["properties"]["meeting_id"]["minLength"] == 1
     assert schema["properties"]["text"]["type"] == "string"
-    assert schema["required"] == ["meeting_id", "text"]
+    assert schema["required"] == ["meeting_id", "text", "identity_id"]
     assert schema["additionalProperties"] is False
 
 
@@ -83,7 +83,7 @@ def test_add_paste_delegates_to_service(tmp_path):
     result = asyncio.run(handler(request))
 
     assert service.calls == [
-        ("MEETING-TEST-001", "Hello ROOM HOP")
+        ("MEETING-TEST-001", "Hello ROOM HOP", "xu")
     ]
 
     assert result.root.structuredContent == {
@@ -145,7 +145,7 @@ def test_add_paste_returns_service_result(tmp_path):
     """Verify the MCP adapter returns the service result."""
 
     class FakeService:
-        def add_paste(self, meeting_id, raw_text):
+        def add_paste(self, meeting_id, raw_text, identity_id):
             return {
                 "meeting_id": meeting_id,
                 "accepted": True,
