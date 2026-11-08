@@ -436,7 +436,7 @@ jobs:
                   $expectedCreated = ([datetime]::Parse($processCreatedUtc)).ToUniversalTime().Ticks
                   $remainingExe = [string]::Equals([IO.Path]::GetFullPath($remaining.ExecutablePath), [IO.Path]::GetFullPath($adapterExe), [StringComparison]::OrdinalIgnoreCase)
                   $remainingOwnerResult = Invoke-CimMethod -InputObject $remaining -MethodName GetOwner
-                  $remainingOwner = $remainingOwnerResult.ReturnValue -eq 0 -and "$($remainingOwnerResult.Domain)\\$($remainingOwnerResult.User)" -eq $adapterOwner
+                  $remainingOwner = $remainingOwnerResult.ReturnValue -eq 0 -and "$($remainingOwnerResult.Domain)\$($remainingOwnerResult.User)" -eq $adapterOwner
                   if ($remainingCreated -eq $expectedCreated -and $remainingExe -and $remainingOwner) {
                     Write-Host "adapter_cleanup_taskkill_exit=$killExit"
                     Write-Host "adapter_remaining_command=$($remaining.CommandLine)"
