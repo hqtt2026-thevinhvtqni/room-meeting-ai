@@ -2,7 +2,7 @@ import asyncio
 
 from mcp import types
 
-from core.meeting_manager import MeetingManager
+from core.meeting_manager import MeetingManager, MeetingRateLimitError
 from core.meeting_service import MeetingService
 from room_hop_mcp.adapter.server import create_server
 
@@ -210,3 +210,33 @@ def test_add_paste_handles_core_error(tmp_path):
     assert result.root.isError is True
     assert len(result.root.content) > 0
     assert "meeting is not active" in result.root.content[0].text
+
+
+def test_add_paste_returns_structured_rate_limit_error(tmp_path):
+    class RateLimitedService:
+        def add_paste(self, meeting_id, raw_text, identity_id):
+            raise MeetingRateLimitError(7)
+
+    server = create_server(RateLimitedService())
+    handler = _get_call_tool_handler(server)
+    request = types.CallToolRequest(
+        method="tools/call",
+        params=types.CallToolRequestParams(
+            name="add_paste_to_meeting",
+            arguments={
+                "meeting_id": "MEETING-TEST-001",
+                "text": "hello",
+                "identity_id": "xu",
+            },
+        ),
+    )
+
+    result = asyncio.run(handler(request))
+
+    assert result.root.isError is True
+    assert result.root.structuredContent == {
+        "error": {
+            "code": "RATE_LIMIT_EXCEEDED",
+            "retry_after_seconds": 7,
+        }
+    }
