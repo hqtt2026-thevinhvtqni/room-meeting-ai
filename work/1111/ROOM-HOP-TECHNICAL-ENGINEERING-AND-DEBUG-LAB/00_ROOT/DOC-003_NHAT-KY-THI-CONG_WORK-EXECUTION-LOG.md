@@ -490,3 +490,10 @@ a read-only cho process/listener/health nếu có source change hoặc evidence 
 - Workflow config xác nhận push trigger tồn tại, nhưng không có general workflow-run list/dispatch action. Exact-SHA CI remains NOT VERIFIED.
 - `git apply --check` không thể chạy vì session không có local Git checkout/command runner. Không tạo PASS giả.
 - Trạng thái C02: code + 5 regression test changes + GitHub cumulative diff artifact = WRITTEN/READBACK; CI exact SHA and local apply-check = BLOCKED; not READY FOR CLA REVIEW.
+
+
+## 2026-11-09 12h (UTC+7) — C07 SAFETY REDACTION CORRECTION
+- Co chỉnh sửa `06_EVIDENCE/PC_READONLY_ATTESTATION_PACK_20261109.md` sau readback review: command line được xuất dưới trường `CommandLineRedacted`; các argument dạng token/secret/password/API-key/credential được redact trước khi hiển thị; không in giá trị environment secret.
+- PEB struct khởi tạo bằng static ::new() để giảm rủi ro parse nested type trong PowerShell.
+- Sandbox readback status=ok; xác nhận không còn Select-Object in raw CommandLine và script có secret-redaction expression.
+- C07 vẫn là package handoff; chưa chạy trên PC. Hash mới sẽ được ghi trong DOC-010 revision ledger.
