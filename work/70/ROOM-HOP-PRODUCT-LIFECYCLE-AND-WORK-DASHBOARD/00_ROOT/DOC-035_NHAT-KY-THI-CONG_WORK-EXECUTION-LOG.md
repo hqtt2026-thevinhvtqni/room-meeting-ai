@@ -1430,3 +1430,12 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - Exact fetch từ GitHub `main` xác nhận DOC-054 có assignment ID `ASG-W70-VI-DASHBOARD-COMPLETION-20261107-01`; blob SHA `ccf3353edf846d560ff8239d671400cded099a98`.
 - Exact fetch từ GitHub `main` xác nhận DOC-035 chứa entry “Đọc nhật ký, giao Vi hoàn thiện Dashboard Work 70”; blob SHA sau cập nhật `4927a4e4eff405973d8e178b31e761c7fffdeb4e`.
 - **Correction trạng thái:** DOC-035 entry đã được exact read-back thành công; thay câu “cần exact read-back sau commit” ở phần ghi kết quả bằng xác nhận read-back PASS tại addendum này. Đây chỉ là xác minh hồ sơ GitHub, không phải xác nhận Vi đã ACK hoặc bắt đầu code.
+
+
+## W70-LOG-20261108-05 — GITHUB MAIN SYNC — 2026-11-08 12:20 (+07:00)
+- Đối chiếu GitHub main với Sandbox: DOC-093, ROLE_TASK_STATUS.json chưa tồn tại trên main; Dashboard execution/index.html trên main là phiên bản cũ, không có Role-based Task Board. Đây là nguyên nhân anh chưa thấy bảng.
+- Sửa lỗi cú pháp JavaScript ở renderer Sandbox trước khi đồng bộ; mở rộng schema DOC-093 cho 5 trường task chi tiết.
+- Đồng bộ DOC-093 (36 task), schema, projection và Dashboard HTML lên GitHub main. Projection read-only, no_mock_data=true; mọi task vẫn PLANNED.
+- Kiểm tra tĩnh trước đồng bộ: 36/36 task có 3 execution steps, scope boundary, verification method, evidence list và completion rule; HTML có bảng chi tiết và phần mở rộng Evidence.
+- Trạng thái: GITHUB_WRITE_ACKNOWLEDGED; GITHUB_READBACK_PENDING; BROWSER_RUNTIME_NOT_VERIFIED; CI_NOT_VERIFIED.
+- Next: fetch lại toàn bộ 4 artifact từ main, xác minh hash/nội dung, theo dõi Work 70 Preview Host workflow và kiểm tra URL Preview Host nếu có runtime.
