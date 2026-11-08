@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import asyncio
+import ipaddress
 from concurrent.futures import ThreadPoolExecutor
 from functools import wraps
 import json
 import os
+import socket
 import sys
 import time
 from threading import RLock
@@ -33,6 +35,58 @@ def _redact_url(value: str) -> str:
         return urlunsplit((parts.scheme, parts.netloc, parts.path, "", ""))
     except ValueError:
         return "[invalid-url]"
+
+
+def _validate_navigation_url(value: str) -> None:
+    """Fail closed for non-web schemes and non-public destinations."""
+    try:
+        parts = urlsplit(str(value))
+        host = parts.hostname
+        if parts.scheme.lower() not in {"http", "https"} or not host:
+            raise ValueError("Browser navigation permits only http/https URLs.")
+        if parts.username is not None or parts.password is not None:
+            raise ValueError("Credentials embedded in browser URLs are not permitted.")
+    except ValueError:
+        raise
+
+    allowed_test_hosts = {
+        item.strip().lower()
+        for item in os.getenv("ROOMHOP_BROWSER_ALLOWED_HOSTS", "").split(",")
+        if item.strip()
+    }
+    if os.getenv("ROOMHOP_TEST_MODE") == "1" and host.lower() in allowed_test_hosts:
+        return
+
+    try:
+        addresses = {
+            item[4][0]
+            for item in socket.getaddrinfo(host, parts.port, type=socket.SOCK_STREAM)
+        }
+    except OSError:
+        raise ValueError("Browser destination DNS resolution failed.") from None
+    if not addresses:
+        raise ValueError("Browser destination did not resolve.")
+    for address in addresses:
+        try:
+            parsed_ip = ipaddress.ip_address(address)
+        except ValueError:
+            raise ValueError("Browser destination resolved to an invalid IP.") from None
+        if not parsed_ip.is_global:
+            raise ValueError("Browser destination resolves to a non-public IP address.")
+
+
+def _safe_evidence_path(name: str) -> Path:
+    """Confine evidence filenames to the adapter evidence directory."""
+    if not isinstance(name, str) or not name or name in {".", ".."}:
+        raise ValueError("Evidence filename is required.")
+    candidate = Path(name)
+    if candidate.is_absolute() or candidate.name != name or "/" in name or "\\" in name:
+        raise ValueError("Evidence filename must be a plain basename.")
+    root = EVIDENCE.resolve()
+    resolved = (root / name).resolve()
+    if resolved.parent != root:
+        raise ValueError("Evidence path escapes the evidence directory.")
+    return resolved
 
 
 class WorkflowRequest(BaseModel):
@@ -75,7 +129,7 @@ class Adapter:
         executable = os.getenv("ROOMHOP_BROWSER_EXECUTABLE")
         launch_kwargs: dict[str, Any] = {
             "headless": True,
-            "args": ["--no-sandbox"],
+            "args": [],
         }
         if executable:
             launch_kwargs["executable_path"] = executable
@@ -85,6 +139,7 @@ class Adapter:
             accept_downloads=True,
             viewport={"width": 1280, "height": 900},
         )
+        self.context.route("**/*", self._guard_route)
         self.page = self.context.new_page()
         self.started_at = time.time()
         self.log(
@@ -104,10 +159,21 @@ class Adapter:
         assert self.page is not None
         return self.page
 
+    @staticmethod
+    def _guard_route(route) -> None:
+        try:
+            _validate_navigation_url(route.request.url)
+        except ValueError:
+            route.abort()
+        else:
+            route.continue_()
+
     @_serialized_operation
     def navigate(self, url: str):
+        _validate_navigation_url(url)
         p = self.require()
         r = p.goto(url, wait_until="domcontentloaded", timeout=30000)
+        _validate_navigation_url(p.url)
         p.wait_for_timeout(500)
         self.log("browser_navigate", url=_redact_url(p.url), status=r.status if r else None)
         return {"url": _redact_url(p.url), "status": r.status if r else None, "title": p.title()}
@@ -158,7 +224,7 @@ class Adapter:
     @_serialized_operation
     def screenshot(self, name: str = "page.png"):
         p = self.require()
-        path = EVIDENCE / name
+        path = _safe_evidence_path(name)
         p.screenshot(path=str(path), full_page=True)
         self.log("browser_screenshot", path=str(path))
         return {"path": str(path)}
@@ -169,7 +235,7 @@ class Adapter:
         with p.expect_download(timeout=20000) as pending:
             p.locator(selector).first.click()
         download = pending.value
-        path = EVIDENCE / (name or download.suggested_filename)
+        path = _safe_evidence_path(name or download.suggested_filename)
         download.save_as(str(path))
         self.log("browser_download", selector=selector, path=str(path))
         return {"path": str(path), "suggested_filename": download.suggested_filename}
@@ -222,7 +288,7 @@ class Adapter:
             "finished_at": time.time(),
         }
 
-        out = EVIDENCE / f"{req.work_id}-{int(time.time())}.json"
+        out = _safe_evidence_path(f"{req.work_id}-{int(time.time())}.json")
         out.write_text(json.dumps(final, indent=2, ensure_ascii=False), encoding="utf-8")
         final["evidence_json"] = str(out)
         final["roomhop_submission"] = _submit_to_roomhop_from_worker(final)
