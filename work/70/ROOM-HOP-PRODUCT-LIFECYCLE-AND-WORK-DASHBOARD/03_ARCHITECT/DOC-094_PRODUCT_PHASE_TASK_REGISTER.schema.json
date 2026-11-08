@@ -1,0 +1,324 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "DOC-094_PRODUCT_PHASE_TASK_REGISTER.schema.json",
+  "title": "Work 70 Product Task and Phase Task Register",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "work_id",
+    "document_id",
+    "schema_version",
+    "baseline_status",
+    "source_of_truth",
+    "agent_task_source",
+    "model",
+    "rules",
+    "progress_policy",
+    "product_tasks",
+    "phase_tasks",
+    "task_count",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "work_id": {
+      "const": "70"
+    },
+    "document_id": {
+      "const": "DOC-094"
+    },
+    "title": {
+      "type": "string"
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "baseline_status": {
+      "enum": [
+        "DRAFT_NOT_APPROVED",
+        "APPROVED",
+        "SUPERSEDED"
+      ]
+    },
+    "authority": {
+      "type": "string"
+    },
+    "source_of_truth": {
+      "type": "string"
+    },
+    "agent_task_source": {
+      "type": "string"
+    },
+    "minutes_source": {
+      "type": "string"
+    },
+    "journal_source": {
+      "type": "string"
+    },
+    "decision_source": {
+      "type": "string"
+    },
+    "dashboard_projection": {
+      "type": "string"
+    },
+    "model": {
+      "type": "object",
+      "required": [
+        "tier_1",
+        "tier_2",
+        "tier_3"
+      ],
+      "properties": {
+        "tier_1": {
+          "type": "string"
+        },
+        "tier_2": {
+          "type": "string"
+        },
+        "tier_3": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "progress_policy": {
+      "type": "object",
+      "required": [
+        "status",
+        "reason",
+        "prohibited_methods"
+      ],
+      "properties": {
+        "status": {
+          "const": "NOT_CALCULATED"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "prohibited_methods": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "product_tasks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "product_task_id",
+          "product_name",
+          "product_type",
+          "objective",
+          "scope",
+          "current_phase",
+          "status",
+          "progress_percent",
+          "progress_status",
+          "baseline_status",
+          "phase_task_ids",
+          "status_basis"
+        ],
+        "properties": {
+          "product_task_id": {
+            "type": "string"
+          },
+          "product_name": {
+            "type": "string"
+          },
+          "product_type": {
+            "type": "string"
+          },
+          "objective": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string"
+          },
+          "current_phase": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "PLANNED",
+              "IN_PROGRESS",
+              "BLOCKED",
+              "DONE",
+              "NOT_ASSESSED"
+            ]
+          },
+          "progress_percent": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 100
+          },
+          "progress_status": {
+            "type": "string"
+          },
+          "baseline_status": {
+            "type": "string"
+          },
+          "phase_task_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status_basis": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "phase_tasks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "phase_task_id",
+          "product_task_id",
+          "phase",
+          "phase_name",
+          "task_title",
+          "expected_deliverable",
+          "acceptance_criteria",
+          "primary_agent",
+          "contributing_agents",
+          "checking_agent",
+          "assignment_status",
+          "status",
+          "progress_percent",
+          "shared_work_agent_task_ids",
+          "evidence_refs",
+          "journal_refs",
+          "minutes_refs",
+          "next_action"
+        ],
+        "properties": {
+          "phase_task_id": {
+            "type": "string"
+          },
+          "product_task_id": {
+            "type": "string"
+          },
+          "phase": {
+            "type": "string"
+          },
+          "phase_name": {
+            "type": "string"
+          },
+          "task_title": {
+            "type": "string"
+          },
+          "expected_deliverable": {
+            "type": "string"
+          },
+          "acceptance_criteria": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "primary_agent": {
+            "type": "string"
+          },
+          "contributing_agents": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "checking_agent": {
+            "type": "string"
+          },
+          "assignment_status": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "PLANNED",
+              "IN_PROGRESS",
+              "BLOCKED",
+              "DONE",
+              "NOT_ASSESSED"
+            ]
+          },
+          "progress_percent": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "shared_work_agent_task_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "evidence_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "journal_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "minutes_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "next_action": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "task_count": {
+      "type": "object",
+      "required": [
+        "product_tasks",
+        "phase_tasks",
+        "shared_agent_task_references"
+      ],
+      "properties": {
+        "product_tasks": {
+          "type": "integer"
+        },
+        "phase_tasks": {
+          "type": "integer"
+        },
+        "shared_agent_task_references": {
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "updated_at": {
+      "type": "string"
+    }
+  }
+}
