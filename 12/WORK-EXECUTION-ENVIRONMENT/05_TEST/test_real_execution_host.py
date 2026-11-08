@@ -1,3 +1,9 @@
+import sys
+from pathlib import Path
+W12_CODE = Path(__file__).resolve().parents[1] / '04_CODE'
+if str(W12_CODE) not in sys.path:
+    sys.path.insert(0, str(W12_CODE))
+
 import pytest
 from wee.bridge.real_host import RealExecutionHost, WorkIsolationError
 from wee.models import WorkContext
