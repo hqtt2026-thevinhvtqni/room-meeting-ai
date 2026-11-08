@@ -1,6 +1,9 @@
 import asyncio
 import importlib
 import sys
+import threading
+import time
+from concurrent.futures import ThreadPoolExecutor
 import types
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -331,3 +334,60 @@ def test_submission_uses_exact_target_stdio_and_verifies_readback(monkeypatch, t
         "MEETING-W32-DISPOSABLE",
         "identity-w32-e2e",
     )
+
+
+
+def test_adapter_workflows_are_serialized_and_keep_request_scoped_logs(monkeypatch, tmp_path):
+    monkeypatch.setattr(browser_adapter, "EVIDENCE", tmp_path)
+    monkeypatch.setattr(
+        browser_adapter,
+        "_submit_to_roomhop_from_worker",
+        lambda result: {"status": "pass"},
+    )
+    instance = browser_adapter.Adapter()
+    state = {"active": 0, "max_active": 0}
+    state_lock = threading.Lock()
+    instance.page = SimpleNamespace(url="", title=lambda: "serialized test")
+
+    def fake_start():
+        with state_lock:
+            state["active"] += 1
+            state["max_active"] = max(state["max_active"], state["active"])
+        instance.started_at = time.time()
+        instance.logs.append({"event": "start"})
+        return {"status": "started"}
+
+    def fake_navigate(url):
+        time.sleep(0.04)
+        instance.page.url = url
+        instance.logs.append({"event": "navigate", "url": url})
+        return {"url": url, "status": 200, "title": "serialized test"}
+
+    def fake_submit(result):
+        with state_lock:
+            state["active"] -= 1
+        return {"status": "pass"}
+
+    monkeypatch.setattr(instance, "start", fake_start)
+    monkeypatch.setattr(instance, "navigate", fake_navigate)
+    monkeypatch.setattr(browser_adapter, "_submit_to_roomhop_from_worker", fake_submit)
+
+    requests = [
+        browser_adapter.WorkflowRequest(url="https://one.example/", work_id="parallel-one"),
+        browser_adapter.WorkflowRequest(url="https://two.example/", work_id="parallel-two"),
+    ]
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        results = list(executor.map(instance.workflow, requests))
+
+    assert state["max_active"] == 1
+    assert state["active"] == 0
+    by_url = {result["final_url"]: result for result in results}
+    assert set(by_url) == {"https://one.example/", "https://two.example/"}
+    assert by_url["https://one.example/"]["logs"] == [
+        {"event": "start"},
+        {"event": "navigate", "url": "https://one.example/"},
+    ]
+    assert by_url["https://two.example/"]["logs"] == [
+        {"event": "start"},
+        {"event": "navigate", "url": "https://two.example/"},
+    ]
