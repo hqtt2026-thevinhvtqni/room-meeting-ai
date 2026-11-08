@@ -80,8 +80,16 @@ def _safe_evidence_path(name: str) -> Path:
     if not isinstance(name, str) or not name or name in {".", ".."}:
         raise ValueError("Evidence filename is required.")
     candidate = Path(name)
-    if candidate.is_absolute() or candidate.name != name or "/" in name or "\\" in name:
-        raise ValueError("Evidence filename must be a plain basename.")
+    if (
+        candidate.is_absolute()
+        or candidate.name != name
+        or "/" in name
+        or "\\" in name
+        or any(character in name for character in '<>:"|?*')
+        or any(ord(character) < 32 for character in name)
+        or name.endswith((" ", "."))
+    ):
+        raise ValueError("Evidence filename must be a safe plain basename.")
     root = EVIDENCE.resolve()
     resolved = (root / name).resolve()
     if resolved.parent != root:
