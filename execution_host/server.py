@@ -63,7 +63,7 @@ class CoreAuthorityClient:
     def validate_grant(self, work_id: str, grant_id: str, token: str) -> dict:
         return self._request(
             "GET",
-            f"/works/{quote(work_id, safe='')}/execution-grants/{quote(grant_id, safe='')}",
+            f"/works/{quote(work_id, safe='')}/execution-grants/{quote(grant_id, safe='')}/validate",
             token,
         )
 
