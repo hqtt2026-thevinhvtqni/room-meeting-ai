@@ -44,3 +44,11 @@
 
 ### Hiệu đính tính trung thực từ nhật ký nguồn
 Các commit d7f1963 và 4f83c5b được tạo trong một môi trường shell riêng theo log người dùng cung cấp, nhưng không tồn tại trên GitHub branch khi đối chiếu qua GitHub API tại thời điểm kiểm tra. Vì vậy không ghi chúng là commit đã đồng bộ. Các số MRR/Hit@3/Exact-pass trong log đó chưa được xem là bằng chứng GitHub/production; cần tái chạy từ đúng source/commit và lưu artifact vào branch trước khi nghiệm thu baseline.
+
+## LOG-W103-20261108-003 — Promote official records and preserve legacy history
+- **Time:** 2026-11-08 16:34 UTC+07
+- **Scope:** Manifest, minutes, plan and execution journal.
+- **Actions:** Created canonical DOC-034 minutes and DOC-045 roadmap; converted WORK_MANIFEST.md, BIEN_BAN.md, KE_HOACH_THI_CONG_XU.md and NHAT_KY_HOP_THI_CONG.md to compatibility pointers; preserved the original 2026-10-26 journal entry and correction in DOC-035; updated DOC-001 and DOC-055.
+- **Evidence:** Canonical documents were created on the Work 103 branch; exact blob readback and branch-head confirmation are pending the final verification pass.
+- **Status:** DONE for canonical promotion and historical preservation; NOT VERIFIED for inbound links, CI regression and independent QE.
+- **Next:** Run link/reference audit and CI; then continue lifecycle folders, Work Package mapping and dashboard.
