@@ -1573,3 +1573,28 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **Coverage:** Run #284 still excluded `tests/test_core_http_main.py`, so the 204 Unit PASS does not validate the new route. Ka re-added this existing test to `UNIT_TESTS` and synchronized the workflow mirror byte-for-byte to verify the exact 503 fail-closed response and unchanged Meeting API. Run #285 is required before claiming this test PASS.
 - **Qw / review evidence:** Vinh reports Xu, Cla and Qw have completed the requested checks. Existing Xu/Cla first-review records are present; post-remediation decisions and the original W32 Qw QE artifact still need attributable source linkage in Work32 evidence. The Work70 Qw report remains out of scope.
 - **Status:** Run #284 PASS 6/6; latest unit contract test revalidation pending. PR #49 remains DRAFT; main unchanged; no merge, CD, staging, production or release.
+
+
+## W32-LOG-20261109-104 — Run #287 PASS 6/6 trên exact PR head
+
+- **Document Number:** W32-LOG-20261109-104
+- **Priority Order:** P0 — Final exact-SHA CI evidence for current integration candidate
+- **Name:** Ka
+- **Title:** CSA / Delegated Work32 Execution Owner
+- **Date-Time:** 2026-11-09 (Asia/Ho_Chi_Minh)
+- **PR:** #49, branch `work/32-main-integration-20261109`, exact head `e0e990a2c2a0d92813afd811359b8cf168c0e18b`.
+- **GitHub Actions Run #287:** `42523319196`, conclusion SUCCESS; all six jobs PASS.
+- **Unit:** 205 passed in 5.90s. `tests/test_core_http_main.py` now passes against the explicit fail-closed 503 route. Coverage report: `unaccounted_test_files=0`, `missing_whitelisted_files=0`; the one Windows-only Browser Adapter E2E file is explicitly assigned to the Windows lane.
+- **Product Auto E2E:** 89 passed.
+- **Work32 tooling/workflow mirror:** PASS; active workflow and Work32 mirror verified byte-for-byte identical.
+- **Windows Browser Adapter E2E:** 10 passed in 3.24s; disposable Core fixture and preflight PASS; loopback adapter port 49590; browser context cleanup PASS; adapter process PID 8408 cleanup PASS; evidence artifact uploaded.
+- **Immutable product artifact:** source build/checksum, extracted dependency check and artifact-level E2E PASS.
+- **Work32 release acceptance gate:** PASS.
+- **S10:** atomic YAML replacement, same-process per-meeting serialization, atomic generated-ID reservation/retry and the three focused tests remain validated. Cross-process meeting-state read-modify-write is still unproven; one Core process per local store only. Multi-process/multi-host remain BLOCKED.
+- **Core execution-grant boundary:** the current branch includes the explicit 503 fail-closed route; the authority service does not issue grants. Route ownership and final semantics remain subject to Xu's architecture decision. The route must not be represented as a working grant service or permission to expose remote execution.
+- **Review traceability:** Vinh reports Xu, Cla and Qw completed checks. Ka has read Xu's first architecture decision and Cla's original security review. Post-remediation Xu/Cla review conclusions and the original W32 Qw QE artifact still require exact source linkage in the Work32 evidence chain; the Work70 Qw report is not substituted.
+- **Product integration gate:** Dashboard → Workspace → Core real E2E remains NOT RUN pending canonical Workspace source/runtime and Xu/Mê-approved API contract.
+- **Disposition:** CI acceptance PASS on exact PR head. PR #49 remains DRAFT and unmerged; main unchanged. No remote exposure, CD, staging, production, G7, merge or release.
+- **Next:** obtain attributable Xu route/architecture decision, Cla post-remediation security disposition and Qw W32 QE report; resolve canonical Workspace source/contract; keep the PR draft until all required gates are satisfied.
+
+**Final status:** CI ACCEPTANCE PASS — ARCHITECTURE / SECURITY / QE / DASHBOARD INTEGRATION GATES OPEN — ACTIVE / NOT RELEASED.
