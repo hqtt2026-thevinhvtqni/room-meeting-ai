@@ -369,7 +369,9 @@ listener=PASS
             $currentOwnerResult = Invoke-CimMethod -InputObject $current -MethodName GetOwner
             $currentOwner = "$($currentOwnerResult.Domain)\$($currentOwnerResult.User)"
             if ($actualOwner -ne $currentOwner) { throw "BLOCKED: adapter owner differs from runner identity; refusing to stop PID $adapterPid" }
-            Stop-Process -Id $adapterPid -Force
+            try { Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:$env:ROOMHOP_BROWSER_ADAPTER_PORT/browser/close" -TimeoutSec 5 | Out-Null } catch { Write-Host "adapter_browser_close=unavailable; terminating only the validated process tree" }
+            & "$env:SystemRoot\System32\taskkill.exe" /PID $adapterPid /T /F
+            if ($LASTEXITCODE -ne 0) { throw "BLOCKED: taskkill could not terminate the validated adapter process tree" }
             Wait-Process -Id $adapterPid -Timeout 10 -ErrorAction SilentlyContinue
           }
           if ($env:ROOMHOP_BROWSER_ADAPTER_PORT) {
