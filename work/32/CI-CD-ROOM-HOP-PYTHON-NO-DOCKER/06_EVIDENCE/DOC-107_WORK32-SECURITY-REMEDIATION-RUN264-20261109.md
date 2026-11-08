@@ -95,3 +95,15 @@ Run #254 (42520909842) was the first remediation validation and failed on compat
 ## NHẬT KÝ
 - **W32-LOG-20261109-96:** Run #254 failure evidence and corrections recorded; no rollback of Xu's fail-closed membership decision.
 - **W32-LOG-20261109-97:** Run #264 exact-SHA PASS, six required jobs successful; Xu/Cla re-review, Qw original W32 QE evidence, Dashboard → Workspace → Core E2E and release gates remain open.
+
+
+## Addendum — Run #265 documentation-head revalidation
+- **Name:** Ka
+- **Title:** CSA / Work32 Execution Owner
+- **Date-Time:** 2026-11-09 (Asia/Ho_Chi_Minh)
+- After DOC-107 was added, latest PR head became `a7fe318d14ef06bf3c25bf6005b80dede81a307f` (documentation-only commit).
+- Run #265 / `42521596692` completed SUCCESS across all six jobs: Unit, Product Auto E2E, Windows Browser Adapter E2E, Work32 tooling/mirror, immutable artifact, and release acceptance gate.
+- This confirms the latest documentation head without changing the code SHA validated by Run #264.
+- PR #49 remains DRAFT; main unchanged; no merge/deployment/release.
+
+**W32-LOG-20261109-98:** Run #265 docs-only exact-head revalidation 6/6 PASS.
