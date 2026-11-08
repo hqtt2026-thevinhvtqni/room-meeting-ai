@@ -57,8 +57,11 @@ class ExecutionHostBridge:
     @staticmethod
     def _http_transport(url: str, body: bytes, timeout: float, headers: dict[str, str]) -> tuple[int, bytes]:
         req = request.Request(url, data=body, headers=headers, method="POST")
-        with request.urlopen(req, timeout=timeout) as response:
-            return response.status, response.read(1024 * 1024 + 1)
+        try:
+            with request.urlopen(req, timeout=timeout) as response:
+                return response.status, response.read(1024 * 1024 + 1)
+        except error.HTTPError as exc:
+            return exc.code, exc.read(1024 * 1024 + 1)
 
     @staticmethod
     def _to_dict(value: Any) -> dict[str, Any]:
