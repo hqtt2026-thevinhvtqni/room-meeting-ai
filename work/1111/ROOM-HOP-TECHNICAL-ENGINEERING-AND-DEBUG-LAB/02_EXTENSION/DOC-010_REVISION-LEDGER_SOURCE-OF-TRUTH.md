@@ -49,3 +49,44 @@ Blob SHA identifies file content, not commit SHA. Values are observed fetch_file
 ## 5. Update protocol
 
 Append a dated addendum; do not rewrite historical observations. Record observer, exact paths, revisions, hashes, method, evidence, result and remaining uncertainty.
+
+
+## ADDENDUM — 2026-11-09 — C05 REVISION ANCHORS / DOC-003 SANDBOX CONTINUATION
+
+### Revision anchors observed
+- Repository: `hqtt2026-thevinhvtqni/room-meeting-ai`.
+- Latest GitHub main commit returned by repository commit search at this check: `024e2c9797da091b83c2e0ea5e3ac7f3b593eafb` (message: test(core): verify Core HTTP mount fails closed). This is a GitHub commit-search anchor, not a PC/runtime attestation.
+- PR #48: `https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/48`, draft integration branch `work/w1111-core-execution-authority-v1-2`.
+- Branch head immediately before this DOC-010 update: `423f8192ca1cdb8181d3964cc47bc08d0f5ff9b6` (C05 DOC-003 continuation sync). This update itself will advance the branch head; see C05 journal entry for the resulting commit.
+- C02 source/test commits on that branch: host source commit `65cf53af2a8a656ef83327ea2718c2c65f994bf7`; test additions commit `3edd072fcec184dca936c510f98ebbe42064ed30`; timeout-test stabilization commit `e2c9e7e1508eacff390f4ac2e9117230601df7ab`.
+- Latest observed PR #48 host blob SHA: `a914d36b14bdb5b3207282e7e8a989484421ccdc`; latest observed C02 test blob SHA: `b5d190772d6458e2cdc3b2df3203053121e725be`.
+- Prior CI run `42454767666` was successful (33 tests) on an earlier branch revision. Workflow-run lookup for C02 code commit `e2c9e7e1508eacff390f4ac2e9117230601df7ab` returned no PR-triggered workflow runs in the connector response. Therefore the prior CI result is not attributed to the updated C02 source SHA; exact-SHA CI remains NOT VERIFIED.
+
+### DOC-003 synchronization
+- Canonical Sandbox journal path: `ROOM-HOP-TECHNICAL-ENGINEERING-AND-DEBUG-LAB/00_ROOT/NHAT_KY_THI_CONG.md`.
+- GitHub DOC-003 path: `work/1111/ROOM-HOP-TECHNICAL-ENGINEERING-AND-DEBUG-LAB/00_ROOT/DOC-003_NHAT-KY-THI-CONG_WORK-EXECUTION-LOG.md`.
+- Exact UTF-8 prefix comparison: first 12,928 bytes of Sandbox journal matched GitHub DOC-003 byte-for-byte before sync.
+- Appended the Sandbox journal continuation beginning at byte offset 12,928 after preserving the existing GitHub-specific addenda. No prior GitHub text was overwritten.
+- GitHub DOC-003 new blob SHA after readback: `95588af96a7e7f07000d9f640f41263042a8ee73`.
+- GitHub DOC-003 main blob remains `b5c6d2a24ce030546b8997ffe9e6d64f26f190a0`; this sync was written to the PR #48 branch only, not main.
+- The existing GitHub-specific addenda and the Sandbox continuation were both retained; this was append-only synchronization, not a semantic deduplication or whole-file parity claim.
+
+### Work 1111 Sandbox file Git-blob SHA-1 anchors
+Computed from exact Sandbox readback using Git blob framing (`blob <UTF-8 byte length>\0<content>`); these are Sandbox content identifiers, not GitHub branch blob IDs.
+
+| Sandbox canonical path (relative to Work 1111) | UTF-8 bytes | Git blob SHA-1 |
+|---|---:|---|
+| `00_ROOT/NHAT_KY_THI_CONG.md` | 60,962 | `648bae486c1e2cf70c27c5968a35207b1bfc97b2` |
+| `02_EXTENSION/TECHNICAL_BASELINE_AND_OPEN_BLOCKERS.md` | 10,411 | `ef657d06b48272dfdd9cba2c410996e7fde60a5d` |
+| `02_EXTENSION/AUTO_E2E_REMEDIATION_GATE_AND_PC_HANDOFF_20261108.md` | 11,288 | `3cc1740052b015cea46e2c315d53fd5b192f6c86` |
+| `03_ARCHITECTURE/EXECUTION_HOST_LINES_RECONCILIATION_20261109.md` | 6,462 | `4b535cc5612e2e4c002c729c1ff71adf2f39ca32` |
+| `03_ARCHITECTURE/PR48_SELF_REVIEW_PACKAGE_20261109.md` | 7,957 | `63f6e4b19292e23f6ba21f2921e7fd3f0436fc3e` |
+| `02_EXTENSION/APPROVAL_RECORD_CORE_EXEC_AUTHORITY_V1_2_DRAFT.md` | 4,463 | `b48b6a691c784d309e7dfe2ce213cd6b3cfc9ad9` |
+| `06_EVIDENCE/PC_READONLY_ATTESTATION_PACK_20261109.md` | 7,626 | `3aaef246487bf222b80875ecd9e17638fd78b492` |
+| `01_DISCOVER/INVENTORY_CLASSIFICATION_W09_W102_20261109.md` | 5,121 | `392b9b6fda70e39346f0ec21cd4a5a63580df7b0` |
+
+### Parity limits
+- DOC-003 Sandbox continuation ↔ PR #48 branch: append operation acknowledged and GitHub fetch readback returned blob SHA above; the exact 12,928-byte prefix was verified before write.
+- DOC-003 GitHub main was not changed.
+- W1111 source/docs Sandbox ↔ GitHub branch parity is NOT VERIFIED for all eight files above; the table is a Sandbox hash baseline only.
+- PC source/runtime parity remains NOT VERIFIED. No PC or runtime action was performed.
