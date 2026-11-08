@@ -470,3 +470,12 @@ a read-only cho process/listener/health nếu có source change hoặc evidence 
 - Tổng shared files đã hash trong 4 cặp W102: 4 + 6 + 61 + 2 = 73; tất cả 73/73 MATCH. Extra tree entries được ghi lại; không move/delete.
 - Sửa kết luận interim 71/72 thành 61/62 file-only; không sửa/xóa history nhật ký interim.
 - C08 = COMPLETE FOR HASH INVENTORY / READY FOR CLA REVIEW. Cần Cla review tree-shape differences; không tự dọn cấu trúc.
+
+
+## 2026-11-09 12h (UTC+7) — C02 CI QUERY SCOPE CORRECTION + C08 FINAL HASH CLOSEOUT
+- Người thực hiện: Co — Coder theo phân công Cla (CTO).
+- C02 correction: `.github/workflows/core-execution-authority.yml` defines push trigger on branch `work/w1111-core-execution-authority-v1-2` as well as pull_request and workflow_dispatch. GitHub connector `fetch_commit_workflow_runs` only returns pull-request-triggered runs. Empty result for `e2c9e7e1508eacff390f4ac2e9117230601df7ab` means no PR-triggered run was returned; it does not prove no push-triggered run exists. No general workflow-runs list/dispatch action is exposed. Exact-SHA CI = NOT VERIFIED, not FAIL and not PASS.
+- C08 final: W09 4,127/4,127 entries classified. W102 all four duplicate pairs fully compared for shared files: 4 + 6 + 61 + 2 = 73/73 SHA-256 MATCH. Pair3 file-only counts 61 vs 62; archive-only README.md. Tree extras remain preserved.
+- DOC-003 branch current blob before final delta sync: `6732228d0e0ff6d8e777b4b1ead1da1da1ef2fcc`; current Sandbox journal SHA-1: `53ba2e336b53a031081b43f0a4e9487123772299`.
+- DOC-010 addendum update commit `29765c88967246d392b690f2a550a4656fc36d1d`; branch blob readback `751069679274845f6ca4008d6ec2cded2cb35788`. Addendum records C08 completion and correct CI query scope.
+- Trạng thái: C08 READY FOR CLA REVIEW; C02 remains blocked pending exact-SHA CI and local git diff/apply-check; no PASS claimed.
