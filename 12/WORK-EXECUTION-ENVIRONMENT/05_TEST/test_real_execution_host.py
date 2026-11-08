@@ -49,7 +49,7 @@ def test_real_host_enforces_execution_timeout(tmp_path):
     assert result.status=="FAILED"
     assert result.timed_out is True
     assert result.blocker=="execution_timeout"
-    assert result.process_tree_cleanup_verified is False
+    assert result.process_tree_cleanup_verified is True
 
 
 def test_real_host_does_not_forward_unapproved_environment_secrets(tmp_path,monkeypatch):
