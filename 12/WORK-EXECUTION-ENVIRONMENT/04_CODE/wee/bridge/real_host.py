@@ -1,5 +1,6 @@
 from __future__ import annotations
-import os, shutil, subprocess
+import os, shutil, subprocess, threading, time
+import psutil
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -42,17 +43,56 @@ class RealExecutionHost(LocalExecutionHost):
         keep={'PATH','HOME','LANG','LC_ALL','SYSTEMROOT','WINDIR','TMP','TEMP','PATHEXT','COMSPEC','HOMEDRIVE','HOMEPATH','USERPROFILE'}
         child_env={k:v for k,v in os.environ.items() if k in keep}
         child_env.update({'ROOM_HOP_EXECUTION_ID':context.execution_id,'ROOM_HOP_WORK_ID':context.work_id})
+        process=None; observed={}; observer_errors=[]; stop=threading.Event()
         try:
-            p=subprocess.run(command,cwd=workspace,text=True,capture_output=True,env=child_env,timeout=float(timeout_seconds))
-            out.write_text(p.stdout or '',encoding='utf-8'); err.write_text(p.stderr or '',encoding='utf-8')
-            return ExecutionResult(context.execution_id,context.work_id,str(workspace),list(command),started,datetime.now(timezone.utc).isoformat(),p.returncode,str(out),str(err),[str(out),str(err)],'PASS' if p.returncode==0 else 'FAILED',self.provider_type,process_tree_cleanup_verified=False)
-        except subprocess.TimeoutExpired as exc:
-            stdout=exc.stdout or ''; stderr=exc.stderr or ''
-            if isinstance(stdout,bytes): stdout=stdout.decode('utf-8',errors='replace')
-            if isinstance(stderr,bytes): stderr=stderr.decode('utf-8',errors='replace')
-            out.write_text(stdout,encoding='utf-8'); err.write_text((stderr+'\nexecution_timeout').strip(),encoding='utf-8')
-            return ExecutionResult(context.execution_id,context.work_id,str(workspace),list(command),started,datetime.now(timezone.utc).isoformat(),None,str(out),str(err),[str(out),str(err)],'FAILED',self.provider_type,blocker='execution_timeout',timed_out=True,process_tree_cleanup_verified=False)
-        except (OSError,WorkIsolationError) as exc:
+            process=psutil.Popen(command,cwd=workspace,text=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE,env=child_env)
+            def watch_children():
+                while not stop.is_set():
+                    try:
+                        for child in process.children(recursive=True):
+                            observed[child.pid]=child
+                    except psutil.AccessDenied:
+                        observer_errors.append("process_tree_access_denied")
+                    except (psutil.NoSuchProcess,psutil.ZombieProcess):
+                        pass
+                    time.sleep(0.02)
+            watcher=threading.Thread(target=watch_children,daemon=True)
+            watcher.start()
+            timed_out=False
+            try:
+                stdout,stderr=process.communicate(timeout=float(timeout_seconds))
+            except subprocess.TimeoutExpired:
+                timed_out=True
+                try: process.kill()
+                except (psutil.NoSuchProcess,psutil.AccessDenied): pass
+                try: stdout,stderr=process.communicate(timeout=5)
+                except subprocess.TimeoutExpired:
+                    stdout,stderr="","process_reap_timeout"
+            finally:
+                stop.set(); watcher.join(timeout=1)
+            # Reap every descendant observed while the command was alive.
+            descendants=list(observed.values())
+            for child in reversed(descendants):
+                try:
+                    if child.is_running(): child.kill()
+                except (psutil.NoSuchProcess,psutil.AccessDenied,psutil.ZombieProcess):
+                    pass
+            _,alive=psutil.wait_procs(descendants,timeout=5)
+            process_reaped=process.poll() is not None
+            cleanup_verified=process_reaped and not alive and not observer_errors
+            out.write_text(stdout or '',encoding='utf-8')
+            err_text=stderr or ''
+            if timed_out: err_text=(err_text+'\nexecution_timeout').strip()
+            if observer_errors: err_text=(err_text+'\n'+','.join(sorted(set(observer_errors)))).strip()
+            err.write_text(err_text,encoding='utf-8')
+            if not cleanup_verified:
+                status='BLOCKED'; blocker='process_tree_cleanup_unverified'
+            elif timed_out:
+                status='FAILED'; blocker='execution_timeout'
+            else:
+                status='PASS' if process.returncode==0 else 'FAILED'; blocker=None
+            return ExecutionResult(context.execution_id,context.work_id,str(workspace),list(command),started,datetime.now(timezone.utc).isoformat(),process.returncode,str(out),str(err),[str(out),str(err)],status,self.provider_type,blocker=blocker,timed_out=timed_out,process_tree_cleanup_verified=cleanup_verified)
+        except (OSError,WorkIsolationError,psutil.Error) as exc:
             err.write_text(str(exc),encoding='utf-8')
             return ExecutionResult(context.execution_id,context.work_id,str(workspace),list(command),started,datetime.now(timezone.utc).isoformat(),None,None,str(err),[str(err)],'BLOCKED',self.provider_type,blocker=type(exc).__name__)
 
