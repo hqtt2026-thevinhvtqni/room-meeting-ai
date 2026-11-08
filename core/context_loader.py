@@ -48,10 +48,37 @@ def suggest_context(topic: str) -> list[str]:
 
 
 def validate_context_files(context_files: list[str]) -> None:
-    """Kiểm tra mọi file trong context_files thực sự tồn tại trong context/."""
-    missing = [f for f in context_files if not (CONTEXT_DIR / f).exists()]
+    """Validate context names and confine every source file to context/."""
+    root = CONTEXT_DIR.resolve()
+    unsafe: list[str] = []
+    missing: list[str] = []
+
+    for filename in context_files:
+        if not isinstance(filename, str) or not filename:
+            unsafe.append(str(filename))
+            continue
+        candidate = Path(filename)
+        if (
+            candidate.is_absolute()
+            or candidate.name != filename
+            or filename in {".", ".."}
+            or "/" in filename
+            or "\\" in filename
+        ):
+            unsafe.append(filename)
+            continue
+        resolved = (root / filename).resolve()
+        if resolved.parent != root:
+            unsafe.append(filename)
+        elif not resolved.is_file():
+            missing.append(filename)
+
+    if unsafe:
+        raise ContextFileNotFoundError(
+            f"Context path must be a plain filename inside context/: {unsafe}"
+        )
     if missing:
-        available = [p.name for p in CONTEXT_DIR.glob("*.md")]
+        available = [p.name for p in root.glob("*.md")]
         raise ContextFileNotFoundError(
             f"Các file context không tồn tại: {missing}. "
             f"File hiện có trong context/: {available}"
