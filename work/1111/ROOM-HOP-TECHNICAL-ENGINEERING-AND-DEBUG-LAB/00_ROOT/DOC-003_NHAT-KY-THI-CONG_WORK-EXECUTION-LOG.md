@@ -124,3 +124,13 @@
 - **Không thực hiện:** không sửa source code, không tạo branch/PR, không chạy pytest, không gọi /execute, không thao tác PC, không thay đổi Work khác.
 - **Trạng thái:** W1111-T01 = IN_PROGRESS; Revision Ledger initial snapshot = RECORDED; parity toàn hệ = NOT VERIFIED; tests/runtime = NOT RUN.
 - **Bước tiếp theo:** tiếp tục exact-path inventory và phân tích dependency; chỉ mở rộng trạng thái khi có hash/readback mới từ từng layer.
+
+
+## 2026-11-08 11:42 (UTC+7) — DOC-010 / TASK BOARD / REGISTER READBACK
+
+- **Phương pháp:** GitHub fetch_file(ref=main) đọc lại DOC-010, DOC-003, DOC-009 và AI_TASK_BOARD; ROOM-HOP MCP 8030 sandbox_read_probe đọc lại DOC-010 và NHAT_KY_THI_CONG.
+- **GitHub readback:** DOC-010 blob SHA 6ab5f9c17edb4c7f81baaf639c1dc8715be93802; DOC-003 blob SHA a4a75a1ad482de30ab3740ee6704a51ae1751d50; DOC-009 blob SHA 6d238fc736c955db8824543685b6cdb2543b37ac; AI_TASK_BOARD blob SHA 59acc06124df95ea6d9159c51405e9686d939467. Cả bốn fetch trả nội dung; DOC-009 có DOC-010; Task Board thể hiện T01=IN_PROGRESS.
+- **Sandbox readback:** DOC-010 và NHAT_KY_THI_CONG đều trả status=ok, nội dung đầy đủ.
+- **Latest GitHub commit observed after writes:** b756f60f698b5cddc929095d570fb4e94f2f5136 (docs(work1111): record Xu claim for task T01).
+- **Kết quả:** READBACK PASS cho các hồ sơ vừa ghi; W1111-T01 = IN_PROGRESS. GitHub/Sandbox parity chỉ xác nhận file DOC-010 cùng nội dung ở hai nơi theo lần đọc này; không suy rộng sang PC hoặc các file khác.
+- **Giới hạn:** PC, live :8031, pytest và agent ACK T02–T06 chưa được kiểm tra trong lượt này.
