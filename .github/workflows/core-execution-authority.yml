@@ -42,4 +42,4 @@ jobs:
         run: python -m pytest -q ../05_TEST/test_real_execution_host.py
       - name: W13 Core-grant bridge and W12 integration tests
         working-directory: 13/EXECUTION-HOST-INFRASTRUCTURE/04_CODE
-        run: python -m pytest -q ../05_TEST/test_wee_8031_bridge.py ../05_TEST/test_core_grant_host_integration.py
+        run: python -m pytest -q ../05_TEST/test_wee_8031_bridge.py ../05_TEST/test_core_grant_host_integration.py ../05_TEST/test_core_wee_w13_w12_e2e.py
