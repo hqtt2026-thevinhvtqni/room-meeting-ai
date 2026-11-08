@@ -120,3 +120,12 @@ The Core product E2E is PASS for the exact scope in W32-EVIDENCE-005. The separa
 - Dashboard browser→Core remains BLOCKED / NOT RUN.
 - Phase D (staging/VPS, protected approval environment, credentials, health checks, rollback, independent Vibe review, main integration) remains BLOCKED / NOT RUN. CI artifact is a release candidate, not a deployed release.
 - G7 RELEASE: NOT READY / NOT AUTHORIZED under DOC-050. Work32 remains ACTIVE — NOT RELEASED.
+
+
+## Latest exact-SHA checkpoint — 2026-11-08 / Run #232
+
+- Exact cleanup SHA `4dd07dbf4c30541c70bb91e8b053fe62d8b6290e`; Actions run #232 / `42459846727`: SUCCESS, 6/6 jobs.
+- Unit 189 passed; Product Auto E2E 68 passed; Windows Browser Adapter E2E 10 passed; artifact-level product E2E 1 passed; tooling mirror IN_SYNC; release acceptance CI gate PASS.
+- Windows disposable meeting `MEETING-W32-42459846727-1`; PID 11160; dynamic port 58525; exact-SHA process/owner/health/listener preflight PASS; MCP handoff/readback PASS; cleanup PASS.
+- Removed 44 confirmed Windows Explorer `desktop.ini` metadata files from Work32 feature branch; verified zero remain. No test code or Core/API/DB/runtime behavior changed in this cleanup.
+- Main integration remains BLOCKED; Dashboard→Core remains BLOCKED / NOT RUN; Phase D CD/deployment remains BLOCKED / NOT RUN; DOC-050 G7 RELEASE NOT READY / NOT AUTHORIZED. Work32 remains ACTIVE — NOT RELEASED.

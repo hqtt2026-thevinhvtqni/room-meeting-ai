@@ -124,3 +124,15 @@ No Docker requirement; no live-service or MAIN SOURCE changes; no auto-merge or 
 - CD / staging / production: BLOCKED / NOT RUN.
 - G7 RELEASE: NOT READY / NOT AUTHORIZED.
 - Work 32: ACTIVE — NOT RELEASED.
+
+
+## Latest exact-SHA checkpoint — 2026-11-08 / Run #232
+
+- Current branch HEAD at checkpoint: `4dd07dbf4c30541c70bb91e8b053fe62d8b6290e` (`work/32-ci-runner-owned-fixture-v2`).
+- Run #232 / `42459846727`: SUCCESS on exact cleanup SHA; 6/6 jobs PASS.
+- Unit: 189 passed; Product Auto E2E: 68 passed; Windows Browser Adapter E2E: 10 passed; immutable artifact-level E2E: 1 passed; tooling mirror IN_SYNC; release acceptance CI gate PASS.
+- Windows meeting `MEETING-W32-42459846727-1`; adapter PID 11160; dynamic port 58525; preflight PASS; MCP stdio handoff/readback PASS; cleanup PASS. Windows artifact ID `13609715124`, SHA-256 `3f15f641f1d81dfe3de0c11fb729378cd23c0984e6810d5e12664f4d252e6e30`.
+- Product artifact ID `13609242768`; uploaded ZIP digest `5c84a98996c5cd653ad89b8bd0b89d0a841063bbc9cac76983e649f0f6c11aac`; extracted-artifact product test 1 passed.
+- Removed 44 tracked Windows Explorer `desktop.ini` metadata files from this feature branch only; resulting tree verified zero remaining. Existing `.gitignore` rule retained. No test source files were deleted.
+- Main comparison, Dashboard→Core and CD/G7 blockers remain unchanged; no main merge, release tag or deployment.
+- Work32: CI ACCEPTANCE PASS; MAIN INTEGRATION BLOCKED; CD/G7 NOT READY; ACTIVE — NOT RELEASED.
