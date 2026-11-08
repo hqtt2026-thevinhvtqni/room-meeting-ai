@@ -226,36 +226,12 @@ jobs:
             throw "BLOCKED: checkout does not match GITHUB_SHA"
           }
 
-      - name: Locate runner-accessible Python 3.12 runtime
+      - name: Install runner-local portable Python 3.12
         shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
         run: |
-          $candidates = New-Object System.Collections.Generic.List[string]
-          $candidates.Add("C:\Users\Admin\AppData\Local\Programs\Python\Python312\python.exe")
-          $candidates.Add("C:\Program Files\Python312\python.exe")
-          $candidates.Add("C:\Python312\python.exe")
-          if ($env:RUNNER_TOOL_CACHE) {
-            Get-ChildItem -Path (Join-Path $env:RUNNER_TOOL_CACHE "Python") -Directory -ErrorAction SilentlyContinue |
-              Where-Object { $_.Name -like "3.12*" } |
-              ForEach-Object { $candidates.Add((Join-Path $_.FullName "x64\python.exe")) }
-          }
-          $command = Get-Command python.exe -ErrorAction SilentlyContinue
-          if ($command) { $candidates.Add($command.Source) }
-          foreach ($candidate in ($candidates | Select-Object -Unique)) {
-            try {
-              if (-not (Test-Path -LiteralPath $candidate -PathType Leaf)) { continue }
-              $version = & $candidate --version 2>&1
-              if ($LASTEXITCODE -eq 0 -and "$version" -match "^Python 3\.12\.") {
-                "W32_PYTHON_EXE=$candidate" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
-                Write-Host "python_executable=$candidate"
-                Write-Host "python_version=$version"
-                exit 0
-              }
-            } catch {
-              Write-Warning "Python candidate unavailable to runner identity: $candidate"
-            }
-          }
-          throw "BLOCKED: no runner-accessible Python 3.12 executable found; setup-python is not used because its setup.ps1 is blocked by PC execution policy."
-          
+          $installer = Join-Path $env:GITHUB_WORKSPACE "scripts\w32_install_python_runtime.ps1"
+          & $installer
+
       - name: Install Work32 runtime and provision Chromium
         shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
         run: |
