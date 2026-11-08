@@ -153,7 +153,7 @@ def test_complete_room_hop_product_journey_http_mcp_storage_and_close(
     assert started.status_code == 200
     assert started.json()["status"] == "active"
 
-    # 4. Cross the real MCP stdio boundary and record identified + legacy paste.
+    # 4. Cross the real MCP stdio boundary and record two identity-bound pastes.
     env = dict(os.environ)
     env["ROOM_HOP_MEETINGS_DIR"] = str(meetings_dir)
     repo_root = Path(__file__).resolve().parents[1]
@@ -165,7 +165,7 @@ def test_complete_room_hop_product_journey_http_mcp_storage_and_close(
         "Vinh: Xác nhận nội dung họp product E2E.\r\n"
         "Xu: Đã ghi nhận đúng identity và transcript.\r\n"
     )
-    raw_legacy = "Nguồn legacy: giữ nguyên văn bản, không tự gán danh tính.\n"
+    raw_vinh = "Nguồn Vinh: giữ nguyên văn bản với identity được xác nhận.\n"
 
     async def record_and_verify_active():
         async with integration.session() as session:
@@ -196,7 +196,8 @@ def test_complete_room_hop_product_journey_http_mcp_storage_and_close(
             second = await integration.add_paste_to_meeting(
                 session,
                 meeting_id,
-                raw_legacy,
+                raw_vinh,
+                identity_id="vinh",
             )
             assert second == {"status": "READY"}
 
@@ -208,18 +209,18 @@ def test_complete_room_hop_product_journey_http_mcp_storage_and_close(
             assert len(entries) == 2
 
             identified = next(item for item in entries if item["content"] == raw_identified)
-            legacy = next(item for item in entries if item["content"] == raw_legacy)
+            legacy = next(item for item in entries if item["content"] == raw_vinh)
             assert identified["speaker"] == "xu"
             assert identified["header"]["name"] == AgentRegistry().get("xu").name
             assert identified["header"]["role"] == AgentRegistry().get("xu").role
-            assert legacy["speaker"] is None
-            assert legacy["header"] is None
+            assert legacy["speaker"] == "vinh"
+            assert legacy["header"]["name"] == "Vinh"
 
     asyncio.run(record_and_verify_active())
 
     # 5. Verify raw Secretary transcript is byte-identical before closing.
     transcript_path = meetings_dir / meeting_id / "transcript.txt"
-    expected_raw = raw_identified + raw_legacy
+    expected_raw = raw_identified + raw_vinh
     assert transcript_path.read_bytes() == expected_raw.encode("utf-8")
 
     # 6. Close through the public HTTP lifecycle endpoint and verify final artifact.
@@ -244,7 +245,7 @@ def test_complete_room_hop_product_journey_http_mcp_storage_and_close(
     assert "Giữ Transcript là bằng chứng append-only." in final_content
     assert "Vibe thực hiện independent review." in final_content
     assert raw_identified not in final_content
-    assert raw_legacy not in final_content
+    assert raw_vinh not in final_content
 
     # 7. Closed-state readback through public HTTP and MCP; evidence stays intact.
     listed_closed = requests.get(
