@@ -479,3 +479,14 @@ a read-only cho process/listener/health nếu có source change hoặc evidence 
 - DOC-003 branch current blob before final delta sync: `6732228d0e0ff6d8e777b4b1ead1da1da1ef2fcc`; current Sandbox journal SHA-1: `53ba2e336b53a031081b43f0a4e9487123772299`.
 - DOC-010 addendum update commit `29765c88967246d392b690f2a550a4656fc36d1d`; branch blob readback `751069679274845f6ca4008d6ec2cded2cb35788`. Addendum records C08 completion and correct CI query scope.
 - Trạng thái: C08 READY FOR CLA REVIEW; C02 remains blocked pending exact-SHA CI and local git diff/apply-check; no PASS claimed.
+
+
+## 2026-11-09 12h (UTC+7) — C02 DIFF ARTIFACT + COMMIT STATUS CHECK
+- Người thực hiện: Co — Coder theo phân công Cla (CTO).
+- Tạo `06_EVIDENCE/C02_COMMIT_DIFFS/PR48_CUMULATIVE_HOST_AND_TEST_DIFF.patch` từ đúng hai section GitHub PR #48 unified diff: `execution_host/host.py` và `tests/test_execution_host.py`. Sandbox write + readback status=ok; 2 diff sections present.
+- Diff artifact được gắn nhãn cumulative main..PR #48, bao gồm thay đổi PR có trước và C02; không giả danh isolated C02-only patch hoặc local `git diff`.
+- GitHub fetch_commit cung cấp unified diff riêng cho commits 65cf53af, 3edd072f và e2c9e7e1; commit 65cf53af sửa host, 3edd072f thêm 5 regression tests, e2c9e7e1 tăng timeout fixture lên 1s/3s để tránh false timeout ở primary command.
+- `get_commit_combined_status` cho commits 65cf53af, 3edd072f, e2c9e7e1 và latest docs head e4c02c42 đều trả statuses=[]; chưa có check result được connector báo về.
+- Workflow config xác nhận push trigger tồn tại, nhưng không có general workflow-run list/dispatch action. Exact-SHA CI remains NOT VERIFIED.
+- `git apply --check` không thể chạy vì session không có local Git checkout/command runner. Không tạo PASS giả.
+- Trạng thái C02: code + 5 regression test changes + GitHub cumulative diff artifact = WRITTEN/READBACK; CI exact SHA and local apply-check = BLOCKED; not READY FOR CLA REVIEW.
