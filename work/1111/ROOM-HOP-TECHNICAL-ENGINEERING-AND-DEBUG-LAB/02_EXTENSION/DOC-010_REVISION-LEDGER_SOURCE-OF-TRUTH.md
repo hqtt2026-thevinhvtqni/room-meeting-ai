@@ -105,3 +105,14 @@ Computed from exact Sandbox readback using Git blob framing (`blob <UTF-8 byte l
 - The workflow file `.github/workflows/core-execution-authority.yml` defines both `pull_request` and `push` triggers for branch `work/w1111-core-execution-authority-v1-2`, plus `workflow_dispatch`.
 - The GitHub connector's `fetch_commit_workflow_runs` action explicitly filters to pull-request-triggered runs only. Its empty result for C02 commit `e2c9e7e1508eacff390f4ac2e9117230601df7ab` therefore means **no PR-triggered run was returned**, not proof that no push-triggered run exists.
 - No general workflow-run listing/dispatch action is exposed in the connected GitHub toolset, and the public Actions page could not be fetched in this session. Exact-SHA CI status for C02 remains **NOT VERIFIED**. Do not claim CI failure or PASS from the empty filtered result.
+
+
+## FINAL ADDENDUM — 2026-11-09 — C05 POST-C08 JOURNAL SYNC READBACK
+
+- Branch head immediately before this DOC-010 update: `93a9eff7d180956625900a8e85509b51fbacfafc`.
+- DOC-003 latest branch blob after syncing the final C08/CI-scope journal delta: `3b49bd58fea1b165dbea90cfc7e6ddd25463d7b6`; GitHub readback succeeded and includes the latest journal continuation.
+- Latest Sandbox canonical journal Git blob SHA-1: `62c3f4609065af28fcbedf18678f49b32a0ebf66` (66,192 UTF-8 bytes).
+- Latest W09/W102 inventory manifest Sandbox Git blob SHA-1 remains `a942ff67e4de487774878e312d9fdd089250ae72` (23,224 UTF-8 bytes).
+- C08: 4,127/4,127 W09 entries classified; W102 shared file hashes 73/73 MATCH across all four requested pairs; extra files/directories remain preserved and documented.
+- C02: workflow defines push and pull_request triggers. The connected commit-workflow query only exposes pull_request-triggered runs; exact-SHA push-run status remains NOT VERIFIED. Prior run 42454767666 is not attributed to updated C02 SHA.
+- This ledger update is docs-only on PR #48 branch. No main, PC, runtime, merge or release action.
