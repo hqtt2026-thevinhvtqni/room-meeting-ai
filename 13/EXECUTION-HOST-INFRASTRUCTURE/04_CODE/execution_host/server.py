@@ -85,6 +85,21 @@ def _is_pytest_command(command: list[str]) -> bool:
     return executable in {"python", "python3"} and len(command) >= 3 and command[1:3] == ["-m", "pytest"]
 
 
+def _mark_evidence_blocked(result: dict, reason: str) -> None:
+    evidence_ref = result.get("evidence_ref")
+    if not isinstance(evidence_ref, str) or not evidence_ref:
+        return
+    try:
+        path = Path(evidence_ref)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        payload["status"] = "BLOCKED"
+        payload["blocker"] = reason
+        payload["core_run_recorded"] = False
+        path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\\n", encoding="utf-8")
+    except (OSError, ValueError, TypeError):
+        pass
+
+
 class Handler(BaseHTTPRequestHandler):
     host: W12ExecutionAdapter | None = None
     runtime_identity: RuntimeIdentity | None = None
@@ -204,6 +219,7 @@ class Handler(BaseHTTPRequestHandler):
             except CoreAuthorityError:
                 result["status"] = "BLOCKED"
                 result["blocker"] = "core_run_record_failed"
+                _mark_evidence_blocked(result, "core_run_record_failed")
             self._send(200, result)
         except CoreAuthorityError as exc:
             self._send(exc.status_code, {"status": "BLOCKED", "reason": exc.reason})
