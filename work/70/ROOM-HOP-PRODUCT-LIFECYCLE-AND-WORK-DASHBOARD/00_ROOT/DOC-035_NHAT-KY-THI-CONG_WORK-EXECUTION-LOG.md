@@ -1439,3 +1439,15 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - Kiểm tra tĩnh trước đồng bộ: 36/36 task có 3 execution steps, scope boundary, verification method, evidence list và completion rule; HTML có bảng chi tiết và phần mở rộng Evidence.
 - Trạng thái: GITHUB_WRITE_ACKNOWLEDGED; GITHUB_READBACK_PENDING; BROWSER_RUNTIME_NOT_VERIFIED; CI_NOT_VERIFIED.
 - Next: fetch lại toàn bộ 4 artifact từ main, xác minh hash/nội dung, theo dõi Work 70 Preview Host workflow và kiểm tra URL Preview Host nếu có runtime.
+
+
+
+## W70-LOG-20261109-04 — DOC-094 / DASHBOARD THREE-TIER INTEGRATION AND HTML STRUCTURE REPAIR
+- **Time:** 2026-11-09 04:02:46 +07:00.
+- **Scope:** DOC-094 Product/Phase Task source, schema, read-only projection, Work Execution Dashboard, DOC-034, DOC-055, DOC-056 and DOC-035.
+- **Method:** Sandbox MCP 8030 exact read/write; GitHub main exact-path fetch/create/update with current blob SHA.
+- **Finding:** Sandbox execution HTML had extension scripts after the closing `</body></html>` pair. Moved the closing tags to the end; static structure checks confirmed one body close, one html close, balanced 3 script pairs, all scripts before `</body>`, and Product Progress + roleTaskBoard markers. Browser/JS runtime not run.
+- **GitHub main sync:** created DOC-094 source, DOC-094 schema and PRODUCT_PHASE_TASK_STATUS projection; patched only the Product Progress script into existing GitHub execution HTML, preserving the existing main base and DOC-093 board; updated README from a verified prefix-extension; appended D70-019 minute, DOC-094 register rows and three-tier policy section without replacing divergent history.
+- **Decision boundary:** DOC-094 remains DRAFT_NOT_APPROVED; all Product/Phase Tasks remain NOT_ASSESSED; assignments PROPOSED_NOT_ACKNOWLEDGED; progress NOT_CALCULATED. No Gate PASS, acceptance or release claim.
+- **Status:** GITHUB WRITE ACKNOWLEDGED; exact readback pending. Static HTML structure PASS only; browser render, JavaScript runtime, responsive, E2E and independent QE NOT RUN. PC/Preview Host transfer remains outside this operation.
+- **Next:** fetch all changed paths from GitHub main and compare source hashes/content; validate JSON structure/schema; hand over browser/E2E and independent QE checks through an authorized runtime.
