@@ -130,3 +130,13 @@ Run #254 (42520909842) was the first remediation validation and failed on compat
 - Run #267 / `42521925585` completed SUCCESS across all six jobs on documentation-only PR head `79dd24cc3451a58646643982af3003cc5712edb9`.
 - Code SHA `3b25f2759a5b8daf7477b155d306ddaa7e1032ac` remains validated by Run #264; Run #265–#267 revalidated successive documentation-only heads.
 - PR #49 remains DRAFT; main unchanged; no merge, deployment or release.
+
+
+## Addendum — S10 implementation and pending exact-SHA verification
+- **Name:** Ka
+- **Title:** CSA / Work32 Execution Owner
+- **Date-Time:** 2026-11-09 (Asia/Ho_Chi_Minh)
+- Added atomic meeting.yaml replacement, same-process per-meeting RLock serialization, and atomic mkdir + retry for generated meeting IDs.
+- Added tests for concurrent ID allocation, concurrent JOIN_ACCEPTED updates through separate Meeting objects, and atomic YAML replacement.
+- Cross-process meeting.yaml read-modify-write remains unproven; keep one Core process per local store. Multi-process/multi-host remains BLOCKED.
+- Run #274 / `42522244216` is pending on exact PR head `fb7eadcc59bf22d4a91060e738760b4d5380c2fd`; S10 cannot be declared PASS until this run completes.
