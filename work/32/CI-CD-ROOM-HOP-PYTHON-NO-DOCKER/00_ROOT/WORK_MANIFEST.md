@@ -4,9 +4,10 @@
 - Owner/final authority: Vinh
 - Coordinator: Xu (AI-01)
 - Date: 2026-10-24, Asia/Ho_Chi_Minh
-- Status: CORE PRODUCT AUTO E2E + IMMUTABLE ARTIFACT E2E PASS; DASHBOARD→CORE INTEGRATION AND CD BLOCKED; NOT RELEASED
+- Status: CI + PRODUCT AUTO E2E + WINDOWS BROWSER ADAPTER E2E + IMMUTABLE ARTIFACT PIPELINE PASS on exact SHA 4177721a1e557f20127ff124b6c8d64ab63321e7; MAIN INTEGRATION, DASHBOARD→CORE, CD and G7 RELEASE BLOCKED; NOT RELEASED
 - Sandbox ID: 32
-- GitHub branch: work/32-ci-cd-room-hop-python-no-docker
+- GitHub branch (current implementation): work/32-ci-runner-owned-fixture-v2
+- Previous CI pilot branch names in historical records are not the current implementation ref.
 
 ## Goal
 Survey and design evidence-first CI/CD for existing Python ROOM-HOP without Docker. Supplemental scope: remove the Tester dependency on Vinh's PC by providing repeatable Python/pytest execution through the existing authorized Work 12/13 Execution Host contract, plus fail-closed test-result classification.
@@ -96,3 +97,30 @@ No Docker requirement; no live-service or MAIN SOURCE changes; no auto-merge or 
 - Main comparison: 184 ahead / 35 behind, merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`; 74 changed files. Do not merge directly.
 - PR #40 is the old pilot PR, OPEN / DRAFT, and has no review submissions. It is not the current v2 branch review.
 - Keep Work 32 ACTIVE — NOT RELEASED. Main integration requires independent review and a clean integration branch based on current main; PC runtime, Dashboard→Core and CD gates remain separate.
+
+
+## Current verified checkpoint — 2026-11-08 (Run #229)
+
+- Current implementation branch: `work/32-ci-runner-owned-fixture-v2`.
+- Exact validated SHA: `4177721a1e557f20127ff124b6c8d64ab63321e7`.
+- GitHub Actions run #229: `42456186691` — SUCCESS, 6/6 jobs.
+- Unit: 189 passed; Product Auto E2E: 68 passed; Windows Browser Adapter E2E: 10 passed; artifact-level E2E: 1 passed.
+- Work32 tooling tests PASS; active workflow and mirror IN_SYNC.
+- Windows runner-owned fixture, process/owner/health/listener preflight, MCP stdio handoff/readback and exact-process cleanup PASS. Windows artifact ID `13607457887`, SHA-256 `eaa90c74da57cc17569bbd67d7e884c69c1cab5edfe154a02395790b14bf3e62`.
+- Immutable product artifact ID `13606734880`; source archive SHA-256 `e16cbff567681555b9c70b86ac3c8a5a5f4c582e0b83b5db7d9f12aa4749b1c2`; checksum re-computation matched packaged checksum.
+- Main HEAD at audit: `024e2c9797da091b83c2e0ea5e3ac7f3b593eafb`. Work branch vs main: diverged, 246 ahead / 273 behind, merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`, 80 changed files. No merge/rebase/cherry-pick performed.
+- Source archive hygiene inventory: 44 `desktop.ini` paths and 43 test/test-results-like paths; classification/remediation pending. No mass deletion authorized/performed.
+- Dashboard→Core browser integration remains BLOCKED / NOT RUN. CD/deployment remains BLOCKED / NOT RUN: no attested staging/VPS target, protected environment approval, deployment credentials, health target or rollback evidence.
+- DOC-050 G7 RELEASE is separate from CI success. No G7 approval, release tag, merge or production deployment has occurred.
+
+## Overall — 2026-11-08
+
+- CI / exact-SHA validation: PASS.
+- Product Auto E2E: PASS.
+- Windows Browser Adapter + MCP Sub handoff/readback: PASS.
+- Immutable source artifact checksum: PASS.
+- Main integration: BLOCKED pending independent review of 80-file diff and clean integration strategy.
+- Dashboard→Core: BLOCKED / NOT RUN.
+- CD / staging / production: BLOCKED / NOT RUN.
+- G7 RELEASE: NOT READY / NOT AUTHORIZED.
+- Work 32: ACTIVE — NOT RELEASED.
