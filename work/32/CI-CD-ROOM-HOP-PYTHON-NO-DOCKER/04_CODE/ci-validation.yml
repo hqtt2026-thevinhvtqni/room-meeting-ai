@@ -236,6 +236,10 @@ jobs:
         run: |
           $ErrorActionPreference = "Stop"
           New-Item -ItemType Directory -Force test-results | Out-Null
+          $browserCache = Join-Path $env:RUNNER_TEMP "playwright-browsers"
+          New-Item -ItemType Directory -Force $browserCache | Out-Null
+          $env:PLAYWRIGHT_BROWSERS_PATH = $browserCache
+          "PLAYWRIGHT_BROWSERS_PATH=$browserCache" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           python -m pip install -r requirements.txt -c constraints-ci.txt
           if ($LASTEXITCODE -ne 0) { throw "BLOCKED: application dependency install failed" }
           python -m pip install playwright
@@ -354,8 +358,10 @@ listener=PASS
           $adapterPid = [int]$env:W32_ADAPTER_PID
           $procInfo = Get-CimInstance Win32_Process -Filter "ProcessId = $adapterPid" -ErrorAction SilentlyContinue
           if ($procInfo) {
-            $created = $procInfo.CreationDate.ToUniversalTime().ToString("o")
-            if ($created -ne $env:W32_ADAPTER_CREATED_UTC -or [IO.Path]::GetFullPath($procInfo.ExecutablePath) -ne [IO.Path]::GetFullPath($env:W32_ADAPTER_EXE) -or $procInfo.ParentProcessId -ne [int]$env:W32_ADAPTER_PARENT_PID) { throw "BLOCKED: process identity changed; refusing to stop PID $adapterPid" }
+            $created = $procInfo.CreationDate.ToUniversalTime()
+            $expectedCreated = [datetime]::Parse($env:W32_ADAPTER_CREATED_UTC).ToUniversalTime()
+            $creationDeltaSeconds = [Math]::Abs(($created - $expectedCreated).TotalSeconds)
+            if ($creationDeltaSeconds -gt 2 -or [IO.Path]::GetFullPath($procInfo.ExecutablePath) -ne [IO.Path]::GetFullPath($env:W32_ADAPTER_EXE) -or $procInfo.ParentProcessId -ne [int]$env:W32_ADAPTER_PARENT_PID) { throw "BLOCKED: process identity changed; refusing to stop PID $adapterPid" }
             $owner = Invoke-CimMethod -InputObject $procInfo -MethodName GetOwner
             if ($owner.ReturnValue -ne 0) { throw "BLOCKED: adapter owner cannot be revalidated; refusing to stop PID $adapterPid" }
             $actualOwner = "$($owner.Domain)\$($owner.User)"
