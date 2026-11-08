@@ -1,4 +1,4 @@
-import tempfile, time
+import tempfile, time, sys
 from pathlib import Path
 import pytest
 from execution_host import WorkContext, ExecutionRequest, ExecutionHost
@@ -35,3 +35,92 @@ def test_artifact_isolation(tmp_path):
     c=ctx(tmp_path); (Path(c.execution_workspace)/'a.txt').write_text('a'); r=ExecutionHost().execute_work(c,ExecutionRequest(command=('python3','-c','print(1)'),collect_artifacts=('a.txt',))); assert len(r.artifacts)==1; assert Path(r.artifacts[0]).is_relative_to(Path(c.evidence_root))
 def test_service_lifecycle(tmp_path):
     c=ctx(tmp_path); h=ExecutionHost(); s=h.start_service('x',['python3','-c','import time; time.sleep(5)'],c); assert s['status']=='PASS'; assert h.service_status('x',c)['status']=='PASS'; assert h.stop_service('x',c)['status']=='PASS'
+
+
+def test_run_test_false_preserves_primary_pass(tmp_path):
+    c = ctx(tmp_path)
+    r = ExecutionHost().execute_work(
+        c,
+        ExecutionRequest(
+            command=(sys.executable, "-c", "print('primary-pass')"),
+            run_test=False,
+        ),
+    )
+    assert r.status == "PASS"
+    assert r.exit_code == 0
+
+
+def test_nested_test_failed_propagates_to_overall_status(tmp_path):
+    c = ctx(
+        tmp_path,
+        test_entrypoint=(sys.executable, "-c", "raise SystemExit(7)"),
+    )
+    r = ExecutionHost().execute_work(
+        c,
+        ExecutionRequest(
+            command=(sys.executable, "-c", "print('primary-pass')"),
+            run_test=True,
+        ),
+    )
+    final = __import__("json").loads(Path(r.evidence_ref).read_text(encoding="utf-8"))
+    assert r.status == "FAILED"
+    assert r.exit_code == 7
+    assert final["primary_command_status"] == "PASS"
+    assert final["primary_command_exit_code"] == 0
+    assert final["test"]["status"] == "FAILED"
+    assert final["stdout_ref"] != final["test"]["stdout_ref"]
+    assert Path(final["stdout_ref"]).read_text(encoding="utf-8").strip() == "primary-pass"
+
+
+def test_nested_test_timeout_propagates_to_overall_status(tmp_path):
+    c = ctx(
+        tmp_path,
+        test_entrypoint=(sys.executable, "-c", "import time; time.sleep(2)"),
+    )
+    r = ExecutionHost().execute_work(
+        c,
+        ExecutionRequest(
+            command=(sys.executable, "-c", "print('primary-pass')"),
+            timeout_seconds=0.05,
+            run_test=True,
+        ),
+    )
+    final = __import__("json").loads(Path(r.evidence_ref).read_text(encoding="utf-8"))
+    assert r.status == "TIMEOUT"
+    assert final["primary_command_status"] == "PASS"
+    assert final["test"]["status"] == "TIMEOUT"
+
+
+def test_missing_nested_test_entrypoint_blocks_overall_status(tmp_path):
+    c = ctx(tmp_path, test_entrypoint=None)
+    r = ExecutionHost().execute_work(
+        c,
+        ExecutionRequest(
+            command=(sys.executable, "-c", "print('primary-pass')"),
+            run_test=True,
+        ),
+    )
+    final = __import__("json").loads(Path(r.evidence_ref).read_text(encoding="utf-8"))
+    assert r.status == "BLOCKED"
+    assert r.blocker == "test_entrypoint_not_bound"
+    assert final["test"]["status"] == "BLOCKED"
+
+
+def test_primary_failure_is_not_overwritten_by_nested_test_pass(tmp_path):
+    c = ctx(
+        tmp_path,
+        test_entrypoint=(sys.executable, "-c", "print('test-pass')"),
+    )
+    r = ExecutionHost().execute_work(
+        c,
+        ExecutionRequest(
+            command=(sys.executable, "-c", "raise SystemExit(5)"),
+            run_test=True,
+        ),
+    )
+    final = __import__("json").loads(Path(r.evidence_ref).read_text(encoding="utf-8"))
+    assert r.status == "FAILED"
+    assert r.exit_code == 5
+    assert final["primary_command_status"] == "FAILED"
+    assert final["primary_command_exit_code"] == 5
+    assert final["test"]["status"] == "PASS"
