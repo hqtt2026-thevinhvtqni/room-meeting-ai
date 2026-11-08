@@ -398,6 +398,12 @@ jobs:
               if (-not ($sameStart -and $sameExe -and $sameParent -and $sameOwner)) {
                 throw "BLOCKED: refusing to stop PID because process identity no longer matches this run"
               }
+              try {
+                Invoke-RestMethod -Method Post -Uri "$env:ROOMHOP_BROWSER_ADAPTER_URL/browser/close" -TimeoutSec 5 | Out-Null
+                Write-Host "browser_context_cleanup=PASS"
+              } catch {
+                Write-Warning "Browser close endpoint unavailable; terminating only the verified job-owned adapter process."
+              }
               Stop-Process -Id $pidToStop -Force
               Wait-Process -Id $pidToStop -Timeout 10 -ErrorAction SilentlyContinue
               if (Get-CimInstance Win32_Process -Filter "ProcessId = $pidToStop") {
