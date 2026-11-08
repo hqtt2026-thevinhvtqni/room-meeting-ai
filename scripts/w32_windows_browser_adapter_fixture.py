@@ -95,6 +95,7 @@ def provision() -> dict:
         raise RuntimeError("GITHUB_ENV is required inside GitHub Actions")
     env_values = {
         "ROOMHOP_TEST_MODE": "1",
+        "ROOMHOP_BROWSER_ALLOWED_HOSTS": "127.0.0.1",
         "ROOMHOP_TEST_MEETINGS_DIR": str(store),
         "ROOMHOP_TEST_MEETING_ID": meeting_id,
         "ROOMHOP_TEST_IDENTITY_ID": identity_id,
