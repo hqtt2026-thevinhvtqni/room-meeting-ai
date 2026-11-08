@@ -20,9 +20,9 @@ class GrantRequest(BaseModel):
 class RunRecordRequest(BaseModel):
     source_sha256: str
     exit_status: str
-    output_refs: list[str] = []
-    evidence_refs: list[str] = []
-    handoff_ids: list[str] = []
+    output_refs: list[str] = Field(default_factory=list)
+    evidence_refs: list[str] = Field(default_factory=list)
+    handoff_ids: list[str] = Field(default_factory=list)
 
 
 def mount_execution_authority_routes(app: FastAPI, authority: ExecutionAuthority | None) -> None:
@@ -63,6 +63,24 @@ def mount_execution_authority_routes(app: FastAPI, authority: ExecutionAuthority
             raise HTTPException(status_code=400, detail=str(exc)) from None
 
     @app.get("/works/{work_id}/execution-grants/{grant_id}")
+    def get_execution_grant_status(
+        work_id: str,
+        grant_id: str,
+        service_credential: str | None = Header(default=None, alias="X-ROOM-HOP-SERVICE-CREDENTIAL"),
+    ) -> dict[str, Any]:
+        core = configured()
+        try:
+            identity = core.authenticate(service_credential)
+            result = core.get_grant_status(grant_id)
+            if result["work_id"] != work_id or result["identity"] != identity:
+                raise HTTPException(status_code=403, detail="execution_grant_work_mismatch_or_identity_mismatch")
+            return result
+        except KeyError:
+            raise HTTPException(status_code=404, detail="unknown_grant") from None
+        except PermissionError as exc:
+            raise HTTPException(status_code=401, detail=str(exc)) from None
+
+    @app.get("/works/{work_id}/execution-grants/{grant_id}/validate")
     def validate_execution_grant(
         work_id: str,
         grant_id: str,
