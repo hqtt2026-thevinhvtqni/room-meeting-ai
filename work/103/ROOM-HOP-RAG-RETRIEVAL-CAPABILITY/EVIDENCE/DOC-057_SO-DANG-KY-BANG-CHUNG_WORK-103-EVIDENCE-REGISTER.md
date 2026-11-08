@@ -22,3 +22,5 @@ This register is the single cross-phase evidence index. Existing 06_EVIDENCE/ re
 Every new evidence entry must record evidence ID, purpose, producer, UTC+07 timestamp, exact branch and commit, command/method, scope, raw result or immutable artifact reference, PASS/FAIL/BLOCKED/NOT VERIFIED, limitations and next step.
 
 Do not infer PASS from a file existing or from a different commit's CI. Never overwrite failed or superseded evidence.
+
+| EVD-007 | Work 103 CI run 42467546737 (run #85) | GitHub Actions, head f56f86cb9c8ba2be8be990d8cebdb0a1068f0daa | FAILURE on Python 3.11 and 3.12 at independent Manifest V4 + Ka V3 corpus-aligned evaluation gate; no_answer_accuracy=0.300 vs required 0.8. Unit tests, syntax, Gate B and existing EVAL_V2 step succeeded. Controlled experiment steps skipped. Preserve as failure evidence; do not weaken gate. |
