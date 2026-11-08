@@ -10,6 +10,7 @@ import time
 from threading import RLock
 import uuid
 from pathlib import Path
+from urllib.parse import urlsplit, urlunsplit
 from typing import Any
 
 from fastapi import FastAPI, HTTPException
@@ -24,6 +25,14 @@ ROOT = Path(__file__).resolve().parent
 EVIDENCE = ROOT / "evidence"
 EVIDENCE.mkdir(exist_ok=True)
 app = FastAPI(title="ROOM-HOP Browser Agent Adapter", version="1.1.0")
+
+def _redact_url(value: str) -> str:
+    """Remove query strings and fragments before evidence/transcript persistence."""
+    try:
+        parts = urlsplit(str(value))
+        return urlunsplit((parts.scheme, parts.netloc, parts.path, "", ""))
+    except ValueError:
+        return "[invalid-url]"
 
 
 class WorkflowRequest(BaseModel):
@@ -100,14 +109,14 @@ class Adapter:
         p = self.require()
         r = p.goto(url, wait_until="domcontentloaded", timeout=30000)
         p.wait_for_timeout(500)
-        self.log("browser_navigate", url=p.url, status=r.status if r else None)
-        return {"url": p.url, "status": r.status if r else None, "title": p.title()}
+        self.log("browser_navigate", url=_redact_url(p.url), status=r.status if r else None)
+        return {"url": _redact_url(p.url), "status": r.status if r else None, "title": p.title()}
 
     @_serialized_operation
     def inspect(self):
         p = self.require()
         data = {
-            "url": p.url,
+            "url": _redact_url(p.url),
             "title": p.title(),
             "headings": p.locator("h1,h2,h3").all_text_contents()[:20],
             "links": p.locator("a").all_text_contents()[:30],
@@ -122,7 +131,7 @@ class Adapter:
         p.locator(selector).first.click(timeout=15000)
         p.wait_for_timeout(500)
         self.log("browser_click", selector=selector)
-        return {"url": p.url, "title": p.title()}
+        return {"url": _redact_url(p.url), "title": p.title()}
 
     @_serialized_operation
     def type(self, selector: str, text: str):
@@ -141,7 +150,7 @@ class Adapter:
     def extract(self, selectors: dict[str, str]):
         p = self.require()
         out = {k: p.locator(v).all_text_contents()[:20] for k, v in selectors.items()}
-        out["url"] = p.url
+        out["url"] = _redact_url(p.url)
         out["title"] = p.title()
         self.log("browser_extract", fields=list(selectors))
         return out
@@ -205,7 +214,7 @@ class Adapter:
             "evidence_id": str(uuid.uuid4()),
             "work_id": req.work_id,
             "ok": True,
-            "final_url": self.page.url,
+            "final_url": _redact_url(self.page.url),
             "page_title": self.page.title(),
             "results": results,
             "logs": self.logs,
