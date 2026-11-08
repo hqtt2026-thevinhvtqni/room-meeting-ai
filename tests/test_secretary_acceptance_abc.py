@@ -141,7 +141,7 @@ class TestCaseC_TwoArtifactsNotConflated:
         meeting.start("vinh")
 
         raw_paste = "User: day la noi dung PASTE nguyen van, khong qua xu ly."
-        meeting.add_paste(raw_paste)
+        meeting.add_paste(raw_paste, identity_id="vinh")
 
         final_path = meeting.close(
             decisions=["Quyet dinh A"],
