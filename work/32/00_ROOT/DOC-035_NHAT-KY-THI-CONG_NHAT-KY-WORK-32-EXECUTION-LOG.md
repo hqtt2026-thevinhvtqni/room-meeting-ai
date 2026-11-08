@@ -1402,3 +1402,29 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **NON-ACTIONS:** Không dừng PID 12300; không đổi cổng tại runtime bằng thao tác thủ công; không tạo/sửa GitHub Variables; không bật Windows lane; không sửa main; không deploy/release. Chưa áp dụng code fix. Không ghi Phase 1/Phase 5 là PASS.
 - **STATUS:** Root cause understood from supplied journal evidence; architecture decision RECORDED; implementation NOT STARTED; source compatibility TRACE PENDING; Windows preflight BLOCKED; Windows E2E NOT RUN; Release Gate FAILURE on run #133; Work32 ACTIVE — NOT RELEASED.
 - **HANDOFF:** Ka thực hiện source trace DOC-092 + exact-SHA adapter/workflow/tests, báo cáo file/line/evidence và phản biện target contract. Xu giữ quyền quyết định kiến trúc và duyệt patch scope; agent chỉ triển khai sau khi Xu chốt trace. Mọi kết quả tiếp theo phải append DOC-035 với command, timestamp, scope, evidence, PASS/FAIL/BLOCKED và next step.
+
+
+## 2026-11-08 — W32-LOG-20261108-86 — Ka chốt và triển khai cấu trúc runner-owned Windows Browser Adapter
+
+- **Người ghi:** Ka
+- **Chức danh:** CSA / Delegated Execution Owner
+- **Date-Time:** 2026-11-08 12:10 (Asia/Ho_Chi_Minh)
+- **Authority:** Vinh giao Ka chủ động quyết định cấu trúc xây dựng Work32 và ghi nhật ký; Xu đang xử lý dự án khác. Ka nhận quyền quyết định kỹ thuật và triển khai trong phạm vi Work32, không chờ Xu phê duyệt từng bước.
+- **Branch:** `work/32-windows-runner-owned-fixture`
+- **Base:** `work/32-ci-cd-python-ci-v2`, merge-base SHA `d2f4c04ea46458b114d686ed4a1b1a0900c6305c`.
+- **Latest source commit before this journal update:** `972f8eda5b128ccc329d521c845ec961e397203a`.
+- **READ / DESIGN:** Đối chiếu DOC-092 với source hiện hành. Adapter là ASGI app; runner bootstrap mới là thành phần sở hữu bind host/port. Test E2E cũ hardcode 8787 và truy cập Wikipedia; workflow cũ đòi sáu runtime variables/PID tĩnh.
+- **BUILD — Runner bootstrap:** Thêm `room_hop_mcp/browser_agent_adapter/runner.py`. Launcher bắt buộc exact 40-char SHA khớp `GITHUB_SHA`, test mode, absolute store, sentinel chính xác, store nằm dưới `RUNNER_TEMP` và ngoài `GITHUB_WORKSPACE`, identity allowlist `xu`, port hợp lệ và khớp `ROOMHOP_BROWSER_ADAPTER_PORT`. Bind duy nhất `127.0.0.1`.
+- **BUILD — Fixture provisioner:** Thêm `scripts/w32_windows_fixture.py`. Tạo store riêng theo từng run/attempt, sentinel và meeting ID riêng; dùng MeetingManager/MeetingService tạo meeting, OPEN, JOIN `vinh` + `xu`, START; không fallback sang meeting store mặc định.
+- **BUILD — E2E determinism:** Sửa `tests/test_browser_agent_adapter_e2e.py` dùng HTTP fixture local/ephemeral thay Wikipedia; giữ Browser Adapter workflow, screenshot, MCP stdio handoff và transcript readback. Thêm `tests/test_browser_agent_adapter_runner.py` bao phủ SHA, store, sentinel, port và identity; đăng ký test vào UNIT_TESTS.
+- **BUILD — Workflow:** Chuyển Windows job sang tự provision fixture, cài Chromium vào RUNNER_TEMP, chọn port loopback động, tự khởi chạy adapter từ checkout exact SHA, kiểm tra PID/executable/owner/parent/command-line/listener/health, giữ inventory và log, đóng browser rồi chỉ terminate process tree đã xác minh bằng PID + creation time + executable + parent + owner.
+- **CONFIGURATION:** Bỏ sáu runtime variables tĩnh (store/meeting/identity/PID/EXE/OWNER). Chỉ giữ `W32_WINDOWS_RUNNER_READY` làm opt-in gate. Không tạo, sửa hoặc bật variable này.
+- **MIRROR:** Đồng bộ `.github/workflows/ci-validation.yml` với `work/32/CI-CD-ROOM-HOP-PYTHON-NO-DOCKER/04_CODE/ci-validation.yml`; GitHub readback cho thấy cùng blob SHA `454351493706fee4fab5a8036f1e0bbef22a3e93` tại lần kiểm tra trước khi bổ sung fixture import guard/test cases cuối.
+- **STATIC READBACK:** PASS — GitHub readback xác nhận active workflow và mirror bằng nhau; GitHub expressions không còn escape sai; runner unit test được đăng ký; Windows job không còn PID/EXE/OWNER tĩnh hoặc port 8787 hardcode; port động được truyền thống nhất; local fixture thay Wikipedia; runner kiểm tra exact SHA và store isolation.
+- **TEST EXECUTION:** NOT RUN trong môi trường assistant. Chưa có quyền chạy Windows PowerShell, local pytest hoặc trực tiếp tương tác self-hosted runner. GitHub Actions run sau khi hoàn tất commit/PR vẫn cần lấy trạng thái và artifact; không suy diễn static readback thành test PASS.
+- **PC / RUNNER:** Chưa xác minh lại runner labels/group/service identity trên PC trong phiên này. Không dừng/khởi động PID WORK09 12300; không chạm port 8787 đang được báo cáo thuộc WORK09. Không tạo meeting/store trên PC ngoài workflow.
+- **GATE:** `W32_WINDOWS_RUNNER_READY` vẫn chưa bật; Windows E2E chưa chạy; Release Gate chưa được chứng minh PASS. Phase 1 reproduce và Phase 5 exact-SHA verification chưa được ghi PASS.
+- **BIÊN BẢN:** Ka quyết định kiến trúc per-run runner-owned fixture + dynamic loopback port; không dùng tiến trình thường trực/PID tĩnh; không tác động WORK09; triển khai source trên feature branch riêng.
+- **NHẬT KÝ:** Ka đã tạo launcher, fixture provisioner, deterministic E2E test, runner validation tests và đồng bộ workflow mirror. Tiếp theo: kiểm tra diff/CI trên exact SHA; xử lý lỗi source nếu có; sau đó mới yêu cầu PC xác nhận runner readiness và chạy một Windows pilot.
+- **STATUS:** IMPLEMENTED ON FEATURE BRANCH / STATIC READBACK PASS / AUTOMATED TESTS NOT RUN / WINDOWS E2E NOT RUN / RELEASE NOT ACCEPTED. Work32 remains ACTIVE — NOT RELEASED.
+
