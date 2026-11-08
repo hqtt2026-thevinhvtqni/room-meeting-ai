@@ -200,6 +200,7 @@ def test_add_paste_handles_core_error(tmp_path):
             arguments={
                 "meeting_id": "MEETING-TEST-001",
                 "text": "Hello ROOM HOP",
+                "identity_id": "xu",
             },
         ),
     )
