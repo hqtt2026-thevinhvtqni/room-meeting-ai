@@ -302,9 +302,11 @@ class ExecutionAuthority:
         return {"grant_id": grant_id, "status": "revoked"}
 
     def record_run(
-        self, grant_id: str, *, source_sha256: str, exit_status: str,
+        self, grant_id: str, *, grant_token: str, source_sha256: str, exit_status: str,
         output_refs: list[str], evidence_refs: list[str], handoff_ids: list[str],
     ) -> dict[str, Any]:
+        # Revalidate the bearer grant immediately before the append side effect.
+        self.validate_grant_token(grant_id, grant_token)
         issued, _ = self._grant_events(grant_id)
         if not isinstance(source_sha256, str) or not _SHA256.fullmatch(source_sha256):
             raise ValueError("invalid_source_sha256")
