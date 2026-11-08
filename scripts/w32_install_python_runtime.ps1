@@ -1,10 +1,11 @@
 $ErrorActionPreference = "Stop"
 
-# Install CPython into the self-hosted runner tool cache as the runner identity.
-# This uses the signed python.org installer directly; it does not execute setup.ps1
-# and does not change machine or user execution policy.
+# Python embeddable distribution: no MSI, no setup.ps1, no user-profile install.
+# Pinned official python.org release and published MD5 integrity value.
 $pythonVersion = "3.12.10"
-$installerUrl = "https://www.python.org/ftp/python/3.12.10/python-3.12.10-amd64.exe"
+$archiveName = "python-$pythonVersion-embed-amd64.zip"
+$archiveUrl = "https://www.python.org/ftp/python/$pythonVersion/$archiveName"
+$expectedMd5 = "fe8ef205f2e9c3ba44d0cf9954e1abd3"
 
 if ([string]::IsNullOrWhiteSpace($env:RUNNER_TOOL_CACHE)) {
     throw "BLOCKED: RUNNER_TOOL_CACHE is unavailable"
@@ -12,6 +13,7 @@ if ([string]::IsNullOrWhiteSpace($env:RUNNER_TOOL_CACHE)) {
 
 $pythonRoot = Join-Path $env:RUNNER_TOOL_CACHE "Python\$pythonVersion\x64"
 $pythonExe = Join-Path $pythonRoot "python.exe"
+$sitePackages = Join-Path $pythonRoot "Lib\site-packages"
 
 function Test-Work32Python([string]$Path) {
     try {
@@ -24,57 +26,71 @@ function Test-Work32Python([string]$Path) {
 }
 
 if (-not (Test-Work32Python $pythonExe)) {
-    $installRoot = Join-Path $env:RUNNER_TEMP "w32-python-installer-$pythonVersion"
-    New-Item -ItemType Directory -Force $installRoot | Out-Null
-    $installer = Join-Path $installRoot "python-$pythonVersion-amd64.exe"
-    Invoke-WebRequest -Uri $installerUrl -OutFile $installer -UseBasicParsing
+    $downloadRoot = Join-Path $env:RUNNER_TEMP "w32-python-embed-$pythonVersion"
+    New-Item -ItemType Directory -Force $downloadRoot | Out-Null
+    $archive = Join-Path $downloadRoot $archiveName
+    Invoke-WebRequest -Uri $archiveUrl -OutFile $archive -UseBasicParsing
 
-    $signature = Get-AuthenticodeSignature -FilePath $installer
-    if ($signature.Status -ne "Valid") {
-        throw "BLOCKED: downloaded CPython installer Authenticode signature is not valid"
-    }
-    if ($signature.SignerCertificate.Subject -notmatch "Python Software Foundation") {
-        throw "BLOCKED: CPython installer signer is not Python Software Foundation"
+    $actualMd5 = (Get-FileHash -LiteralPath $archive -Algorithm MD5).Hash.ToLowerInvariant()
+    if ($actualMd5 -ne $expectedMd5) {
+        throw "BLOCKED: official Python embeddable archive checksum mismatch"
     }
 
+    if (Test-Path -LiteralPath $pythonRoot) {
+        Remove-Item -LiteralPath $pythonRoot -Recurse -Force
+    }
     New-Item -ItemType Directory -Force $pythonRoot | Out-Null
-    $arguments = @(
-        "/quiet",
-        "InstallAllUsers=0",
-        "TargetDir=$pythonRoot",
-        "Include_pip=1",
-        "Include_launcher=0",
-        "Include_test=0",
-        "PrependPath=0",
-        "Shortcuts=0",
-        "AssociateFiles=0",
-        "CompileAll=0"
-    )
-    $install = Start-Process -FilePath $installer -ArgumentList $arguments -Wait -PassThru
-    if ($install.ExitCode -ne 0) {
-        throw "BLOCKED: python.org installer exited with code $($install.ExitCode)"
+    Expand-Archive -LiteralPath $archive -DestinationPath $pythonRoot -Force
+
+    $pth = Join-Path $pythonRoot "python312._pth"
+    if (-not (Test-Path -LiteralPath $pth -PathType Leaf)) {
+        throw "BLOCKED: embeddable Python path configuration is missing"
     }
+    New-Item -ItemType Directory -Force $sitePackages | Out-Null
+    $pthLines = @(Get-Content -LiteralPath $pth)
+    if ($pthLines -notcontains "Lib\site-packages") {
+        $pthLines += "Lib\site-packages"
+    }
+    $pthLines = @($pthLines | ForEach-Object {
+        if ($_ -eq "#import site") { "import site" } else { $_ }
+    })
+    if ($pthLines -notcontains "import site") { $pthLines += "import site" }
+    Set-Content -LiteralPath $pth -Value $pthLines -Encoding ascii
+
     if (-not (Test-Work32Python $pythonExe)) {
-        throw "BLOCKED: installed CPython did not start from runner tool cache"
+        throw "BLOCKED: embedded CPython failed its version check"
+    }
+
+    $getPip = Join-Path $downloadRoot "get-pip.py"
+    Invoke-WebRequest -Uri "https://bootstrap.pypa.io/get-pip.py" -OutFile $getPip -UseBasicParsing
+    & $pythonExe $getPip --no-warn-script-location --no-compile --target $sitePackages
+    if ($LASTEXITCODE -ne 0) {
+        throw "BLOCKED: pip bootstrap into runner-local site-packages failed"
     }
 }
 
-$env:PATH = "$pythonRoot;$pythonRoot\Scripts;$env:PATH"
+$env:PATH = "$pythonRoot;$env:PATH"
+$env:PYTHONPATH = $sitePackages
+"PYTHONPATH=$sitePackages" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
 & $pythonExe -m pip --version
 if ($LASTEXITCODE -ne 0) {
-    throw "BLOCKED: pip is unavailable in runner-local CPython"
+    throw "BLOCKED: pip is unavailable in embedded CPython"
+}
+$version = & $pythonExe --version
+if ($LASTEXITCODE -ne 0 -or "$version" -ne "Python $pythonVersion") {
+    throw "BLOCKED: embedded CPython version attestation failed"
 }
 
 @(
     "W32_PYTHON_EXE=$pythonExe",
-    "W32_PYTHON_ROOT=$pythonRoot"
+    "W32_PYTHON_ROOT=$pythonRoot",
+    "W32_PYTHON_SITE_PACKAGES=$sitePackages"
 ) | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
-@(
-    $pythonRoot,
-    (Join-Path $pythonRoot "Scripts")
-) | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
+@($pythonRoot) | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
 
 Write-Host "python_executable=$pythonExe"
-Write-Host "python_version=$(& $pythonExe --version)"
+Write-Host "python_version=$version"
 Write-Host "python_root=$pythonRoot"
-Write-Host "python_install_mode=python-org-signed-per-runner-user"
+Write-Host "python_site_packages=$sitePackages"
+Write-Host "python_install_mode=official-embeddable-zip"
+Write-Host "python_archive_md5=$actualMd5"
