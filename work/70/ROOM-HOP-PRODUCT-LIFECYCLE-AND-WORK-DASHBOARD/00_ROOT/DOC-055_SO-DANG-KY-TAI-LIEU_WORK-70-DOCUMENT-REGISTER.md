@@ -216,3 +216,10 @@ DOC-013 has one canonical artifact path only: `branch work/70/05-build: 05_BUILD
 
 ## One-source clarification — DOC-061 (2026-11-07)
 DOC-061 has one canonical Work 70 path on main: `05_BUILD/03_ARCHITECTURE/DOC-061_RA-SOAT-DOI-CHIEU-HOP-DONG-KIEN-TRUC-RUNTIME-WORK-70.md`. Sandbox and `work/70/05-build` locations are synchronization/mirror references, not additional canonical sources.
+
+
+## Registration addendum — DOC-094 / 2026-11-09
+## Addendum 2026-11-09 — đăng ký DOC-094 và projection ba tầng
+| DOC-094 | P0 | 94 | Sổ Product Task và Phase Task / Product and Phase Task Register | 04_PLAN/DOC-094_PRODUCT_PHASE_TASK_REGISTER.json | DOC-004; DOC-005; DOC-006; DOC-034; DOC-035; DOC-056; DOC-093 | DRAFT_NOT_APPROVED | Nguồn chuẩn Product Task và Phase Task; quy định Agent chính, phối hợp, kiểm tra; liên kết xuống DOC-093; không thay thế Agent Task register. |
+| SCHEMA-PRODUCT-PHASE-TASK | P1 | 94A | Product and Phase Task Register Schema | 03_ARCHITECT/DOC-094_PRODUCT_PHASE_TASK_REGISTER.schema.json | DOC-093; DOC-094 | CREATED / VALIDATION NOT RUN | Schema kiểm tra DOC-094; không phải nguồn dữ liệu. |
+| DASHBOARD-PRODUCT-PHASE-TASK | P1 | 94B | Product and Phase Task Dashboard Projection | DASHBOARD/execution/PRODUCT_PHASE_TASK_STATUS.json | DOC-093; DOC-094 | GENERATED / READ-ONLY / BROWSER NOT VERIFIED | Projection ba tầng cho Dashboard; không chỉnh sửa trực tiếp, không phải nguồn chuẩn. |
