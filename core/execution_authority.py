@@ -165,7 +165,7 @@ class ExecutionAuthority:
                     raise ExecutionAuthorityConfigError("work_path_outside_root") from exc
             if not isinstance(policy.get("source_sha256"), str) or not _SHA256.fullmatch(policy["source_sha256"]):
                 raise ExecutionAuthorityConfigError("invalid_work_source_sha256")
-            purposes = policy.get("allowed_purposes", ["pytest_run", "build", "diagnostic"])
+            purposes = policy.get("allowed_purposes", ["pytest_run"])
             if not isinstance(purposes, list) or not purposes or any(not isinstance(x, str) or not x.strip() for x in purposes):
                 raise ExecutionAuthorityConfigError("invalid_allowed_purposes")
             self._work_policies[work_id] = {**policy, "allowed_purposes": list(purposes)}
@@ -206,7 +206,8 @@ class ExecutionAuthority:
         return bool(policy and identity in policy["allowed_identities"])
 
     def issue_grant(
-        self, identity: str, work_id: str, purpose: str, grant_seconds: int | None = None
+        self, identity: str, work_id: str, purpose: str, grant_seconds: int | None = None,
+        *, max_timeout_seconds: int = 60,
     ) -> dict[str, Any]:
         policy = self._work_policies.get(work_id)
         if policy is None:
@@ -218,6 +219,8 @@ class ExecutionAuthority:
         lifetime = self.default_grant_seconds if grant_seconds is None else grant_seconds
         if not isinstance(lifetime, int) or isinstance(lifetime, bool) or not (1 <= lifetime <= self.max_grant_seconds):
             raise ValueError("invalid_grant_lifetime")
+        if not isinstance(max_timeout_seconds, int) or isinstance(max_timeout_seconds, bool) or not (1 <= max_timeout_seconds <= 3600):
+            raise ValueError("invalid_max_timeout_seconds")
         token = secrets.token_urlsafe(32)
         grant_id = "GRANT-" + uuid.uuid4().hex
         issued = _utcnow()
@@ -227,6 +230,7 @@ class ExecutionAuthority:
             "work_id": work_id,
             "identity": identity,
             "purpose": purpose,
+            "max_timeout_seconds": max_timeout_seconds,
             "issued_at": _iso(issued),
             "expires_at": _iso(expires),
             "token_sha256": hashlib.sha256(token.encode("utf-8")).hexdigest(),
@@ -243,6 +247,7 @@ class ExecutionAuthority:
             "evidence_root": policy["evidence_root"],
             "source_sha256": policy["source_sha256"],
             "purpose": purpose,
+            "max_timeout_seconds": max_timeout_seconds,
             "expires_at": _iso(expires),
             "authorized": True,
         }
@@ -271,6 +276,7 @@ class ExecutionAuthority:
             "work_id": issued["work_id"],
             "identity": issued["identity"],
             "purpose": issued["purpose"],
+            "max_timeout_seconds": issued.get("max_timeout_seconds", 60),
             "issued_at": issued["issued_at"],
             "expires_at": issued["expires_at"],
             "status": "active",
