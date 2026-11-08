@@ -59,3 +59,6 @@ Existing CI, imports and tests may depend on 04_CODE, 05_TEST and 06_EVIDENCE. F
 
 ## Batch 1 progress note — 2026-11-08
 Canonical DOC-034 minutes and DOC-045 plan were created from the legacy records. DOC-035 now preserves the earlier 2026-10-26 journal entry and its integrity correction. WORK_MANIFEST.md, BIEN_BAN.md, KE_HOACH_THI_CONG_XU.md and NHAT_KY_HOP_THI_CONG.md are now compatibility pointers. This promotion does not close Batch 1: link integrity and CI regression remain unverified.
+
+## CI regression note — 2026-11-08
+The first CI run after the governance/official-record commits is run 42467546737 (head f56f86cb9c8ba2be8be990d8cebdb0a1068f0daa). Both Python 3.11 and 3.12 jobs failed at the independent Manifest V4 + Ka V3 corpus-aligned evaluation gate: no_answer_accuracy=0.300 against the required floor 0.8. Unit tests, syntax, Gate B and existing EVAL_V2 passed. This is recorded as EVD-007 and DOC-035 LOG-W103-20261108-004. Do not attribute the failure to document migration without evidence; investigate the dataset/gate separately. Batch 1 remains open pending link audit and a passing CI run or documented disposition.
