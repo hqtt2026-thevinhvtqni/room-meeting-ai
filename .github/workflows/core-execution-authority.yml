@@ -1,0 +1,31 @@
+name: Core Execution Authority Contract V1.2
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "core/execution_authority.py"
+      - "room_hop_mcp/adapter/execution_authority_http.py"
+      - "room_hop_mcp/adapter/http_server.py"
+      - "tests/test_execution_authority.py"
+      - ".github/workflows/core-execution-authority.yml"
+  push:
+    branches: [work/w1111-core-execution-authority-v1-2]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  authority-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -r requirements.txt fastapi httpx
+      - run: python -m pytest -q tests/test_execution_authority.py
