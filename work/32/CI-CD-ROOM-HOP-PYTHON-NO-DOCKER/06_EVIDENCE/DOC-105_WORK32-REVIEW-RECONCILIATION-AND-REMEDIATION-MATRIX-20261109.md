@@ -117,3 +117,10 @@ Notable current-source findings:
 - Added tests for concurrent ID allocation, concurrent JOIN_ACCEPTED updates from separate Meeting objects, and atomic YAML replacement.
 - **Residual:** meeting.yaml read-modify-write is not yet cross-process serialized. Deployment must remain one Core process per local store until a cross-process lock or transactional state store is implemented and reviewed.
 - CI status for this S10 batch: pending Run #274 (`42522244216`) on head `fb7eadcc59bf22d4a91060e738760b4d5380c2fd`; do not mark S10 PASS until that exact run completes.
+
+
+## Addendum — S10 acceptance boundary after Run #277
+- Run #277 (`42522681112`) passed 6/6 on exact PR head `d72b68659e9717d8ea33a5c41b2d379fc15064e2`.
+- S10 is **PASS within the single-Core-process local deployment boundary**: atomic YAML replacement, same-process per-meeting serialization, atomic ID directory reservation/collision retry, and concurrency tests all passed.
+- Cross-process read-modify-write is still **OPEN**. No multi-process or multi-host deployment; use one Core process per local meeting store until cross-process locking/transactional storage is reviewed.
+- Cla re-review remains required before staging/production.
