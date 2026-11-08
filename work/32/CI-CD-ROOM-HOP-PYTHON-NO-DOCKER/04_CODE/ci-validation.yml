@@ -66,13 +66,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Verify dedicated Work32 runner identity
-        shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
-        run: |
-          if ("${{ runner.name }}" -ne "ROOM-HOP-W32-PC") {
-            throw "BLOCKED: expected dedicated runner ROOM-HOP-W32-PC; actual runner is '${{ runner.name }}'"
-          }
-
       - name: Fetch exact triggering revision without submodule recursion
         env:
           REPOSITORY: ${{ github.repository }}
@@ -219,6 +212,13 @@ jobs:
     runs-on: [self-hosted, Windows, X64]
     timeout-minutes: 20
     steps:
+      - name: Verify dedicated Work32 runner identity
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
+        run: |
+          if ("${{ runner.name }}" -ne "ROOM-HOP-W32-PC") {
+            throw "BLOCKED: expected dedicated runner ROOM-HOP-W32-PC; actual runner is '${{ runner.name }}'"
+          }
+
       - name: Fetch exact triggering revision without submodule recursion
         env:
           REPOSITORY: ${{ github.repository }}
