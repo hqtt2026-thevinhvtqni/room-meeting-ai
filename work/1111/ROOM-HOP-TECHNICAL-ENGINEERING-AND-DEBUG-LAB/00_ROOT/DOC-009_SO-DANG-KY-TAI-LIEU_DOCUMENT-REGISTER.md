@@ -17,3 +17,13 @@
 - One document has one canonical path; other locations must link to it, not create a competing authority.
 - New documents must be added here before or at issuance and follow the bilingual ASCII naming standard.
 - Journal entries are append-only in business meaning; corrections are recorded as later addenda.
+
+
+## Operational support artifacts (not separate canonical governance records)
+| Artifact | Canonical path | Purpose |
+|---|---|---|
+| Work entry point | README.md | Navigation only; DOC-001 remains authority |
+| AI Task Board | 05_BUILD/00_ROOT/AI_TASK_BOARD.md | Task intake/claim status; journal records actual participation |
+| AI Debug Handoff Guide | 05_BUILD/10_AI_DEBUG_HANDOFF/README.md | Handoff format; no duplicate source records |
+| Verification Checklist | 06_VERIFY/VERIFICATION_CHECKLIST.md | Evidence-gated checklist, not proof by itself |
+| Evidence Register | EVIDENCE/EVIDENCE_REGISTER.md | Index of evidence references and scope limits |
