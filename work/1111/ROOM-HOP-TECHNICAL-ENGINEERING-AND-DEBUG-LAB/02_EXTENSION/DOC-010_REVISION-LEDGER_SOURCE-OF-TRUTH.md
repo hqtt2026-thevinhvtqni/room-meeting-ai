@@ -127,3 +127,13 @@ Computed from exact Sandbox readback using Git blob framing (`blob <UTF-8 byte l
 - Diff qualification: GitHub-generated cumulative main..PR #48 unified diff for host.py and test_execution_host.py; it is not an isolated C02-only patch and not a local `git diff`. `git apply --check` was not run.
 - C02 code/test commits remain `65cf53af2a8a656ef83327ea2718c2c65f994bf7`, `3edd072fcec184dca936c510f98ebbe42064ed30`, `e2c9e7e1508eacff390f4ac2e9117230601df7ab`. Combined commit status responses had no status entries; exact-SHA CI remains NOT VERIFIED.
 - No main, PC, runtime, merge or release action.
+
+
+## FINAL ADDENDUM — 2026-11-09 — C07 COMMAND-LINE REDACTION + DOC-003 READBACK
+
+- Branch head immediately before this DOC-010 update: `0c6bdc61e7d2988a2932c7640c04a16a06821fec`.
+- DOC-003 latest branch blob after syncing C07 redaction correction: `0760e09abc156756999ae4be1da3511e85634db1`; readback confirms the C07 correction is present.
+- Latest Sandbox journal Git blob SHA-1: `534994018830df23e19c802a7eff5d2a296c72ef` (68,378 UTF-8 bytes).
+- Latest C07 PC handoff pack Git blob SHA-1: `af42cd792994d260ba70e407b38e1ade5943f28f` (8,059 UTF-8 bytes).
+- C07 correction: process command line is now emitted only as `CommandLineRedacted`; secret-like arguments are redacted before display. Secret environment values are never printed. The pack remains unexecuted on PC.
+- This is a docs-only revision on PR #48 branch; no main, PC, runtime, merge or release action.
