@@ -226,9 +226,20 @@ jobs:
         shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
         run: |
           git init .
-          git remote add origin "https://$env:REPOSITORY.git"
+          # This runner reuses its workspace; configure long paths locally and
+          # make the origin setup idempotent before checking out the exact SHA.
+          git config core.longpaths true
+          $originUrl = "https://$env:REPOSITORY.git"
+          $origin = git remote get-url origin 2>$null
+          if ($LASTEXITCODE -eq 0 -and -not [string]::IsNullOrWhiteSpace($origin)) {
+            git remote set-url origin $originUrl
+          } else {
+            git remote add origin $originUrl
+          }
           git fetch --no-tags --depth=1 origin "$env:REVISION"
-          git checkout --detach FETCH_HEAD
+          git checkout --force --detach FETCH_HEAD
+          git reset --hard FETCH_HEAD
+          git clean -ffdx
           if ((git rev-parse HEAD).Trim() -ne $env:GITHUB_SHA) {
             throw "BLOCKED: checkout does not match GITHUB_SHA"
           }
