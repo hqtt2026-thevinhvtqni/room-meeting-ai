@@ -1,11 +1,10 @@
 $ErrorActionPreference = "Stop"
 
-# Runner-local portable CPython installation. This does not execute setup.ps1
+# Install CPython into the self-hosted runner tool cache as the runner identity.
+# This uses the signed python.org installer directly; it does not execute setup.ps1
 # and does not change machine or user execution policy.
 $pythonVersion = "3.12.10"
-$releaseTag = "3.12.10-14343898437"
-$assetName = "python-3.12.10-win32-x64.zip"
-$assetUrl = "https://github.com/actions/python-versions/releases/download/$releaseTag/$assetName"
+$installerUrl = "https://www.python.org/ftp/python/3.12.10/python-3.12.10-amd64.exe"
 
 if ([string]::IsNullOrWhiteSpace($env:RUNNER_TOOL_CACHE)) {
     throw "BLOCKED: RUNNER_TOOL_CACHE is unavailable"
@@ -25,42 +24,42 @@ function Test-Work32Python([string]$Path) {
 }
 
 if (-not (Test-Work32Python $pythonExe)) {
-    $downloadRoot = Join-Path $env:RUNNER_TEMP "w32-portable-python-$pythonVersion"
-    if (Test-Path -LiteralPath $downloadRoot) {
-        Remove-Item -LiteralPath $downloadRoot -Recurse -Force
+    $installRoot = Join-Path $env:RUNNER_TEMP "w32-python-installer-$pythonVersion"
+    New-Item -ItemType Directory -Force $installRoot | Out-Null
+    $installer = Join-Path $installRoot "python-$pythonVersion-amd64.exe"
+    Invoke-WebRequest -Uri $installerUrl -OutFile $installer -UseBasicParsing
+
+    $signature = Get-AuthenticodeSignature -FilePath $installer
+    if ($signature.Status -ne "Valid") {
+        throw "BLOCKED: downloaded CPython installer Authenticode signature is not valid"
     }
-    New-Item -ItemType Directory -Force $downloadRoot | Out-Null
-    $archive = Join-Path $downloadRoot $assetName
-    $extractRoot = Join-Path $downloadRoot "extracted"
-    New-Item -ItemType Directory -Force $extractRoot | Out-Null
-
-    Invoke-WebRequest -Uri $assetUrl -OutFile $archive -UseBasicParsing
-    Expand-Archive -LiteralPath $archive -DestinationPath $extractRoot -Force
-
-    $pythonCandidate = Get-ChildItem -LiteralPath $extractRoot -Filter "python.exe" -File -Recurse |
-        Select-Object -First 1
-    if (-not $pythonCandidate) {
-        throw "BLOCKED: downloaded Python archive contains no python.exe"
+    if ($signature.SignerCertificate.Subject -notmatch "Python Software Foundation") {
+        throw "BLOCKED: CPython installer signer is not Python Software Foundation"
     }
 
-    $sourceRoot = $pythonCandidate.Directory.FullName
-    if (Test-Path -LiteralPath $pythonRoot) {
-        Remove-Item -LiteralPath $pythonRoot -Recurse -Force
-    }
     New-Item -ItemType Directory -Force $pythonRoot | Out-Null
-    Copy-Item -Path (Join-Path $sourceRoot "*") -Destination $pythonRoot -Recurse -Force
-
-    if (-not (Test-Work32Python $pythonExe)) {
-        throw "BLOCKED: portable Python failed to start from runner tool cache"
+    $arguments = @(
+        "/quiet",
+        "InstallAllUsers=0",
+        "TargetDir=$pythonRoot",
+        "Include_pip=1",
+        "Include_launcher=0",
+        "Include_test=0",
+        "PrependPath=0",
+        "Shortcuts=0",
+        "AssociateFiles=0",
+        "CompileAll=0"
+    )
+    $install = Start-Process -FilePath $installer -ArgumentList $arguments -Wait -PassThru
+    if ($install.ExitCode -ne 0) {
+        throw "BLOCKED: python.org installer exited with code $($install.ExitCode)"
     }
-    Set-Content -LiteralPath (Join-Path $pythonRoot ".w32-runtime-version") -Value $pythonVersion -Encoding ascii
+    if (-not (Test-Work32Python $pythonExe)) {
+        throw "BLOCKED: installed CPython did not start from runner tool cache"
+    }
 }
 
 $env:PATH = "$pythonRoot;$pythonRoot\Scripts;$env:PATH"
-& $pythonExe -m ensurepip --upgrade
-if ($LASTEXITCODE -ne 0) {
-    throw "BLOCKED: ensurepip failed for runner-local CPython"
-}
 & $pythonExe -m pip --version
 if ($LASTEXITCODE -ne 0) {
     throw "BLOCKED: pip is unavailable in runner-local CPython"
@@ -78,4 +77,4 @@ if ($LASTEXITCODE -ne 0) {
 Write-Host "python_executable=$pythonExe"
 Write-Host "python_version=$(& $pythonExe --version)"
 Write-Host "python_root=$pythonRoot"
-Write-Host "python_install_mode=runner-tool-cache-portable"
+Write-Host "python_install_mode=python-org-signed-per-runner-user"
