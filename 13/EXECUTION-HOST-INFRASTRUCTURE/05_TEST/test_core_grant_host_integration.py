@@ -114,6 +114,7 @@ def test_core_grant_to_w12_real_host_and_append_only_run_record(tmp_path):
 
     assert status == 200
     assert result["status"] == "PASS"
+    assert result["cleanup"]["process_tree_cleanup_verified"] is True
     assert Path(result["evidence_ref"]).is_file()
     evidence_data = json.loads(Path(result["evidence_ref"]).read_text(encoding="utf-8"))
     assert evidence_data["source_sha256"] == source_hash
