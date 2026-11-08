@@ -221,6 +221,25 @@ class Adapter:
 
 
 adapter = Adapter()
+# FastAPI sync endpoints may execute on different worker threads. Playwright's
+# synchronous objects must remain owned by one thread, so all adapter calls are
+# dispatched through this single-worker executor.
+_BROWSER_EXECUTOR = ThreadPoolExecutor(max_workers=1, thread_name_prefix="roomhop-browser-adapter")
+
+
+def _run_browser_operation(operation, *args, **kwargs):
+    return _BROWSER_EXECUTOR.submit(operation, *args, **kwargs).result()
+
+
+def _execute_workflow(req: WorkflowRequest):
+    try:
+        return {"ok": True, "value": adapter.workflow(req)}
+    except Exception as exc:
+        return {
+            "ok": False,
+            "detail": {"error": str(exc), "logs": list(adapter.logs)},
+        }
+
 
 
 def _contains_exact_marker(value: Any, marker: str) -> bool:
@@ -479,73 +498,72 @@ def _configured_port() -> int:
 
 @app.get("/health")
 def health():
+    browser_started = _run_browser_operation(lambda: adapter.page is not None)
     return {
         "ok": True,
         "service": "room-hop-browser-agent-adapter",
-        "browser_started": adapter.page is not None,
+        "browser_started": browser_started,
         "port": _configured_port(),
     }
 
 
 @app.post("/browser/start")
 def start():
-    return adapter.start()
+    return _run_browser_operation(adapter.start)
 
 
 @app.post("/browser/navigate")
 def navigate(body: dict):
-    return adapter.navigate(body["url"])
+    return _run_browser_operation(adapter.navigate, body["url"])
 
 
 @app.post("/browser/inspect")
 def inspect():
-    return adapter.inspect()
+    return _run_browser_operation(adapter.inspect)
 
 
 @app.post("/browser/click")
 def click(body: dict):
-    return adapter.click(body["selector"])
+    return _run_browser_operation(adapter.click, body["selector"])
 
 
 @app.post("/browser/type")
 def type_text(body: dict):
-    return adapter.type(body["selector"], body["text"])
+    return _run_browser_operation(adapter.type, body["selector"], body["text"])
 
 
 @app.post("/browser/wait")
 def wait(body: dict | None = None):
-    return adapter.wait((body or {}).get("ms", 1000))
+    return _run_browser_operation(adapter.wait, (body or {}).get("ms", 1000))
 
 
 @app.post("/browser/extract")
 def extract(body: dict):
-    return adapter.extract(body["selectors"])
+    return _run_browser_operation(adapter.extract, body["selectors"])
 
 
 @app.post("/browser/screenshot")
 def screenshot(body: dict | None = None):
-    return adapter.screenshot((body or {}).get("name", "page.png"))
+    return _run_browser_operation(adapter.screenshot, (body or {}).get("name", "page.png"))
 
 
 @app.post("/browser/download")
 def download(body: dict):
-    return adapter.download(body["selector"], body.get("name"))
+    return _run_browser_operation(adapter.download, body["selector"], body.get("name"))
 
 
 @app.post("/browser/execute_workflow")
 def execute(req: WorkflowRequest):
-    # Keep the failure snapshot inside the same serialized operation; another
-    # request must not replace this workflow's logs before the error is returned.
-    with adapter._operation_lock:
-        try:
-            return adapter.workflow(req)
-        except Exception as exc:
-            raise HTTPException(500, detail={"error": str(exc), "logs": list(adapter.logs)})
+    # Execute and snapshot failures on the same dedicated browser thread.
+    result = _run_browser_operation(_execute_workflow, req)
+    if not result["ok"]:
+        raise HTTPException(500, detail=result["detail"])
+    return result["value"]
 
 
 @app.post("/browser/close")
 def close():
-    return adapter.close()
+    return _run_browser_operation(adapter.close)
 
 
 TOOLS = [
@@ -587,17 +605,17 @@ def mcp(payload: dict):
         name = payload.get("params", {}).get("name")
         args = payload.get("params", {}).get("arguments", {})
         routes = {
-            "browser_start": lambda: adapter.start(),
-            "browser_navigate": lambda: adapter.navigate(args["url"]),
-            "browser_inspect": lambda: adapter.inspect(),
-            "browser_click": lambda: adapter.click(args["selector"]),
-            "browser_type": lambda: adapter.type(args["selector"], args["text"]),
-            "browser_wait": lambda: adapter.wait(args.get("ms", 1000)),
-            "browser_extract": lambda: adapter.extract(args["selectors"]),
-            "browser_screenshot": lambda: adapter.screenshot(args.get("name", "page.png")),
-            "browser_download": lambda: adapter.download(args["selector"], args.get("name")),
-            "browser_execute_workflow": lambda: adapter.workflow(WorkflowRequest(**args)),
-            "browser_close": lambda: adapter.close(),
+            "browser_start": lambda: _run_browser_operation(adapter.start),
+            "browser_navigate": lambda: _run_browser_operation(adapter.navigate, args["url"]),
+            "browser_inspect": lambda: _run_browser_operation(adapter.inspect),
+            "browser_click": lambda: _run_browser_operation(adapter.click, args["selector"]),
+            "browser_type": lambda: _run_browser_operation(adapter.type, args["selector"], args["text"]),
+            "browser_wait": lambda: _run_browser_operation(adapter.wait, args.get("ms", 1000)),
+            "browser_extract": lambda: _run_browser_operation(adapter.extract, args["selectors"]),
+            "browser_screenshot": lambda: _run_browser_operation(adapter.screenshot, args.get("name", "page.png")),
+            "browser_download": lambda: _run_browser_operation(adapter.download, args["selector"], args.get("name")),
+            "browser_execute_workflow": lambda: _run_browser_operation(adapter.workflow, WorkflowRequest(**args)),
+            "browser_close": lambda: _run_browser_operation(adapter.close),
         }
 
         if name not in routes:
