@@ -42,6 +42,7 @@ env:
     tests/test_secretary_acceptance_abc.py
     tests/test_secretary_meeting_acceptance.py
     tests/test_f4_resource_limits.py
+    tests/test_w32_path_safety.py
   E2E_TESTS: >-
     tests/test_e2e.py
     tests/test_execution_host.py
