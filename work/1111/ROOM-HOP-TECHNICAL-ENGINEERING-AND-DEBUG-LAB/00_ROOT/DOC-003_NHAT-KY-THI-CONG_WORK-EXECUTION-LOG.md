@@ -1,0 +1,86 @@
+# NK-1111-001 — NHẬT KÝ THI CÔNG / KIỂM THỬ
+
+## 2026-11-08 — Khởi tạo Work 1111
+- **Phạm vi:** Tạo Work Sandbox mã 1111 và hồ sơ nền.
+- **Phương pháp:** ROOM-HOP MCP 8030 — sandbox_create_work, sandbox_create, sandbox_read_probe.
+- **Identity:** xu.
+- **Bằng chứng tạo Work:** status=ok; work_id=1111; authorization=ALLOW: xu is a registered ROOM HOP member.
+- **Bằng chứng hồ sơ:** sandbox_read_probe trả status=ok và nội dung file đầy đủ.
+- **Kết quả:** PASS — Work và hồ sơ chuẩn đã tạo, đọc xác minh.
+- **Ghi chú sửa sai:** Lần gọi đầu dùng sai identity AI-01, bị UNKNOWN_IDENTITY. Tra cứu thông tin định danh đã lưu xác định đúng ID là xu; lần gọi sau thành công. Không yêu cầu người dùng cung cấp dữ kiện AI có thể tự tra cứu.
+- **Bước tiếp theo:** Hoàn thiện baseline kỹ thuật, inventory, bản đồ kiến trúc và quy trình AI handoff.
+
+## 2026-11-08 — DISCOVER / BASELINE — Rà soát Sandbox, Work liên quan và giới hạn thực thi
+
+- **Người thực hiện:** Xu (identity_id=xu).
+- **Phạm vi:** W1111; danh mục Work Sandbox; MCP Build 8030; Work 70, 32, 100, 102, 09, 24, 11, 12 và 0000.
+- **Phương pháp:** sandbox_list_works, sandbox_list, sandbox_read_probe, get_room_context, get_room_structure qua ROOM-HOP MCP 8030. Chỉ đọc; không sửa source hoặc Work gốc.
+- **Bằng chứng hệ thống:** sandbox_list_works trả status=ok, count=60; W1111 có manifest_exists=true. sandbox_list(work_id=1111) xác nhận hồ sơ chuẩn ở thư mục ROOM-HOP-TECHNICAL-ENGINEERING-AND-DEBUG-LAB/.
+- **Bằng chứng boundary MCP:** get_room_context trả quy tắc Sandbox read/write, Working Source read-only, AI không merge/commit/push. get_room_structure liệt kê các thao tác file Sandbox, không có process/pytest execution trong danh sách capability.
+- **Phát hiện cấu trúc W1111:** hai entry cấp ngoài 00_ROOT và 01_DISCOVER xuất hiện song song với cây canonical có tên Work. Chưa xác định được chúng rỗng hay có dữ liệu ẩn; không xóa.
+- **W32 — GitHub/Sandbox drift:** đọc báo cáo 06_EVIDENCE/AN-W32-GITHUB-SANDBOX-MIRROR-DRIFT-AUDIT-20261107.md; ghi nhận 6/6 cặp file được kiểm tra DRIFT. Báo cáo phân biệt các SHA/branch/run riêng; không được dùng kết quả của SHA/branch khác để chứng minh cùng một revision.
+- **W32 — Windows gate:** đọc hai báo cáo độc lập của An về Run #133, SHA 554ebe3145e8b13206b50d8722879b0bae3db094, run ID 42138046720. Windows Browser Adapter E2E = SKIPPED/NOT RUN; release acceptance gate = FAILURE. Hosted jobs thành công không đóng Windows lane.
+- **W102 — execution boundary:** 03_ARCHITECTURE/INTEGRATION_MAP_AND_GAP_LEDGER_V1.md ghi nhận MCP file-only, không có process/pytest action; test execution, Core/PC live integration và authenticated bridge chưa được chứng minh bằng phiên MCP này. Đây là bằng chứng tài liệu kiến trúc, chưa phải kiểm tra runtime độc lập.
+- **W70 — cấu trúc và PC parity:** đọc DOC-035 execution journal. Ghi nhận các kết luận gần nhất: PC working tree dirty; một số đường dẫn Sandbox không hiện diện trong PC mirror; GitHub/PC parity chưa xác minh. Không thực hiện thao tác Git/PC.
+- **W09 — độ sạch inventory:** Sandbox listing trả 4,127 entries; có .venv, site-packages, __pycache__ và artifacts trong cây Work. Chỉ ghi nhận dấu hiệu inventory bị phình do môi trường phụ thuộc; chưa kết luận file nào có thể xóa.
+- **W100/W11/W12/W24:** xác nhận có hồ sơ incident/root-cause, AI Member Adapter, Work Execution Environment và PC Source/Workspace Bridge. Chưa đọc toàn bộ các hồ sơ này; chưa đưa ra kết luận về tính sẵn sàng tích hợp.
+- **Trạng thái:** DISCOVER = PARTIAL; W1111 scaffold = PASS; Sandbox/GitHub parity = NOT VERIFIED; pytest execution qua MCP 8030 = NOT AVAILABLE theo capability/context đã đọc; W32 Windows release gate = FAIL theo evidence Run #133; W70 PC parity = NOT VERIFIED.
+- **Giới hạn:** không truy cập PC; không xác minh GitHub HEAD hiện tại độc lập ngoài các báo cáo lưu trong Sandbox; không chạy pytest; không sửa/di chuyển/xóa file ở bất kỳ Work gốc nào.
+- **Bước tiếp theo:** hoàn thiện bản đồ kiến trúc theo source GitHub và registry có thể truy cập; lập bảng source-of-truth theo từng loại dữ liệu; xác minh các Work kỹ thuật liên quan bằng hồ sơ canonical; tìm đường thực thi pytest có evidence thực, không suy diễn từ khả năng đọc/ghi file.
+
+## 2026-11-08 — GITHUB SOURCE TRACE — Execution Host :8031 và identity
+
+- **Phạm vi:** GitHub repository hqtt2026-thevinhvtqni/room-meeting-ai; default branch main và branch work/28-mcp-tooling-platform; chỉ đọc.
+- **Repository metadata:** get_repo xác nhận repository public, default_branch=main, size=64210. search_commits theo committer-date trả commit mới nhất ở đầu danh sách là dc87d852920514357f082b9615c050733699e847, message docs(work70): verify dashboard assignment journal readback. Đây là commit mới nhất mà search trả về, không tự suy diễn thành bằng chứng HEAD runtime/PC.
+- **Identity:** fetch_file main agents/xu.yaml xác nhận id=xu; blob SHA 225b9ec95c3274fc18796fc0bfe0df8f42b835a9.
+- **Main source:** execution_host/server.py blob 45aec57525b5d55bb63544b7bd7fd23062e06151 có /health và POST /execute; không thấy auth token hoặc Work allow-list trong handler này. execution_host/host.py blob 977b5bc5072eaf0a3ad054aecd22491483d621b1 có subprocess execution, stdout/stderr/evidence; execution_host/security.py blob 4aa20fbc9c5939c49c85222916dc28fb8dd8075b có allowed executable và workspace containment; execution_host/wee_bridge.py blob eec29b8f43d907e06551329f4ed9e350f51352dc gọi HTTP mặc định 127.0.0.1:8031.
+- **Branch hardening:** search_branches xác nhận work/28-mcp-tooling-platform tồn tại. Fetch execution_host/server.py trên branch này trả blob SHA 87644127a9a2df638b5677758cfc4d0c883b2985; handler có bearer token X-Room-Hop-Execution-Auth, allow-list Work, giới hạn body 256 KiB, kiểm tra content-type và fail-closed unknown keys. Đây là branch riêng, không được coi là đã có trên main hoặc deployed PC.
+- **Giới hạn hardening theo DOC-061:** shared bearer token không định danh riêng từng AI/principal; Work allow-list là cấu hình tĩnh; Core grant fetch có fallback local registry; snapshot_only mặc định false; chưa có bằng chứng startup/service/firewall/proxy trên PC khớp branch hardened. Work 70 DOC-061 đã ghi corrected disposition này; W1111 chỉ ghi nhận và liên kết, không lặp audit đầy đủ.
+- **Potential false PASS:** source ExecutionHost.execute_work() gắn test result vào nested result['test'] nhưng top-level ExecutionResult.status vẫn lấy result['status'] từ command chính. Nếu command chính PASS nhưng test command FAIL, kết quả top-level có thể vẫn PASS. DOC-061 ghi nhận thiếu regression test cho tình huống này. Đây là source-level finding, chưa chạy test trong lượt này.
+- **Test inventory:** tests/test_execution_host.py trên main, blob 183cba2959db9d9fb00751055efdeddd09c14a64, có 10 tests về execute/evidence, authorization boolean, workspace escape, command allow-list/injection, timeout/cleanup, redaction, adapters, artifact isolation và service lifecycle; chưa thấy test run_test=True với test con thất bại.
+- **Kết luận cập nhật:** Execution Host source EXISTS; MCP 8030 hiện tại không cung cấp process/pytest tool; live service :8031 / deployed build / auth configuration / Work 1111 authorization = NOT VERIFIED. Main và branch hardening khác nhau; không dùng branch riêng để khẳng định main đã được harden.
+- **Hành động:** chỉ fetch/read GitHub; không sửa branch, không tạo commit/PR, không dispatch workflow, không gọi runtime /execute.
+
+## 2026-11-08 09:44 (UTC+7) — CTO REVIEW — Cla (AI-03, CTO / Code-Debug Lead)
+
+- **Người thực hiện:** Cla qua phiên claude.ai chat; runtime identity trên MCP 8030 NOT VERIFIED (chưa tra registry; không tự đặt ID).
+- **Phạm vi:** W1111 (nhật ký, inventory, baseline & blockers, quy định AI, kế hoạch); W0000 DOC-010; W102 (listing + RUN_MANIFEST Vi 20261025T135722Z-58be2c5213db). Chỉ đọc; chỉ ghi vào W1111.
+- **Phương pháp:** sandbox_list_works, sandbox_list (W1111, W0000, W102), sandbox_read, get_room_context. Không truy cập GitHub/PC; không chạy test.
+- **Phát hiện chính (có bằng chứng):**
+  1. W102 đã có evidence pytest thực: 151 tests, 0 fail/error/skip, exit_code=0, hash source trước = sau; verdict LOCAL_REFERENCE_PASS nhưng claim_scope=LOCAL_REFERENCE_ONLY, pc_runtime_verified=false. B-1111-03 cần chỉnh: MCP 8030 không thực thi được, nhưng đã có mẫu chạy ở runtime ngoài rồi giao evidence vào Sandbox. Thiếu là khớp exact SHA GitHub và chạy PC/Core live.
+  2. W102 có cây thư mục trùng (04_CODE/05_BUILD/04_CODE, 05_TEST/05_BUILD/05_TEST, 06_EVIDENCE/EVIDENCE/LEGACY_EVIDENCE_ARCHIVE, 07_ENVIRONMENT, 07_RELEASE) và __pycache__; chưa so hash nên chưa kết luận giống/khác.
+  3. W1111 cấp ngoài 00_ROOT và 01_DISCOVER: sandbox_read báo FileNotFoundError, listing không có file con; nghi là thư mục rỗng legacy; không xóa.
+  4. Roster W0000 DOC-010: Cla = AI-03, runtime identity NOT VERIFIED.
+- **Đánh giá:** đồng ý baseline của Xu (DISCOVER = PARTIAL; W32 gate FAIL; parity NOT VERIFIED). Blocker chưa có owner và tiêu chí đóng.
+- **Đề xuất (chi tiết tại 02_EXTENSION/CTO_REVIEW_AND_PROPOSALS_CLA_20261108.md):** P0 Revision Ledger chỉ đọc (GitHub/Sandbox/PC theo SHA + hash) cho B-01/B-04; P1 Execution Evidence Contract theo mẫu RUN_MANIFEST của Vi (B-03) và evidence Windows lane thật (B-02); P2 manifest phân loại inventory và xử lý cây trùng bằng LEGACY_NOTICE, chưa xóa.
+- **Trạng thái:** CTO review = PARTIAL. Không PASS nào được tuyên bố. Chưa đọc trực tiếp báo cáo W32, W70 DOC-035, W100, W24, W11, W12; chưa kiểm GitHub/PC.
+- **Cần quyết định từ Anh Vinh:** quyền truy cập PC cho P0; owner cho Windows lane.
+- **Bước tiếp theo:** review Revision Ledger khi Xu lập; soạn Execution Evidence Contract; đọc trực tiếp báo cáo W32 để thay các kết luận gián tiếp.
+
+## 2026-11-08 — W13 CANONICAL EXECUTION HOST — Đọc hồ sơ handoff và attestation cũ
+
+- **Nguồn:** Work 13 Sandbox, work_id=13; các file EXECUTION-HOST-INFRASTRUCTURE/03_ARCHITECTURE/PC_INTEGRATION_HANDOFF.md, WEE_8031_BRIDGE_STATUS.md, 06_EVIDENCE/W13_CANONICAL_PC_RUNTIME_ATTESTATION_BLOCKER_LOG.md, W13_CANONICAL_PC_RUNTIME_DECISION_LOG.md và 04_CODE/execution_host/server.py.
+- **Kết quả đọc:** source canonical Work 13 Sandbox dùng package entrypoint python -m execution_host.server, bind mặc định 127.0.0.1:8031; WEE bridge có hợp đồng gọi :8031. Hồ sơ nêu rõ Sandbox E2E không phải ROOM-HOP live E2E.
+- **Historical PC evidence:** blocker log ngày 2026-10-08 ghi PID 5188, Python 3.12, listener 127.0.0.1:8031 và GET /health PASS; instance_id w13-686df0ff197e4d478fbe68f8e03c44a8; build_hash f7adcf88fe3db910b0f4572c370ab4274805dc193367247db3e8ad8d8f877098; Windows 10. Hồ sơ cũng xác định POST /execute chưa được validly exercised; lỗi Invoke-RestMethod -Accept và PSReadLine là lỗi client/terminal, không phải server evidence.
+- **Decision log:** canonical PC runtime attestation gate vẫn BLOCKED; không lặp lại vòng /health đã PASS lịch sử. Cần /execute hợp lệ, evidence reference và correlation cùng runtime identity.
+- **Source divergence:** Work 13 Sandbox stored server.py là implementation pre-hardening, trực tiếp deserialize WorkContext rồi gọi W12ExecutionAdapter; không có token/Work allow-list handler. Branch work/28-mcp-tooling-platform có hardening riêng; GitHub main source cũng khác với branch đó. Không có căn cứ cho rằng PC hiện chạy bản hardened.
+- **Trạng thái cập nhật:** W13 source/handoff = PRESENT; historical /health = PASS tại 2026-10-08 only; historical /execute = INCONCLUSIVE/NOT RUN; current PC PID/listener/build/auth = NOT VERIFIED; Work 1111 không gọi localhost và không chạy /execute.
+- **Bước tiếp theo:** đối chiếu deployment manifest/PC startup record và build hash hiện tại; chỉ yêu cầu một lần kiểm tra read-only cho process/listener/health nếu có source change hoặc evidence mới; ưu tiên kiểm tra /execute có kiểm soát sau khi xác định rõ phiên bản, auth và authorization. Không lặp /health không cần thiết.
+
+## 2026-11-08 — READBACK VERIFY — W1111 baseline artifacts
+
+- Đã đọc lại bằng sandbox_read_probe sau khi ghi.
+- NHAT_KY_THI_CONG.md: status=ok, size_bytes=13179.
+- TECHNICAL_INVENTORY.md: status=ok, size_bytes=1737 trước bổ sung; bản bổ sung được ghi ở entry này.
+- TECHNICAL_BASELINE_AND_OPEN_BLOCKERS.md: status=ok, size_bytes=5315.
+- EXECUTION_HOST_SOURCE_TRACE.md: status=ok, size_bytes=6051.
+- sandbox_list(work_id=1111) xác nhận đủ bốn đường dẫn canonical.
+- **Kết quả:** READBACK = PASS cho bốn hồ sơ đã kiểm tra; DISCOVER = PARTIAL; không có test/runtime execution, source mutation hoặc Git operation.
+
+## 2026-11-08 — Final readback confirmation after inventory correction
+- sandbox_read_probe returned status=ok for all four canonical files:
+  - 00_ROOT/NHAT_KY_THI_CONG.md — 13,850 bytes
+  - 01_DISCOVER/TECHNICAL_INVENTORY.md — 2,774 bytes
+  - 02_EXTENSION/TECHNICAL_BASELINE_AND_OPEN_BLOCKERS.md — 5,315 bytes
+  - 03_ARCHITECTURE/EXECUTION_HOST_SOURCE_TRACE.md — 6,051 bytes
+- **Result:** all four files readable after final append; READBACK PASS. No code/runtime execution.
