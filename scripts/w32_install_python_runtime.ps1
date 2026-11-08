@@ -61,12 +61,20 @@ if (-not (Test-Work32Python $pythonExe)) {
         throw "BLOCKED: embedded CPython failed its version check"
     }
 
-    $getPip = Join-Path $downloadRoot "get-pip.py"
-    Invoke-WebRequest -Uri "https://bootstrap.pypa.io/get-pip.py" -OutFile $getPip -UseBasicParsing
-    & $pythonExe $getPip --no-warn-script-location --no-compile --target $sitePackages
-    if ($LASTEXITCODE -ne 0) {
-        throw "BLOCKED: pip bootstrap into runner-local site-packages failed"
-    }
+}
+
+# RUNNER_TOOL_CACHE persists between jobs. Recreate site-packages for each run
+# so old httpx/httpx2 versions cannot leak into the current constrained install.
+if (Test-Path -LiteralPath $sitePackages) {
+    Remove-Item -LiteralPath $sitePackages -Recurse -Force
+}
+New-Item -ItemType Directory -Force $sitePackages | Out-Null
+
+$getPip = Join-Path $env:RUNNER_TEMP ("w32-get-pip-" + $env:GITHUB_RUN_ID + ".py")
+Invoke-WebRequest -Uri "https://bootstrap.pypa.io/get-pip.py" -OutFile $getPip -UseBasicParsing
+& $pythonExe $getPip --no-warn-script-location --no-compile --target $sitePackages
+if ($LASTEXITCODE -ne 0) {
+    throw "BLOCKED: pip bootstrap into clean runner-local site-packages failed"
 }
 
 $env:PATH = "$pythonRoot;$env:PATH"

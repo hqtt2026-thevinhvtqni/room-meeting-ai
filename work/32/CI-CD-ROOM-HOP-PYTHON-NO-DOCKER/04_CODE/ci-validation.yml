@@ -255,7 +255,7 @@ jobs:
         shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
         run: |
           if ([string]::IsNullOrWhiteSpace($env:W32_PYTHON_SITE_PACKAGES)) { throw "BLOCKED: embedded Python site-packages path was not exported" }
-          & $env:W32_PYTHON_EXE -m pip install --target $env:W32_PYTHON_SITE_PACKAGES -r requirements.txt -c constraints-ci.txt
+          & $env:W32_PYTHON_EXE -m pip install --upgrade --force-reinstall --target $env:W32_PYTHON_SITE_PACKAGES -r requirements.txt -c constraints-ci.txt
           & $env:W32_PYTHON_EXE -m pip check
           $browserPath = Join-Path $env:RUNNER_TEMP "playwright-browsers"
           New-Item -ItemType Directory -Force $browserPath | Out-Null
