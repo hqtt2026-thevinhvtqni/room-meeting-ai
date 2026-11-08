@@ -20,7 +20,7 @@ Existing CI, imports and tests may depend on 04_CODE, 05_TEST and 06_EVIDENCE. F
 | Batch | Scope | Actions | Exit evidence | Status |
 |---|---|---|---|---|
 | 0 | Read/trace and governance baseline | Inventory current tree; establish DOC-001, sole DOC-055 register, this plan and canonical EVIDENCE index; preserve legacy paths | Exact GitHub readback and commit SHA | DONE |
-| 1 | 00_ROOT and official records | Promote manifest, minutes, plan and execution journal to DOC-prefixed canonical paths; update legacy files to compatibility pointers; register all docs | Content/hash comparison, links, one canonical owner per record, CI | IN_PROGRESS |
+| 1 | 00_ROOT and official records | Promoted manifest, minutes, plan and execution journal to DOC-prefixed canonical paths; converted four old paths to compatibility pointers; registered records | Content/history preservation confirmed; inbound-link audit and CI regression still pending | IN_PROGRESS |
 | 2 | Lifecycle folders | Classify corpus originals, reference docs, architecture, requirements, plans, tests and acceptance evidence into 01_DISCOVER–07_ACCEPT; preserve code/test paths through mappings | Full old→new path map; no broken imports/CI | NOT_STARTED |
 | 3 | 05_BUILD engineering map | Create Work Package register and mapping records for source, tests, CI and evidence; define exact canonical source repo/path/branch/commit | WP completeness and source mapping validation | NOT_STARTED |
 | 4 | EVIDENCE migration | Audit all links, workflow paths and consumers of 06_EVIDENCE; migrate canonical index to EVIDENCE/ without duplicate independent copies; retain compatibility pointers | Link checker, workflow pass, hash/readback | NOT_STARTED |
@@ -55,3 +55,7 @@ Existing CI, imports and tests may depend on 04_CODE, 05_TEST and 06_EVIDENCE. F
 - Dashboard is read-only and source-backed.
 - No source/test/CI regression; exact CI and readback evidence recorded.
 - Independent QE completes before declaring standardization PASS.
+
+
+## Batch 1 progress note — 2026-11-08
+Canonical DOC-034 minutes and DOC-045 plan were created from the legacy records. DOC-035 now preserves the earlier 2026-10-26 journal entry and its integrity correction. WORK_MANIFEST.md, BIEN_BAN.md, KE_HOACH_THI_CONG_XU.md and NHAT_KY_HOP_THI_CONG.md are now compatibility pointers. This promotion does not close Batch 1: link integrity and CI regression remain unverified.
