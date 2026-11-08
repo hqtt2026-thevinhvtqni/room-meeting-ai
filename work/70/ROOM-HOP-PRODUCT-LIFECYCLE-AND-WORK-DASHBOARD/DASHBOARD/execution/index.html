@@ -6,7 +6,7 @@
 <meta name="color-scheme" content="dark">
 <title>ROOM-HOP — Work Execution Dashboard · Work 70</title>
 <style>
-:root{color-scheme:dark;--bg:#0b1220;--panel:#121d30;--line:#26364e;--text:#e8eef8;--muted:#9aabc2;--blue:#78aaff;--green:#65d6a0;--amber:#f4c66b;--red:#ff8585}
+:root{color-scheme:dark;--bg:#0b1220;--panel:#121d30;--line:#26364e;--text:#e8eef8;--muted:#9aabc2;--blue:#78aaff;--green:#65d6a0;--amber:#f4c66b;--red:#ff8585;--neutral:#8aa0bf}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
 main{max-width:1180px;margin:auto;padding:26px 18px 56px}
 .top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap}
@@ -17,12 +17,13 @@ h1{font-size:24px;margin:0 0 5px}.muted,small{color:var(--muted)}
 .k{font-size:11px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}.v{font-size:22px;font-weight:650;margin-top:4px}
 h2{font-size:16px;margin:0 0 12px}
 .row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding:9px 0}.row:last-child{border:0}
-.state{font-size:12px;font-weight:650;white-space:nowrap}.ok{color:var(--green)}.warn{color:var(--amber)}.bad{color:var(--red)}
+.state{font-size:12px;font-weight:650;white-space:nowrap}.ok{color:var(--green)}.warn{color:var(--amber)}.bad{color:var(--red)}.neutral{color:var(--neutral)}
 .notice{border:1px solid #826a36;background:#2a2417;color:#f7d995;padding:12px 14px;border-radius:10px;margin:14px 0;font-size:13px}
 .nav{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
 .nav a{color:var(--blue);text-decoration:none;border:1px solid var(--line);padding:6px 12px;border-radius:8px;font-size:13px}
 .nav a.active{background:#1a2a45;border-color:var(--blue)}
-.source-box{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.4}
+.legend{font-size:12px;color:var(--muted);margin:8px 0 0;line-height:1.5}
+.source-box{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.45}
 footer{margin-top:20px;color:var(--muted);font-size:12px}
 @media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.grid{grid-template-columns:1fr}}
@@ -62,16 +63,23 @@ footer{margin-top:20px;color:var(--muted);font-size:12px}
   <h2>Data Integrity & Provenance</h2>
   <div id="integrity"></div>
   <div class="source-box" id="sources"></div>
+  <p class="legend"><b>Chú thích trạng thái:</b> <span class="state ok">VERIFIED / FRESH / PASS</span> · <span class="state neutral">RECORDED</span> · <span class="state warn">UNKNOWN / PENDING</span> · <span class="state bad">STALE / OPEN / BLOCKED / FAIL</span>. RECORDED ≠ VERIFIED.</p>
 </section>
-<footer>Work Execution Dashboard · Read-only · Nguồn: GitHub + Sandbox MCP 8030 · Go/AI-06 · Không có quyền đổi gate/state.</footer>
+<footer>Work Execution Dashboard · Read-only · Nguồn: work_snapshot_collector_v1 (không phải Core live) · Go/AI-06 · Không có quyền đổi gate/state.</footer>
 </main>
 <script>
 const $=id=>document.getElementById(id);
-const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&","<":"<",">":">",'"':""","'":"&#39;"}[c]));
-const cls=s=>["PASS","DONE","FRESH","IN_PROGRESS","RECORDED"].includes(s)?"ok":["FAIL","BLOCKED","STALE","OPEN"].includes(s)?"bad":"warn";
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"\u0026amp;","<":"\u0026lt;",">":"\u0026gt;",'"':"\u0026quot;","'":"\u0026#39;"}[c]));
+/* F-04: RECORDED is neutral, not success */
+const cls=s=>{
+  if(["PASS","DONE","FRESH","VERIFIED"].includes(s)) return "ok";
+  if(["FAIL","BLOCKED","STALE","OPEN","NOT_CREATED","NOT_VERIFIED"].includes(s)) return "bad";
+  if(["RECORDED","IN_PROGRESS","PRESENT"].includes(s)) return "neutral";
+  return "warn";
+};
 function render(d){
   $("title").textContent="Work "+d.work_id+" — "+(d.work_name||d.product_name||"");
-  $("subtitle").textContent="Dashboard tiến độ xây dựng Work · "+(d.work_status||"");
+  $("subtitle").textContent="Dashboard tiến độ xây dựng Work · "+(d.work_status||"")+" · collector: "+(d.generated_by||"?");
   const di=d.data_integrity||{};
   $("sourcePill").textContent=(di.source_mode||"UNKNOWN").toUpperCase();
   $("warning").textContent=di.warning_vi||"Nguồn đã đọc. Kiểm tra provenance bên dưới.";
@@ -88,13 +96,17 @@ function render(d){
   $("wpList").innerHTML=items.length?items.map(p=>'<div class="row"><span><b>'+esc(p.wp_id)+'</b> · '+esc(p.title)+'<br><small>Owner: '+esc(p.owner)+' · Reviewer: '+esc(p.reviewer)+'</small></span><span class="state '+cls(p.status)+'">'+esc(p.status)+'</span></div>').join(""):'<p class="muted">Không có WP.</p>';
   const bl=(d.blockers&&d.blockers.items)||[];
   $("blockerList").innerHTML=bl.length?bl.map(b=>'<div class="row"><span><b>'+esc(b.id)+'</b> · '+esc(b.title)+'<br><small>'+esc(b.owner||"")+' · '+esc(b.severity||"")+'</small></span><span class="state '+cls(b.status)+'">'+esc(b.status)+'</span></div>').join(""):'<p class="muted">Không có blocker mở.</p>';
+  /* F-05: no_mock_data class from actual boolean */
+  const nmd=!!d.no_mock_data;
+  const nmdClass=nmd?"ok":"bad";
   $("integrity").innerHTML=
     '<div class="row"><span>Freshness</span><span class="state '+cls(di.freshness)+'">'+esc(di.freshness||"UNKNOWN")+'</span></div>'+
     '<div class="row"><span>as_of (source)</span><span>'+esc(di.as_of||"UNKNOWN")+'</span></div>'+
     '<div class="row"><span>retrieved_at</span><span>'+esc(di.retrieved_at||"UNKNOWN")+'</span></div>'+
-    '<div class="row"><span>no_mock_data</span><span class="state ok">'+esc(String(d.no_mock_data))+'</span></div>';
+    '<div class="row"><span>generated_by</span><span>'+esc(d.generated_by||"UNKNOWN")+'</span></div>'+
+    '<div class="row"><span>no_mock_data</span><span class="state '+nmdClass+'">'+esc(String(nmd))+'</span></div>';
   const srcs=di.primary_sources||[];
-  $("sources").innerHTML='<b>Primary sources</b><br>'+(srcs.length?srcs.map(s=>esc(s.source_id)+' · '+esc(s.source_path)+' · '+esc(s.verification_status)+' · retrieved '+esc(s.retrieved_at)).join('<br>'):'NONE');
+  $("sources").innerHTML='<b>Primary sources</b><br>'+(srcs.length?srcs.map(s=>esc(s.source_id)+' · '+esc(s.source_path)+' · '+esc(s.verification_status)+' · freshness '+esc(s.freshness||"?")+' · sha256 '+esc(s.content_sha256||"?")+' · retrieved '+esc(s.retrieved_at)).join('<br>'):'NONE');
 }
 fetch("./EXECUTION_STATUS.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw new Error("HTTP "+r.status);return r.json()}).then(render).catch(e=>{
   $("title").textContent="Work Execution — Không tải được dữ liệu";
@@ -104,3 +116,34 @@ fetch("./EXECUTION_STATUS.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw new 
 </script>
 </body>
 </html>
+
+<!-- DOC-093 role-based task board extension; read-only projection -->
+<script>
+(function(){
+  const start = () => {
+    if (document.getElementById("roleTaskBoard")) return;
+    const main = document.querySelector("main") || document.body;
+    const section = document.createElement("section");
+    section.className = "card";
+    section.id = "roleTaskBoard";
+    section.style.marginTop = "14px";
+    section.innerHTML = '<h2>Role-based Task Board · DOC-093</h2><p class="muted" id="roleTaskMeta">Đang tải Task Register projection…</p><div style="overflow:auto"><table id="roleTaskTable" style="width:100%;border-collapse:collapse;min-width:900px"><thead><tr><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">Phase / Task</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">Accountable role / Assignee</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">Execution steps / Scope</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">Deliverable / Acceptance / Evidence</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">Status</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">Next action</th></tr></thead><tbody id="roleTaskRows"></tbody></table></div><p class="legend">Nguồn: DOC-093 → ROLE_TASK_STATUS.json · Read-only · PLANNED không đồng nghĩa IN_PROGRESS · Chỉ cập nhật status tại Task Register sau ACK/evidence.</p>';
+    const blockers = document.querySelector("#blockerList")?.parentElement;
+    if (blockers && blockers.parentElement === main) main.insertBefore(section, blockers.nextSibling);
+    else main.appendChild(section);
+    const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+    fetch("./ROLE_TASK_STATUS.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw new Error("HTTP "+r.status);return r.json()}).then(d=>{
+      const rows = d.tasks || [];
+      document.getElementById("roleTaskMeta").textContent = rows.length+" Task · "+JSON.stringify(d.by_role||{})+" · Baseline: "+(d.source_status||"UNKNOWN")+" · "+(d.data_integrity?.verification_status||"UNKNOWN");
+      document.getElementById("roleTaskRows").innerHTML = rows.map(t=>'<tr>'+
+        '<td style="padding:9px 8px;border-bottom:1px solid var(--line)"><b>'+esc(t.phase)+'</b><br><small>'+esc(t.task_id)+' · '+esc(t.task_title)+'</small></td>'+
+        '<td style="padding:9px 8px;border-bottom:1px solid var(--line)">'+esc(t.accountable_role)+'<br><small>'+esc(t.assigned_identity)+' · '+esc(t.assignment_status)+'</small></td>'+
+        '<td style="padding:9px 8px;border-bottom:1px solid var(--line)"><ol style="margin:0;padding-left:18px">'+(t.execution_steps||[]).map(x=>'<li>'+esc(x)+'</li>').join('')+'</ol><small>'+esc(t.scope_boundary)+'</small></td>'+
+        '<td style="padding:9px 8px;border-bottom:1px solid var(--line)">'+esc(t.deliverable)+'<br><small>'+esc(t.acceptance_criteria)+'</small><details><summary>Evidence & kiểm chứng</summary><p>'+esc(t.verification_method)+'</p><ul>'+(t.evidence_required||[]).map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul><p>'+esc(t.completion_rule)+'</p></details></td>'+
+        '<td style="padding:9px 8px;border-bottom:1px solid var(--line)"><b>'+esc(t.status)+'</b><br><small>'+esc(t.progress_percent)+'%</small></td>'+
+        '<td style="padding:9px 8px;border-bottom:1px solid var(--line)">'+esc(t.next_action)+'</td></tr>').join("");
+    }).catch(e=>{document.getElementById("roleTaskMeta").textContent="Không tải được Task Register: "+e.message+" · UNKNOWN; không dùng mock data.";});
+  };
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",start,{once:true}); else start();
+})();
+</script>
