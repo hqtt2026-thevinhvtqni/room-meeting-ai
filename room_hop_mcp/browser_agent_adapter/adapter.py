@@ -193,13 +193,7 @@ class Adapter:
         out = EVIDENCE / f"{req.work_id}-{int(time.time())}.json"
         out.write_text(json.dumps(final, indent=2, ensure_ascii=False), encoding="utf-8")
         final["evidence_json"] = str(out)
-        # Playwright's synchronous API owns an asyncio loop on this thread. Run the
-        # bounded MCP stdio client on a clean worker thread so asyncio.run is not
-        # nested inside Playwright's loop; keep the HTTP workflow synchronous.
-        with ThreadPoolExecutor(max_workers=1, thread_name_prefix="roomhop-mcp-submit") as executor:
-            final["roomhop_submission"] = executor.submit(
-                submit_to_roomhop, final
-            ).result()
+        final["roomhop_submission"] = _submit_to_roomhop_from_worker(final)
         return final
 
 
@@ -432,6 +426,13 @@ def submit_to_roomhop(result: dict[str, Any]):
             "identity_id": identity_id,
             "transport": "stdio",
         }
+
+
+
+def _submit_to_roomhop_from_worker(result: dict[str, Any]) -> dict[str, Any]:
+    """Run MCP stdio outside Playwright's synchronous API event-loop thread."""
+    with ThreadPoolExecutor(max_workers=1, thread_name_prefix="roomhop-mcp-submit") as executor:
+        return executor.submit(submit_to_roomhop, result).result()
 
 
 def _configured_port() -> int:
