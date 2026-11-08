@@ -1449,3 +1449,23 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **Date-Time:** 2026-11-09 02:38 (+07:00)
 - **Action:** Created clean integration branch `work/32-main-integration-20261109` from main and prepared a curated Git tree overlay of the 81 added/modified Work32 paths from source SHA `b7acbea7a7fa71f40c37525b1c288a7fb64ad6a5`. The 44 tracked desktop.ini deletions are excluded. The original diverged branch is preserved.
 - **Result:** Candidate branch remains separate from main; exact-SHA CI, independent review and Dashboard→Core E2E remain pending. No merge, deployment or release.
+
+
+## W32-LOG-20261109-91 — Exact-SHA CI acceptance completed on clean integration PR
+
+- **Document Number:** W32-LOG-20261109-91
+- **Priority Order:** P0 — CI acceptance evidence
+- **Name:** Ka
+- **Title:** CSA / Delegated Work32 Execution Owner
+- **Date-Time:** 2026-11-09 02:57 Asia/Ho_Chi_Minh
+- **PR:** #49 — `work/32-main-integration-20261109` → `main`
+- **Exact PR head:** `44848a31026dd2bce6e01a4dce14acda417154dd`
+- **Run:** #249, ID `42517462912`, conclusion SUCCESS.
+- **Unit:** Python 3.12 compile + 189 tests PASS; dependency check clean.
+- **Product E2E:** 70 tests PASS, including HTTP + MCP stdio + storage/close journey, Browser Adapter workflow isolation, Playwright owner-thread and stdio handoff/readback.
+- **Windows Browser Adapter:** 10 tests PASS; port configuration 9 cases and workflow handoff/readback 1 case. Browser context cleanup PASS; process-tree cleanup PASS (job-owned PID terminated).
+- **Tooling/mirror:** PASS.
+- **Immutable artifact:** build/checksum PASS; extracted artifact dependency check clean; artifact-level product E2E 1 PASS.
+- **Workflow corrections verified:** default runner labels and correct job-scoped guard; Windows long-path checkout; idempotent remote setup with canonical GitHub URL; clean per-run site-packages with constrained httpx/httpx2; exact process-tree cleanup.
+- **Integration scope:** 82 changed paths (70 added, 12 modified), zero deleted. The 44 desktop.ini deletions from the diverged feature branch remain excluded. Source branch remains preserved.
+- **Status:** CI ACCEPTANCE PASS on PR head. PR remains DRAFT and unmerged. Main unchanged. Dashboard→Workspace→Core E2E NOT RUN. Xu concurrency/Workspace contract review and CTO security review remain pending. CD/staging/production NOT RUN. ACTIVE — NOT RELEASED.

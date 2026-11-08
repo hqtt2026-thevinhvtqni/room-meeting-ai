@@ -110,3 +110,14 @@ Work32 CI implementation has repeatable exact-SHA CI, Product Auto E2E, Windows 
 - Browser Adapter has been hardened with a re-entrant operation lock and dedicated single-worker Playwright executor. Two new tests cover workflow isolation and single-thread ownership. These changes still require a new exact-SHA CI result.
 - Xu review is requested for the serialization/concurrency tradeoff. CTO review is required before staging/production for the security boundary and multi-host storage limitation.
 - Release disposition unchanged: ACTIVE — NOT RELEASED; main, staging and production remain untouched.
+
+
+## 2026-11-09 — Exact-SHA CI acceptance result
+
+- Clean integration PR #49: `work/32-main-integration-20261109` → `main`, exact head SHA `44848a31026dd2bce6e01a4dce14acda417154dd`.
+- Run #249 (`42517462912`) concluded SUCCESS.
+- Python 3.12 compile/unit: 189 passed; Product Auto E2E: 70 passed; Windows Browser Adapter E2E: 10 passed; tooling/mirror PASS; immutable artifact and extracted dependency check PASS.
+- Windows evidence: 10/10 tests passed, browser context cleanup PASS, adapter process cleanup PASS. The PR lane uses GitHub-hosted Windows; self-hosted `ROOM-HOP-W32-PC` remains the push lane for `work/32-ci-*`. Earlier Run #229 remains evidence for the PC runner.
+- PR diff: 82 changed paths, 70 added, 12 modified, zero deleted. No tracked desktop.ini deletions were included.
+- PR remains DRAFT, mergeable and unmerged. Main remains unchanged.
+- Remaining release blockers are not CI: Dashboard→Workspace→Core E2E is NOT RUN; Workspace :8010 canonical source/contract needs Xu/Mê confirmation; CTO security review is required before staging/production. Status ACTIVE — NOT RELEASED.
