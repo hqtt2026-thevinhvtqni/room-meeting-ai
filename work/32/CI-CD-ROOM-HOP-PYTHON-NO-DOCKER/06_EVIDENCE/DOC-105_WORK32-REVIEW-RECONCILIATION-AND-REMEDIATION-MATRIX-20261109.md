@@ -98,3 +98,13 @@ Notable current-source findings:
 - Confirmed current source reproduces S4, S5, S6, S9, S1, S2, S2b, S3, S7 and S8 findings; recorded remediation owners and acceptance evidence.
 - Run #251 all six jobs PASS is recorded as pre-remediation baseline only.
 - No source code, main, runner, PC process, staging, production or release changed.
+
+
+## Addendum — Cla S10 disposition
+- **Name:** Ka
+- **Title:** CSA / Work32 Execution Owner
+- **Date-Time:** 2026-11-09 (Asia/Ho_Chi_Minh)
+- Cla S10 identifies non-atomic meeting.yaml read-modify-write and non-atomic ID allocation.
+- This finding was not included in the first remediation batch and is **OPEN**. Do not claim full S1–S10 closure.
+- Follow-up: implement atomic meeting.yaml replacement with appropriate same-process serialization; make generated ID reservation retry-safe using atomic directory creation; add concurrent update/allocation tests. Cross-process consistency must be separately proven or deployment constrained to one Core process.
+- Owner: Ka. Cla re-review required before staging/production.
