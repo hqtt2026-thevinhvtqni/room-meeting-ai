@@ -1,0 +1,760 @@
+{
+  "work_id": "70",
+  "document_id": "DOC-094",
+  "title": "Product Task & Phase Task Register — Three-tier Product Delivery Register",
+  "schema_version": "1.0.0",
+  "baseline_status": "DRAFT_NOT_APPROVED",
+  "authority": "Derived governing structure agreed by Vinh; Xu may implement within delegated Work 70 scope. No final product acceptance/release authority is implied.",
+  "source_of_truth": "04_PLAN/DOC-094_PRODUCT_PHASE_TASK_REGISTER.json",
+  "agent_task_source": "04_PLAN/DOC-093_BANG-PHAN-CONG-TASK_THEO-VAI-TRO_ROLE-BASED-TASK-REGISTER.json",
+  "minutes_source": "00_ROOT/DOC-034_BIEN-BAN_HOP-WORK-70-MINUTES.md",
+  "journal_source": "00_ROOT/DOC-035_NHAT-KY-THI-CONG_WORK-EXECUTION-LOG.md",
+  "decision_source": "00_ROOT/DOC-006_SO-QUYET-DINH_DECISION-LOG.md",
+  "dashboard_projection": "DASHBOARD/execution/PRODUCT_PHASE_TASK_STATUS.json",
+  "model": {
+    "tier_1": "Product Task — one summary task per product",
+    "tier_2": "Phase Task — one task per product per lifecycle phase, with primary_agent, contributing_agents and checking_agent",
+    "tier_3": "Agent Task — DOC-093 remains canonical work-level role task register; product-phase links are explicitly shared support references until product-specific Agent Tasks are assigned."
+  },
+  "rules": [
+    "Product Task is the top-level summary; it does not replace phase or agent registers.",
+    "Each Product Task has exactly one Phase Task per lifecycle phase.",
+    "Every Phase Task must name one primary agent, zero or more contributing agents, and one checking agent; assignments remain PROPOSED until capability, permission and ACK are verified.",
+    "Checking agent must be independent of the primary agent for the deliverable under review; no self-approval.",
+    "DOC-093 remains the only source of existing Agent Tasks. DOC-094 may reference DOC-093 IDs but must not copy or redefine their status.",
+    "Shared DOC-093 Agent Task links are work-level support links, not proof of product-specific assignment, execution or ACK.",
+    "Agent Task DONE does not make Phase Task DONE. Phase Task DONE requires deliverable, acceptance criteria and evidence.",
+    "Product Task DONE requires all required Phase Tasks and product acceptance evidence; no automatic gate promotion.",
+    "Progress is null/NOT_CALCULATED until approved weights and evidence-backed completion rules exist; never average agent percentages as product progress.",
+    "Execution events and test results append to DOC-035; meetings and decisions reference DOC-034 and DOC-006.",
+    "Dashboard projections are read-only and generated from DOC-093 and DOC-094; never edit projection as source.",
+    "Unknown, stale, unverified and blocked states must remain explicit; no fabricated PASS."
+  ],
+  "progress_policy": {
+    "status": "NOT_CALCULATED",
+    "reason": "No approved phase weights or product-level aggregation formula yet.",
+    "prohibited_methods": [
+      "simple average of agent progress",
+      "counting proposed assignments as started",
+      "treating source file presence as acceptance",
+      "treating static checks as browser/runtime/QE PASS"
+    ]
+  },
+  "product_tasks": [
+    {
+      "product_task_id": "W70-PROD-001",
+      "product_name": "Work Execution Dashboard",
+      "product_type": "WORK_EXECUTION_DASHBOARD",
+      "objective": "Theo dõi Product Task, Phase Task, Agent Task, trạng thái, blocker, dependency và bằng chứng của Work 70.",
+      "scope": "Dashboard điều hành tiến trình Work; đọc dữ liệu nguồn chuẩn, read-only.",
+      "current_phase": "05_BUILD",
+      "status": "NOT_ASSESSED",
+      "progress_percent": null,
+      "progress_status": "NOT_CALCULATED",
+      "baseline_status": "DRAFT_NOT_APPROVED",
+      "phase_task_ids": [
+        "W70-PROD-001-P01",
+        "W70-PROD-001-P02",
+        "W70-PROD-001-P03",
+        "W70-PROD-001-P04",
+        "W70-PROD-001-P05",
+        "W70-PROD-001-P06",
+        "W70-PROD-001-P07",
+        "W70-PROD-001-P08",
+        "W70-PROD-001-P09"
+      ],
+      "status_basis": "Current source tree contains Dashboard artifacts under 05_BUILD; however, product-specific task ACK, mapped deliverable acceptance and evidence have not been fully verified. Current phase pointer 05_BUILD is provisional, not a gate PASS."
+    },
+    {
+      "product_task_id": "W70-PROD-002",
+      "product_name": "Product Dashboard",
+      "product_type": "PRODUCT_DASHBOARD",
+      "objective": "Theo dõi năng lực, trạng thái, mức độ hoàn thiện và kết quả của sản phẩm do Work 70 xây dựng.",
+      "scope": "Dashboard sản phẩm; tách biệt với Work Execution Dashboard.",
+      "current_phase": "05_BUILD",
+      "status": "NOT_ASSESSED",
+      "progress_percent": null,
+      "progress_status": "NOT_CALCULATED",
+      "baseline_status": "DRAFT_NOT_APPROVED",
+      "phase_task_ids": [
+        "W70-PROD-002-P01",
+        "W70-PROD-002-P02",
+        "W70-PROD-002-P03",
+        "W70-PROD-002-P04",
+        "W70-PROD-002-P05",
+        "W70-PROD-002-P06",
+        "W70-PROD-002-P07",
+        "W70-PROD-002-P08",
+        "W70-PROD-002-P09"
+      ],
+      "status_basis": "Current source tree contains Dashboard artifacts under 05_BUILD; however, product-specific task ACK, mapped deliverable acceptance and evidence have not been fully verified. Current phase pointer 05_BUILD is provisional, not a gate PASS."
+    }
+  ],
+  "phase_tasks": [
+    {
+      "phase_task_id": "W70-PROD-001-P01",
+      "product_task_id": "W70-PROD-001",
+      "phase": "01_DISCOVER",
+      "phase_name": "Khám phá",
+      "task_title": "Khám phá — Work Execution Dashboard",
+      "expected_deliverable": "Đầu ra Khám phá của Work Execution Dashboard, có đường dẫn/version và tiêu chí nghiệm thu",
+      "acceptance_criteria": [
+        "Đầu ra được xác định và truy nguyên tới requirement/decision",
+        "Tiêu chí nghiệm thu có kết quả cụ thể",
+        "Có evidence refs và liên kết DOC-035; quyết định liên quan tham chiếu DOC-034/DOC-006",
+        "Không tự chuyển phase/gate khi thiếu bằng chứng hoặc reviewer độc lập"
+      ],
+      "primary_agent": "Xu / AI-01",
+      "contributing_agents": [
+        "Kha / AI-04"
+      ],
+      "checking_agent": "Ka / AI-02",
+      "assignment_status": "PROPOSED_NOT_ACKNOWLEDGED",
+      "status": "NOT_ASSESSED",
+      "progress_percent": 0,
+      "shared_work_agent_task_ids": [
+        "W70-01-DISCOVER-CEO",
+        "W70-01-DISCOVER-CSA",
+        "W70-01-DISCOVER-CTO",
+        "W70-01-DISCOVER-CODER"
+      ],
+      "shared_link_semantics": "Các ID DOC-093 là task cấp Work/Phase dùng chung để hỗ trợ lifecycle; không được hiểu là đã có assignment riêng hoặc ACK cho từng Product Task.",
+      "assignment_rationale": "Xu điều phối khám phá; Kha hỗ trợ chiến lược/sản phẩm; Ka phản biện độc lập.",
+      "evidence_refs": [],
+      "journal_refs": [],
+      "minutes_refs": [],
+      "blocker_refs": [],
+      "next_action": "Hoàn thiện đầu vào và điều kiện vào phase 01_DISCOVER.",
+      "status_note": "Không đánh dấu IN_PROGRESS chỉ dựa vào file hiện diện; cần ACK + hoạt động thực tế + nhật ký/evidence được liên kết."
+    },
+    {
+      "phase_task_id": "W70-PROD-001-P02",
+      "product_task_id": "W70-PROD-001",
+      "phase": "02_DEFINE",
+      "phase_name": "Định nghĩa",
+      "task_title": "Định nghĩa — Work Execution Dashboard",
+      "expected_deliverable": "Đầu ra Định nghĩa của Work Execution Dashboard, có đường dẫn/version và tiêu chí nghiệm thu",
+      "acceptance_criteria": [
+        "Đầu ra được xác định và truy nguyên tới requirement/decision",
+        "Tiêu chí nghiệm thu có kết quả cụ thể",
+        "Có evidence refs và liên kết DOC-035; quyết định liên quan tham chiếu DOC-034/DOC-006",
+        "Không tự chuyển phase/gate khi thiếu bằng chứng hoặc reviewer độc lập"
+      ],
+      "primary_agent": "Xu / AI-01",
+      "contributing_agents": [
+        "Kha / AI-04"
+      ],
+      "checking_agent": "Ka / AI-02",
+      "assignment_status": "PROPOSED_NOT_ACKNOWLEDGED",
+      "status": "NOT_ASSESSED",
+      "progress_percent": 0,
+      "shared_work_agent_task_ids": [
+        "W70-02-DEFINE-CEO",
+        "W70-02-DEFINE-CSA",
+        "W70-02-DEFINE-CTO",
+        "W70-02-DEFINE-CODER"
+      ],
+      "shared_link_semantics": "Các ID DOC-093 là task cấp Work/Phase dùng chung để hỗ trợ lifecycle; không được hiểu là đã có assignment riêng hoặc ACK cho từng Product Task.",
+      "assignment_rationale": "Xu chốt yêu cầu trong phạm vi ủy quyền; Kha hỗ trợ product; Ka review.",
+      "evidence_refs": [],
+      "journal_refs": [],
+      "minutes_refs": [],
+      "blocker_refs": [],
+      "next_action": "Hoàn thiện đầu vào và điều kiện vào phase 02_DEFINE.",
+      "status_note": "Không đánh dấu IN_PROGRESS chỉ dựa vào file hiện diện; cần ACK + hoạt động thực tế + nhật ký/evidence được liên kết."
+    },
+    {
+      "phase_task_id": "W70-PROD-001-P03",
+      "product_task_id": "W70-PROD-001",
+      "phase": "03_ARCHITECT",
+      "phase_name": "Kiến trúc",
+      "task_title": "Kiến trúc — Work Execution Dashboard",
+      "expected_deliverable": "Đầu ra Kiến trúc của Work Execution Dashboard, có đường dẫn/version và tiêu chí nghiệm thu",
+      "acceptance_criteria": [
+        "Đầu ra được xác định và truy nguyên tới requirement/decision",
+        "Tiêu chí nghiệm thu có kết quả cụ thể",
+        "Có evidence refs và liên kết DOC-035; quyết định liên quan tham chiếu DOC-034/DOC-006",
+        "Không tự chuyển phase/gate khi thiếu bằng chứng hoặc reviewer độc lập"
+      ],
+      "primary_agent": "Cla / AI-03",
+      "contributing_agents": [
+        "Xu / AI-01"
+      ],
+      "checking_agent": "Ka / AI-02",
+      "assignment_status": "PROPOSED_NOT_ACKNOWLEDGED",
+      "status": "NOT_ASSESSED",
+      "progress_percent": 0,
+      "shared_work_agent_task_ids": [
+        "W70-03-ARCHITECT-CEO",
+        "W70-03-ARCHITECT-CSA",
+        "W70-03-ARCHITECT-CTO",
+        "W70-03-ARCHITECT-CODER"
+      ],
+      "shared_link_semantics": "Các ID DOC-093 là task cấp Work/Phase dùng chung để hỗ trợ lifecycle; không được hiểu là đã có assignment riêng hoặc ACK cho từng Product Task.",
+      "assignment_rationale": "Cla chủ trì kỹ thuật; Xu điều phối; Ka review độc lập.",
+      "evidence_refs": [],
+      "journal_refs": [],
+      "minutes_refs": [],
+      "blocker_refs": [],
+      "next_action": "Hoàn thiện đầu vào và điều kiện vào phase 03_ARCHITECT.",
+      "status_note": "Không đánh dấu IN_PROGRESS chỉ dựa vào file hiện diện; cần ACK + hoạt động thực tế + nhật ký/evidence được liên kết."
+    },
+    {
+      "phase_task_id": "W70-PROD-001-P04",
+      "product_task_id": "W70-PROD-001",
+      "phase": "04_PLAN",
+      "phase_name": "Kế hoạch",
+      "task_title": "Kế hoạch — Work Execution Dashboard",
+      "expected_deliverable": "Đầu ra Kế hoạch của Work Execution Dashboard, có đường dẫn/version và tiêu chí nghiệm thu",
+      "acceptance_criteria": [
+        "Đầu ra được xác định và truy nguyên tới requirement/decision",
+        "Tiêu chí nghiệm thu có kết quả cụ thể",
+        "Có evidence refs và liên kết DOC-035; quyết định liên quan tham chiếu DOC-034/DOC-006",
+        "Không tự chuyển phase/gate khi thiếu bằng chứng hoặc reviewer độc lập"
+      ],
+      "primary_agent": "Xu / AI-01",
+      "contributing_agents": [
+        "Cla / AI-03"
+      ],
+      "checking_agent": "Ka / AI-02",
+      "assignment_status": "PROPOSED_NOT_ACKNOWLEDGED",
+      "status": "NOT_ASSESSED",
+      "progress_percent": 0,
+      "shared_work_agent_task_ids": [
+        "W70-04-PLAN-CEO",
+        "W70-04-PLAN-CSA",
+        "W70-04-PLAN-CTO",
+        "W70-04-PLAN-CODER"
+      ],
+      "shared_link_semantics": "Các ID DOC-093 là task cấp Work/Phase dùng chung để hỗ trợ lifecycle; không được hiểu là đã có assignment riêng hoặc ACK cho từng Product Task.",
+      "assignment_rationale": "Xu chịu trách nhiệm kế hoạch; Cla ước lượng kỹ thuật; Ka phản biện.",
+      "evidence_refs": [],
+      "journal_refs": [],
+      "minutes_refs": [],
+      "blocker_refs": [],
+      "next_action": "Hoàn thiện đầu vào và điều kiện vào phase 04_PLAN.",
+      "status_note": "Không đánh dấu IN_PROGRESS chỉ dựa vào file hiện diện; cần ACK + hoạt động thực tế + nhật ký/evidence được liên kết."
+    },
+    {
+      "phase_task_id": "W70-PROD-001-P05",
+      "product_task_id": "W70-PROD-001",
+      "phase": "05_BUILD",
+      "phase_name": "Thi công",
+      "task_title": "Thi công — Work Execution Dashboard",
+      "expected_deliverable": "Đầu ra Thi công của Work Execution Dashboard, có đường dẫn/version và tiêu chí nghiệm thu",
+      "acceptance_criteria": [
+        "Đầu ra được xác định và truy nguyên tới requirement/decision",
+        "Tiêu chí nghiệm thu có kết quả cụ thể",
+        "Có evidence refs và liên kết DOC-035; quyết định liên quan tham chiếu DOC-034/DOC-006",
+        "Không tự chuyển phase/gate khi thiếu bằng chứng hoặc reviewer độc lập"
+      ],
+      "primary_agent": "Cla / AI-03",
+      "contributing_agents": [
+        "Vi / CODER (capability/ACK chưa xác minh)",
+        "Xu / AI-01"
+      ],
+      "checking_agent": "Qw / AI-05",
+      "assignment_status": "PROPOSED_NOT_ACKNOWLEDGED",
+      "status": "NOT_ASSESSED",
+      "progress_percent": 0,
+      "shared_work_agent_task_ids": [
+        "W70-05-BUILD-CEO",
+        "W70-05-BUILD-CSA",
+        "W70-05-BUILD-CTO",
+        "W70-05-BUILD-CODER"
+      ],
+      "shared_link_semantics": "Các ID DOC-093 là task cấp Work/Phase dùng chung để hỗ trợ lifecycle; không được hiểu là đã có assignment riêng hoặc ACK cho từng Product Task.",
+      "assignment_rationale": "Cla chịu trách nhiệm kỹ thuật; Vi chỉ là đề xuất cho đến khi xác minh capability và ACK; Qw review QE.",
+      "evidence_refs": [],
+      "journal_refs": [],
+      "minutes_refs": [],
+      "blocker_refs": [],
+      "next_action": "Đối chiếu source hiện có với yêu cầu sản phẩm; xác định deliverable còn thiếu và gắn evidence.",
+      "status_note": "Không đánh dấu IN_PROGRESS chỉ dựa vào file hiện diện; cần ACK + hoạt động thực tế + nhật ký/evidence được liên kết."
+    },
+    {
+      "phase_task_id": "W70-PROD-001-P06",
+      "product_task_id": "W70-PROD-001",
+      "phase": "06_VERIFY",
+      "phase_name": "Kiểm chứng",
+      "task_title": "Kiểm chứng — Work Execution Dashboard",
+      "expected_deliverable": "Đầu ra Kiểm chứng của Work Execution Dashboard, có đường dẫn/version và tiêu chí nghiệm thu",
+      "acceptance_criteria": [
+        "Đầu ra được xác định và truy nguyên tới requirement/decision",
+        "Tiêu chí nghiệm thu có kết quả cụ thể",
+        "Có evidence refs và liên kết DOC-035; quyết định liên quan tham chiếu DOC-034/DOC-006",
+        "Không tự chuyển phase/gate khi thiếu bằng chứng hoặc reviewer độc lập"
+      ],
+      "primary_agent": "Qw / AI-05",
+      "contributing_agents": [
+        "Cla / AI-03",
+        "Vi / CODER (capability/ACK chưa xác minh)"
+      ],
+      "checking_agent": "Ka / AI-02",
+      "assignment_status": "PROPOSED_NOT_ACKNOWLEDGED",
+      "status": "NOT_ASSESSED",
+      "progress_percent": 0,
+      "shared_work_agent_task_ids": [
+        "W70-06-VERIFY-CEO",
+        "W70-06-VERIFY-CSA",
+        "W70-06-VERIFY-CTO",
+        "W70-06-VERIFY-CODER"
+      ],
+      "shared_link_semantics": "Các ID DOC-093 là task cấp Work/Phase dùng chung để hỗ trợ lifecycle; không được hiểu là đã có assignment riêng hoặc ACK cho từng Product Task.",
+      "assignment_rationale": "Qw thực hiện QE độc lập; Ka kiểm tra kiến trúc/độ đầy đủ; implementer không tự duyệt.",
+      "evidence_refs": [],
+      "journal_refs": [],
+      "minutes_refs": [],
+      "blocker_refs": [],
+      "next_action": "Hoàn thiện đầu vào và điều kiện vào phase 06_VERIFY.",
+      "status_note": "Không đánh dấu IN_PROGRESS chỉ dựa vào file hiện diện; cần ACK + hoạt động thực tế + nhật ký/evidence được liên kết."
+    },
+    {
+      "phase_task_id": "W70-PROD-001-P07",
+      "product_task_id": "W70-PROD-001",
+      "phase": "07_ACCEPT",
+      "phase_name": "Nghiệm thu",
+      "task_title": "Nghiệm thu — Work Execution Dashboard",
+      "expected_deliverable": "Đầu ra Nghiệm thu của Work Execution Dashboard, có đường dẫn/version và tiêu chí nghiệm thu",
+      "acceptance_criteria": [
+        "Đầu ra được xác định và truy nguyên tới requirement/decision",
+        "Tiêu chí nghiệm thu có kết quả cụ thể",
+        "Có evidence refs và liên kết DOC-035; quyết định liên quan tham chiếu DOC-034/DOC-006",
+        "Không tự chuyển phase/gate khi thiếu bằng chứng hoặc reviewer độc lập"
+      ],
+      "primary_agent": "Xu / AI-01",
+      "contributing_agents": [
+        "Cla / AI-03",
+        "Qw / AI-05"
+      ],
+      "checking_agent": "Ka / AI-02",
+      "assignment_status": "PROPOSED_NOT_ACKNOWLEDGED",
+      "status": "NOT_ASSESSED",
+      "progress_percent": 0,
+      "shared_work_agent_task_ids": [
+        "W70-07-ACCEPT-CEO",
+        "W70-07-ACCEPT-CSA",
+        "W70-07-ACCEPT-CTO",
+        "W70-07-ACCEPT-CODER"
+      ],
+      "shared_link_semantics": "Các ID DOC-093 là task cấp Work/Phase dùng chung để hỗ trợ lifecycle; không được hiểu là đã có assignment riêng hoặc ACK cho từng Product Task.",
+      "assignment_rationale": "Xu điều phối hồ sơ nghiệm thu; Qw cung cấp QE; Ka review độc lập; Vinh giữ quyền PO cuối.",
+      "evidence_refs": [],
+      "journal_refs": [],
+      "minutes_refs": [],
+      "blocker_refs": [],
+      "next_action": "Hoàn thiện đầu vào và điều kiện vào phase 07_ACCEPT.",
+      "status_note": "Không đánh dấu IN_PROGRESS chỉ dựa vào file hiện diện; cần ACK + hoạt động thực tế + nhật ký/evidence được liên kết."
+    },
+    {
+      "phase_task_id": "W70-PROD-001-P08",
+      "product_task_id": "W70-PROD-001",
+      "phase": "08_RELEASE",
+      "phase_name": "Phát hành",
+      "task_title": "Phát hành — Work Execution Dashboard",
+      "expected_deliverable": "Đầu ra Phát hành của Work Execution Dashboard, có đường dẫn/version và tiêu chí nghiệm thu",
+      "acceptance_criteria": [
+        "Đầu ra được xác định và truy nguyên tới requirement/decision",
+        "Tiêu chí nghiệm thu có kết quả cụ thể",
+        "Có evidence refs và liên kết DOC-035; quyết định liên quan tham chiếu DOC-034/DOC-006",
+        "Không tự chuyển phase/gate khi thiếu bằng chứng hoặc reviewer độc lập"
+      ],
+      "primary_agent": "Xu / AI-01",
+      "contributing_agents": [
+        "Cla / AI-03",
+        "Vi / CODER (capability/ACK chưa xác minh)"
+      ],
+      "checking_agent": "Qw / AI-05",
+      "assignment_status": "PROPOSED_NOT_ACKNOWLEDGED",
+      "status": "NOT_ASSESSED",
+      "progress_percent": 0,
+      "shared_work_agent_task_ids": [
+        "W70-08-RELEASE-CEO",
+        "W70-08-RELEASE-CSA",
+        "W70-08-RELEASE-CTO",
+        "W70-08-RELEASE-CODER"
+      ],
+      "shared_link_semantics": "Các ID DOC-093 là task cấp Work/Phase dùng chung để hỗ trợ lifecycle; không được hiểu là đã có assignment riêng hoặc ACK cho từng Product Task.",
+      "assignment_rationale": "Xu điều phối readiness; Cla/Vi chuẩn bị kỹ thuật; Qw kiểm tra release quality; phát hành cuối vẫn cần thẩm quyền riêng.",
+      "evidence_refs": [],
+      "journal_refs": [],
+      "minutes_refs": [],
+      "blocker_refs": [],
+      "next_action": "Hoàn thiện đầu vào và điều kiện vào phase 08_RELEASE.",
+      "status_note": "Không đánh dấu IN_PROGRESS chỉ dựa vào file hiện diện; cần ACK + hoạt động thực tế + nhật ký/evidence được liên kết."
+    },
+    {
+      "phase_task_id": "W70-PROD-001-P09",
+      "product_task_id": "W70-PROD-001",
+      "phase": "09_OPERATE",
+      "phase_name": "Vận hành",
+      "task_title": "Vận hành — Work Execution Dashboard",
+      "expected_deliverable": "Đầu ra Vận hành của Work Execution Dashboard, có đường dẫn/version và tiêu chí nghiệm thu",
+      "acceptance_criteria": [
+        "Đầu ra được xác định và truy nguyên tới requirement/decision",
+        "Tiêu chí nghiệm thu có kết quả cụ thể",
+        "Có evidence refs và liên kết DOC-035; quyết định liên quan tham chiếu DOC-034/DOC-006",
+        "Không tự chuyển phase/gate khi thiếu bằng chứng hoặc reviewer độc lập"
+      ],
+      "primary_agent": "Xu / AI-01",
+      "contributing_agents": [
+        "Cla / AI-03",
+        "Qw / AI-05"
+      ],
+      "checking_agent": "Ka / AI-02",
+      "assignment_status": "PROPOSED_NOT_ACKNOWLEDGED",
+      "status": "NOT_ASSESSED",
+      "progress_percent": 0,
+      "shared_work_agent_task_ids": [
+        "W70-09-OPERATE-CEO",
+        "W70-09-OPERATE-CSA",
+        "W70-09-OPERATE-CTO",
+        "W70-09-OPERATE-CODER"
+      ],
+      "shared_link_semantics": "Các ID DOC-093 là task cấp Work/Phase dùng chung để hỗ trợ lifecycle; không được hiểu là đã có assignment riêng hoặc ACK cho từng Product Task.",
+      "assignment_rationale": "Xu điều phối vận hành; Cla xử lý kỹ thuật; Qw giám sát chất lượng; Ka review governance.",
+      "evidence_refs": [],
+      "journal_refs": [],
+      "minutes_refs": [],
+      "blocker_refs": [],
+      "next_action": "Hoàn thiện đầu vào và điều kiện vào phase 09_OPERATE.",
+      "status_note": "Không đánh dấu IN_PROGRESS chỉ dựa vào file hiện diện; cần ACK + hoạt động thực tế + nhật ký/evidence được liên kết."
+    },
+    {
+      "phase_task_id": "W70-PROD-002-P01",
+      "product_task_id": "W70-PROD-002",
+      "phase": "01_DISCOVER",
+      "phase_name": "Khám phá",
+      "task_title": "Khám phá — Product Dashboard",
+      "expected_deliverable": "Đầu ra Khám phá của Product Dashboard, có đường dẫn/version và tiêu chí nghiệm thu",
+      "acceptance_criteria": [
+        "Đầu ra được xác định và truy nguyên tới requirement/decision",
+        "Tiêu chí nghiệm thu có kết quả cụ thể",
+        "Có evidence refs và liên kết DOC-035; quyết định liên quan tham chiếu DOC-034/DOC-006",
+        "Không tự chuyển phase/gate khi thiếu bằng chứng hoặc reviewer độc lập"
+      ],
+      "primary_agent": "Xu / AI-01",
+      "contributing_agents": [
+        "Kha / AI-04"
+      ],
+      "checking_agent": "Ka / AI-02",
+      "assignment_status": "PROPOSED_NOT_ACKNOWLEDGED",
+      "status": "NOT_ASSESSED",
+      "progress_percent": 0,
+      "shared_work_agent_task_ids": [
+        "W70-01-DISCOVER-CEO",
+        "W70-01-DISCOVER-CSA",
+        "W70-01-DISCOVER-CTO",
+        "W70-01-DISCOVER-CODER"
+      ],
+      "shared_link_semantics": "Các ID DOC-093 là task cấp Work/Phase dùng chung để hỗ trợ lifecycle; không được hiểu là đã có assignment riêng hoặc ACK cho từng Product Task.",
+      "assignment_rationale": "Xu điều phối khám phá; Kha hỗ trợ chiến lược/sản phẩm; Ka phản biện độc lập.",
+      "evidence_refs": [],
+      "journal_refs": [],
+      "minutes_refs": [],
+      "blocker_refs": [],
+      "next_action": "Hoàn thiện đầu vào và điều kiện vào phase 01_DISCOVER.",
+      "status_note": "Không đánh dấu IN_PROGRESS chỉ dựa vào file hiện diện; cần ACK + hoạt động thực tế + nhật ký/evidence được liên kết."
+    },
+    {
+      "phase_task_id": "W70-PROD-002-P02",
+      "product_task_id": "W70-PROD-002",
+      "phase": "02_DEFINE",
+      "phase_name": "Định nghĩa",
+      "task_title": "Định nghĩa — Product Dashboard",
+      "expected_deliverable": "Đầu ra Định nghĩa của Product Dashboard, có đường dẫn/version và tiêu chí nghiệm thu",
+      "acceptance_criteria": [
+        "Đầu ra được xác định và truy nguyên tới requirement/decision",
+        "Tiêu chí nghiệm thu có kết quả cụ thể",
+        "Có evidence refs và liên kết DOC-035; quyết định liên quan tham chiếu DOC-034/DOC-006",
+        "Không tự chuyển phase/gate khi thiếu bằng chứng hoặc reviewer độc lập"
+      ],
+      "primary_agent": "Xu / AI-01",
+      "contributing_agents": [
+        "Kha / AI-04"
+      ],
+      "checking_agent": "Ka / AI-02",
+      "assignment_status": "PROPOSED_NOT_ACKNOWLEDGED",
+      "status": "NOT_ASSESSED",
+      "progress_percent": 0,
+      "shared_work_agent_task_ids": [
+        "W70-02-DEFINE-CEO",
+        "W70-02-DEFINE-CSA",
+        "W70-02-DEFINE-CTO",
+        "W70-02-DEFINE-CODER"
+      ],
+      "shared_link_semantics": "Các ID DOC-093 là task cấp Work/Phase dùng chung để hỗ trợ lifecycle; không được hiểu là đã có assignment riêng hoặc ACK cho từng Product Task.",
+      "assignment_rationale": "Xu chốt yêu cầu trong phạm vi ủy quyền; Kha hỗ trợ product; Ka review.",
+      "evidence_refs": [],
+      "journal_refs": [],
+      "minutes_refs": [],
+      "blocker_refs": [],
+      "next_action": "Hoàn thiện đầu vào và điều kiện vào phase 02_DEFINE.",
+      "status_note": "Không đánh dấu IN_PROGRESS chỉ dựa vào file hiện diện; cần ACK + hoạt động thực tế + nhật ký/evidence được liên kết."
+    },
+    {
+      "phase_task_id": "W70-PROD-002-P03",
+      "product_task_id": "W70-PROD-002",
+      "phase": "03_ARCHITECT",
+      "phase_name": "Kiến trúc",
+      "task_title": "Kiến trúc — Product Dashboard",
+      "expected_deliverable": "Đầu ra Kiến trúc của Product Dashboard, có đường dẫn/version và tiêu chí nghiệm thu",
+      "acceptance_criteria": [
+        "Đầu ra được xác định và truy nguyên tới requirement/decision",
+        "Tiêu chí nghiệm thu có kết quả cụ thể",
+        "Có evidence refs và liên kết DOC-035; quyết định liên quan tham chiếu DOC-034/DOC-006",
+        "Không tự chuyển phase/gate khi thiếu bằng chứng hoặc reviewer độc lập"
+      ],
+      "primary_agent": "Cla / AI-03",
+      "contributing_agents": [
+        "Xu / AI-01"
+      ],
+      "checking_agent": "Ka / AI-02",
+      "assignment_status": "PROPOSED_NOT_ACKNOWLEDGED",
+      "status": "NOT_ASSESSED",
+      "progress_percent": 0,
+      "shared_work_agent_task_ids": [
+        "W70-03-ARCHITECT-CEO",
+        "W70-03-ARCHITECT-CSA",
+        "W70-03-ARCHITECT-CTO",
+        "W70-03-ARCHITECT-CODER"
+      ],
+      "shared_link_semantics": "Các ID DOC-093 là task cấp Work/Phase dùng chung để hỗ trợ lifecycle; không được hiểu là đã có assignment riêng hoặc ACK cho từng Product Task.",
+      "assignment_rationale": "Cla chủ trì kỹ thuật; Xu điều phối; Ka review độc lập.",
+      "evidence_refs": [],
+      "journal_refs": [],
+      "minutes_refs": [],
+      "blocker_refs": [],
+      "next_action": "Hoàn thiện đầu vào và điều kiện vào phase 03_ARCHITECT.",
+      "status_note": "Không đánh dấu IN_PROGRESS chỉ dựa vào file hiện diện; cần ACK + hoạt động thực tế + nhật ký/evidence được liên kết."
+    },
+    {
+      "phase_task_id": "W70-PROD-002-P04",
+      "product_task_id": "W70-PROD-002",
+      "phase": "04_PLAN",
+      "phase_name": "Kế hoạch",
+      "task_title": "Kế hoạch — Product Dashboard",
+      "expected_deliverable": "Đầu ra Kế hoạch của Product Dashboard, có đường dẫn/version và tiêu chí nghiệm thu",
+      "acceptance_criteria": [
+        "Đầu ra được xác định và truy nguyên tới requirement/decision",
+        "Tiêu chí nghiệm thu có kết quả cụ thể",
+        "Có evidence refs và liên kết DOC-035; quyết định liên quan tham chiếu DOC-034/DOC-006",
+        "Không tự chuyển phase/gate khi thiếu bằng chứng hoặc reviewer độc lập"
+      ],
+      "primary_agent": "Xu / AI-01",
+      "contributing_agents": [
+        "Cla / AI-03"
+      ],
+      "checking_agent": "Ka / AI-02",
+      "assignment_status": "PROPOSED_NOT_ACKNOWLEDGED",
+      "status": "NOT_ASSESSED",
+      "progress_percent": 0,
+      "shared_work_agent_task_ids": [
+        "W70-04-PLAN-CEO",
+        "W70-04-PLAN-CSA",
+        "W70-04-PLAN-CTO",
+        "W70-04-PLAN-CODER"
+      ],
+      "shared_link_semantics": "Các ID DOC-093 là task cấp Work/Phase dùng chung để hỗ trợ lifecycle; không được hiểu là đã có assignment riêng hoặc ACK cho từng Product Task.",
+      "assignment_rationale": "Xu chịu trách nhiệm kế hoạch; Cla ước lượng kỹ thuật; Ka phản biện.",
+      "evidence_refs": [],
+      "journal_refs": [],
+      "minutes_refs": [],
+      "blocker_refs": [],
+      "next_action": "Hoàn thiện đầu vào và điều kiện vào phase 04_PLAN.",
+      "status_note": "Không đánh dấu IN_PROGRESS chỉ dựa vào file hiện diện; cần ACK + hoạt động thực tế + nhật ký/evidence được liên kết."
+    },
+    {
+      "phase_task_id": "W70-PROD-002-P05",
+      "product_task_id": "W70-PROD-002",
+      "phase": "05_BUILD",
+      "phase_name": "Thi công",
+      "task_title": "Thi công — Product Dashboard",
+      "expected_deliverable": "Đầu ra Thi công của Product Dashboard, có đường dẫn/version và tiêu chí nghiệm thu",
+      "acceptance_criteria": [
+        "Đầu ra được xác định và truy nguyên tới requirement/decision",
+        "Tiêu chí nghiệm thu có kết quả cụ thể",
+        "Có evidence refs và liên kết DOC-035; quyết định liên quan tham chiếu DOC-034/DOC-006",
+        "Không tự chuyển phase/gate khi thiếu bằng chứng hoặc reviewer độc lập"
+      ],
+      "primary_agent": "Cla / AI-03",
+      "contributing_agents": [
+        "Vi / CODER (capability/ACK chưa xác minh)",
+        "Xu / AI-01"
+      ],
+      "checking_agent": "Qw / AI-05",
+      "assignment_status": "PROPOSED_NOT_ACKNOWLEDGED",
+      "status": "NOT_ASSESSED",
+      "progress_percent": 0,
+      "shared_work_agent_task_ids": [
+        "W70-05-BUILD-CEO",
+        "W70-05-BUILD-CSA",
+        "W70-05-BUILD-CTO",
+        "W70-05-BUILD-CODER"
+      ],
+      "shared_link_semantics": "Các ID DOC-093 là task cấp Work/Phase dùng chung để hỗ trợ lifecycle; không được hiểu là đã có assignment riêng hoặc ACK cho từng Product Task.",
+      "assignment_rationale": "Cla chịu trách nhiệm kỹ thuật; Vi chỉ là đề xuất cho đến khi xác minh capability và ACK; Qw review QE.",
+      "evidence_refs": [],
+      "journal_refs": [],
+      "minutes_refs": [],
+      "blocker_refs": [],
+      "next_action": "Đối chiếu source hiện có với yêu cầu sản phẩm; xác định deliverable còn thiếu và gắn evidence.",
+      "status_note": "Không đánh dấu IN_PROGRESS chỉ dựa vào file hiện diện; cần ACK + hoạt động thực tế + nhật ký/evidence được liên kết."
+    },
+    {
+      "phase_task_id": "W70-PROD-002-P06",
+      "product_task_id": "W70-PROD-002",
+      "phase": "06_VERIFY",
+      "phase_name": "Kiểm chứng",
+      "task_title": "Kiểm chứng — Product Dashboard",
+      "expected_deliverable": "Đầu ra Kiểm chứng của Product Dashboard, có đường dẫn/version và tiêu chí nghiệm thu",
+      "acceptance_criteria": [
+        "Đầu ra được xác định và truy nguyên tới requirement/decision",
+        "Tiêu chí nghiệm thu có kết quả cụ thể",
+        "Có evidence refs và liên kết DOC-035; quyết định liên quan tham chiếu DOC-034/DOC-006",
+        "Không tự chuyển phase/gate khi thiếu bằng chứng hoặc reviewer độc lập"
+      ],
+      "primary_agent": "Qw / AI-05",
+      "contributing_agents": [
+        "Cla / AI-03",
+        "Vi / CODER (capability/ACK chưa xác minh)"
+      ],
+      "checking_agent": "Ka / AI-02",
+      "assignment_status": "PROPOSED_NOT_ACKNOWLEDGED",
+      "status": "NOT_ASSESSED",
+      "progress_percent": 0,
+      "shared_work_agent_task_ids": [
+        "W70-06-VERIFY-CEO",
+        "W70-06-VERIFY-CSA",
+        "W70-06-VERIFY-CTO",
+        "W70-06-VERIFY-CODER"
+      ],
+      "shared_link_semantics": "Các ID DOC-093 là task cấp Work/Phase dùng chung để hỗ trợ lifecycle; không được hiểu là đã có assignment riêng hoặc ACK cho từng Product Task.",
+      "assignment_rationale": "Qw thực hiện QE độc lập; Ka kiểm tra kiến trúc/độ đầy đủ; implementer không tự duyệt.",
+      "evidence_refs": [],
+      "journal_refs": [],
+      "minutes_refs": [],
+      "blocker_refs": [],
+      "next_action": "Hoàn thiện đầu vào và điều kiện vào phase 06_VERIFY.",
+      "status_note": "Không đánh dấu IN_PROGRESS chỉ dựa vào file hiện diện; cần ACK + hoạt động thực tế + nhật ký/evidence được liên kết."
+    },
+    {
+      "phase_task_id": "W70-PROD-002-P07",
+      "product_task_id": "W70-PROD-002",
+      "phase": "07_ACCEPT",
+      "phase_name": "Nghiệm thu",
+      "task_title": "Nghiệm thu — Product Dashboard",
+      "expected_deliverable": "Đầu ra Nghiệm thu của Product Dashboard, có đường dẫn/version và tiêu chí nghiệm thu",
+      "acceptance_criteria": [
+        "Đầu ra được xác định và truy nguyên tới requirement/decision",
+        "Tiêu chí nghiệm thu có kết quả cụ thể",
+        "Có evidence refs và liên kết DOC-035; quyết định liên quan tham chiếu DOC-034/DOC-006",
+        "Không tự chuyển phase/gate khi thiếu bằng chứng hoặc reviewer độc lập"
+      ],
+      "primary_agent": "Xu / AI-01",
+      "contributing_agents": [
+        "Cla / AI-03",
+        "Qw / AI-05"
+      ],
+      "checking_agent": "Ka / AI-02",
+      "assignment_status": "PROPOSED_NOT_ACKNOWLEDGED",
+      "status": "NOT_ASSESSED",
+      "progress_percent": 0,
+      "shared_work_agent_task_ids": [
+        "W70-07-ACCEPT-CEO",
+        "W70-07-ACCEPT-CSA",
+        "W70-07-ACCEPT-CTO",
+        "W70-07-ACCEPT-CODER"
+      ],
+      "shared_link_semantics": "Các ID DOC-093 là task cấp Work/Phase dùng chung để hỗ trợ lifecycle; không được hiểu là đã có assignment riêng hoặc ACK cho từng Product Task.",
+      "assignment_rationale": "Xu điều phối hồ sơ nghiệm thu; Qw cung cấp QE; Ka review độc lập; Vinh giữ quyền PO cuối.",
+      "evidence_refs": [],
+      "journal_refs": [],
+      "minutes_refs": [],
+      "blocker_refs": [],
+      "next_action": "Hoàn thiện đầu vào và điều kiện vào phase 07_ACCEPT.",
+      "status_note": "Không đánh dấu IN_PROGRESS chỉ dựa vào file hiện diện; cần ACK + hoạt động thực tế + nhật ký/evidence được liên kết."
+    },
+    {
+      "phase_task_id": "W70-PROD-002-P08",
+      "product_task_id": "W70-PROD-002",
+      "phase": "08_RELEASE",
+      "phase_name": "Phát hành",
+      "task_title": "Phát hành — Product Dashboard",
+      "expected_deliverable": "Đầu ra Phát hành của Product Dashboard, có đường dẫn/version và tiêu chí nghiệm thu",
+      "acceptance_criteria": [
+        "Đầu ra được xác định và truy nguyên tới requirement/decision",
+        "Tiêu chí nghiệm thu có kết quả cụ thể",
+        "Có evidence refs và liên kết DOC-035; quyết định liên quan tham chiếu DOC-034/DOC-006",
+        "Không tự chuyển phase/gate khi thiếu bằng chứng hoặc reviewer độc lập"
+      ],
+      "primary_agent": "Xu / AI-01",
+      "contributing_agents": [
+        "Cla / AI-03",
+        "Vi / CODER (capability/ACK chưa xác minh)"
+      ],
+      "checking_agent": "Qw / AI-05",
+      "assignment_status": "PROPOSED_NOT_ACKNOWLEDGED",
+      "status": "NOT_ASSESSED",
+      "progress_percent": 0,
+      "shared_work_agent_task_ids": [
+        "W70-08-RELEASE-CEO",
+        "W70-08-RELEASE-CSA",
+        "W70-08-RELEASE-CTO",
+        "W70-08-RELEASE-CODER"
+      ],
+      "shared_link_semantics": "Các ID DOC-093 là task cấp Work/Phase dùng chung để hỗ trợ lifecycle; không được hiểu là đã có assignment riêng hoặc ACK cho từng Product Task.",
+      "assignment_rationale": "Xu điều phối readiness; Cla/Vi chuẩn bị kỹ thuật; Qw kiểm tra release quality; phát hành cuối vẫn cần thẩm quyền riêng.",
+      "evidence_refs": [],
+      "journal_refs": [],
+      "minutes_refs": [],
+      "blocker_refs": [],
+      "next_action": "Hoàn thiện đầu vào và điều kiện vào phase 08_RELEASE.",
+      "status_note": "Không đánh dấu IN_PROGRESS chỉ dựa vào file hiện diện; cần ACK + hoạt động thực tế + nhật ký/evidence được liên kết."
+    },
+    {
+      "phase_task_id": "W70-PROD-002-P09",
+      "product_task_id": "W70-PROD-002",
+      "phase": "09_OPERATE",
+      "phase_name": "Vận hành",
+      "task_title": "Vận hành — Product Dashboard",
+      "expected_deliverable": "Đầu ra Vận hành của Product Dashboard, có đường dẫn/version và tiêu chí nghiệm thu",
+      "acceptance_criteria": [
+        "Đầu ra được xác định và truy nguyên tới requirement/decision",
+        "Tiêu chí nghiệm thu có kết quả cụ thể",
+        "Có evidence refs và liên kết DOC-035; quyết định liên quan tham chiếu DOC-034/DOC-006",
+        "Không tự chuyển phase/gate khi thiếu bằng chứng hoặc reviewer độc lập"
+      ],
+      "primary_agent": "Xu / AI-01",
+      "contributing_agents": [
+        "Cla / AI-03",
+        "Qw / AI-05"
+      ],
+      "checking_agent": "Ka / AI-02",
+      "assignment_status": "PROPOSED_NOT_ACKNOWLEDGED",
+      "status": "NOT_ASSESSED",
+      "progress_percent": 0,
+      "shared_work_agent_task_ids": [
+        "W70-09-OPERATE-CEO",
+        "W70-09-OPERATE-CSA",
+        "W70-09-OPERATE-CTO",
+        "W70-09-OPERATE-CODER"
+      ],
+      "shared_link_semantics": "Các ID DOC-093 là task cấp Work/Phase dùng chung để hỗ trợ lifecycle; không được hiểu là đã có assignment riêng hoặc ACK cho từng Product Task.",
+      "assignment_rationale": "Xu điều phối vận hành; Cla xử lý kỹ thuật; Qw giám sát chất lượng; Ka review governance.",
+      "evidence_refs": [],
+      "journal_refs": [],
+      "minutes_refs": [],
+      "blocker_refs": [],
+      "next_action": "Hoàn thiện đầu vào và điều kiện vào phase 09_OPERATE.",
+      "status_note": "Không đánh dấu IN_PROGRESS chỉ dựa vào file hiện diện; cần ACK + hoạt động thực tế + nhật ký/evidence được liên kết."
+    }
+  ],
+  "task_count": {
+    "product_tasks": 2,
+    "phase_tasks": 18,
+    "shared_agent_task_references": 72
+  },
+  "created_at": "2026-11-09T11:00:00+07:00",
+  "updated_at": "2026-11-09T11:10:00+07:00"
+}
