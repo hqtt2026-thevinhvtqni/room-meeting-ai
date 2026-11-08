@@ -220,7 +220,7 @@ jobs:
         env:
           REPOSITORY: ${{ github.repository }}
           REVISION: ${{ github.sha }}
-        shell: powershell
+        shell: powershell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ". '{0}'"
         run: |
           git init .
           git remote add origin "https://github.com/$env:REPOSITORY.git"
@@ -233,7 +233,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install application and browser dependencies
-        shell: powershell
+        shell: powershell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ". '{0}'"
         run: |
           $ErrorActionPreference = "Stop"
           New-Item -ItemType Directory -Force test-results | Out-Null
@@ -253,7 +253,7 @@ jobs:
           python -m pip freeze | Out-File -FilePath test-results/windows-pip-freeze.txt -Encoding utf8
 
       - name: Create unique disposable Core meeting fixture
-        shell: powershell
+        shell: powershell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ". '{0}'"
         run: |
           $ErrorActionPreference = "Stop"
           $store = Join-Path $env:RUNNER_TEMP "roomhop-w32-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT"
@@ -268,7 +268,7 @@ jobs:
           [System.IO.File]::AppendAllText($env:GITHUB_ENV, $envBlock + [Environment]::NewLine, [System.Text.UTF8Encoding]::new($false))
 
       - name: Launch exact-SHA Browser Adapter and verify ownership
-        shell: powershell
+        shell: powershell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ". '{0}'"
         run: |
           $ErrorActionPreference = "Stop"
           $pythonExe = (Get-Command python -ErrorAction Stop).Source
@@ -336,14 +336,14 @@ jobs:
           "@ | Out-File -FilePath test-results/windows-preflight.txt -Encoding utf8
 
       - name: Run deterministic local Browser Adapter E2E
-        shell: powershell
+        shell: powershell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ". '{0}'"
         run: |
           python -m pytest -v tests/test_browser_agent_adapter_e2e.py --junitxml=test-results/junit-browser-adapter-windows.xml
           if ($LASTEXITCODE -ne 0) { throw "Windows Browser Adapter E2E failed" }
 
       - name: Verify disposable store and retain inventory
         if: always()
-        shell: powershell
+        shell: powershell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ". '{0}'"
         run: |
           $ErrorActionPreference = "Stop"
           $store = $env:ROOMHOP_TEST_MEETINGS_DIR
@@ -356,7 +356,7 @@ jobs:
 
       - name: Stop only the adapter process created by this job
         if: always()
-        shell: powershell
+        shell: powershell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ". '{0}'"
         run: |
           $ErrorActionPreference = "Stop"
           if (-not $env:W32_ADAPTER_PID) { Write-Host "adapter_cleanup=NOT_REQUIRED (process was not started)"; exit 0 }
