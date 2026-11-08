@@ -13,9 +13,9 @@ This is the sole canonical register for Work 103 controlled documents and import
 | ID / Artifact | Type | Canonical path or mapping | Current status | Notes |
 |---|---|---|---|---|
 | DOC-001 | Manifest | 00_ROOT/DOC-001_BAN-TUYEN-NGON_WORK-MANIFEST.md | ACTIVE | Work identity, source authority, structure and gates |
-| DOC-034 | Official minutes | 00_ROOT/DOC-034_BIEN-BAN_HOP-WORK-103-MINUTES.md | MIGRATION_PENDING | Current legacy source: BIEN_BAN.md |
-| DOC-035 | Execution journal | 00_ROOT/DOC-035_NHAT-KY-THI-CONG_WORK-103-EXECUTION-LOG.md | ACTIVE | Canonical append-only journal |
-| DOC-045 | Work plan / roadmap | 04_PLAN/DOC-045_KE-HOACH-THI-CONG_WORK-103-ROADMAP.md | MIGRATION_PENDING | Current legacy source: KE_HOACH_THI_CONG_XU.md |
+| DOC-034 | Official minutes | 00_ROOT/DOC-034_BIEN-BAN_HOP-WORK-103-MINUTES.md | ACTIVE | Legacy path retained as pointer |
+| DOC-035 | Execution journal | 00_ROOT/DOC-035_NHAT-KY-THI-CONG_WORK-103-EXECUTION-LOG.md | ACTIVE | Legacy journal history merged and preserved |
+| DOC-045 | Work plan / roadmap | 04_PLAN/DOC-045_KE-HOACH-THI-CONG_WORK-103-ROADMAP.md | ACTIVE | Legacy path retained as pointer |
 | DOC-055 | Document Register | 00_ROOT/DOC-055_SO-DANG-KY-TAI-LIEU_WORK-103-DOCUMENT-REGISTER.md | ACTIVE | Sole register |
 | DOC-056 | Standardization plan | 00_ROOT/DOC-056_KE-HOACH-CHUAN-HOA_WORK-103-STANDARDIZATION-PLAN.md | ACTIVE | Controlled migration batches |
 | DOC-057 | Evidence Register | EVIDENCE/DOC-057_SO-DANG-KY-BANG-CHUNG_WORK-103-EVIDENCE-REGISTER.md | ACTIVE | Sole cross-phase evidence index |
@@ -30,10 +30,10 @@ This is the sole canonical register for Work 103 controlled documents and import
 ## Legacy path mapping
 | Existing path | Canonical destination | Migration action |
 |---|---|---|
-| 00_ROOT/WORK_MANIFEST.md | 00_ROOT/DOC-001... | Convert to compatibility pointer after inbound-link check |
-| BIEN_BAN.md | 00_ROOT/DOC-034... | Migrate content without rewriting historical decisions; retain pointer |
-| KE_HOACH_THI_CONG_XU.md | 04_PLAN/DOC-045... | Migrate plan and map WPs; retain pointer |
-| NHAT_KY_HOP_THI_CONG.md | 00_ROOT/DOC-035... | Merge chronologically; preserve original as pointer/archive alias |
+| 00_ROOT/WORK_MANIFEST.md | 00_ROOT/DOC-001... | Compatibility pointer established; inbound-link audit still pending |
+| BIEN_BAN.md | 00_ROOT/DOC-034... | Canonical copy established; original path now pointer |
+| KE_HOACH_THI_CONG_XU.md | 04_PLAN/DOC-045... | Canonical copy established; WPs to be rebaselined; original path now pointer |
+| NHAT_KY_HOP_THI_CONG.md | 00_ROOT/DOC-035... | Historical entries preserved in DOC-035; original path now pointer |
 | 00_CORPUS/ | 01_DISCOVER/ + approved corpus location | Classify received originals vs curated test fixtures before moving |
 | 02_EXTENSION/ | 01_DISCOVER/ or 03_ARCHITECT/ | Classify reference material before moving |
 | 03_ARCHITECTURE/ | 03_ARCHITECT/ | Map architecture documents; no move now |
