@@ -66,6 +66,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
+      - name: Verify dedicated Work32 runner identity
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
+        run: |
+          if ("${{ runner.name }}" -ne "ROOM-HOP-W32-PC") {
+            throw "BLOCKED: expected dedicated runner ROOM-HOP-W32-PC; actual runner is '${{ runner.name }}'"
+          }
+
       - name: Fetch exact triggering revision without submodule recursion
         env:
           REPOSITORY: ${{ github.repository }}
@@ -209,7 +216,7 @@ jobs:
   windows_browser_adapter:
     name: Windows Browser Adapter E2E (runner-owned disposable fixture)
     if: ${{ vars.W32_WINDOWS_RUNNER_READY == 'true' }}
-    runs-on: [self-hosted, Windows, X64, room-hop-w32]
+    runs-on: [self-hosted, Windows, X64]
     timeout-minutes: 20
     steps:
       - name: Fetch exact triggering revision without submodule recursion
