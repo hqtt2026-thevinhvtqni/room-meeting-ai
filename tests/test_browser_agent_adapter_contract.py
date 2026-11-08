@@ -339,11 +339,6 @@ def test_submission_uses_exact_target_stdio_and_verifies_readback(monkeypatch, t
 
 def test_adapter_workflows_are_serialized_and_keep_request_scoped_logs(monkeypatch, tmp_path):
     monkeypatch.setattr(browser_adapter, "EVIDENCE", tmp_path)
-    monkeypatch.setattr(
-        browser_adapter,
-        "_submit_to_roomhop_from_worker",
-        lambda result: {"status": "pass"},
-    )
     instance = browser_adapter.Adapter()
     state = {"active": 0, "max_active": 0}
     state_lock = threading.Lock()
@@ -391,3 +386,19 @@ def test_adapter_workflows_are_serialized_and_keep_request_scoped_logs(monkeypat
         {"event": "start"},
         {"event": "navigate", "url": "https://two.example/"},
     ]
+
+
+
+def test_browser_adapter_dispatch_uses_one_playwright_owner_thread():
+    def read_thread_id():
+        return threading.get_ident()
+
+    with ThreadPoolExecutor(max_workers=4) as callers:
+        thread_ids = list(
+            callers.map(
+                lambda _index: browser_adapter._run_browser_operation(read_thread_id),
+                range(12),
+            )
+        )
+
+    assert len(set(thread_ids)) == 1
