@@ -58,3 +58,12 @@
 
 
 **Đính chính đường dẫn hiện hành — 2026-11-07:** nội dung lịch sử ở trên giữ nguyên tham chiếu `DECISION_LOG.md`. Theo chuẩn DOC-056, đường dẫn này hiện chỉ là compatibility pointer; sổ quyết định canonical duy nhất là `00_ROOT/DOC-006_SO-QUYET-DINH_DECISION-LOG.md`. Không ghi quyết định mới vào pointer.
+
+
+## 2026-11-09 — Asynchronous agreement: three-tier product progress model
+- **Participants:** Vinh (Product Owner); Xu / AI-01 (coordinator).
+- **Agreement:** Adopt Product Task → Phase Task → Agent Task. Each Phase Task must show one primary Agent, contributing Agent(s), and an independent checking Agent.
+- **Canonical sources:** DOC-094 owns Product/Phase Task; DOC-093 remains the source of existing Agent Tasks; DOC-035 records execution; DOC-006 records binding decision D70-019.
+- **Implementation boundary:** Agent assignments in DOC-094 remain proposed until capability, permission and ACK are verified. Product progress remains NOT_CALCULATED until aggregation rules are approved. No gate/phase PASS, acceptance or release is implied.
+- **Status:** AGREED; implementation draft written to Sandbox; validation and GitHub parity pending.
+- **Decision reference:** D70-019.
