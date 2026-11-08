@@ -440,3 +440,33 @@ a read-only cho process/listener/health nếu có source change hoặc evidence 
 - Phương pháp: GitHub fetch_file readback + extract test function names; không chạy test, không kết luận an toàn.
 - Trạng thái: C06 STATIC COVERAGE PACKAGE COMPLETE; READY FOR CLA REVIEW; no security PASS.
 
+
+
+## 2026-11-09 12h (UTC+7) — C05 — DOC-003 CONTINUATION SYNC + DOC-010 REVISION ANCHORS
+- Người thực hiện: Co — Coder theo phân công Cla (CTO).
+- Phương pháp: Sandbox readback canonical journal; UTF-8 byte-offset comparison; GitHub fetch_file/update_file/readback trên branch `work/w1111-core-execution-authority-v1-2`.
+- Prefix gate: 12,928 byte đầu của Sandbox `00_ROOT/NHAT_KY_THI_CONG.md` khớp byte-for-byte với GitHub DOC-003 trước khi ghi.
+- DOC-003: nối phần Sandbox journal từ byte offset 12,928 vào cuối DOC-003 trên PR #48 branch, giữ nguyên GitHub-specific addenda; không ghi vào main. Commit `423f8192ca1cdb8181d3964cc47bc08d0f5ff9b6`; blob readback `95588af96a7e7f07000d9f640f41263042a8ee73`; GitHub fetch readback có các entry C01/C02/C08.
+- DOC-010: cập nhật addendum main commit anchor `024e2c9797da091b83c2e0ea5e3ac7f3b593eafb`, branch head trước ledger update `423f8192ca1cdb8181d3964cc47bc08d0f5ff9b6`, PR #48, C02 code/test commits và blob SHAs, DOC-003 blob, cùng 8 Git blob SHA-1 baseline từ Sandbox.
+- DOC-010 update commit: `7561e55e93af83987020969638ade44ecd56b457`; DOC-010 branch blob readback `163f2c6a0a789b6a864dafb309d03d0155594ebc`; readback xác nhận addendum C05 và Sandbox hash anchor.
+- CI qualification: prior run `42454767666` không phải bằng chứng cho C02 updated SHA; query cho commit `e2c9e7e1508eacff390f4ac2e9117230601df7ab` trả workflow_runs=[].
+- Giới hạn: DOC-003 main giữ nguyên blob `b5c6d2a24ce030546b8997ffe9e6d64f26f190a0`; DOC-003 branch có continuation sync, không tuyên bố toàn bộ 8 tài liệu Sandbox↔GitHub parity; PC/runtime parity NOT VERIFIED.
+- Trạng thái: DOC-003 prefix check + append/readback = VERIFIED trên PR branch; DOC-010 addendum readback = VERIFIED; READY FOR CLA REVIEW.
+
+
+## 2026-11-09 12h (UTC+7) — C08 — W09 INVENTORY + W102 DUPLICATE TREE REVIEW
+- Người thực hiện: Co — Coder theo phân công Cla (CTO).
+- W09: sandbox_list count=4,127; phân loại 4,127/4,127: dependency cache 2,321; __pycache__ 1,737; evidence 17; artifact 0 theo rule; source code 8; documentation/config 32; directory structure 12. Không xóa/di chuyển.
+- W102: sandbox_list count=300; cặp 04_CODE↔05_BUILD/04_CODE: 4/4 file chung MATCH SHA-256; 05_TEST↔05_BUILD/05_TEST: 6/6 file test chung MATCH; 07_RELEASE↔05_BUILD/07_RELEASE: 2/2 file chung MATCH. Extra paths được ghi rõ trong manifest.
+- Pair 06_EVIDENCE↔EVIDENCE/LEGACY_EVIDENCE_ARCHIVE: 71 file vs 72 file (archive có README.md thêm); full shared-file SHA-256 sweep chưa hoàn tất; không kết luận MATCH/DRIFT.
+- Sản phẩm: `01_DISCOVER/INVENTORY_CLASSIFICATION_W09_W102_20261109.md`; có W09 classification và SHA tables cho các cặp 1/2/4.
+- Giới hạn: C08 không thể ghi DONE; pair 3 vẫn cần full SHA-256 comparison. Không xóa/di chuyển/ghi đè bất kỳ file nào ở W09/W102.
+- Trạng thái: W09 INVENTORY COMPLETE; W102 DUPLICATE REVIEW PARTIAL; C08 = BLOCKED / PARTIAL, not READY FOR CLA REVIEW.
+
+
+## 2026-11-09 12h (UTC+7) — C08 COMPLETION CORRECTION
+- Co hoàn tất full SHA-256 comparison cho pair 06_EVIDENCE ↔ EVIDENCE/LEGACY_EVIDENCE_ARCHIVE.
+- File-only counts được xác định lại sau khi loại directory entries: 61 files vs 62; 61 common relative paths; 61/61 MATCH. README.md chỉ có ở legacy archive.
+- Tổng shared files đã hash trong 4 cặp W102: 4 + 6 + 61 + 2 = 73; tất cả 73/73 MATCH. Extra tree entries được ghi lại; không move/delete.
+- Sửa kết luận interim 71/72 thành 61/62 file-only; không sửa/xóa history nhật ký interim.
+- C08 = COMPLETE FOR HASH INVENTORY / READY FOR CLA REVIEW. Cần Cla review tree-shape differences; không tự dọn cấu trúc.
