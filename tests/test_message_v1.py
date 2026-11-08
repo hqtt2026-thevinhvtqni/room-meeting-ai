@@ -111,8 +111,8 @@ def test_t3_ai_paste_message_with_identity(service):
     assert entry["speaker"] == "claude"
 
 
-def test_t3b_ai_paste_message_without_identity_is_not_fabricated(service):
-    """DECISION đã khóa: không identity_id -> KHÔNG được bịa header."""
+def test_t3b_ai_paste_rejects_missing_identity(service):
+    """Xu D-102-04: unidentified paste fails closed."""
     service.create_meeting(
         meeting_id="MSG-T3B",
         topic="T3b paste no identity",
@@ -121,18 +121,8 @@ def test_t3b_ai_paste_message_without_identity_is_not_fabricated(service):
     )
     _activate(service, "MSG-T3B", joiners=("vinh", "claude"))
 
-    # Legacy call — không kèm identity_id, giống mọi caller Gate 2 cũ.
-    result = service.add_paste("MSG-T3B", "Paste không định danh")
-    assert result == {"status": "READY"}  # backward-compat return shape
-
-    transcript = service.get_transcript("MSG-T3B")
-    paste_entries = [m for m in transcript if m["source"] == {"type": "ai_chat_paste"}]
-    assert len(paste_entries) == 1
-
-    entry = paste_entries[0]
-    assert entry["header"] is None
-    assert entry["speaker"] is None  # KHÔNG bịa identity mặc định
-    assert entry["content"] == "Paste không định danh"
+    with pytest.raises(MeetingError):
+        service.add_paste("MSG-T3B", "Paste không định danh")
 
 
 def test_t3c_ai_paste_rejects_unresolvable_identity(service):
@@ -246,7 +236,7 @@ def test_t6_every_message_has_unique_id(service):
 
     service.add_message("MSG-T6", "vinh", "msg 1")
     service.add_message("MSG-T6", "xu", "msg 2")
-    service.add_paste("MSG-T6", "paste 1")  # legacy, no identity
+    service.add_paste("MSG-T6", "paste 1", identity_id="vinh")
 
     transcript = service.get_transcript("MSG-T6")
     ids = [m["id"] for m in transcript]
@@ -342,12 +332,12 @@ def test_t8_existing_mcp_tools_no_regression(tmp_path):
     )
     _activate(service, "MSG-T8")
 
-    # Legacy call qua MCP: KHÔNG kèm identity_id -> vẫn PASS như Gate 2.
+    # Xu D-102-04: MCP paste without participant identity fails closed.
     legacy_result = _call(
         "add_paste_to_meeting",
         {"meeting_id": "MSG-T8", "text": "legacy paste qua MCP"},
     )
-    assert legacy_result.root.isError is False
+    assert legacy_result.root.isError is True
 
     # Call mới qua MCP: CÓ identity_id -> Header v1.0 đầy đủ.
     v1_result = _call(
@@ -365,16 +355,10 @@ def test_t8_existing_mcp_tools_no_regression(tmp_path):
         message for message in transcript
         if message["source"] == {"type": "ai_chat_paste"}
     ]
-    legacy_entry = next(
-        message for message in paste_entries
-        if message["content"] == "legacy paste qua MCP"
-    )
     v1_entry = next(
         message for message in paste_entries
         if message["content"] == "paste có identity qua MCP"
     )
-    assert legacy_entry["speaker"] is None
-    assert legacy_entry["header"] is None
     assert v1_entry["speaker"] == "xu"
     assert v1_entry["header"]["name"] == AgentRegistry().get("xu").name
     assert v1_entry["header"]["role"] == AgentRegistry().get("xu").role
