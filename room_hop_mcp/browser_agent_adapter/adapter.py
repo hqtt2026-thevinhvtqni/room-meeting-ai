@@ -427,12 +427,24 @@ def submit_to_roomhop(result: dict[str, Any]):
         }
 
 
+def _configured_port() -> int:
+    raw = os.getenv("ROOMHOP_BROWSER_ADAPTER_PORT", "8787")
+    try:
+        port = int(raw)
+    except (TypeError, ValueError) as exc:
+        raise RuntimeError("ROOMHOP_BROWSER_ADAPTER_PORT must be an integer") from exc
+    if not 1 <= port <= 65535:
+        raise RuntimeError("ROOMHOP_BROWSER_ADAPTER_PORT must be between 1 and 65535")
+    return port
+
+
 @app.get("/health")
 def health():
     return {
         "ok": True,
         "service": "room-hop-browser-agent-adapter",
         "browser_started": adapter.page is not None,
+        "port": _configured_port(),
     }
 
 
