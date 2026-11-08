@@ -227,38 +227,55 @@ jobs:
           git fetch --no-tags --depth=1 origin "$env:REVISION"
           git checkout --detach FETCH_HEAD
 
-      - name: Discover runner Python and create isolated venv
+      - name: Bootstrap verified portable Python under RUNNER_TEMP
         shell: powershell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ". '{0}'"
         run: |
           $ErrorActionPreference = "Stop"
-          $candidates = @()
-          $command = Get-Command python -ErrorAction SilentlyContinue
-          if ($command -and $command.Source) { $candidates += $command.Source }
-          $candidates += "C:\Users\Admin\AppData\Local\Programs\Python\Python312\python.exe"
-          $candidates += "C:\Program Files\Python312\python.exe"
-          $candidates += "C:\Python312\python.exe"
-          $basePython = $null
-          foreach ($candidate in ($candidates | Select-Object -Unique)) {
-            if (-not (Test-Path -LiteralPath $candidate -PathType Leaf)) { continue }
-            $version = & $candidate --version 2>&1
-            if ($LASTEXITCODE -eq 0 -and "$version" -match '^Python 3\.12\.') {
-              $basePython = [IO.Path]::GetFullPath($candidate)
-              break
-            }
-          }
-          if (-not $basePython) { throw "BLOCKED: runner identity cannot access a Python 3.12 executable; install Python machine-wide or expose it on the runner service PATH" }
-          $venv = Join-Path $env:RUNNER_TEMP "roomhop-w32-venv-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT"
-          & $basePython -m venv $venv
-          if ($LASTEXITCODE -ne 0) { throw "BLOCKED: could not create isolated Python venv under RUNNER_TEMP" }
-          $venvPython = Join-Path $venv "Scripts\python.exe"
-          if (-not (Test-Path -LiteralPath $venvPython -PathType Leaf)) { throw "BLOCKED: venv Python executable was not created" }
-          $venvVersion = & $venvPython --version 2>&1
-          if ($LASTEXITCODE -ne 0 -or "$venvVersion" -notmatch '^Python 3\.12\.') { throw "BLOCKED: isolated venv is not running Python 3.12" }
-          $envLine = "W32_VENV_PYTHON=$venvPython" + [Environment]::NewLine
-          [System.IO.File]::AppendAllText($env:GITHUB_ENV, $envLine, [System.Text.UTF8Encoding]::new($false))
-          Write-Host "runner_python=$basePython"
-          Write-Host "venv_python=$venvPython"
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          $pythonUrl = "https://www.python.org/ftp/python/3.12.10/python-3.12.10-embeddable-amd64.zip"
+          $pythonSha256 = "156c7eea90d58cd7e91a23f28a0056616b13e9f4cf4901b7b99b837b7848c6da"
+          $pipUrl = "https://files.pythonhosted.org/packages/f3/6e/1736e5b4ae2b778ef2f81c47d797de9f891d4d8acb047a24ca37a60294dd/pip-26.2.1-py3-none-any.whl"
+          $pipSha256 = "71138adf1f4ca900cdb7d289c21b7494329f2332b6d85f0e1c42108c0384ed3e"
+          $pythonRoot = Join-Path $env:RUNNER_TEMP "roomhop-w32-python-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT"
+          if (Test-Path -LiteralPath $pythonRoot) { throw "BLOCKED: portable Python path already exists; refusing to reuse a prior run" }
+          New-Item -ItemType Directory -Force $pythonRoot | Out-Null
 
+          $pythonZip = Join-Path $env:RUNNER_TEMP "python-3.12.10-embeddable-amd64.zip"
+          Invoke-WebRequest -UseBasicParsing -Uri $pythonUrl -OutFile $pythonZip
+          $actualPythonHash = (Get-FileHash -LiteralPath $pythonZip -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actualPythonHash -ne $pythonSha256) { throw "BLOCKED: official Python embeddable archive SHA-256 mismatch" }
+          Expand-Archive -LiteralPath $pythonZip -DestinationPath $pythonRoot -Force
+
+          $pthPath = Join-Path $pythonRoot "python312._pth"
+          if (-not (Test-Path -LiteralPath $pthPath -PathType Leaf)) { throw "BLOCKED: embedded Python path configuration is missing" }
+          $pthLines = @("python312.zip", ".", "Lib\site-packages")
+          if (Test-Path -LiteralPath (Join-Path $pythonRoot "DLLs") -PathType Container) { $pthLines += "DLLs" }
+          $pthLines += "import site"
+          [System.IO.File]::WriteAllLines($pthPath, $pthLines, [System.Text.Encoding]::ASCII)
+
+          $sitePackages = Join-Path $pythonRoot "Lib\site-packages"
+          New-Item -ItemType Directory -Force $sitePackages | Out-Null
+          $pipWheel = Join-Path $env:RUNNER_TEMP "pip-26.2.1-py3-none-any.whl"
+          Invoke-WebRequest -UseBasicParsing -Uri $pipUrl -OutFile $pipWheel
+          $actualPipHash = (Get-FileHash -LiteralPath $pipWheel -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actualPipHash -ne $pipSha256) { throw "BLOCKED: PyPI pip wheel SHA-256 mismatch" }
+          $pipZip = Join-Path $env:RUNNER_TEMP "pip-26.2.1-py3-none-any.zip"
+          Move-Item -LiteralPath $pipWheel -Destination $pipZip
+          Expand-Archive -LiteralPath $pipZip -DestinationPath $sitePackages -Force
+
+          $pythonExe = Join-Path $pythonRoot "python.exe"
+          if (-not (Test-Path -LiteralPath $pythonExe -PathType Leaf)) { throw "BLOCKED: portable Python executable is missing" }
+          $pythonVersion = & $pythonExe --version 2>&1
+          if ($LASTEXITCODE -ne 0 -or "$pythonVersion" -ne "Python 3.12.10") { throw "BLOCKED: portable Python version verification failed" }
+          $pipVersion = & $pythonExe -m pip --version 2>&1
+          if ($LASTEXITCODE -ne 0) { throw "BLOCKED: verified pip wheel could not be imported by portable Python" }
+
+          $envLine = "W32_PYTHON_EXE=$pythonExe" + [Environment]::NewLine
+          [System.IO.File]::AppendAllText($env:GITHUB_ENV, $envLine, [System.Text.UTF8Encoding]::new($false))
+          Write-Host "portable_python=$pythonVersion"
+          Write-Host "portable_pip=$pipVersion"
+          Write-Host "python_archive_sha256=$actualPythonHash"
+          Write-Host "pip_wheel_sha256=$actualPipHash"
       - name: Install application and browser dependencies
         shell: powershell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ". '{0}'"
         run: |
@@ -269,15 +286,15 @@ jobs:
           $env:PLAYWRIGHT_BROWSERS_PATH = $browserCache
           $envLine = "PLAYWRIGHT_BROWSERS_PATH=$browserCache" + [Environment]::NewLine
           [System.IO.File]::AppendAllText($env:GITHUB_ENV, $envLine, [System.Text.UTF8Encoding]::new($false))
-          & $env:W32_VENV_PYTHON -m pip install -r requirements.txt -c constraints-ci.txt
+          & $env:W32_PYTHON_EXE -m pip install -r requirements.txt -c constraints-ci.txt
           if ($LASTEXITCODE -ne 0) { throw "BLOCKED: application dependency install failed" }
-          & $env:W32_VENV_PYTHON -m pip install playwright
+          & $env:W32_PYTHON_EXE -m pip install playwright
           if ($LASTEXITCODE -ne 0) { throw "BLOCKED: Playwright install failed" }
-          & $env:W32_VENV_PYTHON -m playwright install chromium
+          & $env:W32_PYTHON_EXE -m playwright install chromium
           if ($LASTEXITCODE -ne 0) { throw "BLOCKED: Chromium provisioning failed" }
-          & $env:W32_VENV_PYTHON -m pip check
+          & $env:W32_PYTHON_EXE -m pip check
           if ($LASTEXITCODE -ne 0) { throw "BLOCKED: pip dependency check failed" }
-          & $env:W32_VENV_PYTHON -m pip freeze | Out-File -FilePath test-results/windows-pip-freeze.txt -Encoding utf8
+          & $env:W32_PYTHON_EXE -m pip freeze | Out-File -FilePath test-results/windows-pip-freeze.txt -Encoding utf8
 
       - name: Create unique disposable Core meeting fixture
         shell: powershell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ". '{0}'"
@@ -285,7 +302,7 @@ jobs:
           $ErrorActionPreference = "Stop"
           $store = Join-Path $env:RUNNER_TEMP "roomhop-w32-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT"
           $meetingId = "MEETING-W32-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT"
-          & $env:W32_VENV_PYTHON scripts/w32_windows_fixture.py --store "$store" --meeting-id "$meetingId" --identity-id "xu" --runner-temp "$env:RUNNER_TEMP" --workspace "$env:GITHUB_WORKSPACE" | Tee-Object -FilePath test-results/windows-fixture-setup.txt
+          & $env:W32_PYTHON_EXE scripts/w32_windows_fixture.py --store "$store" --meeting-id "$meetingId" --identity-id "xu" --runner-temp "$env:RUNNER_TEMP" --workspace "$env:GITHUB_WORKSPACE" | Tee-Object -FilePath test-results/windows-fixture-setup.txt
           if ($LASTEXITCODE -ne 0) { throw "BLOCKED: disposable Core fixture creation failed" }
           $envBlock = @"
           ROOMHOP_TEST_MEETINGS_DIR=$store
@@ -298,7 +315,7 @@ jobs:
         shell: powershell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ". '{0}'"
         run: |
           $ErrorActionPreference = "Stop"
-          $pythonExe = $env:W32_VENV_PYTHON
+          $pythonExe = $env:W32_PYTHON_EXE
           if (-not $pythonExe -or -not (Test-Path -LiteralPath $pythonExe -PathType Leaf)) { throw "BLOCKED: isolated venv Python is unavailable" }
           $listener = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Loopback, 0)
           $listener.Start()
@@ -366,7 +383,7 @@ jobs:
       - name: Run deterministic local Browser Adapter E2E
         shell: powershell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ". '{0}'"
         run: |
-          & $env:W32_VENV_PYTHON -m pytest -v tests/test_browser_agent_adapter_e2e.py --junitxml=test-results/junit-browser-adapter-windows.xml
+          & $env:W32_PYTHON_EXE -m pytest -v tests/test_browser_agent_adapter_e2e.py --junitxml=test-results/junit-browser-adapter-windows.xml
           if ($LASTEXITCODE -ne 0) { throw "Windows Browser Adapter E2E failed" }
 
       - name: Verify disposable store and retain inventory
