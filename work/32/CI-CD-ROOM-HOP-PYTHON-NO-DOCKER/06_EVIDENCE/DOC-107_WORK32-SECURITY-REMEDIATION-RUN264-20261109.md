@@ -151,3 +151,15 @@ Run #254 (42520909842) was the first remediation validation and failed on compat
 - Unit lane PASS includes the new S10 tests for concurrent generated-ID allocation, concurrent JOIN updates through separate Meeting objects, and atomic meeting.yaml replacement.
 - S10 disposition: PASS within the one-Core-process local deployment contract. Cross-process meeting.yaml read-modify-write remains unproven and multi-process/multi-host stays BLOCKED.
 - PR #49 remains DRAFT; main unchanged; no merge, deployment or release.
+
+
+## Addendum — Run #287 exact-head PASS and Core HTTP deny boundary
+- **Name:** Ka
+- **Title:** CSA / Work32 Execution Owner
+- **Date-Time:** 2026-11-09 (Asia/Ho_Chi_Minh)
+- Exact PR head: `e0e990a2c2a0d92813afd811359b8cf168c0e18b`.
+- Run #287 / `42523319196` completed SUCCESS across all six jobs.
+- Unit: 205 passed, including `tests/test_core_http_main.py`; the test confirms Meeting API remains available and POST /works/{work_id}/execution-grants fails closed with HTTP 503 execution_authority_not_configured.
+- Product Auto E2E: PASS; Windows Browser Adapter E2E: PASS (10); Work32 tooling/workflow mirror: PASS; immutable artifact: PASS; release acceptance gate: PASS.
+- Core execution-grant route is deny-only. No grant issuance, token validation, run recording or revocation implementation is claimed. Xu must confirm canonical route ownership (Core vs Execution Host) before any functional implementation or merge.
+- PR #49 remains DRAFT; main unchanged; no remote exposure, merge, deployment or release.
