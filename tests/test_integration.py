@@ -125,6 +125,7 @@ async def _test_integration_add_paste(tmp_path):
             mcp_session,
             meeting_id,
             "Integration recording test.",
+            identity_id="vinh",
         )
         assert result == {"status": "READY"}
 
