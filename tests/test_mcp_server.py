@@ -185,7 +185,7 @@ def test_add_paste_handles_core_error(tmp_path):
     """Verify Core/service errors are handled at the MCP boundary."""
 
     class FakeService:
-        def add_paste(self, meeting_id, raw_text):
+        def add_paste(self, meeting_id, raw_text, identity_id=None):
             raise RuntimeError("meeting is not active")
 
     service = FakeService()
