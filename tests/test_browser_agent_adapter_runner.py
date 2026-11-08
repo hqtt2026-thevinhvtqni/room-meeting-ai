@@ -12,8 +12,12 @@ SHA = "a" * 40
 
 
 def _fixture_env(store: Path, port: int = 49152) -> dict[str, str]:
+    workspace = store.parent.parent / "workspace"
+    workspace.mkdir(exist_ok=True)
     return {
         "GITHUB_SHA": SHA,
+        "RUNNER_TEMP": str(store.parent),
+        "GITHUB_WORKSPACE": str(workspace),
         "ROOMHOP_TEST_MODE": "1",
         "ROOMHOP_TEST_MEETINGS_DIR": str(store),
         "ROOMHOP_TEST_MEETING_ID": "MEETING-W32-123-1",
@@ -23,7 +27,9 @@ def _fixture_env(store: Path, port: int = 49152) -> dict[str, str]:
 
 
 def _store(tmp_path: Path) -> Path:
-    store = tmp_path / "disposable"
+    runner_temp = tmp_path / "runner-temp"
+    runner_temp.mkdir()
+    store = runner_temp / "disposable"
     store.mkdir()
     (store / ".roomhop-disposable-test-store").write_text(
         "ROOM-HOP-WORK32-DISPOSABLE-TEST-STORE",
