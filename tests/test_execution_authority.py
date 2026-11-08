@@ -86,6 +86,7 @@ def test_run_record_links_grant_source_exit_and_evidence(tmp_path):
     grant = authority.issue_grant(authority.authenticate(credential), "W28", "pytest_run")
     record = authority.record_run(
         grant["grant_id"],
+        grant_token=grant["grant_token"],
         source_sha256="a" * 64,
         exit_status="PASS",
         output_refs=["stdout:run-1", "stderr:run-1"],
@@ -129,3 +130,82 @@ def test_work_paths_cannot_escape_work_root(tmp_path):
             },
             store_path=tmp_path / "authority.jsonl",
         )
+
+
+def test_http_grant_flow_is_authenticated_and_work_scoped(tmp_path):
+    from fastapi import FastAPI
+    from fastapi.testclient import TestClient
+    from room_hop_mcp.adapter.execution_authority_http import mount_execution_authority_routes
+
+    authority, credential, _ = make_authority(tmp_path)
+    app = FastAPI()
+    mount_execution_authority_routes(app, authority)
+    client = TestClient(app)
+
+    denied = client.post("/works/W28/execution-grants", json={"purpose": "pytest_run"})
+    assert denied.status_code == 401
+
+    issued = client.post(
+        "/works/W28/execution-grants",
+        headers={"X-ROOM-HOP-SERVICE-CREDENTIAL": credential},
+        json={"purpose": "pytest_run", "max_timeout_seconds": 60},
+    )
+    assert issued.status_code == 200
+    grant = issued.json()
+    assert grant["grant_token"]
+    assert grant["work_id"] == "W28"
+
+    wrong_work = client.get(
+        f"/works/W29/execution-grants/{grant['grant_id']}",
+        headers={"Authorization": "Bearer " + grant["grant_token"]},
+    )
+    assert wrong_work.status_code == 403
+
+    status = client.get(
+        f"/works/W28/execution-grants/{grant['grant_id']}",
+        headers={"Authorization": "Bearer " + grant["grant_token"]},
+    )
+    assert status.status_code == 200
+    assert status.json()["status"] == "active"
+
+    recorded = client.post(
+        f"/works/W28/execution-grants/{grant['grant_id']}/runs",
+        headers={"Authorization": "Bearer " + grant["grant_token"]},
+        json={
+            "source_sha256": "b" * 64,
+            "exit_status": "PASS",
+            "output_refs": ["stdout:1"],
+            "evidence_refs": ["evidence:1"],
+            "handoff_ids": ["handoff:1"],
+        },
+    )
+    assert recorded.status_code == 200
+    assert recorded.json()["source_sha256"] == "b" * 64
+
+    revoked = client.post(
+        f"/works/W28/execution-grants/{grant['grant_id']}/revoke",
+        headers={"Authorization": "Bearer " + grant["grant_token"]},
+    )
+    assert revoked.status_code == 200
+    assert revoked.json()["status"] == "revoked"
+
+    after_revoke = client.get(
+        f"/works/W28/execution-grants/{grant['grant_id']}",
+        headers={"Authorization": "Bearer " + grant["grant_token"]},
+    )
+    assert after_revoke.status_code == 403
+
+
+def test_unconfigured_authority_returns_503():
+    from fastapi import FastAPI
+    from fastapi.testclient import TestClient
+    from room_hop_mcp.adapter.execution_authority_http import mount_execution_authority_routes
+
+    app = FastAPI()
+    mount_execution_authority_routes(app, None)
+    response = TestClient(app).post(
+        "/works/W28/execution-grants",
+        json={"purpose": "pytest_run"},
+    )
+    assert response.status_code == 503
+    assert response.json()["detail"] == "execution_authority_not_configured"
