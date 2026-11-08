@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from core.agent_registry import AgentRegistry
-from core.context_loader import package_context
+from core.context_loader import package_context, validate_context_files
 from core.meeting_log import MeetingLog
 from core.governance import GOV, MissionContext
 from core.identity_resolution import resolve_identity
@@ -610,6 +610,19 @@ class MeetingManager:
             self.meetings_dir / ".room_hop_paste_rate_limits.sqlite3"
         )
 
+    def _meeting_dir_for_id(self, meeting_id: str) -> Path:
+        if (
+            not isinstance(meeting_id, str)
+            or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}", meeting_id)
+            or meeting_id in {".", ".."}
+        ):
+            raise MeetingError("meeting_id không hợp lệ.")
+        root = self.meetings_dir.resolve()
+        candidate = (root / meeting_id).resolve()
+        if candidate.parent != root:
+            raise MeetingError("meeting_id escapes the configured meetings directory.")
+        return candidate
+
     def _allocate_meeting_id(self) -> str:
         """
         Sinh meeting_id dạng MEETING-{YYYY}-{seq:03d} cho năm UTC hiện tại.
@@ -648,6 +661,8 @@ class MeetingManager:
         # meeting_id tường minh -> giữ nguyên behavior cũ (backward compat).
         if meeting_id is None:
             meeting_id = self._allocate_meeting_id()
+        meeting_dir = self._meeting_dir_for_id(meeting_id)
+        validate_context_files(context_files)
 
         # participants are INVITATIONS, not automatically accepted.
         for identity_id in [created_by, *participants]:
@@ -661,8 +676,6 @@ class MeetingManager:
                 raise MeetingError(
                     f"Identity không tồn tại: {identity_id}"
                 )
-
-        meeting_dir = self.meetings_dir / meeting_id
 
         if meeting_dir.exists():
             raise MeetingError(
@@ -726,7 +739,7 @@ class MeetingManager:
         return meeting
 
     def get_meeting(self, meeting_id: str) -> Meeting:
-        meeting_dir = self.meetings_dir / meeting_id
+        meeting_dir = self._meeting_dir_for_id(meeting_id)
 
         if not meeting_dir.exists():
             raise MeetingError(
