@@ -78,3 +78,25 @@ def test_runner_rejects_port_environment_mismatch(tmp_path):
     store = _store(tmp_path)
     with pytest.raises(ValueError, match="does not match ROOMHOP_BROWSER_ADAPTER_PORT"):
         validate_runtime_config(SHA, store, 49152, _fixture_env(store, 49153))
+
+
+def test_runner_rejects_store_outside_runner_temp(tmp_path):
+    store = _store(tmp_path)
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / ".roomhop-disposable-test-store").write_text(
+        "ROOM-HOP-WORK32-DISPOSABLE-TEST-STORE",
+        encoding="utf-8",
+    )
+    env = _fixture_env(store)
+    env["ROOMHOP_TEST_MEETINGS_DIR"] = str(outside)
+    with pytest.raises(ValueError, match="inside RUNNER_TEMP"):
+        validate_runtime_config(SHA, outside, 49152, env)
+
+
+def test_runner_rejects_unapproved_identity(tmp_path):
+    store = _store(tmp_path)
+    env = _fixture_env(store)
+    env["ROOMHOP_TEST_IDENTITY_ID"] = "identity-w32-e2e"
+    with pytest.raises(ValueError, match="approved test identity"):
+        validate_runtime_config(SHA, store, 49152, env)
