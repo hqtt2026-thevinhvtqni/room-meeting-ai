@@ -106,3 +106,17 @@ The Core product E2E is PASS for the exact scope in W32-EVIDENCE-005. The separa
 - Retention: 14 days.
 
 - Product artifact ID `13271449355`; archive SHA-256 `76d77939c43b33727a534cbccd06e4240eb106458659b9186f9fb125ca59f0ae`; upload bundle digest `9a688cc80b97e428a2d1b9c39a3c4bc97aa854e7b0715b64e8a7d39aa98c6062`.
+
+
+## Current exact-SHA checkpoint — 2026-11-08 / Run #229
+
+- Current implementation branch: `work/32-ci-runner-owned-fixture-v2`.
+- Exact validated source SHA: `4177721a1e557f20127ff124b6c8d64ab63321e7`.
+- GitHub Actions run #229 / `42456186691`: SUCCESS, 6/6 jobs.
+- Unit: 189 passed; Product Auto E2E: 68 passed; Windows Browser Adapter E2E: 10 passed; immutable artifact-level E2E: 1 passed.
+- Windows Browser Adapter test proves runner-owned disposable Core fixture, process identity/health/listener preflight, Browser workflow, MCP Public V1 stdio handoff and transcript readback, plus exact-process cleanup.
+- Product source archive SHA-256: `e16cbff567681555b9c70b86ac3c8a5a5f4c582e0b83b5db7d9f12aa4749b1c2`; independently recomputed digest matched the checksum file in the downloaded artifact.
+- Main integration is NOT ACCEPTED: compare against main HEAD `024e2c9797da091b83c2e0ea5e3ac7f3b593eafb` is diverged (246 ahead / 273 behind; merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`; 80 changed files). No merge/rebase/cherry-pick; independent review and clean integration strategy required.
+- Dashboard browser→Core remains BLOCKED / NOT RUN.
+- Phase D (staging/VPS, protected approval environment, credentials, health checks, rollback, independent Vibe review, main integration) remains BLOCKED / NOT RUN. CI artifact is a release candidate, not a deployed release.
+- G7 RELEASE: NOT READY / NOT AUTHORIZED under DOC-050. Work32 remains ACTIVE — NOT RELEASED.
