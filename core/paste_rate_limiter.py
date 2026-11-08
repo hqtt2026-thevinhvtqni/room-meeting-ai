@@ -5,6 +5,7 @@ import hashlib
 import math
 import sqlite3
 import time
+import uuid
 from pathlib import Path
 from typing import Callable
 
@@ -22,26 +23,33 @@ class PasteRateLimitExceeded(Exception):
         )
 
 
-class PasteRateAdmission:
-    """Owns a write transaction until append success is committed or rolled back."""
+class PasteRateStoreUnavailable(Exception):
+    """The local quota store could not complete an atomic reservation."""
 
-    def __init__(self, connection: sqlite3.Connection):
-        self._connection = connection
+    def __init__(self, retry_after_seconds: int = 1):
+        self.retry_after_seconds = max(1, int(retry_after_seconds))
+        super().__init__("PASTE_RATE_STORE_UNAVAILABLE")
+
+
+class PasteRateAdmission:
+    """A committed short-lived reservation, compensated unless append succeeds."""
+
+    def __init__(self, limiter: "SQLitePasteRateLimiter", event_id: str):
+        self._limiter = limiter
+        self._event_id = event_id
         self._committed = False
 
     def __enter__(self) -> "PasteRateAdmission":
         return self
 
     def commit(self) -> None:
-        self._connection.commit()
+        # The reservation transaction is already committed before this context
+        # is returned. This only confirms that the transcript append succeeded.
         self._committed = True
 
     def __exit__(self, exc_type, exc, traceback) -> None:
-        try:
-            if not self._committed:
-                self._connection.rollback()
-        finally:
-            self._connection.close()
+        if not self._committed:
+            self._limiter._compensate(self._event_id)
 
 
 class SQLitePasteRateLimiter:
@@ -79,16 +87,34 @@ class SQLitePasteRateLimiter:
                 CREATE TABLE IF NOT EXISTS paste_rate_events (
                     meeting_id TEXT NOT NULL,
                     principal_key_hash TEXT NOT NULL,
-                    accepted_at REAL NOT NULL
+                    accepted_at REAL NOT NULL,
+                    event_id TEXT
                 )
                 """
             )
+            columns = {
+                row[1]
+                for row in connection.execute(
+                    "PRAGMA table_info(paste_rate_events)"
+                ).fetchall()
+            }
+            if "event_id" not in columns:
+                connection.execute(
+                    "ALTER TABLE paste_rate_events ADD COLUMN event_id TEXT"
+                )
             connection.execute(
                 """
                 CREATE INDEX IF NOT EXISTS idx_paste_rate_scope_time
                 ON paste_rate_events (
                     meeting_id, principal_key_hash, accepted_at
                 )
+                """
+            )
+            connection.execute(
+                """
+                CREATE UNIQUE INDEX IF NOT EXISTS idx_paste_rate_event_id
+                ON paste_rate_events (event_id)
+                WHERE event_id IS NOT NULL
                 """
             )
         finally:
@@ -98,13 +124,37 @@ class SQLitePasteRateLimiter:
     def _principal_key_hash(principal_key: str) -> str:
         return hashlib.sha256(principal_key.encode("utf-8")).hexdigest()
 
+    def _compensate(self, event_id: str) -> None:
+        """Delete only the reservation created by the failed append."""
+        connection = self._connect()
+        try:
+            connection.execute("BEGIN IMMEDIATE")
+            connection.execute(
+                "DELETE FROM paste_rate_events WHERE event_id = ?",
+                (event_id,),
+            )
+            connection.commit()
+        except sqlite3.OperationalError:
+            try:
+                if connection.in_transaction:
+                    connection.rollback()
+            finally:
+                connection.close()
+            raise PasteRateStoreUnavailable() from None
+        finally:
+            try:
+                connection.close()
+            except Exception:
+                pass
+
     def admission(
         self, meeting_id: str, principal_key: str
     ) -> PasteRateAdmission:
-        """Atomically reserve a slot; caller commits after raw append succeeds."""
+        """Commit a quota reservation, then let caller append outside the DB lock."""
         connection = self._connect()
+        event_id = uuid.uuid4().hex
         try:
-            # BEGIN IMMEDIATE serializes check-and-insert across local processes.
+            # Only the check + reservation are inside BEGIN IMMEDIATE.
             connection.execute("BEGIN IMMEDIATE")
             now = float(self._clock())
             cutoff = now - self.window_seconds
@@ -129,19 +179,22 @@ class SQLitePasteRateLimiter:
             connection.execute(
                 """
                 INSERT INTO paste_rate_events
-                    (meeting_id, principal_key_hash, accepted_at)
-                VALUES (?, ?, ?)
+                    (meeting_id, principal_key_hash, accepted_at, event_id)
+                VALUES (?, ?, ?, ?)
                 """,
-                (meeting_id, principal_hash, now),
+                (meeting_id, principal_hash, now, event_id),
             )
-            return PasteRateAdmission(connection)
-        except Exception:
-            try:
-                if connection.in_transaction:
-                    connection.rollback()
-            finally:
-                try:
-                    connection.close()
-                except Exception:
-                    pass
+            connection.commit()
+            return PasteRateAdmission(self, event_id)
+        except PasteRateLimitExceeded:
             raise
+        except sqlite3.OperationalError:
+            if connection.in_transaction:
+                connection.rollback()
+            raise PasteRateStoreUnavailable() from None
+        except Exception:
+            if connection.in_transaction:
+                connection.rollback()
+            raise
+        finally:
+            connection.close()
