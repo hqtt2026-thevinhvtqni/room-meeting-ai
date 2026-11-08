@@ -402,3 +402,9 @@ def test_browser_adapter_dispatch_uses_one_playwright_owner_thread():
         )
 
     assert len(set(thread_ids)) == 1
+
+
+def test_browser_evidence_redacts_url_query_and_fragment():
+    assert browser_adapter._redact_url(
+        "https://example.test/path?access_token=secret&x=1#private"
+    ) == "https://example.test/path"
