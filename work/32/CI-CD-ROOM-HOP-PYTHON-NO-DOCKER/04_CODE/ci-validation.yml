@@ -422,10 +422,27 @@ jobs:
                 } catch {
                   Write-Warning "Browser close endpoint unavailable; terminating only the verified job-owned adapter process."
                 }
-                Stop-Process -Id $adapterPid -Force
-                Wait-Process -Id $adapterPid -Timeout 10 -ErrorAction SilentlyContinue
-                if (Get-CimInstance Win32_Process -Filter "ProcessId = $adapterPid") {
-                  throw "BLOCKED: job-owned Browser Adapter did not terminate"
+                # Terminate the verified job-owned process tree, including browser children.
+                & taskkill.exe /PID $adapterPid /T /F | Out-Null
+                $killExit = $LASTEXITCODE
+                $remaining = $null
+                for ($attempt = 0; $attempt -lt 20; $attempt++) {
+                  $remaining = Get-CimInstance Win32_Process -Filter "ProcessId = $adapterPid"
+                  if (-not $remaining) { break }
+                  Start-Sleep -Milliseconds 500
+                }
+                if ($remaining) {
+                  $remainingCreated = $remaining.CreationDate.ToUniversalTime().Ticks
+                  $expectedCreated = ([datetime]::Parse($processCreatedUtc)).ToUniversalTime().Ticks
+                  $remainingExe = [string]::Equals([IO.Path]::GetFullPath($remaining.ExecutablePath), [IO.Path]::GetFullPath($adapterExe), [StringComparison]::OrdinalIgnoreCase)
+                  $remainingOwnerResult = Invoke-CimMethod -InputObject $remaining -MethodName GetOwner
+                  $remainingOwner = $remainingOwnerResult.ReturnValue -eq 0 -and "$($remainingOwnerResult.Domain)\\$($remainingOwnerResult.User)" -eq $adapterOwner
+                  if ($remainingCreated -eq $expectedCreated -and $remainingExe -and $remainingOwner) {
+                    Write-Host "adapter_cleanup_taskkill_exit=$killExit"
+                    Write-Host "adapter_remaining_command=$($remaining.CommandLine)"
+                    throw "BLOCKED: verified job-owned Browser Adapter process tree did not terminate"
+                  }
+                  Write-Host "adapter_pid_reused_by_other_process=$adapterPid"
                 }
                 Write-Host "adapter_cleanup=PASS pid=$adapterPid"
               } else {
