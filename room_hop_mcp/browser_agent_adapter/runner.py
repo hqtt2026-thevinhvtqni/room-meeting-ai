@@ -59,8 +59,23 @@ def validate_runtime_config(
 
     if not env.get("ROOMHOP_TEST_MEETING_ID"):
         raise ValueError("ROOMHOP_TEST_MEETING_ID is required")
-    if not env.get("ROOMHOP_TEST_IDENTITY_ID"):
-        raise ValueError("ROOMHOP_TEST_IDENTITY_ID is required")
+    if env.get("ROOMHOP_TEST_IDENTITY_ID") != "xu":
+        raise ValueError("ROOMHOP_TEST_IDENTITY_ID must be the approved test identity 'xu'")
+
+    runner_temp_raw = env.get("RUNNER_TEMP")
+    workspace_raw = env.get("GITHUB_WORKSPACE")
+    if not runner_temp_raw or not workspace_raw:
+        raise ValueError("RUNNER_TEMP and GITHUB_WORKSPACE are required")
+    try:
+        runner_temp = Path(runner_temp_raw).resolve(strict=True)
+        workspace = Path(workspace_raw).resolve(strict=True)
+    except OSError as exc:
+        raise ValueError("runner temp or workspace path is unavailable") from exc
+    if not store.is_relative_to(runner_temp):
+        raise ValueError("disposable store must be inside RUNNER_TEMP")
+    if store.is_relative_to(workspace):
+        raise ValueError("disposable store must be outside GITHUB_WORKSPACE")
+
     configured_port = env.get("ROOMHOP_BROWSER_ADAPTER_PORT")
     if configured_port is not None and configured_port != str(port):
         raise ValueError("launcher port does not match ROOMHOP_BROWSER_ADAPTER_PORT")
