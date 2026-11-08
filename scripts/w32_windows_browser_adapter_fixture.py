@@ -8,7 +8,15 @@ from __future__ import annotations
 import json
 import os
 import socket
+import sys
 from pathlib import Path
+
+# When Python executes a file by path, sys.path[0] is its scripts/ directory.
+# Add this exact checkout root explicitly so the fixture imports the Core
+# package from the revision under test, independent of runner cwd/PYTHONPATH.
+REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
+if str(REPOSITORY_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPOSITORY_ROOT))
 
 from core.meeting_manager import MeetingManager
 from core.meeting_service import MeetingService
@@ -43,7 +51,7 @@ def provision() -> dict:
     meeting_id = f"MEETING-W32-{run_id}-{attempt}"
     manager = MeetingManager(meetings_dir=store)
     service = MeetingService(manager)
-    created = service.create_meeting(
+    service.create_meeting(
         meeting_id=meeting_id,
         topic=f"Disposable Work32 Browser E2E run {run_id}/{attempt}",
         participants=["xu"],
