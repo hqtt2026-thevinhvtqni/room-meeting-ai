@@ -307,6 +307,13 @@ def test_submission_uses_exact_target_stdio_and_verifies_readback(monkeypatch, t
     assert instances[0].session_opened is True
     assert instances[0].session_closed is True
     assert instances[0].config.cwd == str(Path(browser_adapter.__file__).resolve().parents[2])
+    repo_root = str(Path(browser_adapter.__file__).resolve().parents[2])
+    assert instances[0].config.python_args == [
+        "-c",
+        "import sys, runpy; "
+        f"sys.path.insert(0, {repo_root!r}); "
+        "runpy.run_module('room_hop_mcp', run_name='__main__')",
+    ]
     assert instances[0].config.env["ROOM_HOP_MEETINGS_DIR"] == str(meetings_dir.resolve())
     assert instances[0].config.env == {
         "ROOM_HOP_MEETINGS_DIR": str(meetings_dir.resolve()),
