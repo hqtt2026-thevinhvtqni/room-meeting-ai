@@ -132,9 +132,9 @@ def create_server(service: MeetingService) -> Server:
                     identity_id=arguments["identity_id"],
                 )
             except MeetingRateLimitError as exc:
-                return types.CallToolResult(
+                return CallToolResult(
                     content=[
-                        types.TextContent(
+                        TextContent(
                             type="text",
                             text="RATE_LIMIT_EXCEEDED",
                         )
