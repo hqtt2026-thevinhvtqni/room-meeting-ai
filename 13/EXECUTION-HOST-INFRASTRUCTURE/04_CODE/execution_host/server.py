@@ -95,7 +95,7 @@ def _mark_evidence_blocked(result: dict, reason: str) -> None:
         payload["status"] = "BLOCKED"
         payload["blocker"] = reason
         payload["core_run_recorded"] = False
-        path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\\n", encoding="utf-8")
+        path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     except (OSError, ValueError, TypeError):
         pass
 
