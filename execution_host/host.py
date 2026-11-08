@@ -377,15 +377,16 @@ class ExecutionHost:
                     "reason": "test_entrypoint_not_bound",
                 }
             else:
-                result["test"] = (
-                    self.execute_command(
-                        execution_ctx,
-                        list(
-                            execution_ctx.test_entrypoint
-                        ),
-                        request.timeout_seconds,
-                    )
+                result["test"] = self.execute_command(
+                    execution_ctx,
+                    list(execution_ctx.test_entrypoint),
+                    request.timeout_seconds,
                 )
+            # A successful build/command cannot mask a failed or blocked test.
+            if result["status"] == "PASS" and result["test"].get("status") != "PASS":
+                nested_status = result["test"].get("status")
+                result["status"] = nested_status if nested_status in {"FAILED", "BLOCKED", "TIMEOUT"} else "BLOCKED"
+                result["blocker"] = result["test"].get("blocker") or result["test"].get("reason") or "nested_test_not_pass"
 
         _, workspace, evidence = validate_context(
             execution_ctx
@@ -442,6 +443,8 @@ class ExecutionHost:
             runtime_bind_address=(
                 self.runtime_identity.bind_address
             ),
+            stdout_ref=result.get("stdout_ref"),
+            stderr_ref=result.get("stderr_ref"),
         )
 
     def start_service(
