@@ -1448,3 +1448,21 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **NEXT:** Mở draft PR vào `work/32-ci-cd-python-ci-v2` để GitHub Actions xác minh hosted lanes, tooling/workflow mirror và release gate. Sau đó đọc jobs/artifacts; sửa lỗi source phát hiện được. Chỉ khi runner readiness được chứng minh mới cho phép Windows job chạy.
 - **STATUS:** Static source readback PASS; automated test execution PENDING; Windows E2E NOT RUN; Release Acceptance NOT PASSED; Work32 ACTIVE — NOT RELEASED.
 
+
+
+## 2026-11-08 — W32-LOG-20261108-90 — Phân tích Windows CI #166: runner thiếu pwsh, chưa chạy fixture
+
+- **Người ghi:** Ka
+- **Chức danh:** CSA / Delegated Execution Owner
+- **Date-Time:** 2026-11-08 12:35 (Asia/Ho_Chi_Minh)
+- **Run:** #166 / ID `42449008894`, SHA `cfb6fc9c48fb89cd5068c3cc4cef62fcad8affe1`, PR #46.
+- **Runner evidence:** Log xác nhận runner version `2.338.2`, name `ROOM-HOP-W32-PC`, group `Default`, machine `ADMIN-PC`; job đã được dispatch tới self-hosted runner.
+- **ROOT CAUSE:** Step checkout và các PowerShell steps báo chính xác `pwsh: command not found`. Runner PC có Windows PowerShell nhưng không có PowerShell 7 executable trên PATH. Đây là shell selection incompatibility, không phải lỗi adapter/meeting/Core.
+- **EXECUTION:** Checkout failed trước khi fetch source. Các bước setup Python, install, fixture provision, adapter launch và E2E đều SKIPPED. Verify/cleanup steps cũng không thể chạy vì cùng gọi pwsh. Không có disposable store/meeting/adapter process nào được tạo bởi run #166; artifact upload không có file.
+- **OTHER LANES:** Unit SUCCESS; Tooling + mirror SUCCESS; Product Auto E2E SUCCESS; Product Artifact SUCCESS; Release Gate FAILURE do Windows lane FAILURE.
+- **FIX APPLIED:** Trên feature branch, thay `shell: pwsh` bằng `shell: powershell` cho Windows job; thay ghi `GITHUB_ENV` qua `Out-File -Encoding utf8` bằng `System.IO.File.AppendAllText` + `UTF8Encoding(false)` để tránh BOM trên Windows PowerShell 5.1. Đồng bộ workflow mirror; không đổi sản phẩm hoặc Core.
+- **STATIC READBACK:** PASS — không còn `shell: pwsh` và không còn `Out-File` ghi GITHUB_ENV trong workflow. Chưa có runtime evidence cho PowerShell 5.1 script mới.
+- **SAFETY:** WORK09 untouched; không dừng PID 12300; không có test meeting/transcript nào được tạo trong run #166; không thay đổi repository variables.
+- **NEXT:** Kích hoạt một PR synchronization/reopen run mới trên exact SHA đã sửa; xác minh checkout và PowerShell steps. Nếu fixture/launcher chạy, kiểm tra process ownership, health, E2E, browser close và cleanup. Không coi shell fix là Windows PASS.
+- **STATUS:** CI #166 Unit/Tooling/Product lanes PASS; Windows BLOCKED by missing pwsh; Release Gate FAIL. PowerShell compatibility fix COMMITTED; next exact-SHA Windows run PENDING; Work32 ACTIVE — NOT RELEASED.
+
