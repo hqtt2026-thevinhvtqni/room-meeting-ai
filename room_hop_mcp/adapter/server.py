@@ -77,6 +77,12 @@ def create_server(service: MeetingService) -> Server:
                         },
                         "text": {
                             "type": "string",
+                            "maxLength": 1048576,
+                            "description": (
+                                "Maximum 1 MiB UTF-8 at Core runtime. "
+                                "JSON Schema maxLength counts characters; "
+                                "Core enforces the authoritative byte limit."
+                            ),
                         },
                         # MESSAGE v1.0 — OPTIONAL. Không có trong
                         # "required" -> mọi caller cũ (Gate 2, test F1-F3)
@@ -120,7 +126,17 @@ def create_server(service: MeetingService) -> Server:
             meeting_id = arguments["meeting_id"]
             text = arguments["text"]
 
-            result = service.add_paste(meeting_id, text)
+            identity_id = arguments.get("identity_id")
+            if identity_id is None:
+                # Preserve the legacy service-call contract for callers that
+                # do not provide identity metadata.
+                result = service.add_paste(meeting_id, text)
+            else:
+                result = service.add_paste(
+                    meeting_id,
+                    text,
+                    identity_id=identity_id,
+                )
 
             return {
                 "paste": result,

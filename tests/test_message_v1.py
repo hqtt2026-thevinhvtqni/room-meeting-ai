@@ -323,15 +323,13 @@ def test_t8_existing_mcp_tools_no_regression(tmp_path):
         request = types.ListToolsRequest(method="tools/list")
         return asyncio.run(handler(request))
 
-    # 6 tools KHÔNG đổi, KHÔNG thêm add_message.
+    # Contract #1: Public V1 exposes exactly these 4 tools; lifecycle join/start stays on Core HTTP boundary.
     names = sorted(t.name for t in _list_tools().root.tools)
     assert names == sorted(
         [
             "add_paste_to_meeting",
             "get_meeting",
             "get_transcript",
-            "join_meeting",
-            "start_meeting",
             "list_meetings",
         ]
     )
@@ -361,6 +359,25 @@ def test_t8_existing_mcp_tools_no_regression(tmp_path):
         },
     )
     assert v1_result.root.isError is False
+
+    transcript = service.get_transcript("MSG-T8")
+    paste_entries = [
+        message for message in transcript
+        if message["source"] == {"type": "ai_chat_paste"}
+    ]
+    legacy_entry = next(
+        message for message in paste_entries
+        if message["content"] == "legacy paste qua MCP"
+    )
+    v1_entry = next(
+        message for message in paste_entries
+        if message["content"] == "paste có identity qua MCP"
+    )
+    assert legacy_entry["speaker"] is None
+    assert legacy_entry["header"] is None
+    assert v1_entry["speaker"] == "xu"
+    assert v1_entry["header"]["name"] == AgentRegistry().get("xu").name
+    assert v1_entry["header"]["role"] == AgentRegistry().get("xu").role
 
     # F1.5 (unknown field) vẫn phải reject — identity_id là field ĐÃ KHAI
     # BÁO, không phải "unknown field" — test riêng cho field thật sự lạ.

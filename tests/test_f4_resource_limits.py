@@ -10,21 +10,30 @@ They do NOT modify production code.
 F4 policy under test:
     MAX_TEXT_BYTES = 1 MiB
 
-Expected at this stage:
-    Some tests SHOULD FAIL because the resource limits have not been
-    implemented yet.
-
-That FAIL is evidence for the F4 implementation round.
+F4 implementation contract:
+    - 1 MiB UTF-8 byte ceiling
+    - MCP schema maxLength declaration (character-based; runtime byte guard remains authoritative)
+    - 100 accepted paste requests per resolved identity per meeting per rolling 60 seconds
+    - atomic same-host persistence and retry metadata
 """
 
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import pytest
 
-from core.meeting_manager import MeetingError, MeetingManager
+from core.meeting_manager import (
+    MeetingError,
+    MeetingManager,
+    MeetingRateLimitError,
+)
 from core.meeting_service import MeetingService
+from core.paste_rate_limiter import (
+    PasteRateLimitExceeded,
+    SQLitePasteRateLimiter,
+)
 from core.secretary import Secretary
 
 
@@ -384,3 +393,133 @@ class TestF4PolicyDefinition:
 
         assert len(text) == 1
         assert len(text.encode("utf-8")) == 4
+
+
+# ---------------------------------------------------------------------------
+# F4.4 — actual rolling-window quota, persistence and concurrency
+# ---------------------------------------------------------------------------
+
+class TestF4RateLimiterEnforcement:
+    def test_limit_is_100_and_101st_is_rejected_with_retry(self, tmp_path):
+        now = [1000.0]
+        limiter = SQLitePasteRateLimiter(
+            tmp_path / "rate.sqlite3",
+            clock=lambda: now[0],
+        )
+        for _ in range(100):
+            with limiter.admission("MEETING-A", "resolved:vinh") as slot:
+                slot.commit()
+        with pytest.raises(PasteRateLimitExceeded) as caught:
+            with limiter.admission("MEETING-A", "resolved:vinh"):
+                pytest.fail("the 101st request must be rejected")
+        assert caught.value.retry_after_seconds == 60
+
+    def test_quota_is_scoped_by_identity_and_meeting(self, tmp_path):
+        limiter = SQLitePasteRateLimiter(tmp_path / "rate.sqlite3")
+        for _ in range(100):
+            with limiter.admission("MEETING-A", "resolved:vinh") as slot:
+                slot.commit()
+        with limiter.admission("MEETING-A", "resolved:xu") as slot:
+            slot.commit()
+        with limiter.admission("MEETING-B", "resolved:vinh") as slot:
+            slot.commit()
+
+    def test_rolling_window_expires_old_events(self, tmp_path):
+        now = [1000.0]
+        limiter = SQLitePasteRateLimiter(
+            tmp_path / "rate.sqlite3",
+            clock=lambda: now[0],
+        )
+        for _ in range(100):
+            with limiter.admission("MEETING-A", "resolved:vinh") as slot:
+                slot.commit()
+        now[0] = 1060.001
+        with limiter.admission("MEETING-A", "resolved:vinh") as slot:
+            slot.commit()
+
+    def test_uncommitted_reservation_rolls_back(self, tmp_path):
+        limiter = SQLitePasteRateLimiter(tmp_path / "rate.sqlite3")
+        with limiter.admission("MEETING-A", "resolved:vinh"):
+            pass
+        for _ in range(100):
+            with limiter.admission("MEETING-A", "resolved:vinh") as slot:
+                slot.commit()
+
+    def test_state_persists_across_limiter_instances(self, tmp_path):
+        db = tmp_path / "rate.sqlite3"
+        first = SQLitePasteRateLimiter(db)
+        for _ in range(100):
+            with first.admission("MEETING-A", "resolved:vinh") as slot:
+                slot.commit()
+        second = SQLitePasteRateLimiter(db)
+        with pytest.raises(PasteRateLimitExceeded):
+            with second.admission("MEETING-A", "resolved:vinh"):
+                pytest.fail("persisted quota must still be enforced")
+
+    def test_concurrent_admission_never_exceeds_100(self, tmp_path):
+        db = tmp_path / "rate.sqlite3"
+        limiters = [SQLitePasteRateLimiter(db), SQLitePasteRateLimiter(db)]
+
+        def attempt(index):
+            limiter = limiters[index % len(limiters)]
+            try:
+                with limiter.admission("MEETING-CONCURRENT", "resolved:vinh") as slot:
+                    slot.commit()
+                return True
+            except PasteRateLimitExceeded:
+                return False
+
+        with ThreadPoolExecutor(max_workers=16) as pool:
+            accepted = list(pool.map(attempt, range(150)))
+        assert sum(accepted) == 100
+
+    def test_service_enforces_quota_and_oversized_input_does_not_count(self, tmp_path):
+        service, meeting_id = make_service(tmp_path)
+        oversized = "X" * (MAX_TEXT_BYTES + 1)
+        with pytest.raises(ValueError):
+            service.add_paste(meeting_id, oversized, identity_id="vinh")
+
+        for index in range(100):
+            result = service.add_paste(
+                meeting_id, f"accepted-{index}\n", identity_id="vinh"
+            )
+            assert result["status"] == "READY"
+
+        with pytest.raises(MeetingRateLimitError) as caught:
+            service.add_paste(
+                meeting_id, "must-be-rejected\n", identity_id="vinh"
+            )
+        assert caught.value.retry_after_seconds >= 1
+
+    def test_http_boundary_returns_429_and_retry_after(self, tmp_path):
+        from fastapi.testclient import TestClient
+        from room_hop_mcp.adapter.http_server import create_http_app
+
+        manager = MeetingManager(meetings_dir=tmp_path / "meetings")
+        service = MeetingService(manager)
+        meeting_id = "F4-HTTP-RATE-001"
+        service.create_meeting(
+            meeting_id=meeting_id,
+            topic="F4 HTTP rate limit",
+            participants=["xu", "claude"],
+            context_files=[],
+            created_by="vinh",
+        )
+        service.open_meeting(meeting_id)
+        service.join_meeting(meeting_id, "vinh")
+        service.join_meeting(meeting_id, "xu")
+        service.join_meeting(meeting_id, "claude")
+        service.start_meeting(meeting_id, "vinh")
+        for index in range(100):
+            service.add_paste(
+                meeting_id, f"accepted-{index}\n", identity_id="vinh"
+            )
+
+        client = TestClient(create_http_app(service))
+        response = client.post(
+            f"/meetings/{meeting_id}/paste",
+            json={"text": "blocked", "identity_id": "vinh"},
+        )
+        assert response.status_code == 429
+        assert int(response.headers["Retry-After"]) >= 1
+        assert response.json()["detail"]["code"] == "RATE_LIMIT_EXCEEDED"
