@@ -4,7 +4,7 @@ This board is the shared intake point for technical agents. A task is not assign
 
 | Task ID | Workstream | Initial scope | Suggested role | Status |
 |---|---|---|---|---|
-| W1111-T01 | GitHub–Sandbox–PC source-of-truth map | Exact path/SHA/hash mapping, drift handling, readback protocol | Xu / Architect | READY |
+| W1111-T01 | GitHub–Sandbox–PC source-of-truth map | Exact path/SHA/hash mapping, drift handling, readback protocol | Xu / Architect | IN_PROGRESS (claimed in DOC-003) |
 | W1111-T02 | Execution Host :8031 runtime attestation | Identify deployed source/build, startup, auth, Work authorization and safe execution contract | Claude / Runtime reviewer | READY |
 | W1111-T03 | Execution result correctness | Reproduce and regression-test nested test failure propagation / false aggregate PASS | Vi / Coder + Qw / QE | READY |
 | W1111-T04 | ROOM-HOP component architecture | Core, Workspace, Gateway, Event Listener, Agent Runtime, MCP and adapters dependency map | Ka / CSA | READY |
@@ -21,4 +21,4 @@ This board is the shared intake point for technical agents. A task is not assign
 7. If blocked, state problem / attempts and evidence / bottleneck / options / exact missing condition.
 
 ## Initial state
-All six tasks are READY. No agent ACK or implementation start is asserted by this board.
+W1111-T01 is IN_PROGRESS with Xu's claim recorded in DOC-003. T02–T06 remain READY; no ACK or implementation start is asserted for those agents.
