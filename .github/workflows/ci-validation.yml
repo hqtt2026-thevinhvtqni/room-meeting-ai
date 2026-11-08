@@ -207,12 +207,13 @@ jobs:
           retention-days: 14
 
   windows_browser_adapter:
-    name: Windows Browser Adapter E2E (runner-owned disposable fixture)
-    if: ${{ vars.W32_WINDOWS_RUNNER_READY == 'true' }}
-    runs-on: [self-hosted, Windows, X64]
+    name: Windows Browser Adapter E2E (hosted PR / self-hosted push)
+    if: ${{ github.event_name == 'pull_request' || vars.W32_WINDOWS_RUNNER_READY == 'true' }}
+    runs-on: ${{ github.event_name == 'pull_request' && 'windows-latest' || fromJSON('["self-hosted","Windows","X64"]') }}
     timeout-minutes: 20
     steps:
       - name: Verify dedicated Work32 runner identity
+        if: ${{ github.event_name != 'pull_request' }}
         shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
         run: |
           if ("${{ runner.name }}" -ne "ROOM-HOP-W32-PC") {
