@@ -178,6 +178,10 @@ class Handler(BaseHTTPRequestHandler):
             request_data = dict(request_data)
             request_data["run_test"] = False
             execution_request = ExecutionRequest(**request_data)
+            max_timeout = grant.get("max_timeout_seconds")
+            if not isinstance(max_timeout, int) or execution_request.timeout_seconds > max_timeout:
+                self._send(403, {"status": "BLOCKED", "reason": "execution_timeout_exceeds_grant"})
+                return
             if not _is_pytest_command(list(execution_request.command or ())):
                 self._send(403, {"status": "BLOCKED", "reason": "pytest_grant_requires_pytest_command"})
                 return
