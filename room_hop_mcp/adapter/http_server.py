@@ -25,7 +25,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from core.agent_registry import AgentRegistry
-from core.meeting_manager import MeetingError, MeetingRateLimitError
+from core.meeting_manager import (
+    MeetingError,
+    MeetingRateLimitError,
+    MeetingRateStoreUnavailable,
+)
 from core.meeting_service import MeetingService
 from core.principal_registry import PrincipalRegistry
 
@@ -154,6 +158,15 @@ def create_http_app(
                 status_code=429,
                 detail={
                     "code": "RATE_LIMIT_EXCEEDED",
+                    "retry_after_seconds": exc.retry_after_seconds,
+                },
+                headers={"Retry-After": str(exc.retry_after_seconds)},
+            ) from exc
+        except MeetingRateStoreUnavailable as exc:
+            raise HTTPException(
+                status_code=503,
+                detail={
+                    "code": "PASTE_RATE_STORE_UNAVAILABLE",
                     "retry_after_seconds": exc.retry_after_seconds,
                 },
                 headers={"Retry-After": str(exc.retry_after_seconds)},
