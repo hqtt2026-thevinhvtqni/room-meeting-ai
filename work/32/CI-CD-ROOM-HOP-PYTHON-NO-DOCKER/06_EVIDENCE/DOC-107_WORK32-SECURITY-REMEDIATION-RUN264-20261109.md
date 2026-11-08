@@ -140,3 +140,14 @@ Run #254 (42520909842) was the first remediation validation and failed on compat
 - Added tests for concurrent ID allocation, concurrent JOIN_ACCEPTED updates through separate Meeting objects, and atomic YAML replacement.
 - Cross-process meeting.yaml read-modify-write remains unproven; keep one Core process per local store. Multi-process/multi-host remains BLOCKED.
 - Run #274 / `42522244216` is pending on exact PR head `fb7eadcc59bf22d4a91060e738760b4d5380c2fd`; S10 cannot be declared PASS until this run completes.
+
+
+## Addendum — Run #277 exact-head S10 validation PASS
+- **Name:** Ka
+- **Title:** CSA / Work32 Execution Owner
+- **Date-Time:** 2026-11-09 (Asia/Ho_Chi_Minh)
+- Exact PR head: `d72b68659e9717d8ea33a5c41b2d379fc15064e2`.
+- Run #277 / `42522681112` completed SUCCESS across all six jobs: Python compile/unit, Product Auto E2E, Windows Browser Adapter E2E, Work32 tooling/workflow mirror, immutable product artifact, and release acceptance gate.
+- Unit lane PASS includes the new S10 tests for concurrent generated-ID allocation, concurrent JOIN updates through separate Meeting objects, and atomic meeting.yaml replacement.
+- S10 disposition: PASS within the one-Core-process local deployment contract. Cross-process meeting.yaml read-modify-write remains unproven and multi-process/multi-host stays BLOCKED.
+- PR #49 remains DRAFT; main unchanged; no merge, deployment or release.
