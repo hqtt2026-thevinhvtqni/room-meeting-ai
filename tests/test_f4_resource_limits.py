@@ -20,6 +20,7 @@ F4 implementation contract:
 from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor
+import sqlite3
 from pathlib import Path
 
 import pytest
@@ -444,6 +445,23 @@ class TestF4RateLimiterEnforcement:
         for _ in range(100):
             with limiter.admission("MEETING-A", "resolved:vinh") as slot:
                 slot.commit()
+
+
+
+    def test_reservation_releases_sqlite_write_lock_before_transcript_append(self, tmp_path):
+        db = tmp_path / "rate.sqlite3"
+        limiter = SQLitePasteRateLimiter(db)
+
+        with limiter.admission("MEETING-A", "resolved:vinh") as slot:
+            # A second writer can acquire BEGIN IMMEDIATE while the caller
+            # performs transcript I/O: the reservation transaction is closed.
+            connection = sqlite3.connect(db, timeout=0.2, isolation_level=None)
+            try:
+                connection.execute("BEGIN IMMEDIATE")
+                connection.rollback()
+            finally:
+                connection.close()
+            slot.commit()
 
     def test_state_persists_across_limiter_instances(self, tmp_path):
         db = tmp_path / "rate.sqlite3"

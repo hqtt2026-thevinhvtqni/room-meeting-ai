@@ -19,7 +19,7 @@ import yaml
 from fastapi.testclient import TestClient
 
 from core.agent_registry import AgentRegistry
-from core.meeting_manager import MeetingError
+from core.meeting_manager import MeetingError, MeetingRateStoreUnavailable
 from core.principal_registry import PrincipalRegistry
 from room_hop_mcp.adapter.http_server import create_http_app
 
@@ -44,8 +44,8 @@ class FakeMeetingService:
         self.calls.append(("get_transcript", meeting_id))
         return []
 
-    def add_paste(self, meeting_id, text):
-        self.calls.append(("add_paste", meeting_id, text))
+    def add_paste(self, meeting_id, text, identity_id):
+        self.calls.append(("add_paste", meeting_id, text, identity_id))
         return {"status": "READY"}
 
     def create_meeting(self, topic, participants, context_files, created_by, meeting_id=None):
@@ -204,6 +204,23 @@ def test_open_join_start_close_happy_path(client):
     assert body["meeting"]["id"] == "M1"
 
 
+def test_paste_requires_and_forwards_identity(client):
+    response = client.post(
+        "/meetings/M1/paste",
+        json={"text": "hello", "identity_id": "vinh"},
+    )
+    assert response.status_code == 200
+    assert ("add_paste", "M1", "hello", "vinh") in client.fake_service.calls
+
+
+def test_paste_rejects_missing_identity(client):
+    response = client.post(
+        "/meetings/M1/paste",
+        json={"text": "hello"},
+    )
+    assert response.status_code == 422
+
+
 # ---------------------------------------------------------------------------
 # MeetingError -> HTTP 400 mapping
 # ---------------------------------------------------------------------------
@@ -212,3 +229,17 @@ def test_meeting_error_maps_to_http_400(client):
     response = client.post("/meetings/ALREADY-CLOSED/open")
     assert response.status_code == 400
     assert "closed" in response.json()["detail"]
+
+
+def test_paste_rate_store_unavailable_maps_to_http_503(client):
+    def unavailable(meeting_id, text, identity_id):
+        raise MeetingRateStoreUnavailable(3)
+
+    client.fake_service.add_paste = unavailable
+    response = client.post(
+        "/meetings/M1/paste",
+        json={"text": "hello", "identity_id": "vinh"},
+    )
+    assert response.status_code == 503
+    assert response.headers["Retry-After"] == "3"
+    assert response.json()["detail"]["code"] == "PASTE_RATE_STORE_UNAVAILABLE"

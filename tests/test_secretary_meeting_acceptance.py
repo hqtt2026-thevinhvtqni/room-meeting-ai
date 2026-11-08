@@ -57,14 +57,14 @@ class TestSecretaryReceiveViaMeetingIsByteIdentical:
             "AI: Gradient descent la mot thuat toan toi uu...\r\n"
             "    (indent giu nguyen)\r\n"
         )
-        meeting.add_paste(pasted)
+        meeting.add_paste(pasted, identity_id="vinh")
 
         assert meeting.secretary.read() == pasted
         assert meeting.secretary.export() == pasted
 
     def test_append_return_status_unchanged_via_add_paste(self, tmp_path):
         meeting = _make_meeting(tmp_path)
-        result = meeting.add_paste("noi dung bat ky")
+        result = meeting.add_paste("noi dung bat ky", identity_id="vinh")
         assert result == {"status": "READY"}
 
 
@@ -91,7 +91,7 @@ class TestSecretaryDoesNotControlLifecycle:
         import pytest
 
         meeting = _make_meeting(tmp_path)
-        meeting.add_paste("noi dung truoc khi dong")
+        meeting.add_paste("noi dung truoc khi dong", identity_id="vinh")
         meeting.close(decisions=[], action_items=[], summary="dong meeting")
 
         with pytest.raises(MeetingError):
@@ -117,8 +117,8 @@ class TestSecretaryFullLifecycleAcceptance:
             "AI: BTC dang giao dich quanh vung $95,000...\r\n"
         )
 
-        meeting.add_paste(conversation_1)
-        meeting.add_paste(conversation_2)
+        meeting.add_paste(conversation_1, identity_id="vinh")
+        meeting.add_paste(conversation_2, identity_id="vinh")
 
         final_path = meeting.close(
             decisions=["Ghi nhan 2 doan hoi thoai AI vao transcript."],

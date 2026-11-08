@@ -25,7 +25,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from core.agent_registry import AgentRegistry
-from core.meeting_manager import MeetingError, MeetingRateLimitError
+from core.meeting_manager import (
+    MeetingError,
+    MeetingRateLimitError,
+    MeetingRateStoreUnavailable,
+)
 from core.meeting_service import MeetingService
 from core.principal_registry import PrincipalRegistry
 
@@ -36,7 +40,7 @@ from core.principal_registry import PrincipalRegistry
 
 class AddPasteRequest(BaseModel):
     text: str
-    identity_id: Optional[str] = None
+    identity_id: str
 
 
 class CreateMeetingRequest(BaseModel):
@@ -144,9 +148,6 @@ def create_http_app(
     @app.post("/meetings/{meeting_id}/paste")
     def add_paste(meeting_id: str, body: AddPasteRequest) -> dict:
         try:
-            # Preserve the legacy service call when identity is omitted.
-            if body.identity_id is None:
-                return service.add_paste(meeting_id, body.text)
             return service.add_paste(
                 meeting_id,
                 body.text,
@@ -161,6 +162,17 @@ def create_http_app(
                 },
                 headers={"Retry-After": str(exc.retry_after_seconds)},
             ) from exc
+        except MeetingRateStoreUnavailable as exc:
+            raise HTTPException(
+                status_code=503,
+                detail={
+                    "code": "PASTE_RATE_STORE_UNAVAILABLE",
+                    "retry_after_seconds": exc.retry_after_seconds,
+                },
+                headers={"Retry-After": str(exc.retry_after_seconds)},
+            ) from exc
+        except MeetingError as exc:
+            _raise_as_bad_request(exc)
 
     # -----------------------------------------------------------------
     # Lifecycle routes — MỚI.

@@ -11,6 +11,7 @@ from mcp.types import (
     Tool,
 )
 
+from core.meeting_manager import MeetingRateLimitError, MeetingRateStoreUnavailable
 from core.meeting_service import MeetingService
 
 
@@ -84,10 +85,7 @@ def create_server(service: MeetingService) -> Server:
                                 "Core enforces the authoritative byte limit."
                             ),
                         },
-                        # MESSAGE v1.0 — OPTIONAL. Không có trong
-                        # "required" -> mọi caller cũ (Gate 2, test F1-F3)
-                        # không kèm identity_id vẫn tiếp tục hoạt động
-                        # nguyên trạng (legacy compatibility path).
+                        # Xu D-102-04: required participant identity.
                         "identity_id": {
                             "type": "string",
                             "minLength": 1,
@@ -96,6 +94,7 @@ def create_server(service: MeetingService) -> Server:
                     "required": [
                         "meeting_id",
                         "text",
+                        "identity_id",
                     ],
                     "additionalProperties": False,
                 },
@@ -126,16 +125,43 @@ def create_server(service: MeetingService) -> Server:
             meeting_id = arguments["meeting_id"]
             text = arguments["text"]
 
-            identity_id = arguments.get("identity_id")
-            if identity_id is None:
-                # Preserve the legacy service-call contract for callers that
-                # do not provide identity metadata.
-                result = service.add_paste(meeting_id, text)
-            else:
+            try:
                 result = service.add_paste(
                     meeting_id,
                     text,
-                    identity_id=identity_id,
+                    identity_id=arguments["identity_id"],
+                )
+            except MeetingRateLimitError as exc:
+                return CallToolResult(
+                    content=[
+                        TextContent(
+                            type="text",
+                            text="RATE_LIMIT_EXCEEDED",
+                        )
+                    ],
+                    structuredContent={
+                        "error": {
+                            "code": "RATE_LIMIT_EXCEEDED",
+                            "retry_after_seconds": exc.retry_after_seconds,
+                        }
+                    },
+                    isError=True,
+                )
+            except MeetingRateStoreUnavailable as exc:
+                return types.CallToolResult(
+                    content=[
+                        types.TextContent(
+                            type="text",
+                            text="PASTE_RATE_STORE_UNAVAILABLE",
+                        )
+                    ],
+                    structuredContent={
+                        "error": {
+                            "code": "PASTE_RATE_STORE_UNAVAILABLE",
+                            "retry_after_seconds": exc.retry_after_seconds,
+                        }
+                    },
+                    isError=True,
                 )
 
             return {
