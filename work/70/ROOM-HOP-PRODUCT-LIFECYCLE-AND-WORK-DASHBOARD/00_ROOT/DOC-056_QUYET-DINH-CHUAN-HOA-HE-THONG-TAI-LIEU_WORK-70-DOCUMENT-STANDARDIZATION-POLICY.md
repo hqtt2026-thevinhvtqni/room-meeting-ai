@@ -64,3 +64,24 @@ Vinh là thẩm quyền cuối cùng. Xu được quyền tự thực hiện cá
 
 ## 8. 2026-11-07 canonical evidence-path correction
 The canonical cross-phase evidence directory is `EVIDENCE/` (un-numbered). `06_VERIFY/` remains the phase-06 verification directory. `05_BUILD/06_EVIDENCE/` remains build-only staging and is not the cross-phase evidence source. The former top-level `06_EVIDENCE/` is a legacy compatibility path during this migration; no new canonical artifacts may be written there. Migration uses the existing files and DOC IDs, updates DOC-055 and all active references, retains old paths as non-authoritative pointers where technically valid, and requires exact readback/link/CI checks before closure. This correction changes paths, not document identity or official-record type.
+
+
+## 11. Chuẩn quản lý tiến trình sản phẩm ba tầng — D70-019 / DOC-094
+Mọi sản phẩm trong Work áp dụng mô hình ba tầng:
+1. **Product Task (Tầng 1):** một task tổng hợp cho mỗi sản phẩm; hiển thị mục tiêu, trạng thái tổng thể, phase hiện tại, blocker, tiến độ và liên kết phase.
+2. **Phase Task (Tầng 2):** một task cho mỗi sản phẩm ở từng lifecycle phase; bắt buộc có Agent chính (chịu trách nhiệm đầu ra), Agent phối hợp (tham gia thực hiện) và Agent kiểm tra (xác minh độc lập). Mỗi phase task có deliverable, acceptance criteria, dependency, status, next action và liên kết bằng chứng.
+3. **Agent Task (Tầng 3):** task thực thi chi tiết. DOC-093 là nguồn chuẩn duy nhất cho 36 Agent Task hiện hữu của Work 70; không nhân bản các task đó trong DOC-094. DOC-094 chỉ tham chiếu ID Agent Task. Các task dùng chung cấp Work phải được đánh dấu shared support, không suy diễn thành assignment riêng cho từng sản phẩm.
+
+Nguồn chuẩn và liên kết:
+- DOC-094 sở hữu Product Task và Phase Task; DOC-093 sở hữu Agent Task.
+- DOC-035 là nguồn lịch sử thực thi; mọi ACK, thao tác, thử nghiệm, kết quả, blocker và thay đổi tiến độ phải ghi nhật ký, kèm Task ID / Phase Task ID / Product Task ID phù hợp.
+- DOC-034 ghi biên bản họp/thống nhất; DOC-006 ghi quyết định có tính ràng buộc. Cả hai tham chiếu ID liên quan, không tạo bảng log thứ hai.
+- Dashboard chỉ đọc và kết hợp DOC-093 + DOC-094 + bằng chứng; projection không phải nguồn chuẩn.
+
+Quy tắc trạng thái và tiến độ:
+- Không đánh dấu Agent Task IN_PROGRESS khi chưa có ACK và hoạt động thực tế.
+- Agent Task DONE không tự động làm Phase Task DONE; Phase Task DONE cần deliverable, acceptance và evidence được kiểm tra.
+- Product Task DONE chỉ khi toàn bộ phase bắt buộc và product acceptance đạt.
+- Agent kiểm tra không được tự kiểm tra/phê duyệt đầu ra của chính mình.
+- Không tính phần trăm Product Task bằng trung bình tiến độ Agent. Khi chưa duyệt trọng số và công thức tổng hợp, dùng NOT_CALCULATED / null.
+- PROPOSED assignment không phải ACK; source hiện diện không phải nghiệm thu; static check không phải Browser E2E/QE/runtime PASS.
