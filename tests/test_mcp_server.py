@@ -59,8 +59,8 @@ def test_add_paste_delegates_to_service(tmp_path):
         def __init__(self):
             self.calls = []
 
-        def add_paste(self, meeting_id, raw_text):
-            self.calls.append((meeting_id, raw_text))
+        def add_paste(self, meeting_id, raw_text, identity_id=None):
+            self.calls.append((meeting_id, raw_text, identity_id))
             return {"accepted": True}
 
     service = FakeService()
@@ -75,6 +75,7 @@ def test_add_paste_delegates_to_service(tmp_path):
             arguments={
                 "meeting_id": "MEETING-TEST-001",
                 "text": "Hello ROOM HOP",
+                "identity_id": "xu",
             },
         ),
     )
@@ -163,6 +164,7 @@ def test_add_paste_returns_service_result(tmp_path):
             arguments={
                 "meeting_id": "MEETING-TEST-001",
                 "text": "Hello ROOM HOP",
+                "identity_id": "xu",
             },
         ),
     )
