@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
+from functools import wraps
 import json
 import os
 import sys
 import time
+from threading import RLock
 import uuid
 from pathlib import Path
 from typing import Any
@@ -31,8 +33,18 @@ class WorkflowRequest(BaseModel):
     collect_screenshot: bool = True
 
 
+def _serialized_operation(method):
+    """Serialize access to the process-wide Playwright state; nested calls are re-entrant."""
+    @wraps(method)
+    def wrapped(self, *args, **kwargs):
+        with self._operation_lock:
+            return method(self, *args, **kwargs)
+    return wrapped
+
+
 class Adapter:
     def __init__(self):
+        self._operation_lock = RLock()
         self.pw = None
         self.browser: Browser | None = None
         self.context = None
@@ -45,6 +57,7 @@ class Adapter:
         self.logs.append(item)
         return item
 
+    @_serialized_operation
     def start(self):
         if self.page:
             return {"status": "already_started"}
@@ -82,6 +95,7 @@ class Adapter:
         assert self.page is not None
         return self.page
 
+    @_serialized_operation
     def navigate(self, url: str):
         p = self.require()
         r = p.goto(url, wait_until="domcontentloaded", timeout=30000)
@@ -89,6 +103,7 @@ class Adapter:
         self.log("browser_navigate", url=p.url, status=r.status if r else None)
         return {"url": p.url, "status": r.status if r else None, "title": p.title()}
 
+    @_serialized_operation
     def inspect(self):
         p = self.require()
         data = {
@@ -101,6 +116,7 @@ class Adapter:
         self.log("browser_inspect", **data)
         return data
 
+    @_serialized_operation
     def click(self, selector: str):
         p = self.require()
         p.locator(selector).first.click(timeout=15000)
@@ -108,17 +124,20 @@ class Adapter:
         self.log("browser_click", selector=selector)
         return {"url": p.url, "title": p.title()}
 
+    @_serialized_operation
     def type(self, selector: str, text: str):
         p = self.require()
         p.locator(selector).first.fill(text, timeout=15000)
         self.log("browser_type", selector=selector, chars=len(text))
         return {"selector": selector, "typed": len(text)}
 
+    @_serialized_operation
     def wait(self, ms: int = 1000):
         self.require().wait_for_timeout(ms)
         self.log("browser_wait", ms=ms)
         return {"waited_ms": ms}
 
+    @_serialized_operation
     def extract(self, selectors: dict[str, str]):
         p = self.require()
         out = {k: p.locator(v).all_text_contents()[:20] for k, v in selectors.items()}
@@ -127,6 +146,7 @@ class Adapter:
         self.log("browser_extract", fields=list(selectors))
         return out
 
+    @_serialized_operation
     def screenshot(self, name: str = "page.png"):
         p = self.require()
         path = EVIDENCE / name
@@ -134,6 +154,7 @@ class Adapter:
         self.log("browser_screenshot", path=str(path))
         return {"path": str(path)}
 
+    @_serialized_operation
     def download(self, selector: str, name: str | None = None):
         p = self.require()
         with p.expect_download(timeout=20000) as pending:
@@ -144,6 +165,7 @@ class Adapter:
         self.log("browser_download", selector=selector, path=str(path))
         return {"path": str(path), "suggested_filename": download.suggested_filename}
 
+    @_serialized_operation
     def close(self):
         if self.browser:
             self.browser.close()
@@ -154,6 +176,7 @@ class Adapter:
             self.log("browser_close")
         return {"status": "closed"}
 
+    @_serialized_operation
     def workflow(self, req: WorkflowRequest):
         self.logs = []
         self.start()
@@ -511,10 +534,13 @@ def download(body: dict):
 
 @app.post("/browser/execute_workflow")
 def execute(req: WorkflowRequest):
-    try:
-        return adapter.workflow(req)
-    except Exception as exc:
-        raise HTTPException(500, detail={"error": str(exc), "logs": adapter.logs})
+    # Keep the failure snapshot inside the same serialized operation; another
+    # request must not replace this workflow's logs before the error is returned.
+    with adapter._operation_lock:
+        try:
+            return adapter.workflow(req)
+        except Exception as exc:
+            raise HTTPException(500, detail={"error": str(exc), "logs": list(adapter.logs)})
 
 
 @app.post("/browser/close")
