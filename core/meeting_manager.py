@@ -287,29 +287,14 @@ class Meeting:
     def add_paste(
         self,
         raw_text: str,
-        identity_id: str | None = None,
+        identity_id: str,
     ) -> dict:
-        """SECRETARY V1: ghi nguyên văn block text vào transcript.
+        """Append raw transcript only for an accepted meeting participant.
 
-        MESSAGE v1.0 (bổ sung, KHÔNG đổi hành vi cũ):
-        - `identity_id` là OPTIONAL (Architecture Gate DECISION đã khóa).
-          Không được chuyển thành required — sẽ phá backward compat của
-          Gate 2 / các caller cũ đang gọi add_paste(raw_text) không kèm
-          identity.
-        - Có `identity_id` -> resolve qua Identity/Principal/Agent
-          Registry -> Header v1.0 đầy đủ. Nếu identity_id KHÔNG resolve
-          được, REJECT (raise MeetingError) — không fallback, không giả
-          danh.
-        - Không có `identity_id` -> legacy compatibility path: Message
-          vẫn được tạo (source=ai_chat_paste, vì đây là sự kiện paste,
-          không phải tuyên bố về danh tính), nhưng `header=None` và
-          `speaker=None` — phản ánh ĐÚNG trạng thái chưa định danh,
-          TUYỆT ĐỐI không tự gán một identity mặc định (vd. vinh/claude)
-          để lấp vào Header.
-        - Return value GIỮ NGUYÊN 100%: vẫn là `self.secretary.append()`
-          (vd. {"status": "READY"}) — Message creation là side-effect
-          ghi log, không được làm caller cũ (test_secretary*,
-          test_integration_add_paste) nhận về shape khác đi.
+        Xu D-102-04 requires a non-empty registry-resolved identity that is
+        already present in the meeting's JOIN_ACCEPTED participant set.
+        Registry resolution is not transport authentication; remote callers
+        remain blocked pending the separate authentication gate.
         """
         data = self.data
 
