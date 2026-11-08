@@ -77,7 +77,9 @@ def validate_runtime_config(
         raise ValueError("disposable store must be outside GITHUB_WORKSPACE")
 
     configured_port = env.get("ROOMHOP_BROWSER_ADAPTER_PORT")
-    if configured_port is not None and configured_port != str(port):
+    if configured_port is None:
+        raise ValueError("ROOMHOP_BROWSER_ADAPTER_PORT is required")
+    if configured_port != str(port):
         raise ValueError("launcher port does not match ROOMHOP_BROWSER_ADAPTER_PORT")
     return store
 
