@@ -4,7 +4,15 @@ from __future__ import annotations
 import argparse
 import os
 import subprocess
+import sys
 from pathlib import Path
+
+# Running this file by path puts scripts/ at sys.path[0]. The embedded Python
+# runtime is intentionally isolated, so explicitly expose this exact checkout
+# root before Uvicorn imports the application module.
+REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
+if str(REPOSITORY_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPOSITORY_ROOT))
 
 import yaml
 import uvicorn
