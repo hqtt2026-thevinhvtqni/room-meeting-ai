@@ -137,7 +137,7 @@ class MeetingService:
     def join_meeting(
         self,
         meeting_id: str,
-        identity_id: str,
+        identity_id: str | None = None,
     ) -> dict[str, Any]:
         meeting = self._manager.get_meeting(meeting_id)
         meeting.join_request(identity_id)
