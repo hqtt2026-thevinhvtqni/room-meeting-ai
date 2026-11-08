@@ -225,6 +225,30 @@ def test_submission_fails_closed_inside_running_event_loop(monkeypatch, tmp_path
     assert "Nested event loops are not allowed" in result["reason"]
 
 
+
+def test_browser_submission_worker_has_no_inherited_playwright_event_loop(monkeypatch):
+    observed = {}
+
+    def fake_submit(result):
+        try:
+            asyncio.get_running_loop()
+        except RuntimeError:
+            observed["running_loop"] = False
+        else:
+            observed["running_loop"] = True
+        observed["result"] = result
+        return {"status": "pass"}
+
+    monkeypatch.setattr(browser_adapter, "submit_to_roomhop", fake_submit)
+
+    async def invoke_from_playwright_loop():
+        return browser_adapter._submit_to_roomhop_from_worker(RESULT)
+
+    result = asyncio.run(invoke_from_playwright_loop())
+    assert result == {"status": "pass"}
+    assert observed == {"running_loop": False, "result": RESULT}
+
+
 def test_stdio_session_preserves_cancellation_and_unwinds(monkeypatch):
     lifecycle = {"stdio_closed": False, "session_closed": False}
 
