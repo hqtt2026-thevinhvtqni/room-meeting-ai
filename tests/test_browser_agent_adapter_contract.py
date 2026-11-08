@@ -5,6 +5,7 @@ import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
 import types
+import pytest
 from contextlib import asynccontextmanager
 from pathlib import Path
 from types import SimpleNamespace
@@ -408,3 +409,35 @@ def test_browser_evidence_redacts_url_query_and_fragment():
     assert browser_adapter._redact_url(
         "https://example.test/path?access_token=secret&x=1#private"
     ) == "https://example.test/path"
+
+
+def test_browser_navigation_rejects_non_http_scheme():
+    with pytest.raises(ValueError, match="http/https"):
+        browser_adapter._validate_navigation_url("file:///etc/passwd")
+
+
+def test_browser_navigation_blocks_private_destination(monkeypatch):
+    monkeypatch.setattr(
+        browser_adapter.socket,
+        "getaddrinfo",
+        lambda *args, **kwargs: [(None, None, None, None, ("127.0.0.1", 0))],
+    )
+    with pytest.raises(ValueError, match="non-public"):
+        browser_adapter._validate_navigation_url("http://internal.example/")
+
+
+def test_browser_navigation_allows_explicit_loopback_test_host(monkeypatch):
+    monkeypatch.setenv("ROOMHOP_TEST_MODE", "1")
+    monkeypatch.setenv("ROOMHOP_BROWSER_ALLOWED_HOSTS", "127.0.0.1")
+    browser_adapter._validate_navigation_url("http://127.0.0.1:8080/")
+
+
+@pytest.mark.parametrize("name", ["../escape.txt", "/tmp/escape.txt", "subdir/file.txt", ".."])
+def test_browser_evidence_path_rejects_traversal(name):
+    with pytest.raises(ValueError):
+        browser_adapter._safe_evidence_path(name)
+
+
+def test_browser_evidence_path_is_confined():
+    path = browser_adapter._safe_evidence_path("evidence.json")
+    assert path.parent == browser_adapter.EVIDENCE.resolve()
