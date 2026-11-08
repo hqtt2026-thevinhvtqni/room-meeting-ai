@@ -231,8 +231,8 @@ jobs:
           # make the origin setup idempotent before checking out the exact SHA.
           git config core.longpaths true
           $originUrl = "https://$env:REPOSITORY.git"
-          $origin = git remote get-url origin 2>$null
-          if ($LASTEXITCODE -eq 0 -and -not [string]::IsNullOrWhiteSpace($origin)) {
+          $remotes = @(git remote)
+          if ($remotes -contains "origin") {
             git remote set-url origin $originUrl
           } else {
             git remote add origin $originUrl
