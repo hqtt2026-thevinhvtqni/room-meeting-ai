@@ -30,3 +30,17 @@
 - **Not covered:** CI after these commits, document-link integrity, old-path pointer migration, full lifecycle folder migration, WP register, dashboard, independent QE and runtime integration.
 - **Status:** PARTIAL — governance baseline exists; standardization overall remains IN_PROGRESS / NOT PASS.
 - **Next:** Continue Batch 1; after official-record migration run link and CI checks, then record exact results.
+
+## ARCHIVED SOURCE ENTRIES — NHAT_KY_HOP_THI_CONG.md (2026-10-26)
+
+### W103-SYNC-01 — Xu / AI-01
+- **Thời điểm:** 2026-10-26, UTC+07:00
+- **Lý do:** Chuyển tài sản đã có trong Sandbox thành hồ sơ branch có thể kiểm tra.
+- **Hành động:** Đọc Sandbox manifest, architecture, retrieval source, unit tests, acceptance plan và initial evidence bằng Sandbox MCP read-probe; đồng bộ các tệp đó vào branch GitHub work/103-rag-retrieval-capability.
+- **Kết quả:** GitHub Contents API trả về commit cho từng file; branch có code, tests và hồ sơ kiến trúc. Không tuyên bố unit tests đã chạy chỉ từ việc file tồn tại.
+- **Trạng thái lịch sử:** DONE cho đồng bộ file; CHƯA XÁC MINH cho test runtime và tích hợp.
+- **Bằng chứng lịch sử:** Các commit 07a568de, 32b9e62d, aab0433b, 8f19685b, f869fda4, 5da8ddaa.
+- **Phụ trách tiếp theo tại thời điểm đó:** Qc chạy unit tests; Qw rà soát eval/test; Cla đối soát ranh giới Core/MCP.
+
+### Hiệu đính tính trung thực từ nhật ký nguồn
+Các commit d7f1963 và 4f83c5b được tạo trong một môi trường shell riêng theo log người dùng cung cấp, nhưng không tồn tại trên GitHub branch khi đối chiếu qua GitHub API tại thời điểm kiểm tra. Vì vậy không ghi chúng là commit đã đồng bộ. Các số MRR/Hit@3/Exact-pass trong log đó chưa được xem là bằng chứng GitHub/production; cần tái chạy từ đúng source/commit và lưu artifact vào branch trước khi nghiệm thu baseline.
