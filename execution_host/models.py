@@ -48,6 +48,8 @@ class ExecutionResult:
     runtime_pid: int | None = None
     runtime_platform: str | None = None
     runtime_bind_address: str | None = None
+    stdout_ref: str | None = None
+    stderr_ref: str | None = None
     def as_dict(self): return asdict(self)
 
 def new_execution_id() -> str: return uuid.uuid4().hex
