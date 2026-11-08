@@ -96,6 +96,7 @@ def mount_execution_authority_routes(app: FastAPI, authority: ExecutionAuthority
                 raise HTTPException(status_code=400, detail="invalid_source_sha256")
             return core.record_run(
                 grant_id,
+                grant_token=token,
                 source_sha256=body.source_sha256,
                 exit_status=body.exit_status,
                 output_refs=body.output_refs,
@@ -108,3 +109,21 @@ def mount_execution_authority_routes(app: FastAPI, authority: ExecutionAuthority
             raise HTTPException(status_code=403, detail=str(exc)) from None
         except ValueError as exc:
             raise HTTPException(status_code=400, detail=str(exc)) from None
+
+    @app.post("/works/{work_id}/execution-grants/{grant_id}/revoke")
+    def revoke_execution_grant(
+        work_id: str,
+        grant_id: str,
+        authorization: str | None = Header(default=None, alias="Authorization"),
+    ) -> dict[str, Any]:
+        core = configured()
+        token = bearer(authorization)
+        try:
+            grant = core.validate_grant_token(grant_id, token)
+            if grant["work_id"] != work_id:
+                raise HTTPException(status_code=403, detail="execution_grant_work_mismatch")
+            return core.revoke_grant(grant_id)
+        except KeyError:
+            raise HTTPException(status_code=404, detail="unknown_grant") from None
+        except PermissionError as exc:
+            raise HTTPException(status_code=403, detail=str(exc)) from None
