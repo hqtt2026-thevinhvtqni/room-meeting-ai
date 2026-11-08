@@ -229,6 +229,14 @@ async def _submit_to_roomhop_stdio(
             python_executable=sys.executable,
             cwd=str(repo_root),
             env=child_env,
+            # The runner uses Python's embeddable distribution, which ignores
+            # PYTHONPATH. Inject the exact checkout root before importing Public V1.
+            python_args=[
+                "-c",
+                "import sys, runpy; "
+                f"sys.path.insert(0, {str(repo_root)!r}); "
+                "runpy.run_module('room_hop_mcp', run_name='__main__')",
+            ],
         )
     )
 
