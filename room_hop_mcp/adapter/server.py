@@ -11,7 +11,7 @@ from mcp.types import (
     Tool,
 )
 
-from core.meeting_manager import MeetingRateLimitError
+from core.meeting_manager import MeetingRateLimitError, MeetingRateStoreUnavailable
 from core.meeting_service import MeetingService
 
 
@@ -142,6 +142,22 @@ def create_server(service: MeetingService) -> Server:
                     structuredContent={
                         "error": {
                             "code": "RATE_LIMIT_EXCEEDED",
+                            "retry_after_seconds": exc.retry_after_seconds,
+                        }
+                    },
+                    isError=True,
+                )
+            except MeetingRateStoreUnavailable as exc:
+                return types.CallToolResult(
+                    content=[
+                        types.TextContent(
+                            type="text",
+                            text="PASTE_RATE_STORE_UNAVAILABLE",
+                        )
+                    ],
+                    structuredContent={
+                        "error": {
+                            "code": "PASTE_RATE_STORE_UNAVAILABLE",
                             "retry_after_seconds": exc.retry_after_seconds,
                         }
                     },
