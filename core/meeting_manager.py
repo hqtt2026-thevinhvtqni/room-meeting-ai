@@ -2,7 +2,11 @@
 from __future__ import annotations
 
 import json
+import os
 import re
+import threading
+from functools import wraps
+
 import yaml
 from datetime import datetime, timezone
 from pathlib import Path
@@ -28,11 +32,49 @@ from core.secretary import Secretary, validate_transcript_text
 ROOM_HOP_ROOT = Path(__file__).resolve().parent.parent
 MEETINGS_DIR = ROOM_HOP_ROOT / "meetings"
 
-# ID allocation v0.1 — race-tolerant, collision-detected (KHÔNG atomic:
-# không có lock/transaction thật). Nếu 2 process tạo cùng lúc và đụng
-# đúng 1 sequence, create_meeting() sẽ raise MeetingError ở bước
-# meeting_dir.mkdir() thay vì silent overwrite. Chấp nhận được ở v0.1.
+# Same-process serialization for each meeting YAML read-modify-write.
+# Core HTTP is constrained to one local process until cross-process storage
+# semantics are separately reviewed.
+_MEETING_STATE_LOCKS: dict[str, threading.RLock] = {}
+_MEETING_STATE_LOCKS_GUARD = threading.Lock()
+_ID_ALLOCATION_LOCK = threading.Lock()
 MEETING_ID_RE = re.compile(r"^MEETING-(\d{4})-(\d{3})$")
+
+
+def _meeting_state_lock(path: Path) -> threading.RLock:
+    key = str(path.resolve())
+    with _MEETING_STATE_LOCKS_GUARD:
+        return _MEETING_STATE_LOCKS.setdefault(key, threading.RLock())
+
+
+def _serialized_meeting_state(method):
+    @wraps(method)
+    def wrapper(self, *args, **kwargs):
+        with self._state_lock:
+            return method(self, *args, **kwargs)
+    return wrapper
+
+
+def _atomic_yaml_write(path: Path, data: dict) -> None:
+    temp = path.with_name(
+        f".{path.name}.{os.getpid()}.{threading.get_ident()}.tmp"
+    )
+    try:
+        with open(temp, "w", encoding="utf-8") as stream:
+            yaml.safe_dump(
+                data,
+                stream,
+                allow_unicode=True,
+                sort_keys=False,
+            )
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temp, path)
+    finally:
+        try:
+            temp.unlink(missing_ok=True)
+        except OSError:
+            pass
 
 
 def _now_iso() -> str:
@@ -72,6 +114,7 @@ class Meeting:
     ):
         self.meeting_dir = Path(meeting_dir)
         self.meeting_yaml_path = self.meeting_dir / "meeting.yaml"
+        self._state_lock = _meeting_state_lock(self.meeting_yaml_path)
         self.final_path = self.meeting_dir / "final.md"
         self.log = MeetingLog(self.meeting_dir)
 
@@ -86,18 +129,15 @@ class Meeting:
 
     @property
     def data(self) -> dict:
-        with open(self.meeting_yaml_path, "r", encoding="utf-8") as f:
-            return yaml.safe_load(f) or {}
+        with self._state_lock:
+            with open(self.meeting_yaml_path, "r", encoding="utf-8") as stream:
+                return yaml.safe_load(stream) or {}
 
     def _save(self, data: dict) -> None:
-        with open(self.meeting_yaml_path, "w", encoding="utf-8") as f:
-            yaml.safe_dump(
-                data,
-                f,
-                allow_unicode=True,
-                sort_keys=False,
-            )
+        with self._state_lock:
+            _atomic_yaml_write(self.meeting_yaml_path, data)
 
+    @_serialized_meeting_state
     def _transition(
         self,
         expected: str,
@@ -126,6 +166,7 @@ class Meeting:
             "session_opened",
         )
 
+    @_serialized_meeting_state
     def join_request(self, identity_id: str) -> dict:
         data = self.data
 
@@ -383,6 +424,7 @@ class Meeting:
             for index, message in enumerate(messages, start=1)
         ]
 
+    @_serialized_meeting_state
     def request_close(self, requester: str = "vinh") -> None:
         data = self.data
 
@@ -400,6 +442,7 @@ class Meeting:
         data["status"] = "closing"
         self._save(data)
 
+    @_serialized_meeting_state
     def close(
         self,
         decisions: list[str],
@@ -489,6 +532,7 @@ class Meeting:
 
         return self.final_path
 
+    @_serialized_meeting_state
     def save_artifact(
         self,
         artifact_name: str = "final.md",
@@ -631,22 +675,23 @@ class MeetingManager:
         max(existing_seq) + 1, không dùng len(existing), để không bị
         lệch nếu có thư mục meeting bị xóa thủ công giữa chừng.
         """
-        year = datetime.now(timezone.utc).year
-        max_seq = 0
+        with _ID_ALLOCATION_LOCK:
+            year = datetime.now(timezone.utc).year
+            max_seq = 0
 
-        if self.meetings_dir.exists():
-            for meeting_dir in self.meetings_dir.iterdir():
-                if not meeting_dir.is_dir():
-                    continue
+            if self.meetings_dir.exists():
+                for meeting_dir in self.meetings_dir.iterdir():
+                    if not meeting_dir.is_dir():
+                        continue
 
-                match = MEETING_ID_RE.match(meeting_dir.name)
+                    match = MEETING_ID_RE.match(meeting_dir.name)
 
-                if match and int(match.group(1)) == year:
-                    seq = int(match.group(2))
-                    if seq > max_seq:
-                        max_seq = seq
+                    if match and int(match.group(1)) == year:
+                        seq = int(match.group(2))
+                        if seq > max_seq:
+                            max_seq = seq
 
-        return f"MEETING-{year}-{max_seq + 1:03d}"
+            return f"MEETING-{year}-{max_seq + 1:03d}"
 
     def create_meeting(
         self,
@@ -659,9 +704,7 @@ class MeetingManager:
         # meeting_id=None -> Core allocate (v0.1 decision: ID là
         # authority của Core, Bridge không tự sinh sequence).
         # meeting_id tường minh -> giữ nguyên behavior cũ (backward compat).
-        if meeting_id is None:
-            meeting_id = self._allocate_meeting_id()
-        meeting_dir = self._meeting_dir_for_id(meeting_id)
+        auto_id = meeting_id is None
         validate_context_files(context_files)
 
         # participants are INVITATIONS, not automatically accepted.
@@ -677,12 +720,23 @@ class MeetingManager:
                     f"Identity không tồn tại: {identity_id}"
                 )
 
-        if meeting_dir.exists():
-            raise MeetingError(
-                f"Meeting '{meeting_id}' đã tồn tại."
-            )
-
-        meeting_dir.mkdir(parents=True)
+        # Atomic directory creation is the cross-thread/process collision
+        # boundary. A generated-ID collision retries; explicit IDs fail.
+        for _attempt in range(20):
+            if auto_id:
+                meeting_id = self._allocate_meeting_id()
+            assert meeting_id is not None
+            meeting_dir = self._meeting_dir_for_id(meeting_id)
+            try:
+                meeting_dir.mkdir(parents=True, exist_ok=False)
+                break
+            except FileExistsError:
+                if not auto_id:
+                    raise MeetingError(
+                        f"Meeting '{meeting_id}' đã tồn tại."
+                    ) from None
+        else:
+            raise MeetingError("Không thể cấp meeting_id duy nhất sau 20 lần thử.")
 
         data = {
             "id": meeting_id,
@@ -703,17 +757,7 @@ class MeetingManager:
             "message_bus_mode": None,
         }
 
-        with open(
-            meeting_dir / "meeting.yaml",
-            "w",
-            encoding="utf-8",
-        ) as f:
-            yaml.safe_dump(
-                data,
-                f,
-                allow_unicode=True,
-                sort_keys=False,
-            )
+        _atomic_yaml_write(meeting_dir / "meeting.yaml", data)
 
         meeting = Meeting(
             meeting_dir,
