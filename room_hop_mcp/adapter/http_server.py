@@ -28,6 +28,8 @@ from core.agent_registry import AgentRegistry
 from core.meeting_manager import MeetingError
 from core.meeting_service import MeetingService
 from core.principal_registry import PrincipalRegistry
+from core.execution_authority import ExecutionAuthority, ExecutionAuthorityConfigError
+from room_hop_mcp.adapter.execution_authority_http import mount_execution_authority_routes
 
 
 # ---------------------------------------------------------------------------
@@ -71,8 +73,18 @@ def create_http_app(
     service: MeetingService,
     principal_registry: Optional[PrincipalRegistry] = None,
     agent_registry: Optional[AgentRegistry] = None,
+    execution_authority: Optional[ExecutionAuthority] = None,
 ) -> FastAPI:
     app = FastAPI(title="ROOM HOP HTTP Adapter")
+
+    # Additive authority mount; existing Meeting routes remain independent.
+    # Missing/invalid configuration leaves execution routes fail-closed (503).
+    if execution_authority is None:
+        try:
+            execution_authority = ExecutionAuthority.from_env()
+        except ExecutionAuthorityConfigError:
+            execution_authority = None
+    mount_execution_authority_routes(app, execution_authority)
 
     app.add_middleware(
         CORSMiddleware,
