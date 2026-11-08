@@ -163,3 +163,14 @@ Run #254 (42520909842) was the first remediation validation and failed on compat
 - Product Auto E2E: PASS; Windows Browser Adapter E2E: PASS (10); Work32 tooling/workflow mirror: PASS; immutable artifact: PASS; release acceptance gate: PASS.
 - Core execution-grant route is deny-only. No grant issuance, token validation, run recording or revocation implementation is claimed. Xu must confirm canonical route ownership (Core vs Execution Host) before any functional implementation or merge.
 - PR #49 remains DRAFT; main unchanged; no remote exposure, merge, deployment or release.
+
+
+## Addendum — Run #289 final exact-head revalidation
+- **Name:** Ka
+- **Title:** CSA / Work32 Execution Owner
+- **Date-Time:** 2026-11-09 (Asia/Ho_Chi_Minh)
+- Exact PR head: `03f9ebe2a70b576900f8284375e3663bd14d69e6`.
+- Run #289 / `42523529820` completed SUCCESS across all six jobs.
+- Unit: 205 passed, including Core HTTP fail-closed execution-grant boundary; Product Auto E2E: PASS; Windows Browser Adapter E2E: PASS (10); Work32 tooling/workflow mirror: PASS; immutable artifact: PASS; release acceptance gate: PASS.
+- Latest changes after Run #287 are evidence/journal-only; no new product code changes.
+- PR #49 remains DRAFT; main unchanged; no merge, remote exposure, CD, staging, production or release.
