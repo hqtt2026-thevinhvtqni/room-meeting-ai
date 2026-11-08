@@ -75,13 +75,13 @@ def test_nested_test_failed_propagates_to_overall_status(tmp_path):
 def test_nested_test_timeout_propagates_to_overall_status(tmp_path):
     c = ctx(
         tmp_path,
-        test_entrypoint=(sys.executable, "-c", "import time; time.sleep(2)"),
+        test_entrypoint=(sys.executable, "-c", "import time; time.sleep(3)"),
     )
     r = ExecutionHost().execute_work(
         c,
         ExecutionRequest(
             command=(sys.executable, "-c", "print('primary-pass')"),
-            timeout_seconds=0.05,
+            timeout_seconds=1.0,
             run_test=True,
         ),
     )
