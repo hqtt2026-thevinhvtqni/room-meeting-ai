@@ -114,6 +114,29 @@ fetch("./EXECUTION_STATUS.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw new 
   $("warning").textContent="Không thể tải EXECUTION_STATUS.json ("+e.message+"). Giữ UNKNOWN; không hiển thị số liệu giả.";
 });
 </script>
+
+<!-- DOC-094 Product Progress extension -->
+<script>
+(function(){
+  const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const start=()=>{
+    if(document.getElementById("productPhaseBoard")) return;
+    const main=document.querySelector("main")||document.body;
+    const section=document.createElement("section");
+    section.className="card";section.id="productPhaseBoard";section.style.marginTop="14px";
+    section.innerHTML='<h2>Product Progress · Ba tầng tiến trình sản phẩm</h2><p class="muted" id="productPhaseMeta">Đang tải DOC-094…</p><div id="productTaskCards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin:12px 0"></div><div style="overflow:auto"><table style="width:100%;border-collapse:collapse;min-width:1050px"><thead><tr><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">Product / Phase Task</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">Agent chính</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">Agent phối hợp</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">Agent kiểm tra</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">Trạng thái</th><th style="text-align:left;padding:8px;border-bottom:1px solid var(--line)">Agent Task liên kết / Next action</th></tr></thead><tbody id="productPhaseRows"></tbody></table></div><p class="legend">Tầng 1: Product Task · Tầng 2: Phase Task · Tầng 3: Agent Task tham chiếu DOC-093. Agent Task liên kết là hỗ trợ cấp Work dùng chung, không chứng minh assignment/ACK riêng cho sản phẩm. DOC-094 là DRAFT_NOT_APPROVED; trạng thái NOT_ASSESSED và tiến độ NOT_CALCULATED được giữ nguyên cho đến khi có bằng chứng.</p>';
+    const role=document.getElementById("roleTaskBoard"),footer=document.querySelector("footer");
+    if(role&&role.parentElement===main)main.insertBefore(section,role.nextSibling);else if(footer)main.insertBefore(section,footer);else main.appendChild(section);
+    fetch("./PRODUCT_PHASE_TASK_STATUS.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw new Error("HTTP "+r.status);return r.json();}).then(d=>{
+      document.getElementById("productPhaseMeta").textContent="DOC-094 · "+(d.product_count??0)+" Product Task · "+(d.phase_task_count??0)+" Phase Task · Baseline: "+(d.baseline_status||"UNKNOWN")+" · Progress: "+(d.progress_status||"UNKNOWN");
+      document.getElementById("productTaskCards").innerHTML=(d.products||[]).map(p=>'<article style="border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--bg)"><div class="k">'+esc(p.product_task_id)+'</div><b>'+esc(p.product_name)+'</b><div class="row"><span>Phase hiện tại</span><span>'+esc(p.current_phase||"UNKNOWN")+'</span></div><div class="row"><span>Trạng thái</span><b>'+esc(p.status||"UNKNOWN")+'</b></div><div class="row"><span>Tiến độ</span><b>CHƯA TÍNH</b></div></article>').join("")||'<p class="muted">Không có Product Task.</p>';
+      const rows=d.phases||[];
+      document.getElementById("productPhaseRows").innerHTML=rows.map(t=>'<tr><td style="padding:9px 8px;border-bottom:1px solid var(--line)"><b>'+esc(t.phase)+'</b><br><small>'+esc(t.product_task_id)+' · '+esc(t.phase_task_id)+'</small><br>'+esc(t.task_title)+'</td><td style="padding:9px 8px;border-bottom:1px solid var(--line)">'+esc(t.primary_agent)+'</td><td style="padding:9px 8px;border-bottom:1px solid var(--line)">'+(t.contributing_agents||[]).map(esc).join("<br>")+'</td><td style="padding:9px 8px;border-bottom:1px solid var(--line)">'+esc(t.checking_agent)+'</td><td style="padding:9px 8px;border-bottom:1px solid var(--line)"><b>'+esc(t.status)+'</b><br><small>'+esc(t.assignment_status)+'</small></td><td style="padding:9px 8px;border-bottom:1px solid var(--line)"><details><summary>'+((t.shared_work_agent_task_ids||[]).length)+' Agent Task IDs</summary><small>'+(t.shared_work_agent_task_ids||[]).map(esc).join("<br>")+'</small></details><small>'+esc(t.next_action)+'</small></td></tr>').join("")||'<tr><td colspan="6" class="muted">Không có Phase Task.</td></tr>';
+    }).catch(e=>{document.getElementById("productPhaseMeta").textContent="Không tải được DOC-094 projection ("+e.message+"). Trạng thái UNKNOWN; không fallback dữ liệu mẫu.";document.getElementById("productPhaseRows").innerHTML='<tr><td colspan="6">UNKNOWN — nguồn không tải được.</td></tr>';});
+  };
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
+})();
+</script>
 </body>
 </html>
 
