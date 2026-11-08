@@ -230,7 +230,7 @@ jobs:
           # This runner reuses its workspace; configure long paths locally and
           # make the origin setup idempotent before checking out the exact SHA.
           git config core.longpaths true
-          $originUrl = "https://$env:REPOSITORY.git"
+          $originUrl = "https://github.com/$env:REPOSITORY.git"
           $remotes = @(git remote)
           if ($remotes -contains "origin") {
             git remote set-url origin $originUrl
