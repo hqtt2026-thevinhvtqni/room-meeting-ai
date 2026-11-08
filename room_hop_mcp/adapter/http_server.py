@@ -36,7 +36,7 @@ from core.principal_registry import PrincipalRegistry
 
 class AddPasteRequest(BaseModel):
     text: str
-    identity_id: Optional[str] = None
+    identity_id: str
 
 
 class CreateMeetingRequest(BaseModel):
@@ -144,9 +144,6 @@ def create_http_app(
     @app.post("/meetings/{meeting_id}/paste")
     def add_paste(meeting_id: str, body: AddPasteRequest) -> dict:
         try:
-            # Preserve the legacy service call when identity is omitted.
-            if body.identity_id is None:
-                return service.add_paste(meeting_id, body.text)
             return service.add_paste(
                 meeting_id,
                 body.text,
