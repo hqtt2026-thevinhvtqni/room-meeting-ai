@@ -104,7 +104,12 @@ def compile_pattern(pattern: Any) -> "re.Pattern[str]":
     _require(isinstance(pattern, dict), "pattern must be an object")
     _require(isinstance(pattern.get("regex"), str) and pattern["regex"].strip(),
              "pattern.regex must be a non-empty string")
-    return re.compile(pattern["regex"], re.IGNORECASE)
+    try:
+        return re.compile(pattern["regex"], re.IGNORECASE)
+    except re.error as exc:
+        raise ValueError(
+            f"DECISION_SET invalid: pattern.regex is not a valid regex: {exc}"
+        ) from exc
 
 
 def _is_int(value: Any) -> bool:

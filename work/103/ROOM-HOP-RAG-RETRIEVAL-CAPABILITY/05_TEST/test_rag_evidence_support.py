@@ -336,8 +336,9 @@ class SchemaValidationTests(unittest.TestCase):
 
     def test_missing_decision_coverage(self):
         def m(d):
-            d["required_decisions"] = list(set(d["required_decisions"]) - {"CONTRADICTED"})
-            d["required_decisions"].append("SUPPORTED")
+            # Keep CONTRADICTED required but remove the only gate-counted row
+            # that produces it (un-gate T7 and drop the T7 family requirement
+            # so the family check does not fire first).
             d["required_case_families"] = [f for f in d["required_case_families"] if f != "T7"]
             for row in d["rows"]:
                 if row["case_family"] == "T7":
