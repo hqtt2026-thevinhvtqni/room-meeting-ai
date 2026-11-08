@@ -193,9 +193,14 @@ class ExecutionHost:
         ctx: WorkContext,
         command: list[str],
         timeout_seconds: float = 30.0,
+        *,
+        step_name: str = "command",
     ) -> dict[str, Any]:
 
         root, workspace, evidence = validate_context(ctx)
+
+        if step_name not in {"command", "test"}:
+            raise HostError("invalid_evidence_stage")
 
         args = validate_command(command)
 
@@ -210,6 +215,7 @@ class ExecutionHost:
             evidence
             / ctx.execution_id
             / "runtime"
+            / step_name
             / "stdout.log"
         )
 
@@ -217,6 +223,7 @@ class ExecutionHost:
             evidence
             / ctx.execution_id
             / "runtime"
+            / step_name
             / "stderr.log"
         )
 
@@ -368,25 +375,47 @@ class ExecutionHost:
             execution_ctx,
             list(request.command or ()),
             request.timeout_seconds,
+            step_name="command",
         )
 
         if request.run_test:
+            primary_status = result.get("status")
+            primary_exit_code = result.get("exit_code")
+            result["primary_command_status"] = primary_status
+            result["primary_command_exit_code"] = primary_exit_code
+
             if not execution_ctx.test_entrypoint:
-                result["test"] = {
+                test_result = {
                     "status": "BLOCKED",
                     "reason": "test_entrypoint_not_bound",
+                    "blocker": "test_entrypoint_not_bound",
+                    "exit_code": None,
                 }
             else:
-                result["test"] = self.execute_command(
+                test_result = self.execute_command(
                     execution_ctx,
                     list(execution_ctx.test_entrypoint),
                     request.timeout_seconds,
+                    step_name="test",
                 )
-            # A successful build/command cannot mask a failed or blocked test.
-            if result["status"] == "PASS" and result["test"].get("status") != "PASS":
-                nested_status = result["test"].get("status")
-                result["status"] = nested_status if nested_status in {"FAILED", "BLOCKED", "TIMEOUT"} else "BLOCKED"
-                result["blocker"] = result["test"].get("blocker") or result["test"].get("reason") or "nested_test_not_pass"
+
+            result["test"] = test_result
+
+            # Preserve a failed/timed-out/blocked primary command. Only a
+            # passing primary command may inherit the nested test disposition.
+            if primary_status == "PASS" and test_result.get("status") != "PASS":
+                nested_status = test_result.get("status")
+                result["status"] = (
+                    nested_status
+                    if nested_status in {"FAILED", "BLOCKED", "TIMEOUT"}
+                    else "BLOCKED"
+                )
+                result["exit_code"] = test_result.get("exit_code")
+                result["blocker"] = (
+                    test_result.get("blocker")
+                    or test_result.get("reason")
+                    or "test_result_not_pass"
+                )
 
         _, workspace, evidence = validate_context(
             execution_ctx
