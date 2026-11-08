@@ -1,0 +1,1213 @@
+{
+  "work_id": "70",
+  "document_id": "DOC-093",
+  "source_of_truth": "04_PLAN/DOC-093_BANG-PHAN-CONG-TASK_THEO-VAI-TRO_ROLE-BASED-TASK-REGISTER.json",
+  "generated_at": "2026-11-08T12:10:00+07:00",
+  "source_status": "DRAFT_NOT_APPROVED",
+  "read_only": true,
+  "no_mock_data": true,
+  "task_count": 36,
+  "by_role": {
+    "CEO": 9,
+    "CSA": 9,
+    "CTO": 9,
+    "CODER": 9
+  },
+  "data_integrity": {
+    "verification_status": "SANDBOX_READBACK_OK_BROWSER_NOT_VERIFIED"
+  },
+  "tasks": [
+    {
+      "task_id": "W70-01-DISCOVER-CEO",
+      "phase": "01_DISCOVER",
+      "phase_name": "Khám phá",
+      "task_title": "Xác lập vấn đề, tầm nhìn, người dùng, phạm vi và tiêu chí thành công",
+      "accountable_role": "CEO",
+      "assigned_identity": "Xu / AI-01",
+      "assignment_status": "PROPOSED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Đọc DOC-001 và hồ sơ intake; xác định vấn đề người dùng cần giải quyết.",
+        "Viết problem statement, nhóm người dùng, mục tiêu đo được và phạm vi không làm.",
+        "Liệt kê giả định, rủi ro đầu vào, owner và bằng chứng còn thiếu; trình G0/G1."
+      ],
+      "scope_boundary": "Điều phối, tổng hợp, quyết định trong phạm vi ủy quyền; không tự thay reviewer/QE/PO.",
+      "deliverable": "Discover brief, problem statement, scope và giả định",
+      "acceptance_criteria": "Mục tiêu và out-of-scope được phát biểu rõ; giả định có owner; không tuyên bố G0/G1 PASS khi thiếu evidence",
+      "verification_method": "Kiểm tra completeness của hồ sơ và traceability; đối chiếu task register, decision log, gate evidence.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [],
+      "evidence_refs": [],
+      "next_action": "Hoàn thiện bằng chứng đầu vào và đề xuất G0/G1"
+    },
+    {
+      "task_id": "W70-01-DISCOVER-CSA",
+      "phase": "01_DISCOVER",
+      "phase_name": "Khám phá",
+      "task_title": "Phản biện vấn đề, giả định, rủi ro và tính nhất quán đầu vào",
+      "accountable_role": "CSA",
+      "assigned_identity": "Ka / AI-02",
+      "assignment_status": "PROPOSED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Đối chiếu problem statement với intake và policy; tìm mâu thuẫn/phạm vi mơ hồ.",
+        "Challenge giả định về người dùng, dữ liệu, bảo mật, vận hành và rủi ro hệ thống.",
+        "Lập finding theo mức độ, bằng chứng, câu hỏi cần trả lời và điều kiện đóng."
+      ],
+      "scope_boundary": "Phản biện và audit độc lập; không tự duyệt phần do mình thiết kế, không sửa source nếu không có assignment riêng.",
+      "deliverable": "Independent discovery review và danh sách câu hỏi/rủi ro",
+      "acceptance_criteria": "Các giả định trọng yếu được challenge; rủi ro và khoảng trống bằng chứng được ghi rõ",
+      "verification_method": "Checklist review độc lập; đối chiếu requirement/ADR/policy/diff; ghi finding có vị trí và bằng chứng.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-01-DISCOVER-CEO",
+        "W70-01-DISCOVER-CTO"
+      ],
+      "evidence_refs": [],
+      "next_action": "Rà soát độc lập hồ sơ Discover"
+    },
+    {
+      "task_id": "W70-01-DISCOVER-CTO",
+      "phase": "01_DISCOVER",
+      "phase_name": "Khám phá",
+      "task_title": "Khảo sát hiện trạng kỹ thuật, hệ thống liên quan, dữ liệu và giới hạn runtime",
+      "accountable_role": "CTO",
+      "assigned_identity": "Cla / AI-03",
+      "assignment_status": "PROPOSED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Liệt kê repo/module/service/runtime/data store/API liên quan theo nguồn có thể truy vết.",
+        "Ghi phiên bản, trạng thái hoạt động, giới hạn môi trường và phụ thuộc ngoài.",
+        "Phân loại CONFIRMED/UNVERIFIED/UNKNOWN; lập feasibility và technical risk inventory."
+      ],
+      "scope_boundary": "Chủ trì kỹ thuật, kiến trúc và tích hợp; thay đổi source phải có task/permission cụ thể.",
+      "deliverable": "Technical baseline inventory và feasibility findings",
+      "acceptance_criteria": "Mọi nhận định kỹ thuật có nguồn, phiên bản và mức độ xác minh; UNKNOWN giữ nguyên UNKNOWN",
+      "verification_method": "Review contract/diff; chạy hoặc chỉ định test kỹ thuật phù hợp; lưu version, command và output.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-01-DISCOVER-CEO"
+      ],
+      "evidence_refs": [],
+      "next_action": "Lập inventory hiện trạng có bằng chứng"
+    },
+    {
+      "task_id": "W70-01-DISCOVER-CODER",
+      "phase": "01_DISCOVER",
+      "phase_name": "Khám phá",
+      "task_title": "Khảo sát source, test và cấu trúc repo; không sửa code ở Discover",
+      "accountable_role": "CODER",
+      "assigned_identity": "Vi (đề xuất; chờ xác minh capability)",
+      "assignment_status": "PROPOSED_NOT_VERIFIED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Đọc cấu trúc repo, manifest, entry point, dependency và test layout ở chế độ read-only.",
+        "Truy vết file/module liên quan từng yêu cầu; ghi đường dẫn và symbol/test tương ứng.",
+        "Lập source map và câu hỏi kỹ thuật; tuyệt đối không sửa source trong Discover."
+      ],
+      "scope_boundary": "Chỉ sửa source trong repo/branch/file scope được giao; không tự merge, release hoặc tự xác nhận PASS.",
+      "deliverable": "Source reconnaissance và danh sách file/điểm cần truy vết",
+      "acceptance_criteria": "Chỉ đọc; không sửa source; phát hiện có đường dẫn và bằng chứng tái lập",
+      "verification_method": "Chạy đúng lệnh test trong repo/runbook đã chỉ định; lưu command, exit code, log, artifact và SHA.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-01-DISCOVER-CSA",
+        "W70-01-DISCOVER-CTO"
+      ],
+      "evidence_refs": [],
+      "next_action": "Xác minh năng lực truy cập repo rồi thực hiện read-only reconnaissance"
+    },
+    {
+      "task_id": "W70-02-DEFINE-CEO",
+      "phase": "02_DEFINE",
+      "phase_name": "Định nghĩa",
+      "task_title": "Phân rã nhu cầu thành mục tiêu sản phẩm, phạm vi, ưu tiên và yêu cầu có thể nghiệm thu",
+      "accountable_role": "CEO",
+      "assigned_identity": "Xu / AI-01",
+      "assignment_status": "PROPOSED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Chuyển mục tiêu Discover thành danh sách requirement có ID và mức ưu tiên.",
+        "Với mỗi requirement ghi actor, trigger, expected behavior, out-of-scope và lý do.",
+        "Định nghĩa acceptance criteria đo/quan sát được và liên kết ngược về nhu cầu."
+      ],
+      "scope_boundary": "Điều phối, tổng hợp, quyết định trong phạm vi ủy quyền; không tự thay reviewer/QE/PO.",
+      "deliverable": "Product requirements baseline và traceability map",
+      "acceptance_criteria": "Mỗi yêu cầu có ID, lý do, owner, acceptance criteria và trace về Discover",
+      "verification_method": "Kiểm tra completeness của hồ sơ và traceability; đối chiếu task register, decision log, gate evidence.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-01-DISCOVER-CEO",
+        "W70-01-DISCOVER-CSA",
+        "W70-01-DISCOVER-CTO",
+        "W70-01-DISCOVER-CODER"
+      ],
+      "evidence_refs": [],
+      "next_action": "Chuẩn hóa yêu cầu và liên kết evidence"
+    },
+    {
+      "task_id": "W70-02-DEFINE-CSA",
+      "phase": "02_DEFINE",
+      "phase_name": "Định nghĩa",
+      "task_title": "Phản biện yêu cầu, tính đầy đủ, xung đột, rủi ro và tiêu chí nghiệm thu",
+      "accountable_role": "CSA",
+      "assigned_identity": "Ka / AI-02",
+      "assignment_status": "PROPOSED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Kiểm tra từng requirement về tính đầy đủ, nhất quán, khả thi và xung đột.",
+        "Rà soát security/privacy/data ownership/failure/abuse case và yêu cầu phi chức năng.",
+        "Phát hành review findings; mỗi finding có severity, evidence, owner và điều kiện đóng."
+      ],
+      "scope_boundary": "Phản biện và audit độc lập; không tự duyệt phần do mình thiết kế, không sửa source nếu không có assignment riêng.",
+      "deliverable": "Requirements review findings",
+      "acceptance_criteria": "Không còn mâu thuẫn chưa định danh; mọi ngoại lệ/giả định được ghi nhận",
+      "verification_method": "Checklist review độc lập; đối chiếu requirement/ADR/policy/diff; ghi finding có vị trí và bằng chứng.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-02-DEFINE-CEO",
+        "W70-02-DEFINE-CTO"
+      ],
+      "evidence_refs": [],
+      "next_action": "Review độc lập Product Requirements"
+    },
+    {
+      "task_id": "W70-02-DEFINE-CTO",
+      "phase": "02_DEFINE",
+      "phase_name": "Định nghĩa",
+      "task_title": "Chuyển yêu cầu thành yêu cầu kỹ thuật, NFR, API/data/security constraints",
+      "accountable_role": "CTO",
+      "assigned_identity": "Cla / AI-03",
+      "assignment_status": "PROPOSED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Chuyển requirement thành functional boundary, NFR, API contract và data constraints.",
+        "Định nghĩa authn/authz, error model, timeout/retry, logging và compatibility.",
+        "Gắn mỗi technical requirement với cách kiểm chứng và ngưỡng đo cụ thể."
+      ],
+      "scope_boundary": "Chủ trì kỹ thuật, kiến trúc và tích hợp; thay đổi source phải có task/permission cụ thể.",
+      "deliverable": "Technical requirements và interface constraints",
+      "acceptance_criteria": "Yêu cầu phi chức năng đo/kiểm chứng được; interface không dựa vào giả định",
+      "verification_method": "Review contract/diff; chạy hoặc chỉ định test kỹ thuật phù hợp; lưu version, command và output.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-02-DEFINE-CEO"
+      ],
+      "evidence_refs": [],
+      "next_action": "Lập NFR và technical constraints có trace"
+    },
+    {
+      "task_id": "W70-02-DEFINE-CODER",
+      "phase": "02_DEFINE",
+      "phase_name": "Định nghĩa",
+      "task_title": "Phân rã yêu cầu thành vùng code, testability và ước lượng có cơ sở",
+      "accountable_role": "CODER",
+      "assigned_identity": "Vi (đề xuất; chờ xác minh capability)",
+      "assignment_status": "PROPOSED_NOT_VERIFIED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Map requirement ID tới module/file hiện hữu hoặc module dự kiến; không tự quyết kiến trúc.",
+        "Phân rã thành implementation item nhỏ, có input/output và phụ thuộc rõ.",
+        "Đề xuất estimate theo giả định, độ bất định và test outline cho từng item."
+      ],
+      "scope_boundary": "Chỉ sửa source trong repo/branch/file scope được giao; không tự merge, release hoặc tự xác nhận PASS.",
+      "deliverable": "Implementation decomposition và estimate range",
+      "acceptance_criteria": "Không cam kết estimate thiếu cơ sở; dependency và unknown được nêu rõ",
+      "verification_method": "Chạy đúng lệnh test trong repo/runbook đã chỉ định; lưu command, exit code, log, artifact và SHA.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-02-DEFINE-CSA",
+        "W70-02-DEFINE-CTO"
+      ],
+      "evidence_refs": [],
+      "next_action": "Đề xuất decomposition sau khi requirements ổn định"
+    },
+    {
+      "task_id": "W70-03-ARCHITECT-CEO",
+      "phase": "03_ARCHITECT",
+      "phase_name": "Kiến trúc",
+      "task_title": "Điều phối lựa chọn kiến trúc, trade-off và quyết định trong phạm vi được ủy quyền",
+      "accountable_role": "CEO",
+      "assigned_identity": "Xu / AI-01",
+      "assignment_status": "PROPOSED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Tổng hợp các phương án kiến trúc và trade-off do CTO đề xuất.",
+        "Tổ chức quyết định theo tiêu chí: mục tiêu, rủi ro, chi phí, khả năng vận hành.",
+        "Ghi ADR gồm lựa chọn, phương án loại, lý do, tác động và thẩm quyền phê duyệt; Vinh giữ quyền cuối."
+      ],
+      "scope_boundary": "Điều phối, tổng hợp, quyết định trong phạm vi ủy quyền; không tự thay reviewer/QE/PO.",
+      "deliverable": "Architecture decision record và decision log",
+      "acceptance_criteria": "Mỗi quyết định có lựa chọn, lý do, tác động, người có thẩm quyền; Vinh giữ quyền cuối",
+      "verification_method": "Kiểm tra completeness của hồ sơ và traceability; đối chiếu task register, decision log, gate evidence.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-02-DEFINE-CEO",
+        "W70-02-DEFINE-CSA",
+        "W70-02-DEFINE-CTO",
+        "W70-02-DEFINE-CODER"
+      ],
+      "evidence_refs": [],
+      "next_action": "Đóng các quyết định kiến trúc còn mở"
+    },
+    {
+      "task_id": "W70-03-ARCHITECT-CSA",
+      "phase": "03_ARCHITECT",
+      "phase_name": "Kiến trúc",
+      "task_title": "Review độc lập kiến trúc, trust boundary, security, data authority và failure modes",
+      "accountable_role": "CSA",
+      "assigned_identity": "Ka / AI-02",
+      "assignment_status": "PROPOSED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Đọc kiến trúc và ADR; vẽ lại trust boundary, luồng dữ liệu và quyền truy cập.",
+        "Phân tích threat, failure mode, single point of failure, data authority và recovery.",
+        "Ghi finding độc lập; không tự review/duyệt phần do chính CSA tạo."
+      ],
+      "scope_boundary": "Phản biện và audit độc lập; không tự duyệt phần do mình thiết kế, không sửa source nếu không có assignment riêng.",
+      "deliverable": "Architecture review và findings",
+      "acceptance_criteria": "Review độc lập; findings có mức độ, bằng chứng, điều kiện đóng",
+      "verification_method": "Checklist review độc lập; đối chiếu requirement/ADR/policy/diff; ghi finding có vị trí và bằng chứng.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-03-ARCHITECT-CEO",
+        "W70-03-ARCHITECT-CTO"
+      ],
+      "evidence_refs": [],
+      "next_action": "Rà soát kiến trúc và ghi nhận findings"
+    },
+    {
+      "task_id": "W70-03-ARCHITECT-CTO",
+      "phase": "03_ARCHITECT",
+      "phase_name": "Kiến trúc",
+      "task_title": "Thiết kế kiến trúc kỹ thuật, module boundaries, interfaces, persistence và observability",
+      "accountable_role": "CTO",
+      "assigned_identity": "Cla / AI-03",
+      "assignment_status": "PROPOSED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Thiết kế module boundary, component ownership, data flow và interface contract.",
+        "Định nghĩa persistence, event/error model, observability, security boundary và recovery.",
+        "Tạo sơ đồ/contract có trace requirement, failure handling và test strategy."
+      ],
+      "scope_boundary": "Chủ trì kỹ thuật, kiến trúc và tích hợp; thay đổi source phải có task/permission cụ thể.",
+      "deliverable": "Architecture specification, diagrams và interface contracts",
+      "acceptance_criteria": "Thiết kế khả thi, có boundary, failure handling, test strategy và trace requirements",
+      "verification_method": "Review contract/diff; chạy hoặc chỉ định test kỹ thuật phù hợp; lưu version, command và output.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-03-ARCHITECT-CEO"
+      ],
+      "evidence_refs": [],
+      "next_action": "Hoàn thiện technical architecture baseline"
+    },
+    {
+      "task_id": "W70-03-ARCHITECT-CODER",
+      "phase": "03_ARCHITECT",
+      "phase_name": "Kiến trúc",
+      "task_title": "Thực hiện spike/prototype có giới hạn để kiểm chứng rủi ro kiến trúc",
+      "accountable_role": "CODER",
+      "assigned_identity": "Vi (đề xuất; chờ xác minh capability)",
+      "assignment_status": "PROPOSED_NOT_VERIFIED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Chỉ nhận spike khi có task/permission và phạm vi file cụ thể được duyệt.",
+        "Tạo prototype nhỏ để kiểm chứng một giả thuyết kỹ thuật; không đưa vào production.",
+        "Ghi lệnh chạy, môi trường, kết quả, giới hạn và quyết định tiếp tục/loại bỏ; dọn spike theo chỉ thị."
+      ],
+      "scope_boundary": "Chỉ sửa source trong repo/branch/file scope được giao; không tự merge, release hoặc tự xác nhận PASS.",
+      "deliverable": "Spike code/test report (nếu được ủy quyền)",
+      "acceptance_criteria": "Chỉ chạy sau khi scope/permission được cấp; prototype không tự trở thành production code",
+      "verification_method": "Chạy đúng lệnh test trong repo/runbook đã chỉ định; lưu command, exit code, log, artifact và SHA.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-03-ARCHITECT-CSA",
+        "W70-03-ARCHITECT-CTO"
+      ],
+      "evidence_refs": [],
+      "next_action": "Chờ CTO xác định spike và quyền thực thi"
+    },
+    {
+      "task_id": "W70-04-PLAN-CEO",
+      "phase": "04_PLAN",
+      "phase_name": "Kế hoạch",
+      "task_title": "Phân rã Work Package/Task, thứ tự, dependency, owner, reviewer và baseline",
+      "accountable_role": "CEO",
+      "assigned_identity": "Xu / AI-01",
+      "assignment_status": "PROPOSED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Chia scope thành WP, milestone và Task ID có đầu ra độc lập.",
+        "Gán một accountable role, assignee, reviewer, dependency và quyền cho mỗi task.",
+        "Thiết lập baseline, thứ tự, gate, tiêu chí READY/DONE và quy tắc escalation."
+      ],
+      "scope_boundary": "Điều phối, tổng hợp, quyết định trong phạm vi ủy quyền; không tự thay reviewer/QE/PO.",
+      "deliverable": "Approved work package/task baseline proposal",
+      "acceptance_criteria": "Mỗi task có một accountable owner, deliverable, acceptance, dependency, evidence và next action",
+      "verification_method": "Kiểm tra completeness của hồ sơ và traceability; đối chiếu task register, decision log, gate evidence.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-03-ARCHITECT-CEO",
+        "W70-03-ARCHITECT-CSA",
+        "W70-03-ARCHITECT-CTO",
+        "W70-03-ARCHITECT-CODER"
+      ],
+      "evidence_refs": [],
+      "next_action": "Dựng baseline phân công và trình Vinh phê chuẩn"
+    },
+    {
+      "task_id": "W70-04-PLAN-CSA",
+      "phase": "04_PLAN",
+      "phase_name": "Kế hoạch",
+      "task_title": "Review tính đầy đủ của kế hoạch, dependency, risk, gate và separation of duties",
+      "accountable_role": "CSA",
+      "assigned_identity": "Ka / AI-02",
+      "assignment_status": "PROPOSED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Rà soát coverage requirement-to-task và dependency graph.",
+        "Phát hiện task thiếu owner, reviewer, acceptance, evidence hoặc xung đột quyền.",
+        "Kiểm tra separation-of-duties và gate; phát hành finding trước khi baseline được duyệt."
+      ],
+      "scope_boundary": "Phản biện và audit độc lập; không tự duyệt phần do mình thiết kế, không sửa source nếu không có assignment riêng.",
+      "deliverable": "Plan review findings",
+      "acceptance_criteria": "Không có self-review; blocker và rủi ro có owner; gate không được tự gán PASS",
+      "verification_method": "Checklist review độc lập; đối chiếu requirement/ADR/policy/diff; ghi finding có vị trí và bằng chứng.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-04-PLAN-CEO",
+        "W70-04-PLAN-CTO"
+      ],
+      "evidence_refs": [],
+      "next_action": "Review ma trận Task và phân tách trách nhiệm"
+    },
+    {
+      "task_id": "W70-04-PLAN-CTO",
+      "phase": "04_PLAN",
+      "phase_name": "Kế hoạch",
+      "task_title": "Lập trình tự kỹ thuật, interface ownership, integration strategy và test strategy",
+      "accountable_role": "CTO",
+      "assigned_identity": "Cla / AI-03",
+      "assignment_status": "PROPOSED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Xếp thứ tự triển khai theo interface, migration, risk và tích hợp.",
+        "Xác định owner kỹ thuật, contract freeze, integration point và test environment.",
+        "Lập technical sequence có critical path, rollback point và điều kiện unblock."
+      ],
+      "scope_boundary": "Chủ trì kỹ thuật, kiến trúc và tích hợp; thay đổi source phải có task/permission cụ thể.",
+      "deliverable": "Technical implementation plan",
+      "acceptance_criteria": "Trình tự build theo dependency; môi trường và tiêu chí tích hợp xác định được",
+      "verification_method": "Review contract/diff; chạy hoặc chỉ định test kỹ thuật phù hợp; lưu version, command và output.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-04-PLAN-CEO"
+      ],
+      "evidence_refs": [],
+      "next_action": "Chốt build sequencing và integration contract"
+    },
+    {
+      "task_id": "W70-04-PLAN-CODER",
+      "phase": "04_PLAN",
+      "phase_name": "Kế hoạch",
+      "task_title": "Đề xuất estimate, task breakdown kỹ thuật và test cases theo WP",
+      "accountable_role": "CODER",
+      "assigned_identity": "Vi (đề xuất; chờ xác minh capability)",
+      "assignment_status": "PROPOSED_NOT_VERIFIED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Phân rã mỗi WP thành code task theo file/module/API/UI/data migration cụ thể.",
+        "Đề xuất estimate, dependency, test case và dữ liệu/fixture cần có.",
+        "Nêu rõ quyền sửa file, lệnh kiểm thử, artifact bàn giao và giới hạn không tự merge/release."
+      ],
+      "scope_boundary": "Chỉ sửa source trong repo/branch/file scope được giao; không tự merge, release hoặc tự xác nhận PASS.",
+      "deliverable": "Coder work breakdown và test outline",
+      "acceptance_criteria": "Task đủ nhỏ để giao; estimate có basis/confidence; không tự nhận task khi chưa ACK",
+      "verification_method": "Chạy đúng lệnh test trong repo/runbook đã chỉ định; lưu command, exit code, log, artifact và SHA.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-04-PLAN-CSA",
+        "W70-04-PLAN-CTO"
+      ],
+      "evidence_refs": [],
+      "next_action": "Xác nhận coder identity/capability và lập estimate"
+    },
+    {
+      "task_id": "W70-05-BUILD-CEO",
+      "phase": "05_BUILD",
+      "phase_name": "Thi công",
+      "task_title": "Theo dõi trạng thái task, dependency, blocker, thay đổi scope và handoff",
+      "accountable_role": "CEO",
+      "assigned_identity": "Xu / AI-01",
+      "assignment_status": "PROPOSED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Theo dõi trạng thái từ task register; chỉ tính IN_PROGRESS khi có ACK và hoạt động.",
+        "Điều phối blocker, dependency, thay đổi scope và quyết định cần PO.",
+        "Cập nhật decision/status/evidence ref/next action; không tự xác nhận chất lượng code."
+      ],
+      "scope_boundary": "Điều phối, tổng hợp, quyết định trong phạm vi ủy quyền; không tự thay reviewer/QE/PO.",
+      "deliverable": "Task status updates, decision records và escalation",
+      "acceptance_criteria": "Mỗi cập nhật có timestamp, evidence, next action; không biến báo cáo thành PASS giả",
+      "verification_method": "Kiểm tra completeness của hồ sơ và traceability; đối chiếu task register, decision log, gate evidence.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-04-PLAN-CEO",
+        "W70-04-PLAN-CSA",
+        "W70-04-PLAN-CTO",
+        "W70-04-PLAN-CODER"
+      ],
+      "evidence_refs": [],
+      "next_action": "Duy trì task board theo bằng chứng"
+    },
+    {
+      "task_id": "W70-05-BUILD-CSA",
+      "phase": "05_BUILD",
+      "phase_name": "Thi công",
+      "task_title": "Review các thay đổi ảnh hưởng kiến trúc, bảo mật, dữ liệu và contract",
+      "accountable_role": "CSA",
+      "assigned_identity": "Ka / AI-02",
+      "assignment_status": "PROPOSED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Review độc lập thay đổi ảnh hưởng kiến trúc, security, privacy, data integrity hoặc contract.",
+        "Đối chiếu diff với ADR/requirement; kiểm tra regression risk và policy boundary.",
+        "Ghi finding theo file/dòng, severity, evidence và điều kiện sửa; không tự merge."
+      ],
+      "scope_boundary": "Phản biện và audit độc lập; không tự duyệt phần do mình thiết kế, không sửa source nếu không có assignment riêng.",
+      "deliverable": "Design/code review findings",
+      "acceptance_criteria": "Review đúng scope; finding được xử lý hoặc chấp nhận có thẩm quyền; không tự merge",
+      "verification_method": "Checklist review độc lập; đối chiếu requirement/ADR/policy/diff; ghi finding có vị trí và bằng chứng.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-05-BUILD-CEO",
+        "W70-05-BUILD-CTO"
+      ],
+      "evidence_refs": [],
+      "next_action": "Review thay đổi theo trigger và evidence"
+    },
+    {
+      "task_id": "W70-05-BUILD-CTO",
+      "phase": "05_BUILD",
+      "phase_name": "Thi công",
+      "task_title": "Dẫn dắt kỹ thuật, tích hợp module, xử lý root cause và review chất lượng code",
+      "accountable_role": "CTO",
+      "assigned_identity": "Cla / AI-03",
+      "assignment_status": "PROPOSED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Kiểm tra branch/diff/contract và tích hợp module theo kiến trúc đã duyệt.",
+        "Chẩn đoán lỗi tích hợp, quản lý interface/version và chất lượng kỹ thuật.",
+        "Tạo integration report, quyết định kỹ thuật và test evidence; yêu cầu rollback khi vượt scope."
+      ],
+      "scope_boundary": "Chủ trì kỹ thuật, kiến trúc và tích hợp; thay đổi source phải có task/permission cụ thể.",
+      "deliverable": "Integrated implementation và technical review",
+      "acceptance_criteria": "Code đáp ứng kiến trúc; integration reproducible; lỗi có root cause và regression test",
+      "verification_method": "Review contract/diff; chạy hoặc chỉ định test kỹ thuật phù hợp; lưu version, command và output.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-05-BUILD-CEO"
+      ],
+      "evidence_refs": [],
+      "next_action": "Điều phối tích hợp và xử lý technical blocker"
+    },
+    {
+      "task_id": "W70-05-BUILD-CODER",
+      "phase": "05_BUILD",
+      "phase_name": "Thi công",
+      "task_title": "Thực hiện code/UI/backend, unit tests, docs và cập nhật evidence theo assignment",
+      "accountable_role": "CODER",
+      "assigned_identity": "Vi (đề xuất; chờ xác minh capability)",
+      "assignment_status": "PROPOSED_NOT_VERIFIED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Nhận task READY; xác nhận repo/branch/SHA, file scope, permission và acceptance.",
+        "Sửa đúng module/file được giao; bổ sung unit test và cập nhật tài liệu liên quan.",
+        "Chạy test được chỉ định; nộp diff/commit, log, kết quả và handoff cho CTO/reviewer."
+      ],
+      "scope_boundary": "Chỉ sửa source trong repo/branch/file scope được giao; không tự merge, release hoặc tự xác nhận PASS.",
+      "deliverable": "Code changes, tests, implementation notes và evidence refs",
+      "acceptance_criteria": "Chỉ sửa đúng path/branch/permission; test result chính xác; không tự review/merge/release",
+      "verification_method": "Chạy đúng lệnh test trong repo/runbook đã chỉ định; lưu command, exit code, log, artifact và SHA.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-05-BUILD-CSA",
+        "W70-05-BUILD-CTO"
+      ],
+      "evidence_refs": [],
+      "next_action": "Nhận task cụ thể sau capability check và ACK"
+    },
+    {
+      "task_id": "W70-06-VERIFY-CEO",
+      "phase": "06_VERIFY",
+      "phase_name": "Kiểm chứng",
+      "task_title": "Điều phối readiness, defect triage, blocker closure và chuẩn bị quyết định nghiệm thu",
+      "accountable_role": "CEO",
+      "assigned_identity": "Xu / AI-01",
+      "assignment_status": "PROPOSED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Lập danh sách requirement/task cần xác minh và trạng thái evidence.",
+        "Điều phối defect triage, mức độ, owner, deadline và retest.",
+        "Chuẩn bị readiness summary; không thay QE/QA kết luận PASS."
+      ],
+      "scope_boundary": "Điều phối, tổng hợp, quyết định trong phạm vi ủy quyền; không tự thay reviewer/QE/PO.",
+      "deliverable": "Verification readiness và defect disposition proposal",
+      "acceptance_criteria": "Không tự xác nhận QE; mỗi defect có severity, owner, disposition và evidence",
+      "verification_method": "Kiểm tra completeness của hồ sơ và traceability; đối chiếu task register, decision log, gate evidence.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-05-BUILD-CEO",
+        "W70-05-BUILD-CSA",
+        "W70-05-BUILD-CTO",
+        "W70-05-BUILD-CODER"
+      ],
+      "evidence_refs": [],
+      "next_action": "Tổng hợp coverage và trạng thái defect"
+    },
+    {
+      "task_id": "W70-06-VERIFY-CSA",
+      "phase": "06_VERIFY",
+      "phase_name": "Kiểm chứng",
+      "task_title": "Review độc lập kiến trúc, security, privacy, data integrity và acceptance evidence",
+      "accountable_role": "CSA",
+      "assigned_identity": "Ka / AI-02",
+      "assignment_status": "PROPOSED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Audit độc lập security, privacy, architecture compliance, data integrity và traceability.",
+        "Thực hiện checklist/review trên evidence thực tế; phân biệt finding với giả định.",
+        "Ghi audit report, severity, bằng chứng, residual risk và điều kiện chấp nhận."
+      ],
+      "scope_boundary": "Phản biện và audit độc lập; không tự duyệt phần do mình thiết kế, không sửa source nếu không có assignment riêng.",
+      "deliverable": "Independent architecture/compliance review",
+      "acceptance_criteria": "Finding có evidence; reviewer không phải tác giả chính; chưa đủ bằng chứng thì BLOCKED",
+      "verification_method": "Checklist review độc lập; đối chiếu requirement/ADR/policy/diff; ghi finding có vị trí và bằng chứng.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-06-VERIFY-CEO",
+        "W70-06-VERIFY-CTO"
+      ],
+      "evidence_refs": [],
+      "next_action": "Thực hiện review độc lập theo checklist"
+    },
+    {
+      "task_id": "W70-06-VERIFY-CTO",
+      "phase": "06_VERIFY",
+      "phase_name": "Kiểm chứng",
+      "task_title": "Phân tích lỗi, xác định root cause, xác nhận fix và regression strategy",
+      "accountable_role": "CTO",
+      "assigned_identity": "Cla / AI-03",
+      "assignment_status": "PROPOSED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Truy vết lỗi từ symptom tới component, log, commit và điều kiện tái hiện.",
+        "Lập RCA (root cause analysis), xác định nguyên nhân gốc và phạm vi ảnh hưởng.",
+        "Thiết kế fix/regression; kiểm tra fix trên cùng điều kiện và vùng liên quan."
+      ],
+      "scope_boundary": "Chủ trì kỹ thuật, kiến trúc và tích hợp; thay đổi source phải có task/permission cụ thể.",
+      "deliverable": "Root-cause report và technical verification",
+      "acceptance_criteria": "Fix liên kết defect; regression chứng minh không tái phát; log/command đầy đủ",
+      "verification_method": "Review contract/diff; chạy hoặc chỉ định test kỹ thuật phù hợp; lưu version, command và output.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-06-VERIFY-CEO"
+      ],
+      "evidence_refs": [],
+      "next_action": "Khép technical findings và regression"
+    },
+    {
+      "task_id": "W70-06-VERIFY-CODER",
+      "phase": "06_VERIFY",
+      "phase_name": "Kiểm chứng",
+      "task_title": "Chạy unit/integration/browser E2E được giao; sửa defect và cung cấp evidence",
+      "accountable_role": "CODER",
+      "assigned_identity": "Vi (đề xuất; chờ xác minh capability)",
+      "assignment_status": "PROPOSED_NOT_VERIFIED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Thực thi test case được giao trên môi trường/phiên bản đã khóa.",
+        "Lưu command, exit code, log, artifact, thời điểm và SHA; không chỉ ghi kết quả bằng lời.",
+        "Sửa defect có assignment; chạy lại test liên quan và bàn giao evidence cho QE độc lập."
+      ],
+      "scope_boundary": "Chỉ sửa source trong repo/branch/file scope được giao; không tự merge, release hoặc tự xác nhận PASS.",
+      "deliverable": "Test reports, test artifacts và fix commits",
+      "acceptance_criteria": "Không tự khai PASS nếu chưa chạy; evidence gắn commit/version và môi trường",
+      "verification_method": "Chạy đúng lệnh test trong repo/runbook đã chỉ định; lưu command, exit code, log, artifact và SHA.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-06-VERIFY-CSA",
+        "W70-06-VERIFY-CTO"
+      ],
+      "evidence_refs": [],
+      "next_action": "Thực thi test được phân quyền; bàn giao Qw/An review độc lập"
+    },
+    {
+      "task_id": "W70-07-ACCEPT-CEO",
+      "phase": "07_ACCEPT",
+      "phase_name": "Nghiệm thu",
+      "task_title": "Tổng hợp hồ sơ nghiệm thu và đề xuất quyết định cho Product Owner",
+      "accountable_role": "CEO",
+      "assigned_identity": "Xu / AI-01",
+      "assignment_status": "PROPOSED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Tập hợp gate status, task closure, test report, risk và evidence register.",
+        "Đối chiếu từng acceptance criterion với bằng chứng; liệt kê ngoại lệ chưa đóng.",
+        "Lập acceptance package và recommendation; trình Vinh quyết định cuối."
+      ],
+      "scope_boundary": "Điều phối, tổng hợp, quyết định trong phạm vi ủy quyền; không tự thay reviewer/QE/PO.",
+      "deliverable": "Acceptance package và recommendation",
+      "acceptance_criteria": "Hồ sơ đủ traceability; Xu không thay Vinh đưa ra quyết định PO cuối cùng",
+      "verification_method": "Kiểm tra completeness của hồ sơ và traceability; đối chiếu task register, decision log, gate evidence.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-06-VERIFY-CEO",
+        "W70-06-VERIFY-CSA",
+        "W70-06-VERIFY-CTO",
+        "W70-06-VERIFY-CODER"
+      ],
+      "evidence_refs": [],
+      "next_action": "Chuẩn bị hồ sơ nghiệm thu dựa trên evidence đã VERIFIED"
+    },
+    {
+      "task_id": "W70-07-ACCEPT-CSA",
+      "phase": "07_ACCEPT",
+      "phase_name": "Nghiệm thu",
+      "task_title": "Đánh giá độc lập residual risk, compliance và điều kiện chấp nhận",
+      "accountable_role": "CSA",
+      "assigned_identity": "Ka / AI-02",
+      "assignment_status": "PROPOSED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Đánh giá residual risk, compliance, security/privacy và các finding còn mở.",
+        "Kiểm tra ngoại lệ có người chấp nhận, thời hạn và biện pháp giảm thiểu.",
+        "Phát hành independent acceptance review; nêu rõ ACCEPT/CONDITIONAL/REJECT recommendation."
+      ],
+      "scope_boundary": "Phản biện và audit độc lập; không tự duyệt phần do mình thiết kế, không sửa source nếu không có assignment riêng.",
+      "deliverable": "Independent acceptance review",
+      "acceptance_criteria": "Residual risk có disposition; không có finding critical chưa xử lý hoặc chấp nhận chính thức",
+      "verification_method": "Checklist review độc lập; đối chiếu requirement/ADR/policy/diff; ghi finding có vị trí và bằng chứng.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-07-ACCEPT-CEO",
+        "W70-07-ACCEPT-CTO"
+      ],
+      "evidence_refs": [],
+      "next_action": "Đưa ra ý kiến độc lập, không tự accept"
+    },
+    {
+      "task_id": "W70-07-ACCEPT-CTO",
+      "phase": "07_ACCEPT",
+      "phase_name": "Nghiệm thu",
+      "task_title": "Xác nhận technical readiness, deployability, rollback và vận hành",
+      "accountable_role": "CTO",
+      "assigned_identity": "Cla / AI-03",
+      "assignment_status": "PROPOSED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Xác nhận build reproducible, version/SHA, dependency, config và deployability.",
+        "Kiểm tra backup/restore, rollback, monitoring, runbook và operational ownership.",
+        "Nộp technical readiness statement kèm bằng chứng; không thay PO ký nghiệm thu."
+      ],
+      "scope_boundary": "Chủ trì kỹ thuật, kiến trúc và tích hợp; thay đổi source phải có task/permission cụ thể.",
+      "deliverable": "Technical acceptance recommendation",
+      "acceptance_criteria": "Build/version, test, security, rollback và operational evidence đầy đủ",
+      "verification_method": "Review contract/diff; chạy hoặc chỉ định test kỹ thuật phù hợp; lưu version, command và output.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-07-ACCEPT-CEO"
+      ],
+      "evidence_refs": [],
+      "next_action": "Lập technical readiness statement"
+    },
+    {
+      "task_id": "W70-07-ACCEPT-CODER",
+      "phase": "07_ACCEPT",
+      "phase_name": "Nghiệm thu",
+      "task_title": "Khép defect được giao, hoàn thiện tài liệu kỹ thuật và bàn giao source",
+      "accountable_role": "CODER",
+      "assigned_identity": "Vi (đề xuất; chờ xác minh capability)",
+      "assignment_status": "PROPOSED_NOT_VERIFIED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Đóng defect được giao hoặc ghi rõ disposition và lý do còn mở.",
+        "Hoàn thiện README/API/config/migration/runbook thuộc phạm vi task.",
+        "Bàn giao source revision, test evidence, known limitations và hướng dẫn tái lập."
+      ],
+      "scope_boundary": "Chỉ sửa source trong repo/branch/file scope được giao; không tự merge, release hoặc tự xác nhận PASS.",
+      "deliverable": "Final code, defect closure evidence và handoff",
+      "acceptance_criteria": "Không còn task code mở ngoài disposition được chấp nhận; commit/version xác định",
+      "verification_method": "Chạy đúng lệnh test trong repo/runbook đã chỉ định; lưu command, exit code, log, artifact và SHA.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-07-ACCEPT-CSA",
+        "W70-07-ACCEPT-CTO"
+      ],
+      "evidence_refs": [],
+      "next_action": "Đóng các task code còn lại và bàn giao"
+    },
+    {
+      "task_id": "W70-08-RELEASE-CEO",
+      "phase": "08_RELEASE",
+      "phase_name": "Phát hành",
+      "task_title": "Điều phối release readiness, change communication và trình phê duyệt phát hành",
+      "accountable_role": "CEO",
+      "assigned_identity": "Xu / AI-01",
+      "assignment_status": "PROPOSED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Kiểm tra acceptance và release gate đã đủ điều kiện trước khi lập lịch.",
+        "Chuẩn bị release communication, change summary, owner và phương án thông báo sự cố.",
+        "Trình phê duyệt phát hành; không kích hoạt release khi thiếu approval."
+      ],
+      "scope_boundary": "Điều phối, tổng hợp, quyết định trong phạm vi ủy quyền; không tự thay reviewer/QE/PO.",
+      "deliverable": "Release readiness pack và release recommendation",
+      "acceptance_criteria": "Không phát hành khi gate/acceptance chưa PASS hoặc thiếu phê duyệt",
+      "verification_method": "Kiểm tra completeness của hồ sơ và traceability; đối chiếu task register, decision log, gate evidence.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-07-ACCEPT-CEO",
+        "W70-07-ACCEPT-CSA",
+        "W70-07-ACCEPT-CTO",
+        "W70-07-ACCEPT-CODER"
+      ],
+      "evidence_refs": [],
+      "next_action": "Trình release readiness khi acceptance hoàn tất"
+    },
+    {
+      "task_id": "W70-08-RELEASE-CSA",
+      "phase": "08_RELEASE",
+      "phase_name": "Phát hành",
+      "task_title": "Review release risk, security exposure, compatibility và rollback adequacy",
+      "accountable_role": "CSA",
+      "assigned_identity": "Ka / AI-02",
+      "assignment_status": "PROPOSED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Đánh giá release diff, threat exposure, dependency/license và compatibility risk.",
+        "Kiểm tra secret handling, quyền truy cập, data migration và rollback adequacy.",
+        "Phát hành release risk review với mitigation, owner và residual risk acceptance."
+      ],
+      "scope_boundary": "Phản biện và audit độc lập; không tự duyệt phần do mình thiết kế, không sửa source nếu không có assignment riêng.",
+      "deliverable": "Release risk review",
+      "acceptance_criteria": "Rủi ro release có phương án giảm thiểu và người chấp nhận",
+      "verification_method": "Checklist review độc lập; đối chiếu requirement/ADR/policy/diff; ghi finding có vị trí và bằng chứng.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-08-RELEASE-CEO",
+        "W70-08-RELEASE-CTO"
+      ],
+      "evidence_refs": [],
+      "next_action": "Review release risk trước khi phát hành"
+    },
+    {
+      "task_id": "W70-08-RELEASE-CTO",
+      "phase": "08_RELEASE",
+      "phase_name": "Phát hành",
+      "task_title": "Quản lý version/build artifact, deployment design, rollback và observability",
+      "accountable_role": "CTO",
+      "assigned_identity": "Cla / AI-03",
+      "assignment_status": "PROPOSED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Chốt version/tag, commit SHA, build provenance và artifact checksum.",
+        "Lập deployment sequence, config/environment matrix, health check và monitoring.",
+        "Diễn tập rollback/restore; ghi runbook, ngưỡng abort và bằng chứng rehearsal."
+      ],
+      "scope_boundary": "Chủ trì kỹ thuật, kiến trúc và tích hợp; thay đổi source phải có task/permission cụ thể.",
+      "deliverable": "Release engineering package",
+      "acceptance_criteria": "Artifact có version/hash; deployment/rollback đã kiểm chứng; không dùng môi trường giả",
+      "verification_method": "Review contract/diff; chạy hoặc chỉ định test kỹ thuật phù hợp; lưu version, command và output.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-08-RELEASE-CEO"
+      ],
+      "evidence_refs": [],
+      "next_action": "Chuẩn bị release engineering"
+    },
+    {
+      "task_id": "W70-08-RELEASE-CODER",
+      "phase": "08_RELEASE",
+      "phase_name": "Phát hành",
+      "task_title": "Chuẩn bị build scripts, migration scripts, release notes và deploy automation",
+      "accountable_role": "CODER",
+      "assigned_identity": "Vi (đề xuất; chờ xác minh capability)",
+      "assignment_status": "PROPOSED_NOT_VERIFIED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Viết/chỉnh build, migration, deployment và rollback scripts trong phạm vi được giao.",
+        "Bảo đảm script idempotent, secret-safe, có validation và xử lý lỗi rõ.",
+        "Chạy test trên môi trường được phép; bàn giao script, log, release notes và source SHA."
+      ],
+      "scope_boundary": "Chỉ sửa source trong repo/branch/file scope được giao; không tự merge, release hoặc tự xác nhận PASS.",
+      "deliverable": "Build/deploy artifacts và release notes",
+      "acceptance_criteria": "Scripts được test, có rollback, secret-safe và trace đến source revision",
+      "verification_method": "Chạy đúng lệnh test trong repo/runbook đã chỉ định; lưu command, exit code, log, artifact và SHA.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-08-RELEASE-CSA",
+        "W70-08-RELEASE-CTO"
+      ],
+      "evidence_refs": [],
+      "next_action": "Chuẩn bị artifacts theo release assignment"
+    },
+    {
+      "task_id": "W70-09-OPERATE-CEO",
+      "phase": "09_OPERATE",
+      "phase_name": "Vận hành",
+      "task_title": "Theo dõi outcome, backlog, SLA/KPI và quyết định cải tiến trong phạm vi",
+      "accountable_role": "CEO",
+      "assigned_identity": "Xu / AI-01",
+      "assignment_status": "PROPOSED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Theo dõi outcome/KPI/SLA từ nguồn dữ liệu đã xác định.",
+        "Đánh giá backlog, incident, mức độ đạt mục tiêu và ưu tiên cải tiến.",
+        "Ra quyết định vận hành có owner, hạn xử lý và căn cứ số liệu."
+      ],
+      "scope_boundary": "Điều phối, tổng hợp, quyết định trong phạm vi ủy quyền; không tự thay reviewer/QE/PO.",
+      "deliverable": "Operational review và prioritized improvement backlog",
+      "acceptance_criteria": "KPI có nguồn; thay đổi có decision/owner; không nhầm dashboard snapshot với live metrics",
+      "verification_method": "Kiểm tra completeness của hồ sơ và traceability; đối chiếu task register, decision log, gate evidence.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-08-RELEASE-CEO",
+        "W70-08-RELEASE-CSA",
+        "W70-08-RELEASE-CTO",
+        "W70-08-RELEASE-CODER"
+      ],
+      "evidence_refs": [],
+      "next_action": "Thiết lập review cadence và outcome measures"
+    },
+    {
+      "task_id": "W70-09-OPERATE-CSA",
+      "phase": "09_OPERATE",
+      "phase_name": "Vận hành",
+      "task_title": "Giám sát architecture drift, policy compliance và technical debt",
+      "accountable_role": "CSA",
+      "assigned_identity": "Ka / AI-02",
+      "assignment_status": "PROPOSED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Định kỳ rà soát architecture drift, quyền, policy và technical debt.",
+        "Đối chiếu thay đổi production với ADR và baseline được duyệt.",
+        "Ghi governance finding và remediation owner/deadline."
+      ],
+      "scope_boundary": "Phản biện và audit độc lập; không tự duyệt phần do mình thiết kế, không sửa source nếu không có assignment riêng.",
+      "deliverable": "Architecture governance review",
+      "acceptance_criteria": "Drift được phát hiện, phân loại và có remediation owner",
+      "verification_method": "Checklist review độc lập; đối chiếu requirement/ADR/policy/diff; ghi finding có vị trí và bằng chứng.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-09-OPERATE-CEO",
+        "W70-09-OPERATE-CTO"
+      ],
+      "evidence_refs": [],
+      "next_action": "Rà soát drift theo evidence"
+    },
+    {
+      "task_id": "W70-09-OPERATE-CTO",
+      "phase": "09_OPERATE",
+      "phase_name": "Vận hành",
+      "task_title": "Điều phối incident, reliability, maintenance và technical roadmap",
+      "accountable_role": "CTO",
+      "assigned_identity": "Cla / AI-03",
+      "assignment_status": "PROPOSED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Theo dõi reliability, latency, error rate, capacity và incident.",
+        "Điều phối incident timeline, containment, RCA và corrective action.",
+        "Cập nhật maintenance plan, observability và technical roadmap."
+      ],
+      "scope_boundary": "Chủ trì kỹ thuật, kiến trúc và tích hợp; thay đổi source phải có task/permission cụ thể.",
+      "deliverable": "Operations technical report và incident RCA",
+      "acceptance_criteria": "Incident có timeline, impact, root cause, remediation và lessons learned",
+      "verification_method": "Review contract/diff; chạy hoặc chỉ định test kỹ thuật phù hợp; lưu version, command và output.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-09-OPERATE-CEO"
+      ],
+      "evidence_refs": [],
+      "next_action": "Thiết lập technical operations model"
+    },
+    {
+      "task_id": "W70-09-OPERATE-CODER",
+      "phase": "09_OPERATE",
+      "phase_name": "Vận hành",
+      "task_title": "Thực hiện maintenance, bugfix, dependency updates và regression",
+      "accountable_role": "CODER",
+      "assigned_identity": "Vi (đề xuất; chờ xác minh capability)",
+      "assignment_status": "PROPOSED_NOT_VERIFIED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "execution_steps": [
+        "Nhận maintenance/bugfix task có reproduction và acceptance rõ.",
+        "Sửa lỗi/dependency có kiểm soát, cập nhật test và tài liệu.",
+        "Chạy regression, nộp diff/log/evidence và liên kết release version."
+      ],
+      "scope_boundary": "Chỉ sửa source trong repo/branch/file scope được giao; không tự merge, release hoặc tự xác nhận PASS.",
+      "deliverable": "Maintenance changes và regression evidence",
+      "acceptance_criteria": "Thay đổi có task/assignment, review, tests và release trace",
+      "verification_method": "Chạy đúng lệnh test trong repo/runbook đã chỉ định; lưu command, exit code, log, artifact và SHA.",
+      "evidence_required": [
+        "Task ID, thời điểm, người thực hiện và trạng thái ACK",
+        "Nguồn đầu vào/phiên bản/commit SHA hoặc tài liệu tham chiếu",
+        "Các bước/lệnh/phương pháp đã thực hiện và kết quả quan sát",
+        "Deliverable hoặc đường dẫn artifact/diff/report",
+        "Acceptance checklist có kết quả từng tiêu chí; FAIL/BLOCKED phải có nguyên nhân và next action"
+      ],
+      "dependencies": [
+        "W70-09-OPERATE-CSA",
+        "W70-09-OPERATE-CTO"
+      ],
+      "evidence_refs": [],
+      "next_action": "Nhận maintenance tasks theo backlog được duyệt"
+    }
+  ]
+}
