@@ -148,9 +148,9 @@ def create_server(service: MeetingService) -> Server:
                     isError=True,
                 )
             except MeetingRateStoreUnavailable as exc:
-                return types.CallToolResult(
+                return CallToolResult(
                     content=[
-                        types.TextContent(
+                        TextContent(
                             type="text",
                             text="PASTE_RATE_STORE_UNAVAILABLE",
                         )
