@@ -52,3 +52,13 @@ Các commit d7f1963 và 4f83c5b được tạo trong một môi trường shell 
 - **Evidence:** Canonical documents were created on the Work 103 branch; exact blob readback and branch-head confirmation are pending the final verification pass.
 - **Status:** DONE for canonical promotion and historical preservation; NOT VERIFIED for inbound links, CI regression and independent QE.
 - **Next:** Run link/reference audit and CI; then continue lifecycle folders, Work Package mapping and dashboard.
+
+## LOG-W103-20261108-004 — CI regression after standardization commits
+- **Time:** 2026-11-08 16:35 UTC+07
+- **Run:** 42467546737 (run #85), head f56f86cb9c8ba2be8be990d8cebdb0a1068f0daa.
+- **Method:** Retrieved workflow jobs and decoded logs for Python 3.11 and Python 3.12.
+- **Result:** Both jobs FAILED at step "Manifest V4 + Ka V3 corpus-aligned evaluation (independent gate)". The independent evaluation reported no_answer_accuracy=0.300 below baseline floor 0.8. Syntax compile, unit tests, evidence-support Gate B and existing labeled retrieval evaluation step succeeded. Controlled retrieval experiment and artifact upload were skipped because the independent gate failed.
+- **Additional log warning:** Post-checkout cleanup reported "No url found for submodule path 'room-meeting-ai' in .gitmodules" with exit 128; this is a separate cleanup warning, not the failing evaluation step. Preserve as an open CI cleanup issue.
+- **Interpretation:** The failure is not evidence that the new document structure caused the regression; the failing step evaluates the existing corpus/evaluation data path. Root cause needs investigation before any code/data change.
+- **Status:** FAIL for this CI run; standardization remains IN_PROGRESS / NOT PASS.
+- **Next:** Trace Manifest V4, Ka V3 labels/corpus alignment and the exact failing no-answer cases. Do not weaken the gate, change min_score or promote hybrid to force green CI.
