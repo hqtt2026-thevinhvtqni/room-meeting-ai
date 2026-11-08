@@ -49,7 +49,7 @@ def mount_execution_authority_routes(app: FastAPI, authority: ExecutionAuthority
             identity = core.authenticate(service_credential)
             if not core.is_identity_allowed_for_work(identity, work_id):
                 raise HTTPException(status_code=403, detail="caller_not_authorized_for_work")
-            grant = core.issue_grant(identity, work_id, body.purpose, body.max_timeout_seconds)
+            grant = core.issue_grant(identity, work_id, body.purpose, max_timeout_seconds=body.max_timeout_seconds)
             # Token is returned once over the authenticated private transport.
             # Callers must keep it in memory and never log it.
             return grant
