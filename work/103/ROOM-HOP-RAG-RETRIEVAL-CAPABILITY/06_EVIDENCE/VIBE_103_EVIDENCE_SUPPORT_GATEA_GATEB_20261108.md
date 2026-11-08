@@ -6,7 +6,7 @@
 - Build authorization: Vinh, in the Work 103 coordination conversation, after reviewing the branch state (V2 proposal + V2 pre-review, both ending BLOCKED with gaps B1–B6).
 - Status: **GATE B PROTOTYPE BUILT AND CI-WIRED; GATE A INDEPENDENT ADJUDICATION OPEN; GATE C/D OPEN; E2E CLOSED.**
 
-## 1. What was built (single commit)
+## 1. What was built (initial commit b2bc262; fix history in section 4)
 
 1. `03_ARCHITECTURE/EVIDENCE_SUPPORT_STAGE_CONTRACT_V3.md` — interface contract V3 closing the six blocking findings B1–B6 of `KA_EVIDENCE_SUPPORT_STAGE_V2_REVIEW_20261029.md`: T4a/T4b deterministic split (B1), frozen request/response schema with 9 reason codes and locked precedence (B2), fact-identity/scope/value-conflict rules with fail-closed same-scope conflicts and no authority-resolution policy (B3), metamorphic score-independence protocol (B4), adjudication protocol (B5), coverage matrix enforced structurally by the runner (B6).
 2. `05_TEST/EVIDENCE_SUPPORT_DECISION_SET_V1.json` — Gate A expected-support-decision dataset, SEPARATE from labels V3 (untouched): 11 gate-counted rows covering T1–T7 (+T4a/T4b split) plus 3 coverage rows (C_SUPPORTED, C_NO_CANDIDATES, C_SCOPED_DIFFERENCE), and 2 pending non-gate-counted rows for the borderline cases Q008/Q037 required by V2 section 6. Every row carries exact spans, rationale, and an adjudication record.
@@ -26,7 +26,18 @@ The build environment available to Vibe at authoring time executes TypeScript, n
 - The corpus-aligned strict no-answer retrieval gate is still expected to FAIL (Q008/Q035/Q010 lexical leaks persist). The evidence-support stage is the separately scoped remediation path; it does not change the retrieval floors or claim lexical retrieval PASS.
 - Immutables preserved: labels V3, fixture freezes V1/V2, baseline thresholds, Qw V5, `rag_retrieval.py`, `rag_eval.py`, existing eval sets.
 
-## 4. Required next actions
+## 4. Execution record (CI)
+
+- Commit `b2bc262` (initial build), Actions run 42467238385: py_compile PASS; the new suite FAILED with 2 defects (32/34 tests passing): (1) `compile_pattern` let `re.error` escape instead of the controlled `ValueError`; (2) a self-authored mutation test removed both the requirement and its coverage, so nothing was rejected.
+- Commit `bf7a741` (temporary diagnostic, reverted in the fix commit): surfaced the failure details as CI annotations to locate the two defects without admin log access.
+- Commit `351269` (fix + diagnostic revert), Actions run **42467375198**, verified via GitHub API 2026-11-08:
+  - py_compile PASS (3.11 & 3.12), all three unit suites PASS (retrieval + eval + the new 34-test evidence-support suite),
+  - **Gate B decision-set step PASS** (`python rag_evidence_support.py`; 11/11 gate-counted rows match expected decisions; Q008/Q037 reported as pending, excluded),
+  - Labeled retrieval baseline gate PASS, grounded-abstention diagnostic PASS,
+  - Manifest V4 + Ka V3 corpus-aligned evaluation FAIL — **expected and preserved**: the pre-existing strict no-answer retrieval baseline (Q008/Q035/Q010 lexical leaks). The evidence-support stage does not change that gate, and no claim of lexical retrieval PASS is made.
+- CI conclusion for run 42467375198 is therefore FAILURE at the corpus-aligned step, with every new Gate A/B artifact green upstream of it.
+
+## 5. Required next actions
 
 1. CI run on this commit: verify py_compile, the three unit suites, and the Gate B decision-set step; record the run ID here.
 2. Independent architecture review of Contract V3 (Xu or a reviewer who did not author V2/V3), with accepted/rejected findings recorded.
