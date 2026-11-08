@@ -169,7 +169,7 @@ class MeetingService:
         self,
         meeting_id: str,
         raw_text: str,
-        identity_id: str,
+        identity_id: str | None = None,
     ) -> dict[str, Any]:
         # Xu D-102-04: caller identity is required and Core verifies
         # JOIN_ACCEPTED membership before transcript append.
