@@ -46,8 +46,8 @@ Build an evidence-grounded Retrieval-Augmented Generation (RAG) capability for R
 - Canonical code/tests remain in explicitly declared source mappings. Current implementation is physically under 04_CODE and tests under 05_TEST as a legacy source layout pending controlled migration. No source move in this batch.
 
 ## 5. Canonical Work records
-- Minutes: 00_ROOT/DOC-034_BIEN-BAN_HOP-WORK-103-MINUTES.md (migration pending; current BIEN_BAN.md is legacy source).
-- Plan: 04_PLAN/DOC-045_KE-HOACH-THI-CONG_WORK-103-ROADMAP.md (migration pending; current KE_HOACH_THI_CONG_XU.md is legacy source).
+- Minutes: 00_ROOT/DOC-034_BIEN-BAN_HOP-WORK-103-MINUTES.md (canonical; BIEN_BAN.md is a compatibility pointer).
+- Plan: 04_PLAN/DOC-045_KE-HOACH-THI-CONG_WORK-103-ROADMAP.md (canonical; KE_HOACH_THI_CONG_XU.md is a compatibility pointer).
 - Architecture/model: 03_ARCHITECT/ (existing architecture content to be classified and registered).
 - Execution journal: 00_ROOT/DOC-035_NHAT-KY-THI-CONG_WORK-103-EXECUTION-LOG.md.
 - Evidence: EVIDENCE/ (cross-phase register); existing 06_EVIDENCE/ is legacy compatibility location until link/CI migration is verified.
