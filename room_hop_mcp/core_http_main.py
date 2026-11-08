@@ -6,6 +6,7 @@ identity/Work policy and durable-store environment are configured.
 """
 from __future__ import annotations
 
+import ipaddress
 import os
 from pathlib import Path
 
@@ -28,10 +29,24 @@ def build_app():
 app = build_app()
 
 
+def resolve_loopback_bind_host(value: str | None = None) -> str:
+    """Remote HTTP exposure is disabled until transport authentication ships."""
+    host = (value or os.getenv("ROOM_HOP_CORE_BIND", "127.0.0.1")).strip()
+    if host.lower() == "localhost":
+        return "127.0.0.1"
+    try:
+        address = ipaddress.ip_address(host)
+    except ValueError:
+        raise RuntimeError("ROOM HOP Core HTTP must bind to a loopback address.") from None
+    if not address.is_loopback:
+        raise RuntimeError("ROOM HOP Core HTTP remote bind is disabled pending authenticated transport.")
+    return host
+
+
 if __name__ == "__main__":
     uvicorn.run(
         app,
-        host=os.getenv("ROOM_HOP_CORE_BIND", "127.0.0.1"),
+        host=resolve_loopback_bind_host(),
         port=int(os.getenv("ROOM_HOP_CORE_PORT", "8000")),
         access_log=False,
     )

@@ -1,5 +1,6 @@
 import asyncio
 import importlib
+import inspect
 import sys
 import threading
 import time
@@ -441,3 +442,31 @@ def test_browser_evidence_path_rejects_traversal(name):
 def test_browser_evidence_path_is_confined():
     path = browser_adapter._safe_evidence_path("evidence.json")
     assert path.parent == browser_adapter.EVIDENCE.resolve()
+
+
+@pytest.mark.parametrize("name", ["bad:name.png", "bad?.png", "trailing."])
+def test_browser_evidence_path_rejects_platform_unsafe_names(name):
+    with pytest.raises(ValueError):
+        browser_adapter._safe_evidence_path(name)
+
+
+def test_browser_chromium_launch_does_not_disable_sandbox():
+    source = inspect.getsource(browser_adapter.Adapter.start)
+    assert "--no-sandbox" not in source
+
+
+def test_browser_request_guard_aborts_private_redirect_target(monkeypatch):
+    calls = []
+    monkeypatch.setattr(
+        browser_adapter.socket,
+        "getaddrinfo",
+        lambda *args, **kwargs: [(None, None, None, None, ("10.0.0.8", 0))],
+    )
+    route = SimpleNamespace(
+        request=SimpleNamespace(url="https://internal.example/redirected"),
+        abort=lambda: calls.append("abort"),
+        continue_=lambda: calls.append("continue"),
+    )
+
+    browser_adapter.Adapter._guard_route(route)
+    assert calls == ["abort"]
