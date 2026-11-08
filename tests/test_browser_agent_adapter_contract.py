@@ -453,3 +453,20 @@ def test_browser_evidence_path_rejects_platform_unsafe_names(name):
 def test_browser_chromium_launch_does_not_disable_sandbox():
     source = inspect.getsource(browser_adapter.Adapter.start)
     assert "--no-sandbox" not in source
+
+
+def test_browser_request_guard_aborts_private_redirect_target(monkeypatch):
+    calls = []
+    monkeypatch.setattr(
+        browser_adapter.socket,
+        "getaddrinfo",
+        lambda *args, **kwargs: [(None, None, None, None, ("10.0.0.8", 0))],
+    )
+    route = SimpleNamespace(
+        request=SimpleNamespace(url="https://internal.example/redirected"),
+        abort=lambda: calls.append("abort"),
+        continue_=lambda: calls.append("continue"),
+    )
+
+    browser_adapter.Adapter._guard_route(route)
+    assert calls == ["abort"]
