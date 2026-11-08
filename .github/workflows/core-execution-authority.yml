@@ -14,6 +14,8 @@ on:
       - "execution_host/**"
       - "tests/test_execution_host_authority.py"
       - "tests/test_core_http_main.py"
+      - "12/**"
+      - "13/**"
       - ".github/workflows/core-execution-authority.yml"
   push:
     branches: [work/w1111-core-execution-authority-v1-2]
@@ -35,3 +37,7 @@ jobs:
       - run: python -m pip install --upgrade pip
       - run: python -m pip install -r requirements.txt fastapi httpx
       - run: python -m pytest -q tests/test_execution_authority.py tests/test_execution_host_authority.py tests/test_core_http_main.py
+      - name: W12/W13 execution-boundary tests
+        env:
+          PYTHONPATH: 12/WORK-EXECUTION-ENVIRONMENT/04_CODE:13/EXECUTION-HOST-INFRASTRUCTURE/04_CODE
+        run: python -m pytest -q 12/WORK-EXECUTION-ENVIRONMENT/05_TEST/test_real_execution_host.py 13/EXECUTION-HOST-INFRASTRUCTURE/05_TEST/test_wee_8031_bridge.py 13/EXECUTION-HOST-INFRASTRUCTURE/05_TEST/test_core_grant_host_integration.py
