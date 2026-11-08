@@ -30,6 +30,7 @@ def make_authority(tmp_path, *, grant_seconds=120):
                 "workspace_root": str(root),
                 "execution_workspace": str(workspace),
                 "evidence_root": str(evidence),
+                "source_sha256": "a" * 64,
                 "allowed_purposes": ["pytest_run", "build"],
             }
         },
@@ -126,6 +127,7 @@ def test_work_paths_cannot_escape_work_root(tmp_path):
                     "workspace_root": str(root),
                     "execution_workspace": str(outside),
                     "evidence_root": str(root / "evidence"),
+                    "source_sha256": "a" * 64,
                 }
             },
             store_path=tmp_path / "authority.jsonl",
