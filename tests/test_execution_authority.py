@@ -159,16 +159,23 @@ def test_http_grant_flow_is_authenticated_and_work_scoped(tmp_path):
 
     wrong_work = client.get(
         f"/works/W29/execution-grants/{grant['grant_id']}",
-        headers={"Authorization": "Bearer " + grant["grant_token"]},
+        headers={"X-ROOM-HOP-SERVICE-CREDENTIAL": credential},
     )
     assert wrong_work.status_code == 403
 
     status = client.get(
         f"/works/W28/execution-grants/{grant['grant_id']}",
-        headers={"Authorization": "Bearer " + grant["grant_token"]},
+        headers={"X-ROOM-HOP-SERVICE-CREDENTIAL": credential},
     )
     assert status.status_code == 200
     assert status.json()["status"] == "active"
+
+    validated = client.get(
+        f"/works/W28/execution-grants/{grant['grant_id']}/validate",
+        headers={"Authorization": "Bearer " + grant["grant_token"]},
+    )
+    assert validated.status_code == 200
+    assert validated.json()["status"] == "active"
 
     recorded = client.post(
         f"/works/W28/execution-grants/{grant['grant_id']}/runs",
@@ -191,8 +198,15 @@ def test_http_grant_flow_is_authenticated_and_work_scoped(tmp_path):
     assert revoked.status_code == 200
     assert revoked.json()["status"] == "revoked"
 
-    after_revoke = client.get(
+    revoked_status = client.get(
         f"/works/W28/execution-grants/{grant['grant_id']}",
+        headers={"X-ROOM-HOP-SERVICE-CREDENTIAL": credential},
+    )
+    assert revoked_status.status_code == 200
+    assert revoked_status.json()["status"] == "revoked"
+
+    after_revoke = client.get(
+        f"/works/W28/execution-grants/{grant['grant_id']}/validate",
         headers={"Authorization": "Bearer " + grant["grant_token"]},
     )
     assert after_revoke.status_code == 403
