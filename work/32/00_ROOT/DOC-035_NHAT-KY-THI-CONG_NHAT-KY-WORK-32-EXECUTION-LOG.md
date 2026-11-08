@@ -1557,3 +1557,19 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **S10:** Run #277 remains the successful exact-SHA validation for atomic state and S10 tests (204 unit, 89 Product E2E, Windows 10, artifact and release gate PASS). Run #281 is a separate failed attempt caused by adding the legacy Core HTTP test.
 - **Next CI:** validate the provisional test-lane disposition on the latest exact SHA; retain the one-file coverage report and do not enable strict coverage.
 - **Status:** Core/ExecutionHost route contract OPEN pending Xu; test not counted as PASS; no Core API added; PR #49 DRAFT; main unchanged; no merge, CD, staging, production or release.
+
+
+## W32-LOG-20261109-103 — Run #284 PASS và tái đưa fail-closed Core route vào CI
+
+- **Document Number:** W32-LOG-20261109-103
+- **Priority Order:** P0 — Core HTTP fail-closed boundary and exact-SHA CI
+- **Name:** Ka
+- **Title:** CSA / Delegated Work32 Execution Owner
+- **Date-Time:** 2026-11-09 (Asia/Ho_Chi_Minh)
+- **Run #284:** `42523130669`, exact code head `b0737c78113a665b0888ce7f83e9dcfa6d839a1d`, conclusion SUCCESS — all six jobs PASS.
+- **Results:** Unit 204 PASS; Product Auto E2E 89 PASS; Work32 tooling/mirror PASS; Windows Browser Adapter E2E 10 PASS with disposable fixture/preflight and cleanup PASS; immutable artifact verification PASS; release acceptance gate PASS.
+- **Core HTTP change observed:** commit `b0737c78113a665b0888ce7f83e9dcfa6d839a1d` adds `POST /works/{work_id}/execution-grants` to `core_http_main.build_app()`, returning explicit HTTP 503 `execution_authority_not_configured`. It does not issue grants or claim authority exists. This restores the fail-closed behavior expected by the existing test and corrects the misleading module docstring.
+- **Architecture status:** Treat this only as a fail-closed guard route, not a functional execution-grant handler. Xu's route-ownership decision is still requested in PR #49; no remote exposure or authority grant is enabled. Do not merge until Xu confirms the canonical boundary.
+- **Coverage:** Run #284 still excluded `tests/test_core_http_main.py`, so the 204 Unit PASS does not validate the new route. Ka re-added this existing test to `UNIT_TESTS` and synchronized the workflow mirror byte-for-byte to verify the exact 503 fail-closed response and unchanged Meeting API. Run #285 is required before claiming this test PASS.
+- **Qw / review evidence:** Vinh reports Xu, Cla and Qw have completed the requested checks. Existing Xu/Cla first-review records are present; post-remediation decisions and the original W32 Qw QE artifact still need attributable source linkage in Work32 evidence. The Work70 Qw report remains out of scope.
+- **Status:** Run #284 PASS 6/6; latest unit contract test revalidation pending. PR #49 remains DRAFT; main unchanged; no merge, CD, staging, production or release.
