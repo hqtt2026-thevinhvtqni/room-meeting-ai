@@ -68,6 +68,7 @@ class RoomHopIntegrationConfig:
     module: str = "room_hop_mcp"
     cwd: str | None = None  # must be the room-meeting-ai project root
     env: dict[str, str] | None = None
+    python_args: list[str] | None = None
 
 
 class RoomHopIntegration:
@@ -93,7 +94,11 @@ class RoomHopIntegration:
     def _server_params(self) -> StdioServerParameters:
         return StdioServerParameters(
             command=self._config.python_executable,
-            args=["-m", self._config.module],
+            args=(
+                list(self._config.python_args)
+                if self._config.python_args is not None
+                else ["-m", self._config.module]
+            ),
             env=self._config.env,
             cwd=self._config.cwd,
         )
