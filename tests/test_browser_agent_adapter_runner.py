@@ -100,3 +100,11 @@ def test_runner_rejects_unapproved_identity(tmp_path):
     env["ROOMHOP_TEST_IDENTITY_ID"] = "identity-w32-e2e"
     with pytest.raises(ValueError, match="approved test identity"):
         validate_runtime_config(SHA, store, 49152, env)
+
+
+def test_runner_requires_explicit_shared_port(tmp_path):
+    store = _store(tmp_path)
+    env = _fixture_env(store)
+    env.pop("ROOMHOP_BROWSER_ADAPTER_PORT")
+    with pytest.raises(ValueError, match="ROOMHOP_BROWSER_ADAPTER_PORT is required"):
+        validate_runtime_config(SHA, store, 49152, env)
