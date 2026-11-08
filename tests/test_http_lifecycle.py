@@ -19,7 +19,7 @@ import yaml
 from fastapi.testclient import TestClient
 
 from core.agent_registry import AgentRegistry
-from core.meeting_manager import MeetingError
+from core.meeting_manager import MeetingError, MeetingRateStoreUnavailable
 from core.principal_registry import PrincipalRegistry
 from room_hop_mcp.adapter.http_server import create_http_app
 
@@ -229,3 +229,17 @@ def test_meeting_error_maps_to_http_400(client):
     response = client.post("/meetings/ALREADY-CLOSED/open")
     assert response.status_code == 400
     assert "closed" in response.json()["detail"]
+
+
+def test_paste_rate_store_unavailable_maps_to_http_503(client):
+    def unavailable(meeting_id, text, identity_id):
+        raise MeetingRateStoreUnavailable(3)
+
+    client.fake_service.add_paste = unavailable
+    response = client.post(
+        "/meetings/M1/paste",
+        json={"text": "hello", "identity_id": "vinh"},
+    )
+    assert response.status_code == 503
+    assert response.headers["Retry-After"] == "3"
+    assert response.json()["detail"]["code"] == "PASTE_RATE_STORE_UNAVAILABLE"
