@@ -1,8 +1,9 @@
 import sys
 from pathlib import Path
 W13_CODE = Path(__file__).resolve().parents[1] / '04_CODE'
-if str(W13_CODE) not in sys.path:
-    sys.path.insert(0, str(W13_CODE))
+if str(W13_CODE) in sys.path:
+    sys.path.remove(str(W13_CODE))
+sys.path.insert(0, str(W13_CODE))
 for _name in tuple(sys.modules):
     if _name == 'execution_host' or _name.startswith('execution_host.'):
         del sys.modules[_name]
