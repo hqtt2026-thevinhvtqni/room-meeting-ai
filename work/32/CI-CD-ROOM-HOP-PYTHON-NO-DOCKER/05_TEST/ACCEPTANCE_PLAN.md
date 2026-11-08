@@ -129,3 +129,12 @@ The Core product E2E is PASS for the exact scope in W32-EVIDENCE-005. The separa
 - Windows disposable meeting `MEETING-W32-42459846727-1`; PID 11160; dynamic port 58525; exact-SHA process/owner/health/listener preflight PASS; MCP handoff/readback PASS; cleanup PASS.
 - Removed 44 confirmed Windows Explorer `desktop.ini` metadata files from Work32 feature branch; verified zero remain. No test code or Core/API/DB/runtime behavior changed in this cleanup.
 - Main integration remains BLOCKED; Dashboard→Core remains BLOCKED / NOT RUN; Phase D CD/deployment remains BLOCKED / NOT RUN; DOC-050 G7 RELEASE NOT READY / NOT AUTHORIZED. Work32 remains ACTIVE — NOT RELEASED.
+
+
+## Latest exact-SHA checkpoint — 2026-11-08 / Run #234
+
+- Branch SHA: `0fd12a94dcf598583e402cdb92352ee2f6596880`; GitHub Actions Run #234 / `42460406640`: SUCCESS, 6/6 jobs.
+- Unit 189 passed; Product Auto E2E 68 passed; Windows Browser Adapter E2E 10 passed; immutable artifact E2E 1 passed; tooling workflow mirror IN_SYNC; CI release acceptance gate PASS.
+- Windows disposable meeting `MEETING-W32-42460406640-1`; adapter PID 21468; dynamic port 58821; exact-SHA preflight, MCP stdio handoff/readback and cleanup PASS.
+- Main compare: current main `024e2c9797da091b83c2e0ea5e3ac7f3b593eafb`; diverged 251 ahead / 273 behind; merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`; 124 changed paths. No merge/rebase/cherry-pick.
+- Work32 remains ACTIVE — NOT RELEASED; Dashboard→Core and CD remain BLOCKED / NOT RUN; DOC-050 G7 RELEASE NOT READY / NOT AUTHORIZED.
