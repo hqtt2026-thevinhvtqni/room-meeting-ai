@@ -1,8 +1,8 @@
 """Core HTTP runtime entrypoint.
 
-Runs the existing Meeting API and the additive Work execution-authority
-mount in one Core process. Execution endpoints remain 503 until the Core
-identity/Work policy and durable-store environment are configured.
+Runs the existing Meeting API. The documented Work execution-grant route is
+mounted fail-closed and returns 503 until the authority service/configuration
+is implemented and reviewed; this module does not issue grants.
 """
 from __future__ import annotations
 
@@ -11,6 +11,7 @@ import os
 from pathlib import Path
 
 import uvicorn
+from fastapi import HTTPException
 
 from core.meeting_manager import MeetingManager
 from core.meeting_service import MeetingService
@@ -23,7 +24,18 @@ def build_app():
         meetings_dir=Path(meetings_dir) if meetings_dir else None,
     ) if meetings_dir else MeetingManager()
     service = MeetingService(manager)
-    return create_http_app(service)
+    app = create_http_app(service)
+
+    @app.post("/works/{work_id}/execution-grants")
+    def deny_unconfigured_execution_authority(work_id: str):
+        # Fail closed: the deployment contract is documented, but the grant
+        # authority service/configuration is not yet implemented in this build.
+        raise HTTPException(
+            status_code=503,
+            detail="execution_authority_not_configured",
+        )
+
+    return app
 
 
 app = build_app()
