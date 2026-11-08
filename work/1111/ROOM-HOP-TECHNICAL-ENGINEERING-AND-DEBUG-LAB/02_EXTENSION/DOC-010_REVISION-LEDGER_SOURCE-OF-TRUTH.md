@@ -116,3 +116,14 @@ Computed from exact Sandbox readback using Git blob framing (`blob <UTF-8 byte l
 - C08: 4,127/4,127 W09 entries classified; W102 shared file hashes 73/73 MATCH across all four requested pairs; extra files/directories remain preserved and documented.
 - C02: workflow defines push and pull_request triggers. The connected commit-workflow query only exposes pull_request-triggered runs; exact-SHA push-run status remains NOT VERIFIED. Prior run 42454767666 is not attributed to updated C02 SHA.
 - This ledger update is docs-only on PR #48 branch. No main, PC, runtime, merge or release action.
+
+
+## FINAL ADDENDUM — 2026-11-09 — C02 DIFF EVIDENCE + DOC-003 LATEST READBACK
+
+- Branch head immediately before this DOC-010 update: `a109cf386be7214b06572a01ae455478448e672a`.
+- Latest DOC-003 branch blob after syncing C02 diff-evidence journal entry: `5ec7e503b3057adfc606d995fb703b8d22da9c77`; GitHub readback confirmed the C02 entry is present.
+- Latest Sandbox canonical journal Git blob SHA-1: `0683c639de753c34e9334918f445969b28f9d461` (67,650 UTF-8 bytes).
+- C02 diff artifact: `06_EVIDENCE/C02_COMMIT_DIFFS/PR48_CUMULATIVE_HOST_AND_TEST_DIFF.patch`, Sandbox Git blob SHA-1 `1a35161ce182c9cc65f2f4b905b607093f3ab904` (8,033 UTF-8 bytes), readback status=ok with two file diff sections.
+- Diff qualification: GitHub-generated cumulative main..PR #48 unified diff for host.py and test_execution_host.py; it is not an isolated C02-only patch and not a local `git diff`. `git apply --check` was not run.
+- C02 code/test commits remain `65cf53af2a8a656ef83327ea2718c2c65f994bf7`, `3edd072fcec184dca936c510f98ebbe42064ed30`, `e2c9e7e1508eacff390f4ac2e9117230601df7ab`. Combined commit status responses had no status entries; exact-SHA CI remains NOT VERIFIED.
+- No main, PC, runtime, merge or release action.
