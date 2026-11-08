@@ -287,7 +287,7 @@ class Meeting:
     def add_paste(
         self,
         raw_text: str,
-        identity_id: str,
+        identity_id: str | None = None,
     ) -> dict:
         """Append raw transcript only for an accepted meeting participant.
 
