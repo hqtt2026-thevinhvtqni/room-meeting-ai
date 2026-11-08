@@ -44,6 +44,7 @@ env:
     tests/test_f4_resource_limits.py
     tests/test_w32_path_safety.py
     tests/test_w32_atomic_state.py
+    tests/test_core_http_main.py
   E2E_TESTS: >-
     tests/test_e2e.py
     tests/test_execution_host.py
