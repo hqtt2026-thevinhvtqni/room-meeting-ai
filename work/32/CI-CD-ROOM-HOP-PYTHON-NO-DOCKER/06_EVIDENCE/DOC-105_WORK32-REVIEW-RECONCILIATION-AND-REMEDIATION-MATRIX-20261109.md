@@ -108,3 +108,12 @@ Notable current-source findings:
 - This finding was not included in the first remediation batch and is **OPEN**. Do not claim full S1–S10 closure.
 - Follow-up: implement atomic meeting.yaml replacement with appropriate same-process serialization; make generated ID reservation retry-safe using atomic directory creation; add concurrent update/allocation tests. Cross-process consistency must be separately proven or deployment constrained to one Core process.
 - Owner: Ka. Cla re-review required before staging/production.
+
+
+## Addendum — S10 implementation submitted for exact-SHA CI
+- Atomic YAML replacement now writes a per-thread temporary file, flushes/fsyncs, then os.replace()s the meeting.yaml.
+- A process-wide per-meeting RLock serializes read-modify-write operations across Meeting instances in the same Core process.
+- Generated meeting IDs use a process lock for allocation and atomic directory creation with collision retry.
+- Added tests for concurrent ID allocation, concurrent JOIN_ACCEPTED updates from separate Meeting objects, and atomic YAML replacement.
+- **Residual:** meeting.yaml read-modify-write is not yet cross-process serialized. Deployment must remain one Core process per local store until a cross-process lock or transactional state store is implemented and reviewed.
+- CI status for this S10 batch: pending Run #274 (`42522244216`) on head `fb7eadcc59bf22d4a91060e738760b4d5380c2fd`; do not mark S10 PASS until that exact run completes.
