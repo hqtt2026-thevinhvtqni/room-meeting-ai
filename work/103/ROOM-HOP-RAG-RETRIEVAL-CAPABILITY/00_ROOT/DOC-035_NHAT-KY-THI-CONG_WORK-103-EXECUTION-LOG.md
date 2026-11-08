@@ -20,3 +20,13 @@
 - **Status:** DONE for initial governance baseline creation; NOT VERIFIED for full structural migration, dashboard, CI regression and independent QE.
 - **Blockers:** Batch 1 migration of official records; lifecycle folders/WP mapping; audit 06_EVIDENCE consumers before path migration; dashboard not yet built.
 - **Next:** Read back all newly created files; continue batch 1 by promoting official records without deleting legacy sources; then validate CI and links.
+
+## LOG-W103-20261108-002 — GitHub readback of governance baseline
+- **Time:** 2026-11-08 16:30 UTC+07
+- **Method:** Re-fetched all five newly created canonical records from the exact Work 103 branch.
+- **Readback:** DOC-001, DOC-055, DOC-056, DOC-057 and DOC-035 all returned valid Markdown content with non-empty blob SHA.
+- **Branch head:** 2515194a83c008611753d80bb792ebadecf69877 at the time of readback.
+- **Result:** PASS for file creation/readback only.
+- **Not covered:** CI after these commits, document-link integrity, old-path pointer migration, full lifecycle folder migration, WP register, dashboard, independent QE and runtime integration.
+- **Status:** PARTIAL — governance baseline exists; standardization overall remains IN_PROGRESS / NOT PASS.
+- **Next:** Continue Batch 1; after official-record migration run link and CI checks, then record exact results.
