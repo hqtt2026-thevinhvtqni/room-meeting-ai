@@ -314,24 +314,25 @@ class Meeting:
         # Validate before quota reservation: invalid requests do not consume quota.
         raw_text = validate_transcript_text(raw_text)
 
-        header = None
-        if identity_id is not None:
-            try:
-                header, _source_type = build_header(
-                    identity_id,
-                    self.principal_registry,
-                    self.agent_registry,
-                )
-            except MessageIdentityError as e:
-                raise MeetingError(str(e)) from None
+        # Xu D-102-04: every paste must come from an accepted participant.
+        # Registry resolution alone is not meeting membership.
+        if not identity_id:
+            raise MeetingError("PASTE yêu cầu identity_id đã được xác thực trong meeting policy.")
+        if identity_id not in set(data.get("participants", [])):
+            raise MeetingError(
+                f"Identity '{identity_id}' chưa JOIN_ACCEPTED trong meeting này."
+            )
 
-        # Legacy callers remain supported but share one per-meeting anonymous
-        # bucket, so omitting identity_id cannot bypass the quota.
-        principal_key = (
-            f"resolved:{identity_id}"
-            if identity_id is not None
-            else LEGACY_UNIDENTIFIED_PRINCIPAL
-        )
+        try:
+            header, _source_type = build_header(
+                identity_id,
+                self.principal_registry,
+                self.agent_registry,
+            )
+        except MessageIdentityError as e:
+            raise MeetingError(str(e)) from None
+
+        principal_key = f"resolved:{identity_id}"
         try:
             with self.paste_rate_limiter.admission(
                 data["id"], principal_key
