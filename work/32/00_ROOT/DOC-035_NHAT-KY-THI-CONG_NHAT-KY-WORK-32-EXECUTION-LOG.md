@@ -1402,3 +1402,10 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **NON-ACTIONS:** Không dừng PID 12300; không đổi cổng tại runtime bằng thao tác thủ công; không tạo/sửa GitHub Variables; không bật Windows lane; không sửa main; không deploy/release. Chưa áp dụng code fix. Không ghi Phase 1/Phase 5 là PASS.
 - **STATUS:** Root cause understood from supplied journal evidence; architecture decision RECORDED; implementation NOT STARTED; source compatibility TRACE PENDING; Windows preflight BLOCKED; Windows E2E NOT RUN; Release Gate FAILURE on run #133; Work32 ACTIVE — NOT RELEASED.
 - **HANDOFF:** Ka thực hiện source trace DOC-092 + exact-SHA adapter/workflow/tests, báo cáo file/line/evidence và phản biện target contract. Xu giữ quyền quyết định kiến trúc và duyệt patch scope; agent chỉ triển khai sau khi Xu chốt trace. Mọi kết quả tiếp theo phải append DOC-035 với command, timestamp, scope, evidence, PASS/FAIL/BLOCKED và next step.
+
+
+## 2026-11-09 — W32 integration with unified ROOM-HOP / Work 112
+- Xu / xu — architecture and cross-Work integration reference only; no W32 code, CI workflow, test configuration, runner or release setting changed.
+- W70 remains the system control plane; W32 remains owner of CI/CD and quality-engine implementation. W112 owns cross-Work contracts and integration verification only.
+- Target GitHub branch: work/32-ci-runner-owned-fixture-v2 (current implementation branch per latest Work 32 Manifest inspected). No main merge, release, or branch promotion.
+- Runtime integration status: NOT VERIFIED; no CI run triggered by this documentation sync.
