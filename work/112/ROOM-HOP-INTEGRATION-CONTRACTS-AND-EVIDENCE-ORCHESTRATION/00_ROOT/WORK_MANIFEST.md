@@ -1,0 +1,12 @@
+# WORK MANIFEST
+- Work ID: 112
+- Work Name: ROOM-HOP-INTEGRATION-CONTRACTS-AND-EVIDENCE-ORCHESTRATION
+- Status: ACTIVE — DISCOVER / DEFINE
+- Authority: Vinh
+- Executive Coordinator: Xu / xu
+- Created: 2026-11-09
+- Canonical source: hqtt2026-thevinhvtqni/room-meeting-ai; GitHub main is source of code truth; Sandbox is working/verification zone.
+- Purpose: Define and verify cross-Work integration contracts for the unified ROOM-HOP machine under W70.
+- Non-goals: Do not rebuild W70 lifecycle engine, W32 CI engine, W33 evidence hub, W52 communication orchestration, W16 workflow engine, W37 Core, W38 Gateway, W39 Build MCP, W14 execution-host ownership, or W0000 governance registry.
+- Required reading: W70 governing documents and relevant source Work manifests, decisions, journals and contracts before every task.
+- State rule: No PASS/DONE without reproducible evidence. Journal every measurement, test, decision and blocker.
