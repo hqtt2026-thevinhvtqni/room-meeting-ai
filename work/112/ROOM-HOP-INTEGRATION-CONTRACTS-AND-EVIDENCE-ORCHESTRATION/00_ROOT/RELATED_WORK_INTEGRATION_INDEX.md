@@ -27,7 +27,7 @@
 ## Integration boundaries
 - W70 owns lifecycle, assignment, authority, gates, decisions and system dashboard.
 - W112 owns only cross-Work contracts and integration verification; it does not replace component owners.
-- W32 owns CI engine; W33 evidence storage; W52 AI communication; W16 workflow execution; W14 execution host; W37 Core; W38 Gateway; W39 Build MCP; W0000 governance registry; W21 skills; W51 coder-tester.
+- W32 owns CI engine; W33 evidence storage; W52 AI communication; W16 workflow-engine domain; W14 execution host; W37 investigates/evidences the single live Core; W38 investigates Gateway :8040; W39 investigates Build MCP :8030; W0000 governance registry; W21 skills; W51 coder-tester. W37–W39 Sandbox workspaces are not proof of deployable component implementations.
 - Component implementation remains with its owner. W112 coordinates interface contracts and cross-component tests.
 - Statuses in this index are documentation/branch synchronization states only; they do not assert runtime integration or acceptance PASS.
 
@@ -50,3 +50,12 @@ Every synchronized file must be fetched from the exact target branch after write
 - Branch inventory was read across all nine; the room-meeting-ai first branch page returned the currently visible branch set, including relevant W14/W31/W32/W33/W51/W52/W70/W1111 candidate checks. No exact W16/W21/W37/W38/W39 branch name was returned.
 - Code search remains limited to repositories with an available index and indexed default-branch search; it is not an exhaustive search of all branches or all possible repositories.
 - Next action is to derive owner-authorized exact repo + branch + path + base commit from each Work's own controlling record. Do not infer ownership from keywords or create substitute branches.
+
+
+## Work 37–39 ownership/scope correction (2026-11-09)
+- W37's detailed requirements define it as an evidence-first investigation workspace for the single live Core :8000. Its own rule says the live Core remains unique source of truth, Work 37 is not Core 2, and no write-back to live Core / MAIN_SOURCE / PC / GitHub by default. The initialization log records only Sandbox creation and folder-structure PASS; source correctness, live Core, APIs, tests, CI and GitHub sync were NOT TESTED.
+- W37's structure reference points to the full read-only MAIN_SOURCE tree snapshot held in W99. It explicitly says that tree is not source-code content, not a byte-for-byte backup, and does not prove which files are loaded by Core.
+- W38's Manifest scopes Work 38 to recording/surveying TCP :8040 Gateway behavior. At initialization it says no GitHub sync; its journal says source audit, live process/port, endpoints and runtime are not started/verified. It forbids PC/Main Source edits, service restart or config changes without Vinh approval.
+- W39's Manifest is only a minimal identity/status record; its journal says Work creation is DONE but service survey is OPEN and no live :8030 endpoint, tools/list or Build tool was tested. Its structure reference points to W99's read-only MAIN_SOURCE tree and says Work 39 is an isolated evidence/analysis workspace, not a replacement service.
+- Therefore the Work labels Core / Gateway / Build MCP describe investigation domains, not proof that W37/W38/W39 own or contain deployable component implementations. Do not describe them as canonical source-code owners or use their Sandbox folders as runtime mirrors.
+- W99 snapshot is a MAIN_SOURCE directory-tree observation, not a GitHub repository/branch mapping. It cannot be used to infer a component Work's GitHub path.
