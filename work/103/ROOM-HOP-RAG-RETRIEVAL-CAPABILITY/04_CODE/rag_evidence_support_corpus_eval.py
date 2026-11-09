@@ -39,7 +39,11 @@ from rag_evidence_support import DECISIONS, assess_support, compile_pattern  # n
 DEFAULT_FIXTURE_PATH = CODE_DIR.parent / "05_TEST" / "EVAL_SET_CORPUS_V4_V3.json"
 DEFAULT_SPECS_PATH = CODE_DIR.parent / "05_TEST" / "EVIDENCE_SUPPORT_FACT_SPECS_V1.json"
 
-ABSTAIN_FAMILY = ("EXPLICITLY_UNSPECIFIED", "CONFLICTING_EVIDENCE", "INSUFFICIENT_EVIDENCE")
+# Refusal-to-answer family for the FALSE_ABSTENTION category.
+# CONFLICTING_EVIDENCE is deliberately NOT here: the stage found evidence
+# and reported a conflict, which is a distinct ideal-mismatch
+# (IDEAL_MISMATCH_OTHER), not a refusal to answer.
+ABSTAIN_FAMILY = ("EXPLICITLY_UNSPECIFIED", "INSUFFICIENT_EVIDENCE")
 
 CATEGORIES = (
     "MATCH",
@@ -144,6 +148,8 @@ def categorize(fixture_kind: str, ideal: str, actual: str) -> str:
         return "CONTRADICTION_MISSED"
     if actual in ABSTAIN_FAMILY:
         return "FALSE_ABSTENTION"
+    # Remaining mismatches (e.g. SUPPORTED ideal with CONFLICTING_EVIDENCE
+    # actual) are distinct evidence-quality failures, not abstentions.
     return "IDEAL_MISMATCH_OTHER"
 
 

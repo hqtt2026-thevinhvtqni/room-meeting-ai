@@ -61,7 +61,9 @@ jobs:
 
       - name: Evidence-support corpus diagnostic (Gate C preparatory; report-only, authored specs pending independent adjudication)
         working-directory: work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/04_CODE
-        run: python rag_evidence_support_corpus_eval.py --ci-notice
+        run: |
+          python rag_evidence_support_corpus_eval.py --specs ../05_TEST/EVIDENCE_SUPPORT_FACT_SPECS_V1.json --ci-notice
+          python rag_evidence_support_corpus_eval.py --specs ../05_TEST/EVIDENCE_SUPPORT_FACT_SPECS_V2.json --ci-notice
 
       - name: Labeled retrieval evaluation (baseline gate, fails CI if below baseline)
         working-directory: work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/04_CODE
