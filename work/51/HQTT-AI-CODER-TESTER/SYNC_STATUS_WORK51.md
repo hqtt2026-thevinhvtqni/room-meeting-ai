@@ -45,3 +45,9 @@ The existing canonical plan at Sandbox `01_PLAN/PLAN_WORK51_v1.0.md` was already
 - Evidence exact match after sync: PASS.
 - File write operations: 27 successful responses.
 - Full test suite was not rerun in ROOM Sandbox as part of this sync; the recorded 64-test result remains the GitHub Actions evidence in the canonical plan, not a new Sandbox test result.
+
+
+## 2026-11-09 — Integration boundary with W70 / W112
+- W51 remains the Coder-Tester capability owner/adapter. W70 owns Work lifecycle and assignment authority; W112 owns cross-Work contracts and integrated verification. W51 does not become a second task orchestrator.
+- Documentation-only synchronization; no code, CI or runtime configuration changed. No test or acceptance PASS claimed.
+- GitHub target branch: work/51-hqtt-coder-tester; appended to existing SYNC_STATUS_WORK51.md. Sandbox canonical SYNC_STATUS_WORK51.md receives the same event.
