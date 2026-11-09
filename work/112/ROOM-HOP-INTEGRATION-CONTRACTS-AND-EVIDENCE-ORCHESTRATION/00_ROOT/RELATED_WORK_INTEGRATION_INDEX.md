@@ -39,3 +39,14 @@ Every synchronized file must be fetched from the exact target branch after write
 - Code searches covered those same repositories, using indexed default-branch search.
 - This is not an exhaustive search of every repository accessible to the account and does not prove that no canonical target exists elsewhere.
 - Next action is to obtain or derive owner-authorized exact branch/path/commit pins from each component Work or its controlling source record; do not create substitute branches or infer ownership from keywords.
+
+
+## Canonical-source and branch controls discovered (2026-11-09)
+- W0000 DOC-014 identifies hqtt-ai-platform/main as the original HQTT AI Platform source repository and requires preservation/read-only handling during intake. This does not automatically make it the source repo for every component Work.
+- W0000 DOC-018 is a discovery/portfolio snapshot, not a per-Work GitHub path register. It flags W37/W38/W39 as NAME_ANOMALY_REVIEW because their registry names were generic folder labels; individual Work manifests still establish their identities.
+- room-meeting-ai branch work/missing-work-roots-20261028 contains WORKS_SYNC_MATRIX.md. That matrix scopes its controlled common-root reconciliation to W15 and W98, requires branch/PR workflow (no direct main writes), and explicitly says the full mapping of all Works is incomplete.
+- PR #30 for that branch is OPEN and UNMERGED; its body says draft. It is not a merged common-root baseline and does not authorize W112 to add unrelated Work roots there.
+- The installed repository inventory query returned nine repositories: hqtt-ai-platform, hqtt-android-app, room-meeting-ai, hqtt-Dashboard-note, bh-alert-5p, 004.ont-customer-protection-platform, PL.room-meeting-ai.dash, Computer-Agent, Work-89-Ximang.
+- Branch inventory was read across all nine; the room-meeting-ai first branch page returned the currently visible branch set, including relevant W14/W31/W32/W33/W51/W52/W70/W1111 candidate checks. No exact W16/W21/W37/W38/W39 branch name was returned.
+- Code search remains limited to repositories with an available index and indexed default-branch search; it is not an exhaustive search of all branches or all possible repositories.
+- Next action is to derive owner-authorized exact repo + branch + path + base commit from each Work's own controlling record. Do not infer ownership from keywords or create substitute branches.
