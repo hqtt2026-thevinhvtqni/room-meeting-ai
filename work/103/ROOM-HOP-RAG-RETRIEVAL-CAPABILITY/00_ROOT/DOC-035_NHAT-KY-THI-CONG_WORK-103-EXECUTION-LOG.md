@@ -1,4 +1,4 @@
-# NHẠT KÝ THI CÔNG WORK 103 / WORK 103 EXECUTION LOG
+# NHẬT KÝ THI CÔNG WORK 103 / WORK 103 EXECUTION LOG
 - **STT / Document ID:** DOC-035
 - **Priority:** P0
 - **Read order:** 5
@@ -154,3 +154,17 @@ Các commit d7f1963 và 4f83c5b được tạo trong một môi trường shell 
 - **Status:** DONE for authoring and registration. Batch 5 IN_PROGRESS / NOT VERIFIED. Standardization overall remains IN_PROGRESS / NOT PASS. Gate A adjudication OPEN (DEBT-ES-02/07); Gate C design BLOCKED (DEBT-ES-03/08); E2E MCP :8020 -> Core :8000 CLOSED (DEBT-ES-04); Integration BLOCKED; Release NOT PASS. No release or gate-adjudication claim.
 - **DEBTS (ghi nợ):** DEBT-ES-05 CLOSED pending Xu confirmation. All other debts unchanged: DEBT-ES-01/02/07 (Ka — adjudication), DEBT-ES-06 (Ka/Qw — retrieval-side misses), DEBT-ES-03/04/08 (Xu).
 - **Next:** (1) Readback verification of DOC-058/055/056/035 at the new head. (2) Xu confirms DEBT-ES-05 closure and schedules Batch 5 verification. (3) Ka adjudication (DEBT-ES-01/02/07) remains the critical path. Vibe continues building only under Vinh's standing authorization and does not self-adjudicate.
+
+## LOG-W103-20261109-005 — Readback verification of the Batch 5 commit (Vibe)
+- **Time:** 2026-11-09 (session timestamp, UTC+07)
+- **Actor:** Vibe (GLM 5.3 via Vibe Work agent), under Vinh's standing full-build authorization.
+- **Commit recorded:** c8547d8651350adecb072e54cf7d668c4ee34ae9 — "Work 103 Batch 5: create DOC-058 read-only dashboard; DEBT-ES-05 artifact registration in DOC-055; DOC-056 batch 5 IN_PROGRESS; DOC-035 LOG-W103-20261109-004 (docs-only)". 4 files: DASHBOARD/DOC-058_DASHBOARD_WORK-103-EXECUTION.md (new), DOC-055 (v1.1), DOC-056 (v1.1), DOC-035 (+LOG-004).
+- **Readback method:** Re-fetched all four files from the branch at head c8547d8 via the GitHub API and verified content markers.
+- **Readback results:** PASS (readback only):
+  - DOC-058 present with "READ-ONLY PROJECTION" and the preserved independent-gate value no_answer_accuracy=0.300.
+  - DOC-055 v1.1 present: "1.1 / 2026-11-09", DOC-058 row, "DEBT-ES-05 closure" mapping table, canonical path DOC-001_BAN-TUYEN-NGON_WORK-MANIFEST.md correct.
+  - DOC-056 v1.1 present: header "BATCH 5 IN PROGRESS" and "Batch 5 progress note — 2026-11-09".
+  - DOC-035 present: LOG-W103-20261108-001 through LOG-W103-20261109-004 all present; historical entries unchanged (append-only preserved).
+- **Status:** Readback DONE for file creation/content. Batch 5 remains IN_PROGRESS / NOT VERIFIED — schema validation, live source projection checks and browser verification are still required before batch closure. Standardization overall remains IN_PROGRESS / NOT PASS. All gate statuses unchanged: Gate A adjudication OPEN (DEBT-ES-02/07); Gate C design BLOCKED (DEBT-ES-03/08); independent gate FAIL preserved (no_answer_accuracy=0.300 vs 0.8); Integration BLOCKED; Release NOT PASS.
+- **Note (honesty):** This is a docs-only commit; CI behaviour change is neither claimed nor inferred. The CI run for c8547d8 has not yet been observed this session and is not claimed PASS.
+- **Next:** Xu schedules Batch 5 verification and confirms DEBT-ES-05 closure; Ka adjudication (DEBT-ES-01/02/07) remains the critical path. Vibe does not self-adjudicate.
