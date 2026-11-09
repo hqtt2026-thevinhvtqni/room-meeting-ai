@@ -134,3 +134,10 @@
 - **Latest GitHub commit observed after writes:** b756f60f698b5cddc929095d570fb4e94f2f5136 (docs(work1111): record Xu claim for task T01).
 - **Kết quả:** READBACK PASS cho các hồ sơ vừa ghi; W1111-T01 = IN_PROGRESS. GitHub/Sandbox parity chỉ xác nhận file DOC-010 cùng nội dung ở hai nơi theo lần đọc này; không suy rộng sang PC hoặc các file khác.
 - **Giới hạn:** PC, live :8031, pytest và agent ACK T02–T06 chưa được kiểm tra trong lượt này.
+
+
+## 2026-11-09 — W1111 integration with unified ROOM-HOP / Work 112
+- Xu / xu — architecture and cross-Work coordination record; no technical source or runtime component changed in this event.
+- W1111 remains technical engineering/debug lab. W70 owns system-level lifecycle/authority; W112 owns cross-Work integration contracts and verification. Component owners retain implementation authority.
+- GitHub target: main, canonical journal DOC-003_NHAT-KY-THI-CONG_WORK-EXECUTION-LOG.md. Existing Sandbox journal and GitHub journal are not asserted byte-identical; this event is appended to both without replacing prior history.
+- No runtime integration or test PASS is claimed.
