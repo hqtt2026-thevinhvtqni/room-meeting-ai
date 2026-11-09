@@ -5,6 +5,7 @@ on:
     branches:
       - work/32-ci-cd-python-ci-v2
       - 'work/32-ci-*'
+      - 'work/32-main-integration-*'
   pull_request:
     branches:
       - main
