@@ -16,13 +16,13 @@
 | W1111 | Technical engineering and debug lab | MAIN — canonical DOC-003 journal updated |
 | W33 | Shared File & Evidence Hub | Branch work/33/ROOM-SHARED-FILE-EVIDENCE-HUB — WORK_LOG updated |
 | W51 | Coder-Tester capability | Branch work/51-hqtt-coder-tester — SYNC_STATUS_WORK51 updated |
-| W52 | AI communication/orchestration | Branch work/52-room-universal-ai-communication-orchestration exists, but GitHub branch has no /work subtree and no W52 canonical Work-document path; NOT SYNCED |
+| W52 | AI communication/orchestration | Branch work/52-room-universal-ai-communication-orchestration exists in room-meeting-ai, but branch has no /work subtree and no W52 canonical Work-document path; NOT SYNCED |
 | W14 | Execution-host / autonomous E2E ownership | PARTIAL SYNC — on release/work14-w14-release-20261010t053516, two Sandbox files under work/14/06_EVIDENCE match GitHub exactly: W14_RESTORATION_CONTINUATION_20261103_ADDENDUM2.md (SHA 2a7bfc96e44ae3cf14bc0808e23e423a3efc47fb) and W14_W70_COMPLIANCE_MAPPING_20261103.md (SHA b7ecfb0fcd10ef3b95c2a3cf359fc81be5f4ba16). Release branch is not assumed to be the ongoing development target. |
-| W16 | Workflow engine | No W16 branch/path verified. Branch work/31-room-hop-workflow-model belongs to W31 and is not treated as W16. NOT SYNCED |
-| W21 | Agent skills | Manifest explicitly declares canonical repository hqtt2026-thevinhvtqni/room-meeting-ai, but exact GitHub branch/path/commit is not pinned; branch search found no W21/skills branch. NOT SYNCED — repository known, target unresolved |
-| W37 | Core 8000 | No W37 branch or main/work/37 path. Generic branches feature/core-public-boundary-v1[-xu] and work/w1111-core-execution-authority-v1-2 exist, but none is evidenced as W37-owned; do not map by keyword. NOT SYNCED |
-| W38 | Gateway 8040 | No W38 branch or main/work/38 path in inspected GitHub inventory; Sandbox manifest says no GitHub sync at initialization. NOT SYNCED |
-| W39 | Build MCP 8030 | No W39 branch or main/work/39 path in inspected GitHub inventory; Sandbox journal says no GitHub sync performed. NOT SYNCED |
+| W16 | Workflow engine | Sandbox manifest contains Work identity/status only; no GitHub repo/branch/path declaration. Workflow candidates work/31-room-hop-workflow-model and work/32-sync-workflow-mirror-20261106 are not accepted as W16 without ownership evidence. NOT SYNCED |
+| W21 | Agent skills | Manifest explicitly declares canonical repository hqtt2026-thevinhvtqni/room-meeting-ai, but says GitHub sync NOT VERIFIED and requires exact branch/path/commit pinning. No W21/skills branch found in the four repositories inspected. Repository known; target unresolved; NOT SYNCED |
+| W37 | Core 8000 | Sandbox manifest does not declare GitHub target. Generic branches feature/core-public-boundary-v1[-xu] and work/w1111-core-execution-authority-v1-2 exist in room-meeting-ai, but none is evidenced as W37-owned. NOT SYNCED |
+| W38 | Gateway 8040 | Sandbox manifest says GitHub mirror NOT CREATED / NOT VERIFIED and provides no target. No W38/gateway branch or Work-specific path found in the four repositories inspected. NOT SYNCED |
+| W39 | Build MCP 8030 | Sandbox manifest provides no GitHub target; journal says no GitHub sync performed. No W39/8030 branch or Work-specific path found in the four repositories inspected. NOT SYNCED |
 
 ## Integration boundaries
 - W70 owns lifecycle, assignment, authority, gates, decisions and system dashboard.
@@ -33,3 +33,9 @@
 
 ## Verification rules
 Every synchronized file must be fetched from the exact target branch after write. Existing divergent files are not overwritten without comparison. Missing branch/path is recorded NOT SYNCED, not fabricated as PASS.
+
+## Search coverage limitation
+- Expanded branch searches covered four known repositories: room-meeting-ai, hqtt-ai-platform, PL.room-meeting-ai.dash and Computer-Agent.
+- Code searches covered those same repositories, using indexed default-branch search.
+- This is not an exhaustive search of every repository accessible to the account and does not prove that no canonical target exists elsewhere.
+- Next action is to obtain or derive owner-authorized exact branch/path/commit pins from each component Work or its controlling source record; do not create substitute branches or infer ownership from keywords.
