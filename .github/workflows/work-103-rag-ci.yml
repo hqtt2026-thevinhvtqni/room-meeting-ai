@@ -34,13 +34,26 @@ jobs:
             work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/05_TEST/test_rag_evidence_support_corpus_eval.py
           echo "py_compile exit code: 0"
 
-      - name: Unit tests (verbose)
+      - name: Unit tests (verbose; failures surfaced as annotations)
         working-directory: work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/04_CODE
         run: |
-          python -m unittest discover -s ../05_TEST -p "test_rag_retrieval.py" -v
-          python -m unittest discover -s ../05_TEST -p "test_rag_eval.py" -v
-          python -m unittest discover -s ../05_TEST -p "test_rag_evidence_support.py" -v
-          python -m unittest discover -s ../05_TEST -p "test_rag_evidence_support_corpus_eval.py" -v
+          set +e
+          overall=0
+          for p in test_rag_retrieval.py test_rag_eval.py test_rag_evidence_support.py test_rag_evidence_support_corpus_eval.py; do
+            log="/tmp/unittest-${p}.log"
+            python -m unittest discover -s ../05_TEST -p "$p" -v > "$log" 2>&1
+            code=$?
+            if [ $code -ne 0 ]; then
+              overall=1
+              echo "===== $p FAILED (full log) ====="
+              cat "$log"
+              grep -E "^(FAIL|ERROR):|^AssertionError|AssertionError:|^[A-Za-z_.]*Error" "$log" | head -10 | while IFS= read -r line; do
+                echo "::error::[${p}] ${line}"
+              done
+              echo "::error::[${p}] unittest discover exited non-zero; see step log for full tracebacks"
+            fi
+          done
+          exit $overall
 
       - name: Evidence-support decision-set gate (Gate B; fails CI on any per-case mismatch)
         working-directory: work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/04_CODE
