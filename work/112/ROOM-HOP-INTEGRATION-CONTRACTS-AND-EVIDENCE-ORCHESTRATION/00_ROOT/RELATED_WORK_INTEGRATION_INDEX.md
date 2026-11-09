@@ -59,3 +59,10 @@ Every synchronized file must be fetched from the exact target branch after write
 - W39's Manifest is only a minimal identity/status record; its journal says Work creation is DONE but service survey is OPEN and no live :8030 endpoint, tools/list or Build tool was tested. Its structure reference points to W99's read-only MAIN_SOURCE tree and says Work 39 is an isolated evidence/analysis workspace, not a replacement service.
 - Therefore the Work labels Core / Gateway / Build MCP describe investigation domains, not proof that W37/W38/W39 own or contain deployable component implementations. Do not describe them as canonical source-code owners or use their Sandbox folders as runtime mirrors.
 - W99 snapshot is a MAIN_SOURCE directory-tree observation, not a GitHub repository/branch mapping. It cannot be used to infer a component Work's GitHub path.
+
+
+## Exact path cross-check (2026-11-09)
+- W21 Manifest says its Sandbox canonical source is represented by AI-SKILLS/ plus root-level Work records, while explicitly requiring exact GitHub mapping/commit pinning before synchronization. The nine installed repositories' default-root listings and room-meeting-ai/main/work listing did not show AI-SKILLS or Work16/21/37/38/39 common roots.
+- W16 Charter requires an auditable branch/PR but does not name a repository, branch or path. The similarly named work/31-room-hop-workflow-model is not accepted as W16.
+- room-meeting-ai/main/work currently lists only 0001, 103, 1111, 112, 28, 70, 75 and 76. This confirms the common-root absence on main at the time checked; it does not prove absence from every historical branch or external source.
+- W52 branch root has general repository files and no W52 Work-document subtree. Its Sandbox journal records a failed synchronization attempt; do not equate branch existence with Work record synchronization.
