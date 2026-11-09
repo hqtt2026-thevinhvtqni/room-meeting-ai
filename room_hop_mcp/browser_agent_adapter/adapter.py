@@ -143,17 +143,17 @@ class Adapter:
         if self.page:
             return {"status": "already_started"}
 
-        self.pw = sync_playwright().start()
-        executable = os.getenv("ROOMHOP_BROWSER_EXECUTABLE")
-        launch_kwargs: dict[str, Any] = {
-            "headless": True,
-            "args": [],
-        }
-        if executable:
-            launch_kwargs["executable_path"] = executable
-
         if self.browser is None:
+            self.pw = sync_playwright().start()
+            executable = os.getenv("ROOMHOP_BROWSER_EXECUTABLE")
+            launch_kwargs: dict[str, Any] = {
+                "headless": True,
+                "args": [],
+            }
+            if executable:
+                launch_kwargs["executable_path"] = executable
             self.browser = self.pw.chromium.launch(**launch_kwargs)
+
         self._create_context()
         self.started_at = time.time()
         self.log(
@@ -178,6 +178,18 @@ class Adapter:
         self.context.route("**/*", self._guard_route)
         self.page = self.context.new_page()
         return self.context
+
+    def _close_context(self) -> None:
+        context = self.context
+        self.context = None
+        self.page = None
+        if context is not None:
+            context.close()
+
+    def _replace_context(self):
+        """Start a clean browser storage/session boundary for one workflow."""
+        self._close_context()
+        return self._create_context()
 
     def require(self) -> Page:
         if not self.page:
@@ -271,11 +283,12 @@ class Adapter:
     @_serialized_operation
     def close(self):
         if self.browser:
+            self._close_context()
             self.browser.close()
             if self.pw:
                 self.pw.stop()
             self.browser = None
-            self.page = None
+            self.pw = None
             self.log("browser_close")
         return {"status": "closed"}
 
@@ -283,44 +296,51 @@ class Adapter:
     def workflow(self, req: WorkflowRequest):
         self.logs = []
         self.start()
-        self.navigate(req.url)
-        results = []
+        isolated_context = self.browser is not None
+        if isolated_context:
+            self._replace_context()
+        try:
+            self.navigate(req.url)
+            results = []
 
-        for step in req.steps:
-            op = step["op"]
-            if op == "inspect":
-                results.append(self.inspect())
-            elif op == "click":
-                results.append(self.click(step["selector"]))
-            elif op == "type":
-                results.append(self.type(step["selector"], step["text"]))
-            elif op == "wait":
-                results.append(self.wait(step.get("ms", 1000)))
-            elif op == "extract":
-                results.append(self.extract(step["selectors"]))
-            elif op == "screenshot":
-                results.append(self.screenshot(step.get("name", "page.png")))
-            else:
-                raise ValueError(f"unsupported operation: {op}")
+            for step in req.steps:
+                op = step["op"]
+                if op == "inspect":
+                    results.append(self.inspect())
+                elif op == "click":
+                    results.append(self.click(step["selector"]))
+                elif op == "type":
+                    results.append(self.type(step["selector"], step["text"]))
+                elif op == "wait":
+                    results.append(self.wait(step.get("ms", 1000)))
+                elif op == "extract":
+                    results.append(self.extract(step["selectors"]))
+                elif op == "screenshot":
+                    results.append(self.screenshot(step.get("name", "page.png")))
+                else:
+                    raise ValueError(f"unsupported operation: {op}")
 
-        final = {
-            "execution_id": str(uuid.uuid4()),
-            "evidence_id": str(uuid.uuid4()),
-            "work_id": req.work_id,
-            "ok": True,
-            "final_url": _redact_url(self.page.url),
-            "page_title": self.page.title(),
-            "results": results,
-            "logs": self.logs,
-            "started_at": self.started_at,
-            "finished_at": time.time(),
-        }
+            final = {
+                "execution_id": str(uuid.uuid4()),
+                "evidence_id": str(uuid.uuid4()),
+                "work_id": req.work_id,
+                "ok": True,
+                "final_url": _redact_url(self.page.url),
+                "page_title": self.page.title(),
+                "results": results,
+                "logs": self.logs,
+                "started_at": self.started_at,
+                "finished_at": time.time(),
+            }
 
-        out = _safe_evidence_path(f"{req.work_id}-{int(time.time())}.json")
-        out.write_text(json.dumps(final, indent=2, ensure_ascii=False), encoding="utf-8")
-        final["evidence_json"] = str(out)
-        final["roomhop_submission"] = _submit_to_roomhop_from_worker(final)
-        return final
+            out = _safe_evidence_path(f"{req.work_id}-{int(time.time())}.json")
+            out.write_text(json.dumps(final, indent=2, ensure_ascii=False), encoding="utf-8")
+            final["evidence_json"] = str(out)
+            final["roomhop_submission"] = _submit_to_roomhop_from_worker(final)
+            return final
+        finally:
+            if isolated_context:
+                self._close_context()
 
 
 adapter = Adapter()
