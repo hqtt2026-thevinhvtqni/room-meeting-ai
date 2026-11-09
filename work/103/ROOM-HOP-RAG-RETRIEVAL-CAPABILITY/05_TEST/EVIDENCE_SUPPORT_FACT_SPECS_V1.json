@@ -1,0 +1,281 @@
+{
+  "dataset_id": "work103.evidence-support-fact-specs.v1",
+  "version": 1,
+  "created": "2026-11-08 (UTC+07:00)",
+  "purpose": "Gate C preparatory experiment (REPORT-ONLY): per-query fact specs for the corpus-aligned fixture EVAL_SET_CORPUS_V4_V3.json. The harness rag_evidence_support_corpus_eval.py runs lexical retrieval at the fixture's operating point, feeds the retrieved spans to the evidence-support stage, and reports the five-state decision per query. This is adjudication MATERIAL for Ka (DEBT-ES-02), not a gate: expected support decisions below are AUTHORED and PENDING INDEPENDENT ADJUDICATION.",
+  "adjudication_record": {
+    "protocol": "Same B5 protocol as EVIDENCE_SUPPORT_DECISION_SET_V1.json. The spec author (Vibe) is not an independent adjudicator.",
+    "author": "Vibe (GLM 5.3 via Vibe Work agent), 2026-11-08, under full build authority granted by Vinh in the Work 103 coordination conversation.",
+    "independent_reviewer": null,
+    "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION",
+    "note": "Ideal decisions for Q004/Q008 follow Ka's documented-absence candidates in KA_NO_ANSWER_LEAK_ANALYSIS_20261029.md but remain Ka's call. Do not use these rows as release labels."
+  },
+  "coverage": {
+    "no_answer_queries_covered": ["Q004", "Q008", "Q010", "Q016", "Q025", "Q030", "Q032", "Q035", "Q044", "Q046"],
+    "answerable_queries_covered": ["Q001", "Q006", "Q011", "Q012", "Q013", "Q014", "Q018", "Q021", "Q024", "Q036", "Q040", "Q047"]
+  },
+  "rows": [
+    {
+      "query_id": "Q001",
+      "ideal_decision": "SUPPORTED",
+      "fact": {
+        "fact_id": "ont.optical.check.procedure",
+        "query_scope": "00_CORPUS/network.md",
+        "support_patterns": [
+          { "regex": "thực hiện các bước kiểm tra sau" }
+        ]
+      },
+      "rationale": "Answerable control: network.md prescribes the ONT optical-signal check steps; a matching span supports the answer.",
+      "adjudication": { "author": "Vibe (GLM 5.3 via Vibe Work agent)", "independent_reviewer": null, "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION" }
+    },
+    {
+      "query_id": "Q006",
+      "ideal_decision": "SUPPORTED",
+      "fact": {
+        "fact_id": "sales.delivery_schedule.confirmation",
+        "query_scope": "00_CORPUS/sales.md",
+        "support_patterns": [
+          { "regex": "Xác nhận lịch giao hàng cho đơn đặt hàng của khách hàng" }
+        ]
+      },
+      "rationale": "Answerable control: sales.md step 1 confirms the delivery schedule for a customer order.",
+      "adjudication": { "author": "Vibe (GLM 5.3 via Vibe Work agent)", "independent_reviewer": null, "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION" }
+    },
+    {
+      "query_id": "Q011",
+      "ideal_decision": "SUPPORTED",
+      "fact": {
+        "fact_id": "architecture.mcp.port",
+        "query_scope": "00_CORPUS/architecture.md",
+        "support_patterns": [
+          { "regex": "MCP tool contract: expose trên port 8020" }
+        ]
+      },
+      "rationale": "Answerable control: architecture.md assigns port 8020 to the MCP tool contract.",
+      "adjudication": { "author": "Vibe (GLM 5.3 via Vibe Work agent)", "independent_reviewer": null, "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION" }
+    },
+    {
+      "query_id": "Q012",
+      "ideal_decision": "SUPPORTED",
+      "fact": {
+        "fact_id": "architecture.core.port",
+        "query_scope": "00_CORPUS/architecture.md",
+        "support_patterns": [
+          { "regex": "Core service: chạy trên port 8000" }
+        ]
+      },
+      "rationale": "Answerable control: architecture.md assigns port 8000 to the Core service.",
+      "adjudication": { "author": "Vibe (GLM 5.3 via Vibe Work agent)", "independent_reviewer": null, "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION" }
+    },
+    {
+      "query_id": "Q013",
+      "ideal_decision": "SUPPORTED",
+      "fact": {
+        "fact_id": "architecture.dashboard.port",
+        "query_scope": "00_CORPUS/architecture.md",
+        "support_patterns": [
+          { "regex": "Dashboard: render-only trên port 3000" }
+        ]
+      },
+      "rationale": "Answerable control: architecture.md assigns port 3000 to the render-only Dashboard.",
+      "adjudication": { "author": "Vibe (GLM 5.3 via Vibe Work agent)", "independent_reviewer": null, "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION" }
+    },
+    {
+      "query_id": "Q014",
+      "ideal_decision": "SUPPORTED",
+      "fact": {
+        "fact_id": "architecture.sandbox.port",
+        "query_scope": "00_CORPUS/architecture.md",
+        "support_patterns": [
+          { "regex": "Workspace Sandbox: chạy trên port 8010" }
+        ]
+      },
+      "rationale": "Answerable control: architecture.md assigns port 8010 to the Workspace Sandbox.",
+      "adjudication": { "author": "Vibe (GLM 5.3 via Vibe Work agent)", "independent_reviewer": null, "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION" }
+    },
+    {
+      "query_id": "Q018",
+      "ideal_decision": "SUPPORTED",
+      "fact": {
+        "fact_id": "rag.search.default_top_k",
+        "query_scope": "00_CORPUS/architecture.md",
+        "support_patterns": [
+          { "regex": "top_k` mặc định là 5" }
+        ]
+      },
+      "rationale": "Answerable control: architecture.md states the default top_k of rag_search is 5.",
+      "adjudication": { "author": "Vibe (GLM 5.3 via Vibe Work agent)", "independent_reviewer": null, "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION" }
+    },
+    {
+      "query_id": "Q021",
+      "ideal_decision": "CONTRADICTED",
+      "fact": {
+        "fact_id": "security.env_indexing_permission",
+        "query_scope": "00_CORPUS/security.md",
+        "negation_patterns": [
+          { "regex": "TUYỆT ĐỐI KHÔNG lập chỉ mục các tệp" }
+        ]
+      },
+      "rationale": "Negative-safety answerable query (the class the Ka failure report called an implicit/negative weakness): the proposition 'indexing .env is permitted' is directly negated by security.md; the correct grounded outcome is CONTRADICTED, not a plain SUPPORTED hit.",
+      "adjudication": { "author": "Vibe (GLM 5.3 via Vibe Work agent)", "independent_reviewer": null, "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION" }
+    },
+    {
+      "query_id": "Q024",
+      "ideal_decision": "CONTRADICTED",
+      "fact": {
+        "fact_id": "security.ai_decision_authority",
+        "query_scope": "00_CORPUS/security.md",
+        "negation_patterns": [
+          { "regex": "không trở thành cơ quan quyết định" }
+        ]
+      },
+      "rationale": "Negative-safety answerable query: security.md negates the proposition that AI/RAG may act as decision authority in place of Core.",
+      "adjudication": { "author": "Vibe (GLM 5.3 via Vibe Work agent)", "independent_reviewer": null, "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION" }
+    },
+    {
+      "query_id": "Q040",
+      "ideal_decision": "CONTRADICTED",
+      "fact": {
+        "fact_id": "security.file_deletion_authority",
+        "query_scope": "00_CORPUS/security.md",
+        "negation_patterns": [
+          { "regex": "Retrieval không cấp quyền thực thi lệnh" }
+        ]
+      },
+      "rationale": "Negative-safety answerable query: 'use RAG to automatically delete files' is negated by security.md (retrieval is granted no command-execution authority).",
+      "adjudication": { "author": "Vibe (GLM 5.3 via Vibe Work agent)", "independent_reviewer": null, "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION" }
+    },
+    {
+      "query_id": "Q036",
+      "ideal_decision": "SUPPORTED",
+      "fact": {
+        "fact_id": "rag.data_flow.path",
+        "query_scope": "03_ARCHITECTURE/RAG_RETRIEVAL_ARCHITECTURE.md",
+        "support_patterns": [
+          { "regex": "ingestion adapter" }
+        ]
+      },
+      "rationale": "Answerable control: RAG_RETRIEVAL_ARCHITECTURE.md defines the data flow beginning at the approved source registry through the ingestion adapter.",
+      "adjudication": { "author": "Vibe (GLM 5.3 via Vibe Work agent)", "independent_reviewer": null, "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION" }
+    },
+    {
+      "query_id": "Q047",
+      "ideal_decision": "SUPPORTED",
+      "fact": {
+        "fact_id": "evidence.blind_label_review_owner",
+        "query_scope": "00_CORPUS/evidence.md",
+        "support_patterns": [
+          { "regex": "Ka \\(CSA / Independent Reviewer\\)" }
+        ]
+      },
+      "rationale": "Answerable control: evidence.md names Ka (CSA / Independent Reviewer) as responsible for the independent blind-label review.",
+      "adjudication": { "author": "Vibe (GLM 5.3 via Vibe Work agent)", "independent_reviewer": null, "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION" }
+    },
+    {
+      "query_id": "Q004",
+      "ideal_decision": "EXPLICITLY_UNSPECIFIED",
+      "fact": {
+        "fact_id": "ont.rx.threshold.value",
+        "query_scope": "00_CORPUS/network.md",
+        "absence_patterns": [
+          { "regex": "không quy định ngưỡng công suất RX", "source_scope": "00_CORPUS/network.md" }
+        ]
+      },
+      "rationale": "Near-miss no-answer query and the top lexical leak family: network.md explicitly states the RX power threshold is not specified in that document. Per the leak analysis this is a candidate documented-absence case; final call is Ka's (DEBT-ES-02). Note the decision is only EXPLICITLY_UNSPECIFIED if the chunk containing the absence statement is actually retrieved (T2 discipline).",
+      "adjudication": { "author": "Vibe (GLM 5.3 via Vibe Work agent)", "independent_reviewer": null, "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION" }
+    },
+    {
+      "query_id": "Q008",
+      "ideal_decision": "EXPLICITLY_UNSPECIFIED",
+      "fact": {
+        "fact_id": "sales.change_schedule_process",
+        "query_scope": "00_CORPUS/sales.md",
+        "absence_patterns": [
+          { "regex": "không quy định chi tiết về quy trình xử lý khi khách hàng yêu cầu thay đổi lịch giao hàng", "source_scope": "00_CORPUS/sales.md" }
+        ]
+      },
+      "rationale": "The hardest lexical leak (score 0.990 against sales.md confirmation text): sales.md explicitly states the change-process is not specified. Ka's leak analysis called the grounded-absence mapping borderline; carried as pending adjudication material.",
+      "adjudication": { "author": "Vibe (GLM 5.3 via Vibe Work agent)", "independent_reviewer": null, "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION" }
+    },
+    {
+      "query_id": "Q010",
+      "ideal_decision": "INSUFFICIENT_EVIDENCE",
+      "fact": {
+        "fact_id": "sales.delivery_schedule.storage_location",
+        "query_scope": "corpus"
+      },
+      "rationale": "No span in the corpus states where delivery schedules are stored, and NO scoped absence statement covers storage location. Fail closed: INSUFFICIENT_EVIDENCE; absence of a statement is not a statement of absence.",
+      "adjudication": { "author": "Vibe (GLM 5.3 via Vibe Work agent)", "independent_reviewer": null, "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION" }
+    },
+    {
+      "query_id": "Q016",
+      "ideal_decision": "INSUFFICIENT_EVIDENCE",
+      "fact": {
+        "fact_id": "rag.chromadb.add_now",
+        "query_scope": "corpus"
+      },
+      "rationale": "The extension gate in RAG_RETRIEVAL_ARCHITECTURE.md describes conditions for considering ChromaDB, not instructions to add it now; no support pattern applies. Fail closed.",
+      "adjudication": { "author": "Vibe (GLM 5.3 via Vibe Work agent)", "independent_reviewer": null, "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION" }
+    },
+    {
+      "query_id": "Q025",
+      "ideal_decision": "INSUFFICIENT_EVIDENCE",
+      "fact": {
+        "fact_id": "rag.index.deletion_procedure",
+        "query_scope": "corpus"
+      },
+      "rationale": "Near-miss: 'remove a document from the index safely' collides with indexing-rule vocabulary in security.md, but no span answers it. Fail closed despite topical overlap.",
+      "adjudication": { "author": "Vibe (GLM 5.3 via Vibe Work agent)", "independent_reviewer": null, "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION" }
+    },
+    {
+      "query_id": "Q030",
+      "ideal_decision": "INSUFFICIENT_EVIDENCE",
+      "fact": {
+        "fact_id": "nonsense.quantum_submarine_meteorite",
+        "query_scope": "corpus"
+      },
+      "rationale": "Adversarial gibberish control: nothing should match; retrieval itself likely abstains at the operating threshold.",
+      "adjudication": { "author": "Vibe (GLM 5.3 via Vibe Work agent)", "independent_reviewer": null, "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION" }
+    },
+    {
+      "query_id": "Q032",
+      "ideal_decision": "INSUFFICIENT_EVIDENCE",
+      "fact": {
+        "fact_id": "ont.power_led.repair",
+        "query_scope": "00_CORPUS/network.md"
+      },
+      "rationale": "Near-miss: ONT power-LED vocabulary overlaps network.md optical-signal content, but no span addresses power-LED failure. Fail closed.",
+      "adjudication": { "author": "Vibe (GLM 5.3 via Vibe Work agent)", "independent_reviewer": null, "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION" }
+    },
+    {
+      "query_id": "Q035",
+      "ideal_decision": "INSUFFICIENT_EVIDENCE",
+      "fact": {
+        "fact_id": "sales.customer_a.order",
+        "query_scope": "corpus"
+      },
+      "rationale": "The 0.736-score lexical leak: generic order-confirmation process text must never establish that a NAMED customer has an order. No fact scope covers instance-level order records; fail closed.",
+      "adjudication": { "author": "Vibe (GLM 5.3 via Vibe Work agent)", "independent_reviewer": null, "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION" }
+    },
+    {
+      "query_id": "Q044",
+      "ideal_decision": "INSUFFICIENT_EVIDENCE",
+      "fact": {
+        "fact_id": "rag.retrieval.default_min_score",
+        "query_scope": "corpus"
+      },
+      "rationale": "Ka's leak analysis called Q044 a candidate documented-absence case, but the corpus only says thresholds must be calibrated on a labeled set; there is NO explicit 'not specified' span for a default minimum score. Per the locked disambiguation rule this must fail closed as INSUFFICIENT_EVIDENCE, not EXPLICITLY_UNSPECIFIED. Recorded deliberately as a contract-behaviour probe.",
+      "adjudication": { "author": "Vibe (GLM 5.3 via Vibe Work agent)", "independent_reviewer": null, "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION" }
+    },
+    {
+      "query_id": "Q046",
+      "ideal_decision": "INSUFFICIENT_EVIDENCE",
+      "fact": {
+        "fact_id": "rag.chromadb.configure_now",
+        "query_scope": "corpus"
+      },
+      "rationale": "Same family as Q016: configuration instructions for ChromaDB do not exist in the corpus and no absence statement covers them. Fail closed.",
+      "adjudication": { "author": "Vibe (GLM 5.3 via Vibe Work agent)", "independent_reviewer": null, "status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION" }
+    }
+  ]
+}
