@@ -2,7 +2,9 @@
 
 Covers: fact-specs validation against the corpus fixture, the report-only
 diagnostic taxonomy, the end-to-end mini pipeline (retrieval -> assess_support),
-and CLI exit-code discipline (exit 0 on outcomes, exit 1 on validation errors).
+citation-source alignment + relaxed-threshold retrieval probe (DEBT-ES-08/06
+seeds), and CLI exit-code discipline (exit 0 on outcomes, exit 1 on
+validation errors).
 
 Run via unittest (matching the repo CI runner):
     python -m unittest discover -s ../05_TEST -p "test_rag_evidence_support_corpus_eval.py" -v
@@ -132,6 +134,12 @@ class ValidationTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             corpus_eval.validate_fixture(fixture)
 
+    def test_fixture_rejects_malformed_expected_list(self):
+        fixture = _mini_fixture()
+        fixture["labeled_queries"][0]["expected"] = "doc-a.md"  # string, not list
+        with self.assertRaises(ValueError):
+            corpus_eval.build_query_map(fixture)
+
 
 class CategorizeTests(unittest.TestCase):
     CASES = [
@@ -196,6 +204,92 @@ class EndToEndTests(unittest.TestCase):
         self.assertEqual(report["adjudication_status"],
                          "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION")
         self.assertTrue(report["report_only"])
+
+
+class CitationAlignmentTests(unittest.TestCase):
+    """DEBT-ES-08 seed: citation-source alignment measurement (report-only)."""
+
+    def test_aligned_answerable_row(self):
+        report = corpus_eval.run_corpus_eval(_mini_fixture(), _mini_specs())
+        qx1 = next(r for r in report["results"] if r["query_id"] == "QX1")
+        self.assertEqual(qx1["expected_sources"], ["doc-a.md"])
+        self.assertEqual(qx1["cited_sources"], ["doc-a.md"])
+        self.assertIs(qx1["citation_aligned"], True)
+        self.assertIs(qx1["expected_in_top_k"], True)
+        self.assertIsNone(qx1["relaxed_probe"], "probe must be skipped when expected source is retrieved")
+        self.assertEqual(report["summary"]["n_citation_misaligned"], 0)
+        self.assertEqual(report["summary"]["n_expected_source_missed"], 0)
+
+    def test_misaligned_answerable_row_is_counted(self):
+        # Duplicate-content scenario: the support span lives in doc-b while
+        # the fixture expects doc-a. The decision may be MATCH while the
+        # citation points at the wrong source; the diagnostic must surface it.
+        fixture = _mini_fixture()
+        fixture["documents"][0]["text"] = (
+            "# Kiến trúc\n\n- Core service: sở hữu dữ liệu chính tắc.\n"
+        )
+        fixture["documents"][1]["text"] = (
+            "# Chính sách\n\n- Core service: chạy trên port 8000 (bản sao).\n"
+            "- Hệ thống không được lưu trữ hoặc trả về mật khẩu quản trị.\n"
+        )
+        report = corpus_eval.run_corpus_eval(fixture, _mini_specs())
+        qx1 = next(r for r in report["results"] if r["query_id"] == "QX1")
+        self.assertEqual(qx1["decision"], "SUPPORTED")
+        self.assertEqual(qx1["cited_sources"], ["doc-b.md"])
+        self.assertIs(qx1["citation_aligned"], False)
+        self.assertEqual(report["summary"]["n_citation_misaligned"], 1)
+
+    def test_no_answer_rows_are_not_alignment_measured(self):
+        report = corpus_eval.run_corpus_eval(_mini_fixture(), _mini_specs())
+        qx2 = next(r for r in report["results"] if r["query_id"] == "QX2")
+        self.assertIsNone(qx2["expected_sources"])
+        self.assertIsNone(qx2["citation_aligned"])
+        self.assertIsNone(qx2["expected_in_top_k"])
+        self.assertIsNone(qx2["relaxed_probe"])
+
+    def test_relaxed_probe_when_expected_source_missed(self):
+        # DEBT-ES-06 material: operating threshold set so high that the
+        # expected source is not retrieved; the probe must quantify the gap.
+        # QX3 matches doc-c only partially (query terms 'ưu tiên/hay/không'
+        # are absent), so no chunk reaches the 0.99 operating threshold
+        # while doc-c still surfaces in the relaxed top-10.
+        fixture = _mini_fixture()
+        fixture["retrieval"]["operating_min_score"] = 0.99
+        fixture["documents"].append({
+            "source_id": "doc-c.md",
+            "title": "doc-c.md",
+            "text": "# Phụ lục\n\n- Core service dự phòng: chạy trên port 9000.\n",
+        })
+        fixture["labeled_queries"].append({
+            "query_id": "QX3",
+            "query": "Core service dự phòng chạy trên port nào, ưu tiên dự phòng hay không?",
+            "expected": ["doc-c.md"],
+        })
+        specs = _mini_specs()
+        specs["rows"].append({
+            "query_id": "QX3",
+            "ideal_decision": "SUPPORTED",
+            "fact": {
+                "fact_id": "test.core.port9000",
+                "query_scope": "doc-c.md",
+                "support_patterns": [{"regex": "chạy trên port 9000"}],
+            },
+            "rationale": "relaxed probe row",
+        })
+        report = corpus_eval.run_corpus_eval(fixture, specs)
+        qx3 = next(r for r in report["results"] if r["query_id"] == "QX3")
+        self.assertEqual(qx3["retrieval_count"], 0)
+        self.assertIs(qx3["expected_in_top_k"], False)
+        self.assertEqual(qx3["decision"], "INSUFFICIENT_EVIDENCE")
+        self.assertEqual(qx3["reason_code"], "NO_CANDIDATES")
+        self.assertEqual(qx3["category"], "FALSE_ABSTENTION")
+        probe = qx3["relaxed_probe"]
+        self.assertIsNotNone(probe)
+        self.assertTrue(probe["expected_in_top10_relaxed"])
+        self.assertIsNotNone(probe["expected_best_relaxed_score"])
+        self.assertLess(probe["expected_best_relaxed_score"], 0.99,
+                        "relaxed best score must be below the unreachable operating threshold")
+        self.assertEqual(report["summary"]["n_expected_source_missed"], 1)
 
 
 class CliDisciplineTests(unittest.TestCase):

@@ -6,6 +6,14 @@ evidence-support stage (rag_evidence_support.assess_support) with
 AUTHORED fact specs (EVIDENCE_SUPPORT_FACT_SPECS_V1.json), and reports
 the five-state decision per query.
 
+It additionally reports two diagnostic signals (still report-only):
+- Citation-source alignment (DEBT-ES-08 seed): for answerable rows with
+  fixture-declared expected sources, whether the cited source matches.
+- Relaxed-threshold retrieval probe (DEBT-ES-06 material): for answerable
+  rows whose expected source is NOT retrieved at the operating point, the
+  best expected-source score within a top-10 search at min_score=0.0,
+  quantifying how far the operating threshold sits from surfacing it.
+
 This harness is a DIAGNOSTIC, not a gate:
 - It always exits 0 when the evaluation itself completes (report-only),
   even if every row mismatches its authored ideal decision.
@@ -53,6 +61,8 @@ CATEGORIES = (
     "IDEAL_MISMATCH_OTHER",
 )
 
+RELAXED_PROBE_TOP_K = 10  # fixed top_k for the relaxed-threshold diagnostic probe
+
 
 def _require(cond: bool, message: str) -> None:
     if not cond:
@@ -88,12 +98,20 @@ def validate_fixture(data: Any) -> None:
 
 
 def build_query_map(fixture: dict) -> dict:
-    """Map query_id -> {query, kind} for both groups."""
+    """Map query_id -> {query, kind, expected} for both groups."""
     queries: dict = {}
     for row in fixture["labeled_queries"]:
-        queries[row["query_id"]] = {"query": row["query"], "kind": "ANSWERABLE"}
+        expected = row.get("expected")
+        if expected is not None and not (isinstance(expected, list)
+                                        and all(isinstance(s, str) and s.strip()
+                                                for s in expected)):
+            raise ValueError("FACT_SPECS invalid: labeled row "
+                             f"{row['query_id']} has a malformed expected list")
+        queries[row["query_id"]] = {"query": row["query"], "kind": "ANSWERABLE",
+                                   "expected": expected}
     for row in fixture["no_answer_queries"]:
-        queries[row["query_id"]] = {"query": row["query"], "kind": "NO_ANSWER"}
+        queries[row["query_id"]] = {"query": row["query"], "kind": "NO_ANSWER",
+                                   "expected": None}
     return queries
 
 
@@ -188,6 +206,27 @@ def run_corpus_eval(fixture: dict, specs: dict) -> dict:
             for r in found
         ]
         decision = assess_support(meta["query"], candidates, row["fact"])
+        cited_sources = [c["source_id"] for c in decision.citations]
+        expected = meta.get("expected")
+        citation_aligned = None
+        expected_in_top_k = None
+        relaxed_probe = None
+        if meta["kind"] == "ANSWERABLE" and expected:
+            expected_in_top_k = any(c["source_id"] in expected for c in candidates)
+            citation_aligned = (any(s in expected for s in cited_sources)
+                                if cited_sources else None)
+            if not expected_in_top_k:
+                # Relaxed probe: how far below the operating threshold does
+                # the expected-source span sit? (report-only diagnostic)
+                relaxed_hits = index.search(meta["query"],
+                                            top_k=RELAXED_PROBE_TOP_K,
+                                            min_score=0.0)
+                best = max((r.score for r in relaxed_hits
+                            if r.source_id in expected), default=None)
+                relaxed_probe = {
+                    "expected_in_top10_relaxed": best is not None,
+                    "expected_best_relaxed_score": best,
+                }
         results.append({
             "query_id": query_id,
             "kind": meta["kind"],
@@ -200,6 +239,11 @@ def run_corpus_eval(fixture: dict, specs: dict) -> dict:
             "decision": decision.decision,
             "reason_code": decision.reason_code,
             "citations": [dict(c) for c in decision.citations],
+            "cited_sources": cited_sources,
+            "expected_sources": expected,
+            "citation_aligned": citation_aligned,
+            "expected_in_top_k": expected_in_top_k,
+            "relaxed_probe": relaxed_probe,
             "ideal_decision": row["ideal_decision"],
             "category": categorize(meta["kind"], row["ideal_decision"], decision.decision),
         })
@@ -211,6 +255,8 @@ def run_corpus_eval(fixture: dict, specs: dict) -> dict:
         "n_false_abstention": sum(1 for r in results if r["category"] == "FALSE_ABSTENTION"),
         "n_contradiction_missed": sum(1 for r in results if r["category"] == "CONTRADICTION_MISSED"),
         "n_ideal_mismatch_other": sum(1 for r in results if r["category"] == "IDEAL_MISMATCH_OTHER"),
+        "n_citation_misaligned": sum(1 for r in results if r["citation_aligned"] is False),
+        "n_expected_source_missed": sum(1 for r in results if r["expected_in_top_k"] is False),
     }
     return {"dataset_id": specs.get("dataset_id"), "report_only": True,
             "adjudication_status": "AUTHORED_PENDING_INDEPENDENT_ADJUDICATION",
@@ -237,7 +283,9 @@ def print_report(report: dict, as_json: bool, ci_notice: bool) -> None:
               f"no_answer_leak={s['n_no_answer_leak']} "
               f"false_abstention={s['n_false_abstention']} "
               f"contradiction_missed={s['n_contradiction_missed']} "
-              f"mismatch_other={s['n_ideal_mismatch_other']}")
+              f"mismatch_other={s['n_ideal_mismatch_other']} "
+              f"citation_misaligned={s['n_citation_misaligned']} "
+              f"expected_source_missed={s['n_expected_source_missed']}")
         print("REPORT-ONLY diagnostic (Gate C preparatory); exit status unaffected.")
     if ci_notice:
         s = report["summary"]
@@ -247,19 +295,26 @@ def print_report(report: dict, as_json: bool, ci_notice: bool) -> None:
                 f"false_abstention={s['n_false_abstention']} "
                 f"contradiction_missed={s['n_contradiction_missed']} "
                 f"mismatch_other={s['n_ideal_mismatch_other']} "
+                f"citation_misaligned={s['n_citation_misaligned']} "
+                f"expected_source_missed={s['n_expected_source_missed']} "
                 f"status={report['adjudication_status']}")
         # GitHub caps check-run annotations (~10 notices), so only the
         # diagnostically interesting rows are annotated; MATCH rows are
         # visible in the step log and the full report remains available
         # via --json.
         for r in report["results"]:
-            if r["category"] == "MATCH":
+            if r["category"] == "MATCH" and r["citation_aligned"] is not False:
                 continue
             top = (f"{r['retrieved'][0]['source_id']}@{r['retrieved'][0]['score']}"
                    if r["retrieved"] else "none")
+            probe = r.get("relaxed_probe")
+            probe_txt = (f" relaxed_best={probe['expected_best_relaxed_score']}"
+                         if probe and probe["expected_best_relaxed_score"] is not None else "")
             _notice(f"qid={r['query_id']} kind={r['kind']} ideal={r['ideal_decision']} "
                     f"actual={r['decision']} reason={r['reason_code']} "
-                    f"category={r['category']} top1={top}")
+                    f"category={r['category']} cited={','.join(r['cited_sources']) or 'none'} "
+                    f"expected={','.join(r['expected_sources'] or []) or 'none'} "
+                    f"aligned={r['citation_aligned']} top1={top}{probe_txt}")
 
 
 def main() -> int:
