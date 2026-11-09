@@ -479,6 +479,9 @@ def test_browser_context_blocks_service_workers():
         def route(self, pattern, handler):
             captured["route"] = (pattern, handler)
 
+        def route_web_socket(self, pattern, handler):
+            captured["websocket_route"] = (pattern, handler)
+
         def new_page(self):
             return SimpleNamespace(url="about:blank")
 
@@ -552,6 +555,9 @@ def test_browser_workflow_context_replacement_closes_previous_context():
             self.closed = True
 
         def route(self, pattern, handler):
+            pass
+
+        def route_web_socket(self, pattern, handler):
             pass
 
         def new_page(self):
