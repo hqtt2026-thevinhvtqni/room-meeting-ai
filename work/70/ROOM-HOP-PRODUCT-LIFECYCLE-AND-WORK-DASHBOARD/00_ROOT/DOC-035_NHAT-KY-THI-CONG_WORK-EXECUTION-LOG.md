@@ -1451,3 +1451,13 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - **Decision boundary:** DOC-094 remains DRAFT_NOT_APPROVED; all Product/Phase Tasks remain NOT_ASSESSED; assignments PROPOSED_NOT_ACKNOWLEDGED; progress NOT_CALCULATED. No Gate PASS, acceptance or release claim.
 - **Status:** GITHUB WRITE ACKNOWLEDGED; exact readback pending. Static HTML structure PASS only; browser render, JavaScript runtime, responsive, E2E and independent QE NOT RUN. PC/Preview Host transfer remains outside this operation.
 - **Next:** fetch all changed paths from GitHub main and compare source hashes/content; validate JSON structure/schema; hand over browser/E2E and independent QE checks through an authorized runtime.
+
+
+## 2026-11-09 — Unified ROOM-HOP machine architecture and Work 112 creation
+- Actor: Xu / xu (registered ROOM-HOP member); authority: Vinh.
+- Decision baseline: ROOM-HOP is one integrated machine; W70 is the central control plane. Work are capability subsystems; Agents participate under verified identity, capability, permission, assignment and evidence. No duplicate orchestration or evidence platform.
+- Portfolio inventory returned 60 Sandbox Works. Probes confirmed W33 evidence hub, W52 AI communication/orchestration, W16 workflow engine (specification/experiment-first), W39 Build MCP 8030, W37 Core 8000, W38 Gateway 8040; portfolio intake identifies W51 Coder-Tester orchestration and W14 as canonical execution-host owner after W13 absorption. These ownership descriptions do not prove implementation/runtime acceptance.
+- Work 112 created in Sandbox: ROOM-HOP-INTEGRATION-CONTRACTS-AND-EVIDENCE-ORCHESTRATION. create_work status=ok; registered identity xu authorized. Scope is cross-Work contracts, dependency/event/evidence correlation, idempotency/concurrency and integrated verification only; it does not rebuild component-owned systems.
+- DOC-095 unified machine architecture, Work 112 Manifest, Integration Charter and Journal event 001 written to Sandbox; canonical DOC-055 Sandbox registration appended. Sandbox read_probe confirmed Work 112 Manifest and DOC-095 content; W70 DOC-035 and DOC-055 probes returned status=ok.
+- GitHub main synchronization is a separate step and must be verified. No implementation, CI runtime, integration test, QE, acceptance or release PASS is claimed.
+- First create_work attempt using AI-01 was denied UNKNOWN_IDENTITY; retry using registered identity xu succeeded. No bypass.
