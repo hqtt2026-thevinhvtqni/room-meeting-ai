@@ -444,7 +444,7 @@ def test_browser_evidence_path_is_confined():
     assert path.parent == browser_adapter.EVIDENCE.resolve()
 
 
-@pytest.mark.parametrize("name", ["bad:name.png", "bad?.png", "trailing."])
+@pytest.mark.parametrize("name", ["bad:name.png", "bad?.png", "trailing.", "CON", "nul.txt", "COM1.log", "LPT9", "AUX.data"])
 def test_browser_evidence_path_rejects_platform_unsafe_names(name):
     with pytest.raises(ValueError):
         browser_adapter._safe_evidence_path(name)
@@ -470,3 +470,70 @@ def test_browser_request_guard_aborts_private_redirect_target(monkeypatch):
 
     browser_adapter.Adapter._guard_route(route)
     assert calls == ["abort"]
+
+
+def test_browser_context_blocks_service_workers():
+    captured = {}
+
+    class FakeContext:
+        def route(self, pattern, handler):
+            captured["route"] = (pattern, handler)
+
+        def new_page(self):
+            return SimpleNamespace(url="about:blank")
+
+    class FakeBrowser:
+        def new_context(self, **kwargs):
+            captured["kwargs"] = kwargs
+            return FakeContext()
+
+    instance = browser_adapter.Adapter()
+    instance.browser = FakeBrowser()
+    instance._create_context()
+    assert captured["kwargs"]["service_workers"] == "block"
+    assert instance.page is not None
+
+
+def test_browser_wait_rejects_unbounded_or_invalid_values():
+    instance = browser_adapter.Adapter()
+    for value in (-1, browser_adapter.MAX_BROWSER_WAIT_MS + 1, "100", True):
+        with pytest.raises(ValueError, match="wait ms must be an integer"):
+            instance.wait(value)
+
+
+def test_browser_workflow_rejects_excessive_step_count():
+    with pytest.raises(Exception):
+        browser_adapter.WorkflowRequest(
+            url="https://example.com/",
+            steps=[{"op": "wait"}] * (browser_adapter.MAX_BROWSER_WORKFLOW_STEPS + 1),
+        )
+
+
+def test_browser_operation_executor_has_a_bounded_wait(monkeypatch):
+    class TimedOutFuture:
+        def result(self, timeout=None):
+            assert timeout == browser_adapter.BROWSER_OPERATION_TIMEOUT_SECONDS
+            raise TimeoutError()
+
+        def cancel(self):
+            return False
+
+    monkeypatch.setattr(
+        browser_adapter._BROWSER_EXECUTOR,
+        "submit",
+        lambda *args, **kwargs: TimedOutFuture(),
+    )
+    with pytest.raises(Exception) as exc:
+        browser_adapter._run_browser_operation(lambda: None)
+    assert getattr(exc.value, "status_code", None) == 504
+
+
+def test_roomhop_transcript_submission_omits_untrusted_page_title(monkeypatch, tmp_path):
+    _configure_test_target(monkeypatch, tmp_path)
+    instances = _install_fake(monkeypatch)
+    result = browser_adapter.submit_to_roomhop(RESULT)
+    assert result["status"] == "pass"
+    assert len(instances[0].transcript) == 1
+    marker = instances[0].transcript[0]["content"]
+    assert "page_title" not in marker
+    assert "Example Domain" not in marker
