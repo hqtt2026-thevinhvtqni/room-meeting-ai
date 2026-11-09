@@ -1,0 +1,17 @@
+{
+  "work_id": "113",
+  "work_name": "ROOM-HOP-UNIVERSAL-DASHBOARD",
+  "lifecycle_phase": "01_DISCOVER",
+  "work_status": "ACTIVE",
+  "work_dashboard_maturity": "W0",
+  "work_entry": "NOT_ASSESSED",
+  "core_live": "NOT_VERIFIED",
+  "product_ui": "NOT_STARTED",
+  "web": "PLANNED",
+  "mobile": "PLANNED",
+  "independent_qe": "NOT_RUN",
+  "acceptance": "NOT_AUTHORIZED",
+  "release": "NOT_AUTHORIZED",
+  "source_mode": "SANDBOX_INITIAL_RECORDS",
+  "as_of": "2026-11-09T11:03:00+07:00"
+}
