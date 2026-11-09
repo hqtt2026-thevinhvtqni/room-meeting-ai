@@ -248,7 +248,13 @@ def print_report(report: dict, as_json: bool, ci_notice: bool) -> None:
                 f"contradiction_missed={s['n_contradiction_missed']} "
                 f"mismatch_other={s['n_ideal_mismatch_other']} "
                 f"status={report['adjudication_status']}")
+        # GitHub caps check-run annotations (~10 notices), so only the
+        # diagnostically interesting rows are annotated; MATCH rows are
+        # visible in the step log and the full report remains available
+        # via --json.
         for r in report["results"]:
+            if r["category"] == "MATCH":
+                continue
             top = (f"{r['retrieved'][0]['source_id']}@{r['retrieved'][0]['score']}"
                    if r["retrieved"] else "none")
             _notice(f"qid={r['query_id']} kind={r['kind']} ideal={r['ideal_decision']} "
