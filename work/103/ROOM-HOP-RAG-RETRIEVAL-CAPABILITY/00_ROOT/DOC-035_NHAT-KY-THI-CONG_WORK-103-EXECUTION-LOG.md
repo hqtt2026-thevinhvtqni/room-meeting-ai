@@ -91,3 +91,27 @@ Các commit d7f1963 và 4f83c5b được tạo trong một môi trường shell 
   - DEBT-ES-05 (Xu): DOC-055/DOC-057 mapping of the four new artifacts (contract under the architecture mapping; implementation and tests under TECH-003/004; dataset under TECH-004; evidence report already EVD-005). This commit appends EVD-008 (Gate A/B CI runs) to DOC-057.
   - DEBT-ES-06 (Ka/Qw, pre-existing, restated): the lexical no-answer leaks Q008/Q035/Q010 in the retrieval baseline remain the open retrieval-side limitation; the evidence-support stage is the separately scoped remediation path, not a retrieval fix. QUERY_EXPANSIONS in rag_retrieval.py remains a flagged overfitting risk for generalization.
 - **Next:** Ka picks up DEBT-ES-01 and DEBT-ES-02; Xu sequences DEBT-ES-03/04/05 and continues the standardization batches (DOC-056). Record outcomes as new DOC-035 entries with run IDs and commit SHAs.
+
+## LOG-W103-20261109-001 — Gate C seed: corpus-aligned two-stage diagnostic (report-only, full 50-query coverage) (Vibe)
+- **Time:** 2026-11-09 10:10 UTC+07
+- **Actor:** Vibe (GLM 5.3 via Vibe Work agent). Standing authorization recorded from Vinh (2026-11-08): full build authority to continue proactively, report when coordination is needed; Xu's standardization work confirmed as the governance baseline.
+- **Scope:** Evidence-support corpus diagnostic only (Sandbox prototype, REPORT-ONLY). Labels V3, fixture freezes, thresholds, Qw V5, rag_retrieval.py, rag_eval.py and all existing gates untouched. No release or gate-adjudication claim.
+- **Actions:**
+  1. Built (commits 910316f4, bdbcffcb, 2026-11-09): 04_CODE/rag_evidence_support_corpus_eval.py — runs the real RetrievalIndex at the fixture operating point, feeds spans to assess_support, reports five-state decision + diagnostic category per query; exit 0 on outcomes, exit 1 only on validation errors. 05_TEST/EVIDENCE_SUPPORT_FACT_SPECS_V1.json (22 rows, AUTHORED_PENDING_INDEPENDENT_ADJUDICATION). 05_TEST/test_rag_evidence_support_corpus_eval.py. CI step placed before the baseline and independent gates.
+  2. Extended coverage to ALL 50 queries: 05_TEST/EVIDENCE_SUPPORT_FACT_SPECS_V2.json (V1 rows unchanged + 28 answerable rows). CI now runs both spec sets.
+  3. Fixed a taxonomy defect found by CI (run #92, 42552053676): CONFLICTING_EVIDENCE on an answerable query is a distinct ideal-mismatch, NOT an abstention; ABSTAIN_FAMILY corrected to (EXPLICITLY_UNSPECIFIED, INSUFFICIENT_EVIDENCE).
+  4. Limited per-row CI annotations to non-MATCH rows (GitHub caps annotations ~10 notices per check run) so both V1/V2 summaries surface.
+  5. Authored 06_EVIDENCE/VIBE_103_GATE_C_SEED_CORPUS_DIAGNOSTIC_20261109.md with full build/CI history.
+- **Method note (honesty):** the build environment executed TypeScript, not Python. The whole two-stage pipeline (chunking, BM25-lite, assess_support precedence) was ported to TypeScript and run over all 50 queries BEFORE writing the Python; the simulation predicted 49 MATCH / 1 CONTRADICTION_MISSED, and CI reproduced the identical summary. CI is the binding verification.
+- **CI-verified results (run 42559810631, head e66d3716; run 42559743132, head d9635f4a equivalent):**
+  - Specs V2 (50 rows): specs=50 match=49 no_answer_leak=0 false_abstention=0 contradiction_missed=1 mismatch_other=0.
+  - Specs V1 (22 rows): specs=22 match=21 no_answer_leak=0 false_abstention=0 contradiction_missed=1 mismatch_other=0.
+  - All 10 adjudicated no-answer queries resolve with ZERO affirmative leaks behind unchanged lexical retrieval (2 EXPLICITLY_UNSPECIFIED via scoped absence, 5 fail-closed NO_ADEQUATE_SUPPORT, 3 NO_CANDIDATES). This is the seeded remediation path for the failing independent gate (no_answer_accuracy=0.300 vs 0.8), which remains UNCHANGED and still fails.
+  - 39/40 answerable queries reach their authored ideal decision; the single miss Q040 is a RETRIEVAL miss (zero candidates above min_score 0.35 — the negating span is never seen by the support stage), not a support-stage defect.
+  - Citation-source divergence on Q037/Q045 (duplicate-content sources) is recorded; the harness scores decisions only.
+- **Status:** DONE for the Gate C seed diagnostic (report-only). Gate A adjudication OPEN (DEBT-ES-02); Gate C design still BLOCKED until adjudication (DEBT-ES-03); E2E MCP :8020 -> Core :8000 CLOSED. No release claim.
+- **DEBTS (ghi nợ):**
+  - DEBT-ES-07 (Ka): independent adjudication of all 50 rows of EVIDENCE_SUPPORT_FACT_SPECS_V2.json (extends the DEBT-ES-02 scope to the corpus diagnostic), freeze with SHA-256 per B5. The 49/50 MATCH result is build evidence only, NOT adjudication.
+  - DEBT-ES-08 (Xu): candidate Gate C metric — citation-source alignment (duplicate-content corpus: Q037/Q045 cite RAG_RETRIEVAL_ARCHITECTURE.md while the fixture expects architecture.md). Fold into Gate C design after adjudication.
+  - DEBT-ES-06 (Ka/Qw, extended): Q040 joins the retrieval-side leak/miss list (zero candidates at the operating threshold). QUERY_EXPANSIONS overfit risk unchanged.
+- **Next:** Ka picks up DEBT-ES-01/02/07; Xu sequences DEBT-ES-03/08 and registers the new artifacts in DOC-055/DOC-057 (DEBT-ES-05). Vibe continues building only under Vinh's standing authorization and does not self-adjudicate.
