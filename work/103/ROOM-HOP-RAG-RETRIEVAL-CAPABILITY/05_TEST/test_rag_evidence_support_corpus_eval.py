@@ -179,7 +179,7 @@ class EndToEndTests(unittest.TestCase):
 
         # Leak: if a (wrong) support pattern fires on retrieved text, the
         # diagnostic must flag it instead of hiding it.
-        leak_specs = _mini_specs(qx2_patterns=[{"regex": "Core service"}])
+        leak_specs = _mini_specs(qx2_patterns=[{"regex": "không được lưu trữ"}])
         report = corpus_eval.run_corpus_eval(_mini_fixture(), leak_specs)
         qx2 = next(r for r in report["results"] if r["query_id"] == "QX2")
         self.assertEqual(qx2["decision"], "SUPPORTED")
@@ -217,7 +217,7 @@ class CliDisciplineTests(unittest.TestCase):
 
     def test_main_exits_zero_even_with_leak(self):
         code, out = self._run_main(_mini_fixture(),
-                                   _mini_specs(qx2_patterns=[{"regex": "Core service"}]))
+                                   _mini_specs(qx2_patterns=[{"regex": "không được lưu trữ"}]))
         self.assertEqual(code, 0, "report-only harness must not fail on evaluation outcomes")
         self.assertIn("NO_ANSWER_LEAK", out)
 
