@@ -1,4 +1,4 @@
-# NHẬT KÝ THI CÔNG WORK 103 / WORK 103 EXECUTION LOG
+# NHẠT KÝ THI CÔNG WORK 103 / WORK 103 EXECUTION LOG
 - **STT / Document ID:** DOC-035
 - **Priority:** P0
 - **Read order:** 5
@@ -120,10 +120,10 @@ Các commit d7f1963 và 4f83c5b được tạo trong một môi trường shell 
 - **Time:** 2026-11-09 (session timestamp, UTC+07)
 - **Actor:** Vibe (GLM 5.3 via Vibe Work agent), under Vinh's standing full-build authorization (2026-11-08).
 - **Scope:** Harness upgrade of 04_CODE/rag_evidence_support_corpus_eval.py only (REPORT-ONLY). Labels V3, fixture freezes, thresholds, rag_retrieval.py, rag_eval.py and all existing gates untouched. No release or gate-adjudication claim.
-- **Actions:** Upgraded the harness (commit `c14939a4eab69a6995fc6289cabc30042eab2014`) to measure per-answerable-row citation_aligned against fixture-declared expected sources, plus a relaxed-threshold retrieval probe (RELAXED_PROBE_TOP_K=10) reporting relaxed_best for the expected-source span; extended the corpus-eval unit tests; CI annotations extended with cited/expected/aligned/top1/relaxed_best fields.
+- **Actions:** Upgraded the harness (commit c14939a4eab69a6995fc6289cabc30042eab2014) to measure per-answerable-row citation_aligned against fixture-declared expected sources, plus a relaxed-threshold retrieval probe (RELAXED_PROBE_TOP_K=10) reporting relaxed_best for the expected-source span; extended the corpus-eval unit tests; CI annotations extended with cited/expected/aligned/top1/relaxed_best fields.
 - **CI-verified results (run #96, workflow "Work 103 RAG Retrieval CI", head c14939a4eab69a6995fc6289cabc30042eab2014):**
-  - V2 (50 rows): `specs=50 match=49 no_answer_leak=0 false_abstention=0 contradiction_missed=1 mismatch_other=0 citation_misaligned=2 expected_source_missed=2`
-  - V1 (22 rows): `specs=22 match=21 no_answer_leak=0 false_abstention=0 contradiction_missed=1 mismatch_other=0 citation_misaligned=0 expected_source_missed=1`
+  - V2 (50 rows): specs=50 match=49 no_answer_leak=0 false_abstention=0 contradiction_missed=1 mismatch_other=0 citation_misaligned=2 expected_source_missed=2
+  - V1 (22 rows): specs=22 match=21 no_answer_leak=0 false_abstention=0 contradiction_missed=1 mismatch_other=0 citation_misaligned=0 expected_source_missed=1
   - Rows: Q037/Q045 citation_misaligned (cited 03_ARCHITECTURE/RAG_RETRIEVAL_ARCHITECTURE.md vs expected 00_CORPUS/architecture.md; top1 1.0 / 0.725207; Q037 relaxed_best 0.353077). Q040 contradiction_missed with zero operating-point candidates; expected 00_CORPUS/security.md; relaxed_best 0.19145 (vs min_score 0.35) — retrieval-side miss, DEBT-ES-06.
   - Unit suites (incl. corpus-eval tests) PASS: the only check error annotation is the preserved independent-gate failure (no_answer_accuracy=0.300 vs 0.8), unchanged. Post-checkout exit-128 cleanup warning unchanged (open CI cleanup issue from LOG-W103-20261108-004).
 - **Verification note (honesty):** the anonymous api.github.com quota was exhausted from the build environment's shared IP, so the numeric Actions run ID of run #96 could not be recorded this session; run number (#96) + commit SHA are the binding references, read from the commit-checks page annotations.
@@ -140,3 +140,17 @@ Các commit d7f1963 và 4f83c5b được tạo trong một môi trường shell 
 - **Status:** DONE for root-cause analysis (report-only). Gate A adjudication OPEN (DEBT-ES-02/07); Gate C design BLOCKED pending adjudication (DEBT-ES-03); E2E MCP :8020 -> Core :8000 CLOSED. No release claim.
 - **DEBTS (ghi nợ):** DEBT-ES-06 (Ka/Qw, enriched): remediation options now carry a quantified tradeoff matrix (corpus-side span vs per-class threshold; global normalization NOT viable). DEBT-ES-08 (Xu, enriched): citation misalignment proven to be duplicate-content ranking, measurable now. DEBT-ES-07 (Ka, unchanged).
 - **Next:** Ka picks up DEBT-ES-01/02/06/07; Xu sequences DEBT-ES-03/08. Vibe does not self-adjudicate.
+
+## LOG-W103-20261109-004 — Batch 5: DASHBOARD creation (DOC-058) + DEBT-ES-05 artifact registration (Vibe)
+- **Time:** 2026-11-09 (session timestamp, UTC+07)
+- **Actor:** Vibe (GLM 5.3 via Vibe Work agent), under Vinh's standing full-build authorization (2026-11-08, reaffirmed 2026-11-09).
+- **Scope:** Governance/docs only. No source, tests, thresholds, fixtures, labels, CI workflow or gates changed. This commit is docs-only; no CI behaviour change is claimed or inferred from file existence.
+- **Actions:**
+  1. Created DASHBOARD/DOC-058_DASHBOARD_WORK-103-EXECUTION.md — read-only Work execution dashboard (Batch 5 of DOC-056). Every displayed value is a projection from canonical records (DOC-001/DOC-055/DOC-056/DOC-057/DOC-035) with evidence references (EVD-001..EVD-011, CI run IDs, commit SHAs); no mock values; the dashboard explicitly states it claims no gate PASS.
+  2. Updated DOC-055 to v1.1: registered DOC-058 and DASH-001 (CREATED / NOT_VERIFIED); added the "Detailed artifact mapping — DEBT-ES-05 closure (2026-11-09)" table registering all evidence-support artifacts (contract under TECH-002; implementations under TECH-003; datasets and test suites under TECH-004; Vibe reports indexed under EVD-005/008/009/010/011). DEBT-ES-05 is closed by this registration, pending Xu's confirmation.
+  3. Updated DOC-056 to v1.1: Batch 5 NOT_STARTED → IN_PROGRESS with a progress note; batch exit evidence (schema validation, live source readback, browser verification) remains required.
+  4. Appended this journal entry to DOC-035 (append-only; no historical entry rewritten).
+- **Evidence:** Single commit on work/103-rag-retrieval-capability; commit SHA returned by the GitHub push operation of this session; exact readback of all four files pending and required before Batch 5 closure.
+- **Status:** DONE for authoring and registration. Batch 5 IN_PROGRESS / NOT VERIFIED. Standardization overall remains IN_PROGRESS / NOT PASS. Gate A adjudication OPEN (DEBT-ES-02/07); Gate C design BLOCKED (DEBT-ES-03/08); E2E MCP :8020 -> Core :8000 CLOSED (DEBT-ES-04); Integration BLOCKED; Release NOT PASS. No release or gate-adjudication claim.
+- **DEBTS (ghi nợ):** DEBT-ES-05 CLOSED pending Xu confirmation. All other debts unchanged: DEBT-ES-01/02/07 (Ka — adjudication), DEBT-ES-06 (Ka/Qw — retrieval-side misses), DEBT-ES-03/04/08 (Xu).
+- **Next:** (1) Readback verification of DOC-058/055/056/035 at the new head. (2) Xu confirms DEBT-ES-05 closure and schedules Batch 5 verification. (3) Ka adjudication (DEBT-ES-01/02/07) remains the critical path. Vibe continues building only under Vinh's standing authorization and does not self-adjudicate.

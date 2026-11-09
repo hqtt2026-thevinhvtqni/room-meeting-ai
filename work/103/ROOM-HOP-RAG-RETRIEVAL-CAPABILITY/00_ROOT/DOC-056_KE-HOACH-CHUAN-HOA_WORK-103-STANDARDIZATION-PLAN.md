@@ -3,8 +3,8 @@
 - **Priority:** P0
 - **Read order:** 3
 - **Depends on:** DOC-001; DOC-055
-- **Status:** ACTIVE — BATCH 0 COMPLETE / BATCH 1 IN PROGRESS
-- **Version / Updated:** 1.0 / 2026-11-08
+- **Status:** ACTIVE — BATCH 0 COMPLETE / BATCH 1 IN PROGRESS / BATCH 5 IN PROGRESS
+- **Version / Updated:** 1.1 / 2026-11-09
 - **Owner:** Xu / AI-01
 - **Authority:** Vinh
 
@@ -24,7 +24,7 @@ Existing CI, imports and tests may depend on 04_CODE, 05_TEST and 06_EVIDENCE. F
 | 2 | Lifecycle folders | Classify corpus originals, reference docs, architecture, requirements, plans, tests and acceptance evidence into 01_DISCOVER–07_ACCEPT; preserve code/test paths through mappings | Full old→new path map; no broken imports/CI | NOT_STARTED |
 | 3 | 05_BUILD engineering map | Create Work Package register and mapping records for source, tests, CI and evidence; define exact canonical source repo/path/branch/commit | WP completeness and source mapping validation | NOT_STARTED |
 | 4 | EVIDENCE migration | Audit all links, workflow paths and consumers of 06_EVIDENCE; migrate canonical index to EVIDENCE/ without duplicate independent copies; retain compatibility pointers | Link checker, workflow pass, hash/readback | NOT_STARTED |
-| 5 | DASHBOARD | Build read-only Work Execution dashboard and Product dashboard where applicable; derive data from canonical Manifest/Register/WP/Gates/Evidence; no mock values | Schema validation, live source readback, browser verification | NOT_STARTED |
+| 5 | DASHBOARD | Build read-only Work Execution dashboard and Product dashboard where applicable; derive data from canonical Manifest/Register/WP/Gates/Evidence; no mock values | Schema validation, live source readback, browser verification | IN_PROGRESS — DOC-058 created 2026-11-09; exit evidence NOT yet complete |
 | 6 | VERIFY / ACCEPT / RELEASE readiness | Independent QE validates structure, registers, links, lifecycle gates, dashboard and CI | Signed verification evidence and gate decision | NOT_STARTED |
 
 ## 4. Non-destructive migration rules
@@ -61,4 +61,7 @@ Existing CI, imports and tests may depend on 04_CODE, 05_TEST and 06_EVIDENCE. F
 Canonical DOC-034 minutes and DOC-045 plan were created from the legacy records. DOC-035 now preserves the earlier 2026-10-26 journal entry and its integrity correction. WORK_MANIFEST.md, BIEN_BAN.md, KE_HOACH_THI_CONG_XU.md and NHAT_KY_HOP_THI_CONG.md are now compatibility pointers. This promotion does not close Batch 1: link integrity and CI regression remain unverified.
 
 ## CI regression note — 2026-11-08
-The first CI run after the governance/official-record commits is run 42467546737 (head f56f86cb9c8ba2be8be990d8cebdb0a1068f0daa). Both Python 3.11 and 3.12 jobs failed at the independent Manifest V4 + Ka V3 corpus-aligned evaluation gate: no_answer_accuracy=0.300 against the required floor 0.8. Unit tests, syntax, Gate B and existing EVAL_V2 passed. This is recorded as EVD-007 and DOC-035 LOG-W103-20261108-004. Do not attribute the failure to document migration without evidence; investigate the dataset/gate separately. Batch 1 remains open pending link audit and a passing CI run or documented disposition.
+The first CI run after the governance/official-record commits is run 42467546737 (head f56f86cb9c8ba2be8be990d8cebdb0a1068f0daa). Both Python 3.11 and 3.12 jobs failed at the independent Manifest V4 + Ka V3 corpus-aligned evaluation gate: no_answer_accuracy=0.300 against the required floor 0.8. Unit tests, syntax, Gate B and existing labeled retrieval evaluation step succeeded. This is recorded as EVD-007 and DOC-035 LOG-W103-20261108-004. Do not attribute the failure to document migration without evidence; investigate the dataset/gate separately. Batch 1 remains open pending link audit and a passing CI run or documented disposition.
+
+## Batch 5 progress note — 2026-11-09
+DASHBOARD/DOC-058_DASHBOARD_WORK-103-EXECUTION.md created (producer: Vibe, under Vinh's standing full-build authorization). Read-only projection: every displayed value cites canonical sources (DOC-001/DOC-055/DOC-057/DOC-035 evidence IDs and CI run references); no mock values; dashboard status explicitly states that no gate PASS is claimed. Registered in DOC-055 as DOC-058 / DASH-001 (CREATED / NOT_VERIFIED). Batch 5 exit evidence — schema validation, live source readback and browser verification — is NOT yet complete; the batch remains IN_PROGRESS. Verification note: this commit is docs-only; no CI behaviour change is claimed.
