@@ -46,3 +46,14 @@ The build environment executes TypeScript, not Python. Before writing the Python
 ## 6. Next
 
 Ka: DEBT-ES-01/02/07. Xu: DEBT-ES-03/04/05/08 and DOC-055/057 registration of the V2 dataset. Vibe: available for further build under Vinh's standing authorization; no further self-serving adjudication.
+
+## 7. v2 metrics update — citation-source alignment + relaxed-threshold retrieval probe (CI run #96, head c14939a4)
+
+- **Harness upgrade (commit `c14939a4eab69a6995fc6289cabc30042eab2014`):** the corpus-eval harness now measures, for answerable rows with fixture-declared expected sources, (a) `citation_aligned` — whether any cited source matches the expected source — and (b) a relaxed-threshold retrieval probe (RELAXED_PROBE_TOP_K=10) reporting `relaxed_best`, the best relaxed score of the expected-source span, quantifying how far the operating threshold sits from surfacing it. REPORT-ONLY: no gate, threshold, fixture or eval change.
+- **CI-verified V2 summary (run #96, head c14939a4):** `specs=50 match=49 no_answer_leak=0 false_abstention=0 contradiction_missed=1 mismatch_other=0 citation_misaligned=2 expected_source_missed=2`
+- **CI-verified V1 summary:** `specs=22 match=21 no_answer_leak=0 false_abstention=0 contradiction_missed=1 mismatch_other=0 citation_misaligned=0 expected_source_missed=1`
+- **citation_misaligned=2 (Q037/Q045):** both SUPPORTED rows match spans in `03_ARCHITECTURE/RAG_RETRIEVAL_ARCHITECTURE.md` while the fixture's expected source is `00_CORPUS/architecture.md` (duplicate-content corpus). Q037 top1 score 1.0 (expected-source relaxed best 0.353077); Q045 top1 0.725207. Candidate Gate C metric (DEBT-ES-08).
+- **expected_source_missed=2 (Q037/Q040):** Q040 (ideal CONTRADICTED, reason NO_CANDIDATES, expected `00_CORPUS/security.md`) has zero candidates at the operating point; the expected-source span's relaxed best is 0.19145 — well below min_score 0.35 — confirming Q040 as a retrieval-side miss (DEBT-ES-06), not a support-stage defect.
+- **Unit tests:** all four suites (including the corpus-eval suite) PASS on the CI matrix; the only check error is the preserved independent-gate failure (no_answer_accuracy=0.300 vs floor 0.8), unchanged.
+- **Adjudication status:** all v2-metric fields (expected sources, citation alignment, relaxed probe values) are AUTHORED_PENDING_INDEPENDENT_ADJUDICATION (Ka, DEBT-ES-07 scope extension; Xu, DEBT-ES-08). No gate or release claim is made from these numbers.
+- **Verification note:** annotations were read from the GitHub commit-checks page of head c14939a4; the anonymous api.github.com quota was exhausted from the build environment's shared IP, so the numeric Actions run ID of run #96 could not be recorded this session — workflow run number (#96) plus commit SHA are the binding references.

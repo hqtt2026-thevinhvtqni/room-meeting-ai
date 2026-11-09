@@ -115,3 +115,18 @@ Các commit d7f1963 và 4f83c5b được tạo trong một môi trường shell 
   - DEBT-ES-08 (Xu): candidate Gate C metric — citation-source alignment (duplicate-content corpus: Q037/Q045 cite RAG_RETRIEVAL_ARCHITECTURE.md while the fixture expects architecture.md). Fold into Gate C design after adjudication.
   - DEBT-ES-06 (Ka/Qw, extended): Q040 joins the retrieval-side leak/miss list (zero candidates at the operating threshold). QUERY_EXPANSIONS overfit risk unchanged.
 - **Next:** Ka picks up DEBT-ES-01/02/07; Xu sequences DEBT-ES-03/08 and registers the new artifacts in DOC-055/DOC-057 (DEBT-ES-05). Vibe continues building only under Vinh's standing authorization and does not self-adjudicate.
+
+## LOG-W103-20261109-002 — Corpus diagnostic v2 metrics: citation-source alignment + relaxed-threshold retrieval probe (Vibe)
+- **Time:** 2026-11-09 (session timestamp, UTC+07)
+- **Actor:** Vibe (GLM 5.3 via Vibe Work agent), under Vinh's standing full-build authorization (2026-11-08).
+- **Scope:** Harness upgrade of 04_CODE/rag_evidence_support_corpus_eval.py only (REPORT-ONLY). Labels V3, fixture freezes, thresholds, rag_retrieval.py, rag_eval.py and all existing gates untouched. No release or gate-adjudication claim.
+- **Actions:** Upgraded the harness (commit `c14939a4eab69a6995fc6289cabc30042eab2014`) to measure per-answerable-row citation_aligned against fixture-declared expected sources, plus a relaxed-threshold retrieval probe (RELAXED_PROBE_TOP_K=10) reporting relaxed_best for the expected-source span; extended the corpus-eval unit tests; CI annotations extended with cited/expected/aligned/top1/relaxed_best fields.
+- **CI-verified results (run #96, workflow "Work 103 RAG Retrieval CI", head c14939a4eab69a6995fc6289cabc30042eab2014):**
+  - V2 (50 rows): `specs=50 match=49 no_answer_leak=0 false_abstention=0 contradiction_missed=1 mismatch_other=0 citation_misaligned=2 expected_source_missed=2`
+  - V1 (22 rows): `specs=22 match=21 no_answer_leak=0 false_abstention=0 contradiction_missed=1 mismatch_other=0 citation_misaligned=0 expected_source_missed=1`
+  - Rows: Q037/Q045 citation_misaligned (cited 03_ARCHITECTURE/RAG_RETRIEVAL_ARCHITECTURE.md vs expected 00_CORPUS/architecture.md; top1 1.0 / 0.725207; Q037 relaxed_best 0.353077). Q040 contradiction_missed with zero operating-point candidates; expected 00_CORPUS/security.md; relaxed_best 0.19145 (vs min_score 0.35) — retrieval-side miss, DEBT-ES-06.
+  - Unit suites (incl. corpus-eval tests) PASS: the only check error annotation is the preserved independent-gate failure (no_answer_accuracy=0.300 vs 0.8), unchanged. Post-checkout exit-128 cleanup warning unchanged (open CI cleanup issue from LOG-W103-20261108-004).
+- **Verification note (honesty):** the anonymous api.github.com quota was exhausted from the build environment's shared IP, so the numeric Actions run ID of run #96 could not be recorded this session; run number (#96) + commit SHA are the binding references, read from the commit-checks page annotations.
+- **Status:** DONE for the v2 metrics upgrade (report-only). AUTHORED_PENDING_INDEPENDENT_ADJUDICATION. Gate A adjudication OPEN (DEBT-ES-02/07); Gate C design BLOCKED pending adjudication (DEBT-ES-03); E2E MCP :8020 -> Core :8000 CLOSED. No release claim.
+- **DEBTS (ghi nợ):** DEBT-ES-07 (Ka, extended): adjudicate the 50 V2 rows now including expected-source/citation-alignment fields; DEBT-ES-08 (Xu, unchanged): fold citation alignment into Gate C design; DEBT-ES-06 (Ka/Qw, unchanged): Q040 relaxed_best 0.19145 quantifies the retrieval-side miss.
+- **Next:** Ka picks up DEBT-ES-07; Xu sequences DEBT-ES-03/08. Vibe does not self-adjudicate.
