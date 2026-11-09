@@ -176,6 +176,7 @@ class Adapter:
             viewport={"width": 1280, "height": 900},
         )
         self.context.route("**/*", self._guard_route)
+        self.context.route_web_socket("**/*", self._block_websocket)
         self.page = self.context.new_page()
         return self.context
 
@@ -205,6 +206,14 @@ class Adapter:
             route.abort()
         else:
             route.continue_()
+
+    @staticmethod
+    def _block_websocket(websocket_route) -> None:
+        """Fail closed: the Browser Adapter does not permit WebSocket egress."""
+        websocket_route.close(
+            code=1008,
+            reason="WebSocket egress is disabled by Work32 policy.",
+        )
 
     @_serialized_operation
     def navigate(self, url: str):
