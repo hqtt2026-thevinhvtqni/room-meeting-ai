@@ -589,3 +589,37 @@ def test_browser_context_cleanup_clears_page_and_context_references():
     assert context.closed is True
     assert instance.context is None
     assert instance.page is None
+
+
+
+def test_browser_context_registers_and_closes_websocket_routes():
+    captured = {}
+
+    class FakeContext:
+        def route(self, pattern, handler):
+            captured["http_route"] = (pattern, handler)
+
+        def route_web_socket(self, pattern, handler):
+            captured["websocket_route"] = (pattern, handler)
+
+        def new_page(self):
+            return SimpleNamespace(url="about:blank")
+
+    class FakeBrowser:
+        def new_context(self, **kwargs):
+            captured["context_kwargs"] = kwargs
+            return FakeContext()
+
+    instance = browser_adapter.Adapter()
+    instance.browser = FakeBrowser()
+    instance._create_context()
+    assert captured["websocket_route"][0] == "**/*"
+
+    closed = []
+    websocket = SimpleNamespace(
+        close=lambda code=1000, reason="": closed.append((code, reason))
+    )
+    captured["websocket_route"][1](websocket)
+    assert closed == [
+        (1008, "WebSocket egress is disabled by Work32 policy.")
+    ]
