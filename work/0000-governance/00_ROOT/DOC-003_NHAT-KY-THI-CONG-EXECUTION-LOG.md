@@ -442,3 +442,10 @@ E0000-022 (ghi sau append này).
 - **Branch compare:** main...work/0000-governance-baseline = ahead 13 / behind 0; không merge.
 - **Còn tồn tại:** hai path DOC-003 khác tên; path hyphen có nội dung mới, path underscore còn stale; lần thử cập nhật path underscore bị safety-blocked. Không xóa hoặc retry/bypass.
 - **Trạng thái:** DOC-002 MIRROR PASS; DOC-025 MIRROR PASS; DOC-003 MIRROR PASS tại path hyphen; DUPLICATE PATH RECONCILIATION BLOCKED; BRANCH NOT MERGED.
+
+
+## 2026-11-09 — Work 112 / unified ROOM-HOP integration architecture
+- Xu / xu recorded Work 112 as the cross-Work integration-contract and evidence-orchestration owner under W70. W70 remains the single lifecycle/control-plane authority.
+- DOC-018 portfolio entry and DOC-020 dependency design baseline identify W112 and its non-duplication boundary with W32, W33, W52, W16, W51, W14, W37, W38 and W39.
+- Sandbox source records were read back. GitHub target is branch work/0000-governance-baseline, path work/0000-governance/; DOC-018 and DOC-020 are mirrored from canonical Sandbox contents.
+- No runtime integration, component tests, or acceptance PASS is implied.
