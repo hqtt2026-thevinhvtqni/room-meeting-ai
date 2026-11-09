@@ -1461,3 +1461,10 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - DOC-095 unified machine architecture, Work 112 Manifest, Integration Charter and Journal event 001 written to Sandbox; canonical DOC-055 Sandbox registration appended. Sandbox read_probe confirmed Work 112 Manifest and DOC-095 content; W70 DOC-035 and DOC-055 probes returned status=ok.
 - GitHub main synchronization is a separate step and must be verified. No implementation, CI runtime, integration test, QE, acceptance or release PASS is claimed.
 - First create_work attempt using AI-01 was denied UNKNOWN_IDENTITY; retry using registered identity xu succeeded. No bypass.
+
+
+## 2026-11-09 — GitHub main synchronization and canonical ownership correction
+- GitHub main commits: Work 112 Manifest fecee5ed8a13c4abee51c6830945c5a9a6888f5d; Integration Charter 9ec110bd9e96517c7a2c90d2449596c6a08586db; Work 112 Journal initial 2bd29f24288a8b3d05607d65c35a62cb7bbc6dba; W70 DOC-095 1d3706b0424c770c852a6e1fd0fbc5cc9e9c0c87; W70 DOC-055 register d308f1b9b7b922b4c250ab0a59d86e3b1375ec49; W70 DOC-035 journal 9dbed5d500483b28c898a094b9a62ecb96079b98.
+- Exact GitHub fetch readback succeeded for Work 112 Manifest, Charter, Journal, W70 DOC-095, DOC-055 and DOC-035. Sandbox Work registry now returns 61 Works and includes Work 112.
+- Canonical ownership correction: DOC-095 belongs only to W70. Removed the accidental duplicate DOC-095 from W112 Sandbox and GitHub main (GitHub deletion commit 53a12be56f1457224852ccabd1a9f5cab20c7b43); W70 Sandbox canonical DOC-095 was created. W112 retains Manifest, Integration Charter and Journal.
+- Status: W70/W112 Sandbox writes acknowledged; GitHub main writes and readback verified for listed files. Sandbox↔GitHub byte-for-byte parity for all files and W0000 registry update remain NOT VERIFIED / OPEN. No implementation, tests, runtime or QE PASS claimed.
