@@ -16,13 +16,13 @@
 | W1111 | Technical engineering and debug lab | MAIN — canonical DOC-003 journal updated |
 | W33 | Shared File & Evidence Hub | Branch work/33/ROOM-SHARED-FILE-EVIDENCE-HUB — WORK_LOG updated |
 | W51 | Coder-Tester capability | Branch work/51-hqtt-coder-tester — SYNC_STATUS_WORK51 updated |
-| W52 | AI communication/orchestration | Existing branch work/52-room-universal-ai-communication-orchestration is confirmed, but its root contains repository-level code/docs and no W52 canonical Work-document subtree; no safe source-to-target path mapping; NOT SYNCED |
-| W14 | Execution-host / autonomous E2E ownership | Sandbox has extensive W14 evidence and restoration records; canonical source ownership/path mapping is explicitly a prerequisite in its continuation plan; no target branch/path verified; NOT SYNCED |
-| W16 | Workflow engine | Sandbox canonical root is ROOM-HOP-WORKFLOW-ENGINE/; no dedicated target branch/path or source mapping verified; NOT SYNCED |
-| W21 | Agent skills | Manifest explicitly says GitHub synchronization NOT VERIFIED and exact branch/path/commit must be pinned before synchronization; NOT SYNCED |
-| W37 | Core 8000 | Sandbox manifest limits source mutation and says no GitHub push in initial scope; current exact target branch/path not verified; documentation sync remains NOT SYNCED |
-| W38 | Gateway 8040 | Sandbox manifest says no GitHub sync at initialization; current exact target branch/path not verified; documentation sync remains NOT SYNCED |
-| W39 | Build MCP 8030 | Sandbox manifest says READ-FIRST and journal says no GitHub sync performed; current exact target branch/path not verified; documentation sync remains NOT SYNCED |
+| W52 | AI communication/orchestration | Branch work/52-room-universal-ai-communication-orchestration exists, but GitHub branch has no /work subtree and no W52 canonical Work-document path; NOT SYNCED |
+| W14 | Execution-host / autonomous E2E ownership | PARTIAL SYNC — on release/work14-w14-release-20261010t053516, two Sandbox files under work/14/06_EVIDENCE match GitHub exactly: W14_RESTORATION_CONTINUATION_20261103_ADDENDUM2.md (SHA 2a7bfc96e44ae3cf14bc0808e23e423a3efc47fb) and W14_W70_COMPLIANCE_MAPPING_20261103.md (SHA b7ecfb0fcd10ef3b95c2a3cf359fc81be5f4ba16). Release branch is not assumed to be the ongoing development target. |
+| W16 | Workflow engine | No W16 branch/path verified. Branch work/31-room-hop-workflow-model belongs to W31 and is not treated as W16. NOT SYNCED |
+| W21 | Agent skills | No W21 branch in the inspected GitHub branch inventory; manifest explicitly requires exact branch/path/commit pinning before synchronization. NOT SYNCED |
+| W37 | Core 8000 | No W37 branch or main/work/37 path in inspected GitHub inventory; Sandbox manifest limits source mutation. NOT SYNCED |
+| W38 | Gateway 8040 | No W38 branch or main/work/38 path in inspected GitHub inventory; Sandbox manifest says no GitHub sync at initialization. NOT SYNCED |
+| W39 | Build MCP 8030 | No W39 branch or main/work/39 path in inspected GitHub inventory; Sandbox journal says no GitHub sync performed. NOT SYNCED |
 
 ## Integration boundaries
 - W70 owns lifecycle, assignment, authority, gates, decisions and system dashboard.
