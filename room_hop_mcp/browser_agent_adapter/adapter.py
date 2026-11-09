@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import ipaddress
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as FutureTimeoutError
 from functools import wraps
 import json
 import os
@@ -27,6 +27,10 @@ ROOT = Path(__file__).resolve().parent
 EVIDENCE = ROOT / "evidence"
 EVIDENCE.mkdir(exist_ok=True)
 app = FastAPI(title="ROOM-HOP Browser Agent Adapter", version="1.1.0")
+
+MAX_BROWSER_WAIT_MS = 5000
+MAX_BROWSER_WORKFLOW_STEPS = 10
+BROWSER_OPERATION_TIMEOUT_SECONDS = 120
 
 def _redact_url(value: str) -> str:
     """Remove query strings and fragments before evidence/transcript persistence."""
@@ -90,6 +94,12 @@ def _safe_evidence_path(name: str) -> Path:
         or name.endswith((" ", "."))
     ):
         raise ValueError("Evidence filename must be a safe plain basename.")
+    stem = name.split(".", 1)[0].upper()
+    reserved_windows_names = {"CON", "PRN", "AUX", "NUL"}
+    reserved_windows_names.update(f"{prefix}{index}" for prefix in ("COM", "LPT") for index in range(1, 10))
+    reserved_windows_names.update(f"{prefix}{suffix}" for prefix in ("COM", "LPT") for suffix in ("¹", "²", "³"))
+    if stem in reserved_windows_names:
+        raise ValueError("Evidence filename uses a reserved Windows device name.")
     root = EVIDENCE.resolve()
     resolved = (root / name).resolve()
     if resolved.parent != root:
@@ -99,8 +109,8 @@ def _safe_evidence_path(name: str) -> Path:
 
 class WorkflowRequest(BaseModel):
     url: str
-    steps: list[dict[str, Any]] = Field(default_factory=list)
-    work_id: str = "browser-e2e"
+    steps: list[dict[str, Any]] = Field(default_factory=list, max_length=MAX_BROWSER_WORKFLOW_STEPS)
+    work_id: str = Field(default="browser-e2e", max_length=64)
     collect_screenshot: bool = True
 
 
@@ -142,13 +152,9 @@ class Adapter:
         if executable:
             launch_kwargs["executable_path"] = executable
 
-        self.browser = self.pw.chromium.launch(**launch_kwargs)
-        self.context = self.browser.new_context(
-            accept_downloads=True,
-            viewport={"width": 1280, "height": 900},
-        )
-        self.context.route("**/*", self._guard_route)
-        self.page = self.context.new_page()
+        if self.browser is None:
+            self.browser = self.pw.chromium.launch(**launch_kwargs)
+        self._create_context()
         self.started_at = time.time()
         self.log(
             "browser_start",
@@ -160,6 +166,18 @@ class Adapter:
             "backend": "chromium",
             "executable": executable or "playwright-managed",
         }
+
+    def _create_context(self):
+        if self.browser is None:
+            raise RuntimeError("Browser process is not started.")
+        self.context = self.browser.new_context(
+            accept_downloads=True,
+            service_workers="block",
+            viewport={"width": 1280, "height": 900},
+        )
+        self.context.route("**/*", self._guard_route)
+        self.page = self.context.new_page()
+        return self.context
 
     def require(self) -> Page:
         if not self.page:
@@ -216,6 +234,8 @@ class Adapter:
 
     @_serialized_operation
     def wait(self, ms: int = 1000):
+        if isinstance(ms, bool) or not isinstance(ms, int) or not 0 <= ms <= MAX_BROWSER_WAIT_MS:
+            raise ValueError(f"wait ms must be an integer between 0 and {MAX_BROWSER_WAIT_MS}.")
         self.require().wait_for_timeout(ms)
         self.log("browser_wait", ms=ms)
         return {"waited_ms": ms}
@@ -311,7 +331,15 @@ _BROWSER_EXECUTOR = ThreadPoolExecutor(max_workers=1, thread_name_prefix="roomho
 
 
 def _run_browser_operation(operation, *args, **kwargs):
-    return _BROWSER_EXECUTOR.submit(operation, *args, **kwargs).result()
+    future = _BROWSER_EXECUTOR.submit(operation, *args, **kwargs)
+    try:
+        return future.result(timeout=BROWSER_OPERATION_TIMEOUT_SECONDS)
+    except FutureTimeoutError:
+        future.cancel()
+        raise HTTPException(
+            status_code=504,
+            detail="Browser operation exceeded its bounded execution window; outcome may be uncertain; do not retry automatically.",
+        ) from None
 
 
 def _execute_workflow(req: WorkflowRequest):
@@ -416,7 +444,6 @@ async def _submit_to_roomhop_stdio(
             "work_id": result["work_id"],
             "evidence_json": Path(result["evidence_json"]).name,
             "final_url": result["final_url"],
-            "page_title": result["page_title"],
         }
         marker = "ROOMHOP_BROWSER_AGENT_ARTIFACT " + json.dumps(
             artifact, ensure_ascii=False, sort_keys=True
