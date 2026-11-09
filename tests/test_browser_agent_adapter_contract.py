@@ -537,3 +537,55 @@ def test_roomhop_transcript_submission_omits_untrusted_page_title(monkeypatch, t
     marker = instances[0].transcript[0]["content"]
     assert "page_title" not in marker
     assert "Example Domain" not in marker
+
+
+
+def test_browser_workflow_context_replacement_closes_previous_context():
+    created = []
+
+    class FakeContext:
+        def __init__(self, index):
+            self.index = index
+            self.closed = False
+
+        def close(self):
+            self.closed = True
+
+        def route(self, pattern, handler):
+            pass
+
+        def new_page(self):
+            return SimpleNamespace(url=f"https://context-{self.index}.example/")
+
+    class FakeBrowser:
+        def new_context(self, **kwargs):
+            context = FakeContext(len(created) + 1)
+            created.append(context)
+            return context
+
+    instance = browser_adapter.Adapter()
+    instance.browser = FakeBrowser()
+    first = instance._create_context()
+    second = instance._replace_context()
+    assert first.closed is True
+    assert second is not first
+    assert instance.context is second
+    assert instance.page.url == "https://context-2.example/"
+    assert created[0].index == 1 and created[1].index == 2
+
+
+def test_browser_context_cleanup_clears_page_and_context_references():
+    class FakeContext:
+        closed = False
+
+        def close(self):
+            self.closed = True
+
+    instance = browser_adapter.Adapter()
+    context = FakeContext()
+    instance.context = context
+    instance.page = SimpleNamespace(url="https://example.com/")
+    instance._close_context()
+    assert context.closed is True
+    assert instance.context is None
+    assert instance.page is None
