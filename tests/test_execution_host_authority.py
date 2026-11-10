@@ -82,3 +82,68 @@ def test_primary_failure_is_not_overwritten_by_nested_test_pass(tmp_path):
         ExecutionRequest(command=("python3", "-c", "raise SystemExit(5)"), run_test=True),
     )
     assert result.status == "FAILED"
+
+def test_nested_test_timeout_propagates_to_top_level(tmp_path):
+    ctx = make_context(
+        tmp_path,
+        test_entrypoint=("python3", "-c", "import time; time.sleep(2)"),
+    )
+    result = ExecutionHost().execute_work(
+        ctx,
+        ExecutionRequest(
+            command=("python3", "-c", "print('build-ok')"),
+            run_test=True,
+            timeout_seconds=0.05,
+        ),
+    )
+    assert result.status == "TIMEOUT"
+    assert result.blocker == "timeout"
+    payload = __import__("json").loads(
+        Path(result.evidence_ref).read_text(encoding="utf-8")
+    )
+    assert payload["test"]["status"] == "TIMEOUT"
+    assert payload["status"] == "TIMEOUT"
+
+
+def test_nested_test_execution_error_blocks_top_level(tmp_path):
+    ctx = make_context(
+        tmp_path,
+        test_entrypoint=("__w1111_missing_executable__",),
+    )
+    result = ExecutionHost().execute_work(
+        ctx,
+        ExecutionRequest(
+            command=("python3", "-c", "print('build-ok')"),
+            run_test=True,
+        ),
+    )
+    assert result.status == "BLOCKED"
+    assert result.blocker
+    payload = __import__("json").loads(
+        Path(result.evidence_ref).read_text(encoding="utf-8")
+    )
+    assert payload["test"]["status"] == "BLOCKED"
+    assert payload["status"] == "BLOCKED"
+
+
+def test_primary_timeout_is_not_overwritten_by_nested_test_pass(tmp_path):
+    ctx = make_context(
+        tmp_path,
+        test_entrypoint=("python3", "-c", "print('test-ok')"),
+    )
+    result = ExecutionHost().execute_work(
+        ctx,
+        ExecutionRequest(
+            command=("python3", "-c", "import time; time.sleep(2)"),
+            run_test=True,
+            timeout_seconds=0.05,
+        ),
+    )
+    assert result.status == "TIMEOUT"
+    assert result.blocker == "timeout"
+    payload = __import__("json").loads(
+        Path(result.evidence_ref).read_text(encoding="utf-8")
+    )
+    assert payload["primary_command_status"] == "TIMEOUT"
+    assert payload["test"]["status"] == "PASS"
+    assert payload["status"] == "TIMEOUT"
