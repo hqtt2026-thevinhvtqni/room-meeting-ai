@@ -1,0 +1,200 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "W112 Product and Phase Task Register",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "work_id",
+    "document_id",
+    "status",
+    "current_phase",
+    "product_tasks",
+    "phase_tasks",
+    "progress_policy"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "work_id": {
+      "const": "112"
+    },
+    "document_id": {
+      "const": "DOC-003"
+    },
+    "status": {
+      "enum": [
+        "DRAFT_NOT_APPROVED",
+        "ACTIVE",
+        "SUPERSEDED"
+      ]
+    },
+    "current_phase": {
+      "enum": [
+        "01_DISCOVER",
+        "02_DEFINE",
+        "03_ARCHITECT",
+        "04_PLAN",
+        "05_BUILD",
+        "06_VERIFY",
+        "07_ACCEPT",
+        "08_RELEASE",
+        "09_OPERATE"
+      ]
+    },
+    "product_tasks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "product_task_id",
+          "status",
+          "progress_percent",
+          "phase_task_ids",
+          "status_basis"
+        ],
+        "properties": {
+          "product_task_id": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "PLANNED",
+              "IN_PROGRESS",
+              "BLOCKED",
+              "DONE",
+              "NOT_ASSESSED"
+            ]
+          },
+          "progress_percent": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 100
+          },
+          "phase_task_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status_basis": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "phase_tasks": {
+      "type": "array",
+      "minItems": 9,
+      "items": {
+        "type": "object",
+        "required": [
+          "phase_task_id",
+          "product_task_id",
+          "phase",
+          "primary_agent",
+          "contributing_agents",
+          "checking_agent",
+          "assignment_status",
+          "status",
+          "progress_percent",
+          "agent_task_ids",
+          "acceptance_criteria",
+          "next_action"
+        ],
+        "properties": {
+          "phase_task_id": {
+            "type": "string"
+          },
+          "product_task_id": {
+            "type": "string"
+          },
+          "phase": {
+            "type": "string"
+          },
+          "primary_agent": {
+            "type": "string"
+          },
+          "contributing_agents": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "checking_agent": {
+            "type": "string"
+          },
+          "assignment_status": {
+            "enum": [
+              "PROPOSED_NOT_ACKNOWLEDGED",
+              "ACKNOWLEDGED",
+              "IN_PROGRESS",
+              "SUBMITTED",
+              "ACCEPTED",
+              "BLOCKED"
+            ]
+          },
+          "status": {
+            "enum": [
+              "PLANNED",
+              "IN_PROGRESS",
+              "BLOCKED",
+              "DONE",
+              "NOT_ASSESSED"
+            ]
+          },
+          "progress_percent": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "agent_task_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "acceptance_criteria": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "next_action": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "progress_policy": {
+      "type": "object",
+      "required": [
+        "status",
+        "reason",
+        "prohibited_methods"
+      ],
+      "properties": {
+        "status": {
+          "const": "NOT_CALCULATED"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "prohibited_methods": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": true
+}
