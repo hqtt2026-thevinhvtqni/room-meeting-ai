@@ -5,12 +5,17 @@ This board is the shared intake point for technical agents. A task is not assign
 | Task ID | Workstream | Initial scope | Suggested role | Status |
 |---|---|---|---|---|
 | W1111-T01 | GitHub–Sandbox–PC source-of-truth map | Exact path/SHA/hash mapping, drift handling, readback protocol | Xu / Architect | IN_PROGRESS (claimed in DOC-003) |
-| W1111-T02 | Execution Host :8031 runtime attestation | Identify deployed source/build, startup, auth, Work authorization and safe execution contract | Claude / Runtime reviewer | READY |
-| W1111-T03 | Execution result correctness | Reproduce and regression-test nested test failure propagation / false aggregate PASS | Vi / Coder + Qw / QE | READY |
-| W1111-T04 | ROOM-HOP component architecture | Core, Workspace, Gateway, Event Listener, Agent Runtime, MCP and adapters dependency map | Ka / CSA | READY |
-| W1111-T05 | W32 Windows Browser E2E blocker | Trace runner readiness, service provenance and exact-SHA release gate | An / QE with Xu coordination | READY |
-| W1111-T06 | AI identity and authorization | Principal/agent identity, policy, token provenance and task-to-runtime mapping | Xu / Ka | READY |
-| W1111-T07 | ROOM-HOP authorization boundary & protected mutation remediation | Consolidate W32 DOC-117, complete exact-head/source/runtime trace, reconcile W01/W02/W28/W99, design fail-closed enforcement and independent QE gates | Cla / CTO + Ka / CSA; Xu coordinates; Vi design; Qw independent QE | READY — ACK REQUIRED |
+| W1111-T02 | Execution Host :8031 runtime attestation | Absorbed into W1111-T07-VI; no separate AI assignment | Vi (coder) | SUPERSEDED — MERGED INTO T07-VI |
+| W1111-T03 | Execution result correctness | Absorbed into W1111-T07-VI; Vi owns implementation and tests | Vi (coder) | SUPERSEDED — MERGED INTO T07-VI |
+| W1111-T04 | ROOM-HOP component architecture | Xu performs architecture integration directly; no separate AI assignment | Xu | COORDINATOR OWNED — NOT A CODER TASK |
+| W1111-T05 | W32 Windows Browser E2E blocker | Deferred until Execution Host and authorization boundary are implemented; no separate AI assignment | Xu coordinates with Vi evidence | DEFERRED — NO ACTIVE ASSIGNMENT |
+| W1111-T06 | AI identity and authorization | Absorbed into W1111-T07-CO; Co owns implementation, Xu owns architecture | Co (coder) | SUPERSEDED — MERGED INTO T07-CO |
+| W1111-T07 | ROOM-HOP authorization boundary & protected mutation remediation | Parent workstream decomposed into three coder-owned packages; see CODER_TASK_BREAKDOWN_CO_VI_XUCO_20261110.md | Xu coordinates; Co, Xuco, Vi execute | ACTIVE PLAN — CHILD TASKS BELOW |
+
+
+| W1111-T07-CO | Trusted Identity & Authorization Core | Trusted principal, scoped Work/Assignment/Task grant, policy decision API, expiry/revocation and durable fail-closed audit | Co (coder) | READY — ACK REQUIRED |
+| W1111-T07-XUCO | Gateway & Sandbox Enforcement | Gateway :8040 / MCP :8030 / SandboxService choke point, action/path enforcement and bypass closure | Xuco (coder) | READY — ACK REQUIRED |
+| W1111-T07-VI | Execution Host & Result Integrity | Host :8031 grant validation, isolated named execution, truthful nested result propagation and evidence | Vi (coder) | READY — ACK REQUIRED |
 
 ## Agent participation protocol
 1. Read DOC-001, DOC-004, DOC-005, DOC-006, DOC-007 and the latest DOC-003 journal entries before starting.
@@ -22,4 +27,4 @@ This board is the shared intake point for technical agents. A task is not assign
 7. If blocked, state problem / attempts and evidence / bottleneck / options / exact missing condition.
 
 ## Initial state
-W1111-T01 is IN_PROGRESS with Xu's claim recorded in DOC-003. T02–T07 are READY unless a later task-specific journal claim records a valid ACK; no ACK or implementation start is inferred for them.
+W1111-T01 is IN_PROGRESS with Xu's claim recorded in DOC-003. W1111-T07 is the parent workstream, decomposed into T07-CO (Co), T07-XUCO (Xuco) and T07-VI (Vi). All three child tasks are READY — ACK REQUIRED; no coder ACK or implementation start is inferred. T02/T03/T06 are absorbed into the child tasks; T04 is Xu-owned coordination; T05 is deferred. No other AI is assigned to this active workstream.
