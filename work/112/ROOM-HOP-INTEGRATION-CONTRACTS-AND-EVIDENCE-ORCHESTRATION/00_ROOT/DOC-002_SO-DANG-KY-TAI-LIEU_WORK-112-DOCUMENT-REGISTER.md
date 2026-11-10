@@ -50,3 +50,10 @@
 - DOC-003 and DOC-004 implement W70's three-tier model without copying W70 task IDs or duplicating its task state.
 - All six Agent Task assignments are PROPOSED_NOT_ACKNOWLEDGED; all Product/Phase tasks are NOT_ASSESSED; product progress remains NOT_CALCULATED.
 - A proposed primary/checking agent is a planning reference only. No dispatch, ACK, permission, active execution or Gate PASS is implied.
+
+
+## Addendum 2026-11-10 — schema-rule conformance status
+- DOC-003 against SCHEMA-003: in-session schema-rule conformance subset PASS (zero reported errors).
+- DOC-004 against SCHEMA-004: in-session schema-rule conformance subset PASS (zero reported errors).
+- JSON parsing and the implemented required/type/property/enum/const/array/range/pattern checks passed on exact Sandbox readback content.
+- Formal external JSON Schema validation remains NOT RUN; independent architecture review and Vinh approval remain PENDING. These checks do not approve the task model or authorize dispatch/runtime execution.
