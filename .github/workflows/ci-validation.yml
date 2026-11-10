@@ -145,7 +145,7 @@ jobs:
       - name: Check active workflow and Work 32 mirror (report-only)
         run: |
           set -o pipefail
-          python "${W32_DIR}/04_CODE/ci_tools/check_workflow_mirror.py" | tee test-results/workflow-mirror-report.txt
+          CHECK_STRICT=1 python "${W32_DIR}/04_CODE/ci_tools/check_workflow_mirror.py" | tee test-results/workflow-mirror-report.txt
 
       - name: Retain tooling test evidence
         if: always()
@@ -206,121 +206,170 @@ jobs:
           retention-days: 14
 
   windows_browser_adapter:
-    name: Windows Browser Adapter E2E (dedicated disposable runner)
-    if: ${{ vars.W32_WINDOWS_RUNNER_READY == 'true' }}
+    name: Windows Browser Adapter E2E (job-owned disposable runner)
+    if: \${{ vars.W32_WINDOWS_RUNNER_READY == 'true' }}
     runs-on: [self-hosted, Windows, X64, room-hop-w32]
-    timeout-minutes: 12
+    timeout-minutes: 20
     env:
       ROOMHOP_TEST_MODE: "1"
-      ROOMHOP_TEST_MEETINGS_DIR: ${{ vars.ROOMHOP_TEST_MEETINGS_DIR }}
-      ROOMHOP_TEST_MEETING_ID: ${{ vars.ROOMHOP_TEST_MEETING_ID }}
-      ROOMHOP_TEST_IDENTITY_ID: ${{ vars.ROOMHOP_TEST_IDENTITY_ID }}
-      ROOMHOP_BROWSER_ADAPTER_PID: ${{ vars.ROOMHOP_BROWSER_ADAPTER_PID }}
-      ROOMHOP_BROWSER_ADAPTER_EXE: ${{ vars.ROOMHOP_BROWSER_ADAPTER_EXE }}
-      ROOMHOP_BROWSER_ADAPTER_OWNER: ${{ vars.ROOMHOP_BROWSER_ADAPTER_OWNER }}
+      ROOMHOP_TEST_MEETING_ID: MEETING-W32-DISPOSABLE
+      ROOMHOP_TEST_IDENTITY_ID: vinh
     steps:
       - name: Fetch exact triggering revision without submodule recursion
         env:
-          REPOSITORY: ${{ github.repository }}
-          REVISION: ${{ github.sha }}
-        shell: pwsh
+          REPOSITORY: \${{ github.repository }}
+          REVISION: \${{ github.sha }}
+        shell: powershell
         run: |
           git init .
           git remote add origin "https://github.com/$env:REPOSITORY.git"
           git fetch --no-tags --depth=1 origin "$env:REVISION"
           git checkout --detach FETCH_HEAD
+          $actual = (git rev-parse HEAD).Trim()
+          if ($LASTEXITCODE -ne 0 -or $actual -ne $env:REVISION) { throw "BLOCKED: checkout SHA mismatch" }
 
       - name: Set up Python
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: '3.12'
 
-      - name: Fail-closed Browser Adapter and disposable-store preflight
-        shell: pwsh
+      - name: Install pinned Browser Adapter dependencies and Chromium
+        shell: powershell
         run: |
-          $required = @(
-            "ROOMHOP_TEST_MEETINGS_DIR", "ROOMHOP_TEST_MEETING_ID",
-            "ROOMHOP_TEST_IDENTITY_ID", "ROOMHOP_BROWSER_ADAPTER_PID",
-            "ROOMHOP_BROWSER_ADAPTER_EXE", "ROOMHOP_BROWSER_ADAPTER_OWNER"
-          )
-          foreach ($name in $required) {
-            if ([string]::IsNullOrWhiteSpace([Environment]::GetEnvironmentVariable($name))) {
-              throw "BLOCKED: required runner variable $name is missing"
-            }
-          }
-          $store = (Resolve-Path -LiteralPath $env:ROOMHOP_TEST_MEETINGS_DIR -ErrorAction Stop).Path
-          $workspace = (Resolve-Path -LiteralPath $env:GITHUB_WORKSPACE).Path
-          if ($store.StartsWith($workspace, [StringComparison]::OrdinalIgnoreCase)) {
-            throw "BLOCKED: disposable store must be outside GITHUB_WORKSPACE"
-          }
+          python -m pip install -r requirements.txt -c constraints-ci.txt
+          if ($LASTEXITCODE -ne 0) { throw "project dependency install failed" }
+          python -m pip install pytest requests playwright==1.65.0
+          if ($LASTEXITCODE -ne 0) { throw "Windows E2E dependency install failed" }
+          python -m pip check
+          if ($LASTEXITCODE -ne 0) { throw "pip check failed" }
+          python -m playwright install chromium
+          if ($LASTEXITCODE -ne 0) { throw "Chromium install failed" }
+          $version = (python -c "import importlib.metadata as m; print(m.version('playwright'))").Trim()
+          if ($version -ne "1.65.0") { throw "Unexpected Playwright version: $version" }
+          New-Item -ItemType Directory -Force test-results | Out-Null
+          python -m pip freeze | Out-File test-results/pip-freeze-browser-windows.txt -Encoding utf8
+
+      - name: Create isolated Core meeting fixture and select shared port
+        shell: powershell
+        run: |
+          $workspace = (Resolve-Path $env:GITHUB_WORKSPACE).Path
+          $runnerTemp = (Resolve-Path $env:RUNNER_TEMP).Path
+          if ($runnerTemp.StartsWith($workspace, [StringComparison]::OrdinalIgnoreCase)) { throw "RUNNER_TEMP is inside checkout" }
+          $store = Join-Path $runnerTemp ("w32-browser-store-" + [Guid]::NewGuid().ToString("N"))
+          New-Item -ItemType Directory -Path $store -ErrorAction Stop | Out-Null
+          $store = (Resolve-Path $store).Path
           $sentinel = Join-Path $store ".roomhop-disposable-test-store"
-          if (-not (Test-Path -LiteralPath $sentinel -PathType Leaf)) {
-            throw "BLOCKED: disposable-store sentinel is missing"
+          [IO.File]::WriteAllText($sentinel, "ROOM-HOP-WORK32-DISPOSABLE-TEST-STORE", (New-Object System.Text.UTF8Encoding($false)))
+          $tcp = New-Object System.Net.Sockets.TcpListener([Net.IPAddress]::Loopback, 0)
+          $tcp.Start()
+          $port = $tcp.LocalEndpoint.Port
+          $tcp.Stop()
+          foreach ($line in @("ROOMHOP_TEST_MEETINGS_DIR=$store", "ROOM_HOP_MEETINGS_DIR=$store", "ROOMHOP_BROWSER_ADAPTER_PORT=$port")) {
+            [IO.File]::AppendAllText($env:GITHUB_ENV, $line + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($false)))
           }
-          $expectedPid = [int]$env:ROOMHOP_BROWSER_ADAPTER_PID
-          $listeners = @(Get-NetTCPConnection -State Listen -LocalPort 8787 -ErrorAction Stop |
-            Where-Object { $_.OwningProcess -eq $expectedPid -and $_.LocalAddress -eq "127.0.0.1" })
-          if ($listeners.Count -ne 1) {
-            throw "BLOCKED: expected PID does not own exactly one 127.0.0.1:8787 listener"
+          python tests/support/bootstrap_browser_adapter_fixture.py --store "$store" --workspace "$workspace"
+          if ($LASTEXITCODE -ne 0) { throw "Core meeting fixture bootstrap failed" }
+          Write-Host "fixture_store=$store port=$port meeting=$env:ROOMHOP_TEST_MEETING_ID"
+
+      - name: Start exact-checkout Browser Adapter and verify owned listener
+        shell: powershell
+        run: |
+          $workspace = (Resolve-Path $env:GITHUB_WORKSPACE).Path
+          $store = (Resolve-Path $env:ROOMHOP_TEST_MEETINGS_DIR).Path
+          $port = [int]$env:ROOMHOP_BROWSER_ADAPTER_PORT
+          $sha = (git rev-parse HEAD).Trim()
+          if ($sha -ne $env:GITHUB_SHA) { throw "Source SHA changed before adapter launch" }
+          $wrapper = Join-Path $env:RUNNER_TEMP "w32-browser-adapter-$sha.py"
+          $source = @'
+          import argparse, os, sys
+          p = argparse.ArgumentParser()
+          p.add_argument("--store", required=True)
+          p.add_argument("--sha", required=True)
+          p.add_argument("--port", required=True, type=int)
+          p.add_argument("--workspace", required=True)
+          a = p.parse_args()
+          os.environ.update({"ROOM_HOP_MEETINGS_DIR": a.store, "ROOMHOP_TEST_MEETINGS_DIR": a.store,
+                             "ROOMHOP_TEST_MODE": "1", "ROOMHOP_SOURCE_SHA": a.sha,
+                             "ROOMHOP_BROWSER_ADAPTER_PORT": str(a.port)})
+          sys.path.insert(0, a.workspace)
+          import uvicorn
+          uvicorn.run("room_hop_mcp.browser_agent_adapter.adapter:app", host="127.0.0.1", port=a.port)
+          '@
+          Set-Content -LiteralPath $wrapper -Value $source -Encoding ascii
+          $stdout = Join-Path $env:RUNNER_TEMP "w32-browser-adapter-$sha.stdout.log"
+          $stderr = Join-Path $env:RUNNER_TEMP "w32-browser-adapter-$sha.stderr.log"
+          $python = (Get-Command python -ErrorAction Stop).Source
+          $startArgs = @{ FilePath=$python; PassThru=$true; WorkingDirectory=$workspace; ArgumentList=@("-u",$wrapper,"--store",$store,"--sha",$sha,"--port","$port","--workspace",$workspace); RedirectStandardOutput=$stdout; RedirectStandardError=$stderr }
+          $proc = Start-Process @startArgs
+          if (-not $proc) { throw "Adapter process did not start" }
+          $metadataPath = Join-Path $env:RUNNER_TEMP "w32-browser-adapter-process.json"
+          $deadline = (Get-Date).AddSeconds(90)
+          $health = $null
+          while ((Get-Date) -lt $deadline) {
+            $live = Get-CimInstance Win32_Process -Filter "ProcessId = $($proc.Id)" -ErrorAction SilentlyContinue
+            if (-not $live) { break }
+            try { $health = Invoke-RestMethod "http://127.0.0.1:$port/health" -TimeoutSec 3; if ($health) { break } } catch { Start-Sleep -Seconds 2 }
           }
-          $proc = Get-CimInstance Win32_Process -Filter "ProcessId = $expectedPid"
-          if (-not $proc -or -not $proc.ExecutablePath -or -not $proc.CommandLine) {
-            throw "BLOCKED: process provenance is incomplete"
-          }
-          if (-not [string]::Equals([IO.Path]::GetFullPath($proc.ExecutablePath),
-            [IO.Path]::GetFullPath($env:ROOMHOP_BROWSER_ADAPTER_EXE),
-            [StringComparison]::OrdinalIgnoreCase)) {
-            throw "BLOCKED: executable path does not match approved runner value"
-          }
-          if ($proc.CommandLine -notlike "*$store*") {
-            throw "BLOCKED: service command line does not identify the disposable store"
-          }
-          if ($proc.CommandLine -notlike "*$env:GITHUB_SHA*") {
-            throw "BLOCKED: service command line does not attest the exact source SHA"
-          }
-          $owner = Invoke-CimMethod -InputObject $proc -MethodName GetOwner
-          $actualOwner = if ($owner.ReturnValue -eq 0) { "$($owner.Domain)\$($owner.User)" } else { "" }
-          if ($actualOwner -ne $env:ROOMHOP_BROWSER_ADAPTER_OWNER) {
-            throw "BLOCKED: process owner does not match approved runner value"
-          }
-          $parent = Get-CimInstance Win32_Process -Filter "ProcessId = $($proc.ParentProcessId)"
-          if (-not $parent) { throw "BLOCKED: parent process provenance is unavailable" }
-          Write-Host "runner=$env:COMPUTERNAME"
-          Write-Host "store=$store"
-          Write-Host "sentinel=$sentinel"
-          Write-Host "meeting_id=$env:ROOMHOP_TEST_MEETING_ID"
-          Write-Host "identity_id=$env:ROOMHOP_TEST_IDENTITY_ID"
-          Write-Host "service_pid=$($proc.ProcessId)"
-          Write-Host "service_owner=$actualOwner"
-          Write-Host "service_executable=$($proc.ExecutablePath)"
-          Write-Host "service_command_line=$($proc.CommandLine)"
-          Write-Host "service_parent_pid=$($proc.ParentProcessId)"
-          Write-Host "service_parent_name=$($parent.Name)"
-          Write-Host "service_source_sha=$env:GITHUB_SHA"
+          $owned = Get-CimInstance Win32_Process -Filter "ProcessId = $($proc.Id)" -ErrorAction SilentlyContinue
+          if (-not $owned -or -not $owned.ExecutablePath -or -not $owned.CommandLine) { throw "Adapter process provenance unavailable" }
+          if ($owned.CommandLine -notlike "*$wrapper*" -or $owned.CommandLine -notlike "*$store*" -or $owned.CommandLine -notlike "*$sha*" -or $owned.CommandLine -notlike "*room_hop_mcp.browser_agent_adapter.adapter:app*") { throw "Adapter command line provenance mismatch" }
+          $listeners = @(Get-NetTCPConnection -State Listen -LocalPort $port -ErrorAction Stop | Where-Object { $_.OwningProcess -eq $proc.Id -and $_.LocalAddress -eq "127.0.0.1" })
+          if ($listeners.Count -ne 1) { throw "Listener is not owned by job-created PID" }
+          if (-not $health) { Get-Content $stderr -ErrorAction SilentlyContinue; throw "Adapter health probe failed" }
+          $ownerResult = Invoke-CimMethod -InputObject $owned -MethodName GetOwner
+          if ($ownerResult.ReturnValue -ne 0) { throw "Cannot establish adapter process owner" }
+          $owner = "$($ownerResult.Domain)\$($ownerResult.User)"
+          if ($owner -ne [Security.Principal.WindowsIdentity]::GetCurrent().Name) { throw "Adapter owner differs from runner job identity" }
+          $meta = [ordered]@{ pid=$proc.Id; executable=[IO.Path]::GetFullPath($owned.ExecutablePath); owner=$owner; command_line=$owned.CommandLine; store=$store; port=$port; sha=$sha; wrapper=$wrapper }
+          $meta | ConvertTo-Json | Set-Content -LiteralPath $metadataPath -Encoding utf8
+          [IO.File]::AppendAllText($env:GITHUB_ENV, "ROOMHOP_ADAPTER_METADATA=$metadataPath" + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($false)))
+          Write-Host "adapter_pid=$($proc.Id) owner=$owner sha=$sha health=$($health | ConvertTo-Json -Compress)"
 
       - name: Run Browser Adapter live E2E
-        shell: pwsh
+        shell: powershell
         run: |
-          New-Item -ItemType Directory -Force test-results | Out-Null
-          python -m pip install pytest requests
           python -m pytest -v tests/test_browser_agent_adapter_e2e.py --junitxml=test-results/junit-browser-adapter-windows.xml
+          if ($LASTEXITCODE -ne 0) { throw "Browser Adapter live E2E failed" }
 
-      - name: Verify disposable-store sentinel after run
+      - name: Stop only the process created by this job and remove disposable store
         if: always()
-        shell: pwsh
+        shell: powershell
         run: |
-          $store = $env:ROOMHOP_TEST_MEETINGS_DIR
-          $sentinel = if ($store) { Join-Path $store ".roomhop-disposable-test-store" } else { "" }
-          if (-not $sentinel -or -not (Test-Path -LiteralPath $sentinel -PathType Leaf)) {
-            throw "BLOCKED: disposable-store sentinel disappeared after test"
+          $metadataPath = $env:ROOMHOP_ADAPTER_METADATA
+          if ($metadataPath -and (Test-Path $metadataPath -PathType Leaf)) {
+            $meta = Get-Content $metadataPath -Raw | ConvertFrom-Json
+            $proc = Get-CimInstance Win32_Process -Filter "ProcessId = $($meta.pid)" -ErrorAction SilentlyContinue
+            if ($proc) {
+              $sameExe = [string]::Equals([IO.Path]::GetFullPath($proc.ExecutablePath), [IO.Path]::GetFullPath($meta.executable), [StringComparison]::OrdinalIgnoreCase)
+              $sameCommand = $proc.CommandLine -like "*$($meta.wrapper)*" -and $proc.CommandLine -like "*$($meta.store)*" -and $proc.CommandLine -like "*$($meta.sha)*"
+              $ownerResult = Invoke-CimMethod -InputObject $proc -MethodName GetOwner
+              $sameOwner = $ownerResult.ReturnValue -eq 0 -and "$($ownerResult.Domain)\$($ownerResult.User)" -eq $meta.owner
+              if (-not ($sameExe -and $sameCommand -and $sameOwner)) { throw "Refusing to stop PID $($meta.pid): process identity changed" }
+              Stop-Process -Id ([int]$meta.pid) -Force -ErrorAction Stop
+              Wait-Process -Id ([int]$meta.pid) -Timeout 15 -ErrorAction SilentlyContinue
+            }
+          }
+          if ($env:ROOMHOP_TEST_MEETINGS_DIR) {
+            $store = (Resolve-Path $env:ROOMHOP_TEST_MEETINGS_DIR -ErrorAction Stop).Path
+            $workspace = (Resolve-Path $env:GITHUB_WORKSPACE).Path
+            $runnerTemp = (Resolve-Path $env:RUNNER_TEMP).Path
+            if (-not $store.StartsWith($runnerTemp, [StringComparison]::OrdinalIgnoreCase) -or $store.StartsWith($workspace, [StringComparison]::OrdinalIgnoreCase)) { throw "Refusing cleanup outside runner-temp fixture" }
+            $sentinel = Join-Path $store ".roomhop-disposable-test-store"
+            if (-not (Test-Path $sentinel -PathType Leaf) -or (Get-Content $sentinel -Raw).Trim() -ne "ROOM-HOP-WORK32-DISPOSABLE-TEST-STORE") { throw "Refusing cleanup of unverified store" }
+            Remove-Item -LiteralPath $store -Recurse -Force
+            Write-Host "disposable_store_cleanup=PASS"
           }
 
-      - name: Upload Windows Browser Adapter evidence
+      - name: Retain Windows Browser Adapter evidence
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: room-hop-ci-evidence-windows-browser-adapter
-          path: test-results/junit-browser-adapter-windows.xml
+          path: |
+            test-results/junit-browser-adapter-windows.xml
+            test-results/pip-freeze-browser-windows.txt
+            \${{ runner.temp }}\\\\w32-browser-adapter-*.stdout.log
+            \${{ runner.temp }}\\\\w32-browser-adapter-*.stderr.log
           if-no-files-found: warn
           retention-days: 14
 
