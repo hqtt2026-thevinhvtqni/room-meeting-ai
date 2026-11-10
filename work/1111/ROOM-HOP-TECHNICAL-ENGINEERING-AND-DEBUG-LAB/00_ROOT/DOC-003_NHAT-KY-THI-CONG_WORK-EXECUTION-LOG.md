@@ -524,3 +524,20 @@ a read-only cho process/listener/health nếu có source change hoặc evidence 
 - **Giới hạn công cụ:** MCP 8030 chỉ file operations; GitHub connector có fetch/contents và CI query giới hạn, không có shell/process runner hoặc general workflow-run listing/dispatch trong toolset hiện có. Không thể chạy pytest, xác minh PID/module import, hoặc live HTTP E2E từ phiên này.
 - **Kết luận:** PR #48 source candidate tồn tại; CI run cũ SUCCESS nhưng exact current HEAD CI = NOT VERIFIED; branch divergence review-required; Core :8000 đang chạy command khác entrypoint đã định trong deployment spec; LIVE CORE → W12/W13 → Work Sandbox → FINAL_RESULT/Core durable record → GitHub = **BLOCKED / NOT VERIFIED**. Không tuyên bố PASS.
 - **Hành động tiếp theo của Co:** tiếp tục static source review và rà soát khả năng kiểm chứng qua GitHub/Sandbox; giữ nguyên PR draft và PC working tree. Chỉ yêu cầu PC/VS Code khi cần một phép đo runtime read-only hoặc thao tác deployment được phê duyệt mà không thể thực hiện từ xa.
+
+
+## 2026-11-10 07:57:36 (UTC+7) — CO — C09 TRANSPORT TLS GUARD + EXACT-HEAD CI
+
+- **Người thực hiện:** Co
+- **Chức danh:** Coder — W1111
+- **Ngày/giờ:** 2026-11-10 07:57:36 (UTC+7)
+- **Phạm vi:** Static review và sửa lỗi trong PR #48 branch `work/w1111-core-execution-authority-v1-2`; không sửa main, không thao tác PC/runtime, không merge/deploy.
+- **Finding:** `ExecutionHostBridge` gửi `X-ROOM-HOP-SERVICE-CREDENTIAL` đến Core và `Authorization: Bearer <grant>` đến W13 qua URL cấu hình, nhưng không cưỡng chế HTTPS cho endpoint remote. Deployment spec yêu cầu HTTPS ngoài loopback; source chưa enforce yêu cầu đó. Đây là rủi ro credential/grant bị truyền plaintext nếu cấu hình remote HTTP.
+- **Sửa source:** `13/EXECUTION-HOST-INFRASTRUCTURE/04_CODE/execution_host/wee_bridge.py` thêm kiểm tra transport fail-closed: HTTPS được chấp nhận cho remote; HTTP chỉ được chấp nhận với localhost hoặc IP loopback; URL không có host, có userinfo hoặc scheme khác bị từ chối. Nếu Core hoặc Host endpoint không đạt điều kiện, bridge trả BLOCKED trước khi gửi credential/grant.
+- **Regression tests:** thêm 3 test: remote Core HTTP bị chặn trước khi gửi service credential; remote Host HTTP bị chặn trước khi xin grant; HTTPS remote Core + Host được chấp nhận. Các fixture HTTP hiện hữu được đổi sang loopback `127.0.0.1`.
+- **GitHub commits:** source `8f3c0017da4907538b31cafc70f0c517755ffc20`, source blob `712170a82cdd8a3b910fe4cadca6f13b91f129a9`; tests/current branch HEAD `e81cfafbda8487a3097a1041820f20dc3ed0905e`, test blob `e5e15c85a08ce5ee7bfc30f2775175b4bda8db27`. Branch endpoint và fetch_file xác nhận exact HEAD và hai blob readback.
+- **CI intermediate:** run `42732124428`, SHA source-only `8f3c0017da4907538b31cafc70f0c517755ffc20`, kết luận FAILURE tại step W13 bridge/integration tests. Đây là revision trung gian trước khi commit regression tests; summary tool không cung cấp log lỗi chi tiết nên root cause chưa kết luận.
+- **CI exact current HEAD:** run `42732132673`, SHA `e81cfafbda8487a3097a1041820f20dc3ed0905e`, event=push, status=completed, conclusion=success. Job `authority-tests` success; cả ba bước pytest (Core authority, W12 canonical host, W13 bridge + integration) đều completed/success. Đây là CI PASS cho exact branch HEAD, không phải live runtime E2E.
+- **PR #48:** body được cập nhật thêm follow-up C09; giữ nguyên trạng thái draft/open. Không merge, không đổi base, không deploy.
+- **Trạng thái:** C09 SOURCE PATCH + 3 REGRESSION TESTS = WRITTEN/REMOTE READBACK; EXACT-HEAD CI = PASS (run 42732132673); LIVE CORE → W12/W13 → Work Sandbox → FINAL_RESULT/Core durable record → GitHub = BLOCKED / NOT VERIFIED do Core launcher mismatch và deployment prerequisites còn thiếu.
+- **Bước tiếp:** tiếp tục rà soát source và kiểm tra các gate có thể đóng từ GitHub/Sandbox; không tự tạo secret hoặc restart service.
