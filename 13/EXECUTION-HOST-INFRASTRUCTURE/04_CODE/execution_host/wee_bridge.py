@@ -4,10 +4,34 @@ import json
 import os
 import re
 from dataclasses import asdict, dataclass, is_dataclass
+from ipaddress import ip_address
 from typing import Any, Callable
 from urllib import error, request
+from urllib.parse import urlsplit
 
 _WORK_ID = re.compile(r"^W[0-9]+$")
+
+
+def _secure_transport_endpoint(value: str) -> bool:
+    """Require HTTPS except for explicit loopback development endpoints."""
+    try:
+        parsed = urlsplit(value)
+        host = parsed.hostname
+        if not host or parsed.username is not None or parsed.password is not None:
+            return False
+        if parsed.scheme.lower() == "https":
+            return True
+        if parsed.scheme.lower() != "http":
+            return False
+        normalized = host.rstrip(".").lower()
+        if normalized == "localhost":
+            return True
+        try:
+            return ip_address(normalized).is_loopback
+        except ValueError:
+            return False
+    except ValueError:
+        return False
 
 
 @dataclass(frozen=True)
@@ -89,6 +113,10 @@ class ExecutionHostBridge:
             return self._blocked(work_id if isinstance(work_id, str) else None, "canonical_work_id_required")
         if not self.core_endpoint or not self.service_credential:
             return self._blocked(work_id, "core_service_identity_not_configured")
+        # Both the service credential and the short-lived grant token are
+        # authentication secrets. Never send either over remote plaintext HTTP.
+        if not _secure_transport_endpoint(self.core_endpoint) or not _secure_transport_endpoint(self.endpoint):
+            return self._blocked(work_id, "execution_transport_requires_https_except_loopback")
 
         command = run.get("command")
         timeout_seconds = run.get("timeout_seconds", 30.0)
