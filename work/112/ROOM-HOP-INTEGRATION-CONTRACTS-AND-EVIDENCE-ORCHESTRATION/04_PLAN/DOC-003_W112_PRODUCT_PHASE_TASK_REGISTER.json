@@ -1,0 +1,284 @@
+{
+  "schema_version": "1.0",
+  "work_id": "112",
+  "work_name": "ROOM-HOP-INTEGRATION-CONTRACTS-AND-EVIDENCE-ORCHESTRATION",
+  "document_id": "DOC-003",
+  "title": "W112 Product and Phase Task Register",
+  "status": "DRAFT_NOT_APPROVED",
+  "authority": "Vinh",
+  "coordinator": "Xu / AI-01",
+  "source_of_truth": "This file is the sole source for W112 Product Task and Phase Task state. Agent Task detail is held only in DOC-004.",
+  "governing_standard": "W70 DOC-056 §11; W70 DOC-094 model; W112 DOC-001 design baseline",
+  "current_phase": "01_DISCOVER",
+  "product_tasks": [
+    {
+      "product_task_id": "W112-PROD-001",
+      "product_name": "ROOM-HOP Cross-Work Integration Contracts and Evidence Orchestration",
+      "objective": "Define, verify and coordinate non-duplicative contracts across existing ROOM-HOP Works so task, identity, event, dependency, artifact and verification evidence can be correlated safely.",
+      "scope": "Cross-Work contract design, ownership/source pinning, stable-ID correlation, dependency semantics, event/evidence provenance, idempotency/concurrency/recovery requirements and integrated verification planning.",
+      "status": "NOT_ASSESSED",
+      "progress_percent": null,
+      "progress_status": "NOT_CALCULATED",
+      "baseline_status": "DRAFT_NOT_APPROVED",
+      "phase_task_ids": [
+        "W112-PROD-001-P01",
+        "W112-PROD-001-P02",
+        "W112-PROD-001-P03",
+        "W112-PROD-001-P04",
+        "W112-PROD-001-P05",
+        "W112-PROD-001-P06",
+        "W112-PROD-001-P07",
+        "W112-PROD-001-P08",
+        "W112-PROD-001-P09"
+      ],
+      "status_basis": "No phase is marked complete or active solely from document presence. Current phase pointer is inherited from Manifest and remains subject to W70 entry/gate rules."
+    }
+  ],
+  "phase_tasks": [
+    {
+      "phase_task_id": "W112-PROD-001-P01",
+      "product_task_id": "W112-PROD-001",
+      "phase": "01_DISCOVER",
+      "task_title": "Inventory Works, ownership and source lineage",
+      "primary_agent": "Xu / AI-01",
+      "contributing_agents": [
+        "Ka / AI-02"
+      ],
+      "checking_agent": "Cla / AI-03",
+      "assignment_status": "PROPOSED_NOT_ACKNOWLEDGED",
+      "status": "NOT_ASSESSED",
+      "progress_percent": 0,
+      "agent_task_ids": [
+        "W112-AT-001"
+      ],
+      "deliverable": "Owner/source inventory with evidence-backed repo, branch, path and revision pins or explicit blockers",
+      "acceptance_criteria": [
+        "Read each target Work's controlling manifest, decision records and journal before inspection",
+        "Record ownership proof and source revision for every accepted mapping",
+        "Unknown ownership or path remains BLOCKED/NOT_SYNCED"
+      ],
+      "next_action": "Finish bounded owner/source inventory without repeating completed searches unless a new source lead appears"
+    },
+    {
+      "phase_task_id": "W112-PROD-001-P02",
+      "product_task_id": "W112-PROD-001",
+      "phase": "02_DEFINE",
+      "task_title": "Define cross-Work contract requirements",
+      "primary_agent": "Xu / AI-01",
+      "contributing_agents": [
+        "Ka / AI-02",
+        "Cla / AI-03"
+      ],
+      "checking_agent": "Ka / AI-02",
+      "assignment_status": "PROPOSED_NOT_ACKNOWLEDGED",
+      "status": "NOT_ASSESSED",
+      "progress_percent": 0,
+      "agent_task_ids": [
+        "W112-AT-001",
+        "W112-AT-002"
+      ],
+      "deliverable": "Approved requirements, ownership boundaries, interface inventory and contract acceptance criteria",
+      "acceptance_criteria": [
+        "No duplicate W70 lifecycle, W32 CI, W33 evidence, W52 communication or component runtime ownership",
+        "Each contract field has producer, consumer, authority and failure semantics",
+        "Open questions remain explicit"
+      ],
+      "next_action": "Prepare requirements baseline for independent architecture review"
+    },
+    {
+      "phase_task_id": "W112-PROD-001-P03",
+      "product_task_id": "W112-PROD-001",
+      "phase": "03_ARCHITECT",
+      "task_title": "Design integration contracts and trust boundaries",
+      "primary_agent": "Ka / AI-02",
+      "contributing_agents": [
+        "Cla / AI-03",
+        "Xu / AI-01"
+      ],
+      "checking_agent": "Xu / AI-01",
+      "assignment_status": "PROPOSED_NOT_ACKNOWLEDGED",
+      "status": "NOT_ASSESSED",
+      "progress_percent": 0,
+      "agent_task_ids": [
+        "W112-AT-002",
+        "W112-AT-003",
+        "W112-AT-004"
+      ],
+      "deliverable": "Reviewed schemas, sequence/interaction diagrams, error/retry model and ADRs",
+      "acceptance_criteria": [
+        "Identity, assignment, event, evidence and dependency contracts are versioned",
+        "Idempotency, concurrency, timeout and recovery semantics are explicit",
+        "Independent architecture review and Vinh approval are recorded before enforcement"
+      ],
+      "next_action": "Obtain independent review of DOC-001 and resolve open architecture decisions"
+    },
+    {
+      "phase_task_id": "W112-PROD-001-P04",
+      "product_task_id": "W112-PROD-001",
+      "phase": "04_PLAN",
+      "task_title": "Plan owner adapters, dependencies and integration verification",
+      "primary_agent": "Xu / AI-01",
+      "contributing_agents": [
+        "Ka / AI-02",
+        "Cla / AI-03"
+      ],
+      "checking_agent": "Qw / AI-05",
+      "assignment_status": "PROPOSED_NOT_ACKNOWLEDGED",
+      "status": "NOT_ASSESSED",
+      "progress_percent": 0,
+      "agent_task_ids": [
+        "W112-AT-001",
+        "W112-AT-002",
+        "W112-AT-003",
+        "W112-AT-004",
+        "W112-AT-005",
+        "W112-AT-006"
+      ],
+      "deliverable": "Dependency graph, owner-specific handoffs, test strategy and gated implementation plan",
+      "acceptance_criteria": [
+        "Every task has one accountable owner and distinct checker",
+        "Every dependency is tied to an owner record and source revision",
+        "No component write is planned without Work Entry and owner permission"
+      ],
+      "next_action": "Convert approved design into owner-scoped plans and gate prerequisites"
+    },
+    {
+      "phase_task_id": "W112-PROD-001-P05",
+      "product_task_id": "W112-PROD-001",
+      "phase": "05_BUILD",
+      "task_title": "Build contract schemas and owner adapters after authorization",
+      "primary_agent": "Cla / AI-03",
+      "contributing_agents": [
+        "Co / AI-07",
+        "Xu / AI-01"
+      ],
+      "checking_agent": "Qw / AI-05",
+      "assignment_status": "PROPOSED_NOT_ACKNOWLEDGED",
+      "status": "NOT_ASSESSED",
+      "progress_percent": 0,
+      "agent_task_ids": [
+        "W112-AT-002",
+        "W112-AT-003",
+        "W112-AT-004",
+        "W112-AT-005"
+      ],
+      "deliverable": "Versioned schema fixtures and owner-approved adapters in canonical component repositories",
+      "acceptance_criteria": [
+        "DOC-001 approved and owner-specific Work Entry/permission exists",
+        "Canonical repo/branch/path/base SHA pinned",
+        "Changes remain with component owners; W112 does not implement duplicate runtimes"
+      ],
+      "next_action": "Remain design-only until review, approval, source pins and implementation permissions are present"
+    },
+    {
+      "phase_task_id": "W112-PROD-001-P06",
+      "product_task_id": "W112-PROD-001",
+      "phase": "06_VERIFY",
+      "task_title": "Verify contract compatibility and cross-Work flows",
+      "primary_agent": "Qw / AI-05",
+      "contributing_agents": [
+        "Cla / AI-03"
+      ],
+      "checking_agent": "Ka / AI-02",
+      "assignment_status": "PROPOSED_NOT_ACKNOWLEDGED",
+      "status": "NOT_ASSESSED",
+      "progress_percent": 0,
+      "agent_task_ids": [
+        "W112-AT-005",
+        "W112-AT-006"
+      ],
+      "deliverable": "Reproducible contract, negative, replay, concurrency and end-to-end verification evidence",
+      "acceptance_criteria": [
+        "Tests record exact source SHA, command, environment, raw result and evidence",
+        "MOCK/SNAPSHOT/SANDBOX/LIVE are distinguished",
+        "Independent QE is separate from implementation"
+      ],
+      "next_action": "Prepare test matrix only; execution waits for executable owner-approved integration paths"
+    },
+    {
+      "phase_task_id": "W112-PROD-001-P07",
+      "product_task_id": "W112-PROD-001",
+      "phase": "07_ACCEPT",
+      "task_title": "Accept integrated contract behavior",
+      "primary_agent": "Xu / AI-01",
+      "contributing_agents": [
+        "Qw / AI-05",
+        "Cla / AI-03"
+      ],
+      "checking_agent": "Vinh",
+      "assignment_status": "PROPOSED_NOT_ACKNOWLEDGED",
+      "status": "NOT_ASSESSED",
+      "progress_percent": 0,
+      "agent_task_ids": [
+        "W112-AT-006"
+      ],
+      "deliverable": "Acceptance dossier with owner approvals, independent QE and traceable evidence",
+      "acceptance_criteria": [
+        "All mandatory criteria pass with reproducible evidence",
+        "No unresolved critical ownership/security/recovery blocker",
+        "Final authority approval recorded"
+      ],
+      "next_action": "Do not request acceptance before independent QE and owner sign-offs"
+    },
+    {
+      "phase_task_id": "W112-PROD-001-P08",
+      "product_task_id": "W112-PROD-001",
+      "phase": "08_RELEASE",
+      "task_title": "Release approved integration contract baseline",
+      "primary_agent": "Xu / AI-01",
+      "contributing_agents": [
+        "Cla / AI-03"
+      ],
+      "checking_agent": "Vinh",
+      "assignment_status": "PROPOSED_NOT_ACKNOWLEDGED",
+      "status": "NOT_ASSESSED",
+      "progress_percent": 0,
+      "agent_task_ids": [
+        "W112-AT-006"
+      ],
+      "deliverable": "Versioned release record, compatibility matrix and rollback plan",
+      "acceptance_criteria": [
+        "Accepted version and consumers are pinned",
+        "Migration/deprecation and rollback are documented",
+        "No breaking change is silently deployed"
+      ],
+      "next_action": "Release remains NOT AUTHORIZED until acceptance and authority approval"
+    },
+    {
+      "phase_task_id": "W112-PROD-001-P09",
+      "product_task_id": "W112-PROD-001",
+      "phase": "09_OPERATE",
+      "task_title": "Operate compatibility and integration evidence governance",
+      "primary_agent": "Xu / AI-01",
+      "contributing_agents": [
+        "Cla / AI-03",
+        "Qw / AI-05"
+      ],
+      "checking_agent": "Ka / AI-02",
+      "assignment_status": "PROPOSED_NOT_ACKNOWLEDGED",
+      "status": "NOT_ASSESSED",
+      "progress_percent": 0,
+      "agent_task_ids": [
+        "W112-AT-006"
+      ],
+      "deliverable": "Compatibility monitoring, drift review, incident and contract change records",
+      "acceptance_criteria": [
+        "Contract drift and consumer status are traceable",
+        "Incidents include impact, root cause and corrective actions",
+        "No dashboard projection overrides owner state"
+      ],
+      "next_action": "Define operations cadence after release authorization"
+    }
+  ],
+  "progress_policy": {
+    "status": "NOT_CALCULATED",
+    "reason": "No approved weighting model and no verified phase completion or Agent ACK; do not average proposed Agent Task percentages.",
+    "prohibited_methods": [
+      "Averaging Agent Task progress",
+      "Treating proposed assignment as ACK",
+      "Treating document presence or write acknowledgment as PASS",
+      "Promoting MOCK/SNAPSHOT/SANDBOX PASS to LIVE PASS"
+    ]
+  },
+  "updated_at": "2026-11-10T09:24:00+07:00"
+}
