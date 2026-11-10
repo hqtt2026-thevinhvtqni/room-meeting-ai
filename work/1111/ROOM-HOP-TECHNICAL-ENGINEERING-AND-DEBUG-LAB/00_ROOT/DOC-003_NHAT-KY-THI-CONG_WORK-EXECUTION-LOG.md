@@ -165,3 +165,21 @@
 - **Result:** READBACK PASS — all three files returned content and contained the expected incident/task markers.
 - **Repository revision sequence:** tracker commit `43f95d14990414f52906ea62131d72fab3f5039e`; journal commit `d779913d75a93aed56fb52a4893ab154d777cf0c`; task-board commit `545cba5f90da7bb7f6b87def2fac2e9cfb58fac2`.
 - **Scope:** GitHub main documentation write/readback only. Sandbox copy parity, PC/runtime trace, complete source coverage, agent ACK and implementation remain NOT VERIFIED / NOT DONE.
+
+
+## 2026-11-10 — W1111-T07 — Three-coder work decomposition and task allocation
+
+- **Decision owner/coordinator:** Xu.
+- **User direction:** execute the ROOM-HOP technical remediation using only the three coders Co, Vi and Xuco; do not assign other AIs to this active workstream; avoid expanding the review roster or prolonging the delivery.
+- **Method:** read the current W1111 AI_TASK_BOARD and security-boundary tracker from GitHub main; decompose W1111-T07 into three non-overlapping coder packages; create a detailed execution plan and update the shared task board.
+- **Detailed plan:** `05_BUILD/00_ROOT/CODER_TASK_BREAKDOWN_CO_VI_XUCO_20261110.md`.
+- **Task split:**
+  - `W1111-T07-CO` — Co: trusted identity, scoped authorization/grants, policy decision API, expiry/revocation and durable fail-closed audit.
+  - `W1111-T07-XUCO` — Xuco: Gateway :8040 / MCP :8030 / SandboxService enforcement, action/path validation and bypass closure.
+  - `W1111-T07-VI` — Vi: Execution Host :8031 grant validation, named isolated execution, nested result integrity and durable evidence.
+- **Integration rule:** Co owns the single canonical authorization contract; Xuco and Vi consume it. Xu coordinates architecture, dependency resolution, cross-package integration and acceptance. No duplicated policy engine.
+- **Board reconciliation:** T02/T03/T06 are absorbed into the three coder packages; T04 is Xu-owned coordination; T05 is deferred. No other AI is assigned to this active remediation.
+- **GitHub commits:** task plan `a147e8e75814b4aac3f1b01c816e801e4f1e6b3b`; AI_TASK_BOARD update `4083aa150a4e9686e11dec4c2522a5352109c5cb`.
+- **State:** all three child tasks are READY — ACK REQUIRED. This records task allocation only; no coder ACK, branch creation, source change, test execution or implementation start is claimed.
+- **Security gate:** DOC-117 remains controlling. Protected source/runtime mutation, CI dispatch, PC/runner execution, merge, deployment and release remain DENIED until the exact task, identity, source SHA, resource/action, environment and authorization tuple is approved. READ/TRACE/ANALYZE/DESIGN can proceed.
+- **Next:** Co, Xuco and Vi each acknowledge their exact child task in this journal with verified identity, base SHA, branch and intended files. Xu then resolves the shared contract and issues task-scoped execution authorization before protected code changes.
