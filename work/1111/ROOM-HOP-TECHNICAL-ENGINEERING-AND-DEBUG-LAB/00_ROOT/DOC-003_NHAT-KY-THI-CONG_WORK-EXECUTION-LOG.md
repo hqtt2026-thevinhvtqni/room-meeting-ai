@@ -541,3 +541,16 @@ a read-only cho process/listener/health nếu có source change hoặc evidence 
 - **PR #48:** body được cập nhật thêm follow-up C09; giữ nguyên trạng thái draft/open. Không merge, không đổi base, không deploy.
 - **Trạng thái:** C09 SOURCE PATCH + 3 REGRESSION TESTS = WRITTEN/REMOTE READBACK; EXACT-HEAD CI = PASS (run 42732132673); LIVE CORE → W12/W13 → Work Sandbox → FINAL_RESULT/Core durable record → GitHub = BLOCKED / NOT VERIFIED do Core launcher mismatch và deployment prerequisites còn thiếu.
 - **Bước tiếp:** tiếp tục rà soát source và kiểm tra các gate có thể đóng từ GitHub/Sandbox; không tự tạo secret hoặc restart service.
+
+
+## 2026-11-10 07:58:37 (UTC+7) — CO — C09 POST-SYNC EXACT-HEAD CI CLOSEOUT
+
+- **Người thực hiện:** Co
+- **Chức danh:** Coder — W1111
+- **Ngày/giờ:** 2026-11-10 07:58:37 (UTC+7)
+- **GitHub branch HEAD trước entry này:** `9bbeed63dfbdcc6a00b8bdb31c3db1b00b812197` (DOC-003 journal sync commit sau C09).
+- **Exact-HEAD CI:** GitHub Actions run `42732254869`, event=push, head_sha=`9bbeed63dfbdcc6a00b8bdb31c3db1b00b812197`, status=completed, conclusion=success. Job `authority-tests` completed/success; pip setup, Core authority pytest, W12 canonical host tests và W13 bridge + integration tests đều completed/success.
+- **Đối chiếu:** run `42732132673` cũng PASS cho source/test HEAD `e81cfafbda8487a3097a1041820f20dc3ed0905e`. Run `42732124428` trên source-only intermediate SHA `8f3c0017da4907538b31cafc70f0c517755ffc20` FAILURE ở W13 step; không che giấu lần chạy này.
+- **Kết luận CI:** C09 transport TLS patch + ba regression tests được xác minh bởi CI exact source/test SHA; thêm một lần CI PASS trên DOC-003 sync commit `9bbeed63...`. CI PASS không đóng live deployment gates.
+- **Trạng thái tổng:** PR #48 OPEN/DRAFT; source/test CI = PASS; Core :8000 entrypoint/runtime identity, service credential, persistent store, Work policy/source hash, W12/W13 deployed revision và live positive/negative E2E = NOT VERIFIED/BLOCKED.
+- **Ranh giới:** không main write, merge, rebase, production deploy, restart, secret change hoặc PC working-tree mutation.
