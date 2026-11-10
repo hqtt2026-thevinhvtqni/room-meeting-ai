@@ -183,3 +183,11 @@
 - **State:** all three child tasks are READY — ACK REQUIRED. This records task allocation only; no coder ACK, branch creation, source change, test execution or implementation start is claimed.
 - **Security gate:** DOC-117 remains controlling. Protected source/runtime mutation, CI dispatch, PC/runner execution, merge, deployment and release remain DENIED until the exact task, identity, source SHA, resource/action, environment and authorization tuple is approved. READ/TRACE/ANALYZE/DESIGN can proceed.
 - **Next:** Co, Xuco and Vi each acknowledge their exact child task in this journal with verified identity, base SHA, branch and intended files. Xu then resolves the shared contract and issues task-scoped execution authorization before protected code changes.
+
+
+## 2026-11-10 — Xu / AI-01 — Áp dụng D70-022 vào Work 1111 task board
+- **READ:** đọc lại AI_TASK_BOARD, coder breakdown và DOC-003 hiện hành trên GitHub main; đối chiếu chuẩn D70-022 vừa ghi trong W70 DOC-056/DOC-093/DOC-094/DOC-006/DOC-034/DOC-035.
+- **BUILD:** bổ sung operating addendum vào Task Board và coder breakdown: sau ACK + authorization hợp lệ, Co/Xuco/Vi tự thực hiện trọn gói tới deliverable, test, sửa lỗi trong scope, evidence, journal và handoff; không chờ chỉ đạo từng bước.
+- **STATUS:** không thay đổi trạng thái READY — ACK REQUIRED; không suy diễn coder đã nhận việc. DOC-117 vẫn khóa protected execution khi chưa có authorization chính xác.
+- **VERIFY:** GitHub main updates recorded; exact readback of all four changed W1111/W70 files and structural validation remain pending.
+- **Next:** exact readback, JSON/schema validation; sau đó áp dụng D70-022 cho task đang hoạt động theo quyền và ACK thực tế.
