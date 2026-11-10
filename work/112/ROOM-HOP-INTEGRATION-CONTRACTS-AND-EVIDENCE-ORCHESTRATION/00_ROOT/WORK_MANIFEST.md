@@ -20,3 +20,22 @@
 - Existing legacy folders are preserved; no files were moved or deleted. Their contents must be inventoried and inbound links mapped before any retirement. The empty/duplicate 03_ARCHITECTURE root is not a second architecture source.
 - Standard directories and .gitkeep placeholders have been created in Sandbox. This is STRUCTURAL SCAFFOLDING ONLY; it does not mean any lifecycle phase has started, passed a gate, or completed.
 - Physical legacy-path retirement and full DOC-055-equivalent register/link audit remain OPEN.
+
+
+## 2026-11-10 — Document control and W70 task-governance alignment
+- DOC-002 is the sole Work 112 document register at 00_ROOT/DOC-002_SO-DANG-KY-TAI-LIEU_WORK-112-DOCUMENT-REGISTER.md.
+- WORK_MANIFEST.md, INTEGRATION_CHARTER.md and EXECUTION_JOURNAL.md remain canonical root governance records and are registered in DOC-002.
+- W112 follows W70 DOC-033/DOC-038/DOC-039/DOC-056 for document control and lifecycle layout.
+- W112 must map its product/phase/agent work into the W70 three-tier model. The W112 task register is NOT CREATED; no charter WP is interpreted as an acknowledged Agent assignment.
+- DOC-001 remains DRAFT and cannot enforce runtime contracts until independent review and Vinh approval.
+- Legacy root scaffolds remain preserved; no move/delete is authorized by this addendum.
+- GitHub parity for this addendum and DOC-002 is NOT VERIFIED until exact-branch fetch and content comparison.
+
+
+## 2026-11-10 — W112 three-tier task register established (draft)
+- DOC-003 is the sole W112 Product Task / Phase Task register; DOC-004 is the sole W112 Agent Task register.
+- Current draft contains 1 Product Task, 9 Phase Tasks and 6 Agent Tasks, with stable W112-specific identifiers.
+- All Product/Phase Task states are NOT_ASSESSED; all Agent Task assignments are PROPOSED_NOT_ACKNOWLEDGED; Product progress is NOT_CALCULATED.
+- DOC-003/DOC-004 schemas are created; formal JSON Schema validation is NOT RUN.
+- This supersedes the earlier addendum statement that the W112 task register was NOT CREATED. The register is now CREATED as a draft, not approved for execution.
+- No agent dispatch/ACK, code/runtime permission, component modification, integration test, QE or acceptance is claimed.
