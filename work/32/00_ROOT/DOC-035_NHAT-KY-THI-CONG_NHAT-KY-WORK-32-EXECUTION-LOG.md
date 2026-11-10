@@ -1454,3 +1454,40 @@ actions.runner.hqtt2026-thevinhvtqni-room-meeting-ai.ROOM-HOP-W32-PC Running Aut
 2. Verify the runner service's PowerShell 7 discovery through a controlled runner-side check before rerunning CI.
 3. Keep Windows E2E and Release Gate blocked until the workflow/source alignment and preflight requirements are satisfied.
 
+---
+
+## W32-LOG-20261111-88 — READBACK XÁC NHẬN RUNNER SERVICE SAU RESTART
+
+- **Work:** Work32 — CI/CD
+- **Priority:** P1 — xác minh Windows self-hosted runner
+- **Name:** Ka
+- **Title:** CSA / Execution Owner (được giao)
+- **Date-Time:** 2026-11-11, khoảng 06:26 (UTC+07:00; theo thời điểm phiên)
+- **Status:** WINDOWS SERVICE RUNNING — GITHUB IDLE / PWSh DISCOVERY PENDING
+
+### Evidence — PC readback sau restart
+Người dùng chạy lại lệnh kiểm tra sau khi gọi `Restart-Service`:
+
+```powershell
+Get-Service -Name 'actions.runner.hqtt2026-thevinhvtqni-room-meeting-ai.ROOM-HOP-W32-PC' | Select-Object Name,Status,StartType
+```
+
+Kết quả được cung cấp:
+- Service: `actions.runner.hqtt2026-thevinhvtqni-room-meeting-ai.ROOM-HOP-W32-PC`
+- Status: `Running`
+- StartType: `Automatic`
+
+### Assessment
+- **PASS — Windows service readback:** dịch vụ vẫn Running và Automatic sau thao tác restart.
+- PowerShell 7.6.9 đã được xác nhận trước đó tại `C:\Program Files\PowerShell\7\pwsh.exe`.
+- Chưa có bằng chứng mới từ GitHub UI xác nhận runner đã Online/Idle sau restart; trạng thái service Windows không thay thế trạng thái runner trên GitHub.
+- Chưa có bằng chứng runner service thực thi được `pwsh`; cần controlled runner-side verification.
+- Chưa rerun CI, chưa sửa workflow/source, chưa bật Windows readiness, chưa release/deploy.
+- Sai lệch workflow so với Xu ruling **W32-LOG-20261108-85** (runner-owned fixture; không dùng PID/EXE/owner tĩnh và không hardcode listener 8787) vẫn là blocker độc lập.
+
+### Next
+1. Đối chiếu GitHub Actions > Runners: `ROOM-HOP-W32-PC` Online/Idle sau restart.
+2. Thực hiện controlled runner-side check để xác minh `pwsh` trong chính môi trường job/service.
+3. Ka tiếp tục xử lý source/workflow alignment theo W32-LOG-85; giữ Windows E2E và Release Gate BLOCKED đến khi đủ evidence trên cùng exact SHA.
+
+- **Overall:** Work32 **ACTIVE — NOT RELEASED**.
