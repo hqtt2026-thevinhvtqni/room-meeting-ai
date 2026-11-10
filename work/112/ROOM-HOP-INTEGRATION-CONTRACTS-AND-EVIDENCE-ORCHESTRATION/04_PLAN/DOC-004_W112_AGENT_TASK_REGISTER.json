@@ -1,0 +1,137 @@
+{
+  "schema_version": "1.0",
+  "work_id": "112",
+  "document_id": "DOC-004",
+  "title": "W112 Agent Task Register",
+  "status": "DRAFT_NOT_APPROVED",
+  "authority": "Vinh",
+  "coordinator": "Xu / AI-01",
+  "source_of_truth": "This file is the sole source for W112 Agent Task assignment and execution state. DOC-003 references these stable task IDs; it does not duplicate their state.",
+  "tasks": [
+    {
+      "task_id": "W112-AT-001",
+      "work_package": "WP112-01",
+      "title": "Inventory and reconcile Work ownership/source lineage",
+      "accountable_role": "CEO",
+      "proposed_agent": "Xu / AI-01",
+      "checking_agent": "Ka / AI-02",
+      "assignment_status": "PROPOSED_NOT_ACKNOWLEDGED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "dependencies": [],
+      "deliverable": "Owner/source mapping with exact repo, branch, path, base SHA and evidence or explicit blocker",
+      "scope_boundary": "Read/trace only; no component source writes or branch creation",
+      "acceptance_criteria": "Every accepted mapping has controlling owner evidence; unknowns remain NOT_SYNCED/BLOCKED",
+      "evidence_refs": [],
+      "next_action": "Continue from W112 Index Events 007–015; only investigate new source leads"
+    },
+    {
+      "task_id": "W112-AT-002",
+      "work_package": "WP112-02",
+      "title": "Define and maintain cross-Work contract registry",
+      "accountable_role": "CSA",
+      "proposed_agent": "Ka / AI-02",
+      "checking_agent": "Xu / AI-01",
+      "assignment_status": "PROPOSED_NOT_ACKNOWLEDGED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "dependencies": [
+        "W112-AT-001"
+      ],
+      "deliverable": "Reviewed, versioned contract schemas and ownership map",
+      "scope_boundary": "Design/review only until W112 DOC-001 and owner Work Entry are approved",
+      "acceptance_criteria": "Contracts define producer/consumer, identity, version, required fields and failure behavior",
+      "evidence_refs": [],
+      "next_action": "Independent review DOC-001 and list findings"
+    },
+    {
+      "task_id": "W112-AT-003",
+      "work_package": "WP112-03",
+      "title": "Define event and evidence correlation contract",
+      "accountable_role": "CTO",
+      "proposed_agent": "Cla / AI-03",
+      "checking_agent": "Ka / AI-02",
+      "assignment_status": "PROPOSED_NOT_ACKNOWLEDGED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "dependencies": [
+        "W112-AT-002"
+      ],
+      "deliverable": "Event envelope, correlation model and evidence provenance requirements",
+      "scope_boundary": "No event bus or evidence store implementation; W52/W33 remain owners",
+      "acceptance_criteria": "Stable IDs, source revision, trace, actor, timestamps and evidence refs are defined",
+      "evidence_refs": [],
+      "next_action": "Review event/evidence sections in DOC-001 and record architecture findings"
+    },
+    {
+      "task_id": "W112-AT-004",
+      "work_package": "WP112-04",
+      "title": "Define dependency, idempotency, concurrency and recovery semantics",
+      "accountable_role": "CTO",
+      "proposed_agent": "Cla / AI-03",
+      "checking_agent": "Ka / AI-02",
+      "assignment_status": "PROPOSED_NOT_ACKNOWLEDGED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "dependencies": [
+        "W112-AT-002",
+        "W112-AT-003"
+      ],
+      "deliverable": "Dependency readiness, retry, lease, duplicate and recovery contract",
+      "scope_boundary": "Design only; no lock provider or runtime enforcement selected",
+      "acceptance_criteria": "No silent last-write-wins; retries preserve idempotency; failure and recovery paths are explicit",
+      "evidence_refs": [],
+      "next_action": "Resolve open decisions and identify owner constraints"
+    },
+    {
+      "task_id": "W112-AT-005",
+      "work_package": "WP112-05",
+      "title": "Prepare cross-Work integration test harness and verification matrix",
+      "accountable_role": "CTO",
+      "proposed_agent": "Cla / AI-03",
+      "checking_agent": "Qw / AI-05",
+      "assignment_status": "PROPOSED_NOT_ACKNOWLEDGED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "dependencies": [
+        "W112-AT-001",
+        "W112-AT-002",
+        "W112-AT-003",
+        "W112-AT-004"
+      ],
+      "deliverable": "Owner-approved contract fixtures, integration test plan and reproducible commands",
+      "scope_boundary": "No test execution against live components until endpoint/source and permissions are verified",
+      "acceptance_criteria": "Tests distinguish MOCK/SNAPSHOT/SANDBOX/LIVE and capture raw evidence",
+      "evidence_refs": [],
+      "next_action": "Prepare test design after DOC-001 review; no live test yet"
+    },
+    {
+      "task_id": "W112-AT-006",
+      "work_package": "WP112-06",
+      "title": "Independent QE, cross-Work acceptance and release evidence",
+      "accountable_role": "QE",
+      "proposed_agent": "Qw / AI-05",
+      "checking_agent": "Ka / AI-02",
+      "assignment_status": "PROPOSED_NOT_ACKNOWLEDGED",
+      "status": "PLANNED",
+      "progress_percent": 0,
+      "dependencies": [
+        "W112-AT-005"
+      ],
+      "deliverable": "Independent QE report, acceptance checklist and release evidence dossier",
+      "scope_boundary": "Independent verification only; Qw does not approve own implementation; Vinh retains final acceptance",
+      "acceptance_criteria": "All results reproducible, scoped and source-pinned; acceptance only after owner approvals",
+      "evidence_refs": [],
+      "next_action": "Remain pending until implementation and test evidence are available"
+    }
+  ],
+  "rules": [
+    "One accountable role per Agent Task.",
+    "Contributors do not dilute accountability.",
+    "Proposed assignment is not dispatch or ACK.",
+    "Task status changes require attributable ACK, actual work, deliverable and journal/evidence reference.",
+    "The checking agent must be distinct from the primary implementer.",
+    "W112 coordinates contracts and verification; component owners retain implementation authority."
+  ],
+  "updated_at": "2026-11-10T09:24:00+07:00"
+}
