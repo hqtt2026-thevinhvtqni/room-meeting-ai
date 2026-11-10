@@ -1883,3 +1883,63 @@ The current static-process model is incompatible with Xu ruling W32-LOG-20261108
 ### Next execution
 
 Implement test-only Core fixture bootstrap and its lifecycle regression first. Then change the Windows workflow and E2E test as one coherent patch, add the Windows-only pinned browser dependency, update the mirror, and run strict source/tooling checks on the exact branch SHA before asking Vinh for PC validation.
+
+
+---
+
+## W32-LOG-20261111-96 — IMPLEMENT WINDOWS BROWSER ADAPTER JOB-OWNED E2E
+
+- **Work:** Work32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P1 — Windows Browser Adapter E2E lifecycle
+- **Name:** Ka
+- **Title:** CSA / Delegated Work32 Execution Owner
+- **Date-Time:** 2026-11-11, Asia/Ho_Chi_Minh
+- **Status:** SOURCE PATCH COMMITTED — RUNTIME VERIFICATION PENDING
+
+### Source changes on `work/32-ci-cd-python-ci-v2`
+
+1. Added `tests/support/bootstrap_browser_adapter_fixture.py`:
+   - Validates the resolved disposable store is outside the checkout and carries the exact sentinel.
+   - Refuses a non-empty fixture store.
+   - Creates `MEETING-W32-DISPOSABLE` through Core `MeetingService`; invites `xu`, explicitly JOINs `vinh` and `xu`, STARTs as `vinh`, and asserts final `active`.
+   - Does not write meeting YAML manually and does not add MCP Public V1 tools.
+   - Latest blob: `8f9a4f66e350d9c44ee3fd8fa7fb92c99bc2db5e`.
+2. Updated `tests/test_browser_agent_adapter_e2e.py`:
+   - Uses `ROOMHOP_BROWSER_ADAPTER_PORT` as the test base port.
+   - Removes hardcoded `127.0.0.1:8787`.
+   - Latest blob: `d57470e63c96ed5438e0e8d157449cf78900f2fb`.
+3. Replaced the Windows workflow's persistent external PID/store/EXE/owner variables and pre-existing listener requirement:
+   - Uses built-in Windows PowerShell shell rather than `pwsh`, avoiding the prior PATH discovery failure mode.
+   - Installs declared project requirements, pins Windows-only Playwright to `1.65.0`, installs Chromium, and records pip freeze.
+   - Creates a unique disposable store under `RUNNER_TEMP`, writes the sentinel, and selects one dynamic port shared through `GITHUB_ENV`.
+   - Bootstraps the meeting through Core; starts the Adapter wrapper from the exact checked-out SHA; process command line carries the wrapper, store, SHA, port, and ASGI target.
+   - Checks health, exact PID listener ownership, executable, process owner, command line and SHA before E2E.
+   - An `if: always()` step revalidates process identity, stops only that job-created PID, confirms termination, then removes only the sentinel-verified store under `RUNNER_TEMP`.
+   - Strict workflow mirror checking is now enabled in the tooling lane.
+   - Active workflow blob: `256dd69bf5b43aaa763f2ec261a8a3a40a758b88`.
+   - Mirror blob: `256dd69bf5b43aaa763f2ec261a8a3a40a758b88`.
+   - Active workflow and mirror were fetched after writes and are byte-identical by matching blob SHA.
+
+### Commit trail
+
+- Core fixture helper commit: `81f9370d0a7e871d04c8738933683644a881c2fa`.
+- Configurable-port E2E test commit: `dc4ab7084c1c60dc5ee866a01202a2e72d30d16a`.
+- Active workflow and mirror were then updated sequentially through GitHub Contents API; latest active workflow commit: `0310de5350eae107ba41e3105150f00e83612e17`; latest mirror commit: `d4adc518cfd953d0b34c42137080237fc9591d1e`.
+- Final active/mirror blob equality verified after readback: `256dd69bf5b43aaa763f2ec261a8a3a40a758b88`.
+
+### Verification status and limits
+
+- **PASS — source readback:** helper, E2E test, active workflow and mirror all fetched from the Work32 branch after writes.
+- **PASS — workflow mirror identity:** active workflow and mirror have the same blob SHA.
+- **PASS — fixed-port removal:** the edited workflow and E2E test no longer contain `127.0.0.1:8787`.
+- **NOT YET VERIFIED:** Python execution of the fixture helper, pytest, YAML/workflow parser, strict mirror checker execution, Playwright/Chromium installation on ADMIN-PC, Windows listener/process teardown, and the full Windows E2E.
+- No test PASS is claimed from source readback alone.
+- No repository variables or `W32_WINDOWS_RUNNER_READY` changed; no manual workflow rerun; no WORK09 process action; no main mutation, merge, release or deployment.
+- Work32 remains **ACTIVE — NOT RELEASED**.
+
+### Next
+
+1. Observe the branch CI result and strict mirror lane; inspect exact logs for any source/workflow errors.
+2. If source lanes pass and the Windows runner is enabled, validate Playwright/Chromium and the job-owned process lifecycle on the runner.
+3. Request PC intervention only if the workflow produces a concrete runner-side blocker that cannot be resolved in source.
