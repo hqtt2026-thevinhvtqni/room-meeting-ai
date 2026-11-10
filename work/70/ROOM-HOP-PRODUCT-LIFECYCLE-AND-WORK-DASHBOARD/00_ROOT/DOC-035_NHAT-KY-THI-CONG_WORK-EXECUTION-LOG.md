@@ -1491,3 +1491,11 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - **SAFETY:** quyền tự chủ chỉ trong identity/capability/ACK/scope/permission/revision/environment/gate đã xác minh. Không bỏ qua DOC-057/DOC-063/DOC-117; không giả ACK; không tự nâng trạng thái PASS.
 - **VERIFY:** cập nhật tài liệu GitHub main qua từng canonical path; exact readback và kiểm tra JSON/schema còn phải thực hiện. Chưa tuyên bố hoàn tất chuẩn hóa hoặc runtime automation.
 - **Next:** cập nhật DOC-055 metadata/status, validate JSON + schema DOC-094, exact readback từng file; sau đó áp dụng hợp đồng này vào Task Board W1111 và các Work theo baseline W70.
+
+
+## 2026-11-10 — Xu / AI-01 — Verify D70-022 documentation and task contract
+- **Exact GitHub main readback:** DOC-056 blob 04d8260700608543b74b53cf7dcf63a8709a85bf; DOC-093 blob 5c099c847b1ae19f29b0a195243da62ecb1e856b; DOC-094 blob 08af0a17b991ec53a07cf75b08ad651eb67cbf15; DOC-034 blob 2904a6ab25d9fe8d250edf329e93ee0bce8e8948; DOC-006 blob fb80d4b9d69c47bf3674f73bb265bc22f8cd2b58; DOC-035 pre-append blob 4d94bda76fe0cfbd487c6ffd5d4b8aecdb65643b; DOC-055 blob 58fcc1d895f4fe293bb4885c9ec2da94d81491a7.
+- **W1111 readback:** AI_TASK_BOARD blob 8c3aa32bf9359bb4a7d7f95c29414dd3dcb7bb58; coder breakdown blob fad32e9e355efefcf86825e485cd8400d12bb41c; W1111 DOC-003 pre-append blob 2ff83bba25ead4bcb61cf698f8cd3195db873a29.
+- **Structural checks:** DOC-093 JSON parse PASS; execution_contract.mode=END_TO_END_DELEGATED_OUTCOME; 36 Agent Tasks. DOC-094 JSON parse PASS; required top-level schema keys all present; 2 Product Tasks, 18 Phase Tasks, 72 shared Agent Task references. DOC-094 schema JSON parse PASS. Full automated JSON Schema validation and dashboard regeneration/browser verification NOT RUN.
+- **Outcome:** documentation readback PASS for the listed canonical files; structural validation PARTIAL (JSON parse and required-key check only). No runtime dispatch, coder ACK, source implementation, tests, gate PASS or full dashboard refresh is claimed.
+- **Next:** apply task operating contract to remaining Work task registers through controlled migration; do not change W1111 coder statuses until exact ACK and authorization are evidenced.
