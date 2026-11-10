@@ -207,7 +207,7 @@ jobs:
 
   windows_browser_adapter:
     name: Windows Browser Adapter E2E (job-owned disposable runner)
-    if: \${{ vars.W32_WINDOWS_RUNNER_READY == 'true' }}
+    if: ${{ vars.W32_WINDOWS_RUNNER_READY == 'true' }}
     runs-on: [self-hosted, Windows, X64, room-hop-w32]
     timeout-minutes: 20
     env:
@@ -217,8 +217,8 @@ jobs:
     steps:
       - name: Fetch exact triggering revision without submodule recursion
         env:
-          REPOSITORY: \${{ github.repository }}
-          REVISION: \${{ github.sha }}
+          REPOSITORY: ${{ github.repository }}
+          REVISION: ${{ github.sha }}
         shell: powershell
         run: |
           git init .
@@ -303,6 +303,9 @@ jobs:
           $proc = Start-Process @startArgs
           if (-not $proc) { throw "Adapter process did not start" }
           $metadataPath = Join-Path $env:RUNNER_TEMP "w32-browser-adapter-process.json"
+          $preMeta = [ordered]@{ pid=$proc.Id; executable=[IO.Path]::GetFullPath($python); owner=[Security.Principal.WindowsIdentity]::GetCurrent().Name; store=$store; port=$port; sha=$sha; wrapper=$wrapper }
+          $preMeta | ConvertTo-Json | Set-Content -LiteralPath $metadataPath -Encoding utf8
+          [IO.File]::AppendAllText($env:GITHUB_ENV, "ROOMHOP_ADAPTER_METADATA=$metadataPath" + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($false)))
           $deadline = (Get-Date).AddSeconds(90)
           $health = $null
           while ((Get-Date) -lt $deadline) {
@@ -368,8 +371,8 @@ jobs:
           path: |
             test-results/junit-browser-adapter-windows.xml
             test-results/pip-freeze-browser-windows.txt
-            \${{ runner.temp }}\\\\w32-browser-adapter-*.stdout.log
-            \${{ runner.temp }}\\\\w32-browser-adapter-*.stderr.log
+            ${{ runner.temp }}/w32-browser-adapter-*.stdout.log
+            ${{ runner.temp }}/w32-browser-adapter-*.stderr.log
           if-no-files-found: warn
           retention-days: 14
 
