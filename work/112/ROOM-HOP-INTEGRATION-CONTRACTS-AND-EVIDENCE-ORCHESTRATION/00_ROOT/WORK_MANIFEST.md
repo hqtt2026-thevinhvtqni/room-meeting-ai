@@ -39,3 +39,10 @@
 - DOC-003/DOC-004 schemas are created; formal JSON Schema validation is NOT RUN.
 - This supersedes the earlier addendum statement that the W112 task register was NOT CREATED. The register is now CREATED as a draft, not approved for execution.
 - No agent dispatch/ACK, code/runtime permission, component modification, integration test, QE or acceptance is claimed.
+
+
+## 2026-11-10 — GitHub main synchronization verification
+- Exact GitHub main readback is PASS for the following six changed records: DOC-002, DOC-003, DOC-004, SCHEMA-003, SCHEMA-004 and WORK_MANIFEST.md.
+- Exact GitHub main readback is also PASS for EXECUTION_JOURNAL.md through event 022.
+- The records above were fetched from their exact paths on main and compared byte-for-byte at the UTF-8 text level with Sandbox.
+- This does not establish full parity for every W112 file or directory placeholder; unverified records remain NOT_VERIFIED.
