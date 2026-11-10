@@ -497,3 +497,12 @@ a read-only cho process/listener/health nếu có source change hoặc evidence 
 - PEB struct khởi tạo bằng static ::new() để giảm rủi ro parse nested type trong PowerShell.
 - Sandbox readback status=ok; xác nhận không còn Select-Object in raw CommandLine và script có secret-redaction expression.
 - C07 vẫn là package handoff; chưa chạy trên PC. Hash mới sẽ được ghi trong DOC-010 revision ledger.
+
+
+## 2026-11-10 07:43 UTC+7 — CHAIRMAN DIRECTIVE: AUTONOMOUS FULL E2E MODE
+- Người thực hiện: Co — Coder W1111. Chỉ đạo: Chairman; Cla giữ vai trò CTO/điều phối kỹ thuật.
+- Thiết lập chế độ tự động toàn trình trong `00_ROOT/AUTONOMOUS_E2E_EXECUTION_MODE.md`; thực hiện inspect → implement → test → self-correct → retest → branch/PR → remote readback → journal, không báo tiến độ từng chặng.
+- Chỉ yêu cầu PC/VS Code khi có bằng chứng xác định thao tác live-runtime không thể thực hiện qua Sandbox/GitHub; khi yêu cầu phải gom thành một gói lệnh và output cần trả lại.
+- Không ghi main, không merge PR, không release/deploy production, không restart service, không tạo/đổi secret, không dùng laptop làm execution host; không tuyên bố live PASS từ CI hoặc file readback.
+- Sandbox policy write/readback: OK. GitHub branch policy file committed: `7b428b1532843c4a692d85583f5d0f6ec0d656da`; remote fetch readback blob: `d93dc4c72a0be31bfe9b4f1ceebd08607dab34bf`.
+- Trạng thái: AUTONOMOUS EXECUTION POLICY SYNCED TO PR BRANCH; live Core → Host → Sandbox → GitHub remains BLOCKED / NOT VERIFIED pending actual runtime runner and evidence.
