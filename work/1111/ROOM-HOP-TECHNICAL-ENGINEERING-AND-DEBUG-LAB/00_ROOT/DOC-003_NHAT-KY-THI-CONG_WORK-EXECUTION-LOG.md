@@ -141,3 +141,18 @@
 - W1111 remains technical engineering/debug lab. W70 owns system-level lifecycle/authority; W112 owns cross-Work integration contracts and verification. Component owners retain implementation authority.
 - GitHub target: main, canonical journal DOC-003_NHAT-KY-THI-CONG_WORK-EXECUTION-LOG.md. Existing Sandbox journal and GitHub journal are not asserted byte-identical; this event is appended to both without replacing prior history.
 - No runtime integration or test PASS is claimed.
+
+
+## 2026-11-10 — W1111-SECURITY-BOUNDARY-01 — Consolidate ROOM-HOP authorization-boundary incident
+
+- **Coordinator:** Xu (xu); record owner Work 1111.
+- **Scope:** Consolidate the ROOM-HOP MCP/Sandbox/Gateway/Core/Execution Host authorization findings previously identified in W32 DOC-117, Cla's read-only source trace, and Xu's selected W01/W02 source review.
+- **Method:** Read-only inspection of Work 1111 Sandbox structure, canonical Work 1111 manifest/journal/baseline/revision ledger; GitHub main fetch of DOC-003 and AI_TASK_BOARD; create one technical tracker on GitHub main.
+- **Canonical technical tracker:** `02_EXTENSION/ROOM_HOP_SECURITY_BOUNDARY_TRACE_AND_REMEDIATION_20261110.md`.
+- **GitHub artifact commit:** `43f95d14990414f52906ea62131d72fab3f5039e`.
+- **Key findings carried forward:** generic MCP Sandbox mutation handlers in the inspected source lack the required trusted principal + Work/Assignment + exact resource/action + source SHA + environment + durable audit authorization tuple; existing governance/gateway prototypes are not proven wired into the actual mutation/runtime path; W28 grant work is a candidate only; live proxy/Gateway/MCP topology and deployed runtime remain NOT VERIFIED.
+- **Scope qualification:** This is a consolidation of existing scoped source evidence, not a claim that all ROOM-HOP source files or live runtime have been fully traced. Cla's CLEAN ZIP review omitted source areas and did not contain the exact PR #49 head. Refresh exact refs and complete remaining inventory.
+- **Disposition:** ACTIVE INVESTIGATION / PREPARATION ONLY. Protected execution remains DENIED under W32 DOC-117. No source/runtime code changed; no CI dispatch, PC execution, merge, deploy or release action performed.
+- **Task tracking:** Added W1111-T07 to AI_TASK_BOARD as READY — ACK REQUIRED. No agent ACK or IN_PROGRESS claim is inferred from this coordination record.
+- **Verification:** GitHub create_file acknowledged commit SHA above. Readback verification of the new tracker and journal/task-board updates is the next required step; no content parity with Sandbox is claimed.
+- **Next:** Cla exact-head/full source inventory + live topology trace; Ka architecture review; Xu architecture reconciliation; Vi remediation design after decision; Qw independent QE matrix. Record each agent's claim and evidence in this journal before changing task state.
