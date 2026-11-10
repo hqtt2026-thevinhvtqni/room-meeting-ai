@@ -1551,3 +1551,48 @@ Branch: `work/32-ci-cd-python-ci-v2`
 4. Only after source/CI pass, perform PC preflight and controlled runner-side `pwsh` verification. Keep Windows E2E and Release Gate blocked until then.
 
 - **Overall:** Work32 **ACTIVE — NOT RELEASED**.
+
+---
+
+## W32-LOG-20261111-90 — DEPENDENCY / PORT / FIXTURE LAUNCH TRACE
+
+- **Work:** Work32 — CI/CD
+- **Priority:** P1 — Windows Browser Adapter E2E source readiness
+- **Name:** Ka
+- **Title:** CSA / Execution Owner (được giao)
+- **Date-Time:** 2026-11-11, khoảng 06:27 (UTC+07:00; theo thời điểm phiên)
+- **Status:** TRACE PARTIAL PASS — PATCH BLOCKED BY UNRESOLVED FIXTURE CONTRACT
+
+### Additional exact-source evidence
+Branch: `work/32-ci-cd-python-ci-v2`
+
+1. `requirements.txt`, blob `f82b95fb1e6fe695e3f0409d78e19f4255dba8b1`:
+   - Declares FastAPI and Uvicorn, but does not declare Playwright.
+2. `constraints-ci.txt`, blob `a43c0404408b4a0d2e5406d3e8d3c25ff7c78593`:
+   - Pins FastAPI/Uvicorn and CI packages; does not pin/install Playwright or browser binaries.
+3. `tests/test_browser_agent_adapter_e2e.py`, blob `bdf4f50a71be69a7e09c79bab2b87162e71e5fdf`:
+   - Hardcoded base URL `http://127.0.0.1:8787`.
+   - Windows workflow step installs only `pytest requests`; no Playwright installation/browser provisioning is present in that step.
+4. `room_hop_mcp/browser_agent_adapter/adapter.py`, blob `bb240e5ae9b993edf07b4811ce7f01268fcc4ea0`:
+   - Imports `playwright.sync_api` at module import time and launches Chromium in Adapter.start().
+   - Exposes FastAPI `app`; `uvicorn` is declared in requirements, so the ASGI server dependency exists, but the full Playwright runtime is not declared by the inspected CI dependency manifests.
+5. No `ROOMHOP_BROWSER_ADAPTER_PORT` declaration was found in the inspected active workflow, E2E test, adapter module, or CI constraints. Search results were not branch-complete, so this is a bounded finding, not a claim that no reference exists anywhere in the branch.
+
+### Assessment
+- Merely adding a shared port variable is insufficient: test URL, workflow launch, health check, and teardown must use the same value.
+- The workflow currently has no exact-SHA fixture bootstrap for the disposable meeting/store. Xu ruling requires meeting `MEETING-W32-DISPOSABLE`, identity `vinh` resolved by Core, invite `xu`, and JOIN + START to active. The currently inspected adapter only consumes configured meeting/store/identity; it does not create or activate that Core fixture.
+- Need trace the existing canonical meeting creation/join/start API or approved fixture helper before writing workflow bootstrap. Do not synthesize meeting files or bypass Core authority.
+- Need decide and test Playwright/browser provisioning for the self-hosted Windows runner. No guessed global install or reliance on pre-existing machine state.
+- Exact Uvicorn launch form is technically available from declared dependency and FastAPI app object, but no patch is applied until fixture lifecycle, Playwright provisioning, shared-port contract and cleanup are all designed/tested together.
+
+### Actions / boundaries
+- Read-only source audit only. No source patch, dependency mutation, repository variable change, runner readiness enablement, CI rerun, PC command, WORK09 process action, main change, release or deployment.
+- PC is not needed for this source-trace phase. Ka will request PC only for runner-side validation after a reviewed exact-SHA patch is ready.
+
+### Next
+1. Trace canonical Core API / existing fixture utilities for meeting creation, invite, join and start; preserve Core as authority.
+2. Trace Playwright provisioning already used elsewhere in repository/runner setup and pin dependencies if needed.
+3. Draft one coherent minimal patch across workflow, test endpoint, fixture bootstrap, process ownership, health/preflight and unconditional teardown.
+4. Run source/tooling tests on exact branch SHA before any PC request.
+
+- **Overall:** Work32 **ACTIVE — NOT RELEASED**.
