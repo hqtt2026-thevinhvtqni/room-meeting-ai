@@ -1825,3 +1825,61 @@ Branch: `work/32-ci-cd-python-ci-v2`
 2. Implement the fixture helper and coherent Windows workflow/test changes only when the shared-port and runner process contracts are complete.
 3. Update active workflow and Work32 mirror together; run fixture, adapter contract, workflow mirror strict and source checks on the exact branch SHA.
 4. Request PC validation only after those source checks are ready.
+
+
+---
+
+## W32-LOG-20261111-95 — WORKFLOW PROCESS-OWNERSHIP GAP VÀ SHARED-PORT DESIGN
+
+- **Work:** Work32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P1 — Windows Browser Adapter process lifecycle
+- **Name:** Ka
+- **Title:** CSA / Delegated Work32 Execution Owner
+- **Date-Time:** 2026-11-11, Asia/Ho_Chi_Minh
+- **Status:** SOURCE AUDIT COMPLETE — IMPLEMENTATION NOT YET APPLIED
+
+### Exact source findings
+
+Branch: `work/32-ci-cd-python-ci-v2`
+
+1. Active workflow `.github/workflows/ci-validation.yml` and mirror `work/32/CI-CD-ROOM-HOP-PYTHON-NO-DOCKER/04_CODE/ci-validation.yml` were fetched at the same branch revision; previous audit recorded identical blob `88a87c287f1bfb3e6dc01255f74cead30788f1fd`.
+2. Current Windows job consumes six persistent repository variables for external runtime/process identity:
+   - `ROOMHOP_TEST_MEETINGS_DIR`
+   - `ROOMHOP_TEST_MEETING_ID`
+   - `ROOMHOP_TEST_IDENTITY_ID`
+   - `ROOMHOP_BROWSER_ADAPTER_PID`
+   - `ROOMHOP_BROWSER_ADAPTER_EXE`
+   - `ROOMHOP_BROWSER_ADAPTER_OWNER`
+3. The job expects a pre-existing process, probes a fixed `127.0.0.1:8787` listener, and never starts the Browser Adapter from the checked-out revision. Its current workflow therefore cannot prove runner-owned process lifecycle or unconditional cleanup.
+4. E2E test `tests/test_browser_agent_adapter_e2e.py` hardcodes `BASE = "http://127.0.0.1:8787"`; no shared port environment setting exists in the inspected E2E test or workflow.
+5. Adapter module exposes FastAPI `app` and `/health`; it does not itself bind a port. Uvicorn can bind the selected port at process launch. Adapter MCP child process uses `ROOM_HOP_MEETINGS_DIR` as the isolated store.
+6. `requirements.txt` and `constraints-ci.txt` do not declare Playwright. Windows lane installs only pytest and requests, despite Adapter importing `playwright.sync_api` at module import. Thus a clean runner environment cannot reliably import the adapter until browser dependency provisioning is added.
+7. Core fixture construction confirmed in LOG-94:
+   - `MeetingManager(registry=None, meetings_dir=..., principal_registry=None)`
+   - `MeetingService(manager)`
+   - `create_meeting(meeting_id, topic, participants, context_files, created_by="vinh")`
+   - lifecycle calls are `open_meeting`, `join_meeting`, `start_meeting`.
+
+### Xu design alignment
+
+The current static-process model is incompatible with Xu ruling W32-LOG-20261108-85. The target implementation must:
+- Build a fresh disposable store per Windows job under runner temp/outside checkout; create sentinel only after validating the resolved path is isolated and newly created.
+- Bootstrap meeting through Core MeetingService only; invite `xu`, explicitly JOIN `vinh` and `xu`, then START as `vinh`; verify final Core state is `active`.
+- Set one shared `ROOMHOP_BROWSER_ADAPTER_PORT` value for Uvicorn launch, health probe and E2E HTTP base. Do not retain hardcoded 8787 or persistent process PID/executable/owner repository variables.
+- Install the pinned Playwright package and matching Chromium only in the Windows lane, not all CI lanes.
+- Launch Uvicorn as a child owned by this exact job from the exact checkout; record PID plus command line/executable/owner and source SHA evidence. Probe health before test.
+- In an unconditional `if: always()` teardown step, stop only the exact child PID created by this job after revalidating its identity. Never terminate a port owner or unrelated process by port alone.
+- Update active workflow and mirror together; strict mirror check is mandatory.
+
+### Safety / release boundaries
+
+- No code or workflow file was modified in this audit.
+- No persistent GitHub variables changed; `W32_WINDOWS_RUNNER_READY` remains unchanged.
+- No PC request, CI rerun, WORK09 process action, main mutation, merge, release or deployment.
+- No PASS claim for runner/browser integration.
+- Work32 remains **ACTIVE — NOT RELEASED**.
+
+### Next execution
+
+Implement test-only Core fixture bootstrap and its lifecycle regression first. Then change the Windows workflow and E2E test as one coherent patch, add the Windows-only pinned browser dependency, update the mirror, and run strict source/tooling checks on the exact branch SHA before asking Vinh for PC validation.
