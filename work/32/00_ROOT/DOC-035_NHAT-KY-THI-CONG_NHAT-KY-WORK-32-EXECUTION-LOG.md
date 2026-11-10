@@ -1658,3 +1658,64 @@ Branch: `work/32-ci-cd-python-ci-v2`
 2. Check every 8787 reference and existing shared port configuration on the exact branch.
 3. Implement and test one coherent minimal patch only after those contracts are resolved: Core fixture helper, pinned Playwright provisioning, shared port, exact-SHA adapter startup, health/preflight, PID provenance and unconditional cleanup.
 4. Run exact-branch source/tooling tests, then request PC for controlled runner-side verification.
+
+
+---
+
+## W32-LOG-20261111-92 — TRACE FIXTURE ENTRYPOINT / PLAYWRIGHT / WORKFLOW MIRROR
+
+- **Work:** Work32 — CI/CD
+- **Priority:** P1 — Windows Browser Adapter E2E
+- **Name:** Ka
+- **Title:** CSA / Execution Owner (được giao)
+- **Date-Time:** 2026-11-11, Asia/Ho_Chi_Minh
+- **Status:** SOURCE CONTRACT CLARIFIED — IMPLEMENTATION STILL BLOCKED ON DEPENDENCY AND RUNNER VALIDATION
+
+### Exact branch evidence
+
+Branch: `work/32-ci-cd-python-ci-v2`
+
+1. `core/meeting_service.py`, blob `0b80a81663c1be328c41878a6762d16d95378aab`:
+   - Exact application-boundary API confirmed: `create_meeting`, `open_meeting`, `join_meeting`, `start_meeting`.
+   - MeetingService delegates lifecycle to Core MeetingManager; fixture helper should call this service and assert returned state at every transition.
+2. `integration/room_hop_integration.py`, blob `dd0f544178f84e7b45cf9f7654af608e7ad2944c`:
+   - Integration is a thin MCP Public V1 stdio client; it deliberately has no Core imports or filesystem access and exposes only the four locked tools.
+   - Therefore fixture creation must be a separate test bootstrap using Core MeetingService, not added to Integration or the Public V1 MCP tool inventory.
+3. `room_hop_mcp/__main__.py`, blob `43adaa746f8e51a6ecce762a7b01694d0411d105`:
+   - The MCP stdio child reads `ROOM_HOP_MEETINGS_DIR` and constructs MeetingManager against that directory.
+   - Browser Adapter already passes this variable to its stdio child, so fixture bootstrap and adapter can share one isolated store if both receive the same canonical path.
+4. Active workflow `.github/workflows/ci-validation.yml`, blob `88a87c287f1bfb3e6dc01255f74cead30788f1fd`:
+   - Windows lane installs only `pytest requests`; it does not install Playwright or provision Chromium.
+   - The active workflow contains the existing fixed-port/static-process preflight and no managed fixture or adapter launch.
+5. Workflow mirror `work/32/CI-CD-ROOM-HOP-PYTHON-NO-DOCKER/04_CODE/ci-validation.yml`, blob `88a87c287f1bfb3e6dc01255f74cead30788f1fd`:
+   - Mirror is byte-identical by blob SHA to the active workflow at this revision. Any future workflow edit must update both copies consistently and run the mirror checker in strict mode.
+6. `pytest.ini`, blob `b48b6676b85e30970e00a04a58fad3277be8c3e2`:
+   - Repository has no pytest conftest fixture bootstrap at the inspected root path; no existing Playwright-specific test configuration found in the inspected candidate paths.
+7. `room_hop_mcp/browser_agent_adapter/adapter.py`, blob `bb240e5ae9b993edf07b4811ce7f01268fcc4ea0`:
+   - Imports `playwright.sync_api` at module import time and launches managed Chromium when Browser Adapter starts.
+   - Exposes `/health`; health reports service identity and browser_started, but does not prove exact source SHA, listener ownership, or fixture provenance.
+8. `tests/test_browser_agent_adapter_e2e.py`, blob `bdf4f50a71be69a7e09c79bab2b87162e71e5fdf`:
+   - Hardcodes `http://127.0.0.1:8787`; this is the test-side port dependency.
+9. Exact paths checked for alternate Playwright pins/setup (`requirements-dev.txt`, `requirements-test.txt`, `requirements-browser.txt`, `pyproject.toml`, `setup.cfg`, browser setup scripts and Work32 mirror requirements candidate) were absent on this branch or contained no usable Playwright pin. This is a bounded path audit, not a repository-wide proof that no Playwright reference exists.
+
+### Implementation implications
+
+- Keep Core as lifecycle authority. A test-only bootstrap should instantiate `MeetingManager(meetings_dir=disposable_store)`, wrap it in `MeetingService`, create the exact `MEETING-W32-DISPOSABLE` with creator `vinh` and invite `xu`, then call OPEN, JOIN(`vinh`), JOIN(`xu`), START(`vinh`). Assert every returned state and final ACTIVE before starting Browser Adapter.
+- Keep the fixture bootstrap out of `integration/room_hop_integration.py` and do not add MCP Public V1 tools.
+- Adapter process must be launched by the Windows workflow from the exact checked-out source revision, with explicit disposable-store path and one shared port. The workflow must record its own PID, executable, command line and owner, prove the listener belongs to that PID, and stop only that PID in an unconditional cleanup step.
+- Update active workflow and mirror together; strict mirror check is a mandatory source gate.
+- Playwright package version and matching Chromium installation remain unproven. Do not guess a package/browser pair or rely on global runner state; pin and install them only after a reproducible version pairing is established.
+- Existing runner service PowerShell 7 installation is confirmed locally, but runner-service/job discovery of `pwsh` is still not proven. No PC action until source patch and local/source checks are ready.
+
+### Actions / boundaries
+
+- Read-only exact-branch audit only; no source or dependency patch.
+- No GitHub variables or `W32_WINDOWS_RUNNER_READY` changed; no workflow rerun; no PC request; no WORK09 process action; no main change, release or deployment.
+- Work32 remains **ACTIVE — NOT RELEASED**.
+
+### Next
+
+1. Establish a reproducible Playwright/Chromium version pair and exact Windows install commands; use a pinned dependency rather than runner-global state.
+2. Draft the fixture bootstrap with Core MeetingService and test each lifecycle transition in an isolated temporary store.
+3. Implement one coherent workflow/test/adapter shared-port and process-ownership patch; update the workflow mirror in the same change.
+4. Run strict mirror check, relevant Core fixture tests, adapter contract tests and workflow static checks on the exact branch revision before requesting PC validation.
