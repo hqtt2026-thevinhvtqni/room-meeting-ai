@@ -22,4 +22,4 @@ This board is the shared intake point for technical agents. A task is not assign
 7. If blocked, state problem / attempts and evidence / bottleneck / options / exact missing condition.
 
 ## Initial state
-W1111-T01 is IN_PROGRESS with Xu's claim recorded in DOC-003. T02–T06 remain READY; no ACK or implementation start is asserted for those agents.
+W1111-T01 is IN_PROGRESS with Xu's claim recorded in DOC-003. T02–T07 are READY unless a later task-specific journal claim records a valid ACK; no ACK or implementation start is inferred for them.
