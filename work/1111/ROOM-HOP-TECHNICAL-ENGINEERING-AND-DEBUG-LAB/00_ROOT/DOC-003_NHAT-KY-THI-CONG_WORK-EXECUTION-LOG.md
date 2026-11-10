@@ -191,3 +191,10 @@
 - **STATUS:** không thay đổi trạng thái READY — ACK REQUIRED; không suy diễn coder đã nhận việc. DOC-117 vẫn khóa protected execution khi chưa có authorization chính xác.
 - **VERIFY:** GitHub main updates recorded; exact readback of all four changed W1111/W70 files and structural validation remain pending.
 - **Next:** exact readback, JSON/schema validation; sau đó áp dụng D70-022 cho task đang hoạt động theo quyền và ACK thực tế.
+
+
+## 2026-11-10 — Xu / AI-01 — Exact readback D70-022 W1111 task contract
+- **Readback:** GitHub main exact-path fetch confirmed AI_TASK_BOARD blob 8c3aa32bf9359bb4a7d7f95c29414dd3dcb7bb58 and coder breakdown blob fad32e9e355efefcf86825e485cd8400d12bb41c; D70-022 addenda present in both.
+- **Policy linkage:** W70 D70-022 is recorded in DOC-006/DOC-034/DOC-035 and governing DOC-056/DOC-093/DOC-094. W1111 task assignments remain Co, Xuco, Vi only.
+- **State integrity:** T07-CO, T07-XUCO and T07-VI remain READY — ACK REQUIRED. No ACK, code implementation, protected mutation or test result is inferred. DOC-117 remains active.
+- **Result:** DOCUMENT READBACK PASS. End-to-end task instructions recorded; actual autonomous execution/agent acceptance NOT YET VERIFIED.
