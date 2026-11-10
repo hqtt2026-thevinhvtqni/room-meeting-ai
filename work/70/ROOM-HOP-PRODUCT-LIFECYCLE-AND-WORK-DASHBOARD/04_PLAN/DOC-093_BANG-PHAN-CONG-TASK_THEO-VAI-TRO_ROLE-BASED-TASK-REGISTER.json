@@ -3,7 +3,7 @@
   "work_name": "ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD",
   "document_id": "DOC-093",
   "title": "Bảng phân công Task theo vai trò / Role-based Task Register",
-  "schema_version": "1.1-detailed-task-contract",
+  "schema_version": "1.2-end-to-end-task-ownership",
   "baseline_status": "DRAFT_NOT_APPROVED",
   "authority": "Vinh / Product Owner",
   "orchestrator": "Xu / AI-01",
@@ -1670,10 +1670,53 @@
     "CTO chịu trách nhiệm kỹ thuật/tích hợp; Coder chịu trách nhiệm triển khai theo assignment.",
     "Coder identity chỉ là đề xuất đến khi capability check và ACK được ghi nhận.",
     "Mọi tiến độ, thử nghiệm, lệnh, kết quả và blocker phải ghi DOC-035; task register giữ trạng thái tổng hợp và evidence refs.",
-    "Dashboard chỉ đọc projection từ task register; không được tự sửa trạng thái nguồn hoặc tạo số liệu mock."
+    "Dashboard chỉ đọc projection từ task register; không được tự sửa trạng thái nguồn hoặc tạo số liệu mock.",
+    "An accepted Task is an end-to-end delegated outcome; its accountable owner continues through dependent steps, verification, in-scope repair/retry and handoff without asking what to do after each substep.",
+    "Routine reversible actions already covered by the assignment do not require repeated Product Owner approval; do not ask for information already recorded in canonical Work documents.",
+    "Record execution events and evidence in DOC-035 before updating task status; chat messages are not execution evidence.",
+    "Notify only at material milestones, final handoff or a genuine blocker; continue safe unblocked work while blocked dependencies are escalated.",
+    "Never convert autonomy into implicit permission: missing identity, capability, ACK, task scope, authorization, source revision or gate means stop the protected action and record BLOCKED/DENY."
   ],
   "task_count": 36,
   "created_at": "2026-11-08T11:45:00+07:00",
-  "updated_at": "2026-11-08T12:10:00+07:00",
-  "task_detail_policy": "Task phải thực thi được và kiểm chứng được; không dùng nhãn hoạt động chung chung làm acceptance. Mỗi task có execution_steps, scope_boundary, verification_method, evidence_required và completion_rule."
+  "updated_at": "2026-11-10T13:00:00+07:00",
+  "task_detail_policy": "Task phải thực thi được và kiểm chứng được; không dùng nhãn hoạt động chung chung làm acceptance. Mỗi task có execution_steps, scope_boundary, verification_method, evidence_required và completion_rule. Every assignment is outcome-based and end-to-end: include prerequisites, bounded authority, deliverable, acceptance, verification, recovery/retry, evidence and handoff; no routine step-by-step user prompting.",
+  "execution_contract": {
+    "mode": "END_TO_END_DELEGATED_OUTCOME",
+    "owner_rule": "One accountable AI owns the task from intake through verified handoff; contributors own explicitly delegated sub-deliverables.",
+    "required_loop": [
+      "READ",
+      "TRACE",
+      "PLAN",
+      "EXECUTE",
+      "VERIFY",
+      "RECORD",
+      "HANDOFF"
+    ],
+    "continue_until": [
+      "DONE_WITH_EVIDENCE",
+      "BLOCKED_WITH_EXACT_MISSING_CONDITION",
+      "CANCELLED_BY_AUTHORITY"
+    ],
+    "no_ping_pong": true,
+    "no_routine_user_approval": true,
+    "journal_before_status_update": true,
+    "completion_requires": [
+      "deliverable_present",
+      "all_acceptance_criteria_evidenced",
+      "applicable_tests_and_checks_recorded",
+      "independent_review_when_required",
+      "handoff_recorded"
+    ],
+    "blocker_protocol": [
+      "problem",
+      "attempts_and_evidence",
+      "bottleneck",
+      "safe_options",
+      "missing_condition",
+      "unblocked_work_continuation"
+    ],
+    "autonomy_boundary": "Only within verified identity, capability, task scope, permission, source revision, environment and gates. No bypass of security/authorization or reserved Product Owner decisions.",
+    "notification_policy": "No repetitive progress polling. Notify on material milestone, final handoff or genuine blocker requiring external authority/access."
+  }
 }
