@@ -28,3 +28,14 @@ This board is the shared intake point for technical agents. A task is not assign
 
 ## Initial state
 W1111-T01 is IN_PROGRESS with Xu's claim recorded in DOC-003. W1111-T07 is the parent workstream, decomposed into T07-CO (Co), T07-XUCO (Xuco) and T07-VI (Vi). All three child tasks are READY — ACK REQUIRED; no coder ACK or implementation start is inferred. T02/T03/T06 are absorbed into the child tasks; T04 is Xu-owned coordination; T05 is deferred. No other AI is assigned to this active workstream.
+
+
+## End-to-end execution standard — D70-022 (2026-11-10)
+Every accepted child task is an outcome delegation, not a sequence of chat prompts. The named owner must READ the Work records and journal, TRACE exact source/revision/runtime/dependencies/permissions, PLAN the full route, EXECUTE all permitted steps, VERIFY acceptance and tests, RECORD evidence/status in the canonical journal/register, and HANDOFF once complete.
+
+- Co, Xuco and Vi remain the only coder owners for W1111-T07; no additional AI is assigned by this rule.
+- Initial ACK remains mandatory before IN_PROGRESS; after ACK the owner proceeds through dependent steps and in-scope repair/retry without asking Xu or Vinh what to do next at every step.
+- Do not send repetitive progress pings. Journal material events; notify Xu at material milestone, completion, or genuine blocker requiring external authority/access/decision.
+- DONE requires deliverable, all acceptance evidence, applicable test results and required review. Chat claims are not evidence.
+- Continue safe unblocked work when one dependency is BLOCKED. Record exact missing condition and options.
+- DOC-117 and all authorization/security gates remain in force. D70-022 does not grant protected execution, merge, deploy or release permission.
