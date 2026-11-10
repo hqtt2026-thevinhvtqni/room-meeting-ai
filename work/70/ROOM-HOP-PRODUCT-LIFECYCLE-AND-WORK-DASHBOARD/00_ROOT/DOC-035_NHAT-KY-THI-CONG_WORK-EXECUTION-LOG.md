@@ -1481,3 +1481,13 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - Exact GitHub fetch readback succeeded for W0000 DOC-018/DOC-020/DOC-003/SYNC_STATUS on work/0000-governance-baseline; W32 DOC-035 on work/32-ci-runner-owned-fixture-v2; W1111 DOC-003 on main; W33 WORK_LOG on work/33/ROOM-SHARED-FILE-EVIDENCE-HUB; W51 SYNC_STATUS on work/51-hqtt-coder-tester; W112 journal and related-work index on main.
 - W52 has a branch but no Work documentation tree. W14/W16/W21/W37/W38/W39 have no dedicated GitHub branch/path verified; recorded NOT SYNCED in W112 index.
 - No main merges, branch promotions, runtime tests, CI trigger or QE/system acceptance were performed. This is documentation synchronization only.
+
+
+## 2026-11-10 — Xu / AI-01 — Chuẩn hóa Task theo ủy nhiệm đầu-cuối (D70-022)
+- **Chỉ thị nguồn:** Vinh yêu cầu Task giao cho AI phải được thực hiện đến khi hoàn tất, không báo đi báo lại và ưu tiên auto toàn trình.
+- **READ/TRACE:** đọc DOC-056, DOC-093, DOC-094, DOC-034, DOC-035, DOC-055 và DOC-006 trên GitHub main. Xác nhận DOC-093 là Agent Task source, DOC-094 là Product/Phase Task source; DOC-034 ghi biên bản, DOC-035 ghi execution events. Không tạo register hoặc journal mới.
+- **DECIDE:** ghi D70-022: Task là delegated end-to-end outcome; quy trình READ → TRACE → PLAN → EXECUTE → VERIFY → RECORD → HANDOFF; một accountable owner; không polling/approval cho bước thường lệ; chỉ báo mốc quan trọng, handoff hoặc blocker thật.
+- **BUILD:** cập nhật DOC-056 operating policy; thêm execution_contract vào DOC-093; bổ sung quy tắc phase ownership vào DOC-094; ghi biên bản BB-W70-20261110-001 và D70-022.
+- **SAFETY:** quyền tự chủ chỉ trong identity/capability/ACK/scope/permission/revision/environment/gate đã xác minh. Không bỏ qua DOC-057/DOC-063/DOC-117; không giả ACK; không tự nâng trạng thái PASS.
+- **VERIFY:** cập nhật tài liệu GitHub main qua từng canonical path; exact readback và kiểm tra JSON/schema còn phải thực hiện. Chưa tuyên bố hoàn tất chuẩn hóa hoặc runtime automation.
+- **Next:** cập nhật DOC-055 metadata/status, validate JSON + schema DOC-094, exact readback từng file; sau đó áp dụng hợp đồng này vào Task Board W1111 và các Work theo baseline W70.
