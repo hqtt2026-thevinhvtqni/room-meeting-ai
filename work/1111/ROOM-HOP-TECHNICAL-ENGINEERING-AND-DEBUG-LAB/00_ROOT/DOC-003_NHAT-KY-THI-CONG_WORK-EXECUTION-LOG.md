@@ -156,3 +156,12 @@
 - **Task tracking:** Added W1111-T07 to AI_TASK_BOARD as READY — ACK REQUIRED. No agent ACK or IN_PROGRESS claim is inferred from this coordination record.
 - **Verification:** GitHub create_file acknowledged commit SHA above. Readback verification of the new tracker and journal/task-board updates is the next required step; no content parity with Sandbox is claimed.
 - **Next:** Cla exact-head/full source inventory + live topology trace; Ka architecture review; Xu architecture reconciliation; Vi remediation design after decision; Qw independent QE matrix. Record each agent's claim and evidence in this journal before changing task state.
+
+
+## 2026-11-10 — W1111-SECURITY-BOUNDARY-01 — GitHub readback verification
+
+- **Method:** GitHub fetch_file(ref=main) for the consolidated technical tracker, DOC-003 canonical journal and AI_TASK_BOARD.
+- **Evidence:** tracker blob `78f743a654f4a9c5e5e61c2355bd85411eb49020`; DOC-003 blob `7f575bd30de3411e6eafe5a5a053cbed50f484a4`; AI_TASK_BOARD blob `3e21c527210f84360d3dd5442edcf2dd8e885a1e`.
+- **Result:** READBACK PASS — all three files returned content and contained the expected incident/task markers.
+- **Repository revision sequence:** tracker commit `43f95d14990414f52906ea62131d72fab3f5039e`; journal commit `d779913d75a93aed56fb52a4893ab154d777cf0c`; task-board commit `545cba5f90da7bb7f6b87def2fac2e9cfb58fac2`.
+- **Scope:** GitHub main documentation write/readback only. Sandbox copy parity, PC/runtime trace, complete source coverage, agent ACK and implementation remain NOT VERIFIED / NOT DONE.
