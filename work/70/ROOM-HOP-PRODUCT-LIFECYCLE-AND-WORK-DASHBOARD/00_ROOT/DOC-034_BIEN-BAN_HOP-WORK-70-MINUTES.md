@@ -67,3 +67,17 @@
 - **Implementation boundary:** Agent assignments in DOC-094 remain proposed until capability, permission and ACK are verified. Product progress remains NOT_CALCULATED until aggregation rules are approved. No gate/phase PASS, acceptance or release is implied.
 - **Status:** AGREED; implementation draft written to Sandbox; validation and GitHub parity pending.
 - **Decision reference:** D70-019.
+
+
+## 2026-11-10 — BB-W70-20261110-001 — Chuẩn hóa Task theo cơ chế ủy nhiệm đầu-cuối
+- **Chủ trì / thẩm quyền:** Vinh.
+- **Điều phối / ghi nhận:** Xu / AI-01.
+- **Chỉ thị:** Task được giao cho AI là nhiệm vụ phải thực hiện đến khi hoàn tất; không dừng sau từng bước để hỏi “tiếp theo làm gì”, không báo đi báo lại các tiến độ vụn vặt. Ưu tiên tự động hóa toàn trình.
+- **Thống nhất vận hành:** áp dụng vòng READ → TRACE → PLAN → EXECUTE → VERIFY → RECORD → HANDOFF. Một Agent chính chịu trách nhiệm đầu-cuối; Agent phối hợp chịu trách nhiệm phần việc được giao; Agent kiểm tra xác minh độc lập khi acceptance yêu cầu.
+- **Tự chủ trong phạm vi:** AI tự đọc hồ sơ canonical, lập kế hoạch, xử lý phụ thuộc, thực hiện và sửa lỗi có thể đảo ngược trong quyền được giao; không yêu cầu Vinh duyệt từng thao tác thường lệ đã nằm trong ủy quyền. Không hỏi lại dữ liệu đã có trong Work.
+- **Thông báo:** chỉ báo tại mốc quan trọng, bàn giao hoàn tất hoặc blocker thật sự cần quyền/truy cập/quyết định bên ngoài. Các bước thường nhật ghi DOC-035 và hiển thị qua Dashboard, không polling hội thoại.
+- **Điều kiện DONE:** deliverable tồn tại; acceptance criteria có bằng chứng; kiểm thử áp dụng có kết quả; review độc lập được thực hiện khi bắt buộc; Task Register và DOC-035 đã cập nhật trước handoff.
+- **Blocker:** ghi vấn đề, các lần thử/bằng chứng, nút thắt chính xác, lựa chọn an toàn, điều kiện còn thiếu; tiếp tục phần việc không bị chặn nếu an toàn.
+- **Giới hạn:** tự chủ không vượt quyền, không giả ACK, không bỏ qua authorization/security gate, không tự nghiệm thu hoặc phát hành ở phần việc cần thẩm quyền riêng.
+- **Hồ sơ chuẩn bị cập nhật:** DOC-006 D70-022; DOC-056; DOC-093; DOC-094; DOC-035. Không tạo Task Register hoặc nhật ký song song.
+- **Trạng thái:** DECISION RECORDED; tài liệu GitHub main đang được cập nhật và cần exact readback/schema validation trước khi tuyên bố đồng bộ hoàn tất.
