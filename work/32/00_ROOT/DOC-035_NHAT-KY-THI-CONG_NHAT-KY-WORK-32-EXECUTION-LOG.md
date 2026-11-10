@@ -1418,3 +1418,39 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **DECISION / SAFETY:** Không cài lại runner; không đổi kiến trúc; không đăng ký biến runtime giả; không bật/tắt readiness flag; không nới lỏng fail-closed preflight; không rerun Windows job trước khi workflow/lane được đưa về đúng architecture ruling và shell runtime có sẵn. Không tự động sửa workflow chỉ để né lỗi bằng Windows PowerShell 5.1, vì việc đó che lỗi đầu tiên nhưng không giải quyết sai khác kiến trúc đã được ghi nhận.
 - **STATUS:** Runner đã nhận job CONFIRMED; PowerShell 7 / `pwsh.exe` ABSENT CONFIRMED BY USER OUTPUT; Windows job BLOCKED at checkout; Windows E2E NOT RUN; stale static-variable/8787 preflight mismatch IDENTIFIED by source audit; Work 32 ACTIVE — NOT RELEASED.
 - **NEXT:** Ka tiếp tục source trace exact branch/SHA và chuẩn bị patch tối thiểu để Windows lane thực thi runner-owned fixture theo W32-LOG-20261108-85; song song xác định phương án shell tương thích và dependency runner. Chỉ yêu cầu PC cài PowerShell 7 nếu phương án được chốt vẫn cần `pwsh`; sau khi có patch và điều kiện PC đạt, chạy lại đúng workflow rồi kiểm chứng exact SHA, preflight, E2E và Release Gate.
+
+
+---
+
+## W32-LOG-20261111-87 — XÁC NHẬN RESTART WINDOWS RUNNER SERVICE
+
+- **Work:** Work32 — CI/CD
+- **Priority:** P1 — xác minh môi trường Windows self-hosted runner
+- **Name:** Ka
+- **Title:** CSA / Execution Owner (được giao)
+- **Date-Time:** 2026-11-11 (giờ Việt Nam; thời điểm theo phiên làm việc)
+- **Status:** SERVICE RUNNING — PWSh DETECTION PENDING
+
+### Evidence
+PC output supplied by user after executing the restart command:
+```powershell
+Get-Service -Name 'actions.runner.hqtt2026-thevinhvtqni-room-meeting-ai.ROOM-HOP-W32-PC' | Select-Object Name,Status,StartType
+
+Name                                                                  Status StartType
+----                                                                  ------ ---------
+actions.runner.hqtt2026-thevinhvtqni-room-meeting-ai.ROOM-HOP-W32-PC Running Automatic
+```
+
+### Assessment
+- Runner Windows service is confirmed **Running** and **Automatic** after the restart command.
+- PowerShell 7.6.9 executable was previously confirmed at `C:\Program Files\PowerShell\7\pwsh.exe`.
+- This service-status output does not prove that the service process environment can resolve or launch `pwsh`.
+- GitHub runner online/Idle status after restart is not yet reconfirmed in this entry.
+- No CI workflow rerun, source patch, or release action is authorized/performed by this evidence.
+- Workflow still requires alignment with Xu ruling **W32-LOG-20261108-85** (runner-owned fixture process); Work32 remains **ACTIVE — NOT RELEASED**.
+
+### Next verification
+1. Confirm `ROOM-HOP-W32-PC` is Online/Idle in GitHub Actions > Runners.
+2. Verify the runner service's PowerShell 7 discovery through a controlled runner-side check before rerunning CI.
+3. Keep Windows E2E and Release Gate blocked until the workflow/source alignment and preflight requirements are satisfied.
+
