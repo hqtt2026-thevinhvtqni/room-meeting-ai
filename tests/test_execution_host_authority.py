@@ -93,7 +93,7 @@ def test_nested_test_timeout_propagates_to_top_level(tmp_path):
         ExecutionRequest(
             command=("python3", "-c", "print('build-ok')"),
             run_test=True,
-            timeout_seconds=0.05,
+            timeout_seconds=0.5,
         ),
     )
     assert result.status == "TIMEOUT"
@@ -136,7 +136,7 @@ def test_primary_timeout_is_not_overwritten_by_nested_test_pass(tmp_path):
         ExecutionRequest(
             command=("python3", "-c", "import time; time.sleep(2)"),
             run_test=True,
-            timeout_seconds=0.05,
+            timeout_seconds=0.5,
         ),
     )
     assert result.status == "TIMEOUT"
