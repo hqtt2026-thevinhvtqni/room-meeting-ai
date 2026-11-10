@@ -1762,3 +1762,66 @@ Branch: `work/32-ci-cd-python-ci-v2`
 2. Build the disposable Core fixture helper and assert draft → open → joined participants → active using MeetingService.
 3. Complete shared-port and runner-owned process startup/health/provenance/always-cleanup workflow changes; update mirror simultaneously.
 4. Run Linux/source tests and strict workflow-mirror checks on the branch; then request PC verification for OS build, runner-service `pwsh` discovery and Windows browser execution.
+
+
+---
+
+## W32-LOG-20261111-94 — XÁC NHẬN CORE FIXTURE BOOTSTRAP VÀ RANH GIỚI E2E
+
+- **Work:** Work32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P1 — Windows Browser Adapter E2E fixture correctness
+- **Name:** Ka
+- **Title:** CSA / Delegated Work32 Execution Owner
+- **Date-Time:** 2026-11-11, Asia/Ho_Chi_Minh
+- **Status:** CORE LIFECYCLE BOOTSTRAP CONTRACT CONFIRMED — NO PATCH APPLIED
+
+### Exact branch source evidence
+
+Branch: `work/32-ci-cd-python-ci-v2`
+
+1. `core/meeting_service.py`, blob `0b80a81663c1be328c41878a6762d16d95378aab`:
+   - Confirmed signatures: `create_meeting(meeting_id, topic, participants, context_files, created_by="vinh")`; `open_meeting(meeting_id)`; `join_meeting(meeting_id, identity_id)`; `start_meeting(meeting_id, starter="vinh")`.
+   - Service returns detached state snapshots for create/open/join/start; lifecycle remains delegated to Core.
+2. `core/meeting_manager.py`, blob `64f075f4c22ed08bb82e97d97878beed45678212`:
+   - Constructor accepts `meetings_dir`; Core creates the directory and its rate-limit store beneath it.
+   - `create_meeting` validates `created_by` and every invite through Principal/Agent identity resolution. Invitations are not accepted participants.
+   - JOIN is permitted for creator or invited identities. START requires at least two accepted participants and the starter must be among them.
+3. `tests/test_meeting_service.py`, branch source:
+   - Existing tests exercise MeetingService construction over an isolated temporary `meetings_dir` and verify draft/open/active transitions.
+4. `tests/test_meeting_lifecycle_v021.py`, blob `657b5e19b7fafb91861c4e82df25afaa2cb0a0b1`:
+   - Existing Core lifecycle regression confirms creator `vinh` can JOIN and that START is blocked before quorum.
+5. `tests/test_browser_agent_adapter_e2e.py`, blob `bdf4f50a71be69a7e09c79bab2b87162e71e5fdf`:
+   - E2E target remains hardcoded to `127.0.0.1:8787`; test requires explicit disposable store, test mode, meeting ID and identity ID.
+6. `room_hop_mcp/browser_agent_adapter/adapter.py`, blob `bb240e5ae9b993edf07b4811ce7f01268fcc4ea0`:
+   - Adapter's stdio submission passes `ROOM_HOP_MEETINGS_DIR` to its child process, matching the configured isolated store.
+   - FastAPI exposes `/health`; the current module imports Playwright at import time and starts Chromium when workflow execution begins.
+
+### Confirmed fixture sequence (design only)
+
+- Instantiate `MeetingManager(meetings_dir=<new isolated disposable store>)`, wrap with `MeetingService`.
+- Create exact meeting `MEETING-W32-DISPOSABLE`, topic identifying the Work32 Windows E2E fixture, invite `xu`, creator `vinh`.
+- Assert `draft`; OPEN and assert `open`; JOIN `vinh`; JOIN `xu`; START as `vinh`; assert final `active`.
+- Create and verify the existing sentinel in the same disposable store before the adapter starts. Never write meeting lifecycle records manually.
+- Adapter and MCP stdio child must use this same absolute store path. Fixture setup remains test-only and must not add or alter Public V1 MCP tools.
+
+### Implementation blockers retained
+
+- Playwright pin/browser provisioning is identified as a candidate in LOG-93 but not yet installed or executed on this runner.
+- Shared configurable port, runner-owned adapter launch, exact-SHA/store process provenance, health preflight and unconditional owned-process cleanup are not implemented.
+- Current Windows workflow still depends on static external process variables and fixed port 8787.
+- Runner service discovery of `pwsh` remains unverified despite the local PowerShell installation/service restart evidence. No PC command is needed for this source-audit step.
+
+### Actions / boundaries
+
+- Read-only source audit only. No source, workflow, dependency, or test files changed.
+- No GitHub variable or `W32_WINDOWS_RUNNER_READY` change; no CI rerun; no PC request; no WORK09 process action; no main mutation, merge, release or deployment.
+- No test result is claimed by this entry.
+- Work32 remains **ACTIVE — NOT RELEASED**.
+
+### Next
+
+1. Complete the bounded port/configuration and browser provisioning review; preserve the approved Xu process-ownership design.
+2. Implement the fixture helper and coherent Windows workflow/test changes only when the shared-port and runner process contracts are complete.
+3. Update active workflow and Work32 mirror together; run fixture, adapter contract, workflow mirror strict and source checks on the exact branch SHA.
+4. Request PC validation only after those source checks are ready.
