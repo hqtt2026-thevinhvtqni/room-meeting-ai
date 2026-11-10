@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "W112 Agent Task Register",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "work_id",
+    "document_id",
+    "status",
+    "tasks",
+    "rules"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "work_id": {
+      "const": "112"
+    },
+    "document_id": {
+      "const": "DOC-004"
+    },
+    "status": {
+      "enum": [
+        "DRAFT_NOT_APPROVED",
+        "ACTIVE",
+        "SUPERSEDED"
+      ]
+    },
+    "tasks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "task_id",
+          "work_package",
+          "accountable_role",
+          "proposed_agent",
+          "checking_agent",
+          "assignment_status",
+          "status",
+          "progress_percent",
+          "dependencies",
+          "deliverable",
+          "scope_boundary",
+          "acceptance_criteria",
+          "next_action"
+        ],
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "pattern": "^W112-AT-"
+          },
+          "accountable_role": {
+            "enum": [
+              "CEO",
+              "CSA",
+              "CTO",
+              "QE"
+            ]
+          },
+          "assignment_status": {
+            "enum": [
+              "PROPOSED_NOT_ACKNOWLEDGED",
+              "ACKNOWLEDGED",
+              "IN_PROGRESS",
+              "SUBMITTED",
+              "ACCEPTED",
+              "REJECTED",
+              "BLOCKED"
+            ]
+          },
+          "status": {
+            "enum": [
+              "PLANNED",
+              "READY",
+              "IN_PROGRESS",
+              "BLOCKED",
+              "IN_REVIEW",
+              "DONE",
+              "CANCELLED"
+            ]
+          },
+          "progress_percent": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^W112-AT-"
+            }
+          },
+          "deliverable": {
+            "type": "string"
+          },
+          "scope_boundary": {
+            "type": "string"
+          },
+          "acceptance_criteria": {
+            "type": "string"
+          },
+          "next_action": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": true
+}
