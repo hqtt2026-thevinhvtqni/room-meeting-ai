@@ -85,3 +85,11 @@ Phạm vi phê duyệt: tài liệu kiến trúc và phân loại tri thức tro
 | D70-021 | Đổi tên thư mục bằng chứng xuyên pha cấp Work từ `06_EVIDENCE/` thành `EVIDENCE/`; giữ `06_VERIFY/` là phase 06; giữ `05_BUILD/06_EVIDENCE/` là staging kỹ thuật. | Tránh hai thư mục cấp Work cùng mang tiền tố 06, giúp AI/con người phân biệt phase 06 với kho evidence xuyên phase, không thay đổi ownership hoặc DOC-ID. | ACTIVE STANDARD — MIGRATION IN PROGRESS; old path non-canonical |
 
 D70-021 supersedes only the top-level folder-name portion of D70-001 and D70-004. It does not change the 05_BUILD child directory set or the canonical evidence ownership rule. New artifacts and references use `EVIDENCE/`; old top-level `06_EVIDENCE/` remains compatibility-only until link reconciliation and QE permit retirement. No historical decision text is rewritten.
+
+
+## 10. Quyết định D70-022 — Task là ủy nhiệm đầu-cuối, ưu tiên tự động hóa toàn trình (2026-11-10)
+| Decision ID | Decision / Quyết định | Rationale / Lý do | Status / Trạng thái |
+|---|---|---|---|
+| D70-022 | Mọi Task giao cho AI là một outcome được ủy nhiệm đầu-cuối trong phạm vi quyền đã cấp. Agent chính phải tự đọc hồ sơ, truy vết, lập kế hoạch, điều phối phụ thuộc, thực hiện, kiểm thử, sửa lỗi trong phạm vi, ghi nhật ký, cập nhật Task Register và bàn giao hoàn chỉnh; không dừng ở từng bước để hỏi “tiếp theo làm gì” hoặc yêu cầu Vinh duyệt tác vụ thường lệ đã được ủy quyền. Chỉ thông báo ở mốc quan trọng, khi hoàn tất hoặc khi có blocker thực sự cần quyền/truy cập/quyết định bên ngoài. Áp dụng READ → TRACE → PLAN → EXECUTE → VERIFY → RECORD → HANDOFF. | Giảm vòng lặp hội thoại và thời gian chờ; giao trách nhiệm theo kết quả thay vì từng thao tác; giữ nhật ký/bằng chứng làm nguồn điều hành thay cho polling chat. | APPROVED BY VINH — ACTIVE TASK OPERATING STANDARD |
+
+**Ranh giới:** D70-022 không tạo ACK hoặc capability giả, không mở rộng scope/permission, không bỏ qua DOC-057, DOC-063, DOC-117 hoặc các security gate; không cho phép tự nghiệm thu/phát hành ở phần việc cần thẩm quyền độc lập. Blocker phải ghi đúng điều kiện còn thiếu và tiếp tục phần việc an toàn không bị chặn.
