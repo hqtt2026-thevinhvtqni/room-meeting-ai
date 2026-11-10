@@ -1596,3 +1596,65 @@ Branch: `work/32-ci-cd-python-ci-v2`
 4. Run source/tooling tests on exact branch SHA before any PC request.
 
 - **Overall:** Work32 **ACTIVE — NOT RELEASED**.
+
+
+---
+
+## W32-LOG-20261111-91 — TRACE CORE FIXTURE LIFECYCLE / REGISTRY
+
+- **Work:** Work32 — CI/CD
+- **Priority:** P1 — Windows Browser Adapter E2E source readiness
+- **Name:** Ka
+- **Title:** CSA / Execution Owner (được giao)
+- **Date-Time:** 2026-11-11, Asia/Ho_Chi_Minh
+- **Status:** CORE FIXTURE CONTRACT IDENTIFIED — PLAYWRIGHT / PORT / CLEANUP PATCH STILL PENDING
+
+### Exact branch evidence
+
+Branch: `work/32-ci-cd-python-ci-v2`
+
+1. `core/meeting_service.py`, blob `0b80a81663c1be328c41878a6762d16d95378aab`:
+   - Provides the application boundary methods `create_meeting`, `open_meeting`, `join_meeting`, and `start_meeting`.
+   - Delegates lifecycle operations to the existing Core MeetingManager/Meeting; no lifecycle logic needs to be duplicated.
+2. `core/meeting_manager.py`, blob `64f075f4c22ed08bb82e97d97878beed45678212`:
+   - `MeetingManager` accepts an explicit `meetings_dir`, enabling an isolated disposable store.
+   - `create_meeting` validates creator and invited participant identities through the Principal/Agent registries before writing the meeting.
+   - Invitations are not automatically accepted; JOIN must be performed explicitly.
+3. `core/principal_registry.py`, blob `1eda0c80f413c1405415f92e0e2ff3b82a43b5ef`, and `principals/vinh.yaml`, blob `274e751b7b3aee432e2f2437a1befda2ec0ea1d8`:
+   - `vinh` is a registered `human_principal`.
+4. `core/agent_registry.py`, blob `7e4b98e68fa1a208ebd5788d9235d9c222e402a3`, and `agents/xu.yaml`, blob `225b9ec95c3274fc18796fc0bfe0df8f42b835a9`:
+   - `xu` is a registered AI agent.
+5. `core/identity_resolution.py`, blob `207c0ea74e3c77929c1723b0e66beba4ccf36201`:
+   - Identity resolution uses the separated Principal Registry and Agent Registry; fixture setup must not hardcode an accepted identity record or manufacture JOIN evidence.
+6. `tests/test_meeting_lifecycle_v021.py`, blob `657b5e19b7fafb91861c4e82df25afaa2cb0a0b1`:
+   - Existing lifecycle regression demonstrates OPEN → JOIN → START and the two-participant quorum; it is not itself a Windows fixture bootstrap.
+7. `room_hop_mcp/__main__.py`, blob `43adaa746f8e51a6ecce762a7b01694d0411d105`:
+   - MCP stdio server already accepts `ROOM_HOP_MEETINGS_DIR` and constructs MeetingManager against that configured store.
+
+### Assessment
+
+- A deterministic disposable fixture can be built through the existing Core application boundary using a dedicated meetings directory: create `MEETING-W32-DISPOSABLE` with creator `vinh` and invite `xu`; OPEN; JOIN `vinh`; JOIN `xu`; START as `vinh`; then assert Core reports `active`.
+- This preserves Core identity resolution and meeting policy. It avoids hand-writing `meeting.yaml`, fabricating participant acceptance, or adding lifecycle endpoints to MCP Public V1.
+- The fixture helper must use only the dedicated disposable store and verify its sentinel/path before creation. The adapter's MCP stdio child must receive the same isolated store path.
+- The MCP Public V1 inventory remains unchanged; the fixture bootstrap is a test setup action through Core's existing MeetingService, not a new production API.
+
+### Remaining blockers before coherent patch
+
+- Playwright is imported at Browser Adapter module import time and Chromium is launched by Adapter.start(); inspected CI manifests do not pin/install Playwright or provision its browser binary.
+- The test still hardcodes port 8787; workflow launch, health probe, test URL and teardown need one shared configurable port.
+- The workflow must start the adapter from the exact checked-out SHA, capture and verify its own process provenance, and always stop only that child process. No static external PID/EXE/owner variables.
+- Need verify whether a stable Playwright pin/browser install already exists elsewhere in the branch before choosing dependency changes. Current evidence is insufficient to pick a version or claim browser provisioning.
+- The active workflow uses `shell: pwsh`; local PC has PowerShell 7.6.9 installed, but runner-service discovery remains unverified. Keep PC validation until source patch and source tests are ready.
+
+### Actions / boundaries
+
+- Read-only source trace only; no source or dependency changes made.
+- No GitHub variables or readiness flag changed; no workflow rerun; no PC command requested; no WORK09 process action; no main change, release or deployment.
+- Work32 remains **ACTIVE — NOT RELEASED**.
+
+### Next
+
+1. Trace repository-wide Playwright/browser pins and browser install conventions on the exact branch.
+2. Check every 8787 reference and existing shared port configuration on the exact branch.
+3. Implement and test one coherent minimal patch only after those contracts are resolved: Core fixture helper, pinned Playwright provisioning, shared port, exact-SHA adapter startup, health/preflight, PID provenance and unconditional cleanup.
+4. Run exact-branch source/tooling tests, then request PC for controlled runner-side verification.
