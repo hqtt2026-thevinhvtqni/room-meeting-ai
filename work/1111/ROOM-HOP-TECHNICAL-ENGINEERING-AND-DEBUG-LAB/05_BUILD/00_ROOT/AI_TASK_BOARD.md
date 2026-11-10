@@ -10,6 +10,7 @@ This board is the shared intake point for technical agents. A task is not assign
 | W1111-T04 | ROOM-HOP component architecture | Core, Workspace, Gateway, Event Listener, Agent Runtime, MCP and adapters dependency map | Ka / CSA | READY |
 | W1111-T05 | W32 Windows Browser E2E blocker | Trace runner readiness, service provenance and exact-SHA release gate | An / QE with Xu coordination | READY |
 | W1111-T06 | AI identity and authorization | Principal/agent identity, policy, token provenance and task-to-runtime mapping | Xu / Ka | READY |
+| W1111-T07 | ROOM-HOP authorization boundary & protected mutation remediation | Consolidate W32 DOC-117, complete exact-head/source/runtime trace, reconcile W01/W02/W28/W99, design fail-closed enforcement and independent QE gates | Cla / CTO + Ka / CSA; Xu coordinates; Vi design; Qw independent QE | READY — ACK REQUIRED |
 
 ## Agent participation protocol
 1. Read DOC-001, DOC-004, DOC-005, DOC-006, DOC-007 and the latest DOC-003 journal entries before starting.
