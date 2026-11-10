@@ -1719,3 +1719,46 @@ Branch: `work/32-ci-cd-python-ci-v2`
 2. Draft the fixture bootstrap with Core MeetingService and test each lifecycle transition in an isolated temporary store.
 3. Implement one coherent workflow/test/adapter shared-port and process-ownership patch; update the workflow mirror in the same change.
 4. Run strict mirror check, relevant Core fixture tests, adapter contract tests and workflow static checks on the exact branch revision before requesting PC validation.
+
+
+---
+
+## W32-LOG-20261111-93 — XÁC MINH PLAYWRIGHT PYTHON / CHROMIUM PAIR
+
+- **Work:** Work32 — CI/CD
+- **Priority:** P1 — Windows Browser Adapter E2E dependency reproducibility
+- **Name:** Ka
+- **Title:** CSA / Execution Owner (được giao)
+- **Date-Time:** 2026-11-11, Asia/Ho_Chi_Minh
+- **Status:** OFFICIAL RELEASE PAIR IDENTIFIED — NOT YET INSTALLED OR EXECUTED ON RUNNER
+
+### Official upstream evidence
+
+- Microsoft Playwright Python release page lists **v1.65.0**, published 2026-11-09, with verified release signature. Release notes identify bundled browser versions:
+  - Chromium **158.0.8127.18**
+  - Firefox 159.0
+  - WebKit 27.2
+- PyPI `playwright==1.65.0` metadata confirms Python >=3.10 and a Windows x86-64 wheel. Work32 Windows runner is X64 and workflow uses Python 3.12, so package platform/interpreter compatibility is supported.
+- Official Playwright Python installation documentation specifies installing the package and then installing browser binaries with `python -m playwright install`; Chromium-only provisioning can use `python -m playwright install chromium`.
+- This is an exact version-to-browser pairing from the official release, not an inferred global browser install.
+
+### Assessment
+
+- Proposed reproducible CI dependency is `playwright==1.65.0`, installed in the Windows job only, followed by the matching Chromium install command. Do not add Playwright to all general CI lanes unless another lane requires it.
+- The runner must install the browser into the same Python environment used to launch the Browser Adapter. Workflow should verify the installed Playwright version and browser executable before starting the adapter.
+- The package release is very recent (2026-11-09). Compatibility with the current Browser Adapter workload has not yet been executed on ROOM-HOP runner; this remains a test gate, not PASS.
+- The runner OS version still must meet Playwright's documented Windows requirement; current runner output in this thread has not supplied OS build evidence.
+
+### Boundaries
+
+- No dependency file or workflow changed in this entry.
+- No package/browser installed on PC; no PC action requested.
+- No GitHub variables/readiness flag changed; no CI rerun, WORK09 action, main change, release or deployment.
+- Work32 remains **ACTIVE — NOT RELEASED**.
+
+### Next
+
+1. Add the pinned Playwright package to the Windows-only E2E install path, with the matching Chromium install and version/browser verification.
+2. Build the disposable Core fixture helper and assert draft → open → joined participants → active using MeetingService.
+3. Complete shared-port and runner-owned process startup/health/provenance/always-cleanup workflow changes; update mirror simultaneously.
+4. Run Linux/source tests and strict workflow-mirror checks on the branch; then request PC verification for OS build, runner-service `pwsh` discovery and Windows browser execution.
