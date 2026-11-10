@@ -64,7 +64,7 @@ def request_body():
 
 def bridge(host, core=None, **kwargs):
     return ExecutionHostBridge(
-        "http://host:8031",
+        "http://127.0.0.1:8031",
         transport=host,
         core_endpoint="http://127.0.0.1:8000",
         service_credential="service-credential-test-123456789",
@@ -89,7 +89,7 @@ def test_core_grant_is_obtained_before_host_and_workcontext_is_not_forwarded():
     assert result.status == "PASS"
     assert core.calls[0][0].endswith("/works/W28/execution-grants")
     assert core.calls[0][1] == {"purpose": "pytest_run", "max_timeout_seconds": 30}
-    assert host.calls[0][0] == "http://host:8031/execute"
+    assert host.calls[0][0] == "http://127.0.0.1:8031/execute"
     assert host.calls[0][3]["Authorization"] == "Bearer opaque-test-token"
     assert "work_context" not in host.calls[0][1]
     assert host.calls[0][1]["grant_id"] == "GRANT-test-1"
@@ -159,3 +159,56 @@ def test_noncanonical_work_and_non_pytest_operation_blocked():
     assert result.status == "BLOCKED"
     assert result.blocker == "pytest_grant_requires_pytest_command"
     assert not core.calls and not host.calls
+
+    
+def test_remote_core_plain_http_is_rejected_before_sending_service_credential():
+    host = FakeTransport()
+    core = FakeCoreTransport()
+    adapter = ExecutionHostBridge(
+        "http://127.0.0.1:8031",
+        transport=host,
+        core_endpoint="http://core.example:8000",
+        service_credential="service-credential-test-123456789",
+        core_transport=core,
+    )
+    result = adapter.invoke(context(), request_body())
+    assert result.status == "BLOCKED"
+    assert result.blocker == "execution_transport_requires_https_except_loopback"
+    assert not core.calls and not host.calls
+
+
+def test_remote_host_plain_http_is_rejected_before_obtaining_grant():
+    host = FakeTransport()
+    core = FakeCoreTransport()
+    adapter = ExecutionHostBridge(
+        "http://host.example:8031",
+        transport=host,
+        core_endpoint="https://core.example:8000",
+        service_credential="service-credential-test-123456789",
+        core_transport=core,
+    )
+    result = adapter.invoke(context(), request_body())
+    assert result.status == "BLOCKED"
+    assert result.blocker == "execution_transport_requires_https_except_loopback"
+    assert not core.calls and not host.calls
+
+
+def test_https_remote_core_and_host_are_accepted():
+    host = FakeTransport(payload={
+        "execution_id": "e-https",
+        "work_id": "W28",
+        "status": "PASS",
+        "exit_code": 0,
+        "evidence_ref": "/evidence/FINAL_RESULT.json",
+    })
+    core = FakeCoreTransport()
+    adapter = ExecutionHostBridge(
+        "https://host.example:8031",
+        transport=host,
+        core_endpoint="https://core.example:8000",
+        service_credential="service-credential-test-123456789",
+        core_transport=core,
+    )
+    result = adapter.invoke(context(), request_body())
+    assert result.status == "PASS"
+    assert len(core.calls) == 1 and len(host.calls) == 1
