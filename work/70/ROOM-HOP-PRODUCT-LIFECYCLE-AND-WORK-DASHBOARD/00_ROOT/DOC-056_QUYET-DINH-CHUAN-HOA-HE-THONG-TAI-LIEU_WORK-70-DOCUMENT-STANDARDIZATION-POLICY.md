@@ -85,3 +85,25 @@ Quy tắc trạng thái và tiến độ:
 - Agent kiểm tra không được tự kiểm tra/phê duyệt đầu ra của chính mình.
 - Không tính phần trăm Product Task bằng trung bình tiến độ Agent. Khi chưa duyệt trọng số và công thức tổng hợp, dùng NOT_CALCULATED / null.
 - PROPOSED assignment không phải ACK; source hiện diện không phải nghiệm thu; static check không phải Browser E2E/QE/runtime PASS.
+
+
+## 12. Task execution contract — delegated end-to-end ownership (D70-022 / 2026-11-10)
+A Task is a complete delegated outcome, not a prompt for one isolated step. The accountable AI owns the task from intake through verified handoff within the exact authorized scope.
+
+Required execution loop:
+1. READ: read the Work Manifest, governing decisions/policies, canonical task register, relevant plans/designs, full relevant journal history and referenced evidence before acting.
+2. TRACE: establish exact source/ref/commit, runtime/environment, dependencies, identity, capability, permission and current task state. Do not assume availability or ACK.
+3. PLAN: decompose internally into steps, dependencies, acceptance criteria, rollback/recovery and verification methods. Keep one accountable owner.
+4. EXECUTE: perform all permitted steps without asking the user to approve routine reversible actions already delegated. Reuse existing sessions/tools and avoid unnecessary API/provider cost.
+5. VERIFY: run applicable tests/checks, inspect raw outputs, fix failures within scope, rerun affected checks and verify exact resulting revision/artifacts.
+6. RECORD: append material actions, commands/methods, timestamps, revisions, results, evidence refs, blockers and next actions to DOC-035. Update the canonical Task Register only on evidence-backed state transitions. Keep dashboards read-only projections.
+7. HANDOFF: provide one concise completion report with deliverable, revision, acceptance checklist, test results, residual risks and evidence links. Do not send repetitive progress pings for routine substeps.
+
+Operating rules:
+- After a valid assignment and ACK, the owner continues through all dependent steps and reasonable repair/retry cycles until DONE or a genuine BLOCKED condition; do not stop after each subtask to ask “what next?”.
+- Do not ask the Product Owner to repeat information already present in canonical Work records. Resolve ordinary ambiguity by reading, tracing and recording a reasoned decision within delegated authority.
+- Notify the coordinator/owner only at material milestones, final handoff, or a blocker requiring authority, missing access/identity, unavailable external actor, destructive/high-impact choice, new cost/secret, or scope expansion.
+- A blocker report must state: problem; attempts and evidence; exact bottleneck; safe options; exact missing condition; whether work can continue elsewhere. Continue unblocked subwork in parallel where safe.
+- Status updates are event-driven, not conversational polling. PLANNED → READY requires verified prerequisites; READY → IN_PROGRESS requires explicit ACK and actual start; DONE requires deliverable + every acceptance criterion evidenced + required independent review; otherwise remain IN_REVIEW/BLOCKED.
+- The task owner must update the journal and register before reporting completion. “I did it” in chat is not evidence.
+- End-to-end autonomy never overrides authorization, security gates, independent review, protected-scope restrictions, or the Product Owner's reserved decisions. Missing/stale/unverifiable authorization means DENY; never bypass a gate to maintain momentum.
