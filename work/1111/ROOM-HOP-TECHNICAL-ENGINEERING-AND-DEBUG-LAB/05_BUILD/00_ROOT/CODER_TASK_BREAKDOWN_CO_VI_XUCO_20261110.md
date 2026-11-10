@@ -199,3 +199,7 @@ This plan allocates work; it does not itself authorize protected execution. Unti
 - Durable audit and evidence readback succeeds.
 - No bypass path remains in the enumerated protected surface.
 - Final state is recorded as PASS, FAIL or BLOCKED with exact residual risks; never infer release from merged code alone.
+
+
+## End-to-end task ownership addendum — D70-022 (2026-11-10)
+After the named coder has acknowledged the exact task and the required scoped authorization is valid, the coder owns the complete package through implementation, focused tests, in-scope defect repair/retry, evidence capture, journal update and handoff. The coder must not stop after a single code change or ask for step-by-step instructions when the remaining steps are defined by the acceptance criteria. Xu coordinates dependencies and integrates the three packages; routine progress is recorded in DOC-003, not repeatedly sent as chat updates. Notify Xu only for material milestone, final handoff or a genuine blocker. Initial ACK and DOC-117 authorization requirements are unchanged; this addendum does not authorize protected source mutation by itself.
