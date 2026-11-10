@@ -57,3 +57,10 @@
 - DOC-004 against SCHEMA-004: in-session schema-rule conformance subset PASS (zero reported errors).
 - JSON parsing and the implemented required/type/property/enum/const/array/range/pattern checks passed on exact Sandbox readback content.
 - Formal external JSON Schema validation remains NOT RUN; independent architecture review and Vinh approval remain PENDING. These checks do not approve the task model or authorize dispatch/runtime execution.
+
+
+## Addendum 2026-11-10 — DOC-001 author self-audit findings for independent review
+- DOC-001 §4.2 currently describes BLOCKED and CANCELLED as terminal/exception paths, while W70 permits blocker resolution and task resumption. The contract must distinguish recoverable BLOCKED from terminal CANCELLED/REJECTED and define the transition guard.
+- DOC-001 §4.2/§5 shared Assignment vocabulary does not include the explicit PROPOSED_NOT_ACKNOWLEDGED state used in DOC-003/DOC-004. Do not silently map this state to PROPOSED or DISPATCHED. Define a versioned, loss-aware mapping to W70 assignment state and preserve the fact that no dispatch/ACK has occurred.
+- DOC-003 Phase Task records and DOC-004 Agent Task records both use assignment_status=PROPOSED_NOT_ACKNOWLEDGED; DOC-004 separately uses status=PLANNED. These fields represent separate dimensions (proposal/receipt vs task lifecycle) and must remain explicitly distinct in any projection or adapter.
+- These are author self-audit findings, not independent Ka/Cla review or approval. DOC-001 remains DRAFT — NOT APPROVED FOR RUNTIME ENFORCEMENT; no dispatch, ACK, runtime, integration test or QE is authorized.
