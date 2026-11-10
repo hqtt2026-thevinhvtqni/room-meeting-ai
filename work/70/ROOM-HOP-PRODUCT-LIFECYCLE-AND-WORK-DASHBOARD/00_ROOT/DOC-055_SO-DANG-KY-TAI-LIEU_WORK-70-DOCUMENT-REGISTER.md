@@ -226,3 +226,11 @@ DOC-061 has one canonical Work 70 path on main: `05_BUILD/03_ARCHITECTURE/DOC-06
 
 
 | DOC-095 | P0 | 95 | Kiến trúc tổng thể bộ máy ROOM-HOP thống nhất / ROOM-HOP Unified Machine Architecture | 03_ARCHITECT/DOC-095_ROOM-HOP-UNIFIED-MACHINE-ARCHITECTURE.md | DOC-001; DOC-004; DOC-005; DOC-006; DOC-009; DOC-011; DOC-035; DOC-042; DOC-043; DOC-055; DOC-091; DOC-094 | DESIGN BASELINE — IMPLEMENTATION NOT AUTHORIZED | W70 là control plane; phân định subsystem ownership, Agent participation, integration contracts, parallel delivery and system gates. Work 112 owns cross-Work integration contracts only. |
+
+
+## Addendum 2026-11-10 — D70-022 Task execution standard
+- DOC-056 remains the canonical Task operating policy and now includes §12 end-to-end task execution contract (D70-022).
+- DOC-093 remains the sole Agent Task source; schema_version 1.2 adds execution_contract for end-to-end ownership, no-ping-pong, journal-first status transitions and evidence-backed handoff.
+- DOC-094 remains the sole Product/Phase Task source; schema_version 1.1 adds end-to-end Phase Task ownership and evidence-based roll-up rules.
+- DOC-034 records BB-W70-20261110-001; DOC-006 records D70-022; DOC-035 records the implementation event.
+- No new Task Register, journal, minutes book or document ID was created. Existing canonical paths and IDs are preserved. JSON/schema validation and exact readback are tracked in DOC-035; this addendum is not itself a validation PASS.
