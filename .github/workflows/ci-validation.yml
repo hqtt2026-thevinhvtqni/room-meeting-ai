@@ -142,7 +142,7 @@ jobs:
           cd "${W32_DIR}/05_TEST"
           python -m unittest -v test_result_classifier test_check_test_coverage test_check_workflow_mirror 2>&1 | tee "${GITHUB_WORKSPACE}/test-results/tooling-unittest.txt"
 
-      - name: Check active workflow and Work 32 mirror (report-only)
+      - name: Check active workflow and Work 32 mirror (strict)
         run: |
           set -o pipefail
           CHECK_STRICT=1 python "${W32_DIR}/04_CODE/ci_tools/check_workflow_mirror.py" | tee test-results/workflow-mirror-report.txt
@@ -350,6 +350,8 @@ jobs:
               if (-not ($sameExe -and $sameCommand -and $sameOwner)) { throw "Refusing to stop PID $($meta.pid): process identity changed" }
               Stop-Process -Id ([int]$meta.pid) -Force -ErrorAction Stop
               Wait-Process -Id ([int]$meta.pid) -Timeout 15 -ErrorAction SilentlyContinue
+              $remaining = Get-CimInstance Win32_Process -Filter "ProcessId = $($meta.pid)" -ErrorAction SilentlyContinue
+              if ($remaining) { throw "Owned adapter process did not terminate; refusing fixture-store deletion" }
             }
           }
           if ($env:ROOMHOP_TEST_MEETINGS_DIR) {
