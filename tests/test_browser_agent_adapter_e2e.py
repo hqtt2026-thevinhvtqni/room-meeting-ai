@@ -1,4 +1,4 @@
-"""Opt-in PC integration test. Never runs against an unspecified meeting."""
+"""Opt-in live Browser Adapter E2E against a job-owned disposable meeting."""
 
 import os
 
@@ -11,19 +11,22 @@ REQUIRED_ENV = (
     "ROOMHOP_TEST_MODE",
     "ROOMHOP_TEST_MEETING_ID",
     "ROOMHOP_TEST_IDENTITY_ID",
+    "ROOMHOP_BROWSER_ADAPTER_PORT",
 )
 
 pytestmark = pytest.mark.skipif(
     os.getenv("ROOMHOP_TEST_MODE") != "1"
     or any(not os.getenv(name) for name in REQUIRED_ENV),
-    reason="requires an explicitly configured disposable ROOM-HOP test target",
+    reason="requires an explicitly configured job-owned disposable ROOM-HOP target",
 )
 
-BASE = "http://127.0.0.1:8787"
+PORT = int(os.getenv("ROOMHOP_BROWSER_ADAPTER_PORT", "0"))
+BASE = f"http://127.0.0.1:{PORT}"
 
 
 def test_browser_workflow_handoff_and_readback():
-    """Run only on a PC with an explicit disposable meeting and test identity."""
+    """Run only against the explicitly provisioned disposable fixture."""
+    assert 1 <= PORT <= 65535
     req = {
         "url": "https://en.wikipedia.org/wiki/Headless_browser",
         "work_id": "wikipedia-browser-e2e",
