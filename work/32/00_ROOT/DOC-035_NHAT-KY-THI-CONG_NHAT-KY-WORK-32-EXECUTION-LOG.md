@@ -1491,3 +1491,63 @@ Kết quả được cung cấp:
 3. Ka tiếp tục xử lý source/workflow alignment theo W32-LOG-85; giữ Windows E2E và Release Gate BLOCKED đến khi đủ evidence trên cùng exact SHA.
 
 - **Overall:** Work32 **ACTIVE — NOT RELEASED**.
+
+---
+
+## W32-LOG-20261111-89 — SOURCE TRACE WINDOWS BROWSER ADAPTER / WORKFLOW MISMATCH
+
+- **Work:** Work32 — CI/CD
+- **Priority:** P1 — blocker Windows Browser Adapter E2E
+- **Name:** Ka
+- **Title:** CSA / Execution Owner (được giao)
+- **Date-Time:** 2026-11-11, khoảng 06:26 (UTC+07:00; theo thời điểm phiên)
+- **Status:** SOURCE AUDIT PASS — ARCHITECTURE ALIGNMENT BLOCKED — NO PATCH
+
+### Exact branch evidence
+Branch: `work/32-ci-cd-python-ci-v2`
+
+1. `.github/workflows/ci-validation.yml`
+   - Blob SHA: `88a87c287f1bfb3e6dc01255f74cead30788f1fd`
+   - Windows job still injects six static repository variables:
+     `ROOMHOP_TEST_MEETINGS_DIR`, `ROOMHOP_TEST_MEETING_ID`,
+     `ROOMHOP_TEST_IDENTITY_ID`, `ROOMHOP_BROWSER_ADAPTER_PID`,
+     `ROOMHOP_BROWSER_ADAPTER_EXE`, `ROOMHOP_BROWSER_ADAPTER_OWNER`.
+   - Preflight still checks fixed `127.0.0.1:8787` and verifies an externally running process by static PID/EXE/owner.
+   - Windows steps use `shell: pwsh`.
+   - No workflow step in the inspected Windows job starts the Browser Adapter from the checked-out exact-SHA source, captures the started process PID, or tears down that process in an always/finally step.
+   - Readiness condition remains `vars.W32_WINDOWS_RUNNER_READY == 'true'`; no readiness change made.
+
+2. `tests/test_browser_agent_adapter_e2e.py`
+   - Blob SHA: `bdf4f50a71be69a7e09c79bab2b87162e71e5fdf`
+   - Test endpoint is hardcoded as `http://127.0.0.1:8787`.
+   - Test is opt-in via `ROOMHOP_TEST_MODE` and explicit meeting/store/identity variables.
+   - This is a second hardcoded-port dependency; changing only workflow configuration would leave the test aimed at 8787.
+
+3. `room_hop_mcp/browser_agent_adapter/adapter.py`
+   - Blob SHA: `bb240e5ae9b993edf07b4811ce7f01268fcc4ea0`
+   - Source exposes FastAPI `app`, `/health`, `/browser/execute_workflow`, and browser control routes.
+   - Transcript submission validates explicit test mode, absolute disposable store, exact sentinel value `ROOM-HOP-WORK32-DISPOSABLE-TEST-STORE`, bounded MCP timeout, and exact Public V1 MCP tool inventory; then verifies transcript readback.
+   - The inspected module defines the FastAPI app and routes; the workflow/test still needs a proven launch contract and managed process lifecycle. No inference that this module is self-starting.
+
+4. `tests/test_browser_agent_adapter_contract.py`
+   - Blob SHA: `9ad6a1007bcd7a64999c7a6584ef298a24fd09e3`
+   - Contract tests cover fail-closed test mode, explicit disposable target, sentinel, exact MCP tools, meeting status, bounded timeout, stdio cleanup, and transcript readback. They do not establish Windows workflow process ownership/lifecycle.
+
+5. Work32 mirror checker:
+   - `work/32/CI-CD-ROOM-HOP-PYTHON-NO-DOCKER/04_CODE/ci_tools/check_workflow_mirror.py`
+   - Blob SHA: `8162220475b4673b1a8462e3a3ce29c15c0a8ba6`
+   - Checker compares active workflow with Work32 mirror; strict drift failure requires `CHECK_STRICT=1`. This source alone does not prove the mirror is synchronized; the checker must run on exact checkout to establish that.
+
+### Decision / boundaries
+- Findings agree with Xu architecture ruling **W32-LOG-20261108-85**: target is runner-owned fixture process launched from the exact Work32 checkout, with one shared configurable port, PID/provenance capture, disposable store and deterministic cleanup.
+- Current workflow and live E2E test remain tied to external/static process state and port 8787. This is not resolved by installing PowerShell 7 or restarting the runner service.
+- No source/workflow/test patch was applied. No repository variables were created/changed. No readiness flag was enabled. No Windows job rerun, release, deploy, main-branch change, or WORK09 process action was performed.
+- Patch must be minimal and consistent across workflow, test endpoint configuration, adapter launch command, health/preflight and teardown. Exact entrypoint/process startup and compatibility must be verified before implementation; no guessed launch command is authorized.
+
+### Next
+1. Trace exact launch/import command and server dependency for `room_hop_mcp.browser_agent_adapter.adapter:app` on the branch.
+2. Identify all port 8787 references and any existing shared-port setting before proposing one canonical environment variable.
+3. Prepare minimal patch proposal and regression tests for runner-owned process startup, provenance and cleanup; preserve fail-closed disposable-store/readback checks.
+4. Only after source/CI pass, perform PC preflight and controlled runner-side `pwsh` verification. Keep Windows E2E and Release Gate blocked until then.
+
+- **Overall:** Work32 **ACTIVE — NOT RELEASED**.
