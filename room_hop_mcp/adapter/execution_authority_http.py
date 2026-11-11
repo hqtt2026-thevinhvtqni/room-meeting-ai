@@ -10,6 +10,9 @@ from core.execution_authority import AuthorityError, ExecutionAuthority
 
 class GrantIssueRequest(BaseModel):
     purpose: str = Field(min_length=1, max_length=64)
+    repository: str = Field(min_length=3, max_length=256)
+    branch: str = Field(min_length=1, max_length=256)
+    expected_head: str = Field(min_length=40, max_length=64)
     assignment_id: str = Field(min_length=1, max_length=128)
     task_id: str = Field(min_length=1, max_length=128)
     host_identity_id: str = Field(min_length=1, max_length=128)
@@ -23,6 +26,9 @@ class GrantIssueRequest(BaseModel):
 
 class RunStartRequest(BaseModel):
     run_id: str = Field(min_length=1, max_length=128)
+    repository: str = Field(min_length=3, max_length=256)
+    branch: str = Field(min_length=1, max_length=256)
+    expected_head: str = Field(min_length=40, max_length=64)
     command: list[str]
     source_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     environment_id: str = Field(min_length=1, max_length=128)
