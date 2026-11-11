@@ -209,6 +209,19 @@ def test_submission_timeout_is_blocked_and_never_retried(monkeypatch, tmp_path):
     assert "do not retry automatically" in result["reason"]
 
 
+def test_workflow_handoff_runs_outside_caller_event_loop(monkeypatch, tmp_path):
+    _configure_test_target(monkeypatch, tmp_path)
+    instances = _install_fake(monkeypatch)
+
+    async def invoke_from_running_loop():
+        return browser_adapter._submit_to_roomhop_in_worker(RESULT)
+
+    result = asyncio.run(invoke_from_running_loop())
+    assert result["status"] == "pass"
+    assert result["read_back"] is True
+    assert instances[0].session_closed is True
+
+
 def test_submission_fails_closed_inside_running_event_loop(monkeypatch, tmp_path):
     _configure_test_target(monkeypatch, tmp_path)
 
