@@ -472,6 +472,57 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
+  w32_self_hosted_runner_probe:
+    name: Work32 dedicated PC runner identity (read-only)
+    if: \${{ github.event_name == 'pull_request' }}
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 5
+    steps:
+      - name: Verify exact Work32 runner identity
+        shell: powershell
+        run: |
+          $runnerName = "\${{ runner.name }}"
+          if ($runnerName -ne "ROOM-HOP-W32-PC") {
+            throw "BLOCKED: expected ROOM-HOP-W32-PC; actual runner is '$runnerName'"
+          }
+          if ($env:RUNNER_OS -ne "Windows" -or $env:RUNNER_ARCH -ne "X64") {
+            throw "BLOCKED: expected Windows X64 runner; actual $env:RUNNER_OS / $env:RUNNER_ARCH"
+          }
+          Write-Output "runner_name=$runnerName"
+          Write-Output "runner_os=$env:RUNNER_OS"
+          Write-Output "runner_arch=$env:RUNNER_ARCH"
+          Write-Output "runner_temp=$env:RUNNER_TEMP"
+          Write-Output "runner_identity=PASS"
+
+      - name: Read-only toolchain and local listener snapshot
+        shell: powershell
+        run: |
+          $python = Get-Command python -ErrorAction SilentlyContinue
+          if ($python) {
+            Write-Output "python_path=$($python.Source)"
+            & python --version
+          } else {
+            Write-Output "python=NOT_FOUND"
+          }
+          $git = Get-Command git -ErrorAction SilentlyContinue
+          if ($git) {
+            Write-Output "git_path=$($git.Source)"
+            & git --version
+          } else {
+            Write-Output "git=NOT_FOUND"
+          }
+          foreach ($port in @(8010, 8020, 8030, 8031, 8787)) {
+            $listeners = @(Get-NetTCPConnection -State Listen -LocalPort $port -ErrorAction SilentlyContinue)
+            if ($listeners.Count -eq 0) {
+              Write-Output "port=$port listener=ABSENT"
+              continue
+            }
+            foreach ($listener in $listeners) {
+              $process = Get-CimInstance Win32_Process -Filter "ProcessId = $($listener.OwningProcess)"
+              $processName = if ($process) { $process.Name } else { "UNKNOWN" }
+              Write-Output "port=$port address=$($listener.LocalAddress) pid=$($listener.OwningProcess) process=$processName"
+            }
+          }
   release_gate:
     name: Work 32 release acceptance gate
     if: always()
