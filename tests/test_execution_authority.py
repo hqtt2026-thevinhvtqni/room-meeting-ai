@@ -52,7 +52,6 @@ def make_authority(tmp_path: Path) -> tuple[ExecutionAuthority, dict]:
             "workspace_root": str(root),
             "execution_workspace": str(workspace),
             "evidence_root": str(evidence),
-            "source_sha256": source_hash,
             "environment_id": "w32-local-ci",
             "test_entrypoint": ["python", "-m", "pytest", "-q"],
             "max_timeout_seconds": 120,
