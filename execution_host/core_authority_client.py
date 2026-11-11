@@ -31,7 +31,7 @@ class CoreAuthorityClient:
         ).rstrip("/")
         parsed = urlsplit(self.base_url)
         loopback_http = parsed.scheme == "http" and parsed.hostname in {"127.0.0.1", "localhost", "::1"}
-        if not self.base_url or parsed.username or parsed.password or parsed.query or parsed.fragment or not (parsed.scheme == "https" or loopback_http):
+        if not self.base_url or not parsed.hostname or parsed.username or parsed.password or parsed.query or parsed.fragment or not (parsed.scheme == "https" or loopback_http):
             raise AuthorityClientError("core_authority_url_must_use_https_or_loopback_http", 503)
         self.service_id = (
             service_id or os.getenv("ROOM_HOP_EXECUTION_HOST_ID", "")
