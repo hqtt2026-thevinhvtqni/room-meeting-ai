@@ -1822,3 +1822,42 @@ These later changes are not covered by Run #376. The branch requires a new exact
 - No local PC files or services were changed by the probe; it failed before executing its body.
 - No Execution Host or Core service was started; no protected command was executed.
 - Work32 remains ACTIVE — NOT RELEASED; PROTECTED EXECUTION DENIED.
+
+---
+
+## W32-LOG-20261112-117 — RUN #392 LATEST TEST LANES PASS / PC RUNNER STILL QUEUED
+
+- **Work:** 32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P0 — PR acceptance / self-hosted runner
+- **Name:** Ka
+- **Title:** CSA / Work32 Execution Owner
+- **Date-Time:** 2026-11-12 00:25 Asia/Ho_Chi_Minh
+- **PR #52 head:** f3606598d18780260e70cc9090a3a8cef1f9ceab
+- **Run #392:** 43077892672
+- **Tested merge revision:** fcf3b9e615cc0ce2be3f99abb151782772c43ffa
+- **Status:** HOSTED TEST LANES PASS; DEDICATED PC RUNNER PROBE QUEUED; PR RELEASE GATE PENDING.
+
+### Run #392 observed
+
+- Work32 tooling/workflow mirror: PASS.
+- Python 3.12 unit: 234 passed in 4.12s.
+- Product Auto E2E: 119 passed in 10.93s.
+- Windows Browser Adapter hosted PR lane: PASS.
+- Immutable artifact lane: PASS.
+- The separate Work32 dedicated PC runner identity job is still queued; because PR release_gate now depends on it, the release gate remains pending.
+
+### Runner #390 diagnostic
+
+- GitHub assigned the probe to runner ROOM-HOP-W32-PC, version 2.338.2, group Default, machine ADMIN-PC. This proves the runner was registered, online and matched the requested labels at that time.
+- The probe script failed before executing its body because Windows PowerShell Execution Policy blocked the temporary script file.
+- Workflow now invokes PowerShell with process-scoped -ExecutionPolicy Bypass; no machine policy was changed.
+- The corrected Run #392 probe has not yet been claimed. Current service/listener state is therefore not proven. PC-side Runner.Listener process and latest _diag log inspection is required before further changes.
+
+### Acceptance boundary
+
+- Do not treat Run #388 or Run #392 hosted lane success as proof of the dedicated PC runner.
+- Do not start Core/Host or protected execution until the PC probe and runtime configuration gates are resolved.
+- No credentials or Work policy were provisioned; no protected command was executed.
+- PR #52 remains open and unmerged; main remains unchanged.
+- PROTECTED EXECUTION DENIED; Work32 ACTIVE — NOT RELEASED.
