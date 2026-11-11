@@ -479,7 +479,7 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Verify exact Work32 runner identity
-        shell: powershell
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
         run: |
           $runnerName = "${{ runner.name }}"
           if ($runnerName -ne "ROOM-HOP-W32-PC") {
@@ -495,7 +495,7 @@ jobs:
           Write-Output "runner_identity=PASS"
 
       - name: Read-only toolchain and local listener snapshot
-        shell: powershell
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
         run: |
           $python = Get-Command python -ErrorAction SilentlyContinue
           if ($python) {
