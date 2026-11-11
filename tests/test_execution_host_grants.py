@@ -14,6 +14,7 @@ class FakeAuthorityClient:
         self.validation_calls = 0
         self.fail_validation_number = fail_validation_number
         self.records = []
+        self.started = []
 
     def validate_grant(self, work_id, grant_id, token):
         self.validation_calls += 1
@@ -24,9 +25,13 @@ class FakeAuthorityClient:
         assert token == "secret-token"
         return dict(self.binding, status="active", grant_id=grant_id)
 
-    def record_run(self, work_id, grant_id, token, record):
-        self.records.append(record)
-        return {"run_id": record["run_id"], "grant_id": grant_id, "status": "recorded"}
+    def start_run(self, work_id, grant_id, token, record):
+        self.started.append(record)
+        return {"run_id": record["run_id"], "grant_id": grant_id, "status": "started"}
+
+    def complete_run(self, work_id, grant_id, token, run_id, record):
+        self.records.append({"run_id": run_id, **record})
+        return {"run_id": run_id, "grant_id": grant_id, "status": "completed"}
 
 
 def make_binding(tmp_path: Path, command=None):
@@ -64,8 +69,9 @@ def test_host_validates_twice_executes_canonical_pytest_and_records_run(tmp_path
     assert authority.validation_calls == 2
     assert result["status"] == "PASS"
     assert result["run_record_persisted"] is True
+    assert len(authority.started) == 1
     assert len(authority.records) == 1
-    assert authority.records[0]["command"] == binding["test_entrypoint"]
+    assert authority.started[0]["command"] == binding["test_entrypoint"]
     assert Path(result["evidence_ref"]).exists()
     assert Path(result["stdout_ref"]).exists()
 
@@ -106,6 +112,7 @@ def test_host_revalidates_immediately_before_process_effect(tmp_path):
     )
 
     assert authority.validation_calls == 2
+    assert len(authority.started) == 1
     assert result["status"] == "BLOCKED"
     assert result["blocker"] == "grant_not_active"
     assert not marker.exists()
