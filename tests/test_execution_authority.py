@@ -310,6 +310,66 @@ def test_work_policy_rejects_workspace_symlink_escape(tmp_path):
         issue(authority, request)
 
 
+
+def test_revocation_blocks_new_run_but_allows_existing_run_completion(tmp_path):
+    authority, request = make_authority(tmp_path)
+    grant = issue(authority, request)
+    start_record = {
+        "run_id": "run-revoked-after-start",
+        "command": ["python", "-m", "pytest", "-q"],
+        "source_sha256": "a" * 64,
+        "environment_id": "w32-local-ci",
+        "started_at": "2026-11-12T00:00:00+00:00",
+    }
+    authority.start_run(
+        work_id="W32",
+        grant_id=grant["grant_id"],
+        token=grant["grant_token"],
+        host_service_id="host-8031",
+        host_credential="host-secret-32-byte-minimum-credential",
+        record=start_record,
+    )
+    authority.revoke_grant(
+        work_id="W32",
+        grant_id=grant["grant_id"],
+        service_id="agent-ka-service",
+        credential="agent-secret-32-byte-minimum-credential",
+    )
+    with pytest.raises(AuthorityError, match="grant_not_active"):
+        authority.start_run(
+            work_id="W32",
+            grant_id=grant["grant_id"],
+            token=grant["grant_token"],
+            host_service_id="host-8031",
+            host_credential="host-secret-32-byte-minimum-credential",
+            record={**start_record, "run_id": "run-after-revoke"},
+        )
+
+    completed = authority.complete_run(
+        work_id="W32",
+        grant_id=grant["grant_id"],
+        token=grant["grant_token"],
+        host_service_id="host-8031",
+        host_credential="host-secret-32-byte-minimum-credential",
+        record={
+            "run_id": "run-revoked-after-start",
+            "finished_at": "2026-11-12T00:00:02+00:00",
+            "status": "BLOCKED",
+            "exit_code": None,
+            "evidence_sha256": "d" * 64,
+        },
+    )
+    assert completed["status"] == "completed"
+    events = [
+        json.loads(line)
+        for line in authority.store_path.read_text(encoding="utf-8").splitlines()
+    ]
+    assert [event["event_type"] for event in events] == [
+        "grant_issued", "run_started", "grant_revoked", "run_completed"
+    ]
+    assert events[-1]["payload"]["grant_status_at_completion"] == "revoked"
+
+
 def test_journal_tampering_fails_closed(tmp_path):
     authority, request = make_authority(tmp_path)
     grant = issue(authority, request)
