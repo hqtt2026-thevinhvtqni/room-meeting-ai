@@ -198,13 +198,34 @@ def test_run_record_is_bound_to_grant_and_persisted(tmp_path):
         "evidence_sha256": "c" * 64,
         "evidence_ref": "evidence/run-001/RUN_EVIDENCE.json",
     }
-    result = authority.record_run(
+    authority.start_run(
         work_id="W32",
         grant_id=grant["grant_id"],
         token=grant["grant_token"],
         host_service_id="host-8031",
         host_credential="host-secret",
-        record=record,
+        record={
+            "run_id": "run-001",
+            "command": ["python", "-m", "pytest", "-q"],
+            "source_sha256": "a" * 64,
+            "environment_id": "w32-local-ci",
+            "started_at": "2026-11-12T00:00:00+00:00",
+        },
+    )
+    result = authority.complete_run(
+        work_id="W32",
+        grant_id=grant["grant_id"],
+        token=grant["grant_token"],
+        host_service_id="host-8031",
+        host_credential="host-secret",
+        record={
+            "run_id": "run-001",
+            "finished_at": "2026-11-12T00:00:01+00:00",
+            "status": "PASS",
+            "exit_code": 0,
+            "evidence_sha256": "c" * 64,
+            "evidence_ref": "evidence/run-001/RUN_EVIDENCE.json",
+        },
     )
     assert result == {
         "run_id": "run-001",
@@ -215,12 +236,12 @@ def test_run_record_is_bound_to_grant_and_persisted(tmp_path):
         json.loads(line)
         for line in authority.store_path.read_text(encoding="utf-8").splitlines()
     ]
-    assert [event["event_type"] for event in events] == ["grant_issued", "run_recorded"]
+    assert [event["event_type"] for event in events] == ["grant_issued", "run_started", "run_completed"]
     assert events[-1]["payload"]["principal_id"] == "agent-ka"
     assert events[-1]["payload"]["task_id"] == "W32-P0-PYTEST"
 
 
-def test_run_record_rejects_command_or_source_mismatch(tmp_path):
+def test_run_start_rejects_command_or_source_mismatch(tmp_path):
     authority, request = make_authority(tmp_path)
     grant = issue(authority, request)
     record = {
@@ -229,13 +250,9 @@ def test_run_record_rejects_command_or_source_mismatch(tmp_path):
         "source_sha256": "b" * 64,
         "environment_id": "w32-local-ci",
         "started_at": "2026-11-12T00:00:00+00:00",
-        "finished_at": "2026-11-12T00:00:01+00:00",
-        "status": "PASS",
-        "exit_code": 0,
-        "evidence_sha256": "c" * 64,
     }
     with pytest.raises(AuthorityError, match="run_source_binding_mismatch"):
-        authority.record_run(
+        authority.start_run(
             work_id="W32",
             grant_id=grant["grant_id"],
             token=grant["grant_token"],
