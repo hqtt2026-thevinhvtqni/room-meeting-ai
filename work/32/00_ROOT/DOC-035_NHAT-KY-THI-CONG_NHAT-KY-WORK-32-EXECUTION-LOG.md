@@ -2073,3 +2073,45 @@ Inspect the new exact-SHA workflow run. If PowerShell 7 is found and scripts exe
 ### Next
 
 Inspect the next run and continue from the first real failing step; do not request manual PC intervention unless the runner reports an action requiring interactive PC access.
+
+
+---
+
+## W32-LOG-20261111-100 — PROPAGATE PROCESS-SCOPED POLICY TO SETUP-PYTHON
+
+- **Work:** Work32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P1 — Windows setup-python action bootstrap
+- **Name:** Ka
+- **Title:** CSA / Delegated Work32 Execution Owner
+- **Date-Time:** 2026-11-11, Asia/Ho_Chi_Minh
+- **Status:** SOURCE PATCH COMMITTED — RETEST PENDING
+
+### Runtime evidence
+
+- Workflow run 42944628356, run number 336, confirmed the PowerShell 7 PATH bootstrap and exact-SHA checkout succeeded on ROOM-HOP-W32-PC / ADMIN-PC.
+- actions/setup-python then failed while invoking its own setup.ps1 through Windows PowerShell 5.1; that child process inherited the runner's restrictive Execution Policy and rejected the script.
+- Product Auto E2E, Python compile/unit tests, and strict workflow mirror tooling all passed in that run. Windows Browser Adapter setup and E2E were skipped after setup-python failed. Cleanup step succeeded; no fixture store or Adapter process had been created.
+
+### Corrective change
+
+- Added PSExecutionPolicyPreference: Bypass to the Windows job environment. This sets the Process-scope policy for PowerShell processes spawned within this job, including Windows PowerShell 5.1 invoked internally by actions/setup-python.
+- Kept explicit -ExecutionPolicy Bypass on the six Windows script invocations.
+- No machine-level or user-level execution policy is modified.
+- Active workflow blob: 3dd27536ab03398fda03eab83179c392c34493fe.
+- Mirror workflow blob: 3dd27536ab03398fda03eab83179c392c34493fe.
+- Active workflow commit: 78b9866996afdda0295227852001f1fb3d689d6d.
+- Mirror workflow commit: d989b393447f2fc7aea0a840cbe20cc5d62ad654.
+- Both files were fetched after writes; blob SHA equality confirmed.
+
+### Verification
+
+- **PASS:** PowerShell 7 resolution and exact-SHA checkout on ADMIN-PC.
+- **PASS:** strict workflow mirror check in run 336.
+- **PENDING:** Process-scope environment propagation into setup-python; Python 3.12 setup; pinned Playwright/Chromium; Core fixture; Adapter process ownership/health; E2E; teardown.
+- No global execution policy change, no WORK09 action, no readiness variable mutation by Ka, no main/release/deploy.
+- Work32 remains **ACTIVE — NOT RELEASED**.
+
+### Next
+
+Inspect the next exact-SHA run. If setup-python passes, proceed to dependency/browser provisioning and the live disposable fixture.
