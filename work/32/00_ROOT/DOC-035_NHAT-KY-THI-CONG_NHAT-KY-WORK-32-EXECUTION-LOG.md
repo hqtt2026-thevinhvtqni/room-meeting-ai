@@ -1701,3 +1701,46 @@ These later changes are not covered by Run #376. The branch requires a new exact
 - main remains at its pre-implementation baseline; no Work32 source has been merged.
 - MCP :8020 sandbox_read() restriction remains unchanged.
 - Protected execution remains DENIED; Work32 remains ACTIVE — NOT RELEASED.
+
+---
+
+## W32-LOG-20261112-114 — GIT REVISION BINDING AND CLEAN WORKSPACE GATE
+
+- **Work:** 32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P0 — source provenance / protected execution
+- **Name:** Ka
+- **Title:** CSA / Work32 Execution Owner
+- **Date-Time:** 2026-11-12 00:25 Asia/Ho_Chi_Minh
+- **Implementation branch HEAD:** e2d8c680a06a580040d163663cb39ddab8f17ed2
+- **Evidence:** DOC-121
+
+### Architecture hardening
+
+- Core Grant now binds exact repository, allowed branch, expected Git commit SHA, per-run source SHA-256, Work, Assignment, Task, Agent principal, Host identity, environment, canonical pytest command and timeout.
+- Static Work policy no longer hardcodes source SHA-256. WEE computes the content fingerprint from canonical WorkContext; Core binds it into the short-lived Grant; Host independently recomputes it. This supports successive authorized commits while preserving exact content integrity.
+- Host now verifies git rev-parse HEAD, git branch --show-current, exact GitHub origin and a clean Git worktree before execution.
+- Host denies evidence storage inside the source workspace or Git repository root.
+- Run Record remains two-phase and Grant single-use. Core outage, run-start persistence failure, revocation before process spawn or run-completion persistence failure cannot be reported as PASS.
+- Tests added for wrong repository/branch/SHA, actual Git HEAD/branch/origin mismatch, dirty worktree, evidence-root containment, Core outage and Run Record completion failure.
+- Host HTTP request timeout covers the bounded pytest maximum plus margin.
+
+### Run #378 evidence retained
+
+- Run #378 / 43073964120 completed 6/6 configured jobs PASS on tested merge revision d3ce06f221f123f8f4c73458c7e89506ed263d9c.
+- Unit: 231 passed, 4 Pydantic deprecation warnings.
+- Product Auto E2E: 113 passed.
+- Hosted Windows Browser Adapter: 10 passed; preflight and cleanup PASS.
+- Work32 tooling, immutable artifact and configured release acceptance gate: PASS.
+- Dedicated self-hosted runner identity step was SKIPPED for pull_request. This does not prove ROOM-HOP-W32-PC executed.
+- Pydantic v2 deprecations were corrected after Run #378; later Git-binding/clean-workspace changes were also added after Run #378. The latest branch head e2d8c68 has not yet been tested.
+
+### Change-control
+
+- PR #52 is the single integration candidate against main; its branch still needs to be advanced to latest implementation HEAD and re-tested.
+- Intermediate draft PR #51 was closed unmerged as superseded by PR #52.
+- main remains at baseline a663bd5afda524cb9dc7ca685945ca96c68d664d; Work32 source is not merged.
+- No runtime credentials, Work policy, service config or Core/Host process was provisioned or started.
+- No protected command was executed. MCP :8020 sandbox_read() restriction remains unchanged.
+- Independent security review, exact-latest-SHA CI, self-hosted PC runner proof and live positive/negative execution E2E remain open.
+- PROTECTED EXECUTION DENIED; Work32 ACTIVE — NOT RELEASED.
