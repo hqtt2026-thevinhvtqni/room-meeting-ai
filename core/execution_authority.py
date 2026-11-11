@@ -247,6 +247,12 @@ class ExecutionAuthority:
             canonical_workspace.relative_to(root)
             workspace.relative_to(canonical_workspace)
             evidence.relative_to(root)
+            try:
+                evidence.relative_to(workspace)
+            except ValueError:
+                pass
+            else:
+                raise ValueError("evidence_root_inside_execution_workspace")
             if not root.is_dir() or not workspace.is_dir():
                 raise ValueError("not_directory")
         except (OSError, ValueError, TypeError):
