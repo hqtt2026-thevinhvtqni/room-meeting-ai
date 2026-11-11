@@ -2247,3 +2247,45 @@ Inspect the next exact-SHA run from portable Python provisioning onward; continu
 ### Next
 
 Inspect the next Actions run. Do not claim Windows E2E or release acceptance until the live workflow handoff and transcript readback pass.
+
+
+---
+
+## W32-LOG-20261111-104 — ISOLATE MCP STDIO HANDOFF FROM PLAYWRIGHT EVENT LOOP
+
+- **Work:** Work32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P1 — Windows Browser Adapter → MCP stdio → Core handoff
+- **Name:** Ka
+- **Title:** CSA / Delegated Work32 Execution Owner
+- **Date-Time:** 2026-11-11 09:33 Asia/Ho_Chi_Minh
+- **Status:** SOURCE PATCH COMMITTED — EXACT-SHA RETEST PENDING
+
+### Runtime evidence
+
+- GitHub Actions run #357 / ID `42946402813`, exact SHA `dbff2a8106dda998f706dd996929d7d62fbe483f`.
+- Windows runner: `ROOM-HOP-W32-PC` / `ADMIN-PC`; portable Python 3.12.9 x64, pinned dependencies and Chromium provisioning PASS.
+- Core disposable meeting fixture PASS. Adapter PID/process identity, health endpoint and job-owned listener verification PASS.
+- Live Browser Adapter request reached the application and completed browser navigation, inspection, extraction, wait and screenshot workflow. The former WinError 10061 connection-refused symptom is no longer present.
+- The handoff returned `status=blocked`, reason: `Nested event loops are not allowed; call from the synchronous Browser Adapter worker`. The failure occurs when the synchronous Playwright path calls the asyncio-based MCP stdio integration from a thread with an active event loop. Transcript readback did not pass; no successful Core append is claimed.
+- Disposable adapter process, fixture store, portable Python and Playwright cache cleanup PASS. Windows job artifact retained (artifact ID `13823117790`).
+- Python compile/unit lane, tooling + strict mirror lane, Product Auto E2E and immutable product artifact lane PASS; Windows Browser Adapter lane and release gate FAIL.
+
+### Corrective change
+
+- Preserve `submit_to_roomhop()` as a synchronous, fail-closed boundary; do not nest or patch an existing event loop.
+- Add a dedicated one-worker thread boundary for the workflow's MCP stdio handoff. The async stdio session and its bounded `asyncio.run(asyncio.wait_for(...))` execute on that worker, outside the Playwright Sync API thread.
+- Keep the existing timeout, no-automatic-retry behavior, exact Public V1 tool inventory, explicit disposable-store sentinel, identity/meeting targeting, and exact Transcript readback unchanged.
+- Add a contract regression proving the handoff works when its caller already has a running event loop, while preserving the direct-call fail-closed regression.
+- Upgrade the real stdio roundtrip E2E to invoke the handoff from a running event loop and verify the artifact is persisted/read back through Core.
+- No Core/API architecture change, no live meeting target, no WORK09 action, no runner service/privilege change, no readiness variable mutation, no main mutation, merge/rebase/cherry-pick, deployment or release.
+
+### Verification
+
+- **PASS:** exact runtime cause isolated from Run #357 Windows job logs and source inspection.
+- **PENDING:** contract tests, real MCP stdio roundtrip/timeout teardown, strict workflow mirror, Windows Browser Adapter E2E, exact Transcript readback and release gate on the new exact SHA.
+- Work32 remains **ACTIVE — NOT RELEASED**.
+
+### Next
+
+Run the exact-SHA CI after this source/test/journal patch; inspect all mandatory lanes and retained Windows evidence. Do not request PC action unless the next run identifies a concrete runner-side intervention.
