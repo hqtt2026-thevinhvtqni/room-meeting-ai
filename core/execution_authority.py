@@ -213,6 +213,25 @@ class ExecutionAuthority:
         )
         if any(key not in policy for key in required):
             raise AuthorityError("work_policy_incomplete", 503)
+        for key in ("allowed_identities", "allowed_host_identities", "allowed_assignments", "allowed_tasks"):
+            if not isinstance(policy[key], list) or not policy[key] or not all(isinstance(item, str) and item for item in policy[key]):
+                raise AuthorityError("work_policy_scope_invalid", 503)
+        source_hash = policy["source_sha256"]
+        if not isinstance(source_hash, str) or len(source_hash) != 64 or any(ch not in "0123456789abcdef" for ch in source_hash):
+            raise AuthorityError("work_policy_source_hash_invalid", 503)
+        if not isinstance(policy["environment_id"], str) or not policy["environment_id"]:
+            raise AuthorityError("work_policy_environment_invalid", 503)
+        try:
+            root = Path(policy["workspace_root"]).resolve(strict=True)
+            workspace = Path(policy["execution_workspace"]).resolve(strict=True)
+            evidence = Path(policy["evidence_root"]).resolve()
+            canonical_workspace = (root / "workspace").resolve()
+            workspace.relative_to(canonical_workspace)
+            evidence.relative_to(root)
+            if not root.is_dir() or not workspace.is_dir():
+                raise ValueError("not_directory")
+        except (OSError, ValueError, TypeError):
+            raise AuthorityError("work_policy_paths_invalid", 503) from None
         command = policy["test_entrypoint"]
         if (
             not isinstance(command, list) or len(command) < 2
@@ -226,7 +245,7 @@ class ExecutionAuthority:
         )
         if not pytest_command:
             raise AuthorityError("work_test_entrypoint_not_pytest", 503)
-        if not isinstance(policy["max_timeout_seconds"], int) or not (
+        if isinstance(policy["max_timeout_seconds"], bool) or not isinstance(policy["max_timeout_seconds"], int) or not (
             1 <= policy["max_timeout_seconds"] <= 3600
         ):
             raise AuthorityError("work_timeout_policy_invalid", 503)
@@ -248,7 +267,9 @@ class ExecutionAuthority:
         host_identity_id = request.get("host_identity_id")
         source_sha256 = request.get("source_sha256")
         environment_id = request.get("environment_id")
-        timeout = request.get("requested_timeout_seconds", policy["max_timeout_seconds"])
+        timeout = request.get("requested_timeout_seconds")
+        if timeout is None:
+            timeout = policy["max_timeout_seconds"]
         if purpose != "pytest_run":
             raise AuthorityError("execution_purpose_not_allowed", 403)
         if service_id not in policy["allowed_identities"]:
@@ -265,7 +286,7 @@ class ExecutionAuthority:
             raise AuthorityError("test_entrypoint_not_authorized", 403)
         if environment_id != policy["environment_id"]:
             raise AuthorityError("execution_environment_not_authorized", 403)
-        if not isinstance(timeout, int) or timeout < 1 or timeout > policy["max_timeout_seconds"]:
+        if isinstance(timeout, bool) or not isinstance(timeout, int) or timeout < 1 or timeout > policy["max_timeout_seconds"]:
             raise AuthorityError("execution_timeout_not_authorized", 403)
 
         token = secrets.token_urlsafe(32)
