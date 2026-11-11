@@ -2289,3 +2289,43 @@ Inspect the next Actions run. Do not claim Windows E2E or release acceptance unt
 ### Next
 
 Run the exact-SHA CI after this source/test/journal patch; inspect all mandatory lanes and retained Windows evidence. Do not request PC action unless the next run identifies a concrete runner-side intervention.
+
+
+---
+
+## W32-LOG-20261111-105 — FIX EMBEDDED PYTHON IMPORT PATH FOR MCP STDIO CHILD
+
+- **Work:** Work32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P1 — Windows Browser Adapter → MCP stdio subprocess startup
+- **Name:** Ka
+- **Title:** CSA / Delegated Work32 Execution Owner
+- **Date-Time:** 2026-11-11 10:27:03 Asia/Ho_Chi_Minh
+- **Status:** WORKFLOW CORRECTIVE CHANGE COMMITTED — EXACT-SHA RETEST PENDING
+
+### Runtime evidence
+
+- Branch: `work/32-ci-cd-python-ci-v2`.
+- Run #358 / ID `42947224311`, source SHA `d1353c219076b326d239e9a0b2c18d81b003f0ea`: Python compile/unit, Product Auto E2E and tooling/strict mirror passed; Windows Browser Adapter E2E and release gate failed.
+- Run #361 / ID `42947285111`, source SHA `f1b7939be74f4a238a7d7d1c59d87ae48585d737`: same mandatory non-Windows lanes passed; Windows Browser Adapter E2E and release gate failed.
+- Inspected retained Windows artifact `13823089175` (run #361), including JUnit, stdout, stderr and pip freeze. Adapter/Uvicorn and Chromium workflow reached the application; Browser Adapter returned HTTP 200. The MCP stdio child stderr states exactly: `python.exe: No module named room_hop_mcp`.
+- The portable Windows interpreter is the embeddable distribution configured by `python312._pth`. In this isolated mode, `PYTHONPATH` is not a reliable way to expose the checkout to a spawned `python -m room_hop_mcp` child. Therefore the previous worker-thread correction removed the nested-loop failure but exposed the subprocess import-path defect. No successful Transcript append/readback is claimed.
+
+### Corrective workflow change
+
+- Add the exact GitHub Actions checkout workspace as an explicit absolute import path in the isolated interpreter's `python312._pth`, alongside `Lib\\site-packages` and the existing `import site` setting.
+- Add a preflight import of `room_hop_mcp.__main__` using the same portable interpreter after dependencies are installed. This fails early if the exact stdio entrypoint is not importable before starting the Browser Adapter E2E.
+- Update both active workflow and Work32 mirror. Fetched both files after the writes and verified identical content and blob SHA `b2a06361291a990b6ebb12205cae03a77ea7c11b`.
+- Workflow commits: active `517adad8545a5ec8d892e5d467de69e0e08bd6e8`; mirror `76aa77f762fa09f0082effc4a63ab68c26b81409`.
+- Current branch HEAD at journal preparation: `76aa77f762fa09f0082effc4a63ab68c26b81409`.
+- No Core/API architecture change, no live meeting target, no WORK09 action, no runner service/privilege change, no readiness variable mutation, no main mutation, merge/rebase/cherry-pick, deployment or release.
+
+### Verification
+
+- **PASS:** root cause isolated from the retained Windows stderr artifact.
+- **PASS:** active workflow and Work32 mirror are byte-identical after line-ending normalization; same Git blob SHA.
+- **PENDING:** exact-SHA Actions run must prove the new embedded-Python import preflight, real MCP stdio subprocess startup, exact Public V1 tool inventory, artifact append, Transcript readback, timeout/child teardown, Windows cleanup and release gate.
+
+### Next
+
+Inspect the exact-SHA Actions run for this workflow patch. If the import preflight passes but MCP stdio still fails, inspect the child process stderr and transport lifecycle before changing application code. Do not claim Windows E2E or release acceptance until Transcript readback passes. Work32 remains **ACTIVE — NOT RELEASED**.
