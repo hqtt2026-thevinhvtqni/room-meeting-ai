@@ -33,11 +33,11 @@ def make_authority(tmp_path: Path) -> tuple[ExecutionAuthority, dict]:
         "agent-ka-service": {
             "kind": "agent",
             "principal_id": "agent-ka",
-            "credential_sha256": _digest("agent-secret"),
+            "credential_sha256": _digest("agent-secret-32-byte-minimum-credential"),
         },
         "host-8031": {
             "kind": "host",
-            "credential_sha256": _digest("host-secret"),
+            "credential_sha256": _digest("host-secret-32-byte-minimum-credential"),
         },
     }
     works = {
@@ -81,7 +81,7 @@ def issue(authority, request):
     return authority.issue_grant(
         work_id="W32",
         service_id="agent-ka-service",
-        credential="agent-secret",
+        credential="agent-secret-32-byte-minimum-credential",
         request=request,
     )
 
@@ -92,7 +92,7 @@ def validate(authority, grant):
         grant_id=grant["grant_id"],
         token=grant["grant_token"],
         host_service_id="host-8031",
-        host_credential="host-secret",
+        host_credential="host-secret-32-byte-minimum-credential",
     )
 
 
@@ -155,7 +155,7 @@ def test_wrong_host_identity_and_token_are_denied(tmp_path):
             grant_id=grant["grant_id"],
             token=grant["grant_token"],
             host_service_id="other-host",
-            host_credential="host-secret",
+            host_credential="host-secret-32-byte-minimum-credential",
         )
     with pytest.raises(AuthorityError, match="grant_token_invalid"):
         authority.validate_grant(
@@ -163,7 +163,7 @@ def test_wrong_host_identity_and_token_are_denied(tmp_path):
             grant_id=grant["grant_id"],
             token="wrong-token",
             host_service_id="host-8031",
-            host_credential="host-secret",
+            host_credential="host-secret-32-byte-minimum-credential",
         )
 
 
@@ -175,7 +175,7 @@ def test_revocation_is_online_and_blocks_next_validation(tmp_path):
         work_id="W32",
         grant_id=grant["grant_id"],
         service_id="agent-ka-service",
-        credential="agent-secret",
+        credential="agent-secret-32-byte-minimum-credential",
     )
     assert revoked["status"] == "revoked"
     with pytest.raises(AuthorityError, match="grant_not_active"):
@@ -203,7 +203,7 @@ def test_run_record_is_bound_to_grant_and_persisted(tmp_path):
         grant_id=grant["grant_id"],
         token=grant["grant_token"],
         host_service_id="host-8031",
-        host_credential="host-secret",
+        host_credential="host-secret-32-byte-minimum-credential",
         record={
             "run_id": "run-001",
             "command": ["python", "-m", "pytest", "-q"],
@@ -217,7 +217,7 @@ def test_run_record_is_bound_to_grant_and_persisted(tmp_path):
         grant_id=grant["grant_id"],
         token=grant["grant_token"],
         host_service_id="host-8031",
-        host_credential="host-secret",
+        host_credential="host-secret-32-byte-minimum-credential",
         record={
             "run_id": "run-001",
             "finished_at": "2026-11-12T00:00:01+00:00",
@@ -257,7 +257,7 @@ def test_run_start_rejects_command_or_source_mismatch(tmp_path):
             grant_id=grant["grant_id"],
             token=grant["grant_token"],
             host_service_id="host-8031",
-            host_credential="host-secret",
+            host_credential="host-secret-32-byte-minimum-credential",
             record=record,
         )
 
@@ -278,7 +278,7 @@ def test_grant_is_single_use_after_run_start(tmp_path):
         grant_id=grant["grant_id"],
         token=grant["grant_token"],
         host_service_id="host-8031",
-        host_credential="host-secret",
+        host_credential="host-secret-32-byte-minimum-credential",
         record=start,
     )
     with pytest.raises(AuthorityError, match="grant_already_used"):
@@ -287,7 +287,7 @@ def test_grant_is_single_use_after_run_start(tmp_path):
             grant_id=grant["grant_id"],
             token=grant["grant_token"],
             host_service_id="host-8031",
-            host_credential="host-secret",
+            host_credential="host-secret-32-byte-minimum-credential",
             record={**start, "run_id": "run-single-2"},
         )
 
