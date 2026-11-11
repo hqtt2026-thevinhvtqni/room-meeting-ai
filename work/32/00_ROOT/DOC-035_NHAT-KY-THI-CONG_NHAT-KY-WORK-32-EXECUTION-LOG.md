@@ -1983,3 +1983,50 @@ The Windows job used `git init .` followed by unconditional `git remote add orig
 ### Next
 
 Observe the CI run for this exact branch revision and resolve only evidence-backed failures before requesting any PC action.
+
+
+---
+
+## W32-LOG-20261111-98 — FIX WINDOWS RUNNER POWERSHELL EXECUTION POLICY BLOCK
+
+- **Work:** Work32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P1 — Windows runner script execution
+- **Name:** Ka
+- **Title:** CSA / Delegated Work32 Execution Owner
+- **Date-Time:** 2026-11-11, Asia/Ho_Chi_Minh
+- **Status:** SOURCE PATCH COMMITTED — RETEST QUEUED
+
+### Runtime evidence
+
+- Workflow run: `42944255921`, run number `331`, triggering SHA `89e5ef978588e13460aaff3ba7914d2ecb190ce7`.
+- Runner: `ROOM-HOP-W32-PC`, machine `ADMIN-PC`, runner version `2.338.2`.
+- Tooling unit tests: **PASS**.
+- Strict active-workflow/mirror check: **PASS**.
+- Windows Browser Adapter job reached the runner but failed at the first PowerShell script before executing checkout. Log evidence: Windows PowerShell 5.1 rejected the temporary `.ps1` because script execution is disabled by Execution Policy. Consequently Python setup, fixture bootstrap, Adapter launch and E2E were skipped.
+- Cleanup step was also blocked by the same script policy; no fixture store or Adapter process had been created by that job.
+
+### Fix committed
+
+- Replaced all six Windows-job `shell: powershell` declarations with the explicit installed PowerShell 7 executable:
+  `C:\Program Files\PowerShell\7\pwsh.exe`.
+- Invokes PowerShell 7 with `-NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File {0}`.
+- Bypass is scoped to the process invocation; no machine/user execution policy was changed.
+- Active workflow blob: `45c4fb35655ed6115547ceaf2b6b020159be630f`.
+- Mirror workflow blob: `45c4fb35655ed6115547ceaf2b6b020159be630f`.
+- Active and mirror fetched after writes; identical blob SHA confirmed.
+- Active workflow commit: `b720540eee8a23e2566f86c79aefb93c4ae45dfd`.
+- Mirror commit: `033ec5b9dcab6bc6495848cb6b5b6ce22ef9d4c2`.
+
+### Verification status
+
+- **PASS:** runtime cause identified from Windows job logs.
+- **PASS:** PowerShell 7 explicit path and process-scoped bypass committed to all six Windows script steps.
+- **PASS:** strict workflow mirror identity by blob SHA.
+- **PENDING:** retest on ADMIN-PC; exact checkout, Playwright/Chromium install, Core fixture, Adapter health/PID ownership, E2E, process teardown and disposable-store cleanup.
+- No machine policy changed, no WORK09 process touched, no readiness variable changed by Ka, no main/release/deploy action.
+- Work32 remains **ACTIVE — NOT RELEASED**.
+
+### Next
+
+Inspect the new exact-SHA workflow run. If PowerShell 7 is found and scripts execute, continue resolving the next evidence-backed blocker without requesting PC intervention prematurely.
