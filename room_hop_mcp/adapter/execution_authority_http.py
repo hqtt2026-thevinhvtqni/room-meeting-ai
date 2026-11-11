@@ -5,7 +5,7 @@ from typing import Any, Literal
 from fastapi import APIRouter, Header, HTTPException
 from pydantic import BaseModel, Field
 
-from .execution_authority import AuthorityError, ExecutionAuthority
+from core.execution_authority import AuthorityError, ExecutionAuthority
 
 
 class GrantIssueRequest(BaseModel):
