@@ -102,3 +102,65 @@ def test_lifecycle_adapter_rejects_non_tls_remote_http():
             agent_credential="agent-secret",
             transport=lambda *args: (200, b"{}"),
         )
+
+
+def test_lifecycle_adapter_blocks_when_core_does_not_confirm_revocation(tmp_path):
+    def transport(url, method, body, headers, timeout):
+        if url.endswith("/works/W32/execution-grants") and method == "POST":
+            return 200, json.dumps({
+                "grant_id": "grant-123",
+                "grant_token": "one-time-secret",
+            }).encode()
+        if url.endswith("/execute-granted") and method == "POST":
+            return 200, json.dumps({
+                "status": "PASS",
+                "work_id": "W32",
+                "run_id": "run-123",
+                "run_record_persisted": True,
+                "exit_code": 0,
+            }).encode()
+        if url.endswith("/grant-123/revoke") and method == "POST":
+            return 200, json.dumps({"status": "active"}).encode()
+        raise AssertionError((url, method))
+
+    host = CoreGrantExecutionHost(
+        core_url="http://127.0.0.1:8000",
+        host_url="http://127.0.0.1:8031",
+        agent_id="agent-ka-service",
+        agent_credential="agent-secret",
+        transport=transport,
+    )
+    result = host.execute_authorized(make_context(tmp_path))
+
+    assert result["status"] == "BLOCKED"
+    assert result["grant_revocation_confirmed"] is False
+    assert "grant_revocation_not_confirmed" in result["blocker"]
+    assert "one-time-secret" not in json.dumps(result)
+
+
+def test_lifecycle_adapter_preserves_execution_and_revocation_failures(tmp_path):
+    def transport(url, method, body, headers, timeout):
+        if url.endswith("/works/W32/execution-grants") and method == "POST":
+            return 200, json.dumps({
+                "grant_id": "grant-123",
+                "grant_token": "one-time-secret",
+            }).encode()
+        if url.endswith("/execute-granted") and method == "POST":
+            return 503, json.dumps({"reason": "host_unreachable"}).encode()
+        if url.endswith("/grant-123/revoke") and method == "POST":
+            return 503, json.dumps({"detail": "core_unreachable"}).encode()
+        raise AssertionError((url, method))
+
+    host = CoreGrantExecutionHost(
+        core_url="http://127.0.0.1:8000",
+        host_url="http://127.0.0.1:8031",
+        agent_id="agent-ka-service",
+        agent_credential="agent-secret",
+        transport=transport,
+    )
+    result = host.execute_authorized(make_context(tmp_path))
+
+    assert result["status"] == "BLOCKED"
+    assert "host_unreachable" in result["blocker"]
+    assert "grant_revocation_failed:core_unreachable" in result["blocker"]
+    assert result["grant_revocation_confirmed"] is False

@@ -161,6 +161,7 @@ class CoreGrantExecutionHost:
 
         result: dict[str, Any] | None = None
         execution_error: Exception | None = None
+        revocation_error: str | None = None
         try:
             result = self._request(
                 self.host_url,
@@ -184,20 +185,24 @@ class CoreGrantExecutionHost:
             execution_error = exc
         finally:
             try:
-                self._request(
+                revoked = self._request(
                     self.core_url,
                     "POST",
                     f"/works/{work_path}/execution-grants/{quote(str(grant_id), safe='')}/revoke",
                     service_id=self.agent_id,
                     credential=self.agent_credential,
                 )
+                if revoked.get("status") != "revoked":
+                    raise CoreGrantExecutionError("grant_revocation_not_confirmed")
             except Exception as revoke_exc:
-                if execution_error is None:
-                    execution_error = CoreGrantExecutionError(
-                        "grant_revocation_failed:" + type(revoke_exc).__name__
-                    )
+                revocation_error = str(revoke_exc) or type(revoke_exc).__name__
 
-        if execution_error is not None:
+        if execution_error is not None or revocation_error is not None:
+            blockers = []
+            if execution_error is not None:
+                blockers.append(str(execution_error))
+            if revocation_error is not None:
+                blockers.append("grant_revocation_failed:" + revocation_error)
             return {
                 "status": "BLOCKED",
                 "work_id": str(context.work_id),
@@ -206,10 +211,12 @@ class CoreGrantExecutionHost:
                 "run_record_persisted": bool(
                     result and result.get("run_record_persisted")
                 ),
-                "blocker": str(execution_error),
+                "grant_revocation_confirmed": revocation_error is None,
+                "blocker": ";".join(blockers),
             }
         return {
             **(result or {}),
             "grant_id": grant_id,
+            "grant_revocation_confirmed": True,
             "grant_revoked_after_run": True,
         }

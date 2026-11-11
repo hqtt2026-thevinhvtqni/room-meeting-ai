@@ -451,3 +451,36 @@ def test_journal_tampering_fails_closed(tmp_path):
     authority.store_path.write_text(raw.replace("grant_issued", "grant_issuEd"), encoding="utf-8")
     with pytest.raises(AuthorityError, match="authority_journal_hash_invalid"):
         validate(authority, grant)
+
+
+def test_expired_grant_can_be_revoked_and_revocation_is_idempotent(tmp_path):
+    from datetime import datetime, timedelta
+
+    authority, request = make_authority(tmp_path)
+    grant = issue(authority, request)
+    expiry = datetime.fromisoformat(grant["expires_at"])
+    authority.clock = lambda: expiry + timedelta(seconds=1)
+
+    revoked = authority.revoke_grant(
+        work_id="W32",
+        grant_id=grant["grant_id"],
+        service_id="agent-ka-service",
+        credential="agent-secret-32-byte-minimum-credential",
+    )
+    assert revoked["status"] == "revoked"
+
+    repeated = authority.revoke_grant(
+        work_id="W32",
+        grant_id=grant["grant_id"],
+        service_id="agent-ka-service",
+        credential="agent-secret-32-byte-minimum-credential",
+    )
+    assert repeated == revoked
+
+    events = [
+        json.loads(line)
+        for line in authority.store_path.read_text(encoding="utf-8").splitlines()
+    ]
+    assert [event["event_type"] for event in events] == [
+        "grant_issued", "grant_revoked"
+    ]

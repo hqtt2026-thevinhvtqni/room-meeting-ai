@@ -303,8 +303,29 @@ class GrantedExecutionHost:
         finished_at = _utcnow()
         stdout_path = run_dir / "stdout.log"
         stderr_path = run_dir / "stderr.log"
-        stdout_path.write_text(stdout, encoding="utf-8")
-        stderr_path.write_text(stderr, encoding="utf-8")
+        evidence_path = run_dir / "RUN_EVIDENCE.json"
+        evidence_errors: list[str] = []
+        stdout_sha256 = hashlib.sha256(stdout.encode("utf-8")).hexdigest()
+        stderr_sha256 = hashlib.sha256(stderr.encode("utf-8")).hexdigest()
+
+        for target, content in ((stdout_path, stdout), (stderr_path, stderr)):
+            try:
+                target.write_text(content, encoding="utf-8")
+                if target == stdout_path:
+                    stdout_sha256 = _hash_file(target)
+                else:
+                    stderr_sha256 = _hash_file(target)
+            except Exception as exc:
+                evidence_errors.append(target.name + ":" + type(exc).__name__)
+
+        evidence_persisted = not evidence_errors
+        reported_status = "BLOCKED" if evidence_errors else status
+        reported_blocker = blocker
+        if evidence_errors:
+            reported_blocker = "run_evidence_persistence_failed"
+            if blocker:
+                reported_blocker += ":" + blocker
+
         evidence = {
             "run_id": run_id,
             "grant_id": grant_id,
@@ -321,18 +342,45 @@ class GrantedExecutionHost:
             "environment_id": binding["environment_id"],
             "started_at": started_at,
             "finished_at": finished_at,
-            "status": status,
+            "status": reported_status,
+            "execution_status": status,
             "exit_code": exit_code,
-            "blocker": blocker,
-            "stdout_sha256": _hash_file(stdout_path),
-            "stderr_sha256": _hash_file(stderr_path),
+            "blocker": reported_blocker,
+            "stdout_sha256": stdout_sha256,
+            "stderr_sha256": stderr_sha256,
+            "evidence_persisted": evidence_persisted,
+            "evidence_errors": list(evidence_errors),
         }
-        evidence_path = run_dir / "RUN_EVIDENCE.json"
-        evidence_path.write_text(
-            json.dumps(evidence, sort_keys=True, indent=2, ensure_ascii=False) + "\n",
-            encoding="utf-8",
-        )
-        evidence_sha256 = _hash_file(evidence_path)
+        evidence_file_verified = False
+        try:
+            evidence_path.write_text(
+                json.dumps(evidence, sort_keys=True, indent=2, ensure_ascii=False) + "\n",
+                encoding="utf-8",
+            )
+            evidence_sha256 = _hash_file(evidence_path)
+            evidence_file_verified = True
+        except Exception as exc:
+            evidence_errors.append(evidence_path.name + ":" + type(exc).__name__)
+            evidence_persisted = False
+            reported_status = "BLOCKED"
+            reported_blocker = "run_evidence_persistence_failed"
+            if blocker:
+                reported_blocker += ":" + blocker
+            evidence.update({
+                "status": reported_status,
+                "blocker": reported_blocker,
+                "evidence_persisted": False,
+                "evidence_errors": list(evidence_errors),
+            })
+            evidence_sha256 = hashlib.sha256(
+                json.dumps(
+                    evidence, sort_keys=True, separators=(",", ":"),
+                    ensure_ascii=False,
+                ).encode("utf-8")
+            ).hexdigest()
+        evidence_ref = str(evidence_path) if evidence_file_verified else None
+        stdout_ref = str(stdout_path) if stdout_path.is_file() else None
+        stderr_ref = str(stderr_path) if stderr_path.is_file() else None
 
         if not run_started_persisted:
             return {
@@ -342,17 +390,20 @@ class GrantedExecutionHost:
                 "blocker": blocker or "run_start_record_not_persisted",
                 "run_record_started": False,
                 "run_record_persisted": False,
-                "evidence_ref": str(evidence_path),
-                "stdout_ref": str(stdout_path),
-                "stderr_ref": str(stderr_path),
+                "evidence_ref": evidence_ref,
+                "stdout_ref": stdout_ref,
+                "stderr_ref": stderr_ref,
                 **self.identity(),
             }
         completion = {
             "finished_at": finished_at,
-            "status": status,
+            "status": reported_status,
+            "execution_status": status,
             "exit_code": exit_code,
             "evidence_sha256": evidence_sha256,
-            "evidence_ref": str(evidence_path),
+            "evidence_ref": evidence_ref,
+            "evidence_persisted": evidence_persisted,
+            "evidence_errors": list(evidence_errors),
             "stdout_sha256": evidence["stdout_sha256"],
             "stderr_sha256": evidence["stderr_sha256"],
         }
@@ -368,9 +419,9 @@ class GrantedExecutionHost:
                 "blocker": "run_record_completion_failed:" + type(exc).__name__,
                 "run_record_started": True,
                 "run_record_persisted": False,
-                "evidence_ref": str(evidence_path),
-                "stdout_ref": str(stdout_path),
-                "stderr_ref": str(stderr_path),
+                "evidence_ref": evidence_ref,
+                "stdout_ref": stdout_ref,
+                "stderr_ref": stderr_ref,
                 **self.identity(),
             }
 
@@ -379,8 +430,9 @@ class GrantedExecutionHost:
             "run_record": persisted,
             "run_record_started": True,
             "run_record_persisted": True,
-            "evidence_ref": str(evidence_path),
-            "stdout_ref": str(stdout_path),
-            "stderr_ref": str(stderr_path),
+            "evidence_persisted": evidence_persisted,
+            "evidence_ref": evidence_ref,
+            "stdout_ref": stdout_ref,
+            "stderr_ref": stderr_ref,
             **self.identity(),
         }

@@ -415,15 +415,26 @@ class ExecutionAuthority:
     ) -> dict[str, Any]:
         actor = self._identity(service_id, credential, kind="agent")
         with self._locked():
-            grant = self._find_grant(work_id, grant_id)
+            grants, _ = self._read_state()
+            grant = grants.get(grant_id)
+            if grant is None or grant.get("work_id") != work_id:
+                raise AuthorityError("grant_not_found", 404)
             if grant["issuer_service_id"] != service_id:
                 raise AuthorityError("grant_revoke_not_permitted", 403)
+            if grant.get("status") == "revoked":
+                return {
+                    "grant_id": grant_id,
+                    "status": "revoked",
+                    "revoked_at": grant.get("revoked_at"),
+                }
             payload = {
                 "grant_id": grant_id,
                 "work_id": work_id,
                 "revoked_by": actor["principal_id"],
                 "revoked_at": _iso(self.clock()),
             }
+            # Expired grants are already non-authorizing. Persist an explicit
+            # revoke event so cleanup is idempotent and auditable.
             self._append("grant_revoked", payload)
         return {"grant_id": grant_id, "status": "revoked", "revoked_at": payload["revoked_at"]}
 

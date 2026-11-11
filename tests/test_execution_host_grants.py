@@ -318,3 +318,32 @@ def test_host_blocks_when_core_is_unreachable_before_grant_validation(tmp_path):
     assert result["status"] == "BLOCKED"
     assert authority.started == []
     assert authority.records == []
+
+
+def test_host_completes_blocked_run_record_when_local_evidence_write_fails(
+    tmp_path, monkeypatch
+):
+    binding = make_binding(tmp_path)
+    authority = FakeAuthorityClient(binding)
+    original_write_text = Path.write_text
+
+    def fail_stdout(path, content, *args, **kwargs):
+        if path.name == "stdout.log":
+            raise OSError("disk_full")
+        return original_write_text(path, content, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "write_text", fail_stdout)
+    result = GrantedExecutionHost(authority).execute_for_work(
+        "W32", "grant-test", "secret-token"
+    )
+
+    assert result["status"] == "BLOCKED"
+    assert result["execution_status"] == "PASS"
+    assert result["blocker"].startswith("run_evidence_persistence_failed")
+    assert result["run_record_started"] is True
+    assert result["run_record_persisted"] is True
+    assert result["evidence_persisted"] is False
+    assert len(authority.records) == 1
+    assert authority.records[0]["status"] == "BLOCKED"
+    assert authority.records[0]["execution_status"] == "PASS"
+    assert authority.records[0]["evidence_persisted"] is False
