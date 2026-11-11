@@ -1943,3 +1943,43 @@ Implement test-only Core fixture bootstrap and its lifecycle regression first. T
 1. Observe the branch CI result and strict mirror lane; inspect exact logs for any source/workflow errors.
 2. If source lanes pass and the Windows runner is enabled, validate Playwright/Chromium and the job-owned process lifecycle on the runner.
 3. Request PC intervention only if the workflow produces a concrete runner-side blocker that cannot be resolved in source.
+
+
+---
+
+## W32-LOG-20261111-97 — HARDEN SELF-HOSTED WORKSPACE CHECKOUT REUSE
+
+- **Work:** Work32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P1 — deterministic exact-SHA checkout on persistent Windows runner
+- **Name:** Ka
+- **Title:** CSA / Delegated Work32 Execution Owner
+- **Date-Time:** 2026-11-11, Asia/Ho_Chi_Minh
+- **Status:** SOURCE PATCH COMMITTED — RUNTIME VERIFICATION PENDING
+
+### Finding
+
+The Windows job used `git init .` followed by unconditional `git remote add origin`. A self-hosted runner can retain its Work32 workspace between jobs; if `.git/config` already contains `origin`, the step can fail before fetching the requested SHA.
+
+### Change
+
+- Reuses and updates the existing `origin` URL when present; otherwise adds it.
+- Checks each Git operation for failure.
+- Fetches only the triggering `GITHUB_SHA`, then runs `git clean -ffdx` inside the Work32 `GITHUB_WORKSPACE` only, and checks out `FETCH_HEAD` detached.
+- Verifies the resulting HEAD equals the triggering SHA.
+- Does not clean parent runner directories, `RUNNER_TEMP`, WORK09, or another workspace.
+- Active workflow blob: `d05354285f4a64d47d2a8a6fd0f38499a7c0d6b3`.
+- Mirror workflow blob: `d05354285f4a64d47d2a8a6fd0f38499a7c0d6b3`.
+- Active workflow and mirror were fetched after writes; blob SHA equality confirms identical content.
+
+### Verification
+
+- **PASS — source readback:** both workflow files fetched after update.
+- **PASS — mirror identity:** active/mirror blob SHA identical.
+- **NOT YET VERIFIED:** PowerShell execution on ADMIN-PC, persistent workspace reuse behavior, strict mirror checker, Windows E2E and teardown.
+- No readiness variable changed; no workflow manually rerun; no WORK09 action; no main/release/deploy action.
+- Work32 remains **ACTIVE — NOT RELEASED**.
+
+### Next
+
+Observe the CI run for this exact branch revision and resolve only evidence-backed failures before requesting any PC action.
