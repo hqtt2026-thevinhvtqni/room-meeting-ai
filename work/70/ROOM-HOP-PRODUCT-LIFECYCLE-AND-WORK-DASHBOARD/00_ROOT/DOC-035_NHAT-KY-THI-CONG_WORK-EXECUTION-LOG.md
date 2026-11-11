@@ -1512,3 +1512,15 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - **VERIFY STATUS:** GitHub write acknowledgements received. Exact readback/hash/content verification for all four updated/created files remains pending in this entry; no test, benchmark, CI, independent QE or Sandbox parity was performed. No production code/runtime changed.
 - **Next:** exact-fetch all four paths and compare content; then reconcile the W103 plan into its verified canonical Sandbox manifest/register/journal, preserving one official path. Before benchmark, verify immutable corpus/query snapshot and blind-label gate. If unavailable, BLOCKED; do not fabricate or unseal labels.
 - **Status:** DOCUMENTATION WRITE ACKNOWLEDGED / READBACK PENDING / BENCHMARK NOT RUN / PRODUCTION NOT AUTHORIZED.
+
+
+### W70-LOG-20261111-01 — Exact GitHub main readback
+- **Verification time:** 2026-11-11 19:46 +07:00.
+- Exact fetch from `main` returned all five expected artifacts:
+  - DOC-096: blob `d59d11fa2a9ebc72b99f0ed759d745f0c641e1d4`, 4,616 UTF-8 bytes; DecisionRAG content present.
+  - DOC-095: blob `efb8243bda107cb0ced5be2de93a1ecb5c9cd563`, 4,397 bytes; DecisionRAG architecture addendum present.
+  - DOC-055: blob `4c540c6c71e24a763befb7a479f44076fe6210c1`, 42,132 bytes; DOC-096 registration row present.
+  - DOC-035: blob before this verification addendum `f6bc8de722f51a4a162f96bf78f393f2eb0de2ae`, 253,840 bytes; event W70-LOG-20261111-01 present.
+  - W103 experiment plan: blob `97ae3873caa15f3260b1d8a172747cad19f32881`, 4,827 bytes; DecisionRAG experiment protocol present.
+- **Result:** GitHub main exact-path readback PASS for all five artifacts. This verifies file existence/content markers, not byte parity with Sandbox. Sandbox comparison, CI, benchmark, independent QE and production verification remain NOT RUN.
+- **Next:** retrieve the canonical W103 Sandbox manifest/register/journal and reconcile this plan to those records; do not create competing governance files. Confirm corpus/query snapshot and blind-label gate before any experiment.
