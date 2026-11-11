@@ -406,6 +406,16 @@ def test_concurrent_core_instances_append_valid_hash_chain(tmp_path):
         )["status"] == "active"
 
 
+
+def test_work_policy_rejects_evidence_inside_source_workspace(tmp_path):
+    authority, request = make_authority(tmp_path)
+    evidence_inside = Path(authority.works["W32"]["execution_workspace"]) / "evidence"
+    evidence_inside.mkdir()
+    authority.works["W32"]["evidence_root"] = str(evidence_inside)
+    with pytest.raises(AuthorityError, match="work_policy_paths_invalid"):
+        issue(authority, request)
+
+
 def test_journal_tampering_fails_closed(tmp_path):
     authority, request = make_authority(tmp_path)
     grant = issue(authority, request)
