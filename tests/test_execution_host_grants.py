@@ -124,6 +124,9 @@ def test_host_revalidates_immediately_before_process_effect(tmp_path):
     binding = {
         "work_id": "W32",
         "work_name": "ROOM-HOP-WORK-32",
+        "repository": REPOSITORY,
+        "branch": BRANCH,
+        "expected_head": expected_head,
         "purpose": "pytest_run",
         "assignment_id": "W32-EXECUTION-AUTHORITY",
         "task_id": "W32-P0-PYTEST",
@@ -176,6 +179,9 @@ def test_host_does_not_spawn_when_core_cannot_persist_run_start(tmp_path):
     binding = {
         "work_id": "W32",
         "work_name": "ROOM-HOP-WORK-32",
+        "repository": REPOSITORY,
+        "branch": BRANCH,
+        "expected_head": expected_head,
         "purpose": "pytest_run",
         "assignment_id": "W32-EXECUTION-AUTHORITY",
         "task_id": "W32-P0-PYTEST",
