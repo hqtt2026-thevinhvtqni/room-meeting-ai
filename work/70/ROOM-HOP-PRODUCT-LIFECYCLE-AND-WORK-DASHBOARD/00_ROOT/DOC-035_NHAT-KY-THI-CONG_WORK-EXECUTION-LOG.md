@@ -1499,3 +1499,16 @@ Ket qua: sandbox_list Work 70 tra status ok; danh muc Sandbox co DOC-057 Work En
 - **Structural checks:** DOC-093 JSON parse PASS; execution_contract.mode=END_TO_END_DELEGATED_OUTCOME; 36 Agent Tasks. DOC-094 JSON parse PASS; required top-level schema keys all present; 2 Product Tasks, 18 Phase Tasks, 72 shared Agent Task references. DOC-094 schema JSON parse PASS. Full automated JSON Schema validation and dashboard regeneration/browser verification NOT RUN.
 - **Outcome:** documentation readback PASS for the listed canonical files; structural validation PARTIAL (JSON parse and required-key check only). No runtime dispatch, coder ACK, source implementation, tests, gate PASS or full dashboard refresh is claimed.
 - **Next:** apply task operating contract to remaining Work task registers through controlled migration; do not change W1111 coder statuses until exact ACK and authorization are evidenced.
+
+
+## W70-LOG-20261111-01 — Retrieval đa phương pháp và tiếp nhận DecisionRAG cho Work 103
+- **Time:** 2026-11-11 19:38–19:45 +07:00.
+- **Actor / Authority:** Xu / AI-01; authority Vinh.
+- **Scope:** W70 DOC-095 architecture baseline, DOC-096 retrieval strategy, DOC-055 register, W103 DecisionRAG experiment plan; GitHub repository `hqtt2026-thevinhvtqni/room-meeting-ai`, branch `main`.
+- **READ/TRACE:** exact-read DOC-095, DOC-055, DOC-035 và W103 blind-label gate `work/103/ROOM-HOP-RAG-RETRIEVAL-CAPABILITY/06_EVIDENCE/BLIND_LABELING_GATE_STATUS_20261028.md`. Gate source states BLOCKED pending independently frozen blind labels/corpus snapshot; preserve it. Search did not locate a current canonical W103 manifest/journal or an exact GitHub copy of `03_ARCHITECTURE/RAG_RETRIEVAL_ARCHITECTURE.md`; do not infer those exist.
+- **DECIDE:** retrieval is a pluggable capability under the single ROOM-HOP architecture; no second Core. DecisionRAG is an isolated research candidate, not a baseline replacement or production authorization.
+- **BUILD:** created W70 DOC-096 and W103 DecisionRAG experiment plan. Extended DOC-095 with evidence contract, permissions/provenance, strategy families and evaluation safeguards. Registered DOC-096 in DOC-055.
+- **GIT:** DOC-096 create commit `bdafae2a59e8e2015d6c98f1f01b120e6b20e7ff`; W103 experiment plan create commit `9409c810305a2f52ecb392734ba04c8a8131289d`; DOC-095 update commit `a987abfdd9a50abf7744fe595e96ead4ecf24813`; DOC-055 update commit `a9d3b53eecd8f67ad6927de2fe42c6d567a6199a`.
+- **VERIFY STATUS:** GitHub write acknowledgements received. Exact readback/hash/content verification for all four updated/created files remains pending in this entry; no test, benchmark, CI, independent QE or Sandbox parity was performed. No production code/runtime changed.
+- **Next:** exact-fetch all four paths and compare content; then reconcile the W103 plan into its verified canonical Sandbox manifest/register/journal, preserving one official path. Before benchmark, verify immutable corpus/query snapshot and blind-label gate. If unavailable, BLOCKED; do not fabricate or unseal labels.
+- **Status:** DOCUMENTATION WRITE ACKNOWLEDGED / READBACK PENDING / BENCHMARK NOT RUN / PRODUCTION NOT AUTHORIZED.
