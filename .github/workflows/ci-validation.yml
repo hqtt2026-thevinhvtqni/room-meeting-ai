@@ -511,7 +511,7 @@ jobs:
           } else {
             Write-Output "git=NOT_FOUND"
           }
-          foreach ($port in @(8010, 8020, 8030, 8031, 8787)) {
+          foreach ($port in @(8000, 8010, 8020, 8030, 8031, 8787)) {
             $listeners = @(Get-NetTCPConnection -State Listen -LocalPort $port -ErrorAction SilentlyContinue)
             if ($listeners.Count -eq 0) {
               Write-Output "port=$port listener=ABSENT"
@@ -520,7 +520,31 @@ jobs:
             foreach ($listener in $listeners) {
               $process = Get-CimInstance Win32_Process -Filter "ProcessId = $($listener.OwningProcess)"
               $processName = if ($process) { $process.Name } else { "UNKNOWN" }
-              Write-Output "port=$port address=$($listener.LocalAddress) pid=$($listener.OwningProcess) process=$processName"
+              $owner = "UNKNOWN"
+              $entrypointMatch = "NOT_CHECKED"
+              if ($process) {
+                try {
+                  $ownerResult = Invoke-CimMethod -InputObject $process -MethodName GetOwner -ErrorAction Stop
+                  if ($ownerResult.ReturnValue -eq 0) {
+                    $owner = "$($ownerResult.Domain)\\$($ownerResult.User)"
+                  }
+                } catch {}
+                $expectedEntrypoint = switch ($port) {
+                  8000 { "room_hop_mcp.core_http_main" }
+                  8031 { "execution_host.server" }
+                  default { "" }
+                }
+                if ($expectedEntrypoint) {
+                  $entrypointMatch = [bool]($process.CommandLine -match [regex]::Escape($expectedEntrypoint))
+                }
+              }
+              if ($port -in @(8000, 8031) -and $listener.LocalAddress -notin @("127.0.0.1", "::1")) {
+                throw "BLOCKED: protected service port $port is not loopback-bound ($($listener.LocalAddress))"
+              }
+              if ($port -in @(8000, 8031) -and $entrypointMatch -eq $false) {
+                throw "BLOCKED: unexpected process entrypoint on protected service port $port"
+              }
+              Write-Output "port=$port address=$($listener.LocalAddress) pid=$($listener.OwningProcess) process=$processName owner=$owner entrypoint_match=$entrypointMatch"
             }
           }
   release_gate:
