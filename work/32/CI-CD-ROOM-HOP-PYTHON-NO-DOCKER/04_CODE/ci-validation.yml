@@ -417,7 +417,7 @@ jobs:
 
           $workspace = (Resolve-Path $env:GITHUB_WORKSPACE).Path
           $runnerTemp = (Resolve-Path $env:RUNNER_TEMP).Path
-          $runnerPrefix = $runnerTemp.TrimEnd('\\') + '\\'
+          $runnerPrefix = $runnerTemp.TrimEnd('\') + '\'
           $ephemeral = @(
             $env:PLAYWRIGHT_BROWSERS_PATH,
             $env:W32_PYTHON_ROOT,
