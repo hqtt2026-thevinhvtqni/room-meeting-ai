@@ -191,12 +191,20 @@ class ExecutionAuthority:
     def _identity(self, service_id: str, credential: str, *, kind: str) -> dict[str, Any]:
         if not service_id or not credential:
             raise AuthorityError("service_identity_required", 401)
+        if not isinstance(credential, str) or len(credential) < 32:
+            raise AuthorityError("service_credential_invalid", 401)
         record = self.identities.get(service_id)
         if not isinstance(record, dict) or record.get("kind") != kind:
             raise AuthorityError("service_identity_not_enrolled", 403)
         expected = record.get("credential_sha256", "")
+        if (
+            not isinstance(expected, str)
+            or len(expected) != 64
+            or any(ch not in "0123456789abcdef" for ch in expected)
+        ):
+            raise AuthorityError("service_credential_config_invalid", 503)
         actual = _sha256(credential.encode("utf-8"))
-        if not isinstance(expected, str) or not hmac.compare_digest(expected, actual):
+        if not hmac.compare_digest(expected, actual):
             raise AuthorityError("service_credential_invalid", 401)
         principal_id = record.get("principal_id")
         if kind == "agent":
