@@ -237,3 +237,5 @@ DOC-061 has one canonical Work 70 path on main: `05_BUILD/03_ARCHITECTURE/DOC-06
 
 
 **D70-022 verification addendum — 2026-11-10:** Exact GitHub main readback completed for DOC-006, DOC-034, DOC-035, DOC-056, DOC-093, DOC-094 and this DOC-055 register entry. DOC-093 and DOC-094 parse as valid JSON; DOC-094 required top-level schema keys are present. Full JSON Schema validation, Dashboard projection regeneration/browser verification and Sandbox parity are NOT RUN / NOT VERIFIED. See DOC-035 event “Verify D70-022 documentation and task contract”.
+
+| DOC-096 | P1 | 96 | Chiến lược Retrieval đa phương pháp và tiếp nhận DecisionRAG / Retrieval Strategy and DecisionRAG Adoption | 03_ARCHITECT/DOC-096_RETRIEVAL-STRATEGY-AND-DECISIONRAG-ADOPTION.md | DOC-001; DOC-006; DOC-009; DOC-035; DOC-095 | DESIGN ADDENDUM — RESEARCH ONLY; PRODUCTION NOT AUTHORIZED | Chuẩn hóa retrieval như capability đa chiến lược, evidence contract, kiểm soát quyền/provenance và lộ trình thử nghiệm DecisionRAG tại W103. |
