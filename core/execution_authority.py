@@ -559,6 +559,9 @@ class ExecutionAuthority:
             payload = {
                 **record,
                 "started_at": start_record["started_at"],
+                "repository": start_record["repository"],
+                "branch": start_record["branch"],
+                "expected_head": start_record["expected_head"],
                 "command": start_record["command"],
                 "source_sha256": start_record["source_sha256"],
                 "environment_id": start_record["environment_id"],
