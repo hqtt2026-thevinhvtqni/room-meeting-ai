@@ -251,7 +251,7 @@ jobs:
           $archive = Join-Path $env:RUNNER_TEMP "python-3.12.9-embed-amd64.zip"
           $download = "https://www.python.org/ftp/python/3.12.9/python-3.12.9-embed-amd64.zip"
           Invoke-WebRequest -Uri $download -OutFile $archive
-          if ($LASTEXITCODE -ne 0 -or -not (Test-Path -LiteralPath $archive)) { throw "BLOCKED: official Python embeddable archive download failed" }
+          if (-not (Test-Path -LiteralPath $archive)) { throw "BLOCKED: official Python embeddable archive download failed" }
           $archiveBytes = (Get-Item -LiteralPath $archive).Length
           if ($archiveBytes -ne 11098289) { throw "BLOCKED: unexpected Python embeddable archive size: $archiveBytes" }
           $archiveHash = (Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant()
@@ -273,7 +273,10 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw "BLOCKED: pip bootstrap failed for embedded Python" }
           $details = & $python -c 'import sys,struct; print("%d.%d.%d|%d|%s" % (sys.version_info[0],sys.version_info[1],sys.version_info[2],struct.calcsize("P")*8,sys.executable))'
           if ($LASTEXITCODE -ne 0 -or $details -notmatch "^3\.12\.9\|64\|") { throw "BLOCKED: portable Python version/architecture verification failed: $details" }
-          [IO.File]::AppendAllText($env:GITHUB_ENV, "W32_PYTHON=$python" + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($false)))
+          $browserRoot = Join-Path $env:RUNNER_TEMP ("w32-playwright-browsers-" + $env:GITHUB_SHA)
+          foreach ($line in @("W32_PYTHON=$python", "W32_PYTHON_ROOT=$pythonRoot", "PLAYWRIGHT_BROWSERS_PATH=$browserRoot")) {
+            [IO.File]::AppendAllText($env:GITHUB_ENV, $line + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($false)))
+          }
           Write-Host "portable_python=$details"
           Write-Host "python_archive_bytes=$archiveBytes"
           Write-Host "python_archive_sha256=$archiveHash"
