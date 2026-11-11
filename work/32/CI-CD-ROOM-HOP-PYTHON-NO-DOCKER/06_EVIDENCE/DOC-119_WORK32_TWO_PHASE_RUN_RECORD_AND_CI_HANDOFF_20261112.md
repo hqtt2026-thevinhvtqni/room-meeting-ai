@@ -20,7 +20,7 @@ Ka selected a two-phase append-only Run Record to prevent a protected process fr
 5. Host writes stdout/stderr and a hashed RUN_EVIDENCE.json.
 6. Host asks Core to append run_completed with outcome, exit code, evidence digest and completion time.
 
-Revocation after a recorded start does not erase the start record and does not prevent the Host from recording the completion of that already-started attempt. Revocation does prevent a new run from starting. No cached ALLOW is accepted.
+Each Grant is single-use: Core rejects a second run_started for the same grant_id. Revocation after a recorded start does not erase the start record and does not prevent the Host from recording the completion of that already-started attempt. Revocation does prevent a new run from starting. No cached ALLOW is accepted.
 
 ## 2. Source changes
 
@@ -28,7 +28,8 @@ Revocation after a recorded start does not erase the start record and does not p
 - Core HTTP exposes POST /works/{work_id}/execution-grants/{grant_id}/runs and POST .../runs/{run_id}/complete.
 - Execution Host Core client exposes start_run and complete_run.
 - GrantedExecutionHost persists the start record before its final online validation and process effect; it completes the record only after evidence is written.
-- Tests cover two-phase persistence, HTTP start/complete and the revocation-before-spawn negative path.
+- Tests cover two-phase persistence, HTTP start/complete, single-use grants, concurrent journal appends, source/evidence path containment and the revocation-before-spawn negative path.
+- The WEE adapter's Host HTTP timeout now covers the maximum bounded pytest timeout plus a safety margin, avoiding premature client timeout while the Host is still executing.
 
 ## 3. CI handoff
 
@@ -42,7 +43,7 @@ Revocation after a recorded start does not erase the start record and does not p
 - No credentials or live Work policy are committed.
 - No Core or Host process has been configured or started.
 - No protected command has been executed.
-- CI result is pending; no PASS is claimed.
+- Run #376 passed the Work32 tooling, 226 unit tests, 112 E2E tests, hosted Windows Browser Adapter and immutable product artifact at its tested merge revision. This is an earlier source snapshot than the subsequent hardening commits; the latest head still requires a new exact-SHA run.
 - Independent security review and live exact-runtime positive/negative tests remain required.
 - Protected execution remains DENIED; Work32 remains ACTIVE — NOT RELEASED.
 
