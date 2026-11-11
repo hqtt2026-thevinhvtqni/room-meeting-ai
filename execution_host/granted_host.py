@@ -144,54 +144,73 @@ class GrantedExecutionHost:
         stdout = ""
         stderr = ""
         blocker = None
+        run_started_persisted = False
         try:
-            # Final online validation immediately before the real process effect.
-            # Re-fetching also ensures a revoke between request admission and
-            # process creation is observed by the Host.
-            latest = self.authority_client.validate_grant(
-                binding["work_id"], grant_id, grant_token
+            self.authority_client.start_run(
+                binding["work_id"],
+                grant_id,
+                grant_token,
+                {
+                    "run_id": run_id,
+                    "command": command,
+                    "source_sha256": actual_source_hash,
+                    "environment_id": binding["environment_id"],
+                    "started_at": started_at,
+                },
             )
-            if latest.get("status") != "active":
-                raise GrantedExecutionError("grant_not_active_at_execution")
-            if (
-                latest.get("source_sha256") != actual_source_hash
-                or latest.get("host_identity_id") != binding["host_identity_id"]
-                or latest.get("test_entrypoint") != command
-            ):
-                raise GrantedExecutionError("grant_binding_changed_before_execution")
-
-            env = safe_env()
-            env.update({
-                "ROOM_HOP_EXECUTION_ID": run_id,
-                "ROOM_HOP_WORK_ID": binding["work_id"],
-                "PYTHONUNBUFFERED": "1",
-            })
-            try:
-                completed = subprocess.run(
-                    command,
-                    cwd=workspace,
-                    env=env,
-                    text=True,
-                    capture_output=True,
-                    timeout=timeout,
-                    check=False,
-                )
-                exit_code = completed.returncode
-                stdout = redact(completed.stdout or "")
-                stderr = redact(completed.stderr or "")
-                status = "PASS" if exit_code == 0 else "FAILED"
-            except subprocess.TimeoutExpired as exc:
-                stdout = redact((exc.stdout or "").decode("utf-8", "replace") if isinstance(exc.stdout, bytes) else (exc.stdout or ""))
-                stderr = redact((exc.stderr or "").decode("utf-8", "replace") if isinstance(exc.stderr, bytes) else (exc.stderr or ""))
-                status = "TIMEOUT"
-                blocker = "execution_timeout"
+            run_started_persisted = True
         except Exception as exc:
-            blocker = (
-                exc.code if hasattr(exc, "code")
-                else str(exc) if isinstance(exc, GrantedExecutionError)
-                else "execution_blocked:" + type(exc).__name__
-            )
+            blocker = "run_start_persistence_failed:" + type(exc).__name__
             status = "BLOCKED"
+
+        if run_started_persisted:
+            try:
+                # Final online validation immediately before the real process effect.
+                # A revoke after run-start but before process creation is observed here.
+                latest = self.authority_client.validate_grant(
+                    binding["work_id"], grant_id, grant_token
+                )
+                if latest.get("status") != "active":
+                    raise GrantedExecutionError("grant_not_active_at_execution")
+                if (
+                    latest.get("source_sha256") != actual_source_hash
+                    or latest.get("host_identity_id") != binding["host_identity_id"]
+                    or latest.get("test_entrypoint") != command
+                ):
+                    raise GrantedExecutionError("grant_binding_changed_before_execution")
+
+                env = safe_env()
+                env.update({
+                    "ROOM_HOP_EXECUTION_ID": run_id,
+                    "ROOM_HOP_WORK_ID": binding["work_id"],
+                    "PYTHONUNBUFFERED": "1",
+                })
+                try:
+                    completed = subprocess.run(
+                        command,
+                        cwd=workspace,
+                        env=env,
+                        text=True,
+                        capture_output=True,
+                        timeout=timeout,
+                        check=False,
+                    )
+                    exit_code = completed.returncode
+                    stdout = redact(completed.stdout or "")
+                    stderr = redact(completed.stderr or "")
+                    status = "PASS" if exit_code == 0 else "FAILED"
+                except subprocess.TimeoutExpired as exc:
+                    stdout = redact((exc.stdout or "").decode("utf-8", "replace") if isinstance(exc.stdout, bytes) else (exc.stdout or ""))
+                    stderr = redact((exc.stderr or "").decode("utf-8", "replace") if isinstance(exc.stderr, bytes) else (exc.stderr or ""))
+                    status = "TIMEOUT"
+                    blocker = "execution_timeout"
+            except Exception as exc:
+                blocker = (
+                    exc.code if hasattr(exc, "code")
+                    else str(exc) if isinstance(exc, GrantedExecutionError)
+                    else "execution_blocked:" + type(exc).__name__
+                )
+                status = "BLOCKED"
 
         finished_at = _utcnow()
         stdout_path = run_dir / "stdout.log"
@@ -224,12 +243,20 @@ class GrantedExecutionHost:
         )
         evidence_sha256 = _hash_file(evidence_path)
 
-        record = {
-            "run_id": run_id,
-            "command": command,
-            "source_sha256": actual_source_hash,
-            "environment_id": binding["environment_id"],
-            "started_at": started_at,
+        if not run_started_persisted:
+            return {
+                **evidence,
+                "status": "BLOCKED",
+                "execution_status": status,
+                "blocker": blocker or "run_start_record_not_persisted",
+                "run_record_started": False,
+                "run_record_persisted": False,
+                "evidence_ref": str(evidence_path),
+                "stdout_ref": str(stdout_path),
+                "stderr_ref": str(stderr_path),
+                **self.identity(),
+            }
+        completion = {
             "finished_at": finished_at,
             "status": status,
             "exit_code": exit_code,
@@ -239,15 +266,16 @@ class GrantedExecutionHost:
             "stderr_sha256": evidence["stderr_sha256"],
         }
         try:
-            persisted = self.authority_client.record_run(
-                binding["work_id"], grant_id, grant_token, record
+            persisted = self.authority_client.complete_run(
+                binding["work_id"], grant_id, grant_token, run_id, completion
             )
         except Exception as exc:
             return {
                 **evidence,
                 "status": "BLOCKED",
                 "execution_status": status,
-                "blocker": "run_record_persistence_failed:" + type(exc).__name__,
+                "blocker": "run_record_completion_failed:" + type(exc).__name__,
+                "run_record_started": True,
                 "run_record_persisted": False,
                 "evidence_ref": str(evidence_path),
                 "stdout_ref": str(stdout_path),
@@ -258,6 +286,7 @@ class GrantedExecutionHost:
         return {
             **evidence,
             "run_record": persisted,
+            "run_record_started": True,
             "run_record_persisted": True,
             "evidence_ref": str(evidence_path),
             "stdout_ref": str(stdout_path),
