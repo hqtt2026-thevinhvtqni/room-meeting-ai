@@ -1,0 +1,76 @@
+--- a/execution_host/host.py
++++ b/execution_host/host.py
+@@
+     def execute_command(
+         self,
+         ctx: WorkContext,
+         command: list[str],
+         timeout_seconds: float = 30.0,
++        *,
++        step_name: str = "command",
+     ) -> dict[str, Any]:
+ 
+         root, workspace, evidence = validate_context(ctx)
+ 
++        if step_name not in {"command", "test"}:
++            raise HostError("invalid_evidence_stage")
+         args = validate_command(command)
+@@
+         out_path = (
+             evidence
+             / ctx.execution_id
+             / "runtime"
++            / step_name
+             / "stdout.log"
+         )
+@@
+         err_path = (
+             evidence
+             / ctx.execution_id
+             / "runtime"
++            / step_name
+             / "stderr.log"
+         )
+@@
+         result = self.execute_command(
+             execution_ctx,
+             list(request.command or ()),
+             request.timeout_seconds,
++            step_name="command",
+         )
+@@
+                 result["test"] = (
+                     self.execute_command(
+                         execution_ctx,
+                         list(
+                             execution_ctx.test_entrypoint
+                         ),
+                         request.timeout_seconds,
++                        step_name="test",
+                     )
+                 )
++
++            test_result = result.get("test")
++            test_status = (
++                test_result.get("status")
++                if isinstance(test_result, dict)
++                else None
++            )
++            if result.get("status") == "PASS" and test_status != "PASS":
++                result["primary_command_status"] = result.get("status")
++                result["primary_command_exit_code"] = result.get("exit_code")
++                result["status"] = (
++                    test_status
++                    if test_status in {"FAILED", "TIMEOUT", "BLOCKED"}
++                    else "BLOCKED"
++                )
++                result["exit_code"] = (
++                    test_result.get("exit_code")
++                    if isinstance(test_result, dict)
++                    else None
++                )
++                result["blocker"] = (
++                    (test_result.get("blocker") or test_result.get("reason"))
++                    if isinstance(test_result, dict)
++                    else None
++                ) or "test_result_not_pass"
