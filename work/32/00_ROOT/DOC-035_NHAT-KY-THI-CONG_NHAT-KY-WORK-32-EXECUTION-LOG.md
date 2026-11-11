@@ -1646,3 +1646,58 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 3. Review cross-process journal locking/replay, credential mapping, expiry/revocation race and Run Record semantics.
 4. Verify exact WorkContext → LifecycleController → Core Grant → Execution Host path with positive and negative E2E.
 5. Obtain independent security review; keep protected execution denied until runtime config and exact-build evidence are verified.
+
+---
+
+## W32-LOG-20261112-113 — RUN #376 PASS / POST-RUN SECURITY HARDENING
+
+- **Work:** 32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P0 — Core-owned Execution Authority
+- **Name:** Ka
+- **Title:** CSA / Work32 Execution Owner
+- **Date-Time:** 2026-11-12 00:25 Asia/Ho_Chi_Minh
+- **Implementation branch:** work/32-core-owned-execution-authority-20261112
+- **Implementation branch HEAD at this entry:** 3ecbdfb982d100440bd735950231050b8f4d7717
+- **PR #52 tested head:** 7958570c468ded3d87af79527137bf9f9b201c12
+- **Run #376:** 43072231235
+- **Workflow tested merge revision:** dda4560e11c4a4580c1bfd8282ec7ab676a8cd54 (merge of PR #52 head 7958570 and main a663bd5)
+- **Status:** RUN #376 PASS ON EARLIER SOURCE SNAPSHOT; LATER HARDENING RETEST PENDING.
+
+### Run #376 observed evidence
+
+- Work32 tooling/workflow mirror: PASS.
+- Python 3.12 bounded unit lane: 226 passed, 14 Pydantic deprecation warnings in 7.69s.
+- Product Auto E2E lane: 112 passed in 9.19s.
+- Windows Browser Adapter lane: 10 passed in 3.92s; disposable fixture/preflight PASS; adapter PID 8740 cleanup PASS.
+- Important runner boundary: Windows Browser Adapter ran on hosted PR Windows; dedicated Work32 runner identity step was SKIPPED because the event was pull_request. This is not proof that ROOM-HOP-W32-PC self-hosted runner executed.
+- Immutable product artifact: build/checksum/extracted dependency check/artifact E2E PASS.
+- Work32 release acceptance gate: PASS for the workflow's configured lanes only; not a protected-execution release decision.
+
+### Run #372 correction preserved
+
+- Run #372 remains historical FAIL due to the wrong relative import in execution_authority_http.py; it was corrected to import core.execution_authority.
+- Run #376 is a later successful CI run and does not erase Run #372's history.
+
+### Additional hardening after the Run #376 tested source snapshot
+
+- Replaced Pydantic deprecated Config/parse_obj/dict usage with ConfigDict/model_validate/model_dump.
+- Required at least 32 characters for enrolled raw service credentials and validated the configured SHA-256 digest format.
+- Enforced single-use Grant semantics; one Grant can start only one Run Record.
+- Added strict journal transitions: unknown events, duplicate grants, missing revoke targets and invalid run transitions fail closed.
+- Added evidence-root-outside-source-workspace checks and symlink escape rejection.
+- Added two-phase run_started/run_completed persistence and explicit revocation-after-start semantics.
+- Added longer Host HTTP timeout covering the bounded pytest timeout plus margin.
+- Added tests for concurrency across two Core instances, Grant reuse, evidence path containment, high-entropy credentials and Run Record transition semantics.
+- Updated the deployment contract to match actual code and clarified loopback-only runtime constraints.
+
+These later changes are not covered by Run #376. The branch requires a new exact-SHA CI run before any PASS can be assigned to the latest source.
+
+### Current boundaries
+
+- No credentials, live Work policy or durable deployment store has been provisioned.
+- No Core/Host process was started and no protected command was executed.
+- PR #52 remains open and unmerged; PR #51 remains a draft delta review.
+- main remains at its pre-implementation baseline; no Work32 source has been merged.
+- MCP :8020 sandbox_read() restriction remains unchanged.
+- Protected execution remains DENIED; Work32 remains ACTIVE — NOT RELEASED.
