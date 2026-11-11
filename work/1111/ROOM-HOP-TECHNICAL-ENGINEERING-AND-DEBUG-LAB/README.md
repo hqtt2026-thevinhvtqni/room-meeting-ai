@@ -14,9 +14,10 @@ This is the canonical GitHub Work record set for the shared ROOM-HOP technical e
 7. [Implementation Plan](04_PLAN/DOC-008_KE-HOACH-TRIEN-KHAI_IMPLEMENTATION-PLAN.md)
 8. [AI Task Board](05_BUILD/00_ROOT/AI_TASK_BOARD.md)
 9. [Work Execution Journal](00_ROOT/DOC-003_NHAT-KY-THI-CONG_WORK-EXECUTION-LOG.md)
+10. [Git-primary Build Environment](05_BUILD/00_ROOT/GIT_PRIMARY_BUILD_ENVIRONMENT.md)
 
 ## Operating model
-- GitHub main is the canonical home for Work records and source-of-truth code references.
+- GitHub is the primary versioned build/test source of truth. While PR #48 is open, use the active Work branch (see 05_BUILD/00_ROOT/GIT_PRIMARY_BUILD_ENVIRONMENT.md); do not treat main as updated or merged.
 - ROOM-HOP Sandbox Work 1111 is the shared AI collaboration and working-document environment.
 - Keep GitHub and Sandbox aligned by exact path and readback; never assume a successful write means verified sync.
 - Code changes must be scoped and reviewed through an isolated branch/PR; do not push unreviewed code to main.
