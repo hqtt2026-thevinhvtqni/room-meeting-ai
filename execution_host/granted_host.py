@@ -136,6 +136,19 @@ class GrantedExecutionHost:
         if git_head != expected_head.lower():
             raise GrantedExecutionError("execution_git_head_mismatch")
         try:
+            git_top_level = Path(subprocess.run(
+                ["git", "rev-parse", "--show-toplevel"],
+                cwd=workspace,
+                text=True,
+                capture_output=True,
+                timeout=5,
+                check=True,
+            ).stdout.strip()).resolve()
+        except (OSError, subprocess.SubprocessError):
+            raise GrantedExecutionError("execution_git_root_unavailable") from None
+        if _inside(evidence_root, git_top_level):
+            raise GrantedExecutionError("evidence_root_inside_git_repository")
+        try:
             git_branch = subprocess.run(
                 ["git", "branch", "--show-current"],
                 cwd=workspace,
