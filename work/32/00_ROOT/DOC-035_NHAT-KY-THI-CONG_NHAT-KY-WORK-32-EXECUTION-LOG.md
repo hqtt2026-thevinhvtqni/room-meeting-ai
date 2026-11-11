@@ -2115,3 +2115,48 @@ Inspect the next run and continue from the first real failing step; do not reque
 ### Next
 
 Inspect the next exact-SHA run. If setup-python passes, proceed to dependency/browser provisioning and the live disposable fixture.
+
+
+---
+
+## W32-LOG-20261111-101 — REMOVE PRIVILEGED PYTHON INSTALLER FROM WINDOWS RUNNER
+
+- **Work:** Work32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P1 — Python bootstrap under runner service identity
+- **Name:** Ka
+- **Title:** CSA / Delegated Work32 Execution Owner
+- **Date-Time:** 2026-11-11, Asia/Ho_Chi_Minh
+- **Status:** SOURCE PATCH COMMITTED — RETEST PENDING
+
+### Runtime evidence
+
+- Workflow run 42944812752, run number 339, confirmed PowerShell 7 resolution and exact-SHA checkout now pass.
+- Process-scope Execution Policy bypass also allowed setup-python to execute its setup script.
+- setup-python then failed because its installer attempted to remove Python uninstall registry keys under HKEY_LOCAL_MACHINE; the runner service identity is not permitted to modify those keys. This is an environment privilege boundary, not a missing Python package.
+- The same run's Product Auto E2E, Python compile/unit tests, and strict workflow mirror check passed.
+- Windows fixture and Adapter steps did not run; cleanup succeeded and no Adapter process/store was created.
+
+### Corrective source change
+
+- Removed actions/setup-python only from the Windows Browser Adapter job; Linux jobs retain their existing setup-python actions.
+- Windows job now discovers an accessible installed Python 3.12 x64 through the Python launcher or PATH, verifies its version/architecture, creates a disposable venv under RUNNER_TEMP, and exports that venv interpreter path for later steps.
+- Dependency installation, fixture bootstrap, Adapter launch and pytest all invoke the explicit venv interpreter; no registry write or machine-wide Python installation is required.
+- Active workflow blob: 34b88823e85ea12e9f87e3c12c83c3c26aa2a6a1.
+- Mirror workflow blob: 34b88823e85ea12e9f87e3c12c83c3c26aa2a6a1.
+- Active workflow commit: 647360b7b86d70fb7c443ebc78dfd328b7bb5bfa.
+- Mirror workflow commit: 8957009e17b7cc2830fefd06fcf01042794a1fa3.
+- Active and mirror were fetched after writes and their blob SHA values match.
+
+### Verification
+
+- **PASS:** Linux unit/setup-python definition restored and read back unchanged.
+- **PASS:** Windows job no longer invokes actions/setup-python; it uses an isolated venv design.
+- **PASS:** active/mirror content identity by blob SHA.
+- **PENDING:** runner service can discover/use Python 3.12 x64; venv creation; dependency and Chromium installation; Core fixture; Adapter health/PID ownership; live E2E; cleanup.
+- No registry permission or runner service account changed; no WORK09 action; no readiness variable mutation by Ka; no main/release/deploy.
+- Work32 remains **ACTIVE — NOT RELEASED**.
+
+### Next
+
+Inspect the next exact-SHA run. Resolve Python discovery/venv issues from runner evidence before progressing to browser provisioning.
