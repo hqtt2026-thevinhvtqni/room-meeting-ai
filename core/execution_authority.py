@@ -226,7 +226,7 @@ class ExecutionAuthority:
         required = (
             "work_name", "repository", "allowed_branches", "allowed_identities", "allowed_host_identities",
             "allowed_assignments", "allowed_tasks", "workspace_root",
-            "execution_workspace", "evidence_root", "source_sha256",
+            "execution_workspace", "evidence_root",
             "environment_id", "test_entrypoint", "max_timeout_seconds",
         )
         if any(key not in policy for key in required):
@@ -237,9 +237,6 @@ class ExecutionAuthority:
         repository = policy["repository"]
         if not isinstance(repository, str) or len(repository.split("/")) != 2 or not all(repository.split("/")):
             raise AuthorityError("work_policy_repository_invalid", 503)
-        source_hash = policy["source_sha256"]
-        if not isinstance(source_hash, str) or len(source_hash) != 64 or any(ch not in "0123456789abcdef" for ch in source_hash):
-            raise AuthorityError("work_policy_source_hash_invalid", 503)
         if not isinstance(policy["environment_id"], str) or not policy["environment_id"]:
             raise AuthorityError("work_policy_environment_invalid", 503)
         try:
@@ -311,8 +308,8 @@ class ExecutionAuthority:
             raise AuthorityError("task_not_authorized", 403)
         if not host_identity_id or host_identity_id not in policy["allowed_host_identities"]:
             raise AuthorityError("execution_host_not_authorized", 403)
-        if source_sha256 != policy["source_sha256"]:
-            raise AuthorityError("source_revision_not_authorized", 409)
+        if not isinstance(source_sha256, str) or len(source_sha256) != 64 or any(ch not in "0123456789abcdef" for ch in source_sha256):
+            raise AuthorityError("source_sha256_invalid", 422)
         if repository != policy["repository"] or branch not in policy["allowed_branches"]:
             raise AuthorityError("repository_or_branch_not_authorized", 403)
         if not isinstance(expected_head, str) or len(expected_head) not in (40, 64) or any(ch not in "0123456789abcdef" for ch in expected_head):
