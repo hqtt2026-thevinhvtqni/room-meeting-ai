@@ -44,3 +44,10 @@ The probe does not provision or enable Execution Host :8031. It does not prove C
 ## NHẬT KÝ
 - **W32-LOG-20261112-115**
 - Added a separate self-hosted runner identity probe without changing the existing release gate.
+## 5. Run #390 observation and correction
+
+- Run #390 scheduled the probe on the exact runner ROOM-HOP-W32-PC; GitHub log identifies runner version 2.338.2, group Default and machine ADMIN-PC. The runner successfully claimed the job, proving it is connected and matches the self-hosted Windows X64 labels.
+- The first step failed before executing PowerShell statements because the machine's Execution Policy blocked GitHub's temporary .ps1 script. This is a shell-launch policy issue, not a runner registration or label issue.
+- Corrective workflow change: both probe steps now invoke PowerShell with -NoProfile -ExecutionPolicy Bypass -File {0}. This applies only to the job process; it does not modify machine/user ExecutionPolicy.
+- Run #390 remains a failed historical probe. A new run is required to prove the corrected probe.
+- The pull_request release_gate now depends on the probe; it cannot PASS while the probe is queued or failed.
