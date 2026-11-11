@@ -17,7 +17,7 @@ def _safe_endpoint(value: str, *, label: str) -> str:
     value = value.rstrip("/")
     parsed = urlsplit(value)
     loopback_http = parsed.scheme == "http" and parsed.hostname in {"127.0.0.1", "localhost", "::1"}
-    if parsed.username or parsed.password or parsed.query or parsed.fragment:
+    if not parsed.hostname or parsed.username or parsed.password or parsed.query or parsed.fragment:
         raise CoreGrantExecutionError(label + "_invalid_url")
     if parsed.scheme == "https" or loopback_http:
         return value
