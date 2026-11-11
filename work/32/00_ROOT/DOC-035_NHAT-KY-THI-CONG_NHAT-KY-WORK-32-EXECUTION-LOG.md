@@ -2205,3 +2205,45 @@ Inspect the next exact-SHA run. Resolve Python discovery/venv issues from runner
 ### Next
 
 Inspect the next exact-SHA run from portable Python provisioning onward; continue fixing only observed failures.
+---
+
+## W32-LOG-20261111-103 — KEEP JOB-OWNED ADAPTER ALIVE THROUGH LIVE E2E
+
+- **Work:** Work32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P1 — Windows Browser Adapter process lifecycle
+- **Name:** Ka
+- **Title:** CSA / Delegated Work32 Execution Owner
+- **Date-Time:** 2026-11-11, Asia/Ho_Chi_Minh
+- **Status:** SOURCE PATCH COMMITTED — RETEST PENDING
+
+### Runtime evidence
+
+- Workflow run **42945586908** (#353), exact source SHA `f99723d947cb62cbb4c91b61ddc2e1e9790c933a`.
+- Windows runner successfully provisioned portable Python 3.12.9 x64, installed pinned dependencies and Chromium, created the disposable Core meeting fixture, launched the Browser Adapter, verified the process owner/command line and confirmed the job-owned listener.
+- Health response was `{"ok":true,"service":"room-hop-browser-agent-adapter","browser_started":false}`. This is expected before the first browser workflow request.
+- The next separate Actions step failed with WinError 10061 (`127.0.0.1:<dynamic-port>` connection refused) when posting `/browser/execute_workflow`.
+- Retained artifact `13821939945` was downloaded and inspected. Adapter stdout contains only the successful `/health` request; stderr contains normal Uvicorn startup and no application exception or shutdown trace. The process was no longer reachable across the Actions step boundary.
+- Fixture cleanup, Python/browser runtime cleanup and artifact retention all completed successfully. Linux unit, tooling/strict mirror, Product Auto E2E and product artifact lanes passed. Windows E2E and release gate failed.
+
+### Corrective source change
+
+- Evidence isolates the failure to the adapter process lifetime across separate runner steps, not Python provisioning, Chromium installation, fixture creation or listener ownership.
+- Moved the live pytest invocation into the same PowerShell step that starts and validates the exact-checkout Adapter. The process therefore remains in the owning step for the complete E2E request.
+- Added an in-step `finally` block that re-reads PID, executable, command line, store, SHA and owner before stopping only that process; it then verifies the PID has exited.
+- Kept the separate `if: always()` teardown as a second safety boundary for failures before the in-step test/finally section. It still validates process identity before any stop and validates the disposable-store sentinel before deletion.
+- No application code, Core contract, WORK09 process, runner service identity, readiness variable, main branch, release or deployment was changed.
+- Active workflow commit: `d83ff50eaf60bd0eddbacaf1d3d2045eb4ea872f`.
+- Mirror workflow commit: `1a293267fb86669bacbd5f0ad6b489f0828f5af8`.
+- Both workflow files were fetched after writes; identical blob SHA: `884f2fe79c157dbdd3aa41f6ce1a31370f4a129b`.
+
+### Verification
+
+- **PASS:** root cause narrowed using run logs and retained stdout/stderr artifact.
+- **PASS:** active/mirror workflow content and blob SHA identical after patch.
+- **PENDING:** next exact-SHA run must prove live Browser Adapter E2E, in-step owned-process cleanup, disposable-store cleanup and release gate.
+- Work32 remains **ACTIVE — NOT RELEASED**.
+
+### Next
+
+Inspect the next Actions run. Do not claim Windows E2E or release acceptance until the live workflow handoff and transcript readback pass.
