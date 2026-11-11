@@ -95,7 +95,7 @@ class CoreAuthorityClient:
             grant_token=token,
         )
 
-    def record_run(
+    def start_run(
         self,
         work_id: str,
         grant_id: str,
@@ -107,4 +107,31 @@ class CoreAuthorityClient:
             f"/works/{quote(work_id, safe='')}/execution-grants/{quote(grant_id, safe='')}/runs",
             payload=record,
             grant_token=token,
+        )
+
+    def complete_run(
+        self,
+        work_id: str,
+        grant_id: str,
+        token: str,
+        run_id: str,
+        record: dict[str, Any],
+    ) -> dict[str, Any]:
+        return self._request(
+            "POST",
+            f"/works/{quote(work_id, safe='')}/execution-grants/{quote(grant_id, safe='')}/runs/{quote(run_id, safe='')}/complete",
+            payload=record,
+            grant_token=token,
+        )
+
+    def record_run(
+        self,
+        work_id: str,
+        grant_id: str,
+        token: str,
+        record: dict[str, Any],
+    ) -> dict[str, Any]:
+        """Compatibility alias; callers must have created the Run Record first."""
+        return self.complete_run(
+            work_id, grant_id, token, str(record["run_id"]), record
         )
