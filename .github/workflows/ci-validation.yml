@@ -75,44 +75,10 @@ jobs:
           git fetch --no-tags --depth=1 origin "${REVISION}"
           git checkout --detach FETCH_HEAD
 
-      - name: Select installed Python 3.12 x64 and create isolated venv
-        shell: 'pwsh -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File {0}'
-        run: |
-          $python = $null
-          $launcher = Get-Command py.exe -ErrorAction SilentlyContinue
-          if ($launcher) {
-            $candidate = & $launcher.Source -3.12 -c "import sys; print(sys.executable)" 2>$null
-            if ($LASTEXITCODE -eq 0 -and $candidate -and (Test-Path -LiteralPath $candidate.Trim())) {
-              $python = $candidate.Trim()
-            }
-          }
-          if (-not $python) {
-            $candidates = @(where.exe python.exe 2>$null)
-            foreach ($candidate in $candidates) {
-              if (-not (Test-Path -LiteralPath $candidate)) { continue }
-              $details = & $candidate -c 'import sys,struct; print("%d.%d|%d|%s" % (sys.version_info[0],sys.version_info[1],struct.calcsize("P")*8,sys.executable))' 2>$null
-              if ($LASTEXITCODE -eq 0 -and $details) {
-                $parts = $details.Trim().Split("|")
-                if ($parts.Length -ge 3 -and $parts[0] -eq "3.12" -and $parts[1] -eq "64") {
-                  $python = $candidate
-                  break
-                }
-              }
-            }
-          }
-          if (-not $python) { throw "BLOCKED: no accessible Python 3.12 x64 installation for the runner service identity" }
-          $details = & $python -c 'import sys,struct; print("%d.%d.%d|%d|%s" % (sys.version_info[0],sys.version_info[1],sys.version_info[2],struct.calcsize("P")*8,sys.executable))'
-          if ($LASTEXITCODE -ne 0) { throw "BLOCKED: selected Python cannot execute" }
-          $parts = $details.Trim().Split("|")
-          if ($parts[0] -notlike "3.12.*" -or $parts[1] -ne "64") { throw "BLOCKED: selected interpreter is not Python 3.12 x64: $details" }
-          $venv = Join-Path $env:RUNNER_TEMP ("w32-python-" + $env:GITHUB_SHA)
-          & $python -m venv $venv
-          if ($LASTEXITCODE -ne 0) { throw "BLOCKED: isolated Python venv creation failed" }
-          $venvPython = Join-Path $venv "Scripts\python.exe"
-          if (-not (Test-Path -LiteralPath $venvPython)) { throw "BLOCKED: venv Python executable missing" }
-          [IO.File]::AppendAllText($env:GITHUB_ENV, "W32_PYTHON=$venvPython" + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($false)))
-          Write-Host "selected_python=$details"
-          Write-Host "isolated_venv=$venv"
+      - name: Set up Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
           cache: pip
           cache-dependency-path: |
             requirements.txt
@@ -278,10 +244,44 @@ jobs:
           $actual = (git rev-parse HEAD).Trim()
           if ($LASTEXITCODE -ne 0 -or $actual -ne $env:REVISION) { throw "BLOCKED: checkout SHA mismatch" }
 
-      - name: Set up Python
-        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
-        with:
-          python-version: '3.12'
+      - name: Select installed Python 3.12 x64 and create isolated venv
+        shell: 'pwsh -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File {0}'
+        run: |
+          $python = $null
+          $launcher = Get-Command py.exe -ErrorAction SilentlyContinue
+          if ($launcher) {
+            $candidate = & $launcher.Source -3.12 -c "import sys; print(sys.executable)" 2>$null
+            if ($LASTEXITCODE -eq 0 -and $candidate -and (Test-Path -LiteralPath $candidate.Trim())) {
+              $python = $candidate.Trim()
+            }
+          }
+          if (-not $python) {
+            $candidates = @(where.exe python.exe 2>$null)
+            foreach ($candidate in $candidates) {
+              if (-not (Test-Path -LiteralPath $candidate)) { continue }
+              $details = & $candidate -c 'import sys,struct; print("%d.%d|%d|%s" % (sys.version_info[0],sys.version_info[1],struct.calcsize("P")*8,sys.executable))' 2>$null
+              if ($LASTEXITCODE -eq 0 -and $details) {
+                $parts = $details.Trim().Split("|")
+                if ($parts.Length -ge 3 -and $parts[0] -eq "3.12" -and $parts[1] -eq "64") {
+                  $python = $candidate
+                  break
+                }
+              }
+            }
+          }
+          if (-not $python) { throw "BLOCKED: no accessible Python 3.12 x64 installation for the runner service identity" }
+          $details = & $python -c 'import sys,struct; print("%d.%d.%d|%d|%s" % (sys.version_info[0],sys.version_info[1],sys.version_info[2],struct.calcsize("P")*8,sys.executable))'
+          if ($LASTEXITCODE -ne 0) { throw "BLOCKED: selected Python cannot execute" }
+          $parts = $details.Trim().Split("|")
+          if ($parts[0] -notlike "3.12.*" -or $parts[1] -ne "64") { throw "BLOCKED: selected interpreter is not Python 3.12 x64: $details" }
+          $venv = Join-Path $env:RUNNER_TEMP ("w32-python-" + $env:GITHUB_SHA)
+          & $python -m venv $venv
+          if ($LASTEXITCODE -ne 0) { throw "BLOCKED: isolated Python venv creation failed" }
+          $venvPython = Join-Path $venv "Scripts\python.exe"
+          if (-not (Test-Path -LiteralPath $venvPython)) { throw "BLOCKED: venv Python executable missing" }
+          [IO.File]::AppendAllText($env:GITHUB_ENV, "W32_PYTHON=$venvPython" + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($false)))
+          Write-Host "selected_python=$details"
+          Write-Host "isolated_venv=$venv"
 
       - name: Install pinned Browser Adapter dependencies and Chromium
         shell: 'pwsh -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File {0}'
@@ -349,7 +349,7 @@ jobs:
           Set-Content -LiteralPath $wrapper -Value $source -Encoding ascii
           $stdout = Join-Path $env:RUNNER_TEMP "w32-browser-adapter-$sha.stdout.log"
           $stderr = Join-Path $env:RUNNER_TEMP "w32-browser-adapter-$sha.stderr.log"
-          $python = ($env:W32_PYTHON
+          $python = $env:W32_PYTHON
           $startArgs = @{ FilePath=$python; PassThru=$true; WorkingDirectory=$workspace; ArgumentList=@("-u",$wrapper,"--store",$store,"--sha",$sha,"--port","$port","--workspace",$workspace,"--app","room_hop_mcp.browser_agent_adapter.adapter:app"); RedirectStandardOutput=$stdout; RedirectStandardError=$stderr }
           $proc = Start-Process @startArgs
           if (-not $proc) { throw "Adapter process did not start" }
