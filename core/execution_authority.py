@@ -261,6 +261,8 @@ class ExecutionAuthority:
             raise AuthorityError("execution_host_not_authorized", 403)
         if source_sha256 != policy["source_sha256"]:
             raise AuthorityError("source_revision_not_authorized", 409)
+        if request.get("test_entrypoint") != policy["test_entrypoint"]:
+            raise AuthorityError("test_entrypoint_not_authorized", 403)
         if environment_id != policy["environment_id"]:
             raise AuthorityError("execution_environment_not_authorized", 403)
         if not isinstance(timeout, int) or timeout < 1 or timeout > policy["max_timeout_seconds"]:
