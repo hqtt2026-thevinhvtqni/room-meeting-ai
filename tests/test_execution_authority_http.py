@@ -49,7 +49,6 @@ def configured_authority(tmp_path):
                 "workspace_root": str(root),
                 "execution_workspace": str(workspace),
                 "evidence_root": str(evidence),
-                "source_sha256": "a" * 64,
                 "environment_id": "w32-test",
                 "test_entrypoint": ["python", "-m", "pytest", "-q"],
                 "max_timeout_seconds": 30,
