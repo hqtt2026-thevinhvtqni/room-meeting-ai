@@ -7,6 +7,7 @@ import subprocess
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import urlsplit
 from typing import Any
 
 from .core_authority_client import CoreAuthorityClient
@@ -147,6 +148,32 @@ class GrantedExecutionHost:
             raise GrantedExecutionError("execution_git_branch_unavailable") from None
         if git_branch != binding["branch"]:
             raise GrantedExecutionError("execution_git_branch_mismatch")
+        try:
+            origin = subprocess.run(
+                ["git", "remote", "get-url", "origin"],
+                cwd=workspace,
+                text=True,
+                capture_output=True,
+                timeout=5,
+                check=True,
+            ).stdout.strip()
+        except (OSError, subprocess.SubprocessError):
+            raise GrantedExecutionError("execution_git_origin_unavailable") from None
+        if origin.startswith("git@github.com:"):
+            remote_repository = origin.split(":", 1)[1].removesuffix(".git")
+        else:
+            parsed_origin = urlsplit(origin)
+            remote_repository = parsed_origin.path.strip("/").removesuffix(".git")
+            if (
+                parsed_origin.hostname != "github.com"
+                or parsed_origin.username
+                or parsed_origin.password
+                or parsed_origin.query
+                or parsed_origin.fragment
+            ):
+                raise GrantedExecutionError("execution_git_origin_invalid")
+        if remote_repository.lower() != binding["repository"].lower():
+            raise GrantedExecutionError("execution_git_origin_mismatch")
 
         command = binding["test_entrypoint"]
         if not isinstance(command, list) or not command:
