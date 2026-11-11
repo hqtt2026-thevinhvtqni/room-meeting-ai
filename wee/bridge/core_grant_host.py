@@ -35,6 +35,7 @@ class CoreGrantExecutionHost:
         agent_id: str | None = None,
         agent_credential: str | None = None,
         timeout: float = 10.0,
+        execution_timeout: float = 3630.0,
         transport=None,
     ):
         self.core_url = _safe_endpoint(
@@ -50,6 +51,7 @@ class CoreGrantExecutionHost:
             agent_credential or os.getenv("ROOM_HOP_EXECUTION_AGENT_CREDENTIAL", "")
         )
         self.timeout = timeout
+        self.execution_timeout = execution_timeout
         self.transport = transport or self._http_transport
         if not self.agent_id or not self.agent_credential:
             raise CoreGrantExecutionError("execution_agent_identity_not_configured")
@@ -74,6 +76,7 @@ class CoreGrantExecutionHost:
         payload: dict[str, Any] | None = None,
         service_id: str | None = None,
         credential: str | None = None,
+        request_timeout: float | None = None,
     ) -> dict[str, Any]:
         headers = {"Accept": "application/json"}
         if payload is not None:
@@ -86,7 +89,7 @@ class CoreGrantExecutionHost:
             if payload is not None else None
         )
         status, raw = self.transport(
-            base_url + path, method, body, headers, self.timeout
+            base_url + path, method, body, headers, request_timeout or self.timeout
         )
         try:
             data = json.loads(raw.decode("utf-8")) if raw else {}
@@ -165,6 +168,10 @@ class CoreGrantExecutionHost:
                     "grant_id": grant_id,
                     "grant_token": grant_token,
                 },
+                request_timeout=max(
+                    self.execution_timeout,
+                    int(getattr(context, "requested_timeout_seconds", None) or 0) + 30,
+                ),
             )
             if result.get("work_id") != str(context.work_id):
                 raise CoreGrantExecutionError("execution_host_work_binding_mismatch")
