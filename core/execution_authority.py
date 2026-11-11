@@ -148,8 +148,13 @@ class ExecutionAuthority:
                             grant["status"] = "revoked"
                             grant["revoked_at"] = payload["revoked_at"]
                             grant["revoked_by"] = payload["revoked_by"]
-                    elif kind == "run_recorded":
-                        runs.append(dict(payload))
+                    elif kind == "run_started":
+                        runs.append({"start": dict(payload), "completion": None})
+                    elif kind == "run_completed":
+                        match = next((item for item in runs if item["start"].get("run_id") == payload.get("run_id")), None)
+                        if match is None or match["completion"] is not None:
+                            raise AuthorityError("authority_journal_run_transition_invalid", 503)
+                        match["completion"] = dict(payload)
         except AuthorityError:
             raise
         except (OSError, UnicodeError, json.JSONDecodeError, KeyError, TypeError):
@@ -417,7 +422,59 @@ class ExecutionAuthority:
                 "expires_at": grant["expires_at"],
             }
 
-    def record_run(
+    def start_run(
+        self,
+        *,
+        work_id: str,
+        grant_id: str,
+        token: str,
+        host_service_id: str,
+        host_credential: str,
+        record: dict[str, Any],
+    ) -> dict[str, Any]:
+        host = self._identity(host_service_id, host_credential, kind="host")
+        with self._locked():
+            grants, runs = self._read_state()
+            grant = grants.get(grant_id)
+            if grant is None or grant.get("work_id") != work_id:
+                raise AuthorityError("grant_not_found", 404)
+            if grant.get("status") != "active":
+                raise AuthorityError("grant_not_active", 403)
+            if self.clock() >= datetime.fromisoformat(grant["expires_at"]):
+                raise AuthorityError("grant_expired", 403)
+            actual = _sha256(token.encode("utf-8"))
+            if not hmac.compare_digest(grant["token_sha256"], actual):
+                raise AuthorityError("grant_token_invalid", 401)
+            if grant["host_identity_id"] != host["service_id"]:
+                raise AuthorityError("grant_host_binding_mismatch", 403)
+            required = ("run_id", "command", "source_sha256", "environment_id", "started_at")
+            if any(key not in record for key in required):
+                raise AuthorityError("run_start_record_incomplete", 422)
+            if record["source_sha256"] != grant["source_sha256"]:
+                raise AuthorityError("run_source_binding_mismatch", 409)
+            if record["environment_id"] != grant["environment_id"]:
+                raise AuthorityError("run_environment_binding_mismatch", 409)
+            if record["command"] != grant["test_entrypoint"]:
+                raise AuthorityError("run_command_binding_mismatch", 409)
+            if any(item["start"].get("run_id") == record["run_id"] for item in runs):
+                raise AuthorityError("run_id_already_recorded", 409)
+            payload = {
+                **record,
+                "grant_id": grant_id,
+                "work_id": work_id,
+                "principal_id": grant["principal_id"],
+                "issuer_service_id": grant["issuer_service_id"],
+                "host_identity_id": host["service_id"],
+                "assignment_id": grant["assignment_id"],
+                "task_id": grant["task_id"],
+                "purpose": grant["purpose"],
+                "run_state": "STARTED",
+                "recorded_at": _iso(self.clock()),
+            }
+            self._append("run_started", payload)
+        return {"run_id": record["run_id"], "grant_id": grant_id, "status": "started"}
+
+    def complete_run(
         self,
         *,
         work_id: str,
@@ -439,22 +496,32 @@ class ExecutionAuthority:
             if grant["host_identity_id"] != host["service_id"]:
                 raise AuthorityError("grant_host_binding_mismatch", 403)
             required = (
-                "run_id", "command", "source_sha256", "environment_id",
-                "started_at", "finished_at", "status", "exit_code",
+                "run_id", "finished_at", "status", "exit_code",
                 "evidence_sha256",
             )
             if any(key not in record for key in required):
-                raise AuthorityError("run_record_incomplete", 422)
-            if record["source_sha256"] != grant["source_sha256"]:
-                raise AuthorityError("run_source_binding_mismatch", 409)
-            if record["environment_id"] != grant["environment_id"]:
-                raise AuthorityError("run_environment_binding_mismatch", 409)
-            if record["command"] != grant["test_entrypoint"]:
-                raise AuthorityError("run_command_binding_mismatch", 409)
-            if any(item.get("run_id") == record["run_id"] for item in runs):
-                raise AuthorityError("run_id_already_recorded", 409)
+                raise AuthorityError("run_completion_record_incomplete", 422)
+            started = next(
+                (item for item in runs if item["start"].get("run_id") == record["run_id"]),
+                None,
+            )
+            if started is None or started["completion"] is not None:
+                raise AuthorityError("run_start_not_found_or_already_completed", 409)
+            start_record = started["start"]
+            if start_record.get("grant_id") != grant_id or start_record.get("work_id") != work_id:
+                raise AuthorityError("run_grant_binding_mismatch", 409)
+            if (
+                start_record.get("command") != grant["test_entrypoint"]
+                or start_record.get("source_sha256") != grant["source_sha256"]
+                or start_record.get("environment_id") != grant["environment_id"]
+            ):
+                raise AuthorityError("run_start_binding_invalid", 409)
             payload = {
                 **record,
+                "started_at": start_record["started_at"],
+                "command": start_record["command"],
+                "source_sha256": start_record["source_sha256"],
+                "environment_id": start_record["environment_id"],
                 "grant_id": grant_id,
                 "work_id": work_id,
                 "principal_id": grant["principal_id"],
@@ -464,11 +531,12 @@ class ExecutionAuthority:
                 "task_id": grant["task_id"],
                 "purpose": grant["purpose"],
                 "grant_status_at_completion": grant.get("status"),
+                "run_state": "COMPLETED",
                 "recorded_at": _iso(self.clock()),
             }
-            self._append("run_recorded", payload)
-        return {
-            "run_id": record["run_id"],
-            "grant_id": grant_id,
-            "status": "recorded",
-        }
+            self._append("run_completed", payload)
+        return {"run_id": record["run_id"], "grant_id": grant_id, "status": "completed"}
+
+    def record_run(self, **kwargs) -> dict[str, Any]:
+        """Backward-compatible alias for completing an already-started Run Record."""
+        return self.complete_run(**kwargs)
