@@ -33,11 +33,12 @@ def init_git(workspace: Path) -> str:
 
 
 class FakeAuthorityClient:
-    def __init__(self, binding, *, fail_validation_number=None, fail_start=False):
+    def __init__(self, binding, *, fail_validation_number=None, fail_start=False, fail_complete=False):
         self.binding = binding
         self.validation_calls = 0
         self.fail_validation_number = fail_validation_number
         self.fail_start = fail_start
+        self.fail_complete = fail_complete
         self.records = []
         self.started = []
 
@@ -57,6 +58,8 @@ class FakeAuthorityClient:
         return {"run_id": record["run_id"], "grant_id": grant_id, "status": "started"}
 
     def complete_run(self, work_id, grant_id, token, run_id, record):
+        if self.fail_complete:
+            raise AuthorityClientError("run_completion_unavailable", 503)
         self.records.append({"run_id": run_id, **record})
         return {"run_id": run_id, "grant_id": grant_id, "status": "completed"}
 
@@ -291,3 +294,27 @@ def test_host_rejects_evidence_directory_inside_git_repository(tmp_path):
     )
     assert result["status"] == "BLOCKED"
     assert result["blocker"] == "evidence_root_inside_git_repository"
+
+
+def test_host_does_not_report_pass_when_run_completion_is_not_persisted(tmp_path):
+    binding = make_binding(tmp_path)
+    authority = FakeAuthorityClient(binding, fail_complete=True)
+    result = GrantedExecutionHost(authority).execute_for_work(
+        "W32", "grant-test", "secret-token"
+    )
+    assert result["execution_status"] == "PASS"
+    assert result["status"] == "BLOCKED"
+    assert result["run_record_started"] is True
+    assert result["run_record_persisted"] is False
+    assert result["blocker"] == "run_record_completion_failed:AuthorityClientError"
+
+
+def test_host_blocks_when_core_is_unreachable_before_grant_validation(tmp_path):
+    binding = make_binding(tmp_path)
+    authority = FakeAuthorityClient(binding, fail_validation_number=1)
+    result = GrantedExecutionHost(authority).execute_for_work(
+        "W32", "grant-test", "secret-token"
+    )
+    assert result["status"] == "BLOCKED"
+    assert authority.started == []
+    assert authority.records == []
