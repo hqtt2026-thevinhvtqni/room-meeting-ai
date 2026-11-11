@@ -230,7 +230,7 @@ def test_run_record_is_bound_to_grant_and_persisted(tmp_path):
     assert result == {
         "run_id": "run-001",
         "grant_id": grant["grant_id"],
-        "status": "recorded",
+        "status": "completed",
     }
     events = [
         json.loads(line)
