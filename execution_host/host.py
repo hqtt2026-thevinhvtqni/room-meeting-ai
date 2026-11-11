@@ -392,12 +392,24 @@ class ExecutionHost:
                     "exit_code": None,
                 }
             else:
-                test_result = self.execute_command(
-                    execution_ctx,
-                    list(execution_ctx.test_entrypoint),
-                    request.timeout_seconds,
-                    step_name="test",
-                )
+                try:
+                    test_result = self.execute_command(
+                        execution_ctx,
+                        list(execution_ctx.test_entrypoint),
+                        request.timeout_seconds,
+                        step_name="test",
+                    )
+                except HostError as exc:
+                    # Validation failures are execution blockers too. Convert
+                    # them into structured nested-test evidence so callers can
+                    # preserve the primary command result and fail closed.
+                    blocker = redact(str(exc)) or "test_execution_blocked"
+                    test_result = {
+                        "status": "BLOCKED",
+                        "reason": blocker,
+                        "blocker": blocker,
+                        "exit_code": None,
+                    }
 
             result["test"] = test_result
 
