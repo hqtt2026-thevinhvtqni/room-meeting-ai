@@ -415,6 +415,26 @@ jobs:
             Write-Host "disposable_store_cleanup=PASS"
           }
 
+          $workspace = (Resolve-Path $env:GITHUB_WORKSPACE).Path
+          $runnerTemp = (Resolve-Path $env:RUNNER_TEMP).Path
+          $runnerPrefix = $runnerTemp.TrimEnd('\\') + '\\'
+          $ephemeral = @(
+            $env:PLAYWRIGHT_BROWSERS_PATH,
+            $env:W32_PYTHON_ROOT,
+            (Join-Path $runnerTemp "python-3.12.9-embed-amd64.zip"),
+            (Join-Path $runnerTemp "get-pip-w32-$env:GITHUB_SHA.py")
+          )
+          foreach ($candidate in $ephemeral) {
+            if (-not $candidate -or -not (Test-Path -LiteralPath $candidate)) { continue }
+            $resolved = (Resolve-Path -LiteralPath $candidate).Path
+            if (-not $resolved.StartsWith($runnerPrefix, [StringComparison]::OrdinalIgnoreCase) -or
+                $resolved.StartsWith($workspace, [StringComparison]::OrdinalIgnoreCase)) {
+              throw "BLOCKED: refusing to clean an ephemeral path outside this job's RUNNER_TEMP"
+            }
+            Remove-Item -LiteralPath $resolved -Recurse -Force
+          }
+          Write-Host "python_and_browser_runtime_cleanup=PASS"
+
       - name: Retain Windows Browser Adapter evidence
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
