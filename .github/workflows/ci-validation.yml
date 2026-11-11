@@ -555,6 +555,39 @@ jobs:
           if ($listenerViolations.Count -gt 0) {
             throw "BLOCKED: $($listenerViolations -join '; ')"
           }
+
+          # Negative-only Core probe: no Grant is issued or mutated.
+          $coreAuthorityStatus = 0
+          try {
+            $null = Invoke-WebRequest -UseBasicParsing -Method Get -TimeoutSec 3 -Uri "http://127.0.0.1:8000/works/W32/execution-grants/probe-readonly-status" -Headers @{ "X-Room-Hop-Service-Id" = "w32-readonly-probe-invalid"; "X-Room-Hop-Service-Credential" = "invalid-probe-credential" }
+            $coreAuthorityStatus = 200
+          } catch {
+            $response = $_.Exception.Response
+            if ($response -and $response.StatusCode) {
+              $coreAuthorityStatus = [int]$response.StatusCode
+            }
+          }
+          Write-Output "core_authority_negative_probe_http=$coreAuthorityStatus"
+          if ($coreAuthorityStatus -eq 200) {
+            throw "BLOCKED: Core grant status endpoint accepted invalid probe credentials"
+          }
+
+          # Host health is read-only and reports configuration identity, not execution permission.
+          $hostHealthStatus = 0
+          try {
+            $hostHealth = Invoke-RestMethod -Method Get -TimeoutSec 3 -Uri "http://127.0.0.1:8031/health"
+            $hostHealthStatus = 200
+            Write-Output "execution_host_health_status=$($hostHealth.status)"
+            Write-Output "execution_host_service=$($hostHealth.service)"
+            Write-Output "execution_host_build_hash=$($hostHealth.build_hash)"
+            Write-Output "execution_host_bind_address=$($hostHealth.bind_address)"
+          } catch {
+            $response = $_.Exception.Response
+            if ($response -and $response.StatusCode) {
+              $hostHealthStatus = [int]$response.StatusCode
+            }
+          }
+          Write-Output "execution_host_health_http=$hostHealthStatus"
   release_gate:
     name: Work 32 release acceptance gate
     if: always()
