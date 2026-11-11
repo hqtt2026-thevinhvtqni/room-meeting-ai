@@ -204,3 +204,21 @@ def test_host_does_not_spawn_when_core_cannot_persist_run_start(tmp_path):
     assert result["status"] == "BLOCKED"
     assert result["run_record_started"] is False
     assert not marker.exists()
+
+
+def test_host_rejects_git_head_or_branch_mismatch(tmp_path):
+    wrong_head_binding = make_binding(tmp_path / "wrong-head")
+    wrong_head_binding["expected_head"] = "0" * 40
+    wrong_head = GrantedExecutionHost(FakeAuthorityClient(wrong_head_binding)).execute_for_work(
+        "W32", "grant-test", "secret-token"
+    )
+    assert wrong_head["status"] == "BLOCKED"
+    assert wrong_head["blocker"] == "execution_git_head_mismatch"
+
+    wrong_branch_binding = make_binding(tmp_path / "wrong-branch")
+    wrong_branch_binding["branch"] = "main"
+    wrong_branch = GrantedExecutionHost(FakeAuthorityClient(wrong_branch_binding)).execute_for_work(
+        "W32", "grant-test", "secret-token"
+    )
+    assert wrong_branch["status"] == "BLOCKED"
+    assert wrong_branch["blocker"] == "execution_git_branch_mismatch"
