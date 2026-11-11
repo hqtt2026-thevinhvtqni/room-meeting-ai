@@ -244,44 +244,40 @@ jobs:
           $actual = (git rev-parse HEAD).Trim()
           if ($LASTEXITCODE -ne 0 -or $actual -ne $env:REVISION) { throw "BLOCKED: checkout SHA mismatch" }
 
-      - name: Select installed Python 3.12 x64 and create isolated venv
+      - name: Provision isolated portable Python 3.12.9 x64
         shell: 'pwsh -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File {0}'
         run: |
-          $python = $null
-          $launcher = Get-Command py.exe -ErrorAction SilentlyContinue
-          if ($launcher) {
-            $candidate = & $launcher.Source -3.12 -c "import sys; print(sys.executable)" 2>$null
-            if ($LASTEXITCODE -eq 0 -and $candidate -and (Test-Path -LiteralPath $candidate.Trim())) {
-              $python = $candidate.Trim()
-            }
-          }
-          if (-not $python) {
-            $candidates = @(where.exe python.exe 2>$null)
-            foreach ($candidate in $candidates) {
-              if (-not (Test-Path -LiteralPath $candidate)) { continue }
-              $details = & $candidate -c 'import sys,struct; print("%d.%d|%d|%s" % (sys.version_info[0],sys.version_info[1],struct.calcsize("P")*8,sys.executable))' 2>$null
-              if ($LASTEXITCODE -eq 0 -and $details) {
-                $parts = $details.Trim().Split("|")
-                if ($parts.Length -ge 3 -and $parts[0] -eq "3.12" -and $parts[1] -eq "64") {
-                  $python = $candidate
-                  break
-                }
-              }
-            }
-          }
-          if (-not $python) { throw "BLOCKED: no accessible Python 3.12 x64 installation for the runner service identity" }
+          $pythonRoot = Join-Path $env:RUNNER_TEMP ("w32-python-3.12.9-" + $env:GITHUB_SHA)
+          $archive = Join-Path $env:RUNNER_TEMP "python-3.12.9-embed-amd64.zip"
+          $download = "https://www.python.org/ftp/python/3.12.9/python-3.12.9-embed-amd64.zip"
+          Invoke-WebRequest -Uri $download -OutFile $archive
+          if ($LASTEXITCODE -ne 0 -or -not (Test-Path -LiteralPath $archive)) { throw "BLOCKED: official Python embeddable archive download failed" }
+          $archiveBytes = (Get-Item -LiteralPath $archive).Length
+          if ($archiveBytes -ne 11098289) { throw "BLOCKED: unexpected Python embeddable archive size: $archiveBytes" }
+          $archiveHash = (Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant()
+          New-Item -ItemType Directory -Path $pythonRoot -Force | Out-Null
+          Expand-Archive -LiteralPath $archive -DestinationPath $pythonRoot -Force
+          $python = Join-Path $pythonRoot "python.exe"
+          $pth = Join-Path $pythonRoot "python312._pth"
+          if (-not (Test-Path -LiteralPath $python) -or -not (Test-Path -LiteralPath $pth)) { throw "BLOCKED: embedded Python package layout is incomplete" }
+          $pthLines = @(Get-Content -LiteralPath $pth)
+          if ($pthLines -notcontains "Lib\site-packages") { $pthLines += "Lib\site-packages" }
+          $pthLines = @($pthLines | ForEach-Object { if ($_ -eq "#import site") { "import site" } else { $_ } })
+          if ($pthLines -notcontains "import site") { $pthLines += "import site" }
+          Set-Content -LiteralPath $pth -Value $pthLines -Encoding ascii
+          New-Item -ItemType Directory -Path (Join-Path $pythonRoot "Lib\site-packages") -Force | Out-Null
+          $getPip = Join-Path $env:RUNNER_TEMP "get-pip-w32-$env:GITHUB_SHA.py"
+          Invoke-WebRequest -Uri "https://bootstrap.pypa.io/get-pip.py" -OutFile $getPip
+          if (-not (Test-Path -LiteralPath $getPip)) { throw "BLOCKED: pip bootstrap download failed" }
+          & $python $getPip --no-warn-script-location
+          if ($LASTEXITCODE -ne 0) { throw "BLOCKED: pip bootstrap failed for embedded Python" }
           $details = & $python -c 'import sys,struct; print("%d.%d.%d|%d|%s" % (sys.version_info[0],sys.version_info[1],sys.version_info[2],struct.calcsize("P")*8,sys.executable))'
-          if ($LASTEXITCODE -ne 0) { throw "BLOCKED: selected Python cannot execute" }
-          $parts = $details.Trim().Split("|")
-          if ($parts[0] -notlike "3.12.*" -or $parts[1] -ne "64") { throw "BLOCKED: selected interpreter is not Python 3.12 x64: $details" }
-          $venv = Join-Path $env:RUNNER_TEMP ("w32-python-" + $env:GITHUB_SHA)
-          & $python -m venv $venv
-          if ($LASTEXITCODE -ne 0) { throw "BLOCKED: isolated Python venv creation failed" }
-          $venvPython = Join-Path $venv "Scripts\python.exe"
-          if (-not (Test-Path -LiteralPath $venvPython)) { throw "BLOCKED: venv Python executable missing" }
-          [IO.File]::AppendAllText($env:GITHUB_ENV, "W32_PYTHON=$venvPython" + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($false)))
-          Write-Host "selected_python=$details"
-          Write-Host "isolated_venv=$venv"
+          if ($LASTEXITCODE -ne 0 -or $details -notmatch "^3\.12\.9\|64\|") { throw "BLOCKED: portable Python version/architecture verification failed: $details" }
+          [IO.File]::AppendAllText($env:GITHUB_ENV, "W32_PYTHON=$python" + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($false)))
+          Write-Host "portable_python=$details"
+          Write-Host "python_archive_bytes=$archiveBytes"
+          Write-Host "python_archive_sha256=$archiveHash"
+          Write-Host "python_install_root=$pythonRoot"
 
       - name: Install pinned Browser Adapter dependencies and Chromium
         shell: 'pwsh -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File {0}'
