@@ -40,6 +40,8 @@ def configured_authority(tmp_path):
         works={
             "W32": {
                 "work_name": "ROOM-HOP-WORK-32",
+                "repository": "hqtt2026-thevinhvtqni/room-meeting-ai",
+                "allowed_branches": ["work/32-core-owned-execution-authority-20261112"],
                 "allowed_identities": ["agent-service"],
                 "allowed_host_identities": ["host-service"],
                 "allowed_assignments": ["W32-A"],
@@ -81,6 +83,9 @@ def host_headers():
 def issue_payload():
     return {
         "purpose": "pytest_run",
+        "repository": "hqtt2026-thevinhvtqni/room-meeting-ai",
+        "branch": "work/32-core-owned-execution-authority-20261112",
+        "expected_head": "b" * 40,
         "assignment_id": "W32-A",
         "task_id": "W32-T1",
         "host_identity_id": "host-service",
@@ -184,6 +189,9 @@ def test_http_run_record_requires_grant_and_host_binding(tmp_path):
         f"/works/W32/execution-grants/{grant['grant_id']}/runs",
         json={
             "run_id": "run-http-001",
+            "repository": "hqtt2026-thevinhvtqni/room-meeting-ai",
+            "branch": "work/32-core-owned-execution-authority-20261112",
+            "expected_head": "b" * 40,
             "command": ["python", "-m", "pytest", "-q"],
             "source_sha256": "a" * 64,
             "environment_id": "w32-test",
