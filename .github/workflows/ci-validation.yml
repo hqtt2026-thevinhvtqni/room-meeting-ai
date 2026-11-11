@@ -474,14 +474,14 @@ jobs:
 
   w32_self_hosted_runner_probe:
     name: Work32 dedicated PC runner identity (read-only)
-    if: \${{ github.event_name == 'pull_request' }}
+    if: ${{ github.event_name == 'pull_request' }}
     runs-on: [self-hosted, Windows, X64]
     timeout-minutes: 5
     steps:
       - name: Verify exact Work32 runner identity
         shell: powershell
         run: |
-          $runnerName = "\${{ runner.name }}"
+          $runnerName = "${{ runner.name }}"
           if ($runnerName -ne "ROOM-HOP-W32-PC") {
             throw "BLOCKED: expected ROOM-HOP-W32-PC; actual runner is '$runnerName'"
           }
