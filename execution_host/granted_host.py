@@ -178,7 +178,8 @@ class GrantedExecutionHost:
             parsed_origin = urlsplit(origin)
             remote_repository = parsed_origin.path.strip("/").removesuffix(".git")
             if (
-                parsed_origin.hostname != "github.com"
+                parsed_origin.scheme != "https"
+                or parsed_origin.hostname != "github.com"
                 or parsed_origin.username
                 or parsed_origin.password
                 or parsed_origin.query
