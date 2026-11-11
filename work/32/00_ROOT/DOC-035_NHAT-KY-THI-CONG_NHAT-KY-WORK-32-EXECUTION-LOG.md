@@ -1598,3 +1598,51 @@ Vibe re-read raw blobs at the exact audited commit 450c0b2409c0d19c68931cb033165
 - **Next:** obtain attributable Xu route/architecture decision, Cla post-remediation security disposition and Qw W32 QE report; resolve canonical Workspace source/contract; keep the PR draft until all required gates are satisfied.
 
 **Final status:** CI ACCEPTANCE PASS — ARCHITECTURE / SECURITY / QE / DASHBOARD INTEGRATION GATES OPEN — ACTIVE / NOT RELEASED.
+
+---
+
+## W32-LOG-20261112-110 — KA TAKES OVER CORE-OWNED EXECUTION AUTHORITY
+
+- **Work:** 32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P0 — protected execution authority
+- **Name:** Ka
+- **Title:** CSA / Work32 Execution Owner
+- **Date-Time:** 2026-11-12 00:25 Asia/Ho_Chi_Minh
+- **Authority:** Vinh delegated Ka to resolve Work32 architecture and complete the execution-authority workstream; Xu's Core-owned Authority decision is accepted.
+- **Implementation branch:** work/32-core-owned-execution-authority-20261112
+- **Starting PR #49 HEAD:** 0ec30f0b8c089fe9f7bcc75b062a4c7e03e281c6
+- **Status:** IMPLEMENTATION CANDIDATE CREATED — EXACT-SHA CI PENDING — PROTECTED EXECUTION DENIED.
+
+### Work completed in this slice
+
+- Created an isolated branch from the exact PR #49 head; no merge to main.
+- Added Core-owned Grant service logic: enrolled service credential → Agent Registry principal; Work/Assignment/Task/Host/source/environment/pytest/timeout scope; short-lived Grant; online validation; revocation; append-only fsynced hash-chain journal.
+- Added Core HTTP router for issue/status/validate/revoke/run-record and mounted it in the existing Core :8000 process. Missing authority configuration remains 503 fail-closed.
+- Added deterministic workspace source SHA-256 and symlink rejection.
+- Added Host-side online Core client, Grant-only /execute-granted endpoint, Core-derived Work binding, pytest-only command, second validation immediately before process creation, evidence files and Run Record submission.
+- Added WEE adapter to issue Grant through Core, invoke Host, then revoke Grant; extended canonical WorkContext with optional Assignment/Task/Environment/Host binding; LifecycleController no longer treats discovery as execution and blocks if the Core-grant adapter is absent.
+- Added focused Core, source snapshot, Host and LifecycleController tests; registered them in the Work32 workflow.
+- Opened draft PR #51 against the Work32 integration branch. PR #51 is not merged.
+- Created DOC-118 as the implementation contract and recorded current blockers/review gates.
+
+### Important boundaries
+
+- This is a source implementation candidate, not a live deployment or test PASS.
+- No Core or Host process was started; no runtime identity, Work policy, credential or durable store path was provisioned.
+- No protected command was executed. Remote exposure, multi-process/multi-host, staging, production, merge and release remain BLOCKED.
+- MCP :8020 sandbox_read() restriction remains unchanged.
+
+### Main branch correction disclosure
+
+- During this tool sequence, one contents-API create operation briefly created a WEE adapter file on main because the branch parameter was omitted. The file was immediately deleted, then main was restored with a force-with-lease ref update to the exact pre-operation SHA a663bd5afda524cb9dc7ca685945ca96c68d664d.
+- Compare confirmed main had exactly two temporary commits and zero net file differences relative to that SHA. Final main ref was restored to the exact pre-operation commit; no Work32 source remains on main.
+- This incident is disclosed here; it is not represented as an uninterrupted no-touch event.
+
+### Next gates
+
+1. Add HTTP router tests and verify fail-closed behavior.
+2. Run exact-SHA CI on a branch matching the Work32 push workflow filter; fix all failures before any PASS claim.
+3. Review cross-process journal locking/replay, credential mapping, expiry/revocation race and Run Record semantics.
+4. Verify exact WorkContext → LifecycleController → Core Grant → Execution Host path with positive and negative E2E.
+5. Obtain independent security review; keep protected execution denied until runtime config and exact-build evidence are verified.
