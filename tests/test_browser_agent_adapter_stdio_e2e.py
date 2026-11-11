@@ -72,7 +72,10 @@ def test_browser_adapter_real_stdio_submission_roundtrip(monkeypatch, tmp_path):
         "page_title": "Example Domain",
     }
 
-    submission = browser_adapter.submit_to_roomhop(result)
+    async def submit_from_running_loop():
+        return browser_adapter._submit_to_roomhop_in_worker(result)
+
+    submission = asyncio.run(submit_from_running_loop())
 
     assert submission["status"] == "pass", submission
     assert submission["transport"] == "stdio"
