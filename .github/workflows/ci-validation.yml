@@ -222,9 +222,20 @@ jobs:
         shell: powershell
         run: |
           git init .
-          git remote add origin "https://github.com/$env:REPOSITORY.git"
+          if ($LASTEXITCODE -ne 0) { throw "BLOCKED: git init failed in Work32 workspace" }
+          $origin = git remote get-url origin 2>$null
+          if ($LASTEXITCODE -eq 0 -and $origin) {
+            git remote set-url origin "https://github.com/$env:REPOSITORY.git"
+          } else {
+            git remote add origin "https://github.com/$env:REPOSITORY.git"
+          }
+          if ($LASTEXITCODE -ne 0) { throw "BLOCKED: could not configure Work32 origin remote" }
           git fetch --no-tags --depth=1 origin "$env:REVISION"
-          git checkout --detach FETCH_HEAD
+          if ($LASTEXITCODE -ne 0) { throw "BLOCKED: exact triggering revision fetch failed" }
+          git clean -ffdx
+          if ($LASTEXITCODE -ne 0) { throw "BLOCKED: could not clean only the Work32 checkout workspace" }
+          git checkout --force --detach FETCH_HEAD
+          if ($LASTEXITCODE -ne 0) { throw "BLOCKED: detached checkout failed" }
           $actual = (git rev-parse HEAD).Trim()
           if ($LASTEXITCODE -ne 0 -or $actual -ne $env:REVISION) { throw "BLOCKED: checkout SHA mismatch" }
 
