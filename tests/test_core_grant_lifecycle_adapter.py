@@ -42,7 +42,7 @@ def test_lifecycle_adapter_issues_executes_and_revokes_grant(tmp_path):
     calls = []
 
     def transport(url, method, body, headers, timeout):
-        calls.append((url, method, json.loads(body) if body else None, headers))
+        calls.append((url, method, json.loads(body) if body else None, headers, timeout))
         if url.endswith("/works/W32/execution-grants") and method == "POST":
             return 200, json.dumps({
                 "grant_id": "grant-123",
@@ -87,6 +87,7 @@ def test_lifecycle_adapter_issues_executes_and_revokes_grant(tmp_path):
     assert issue[2]["task_id"] == "W32-P0-PYTEST"
     assert issue[2]["test_entrypoint"] == ["python", "-m", "pytest", "-q"]
     assert "one-time-secret" not in json.dumps(result)
+    assert calls[2][4] >= 3630
 
 
 def test_lifecycle_adapter_rejects_non_tls_remote_http():
