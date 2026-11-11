@@ -245,9 +245,6 @@ def test_run_record_is_bound_to_grant_and_persisted(tmp_path):
     )
     assert result == {
         "run_id": "run-001",
-            "repository": "hqtt2026-thevinhvtqni/room-meeting-ai",
-            "branch": "work/32-core-owned-execution-authority-20261112",
-            "expected_head": "b" * 40,
         "grant_id": grant["grant_id"],
         "status": "completed",
     }
