@@ -28,8 +28,7 @@ class RunStartRequest(BaseModel):
     environment_id: str = Field(min_length=1, max_length=128)
     started_at: str
 
-    class Config:
-        extra = "forbid"
+    model_config = ConfigDict(extra="forbid")
 
 
 class RunCompleteRequest(BaseModel):
@@ -42,8 +41,7 @@ class RunCompleteRequest(BaseModel):
     stdout_sha256: str | None = None
     stderr_sha256: str | None = None
 
-    class Config:
-        extra = "forbid"
+    model_config = ConfigDict(extra="forbid")
 
 
 def create_execution_authority_router(
@@ -149,7 +147,7 @@ def create_execution_authority_router(
             token=token,
             host_service_id=x_room_hop_service_id or "",
             host_credential=x_room_hop_service_credential or "",
-            record=request_body.dict(),
+            record=request_body.model_dump(),
         )
 
     @router.post("/works/{work_id}/execution-grants/{grant_id}/runs/{run_id}/complete")
@@ -177,7 +175,7 @@ def create_execution_authority_router(
             token=token,
             host_service_id=x_room_hop_service_id or "",
             host_credential=x_room_hop_service_credential or "",
-            record=request_body.dict(),
+            record=request_body.model_dump(),
         )
 
     @router.post("/works/{work_id}/execution-grants/{grant_id}/revoke")
