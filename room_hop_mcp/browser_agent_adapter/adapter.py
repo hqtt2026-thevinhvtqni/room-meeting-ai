@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+from concurrent.futures import ThreadPoolExecutor
 import json
 import os
 import sys
@@ -192,7 +193,9 @@ class Adapter:
         out = EVIDENCE / f"{req.work_id}-{int(time.time())}.json"
         out.write_text(json.dumps(final, indent=2, ensure_ascii=False), encoding="utf-8")
         final["evidence_json"] = str(out)
-        final["roomhop_submission"] = submit_to_roomhop(final)
+        # Playwright Sync API may own a running asyncio loop on this thread.
+        # Keep the MCP stdio client on a dedicated worker; preserve the fail-closed guard.
+        final["roomhop_submission"] = _submit_to_roomhop_in_worker(final)
         return final
 
 
@@ -319,6 +322,13 @@ async def _submit_to_roomhop_stdio(
             "meetings_dir": str(meetings_dir),
         }
 
+
+
+
+def _submit_to_roomhop_in_worker(result: dict[str, Any]) -> dict[str, Any]:
+    """Run the bounded MCP stdio handoff outside Playwright event-loop thread."""
+    with ThreadPoolExecutor(max_workers=1, thread_name_prefix="roomhop-mcp-handoff") as worker:
+        return worker.submit(submit_to_roomhop, result).result()
 
 DEFAULT_MCP_TIMEOUT_SECONDS = 30.0
 MAX_MCP_TIMEOUT_SECONDS = 120.0
