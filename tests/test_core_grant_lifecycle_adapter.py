@@ -83,6 +83,9 @@ def test_lifecycle_adapter_issues_executes_and_revokes_grant(tmp_path):
     assert result["grant_revoked_after_run"] is True
     assert [call[1] for call in calls] == ["GET", "POST", "POST", "POST"]
     issue = calls[1]
+    assert issue[2]["repository"] == "hqtt2026-thevinhvtqni/room-meeting-ai"
+    assert issue[2]["branch"] == "work/32-core-owned-execution-authority-20261112"
+    assert issue[2]["expected_head"] == "a" * 40
     assert issue[2]["assignment_id"] == "W32-EXECUTION-AUTHORITY"
     assert issue[2]["task_id"] == "W32-P0-PYTEST"
     assert issue[2]["test_entrypoint"] == ["python", "-m", "pytest", "-q"]
