@@ -1774,7 +1774,7 @@ These later changes are not covered by Run #376. The branch requires a new exact
 
 - Added DOC-122 and a separate read-only job targeting self-hosted, Windows, X64.
 - The new job requires exact runner name ROOM-HOP-W32-PC and reports toolchain plus listener PIDs/process names for ports 8010/8020/8030/8031/8787.
-- It is deliberately not a dependency of the release_gate and does not start/stop services or execute protected commands.
+- It is now a dependency of the pull_request release_gate: a queued probe keeps PR acceptance pending, and an identity mismatch fails the gate. It does not start/stop services or execute protected commands.
 - Its first execution is pending on the next PR workflow run. A queued job will indicate that the runner service is not connected/available to GitHub despite local service status.
 
 ### Change-control
