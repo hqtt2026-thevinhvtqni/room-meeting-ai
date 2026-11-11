@@ -1059,3 +1059,20 @@ If continuing this probe, reload the previously used read-only C# PEB reader def
 - **Tài liệu chuẩn hóa:** `05_BUILD/00_ROOT/GIT_PRIMARY_BUILD_ENVIRONMENT.md` mô tả Python 3.12, workflow, lệnh pytest, chu trình commit → exact-HEAD CI → journal → Sandbox sync và các ranh giới bằng chứng. README đã liên kết tới tài liệu này.
 - **Giới hạn:** CI PASS là source-level verification cho các nhóm test đã chạy trên đúng SHA nêu trên; không chứng minh PC/live runtime, credentials, deployment hoặc E2E production. PR #48 vẫn OPEN/DRAFT/UNMERGED.
 - **Trạng thái đồng bộ Sandbox:** chờ hoàn tất kiểm tra CI trên commit cuối và readback từng file sau đồng bộ; chưa đánh dấu Sandbox sync PASS ở thời điểm ghi mục này.
+
+
+---
+
+## W1111 — Git -> Sandbox synchronization closeout
+
+- **Người thực hiện:** Co
+- **Chức danh:** Coder W1111
+- **Ngày:** 12/11/2026
+- **Giờ:** 01:04 UTC+7
+- **Nguồn đồng bộ:** GitHub branch `work/w1111-core-execution-authority-v1-2`, source HEAD `290e6a335ebc812bfae93ea586815bc2859c09bb`.
+- **Phạm vi:** toàn bộ 42 tệp trong canonical Work folder `work/1111/ROOM-HOP-TECHNICAL-ENGINEERING-AND-DEBUG-LAB/`, bao gồm tài liệu gốc, nhật ký, task board, tài liệu Git-primary build, code patch/test candidate, evidence register và verification checklist.
+- **Kết quả ghi:** 42/42 lệnh Sandbox write trả `status=ok`.
+- **Kết quả readback:** dùng Sandbox read-probe đối chiếu lại đủ 42/42 tệp với nội dung Git theo đúng path; toàn bộ 42 phép so sánh nội dung trả `match=true`. Đã xác minh cả hai nhật ký và tài liệu Git-primary build.
+- **Trạng thái:** Git -> Sandbox content sync 42/42 — PASS tại source HEAD nêu trên. Không bao gồm các bản sao root-level ngoài canonical folder và không xác nhận runtime parity.
+- **CI:** GitHub Actions run `43073130362` trên source HEAD `290e6a335ebc812bfae93ea586815bc2859c09bb` — SUCCESS; Core 19 passed, W12 6 passed, W13 14 passed; tổng 39 passed.
+- **Ranh giới:** PR #48 vẫn OPEN/DRAFT/UNMERGED; không merge, không deploy, không xác nhận PC/live E2E PASS.
