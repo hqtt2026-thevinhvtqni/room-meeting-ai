@@ -15,6 +15,7 @@ class GrantIssueRequest(BaseModel):
     host_identity_id: str = Field(min_length=1, max_length=128)
     source_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     environment_id: str = Field(min_length=1, max_length=128)
+    test_entrypoint: list[str]
     requested_timeout_seconds: int | None = Field(default=None, ge=1, le=3600)
 
     class Config:
