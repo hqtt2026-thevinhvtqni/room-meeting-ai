@@ -1744,3 +1744,45 @@ These later changes are not covered by Run #376. The branch requires a new exact
 - No protected command was executed. MCP :8020 sandbox_read() restriction remains unchanged.
 - Independent security review, exact-latest-SHA CI, self-hosted PC runner proof and live positive/negative execution E2E remain open.
 - PROTECTED EXECUTION DENIED; Work32 ACTIVE — NOT RELEASED.
+
+---
+
+## W32-LOG-20261112-115 — RUN #388 FULL CI PASS / DEDICATED PC PROBE ADDED
+
+- **Work:** 32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P0 — CI and runner provenance
+- **Name:** Ka
+- **Title:** CSA / Work32 Execution Owner
+- **Date-Time:** 2026-11-12 00:25 Asia/Ho_Chi_Minh
+- **PR #52 head:** 8abb707a0a36121c0708b3edc8bb03756540144b
+- **Run #388:** 43076639093
+- **Tested merge revision:** 6b5b8a121d136b44abf3f78066604ace4710a493
+- **Status:** RUN #388 6/6 PASS ON EXACT TESTED MERGE REVISION; NEW PC PROBE NOT YET RUN.
+
+### Run #388 results
+
+- Work32 tooling/workflow mirror: PASS.
+- Python 3.12 unit: 234 passed in 5.80s; no Pydantic deprecation warnings.
+- Product Auto E2E: 119 passed in 9.27s.
+- Windows Browser Adapter hosted PR lane: 10 passed in 3.03s; preflight PASS on port 62541; adapter cleanup PASS for PID 1736.
+- Immutable product artifact: build/checksum/extracted artifact test PASS (1 artifact-level test passed).
+- Work32 release acceptance gate: PASS; all five configured dependencies reported success.
+- Windows runner identity check in the Browser Adapter job remained SKIPPED because this was a pull_request event. This run does not prove the dedicated ROOM-HOP-W32-PC runner executed.
+
+### Dedicated PC runner evidence action
+
+- Added DOC-122 and a separate read-only job targeting self-hosted, Windows, X64.
+- The new job requires exact runner name ROOM-HOP-W32-PC and reports toolchain plus listener PIDs/process names for ports 8010/8020/8030/8031/8787.
+- It is deliberately not a dependency of the release_gate and does not start/stop services or execute protected commands.
+- Its first execution is pending on the next PR workflow run. A queued job will indicate that the runner service is not connected/available to GitHub despite local service status.
+
+### Change-control
+
+- PR #52 remains open, unmerged and is the single integration candidate against main.
+- PR #51 remains closed unmerged as superseded by PR #52.
+- main remains at baseline a663bd5afda524cb9dc7ca685945ca96c68d664d.
+- No Core/Host runtime credentials, Work policy or durable store were provisioned; no Core/Host service started; no protected command executed.
+- Independent security review and live positive/negative Core↔Host execution E2E remain open.
+- MCP :8020 sandbox_read() restriction remains unchanged.
+- PROTECTED EXECUTION DENIED; Work32 ACTIVE — NOT RELEASED.
