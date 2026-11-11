@@ -176,25 +176,34 @@ def test_http_run_record_requires_grant_and_host_binding(tmp_path):
         json=issue_payload(),
         headers=agent_headers(),
     ).json()
-    record = {
-        "run_id": "run-http-001",
-        "command": ["python", "-m", "pytest", "-q"],
-        "source_sha256": "a" * 64,
-        "environment_id": "w32-test",
-        "started_at": "2026-11-12T00:00:00+00:00",
-        "finished_at": "2026-11-12T00:00:01+00:00",
-        "status": "PASS",
-        "exit_code": 0,
-        "evidence_sha256": "c" * 64,
-        "evidence_ref": "evidence/run-http-001/RUN_EVIDENCE.json",
+    headers = {
+        **host_headers(),
+        "Authorization": "Bearer " + grant["grant_token"],
     }
-    response = client.post(
+    started = client.post(
         f"/works/W32/execution-grants/{grant['grant_id']}/runs",
-        json=record,
-        headers={
-            **host_headers(),
-            "Authorization": "Bearer " + grant["grant_token"],
+        json={
+            "run_id": "run-http-001",
+            "command": ["python", "-m", "pytest", "-q"],
+            "source_sha256": "a" * 64,
+            "environment_id": "w32-test",
+            "started_at": "2026-11-12T00:00:00+00:00",
         },
+        headers=headers,
     )
-    assert response.status_code == 200
-    assert response.json()["status"] == "recorded"
+    assert started.status_code == 200
+    assert started.json()["status"] == "started"
+
+    completed = client.post(
+        f"/works/W32/execution-grants/{grant['grant_id']}/runs/run-http-001/complete",
+        json={
+            "finished_at": "2026-11-12T00:00:01+00:00",
+            "status": "PASS",
+            "exit_code": 0,
+            "evidence_sha256": "c" * 64,
+            "evidence_ref": "evidence/run-http-001/RUN_EVIDENCE.json",
+        },
+        headers=headers,
+    )
+    assert completed.status_code == 200
+    assert completed.json()["status"] == "completed"
