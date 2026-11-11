@@ -53,25 +53,6 @@ class GrantedExecutionHost:
             "grant_cache": False,
         }
 
-    def execute_granted(self, grant_id: str, grant_token: str) -> dict[str, Any]:
-        if not grant_id or not grant_token:
-            raise GrantedExecutionError("grant_required")
-
-        # This online check is deliberately performed for every execution.
-        # No ALLOW result or grant token is cached by this process.
-        binding = self.authority_client.validate_grant(
-            self._work_id_hint(grant_id), grant_id, grant_token
-        )
-        return self._execute_validated(binding, grant_id, grant_token)
-
-    def _work_id_hint(self, grant_id: str) -> str:
-        # The Work ID is supplied by the request envelope, then checked against
-        # the Core-returned grant binding. It is not trusted for authorization.
-        work_id = getattr(self, "_request_work_id", None)
-        if not work_id:
-            raise GrantedExecutionError("work_id_required")
-        return work_id
-
     def execute_for_work(
         self,
         work_id: str,
@@ -80,12 +61,28 @@ class GrantedExecutionHost:
     ) -> dict[str, Any]:
         if not work_id or not grant_id or not grant_token:
             raise GrantedExecutionError("grant_and_work_required")
-        binding = self.authority_client.validate_grant(
-            work_id, grant_id, grant_token
-        )
-        if binding.get("work_id") != work_id or binding.get("grant_id") != grant_id:
-            raise GrantedExecutionError("core_grant_binding_mismatch")
-        return self._execute_validated(binding, grant_id, grant_token)
+        try:
+            binding = self.authority_client.validate_grant(
+                work_id, grant_id, grant_token
+            )
+            if binding.get("work_id") != work_id or binding.get("grant_id") != grant_id:
+                raise GrantedExecutionError("core_grant_binding_mismatch")
+            return self._execute_validated(binding, grant_id, grant_token)
+        except Exception as exc:
+            reason = (
+                exc.code if hasattr(exc, "code")
+                else str(exc) if isinstance(exc, GrantedExecutionError)
+                else "execution_blocked:" + type(exc).__name__
+            )
+            return {
+                "status": "BLOCKED",
+                "work_id": work_id,
+                "grant_id": grant_id,
+                "run_record_started": False,
+                "run_record_persisted": False,
+                "blocker": reason,
+                **self.identity(),
+            }
 
     def _execute_validated(
         self,
