@@ -2030,3 +2030,46 @@ Observe the CI run for this exact branch revision and resolve only evidence-back
 ### Next
 
 Inspect the new exact-SHA workflow run. If PowerShell 7 is found and scripts execute, continue resolving the next evidence-backed blocker without requesting PC intervention prematurely.
+
+
+---
+
+## W32-LOG-20261111-99 — CORRECT POWERSHELL 7 SHELL RESOLUTION ON WINDOWS RUNNER
+
+- **Work:** Work32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P1 — Windows runner shell resolution
+- **Name:** Ka
+- **Title:** CSA / Delegated Work32 Execution Owner
+- **Date-Time:** 2026-11-11, Asia/Ho_Chi_Minh
+- **Status:** SOURCE PATCH COMMITTED — RETEST PENDING
+
+### Runtime evidence
+
+- Workflow run `42944462583`, run number `332`, confirmed that the previous custom shell string containing a quoted absolute executable path was parsed incorrectly by the runner. It attempted to resolve `C:\Windows\system32\"C:` and failed before running checkout.
+- The previous attempt did not run checkout, Python setup, fixture bootstrap or Browser Adapter. No process or fixture store was created.
+- In the same run, Product Auto E2E and Python compile/unit lane passed; the strict mirror check failed because the active workflow had been committed before its mirror update, so that run observed an intermediate, intentionally non-identical pair.
+
+### Corrective change
+
+- Added a first Windows job step using `cmd` to append the already-installed PowerShell 7 directory to the job PATH through `GITHUB_PATH`.
+- Changed all six Windows script steps to the unquoted custom shell command: `pwsh -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File {0}`.
+- This avoids the earlier missing-PATH issue and the quoted executable parsing issue. Execution Policy Bypass remains process-scoped; no machine/user policy change.
+- Active workflow blob: `125826783710aab54f856d849a72c51714e1c39d`.
+- Mirror workflow blob: `125826783710aab54f856d849a72c51714e1c39d`.
+- Active and mirror fetched after writes; identical blob SHA confirmed.
+- Active workflow commit: `d84ce87be0623ad8cb8d8ef8e152009363107832`.
+- Mirror commit: `2230fd84e3c141b1a8f7bc49a4275b218a78fc2f`.
+
+### Verification
+
+- **PASS:** runtime failure precisely identified from Windows job logs.
+- **PASS:** PowerShell 7 PATH bootstrap and process-scoped invocation committed and read back.
+- **PASS:** active/mirror blob equality.
+- **PENDING:** new workflow run must prove `pwsh` resolution, script execution, exact checkout and subsequent Windows E2E lifecycle.
+- No machine policy change, no WORK09 action, no readiness variable mutation by Ka, no main/release/deploy.
+- Work32 remains **ACTIVE — NOT RELEASED**.
+
+### Next
+
+Inspect the next run and continue from the first real failing step; do not request manual PC intervention unless the runner reports an action requiring interactive PC access.
