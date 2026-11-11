@@ -34,7 +34,7 @@ Canonical Authority → WorkContext → LifecycleController → ExecutionHost.
 ## 2. Contract decisions made for the Work32 first protected operation
 
 - Initial protected purpose is deliberately narrow: pytest_run only.
-- A Grant is bound to Work ID, server-derived Agent principal, issuer service identity, Assignment ID, Task ID, target Host service identity, source SHA-256, environment ID, exact pytest entrypoint, timeout ceiling, policy version, issued time and expiry.
+- A Grant is bound to Work ID, repository, allowed branch, expected Git commit SHA, server-derived Agent principal, issuer service identity, Assignment ID, Task ID, target Host service identity, per-run source SHA-256, environment ID, exact pytest entrypoint, timeout ceiling, policy version, issued time and expiry.
 - Assignment and Task must be present in canonical WorkContext and must also be allow-listed in Core's Work policy. No caller can widen those allow-lists.
 - The issuer identity and Host identity are separate enrolled service identities. Agent principal is resolved by Core from credential configuration and Agent Registry; it is not trusted from the request body.
 - Grant token is returned once; only its SHA-256 digest is persisted. Enrolled service credentials must be at least 32 characters; Core stores only their SHA-256 digests. No token is logged or copied into Run Record.
@@ -68,7 +68,7 @@ The workflow's bounded unit/E2E lists were extended to include these tests. No t
 
 Core requires:
 - ROOM_HOP_EXECUTION_IDENTITIES_JSON: service ID → credential SHA-256, kind (agent or host), and server-side principal ID for agent services.
-- ROOM_HOP_EXECUTION_WORKS_JSON: Work policy including work_name, allowed_identities, allowed_host_identities, allowed_assignments, allowed_tasks, canonical paths, source SHA-256, environment ID, exact pytest entrypoint, max timeout and policy version.
+- ROOM_HOP_EXECUTION_WORKS_JSON: Work policy including work_name, repository, allowed_branches, allowed_identities, allowed_host_identities, allowed_assignments, allowed_tasks, canonical paths, environment ID, exact pytest entrypoint, max timeout and policy version. Per-run source SHA-256 is supplied by canonical WorkContext and recomputed by Host; it is not a static policy field.
 - ROOM_HOP_EXECUTION_STORE_PATH: durable journal path.
 
 Execution Host requires:
