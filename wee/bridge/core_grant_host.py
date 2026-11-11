@@ -131,6 +131,9 @@ class CoreGrantExecutionHost:
         source_sha = workspace_source_sha256(context.execution_workspace)
         issue_payload = {
             "purpose": "pytest_run",
+            "repository": context.repository,
+            "branch": context.branch,
+            "expected_head": context.expected_head,
             "assignment_id": context.assignment_id,
             "task_id": context.task_id,
             "host_identity_id": context.host_identity_id,
