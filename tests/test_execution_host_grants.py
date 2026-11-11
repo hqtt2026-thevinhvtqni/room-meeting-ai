@@ -20,6 +20,7 @@ def init_git(workspace: Path) -> str:
         ["git", "config", "user.name", "Work32 Test"],
         ["git", "add", "-A"],
         ["git", "commit", "-m", "test workspace snapshot"],
+        ["git", "remote", "add", "origin", f"https://github.com/{REPOSITORY}.git"],
         ["git", "rev-parse", "HEAD"],
     ]
     output = ""
@@ -222,3 +223,18 @@ def test_host_rejects_git_head_or_branch_mismatch(tmp_path):
     )
     assert wrong_branch["status"] == "BLOCKED"
     assert wrong_branch["blocker"] == "execution_git_branch_mismatch"
+
+
+def test_host_rejects_wrong_git_origin_repository(tmp_path):
+    binding = make_binding(tmp_path)
+    subprocess.run(
+        ["git", "remote", "set-url", "origin", "https://github.com/attacker/other.git"],
+        cwd=binding["execution_workspace"],
+        check=True,
+        capture_output=True,
+    )
+    result = GrantedExecutionHost(FakeAuthorityClient(binding)).execute_for_work(
+        "W32", "grant-test", "secret-token"
+    )
+    assert result["status"] == "BLOCKED"
+    assert result["blocker"] == "execution_git_origin_mismatch"
