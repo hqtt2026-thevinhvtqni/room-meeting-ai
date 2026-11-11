@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Literal
 
 from fastapi import APIRouter, Header, HTTPException
 from pydantic import BaseModel, Field
@@ -22,14 +22,21 @@ class GrantIssueRequest(BaseModel):
         extra = "forbid"
 
 
-class RunRecordRequest(BaseModel):
+class RunStartRequest(BaseModel):
     run_id: str = Field(min_length=1, max_length=128)
     command: list[str]
     source_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     environment_id: str = Field(min_length=1, max_length=128)
     started_at: str
+
+    class Config:
+        extra = "forbid"
+
+
+class RunCompleteRequest(BaseModel):
+    run_id: str = Field(min_length=1, max_length=128)
     finished_at: str
-    status: str
+    status: Literal["PASS", "FAILED", "TIMEOUT", "BLOCKED"]
     exit_code: int | None
     evidence_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     evidence_ref: str | None = None
@@ -120,7 +127,7 @@ def create_execution_authority_router(
         )
 
     @router.post("/works/{work_id}/execution-grants/{grant_id}/runs")
-    def record_run(
+    def start_run(
         work_id: str,
         grant_id: str,
         body: dict[str, Any],
@@ -130,14 +137,42 @@ def create_execution_authority_router(
     ) -> dict[str, Any]:
         service = require_authority()
         try:
-            request_body = RunRecordRequest.parse_obj(body)
+            request_body = RunStartRequest.parse_obj(body)
         except Exception:
-            raise HTTPException(status_code=422, detail="execution_run_record_invalid") from None
+            raise HTTPException(status_code=422, detail="execution_run_start_invalid") from None
         scheme, _, token = (authorization or "").partition(" ")
         if scheme.lower() != "bearer" or not token:
             raise HTTPException(status_code=401, detail="grant_bearer_required")
         return invoke(
-            service.record_run,
+            service.start_run,
+            work_id=work_id,
+            grant_id=grant_id,
+            token=token,
+            host_service_id=x_room_hop_service_id or "",
+            host_credential=x_room_hop_service_credential or "",
+            record=request_body.dict(),
+        )
+
+    @router.post("/works/{work_id}/execution-grants/{grant_id}/runs/{run_id}/complete")
+    def complete_run(
+        work_id: str,
+        grant_id: str,
+        run_id: str,
+        body: dict[str, Any],
+        authorization: str | None = Header(default=None),
+        x_room_hop_service_id: str | None = Header(default=None),
+        x_room_hop_service_credential: str | None = Header(default=None),
+    ) -> dict[str, Any]:
+        service = require_authority()
+        try:
+            request_body = RunCompleteRequest.parse_obj({"run_id": run_id, **body})
+        except Exception:
+            raise HTTPException(status_code=422, detail="execution_run_completion_invalid") from None
+        scheme, _, token = (authorization or "").partition(" ")
+        if scheme.lower() != "bearer" or not token:
+            raise HTTPException(status_code=401, detail="grant_bearer_required")
+        return invoke(
+            service.complete_run,
             work_id=work_id,
             grant_id=grant_id,
             token=token,
