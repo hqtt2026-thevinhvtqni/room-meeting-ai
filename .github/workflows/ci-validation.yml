@@ -511,6 +511,7 @@ jobs:
           } else {
             Write-Output "git=NOT_FOUND"
           }
+          $listenerViolations = @()
           foreach ($port in @(8000, 8010, 8020, 8030, 8031, 8787)) {
             $listeners = @(Get-NetTCPConnection -State Listen -LocalPort $port -ErrorAction SilentlyContinue)
             if ($listeners.Count -eq 0) {
@@ -521,31 +522,38 @@ jobs:
               $process = Get-CimInstance Win32_Process -Filter "ProcessId = $($listener.OwningProcess)"
               $processName = if ($process) { $process.Name } else { "UNKNOWN" }
               $owner = "UNKNOWN"
+              $processModule = "UNRESOLVED"
               $entrypointMatch = "NOT_CHECKED"
               if ($process) {
                 try {
                   $ownerResult = Invoke-CimMethod -InputObject $process -MethodName GetOwner -ErrorAction Stop
                   if ($ownerResult.ReturnValue -eq 0) {
-                    $owner = "$($ownerResult.Domain)\\$($ownerResult.User)"
+                    $owner = "$($ownerResult.Domain)\$($ownerResult.User)"
                   }
                 } catch {}
+                $commandLine = [string]$process.CommandLine
+                if ($commandLine -match '(?:^|\s)-m\s+([A-Za-z0-9_.-]+)') {
+                  $processModule = $Matches[1]
+                } elseif ($commandLine -match '([A-Za-z0-9_.-]+\.py)(?:\s|$)') {
+                  $processModule = [System.IO.Path]::GetFileName($Matches[1])
+                }
                 $expectedEntrypoint = switch ($port) {
                   8000 { "room_hop_mcp.core_http_main" }
                   8031 { "execution_host.server" }
                   default { "" }
                 }
                 if ($expectedEntrypoint) {
-                  $entrypointMatch = [bool]($process.CommandLine -match [regex]::Escape($expectedEntrypoint))
+                  $entrypointMatch = [bool]($commandLine -match [regex]::Escape($expectedEntrypoint))
                 }
               }
               if ($port -in @(8000, 8031) -and $listener.LocalAddress -notin @("127.0.0.1", "::1")) {
-                throw "BLOCKED: protected service port $port is not loopback-bound ($($listener.LocalAddress))"
+                $listenerViolations += "protected port $port bound to $($listener.LocalAddress)"
               }
-              if ($port -in @(8000, 8031) -and $entrypointMatch -eq $false) {
-                throw "BLOCKED: unexpected process entrypoint on protected service port $port"
-              }
-              Write-Output "port=$port address=$($listener.LocalAddress) pid=$($listener.OwningProcess) process=$processName owner=$owner entrypoint_match=$entrypointMatch"
+              Write-Output "port=$port address=$($listener.LocalAddress) pid=$($listener.OwningProcess) process=$processName owner=$owner module=$processModule entrypoint_match=$entrypointMatch"
             }
+          }
+          if ($listenerViolations.Count -gt 0) {
+            throw "BLOCKED: $($listenerViolations -join '; ')"
           }
   release_gate:
     name: Work 32 release acceptance gate
