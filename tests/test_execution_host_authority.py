@@ -123,6 +123,7 @@ def test_nested_test_execution_error_blocks_top_level(tmp_path):
         Path(result.evidence_ref).read_text(encoding="utf-8")
     )
     assert payload["test"]["status"] == "BLOCKED"
+    assert payload["test"]["blocker"] == "forbidden_executable"
     assert payload["status"] == "BLOCKED"
 
 
