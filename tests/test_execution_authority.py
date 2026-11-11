@@ -125,6 +125,9 @@ def test_issue_and_validate_grant_binds_agent_work_task_host_and_source(tmp_path
         ("source_sha256", "b" * 64, "source_revision_not_authorized"),
         ("environment_id", "production", "execution_environment_not_authorized"),
         ("purpose", "shell", "execution_purpose_not_allowed"),
+        ("repository", "attacker/other-repo", "repository_or_branch_not_authorized"),
+        ("branch", "main", "repository_or_branch_not_authorized"),
+        ("expected_head", "not-a-git-sha", "expected_git_head_invalid"),
         ("test_entrypoint", ["python", "-c", "print(1)"], "test_entrypoint_not_authorized"),
     ],
 )
