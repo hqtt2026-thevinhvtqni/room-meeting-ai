@@ -1,0 +1,211 @@
+# GitHub-generated PR #48 unified diff sections for C02 touched files
+# Source: GitHub PR compare diff, not a locally executed git diff.
+# Scope: cumulative main..PR #48 diff for execution_host/host.py and tests/test_execution_host.py.
+# This includes pre-existing PR #48 changes in these files as well as C02 changes; it is NOT an isolated C02-only patch.
+# git apply --check was not run; no local Git checkout/command runner is available in this session.
+
+diff --git a/execution_host/host.py b/execution_host/host.py
+index 977b5bc50..a914d36b1 100644
+--- a/execution_host/host.py
++++ b/execution_host/host.py
+@@ -193,10 +193,15 @@ def execute_command(
+         ctx: WorkContext,
+         command: list[str],
+         timeout_seconds: float = 30.0,
++        *,
++        step_name: str = "command",
+     ) -> dict[str, Any]:
+ 
+         root, workspace, evidence = validate_context(ctx)
+ 
++        if step_name not in {"command", "test"}:
++            raise HostError("invalid_evidence_stage")
++
+         args = validate_command(command)
+ 
+         validate_cwd(workspace, workspace)
+@@ -210,6 +215,7 @@ def execute_command(
+             evidence
+             / ctx.execution_id
+             / "runtime"
++            / step_name
+             / "stdout.log"
+         )
+ 
+@@ -217,6 +223,7 @@ def execute_command(
+             evidence
+             / ctx.execution_id
+             / "runtime"
++            / step_name
+             / "stderr.log"
+         )
+ 
+@@ -368,23 +375,46 @@ def execute_work(
+             execution_ctx,
+             list(request.command or ()),
+             request.timeout_seconds,
++            step_name="command",
+         )
+ 
+         if request.run_test:
++            primary_status = result.get("status")
++            primary_exit_code = result.get("exit_code")
++            result["primary_command_status"] = primary_status
++            result["primary_command_exit_code"] = primary_exit_code
++
+             if not execution_ctx.test_entrypoint:
+-                result["test"] = {
++                test_result = {
+                     "status": "BLOCKED",
+                     "reason": "test_entrypoint_not_bound",
++                    "blocker": "test_entrypoint_not_bound",
++                    "exit_code": None,
+                 }
+             else:
+-                result["test"] = (
+-                    self.execute_command(
+-                        execution_ctx,
+-                        list(
+-                            execution_ctx.test_entrypoint
+-                        ),
+-                        request.timeout_seconds,
+-                    )
++                test_result = self.execute_command(
++                    execution_ctx,
++                    list(execution_ctx.test_entrypoint),
++                    request.timeout_seconds,
++                    step_name="test",
++                )
++
++            result["test"] = test_result
++
++            # Preserve a failed/timed-out/blocked primary command. Only a
++            # passing primary command may inherit the nested test disposition.
++            if primary_status == "PASS" and test_result.get("status") != "PASS":
++                nested_status = test_result.get("status")
++                result["status"] = (
++                    nested_status
++                    if nested_status in {"FAILED", "BLOCKED", "TIMEOUT"}
++                    else "BLOCKED"
++                )
++                result["exit_code"] = test_result.get("exit_code")
++                result["blocker"] = (
++                    test_result.get("blocker")
++                    or test_result.get("reason")
++                    or "test_result_not_pass"
+                 )
+ 
+         _, workspace, evidence = validate_context(
+@@ -442,6 +472,8 @@ def execute_work(
+             runtime_bind_address=(
+                 self.runtime_identity.bind_address
+             ),
++            stdout_ref=result.get("stdout_ref"),
++            stderr_ref=result.get("stderr_ref"),
+         )
+ 
+     def start_service(
+
+diff --git a/tests/test_execution_host.py b/tests/test_execution_host.py
+index 183cba295..b5d190772 100644
+--- a/tests/test_execution_host.py
++++ b/tests/test_execution_host.py
+@@ -1,4 +1,4 @@
+-import tempfile, time
++import tempfile, time, sys
+ from pathlib import Path
+ import pytest
+ from execution_host import WorkContext, ExecutionRequest, ExecutionHost
+@@ -35,3 +35,92 @@ def test_artifact_isolation(tmp_path):
+     c=ctx(tmp_path); (Path(c.execution_workspace)/'a.txt').write_text('a'); r=ExecutionHost().execute_work(c,ExecutionRequest(command=('python3','-c','print(1)'),collect_artifacts=('a.txt',))); assert len(r.artifacts)==1; assert Path(r.artifacts[0]).is_relative_to(Path(c.evidence_root))
+ def test_service_lifecycle(tmp_path):
+     c=ctx(tmp_path); h=ExecutionHost(); s=h.start_service('x',['python3','-c','import time; time.sleep(5)'],c); assert s['status']=='PASS'; assert h.service_status('x',c)['status']=='PASS'; assert h.stop_service('x',c)['status']=='PASS'
++
++
++def test_run_test_false_preserves_primary_pass(tmp_path):
++    c = ctx(tmp_path)
++    r = ExecutionHost().execute_work(
++        c,
++        ExecutionRequest(
++            command=(sys.executable, "-c", "print('primary-pass')"),
++            run_test=False,
++        ),
++    )
++    assert r.status == "PASS"
++    assert r.exit_code == 0
++
++
++def test_nested_test_failed_propagates_to_overall_status(tmp_path):
++    c = ctx(
++        tmp_path,
++        test_entrypoint=(sys.executable, "-c", "raise SystemExit(7)"),
++    )
++    r = ExecutionHost().execute_work(
++        c,
++        ExecutionRequest(
++            command=(sys.executable, "-c", "print('primary-pass')"),
++            run_test=True,
++        ),
++    )
++    final = __import__("json").loads(Path(r.evidence_ref).read_text(encoding="utf-8"))
++    assert r.status == "FAILED"
++    assert r.exit_code == 7
++    assert final["primary_command_status"] == "PASS"
++    assert final["primary_command_exit_code"] == 0
++    assert final["test"]["status"] == "FAILED"
++    assert final["stdout_ref"] != final["test"]["stdout_ref"]
++    assert Path(final["stdout_ref"]).read_text(encoding="utf-8").strip() == "primary-pass"
++
++
++def test_nested_test_timeout_propagates_to_overall_status(tmp_path):
++    c = ctx(
++        tmp_path,
++        test_entrypoint=(sys.executable, "-c", "import time; time.sleep(3)"),
++    )
++    r = ExecutionHost().execute_work(
++        c,
++        ExecutionRequest(
++            command=(sys.executable, "-c", "print('primary-pass')"),
++            timeout_seconds=1.0,
++            run_test=True,
++        ),
++    )
++    final = __import__("json").loads(Path(r.evidence_ref).read_text(encoding="utf-8"))
++    assert r.status == "TIMEOUT"
++    assert final["primary_command_status"] == "PASS"
++    assert final["test"]["status"] == "TIMEOUT"
++
++
++def test_missing_nested_test_entrypoint_blocks_overall_status(tmp_path):
++    c = ctx(tmp_path, test_entrypoint=None)
++    r = ExecutionHost().execute_work(
++        c,
++        ExecutionRequest(
++            command=(sys.executable, "-c", "print('primary-pass')"),
++            run_test=True,
++        ),
++    )
++    final = __import__("json").loads(Path(r.evidence_ref).read_text(encoding="utf-8"))
++    assert r.status == "BLOCKED"
++    assert r.blocker == "test_entrypoint_not_bound"
++    assert final["test"]["status"] == "BLOCKED"
++
++
++def test_primary_failure_is_not_overwritten_by_nested_test_pass(tmp_path):
++    c = ctx(
++        tmp_path,
++        test_entrypoint=(sys.executable, "-c", "print('test-pass')"),
++    )
++    r = ExecutionHost().execute_work(
++        c,
++        ExecutionRequest(
++            command=(sys.executable, "-c", "raise SystemExit(5)"),
++            run_test=True,
++        ),
++    )
++    final = __import__("json").loads(Path(r.evidence_ref).read_text(encoding="utf-8"))
++    assert r.status == "FAILED"
++    assert r.exit_code == 5
++    assert final["primary_command_status"] == "FAILED"
++    assert final["primary_command_exit_code"] == 5
++    assert final["test"]["status"] == "PASS"
