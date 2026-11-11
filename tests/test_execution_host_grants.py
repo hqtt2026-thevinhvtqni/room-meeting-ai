@@ -257,3 +257,37 @@ def test_host_rejects_dirty_worktree_even_when_source_hash_matches(tmp_path):
     assert result["status"] == "BLOCKED"
     assert result["blocker"] == "execution_git_worktree_dirty"
     assert authority.started == []
+
+
+def test_host_rejects_evidence_directory_inside_git_repository(tmp_path):
+    root = tmp_path / "repository-root"
+    workspace = root / "workspace"
+    evidence = root / "evidence"
+    workspace.mkdir(parents=True)
+    evidence.mkdir()
+    (workspace / "test_ok.py").write_text("def test_ok(): assert True\n", encoding="utf-8")
+    expected_head = init_git(root)
+    binding = {
+        "work_id": "W32",
+        "work_name": "ROOM-HOP-WORK-32",
+        "repository": REPOSITORY,
+        "branch": BRANCH,
+        "expected_head": expected_head,
+        "purpose": "pytest_run",
+        "assignment_id": "W32-EXECUTION-AUTHORITY",
+        "task_id": "W32-P0-PYTEST",
+        "principal_id": "agent-ka",
+        "host_identity_id": "host-8031",
+        "workspace_root": str(root),
+        "execution_workspace": str(workspace),
+        "evidence_root": str(evidence),
+        "source_sha256": workspace_source_sha256(workspace),
+        "environment_id": "w32-local-ci",
+        "test_entrypoint": [sys.executable, "-m", "pytest", "-q"],
+        "max_timeout_seconds": 30,
+    }
+    result = GrantedExecutionHost(FakeAuthorityClient(binding)).execute_for_work(
+        "W32", "grant-test", "secret-token"
+    )
+    assert result["status"] == "BLOCKED"
+    assert result["blocker"] == "evidence_root_inside_git_repository"
