@@ -30,11 +30,11 @@ def configured_authority(tmp_path):
             "agent-service": {
                 "kind": "agent",
                 "principal_id": "agent-ka",
-                "credential_sha256": digest("agent-secret"),
+                "credential_sha256": digest("agent-secret-32-byte-minimum-credential"),
             },
             "host-service": {
                 "kind": "host",
-                "credential_sha256": digest("host-secret"),
+                "credential_sha256": digest("host-secret-32-byte-minimum-credential"),
             },
         },
         works={
@@ -67,14 +67,14 @@ def app_for(authority):
 def agent_headers():
     return {
         "X-ROOM-HOP-SERVICE-ID": "agent-service",
-        "X-ROOM-HOP-SERVICE-CREDENTIAL": "agent-secret",
+        "X-ROOM-HOP-SERVICE-CREDENTIAL": "agent-secret-32-byte-minimum-credential",
     }
 
 
 def host_headers():
     return {
         "X-ROOM-HOP-SERVICE-ID": "host-service",
-        "X-ROOM-HOP-SERVICE-CREDENTIAL": "host-secret",
+        "X-ROOM-HOP-SERVICE-CREDENTIAL": "host-secret-32-byte-minimum-credential",
     }
 
 
