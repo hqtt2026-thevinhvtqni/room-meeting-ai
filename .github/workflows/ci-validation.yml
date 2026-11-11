@@ -526,7 +526,7 @@ jobs:
   release_gate:
     name: Work 32 release acceptance gate
     if: always()
-    needs: [unit, tooling, e2e, windows_browser_adapter, product_artifact]
+    needs: [unit, tooling, e2e, windows_browser_adapter, product_artifact, w32_self_hosted_runner_probe]
     runs-on: ubuntu-latest
     steps:
       - name: Require all mandatory lanes
@@ -536,13 +536,20 @@ jobs:
           E2E_RESULT: ${{ needs.e2e.result }}
           WINDOWS_RESULT: ${{ needs.windows_browser_adapter.result }}
           ARTIFACT_RESULT: ${{ needs.product_artifact.result }}
+          SELF_HOSTED_RESULT: ${{ needs.w32_self_hosted_runner_probe.result }}
+          EVENT_NAME: ${{ github.event_name }}
         run: |
-          printf 'unit=%s\ntooling=%s\ne2e=%s\nwindows_browser_adapter=%s\nproduct_artifact=%s\n' "$UNIT_RESULT" "$TOOLING_RESULT" "$E2E_RESULT" "$WINDOWS_RESULT" "$ARTIFACT_RESULT"
+          printf 'unit=%s\ntooling=%s\ne2e=%s\nwindows_browser_adapter=%s\nproduct_artifact=%s\nself_hosted_runner=%s\n' "$UNIT_RESULT" "$TOOLING_RESULT" "$E2E_RESULT" "$WINDOWS_RESULT" "$ARTIFACT_RESULT" "$SELF_HOSTED_RESULT"
           test "$UNIT_RESULT" = success
           test "$TOOLING_RESULT" = success
           test "$E2E_RESULT" = success
           test "$WINDOWS_RESULT" = success
           test "$ARTIFACT_RESULT" = success
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            test "$SELF_HOSTED_RESULT" = success
+          else
+            test "$SELF_HOSTED_RESULT" = success -o "$SELF_HOSTED_RESULT" = skipped
+          fi
 
   product_artifact:
     name: Build and verify immutable ROOM HOP product artifact
