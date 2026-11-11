@@ -193,6 +193,9 @@ def test_run_record_is_bound_to_grant_and_persisted(tmp_path):
     validate(authority, grant)
     record = {
         "run_id": "run-001",
+            "repository": "hqtt2026-thevinhvtqni/room-meeting-ai",
+            "branch": "work/32-core-owned-execution-authority-20261112",
+            "expected_head": "b" * 40,
         "command": ["python", "-m", "pytest", "-q"],
         "source_sha256": "a" * 64,
         "environment_id": "w32-local-ci",
@@ -214,6 +217,9 @@ def test_run_record_is_bound_to_grant_and_persisted(tmp_path):
             "repository": "hqtt2026-thevinhvtqni/room-meeting-ai",
             "branch": "work/32-core-owned-execution-authority-20261112",
             "expected_head": "b" * 40,
+            "repository": "hqtt2026-thevinhvtqni/room-meeting-ai",
+            "branch": "work/32-core-owned-execution-authority-20261112",
+            "expected_head": "b" * 40,
             "command": ["python", "-m", "pytest", "-q"],
             "source_sha256": "a" * 64,
             "environment_id": "w32-local-ci",
@@ -228,6 +234,9 @@ def test_run_record_is_bound_to_grant_and_persisted(tmp_path):
         host_credential="host-secret-32-byte-minimum-credential",
         record={
             "run_id": "run-001",
+            "repository": "hqtt2026-thevinhvtqni/room-meeting-ai",
+            "branch": "work/32-core-owned-execution-authority-20261112",
+            "expected_head": "b" * 40,
             "finished_at": "2026-11-12T00:00:01+00:00",
             "status": "PASS",
             "exit_code": 0,
@@ -237,6 +246,9 @@ def test_run_record_is_bound_to_grant_and_persisted(tmp_path):
     )
     assert result == {
         "run_id": "run-001",
+            "repository": "hqtt2026-thevinhvtqni/room-meeting-ai",
+            "branch": "work/32-core-owned-execution-authority-20261112",
+            "expected_head": "b" * 40,
         "grant_id": grant["grant_id"],
         "status": "completed",
     }
@@ -254,6 +266,9 @@ def test_run_start_rejects_command_or_source_mismatch(tmp_path):
     grant = issue(authority, request)
     record = {
         "run_id": "run-bad",
+        "repository": "hqtt2026-thevinhvtqni/room-meeting-ai",
+        "branch": "work/32-core-owned-execution-authority-20261112",
+        "expected_head": "b" * 40,
         "command": ["python", "-c", "print(1)"],
         "source_sha256": "b" * 64,
         "environment_id": "w32-local-ci",
@@ -327,6 +342,9 @@ def test_revocation_blocks_new_run_but_allows_existing_run_completion(tmp_path):
     grant = issue(authority, request)
     start_record = {
         "run_id": "run-revoked-after-start",
+        "repository": "hqtt2026-thevinhvtqni/room-meeting-ai",
+        "branch": "work/32-core-owned-execution-authority-20261112",
+        "expected_head": "b" * 40,
         "command": ["python", "-m", "pytest", "-q"],
         "source_sha256": "a" * 64,
         "environment_id": "w32-local-ci",
@@ -364,6 +382,9 @@ def test_revocation_blocks_new_run_but_allows_existing_run_completion(tmp_path):
         host_credential="host-secret-32-byte-minimum-credential",
         record={
             "run_id": "run-revoked-after-start",
+        "repository": "hqtt2026-thevinhvtqni/room-meeting-ai",
+        "branch": "work/32-core-owned-execution-authority-20261112",
+        "expected_head": "b" * 40,
             "finished_at": "2026-11-12T00:00:02+00:00",
             "status": "BLOCKED",
             "exit_code": None,
