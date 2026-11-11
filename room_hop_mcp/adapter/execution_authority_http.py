@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any, Literal
 
 from fastapi import APIRouter, Header, HTTPException
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from core.execution_authority import AuthorityError, ExecutionAuthority
 
@@ -18,8 +18,7 @@ class GrantIssueRequest(BaseModel):
     test_entrypoint: list[str]
     requested_timeout_seconds: int | None = Field(default=None, ge=1, le=3600)
 
-    class Config:
-        extra = "forbid"
+    model_config = ConfigDict(extra="forbid")
 
 
 class RunStartRequest(BaseModel):
@@ -78,7 +77,7 @@ def create_execution_authority_router(
     ) -> dict[str, Any]:
         service = require_authority()
         try:
-            request_body = GrantIssueRequest.parse_obj(body)
+            request_body = GrantIssueRequest.model_validate(body)
         except Exception:
             raise HTTPException(status_code=422, detail="execution_grant_request_invalid") from None
         return invoke(
@@ -86,7 +85,7 @@ def create_execution_authority_router(
             work_id=work_id,
             service_id=x_room_hop_service_id or "",
             credential=x_room_hop_service_credential or "",
-            request=request_body.dict(),
+            request=request_body.model_dump(),
         )
 
     @router.get("/works/{work_id}/execution-grants/{grant_id}")
@@ -137,7 +136,7 @@ def create_execution_authority_router(
     ) -> dict[str, Any]:
         service = require_authority()
         try:
-            request_body = RunStartRequest.parse_obj(body)
+            request_body = RunStartRequest.model_validate(body)
         except Exception:
             raise HTTPException(status_code=422, detail="execution_run_start_invalid") from None
         scheme, _, token = (authorization or "").partition(" ")
@@ -165,7 +164,7 @@ def create_execution_authority_router(
     ) -> dict[str, Any]:
         service = require_authority()
         try:
-            request_body = RunCompleteRequest.parse_obj({"run_id": run_id, **body})
+            request_body = RunCompleteRequest.model_validate({"run_id": run_id, **body})
         except Exception:
             raise HTTPException(status_code=422, detail="execution_run_completion_invalid") from None
         scheme, _, token = (authorization or "").partition(" ")
