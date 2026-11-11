@@ -11,7 +11,7 @@ The Execution Host entrypoint is python -m execution_host.server (default bind 1
 Required environment variables:
 
 - ROOM_HOP_EXECUTION_IDENTITIES_JSON: JSON object mapping service identity IDs to records containing credential_sha256 (64 lowercase hex), kind (agent or host), and principal_id for agent identities. Example shape: {"agent-ka-service":{"kind":"agent","principal_id":"agent-ka","credential_sha256":"<64-lowercase-hex>"},"host-8031":{"kind":"host","credential_sha256":"<64-lowercase-hex>"}}. Raw credentials are not stored in Core configuration.
-- ROOM_HOP_EXECUTION_WORKS_JSON: JSON object mapping canonical Work IDs to policy records. Each policy requires work_name, allowed_identities, allowed_host_identities, allowed_assignments, allowed_tasks, workspace_root, execution_workspace, evidence_root, source_sha256, environment_id, test_entrypoint and max_timeout_seconds. Optional policy fields are grant_ttl_seconds (1–900) and policy_version.
+- ROOM_HOP_EXECUTION_WORKS_JSON: JSON object mapping canonical Work IDs to policy records. Each policy requires work_name, repository, allowed_branches, allowed_identities, allowed_host_identities, allowed_assignments, allowed_tasks, workspace_root, execution_workspace, evidence_root, source_sha256, environment_id, test_entrypoint and max_timeout_seconds. Optional policy fields are grant_ttl_seconds (1–900) and policy_version.
 - ROOM_HOP_EXECUTION_STORE_PATH: absolute durable path to the append-only, fsynced, hash-chained JSONL event journal. Core also creates a lock file. Do not use ephemeral storage.
 
 Agent principal resolution is server-side: the enrolled agent service credential maps to an Agent Registry ID, and Core verifies that ID exists in AgentRegistry. Request bodies cannot nominate principal_id. Host identities are enrolled separately with kind=host. Raw service credentials must be high entropy (at least 32 characters); only SHA-256 digests are stored in Core configuration.
@@ -42,7 +42,7 @@ Required for the WEE Core-grant adapter:
 - ROOM_HOP_EXECUTION_AGENT_CREDENTIAL: raw high-entropy agent service credential from the agent secret store.
 - EXECUTION_HOST_URL: Host URL; defaults to http://127.0.0.1:8031 for loopback development.
 
-Canonical WorkContext must contain assignment_id, task_id, environment_id, host_identity_id and test_entrypoint in addition to the existing Work/repository/branch/workspace/expected-head/evidence binding. The adapter computes the source hash from that canonical workspace, requests a Grant from Core, invokes the Host, and requests revocation after the attempt. The requested Host HTTP timeout is bounded to cover the configured test timeout plus a safety margin.
+Canonical WorkContext must contain repository, branch, expected_head (Git commit SHA), assignment_id, task_id, environment_id, host_identity_id and test_entrypoint in addition to the existing Work/workspace/evidence binding. Core checks repository and branch against the Work policy and binds expected_head into the Grant. Host independently checks git rev-parse HEAD and git branch --show-current against the Grant before it creates a Run Record. The adapter computes the source hash from that canonical workspace, requests a Grant from Core, invokes the Host, and requests revocation after the attempt. The requested Host HTTP timeout is bounded to cover the configured test timeout plus a safety margin.
 
 ## Grant and Run Record protocol
 
