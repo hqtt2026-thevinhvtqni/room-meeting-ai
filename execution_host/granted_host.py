@@ -111,6 +111,8 @@ class GrantedExecutionHost:
             raise GrantedExecutionError("execution_workspace_escape")
         if not _inside(evidence_root, root):
             raise GrantedExecutionError("evidence_root_escape")
+        if _inside(evidence_root, workspace):
+            raise GrantedExecutionError("evidence_root_inside_execution_workspace")
 
         actual_source_hash = workspace_source_sha256(workspace)
         if actual_source_hash != binding["source_sha256"]:
