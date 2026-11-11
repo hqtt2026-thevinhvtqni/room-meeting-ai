@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 import os
 from urllib import error, request
-from urllib.parse import quote
+from urllib.parse import quote, urlsplit
 from typing import Any
 
 from execution_host.source_snapshot import workspace_source_sha256
@@ -15,11 +15,11 @@ class CoreGrantExecutionError(RuntimeError):
 
 def _safe_endpoint(value: str, *, label: str) -> str:
     value = value.rstrip("/")
-    if value.startswith("https://"):
-        return value
-    if value.startswith("http://127.0.0.1") or value.startswith("http://localhost"):
-        return value
-    if value.startswith("http://[::1]"):
+    parsed = urlsplit(value)
+    loopback_http = parsed.scheme == "http" and parsed.hostname in {"127.0.0.1", "localhost", "::1"}
+    if parsed.username or parsed.password or parsed.query or parsed.fragment:
+        raise CoreGrantExecutionError(label + "_invalid_url")
+    if parsed.scheme == "https" or loopback_http:
         return value
     raise CoreGrantExecutionError(label + "_must_use_https_or_loopback_http")
 
