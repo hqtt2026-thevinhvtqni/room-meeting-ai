@@ -134,6 +134,19 @@ class GrantedExecutionHost:
             raise GrantedExecutionError("execution_git_head_unavailable") from None
         if git_head != expected_head.lower():
             raise GrantedExecutionError("execution_git_head_mismatch")
+        try:
+            git_branch = subprocess.run(
+                ["git", "branch", "--show-current"],
+                cwd=workspace,
+                text=True,
+                capture_output=True,
+                timeout=5,
+                check=True,
+            ).stdout.strip()
+        except (OSError, subprocess.SubprocessError):
+            raise GrantedExecutionError("execution_git_branch_unavailable") from None
+        if git_branch != binding["branch"]:
+            raise GrantedExecutionError("execution_git_branch_mismatch")
 
         command = binding["test_entrypoint"]
         if not isinstance(command, list) or not command:
