@@ -629,3 +629,110 @@ def test_browser_context_registers_and_closes_websocket_routes():
     assert closed == [
         (1008, "WebSocket egress is disabled by Work32 policy.")
     ]
+
+
+def _install_fake_browser_runtime(monkeypatch):
+    state = {"launches": [], "contexts": []}
+
+    class FakeContext:
+        def __init__(self):
+            self.closed = False
+
+        def route(self, pattern, handler):
+            pass
+
+        def route_web_socket(self, pattern, handler):
+            pass
+
+        def new_page(self):
+            return SimpleNamespace(url="about:blank", title=lambda: "W32 fake page")
+
+        def close(self):
+            self.closed = True
+
+    class FakeBrowser:
+        def new_context(self, **kwargs):
+            context = FakeContext()
+            state["contexts"].append(context)
+            return context
+
+        def close(self):
+            pass
+
+    fake_browser = FakeBrowser()
+
+    class FakePlaywright:
+        def __init__(self):
+            self.chromium = SimpleNamespace(launch=self.launch)
+
+        def launch(self, **kwargs):
+            state["launches"].append(kwargs)
+            return fake_browser
+
+        def stop(self):
+            pass
+
+    class FakePlaywrightDriver:
+        def start(self):
+            return FakePlaywright()
+
+    monkeypatch.setattr(
+        browser_adapter, "sync_playwright", lambda: FakePlaywrightDriver()
+    )
+    return state
+
+
+def test_adapter_start_recreates_context_without_relaunching_browser(monkeypatch):
+    state = _install_fake_browser_runtime(monkeypatch)
+    executable = r"C:\\W32\\chromium\\chrome.exe"
+    monkeypatch.setenv("ROOMHOP_BROWSER_EXECUTABLE", executable)
+    instance = browser_adapter.Adapter()
+
+    first = instance.start()
+    first_context = instance.context
+    instance._close_context()
+    second = instance.start()
+
+    assert first["status"] == "started"
+    assert second["status"] == "started"
+    assert first["executable"] == executable
+    assert second["executable"] == executable
+    assert first_context.closed is True
+    assert len(state["launches"]) == 1
+    assert state["launches"][0]["executable_path"] == executable
+
+
+def test_adapter_runs_two_workflows_on_one_browser_process(monkeypatch, tmp_path):
+    state = _install_fake_browser_runtime(monkeypatch)
+    monkeypatch.setattr(browser_adapter, "EVIDENCE", tmp_path)
+    instance = browser_adapter.Adapter()
+
+    def fake_navigate(url):
+        instance.page.url = url
+        return {"url": url, "status": 200, "title": "W32 fake page"}
+
+    monkeypatch.setattr(instance, "navigate", fake_navigate)
+    monkeypatch.setattr(
+        browser_adapter,
+        "_submit_to_roomhop_from_worker",
+        lambda result: {"status": "pass"},
+    )
+
+    first = instance.workflow(
+        browser_adapter.WorkflowRequest(
+            url="https://one.example/", work_id="w32-repeated-first"
+        )
+    )
+    second = instance.workflow(
+        browser_adapter.WorkflowRequest(
+            url="https://two.example/", work_id="w32-repeated-second"
+        )
+    )
+
+    assert first["ok"] is True
+    assert second["ok"] is True
+    assert first["final_url"] == "https://one.example/"
+    assert second["final_url"] == "https://two.example/"
+    assert len(state["launches"]) == 1
+    assert len(state["contexts"]) == 4
+    assert all(context.closed for context in state["contexts"])
