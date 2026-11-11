@@ -262,6 +262,10 @@ jobs:
           if (-not (Test-Path -LiteralPath $python) -or -not (Test-Path -LiteralPath $pth)) { throw "BLOCKED: embedded Python package layout is incomplete" }
           $pthLines = @(Get-Content -LiteralPath $pth)
           if ($pthLines -notcontains "Lib\site-packages") { $pthLines += "Lib\site-packages" }
+          # The embeddable interpreter ignores PYTHONPATH; expose this exact checkout
+          # in python312._pth so child MCP stdio processes can import the package.
+          $workspace = (Resolve-Path $env:GITHUB_WORKSPACE).Path
+          if ($pthLines -notcontains $workspace) { $pthLines += $workspace }
           $pthLines = @($pthLines | ForEach-Object { if ($_ -eq "#import site") { "import site" } else { $_ } })
           if ($pthLines -notcontains "import site") { $pthLines += "import site" }
           Set-Content -LiteralPath $pth -Value $pthLines -Encoding ascii
@@ -295,6 +299,8 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw "Chromium install failed" }
           $version = (& $env:W32_PYTHON -c "import importlib.metadata as m; print(m.version('playwright'))").Trim()
           if ($version -ne "1.65.0") { throw "Unexpected Playwright version: $version" }
+          & $env:W32_PYTHON -c "import room_hop_mcp.__main__; print('mcp_stdio_entrypoint_import=PASS')"
+          if ($LASTEXITCODE -ne 0) { throw "MCP stdio entrypoint is not importable by the isolated Python runtime" }
           New-Item -ItemType Directory -Force test-results | Out-Null
           & $env:W32_PYTHON -m pip freeze | Out-File test-results/pip-freeze-browser-windows.txt -Encoding utf8
 
