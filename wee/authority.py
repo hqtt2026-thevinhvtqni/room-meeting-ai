@@ -20,6 +20,11 @@ class WorkBinding:
     test_entrypoint: list[str] | None
     ci_target: dict[str, Any]
     evidence_root: str
+    assignment_id: str | None = None
+    task_id: str | None = None
+    environment_id: str | None = None
+    host_identity_id: str | None = None
+    requested_timeout_seconds: int | None = None
     def as_dict(self) -> dict[str, Any]: return asdict(self)
 
 class CanonicalWorkAuthority:
@@ -37,4 +42,8 @@ class CanonicalWorkAuthority:
             raise ValueError(f'authority work mismatch: expected {work_id}, got {raw["work_id"]}')
         if not raw.get('work_id') or not raw.get('work_name') or not raw.get('execution_workspace') or not raw.get('evidence_root'):
             raise ValueError('authority identity/scope fields must be non-empty')
-        return WorkBinding(**{key: raw[key] for key in REQUIRED})
+        values = {key: raw[key] for key in REQUIRED}
+        for key in ('assignment_id', 'task_id', 'environment_id', 'host_identity_id', 'requested_timeout_seconds'):
+            if key in raw:
+                values[key] = raw[key]
+        return WorkBinding(**values)
