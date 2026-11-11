@@ -21,7 +21,7 @@ The job performs only read-only checks:
 - Python and Git executable path/version;
 - listener presence and owning process name/PID on ports 8010, 8020, 8030, 8031 and 8787.
 
-It does not checkout source, modify files, start/stop processes, access credentials, invoke sandbox_read(), or execute protected commands. It is intentionally not a dependency of the existing release_gate; its result is a separate PC runner evidence gate.
+It does not checkout source, modify files, start/stop processes, access credentials, invoke sandbox_read(), or execute protected commands. For pull_request events, the Work32 release_gate now requires this probe to succeed. A queued probe keeps the release gate pending; a wrong runner identity fails the gate. On push events the probe may be skipped unless the dedicated self-hosted Windows Browser Adapter lane is enabled by the repository variable.
 
 ## 3. Expected outcomes
 
