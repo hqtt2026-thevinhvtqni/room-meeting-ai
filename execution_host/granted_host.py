@@ -174,6 +174,19 @@ class GrantedExecutionHost:
                 raise GrantedExecutionError("execution_git_origin_invalid")
         if remote_repository.lower() != binding["repository"].lower():
             raise GrantedExecutionError("execution_git_origin_mismatch")
+        try:
+            git_status = subprocess.run(
+                ["git", "status", "--porcelain", "--untracked-files=all"],
+                cwd=workspace,
+                text=True,
+                capture_output=True,
+                timeout=5,
+                check=True,
+            ).stdout
+        except (OSError, subprocess.SubprocessError):
+            raise GrantedExecutionError("execution_git_status_unavailable") from None
+        if git_status.strip():
+            raise GrantedExecutionError("execution_git_worktree_dirty")
 
         command = binding["test_entrypoint"]
         if not isinstance(command, list) or not command:
