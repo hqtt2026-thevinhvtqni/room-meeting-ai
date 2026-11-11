@@ -91,7 +91,7 @@ class GrantedExecutionHost:
         grant_token: str,
     ) -> dict[str, Any]:
         required = (
-            "work_id", "work_name", "purpose", "assignment_id", "task_id",
+            "work_id", "work_name", "repository", "branch", "expected_head", "purpose", "assignment_id", "task_id",
             "workspace_root", "execution_workspace", "evidence_root",
             "source_sha256", "environment_id", "test_entrypoint",
             "max_timeout_seconds", "host_identity_id",
@@ -117,6 +117,23 @@ class GrantedExecutionHost:
         actual_source_hash = workspace_source_sha256(workspace)
         if actual_source_hash != binding["source_sha256"]:
             raise GrantedExecutionError("execution_source_hash_mismatch")
+
+        expected_head = binding["expected_head"]
+        if not isinstance(expected_head, str) or len(expected_head) not in (40, 64):
+            raise GrantedExecutionError("canonical_git_head_invalid")
+        try:
+            git_head = subprocess.run(
+                ["git", "rev-parse", "HEAD"],
+                cwd=workspace,
+                text=True,
+                capture_output=True,
+                timeout=5,
+                check=True,
+            ).stdout.strip().lower()
+        except (OSError, subprocess.SubprocessError):
+            raise GrantedExecutionError("execution_git_head_unavailable") from None
+        if git_head != expected_head.lower():
+            raise GrantedExecutionError("execution_git_head_mismatch")
 
         command = binding["test_entrypoint"]
         if not isinstance(command, list) or not command:
@@ -151,6 +168,9 @@ class GrantedExecutionHost:
                 grant_token,
                 {
                     "run_id": run_id,
+                    "repository": binding["repository"],
+                    "branch": binding["branch"],
+                    "expected_head": expected_head,
                     "command": command,
                     "source_sha256": actual_source_hash,
                     "environment_id": binding["environment_id"],
@@ -164,8 +184,14 @@ class GrantedExecutionHost:
 
         if run_started_persisted:
             try:
-                # Final online validation immediately before the real process effect.
-                # A revoke after run-start but before process creation is observed here.
+                env = safe_env()
+                env.update({
+                    "ROOM_HOP_EXECUTION_ID": run_id,
+                    "ROOM_HOP_WORK_ID": binding["work_id"],
+                    "PYTHONUNBUFFERED": "1",
+                })
+
+                # Final online authorization is the last operation before spawn.
                 latest = self.authority_client.validate_grant(
                     binding["work_id"], grant_id, grant_token
                 )
@@ -175,15 +201,11 @@ class GrantedExecutionHost:
                     latest.get("source_sha256") != actual_source_hash
                     or latest.get("host_identity_id") != binding["host_identity_id"]
                     or latest.get("test_entrypoint") != command
+                    or latest.get("repository") != binding["repository"]
+                    or latest.get("branch") != binding["branch"]
+                    or latest.get("expected_head") != expected_head
                 ):
                     raise GrantedExecutionError("grant_binding_changed_before_execution")
-
-                env = safe_env()
-                env.update({
-                    "ROOM_HOP_EXECUTION_ID": run_id,
-                    "ROOM_HOP_WORK_ID": binding["work_id"],
-                    "PYTHONUNBUFFERED": "1",
-                })
                 try:
                     completed = subprocess.run(
                         command,
@@ -220,6 +242,9 @@ class GrantedExecutionHost:
             "run_id": run_id,
             "grant_id": grant_id,
             "work_id": binding["work_id"],
+            "repository": binding["repository"],
+            "branch": binding["branch"],
+            "expected_head": expected_head,
             "assignment_id": binding["assignment_id"],
             "task_id": binding["task_id"],
             "principal_id": binding["principal_id"],
