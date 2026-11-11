@@ -2160,3 +2160,48 @@ Inspect the next exact-SHA run. If setup-python passes, proceed to dependency/br
 ### Next
 
 Inspect the next exact-SHA run. Resolve Python discovery/venv issues from runner evidence before progressing to browser provisioning.
+
+
+---
+
+## W32-LOG-20261111-102 — PORTABLE PYTHON FOR NETWORK SERVICE RUNNER
+
+- **Work:** Work32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P1 — Python runtime available to self-hosted runner identity
+- **Name:** Ka
+- **Title:** CSA / Delegated Work32 Execution Owner
+- **Date-Time:** 2026-11-11, Asia/Ho_Chi_Minh
+- **Status:** SOURCE PATCH COMMITTED — RETEST PENDING
+
+### Runtime evidence
+
+- Workflow run 42945241519, run number 344: PowerShell 7, exact-SHA checkout, Linux unit tests, Product Auto E2E, and strict mirror check passed.
+- Windows Python discovery failed with: no accessible Python 3.12 x64 installation for the runner service identity.
+- The runner service runs as NETWORK SERVICE. The interactive ADMIN-PC Python installation is not discoverable/accessible from that service context. No Python installer or browser installation was performed in this run.
+- Cleanup completed successfully; no fixture store or Browser Adapter process was created.
+
+### Corrective source change
+
+- Replaced runner-account Python discovery and venv creation with a job-local portable Python 3.12.9 x64 runtime downloaded from the official Python.org embeddable package URL.
+- Validates the archive size against the official directory listing, records SHA-256, extracts only under RUNNER_TEMP, enables the embedded site-packages path, bootstraps pip, and verifies Python version/architecture before dependency installation.
+- Pins the Playwright browser cache to a unique RUNNER_TEMP directory for this exact GITHUB_SHA.
+- Uses the portable interpreter explicitly for dependency install, fixture bootstrap and E2E.
+- Teardown now removes only the job-owned disposable meeting store, portable Python runtime/archive/bootstrap file, and Playwright browser cache after confirming they resolve beneath RUNNER_TEMP and outside the checkout.
+- Active workflow blob: 105d38099640e76625dfc69a27daea9c1191d1a5.
+- Mirror workflow blob: 105d38099640e76625dfc69a27daea9c1191d1a5.
+- Active workflow commit: 9e33f197b527ed9dfcefde216ab16ee8fa8d4e10.
+- Mirror workflow commit: f99723d947cb62cbb4c91b61ddc2e1e9790c933a.
+- Active and mirror fetched after writes; identical blob SHA confirmed.
+
+### Verification
+
+- **PASS:** exact blocker identified from ADMIN-PC runner log.
+- **PASS:** portable Python source and cleanup paths committed/read back; workflow mirror matches.
+- **PENDING:** Python.org archive download/size verification, pip bootstrap, dependency resolution, Playwright/Chromium download, Core fixture creation, Adapter launch/health/PID ownership, E2E and teardown.
+- No PC/admin intervention required for this portable-runtime approach; no registry writes or service-account changes; no WORK09 action; no main/release/deploy.
+- Work32 remains **ACTIVE — NOT RELEASED**.
+
+### Next
+
+Inspect the next exact-SHA run from portable Python provisioning onward; continue fixing only observed failures.
