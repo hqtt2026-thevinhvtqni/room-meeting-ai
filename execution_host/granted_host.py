@@ -107,7 +107,7 @@ class GrantedExecutionHost:
         canonical_workspace = (root / "workspace").resolve()
         if not root.is_dir() or not workspace.is_dir():
             raise GrantedExecutionError("canonical_workspace_missing")
-        if not _inside(workspace, canonical_workspace):
+        if not _inside(canonical_workspace, root) or not _inside(workspace, canonical_workspace):
             raise GrantedExecutionError("execution_workspace_escape")
         if not _inside(evidence_root, root):
             raise GrantedExecutionError("evidence_root_escape")
