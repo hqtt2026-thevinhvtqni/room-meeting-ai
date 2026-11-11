@@ -238,3 +238,22 @@ def test_host_rejects_wrong_git_origin_repository(tmp_path):
     )
     assert result["status"] == "BLOCKED"
     assert result["blocker"] == "execution_git_origin_mismatch"
+
+
+def test_host_rejects_dirty_worktree_even_when_source_hash_matches(tmp_path):
+    binding = make_binding(tmp_path)
+    workspace = Path(binding["execution_workspace"])
+    (workspace / "test_ok.py").write_text(
+        "def test_ok():\n    assert 2 == 2\n",
+        encoding="utf-8",
+    )
+    # The submitted source digest matches the modified bytes, but the Git
+    # revision is no longer a clean checkout of the approved commit.
+    binding["source_sha256"] = workspace_source_sha256(workspace)
+    authority = FakeAuthorityClient(binding)
+    result = GrantedExecutionHost(authority).execute_for_work(
+        "W32", "grant-test", "secret-token"
+    )
+    assert result["status"] == "BLOCKED"
+    assert result["blocker"] == "execution_git_worktree_dirty"
+    assert authority.started == []
