@@ -33,7 +33,18 @@ def build_app():
     # Agent identity is resolved from the server-side Agent Registry.
     # Service credentials map to this principal; request bodies cannot
     # nominate or override the principal.
-    authority = ExecutionAuthority.from_env(agent_registry=AgentRegistry())
+    authority = None
+    if all(os.getenv(name) for name in (
+        "ROOM_HOP_EXECUTION_IDENTITIES_JSON",
+        "ROOM_HOP_EXECUTION_WORKS_JSON",
+        "ROOM_HOP_EXECUTION_STORE_PATH",
+    )):
+        try:
+            authority = ExecutionAuthority.from_env(agent_registry=AgentRegistry())
+        except Exception:
+            # Authority configuration or Agent Registry failure must not take
+            # down the existing Meeting API; protected routes stay 503.
+            authority = None
     app.include_router(create_execution_authority_router(authority))
     return app
 
