@@ -37,8 +37,9 @@ Canonical Authority → WorkContext → LifecycleController → ExecutionHost.
 - A Grant is bound to Work ID, server-derived Agent principal, issuer service identity, Assignment ID, Task ID, target Host service identity, source SHA-256, environment ID, exact pytest entrypoint, timeout ceiling, policy version, issued time and expiry.
 - Assignment and Task must be present in canonical WorkContext and must also be allow-listed in Core's Work policy. No caller can widen those allow-lists.
 - The issuer identity and Host identity are separate enrolled service identities. Agent principal is resolved by Core from credential configuration and Agent Registry; it is not trusted from the request body.
-- Grant token is returned once; only its SHA-256 digest is persisted. No token is logged or copied into Run Record.
-- Host makes an online Core validation for each execution and a second online validation immediately before spawning the test process. No cached ALLOW decision is used.
+- Grant token is returned once; only its SHA-256 digest is persisted. Enrolled service credentials must be at least 32 characters; Core stores only their SHA-256 digests. No token is logged or copied into Run Record.
+- A Grant is single-use: only one run_started event may be recorded against it. A revoked Grant cannot start a new run.
+- Host makes an online Core validation for each execution, persists run_started before process creation, and makes a second online validation immediately before spawning the test process. After writing evidence, it appends run_completed. Revocation blocks a not-yet-started run; an already-started run can still be closed in the journal. No cached ALLOW decision is used.
 - Core outage, invalid/revoked/expired Grant, source mismatch, policy mismatch, or Host inability to persist the Run Record blocks acceptance.
 - Host and Core HTTP bind to loopback by default. Remote transport requires HTTPS; the current HTTP servers reject non-loopback bind.
 
@@ -50,13 +51,13 @@ The implementation branch introduces:
 - room_hop_mcp/core_http_main.py: mounts the additive authority router in the existing Core process.
 - execution_host/source_snapshot.py: deterministic immutable workspace source fingerprint; symlinks are rejected.
 - execution_host/core_authority_client.py: Host online Core validation and Run Record client; remote HTTP is rejected.
-- execution_host/granted_host.py and execution_host/server.py: grant-only Host HTTP boundary, Core-derived execution binding, pytest-only command, immediate revalidation, evidence and Run Record.
+- execution_host/granted_host.py and execution_host/server.py: grant-only Host HTTP boundary, Core-derived execution binding, pytest-only command, immediate revalidation, two-phase Run Record, evidence and bounded Host request timeout.
 - wee/bridge/core_grant_host.py: WEE adapter that obtains a Core Grant, calls Host, then requests Grant revocation.
 - wee/authority.py, wee/models.py, wee/controller.py, wee/cli.py: canonical Assignment/Task/Environment/Host binding is carried in WorkContext; LifecycleController no longer equates discovery with execution and requires the Core-grant adapter for protected execution.
 
 ## 4. Tests added to the Work32 CI workflow
 
-- tests/test_execution_authority.py: scope denial, service identity, issue/validate/revoke, Run Record binding and journal tamper.
+- tests/test_execution_authority.py: scope denial, high-entropy service identity, issue/validate/revoke, single-use Grant, two-phase Run Record, journal tamper, workspace/evidence containment and concurrent Core instances.
 - tests/test_execution_source_snapshot.py: deterministic hash, cache exclusions and symlink rejection.
 - tests/test_execution_host_grants.py: Host online validation twice, canonical pytest-only operation and revocation-before-spawn negative case.
 - tests/test_wee_lifecycle_authority.py: no false EXECUTE PASS from discovery, real grant adapter path and test failure propagation.
@@ -87,8 +88,8 @@ No credentials, production policy, path, environment identity or live service st
 
 Before protected execution can be enabled:
 1. Run exact-SHA CI including all new focused tests; resolve every failure.
-2. Add HTTP-level tests for issue/validate/revoke/run routes and unconfigured fail-closed behavior.
-3. Review hash-chain persistence and cross-process locking on Windows and POSIX; test restart replay, concurrent issue/revoke/record and corruption fail-closed.
+2. HTTP-level tests for issue/validate/revoke/run-start/run-complete and unconfigured fail-closed behavior have been added; exact-SHA retest remains required.
+3. Review hash-chain persistence and cross-process locking on Windows and POSIX; concurrent two-instance append is covered by a thread test, but separate-process and Windows lock/restart replay tests remain open. Journal hash-chain is tamper-evident, not tamper-proof against an actor who can rewrite the file and recompute hashes.
 4. Review token lifetime, credential rotation, identity mapping and revocation race semantics.
 5. Verify source snapshot parity between canonical Work workspace, issuer and Host; verify the actual deployment uses the same immutable workspace.
 6. Verify Run Record persistence failure behavior and evidence retention/ownership.
