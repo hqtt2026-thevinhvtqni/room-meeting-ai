@@ -65,17 +65,21 @@ def create_execution_authority_router(
     @router.post("/works/{work_id}/execution-grants")
     def issue_grant(
         work_id: str,
-        body: GrantIssueRequest,
+        body: dict[str, Any],
         x_room_hop_service_id: str | None = Header(default=None),
         x_room_hop_service_credential: str | None = Header(default=None),
     ) -> dict[str, Any]:
         service = require_authority()
+        try:
+            request_body = GrantIssueRequest.parse_obj(body)
+        except Exception:
+            raise HTTPException(status_code=422, detail="execution_grant_request_invalid") from None
         return invoke(
             service.issue_grant,
             work_id=work_id,
             service_id=x_room_hop_service_id or "",
             credential=x_room_hop_service_credential or "",
-            request=body.model_dump(),
+            request=request_body.dict(),
         )
 
     @router.get("/works/{work_id}/execution-grants/{grant_id}")
@@ -119,12 +123,16 @@ def create_execution_authority_router(
     def record_run(
         work_id: str,
         grant_id: str,
-        body: RunRecordRequest,
+        body: dict[str, Any],
         authorization: str | None = Header(default=None),
         x_room_hop_service_id: str | None = Header(default=None),
         x_room_hop_service_credential: str | None = Header(default=None),
     ) -> dict[str, Any]:
         service = require_authority()
+        try:
+            request_body = RunRecordRequest.parse_obj(body)
+        except Exception:
+            raise HTTPException(status_code=422, detail="execution_run_record_invalid") from None
         scheme, _, token = (authorization or "").partition(" ")
         if scheme.lower() != "bearer" or not token:
             raise HTTPException(status_code=401, detail="grant_bearer_required")
@@ -135,7 +143,7 @@ def create_execution_authority_router(
             token=token,
             host_service_id=x_room_hop_service_id or "",
             host_credential=x_room_hop_service_credential or "",
-            record=body.model_dump(),
+            record=request_body.dict(),
         )
 
     @router.post("/works/{work_id}/execution-grants/{grant_id}/revoke")
