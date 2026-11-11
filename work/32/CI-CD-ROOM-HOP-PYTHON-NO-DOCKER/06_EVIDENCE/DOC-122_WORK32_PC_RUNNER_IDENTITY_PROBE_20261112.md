@@ -51,3 +51,10 @@ The probe does not provision or enable Execution Host :8031. It does not prove C
 - Corrective workflow change: both probe steps now invoke PowerShell with -NoProfile -ExecutionPolicy Bypass -File {0}. This applies only to the job process; it does not modify machine/user ExecutionPolicy.
 - Run #390 remains a failed historical probe. A new run is required to prove the corrected probe.
 - The pull_request release_gate now depends on the probe; it cannot PASS while the probe is queued or failed.
+## 6. Run #392 retest state
+
+- Corrected PR head: f3606598d18780260e70cc9090a3a8cef1f9ceab.
+- Run #392 / 43077892672 has 234 unit tests and 119 Product Auto E2E tests PASS; hosted Windows and immutable artifact lanes also completed successfully.
+- The corrected self-hosted runner probe remains QUEUED, so the PR release_gate is intentionally pending.
+- The prior log proves the runner was online and claimed Run #390, but no current Runner.Listener process/log evidence is available after that failed job.
+- Next diagnostic is limited to the PC runner service, Runner.Listener process and latest _diag Runner log. Do not change registration, labels, service account or ExecutionPolicy globally until that evidence is reviewed.
