@@ -224,16 +224,19 @@ class ExecutionAuthority:
         if not isinstance(policy, dict):
             raise AuthorityError("work_not_authorized", 403)
         required = (
-            "work_name", "allowed_identities", "allowed_host_identities",
+            "work_name", "repository", "allowed_branches", "allowed_identities", "allowed_host_identities",
             "allowed_assignments", "allowed_tasks", "workspace_root",
             "execution_workspace", "evidence_root", "source_sha256",
             "environment_id", "test_entrypoint", "max_timeout_seconds",
         )
         if any(key not in policy for key in required):
             raise AuthorityError("work_policy_incomplete", 503)
-        for key in ("allowed_identities", "allowed_host_identities", "allowed_assignments", "allowed_tasks"):
+        for key in ("allowed_branches", "allowed_identities", "allowed_host_identities", "allowed_assignments", "allowed_tasks"):
             if not isinstance(policy[key], list) or not policy[key] or not all(isinstance(item, str) and item for item in policy[key]):
                 raise AuthorityError("work_policy_scope_invalid", 503)
+        repository = policy["repository"]
+        if not isinstance(repository, str) or len(repository.split("/")) != 2 or not all(repository.split("/")):
+            raise AuthorityError("work_policy_repository_invalid", 503)
         source_hash = policy["source_sha256"]
         if not isinstance(source_hash, str) or len(source_hash) != 64 or any(ch not in "0123456789abcdef" for ch in source_hash):
             raise AuthorityError("work_policy_source_hash_invalid", 503)
@@ -291,6 +294,9 @@ class ExecutionAuthority:
         task_id = request.get("task_id")
         host_identity_id = request.get("host_identity_id")
         source_sha256 = request.get("source_sha256")
+        repository = request.get("repository")
+        branch = request.get("branch")
+        expected_head = request.get("expected_head")
         environment_id = request.get("environment_id")
         timeout = request.get("requested_timeout_seconds")
         if timeout is None:
@@ -307,6 +313,10 @@ class ExecutionAuthority:
             raise AuthorityError("execution_host_not_authorized", 403)
         if source_sha256 != policy["source_sha256"]:
             raise AuthorityError("source_revision_not_authorized", 409)
+        if repository != policy["repository"] or branch not in policy["allowed_branches"]:
+            raise AuthorityError("repository_or_branch_not_authorized", 403)
+        if not isinstance(expected_head, str) or len(expected_head) not in (40, 64) or any(ch not in "0123456789abcdef" for ch in expected_head):
+            raise AuthorityError("expected_git_head_invalid", 422)
         if request.get("test_entrypoint") != policy["test_entrypoint"]:
             raise AuthorityError("test_entrypoint_not_authorized", 403)
         if environment_id != policy["environment_id"]:
@@ -329,6 +339,9 @@ class ExecutionAuthority:
             "status": "active",
             "work_id": work_id,
             "work_name": policy["work_name"],
+            "repository": repository,
+            "branch": branch,
+            "expected_head": expected_head,
             "purpose": purpose,
             "issuer_service_id": service_id,
             "principal_id": actor["principal_id"],
@@ -470,7 +483,7 @@ class ExecutionAuthority:
                 raise AuthorityError("grant_token_invalid", 401)
             if grant["host_identity_id"] != host["service_id"]:
                 raise AuthorityError("grant_host_binding_mismatch", 403)
-            required = ("run_id", "command", "source_sha256", "environment_id", "started_at")
+            required = ("run_id", "repository", "branch", "expected_head", "command", "source_sha256", "environment_id", "started_at")
             if any(key not in record for key in required):
                 raise AuthorityError("run_start_record_incomplete", 422)
             if record["source_sha256"] != grant["source_sha256"]:
@@ -479,6 +492,8 @@ class ExecutionAuthority:
                 raise AuthorityError("run_environment_binding_mismatch", 409)
             if record["command"] != grant["test_entrypoint"]:
                 raise AuthorityError("run_command_binding_mismatch", 409)
+            if (record["repository"], record["branch"], record["expected_head"]) != (grant["repository"], grant["branch"], grant["expected_head"]):
+                raise AuthorityError("run_git_binding_mismatch", 409)
             if any(item["start"].get("run_id") == record["run_id"] for item in runs):
                 raise AuthorityError("run_id_already_recorded", 409)
             if any(item["start"].get("grant_id") == grant_id for item in runs):
