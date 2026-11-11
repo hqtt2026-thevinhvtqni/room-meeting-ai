@@ -370,6 +370,42 @@ def test_revocation_blocks_new_run_but_allows_existing_run_completion(tmp_path):
     assert events[-1]["payload"]["grant_status_at_completion"] == "revoked"
 
 
+
+def test_concurrent_core_instances_append_valid_hash_chain(tmp_path):
+    from concurrent.futures import ThreadPoolExecutor
+
+    authority, request = make_authority(tmp_path)
+    second = ExecutionAuthority(
+        identities=authority.identities,
+        works=authority.works,
+        store_path=authority.store_path,
+        agent_registry=AgentRegistryStub(),
+    )
+    services = [authority, second]
+
+    def issue_one(index):
+        return issue(services[index % 2], dict(request))
+
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        grants = list(pool.map(issue_one, range(16)))
+
+    ids = [grant["grant_id"] for grant in grants]
+    assert len(set(ids)) == 16
+    events = [
+        json.loads(line)
+        for line in authority.store_path.read_text(encoding="utf-8").splitlines()
+    ]
+    assert len(events) == 16
+    assert all(event["event_type"] == "grant_issued" for event in events)
+    for grant in grants:
+        assert authority.grant_status(
+            work_id="W32",
+            grant_id=grant["grant_id"],
+            service_id="agent-ka-service",
+            credential="agent-secret-32-byte-minimum-credential",
+        )["status"] == "active"
+
+
 def test_journal_tampering_fails_closed(tmp_path):
     authority, request = make_authority(tmp_path)
     grant = issue(authority, request)
