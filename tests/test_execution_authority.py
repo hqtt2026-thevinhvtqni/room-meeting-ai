@@ -43,6 +43,8 @@ def make_authority(tmp_path: Path) -> tuple[ExecutionAuthority, dict]:
     works = {
         "W32": {
             "work_name": "ROOM-HOP-WORK-32",
+            "repository": "hqtt2026-thevinhvtqni/room-meeting-ai",
+            "allowed_branches": ["work/32-core-owned-execution-authority-20261112"],
             "allowed_identities": ["agent-ka-service"],
             "allowed_host_identities": ["host-8031"],
             "allowed_assignments": ["W32-EXECUTION-AUTHORITY"],
@@ -66,6 +68,9 @@ def make_authority(tmp_path: Path) -> tuple[ExecutionAuthority, dict]:
     )
     request = {
         "purpose": "pytest_run",
+        "repository": "hqtt2026-thevinhvtqni/room-meeting-ai",
+        "branch": "work/32-core-owned-execution-authority-20261112",
+        "expected_head": "b" * 40,
         "assignment_id": "W32-EXECUTION-AUTHORITY",
         "task_id": "W32-P0-PYTEST",
         "host_identity_id": "host-8031",
@@ -206,6 +211,9 @@ def test_run_record_is_bound_to_grant_and_persisted(tmp_path):
         host_credential="host-secret-32-byte-minimum-credential",
         record={
             "run_id": "run-001",
+            "repository": "hqtt2026-thevinhvtqni/room-meeting-ai",
+            "branch": "work/32-core-owned-execution-authority-20261112",
+            "expected_head": "b" * 40,
             "command": ["python", "-m", "pytest", "-q"],
             "source_sha256": "a" * 64,
             "environment_id": "w32-local-ci",
@@ -268,6 +276,9 @@ def test_grant_is_single_use_after_run_start(tmp_path):
     grant = issue(authority, request)
     start = {
         "run_id": "run-single-1",
+        "repository": "hqtt2026-thevinhvtqni/room-meeting-ai",
+        "branch": "work/32-core-owned-execution-authority-20261112",
+        "expected_head": "b" * 40,
         "command": ["python", "-m", "pytest", "-q"],
         "source_sha256": "a" * 64,
         "environment_id": "w32-local-ci",
