@@ -32,3 +32,11 @@ Các phân hệ phát triển song song theo contract-first. Chỉ tích hợp k
 S0 inventory/ownership; S1 contracts approved; S2 component tests; S3 integration tests; S4 concurrency/idempotency/recovery/security; S5 independent QE; S6 Founder acceptance. PASS chỉ khi có bằng chứng tái lập. Chưa chạy là NOT RUN, thiếu căn cứ là NOT VERIFIED.
 ## 7. Phạm vi chưa được xác nhận
 Runtime dispatch, event delivery, evidence parity, multi-agent concurrency, recovery, cross-work dashboard live data, CI trigger from task lifecycle và QE independence enforcement chưa được xác minh đầy đủ. Không tuyên bố bộ máy hoàn thành trước khi các phép thử PASS.
+
+
+## 8. Retrieval capability architecture addendum — 2026-11-11
+- Retrieval is a pluggable capability, not a second Core/control plane. ROOM-HOP may support lexical, dense-vector, hybrid, reranking, hierarchical/DecisionRAG and graph strategies behind a common evidence-result contract.
+- Strategy outputs must preserve source ID, document revision, exact locator/span, chunk/node ID, retrieval trace, access decision, timestamp and abstention metadata. Generation receives only authorized, traceable evidence.
+- DecisionRAG is a research candidate only. It does not replace the current Work 103 baseline or authorize production implementation. See DOC-096 and Work 103 `03_ARCHITECTURE/DECISIONRAG_RETRIEVAL_EXPERIMENT_PLAN_20261111.md`.
+- No retrieval strategy is selected on R@1 alone; evaluate recall/ranking, false abstention, unsupported-answer/leak rate, permission violations, provenance, pruning misses, p50/p95 latency, token/cost and reproducibility.
+- Architecture status: design direction recorded; implementation, benchmark and production adoption NOT AUTHORIZED / NOT VERIFIED.
