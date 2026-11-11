@@ -484,3 +484,28 @@ def test_expired_grant_can_be_revoked_and_revocation_is_idempotent(tmp_path):
     assert [event["event_type"] for event in events] == [
         "grant_issued", "grant_revoked"
     ]
+
+
+def test_authority_store_must_be_outside_work_scope(tmp_path):
+    authority, _ = make_authority(tmp_path)
+    work_root = Path(authority.works["W32"]["workspace_root"])
+
+    with pytest.raises(AuthorityError, match="authority_store_inside_work_scope"):
+        ExecutionAuthority(
+            identities=authority.identities,
+            works=authority.works,
+            store_path=work_root / "authority" / "events.jsonl",
+            agent_registry=AgentRegistryStub(),
+        )
+
+
+def test_authority_store_path_must_be_absolute(tmp_path):
+    authority, _ = make_authority(tmp_path)
+
+    with pytest.raises(AuthorityError, match="authority_store_path_must_be_absolute"):
+        ExecutionAuthority(
+            identities=authority.identities,
+            works=authority.works,
+            store_path="relative-authority/events.jsonl",
+            agent_registry=AgentRegistryStub(),
+        )

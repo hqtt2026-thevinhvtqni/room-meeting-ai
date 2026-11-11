@@ -78,7 +78,23 @@ class ExecutionAuthority:
     ):
         self.identities = identities
         self.works = works
-        self.store_path = Path(store_path).resolve()
+        raw_store_path = Path(store_path)
+        if not raw_store_path.is_absolute():
+            raise AuthorityError("authority_store_path_must_be_absolute", 503)
+        self.store_path = raw_store_path.resolve()
+        for work_id, policy in self.works.items():
+            if not isinstance(policy, dict):
+                raise AuthorityError("work_policy_invalid", 503)
+            root_value = policy.get("workspace_root")
+            if not isinstance(root_value, str) or not root_value:
+                raise AuthorityError("work_policy_workspace_root_invalid", 503)
+            work_root = Path(root_value).resolve()
+            try:
+                self.store_path.relative_to(work_root)
+            except ValueError:
+                pass
+            else:
+                raise AuthorityError("authority_store_inside_work_scope", 503)
         self.lock_path = self.store_path.with_suffix(self.store_path.suffix + ".lock")
         self.agent_registry = agent_registry
         self.clock = clock
