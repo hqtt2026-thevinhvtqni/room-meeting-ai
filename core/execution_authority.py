@@ -141,13 +141,16 @@ class ExecutionAuthority:
                     if not isinstance(payload, dict):
                         raise AuthorityError("authority_journal_payload_invalid", 503)
                     if kind == "grant_issued":
+                        if payload["grant_id"] in grants:
+                            raise AuthorityError("authority_journal_duplicate_grant", 503)
                         grants[payload["grant_id"]] = dict(payload)
                     elif kind == "grant_revoked":
                         grant = grants.get(payload.get("grant_id"))
-                        if grant is not None:
-                            grant["status"] = "revoked"
-                            grant["revoked_at"] = payload["revoked_at"]
-                            grant["revoked_by"] = payload["revoked_by"]
+                        if grant is None:
+                            raise AuthorityError("authority_journal_revoke_target_missing", 503)
+                        grant["status"] = "revoked"
+                        grant["revoked_at"] = payload["revoked_at"]
+                        grant["revoked_by"] = payload["revoked_by"]
                     elif kind == "run_started":
                         runs.append({"start": dict(payload), "completion": None})
                     elif kind == "run_completed":
@@ -155,6 +158,8 @@ class ExecutionAuthority:
                         if match is None or match["completion"] is not None:
                             raise AuthorityError("authority_journal_run_transition_invalid", 503)
                         match["completion"] = dict(payload)
+                    else:
+                        raise AuthorityError("authority_journal_event_unknown", 503)
         except AuthorityError:
             raise
         except (OSError, UnicodeError, json.JSONDecodeError, KeyError, TypeError):
@@ -231,6 +236,7 @@ class ExecutionAuthority:
             workspace = Path(policy["execution_workspace"]).resolve(strict=True)
             evidence = Path(policy["evidence_root"]).resolve()
             canonical_workspace = (root / "workspace").resolve()
+            canonical_workspace.relative_to(root)
             workspace.relative_to(canonical_workspace)
             evidence.relative_to(root)
             if not root.is_dir() or not workspace.is_dir():
@@ -296,7 +302,10 @@ class ExecutionAuthority:
 
         token = secrets.token_urlsafe(32)
         now = self.clock()
-        ttl = min(int(policy.get("grant_ttl_seconds", 300)), 900)
+        try:
+            ttl = min(int(policy.get("grant_ttl_seconds", 300)), 900)
+        except (TypeError, ValueError):
+            raise AuthorityError("grant_ttl_policy_invalid", 503) from None
         if ttl < 1:
             raise AuthorityError("grant_ttl_policy_invalid", 503)
         grant_id = "eg_" + secrets.token_hex(16)
@@ -458,6 +467,8 @@ class ExecutionAuthority:
                 raise AuthorityError("run_command_binding_mismatch", 409)
             if any(item["start"].get("run_id") == record["run_id"] for item in runs):
                 raise AuthorityError("run_id_already_recorded", 409)
+            if any(item["start"].get("grant_id") == grant_id for item in runs):
+                raise AuthorityError("grant_already_used", 409)
             payload = {
                 **record,
                 "grant_id": grant_id,
