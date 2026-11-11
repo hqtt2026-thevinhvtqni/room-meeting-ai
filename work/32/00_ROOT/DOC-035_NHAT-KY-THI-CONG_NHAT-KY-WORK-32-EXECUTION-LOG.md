@@ -1786,3 +1786,39 @@ These later changes are not covered by Run #376. The branch requires a new exact
 - Independent security review and live positive/negative Core↔Host execution E2E remain open.
 - MCP :8020 sandbox_read() restriction remains unchanged.
 - PROTECTED EXECUTION DENIED; Work32 ACTIVE — NOT RELEASED.
+
+---
+
+## W32-LOG-20261112-116 — PC RUNNER CONNECTED / POWERSHELL EXECUTION POLICY CORRECTION
+
+- **Work:** 32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P0 — dedicated runner proof
+- **Name:** Ka
+- **Title:** CSA / Work32 Execution Owner
+- **Date-Time:** 2026-11-12 00:25 Asia/Ho_Chi_Minh
+- **Run #390:** 43077454507
+- **Runner job:** 130720921237
+- **Status:** RUNNER CLAIMED JOB; PROBE SCRIPT BLOCKED BY POWERSHELL POLICY; CORRECTION COMMITTED; RETEST PENDING.
+
+### Evidence from GitHub runner log
+
+- Runner name: ROOM-HOP-W32-PC.
+- Runner version: 2.338.2.
+- Runner group: Default.
+- Machine name: ADMIN-PC.
+- Job was scheduled on labels self-hosted, Windows, X64 and claimed by the intended runner.
+- PowerShell temporary script failed to load because script execution is disabled on the machine. The probe statements did not execute; no toolchain/listener inventory was collected.
+
+### Corrective action
+
+- Updated both probe steps to use explicit shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}.
+- This is process-scoped invocation only; no local or machine ExecutionPolicy was changed.
+- The PR release_gate now depends on w32_self_hosted_runner_probe. A queued or failed probe blocks PR acceptance.
+- Run #390 is preserved as failed; a new exact-head run must prove the corrected probe.
+
+### Safety
+
+- No local PC files or services were changed by the probe; it failed before executing its body.
+- No Execution Host or Core service was started; no protected command was executed.
+- Work32 remains ACTIVE — NOT RELEASED; PROTECTED EXECUTION DENIED.
