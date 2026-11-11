@@ -122,7 +122,7 @@ def test_issue_and_validate_grant_binds_agent_work_task_host_and_source(tmp_path
         ("assignment_id", "W99-OTHER", "assignment_not_authorized"),
         ("task_id", "UNRELATED-TASK", "task_not_authorized"),
         ("host_identity_id", "untrusted-host", "execution_host_not_authorized"),
-        ("source_sha256", "b" * 64, "source_revision_not_authorized"),
+        ("source_sha256", "bad", "source_sha256_invalid"),
         ("environment_id", "production", "execution_environment_not_authorized"),
         ("purpose", "shell", "execution_purpose_not_allowed"),
         ("repository", "attacker/other-repo", "repository_or_branch_not_authorized"),
