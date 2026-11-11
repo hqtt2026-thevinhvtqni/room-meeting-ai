@@ -143,9 +143,9 @@ class Adapter:
         if self.page:
             return {"status": "already_started"}
 
+        executable = os.getenv("ROOMHOP_BROWSER_EXECUTABLE")
         if self.browser is None:
             self.pw = sync_playwright().start()
-            executable = os.getenv("ROOMHOP_BROWSER_EXECUTABLE")
             launch_kwargs: dict[str, Any] = {
                 "headless": True,
                 "args": [],
