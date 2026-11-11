@@ -296,6 +296,9 @@ def test_work_policy_rejects_workspace_symlink_escape(tmp_path):
     authority, request = make_authority(tmp_path)
     root = tmp_path / "work-root"
     workspace = root / "workspace"
+    for child in workspace.iterdir():
+        if child.is_file():
+            child.unlink()
     outside = tmp_path / "outside-workspace"
     outside.mkdir()
     workspace.rmdir()
