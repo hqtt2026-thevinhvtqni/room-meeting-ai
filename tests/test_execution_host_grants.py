@@ -9,10 +9,11 @@ from execution_host.source_snapshot import workspace_source_sha256
 
 
 class FakeAuthorityClient:
-    def __init__(self, binding, *, fail_validation_number=None):
+    def __init__(self, binding, *, fail_validation_number=None, fail_start=False):
         self.binding = binding
         self.validation_calls = 0
         self.fail_validation_number = fail_validation_number
+        self.fail_start = fail_start
         self.records = []
         self.started = []
 
@@ -26,6 +27,8 @@ class FakeAuthorityClient:
         return dict(self.binding, status="active", grant_id=grant_id)
 
     def start_run(self, work_id, grant_id, token, record):
+        if self.fail_start:
+            raise AuthorityClientError("run_start_persistence_unavailable", 503)
         self.started.append(record)
         return {"run_id": record["run_id"], "grant_id": grant_id, "status": "started"}
 
@@ -126,3 +129,43 @@ def test_host_refuses_non_pytest_command_from_core_binding(tmp_path):
     )
     assert result["status"] == "BLOCKED"
     assert result["blocker"] == "canonical_command_not_pytest"
+
+
+def test_host_does_not_spawn_when_core_cannot_persist_run_start(tmp_path):
+    root = tmp_path / "root"
+    workspace = root / "workspace"
+    workspace.mkdir(parents=True)
+    marker = root / "must-not-exist.txt"
+    (workspace / "test_side_effect.py").write_text(
+        "from pathlib import Path\n"
+        f"Path({str(marker)!r}).write_text('executed')\n"
+        "def test_ok(): assert True\n",
+        encoding="utf-8",
+    )
+    evidence = root / "evidence"
+    evidence.mkdir()
+    binding = {
+        "work_id": "W32",
+        "work_name": "ROOM-HOP-WORK-32",
+        "purpose": "pytest_run",
+        "assignment_id": "W32-EXECUTION-AUTHORITY",
+        "task_id": "W32-P0-PYTEST",
+        "principal_id": "agent-ka",
+        "host_identity_id": "host-8031",
+        "workspace_root": str(root),
+        "execution_workspace": str(workspace),
+        "evidence_root": str(evidence),
+        "source_sha256": workspace_source_sha256(workspace),
+        "environment_id": "w32-local-ci",
+        "test_entrypoint": [sys.executable, "-m", "pytest", "-q"],
+        "max_timeout_seconds": 30,
+    }
+    authority = FakeAuthorityClient(binding, fail_start=True)
+    result = GrantedExecutionHost(authority).execute_for_work(
+        "W32", "grant-test", "secret-token"
+    )
+
+    assert authority.validation_calls == 1
+    assert result["status"] == "BLOCKED"
+    assert result["run_record_started"] is False
+    assert not marker.exists()
