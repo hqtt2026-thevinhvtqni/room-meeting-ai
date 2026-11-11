@@ -47,6 +47,7 @@ env:
     tests/test_w32_atomic_state.py
     tests/test_core_http_main.py
     tests/test_execution_authority.py
+    tests/test_execution_authority_http.py
     tests/test_execution_source_snapshot.py
   E2E_TESTS: >-
     tests/test_e2e.py
