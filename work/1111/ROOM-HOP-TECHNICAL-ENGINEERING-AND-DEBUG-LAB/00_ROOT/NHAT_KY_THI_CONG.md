@@ -1041,3 +1041,21 @@ If continuing this probe, reload the previously used read-only C# PEB reader def
 - **Kết quả:** 7 tệp được cập nhật và 20 tệp được tạo trong đợt đồng bộ; commit cuối của nhóm 27 tệp: `c55bfe8b347eed86035eacd6be2641dc74358784`.
 - **Khôi phục/đối chiếu nhật ký:** Sau khi phát hiện lượt remote readback đầu trả nội dung rút gọn, Co đã ghi lại toàn bộ nhật ký canonical từ Sandbox (129,246 ký tự) lên GitHub; commit khôi phục: `36d9c63a911001a4ec99d522d75d49b14edde053`. Remote fetch trả đủ 129,246 ký tự.
 - **Trạng thái PR:** #48 OPEN / DRAFT / UNMERGED; không merge, không deploy. Sync hồ sơ không xác nhận CI hoặc live E2E PASS.
+
+
+---
+
+## W1111 — Git-primary build environment adoption and pytest remediation
+
+- **Người thực hiện:** Co
+- **Chức danh:** Coder W1111
+- **Ngày:** 12/11/2026
+- **Giờ:** 00:57 UTC+7
+- **Quyết định vận hành theo chỉ thị của Vinh:** GitHub branch `work/w1111-core-execution-authority-v1-2` là nguồn chuẩn xây dựng/kiểm thử của W1111 trong thời gian PR #48 còn OPEN/DRAFT. `main` không được coi là đã cập nhật và không được merge nếu chưa có phê duyệt riêng. ROOM-HOP Sandbox là môi trường cộng tác/mirror, đồng bộ từ Git sau khi xác minh đúng commit.
+- **Kiểm tra lỗi CI:** GitHub Actions run `43072258364` trên HEAD `cfef706489f48aeba2d057a2c440cf0dfb33b96e` thất bại ở 1/19 test Core group. Lỗi: test nested test executable không hợp lệ làm `validate_command()` raise `HostError(forbidden_executable)` trước khi `execute_work()` chuyển lỗi thành structured BLOCKED result.
+- **Sửa mã trên Git branch:** `execution_host/host.py` bắt `HostError` trong nested test execution và chuyển thành `status=BLOCKED`, lưu blocker/reason đã redact; test `tests/test_execution_host_authority.py` xác nhận chính xác blocker `forbidden_executable`.
+- **Commit sửa:** host `eb8c181a3bdff8e999369fb75361ed19e94cb440`; test `a6efdeb2a8e517d949905ea8896279c49a50bb7a`.
+- **Bằng chứng pytest:** GitHub Actions run `43072888315`, exact HEAD `a6efdeb2a8e517d949905ea8896279c49a50bb7a`, conclusion SUCCESS. Core authority/host/HTTP group: 19 passed; W12 canonical host: 6 passed; W13 bridge/integration: 14 passed. Tổng 39 passed, 1 warning. Không có test failure trong run này.
+- **Tài liệu chuẩn hóa:** `05_BUILD/00_ROOT/GIT_PRIMARY_BUILD_ENVIRONMENT.md` mô tả Python 3.12, workflow, lệnh pytest, chu trình commit → exact-HEAD CI → journal → Sandbox sync và các ranh giới bằng chứng. README đã liên kết tới tài liệu này.
+- **Giới hạn:** CI PASS là source-level verification cho các nhóm test đã chạy trên đúng SHA nêu trên; không chứng minh PC/live runtime, credentials, deployment hoặc E2E production. PR #48 vẫn OPEN/DRAFT/UNMERGED.
+- **Trạng thái đồng bộ Sandbox:** chờ hoàn tất kiểm tra CI trên commit cuối và readback từng file sau đồng bộ; chưa đánh dấu Sandbox sync PASS ở thời điểm ghi mục này.
