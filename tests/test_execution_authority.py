@@ -262,6 +262,51 @@ def test_run_start_rejects_command_or_source_mismatch(tmp_path):
         )
 
 
+
+def test_grant_is_single_use_after_run_start(tmp_path):
+    authority, request = make_authority(tmp_path)
+    grant = issue(authority, request)
+    start = {
+        "run_id": "run-single-1",
+        "command": ["python", "-m", "pytest", "-q"],
+        "source_sha256": "a" * 64,
+        "environment_id": "w32-local-ci",
+        "started_at": "2026-11-12T00:00:00+00:00",
+    }
+    authority.start_run(
+        work_id="W32",
+        grant_id=grant["grant_id"],
+        token=grant["grant_token"],
+        host_service_id="host-8031",
+        host_credential="host-secret",
+        record=start,
+    )
+    with pytest.raises(AuthorityError, match="grant_already_used"):
+        authority.start_run(
+            work_id="W32",
+            grant_id=grant["grant_id"],
+            token=grant["grant_token"],
+            host_service_id="host-8031",
+            host_credential="host-secret",
+            record={**start, "run_id": "run-single-2"},
+        )
+
+
+def test_work_policy_rejects_workspace_symlink_escape(tmp_path):
+    authority, request = make_authority(tmp_path)
+    root = tmp_path / "work-root"
+    workspace = root / "workspace"
+    outside = tmp_path / "outside-workspace"
+    outside.mkdir()
+    workspace.rmdir()
+    try:
+        workspace.symlink_to(outside, target_is_directory=True)
+    except (OSError, NotImplementedError):
+        pytest.skip("directory symlink creation is unavailable on this runner")
+    with pytest.raises(AuthorityError, match="work_policy_paths_invalid"):
+        issue(authority, request)
+
+
 def test_journal_tampering_fails_closed(tmp_path):
     authority, request = make_authority(tmp_path)
     grant = issue(authority, request)
