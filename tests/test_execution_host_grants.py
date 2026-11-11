@@ -1,11 +1,34 @@
 from __future__ import annotations
 
+import subprocess
 import sys
 from pathlib import Path
 
 from execution_host.core_authority_client import AuthorityClientError
 from execution_host.granted_host import GrantedExecutionHost
 from execution_host.source_snapshot import workspace_source_sha256
+
+
+REPOSITORY = "hqtt2026-thevinhvtqni/room-meeting-ai"
+BRANCH = "work/32-core-execution-authority-20261112"
+
+
+def init_git(workspace: Path) -> str:
+    commands = [
+        ["git", "init", "-b", BRANCH],
+        ["git", "config", "user.email", "w32-tests@example.invalid"],
+        ["git", "config", "user.name", "Work32 Test"],
+        ["git", "add", "-A"],
+        ["git", "commit", "-m", "test workspace snapshot"],
+        ["git", "rev-parse", "HEAD"],
+    ]
+    output = ""
+    for command in commands:
+        result = subprocess.run(
+            command, cwd=workspace, text=True, capture_output=True, check=True
+        )
+        output = result.stdout.strip()
+    return output
 
 
 class FakeAuthorityClient:
@@ -44,9 +67,13 @@ def make_binding(tmp_path: Path, command=None):
     workspace.mkdir(parents=True)
     evidence.mkdir()
     (workspace / "test_ok.py").write_text("def test_ok():\n    assert True\n", encoding="utf-8")
+    expected_head = init_git(workspace)
     return {
         "work_id": "W32",
         "work_name": "ROOM-HOP-WORK-32",
+        "repository": REPOSITORY,
+        "branch": BRANCH,
+        "expected_head": expected_head,
         "purpose": "pytest_run",
         "assignment_id": "W32-EXECUTION-AUTHORITY",
         "task_id": "W32-P0-PYTEST",
@@ -93,6 +120,7 @@ def test_host_revalidates_immediately_before_process_effect(tmp_path):
     )
     evidence = root / "evidence"
     evidence.mkdir()
+    expected_head = init_git(workspace)
     binding = {
         "work_id": "W32",
         "work_name": "ROOM-HOP-WORK-32",
@@ -144,6 +172,7 @@ def test_host_does_not_spawn_when_core_cannot_persist_run_start(tmp_path):
     )
     evidence = root / "evidence"
     evidence.mkdir()
+    expected_head = init_git(workspace)
     binding = {
         "work_id": "W32",
         "work_name": "ROOM-HOP-WORK-32",
