@@ -86,3 +86,30 @@ The preferred direction is to keep deterministic business rules and authoritativ
 
 ### 8.5 Entry conditions before implementation
 Before any AI component is built or connected, document: validated user task; data classification and permitted processing; source-of-truth and human approval path; threat model and project isolation tests; benchmark dataset and baseline; fallback behavior; operating-cost ceiling; monitoring and rollback plan. The normal W70 phase gates still apply. This section does not authorize BUILD.
+
+
+## 9. Business role and reporting architecture — updated from user clarification
+**Confirmed relationship:** Quản công (site foreman) reports construction progress to Nhà thầu (contractor). Chủ đầu tư (project investor) may be granted access as an optional extension when required.
+
+### 9.1 Role-oriented application model
+- **Foreman workspace:** mobile-first report creation/submission for assigned projects and work items; attachment upload; report history and correction response.
+- **Contractor workspace:** project portfolio and project-level dashboard; assignment of foremen; report inbox; review, comment, clarification/correction workflow; progress overview.
+- **Investor view (optional capability):** a separately permissioned, project-scoped view that the contractor/project administrator explicitly enables. Default to read-only, with only approved progress and report information.
+- **Field workers (optional subordinate source):** may provide updates/photos to the foreman. Direct worker accounts are not assumed until the real site workflow is confirmed.
+
+### 9.2 Reporting flow
+Contractor creates project and defines work/reporting structure → appoints foreman → foreman submits progress report and supporting evidence → contractor reviews and may request correction → accepted report is reflected in project progress → authorized investor can view the shared information if the feature is enabled.
+
+The report lifecycle, review authority, report frequency, correction rules and whether an investor can comment/acknowledge remain OPEN for discovery.
+
+### 9.3 Multi-party authorization and information boundaries
+- Model organizations/contractors, projects, memberships/assignments and project-specific external stakeholders as separate authorization scopes; final schema remains undecided.
+- Every request must be checked server-side against actor, organization, project, resource and action.
+- Investor access is opt-in per project, least-privilege, revocable and read-only by default; it must not imply access to the contractor's organization-wide portfolio.
+- Separate internal contractor notes and commercially/personally sensitive information from investor-visible report fields.
+- Do not expose worker personal data, internal cost/commercial details, attachments or comments to an investor unless specifically approved for that project.
+- Record who granted/revoked access, which project/report was shared, what scope was granted and when.
+- The dashboard must filter by the viewer's authorized projects and visibility class; hiding a UI element is not authorization.
+
+### 9.4 Product boundary clarification
+The primary product workflow is foreman-to-contractor progress reporting. Investor access is an optional extension point, not a mandatory MVP user or a reason to build a full investor portal now. Direct worker reporting remains an open option, not a confirmed requirement.
