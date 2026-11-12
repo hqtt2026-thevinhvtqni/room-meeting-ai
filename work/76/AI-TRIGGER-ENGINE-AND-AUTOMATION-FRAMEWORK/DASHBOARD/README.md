@@ -4,7 +4,7 @@
 - Version: 0.2
 - Updated: 2026-11-06
 - Reference: Work 70 / Dashboard DOC-032
-- Status: ACTIVE — SOURCE SYNC PENDING VERIFICATION
+- Status: ACTIVE — SOURCE SYNC VERIFIED; BROWSER/MOBILE QE NOT RUN
 
 ## 1. Mục đích
 Bảng điều khiển theo dõi vòng đời Work 76, phase/gate, Work Package, AI assignment, blocker, risk, decision, activity log, evidence và freshness. Dashboard là read-only projection, không thay thế Core và không có quyền thực thi Trigger.
@@ -53,3 +53,10 @@ Sau đó mở `http://localhost:8080`. Không dùng `file://` nếu trình duy�
 
 ## 7. Giới hạn hiện tại
 Dashboard v0.2 đọc JSON tĩnh từ repository. Chưa có Core API, authentication/authorization, live push, backend persistence, upload/export backend, browser E2E hoặc independent QE. Source sync không đồng nghĩa browser test PASS. Work 76 vẫn ở 01_DISCOVER; G0/G1 chưa xác minh; NOT RELEASED.
+
+
+## 8. Snapshot refresh — 2026-11-13
+- PRODUCT_STATUS.json revision: W76-DASHBOARD-0.3.3.
+- Snapshot includes evidence EV-76-001…EV-76-018 and recent discovery/review activity from the canonical Work journal.
+- Source mode remains local_snapshot; this is not Core live data.
+- GitHub/Sandbox data-file synchronization is not browser rendering or interaction evidence. PC/mobile browser checks and independent QE remain NOT RUN; EV-76-007 remains NOT_AVAILABLE.
