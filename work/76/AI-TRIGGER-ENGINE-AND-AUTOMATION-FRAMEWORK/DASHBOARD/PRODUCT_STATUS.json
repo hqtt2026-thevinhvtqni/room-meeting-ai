@@ -9,9 +9,9 @@
   "current_phase": "01_DISCOVER",
   "source_mode": "local_snapshot",
   "freshness": "LOCAL_SNAPSHOT",
-  "revision": "W76-DASHBOARD-0.3.5",
-  "warning_vi": "LOCAL SNAPSHOT — chưa kết nối Core live. Cập nhật 2026-11-13 06:38:49 UTC+7; Evidence Register đến EV-76-020. ADR-76-001…008 OPEN / NOT APPROVED. Dashboard finding B-76-07: UI chưa hiển thị participant Work Entry gates; owner Xu/WP-76-09. Work vẫn 01_DISCOVER; G0/G1 NOT VERIFIED; Co WE-G4/G5 BLOCKED; WP-76-07 BLOCKED; runtime/test/browser-mobile E2E chưa triển khai/chưa chạy.",
-  "updated_at": "2026-11-12T23:38:54.706Z",
+  "revision": "W76-DASHBOARD-0.3.6",
+  "warning_vi": "LOCAL SNAPSHOT — chưa kết nối Core live. Cập nhật 2026-11-13 06:50 UTC+7; Evidence Register đến EV-76-021. OChat Sandbox write/read/delete probe VERIFIED ở mức tool-session capability בלבד; trusted AI-07 identity binding và PC/VS Code Bridge vẫn NOT VERIFIED. Work vẫn 01_DISCOVER; G0/G1 NOT VERIFIED; Co WE-G4/G5 BLOCKED; WP-76-07 BLOCKED; runtime/test/browser-mobile E2E chưa triển khai/chưa chạy.",
+  "updated_at": "2026-11-12T23:50:00Z",
   "phases": [
     {
       "phase_id": "01_DISCOVER",
@@ -446,6 +446,13 @@
       "title": "Static review Dashboard Work Entry gate visibility",
       "detail": "index.html chỉ render lifecycle phase gate_status; chưa hiển thị Work Entry WE-G0…WE-G5. Ghi nhận finding EV-76-020, chuyển owner Xu/WP-76-09.",
       "status": "FINDING OPEN / STATIC REVIEW"
+    },
+    {
+      "date": "2026-11-13",
+      "actor": "Co / AI-07",
+      "title": "OChat Sandbox capability probe",
+      "detail": "sandbox_write + exact read-back + sandbox_delete + post-delete FileNotFoundError verified on temporary diagnostic file; no source/build mutation. Trusted AI-07 identity binding remains NOT_VERIFIED; WE-G4/G5 unchanged.",
+      "status": "VERIFIED (SESSION CAPABILITY ONLY)"
     }
   ],
   "evidence": [
@@ -588,6 +595,13 @@
       "claim": "Static review thấy gateSummary chỉ đếm lifecycle phase gates; không render participant Work Entry G0/G1/WE-G4/G5. Xu/WP-76-09 cần đánh giá; không có source change/browser QE.",
       "path": "DASHBOARD/index.html blob c53b084a5a9bedbafef2d74af5701dc0c4f0149d; README finding",
       "status": "VERIFIED (STATIC REVIEW ONLY; BROWSER QE NOT RUN)"
+    },
+    {
+      "evidence_id": "EV-76-021",
+      "title": "OChat Sandbox session capability probe",
+      "claim": "Phiên OChat hiện tại ghi, đọc lại đúng marker, xóa tệp chẩn đoán và xác nhận FileNotFoundError sau xóa. Chỉ chứng minh capability của tool session; trusted AI-07 identity vẫn NOT VERIFIED.",
+      "path": "Work 76 Sandbox MCP 8030 · .diagnostics/co-session-capability-probe.txt · DOC-035 2026-11-13 06:50 +07:00",
+      "status": "VERIFIED (SESSION CAPABILITY ONLY; AI-07 IDENTITY NOT VERIFIED)"
     }
   ]
 }
