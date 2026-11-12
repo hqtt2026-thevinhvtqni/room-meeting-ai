@@ -105,3 +105,32 @@ Append-only logical record: audit_id, event_id, trigger_id/version, correlation_
 8. SLO, throughput, rate limits, operational ownership and recovery objectives.
 
 Status of this appendix: PROPOSED ONLY. Xu/architecture review and Vinh authority decision are pending. No ADR is approved by this text; no gate is passed and no implementation is authorized.
+
+
+## H. Cross-Work dependency trace — evidence-backed status (DRAFT / NOT APPROVED)
+
+This section records a bounded read-only comparison of W76's proposed interfaces against existing ROOM-HOP records and source findings. It is not an integration approval and does not assert that a searched-but-unseen component is absent from every repository, branch, deployment or runtime.
+
+| W76 dependency | Existing evidence inspected | Verified fact | W76 disposition |
+|---|---|---|---|
+| Principal / Work authorization | Work 70 DOC-063, DRAFT / DESIGN ONLY / NOT APPROVED / NOT IMPLEMENTED; DOC-061 source-trace findings recorded in W70 journal | DOC-063 defines server-trusted principal, Work/WP/assignment, action/resource scope, source revision, gate snapshot, expiry/revocation and commit-time revalidation. W70 source-trace record says the inspected Core router exposed Identity/Meeting routes; Work/WP authorization and Evidence Registry routes were not found in that inspected router. | Reuse the security requirements as design constraints only. Actual Core API, owner, route, schema and deployed enforcement remain NOT VERIFIED. No local substitute authority. |
+| Execution boundary / tool dispatch | W13/W70/W1111 source-trace records; execution_host/server.py, execution_host/host.py, execution_host/wee_bridge.py findings summarized in W1111 DOC-003 | The inspected main /execute path relied on caller-supplied authorized boolean; no server-side principal/assignment/gate authorization was evidenced in that inspected handler. W28 hardened branch is a separate branch and is not proof of main or deployed PC runtime; shared bearer token and static allow-list limitations were also recorded. | W76 must call a verified server-side authorization boundary before protected action. Do not treat MCP 8030, a caller boolean, shared token, or branch-only code as trusted per-principal dispatch. Actual provider and deployed path remain NOT VERIFIED. |
+| Event source / intake authentication | GitHub default-branch indexed code searches: event gateway event envelope schema validation replay idempotency in room-meeting-ai | Search returned no matching indexed files. Search coverage is limited to indexed default-branch content and query terms. | No authoritative event-source registry, webhook signature/key rotation, replay store or intake API was located in this bounded search. Mark NOT LOCATED / DISCOVERY OPEN, not globally absent. |
+| Durable queue / outbox | GitHub default-branch indexed code search: scheduler queue outbox dispatch acknowledgement AI dispatcher | Search returned no matching indexed files. | Broker/database/outbox and delivery semantics remain TBD; do not select technology or claim durable delivery. |
+| Scheduler / time triggers | Same bounded scheduler/queue search; W76 DOC-004 unresolved ADR list | No authoritative scheduler implementation/owner/contract was identified in the inspected results. | Scheduler library, timezone/DST policy, missed-run policy and leader/HA behavior remain OPEN ADR. |
+| AI target identity / receipt / ACK | W70 DOC-063 and W76 DOC-004 proposed dispatch contract | W76 design distinguishes QUEUED/SENT/RECEIVED/ACKNOWLEDGED; inspected cross-Work records do not provide an authoritative W76-compatible target identity resolver plus receiver-issued receipt/ACK contract. | No dispatch success may be inferred from enqueue, HTTP acceptance, tool invocation or local log. Require receiver identity and explicit ACK evidence before recording ACKNOWLEDGED. |
+| Audit / evidence persistence | W70 DOC-063; W76 DOC-004 proposed audit minimum | W70 design requires provenance, append-only/tamper-evident audit and atomicity or approved reconciliation; no verified W76-compatible Core persistence contract was found in this bounded inspection. | Audit store, atomicity/outbox, retention, privacy and recovery remain OPEN ADR; protected action fails closed if required audit cannot persist. |
+
+### H.1 Required architecture decisions before implementation-ready
+1. Xu/Core owner must identify the authoritative Core principal + Work/WP/assignment + policy/gate read API and its owning repository, branch, route, schema, revision and deployed runtime evidence.
+2. Vi/Core owner must map the actual protected mutation and execution endpoints, including caller authentication, principal binding, authorization recheck at commit, audit atomicity and failure behavior.
+3. Xu must identify the authoritative event-source registry and scheduler/queue ownership, or explicitly record that these are new components requiring separate ADR and approval.
+4. Dispatch owner must provide the target identity resolver, transport, receiver receipt and ACK schema, idempotency and retry semantics, and raw evidence for each state transition.
+5. Architecture authority must approve storage/outbox, retention/privacy, SLO and operational ownership before selecting infrastructure.
+
+### H.2 Evidence boundary and status
+- This is read-only cross-work discovery plus a documentation update. It is not source inspection of every candidate module and not a runtime topology audit.
+- Search results with no matches mean NOT LOCATED in the indexed default-branch search, not proof of nonexistence.
+- Work 70 DOC-063 remains DRAFT; its contract is a design reference, not an approved API.
+- No W76 implementation, test, CI, runtime, PC Bridge, dispatch, independent QE or release evidence is created by this appendix.
+- Status: PROPOSED DEPENDENCY MAP / NOT APPROVED / NOT IMPLEMENTED. WE-G4/G5 and G0/G1 remain unchanged.
