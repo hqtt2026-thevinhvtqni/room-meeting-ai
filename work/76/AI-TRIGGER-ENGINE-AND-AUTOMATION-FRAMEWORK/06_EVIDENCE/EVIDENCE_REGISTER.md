@@ -33,3 +33,12 @@ Rules: artifact existence is not runtime verification; a planned test is not a p
 | EV-76-017 | DOC-002 discovery questions updated with bounded evidence findings for event sources, Core auth/audit, AI dispatch, SLO, approval matrix, scheduler/retry/replay and versioning/rollback; unresolved decisions remain open | DOC-002 discovery addendum; supporting DOC-004 H/H.3 and DOC-006 traceability; GitHub main, 2026-11-13 | VERIFIED (discovery documentation only; no architecture decision approved) |
 
 | EV-76-018 | Dashboard PRODUCT_STATUS local snapshot refreshed to revision W76-DASHBOARD-0.3.3, includes evidence EV-76-001..018 and current activity; README distinguishes source sync from browser/mobile QE | DASHBOARD/PRODUCT_STATUS.json; DASHBOARD/README.md; GitHub main + Sandbox read-back, 2026-11-13 | VERIFIED (data synchronization only; browser/mobile QE NOT RUN) |
+
+
+### EV-76-018 exact read-back detail
+The following four canonical artifacts were fetched from GitHub main, written to Work 76 Sandbox via MCP 8030, then read with sandbox_read_probe. Each probe returned status=ok and exact string equality TRUE:
+- DASHBOARD/PRODUCT_STATUS.json — GitHub blob a01a0127deda1002b34af8682f8657e2ffbacade; 19,461 characters; JSON.parse successful; evidence array contains 18 entries.
+- DASHBOARD/README.md — GitHub blob 3f38fdd0182e1d395527a57356398e41168f755d; 3,294 characters.
+- 06_EVIDENCE/EVIDENCE_REGISTER.md — GitHub blob bc094f8c22b3e41ccaeca1b146738211493330de; 4,896 characters.
+- 00_ROOT/DOC-035_NHAT-KY-THI-CONG_EXECUTION-LOG.md — GitHub blob 41bc697d5a451141a8b43d305c8f490715773362; 30,894 characters; unique refresh journal marker present.
+This proves GitHub↔Sandbox data-file synchronization in the current OChat MCP tool session only. It does not prove AI-07 trusted runtime identity, dashboard browser rendering, mobile behavior, Core-live connectivity or independent QE.
