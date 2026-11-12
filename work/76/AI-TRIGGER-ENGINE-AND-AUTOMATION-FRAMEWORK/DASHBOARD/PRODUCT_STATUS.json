@@ -9,9 +9,9 @@
   "current_phase": "01_DISCOVER",
   "source_mode": "local_snapshot",
   "freshness": "LOCAL_SNAPSHOT",
-  "revision": "W76-DASHBOARD-0.2",
-  "warning_vi": "LOCAL SNAPSHOT — GitHub main/Sandbox; chưa kết nối Core live. G0/G1 chưa xác minh. Trigger runtime chưa triển khai. Dashboard source sync đã read-back; browser/mobile E2E chưa chạy.",
-  "updated_at": "2026-11-06T07:15:00Z",
+  "revision": "W76-DASHBOARD-0.3",
+  "warning_vi": "LOCAL SNAPSHOT — chưa kết nối Core live. Co / AI-07 được Vinh ủy quyền AUTO–E2E; Work Entry WE-G0–WE-G3 PASS, WE-G4/G5 BLOCKED. Sandbox list/read/append/read-back đã VERIFIED trong phiên Xu; quyền riêng của Co và PC/VS Code Bridge chưa VERIFIED. Trigger runtime chưa triển khai; CI/browser/mobile E2E chưa chạy.",
+  "updated_at": "2026-11-12T22:23:00Z",
   "phases": [
     {
       "phase_id": "01_DISCOVER",
@@ -58,7 +58,7 @@
       "name_vi": "Thi công",
       "status": "NOT_STARTED",
       "gate_status": "NOT_READY",
-      "owner": "Chưa phân công",
+      "owner": "Co / AI-07 (delegated; WE-G5 BLOCKED)",
       "evidence_refs": [
         "05_BUILD/00_ROOT/BUILD_REGISTER.md"
       ]
@@ -103,8 +103,8 @@
       "wp_id": "WP-76-01",
       "title": "Trigger Registry and schema",
       "status": "PLANNED",
-      "owner": "Xu / TBD",
-      "reviewer": "Qw / TBD",
+      "owner": "Co / AI-07 (delegated; WE-G5 BLOCKED)",
+      "reviewer": "Qw (nomination; ACK/entry pending)",
       "evidence_refs": [
         "05_BUILD/00_ROOT/BUILD_REGISTER.md"
       ]
@@ -113,8 +113,8 @@
       "wp_id": "WP-76-02",
       "title": "Event Gateway and source validation",
       "status": "PLANNED",
-      "owner": "Chưa phân công",
-      "reviewer": "Qw / TBD",
+      "owner": "Co / AI-07 (delegated; WE-G5 BLOCKED)",
+      "reviewer": "Qw (nomination; ACK/entry pending)",
       "evidence_refs": [
         "04_PLAN/DOC-005_IMPLEMENTATION-ROADMAP.md"
       ]
@@ -123,8 +123,8 @@
       "wp_id": "WP-76-03",
       "title": "Scheduler and TIME triggers",
       "status": "PLANNED",
-      "owner": "Chưa phân công",
-      "reviewer": "Qw / TBD",
+      "owner": "Co / AI-07 (delegated; WE-G5 BLOCKED)",
+      "reviewer": "Qw (nomination; ACK/entry pending)",
       "evidence_refs": [
         "04_PLAN/DOC-005_IMPLEMENTATION-ROADMAP.md"
       ]
@@ -133,8 +133,8 @@
       "wp_id": "WP-76-04",
       "title": "Typed Condition Evaluator",
       "status": "PLANNED",
-      "owner": "Chưa phân công",
-      "reviewer": "Qw / TBD",
+      "owner": "Co / AI-07 (delegated; WE-G5 BLOCKED)",
+      "reviewer": "Qw (nomination; ACK/entry pending)",
       "evidence_refs": [
         "03_ARCHITECT/DOC-004_TRIGGER-ENGINE-ARCHITECTURE.md"
       ]
@@ -143,8 +143,8 @@
       "wp_id": "WP-76-05",
       "title": "Policy adapter and approval",
       "status": "PLANNED",
-      "owner": "Chưa phân công",
-      "reviewer": "Qw / TBD",
+      "owner": "Co / AI-07 (delegated; WE-G5 BLOCKED)",
+      "reviewer": "Qw (nomination; ACK/entry pending)",
       "evidence_refs": [
         "03_ARCHITECT/DOC-004_TRIGGER-ENGINE-ARCHITECTURE.md"
       ]
@@ -153,8 +153,8 @@
       "wp_id": "WP-76-06",
       "title": "Orchestration, dedupe and retry",
       "status": "PLANNED",
-      "owner": "Chưa phân công",
-      "reviewer": "Qw / TBD",
+      "owner": "Co / AI-07 (delegated; WE-G5 BLOCKED)",
+      "reviewer": "Qw (nomination; ACK/entry pending)",
       "evidence_refs": [
         "03_ARCHITECT/DOC-004_TRIGGER-ENGINE-ARCHITECTURE.md"
       ]
@@ -163,8 +163,8 @@
       "wp_id": "WP-76-07",
       "title": "Verified AI dispatch adapter",
       "status": "BLOCKED",
-      "owner": "Xu / Core owner TBD",
-      "reviewer": "Qw / TBD",
+      "owner": "Co / AI-07 (discovery/design only)",
+      "reviewer": "Qw (nomination; ACK/entry pending)",
       "evidence_refs": [
         "03_ARCHITECT/DOC-004_TRIGGER-ENGINE-ARCHITECTURE.md"
       ]
@@ -173,8 +173,8 @@
       "wp_id": "WP-76-08",
       "title": "Audit and evidence store",
       "status": "PLANNED",
-      "owner": "Chưa phân công",
-      "reviewer": "Qw / TBD",
+      "owner": "Co / AI-07 (delegated; WE-G5 BLOCKED)",
+      "reviewer": "Qw (nomination; ACK/entry pending)",
       "evidence_refs": [
         "06_EVIDENCE/EVIDENCE_REGISTER.md"
       ]
@@ -184,7 +184,7 @@
       "title": "Read-only Work 76 dashboard v0.2",
       "status": "IN_REVIEW",
       "owner": "Xu",
-      "reviewer": "An / Qw",
+      "reviewer": "An / Qw (nominations; ACK/entry pending)",
       "evidence_refs": [
         "DASHBOARD/index.html",
         "DASHBOARD/PRODUCT_STATUS.json",
@@ -224,6 +224,22 @@
       "status": "OPEN",
       "owner": "Vinh / Xu",
       "detail_vi": "Manifest và tài liệu khởi tạo đã có; gate vẫn cần đánh giá độc lập."
+    },
+    {
+      "id": "B-76-05",
+      "title": "Co PC / VS Code Bridge not verified",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "owner": "Co / Xu",
+      "detail_vi": "Xu session không có công cụ Terminal/VS Code Bridge; chưa có bằng chứng phiên Co kết nối PC. Không kết luận PC hỏng."
+    },
+    {
+      "id": "B-76-06",
+      "title": "Co Work Entry WE-G4 / WE-G5 blocked",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "owner": "Xu / Co",
+      "detail_vi": "Delegation đã được ghi DOC-007; còn thiếu bằng chứng identity/tool permissions riêng của Co và xác minh các phụ thuộc/ACK cần thiết."
     }
   ],
   "risks": [
@@ -277,25 +293,31 @@
       "ai_id": "AI-02",
       "name": "Ka",
       "role": "CSA · rà soát kiến trúc, gate và hợp đồng",
-      "assignment_status": "PLANNED"
+      "assignment_status": "REVIEW NOMINATION / ACK + WORK ENTRY NOT VERIFIED"
     },
     {
       "ai_id": "AI-05",
       "name": "Qw",
       "role": "QE/QA · thiết kế kiểm thử và rà soát bằng chứng",
-      "assignment_status": "PLANNED"
+      "assignment_status": "REVIEW NOMINATION / ACK + WORK ENTRY NOT VERIFIED"
     },
     {
       "ai_id": "AI-AN",
       "name": "An",
       "role": "Tester · kiểm thử giao diện Dashboard",
-      "assignment_status": "PLANNED"
+      "assignment_status": "REVIEW NOMINATION / ACK + WORK ENTRY NOT VERIFIED"
     },
     {
       "ai_id": "AI-OWNER",
       "name": "Vinh",
       "role": "Product Owner · quyết định cuối và nghiệm thu",
       "assignment_status": "OWNER"
+    },
+    {
+      "ai_id": "AI-07",
+      "name": "Co",
+      "role": "Implementation coder · delegated AUTO–E2E owner for WP-76-01…08; no merge/release",
+      "assignment_status": "DELEGATED / WORK ENTRY WE-G4-G5 BLOCKED"
     }
   ],
   "recent_activity": [
@@ -319,6 +341,13 @@
       "title": "Đồng bộ baseline Work 76 lên GitHub main",
       "detail": "Tài liệu nền, manifest, kế hoạch, evidence register và dashboard baseline đã được đồng bộ.",
       "status": "VERIFIED"
+    },
+    {
+      "date": "2026-11-13",
+      "actor": "Xu",
+      "title": "Thiết lập Work Entry và xác minh Sandbox cho Co",
+      "detail": "DOC-007/DOC-008 được tạo và read-back; sandbox_append + sandbox_read_probe PASS trong phiên Xu. Co WE-G4/G5 và PC Bridge vẫn BLOCKED/NOT VERIFIED.",
+      "status": "PARTIAL / BLOCKED"
     }
   ],
   "evidence": [
@@ -370,6 +399,20 @@
       "claim": "Browser rendering, mobile layout and interaction checks have not been run; source sync alone is insufficient.",
       "path": "DASHBOARD/README.md §6 Manual verification checklist",
       "status": "NOT_AVAILABLE"
+    },
+    {
+      "evidence_id": "EV-76-008",
+      "title": "Co Work Entry and Document Register",
+      "claim": "DOC-007 và DOC-008 đã tạo trong Sandbox/GitHub và exact-path read-back xác nhận.",
+      "path": "00_ROOT/DOC-007_HO-SO-NHAN-VIEC_CO_WORK-ENTRY-RECORD.md · DOC-008",
+      "status": "VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-009",
+      "title": "Sandbox append/read-back test",
+      "claim": "sandbox_append và sandbox_read_probe đọc lại marker thành công trong phiên Xu; Co-specific access chưa xác minh.",
+      "path": "00_ROOT/DOC-035_NHAT-KY-THI-CONG_EXECUTION-LOG.md",
+      "status": "VERIFIED (XU SESSION ONLY)"
     }
   ]
 }
