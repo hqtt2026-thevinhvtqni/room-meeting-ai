@@ -60,3 +60,33 @@ Reporting period/date; project and work item; work completed; progress/quantity 
 
 ### Open discovery questions
 Confirm who creates projects and appoints the foreman; whether one contractor manages multiple projects; whether one project has multiple contractors; who reviews/accepts reports; report frequency (daily, shift-based, milestone or ad hoc); whether investors need live dashboard access or periodic exported reports; and which report fields are visible externally.
+
+
+## 1.2 Confirmed business extension — construction materials and storekeeper
+**User-confirmed direction (2026-11-12):** the construction foreman (quản công) also needs construction-material information/workflows, and a storekeeper (thủ kho) role is added to record material receipts into the project warehouse.
+
+### Candidate role responsibilities
+- **Quản công / Site Foreman:** views material availability relevant to assigned work; raises or records material needs for work items; confirms the intended work area/recipient for material requests. Whether the foreman may directly request, approve or record material issues remains OPEN.
+- **Thủ kho / Storekeeper:** records actual received materials into the assigned project warehouse, including item, unit, quantity, receipt date/time, supplier/source and supporting delivery/receipt documents where available; maintains stock movement records; records issues/returns and physical counts only within granted authority.
+- **Nhà thầu / Contractor:** manages project and warehouse access; defines who may request, approve, receive and issue materials; reviews material balances and exceptions. Approval hierarchy and purchasing responsibility remain OPEN.
+- **Chủ đầu tư / Project Investor:** optional, explicitly scoped visibility only if enabled; no default access to internal warehouse notes, supplier/commercial data or detailed costs.
+
+### Candidate material MVP workflows
+1. **Material catalogue:** code/name, specification, unit of measure and active status. Avoid duplicate item identities within the relevant organization/project scope.
+2. **Goods receipt / nhập kho:** storekeeper records actual delivered quantity, item, unit, date/time, warehouse/project, supplier/source and delivery note or photo evidence. A receipt is not proof of payment or procurement approval.
+3. **Material request:** foreman records needed item, quantity, work item/area, required date and reason. Approval path is not yet confirmed.
+4. **Material issue / xuất kho:** record actual issued quantity, recipient/team and destination work item/area, linked to an approved request where that workflow is adopted.
+5. **Return/adjustment/count:** record returned material, damaged/lost quantity, stock count and any adjustment with reason and authorized actor. Never silently overwrite stock balances.
+6. **Stock ledger and balance:** derive on-hand quantity from opening balance plus posted receipts and returns minus issues and authorized deductions/adjustments. Preserve transaction history and audit actor/time.
+7. **Material report:** opening balance, receipts, issues, returns, adjustments and closing balance by project, warehouse, item and period.
+
+### Candidate access boundaries
+- Storekeeper access is limited to assigned project warehouse(s); no automatic visibility across the contractor's portfolio.
+- Foreman sees material information needed for assigned work and may submit requests; cannot alter warehouse balances by editing a report.
+- Only authorized roles may post receipts, issues, returns or adjustments. Keep request, approval and physical execution as distinct events when the workflow requires separation of duties.
+- Each stock movement records actor, timestamp, item, unit, quantity, source/destination, project/warehouse, reference document and status.
+- Stock balance is a derived view from an immutable/append-only movement ledger; corrections use reversal/adjustment entries, not destructive edits to posted transactions.
+- Investor visibility is separately configured per project and should default to summary-level information only if explicitly shared.
+
+### Scope boundary and unresolved discovery
+This addition is a candidate material/warehouse workflow, not authorization for full ERP, purchasing, accounts payable, costing, inventory valuation, accounting, or automated procurement. Validate whether a project has one or multiple warehouses; whether storekeeper can also approve; who authorizes issues/adjustments; whether material is tracked by batch/lot or serial; treatment of transfers, returns, wastage and damaged goods; and whether balances are shared across projects. No BUILD authorization is implied.
