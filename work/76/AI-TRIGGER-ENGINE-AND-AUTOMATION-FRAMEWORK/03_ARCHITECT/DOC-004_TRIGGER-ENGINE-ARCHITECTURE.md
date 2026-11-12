@@ -152,3 +152,30 @@ Repository: hqtt2026-thevinhvtqni/hqtt-ai-platform, default branch main. Git tre
 The repository's code-search index is unavailable, and this inspection is bounded to the returned main tree and exact files above. It does not establish the state of other repositories, historical branches, external services or deployed PC runtime. The repository is the original HQTT AI Platform source, but this fact alone does not designate it as the canonical source owner for ROOM-HOP Work 76.
 
 **Conclusion:** the inspected HQTT AI Platform records supply useful operating-process and conceptual API guidance, but do not close W76's machine dispatch, trusted identity, Work authorization, receiver ACK or scheduler/queue dependencies. Keep WP-76-07 BLOCKED and all corresponding ADRs OPEN until an owner identifies and verifies an actual provider contract.
+
+
+## I. Architecture Decision Register (ADR-76-001…008) — OPEN / NOT APPROVED
+
+This register converts the unresolved architecture areas into individually trackable decisions. An ADR is not approved by being listed here. No implementation technology or provider is selected by this register.
+
+| ADR | Decision topic | Required decision / evidence before closure | Proposal owner | Decision authority | Current status / blocking effect |
+|---|---|---|---|---|---|
+| ADR-76-001 | Core principal, Work/WP authorization and policy enforcement | Identify authoritative API, repository/ref, route/schema, trusted principal binding, assignment/scope/gate revision, expiry/revocation, commit-time recheck, error semantics and deployed proof. Must not accept caller-supplied role/authorized booleans as authority. | Xu + Core owner | Vinh; Core owner confirms contract; Ka reviews | OPEN / BLOCKS WP-76-05, protected dispatch and WE-G4/G5 readiness |
+| ADR-76-002 | Event source authentication, key lifecycle and replay | Authoritative source inventory; webhook/polling contracts; signature algorithm/canonical input; key rotation/revocation; timestamp tolerance; replay/idempotency persistence; source-to-Work scope mapping. | Xu + source owners | Vinh; source owners confirm contracts; Ka reviews | OPEN / BLOCKS WP-76-02 |
+| ADR-76-003 | Canonical serialization, schema version and digest | Deterministic canonical encoding, number/string/time normalization, unknown-field policy, digest algorithm/version, immutable payload representation, migration compatibility and cross-language test vectors. | Co prepares options after gate; Xu coordinates | Vinh; Ka reviews | OPEN / BLOCKS durable registry/event digest interoperability |
+| ADR-76-004 | Durable queue, transaction/outbox and delivery semantics | Existing platform inventory; transaction boundary for state+outbox; broker/database ownership; at-least-once behavior; ordering/partitioning; dedupe retention; DLQ and recovery; failure/consistency evidence. | Xu + platform/storage owner | Vinh; platform owner confirms; Ka reviews | OPEN / BLOCKS WP-76-06 and reliable dispatch claims |
+| ADR-76-005 | Scheduler and time semantics | Existing scheduler inventory; UTC clock source; timezone/DST gap/fold policy; recurrence semantics; missed-run/catch-up policy; clock drift; leader/HA; pause/resume and duplicate tick control. | Xu + operations owner | Vinh; operations owner confirms; Ka reviews | OPEN / BLOCKS WP-76-03 |
+| ADR-76-006 | AI dispatch transport, target identity, receipt and ACK | Actual provider/route; authenticated target identity resolver; assignment envelope; receiver-issued receipt/ACK schema; state transition authority; timeout UNKNOWN; idempotency, retries and evidence from real end-to-end exchange. | Xu + dispatch/provider owner | Vinh; provider owner confirms; Ka/Qw review | OPEN / BLOCKS WP-76-07; no private-session dispatch claim |
+| ADR-76-007 | Audit/evidence persistence, privacy and retention | Authoritative store/owner; append-only/tamper-evidence properties; atomicity or reconciliation; provenance; redaction/minimization; retention/deletion/access policy; backup/restore and audit-outage fail-closed behavior. | Xu + Core/security owner | Vinh; Core/security owner confirms; Ka reviews | OPEN / BLOCKS WP-76-08 and protected actions |
+| ADR-76-008 | SLO, operations, alerting and recovery | Product-approved availability/latency/throughput targets; measured baseline; on-call ownership; alerts/runbooks; capacity limits; incident/recovery/rollback objectives; cost constraints. | Xu + operations owner | Vinh | OPEN / BLOCKS NFR-05, release readiness and production rollout |
+
+### I.1 Decision sequence and closure rule
+1. ADR-76-001 and ADR-76-007 establish authority and audit constraints; they must be resolved before any protected-action implementation can be considered.
+2. ADR-76-002, ADR-76-004 and ADR-76-005 establish trusted event intake, durable processing and time semantics.
+3. ADR-76-006 depends on verified identity/authorization and durable idempotency/audit semantics; it cannot be closed by a workflow document or a local tool call.
+4. ADR-76-003 must provide stable test vectors before interoperable digest/signature contracts are frozen.
+5. ADR-76-008 requires owner-approved targets and measured data; no numeric SLO is invented here.
+6. Close an ADR only with: decision ID/version, decision maker, date/time +07:00, options considered, rationale, consequences, linked source/API/schema evidence, security/failure analysis, reviewer disposition and affected requirement/test IDs. Then update DOC-008 only if a new canonical document is formally created.
+7. Until formally approved, every ADR remains OPEN. A proposal or evidence collection does not authorize source mutation, infrastructure selection or gate advancement.
+
+Status: register only. ADR-76-001…008 are OPEN / NOT APPROVED; no implementation authorization is implied.
