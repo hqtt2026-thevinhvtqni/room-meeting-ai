@@ -5,11 +5,13 @@
 - Work Name: AI-TRIGGER-ENGINE-AND-AUTOMATION-FRAMEWORK
 - Product: ROOM-HOP AI Trigger Engine
 - Version: 0.1.0-draft | Updated: 2026-11-06
-- Status: ACTIVE / DISCOVER BASELINE — G0/G1 NOT YET VERIFIED
+- Status: ACTIVE / DISCOVER BASELINE — lifecycle G0/G1 NOT VERIFIED; Co Work Entry WE-G0–WE-G3 PASS, WE-G4/G5 BLOCKED
 - Product Owner / Final Authority: Vinh
 - Lifecycle Orchestrator: Xu (runtime identity: xu)
 - Reference standard: Work 70 — ROOM-HOP Product Lifecycle & Work Dashboard
 - Sandbox: Work 76 via MCP 8030
+- Work Entry record: 00_ROOT/DOC-007_HO-SO-NHAN-VIEC_CO_WORK-ENTRY-RECORD.md
+- Canonical Document Register: 00_ROOT/DOC-008_SO-DANG-KY-TAI-LIEU_WORK-76-DOCUMENT-REGISTER.md
 - GitHub: hqtt2026-thevinhvtqni/room-meeting-ai / main / work/76/AI-TRIGGER-ENGINE-AND-AUTOMATION-FRAMEWORK/
 
 ## Mission
@@ -34,6 +36,9 @@ Xây dựng nền tảng dùng chung để đăng ký, tiếp nhận, đánh gi�
 ## Canonical Work layout
 00_ROOT, 01_DISCOVER, 02_DEFINE, 03_ARCHITECT, 04_PLAN, 05_BUILD, 06_VERIFY, 06_EVIDENCE, 07_ACCEPT, 08_RELEASE, 09_OPERATE, DASHBOARD.
 05_BUILD is an engineering mapping/execution area, not an alternate canonical source root.
+
+## Work Entry baseline
+Co / AI-07 has a recorded AUTO–E2E delegation from Vinh under ASG-W76-CO-20261113-01. Work Entry WE-G0–WE-G3 PASS; WE-G4/G5 BLOCKED because Co-specific runtime identity/tool permissions and PC/VS Code Bridge are not verified. This is separate from lifecycle G0/G1, which remain NOT VERIFIED. See DOC-007.
 
 ## Lifecycle baseline
 Current phase: 01_DISCOVER.
