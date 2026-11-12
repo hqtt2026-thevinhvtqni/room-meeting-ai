@@ -15,3 +15,5 @@ Rules: artifact existence is not runtime verification; a planned test is not a p
 
 | EV-76-008 | Co Work Entry DOC-007 and canonical Document Register DOC-008 created in Sandbox and GitHub main; exact-path read-back confirmed | Work 76 DOC-007/DOC-008, Sandbox read_probe + GitHub fetch, 2026-11-13 | VERIFIED |
 | EV-76-009 | Sandbox append/write path verified for Xu session by unique journal append and read_probe read-back; Co-specific access not verified | Work 76 DOC-035 Sandbox MCP 8030, 2026-11-13 | VERIFIED (Xu session only) |
+
+| EV-76-010 | Seven canonical Work 76 files synchronized from GitHub main to Sandbox and verified byte-for-byte by read-back in Xu session | GitHub fetch + Sandbox write/read_probe, 2026-11-13 | VERIFIED (Xu session only) |
