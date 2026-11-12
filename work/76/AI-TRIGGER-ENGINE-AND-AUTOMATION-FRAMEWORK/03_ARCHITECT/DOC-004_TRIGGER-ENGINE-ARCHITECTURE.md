@@ -134,3 +134,21 @@ This section records a bounded read-only comparison of W76's proposed interfaces
 - Work 70 DOC-063 remains DRAFT; its contract is a design reference, not an approved API.
 - No W76 implementation, test, CI, runtime, PC Bridge, dispatch, independent QE or release evidence is created by this appendix.
 - Status: PROPOSED DEPENDENCY MAP / NOT APPROVED / NOT IMPLEMENTED. WE-G4/G5 and G0/G1 remain unchanged.
+
+
+### H.3 Original HQTT AI Platform repository cross-check (bounded main-tree inspection)
+
+Repository: hqtt2026-thevinhvtqni/hqtt-ai-platform, default branch main. Git tree SHA observed: 8a2d7aa33ed537e2bc117d3421a454da0e4cd8ab. Repository metadata reported code search index unavailable; therefore this check used the returned main tree and exact-path file reads, not indexed code search.
+
+| Artifact | Exact main path / blob SHA | What the artifact actually establishes | W76 interpretation |
+|---|---|---|---|
+| Task dispatch operating rule | 00_COMPANY/03_Operating_Model/Task_Dispatch.md — 01e81df92cf9deafed37580f5b369f799651734e | Human/AI workflow states Draft, Assigned, In Progress, Blocked, Submitted, Reviewed, Approved, Closed; task brief must identify owner/output/deadline; AI should acknowledge before work; results are handed to Ka. | Process/governance guidance only. It does not define HTTP/MCP transport, machine-readable assignment token, target principal binding, receiver receipt, ACK schema, idempotency or retry API. |
+| AI workflow | 00_COMPANY/03_Operating_Model/AI_Workflow.md — 0d915a964f0f5fdc7f14907440a10a7bf628c40f | Describes Xu → Ka → specialist AI → Ka synthesis → Xu review → Founder approval. | Human operating workflow, not automated private-session dispatch capability. |
+| Workforce registry | 00_COMPANY/03_Operating_Model/AI_Workforce_Registry.md — 29e10325726f83b9fb5a1b7da0bce6e826d756b6 | Lists role status and account status separately (Run/Ready/Busy/Offline/etc.). | Roster metadata is not cryptographic runtime identity, per-Work assignment, permission proof or ACK evidence. |
+| Backend API router | 01_PROJECTS/HQTT_AI/backend/app/api/routes.py — 7e8abab2a491fc8526f68840114582680d83f1e3 | Router comment calls it a scaffold; only GET /api/health and GET /api/ping are implemented. | No task/trigger/assignment/dispatch/ACK/authz endpoint in this inspected router. |
+| Backend app entrypoint | 01_PROJECTS/HQTT_AI/backend/app/main.py — 55b5e159bb30f2accac7794a44c0ec64dd7aeb10 | FastAPI app includes the scaffold router and CORS configuration. | Does not add a dispatch or Work authorization route. |
+| API design | 01_PROJECTS/HQTT_AI/docs/Architecture/API_Design.md — 61caeb848774881f382fea4f868b7916f0404ba9 | Conceptual REST route families and token-based authentication (JWT or equivalent) are documented; the file explicitly says the current backend scaffold has only root/health/ping and business endpoints are pending. | Bearer-token concept is not a deployed auth middleware or a Work/WP authorization contract. Do not copy it as W76 Core API without owner approval. |
+
+The repository's code-search index is unavailable, and this inspection is bounded to the returned main tree and exact files above. It does not establish the state of other repositories, historical branches, external services or deployed PC runtime. The repository is the original HQTT AI Platform source, but this fact alone does not designate it as the canonical source owner for ROOM-HOP Work 76.
+
+**Conclusion:** the inspected HQTT AI Platform records supply useful operating-process and conceptual API guidance, but do not close W76's machine dispatch, trusted identity, Work authorization, receiver ACK or scheduler/queue dependencies. Keep WP-76-07 BLOCKED and all corresponding ADRs OPEN until an owner identifies and verifies an actual provider contract.
