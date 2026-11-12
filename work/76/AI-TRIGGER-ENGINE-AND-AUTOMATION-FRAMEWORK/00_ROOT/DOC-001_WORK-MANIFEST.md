@@ -57,9 +57,10 @@ Dashboard: read-only projection; status source is local snapshot until Core inte
 8. Fail closed for protected actions when identity, policy, evidence or audit dependencies are unavailable.
 
 ## Initial delivery objectives
-- DOC-003 architecture and trigger contract.
-- DOC-004 implementation and rollout plan.
-- DOC-005 test/verification plan.
+- DOC-003 product requirements baseline (FR/NFR and acceptance baseline).
+- DOC-004 Trigger Engine architecture and interface design baseline.
+- DOC-005 implementation roadmap and phase/WP sequencing.
+- DOC-006 verification plan and acceptance test design.
 - Dashboard baseline and Work Package register.
 - Build implementation only after discovery, requirements and architecture gates are reviewed.
 
