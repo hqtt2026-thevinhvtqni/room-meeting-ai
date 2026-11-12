@@ -49,3 +49,10 @@
 - Every sandbox_write returned status=ok; each sandbox_read_probe returned status=ok; byte-for-byte content comparison matched GitHub main. PRODUCT_STATUS.json parsed successfully; revision W76-DASHBOARD-0.3 and Co / AI-07 assignment were present.
 - Evidence: EV-76-010. This proves the shared Sandbox/GitHub sync path for Xu's session only; it does not prove Co's identity-bound access or PC Bridge availability.
 - Status unchanged: Co WE-G4/G5 BLOCKED; Build mutation not started; runtime, CI, E2E, QE and release not run.
+
+
+### 2026-11-13 05:29 +07:00 — Đối chiếu vai trò Co theo DOC-043
+- READ: Work 70 DOC-043 AI Role & Permission Matrix; xác nhận AI-07 Co là Coder Assistant, quyền mặc định giới hạn theo assignment, không có quyền merge/release/accept.
+- TRACE: DOC-007 đã ghi đúng ranh giới không merge/release/accept; G4 vẫn BLOCKED vì capability/identity/tool permission thực tế của Co chưa được quan sát từ phiên Co. Role registry không chứng minh kết nối hoặc runtime activity.
+- UPDATE: bổ sung DOC-043 vào căn cứ Work Entry DOC-007; không thay đổi scope ủy quyền AUTO–E2E của Vinh, không tự cấp thêm quyền kỹ thuật.
+- STATUS: WE-G0–WE-G3 PASS; WE-G4/G5 BLOCKED; lifecycle gate và Build mutation vẫn chưa mở.
