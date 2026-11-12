@@ -17,3 +17,5 @@ Rules: artifact existence is not runtime verification; a planned test is not a p
 | EV-76-009 | Sandbox append/write path verified for Xu session by unique journal append and read_probe read-back; Co-specific access not verified | Work 76 DOC-035 Sandbox MCP 8030, 2026-11-13 | VERIFIED (Xu session only) |
 
 | EV-76-010 | Seven canonical Work 76 files synchronized from GitHub main to Sandbox and verified byte-for-byte by read-back in Xu session | GitHub fetch + Sandbox write/read_probe, 2026-11-13 | VERIFIED (Xu session only) |
+
+| EV-76-011 | OChat session can write and read back canonical DOC-006 and DOC-035 in Work 76 Sandbox; exact GitHub↔Sandbox content equality verified. Caller runtime identity binding remains unresolved. | OChat MCP 8030 sandbox_write + sandbox_read_probe; exact compare against GitHub main, 2026-11-13 | VERIFIED (session capability only; not AI-07 identity proof) |
