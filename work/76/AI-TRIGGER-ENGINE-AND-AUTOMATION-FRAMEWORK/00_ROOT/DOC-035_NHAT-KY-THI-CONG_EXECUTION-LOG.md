@@ -226,3 +226,13 @@
 - DOC-035 before this verification-detail append: blob 41bc697d5a451141a8b43d305c8f490715773362; 30,894 chars; unique refresh marker present; Sandbox exact_match=true.
 - Each sandbox_write returned status=ok and each sandbox_read_probe returned status=ok. This is exact content synchronization in the current OChat tool session only; it does not prove trusted AI-07 runtime identity or browser/mobile E2E.
 - EV-76-018 includes exact synchronization evidence. JSON syntax parse was checked; formal JSON Schema validation, browser rendering, mobile interaction and independent QE remain NOT RUN.
+
+
+### 2026-11-13 06:36:39 +07:00 — Co chuẩn hóa Architecture Decision Register
+- Actor: Co / AI-07 — AI Coder / Execution Assistant.
+- Action: chuyển tám vùng Open ADR đã nêu trong DOC-004 thành ADR-76-001…008, mỗi mục có quyết định cần chốt, bằng chứng bắt buộc, proposal owner, decision authority và blocker ảnh hưởng đến WP/NFR.
+- Decisions registered: Core identity/Work authorization; event-source authentication/key/replay; canonical serialization/schema/digest; durable queue/outbox; scheduler/time semantics; AI dispatch/target identity/receipt/ACK; audit/evidence/privacy/retention; SLO/operations/recovery.
+- Control: tất cả ADR vẫn OPEN / NOT APPROVED; không lựa chọn công nghệ/provider; không suy diễn có API; không cấp phép implementation. Đã ghi thứ tự phụ thuộc và điều kiện đóng ADR bằng quyết định có người phê duyệt, thời gian, rationale, evidence và test mapping.
+- GitHub: DOC-004 commit 0722cbcd737d2a80afb1ffdaf043b17c5e41020f, blob 0cdf5d737c3d889546ddb654b683ae9dff23a9f8; EVIDENCE_REGISTER commit 4f9a7f0d743dc2403e16b5aa3fbf141b1cf4e05d, blob 7b17689500348871dfa20d9f7cf8a304fa9a0f44. Exact read-back and Sandbox parity follow.
+- Evidence: EV-76-019 — ADR register only.
+- Guardrails: docs-only; no source/build/runtime/test/CI/PR/Build Register/gate/merge/release changes. Current phase 01_DISCOVER; G0/G1 NOT VERIFIED; WE-G4/G5 BLOCKED; WP-76-07 BLOCKED; NOT RELEASED.
