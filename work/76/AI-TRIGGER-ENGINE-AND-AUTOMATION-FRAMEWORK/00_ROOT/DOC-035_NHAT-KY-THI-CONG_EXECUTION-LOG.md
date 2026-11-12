@@ -236,3 +236,11 @@
 - GitHub: DOC-004 commit 0722cbcd737d2a80afb1ffdaf043b17c5e41020f, blob 0cdf5d737c3d889546ddb654b683ae9dff23a9f8; EVIDENCE_REGISTER commit 4f9a7f0d743dc2403e16b5aa3fbf141b1cf4e05d, blob 7b17689500348871dfa20d9f7cf8a304fa9a0f44. Exact read-back and Sandbox parity follow.
 - Evidence: EV-76-019 — ADR register only.
 - Guardrails: docs-only; no source/build/runtime/test/CI/PR/Build Register/gate/merge/release changes. Current phase 01_DISCOVER; G0/G1 NOT VERIFIED; WE-G4/G5 BLOCKED; WP-76-07 BLOCKED; NOT RELEASED.
+
+
+### 2026-11-13 06:37:04 +07:00 — Co đồng bộ ADR-76-001…008 lên Dashboard snapshot
+- Actor: Co / AI-07 — AI Coder / Execution Assistant.
+- Action: cập nhật PRODUCT_STATUS.json lên W76-DASHBOARD-0.3.4; thêm 8 ADR đang OPEN/NOT APPROVED vào decisions_needed, activity và evidence; giữ nguyên local_snapshot, phase 01_DISCOVER, các gate/WP status và NOT_RELEASED.
+- README bổ sung giới hạn: ADR list là theo dõi quyết định, không phải phê duyệt; Core live, implementation, CI/test và browser/mobile QE vẫn chưa xác minh/chưa chạy.
+- GitHub: PRODUCT_STATUS commit a959c68d8327ed1eb59026ebe248ff2391d43a63, blob 4640f3c4e79387b7537ecc3dcfa2eb248d072ed5; README commit 2f85ed1806e2f9772de19e75cedab8da4d57ba5d, blob bdc8802d20164378f31d7f48cd2944bc6584f2b9. Exact read-back and Sandbox parity follow.
+- Guardrails: dashboard data/docs only; no UI source, runtime, tests, CI, Build Register, gates, PR, merge or release changed.
