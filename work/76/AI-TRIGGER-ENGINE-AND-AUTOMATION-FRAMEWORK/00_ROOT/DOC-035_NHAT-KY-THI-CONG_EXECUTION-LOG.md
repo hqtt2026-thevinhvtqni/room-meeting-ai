@@ -161,3 +161,13 @@
 - GitHub: DOC-004 update commit 0f1f97b23dd3a56b7d7477a820704ee87c2950c7, blob e297b71b7e1d1d64c573f4f10c5816ec4fdf8a10; EVIDENCE_REGISTER update commit 5523deca2476afcead43aae068a9170f0023ca0d, blob 0c30e694c62977a6222bf6bea04718c03f6a113c. Exact read-back follows.
 - Guardrails: documentation/discovery only. No code, tests, CI, runtime, dispatch, PR, Build Register, gate, approval or release changed. WE-G4/G5 remain BLOCKED; G0/G1 NOT VERIFIED; NOT RELEASED.
 - Next: continue permitted discovery/traceability work; implementation remains prohibited until the Work Entry and lifecycle gates are independently satisfied and authority approves.
+
+
+### 2026-11-13 06:28:25 +07:00 — Co hoàn thiện ma trận truy vết yêu cầu → kiểm chứng
+- Actor: Co / AI-07 — AI Coder / Execution Assistant.
+- READ: DOC-001 confirms 01_DISCOVER, lifecycle G0/G1 NOT VERIFIED, WE-G4/G5 BLOCKED and NOT RELEASED; DOC-002 discovery questions remain open; DOC-003 contains FR-01…FR-10 and NFR-01…NFR-07; DOC-005 forbids phase advancement on documents alone; BUILD_REGISTER states no implementation claimed and WP-76-07 transport blocked.
+- GAP: DOC-006 had ten broad test groups and the PR #53 regression addendum, but no complete row-by-row mapping for all FR/NFR. Dashboard browser/mobile QE, dispatch transport, SLO and retention/privacy remain unresolved.
+- UPDATE: appended DOC-006 requirements-to-verification matrix covering FR-01…FR-10 and NFR-01…NFR-07, proposed test ID ranges, explicit coverage expectations and status/blockers. Existing W76-CE/W76-RG/W76-MD/W76-EV IDs preserved.
+- GitHub: DOC-006 commit 36c09b48f65a473bb39ba509712874be53a03287, blob 0f854b680a75041aaee43a0d81a4bab51d820112; EVIDENCE_REGISTER commit e5402308b53e4d118bb7a8c6f0043cef4d6655bd, blob 610f27acf0dbe49139f70d5fee33ebb099c42bcf. Exact read-back and Sandbox parity follow.
+- Evidence: EV-76-014 records documentation sync only. No test IDs in this matrix are executed; DOC-006 remains NOT_STARTED.
+- Guardrails: no source/build artifact, CI, runtime, dispatch, PR, Build Register, gate or release change. WE-G4/G5 BLOCKED; G0/G1 NOT VERIFIED; NOT RELEASED.
