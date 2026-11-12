@@ -42,3 +42,5 @@ The following four canonical artifacts were fetched from GitHub main, written to
 - 06_EVIDENCE/EVIDENCE_REGISTER.md — GitHub blob bc094f8c22b3e41ccaeca1b146738211493330de; 4,896 characters.
 - 00_ROOT/DOC-035_NHAT-KY-THI-CONG_EXECUTION-LOG.md — GitHub blob 41bc697d5a451141a8b43d305c8f490715773362; 30,894 characters; unique refresh journal marker present.
 This proves GitHub↔Sandbox data-file synchronization in the current OChat MCP tool session only. It does not prove AI-07 trusted runtime identity, dashboard browser rendering, mobile behavior, Core-live connectivity or independent QE.
+
+| EV-76-019 | DOC-004 ADR register formalizes eight unresolved decisions (Core auth, event auth, canonical digest, queue/outbox, scheduler, dispatch/ACK, audit/privacy, SLO/operations), owners, evidence and closure rules; all remain OPEN | DOC-004 section I; GitHub main read-back, 2026-11-13 | VERIFIED (decision register only; no ADR approved) |
