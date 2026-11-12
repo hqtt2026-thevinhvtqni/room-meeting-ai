@@ -119,3 +119,61 @@ Keep separate records and status for: (a) drawing-measured quantity, (b) estimat
 - AI-assisted drawing extraction from PDF/CAD is OPEN and not a committed MVP feature. If later evaluated, extraction must cite drawing revision/page/detail, expose formula and confidence/uncertainty, preserve original files, support human correction, and never post approved quantities without authorized review.
 - CAD format/version support, OCR/geometry measurement accuracy, scale calibration, drawing revision conflicts, rate databases, local estimating standards, multi-currency, taxes, estimate approval, contract variations and investor visibility require discovery.
 - Do not include procurement, supplier payment, accounting, payroll, full ERP, BIM authoring or automated financial commitments by implication.
+
+
+## 1.4 Candidate end-to-end workflows and functional requirement map
+The following IDs organize discovery and later acceptance criteria. They are not implementation authorization.
+
+### A. Estimate and BOQ workflow
+1. Contractor creates project and appoints a technical estimator/QS.
+2. QS registers the drawing/document set and revision; uploads an Excel BOQ/estimate file or starts a manual takeoff sheet.
+3. System validates file/template, required columns, units, duplicate keys, numeric ranges and project scope; rejected rows are reported without partial silent import.
+4. QS reviews each line, records formula/source/assumption, saves a draft revision and submits it for review.
+5. Authorized contractor reviewer approves or rejects that exact revision with comments. Approval freezes the revision; changes require a new revision.
+6. A published estimate/BOQ revision becomes the reference for planning. A drawing revision change flags affected takeoff lines for impact review.
+
+### B. Work planning and field progress workflow
+1. Contractor decomposes approved BOQ lines into work packages, locations/zones, responsible foreman, target dates and planned quantities.
+2. Foreman sees assigned work packages on mobile; submits progress by date/shift, location, quantity/unit, narrative, photos and blockers.
+3. System validates unit and assignment scope, prevents duplicate submission and keeps reported values distinct from approved BOQ values.
+4. Contractor reviews report, requests correction or verifies quantity through a separate action. Verification records reviewer, time, evidence and exact work line.
+5. Approved progress projection updates dashboards; a correction never erases original submission history.
+
+### C. Warehouse and material workflow
+1. Contractor assigns a storekeeper to a project warehouse and configures authorized transaction types.
+2. Storekeeper records receipt against delivery evidence; a receipt records physical arrival, not procurement approval or payment.
+3. Foreman creates material request linked to work package/location and required date.
+4. Authorized approver approves/rejects/partially approves request; storekeeper records actual issue and recipient.
+5. Returns, damaged/lost material, transfer and stock count are separate movement types with reason and authority.
+6. On-hand balance is derived from posted movement ledger; estimated demand, requests and issues are displayed separately.
+
+### D. Cost and variance control workflow
+1. System compares estimate revision, planned quantities, reported execution, verified/accepted quantities and posted material movements by project/work package/item and time window.
+2. Each variance displays source revisions, units, formulas, comparison period and missing-data warnings.
+3. Contractor investigates and records explanation/action; no variance automatically changes an approved estimate, contract or stock balance.
+4. Investor receives only contractor-approved shared summaries if enabled for the project.
+
+### Candidate functional requirements
+| ID | Requirement | Candidate verification |
+|---|---|---|
+| FR-115-EST-01 | Import a controlled Excel BOQ template with row-level validation and an import error report | Valid/invalid mixed-file test; no silent partial posting |
+| FR-115-EST-02 | Maintain draft/submitted/approved/rejected/superseded revisions for BOQ and estimate | State-transition and immutable-approved-revision tests |
+| FR-115-EST-03 | Trace every quantity line to source drawing/revision, location, method, formula, unit and assumption | Traceability completeness test |
+| FR-115-PLAN-01 | Link BOQ lines to work packages, location, schedule and assigned foreman | Referential integrity and authorization tests |
+| FR-115-FLD-01 | Submit field quantities with photos and immutable correction history | Mobile upload, retry, duplicate and correction tests |
+| FR-115-WH-01 | Record receipts, issues, returns and adjustments as separate authorized movements | Ledger arithmetic, permission and reversal tests |
+| FR-115-WH-02 | Derive on-hand balance from posted movements; exclude drafts and unapproved requests | Deterministic balance reconciliation test |
+| FR-115-CST-01 | Compare estimate/plan/actual/verified/accepted/stock data without conflating units or states | Reconciliation and incomparable-data tests |
+| FR-115-SEC-01 | Enforce contractor/project/warehouse/work-package scope on every read/write/export | Cross-project and role-based negative tests |
+| FR-115-AUD-01 | Preserve actor, time, source, revision and before/after history for consequential changes | Audit completeness test |
+
+### Candidate user-facing reports
+- Estimate/BOQ revision comparison and unresolved review items.
+- Work package planned versus reported versus verified quantities.
+- Material balance and movement statement by warehouse/item/period.
+- Estimated material demand versus request, issue, return and measured consumption (only if consumption is separately evidenced).
+- Cost/quantity variance with source provenance and review status.
+- Project summary for contractor; separately configured investor report.
+
+### Discovery questions still OPEN
+Confirm target construction type and trade taxonomy; unit catalogue and conversions; Excel template shape; local norms/rate sources and effective dates; estimate approval authority; contract/variation process; field quantity verification authority; warehouse count/transfer rules; consumption recording method; reporting cadence; investor data visibility; representative PDF/CAD file formats; offline requirements and retention.
