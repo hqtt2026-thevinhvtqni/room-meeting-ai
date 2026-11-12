@@ -4,14 +4,14 @@
 - **Read order:** 1
 - **Depends on:** NONE
 - **Status:** ACTIVE / INITIALIZED — DISCOVERY ONLY
-- **Version / Updated:** 0.1 / 2026-11-12
+- **Version / Updated:** 0.2 / 2026-11-12
 - **Work ID:** 115
 - **Work Name:** CONSTRUCTION-SITE-MANAGEMENT
 - **Product:** Ứng dụng quản lý và báo cáo thi công công trình / Construction Site Management & Field Reporting App
 - **Product Owner / Final Authority:** Vinh
 - **Lifecycle Orchestrator:** Xu / AI-01
-- **Governing standard:** Work 70 — ROOM-HOP Product Lifecycle & Work Dashboard, Standard 1.2; W70 DOC-002, DOC-033, DOC-038, DOC-039, DOC-056
-- **Sandbox:** Work 115 — creation pending ROOM-HOP Sandbox 8030 availability
+- **Governing standard:** Work 70 — ROOM-HOP Product Lifecycle & Work Dashboard, current baseline Standard 1.3 (W70 DOC-001 v1.5); W70 DOC-002, DOC-033, DOC-038, DOC-039, DOC-056, DOC-096
+- **Sandbox:** Work 115 — created in ROOM-HOP Sandbox 8030; exact parity verification in progress
 - **GitHub repository:** hqtt2026-thevinhvtqni/room-meeting-ai
 - **GitHub branch:** main
 - **Canonical Work path:** work/115/CONSTRUCTION-SITE-MANAGEMENT/
@@ -71,7 +71,7 @@ NOT AUTHORIZED YET:
 6. Preserve history; do not silently overwrite or delete artifacts.
 7. No product implementation before discovery/requirements/architecture and applicable entry gates are ready.
 
-## 8. Current truth
+## 8. Governing control adoption\n- Adopt current Work 70 baseline Standard 1.3, including DOC-096 AI Work Session Integrity & Journal Control (P0).\n- DOC-096 is a governing external control; W115 must apply identity verification, full-journal scan before append, unique sequence/evidence IDs, append-only corrections and exact readback.\n- Work 70 Sandbox paths are relative to the Work root; W115 Sandbox paths are relative to Work 115 root.\n\n## 9. Current truth
 - Work documentation scaffold created on GitHub main; exact-path readback PASS for all 11 registered canonical files (2026-11-12).
 - Sandbox Work 115 creation: BLOCKED / NOT RUN because ROOM-HOP 8030 connection failed.
 - Existing Sandbox portfolio collision check: NOT VERIFIED during this operation.
