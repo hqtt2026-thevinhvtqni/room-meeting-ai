@@ -188,3 +188,12 @@
 - GitHub: DOC-004 commit e2aaed479a2e0d1e8f78f124930d774161409e24, blob 77c6c4dec4b334dda535256caaa06e6117b19f27; EVIDENCE_REGISTER commit 1ab0c2b338ad374fb2f01ef7723e501ba7794d4f, blob 84e8080d508e60cf469e9275417fca7aff46a52e. Exact read-back and Sandbox parity follow.
 - Boundary: hqtt-ai-platform being the original HQTT AI Platform source does not automatically make it canonical runtime source for W76. Inspection is bounded to main tree and exact files; no claims about other branches/repos/deployed runtime.
 - Status unchanged: WP-76-07 BLOCKED; no source/build/runtime/test/CI/dispatch/gate/PR/release change. WE-G4/G5 BLOCKED; G0/G1 NOT VERIFIED; NOT RELEASED.
+
+
+### 2026-11-13 06:30:13 +07:00 — Co sửa sai lệch liên kết tài liệu trong Manifest
+- Actor: Co / AI-07 — AI Coder / Execution Assistant.
+- Finding: DOC-001 mục Initial delivery objectives gán sai nội dung DOC-003/DOC-004/DOC-005 và bỏ sót DOC-006. Đối chiếu DOC-008 canonical Document Register xác nhận mapping đúng là DOC-003 Product Requirements, DOC-004 Trigger Engine Architecture, DOC-005 Implementation Roadmap, DOC-006 Verification Plan.
+- UPDATE: sửa đúng bốn dòng mapping trong DOC-001; không đổi DOC-ID, canonical path, lifecycle, scope hoặc quyền.
+- GitHub: DOC-001 commit ee9053bedea23b8e89b1ce6d52aa247f8479350e, blob 569075201773db6421d81ee12ffa23e6f10e90e9; EVIDENCE_REGISTER commit ce5e8819b2309fe63b32eb7ca026e6686e86cf23, blob f609556c6f5b82cdd42ad7a707ec583a6f7c5617. Exact read-back and Sandbox parity follow.
+- Evidence: EV-76-016 — documentation consistency correction only.
+- Guardrails: không sửa source/build artifact; không chạy test/CI/runtime; không đổi Build Register, PR, gate, approval hoặc release. WE-G4/G5 BLOCKED; G0/G1 NOT VERIFIED; NOT RELEASED.
