@@ -9,9 +9,9 @@
   "current_phase": "01_DISCOVER",
   "source_mode": "local_snapshot",
   "freshness": "LOCAL_SNAPSHOT",
-  "revision": "W76-DASHBOARD-0.3.4",
-  "warning_vi": "LOCAL SNAPSHOT — chưa kết nối Core live. Cập nhật 2026-11-13 06:37:04 UTC+7; Evidence Register đến EV-76-019. ADR-76-001…008 đều OPEN / NOT APPROVED. Work vẫn ở 01_DISCOVER; G0/G1 NOT VERIFIED; Co WE-G4/G5 BLOCKED; WP-76-07 BLOCKED do dispatch transport/identity/receipt/ACK chưa xác minh. Trigger runtime chưa triển khai; CI/test và browser/mobile E2E chưa chạy.",
-  "updated_at": "2026-11-12T23:37:04.693Z",
+  "revision": "W76-DASHBOARD-0.3.5",
+  "warning_vi": "LOCAL SNAPSHOT — chưa kết nối Core live. Cập nhật 2026-11-13 06:38:49 UTC+7; Evidence Register đến EV-76-020. ADR-76-001…008 OPEN / NOT APPROVED. Dashboard finding B-76-07: UI chưa hiển thị participant Work Entry gates; owner Xu/WP-76-09. Work vẫn 01_DISCOVER; G0/G1 NOT VERIFIED; Co WE-G4/G5 BLOCKED; WP-76-07 BLOCKED; runtime/test/browser-mobile E2E chưa triển khai/chưa chạy.",
+  "updated_at": "2026-11-12T23:38:54.706Z",
   "phases": [
     {
       "phase_id": "01_DISCOVER",
@@ -240,6 +240,14 @@
       "status": "OPEN",
       "owner": "Xu / Co",
       "detail_vi": "Delegation đã được ghi DOC-007; còn thiếu bằng chứng identity/tool permissions riêng của Co và xác minh các phụ thuộc/ACK cần thiết."
+    },
+    {
+      "id": "B-76-07",
+      "title": "Dashboard does not display participant Work Entry gates",
+      "severity": "MEDIUM",
+      "status": "OPEN",
+      "owner": "Xu / WP-76-09",
+      "detail_vi": "Static review: gateSummary chỉ đếm lifecycle phase gate_status; chưa hiển thị riêng Work Entry WE-G0…WE-G5. Cần tách lifecycle G0/G1 khỏi participant gates; browser/mobile QE chưa chạy."
     }
   ],
   "risks": [
@@ -372,13 +380,6 @@
     {
       "date": "2026-11-06",
       "actor": "Xu",
-      "title": "Nâng cấp Dashboard v0.2",
-      "detail": "Đang cập nhật giao diện responsive, dữ liệu trạng thái và hướng dẫn kiểm thử.",
-      "status": "IN_PROGRESS"
-    },
-    {
-      "date": "2026-11-06",
-      "actor": "Xu",
       "title": "Đồng bộ baseline Work 76 lên GitHub main",
       "detail": "Tài liệu nền, manifest, kế hoạch, evidence register và dashboard baseline đã được đồng bộ.",
       "status": "VERIFIED"
@@ -438,6 +439,13 @@
       "title": "Architecture Decision Register ADR-76-001…008",
       "detail": "Chuẩn hóa 8 quyết định còn mở, bằng chứng cần có, owner, authority, dependency và điều kiện đóng. Không ADR nào được phê duyệt.",
       "status": "OPEN / NOT APPROVED"
+    },
+    {
+      "date": "2026-11-13",
+      "actor": "Co / AI-07",
+      "title": "Static review Dashboard Work Entry gate visibility",
+      "detail": "index.html chỉ render lifecycle phase gate_status; chưa hiển thị Work Entry WE-G0…WE-G5. Ghi nhận finding EV-76-020, chuyển owner Xu/WP-76-09.",
+      "status": "FINDING OPEN / STATIC REVIEW"
     }
   ],
   "evidence": [
@@ -573,6 +581,13 @@
       "claim": "DOC-004 ghi nhận ADR-76-001…008, chủ đề, owner, evidence/closure requirements và dependency; tất cả vẫn OPEN/NOT APPROVED.",
       "path": "03_ARCHITECT/DOC-004_TRIGGER-ENGINE-ARCHITECTURE.md §I",
       "status": "VERIFIED (REGISTER ONLY; NO ADR APPROVED)"
+    },
+    {
+      "evidence_id": "EV-76-020",
+      "title": "Dashboard Work Entry gate visibility finding",
+      "claim": "Static review thấy gateSummary chỉ đếm lifecycle phase gates; không render participant Work Entry G0/G1/WE-G4/G5. Xu/WP-76-09 cần đánh giá; không có source change/browser QE.",
+      "path": "DASHBOARD/index.html blob c53b084a5a9bedbafef2d74af5701dc0c4f0149d; README finding",
+      "status": "VERIFIED (STATIC REVIEW ONLY; BROWSER QE NOT RUN)"
     }
   ]
 }
