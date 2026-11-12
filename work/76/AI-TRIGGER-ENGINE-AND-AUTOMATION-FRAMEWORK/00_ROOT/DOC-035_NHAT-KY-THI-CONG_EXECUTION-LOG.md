@@ -272,3 +272,12 @@
 - EVIDENCE_REGISTER.md — blob 379b52ae05e0f11f06e7fa9783fe769cc82a0a80; 6,660 chars; exact_match=true.
 - DOC-035 before this detail append — blob 761ac2748be3cd2231dce6d5667db2d8fd841280; 37,093 chars; unique finding marker present; exact_match=true.
 - All four sandbox_write calls returned status=ok; all four sandbox_read_probe calls returned status=ok. This verifies data-file synchronization in the current OChat MCP session only; no browser/mobile QE or AI-07 trusted runtime identity is inferred.
+
+
+### 2026-11-13 06:50 +07:00 — Co kiểm tra quyền Sandbox trong phiên OChat hiện tại
+- Actor: Co / AI-07 — AI Coder / Execution Assistant (tool session observed; trusted runtime identity binding remains NOT_VERIFIED).
+- Scope: temporary diagnostic file only; no canonical source, Build artifact, runtime state or protected configuration changed.
+- Test: `.diagnostics/co-session-capability-probe.txt` was written with marker `W76-CO-SESSION-PROBE-20261113T0650+0700`; sandbox_write returned status=ok. sandbox_read_probe returned status=ok and the exact 39-byte marker. sandbox_delete returned status=ok; subsequent sandbox_read_probe returned FileNotFoundError, confirming cleanup.
+- Conclusion: current OChat tool session has observed Sandbox write/read/delete capability for Work 76. This is not proof that the session is cryptographically bound to trusted AI-07 identity; it does not prove PC/VS Code Bridge, local terminal, Git push, test execution or runtime capability.
+- Evidence: EV-76-021. Evidence Register update commit `5f3829f482ba5b1e2df71799ce51cb5d5934d3b0`, blob `3cdeb5fd85fff2f7a9684d3337d18f6298321408`.
+- Gate effect: none. WE-G4 remains BLOCKED pending trusted identity/assignment/tool authorization evidence and reviewer ACKs; WE-G5 remains BLOCKED. Lifecycle G0/G1 NOT VERIFIED; no source/build mutation, tests, CI, E2E, dispatch, merge or release performed.
