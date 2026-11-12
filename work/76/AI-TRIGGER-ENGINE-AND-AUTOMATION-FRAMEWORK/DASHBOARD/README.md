@@ -67,3 +67,13 @@ Dashboard v0.2 đọc JSON tĩnh từ repository. Chưa có Core API, authentica
 - Eight architecture decisions ADR-76-001…008 are listed as OPEN / NOT APPROVED; they are decision tracking items, not approved designs.
 - Snapshot remains local_snapshot; Core live integration is not available/verified.
 - Trigger implementation, CI/tests and browser/mobile QE remain NOT RUN.
+
+
+## Static review finding — Work Entry gates are not rendered (2026-11-13)
+- Reviewed artifact: DASHBOARD/index.html, GitHub main blob c53b084a5a9bedbafef2d74af5701dc0c4f0149d (16,248 chars).
+- Exact behavior found: the UI calculates gateSummary only from phases.filter(p => p.gate_status === "PASS") and renders each lifecycle phase's gate_status.
+- No G0, G1, WE-G4 or Work Entry gate fields/rendering were found in the inspected HTML.
+- Impact: the displayed “Gate đạt x/9” is a lifecycle phase-gate summary only. It does not communicate DOC-007 participant-specific Work Entry WE-G0…WE-G5; a viewer may miss that Co WE-G4/G5 are BLOCKED even while looking at the gate summary.
+- Required correction for WP-76-09 owner Xu: add a distinct Work Entry panel/summary sourced from canonical DOC-007 or an explicitly versioned snapshot field; show lifecycle G0/G1 separately from participant WE-G0…WE-G5; label unknown/stale data UNKNOWN; do not combine counts or infer PASS.
+- Boundary: static HTML inspection only. No browser/mobile rendering, interaction or accessibility test was run. This is a review finding, not a source-code defect reproduction.
+- Disposition: WP-76-09 remains IN_REVIEW; owner Xu to assess and implement within its assignment; An/Qw independent QE ACK/entry still pending.
