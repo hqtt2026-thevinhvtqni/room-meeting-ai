@@ -197,3 +197,71 @@ Stage B controlled calculation: approved units/norms/rates and deterministic est
 Stage C optional drawing assistance: PDF first, then specific CAD formats only after representative-file tests, measurement benchmark and independent engineering validation.
 Stage D integrated controls: connect planned material demand, field actuals, warehouse movement and variance dashboard.
 Each stage requires W70 gates and explicit scope approval; no BUILD authorization is implied.
+
+
+## 12. Logical data model and workflow contracts — discovery baseline
+**Status:** conceptual model for discovery and review; not a physical database schema. IDs below are illustrative stable business keys. Tenant/customer isolation and project scope must be enforced server-side.
+
+### 12.1 Entity groups and minimum fields
+| Entity | Minimum conceptual fields | Key relationship / integrity |
+|---|---|---|
+| Project | project_id, contractor_id, name, location, status, timezone | Tenant/contractor owns project |
+| ProjectMember | project_id, user_id, role, scope, active_from/to | Unique active membership per user/role/scope |
+| DrawingDocument | drawing_id, project_id, document_no, discipline, title | One document has revisions |
+| DrawingRevision | revision_id, drawing_id, revision_code, issue_date, file_ref, checksum, status, supersedes_revision_id | Immutable source file/revision; unique revision code per drawing |
+| TakeoffSheet | takeoff_id, project_id, drawing_revision_id, preparer_id, revision_no, state | References exact drawing revision |
+| TakeoffLine | takeoff_line_id, takeoff_id, work_code, description, location, dimensions_json, formula, unit_id, quantity, rounding_rule, assumption, source_page_detail | Quantity reproducible from stored inputs/formula |
+| BOQ / BOQRevision | boq_id, project_id, revision_id, state, created_by, submitted_at, approved_by, approved_at | Approval binds to exact immutable revision |
+| BOQLine | boq_line_id, boq_revision_id, work_code, description, unit_id, quantity, location, takeoff_line_refs | No implicit overwrite from later takeoff |
+| NormSet / NormRevision | norm_set_id, revision_id, source, effective_from/to, approval_state | Rate/norm source and validity are explicit |
+| NormItem | norm_item_id, norm_revision_id, work_code, resource_type, resource_code, unit, coefficient | Coefficient and unit basis are versioned |
+| RateBook / RateRevision | rate_book_id, revision_id, source, currency, effective_from/to, approval_state | No rate recommendation without source/date |
+| RateItem | rate_item_id, rate_revision_id, resource_code, unit, unit_rate, price_date, source_ref | Same resource/unit basis must be comparable |
+| Estimate / EstimateRevision | estimate_id, project_id, boq_revision_id, norm_revision_id, rate_revision_id, revision_no, state, total, currency | Estimate locks exact input revisions |
+| EstimateLine | estimate_line_id, estimate_revision_id, boq_line_id, resource_breakdown, formula_version, amount | Amount is deterministically derived and reproducible |
+| EstimateReview | review_id, estimate_revision_id, reviewer_id, decision, comments, decided_at | Reviewer authority and exact revision recorded |
+| WorkPackage | work_package_id, project_id, boq_line_id, location, planned_start/end, planned_quantity, foreman_id, state | References approved baseline revision |
+| ProgressReport / ProgressLine | report_id, work_package_id, reporter_id, period, state; line_id, quantity, unit, narrative | Field-reported quantity is not accepted quantity |
+| QuantityVerification | verification_id, progress_line_id, verified_quantity, reviewer_id, decision, evidence_refs, verified_at | Separate authorized verification record |
+| Warehouse / MaterialItem | warehouse_id, project_id; item_id, code, spec, unit_id | Project-scoped warehouse and material catalogue |
+| MaterialRequest | request_id, project_id, work_package_id, requester_id, item_id, requested_qty, state | Request does not change stock |
+| MaterialMovement | movement_id, warehouse_id, item_id, movement_type, qty, unit_id, source_ref, destination_ref, work_package_id, actor_id, posted_at, reversal_of_id | Append-only posted ledger; drafts do not affect balance |
+| VarianceRecord | variance_id, project_id, dimension, baseline_ref, actual_ref, formula_version, period, explanation, status | Store source refs and comparable unit/time basis |
+| AuditEvent | event_id, actor_id, action, entity_type/id, timestamp, before_ref, after_ref, reason, correlation_id | Append-only security and business audit |
+
+### 12.2 Aggregate boundaries
+- Project is the authorization and reporting boundary; contractor organization is the tenant boundary.
+- BOQRevision and EstimateRevision are immutable approval aggregates. Their lines cannot be silently updated after approval.
+- ProgressReport is a field-submission aggregate; QuantityVerification is a separate decision aggregate.
+- Warehouse balance is a projection from posted MaterialMovement events, not a manually editable field.
+- RateBook/NormSet revisions are controlled reference data; each estimate stores the exact revisions used.
+- Files are stored outside relational business rows using controlled file references, checksums, media metadata and access policies. Do not expose storage paths as public URLs by default.
+
+### 12.3 Workflow state contracts
+- Drawing revision: DRAFT → REGISTERED → SUPERSEDED (or WITHDRAWN with reason).
+- Takeoff/BOQ: DRAFT → SUBMITTED → APPROVED or REJECTED; approved revision can later become SUPERSEDED, never edited in place.
+- Estimate: DRAFT → SUBMITTED → APPROVED or REJECTED → SUPERSEDED by a new revision.
+- Work package: DRAFT → READY → IN_PROGRESS → COMPLETED_REPORTED → VERIFIED/ACCEPTED where separately authorized; corrections create traceable events.
+- Progress report: DRAFT → SUBMITTED → NEEDS_CORRECTION or REVIEWED; report review is not necessarily formal acceptance.
+- Material request: DRAFT → SUBMITTED → APPROVED/PARTIAL/REJECTED → FULFILLED/CLOSED; no state changes stock until a movement is posted.
+- Material movement: DRAFT → POSTED → REVERSED by a linked reversal; posted records are not destructively edited.
+- Variance: DETECTED → UNDER_REVIEW → EXPLAINED/ACTION_REQUIRED → CLOSED by authorized actor.
+
+### 12.4 Core calculation contracts
+1. Estimate line amount = approved BOQ quantity × applicable norm coefficients × versioned resource rates, plus explicitly configured cost components. Exact formula, overhead, tax, rounding and legal standards remain OPEN pending market/jurisdiction decision.
+2. Stock on hand = opening balance + posted receipts + posted returns + authorized positive adjustments − posted issues − authorized negative adjustments. Transfers must post paired source/destination movements atomically.
+3. Progress ratio is only calculated when numerator and denominator share the same work item, unit, scope and valid baseline revision; otherwise show NOT COMPARABLE.
+4. Estimate-to-actual variance must name the baseline revision, actual source, period and formula. Do not mix reported, verified, accepted or paid quantities.
+5. Material consumption is not derivable from warehouse issue alone. If tracked, it needs separate evidence or an explicit consumption transaction and reconciliation policy.
+
+### 12.5 API and transaction safety expectations
+- Validate actor, project membership, warehouse/work-package scope and state transition on the server for every command.
+- Use idempotency keys for imports, uploads and posting commands; repeated retries must not duplicate rows or movements.
+- Post material movements and their audit event atomically; paired transfers must be all-or-nothing.
+- Use optimistic concurrency/version checks for BOQ/estimate approvals and revisions.
+- Store timestamps in UTC and preserve project timezone for display/reporting.
+- Every import returns accepted/rejected row counts, row-level errors and an import batch reference.
+- Dashboard is a read projection from authorized records; it cannot mutate source aggregates.
+
+### 12.6 Proposed module delivery order (not BUILD authorization)
+M0 Discovery & sample-data validation → M1 project/roles/work packages/reporting → M2 Excel BOQ import and manual takeoff/estimate revision → M3 warehouse movement ledger → M4 deterministic variance/reporting → M5 optional PDF/CAD extraction experiment. Dependencies and MVP cut remain subject to validated user journeys and W70 gates.
