@@ -244,3 +244,12 @@
 - README bổ sung giới hạn: ADR list là theo dõi quyết định, không phải phê duyệt; Core live, implementation, CI/test và browser/mobile QE vẫn chưa xác minh/chưa chạy.
 - GitHub: PRODUCT_STATUS commit a959c68d8327ed1eb59026ebe248ff2391d43a63, blob 4640f3c4e79387b7537ecc3dcfa2eb248d072ed5; README commit 2f85ed1806e2f9772de19e75cedab8da4d57ba5d, blob bdc8802d20164378f31d7f48cd2944bc6584f2b9. Exact read-back and Sandbox parity follow.
 - Guardrails: dashboard data/docs only; no UI source, runtime, tests, CI, Build Register, gates, PR, merge or release changed.
+
+
+#### Exact GitHub ↔ Sandbox verification for ADR/Dashboard refresh — 2026-11-13 06:37:04 +07:00
+- DOC-004 architecture + ADR register — blob 0cdf5d737c3d889546ddb654b683ae9dff23a9f8; 23,939 chars; exact_match=true.
+- DASHBOARD/PRODUCT_STATUS.json — blob 4640f3c4e79387b7537ecc3dcfa2eb248d072ed5; 21,384 chars; JSON.parse successful; 19 evidence entries; 8 ADR decisions; exact_match=true.
+- DASHBOARD/README.md — blob bdc8802d20164378f31d7f48cd2944bc6584f2b9; 3,693 chars; exact_match=true.
+- EVIDENCE_REGISTER.md — blob 7b17689500348871dfa20d9f7cf8a304fa9a0f44; 6,264 chars; exact_match=true.
+- DOC-035 before this detail append — blob caf0c38eded3e676d13d2de543395ec067621718; 34,279 chars; exact_match=true.
+- For all five paths sandbox_write returned status=ok and sandbox_read_probe returned status=ok. This confirms exact file synchronization in this OChat MCP session, not trusted AI-07 runtime identity, Core live integration, test execution or browser/mobile QE.
