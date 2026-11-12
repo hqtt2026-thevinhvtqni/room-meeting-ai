@@ -29,3 +29,11 @@ Ghi sự kiện đã thực hiện, không ghi dự kiến thành kết quả. M
 - Product implementation and tests: NOT STARTED / NOT RUN.
 - Current phase: 01_DISCOVER.
 - Gate status: NOT ASSESSED; no PASS.
+
+
+### Read-back verification — 2026-11-12 (UTC+07)
+- Exact-path fetch from GitHub main succeeded for all 11 registered canonical files: DOC-001, DOC-002, DOC-003, DOC-034, DOC-035, DOC-006, DOC-007, DOC-008, DOC-009, DOC-010 and DOC-011.
+- All 11 fetches returned content and blob SHAs. Structural spot checks confirmed W115 identity/title markers and expected discovery/initialization status markers. This is exact-path GitHub readback; byte-for-byte comparison against Sandbox is impossible because Sandbox is unavailable. Full Markdown lint, link integrity and schema validation were NOT RUN.
+- DOC-035 exact readback blob SHA before this addendum: 930071aaf8833362857aab2cab54977439d520a8. DOC-011 exact readback blob SHA: 749f2e57c56e08393bb6a95662a53f935dbd8e98.
+- Result: GITHUB MAIN READBACK PASS (11/11 paths); SANDBOX CREATE/PARITY BLOCKED; PRODUCT IMPLEMENTATION NOT STARTED; TESTS NOT RUN; QE NOT RUN; ACCEPTANCE/RELEASE NOT READY.
+- Next: restore ROOM-HOP 8030, inspect Sandbox inventory for ID collision, create Work 115 Sandbox instance with registered identity xu, then exact-readback and compare canonical records. Do not duplicate or overwrite if an existing Sandbox W115 is found; reconcile first.
