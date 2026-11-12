@@ -4,7 +4,7 @@
 - **Read order:** 1
 - **Depends on:** NONE
 - **Status:** ACTIVE / INITIALIZED — DISCOVERY ONLY
-- **Version / Updated:** 0.2 / 2026-11-12
+- **Version / Updated:** 0.3 / 2026-11-12
 - **Work ID:** 115
 - **Work Name:** CONSTRUCTION-SITE-MANAGEMENT
 - **Product:** Ứng dụng quản lý và báo cáo thi công công trình / Construction Site Management & Field Reporting App
@@ -72,7 +72,7 @@ NOT AUTHORIZED YET:
 7. No product implementation before discovery/requirements/architecture and applicable entry gates are ready.
 
 ## 8. Governing control adoption\n- Adopt current Work 70 baseline Standard 1.3, including DOC-096 AI Work Session Integrity & Journal Control (P0).\n- DOC-096 is a governing external control; W115 must apply identity verification, full-journal scan before append, unique sequence/evidence IDs, append-only corrections and exact readback.\n- Work 70 Sandbox paths are relative to the Work root; W115 Sandbox paths are relative to Work 115 root.\n\n## 9. Current truth
-- Work documentation scaffold created on GitHub main; exact-path readback PASS for all 11 registered canonical files (2026-11-12).
+- Work documentation scaffold created on GitHub main; exact-path readback PASS for all 11 registered canonical files (2026-11-12).\n- Sandbox Work 115 created; exact content parity PASS for 11/11 canonical documents and 5/5 lifecycle placeholders (16/16 files).
 - Sandbox Work 115 creation: BLOCKED / NOT RUN because ROOM-HOP 8030 connection failed.
 - Existing Sandbox portfolio collision check: NOT VERIFIED during this operation.
 - Product code, UI, backend, database, authentication, tests and deployment: NOT STARTED.
