@@ -15,3 +15,5 @@
 
 Evidence is not a claim of product implementation, test PASS, acceptance or release.
 
+
+| EV-115-008 | 2026-11-12 | Conditional architecture principle | Vinh's shared Teacher–Student–Rule Engine proposal, reconciled against current W115 Manifest, Decision Log, Architecture and Journal | Rule-first authority boundary, optional AI assistance/escalation, privacy/security/audit/fallback/cost controls and QS exclusion documented as a conditional design baseline; no implementation authorization | RECORDED — source and decision documented; readback verification pending |
