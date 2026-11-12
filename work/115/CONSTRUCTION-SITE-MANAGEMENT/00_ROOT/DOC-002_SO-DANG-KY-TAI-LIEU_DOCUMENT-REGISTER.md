@@ -8,7 +8,7 @@
 - **Owner:** Xu / AI-01
 - **Authority:** Vinh
 
-Rule: one stable DOC-ID, one canonical path, one official register. W70 DOC-038/DOC-039/DOC-056 apply. Technical artifacts must also be classified and mapped.
+Rule: one stable DOC-ID, one canonical path, one official register. W70 DOC-038/DOC-039/DOC-056 apply. Technical artifacts must also be classified and mapped. W70 DOC-096 is adopted as a governing external control; it is not duplicated as a W115-owned document.
 
 | DOC-ID | Priority | Read order | Canonical path | Purpose | Status |
 |---|---|---:|---|---|---|
@@ -24,4 +24,4 @@ Rule: one stable DOC-ID, one canonical path, one official register. W70 DOC-038/
 | DOC-010 | P1 | 10 | 06_VERIFY/DOC-010_KE-HOACH-KIEM-CHUNG_VERIFICATION-PLAN.md | Verification and acceptance evidence plan | DRAFT / TESTS NOT RUN |
 | DOC-011 | P1 | 11 | EVIDENCE/DOC-011_SO-DANG-KY-BANG-CHUNG_EVIDENCE-REGISTER.md | Cross-phase evidence index | ACTIVE — INITIALIZED |
 
-New controlled documents must be added here before use. Do not create competing registers or duplicate official records.
+## Governing external controls (not duplicated in this Work register)\n- Work 70 DOC-001 v1.5 — current Work lifecycle baseline, Standard 1.3.\n- Work 70 DOC-033 — documentation and storage standard.\n- Work 70 DOC-038/DOC-039/DOC-056 — naming, document codes and controlled standardization.\n- Work 70 DOC-096 — AI session integrity and append-only journal control (P0).\n\nNew controlled documents must be added here before use. Do not create competing registers or duplicate official records.
