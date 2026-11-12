@@ -146,3 +146,18 @@
 - GitHub: DOC-004 commit `c7c36621c8c4c88524d7c91061248dae82a576b4`; blob SHA sau read-back `cf84cddcb16e6679241429ca18801d9c6134a9bc`. EVIDENCE_REGISTER commit `e838f0ac2aae66f3f9e5e832b88d90330dc6fcca`; blob SHA sau read-back `3c0a6cb8dca1f54064175a08b71f2654156583b2`; EV-76-012 recorded.
 - Status: DOC-004 appendix là đề xuất kỹ thuật, chưa được Xu/architecture review hoặc Vinh phê duyệt; không coi là ADR được duyệt. Broker/database/scheduler/Core API/dispatch transport/ACK scheme vẫn TBD.
 - Scope/guardrail: chỉ sửa tài liệu kiến trúc và Evidence Register; không sửa source/build artifact, không chạy test, không đổi PR #53, Build Register, EV-76-004/005 hoặc lifecycle/Work Entry gates. WE-G4/G5 BLOCKED; G0/G1 NOT VERIFIED; NOT RELEASED.
+
+
+### 2026-11-13 06:27:14 +07:00 — Co cross-Work integration dependency trace (read-only)
+- Actor: Co / AI-07 — AI Coder / Execution Assistant.
+- Scope: W76 canonical docs on GitHub main; read-only comparison against W70 DOC-063 and source-trace records in W70/W1111, plus indexed default-branch GitHub code searches in room-meeting-ai. No source/runtime mutation.
+- Findings:
+  1. W70 DOC-063 is DRAFT / DESIGN ONLY / NOT APPROVED / NOT IMPLEMENTED. It defines useful security constraints (server-trusted principal, Work/WP/assignment/action/resource scope, source revision, gate snapshot, expiry/revocation and commit-time revalidation), but it is not an approved Core API.
+  2. W70/W1111 source-trace records state that the inspected Core router exposed Identity/Meeting routes; Work/WP authorization and Evidence Registry routes were not found in that inspected router. The inspected main Execution Host /execute path relied on caller-supplied authorized boolean; no trusted server-side principal/assignment/gate enforcement was evidenced in that inspected handler.
+  3. W28 hardened branch is separate from main/deployed PC evidence; recorded shared-token/static-allow-list limitations mean it is not accepted as a per-principal W76 dispatch contract.
+  4. Indexed default-branch searches for event gateway/schema/replay/idempotency and scheduler/queue/outbox/dispatch returned no matches. This is bounded NOT LOCATED evidence only; it does not prove global absence across all branches, repositories or runtime deployments.
+  5. No authoritative W76-compatible target identity resolver, receiver-issued receipt/ACK schema, scheduler contract, durable queue/outbox or Core audit-persistence contract was verified in this inspection.
+- UPDATE: appended DOC-004 section H cross-Work dependency map and registered EV-76-013 in EVIDENCE_REGISTER.
+- GitHub: DOC-004 update commit 0f1f97b23dd3a56b7d7477a820704ee87c2950c7, blob e297b71b7e1d1d64c573f4f10c5816ec4fdf8a10; EVIDENCE_REGISTER update commit 5523deca2476afcead43aae068a9170f0023ca0d, blob 0c30e694c62977a6222bf6bea04718c03f6a113c. Exact read-back follows.
+- Guardrails: documentation/discovery only. No code, tests, CI, runtime, dispatch, PR, Build Register, gate, approval or release changed. WE-G4/G5 remain BLOCKED; G0/G1 NOT VERIFIED; NOT RELEASED.
+- Next: continue permitted discovery/traceability work; implementation remains prohibited until the Work Entry and lifecycle gates are independently satisfied and authority approves.
