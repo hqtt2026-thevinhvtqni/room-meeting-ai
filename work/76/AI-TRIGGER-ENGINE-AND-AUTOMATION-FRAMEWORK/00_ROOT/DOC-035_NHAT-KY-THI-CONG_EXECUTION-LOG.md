@@ -281,3 +281,12 @@
 - Conclusion: current OChat tool session has observed Sandbox write/read/delete capability for Work 76. This is not proof that the session is cryptographically bound to trusted AI-07 identity; it does not prove PC/VS Code Bridge, local terminal, Git push, test execution or runtime capability.
 - Evidence: EV-76-021. Evidence Register update commit `5f3829f482ba5b1e2df71799ce51cb5d5934d3b0`, blob `3cdeb5fd85fff2f7a9684d3337d18f6298321408`.
 - Gate effect: none. WE-G4 remains BLOCKED pending trusted identity/assignment/tool authorization evidence and reviewer ACKs; WE-G5 remains BLOCKED. Lifecycle G0/G1 NOT VERIFIED; no source/build mutation, tests, CI, E2E, dispatch, merge or release performed.
+
+
+### 2026-11-13 06:50 +07:00 — Co cập nhật Dashboard snapshot theo EV-76-021
+- Actor: Co / AI-07 — AI Coder / Execution Assistant.
+- Action: cập nhật `DASHBOARD/PRODUCT_STATUS.json` lên revision `W76-DASHBOARD-0.3.6`; thêm EV-76-021 và activity về Sandbox capability probe.
+- GitHub: commit `7c9c3a00d329c934b13220b542cc00bcf228ef2f`, blob `dda3e641e04733ca76ad911f00c4d1784995aa1e`; read-back thành công, JSON.parse PASS, 21 evidence entries, 11 recent activities.
+- Sandbox: sandbox_write status=ok; sandbox_read_probe status=ok; exact content equality TRUE cho PRODUCT_STATUS.json.
+- Boundary: snapshot vẫn LOCAL_SNAPSHOT, không phải Core live. EV-76-021 chỉ chứng minh capability của OChat tool session; trusted AI-07 identity binding và PC/VS Code Bridge vẫn NOT VERIFIED. Không đổi phase/gates/WP, không sửa UI source, Build/runtime/test/CI/PR/merge/release.
+- Status: 01_DISCOVER; G0/G1 NOT VERIFIED; WE-G4/G5 BLOCKED; WP-76-07 BLOCKED; NOT RELEASED.
