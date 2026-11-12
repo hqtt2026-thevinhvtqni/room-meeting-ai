@@ -29,3 +29,9 @@
 - Verification addendum: GitHub read-back successful for Dashboard/index.html, PRODUCT_STATUS.json, README.md, execution log and evidence register; PRODUCT_STATUS.json parse PASS; source feature checks found WP search/filter, AI team, activity, evidence, refresh and UNKNOWN error state. PRODUCT_STATUS.schema.json expanded for v0.2.
 - Evidence: EV-76-006 VERIFIED (source sync/read-back); EV-76-007 NOT_AVAILABLE (browser/mobile rendering not run).
 - Remaining: browser check on PC and Android/mobile; verify search/filter/refresh and error states; independent An/Qw review. Until then WP-76-09 remains IN_REVIEW, not DONE.
+
+
+### 2026-11-13 05:26 +07:00 — Sandbox append/read-back verification
+- Result: sandbox_append returned status=ok for DOC-035; sandbox_read_probe returned status=ok, size_bytes=5345, and the unique marker "2026-11-13 05:23 +07:00" was found.
+- Conclusion: Sandbox MCP shared write + read-back path VERIFIED for Xu's current session. This does not verify Co's own runtime identity or tool permissions.
+- Evidence: EV-76-009. Co Work Entry WE-G4/G5 remain BLOCKED; no code/test/E2E execution claimed.
