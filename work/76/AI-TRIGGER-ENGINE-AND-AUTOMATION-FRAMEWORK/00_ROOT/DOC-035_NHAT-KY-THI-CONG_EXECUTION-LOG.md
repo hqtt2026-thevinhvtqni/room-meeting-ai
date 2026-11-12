@@ -264,3 +264,11 @@
 - Recommendation to Xu: render lifecycle G0/G1 and participant Work Entry WE-G0…WE-G5 as separate panels/counts, sourced from canonical DOC-001/DOC-007 or versioned snapshot; display UNKNOWN for stale/missing data; never combine or infer PASS.
 - GitHub: README commit 3693747ef8be96c9d55a214b2a882396308f070e, blob bc738dccbb49d79e6223a66122d657aa80b6a8b4; Evidence Register commit 6ad3320692f26767930677508725ae6b6d181d9d, blob 379b52ae05e0f11f06e7fa9783fe769cc82a0a80; PRODUCT_STATUS commit 0db9f17e4be2f74e614d6848c39ab5aec7de2c7b, blob 62f7349939584ab513cb273417cbc005a66d5e64. DOC-035 log update and exact read-back follow.
 - Boundary: static review only; no browser/mobile test, accessibility test, UI source edit, runtime, CI, gate, PR, merge or release change. ADR-76-001…008 remain OPEN; WE-G4/G5 BLOCKED; G0/G1 NOT VERIFIED; NOT RELEASED.
+
+
+#### Exact GitHub ↔ Sandbox verification for Dashboard gate finding — 2026-11-13 06:38:49 +07:00
+- DASHBOARD/README.md — blob bc738dccbb49d79e6223a66122d657aa80b6a8b4; 4,990 chars; exact_match=true.
+- DASHBOARD/PRODUCT_STATUS.json — blob 62f7349939584ab513cb273417cbc005a66d5e64; 22,388 chars; JSON.parse successful; revision W76-DASHBOARD-0.3.5; 7 blockers; 20 evidence entries; exact_match=true.
+- EVIDENCE_REGISTER.md — blob 379b52ae05e0f11f06e7fa9783fe769cc82a0a80; 6,660 chars; exact_match=true.
+- DOC-035 before this detail append — blob 761ac2748be3cd2231dce6d5667db2d8fd841280; 37,093 chars; unique finding marker present; exact_match=true.
+- All four sandbox_write calls returned status=ok; all four sandbox_read_probe calls returned status=ok. This verifies data-file synchronization in the current OChat MCP session only; no browser/mobile QE or AI-07 trusted runtime identity is inferred.
