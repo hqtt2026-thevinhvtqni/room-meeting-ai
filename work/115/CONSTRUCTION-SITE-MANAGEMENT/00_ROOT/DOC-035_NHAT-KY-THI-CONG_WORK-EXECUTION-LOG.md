@@ -37,3 +37,6 @@ Ghi sự kiện đã thực hiện, không ghi dự kiến thành kết quả. M
 - DOC-035 exact readback blob SHA before this addendum: 930071aaf8833362857aab2cab54977439d520a8. DOC-011 exact readback blob SHA: 749f2e57c56e08393bb6a95662a53f935dbd8e98.
 - Result: GITHUB MAIN READBACK PASS (11/11 paths); SANDBOX CREATE/PARITY BLOCKED; PRODUCT IMPLEMENTATION NOT STARTED; TESTS NOT RUN; QE NOT RUN; ACCEPTANCE/RELEASE NOT READY.
 - Next: restore ROOM-HOP 8030, inspect Sandbox inventory for ID collision, create Work 115 Sandbox instance with registered identity xu, then exact-readback and compare canonical records. Do not duplicate or overwrite if an existing Sandbox W115 is found; reconcile first.
+
+
+| 006 | 2026-11-12 (UTC+07) | Xu / AI-01 | W115 manifest and evidence reconciliation | Cập nhật DOC-001 để phản ánh trạng thái exact-path readback; chuẩn hóa DOC-011 còn một dòng duy nhất cho EV-115-004, ghi nhận GitHub readback PASS và Sandbox parity NOT VERIFIED. | GITHUB WRITE ACKNOWLEDGED — final exact readback pending. | DOC-001 update commit d7d1cbf8ac6caf70f9a06c38dc6ed6a3287a00f9; DOC-011 update commit 70caf23034a10d6f8340dba972f4787df6219800. |
