@@ -11,7 +11,7 @@
 - **Product Owner / Final Authority:** Vinh
 - **Lifecycle Orchestrator:** Xu / AI-01
 - **Governing standard:** Work 70 — ROOM-HOP Product Lifecycle & Work Dashboard, current baseline Standard 1.3 (W70 DOC-001 v1.5); W70 DOC-002, DOC-033, DOC-038, DOC-039, DOC-056, DOC-096
-- **Sandbox:** Work 115 — created in ROOM-HOP Sandbox 8030; exact parity verification in progress
+- **Sandbox:** Work 115 — created in ROOM-HOP Sandbox 8030; exact canonical file parity PASS (16/16)
 - **GitHub repository:** hqtt2026-thevinhvtqni/room-meeting-ai
 - **GitHub branch:** main
 - **Canonical Work path:** work/115/CONSTRUCTION-SITE-MANAGEMENT/
@@ -54,7 +54,7 @@ NOT AUTHORIZED YET:
 ## 5. Source of truth and storage
 - Work governance and official records: this Work's canonical lifecycle tree on GitHub main.
 - Product source code: separate canonical repository/path to be declared before BUILD.
-- Sandbox: intended working environment; not currently verified or created in this operation.
+- Sandbox: ROOM-HOP Sandbox Work 115; canonical file parity verified (16/16).
 - Dashboard: read-only projection only.
 - Cross-phase evidence: top-level EVIDENCE/.
 - Nhật ký thi công: 00_ROOT/DOC-035_NHAT-KY-THI-CONG_WORK-EXECUTION-LOG.md.
@@ -73,8 +73,6 @@ NOT AUTHORIZED YET:
 
 ## 8. Governing control adoption\n- Adopt current Work 70 baseline Standard 1.3, including DOC-096 AI Work Session Integrity & Journal Control (P0).\n- DOC-096 is a governing external control; W115 must apply identity verification, full-journal scan before append, unique sequence/evidence IDs, append-only corrections and exact readback.\n- Work 70 Sandbox paths are relative to the Work root; W115 Sandbox paths are relative to Work 115 root.\n\n## 9. Current truth
 - Work documentation scaffold created on GitHub main; exact-path readback PASS for all 11 registered canonical files (2026-11-12).\n- Sandbox Work 115 created; exact content parity PASS for 11/11 canonical documents and 5/5 lifecycle placeholders (16/16 files).
-- Sandbox Work 115 creation: BLOCKED / NOT RUN because ROOM-HOP 8030 connection failed.
-- Existing Sandbox portfolio collision check: NOT VERIFIED during this operation.
 - Product code, UI, backend, database, authentication, tests and deployment: NOT STARTED.
 - Requirements and architecture: initial discovery hypotheses only; not approved.
 - Acceptance and release: NOT READY / NOT RELEASED.
