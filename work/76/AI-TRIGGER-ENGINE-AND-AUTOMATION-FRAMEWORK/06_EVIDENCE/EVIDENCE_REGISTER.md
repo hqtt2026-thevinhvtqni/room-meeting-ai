@@ -44,3 +44,5 @@ The following four canonical artifacts were fetched from GitHub main, written to
 This proves GitHub↔Sandbox data-file synchronization in the current OChat MCP tool session only. It does not prove AI-07 trusted runtime identity, dashboard browser rendering, mobile behavior, Core-live connectivity or independent QE.
 
 | EV-76-019 | DOC-004 ADR register formalizes eight unresolved decisions (Core auth, event auth, canonical digest, queue/outbox, scheduler, dispatch/ACK, audit/privacy, SLO/operations), owners, evidence and closure rules; all remain OPEN | DOC-004 section I; GitHub main read-back, 2026-11-13 | VERIFIED (decision register only; no ADR approved) |
+
+| EV-76-020 | Static review of Dashboard index.html found gateSummary counts only lifecycle phase gate_status; no Work Entry G0/G1/WE-G4/G5 rendering. Finding routed to WP-76-09 owner Xu; no source change or browser QE. | DASHBOARD/index.html blob c53b084a5a9bedbafef2d74af5701dc0c4f0149d; DASHBOARD/README.md static review finding; DOC-035 | VERIFIED (STATIC REVIEW ONLY; BROWSER QE NOT RUN) |
