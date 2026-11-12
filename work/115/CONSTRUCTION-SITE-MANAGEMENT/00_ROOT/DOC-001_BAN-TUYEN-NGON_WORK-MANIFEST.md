@@ -72,7 +72,7 @@ NOT AUTHORIZED YET:
 7. No product implementation before discovery/requirements/architecture and applicable entry gates are ready.
 
 ## 8. Current truth
-- Work documentation initialized on GitHub main: pending exact readback.
+- Work documentation scaffold created on GitHub main; exact-path readback PASS for all 11 registered canonical files (2026-11-12).
 - Sandbox Work 115 creation: BLOCKED / NOT RUN because ROOM-HOP 8030 connection failed.
 - Existing Sandbox portfolio collision check: NOT VERIFIED during this operation.
 - Product code, UI, backend, database, authentication, tests and deployment: NOT STARTED.
