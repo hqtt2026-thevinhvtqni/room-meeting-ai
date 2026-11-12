@@ -113,3 +113,41 @@ The report lifecycle, review authority, report frequency, correction rules and w
 
 ### 9.4 Product boundary clarification
 The primary product workflow is foreman-to-contractor progress reporting. Investor access is an optional extension point, not a mandatory MVP user or a reason to build a full investor portal now. Direct worker reporting remains an open option, not a confirmed requirement.
+
+
+## 10. Construction material and warehouse architecture — discovery extension
+**User-confirmed direction:** include construction materials in the foreman's work context and add a **Thủ kho / Storekeeper** actor responsible for recording material receipts. Detailed workflow, approval authority and data schema remain hypotheses pending discovery.
+
+### 10.1 Role workspaces
+- **Foreman:** view relevant item catalogue and available balances; submit material requests linked to a project work item/area; see request and issue status.
+- **Storekeeper:** assigned-warehouse workspace for receipt entry, stock movement, issue/return recording where authorized, stock count and discrepancy reporting.
+- **Contractor:** project/warehouse oversight, assignment of storekeepers, policy and approval configuration, movement review and stock reports.
+- **Investor (optional):** separately authorized, project-scoped summary view only when explicitly shared.
+
+### 10.2 Candidate domain entities
+Organization; Project; Warehouse; WarehouseMembership; MaterialItem; UnitOfMeasure; MaterialRequest; MaterialRequestLine; MaterialReceipt; MaterialReceiptLine; StockMovement; StockMovementLine; MaterialIssue; MaterialReturn; StockCount; StockAdjustment; SupplierReference; DocumentAttachment; ApprovalEvent; AuditEvent.
+These are conceptual candidates, not a finalized schema. A project may have one or multiple warehouses; this remains OPEN.
+
+### 10.3 Candidate transaction flow
+Supplier/delivery arrives → storekeeper checks physical delivery and records a draft receipt with item/quantity/unit and evidence → authorized user verifies/posts the receipt → stock ledger and derived balance update → foreman submits a request against a work item → authorized contractor role approves or rejects if approval is required → storekeeper records actual issued quantity and recipient/work area → ledger updates → return/count/adjustment is separately recorded with reason and authority → contractor reviews material usage against progress reports.
+
+### 10.4 State and integrity rules
+- Distinguish draft, submitted, approved/rejected, posted, reversed and void states as appropriate; exact state machine is OPEN.
+- Draft records do not affect on-hand stock. Only validated, authorized posted movements affect balances.
+- Store balances as a projection derived from the movement ledger; do not accept a client-supplied balance as authoritative.
+- Enforce positive quantity, valid unit, item/warehouse/project scope and permitted source/destination; support explicit unit conversion only when a governed conversion exists.
+- Posted movement corrections require reversal or adjustment entries with actor, time, reason and reference; do not silently mutate history.
+- Prevent duplicate receipt posting using stable document/reference identifiers and idempotency controls where available.
+- Preserve attachment access controls and project isolation for delivery notes/photos.
+- Reconcile physical count with ledger and record variances; never auto-correct discrepancies without an authorized adjustment.
+- Keep procurement commitment, supplier invoice/payment and accounting valuation outside this workflow unless separately approved.
+
+### 10.5 Separation of duties and authorization
+- The storekeeper may record what was physically received; whether the same person may verify/post receipts, approve requests or authorize adjustments is OPEN.
+- Foreman request authority does not imply authority to approve or issue stock.
+- Contractor assigns project/warehouse memberships and explicit action permissions; authorization is checked server-side for every transaction.
+- Investor access is not inherited from project membership; only explicitly shared summary fields are visible.
+- Every transaction captures actor, timestamp, project, warehouse, item, quantity/unit, source/destination, supporting evidence, status and audit history.
+
+### 10.6 Product boundary
+The material extension covers operational stock visibility and movement records only. It does not authorize procurement, full ERP, accounting, cost valuation, QS/BOQ, automated purchasing or financial commitments. Material workflows must remain usable without AI; AI may only suggest extraction/classification after the Rule-first and privacy gates are met. W115 remains in 01_DISCOVER; no BUILD authorization.
