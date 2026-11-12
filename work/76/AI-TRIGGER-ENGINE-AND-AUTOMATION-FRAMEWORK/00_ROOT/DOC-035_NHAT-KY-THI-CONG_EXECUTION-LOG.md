@@ -253,3 +253,14 @@
 - EVIDENCE_REGISTER.md — blob 7b17689500348871dfa20d9f7cf8a304fa9a0f44; 6,264 chars; exact_match=true.
 - DOC-035 before this detail append — blob caf0c38eded3e676d13d2de543395ec067621718; 34,279 chars; exact_match=true.
 - For all five paths sandbox_write returned status=ok and sandbox_read_probe returned status=ok. This confirms exact file synchronization in this OChat MCP session, not trusted AI-07 runtime identity, Core live integration, test execution or browser/mobile QE.
+
+
+### 2026-11-13 06:38:49 +07:00 — Co static review Dashboard gate visibility
+- Actor: Co / AI-07 — AI Coder / Execution Assistant.
+- Review target: DASHBOARD/index.html, GitHub main blob c53b084a5a9bedbafef2d74af5701dc0c4f0149d (16,248 chars).
+- Finding: UI computes gateSummary from phases.filter(p => p.gate_status === "PASS") and renders phase gate_status only. No G0/G1/WE-G4/Work Entry gate fields or panel were found in the inspected HTML. Thus “Gate đạt x/9” is lifecycle phase-gate summary and does not show DOC-007 participant-specific Work Entry WE-G0…WE-G5.
+- Impact: user may not see Co WE-G4/G5 BLOCKED from the dashboard gate summary. This is a visibility gap; it does not change the actual gate records.
+- UPDATE: added static finding to DASHBOARD/README.md and registered EV-76-020. Added B-76-07 to PRODUCT_STATUS as OPEN / MEDIUM, owner Xu/WP-76-09; refreshed snapshot to W76-DASHBOARD-0.3.5. WP-76-09 remains IN_REVIEW; no HTML/UI code modified because Xu owns WP-76-09.
+- Recommendation to Xu: render lifecycle G0/G1 and participant Work Entry WE-G0…WE-G5 as separate panels/counts, sourced from canonical DOC-001/DOC-007 or versioned snapshot; display UNKNOWN for stale/missing data; never combine or infer PASS.
+- GitHub: README commit 3693747ef8be96c9d55a214b2a882396308f070e, blob bc738dccbb49d79e6223a66122d657aa80b6a8b4; Evidence Register commit 6ad3320692f26767930677508725ae6b6d181d9d, blob 379b52ae05e0f11f06e7fa9783fe769cc82a0a80; PRODUCT_STATUS commit 0db9f17e4be2f74e614d6848c39ab5aec7de2c7b, blob 62f7349939584ab513cb273417cbc005a66d5e64. DOC-035 log update and exact read-back follow.
+- Boundary: static review only; no browser/mobile test, accessibility test, UI source edit, runtime, CI, gate, PR, merge or release change. ADR-76-001…008 remain OPEN; WE-G4/G5 BLOCKED; G0/G1 NOT VERIFIED; NOT RELEASED.
