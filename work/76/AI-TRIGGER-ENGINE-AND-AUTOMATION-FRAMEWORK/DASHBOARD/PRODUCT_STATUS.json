@@ -9,9 +9,9 @@
   "current_phase": "01_DISCOVER",
   "source_mode": "local_snapshot",
   "freshness": "LOCAL_SNAPSHOT",
-  "revision": "W76-DASHBOARD-0.3.1",
+  "revision": "W76-DASHBOARD-0.3.2",
   "warning_vi": "LOCAL SNAPSHOT — chưa kết nối Core live. Co / AI-07 được Vinh ủy quyền AUTO–E2E; Work Entry WE-G0–WE-G3 PASS, WE-G4/G5 BLOCKED. Sandbox list/read/append/read-back đã VERIFIED trong phiên Xu; quyền riêng của Co và PC/VS Code Bridge chưa VERIFIED. Trigger runtime chưa triển khai; CI/browser/mobile E2E chưa chạy.",
-  "updated_at": "2026-11-12T22:27:00Z",
+  "updated_at": "2026-11-12T22:29:00Z",
   "phases": [
     {
       "phase_id": "01_DISCOVER",
@@ -355,6 +355,13 @@
       "title": "Đồng bộ hồ sơ Co giữa GitHub và Sandbox",
       "detail": "7 tệp canonical được ghi và read-back khớp byte-for-byte trong phiên Xu; Co-specific access vẫn chưa xác minh.",
       "status": "VERIFIED (XU SESSION ONLY)"
+    },
+    {
+      "date": "2026-11-13",
+      "actor": "Xu",
+      "title": "Đối chiếu quyền mặc định Co theo DOC-043",
+      "detail": "Xác nhận AI-07 là Coder Assistant; quyền giới hạn theo assignment, không merge/release/accept. Capability và PC Bridge riêng của Co vẫn chưa xác minh.",
+      "status": "VERIFIED / ENTRY BLOCKED"
     }
   ],
   "evidence": [
