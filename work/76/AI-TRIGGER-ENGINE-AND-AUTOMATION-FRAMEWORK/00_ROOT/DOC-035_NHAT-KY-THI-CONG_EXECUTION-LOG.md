@@ -197,3 +197,13 @@
 - GitHub: DOC-001 commit ee9053bedea23b8e89b1ce6d52aa247f8479350e, blob 569075201773db6421d81ee12ffa23e6f10e90e9; EVIDENCE_REGISTER commit ce5e8819b2309fe63b32eb7ca026e6686e86cf23, blob f609556c6f5b82cdd42ad7a707ec583a6f7c5617. Exact read-back and Sandbox parity follow.
 - Evidence: EV-76-016 — documentation consistency correction only.
 - Guardrails: không sửa source/build artifact; không chạy test/CI/runtime; không đổi Build Register, PR, gate, approval hoặc release. WE-G4/G5 BLOCKED; G0/G1 NOT VERIFIED; NOT RELEASED.
+
+
+### 2026-11-13 06:31:01 +07:00 — Co cập nhật Discover Brief theo bằng chứng liên Work
+- Actor: Co / AI-07 — AI Coder / Execution Assistant.
+- Action: đối chiếu DOC-002 discovery questions 1–7 với DOC-004 cross-Work dependency trace, W70 DOC-063, W13/W70/W1111 source-trace records và hqtt-ai-platform main-tree files.
+- UPDATE: bổ sung DOC-002 findings matrix phân loại từng câu hỏi là OPEN, PARTIALLY SPECIFIED hoặc BLOCKED; ghi rõ event sources, Core API/audit, dispatch/ACK, SLO, approval matrix, scheduler/retry/replay và versioning/rollback.
+- Key conclusions: Task_Dispatch documentation is workflow guidance, not machine transport; inspected HQTT backend exposes health/ping only; Core authorization/audit contract and deployed dispatch/ACK remain NOT VERIFIED; WP-76-07 stays BLOCKED.
+- GitHub: DOC-002 commit 0440a3427676e72cdcd85c35c5f594cd276204af, blob 071fc801e234cc265c45f5a67a3e6156391f82ef; EVIDENCE_REGISTER commit 2c8f135ada825d1be6d3bc90143ff145f36819d0, blob fc312ec1bb69e9fdae33cf1d76f1b5563593f1f6. Exact read-back and Sandbox parity follow.
+- Evidence: EV-76-017; discovery documentation only, no ADR approved.
+- Guardrails: no source/build/runtime/test/CI/dispatch/PR/gate/release changes. 01_DISCOVER unchanged; G0/G1 NOT VERIFIED; WE-G4/G5 BLOCKED; NOT RELEASED.
