@@ -46,3 +46,6 @@ This proves GitHub↔Sandbox data-file synchronization in the current OChat MCP 
 | EV-76-019 | DOC-004 ADR register formalizes eight unresolved decisions (Core auth, event auth, canonical digest, queue/outbox, scheduler, dispatch/ACK, audit/privacy, SLO/operations), owners, evidence and closure rules; all remain OPEN | DOC-004 section I; GitHub main read-back, 2026-11-13 | VERIFIED (decision register only; no ADR approved) |
 
 | EV-76-020 | Static review of Dashboard index.html found gateSummary counts only lifecycle phase gate_status; no Work Entry G0/G1/WE-G4/G5 rendering. Finding routed to WP-76-09 owner Xu; no source change or browser QE. | DASHBOARD/index.html blob c53b084a5a9bedbafef2d74af5701dc0c4f0149d; DASHBOARD/README.md static review finding; DOC-035 | VERIFIED (STATIC REVIEW ONLY; BROWSER QE NOT RUN) |
+
+
+| EV-76-021 | Current OChat tool session successfully performed Sandbox write, exact marker read-back, delete, and post-delete FileNotFoundError check on a temporary diagnostic file. This proves session capability only; it does not establish trusted AI-07 identity binding or PC/VS Code Bridge. | Work 76 Sandbox MCP 8030, .diagnostics/co-session-capability-probe.txt, 2026-11-13 06:50 +07:00 | VERIFIED (SESSION CAPABILITY ONLY; AI-07 IDENTITY NOT VERIFIED) |
