@@ -23,3 +23,5 @@ Rules: artifact existence is not runtime verification; a planned test is not a p
 | EV-76-012 | DOC-004 proposed interface contract baseline (event envelope, typed condition AST, policy decision, dispatch ACK, audit and lifecycle invariants) committed and read back from GitHub main; draft only, not approved or implemented. | DOC-004 Co contract proposal appendix; GitHub main read-back, 2026-11-13 | VERIFIED (document sync only) |
 
 | EV-76-013 | Bounded cross-Work dependency trace against W70 DOC-063 and W13/W70/W1111 execution/auth findings; includes indexed default-branch searches for event intake and scheduler/queue/dispatch | DOC-004 section H; W70 DOC-063; W70/W1111 source-trace records; GitHub indexed code search, 2026-11-13 | VERIFIED (read-only discovery/documentation only; no runtime or global absence claim) |
+
+| EV-76-014 | DOC-006 requirements-to-verification traceability matrix mapping FR-01..FR-10 and NFR-01..NFR-07 to proposed test IDs, blockers and execution status; specifications only, not executed | DOC-006 traceability matrix; GitHub main read-back, 2026-11-13 | VERIFIED (documentation sync only; tests NOT RUN) |
