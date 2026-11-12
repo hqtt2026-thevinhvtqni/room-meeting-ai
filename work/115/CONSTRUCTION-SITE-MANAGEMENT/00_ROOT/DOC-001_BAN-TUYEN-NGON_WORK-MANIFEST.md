@@ -4,7 +4,7 @@
 - **Read order:** 1
 - **Depends on:** NONE
 - **Status:** ACTIVE / INITIALIZED — DISCOVERY ONLY
-- **Version / Updated:** 0.3 / 2026-11-12
+- **Version / Updated:** 0.4 / 2026-11-12
 - **Work ID:** 115
 - **Work Name:** CONSTRUCTION-SITE-MANAGEMENT
 - **Product:** Ứng dụng quản lý và báo cáo thi công công trình / Construction Site Management & Field Reporting App
