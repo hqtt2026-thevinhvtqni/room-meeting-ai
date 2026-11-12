@@ -129,3 +129,11 @@
 - Verification: update thành công; fetch lại canonical DOC-006 từ main; marker W76-CE-001 hiện diện và đủ 10 test IDs.
 - Scope: tài liệu kiểm chứng / acceptance criteria only. Không sửa source code, không chạy test, không đổi Build Register, Evidence Register hoặc gate.
 - Status: test plan đã được cụ thể hóa cho các lỗi prototype đã phát hiện; execution evidence vẫn NOT_AVAILABLE. WE-G4/G5 BLOCKED; G0/G1 NOT VERIFIED; NOT RELEASED.
+
+
+### 2026-11-13 06:18 +07:00 — OChat Sandbox write/read-back capability verified for canonical docs
+- Actor: Co / AI-07 — AI Coder / Execution Assistant (tool session observed; trusted runtime identity binding itself remains NOT_VERIFIED).
+- Action: used MCP 8030 `sandbox_write` to synchronize canonical DOC-006 and DOC-035 from GitHub main into Work 76 Sandbox, then read both with `sandbox_read_probe`.
+- Exact read-back: DOC-006 GitHub blob `586265c6c3305becde1acb40ad66eedd253ad174`, 4,727 characters; Sandbox content length 4,727; exact string equality TRUE. DOC-035 GitHub blob `47f90a9d9ad049c232d31584dd2385a38bbd03f7`, 17,615 characters; Sandbox content length 17,615; exact string equality TRUE.
+- Evidence: EV-76-011 added to EVIDENCE_REGISTER. This proves write/read-back capability in this OChat tool session only; it does not resolve the session's trusted AI-07 identity binding, reviewer ACKs, or PC Bridge.
+- Scope: documentation synchronization only. No source/build artifact, runtime state, gate, PR, merge or release was changed. WE-G4/G5 remain BLOCKED; lifecycle G0/G1 NOT VERIFIED; NOT RELEASED.
