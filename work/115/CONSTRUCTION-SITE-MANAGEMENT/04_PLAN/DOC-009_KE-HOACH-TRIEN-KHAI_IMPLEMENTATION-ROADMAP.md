@@ -4,8 +4,8 @@
 - **Read order:** 9
 - **Depends on:** DOC-006; DOC-007; DOC-008
 - **Status:** DRAFT — BUILD NOT AUTHORIZED
-- **Version / Updated:** 0.1 / 2026-11-12
-- **Governing standard:** Work 70 Standard 1.2
+- **Version / Updated:** 0.2 / 2026-11-12
+- **Governing standard:** Work 70 current baseline Standard 1.3; DOC-096 AI Work Session Integrity & Journal Control (P0)
 
 | Phase | WP | Objective | Status | Exit evidence |
 |---|---|---|---|---|
