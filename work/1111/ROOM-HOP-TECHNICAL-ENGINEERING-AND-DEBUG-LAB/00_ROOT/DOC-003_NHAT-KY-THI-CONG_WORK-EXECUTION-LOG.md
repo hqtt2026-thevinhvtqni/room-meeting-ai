@@ -198,3 +198,27 @@
 - **Policy linkage:** W70 D70-022 is recorded in DOC-006/DOC-034/DOC-035 and governing DOC-056/DOC-093/DOC-094. W1111 task assignments remain Co, Xuco, Vi only.
 - **State integrity:** T07-CO, T07-XUCO and T07-VI remain READY — ACK REQUIRED. No ACK, code implementation, protected mutation or test result is inferred. DOC-117 remains active.
 - **Result:** DOCUMENT READBACK PASS. End-to-end task instructions recorded; actual autonomous execution/agent acceptance NOT YET VERIFIED.
+
+
+## 2026-11-12 18:17:36 (UTC+7) — Co — W1111-T07-CO READ-ONLY RECHECK / AUTHORIZATION GATE
+
+- **Actor / role:** Co — Coder, W1111-T07-CO. Runtime ROOM-HOP identity ID: NOT VERIFIED in this session; this entry records read-only work only and is not a formal task ACK.
+- **Task scope reviewed:** W1111-T07-CO — Trusted Identity & Authorization Core.
+- **Canonical governance records re-read from GitHub main:**
+  - DOC-003 (this journal), current blob before this append: `9cb3a1e19e08b18b56cc256019a9924746d6e21f`.
+  - AI_TASK_BOARD, blob: `8c3aa32bf9359bb4a7d7f95c29414dd3dcb7bb58`.
+  - Coder task breakdown, blob: `fad32e9e355efefcf86825e485cd8400d12bb41c`.
+  - Security boundary tracker, blob: `78f743a654f4a9c5e5e61c2355bd85411eb49020`.
+- **Source revision inspected:** branch `work/w1111-core-execution-authority-v1-2`, exact branch HEAD `c70eb2b82f54a000a81263dc519078ddf105f075`.
+- **Exact source readback on that branch:**
+  - `core/execution_authority.py` — blob `163b126178b67c6e0a3f68ba33eaf7b9e6d91503`.
+  - `room_hop_mcp/adapter/execution_authority_http.py` — blob `8cb21fadf6bf2318f4884d368b77f2abf796b807`.
+  - `tests/test_execution_authority.py` — blob `4ea5158c07df1e66183a6fbe7a6f79042332605d`.
+- **Confirmed source-level findings (read-only):**
+  1. **C-CORE-01 — immutable source SHA binding gap:** grant issuance/validation is not anchored to an immutable issue-time source SHA; validation can use current Work policy state, and run recording checks SHA format without enforcing equality to the grant-bound SHA. An existing HTTP test accepts a source SHA that differs from the configured policy SHA.
+  2. **C-CORE-02 — Assignment/Task/ACK binding gap:** current grant model does not establish the complete active Assignment + Task + owner + recipient ACK + state/revocation tuple required by W32 DOC-117 and the W1111 coder plan.
+  3. **C-CORE-03 — revoke/run atomicity gap:** grant validation and RUN_RECORDED append are not one atomic operation with revocation; append-only store locking applies to individual append calls, leaving a validation-to-record race.
+- **Gate check:** latest fetched AI_TASK_BOARD and coder plan still show T07-CO, T07-XUCO and T07-VI as `READY — ACK REQUIRED`. The reviewed records and GitHub searches did not locate a Xu `READY / EXECUTION_AUTHORIZED` decision bound to the exact task/revision/resource/action/environment tuple, nor a published Xu architecture contract that resolves the shared API. This is a bounded search result, not a claim that no such record can exist elsewhere.
+- **Disposition:** READ / TRACE / ANALYZE = COMPLETED FOR THE THREE FILES ABOVE. Formal coder ACK = NOT CLAIMED (runtime identity ID not verified). Protected implementation = DENIED / NOT STARTED under DOC-117. No source mutation, branch update, CI dispatch, pytest, PC/runner execution, merge, deploy or release was performed.
+- **Test/evidence status:** pytest = NOT RUN; CI = NOT DISPATCHED; Sandbox parity = NOT VERIFIED in this entry; live Gateway/MCP/Execution Host = NOT VERIFIED. The three findings are source-level findings only.
+- **Required next gate:** Xu must publish the canonical architecture/API contract and separately record `READY / EXECUTION_AUTHORIZED` against the exact W1111-T07-CO task, source revision, target resource/path, allowed action and environment. After that, verify Co's registered runtime identity and record the formal task ACK before protected implementation.
