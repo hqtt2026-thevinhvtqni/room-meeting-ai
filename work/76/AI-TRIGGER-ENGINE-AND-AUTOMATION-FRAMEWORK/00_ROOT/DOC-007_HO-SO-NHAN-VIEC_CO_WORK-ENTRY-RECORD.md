@@ -69,9 +69,9 @@ These are participant-specific Work Entry gates WE-G0…WE-G5. They are not the 
 
 ### Sandbox MCP 8030
 - Observed in Xu's session on 2026-11-13: sandbox_list(work_id=76) returned status=ok; sandbox_read_probe on the canonical execution log returned status=ok and the complete log content.
-- Not established at assessment start: sandbox_write/append reliability and Co-specific access.
-- Owner: Xu verifies the shared service write/read-back path; Co separately verifies access under its own runtime identity before relying on it.
-- Verification: append a uniquely timestamped diagnostic entry to the canonical journal, read it back with sandbox_read_probe, and record exact result. Do not use the ordinary sandbox_read result alone as proof when it returns an empty payload.
+- Verified for Xu's session: sandbox_append returned status=ok and sandbox_read_probe read-back found the unique 2026-11-13 journal marker (5,345 bytes). Co-specific access under Co's own runtime identity remains NOT VERIFIED.
+- Owner: Xu has verified the shared service write/read-back path for Xu's session; Co separately verifies access under its own runtime identity before relying on it.
+- Verification: Xu's sandbox_append returned status=ok; sandbox_read_probe returned status=ok, included the unique journal marker, and reported 5,345 bytes. This does not prove Co-specific identity/permission.
 
 ### Core identity / authorization / audit / AI dispatch
 - Core remains the authoritative owner. MCP 8030 is a Work artifact service, not the production dispatcher or authority service.
