@@ -171,3 +171,20 @@
 - GitHub: DOC-006 commit 36c09b48f65a473bb39ba509712874be53a03287, blob 0f854b680a75041aaee43a0d81a4bab51d820112; EVIDENCE_REGISTER commit e5402308b53e4d118bb7a8c6f0043cef4d6655bd, blob 610f27acf0dbe49139f70d5fee33ebb099c42bcf. Exact read-back and Sandbox parity follow.
 - Evidence: EV-76-014 records documentation sync only. No test IDs in this matrix are executed; DOC-006 remains NOT_STARTED.
 - Guardrails: no source/build artifact, CI, runtime, dispatch, PR, Build Register, gate or release change. WE-G4/G5 BLOCKED; G0/G1 NOT VERIFIED; NOT RELEASED.
+
+
+### 2026-11-13 06:29:34 +07:00 — Co đối chiếu repository gốc hqtt-ai-platform về AI dispatch
+- Actor: Co / AI-07 — AI Coder / Execution Assistant.
+- Scope: read-only main-tree inspection of hqtt2026-thevinhvtqni/hqtt-ai-platform; no file writes to that repository and no runtime calls.
+- Repository evidence: default branch main; exact Git tree SHA 8a2d7aa33ed537e2bc117d3421a454da0e4cd8ab; repository metadata reports code search index unavailable. Inspected exact file paths and blob SHAs:
+  - 00_COMPANY/03_Operating_Model/Task_Dispatch.md — 01e81df92cf9deafed37580f5b369f799651734e.
+  - 00_COMPANY/03_Operating_Model/AI_Workflow.md — 0d915a964f0f5fdc7f14907440a10a7bf628c40f.
+  - 00_COMPANY/03_Operating_Model/AI_Workforce_Registry.md — 29e10325726f83b9fb5a1b7da0bce6e826d756b6.
+  - 01_PROJECTS/HQTT_AI/backend/app/api/routes.py — 7e8abab2a491fc8526f68840114582680d83f1e3.
+  - 01_PROJECTS/HQTT_AI/backend/app/main.py — 55b5e159bb30f2accac7794a44c0ec64dd7aeb10.
+  - 01_PROJECTS/HQTT_AI/docs/Architecture/API_Design.md — 61caeb848774881f382fea4f868b7916f0404ba9.
+- Findings: Task_Dispatch and AI_Workflow describe human/AI process states and handoff; Workforce Registry describes role/account status but does not bind authenticated runtime principal to Work/WP/action or provide ACK proof. The inspected FastAPI router implements only GET /api/health and GET /api/ping. API_Design describes conceptual bearer-token authentication and explicitly distinguishes the current scaffold from future business endpoints. No machine dispatch, assignment authorization or receiver ACK contract was evidenced in these exact files.
+- UPDATE: appended DOC-004 section H.3 with exact paths/blob SHAs and bounded evidence interpretation; registered EV-76-015.
+- GitHub: DOC-004 commit e2aaed479a2e0d1e8f78f124930d774161409e24, blob 77c6c4dec4b334dda535256caaa06e6117b19f27; EVIDENCE_REGISTER commit 1ab0c2b338ad374fb2f01ef7723e501ba7794d4f, blob 84e8080d508e60cf469e9275417fca7aff46a52e. Exact read-back and Sandbox parity follow.
+- Boundary: hqtt-ai-platform being the original HQTT AI Platform source does not automatically make it canonical runtime source for W76. Inspection is bounded to main tree and exact files; no claims about other branches/repos/deployed runtime.
+- Status unchanged: WP-76-07 BLOCKED; no source/build/runtime/test/CI/dispatch/gate/PR/release change. WE-G4/G5 BLOCKED; G0/G1 NOT VERIFIED; NOT RELEASED.
