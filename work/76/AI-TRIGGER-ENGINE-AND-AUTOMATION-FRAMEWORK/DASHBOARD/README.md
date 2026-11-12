@@ -60,3 +60,10 @@ Dashboard v0.2 đọc JSON tĩnh từ repository. Chưa có Core API, authentica
 - Snapshot includes evidence EV-76-001…EV-76-018 and recent discovery/review activity from the canonical Work journal.
 - Source mode remains local_snapshot; this is not Core live data.
 - GitHub/Sandbox data-file synchronization is not browser rendering or interaction evidence. PC/mobile browser checks and independent QE remain NOT RUN; EV-76-007 remains NOT_AVAILABLE.
+
+
+## 9. Architecture decision register — 2026-11-13
+- PRODUCT_STATUS.json revision: W76-DASHBOARD-0.3.4.
+- Eight architecture decisions ADR-76-001…008 are listed as OPEN / NOT APPROVED; they are decision tracking items, not approved designs.
+- Snapshot remains local_snapshot; Core live integration is not available/verified.
+- Trigger implementation, CI/tests and browser/mobile QE remain NOT RUN.
