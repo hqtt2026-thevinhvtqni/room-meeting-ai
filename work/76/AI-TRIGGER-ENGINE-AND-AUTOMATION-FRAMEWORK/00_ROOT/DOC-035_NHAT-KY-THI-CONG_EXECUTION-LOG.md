@@ -56,3 +56,9 @@
 - TRACE: DOC-007 đã ghi đúng ranh giới không merge/release/accept; G4 vẫn BLOCKED vì capability/identity/tool permission thực tế của Co chưa được quan sát từ phiên Co. Role registry không chứng minh kết nối hoặc runtime activity.
 - UPDATE: bổ sung DOC-043 vào căn cứ Work Entry DOC-007; không thay đổi scope ủy quyền AUTO–E2E của Vinh, không tự cấp thêm quyền kỹ thuật.
 - STATUS: WE-G0–WE-G3 PASS; WE-G4/G5 BLOCKED; lifecycle gate và Build mutation vẫn chưa mở.
+
+
+### 2026-11-13 05:30 +07:00 — Cập nhật Dashboard snapshot theo Work Entry Co
+- Action: cập nhật DASHBOARD/PRODUCT_STATUS.json lên revision W76-DASHBOARD-0.3.2; bổ sung Co / AI-07, trạng thái WE-G4/G5 BLOCKED, reviewer nominations, blockers PC Bridge/Work Entry và activity đối chiếu DOC-043.
+- Verify: GitHub update thành công; Sandbox write status=ok; sandbox_read_probe status=ok; exact content match; JSON parse PASS.
+- Guardrail: Dashboard vẫn là local_snapshot/read-only, không phải Core live; không thay đổi lifecycle phase, không mở Build, không tuyên bố runtime/test/E2E/QE PASS.
