@@ -9,9 +9,9 @@
   "current_phase": "01_DISCOVER",
   "source_mode": "local_snapshot",
   "freshness": "LOCAL_SNAPSHOT",
-  "revision": "W76-DASHBOARD-0.3.3",
-  "warning_vi": "LOCAL SNAPSHOT — dữ liệu chụp từ GitHub main, chưa kết nối Core live. Cập nhật 2026-11-13 06:34:45 UTC+7; Evidence Register đến EV-76-018. Work vẫn ở 01_DISCOVER; G0/G1 NOT VERIFIED; Co WE-G4/G5 BLOCKED; WP-76-07 BLOCKED do dispatch transport/identity/receipt/ACK chưa xác minh. Trigger runtime chưa triển khai; CI/test và browser/mobile E2E chưa chạy. Sandbox exact read-back của các tài liệu cập nhật được xác minh trong phiên OChat; không phải bằng chứng AI-07 runtime identity.",
-  "updated_at": "2026-11-12T23:34:45.707Z",
+  "revision": "W76-DASHBOARD-0.3.4",
+  "warning_vi": "LOCAL SNAPSHOT — chưa kết nối Core live. Cập nhật 2026-11-13 06:37:04 UTC+7; Evidence Register đến EV-76-019. ADR-76-001…008 đều OPEN / NOT APPROVED. Work vẫn ở 01_DISCOVER; G0/G1 NOT VERIFIED; Co WE-G4/G5 BLOCKED; WP-76-07 BLOCKED do dispatch transport/identity/receipt/ACK chưa xác minh. Trigger runtime chưa triển khai; CI/test và browser/mobile E2E chưa chạy.",
+  "updated_at": "2026-11-12T23:37:04.693Z",
   "phases": [
     {
       "phase_id": "01_DISCOVER",
@@ -280,6 +280,54 @@
       "title": "Phê duyệt công nghệ runtime/queue/storage sau discovery",
       "owner": "Vinh / Xu / Ka",
       "status": "PENDING"
+    },
+    {
+      "id": "ADR-76-001",
+      "title": "Core principal and Work/WP authorization contract",
+      "owner": "Xu / Core owner; Vinh decision",
+      "status": "OPEN / NOT APPROVED"
+    },
+    {
+      "id": "ADR-76-002",
+      "title": "Event source authentication, key lifecycle and replay",
+      "owner": "Xu / event source owners; Vinh decision",
+      "status": "OPEN / NOT APPROVED"
+    },
+    {
+      "id": "ADR-76-003",
+      "title": "Canonical serialization, schema version and digest",
+      "owner": "Co prepares after gate; Xu coordinates; Vinh decision",
+      "status": "OPEN / NOT APPROVED"
+    },
+    {
+      "id": "ADR-76-004",
+      "title": "Durable queue, transaction/outbox and delivery semantics",
+      "owner": "Xu / platform owner; Vinh decision",
+      "status": "OPEN / NOT APPROVED"
+    },
+    {
+      "id": "ADR-76-005",
+      "title": "Scheduler and timezone/DST/missed-run semantics",
+      "owner": "Xu / operations owner; Vinh decision",
+      "status": "OPEN / NOT APPROVED"
+    },
+    {
+      "id": "ADR-76-006",
+      "title": "AI dispatch transport, target identity, receipt and ACK",
+      "owner": "Xu / dispatch provider; Vinh decision",
+      "status": "OPEN / NOT APPROVED"
+    },
+    {
+      "id": "ADR-76-007",
+      "title": "Audit/evidence persistence, privacy and retention",
+      "owner": "Xu / Core-security owner; Vinh decision",
+      "status": "OPEN / NOT APPROVED"
+    },
+    {
+      "id": "ADR-76-008",
+      "title": "SLO, operations, alerting and recovery",
+      "owner": "Xu / operations; Vinh decision",
+      "status": "OPEN / NOT APPROVED"
     }
   ],
   "ai_assignments": [
@@ -321,13 +369,6 @@
     }
   ],
   "recent_activity": [
-    {
-      "date": "2026-11-06",
-      "actor": "Xu",
-      "title": "Rà soát Dashboard hiện hữu và đối chiếu Work 70",
-      "detail": "Xác định phần còn thiếu: lọc WP, AI assignment, activity, evidence, decisions và freshness.",
-      "status": "DONE"
-    },
     {
       "date": "2026-11-06",
       "actor": "Xu",
@@ -390,6 +431,13 @@
       "title": "Discover Brief and Manifest consistency",
       "detail": "Cập nhật DOC-002 theo bằng chứng liên Work và sửa mapping deliverable DOC-001 theo DOC-008.",
       "status": "DOCUMENTATION VERIFIED"
+    },
+    {
+      "date": "2026-11-13",
+      "actor": "Co / AI-07",
+      "title": "Architecture Decision Register ADR-76-001…008",
+      "detail": "Chuẩn hóa 8 quyết định còn mở, bằng chứng cần có, owner, authority, dependency và điều kiện đóng. Không ADR nào được phê duyệt.",
+      "status": "OPEN / NOT APPROVED"
     }
   ],
   "evidence": [
@@ -518,6 +566,13 @@
       "claim": "Dashboard PRODUCT_STATUS snapshot updated through EV-76-017 and current journal activity; exact GitHub/Sandbox read-back is recorded in DOC-035. Browser/mobile E2E remains NOT_AVAILABLE.",
       "path": "DASHBOARD/PRODUCT_STATUS.json; DASHBOARD/README.md; DOC-035",
       "status": "VERIFIED (DATA SYNC ONLY; BROWSER QE NOT RUN)"
+    },
+    {
+      "evidence_id": "EV-76-019",
+      "title": "Architecture Decision Register",
+      "claim": "DOC-004 ghi nhận ADR-76-001…008, chủ đề, owner, evidence/closure requirements và dependency; tất cả vẫn OPEN/NOT APPROVED.",
+      "path": "03_ARCHITECT/DOC-004_TRIGGER-ENGINE-ARCHITECTURE.md §I",
+      "status": "VERIFIED (REGISTER ONLY; NO ADR APPROVED)"
     }
   ]
 }
