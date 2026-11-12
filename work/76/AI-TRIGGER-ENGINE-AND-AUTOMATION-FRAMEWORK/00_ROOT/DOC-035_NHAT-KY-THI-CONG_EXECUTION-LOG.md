@@ -120,3 +120,12 @@
 - Review conclusion: the prototype is **NOT ACCEPTABLE AS SUBMITTED** even before integration review. At least one deterministic runtime defect and multiple correctness/security-relevant contract gaps require remediation. This is static source inspection only; no claim that any finding has been executed or test-reproduced.
 - Required test additions before re-review: missing/extra AST keys; temporal comparison with UTC offsets and naive timestamps; relative window fresh/stale/future event boundaries; multiple-version ACTIVE invariant under publish/activate/pause/resume; deep mutation after digest/publication; malformed event ID types; retry numeric bounds including bool/NaN/infinity. Tests must be committed and mapped to DOC-006 acceptance criteria.
 - Governance remains unchanged: PR #53 NOT APPROVED / RETURN FOR CHANGES; do not merge or retarget directly to main; preserve PR as audit evidence. EV-76-004/005 remain NOT_AVAILABLE until implementation and test/CI evidence are independently verified. WE-G4/G5 BLOCKED; G0/G1 NOT VERIFIED; NOT RELEASED. No source code was edited and no tests were run by Co.
+
+
+### 2026-11-13 06:18 +07:00 — Chuẩn hóa regression acceptance matrix sau static review
+- Actor: Co / AI-07 — AI Coder / Execution Assistant.
+- Action: bổ sung DOC-006 Verification Plan với 10 test cases bắt buộc W76-CE-001…004, W76-RG-001…002, W76-MD-001…002 và W76-EV-001…002; gắn từng nhóm với FR/NFR, kiến trúc và nhóm kiểm thử DOC-006.
+- GitHub: commit `19ff5e1809da50f14773407f4af97b6c1d1d3cb6`; DOC-006 blob SHA sau read-back `586265c6c3305becde1acb40ad66eedd253ad174`.
+- Verification: update thành công; fetch lại canonical DOC-006 từ main; marker W76-CE-001 hiện diện và đủ 10 test IDs.
+- Scope: tài liệu kiểm chứng / acceptance criteria only. Không sửa source code, không chạy test, không đổi Build Register, Evidence Register hoặc gate.
+- Status: test plan đã được cụ thể hóa cho các lỗi prototype đã phát hiện; execution evidence vẫn NOT_AVAILABLE. WE-G4/G5 BLOCKED; G0/G1 NOT VERIFIED; NOT RELEASED.
