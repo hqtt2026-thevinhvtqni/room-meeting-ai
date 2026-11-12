@@ -14,3 +14,7 @@
 | EV-115-004 | 2026-11-12 | GitHub initialization | GitHub main create-file acknowledgements and exact readback | Pending | NOT VERIFIED |
 
 Evidence is not a claim of product implementation, test PASS, acceptance or release.
+
+
+### Evidence update — 2026-11-12
+| EV-115-004 | 2026-11-12 | GitHub initialization readback | Exact-path fetch from GitHub main for all 11 canonical files | All 11 paths returned content and blob SHAs; structural marker checks passed | RECORDED — GitHub readback PASS; Sandbox parity NOT VERIFIED |
