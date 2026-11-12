@@ -40,3 +40,6 @@ Ghi sự kiện đã thực hiện, không ghi dự kiến thành kết quả. M
 
 
 | 006 | 2026-11-12 (UTC+07) | Xu / AI-01 | W115 manifest and evidence reconciliation | Cập nhật DOC-001 để phản ánh trạng thái exact-path readback; chuẩn hóa DOC-011 còn một dòng duy nhất cho EV-115-004, ghi nhận GitHub readback PASS và Sandbox parity NOT VERIFIED. | GITHUB WRITE ACKNOWLEDGED — final exact readback pending. | DOC-001 update commit d7d1cbf8ac6caf70f9a06c38dc6ed6a3287a00f9; DOC-011 update commit 70caf23034a10d6f8340dba972f4787df6219800. |
+
+
+| 007 | 2026-11-12 (UTC+07) | Xu / AI-01 | Final W115 GitHub readback | Fetch lại DOC-001 Manifest và DOC-011 Evidence Register sau cập nhật; xác nhận Manifest đã ghi GitHub readback PASS, Evidence Register chỉ còn một EV-115-004 và ghi đúng Sandbox parity NOT VERIFIED. DOC-035 cũng được fetch lại sau entry 006 và xác nhận entry tồn tại. | PASS — exact-path GitHub readback cho các hồ sơ vừa cập nhật; không phải Sandbox parity hay product verification. | DOC-001 blob 7b8c13b771e6b31d21cf4ee9e9a74fe4b59b6265; DOC-011 blob 0c72051adf5780d0ea81f35078c452c98caca2f4; DOC-035 blob 9aed21706b954e777b18bb6abfb0be9d8b6c5758. |
