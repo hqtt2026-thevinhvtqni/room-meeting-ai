@@ -151,3 +151,49 @@ Supplier/delivery arrives → storekeeper checks physical delivery and records a
 
 ### 10.6 Product boundary
 The material extension covers operational stock visibility and movement records only. It does not authorize procurement, full ERP, accounting, cost valuation, QS/BOQ, automated purchasing or financial commitments. Material workflows must remain usable without AI; AI may only suggest extraction/classification after the Rule-first and privacy gates are met. W115 remains in 01_DISCOVER; no BUILD authorization.
+
+
+## 11. Quantity takeoff, BOQ and estimating architecture — candidate extension
+**Status: discovery architecture only.** This section extends the earlier Rule-first design. It supersedes the earlier statement that QS/estimating is excluded from all W115 scope; it does not approve implementation, final MVP scope, formulas, rates or AI drawing extraction.
+
+### 11.1 Logical domain modules
+- Drawing & Revision Register: controlled source files and immutable revision metadata.
+- Measurement Workspace: takeoff sheets and quantity calculation lines.
+- BOQ Workspace: structured work items, units, quantities, location and work-package grouping.
+- Estimate Workspace: versioned norms, unit rates, cost build-up, assumptions and estimate snapshots.
+- Review & Approval Workflow: role-authorized review, comments, approve/reject and revision supersession.
+- Actual Progress & Acceptance: field-reported quantities and separately verified/accepted quantities.
+- Materials Ledger: operational receipts/issues/returns/counts, linked by references to work items but not merged with takeoff or consumption data.
+- Variance & Reporting: estimate/plan/actual/accepted/stock comparisons with provenance.
+
+### 11.2 Core entities (conceptual; not finalized schema)
+DrawingDocument, DrawingRevision, TakeoffSheet, TakeoffLine, MeasurementFormula, BOQ, BOQRevision, BOQLine, NormSet, NormItem, RateBook, RateRevision, Estimate, EstimateRevision, EstimateLine, EstimateApproval, WorkPackage, ProgressQuantity, QuantityVerification, AcceptanceRecord, MaterialMovement, VarianceRecord, AuditEvent.
+Every revisioned aggregate needs stable identity, revision number, lifecycle state, creator, timestamps and links to its source/parent revision.
+
+### 11.3 Quantity and cost provenance
+Every takeoff line should preserve source drawing/revision, page/detail/zone, measurement method, dimensions or count, formula, unit, rounding rule, assumptions, preparer and reviewer. Every estimate line should preserve BOQ revision, norm/rate identifiers and revisions, price source/date, unit conversion basis, cost components and calculation version. Reproducible calculations belong in deterministic application logic, not in an LLM response.
+
+### 11.4 Revision and state integrity
+- Never mutate an approved revision in place; create a successor revision and preserve comparison history.
+- A drawing revision change flags dependent takeoff lines for impact review; it must not silently recalculate or replace approved quantities.
+- Draft/imported quantities are not approved BOQ quantities. Imported rows require schema, unit, duplicate and range validation plus a review state.
+- Estimate totals are derived from line-level quantities and versioned rates using explicit, testable rounding rules.
+- Approval records identify the approving actor, authority, time, comments and exact revision hash/identity.
+- Contract variation/change orders remain a separately governed candidate workflow; no automatic contract amendment.
+
+### 11.5 Separation of quantity, progress, acceptance and stock
+- Drawing measurement, BOQ/estimate, contract quantity, planned quantity, reported execution, verified/accepted quantity and paid quantity are distinct ledgers or stateful records.
+- Field progress can reference BOQ/work-package lines but cannot edit the approved estimate.
+- Store issue is not consumption; consumption is not proof of completed work; completed work is not accepted work; accepted work is not proof of payment.
+- Stock balance is derived only from posted material movement records. Estimated material norms create expected demand, not physical stock.
+- Variance reports must show numerator, denominator, unit, source revisions and time window; flag incomparable or missing data instead of inventing a ratio.
+
+### 11.6 AI boundary for drawings and estimates
+AI may later assist with document classification, OCR, candidate dimension extraction or draft line descriptions. It cannot be the measurement authority, rate source, calculation engine, approval actor or source of truth. Preserve page/detail references, raw extracted text/geometry, model/provider/version, confidence, reviewer edits and final accepted value. Uncertain or unsupported extraction must abstain and route to manual measurement. No external model call with confidential drawings before privacy, contractual, security and cost approval. No model API, GPU, fine-tuning or training dataset is authorized here.
+
+### 11.7 MVP sequencing proposal (not approved)
+Stage A discovery prototype: Excel BOQ/estimate import, manual line entry, validation, version history and human review.
+Stage B controlled calculation: approved units/norms/rates and deterministic estimate calculations after source standards are selected.
+Stage C optional drawing assistance: PDF first, then specific CAD formats only after representative-file tests, measurement benchmark and independent engineering validation.
+Stage D integrated controls: connect planned material demand, field actuals, warehouse movement and variance dashboard.
+Each stage requires W70 gates and explicit scope approval; no BUILD authorization is implied.
