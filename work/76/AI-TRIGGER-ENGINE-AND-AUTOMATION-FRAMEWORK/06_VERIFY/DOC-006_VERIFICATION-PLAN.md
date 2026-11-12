@@ -46,3 +46,37 @@ These cases are mandatory regression tests if the prototype is used as a startin
 - Model integrity cases W76-MD-001…002 map to DOC-003 FR-01/NFR-06 and DOC-006 groups 1 and 6.
 - Event cases W76-EV-001…002 map to DOC-003 FR-03/NFR-01 and DOC-006 groups 3 and 7.
 - Each test result must retain test ID, exact source commit, command, environment, raw output, exit code and artifact hash. Static inspection or a planned test is not execution evidence.
+
+
+## Requirements-to-verification traceability matrix (DESIGN / NOT EXECUTED)
+
+The matrix closes the traceability gap between DOC-003 FR/NFR, DOC-004 logical components and DOC-006 test groups. IDs below are proposed test specifications, not evidence of implementation or execution. Test fixtures, commands, source commit and raw results must be attached only when the relevant runtime exists and gates authorize execution.
+
+| Requirement | Design component / contract | Required verification IDs | Coverage expectation | Current status |
+|---|---|---|---|---|
+| FR-01 Registry lifecycle/versioning | Trigger Registry; lifecycle and single-ACTIVE invariant | W76-REG-001…004; W76-RG-001…002 | CRUD scope validation, version conflict, atomic activation, pause/resume/disable and reload consistency | SPECIFIED / NOT RUN |
+| FR-02 Scheduler | Scheduler; timezone and missed-run policy | W76-SCH-001…006 | One-shot/recurring, UTC offsets, DST gap/fold, clock drift, missed-run policy, pause/resume and duplicate tick | SPECIFIED / NOT RUN |
+| FR-03 Event intake | Event Gateway; normalized envelope and source-auth contract | W76-EVT-001…006; W76-EV-001…002 | Unknown source, signature/key rotation, malformed/oversized payload, timestamp skew, replay and trusted Work-scope resolution | SPECIFIED / NOT RUN |
+| FR-04 Condition engine | Typed AST and deterministic evaluator | W76-COND-001…008; W76-CE-001…004 | Type/operator/arity validation, missing vs null, boolean composition, threshold boundaries, timezone and stale/future time windows | SPECIFIED / NOT RUN |
+| FR-05 Dispatch | AI Dispatcher; assignment/target/receipt/ACK contract | W76-DSP-001…006 | Trusted target resolution, scope binding, QUEUED/SENT/RECEIVED/ACKNOWLEDGED separation, timeout UNKNOWN, retry/idempotency and mismatched ACK rejection | BLOCKED BY TRANSPORT / NOT RUN |
+| FR-06 Safety | Policy adapter, approval, cooldown, rate limit, kill switch | W76-AUTH-001…010 | Unauthenticated/wrong scope/revoked assignment/stale policy/gate deny/approval missing; kill switch checked at enqueue, dispatch and execution | SPECIFIED / NOT RUN |
+| FR-07 Observability | Orchestrator state machine and Audit/Evidence Store | W76-OBS-001…005 | Correlation continuity, legal state transitions, reason codes, terminal outcome and no inferred state from UI | SPECIFIED / NOT RUN |
+| FR-08 Dashboard | Read-only API/projection | W76-DASH-001…006 | Read-only enforcement, source freshness/UNKNOWN, empty/error states, filter/search, desktop/mobile interaction and no local fixture masquerading as Core live | IN REVIEW / BROWSER QE NOT RUN |
+| FR-09 Replay | Replay controller and idempotency boundary | W76-RPL-001…006 | Dry-run default, explicit side-effect opt-in, current authorization recheck, duplicate replay suppression, audit continuity and kill-switch enforcement | SPECIFIED / NOT RUN |
+| FR-10 Multi-tenant | Work/scope isolation across registry, event, queue, audit and projection | W76-TEN-001…006 | Cross-Work read/write denial, scope inheritance from trusted registry, partition/query isolation, no leakage in errors and audit | SPECIFIED / NOT RUN |
+| NFR-01 Security | Authentication, authorization, signature and secret handling | W76-SEC-001…008 | Forged identity/role/authorized flags, signature invalidation, key rotation, least privilege, injection-as-data and secret redaction | SPECIFIED / NOT RUN |
+| NFR-02 Reliability | At-least-once intake + idempotent processing | W76-REL-001…006 | Duplicate/out-of-order delivery, crash/restart recovery, idempotency persistence and no exactly-once claim absent proof | SPECIFIED / NOT RUN |
+| NFR-03 Audit | Append-only/tamper-evident audit contract | W76-AUD-001…006 | Missing audit store fail-closed, tamper detection, provenance completeness, correlation, redaction and mutation/audit consistency | SPECIFIED / NOT RUN |
+| NFR-04 Resilience | Retry budget, backoff, DLQ and recovery | W76-RES-001…007 | Bounded retry, poison event, queue/database/audit outage, DLQ recovery, operator replay and recovery idempotency | SPECIFIED / NOT RUN |
+| NFR-05 Performance | Measured SLO/throughput/latency | W76-PERF-001…004 | Load/soak/latency/throughput measurements against owner-approved SLO; no numeric target invented in this plan | BLOCKED — SLO NOT APPROVED |
+| NFR-06 Maintainability | Versioned schemas and migration | W76-MAINT-001…006; W76-MD-001…002 | Backward compatibility, migration/rollback, schema rejection, digest stability and reproducible contract fixtures | SPECIFIED / NOT RUN |
+| NFR-07 Privacy | Data minimization, retention and redaction | W76-PRIV-001…005 | Private conversation/prompt exclusion, secret/PII redaction, retention/deletion policy, access isolation and evidence export minimization | BLOCKED — POLICY/RETENTION ADR OPEN |
+
+### Execution and acceptance rules
+1. Every listed ID must be expanded into deterministic setup, input, expected output, cleanup and evidence artifact before implementation test execution.
+2. The existing W76-CE/W76-RG/W76-MD/W76-EV regression cases remain mandatory; do not replace or renumber them.
+3. Test status vocabulary: SPECIFIED, READY, RUNNING, PASS, FAIL, BLOCKED, NOT RUN. SPECIFIED is not PASS.
+4. Independent QE must execute or independently reproduce critical security, reliability, dispatch and audit cases. Implementer static review is not QE sign-off.
+5. Any test blocked by missing Core API, transport, SLO or retention decision must retain its explicit blocker and must not be silently marked skipped/pass.
+
+Status: traceability specification only. DOC-006 overall remains NOT_STARTED; no tests have been executed by this addendum.
