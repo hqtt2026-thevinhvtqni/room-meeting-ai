@@ -9,9 +9,9 @@
   "current_phase": "01_DISCOVER",
   "source_mode": "local_snapshot",
   "freshness": "LOCAL_SNAPSHOT",
-  "revision": "W76-DASHBOARD-0.3",
+  "revision": "W76-DASHBOARD-0.3.1",
   "warning_vi": "LOCAL SNAPSHOT — chưa kết nối Core live. Co / AI-07 được Vinh ủy quyền AUTO–E2E; Work Entry WE-G0–WE-G3 PASS, WE-G4/G5 BLOCKED. Sandbox list/read/append/read-back đã VERIFIED trong phiên Xu; quyền riêng của Co và PC/VS Code Bridge chưa VERIFIED. Trigger runtime chưa triển khai; CI/browser/mobile E2E chưa chạy.",
-  "updated_at": "2026-11-12T22:23:00Z",
+  "updated_at": "2026-11-12T22:27:00Z",
   "phases": [
     {
       "phase_id": "01_DISCOVER",
@@ -348,6 +348,13 @@
       "title": "Thiết lập Work Entry và xác minh Sandbox cho Co",
       "detail": "DOC-007/DOC-008 được tạo và read-back; sandbox_append + sandbox_read_probe PASS trong phiên Xu. Co WE-G4/G5 và PC Bridge vẫn BLOCKED/NOT VERIFIED.",
       "status": "PARTIAL / BLOCKED"
+    },
+    {
+      "date": "2026-11-13",
+      "actor": "Xu",
+      "title": "Đồng bộ hồ sơ Co giữa GitHub và Sandbox",
+      "detail": "7 tệp canonical được ghi và read-back khớp byte-for-byte trong phiên Xu; Co-specific access vẫn chưa xác minh.",
+      "status": "VERIFIED (XU SESSION ONLY)"
     }
   ],
   "evidence": [
@@ -412,6 +419,13 @@
       "title": "Sandbox append/read-back test",
       "claim": "sandbox_append và sandbox_read_probe đọc lại marker thành công trong phiên Xu; Co-specific access chưa xác minh.",
       "path": "00_ROOT/DOC-035_NHAT-KY-THI-CONG_EXECUTION-LOG.md",
+      "status": "VERIFIED (XU SESSION ONLY)"
+    },
+    {
+      "evidence_id": "EV-76-010",
+      "title": "Sandbox and GitHub exact read-back",
+      "claim": "Seven canonical Work 76 files were written and read back with exact content match in Xu session; Co-specific access remains unverified.",
+      "path": "DOC-035 §2026-11-13 05:27 · EV-76-010",
       "status": "VERIFIED (XU SESSION ONLY)"
     }
   ]
