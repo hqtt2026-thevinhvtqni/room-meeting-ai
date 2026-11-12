@@ -35,3 +35,17 @@
 - Result: sandbox_append returned status=ok for DOC-035; sandbox_read_probe returned status=ok, size_bytes=5345, and the unique marker "2026-11-13 05:23 +07:00" was found.
 - Conclusion: Sandbox MCP shared write + read-back path VERIFIED for Xu's current session. This does not verify Co's own runtime identity or tool permissions.
 - Evidence: EV-76-009. Co Work Entry WE-G4/G5 remain BLOCKED; no code/test/E2E execution claimed.
+
+
+### 2026-11-13 05:27 +07:00 — GitHub main ↔ Sandbox exact read-back after Co Work Entry setup
+- Exact content equality VERIFIED for seven canonical files after writing GitHub main versions to Sandbox and reading them back with sandbox_read_probe:
+  1. 00_ROOT/DOC-001_WORK-MANIFEST.md
+  2. 00_ROOT/DOC-007_HO-SO-NHAN-VIEC_CO_WORK-ENTRY-RECORD.md
+  3. 00_ROOT/DOC-008_SO-DANG-KY-TAI-LIEU_WORK-76-DOCUMENT-REGISTER.md
+  4. 05_BUILD/00_ROOT/BUILD_REGISTER.md
+  5. 06_EVIDENCE/EVIDENCE_REGISTER.md
+  6. 00_ROOT/DOC-035_NHAT-KY-THI-CONG_EXECUTION-LOG.md (prior to this addendum)
+  7. DASHBOARD/PRODUCT_STATUS.json
+- Every sandbox_write returned status=ok; each sandbox_read_probe returned status=ok; byte-for-byte content comparison matched GitHub main. PRODUCT_STATUS.json parsed successfully; revision W76-DASHBOARD-0.3 and Co / AI-07 assignment were present.
+- Evidence: EV-76-010. This proves the shared Sandbox/GitHub sync path for Xu's session only; it does not prove Co's identity-bound access or PC Bridge availability.
+- Status unchanged: Co WE-G4/G5 BLOCKED; Build mutation not started; runtime, CI, E2E, QE and release not run.
