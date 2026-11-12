@@ -137,3 +137,12 @@
 - Exact read-back: DOC-006 GitHub blob `586265c6c3305becde1acb40ad66eedd253ad174`, 4,727 characters; Sandbox content length 4,727; exact string equality TRUE. DOC-035 GitHub blob `47f90a9d9ad049c232d31584dd2385a38bbd03f7`, 17,615 characters; Sandbox content length 17,615; exact string equality TRUE.
 - Evidence: EV-76-011 added to EVIDENCE_REGISTER. This proves write/read-back capability in this OChat tool session only; it does not resolve the session's trusted AI-07 identity binding, reviewer ACKs, or PC Bridge.
 - Scope: documentation synchronization only. No source/build artifact, runtime state, gate, PR, merge or release was changed. WE-G4/G5 remain BLOCKED; lifecycle G0/G1 NOT VERIFIED; NOT RELEASED.
+
+
+### 2026-11-13 06:23 +07:00 — Hoàn thiện contract baseline đề xuất cho W76
+- Actor: Co / AI-07 — AI Coder / Execution Assistant.
+- Action: bổ sung vào DOC-004 một appendix PROPOSED ONLY gồm: normalized event envelope; typed condition AST; condition/policy decision contracts; dispatch/receipt/ACK semantics; audit record minimum; lifecycle/concurrency/idempotency invariants; 8 nhóm Open ADR cần xác minh.
+- Kết quả kỹ thuật: làm rõ nguyên tắc event payload là untrusted data; missing khác explicit null; chỉ MATCH mới đi policy; DENY/REQUIRE_APPROVAL chưa duyệt/INDETERMINATE/stale policy/mất Core auth không được dispatch; QUEUED/SENT/RECEIVED/ACKNOWLEDGED là các trạng thái chứng cứ tách biệt; tối đa một ACTIVE version cho mỗi trigger_id.
+- GitHub: DOC-004 commit `c7c36621c8c4c88524d7c91061248dae82a576b4`; blob SHA sau read-back `cf84cddcb16e6679241429ca18801d9c6134a9bc`. EVIDENCE_REGISTER commit `e838f0ac2aae66f3f9e5e832b88d90330dc6fcca`; blob SHA sau read-back `3c0a6cb8dca1f54064175a08b71f2654156583b2`; EV-76-012 recorded.
+- Status: DOC-004 appendix là đề xuất kỹ thuật, chưa được Xu/architecture review hoặc Vinh phê duyệt; không coi là ADR được duyệt. Broker/database/scheduler/Core API/dispatch transport/ACK scheme vẫn TBD.
+- Scope/guardrail: chỉ sửa tài liệu kiến trúc và Evidence Register; không sửa source/build artifact, không chạy test, không đổi PR #53, Build Register, EV-76-004/005 hoặc lifecycle/Work Entry gates. WE-G4/G5 BLOCKED; G0/G1 NOT VERIFIED; NOT RELEASED.
