@@ -90,3 +90,32 @@ Confirm who creates projects and appoints the foreman; whether one contractor ma
 
 ### Scope boundary and unresolved discovery
 This addition is a candidate material/warehouse workflow, not authorization for full ERP, purchasing, accounts payable, costing, inventory valuation, accounting, or automated procurement. Validate whether a project has one or multiple warehouses; whether storekeeper can also approve; who authorizes issues/adjustments; whether material is tracked by batch/lot or serial; treatment of transfers, returns, wastage and damaged goods; and whether balances are shared across projects. No BUILD authorization is implied.
+
+
+## 1.3 Candidate business extension — quantity takeoff, BOQ and cost estimation
+**User direction (2026-11-12):** include design for construction cost estimation and quantity takeoff as connected capabilities in W115 discovery. This is a scope-design instruction, not approval to implement or a final MVP commitment.
+
+### Candidate workflows
+1. **Drawing/document register:** register drawing/document number, discipline, revision, issue date, source file, status and superseded-by relationship. A quantity calculation must identify the exact drawing revision and measurement basis used.
+2. **Quantity takeoff / bóc tách khối lượng:** create measurable line items with work code, description, location/level/zone, geometry or count, dimensions, formula, unit, calculated quantity, rounding rule, assumptions, source drawing/page/detail and preparer.
+3. **BOQ / bảng khối lượng:** group quantity lines by work package and trade; preserve line-level traceability back to source measurements. Support spreadsheet import/export and manual correction with reason and audit history.
+4. **Cost estimate / lập dự toán:** apply versioned material, labor and equipment norms/rates to approved quantity lines; record rate source, price date/effective date, unit, cost components, assumptions and estimate revision. Taxes, overhead and jurisdiction-specific formulas remain configurable/open until the target standards and market are confirmed.
+5. **Review and approval:** technical estimator/QS prepares; designated contractor authority reviews and approves a named revision. Revisions after approval create a new version and retain the prior snapshot.
+6. **Plan and materials linkage:** map approved work quantities and norms to work packages, schedule and expected material demand. Norm-derived demand is a planning estimate, not a warehouse transaction.
+7. **Actuals and variance:** compare estimated/contracted quantities and cost with reported executed quantities, accepted quantities and warehouse movements. Explain variances; do not automatically convert them into approved cost or payment.
+
+### Required quantity distinctions
+Keep separate records and status for: (a) drawing-measured quantity, (b) estimated/BOQ quantity, (c) tender/contract or approved quantity, (d) planned quantity, (e) field-reported executed quantity, (f) technically verified/accepted quantity, and (g) paid quantity if a later approved scope includes payment. Never overwrite one with another or assume that a foreman report is an acceptance certificate.
+
+### Candidate actor responsibilities
+- **Kỹ thuật dự toán / QS:** prepares takeoff, BOQ and estimate revisions; records formulas, assumptions and sources.
+- **Nhà thầu / authorized contractor manager:** controls project estimate versions and assigns review/approval authority; approval hierarchy remains OPEN.
+- **Quản công:** reports actual work completed and quantities by work item/location with supporting photos/evidence; does not approve its own estimate or convert reports into accepted quantities by default.
+- **Thủ kho:** records physical receipts, issues, returns and stock counts. Warehouse movements remain a separate ledger; issued material is not automatically consumed or attributable as completed work.
+- **Chủ đầu tư:** optional, explicitly scoped visibility to approved commercial/progress information only where enabled; no default access to internal rates, supplier records or contractor margin.
+
+### MVP discovery candidate and unresolved decisions
+- Candidate initial input: import a controlled Excel BOQ/estimate template and allow manual entry, review and revision history. Validate template mapping, units and duplicate-line handling before acceptance.
+- AI-assisted drawing extraction from PDF/CAD is OPEN and not a committed MVP feature. If later evaluated, extraction must cite drawing revision/page/detail, expose formula and confidence/uncertainty, preserve original files, support human correction, and never post approved quantities without authorized review.
+- CAD format/version support, OCR/geometry measurement accuracy, scale calibration, drawing revision conflicts, rate databases, local estimating standards, multi-currency, taxes, estimate approval, contract variations and investor visibility require discovery.
+- Do not include procurement, supplier payment, accounting, payroll, full ERP, BIM authoring or automated financial commitments by implication.
