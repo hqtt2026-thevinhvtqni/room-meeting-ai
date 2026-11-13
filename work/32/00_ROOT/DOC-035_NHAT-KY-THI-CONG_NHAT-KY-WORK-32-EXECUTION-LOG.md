@@ -2783,3 +2783,25 @@ D1-01..D1-07 cover creation-time assignment, no-side-effect failure, nested Jobs
 - No product source/test changes; no PC action; no runner dispatch; no protected execution; no main integration; no deployment/release.
 - D1 DESIGN SPECIFIED / RUNTIME NOT VERIFIED; D3 CONTRACT SPECIFIED / RUNTIME NOT VERIFIED.
 - D2, D4, D5 and D6 remain open and continue to block implementation. Work32 remains ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261114-137 — D1/D3 DESIGN SPECIFICATION GITHUB/SANDBOX READBACK
+
+- **Date:** 2026-11-14; exact time not separately captured.
+- **Actor:** Xu / AI-01.
+- **Method:** fetched updated GitHub files on `work/32-main-integration-remediation-20261113`; used Sandbox diagnostic readback; checked canonical path, new section/log markers and terminal content.
+- **Status:** NEW ADDENDA PRESENT IN BOTH STORES; FULL MIRROR PARITY NOT VERIFIED.
+
+### Results
+
+- DOC-125: GitHub length 29,104 characters; Sandbox length 26,838 characters. Both contain Section 12 (D1/D3 specification), the Microsoft API reference list and the current status clarification. Terminal content matches in the sampled tail. Full document parity remains NOT VERIFIED because the pre-existing DOC-125 body differs.
+- DOC-035: GitHub length 275,348 characters; Sandbox length 916,204 characters. Both contain W32-LOG-20261114-136 and W32-LOG-20261114-137; terminal content of LOG-136 matches in the sampled tail. Full journal parity remains NOT VERIFIED due historical content divergence.
+- GitHub DOC-125 blob after Section 12 addendum: `b8fc93bc268e31e7444831ffbbf6d5eff7494bed`.
+- GitHub DOC-035 blob after LOG-136: `df6a6dec92ee728f2dacca2383736b169fae0f56`.
+- No overwrite/truncation of Sandbox documents was attempted. New records were appended only.
+
+### Disposition
+
+D1 design specified; runtime not verified. D3 lifecycle contract specified; runtime not verified. D2/D4/D5/D6 remain open. No source code or tests changed, no PC action, no runner dispatch, no protected execution, no main integration, no deployment/release. Work32 remains ACTIVE — NOT ACCEPTED — NOT RELEASED.
