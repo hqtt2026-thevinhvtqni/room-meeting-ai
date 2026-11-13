@@ -82,3 +82,6 @@ Evidence is immutable by reference. Corrections add a new evidence record; faile
 
 
 | W32-EVIDENCE-029 | Bounded stdout/stderr capture and process-tree timeout helper | W32-LOG-20261113-121; execution_host/process_control.py; execution_host/granted_host.py; tests/test_execution_host_grants.py | Remediation branch work/32-main-integration-remediation-20261113; process helper blob 9f5eeddbbcb32152b19321ac59563e2729a3303c; exact helper py_compile PASS; isolated Linux pytest 2 passed in 3.27s | LINUX HELPER SMOKE PASS; FULL WORK32 PYTEST / WINDOWS TREE-KILL CI PENDING; NOT AN ACCEPTANCE PASS |
+
+
+| W32-EVIDENCE-030 | Execution Host loopback Host/Origin/Fetch-Metadata boundary | W32-LOG-20261113-122; execution_host/server.py; tests/test_execution_host_grants.py | Exact server blob 14d1d764730540330b7bf1d0f3b83b2c03df6a2c; isolated HTTP boundary smoke 1 passed; PR #54 draft | SOURCE / ISOLATED HTTP SMOKE PASS; FULL REPOSITORY + WINDOWS CI PENDING |
