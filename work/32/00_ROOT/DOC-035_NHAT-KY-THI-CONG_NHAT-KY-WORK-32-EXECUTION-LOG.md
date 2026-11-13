@@ -1986,3 +1986,57 @@ Inspected GitHub Actions job summaries and raw logs; no local or PC test executi
 6. Keep main, CD, staging, production and release untouched. PR #52 remains open/unmerged. Protected execution remains DENIED.
 
 **Disposition:** hosted/source CI lanes PASS for Run #430; workflow mirror strict-parity remediation committed and read back PASS; live Core/Host identity BLOCKED; exact-head retest PENDING; Work32 **ACTIVE — NOT ACCEPTED — NOT RELEASED**.
+
+
+---
+
+## W32-LOG-20261113-120 — ISOLATED REMEDIATION BRANCH / GRANTED CHILD ENVIRONMENT HARDENING
+
+- **Work:** 32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P0 — protected execution / secret isolation
+- **Name:** Ka
+- **Title:** CSA / Work32 delegated execution owner
+- **Date-Time:** 2026-11-13 20:01 Asia/Ho_Chi_Minh
+- **Authority:** Vinh's explicit delegation; Xu's H0/H1 security directive remains binding.
+- **Base candidate:** PR #52 branch `work/32-main-integration-authority-20261112`, exact base HEAD `d639199159d2f2c72d0e706e1490d9afd0f20ac3`.
+- **Remediation branch:** `work/32-main-integration-remediation-20261113`.
+- **Status:** ISOLATED ENVIRONMENT PATCH COMMITTED; TEST/CI PENDING; PROTECTED EXECUTION DENIED.
+
+### 1. H0 source trace
+
+Re-read the current candidate's Host and security source:
+
+- Confirmed the grant-only Host path called `safe_env()`, whose allowlist inherited operator `HOME` and temporary-directory variables.
+- Confirmed `GrantedExecutionHost.identity()` reports `CORE_AUTHORIZED_PYTEST`, `CORE_ONLINE`, and `grant_cache=false`; Run #430's live health response omitted all three fields, so the live listener is not attesting this source contract.
+- Confirmed the current Host execution path still uses `subprocess.run(capture_output=True, timeout=...)`; bounded output and complete process-tree termination are not yet implemented/proven.
+- Host HTTP handler exposes only `POST /execute-granted` for execution and does not expose the retired caller-supplied `/execute` route. Host/Origin protections and transport peer authentication remain unverified; remote bind remains rejected by the current source.
+- Core service credential resolution is application-level header authentication; no mTLS/OS peer identity evidence is present. Keep both services loopback-only.
+- Legacy `execution_host/security.py` executable allowances are not used as the authorization decision for the grant-only Host route; the grant path separately requires the Core-bound pytest entrypoint. Alternate legacy execution-route reachability still requires independent negative testing.
+
+### 2. Remediation branch and change
+
+Created `work/32-main-integration-remediation-20261113` from the exact PR #52 candidate head above. No merge/rebase/cherry-pick or main mutation.
+
+- `execution_host/security.py`: added optional per-run isolated environment construction. In isolated mode, operator HOME/USERPROFILE/APPDATA/LOCALAPPDATA and TMP/TEMP values are not inherited; HOME and temp paths are redirected beneath the run-specific home. Windows profile/cache directories and POSIX XDG directories are created under that isolated path. The legacy default call remains backward-compatible.
+- `execution_host/granted_host.py`: grant-only pytest execution now calls `safe_env(isolated_home=run_dir / "home")`.
+- `tests/test_execution_host_grants.py`: added a regression test proving isolated HOME/temp paths and exclusion of operator credential/profile variables.
+- Commits: `dd76e3dce2d4d4599bf4e754806b471e5325f246` (security helper), `2da01e5a494b122ae97ac619d78aafc6038ab956` (Host call), `cebac076f257c6ef8801a0924e79074ec43350af` (regression test).
+
+### 3. Validation boundary
+
+- GitHub source writes completed on the isolated remediation branch.
+- Tests have **NOT RUN** in this session; no local PASS is claimed.
+- Exact-head CI for remediation branch: **PENDING / NOT OBSERVED**.
+- Run #430 remains historical evidence for its exact earlier head and is not evidence for this patch.
+- No PC process/service was started, stopped, terminated, or reconfigured. No credential was provisioned. No protected command was executed.
+
+### 4. Next H1 actions
+
+1. Implement bounded stdout/stderr capture and process-tree timeout cleanup with descendant/output-flood regression tests.
+2. Add Host/Origin/content-type/cross-origin negative request tests and safe loopback request policy.
+3. Reconcile process identity on ADMIN-PC using a read-only elevated snapshot; do not restart until exact executable/service ownership is known.
+4. Obtain independent Cla review/replay on the final remediation SHA.
+5. Run exact-head CI, strict workflow-mirror check and live positive/negative Core↔Host tests before changing any acceptance status.
+
+**Disposition:** isolated child environment hardening committed; exact-head test evidence pending; process-tree/output limits, request-origin controls, authenticated transport, live runtime identity and independent security review remain OPEN. Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
