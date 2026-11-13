@@ -2317,3 +2317,48 @@ Automated exact-head tests are green, including Windows process containment. Thi
 Next required evidence: an elevated, read-only PC snapshot of service/process owner, executable path, parent PID, parsed module entrypoint and listener PIDs for ports 8000/8010/8020/8030/8031/8787. No process termination or service restart is authorized before that identity is established.
 
 **Disposition:** automated test lanes PASS; live PC Core/Host identity BLOCKED; PC runner probe queued; release gate pending; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261113-127 — RUN #508 RELEASE GATE BLOCKED BY PC RUNNER PROBE
+
+- **Work:** 32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P0 — live PC runtime identity / release acceptance
+- **Name:** Ka
+- **Title:** CSA / Work32 delegated execution owner
+- **Date-Time:** 2026-11-13 20:25 Asia/Ho_Chi_Minh
+- **Run:** #508 / `43432659016`
+- **Tested source HEAD:** `7a93ce6d5546f778e76db47b201dc1574e02940d`
+- **Status:** AUTOMATED LANES PASS; RELEASE GATE FAIL; PC PROBE CANCELLED.
+
+### 1. Final Run #508 job state
+
+- Unit: PASS (260).
+- Product Auto E2E: PASS (127).
+- Hosted Windows security/Browser Adapter: PASS (26).
+- Tooling + strict workflow mirror: PASS.
+- Immutable artifact: PASS.
+- Dedicated PC runner identity: **CANCELLED**.
+- Release acceptance gate: **FAIL** because `SELF_HOSTED_RESULT=cancelled`; the gate correctly requires self-hosted success for pull requests.
+
+### 2. Why PC action is required
+
+The last completed read-only PC snapshot (Run #439, historical candidate SHA `d639199159d2f2c72d0e706e1490d9afd0f20ac3`) established runner identity but could not prove process provenance:
+
+- Runner service identity: `ROOM-HOP-W32-PC`, Windows X64; runner identity PASS.
+- Runner service account: `NT AUTHORITY\NETWORK SERVICE` (known service configuration); process owner remained UNKNOWN under the service context.
+- Ports 8000/8031: PIDs 7708/10212, `python.exe`, module UNRESOLVED, expected entrypoint match false.
+- Core invalid-credential probe: HTTP 404 (expected 401/403).
+- Host health: HTTP 200, but missing `provider_type`, `authority`, `grant_cache`.
+- Python was not found in the service PATH; Git 2.55.0 was found.
+- Current Run #508 did not produce a fresh PC snapshot; its PC job was cancelled.
+
+### 3. Required next action
+
+Before any process restart or service change, Vinh must provide one elevated, read-only snapshot of the current listener owners, executable paths, parent PIDs, parsed Python module entrypoints and runner service/process status for ports 8000/8010/8020/8030/8031/8787.
+
+No process termination, service restart, credential change or port mutation is authorized until the exact process identity is known.
+
+**Disposition:** CI source and hosted test lanes PASS; live PC Core/Host provenance unresolved; release gate correctly BLOCKED. Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
