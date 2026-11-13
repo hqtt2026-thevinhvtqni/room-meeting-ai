@@ -65,3 +65,6 @@ Evidence is immutable by reference. Corrections add a new evidence record; faile
 
 
 | W32-EVIDENCE-023 | Starlette TestClient httpx2 compatibility remediation and exact-SHA validation | DOC-067; requirements.txt; constraints-ci.txt | Exact SHA 17d7d87c9e09b08026fd8bdda29578c04bd1aa35; run 41806906885; 4/4 jobs SUCCESS; pip check pass; raw logs zero StarletteDeprecationWarning and zero Node.js 20 warnings | PASS — httpx2 2.16.0, httpcore2 2.16.0, truststore 0.10.5 pinned; existing httpx/FastAPI/Starlette retained |
+
+
+| W32-EVIDENCE-024 | Work32 Core Run Record completion validation, HTTP run-ID binding, and live PC authority probe finding | 06_EVIDENCE/DOC-124_WORK32_COMPLETION_VALIDATION_AND_LIVE_RUNNER_PROBE_20261113.md | PR #52 head 17ba50ab2e8736e2636e323741ce735c107fe197; Run #416 / 43357544278: 250 unit, 122 Product Auto E2E, 10 Windows Browser Adapter, tooling PASS, immutable artifact E2E 1 PASS; Run #414 / 43357234292: dedicated PC runner identity PASS but Core invalid-credential probe returned HTTP 404 | SOURCE + HOSTED CI LANES PASS; LIVE CORE AUTHORITY ROUTE BLOCKED; Host health identity pending; release gate NOT PASS; Work32 ACTIVE — NOT RELEASED |
