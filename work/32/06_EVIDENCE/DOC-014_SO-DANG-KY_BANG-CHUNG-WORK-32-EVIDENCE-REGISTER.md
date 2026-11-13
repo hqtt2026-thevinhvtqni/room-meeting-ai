@@ -91,3 +91,6 @@ Evidence is immutable by reference. Corrections add a new evidence record; faile
 
 
 | W32-EVIDENCE-032 | Real GrantedExecutionHost → Core HTTP two-phase completion E2E regression | W32-LOG-20261113-124; DOC-119 section 6; tests/test_execution_authority_http.py | Remediation branch test commit da81a25bbe7c5d10ace9ebf17703aec9ca51ebfe; import correction b62c08766ff7d0dca522c10c0f02d982d5574d65 | REGRESSION ADDED; EXACT-HEAD FULL TEST / CI PENDING |
+
+
+| W32-EVIDENCE-033 | Run #499 compile failure and immediate syntax correction | W32-LOG-20261113-125; Run 43432414929; execution_host/granted_host.py | Tested head ecddd3ac05448540453c6a290f38310dd25c2594 failed compileall at line 302; fix commit 05b0fb33087289d079c25bac2fb637eab5150575 | FAILURE RETAINED; SOURCE CORRECTED; EXACT-HEAD RETEST REQUIRED |
