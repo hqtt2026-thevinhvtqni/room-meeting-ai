@@ -2135,3 +2135,50 @@ The exact Git blob was materialized in a temporary Linux container file and its 
 - No PC service/process was changed or restarted; no credentials provisioned; no protected command executed; no merge, CD or release.
 
 **Disposition:** Host/Origin source boundary implemented; exact source HTTP smoke PASS; Windows/full-repository validation pending; live PC runtime identity BLOCKED; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261113-123 — P0 HOST/HTTP/CORE COMPLETION CONTRACT FIX
+
+- **Work:** 32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P0 — actual Run completion must persist through the strict Core API
+- **Name:** Ka
+- **Title:** CSA / Work32 delegated execution owner
+- **Date-Time:** 2026-11-13 20:14 Asia/Ho_Chi_Minh
+- **Branch:** `work/32-main-integration-remediation-20261113`
+- **Related evidence:** DOC-119 addendum; PR #54 draft.
+- **Status:** SOURCE + REGRESSION TESTS COMMITTED; EXACT-HEAD CI PENDING.
+
+### 1. Confirmed integration defect
+
+The Host completion payload sends `execution_status`, `evidence_persisted`, `evidence_errors`, `stdout_sha256` and `stderr_sha256`. The strict HTTP `RunCompleteRequest` declared `execution_status` and the digest fields, but omitted `evidence_persisted` and `evidence_errors`. With `extra="forbid"`, the actual Host completion request could fail with HTTP 422. Existing HTTP tests did not send the full Host payload shape.
+
+### 2. Remediation committed
+
+- HTTP `RunCompleteRequest` now declares bounded `evidence_ref`, optional `evidence_persisted`, bounded `evidence_errors`, and strict lowercase SHA-256 patterns for stdout/stderr hashes.
+- Core independently validates stdout/stderr digests, evidence reference length, persistence flag type, error-list size/item bounds and consistency:
+  - non-empty evidence errors require `evidence_persisted=false`;
+  - `evidence_persisted=false` requires status BLOCKED and at least one evidence error;
+  - persisted evidence cannot contain errors.
+- HTTP integration test now sends the actual Host completion metadata shape.
+- Added HTTP regression: malformed digest/inconsistent persistence metadata is rejected; valid BLOCKED completion with evidence errors is accepted.
+- Added Core parameterized negative tests for invalid stdout/stderr digest, evidence reference, persistence flag and evidence-error list.
+- Updated DOC-119 with the completion contract addendum and BIÊN BẢN/NHẬT KÝ.
+- Source/test commits:
+  - Router: `18fc0c0dc9c6e179ce44cc92c079ac3daeeb04ac`
+  - Core: `b4c4442b2a3543f903c5ce684809c04f42b86b17`
+  - HTTP regression: `07f6c262d1136e0ea35dd92442daf82b4edbc5be`
+  - Core regression: `107508627abda20261b11afa5ed3983b094fef48`
+  - DOC-119 addendum: `7df2634d239be2c0633453bc845f673393f5199f`
+
+### 3. Validation boundary
+
+- Source changes are committed on the isolated remediation branch.
+- Tests have **NOT RUN** against the full repository at this exact head.
+- No HTTP 422 → 200 runtime result is claimed yet; exact-head CI and live Host→Core E2E are pending.
+- PR #54 remains draft/open and unmerged. Main/release paths remain untouched.
+- No PC process/service mutation, credential provisioning or protected execution occurred.
+
+**Disposition:** confirmed completion DTO mismatch fixed at source and covered by regression tests; exact-head test proof pending; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
