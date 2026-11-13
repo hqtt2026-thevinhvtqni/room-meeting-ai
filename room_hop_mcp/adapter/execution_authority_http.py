@@ -167,8 +167,13 @@ def create_execution_authority_router(
         x_room_hop_service_credential: str | None = Header(default=None),
     ) -> dict[str, Any]:
         service = require_authority()
+        if "run_id" in body and body["run_id"] != run_id:
+            raise HTTPException(
+                status_code=422,
+                detail="execution_run_id_mismatch",
+            )
         try:
-            request_body = RunCompleteRequest.model_validate({"run_id": run_id, **body})
+            request_body = RunCompleteRequest.model_validate({**body, "run_id": run_id})
         except Exception:
             raise HTTPException(status_code=422, detail="execution_run_completion_invalid") from None
         scheme, _, token = (authorization or "").partition(" ")
