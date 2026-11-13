@@ -1927,3 +1927,62 @@ These later changes are not covered by Run #376. The branch requires a new exact
 - PR #52 remains open/unmerged. No main merge, CD, staging, production or release authorized.
 - PROTECTED EXECUTION DENIED; Work32 ACTIVE — NOT RELEASED.
 
+
+
+---
+
+## W32-LOG-20261113-119 — RUN #430 AUDIT / WORKFLOW MIRROR STRICT PARITY REMEDIATION
+
+- **Work:** 32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P0 — release-gate integrity / exact workflow provenance
+- **Name:** Ka
+- **Title:** CSA / Work32 delegated execution owner
+- **Date-Time:** 2026-11-13 19:59 Asia/Ho_Chi_Minh
+- **Authority:** Vinh's explicit delegation to Ka to decide architecture and execute Work32 through completion; existing Xu security/acceptance gates remain binding.
+- **PR:** #52 — OPEN / DRAFT / NOT MERGED
+- **Branch:** `work/32-main-integration-authority-20261112`
+- **Source/documentation head before this entry:** `e6d3ed5662ee93e4106d01066f6cacf1078edb03`
+- **Workflow run:** #430 / `43358168481`
+- **Workflow head tested:** `e6d3ed5662ee93e4106d01066f6cacf1078edb03`
+
+### 1. READ / VERIFY — Run #430
+
+Inspected GitHub Actions job summaries and raw logs; no local or PC test execution is claimed.
+
+- Python 3.12 unit suite: **250 passed**.
+- Product Auto E2E: **122 passed**.
+- Hosted Windows Browser Adapter E2E: **10 passed**.
+- Tooling tests/workflow checker job: job conclusion SUCCESS, but its log printed a workflow diff. The checker ran in report-only mode, so the job did not fail on drift.
+- Immutable product artifact: checksum/dependency/compile checks and artifact-level E2E **1 passed**.
+- Dedicated PC runner identity: **PASS** — runner `ROOM-HOP-W32-PC`, Windows X64.
+- Dedicated PC read-only probe: **FAIL / BLOCKED**. Python is NOT_FOUND in the runner service PATH; Git 2.55.0 is present. Ports 8000/8010/8020/8030/8031/8787 are loopback listeners, but process owner is UNKNOWN and module UNRESOLVED. Core :8000 and Host :8031 entrypoint_match=false. Core invalid-credential probe returned HTTP 404, not required 401/403. Host :8031 returned HTTP 200 / status PASS / service execution-host, but provider_type, authority and grant_cache were blank.
+- Work32 release acceptance gate: **FAIL** because the mandatory dedicated PC probe failed.
+- Evidence: [Run #430](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/43358168481); dedicated PC job `131666677136`; release gate job `131667115971`.
+
+### 2. SOURCE TRACE — Core route and workflow mirror
+
+- Re-read `room_hop_mcp/core_http_main.py`: current candidate mounts `create_execution_authority_router(authority)`.
+- Re-read `room_hop_mcp/adapter/execution_authority_http.py`: the grant-status route exists at `GET /works/{work_id}/execution-grants/{grant_id}`; invalid service credentials are expected to fail through Core authorization, not be accepted as HTTP 404.
+- Live process provenance remains unresolved; do not assert which legacy/current module owns PID 12272 or PID 16720.
+- Run #430 tooling log exposed a real active-workflow / Work32-mirror difference: active release gate required `w32_self_hosted_runner_probe`; Work32 mirror omitted that dependency. The mirror checker was configured report-only, allowing the tooling job to conclude SUCCESS despite drift.
+
+### 3. REMEDIATION EXECUTED ON THE PR BRANCH
+
+- Updated `.github/workflows/ci-validation.yml`: renamed the step to enforce active workflow / mirror parity and set `CHECK_STRICT=1`, so future drift fails the tooling lane.
+- Updated `work/32/CI-CD-ROOM-HOP-PYTHON-NO-DOCKER/04_CODE/ci-validation.yml` to the exact active workflow content.
+- Exact GitHub readback confirms active and mirror blob SHA are both `fd613c2e2ef2f54772133a46e8d5f593dc0c4b36`; byte content equality: **PASS**.
+- Commits: active workflow `e4c57d9f451218b3e591480bf6326f844eb18f49`; synchronized mirror `a4e62e5e8234a3d1cdf7688a6622752fe6f67148`.
+- PR #52 now points to head `a4e62e5e8234a3d1cdf7688a6622752fe6f67148`.
+- Exact-head CI for the new head: **PENDING / NOT YET OBSERVED** at journal time. No PASS is claimed for this remediation.
+
+### 4. BLOCKERS / NEXT ACTIONS
+
+1. Obtain a safe, read-only PC process provenance snapshot for ports 8000 and 8031: exact executable path, command line, process owner, parent PID, service name/start mode and file version/hash. Do not terminate or restart either process during discovery.
+2. Reconcile the actual PC Core/Host entrypoints with the approved branch; only then prepare a controlled service update/restart plan. No credentials or protected command may be provisioned/executed until the security gate authorizes it.
+3. Run the new exact-head workflow and require strict mirror checker PASS plus all hosted lanes.
+4. Obtain independent Cla security review and positive/negative Core↔Host runtime evidence; retain Qw/An acceptance QE after security closure.
+5. Retry ROOM-HOP Sandbox journal readback/write only when MCP :8030 is reachable. This entry is committed to the canonical GitHub DOC-035 on the PR branch; Sandbox parity is **NOT VERIFIED** because the MCP connection attempt returned UNAVAILABLE.
+6. Keep main, CD, staging, production and release untouched. PR #52 remains open/unmerged. Protected execution remains DENIED.
+
+**Disposition:** hosted/source CI lanes PASS for Run #430; workflow mirror strict-parity remediation committed and read back PASS; live Core/Host identity BLOCKED; exact-head retest PENDING; Work32 **ACTIVE — NOT ACCEPTED — NOT RELEASED**.
