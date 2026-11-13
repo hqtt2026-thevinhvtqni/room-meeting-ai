@@ -4,7 +4,7 @@
 - Owner/final authority: Vinh
 - Coordinator: Xu (AI-01)
 - Date: 2026-10-24, Asia/Ho_Chi_Minh
-- Status: Work32 source + hosted CI lanes PASS on current authority branch; live Core Execution Authority route and Host identity BLOCKED by DOC-125; release acceptance gate FAIL; ACTIVE — NOT RELEASED
+- Status: Run #430 hosted/source lanes PASS; live Core/Host identity BLOCKED; workflow mirror strict-parity remediation committed at current PR head; exact-head retest PENDING; release acceptance gate FAIL; ACTIVE — NOT RELEASED
 - Sandbox ID: 32
 - GitHub branch (current implementation): work/32-main-integration-authority-20261112 (PR #52; do not merge without Vinh approval)
 - Previous CI pilot branch names in historical records are not the current implementation ref.
@@ -161,3 +161,15 @@ No Docker requirement; no live-service or MAIN SOURCE changes; no auto-merge or 
 - DOC-124/DOC-125 and W32-LOG-117/118 record the source hardening and live runtime findings. W32-EVIDENCE-024/025 record exact evidence references.
 - Main integration, CD, staging, production, G7 release and protected execution remain BLOCKED / NOT AUTHORIZED. No service restart or runtime configuration was performed.
 - **Overall: HOSTED CI PASS; LIVE CORE/HOST RUNTIME BLOCKED; RELEASE NOT AUTHORIZED. Work32 ACTIVE — NOT RELEASED.**
+
+
+## Current checkpoint — 2026-11-13 19:59 Asia/Ho_Chi_Minh
+
+- Current PR #52 branch HEAD after workflow mirror remediation: `a4e62e5e8234a3d1cdf7688a6622752fe6f67148`.
+- Run #430 / `43358168481` tested prior documentation head `e6d3ed5662ee93e4106d01066f6cacf1078edb03`: unit 250 PASS; Product Auto E2E 122 PASS; hosted Windows Browser Adapter 10 PASS; immutable artifact E2E 1 PASS; dedicated PC runner identity PASS.
+- Run #430 live PC probe FAIL: Core invalid-credential route HTTP 404; Host health HTTP 200 but required identity fields blank; process owner/module unresolved; Python NOT_FOUND in runner service PATH. Release acceptance gate FAIL.
+- Active workflow and Work32 mirror are now byte-identical (blob SHA `fd613c2e2ef2f54772133a46e8d5f593dc0c4b36`); strict checker mode `CHECK_STRICT=1` is enabled. Exact-head CI for current HEAD is pending.
+- DOC-035 entry: W32-LOG-20261113-119. Evidence register: W32-EVIDENCE-026/027.
+- ROOM-HOP Sandbox parity is not verified because MCP :8030 connection was unavailable during this continuation.
+- Main, CD, staging, production and release remain untouched. PR #52 remains open/unmerged. Protected execution denied.
+- **Overall: HOSTED/SOURCE LANES PASS ON RUN #430; LIVE CORE/HOST BLOCKED; MIRROR PARITY SOURCE PASS; CURRENT HEAD CI PENDING; WORK32 ACTIVE — NOT RELEASED.**
