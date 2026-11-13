@@ -219,3 +219,12 @@ No Docker requirement; no live-service or MAIN SOURCE changes; no auto-merge or 
 - Exact-head tests remain pending; no PASS claimed.
 - Live PC process identity, Core 404, Host health identity and independent security review remain BLOCKED/OPEN.
 - Work32 remains ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+## Run #499 compile failure and correction — 2026-11-13 20:18 Asia/Ho_Chi_Minh
+
+- Exact tested HEAD `ecddd3ac05448540453c6a290f38310dd25c2594` failed compileall in `execution_host/granted_host.py:302`; unit and Product Auto E2E tests did not run.
+- Failure retained in DOC-035 W32-LOG-20261113-125 and DOC-014 W32-EVIDENCE-033.
+- Corrective source commit `05b0fb33087289d079c25bac2fb637eab5150575` removes the redundant nested try and restores the outer exception boundary.
+- A fresh exact-head compile + unit + E2E + Windows lane is mandatory; do not count the failed run as a test result.
+- Work32 remains ACTIVE — NOT ACCEPTED — NOT RELEASED.
