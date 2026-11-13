@@ -228,3 +228,12 @@ No Docker requirement; no live-service or MAIN SOURCE changes; no auto-merge or 
 - Corrective source commit `05b0fb33087289d079c25bac2fb637eab5150575` removes the redundant nested try and restores the outer exception boundary.
 - A fresh exact-head compile + unit + E2E + Windows lane is mandatory; do not count the failed run as a test result.
 - Work32 remains ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+## Run #508 exact-head validation — 2026-11-13 20:23 Asia/Ho_Chi_Minh
+
+- Exact remediation HEAD `7a93ce6d5546f778e76db47b201dc1574e02940d`: compile PASS; 260 unit tests PASS; 127 Product Auto E2E PASS; 26 hosted Windows security/Browser Adapter tests PASS; tooling and strict workflow mirror PASS; immutable artifact verification PASS.
+- Windows lane explicitly validates isolated child environment, 1 MiB output cap, process-tree timeout cleanup, loopback Host/Origin and HTTP boundary.
+- The unit suite includes the real Host → Core HTTP completion E2E regression and Core metadata validation.
+- Dedicated PC runner identity job remains QUEUED. Historical Run #439 on prior candidate showed Core invalid-credential HTTP 404, Host health identity fields missing, and process owner/module unresolved. Do not treat historical snapshot as current PASS.
+- Work32 remains ACTIVE — NOT ACCEPTED — NOT RELEASED until current PC process provenance, Core/Host runtime identity and release gate are verified.
