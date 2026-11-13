@@ -81,3 +81,12 @@
 - **Giới hạn:** tự chủ không vượt quyền, không giả ACK, không bỏ qua authorization/security gate, không tự nghiệm thu hoặc phát hành ở phần việc cần thẩm quyền riêng.
 - **Hồ sơ chuẩn bị cập nhật:** DOC-006 D70-022; DOC-056; DOC-093; DOC-094; DOC-035. Không tạo Task Register hoặc nhật ký song song.
 - **Trạng thái:** DECISION RECORDED; tài liệu GitHub main đang được cập nhật và cần exact readback/schema validation trước khi tuyên bố đồng bộ hoàn tất.
+
+
+## Addendum — Quyết định kiến trúc D70-023 (2026-11-13)
+- **Điều phối / quyết định:** Xu / AI-01 theo ủy quyền D70-018.
+- **Thành phần phản biện độc lập:** Chưa có. Không ghi nhận Ka, Cla hoặc AI khác tham gia/ACK.
+- **Căn cứ:** W70 DOC-095 và DOC-006 hiện hành; W112 Integration Charter/Related Work Index/Execution Journal; hồ sơ Sandbox W16, W52, W103; kết quả READ/TRACE và kiểm tra kênh agent session.
+- **Kết luận:** W70 = Work lifecycle/control plane; W52 = Agent-to-Agent task/event orchestration + provider adapters; W16 = deterministic workflow graph/step execution; W103 = retrieval/ranking/evidence packaging/abstention/evaluation, không phải Agent Runtime hoặc decision authority; W112 = cross-Work contracts/mapping/evidence coordination; W37 Core; W14 execution boundary; W32 CI; W33 Evidence Hub; W38 Gateway; W39 Build MCP.
+- **Giới hạn:** Không chọn framework/library; durable scheduler, queue/outbox/idempotency và retry split W52/W16 còn là open contract items. DecisionRAG giữ EXPERIMENT / NOT APPROVED. Independent review pending; không có implementation/migration/release authorization.
+- **Trạng thái:** DECISION RECORDED UNDER DELEGATED AUTHORITY; independent review and implementation gates remain open.
