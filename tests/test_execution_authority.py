@@ -509,3 +509,95 @@ def test_authority_store_path_must_be_absolute(tmp_path):
             store_path="relative-authority/events.jsonl",
             agent_registry=AgentRegistryStub(),
         )
+
+
+def _start_completion_validation_run(authority, grant, run_id="run-completion-validation"):
+    authority.start_run(
+        work_id="W32",
+        grant_id=grant["grant_id"],
+        token=grant["grant_token"],
+        host_service_id="host-8031",
+        host_credential="host-secret-32-byte-minimum-credential",
+        record={
+            "run_id": run_id,
+            "repository": "hqtt2026-thevinhvtqni/room-meeting-ai",
+            "branch": "work/32-core-owned-execution-authority-20261112",
+            "expected_head": "b" * 40,
+            "command": ["python", "-m", "pytest", "-q"],
+            "source_sha256": "a" * 64,
+            "environment_id": "w32-local-ci",
+            "started_at": "2026-11-12T00:00:00+00:00",
+        },
+    )
+
+
+def _complete_validation_run(authority, grant, run_id="run-completion-validation", **overrides):
+    record = {
+        "run_id": run_id,
+        "finished_at": "2026-11-12T00:00:01+00:00",
+        "status": "PASS",
+        "exit_code": 0,
+        "evidence_sha256": "c" * 64,
+    }
+    record.update(overrides)
+    return authority.complete_run(
+        work_id="W32",
+        grant_id=grant["grant_id"],
+        token=grant["grant_token"],
+        host_service_id="host-8031",
+        host_credential="host-secret-32-byte-minimum-credential",
+        record=record,
+    )
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "expected"),
+    [
+        ("status", "UNKNOWN", "run_completion_status_invalid"),
+        ("status", [], "run_completion_status_invalid"),
+        ("execution_status", "UNKNOWN", "run_execution_status_invalid"),
+        ("execution_status", {}, "run_execution_status_invalid"),
+        ("finished_at", "not-a-date", "run_finished_at_invalid"),
+        ("finished_at", "2026-11-12T00:00:01", "run_finished_at_timezone_required"),
+        ("exit_code", True, "run_exit_code_invalid"),
+        ("exit_code", "0", "run_exit_code_invalid"),
+        ("evidence_sha256", "A" * 64, "run_evidence_sha256_invalid"),
+        ("evidence_sha256", "bad", "run_evidence_sha256_invalid"),
+    ],
+)
+def test_complete_run_rejects_invalid_completion_fields(
+    tmp_path, field, value, expected
+):
+    authority, request = make_authority(tmp_path)
+    grant = issue(authority, request)
+    _start_completion_validation_run(authority, grant)
+
+    with pytest.raises(AuthorityError) as caught:
+        _complete_validation_run(authority, grant, **{field: value})
+
+    assert caught.value.code == expected
+
+
+@pytest.mark.parametrize(
+    ("status", "execution_status"),
+    [
+        ("BLOCKED", "BLOCKED"),
+        ("TIMEOUT", "TIMEOUT"),
+    ],
+)
+def test_complete_run_accepts_nonzero_or_unavailable_exit_code_states(
+    tmp_path, status, execution_status
+):
+    authority, request = make_authority(tmp_path)
+    grant = issue(authority, request)
+    _start_completion_validation_run(authority, grant)
+
+    result = _complete_validation_run(
+        authority,
+        grant,
+        status=status,
+        execution_status=execution_status,
+        exit_code=None,
+    )
+
+    assert result["status"] == "completed"
