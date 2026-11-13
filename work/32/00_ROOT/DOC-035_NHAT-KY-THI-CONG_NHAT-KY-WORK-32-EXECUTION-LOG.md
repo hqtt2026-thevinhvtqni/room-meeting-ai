@@ -2040,3 +2040,47 @@ Created `work/32-main-integration-remediation-20261113` from the exact PR #52 ca
 5. Run exact-head CI, strict workflow-mirror check and live positive/negative Core↔Host tests before changing any acceptance status.
 
 **Disposition:** isolated child environment hardening committed; exact-head test evidence pending; process-tree/output limits, request-origin controls, authenticated transport, live runtime identity and independent security review remain OPEN. Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261113-121 — BOUNDED OUTPUT / PROCESS-TREE TIMEOUT HARDENING
+
+- **Work:** 32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P0 — protected execution resource containment
+- **Name:** Ka
+- **Title:** CSA / Work32 delegated execution owner
+- **Date-Time:** 2026-11-13 20:07 Asia/Ho_Chi_Minh
+- **Branch:** `work/32-main-integration-remediation-20261113`
+- **Status:** SOURCE PATCH COMMITTED; EXACT HELPER SMOKE PASS ON LINUX; FULL REPO CI / WINDOWS VALIDATION PENDING
+
+### 1. Source remediation
+
+- Added `execution_host/process_control.py` with shell-free `Popen`, one combined stdout/stderr cap of 1 MiB, timeout enforcement, POSIX process-session termination, and Windows process-tree termination via `taskkill /T /F`.
+- POSIX output capture uses selector readiness + `os.read` to avoid blocking on a pipe read larger than the available pipe buffer. Windows uses dedicated drain threads and the same combined byte budget.
+- Host grant-only pytest execution now uses `run_bounded()`. Output overflow or unconfirmed process-tree termination yields BLOCKED; timeout is TIMEOUT only when tree termination is confirmed.
+- Run evidence now records `process_tree_termination_confirmed` and `output_limit_exceeded`.
+- Added repository regression tests for combined output cap and a child process that must not survive a timed-out parent. These are in `tests/test_execution_host_grants.py`, already included in the Work32 E2E test list.
+- Final helper blob SHA: `9f5eeddbbcb32152b19321ac59563e2729a3303c`; exact blob identity was verified with Git's `hash-object`.
+- Relevant commits: helper `36ccbcfd96606c02ed188616b5833bdd3e0cdf0c`; Host integration `258b7b3cb9e27650c12aadfbb5b70f6d33e52726`; regression tests `31dca963436916ce784f5c20c8011bde183ff650`; pipe-drain correction `6ce45adcb43c245a2a0ed65d0f2cdf820f0d2e42`; test import correction `afa83f77c71488313e5869d3dc26c30666d2deef`.
+
+### 2. Local isolated validation — exact helper source
+
+The exact Git blob was materialized in a temporary Linux container file and its Git blob SHA matched the branch source.
+
+- `python -m py_compile /tmp/process_control.py`: PASS.
+- `PYTHONPATH=/tmp python -m pytest -q /tmp/test_process_control.py`: **2 passed in 3.27s**.
+- Output-flood case: 4,096-byte combined capture cap enforced; output-limit flag true; process-tree termination confirmed.
+- Timeout case: parent + child process tree terminated; termination confirmed; delayed orphan marker was not created.
+- This is an isolated helper smoke test, **not** the complete Work32 repository test suite and not Windows validation.
+
+### 3. Remaining validation / safety
+
+- Full `tests/test_execution_host_grants.py` on the exact remediation branch: NOT RUN.
+- Exact-head GitHub Actions / strict workflow mirror gate: PENDING.
+- Windows `taskkill /T /F` behavior and the Windows child-process regression: NOT RUN.
+- Host/Origin/cross-origin request protections, authenticated transport peer identity, Core/Host live runtime provenance and independent Cla replay remain OPEN.
+- No PC process/service was started, stopped, terminated or reconfigured. No credentials provisioned. No protected command executed. Main and release paths remain untouched.
+
+**Disposition:** bounded output and timeout tree-control source implemented; isolated Linux helper tests PASS; full repo CI and Windows proof PENDING; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
