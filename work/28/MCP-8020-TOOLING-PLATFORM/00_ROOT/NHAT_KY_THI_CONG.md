@@ -664,3 +664,28 @@ Xu approves three contract directions:
 5. After Q4 is approved, prepare implementation plan/test matrix; do not start WP3-F01 code before the decision gate is closed.
 
 **STATUS:** Q1–Q3 DECIDED / Q4 BLOCKED PENDING KA REVIEW / WP3-F01 IMPLEMENTATION BLOCKED. WP2 CI #327 and An/Ka handoff acknowledgements remain independent pending items. Work ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED.
+
+
+
+## 2026-11-13 — JRN-W28-017 — WP2 CI verified on code-bearing SHA; runs #327–#332 green (Vibe)
+
+**Role:** VIBE | thực hiện mục NEXT #4 của JRN-W28-016 (đọc run #327, ghi PASS nếu xanh trên commit chứa code)  
+**Branch:** `work/28-mcp-tooling-platform`  
+**HEAD trước entry này:** `d2822b0a` (JRN-W28-016 của Xu)
+
+### VERIFY — GITHUB ACTIONS (workflow "Work 28 MCP Tooling Tests", branch work/28-mcp-tooling-platform)
+- **Run #327 — commit `8c9ff9d` (code-bearing: chứa `host.py` BLOCKED mapping `98d68a7` + 5 test race/mapping `31f21c3`; `8c9ff9d` chỉ khôi phục 4 dòng journal): COMPLETED SUCCESS.** Đây là bằng chứng CI cho WP2 service mapping + race coverage.
+- Run #328 (`563b03f`, docs JRN-W28-014): SUCCESS. Run #329 (`c13adcc`, docs handoffs): SUCCESS. Run #330 (`7f731b4`, docs JRN-W28-015): SUCCESS. Run #331 (`0d62088b`, Xu decision record): SUCCESS. Run #332 (`d2822b0a`, JRN-W28-016): SUCCESS (2m11s).
+- Run #325 bị cancel do concurrency; không dùng làm bằng chứng.
+- Kết quả đọc trực tiếp từ trang Actions của workflow; không suy diễn từ commit docs.
+
+### INTERPRETATION (giới hạn đúng)
+- CI xanh trên commit chứa code xác nhận: unit/regression + Linux lifecycle + Windows lifecycle + immutable artifact retest + auto E2E gate report đều pass với mapping BLOCKED và 5 test mới trong suite.
+- KHÔNG chứng minh: acknowledgement QA của An, security review của Ka, OS sandbox isolation, live MCP 8030 → Core → Runtime → Execution Host E2E, release acceptance.
+- WP2 vẫn cần An + Ka acknowledge độc lập theo handoff `c13adcc`.
+
+### WP3-F01 STATUS (theo XU-W28-WP3-F01-DEC-20261113-01)
+- Q1=A (caller context từ transport session, có điều kiện), Q2=B (mapping động từ Core), Q3=B (begin/chunk/finalize + abort): DECIDED.
+- Q4 capability-grant: BLOCKED chờ Ka review; WP3-F01 giữ IMPLEMENTATION BLOCKED; không viết code upload. Implementation plan/test matrix sẽ chuẩn bị sau khi Q4 được phê duyệt (theo NEXT #5 của JRN-W28-016).
+
+**STATUS:** WP2 SERVICE MAPPING + RACE COVERAGE CI-VERIFIED ON `8c9ff9d` (RUN #327 SUCCESS) / AN + KA ACK PENDING / Q4 PENDING KA. Work remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED. Execution Gate CLOSED.
