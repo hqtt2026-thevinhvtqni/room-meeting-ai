@@ -570,3 +570,27 @@ This entry is the formal assignment record under the agreed journal-based workfl
 3. WP3-F01 vẫn BLOCKED chờ 4 quyết định trong VI_WP3_BINARY_UPLOAD_AUTHORIZATION_CONTRACT_PROPOSAL_20261104.md (trusted transport context; mapping W28↔28; 1 tool streaming hay 3 tool begin/chunk/finalize; capability-grant semantics) — chờ Vinh quyết.
 
 **STATUS:** WP2 SERVICE MAPPING + RACE COVERAGE COMMITTED / CI VERIFICATION PENDING / INDEPENDENT REVIEW PENDING. Work remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED. Execution Gate CLOSED.
+
+
+
+## 2026-11-13 — JRN-W28-014 — Vinh's WP3-F01 decision input recorded; routed to Xu
+
+**Role:** VIBE | ghi theo chỉ dẫn trực tiếp của Vinh trong phiên làm việc 2026-11-13  
+**Branch:** `work/28-mcp-tooling-platform`
+
+### DECISION INPUT FROM VINH (WP3-F01 — sandbox_upload_file authorization contract)
+Vinh trả lời 4 câu hỏi mở trong `06_EVIDENCE/VI_WP3_BINARY_UPLOAD_AUTHORIZATION_CONTRACT_PROPOSAL_20261104.md` như sau:
+1. **Trusted caller context:** CHƯA QUYẾT — không chọn giữa MCP/transport session đã xác thực và service credential pinned.
+2. **Mapping Work ID (Core W28 ↔ Sandbox 28):** CHƯA QUYẾT.
+3. **Hình thức tool (1 streaming vs 3 begin/chunk/finalize):** CHƯA QUYẾT.
+4. **Core capability-grant cho upload:** CHƯA CHẤP THUẬN — yêu cầu Ka review trước khi cấp.
+
+### ROUTING (theo chỉ dẫn của Vinh)
+- Các quyết định trên được ghi lại tại đây để **Xu quyết** trong phạm vi ủy quyền điều phối; Vibe không tự chốt thay Xu/Ka.
+- Hồ sơ trình quyết định tổng hợp (options + hệ quả từng phương án) được chuẩn bị trên **nhánh riêng** `work/28-wp3-xu-decision-brief` (không đụng nhánh canonical cho đến khi Xu quyết).
+- WP3-F01 giữ nguyên: IMPLEMENTATION BLOCKED. Không có code upload nào được viết.
+
+### WP2 STATUS (từ JRN-W28-013)
+- Commit `98d68a7` (start_service BLOCKED mapping) + `31f21c3` (5 test race/mapping) đã lên nhánh; run #325 bị cancel do concurrency, run #327 trên HEAD `8c9ff9d` đang IN_PROGRESS lúc ghi dòng này. Chưa khai PASS.
+
+**STATUS:** WP3-F01 DECISIONS PENDING AT XU (Ka review required for capability-grant) / WP2 CI PENDING. Work remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED. Execution Gate CLOSED.
