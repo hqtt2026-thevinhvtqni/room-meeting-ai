@@ -467,3 +467,93 @@ To remove ambiguity in the launch sequence, the preferred spike sequence is refi
 6. `CREATE_SUSPENDED` + later `AssignProcessToJobObject` remains comparison-only. It is not the production fallback because the process exists outside the Job during the assignment interval.
 
 This refinement supersedes any shorter reading of Section 12.1 that might be interpreted as resuming or permitting execution immediately after creation-time assignment without the suspended-thread verification barrier.
+
+
+---
+
+## 16. BOUNDED WINDOWS API SPIKE — HARNESS ARCHITECTURE AND EXECUTION PROTOCOL
+
+- **Status:** SPECIFICATION ONLY; NOT CODED; NOT EXECUTED; NO PRODUCT IMPLEMENTATION AUTHORIZATION.
+- **Authority basis:** DOC-034 / W32-20261114-08 and DOC-006 / W32-DECISION-20261114-08.
+- **Purpose:** prove D1 creation-time Job assignment and D3 lifecycle/cleanup using only a benign local probe process. This spike does not execute a Work task, pytest suite, shell command supplied by an agent, or arbitrary user payload.
+
+### 16.1 Isolation and artifact boundary
+
+The spike must be a separate, disposable harness, not imported by Core, Execution Host, Gateway, Workspace or any production service.
+
+Proposed logical components:
+1. **Controller:** starts/stops the harness supervisor, captures its PID/exit code, and observes test markers. It must not own or duplicate the per-run Job handle.
+2. **Supervisor under test:** creates the unnamed Job Object, configures lifecycle flags, creates the probe process through direct `CreateProcessW`, verifies it, resumes it, cancels it and records API evidence.
+3. **Probe executable:** a fixed, reviewed test binary with a small allowlisted set of modes: write a unique marker after start; spawn a child/grandchild using `CreateProcessW`; exit while descendants remain; wait for cancellation. It must not accept arbitrary command strings or load user-supplied scripts.
+4. **Evidence collector:** reads only the unique temporary test directory and controller-observed process handles. It must not scan or modify unrelated processes/files.
+
+All output is confined to a newly created per-test temporary directory with restrictive ACLs. Each test uses a unique run ID and marker names. Cleanup is limited to files created by that test. No service, registry, firewall, account, scheduled task, WMI provider, port or machine-wide setting is changed.
+
+### 16.2 API path to be tested
+
+The harness must call the Win32 API directly; wrapping `subprocess.Popen` is not acceptable for this proof.
+
+1. Record OS edition/build, process identity/integrity level, current-process Job membership (`IsProcessInJob(GetCurrentProcess(), NULL, ...)`) and relevant parent-job facts obtainable through documented APIs.
+2. Create an unnamed Job Object using `CreateJobObjectW`; retain the only supervisor-owned Job handle. Do not make the handle inheritable, named, duplicated or available to the probe.
+3. Configure `JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE`; set neither breakaway flag. Query the setting back using `QueryInformationJobObject`. Resource quotas are intentionally excluded from this D1/D3-only spike because D2 and D6 have not been approved/measured.
+4. Build `STARTUPINFOEXW` and its attribute list. Add `PROC_THREAD_ATTRIBUTE_JOB_LIST` with the intended Job handle(s). Keep the handle array and attribute storage alive until `DeleteProcThreadAttributeList`.
+5. Call `CreateProcessW` with an explicit executable path, a fixed argument list, `EXTENDED_STARTUPINFO_PRESENT | CREATE_SUSPENDED`, and no breakaway flag. Prefer `bInheritHandles=FALSE`; if a future test needs pipes, use an explicit `PROC_THREAD_ATTRIBUTE_HANDLE_LIST` containing only the required pipe handles, never the Job handle.
+6. While the primary thread is suspended, verify `IsProcessInJob(process_handle, per_run_job_handle)` is TRUE; query back Job limits; verify process/thread handles and expected identity; verify the workload-start marker does not exist; and complete the final authorization/test-fixture check.
+7. Call `ResumeThread` exactly once. The expected previous suspend count is 1. A return of `(DWORD)-1`, 0, or any value other than 1 is a failure: terminate the Job, wait for completion, and record BLOCKED. Never retry by launching through Popen.
+8. After resume, verify the probe's unique start marker and record the exact API results, error codes and timestamps.
+9. On every exit path, close thread/process/attribute resources deterministically. Keep the Job handle until the Job is signaled and accounting confirms zero active processes, or until the explicit Host-crash test transfers observation to the external Controller.
+
+### 16.3 Parent Job / nested Job test is a mandatory D1 gate
+
+Microsoft documents nested Job hierarchies and parent-to-child assignment ordering. It also documents that `IsProcessInJob(..., NULL, ...)` can tell whether a process is in any Job, but does not return a handle to that Job. Therefore the harness must not assume it can enumerate or supply every opaque parent Job handle.
+
+Required cases:
+- **P0 — no parent Job:** baseline creation with only the new per-run Job in the Job-list attribute.
+- **P1 — known parent Job:** Controller places the Supervisor in a controlled outer Job; the test supplies known Job handles in documented parent-to-child order and verifies the child is in the expected hierarchy.
+- **P2 — existing/opaque parent Job:** Supervisor detects it is already in a Job but cannot prove the full parent chain/required assignment semantics. The harness records the API behavior; production disposition remains DENY until the supported launch path is demonstrated safe on the actual Host topology.
+- **P3 — incompatible parent limits or nesting:** creation/assignment failure must not cause an alternate launch path; no probe marker may appear.
+
+The spike must determine whether the JOB_LIST attribute used by the actual Host preserves all inherited parent-job constraints and whether the per-run Job is effective under the actual parent chain. A successful `IsProcessInJob` check against the new Job alone is not sufficient proof that every ancestor constraint is preserved.
+
+### 16.4 D3 lifecycle scenarios
+
+- **L1 — normal completion:** probe exits; Supervisor waits on the Job handle and verifies Job signaled plus `ActiveProcesses == 0`.
+- **L2 — explicit cancellation:** Supervisor calls `TerminateJobObject`, waits on the Job handle, queries accounting and verifies zero active processes.
+- **L3 — root exits, child remains:** probe creates a child/grandchild then exits. Supervisor must detect nonzero active count and terminate the complete Job. Root exit alone is not completion.
+- **L4 — graceful Supervisor shutdown:** Supervisor follows the common cancellation path and closes its final Job handle only after recording the outcome.
+- **L5 — forced Supervisor termination:** external Controller terminates the Supervisor while a probe is running. The Job handle must not have been inherited or duplicated; `KILL_ON_JOB_CLOSE` must terminate every member. Controller verifies process handles become signaled and no probe descendants remain.
+- **L6 — failure before ResumeThread:** Controller kills Supervisor after process creation but before resume. The suspended process must be a member of the Job and must terminate when the final Job handle closes; the workload-start marker must remain absent.
+- **L7 — repeated cancellation:** concurrent/repeated cancellation requests result in one logical terminal outcome and no live descendants.
+- **L8 — breakaway attempt:** a probe attempts child creation with a breakaway flag. Either creation is denied or the child remains in the Job; any child outside the Job is a hard FAIL.
+- **L9 — failed wait/query/termination:** status is BLOCKED/INDETERMINATE; no clean PASS and no next protected run.
+
+### 16.5 Evidence schema and PASS criteria
+
+Each test record must include:
+- run ID, test ID, exact harness/probe source and binary SHA-256;
+- Windows edition/build, architecture, Supervisor and probe identity/integrity;
+- parent Job membership result and known/unknown parent chain disposition;
+- API name, flags, input structure values, return value, `GetLastError` when applicable, and monotonic timestamps;
+- Job configuration before/after query, `IsProcessInJob` results, process IDs/parent IDs, Job accounting snapshots, wait result and final active-process count;
+- marker file presence/absence and hash; Controller-observed Supervisor/probe exit status;
+- cleanup result and all remaining test-created process IDs.
+
+A test can PASS only when its own expected behavior is observed and independently verifiable. The overall D1/D3 spike can PASS only if P0–P3 and L1–L9 pass, including the actual supported Host parent-job topology. Any missing observation, ambiguous parent chain, surviving descendant, inherited/duplicated Job handle, marker before ResumeThread, failed query/wait, or evidence loss => BLOCKED/FAIL; no inferred PASS.
+
+### 16.6 Explicit exclusions
+
+This spike does not:
+- run pytest, CI commands, shell scripts, agent-provided commands or user workloads;
+- set memory, CPU or process-count quotas (D2/D6 remain open);
+- claim WMI/Task Scheduler/SCM privilege isolation (separate restricted-identity gate required);
+- test or change production Core grant schema, SQLite, JSONL Run Record, Execution Host, Gateway, Workspace or services;
+- change PC configuration, start a self-hosted runner, modify main, create a PR, deploy or release.
+
+### 16.7 Required review and execution gate
+
+Before any harness code is created or executed, Xu must prepare a concrete file-level plan and obtain:
+- Ka security review of the harness boundary, parent-job behavior, handle ownership and escape cases;
+- Cla implementation review of Win32 structure/API correctness, error handling and cleanup;
+- explicit separate authorization for harness source creation and, later, execution in a disposable supported Windows environment.
+
+Until those conditions are met, this document is a test protocol only. D1/D3 remain NOT VERIFIED; H1 remains BLOCKED; protected execution remains DENIED.
