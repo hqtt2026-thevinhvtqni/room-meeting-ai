@@ -2362,3 +2362,48 @@ Before any process restart or service change, Vinh must provide one elevated, re
 No process termination, service restart, credential change or port mutation is authorized until the exact process identity is known.
 
 **Disposition:** CI source and hosted test lanes PASS; live PC Core/Host provenance unresolved; release gate correctly BLOCKED. Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+
+---
+
+## W32-LOG-20261114-128 — PC TERMINAL EVIDENCE CAPTURE / KA HANDOFF SUMMARY
+
+- **Work:** 32 — CI/CD
+- **Document:** DOC-035 — canonical execution journal
+- **Date:** 2026-11-14 (the supplied terminal capture does not embed a reliable execution timestamp)
+- **Recorded by:** Xu / AI-01
+- **Evidence source:** Vinh-provided PowerShell transcript `Pasted text(20261113-224844).txt`; read-only review of captured output. This entry does not claim Xu executed commands on the PC.
+- **Branch receiving this journal entry:** `work/32-main-integration-remediation-20261113`
+- **Status:** EVIDENCE CAPTURED; LOCAL WORKTREE NOT RECONCILED; NO PASS CLAIMED.
+
+### 1. PC runner probe evidence relevant to Ka
+
+- The transcript includes DOC-122 and the historical GitHub Actions Run #390 / ID `43077454507`, runner job `130720921237`.
+- GitHub assigned the job to self-hosted runner `ROOM-HOP-W32-PC`, runner version 2.338.2, group `Default`, machine `ADMIN-PC`. Runner registration/label matching was therefore demonstrated for that historical run.
+- The probe script did not execute its body: Windows PowerShell Execution Policy blocked the temporary script file at launch.
+- Workflow correction recorded in the transcript: invoke the probe steps with `powershell -NoProfile -ExecutionPolicy Bypass -File {0}`. This is process-scoped and does not change machine/user ExecutionPolicy.
+- Run #390 remains a historical FAIL. A fresh run on the corrected exact head is still required; the correction itself is not a PASS.
+- The existing DOC-035 entries W32-LOG-20261112-115 and the Run #390 addendum remain the historical source of record. This entry summarizes the supplied capture for handoff and does not overwrite that history.
+
+### 2. Local worktree state observed in the supplied terminal capture
+
+The final `git status --short` excerpt reports:
+
+- Modified: `.gitignore`
+- Modified: `core/execution_authority.py`
+- Modified: `tests/test_execution_authority.py`
+- Untracked: `.ai-workspace/`
+- Untracked: `core/execution_authority.py.pre_completion_validation.bak`
+
+The capture does not establish the exact local HEAD SHA, branch, origin/upstream relation, or whether these paths correspond byte-for-byte to the GitHub branch receiving this journal entry. Therefore these files are **LOCAL-ONLY / UNRECONCILED**. Do not stage, commit, discard, overwrite, or synchronize them until their provenance and diff are inspected against the exact branch/commit. Preserve the backup and untracked workspace during that inspection.
+
+### 3. Handoff and next action
+
+1. Ka receives this concise evidence summary plus DOC-122; the full terminal transcript is not required for the first review.
+2. On GitHub, verify the corrected self-hosted runner probe on the current exact PR head and capture run ID, runner identity, job conclusion and complete probe output.
+3. Separately reconcile the local worktree against its exact branch/HEAD and GitHub source. Inspect diffs before any write or synchronization.
+4. Continue the Core-owned Execution Authority validation sequence from DOC-118/119/120/121: exact-SHA CI, fail-closed HTTP contract, source/workspace binding, two-phase Run Record persistence, and independent security review. Do not enable protected execution from source-level tests alone.
+5. Request PC action from Vinh only for the elevated read-only process/service provenance snapshot that cannot be obtained from GitHub-hosted CI. No process termination, service restart, credential mutation, port change, protected execution, main merge, deployment or release is authorized by this entry.
+
+**Disposition:** historical runner probe #390 FAIL; corrected probe RETEST PENDING; local worktree UNRECONCILED; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
