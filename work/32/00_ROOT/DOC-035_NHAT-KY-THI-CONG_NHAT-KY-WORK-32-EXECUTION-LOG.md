@@ -2407,3 +2407,45 @@ The capture does not establish the exact local HEAD SHA, branch, origin/upstream
 5. Request PC action from Vinh only for the elevated read-only process/service provenance snapshot that cannot be obtained from GitHub-hosted CI. No process termination, service restart, credential mutation, port change, protected execution, main merge, deployment or release is authorized by this entry.
 
 **Disposition:** historical runner probe #390 FAIL; corrected probe RETEST PENDING; local worktree UNRECONCILED; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+
+---
+
+## W32-LOG-20261114-129 — XU REVIEW: WINDOWS PROCESS TEST SCOPE VS REAL PC PROBE
+
+- **Work:** 32 — CI/CD
+- **Document:** DOC-035
+- **Date:** 2026-11-14 (review time not separately captured)
+- **Actor:** Xu / AI-01 — architecture and gate owner
+- **Scope:** exact Work32 integration-remediation branch; workflow, process-control implementation, Windows tests and Run #508 evidence.
+- **Source branch:** `work/32-main-integration-remediation-20261113`
+- **Source revision tested by Run #508:** `7a93ce6d5546f778e76db47b201dc1574e02940d`
+- **Workflow blob:** `7f6450db6d530884cb6fc1cce8e26bb7d1916223`
+- **Process-control blob:** `9f5eeddbbcb32152b19321ac59563e2729a3303c`
+- **Windows test blob:** `c70ed4bee8a098aae27fcf921e0570bde95bf1f7`
+- **Status:** SOURCE/CI EVIDENCE REVIEWED; PC RUNTIME PROVENANCE STILL BLOCKED.
+
+### 1. Workflow and Run #508 distinction
+
+- The PR Windows Browser Adapter lane uses `windows-latest`; it runs `tests/test_browser_agent_adapter_port_config.py`, `tests/test_browser_agent_adapter_e2e.py` and `tests/test_execution_host_grants.py`.
+- The separate `w32_self_hosted_runner_probe` job runs on `[self-hosted, Windows, X64]`, only for pull requests, and requires runner name `ROOM-HOP-W32-PC`.
+- Run #508 / `43432659016`: hosted Windows lane PASS (26 tests); dedicated PC probe job `131909839284` CANCELLED; release gate job `131911054110` FAIL because the self-hosted result was cancelled.
+- Therefore the 26 Windows tests are evidence from GitHub-hosted Windows, not evidence from ADMIN-PC. They cannot be used to claim the user's PC services or PC runner runtime are healthy.
+
+### 2. Process-control source and test scope
+
+- `execution_host/process_control.py` implements combined stdout/stderr byte limiting, timeout handling and process-tree termination. Windows termination uses `taskkill /PID <pid> /T /F`; it reports tree termination as confirmed only when the command succeeds and the root process exits. If taskkill is unavailable/fails, the fallback kills only the root process and returns an unconfirmed result (fail-closed).
+- `tests/test_execution_host_grants.py` contains tests for combined-output cap and timeout process-tree termination, including a child-process marker check. These tests were included in the hosted Windows lane on Run #508.
+- This source/test evidence does not prove process-tree cleanup on the dedicated ADMIN-PC runner or the live Core/Host processes currently listening on the PC.
+- Ka's DOC-124 MCP SDK Windows Job Object audit is a separate implementation path from Work32's `run_bounded`; its Job Object assignment and actual child-process cleanup remain NOT VERIFIED per DOC-124.
+
+### 3. Decision and next action
+
+1. No source-code change is justified by this review alone; keep the exact-head code and current passing hosted tests intact.
+2. The only remaining PC-specific action is a fresh read-only probe on `ROOM-HOP-W32-PC` plus an elevated read-only snapshot of listener/service process provenance. The previous Run #508 PC job was cancelled, so it supplied no fresh snapshot.
+3. Do not restart/terminate listeners, change service configuration/credentials/ports, or enable protected execution until the exact process identity and entrypoint are known.
+4. After PC evidence is available, reconcile the observed Core :8000 and Execution Host :8031 processes with the expected entrypoints, check Core invalid-credential behavior (401/403), and verify Host identity fields (`provider_type`, `authority`, `grant_cache`). Then decide whether any controlled runtime repair is needed.
+5. Keep PR open/unmerged, main untouched, protected execution DENIED, CD/deployment/release blocked.
+
+**Disposition:** hosted Windows process-control tests PASS on Run #508; dedicated PC runner probe CANCELLED; live PC Core/Host identity NOT VERIFIED; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
