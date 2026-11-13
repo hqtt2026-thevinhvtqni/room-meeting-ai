@@ -565,6 +565,48 @@ class ExecutionAuthority:
             )
             if any(key not in record for key in required):
                 raise AuthorityError("run_completion_record_incomplete", 422)
+
+            allowed_statuses = {"PASS", "FAILED", "TIMEOUT", "BLOCKED"}
+            status = record.get("status")
+            if not isinstance(status, str) or status not in allowed_statuses:
+                raise AuthorityError("run_completion_status_invalid", 422)
+
+            execution_status = record.get("execution_status")
+            if execution_status is not None and (
+                not isinstance(execution_status, str)
+                or execution_status not in allowed_statuses
+            ):
+                raise AuthorityError("run_execution_status_invalid", 422)
+
+            finished_at = record.get("finished_at")
+            if not isinstance(finished_at, str):
+                raise AuthorityError("run_finished_at_invalid", 422)
+            try:
+                normalized_finished_at = (
+                    finished_at[:-1] + "+00:00"
+                    if finished_at.endswith("Z")
+                    else finished_at
+                )
+                parsed_finished_at = datetime.fromisoformat(normalized_finished_at)
+            except ValueError:
+                raise AuthorityError("run_finished_at_invalid", 422) from None
+            if parsed_finished_at.tzinfo is None or parsed_finished_at.utcoffset() is None:
+                raise AuthorityError("run_finished_at_timezone_required", 422)
+
+            exit_code = record.get("exit_code")
+            if exit_code is not None and (
+                isinstance(exit_code, bool) or not isinstance(exit_code, int)
+            ):
+                raise AuthorityError("run_exit_code_invalid", 422)
+
+            evidence_sha256 = record.get("evidence_sha256")
+            if (
+                not isinstance(evidence_sha256, str)
+                or len(evidence_sha256) != 64
+                or any(char not in "0123456789abcdef" for char in evidence_sha256)
+            ):
+                raise AuthorityError("run_evidence_sha256_invalid", 422)
+
             started = next(
                 (item for item in runs if item["start"].get("run_id") == record["run_id"]),
                 None,
