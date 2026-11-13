@@ -2084,3 +2084,54 @@ The exact Git blob was materialized in a temporary Linux container file and its 
 - No PC process/service was started, stopped, terminated or reconfigured. No credentials provisioned. No protected command executed. Main and release paths remain untouched.
 
 **Disposition:** bounded output and timeout tree-control source implemented; isolated Linux helper tests PASS; full repo CI and Windows proof PENDING; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261113-122 — HOST/ORIGIN BOUNDARY + WINDOWS SECURITY TEST LANE
+
+- **Work:** 32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P0 — loopback request boundary / browser-origin isolation
+- **Name:** Ka
+- **Title:** CSA / Work32 delegated execution owner
+- **Date-Time:** 2026-11-13 20:11 Asia/Ho_Chi_Minh
+- **Branch:** `work/32-main-integration-remediation-20261113`
+- **Draft PR:** #54 — targets PR #52 candidate branch; not a main/release PR.
+- **Status:** SOURCE PATCH + LOCAL HTTP SMOKE PASS; FULL REPO / WINDOWS CI PENDING.
+
+### 1. Host HTTP boundary
+
+- `execution_host/server.py` now validates the HTTP Host authority against loopback hostnames (`127.0.0.1`, `localhost`, `::1`) and the exact configured Host port.
+- If Origin is present, it must be HTTP, loopback and the same configured port; malformed, remote, credential-bearing, query/fragment or path-bearing origins are rejected.
+- `Sec-Fetch-Site`, when present, is limited to `same-origin` or `none`.
+- Applied to both `GET /health` and `POST /execute-granted`; unknown/legacy caller-supplied execution route remains 404.
+- Regression tests added for allowed loopback and denied remote Host, wrong port, remote Origin, cross-site fetch, null/missing origin; HTTP handler test proves rejected requests never reach the Host executor and valid same-loopback requests do.
+- Exact server blob SHA `14d1d764730540330b7bf1d0f3b83b2c03df6a2c` was materialized and verified with Git `hash-object`; `py_compile` PASS; isolated HTTP-boundary pytest **1 passed**. This is not the full repository test suite.
+
+### 2. Exact Windows lane coverage
+
+- Updated active workflow and Work32 mirror on both the integration base branch and remediation branch.
+- `pull_request.branches` now includes `work/32-main-integration-authority-20261112`, allowing the remediation PR's base branch to receive the PR event.
+- Hosted Windows Browser Adapter pytest command now also runs `tests/test_execution_host_grants.py`, exercising the Windows process-tree termination path using runner-local portable Python 3.12.
+- Strict workflow mirror checker remains enabled with `CHECK_STRICT=1`.
+- Active/mirror parity is required before CI acceptance; exact readback to be recorded after verification.
+- Relevant base-branch commits: `1b12620f1105141bc86c1020814b6bdce5170795`, `2fb2de923aa7a592f6926457e0b93208e9cb2ed0`.
+- Relevant remediation-branch commits: `45379864090102d946ca4011dbe975f2c2f6e00e`, `2aadb358c5b5da2ad349aad277eebfa2df321a72`.
+
+### 3. CI trigger and validation status
+
+- Draft PR #54 created: `work/32-main-integration-remediation-20261113` → `work/32-main-integration-authority-20261112`.
+- PR #54 was initially opened before the base-branch filter included its target; therefore no PR workflow run was observed at that time.
+- The base workflow filter is now corrected. PR must be reopened/updated to emit a matching pull_request event. No current exact-head workflow PASS is claimed.
+- Full `tests/test_execution_host_grants.py` on the repository checkout, Windows hosted process-tree test, full Work32 unit/E2E and exact-head strict mirror CI remain PENDING.
+
+### 4. Safety / remaining blockers
+
+- Core :8000 invalid-credential route still requires live verification as 401/403; current PC probe observed 404.
+- Host :8031 live health must expose `provider_type=CORE_AUTHORIZED_PYTEST`, `authority=CORE_ONLINE`, `grant_cache=false`; current PC probe observed missing values.
+- Process owner/executable/module for PC ports 8000 and 8031 remains UNKNOWN/UNRESOLVED.
+- Remote transport remains disabled; no mTLS/OS peer identity claim is made.
+- No PC service/process was changed or restarted; no credentials provisioned; no protected command executed; no merge, CD or release.
+
+**Disposition:** Host/Origin source boundary implemented; exact source HTTP smoke PASS; Windows/full-repository validation pending; live PC runtime identity BLOCKED; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
