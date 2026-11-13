@@ -557,6 +557,8 @@ jobs:
           }
 
           # Negative-only Core probe: no Grant is issued or mutated.
+          # Collect both Core and Host diagnostics before failing the read-only probe.
+          $probeViolations = @()
           $coreAuthorityStatus = 0
           try {
             $null = Invoke-WebRequest -UseBasicParsing -Method Get -TimeoutSec 3 -Uri "http://127.0.0.1:8000/works/W32/execution-grants/probe-readonly-status" -Headers @{ "X-Room-Hop-Service-Id" = "w32-readonly-probe-invalid"; "X-Room-Hop-Service-Credential" = "invalid-probe-credential" }
@@ -569,7 +571,7 @@ jobs:
           }
           Write-Output "core_authority_negative_probe_http=$coreAuthorityStatus"
           if ($coreAuthorityStatus -notin @(401, 403)) {
-            throw "BLOCKED: Core invalid-credential probe expected HTTP 401 or 403; received $coreAuthorityStatus"
+            $probeViolations += "Core invalid-credential probe expected HTTP 401 or 403; received $coreAuthorityStatus"
           }
 
           # Host health is read-only and reports configuration identity, not execution permission.
@@ -589,7 +591,7 @@ jobs:
               $hostHealth.authority -ne "CORE_ONLINE" -or
               $hostHealth.grant_cache -ne $false
             ) {
-              throw "BLOCKED: Execution Host health identity is missing or does not match the Core-authorized contract"
+              $probeViolations += "Execution Host health identity is missing or does not match the Core-authorized contract"
             }
           } catch {
             $response = $_.Exception.Response
@@ -598,6 +600,12 @@ jobs:
             }
           }
           Write-Output "execution_host_health_http=$hostHealthStatus"
+          if ($hostHealthStatus -ne 200) {
+            $probeViolations += "Execution Host health endpoint expected HTTP 200; received $hostHealthStatus"
+          }
+          if ($probeViolations.Count -gt 0) {
+            throw "BLOCKED: $($probeViolations -join '; ')"
+          }
   release_gate:
     name: Work 32 release acceptance gate
     if: always()
