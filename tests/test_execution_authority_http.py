@@ -206,6 +206,7 @@ def test_http_run_record_requires_grant_and_host_binding(tmp_path):
         json={
             "finished_at": "2026-11-12T00:00:01+00:00",
             "status": "PASS",
+            "execution_status": "PASS",
             "exit_code": 0,
             "evidence_sha256": "c" * 64,
             "evidence_ref": "evidence/run-http-001/RUN_EVIDENCE.json",
