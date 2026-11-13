@@ -2738,3 +2738,48 @@ Disposition: resource isolation H1 BLOCKED; protected execution DENIED; Work32 A
 - DOC-035: required new entries present in both; full journal parity NOT VERIFIED / DRIFT OPEN.
 - Do not claim full GitHub↔Sandbox synchronization. Do not overwrite or truncate the Sandbox journal. A controlled line-level reconciliation is still required.
 - No source/runtime code changed; no PC action; protected execution remains DENIED; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261114-136 — XU D1/D3 WINDOWS JOB OBJECT DESIGN SPECIFICATION
+
+- **Date:** 2026-11-14; exact time not separately captured.
+- **Actor:** Xu / AI-01.
+- **Branch:** work/32-main-integration-remediation-20261113.
+- **Scope:** DOC-125 D1 creation-time Job assignment and D3 cancellation/descendant lifecycle.
+- **Method:** read-only review of canonical DOC-125/DOC-034/DOC-006/DOC-035 plus Microsoft Learn API documentation; no code execution, no PC access, no runner dispatch, no source mutation.
+- **Status:** DESIGN SPECIFICATION RECORDED; RUNTIME NOT RUN; NOT VERIFIED.
+
+### 1. D1 design recommendation
+
+- Preferred spike candidate is Windows `PROC_THREAD_ATTRIBUTE_JOB_LIST` via `STARTUPINFOEX` / `EXTENDED_STARTUPINFO_PRESENT`, because Microsoft documents support beginning with Windows 10 and creation-time Job assignment avoids the post-create/pre-assignment execution interval.
+- ADMIN-PC baseline is Windows 10 Pro build 19045, which is within the documented support generation. This is a compatibility basis only, not runtime proof.
+- `CREATE_SUSPENDED` + `AssignProcessToJobObject` remains a comparison-only spike case, not a production fallback. A Host crash before assignment can leave a suspended process outside the Job.
+- Invalid attribute, unsupported API, nested Job conflict, configuration/query mismatch, membership verification failure or Core revalidation failure => DENY/BLOCKED; no ordinary-Popen fallback.
+
+### 2. D3 lifecycle contract
+
+- Single Host supervisor owns each run's process/thread/Job handles and cancellation/finalization state.
+- All cancellation causes use one idempotent `TerminateJobObject` path; verify Job signaled and Job accounting `ActiveProcesses == 0`.
+- Root exit while descendants remain requires whole-Job termination; root exit alone is not clean completion.
+- Graceful shutdown and forced Host termination must verify kill-on-last-handle-close. Job handles must not be inheritable or leaked/duplicated.
+- Failed wait/query/termination or Run Record write/recovery => BLOCKED/INDETERMINATE, never PASS.
+
+### 3. Important boundary discovered in Microsoft API documentation
+
+- Windows Job Object inheritance does not cover every process-creation mechanism. Microsoft documents that a process created through `Win32_Process.Create` is not associated with the parent Job by default.
+- Therefore Job Object alone is not a complete sandbox. Restricted workload identity and explicit denial of WMI/service/task-scheduler broker privileges are mandatory. If not established, protected execution remains DENIED.
+- Job memory quota is committed-memory accounting, not an RSS/working-set guarantee; CPU hard cap is throttling, distinct from CPU-time budget. No numeric quota was selected.
+
+### 4. Test specification added to DOC-125
+
+D1-01..D1-07 cover creation-time assignment, no-side-effect failure, nested Jobs, limit query, Host crash, breakaway and WMI escape. D3-01..D3-10 cover cancel/timeout/output overflow, root-exit-with-descendants, graceful/forced Host shutdown, handle leakage, racing cancellation, failed Job query/wait, Run Record torn-write recovery and measured resource enforcement.
+
+### 5. Evidence and disposition
+
+- DOC-125 now contains the full D1/D3 design and bounded spike test specification.
+- External API references: Microsoft Learn Job Objects, UpdateProcThreadAttribute, Nested Jobs and JOBOBJECT_BASIC_LIMIT_INFORMATION.
+- No product source/test changes; no PC action; no runner dispatch; no protected execution; no main integration; no deployment/release.
+- D1 DESIGN SPECIFIED / RUNTIME NOT VERIFIED; D3 CONTRACT SPECIFIED / RUNTIME NOT VERIFIED.
+- D2, D4, D5 and D6 remain open and continue to block implementation. Work32 remains ACTIVE — NOT ACCEPTED — NOT RELEASED.
