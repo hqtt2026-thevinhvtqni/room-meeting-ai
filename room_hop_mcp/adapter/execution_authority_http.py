@@ -41,6 +41,7 @@ class RunCompleteRequest(BaseModel):
     run_id: str = Field(min_length=1, max_length=128)
     finished_at: str
     status: Literal["PASS", "FAILED", "TIMEOUT", "BLOCKED"]
+    execution_status: Literal["PASS", "FAILED", "TIMEOUT", "BLOCKED"] | None = None
     exit_code: int | None
     evidence_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     evidence_ref: str | None = None
