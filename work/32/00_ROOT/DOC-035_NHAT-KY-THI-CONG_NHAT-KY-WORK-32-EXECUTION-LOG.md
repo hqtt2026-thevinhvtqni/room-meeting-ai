@@ -2711,3 +2711,30 @@ DOC-125 remains PROPOSED / NOT APPROVED pending Xu's canonical decision. This en
 W32-DECISION-20261114-08 in DOC-006 and Biên bản W32-20261114-08 in DOC-034 approve the design direction only with conditions. D1–D6 remain blockers to product implementation. A bounded isolated Windows API proof-of-concept/test specification is the only authorized next activity; no product source change, PC action, runner dispatch, protected execution, main integration, deployment or release.
 
 Disposition: resource isolation H1 BLOCKED; protected execution DENIED; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261114-135 — GITHUB/SANDBOX DOCUMENT MIRROR DRIFT AFTER REVIEW RECONCILIATION
+
+- **Date:** 2026-11-14; exact time not separately captured.
+- **Actor:** Xu / AI-01.
+- **Scope:** readback comparison of DOC-034, DOC-006, DOC-035, DOC-055, DOC-125 and Cla evidence after Ka/Cla review reconciliation.
+- **Method:** exact GitHub fetch on branch work/32-main-integration-remediation-20261113 and Sandbox readback; compare byte lengths and required markers.
+
+### Readback results
+
+- DOC-034: GitHub and Sandbox content lengths match (4,632 bytes); decision W32-20261114-08 present in both.
+- DOC-006: GitHub and Sandbox content lengths match (22,170 bytes); decision W32-DECISION-20261114-08 present in both.
+- DOC-055: GitHub and Sandbox content lengths match (26,502 bytes); DOC-125 review/decision status addendum present in both.
+- Cla evidence: GitHub and Sandbox content lengths match (9,728 bytes); review conclusion IMPLEMENTABLE WITH CONDITIONS present in both.
+- DOC-125: both stores contain Ka review, Cla review and Xu source-trace/decision markers, but byte lengths differ (GitHub 15,982; Sandbox 13,718). Treat as semantic presence verified, exact mirror NOT VERIFIED.
+- DOC-035: both stores contain Ka LOG-133, Cla LOG-CLA-06 and Xu LOG-134; byte lengths differ (GitHub 269,500; Sandbox 910,358). A pre-existing Sandbox sync note and historical content divergence were observed. Append-only records were preserved; no overwrite/truncation attempted.
+
+### Disposition
+
+- DOC-034, DOC-006, DOC-055 and Cla evidence: exact content-size parity plus required-marker readback PASS.
+- DOC-125: required review/decision markers present in both; exact content parity NOT VERIFIED.
+- DOC-035: required new entries present in both; full journal parity NOT VERIFIED / DRIFT OPEN.
+- Do not claim full GitHub↔Sandbox synchronization. Do not overwrite or truncate the Sandbox journal. A controlled line-level reconciliation is still required.
+- No source/runtime code changed; no PC action; protected execution remains DENIED; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
