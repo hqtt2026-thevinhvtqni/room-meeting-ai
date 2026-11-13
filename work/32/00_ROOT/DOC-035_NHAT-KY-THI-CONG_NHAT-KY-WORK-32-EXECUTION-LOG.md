@@ -2622,3 +2622,50 @@ Ka reported CSA-125-01 memory quota absent (Critical); CSA-125-02 CPU hard cap a
 5. This entry records receipt of the report, not independent confirmation of every API assertion or Windows runtime behavior.
 
 **Disposition:** W32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261114-CLA-06 — CLA / AI-03 CTO REVIEW DOC-125 RECEIVED AND RECONCILED
+
+- **Date:** 2026-11-14; exact time not available.
+- **Actor:** Xu / AI-01 — reconciliation and GitHub/Sandbox evidence sync.
+- **Reviewer:** Cla / AI-03 (Claude), CTO — READ-ONLY.
+- **Evidence file:** work/32/06_EVIDENCE/W32-EVIDENCE-CLA-06-DOC125-RESOURCE-QUOTA-CTO-REVIEW-20261114.md.
+- **Original receipt:** found in Sandbox canonical evidence and existing Sandbox journal; this entry reconciles the previously missing GitHub mirror.
+- **Conclusion reported by Cla:** IMPLEMENTABLE WITH CONDITIONS.
+- **Source limitation:** Cla explicitly lacked GitHub source access in its review session and relied on prior journal/source summaries. Its code observations are secondary, not an independent line-by-line source audit.
+- **Code changes by Cla:** NONE. Protected execution: NOT RUN. PC action: NONE.
+
+### 1. CTO design proposal
+
+Cla proposes a narrow ResourceBackend, a Windows Job Object backend and an UnsupportedBackend that denies protected execution. The launch sequence is: validate policy; create/configure Job; query and verify limits; create process suspended; assign and verify Job membership; perform the second Core online validation; resume only after all barriers pass. Failures terminate/close and return BLOCKED; no fallback to ordinary Popen. Linux protected execution remains DENY unless a separate kernel-enforced backend is verified.
+
+### 2. CTO conditions and unresolved decisions
+
+- Xu must independently line-trace the exact source SHA because Cla did not access GitHub source during its review.
+- Resolve policy provenance/Host ceiling, Linux denial and test-double injection, orphan process behavior, incomplete/torn journal recovery, Host cancellation, and JSONL versus SQLite requirement.
+- Probe nested Job behavior, CPU rate control and optional JOB_LIST on a Windows environment matching ADMIN-PC.
+- Set quota values only after measured workload baselines; no guessed limits.
+- H1 requires exact self-hosted ADMIN-PC evidence; hosted Windows is insufficient.
+- Add independent-process Run Record contention and crash/restart tests.
+
+### 3. Technical cautions
+
+- Job memory quota concerns committed memory, not necessarily working set/RSS; exceeding it may cause allocation failure rather than automatic process termination.
+- CPU hard cap throttles; CPU-time limit is distinct. ActiveProcessLimit overflow behavior needs measurement.
+- The simpler suspended-process A1 path may leave a suspended non-running orphan if Host dies before assignment; explicitly test cleanup. JOB_LIST is a stronger candidate but requires platform probing.
+- Nested Job assignment failure must remain fail-closed; no breakaway workaround.
+
+### 4. Reconciliation with Ka
+
+- Ka: current isolation REJECT; Job Object direction APPROVE WITH CONDITIONS; emphasizes security threat model, privilege separation, no pre-assignment execution and negative tests.
+- Cla: implementation IMPLEMENTABLE WITH CONDITIONS; emphasizes backend design, Windows API spike, quota measurement, Host cancellation/orphan handling, persistence semantics and PC evidence.
+- No substantive disagreement on the core safety barrier: workload must not execute before OS containment is configured and verified; every failure denies execution.
+- Both reviews are design/source reviews only. Neither supplies actual ADMIN-PC quota enforcement evidence.
+
+### 5. Xu disposition
+
+DOC-125 remains PROPOSED / NOT APPROVED pending Xu's canonical decision. This entry records Cla's previously received Sandbox review and its GitHub evidence mirror; it does not claim independent source/runtime verification. Protected execution remains DENIED. No implementation, main integration, deployment or release is authorized.
+
+**Disposition:** W32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
