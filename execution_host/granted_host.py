@@ -228,6 +228,8 @@ class GrantedExecutionHost:
         stdout = ""
         stderr = ""
         blocker = None
+        process_tree_termination_confirmed = True
+        output_limit_exceeded = False
         run_started_persisted = False
         try:
             self.authority_client.start_run(
@@ -284,15 +286,17 @@ class GrantedExecutionHost:
                     exit_code = completed.returncode
                     stdout = redact(completed.stdout.decode("utf-8", "replace"))
                     stderr = redact(completed.stderr.decode("utf-8", "replace"))
-                    if completed.output_limit_exceeded:
-                        status = "BLOCKED"
-                        blocker = "execution_output_limit_exceeded"
-                    elif completed.timed_out and completed.tree_termination_confirmed:
-                        status = "TIMEOUT"
-                        blocker = "execution_timeout"
-                    elif not completed.tree_termination_confirmed:
+                    process_tree_termination_confirmed = completed.tree_termination_confirmed
+                    output_limit_exceeded = completed.output_limit_exceeded
+                    if not process_tree_termination_confirmed:
                         status = "BLOCKED"
                         blocker = "execution_process_tree_termination_unconfirmed"
+                    elif output_limit_exceeded:
+                        status = "BLOCKED"
+                        blocker = "execution_output_limit_exceeded"
+                    elif completed.timed_out:
+                        status = "TIMEOUT"
+                        blocker = "execution_timeout"
                     else:
                         status = "PASS" if exit_code == 0 else "FAILED"
             except Exception as exc:
@@ -349,6 +353,8 @@ class GrantedExecutionHost:
             "execution_status": status,
             "exit_code": exit_code,
             "blocker": reported_blocker,
+            "process_tree_termination_confirmed": process_tree_termination_confirmed,
+            "output_limit_exceeded": output_limit_exceeded,
             "stdout_sha256": stdout_sha256,
             "stderr_sha256": stderr_sha256,
             "evidence_persisted": evidence_persisted,
