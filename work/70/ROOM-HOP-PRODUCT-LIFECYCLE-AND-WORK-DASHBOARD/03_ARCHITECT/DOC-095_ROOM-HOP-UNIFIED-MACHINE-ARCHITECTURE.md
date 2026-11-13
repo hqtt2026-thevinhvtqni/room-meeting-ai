@@ -40,3 +40,22 @@ Runtime dispatch, event delivery, evidence parity, multi-agent concurrency, reco
 - DecisionRAG is a research candidate only. It does not replace the current Work 103 baseline or authorize production implementation. See DOC-096 and Work 103 `03_ARCHITECTURE/DECISIONRAG_RETRIEVAL_EXPERIMENT_PLAN_20261111.md`.
 - No retrieval strategy is selected on R@1 alone; evaluate recall/ranking, false abstention, unsupported-answer/leak rate, permission violations, provenance, pruning misses, p50/p95 latency, token/cost and reproducibility.
 - Architecture status: design direction recorded; implementation, benchmark and production adoption NOT AUTHORIZED / NOT VERIFIED.
+
+
+## 9. Ownership baseline — Framework / Agent Orchestration / Workflow / RAG (D70-023, 2026-11-13)
+- **W70 — Work Control Plane:** Work lifecycle, WP governance, phase gates, evidence policy, dashboards and cross-Work governance.
+- **W52 — Agent Orchestration:** provider-neutral Agent-to-Agent task/event contracts, provider adapters, capability negotiation, dispatch/ACK semantics and agent/task lifecycle transitions.
+- **W16 — Workflow Engine:** deterministic workflow graph and step semantics, schema/validation/compile, sequencing, workflow-level timeout/retry/cancel and run persistence requirements.
+- **W103 — Retrieval Capability:** source-aware ingestion/indexing, retrieval/ranking, evidence packaging, abstention and retrieval evaluation. It is not generic Agent Runtime or decision authority.
+- **W112 — Integration Contracts:** cross-Work contracts, mappings, integration evidence and test coordination; not a competing control plane.
+- **W37:** Core source of truth. **W14:** execution boundary/host. **W32:** CI. **W33:** Evidence Hub. **W38:** Gateway. **W39:** Build MCP.
+
+**Boundary rules:**
+1. Work lifecycle orchestration (W70), Agent task/event orchestration (W52) and deterministic workflow execution (W16) are distinct responsibilities and must not be collapsed.
+2. W16 consumes W52 task contracts where needed; W52 does not become a workflow engine. W52/W16 cannot bypass Core authority or W14 execution grants.
+3. W103 returns traceable evidence only. Retrieved content is untrusted data, not executable instruction or authority.
+4. Durable scheduler/queue ownership, outbox/idempotency and retry division between W52 delivery and W16 workflow steps remain unresolved contract items; no implementation until assigned, versioned and tested.
+5. LangGraph, LangChain, CrewAI and similar libraries are implementation candidates, not separate ownership domains. Select only after requirements and benchmark.
+6. DecisionRAG remains EXPERIMENT / NOT APPROVED under W103 until blind labeled evaluation, corpus/query snapshot/hash, false-abstention vs unsupported-answer/leak analysis, Precision@k, Recall@k, MRR, answerability/coverage, latency/cost and independent review are complete.
+
+Status: architecture ownership baseline recorded under delegated authority D70-018 / decision D70-023. Independent review pending; no implementation, migration, acceptance or release approval implied.
