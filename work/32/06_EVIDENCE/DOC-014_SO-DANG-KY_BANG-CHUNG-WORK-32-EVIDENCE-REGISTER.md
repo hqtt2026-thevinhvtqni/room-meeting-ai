@@ -68,3 +68,6 @@ Evidence is immutable by reference. Corrections add a new evidence record; faile
 
 
 | W32-EVIDENCE-024 | Work32 Core Run Record completion validation, HTTP run-ID binding, and live PC authority probe finding | 06_EVIDENCE/DOC-124_WORK32_COMPLETION_VALIDATION_AND_LIVE_RUNNER_PROBE_20261113.md | PR #52 head 17ba50ab2e8736e2636e323741ce735c107fe197; Run #416 / 43357544278: 250 unit, 122 Product Auto E2E, 10 Windows Browser Adapter, tooling PASS, immutable artifact E2E 1 PASS; Run #414 / 43357234292: dedicated PC runner identity PASS but Core invalid-credential probe returned HTTP 404 | SOURCE + HOSTED CI LANES PASS; LIVE CORE AUTHORITY ROUTE BLOCKED; Host health identity pending; release gate NOT PASS; Work32 ACTIVE — NOT RELEASED |
+
+
+| W32-EVIDENCE-025 | Final Run #416 dedicated PC Core/Host identity probe | 06_EVIDENCE/DOC-125_WORK32_LIVE_PC_CORE_HOST_IDENTITY_PROBE_20261113.md | Exact source head 17ba50ab2e8736e2636e323741ce735c107fe197; Run #416 / 43357544278; runner ROOM-HOP-W32-PC identity PASS; Core invalid-credential route HTTP 404; Host health HTTP 200 but provider_type/authority/grant_cache missing; unit 250, Product Auto E2E 122, Windows 10, tooling PASS, artifact E2E 1 PASS | LIVE CORE/HOST IDENTITY BLOCKED; release acceptance gate FAIL; no runtime changes; Work32 ACTIVE — NOT RELEASED |
