@@ -622,3 +622,45 @@ Vinh trả lời 4 câu hỏi mở trong `06_EVIDENCE/VI_WP3_BINARY_UPLOAD_AUTHO
 3. Sau khi Xu quyết: triển khai WP3-F01 trên nhánh riêng, PR có CI xanh mới merge về canonical.
 
 **STATUS:** WP2 HANDOFFS ISSUED (AN + KA ACK PENDING) / WP3 DECISION BRIEF PUBLISHED ON SEPARATE BRANCH / CI #327 PENDING. Work remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED. Execution Gate CLOSED.
+
+
+## 2026-11-13 — JRN-W28-016 — Xu contract decisions for WP3-F01; Q4 held for Ka review
+
+**Role:** XU | delegated Work 28 architecture and integration decision owner  
+**Branch:** `work/28-mcp-tooling-platform`  
+**Decision record:** `06_EVIDENCE/XU_WP3_F01_DECISION_RECORD_20261113.md`  
+**Decision record commit:** `0d62088bf55401441ed589682f109f51a0b0084f`  
+**Source brief:** `work/28-wp3-xu-decision-brief`, commit `a37a5bea115c962ebd879e0384e520ca7ff114a6`
+
+### READ / TRACE
+- Read the full WP3-F01 decision brief on its dedicated branch and the original `VI_WP3_BINARY_UPLOAD_AUTHORIZATION_CONTRACT_PROPOSAL_20261104.md` on the canonical branch.
+- Confirmed the source trace states v54 currently has text UTF-8 read/write only; binary upload tool/schema/registration is absent, and the staged Core authorizer is not yet wired into v54 dispatch.
+- Confirmed the proposal explicitly rejects caller-supplied identity/work claims as authentication, requires Core authorization before Sandbox side effects, and requires an explicit Work-ID mapping.
+- Confirmed canonical journal JRN-W28-015 is present at HEAD `7f731b49488e09fd6d19ae34243da85d6de710fe`; compare against `work/28-mcp-tooling-platform` returned identical (0 ahead / 0 behind) before this decision update.
+
+### DECIDE
+Xu approves three contract directions:
+1. **Q1 — Trusted caller context: Option A.** Use authenticated MCP/transport session context resolved server-side and passed out-of-band. Missing/invalid/expired context denies before filesystem access. stdio is trusted only under an approved trusted parent/runtime with principal binding; HTTP upload must not be exposed before authentication is enforced. This does not claim current v54 already implements the context.
+2. **Q2 — Work ID mapping: Option B.** Core :8000 returns the authoritative dynamic Sandbox/provider mapping in trusted WorkContext/authorization response. No hardcoded W28→28 mapping, caller-derived normalization or production static fallback. Missing/conflicting/stale mapping blocks before side effects.
+3. **Q3 — Upload protocol: Option B.** Adopt begin/chunk/finalize with bounded chunks, opaque short-lived sessions bound to caller/Work/path/quota/expiry, strict ordering and byte limits, final exact byte-count + SHA-256 verification, atomic promotion, independent readback and audit. Abort/cancel or equivalent server-side cancellation and idempotent staging cleanup are mandatory.
+
+**Q4 — Core capability grant: NOT APPROVED.** Vinh required Ka review before approval. Ka must review the concrete grant design against principal/Work binding, operation/path scope, quotas, TTL, revocation/replay, overwrite policy, pre-side-effect checks and audit behavior. Xu will not approve a grant broader than Ka's reviewed revision. Until Ka's evidence-backed review and a subsequent Xu decision, upload remains DENY/BLOCKED with no staging or filesystem side effect.
+
+### BUILD
+- Published the controlled decision record as a new evidence file in the canonical branch; commit `0d62088bf55401441ed589682f109f51a0b0084f`.
+- No code, runtime, routing, Core, Execution Host or capability grant was changed.
+
+### VERIFY
+- Decision record commit returned by GitHub create-file operation.
+- Journal update is appended below JRN-W28-015; no prior entry is rewritten.
+- CI #327 remains a separate pending verification item; this decision does not infer its result.
+- An/Ka acknowledgements for the WP2 handoffs remain pending until their own evidence artifacts are published.
+
+### NEXT
+1. **Ka:** review Q4 capability-grant design and publish an independent artifact tied to the exact revision.
+2. **Xu:** decide Q4 only after Ka's review; record the decision append-only.
+3. **An:** independently complete WP2 QA handoff against exact tested commit and CI run.
+4. **Xu/CI owner:** read run #327 live result; record PASS only if completed green on the code-bearing SHA.
+5. After Q4 is approved, prepare implementation plan/test matrix; do not start WP3-F01 code before the decision gate is closed.
+
+**STATUS:** Q1–Q3 DECIDED / Q4 BLOCKED PENDING KA REVIEW / WP3-F01 IMPLEMENTATION BLOCKED. WP2 CI #327 and An/Ka handoff acknowledgements remain independent pending items. Work ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED.
