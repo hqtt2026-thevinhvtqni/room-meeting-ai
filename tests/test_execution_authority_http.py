@@ -210,6 +210,75 @@ def test_http_run_record_requires_grant_and_host_binding(tmp_path):
             "exit_code": 0,
             "evidence_sha256": "c" * 64,
             "evidence_ref": "evidence/run-http-001/RUN_EVIDENCE.json",
+            "evidence_persisted": True,
+            "evidence_errors": [],
+            "stdout_sha256": "d" * 64,
+            "stderr_sha256": "e" * 64,
+        },
+        headers=headers,
+    )
+    assert completed.status_code == 200
+    assert completed.json()["status"] == "completed"
+
+
+def test_http_run_completion_rejects_invalid_evidence_metadata(tmp_path):
+    client = app_for(configured_authority(tmp_path))
+    grant = client.post(
+        "/works/W32/execution-grants",
+        json=issue_payload(),
+        headers=agent_headers(),
+    ).json()
+    headers = {
+        **host_headers(),
+        "Authorization": "Bearer " + grant["grant_token"],
+    }
+    started = client.post(
+        f"/works/W32/execution-grants/{grant['grant_id']}/runs",
+        json={
+            "run_id": "run-http-evidence-metadata",
+            "repository": "hqtt2026-thevinhvtqni/room-meeting-ai",
+            "branch": "work/32-core-owned-execution-authority-20261112",
+            "expected_head": "b" * 40,
+            "command": ["python", "-m", "pytest", "-q"],
+            "source_sha256": "a" * 64,
+            "environment_id": "w32-test",
+            "started_at": "2026-11-12T00:00:00+00:00",
+        },
+        headers=headers,
+    )
+    assert started.status_code == 200
+
+    invalid = client.post(
+        f"/works/W32/execution-grants/{grant['grant_id']}/runs/run-http-evidence-metadata/complete",
+        json={
+            "finished_at": "2026-11-12T00:00:01+00:00",
+            "status": "PASS",
+            "execution_status": "PASS",
+            "exit_code": 0,
+            "evidence_sha256": "c" * 64,
+            "evidence_persisted": False,
+            "evidence_errors": [],
+            "stdout_sha256": "bad",
+            "stderr_sha256": "e" * 64,
+        },
+        headers=headers,
+    )
+    assert invalid.status_code == 422
+    assert invalid.json()["detail"] == "execution_run_completion_invalid"
+
+    completed = client.post(
+        f"/works/W32/execution-grants/{grant['grant_id']}/runs/run-http-evidence-metadata/complete",
+        json={
+            "finished_at": "2026-11-12T00:00:02+00:00",
+            "status": "BLOCKED",
+            "execution_status": "PASS",
+            "exit_code": 0,
+            "evidence_sha256": "c" * 64,
+            "evidence_ref": "evidence/run-http-evidence-metadata/RUN_EVIDENCE.json",
+            "evidence_persisted": False,
+            "evidence_errors": ["stdout.log:OSError"],
+            "stdout_sha256": "d" * 64,
+            "stderr_sha256": "e" * 64,
         },
         headers=headers,
     )
