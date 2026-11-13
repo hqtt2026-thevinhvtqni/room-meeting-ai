@@ -2530,3 +2530,45 @@ The current Windows implementation does not create or configure a Windows Job Ob
 - Vinh / PC: NOT REQUIRED for this design review stage.
 
 **Disposition:** DOC-125 proposal created on GitHub and Sandbox; register updated in Sandbox; implementation remains unauthorized; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261114-132 — CORE RUN-RECORD PERSISTENCE TEST-COVERAGE AUDIT
+
+- **Timestamp:** 2026-11-14 06:12 +07:00
+- **Actor:** Xu / AI-01
+- **Scope:** read-only audit of `core/execution_authority.py` and `tests/test_execution_authority.py` against DOC-123 H1 item 7.
+- **Source blobs:** Core `dd9becadd56a1df4c3f306de317b2f70f2b3b1db`; tests `<see source candidate 7a93ce6d5546f778e76db47b201dc1574e02940d>`.
+- **Status:** IMPLEMENTATION PATTERN PRESENT; REQUIRED FAILURE/PROCESS-LEVEL TEST EVIDENCE INCOMPLETE; NO CODE CHANGED.
+
+### 1. Source observations
+
+- Core serializes state changes through a thread lock plus OS file lock (`msvcrt.locking` on Windows / `fcntl.flock` elsewhere).
+- Run events are append-only JSONL, hash-chained, flushed and `fsync`'d.
+- Readback validates chain continuity, event hashes, event types and legal run-start/run-completion transitions; corrupt state fails closed.
+- A run-start event without a completion remains represented as an incomplete record (`completion=None`); the grant is already consumed and cannot be used for another run.
+
+### 2. Test evidence observed
+
+- `test_concurrent_core_instances_append_valid_hash_chain` creates two Core instances and uses a ThreadPoolExecutor with 8 threads to issue 16 grants; it verifies the resulting chain and grant state.
+- `test_journal_tampering_fails_closed` verifies hash tampering is rejected.
+- Tests cover single-use grants and completion validation.
+- The concurrency test is thread-based, not a separate-process test. No test in the inspected authority test module starts independent OS processes contending on the same journal/lock.
+- No explicit crash/restart test was found for interruption after `run_started` and before `run_completed`, including the expected post-restart representation and prohibition on false PASS.
+
+### 3. Disposition against DOC-123 H1 item 7
+
+- File-lock implementation exists, but **cross-process contention and lock recovery are NOT VERIFIED by the inspected test suite**.
+- Hash-chain tamper detection and append-only event mechanics have source/test evidence.
+- **Crash/restart recovery of an incomplete Run Record is NOT VERIFIED**. This is a test/evidence gap; this audit does not assert that the implementation is defective.
+- No SQLite backend is present in the audited Core authority path; the actual store is JSONL plus OS file lock. The acceptance decision must explicitly confirm whether this is the approved persistence design or whether DOC-123's SQLite wording is still a requirement.
+
+### 4. Required follow-up
+
+1. Add an independent-process contention test using separate Python processes sharing one authority journal and lock; assert unique grants, valid hash chain and no lost events.
+2. Add crash/restart simulation after durable `run_started` and before completion; after reopening Core, assert the record remains incomplete/indeterminate, the grant remains consumed, and no PASS is synthesized.
+3. Add lock acquisition/recovery timeout behavior or document why the OS lock's blocking semantics satisfy the operational requirement; ensure service behavior fails closed if the lock cannot be acquired.
+4. Resolve JSONL vs SQLite explicitly in the canonical decision before changing persistence architecture.
+
+**Disposition:** source persistence design PARTIAL; thread-level concurrency PASS in tests; cross-process contention NOT RUN/NOT VERIFIED; crash/restart recovery NOT RUN/NOT VERIFIED; no code change; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
