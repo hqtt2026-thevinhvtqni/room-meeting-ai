@@ -192,3 +192,12 @@ No Docker requirement; no live-service or MAIN SOURCE changes; no auto-merge or 
 - Exact process helper blob `9f5eeddbbcb32152b19321ac59563e2729a3303c` passed isolated Linux smoke: py_compile PASS; output-flood and timeout-descendant tests 2/2 PASS. This does not certify Windows behavior or the full Work32 suite.
 - Full repo exact-head CI, Windows runner validation, Host/Origin protections, transport peer authentication, live PC process provenance and independent Cla review remain pending.
 - Keep protected execution DENIED. No PC services, main, merge, CD, staging, production or release changed.
+
+
+## Host request boundary / Windows security test continuation — 2026-11-13 20:11 Asia/Ho_Chi_Minh
+
+- Host health and grant execution now require an exact loopback Host authority; supplied Origin must be same-loopback/same-port; cross-site Fetch Metadata is rejected. Source and isolated HTTP handler smoke are recorded in W32-LOG-20261113-122 / W32-EVIDENCE-030.
+- Windows hosted Browser Adapter lane now includes `tests/test_execution_host_grants.py` to exercise output caps, timeout descendant termination, isolated environment and HTTP boundary on Windows.
+- PR #54 is a draft remediation PR against PR #52's integration candidate branch. The base workflow now allows PR events targeting that branch; PR #54 needs a new matching PR event to trigger the full workflow.
+- Exact-head GitHub Actions and full repository pytest remain pending. Do not claim PASS from isolated helper/HTTP smoke tests.
+- Live PC Core/Host process identity and 404 mismatch remain blocked. No PC service mutation, credentials, protected execution, main merge, CD or release.
