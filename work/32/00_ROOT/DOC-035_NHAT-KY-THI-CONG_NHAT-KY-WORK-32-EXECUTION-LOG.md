@@ -2449,3 +2449,56 @@ The capture does not establish the exact local HEAD SHA, branch, origin/upstream
 5. Keep PR open/unmerged, main untouched, protected execution DENIED, CD/deployment/release blocked.
 
 **Disposition:** hosted Windows process-control tests PASS on Run #508; dedicated PC runner probe CANCELLED; live PC Core/Host identity NOT VERIFIED; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261114-130 — EXECUTION HOST RESOURCE-BOUNDARY SOURCE AUDIT
+
+- **Timestamp:** 2026-11-14 06:07:11 +07:00
+- **Actor:** Xu / AI-01
+- **Work:** 32 — CI/CD
+- **Scope:** read-only source audit of Core grant validation, Execution Host process control, Windows CI test wiring and DOC-123 H1 security acceptance requirements.
+- **Branch:** `work/32-main-integration-remediation-20261113`
+- **Reference candidate SHA:** `7a93ce6d5546f778e76db47b201dc1574e02940d` (Run #508 source tested)
+- **Source blobs:** `core/execution_authority.py` = `dd9becadd56a1df4c3f306de317b2f70f2b3b1db`; `execution_host/process_control.py` = `9f5eeddbbcb32152b19321ac59563e2729a3303c`; `execution_host/granted_host.py` = `1c5c05f9204510b98775069ed8378d8ac2c69e3f`; `tests/test_execution_host_grants.py` = `c70ed4bee8a098aae27fcf921e0570bde95bf1f7`.
+- **Method:** source read and cross-check against DOC-123 H1; no code execution or PC access.
+- **Status:** SOURCE AUDIT COMPLETE; RESOURCE-ISOLATION ACCEPTANCE GAP OPEN; NO CODE CHANGED.
+
+### 1. Core grant lifecycle checks confirmed
+
+- `ExecutionAuthority.validate_grant()` calls `_find_grant()` under the Core lock.
+- `_find_grant()` rejects missing/wrong-Work grants, non-active/revoked grants, and expired grants (`grant_expired`); malformed expiry records fail closed.
+- `start_run()` independently checks active state and expiry before persisting `run_started`.
+- Execution Host performs a second online validation immediately before spawning the process and checks status and scope bindings.
+- Therefore the earlier possible expiry/revocation concern is **NOT a confirmed defect**; source has the required checks. No change proposed for this path.
+
+### 2. Process controls present
+
+- `run_bounded()` caps combined stdout/stderr at 1 MiB, enforces a timeout, and attempts process-tree termination.
+- Windows process-tree termination uses `taskkill /PID <pid> /T /F`; it only reports confirmed termination when taskkill succeeds and the root process exits. If unavailable or unsuccessful, result remains unconfirmed/fail-closed.
+- The Windows test suite includes output-cap and timeout/process-tree tests. Run #508's hosted Windows lane passed 26 tests, including `tests/test_execution_host_grants.py`; this was GitHub-hosted Windows, not ADMIN-PC.
+
+### 3. Confirmed gap against DOC-123 H1 item 4
+
+DOC-123 requires runtime, memory, CPU, process-count and workspace bounds.
+
+- Runtime bound: present through the grant timeout and `run_bounded(timeout=...)`.
+- Output bound: present through the combined stdout/stderr byte cap.
+- Workspace boundary: source enforces canonical workspace/evidence-root containment and source/Git identity checks.
+- Process-tree cleanup: attempted and covered by tests; actual dedicated-PC runtime proof remains pending.
+- **Memory bound: no OS-enforced per-run memory limit identified in the audited process-control path.**
+- **CPU bound: no per-run CPU quota identified.**
+- **Process-count bound: no per-run process/job limit identified.**
+
+The current Windows implementation does not create or configure a Windows Job Object for the Work32 pytest process. The code's taskkill tree operation is cleanup after timeout/output overflow; it is not a resource quota. The present tests do not demonstrate memory, CPU or process-count enforcement.
+
+### 4. Decision / next steps
+
+1. Keep protected execution DENIED. Do not mark H1 complete while the three quota controls above are absent or unproven.
+2. Prepare a bounded design proposal for OS-enforced resource limits, prioritizing Windows Job Objects for the actual Windows execution host; define explicit policy values, unsupported-platform behavior, cleanup semantics and negative tests before implementation.
+3. Route the proposal for independent security/architecture review (Ka and Cla) and reconcile feedback into the canonical Work 32 Biên bản before any code change, consistent with the Work's change-control process.
+4. After approval, implement on a dedicated remediation branch; test memory exhaustion, CPU quota, process-count overflow, timeout, cancellation, child-process cleanup, and fail-closed behavior when quota assignment is unavailable.
+5. Keep PC runtime provenance as a separate pending gate; this source gap can be designed and implemented without asking Vinh to run PC commands.
+
+**Disposition:** Core grant expiry/revocation source checks CONFIRMED; bounded runtime/output/workspace checks PARTIAL; memory/CPU/process-count quotas NOT IMPLEMENTED/NOT VERIFIED; no source change; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
