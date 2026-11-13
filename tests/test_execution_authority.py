@@ -563,6 +563,14 @@ def _complete_validation_run(authority, grant, run_id="run-completion-validation
         ("exit_code", "0", "run_exit_code_invalid"),
         ("evidence_sha256", "A" * 64, "run_evidence_sha256_invalid"),
         ("evidence_sha256", "bad", "run_evidence_sha256_invalid"),
+        ("stdout_sha256", "bad", "run_stdout_sha256_invalid"),
+        ("stderr_sha256", "A" * 64, "run_stderr_sha256_invalid"),
+        ("evidence_ref", "", "run_evidence_ref_invalid"),
+        ("evidence_persisted", "false", "run_evidence_persisted_invalid"),
+        ("evidence_errors", "disk_full", "run_evidence_errors_invalid"),
+        ("evidence_errors", ["x" * 257], "run_evidence_errors_invalid"),
+        ("evidence_errors", ["disk_full"], "run_evidence_persistence_metadata_invalid"),
+        ("evidence_persisted", False, "run_evidence_persistence_metadata_invalid"),
     ],
 )
 def test_complete_run_rejects_invalid_completion_fields(
