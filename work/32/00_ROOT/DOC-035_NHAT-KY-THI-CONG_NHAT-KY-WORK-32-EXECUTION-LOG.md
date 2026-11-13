@@ -2911,3 +2911,25 @@ DOC-125 now includes design proposals for D1–D6. D1/D3 remain runtime NOT VERI
 ### Disposition
 
 DOC-125 Sections 12–16 now describe D1–D6 design proposals and the bounded D1/D3 spike protocol. Harness source is NOT CREATED; runtime NOT RUN. Ka/Cla review and separate explicit authorization are required before code creation/execution. D2 schema, D4 crash/process tests, D5 SQLite implementation/migration, D6 measurements and restricted-identity gate remain open. H1 BLOCKED; protected execution DENIED; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED. No source changes, PC action, runner dispatch, main integration, deployment or release.
+
+
+---
+
+## W32-LOG-20261114-142 — KA/CLA REVIEW BRIEF PREPARED; DISPATCH NOT VERIFIED
+
+- **Date:** 2026-11-14; Asia/Ho_Chi_Minh.
+- **Actor:** Xu / AI-01.
+- **Scope:** prepare the read-only security and implementation-feasibility review request for DOC-125 Sections 12.9 and 16.
+- **Method:** inspected available ROOM-HOP tool surface; confirmed it exposes Sandbox file operations and meeting records, but no verified direct agent-task dispatch action. Did not use the previously rejected/broken meeting execution route.
+- **Status:** REVIEW BRIEF PREPARED; NOT DISPATCHED; NO REVIEW RESPONSE.
+
+### Request contents
+
+- Ka / AI-02: review harness isolation, Job handle ownership, parent/nested Job behavior, descendant escape, WMI/service/task-scheduler privilege boundary and evidence sufficiency.
+- Cla / AI-03: review Win32 API sequence, STARTUPINFOEX attribute-list lifecycle, ResumeThread assertion, Job-list ordering, cancellation/kill-on-close races and direct CreateProcessW feasibility.
+- Both reviewers must respond ACCEPT / ACCEPT WITH CONDITIONS / REJECT with exact section/test IDs and evidence.
+- Review is read-only; no code, PC action, runner dispatch or product mutation.
+
+### Disposition
+
+The brief is recorded in DOC-125 Section 17. No claim is made that Ka or Cla received it. Harness code creation/execution remains blocked pending actual reviews and separate explicit authorization. H1 BLOCKED; protected execution DENIED; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
