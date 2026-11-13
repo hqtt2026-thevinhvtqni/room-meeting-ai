@@ -181,3 +181,19 @@ Các commit d7f1963 và 4f83c5b được tạo trong một môi trường shell 
 - **Remaining for Batch 5 closure:** browser verification (rendering of DOC-058) was NOT performed in this environment (no browser available) and remains required per DOC-056 Batch 5 exit evidence. Batch 5 stays IN_PROGRESS / NOT VERIFIED pending that step and Xu's confirmation of DEBT-ES-05 closure.
 - **Status:** DONE for CI observation + schema/projection verification. All gate statuses unchanged: Gate A adjudication OPEN (DEBT-ES-02/07); Gate C design BLOCKED (DEBT-ES-03/08); independent gate FAIL preserved (0.300 vs 0.8); Integration BLOCKED; Release NOT PASS.
 - **Next:** Xu performs/accepts browser verification of DOC-058 and confirms DEBT-ES-05 closure; Ka adjudication (DEBT-ES-01/02/07) remains the critical path. Vibe does not self-adjudicate.
+
+## LOG-W103-20261109-007 — Standing instruction "xây tiếp, không chờ"; debts DEBT-ES-09/10; Batch 2 prep DOC-059 (Vibe)
+- **Time:** 2026-11-09 (session timestamp, UTC+07)
+- **Actor:** Vibe (GLM 5.3 via Vibe Work agent), under Vinh's standing full-build authorization. **New standing instruction (Vinh, 2026-11-09):** các mục chưa được xác nhận được GHI NỢ và Vibe XÂY TIẾP, không chờ, không đợi xác nhận.
+- **Debts recorded for unconfirmed items (mở, chờ chủ nợ xác nhận — không chặn build):**
+  - DEBT-ES-09 (Xu): browser verification (render) của DOC-058 + xác nhận closure DEBT-ES-05 (đăng ký artifact). Schema/projection verification đã PASS (LOG-006); chỉ còn bước browser.
+  - DEBT-ES-10 (Xu): closure Batch 1 — inbound-link audit + CI regression disposition (diện fail độc lập 0.300 đã biết cần disposition văn bản, không phải fix gate).
+  - Nhắc lại (không đổi): DEBT-ES-01/02/07 (Ka — adjudication độc lập, critical path); DEBT-ES-03/04/08 (Xu); DEBT-ES-06 (Ka/Qw).
+- **Actions (Batch 2 prep, REPORT-ONLY, không di chuyển file nào):**
+  1. Traced toàn bộ phụ thuộc CI (9 consumer C1..C9) và phụ thuộc nội bộ code (6 file) — xem DOC-059 §1/§2.
+  2. Suy ra 6 ràng buộc di chuyển bắt buộc (DOC-059 §3), đáng chú ý: 04_CODE/05_TEST phải giữ quan hệ anh em; 06_EVIDENCE là CI write target (tee grounded_abstention_diagnostic.json); rag_experiment_results.json là write target + artifact upload path; CI trigger glob phải đồng bộ.
+  3. Ánh xạ old→new đề xuất theo DOC-001 §3/§4 (DOC-059 §4) với điều kiện an toàn từng dòng; KHÔNG thực hiện di chuyển trong commit này.
+  4. Cảnh báo dữ liệu ghi rõ: source_id trong fixtures ("00_CORPUS/*.md", "03_ARCHITECTURE/*.md") là định danh logic của dữ liệu freeze/adjudication-scoped, KHÔNG phải đường dẫn vật lý — việc đổi vị trí thư mục không được đụng vào fixture.
+  5. Đăng ký DOC-059 trong DOC-055 (v1.2); DOC-056 Batch 2 NOT_STARTED → IN_PROGRESS; DOC-058 đồng bộ (thêm DEBT-ES-09/10, Batch 2 IN_PROGRESS).
+- **Status:** DONE cho Batch 2 prep (mapping + trace). Di chuyển thư mục CHƯA thực hiện — chờ một commit di chuyển đồng bộ CI theo DOC-059 §3. Mọi gate status giữ nguyên (independent gate FAIL 0.300 bảo toàn; Gate A OPEN; Gate C BLOCKED; Release NOT PASS). No release claim.
+- **Next:** Vibe tiếp tục các việc không cần xác nhận theo chỉ dẫn thường trực; Xu nhận DEBT-ES-09/10; Ka nhận adjudication. Vibe không tự phê chuẩn.

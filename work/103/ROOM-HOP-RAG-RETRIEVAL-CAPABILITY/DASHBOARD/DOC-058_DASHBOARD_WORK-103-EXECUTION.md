@@ -50,7 +50,7 @@
 |---|---|---|
 | 0 | Governance baseline (DOC-001/055/056/057/035) | DONE |
 | 1 | 00_ROOT + hồ sơ chính thức | IN_PROGRESS (link audit + CI disposition còn treo) |
-| 2 | Lifecycle folders | NOT_STARTED |
+| 2 | Lifecycle folders | IN_PROGRESS (bản đồ + trace xong — DOC-059; di chuyển chưa thực hiện) |
 | 3 | 05_BUILD engineering map / WP register | NOT_STARTED |
 | 4 | EVIDENCE migration | NOT_STARTED |
 | 5 | DASHBOARD | IN_PROGRESS (DOC-058 đã tạo; verification chưa xong) |
@@ -67,6 +67,8 @@
 | DEBT-ES-04 | Quyết định tích hợp riêng cho E2E MCP :8020 → Core :8000 | Xu |
 | DEBT-ES-08 | Citation-source alignment — metric Gate C ứng viên (fold vào Gate C design sau adjudication) | Xu |
 | DEBT-ES-05 | Đăng ký artifact mới trong DOC-055/DOC-057 | Xu — ĐÃ ĐÓNG bởi mapping 2026-11-09 (chờ Xu xác nhận) |
+| DEBT-ES-09 | Browser verification DOC-058 + xác nhận closure DEBT-ES-05 | Xu |
+| DEBT-ES-10 | Closure Batch 1: inbound-link audit + CI regression disposition | Xu |
 
 ## 6. Chỉ mục bằng chứng (DOC-057)
 EVD-001 (CI 40668733280) · EVD-002 (blind pool V1, UNLABELED) · EVD-003 (thí nghiệm có kiểm soát lịch sử) · EVD-004 (replication addendum) · EVD-005 (Gate A/B report) · EVD-006 (evidence lịch sử) · EVD-007 (run #85 FAIL độc lập 0.300) · EVD-008 (Gate A/B CI runs) · EVD-009 (corpus diagnostic 50 query) · EVD-010 (v2 metrics run #96) · EVD-011 (root-cause diagnostic v3).

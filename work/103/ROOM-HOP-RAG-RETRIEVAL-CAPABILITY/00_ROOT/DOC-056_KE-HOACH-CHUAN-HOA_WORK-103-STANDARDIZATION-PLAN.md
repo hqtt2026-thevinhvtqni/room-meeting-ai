@@ -68,3 +68,7 @@ DASHBOARD/DOC-058_DASHBOARD_WORK-103-EXECUTION.md created (producer: Vibe, under
 
 ### Batch 5 verification progress — 2026-11-09 (Vibe, LOG-W103-20261109-006)
 Schema validation and live source projection checks of DOC-058 against DOC-001/DOC-055/DOC-056/DOC-057/DOC-035 at head c4fc5010f540badb793a0bde06d24cf37e226e2d: PASS (details in DOC-035 LOG-W103-20261109-006). CI at that head: unit suites PASS on Python 3.11/3.12; independent gate FAIL 0.300 vs 0.8 preserved; diagnostic summaries identical to run #96. Browser verification of DOC-058 remains outstanding — Batch 5 stays IN_PROGRESS / NOT VERIFIED until it is done and DEBT-ES-05 closure is confirmed by Xu.
+
+
+## Batch 2 progress note — 2026-11-09 (Vibe, LOG-W103-20261109-007)
+Batch 2 chuyển NOT_STARTED → IN_PROGRESS: path & dependency map hoàn tất trong DOC-059 (CI consumers C1..C9, code-internal dependencies, 6 ràng buộc di chuyển, ánh xạ old→new đề xuất). KHÔNG có file nào được di chuyển trong bước prep này; việc di chuyển phải là một commit duy nhất đồng bộ CI theo DOC-059 §3, kèm readback + CI disposition. Lưu ý dữ liệu: source_id trong fixture là định danh logic, không đụng khi di chuyển thư mục.

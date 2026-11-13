@@ -61,3 +61,4 @@ Registered per DEBT-ES-05 (DOC-035 LOG-W103-20261108-005) and its Gate C seed ex
 
 ## Register rules
 Update this register whenever a controlled document, canonical path, source mapping, status or version changes. Technical artifacts are registered by stable artifact ID and exact path/ref/commit; do not assign DOC IDs to source code. A status is not PASS unless supported by exact evidence. Compatibility pointers are not separate authoritative documents.
+| DOC-059 | Batch 2 path & dependency map (report-only) | 04_PLAN/DOC-059_BAN-DO-DI-CHUYEN_WORK-103-BATCH2-PATH-DEPENDENCY-MAP.md | ACTIVE — MAPPING ONLY | Producer: Vibe (LOG-W103-20261109-007); no moves performed; CI consumers C1..C9 traced |
