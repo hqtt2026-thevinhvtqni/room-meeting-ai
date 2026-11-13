@@ -147,3 +147,41 @@ Ka requests negative tests for every pre-execution failure; memory, CPU and proc
 ### 9.5 Xu disposition
 
 This review supports retaining DOC-125 as a proposal and protected execution as DENIED. It does not approve implementation. Xu will reconcile Ka's findings with Cla's independent feasibility review before drafting the canonical DOC-034 decision. The source review is not treated as independent runtime verification.
+
+
+## 10. CLA / AI-03 CTO FEASIBILITY REVIEW — RECEIVED IN SANDBOX 2026-11-14; SYNCED TO GITHUB
+
+- **Reviewer:** Cla / AI-03 (Claude), CTO implementation and testability review.
+- **Canonical review evidence:** work/32/06_EVIDENCE/W32-EVIDENCE-CLA-06-DOC125-RESOURCE-QUOTA-CTO-REVIEW-20261114.md.
+- **Mode:** READ-ONLY; no code, PR, commit or protected execution by reviewer.
+- **Conclusion:** IMPLEMENTABLE WITH CONDITIONS.
+- **Evidence limitation:** Cla explicitly states that its session could not independently read GitHub source files; it relied on DOC-035 / prior review records for source descriptions. Therefore its source-level statements are secondary, not an independent line-by-line source audit.
+
+### 10.1 Proposed implementation
+
+- Narrow ResourceBackend interface with Windows Job Object implementation and UnsupportedBackend that always denies protected execution.
+- Configure and query back all limits; create the workload process suspended; assign to Job; verify membership and process state; perform the second online Core validation; only then resume.
+- On any failure: terminate/close resources, return BLOCKED, and never fall back to ordinary Popen.
+- Use Job memory limit, CPU hard-cap, active-process limit and kill-on-job-close; keep taskkill only as secondary cleanup.
+- Use ctypes without Docker or global OS configuration changes. Linux protected execution should be DENY unless a separately verified kernel-enforced backend exists.
+
+### 10.2 Cla's conditions and unresolved decisions
+
+1. Xu must line-trace the source at the exact candidate SHA; Cla did not independently inspect GitHub source in its session.
+2. Xu must decide platform backend/Linux denial and test-double injection, policy source/Host ceiling, orphan handling, incomplete/torn journal behavior, Host cancellation path, and JSONL versus SQLite requirement.
+3. Probe nested Job behavior, CPU rate control and optional JOB_LIST on an environment matching ADMIN-PC before relying on them.
+4. Determine quota values from measured workload baselines; do not guess. Cla proposes repeated baseline measurements and a conservative percentile-based margin.
+5. H1 cannot pass without exact self-hosted ADMIN-PC evidence; hosted Windows is not a substitute.
+6. Run Record still needs separate-process contention, crash after durable run_started, restart/hash-chain verification and no-false-PASS tests.
+
+### 10.3 Technical cautions from Cla
+
+- Memory limits concern committed memory, not necessarily working set/RSS; exceeding the limit may cause allocation failure rather than an automatic kill.
+- CPU hard cap throttles; CPU-time limit is a distinct policy.
+- ActiveProcessLimit behavior on overflow must be measured.
+- A suspended process may remain as a non-running orphan if Host dies before assignment in the simpler A1 sequence; cleanup and host-crash behavior require a dedicated harness/test. Cla also identifies JOB_LIST as a stronger candidate requiring platform probing.
+- Nested Job assignment failure must fail closed; do not break away from a parent Job to force success.
+
+### 10.4 Xu disposition
+
+Cla's feasibility review supports further design work, not immediate implementation. DOC-125 remains PROPOSED / NOT APPROVED. Xu will reconcile Ka's security conditions and Cla's implementation conditions into one DOC-034 decision. Protected execution remains DENIED; no implementation, PC action, main integration or release is authorized by this review.
