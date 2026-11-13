@@ -2844,3 +2844,31 @@ D1 design specified; runtime not verified. D3 lifecycle contract specified; runt
 ### 4. Disposition
 
 DOC-125 now includes design proposals for D1–D6. D1/D3 remain runtime NOT VERIFIED; D2 schema not implemented; D4 process/crash/idempotency tests not run; D5 SQLite migration not implemented; D6 measurements not run and no quotas selected. H1 remains BLOCKED; protected execution DENIED. No product source/test change, no PC action, no runner dispatch, no main integration, deployment or release. Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261114-139 — FINAL READBACK OF DOC-125 D1–D6 ADDENDA
+
+- **Date:** 2026-11-14; exact time not separately captured.
+- **Actor:** Xu / AI-01.
+- **Method:** exact GitHub fetch on remediation branch and Sandbox diagnostic readback of canonical DOC-125 and DOC-035 paths.
+- **Status:** ADDENDA VERIFIED PRESENT; FULL MIRROR PARITY STILL NOT VERIFIED.
+
+### Readback evidence
+
+- DOC-125 GitHub blob: `ed09f437c6e166e9ca2d5a5da268e8992aca51e6`; GitHub length 44,748 characters; Sandbox length 42,482 characters.
+- DOC-125 Sections 12, 13, 14, 15 and current-status clarification are present in both stores. The last 700 characters match exactly. Full DOC-125 parity remains NOT VERIFIED because the pre-existing body differs.
+- DOC-035 GitHub blob: `eca8df929c236b6e693d953c9d400402a1ca49c6`; GitHub length 280,945 characters; Sandbox length 921,801 characters.
+- DOC-035 entries W32-LOG-20261114-136, -137 and -138 are present in both stores. The last 700 characters match exactly. Full DOC-035 parity remains NOT VERIFIED because the pre-existing journal bodies differ.
+- No existing content was overwritten or truncated.
+
+### Current technical disposition
+
+- D1: creation-time Job-list design specified; Windows runtime proof NOT RUN.
+- D2: Core-owned profile + digest / Host hard-ceiling contract specified; not implemented.
+- D3: cancellation/descendant lifecycle specified; runtime proof NOT RUN.
+- D4: no-false-PASS and recovery contract specified; crash/process/idempotency tests NOT RUN.
+- D5: SQLite is the DOC-123 acceptance target by current Xu interpretation; migration NOT IMPLEMENTED and not authorized.
+- D6: measurement plan specified; measurements NOT RUN; no numeric quotas selected.
+- H1 remains BLOCKED; protected execution DENIED; implementation NOT AUTHORIZED; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
