@@ -2885,3 +2885,29 @@ DOC-125 now includes design proposals for D1–D6. D1/D3 remain runtime NOT VERI
 - **Decision refinement:** preferred spike must combine `PROC_THREAD_ATTRIBUTE_JOB_LIST` with `CREATE_SUSPENDED`; verify Job membership/limits and Core grant while suspended; then `ResumeThread`. Any failure terminates the Job and fails closed. A suspended process created outside the Job and assigned afterward remains comparison-only, not a fallback.
 - **Evidence status:** design refinement only; API behavior and kill-on-close for a suspended Job member remain NOT RUN / NOT VERIFIED.
 - **Disposition:** D1 runtime NOT VERIFIED; H1 BLOCKED; protected execution DENIED; implementation NOT AUTHORIZED.
+
+
+---
+
+## W32-LOG-20261114-141 — BOUNDED WINDOWS API SPIKE HARNESS SPECIFICATION
+
+- **Date:** 2026-11-14.
+- **Local time:** 06:53 Asia/Ho_Chi_Minh.
+- **Actor:** Xu / AI-01.
+- **Branch:** `work/32-main-integration-remediation-20261113`.
+- **Scope:** DOC-125 Section 16; bounded D1/D3 API spike protocol only.
+- **Method:** reviewed DOC-034/DOC-006 authorization boundaries; checked Microsoft Learn Job Objects, Nested Jobs, UpdateProcThreadAttribute, IsProcessInJob, CreateProcessW, CREATE_SUSPENDED, CPU/memory API references. No code execution and no PC access.
+- **Status:** SPECIFICATION ADDED; NOT CODED; NOT EXECUTED; NO IMPLEMENTATION AUTHORIZATION.
+
+### Work recorded
+
+- Defined a separate disposable Controller / Supervisor / fixed Probe / Evidence Collector harness; no integration with product services.
+- Specified direct `CreateProcessW` + `STARTUPINFOEXW` + `PROC_THREAD_ATTRIBUTE_JOB_LIST` + `CREATE_SUSPENDED`; verify membership and Job configuration before `ResumeThread`; no Popen fallback.
+- Added P0–P3 parent Job/nested Job cases. Important constraint: `IsProcessInJob(..., NULL, ...)` reports whether a process is in any Job but does not return an opaque parent Job handle. The actual Host parent-job topology must therefore be proven; unknown/incompatible topology remains DENY.
+- Added L1–L9 lifecycle cases for normal completion, cancellation, root-exits-with-descendants, graceful/forced Supervisor termination, pre-resume crash, repeated cancellation, breakaway and query/wait failure.
+- Defined evidence schema and strict PASS criteria; no numeric quota, WMI privilege isolation, production code or workload execution included.
+- External API sources: Microsoft Learn Job Objects; Nested Jobs; UpdateProcThreadAttribute; IsProcessInJob; CreateProcessW; Process Creation Flags; JOBOBJECT_EXTENDED_LIMIT_INFORMATION; JOBOBJECT_CPU_RATE_CONTROL_INFORMATION.
+
+### Disposition
+
+DOC-125 Sections 12–16 now describe D1–D6 design proposals and the bounded D1/D3 spike protocol. Harness source is NOT CREATED; runtime NOT RUN. Ka/Cla review and separate explicit authorization are required before code creation/execution. D2 schema, D4 crash/process tests, D5 SQLite implementation/migration, D6 measurements and restricted-identity gate remain open. H1 BLOCKED; protected execution DENIED; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED. No source changes, PC action, runner dispatch, main integration, deployment or release.
