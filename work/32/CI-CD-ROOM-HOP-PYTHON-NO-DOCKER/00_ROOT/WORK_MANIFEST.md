@@ -173,3 +173,12 @@ No Docker requirement; no live-service or MAIN SOURCE changes; no auto-merge or 
 - ROOM-HOP Sandbox parity is not verified because MCP :8030 connection was unavailable during this continuation.
 - Main, CD, staging, production and release remain untouched. PR #52 remains open/unmerged. Protected execution denied.
 - **Overall: HOSTED/SOURCE LANES PASS ON RUN #430; LIVE CORE/HOST BLOCKED; MIRROR PARITY SOURCE PASS; CURRENT HEAD CI PENDING; WORK32 ACTIVE — NOT RELEASED.**
+
+
+## Security remediation continuation — 2026-11-13
+
+- PR #52 integration candidate remains open/unmerged on `work/32-main-integration-authority-20261112`.
+- Ka created isolated remediation branch `work/32-main-integration-remediation-20261113` from candidate SHA `d639199159d2f2c72d0e706e1490d9afd0f20ac3`, per Xu's H0/H1 directive.
+- Confirmed residual: granted pytest child process inherited operator HOME/profile/temp paths. Source patch now redirects these to a per-run isolated home and adds a regression test; W32-LOG-20261113-120 / W32-EVIDENCE-028.
+- Exact-head tests and CI for the remediation branch have not yet run. Process-tree termination/output caps, Host request-origin protections, independent security review and live PC Core/Host identity remain open.
+- Do not merge/rebase/cherry-pick, restart PC services, provision credentials, execute protected commands, deploy or release. Protected execution remains denied.
