@@ -302,3 +302,154 @@ These references establish documented API semantics only; they are not evidence 
 ### 12.8 Current document-status clarification
 
 The metadata and dispositions in Sections 1–10 preserve the proposal/review history as it stood when those entries were written. The later controlling decision is **W32-DECISION-20261114-08 in DOC-006 and Biên bản W32-20261114-08 in DOC-034**: the **design direction is APPROVED WITH CONDITIONS**, while **product implementation remains NOT AUTHORIZED** and **protected execution remains DENIED**. Sections 11–12 are the current Xu trace/specification addenda and do not override the authorization boundary in DOC-006/DOC-034.
+
+
+---
+
+## 13. XU D2 CORE RESOURCE-PROFILE CONTRACT — DESIGN PROPOSAL
+
+- **Status:** DESIGN PROPOSAL; NOT IMPLEMENTED; NOT AUTHORIZED FOR PRODUCT SCHEMA CHANGE.
+- **Source baseline:** exact Core source blob `core/execution_authority.py` = `dd9becadd56a1df4c3f306de317b2f70f2b3b1db`; Host validation client blob = `adc36577a94efdd5c46d64c30065993d5cd02b3b`; Granted Host blob = `1c5c05f9204510b98775069ed8378d8ac2c69e3f`.
+- **Finding:** current Core Work policy requires `max_timeout_seconds` but does not validate or bind an OS resource profile. Grant issuance copies `max_timeout_seconds` and `policy_version`; it does not currently carry memory, CPU hard-cap or active-process policy. Host `validate_grant()` returns the stored grant fields, so there is no resource profile for Host to enforce today.
+
+### 13.1 Ownership and trust model
+
+1. **Core owns policy.** The authoritative Work policy contains a versioned resource profile. The profile is not supplied by the agent, caller, HTTP request or workload.
+2. **Grant binds a snapshot.** At issuance, Core validates the Work profile and copies the normalized profile plus its canonical SHA-256 digest into the immutable grant record. The grant token therefore authorizes one Work/assignment/task/host/source/environment and one exact resource profile.
+3. **Validation returns the bound profile.** Core's online grant validation returns the profile, profile ID/version and digest with the rest of the grant binding. Missing or malformed profile fields are an authorization failure, not a request to use defaults.
+4. **Host has a local hard ceiling.** The Host loads an operator-controlled, service-owned ceiling at startup. It is not accepted from the execution request, environment supplied by the caller, or workload. Missing/invalid ceiling => Host DENY.
+5. **Effective limits are the stricter values.** For each upper-bound dimension, effective limit = `min(Core-authorized profile, Host hard ceiling)`. Host cannot raise a Core limit; Core cannot exceed the Host ceiling. Timeout is likewise the minimum of grant-authorized timeout and Host maximum.
+6. **No profile downgrade.** Unknown schema/profile, stale version, digest mismatch, unsupported enforcement capability or policy change since grant issuance => DENY. No legacy/no-profile compatibility fallback for protected execution.
+
+### 13.2 Proposed canonical profile shape
+
+The following is a contract sketch, not an implemented API schema:
+
+```json
+{
+  "schema": "room-hop.resource-profile/v1",
+  "profile_id": "work32-pytest",
+  "profile_version": 1,
+  "memory_limit_bytes": 0,
+  "cpu_rate_x100": 0,
+  "active_process_limit": 0,
+  "runtime_limit_seconds": 0
+}
+```
+
+Field semantics:
+- `memory_limit_bytes`: positive integer for Job-wide committed-memory ceiling; not RSS/working-set bytes.
+- `cpu_rate_x100`: integer 1..10000; Windows Job Object hard-cap rate expressed as percentage × 100 (for example, 2000 means 20%). The profile must explicitly request hard-cap mode; weight-based scheduling is not an equivalent control.
+- `active_process_limit`: positive integer for the maximum simultaneous processes in the Job, including descendants.
+- `runtime_limit_seconds`: positive integer; must not exceed the Work policy's existing maximum timeout and the Host ceiling.
+- `profile_id`: stable, Work-policy-owned identifier; not a caller-selected string.
+- `profile_version`: positive integer, incremented whenever any effective profile field changes.
+- The example's zero values are placeholders and MUST NOT be accepted as runnable limits. No quota values are selected in this design.
+
+### 13.3 Digest and validation rules
+
+- Core canonicalizes the profile using the existing canonical JSON convention (UTF-8, sorted keys, compact separators, no NaN/Infinity) and calculates SHA-256 over the complete normalized profile object.
+- Grant stores `resource_profile`, `resource_profile_id`, `resource_profile_version`, and `resource_profile_sha256`. Digest is recomputed at every Core/Host trust boundary and compared in constant-time where appropriate.
+- Core validates exact keys and types; booleans are rejected where integers are required; all numeric fields must be positive and within documented OS/API ranges; CPU rate must be 1..10000.
+- Host verifies schema, digest, Work/Grant binding, supported backend and local hard ceiling before creating a Job.
+- Core validation must reject a grant if the current authoritative Work profile no longer matches the profile digest/version bound at issuance, unless a future explicit policy permits grandfathering. Default disposition is stale-policy DENY.
+- The agent request schema must not accept resource-profile values. Unknown quota fields supplied by a caller must be ignored only if the current API contract explicitly allows unknown fields; preferred future behavior is reject unknown fields to avoid ambiguous authority. In all cases, caller-supplied quotas never affect the grant.
+- Profile change requires a new version and digest; existing grants with an old digest are denied or revoked. No in-place reinterpretation.
+
+### 13.4 Host ceiling and effective policy
+
+- Host ceiling is loaded once from a trusted service-owned configuration source with restrictive filesystem ACLs and a recorded configuration digest/version.
+- Host ceiling contains the same four numeric ceilings and backend capability requirements; it is not exposed in public request parameters.
+- The effective Job configuration is computed and recorded before process creation. It includes source profile ID/version/digest, Host ceiling version/digest, effective memory bytes, effective CPU rate, effective process count and effective timeout.
+- Query-back of the actual Job Object must equal the effective values. If Windows rounds, ignores or rejects a value, the backend must fail closed rather than silently accept a different limit.
+- The Work's existing workspace path/source binding remains a separate filesystem boundary; Job Object is not a disk quota. Any disk-usage quota requirement must be specified and enforced separately, not represented as a Job memory field.
+
+### 13.5 D2 disposition
+
+- **Design recommendation:** Core-owned immutable resource profile + digest in the grant; Host-owned local hard ceiling; strict minimum for every limit; missing/stale/mismatched policy => DENY.
+- **Current implementation:** profile schema absent from audited Core and Host source; D2 is NOT IMPLEMENTED / NOT VERIFIED.
+- **Authorization:** no Core schema change, Host source change or product test change is authorized by this design proposal.
+
+---
+
+## 14. XU D4/D5 RUN-RECORD AND PERSISTENCE CONTRACT — DESIGN PROPOSAL
+
+### 14.1 D4 — crash/recovery and no-false-PASS contract
+
+The current audited Core implementation uses append-only JSONL events with SHA-256 hash chaining, flush/fsync and an OS file lock. The following behavior is required regardless of the final store:
+
+1. A durable `run_started` event is written before any workload process is created. The grant is consumed at this point.
+2. A run with `run_started` and no durable terminal event after restart is `INDETERMINATE`; it is never inferred PASS from exit code, missing process, timeout or Host disappearance.
+3. An indeterminate run's grant remains consumed. Re-execution requires a newly issued grant and a separately authorized retry decision.
+4. A clean PASS requires all of: process exit code 0; Job signaled; Job active-process count 0; output and runtime bounds satisfied; resource profile and Job query-back verified; source/workspace bindings still valid; durable terminal record accepted by Core.
+5. A failure before process creation records a terminal BLOCKED/FAILED result if the store is healthy. If the store is unavailable or the write outcome is ambiguous, status remains INDETERMINATE and no workload starts (pre-start) or no PASS is reported (post-start).
+6. A partial/torn/corrupt append is not silently truncated, skipped or auto-repaired. Startup detects corruption and fails closed, preserving the original bytes for investigation.
+7. Separate-process contention must be tested with independent Core processes sharing the same store, not only threads or multiple objects in one process.
+8. Completion submission must be idempotent by `run_id` and canonical completion digest: an exact duplicate returns the already committed result; a different payload for the same run ID is rejected as a conflict. A transport timeout after commit must not force a second logical completion or create contradictory events.
+9. Terminal status must not be returned to the caller as complete until the terminal record is durably committed and readback/chain validation succeeds.
+
+**Required D4 tests:** crash after durable run_started before spawn; crash after spawn before completion; Core restart with incomplete run; Host restart; two independent Core processes contending; lock timeout; torn final line; hash tampering; duplicate identical completion; conflicting duplicate completion; store full/permission denied; and no-false-PASS assertions for every case.
+
+### 14.2 D5 — resolve DOC-123 persistence wording
+
+DOC-123 H1 item 7 explicitly calls for “multi-process lock/SQLite timeout/recovery and append-only Run Record consistency.” The audited source is currently JSONL + OS file lock, not SQLite. To avoid silently treating the current implementation as satisfying an explicit directive, the design disposition is:
+
+- **Acceptance target:** SQLite-backed transactional Run Record is the required target unless DOC-123 is formally amended by the decision owner to remove or replace the SQLite requirement.
+- **Current JSONL store:** historical/current implementation only; it does not by itself satisfy the SQLite portion of DOC-123. No automatic migration or dual-write is authorized.
+- **Proposed SQLite contract:** one local Core-owned database; WAL mode where supported by the deployment filesystem; `synchronous=FULL`; bounded `busy_timeout`; `BEGIN IMMEDIATE` for state transitions; append-only events table with monotonically increasing sequence, previous hash and event hash; unique run IDs and enforced legal transitions; update/delete protection for event history; transactionally commit grant consumption and run-start/terminal transitions.
+- **Integrity:** canonical event serialization and hash chain remain required even with SQLite. Database integrity check and application-level chain validation run on startup/recovery; corruption fails closed.
+- **Concurrency:** independent Core processes must serialize state transitions through SQLite transactions; lock timeout returns structured BLOCKED/503 and must not bypass the store.
+- **Crash semantics:** SQLite transaction atomicity must ensure a grant/run transition is either fully committed or absent; a committed run_started without completion remains INDETERMINATE and grant-consumed.
+- **Deployment constraints:** database must reside on a supported local filesystem, not an unverified network share. WAL behavior, backup/restore, disk-full and process-crash recovery must be tested on the actual deployment filesystem.
+- **Migration:** preserve the original JSONL file read-only; design a one-time verified importer with source hash, event count, grant/run counts, hash-chain validation and rollback plan. Do not dual-write or delete the old file until a separately approved migration and reconciliation plan passes.
+
+### 14.3 D4/D5 disposition
+
+- D4 contract specified; process-level/crash/restart/idempotency evidence NOT RUN.
+- D5 resolved as a design interpretation of DOC-123: SQLite is the acceptance target; JSONL remains current source implementation and is not silently treated as compliant.
+- Product persistence changes and migration remain NOT AUTHORIZED. Ka/Cla review and separate implementation authorization are required.
+
+---
+
+## 15. XU D6 RESOURCE-BASELINE MEASUREMENT PLAN — NO QUOTA VALUES SELECTED
+
+### 15.1 Measurement objective
+
+Derive defensible memory, CPU and active-process ceilings from the actual supported Work32 workload and Host overhead. No numeric limits are selected from guesswork or hosted-runner-only observations.
+
+### 15.2 Workload cohorts
+
+Measure each actual supported command class separately, including:
+- deterministic unit/tooling test workload;
+- Windows-specific integration / process-tree workload;
+- product-artifact or browser/E2E workload only where that command is genuinely in the protected allowlist and its environment is available.
+
+Do not mix hosted Windows results with ADMIN-PC results. Record cold-start and warm-start behavior, serial and approved concurrency modes, and the exact source SHA/environment for each sample.
+
+### 15.3 Required observations
+
+For every run, capture:
+- Job-wide committed memory current/peak and configured limit;
+- CPU hard-cap configured value, CPU time/accounting and observed throttling;
+- active process current/peak, descendant tree and process creation failures;
+- wall-clock duration, timeout result and cleanup duration;
+- output bytes, workspace size and temporary-file growth;
+- Host/Core baseline memory and CPU overhead;
+- exact source SHA, command/arguments, Python/runtime versions, OS build, identity, concurrency and test result.
+
+Use Job Object accounting/query APIs for resource values where available. Do not substitute Task Manager working set/RSS for Job committed-memory accounting.
+
+### 15.4 Derivation and review
+
+- Collect repeated samples across the representative workload cohorts; report sample count, p50, p95, maximum, variance and outliers. The measurement plan must state why the sample set is sufficient.
+- Choose ceilings with an explicit safety margin and explain the impact of outliers, concurrency and Host overhead. A profile must leave sufficient capacity for the Host/Core and OS; quotas must not endanger the machine.
+- Validate memory exhaustion behavior, CPU hard-cap throttling and active-process overflow under controlled conditions. Capture both the OS enforcement result and workload-visible behavior.
+- Ka reviews the security implications and denial-of-service envelope; Cla reviews implementation semantics and measurement quality; QE independently reproduces the selected values.
+- Any quota adjustment increments profile version and digest. A new profile requires new exact-SHA CI and actual supported-environment verification.
+
+### 15.5 Environment gate and disposition
+
+- Hosted Windows may be used for preliminary harness development but is not a substitute for the supported ADMIN-PC evidence required by H1.
+- No local PC measurement or self-hosted runner dispatch is authorized by this design plan. A separate explicit execution authorization and a single bounded PC command/harness will be prepared only after the spike and review gates are complete.
+- **D6 status:** MEASUREMENT PLAN SPECIFIED / MEASUREMENTS NOT RUN / NUMERIC QUOTAS NOT SELECTED.
+- **H1 resource isolation:** BLOCKED until D1/D3 runtime proof, D2 policy binding, D4/D5 persistence evidence, D6 measured values, privilege boundary and independent QE all pass.
