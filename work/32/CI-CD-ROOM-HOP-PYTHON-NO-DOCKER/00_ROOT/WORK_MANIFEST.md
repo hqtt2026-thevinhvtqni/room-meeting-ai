@@ -210,3 +210,12 @@ No Docker requirement; no live-service or MAIN SOURCE changes; no auto-merge or 
 - DOC-119 addendum, DOC-035 W32-LOG-20261113-123 and W32-EVIDENCE-031 record the change.
 - Exact-head repository CI and live Host→Core completion test are pending; do not claim runtime PASS.
 - Work32 remains ACTIVE — NOT ACCEPTED — NOT RELEASED; no protected execution or release.
+
+
+## Real Host → Core completion integration regression — 2026-11-13 20:18 Asia/Ho_Chi_Minh
+
+- Added a real Host → Core HTTP two-phase execution regression to `tests/test_execution_authority_http.py`: real CoreAuthorityClient, real GrantedExecutionHost, grant issuance via HTTP, run_started, pytest, evidence writing, completion via strict HTTP DTO, and append-only journal readback.
+- DOC-119 section 6; DOC-035 W32-LOG-20261113-124; DOC-014 W32-EVIDENCE-032.
+- Exact-head tests remain pending; no PASS claimed.
+- Live PC process identity, Core 404, Host health identity and independent security review remain BLOCKED/OPEN.
+- Work32 remains ACTIVE — NOT ACCEPTED — NOT RELEASED.
