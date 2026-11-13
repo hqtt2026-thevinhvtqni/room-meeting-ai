@@ -77,3 +77,10 @@ Dashboard v0.2 đọc JSON tĩnh từ repository. Chưa có Core API, authentica
 - Required correction for WP-76-09 owner Xu: add a distinct Work Entry panel/summary sourced from canonical DOC-007 or an explicitly versioned snapshot field; show lifecycle G0/G1 separately from participant WE-G0…WE-G5; label unknown/stale data UNKNOWN; do not combine counts or infer PASS.
 - Boundary: static HTML inspection only. No browser/mobile rendering, interaction or accessibility test was run. This is a review finding, not a source-code defect reproduction.
 - Disposition: WP-76-09 remains IN_REVIEW; owner Xu to assess and implement within its assignment; An/Qw independent QE ACK/entry still pending.
+
+
+### 2026-11-13 12:06 +07:00 — Snapshot revision W76-DASHBOARD-0.3.7
+- Added EV-76-022 for the DOC-006 observable FR/NFR acceptance criteria matrix.
+- The matrix is a specification only; tests remain NOT RUN and no approval or gate transition is implied.
+- Sandbox capability evidence EV-76-021 is limited to the current OChat tool session; trusted AI-07 identity binding and PC/VS Code Bridge remain NOT VERIFIED.
+- Current source remains LOCAL_SNAPSHOT, not Core live. Dashboard browser/mobile QE remains NOT RUN.
