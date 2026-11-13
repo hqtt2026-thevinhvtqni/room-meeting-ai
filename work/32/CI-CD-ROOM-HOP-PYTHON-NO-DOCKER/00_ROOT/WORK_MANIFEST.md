@@ -182,3 +182,13 @@ No Docker requirement; no live-service or MAIN SOURCE changes; no auto-merge or 
 - Confirmed residual: granted pytest child process inherited operator HOME/profile/temp paths. Source patch now redirects these to a per-run isolated home and adds a regression test; W32-LOG-20261113-120 / W32-EVIDENCE-028.
 - Exact-head tests and CI for the remediation branch have not yet run. Process-tree termination/output caps, Host request-origin protections, independent security review and live PC Core/Host identity remain open.
 - Do not merge/rebase/cherry-pick, restart PC services, provision credentials, execute protected commands, deploy or release. Protected execution remains denied.
+
+
+## H1 process containment continuation — 2026-11-13 20:07 Asia/Ho_Chi_Minh
+
+- Remediation branch: `work/32-main-integration-remediation-20261113`; source base is PR #52 candidate SHA `d639199159d2f2c72d0e706e1490d9afd0f20ac3`.
+- Per-run child environment isolation: committed with regression test (W32-LOG-120 / W32-EVIDENCE-028).
+- Bounded stdout/stderr capture (1 MiB combined), POSIX process-session termination, Windows process-tree taskkill path, and fail-closed status mapping: committed with repository regressions (W32-LOG-121 / W32-EVIDENCE-029).
+- Exact process helper blob `9f5eeddbbcb32152b19321ac59563e2729a3303c` passed isolated Linux smoke: py_compile PASS; output-flood and timeout-descendant tests 2/2 PASS. This does not certify Windows behavior or the full Work32 suite.
+- Full repo exact-head CI, Windows runner validation, Host/Origin protections, transport peer authentication, live PC process provenance and independent Cla review remain pending.
+- Keep protected execution DENIED. No PC services, main, merge, CD, staging, production or release changed.
