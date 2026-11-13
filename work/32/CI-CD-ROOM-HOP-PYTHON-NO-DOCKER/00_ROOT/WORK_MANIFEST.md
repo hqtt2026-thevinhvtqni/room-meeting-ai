@@ -4,9 +4,9 @@
 - Owner/final authority: Vinh
 - Coordinator: Xu (AI-01)
 - Date: 2026-10-24, Asia/Ho_Chi_Minh
-- Status: CI + PRODUCT AUTO E2E + WINDOWS BROWSER ADAPTER E2E + IMMUTABLE ARTIFACT PIPELINE PASS on exact SHA 4177721a1e557f20127ff124b6c8d64ab63321e7; MAIN INTEGRATION, DASHBOARD→CORE, CD and G7 RELEASE BLOCKED; NOT RELEASED
+- Status: Work32 source + hosted CI lanes PASS on current authority branch; live Core Execution Authority route and Host identity BLOCKED by DOC-125; release acceptance gate FAIL; ACTIVE — NOT RELEASED
 - Sandbox ID: 32
-- GitHub branch (current implementation): work/32-ci-runner-owned-fixture-v2
+- GitHub branch (current implementation): work/32-main-integration-authority-20261112 (PR #52; do not merge without Vinh approval)
 - Previous CI pilot branch names in historical records are not the current implementation ref.
 
 ## Goal
@@ -145,3 +145,19 @@ No Docker requirement; no live-service or MAIN SOURCE changes; no auto-merge or 
 - Windows disposable meeting `MEETING-W32-42460406640-1`; adapter PID 21468; dynamic port 58821; exact-SHA preflight, MCP stdio handoff/readback and cleanup PASS.
 - Main compare: current main `024e2c9797da091b83c2e0ea5e3ac7f3b593eafb`; diverged 251 ahead / 273 behind; merge base `9e4002cbd93a6b92684b17623d79a1adda161d37`; 124 changed paths. No merge/rebase/cherry-pick.
 - Work32 remains ACTIVE — NOT RELEASED; Dashboard→Core and CD remain BLOCKED / NOT RUN; DOC-050 G7 RELEASE NOT READY / NOT AUTHORIZED.
+
+
+## Current authority acceptance checkpoint — 2026-11-13
+
+- Current implementation branch: `work/32-main-integration-authority-20261112`; PR #52 remains open and unmerged.
+- Latest source/workflow head with hosted CI evidence: `17ba50ab2e8736e2636e323741ce735c107fe197`.
+- Latest documentation head: `98d58b912b53e70a33c4ec56abf9c8795e1055e4`; documentation-only manifest/journal/evidence updates are followed by a new exact-head run.
+- Run #416 / 43357544278: unit 250 passed; Product Auto E2E 122 passed; hosted Windows Browser Adapter 10 passed; Work32 tooling PASS; immutable product artifact checksum/dependency/compile checks PASS and artifact E2E 1 passed.
+- Dedicated runner identity ROOM-HOP-W32-PC / Windows X64: PASS.
+- Live Core invalid-credential authority route: HTTP 404 instead of required 401/403.
+- Live Host health: HTTP 200 but provider_type, authority and grant_cache fields are missing/blank.
+- Runner service PATH: Python NOT_FOUND; Git 2.55.0.windows.3.
+- Ports 8000/8031 are loopback listeners, but process owner/module remain unresolved and expected entrypoint match is false.
+- DOC-124/DOC-125 and W32-LOG-117/118 record the source hardening and live runtime findings. W32-EVIDENCE-024/025 record exact evidence references.
+- Main integration, CD, staging, production, G7 release and protected execution remain BLOCKED / NOT AUTHORIZED. No service restart or runtime configuration was performed.
+- **Overall: HOSTED CI PASS; LIVE CORE/HOST RUNTIME BLOCKED; RELEASE NOT AUTHORIZED. Work32 ACTIVE — NOT RELEASED.**
