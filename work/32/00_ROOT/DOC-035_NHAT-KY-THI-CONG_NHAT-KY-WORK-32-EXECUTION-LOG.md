@@ -2872,3 +2872,16 @@ DOC-125 now includes design proposals for D1–D6. D1/D3 remain runtime NOT VERI
 - D5: SQLite is the DOC-123 acceptance target by current Xu interpretation; migration NOT IMPLEMENTED and not authorized.
 - D6: measurement plan specified; measurements NOT RUN; no numeric quotas selected.
 - H1 remains BLOCKED; protected execution DENIED; implementation NOT AUTHORIZED; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261114-140 — D1 LAUNCH-BARRIER REFINEMENT
+
+- **Date:** 2026-11-14; exact time not separately captured.
+- **Actor:** Xu / AI-01.
+- **Method:** design consistency review of DOC-125 Section 12; no runtime execution and no source change.
+- **Finding:** creation-time Job assignment prevents an uncontained process window, while a suspended primary thread separately ensures no workload code runs before membership, limits and final Core revalidation are verified.
+- **Decision refinement:** preferred spike must combine `PROC_THREAD_ATTRIBUTE_JOB_LIST` with `CREATE_SUSPENDED`; verify Job membership/limits and Core grant while suspended; then `ResumeThread`. Any failure terminates the Job and fails closed. A suspended process created outside the Job and assigned afterward remains comparison-only, not a fallback.
+- **Evidence status:** design refinement only; API behavior and kill-on-close for a suspended Job member remain NOT RUN / NOT VERIFIED.
+- **Disposition:** D1 runtime NOT VERIFIED; H1 BLOCKED; protected execution DENIED; implementation NOT AUTHORIZED.
