@@ -97,3 +97,53 @@ If a race-free and testable quota backend cannot be implemented safely, retain D
 **OPEN DESIGN GAP:** memory quota, CPU quota and process-count quota are NOT IMPLEMENTED / NOT VERIFIED in the audited Work32 execution path.
 
 **NO IMPLEMENTATION AUTHORIZED.** This document is a review request, not an approval or a claim that the candidate design is safe.
+
+
+---
+
+## 9. KA / AI-02 INDEPENDENT CSA REVIEW — RECEIVED 2026-11-14
+
+- **Reviewer:** Ka / AI-02, Chief Security Architect (CSA)
+- **Review mode:** READ-ONLY; report supplied in the Work32 conversation by the user.
+- **Claimed reference branch:** work/32-main-integration-remediation-20261113
+- **Reported inspected commit:** 066e0a19f924806a71b1d0bbc971887e5c5d2c50
+- **Code changes / PR / commit by reviewer:** NONE
+- **Protected execution:** NOT RUN
+- **Evidence qualification:** Xu has received the review report. The report's source observations and blob identifiers are recorded as reviewer-reported evidence; Xu has not independently re-fetched every cited source file or reproduced the Windows API tests in this entry.
+
+### 9.1 Reviewer conclusion
+
+- **Current resource-isolation implementation:** REJECT.
+- **Candidate Windows Job Object architecture:** APPROVE WITH CONDITIONS.
+- **Protected execution:** retain DENIED.
+- **Implementation authorization:** NOT GRANTED.
+
+### 9.2 Main findings reported by Ka
+
+1. Existing execution paths use ordinary subprocess.Popen process creation and do not demonstrate a suspended-create / Job Object assignment / verification / resume barrier.
+2. Existing timeout and taskkill /T /F behavior is cleanup, not OS-enforced memory, CPU-rate or active-process quota.
+3. Grant validation and command/workspace/source bindings are separate from OS resource isolation; authorization does not establish resource containment.
+4. Windows Job Objects are a viable candidate for job memory limits, CPU rate control, active process limits, descendant ownership and kill-on-job-close, subject to implementation and platform-specific verification.
+5. Required launch sequence: create Job → configure all limits → query/verify limits → create process suspended → assign to Job → verify membership → resume. Any failure must terminate/deny; no fallback to ordinary Popen.
+6. Job Object is not a complete security sandbox. It does not by itself reduce the Host account's filesystem, network, service or token privileges. A restricted workload identity and separate access-control policy remain necessary.
+7. Nested Job constraints, breakaway flags, WMI process creation, handle lifetime and host-crash cleanup require explicit treatment and tests.
+
+### 9.3 Reported security findings
+
+- CSA-125-01: memory quota absent — Critical.
+- CSA-125-02: CPU hard cap absent — High.
+- CSA-125-03: active process limit absent — High.
+- CSA-125-04: process can start before resource boundary — Critical.
+- CSA-125-05: no demonstrated Job ownership for descendants — Critical.
+- CSA-125-06: no demonstrated kill-on-job-close behavior — High.
+- CSA-125-07: child-process escape paths require explicit control — High.
+- CSA-125-08: workload privilege isolation not demonstrated — High.
+- CSA-125-09: quota telemetry/provenance not demonstrated — Medium.
+
+### 9.4 Required acceptance evidence
+
+Ka requests negative tests for every pre-execution failure; memory, CPU and process-count enforcement; child/grandchild inheritance; parent exit; timeout/cancellation; host crash and kill-on-close; breakaway/WMI paths; nested Job assignment; unsupported OS; malformed policy; grant expiry/revocation; Run Record persistence; and restricted workload identity. Windows evidence must come from the actual supported execution environment, not only hosted CI.
+
+### 9.5 Xu disposition
+
+This review supports retaining DOC-125 as a proposal and protected execution as DENIED. It does not approve implementation. Xu will reconcile Ka's findings with Cla's independent feasibility review before drafting the canonical DOC-034 decision. The source review is not treated as independent runtime verification.
