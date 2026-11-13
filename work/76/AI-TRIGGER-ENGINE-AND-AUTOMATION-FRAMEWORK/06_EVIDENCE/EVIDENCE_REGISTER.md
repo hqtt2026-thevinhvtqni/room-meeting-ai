@@ -49,3 +49,6 @@ This proves GitHub↔Sandbox data-file synchronization in the current OChat MCP 
 
 
 | EV-76-021 | Current OChat tool session successfully performed Sandbox write, exact marker read-back, delete, and post-delete FileNotFoundError check on a temporary diagnostic file. This proves session capability only; it does not establish trusted AI-07 identity binding or PC/VS Code Bridge. | Work 76 Sandbox MCP 8030, .diagnostics/co-session-capability-probe.txt, 2026-11-13 06:50 +07:00 | VERIFIED (SESSION CAPABILITY ONLY; AI-07 IDENTITY NOT VERIFIED) |
+
+
+| EV-76-022 | DOC-006 expanded with observable acceptance criteria for FR-01…FR-10 and NFR-01…NFR-07, including preconditions, PASS criteria, fail-closed conditions and mandatory evidence artifacts; specification only, not approved or executed. | DOC-006 Observable acceptance criteria matrix; GitHub main blob 8cad3ad027214a2608debe789d1f38dc3414d2a3; 2026-11-13 12:06 +07:00 | VERIFIED (DOCUMENT SYNC ONLY; TESTS NOT RUN) |
