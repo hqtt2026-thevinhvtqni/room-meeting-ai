@@ -297,3 +297,8 @@ Rules:
 - Microsoft Learn — JOBOBJECT_BASIC_LIMIT_INFORMATION: https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-jobobject_basic_limit_information
 
 These references establish documented API semantics only; they are not evidence that the API has been exercised successfully on ADMIN-PC.
+
+
+### 12.8 Current document-status clarification
+
+The metadata and dispositions in Sections 1–10 preserve the proposal/review history as it stood when those entries were written. The later controlling decision is **W32-DECISION-20261114-08 in DOC-006 and Biên bản W32-20261114-08 in DOC-034**: the **design direction is APPROVED WITH CONDITIONS**, while **product implementation remains NOT AUTHORIZED** and **protected execution remains DENIED**. Sections 11–12 are the current Xu trace/specification addenda and do not override the authorization boundary in DOC-006/DOC-034.
