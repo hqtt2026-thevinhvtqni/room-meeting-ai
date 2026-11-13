@@ -10,6 +10,7 @@ from execution_host.core_authority_client import AuthorityClientError
 from execution_host.granted_host import GrantedExecutionHost
 from execution_host.process_control import run_bounded
 from execution_host.source_snapshot import workspace_source_sha256
+from execution_host.server import _request_origin_allowed
 
 
 REPOSITORY = "hqtt2026-thevinhvtqni/room-meeting-ai"
@@ -419,3 +420,25 @@ def test_run_bounded_terminates_process_tree_on_timeout(tmp_path):
     assert result.tree_termination_confirmed is True
     time.sleep(1.8)
     assert not marker.exists()
+
+
+
+def test_execution_host_rejects_remote_host_and_cross_origin():
+    assert _request_origin_allowed({"Host": "127.0.0.1:8031"}, 8031)
+    assert _request_origin_allowed({
+        "Host": "localhost:8031",
+        "Origin": "http://localhost:8031",
+        "Sec-Fetch-Site": "same-origin",
+    }, 8031)
+    assert not _request_origin_allowed({"Host": "attacker.example:8031"}, 8031)
+    assert not _request_origin_allowed({"Host": "127.0.0.1:8787"}, 8031)
+    assert not _request_origin_allowed({
+        "Host": "127.0.0.1:8031",
+        "Origin": "http://attacker.example:8031",
+    }, 8031)
+    assert not _request_origin_allowed({
+        "Host": "127.0.0.1:8031",
+        "Sec-Fetch-Site": "cross-site",
+    }, 8031)
+    assert not _request_origin_allowed({"Origin": "null"}, 8031)
+    assert not _request_origin_allowed({}, 8031)
