@@ -92,12 +92,15 @@ def _terminate_process_tree(process: subprocess.Popen[bytes]) -> bool:
         except (OSError, subprocess.SubprocessError):
             return False
 
-    try:
-        os.killpg(process.pid, 0)
-    except ProcessLookupError:
-        return process.poll() is not None
-    except OSError:
-        return False
+    deadline = time.monotonic() + 2
+    while time.monotonic() < deadline:
+        try:
+            os.killpg(process.pid, 0)
+        except ProcessLookupError:
+            return process.poll() is not None
+        except OSError:
+            return False
+        time.sleep(0.025)
     return False
 
 
