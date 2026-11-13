@@ -1,9 +1,13 @@
 from __future__ import annotations
 
+import http.client
+import json
 import os
 import subprocess
 import sys
+import threading
 import time
+from http.server import ThreadingHTTPServer
 from pathlib import Path
 
 from execution_host.core_authority_client import AuthorityClientError
@@ -442,3 +446,94 @@ def test_execution_host_rejects_remote_host_and_cross_origin():
     }, 8031)
     assert not _request_origin_allowed({"Origin": "null"}, 8031)
     assert not _request_origin_allowed({}, 8031)
+
+
+
+def test_execution_host_http_rejects_remote_host_and_origin():
+    from execution_host.server import Handler
+
+    class FakeHost:
+        def __init__(self):
+            self.calls = []
+
+        def identity(self):
+            return {
+                "provider_type": "CORE_AUTHORIZED_PYTEST",
+                "authority": "CORE_ONLINE",
+                "grant_cache": False,
+            }
+
+        def execute_for_work(self, work_id, grant_id, grant_token):
+            self.calls.append((work_id, grant_id, grant_token))
+            return {"status": "PASS", "run_record_persisted": True}
+
+    class TestHandler(Handler):
+        pass
+
+    fake = FakeHost()
+    TestHandler.host = fake
+    server = ThreadingHTTPServer(("127.0.0.1", 0), TestHandler)
+    TestHandler.expected_port = server.server_address[1]
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    port = server.server_address[1]
+    payload = json.dumps({
+        "work_id": "W32",
+        "grant_id": "grant-test",
+        "grant_token": "opaque-test-token",
+    })
+    try:
+        conn = http.client.HTTPConnection("127.0.0.1", port, timeout=3)
+        conn.request(
+            "POST",
+            "/execute-granted",
+            body=payload,
+            headers={
+                "Host": f"attacker.example:{port}",
+                "Content-Type": "application/json",
+            },
+        )
+        response = conn.getresponse()
+        assert response.status == 403
+        response.read()
+        conn.close()
+        assert fake.calls == []
+
+        conn = http.client.HTTPConnection("127.0.0.1", port, timeout=3)
+        conn.request(
+            "POST",
+            "/execute-granted",
+            body=payload,
+            headers={
+                "Host": f"127.0.0.1:{port}",
+                "Origin": f"http://attacker.example:{port}",
+                "Content-Type": "application/json",
+            },
+        )
+        response = conn.getresponse()
+        assert response.status == 403
+        response.read()
+        conn.close()
+        assert fake.calls == []
+
+        conn = http.client.HTTPConnection("127.0.0.1", port, timeout=3)
+        conn.request(
+            "POST",
+            "/execute-granted",
+            body=payload,
+            headers={
+                "Host": f"127.0.0.1:{port}",
+                "Origin": f"http://127.0.0.1:{port}",
+                "Sec-Fetch-Site": "same-origin",
+                "Content-Type": "application/json",
+            },
+        )
+        response = conn.getresponse()
+        assert response.status == 200
+        response.read()
+        conn.close()
+        assert fake.calls == [("W32", "grant-test", "opaque-test-token")]
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=3)
