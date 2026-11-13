@@ -2502,3 +2502,31 @@ The current Windows implementation does not create or configure a Windows Job Ob
 5. Keep PC runtime provenance as a separate pending gate; this source gap can be designed and implemented without asking Vinh to run PC commands.
 
 **Disposition:** Core grant expiry/revocation source checks CONFIRMED; bounded runtime/output/workspace checks PARTIAL; memory/CPU/process-count quotas NOT IMPLEMENTED/NOT VERIFIED; no source change; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261114-131 — DOC-125 RESOURCE QUOTA REVIEW PACKAGE PREPARED
+
+- **Timestamp:** 2026-11-14 06:10 +07:00
+- **Actor:** Xu / AI-01
+- **Scope:** design-only preparation; no code/runtime mutation.
+- **Canonical proposal:** `01_PLAN/DOC-125_W32-EXECUTION-HOST-OS-RESOURCE-QUOTA-DESIGN-REVIEW-20261114.md`
+- **GitHub commit:** `07d728d7bb92d2c1d8045aa87042a73d3579246e`
+- **Sandbox:** same canonical relative path created and readback pending.
+- **Register:** DOC-055 updated with DOC-125 entry in Sandbox.
+
+### Work completed
+
+1. Prepared DOC-125 with current source baseline, constraints, candidate Windows Job Object approach, unresolved pre-execution assignment race, fail-closed requirements, review questions for Ka/Cla and a negative-test matrix.
+2. Explicitly kept the proposal at PROPOSED / NOT APPROVED. No implementation or execution permission is granted.
+3. Identified that review feedback must be reconciled into canonical DOC-034 / DOC-006 before code work begins.
+
+### Handoff state
+
+- Ka security review: REQUEST PREPARED / RESPONSE NOT YET RECEIVED.
+- Cla CTO implementation review: REQUEST PREPARED / RESPONSE NOT YET RECEIVED.
+- Xu architecture decision: PENDING both reviews.
+- Vinh / PC: NOT REQUIRED for this design review stage.
+
+**Disposition:** DOC-125 proposal created on GitHub and Sandbox; register updated in Sandbox; implementation remains unauthorized; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
