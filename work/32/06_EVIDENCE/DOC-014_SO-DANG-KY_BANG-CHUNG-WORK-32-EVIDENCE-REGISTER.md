@@ -71,3 +71,8 @@ Evidence is immutable by reference. Corrections add a new evidence record; faile
 
 
 | W32-EVIDENCE-025 | Final Run #416 dedicated PC Core/Host identity probe | 06_EVIDENCE/DOC-125_WORK32_LIVE_PC_CORE_HOST_IDENTITY_PROBE_20261113.md | Exact source head 17ba50ab2e8736e2636e323741ce735c107fe197; Run #416 / 43357544278; runner ROOM-HOP-W32-PC identity PASS; Core invalid-credential route HTTP 404; Host health HTTP 200 but provider_type/authority/grant_cache missing; unit 250, Product Auto E2E 122, Windows 10, tooling PASS, artifact E2E 1 PASS | LIVE CORE/HOST IDENTITY BLOCKED; release acceptance gate FAIL; no runtime changes; Work32 ACTIVE — NOT RELEASED |
+
+
+| W32-EVIDENCE-026 | Run #430 exact documentation-head CI and dedicated PC live identity probe | GitHub Actions run 43358168481; W32-LOG-20261113-119; PR #52 | Tested head e6d3ed5662ee93e4106d01066f6cacf1078edb03; unit 250 PASS; Product Auto E2E 122 PASS; hosted Windows Browser Adapter 10 PASS; tooling job SUCCESS but mirror DRIFT was report-only; artifact E2E 1 PASS; dedicated runner identity PASS; Core invalid-credential HTTP 404; Host identity fields blank | HOSTED/SOURCE LANES PASS; PC LIVE PROBE FAIL; RELEASE GATE FAIL; historical evidence retained |
+
+| W32-EVIDENCE-027 | Strict workflow mirror parity remediation | Active workflow commit e4c57d9f451218b3e591480bf6326f844eb18f49; mirror sync commit a4e62e5e8234a3d1cdf7688a6622752fe6f67148; W32-LOG-20261113-119 | Active and mirror exact readback blob SHA fd613c2e2ef2f54772133a46e8d5f593dc0c4b36; CHECK_STRICT=1 enabled | BYTE-CONTENT PARITY PASS; exact-head CI for a4e62e5 pending; no runtime or release claim |
