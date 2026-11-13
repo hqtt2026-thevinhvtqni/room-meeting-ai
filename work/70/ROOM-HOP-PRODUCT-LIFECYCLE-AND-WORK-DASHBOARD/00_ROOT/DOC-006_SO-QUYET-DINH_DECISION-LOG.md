@@ -93,3 +93,17 @@ D70-021 supersedes only the top-level folder-name portion of D70-001 and D70-004
 | D70-022 | Mọi Task giao cho AI là một outcome được ủy nhiệm đầu-cuối trong phạm vi quyền đã cấp. Agent chính phải tự đọc hồ sơ, truy vết, lập kế hoạch, điều phối phụ thuộc, thực hiện, kiểm thử, sửa lỗi trong phạm vi, ghi nhật ký, cập nhật Task Register và bàn giao hoàn chỉnh; không dừng ở từng bước để hỏi “tiếp theo làm gì” hoặc yêu cầu Vinh duyệt tác vụ thường lệ đã được ủy quyền. Chỉ thông báo ở mốc quan trọng, khi hoàn tất hoặc khi có blocker thực sự cần quyền/truy cập/quyết định bên ngoài. Áp dụng READ → TRACE → PLAN → EXECUTE → VERIFY → RECORD → HANDOFF. | Giảm vòng lặp hội thoại và thời gian chờ; giao trách nhiệm theo kết quả thay vì từng thao tác; giữ nhật ký/bằng chứng làm nguồn điều hành thay cho polling chat. | APPROVED BY VINH — ACTIVE TASK OPERATING STANDARD |
 
 **Ranh giới:** D70-022 không tạo ACK hoặc capability giả, không mở rộng scope/permission, không bỏ qua DOC-057, DOC-063, DOC-117 hoặc các security gate; không cho phép tự nghiệm thu/phát hành ở phần việc cần thẩm quyền độc lập. Blocker phải ghi đúng điều kiện còn thiếu và tiếp tục phần việc an toàn không bị chặn.
+
+
+## 11. Quyết định D70-023 — Ranh giới sở hữu Framework / Agent Orchestration / Workflow / RAG (2026-11-13)
+| Decision ID | Decision / Quyết định | Rationale / Lý do | Status / Trạng thái |
+|---|---|---|---|
+| D70-023 | Trong phạm vi điều phối được ủy quyền tại D70-018, Xu chuẩn hóa baseline ownership: W70 sở hữu Work lifecycle/control plane và policy gates; W52 sở hữu Agent-to-Agent task/event orchestration và provider adapters; W16 sở hữu deterministic workflow graph/step execution; W103 sở hữu retrieval, ranking, evidence packaging, abstention và retrieval evaluation, không sở hữu generic Agent Runtime hoặc decision authority; W112 sở hữu cross-Work contracts/mapping/evidence coordination; W37 là Core source of truth; W14 là execution boundary; W32 CI; W33 Evidence Hub; W38 Gateway; W39 Build MCP. Framework libraries (LangGraph, LangChain, CrewAI...) là lựa chọn triển khai, không tạo thêm Work ownership. | Tách rõ Work lifecycle orchestration, Agent task orchestration và deterministic workflow execution; ngăn RAG bị mở rộng thành Agent Runtime hoặc decision authority; giảm ownership overlap. | DECIDED BY XU UNDER D70-018 — ARCHITECTURE BASELINE; INDEPENDENT REVIEW PENDING; IMPLEMENTATION / MIGRATION / RELEASE NOT AUTHORIZED |
+
+**Ràng buộc D70-023:**
+1. Đây là baseline trong phạm vi ủy quyền điều phối; không được diễn giải là Vinh trực tiếp phê duyệt hoặc Ka/Cla/AI khác đã phản biện.
+2. Kênh Notion Custom Agents hiện trả `entitlement_required`; chưa có reviewer session/ACK. Independent review vẫn bắt buộc trước thay đổi ảnh hưởng security, authority, runtime hoặc release.
+3. Không chọn framework cụ thể trước khi contracts, non-functional requirements và benchmark được xác định.
+4. Durable scheduling, queue ownership, outbox/idempotency và ranh giới retry giữa W52 task delivery với W16 workflow step vẫn là open contract items; chưa triển khai khi chưa phân công ownership và kiểm thử.
+5. DecisionRAG thuộc W103 vẫn EXPERIMENT / NOT APPROVED; cần blind labeled set, corpus/query snapshot/hash, false-abstention vs unsupported-answer/leak analysis, Precision@k, Recall@k, MRR, answerability/coverage, latency/cost và independent review.
+6. Không có gate PASS, nghiệm thu hoặc release nào được suy ra từ quyết định này.
