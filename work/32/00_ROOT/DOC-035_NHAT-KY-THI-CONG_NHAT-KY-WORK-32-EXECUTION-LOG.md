@@ -2572,3 +2572,53 @@ The current Windows implementation does not create or configure a Windows Job Ob
 4. Resolve JSONL vs SQLite explicitly in the canonical decision before changing persistence architecture.
 
 **Disposition:** source persistence design PARTIAL; thread-level concurrency PASS in tests; cross-process contention NOT RUN/NOT VERIFIED; crash/restart recovery NOT RUN/NOT VERIFIED; no code change; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261114-133 — KA / AI-02 CSA SECURITY REVIEW RECEIVED
+
+- **Date:** 2026-11-14 (the supplied review did not provide a verifiable time-of-day)
+- **Actor:** Xu / AI-01 — intake and evidence recording
+- **Reviewer:** Ka / AI-02 — CSA, READ-ONLY
+- **Scope:** DOC-125 Windows Execution Host OS resource quota and process containment design
+- **Reference branch reported by reviewer:** work/32-main-integration-remediation-20261113
+- **Inspected commit reported by reviewer:** 066e0a19f924806a71b1d0bbc971887e5c5d2c50
+- **Status:** REVIEW RECEIVED; SOURCE CLAIMS ATTRIBUTED TO REVIEWER; NOT INDEPENDENTLY REPRODUCED BY THIS LOG ENTRY.
+- **Code changes:** NONE. **Protected execution:** DENIED. **Release:** NOT AUTHORIZED.
+
+### 1. Review disposition
+
+Ka rejects the current resource-isolation implementation and approves the proposed Windows Job Object direction only with conditions. The report explicitly does not authorize implementation or execution.
+
+### 2. Key findings received
+
+- Ordinary Popen-based launch paths do not establish a pre-execution OS resource boundary.
+- Timeout, output cap and taskkill cleanup do not substitute for OS-enforced memory, CPU-rate and active-process limits.
+- Required safe sequence: create/configure/query Job limits; create workload process suspended; assign; verify Job membership; only then resume.
+- Any failure before resume must deny execution and terminate any suspended process; no fallback to ordinary Popen.
+- Job Object does not by itself provide privilege isolation. Restricted workload identity, filesystem/network access controls and credential isolation require separate design.
+- Nested Job behavior, breakaway, WMI process creation, handle lifetime, host crash cleanup and quota telemetry need explicit tests.
+
+### 3. Security findings recorded
+
+Ka reported CSA-125-01 memory quota absent (Critical); CSA-125-02 CPU hard cap absent (High); CSA-125-03 process-count limit absent (High); CSA-125-04 pre-assignment execution race (Critical); CSA-125-05 missing demonstrated Job ownership (Critical); CSA-125-06 host-close cleanup not demonstrated (High); CSA-125-07 child escape paths (High); CSA-125-08 privilege isolation not demonstrated (High); CSA-125-09 quota telemetry/provenance not demonstrated (Medium).
+
+### 4. Required next evidence
+
+- Complete negative tests for Job creation/configuration/query/assignment/resume failures, proving no user-code side effect before successful assignment.
+- Prove memory, CPU-rate and active-process enforcement on supported Windows.
+- Prove child/grandchild containment, timeout, cancellation, host crash/kill-on-close and no orphan process.
+- Test breakaway, WMI and nested Job conditions; fail closed when containment cannot be guaranteed.
+- Verify restricted workload identity and policy/telemetry provenance.
+- Retain grant, source/workspace binding and Run Record tests.
+
+### 5. Xu disposition and handoff
+
+1. DOC-125 remains PROPOSED; Ka's review is appended as an attributed independent review, not an approval.
+2. DOC-034 implementation decision remains PENDING Cla's feasibility review and Xu reconciliation.
+3. Protected execution remains DENIED; no code, PR, branch integration or release action is authorized.
+4. Cla's report is the next required input. Xu will compare disagreements and prepare one canonical decision after receipt.
+5. This entry records receipt of the report, not independent confirmation of every API assertion or Windows runtime behavior.
+
+**Disposition:** W32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
