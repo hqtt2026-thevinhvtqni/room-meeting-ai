@@ -88,3 +88,31 @@ Regression coverage added:
 ## NHẬT KÝ — Addendum
 - **W32-LOG-20261113-123**
 - Recorded the Host/HTTP/Core completion contract mismatch, source correction and regression coverage.
+
+
+## 6. Host → Core HTTP end-to-end regression addendum — 2026-11-13
+
+Added `test_granted_host_completes_through_real_core_http_contract` to `tests/test_execution_authority_http.py`.
+
+The test:
+1. Creates a temporary Git workspace with the approved repository remote, exact branch and commit SHA.
+2. Computes the real workspace source digest and configures a real `ExecutionAuthority`.
+3. Issues the grant through the FastAPI Core HTTP route.
+4. Constructs the real `CoreAuthorityClient` with an in-process TestClient transport (no fake Host authority client).
+5. Executes `GrantedExecutionHost.execute_for_work()`, which performs online grant validation, persists `run_started`, runs the canonical pytest entrypoint, writes evidence and posts the full completion payload through the HTTP route.
+6. Reads the append-only Core journal and asserts `run_completed`, `evidence_persisted=true`, empty `evidence_errors`, and valid stdout/stderr SHA-256 digests.
+
+This closes the prior test gap where Core HTTP and Host were tested separately but the actual Host-shaped completion payload was not proven end-to-end through the HTTP boundary.
+
+**Validation:** regression source committed on the remediation branch; exact-head GitHub Actions has not yet completed. No PASS is claimed until the full repository test and Windows lanes finish.
+
+## BIÊN BẢN — Host/Core HTTP E2E Addendum
+- **Name:** Ka
+- **Title:** CSA / Work32 Execution Owner
+- **Date-Time:** 2026-11-13 20:18 Asia/Ho_Chi_Minh
+- **Priority:** P0 — two-phase Run Record and evidence persistence
+- **Decision:** Add a real Host → Core HTTP integration regression to verify the full two-phase completion contract.
+
+## NHẬT KÝ — Host/Core HTTP E2E Addendum
+- **W32-LOG-20261113-124**
+- Recorded the real Host → Core HTTP completion regression and journal readback assertions.
