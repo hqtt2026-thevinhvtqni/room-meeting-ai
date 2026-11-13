@@ -65,3 +65,6 @@ The first CI run after the governance/official-record commits is run 42467546737
 
 ## Batch 5 progress note — 2026-11-09
 DASHBOARD/DOC-058_DASHBOARD_WORK-103-EXECUTION.md created (producer: Vibe, under Vinh's standing full-build authorization). Read-only projection: every displayed value cites canonical sources (DOC-001/DOC-055/DOC-057/DOC-035 evidence IDs and CI run references); no mock values; dashboard status explicitly states that no gate PASS is claimed. Registered in DOC-055 as DOC-058 / DASH-001 (CREATED / NOT_VERIFIED). Batch 5 exit evidence — schema validation, live source readback and browser verification — is NOT yet complete; the batch remains IN_PROGRESS. Verification note: this commit is docs-only; no CI behaviour change is claimed.
+
+### Batch 5 verification progress — 2026-11-09 (Vibe, LOG-W103-20261109-006)
+Schema validation and live source projection checks of DOC-058 against DOC-001/DOC-055/DOC-056/DOC-057/DOC-035 at head c4fc5010f540badb793a0bde06d24cf37e226e2d: PASS (details in DOC-035 LOG-W103-20261109-006). CI at that head: unit suites PASS on Python 3.11/3.12; independent gate FAIL 0.300 vs 0.8 preserved; diagnostic summaries identical to run #96. Browser verification of DOC-058 remains outstanding — Batch 5 stays IN_PROGRESS / NOT VERIFIED until it is done and DEBT-ES-05 closure is confirmed by Xu.
