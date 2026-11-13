@@ -453,3 +453,17 @@ Use Job Object accounting/query APIs for resource values where available. Do not
 - No local PC measurement or self-hosted runner dispatch is authorized by this design plan. A separate explicit execution authorization and a single bounded PC command/harness will be prepared only after the spike and review gates are complete.
 - **D6 status:** MEASUREMENT PLAN SPECIFIED / MEASUREMENTS NOT RUN / NUMERIC QUOTAS NOT SELECTED.
 - **H1 resource isolation:** BLOCKED until D1/D3 runtime proof, D2 policy binding, D4/D5 persistence evidence, D6 measured values, privilege boundary and independent QE all pass.
+
+
+### 12.9 Launch-barrier refinement — creation-time Job assignment PLUS suspended initial thread
+
+To remove ambiguity in the launch sequence, the preferred spike sequence is refined as follows:
+
+1. Use `PROC_THREAD_ATTRIBUTE_JOB_LIST` so the new process is associated with the intended Job during process creation.
+2. Also pass `CREATE_SUSPENDED` to `CreateProcessW`. The process is therefore born inside the Job but its primary thread cannot execute workload code.
+3. Verify `IsProcessInJob`, query back all effective Job limits, verify the process/thread handles and run bindings, and perform the final online Core revalidation while the primary thread remains suspended.
+4. Call `ResumeThread` only after every check succeeds. A return value of `(DWORD)-1`, an unexpected previous suspend count, or any failed verification => call `TerminateJobObject`, wait for Job signaled/ActiveProcesses=0, record BLOCKED and never fall back.
+5. Because the process is assigned to the Job at creation, Host crash before `ResumeThread` leaves at most a suspended Job member; last-handle close with `KILL_ON_JOB_CLOSE` must terminate it. The spike must prove this behavior. This is materially safer than create-suspended-outside-Job followed by assignment.
+6. `CREATE_SUSPENDED` + later `AssignProcessToJobObject` remains comparison-only. It is not the production fallback because the process exists outside the Job during the assignment interval.
+
+This refinement supersedes any shorter reading of Section 12.1 that might be interpreted as resuming or permitting execution immediately after creation-time assignment without the suspended-thread verification barrier.
