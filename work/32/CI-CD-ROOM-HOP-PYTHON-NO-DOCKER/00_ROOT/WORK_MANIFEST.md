@@ -237,3 +237,13 @@ No Docker requirement; no live-service or MAIN SOURCE changes; no auto-merge or 
 - The unit suite includes the real Host → Core HTTP completion E2E regression and Core metadata validation.
 - Dedicated PC runner identity job remains QUEUED. Historical Run #439 on prior candidate showed Core invalid-credential HTTP 404, Host health identity fields missing, and process owner/module unresolved. Do not treat historical snapshot as current PASS.
 - Work32 remains ACTIVE — NOT ACCEPTED — NOT RELEASED until current PC process provenance, Core/Host runtime identity and release gate are verified.
+
+
+## Run #508 release gate disposition — 2026-11-13 20:25 Asia/Ho_Chi_Minh
+
+- All automated lanes passed on source HEAD `7a93ce6d5546f778e76db47b201dc1574e02940d`: 260 unit, 127 Product Auto E2E, 26 hosted Windows security/Browser Adapter, tooling + strict mirror, immutable artifact.
+- Dedicated PC runner identity job was CANCELLED; release gate failed because `SELF_HOSTED_RESULT=cancelled`.
+- Historical Run #439 showed process owner/module unresolved, Core invalid-credential 404, Host health identity missing and Python not found in service PATH. This is not a fresh snapshot for current head.
+- Required next action is an elevated, read-only PC process/service provenance snapshot. Do not restart/kill services or alter credentials until PID/entrypoint/owner are known.
+- DOC-035 W32-LOG-20261113-127; DOC-014 W32-EVIDENCE-035.
+- Work32 remains ACTIVE — NOT ACCEPTED — NOT RELEASED.
