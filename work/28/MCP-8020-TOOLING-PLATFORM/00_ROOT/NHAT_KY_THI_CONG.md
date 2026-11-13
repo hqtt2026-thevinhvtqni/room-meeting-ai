@@ -594,3 +594,31 @@ Vinh trả lời 4 câu hỏi mở trong `06_EVIDENCE/VI_WP3_BINARY_UPLOAD_AUTHO
 - Commit `98d68a7` (start_service BLOCKED mapping) + `31f21c3` (5 test race/mapping) đã lên nhánh; run #325 bị cancel do concurrency, run #327 trên HEAD `8c9ff9d` đang IN_PROGRESS lúc ghi dòng này. Chưa khai PASS.
 
 **STATUS:** WP3-F01 DECISIONS PENDING AT XU (Ka review required for capability-grant) / WP2 CI PENDING. Work remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED. Execution Gate CLOSED.
+
+
+
+## 2026-11-13 — JRN-W28-015 — WP2 handoff evidence to An and Ka; decision brief branch published (Vibe)
+
+**Role:** VIBE | theo ủy quyền tự chủ của Vinh  
+**Branch:** `work/28-mcp-tooling-platform`  
+**HEAD trước entry này:** `563b03f` (JRN-W28-014, đã xác minh append-only +24/−0 qua commit stats)
+
+### BUILD
+- Handoff AN (QA độc lập): `10_AI_DEBUG_HANDOFF/00_INBOX/AN/VI_WP2_SERVICE_BLOCKED_MAPPING_RACE_QA_HANDOFF_20261113.md` — yêu cầu An đọc run #327 từng job trên đúng commit, tự chạy lại 5 test mới trên Linux + Windows native, adversarial coverage (cleanup raise, registry state sau BLOCKED, signal/timeout), xác nhận không route production bị ảnh hưởng.
+- Handoff KA (security review): `10_AI_DEBUG_HANDOFF/00_INBOX/KA/VI_WP2_SERVICE_BLOCKED_MAPPING_RACE_SECURITY_REVIEW_HANDOFF_20261113.md` — 5 câu hỏi review: fail-closed semantics của BLOCKED, reap semantics (handle/zombie leak), race/reentrancy đủ chưa, BLOCKED có cần mã lỗi chuẩn hóa/audit event cho WP6, scope diff thực tế.
+- Cả hai handoff trong 1 commit docs-only: `c13adcc7575243040567b8c7a14ff7cbbfb1025f` (2 file mới, không đổi code).
+
+### WP3 DECISION BRIEF (nhánh riêng, theo chỉ dẫn JRN-W28-014)
+- Nhánh `work/28-wp3-xu-decision-brief` tạo từ `563b03f`; hồ sơ `06_EVIDENCE/XU_WP3_F01_DECISION_BRIEF_20261113.md` (commit `a37a5bea115c962ebd879e0384e520ca7ff114a6`): bảng options + tradeoffs cho 4 câu hỏi, khuyến nghị kỹ thuật không ràng buộc (A cho caller context làm bước đầu; mapping động từ Core là đích đúng; 3-tool begin/chunk/finalize khớp acceptance JRN-W28-005), quy tắc thi công sau quyết định, capability-grant bắt buộc Ka review trước.
+- Không viết code upload; WP3-F01 giữ IMPLEMENTATION BLOCKED.
+
+### VERIFY — PENDING
+- Run #327 (HEAD `8c9ff9d`) vẫn IN_PROGRESS lúc ghi entry này; run #324/#326 SUCCESS, #325 cancel do concurrency. Không khai PASS cho WP2 service mapping + race coverage cho đến khi #327 xanh trên commit `8c9ff9d` hoặc commit sau đó chứa cùng code.
+- Acknowledgement của An và Ka CHƯA có; GitHub persistence không chứng minh họ đã đọc handoff.
+
+### NEXT
+1. Đọc kết quả run #327; nếu xanh → ghi CI evidence vào journal; nếu Windows fail → sửa chỉ phần fail.
+2. Chờ An/Ka acknowledge + kết quả độc lập; chờ Xu quyết 4 câu WP3 trên hồ sơ decision brief.
+3. Sau khi Xu quyết: triển khai WP3-F01 trên nhánh riêng, PR có CI xanh mới merge về canonical.
+
+**STATUS:** WP2 HANDOFFS ISSUED (AN + KA ACK PENDING) / WP3 DECISION BRIEF PUBLISHED ON SEPARATE BRANCH / CI #327 PENDING. Work remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED. Execution Gate CLOSED.
