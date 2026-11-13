@@ -1882,3 +1882,48 @@ These later changes are not covered by Run #376. The branch requires a new exact
 - Independent security review remains pending.
 - PROTECTED EXECUTION DENIED; Work32 ACTIVE — NOT RELEASED.
 
+
+
+---
+
+## W32-LOG-20261113-118 — RUN #416 LIVE PC CORE/HOST IDENTITY PROBE FINAL RESULT
+
+- **Work:** 32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P0 — live runtime authority and process identity
+- **Name:** Ka
+- **Title:** CSA / Work32 Execution Owner
+- **Date-Time:** 2026-11-13 10:25 Asia/Ho_Chi_Minh
+- **Exact tested source head:** `17ba50ab2e8736e2636e323741ce735c107fe197`
+- **Run:** #416 / 43357544278
+- **Evidence:** DOC-125
+- **Status:** HOSTED CI LANES PASS; LIVE CORE/HOST IDENTITY BLOCKED; RELEASE GATE FAIL
+
+### Hosted/source lanes — PASS
+
+- Unit: 250 passed.
+- Product Auto E2E: 122 passed.
+- Hosted Windows Browser Adapter: 10 passed; preflight and cleanup PASS.
+- Work32 tooling/workflow mirror: PASS.
+- Immutable product artifact: checksum/dependency/compile checks PASS; artifact E2E 1 passed.
+
+### PC runner — identity PASS, runtime contract BLOCKED
+
+- Runner identity: ROOM-HOP-W32-PC / Windows X64 — PASS.
+- Python: NOT_FOUND in runner service PATH; Git 2.55.0.windows.3.
+- Core port 8000: loopback listener PID 12272, python.exe; owner/module unresolved, expected entrypoint match false.
+- Core invalid-credential status route: HTTP 404, not required HTTP 401/403.
+- Host port 8031: loopback listener PID 16720, python.exe; owner/module unresolved, expected entrypoint match false.
+- Host health: HTTP 200, status PASS, service execution-host; provider_type, authority and grant_cache missing/blank.
+- The aggregate diagnostic probe reached both Core and Host; it failed because Core route and Host identity did not meet the contract.
+- Release acceptance gate: FAIL.
+
+### Interpretation / safety
+
+- The live Core process did not expose the expected Execution Authority route.
+- The live Host health response did not attest CORE_AUTHORIZED_PYTEST / CORE_ONLINE / grant_cache=false.
+- Exact process entrypoints remain unproven; a stale or mismatched runtime is the working hypothesis, not a confirmed process identity.
+- No service restart, process termination, configuration change, credential provisioning or protected command was performed.
+- PR #52 remains open/unmerged. No main merge, CD, staging, production or release authorized.
+- PROTECTED EXECUTION DENIED; Work32 ACTIVE — NOT RELEASED.
+
