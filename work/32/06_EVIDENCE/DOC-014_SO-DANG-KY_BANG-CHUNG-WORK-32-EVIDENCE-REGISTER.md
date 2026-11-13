@@ -79,3 +79,6 @@ Evidence is immutable by reference. Corrections add a new evidence record; faile
 
 
 | W32-EVIDENCE-028 | Isolated granted-child environment hardening source and regression test | W32-LOG-20261113-120; execution_host/security.py; execution_host/granted_host.py; tests/test_execution_host_grants.py | Remediation branch work/32-main-integration-remediation-20261113; commits dd76e3dce2d4d4599bf4e754806b471e5325f246, 2da01e5a494b122ae97ac619d78aafc6038ab956, cebac076f257c6ef8801a0924e79074ec43350af | SOURCE PATCH COMMITTED; TEST/EXACT-HEAD CI NOT RUN; NOT A PASS CLAIM |
+
+
+| W32-EVIDENCE-029 | Bounded stdout/stderr capture and process-tree timeout helper | W32-LOG-20261113-121; execution_host/process_control.py; execution_host/granted_host.py; tests/test_execution_host_grants.py | Remediation branch work/32-main-integration-remediation-20261113; process helper blob 9f5eeddbbcb32152b19321ac59563e2729a3303c; exact helper py_compile PASS; isolated Linux pytest 2 passed in 3.27s | LINUX HELPER SMOKE PASS; FULL WORK32 PYTEST / WINDOWS TREE-KILL CI PENDING; NOT AN ACCEPTANCE PASS |
