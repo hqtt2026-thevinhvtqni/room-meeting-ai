@@ -72,3 +72,10 @@ Schema validation and live source projection checks of DOC-058 against DOC-001/D
 
 ## Batch 2 progress note — 2026-11-09 (Vibe, LOG-W103-20261109-007)
 Batch 2 chuyển NOT_STARTED → IN_PROGRESS: path & dependency map hoàn tất trong DOC-059 (CI consumers C1..C9, code-internal dependencies, 6 ràng buộc di chuyển, ánh xạ old→new đề xuất). KHÔNG có file nào được di chuyển trong bước prep này; việc di chuyển phải là một commit duy nhất đồng bộ CI theo DOC-059 §3, kèm readback + CI disposition. Lưu ý dữ liệu: source_id trong fixture là định danh logic, không đụng khi di chuyển thư mục.
+
+
+## Batch 2 progress note — 2026-11-09 (Vibe, LOG-W103-20261109-008)
+Lifecycle skeleton (01_DISCOVER, 02_DEFINE, 03_ARCHITECT, 06_VERIFY, 07_ACCEPT, 08_RELEASE, 09_OPERATE) tạo xong với README classification index tham chiếu DOC-059. Phân loại: 00_CORPUS = originals + curated fixture (cần phân loại trước khi di chuyển); 02_EXTENSION = reference; 03_ARCHITECTURE → 03_ARCHITECT (deferred, source_id logic); 05_TEST/04_CODE = declared legacy source layout (giữ nguyên); 06_EVIDENCE → EVIDENCE (Batch 4, CI write target). Full old→new path map = DOC-059; no broken imports/CI (không có di chuyển vật lý). Batch 2: mapping/classification DONE, physical moves DEFERRED — batch IN_PROGRESS cho tới khi di chuyển hoặc có disposition văn bản.
+
+## Batch 3 progress note — 2026-11-09 (Vibe, LOG-W103-20261109-008)
+05_BUILD/DOC-060 WP register tạo xong: WP-103-01..08 với owner/reviewer/dependencies/deliverables/acceptance criteria/status/evidence theo DOC-001 §6. 05_BUILD chỉ chứa mapping/coordination. Batch 3 exit evidence (WP completeness + source mapping validation): register complete; source mapping validation = DOC-059 §1/§2; chờ Xu xác nhận trước khi đóng batch.

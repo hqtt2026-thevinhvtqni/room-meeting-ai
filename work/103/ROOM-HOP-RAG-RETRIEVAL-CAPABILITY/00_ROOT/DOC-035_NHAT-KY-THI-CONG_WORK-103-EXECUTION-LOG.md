@@ -197,3 +197,15 @@ Các commit d7f1963 và 4f83c5b được tạo trong một môi trường shell 
   5. Đăng ký DOC-059 trong DOC-055 (v1.2); DOC-056 Batch 2 NOT_STARTED → IN_PROGRESS; DOC-058 đồng bộ (thêm DEBT-ES-09/10, Batch 2 IN_PROGRESS).
 - **Status:** DONE cho Batch 2 prep (mapping + trace). Di chuyển thư mục CHƯA thực hiện — chờ một commit di chuyển đồng bộ CI theo DOC-059 §3. Mọi gate status giữ nguyên (independent gate FAIL 0.300 bảo toàn; Gate A OPEN; Gate C BLOCKED; Release NOT PASS). No release claim.
 - **Next:** Vibe tiếp tục các việc không cần xác nhận theo chỉ dẫn thường trực; Xu nhận DEBT-ES-09/10; Ka nhận adjudication. Vibe không tự phê chuẩn.
+
+## LOG-W103-20261109-008 — Batch 2 classification complete (no moves) + Batch 3 WP register DOC-060 (Vibe)
+- **Time:** 2026-11-09 (session timestamp, UTC+07)
+- **Actor:** Vibe (GLM 5.3 via Vibe Work agent), under Vinh's standing authorization; instruction "xây tiếp, không chờ" applied.
+- **Scope:** Governance/structure only. No source, tests, thresholds, fixtures, labels, CI workflow or gates changed. No file moved.
+- **Actions:**
+  1. Batch 2 classification (per DOC-059 §4): lifecycle skeleton created — 01_DISCOVER, 02_DEFINE, 03_ARCHITECT, 06_VERIFY, 07_ACCEPT, 08_RELEASE, 09_OPERATE — mỗi thư mục có README index ghi phân loại và ánh xạ. Xác minh kỹ thuật: unit tests KHÔNG đọc corpus vật lý (toàn bộ in-memory; fixture nhúng nội dung document), nên giữ 00_CORPUS/03_ARCHITECTURE tại chỗ không ảnh hưởng CI; source_id trong fixture là định danh logic.
+  2. Quyết định an toàn: KHÔNG di chuyển vật lý 00_CORPUS (cần phân loại originals vs fixtures trước — điều kiện DOC-056), 03_ARCHITECTURE (source_id logic + audit link), 06_EVIDENCE (CI write target C7 — thuộc Batch 4), 04_CODE/05_TEST (declared legacy source layout theo DOC-001 §4). Mọi di chuyển tương lai = một commit riêng đồng bộ CI theo DOC-059 §3.
+  3. Batch 3: tạo 05_BUILD/DOC-060 WP register — 8 WP (01 retrieval core, 02 eval baseline, 03 evidence-support stage, 04 corpus diagnostic, 05 standardization, 06 Gate C design BLOCKED, 07 E2E CLOSED, 08 retrieval remediation OPEN) đầy đủ owner/reviewer/deps/acceptance/status/evidence theo DOC-001 §6. 05_BUILD chỉ chứa mapping/coordination, không phải canonical source (DOC-001 §4).
+  4. Đồng bộ: DOC-055 đăng ký DOC-060 + các README lifecycle; DOC-056 Batch 2/3 progress notes; DOC-058 batch table + WP index.
+- **Status:** Batch 2 mapping/classification DONE — physical moves DEFERRED with recorded rationale (batch IN_PROGRESS cho tới khi di chuyển hoặc có disposition văn bản); Batch 3 register DONE (build-level, chờ Xu xác nhận). Gate statuses unchanged: independent gate FAIL 0.300 bảo toàn; Gate A OPEN; Gate C BLOCKED; Release NOT PASS. No release claim.
+- **Next:** Xu review DOC-060 + xác nhận; Batch 4 (EVIDENCE migration + link audit) và các di chuyển vật lý theo DOC-059 §3; Ka adjudication vẫn là critical path. Vibe không tự phê chuẩn.
