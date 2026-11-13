@@ -26,7 +26,7 @@ from .security import (
 from .adapters import unavailable
 from .git_adapter import GitAdapter
 from .identity import RuntimeIdentity
-from .process_job import ManagedProcess, spawn_managed_service
+from .process_job import JobObjectUnavailable, ManagedProcess, spawn_managed_service
 
 
 class ExecutionHost:
@@ -324,7 +324,23 @@ class ExecutionHost:
         )
 
         # Job Object (Windows) / session leader (POSIX) at spawn — Xu service path.
-        managed = spawn_managed_service(args, cwd=workspace, env=env)
+        # Fail-closed mapping (WP2): a containment failure at spawn must surface
+        # as a structured BLOCKED result, never as an uncaught OSError, so no
+        # caller can mistake a failed spawn for a successful start.
+        try:
+            managed = spawn_managed_service(args, cwd=workspace, env=env)
+        except JobObjectUnavailable as exc:
+            return {
+                "status": "BLOCKED",
+                "name": name,
+                "blocker": getattr(exc, "blocker", "job_object_attach_failed"),
+                "notes": list(getattr(exc, "notes", ())),
+                "process_reaped": bool(getattr(exc, "process_reaped", False)),
+                "pid": None,
+                "execution_id": ctx.execution_id,
+                "job_object": "NOT_ATTACHED",
+                **self.identity(),
+            }
         self.processes[name] = managed
 
         return {
