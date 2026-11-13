@@ -1822,3 +1822,63 @@ These later changes are not covered by Run #376. The branch requires a new exact
 - No local PC files or services were changed by the probe; it failed before executing its body.
 - No Execution Host or Core service was started; no protected command was executed.
 - Work32 remains ACTIVE — NOT RELEASED; PROTECTED EXECUTION DENIED.
+
+
+---
+
+## W32-LOG-20261113-117 — COMPLETION VALIDATION / LIVE CORE AUTHORITY PROBE FINDING
+
+- **Work:** 32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P0 — execution evidence integrity / live authority proof
+- **Name:** Ka
+- **Title:** CSA / Work32 Execution Owner
+- **Date-Time:** 2026-11-13 10:20 Asia/Ho_Chi_Minh
+- **PR #52 branch:** `work/32-main-integration-authority-20261112`
+- **Latest workflow commit at this record:** `17ba50ab2e8736e2636e323741ce735c107fe197`
+- **Evidence document:** DOC-124
+- **Status:** SOURCE VALIDATION PASS; HOSTED CI LANES PASS; LIVE CORE AUTHORITY PROBE BLOCKED
+
+### Source changes
+
+- Core `complete_run()` validates allowed status, optional execution_status, timezone-aware ISO finished_at, integer-or-null exit_code (boolean rejected), and lowercase 64-character evidence SHA-256.
+- Added 10 invalid-field cases and 2 valid BLOCKED/TIMEOUT completion cases.
+- HTTP RunCompleteRequest accepts the Host's execution_status.
+- HTTP completion route rejects a body run_id that differs from the URL path run_id; regression test proves rejection and subsequent valid completion.
+- PC probe requires Core invalid-credential HTTP 401/403 and validates Host identity; diagnostic follow-up collects both Core and Host results before failing.
+
+### Exact-head CI
+
+**Run #414 / 43357234292 — PR head 1394ceefa3fdc52a422b6aa208c50a1e00c32b77**
+- Unit 250 passed.
+- Product Auto E2E 122 passed.
+- Hosted Windows Browser Adapter 10 passed; preflight and cleanup PASS.
+- Tooling/workflow mirror PASS.
+- Immutable product artifact checksum/dependency/compile checks PASS; artifact E2E 1 passed.
+- PC runner identity PASS, but Core invalid-credential probe returned HTTP 404; release acceptance gate FAIL.
+
+**Run #416 / 43357544278 — exact head 17ba50ab2e8736e2636e323741ce735c107fe197**
+- Unit 250 passed.
+- Product Auto E2E 122 passed.
+- Hosted Windows Browser Adapter 10 passed; preflight and cleanup PASS.
+- Tooling/workflow mirror PASS.
+- Immutable product artifact checksum/dependency/compile checks PASS; artifact E2E 1 passed.
+- Dedicated PC identity/authority probe remained QUEUED at the time of this journal entry; release gate pending.
+
+### Live runner finding
+
+- Runner name ROOM-HOP-W32-PC; Windows X64; identity PASS.
+- Python command NOT_FOUND in the runner service environment; Git 2.55.0.windows.3.
+- Ports 8000 and 8031 were loopback listeners; process owner/module unresolved and expected entrypoint match false.
+- Core invalid-credential request returned HTTP 404, not the required 401/403. This does not prove authentication denial and indicates the live Core listener did not expose the expected authority status route at probe time.
+- Host health was not reached on Run #414 because the probe stopped after Core 404. Commit 17ba50ab collects both Core and Host diagnostics; the next exact-head run must establish Host identity.
+- The live process entrypoint is not confirmed; the old HTTP adapter is a plausible but unproven cause.
+
+### Change-control / safety
+
+- No Core/Host process started, stopped or reconfigured.
+- No credentials or runtime Work policy provisioned; no protected command executed.
+- PR #52 remains open and unmerged. No merge, CD, staging, production or release authorization.
+- Independent security review remains pending.
+- PROTECTED EXECUTION DENIED; Work32 ACTIVE — NOT RELEASED.
+
