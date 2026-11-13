@@ -214,3 +214,58 @@ def test_http_run_record_requires_grant_and_host_binding(tmp_path):
     )
     assert completed.status_code == 200
     assert completed.json()["status"] == "completed"
+
+
+def test_http_run_completion_rejects_body_run_id_mismatch(tmp_path):
+    client = app_for(configured_authority(tmp_path))
+    grant = client.post(
+        "/works/W32/execution-grants",
+        json=issue_payload(),
+        headers=agent_headers(),
+    ).json()
+    headers = {
+        **host_headers(),
+        "Authorization": "Bearer " + grant["grant_token"],
+    }
+    started = client.post(
+        f"/works/W32/execution-grants/{grant['grant_id']}/runs",
+        json={
+            "run_id": "run-http-path-bound",
+            "repository": "hqtt2026-thevinhvtqni/room-meeting-ai",
+            "branch": "work/32-core-owned-execution-authority-20261112",
+            "expected_head": "b" * 40,
+            "command": ["python", "-m", "pytest", "-q"],
+            "source_sha256": "a" * 64,
+            "environment_id": "w32-test",
+            "started_at": "2026-11-12T00:00:00+00:00",
+        },
+        headers=headers,
+    )
+    assert started.status_code == 200
+
+    mismatch = client.post(
+        f"/works/W32/execution-grants/{grant['grant_id']}/runs/run-http-path-bound/complete",
+        json={
+            "run_id": "run-http-other",
+            "finished_at": "2026-11-12T00:00:01+00:00",
+            "status": "PASS",
+            "exit_code": 0,
+            "evidence_sha256": "c" * 64,
+        },
+        headers=headers,
+    )
+    assert mismatch.status_code == 422
+    assert mismatch.json()["detail"] == "execution_run_id_mismatch"
+
+    completed = client.post(
+        f"/works/W32/execution-grants/{grant['grant_id']}/runs/run-http-path-bound/complete",
+        json={
+            "finished_at": "2026-11-12T00:00:02+00:00",
+            "status": "PASS",
+            "exit_code": 0,
+            "evidence_sha256": "d" * 64,
+        },
+        headers=headers,
+    )
+    assert completed.status_code == 200
+    assert completed.json()["status"] == "completed"
