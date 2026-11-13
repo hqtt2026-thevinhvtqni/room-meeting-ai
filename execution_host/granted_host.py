@@ -13,6 +13,7 @@ from typing import Any
 from .core_authority_client import CoreAuthorityClient
 from .security import redact, safe_env
 from .source_snapshot import workspace_source_sha256
+from .process_control import run_bounded
 
 
 class GrantedExecutionError(RuntimeError):
@@ -227,6 +228,8 @@ class GrantedExecutionHost:
         stdout = ""
         stderr = ""
         blocker = None
+        process_tree_termination_confirmed = True
+        output_limit_exceeded = False
         run_started_persisted = False
         try:
             self.authority_client.start_run(
@@ -251,7 +254,7 @@ class GrantedExecutionHost:
 
         if run_started_persisted:
             try:
-                env = safe_env()
+                env = safe_env(isolated_home=run_dir / "home")
                 env.update({
                     "ROOM_HOP_EXECUTION_ID": run_id,
                     "ROOM_HOP_WORK_ID": binding["work_id"],
@@ -273,25 +276,28 @@ class GrantedExecutionHost:
                     or latest.get("expected_head") != expected_head
                 ):
                     raise GrantedExecutionError("grant_binding_changed_before_execution")
-                try:
-                    completed = subprocess.run(
-                        command,
-                        cwd=workspace,
-                        env=env,
-                        text=True,
-                        capture_output=True,
-                        timeout=timeout,
-                        check=False,
-                    )
-                    exit_code = completed.returncode
-                    stdout = redact(completed.stdout or "")
-                    stderr = redact(completed.stderr or "")
-                    status = "PASS" if exit_code == 0 else "FAILED"
-                except subprocess.TimeoutExpired as exc:
-                    stdout = redact((exc.stdout or "").decode("utf-8", "replace") if isinstance(exc.stdout, bytes) else (exc.stdout or ""))
-                    stderr = redact((exc.stderr or "").decode("utf-8", "replace") if isinstance(exc.stderr, bytes) else (exc.stderr or ""))
+                completed = run_bounded(
+                    command,
+                    cwd=workspace,
+                    env=env,
+                    timeout=timeout,
+                )
+                exit_code = completed.returncode
+                stdout = redact(completed.stdout.decode("utf-8", "replace"))
+                stderr = redact(completed.stderr.decode("utf-8", "replace"))
+                process_tree_termination_confirmed = completed.tree_termination_confirmed
+                output_limit_exceeded = completed.output_limit_exceeded
+                if not process_tree_termination_confirmed:
+                    status = "BLOCKED"
+                    blocker = "execution_process_tree_termination_unconfirmed"
+                elif output_limit_exceeded:
+                    status = "BLOCKED"
+                    blocker = "execution_output_limit_exceeded"
+                elif completed.timed_out:
                     status = "TIMEOUT"
                     blocker = "execution_timeout"
+                else:
+                    status = "PASS" if exit_code == 0 else "FAILED"
             except Exception as exc:
                 blocker = (
                     exc.code if hasattr(exc, "code")
@@ -346,6 +352,8 @@ class GrantedExecutionHost:
             "execution_status": status,
             "exit_code": exit_code,
             "blocker": reported_blocker,
+            "process_tree_termination_confirmed": process_tree_termination_confirmed,
+            "output_limit_exceeded": output_limit_exceeded,
             "stdout_sha256": stdout_sha256,
             "stderr_sha256": stderr_sha256,
             "evidence_persisted": evidence_persisted,

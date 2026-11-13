@@ -76,3 +76,27 @@ Evidence is immutable by reference. Corrections add a new evidence record; faile
 | W32-EVIDENCE-026 | Run #430 exact documentation-head CI and dedicated PC live identity probe | GitHub Actions run 43358168481; W32-LOG-20261113-119; PR #52 | Tested head e6d3ed5662ee93e4106d01066f6cacf1078edb03; unit 250 PASS; Product Auto E2E 122 PASS; hosted Windows Browser Adapter 10 PASS; tooling job SUCCESS but mirror DRIFT was report-only; artifact E2E 1 PASS; dedicated runner identity PASS; Core invalid-credential HTTP 404; Host identity fields blank | HOSTED/SOURCE LANES PASS; PC LIVE PROBE FAIL; RELEASE GATE FAIL; historical evidence retained |
 
 | W32-EVIDENCE-027 | Strict workflow mirror parity remediation | Active workflow commit e4c57d9f451218b3e591480bf6326f844eb18f49; mirror sync commit a4e62e5e8234a3d1cdf7688a6622752fe6f67148; W32-LOG-20261113-119 | Active and mirror exact readback blob SHA fd613c2e2ef2f54772133a46e8d5f593dc0c4b36; CHECK_STRICT=1 enabled | BYTE-CONTENT PARITY PASS; exact-head CI for a4e62e5 pending; no runtime or release claim |
+
+
+| W32-EVIDENCE-028 | Isolated granted-child environment hardening source and regression test | W32-LOG-20261113-120; execution_host/security.py; execution_host/granted_host.py; tests/test_execution_host_grants.py | Remediation branch work/32-main-integration-remediation-20261113; commits dd76e3dce2d4d4599bf4e754806b471e5325f246, 2da01e5a494b122ae97ac619d78aafc6038ab956, cebac076f257c6ef8801a0924e79074ec43350af | SOURCE PATCH COMMITTED; TEST/EXACT-HEAD CI NOT RUN; NOT A PASS CLAIM |
+
+
+| W32-EVIDENCE-029 | Bounded stdout/stderr capture and process-tree timeout helper | W32-LOG-20261113-121; execution_host/process_control.py; execution_host/granted_host.py; tests/test_execution_host_grants.py | Remediation branch work/32-main-integration-remediation-20261113; process helper blob 9f5eeddbbcb32152b19321ac59563e2729a3303c; exact helper py_compile PASS; isolated Linux pytest 2 passed in 3.27s | LINUX HELPER SMOKE PASS; FULL WORK32 PYTEST / WINDOWS TREE-KILL CI PENDING; NOT AN ACCEPTANCE PASS |
+
+
+| W32-EVIDENCE-030 | Execution Host loopback Host/Origin/Fetch-Metadata boundary | W32-LOG-20261113-122; execution_host/server.py; tests/test_execution_host_grants.py | Exact server blob 14d1d764730540330b7bf1d0f3b83b2c03df6a2c; isolated HTTP boundary smoke 1 passed; PR #54 draft | SOURCE / ISOLATED HTTP SMOKE PASS; FULL REPOSITORY + WINDOWS CI PENDING |
+
+
+| W32-EVIDENCE-031 | Host → HTTP → Core Run completion evidence contract alignment | W32-LOG-20261113-123; DOC-119 addendum; room_hop_mcp/adapter/execution_authority_http.py; core/execution_authority.py; tests/test_execution_authority_http.py; tests/test_execution_authority.py | Remediation branch commits 18fc0c0dc9c6e179ce44cc92c079ac3daeeb04ac, b4c4442b2a3543f903c5ce684809c04f42b86b17, 07f6c262d1136e0ea35dd92442daf82b4edbc5be, 107508627abda20261b11afa5ed3983b094fef48 | SOURCE + REGRESSION TESTS COMMITTED; FULL TEST / EXACT-HEAD CI PENDING |
+
+
+| W32-EVIDENCE-032 | Real GrantedExecutionHost → Core HTTP two-phase completion E2E regression | W32-LOG-20261113-124; DOC-119 section 6; tests/test_execution_authority_http.py | Remediation branch test commit da81a25bbe7c5d10ace9ebf17703aec9ca51ebfe; import correction b62c08766ff7d0dca522c10c0f02d982d5574d65 | REGRESSION ADDED; EXACT-HEAD FULL TEST / CI PENDING |
+
+
+| W32-EVIDENCE-033 | Run #499 compile failure and immediate syntax correction | W32-LOG-20261113-125; Run 43432414929; execution_host/granted_host.py | Tested head ecddd3ac05448540453c6a290f38310dd25c2594 failed compileall at line 302; fix commit 05b0fb33087289d079c25bac2fb637eab5150575 | FAILURE RETAINED; SOURCE CORRECTED; EXACT-HEAD RETEST REQUIRED |
+
+
+| W32-EVIDENCE-034 | Run #508 exact-head Linux / hosted Windows / product artifact validation | W32-LOG-20261113-126; run 43432659016; head 7a93ce6d5546f778e76db47b201dc1574e02940d | Unit 260 passed; Product Auto E2E 127 passed; Windows security/Browser Adapter 26 passed; tooling + strict mirror PASS; immutable artifact PASS | AUTOMATED CI LANES PASS; DEDICATED PC RUNNER PROBE QUEUED; RELEASE GATE PENDING |
+
+
+| W32-EVIDENCE-035 | Run #508 release gate failure due dedicated PC probe cancellation | W32-LOG-20261113-127; run 43432659016; release gate job 131911054110; historical PC probe Run #439 job 131900379293 | All hosted/automated lanes PASS; SELF_HOSTED_RESULT=cancelled; release gate FAIL | LIVE PC PROCESS PROVENANCE REQUIRED; NO RELEASE ACCEPTANCE |

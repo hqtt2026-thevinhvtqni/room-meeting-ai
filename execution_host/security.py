@@ -176,23 +176,54 @@ def validate_command(command: Iterable[str]) -> list[str]:
     return args
 
 
-def safe_env() -> dict[str, str]:
-    keep = {
-        "PATH",
-        "HOME",
-        "LANG",
-        "LC_ALL",
-        "SYSTEMROOT",
-        "WINDIR",
-        "TMP",
-        "TEMP",
-    }
+def safe_env(*, isolated_home: str | Path | None = None) -> dict[str, str]:
+    keep = {"PATH", "LANG", "LC_ALL", "SYSTEMROOT", "WINDIR"}
 
-    return {
+    if isolated_home is None:
+        keep.update({"HOME", "TMP", "TEMP"})
+        return {
+            key: value
+            for key, value in os.environ.items()
+            if key in keep
+        }
+
+    home = Path(isolated_home).resolve()
+    temp = home / "tmp"
+    home.mkdir(parents=True, exist_ok=True)
+    temp.mkdir(parents=True, exist_ok=True)
+    env = {
         key: value
         for key, value in os.environ.items()
         if key in keep
     }
+    env.update({
+        "HOME": str(home),
+        "TMP": str(temp),
+        "TEMP": str(temp),
+    })
+    if os.name == "nt":
+        roaming = home / "AppData" / "Roaming"
+        local = home / "AppData" / "Local"
+        roaming.mkdir(parents=True, exist_ok=True)
+        local.mkdir(parents=True, exist_ok=True)
+        env.update({
+            "USERPROFILE": str(home),
+            "APPDATA": str(roaming),
+            "LOCALAPPDATA": str(local),
+        })
+    else:
+        cache = home / ".cache"
+        config = home / ".config"
+        data = home / ".local" / "share"
+        for path in (cache, config, data):
+            path.mkdir(parents=True, exist_ok=True)
+        env.update({
+            "TMPDIR": str(temp),
+            "XDG_CACHE_HOME": str(cache),
+            "XDG_CONFIG_HOME": str(config),
+            "XDG_DATA_HOME": str(data),
+        })
+    return env
 
 
 def executable_capabilities():

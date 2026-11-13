@@ -173,3 +173,77 @@ No Docker requirement; no live-service or MAIN SOURCE changes; no auto-merge or 
 - ROOM-HOP Sandbox parity is not verified because MCP :8030 connection was unavailable during this continuation.
 - Main, CD, staging, production and release remain untouched. PR #52 remains open/unmerged. Protected execution denied.
 - **Overall: HOSTED/SOURCE LANES PASS ON RUN #430; LIVE CORE/HOST BLOCKED; MIRROR PARITY SOURCE PASS; CURRENT HEAD CI PENDING; WORK32 ACTIVE — NOT RELEASED.**
+
+
+## Security remediation continuation — 2026-11-13
+
+- PR #52 integration candidate remains open/unmerged on `work/32-main-integration-authority-20261112`.
+- Ka created isolated remediation branch `work/32-main-integration-remediation-20261113` from candidate SHA `d639199159d2f2c72d0e706e1490d9afd0f20ac3`, per Xu's H0/H1 directive.
+- Confirmed residual: granted pytest child process inherited operator HOME/profile/temp paths. Source patch now redirects these to a per-run isolated home and adds a regression test; W32-LOG-20261113-120 / W32-EVIDENCE-028.
+- Exact-head tests and CI for the remediation branch have not yet run. Process-tree termination/output caps, Host request-origin protections, independent security review and live PC Core/Host identity remain open.
+- Do not merge/rebase/cherry-pick, restart PC services, provision credentials, execute protected commands, deploy or release. Protected execution remains denied.
+
+
+## H1 process containment continuation — 2026-11-13 20:07 Asia/Ho_Chi_Minh
+
+- Remediation branch: `work/32-main-integration-remediation-20261113`; source base is PR #52 candidate SHA `d639199159d2f2c72d0e706e1490d9afd0f20ac3`.
+- Per-run child environment isolation: committed with regression test (W32-LOG-120 / W32-EVIDENCE-028).
+- Bounded stdout/stderr capture (1 MiB combined), POSIX process-session termination, Windows process-tree taskkill path, and fail-closed status mapping: committed with repository regressions (W32-LOG-121 / W32-EVIDENCE-029).
+- Exact process helper blob `9f5eeddbbcb32152b19321ac59563e2729a3303c` passed isolated Linux smoke: py_compile PASS; output-flood and timeout-descendant tests 2/2 PASS. This does not certify Windows behavior or the full Work32 suite.
+- Full repo exact-head CI, Windows runner validation, Host/Origin protections, transport peer authentication, live PC process provenance and independent Cla review remain pending.
+- Keep protected execution DENIED. No PC services, main, merge, CD, staging, production or release changed.
+
+
+## Host request boundary / Windows security test continuation — 2026-11-13 20:11 Asia/Ho_Chi_Minh
+
+- Host health and grant execution now require an exact loopback Host authority; supplied Origin must be same-loopback/same-port; cross-site Fetch Metadata is rejected. Source and isolated HTTP handler smoke are recorded in W32-LOG-20261113-122 / W32-EVIDENCE-030.
+- Windows hosted Browser Adapter lane now includes `tests/test_execution_host_grants.py` to exercise output caps, timeout descendant termination, isolated environment and HTTP boundary on Windows.
+- PR #54 is a draft remediation PR against PR #52's integration candidate branch. The base workflow now allows PR events targeting that branch; PR #54 needs a new matching PR event to trigger the full workflow.
+- Exact-head GitHub Actions and full repository pytest remain pending. Do not claim PASS from isolated helper/HTTP smoke tests.
+- Live PC Core/Host process identity and 404 mismatch remain blocked. No PC service mutation, credentials, protected execution, main merge, CD or release.
+
+
+## P0 Run completion contract correction — 2026-11-13 20:14 Asia/Ho_Chi_Minh
+
+- Confirmed Host completion metadata had `evidence_persisted` and `evidence_errors` absent from strict `RunCompleteRequest`; this could produce HTTP 422 at the actual Host→Core completion boundary.
+- Router schema and Core validation now align; HTTP and Core regression tests cover Host-shaped completion payload, invalid hashes and evidence-persistence consistency.
+- DOC-119 addendum, DOC-035 W32-LOG-20261113-123 and W32-EVIDENCE-031 record the change.
+- Exact-head repository CI and live Host→Core completion test are pending; do not claim runtime PASS.
+- Work32 remains ACTIVE — NOT ACCEPTED — NOT RELEASED; no protected execution or release.
+
+
+## Real Host → Core completion integration regression — 2026-11-13 20:18 Asia/Ho_Chi_Minh
+
+- Added a real Host → Core HTTP two-phase execution regression to `tests/test_execution_authority_http.py`: real CoreAuthorityClient, real GrantedExecutionHost, grant issuance via HTTP, run_started, pytest, evidence writing, completion via strict HTTP DTO, and append-only journal readback.
+- DOC-119 section 6; DOC-035 W32-LOG-20261113-124; DOC-014 W32-EVIDENCE-032.
+- Exact-head tests remain pending; no PASS claimed.
+- Live PC process identity, Core 404, Host health identity and independent security review remain BLOCKED/OPEN.
+- Work32 remains ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+## Run #499 compile failure and correction — 2026-11-13 20:18 Asia/Ho_Chi_Minh
+
+- Exact tested HEAD `ecddd3ac05448540453c6a290f38310dd25c2594` failed compileall in `execution_host/granted_host.py:302`; unit and Product Auto E2E tests did not run.
+- Failure retained in DOC-035 W32-LOG-20261113-125 and DOC-014 W32-EVIDENCE-033.
+- Corrective source commit `05b0fb33087289d079c25bac2fb637eab5150575` removes the redundant nested try and restores the outer exception boundary.
+- A fresh exact-head compile + unit + E2E + Windows lane is mandatory; do not count the failed run as a test result.
+- Work32 remains ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+## Run #508 exact-head validation — 2026-11-13 20:23 Asia/Ho_Chi_Minh
+
+- Exact remediation HEAD `7a93ce6d5546f778e76db47b201dc1574e02940d`: compile PASS; 260 unit tests PASS; 127 Product Auto E2E PASS; 26 hosted Windows security/Browser Adapter tests PASS; tooling and strict workflow mirror PASS; immutable artifact verification PASS.
+- Windows lane explicitly validates isolated child environment, 1 MiB output cap, process-tree timeout cleanup, loopback Host/Origin and HTTP boundary.
+- The unit suite includes the real Host → Core HTTP completion E2E regression and Core metadata validation.
+- Dedicated PC runner identity job remains QUEUED. Historical Run #439 on prior candidate showed Core invalid-credential HTTP 404, Host health identity fields missing, and process owner/module unresolved. Do not treat historical snapshot as current PASS.
+- Work32 remains ACTIVE — NOT ACCEPTED — NOT RELEASED until current PC process provenance, Core/Host runtime identity and release gate are verified.
+
+
+## Run #508 release gate disposition — 2026-11-13 20:25 Asia/Ho_Chi_Minh
+
+- All automated lanes passed on source HEAD `7a93ce6d5546f778e76db47b201dc1574e02940d`: 260 unit, 127 Product Auto E2E, 26 hosted Windows security/Browser Adapter, tooling + strict mirror, immutable artifact.
+- Dedicated PC runner identity job was CANCELLED; release gate failed because `SELF_HOSTED_RESULT=cancelled`.
+- Historical Run #439 showed process owner/module unresolved, Core invalid-credential 404, Host health identity missing and Python not found in service PATH. This is not a fresh snapshot for current head.
+- Required next action is an elevated, read-only PC process/service provenance snapshot. Do not restart/kill services or alter credentials until PID/entrypoint/owner are known.
+- DOC-035 W32-LOG-20261113-127; DOC-014 W32-EVIDENCE-035.
+- Work32 remains ACTIVE — NOT ACCEPTED — NOT RELEASED.

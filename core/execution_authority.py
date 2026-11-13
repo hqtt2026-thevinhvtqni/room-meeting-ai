@@ -607,6 +607,46 @@ class ExecutionAuthority:
             ):
                 raise AuthorityError("run_evidence_sha256_invalid", 422)
 
+            for field in ("stdout_sha256", "stderr_sha256"):
+                digest = record.get(field)
+                if digest is not None and (
+                    not isinstance(digest, str)
+                    or len(digest) != 64
+                    or any(char not in "0123456789abcdef" for char in digest)
+                ):
+                    raise AuthorityError("run_" + field + "_invalid", 422)
+
+            evidence_ref = record.get("evidence_ref")
+            if evidence_ref is not None and (
+                not isinstance(evidence_ref, str)
+                or not evidence_ref
+                or len(evidence_ref) > 2048
+            ):
+                raise AuthorityError("run_evidence_ref_invalid", 422)
+
+            evidence_persisted = record.get("evidence_persisted")
+            if evidence_persisted is not None and not isinstance(evidence_persisted, bool):
+                raise AuthorityError("run_evidence_persisted_invalid", 422)
+
+            evidence_errors = record.get("evidence_errors", [])
+            if (
+                not isinstance(evidence_errors, list)
+                or len(evidence_errors) > 8
+                or any(
+                    not isinstance(item, str) or not item or len(item) > 256
+                    for item in evidence_errors
+                )
+            ):
+                raise AuthorityError("run_evidence_errors_invalid", 422)
+            if evidence_errors and evidence_persisted is not False:
+                raise AuthorityError("run_evidence_persistence_metadata_invalid", 422)
+            if evidence_persisted is False and (
+                status != "BLOCKED" or not evidence_errors
+            ):
+                raise AuthorityError("run_evidence_persistence_metadata_invalid", 422)
+            if evidence_persisted is True and evidence_errors:
+                raise AuthorityError("run_evidence_persistence_metadata_invalid", 422)
+
             started = next(
                 (item for item in runs if item["start"].get("run_id") == record["run_id"]),
                 None,

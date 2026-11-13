@@ -1986,3 +1986,950 @@ Inspected GitHub Actions job summaries and raw logs; no local or PC test executi
 6. Keep main, CD, staging, production and release untouched. PR #52 remains open/unmerged. Protected execution remains DENIED.
 
 **Disposition:** hosted/source CI lanes PASS for Run #430; workflow mirror strict-parity remediation committed and read back PASS; live Core/Host identity BLOCKED; exact-head retest PENDING; Work32 **ACTIVE — NOT ACCEPTED — NOT RELEASED**.
+
+
+---
+
+## W32-LOG-20261113-120 — ISOLATED REMEDIATION BRANCH / GRANTED CHILD ENVIRONMENT HARDENING
+
+- **Work:** 32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P0 — protected execution / secret isolation
+- **Name:** Ka
+- **Title:** CSA / Work32 delegated execution owner
+- **Date-Time:** 2026-11-13 20:01 Asia/Ho_Chi_Minh
+- **Authority:** Vinh's explicit delegation; Xu's H0/H1 security directive remains binding.
+- **Base candidate:** PR #52 branch `work/32-main-integration-authority-20261112`, exact base HEAD `d639199159d2f2c72d0e706e1490d9afd0f20ac3`.
+- **Remediation branch:** `work/32-main-integration-remediation-20261113`.
+- **Status:** ISOLATED ENVIRONMENT PATCH COMMITTED; TEST/CI PENDING; PROTECTED EXECUTION DENIED.
+
+### 1. H0 source trace
+
+Re-read the current candidate's Host and security source:
+
+- Confirmed the grant-only Host path called `safe_env()`, whose allowlist inherited operator `HOME` and temporary-directory variables.
+- Confirmed `GrantedExecutionHost.identity()` reports `CORE_AUTHORIZED_PYTEST`, `CORE_ONLINE`, and `grant_cache=false`; Run #430's live health response omitted all three fields, so the live listener is not attesting this source contract.
+- Confirmed the current Host execution path still uses `subprocess.run(capture_output=True, timeout=...)`; bounded output and complete process-tree termination are not yet implemented/proven.
+- Host HTTP handler exposes only `POST /execute-granted` for execution and does not expose the retired caller-supplied `/execute` route. Host/Origin protections and transport peer authentication remain unverified; remote bind remains rejected by the current source.
+- Core service credential resolution is application-level header authentication; no mTLS/OS peer identity evidence is present. Keep both services loopback-only.
+- Legacy `execution_host/security.py` executable allowances are not used as the authorization decision for the grant-only Host route; the grant path separately requires the Core-bound pytest entrypoint. Alternate legacy execution-route reachability still requires independent negative testing.
+
+### 2. Remediation branch and change
+
+Created `work/32-main-integration-remediation-20261113` from the exact PR #52 candidate head above. No merge/rebase/cherry-pick or main mutation.
+
+- `execution_host/security.py`: added optional per-run isolated environment construction. In isolated mode, operator HOME/USERPROFILE/APPDATA/LOCALAPPDATA and TMP/TEMP values are not inherited; HOME and temp paths are redirected beneath the run-specific home. Windows profile/cache directories and POSIX XDG directories are created under that isolated path. The legacy default call remains backward-compatible.
+- `execution_host/granted_host.py`: grant-only pytest execution now calls `safe_env(isolated_home=run_dir / "home")`.
+- `tests/test_execution_host_grants.py`: added a regression test proving isolated HOME/temp paths and exclusion of operator credential/profile variables.
+- Commits: `dd76e3dce2d4d4599bf4e754806b471e5325f246` (security helper), `2da01e5a494b122ae97ac619d78aafc6038ab956` (Host call), `cebac076f257c6ef8801a0924e79074ec43350af` (regression test).
+
+### 3. Validation boundary
+
+- GitHub source writes completed on the isolated remediation branch.
+- Tests have **NOT RUN** in this session; no local PASS is claimed.
+- Exact-head CI for remediation branch: **PENDING / NOT OBSERVED**.
+- Run #430 remains historical evidence for its exact earlier head and is not evidence for this patch.
+- No PC process/service was started, stopped, terminated, or reconfigured. No credential was provisioned. No protected command was executed.
+
+### 4. Next H1 actions
+
+1. Implement bounded stdout/stderr capture and process-tree timeout cleanup with descendant/output-flood regression tests.
+2. Add Host/Origin/content-type/cross-origin negative request tests and safe loopback request policy.
+3. Reconcile process identity on ADMIN-PC using a read-only elevated snapshot; do not restart until exact executable/service ownership is known.
+4. Obtain independent Cla review/replay on the final remediation SHA.
+5. Run exact-head CI, strict workflow-mirror check and live positive/negative Core↔Host tests before changing any acceptance status.
+
+**Disposition:** isolated child environment hardening committed; exact-head test evidence pending; process-tree/output limits, request-origin controls, authenticated transport, live runtime identity and independent security review remain OPEN. Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261113-121 — BOUNDED OUTPUT / PROCESS-TREE TIMEOUT HARDENING
+
+- **Work:** 32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P0 — protected execution resource containment
+- **Name:** Ka
+- **Title:** CSA / Work32 delegated execution owner
+- **Date-Time:** 2026-11-13 20:07 Asia/Ho_Chi_Minh
+- **Branch:** `work/32-main-integration-remediation-20261113`
+- **Status:** SOURCE PATCH COMMITTED; EXACT HELPER SMOKE PASS ON LINUX; FULL REPO CI / WINDOWS VALIDATION PENDING
+
+### 1. Source remediation
+
+- Added `execution_host/process_control.py` with shell-free `Popen`, one combined stdout/stderr cap of 1 MiB, timeout enforcement, POSIX process-session termination, and Windows process-tree termination via `taskkill /T /F`.
+- POSIX output capture uses selector readiness + `os.read` to avoid blocking on a pipe read larger than the available pipe buffer. Windows uses dedicated drain threads and the same combined byte budget.
+- Host grant-only pytest execution now uses `run_bounded()`. Output overflow or unconfirmed process-tree termination yields BLOCKED; timeout is TIMEOUT only when tree termination is confirmed.
+- Run evidence now records `process_tree_termination_confirmed` and `output_limit_exceeded`.
+- Added repository regression tests for combined output cap and a child process that must not survive a timed-out parent. These are in `tests/test_execution_host_grants.py`, already included in the Work32 E2E test list.
+- Final helper blob SHA: `9f5eeddbbcb32152b19321ac59563e2729a3303c`; exact blob identity was verified with Git's `hash-object`.
+- Relevant commits: helper `36ccbcfd96606c02ed188616b5833bdd3e0cdf0c`; Host integration `258b7b3cb9e27650c12aadfbb5b70f6d33e52726`; regression tests `31dca963436916ce784f5c20c8011bde183ff650`; pipe-drain correction `6ce45adcb43c245a2a0ed65d0f2cdf820f0d2e42`; test import correction `afa83f77c71488313e5869d3dc26c30666d2deef`.
+
+### 2. Local isolated validation — exact helper source
+
+The exact Git blob was materialized in a temporary Linux container file and its Git blob SHA matched the branch source.
+
+- `python -m py_compile /tmp/process_control.py`: PASS.
+- `PYTHONPATH=/tmp python -m pytest -q /tmp/test_process_control.py`: **2 passed in 3.27s**.
+- Output-flood case: 4,096-byte combined capture cap enforced; output-limit flag true; process-tree termination confirmed.
+- Timeout case: parent + child process tree terminated; termination confirmed; delayed orphan marker was not created.
+- This is an isolated helper smoke test, **not** the complete Work32 repository test suite and not Windows validation.
+
+### 3. Remaining validation / safety
+
+- Full `tests/test_execution_host_grants.py` on the exact remediation branch: NOT RUN.
+- Exact-head GitHub Actions / strict workflow mirror gate: PENDING.
+- Windows `taskkill /T /F` behavior and the Windows child-process regression: NOT RUN.
+- Host/Origin/cross-origin request protections, authenticated transport peer identity, Core/Host live runtime provenance and independent Cla replay remain OPEN.
+- No PC process/service was started, stopped, terminated or reconfigured. No credentials provisioned. No protected command executed. Main and release paths remain untouched.
+
+**Disposition:** bounded output and timeout tree-control source implemented; isolated Linux helper tests PASS; full repo CI and Windows proof PENDING; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261113-122 — HOST/ORIGIN BOUNDARY + WINDOWS SECURITY TEST LANE
+
+- **Work:** 32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P0 — loopback request boundary / browser-origin isolation
+- **Name:** Ka
+- **Title:** CSA / Work32 delegated execution owner
+- **Date-Time:** 2026-11-13 20:11 Asia/Ho_Chi_Minh
+- **Branch:** `work/32-main-integration-remediation-20261113`
+- **Draft PR:** #54 — targets PR #52 candidate branch; not a main/release PR.
+- **Status:** SOURCE PATCH + LOCAL HTTP SMOKE PASS; FULL REPO / WINDOWS CI PENDING.
+
+### 1. Host HTTP boundary
+
+- `execution_host/server.py` now validates the HTTP Host authority against loopback hostnames (`127.0.0.1`, `localhost`, `::1`) and the exact configured Host port.
+- If Origin is present, it must be HTTP, loopback and the same configured port; malformed, remote, credential-bearing, query/fragment or path-bearing origins are rejected.
+- `Sec-Fetch-Site`, when present, is limited to `same-origin` or `none`.
+- Applied to both `GET /health` and `POST /execute-granted`; unknown/legacy caller-supplied execution route remains 404.
+- Regression tests added for allowed loopback and denied remote Host, wrong port, remote Origin, cross-site fetch, null/missing origin; HTTP handler test proves rejected requests never reach the Host executor and valid same-loopback requests do.
+- Exact server blob SHA `14d1d764730540330b7bf1d0f3b83b2c03df6a2c` was materialized and verified with Git `hash-object`; `py_compile` PASS; isolated HTTP-boundary pytest **1 passed**. This is not the full repository test suite.
+
+### 2. Exact Windows lane coverage
+
+- Updated active workflow and Work32 mirror on both the integration base branch and remediation branch.
+- `pull_request.branches` now includes `work/32-main-integration-authority-20261112`, allowing the remediation PR's base branch to receive the PR event.
+- Hosted Windows Browser Adapter pytest command now also runs `tests/test_execution_host_grants.py`, exercising the Windows process-tree termination path using runner-local portable Python 3.12.
+- Strict workflow mirror checker remains enabled with `CHECK_STRICT=1`.
+- Active/mirror parity is required before CI acceptance; exact readback to be recorded after verification.
+- Relevant base-branch commits: `1b12620f1105141bc86c1020814b6bdce5170795`, `2fb2de923aa7a592f6926457e0b93208e9cb2ed0`.
+- Relevant remediation-branch commits: `45379864090102d946ca4011dbe975f2c2f6e00e`, `2aadb358c5b5da2ad349aad277eebfa2df321a72`.
+
+### 3. CI trigger and validation status
+
+- Draft PR #54 created: `work/32-main-integration-remediation-20261113` → `work/32-main-integration-authority-20261112`.
+- PR #54 was initially opened before the base-branch filter included its target; therefore no PR workflow run was observed at that time.
+- The base workflow filter is now corrected. PR must be reopened/updated to emit a matching pull_request event. No current exact-head workflow PASS is claimed.
+- Full `tests/test_execution_host_grants.py` on the repository checkout, Windows hosted process-tree test, full Work32 unit/E2E and exact-head strict mirror CI remain PENDING.
+
+### 4. Safety / remaining blockers
+
+- Core :8000 invalid-credential route still requires live verification as 401/403; current PC probe observed 404.
+- Host :8031 live health must expose `provider_type=CORE_AUTHORIZED_PYTEST`, `authority=CORE_ONLINE`, `grant_cache=false`; current PC probe observed missing values.
+- Process owner/executable/module for PC ports 8000 and 8031 remains UNKNOWN/UNRESOLVED.
+- Remote transport remains disabled; no mTLS/OS peer identity claim is made.
+- No PC service/process was changed or restarted; no credentials provisioned; no protected command executed; no merge, CD or release.
+
+**Disposition:** Host/Origin source boundary implemented; exact source HTTP smoke PASS; Windows/full-repository validation pending; live PC runtime identity BLOCKED; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261113-123 — P0 HOST/HTTP/CORE COMPLETION CONTRACT FIX
+
+- **Work:** 32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P0 — actual Run completion must persist through the strict Core API
+- **Name:** Ka
+- **Title:** CSA / Work32 delegated execution owner
+- **Date-Time:** 2026-11-13 20:14 Asia/Ho_Chi_Minh
+- **Branch:** `work/32-main-integration-remediation-20261113`
+- **Related evidence:** DOC-119 addendum; PR #54 draft.
+- **Status:** SOURCE + REGRESSION TESTS COMMITTED; EXACT-HEAD CI PENDING.
+
+### 1. Confirmed integration defect
+
+The Host completion payload sends `execution_status`, `evidence_persisted`, `evidence_errors`, `stdout_sha256` and `stderr_sha256`. The strict HTTP `RunCompleteRequest` declared `execution_status` and the digest fields, but omitted `evidence_persisted` and `evidence_errors`. With `extra="forbid"`, the actual Host completion request could fail with HTTP 422. Existing HTTP tests did not send the full Host payload shape.
+
+### 2. Remediation committed
+
+- HTTP `RunCompleteRequest` now declares bounded `evidence_ref`, optional `evidence_persisted`, bounded `evidence_errors`, and strict lowercase SHA-256 patterns for stdout/stderr hashes.
+- Core independently validates stdout/stderr digests, evidence reference length, persistence flag type, error-list size/item bounds and consistency:
+  - non-empty evidence errors require `evidence_persisted=false`;
+  - `evidence_persisted=false` requires status BLOCKED and at least one evidence error;
+  - persisted evidence cannot contain errors.
+- HTTP integration test now sends the actual Host completion metadata shape.
+- Added HTTP regression: malformed digest/inconsistent persistence metadata is rejected; valid BLOCKED completion with evidence errors is accepted.
+- Added Core parameterized negative tests for invalid stdout/stderr digest, evidence reference, persistence flag and evidence-error list.
+- Updated DOC-119 with the completion contract addendum and BIÊN BẢN/NHẬT KÝ.
+- Source/test commits:
+  - Router: `18fc0c0dc9c6e179ce44cc92c079ac3daeeb04ac`
+  - Core: `b4c4442b2a3543f903c5ce684809c04f42b86b17`
+  - HTTP regression: `07f6c262d1136e0ea35dd92442daf82b4edbc5be`
+  - Core regression: `107508627abda20261b11afa5ed3983b094fef48`
+  - DOC-119 addendum: `7df2634d239be2c0633453bc845f673393f5199f`
+
+### 3. Validation boundary
+
+- Source changes are committed on the isolated remediation branch.
+- Tests have **NOT RUN** against the full repository at this exact head.
+- No HTTP 422 → 200 runtime result is claimed yet; exact-head CI and live Host→Core E2E are pending.
+- PR #54 remains draft/open and unmerged. Main/release paths remain untouched.
+- No PC process/service mutation, credential provisioning or protected execution occurred.
+
+**Disposition:** confirmed completion DTO mismatch fixed at source and covered by regression tests; exact-head test proof pending; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261113-124 — REAL HOST → CORE HTTP COMPLETION E2E REGRESSION
+
+- **Work:** 32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P0 — two-phase Run Record and evidence persistence
+- **Name:** Ka
+- **Title:** CSA / Work32 delegated execution owner
+- **Date-Time:** 2026-11-13 20:18 Asia/Ho_Chi_Minh
+- **Branch:** `work/32-main-integration-remediation-20261113`
+- **Status:** E2E REGRESSION ADDED; EXACT-HEAD CI PENDING.
+
+### 1. Test gap closed
+
+The prior tests validated Core HTTP and GrantedExecutionHost separately; they did not execute the real Host through the actual Core HTTP router using the Host-shaped completion payload.
+
+### 2. Regression added
+
+Added `test_granted_host_completes_through_real_core_http_contract` to `tests/test_execution_authority_http.py`:
+
+- Creates a temporary Git workspace with exact branch, origin and commit.
+- Computes the real source snapshot SHA.
+- Issues a grant through the Core HTTP API.
+- Uses the real `CoreAuthorityClient` with an in-process FastAPI TestClient transport.
+- Executes the real `GrantedExecutionHost.execute_for_work()`, including online validation, run_started persistence, canonical pytest process, evidence writing and HTTP completion.
+- Reads the Core append-only journal and asserts run_completed, evidence_persisted=true, empty evidence_errors, and stdout/stderr SHA-256 digests.
+
+This is not a fake AuthorityClient test; only the HTTP transport is in-process to avoid opening a network listener.
+
+### 3. Documentation and validation
+
+- DOC-119 section 6 records the test protocol and BIÊN BẢN/NHẬT KÝ addendum.
+- Test commit: `da81a25bbe7c5d10ace9ebf17703aec9ca51ebfe`; import correction: `b62c08766ff7d0dca522c10c0f02d982d5574d65`.
+- DOC-119 update: `f42bac2cf2ed6bcd30914bacf0bac149179c8e0a`.
+- Full repository test, exact-head CI and Windows lane remain pending. No PASS is claimed.
+
+**Disposition:** real Host → Core HTTP completion regression added to the unit suite; exact-head validation pending; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261113-125 — RUN #499 COMPILE FAILURE / IMMEDIATE SOURCE CORRECTION
+
+- **Work:** 32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P0 — exact-head validation / execution host integrity
+- **Name:** Ka
+- **Title:** CSA / Work32 delegated execution owner
+- **Date-Time:** 2026-11-13 20:18 Asia/Ho_Chi_Minh
+- **Run:** #499 / `43432414929`
+- **Tested HEAD:** `ecddd3ac05448540453c6a290f38310dd25c2594`
+- **Branch:** `work/32-main-integration-remediation-20261113`
+- **Status:** COMPILE FAIL RECORDED; SOURCE CORRECTED; RETEST PENDING.
+
+### 1. Failure evidence
+
+- Tooling tests: PASS.
+- Strict active workflow / Work32 mirror parity: PASS.
+- Python 3.12 unit job and Product Auto E2E job both stopped at `python -m compileall -q core agents execution_host room_hop_mcp`.
+- Exact failure: `execution_host/granted_host.py:302 SyntaxError: expected 'except' or 'finally' block`.
+- Unit tests and Product Auto E2E did not run; no test PASS is claimed.
+- Windows Browser Adapter and dedicated PC probe were still running/queued when this entry was made.
+
+### 2. Root cause and correction
+
+The `subprocess.run` → `run_bounded` replacement left a redundant inner `try:` without a matching handler, while the existing outer exception handler remained at the outer indentation.
+
+Ka removed the redundant inner `try` and aligned the bounded process execution block under the existing outer exception boundary. This preserves fail-closed handling for process creation, timeout, output overflow and process-tree termination errors.
+
+- Corrective commit: `05b0fb33087289d079c25bac2fb637eab5150575`.
+- New blob: `1c5c05f9204510b98775069ed8378d8ac2c69e3f`.
+- No other source behavior was changed in this correction.
+
+### 3. Next validation
+
+- Trigger a fresh exact-head workflow after this correction.
+- Require compileall PASS before counting any unit/E2E result.
+- Review Windows process-control tests separately; do not treat the prior run's partial job state as PASS.
+- Keep PR #54 draft/open and unmerged. Main, CD, staging, production and release remain untouched.
+
+**Disposition:** Run #499 is a real compile FAIL; source correction committed; exact-head retest required. Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261113-126 — RUN #508 AUTOMATED VALIDATION RESULTS / PC PROBE PENDING
+
+- **Work:** 32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P0 — exact-head validation
+- **Name:** Ka
+- **Title:** CSA / Work32 delegated execution owner
+- **Date-Time:** 2026-11-13 20:23 Asia/Ho_Chi_Minh
+- **Run:** #508 / `43432659016`
+- **Exact tested HEAD:** `7a93ce6d5546f778e76db47b201dc1574e02940d`
+- **Branch:** `work/32-main-integration-remediation-20261113`
+- **Status:** AUTOMATED LINUX + HOSTED WINDOWS LANES PASS; PC RUNNER PROBE QUEUED; RELEASE GATE NOT COMPLETE.
+
+### 1. Exact-head results
+
+- Compile application packages: **PASS**.
+- Python 3.12 bounded unit tests: **260 passed in 9.08s**. Unit manifest includes `tests/test_execution_authority_http.py` and `tests/test_execution_authority.py`; therefore the new real Host → Core HTTP completion regression and Core evidence metadata tests were included.
+- Product Auto E2E (live HTTP + MCP stdio + persisted evidence): **127 passed**.
+- Hosted Windows Browser Adapter + Host security regression lane: **26 passed in 13.87s**. Explicitly passed:
+  - per-run isolated HOME/temp environment;
+  - combined output cap;
+  - timeout process-tree termination / no orphan marker;
+  - loopback Host/Origin helper policy;
+  - actual HTTP handler rejection of remote Host/Origin and acceptance of same-loopback request.
+- Work32 tooling tests: **PASS**.
+- Strict active workflow / Work32 mirror parity: **PASS**.
+- Immutable product artifact build and extracted-artifact verification: **PASS**.
+
+### 2. PC runtime evidence remains unresolved
+
+- Run #508 dedicated PC runner identity job is still **QUEUED**; it has not produced a fresh snapshot for this exact head.
+- Last completed read-only PC probe is Run #439 on the earlier candidate SHA `d639199159d2f2c72d0e706e1490d9afd0f20ac3` (historical evidence only):
+  - runner identity: PASS (`ROOM-HOP-W32-PC`, Windows, X64);
+  - Python on service PATH: NOT_FOUND; Git 2.55.0 found;
+  - listener owner/module could not be read under runner service account (owner UNKNOWN, module UNRESOLVED);
+  - port 8000 PID 7708 and port 8031 PID 10212 did not match required entrypoints;
+  - Core invalid-credential probe returned HTTP 404, expected 401/403;
+  - Host health returned HTTP 200 but omitted `provider_type`, `authority`, and `grant_cache`.
+- Listener addresses were loopback at the time of that historical probe; process identity and application contract still failed.
+
+### 3. Disposition
+
+Automated exact-head tests are green, including Windows process containment. This does **not** prove the live PC services are the correct Core/Host processes, nor does it pass the release gate.
+
+Next required evidence: an elevated, read-only PC snapshot of service/process owner, executable path, parent PID, parsed module entrypoint and listener PIDs for ports 8000/8010/8020/8030/8031/8787. No process termination or service restart is authorized before that identity is established.
+
+**Disposition:** automated test lanes PASS; live PC Core/Host identity BLOCKED; PC runner probe queued; release gate pending; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261113-127 — RUN #508 RELEASE GATE BLOCKED BY PC RUNNER PROBE
+
+- **Work:** 32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P0 — live PC runtime identity / release acceptance
+- **Name:** Ka
+- **Title:** CSA / Work32 delegated execution owner
+- **Date-Time:** 2026-11-13 20:25 Asia/Ho_Chi_Minh
+- **Run:** #508 / `43432659016`
+- **Tested source HEAD:** `7a93ce6d5546f778e76db47b201dc1574e02940d`
+- **Status:** AUTOMATED LANES PASS; RELEASE GATE FAIL; PC PROBE CANCELLED.
+
+### 1. Final Run #508 job state
+
+- Unit: PASS (260).
+- Product Auto E2E: PASS (127).
+- Hosted Windows security/Browser Adapter: PASS (26).
+- Tooling + strict workflow mirror: PASS.
+- Immutable artifact: PASS.
+- Dedicated PC runner identity: **CANCELLED**.
+- Release acceptance gate: **FAIL** because `SELF_HOSTED_RESULT=cancelled`; the gate correctly requires self-hosted success for pull requests.
+
+### 2. Why PC action is required
+
+The last completed read-only PC snapshot (Run #439, historical candidate SHA `d639199159d2f2c72d0e706e1490d9afd0f20ac3`) established runner identity but could not prove process provenance:
+
+- Runner service identity: `ROOM-HOP-W32-PC`, Windows X64; runner identity PASS.
+- Runner service account: `NT AUTHORITY\NETWORK SERVICE` (known service configuration); process owner remained UNKNOWN under the service context.
+- Ports 8000/8031: PIDs 7708/10212, `python.exe`, module UNRESOLVED, expected entrypoint match false.
+- Core invalid-credential probe: HTTP 404 (expected 401/403).
+- Host health: HTTP 200, but missing `provider_type`, `authority`, `grant_cache`.
+- Python was not found in the service PATH; Git 2.55.0 was found.
+- Current Run #508 did not produce a fresh PC snapshot; its PC job was cancelled.
+
+### 3. Required next action
+
+Before any process restart or service change, Vinh must provide one elevated, read-only snapshot of the current listener owners, executable paths, parent PIDs, parsed Python module entrypoints and runner service/process status for ports 8000/8010/8020/8030/8031/8787.
+
+No process termination, service restart, credential change or port mutation is authorized until the exact process identity is known.
+
+**Disposition:** CI source and hosted test lanes PASS; live PC Core/Host provenance unresolved; release gate correctly BLOCKED. Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+
+---
+
+## W32-LOG-20261114-128 — PC TERMINAL EVIDENCE CAPTURE / KA HANDOFF SUMMARY
+
+- **Work:** 32 — CI/CD
+- **Document:** DOC-035 — canonical execution journal
+- **Date:** 2026-11-14 (the supplied terminal capture does not embed a reliable execution timestamp)
+- **Recorded by:** Xu / AI-01
+- **Evidence source:** Vinh-provided PowerShell transcript `Pasted text(20261113-224844).txt`; read-only review of captured output. This entry does not claim Xu executed commands on the PC.
+- **Branch receiving this journal entry:** `work/32-main-integration-remediation-20261113`
+- **Status:** EVIDENCE CAPTURED; LOCAL WORKTREE NOT RECONCILED; NO PASS CLAIMED.
+
+### 1. PC runner probe evidence relevant to Ka
+
+- The transcript includes DOC-122 and the historical GitHub Actions Run #390 / ID `43077454507`, runner job `130720921237`.
+- GitHub assigned the job to self-hosted runner `ROOM-HOP-W32-PC`, runner version 2.338.2, group `Default`, machine `ADMIN-PC`. Runner registration/label matching was therefore demonstrated for that historical run.
+- The probe script did not execute its body: Windows PowerShell Execution Policy blocked the temporary script file at launch.
+- Workflow correction recorded in the transcript: invoke the probe steps with `powershell -NoProfile -ExecutionPolicy Bypass -File {0}`. This is process-scoped and does not change machine/user ExecutionPolicy.
+- Run #390 remains a historical FAIL. A fresh run on the corrected exact head is still required; the correction itself is not a PASS.
+- The existing DOC-035 entries W32-LOG-20261112-115 and the Run #390 addendum remain the historical source of record. This entry summarizes the supplied capture for handoff and does not overwrite that history.
+
+### 2. Local worktree state observed in the supplied terminal capture
+
+The final `git status --short` excerpt reports:
+
+- Modified: `.gitignore`
+- Modified: `core/execution_authority.py`
+- Modified: `tests/test_execution_authority.py`
+- Untracked: `.ai-workspace/`
+- Untracked: `core/execution_authority.py.pre_completion_validation.bak`
+
+The capture does not establish the exact local HEAD SHA, branch, origin/upstream relation, or whether these paths correspond byte-for-byte to the GitHub branch receiving this journal entry. Therefore these files are **LOCAL-ONLY / UNRECONCILED**. Do not stage, commit, discard, overwrite, or synchronize them until their provenance and diff are inspected against the exact branch/commit. Preserve the backup and untracked workspace during that inspection.
+
+### 3. Handoff and next action
+
+1. Ka receives this concise evidence summary plus DOC-122; the full terminal transcript is not required for the first review.
+2. On GitHub, verify the corrected self-hosted runner probe on the current exact PR head and capture run ID, runner identity, job conclusion and complete probe output.
+3. Separately reconcile the local worktree against its exact branch/HEAD and GitHub source. Inspect diffs before any write or synchronization.
+4. Continue the Core-owned Execution Authority validation sequence from DOC-118/119/120/121: exact-SHA CI, fail-closed HTTP contract, source/workspace binding, two-phase Run Record persistence, and independent security review. Do not enable protected execution from source-level tests alone.
+5. Request PC action from Vinh only for the elevated read-only process/service provenance snapshot that cannot be obtained from GitHub-hosted CI. No process termination, service restart, credential mutation, port change, protected execution, main merge, deployment or release is authorized by this entry.
+
+**Disposition:** historical runner probe #390 FAIL; corrected probe RETEST PENDING; local worktree UNRECONCILED; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+
+---
+
+## W32-LOG-20261114-129 — XU REVIEW: WINDOWS PROCESS TEST SCOPE VS REAL PC PROBE
+
+- **Work:** 32 — CI/CD
+- **Document:** DOC-035
+- **Date:** 2026-11-14 (review time not separately captured)
+- **Actor:** Xu / AI-01 — architecture and gate owner
+- **Scope:** exact Work32 integration-remediation branch; workflow, process-control implementation, Windows tests and Run #508 evidence.
+- **Source branch:** `work/32-main-integration-remediation-20261113`
+- **Source revision tested by Run #508:** `7a93ce6d5546f778e76db47b201dc1574e02940d`
+- **Workflow blob:** `7f6450db6d530884cb6fc1cce8e26bb7d1916223`
+- **Process-control blob:** `9f5eeddbbcb32152b19321ac59563e2729a3303c`
+- **Windows test blob:** `c70ed4bee8a098aae27fcf921e0570bde95bf1f7`
+- **Status:** SOURCE/CI EVIDENCE REVIEWED; PC RUNTIME PROVENANCE STILL BLOCKED.
+
+### 1. Workflow and Run #508 distinction
+
+- The PR Windows Browser Adapter lane uses `windows-latest`; it runs `tests/test_browser_agent_adapter_port_config.py`, `tests/test_browser_agent_adapter_e2e.py` and `tests/test_execution_host_grants.py`.
+- The separate `w32_self_hosted_runner_probe` job runs on `[self-hosted, Windows, X64]`, only for pull requests, and requires runner name `ROOM-HOP-W32-PC`.
+- Run #508 / `43432659016`: hosted Windows lane PASS (26 tests); dedicated PC probe job `131909839284` CANCELLED; release gate job `131911054110` FAIL because the self-hosted result was cancelled.
+- Therefore the 26 Windows tests are evidence from GitHub-hosted Windows, not evidence from ADMIN-PC. They cannot be used to claim the user's PC services or PC runner runtime are healthy.
+
+### 2. Process-control source and test scope
+
+- `execution_host/process_control.py` implements combined stdout/stderr byte limiting, timeout handling and process-tree termination. Windows termination uses `taskkill /PID <pid> /T /F`; it reports tree termination as confirmed only when the command succeeds and the root process exits. If taskkill is unavailable/fails, the fallback kills only the root process and returns an unconfirmed result (fail-closed).
+- `tests/test_execution_host_grants.py` contains tests for combined-output cap and timeout process-tree termination, including a child-process marker check. These tests were included in the hosted Windows lane on Run #508.
+- This source/test evidence does not prove process-tree cleanup on the dedicated ADMIN-PC runner or the live Core/Host processes currently listening on the PC.
+- Ka's DOC-124 MCP SDK Windows Job Object audit is a separate implementation path from Work32's `run_bounded`; its Job Object assignment and actual child-process cleanup remain NOT VERIFIED per DOC-124.
+
+### 3. Decision and next action
+
+1. No source-code change is justified by this review alone; keep the exact-head code and current passing hosted tests intact.
+2. The only remaining PC-specific action is a fresh read-only probe on `ROOM-HOP-W32-PC` plus an elevated read-only snapshot of listener/service process provenance. The previous Run #508 PC job was cancelled, so it supplied no fresh snapshot.
+3. Do not restart/terminate listeners, change service configuration/credentials/ports, or enable protected execution until the exact process identity and entrypoint are known.
+4. After PC evidence is available, reconcile the observed Core :8000 and Execution Host :8031 processes with the expected entrypoints, check Core invalid-credential behavior (401/403), and verify Host identity fields (`provider_type`, `authority`, `grant_cache`). Then decide whether any controlled runtime repair is needed.
+5. Keep PR open/unmerged, main untouched, protected execution DENIED, CD/deployment/release blocked.
+
+**Disposition:** hosted Windows process-control tests PASS on Run #508; dedicated PC runner probe CANCELLED; live PC Core/Host identity NOT VERIFIED; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261114-130 — EXECUTION HOST RESOURCE-BOUNDARY SOURCE AUDIT
+
+- **Timestamp:** 2026-11-14 06:07:11 +07:00
+- **Actor:** Xu / AI-01
+- **Work:** 32 — CI/CD
+- **Scope:** read-only source audit of Core grant validation, Execution Host process control, Windows CI test wiring and DOC-123 H1 security acceptance requirements.
+- **Branch:** `work/32-main-integration-remediation-20261113`
+- **Reference candidate SHA:** `7a93ce6d5546f778e76db47b201dc1574e02940d` (Run #508 source tested)
+- **Source blobs:** `core/execution_authority.py` = `dd9becadd56a1df4c3f306de317b2f70f2b3b1db`; `execution_host/process_control.py` = `9f5eeddbbcb32152b19321ac59563e2729a3303c`; `execution_host/granted_host.py` = `1c5c05f9204510b98775069ed8378d8ac2c69e3f`; `tests/test_execution_host_grants.py` = `c70ed4bee8a098aae27fcf921e0570bde95bf1f7`.
+- **Method:** source read and cross-check against DOC-123 H1; no code execution or PC access.
+- **Status:** SOURCE AUDIT COMPLETE; RESOURCE-ISOLATION ACCEPTANCE GAP OPEN; NO CODE CHANGED.
+
+### 1. Core grant lifecycle checks confirmed
+
+- `ExecutionAuthority.validate_grant()` calls `_find_grant()` under the Core lock.
+- `_find_grant()` rejects missing/wrong-Work grants, non-active/revoked grants, and expired grants (`grant_expired`); malformed expiry records fail closed.
+- `start_run()` independently checks active state and expiry before persisting `run_started`.
+- Execution Host performs a second online validation immediately before spawning the process and checks status and scope bindings.
+- Therefore the earlier possible expiry/revocation concern is **NOT a confirmed defect**; source has the required checks. No change proposed for this path.
+
+### 2. Process controls present
+
+- `run_bounded()` caps combined stdout/stderr at 1 MiB, enforces a timeout, and attempts process-tree termination.
+- Windows process-tree termination uses `taskkill /PID <pid> /T /F`; it only reports confirmed termination when taskkill succeeds and the root process exits. If unavailable or unsuccessful, result remains unconfirmed/fail-closed.
+- The Windows test suite includes output-cap and timeout/process-tree tests. Run #508's hosted Windows lane passed 26 tests, including `tests/test_execution_host_grants.py`; this was GitHub-hosted Windows, not ADMIN-PC.
+
+### 3. Confirmed gap against DOC-123 H1 item 4
+
+DOC-123 requires runtime, memory, CPU, process-count and workspace bounds.
+
+- Runtime bound: present through the grant timeout and `run_bounded(timeout=...)`.
+- Output bound: present through the combined stdout/stderr byte cap.
+- Workspace boundary: source enforces canonical workspace/evidence-root containment and source/Git identity checks.
+- Process-tree cleanup: attempted and covered by tests; actual dedicated-PC runtime proof remains pending.
+- **Memory bound: no OS-enforced per-run memory limit identified in the audited process-control path.**
+- **CPU bound: no per-run CPU quota identified.**
+- **Process-count bound: no per-run process/job limit identified.**
+
+The current Windows implementation does not create or configure a Windows Job Object for the Work32 pytest process. The code's taskkill tree operation is cleanup after timeout/output overflow; it is not a resource quota. The present tests do not demonstrate memory, CPU or process-count enforcement.
+
+### 4. Decision / next steps
+
+1. Keep protected execution DENIED. Do not mark H1 complete while the three quota controls above are absent or unproven.
+2. Prepare a bounded design proposal for OS-enforced resource limits, prioritizing Windows Job Objects for the actual Windows execution host; define explicit policy values, unsupported-platform behavior, cleanup semantics and negative tests before implementation.
+3. Route the proposal for independent security/architecture review (Ka and Cla) and reconcile feedback into the canonical Work 32 Biên bản before any code change, consistent with the Work's change-control process.
+4. After approval, implement on a dedicated remediation branch; test memory exhaustion, CPU quota, process-count overflow, timeout, cancellation, child-process cleanup, and fail-closed behavior when quota assignment is unavailable.
+5. Keep PC runtime provenance as a separate pending gate; this source gap can be designed and implemented without asking Vinh to run PC commands.
+
+**Disposition:** Core grant expiry/revocation source checks CONFIRMED; bounded runtime/output/workspace checks PARTIAL; memory/CPU/process-count quotas NOT IMPLEMENTED/NOT VERIFIED; no source change; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261114-131 — DOC-125 RESOURCE QUOTA REVIEW PACKAGE PREPARED
+
+- **Timestamp:** 2026-11-14 06:10 +07:00
+- **Actor:** Xu / AI-01
+- **Scope:** design-only preparation; no code/runtime mutation.
+- **Canonical proposal:** `01_PLAN/DOC-125_W32-EXECUTION-HOST-OS-RESOURCE-QUOTA-DESIGN-REVIEW-20261114.md`
+- **GitHub commit:** `07d728d7bb92d2c1d8045aa87042a73d3579246e`
+- **Sandbox:** same canonical relative path created and readback pending.
+- **Register:** DOC-055 updated with DOC-125 entry in Sandbox.
+
+### Work completed
+
+1. Prepared DOC-125 with current source baseline, constraints, candidate Windows Job Object approach, unresolved pre-execution assignment race, fail-closed requirements, review questions for Ka/Cla and a negative-test matrix.
+2. Explicitly kept the proposal at PROPOSED / NOT APPROVED. No implementation or execution permission is granted.
+3. Identified that review feedback must be reconciled into canonical DOC-034 / DOC-006 before code work begins.
+
+### Handoff state
+
+- Ka security review: REQUEST PREPARED / RESPONSE NOT YET RECEIVED.
+- Cla CTO implementation review: REQUEST PREPARED / RESPONSE NOT YET RECEIVED.
+- Xu architecture decision: PENDING both reviews.
+- Vinh / PC: NOT REQUIRED for this design review stage.
+
+**Disposition:** DOC-125 proposal created on GitHub and Sandbox; register updated in Sandbox; implementation remains unauthorized; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261114-132 — CORE RUN-RECORD PERSISTENCE TEST-COVERAGE AUDIT
+
+- **Timestamp:** 2026-11-14 06:12 +07:00
+- **Actor:** Xu / AI-01
+- **Scope:** read-only audit of `core/execution_authority.py` and `tests/test_execution_authority.py` against DOC-123 H1 item 7.
+- **Source blobs:** Core `dd9becadd56a1df4c3f306de317b2f70f2b3b1db`; tests `<see source candidate 7a93ce6d5546f778e76db47b201dc1574e02940d>`.
+- **Status:** IMPLEMENTATION PATTERN PRESENT; REQUIRED FAILURE/PROCESS-LEVEL TEST EVIDENCE INCOMPLETE; NO CODE CHANGED.
+
+### 1. Source observations
+
+- Core serializes state changes through a thread lock plus OS file lock (`msvcrt.locking` on Windows / `fcntl.flock` elsewhere).
+- Run events are append-only JSONL, hash-chained, flushed and `fsync`'d.
+- Readback validates chain continuity, event hashes, event types and legal run-start/run-completion transitions; corrupt state fails closed.
+- A run-start event without a completion remains represented as an incomplete record (`completion=None`); the grant is already consumed and cannot be used for another run.
+
+### 2. Test evidence observed
+
+- `test_concurrent_core_instances_append_valid_hash_chain` creates two Core instances and uses a ThreadPoolExecutor with 8 threads to issue 16 grants; it verifies the resulting chain and grant state.
+- `test_journal_tampering_fails_closed` verifies hash tampering is rejected.
+- Tests cover single-use grants and completion validation.
+- The concurrency test is thread-based, not a separate-process test. No test in the inspected authority test module starts independent OS processes contending on the same journal/lock.
+- No explicit crash/restart test was found for interruption after `run_started` and before `run_completed`, including the expected post-restart representation and prohibition on false PASS.
+
+### 3. Disposition against DOC-123 H1 item 7
+
+- File-lock implementation exists, but **cross-process contention and lock recovery are NOT VERIFIED by the inspected test suite**.
+- Hash-chain tamper detection and append-only event mechanics have source/test evidence.
+- **Crash/restart recovery of an incomplete Run Record is NOT VERIFIED**. This is a test/evidence gap; this audit does not assert that the implementation is defective.
+- No SQLite backend is present in the audited Core authority path; the actual store is JSONL plus OS file lock. The acceptance decision must explicitly confirm whether this is the approved persistence design or whether DOC-123's SQLite wording is still a requirement.
+
+### 4. Required follow-up
+
+1. Add an independent-process contention test using separate Python processes sharing one authority journal and lock; assert unique grants, valid hash chain and no lost events.
+2. Add crash/restart simulation after durable `run_started` and before completion; after reopening Core, assert the record remains incomplete/indeterminate, the grant remains consumed, and no PASS is synthesized.
+3. Add lock acquisition/recovery timeout behavior or document why the OS lock's blocking semantics satisfy the operational requirement; ensure service behavior fails closed if the lock cannot be acquired.
+4. Resolve JSONL vs SQLite explicitly in the canonical decision before changing persistence architecture.
+
+**Disposition:** source persistence design PARTIAL; thread-level concurrency PASS in tests; cross-process contention NOT RUN/NOT VERIFIED; crash/restart recovery NOT RUN/NOT VERIFIED; no code change; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261114-133 — KA / AI-02 CSA SECURITY REVIEW RECEIVED
+
+- **Date:** 2026-11-14 (the supplied review did not provide a verifiable time-of-day)
+- **Actor:** Xu / AI-01 — intake and evidence recording
+- **Reviewer:** Ka / AI-02 — CSA, READ-ONLY
+- **Scope:** DOC-125 Windows Execution Host OS resource quota and process containment design
+- **Reference branch reported by reviewer:** work/32-main-integration-remediation-20261113
+- **Inspected commit reported by reviewer:** 066e0a19f924806a71b1d0bbc971887e5c5d2c50
+- **Status:** REVIEW RECEIVED; SOURCE CLAIMS ATTRIBUTED TO REVIEWER; NOT INDEPENDENTLY REPRODUCED BY THIS LOG ENTRY.
+- **Code changes:** NONE. **Protected execution:** DENIED. **Release:** NOT AUTHORIZED.
+
+### 1. Review disposition
+
+Ka rejects the current resource-isolation implementation and approves the proposed Windows Job Object direction only with conditions. The report explicitly does not authorize implementation or execution.
+
+### 2. Key findings received
+
+- Ordinary Popen-based launch paths do not establish a pre-execution OS resource boundary.
+- Timeout, output cap and taskkill cleanup do not substitute for OS-enforced memory, CPU-rate and active-process limits.
+- Required safe sequence: create/configure/query Job limits; create workload process suspended; assign; verify Job membership; only then resume.
+- Any failure before resume must deny execution and terminate any suspended process; no fallback to ordinary Popen.
+- Job Object does not by itself provide privilege isolation. Restricted workload identity, filesystem/network access controls and credential isolation require separate design.
+- Nested Job behavior, breakaway, WMI process creation, handle lifetime, host crash cleanup and quota telemetry need explicit tests.
+
+### 3. Security findings recorded
+
+Ka reported CSA-125-01 memory quota absent (Critical); CSA-125-02 CPU hard cap absent (High); CSA-125-03 process-count limit absent (High); CSA-125-04 pre-assignment execution race (Critical); CSA-125-05 missing demonstrated Job ownership (Critical); CSA-125-06 host-close cleanup not demonstrated (High); CSA-125-07 child escape paths (High); CSA-125-08 privilege isolation not demonstrated (High); CSA-125-09 quota telemetry/provenance not demonstrated (Medium).
+
+### 4. Required next evidence
+
+- Complete negative tests for Job creation/configuration/query/assignment/resume failures, proving no user-code side effect before successful assignment.
+- Prove memory, CPU-rate and active-process enforcement on supported Windows.
+- Prove child/grandchild containment, timeout, cancellation, host crash/kill-on-close and no orphan process.
+- Test breakaway, WMI and nested Job conditions; fail closed when containment cannot be guaranteed.
+- Verify restricted workload identity and policy/telemetry provenance.
+- Retain grant, source/workspace binding and Run Record tests.
+
+### 5. Xu disposition and handoff
+
+1. DOC-125 remains PROPOSED; Ka's review is appended as an attributed independent review, not an approval.
+2. DOC-034 implementation decision remains PENDING Cla's feasibility review and Xu reconciliation.
+3. Protected execution remains DENIED; no code, PR, branch integration or release action is authorized.
+4. Cla's report is the next required input. Xu will compare disagreements and prepare one canonical decision after receipt.
+5. This entry records receipt of the report, not independent confirmation of every API assertion or Windows runtime behavior.
+
+**Disposition:** W32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261114-CLA-06 — CLA / AI-03 CTO REVIEW DOC-125 RECEIVED AND RECONCILED
+
+- **Date:** 2026-11-14; exact time not available.
+- **Actor:** Xu / AI-01 — reconciliation and GitHub/Sandbox evidence sync.
+- **Reviewer:** Cla / AI-03 (Claude), CTO — READ-ONLY.
+- **Evidence file:** work/32/06_EVIDENCE/W32-EVIDENCE-CLA-06-DOC125-RESOURCE-QUOTA-CTO-REVIEW-20261114.md.
+- **Original receipt:** found in Sandbox canonical evidence and existing Sandbox journal; this entry reconciles the previously missing GitHub mirror.
+- **Conclusion reported by Cla:** IMPLEMENTABLE WITH CONDITIONS.
+- **Source limitation:** Cla explicitly lacked GitHub source access in its review session and relied on prior journal/source summaries. Its code observations are secondary, not an independent line-by-line source audit.
+- **Code changes by Cla:** NONE. Protected execution: NOT RUN. PC action: NONE.
+
+### 1. CTO design proposal
+
+Cla proposes a narrow ResourceBackend, a Windows Job Object backend and an UnsupportedBackend that denies protected execution. The launch sequence is: validate policy; create/configure Job; query and verify limits; create process suspended; assign and verify Job membership; perform the second Core online validation; resume only after all barriers pass. Failures terminate/close and return BLOCKED; no fallback to ordinary Popen. Linux protected execution remains DENY unless a separate kernel-enforced backend is verified.
+
+### 2. CTO conditions and unresolved decisions
+
+- Xu must independently line-trace the exact source SHA because Cla did not access GitHub source during its review.
+- Resolve policy provenance/Host ceiling, Linux denial and test-double injection, orphan process behavior, incomplete/torn journal recovery, Host cancellation, and JSONL versus SQLite requirement.
+- Probe nested Job behavior, CPU rate control and optional JOB_LIST on a Windows environment matching ADMIN-PC.
+- Set quota values only after measured workload baselines; no guessed limits.
+- H1 requires exact self-hosted ADMIN-PC evidence; hosted Windows is insufficient.
+- Add independent-process Run Record contention and crash/restart tests.
+
+### 3. Technical cautions
+
+- Job memory quota concerns committed memory, not necessarily working set/RSS; exceeding it may cause allocation failure rather than automatic process termination.
+- CPU hard cap throttles; CPU-time limit is distinct. ActiveProcessLimit overflow behavior needs measurement.
+- The simpler suspended-process A1 path may leave a suspended non-running orphan if Host dies before assignment; explicitly test cleanup. JOB_LIST is a stronger candidate but requires platform probing.
+- Nested Job assignment failure must remain fail-closed; no breakaway workaround.
+
+### 4. Reconciliation with Ka
+
+- Ka: current isolation REJECT; Job Object direction APPROVE WITH CONDITIONS; emphasizes security threat model, privilege separation, no pre-assignment execution and negative tests.
+- Cla: implementation IMPLEMENTABLE WITH CONDITIONS; emphasizes backend design, Windows API spike, quota measurement, Host cancellation/orphan handling, persistence semantics and PC evidence.
+- No substantive disagreement on the core safety barrier: workload must not execute before OS containment is configured and verified; every failure denies execution.
+- Both reviews are design/source reviews only. Neither supplies actual ADMIN-PC quota enforcement evidence.
+
+### 5. Xu disposition
+
+DOC-125 remains PROPOSED / NOT APPROVED pending Xu's canonical decision. This entry records Cla's previously received Sandbox review and its GitHub evidence mirror; it does not claim independent source/runtime verification. Protected execution remains DENIED. No implementation, main integration, deployment or release is authorized.
+
+**Disposition:** W32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261114-134 — XU EXACT-SHA SOURCE TRACE AND KA/CLA REVIEW RECONCILIATION
+
+- Date: 2026-11-14; exact time not separately captured.
+- Actor: Xu / AI-01.
+- Branch: work/32-main-integration-remediation-20261113.
+- Method: GitHub fetch/read-only source inspection; no runtime execution and no code mutation.
+- Status: SOURCE TRACE CONFIRMED; DESIGN DECISION RECORDED; IMPLEMENTATION NOT AUTHORIZED.
+
+### 1. Exact source blobs independently fetched by Xu
+
+- execution_host/process_control.py — 9f5eeddbbcb32152b19321ac59563e2729a3303c.
+- execution_host/host.py — 977b5bc5072eaf0a3ad054aecd22491483d621b1.
+- execution_host/granted_host.py — 1c5c05f9204510b98775069ed8378d8ac2c69e3f.
+- execution_host/server.py — 14d1d764730540330b7bf1d0f3b83b2c03df6a2c.
+- execution_host/core_authority_client.py — adc36577a94efdd5c46d64c30065993d5cd02b3b.
+- tests/test_execution_host.py — 183cba2959db9d9fb00751055efdeddd09c14a64.
+- tests/test_execution_host_grants.py — c70ed4bee8a098aae27fcf921e0570bde95bf1f7.
+- core/execution_authority.py — dd9becadd56a1df4c3f306de317b2f70f2b3b1db.
+- tests/test_execution_authority.py — 6503bf7b5ffb87ee0ab8721044149fb0ebedc52f.
+
+### 2. Source findings
+
+- The protected GrantedExecutionHost path imports and calls run_bounded(). On Windows, run_bounded() creates the process with subprocess.Popen and CREATE_NEW_PROCESS_GROUP; it does not use CREATE_SUSPENDED or Job Object assignment. Timeout/output overflow invokes taskkill /T /F as cleanup.
+- The separate generic ExecutionHost path in host.py also uses ordinary subprocess.Popen followed by communicate(timeout=...). It is not the protected server route (server.py instantiates GrantedExecutionHost), but it is another execution-capable path and must be inventoried/disabled or separately contained before claiming all Host execution paths are isolated.
+- GrantedExecutionHost persists run_started before execution, validates grant online, checks Work/source/repository/branch/command bindings and uses a second online validation immediately before run_bounded(). This is authorization and audit protection, not OS resource containment.
+- Core source uses JSONL append-only/hash-chain with OS file locking (msvcrt on Windows / fcntl on POSIX). DOC-123 separately mentions multi-process lock/SQLite timeout/recovery; persistence contract remains unresolved until explicitly reconciled.
+
+### 3. Review reconciliation
+
+- Ka: current resource isolation REJECT; Job Object architecture APPROVE WITH CONDITIONS; highlights privilege isolation, breakaway/WMI/nested Job, kill-on-close and negative tests.
+- Cla: IMPLEMENTABLE WITH CONDITIONS; its source observations were secondary because Cla could not independently read GitHub in its session. It adds API spike, cancellation/orphan lifecycle, quota measurement and Run Record process/crash tests.
+- Common conclusion: no workload code before verified OS containment; fail closed; no ordinary-Popen fallback.
+
+### 4. Decision and status
+
+W32-DECISION-20261114-08 in DOC-006 and Biên bản W32-20261114-08 in DOC-034 approve the design direction only with conditions. D1–D6 remain blockers to product implementation. A bounded isolated Windows API proof-of-concept/test specification is the only authorized next activity; no product source change, PC action, runner dispatch, protected execution, main integration, deployment or release.
+
+Disposition: resource isolation H1 BLOCKED; protected execution DENIED; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261114-135 — GITHUB/SANDBOX DOCUMENT MIRROR DRIFT AFTER REVIEW RECONCILIATION
+
+- **Date:** 2026-11-14; exact time not separately captured.
+- **Actor:** Xu / AI-01.
+- **Scope:** readback comparison of DOC-034, DOC-006, DOC-035, DOC-055, DOC-125 and Cla evidence after Ka/Cla review reconciliation.
+- **Method:** exact GitHub fetch on branch work/32-main-integration-remediation-20261113 and Sandbox readback; compare byte lengths and required markers.
+
+### Readback results
+
+- DOC-034: GitHub and Sandbox content lengths match (4,632 bytes); decision W32-20261114-08 present in both.
+- DOC-006: GitHub and Sandbox content lengths match (22,170 bytes); decision W32-DECISION-20261114-08 present in both.
+- DOC-055: GitHub and Sandbox content lengths match (26,502 bytes); DOC-125 review/decision status addendum present in both.
+- Cla evidence: GitHub and Sandbox content lengths match (9,728 bytes); review conclusion IMPLEMENTABLE WITH CONDITIONS present in both.
+- DOC-125: both stores contain Ka review, Cla review and Xu source-trace/decision markers, but byte lengths differ (GitHub 15,982; Sandbox 13,718). Treat as semantic presence verified, exact mirror NOT VERIFIED.
+- DOC-035: both stores contain Ka LOG-133, Cla LOG-CLA-06 and Xu LOG-134; byte lengths differ (GitHub 269,500; Sandbox 910,358). A pre-existing Sandbox sync note and historical content divergence were observed. Append-only records were preserved; no overwrite/truncation attempted.
+
+### Disposition
+
+- DOC-034, DOC-006, DOC-055 and Cla evidence: exact content-size parity plus required-marker readback PASS.
+- DOC-125: required review/decision markers present in both; exact content parity NOT VERIFIED.
+- DOC-035: required new entries present in both; full journal parity NOT VERIFIED / DRIFT OPEN.
+- Do not claim full GitHub↔Sandbox synchronization. Do not overwrite or truncate the Sandbox journal. A controlled line-level reconciliation is still required.
+- No source/runtime code changed; no PC action; protected execution remains DENIED; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261114-136 — XU D1/D3 WINDOWS JOB OBJECT DESIGN SPECIFICATION
+
+- **Date:** 2026-11-14; exact time not separately captured.
+- **Actor:** Xu / AI-01.
+- **Branch:** work/32-main-integration-remediation-20261113.
+- **Scope:** DOC-125 D1 creation-time Job assignment and D3 cancellation/descendant lifecycle.
+- **Method:** read-only review of canonical DOC-125/DOC-034/DOC-006/DOC-035 plus Microsoft Learn API documentation; no code execution, no PC access, no runner dispatch, no source mutation.
+- **Status:** DESIGN SPECIFICATION RECORDED; RUNTIME NOT RUN; NOT VERIFIED.
+
+### 1. D1 design recommendation
+
+- Preferred spike candidate is Windows `PROC_THREAD_ATTRIBUTE_JOB_LIST` via `STARTUPINFOEX` / `EXTENDED_STARTUPINFO_PRESENT`, because Microsoft documents support beginning with Windows 10 and creation-time Job assignment avoids the post-create/pre-assignment execution interval.
+- ADMIN-PC baseline is Windows 10 Pro build 19045, which is within the documented support generation. This is a compatibility basis only, not runtime proof.
+- `CREATE_SUSPENDED` + `AssignProcessToJobObject` remains a comparison-only spike case, not a production fallback. A Host crash before assignment can leave a suspended process outside the Job.
+- Invalid attribute, unsupported API, nested Job conflict, configuration/query mismatch, membership verification failure or Core revalidation failure => DENY/BLOCKED; no ordinary-Popen fallback.
+
+### 2. D3 lifecycle contract
+
+- Single Host supervisor owns each run's process/thread/Job handles and cancellation/finalization state.
+- All cancellation causes use one idempotent `TerminateJobObject` path; verify Job signaled and Job accounting `ActiveProcesses == 0`.
+- Root exit while descendants remain requires whole-Job termination; root exit alone is not clean completion.
+- Graceful shutdown and forced Host termination must verify kill-on-last-handle-close. Job handles must not be inheritable or leaked/duplicated.
+- Failed wait/query/termination or Run Record write/recovery => BLOCKED/INDETERMINATE, never PASS.
+
+### 3. Important boundary discovered in Microsoft API documentation
+
+- Windows Job Object inheritance does not cover every process-creation mechanism. Microsoft documents that a process created through `Win32_Process.Create` is not associated with the parent Job by default.
+- Therefore Job Object alone is not a complete sandbox. Restricted workload identity and explicit denial of WMI/service/task-scheduler broker privileges are mandatory. If not established, protected execution remains DENIED.
+- Job memory quota is committed-memory accounting, not an RSS/working-set guarantee; CPU hard cap is throttling, distinct from CPU-time budget. No numeric quota was selected.
+
+### 4. Test specification added to DOC-125
+
+D1-01..D1-07 cover creation-time assignment, no-side-effect failure, nested Jobs, limit query, Host crash, breakaway and WMI escape. D3-01..D3-10 cover cancel/timeout/output overflow, root-exit-with-descendants, graceful/forced Host shutdown, handle leakage, racing cancellation, failed Job query/wait, Run Record torn-write recovery and measured resource enforcement.
+
+### 5. Evidence and disposition
+
+- DOC-125 now contains the full D1/D3 design and bounded spike test specification.
+- External API references: Microsoft Learn Job Objects, UpdateProcThreadAttribute, Nested Jobs and JOBOBJECT_BASIC_LIMIT_INFORMATION.
+- No product source/test changes; no PC action; no runner dispatch; no protected execution; no main integration; no deployment/release.
+- D1 DESIGN SPECIFIED / RUNTIME NOT VERIFIED; D3 CONTRACT SPECIFIED / RUNTIME NOT VERIFIED.
+- D2, D4, D5 and D6 remain open and continue to block implementation. Work32 remains ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261114-137 — D1/D3 DESIGN SPECIFICATION GITHUB/SANDBOX READBACK
+
+- **Date:** 2026-11-14; exact time not separately captured.
+- **Actor:** Xu / AI-01.
+- **Method:** fetched updated GitHub files on `work/32-main-integration-remediation-20261113`; used Sandbox diagnostic readback; checked canonical path, new section/log markers and terminal content.
+- **Status:** NEW ADDENDA PRESENT IN BOTH STORES; FULL MIRROR PARITY NOT VERIFIED.
+
+### Results
+
+- DOC-125: GitHub length 29,104 characters; Sandbox length 26,838 characters. Both contain Section 12 (D1/D3 specification), the Microsoft API reference list and the current status clarification. Terminal content matches in the sampled tail. Full document parity remains NOT VERIFIED because the pre-existing DOC-125 body differs.
+- DOC-035: GitHub length 275,348 characters; Sandbox length 916,204 characters. Both contain W32-LOG-20261114-136 and W32-LOG-20261114-137; terminal content of LOG-136 matches in the sampled tail. Full journal parity remains NOT VERIFIED due historical content divergence.
+- GitHub DOC-125 blob after Section 12 addendum: `b8fc93bc268e31e7444831ffbbf6d5eff7494bed`.
+- GitHub DOC-035 blob after LOG-136: `df6a6dec92ee728f2dacca2383736b169fae0f56`.
+- No overwrite/truncation of Sandbox documents was attempted. New records were appended only.
+
+### Disposition
+
+D1 design specified; runtime not verified. D3 lifecycle contract specified; runtime not verified. D2/D4/D5/D6 remain open. No source code or tests changed, no PC action, no runner dispatch, no protected execution, no main integration, no deployment/release. Work32 remains ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261114-138 — XU D2/D4/D5/D6 POLICY, PERSISTENCE AND MEASUREMENT DESIGN
+
+- **Date:** 2026-11-14; exact time not separately captured.
+- **Actor:** Xu / AI-01.
+- **Branch:** work/32-main-integration-remediation-20261113.
+- **Scope:** read-only exact-SHA Core/Host source audit and design extension for DOC-125 D2, D4, D5 and D6.
+- **Method:** inspected Core authority source, Grant issuance/validation, Granted Host and Core Authority Client; read DOC-123 and DOC-117 from Sandbox; consulted Microsoft Learn Job Object CPU/memory API semantics. No runtime execution and no source mutation.
+- **Status:** SOURCE GAP CONFIRMED; DESIGN PROPOSALS RECORDED; NO IMPLEMENTATION AUTHORIZED.
+
+### 1. D2 source finding and proposed contract
+
+- Exact Core source blob: `core/execution_authority.py` = `dd9becadd56a1df4c3f306de317b2f70f2b3b1db`.
+- Core Work policy currently validates `max_timeout_seconds`, but no OS resource profile is required or validated.
+- Grant issuance currently stores `max_timeout_seconds` and `policy_version`; it does not bind Job memory, CPU hard-cap or active-process limits.
+- Host's online validation returns the stored grant binding; there is no resource profile today.
+- Proposed contract: Core Work policy owns a normalized resource profile; grant snapshots profile ID/version/payload/SHA-256; Host verifies the digest and intersects it with a trusted local hard ceiling using minimum numeric limits. Caller-supplied quota values are never accepted. Missing/stale/mismatched profile => DENY.
+- Proposed fields: `memory_limit_bytes`, `cpu_rate_x100` (1..10000; percentage × 100), `active_process_limit`, `runtime_limit_seconds`. Zero placeholders are invalid; no numeric values selected.
+
+### 2. D4/D5 persistence finding and proposed disposition
+
+- DOC-123 H1 item 7 explicitly names multi-process lock / SQLite timeout/recovery / append-only Run Record consistency.
+- Current Core source uses append-only JSONL, SHA-256 hash chain, flush/fsync and OS file lock. Existing evidence covers thread-level concurrency and tampering; separate-process contention and crash/restart are not verified.
+- D4 contract: incomplete durable run_started after restart is INDETERMINATE; grant remains consumed; no false PASS; torn/corrupt append fails closed; exact duplicate completion is idempotent by run_id + canonical payload digest; conflicting duplicate is rejected.
+- D5 interpretation: SQLite-backed transactional store is the acceptance target under DOC-123 unless the directive is formally amended. Existing JSONL remains current implementation, not silently considered SQLite-compliant. No dual-write/migration/source change authorized.
+- Proposed SQLite design: local Core-owned DB, WAL where supported, synchronous FULL, bounded busy_timeout, BEGIN IMMEDIATE, append-only hash-chained event table, legal transition enforcement, integrity checks, explicit migration/rollback.
+
+### 3. D6 measurement plan
+
+- No quota values selected. Measure real workload cohorts separately, capture Job committed-memory peak, CPU rate/accounting, active-process peak, runtime, output/workspace growth, Host/Core overhead and exact source/environment provenance.
+- Report sample count, p50/p95/max, variance and outliers; derive safety margins only after measurements and independent Ka/Cla/QE review.
+- Hosted Windows is preliminary only; H1 still requires supported ADMIN-PC evidence. No PC action or self-hosted runner dispatch authorized now.
+
+### 4. Disposition
+
+DOC-125 now includes design proposals for D1–D6. D1/D3 remain runtime NOT VERIFIED; D2 schema not implemented; D4 process/crash/idempotency tests not run; D5 SQLite migration not implemented; D6 measurements not run and no quotas selected. H1 remains BLOCKED; protected execution DENIED. No product source/test change, no PC action, no runner dispatch, no main integration, deployment or release. Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261114-139 — FINAL READBACK OF DOC-125 D1–D6 ADDENDA
+
+- **Date:** 2026-11-14; exact time not separately captured.
+- **Actor:** Xu / AI-01.
+- **Method:** exact GitHub fetch on remediation branch and Sandbox diagnostic readback of canonical DOC-125 and DOC-035 paths.
+- **Status:** ADDENDA VERIFIED PRESENT; FULL MIRROR PARITY STILL NOT VERIFIED.
+
+### Readback evidence
+
+- DOC-125 GitHub blob: `ed09f437c6e166e9ca2d5a5da268e8992aca51e6`; GitHub length 44,748 characters; Sandbox length 42,482 characters.
+- DOC-125 Sections 12, 13, 14, 15 and current-status clarification are present in both stores. The last 700 characters match exactly. Full DOC-125 parity remains NOT VERIFIED because the pre-existing body differs.
+- DOC-035 GitHub blob: `eca8df929c236b6e693d953c9d400402a1ca49c6`; GitHub length 280,945 characters; Sandbox length 921,801 characters.
+- DOC-035 entries W32-LOG-20261114-136, -137 and -138 are present in both stores. The last 700 characters match exactly. Full DOC-035 parity remains NOT VERIFIED because the pre-existing journal bodies differ.
+- No existing content was overwritten or truncated.
+
+### Current technical disposition
+
+- D1: creation-time Job-list design specified; Windows runtime proof NOT RUN.
+- D2: Core-owned profile + digest / Host hard-ceiling contract specified; not implemented.
+- D3: cancellation/descendant lifecycle specified; runtime proof NOT RUN.
+- D4: no-false-PASS and recovery contract specified; crash/process/idempotency tests NOT RUN.
+- D5: SQLite is the DOC-123 acceptance target by current Xu interpretation; migration NOT IMPLEMENTED and not authorized.
+- D6: measurement plan specified; measurements NOT RUN; no numeric quotas selected.
+- H1 remains BLOCKED; protected execution DENIED; implementation NOT AUTHORIZED; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261114-140 — D1 LAUNCH-BARRIER REFINEMENT
+
+- **Date:** 2026-11-14; exact time not separately captured.
+- **Actor:** Xu / AI-01.
+- **Method:** design consistency review of DOC-125 Section 12; no runtime execution and no source change.
+- **Finding:** creation-time Job assignment prevents an uncontained process window, while a suspended primary thread separately ensures no workload code runs before membership, limits and final Core revalidation are verified.
+- **Decision refinement:** preferred spike must combine `PROC_THREAD_ATTRIBUTE_JOB_LIST` with `CREATE_SUSPENDED`; verify Job membership/limits and Core grant while suspended; then `ResumeThread`. Any failure terminates the Job and fails closed. A suspended process created outside the Job and assigned afterward remains comparison-only, not a fallback.
+- **Evidence status:** design refinement only; API behavior and kill-on-close for a suspended Job member remain NOT RUN / NOT VERIFIED.
+- **Disposition:** D1 runtime NOT VERIFIED; H1 BLOCKED; protected execution DENIED; implementation NOT AUTHORIZED.
+
+
+---
+
+## W32-LOG-20261114-141 — BOUNDED WINDOWS API SPIKE HARNESS SPECIFICATION
+
+- **Date:** 2026-11-14.
+- **Local time:** 06:53 Asia/Ho_Chi_Minh.
+- **Actor:** Xu / AI-01.
+- **Branch:** `work/32-main-integration-remediation-20261113`.
+- **Scope:** DOC-125 Section 16; bounded D1/D3 API spike protocol only.
+- **Method:** reviewed DOC-034/DOC-006 authorization boundaries; checked Microsoft Learn Job Objects, Nested Jobs, UpdateProcThreadAttribute, IsProcessInJob, CreateProcessW, CREATE_SUSPENDED, CPU/memory API references. No code execution and no PC access.
+- **Status:** SPECIFICATION ADDED; NOT CODED; NOT EXECUTED; NO IMPLEMENTATION AUTHORIZATION.
+
+### Work recorded
+
+- Defined a separate disposable Controller / Supervisor / fixed Probe / Evidence Collector harness; no integration with product services.
+- Specified direct `CreateProcessW` + `STARTUPINFOEXW` + `PROC_THREAD_ATTRIBUTE_JOB_LIST` + `CREATE_SUSPENDED`; verify membership and Job configuration before `ResumeThread`; no Popen fallback.
+- Added P0–P3 parent Job/nested Job cases. Important constraint: `IsProcessInJob(..., NULL, ...)` reports whether a process is in any Job but does not return an opaque parent Job handle. The actual Host parent-job topology must therefore be proven; unknown/incompatible topology remains DENY.
+- Added L1–L9 lifecycle cases for normal completion, cancellation, root-exits-with-descendants, graceful/forced Supervisor termination, pre-resume crash, repeated cancellation, breakaway and query/wait failure.
+- Defined evidence schema and strict PASS criteria; no numeric quota, WMI privilege isolation, production code or workload execution included.
+- External API sources: Microsoft Learn Job Objects; Nested Jobs; UpdateProcThreadAttribute; IsProcessInJob; CreateProcessW; Process Creation Flags; JOBOBJECT_EXTENDED_LIMIT_INFORMATION; JOBOBJECT_CPU_RATE_CONTROL_INFORMATION.
+
+### Disposition
+
+DOC-125 Sections 12–16 now describe D1–D6 design proposals and the bounded D1/D3 spike protocol. Harness source is NOT CREATED; runtime NOT RUN. Ka/Cla review and separate explicit authorization are required before code creation/execution. D2 schema, D4 crash/process tests, D5 SQLite implementation/migration, D6 measurements and restricted-identity gate remain open. H1 BLOCKED; protected execution DENIED; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED. No source changes, PC action, runner dispatch, main integration, deployment or release.
+
+
+---
+
+## W32-LOG-20261114-142 — KA/CLA REVIEW BRIEF PREPARED; DISPATCH NOT VERIFIED
+
+- **Date:** 2026-11-14; Asia/Ho_Chi_Minh.
+- **Actor:** Xu / AI-01.
+- **Scope:** prepare the read-only security and implementation-feasibility review request for DOC-125 Sections 12.9 and 16.
+- **Method:** inspected available ROOM-HOP tool surface; confirmed it exposes Sandbox file operations and meeting records, but no verified direct agent-task dispatch action. Did not use the previously rejected/broken meeting execution route.
+- **Status:** REVIEW BRIEF PREPARED; NOT DISPATCHED; NO REVIEW RESPONSE.
+
+### Request contents
+
+- Ka / AI-02: review harness isolation, Job handle ownership, parent/nested Job behavior, descendant escape, WMI/service/task-scheduler privilege boundary and evidence sufficiency.
+- Cla / AI-03: review Win32 API sequence, STARTUPINFOEX attribute-list lifecycle, ResumeThread assertion, Job-list ordering, cancellation/kill-on-close races and direct CreateProcessW feasibility.
+- Both reviewers must respond ACCEPT / ACCEPT WITH CONDITIONS / REJECT with exact section/test IDs and evidence.
+- Review is read-only; no code, PC action, runner dispatch or product mutation.
+
+### Disposition
+
+The brief is recorded in DOC-125 Section 17. No claim is made that Ka or Cla received it. Harness code creation/execution remains blocked pending actual reviews and separate explicit authorization. H1 BLOCKED; protected execution DENIED; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.

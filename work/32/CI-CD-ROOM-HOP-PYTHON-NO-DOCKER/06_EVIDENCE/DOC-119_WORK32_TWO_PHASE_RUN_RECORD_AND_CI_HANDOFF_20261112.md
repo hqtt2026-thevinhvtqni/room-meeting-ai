@@ -56,3 +56,63 @@ Each Grant is single-use: Core rejects a second run_started for the same grant_i
 ## NHẬT KÝ
 - **W32-LOG-20261112-111**
 - Recorded the two-phase Run Record protocol and exact-SHA CI handoff.
+
+## 5. P0 completion-contract alignment addendum — 2026-11-13
+
+A source audit found that the Host completion payload included `evidence_persisted` and `evidence_errors`, while the strict HTTP `RunCompleteRequest` schema did not declare them. Because the schema uses `extra="forbid"`, the actual Host completion request could be rejected with HTTP 422 even though direct Core tests passed.
+
+The remediation branch now aligns the full Host → HTTP → Core contract:
+
+- Required lifecycle: `finished_at`, `status`, `exit_code`, `evidence_sha256`.
+- Optional execution outcome: `execution_status`.
+- Evidence persistence: `evidence_persisted` (bool or null), `evidence_errors` (at most 8 bounded strings).
+- Evidence references: `evidence_ref` (bounded to 2048 characters).
+- Output digests: optional `stdout_sha256` and `stderr_sha256`, each lowercase SHA-256 hex.
+- HTTP schema remains strict: undeclared fields are rejected.
+
+Core now independently validates optional output digests, evidence reference, persistence flag and error list. Inconsistent persistence metadata is rejected: evidence errors require `evidence_persisted=false`; a non-persisted evidence result must be `BLOCKED` and include an error; persisted evidence cannot contain errors.
+
+Regression coverage added:
+- HTTP test sends the same evidence metadata shape used by the Host.
+- HTTP negative test rejects invalid digest and inconsistent persistence metadata, then accepts a correctly marked BLOCKED completion.
+- Core parameterized tests reject malformed stdout/stderr digests, evidence refs, persistence flags and evidence-error lists.
+
+**Validation status:** source and regression tests committed on `work/32-main-integration-remediation-20261113`; full exact-head CI and live Host→Core E2E remain pending. This addendum does not claim PASS.
+
+## BIÊN BẢN — Addendum
+- **Name:** Ka
+- **Title:** CSA / Work32 Execution Owner
+- **Date-Time:** 2026-11-13 20:14 Asia/Ho_Chi_Minh
+- **Decision:** Align the strict HTTP completion DTO with the actual Host evidence payload and enforce evidence integrity invariants in Core.
+
+## NHẬT KÝ — Addendum
+- **W32-LOG-20261113-123**
+- Recorded the Host/HTTP/Core completion contract mismatch, source correction and regression coverage.
+
+
+## 6. Host → Core HTTP end-to-end regression addendum — 2026-11-13
+
+Added `test_granted_host_completes_through_real_core_http_contract` to `tests/test_execution_authority_http.py`.
+
+The test:
+1. Creates a temporary Git workspace with the approved repository remote, exact branch and commit SHA.
+2. Computes the real workspace source digest and configures a real `ExecutionAuthority`.
+3. Issues the grant through the FastAPI Core HTTP route.
+4. Constructs the real `CoreAuthorityClient` with an in-process TestClient transport (no fake Host authority client).
+5. Executes `GrantedExecutionHost.execute_for_work()`, which performs online grant validation, persists `run_started`, runs the canonical pytest entrypoint, writes evidence and posts the full completion payload through the HTTP route.
+6. Reads the append-only Core journal and asserts `run_completed`, `evidence_persisted=true`, empty `evidence_errors`, and valid stdout/stderr SHA-256 digests.
+
+This closes the prior test gap where Core HTTP and Host were tested separately but the actual Host-shaped completion payload was not proven end-to-end through the HTTP boundary.
+
+**Validation:** regression source committed on the remediation branch; exact-head GitHub Actions has not yet completed. No PASS is claimed until the full repository test and Windows lanes finish.
+
+## BIÊN BẢN — Host/Core HTTP E2E Addendum
+- **Name:** Ka
+- **Title:** CSA / Work32 Execution Owner
+- **Date-Time:** 2026-11-13 20:18 Asia/Ho_Chi_Minh
+- **Priority:** P0 — two-phase Run Record and evidence persistence
+- **Decision:** Add a real Host → Core HTTP integration regression to verify the full two-phase completion contract.
+
+## NHẬT KÝ — Host/Core HTTP E2E Addendum
+- **W32-LOG-20261113-124**
+- Recorded the real Host → Core HTTP completion regression and journal readback assertions.

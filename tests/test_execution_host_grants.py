@@ -1,12 +1,20 @@
 from __future__ import annotations
 
+import http.client
+import json
+import os
 import subprocess
 import sys
+import threading
+import time
+from http.server import ThreadingHTTPServer
 from pathlib import Path
 
 from execution_host.core_authority_client import AuthorityClientError
 from execution_host.granted_host import GrantedExecutionHost
+from execution_host.process_control import run_bounded
 from execution_host.source_snapshot import workspace_source_sha256
+from execution_host.server import _request_origin_allowed
 
 
 REPOSITORY = "hqtt2026-thevinhvtqni/room-meeting-ai"
@@ -347,3 +355,185 @@ def test_host_completes_blocked_run_record_when_local_evidence_write_fails(
     assert authority.records[0]["status"] == "BLOCKED"
     assert authority.records[0]["execution_status"] == "PASS"
     assert authority.records[0]["evidence_persisted"] is False
+
+
+
+def test_safe_env_uses_per_run_isolated_home_and_temp(monkeypatch, tmp_path):
+    from execution_host.security import safe_env
+
+    monkeypatch.setenv("HOME", str(tmp_path / "operator-home"))
+    monkeypatch.setenv("USERPROFILE", str(tmp_path / "operator-profile"))
+    monkeypatch.setenv("APPDATA", str(tmp_path / "operator-appdata"))
+    monkeypatch.setenv("LOCALAPPDATA", str(tmp_path / "operator-localappdata"))
+    monkeypatch.setenv("OPENAI_API_KEY", "operator-secret-value")
+    monkeypatch.setenv("ROOM_HOP_EXECUTION_HOST_CREDENTIAL", "operator-host-secret")
+
+    isolated = tmp_path / "run" / "home"
+    env = safe_env(isolated_home=isolated)
+
+    assert env["HOME"] == str(isolated.resolve())
+    assert env["TMP"] == str((isolated / "tmp").resolve())
+    assert env["TEMP"] == str((isolated / "tmp").resolve())
+    assert "OPENAI_API_KEY" not in env
+    assert "ROOM_HOP_EXECUTION_HOST_CREDENTIAL" not in env
+    assert str(tmp_path / "operator-home") not in env.values()
+    assert str(tmp_path / "operator-profile") not in env.values()
+    assert (isolated / "tmp").is_dir()
+    if os.name == "nt":
+        assert env["USERPROFILE"] == str(isolated.resolve())
+        assert env["APPDATA"].startswith(str(isolated.resolve()))
+        assert env["LOCALAPPDATA"].startswith(str(isolated.resolve()))
+    else:
+        assert env["TMPDIR"] == str((isolated / "tmp").resolve())
+        assert env["XDG_CACHE_HOME"] == str((isolated / ".cache").resolve())
+
+
+
+def test_run_bounded_caps_combined_output(tmp_path):
+    code = "import sys,time; sys.stdout.write('x' * (2 * 1024 * 1024)); sys.stdout.flush(); time.sleep(5)"
+    result = run_bounded(
+        [sys.executable, "-c", code],
+        cwd=tmp_path,
+        env=os.environ.copy(),
+        timeout=5,
+        max_output_bytes=4096,
+    )
+    assert result.output_limit_exceeded is True
+    assert len(result.stdout) + len(result.stderr) <= 4096
+    assert result.tree_termination_confirmed is True
+
+
+def test_run_bounded_terminates_process_tree_on_timeout(tmp_path):
+    marker = tmp_path / "orphan-survived.txt"
+    child_code = (
+        "import time; from pathlib import Path; time.sleep(1.5); "
+        f"Path({str(marker)!r}).write_text('survived', encoding='utf-8')"
+    )
+    parent_code = (
+        "import subprocess,sys,time; "
+        "subprocess.Popen([sys.executable, '-c', sys.argv[1]]); "
+        "time.sleep(30)"
+    )
+    result = run_bounded(
+        [sys.executable, "-c", parent_code, child_code],
+        cwd=tmp_path,
+        env=os.environ.copy(),
+        timeout=0.4,
+    )
+    assert result.timed_out is True
+    assert result.tree_termination_confirmed is True
+    time.sleep(1.8)
+    assert not marker.exists()
+
+
+
+def test_execution_host_rejects_remote_host_and_cross_origin():
+    assert _request_origin_allowed({"Host": "127.0.0.1:8031"}, 8031)
+    assert _request_origin_allowed({
+        "Host": "localhost:8031",
+        "Origin": "http://localhost:8031",
+        "Sec-Fetch-Site": "same-origin",
+    }, 8031)
+    assert not _request_origin_allowed({"Host": "attacker.example:8031"}, 8031)
+    assert not _request_origin_allowed({"Host": "127.0.0.1:8787"}, 8031)
+    assert not _request_origin_allowed({
+        "Host": "127.0.0.1:8031",
+        "Origin": "http://attacker.example:8031",
+    }, 8031)
+    assert not _request_origin_allowed({
+        "Host": "127.0.0.1:8031",
+        "Sec-Fetch-Site": "cross-site",
+    }, 8031)
+    assert not _request_origin_allowed({"Origin": "null"}, 8031)
+    assert not _request_origin_allowed({}, 8031)
+
+
+
+def test_execution_host_http_rejects_remote_host_and_origin():
+    from execution_host.server import Handler
+
+    class FakeHost:
+        def __init__(self):
+            self.calls = []
+
+        def identity(self):
+            return {
+                "provider_type": "CORE_AUTHORIZED_PYTEST",
+                "authority": "CORE_ONLINE",
+                "grant_cache": False,
+            }
+
+        def execute_for_work(self, work_id, grant_id, grant_token):
+            self.calls.append((work_id, grant_id, grant_token))
+            return {"status": "PASS", "run_record_persisted": True}
+
+    class TestHandler(Handler):
+        pass
+
+    fake = FakeHost()
+    TestHandler.host = fake
+    server = ThreadingHTTPServer(("127.0.0.1", 0), TestHandler)
+    TestHandler.expected_port = server.server_address[1]
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    port = server.server_address[1]
+    payload = json.dumps({
+        "work_id": "W32",
+        "grant_id": "grant-test",
+        "grant_token": "opaque-test-token",
+    })
+    try:
+        conn = http.client.HTTPConnection("127.0.0.1", port, timeout=3)
+        conn.request(
+            "POST",
+            "/execute-granted",
+            body=payload,
+            headers={
+                "Host": f"attacker.example:{port}",
+                "Content-Type": "application/json",
+            },
+        )
+        response = conn.getresponse()
+        assert response.status == 403
+        response.read()
+        conn.close()
+        assert fake.calls == []
+
+        conn = http.client.HTTPConnection("127.0.0.1", port, timeout=3)
+        conn.request(
+            "POST",
+            "/execute-granted",
+            body=payload,
+            headers={
+                "Host": f"127.0.0.1:{port}",
+                "Origin": f"http://attacker.example:{port}",
+                "Content-Type": "application/json",
+            },
+        )
+        response = conn.getresponse()
+        assert response.status == 403
+        response.read()
+        conn.close()
+        assert fake.calls == []
+
+        conn = http.client.HTTPConnection("127.0.0.1", port, timeout=3)
+        conn.request(
+            "POST",
+            "/execute-granted",
+            body=payload,
+            headers={
+                "Host": f"127.0.0.1:{port}",
+                "Origin": f"http://127.0.0.1:{port}",
+                "Sec-Fetch-Site": "same-origin",
+                "Content-Type": "application/json",
+            },
+        )
+        response = conn.getresponse()
+        assert response.status == 200
+        response.read()
+        conn.close()
+        assert fake.calls == [("W32", "grant-test", "opaque-test-token")]
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=3)
