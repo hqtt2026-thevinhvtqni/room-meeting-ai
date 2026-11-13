@@ -2266,3 +2266,54 @@ Ka removed the redundant inner `try` and aligned the bounded process execution b
 - Keep PR #54 draft/open and unmerged. Main, CD, staging, production and release remain untouched.
 
 **Disposition:** Run #499 is a real compile FAIL; source correction committed; exact-head retest required. Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261113-126 — RUN #508 AUTOMATED VALIDATION RESULTS / PC PROBE PENDING
+
+- **Work:** 32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P0 — exact-head validation
+- **Name:** Ka
+- **Title:** CSA / Work32 delegated execution owner
+- **Date-Time:** 2026-11-13 20:23 Asia/Ho_Chi_Minh
+- **Run:** #508 / `43432659016`
+- **Exact tested HEAD:** `7a93ce6d5546f778e76db47b201dc1574e02940d`
+- **Branch:** `work/32-main-integration-remediation-20261113`
+- **Status:** AUTOMATED LINUX + HOSTED WINDOWS LANES PASS; PC RUNNER PROBE QUEUED; RELEASE GATE NOT COMPLETE.
+
+### 1. Exact-head results
+
+- Compile application packages: **PASS**.
+- Python 3.12 bounded unit tests: **260 passed in 9.08s**. Unit manifest includes `tests/test_execution_authority_http.py` and `tests/test_execution_authority.py`; therefore the new real Host → Core HTTP completion regression and Core evidence metadata tests were included.
+- Product Auto E2E (live HTTP + MCP stdio + persisted evidence): **127 passed**.
+- Hosted Windows Browser Adapter + Host security regression lane: **26 passed in 13.87s**. Explicitly passed:
+  - per-run isolated HOME/temp environment;
+  - combined output cap;
+  - timeout process-tree termination / no orphan marker;
+  - loopback Host/Origin helper policy;
+  - actual HTTP handler rejection of remote Host/Origin and acceptance of same-loopback request.
+- Work32 tooling tests: **PASS**.
+- Strict active workflow / Work32 mirror parity: **PASS**.
+- Immutable product artifact build and extracted-artifact verification: **PASS**.
+
+### 2. PC runtime evidence remains unresolved
+
+- Run #508 dedicated PC runner identity job is still **QUEUED**; it has not produced a fresh snapshot for this exact head.
+- Last completed read-only PC probe is Run #439 on the earlier candidate SHA `d639199159d2f2c72d0e706e1490d9afd0f20ac3` (historical evidence only):
+  - runner identity: PASS (`ROOM-HOP-W32-PC`, Windows, X64);
+  - Python on service PATH: NOT_FOUND; Git 2.55.0 found;
+  - listener owner/module could not be read under runner service account (owner UNKNOWN, module UNRESOLVED);
+  - port 8000 PID 7708 and port 8031 PID 10212 did not match required entrypoints;
+  - Core invalid-credential probe returned HTTP 404, expected 401/403;
+  - Host health returned HTTP 200 but omitted `provider_type`, `authority`, and `grant_cache`.
+- Listener addresses were loopback at the time of that historical probe; process identity and application contract still failed.
+
+### 3. Disposition
+
+Automated exact-head tests are green, including Windows process containment. This does **not** prove the live PC services are the correct Core/Host processes, nor does it pass the release gate.
+
+Next required evidence: an elevated, read-only PC snapshot of service/process owner, executable path, parent PID, parsed module entrypoint and listener PIDs for ports 8000/8010/8020/8030/8031/8787. No process termination or service restart is authorized before that identity is established.
+
+**Disposition:** automated test lanes PASS; live PC Core/Host identity BLOCKED; PC runner probe queued; release gate pending; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
