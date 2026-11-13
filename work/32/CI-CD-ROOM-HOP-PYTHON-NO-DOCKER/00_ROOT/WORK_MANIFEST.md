@@ -201,3 +201,12 @@ No Docker requirement; no live-service or MAIN SOURCE changes; no auto-merge or 
 - PR #54 is a draft remediation PR against PR #52's integration candidate branch. The base workflow now allows PR events targeting that branch; PR #54 needs a new matching PR event to trigger the full workflow.
 - Exact-head GitHub Actions and full repository pytest remain pending. Do not claim PASS from isolated helper/HTTP smoke tests.
 - Live PC Core/Host process identity and 404 mismatch remain blocked. No PC service mutation, credentials, protected execution, main merge, CD or release.
+
+
+## P0 Run completion contract correction — 2026-11-13 20:14 Asia/Ho_Chi_Minh
+
+- Confirmed Host completion metadata had `evidence_persisted` and `evidence_errors` absent from strict `RunCompleteRequest`; this could produce HTTP 422 at the actual Host→Core completion boundary.
+- Router schema and Core validation now align; HTTP and Core regression tests cover Host-shaped completion payload, invalid hashes and evidence-persistence consistency.
+- DOC-119 addendum, DOC-035 W32-LOG-20261113-123 and W32-EVIDENCE-031 record the change.
+- Exact-head repository CI and live Host→Core completion test are pending; do not claim runtime PASS.
+- Work32 remains ACTIVE — NOT ACCEPTED — NOT RELEASED; no protected execution or release.
