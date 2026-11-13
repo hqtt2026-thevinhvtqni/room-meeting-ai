@@ -2669,3 +2669,45 @@ Cla proposes a narrow ResourceBackend, a Windows Job Object backend and an Unsup
 DOC-125 remains PROPOSED / NOT APPROVED pending Xu's canonical decision. This entry records Cla's previously received Sandbox review and its GitHub evidence mirror; it does not claim independent source/runtime verification. Protected execution remains DENIED. No implementation, main integration, deployment or release is authorized.
 
 **Disposition:** W32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261114-134 — XU EXACT-SHA SOURCE TRACE AND KA/CLA REVIEW RECONCILIATION
+
+- Date: 2026-11-14; exact time not separately captured.
+- Actor: Xu / AI-01.
+- Branch: work/32-main-integration-remediation-20261113.
+- Method: GitHub fetch/read-only source inspection; no runtime execution and no code mutation.
+- Status: SOURCE TRACE CONFIRMED; DESIGN DECISION RECORDED; IMPLEMENTATION NOT AUTHORIZED.
+
+### 1. Exact source blobs independently fetched by Xu
+
+- execution_host/process_control.py — 9f5eeddbbcb32152b19321ac59563e2729a3303c.
+- execution_host/host.py — 977b5bc5072eaf0a3ad054aecd22491483d621b1.
+- execution_host/granted_host.py — 1c5c05f9204510b98775069ed8378d8ac2c69e3f.
+- execution_host/server.py — 14d1d764730540330b7bf1d0f3b83b2c03df6a2c.
+- execution_host/core_authority_client.py — adc36577a94efdd5c46d64c30065993d5cd02b3b.
+- tests/test_execution_host.py — 183cba2959db9d9fb00751055efdeddd09c14a64.
+- tests/test_execution_host_grants.py — c70ed4bee8a098aae27fcf921e0570bde95bf1f7.
+- core/execution_authority.py — dd9becadd56a1df4c3f306de317b2f70f2b3b1db.
+- tests/test_execution_authority.py — 6503bf7b5ffb87ee0ab8721044149fb0ebedc52f.
+
+### 2. Source findings
+
+- The protected GrantedExecutionHost path imports and calls run_bounded(). On Windows, run_bounded() creates the process with subprocess.Popen and CREATE_NEW_PROCESS_GROUP; it does not use CREATE_SUSPENDED or Job Object assignment. Timeout/output overflow invokes taskkill /T /F as cleanup.
+- The separate generic ExecutionHost path in host.py also uses ordinary subprocess.Popen followed by communicate(timeout=...). It is not the protected server route (server.py instantiates GrantedExecutionHost), but it is another execution-capable path and must be inventoried/disabled or separately contained before claiming all Host execution paths are isolated.
+- GrantedExecutionHost persists run_started before execution, validates grant online, checks Work/source/repository/branch/command bindings and uses a second online validation immediately before run_bounded(). This is authorization and audit protection, not OS resource containment.
+- Core source uses JSONL append-only/hash-chain with OS file locking (msvcrt on Windows / fcntl on POSIX). DOC-123 separately mentions multi-process lock/SQLite timeout/recovery; persistence contract remains unresolved until explicitly reconciled.
+
+### 3. Review reconciliation
+
+- Ka: current resource isolation REJECT; Job Object architecture APPROVE WITH CONDITIONS; highlights privilege isolation, breakaway/WMI/nested Job, kill-on-close and negative tests.
+- Cla: IMPLEMENTABLE WITH CONDITIONS; its source observations were secondary because Cla could not independently read GitHub in its session. It adds API spike, cancellation/orphan lifecycle, quota measurement and Run Record process/crash tests.
+- Common conclusion: no workload code before verified OS containment; fail closed; no ordinary-Popen fallback.
+
+### 4. Decision and status
+
+W32-DECISION-20261114-08 in DOC-006 and Biên bản W32-20261114-08 in DOC-034 approve the design direction only with conditions. D1–D6 remain blockers to product implementation. A bounded isolated Windows API proof-of-concept/test specification is the only authorized next activity; no product source change, PC action, runner dispatch, protected execution, main integration, deployment or release.
+
+Disposition: resource isolation H1 BLOCKED; protected execution DENIED; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
