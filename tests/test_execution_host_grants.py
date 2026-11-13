@@ -347,3 +347,34 @@ def test_host_completes_blocked_run_record_when_local_evidence_write_fails(
     assert authority.records[0]["status"] == "BLOCKED"
     assert authority.records[0]["execution_status"] == "PASS"
     assert authority.records[0]["evidence_persisted"] is False
+
+
+
+def test_safe_env_uses_per_run_isolated_home_and_temp(monkeypatch, tmp_path):
+    from execution_host.security import safe_env
+
+    monkeypatch.setenv("HOME", str(tmp_path / "operator-home"))
+    monkeypatch.setenv("USERPROFILE", str(tmp_path / "operator-profile"))
+    monkeypatch.setenv("APPDATA", str(tmp_path / "operator-appdata"))
+    monkeypatch.setenv("LOCALAPPDATA", str(tmp_path / "operator-localappdata"))
+    monkeypatch.setenv("OPENAI_API_KEY", "operator-secret-value")
+    monkeypatch.setenv("ROOM_HOP_EXECUTION_HOST_CREDENTIAL", "operator-host-secret")
+
+    isolated = tmp_path / "run" / "home"
+    env = safe_env(isolated_home=isolated)
+
+    assert env["HOME"] == str(isolated.resolve())
+    assert env["TMP"] == str((isolated / "tmp").resolve())
+    assert env["TEMP"] == str((isolated / "tmp").resolve())
+    assert "OPENAI_API_KEY" not in env
+    assert "ROOM_HOP_EXECUTION_HOST_CREDENTIAL" not in env
+    assert str(tmp_path / "operator-home") not in env.values()
+    assert str(tmp_path / "operator-profile") not in env.values()
+    assert (isolated / "tmp").is_dir()
+    if os.name == "nt":
+        assert env["USERPROFILE"] == str(isolated.resolve())
+        assert env["APPDATA"].startswith(str(isolated.resolve()))
+        assert env["LOCALAPPDATA"].startswith(str(isolated.resolve()))
+    else:
+        assert env["TMPDIR"] == str((isolated / "tmp").resolve())
+        assert env["XDG_CACHE_HOME"] == str((isolated / ".cache").resolve())
