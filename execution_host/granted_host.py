@@ -251,7 +251,7 @@ class GrantedExecutionHost:
 
         if run_started_persisted:
             try:
-                env = safe_env()
+                env = safe_env(isolated_home=run_dir / "home")
                 env.update({
                     "ROOM_HOP_EXECUTION_ID": run_id,
                     "ROOM_HOP_WORK_ID": binding["work_id"],
