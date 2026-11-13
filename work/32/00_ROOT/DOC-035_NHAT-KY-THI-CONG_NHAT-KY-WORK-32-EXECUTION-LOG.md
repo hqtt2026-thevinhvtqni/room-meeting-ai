@@ -2222,3 +2222,47 @@ This is not a fake AuthorityClient test; only the HTTP transport is in-process t
 - Full repository test, exact-head CI and Windows lane remain pending. No PASS is claimed.
 
 **Disposition:** real Host → Core HTTP completion regression added to the unit suite; exact-head validation pending; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261113-125 — RUN #499 COMPILE FAILURE / IMMEDIATE SOURCE CORRECTION
+
+- **Work:** 32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P0 — exact-head validation / execution host integrity
+- **Name:** Ka
+- **Title:** CSA / Work32 delegated execution owner
+- **Date-Time:** 2026-11-13 20:18 Asia/Ho_Chi_Minh
+- **Run:** #499 / `43432414929`
+- **Tested HEAD:** `ecddd3ac05448540453c6a290f38310dd25c2594`
+- **Branch:** `work/32-main-integration-remediation-20261113`
+- **Status:** COMPILE FAIL RECORDED; SOURCE CORRECTED; RETEST PENDING.
+
+### 1. Failure evidence
+
+- Tooling tests: PASS.
+- Strict active workflow / Work32 mirror parity: PASS.
+- Python 3.12 unit job and Product Auto E2E job both stopped at `python -m compileall -q core agents execution_host room_hop_mcp`.
+- Exact failure: `execution_host/granted_host.py:302 SyntaxError: expected 'except' or 'finally' block`.
+- Unit tests and Product Auto E2E did not run; no test PASS is claimed.
+- Windows Browser Adapter and dedicated PC probe were still running/queued when this entry was made.
+
+### 2. Root cause and correction
+
+The `subprocess.run` → `run_bounded` replacement left a redundant inner `try:` without a matching handler, while the existing outer exception handler remained at the outer indentation.
+
+Ka removed the redundant inner `try` and aligned the bounded process execution block under the existing outer exception boundary. This preserves fail-closed handling for process creation, timeout, output overflow and process-tree termination errors.
+
+- Corrective commit: `05b0fb33087289d079c25bac2fb637eab5150575`.
+- New blob: `1c5c05f9204510b98775069ed8378d8ac2c69e3f`.
+- No other source behavior was changed in this correction.
+
+### 3. Next validation
+
+- Trigger a fresh exact-head workflow after this correction.
+- Require compileall PASS before counting any unit/E2E result.
+- Review Windows process-control tests separately; do not treat the prior run's partial job state as PASS.
+- Keep PR #54 draft/open and unmerged. Main, CD, staging, production and release remain untouched.
+
+**Disposition:** Run #499 is a real compile FAIL; source correction committed; exact-head retest required. Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
