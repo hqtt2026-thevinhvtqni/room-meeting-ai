@@ -2805,3 +2805,42 @@ D1-01..D1-07 cover creation-time assignment, no-side-effect failure, nested Jobs
 ### Disposition
 
 D1 design specified; runtime not verified. D3 lifecycle contract specified; runtime not verified. D2/D4/D5/D6 remain open. No source code or tests changed, no PC action, no runner dispatch, no protected execution, no main integration, no deployment/release. Work32 remains ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261114-138 — XU D2/D4/D5/D6 POLICY, PERSISTENCE AND MEASUREMENT DESIGN
+
+- **Date:** 2026-11-14; exact time not separately captured.
+- **Actor:** Xu / AI-01.
+- **Branch:** work/32-main-integration-remediation-20261113.
+- **Scope:** read-only exact-SHA Core/Host source audit and design extension for DOC-125 D2, D4, D5 and D6.
+- **Method:** inspected Core authority source, Grant issuance/validation, Granted Host and Core Authority Client; read DOC-123 and DOC-117 from Sandbox; consulted Microsoft Learn Job Object CPU/memory API semantics. No runtime execution and no source mutation.
+- **Status:** SOURCE GAP CONFIRMED; DESIGN PROPOSALS RECORDED; NO IMPLEMENTATION AUTHORIZED.
+
+### 1. D2 source finding and proposed contract
+
+- Exact Core source blob: `core/execution_authority.py` = `dd9becadd56a1df4c3f306de317b2f70f2b3b1db`.
+- Core Work policy currently validates `max_timeout_seconds`, but no OS resource profile is required or validated.
+- Grant issuance currently stores `max_timeout_seconds` and `policy_version`; it does not bind Job memory, CPU hard-cap or active-process limits.
+- Host's online validation returns the stored grant binding; there is no resource profile today.
+- Proposed contract: Core Work policy owns a normalized resource profile; grant snapshots profile ID/version/payload/SHA-256; Host verifies the digest and intersects it with a trusted local hard ceiling using minimum numeric limits. Caller-supplied quota values are never accepted. Missing/stale/mismatched profile => DENY.
+- Proposed fields: `memory_limit_bytes`, `cpu_rate_x100` (1..10000; percentage × 100), `active_process_limit`, `runtime_limit_seconds`. Zero placeholders are invalid; no numeric values selected.
+
+### 2. D4/D5 persistence finding and proposed disposition
+
+- DOC-123 H1 item 7 explicitly names multi-process lock / SQLite timeout/recovery / append-only Run Record consistency.
+- Current Core source uses append-only JSONL, SHA-256 hash chain, flush/fsync and OS file lock. Existing evidence covers thread-level concurrency and tampering; separate-process contention and crash/restart are not verified.
+- D4 contract: incomplete durable run_started after restart is INDETERMINATE; grant remains consumed; no false PASS; torn/corrupt append fails closed; exact duplicate completion is idempotent by run_id + canonical payload digest; conflicting duplicate is rejected.
+- D5 interpretation: SQLite-backed transactional store is the acceptance target under DOC-123 unless the directive is formally amended. Existing JSONL remains current implementation, not silently considered SQLite-compliant. No dual-write/migration/source change authorized.
+- Proposed SQLite design: local Core-owned DB, WAL where supported, synchronous FULL, bounded busy_timeout, BEGIN IMMEDIATE, append-only hash-chained event table, legal transition enforcement, integrity checks, explicit migration/rollback.
+
+### 3. D6 measurement plan
+
+- No quota values selected. Measure real workload cohorts separately, capture Job committed-memory peak, CPU rate/accounting, active-process peak, runtime, output/workspace growth, Host/Core overhead and exact source/environment provenance.
+- Report sample count, p50/p95/max, variance and outliers; derive safety margins only after measurements and independent Ka/Cla/QE review.
+- Hosted Windows is preliminary only; H1 still requires supported ADMIN-PC evidence. No PC action or self-hosted runner dispatch authorized now.
+
+### 4. Disposition
+
+DOC-125 now includes design proposals for D1–D6. D1/D3 remain runtime NOT VERIFIED; D2 schema not implemented; D4 process/crash/idempotency tests not run; D5 SQLite migration not implemented; D6 measurements not run and no quotas selected. H1 remains BLOCKED; protected execution DENIED. No product source/test change, no PC action, no runner dispatch, no main integration, deployment or release. Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
