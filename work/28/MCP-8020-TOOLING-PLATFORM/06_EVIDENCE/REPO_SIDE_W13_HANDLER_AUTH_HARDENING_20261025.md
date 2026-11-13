@@ -769,4 +769,43 @@ The parallel work package already delivered a REAL Windows Job Object (`executio
 - No Sandbox deployment claimed; no Core grant live claimed; no execute/readback with seal claimed (PC-side, pending).
 - Gateway v54 stays UNWIRED; catalog v54 execution tools stay NOT_IMPLEMENTED; RUN_COMMAND stays disabled.
 
+
+
+---
+
+## §24. WP2 close-out: wrapped-Popen gate coverage, CI incident #334, process debt (2026-11-13)
+
+### Audit of remaining execution paths (tree at 4d9f2ce)
+
+After §23, a re-audit of every command-executing path on the branch (HEAD had moved to df4c98f with parallel-session work) confirmed all paths are now fail-closed on Windows:
+
+* `spawn_managed` / `spawn_managed_service`: Job Object is created BEFORE the process, the process starts CREATE_SUSPENDED, is assigned to the Job, and only then resumed; any failure aborts the never-resumed process and raises `JobObjectUnavailable` (an OSError) so callers report BLOCKED.
+* `run_execute_command`: applies `job_object_gate` after spawn, before communicate (§23).
+* `ExecutionHost.start_service`: maps `JobObjectUnavailable` to a structured BLOCKED result and registers nothing (covered by `tests/test_wp2_service_mapping_and_race.py`, including retry-after-block and spawn/cleanup race coverage).
+* `wrap_existing_popen`: cannot attach a Job Object retroactively; labeled NOT_ATTACHED and must never claim containment.
+
+### Gap closed this round
+
+The wrapped path had no gate test. Commit `4935b2b42e3dda4b26aed6b729d75fbb3f7f7d4c` added `WrappedPopenGateTests` to `tests/test_process_job_gate.py`: wrapped Popen stays labeled NOT_ATTACHED / created_via_spawn=False; a synthetic Windows-wrapped process is blocked by the gate; and `run_execute_command` over a wrapped Windows process returns BLOCKED with blocker `job_object_attach_failed`, cleanup notes containing `wrapped_existing_popen`, process reaped, evidence written.
+
+### Incident record: CI #334 red, fixed in 4d9f2ce
+
+* Run **#334** (commit 4935b2b) FAILED in 34s: one added assertion asserted the gate passes for a wrapped process regardless of platform; on the real windows-2025 runner a wrapped process is genuinely NOT attached, so the gate correctly blocks and the assertion was wrong (test defect, not product defect).
+* Fix commit `4d9f2ce4b4b86a5af36c487bd168f6715cafdc21`: the expectation is now platform-conditional — Windows wrapped process blocks (`job_object_attach_failed`), POSIX wrapped process passes (session process group at spawn is impossible for a wrapped process, so on POSIX only the label applies).
+* Run **#335** (commit 4d9f2ce): "completed successfully" in 1m 28s; the commit checks page shows `execution-host-lifecycle-windows` "succeeded Nov 13, 2026 in 29s". The critical Windows lifecycle job therefore exercises the wrapped-path gate on a real Windows runner.
+
+### Process debt (recorded per owner instruction, 2026-11-13)
+
+The owner is away and explicitly authorized continuing with the review steps logged as debt:
+
+* **DEBT-1:** Cla/Qw independent review of WP2 (§23 + this section) has NOT happened. Until it does, OS isolation stays `NOT_VERIFIED` and no isolation status change is claimed.
+* **DEBT-2:** Xu's follow-up review of WP2 has NOT happened.
+* **DEBT-3:** PC-side Core grant live + execute/readback with seal has NOT happened (requires the owner's PC).
+* These debts do not change any status: Work 28 stays ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; gateway v54 UNWIRED; catalog v54 execution tools NOT_IMPLEMENTED; RUN_COMMAND disabled.
+
+### NOT claimed (unchanged)
+
+No Sandbox deployment, no OS isolation PASS, no Core grant live, no sealed readback, no E2E via MCP 8030. CI green remains a necessary condition, never a pass certificate.
+
 Work 28 remains ACTIVE / BLOCKED / NOT RELEASED.
+
