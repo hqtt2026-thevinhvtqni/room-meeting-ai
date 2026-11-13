@@ -117,7 +117,10 @@ class WrappedPopenGateTests(unittest.TestCase):
         self.assertEqual(
             job_object_gate(synthetic_windows), "job_object_attach_failed"
         )
-        self.assertIsNone(job_object_gate(wrapped) if not sys.platform.startswith("win") else job_object_gate(wrapped))
+        if sys.platform.startswith("win"):
+            self.assertEqual(job_object_gate(wrapped), "job_object_attach_failed")
+        else:
+            self.assertIsNone(job_object_gate(wrapped))
 
     def test_execute_command_blocks_wrapped_windows_process(self):
         from dataclasses import replace as dc_replace
