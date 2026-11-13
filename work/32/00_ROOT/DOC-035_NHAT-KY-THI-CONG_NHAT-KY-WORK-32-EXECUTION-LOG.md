@@ -2182,3 +2182,43 @@ The Host completion payload sends `execution_status`, `evidence_persisted`, `evi
 - No PC process/service mutation, credential provisioning or protected execution occurred.
 
 **Disposition:** confirmed completion DTO mismatch fixed at source and covered by regression tests; exact-head test proof pending; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+---
+
+## W32-LOG-20261113-124 — REAL HOST → CORE HTTP COMPLETION E2E REGRESSION
+
+- **Work:** 32 — CI/CD
+- **Document:** DOC-035
+- **Priority:** P0 — two-phase Run Record and evidence persistence
+- **Name:** Ka
+- **Title:** CSA / Work32 delegated execution owner
+- **Date-Time:** 2026-11-13 20:18 Asia/Ho_Chi_Minh
+- **Branch:** `work/32-main-integration-remediation-20261113`
+- **Status:** E2E REGRESSION ADDED; EXACT-HEAD CI PENDING.
+
+### 1. Test gap closed
+
+The prior tests validated Core HTTP and GrantedExecutionHost separately; they did not execute the real Host through the actual Core HTTP router using the Host-shaped completion payload.
+
+### 2. Regression added
+
+Added `test_granted_host_completes_through_real_core_http_contract` to `tests/test_execution_authority_http.py`:
+
+- Creates a temporary Git workspace with exact branch, origin and commit.
+- Computes the real source snapshot SHA.
+- Issues a grant through the Core HTTP API.
+- Uses the real `CoreAuthorityClient` with an in-process FastAPI TestClient transport.
+- Executes the real `GrantedExecutionHost.execute_for_work()`, including online validation, run_started persistence, canonical pytest process, evidence writing and HTTP completion.
+- Reads the Core append-only journal and asserts run_completed, evidence_persisted=true, empty evidence_errors, and stdout/stderr SHA-256 digests.
+
+This is not a fake AuthorityClient test; only the HTTP transport is in-process to avoid opening a network listener.
+
+### 3. Documentation and validation
+
+- DOC-119 section 6 records the test protocol and BIÊN BẢN/NHẬT KÝ addendum.
+- Test commit: `da81a25bbe7c5d10ace9ebf17703aec9ca51ebfe`; import correction: `b62c08766ff7d0dca522c10c0f02d982d5574d65`.
+- DOC-119 update: `f42bac2cf2ed6bcd30914bacf0bac149179c8e0a`.
+- Full repository test, exact-head CI and Windows lane remain pending. No PASS is claimed.
+
+**Disposition:** real Host → Core HTTP completion regression added to the unit suite; exact-head validation pending; Work32 ACTIVE — NOT ACCEPTED — NOT RELEASED.
