@@ -97,3 +97,6 @@ Evidence is immutable by reference. Corrections add a new evidence record; faile
 
 
 | W32-EVIDENCE-034 | Run #508 exact-head Linux / hosted Windows / product artifact validation | W32-LOG-20261113-126; run 43432659016; head 7a93ce6d5546f778e76db47b201dc1574e02940d | Unit 260 passed; Product Auto E2E 127 passed; Windows security/Browser Adapter 26 passed; tooling + strict mirror PASS; immutable artifact PASS | AUTOMATED CI LANES PASS; DEDICATED PC RUNNER PROBE QUEUED; RELEASE GATE PENDING |
+
+
+| W32-EVIDENCE-035 | Run #508 release gate failure due dedicated PC probe cancellation | W32-LOG-20261113-127; run 43432659016; release gate job 131911054110; historical PC probe Run #439 job 131900379293 | All hosted/automated lanes PASS; SELF_HOSTED_RESULT=cancelled; release gate FAIL | LIVE PC PROCESS PROVENANCE REQUIRED; NO RELEASE ACCEPTANCE |
