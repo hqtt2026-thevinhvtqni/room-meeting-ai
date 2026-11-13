@@ -137,64 +137,105 @@ def run_bounded(
     lock = threading.Lock()
     output_exceeded = threading.Event()
 
-    def drain(stream, target: bytearray) -> None:
-        try:
-            while True:
-                chunk = os.read(stream.fileno(), 65536)
-                if not chunk:
-                    return
-                with lock:
-                    allowed = min(len(chunk), remaining[0])
-                    if allowed:
-                        target.extend(chunk[:allowed])
-                        remaining[0] -= allowed
-                    if allowed < len(chunk):
-                        output_exceeded.set()
-        except (OSError, ValueError):
-            return
-
-    readers = [
-        threading.Thread(target=drain, args=(process.stdout, stdout), daemon=True),
-        threading.Thread(target=drain, args=(process.stderr, stderr), daemon=True),
-    ]
-    for reader in readers:
-        reader.start()
+    def capture(target: bytearray, chunk: bytes) -> None:
+        with lock:
+            allowed = min(len(chunk), remaining[0])
+            if allowed:
+                target.extend(chunk[:allowed])
+                remaining[0] -= allowed
+            if allowed < len(chunk):
+                output_exceeded.set()
 
     deadline = time.monotonic() + timeout
     timed_out = False
     tree_confirmed = True
+    termination_attempted = False
+    drain_deadline: float | None = None
 
-    while process.poll() is None:
-        if output_exceeded.is_set():
-            tree_confirmed = _terminate_process_tree(process)
-            break
-        if time.monotonic() >= deadline:
-            timed_out = True
-            tree_confirmed = _terminate_process_tree(process)
-            break
-        time.sleep(0.025)
+    if os.name != "nt":
+        import selectors
+
+        with selectors.DefaultSelector() as selector:
+            selector.register(process.stdout, selectors.EVENT_READ, stdout)
+            selector.register(process.stderr, selectors.EVENT_READ, stderr)
+            while selector.get_map() or process.poll() is None:
+                now = time.monotonic()
+                if process.poll() is None and output_exceeded.is_set() and not termination_attempted:
+                    tree_confirmed = _terminate_process_tree(process)
+                    termination_attempted = True
+                    drain_deadline = now + 2
+                elif process.poll() is None and now >= deadline and not termination_attempted:
+                    timed_out = True
+                    tree_confirmed = _terminate_process_tree(process)
+                    termination_attempted = True
+                    drain_deadline = now + 2
+                elif process.poll() is not None and selector.get_map() and drain_deadline is None:
+                    drain_deadline = now + 2
+                elif drain_deadline is not None and now >= drain_deadline:
+                    if not termination_attempted:
+                        tree_confirmed = _terminate_process_tree(process)
+                        termination_attempted = True
+                        drain_deadline = now + 2
+                    else:
+                        for key in list(selector.get_map().values()):
+                            selector.unregister(key.fileobj)
+                            key.fileobj.close()
+                        tree_confirmed = False
+                        break
+
+                for key, _ in selector.select(timeout=0.025):
+                    try:
+                        chunk = os.read(key.fileobj.fileno(), 65536)
+                    except OSError:
+                        chunk = b""
+                    if not chunk:
+                        selector.unregister(key.fileobj)
+                        key.fileobj.close()
+                    else:
+                        capture(key.data, chunk)
+    else:
+        def drain(stream, target: bytearray) -> None:
+            try:
+                while True:
+                    chunk = os.read(stream.fileno(), 65536)
+                    if not chunk:
+                        return
+                    capture(target, chunk)
+            except (OSError, ValueError):
+                return
+
+        readers = [
+            threading.Thread(target=drain, args=(process.stdout, stdout), daemon=True),
+            threading.Thread(target=drain, args=(process.stderr, stderr), daemon=True),
+        ]
+        for reader in readers:
+            reader.start()
+
+        while process.poll() is None:
+            if output_exceeded.is_set():
+                tree_confirmed = _terminate_process_tree(process)
+                termination_attempted = True
+                break
+            if time.monotonic() >= deadline:
+                timed_out = True
+                tree_confirmed = _terminate_process_tree(process)
+                termination_attempted = True
+                break
+            time.sleep(0.025)
+
+        for reader in readers:
+            reader.join(timeout=2)
+        if any(reader.is_alive() for reader in readers):
+            tree_confirmed = _terminate_process_tree(process) and tree_confirmed
+            for reader in readers:
+                reader.join(timeout=2)
+        if any(reader.is_alive() for reader in readers):
+            tree_confirmed = False
 
     try:
         process.wait(timeout=5)
     except subprocess.TimeoutExpired:
         tree_confirmed = _terminate_process_tree(process) and tree_confirmed
-
-    for reader in readers:
-        reader.join(timeout=2)
-    if any(reader.is_alive() for reader in readers):
-        tree_confirmed = _terminate_process_tree(process) and tree_confirmed
-        for reader in readers:
-            reader.join(timeout=2)
-    if any(reader.is_alive() for reader in readers):
-        tree_confirmed = False
-
-    if process.poll() is None:
-        try:
-            process.kill()
-            process.wait(timeout=2)
-        except (OSError, subprocess.SubprocessError):
-            pass
-        tree_confirmed = False
 
     return BoundedProcessResult(
         returncode=process.returncode if process.returncode is not None else -1,
