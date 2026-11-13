@@ -568,8 +568,8 @@ jobs:
             }
           }
           Write-Output "core_authority_negative_probe_http=$coreAuthorityStatus"
-          if ($coreAuthorityStatus -eq 200) {
-            throw "BLOCKED: Core grant status endpoint accepted invalid probe credentials"
+          if ($coreAuthorityStatus -notin @(401, 403)) {
+            throw "BLOCKED: Core invalid-credential probe expected HTTP 401 or 403; received $coreAuthorityStatus"
           }
 
           # Host health is read-only and reports configuration identity, not execution permission.
@@ -579,8 +579,18 @@ jobs:
             $hostHealthStatus = 200
             Write-Output "execution_host_health_status=$($hostHealth.status)"
             Write-Output "execution_host_service=$($hostHealth.service)"
-            Write-Output "execution_host_build_hash=$($hostHealth.build_hash)"
-            Write-Output "execution_host_bind_address=$($hostHealth.bind_address)"
+            Write-Output "execution_host_provider_type=$($hostHealth.provider_type)"
+            Write-Output "execution_host_authority=$($hostHealth.authority)"
+            Write-Output "execution_host_grant_cache=$($hostHealth.grant_cache)"
+            if (
+              $hostHealth.status -ne "PASS" -or
+              $hostHealth.service -ne "execution-host" -or
+              $hostHealth.provider_type -ne "CORE_AUTHORIZED_PYTEST" -or
+              $hostHealth.authority -ne "CORE_ONLINE" -or
+              $hostHealth.grant_cache -ne $false
+            ) {
+              throw "BLOCKED: Execution Host health identity is missing or does not match the Core-authorized contract"
+            }
           } catch {
             $response = $_.Exception.Response
             if ($response -and $response.StatusCode) {
