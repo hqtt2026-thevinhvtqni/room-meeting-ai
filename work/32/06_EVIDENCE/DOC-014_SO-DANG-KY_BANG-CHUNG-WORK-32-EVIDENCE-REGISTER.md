@@ -88,3 +88,6 @@ Evidence is immutable by reference. Corrections add a new evidence record; faile
 
 
 | W32-EVIDENCE-031 | Host → HTTP → Core Run completion evidence contract alignment | W32-LOG-20261113-123; DOC-119 addendum; room_hop_mcp/adapter/execution_authority_http.py; core/execution_authority.py; tests/test_execution_authority_http.py; tests/test_execution_authority.py | Remediation branch commits 18fc0c0dc9c6e179ce44cc92c079ac3daeeb04ac, b4c4442b2a3543f903c5ce684809c04f42b86b17, 07f6c262d1136e0ea35dd92442daf82b4edbc5be, 107508627abda20261b11afa5ed3983b094fef48 | SOURCE + REGRESSION TESTS COMMITTED; FULL TEST / EXACT-HEAD CI PENDING |
+
+
+| W32-EVIDENCE-032 | Real GrantedExecutionHost → Core HTTP two-phase completion E2E regression | W32-LOG-20261113-124; DOC-119 section 6; tests/test_execution_authority_http.py | Remediation branch test commit da81a25bbe7c5d10ace9ebf17703aec9ca51ebfe; import correction b62c08766ff7d0dca522c10c0f02d982d5574d65 | REGRESSION ADDED; EXACT-HEAD FULL TEST / CI PENDING |
