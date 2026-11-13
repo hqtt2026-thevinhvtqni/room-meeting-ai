@@ -290,3 +290,12 @@
 - Sandbox: sandbox_write status=ok; sandbox_read_probe status=ok; exact content equality TRUE cho PRODUCT_STATUS.json.
 - Boundary: snapshot vẫn LOCAL_SNAPSHOT, không phải Core live. EV-76-021 chỉ chứng minh capability của OChat tool session; trusted AI-07 identity binding và PC/VS Code Bridge vẫn NOT VERIFIED. Không đổi phase/gates/WP, không sửa UI source, Build/runtime/test/CI/PR/merge/release.
 - Status: 01_DISCOVER; G0/G1 NOT VERIFIED; WE-G4/G5 BLOCKED; WP-76-07 BLOCKED; NOT RELEASED.
+
+
+### 2026-11-13 12:06 +07:00 — Co bổ sung tiêu chí nghiệm thu quan sát được cho FR/NFR
+- Actor: Co / AI-07 — AI Coder / Execution Assistant.
+- Review: DOC-003 contains FR-01…FR-10 and NFR-01…NFR-07; DOC-006 already mapped each requirement to proposed test IDs, but the matrix did not state a consistent per-requirement precondition, observable PASS condition, fail/fail-closed condition and mandatory evidence artifact.
+- UPDATE: appended an observable acceptance criteria matrix to DOC-006 for all 17 requirements. Added a cross-cutting evidence bundle rule requiring requirement/test IDs, exact source revision, invocation, runtime/tool identity and authorization scope, environment, fixture digest, raw output, result code, assertions, artifact hashes/location and reviewer disposition where required.
+- GitHub: DOC-006 blob `8cad3ad027214a2608debe789d1f38dc3414d2a3` (read-back verified); EVIDENCE_REGISTER update commit `cb9bb9c9340993acc4d91336252acc43193f8d06`, blob `a419c92da47651f3050ee3ffc9c46b54df6b28c1`; EV-76-022 present.
+- Scope: documentation specification only. No code/build artifact changed; no pytest, CI, runtime, browser/mobile QE or E2E executed. No SLO, provider, API or technology invented. Unresolved ADR dependencies remain blockers.
+- Gate/authority: no gate or WP status changed; WE-G4/G5 BLOCKED; G0/G1 NOT VERIFIED; WP-76-07 BLOCKED; lifecycle 01_DISCOVER; NOT_RELEASED. Vinh retains final acceptance/release authority.
