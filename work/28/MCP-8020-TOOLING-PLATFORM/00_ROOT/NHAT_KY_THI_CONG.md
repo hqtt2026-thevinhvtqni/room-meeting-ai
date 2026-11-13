@@ -689,3 +689,66 @@ Xu approves three contract directions:
 - Q4 capability-grant: BLOCKED chờ Ka review; WP3-F01 giữ IMPLEMENTATION BLOCKED; không viết code upload. Implementation plan/test matrix sẽ chuẩn bị sau khi Q4 được phê duyệt (theo NEXT #5 của JRN-W28-016).
 
 **STATUS:** WP2 SERVICE MAPPING + RACE COVERAGE CI-VERIFIED ON `8c9ff9d` (RUN #327 SUCCESS) / AN + KA ACK PENDING / Q4 PENDING KA. Work remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED. Execution Gate CLOSED.
+
+## 2026-11-13 — AN | TESTER — Git/Sandbox sync checkpoint
+
+- Thời điểm ghi: 2026-11-13 UTC+07:00.
+- Vai trò: An | TESTER / Independent QA.
+- Yêu cầu vận hành: chuyển Git thành lane xây dựng/kiểm thử chính; Sandbox là lane hồ sơ/evidence hỗ trợ.
+- GitHub branch search xác nhận branch work/28-mcp-tooling-platform tồn tại.
+- GitHub commit search theo repository với từ khóa work-28 trả về commit Work 28 mới nhất tìm thấy: 157e88e2cd821a0b53bdcabd6483956e6bc2074a — docs(work-28): define automatic E2E operating runbook v2 (2026-11-04 04:27:37 UTC+07).
+- Commit này chỉ thay đổi work/28/MCP-8020-TOOLING-PLATFORM/01_PLAN/WORK28_AUTO_E2E_RUNBOOK_V2.0.md.
+- Truy workflow runs theo commit này: danh sách rỗng; combined status: không có status records. Không được diễn giải thành CI PASS/FAIL.
+- Sandbox master journal có nội dung đến 2026-11-12, bao gồm các phát hiện P0 về Core Authority ↔ Execution Host: Boolean authorized trust, local FileGrantSource fallback, thiếu atomic grant/revoke/run, thiếu exact-SHA binding, protocol mismatch và OS sandbox isolation NOT VERIFIED. Các nội dung này là static source trace/decision records; lượt đọc hiện tại không chạy test.
+- Chênh lệch đồng bộ: nội dung nhật ký Sandbox mới hơn commit Work 28 mới nhất tìm thấy trên GitHub. Chưa thể kết luận branch HEAD thực tế chỉ là commit nêu trên vì connector search commits là kết quả tìm kiếm, không phải branch-ref HEAD endpoint.
+- GitHub connector trong phiên không có shell runner để An thực thi pytest; workflow/status truy vấn không trả kết quả. QE execution trong lượt này: NOT RUN.
+- Không ghi đè nhật ký Sandbox bằng bản Git cũ; giữ nguyên toàn bộ lịch sử Sandbox. Không thực hiện Git write/commit/push vì quyền push của connector chưa được xác nhận/đang read-only.
+- Hành động đồng bộ: ghi nhận checkpoint này trực tiếp vào Sandbox master journal; yêu cầu lane Coder/authorized Git operator đưa các bản ghi canonical đã duyệt và cập nhật cần thiết lên branch Work 28; sau đó An sẽ đối chiếu blob SHA và nội dung hai chiều.
+- Trạng thái: Git branch FOUND; Git↔Sandbox FULL SYNC NOT ACHIEVED; Sandbox journal checkpoint WRITTEN; pytest NOT RUN; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED.
+
+[KÝ: AN | TESTER]
+
+## 2026-11-13 — JRN-W28-018 — GitHub pytest lane enabled; exact-SHA CI #337 PASS (Xu)
+
+**Role:** XU | Work 28 coordinator and technical decision owner  
+**Canonical branch:** `work/28-mcp-tooling-platform`  
+**Source commit under test:** `5c7bbfd452a6948fccae1717d3d2a7159b69520f`  
+**GitHub Actions:** Run #337 / ID `43385810696`  
+**Workflow:** `Work 28 Automatic E2E Gate`
+
+### READ / TRACE
+- Read the canonical Work 28 workflow and confirmed the main regression job ran unittest discovery for `05_TEST`, while pytest was previously limited to selected execution-host lifecycle tests.
+- Confirmed the canonical test directory is `work/28/MCP-8020-TOOLING-PLATFORM/05_TEST` and the CI runner checks out the exact triggering Git SHA.
+- Preserved the earlier Sandbox-only An checkpoint as a historical record below this entry's predecessor, rather than silently deleting or rewriting it.
+
+### BUILD
+- Updated `.github/workflows/work28-mcp-tooling.yml` to install pytest in the primary regression job and run the complete Work 28 test directory:
+  `python -m pytest 05_TEST -q`
+- Change committed directly to the canonical GitHub branch as `5c7bbfd452a6948fccae1717d3d2a7159b69520f`.
+- Synced the exact workflow file GitHub → Work 28 Sandbox at `MCP-8020-TOOLING-PLATFORM/.github/workflows/work28-mcp-tooling.yml`.
+- Sandbox readback returned `status: ok`, size 15,343 bytes, and exact text equality with the GitHub file (blob `aef70150c274ecb076bcb3e94c558892e3b52573`).
+
+### VERIFY — EXACT SHA / RUN #337
+- Overall GitHub Actions run #337: **COMPLETED SUCCESS** on source commit `5c7bbfd452a6948fccae1717d3d2a7159b69520f`.
+- Unit/regression job: **348 tests, OK**.
+- Full pytest suite: **348 passed, 238 subtests passed** in 10.24 seconds.
+- Linux execution-host lifecycle job: **SUCCESS**.
+- Windows execution-host lifecycle job: **SUCCESS**.
+- Immutable exact-SHA source artifact build, extraction and retest: **SUCCESS**; artifact ID `14018072815`; retest log reports 348 tests, OK.
+- Automatic E2E gate report job: **SUCCESS**; artifact ID `14018358159`.
+- The generated report explicitly keeps deployed MCP → Core → Runtime E2E **BLOCKED**, Execution Gate **CLOSED**, and release **NOT_RELEASED**. Its blockers are absent live MCP build/process provenance, trusted deployed Core principal/WorkContext evidence, approved Runtime/Execution Host deployment/isolation attestation, and complete deployed request-to-evidence readback.
+- Run link: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/43385810696
+
+### INTERPRETATION / LIMITS
+- This is a real GitHub-hosted pytest run against the exact source SHA, not a local or Sandbox test claim.
+- Pytest and the configured regression/lifecycle/artifact jobs are CI-verified for this SHA.
+- It does not establish independent An QA acceptance, Ka security review, deployed product E2E, OS sandbox isolation, or release acceptance.
+- Work remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate remains CLOSED.
+
+### NEXT
+1. Continue implementation only within approved gates; WP3-F01 code remains blocked until Ka reviews Q4 capability-grant semantics and Xu records the final decision.
+2. Obtain An's independent WP2 reproduction and Ka's independent WP2 security review on the code-bearing SHA.
+3. Continue WP0–WP7 source/runtime integration with exact-SHA pytest and CI evidence.
+4. Sync this canonical journal revision to Sandbox and verify exact readback.
+
+**STATUS:** GITHUB PYTEST LANE ENABLED / 348 PYTEST PASSED / RUN #337 SUCCESS / WORK 28 NOT RELEASED.
