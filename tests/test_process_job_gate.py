@@ -95,5 +95,65 @@ class ExecuteCommandFailClosedTests(unittest.TestCase):
             self.assertTrue(Path(result["evidence_ref"]).is_file())
 
 
+class WrappedPopenGateTests(unittest.TestCase):
+    """wrap_existing_popen cannot attach a Job Object retroactively.
+
+    The wrapped path must stay labeled NOT_ATTACHED, must never claim
+    ATTACHED, and the gate must block it on Windows. ISOLATION_STATUS
+    remains NOT_VERIFIED.
+    """
+
+    def test_wrapped_popen_is_labeled_not_attached(self):
+        from execution_host.process_job import wrap_existing_popen
+        wrapped = wrap_existing_popen(_finished_process())
+        self.assertFalse(wrapped.created_via_spawn)
+        self.assertEqual(wrapped.job_object, "NOT_ATTACHED")
+
+    def test_gate_blocks_wrapped_popen_on_windows(self):
+        from dataclasses import replace as dc_replace
+        from execution_host.process_job import wrap_existing_popen
+        wrapped = wrap_existing_popen(_finished_process())
+        synthetic_windows = dc_replace(wrapped, platform="win32")
+        self.assertEqual(
+            job_object_gate(synthetic_windows), "job_object_attach_failed"
+        )
+        self.assertIsNone(job_object_gate(wrapped) if not sys.platform.startswith("win") else job_object_gate(wrapped))
+
+    def test_execute_command_blocks_wrapped_windows_process(self):
+        from dataclasses import replace as dc_replace
+        from execution_host.process_job import wrap_existing_popen
+        with tempfile.TemporaryDirectory() as td:
+            ctx = ExecuteCommandFailClosedTests._setup(None, td) if False else None
+            base = Path(td)
+            (base / "root" / "workspace").mkdir(parents=True, exist_ok=True)
+            (base / "root" / "evidence").mkdir(parents=True, exist_ok=True)
+            ctx = WorkContext(
+                work_id="W28", work_name="WORK28",
+                workspace_root=str(base / "root"),
+                execution_workspace=str(base / "root" / "workspace"),
+                evidence_root=str(base / "root" / "evidence"),
+                authorized=True, execution_id="wp2-gate-wrap",
+            )
+            host = ExecutionHost()
+            real_process = subprocess.Popen(
+                [sys.executable, "-c", "import time; time.sleep(30)"],
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+            )
+            wrapped = wrap_existing_popen(real_process)
+            synthetic_windows = dc_replace(wrapped, platform="win32")
+
+            def fake_spawn(args, *, cwd, env, text=True):
+                return synthetic_windows
+
+            with patch("execution_host.host_run.spawn_managed", side_effect=fake_spawn):
+                result = host.execute_command(ctx, [sys.executable, "-c", "print(1)"], 10)
+            self.assertEqual(result["status"], "BLOCKED")
+            self.assertEqual(result["blocker"], "job_object_attach_failed")
+            self.assertIn("wrapped_existing_popen", result["cleanup"]["notes"])
+            self.assertEqual(result["cleanup"]["job_object"], "NOT_ATTACHED")
+            self.assertIsNotNone(real_process.poll())
+            self.assertTrue(Path(result["evidence_ref"]).is_file())
+
+
 if __name__ == "__main__":
     unittest.main()
