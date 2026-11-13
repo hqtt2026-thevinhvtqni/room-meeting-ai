@@ -85,3 +85,6 @@ Evidence is immutable by reference. Corrections add a new evidence record; faile
 
 
 | W32-EVIDENCE-030 | Execution Host loopback Host/Origin/Fetch-Metadata boundary | W32-LOG-20261113-122; execution_host/server.py; tests/test_execution_host_grants.py | Exact server blob 14d1d764730540330b7bf1d0f3b83b2c03df6a2c; isolated HTTP boundary smoke 1 passed; PR #54 draft | SOURCE / ISOLATED HTTP SMOKE PASS; FULL REPOSITORY + WINDOWS CI PENDING |
+
+
+| W32-EVIDENCE-031 | Host → HTTP → Core Run completion evidence contract alignment | W32-LOG-20261113-123; DOC-119 addendum; room_hop_mcp/adapter/execution_authority_http.py; core/execution_authority.py; tests/test_execution_authority_http.py; tests/test_execution_authority.py | Remediation branch commits 18fc0c0dc9c6e179ce44cc92c079ac3daeeb04ac, b4c4442b2a3543f903c5ce684809c04f42b86b17, 07f6c262d1136e0ea35dd92442daf82b4edbc5be, 107508627abda20261b11afa5ed3983b094fef48 | SOURCE + REGRESSION TESTS COMMITTED; FULL TEST / EXACT-HEAD CI PENDING |
