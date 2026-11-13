@@ -299,3 +299,11 @@
 - GitHub: DOC-006 blob `8cad3ad027214a2608debe789d1f38dc3414d2a3` (read-back verified); EVIDENCE_REGISTER update commit `cb9bb9c9340993acc4d91336252acc43193f8d06`, blob `a419c92da47651f3050ee3ffc9c46b54df6b28c1`; EV-76-022 present.
 - Scope: documentation specification only. No code/build artifact changed; no pytest, CI, runtime, browser/mobile QE or E2E executed. No SLO, provider, API or technology invented. Unresolved ADR dependencies remain blockers.
 - Gate/authority: no gate or WP status changed; WE-G4/G5 BLOCKED; G0/G1 NOT VERIFIED; WP-76-07 BLOCKED; lifecycle 01_DISCOVER; NOT_RELEASED. Vinh retains final acceptance/release authority.
+
+
+### 2026-11-13 12:06 +07:00 — Co đồng bộ Dashboard snapshot theo EV-76-022
+- Actor: Co / AI-07 — AI Coder / Execution Assistant.
+- Action: refreshed `DASHBOARD/PRODUCT_STATUS.json` to `W76-DASHBOARD-0.3.7`; added EV-76-022 and current acceptance-criteria activity. Updated Dashboard README with snapshot scope and gate/evidence limitations.
+- GitHub: PRODUCT_STATUS commit `970cca04887b218b8af504298bcc522e822ebedb`, blob `aba5ad83363c46ab27f2cbfe9c8013bd30237153`; JSON.parse PASS; 22 evidence entries, 12 recent activities. README commit `5be4778b744cfe3ee89a62a0dc7d5fb52c3ad920`, blob `0b4d8c543d95811083dfa572da11d46565f7f279`.
+- Scope: dashboard data/docs only. Browser/mobile QE NOT RUN; source remains LOCAL_SNAPSHOT, not Core live. No UI code, runtime, Build, tests, CI, PR, merge, gate or release changed.
+- Status unchanged: 01_DISCOVER; G0/G1 NOT VERIFIED; WE-G4/G5 BLOCKED; WP-76-07 BLOCKED; NOT_RELEASED.
