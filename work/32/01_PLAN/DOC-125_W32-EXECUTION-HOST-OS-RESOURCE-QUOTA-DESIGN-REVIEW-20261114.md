@@ -190,3 +190,110 @@ Cla's feasibility review supports further design work, not immediate implementat
 ## 11. XU EXACT-SHA SOURCE TRACE AND DESIGN RECONCILIATION
 
 Xu independently fetched the current remediation-branch source blobs: process_control.py 9f5eeddbbcb32152b19321ac59563e2729a3303c; host.py 977b5bc5072eaf0a3ad054aecd22491483d621b1; granted_host.py 1c5c05f9204510b98775069ed8378d8ac2c69e3f; server.py 14d1d764730540330b7bf1d0f3b83b2c03df6a2c; core_authority_client.py adc36577a94efdd5c46d64c30065993d5cd02b3b; tests/test_execution_host.py 183cba2959db9d9fb00751055efdeddd09c14a64; tests/test_execution_host_grants.py c70ed4bee8a098aae27fcf921e0570bde95bf1f7; core/execution_authority.py dd9becadd56a1df4c3f306de317b2f70f2b3b1db; tests/test_execution_authority.py 6503bf7b5ffb87ee0ab8721044149fb0ebedc52f. The protected GrantedExecutionHost path calls run_bounded(); Windows process creation uses Popen + CREATE_NEW_PROCESS_GROUP, not CREATE_SUSPENDED. The generic ExecutionHost path in host.py also uses ordinary Popen. Neither path currently demonstrates Job Object containment before user code. GrantedExecutionHost's online grant checks and run_started persistence are authorization/audit controls, not resource isolation. Core uses JSONL + OS file lock; DOC-123's SQLite wording needs explicit resolution. See W32-LOG-20261114-134 and W32-DECISION-20261114-08. Design direction approved with conditions only; product implementation not authorized; protected execution DENIED.
+
+
+---
+
+## 12. XU D1/D3 WINDOWS API DESIGN SPIKE SPECIFICATION — 2026-11-14
+
+- **Status:** DESIGN SPECIFICATION ONLY; NO PRODUCT CODE; NO RUNTIME EXECUTION.
+- **Target environment:** Windows 10 Pro, build 19045 (ADMIN-PC baseline recorded in project context).
+- **Scope:** resolve D1 (creation-time Job assignment) and D3 (cancellation/descendant lifecycle) sufficiently to define an isolated proof-of-concept. This section does not authorize execution of a user workload.
+
+### 12.1 D1 decision — creation-time Job assignment is the preferred candidate
+
+**Preferred candidate for the bounded spike: `PROC_THREAD_ATTRIBUTE_JOB_LIST` with `STARTUPINFOEX` and `EXTENDED_STARTUPINFO_PRESENT`.**
+
+Reasons:
+1. Microsoft documents `PROC_THREAD_ATTRIBUTE_JOB_LIST` as supported on Windows 10 and newer. It lets the creator provide the Job handles to which the child process is assigned during process creation.
+2. Creation-time assignment removes the interval in which a newly created, runnable process exists outside the per-run Job.
+3. The supported target build (Windows 10 Pro 19045) is within the documented OS generation, but that does **not** prove the exact API call, host nesting state, security descriptor, or runtime behavior on ADMIN-PC. Those require the isolated spike and later exact-environment evidence.
+4. The attribute list and its backing Job-handle array must remain valid until the process-creation call has completed and the attribute list is destroyed. Handle ownership and cleanup must be explicit.
+
+**Required launch sequence for the spike:**
+1. Validate the Core-authorized grant and resource-profile binding; reject absent, malformed, unknown or digest-mismatched policy.
+2. Create a private, unnamed per-run Job Object with a restrictive security descriptor; do not expose a name that unrelated processes can open.
+3. Configure all supported limits before process creation: job commit-memory ceiling, CPU hard-cap, active-process ceiling, and `JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE`. Do not enable either breakaway flag.
+4. Query the Job configuration back and compare every effective field with the intended policy. Any mismatch is BLOCKED.
+5. Inspect the Host's existing Job membership. If a parent Job exists, determine whether the required nested hierarchy is valid and whether effective parent limits permit the child policy. Do not attempt a breakaway or weaken a parent policy. Unknown or incompatible nesting => DENY.
+6. Build the extended startup attribute list with the Job handle(s) in valid parent-to-child order. Create the process using `CreateProcessW` + `STARTUPINFOEX` + `EXTENDED_STARTUPINFO_PRESENT` and the Job-list attribute. Do not use `CREATE_BREAKAWAY_FROM_JOB`.
+7. Before allowing the workload to proceed, verify the returned process handle with `IsProcessInJob` for the expected per-run Job, query the Job limits again, and verify the process is alive and the Job membership is present.
+8. Perform the final online Core grant/policy revalidation. Only after every previous check and the final revalidation succeeds may the Host mark the run as started/executable and allow the workload to proceed. The exact durable audit ordering must preserve the existing no-false-PASS rule.
+9. Close thread/process/attribute-list resources deterministically. Keep the Job handle owned by the Host run supervisor until all descendants are verified terminated.
+
+**No production fallback:** `CREATE_SUSPENDED` + `AssignProcessToJobObject` is retained only as a comparison case in the isolated spike. It is **not** an automatic fallback for production. It has a Host-crash window after process creation and before assignment; a suspended process can be left outside the Job. If the creation-time Job-list path is unavailable, rejected by nested-job constraints, or cannot be verified, protected execution remains DENIED.
+
+### 12.2 Hostile and edge-case conditions
+
+- **Nested Job:** Windows 8+ supports nested Jobs, but a valid hierarchy and parent limits still govern assignment. Probe the actual Host membership and assignment result. Never escape a parent Job to force assignment.
+- **Breakaway:** do not set `JOB_OBJECT_LIMIT_BREAKAWAY_OK`, `JOB_OBJECT_LIMIT_SILENT_BREAKAWAY_OK`, or `CREATE_BREAKAWAY_FROM_JOB`. Verify descendants remain in the per-run Job.
+- **WMI / Task Scheduler / SCM:** Job Object inheritance does not cover every process-creation mechanism. Microsoft specifically documents that children created through `Win32_Process.Create` are not associated with the Job by default. A Job Object is therefore not a complete sandbox. The workload identity must not have privileges to create out-of-band processes through WMI, Task Scheduler, service control or other brokers. If that privilege boundary is not established and tested, protected execution remains DENIED.
+- **Handle ownership:** Job handles must be non-inheritable, private to the Host supervisor, absent from the workload's inherited handle list, and not duplicated to unrelated processes. `KILL_ON_JOB_CLOSE` acts when the last Job handle closes; leaked/duplicated handles can defeat the expected close behavior. Explicitly call `TerminateJobObject` during cancellation/failure and then verify termination; kill-on-close is the crash backstop, not the only cleanup action.
+- **Host crash:** creation-time Job assignment avoids the unassigned suspended-child window. The spike must still verify that process termination/Host crash closes the final Job handle and that all members are terminated. A separate watchdog/helper must not be introduced without a new architecture decision.
+- **Restricted identity:** use a non-admin workload identity with explicit filesystem/workspace access and denied credential, service, WMI and network privileges as appropriate. Job Object limits do not remove inherited Host token permissions.
+- **Resource semantics:** Job memory limit is committed-memory accounting, not a promise to cap working set/RSS; allocation may fail when the limit is reached. CPU rate hard-cap throttles CPU share and is distinct from a total CPU-time budget. Active-process overflow behavior must be measured. No numeric quota is approved in this specification.
+
+### 12.3 D3 run and cancellation state machine
+
+`POLICY_VALIDATED → JOB_CREATED → LIMITS_CONFIGURED → LIMITS_QUERIED_BACK → PROCESS_CREATED_IN_JOB → MEMBERSHIP_VERIFIED → CORE_REVALIDATED → RUNNING → (COMPLETED | CANCELLING | ROOT_EXITED_WITH_DESCENDANTS) → JOB_EMPTY_VERIFIED → RUN_RECORD_FINALIZED`
+
+Rules:
+1. A single Host run supervisor owns the process handle, primary thread handle, Job handle, cancellation signal and finalization lock for that run.
+2. Cancellation, timeout, output overflow, Host shutdown and policy-revocation handling enter one idempotent termination path. Repeated cancellation requests must not race finalization or produce duplicate terminal records.
+3. The termination path calls `TerminateJobObject` with a non-success termination status, waits for the Job to become signaled, and queries Job accounting until `ActiveProcesses == 0`. A root process exit alone is never proof that descendants have ended.
+4. If the root exits while descendants remain, terminate the entire Job. The result is not a clean PASS; classify as CANCELLED/FAILED according to the trigger and record the orphan-prevention action.
+5. If Job termination cannot be confirmed within the bounded cleanup deadline, record BLOCKED / INDETERMINATE, retain diagnostic evidence and prevent the Host from accepting another protected run until the containment state is resolved. Never claim zero descendants based only on taskkill output or root exit.
+6. On normal completion, require the Job to be signaled and active-process count to be zero before recording a clean terminal result.
+7. On Host process termination, the last Job handle must close and `KILL_ON_JOB_CLOSE` must terminate members. The spike must test both graceful Host shutdown and forced Host termination.
+8. Run Record write failure, torn record, failed Job query, failed wait, or contradictory process accounting => INDETERMINATE/BLOCKED, never PASS. Do not silently truncate or repair an append-only journal.
+9. Run finalization is exactly-once at the logical level: terminal status and evidence references are durable before the run is exposed as complete to callers.
+
+### 12.4 Isolated proof-of-concept test matrix (specification; not executed)
+
+| ID | Test | Required observation | Failure disposition |
+|---|---|---|---|
+| D1-01 | Create process with Job-list attribute | Process is in the intended Job before any workload side effect | BLOCKED |
+| D1-02 | Invalid/unsupported attribute or Job handle | No workload side-effect marker; no ordinary-Popen fallback | DENY |
+| D1-03 | Parent Job / nested Job compatibility | Valid hierarchy only; effective limits are no weaker than policy | DENY on ambiguity/failure |
+| D1-04 | Job limit configure/query mismatch | Process is not created; queried fields and policy digest retained | BLOCKED |
+| D1-05 | Host crash around process creation | No uncontained runnable or suspended orphan remains | BLOCKED |
+| D1-06 | Breakaway attempt by child/grandchild | Descendant remains in Job or operation is denied; no escape | BLOCKED |
+| D1-07 | WMI `Win32_Process.Create` attempt | Restricted identity cannot create an out-of-Job process | DENY protected execution if privilege remains |
+| D3-01 | Explicit cancellation | Entire Job terminates; Job signaled; ActiveProcesses=0 | BLOCKED if not verified |
+| D3-02 | Timeout / output overflow | Same full-tree termination and zero-process verification | BLOCKED if not verified |
+| D3-03 | Root exits while child/grandchild remains | Supervisor detects nonzero active count and terminates Job | Never PASS |
+| D3-04 | Graceful Host shutdown | All active Jobs terminated and handles closed | BLOCKED if not verified |
+| D3-05 | Forced Host termination | Last-handle close triggers kill-on-close; no surviving member | BLOCKED if not verified |
+| D3-06 | Duplicate/reused Job handle attempt | Workload cannot inherit/open/duplicate the supervisor handle | DENY if handle isolation fails |
+| D3-07 | Repeated/racing cancel requests | One terminal record; no double-finalization or leaked process | BLOCKED on inconsistency |
+| D3-08 | Job wait/query failure | Result remains INDETERMINATE; no clean completion | BLOCKED |
+| D3-09 | Run Record failure/torn write | No false PASS; evidence preserved; restart fails closed | BLOCKED |
+| D3-10 | CPU/memory/process-count enforcement | OS query/accounting confirms configured enforcement and measured behavior | NOT PASS until measured |
+
+### 12.5 Acceptance evidence required from the spike
+
+- Exact Windows edition/build and process identity; exact source revision and test harness hash.
+- API calls, flags, structure sizes, return codes and captured `GetLastError` values for every positive and negative path.
+- Before/after Job configuration query; `IsProcessInJob` results; Job accounting snapshots; wait/signaled result.
+- Process tree identity/PIDs and proof of zero active descendants after cancellation, root exit, graceful shutdown and forced Host termination.
+- Side-effect marker proving no user workload ran on every pre-execution failure path.
+- Evidence that WMI/service/task-scheduler broker creation is unavailable to the restricted workload identity, or a clear BLOCKED disposition.
+- No guessed resource values; baseline measurements must precede any quota selection.
+- Independent review by Ka (security) and Cla (implementation feasibility), followed by independent QE on the actual supported Windows environment.
+
+### 12.6 D1/D3 disposition
+
+- **D1:** design recommendation is creation-time `PROC_THREAD_ATTRIBUTE_JOB_LIST`; Windows 10 build 19045 is within the documented support generation. Runtime proof on ADMIN-PC remains NOT RUN / NOT VERIFIED. Suspended-create/assign is not an approved production fallback.
+- **D3:** lifecycle and cancellation contract defined above; implementation and runtime evidence remain NOT RUN.
+- **Authorization:** this is a design/test specification only. It does not authorize product code, local PC execution, self-hosted runner dispatch, protected workload execution, service changes, PR/main integration or release.
+- **D1 status:** DESIGN SPECIFIED / RUNTIME NOT VERIFIED.
+- **D3 status:** CONTRACT SPECIFIED / RUNTIME NOT VERIFIED.
+
+### 12.7 External API references consulted
+
+- Microsoft Learn — Job Objects: https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects
+- Microsoft Learn — UpdateProcThreadAttribute / `PROC_THREAD_ATTRIBUTE_JOB_LIST`: https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-updateprocthreadattribute
+- Microsoft Learn — Nested Jobs: https://learn.microsoft.com/en-us/windows/win32/procthread/nested-jobs
+- Microsoft Learn — JOBOBJECT_BASIC_LIMIT_INFORMATION: https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-jobobject_basic_limit_information
+
+These references establish documented API semantics only; they are not evidence that the API has been exercised successfully on ADMIN-PC.
