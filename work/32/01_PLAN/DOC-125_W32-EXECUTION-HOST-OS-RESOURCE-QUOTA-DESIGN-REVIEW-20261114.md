@@ -557,3 +557,45 @@ Before any harness code is created or executed, Xu must prepare a concrete file-
 - explicit separate authorization for harness source creation and, later, execution in a disposable supported Windows environment.
 
 Until those conditions are met, this document is a test protocol only. D1/D3 remain NOT VERIFIED; H1 remains BLOCKED; protected execution remains DENIED.
+
+
+---
+
+## 17. KA / CLA REVIEW REQUEST — DOC-125 SECTION 16 (SPECIFICATION ONLY)
+
+- **Review target:** DOC-125 Sections 12.9 and 16, including P0–P3 and L1–L9.
+- **Requested reviewers:** Ka / AI-02 (security); Cla / AI-03 (Windows implementation feasibility).
+- **Review type:** READ-ONLY DESIGN REVIEW. Do not create code, execute commands, access ADMIN-PC, dispatch a runner, or change product files.
+- **Decision required from each reviewer:** ACCEPT / ACCEPT WITH CONDITIONS / REJECT. Every finding must identify the exact section/test ID, technical reason, evidence/source, and required correction.
+
+### 17.1 Ka — security review questions
+
+1. Is the Controller/Supervisor/Probe separation sufficient to ensure the harness cannot run arbitrary commands or user workloads?
+2. Are Job handle ownership, non-inheritance, no-duplication and explicit child handle allow-list sufficient? Identify any handle-leak path.
+3. Are P0–P3 sufficient to test parent Job, nested Job, unknown/opaque parent chain and fail-closed behavior? Is the production DENY rule for unknown parent topology correct?
+4. Are L1–L9 sufficient to cover descendant escape, breakaway, cancellation races, Host shutdown/crash and orphan cleanup?
+5. Does the specification overstate what Job Object proves? Identify WMI/Task Scheduler/SCM, token privilege, filesystem, credential and network gaps that must remain separate gates.
+6. Are the marker, process-handle, Job accounting and wait observations strong enough for PASS, or is additional independent evidence required?
+
+### 17.2 Cla — implementation feasibility review questions
+
+1. Is the proposed `STARTUPINFOEXW` + `PROC_THREAD_ATTRIBUTE_JOB_LIST` + `CREATE_SUSPENDED` sequence valid on Windows 10 Pro build 19045?
+2. Are attribute-list allocation, initialization, value lifetime, deletion and handle cleanup specified correctly?
+3. Is the expected `ResumeThread` previous suspend count of exactly 1 the correct fail-closed assertion for this harness?
+4. Are Job-list ordering and parent/nested Job cases technically testable as written? What API observations are required where the Host cannot obtain an opaque parent Job handle?
+5. Are Job signaling, `ActiveProcesses`, `TerminateJobObject` and `KILL_ON_JOB_CLOSE` sufficient for each lifecycle assertion, and what races remain?
+6. Is the proposed fixed Probe and temporary evidence protocol practical without using `subprocess.Popen` for the process-creation path?
+
+### 17.3 Required review response format
+
+- Reviewer identity and exact source/document revision reviewed.
+- Overall disposition: ACCEPT / ACCEPT WITH CONDITIONS / REJECT.
+- Findings by section/test ID, severity, evidence and correction.
+- Any unresolved question that prevents safe harness code creation or execution.
+- Explicit statement that no code or runtime action was performed during the review.
+
+### 17.4 Dispatch and status truth
+
+This repository/Sandbox tool surface currently exposes file read/write and meeting record operations, but no verified direct agent-task dispatch action. Therefore this section is a prepared review brief, **not evidence that Ka or Cla have received or accepted the review request**. Do not mark either review complete until a reviewer response is received and recorded. No attempt is made to use the previously rejected/broken meeting execution path.
+
+**Current status:** REVIEW BRIEF PREPARED / DISPATCH NOT VERIFIED / RESPONSES NOT RECEIVED.
