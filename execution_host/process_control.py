@@ -140,7 +140,7 @@ def run_bounded(
     def drain(stream, target: bytearray) -> None:
         try:
             while True:
-                chunk = stream.read(65536)
+                chunk = os.read(stream.fileno(), 65536)
                 if not chunk:
                     return
                 with lock:
