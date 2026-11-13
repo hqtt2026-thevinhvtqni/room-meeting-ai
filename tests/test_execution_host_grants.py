@@ -6,6 +6,7 @@ from pathlib import Path
 
 from execution_host.core_authority_client import AuthorityClientError
 from execution_host.granted_host import GrantedExecutionHost
+from execution_host.process_control import run_bounded
 from execution_host.source_snapshot import workspace_source_sha256
 
 
@@ -378,3 +379,41 @@ def test_safe_env_uses_per_run_isolated_home_and_temp(monkeypatch, tmp_path):
     else:
         assert env["TMPDIR"] == str((isolated / "tmp").resolve())
         assert env["XDG_CACHE_HOME"] == str((isolated / ".cache").resolve())
+
+
+
+def test_run_bounded_caps_combined_output(tmp_path):
+    code = "import sys,time; sys.stdout.write('x' * (2 * 1024 * 1024)); sys.stdout.flush(); time.sleep(5)"
+    result = run_bounded(
+        [sys.executable, "-c", code],
+        cwd=tmp_path,
+        env=os.environ.copy(),
+        timeout=5,
+        max_output_bytes=4096,
+    )
+    assert result.output_limit_exceeded is True
+    assert len(result.stdout) + len(result.stderr) <= 4096
+    assert result.tree_termination_confirmed is True
+
+
+def test_run_bounded_terminates_process_tree_on_timeout(tmp_path):
+    marker = tmp_path / "orphan-survived.txt"
+    child_code = (
+        "import time; from pathlib import Path; time.sleep(1.5); "
+        f"Path({str(marker)!r}).write_text('survived', encoding='utf-8')"
+    )
+    parent_code = (
+        "import subprocess,sys,time; "
+        "subprocess.Popen([sys.executable, '-c', sys.argv[1]]); "
+        "time.sleep(30)"
+    )
+    result = run_bounded(
+        [sys.executable, "-c", parent_code, child_code],
+        cwd=tmp_path,
+        env=os.environ.copy(),
+        timeout=0.4,
+    )
+    assert result.timed_out is True
+    assert result.tree_termination_confirmed is True
+    time.sleep(1.8)
+    assert not marker.exists()
