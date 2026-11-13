@@ -94,3 +94,6 @@ Evidence is immutable by reference. Corrections add a new evidence record; faile
 
 
 | W32-EVIDENCE-033 | Run #499 compile failure and immediate syntax correction | W32-LOG-20261113-125; Run 43432414929; execution_host/granted_host.py | Tested head ecddd3ac05448540453c6a290f38310dd25c2594 failed compileall at line 302; fix commit 05b0fb33087289d079c25bac2fb637eab5150575 | FAILURE RETAINED; SOURCE CORRECTED; EXACT-HEAD RETEST REQUIRED |
+
+
+| W32-EVIDENCE-034 | Run #508 exact-head Linux / hosted Windows / product artifact validation | W32-LOG-20261113-126; run 43432659016; head 7a93ce6d5546f778e76db47b201dc1574e02940d | Unit 260 passed; Product Auto E2E 127 passed; Windows security/Browser Adapter 26 passed; tooling + strict mirror PASS; immutable artifact PASS | AUTOMATED CI LANES PASS; DEDICATED PC RUNNER PROBE QUEUED; RELEASE GATE PENDING |
