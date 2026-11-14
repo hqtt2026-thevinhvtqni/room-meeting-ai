@@ -14,4 +14,4 @@
 - Non-goal: W116 is not an API gateway, execution runtime, credential vault or automatic permission-grant system.
 - Current source: public-apis/public-apis — catalog source only; individual APIs/MCP servers require their own usage and runtime check.
 - Implementation: Catalog and documentation only. No external service credentials or production API integration.
-- GitHub main sync: IN PROGRESS; exact readback pending.
+- GitHub main sync: SYNCED — exact Sandbox/GitHub main content parity verified for 7/7 canonical files on 2026-11-14.
