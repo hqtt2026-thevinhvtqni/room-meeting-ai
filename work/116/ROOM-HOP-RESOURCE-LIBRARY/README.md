@@ -13,6 +13,9 @@ W116 helps ROOM-HOP Agents discover useful APIs, MCP servers, SDKs, libraries, m
 ## Finance and investment resources
 W116 has dedicated finance classifications: RES-03 Finance & Investment, RES-04 Market Data and RES-05 Banking & Economy. See [finance source records](01_DISCOVER/SOURCE_CATALOG.md#finance--investment-resources) and filter `RESOURCE_CATALOG.json` by category.
 
+## Expanded resource domains
+W116 now classifies public administration/e-government, legal/regulatory, public investment, public procurement, construction and construction costs, health, education, I Ching and classical texts (RES-13 to RES-23). See the source catalog and filter `RESOURCE_CATALOG.json` by category. New entries GOV-001..002, PUB-001..002, CON-001..002, HLT-001, EDU-001 and ICH-001 are candidates; portal/API access and runtime status are explicitly distinguished.
+
 ## Current source
 - [public-apis/public-apis](01_DISCOVER/SOURCE_CATALOG.md) — useful discovery directory for public APIs and MCP server candidates.
 - It is a catalog, not a callable API or an automatic permission grant.
