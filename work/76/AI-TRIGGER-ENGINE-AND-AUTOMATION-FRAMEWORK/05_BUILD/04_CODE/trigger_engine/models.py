@@ -254,10 +254,12 @@ class Trigger:
             )
         except KeyError as exc:
             raise ValidationError(f"missing required field: {exc.args[0]}") from exc
-        # M1 (Grok review): verify the persisted digest against the recomputed
-        # semantic digest so altered content cannot be silently accepted.
+        # M1 (Grok review): verify the persisted digest against a freshly
+        # recomputed semantic digest. __post_init__ keeps a provided digest
+        # as-is, so the comparison must be against semantic_digest(), never
+        # against trigger.content_digest (which would equal the provided value).
         provided = data.get("content_digest", "")
-        if provided and provided != trigger.content_digest:
+        if provided and provided != trigger.semantic_digest():
             raise ValidationError(
                 "content_digest mismatch: persisted semantic content was altered"
             )
