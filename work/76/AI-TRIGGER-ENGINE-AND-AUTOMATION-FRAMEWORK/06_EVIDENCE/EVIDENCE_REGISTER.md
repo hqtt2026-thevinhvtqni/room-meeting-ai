@@ -6,7 +6,7 @@
 | EV-76-002 | Work 70 reference structure and manifest inspected | Work 70 Sandbox / GitHub tree | VERIFIED |
 | EV-76-003 | Work 76 baseline documents and dashboard created and synchronized | Work 76 Sandbox + GitHub main; selected files re-read; JSON parse passed | VERIFIED |
 | EV-76-004 | Trigger engine runtime implementation | Not implemented | NOT_AVAILABLE |
-| EV-76-005 | CI/test execution | Not run | NOT_AVAILABLE |
+| EV-76-005 | Initial baseline CI/test execution at Work setup (2026-11-06) | Not run at that historical baseline; later PR #55 branch CI is separately recorded in EV-76-013 | HISTORICAL — superseded for current PR CI status; not Canonical QE |
 
 Rules: artifact existence is not runtime verification; a planned test is not a passed test; dashboard status must not upgrade evidence status.
 
