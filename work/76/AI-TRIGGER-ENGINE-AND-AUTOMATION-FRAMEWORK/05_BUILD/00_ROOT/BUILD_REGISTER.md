@@ -2,7 +2,7 @@
 
 | WP | Package | Owner | Reviewer | Status | Canonical evidence |
 |---|---|---|---|---|---|
-| WP-76-01 | Trigger Registry and schema | Vibe (PR #55 proposal; participant Work Entry not verified) | Ka / AI-02 (assignment-specific QE Lead; G4/G5 blocked) | IN_REVIEW — PR #55 unmerged | PR #55: 05_BUILD/04_CODE/trigger_engine/registry.py; models.py; CI/test evidence EV-76-013/014 |
+| WP-76-01 | Trigger Registry and schema | Vibe (PR #55 proposal; participant Work Entry not verified) | Ka / AI-02 (assignment-specific QE Lead; G4/G5 blocked) | IN_REVIEW — PR #55 unmerged | PR #55: 05_BUILD/04_CODE/trigger_engine/registry.py; models.py; CI/test evidence EV-76-026/027 |
 | WP-76-02 | Event Gateway and source validation | Co / AI-07 (delegated; WE-G5 blocked) | Qw (nomination; ACK/entry pending) | PLANNED | 05_BUILD/04_CODE |
 | WP-76-03 | Scheduler and TIME triggers | Co / AI-07 (delegated; WE-G5 blocked) | Qw (nomination; ACK/entry pending) | PLANNED | 05_BUILD/04_CODE |
 | WP-76-04 | Typed Condition Evaluator | Vibe (PR #55 proposal; participant Work Entry not verified) | Ka / AI-02 (assignment-specific QE Lead; G4/G5 blocked) | IN_REVIEW — PR #55 unmerged | PR #55: 05_BUILD/04_CODE/trigger_engine/conditions.py; tests in 05_BUILD/05_TEST/test_trigger_engine.py |
