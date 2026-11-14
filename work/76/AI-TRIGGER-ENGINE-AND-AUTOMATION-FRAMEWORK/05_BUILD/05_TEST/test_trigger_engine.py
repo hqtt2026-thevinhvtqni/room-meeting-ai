@@ -1,7 +1,8 @@
 """Work 76 mandatory regression tests (DOC-006 static-review addendum).
 
-Covers W76-CE-001..004, W76-RG-001..002, W76-MD-001..002, W76-EV-001..002.
-Run: pytest <this directory> (PYTHONPATH must include 04_CODE).
+Covers W76-CE-001..006, W76-RG-001..003, W76-MD-001..003, W76-EV-001..002,
+including Grok independent-review regressions (H1/M1/M2/L1). Run: pytest
+<this directory> (PYTHONPATH must include 04_CODE).
 """
 
 from __future__ import annotations
@@ -15,6 +16,7 @@ from trigger_engine import (
     ConditionValidationError,
     ConcurrencyError,
     Event,
+    RegistryError,
     RetryPolicy,
     StateError,
     Trigger,
@@ -41,7 +43,6 @@ def make_trigger(version: int = 1, trigger_id: str = "trg-1", **overrides) -> Tr
     )
     defaults.update(overrides)
     return Trigger(**defaults)
-
 
 # ---------------------------------------------------------------- W76-CE-001
 def test_w76_ce_001_time_normalization():
@@ -261,3 +262,67 @@ def test_w76_ev_002_oversized_payload_rejected():
     big = {"blob": "x" * 70000}
     with pytest.raises(ValidationError):
         Event(event_id="evt-3", provider="github", event_type="push", occurred_at=NOW, payload=big)
+
+# ------------------------------------------------- Grok review: H1 (W76-RG-003)
+def test_w76_rg_003_reload_multiple_active_fail_closed():
+    """H1: persisted data with two ACTIVE versions of one trigger is rejected."""
+    v1 = make_trigger(version=1, status="ACTIVE")
+    v2 = make_trigger(version=2, status="ACTIVE")
+    corrupt = {"triggers": [v1.to_dict(), v2.to_dict()]}
+    with pytest.raises(RegistryError):
+        TriggerRegistry.from_dict(corrupt)
+
+
+def test_w76_rg_003_reload_preserves_single_active_invariant():
+    """H1: a legitimate snapshot reloads and the single-ACTIVE invariant holds
+    both at load time and when a retired version is re-activated."""
+    registry = TriggerRegistry()
+    registry.publish(make_trigger(version=1))
+    registry.activate("trg-1", 1)
+    registry.publish(make_trigger(version=2))
+    registry.activate("trg-1", 2)
+    reloaded = TriggerRegistry.from_dict(registry.to_dict())
+    assert [t.version for t in reloaded.active_triggers("trg-1")] == [2]
+    assert reloaded.get("trg-1", 1).status == "RETIRED"
+    # Activating the retired version again still retires the current ACTIVE.
+    reloaded.activate("trg-1", 1)
+    assert [t.version for t in reloaded.active_triggers("trg-1")] == [1]
+    assert reloaded.get("trg-1", 2).status == "RETIRED"
+
+
+# ------------------------------------------------- Grok review: M1 (W76-MD-003)
+def test_w76_md_003_tampered_digest_rejected_on_reload():
+    """M1: a persisted trigger whose semantic content was altered is rejected."""
+    trigger = make_trigger()
+    data = trigger.to_dict()
+    data["condition"]["right"]["value"] = "closed"
+    with pytest.raises(ValidationError):
+        Trigger.from_dict(data)
+
+
+def test_w76_md_003_digest_recomputed_when_absent():
+    """M1: snapshot without a digest field recomputes a matching digest."""
+    data = make_trigger().to_dict()
+    del data["content_digest"]
+    reloaded = Trigger.from_dict(data)
+    assert reloaded.content_digest == reloaded.semantic_digest()
+
+
+# ------------------------------------------------- Grok review: M2 (W76-CE-005)
+def test_w76_ce_005_time_window_path_key_rejected():
+    """M2: 'path' is not a time_window key; carrying it is malformed AST."""
+    node = {"type": "time_window", "last_seconds": 60, "path": "ts"}
+    result = evaluate(node, {"ts": NOW}, event_time=NOW, now=NOW)
+    assert result.outcome == "INVALID"
+    with pytest.raises(ConditionValidationError):
+        _validate_node(node, 0, [0])
+
+
+# ------------------------------------------------- Grok review: L1 (W76-CE-006)
+def test_w76_ce_006_non_boolean_result_is_error_not_match():
+    """L1: a bare non-boolean node result is ERROR, never coerced to MATCH."""
+    result = evaluate({"type": "field", "path": "status"}, {"status": "open"}, event_time=NOW, now=NOW)
+    assert result.outcome == "ERROR"
+    # Boolean literals still evaluate normally; truthy non-bool does not.
+    assert evaluate({"type": "literal", "value": True}, {}, event_time=NOW, now=NOW).outcome == "MATCH"
+    assert evaluate({"type": "literal", "value": "yes"}, {}, event_time=NOW, now=NOW).outcome == "ERROR"
