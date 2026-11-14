@@ -11,7 +11,8 @@ Implements the DOC-004 typed AST contract:
   range (W76-CE-004).
 
 Evaluation result is a typed outcome: MATCH / NO_MATCH / INVALID / ERROR,
-never a bare boolean.
+never a bare boolean. Boolean results are strict (L1, Grok review): a node
+that does not evaluate to a boolean yields ERROR, never a truthy coercion.
 """
 
 from __future__ import annotations
@@ -130,7 +131,9 @@ def _validate_node(node: Any, depth: int, counter: list) -> None:
         _validate_node(node["left"], depth + 1, counter)
         return
     if ntype == "time_window":
-        if set(node.keys()) - {"type", "last_seconds", "since", "until", "path"}:
+        # M2 (Grok review): 'path' was accepted but never used; it is now an
+        # unknown key so a time_window node cannot silently carry dead config.
+        if set(node.keys()) - {"type", "last_seconds", "since", "until"}:
             raise ConditionValidationError("time_window node has unknown keys")
         if "last_seconds" in node:
             last = node["last_seconds"]
@@ -206,6 +209,13 @@ def _compare(op: str, left: Any, right: Any) -> bool:
     raise ConditionEvaluationError(f"unsupported operator: {op}")
 
 
+def _as_bool(value: Any, context: str) -> bool:
+    """Strict boolean coercion (L1): non-boolean results are evaluation errors."""
+    if not isinstance(value, bool):
+        raise ConditionEvaluationError(f"{context} must evaluate to a boolean, got {type(value).__name__}")
+    return value
+
+
 def _eval_node(node: Mapping[str, Any], scope: Mapping[str, Any], event_time: datetime, now: datetime) -> Any:
     ntype = node["type"]
     if ntype == "literal":
@@ -219,11 +229,11 @@ def _eval_node(node: Mapping[str, Any], scope: Mapping[str, Any], event_time: da
             _eval_node(node["right"], scope, event_time, now),
         )
     if ntype == "and":
-        return all(bool(_eval_node(o, scope, event_time, now)) for o in node["operands"])
+        return all(_as_bool(_eval_node(o, scope, event_time, now), "and operand") for o in node["operands"])
     if ntype == "or":
-        return any(bool(_eval_node(o, scope, event_time, now)) for o in node["operands"])
+        return any(_as_bool(_eval_node(o, scope, event_time, now), "or operand") for o in node["operands"])
     if ntype == "not":
-        return not bool(_eval_node(node["operand"], scope, event_time, now))
+        return not _as_bool(_eval_node(node["operand"], scope, event_time, now), "not operand")
     if ntype == "exists":
         return _resolve_path(scope, node["path"]) is not MISSING
     if ntype == "in":
@@ -274,7 +284,7 @@ def evaluate(
     try:
         _validate_node(condition, 0, [0])
         event_utc = normalize_utc(event_time)
-        result = bool(_eval_node(condition, scope, event_utc, evaluated_at))
+        result = _as_bool(_eval_node(condition, scope, event_utc, evaluated_at), "root node")
         return ConditionResult(
             outcome="MATCH" if result else "NO_MATCH",
             reason_code="OK",

@@ -234,7 +234,7 @@ class Trigger:
     def from_dict(cls, data: Mapping[str, Any]) -> "Trigger":
         try:
             action = data["action"]
-            return cls(
+            trigger = cls(
                 trigger_id=data["trigger_id"],
                 name=data["name"],
                 version=data["version"],
@@ -254,6 +254,14 @@ class Trigger:
             )
         except KeyError as exc:
             raise ValidationError(f"missing required field: {exc.args[0]}") from exc
+        # M1 (Grok review): verify the persisted digest against the recomputed
+        # semantic digest so altered content cannot be silently accepted.
+        provided = data.get("content_digest", "")
+        if provided and provided != trigger.content_digest:
+            raise ValidationError(
+                "content_digest mismatch: persisted semantic content was altered"
+            )
+        return trigger
 
 
 @dataclass(frozen=True)

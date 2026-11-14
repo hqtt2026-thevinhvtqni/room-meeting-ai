@@ -5,7 +5,9 @@ Implements DOC-004 lifecycle invariants:
   the previous ACTIVE version (regression W76-RG-001),
 - expected-revision compare-and-swap for state changes,
 - pause/resume/disable transitions with persistence round-trip consistency
-  (W76-RG-002).
+  (W76-RG-002),
+- reload from persisted data fails closed on multi-ACTIVE corruption
+  (W76-RG-003, Grok review H1).
 """
 
 from __future__ import annotations
@@ -25,7 +27,12 @@ VALID_TRANSITIONS = {
 
 
 class TriggerRegistry:
-    """In-memory canonical registry with JSON round-trip support."""
+    """In-memory canonical registry with JSON round-trip support.
+
+    L2 (Grok review, architectural limitation): this registry keeps state in
+    memory only. Durability is the caller's responsibility via to_dict /
+    from_dict round-trips; the engine itself performs no persistence.
+    """
 
     def __init__(self) -> None:
         self._triggers: dict[tuple[str, int], Trigger] = {}
@@ -141,8 +148,20 @@ class TriggerRegistry:
     @classmethod
     def from_dict(cls, data: Mapping[str, Any]) -> "TriggerRegistry":
         registry = cls()
+        # H1 (Grok review): fail closed when persisted data carries more than
+        # one ACTIVE version for the same trigger_id. The single-ACTIVE
+        # invariant must hold at load time, not only at activation time.
+        active_seen: dict[str, int] = {}
         for item in data.get("triggers", []):
             trigger = Trigger.from_dict(item)
             # Restore persisted state directly; publish() only accepts DRAFT.
             registry._triggers[(trigger.trigger_id, trigger.version)] = trigger
+            if trigger.status == "ACTIVE":
+                previous = active_seen.get(trigger.trigger_id)
+                if previous is not None:
+                    raise RegistryError(
+                        f"corrupt registry data: trigger {trigger.trigger_id} has "
+                        f"multiple ACTIVE versions ({previous}, {trigger.version})"
+                    )
+                active_seen[trigger.trigger_id] = trigger.version
         return registry
