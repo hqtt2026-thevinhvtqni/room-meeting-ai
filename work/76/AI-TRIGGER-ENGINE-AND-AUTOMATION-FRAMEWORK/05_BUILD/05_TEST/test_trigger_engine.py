@@ -284,9 +284,11 @@ def test_w76_rg_003_reload_preserves_single_active_invariant():
     reloaded = TriggerRegistry.from_dict(registry.to_dict())
     assert [t.version for t in reloaded.active_triggers("trg-1")] == [2]
     assert reloaded.get("trg-1", 1).status == "RETIRED"
-    # Activating the retired version again still retires the current ACTIVE.
-    reloaded.activate("trg-1", 1)
-    assert [t.version for t in reloaded.active_triggers("trg-1")] == [1]
+    # A fresh DRAFT version can be activated after reload; the invariant
+    # still holds and the previous ACTIVE version is retired.
+    reloaded.publish(make_trigger(version=3))
+    reloaded.activate("trg-1", 3)
+    assert [t.version for t in reloaded.active_triggers("trg-1")] == [3]
     assert reloaded.get("trg-1", 2).status == "RETIRED"
 
 
