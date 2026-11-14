@@ -53,3 +53,15 @@
 - Safety and integrity: Administrative submissions, payments, procurement participation and government record changes require explicit human authorization. Health entries are aggregate statistics only. Legal records require exact effective-date/version checks. I Ching source text, commentary and AI interpretation must remain separate.
 - Status: 10 new candidates catalogued; none marked runtime PASS. Existing finance records retained.
 - Next: Sync Sandbox and GitHub main, exact-readback all changed canonical files, parse JSON and verify category/resource counts.
+
+
+## 2026-11-14 — Xu / AI-01 — Add dedicated Vietnam Law category
+- Scope: Add a standalone RES-24 Vietnam Law & Legal Research category, separate from generic public administration/legal regulation tags.
+- Method: Reviewed official Ministry of Justice National Law Portal and National Database of Legal Documents guides, Official Gazette, National Assembly, Supreme People's Court/precedents and Ministry of Foreign Affairs treaty portal references.
+- Added records: LAW-001..LAW-006 (6 records); taxonomy RES-24.
+- Evidence: Ministry of Justice portal identifies the National Law Portal as managed by the Ministry and provides legal document search; VBPL official user guide describes central and local legal-document coverage and search; official Gazette and other institutional sources identified for publication, legislation, case law and treaties.
+- Access assessment: Official web portals/database search reviewed or referenced. No public API contract, bulk export permission or runtime endpoint verified for these records.
+- Runtime test: NOT RUN. No automated scraping, bulk download, filing, legal transaction or authenticated action performed.
+- Agent guidance: Prefer official primary sources; preserve document number, issuer, effective date, validity, amendments and transitional provisions; distinguish drafts, enacted law, consolidated texts, judgments, precedents and treaties. Mark uncertain validity UNVERIFIED. Cite exact text/version. Legal research output is not authoritative legal advice.
+- Status: 6 official-source candidates added; none marked API/runtime PASS.
+- Next: Sync Sandbox and GitHub main; verify exact readback parity and JSON validity.
