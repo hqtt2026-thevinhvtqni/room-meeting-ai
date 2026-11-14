@@ -52,3 +52,5 @@ This proves GitHub↔Sandbox data-file synchronization in the current OChat MCP 
 
 
 | EV-76-022 | DOC-006 expanded with observable acceptance criteria for FR-01…FR-10 and NFR-01…NFR-07, including preconditions, PASS criteria, fail-closed conditions and mandatory evidence artifacts; specification only, not approved or executed. | DOC-006 Observable acceptance criteria matrix; GitHub main blob 8cad3ad027214a2608debe789d1f38dc3414d2a3; 2026-11-13 12:06 +07:00 | VERIFIED (DOCUMENT SYNC ONLY; TESTS NOT RUN) |
+
+| EV-76-023 | Corrected Trigger Engine implementation rebuilt from main on branch work/76-trigger-engine-vibe-v1 (commits d1795f4, 8e73fdf): fixes all 6 static-review findings of prototype PR #53; adds mandatory DOC-006 regression tests W76-CE/RG/MD/EV and CI workflow. CI run 43541364364 COMPLETED SUCCESS (pytest 3.11 + 3.12). Draft PR #55 to main, NOT MERGED; no gate/WP status change. | Branch work/76-trigger-engine-vibe-v1; PR #55; Actions run https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/43541364364; DOC-035 2026-11-14 08:40 +07:00 | VERIFIED (BRANCH-LEVEL CI ONLY; CANONICAL MAIN UNCHANGED; INDEPENDENT QE PENDING) |

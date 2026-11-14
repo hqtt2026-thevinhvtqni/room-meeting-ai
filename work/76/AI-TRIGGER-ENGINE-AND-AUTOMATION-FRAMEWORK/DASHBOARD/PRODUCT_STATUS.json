@@ -9,9 +9,9 @@
   "current_phase": "01_DISCOVER",
   "source_mode": "local_snapshot",
   "freshness": "LOCAL_SNAPSHOT",
-  "revision": "W76-DASHBOARD-0.3.7",
-  "warning_vi": "LOCAL SNAPSHOT — chưa kết nối Core live. Cập nhật 2026-11-13 12:06 UTC+7; Evidence Register đến EV-76-022. DOC-006 đã có tiêu chí nghiệm thu quan sát được cho FR-01…FR-10 và NFR-01…NFR-07; đây là đặc tả, chưa phê duyệt/chưa chạy test. OChat Sandbox capability probe chỉ xác nhận tool-session capability; trusted AI-07 identity và PC/VS Code Bridge vẫn NOT VERIFIED. Work 01_DISCOVER; G0/G1 NOT VERIFIED; WE-G4/G5 BLOCKED; WP-76-07 BLOCKED; NOT_RELEASED.",
-  "updated_at": "2026-11-13T05:06:00Z",
+  "revision": "W76-DASHBOARD-0.3.8",
+  "warning_vi": "LOCAL SNAPSHOT — chưa kết nối Core live. Cập nhật 2026-11-14 08:40 UTC+7; Evidence Register đến EV-76-023. Bản implementation Trigger Engine đã sửa 6 lỗi static review của PR #53 được đề xuất trên nhánh work/76-trigger-engine-vibe-v1 (draft PR #55), CI pytest 3.11/3.12 PASS cấp nhánh (run 43541364364); CHƯA merge, chưa QE độc lập. Work 01_DISCOVER; G0/G1 NOT VERIFIED; WE-G4/G5 BLOCKED; WP-76-07 BLOCKED; NOT_RELEASED.",
+  "updated_at": "2026-11-14T01:40:00Z",
   "phases": [
     {
       "phase_id": "01_DISCOVER",
@@ -378,6 +378,13 @@
   ],
   "recent_activity": [
     {
+      "date": "2026-11-14",
+      "actor": "Vibe (delegated by Vinh)",
+      "title": "Tái xây dựng Trigger Engine + test DOC-006 + CI (PR #55)",
+      "detail": "Nhánh sạch từ main sửa đủ 6 lỗi static review PR #53; 10 regression test bắt buộc; CI run 43541364364 PASS (pytest 3.11/3.12). Draft PR #55, chưa merge, không đổi gate/WP.",
+      "status": "BRANCH CI PASS / PENDING REVIEW + MERGE"
+    },
+    {
       "date": "2026-11-06",
       "actor": "Xu",
       "title": "Đồng bộ baseline Work 76 lên GitHub main",
@@ -616,6 +623,13 @@
       "claim": "DOC-006 bổ sung preconditions, observable PASS criteria, fail-closed criteria và mandatory evidence artifact cho 10 FR + 7 NFR; specification only, tests NOT RUN.",
       "path": "06_VERIFY/DOC-006_VERIFICATION-PLAN.md §Observable acceptance criteria matrix",
       "status": "VERIFIED (DOCUMENT SYNC ONLY; TESTS NOT RUN)"
+    },
+    {
+      "evidence_id": "EV-76-023",
+      "title": "Corrected Trigger Engine implementation + branch CI PASS",
+      "claim": "Implementation sửa 6 lỗi static review PR #53, kèm 10 regression test DOC-006 và CI workflow; CI run 43541364364 PASS trên nhánh; draft PR #55 chưa merge; EV-76-004/005 trên main vẫn NOT_AVAILABLE.",
+      "path": "work/76-trigger-engine-vibe-v1 · PR #55 · Actions run 43541364364 · DOC-035 2026-11-14",
+      "status": "VERIFIED (BRANCH-LEVEL CI ONLY; QE PENDING)"
     }
   ]
 }

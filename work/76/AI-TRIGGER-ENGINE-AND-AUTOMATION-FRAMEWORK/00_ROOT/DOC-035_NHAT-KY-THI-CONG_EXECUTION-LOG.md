@@ -307,3 +307,15 @@
 - GitHub: PRODUCT_STATUS commit `970cca04887b218b8af504298bcc522e822ebedb`, blob `aba5ad83363c46ab27f2cbfe9c8013bd30237153`; JSON.parse PASS; 22 evidence entries, 12 recent activities. README commit `5be4778b744cfe3ee89a62a0dc7d5fb52c3ad920`, blob `0b4d8c543d95811083dfa572da11d46565f7f279`.
 - Scope: dashboard data/docs only. Browser/mobile QE NOT RUN; source remains LOCAL_SNAPSHOT, not Core live. No UI code, runtime, Build, tests, CI, PR, merge, gate or release changed.
 - Status unchanged: 01_DISCOVER; G0/G1 NOT VERIFIED; WE-G4/G5 BLOCKED; WP-76-07 BLOCKED; NOT_RELEASED.
+
+
+### 2026-11-14 08:40 +07:00 — Vibe tái xây dựng Trigger Engine từ main, sửa 6 lỗi static review, CI PASS trên nhánh (PR #55)
+- Actor: Vibe (GLM serving, Vibe Work session) — theo ủy quyền của Vinh "tiếp tục xây dựng, giao Vibe toàn quyền" (ASG-W76-VIBE-20261114-01).
+- Scope: nhánh làm việc sạch `work/76-trigger-engine-vibe-v1` tạo từ main gốc (base commit 8dc22485bd638bb614e44037a9c1a80e74200cc0). Thay thế prototype PR #53 đã bị trả về (giữ nguyên làm bằng chứng audit, KHÔNG merge, KHÔNG xóa).
+- BUILD: `05_BUILD/04_CODE/trigger_engine/{__init__,errors,models,conditions,registry}.py` — hiện thực hóa contract baseline DOC-004: typed condition AST evaluator (allow-list operator cố định, không eval/dynamic code), model bất biến deep-frozen kèm canonical-JSON semantic digest, registry bất biến single-ACTIVE-version với expected-revision CAS, validation khai báo rõ ràng (không rò AttributeError), payload là untrusted data với giới hạn size/depth.
+- Remediation: xử lý đủ 6 finding static review của PR #53 (DOC-035 2026-11-13 06:18:54): (1) P0 timezone NameError — import timezone, từ chối naive datetime; (2) P1 thiếu operand so sánh bị từ chối là malformed AST, không còn fail-open; (3) P1 time window tương đối dùng reference clock UTC được inject, biên inclusive, từ chối stale/future; (4) P1 bất biến single-ACTIVE được thực thi atomic khi activate, version cũ RETIRED; (5) P1 digest bất biến sâu trên cấu trúc frozen; (6) P2 validation số học nghiêm ngặt (bool/NaN/inf/range) và Event validation khai báo.
+- TEST: `05_BUILD/05_TEST/test_trigger_engine.py` phủ đủ 10 test bắt buộc W76-CE-001…004, W76-RG-001…002, W76-MD-001…002, W76-EV-001…002 theo DOC-006 static-review addendum.
+- CI: workflow mới `.github/workflows/work-76-trigger-ci.yml` (pytest Python 3.11/3.12, artifact JUnit). Run #1 (commit d1795f493288690ab7cb7475b063357d83577c52) FAILED do lỗi soạn test W76-CE-004 (16:59:59Z nằm trong cửa sổ [since, until] nên phải MATCH; assertion viết sai chiều). Fix commit 8e73fdf30f8dbeca90575015f5e700ea91bae59c. Run #4 (PR event, run id 43541364364) COMPLETED / SUCCESS — cả hai job Python 3.11 và 3.12 PASS. Đây là bằng chứng CI cấp nhánh, chưa phải PASS canonical trên main.
+- PR: #55 draft, base main; KHÔNG merge. Không tuyên bố gate: G0/G1 NOT VERIFIED; WE-G4/G5 giữ nguyên; WP-76-07 BLOCKED; ADR-76-001…008 OPEN; EV-76-004/005 trên main vẫn NOT_AVAILABLE cho đến khi review/QE độc lập xác minh và authority merge.
+- Evidence: EV-76-023.
+- Next: Xu/Ka review tĩnh PR #55; QE độc lập tái lập; sau đó Vinh quyết định merge + ADR.
