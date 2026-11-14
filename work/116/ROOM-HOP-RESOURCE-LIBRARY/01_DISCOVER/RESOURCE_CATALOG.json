@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.3",
+  "schema_version": "1.4",
   "work_id": "116",
   "catalog_name": "ROOM-HOP Shared Resource Catalog",
   "last_updated": "2026-11-14",
@@ -657,6 +657,493 @@
         "Distinguish signed, ratified, approved and in-force treaties.",
         "No API assumed."
       ]
+    },
+    {
+      "resource_id": "AGR-001",
+      "name": "NSO Vietnam — agriculture, forestry and fishery statistics",
+      "type": "official_agriculture_statistics",
+      "category": [
+        "RES-25",
+        "RES-20"
+      ],
+      "purpose": "Discovery seed for NSO Vietnam — agriculture, forestry and fishery statistics; evaluate source coverage and usable data for ROOM-HOP Agents.",
+      "canonical_url": "https://www.nso.gov.vn/so-lieu-thong-ke/",
+      "documentation_url": "https://www.nso.gov.vn/so-lieu-thong-ke/",
+      "protocol_or_endpoint": "Official statistical tables and reports; API not verified.",
+      "auth": "Public portal or publication access where available; account/API requirements not yet verified.",
+      "pricing_or_quota": "Not established; verify provider terms, reuse license and rate limits.",
+      "status": "candidate_source_discovery_not_runtime_tested",
+      "source_reachability": "reference_identified_not_independently_runtime_verified",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Owning domain Work to be assigned after use case and access review"
+      ],
+      "constraints": [
+        "Published aggregate statistics; preserve crop/product, geography, season, units and revision dates.",
+        "Do not assume a web portal is an API or that published data permits bulk reuse.",
+        "No credentials or personal/sensitive records stored in W116."
+      ]
+    },
+    {
+      "resource_id": "IND-001",
+      "name": "NSO Vietnam — industrial production statistics",
+      "type": "official_industry_statistics",
+      "category": [
+        "RES-26",
+        "RES-20"
+      ],
+      "purpose": "Discovery seed for NSO Vietnam — industrial production statistics; evaluate source coverage and usable data for ROOM-HOP Agents.",
+      "canonical_url": "https://www.nso.gov.vn/so-lieu-thong-ke/",
+      "documentation_url": "https://www.nso.gov.vn/so-lieu-thong-ke/",
+      "protocol_or_endpoint": "Official statistical tables and reports; API not verified.",
+      "auth": "Public portal or publication access where available; account/API requirements not yet verified.",
+      "pricing_or_quota": "Not established; verify provider terms, reuse license and rate limits.",
+      "status": "candidate_source_discovery_not_runtime_tested",
+      "source_reachability": "reference_identified_not_independently_runtime_verified",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Owning domain Work to be assigned after use case and access review"
+      ],
+      "constraints": [
+        "Distinguish industrial production indices, physical output, enterprise counts and survey estimates.",
+        "Do not assume a web portal is an API or that published data permits bulk reuse.",
+        "No credentials or personal/sensitive records stored in W116."
+      ]
+    },
+    {
+      "resource_id": "ENE-001",
+      "name": "NSO Vietnam — energy and electricity statistics",
+      "type": "official_energy_statistics",
+      "category": [
+        "RES-27",
+        "RES-20"
+      ],
+      "purpose": "Discovery seed for NSO Vietnam — energy and electricity statistics; evaluate source coverage and usable data for ROOM-HOP Agents.",
+      "canonical_url": "https://www.nso.gov.vn/so-lieu-thong-ke/",
+      "documentation_url": "https://www.nso.gov.vn/so-lieu-thong-ke/",
+      "protocol_or_endpoint": "Official statistical tables and reports; API not verified.",
+      "auth": "Public portal or publication access where available; account/API requirements not yet verified.",
+      "pricing_or_quota": "Not established; verify provider terms, reuse license and rate limits.",
+      "status": "candidate_source_discovery_not_runtime_tested",
+      "source_reachability": "reference_identified_not_independently_runtime_verified",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Owning domain Work to be assigned after use case and access review"
+      ],
+      "constraints": [
+        "For operational grid data or real-time dispatch, identify the system operator source separately; NSO tables are not live telemetry.",
+        "Do not assume a web portal is an API or that published data permits bulk reuse.",
+        "No credentials or personal/sensitive records stored in W116."
+      ]
+    },
+    {
+      "resource_id": "LOG-001",
+      "name": "NSO Vietnam — transport and logistics statistics",
+      "type": "official_transport_statistics",
+      "category": [
+        "RES-28",
+        "RES-20"
+      ],
+      "purpose": "Discovery seed for NSO Vietnam — transport and logistics statistics; evaluate source coverage and usable data for ROOM-HOP Agents.",
+      "canonical_url": "https://www.nso.gov.vn/so-lieu-thong-ke/",
+      "documentation_url": "https://www.nso.gov.vn/so-lieu-thong-ke/",
+      "protocol_or_endpoint": "Official statistical tables and reports; API not verified.",
+      "auth": "Public portal or publication access where available; account/API requirements not yet verified.",
+      "pricing_or_quota": "Not established; verify provider terms, reuse license and rate limits.",
+      "status": "candidate_source_discovery_not_runtime_tested",
+      "source_reachability": "reference_identified_not_independently_runtime_verified",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Owning domain Work to be assigned after use case and access review"
+      ],
+      "constraints": [
+        "Preserve transport mode, tonnage/passenger unit, passenger-km/ton-km, geography and reference period.",
+        "Do not assume a web portal is an API or that published data permits bulk reuse.",
+        "No credentials or personal/sensitive records stored in W116."
+      ]
+    },
+    {
+      "resource_id": "ENV-001",
+      "name": "Vietnam environmental statistics and monitoring sources",
+      "type": "official_environmental_data_discovery",
+      "category": [
+        "RES-29",
+        "RES-37"
+      ],
+      "purpose": "Discovery seed for Vietnam environmental statistics and monitoring sources; evaluate source coverage and usable data for ROOM-HOP Agents.",
+      "canonical_url": "https://monre.gov.vn/",
+      "documentation_url": "https://monre.gov.vn/",
+      "protocol_or_endpoint": "Official ministry portal and linked reports/data systems; public API and sensor feeds not verified.",
+      "auth": "Public portal or publication access where available; account/API requirements not yet verified.",
+      "pricing_or_quota": "Not established; verify provider terms, reuse license and rate limits.",
+      "status": "candidate_source_discovery_not_runtime_tested",
+      "source_reachability": "reference_identified_not_independently_runtime_verified",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Owning domain Work to be assigned after use case and access review"
+      ],
+      "constraints": [
+        "Do not infer real-time monitor access; record station, pollutant/parameter, unit, calibration and timestamp.",
+        "Do not assume a web portal is an API or that published data permits bulk reuse.",
+        "No credentials or personal/sensitive records stored in W116."
+      ]
+    },
+    {
+      "resource_id": "RE-001",
+      "name": "Vietnam land, planning and urban information source discovery",
+      "type": "official_land_planning_portal_discovery",
+      "category": [
+        "RES-30",
+        "RES-11",
+        "RES-14"
+      ],
+      "purpose": "Discovery seed for Vietnam land, planning and urban information source discovery; evaluate source coverage and usable data for ROOM-HOP Agents.",
+      "canonical_url": "https://www.monre.gov.vn/",
+      "documentation_url": "https://www.monre.gov.vn/",
+      "protocol_or_endpoint": "Official ministry/sector portal discovery; parcel-level open API not verified.",
+      "auth": "Public portal or publication access where available; account/API requirements not yet verified.",
+      "pricing_or_quota": "Not established; verify provider terms, reuse license and rate limits.",
+      "status": "candidate_source_discovery_not_runtime_tested",
+      "source_reachability": "reference_identified_not_independently_runtime_verified",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Owning domain Work to be assigned after use case and access review"
+      ],
+      "constraints": [
+        "Parcel maps, planning layers and land records may be restricted; verify issuing authority, map scale, coordinate system and effective plan.",
+        "Do not assume a web portal is an API or that published data permits bulk reuse.",
+        "No credentials or personal/sensitive records stored in W116."
+      ]
+    },
+    {
+      "resource_id": "TRD-001",
+      "name": "Ministry of Industry and Trade — domestic market and trade reports",
+      "type": "official_trade_market_reports",
+      "category": [
+        "RES-31"
+      ],
+      "purpose": "Discovery seed for Ministry of Industry and Trade — domestic market and trade reports; evaluate source coverage and usable data for ROOM-HOP Agents.",
+      "canonical_url": "https://dms.gov.vn/",
+      "documentation_url": "https://dms.gov.vn/",
+      "protocol_or_endpoint": "Official reports and portal publications; public data API not verified.",
+      "auth": "Public portal or publication access where available; account/API requirements not yet verified.",
+      "pricing_or_quota": "Not established; verify provider terms, reuse license and rate limits.",
+      "status": "candidate_source_discovery_not_runtime_tested",
+      "source_reachability": "reference_identified_not_independently_runtime_verified",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Owning domain Work to be assigned after use case and access review"
+      ],
+      "constraints": [
+        "Distinguish official estimates, survey data and platform-reported sales; capture period and methodology.",
+        "Do not assume a web portal is an API or that published data permits bulk reuse.",
+        "No credentials or personal/sensitive records stored in W116."
+      ]
+    },
+    {
+      "resource_id": "TOU-001",
+      "name": "Vietnam National Authority of Tourism — tourism statistics database",
+      "type": "official_tourism_statistics_portal",
+      "category": [
+        "RES-32",
+        "RES-20"
+      ],
+      "purpose": "Discovery seed for Vietnam National Authority of Tourism — tourism statistics database; evaluate source coverage and usable data for ROOM-HOP Agents.",
+      "canonical_url": "https://thongke.tourism.vn/index.php/",
+      "documentation_url": "https://thongke.tourism.vn/index.php/",
+      "protocol_or_endpoint": "Public statistical portal; API/export contract not verified.",
+      "auth": "Public portal or publication access where available; account/API requirements not yet verified.",
+      "pricing_or_quota": "Not established; verify provider terms, reuse license and rate limits.",
+      "status": "candidate_source_discovery_not_runtime_tested",
+      "source_reachability": "reference_identified_not_independently_runtime_verified",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Owning domain Work to be assigned after use case and access review"
+      ],
+      "constraints": [
+        "Portal displays arrivals, domestic tourism and guide statistics; preserve market, transport mode, period and definitions.",
+        "Do not assume a web portal is an API or that published data permits bulk reuse.",
+        "No credentials or personal/sensitive records stored in W116."
+      ]
+    },
+    {
+      "resource_id": "LAB-001",
+      "name": "NSO Vietnam — labor and employment statistics",
+      "type": "official_labor_statistics",
+      "category": [
+        "RES-33",
+        "RES-20"
+      ],
+      "purpose": "Discovery seed for NSO Vietnam — labor and employment statistics; evaluate source coverage and usable data for ROOM-HOP Agents.",
+      "canonical_url": "https://www.nso.gov.vn/so-lieu-thong-ke/",
+      "documentation_url": "https://www.nso.gov.vn/so-lieu-thong-ke/",
+      "protocol_or_endpoint": "Official statistical tables and reports; API not verified.",
+      "auth": "Public portal or publication access where available; account/API requirements not yet verified.",
+      "pricing_or_quota": "Not established; verify provider terms, reuse license and rate limits.",
+      "status": "candidate_source_discovery_not_runtime_tested",
+      "source_reachability": "reference_identified_not_independently_runtime_verified",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Owning domain Work to be assigned after use case and access review"
+      ],
+      "constraints": [
+        "Aggregate labor indicators only; distinguish labor force, employed, unemployed, underemployment and wage concepts.",
+        "Do not assume a web portal is an API or that published data permits bulk reuse.",
+        "No credentials or personal/sensitive records stored in W116."
+      ]
+    },
+    {
+      "resource_id": "INS-001",
+      "name": "Insurance market regulator and Ministry of Finance publications",
+      "type": "official_insurance_market_source_discovery",
+      "category": [
+        "RES-34",
+        "RES-39"
+      ],
+      "purpose": "Discovery seed for Insurance market regulator and Ministry of Finance publications; evaluate source coverage and usable data for ROOM-HOP Agents.",
+      "canonical_url": "https://www.mof.gov.vn/",
+      "documentation_url": "https://www.mof.gov.vn/",
+      "protocol_or_endpoint": "Official regulator/ministry publications; structured API not verified.",
+      "auth": "Public portal or publication access where available; account/API requirements not yet verified.",
+      "pricing_or_quota": "Not established; verify provider terms, reuse license and rate limits.",
+      "status": "candidate_source_discovery_not_runtime_tested",
+      "source_reachability": "reference_identified_not_independently_runtime_verified",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Owning domain Work to be assigned after use case and access review"
+      ],
+      "constraints": [
+        "Use aggregate market and supervisory data; no policyholder-level or claims personal data.",
+        "Do not assume a web portal is an API or that published data permits bulk reuse.",
+        "No credentials or personal/sensitive records stored in W116."
+      ]
+    },
+    {
+      "resource_id": "TEL-001",
+      "name": "Ministry ICT data portal — telecommunications and digital indicators",
+      "type": "official_ict_statistics_portal",
+      "category": [
+        "RES-35",
+        "RES-20"
+      ],
+      "purpose": "Discovery seed for Ministry ICT data portal — telecommunications and digital indicators; evaluate source coverage and usable data for ROOM-HOP Agents.",
+      "canonical_url": "https://data.mst.gov.vn/",
+      "documentation_url": "https://data.mst.gov.vn/",
+      "protocol_or_endpoint": "Public dashboard/data portal; API/export details require verification.",
+      "auth": "Public portal or publication access where available; account/API requirements not yet verified.",
+      "pricing_or_quota": "Not established; verify provider terms, reuse license and rate limits.",
+      "status": "candidate_source_discovery_not_runtime_tested",
+      "source_reachability": "reference_identified_not_independently_runtime_verified",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Owning domain Work to be assigned after use case and access review"
+      ],
+      "constraints": [
+        "Portal categories include telecom, postal, ICT and digital transformation indicators; preserve reporting year and metric definition.",
+        "Do not assume a web portal is an API or that published data permits bulk reuse.",
+        "No credentials or personal/sensitive records stored in W116."
+      ]
+    },
+    {
+      "resource_id": "SCI-001",
+      "name": "Vietnam intellectual property and science-technology source discovery",
+      "type": "official_science_ip_portal_discovery",
+      "category": [
+        "RES-36",
+        "RES-14"
+      ],
+      "purpose": "Discovery seed for Vietnam intellectual property and science-technology source discovery; evaluate source coverage and usable data for ROOM-HOP Agents.",
+      "canonical_url": "https://ipvietnam.gov.vn/",
+      "documentation_url": "https://ipvietnam.gov.vn/",
+      "protocol_or_endpoint": "Official intellectual-property portal; bulk search/API access not verified.",
+      "auth": "Public portal or publication access where available; account/API requirements not yet verified.",
+      "pricing_or_quota": "Not established; verify provider terms, reuse license and rate limits.",
+      "status": "candidate_source_discovery_not_runtime_tested",
+      "source_reachability": "reference_identified_not_independently_runtime_verified",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Owning domain Work to be assigned after use case and access review"
+      ],
+      "constraints": [
+        "Distinguish application, grant, publication and legal status; preserve applicant/inventor data only under applicable privacy rules.",
+        "Do not assume a web portal is an API or that published data permits bulk reuse.",
+        "No credentials or personal/sensitive records stored in W116."
+      ]
+    },
+    {
+      "resource_id": "WAT-001",
+      "name": "Vietnam water resources and water-sector source discovery",
+      "type": "official_water_resources_portal_discovery",
+      "category": [
+        "RES-37",
+        "RES-29"
+      ],
+      "purpose": "Discovery seed for Vietnam water resources and water-sector source discovery; evaluate source coverage and usable data for ROOM-HOP Agents.",
+      "canonical_url": "https://monre.gov.vn/",
+      "documentation_url": "https://monre.gov.vn/",
+      "protocol_or_endpoint": "Official ministry portal and linked water resources systems; API and sensor access not verified.",
+      "auth": "Public portal or publication access where available; account/API requirements not yet verified.",
+      "pricing_or_quota": "Not established; verify provider terms, reuse license and rate limits.",
+      "status": "candidate_source_discovery_not_runtime_tested",
+      "source_reachability": "reference_identified_not_independently_runtime_verified",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Owning domain Work to be assigned after use case and access review"
+      ],
+      "constraints": [
+        "Record basin, station, parameter, unit, timestamp, quality flags and authority.",
+        "Do not assume a web portal is an API or that published data permits bulk reuse.",
+        "No credentials or personal/sensitive records stored in W116."
+      ]
+    },
+    {
+      "resource_id": "FOOD-001",
+      "name": "Vietnam food traceability and safety information system",
+      "type": "official_food_traceability_system",
+      "category": [
+        "RES-38",
+        "RES-25"
+      ],
+      "purpose": "Discovery seed for Vietnam food traceability and safety information system; evaluate source coverage and usable data for ROOM-HOP Agents.",
+      "canonical_url": "https://dms.gov.vn/",
+      "documentation_url": "https://dms.gov.vn/",
+      "protocol_or_endpoint": "Government system described in official legal publication; public query/API and coverage require verification.",
+      "auth": "Public portal or publication access where available; account/API requirements not yet verified.",
+      "pricing_or_quota": "Not established; verify provider terms, reuse license and rate limits.",
+      "status": "candidate_source_discovery_not_runtime_tested",
+      "source_reachability": "reference_identified_not_independently_runtime_verified",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Owning domain Work to be assigned after use case and access review"
+      ],
+      "constraints": [
+        "Traceability records may be supplied by businesses and are not automatically verified certification; do not infer food safety from a QR code alone.",
+        "Do not assume a web portal is an API or that published data permits bulk reuse.",
+        "No credentials or personal/sensitive records stored in W116."
+      ]
+    },
+    {
+      "resource_id": "TAX-001",
+      "name": "Vietnam Ministry of Finance — tax, e-invoice and enterprise finance source discovery",
+      "type": "official_tax_finance_portal_discovery",
+      "category": [
+        "RES-39",
+        "RES-13"
+      ],
+      "purpose": "Discovery seed for Vietnam Ministry of Finance — tax, e-invoice and enterprise finance source discovery; evaluate source coverage and usable data for ROOM-HOP Agents.",
+      "canonical_url": "https://www.mof.gov.vn/",
+      "documentation_url": "https://www.mof.gov.vn/",
+      "protocol_or_endpoint": "Official portal and linked services; public API, access and reuse terms vary and must be verified.",
+      "auth": "Public portal or publication access where available; account/API requirements not yet verified.",
+      "pricing_or_quota": "Not established; verify provider terms, reuse license and rate limits.",
+      "status": "candidate_source_discovery_not_runtime_tested",
+      "source_reachability": "reference_identified_not_independently_runtime_verified",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Owning domain Work to be assigned after use case and access review"
+      ],
+      "constraints": [
+        "Tax filing, e-invoice issuance and payment are transactional actions requiring explicit human approval; no credentials in W116.",
+        "Do not assume a web portal is an API or that published data permits bulk reuse.",
+        "No credentials or personal/sensitive records stored in W116."
+      ]
+    },
+    {
+      "resource_id": "HR-001",
+      "name": "VietJobs — Vietnamese job-advertisement research dataset",
+      "type": "research_job_ads_dataset",
+      "category": [
+        "RES-40",
+        "RES-33",
+        "RES-07"
+      ],
+      "purpose": "Discovery seed for VietJobs — Vietnamese job-advertisement research dataset; evaluate source coverage and usable data for ROOM-HOP Agents.",
+      "canonical_url": "https://github.com/VinNLP/VietJobs",
+      "documentation_url": "https://github.com/VinNLP/VietJobs",
+      "protocol_or_endpoint": "Public research dataset/repository; inspect dataset license and download files before reuse.",
+      "auth": "Public portal or publication access where available; account/API requirements not yet verified.",
+      "pricing_or_quota": "Not established; verify provider terms, reuse license and rate limits.",
+      "status": "candidate_source_discovery_not_runtime_tested",
+      "source_reachability": "reference_identified_not_independently_runtime_verified",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Owning domain Work to be assigned after use case and access review"
+      ],
+      "constraints": [
+        "Research corpus, not a live vacancies feed; check license, collection date, personal data and representativeness before processing.",
+        "Do not assume a web portal is an API or that published data permits bulk reuse.",
+        "No credentials or personal/sensitive records stored in W116."
+      ]
+    },
+    {
+      "resource_id": "CUL-001",
+      "name": "Vietnam cultural heritage and digital archive source discovery",
+      "type": "official_culture_heritage_portal_discovery",
+      "category": [
+        "RES-41",
+        "RES-23"
+      ],
+      "purpose": "Discovery seed for Vietnam cultural heritage and digital archive source discovery; evaluate source coverage and usable data for ROOM-HOP Agents.",
+      "canonical_url": "https://bvhttdl.gov.vn/",
+      "documentation_url": "https://bvhttdl.gov.vn/",
+      "protocol_or_endpoint": "Official ministry portal and linked heritage repositories; open structured API not verified.",
+      "auth": "Public portal or publication access where available; account/API requirements not yet verified.",
+      "pricing_or_quota": "Not established; verify provider terms, reuse license and rate limits.",
+      "status": "candidate_source_discovery_not_runtime_tested",
+      "source_reachability": "reference_identified_not_independently_runtime_verified",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Owning domain Work to be assigned after use case and access review"
+      ],
+      "constraints": [
+        "Check source institution, provenance, image/text reuse rights, digitization quality and cultural context.",
+        "Do not assume a web portal is an API or that published data permits bulk reuse.",
+        "No credentials or personal/sensitive records stored in W116."
+      ]
+    },
+    {
+      "resource_id": "DRR-001",
+      "name": "Vietnam disaster monitoring and warning source discovery",
+      "type": "official_disaster_warning_portal_discovery",
+      "category": [
+        "RES-42",
+        "RES-29"
+      ],
+      "purpose": "Discovery seed for Vietnam disaster monitoring and warning source discovery; evaluate source coverage and usable data for ROOM-HOP Agents.",
+      "canonical_url": "https://nchmf.gov.vn/",
+      "documentation_url": "https://nchmf.gov.vn/",
+      "protocol_or_endpoint": "Official meteorological and hydrological warning portal; machine API/feed availability not verified.",
+      "auth": "Public portal or publication access where available; account/API requirements not yet verified.",
+      "pricing_or_quota": "Not established; verify provider terms, reuse license and rate limits.",
+      "status": "candidate_source_discovery_not_runtime_tested",
+      "source_reachability": "reference_identified_not_independently_runtime_verified",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Owning domain Work to be assigned after use case and access review"
+      ],
+      "constraints": [
+        "Use current official warnings and timestamps; distinguish forecast, watch and emergency warning; never delay emergency response for an Agent result.",
+        "Do not assume a web portal is an API or that published data permits bulk reuse.",
+        "No credentials or personal/sensitive records stored in W116."
+      ]
     }
   ],
   "categories": [
@@ -854,6 +1341,210 @@
         "case law and precedents",
         "international treaties",
         "legal compliance"
+      ]
+    },
+    {
+      "code": "RES-25",
+      "name": "Agriculture & Forestry",
+      "subcategories": [
+        "crops",
+        "livestock",
+        "aquaculture",
+        "forestry",
+        "agricultural prices",
+        "agri-tech"
+      ]
+    },
+    {
+      "code": "RES-26",
+      "name": "Industry & Manufacturing",
+      "subcategories": [
+        "industrial production",
+        "manufacturing",
+        "industrial zones",
+        "factory automation",
+        "quality standards"
+      ]
+    },
+    {
+      "code": "RES-27",
+      "name": "Energy & Power",
+      "subcategories": [
+        "electricity",
+        "oil and gas",
+        "renewables",
+        "power grid",
+        "energy prices"
+      ]
+    },
+    {
+      "code": "RES-28",
+      "name": "Transport & Logistics",
+      "subcategories": [
+        "road",
+        "rail",
+        "maritime",
+        "aviation",
+        "ports",
+        "freight",
+        "supply chain"
+      ]
+    },
+    {
+      "code": "RES-29",
+      "name": "Environment & Climate",
+      "subcategories": [
+        "air quality",
+        "water quality",
+        "climate",
+        "emissions",
+        "weather observations",
+        "carbon"
+      ]
+    },
+    {
+      "code": "RES-30",
+      "name": "Real Estate & Urban Planning",
+      "subcategories": [
+        "land",
+        "zoning",
+        "urban planning",
+        "property market",
+        "geospatial planning"
+      ]
+    },
+    {
+      "code": "RES-31",
+      "name": "Trade & Retail",
+      "subcategories": [
+        "domestic trade",
+        "retail",
+        "wholesale",
+        "e-commerce",
+        "consumer markets"
+      ]
+    },
+    {
+      "code": "RES-32",
+      "name": "Tourism & Hospitality",
+      "subcategories": [
+        "tourism arrivals",
+        "accommodation",
+        "tour operators",
+        "destinations",
+        "tourism statistics"
+      ]
+    },
+    {
+      "code": "RES-33",
+      "name": "Labor & Social Security",
+      "subcategories": [
+        "labor force",
+        "employment",
+        "wages",
+        "social insurance",
+        "social welfare"
+      ]
+    },
+    {
+      "code": "RES-34",
+      "name": "Insurance",
+      "subcategories": [
+        "insurance market",
+        "life insurance",
+        "non-life insurance",
+        "insurance supervision",
+        "risk"
+      ]
+    },
+    {
+      "code": "RES-35",
+      "name": "Telecommunications & Media",
+      "subcategories": [
+        "telecommunications",
+        "broadband",
+        "postal services",
+        "digital media",
+        "ICT indicators"
+      ]
+    },
+    {
+      "code": "RES-36",
+      "name": "Science & Technology",
+      "subcategories": [
+        "research",
+        "innovation",
+        "patents",
+        "intellectual property",
+        "technology transfer"
+      ]
+    },
+    {
+      "code": "RES-37",
+      "name": "Water & Waste Management",
+      "subcategories": [
+        "water resources",
+        "water supply",
+        "wastewater",
+        "solid waste",
+        "recycling"
+      ]
+    },
+    {
+      "code": "RES-38",
+      "name": "Food & Food Supply Chain",
+      "subcategories": [
+        "food safety",
+        "food traceability",
+        "food processing",
+        "testing",
+        "supply chain"
+      ]
+    },
+    {
+      "code": "RES-39",
+      "name": "Corporate Finance, Tax & Accounting",
+      "subcategories": [
+        "tax",
+        "e-invoices",
+        "accounting",
+        "audit",
+        "business registration",
+        "financial statements"
+      ]
+    },
+    {
+      "code": "RES-40",
+      "name": "Human Resources & Enterprise Management",
+      "subcategories": [
+        "recruitment",
+        "skills",
+        "training",
+        "HR analytics",
+        "enterprise operations"
+      ]
+    },
+    {
+      "code": "RES-41",
+      "name": "Culture & Heritage",
+      "subcategories": [
+        "cultural heritage",
+        "museums",
+        "archives",
+        "intangible heritage",
+        "digital collections"
+      ]
+    },
+    {
+      "code": "RES-42",
+      "name": "Public Safety & Disaster Risk",
+      "subcategories": [
+        "disaster alerts",
+        "floods",
+        "storms",
+        "fire safety",
+        "rescue",
+        "risk management"
       ]
     }
   ]
