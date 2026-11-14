@@ -1,0 +1,206 @@
+{
+  "annotator": "QW-QE-PASS1",
+  "pass": 1,
+  "items": [
+    {
+      "id": "Q001",
+      "query": "doanh thu quý 4 của chi nhánh Hà Nội"
+    },
+    {
+      "id": "Q002",
+      "query": "kỷ luật họp tuần gồm những gì"
+    },
+    {
+      "id": "Q003",
+      "query": "tín hiệu quang ONT khu C mạnh bao nhiêu dBm"
+    },
+    {
+      "id": "Q004",
+      "query": "quy trình xử lý sự cố mạng gồm các bước nào"
+    },
+    {
+      "id": "Q005",
+      "query": "văn phòng chi nhánh Đà Nẵng đạt doanh thu quý 4 bao nhiêu"
+    },
+    {
+      "id": "Q006",
+      "query": "quy định công tác xa gồm những nội dung gì"
+    },
+    {
+      "id": "Q007",
+      "query": "LOS ở khu C xuất hiện lúc mấy giờ"
+    },
+    {
+      "id": "Q008",
+      "query": "chính sách bảo mật thông tin có những quy định nào"
+    },
+    {
+      "id": "Q009",
+      "query": "RX power của ONT khu A là bao nhiêu dBm"
+    },
+    {
+      "id": "Q010",
+      "query": "kế hoạch giao hàng xi măng gồm những mốc nào"
+    },
+    {
+      "id": "Q011",
+      "query": "ai phê duyệt vé máy bay cho chuyến đi Hà Nội tuần sau"
+    },
+    {
+      "id": "Q012",
+      "query": "báo cáo doanh thu nêu những kết quả gì"
+    },
+    {
+      "id": "Q013",
+      "query": "doanh thu quý 4 của bộ phận marketing đạt bao nhiêu tiền"
+    },
+    {
+      "id": "Q014",
+      "query": "nhiệm vụ tuần 42 gồm những việc nào"
+    },
+    {
+      "id": "Q015",
+      "query": "lịch giao xi măng cho khách hàng chi nhánh miền Trung tháng 12"
+    },
+    {
+      "id": "Q016",
+      "query": "các bước cần làm khi nhận ticket khách hàng là gì"
+    },
+    {
+      "id": "Q017",
+      "query": "ai chịu trách nhiệm xử lý sự cố ONT khu C trước 15/11"
+    },
+    {
+      "id": "Q018",
+      "query": "các biện pháp xử lý tín hiệu quang yếu được nêu là gì"
+    },
+    {
+      "id": "Q019",
+      "query": "mức phạt đi muộn họp của chi nhánh Hà Nội"
+    },
+    {
+      "id": "Q020",
+      "query": "những trường hợp nào cần báo cho bộ phận bảo mật"
+    },
+    {
+      "id": "Q021",
+      "query": "token API phải đổi bao nhiêu ngày một lần"
+    },
+    {
+      "id": "Q022",
+      "query": "các khoản hỗ trợ trong chuyến công tác gồm những gì"
+    },
+    {
+      "id": "Q023",
+      "query": "khách sạn công tác được hoàn tối đa bao nhiêu tiền mỗi đêm"
+    },
+    {
+      "id": "Q024",
+      "query": "các mốc giao hàng trong kế hoạch là ngày nào"
+    },
+    {
+      "id": "Q025",
+      "query": "doanh thu quý 3 của chi nhánh Hà Nội bằng bao nhiêu phần trăm"
+    },
+    {
+      "id": "Q026",
+      "query": "những việc nào cần hoàn thành trước thứ sáu"
+    },
+    {
+      "id": "Q027",
+      "query": "NOC phải xử lý LOS trong bao nhiêu giờ theo SLA"
+    },
+    {
+      "id": "Q028",
+      "query": "các thông tin nào liên quan đến token được nhắc đến"
+    },
+    {
+      "id": "Q029",
+      "query": "danh sách khách hàng nợ quá hạn quý 4"
+    },
+    {
+      "id": "Q030",
+      "query": "các quy định về tham gia họp tuần là gì"
+    },
+    {
+      "id": "Q031",
+      "query": "ai duyệt chi phí taxi đi công tác"
+    },
+    {
+      "id": "Q032",
+      "query": "các thông tin nào được nêu về doanh thu và sales"
+    },
+    {
+      "id": "Q033",
+      "query": "ONT khu B được thay thiết bị vào ngày nào"
+    },
+    {
+      "id": "Q034",
+      "query": "những công việc nào liên quan đến biên bản họp"
+    },
+    {
+      "id": "Q035",
+      "query": "lịch họp tuần của chi nhánh Hà Nội chiều thứ sáu"
+    },
+    {
+      "id": "Q036",
+      "query": "các bước cuối của quy trình xử lý sự cố là gì"
+    },
+    {
+      "id": "Q037",
+      "query": "doanh thu từng nhân viên sales trong tháng 10"
+    },
+    {
+      "id": "Q038",
+      "query": "những nghĩa vụ sau chuyến công tác gồm những gì"
+    },
+    {
+      "id": "Q039",
+      "query": "mật khẩu vault phải có tối thiểu bao nhiêu ký tự"
+    },
+    {
+      "id": "Q040",
+      "query": "các thông tin nào về lịch họp và giờ họp được ghi lại"
+    },
+    {
+      "id": "Q041",
+      "query": "số lượng xi măng đã giao thực tế ngày 19/11"
+    },
+    {
+      "id": "Q042",
+      "query": "ai ký xác nhận doanh thu quý 4"
+    },
+    {
+      "id": "Q043",
+      "query": "quy trình xử lý sự cố điện tại văn phòng"
+    },
+    {
+      "id": "Q044",
+      "query": "mức hỗ trợ per diem ở Nhật Bản"
+    },
+    {
+      "id": "Q045",
+      "query": "tín hiệu quang ONT khu C đã khắc phục xong chưa"
+    },
+    {
+      "id": "Q046",
+      "query": "ngày kế toán xác nhận doanh thu quý 4"
+    },
+    {
+      "id": "Q047",
+      "query": "số ticket LOS khách hàng gửi tuần 42"
+    },
+    {
+      "id": "Q048",
+      "query": "quy định bảo mật khi chia sẻ file qua Zalo"
+    },
+    {
+      "id": "Q049",
+      "query": "chi nhánh nào đạt doanh số cao nhất quý 4"
+    },
+    {
+      "id": "Q050",
+      "query": "ai trực NOC lúc 3 giờ sáng ngày 12/10"
+    }
+  ]
+}
