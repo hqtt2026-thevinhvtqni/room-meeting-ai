@@ -31,7 +31,7 @@ def test_post_paste_active_returns_ready(tmp_path):
 
     response = client.post(
         "/meetings/MEETING-HTTP-PASTE-001/paste",
-        json={"text": "Hello from HTTP"},
+        json={"text": "Hello from HTTP", "identity_id": "xu"},
     )
 
     assert response.status_code == 200
@@ -66,21 +66,21 @@ def test_post_paste_closed_propagates_domain_error(tmp_path):
         closer="xu",
     )
 
-    with pytest.raises(Exception):
-        client.post(
-            "/meetings/MEETING-HTTP-PASTE-002/paste",
-            json={"text": "Should be rejected"},
-        )
+    response = client.post(
+        "/meetings/MEETING-HTTP-PASTE-002/paste",
+        json={"text": "Should be rejected", "identity_id": "xu"},
+    )
+    assert response.status_code == 400
 
 
 def test_post_paste_unknown_meeting_propagates_domain_error(tmp_path):
     client, _, _ = make_client(tmp_path)
 
-    with pytest.raises(Exception):
-        client.post(
-            "/meetings/MEETING-HTTP-UNKNOWN/paste",
-            json={"text": "Should be rejected"},
-        )
+    response = client.post(
+        "/meetings/MEETING-HTTP-UNKNOWN/paste",
+        json={"text": "Should be rejected", "identity_id": "xu"},
+    )
+    assert response.status_code == 400
 
 def test_post_paste_missing_text_is_rejected(tmp_path):
     client, _, _ = make_client(tmp_path)
