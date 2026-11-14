@@ -65,3 +65,14 @@
 - Agent guidance: Prefer official primary sources; preserve document number, issuer, effective date, validity, amendments and transitional provisions; distinguish drafts, enacted law, consolidated texts, judgments, precedents and treaties. Mark uncertain validity UNVERIFIED. Cite exact text/version. Legal research output is not authoritative legal advice.
 - Status: 6 official-source candidates added; none marked API/runtime PASS.
 - Next: Sync Sandbox and GitHub main; verify exact readback parity and JSON validity.
+
+
+## 2026-11-14 — Xu / AI-01 — One-pass full industry taxonomy expansion
+- Scope: Extend W116 from RES-24 to RES-42 in one coordinated update; preserve all existing categories and records; seed every added domain with one discovery resource.
+- Precondition: Re-fetched canonical GitHub main files and corresponding Sandbox files for README, WORK_MANIFEST, DOC-035, SOURCE_CATALOG and RESOURCE_CATALOG.json. Exact parity confirmed for all five before modification; no pre-existing drift detected.
+- Research basis: Official/public reference discovery included NSO Vietnam statistics, Ministry of Industry and Trade domestic-market reporting, Vietnam National Authority of Tourism statistics, Ministry ICT data portal, official environment/land and water sector portals, meteorological warnings, and VietJobs research dataset. Search results identify sources; not all source pages or data interfaces were independently opened or runtime tested.
+- Added taxonomy: RES-25..RES-42 (18 groups): agriculture/forestry; industry/manufacturing; energy/power; transport/logistics; environment/climate; real estate/urban planning; trade/retail; tourism/hospitality; labor/social security; insurance; telecommunications/media; science/technology; water/waste; food/food supply chain; corporate finance/tax/accounting; HR/enterprise management; culture/heritage; public safety/disaster risk.
+- Added discovery seeds: AGR-001, IND-001, ENE-001, LOG-001, ENV-001, RE-001, TRD-001, TOU-001, LAB-001, INS-001, TEL-001, SCI-001, WAT-001, FOOD-001, TAX-001, HR-001, CUL-001 and DRR-001.
+- Evidence boundary: Search result evidence supports discovery references only. Portal/API contracts, bulk export rights, licenses, authentication, rate limits, freshness and runtime compatibility remain unverified unless a specific source record states otherwise. No API/MCP calls, credentialed access, payments, filings, or transactions were performed.
+- Data integrity: Existing resource records preserved; new records marked candidate_source_discovery_not_runtime_tested; JSON schema version advanced to 1.4.
+- Verification required: JSON parse, 42 unique category codes, 42 unique resource IDs (count includes SRC-001), required fields, Sandbox/GitHub exact parity after write. No PASS may be claimed for external source execution.
