@@ -167,3 +167,156 @@ Official source discovery for treaties involving Vietnam. Verify parties, ratifi
 
 ## Access and execution boundary
 All six entries are official-source discovery candidates. This review did not establish public API contracts, bulk export permissions or automated access rights. Do not scrape at scale, bypass controls, submit legal filings or represent a generated summary as an official interpretation.
+
+
+# RES-25 TO RES-42 — FULL INDUSTRY COVERAGE EXPANSION
+
+## Taxonomy expansion
+- **RES-25 Agriculture & Forestry:** crops, livestock, aquaculture, forestry, agricultural prices, agri-tech.
+- **RES-26 Industry & Manufacturing:** industrial production, manufacturing, industrial zones, factory automation, quality standards.
+- **RES-27 Energy & Power:** electricity, oil and gas, renewables, power grid, energy prices.
+- **RES-28 Transport & Logistics:** road, rail, maritime, aviation, ports, freight, supply chain.
+- **RES-29 Environment & Climate:** air quality, water quality, climate, emissions, weather observations, carbon.
+- **RES-30 Real Estate & Urban Planning:** land, zoning, urban planning, property market, geospatial planning.
+- **RES-31 Trade & Retail:** domestic trade, retail, wholesale, e-commerce, consumer markets.
+- **RES-32 Tourism & Hospitality:** tourism arrivals, accommodation, tour operators, destinations, tourism statistics.
+- **RES-33 Labor & Social Security:** labor force, employment, wages, social insurance, social welfare.
+- **RES-34 Insurance:** insurance market, life insurance, non-life insurance, insurance supervision, risk.
+- **RES-35 Telecommunications & Media:** telecommunications, broadband, postal services, digital media, ICT indicators.
+- **RES-36 Science & Technology:** research, innovation, patents, intellectual property, technology transfer.
+- **RES-37 Water & Waste Management:** water resources, water supply, wastewater, solid waste, recycling.
+- **RES-38 Food & Food Supply Chain:** food safety, food traceability, food processing, testing, supply chain.
+- **RES-39 Corporate Finance, Tax & Accounting:** tax, e-invoices, accounting, audit, business registration, financial statements.
+- **RES-40 Human Resources & Enterprise Management:** recruitment, skills, training, HR analytics, enterprise operations.
+- **RES-41 Culture & Heritage:** cultural heritage, museums, archives, intangible heritage, digital collections.
+- **RES-42 Public Safety & Disaster Risk:** disaster alerts, floods, storms, fire safety, rescue, risk management.
+
+## Seed resource records
+### AGR-001 — NSO Vietnam — agriculture, forestry and fishery statistics
+- Categories: RES-25, RES-20
+- Source: https://www.nso.gov.vn/so-lieu-thong-ke/
+- Access: Official statistical tables and reports; API not verified.
+- Assessment: CANDIDATE / discovery reference only; API, bulk access, terms and runtime remain unverified unless explicitly stated otherwise.
+- Guardrail: Published aggregate statistics; preserve crop/product, geography, season, units and revision dates.
+
+### IND-001 — NSO Vietnam — industrial production statistics
+- Categories: RES-26, RES-20
+- Source: https://www.nso.gov.vn/so-lieu-thong-ke/
+- Access: Official statistical tables and reports; API not verified.
+- Assessment: CANDIDATE / discovery reference only; API, bulk access, terms and runtime remain unverified unless explicitly stated otherwise.
+- Guardrail: Distinguish industrial production indices, physical output, enterprise counts and survey estimates.
+
+### ENE-001 — NSO Vietnam — energy and electricity statistics
+- Categories: RES-27, RES-20
+- Source: https://www.nso.gov.vn/so-lieu-thong-ke/
+- Access: Official statistical tables and reports; API not verified.
+- Assessment: CANDIDATE / discovery reference only; API, bulk access, terms and runtime remain unverified unless explicitly stated otherwise.
+- Guardrail: For operational grid data or real-time dispatch, identify the system operator source separately; NSO tables are not live telemetry.
+
+### LOG-001 — NSO Vietnam — transport and logistics statistics
+- Categories: RES-28, RES-20
+- Source: https://www.nso.gov.vn/so-lieu-thong-ke/
+- Access: Official statistical tables and reports; API not verified.
+- Assessment: CANDIDATE / discovery reference only; API, bulk access, terms and runtime remain unverified unless explicitly stated otherwise.
+- Guardrail: Preserve transport mode, tonnage/passenger unit, passenger-km/ton-km, geography and reference period.
+
+### ENV-001 — Vietnam environmental statistics and monitoring sources
+- Categories: RES-29, RES-37
+- Source: https://monre.gov.vn/
+- Access: Official ministry portal and linked reports/data systems; public API and sensor feeds not verified.
+- Assessment: CANDIDATE / discovery reference only; API, bulk access, terms and runtime remain unverified unless explicitly stated otherwise.
+- Guardrail: Do not infer real-time monitor access; record station, pollutant/parameter, unit, calibration and timestamp.
+
+### RE-001 — Vietnam land, planning and urban information source discovery
+- Categories: RES-30, RES-11, RES-14
+- Source: https://www.monre.gov.vn/
+- Access: Official ministry/sector portal discovery; parcel-level open API not verified.
+- Assessment: CANDIDATE / discovery reference only; API, bulk access, terms and runtime remain unverified unless explicitly stated otherwise.
+- Guardrail: Parcel maps, planning layers and land records may be restricted; verify issuing authority, map scale, coordinate system and effective plan.
+
+### TRD-001 — Ministry of Industry and Trade — domestic market and trade reports
+- Categories: RES-31
+- Source: https://dms.gov.vn/
+- Access: Official reports and portal publications; public data API not verified.
+- Assessment: CANDIDATE / discovery reference only; API, bulk access, terms and runtime remain unverified unless explicitly stated otherwise.
+- Guardrail: Distinguish official estimates, survey data and platform-reported sales; capture period and methodology.
+
+### TOU-001 — Vietnam National Authority of Tourism — tourism statistics database
+- Categories: RES-32, RES-20
+- Source: https://thongke.tourism.vn/index.php/
+- Access: Public statistical portal; API/export contract not verified.
+- Assessment: CANDIDATE / discovery reference only; API, bulk access, terms and runtime remain unverified unless explicitly stated otherwise.
+- Guardrail: Portal displays arrivals, domestic tourism and guide statistics; preserve market, transport mode, period and definitions.
+
+### LAB-001 — NSO Vietnam — labor and employment statistics
+- Categories: RES-33, RES-20
+- Source: https://www.nso.gov.vn/so-lieu-thong-ke/
+- Access: Official statistical tables and reports; API not verified.
+- Assessment: CANDIDATE / discovery reference only; API, bulk access, terms and runtime remain unverified unless explicitly stated otherwise.
+- Guardrail: Aggregate labor indicators only; distinguish labor force, employed, unemployed, underemployment and wage concepts.
+
+### INS-001 — Insurance market regulator and Ministry of Finance publications
+- Categories: RES-34, RES-39
+- Source: https://www.mof.gov.vn/
+- Access: Official regulator/ministry publications; structured API not verified.
+- Assessment: CANDIDATE / discovery reference only; API, bulk access, terms and runtime remain unverified unless explicitly stated otherwise.
+- Guardrail: Use aggregate market and supervisory data; no policyholder-level or claims personal data.
+
+### TEL-001 — Ministry ICT data portal — telecommunications and digital indicators
+- Categories: RES-35, RES-20
+- Source: https://data.mst.gov.vn/
+- Access: Public dashboard/data portal; API/export details require verification.
+- Assessment: CANDIDATE / discovery reference only; API, bulk access, terms and runtime remain unverified unless explicitly stated otherwise.
+- Guardrail: Portal categories include telecom, postal, ICT and digital transformation indicators; preserve reporting year and metric definition.
+
+### SCI-001 — Vietnam intellectual property and science-technology source discovery
+- Categories: RES-36, RES-14
+- Source: https://ipvietnam.gov.vn/
+- Access: Official intellectual-property portal; bulk search/API access not verified.
+- Assessment: CANDIDATE / discovery reference only; API, bulk access, terms and runtime remain unverified unless explicitly stated otherwise.
+- Guardrail: Distinguish application, grant, publication and legal status; preserve applicant/inventor data only under applicable privacy rules.
+
+### WAT-001 — Vietnam water resources and water-sector source discovery
+- Categories: RES-37, RES-29
+- Source: https://monre.gov.vn/
+- Access: Official ministry portal and linked water resources systems; API and sensor access not verified.
+- Assessment: CANDIDATE / discovery reference only; API, bulk access, terms and runtime remain unverified unless explicitly stated otherwise.
+- Guardrail: Record basin, station, parameter, unit, timestamp, quality flags and authority.
+
+### FOOD-001 — Vietnam food traceability and safety information system
+- Categories: RES-38, RES-25
+- Source: https://dms.gov.vn/
+- Access: Government system described in official legal publication; public query/API and coverage require verification.
+- Assessment: CANDIDATE / discovery reference only; API, bulk access, terms and runtime remain unverified unless explicitly stated otherwise.
+- Guardrail: Traceability records may be supplied by businesses and are not automatically verified certification; do not infer food safety from a QR code alone.
+
+### TAX-001 — Vietnam Ministry of Finance — tax, e-invoice and enterprise finance source discovery
+- Categories: RES-39, RES-13
+- Source: https://www.mof.gov.vn/
+- Access: Official portal and linked services; public API, access and reuse terms vary and must be verified.
+- Assessment: CANDIDATE / discovery reference only; API, bulk access, terms and runtime remain unverified unless explicitly stated otherwise.
+- Guardrail: Tax filing, e-invoice issuance and payment are transactional actions requiring explicit human approval; no credentials in W116.
+
+### HR-001 — VietJobs — Vietnamese job-advertisement research dataset
+- Categories: RES-40, RES-33, RES-07
+- Source: https://github.com/VinNLP/VietJobs
+- Access: Public research dataset/repository; inspect dataset license and download files before reuse.
+- Assessment: CANDIDATE / discovery reference only; API, bulk access, terms and runtime remain unverified unless explicitly stated otherwise.
+- Guardrail: Research corpus, not a live vacancies feed; check license, collection date, personal data and representativeness before processing.
+
+### CUL-001 — Vietnam cultural heritage and digital archive source discovery
+- Categories: RES-41, RES-23
+- Source: https://bvhttdl.gov.vn/
+- Access: Official ministry portal and linked heritage repositories; open structured API not verified.
+- Assessment: CANDIDATE / discovery reference only; API, bulk access, terms and runtime remain unverified unless explicitly stated otherwise.
+- Guardrail: Check source institution, provenance, image/text reuse rights, digitization quality and cultural context.
+
+### DRR-001 — Vietnam disaster monitoring and warning source discovery
+- Categories: RES-42, RES-29
+- Source: https://nchmf.gov.vn/
+- Access: Official meteorological and hydrological warning portal; machine API/feed availability not verified.
+- Assessment: CANDIDATE / discovery reference only; API, bulk access, terms and runtime remain unverified unless explicitly stated otherwise.
+- Guardrail: Use current official warnings and timestamps; distinguish forecast, watch and emergency warning; never delay emergency response for an Agent result.
+
+## Coverage and maturity note
+RES-25..RES-42 have been added as industry taxonomy and one discovery seed each. These seeds are not proof of API availability, completeness, freshness, licensing or production readiness. Some official statistical sectors share the NSO portal; domain-specific operational feeds require separate source identification. No runtime tests or authenticated operations were performed in this expansion.
