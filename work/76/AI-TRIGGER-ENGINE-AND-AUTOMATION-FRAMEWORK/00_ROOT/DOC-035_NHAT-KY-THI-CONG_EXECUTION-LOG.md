@@ -414,3 +414,12 @@ This is a governance/assignment and preparation record only. Xu did not alter so
 - Build Register updated: WP-76-01 and WP-76-04 now IN_REVIEW — PR #55 unmerged; Vibe is recorded as proposed author per PR description with participant Work Entry/identity NOT_VERIFIED; Ka is recorded as assigned QE Lead with G4/G5 BLOCKED. Other WPs retain prior states. The register now explicitly distinguishes unmerged PR proposal from implementation on main/runtime verification.
 - Evidence EV-76-014 records the exact changed-file inventory. No source or PR mutation; no WP marked DONE/PASS; no gate transition.
 - G3 remains NOT_VERIFIED until remaining history/decision evidence and evidence/register reconciliation are completed. G4/G5 remain BLOCKED.
+
+
+### 2026-11-14 10:13 +07:00 — G3 reconciliation and Sandbox/GitHub read-back closure
+- Actor: Xu / AI-01.
+- Build Register now records WP-76-01 and WP-76-04 as IN_REVIEW against unmerged PR #55; other WPs remain unchanged. It explicitly distinguishes proposed PR files from merged main/runtime implementation.
+- Evidence Register EV-76-005 was clarified as a historical baseline observation; EV-76-013 records four successful CI checks for exact PR HEAD d14f018e; EV-76-014 records the seven changed-file inventory and scope mapping.
+- Exact GitHub-main content was written to Sandbox and read back byte-for-byte for WE-ASG-W76-KA-QE-20261114.md, DOC-008, DOC-035, EVIDENCE_REGISTER.md and BUILD_REGISTER.md. All five read-backs matched.
+- G3 remains NOT_VERIFIED because the Work 76 Sandbox listing contains no separate Decision Log or meeting-minutes artifact and no authorized N/A determination is present. No waiver or missing historical record was fabricated.
+- G4 remains BLOCKED due to missing trusted Ka-session identity and actual capability evidence; G5 remains BLOCKED. No source, PR, merge or release mutation.
