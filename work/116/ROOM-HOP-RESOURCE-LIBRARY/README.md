@@ -10,6 +10,9 @@ W116 helps ROOM-HOP Agents discover useful APIs, MCP servers, SDKs, libraries, m
 4. Check each resource's status, authentication, cost/quota, constraints and test evidence.
 5. Use only the official documented interface and only where the Agent/Work already has permission.
 
+## Finance and investment resources
+W116 has dedicated finance classifications: RES-03 Finance & Investment, RES-04 Market Data and RES-05 Banking & Economy. See [finance source records](01_DISCOVER/SOURCE_CATALOG.md#finance--investment-resources) and filter `RESOURCE_CATALOG.json` by category.
+
 ## Current source
 - [public-apis/public-apis](01_DISCOVER/SOURCE_CATALOG.md) — useful discovery directory for public APIs and MCP server candidates.
 - It is a catalog, not a callable API or an automatic permission grant.
