@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.2",
+  "schema_version": "1.3",
   "work_id": "116",
   "catalog_name": "ROOM-HOP Shared Resource Catalog",
   "last_updated": "2026-11-14",
@@ -495,6 +495,168 @@
         "Preserve original text, source edition and attribution when extending.",
         "Separate classical source text, later commentary, modern interpretation and generated AI interpretation."
       ]
+    },
+    {
+      "resource_id": "LAW-001",
+      "name": "Cổng Pháp luật Quốc gia",
+      "type": "official_national_law_portal",
+      "category": [
+        "RES-24-vietnam-law",
+        "RES-13-public-administration"
+      ],
+      "purpose": "Tra cứu văn bản pháp luật mới ban hành, tìm theo số hiệu/từ khóa/cơ quan; liên kết hỗ trợ pháp lý, dự thảo và phản ánh chính sách.",
+      "canonical_url": "https://phapluat.gov.vn/",
+      "documentation_url": "https://phapluat.gov.vn/he-thong-van-ban-phap-luat",
+      "protocol_or_endpoint": "Official web portal; no public API contract verified.",
+      "auth": "Public legal-document lookup; account may be required for personalized services.",
+      "pricing_or_quota": "Public portal; verify service-specific terms.",
+      "status": "candidate_official_portal_reviewed_runtime_not_tested",
+      "source_reachability": "official_ministry_of_justice_portal_reviewed",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Vietnam legal research Agent"
+      ],
+      "constraints": [
+        "Use as an official entry point; verify each underlying document in the national legal database or Official Gazette.",
+        "Capture document number, issuing body, promulgation date, effective date, status and amendments.",
+        "No legal advice guarantee; cite the exact source text and version."
+      ]
+    },
+    {
+      "resource_id": "LAW-002",
+      "name": "Cơ sở dữ liệu quốc gia về văn bản pháp luật (VBPL)",
+      "type": "official_national_legal_document_database",
+      "category": [
+        "RES-24-vietnam-law",
+        "RES-14-legal-regulatory"
+      ],
+      "purpose": "Search central and local legal normative documents, consolidated documents, legal status and document metadata.",
+      "canonical_url": "https://vbpl.moj.gov.vn/pages/portal.aspx",
+      "documentation_url": "https://vbpl.moj.gov.vn/huongdan/csdlvbplquocgia.htm",
+      "protocol_or_endpoint": "Official web search/database; no public API contract verified.",
+      "auth": "Public document search.",
+      "pricing_or_quota": "Public lookup; verify download/reuse terms.",
+      "status": "candidate_official_database_reviewed_runtime_not_tested",
+      "source_reachability": "official_moj_database_and_user_guide_reviewed",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Legal research and compliance Works"
+      ],
+      "constraints": [
+        "Prefer as primary lookup for legal normative documents, central and provincial.",
+        "Check consolidated text versus original/amending instruments; preserve version and effective status.",
+        "No API or bulk-export capability assumed."
+      ]
+    },
+    {
+      "resource_id": "LAW-003",
+      "name": "Công báo điện tử Chính phủ",
+      "type": "official_gazette",
+      "category": [
+        "RES-24-vietnam-law",
+        "RES-14-legal-regulatory"
+      ],
+      "purpose": "Official publication channel for promulgated legal documents and other documents required to be published; supports verification of official publication.",
+      "canonical_url": "https://congbao.chinhphu.vn/",
+      "documentation_url": "https://congbao.chinhphu.vn/",
+      "protocol_or_endpoint": "Official web portal with document pages and downloadable files; no public API contract verified.",
+      "auth": "Public access.",
+      "pricing_or_quota": "Public access; verify reuse terms.",
+      "status": "candidate_official_publication_source_runtime_not_tested",
+      "source_reachability": "official_gazette_portal_reviewed",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Legal verification and citation workflows"
+      ],
+      "constraints": [
+        "Use to verify publication details and official text; publication date is not automatically the effective date.",
+        "Preserve issue number, publication date, document number and downloadable original.",
+        "No scraping or API assumed."
+      ]
+    },
+    {
+      "resource_id": "LAW-004",
+      "name": "Quốc hội Việt Nam — văn bản và hoạt động lập pháp",
+      "type": "official_parliamentary_source",
+      "category": [
+        "RES-24-vietnam-law",
+        "RES-14-legal-regulatory"
+      ],
+      "purpose": "Primary institutional source for National Assembly activities, laws/resolutions, legislative programs, draft laws and legislative records.",
+      "canonical_url": "https://quochoi.vn/",
+      "documentation_url": "https://quochoi.vn/",
+      "protocol_or_endpoint": "Official web portal; no public API contract verified.",
+      "auth": "Public information.",
+      "pricing_or_quota": "Public access; verify reuse terms.",
+      "status": "candidate_official_portal_runtime_not_tested",
+      "source_reachability": "official_portal_reference_reviewed",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Legislative tracking and legal research Works"
+      ],
+      "constraints": [
+        "Distinguish draft bills/resolutions from enacted instruments.",
+        "For legal effect, cross-check final promulgated text in VBPL and/or Công báo.",
+        "No public API assumed."
+      ]
+    },
+    {
+      "resource_id": "LAW-005",
+      "name": "Tòa án nhân dân tối cao — án lệ và văn bản xét xử",
+      "type": "official_judiciary_source",
+      "category": [
+        "RES-24-vietnam-law",
+        "RES-14-legal-regulatory"
+      ],
+      "purpose": "Discover official judicial information, published precedents (án lệ), resolutions and guidance from the Supreme People's Court.",
+      "canonical_url": "https://www.toaan.gov.vn/",
+      "documentation_url": "https://anle.toaan.gov.vn/",
+      "protocol_or_endpoint": "Official judiciary web portals; public API not verified.",
+      "auth": "Public access to published materials; some services may be restricted.",
+      "pricing_or_quota": "Public materials; verify service conditions.",
+      "status": "candidate_official_judiciary_source_runtime_not_tested",
+      "source_reachability": "official_judiciary_portal_reference",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Case-law and judicial research Work"
+      ],
+      "constraints": [
+        "Distinguish án lệ from statutes and other judgments; capture approval/publication status and effective application guidance.",
+        "Do not imply a precedent applies without checking its legal scope and subsequent status.",
+        "No API assumed."
+      ]
+    },
+    {
+      "resource_id": "LAW-006",
+      "name": "Bộ Ngoại giao — điều ước quốc tế",
+      "type": "official_treaty_source",
+      "category": [
+        "RES-24-vietnam-law",
+        "RES-14-legal-regulatory"
+      ],
+      "purpose": "Discover treaty information and official foreign-affairs materials relevant to treaties to which Vietnam is a party.",
+      "canonical_url": "https://www.mofa.gov.vn/",
+      "documentation_url": "https://treaty.mofa.gov.vn/",
+      "protocol_or_endpoint": "Official web portal; API not verified.",
+      "auth": "Public lookup where published.",
+      "pricing_or_quota": "Public materials; verify access terms.",
+      "status": "candidate_official_treaty_source_runtime_not_tested",
+      "source_reachability": "official_mofa_source_reference",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Treaty and international-law research Work"
+      ],
+      "constraints": [
+        "Check treaty text, parties, entry-into-force date, reservations and current status.",
+        "Distinguish signed, ratified, approved and in-force treaties.",
+        "No API assumed."
+      ]
     }
   ],
   "categories": [
@@ -677,6 +839,21 @@
         "Vietnamese translations",
         "text corpora",
         "digital humanities"
+      ]
+    },
+    {
+      "code": "RES-24",
+      "name": "Vietnam Law & Legal Research",
+      "subcategories": [
+        "legal normative documents",
+        "laws and codes",
+        "decrees and circulars",
+        "effective status and amendments",
+        "official gazette",
+        "National Assembly legislation",
+        "case law and precedents",
+        "international treaties",
+        "legal compliance"
       ]
     }
   ]
