@@ -40,3 +40,16 @@
 - Status: Documentation/repository review only. No external API requests, credentials, broker account access, trading actions or MCP server execution performed. All 8 entries remain candidates/discovery records, not runtime PASS.
 - Safety boundary: No secrets stored. SSI/CCXT private trading capabilities must remain disabled unless separately authorized and technically isolated.
 - Next: Exact Sandbox/GitHub parity verification; then selectively test public/read-only endpoints without secrets where permitted.
+
+
+## 2026-11-14 — Xu / AI-01 — Expand W116 beyond finance
+- Scope: Add practical source categories requested for public administration, public investment, construction, health, education and I Ching; preserve finance classification.
+- Method: Reviewed official Vietnamese government/statistics portals and structured I Ching dataset metadata; compared portal purpose and available public documentation; added resource records and category taxonomy.
+- Sources reviewed: National Public Service Portal; National Legal Documents Database; Ministry portal listing national public investment systems; Vietnam National E-Procurement System; official construction system references csdlhdxd.gov.vn and cemia.gov.vn; NSO Vietnam statistics and indicator tables; Nhật Nguyệt 64-hexagram dataset and Hugging Face dataset card.
+- Added resource records: GOV-001..002, PUB-001..002, CON-001..002, HLT-001, EDU-001, ICH-001 (10 records). New taxonomy RES-13..RES-23.
+- Evidence: Public Service Portal describes administrative procedure/service lookup and authenticated hồ sơ tracking; Ministry portal lists national public investment and related databases; VNEPS exposes public procurement search; NSO tables include health and education indicators; dataset publisher identifies 64 hexagrams, Vietnamese/Han names and CC BY 4.0.
+- Access assessment: Public-facing portals and published tables are discoverable, but public API contracts are NOT confirmed for GOV-001/002, PUB-001/002, CON-001/002, HLT-001 and EDU-001. ICH-001 is a downloadable dataset candidate, not yet fetched/parsed in runtime.
+- Runtime test: NOT RUN. No API calls, authenticated government transactions, bid submissions, digital signatures, patient-level records or private data access performed.
+- Safety and integrity: Administrative submissions, payments, procurement participation and government record changes require explicit human authorization. Health entries are aggregate statistics only. Legal records require exact effective-date/version checks. I Ching source text, commentary and AI interpretation must remain separate.
+- Status: 10 new candidates catalogued; none marked runtime PASS. Existing finance records retained.
+- Next: Sync Sandbox and GitHub main, exact-readback all changed canonical files, parse JSON and verify category/resource counts.
