@@ -30,3 +30,13 @@
 - Evidence: README.md, WORK_MANIFEST.md, DOC-034, DOC-035, SOURCE_CATALOG.md, AGENT_RESOURCE_DISCOVERY_GUIDE.md and RESOURCE_CATALOG.json all matched exactly (7/7). RESOURCE_CATALOG.json parsed successfully.
 - Result: PASS — exact content parity verified for all seven canonical W116 files on GitHub main and ROOM-HOP Sandbox.
 - Remaining: W0000 portfolio index registration has not yet been checked; no individual API/MCP provider execution or runtime integration was performed.
+
+
+## 2026-11-14 — Xu / AI-01 — Finance resource expansion
+- Scope: Add dedicated finance classification and seed financial APIs, market-data libraries and finance MCP discovery sources.
+- Sources reviewed: SSI FastConnect official docs; FRED API official docs; SEC EDGAR official docs reference; CCXT repository/manual; CohenD/fin-data-mcp repository; BlockRunAI/awesome-finance-mcp repository; Frankfurter docs; World Bank developer docs reference.
+- Added records: FIN-001..FIN-008. Dedicated categories: RES-03 Finance & Investment, RES-04 Market Data, RES-05 Banking & Economy.
+- Evidence: SSI documentation explicitly describes Vietnamese market-data endpoints and separately describes trading/account endpoints; FRED docs describe FRED/ALFRED series APIs; CCXT manual separates public market-data methods from private account/trading methods; finance MCP repositories inspected. FIN-005 marked low maturity based on repository snapshot (4 stars, 1 commit) and requires code/security review.
+- Status: Documentation/repository review only. No external API requests, credentials, broker account access, trading actions or MCP server execution performed. All 8 entries remain candidates/discovery records, not runtime PASS.
+- Safety boundary: No secrets stored. SSI/CCXT private trading capabilities must remain disabled unless separately authorized and technically isolated.
+- Next: Exact Sandbox/GitHub parity verification; then selectively test public/read-only endpoints without secrets where permitted.
