@@ -9,9 +9,9 @@
   "current_phase": "01_DISCOVER",
   "source_mode": "local_snapshot",
   "freshness": "LOCAL_SNAPSHOT",
-  "revision": "W76-DASHBOARD-0.3.10",
+  "revision": "W76-DASHBOARD-0.3.11",
   "warning_vi": "LOCAL SNAPSHOT — chưa kết nối Core live. Cập nhật 2026-11-14 09:50 UTC+7; Evidence EV-76-025: xác minh độc lập Round 2 APPROVE cho 5 fix trên PR #55 (branch-level, reviewer input, chưa phải QE canonical). CI PASS run 43547006333.",
-  "updated_at": "2026-11-14T02:42:16.381Z",
+  "updated_at": "2026-11-14T02:42:37.091Z",
   "phases": [
     {
       "phase_id": "01_DISCOVER",
@@ -378,8 +378,11 @@
   ],
   "recent_activity": [
     {
-      "timestamp": "2026-11-14T02:42:16.381Z",
-      "title": "Xác minh độc lập Round 2 APPROVE cho 5 fix PR #55 (EV-76-025)"
+      "date": "2026-11-14",
+      "actor": "Vibe (delegated by Vinh)",
+      "title": "Xác minh độc lập Round 2 APPROVE cho 5 fix PR #55 (EV-76-025)",
+      "detail": "Grok Round 2 (READ-ONLY) xác minh tại head d14f018e: H1/M1/M2/L1/L2 PASS, 36/36 test (Python 3.12.3, pytest 9.0.3), không phát hiện mới, APPROVE. Giới hạn: ô CI 3.11 và JUnit artifact chưa xác minh lại trong sandbox xác minh. PR #55 vẫn DRAFT; reviewer input, chưa phải QE canonical; gate/WP không đổi.",
+      "status": "INDEPENDENT VERIFICATION APPROVE / PENDING QE + MERGE DECISION"
     },
     {
       "date": "2026-11-14",
@@ -651,8 +654,10 @@
     },
     {
       "evidence_id": "EV-76-025",
-      "description": "Independent fix verification PR #55 Round 2 — H1/M1/M2/L1/L2 PASS, 36/36 tests, APPROVE (branch-level, reviewer input)",
-      "status": "NOT_AVAILABLE_ON_MAIN"
+      "title": "Independent fix verification Round 2 (APPROVE)",
+      "claim": "Grok Round 2 xác minh độc lập tại head d14f018e: cả 5 fix H1/M1/M2/L1/L2 PASS, 36/36 test PASS (Python 3.12.3, pytest 9.0.3), không phát hiện mới. Reviewer input, chưa phải bằng chứng QE canonical.",
+      "path": "GROK_INDEPENDENT_REVIEW_PR55_ROUND2.md · PR #55 · DOC-035 2026-11-14 09:50 +07:00",
+      "status": "VERIFIED (BRANCH-LEVEL ONLY; QE CANONICAL PENDING)"
     }
   ]
 }
