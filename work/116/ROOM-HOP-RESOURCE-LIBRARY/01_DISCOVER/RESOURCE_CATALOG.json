@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "work_id": "116",
   "catalog_name": "ROOM-HOP Shared Resource Catalog",
   "last_updated": "2026-11-14",
@@ -8,7 +8,11 @@
       "resource_id": "SRC-001",
       "name": "public-apis",
       "type": "discovery_directory",
-      "category": ["api-directory", "mcp-directory", "developer-resources"],
+      "category": [
+        "api-directory",
+        "mcp-directory",
+        "developer-resources"
+      ],
       "purpose": "Discover public API and MCP server candidates by category.",
       "canonical_url": "https://github.com/public-apis/public-apis",
       "documentation_url": "https://github.com/public-apis/public-apis/blob/master/README.md",
@@ -17,7 +21,9 @@
       "auth": "Not applicable to the directory; individual providers vary.",
       "protocol_or_endpoint": "Git repository / Markdown catalog; not a callable API endpoint.",
       "pricing_or_quota": "Not applicable to the directory; individual providers vary.",
-      "compatible_work_ids": ["ROOM-HOP-wide discovery; individual integrations must name their owning Work"],
+      "compatible_work_ids": [
+        "ROOM-HOP-wide discovery; individual integrations must name their owning Work"
+      ],
       "status": "discovery_directory",
       "source_reachability": "pass",
       "runtime_test": "not_applicable_to_directory",
@@ -28,6 +34,297 @@
         "Do not store credentials in W116."
       ],
       "last_checked": "2026-11-14"
+    },
+    {
+      "resource_id": "FIN-001",
+      "name": "SSI FastConnect API",
+      "type": "official_broker_api",
+      "category": [
+        "RES-03-finance-investment",
+        "RES-04-vietnam-market-data",
+        "RES-09-broker-integration"
+      ],
+      "purpose": "Vietnam equities market data, OHLCV, indices, corporate actions, WebSocket streaming; the same platform also documents account and order-management operations.",
+      "canonical_url": "https://developers.ssi.com.vn/docs/getting-started/overview",
+      "documentation_url": "https://developers.ssi.com.vn/docs/getting-started/overview",
+      "protocol_or_endpoint": "REST JSON and WebSocket; documented SDKs include Python, Node.js, Java, C#, Go.",
+      "auth": "API Key + Secret; JWT. Trading token requires OTP.",
+      "pricing_or_quota": "Registration and access conditions apply; inspect current SSI terms and rate-limit headers.",
+      "status": "candidate_documented_not_runtime_tested",
+      "source_reachability": "official_documentation_read",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Owning market-data/integration Work to be assigned"
+      ],
+      "constraints": [
+        "Separate read-only market-data scope from trading scope.",
+        "Trading endpoints can place/amend/cancel orders and access account data; do not enable or expose them to general Agents.",
+        "Never store API secrets or OTP in W116 or Git."
+      ]
+    },
+    {
+      "resource_id": "FIN-002",
+      "name": "FRED API",
+      "type": "official_economic_data_api",
+      "category": [
+        "RES-03-finance-investment",
+        "RES-05-banking-economy",
+        "RES-06-apis-data"
+      ],
+      "purpose": "Retrieve macroeconomic and financial time series from FRED and ALFRED, including series observations, releases, vintages and revisions.",
+      "canonical_url": "https://fred.stlouisfed.org/docs/api/fred/",
+      "documentation_url": "https://fred.stlouisfed.org/docs/api/fred/overview.html",
+      "protocol_or_endpoint": "HTTPS REST; JSON/XML.",
+      "auth": "API key required.",
+      "pricing_or_quota": "API key registration; check current service limits.",
+      "status": "candidate_documented_not_runtime_tested",
+      "source_reachability": "official_documentation_read",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Macroeconomic research and dashboard Works"
+      ],
+      "constraints": [
+        "Record series ID, units, frequency, seasonal adjustment, observation date and release/vintage context.",
+        "Do not treat revised historical data as the originally published value."
+      ]
+    },
+    {
+      "resource_id": "FIN-003",
+      "name": "SEC EDGAR APIs",
+      "type": "official_regulatory_data_api",
+      "category": [
+        "RES-03-finance-investment",
+        "RES-04-market-fundamentals",
+        "RES-06-apis-data"
+      ],
+      "purpose": "Access public company submissions, filing histories and XBRL company facts for fundamental and regulatory research.",
+      "canonical_url": "https://www.sec.gov/edgar/sec-api-documentation",
+      "documentation_url": "https://www.sec.gov/edgar/sec-api-documentation",
+      "protocol_or_endpoint": "HTTPS JSON APIs and EDGAR filing data.",
+      "auth": "No API key for public data; clients must identify themselves with a compliant User-Agent.",
+      "pricing_or_quota": "Public access; comply with SEC fair-access guidance and current request limits.",
+      "status": "candidate_documented_not_runtime_tested",
+      "source_reachability": "official_documentation_reference",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Equity research and fundamental-analysis Works"
+      ],
+      "constraints": [
+        "Respect SEC fair-access rules and request throttling.",
+        "Parse XBRL contexts, units, periods and amendments carefully; filings are not investment recommendations."
+      ]
+    },
+    {
+      "resource_id": "FIN-004",
+      "name": "CCXT",
+      "type": "open_source_exchange_library",
+      "category": [
+        "RES-03-finance-investment",
+        "RES-04-market-data",
+        "RES-07-python-libraries"
+      ],
+      "purpose": "Unified library for public market data across 100+ crypto exchanges; supports tickers, order books, trades and OHLCV. Also exposes private account and trading methods.",
+      "canonical_url": "https://github.com/ccxt/ccxt",
+      "documentation_url": "https://github.com/ccxt/ccxt/wiki/Manual",
+      "protocol_or_endpoint": "Python, JavaScript/TypeScript, PHP, C#, Go, Java and Rust; REST and exchange-specific WebSocket support.",
+      "auth": "Public market-data methods often need no key; private account/trading methods require exchange-specific credentials.",
+      "pricing_or_quota": "Open-source MIT; exchange rate limits and product/API conditions apply.",
+      "status": "candidate_source_reviewed_runtime_not_tested",
+      "source_reachability": "public_repository_and_manual_reviewed",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Crypto market-data adapters"
+      ],
+      "constraints": [
+        "Private API methods include orders, transfers and withdrawals; keep disabled for general Agents.",
+        "Respect per-exchange rate limits, terms, geography and product availability.",
+        "Never store exchange keys in W116."
+      ]
+    },
+    {
+      "resource_id": "FIN-005",
+      "name": "fin-data-mcp",
+      "type": "community_financial_mcp_server",
+      "category": [
+        "RES-02-agent-mcp",
+        "RES-03-finance-investment",
+        "RES-04-market-data",
+        "RES-05-macro-data"
+      ],
+      "purpose": "Community MCP server describing a unified surface over equity, options, FX, crypto, commodities, macroeconomic and filing sources.",
+      "canonical_url": "https://github.com/CohenD/fin-data-mcp",
+      "documentation_url": "https://github.com/CohenD/fin-data-mcp#readme",
+      "protocol_or_endpoint": "MCP server; repository describes TypeScript implementation and multiple provider adapters.",
+      "auth": "Varies by provider; some sources public, optional providers require API keys.",
+      "pricing_or_quota": "Depends on upstream provider and optional credentials.",
+      "status": "candidate_low_maturity_requires_code_review",
+      "source_reachability": "public_repository_read",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Potential finance research Agent after code/security review"
+      ],
+      "constraints": [
+        "At inspection repository showed 4 stars and 1 commit; treat as low-maturity candidate, not production-ready.",
+        "Audit dependencies, code, provider behavior, licensing and tests before installing.",
+        "No trading or private account permissions."
+      ]
+    },
+    {
+      "resource_id": "FIN-006",
+      "name": "awesome-finance-mcp",
+      "type": "finance_mcp_discovery_directory",
+      "category": [
+        "RES-02-agent-mcp",
+        "RES-03-finance-investment",
+        "RES-10-developer-tools"
+      ],
+      "purpose": "Discover MCP servers for finance Agents, including market data, trading research and financial-data connectors.",
+      "canonical_url": "https://github.com/BlockRunAI/awesome-finance-mcp",
+      "documentation_url": "https://github.com/BlockRunAI/awesome-finance-mcp#readme",
+      "protocol_or_endpoint": "GitHub Markdown directory; not an executable MCP endpoint.",
+      "auth": "Not applicable to directory; individual projects vary.",
+      "pricing_or_quota": "Not applicable to directory; individual projects vary.",
+      "status": "discovery_directory",
+      "source_reachability": "public_repository_read",
+      "runtime_test": "not_applicable_to_directory",
+      "compatible_work_ids": [
+        "W116 discovery"
+      ],
+      "constraints": [
+        "Directory listing does not establish maintenance, safety, licensing, provider availability or production readiness."
+      ]
+    },
+    {
+      "resource_id": "FIN-007",
+      "name": "Frankfurter API",
+      "type": "exchange_rate_data_api",
+      "category": [
+        "RES-03-finance-investment",
+        "RES-05-banking-economy",
+        "RES-06-apis-data"
+      ],
+      "purpose": "Retrieve historical and current reference exchange rates sourced from central-bank data, including ECB reference rates.",
+      "canonical_url": "https://frankfurter.dev/",
+      "documentation_url": "https://frankfurter.dev/",
+      "protocol_or_endpoint": "HTTPS REST API.",
+      "auth": "No API key according to public documentation.",
+      "pricing_or_quota": "Public service; verify current limits and data update schedule.",
+      "status": "candidate_documented_not_runtime_tested",
+      "source_reachability": "documentation_reference",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "FX and macro dashboards"
+      ],
+      "constraints": [
+        "Reference rates are not necessarily executable trading quotes or intraday rates.",
+        "Store source date and base/quote currency."
+      ]
+    },
+    {
+      "resource_id": "FIN-008",
+      "name": "World Bank Indicators API",
+      "type": "official_development_data_api",
+      "category": [
+        "RES-03-finance-investment",
+        "RES-05-banking-economy",
+        "RES-06-apis-data"
+      ],
+      "purpose": "Retrieve cross-country development and macro indicators, including GDP and other economic series.",
+      "canonical_url": "https://datahelpdesk.worldbank.org/knowledgebase/topics/125589-developer-information",
+      "documentation_url": "https://datahelpdesk.worldbank.org/knowledgebase/topics/125589-developer-information",
+      "protocol_or_endpoint": "HTTPS REST API; JSON/XML formats.",
+      "auth": "Public indicator endpoints generally do not require an API key.",
+      "pricing_or_quota": "Public API; verify current service conditions.",
+      "status": "candidate_documented_not_runtime_tested",
+      "source_reachability": "documentation_reference",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Macro and country comparison research"
+      ],
+      "constraints": [
+        "Check indicator definitions, units, country coverage, frequency and publication lag."
+      ]
+    }
+  ],
+  "categories": [
+    {
+      "code": "RES-01",
+      "name": "AI & LLM"
+    },
+    {
+      "code": "RES-02",
+      "name": "Agent & MCP"
+    },
+    {
+      "code": "RES-03",
+      "name": "Finance & Investment",
+      "subcategories": [
+        "financial research",
+        "equities",
+        "fundamentals",
+        "portfolio",
+        "quantitative analysis",
+        "accounting"
+      ]
+    },
+    {
+      "code": "RES-04",
+      "name": "Market Data",
+      "subcategories": [
+        "Vietnam equities",
+        "global equities",
+        "crypto",
+        "commodities",
+        "indices",
+        "options"
+      ]
+    },
+    {
+      "code": "RES-05",
+      "name": "Banking & Economy",
+      "subcategories": [
+        "central banks",
+        "interest rates",
+        "FX",
+        "inflation",
+        "GDP",
+        "economic indicators"
+      ]
+    },
+    {
+      "code": "RES-06",
+      "name": "APIs & Data"
+    },
+    {
+      "code": "RES-07",
+      "name": "Python & Libraries"
+    },
+    {
+      "code": "RES-08",
+      "name": "Database & RAG"
+    },
+    {
+      "code": "RES-09",
+      "name": "Automation"
+    },
+    {
+      "code": "RES-10",
+      "name": "Developer Tools"
+    },
+    {
+      "code": "RES-11",
+      "name": "Maps & Geospatial"
+    },
+    {
+      "code": "RES-12",
+      "name": "Security"
     }
   ]
 }
