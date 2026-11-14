@@ -17,6 +17,7 @@
 | DOC-005 | 04_PLAN/DOC-005_IMPLEMENTATION-ROADMAP.md | Implementation roadmap | ACTIVE |
 | DOC-006 | 06_VERIFY/DOC-006_VERIFICATION-PLAN.md | Verification plan | ACTIVE |
 | DOC-007 | 00_ROOT/DOC-007_HO-SO-NHAN-VIEC_CO_WORK-ENTRY-RECORD.md | Co participant-specific Work Entry and assignment scope | BLOCKED FOR BUILD |
+| WE-ASG-W76-KA-20261114 | 00_ROOT/WE-ASG-W76-KA-QE-20261114.md | Ka / AI-02 participant-specific QE Lead assignment and Work Entry assessment | PREPARATION_ONLY / G4-G5 BLOCKED |
 | DOC-008 | 00_ROOT/DOC-008_SO-DANG-KY-TAI-LIEU_WORK-76-DOCUMENT-REGISTER.md | Canonical document register for Work 76 | ACTIVE |
 | DOC-035 | 00_ROOT/DOC-035_NHAT-KY-THI-CONG_EXECUTION-LOG.md | Canonical Work execution journal | ACTIVE |
 | EVIDENCE_REGISTER | 06_EVIDENCE/EVIDENCE_REGISTER.md | Evidence inventory and status | ACTIVE |
