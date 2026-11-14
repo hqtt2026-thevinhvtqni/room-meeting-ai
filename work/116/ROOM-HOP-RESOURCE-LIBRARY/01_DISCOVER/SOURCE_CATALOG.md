@@ -116,3 +116,54 @@ Vietnamese structured dataset of 64 hexagrams with Vietnamese/Han names and trig
 
 ## Agent use rule for regulated/public domains
 Use official primary sources first. Treat portal existence as distinct from callable API access. Do not submit public-service applications, bids, signatures, payments, or change government records. Health resources here are aggregate statistics, not personal medical records. For legal answers preserve the exact document, status, effective date and amendment history. For I Ching, keep source text and commentary distinct from modern interpretation or AI-generated readings.
+
+
+# RES-24 — VIETNAM LAW & LEGAL RESEARCH
+
+A dedicated legal-resource category for ROOM-HOP Agents. Prefer official primary sources and preserve document identity, validity, effective date, amendment chain and original publication. A searchable portal is not automatically a public API.
+
+## LAW-001 — Cổng Pháp luật Quốc gia
+Ministry of Justice-managed national portal with legal document search, new instruments, draft legislation, legal support and policy feedback entry points.
+- Portal: https://phapluat.gov.vn/
+- Legal documents: https://phapluat.gov.vn/he-thong-van-ban-phap-luat
+- Status: Official portal reviewed; API/runtime not tested. [Source](https://phapluat.gov.vn/he-thong-van-ban-phap-luat)
+
+## LAW-002 — Cơ sở dữ liệu quốc gia về văn bản pháp luật (VBPL)
+Ministry of Justice database for central and local legal normative documents, consolidated texts and legal document search. The Ministry's guide describes the database coverage and search functions.
+- Portal: https://vbpl.moj.gov.vn/pages/portal.aspx
+- User guide: https://vbpl.moj.gov.vn/huongdan/csdlvbplquocgia.htm
+- Status: Official database and guide reviewed; API/runtime not tested. [Sources](https://vbpl.moj.gov.vn/huongdan/csdlvbplquocgia.htm) and (https://vbpl.moj.gov.vn/huongdan/csdlvbpltrunguong.htm)
+
+## LAW-003 — Công báo điện tử Chính phủ
+Official Gazette for verifying publication of promulgated legal instruments and official publication details.
+- Portal: https://congbao.chinhphu.vn/
+- Status: Official portal; API/runtime not tested. [Source](https://congbao.chinhphu.vn/)
+
+## LAW-004 — Quốc hội Việt Nam
+Primary institutional source for National Assembly laws/resolutions, legislative programs and draft legislation. Always distinguish drafts from enacted instruments.
+- Portal: https://quochoi.vn/
+- Status: Official portal reference; API/runtime not tested.
+
+## LAW-005 — Tòa án nhân dân tối cao / Án lệ
+Official judiciary source for published precedents (án lệ), judicial resolutions and guidance. Precedents are not statutes; applicability and status must be checked.
+- Portal: https://www.toaan.gov.vn/
+- Precedents: https://anle.toaan.gov.vn/
+- Status: Official portal reference; API/runtime not tested.
+
+## LAW-006 — Bộ Ngoại giao / Điều ước quốc tế
+Official source discovery for treaties involving Vietnam. Verify parties, ratification/approval, entry into force, reservations and current status.
+- Portal: https://www.mofa.gov.vn/
+- Treaty portal: https://treaty.mofa.gov.vn/
+- Status: Official source reference; API/runtime not tested.
+
+## Agent legal-research protocol
+1. Identify the legal question, jurisdiction, sector and relevant date.
+2. Search official primary sources first: VBPL, Công báo, National Assembly, relevant ministry/agency, judiciary or treaty database.
+3. Record document number, issuing body, promulgation date, publication date, effective date, status, amendments/replacements and source URL.
+4. Read the full text and relevant transitional provisions; never rely only on search snippets or summaries.
+5. Distinguish current consolidated text from original text and each amending instrument. If status is uncertain, label it UNVERIFIED and do not present as current law.
+6. Cite the exact source and access date in the Agent's answer. Secondary commercial databases may aid discovery but cannot silently replace official verification.
+7. Agent output is legal information/research support, not a substitute for qualified legal advice or an authoritative legal determination.
+
+## Access and execution boundary
+All six entries are official-source discovery candidates. This review did not establish public API contracts, bulk export permissions or automated access rights. Do not scrape at scale, bypass controls, submit legal filings or represent a generated summary as an official interpretation.
