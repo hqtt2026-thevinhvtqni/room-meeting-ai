@@ -9,9 +9,9 @@
   "current_phase": "01_DISCOVER",
   "source_mode": "local_snapshot",
   "freshness": "LOCAL_SNAPSHOT",
-  "revision": "W76-DASHBOARD-0.3.9",
-  "warning_vi": "LOCAL SNAPSHOT — chưa kết nối Core live. Cập nhật 2026-11-14 09:35 UTC+7; Evidence Register đến EV-76-024. PR #55 (draft) đã xử lý đủ H1/M1/M2/L1/L2 từ phản biện độc lập Grok, CI pytest 3.11/3.12 PASS cấp nhánh (run 43547006333); CHƯA merge, chưa QE độc lập. Work 01_DISCOVER; G0/G1 NOT VERIFIED; WE-G4/G5 BLOCKED; WP-76-07 BLOCKED; NOT_RELEASED.",
-  "updated_at": "2026-11-14T02:35:26Z",
+  "revision": "W76-DASHBOARD-0.3.10",
+  "warning_vi": "LOCAL SNAPSHOT — chưa kết nối Core live. Cập nhật 2026-11-14 09:50 UTC+7; Evidence EV-76-025: xác minh độc lập Round 2 APPROVE cho 5 fix trên PR #55 (branch-level, reviewer input, chưa phải QE canonical). CI PASS run 43547006333.",
+  "updated_at": "2026-11-14T02:42:16.381Z",
   "phases": [
     {
       "phase_id": "01_DISCOVER",
@@ -378,6 +378,10 @@
   ],
   "recent_activity": [
     {
+      "timestamp": "2026-11-14T02:42:16.381Z",
+      "title": "Xác minh độc lập Round 2 APPROVE cho 5 fix PR #55 (EV-76-025)"
+    },
+    {
       "date": "2026-11-14",
       "actor": "Vibe (delegated by Vinh)",
       "title": "Xử lý phản biện Grok H1/M1/M2/L1/L2 trên PR #55",
@@ -644,6 +648,11 @@
       "claim": "PR #55 sửa H1/M1/M2/L1/L2 kèm 8 regression test; CI run 43547006333 PASS trên nhánh tại commit d14f018e; chưa merge; QE độc lập chưa tái chạy.",
       "path": "work/76-trigger-engine-vibe-v1 · PR #55 · Actions run 43547006333 · DOC-035 2026-11-14",
       "status": "VERIFIED (BRANCH-LEVEL CI ONLY; QE PENDING)"
+    },
+    {
+      "evidence_id": "EV-76-025",
+      "description": "Independent fix verification PR #55 Round 2 — H1/M1/M2/L1/L2 PASS, 36/36 tests, APPROVE (branch-level, reviewer input)",
+      "status": "NOT_AVAILABLE_ON_MAIN"
     }
   ]
 }

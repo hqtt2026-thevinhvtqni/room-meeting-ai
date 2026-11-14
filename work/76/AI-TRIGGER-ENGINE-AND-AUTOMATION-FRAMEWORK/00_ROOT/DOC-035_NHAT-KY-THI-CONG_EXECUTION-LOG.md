@@ -333,3 +333,22 @@
 - PR: #55 giữ DRAFT, chưa merge. Grok review là đầu vào do Vinh cung cấp, chưa phải bằng chứng QE độc lập đã tái chạy. Gate giữ nguyên: G0/G1 NOT VERIFIED; WE-G4/G5 BLOCKED; WP-76-07 BLOCKED; ADR-76-001…008 OPEN; EV-76-004/005 NOT_AVAILABLE; NOT_RELEASED.
 - Evidence: EV-76-024.
 - Next: Xu/Ka đối chiếu bản fix với báo cáo Grok; QE tái lập toàn bộ suite; Vinh quyết định merge + ADR.
+
+### 2026-11-14 09:50 +07:00 — Vibe ghi nhận xác minh độc lập Round 2 (APPROVE) cho 5 fix H1/M1/M2/L1/L2 trên PR #55
+
+**Bối cảnh:** Sau khi Vibe xử lý xong phản biện Grok Round 1 (EV-76-024, commit d14f018e trên nhánh `work/76-trigger-engine-vibe-v1`), Xu đã chuyển tiếp báo cáo xác minh độc lập Round 2 (`GROK_INDEPENDENT_REVIEW_PR55_ROUND2.md`).
+
+**Phạm vi xác minh (READ-ONLY):** head `d14f018e2fb18e0c68d084964a6e33895679360b`; sandbox sạch Python 3.12.3 + pytest 9.0.3; thực thi độc lập toàn bộ suite + edge case ad-hoc. Kết quả: **36/36 test PASS**, cả 5 phát hiện Round 1 xác nhận đã xử lý đúng, **không có phát hiện mới**, kết luận **APPROVE**.
+
+**Chi tiết từng mục:**
+- **H1 (PASS):** `from_dict` theo dõi `active_seen`, fail-closed khi có ACTIVE thứ hai cùng trigger_id; activate retire phiên bản ACTIVE cũ nguyên tử trong cùng `_commit`; không còn đường public nào vi phạm bất biến single-ACTIVE.
+- **M1 (PASS):** `from_dict` so digest với `semantic_digest()` tính tươi (không so với trường lưu); digest giả/tamper nội dung bị `ValidationError`; thiếu digest được tính lại.
+- **M2 (PASS):** time_window từ chối mọi key ngoài {type, last_seconds, since, until} (gồm `path`); key thiếu/sai kiểu/cửa sổ ngược → INVALID.
+- **L1 (PASS):** `_as_bool` strict bool; root + and/or/not đều qua `_as_bool`; non-bool → ERROR, không còn ép kiểu truthiness.
+- **L2 (PASS):** docstring `TriggerRegistry` ghi rõ giới hạn in-memory process-local.
+
+**Giới hạn chưa xác minh trong môi trường xác minh:** ô matrix CI Python 3.11 (sandbox chỉ có 3.12 — ô này đã PASS trong CI run 43547006333); nội dung artifact JUnit của run chính thức; mutation đa tiến trình đồng thời (ngoài phạm vi do thành phần là process-local).
+
+**Ranh giới:** Báo cáo Round 2 là **đầu vào review độc lập, KHÔNG phải bằng chứng QE canonical** (xem EV-76-025). PR #55 vẫn DRAFT, chưa merge. Quyền chấp nhận cuối cùng thuộc về Vinh.
+
+**Trạng thái gate sau bước này:** không đổi — G0/G1 NOT VERIFIED; WE-G4/G5 BLOCKED; WP-76-07 BLOCKED; ADR-76-001…008 OPEN; EV-76-004/005 NOT_AVAILABLE; NOT_RELEASED.
