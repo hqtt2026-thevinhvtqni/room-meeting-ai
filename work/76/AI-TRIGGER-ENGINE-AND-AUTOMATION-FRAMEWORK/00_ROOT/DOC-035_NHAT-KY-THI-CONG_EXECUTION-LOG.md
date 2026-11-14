@@ -319,3 +319,17 @@
 - PR: #55 draft, base main; KHÔNG merge. Không tuyên bố gate: G0/G1 NOT VERIFIED; WE-G4/G5 giữ nguyên; WP-76-07 BLOCKED; ADR-76-001…008 OPEN; EV-76-004/005 trên main vẫn NOT_AVAILABLE cho đến khi review/QE độc lập xác minh và authority merge.
 - Evidence: EV-76-023.
 - Next: Xu/Ka review tĩnh PR #55; QE độc lập tái lập; sau đó Vinh quyết định merge + ADR.
+
+
+### 2026-11-14 09:35 +07:00 — Vibe xử lý phản biện độc lập Grok (H1/M1/M2/L1/L2) trên PR #55
+- Actor: Vibe (GLM serving, Vibe Work session) — tác giả PR #55, theo ASG-W76-VIBE-20261114-01; đầu vào là báo cáo GROK_INDEPENDENT_REVIEW_PR55.md do anh Vinh cung cấp (AI-06 Grok; xác nhận 6 lỗi cũ đã xử lý, 30/30 test PASS, phát hiện thêm H1 HIGH + M1/M2 MEDIUM + L1/L2 LOW).
+- H1 (HIGH): TriggerRegistry.from_dict trước đây nạp trực tiếp dữ liệu persisted và có thể tạo nhiều phiên bản ACTIVE cùng trigger_id. Fix: from_dict fail-closed với RegistryError khi dữ liệu chứa >1 ACTIVE cho cùng trigger_id (commit e82211949449115d694a613e61425fbe43d02cab). Bất biến single-ACTIVE giờ được bảo toàn cả khi nạp dữ liệu lẫn khi activate.
+- M1 (MEDIUM): Trigger.from_dict giờ xác minh content_digest được lưu khớp semantic_digest() tính lại tươi (so với giá trị được cấp sẽ là so sánh với chính nó — lỗi này làm CI fail 2 lần trước khi phát hiện). Digest bị thay đổi nội dung bị từ chối ValidationError.
+- M2 (MEDIUM): time_window không còn chấp nhận key "path" không dùng; key lạ bị từ chối là malformed AST.
+- L1 (LOW): đánh giá boolean nghiêm ngặt (_as_bool) ở root và các operand and/or/not; kết quả non-bool cho ERROR, không ép truthy.
+- L2 (LOW): giới hạn kiến trúc registry in-memory được ghi rõ trên docstring TriggerRegistry.
+- TEST: bổ sung 8 regression Grok-review: W76-RG-003 (2 test: corrupt multi-ACTIVE fail-closed + bất biến giữ nguyên sau reload và activate phiên bản DRAFT mới), W76-MD-003 (2 test: digest giả bị từ chối + thiếu digest được tính lại), W76-CE-005 (time_window path bị từ chối), W76-CE-006 (non-bool → ERROR). Lỗi soạn test W76-RG-003 (activate từ RETIRED gây StateError) sửa ở commit 4435ccbf8ee3c3aca2862e83615e5ed2edfe439f.
+- CI: run 43546875543 (commit 4435ccbf) FAILED do lỗi M1 nêu trên; sau fix commit d14f018e2fb18e0c68d084964a6e33895679360b, run COMPLETED SUCCESS — pytest 3.11 và 3.12 PASS. Vẫn là bằng chứng CI cấp nhánh.
+- PR: #55 giữ DRAFT, chưa merge. Grok review là đầu vào do Vinh cung cấp, chưa phải bằng chứng QE độc lập đã tái chạy. Gate giữ nguyên: G0/G1 NOT VERIFIED; WE-G4/G5 BLOCKED; WP-76-07 BLOCKED; ADR-76-001…008 OPEN; EV-76-004/005 NOT_AVAILABLE; NOT_RELEASED.
+- Evidence: EV-76-024.
+- Next: Xu/Ka đối chiếu bản fix với báo cáo Grok; QE tái lập toàn bộ suite; Vinh quyết định merge + ADR.
