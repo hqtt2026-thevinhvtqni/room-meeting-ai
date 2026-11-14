@@ -109,7 +109,11 @@ def test_w76_ce_004_explicit_window_boundaries():
     }
     # Boundaries normalized across offsets: 00:00+07 == 17:00Z previous day.
     assert evaluate(window, {}, event_time=datetime(2026, 11, 12, 17, 0, 0, tzinfo=UTC), now=NOW).outcome == "MATCH"
-    assert evaluate(window, {}, event_time=datetime(2026, 11, 13, 16, 59, 59, tzinfo=UTC), now=NOW).outcome == "NO_MATCH"
+    assert evaluate(window, {}, event_time=datetime(2026, 11, 13, 16, 59, 59, tzinfo=UTC), now=NOW).outcome == "MATCH"
+    # Just before the inclusive 'since' boundary is rejected.
+    assert evaluate(window, {}, event_time=datetime(2026, 11, 12, 16, 59, 59, tzinfo=UTC), now=NOW).outcome == "NO_MATCH"
+    # Just after the inclusive 'until' boundary is rejected.
+    assert evaluate(window, {}, event_time=datetime(2026, 11, 13, 17, 0, 1, tzinfo=UTC), now=NOW).outcome == "NO_MATCH"
     # Naive timestamp rejected.
     result = evaluate(window, {}, event_time=datetime(2026, 11, 13, 10, 0, 0), now=NOW)
     assert result.outcome == "INVALID"
