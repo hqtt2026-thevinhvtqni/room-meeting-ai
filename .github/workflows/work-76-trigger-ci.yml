@@ -1,0 +1,44 @@
+# Work 76 Trigger Engine CI - runs the mandatory DOC-006 regression suite.
+# JUnit results are uploaded as artifacts to serve as raw CI evidence.
+name: work-76-trigger-ci
+
+on:
+  push:
+    paths:
+      - 'work/76/**'
+      - '.github/workflows/work-76-trigger-ci.yml'
+  pull_request:
+    paths:
+      - 'work/76/**'
+      - '.github/workflows/work-76-trigger-ci.yml'
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12']
+    env:
+      WORK76: work/76/AI-TRIGGER-ENGINE-AND-AUTOMATION-FRAMEWORK
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '${{ matrix.python-version }}'
+      - name: Install test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+      - name: Run Work 76 regression tests (DOC-006 addendum)
+        env:
+          PYTHONPATH: '${{ env.WORK76 }}/05_BUILD/04_CODE'
+        run: |
+          python -m pytest "${{ env.WORK76 }}/05_BUILD/05_TEST" -v \
+            --junitxml=work-76-junit-${{ matrix.python-version }}.xml
+      - name: Upload JUnit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: work-76-junit-${{ matrix.python-version }}
+          path: work-76-junit-${{ matrix.python-version }}.xml
