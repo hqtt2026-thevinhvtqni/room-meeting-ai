@@ -12,7 +12,7 @@
 - Purpose: Evaluate practical usability of external resource sources and normalize useful APIs, MCP servers, SDKs, libraries, models and tools so ROOM-HOP Agents can discover them.
 - Scope: Resource source evaluation, concise records, category tags, usage links, access/auth notes, compatibility and test status.
 - Non-goal: W116 is not an API gateway, execution runtime, credential vault or automatic permission-grant system.
-- Resource domains: RES-01 to RES-12; finance has dedicated RES-03 Finance & Investment, RES-04 Market Data and RES-05 Banking & Economy.
-- Current sources: public-apis directory plus FIN-001..FIN-008 finance resources; all individual providers require scoped checks before use.
+- Resource domains: RES-01 to RES-23, including finance, public administration, legal/regulatory, public investment, procurement, construction, health, education and I Ching/classical texts.
+- Current sources: public-apis directory; FIN-001..FIN-008; GOV-001..002; PUB-001..002; CON-001..002; HLT-001; EDU-001; ICH-001. Candidate sources require scoped access/runtime checks before use.
 - Implementation: Catalog and documentation only. No external service credentials or production API integration.
 - GitHub main sync: SYNCED — exact Sandbox/GitHub main content parity verified for 7/7 canonical files on 2026-11-14.
