@@ -25,3 +25,7 @@ Dedicated category RES-24 includes the National Law Portal, National Database of
 
 ## Work boundaries
 W116 discovers, evaluates and documents resources. It does not replace ROOM-HOP execution, Gateway, integration contracts, Agent orchestration or credential management. Never commit secrets.
+
+
+## Full industry taxonomy (RES-25 to RES-42)
+W116 now covers agriculture/forestry, industry/manufacturing, energy, transport/logistics, environment/climate, real estate/urban planning, trade/retail, tourism/hospitality, labor/social security, insurance, telecommunications/media, science/technology, water/waste, food supply chain, corporate finance/tax/accounting, HR/enterprise management, culture/heritage and public safety/disaster risk. Each new domain has a discovery seed; these are candidates, not runtime-verified integrations.
