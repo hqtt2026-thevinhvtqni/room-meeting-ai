@@ -60,3 +60,59 @@ Source: https://datahelpdesk.worldbank.org/knowledgebase/topics/125589-developer
 
 ## Important status distinction
 These additions are documented candidates, not runtime PASS. Only the upstream documentation/repository was reviewed. No broker account, API key, trade endpoint or external MCP server was connected or executed.
+
+
+# PUBLIC ADMINISTRATION, PUBLIC INVESTMENT, CONSTRUCTION, HEALTH, EDUCATION & I CHING
+
+## RES-13 / RES-14 — Public administration and legal sources
+### GOV-001 — National Public Service Portal
+Official portal supports lookup of administrative procedures and online public services, identifies responsible agencies, and supports tracking hồ sơ by reference number. Public lookup is useful; authenticated submission is a separate high-risk workflow. No public API contract verified.
+- Source: https://vpcp.dichvucong.gov.vn/p/home/dvc-gioi-thieu.html
+- Status: CANDIDATE / portal reviewed / runtime not tested.
+
+### GOV-002 — National Legal Documents Database (vbpl.vn)
+Official legal-document source with full text, attributes, validity status, history, related documents and downloadable files. Useful for grounded legal retrieval; no public API contract verified.
+- Source: https://vbpl.vn/
+- Status: CANDIDATE / official portal reviewed / runtime not tested.
+
+## RES-15 / RES-16 — Public investment and procurement
+### PUB-001 — National Public Investment Information System
+The Ministry portal lists a national public investment information system/database. Existence and institutional role are confirmed; open API/public bulk access are NOT confirmed.
+- Discovery source: https://www.mpi.gov.vn/portal/Pages/default.aspx
+- Status: CANDIDATE / access model unverified.
+
+### PUB-002 — Vietnam National E-Procurement System (VNEPS)
+Official portal provides search for bidding notices, contractor/investor selection, procurement plans and project information. Public web search is visible; public API not verified.
+- Source: https://muasamcong.mof.gov.vn/en/web/guest/business/ebidding
+- Status: CANDIDATE / portal reviewed / runtime not tested.
+
+## RES-17 / RES-18 — Construction
+### CON-001 — National Construction Activity Database
+Official construction information system reference at https://csdlhdxd.gov.vn/. Public API, access level and export capability still need confirmation.
+- Status: CANDIDATE / access unverified.
+
+### CON-002 — CEMIA construction norms, prices and indices
+Officially referenced information system for construction norms, prices, direct cost elements and construction price indices at https://cemia.gov.vn/. Public API/export access still needs confirmation.
+- Status: CANDIDATE / access unverified.
+
+## RES-19 / RES-20 — Health
+### HLT-001 — NSO Vietnam health statistics
+Official tables include health facilities, beds, doctors and medical staff, with statistical indicators. Aggregate statistics only; not clinical records.
+- Source: https://www.nso.gov.vn/so-lieu-thong-ke/
+- Status: CANDIDATE / official statistics reviewed / runtime not tested.
+
+## RES-21 — Education
+### EDU-001 — NSO Vietnam education statistics
+Official indicator system includes schools, classes, classrooms, teachers, pupils and enrollment/access measures.
+- Source: https://www.nso.gov.vn/phuong-phap-luan-thong-ke/he-thong-chi-tieu-thong-ke/
+- Status: CANDIDATE / official statistics reviewed / runtime not tested.
+
+## RES-22 / RES-23 — I Ching and classical texts
+### ICH-001 — 64 hexagrams of the I Ching (Nhật Nguyệt)
+Vietnamese structured dataset of 64 hexagrams with Vietnamese/Han names and trigram structure; CSV/Hugging Face distribution, CC BY 4.0 attribution stated by publisher. This is a structured reference table, not a complete classical-text/commentary corpus.
+- Source: https://nhatnguyet.org/en/du-lieu
+- Dataset: https://huggingface.co/datasets/nhatnguyet/64-que-kinh-dich
+- Status: CANDIDATE / metadata reviewed / runtime not tested.
+
+## Agent use rule for regulated/public domains
+Use official primary sources first. Treat portal existence as distinct from callable API access. Do not submit public-service applications, bids, signatures, payments, or change government records. Health resources here are aggregate statistics, not personal medical records. For legal answers preserve the exact document, status, effective date and amendment history. For I Ching, keep source text and commentary distinct from modern interpretation or AI-generated readings.
