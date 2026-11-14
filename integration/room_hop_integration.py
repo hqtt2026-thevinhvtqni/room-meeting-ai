@@ -45,10 +45,9 @@ from mcp.client.stdio import stdio_client
 LIST_MEETINGS = "list_meetings"
 GET_MEETING = "get_meeting"
 GET_TRANSCRIPT = "get_transcript"
-JOIN_MEETING = "join_meeting"
 ADD_PASTE_TO_MEETING = "add_paste_to_meeting"
 
-_REQUIRED_TOOLS = {LIST_MEETINGS, GET_MEETING, GET_TRANSCRIPT, JOIN_MEETING, ADD_PASTE_TO_MEETING}
+_REQUIRED_TOOLS = {LIST_MEETINGS, GET_MEETING, GET_TRANSCRIPT, ADD_PASTE_TO_MEETING}
 
 
 class IntegrationError(RuntimeError):
@@ -69,6 +68,7 @@ class RoomHopIntegrationConfig:
     module: str = "room_hop_mcp"
     cwd: str | None = None  # must be the room-meeting-ai project root
     env: dict[str, str] | None = None
+    python_args: list[str] | None = None
 
 
 class RoomHopIntegration:
@@ -94,7 +94,11 @@ class RoomHopIntegration:
     def _server_params(self) -> StdioServerParameters:
         return StdioServerParameters(
             command=self._config.python_executable,
-            args=["-m", self._config.module],
+            args=(
+                list(self._config.python_args)
+                if self._config.python_args is not None
+                else ["-m", self._config.module]
+            ),
             env=self._config.env,
             cwd=self._config.cwd,
         )
@@ -229,20 +233,8 @@ class RoomHopIntegration:
         )
         return self._unwrap(result, "transcript")
 
-    async def join_meeting(
-        self,
-        mcp_session: ClientSession,
-        meeting_id: str,
-        identity_id: str,
-    ) -> dict[str, Any]:
-        """PARTICIPATE. Returns Public V1's join_meeting DTO, unchanged."""
-        result = await mcp_session.call_tool(
-            JOIN_MEETING,
-            {"meeting_id": meeting_id, "identity_id": identity_id},
-        )
-        return self._unwrap(result, "meeting")
     async def add_paste_to_meeting(
-        self, mcp_session: ClientSession, meeting_id: str, text: str, identity_id: str | None = None
+        self, mcp_session: ClientSession, meeting_id: str, text: str, identity_id: str
     ) -> dict[str, Any]:
         """
         RECORDING. Returns Public V1's add_paste_to_meeting DTO, unchanged.
@@ -253,7 +245,7 @@ class RoomHopIntegration:
         """
         result = await mcp_session.call_tool(
             ADD_PASTE_TO_MEETING,
-            {"meeting_id": meeting_id, "text": text, **({"identity_id": identity_id} if identity_id is not None else {})},
+            {"meeting_id": meeting_id, "text": text, "identity_id": identity_id},
         )
         return self._unwrap(result, "paste")
 

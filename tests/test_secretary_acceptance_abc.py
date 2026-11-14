@@ -63,9 +63,9 @@ class TestCaseA_PasteFidelity:
             "\t\tTab-indented line\n"
         )
 
-        meeting.add_paste(raw_1)
-        meeting.add_paste(raw_2)
-        meeting.add_paste(raw_3)
+        meeting.add_paste(raw_1, identity_id="vinh")
+        meeting.add_paste(raw_2, identity_id="vinh")
+        meeting.add_paste(raw_3, identity_id="vinh")
 
         expected = raw_1 + raw_2 + raw_3
         assert meeting.secretary.export() == expected
@@ -97,7 +97,7 @@ class TestCaseB_LifecycleBoundary:
         meeting.start("vinh")
         assert meeting.data["status"] == "active"
 
-        result = meeting.add_paste("noi dung hop le khi ACTIVE")
+        result = meeting.add_paste("noi dung hop le khi ACTIVE", identity_id="vinh")
         assert result == {"status": "READY"}
         assert meeting.secretary.read() == "noi dung hop le khi ACTIVE"
 
@@ -108,7 +108,7 @@ class TestCaseB_LifecycleBoundary:
         meeting.join_request("xu")
         meeting.start("vinh")
 
-        meeting.add_paste("noi dung ghi truoc khi CLOSE")
+        meeting.add_paste("noi dung ghi truoc khi CLOSE", identity_id="vinh")
         meeting.close(decisions=[], action_items=[], summary="dong lai")
         assert meeting.data["status"] == "closed"
 
@@ -141,7 +141,7 @@ class TestCaseC_TwoArtifactsNotConflated:
         meeting.start("vinh")
 
         raw_paste = "User: day la noi dung PASTE nguyen van, khong qua xu ly."
-        meeting.add_paste(raw_paste)
+        meeting.add_paste(raw_paste, identity_id="vinh")
 
         final_path = meeting.close(
             decisions=["Quyet dinh A"],

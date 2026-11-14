@@ -2,13 +2,17 @@
 from __future__ import annotations
 
 import json
+import os
 import re
+import threading
+from functools import wraps
+
 import yaml
 from datetime import datetime, timezone
 from pathlib import Path
 
 from core.agent_registry import AgentRegistry
-from core.context_loader import package_context
+from core.context_loader import package_context, validate_context_files
 from core.meeting_log import MeetingLog
 from core.governance import GOV, MissionContext
 from core.identity_resolution import resolve_identity
@@ -18,16 +22,59 @@ from core.message_identity import (
     build_header,
 )
 from core.principal_registry import PrincipalRegistry
-from core.secretary import Secretary
+from core.paste_rate_limiter import (
+    PasteRateLimitExceeded,
+    PasteRateStoreUnavailable,
+    SQLitePasteRateLimiter,
+)
+from core.secretary import Secretary, validate_transcript_text
 
 ROOM_HOP_ROOT = Path(__file__).resolve().parent.parent
 MEETINGS_DIR = ROOM_HOP_ROOT / "meetings"
 
-# ID allocation v0.1 — race-tolerant, collision-detected (KHÔNG atomic:
-# không có lock/transaction thật). Nếu 2 process tạo cùng lúc và đụng
-# đúng 1 sequence, create_meeting() sẽ raise MeetingError ở bước
-# meeting_dir.mkdir() thay vì silent overwrite. Chấp nhận được ở v0.1.
+# Same-process serialization for each meeting YAML read-modify-write.
+# Core HTTP is constrained to one local process until cross-process storage
+# semantics are separately reviewed.
+_MEETING_STATE_LOCKS: dict[str, threading.RLock] = {}
+_MEETING_STATE_LOCKS_GUARD = threading.Lock()
+_ID_ALLOCATION_LOCK = threading.Lock()
 MEETING_ID_RE = re.compile(r"^MEETING-(\d{4})-(\d{3})$")
+
+
+def _meeting_state_lock(path: Path) -> threading.RLock:
+    key = str(path.resolve())
+    with _MEETING_STATE_LOCKS_GUARD:
+        return _MEETING_STATE_LOCKS.setdefault(key, threading.RLock())
+
+
+def _serialized_meeting_state(method):
+    @wraps(method)
+    def wrapper(self, *args, **kwargs):
+        with self._state_lock:
+            return method(self, *args, **kwargs)
+    return wrapper
+
+
+def _atomic_yaml_write(path: Path, data: dict) -> None:
+    temp = path.with_name(
+        f".{path.name}.{os.getpid()}.{threading.get_ident()}.tmp"
+    )
+    try:
+        with open(temp, "w", encoding="utf-8") as stream:
+            yaml.safe_dump(
+                data,
+                stream,
+                allow_unicode=True,
+                sort_keys=False,
+            )
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temp, path)
+    finally:
+        try:
+            temp.unlink(missing_ok=True)
+        except OSError:
+            pass
 
 
 def _now_iso() -> str:
@@ -38,38 +85,59 @@ class MeetingError(Exception):
     pass
 
 
+class MeetingRateLimitError(MeetingError):
+    """Domain error carrying retry guidance for F4 quota rejection."""
+
+    def __init__(self, retry_after_seconds: int):
+        self.retry_after_seconds = max(1, int(retry_after_seconds))
+        super().__init__(
+            "RATE_LIMIT_EXCEEDED "
+            f"retry_after_seconds={self.retry_after_seconds}"
+        )
+
+
+class MeetingRateStoreUnavailable(MeetingError):
+    """Controlled service-unavailable error for local quota-store failures."""
+
+    def __init__(self, retry_after_seconds: int = 1):
+        self.retry_after_seconds = max(1, int(retry_after_seconds))
+        super().__init__("PASTE_RATE_STORE_UNAVAILABLE")
+
+
 class Meeting:
     def __init__(
         self,
         meeting_dir: Path,
         principal_registry: PrincipalRegistry | None = None,
         agent_registry: AgentRegistry | None = None,
+        paste_rate_limiter: SQLitePasteRateLimiter | None = None,
     ):
         self.meeting_dir = Path(meeting_dir)
         self.meeting_yaml_path = self.meeting_dir / "meeting.yaml"
+        self._state_lock = _meeting_state_lock(self.meeting_yaml_path)
         self.final_path = self.meeting_dir / "final.md"
         self.log = MeetingLog(self.meeting_dir)
 
         # SECRETARY V1: raw transcript record keeper.
         self.secretary = Secretary(self.meeting_dir / "transcript.txt")
+        self.paste_rate_limiter = paste_rate_limiter or SQLitePasteRateLimiter(
+            self.meeting_dir.parent / ".room_hop_paste_rate_limits.sqlite3"
+        )
 
         self.principal_registry = principal_registry or PrincipalRegistry()
         self.agent_registry = agent_registry or AgentRegistry()
 
     @property
     def data(self) -> dict:
-        with open(self.meeting_yaml_path, "r", encoding="utf-8") as f:
-            return yaml.safe_load(f) or {}
+        with self._state_lock:
+            with open(self.meeting_yaml_path, "r", encoding="utf-8") as stream:
+                return yaml.safe_load(stream) or {}
 
     def _save(self, data: dict) -> None:
-        with open(self.meeting_yaml_path, "w", encoding="utf-8") as f:
-            yaml.safe_dump(
-                data,
-                f,
-                allow_unicode=True,
-                sort_keys=False,
-            )
+        with self._state_lock:
+            _atomic_yaml_write(self.meeting_yaml_path, data)
 
+    @_serialized_meeting_state
     def _transition(
         self,
         expected: str,
@@ -98,6 +166,7 @@ class Meeting:
             "session_opened",
         )
 
+    @_serialized_meeting_state
     def join_request(self, identity_id: str) -> dict:
         data = self.data
 
@@ -261,27 +330,12 @@ class Meeting:
         raw_text: str,
         identity_id: str | None = None,
     ) -> dict:
-        """SECRETARY V1: ghi nguyên văn block text vào transcript.
+        """Append raw transcript only for an accepted meeting participant.
 
-        MESSAGE v1.0 (bổ sung, KHÔNG đổi hành vi cũ):
-        - `identity_id` là OPTIONAL (Architecture Gate DECISION đã khóa).
-          Không được chuyển thành required — sẽ phá backward compat của
-          Gate 2 / các caller cũ đang gọi add_paste(raw_text) không kèm
-          identity.
-        - Có `identity_id` -> resolve qua Identity/Principal/Agent
-          Registry -> Header v1.0 đầy đủ. Nếu identity_id KHÔNG resolve
-          được, REJECT (raise MeetingError) — không fallback, không giả
-          danh.
-        - Không có `identity_id` -> legacy compatibility path: Message
-          vẫn được tạo (source=ai_chat_paste, vì đây là sự kiện paste,
-          không phải tuyên bố về danh tính), nhưng `header=None` và
-          `speaker=None` — phản ánh ĐÚNG trạng thái chưa định danh,
-          TUYỆT ĐỐI không tự gán một identity mặc định (vd. vinh/claude)
-          để lấp vào Header.
-        - Return value GIỮ NGUYÊN 100%: vẫn là `self.secretary.append()`
-          (vd. {"status": "READY"}) — Message creation là side-effect
-          ghi log, không được làm caller cũ (test_secretary*,
-          test_integration_add_paste) nhận về shape khác đi.
+        Xu D-102-04 requires a non-empty registry-resolved identity that is
+        already present in the meeting's JOIN_ACCEPTED participant set.
+        Registry resolution is not transport authentication; remote callers
+        remain blocked pending the separate authentication gate.
         """
         data = self.data
 
@@ -291,19 +345,39 @@ class Meeting:
                 f"'{data.get('status')}', không thể PASTE."
             )
 
-        header = None
-        if identity_id is not None:
-            try:
-                header, _source_type = build_header(
-                    identity_id,
-                    self.principal_registry,
-                    self.agent_registry,
-                )
-            except MessageIdentityError as e:
-                raise MeetingError(str(e)) from None
+        # Validate before quota reservation: invalid requests do not consume quota.
+        raw_text = validate_transcript_text(raw_text)
 
-        # RAW, byte-identical — KHÔNG đổi so với hành vi trước Message v1.0.
-        result = self.secretary.append(raw_text)
+        # Xu D-102-04: every paste must come from an accepted participant.
+        # Registry resolution alone is not meeting membership.
+        if not identity_id:
+            raise MeetingError("PASTE yêu cầu identity_id đã được xác thực trong meeting policy.")
+        if identity_id not in set(data.get("participants", [])):
+            raise MeetingError(
+                f"Identity '{identity_id}' chưa JOIN_ACCEPTED trong meeting này."
+            )
+
+        try:
+            header, _source_type = build_header(
+                identity_id,
+                self.principal_registry,
+                self.agent_registry,
+            )
+        except MessageIdentityError as e:
+            raise MeetingError(str(e)) from None
+
+        principal_key = f"resolved:{identity_id}"
+        try:
+            with self.paste_rate_limiter.admission(
+                data["id"], principal_key
+            ) as admission:
+                # Count only after Secretary successfully appends raw transcript.
+                result = self.secretary.append(raw_text)
+                admission.commit()
+        except PasteRateLimitExceeded as exc:
+            raise MeetingRateLimitError(exc.retry_after_seconds) from None
+        except PasteRateStoreUnavailable as exc:
+            raise MeetingRateStoreUnavailable(exc.retry_after_seconds) from None
 
         # MESSAGE v1.0: "một lần paste = một logical Message" — đúng một
         # entry Message được tạo ở đây, dù có/không có identity_id.
@@ -350,6 +424,7 @@ class Meeting:
             for index, message in enumerate(messages, start=1)
         ]
 
+    @_serialized_meeting_state
     def request_close(self, requester: str = "vinh") -> None:
         data = self.data
 
@@ -367,6 +442,7 @@ class Meeting:
         data["status"] = "closing"
         self._save(data)
 
+    @_serialized_meeting_state
     def close(
         self,
         decisions: list[str],
@@ -456,6 +532,7 @@ class Meeting:
 
         return self.final_path
 
+    @_serialized_meeting_state
     def save_artifact(
         self,
         artifact_name: str = "final.md",
@@ -573,31 +650,47 @@ class MeetingManager:
             parents=True,
             exist_ok=True,
         )
+        self.paste_rate_limiter = SQLitePasteRateLimiter(
+            self.meetings_dir / ".room_hop_paste_rate_limits.sqlite3"
+        )
+
+    def _meeting_dir_for_id(self, meeting_id: str) -> Path:
+        if (
+            not isinstance(meeting_id, str)
+            or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}", meeting_id)
+            or meeting_id in {".", ".."}
+        ):
+            raise MeetingError("meeting_id không hợp lệ.")
+        root = self.meetings_dir.resolve()
+        candidate = (root / meeting_id).resolve()
+        if candidate.parent != root:
+            raise MeetingError("meeting_id escapes the configured meetings directory.")
+        return candidate
 
     def _allocate_meeting_id(self) -> str:
         """
         Sinh meeting_id dạng MEETING-{YYYY}-{seq:03d} cho năm UTC hiện tại.
 
-        race-tolerant / collision-detected — KHÔNG atomic. Dùng
-        max(existing_seq) + 1, không dùng len(existing), để không bị
-        lệch nếu có thư mục meeting bị xóa thủ công giữa chừng.
+        Scan is process-serialized; create_meeting reserves the candidate
+        with atomic mkdir(exist_ok=False) and retries on a collision.
         """
-        year = datetime.now(timezone.utc).year
-        max_seq = 0
+        with _ID_ALLOCATION_LOCK:
+            year = datetime.now(timezone.utc).year
+            max_seq = 0
 
-        if self.meetings_dir.exists():
-            for meeting_dir in self.meetings_dir.iterdir():
-                if not meeting_dir.is_dir():
-                    continue
+            if self.meetings_dir.exists():
+                for meeting_dir in self.meetings_dir.iterdir():
+                    if not meeting_dir.is_dir():
+                        continue
 
-                match = MEETING_ID_RE.match(meeting_dir.name)
+                    match = MEETING_ID_RE.match(meeting_dir.name)
 
-                if match and int(match.group(1)) == year:
-                    seq = int(match.group(2))
-                    if seq > max_seq:
-                        max_seq = seq
+                    if match and int(match.group(1)) == year:
+                        seq = int(match.group(2))
+                        if seq > max_seq:
+                            max_seq = seq
 
-        return f"MEETING-{year}-{max_seq + 1:03d}"
+            return f"MEETING-{year}-{max_seq + 1:03d}"
 
     def create_meeting(
         self,
@@ -610,8 +703,8 @@ class MeetingManager:
         # meeting_id=None -> Core allocate (v0.1 decision: ID là
         # authority của Core, Bridge không tự sinh sequence).
         # meeting_id tường minh -> giữ nguyên behavior cũ (backward compat).
-        if meeting_id is None:
-            meeting_id = self._allocate_meeting_id()
+        auto_id = meeting_id is None
+        validate_context_files(context_files)
 
         # participants are INVITATIONS, not automatically accepted.
         for identity_id in [created_by, *participants]:
@@ -626,14 +719,23 @@ class MeetingManager:
                     f"Identity không tồn tại: {identity_id}"
                 )
 
-        meeting_dir = self.meetings_dir / meeting_id
-
-        if meeting_dir.exists():
-            raise MeetingError(
-                f"Meeting '{meeting_id}' đã tồn tại."
-            )
-
-        meeting_dir.mkdir(parents=True)
+        # Atomic directory creation is the cross-thread/process collision
+        # boundary. A generated-ID collision retries; explicit IDs fail.
+        for _attempt in range(20):
+            if auto_id:
+                meeting_id = self._allocate_meeting_id()
+            assert meeting_id is not None
+            meeting_dir = self._meeting_dir_for_id(meeting_id)
+            try:
+                meeting_dir.mkdir(parents=True, exist_ok=False)
+                break
+            except FileExistsError:
+                if not auto_id:
+                    raise MeetingError(
+                        f"Meeting '{meeting_id}' đã tồn tại."
+                    ) from None
+        else:
+            raise MeetingError("Không thể cấp meeting_id duy nhất sau 20 lần thử.")
 
         data = {
             "id": meeting_id,
@@ -654,22 +756,13 @@ class MeetingManager:
             "message_bus_mode": None,
         }
 
-        with open(
-            meeting_dir / "meeting.yaml",
-            "w",
-            encoding="utf-8",
-        ) as f:
-            yaml.safe_dump(
-                data,
-                f,
-                allow_unicode=True,
-                sort_keys=False,
-            )
+        _atomic_yaml_write(meeting_dir / "meeting.yaml", data)
 
         meeting = Meeting(
             meeting_dir,
             self.principal_registry,
             self.registry,
+            self.paste_rate_limiter,
         )
 
         meeting.log.log_event(
@@ -689,7 +782,7 @@ class MeetingManager:
         return meeting
 
     def get_meeting(self, meeting_id: str) -> Meeting:
-        meeting_dir = self.meetings_dir / meeting_id
+        meeting_dir = self._meeting_dir_for_id(meeting_id)
 
         if not meeting_dir.exists():
             raise MeetingError(
@@ -700,6 +793,7 @@ class MeetingManager:
             meeting_dir,
             self.principal_registry,
             self.registry,
+            self.paste_rate_limiter,
         )
 
     def list_meetings(
@@ -734,6 +828,7 @@ class MeetingManager:
                 meeting_dir,
                 self.principal_registry,
                 self.registry,
+                self.paste_rate_limiter,
             )
 
             data = meeting.data

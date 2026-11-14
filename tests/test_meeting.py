@@ -153,3 +153,42 @@ def test_close_generates_final_md(manager):
 def test_get_meeting_not_found_raises(manager):
     with pytest.raises(MeetingError):
         manager.get_meeting("KHONG_TON_TAI")
+
+
+def test_add_paste_requires_join_accepted_participant(manager):
+    meeting = manager.create_meeting(
+        meeting_id="TEST-PASTE-MEMBER",
+        topic="Paste membership",
+        participants=["xu", "claude", "cto"],
+        context_files=["XU_CORE.md"],
+    )
+    _activate(meeting, joiners=("xu", "cto"), starter="xu")
+
+    with pytest.raises(MeetingError, match="JOIN_ACCEPTED"):
+        meeting.add_paste("not a participant", identity_id="claude")
+
+
+def test_add_paste_rejects_missing_identity(manager):
+    meeting = manager.create_meeting(
+        meeting_id="TEST-PASTE-NO-ID",
+        topic="Paste requires identity",
+        participants=["xu", "claude"],
+        context_files=["XU_CORE.md"],
+    )
+    _activate(meeting)
+
+    with pytest.raises(MeetingError, match="identity_id"):
+        meeting.add_paste("anonymous paste")
+
+
+def test_add_paste_accepts_join_accepted_participant(manager):
+    meeting = manager.create_meeting(
+        meeting_id="TEST-PASTE-ACCEPTED",
+        topic="Accepted participant paste",
+        participants=["xu", "claude"],
+        context_files=["XU_CORE.md"],
+    )
+    _activate(meeting)
+
+    result = meeting.add_paste("accepted paste", identity_id="xu")
+    assert result == {"status": "READY"}

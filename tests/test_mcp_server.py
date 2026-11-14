@@ -2,7 +2,7 @@ import asyncio
 
 from mcp import types
 
-from core.meeting_manager import MeetingManager
+from core.meeting_manager import MeetingManager, MeetingRateLimitError, MeetingRateStoreUnavailable
 from core.meeting_service import MeetingService
 from room_hop_mcp.adapter.server import create_server
 
@@ -48,7 +48,7 @@ def test_add_paste_to_meeting_tool_schema(tmp_path):
     assert schema["properties"]["meeting_id"]["type"] == "string"
     assert schema["properties"]["meeting_id"]["minLength"] == 1
     assert schema["properties"]["text"]["type"] == "string"
-    assert schema["required"] == ["meeting_id", "text"]
+    assert schema["required"] == ["meeting_id", "text", "identity_id"]
     assert schema["additionalProperties"] is False
 
 
@@ -59,8 +59,8 @@ def test_add_paste_delegates_to_service(tmp_path):
         def __init__(self):
             self.calls = []
 
-        def add_paste(self, meeting_id, raw_text):
-            self.calls.append((meeting_id, raw_text))
+        def add_paste(self, meeting_id, raw_text, identity_id=None):
+            self.calls.append((meeting_id, raw_text, identity_id))
             return {"accepted": True}
 
     service = FakeService()
@@ -75,6 +75,7 @@ def test_add_paste_delegates_to_service(tmp_path):
             arguments={
                 "meeting_id": "MEETING-TEST-001",
                 "text": "Hello ROOM HOP",
+                "identity_id": "xu",
             },
         ),
     )
@@ -82,7 +83,7 @@ def test_add_paste_delegates_to_service(tmp_path):
     result = asyncio.run(handler(request))
 
     assert service.calls == [
-        ("MEETING-TEST-001", "Hello ROOM HOP")
+        ("MEETING-TEST-001", "Hello ROOM HOP", "xu")
     ]
 
     assert result.root.structuredContent == {
@@ -144,7 +145,7 @@ def test_add_paste_returns_service_result(tmp_path):
     """Verify the MCP adapter returns the service result."""
 
     class FakeService:
-        def add_paste(self, meeting_id, raw_text):
+        def add_paste(self, meeting_id, raw_text, identity_id):
             return {
                 "meeting_id": meeting_id,
                 "accepted": True,
@@ -163,6 +164,7 @@ def test_add_paste_returns_service_result(tmp_path):
             arguments={
                 "meeting_id": "MEETING-TEST-001",
                 "text": "Hello ROOM HOP",
+                "identity_id": "xu",
             },
         ),
     )
@@ -183,7 +185,7 @@ def test_add_paste_handles_core_error(tmp_path):
     """Verify Core/service errors are handled at the MCP boundary."""
 
     class FakeService:
-        def add_paste(self, meeting_id, raw_text):
+        def add_paste(self, meeting_id, raw_text, identity_id=None):
             raise RuntimeError("meeting is not active")
 
     service = FakeService()
@@ -198,6 +200,7 @@ def test_add_paste_handles_core_error(tmp_path):
             arguments={
                 "meeting_id": "MEETING-TEST-001",
                 "text": "Hello ROOM HOP",
+                "identity_id": "xu",
             },
         ),
     )
@@ -207,3 +210,63 @@ def test_add_paste_handles_core_error(tmp_path):
     assert result.root.isError is True
     assert len(result.root.content) > 0
     assert "meeting is not active" in result.root.content[0].text
+
+
+def test_add_paste_returns_structured_rate_limit_error(tmp_path):
+    class RateLimitedService:
+        def add_paste(self, meeting_id, raw_text, identity_id):
+            raise MeetingRateLimitError(7)
+
+    server = create_server(RateLimitedService())
+    handler = _get_call_tool_handler(server)
+    request = types.CallToolRequest(
+        method="tools/call",
+        params=types.CallToolRequestParams(
+            name="add_paste_to_meeting",
+            arguments={
+                "meeting_id": "MEETING-TEST-001",
+                "text": "hello",
+                "identity_id": "xu",
+            },
+        ),
+    )
+
+    result = asyncio.run(handler(request))
+
+    assert result.root.isError is True
+    assert result.root.structuredContent == {
+        "error": {
+            "code": "RATE_LIMIT_EXCEEDED",
+            "retry_after_seconds": 7,
+        }
+    }
+
+
+def test_add_paste_returns_structured_store_unavailable_error(tmp_path):
+    class UnavailableService:
+        def add_paste(self, meeting_id, raw_text, identity_id):
+            raise MeetingRateStoreUnavailable(4)
+
+    server = create_server(UnavailableService())
+    handler = _get_call_tool_handler(server)
+    request = types.CallToolRequest(
+        method="tools/call",
+        params=types.CallToolRequestParams(
+            name="add_paste_to_meeting",
+            arguments={
+                "meeting_id": "MEETING-TEST-001",
+                "text": "hello",
+                "identity_id": "xu",
+            },
+        ),
+    )
+
+    result = asyncio.run(handler(request))
+
+    assert result.root.isError is True
+    assert result.root.structuredContent == {
+        "error": {
+            "code": "PASTE_RATE_STORE_UNAVAILABLE",
+            "retry_after_seconds": 4,
+        }
+    }
