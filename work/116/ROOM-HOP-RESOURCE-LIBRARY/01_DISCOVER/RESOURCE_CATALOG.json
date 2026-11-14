@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.1",
+  "schema_version": "1.2",
   "work_id": "116",
   "catalog_name": "ROOM-HOP Shared Resource Catalog",
   "last_updated": "2026-11-14",
@@ -251,6 +251,250 @@
       "constraints": [
         "Check indicator definitions, units, country coverage, frequency and publication lag."
       ]
+    },
+    {
+      "resource_id": "GOV-001",
+      "name": "Cổng Dịch vụ công Quốc gia",
+      "type": "government_service_portal",
+      "category": [
+        "RES-13-public-administration"
+      ],
+      "purpose": "Tra cứu thủ tục hành chính, dịch vụ công, cơ quan thực hiện, hướng dẫn hồ sơ và theo dõi trạng thái hồ sơ theo mã; thao tác nộp hồ sơ yêu cầu tài khoản/xác thực.",
+      "canonical_url": "https://dichvucong.gov.vn/",
+      "documentation_url": "https://vpcp.dichvucong.gov.vn/p/home/dvc-gioi-thieu.html",
+      "protocol_or_endpoint": "Web portal; public information lookup and authenticated citizen/business workflows.",
+      "auth": "Public lookup; account and identity/signature authentication for personal hồ sơ workflows.",
+      "pricing_or_quota": "Fees depend on the administrative procedure; portal access conditions apply.",
+      "status": "candidate_portal_reviewed_runtime_not_tested",
+      "source_reachability": "official_portal_documentation_reviewed",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Administrative procedure assistant Work"
+      ],
+      "constraints": [
+        "Portal is a user-facing workflow, not a documented open API.",
+        "Agents must not submit applications, make declarations or pay fees without explicit authorization and user review.",
+        "Verify current competent authority, forms, fees and effective dates."
+      ]
+    },
+    {
+      "resource_id": "GOV-002",
+      "name": "Cơ sở dữ liệu quốc gia về văn bản pháp luật",
+      "type": "official_legal_document_portal",
+      "category": [
+        "RES-13-public-administration",
+        "RES-14-legal-regulatory"
+      ],
+      "purpose": "Tra cứu văn bản quy phạm pháp luật, toàn văn, thuộc tính, lịch sử hiệu lực, văn bản liên quan and downloadable files.",
+      "canonical_url": "https://vbpl.vn/",
+      "documentation_url": "https://vbpl.vn/TW/Pages/ivbpq-toanvan.aspx",
+      "protocol_or_endpoint": "Public web portal; HTML/PDF/DOC downloads; no public API contract verified.",
+      "auth": "Public document lookup; some advanced services may vary.",
+      "pricing_or_quota": "Public portal; verify usage terms.",
+      "status": "candidate_official_source_runtime_not_tested",
+      "source_reachability": "official_portal_reviewed",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Legal and public-administration research Works"
+      ],
+      "constraints": [
+        "Capture document number, issuing body, promulgation/effective dates, status and amendment history.",
+        "Do not infer current validity from a search snippet; open the official record.",
+        "Not a verified API; no automated bulk scraping assumed."
+      ]
+    },
+    {
+      "resource_id": "PUB-001",
+      "name": "National Public Investment Information System",
+      "type": "official_public_investment_information_system",
+      "category": [
+        "RES-15-public-investment",
+        "RES-13-public-administration"
+      ],
+      "purpose": "Official information system/database for public investment programs, projects and annual/medium-term plans; public-facing discovery and access scope must be checked.",
+      "canonical_url": "https://www.mof.gov.vn/",
+      "documentation_url": "https://www.mpi.gov.vn/portal/Pages/default.aspx",
+      "protocol_or_endpoint": "Government information system/portal; no public API contract confirmed in this review.",
+      "auth": "Public pages may be accessible; system operations/accounts and data submission are controlled.",
+      "pricing_or_quota": "Not established; verify system access and data-sharing terms.",
+      "status": "candidate_official_system_api_unverified",
+      "source_reachability": "official_government_portal_lists_system",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Public investment monitoring/research Work"
+      ],
+      "constraints": [
+        "Do not assume database is openly downloadable or API-accessible.",
+        "Separate public project information from internal/controlled planning and disbursement records.",
+        "Use official system data as source of record where legally designated; preserve as-of date and project identifiers."
+      ]
+    },
+    {
+      "resource_id": "PUB-002",
+      "name": "Vietnam National E-Procurement System (VNEPS)",
+      "type": "official_public_procurement_portal",
+      "category": [
+        "RES-15-public-investment",
+        "RES-16-public-procurement",
+        "RES-13-public-administration"
+      ],
+      "purpose": "Search public procurement notices, contractor/investor selection plans, bidding packages and project information.",
+      "canonical_url": "https://muasamcong.mof.gov.vn/",
+      "documentation_url": "https://muasamcong.mof.gov.vn/en/web/guest/business/ebidding",
+      "protocol_or_endpoint": "Web portal with search interface; public API not verified.",
+      "auth": "Public search; account/signature may be required for participation and submission.",
+      "pricing_or_quota": "Search access and bidding fees/conditions depend on service and current rules.",
+      "status": "candidate_official_portal_runtime_not_tested",
+      "source_reachability": "official_portal_reviewed",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Public procurement analysis Work"
+      ],
+      "constraints": [
+        "Search results are not proof of award validity; inspect notices, amendments and award decisions.",
+        "No bid submission, digital signing or account actions by Agent without explicit approval.",
+        "Capture bid notice number, owner, deadlines, status and source timestamp."
+      ]
+    },
+    {
+      "resource_id": "CON-001",
+      "name": "Cơ sở dữ liệu quốc gia về hoạt động xây dựng",
+      "type": "official_construction_information_system",
+      "category": [
+        "RES-17-construction",
+        "RES-14-legal-regulatory"
+      ],
+      "purpose": "Official construction activity information/database intended to support construction-sector data, information sharing and analytical applications.",
+      "canonical_url": "https://csdlhdxd.gov.vn/",
+      "documentation_url": "https://csdlhdxd.gov.vn/",
+      "protocol_or_endpoint": "Government web system; public API/access model not verified.",
+      "auth": "Access levels and account requirements to be confirmed.",
+      "pricing_or_quota": "Not established.",
+      "status": "candidate_official_system_access_unverified",
+      "source_reachability": "official_system_reference_found",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Construction project management Work"
+      ],
+      "constraints": [
+        "Do not infer public access or API availability from system existence.",
+        "Verify data scope, permissions and update frequency before integration.",
+        "Construction records may include controlled or project-sensitive information."
+      ]
+    },
+    {
+      "resource_id": "CON-002",
+      "name": "CEMIA — construction norms, prices and indices information system",
+      "type": "official_construction_cost_data_system",
+      "category": [
+        "RES-17-construction",
+        "RES-18-cost-estimation"
+      ],
+      "purpose": "Construction norms, construction prices, direct cost element prices and construction price indices for estimating and managing construction investment costs.",
+      "canonical_url": "https://cemia.gov.vn/",
+      "documentation_url": "https://cemia.gov.vn/",
+      "protocol_or_endpoint": "Official information system; public data/API interface not verified.",
+      "auth": "To be confirmed by the system owner.",
+      "pricing_or_quota": "Not established.",
+      "status": "candidate_official_system_access_unverified",
+      "source_reachability": "official_reference_in_regulatory_text",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Construction cost estimation Work"
+      ],
+      "constraints": [
+        "Record province, effective period, work type, unit and source decision for every cost value.",
+        "Do not mix announced official norms with market quotations.",
+        "Confirm export/API availability and update cadence before integration."
+      ]
+    },
+    {
+      "resource_id": "HLT-001",
+      "name": "NSO Vietnam — health statistics",
+      "type": "official_health_statistics",
+      "category": [
+        "RES-19-health",
+        "RES-20-public_statistics"
+      ],
+      "purpose": "Official statistical tables for health facilities, hospital beds, doctors, medical staff and health indicators by time/administrative area.",
+      "canonical_url": "https://www.nso.gov.vn/so-lieu-thong-ke/",
+      "documentation_url": "https://www.nso.gov.vn/so-lieu-thong-ke/",
+      "protocol_or_endpoint": "Web statistical tables and downloadable materials where provided; API not verified.",
+      "auth": "Public access to published statistics.",
+      "pricing_or_quota": "Public statistical portal; verify reuse terms per dataset.",
+      "status": "candidate_official_statistics_runtime_not_tested",
+      "source_reachability": "official_statistics_pages_reviewed",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Health statistics and policy analysis Work"
+      ],
+      "constraints": [
+        "Aggregate statistics only; not patient-level medical records.",
+        "Preserve year, geography, indicator definition, unit and revision notes.",
+        "Do not use for diagnosis or individual treatment recommendations."
+      ]
+    },
+    {
+      "resource_id": "EDU-001",
+      "name": "NSO Vietnam — education statistics",
+      "type": "official_education_statistics",
+      "category": [
+        "RES-21-education",
+        "RES-20-public_statistics"
+      ],
+      "purpose": "Official statistical indicators for schools, classes, classrooms, teachers, pupils, enrollment and education access.",
+      "canonical_url": "https://www.nso.gov.vn/so-lieu-thong-ke/",
+      "documentation_url": "https://www.nso.gov.vn/phuong-phap-luan-thong-ke/he-thong-chi-tieu-thong-ke/",
+      "protocol_or_endpoint": "Web statistical tables and indicator definitions; API not verified.",
+      "auth": "Public access to published statistics.",
+      "pricing_or_quota": "Public statistical portal; verify reuse terms per dataset.",
+      "status": "candidate_official_statistics_runtime_not_tested",
+      "source_reachability": "official_statistics_pages_reviewed",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "Education policy and analytics Work"
+      ],
+      "constraints": [
+        "Preserve academic year/reference period, geography, indicator definition and unit.",
+        "Distinguish official statistical series from school-level operational records.",
+        "No student personal data is included in this resource record."
+      ]
+    },
+    {
+      "resource_id": "ICH-001",
+      "name": "64 quẻ Kinh Dịch — Nhật Nguyệt dataset",
+      "type": "open_licensed_iching_reference_dataset",
+      "category": [
+        "RES-22-iching",
+        "RES-23-classical-texts",
+        "RES-07-python-libraries"
+      ],
+      "purpose": "Structured Vietnamese reference table for all 64 hexagrams with Vietnamese/Han names, upper/lower trigrams and image; available as CSV/Hugging Face dataset.",
+      "canonical_url": "https://nhatnguyet.org/en/du-lieu",
+      "documentation_url": "https://huggingface.co/datasets/nhatnguyet/64-que-kinh-dich",
+      "protocol_or_endpoint": "CSV dataset / Hugging Face datasets; no hosted inference API required.",
+      "auth": "Public dataset access.",
+      "pricing_or_quota": "CC BY 4.0 according to dataset publisher; attribution required.",
+      "status": "candidate_dataset_metadata_reviewed_runtime_not_tested",
+      "source_reachability": "dataset_page_reviewed",
+      "runtime_test": "not_run",
+      "compatible_work_ids": [
+        "W116 discovery",
+        "I Ching knowledge and retrieval Work"
+      ],
+      "constraints": [
+        "Reference data for names and hexagram structure; not a complete authoritative corpus of all commentaries.",
+        "Preserve original text, source edition and attribution when extending.",
+        "Separate classical source text, later commentary, modern interpretation and generated AI interpretation."
+      ]
     }
   ],
   "categories": [
@@ -325,6 +569,115 @@
     {
       "code": "RES-12",
       "name": "Security"
+    },
+    {
+      "code": "RES-13",
+      "name": "Public Administration & E-Government",
+      "subcategories": [
+        "administrative procedures",
+        "public services",
+        "legal documents",
+        "government portals"
+      ]
+    },
+    {
+      "code": "RES-14",
+      "name": "Legal & Regulatory",
+      "subcategories": [
+        "laws and decrees",
+        "effective dates",
+        "amendments",
+        "official gazette"
+      ]
+    },
+    {
+      "code": "RES-15",
+      "name": "Public Investment",
+      "subcategories": [
+        "public investment plans",
+        "projects",
+        "disbursement",
+        "monitoring and evaluation"
+      ]
+    },
+    {
+      "code": "RES-16",
+      "name": "Public Procurement",
+      "subcategories": [
+        "bidding notices",
+        "contractor selection",
+        "award decisions",
+        "procurement plans"
+      ]
+    },
+    {
+      "code": "RES-17",
+      "name": "Construction",
+      "subcategories": [
+        "construction regulations",
+        "project data",
+        "standards",
+        "construction activity"
+      ]
+    },
+    {
+      "code": "RES-18",
+      "name": "Construction Cost & Estimation",
+      "subcategories": [
+        "norms",
+        "material prices",
+        "labor prices",
+        "construction price indices"
+      ]
+    },
+    {
+      "code": "RES-19",
+      "name": "Health",
+      "subcategories": [
+        "health statistics",
+        "health facilities",
+        "health policy",
+        "public health"
+      ]
+    },
+    {
+      "code": "RES-20",
+      "name": "Public Statistics",
+      "subcategories": [
+        "national statistics",
+        "regional indicators",
+        "time series"
+      ]
+    },
+    {
+      "code": "RES-21",
+      "name": "Education",
+      "subcategories": [
+        "schools",
+        "teachers",
+        "students",
+        "education indicators"
+      ]
+    },
+    {
+      "code": "RES-22",
+      "name": "I Ching & Chinese Classics",
+      "subcategories": [
+        "64 hexagrams",
+        "classical texts",
+        "commentaries",
+        "trigram structures"
+      ]
+    },
+    {
+      "code": "RES-23",
+      "name": "Classical Texts & Humanities",
+      "subcategories": [
+        "Chinese classics",
+        "Vietnamese translations",
+        "text corpora",
+        "digital humanities"
+      ]
     }
   ]
 }
