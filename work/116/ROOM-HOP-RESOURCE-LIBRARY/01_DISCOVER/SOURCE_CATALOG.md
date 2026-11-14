@@ -12,7 +12,7 @@
 - Not useful for: Directly executing an API call, proving a provider is live, proving that an API is free, or granting an Agent permission.
 - Practical assessment: PASS as a source directory; NOT AN EXECUTABLE SERVICE.
 - Runtime test: NOT APPLICABLE to the repository itself. Individual entries are NOT TESTED until separately inspected/called in an authorized test.
-- Important caveat: MIT applies to the repository's own content. It does not replace each API provider's terms, license, pricing, privacy policy or usage limits.
+- Important caveat: MIT applies to the repository's own content. It does not replace each API provider's terms, license, pricing, authentication, privacy policy or usage limits.
 - Source freshness: Check the upstream README and provider docs when selecting a specific entry; do not assume the catalog entry is current.
 
 ## Selection rule
