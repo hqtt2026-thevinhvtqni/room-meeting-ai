@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "work_id": "116",
+  "catalog_name": "ROOM-HOP Shared Resource Catalog",
+  "last_updated": "2026-11-14",
+  "resources": [
+    {
+      "resource_id": "SRC-001",
+      "name": "public-apis",
+      "type": "discovery_directory",
+      "category": ["api-directory", "mcp-directory", "developer-resources"],
+      "purpose": "Discover public API and MCP server candidates by category.",
+      "canonical_url": "https://github.com/public-apis/public-apis",
+      "documentation_url": "https://github.com/public-apis/public-apis/blob/master/README.md",
+      "source_branch": "master",
+      "repository_license": "MIT",
+      "auth": "Not applicable to the directory; individual providers vary.",
+      "protocol_or_endpoint": "Git repository / Markdown catalog; not a callable API endpoint.",
+      "pricing_or_quota": "Not applicable to the directory; individual providers vary.",
+      "compatible_work_ids": ["ROOM-HOP-wide discovery; individual integrations must name their owning Work"],
+      "status": "discovery_directory",
+      "source_reachability": "pass",
+      "runtime_test": "not_applicable_to_directory",
+      "individual_entries_tested": false,
+      "constraints": [
+        "Catalog listing does not prove provider availability, safety, cost, license, or compatibility.",
+        "Repository MIT license does not replace individual provider terms.",
+        "Do not store credentials in W116."
+      ],
+      "last_checked": "2026-11-14"
+    }
+  ]
+}
