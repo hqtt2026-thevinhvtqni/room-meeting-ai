@@ -1,0 +1,17 @@
+# WORK MANIFEST
+- Work ID: 116
+- Work Name: ROOM-HOP-RESOURCE-LIBRARY
+- Vietnamese Name: KHO TÀI NGUYÊN DÙNG CHUNG ROOM-HOP
+- Status: ACTIVE — RESOURCE DISCOVERY AND CATALOG
+- Authority: Vinh
+- Executive Coordinator: Xu / AI-01
+- Canonical repository: hqtt2026-thevinhvtqni/room-meeting-ai
+- Canonical branch: main
+- Canonical path: work/116/ROOM-HOP-RESOURCE-LIBRARY/
+- Sandbox path: 116/ROOM-HOP-RESOURCE-LIBRARY/
+- Purpose: Evaluate practical usability of external resource sources and normalize useful APIs, MCP servers, SDKs, libraries, models and tools so ROOM-HOP Agents can discover them.
+- Scope: Resource source evaluation, concise records, category tags, usage links, access/auth notes, compatibility and test status.
+- Non-goal: W116 is not an API gateway, execution runtime, credential vault or automatic permission-grant system.
+- Current source: public-apis/public-apis — catalog source only; individual APIs/MCP servers require their own usage and runtime check.
+- Implementation: Catalog and documentation only. No external service credentials or production API integration.
+- GitHub main sync: IN PROGRESS; exact readback pending.
