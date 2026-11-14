@@ -16,6 +16,9 @@ W116 has dedicated finance classifications: RES-03 Finance & Investment, RES-04 
 ## Expanded resource domains
 W116 now classifies public administration/e-government, legal/regulatory, public investment, public procurement, construction and construction costs, health, education, I Ching and classical texts (RES-13 to RES-23). See the source catalog and filter `RESOURCE_CATALOG.json` by category. New entries GOV-001..002, PUB-001..002, CON-001..002, HLT-001, EDU-001 and ICH-001 are candidates; portal/API access and runtime status are explicitly distinguished.
 
+## Vietnam law and legal research
+Dedicated category RES-24 includes the National Law Portal, National Database of Legal Documents, Official Gazette, National Assembly, Supreme People's Court and treaty sources (LAW-001..LAW-006). Prefer official primary sources; verify exact document version, legal status, effective date and amendments. No public API is assumed unless separately verified.
+
 ## Current source
 - [public-apis/public-apis](01_DISCOVER/SOURCE_CATALOG.md) — useful discovery directory for public APIs and MCP server candidates.
 - It is a catalog, not a callable API or an automatic permission grant.
