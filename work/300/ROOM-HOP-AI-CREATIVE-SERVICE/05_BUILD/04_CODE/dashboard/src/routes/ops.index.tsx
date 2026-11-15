@@ -15,6 +15,19 @@ function Overview() {
   return (
     <>
       <PageHeader title="Tổng quan W300" sub="ROOM-HOP AI Creative Service · Dữ liệu minh họa / Demo data" />
+      <section aria-label="Trạng thái thực tế của Work" className="mb-6 surface border-primary/30 p-5">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div><div className="text-xs font-semibold uppercase tracking-wider text-primary">Trạng thái thực tế · Live facts</div><h2 className="mt-1 text-lg font-semibold">Nền tảng đang ở giai đoạn hoàn thiện dashboard</h2></div>
+          <span className="rounded-full border border-warning/40 bg-warning/10 px-2.5 py-1 text-xs font-medium text-warning">Chưa phát hành</span>
+        </div>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="rounded-lg bg-muted/50 p-3"><div className="text-xs text-muted-foreground">Mã nguồn</div><div className="mt-1 font-medium">GitHub · main</div><div className="text-xs text-muted-foreground">W300 canonical folder</div></div>
+          <div className="rounded-lg bg-muted/50 p-3"><div className="text-xs text-muted-foreground">CI dashboard</div><div className="mt-1 font-medium">Workflow đã cấu hình</div><div className="text-xs text-muted-foreground">Kết quả chạy đầu tiên chưa xác minh</div></div>
+          <div className="rounded-lg bg-muted/50 p-3"><div className="text-xs text-muted-foreground">MCP / AI providers</div><div className="mt-1 font-medium">Chưa kết nối</div><div className="text-xs text-muted-foreground">Không có tác vụ tạo ảnh/video thật</div></div>
+          <div className="rounded-lg bg-muted/50 p-3"><div className="text-xs text-muted-foreground">Nguồn số liệu bên dưới</div><div className="mt-1 font-medium">Demo data</div><div className="text-xs text-muted-foreground">Không phải tiến độ nghiệm thu</div></div>
+        </div>
+        <a href="https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/workflows/w300-dashboard-ci.yml" target="_blank" rel="noreferrer" className="mt-4 inline-flex text-sm font-medium text-primary underline-offset-4 hover:underline">Mở CI W300 trên GitHub ↗</a>
+      </section>
       <div className="mb-6 surface bg-hero p-6">
         <div className="flex items-center justify-between"><div className="text-xs text-muted-foreground">Giai đoạn hiện tại</div><DemoTag /></div>
         <div className="mt-1 flex flex-wrap items-center gap-3"><h2 className="text-xl font-semibold">{DEMO_PHASE.name}</h2><StatusBadge value={DEMO_PHASE.status} /></div>
