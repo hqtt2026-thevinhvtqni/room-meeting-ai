@@ -18,7 +18,7 @@ export class NotConnectedError extends Error {
 }
 
 export function gatewayUrl(): string | undefined {
-  const v = import.meta.env?.VITE_W300_GATEWAY_URL;
+  const v = import.meta.env?.["VITE_W300_GATEWAY_URL"];
   return v && v.length > 0 ? v : undefined;
 }
 

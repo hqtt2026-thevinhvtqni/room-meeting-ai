@@ -2,9 +2,12 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 import { demoJobs } from "./demo-data";
 import type { Job, Role } from "./types";
 
+/** Partial patch that also allows explicitly clearing optional fields (exactOptionalPropertyTypes). */
+export type JobPatch = { [K in keyof Job]?: Job[K] | undefined };
+
 interface Ctx {
   role: Role; setRole: (r: Role) => void;
-  jobs: Job[]; addJob: (j: Job) => void; updateJob: (id: string, p: Partial<Job>) => void;
+  jobs: Job[]; addJob: (j: Job) => void; updateJob: (id: string, p: JobPatch) => void;
   resetDemoJobs: () => void; hydrated: boolean;
 }
 const C = createContext<Ctx | null>(null);
