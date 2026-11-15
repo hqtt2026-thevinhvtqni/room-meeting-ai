@@ -83,3 +83,13 @@
 - Fix: removed the stray gitlink from main. Commit 4267052595e48b878ecaf7b2475c89558a8952aa — fix(w300): remove stray submodule gitlink room-meeting-ai breaking actions/checkout.
 - CI re-trigger: the fix commit touches no dashboard path, so a documentation/dashboard-README update in this same commit is used to trigger the workflow via its paths filter. New run evidence will be recorded in the next entry; no PASS is claimed before that run completes.
 - Status: PASS — CI failure diagnosed with run/annotation evidence; root cause removed from main. PENDING — next CI run outcome for typecheck/lint/tests/build.
+
+
+## 2026-11-15 — Entry 009 — Xu / AI-01 — CI run 4 evidence and TypeScript strict-mode fix
+- Scope: retrieve w300-dashboard-ci run 43677565968 (run number 4) evidence and fix the failure.
+- Method: GitHub Actions REST API via HTTP; job steps and check-run annotations; source re-read of tsconfig and changed files.
+- Evidence: run 4 on commit ed62a3af863a0f2159f7c231e0b23a498766c99d — Checkout source PASSED (confirms the stray gitlink removal in commit 4267052595e48b878ecaf7b2475c89558a8952aa fixed the checkout blocker), Set up Bun PASSED, Install locked dependencies PASSED, TypeScript check FAILED (exit 2, ~15s), ESLint/Unit tests/Production build SKIPPED. Job logs download requires admin rights (HTTP 403), so the exact compiler output could not be retrieved; diagnosis was done by source audit instead.
+- Root cause: dashboard tsconfig enables exactOptionalPropertyTypes. The retry action in app.jobs.tsx passed error: undefined into the optional Job.error property, which is a type error under that flag.
+- Fix: app.jobs.tsx retry handler now destructures the existing job and omits the error key instead of passing undefined. No behavior change; the job record simply keeps no error field after retry.
+- Journal note: Entry 006/007/008 source changes were committed but had never passed a full CI gate; this entry records the first observed step-level evidence (checkout/bun/install PASS, typecheck FAIL).
+- Status: PASS — run 4 evidence recorded, root cause fixed. PENDING — next CI run for typecheck/lint/tests/build outcomes.

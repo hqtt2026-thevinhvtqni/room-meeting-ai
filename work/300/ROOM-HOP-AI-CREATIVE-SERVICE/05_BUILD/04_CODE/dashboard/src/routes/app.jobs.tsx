@@ -32,7 +32,7 @@ function P() {
       <div className="mt-2 text-xs text-muted-foreground">ETA: {j.etaConfirmed ? "Đã xác nhận" : "Chưa xác nhận (ước tính)"}{j.retries > 0 ? ` · Lần thử lại: ${j.retries}` : ""}</div>
       {j.error && <p className="mt-2 text-sm text-destructive">{j.error}</p>}
       <div className="mt-3 flex flex-wrap gap-2">
-        {j.status === "FAILED" && <Button size="sm" variant="outline" onClick={() => { updateJob(j.id, { status: "QUEUED", retries: j.retries + 1, error: undefined, progress: 0 }); toast("Đã xếp lại hàng đợi (demo)"); }}>Thử lại</Button>}
+        {j.status === "FAILED" && <Button size="sm" variant="outline" onClick={() => { const { error: _ignored, ...rest } = j; updateJob(j.id, { ...rest, status: "QUEUED", retries: j.retries + 1, progress: 0 }); toast("Đã xếp lại hàng đợi (demo)"); }}>Thử lại</Button>}
         {(j.status === "QUEUED" || j.status === "RUNNING") && <Button size="sm" variant="ghost" onClick={() => { updateJob(j.id, { status: "CANCELLED", progress: 0 }); toast("Đã hủy job (demo)"); }}><XCircle />Hủy</Button>}
         {j.status === "FAILED" && <Button size="sm" variant="ghost" onClick={() => toast("Yêu cầu hỗ trợ đã ghi nhận (demo)")}>Yêu cầu hỗ trợ</Button>}
       </div>
