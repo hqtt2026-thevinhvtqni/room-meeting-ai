@@ -789,3 +789,35 @@ Xu approves three contract directions:
 - The earlier assistant's labels “WP-A0” and “WP-B0” were shorthand, not canonical Work package IDs. The controlling plan is WP0–WP7 in `WORK28_MASTER_EXECUTION_PLAN_V2.0.md`; no official package was created under those shorthand labels.
 
 **STATUS:** Q4 REVIEW COMPLETE / Q4 NOT APPROVED / WP3-F01 IMPLEMENTATION BLOCKED / EXECUTION GATE CLOSED.
+
+
+## 2026-11-15 13:07 UTC+07:00 — JRN-W28-020 — Ka independent WP2 service lifecycle and cleanup review
+
+**Người thực hiện:** Ka  
+**Chức danh:** Chief Security Architect (CSA) — Independent Architecture/Security Reviewer  
+**Priority:** P0  
+**Reviewed tree:** `8c9ff9d3a8f25faad03f0254954930de2031bedf`  
+**Evidence:** `06_EVIDENCE/KA_WP2_SERVICE_REGISTRY_CLEANUP_SECURITY_REVIEW_20261115.md`  
+**Evidence create commit:** `5f60ba8e607896a5de49958e5aa449b70154b66f`  
+**Evidence readback blob:** `df8d857b602fb4d0b5ff555b0714a53907d33d2d`
+
+### READ / TRACE
+- Read exact source blobs for ExecutionHost service registry, execute-command path, suspended-spawn process manager, cleanup bridge and WP2 test suites. Blob SHAs are recorded in the review artifact.
+- Static positive: Windows Job Object is created/configured before CREATE_SUSPENDED process creation; assignment precedes ResumeThread; assignment/resume failures abort without intentionally running user code; command and service paths share the spawn helper.
+- Native Windows marker tests exist for command/service success and assignment/resume failure. Ka did not execute these tests in this review.
+- Canonical JRN-W28-017 reports GitHub Actions run #327 SUCCESS on the reviewed code-bearing tree. Independent workflow/status lookups for full commit `8c9ff9d3a8f25faad03f0254954930de2031bedf` returned empty arrays in this session; run #327 is therefore recorded as journal-reported, not independently revalidated by Ka.
+
+### REVIEW FINDINGS
+- **WP2-SVC-01 HIGH:** `stop_service()` removes the registry entry before cleanup succeeds. If cleanup returns process_reaped=false, the handle is lost; a later call can incorrectly return STOPPED.
+- **WP2-SVC-02 HIGH:** `start_service()` overwrites an exited leader's ManagedProcess without draining possible surviving Job/process-group children.
+- **WP2-SVC-03 HIGH:** no per-service lock protects check → spawn → register; concurrent same-name starts can create duplicate processes and leave one untracked.
+- **WP2-EVID-04 HIGH:** `run_execute_command()` loses `JobObjectUnavailable.process_reaped` when spawn fails; `attested_cleanup(None)` then reports process_reaped=true/no_process even when abort was not confirmed.
+- Test gap: existing concurrency test covers direct spawn/cleanup, not shared ExecutionHost service registry, same-name start, stale-leader replacement or cleanup retry.
+- `ISOLATION_STATUS` remains NOT_VERIFIED; Job Object containment is not OS sandbox isolation.
+
+### DECISION / NEXT
+- **WP2 = PARTIAL / HIGH FINDINGS OPEN / NOT ACCEPTED.** Suspended-spawn design is statically positive; service registry and cleanup/evidence callers remain release blockers.
+- Vi to patch the four findings and add exact regression tests; An to independently test native Windows and Linux; Xu to retain WP2 open until acceptance evidence exists; Ka to review the exact patched blobs.
+- No tests run by Ka, no production listener touched, no code changed and no execution gate opened.
+
+**STATUS:** WP2 STATIC REVIEW COMPLETE / WP2 NOT ACCEPTED / EXECUTION GATE CLOSED.
