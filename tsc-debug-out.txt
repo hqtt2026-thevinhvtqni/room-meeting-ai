@@ -1,4 +1,0 @@
-src/lib/w300/adapter.ts(21,30): error TS4111: Property 'VITE_W300_GATEWAY_URL' comes from an index signature, so it must be accessed with ['VITE_W300_GATEWAY_URL'].
-src/routes/app.jobs.tsx(35,104): error TS2379: Argument of type '{ status: "QUEUED"; retries: number; error: undefined; progress: number; }' is not assignable to parameter of type 'Partial<Job>' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
-  Types of property 'error' are incompatible.
-    Type 'undefined' is not assignable to type 'string'.
