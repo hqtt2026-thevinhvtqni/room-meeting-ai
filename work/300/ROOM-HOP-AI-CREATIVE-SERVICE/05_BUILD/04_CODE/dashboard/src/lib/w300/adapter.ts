@@ -14,7 +14,10 @@ export interface W300Service {
 }
 
 export class NotConnectedError extends Error {
-  constructor() { super("W300 backend/MCP chưa kết nối (not connected)"); this.name = "NotConnectedError"; }
+  constructor() {
+    super("W300 backend/MCP chưa kết nối (not connected)");
+    this.name = "NotConnectedError";
+  }
 }
 
 export function gatewayUrl(): string | undefined {
@@ -25,7 +28,13 @@ export function gatewayUrl(): string | undefined {
 /** Disconnected adapter: every live call rejects safely. */
 export const liveService: W300Service = {
   connected: false,
-  async listJobs() { throw new NotConnectedError(); },
-  async submitJob() { throw new NotConnectedError(); },
-  async checkIntegrations() { throw new NotConnectedError(); },
+  async listJobs() {
+    throw new NotConnectedError();
+  },
+  async submitJob() {
+    throw new NotConnectedError();
+  },
+  async checkIntegrations() {
+    throw new NotConnectedError();
+  },
 };

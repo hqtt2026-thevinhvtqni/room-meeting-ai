@@ -84,7 +84,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "W300 — ROOM-HOP AI Creative Service" },
-      { name: "description", content: "W300: AI image & video production portal and ROOM-HOP operations dashboard (demo)." },
+      {
+        name: "description",
+        content:
+          "W300: AI image & video production portal and ROOM-HOP operations dashboard (demo).",
+      },
       { property: "og:title", content: "W300 — ROOM-HOP AI Creative Service" },
       { property: "og:description", content: "AI image & video production portal (demo)." },
       { property: "og:type", content: "website" },
@@ -97,7 +101,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Sora:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Sora:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap",
+      },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),

@@ -5,7 +5,9 @@ import { RoleGate } from "@/components/w300/guard";
 import { canAccessOps } from "@/lib/w300/rules";
 
 export const Route = createFileRoute("/ops")({
-  head: () => ({ meta: [{ title: "Ops — W300 ROOM-HOP" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({
+    meta: [{ title: "Ops — W300 ROOM-HOP" }, { name: "robots", content: "noindex" }],
+  }),
   component: OpsLayout,
 });
 
@@ -20,8 +22,13 @@ const nav = [
 
 function OpsLayout() {
   return (
-    <RoleGate allow={canAccessOps} message="Khu vực Ops chỉ dành cho vai trò nội bộ ROOM-HOP. Tài khoản khách hàng không thể truy cập.">
-      <AppShell nav={nav} sub="Internal Operations"><Outlet /></AppShell>
+    <RoleGate
+      allow={canAccessOps}
+      message="Khu vực Ops chỉ dành cho vai trò nội bộ ROOM-HOP. Tài khoản khách hàng không thể truy cập."
+    >
+      <AppShell nav={nav} sub="Internal Operations">
+        <Outlet />
+      </AppShell>
     </RoleGate>
   );
 }

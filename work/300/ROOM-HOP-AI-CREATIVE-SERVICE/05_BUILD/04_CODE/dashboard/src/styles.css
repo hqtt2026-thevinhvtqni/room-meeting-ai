@@ -118,7 +118,17 @@
   --sidebar-border: oklch(0.26 0.03 268);
   --sidebar-ring: oklch(0.66 0.21 285);
   --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-glow));
-  --gradient-hero: radial-gradient(1200px 500px at 15% -10%, color-mix(in oklab, var(--primary) 35%, transparent), transparent 60%), radial-gradient(900px 400px at 100% 0%, color-mix(in oklab, var(--primary-glow) 25%, transparent), transparent 60%);
+  --gradient-hero:
+    radial-gradient(
+      1200px 500px at 15% -10%,
+      color-mix(in oklab, var(--primary) 35%, transparent),
+      transparent 60%
+    ),
+    radial-gradient(
+      900px 400px at 100% 0%,
+      color-mix(in oklab, var(--primary-glow) 25%, transparent),
+      transparent 60%
+    );
   --shadow-glow: 0 10px 40px -12px color-mix(in oklab, var(--primary) 55%, transparent);
 }
 
@@ -134,12 +144,40 @@
 }
 
 @layer base {
-  h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.02em; }
-  body { font-family: var(--font-sans); }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+  body {
+    font-family: var(--font-sans);
+  }
 }
-@utility bg-gradient-primary { background-image: var(--gradient-primary); }
-@utility bg-hero { background-image: var(--gradient-hero); }
-@utility shadow-glow { box-shadow: var(--shadow-glow); }
-@utility text-gradient { background-image: var(--gradient-primary); -webkit-background-clip: text; background-clip: text; color: transparent; }
-@utility surface { background: color-mix(in oklab, var(--card) 85%, transparent); border: 1px solid var(--border); border-radius: var(--radius-xl); }
-@utility demo-stripes { background-image: repeating-linear-gradient(135deg, color-mix(in oklab, var(--warning) 18%, transparent) 0 10px, transparent 10px 20px); }
+@utility bg-gradient-primary {
+  background-image: var(--gradient-primary);
+}
+@utility bg-hero {
+  background-image: var(--gradient-hero);
+}
+@utility shadow-glow {
+  box-shadow: var(--shadow-glow);
+}
+@utility text-gradient {
+  background-image: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+@utility surface {
+  background: color-mix(in oklab, var(--card) 85%, transparent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+}
+@utility demo-stripes {
+  background-image: repeating-linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--warning) 18%, transparent) 0 10px,
+    transparent 10px 20px
+  );
+}
