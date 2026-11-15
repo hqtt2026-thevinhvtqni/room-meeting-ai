@@ -277,3 +277,18 @@ Sau khi ghi nhật ký, Vi đã thực hiện read-probe độc lập:
 - **Status:** FEATURE BRANCH DOCUMENTATION SYNC = PASS; source/runtime synchronization and Work 102 acceptance/release remain NOT VERIFIED / NOT ACCEPTED / NOT RELEASED.
 
 [KÝ: VI | CODER]
+
+
+## W102-LOG-20261115-01 — WP1 owner-contract and lifecycle alignment trace
+- **Date:** 2026-11-15 (UTC+07:00)
+- **Role:** Vi — CODER
+- **Action:** Continued WP1 read-only trace. Re-read W70 DOC-005, DOC-042, DOC-043 and DOC-044; W112 DOC-001 v1.0/v1.1 draft; W37 Core scope/mirror rule; W38 Gateway requirements/mirror role; W39 Build MCP mirror role; W14 restoration addendum 2; and W102 DOC-013/DOC-065.
+- **Findings:** W70 defines Work/WP/gate/assignment governance semantics but its documents do not prove live Core API enforcement. W112 remains DRAFT / NOT APPROVED FOR RUNTIME ENFORCEMENT. W37/38/39 are evidence workspaces, not runtime attestations. W14 current HostPort open/stop/cancel binding remains NOT VERIFIED. Existing W28 Core Authority branch findings remain source-level and are not proof of canonical Core :8000 integration.
+- **State separation:** Explicitly preserve Work/WP lifecycle, assignment lifecycle, W52 A2A transport/task state, W102 Agent Loop execution state, acceptance verdict and Host process state as distinct dimensions.
+- **Artifact:** Created `AI-AGENT-LOOP-PRODUCTION-READINESS/05_BUILD/03_ARCHITECTURE/DOC-066_WP1_OWNER-CONTRACT-TRACE_AND-LIFECYCLE-ALIGNMENT.md` in Work 102 Sandbox. It records owner-aligned mapping, exact WP1 exit evidence WP1-E01..E08, limitations and next owner actions.
+- **GitHub search limitation:** Scoped default-branch code searches for generic task/assignment symbols did not return direct results for the exact terms queried. This is not proof of repository-wide or runtime absence.
+- **Change boundary:** No code/test/runtime edits, no live Core/Gateway/Host calls, no provider invocation, no Work 51/52/112/37/38/39/14 mutation, no GitHub write, no merge/deploy/release.
+- **Result:** WP1 trace UPDATED; WP1 remains BLOCKED / DESIGN ONLY. WP0 PARTIAL; WP2–WP7 NOT RUN / NOT VERIFIED; Work 102 NOT ACCEPTED / NOT RELEASED.
+- **Next:** Xu/component owners to provide named Core owner and approved Core schema/authority evidence; W52 owner to approve A2A version; W14 owner to verify HostPort; W33/Core to confirm evidence storage contract. Then revise DOC-065 and define compatibility tests against approved schemas.
+- **Signature:** [KÝ: VI | CODER]
+

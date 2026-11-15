@@ -101,3 +101,5 @@ Decision W102-DEC-008 is appended to DOC-006; execution record W102-LOG-20261112
 | DOC-064 | P1 | 19 | 05_BUILD/00_ROOT/DOC-064_WP0_PROVENANCE-REGISTER_WORK51_WORK52_WORK102.md | WP0 inventory, GitHub branch refs and candidate provenance for W51/W52/W102 | ACTIVE — WP0 PARTIAL; read-back verified |
 
 | DOC-065 | P1 | 20 | 05_BUILD/03_ARCHITECTURE/DOC-065_WP1_CONTRACT-COMPATIBILITY-MAPPING_DRAFT.md | Draft field mapping W51 WorkContract / W52 A2A task-event / W102 Agent Loop to Core-owned contract | DRAFT — Core mapping NOT VERIFIED; not approved |
+
+| DOC-066 | 05_BUILD/03_ARCHITECTURE/DOC-066_WP1_OWNER-CONTRACT-TRACE_AND-LIFECYCLE-ALIGNMENT.md | WP1 owner-contract trace and W70 lifecycle alignment supplement | Vi | 2026-11-15 | TRACE UPDATED / DESIGN ONLY / WP1 BLOCKED |
