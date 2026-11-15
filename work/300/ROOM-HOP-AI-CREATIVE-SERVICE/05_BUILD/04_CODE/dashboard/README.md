@@ -34,4 +34,4 @@ Run commands from this directory. Do not run production deployment before Work a
 - No credentials or provider keys belong in browser code or Git.
 
 ## Backend contract TODOs
-See W300 canonical docs at ../../../../00_ROOT and roadmap at ../../../../04_PLAN. Backend work is gated by architecture and security review.
+See W300 canonical docs at ../../../00_ROOT and roadmap at ../../../04_PLAN. Backend work is gated by architecture and security review.
