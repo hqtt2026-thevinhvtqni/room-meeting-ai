@@ -42,14 +42,36 @@ jobs:
       - name: Install locked dependencies
         run: bun install --frozen-lockfile
 
+      # Diagnostics: on failure, mirror the tool output into the job summary so the
+      # exact errors are publicly viewable (job logs download requires admin rights).
       - name: TypeScript check
-        run: bunx tsc --noEmit
+        run: |
+          set -o pipefail
+          if ! bunx tsc --noEmit 2>&1 | tee tsc.log; then
+            { echo "## w300 typecheck (tsc --noEmit)"; echo '```'; cat tsc.log; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
 
       - name: ESLint
-        run: bun run lint
+        run: |
+          set -o pipefail
+          if ! bun run lint 2>&1 | tee lint.log; then
+            { echo "## w300 eslint output"; echo '```'; cat lint.log; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
 
       - name: Unit tests
-        run: bun run test
+        run: |
+          set -o pipefail
+          if ! bun run test 2>&1 | tee vitest.log; then
+            { echo "## w300 vitest output"; echo '```'; cat vitest.log; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
 
       - name: Production build
-        run: bun run build
+        run: |
+          set -o pipefail
+          if ! bun run build 2>&1 | tee build.log; then
+            { echo "## w300 build output"; echo '```'; tail -c 4000 build.log; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
