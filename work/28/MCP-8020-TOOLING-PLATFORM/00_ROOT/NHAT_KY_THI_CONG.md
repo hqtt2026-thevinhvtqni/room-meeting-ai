@@ -821,3 +821,36 @@ Xu approves three contract directions:
 - No tests run by Ka, no production listener touched, no code changed and no execution gate opened.
 
 **STATUS:** WP2 STATIC REVIEW COMPLETE / WP2 NOT ACCEPTED / EXECUTION GATE CLOSED.
+
+
+## 2026-11-15 21:36 UTC+07:00 — JRN-W28-021 — Ka independent WP0 MCP :8030 provenance reconciliation
+
+**Người thực hiện:** Ka  
+**Chức danh:** Chief Security Architect (CSA) — Independent Architecture/Security Reviewer  
+**Priority:** P0 — Source/runtime provenance gate  
+**Inspected branch HEAD:** `9a19d6df9a2a7bb122817d65df90426b48b57116`  
+**Evidence:** `06_EVIDENCE/KA_WP0_MCP8030_PROVENANCE_RECONCILIATION_20261115.md`  
+**Evidence create commit:** `c26fb9ea2a525e0c34b7a2ed1e2c1e84a054c188`  
+**Evidence readback blob:** `e69dbc57651bd5d76c1a9ce82e5b69fc0741c84f`
+
+### READ / TRACE
+- Read the canonical Manifest, Master Execution Plan V2.0, current Work journal, historical 18-tool inventory, v54 contract catalog, v54 catalog/service/server source, unified 31-tool registry/server factory and Sandbox v54 provider source.
+- Pinned exact source blob SHAs in the review artifact.
+- Read-only connected Build MCP calls returned service label `room-hop-build` version `1.0`; structure reports eight Sandbox capabilities; Work listing returned 66 Work entries.
+- These helper-call outputs are not raw protocol-level `tools/list`, do not include full schemas, and do not identify the exact Work 28 deployment process/build. No raw tools/list response or source-to-runtime attestation was available in the connected tool surface.
+
+### FINDINGS
+- **WP0-PROV-01 HIGH:** branch contains three incompatible registry generations: historical 18 legacy names, 54-tool v54 draft catalog and 31-tool unified registry. Names and schemas differ; no evidence selects one as the current deployed :8030 registry.
+- **WP0-PROV-02 HIGH:** v54 and unified MCP server factories explicitly do not open listeners; source existence does not prove either factory is used by the running Build MCP.
+- **WP0-PROV-03 MEDIUM:** current connected Build MCP reports eight capabilities, but this is not a raw MCP tools/list response and does not establish deployed source/build identity.
+- **WP0-PROV-04 MEDIUM:** listing 66 Sandbox Works proves enumeration only, not Core authorization, Work mapping or isolation.
+- **WP0-PROV-05 HIGH (WP3-F01):** reviewed 31-tool registry and v54 catalog/provider do not contain the approved binary upload capability/session contract; existing Sandbox write/append paths are text-oriented.
+
+### DECISION / NEXT
+- **WP0 = PARTIAL / BLOCKED; G0 remains OPEN.** No deployed :8030 provenance PASS or tools/list parity PASS is issued.
+- Xu/Vi must identify the intended deployment and canonical registry version, then capture raw tools/list schemas + response digest and bind them to the exact running service/build identity.
+- An must independently reproduce protocol-level discovery and schema digest against that identified target.
+- Ka will re-review exact pinned deployment and registry evidence.
+- Historical MCP :8020 remains DO NOT USE. No probe, restart or modification occurred. No tests were run; no code/runtime configuration changed; Execution Gate remains CLOSED.
+
+**STATUS:** WP0 SOURCE INVENTORY PARTIAL / LIVE PROVENANCE BLOCKED / G0 OPEN / WORK NOT RELEASED.
