@@ -1,4 +1,5 @@
 import json
+import sys
 from pathlib import Path
 
 from wee.authority import CanonicalWorkAuthority
@@ -23,7 +24,7 @@ def test_work13_real_host_e2e(tmp_path):
         "runtime":{},
         "browser":{},
         "test_entrypoint":[
-            "python.exe","-c",
+            sys.executable,"-c",
             "print('W13_WEE_TEST_PASS')"
         ],
         "ci_target":{},
