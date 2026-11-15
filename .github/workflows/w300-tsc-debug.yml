@@ -45,7 +45,7 @@ jobs:
           echo "TSC_EXIT=$code" >> "$GITHUB_ENV"
 
       - name: Commit tsc output as evidence
-        if: env.TSC_EXIT == '0'
+        if: always()
         run: |
           cd "$GITHUB_WORKSPACE"
           echo "TSC CLEAN" > tsc-debug-out.txt
