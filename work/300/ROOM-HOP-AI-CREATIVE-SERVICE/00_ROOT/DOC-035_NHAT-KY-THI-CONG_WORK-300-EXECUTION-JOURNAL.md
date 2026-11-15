@@ -35,3 +35,14 @@
 - Exact readback: DOC-001, DOC-035, package.json, demo-data.ts and adapter.ts fetched successfully; demo-data imports SVG placeholders and uses an explicit Gate tuple type. Git ref and directory listings returned expected W300 paths.
 - Status: PASS — GitHub main write and structural/readback verification. NOT RUN — npm/bun install, typecheck, lint, unit tests, production build and browser E2E. No deployment or public release.
 - Next: use a controlled local/CI runtime to run the test/build suite and fix any remaining errors. Native Lovable bidirectional GitHub connection remains unconfigured; source of truth for this Work is the nested W300 directory on ROOM-HOP main.
+
+
+## 2026-11-15 — Entry 004 — Xu / AI-01 — W300 dashboard CI foundation
+- Scope: establish repeatable GitHub Actions verification for the isolated W300 dashboard source.
+- Pre-check: re-read DOC-001, DOC-035, dashboard package.json, README, tsconfig, Vite/Vitest configs, Bun config and the existing Work 70 workflow. Confirmed Bun lockfile and available lint/test/build scripts; TypeScript compiler is installed as a dev dependency. Existing repository workflow was Work 70-specific; no W300 dashboard CI existed.
+- Change: added .github/workflows/w300-dashboard-ci.yml on main. Triggers on W300 dashboard changes, pull requests touching the dashboard, and manual dispatch. Minimal permission: contents: read; concurrency cancels superseded runs; action references are pinned to commit SHAs. Pipeline steps: Bun 1.3.14 setup, frozen-lockfile install, TypeScript no-emit check, ESLint, Vitest unit tests, production build.
+- GitHub commit: 6efa49d69a46cd2d604182a703a7a74932f55981.
+- Verification at journal update time: workflow file write acknowledged by GitHub. Workflow execution result has NOT YET BEEN OBSERVED; do not mark typecheck/lint/tests/build PASS until run evidence is retrieved.
+- Safety: workflow only checks the frontend prototype. No secrets, deployment, provider calls, public MCP exposure or backend implementation.
+- Status: PASS — CI workflow definition committed. PENDING — first workflow run and all build/test outcomes.
+- Next: verify workflow file and journal readback; inspect the first GitHub Actions run and diagnose any failures before making source changes.
