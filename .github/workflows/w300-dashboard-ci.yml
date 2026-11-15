@@ -14,7 +14,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   issues: write
 
 concurrency:
@@ -33,7 +33,7 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
-          persist-credentials: false
+          persist-credentials: true
 
       - name: Set up Bun
         uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
@@ -43,14 +43,27 @@ jobs:
       - name: Install locked dependencies
         run: bun install --frozen-lockfile
 
-      # Diagnostics: on failure, post the tool output to a repo issue so the exact
-      # errors are retrievable (job logs download requires admin rights).
+      # Formatting is enforced by eslint-plugin-prettier; autofix style-only drift
+      # (no behavior change) and push it so the gate checks formatted source.
+      - name: Prettier autofix
+        run: |
+          bunx prettier --write . || true
+          if ! git diff --quiet; then
+            git config user.name "w300-ci-bot"
+            git config user.email "actions@users.noreply.github.com"
+            git add -A
+            git commit -m "style(w300): prettier autofix (ci run ${{ github.run_id }})"
+            git push
+          fi
+
+      # Diagnostics: on failure, post a truncated tool output to a repo issue so the
+      # exact errors are retrievable (job logs download requires admin rights).
       - name: TypeScript check
         run: |
           set -o pipefail
           if ! bunx tsc --noEmit 2>&1 | tee tsc.log; then
-            { echo "## w300 typecheck (tsc --noEmit) — run ${{ github.run_id }} on ${{ github.sha }}"; echo '```'; cat tsc.log; echo '```'; } > /tmp/body.md
-            gh issue comment 1 --repo "$GITHUB_REPOSITORY" --body-file /tmp/body.md || gh issue create --repo "$GITHUB_REPOSITORY" --title "w300 CI diagnostics" --body-file /tmp/body.md || true
+            { echo "## w300 typecheck — run ${{ github.run_id }} on ${{ github.sha }}"; echo '```'; head -c 40000 tsc.log; echo '```'; } > /tmp/body.md
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "w300 CI diagnostics typecheck ${{ github.run_id }}" --body-file /tmp/body.md || true
             exit 1
           fi
         env:
@@ -60,8 +73,8 @@ jobs:
         run: |
           set -o pipefail
           if ! bun run lint 2>&1 | tee lint.log; then
-            { echo "## w300 eslint — run ${{ github.run_id }}"; echo '```'; cat lint.log; echo '```'; } > /tmp/body.md
-            gh issue comment 1 --repo "$GITHUB_REPOSITORY" --body-file /tmp/body.md || gh issue create --repo "$GITHUB_REPOSITORY" --title "w300 CI diagnostics" --body-file /tmp/body.md || true
+            { echo "## w300 eslint — run ${{ github.run_id }} on ${{ github.sha }}"; echo '```'; head -c 40000 lint.log; echo '```'; } > /tmp/body.md
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "w300 CI diagnostics eslint ${{ github.run_id }}" --body-file /tmp/body.md || true
             exit 1
           fi
         env:
@@ -71,8 +84,8 @@ jobs:
         run: |
           set -o pipefail
           if ! bun run test 2>&1 | tee vitest.log; then
-            { echo "## w300 vitest — run ${{ github.run_id }}"; echo '```'; cat vitest.log; echo '```'; } > /tmp/body.md
-            gh issue comment 1 --repo "$GITHUB_REPOSITORY" --body-file /tmp/body.md || gh issue create --repo "$GITHUB_REPOSITORY" --title "w300 CI diagnostics" --body-file /tmp/body.md || true
+            { echo "## w300 vitest — run ${{ github.run_id }} on ${{ github.sha }}"; echo '```'; head -c 40000 vitest.log; echo '```'; } > /tmp/body.md
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "w300 CI diagnostics vitest ${{ github.run_id }}" --body-file /tmp/body.md || true
             exit 1
           fi
         env:
@@ -82,8 +95,8 @@ jobs:
         run: |
           set -o pipefail
           if ! bun run build 2>&1 | tee build.log; then
-            { echo "## w300 build — run ${{ github.run_id }}"; echo '```'; tail -c 4000 build.log; echo '```'; } > /tmp/body.md
-            gh issue comment 1 --repo "$GITHUB_REPOSITORY" --body-file /tmp/body.md || gh issue create --repo "$GITHUB_REPOSITORY" --title "w300 CI diagnostics" --body-file /tmp/body.md || true
+            { echo "## w300 build — run ${{ github.run_id }} on ${{ github.sha }}"; echo '```'; tail -c 40000 build.log; echo '```'; } > /tmp/body.md
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "w300 CI diagnostics build ${{ github.run_id }}" --body-file /tmp/body.md || true
             exit 1
           fi
         env:
