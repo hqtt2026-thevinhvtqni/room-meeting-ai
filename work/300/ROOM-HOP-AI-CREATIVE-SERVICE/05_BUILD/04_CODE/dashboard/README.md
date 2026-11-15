@@ -39,3 +39,5 @@ See W300 canonical docs at ../../../00_ROOT and roadmap at ../../../04_PLAN. Bac
 ## Build & verify (W300 CI)
 
 CI workflow: `.github/workflows/w300-dashboard-ci.yml` (Bun install → tsc --noEmit → ESLint → Vitest → production build). All current data remains demo-only; no provider, storage or billing is connected.
+
+CI status: typecheck/lint/tests/build verified by w300-dashboard-ci run evidence (see DOC-035 Entry 009).
