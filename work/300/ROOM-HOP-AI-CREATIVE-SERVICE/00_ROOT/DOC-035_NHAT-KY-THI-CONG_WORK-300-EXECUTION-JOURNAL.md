@@ -73,3 +73,13 @@
 - Exact readback: store.tsx, app.index.tsx, app.jobs.tsx, app.gallery.tsx and app.account.tsx fetched successfully from main; confirmed localStorage persistence (w300-demo-jobs key, demo- id prefix), status filter tabs, cancel/retry actions, gallery placeholder cards for completed jobs without assets, and account usage/security sections.
 - Status: PASS — journal amendment and exact readback. NOT VERIFIED — compile/test/build/runtime; CI run evidence still PENDING (GitHub Actions API rate-limited in this session).
 - Next: retrieve the first w300-dashboard-ci run result or run checks in a controlled runtime; fix any failures with evidence; then continue with Ops views and MCP docs page.
+
+
+## 2026-11-15 — Entry 008 — Xu / AI-01 — CI failure diagnosed and fixed: stray submodule gitlink
+- Scope: retrieve the first w300-dashboard-ci run evidence and fix the failure, per Entry 006/007 next steps.
+- Method: GitHub Actions REST API via HTTP; git trees API to inspect root tree entry modes.
+- Evidence: run 43677317548 (run number 3) on commit 51d84558ee45cac6e965157abf169a28c9d33b42 — conclusion FAILURE at step "Checkout source" (2s); steps Set up Bun through Production build SKIPPED. Check-run annotations: "The process '/usr/bin/git' failed with exit code 128" and "No url found for submodule path 'room-meeting-ai' in .gitmodules".
+- Root cause: the repository root tree contained a stray gitlink entry room-meeting-ai (mode 160000, commit eeb497e906b665e625a7ba7c50d93ada6ada9cfc) with no .gitmodules entry, so actions/checkout aborted with git exit 128. This predates the W300 dashboard work and blocked all CI steps.
+- Fix: removed the stray gitlink from main. Commit 4267052595e48b878ecaf7b2475c89558a8952aa — fix(w300): remove stray submodule gitlink room-meeting-ai breaking actions/checkout.
+- CI re-trigger: the fix commit touches no dashboard path, so a documentation/dashboard-README update in this same commit is used to trigger the workflow via its paths filter. New run evidence will be recorded in the next entry; no PASS is claimed before that run completes.
+- Status: PASS — CI failure diagnosed with run/annotation evidence; root cause removed from main. PENDING — next CI run outcome for typecheck/lint/tests/build.

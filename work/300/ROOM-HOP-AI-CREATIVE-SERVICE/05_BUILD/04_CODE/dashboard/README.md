@@ -35,3 +35,7 @@ Run commands from this directory. Do not run production deployment before Work a
 
 ## Backend contract TODOs
 See W300 canonical docs at ../../../00_ROOT and roadmap at ../../../04_PLAN. Backend work is gated by architecture and security review.
+
+## Build & verify (W300 CI)
+
+CI workflow: `.github/workflows/w300-dashboard-ci.yml` (Bun install → tsc --noEmit → ESLint → Vitest → production build). All current data remains demo-only; no provider, storage or billing is connected.
