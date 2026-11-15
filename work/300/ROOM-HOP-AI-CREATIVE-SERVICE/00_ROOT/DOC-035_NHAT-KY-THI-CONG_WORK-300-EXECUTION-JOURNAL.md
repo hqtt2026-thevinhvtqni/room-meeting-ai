@@ -64,3 +64,12 @@
 - Verification: commit acknowledged by GitHub with main ref readback 51d84558ee45cac6e965157abf169a28c9d33b42. Typecheck, lint, unit tests, production build and browser E2E remain NOT RUN in this step. GitHub Actions API was rate-limited during this session, so the first w300-dashboard-ci run result still could not be observed.
 - Status: PASS — source change committed with ref readback. NOT VERIFIED — compile/test/build/runtime. CI run evidence PENDING.
 - Next: retrieve the first w300-dashboard-ci run result (or run checks in a controlled runtime), fix any failures with evidence, then continue with Ops views and MCP docs page.
+
+
+## 2026-11-15 — Entry 007 — Xu / AI-01 — Journal amendment and dashboard readback verification
+- Scope: re-record and verify Entry 006 after Vinh asked to re-write the journal ("tiếp ghi nhật ký lại").
+- Method: fetched main ref and exact-fetched DOC-035, plus the five dashboard files changed in Entry 006, from main.
+- Evidence: immediately before this amendment, main ref = 30cb61cc1b0882f50b278ff92841228014292845; Entry 006 present in DOC-035 with commit 51d84558ee45cac6e965157abf169a28c9d33b42 recorded.
+- Exact readback: store.tsx, app.index.tsx, app.jobs.tsx, app.gallery.tsx and app.account.tsx fetched successfully from main; confirmed localStorage persistence (w300-demo-jobs key, demo- id prefix), status filter tabs, cancel/retry actions, gallery placeholder cards for completed jobs without assets, and account usage/security sections.
+- Status: PASS — journal amendment and exact readback. NOT VERIFIED — compile/test/build/runtime; CI run evidence still PENDING (GitHub Actions API rate-limited in this session).
+- Next: retrieve the first w300-dashboard-ci run result or run checks in a controlled runtime; fix any failures with evidence; then continue with Ops views and MCP docs page.
