@@ -38,8 +38,20 @@ export function W300Provider({ children }: { children: ReactNode }) {
   return (
     <C.Provider value={{ role, setRole, jobs, hydrated,
       addJob: (j) => setJobs((s) => [j, ...s]),
-      updateJob: (id, p) => setJobs((s) => s.map((j) => (j.id === id ? { ...j, ...p, updatedAt: new Date().toISOString() } : j))),
-      resetDemoJobs: () => setJobs(demoJobs) }}>
+      // Apply patch key-by-key: spreading JobPatch into Job would type every optional
+      // prop as "T | undefined", which violates exactOptionalPropertyTypes on Job.
+      updateJob: (id, p) => setJobs((s) => s.map((j) => {
+        if (j.id !== id) return j;
+        const next: Job = { ...j, updatedAt: new Date().toISOString() };
+        for (const key of Object.keys(p) as Array<keyof Job>) {
+          const v = p[key];
+          if (v === undefined) delete (next as unknown as Record<string, unknown>)[key];
+          else (next as unknown as Record<string, unknown>)[key] = v;
+        }
+        return next;
+      })),
+      resetDemoJobs: () => setJobs(
+demoJobs) }}>
       {children}
     </C.Provider>
   );
