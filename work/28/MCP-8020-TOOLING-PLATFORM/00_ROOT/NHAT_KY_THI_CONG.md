@@ -752,3 +752,40 @@ Xu approves three contract directions:
 4. Sync this canonical journal revision to Sandbox and verify exact readback.
 
 **STATUS:** GITHUB PYTEST LANE ENABLED / 348 PYTEST PASSED / RUN #337 SUCCESS / WORK 28 NOT RELEASED.
+
+
+## 2026-11-15 13:07 UTC+07:00 — JRN-W28-019 — Ka independent Q4 capability-grant review
+
+**Người thực hiện:** Ka  
+**Chức danh:** Chief Security Architect (CSA) — Independent Architecture/Security Reviewer  
+**Priority:** P0  
+**Scope:** Xu decision XU-W28-WP3-F01-DEC-20261113-01, Q4 — Core capability-grant semantics for W28-WP3-F01 `sandbox_upload_file`.
+
+### READ / TRACE
+- Read canonical Xu decision record, Vi upload authorization proposal and source trace, Core Execution Authority V1.2 proposal, Core authority implementation, HTTP surface, append-only store, Execution Host grant client/dispatch and related tests.
+- Review artifact: `06_EVIDENCE/KA_WP3_F01_Q4_CAPABILITY_GRANT_SECURITY_REVIEW_20261115.md`.
+- Review artifact GitHub commit: `89244da15a7b56de5df67345110f45cd1eeaf6c5`; pinned-revision update commit: `446242dbeb8562d96889df25d254cf5d22677a4f`; final report blob SHA: `268ae8ec4d96c442b7e61bae4f83c5c6294b36d8`.
+- Reviewed exact source blobs include: Xu decision `8dbd82b69b4c295626ab5fb101c28b9bb0b6195e`; Vi proposal `b957eba4fce949bfdfba56ba8da9dd71d9bfc29`; Vi source trace `fb4a95a49214b54c5c28407179860999f5bf7a16`; Core authority contract V1.2 `80199539afc45022980a481e1bc81b8aed160096`; authority implementation `bfb052fed0fde69767dd219f17a0b14ae6383560`; Core HTTP `6363c277ce410d3f5465f449b730199e06e5024c`; store `a628dc578c68c05bb875318d1b74528b26f0e4eb`; Host grant client `75b28b49a8d2ce7561d722519af293d00fac13aa`; Execution Host server `87644127a9a2df638b5677758cfc4d0c883b2985`.
+- Branch HEAD was not independently pinned by the available connector operation. Findings are bound to the listed file blob SHAs, not asserted as an immutable branch-wide snapshot.
+
+### REVIEW RESULT
+- **Q4 = NOT APPROVED / BLOCKED.** No complete upload-specific capability-grant schema exists in the reviewed revision.
+- Core Execution Authority V1.2 is an execution-grant proposal, explicitly NOT APPROVED / NOT IMPLEMENTED / NOT WIRED; it is not an upload capability contract and must not be silently reused.
+- Gaps: no explicit capability/operation allow-list, normalized destination scope binding, grant/session mapping-version binding, atomic quota reservation, defined TTL relationship, upload-session revocation, replay/idempotency semantics, per-operation reauthorization/state checks, or durable audit ordering.
+- Adjacent P0 risks recorded separately: Core grant client can select local FileGrantSource fallback when Core URL is absent or fetch fails; Execution Host command mode remains available unless snapshot_only is enabled and uses static token/Work allow-list rather than proof of a Core-issued upload grant. These do not get fixed by Q4 approval.
+- The Core authority test docstring calls DR-1..DR-4 “approved decision requests”, while the V1.2 contract explicitly remains NOT APPROVED awaiting Vinh. This is a documentation/provenance contradiction, not evidence of approval.
+- No code was changed; no test or live service was run; no upload tool, staging, filesystem write, grant issuance or execution gate was enabled.
+
+### DECISION / NEXT
+- Ka does not approve Q4 on the current revision. Xu must record Q4 as NOT APPROVED and request a revised versioned upload-capability contract from Vi.
+- Vi to revise grant schema/state machine and defect-to-test matrix; no WP3-F01 implementation until Xu records a subsequent Q4 decision.
+- An to independently review the revised test plan after contract revision; no acknowledgement or execution is assumed.
+- Ka to re-review exact revised blob SHAs before Q4 can be reconsidered.
+- Work 28 remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED.
+
+### RECORD CORRECTIONS
+- The previous assistant turn incorrectly appended an entry named `W28-JRN-20261103-01` to the legacy `06_EVIDENCE/NHAT_KY_THI_CONG.md`, using an incorrect date/time and incorrectly naming Co in the active role assignment. That entry is NOT a canonical Work-wide journal record and must not be used as an assignment or status authority. The legacy file is preserved unchanged as historical evidence; this correction is authoritative.
+- The current approved Work 28 team is exactly Xu (Coordinator/Decision Owner), Vi (Implementation Lead), Ka (Independent Architecture/Security Reviewer), and An (Independent QA). Co is excluded, per Manifest and official minutes.
+- The earlier assistant's labels “WP-A0” and “WP-B0” were shorthand, not canonical Work package IDs. The controlling plan is WP0–WP7 in `WORK28_MASTER_EXECUTION_PLAN_V2.0.md`; no official package was created under those shorthand labels.
+
+**STATUS:** Q4 REVIEW COMPLETE / Q4 NOT APPROVED / WP3-F01 IMPLEMENTATION BLOCKED / EXECUTION GATE CLOSED.
