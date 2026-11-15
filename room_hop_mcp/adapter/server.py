@@ -18,6 +18,16 @@ LIST_MEETINGS = "list_meetings"
 GET_MEETING = "get_meeting"
 GET_TRANSCRIPT = "get_transcript"
 ADD_PASTE_TO_MEETING = "add_paste_to_meeting"
+# Work 32 G2 contract completion (2026-11-05): the frozen 6-tool contract
+# (tests/test_message_v1.py T8, "6 tools KHÔNG đổi, KHÔNG thêm add_message")
+# requires join_meeting and start_meeting to be exposed. MeetingService
+# already implements both; only the MCP adapter registration was missing.
+JOIN_MEETING = "join_meeting"
+START_MEETING = "start_meeting"
+
+# F4 resource-limit policy (tests/test_f4_resource_limits.py): the paste
+# text payload must declare its maximum length in the public schema.
+ADD_PASTE_MAX_LENGTH = 1048576
 
 
 def create_server(service: MeetingService) -> Server:
@@ -77,6 +87,9 @@ def create_server(service: MeetingService) -> Server:
                         },
                         "text": {
                             "type": "string",
+                            # F4 resource-limit contract: declare the
+                            # maximum paste payload length (1 MiB).
+                            "maxLength": ADD_PASTE_MAX_LENGTH,
                         },
                         # MESSAGE v1.0 — OPTIONAL. Không có trong
                         # "required" -> mọi caller cũ (Gate 2, test F1-F3)
@@ -91,6 +104,44 @@ def create_server(service: MeetingService) -> Server:
                         "meeting_id",
                         "text",
                     ],
+                    "additionalProperties": False,
+                },
+            ),
+            Tool(
+                name=JOIN_MEETING,
+                description="Register an identity as a participant of a ROOM HOP meeting.",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "meeting_id": {
+                            "type": "string",
+                            "minLength": 1,
+                        },
+                        "identity_id": {
+                            "type": "string",
+                            "minLength": 1,
+                        },
+                    },
+                    "required": ["meeting_id", "identity_id"],
+                    "additionalProperties": False,
+                },
+            ),
+            Tool(
+                name=START_MEETING,
+                description="Start a ROOM HOP meeting session.",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "meeting_id": {
+                            "type": "string",
+                            "minLength": 1,
+                        },
+                        "starter": {
+                            "type": "string",
+                            "minLength": 1,
+                        },
+                    },
+                    "required": ["meeting_id"],
                     "additionalProperties": False,
                 },
             ),
@@ -124,6 +175,26 @@ def create_server(service: MeetingService) -> Server:
 
             return {
                 "paste": result,
+            }
+
+        if name == JOIN_MEETING:
+            meeting_id = arguments["meeting_id"]
+            identity_id = arguments["identity_id"]
+
+            result = service.join_meeting(meeting_id, identity_id)
+
+            return {
+                "meeting": result,
+            }
+
+        if name == START_MEETING:
+            meeting_id = arguments["meeting_id"]
+            starter = arguments.get("starter", "vinh")
+
+            result = service.start_meeting(meeting_id, starter=starter)
+
+            return {
+                "meeting": result,
             }
 
         raise ValueError(f"Unknown ROOM HOP MCP tool: {name}")
