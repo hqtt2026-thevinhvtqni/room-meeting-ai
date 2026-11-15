@@ -55,3 +55,12 @@
 - Verification: source update acknowledged by GitHub; combined commit status query returned an empty statuses array. This is NOT evidence of CI success. No runtime/browser check was executed in this step.
 - Status: PASS — source change committed. NOT VERIFIED — visual rendering, typecheck, lint, unit tests, production build and browser E2E. CI execution remains unobserved.
 - Next: obtain an actual GitHub Actions run result or run the same checks in a controlled local runtime; fix issues with evidence. Continue expanding the Ops and customer views without presenting demo metrics as live facts.
+
+## 2026-11-15 — Entry 006 — Xu / AI-01 — Customer portal dashboard refinement
+- Scope: complete the customer-facing dashboard before further work, per Vinh's instruction "tiếp tục hoàn thiện dash trước".
+- Pre-check: re-read app.index, app.jobs, app.new, app.gallery, app.account, shell, guard, status, store, rules, demo-data, types and ops.index on main. Confirmed demo-only data model and no live API.
+- Change: (1) store.tsx — persist demo-created jobs (ids prefixed demo-) to localStorage, merge with demoJobs on hydration, add resetDemoJobs; (2) app.index — active-jobs and project panels, empty state, relabeled counters; (3) app.jobs — status filter tabs, project name, retry counter, cancel action for queued/running jobs, empty state; (4) app.gallery — placeholder cards for completed jobs without real assets, explicit "no provider called" note; (5) app.account — demo role/session info, per-type usage counts from demo jobs, security/privacy notes. No backend, provider, storage or billing connection was added; all records remain demo data.
+- GitHub commit: 51d84558ee45cac6e965157abf169a28c9d33b42 — feat(w300): refine customer portal dashboard (index, jobs, gallery, account, persisted demo jobs).
+- Verification: commit acknowledged by GitHub with main ref readback 51d84558ee45cac6e965157abf169a28c9d33b42. Typecheck, lint, unit tests, production build and browser E2E remain NOT RUN in this step. GitHub Actions API was rate-limited during this session, so the first w300-dashboard-ci run result still could not be observed.
+- Status: PASS — source change committed with ref readback. NOT VERIFIED — compile/test/build/runtime. CI run evidence PENDING.
+- Next: retrieve the first w300-dashboard-ci run result (or run checks in a controlled runtime), fix any failures with evidence, then continue with Ops views and MCP docs page.
