@@ -15,6 +15,7 @@ on:
 
 permissions:
   contents: read
+  issues: write
 
 concurrency:
   group: w300-dashboard-ci-${{ github.ref }}
@@ -42,36 +43,48 @@ jobs:
       - name: Install locked dependencies
         run: bun install --frozen-lockfile
 
-      # Diagnostics: on failure, mirror the tool output into the job summary so the
-      # exact errors are publicly viewable (job logs download requires admin rights).
+      # Diagnostics: on failure, post the tool output to a repo issue so the exact
+      # errors are retrievable (job logs download requires admin rights).
       - name: TypeScript check
         run: |
           set -o pipefail
           if ! bunx tsc --noEmit 2>&1 | tee tsc.log; then
-            { echo "## w300 typecheck (tsc --noEmit)"; echo '```'; cat tsc.log; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+            { echo "## w300 typecheck (tsc --noEmit) — run ${{ github.run_id }} on ${{ github.sha }}"; echo '```'; cat tsc.log; echo '```'; } > /tmp/body.md
+            gh issue comment 1 --repo "$GITHUB_REPOSITORY" --body-file /tmp/body.md || gh issue create --repo "$GITHUB_REPOSITORY" --title "w300 CI diagnostics" --body-file /tmp/body.md || true
             exit 1
           fi
+        env:
+          GH_TOKEN: ${{ github.token }}
 
       - name: ESLint
         run: |
           set -o pipefail
           if ! bun run lint 2>&1 | tee lint.log; then
-            { echo "## w300 eslint output"; echo '```'; cat lint.log; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+            { echo "## w300 eslint — run ${{ github.run_id }}"; echo '```'; cat lint.log; echo '```'; } > /tmp/body.md
+            gh issue comment 1 --repo "$GITHUB_REPOSITORY" --body-file /tmp/body.md || gh issue create --repo "$GITHUB_REPOSITORY" --title "w300 CI diagnostics" --body-file /tmp/body.md || true
             exit 1
           fi
+        env:
+          GH_TOKEN: ${{ github.token }}
 
       - name: Unit tests
         run: |
           set -o pipefail
           if ! bun run test 2>&1 | tee vitest.log; then
-            { echo "## w300 vitest output"; echo '```'; cat vitest.log; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+            { echo "## w300 vitest — run ${{ github.run_id }}"; echo '```'; cat vitest.log; echo '```'; } > /tmp/body.md
+            gh issue comment 1 --repo "$GITHUB_REPOSITORY" --body-file /tmp/body.md || gh issue create --repo "$GITHUB_REPOSITORY" --title "w300 CI diagnostics" --body-file /tmp/body.md || true
             exit 1
           fi
+        env:
+          GH_TOKEN: ${{ github.token }}
 
       - name: Production build
         run: |
           set -o pipefail
           if ! bun run build 2>&1 | tee build.log; then
-            { echo "## w300 build output"; echo '```'; tail -c 4000 build.log; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+            { echo "## w300 build — run ${{ github.run_id }}"; echo '```'; tail -c 4000 build.log; echo '```'; } > /tmp/body.md
+            gh issue comment 1 --repo "$GITHUB_REPOSITORY" --body-file /tmp/body.md || gh issue create --repo "$GITHUB_REPOSITORY" --title "w300 CI diagnostics" --body-file /tmp/body.md || true
             exit 1
           fi
+        env:
+          GH_TOKEN: ${{ github.token }}
