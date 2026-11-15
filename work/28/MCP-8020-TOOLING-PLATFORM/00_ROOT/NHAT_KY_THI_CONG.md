@@ -854,3 +854,43 @@ Xu approves three contract directions:
 - Historical MCP :8020 remains DO NOT USE. No probe, restart or modification occurred. No tests were run; no code/runtime configuration changed; Execution Gate remains CLOSED.
 
 **STATUS:** WP0 SOURCE INVENTORY PARTIAL / LIVE PROVENANCE BLOCKED / G0 OPEN / WORK NOT RELEASED.
+
+
+## 2026-11-16 — JRN-W28-022 — GitHub App write and manual-dispatch verification
+
+**Người thực hiện:** Ka  
+**Chức danh:** Chief Security Architect (CSA) — Independent Architecture/Security Reviewer  
+**Priority:** P0 — GitHub integration evidence  
+**Repository / branch:** `hqtt2026-thevinhvtqni/room-meeting-ai` / `work/28-mcp-tooling-platform`
+
+### READ / TRACE
+- Re-read Work Manifest, Master Execution Plan V2.0, canonical journal and controlled document register before recording this checkpoint.
+- GitHub App identity: App ID `5775206`; Installation ID `182362333`.
+- User-executed installation-token test returned permissions: Actions=write, Contents=write, Pull Requests=read, Checks=read, Statuses=read, Metadata=read.
+- Read-only API checks returned CONTENTS HTTP 200, PULL_REQUESTS HTTP 200 and ACTIONS HTTP 200.
+- Isolated write probe used temporary branch `probe-work28-github-app-write-20261116` from base commit `3fea73071eed757dbde337f0d2be79d9fcd74745`. User terminal evidence: branch create PASS; temporary file create PASS; exact content readback PASS; file deletion PASS; branch deletion PASS.
+- Manual dispatch API returned HTTP 204 for `.github/workflows/work28-mcp-tooling.yml` against `work/28-mcp-tooling-platform`.
+
+### VERIFY — GITHUB ACTIONS RUN #347
+- Initial local polling printed `WORKFLOW RUN: NOT FOUND`. This was a polling defect: `time.mktime(time.strptime(...))` interpreted GitHub's UTC `created_at` timestamp as local time, causing the candidate filter to reject the run.
+- Independent GitHub Actions API lookup found Run #347 / ID `43773392184`, event `workflow_dispatch`, actor `room-hop-work28-integration[bot]`, branch `work/28-mcp-tooling-platform`, source commit `3fea73071eed757dbde337f0d2be79d9fcd74745`, conclusion SUCCESS.
+- All five jobs completed SUCCESS: `unit-regression-tests`, `execution-host-lifecycle-linux`, `execution-host-lifecycle-windows`, `Build and retest exact-SHA Work 28 source artifact`, `automatic-e2e-gate-report`.
+- Report artifact: ID `14185621545`, name `work28-auto-e2e-report-43773392184`, SHA-256 `1fd66ac8ee865e8971e65da12d6468e8cd5eabe5acedda52e6ef27df439166ad`.
+- Source artifact: ID `14185636344`, name `work28-source-artifact-3fea73071eed757dbde337f0d2be79d9fcd74745`, SHA-256 `43cf21140e472c3fc54abbbfd99cfb6f2ce2bc0671d46471f5074af7f80e293b`.
+- Read the automatic report job log. It explicitly sets CI preconditions PASS but deployed MCP → Core → Runtime E2E BLOCKED, overall status BLOCKED, Execution Gate CLOSED and Release NOT_RELEASED.
+
+### BLOCKERS — NOT CLEARED BY GREEN CI
+1. No verified live MCP 8030 build/process identity and raw `tools/list` parity artifact is wired to the workflow.
+2. No trusted deployed Core principal / WorkContext authorization evidence is available to the runner.
+3. No approved canonical Runtime MCP and Execution Host deployment/isolation attestation is wired to the workflow.
+4. No complete deployed request-to-protected-evidence readback chain exists; local CI and mocks cannot substitute.
+5. Existing WP0 provenance findings remain open; WP2 HIGH service lifecycle findings remain open; WP3 Q4 capability-grant remains NOT APPROVED per JRN-W28-019.
+
+### DECISION / NEXT
+- GitHub App authentication, repository read access, isolated Contents write/readback/delete, temporary branch cleanup and Actions manual dispatch are VERIFIED PASS for this probe.
+- Workflow Run #347 and its five CI jobs are VERIFIED SUCCESS. The earlier NOT FOUND line is classified as a local timestamp-filter false negative, not a GitHub dispatch failure.
+- Do not promote product E2E, Execution Gate or release status. Work remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED.
+- Next priority: continue WP0 provenance reconciliation by identifying the actual deployed Build MCP :8030 process/build and obtaining raw protocol-level `tools/list` response plus full schema digest bound to that identity. Do not touch historical MCP :8020.
+- Ka review and An independent verification must remain distinct; this checkpoint does not claim An acknowledgement or independent QA acceptance.
+
+**STATUS:** GITHUB APP WRITE + DISPATCH PASS / CI RUN #347 SUCCESS / DEPLOYED PRODUCT E2E BLOCKED / NOT RELEASED.
