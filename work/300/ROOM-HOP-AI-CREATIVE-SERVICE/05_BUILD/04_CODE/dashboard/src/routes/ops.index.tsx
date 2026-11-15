@@ -53,8 +53,10 @@ function Overview() {
             Chưa phát hành
           </span>
         </div>
-        <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:gri
-d-cols-4">
+        <div
+          className="mt-4 grid gap-3 sm:grid-cols-2 xl:gri
+d-cols-4"
+        >
           <div className="rounded-lg bg-muted/50 p-3">
             <div className="text-xs text-muted-foreground">Mã nguồn</div>
             <div className="mt-1 font-medium">GitHub · main</div>
@@ -62,7 +64,9 @@ d-cols-4">
           </div>
           <div className="rounded-lg bg-muted/50 p-3">
             <div className="text-xs text-muted-foreground">CI dashboard</div>
-            <div className="mt-1 font-medium text-success">PASS — typecheck · lint · tests · build</div>
+            <div className="mt-1 font-medium text-success">
+              PASS — typecheck · lint · tests · build
+            </div>
             <div className="text-xs text-muted-foreground">
               Run #11 (id 43682996529) · commit 896b08e · 2026-11-15
             </div>
@@ -93,8 +97,7 @@ d-cols-4">
           <DemoTag />
         </div>
         <div className="mt-1 flex flex-wrap items-center gap-3">
-          <h2 className="text-xl font-semibold">{DEMO_PHASE.
-name}</h2>
+          <h2 className="text-xl font-semibold">{DEMO_PHASE.name}</h2>
           <StatusBadge value={DEMO_PHASE.status} />
         </div>
         <Progress value={DEMO_PHASE.percent} className="mt-4 h-2" />
@@ -142,7 +145,6 @@ name}</h2>
                   contentStyle={{ background: "var(--popover)", border: "1px solid var(--border)" }}
                 />
                 <Bar dataKey="n" fill="var(--primary)" radius={[6, 6, 0, 0]} />
-
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -204,8 +206,7 @@ name}</h2>
           }
         >
           <ul className="space-y-2 text-sm">
-            {defaultIntegrations.map(
-(i) => (
+            {defaultIntegrations.map((i) => (
               <li key={i.id} className="flex justify-between">
                 <span>{i.name}</span>
                 <StatusBadge value={i.state} />
