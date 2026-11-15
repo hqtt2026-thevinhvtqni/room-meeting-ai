@@ -29,7 +29,8 @@ The following GitHub blob revisions were read from branch `work/28-mcp-tooling-p
 | `work/28/MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/XU_WP3_F01_DECISION_RECORD_20261113.md` | `8dbd82b69b4c295626ab5fb101c28b9bb0b6195e` | Q1–Q3 decisions; Q4 pending Ka |
 | `work/28/MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/VI_WP3_BINARY_UPLOAD_AUTHORIZATION_CONTRACT_PROPOSAL_20261104.md` | `b957eba4fce949bfdfba56ba8da9dd71d9bfc29` | Proposed upload trust boundary and session protocol |
 | `work/28/MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/VI_WP3_BINARY_UPLOAD_SOURCE_TRACE_20261104.md` | `fb4a95a49214b54c5c28407179860999f5bf7a16` | Current v54 binary-upload and Core-wiring gaps |
-| `work/28/MCP-8020-TOOLING-PLATFORM/03_ARCHITECTURE/PROPOSED_CORE_EXECUTION_AUTHORITY_CONTRACT_V1.md` | Sandbox readback; GitHub blob not independently pinned in this pass | Execution grant proposal V1.2; explicitly not approved |
+| `work/28/MCP-8020-TOOLING-PLATFORM/03_ARCHITECTURE/PROPOSED_CORE_EXECUTION_AUTHORITY_CONTRACT_V1.md` | `80199539afc45022980a481e1bc81b8aed160096` | Execution grant proposal V1.2; explicitly not approved |
+| `work/28/MCP-8020-TOOLING-PLATFORM/05_TEST/test_core_execution_authority_v1.py` | `339cab5846290fdc41e6768444f3a374de5b4ec7` | Local component tests; docstring incorrectly calls DR-1..DR-4 approved decision requests |
 | `core/execution_authority/authority.py` | `bfb052fed0fde69767dd219f17a0b14ae6383560` | Grant lifecycle implementation candidate |
 | `core/execution_authority/http_server.py` | `6363c277ce410d3f5465f449b730199e06e5024c` | Candidate Core authority HTTP surface |
 | `core/execution_authority/store.py` | `a628dc578c68c05bb875318d1b74528b26f0e4eb` | Append-only record store candidate |
@@ -68,7 +69,7 @@ Source-level observations from the reviewed candidate:
 6. The HTTP candidate uses `X-Room-Hop-Service-Identity` and exposes a grant-specific GET route. The Execution Host `HttpCoreGrantSource` instead expects a GET response containing a list and sends optional Bearer authentication. No compatible adapter/protocol integration was established.
 7. The Core authority proposal itself says it is NOT APPROVED / NOT IMPLEMENTED / NOT WIRED and awaits Vinh's final approval. Local temp-store and ephemeral-port tests do not prove deployed Core authority.
 
-These observations mean the current execution-grant implementation is not a safe drop-in upload capability service.
+The associated test module's docstring calls DR-1..DR-4 “approved decision requests”, while the V1.2 contract explicitly says NOT APPROVED and awaiting Vinh. This is a documentation/provenance contradiction, not evidence of approval; it must be corrected before any approval gate relies on that test suite.\n\nThese observations mean the current execution-grant implementation is not a safe drop-in upload capability service.
 
 ## 5. Adjacent P0 boundary blockers (must remain separate from Q4)
 
