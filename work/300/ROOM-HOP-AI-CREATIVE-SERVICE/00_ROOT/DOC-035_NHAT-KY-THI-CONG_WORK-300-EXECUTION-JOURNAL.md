@@ -46,3 +46,12 @@
 - Safety: workflow only checks the frontend prototype. No secrets, deployment, provider calls, public MCP exposure or backend implementation.
 - Status: PASS — CI workflow definition committed. PENDING — first workflow run and all build/test outcomes.
 - Next: verify workflow file and journal readback; inspect the first GitHub Actions run and diagnose any failures before making source changes.
+
+## 2026-11-15 — Entry 005 — Xu / AI-01 — Ops dashboard truth panel
+- Scope: improve the internal W300 overview so users can distinguish verified platform facts from illustrative dashboard metrics.
+- Pre-check: re-read Ops overview route, Ops shell, status components, demo data and type definitions. Confirmed global demo banner exists; all work-package, gate, reviewer, risk, decision, journal and job records in this prototype are illustrative data. No live API is wired.
+- Change: added a dedicated 'Trạng thái thực tế / Live facts' panel to the Ops overview. It states GitHub main as the source location, CI workflow configured but first execution not verified, MCP/providers not connected, and all metrics below are demo data rather than acceptance evidence. Added direct link to the W300 CI workflow.
+- GitHub commit: c26c5eb085347669b4e215dd0e46f2f3e51b1831.
+- Verification: source update acknowledged by GitHub; combined commit status query returned an empty statuses array. This is NOT evidence of CI success. No runtime/browser check was executed in this step.
+- Status: PASS — source change committed. NOT VERIFIED — visual rendering, typecheck, lint, unit tests, production build and browser E2E. CI execution remains unobserved.
+- Next: obtain an actual GitHub Actions run result or run the same checks in a controlled local runtime; fix issues with evidence. Continue expanding the Ops and customer views without presenting demo metrics as live facts.
