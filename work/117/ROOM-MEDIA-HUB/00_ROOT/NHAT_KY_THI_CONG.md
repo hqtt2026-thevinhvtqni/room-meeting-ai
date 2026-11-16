@@ -424,3 +424,19 @@ Em đã đọc và phân tích mã nguồn thực tế của ba Work liên quan:
 - Result: Four canonical records synced to GitHub main; full-content comparison 4/4 PASS. This comparison occurred before appending this final sync record to the Journal; the Journal is being synced once more so the record itself is included.
 - Boundary: Documentation sync only. No source code, runtime, provider account, cloud resource, media binary, secret or token changed. Architecture remains provisional; builder choice remains open; BUILD and deployment remain NOT AUTHORIZED.
 - Next: Read back the final Journal from both environments and verify exact content parity.
+
+
+## 2026-11-17 — Xu / AI-01 — Cập nhật lựa chọn Builder chính và phân định BUILD
+- Scope: Cập nhật quyết định mới của Vinh: Go là Builder chính; Vibe phản biện kiến trúc độc lập kiêm hỗ trợ xây dựng trên GitHub; làm rõ ý nghĩa BUILD.
+- Method: Đọc bốn hồ sơ canonical từ Sandbox; cập nhật Plan và Task Board theo role decision; append quyết định vào Biên bản và Nhật ký.
+- Decision evidence: Chỉ đạo trực tiếp của Vinh trong cuộc hội thoại ngày 2026-11-17.
+- Role outcome:
+  - Go / AI-06 (Grok): PRIMARY BUILDER.
+  - Vibe (Mistral): INDEPENDENT ARCHITECTURE CHALLENGER + SUPPORTING GITHUB BUILDER.
+  - Qc: implementation coder for assigned UI/Backend.
+  - Cla: technical reconciliation, technical planning, code review, repair and debugging; not default feature builder.
+  - Qw: independent QE/QA; Ka: CSA reviewer; Xu: coordinator; Vinh: final authority.
+- BUILD definition recorded in Minutes: implementation activity that turns approved requirements, architecture and tasks into source code/configuration/product capability; distinct from Builder role, and distinct from deployment/release.
+- Result: User role decision is recorded. No claim that Go/Vibe have been dispatched, accepted work or verified access. No source code changed and no implementation started.
+- Status: ROLE DECISION RECORDED; PLAN/TASK BOARD UPDATE IN PROGRESS; BUILD NOT AUTHORIZED.
+- Next: Read back all four records, sync the exact same contents to GitHub main, and verify full-content parity.
