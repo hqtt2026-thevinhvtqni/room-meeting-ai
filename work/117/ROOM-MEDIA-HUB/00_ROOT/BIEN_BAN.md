@@ -112,3 +112,13 @@ This confirms product scope only. It does not approve a storage vendor, detailed
 - Ranh giới thuật ngữ: BUILD là hoạt động xây dựng/hiện thực hóa sản phẩm bằng mã nguồn và cấu hình theo kiến trúc, yêu cầu và task đã được phê duyệt. Builder là vai trò/người chịu trách nhiệm tổ chức và thực hiện hoạt động BUILD. BUILD không đồng nghĩa với một AI cụ thể, không đồng nghĩa với việc mở một Work mới, và không tự động cho phép deploy/release.
 - Trạng thái quyền hạn: lựa chọn vai trò Go/Vibe đã được Vinh quyết định; việc dispatch, nhận task, xác minh quyền truy cập GitHub/công cụ và bắt đầu thi công vẫn cần bằng chứng riêng. Quyết định này KHÔNG tự động phê duyệt BUILD, chi phí, upload media thật, deployment hoặc release.
 - Status: BUILDER ROLE DECISION CONFIRMED; EXECUTION DISPATCH/ACCESS PENDING; ARCHITECTURE PROVISIONAL; BUILD NOT AUTHORIZED.
+
+
+## 13. Quyết định ủy quyền BUILD Dashboard riêng cho Work 117 — 2026-11-17
+- Authority: Vinh / Product Owner, direct instruction in the current conversation.
+- Scope authorized: A dedicated, read-only operational Dashboard for Work 117 only, focused on Work Overview, Task Board, Agent Monitor and Activity & Evidence.
+- Go / AI-06 (Grok) is the single accountable primary Builder and integration lead. Qc supports UI/Backend implementation. Cla provides technical assurance/runtime-contract verification. Ka performs independent CSA/security review. Qw performs independent QE. Vibe may challenge architecture and support scoped GitHub tasks after access/acceptance is verified. Xu coordinates and maintains the canonical records.
+- Execution instruction: Independent tasks should proceed in parallel and continue to completion without repeatedly asking Vinh for routine confirmation. Escalate only hard blockers, security/privacy risks, irreversible external actions or work outside this scope.
+- Data truth: Dashboard reads the canonical W117 Task Board and Journal. It must not fabricate progress, task completion, Agent online state, dispatch, ACK or runtime activity. Unverified states must be displayed as unverified.
+- Explicit boundary: This authorization applies ONLY to the W117 Dashboard. It does not authorize the W117 media-hub product implementation (T009–T011), paid services, billing/payment setup, cloud account/token creation, real-media upload, production deployment or release. Those remain separately gated.
+- Status: DASHBOARD BUILD AUTHORIZED; AGENT DISPATCH/ACK NOT VERIFIED; IMPLEMENTATION NOT YET EVIDENCED.
