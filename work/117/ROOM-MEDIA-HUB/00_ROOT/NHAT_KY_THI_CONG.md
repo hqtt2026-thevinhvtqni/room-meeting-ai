@@ -383,3 +383,12 @@ Em đã đọc và phân tích mã nguồn thực tế của ba Work liên quan:
 - Governance: This is documentation synchronization only. Product scope remains shared Room-wide; zero-cost-first remains the current cost direction; TeraBox remains NOT SELECTED; architecture remains provisional; BUILD NOT AUTHORIZED.
 - Timestamp note: Exact wall-clock time for this sync was not captured by the execution tools; date recorded without inventing a time.
 - Next: Read back key files and confirm GitHub contents match Sandbox; update status only from observed evidence.
+
+ 
+## 2026-11-16 — Xu / AI-01 — GitHub readback and parity verification
+- Scope: Verify all 14 canonical W117 documentation files synchronized to GitHub `main`.
+- Method: For each file, read canonical Sandbox content and fetch the corresponding GitHub file from `work/117/ROOM-MEDIA-HUB/`; compare complete text content byte-for-byte at the returned UTF-8 string level.
+- Evidence: 14/14 file comparisons returned `match=true`; all source and GitHub character counts matched. Verified files cover 00_ROOT (4), 01_DISCOVER (1), 02_DEFINE (1), 03_ARCHITECT (7), and 04_PLAN (1).
+- Result: DOCUMENTATION SYNC + READBACK PARITY — PASS (14/14). This PASS applies only to the listed documentation files and does not represent product/runtime/build verification.
+- Governance status unchanged: architecture provisional; provider not selected; consultation pending; BUILD NOT AUTHORIZED.
+- Timestamp note: Exact wall-clock time not captured; date only.
