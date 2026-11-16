@@ -271,7 +271,7 @@
       "pricing_or_quota": "Fees depend on the administrative procedure; portal access conditions apply.",
       "status": "candidate_portal_reviewed_runtime_not_tested",
       "source_reachability": "official_portal_documentation_reviewed",
-      "runtime_test": "not_run",
+      "runtime_test": "not_verified_automated_fetch_incomplete_2026-11-16",
       "compatible_work_ids": [
         "W116 discovery",
         "Administrative procedure assistant Work"
@@ -280,7 +280,9 @@
         "Portal is a user-facing workflow, not a documented open API.",
         "Agents must not submit applications, make declarations or pay fees without explicit authorization and user review.",
         "Verify current competent authority, forms, fees and effective dates."
-      ]
+      ],
+      "runtime_test_evidence": "Three fetch attempts 2026-11-16 of https://dichvucong.gov.vn/ failed with \"page-fetching service temporarily unreachable\". Status NOT VERIFIED: cannot distinguish service-side failure from portal-side blocking; no conclusion drawn.",
+      "last_checked": "2026-11-16"
     },
     {
       "resource_id": "GOV-002",
@@ -433,8 +435,8 @@
       "auth": "Public access to published statistics.",
       "pricing_or_quota": "Public statistical portal; verify reuse terms per dataset.",
       "status": "candidate_official_statistics_runtime_not_tested",
-      "source_reachability": "official_statistics_pages_reviewed",
-      "runtime_test": "not_run",
+      "source_reachability": "runtime_verified_portal_page",
+      "runtime_test": "portal_page_reachable_read_only_2026-11-16",
       "compatible_work_ids": [
         "W116 discovery",
         "Health statistics and policy analysis Work"
@@ -443,7 +445,9 @@
         "Aggregate statistics only; not patient-level medical records.",
         "Preserve year, geography, indicator definition, unit and revision notes.",
         "Do not use for diagnosis or individual treatment recommendations."
-      ]
+      ],
+      "runtime_test_evidence": "Portal page https://www.nso.gov.vn/so-lieu-thong-ke/ fetched 2026-11-16: title \"Số liệu thống kê\", category navigation rendered (đơn vị hành chính/đất đai; dân số và lao động; tài khoản quốc gia; công nghiệp; đầu tư; ...). Page-level reachability only; no table download, no API discovery; statistic-table URLs and formats remain unverified.",
+      "last_checked": "2026-11-16"
     },
     {
       "resource_id": "EDU-001",
@@ -460,8 +464,8 @@
       "auth": "Public access to published statistics.",
       "pricing_or_quota": "Public statistical portal; verify reuse terms per dataset.",
       "status": "candidate_official_statistics_runtime_not_tested",
-      "source_reachability": "official_statistics_pages_reviewed",
-      "runtime_test": "not_run",
+      "source_reachability": "runtime_verified_portal_page",
+      "runtime_test": "portal_page_reachable_read_only_2026-11-16",
       "compatible_work_ids": [
         "W116 discovery",
         "Education policy and analytics Work"
@@ -470,7 +474,9 @@
         "Preserve academic year/reference period, geography, indicator definition and unit.",
         "Distinguish official statistical series from school-level operational records.",
         "No student personal data is included in this resource record."
-      ]
+      ],
+      "runtime_test_evidence": "Portal page https://www.nso.gov.vn/so-lieu-thong-ke/ fetched 2026-11-16: title \"Số liệu thống kê\", category navigation rendered (đơn vị hành chính/đất đai; dân số và lao động; tài khoản quốc gia; công nghiệp; đầu tư; ...). Page-level reachability only; no table download, no API discovery; statistic-table URLs and formats remain unverified.",
+      "last_checked": "2026-11-16"
     },
     {
       "resource_id": "ICH-001",
@@ -518,7 +524,7 @@
       "pricing_or_quota": "Public portal; verify service-specific terms.",
       "status": "candidate_official_portal_reviewed_runtime_not_tested",
       "source_reachability": "official_ministry_of_justice_portal_reviewed",
-      "runtime_test": "not_run",
+      "runtime_test": "blocked_automated_access_2026-11-16",
       "compatible_work_ids": [
         "W116 discovery",
         "Vietnam legal research Agent"
@@ -527,7 +533,9 @@
         "Use as an official entry point; verify each underlying document in the national legal database or Official Gazette.",
         "Capture document number, issuing body, promulgation date, effective date, status and amendments.",
         "No legal advice guarantee; cite the exact source text and version."
-      ]
+      ],
+      "runtime_test_evidence": "Fetch attempt 2026-11-16 of https://phapluat.gov.vn/ returned HTTP 403 Forbidden with \"Sorry, you have been blocked\" (Request-ID 6afa5d88_VM-HAN-011SC229_10847-62843). Automated access blocked by WAF; human browser access not tested. Do NOT infer portal status from this result.",
+      "last_checked": "2026-11-16"
     },
     {
       "resource_id": "LAW-002",
@@ -679,8 +687,8 @@
       "auth": "Public portal or publication access where available; account/API requirements not yet verified.",
       "pricing_or_quota": "Not established; verify provider terms, reuse license and rate limits.",
       "status": "candidate_source_discovery_not_runtime_tested",
-      "source_reachability": "reference_identified_not_independently_runtime_verified",
-      "runtime_test": "not_run",
+      "source_reachability": "runtime_verified_portal_page",
+      "runtime_test": "portal_page_reachable_read_only_2026-11-16",
       "compatible_work_ids": [
         "W116 discovery",
         "Owning domain Work to be assigned after use case and access review"
@@ -689,7 +697,9 @@
         "Published aggregate statistics; preserve crop/product, geography, season, units and revision dates.",
         "Do not assume a web portal is an API or that published data permits bulk reuse.",
         "No credentials or personal/sensitive records stored in W116."
-      ]
+      ],
+      "runtime_test_evidence": "Portal page https://www.nso.gov.vn/so-lieu-thong-ke/ fetched 2026-11-16: title \"Số liệu thống kê\", category navigation rendered (đơn vị hành chính/đất đai; dân số và lao động; tài khoản quốc gia; công nghiệp; đầu tư; ...). Page-level reachability only; no table download, no API discovery; statistic-table URLs and formats remain unverified.",
+      "last_checked": "2026-11-16"
     },
     {
       "resource_id": "IND-001",
@@ -706,8 +716,8 @@
       "auth": "Public portal or publication access where available; account/API requirements not yet verified.",
       "pricing_or_quota": "Not established; verify provider terms, reuse license and rate limits.",
       "status": "candidate_source_discovery_not_runtime_tested",
-      "source_reachability": "reference_identified_not_independently_runtime_verified",
-      "runtime_test": "not_run",
+      "source_reachability": "runtime_verified_portal_page",
+      "runtime_test": "portal_page_reachable_read_only_2026-11-16",
       "compatible_work_ids": [
         "W116 discovery",
         "Owning domain Work to be assigned after use case and access review"
@@ -716,7 +726,9 @@
         "Distinguish industrial production indices, physical output, enterprise counts and survey estimates.",
         "Do not assume a web portal is an API or that published data permits bulk reuse.",
         "No credentials or personal/sensitive records stored in W116."
-      ]
+      ],
+      "runtime_test_evidence": "Portal page https://www.nso.gov.vn/so-lieu-thong-ke/ fetched 2026-11-16: title \"Số liệu thống kê\", category navigation rendered (đơn vị hành chính/đất đai; dân số và lao động; tài khoản quốc gia; công nghiệp; đầu tư; ...). Page-level reachability only; no table download, no API discovery; statistic-table URLs and formats remain unverified.",
+      "last_checked": "2026-11-16"
     },
     {
       "resource_id": "ENE-001",
@@ -733,8 +745,8 @@
       "auth": "Public portal or publication access where available; account/API requirements not yet verified.",
       "pricing_or_quota": "Not established; verify provider terms, reuse license and rate limits.",
       "status": "candidate_source_discovery_not_runtime_tested",
-      "source_reachability": "reference_identified_not_independently_runtime_verified",
-      "runtime_test": "not_run",
+      "source_reachability": "runtime_verified_portal_page",
+      "runtime_test": "portal_page_reachable_read_only_2026-11-16",
       "compatible_work_ids": [
         "W116 discovery",
         "Owning domain Work to be assigned after use case and access review"
@@ -743,7 +755,9 @@
         "For operational grid data or real-time dispatch, identify the system operator source separately; NSO tables are not live telemetry.",
         "Do not assume a web portal is an API or that published data permits bulk reuse.",
         "No credentials or personal/sensitive records stored in W116."
-      ]
+      ],
+      "runtime_test_evidence": "Portal page https://www.nso.gov.vn/so-lieu-thong-ke/ fetched 2026-11-16: title \"Số liệu thống kê\", category navigation rendered (đơn vị hành chính/đất đai; dân số và lao động; tài khoản quốc gia; công nghiệp; đầu tư; ...). Page-level reachability only; no table download, no API discovery; statistic-table URLs and formats remain unverified.",
+      "last_checked": "2026-11-16"
     },
     {
       "resource_id": "LOG-001",
@@ -760,8 +774,8 @@
       "auth": "Public portal or publication access where available; account/API requirements not yet verified.",
       "pricing_or_quota": "Not established; verify provider terms, reuse license and rate limits.",
       "status": "candidate_source_discovery_not_runtime_tested",
-      "source_reachability": "reference_identified_not_independently_runtime_verified",
-      "runtime_test": "not_run",
+      "source_reachability": "runtime_verified_portal_page",
+      "runtime_test": "portal_page_reachable_read_only_2026-11-16",
       "compatible_work_ids": [
         "W116 discovery",
         "Owning domain Work to be assigned after use case and access review"
@@ -770,7 +784,9 @@
         "Preserve transport mode, tonnage/passenger unit, passenger-km/ton-km, geography and reference period.",
         "Do not assume a web portal is an API or that published data permits bulk reuse.",
         "No credentials or personal/sensitive records stored in W116."
-      ]
+      ],
+      "runtime_test_evidence": "Portal page https://www.nso.gov.vn/so-lieu-thong-ke/ fetched 2026-11-16: title \"Số liệu thống kê\", category navigation rendered (đơn vị hành chính/đất đai; dân số và lao động; tài khoản quốc gia; công nghiệp; đầu tư; ...). Page-level reachability only; no table download, no API discovery; statistic-table URLs and formats remain unverified.",
+      "last_checked": "2026-11-16"
     },
     {
       "resource_id": "ENV-001",
@@ -895,8 +911,8 @@
       "auth": "Public portal or publication access where available; account/API requirements not yet verified.",
       "pricing_or_quota": "Not established; verify provider terms, reuse license and rate limits.",
       "status": "candidate_source_discovery_not_runtime_tested",
-      "source_reachability": "reference_identified_not_independently_runtime_verified",
-      "runtime_test": "not_run",
+      "source_reachability": "runtime_verified_portal_page",
+      "runtime_test": "portal_page_reachable_read_only_2026-11-16",
       "compatible_work_ids": [
         "W116 discovery",
         "Owning domain Work to be assigned after use case and access review"
@@ -905,7 +921,9 @@
         "Aggregate labor indicators only; distinguish labor force, employed, unemployed, underemployment and wage concepts.",
         "Do not assume a web portal is an API or that published data permits bulk reuse.",
         "No credentials or personal/sensitive records stored in W116."
-      ]
+      ],
+      "runtime_test_evidence": "Portal page https://www.nso.gov.vn/so-lieu-thong-ke/ fetched 2026-11-16: title \"Số liệu thống kê\", category navigation rendered (đơn vị hành chính/đất đai; dân số và lao động; tài khoản quốc gia; công nghiệp; đầu tư; ...). Page-level reachability only; no table download, no API discovery; statistic-table URLs and formats remain unverified.",
+      "last_checked": "2026-11-16"
     },
     {
       "resource_id": "INS-001",
@@ -1084,9 +1102,9 @@
       "protocol_or_endpoint": "Public research dataset/repository; inspect dataset license and download files before reuse.",
       "auth": "Public portal or publication access where available; account/API requirements not yet verified.",
       "pricing_or_quota": "Not established; verify provider terms, reuse license and rate limits.",
-      "status": "candidate_source_discovery_not_runtime_tested",
-      "source_reachability": "reference_identified_not_independently_runtime_verified",
-      "runtime_test": "not_run",
+      "status": "runtime_tested_public_source_page_pass",
+      "source_reachability": "runtime_verified",
+      "runtime_test": "pass_public_read_only_2026-11-16",
       "compatible_work_ids": [
         "W116 discovery",
         "Owning domain Work to be assigned after use case and access review"
@@ -1095,7 +1113,9 @@
         "Research corpus, not a live vacancies feed; check license, collection date, personal data and representativeness before processing.",
         "Do not assume a web portal is an API or that published data permits bulk reuse.",
         "No credentials or personal/sensitive records stored in W116."
-      ]
+      ],
+      "runtime_test_evidence": "GitHub repository page VinNLP/VietJobs fetched 2026-11-16: repo exists, description confirms \"first large-scale, publicly available corpus of Vietnamese job advertisements: 48,092 postings, over 15 million words, all 34 provinces and municipalities\". Repository page verified only; dataset files not downloaded or parsed yet; license must be inspected in-repo before reuse.",
+      "last_checked": "2026-11-16"
     },
     {
       "resource_id": "CUL-001",
@@ -1140,7 +1160,7 @@
       "pricing_or_quota": "Not established; verify provider terms, reuse license and rate limits.",
       "status": "candidate_source_discovery_not_runtime_tested",
       "source_reachability": "reference_identified_not_independently_runtime_verified",
-      "runtime_test": "not_run",
+      "runtime_test": "blocked_automated_access_2026-11-16",
       "compatible_work_ids": [
         "W116 discovery",
         "Owning domain Work to be assigned after use case and access review"
@@ -1149,7 +1169,9 @@
         "Use current official warnings and timestamps; distinguish forecast, watch and emergency warning; never delay emergency response for an Agent result.",
         "Do not assume a web portal is an API or that published data permits bulk reuse.",
         "No credentials or personal/sensitive records stored in W116."
-      ]
+      ],
+      "runtime_test_evidence": "Fetch attempt 2026-11-16 of https://nchmf.gov.vn/ returned no readable content: \"the site blocked automated access or returned no readable content\". Portal may work in a normal browser; automated access is blocked. Do NOT infer portal status from this result.",
+      "last_checked": "2026-11-16"
     }
   ],
   "categories": [
