@@ -408,3 +408,19 @@ Em đã đọc và phân tích mã nguồn thực tế của ba Work liên quan:
 - Result: Sandbox writes submitted; final readback and GitHub parity must be verified before declaring sync PASS.
 - Status: DOCUMENT UPDATE IN PROGRESS; BUILD NOT AUTHORIZED.
 - Next: Read back all four canonical records from Sandbox, sync the same four paths to GitHub main, then fetch GitHub versions and compare full content.
+
+
+## 2026-11-17 — Xu / AI-01 — Đồng bộ bốn hồ sơ quản trị Sandbox ↔ GitHub main
+- Scope: Đồng bộ đúng bốn hồ sơ chính thức của W117 giữa Sandbox Work 117 và repository GitHub main.
+- Method: Đọc lại nội dung Sandbox; cập nhật ba file hiện hữu trên GitHub main và tạo TASK_BOARD.md; sau ghi, fetch lại cả bốn file từ GitHub và so sánh toàn bộ nội dung với Sandbox.
+- Files:
+  1. ROOM-MEDIA-HUB/00_ROOT/BIEN_BAN.md
+  2. ROOM-MEDIA-HUB/00_ROOT/NHAT_KY_THI_CONG.md
+  3. ROOM-MEDIA-HUB/04_PLAN/IMPLEMENTATION_ROADMAP.md
+  4. ROOM-MEDIA-HUB/00_ROOT/TASK_BOARD.md
+- Evidence:
+  - GitHub main commits: Biên bản c061a790110e874f4a5470a574b211f14182c332; Nhật ký 323988581bdfe673ba483cf295a71d15bc49a5ad; Plan 30898a1ba192bd2e7d1f5be41056b469b3a243d9; Task Board 05578212aed51689fd97b9a78a1fd946ab8da5ee.
+  - Full-content readback comparison before this journal entry: 4/4 identical. Blob SHAs: Biên bản 6bf4ead163d7f361f29c579e3d553312cd27e10d; Nhật ký 6632a5719271df5cedc8d0645f038b458f738d9a; Plan c5c7637ac7305a3888298457778c6716d70377cc; Task Board 9d8eda2f13625e3ed0693961067112315d8e2071.
+- Result: Four canonical records synced to GitHub main; full-content comparison 4/4 PASS. This comparison occurred before appending this final sync record to the Journal; the Journal is being synced once more so the record itself is included.
+- Boundary: Documentation sync only. No source code, runtime, provider account, cloud resource, media binary, secret or token changed. Architecture remains provisional; builder choice remains open; BUILD and deployment remain NOT AUTHORIZED.
+- Next: Read back the final Journal from both environments and verify exact content parity.
