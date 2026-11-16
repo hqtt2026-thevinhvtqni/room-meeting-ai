@@ -406,3 +406,16 @@ Read Manifest for W23/W27/W33/W51 and listing for W23/W27/W33/W51. W200 Manifest
 - Purpose: Cross-Work integration contracts, dependency graph, event/evidence correlation, idempotency/concurrency, consistency and integrated verification.
 - Non-duplication boundary: Does not replace W70 lifecycle authority, W32 CI engine, W33 evidence hub, W52 AI communication/orchestration, W16 workflow engine, W51 coder-tester orchestration, W14 execution host, W37 Core, W38 Gateway, W39 Build MCP or W0000 governance registry.
 - Canonical source: GitHub main; Sandbox Work 112 created and listed. Implementation/runtime acceptance NOT VERIFIED.
+
+
+## 2026-11-16 — Add Work 116: ROOM-HOP Resource Library (Vibe for Vinh, autonomous authorization)
+- Work ID: 116
+- Work Name: ROOM-HOP-RESOURCE-LIBRARY
+- Status: ACTIVE — RESOURCE DISCOVERY AND CATALOG
+- Authority: Vinh; Executive Coordinator: Xu / AI-01
+- Purpose: Shared ROOM-HOP resource library; evaluate practical usability of external sources and normalize discoverable APIs, MCP servers, SDKs, libraries, models and tools for Agents.
+- Non-duplication boundary: Does not replace ROOM-HOP execution, Gateway, integration contracts, Agent orchestration or credential management; not an API gateway, execution runtime, credential vault or automatic permission-grant system.
+- Canonical source: GitHub main path work/116/ROOM-HOP-RESOURCE-LIBRARY/; seven canonical files (README, WORK_MANIFEST, DOC-034, DOC-035, SOURCE_CATALOG, AGENT_RESOURCE_DISCOVERY_GUIDE, RESOURCE_CATALOG.json) with exact parity verified 2026-11-14.
+- Catalog evidence 2026-11-16: RESOURCE_CATALOG.json schema 1.4 parsed OK; 42 unique resource IDs; 42 unique category codes RES-01..RES-42; 0 missing required fields; all records remain candidates, no runtime PASS for any external source.
+- Portfolio note: documentation/catalog Work only; no external API/MCP execution, no credentials; runtime verification of individual sources is future work per record status.
+- Manifest sync line updated to "GitHub main sync: VERIFIED 2026-11-16" (commit 42d8b75); journal entry in W116 DOC-035 (commit f46ab31).
