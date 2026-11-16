@@ -4,10 +4,10 @@
 - Product authority: Vinh
 - Coordinator: Xu / AI-01
 - Date: 2026-11-17
-- Status: PLANNING — BUILD NOT AUTHORIZED
+- Status: W117 DASHBOARD BUILD AUTHORIZED (DASHBOARD SCOPE ONLY); MEDIA HUB PRODUCT BUILD NOT AUTHORIZED
 
 ## Status legend
-PLANNED = defined, not started; READY = dependencies and authorization satisfied; IN_PROGRESS = evidence-backed work underway; BLOCKED = cannot proceed and blocker is recorded; DONE = task action completed; PASS = verification criterion passed; FAIL = verification failed; NOT RUN = no test executed; NOT AUTHORIZED = requires explicit approval.
+PLANNED = defined, not started; ASSIGNED — DISPATCH UNCONFIRMED = allocated in canonical board, agent receipt not verified; ACKNOWLEDGED = agent explicitly accepted; READY = dependencies and authorization satisfied; IN_PROGRESS = evidence-backed work underway; BLOCKED = cannot proceed and blocker is recorded; DONE = task action completed; PASS = verification criterion passed; FAIL = verification failed; NOT RUN = no test executed; NOT AUTHORIZED = requires explicit approval.
 
 ## Active task register
 | Task ID | Work Package | Task / deliverable | Accountable owner (proposed) | Dependencies | Acceptance / evidence | Status |
@@ -47,3 +47,38 @@ PLANNED = defined, not started; READY = dependencies and authorization satisfied
 
 ## Update protocol
 Every task state change must be reflected here and appended to the single canonical Journal. Decisions affecting scope, authority, cost or gates must also be recorded in the single canonical Minutes. Do not create another task tracker or shadow plan.
+
+
+## W117 DASHBOARD — USER-AUTHORIZED BUILD TRACK (2026-11-17)
+- Authority: Vinh directly instructed Xu to assign all Dashboard work into this canonical Task Board and Journal, with Agents to proceed independently through completion without waiting for repeated prompts.
+- Scope: Build a dedicated, read-only operational Dashboard for Work 117 only. It monitors W117 progress, task status, assigned agents and evidence. This is NOT the ROOM-wide/HQTT dashboard and does not expand the media product scope.
+- BUILD authorization: GRANTED by Vinh for the W117 Dashboard only. This does not authorize implementation of the underlying ROOM MEDIA HUB product tasks T009–T011, paid services, billing/payment setup, cloud account/token creation, real-media upload, production deployment or release.
+- Canonical inputs: this TASK_BOARD.md and 00_ROOT/NHAT_KY_THI_CONG.md. Dashboard must not invent progress or infer an Agent is online/active from role assignment. Agent acceptance/session/activity may be shown only when supported by verifiable runtime evidence. Until such evidence exists, show "DISPATCH/ACK NOT VERIFIED".
+- Operating rule: parallelize independent review/build tasks; Go owns delivery and resolves integration. Qc implements assigned UI/Backend slices. Cla, Ka and Qw perform independent assurance in their domains. No repeated user confirmation is needed for work inside this scope. Escalate only hard blockers, security/privacy concerns, irreversible external actions, or anything outside this authorization.
+- Delivery target: working local/preview Dashboard with source provenance, followed by independent QE and technical/security review. Production deployment/release remains separately gated.
+
+### Dashboard task register
+| Task ID | Deliverable | Accountable owner | Contributors / reviewers | Dependencies | Acceptance evidence | Initial status |
+|---|---|---|---|---|---|---|
+| W117-DASH-001 | Own end-to-end Dashboard delivery; define minimal read-only data contract and coordinate integration | Go / AI-06 | Xu | User authorization recorded here | Accepted task, implementation plan in Journal, integrated working Dashboard | ASSIGNED — DISPATCH UNCONFIRMED |
+| W117-DASH-002 | Build Dashboard shell, Work Overview and task board views using canonical W117 task data | Go / AI-06 | Qc / Qwen Coder | DASH-001 data contract; can proceed with shell in parallel | UI source, task counts reconcile exactly to canonical Task Board, no mock metrics | ASSIGNED — DISPATCH UNCONFIRMED |
+| W117-DASH-003 | Build Agent Monitor with explicit assignment/dispatch/ACK/session/activity evidence states | Go / AI-06 | Qc; Cla verifies runtime contract | DASH-001; runtime fields only if verified | Each Agent state has provenance; unknown states remain visibly unknown; no fabricated online status | ASSIGNED — DISPATCH UNCONFIRMED |
+| W117-DASH-004 | Build Activity & Evidence timeline from canonical Journal with traceable source references | Go / AI-06 | Qc | Journal parsing contract | Timeline entries map to actual Journal records; evidence links resolve or are marked unavailable | ASSIGNED — DISPATCH UNCONFIRMED |
+| W117-DASH-005 | Independent technical review of data flow, source-of-truth rules, failure behavior and maintainability | Cla / AI-03 | Go provides implementation evidence | DASH-001 and evolving implementation | Findings, severity, evidence and required fixes appended to Journal | ASSIGNED — DISPATCH UNCONFIRMED |
+| W117-DASH-006 | Independent CSA review: read-only access, authorization boundary, data exposure and fail-closed behavior | Ka / AI-02 | Cla; Go | Data contract and preview build | CSA findings and remediation disposition recorded; no sensitive data exposure | ASSIGNED — DISPATCH UNCONFIRMED |
+| W117-DASH-007 | Define independent QE matrix and measurable acceptance criteria | Qw / AI-05 | Xu | DASH-001; can draft in parallel | Traceability matrix and test cases covering overview, tasks, agents, timeline, stale/missing data and error states | ASSIGNED — DISPATCH UNCONFIRMED |
+| W117-DASH-008 | Execute independent functional/regression/accessibility/data-integrity tests; verify fixes | Qw / AI-05 | Go accountable for fixes; Qc implements fixes | Testable preview build | Test logs, reproducible evidence, defect list and PASS/FAIL recommendation | ASSIGNED — DISPATCH UNCONFIRMED |
+| W117-DASH-009 | Integrate, reconcile findings, complete handoff package and mark Dashboard complete only after evidence | Go / AI-06 | Xu coordinates; Cla/Ka/Qw sign off their domains | DASH-002–008 | Working preview, source revision, evidence, known limitations, independent QE PASS and technical/security disposition | ASSIGNED — DISPATCH UNCONFIRMED |
+
+### Dashboard role allocation
+- Go / AI-06: single accountable Builder and integration lead; drives all Dashboard tasks to completion.
+- Qc: UI/Backend implementation partner under Go's task breakdown.
+- Cla / AI-03: technical assurance and runtime-contract verification; not the feature lead.
+- Ka / AI-02: independent CSA/security review.
+- Qw / AI-05: independent QE; does not approve its own implementation.
+- Vibe: architecture challenger and optional GitHub support on a clearly scoped task; no delivery dependency unless access and acceptance are verified.
+- Xu / AI-01: coordinator, canonical records and blocker resolution; does not substitute record writes for Agent dispatch.
+- Vinh: final authority outside the explicitly granted Dashboard build scope.
+
+### Dispatch and acceptance truth
+The current ROOM-HOP Build MCP tool surface available to Xu exposes Sandbox read/write/list operations but no Agent task-dispatch or session-assignment operation. Therefore the allocations above are authoritative task assignments, but are NOT evidence that any Agent has received or accepted them. Each row remains "ASSIGNED — DISPATCH UNCONFIRMED" until a verifiable Agent ACK or runtime event is recorded. Xu must pursue an authorized dispatch route without asking Vinh to repeat the instruction; do not mark an Agent IN_PROGRESS merely because its name appears here.
