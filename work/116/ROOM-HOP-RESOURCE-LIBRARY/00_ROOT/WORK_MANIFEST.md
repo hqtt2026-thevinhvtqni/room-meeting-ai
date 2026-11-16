@@ -15,4 +15,4 @@
 - Resource domains: RES-01 to RES-42, covering technology/infrastructure, finance, public administration, legal research and 18 additional industry domains.
 - Current sources: public-apis directory; FIN-001..FIN-008; GOV-001..002; PUB-001..002; CON-001..002; HLT-001; EDU-001; ICH-001; LAW-001..LAW-006; AGR-001, IND-001, ENE-001, LOG-001, ENV-001, RE-001, TRD-001, TOU-001, LAB-001, INS-001, TEL-001, SCI-001, WAT-001, FOOD-001, TAX-001, HR-001, CUL-001 and DRR-001. Candidate sources require scoped access/runtime checks before use.
 - Implementation: Catalog and documentation only. No external service credentials or production API integration.
-- GitHub main sync: UPDATE IN PROGRESS — final parity verification required after this taxonomy expansion.
+- GitHub main sync: VERIFIED 2026-11-16 — post-expansion verification PASS (see DOC-035 journal entry of same date).
