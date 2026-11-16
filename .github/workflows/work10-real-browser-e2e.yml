@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - work/10-computer-agent-mirror
+      - work/10-computer-workforce-p0-candidate
       - work-10-sandbox-handoff-20261006
     paths:
       - "10/COMPUTER-AGENT/**"
@@ -15,10 +16,6 @@ permissions:
 
 jobs:
   real-browser:
-    # Pinned on purpose: ubuntu-latest now resolves to ubuntu-26.04, which
-    # playwright 1.55.0 does not support ("Playwright does not support
-    # chromium on ubuntu26.04-x64"). 24.04 is the newest LTS supported by
-    # the pinned playwright version. Re-evaluate when upgrading playwright.
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     defaults:
@@ -46,9 +43,13 @@ jobs:
           python -m py_compile 10/COMPUTER-AGENT/04_CODE/*.py
           python -m py_compile 10/COMPUTER-AGENT/05_TEST/e2e_real_browser.py
           python -m py_compile 10/COMPUTER-AGENT/05_TEST/test_p0_p5.py
+          python -m py_compile 10/COMPUTER-AGENT/05_TEST/test_http_security_lifecycle.py
 
       - name: Offline contract tests
         run: python 10/COMPUTER-AGENT/05_TEST/test_p0_p5.py
+
+      - name: HTTP security and lifecycle regressions
+        run: python 10/COMPUTER-AGENT/05_TEST/test_http_security_lifecycle.py
 
       - name: Real Chromium E2E
         run: python 10/COMPUTER-AGENT/05_TEST/e2e_real_browser.py
