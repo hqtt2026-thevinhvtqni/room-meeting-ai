@@ -109,3 +109,16 @@
 - Scope limits: one read-only GET per source; no trading, no private data, no credentials, no bulk download, no automated scraping. Reference rates are not executable quotes; World Bank values must keep indicator definition, unit and lastupdated context.
 - Status: FIN-007 and FIN-008 upgraded to runtime_tested_public_endpoint_pass (read-only scope only). All other records remain candidates/not runtime tested. No Work-level release claimed.
 - Next candidates for the same read-only pattern: SRC-001-adjacent no-key APIs in public-apis; SEC EDGAR (requires compliant User-Agent header, needs a client that can set headers); ICH-001 dataset fetch/parse.
+
+
+## 2026-11-16 — Vibe (for Vinh, autonomous authorization) — Runtime verification of ICH-001 dataset (read-only fetch)
+- Scope: Continue the per-record runtime verification backlog: fetch and parse the ICH-001 dataset without credentials.
+- Method: Opened the Hugging Face dataset page and queried the public datasets-server API (/rows and /size) for dataset nhatnguyet/64-que-kinh-dich. No download of the full file into W116; no modification of upstream data.
+- Evidence:
+  - Dataset page: 1 subset (default), 1 split (train) with 64 rows; schema columns id, so, ten, ten_en, ten_han, que_thuong, que_ha, hao, tuong, nguon, ghi_chu; sample rows show source attribution "Chu Hy, Chu Dịch bản nghĩa ... đối chiếu bản ctext.org".
+  - datasets-server /rows: real row data returned; row 0 = hexagram 1, ten "Thuần Càn", ten_han 乾, que_thuong "Càn", que_ha "Càn", hao 111111.
+  - datasets-server /size: num_rows 64, num_columns 11, config default, split train.
+- Consistency check: hexagram 1 structure (thuong Càn / ha Càn / hao 111111) matches the classical King Wen order; row count 64 matches the declared 64-hexagram scope.
+- Result: PASS for public read-only dataset fetch/parse. ICH-001 upgraded to runtime_tested_public_dataset_pass in RESOURCE_CATALOG.json (new runtime_test_evidence field, last_checked 2026-11-16).
+- Scope limits: read-only API queries only; dataset license (CC BY 4.0 per publisher) requires attribution downstream; source text, commentary and AI interpretation remain separate per record constraints. No Work-level release claimed.
+- Remaining backlog: SEC EDGAR requires a compliant custom User-Agent header not supported by the current fetch tool; government portals (GOV/PUB/CON/LAW series) have no verified API contracts and remain portal-only; remaining seeds stay candidates.
