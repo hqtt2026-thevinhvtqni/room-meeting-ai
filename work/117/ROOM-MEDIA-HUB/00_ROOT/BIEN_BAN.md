@@ -100,3 +100,15 @@ This confirms product scope only. It does not approve a storage vendor, detailed
 - Sandbox và GitHub main là hai môi trường song song xây dựng. Bốn hồ sơ chính thức phải dùng cùng nội dung và đường dẫn tương ứng; thay đổi phải được đối soát và đồng bộ có readback, không tự ý tạo nhánh Work riêng.
 - Đây là quyết định về cơ cấu và quản trị dự án. Không phải bằng chứng các AI đã được dispatch/đã nhận việc; không phê duyệt kiến trúc cuối cùng, BUILD, chi phí, upload dữ liệu thật, deployment hoặc release.
 - Status: ROLE/RECORD GOVERNANCE DIRECTION CONFIRMED; BUILDER SELECTION OPEN; ARCHITECTURE PROVISIONAL; BUILD NOT AUTHORIZED.
+
+
+## 12. Quyết định lựa chọn Builder chính và vai trò Vibe — 2026-11-17
+- Authority: Vinh / Product Owner.
+- Go / AI-06 (Grok) được CHỌN làm Builder chính (đầu mối xây dựng) của W117, chịu trách nhiệm đầu mối triển khai và kết quả xây dựng trong phạm vi task được phê duyệt.
+- Vibe (Mistral) được CHỌN làm người phản biện kiến trúc độc lập, đồng thời hỗ trợ xây dựng trên GitHub ở các task được giao. Vibe có quyền nêu phản biện, yêu cầu làm rõ rủi ro và đề xuất phương án khác với Go; không mặc định phải đồng ý với thiết kế của Go. Vibe không thay thế trách nhiệm Builder chính của Go.
+- Qc (Qwen Coder) là coder triển khai UI/Backend theo task được giao và phạm vi truy cập thực tế.
+- Cla (Claude) chỉ đảm nhiệm đối soát kỹ thuật/kiến trúc, lập kế hoạch kỹ thuật, rà soát mã, sửa chữa, debug và phân tích nguyên nhân gốc; không là Builder tính năng mặc định.
+- Qw (Qween) kiểm thử độc lập; Ka phản biện CSA/bảo mật; Xu điều phối và quản lý bốn hồ sơ; Vinh giữ quyền phê duyệt cuối cùng.
+- Ranh giới thuật ngữ: BUILD là hoạt động xây dựng/hiện thực hóa sản phẩm bằng mã nguồn và cấu hình theo kiến trúc, yêu cầu và task đã được phê duyệt. Builder là vai trò/người chịu trách nhiệm tổ chức và thực hiện hoạt động BUILD. BUILD không đồng nghĩa với một AI cụ thể, không đồng nghĩa với việc mở một Work mới, và không tự động cho phép deploy/release.
+- Trạng thái quyền hạn: lựa chọn vai trò Go/Vibe đã được Vinh quyết định; việc dispatch, nhận task, xác minh quyền truy cập GitHub/công cụ và bắt đầu thi công vẫn cần bằng chứng riêng. Quyết định này KHÔNG tự động phê duyệt BUILD, chi phí, upload media thật, deployment hoặc release.
+- Status: BUILDER ROLE DECISION CONFIRMED; EXECUTION DISPATCH/ACCESS PENDING; ARCHITECTURE PROVISIONAL; BUILD NOT AUTHORIZED.
