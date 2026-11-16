@@ -113,12 +113,29 @@ class HttpSecurityLifecycleTests(unittest.TestCase):
         self.assertEqual(self._request(content_type="text/plain")[0], 400)
         self.assertEqual(self.adapters, [])
 
+    def test_empty_verification_is_rejected_before_adapter_creation(self):
+        payload = {"task": "invalid verification", "actions": [{"type": "click", "target": "Go"}],
+                   "verification": {"checks": []}}
+        status, _, body = self._request(payload)
+        self.assertEqual(status, 400)
+        self.assertIn(b"verification_checks_must_be_non_empty_list", body)
+        self.assertEqual(self.adapters, [])
+
     def test_approved_origin_gets_exact_cors_header(self):
         status, headers, _ = self._request()
         self.assertEqual(status, 200)
         self.assertEqual(headers.get("Access-Control-Allow-Origin"), ORIGIN)
         self.assertEqual(self.adapters[0].calls[-1], "close")
         self.assertTrue(self.adapters[0].closed)
+
+    def test_adapter_close_failure_does_not_return_pass(self):
+        class CloseFailAdapter(RecordingAdapter):
+            def close(self):
+                raise RuntimeError("close failed")
+        with patch.object(agent_api, "build_adapter", return_value=CloseFailAdapter()):
+            status, _, body = self._request()
+        self.assertEqual(status, 500)
+        self.assertIn(b"adapter_close_failed", body)
 
     def test_process_wide_lease_blocks_second_http_request_until_close(self):
         entered = threading.Event()
