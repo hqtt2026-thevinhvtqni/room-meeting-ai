@@ -2,7 +2,7 @@
   "schema_version": "1.4",
   "work_id": "116",
   "catalog_name": "ROOM-HOP Shared Resource Catalog",
-  "last_updated": "2026-11-14",
+  "last_updated": "2026-11-16",
   "resources": [
     {
       "resource_id": "SRC-001",
@@ -214,9 +214,9 @@
       "protocol_or_endpoint": "HTTPS REST API.",
       "auth": "No API key according to public documentation.",
       "pricing_or_quota": "Public service; verify current limits and data update schedule.",
-      "status": "candidate_documented_not_runtime_tested",
-      "source_reachability": "documentation_reference",
-      "runtime_test": "not_run",
+      "status": "runtime_tested_public_endpoint_pass",
+      "source_reachability": "runtime_verified",
+      "runtime_test": "pass_public_read_only_2026-11-16",
       "compatible_work_ids": [
         "W116 discovery",
         "FX and macro dashboards"
@@ -224,7 +224,9 @@
       "constraints": [
         "Reference rates are not necessarily executable trading quotes or intraday rates.",
         "Store source date and base/quote currency."
-      ]
+      ],
+      "runtime_test_evidence": "GET https://api.frankfurter.dev/v1/latest?base=EUR&symbols=USD,JPY on 2026-11-16 returned HTTP 200 JSON: amount 1.0, base EUR, date 2026-11-13, rates JPY 176.83, USD 1.1052. No API key used.",
+      "last_checked": "2026-11-16"
     },
     {
       "resource_id": "FIN-008",
@@ -241,16 +243,18 @@
       "protocol_or_endpoint": "HTTPS REST API; JSON/XML formats.",
       "auth": "Public indicator endpoints generally do not require an API key.",
       "pricing_or_quota": "Public API; verify current service conditions.",
-      "status": "candidate_documented_not_runtime_tested",
-      "source_reachability": "documentation_reference",
-      "runtime_test": "not_run",
+      "status": "runtime_tested_public_endpoint_pass",
+      "source_reachability": "runtime_verified",
+      "runtime_test": "pass_public_read_only_2026-11-16",
       "compatible_work_ids": [
         "W116 discovery",
         "Macro and country comparison research"
       ],
       "constraints": [
         "Check indicator definitions, units, country coverage, frequency and publication lag."
-      ]
+      ],
+      "runtime_test_evidence": "GET https://api.worldbank.org/v2/country/VNM/indicator/NY.GDP.MKTP.CD?format=json&per_page=3 on 2026-11-16 returned HTTP 200 JSON: GDP current US$ Viet Nam 2025 = 514,697,215,165; 2024 = 476,324,572,784; 2023 = 433,805,036,898; lastupdated 2026-11-11. No API key used.",
+      "last_checked": "2026-11-16"
     },
     {
       "resource_id": "GOV-001",
