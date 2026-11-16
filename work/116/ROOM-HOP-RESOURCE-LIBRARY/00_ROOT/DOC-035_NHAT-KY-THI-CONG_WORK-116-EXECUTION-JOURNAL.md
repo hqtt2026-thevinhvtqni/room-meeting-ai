@@ -99,3 +99,13 @@
 - Evidence: W0000 DOC-018 commit 12d9898 (registration entry with status, authority, purpose, non-duplication boundary, canonical source, catalog verification evidence and portfolio note).
 - Result: W116 is now registered in the company Work portfolio register. This journal closes the registration item.
 - Scope limits: documentation only; W0000 registry metadata (56-entry snapshot table) intentionally not rewritten; no external API/MCP call, no credentials, no runtime integration.
+
+
+## 2026-11-16 — Vibe (for Vinh, autonomous authorization) — First runtime verification of public endpoints (FIN-007, FIN-008)
+- Scope: Begin the per-record runtime/API verification backlog, restricted to public read-only endpoints that require no credentials, per the 2026-11-14 journal "selectively test public/read-only endpoints without secrets where permitted".
+- Method: Called each documented endpoint once via HTTPS GET with no API key and no credentials, read the returned JSON, then updated the corresponding RESOURCE_CATALOG.json record (status, source_reachability, runtime_test, new runtime_test_evidence field, last_checked) and catalog last_updated to 2026-11-16.
+- FIN-007 Frankfurter API: GET https://api.frankfurter.dev/v1/latest?base=EUR&symbols=USD,JPY returned HTTP 200 JSON {amount:1.0, base:EUR, date:2026-11-13, rates:{JPY:176.83, USD:1.1052}}. Result: PASS for public read-only reference-rate query. No key required, consistent with documentation.
+- FIN-008 World Bank Indicators API: GET https://api.worldbank.org/v2/country/VNM/indicator/NY.GDP.MKTP.CD?format=json&per_page=3 returned HTTP 200 JSON with GDP (current US$) Viet Nam 2025 = 514,697,215,165.065; 2024 = 476,324,572,783.807; 2023 = 433,805,036,898.465; metadata lastupdated 2026-11-11. Result: PASS for public read-only indicator query. No key required.
+- Scope limits: one read-only GET per source; no trading, no private data, no credentials, no bulk download, no automated scraping. Reference rates are not executable quotes; World Bank values must keep indicator definition, unit and lastupdated context.
+- Status: FIN-007 and FIN-008 upgraded to runtime_tested_public_endpoint_pass (read-only scope only). All other records remain candidates/not runtime tested. No Work-level release claimed.
+- Next candidates for the same read-only pattern: SRC-001-adjacent no-key APIs in public-apis; SEC EDGAR (requires compliant User-Agent header, needs a client that can set headers); ICH-001 dataset fetch/parse.
