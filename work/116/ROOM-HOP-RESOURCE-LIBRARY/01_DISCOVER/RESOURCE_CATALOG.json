@@ -487,9 +487,9 @@
       "protocol_or_endpoint": "CSV dataset / Hugging Face datasets; no hosted inference API required.",
       "auth": "Public dataset access.",
       "pricing_or_quota": "CC BY 4.0 according to dataset publisher; attribution required.",
-      "status": "candidate_dataset_metadata_reviewed_runtime_not_tested",
-      "source_reachability": "dataset_page_reviewed",
-      "runtime_test": "not_run",
+      "status": "runtime_tested_public_dataset_pass",
+      "source_reachability": "runtime_verified",
+      "runtime_test": "pass_public_read_only_2026-11-16",
       "compatible_work_ids": [
         "W116 discovery",
         "I Ching knowledge and retrieval Work"
@@ -498,7 +498,9 @@
         "Reference data for names and hexagram structure; not a complete authoritative corpus of all commentaries.",
         "Preserve original text, source edition and attribution when extending.",
         "Separate classical source text, later commentary, modern interpretation and generated AI interpretation."
-      ]
+      ],
+      "runtime_test_evidence": "Hugging Face dataset page nhatnguyet/64-que-kinh-dich shows 1 subset (default), 1 split (train, 64 rows), 11 columns (id, so, ten, ten_en, ten_han, que_thuong, que_ha, hao, tuong, nguon, ghi_chu). datasets-server /rows returned real row data: row 0 = hexagram 1, ten \"Thuần Càn\", ten_han 乾, que_thuong/que_ha \"Càn\", hao 111111; /size confirms num_rows 64, num_columns 11. Read-only fetch, no credentials.",
+      "last_checked": "2026-11-16"
     },
     {
       "resource_id": "LAW-001",
