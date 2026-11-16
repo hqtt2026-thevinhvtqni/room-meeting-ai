@@ -449,3 +449,23 @@ Em đã đọc và phân tích mã nguồn thực tế của ba Work liên quan:
 - Pre-final-journal full-content readback: 00_ROOT/BIEN_BAN.md: MATCH (blob 20fd15a59aa8f2b5ca059ab2a9db75ac4405298b); 00_ROOT/NHAT_KY_THI_CONG.md: MATCH (blob bd53ec482b6445db67e75cde03805832f6f30ee3); 04_PLAN/IMPLEMENTATION_ROADMAP.md: MATCH (blob eb685a670eb311df9f8d1d54d0aed2a1003701ce); 00_ROOT/TASK_BOARD.md: MATCH (blob 567c82f474deb9a5051b2fdc1174c4c728a94a47).
 - Result: Builder decision and BUILD definition synchronized. The Journal receives this final sync entry and is synced/read back once more.
 - Boundary: Documentation-only update. No agent dispatch or task acceptance is claimed; no source code changed; BUILD remains NOT AUTHORIZED pending architecture gate and explicit Vinh approval.
+
+
+## 2026-11-17 — Xu / AI-01 — Vinh authorizes W117 Dashboard build and assigns execution work
+- Scope: Dedicated W117-only operational Dashboard; this is not the future HQTT-wide/W113 dashboard and does not authorize the underlying media-hub product build.
+- Authority: Direct instruction from Vinh in this conversation: assign all Dashboard responsibilities and tasks into the canonical Journal and Task Board; Agents are expected to proceed independently to completion without repeated prompting.
+- Decision: W117 Dashboard BUILD AUTHORIZED within the bounded scope stated in the Task Board. Production deployment/release, paid services, billing/payment setup, cloud account/token creation, real-media upload and W117 media-product implementation remain outside this authorization.
+- Allocation:
+  - Go / AI-06 — single accountable primary Builder and integration lead.
+  - Qc — UI/Backend implementation partner under Go's breakdown.
+  - Cla / AI-03 — technical assurance and verification of actual runtime/data contracts.
+  - Ka / AI-02 — independent CSA/security review.
+  - Qw / AI-05 — independent QE strategy and execution; no self-approval.
+  - Vibe — architecture challenger and optional GitHub support, only after access/acceptance evidence.
+  - Xu / AI-01 — coordination, canonical records, integration tracking and blocker resolution.
+- Task breakdown recorded in canonical TASK_BOARD.md: W117-DASH-001 through W117-DASH-009, covering delivery ownership/data contract, overview/task UI, Agent Monitor, Activity & Evidence, technical assurance, CSA, QE criteria, independent tests and final handoff.
+- Build rules: Use canonical Task Board and Journal as data sources; read-only dashboard; no mock/fabricated metrics; unknown dispatch/ACK/runtime state must remain explicitly unknown; run independent tasks in parallel; no repeated user confirmation for work inside the authorized scope.
+- Method/evidence: Re-read canonical Sandbox records via diagnostic read and fetched the three canonical GitHub main records before editing. Tool discovery confirmed the currently exposed ROOM-HOP Build MCP surface has Sandbox read/write/list operations but no Agent task-dispatch/session-assignment operation.
+- Result: Scope and per-Agent task allocations are being written to the existing canonical records. Agent dispatch/receipt/acceptance is NOT VERIFIED; no Agent is claimed to have started. Dashboard source code has NOT yet been built. No QE PASS claimed.
+- Blocker: No authorized Agent dispatch operation is exposed in the current ROOM-HOP tool surface. Xu must continue seeking an authorized route and preserve each task as ASSIGNED — DISPATCH UNCONFIRMED until an actual ACK/runtime event is evidenced; do not ask Vinh to repeat the instruction.
+- Next: Persist and read back Task Board, Journal and Minutes in Sandbox; sync the same canonical files to GitHub main and verify exact content parity; continue with dispatch-route discovery and Dashboard build coordination.
