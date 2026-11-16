@@ -89,3 +89,14 @@ This confirms product scope only. It does not approve a storage vendor, detailed
 - Architecture constraint: provider-neutral storage adapter; canonical Asset ID and metadata independent of provider; store provider/object locator separately; checksum verification; export/migration path; avoid proprietary URLs as canonical identity.
 - This decision changes cost priority only. It does not approve architecture baseline, BUILD, account authorization, real-data upload, or deployment.
 - Status: USER DIRECTION CONFIRMED; PROVIDER SELECTION PENDING; BUILD NOT AUTHORIZED.
+
+
+## 11. Quyết định điều chỉnh cơ cấu thi công và quản trị hồ sơ — 2026-11-17
+- Authority: Vinh / Product Owner.
+- Cla / AI-03 (Claude) được tách khỏi vai trò mặc định trực tiếp xây dựng tính năng. Phạm vi Cla: đối soát kỹ thuật/kiến trúc, lập kế hoạch kỹ thuật, rà soát mã nguồn, sửa chữa, debug và phân tích nguyên nhân gốc.
+- Đầu mối xây dựng có hai ứng viên: Go / AI-06 (Grok) hoặc Vibe (Mistral). Việc chọn một lead builder còn mở cho đến khi xác minh quyền truy cập, năng lực công cụ và có bằng chứng nhận việc. Không được ghi nhận Go/Vibe đã nhận việc khi chưa có xác nhận.
+- Qc (Qwen Coder) đảm nhiệm viết mã UI/Backend theo task được duyệt và quyền truy cập thực tế. Qw (Qween) là QE/QA độc lập, không tự nghiệm thu phần mình xây dựng. Ka giữ vai trò CSA reviewer. Xu điều phối và quản lý hồ sơ; Vinh giữ quyền quyết định cuối cùng.
+- Vinh yêu cầu mỗi Work chỉ duy trì đúng bốn hồ sơ quản trị xuyên suốt: (1) một Nhật ký thi công, (2) một Biên bản, (3) một Plan, (4) một Bảng Task. Các tài liệu kỹ thuật khác chỉ là tài liệu hỗ trợ/bằng chứng, không được tạo thành bản kế hoạch hoặc bảng task cạnh tranh.
+- Sandbox và GitHub main là hai môi trường song song xây dựng. Bốn hồ sơ chính thức phải dùng cùng nội dung và đường dẫn tương ứng; thay đổi phải được đối soát và đồng bộ có readback, không tự ý tạo nhánh Work riêng.
+- Đây là quyết định về cơ cấu và quản trị dự án. Không phải bằng chứng các AI đã được dispatch/đã nhận việc; không phê duyệt kiến trúc cuối cùng, BUILD, chi phí, upload dữ liệu thật, deployment hoặc release.
+- Status: ROLE/RECORD GOVERNANCE DIRECTION CONFIRMED; BUILDER SELECTION OPEN; ARCHITECTURE PROVISIONAL; BUILD NOT AUTHORIZED.
