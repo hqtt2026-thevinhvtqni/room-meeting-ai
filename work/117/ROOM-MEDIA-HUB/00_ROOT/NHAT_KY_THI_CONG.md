@@ -370,3 +370,16 @@ Em đã đọc và phân tích mã nguồn thực tế của ba Work liên quan:
   - Terms create provider-change/retention risk; migration/export and account activity monitoring are mandatory if later approved.
 - Status: PUBLIC DOCUMENTATION REVIEW DONE; ACCOUNT/API ELIGIBILITY NOT TESTED; PROVIDER NOT SELECTED; NO TEST ASSETS UPLOADED; BUILD NOT AUTHORIZED.
 - Next: Seek evidence for developer application eligibility and free-tier limits from official sources; any live account test requires separate Vinh approval and synthetic data only.
+
+ 
+## 2026-11-16 — Xu / AI-01 — Đồng bộ hồ sơ W117 lên GitHub main
+- Scope: Đồng bộ tài liệu W117 từ Sandbox canonical sang repository GitHub đã khai báo trong WORK_MANIFEST.
+- Source of truth: Sandbox Work ID 117, path `ROOM-MEDIA-HUB/`.
+- Target: `hqtt2026-thevinhvtqni/room-meeting-ai`, branch `main`, path `work/117/ROOM-MEDIA-HUB/`.
+- Method: Đọc nội dung từng tài liệu bằng Sandbox diagnostic read; tạo/cập nhật tệp qua GitHub Contents API. Chỉ đồng bộ Markdown/documentation; không đồng bộ media binary, secrets, credentials hoặc dữ liệu thật.
+- Scope synchronized: 14 canonical files — 4 files trong 00_ROOT, 01_DISCOVER/DISCOVER_BRIEF.md, 02_DEFINE/PRODUCT_REQUIREMENTS.md, 7 files trong 03_ARCHITECT và 04_PLAN/IMPLEMENTATION_ROADMAP.md.
+- Evidence: GitHub trả commit SHA thành công cho từng thao tác ghi. Các commit có message prefix `W117: sync`; latest file commit recorded in this operation: `f7598cde31da738301ac67a7c916b1af1d4125d5`.
+- Result: WRITE OPERATIONS — SUCCESS. Full GitHub readback/content parity — PENDING verification; do not claim full PASS until checked.
+- Governance: This is documentation synchronization only. Product scope remains shared Room-wide; zero-cost-first remains the current cost direction; TeraBox remains NOT SELECTED; architecture remains provisional; BUILD NOT AUTHORIZED.
+- Timestamp note: Exact wall-clock time for this sync was not captured by the execution tools; date recorded without inventing a time.
+- Next: Read back key files and confirm GitHub contents match Sandbox; update status only from observed evidence.
