@@ -157,8 +157,19 @@ class Handler(BaseHTTPRequestHandler):
         if any(not isinstance(item, dict) for item in raw_actions):
             raise ValueError("each_action_must_be_object")
         verification = body.get("verification")
-        if verification is not None and not isinstance(verification, dict):
-            raise ValueError("verification_must_be_object")
+        if verification is not None:
+            if not isinstance(verification, dict):
+                raise ValueError("verification_must_be_object")
+            checks = verification.get("checks")
+            if not isinstance(checks, list) or not checks:
+                raise ValueError("verification_checks_must_be_non_empty_list")
+            for check in checks:
+                if not isinstance(check, dict):
+                    raise ValueError("each_verification_check_must_be_object")
+                if not isinstance(check.get("field"), str) or not check["field"].strip():
+                    raise ValueError("verification_check_field_required")
+                if check.get("contains") in (None, ""):
+                    raise ValueError("verification_check_contains_required")
         actions = [Action(**item) for item in raw_actions]
         return task, actions, verification
 
@@ -186,22 +197,30 @@ class Handler(BaseHTTPRequestHandler):
             }, self.headers.get("Origin"))
 
         adapter = None
+        result = None
+        failure = None
         try:
             adapter = build_adapter()
             result = AgentRuntime(adapter).execute(task, actions, verification)
-            code = 200 if result.status == "PASS" else 409
-            return self._send(code, result.__dict__, self.headers.get("Origin"))
         except Exception as exc:
-            return self._send(500, {
-                "status": "FAIL",
-                "error": f"{type(exc).__name__}: {exc}",
-            }, self.headers.get("Origin"))
+            failure = f"{type(exc).__name__}: {exc}"
         finally:
             try:
                 if adapter is not None:
                     adapter.close()
+            except Exception as exc:
+                failure = f"adapter_close_failed: {type(exc).__name__}: {exc}"
             finally:
                 EXECUTION_COORDINATOR.release()
+
+        # Do not report PASS until adapter shutdown has also completed.
+        if failure:
+            return self._send(500, {
+                "status": "FAIL",
+                "error": failure,
+            }, self.headers.get("Origin"))
+        code = 200 if result.status == "PASS" else 409
+        return self._send(code, result.__dict__, self.headers.get("Origin"))
 
 
 def serve(port: int = PORT, host: str = "127.0.0.1") -> ThreadingHTTPServer:
