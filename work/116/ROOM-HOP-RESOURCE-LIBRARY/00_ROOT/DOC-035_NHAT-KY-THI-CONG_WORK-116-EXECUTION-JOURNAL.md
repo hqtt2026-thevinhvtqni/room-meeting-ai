@@ -122,3 +122,17 @@
 - Result: PASS for public read-only dataset fetch/parse. ICH-001 upgraded to runtime_tested_public_dataset_pass in RESOURCE_CATALOG.json (new runtime_test_evidence field, last_checked 2026-11-16).
 - Scope limits: read-only API queries only; dataset license (CC BY 4.0 per publisher) requires attribution downstream; source text, commentary and AI interpretation remain separate per record constraints. No Work-level release claimed.
 - Remaining backlog: SEC EDGAR requires a compliant custom User-Agent header not supported by the current fetch tool; government portals (GOV/PUB/CON/LAW series) have no verified API contracts and remain portal-only; remaining seeds stay candidates.
+
+
+## 2026-11-16 — Vibe (for Vinh, autonomous authorization) — Runtime reachability batch: HR-001, NSO family, DRR-001, LAW-001, GOV-001
+- Scope: Continue the per-record runtime backlog with read-only page fetches; no credentials, no scraping, no bulk download.
+- Method: One HTTPS read-only fetch per target URL via the page-fetching tool; results recorded honestly per record, including failures.
+- Results:
+  - HR-001 VietJobs (https://github.com/VinNLP/VietJobs): PASS — repository page reachable; description confirms 48,092 postings, over 15 million words, all 34 provinces/municipalities. Repository page verified only; dataset files not downloaded; in-repo license inspection still required before reuse. Status: runtime_tested_public_source_page_pass.
+  - NSO statistics portal (https://www.nso.gov.vn/so-lieu-thong-ke/): PASS at page level — title "Số liệu thống kê", category navigation rendered. Applied to HLT-001, EDU-001, AGR-001, IND-001, ENE-001, LOG-001, LAB-001 as source_reachability=runtime_verified_portal_page, runtime_test=portal_page_reachable_read_only_2026-11-16. Table URLs, formats and any API remain unverified; no table downloaded.
+  - DRR-001 (https://nchmf.gov.vn/): automated access BLOCKED — fetch returned no readable content ("site blocked automated access"). Portal status NOT inferred; may work in a normal browser.
+  - LAW-001 (https://phapluat.gov.vn/): automated access BLOCKED — HTTP 403 Forbidden WAF page with Request-ID. Portal status NOT inferred.
+  - GOV-001 (https://dichvucong.gov.vn/): NOT VERIFIED — three attempts failed with page-fetching service unreachable; service-side failure vs portal-side blocking cannot be distinguished; no conclusion drawn.
+- Catalog changes: statuses and new runtime_test_evidence fields updated for the 12 affected records; catalog last_updated 2026-11-16.
+- Scope limits: page-level reachability only; no scraping, no bulk download, no credential use, no inference of portal health from automated-access blocks. No Work-level release claimed.
+- Remaining backlog: SEC EDGAR needs a custom User-Agent header (tool limitation); VietJobs dataset files + license inspection; remaining portal records need human-browser verification or an authorized fetch path.
