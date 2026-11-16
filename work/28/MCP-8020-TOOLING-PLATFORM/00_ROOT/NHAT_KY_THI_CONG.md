@@ -930,3 +930,40 @@ Xu approves three contract directions:
 4. Plan any main-branch integration separately, with exact merge-base, changed-path inventory, conflict review and protected CI; do not use the raw 393/1,173 compare as a merge instruction.
 
 **STATUS:** GITHUB CANONICAL JOURNAL UPDATED / FULL SANDBOX SYNC NOT CLAIMED / BRANCH MERGE NOT PERFORMED / WORK ACTIVE — INTEGRATION BLOCKED — NOT RELEASED / EXECUTION GATE CLOSED.
+
+
+## 2026-11-16 — JRN-W28-024 — Canonical GitHub → Sandbox artifact synchronization batch
+
+**Người thực hiện:** Ka  
+**Chức danh:** Chief Security Architect (CSA) — Independent Architecture/Security Reviewer  
+**Priority:** P0 — Canonical record and source synchronization
+
+### READ / TRACE
+- Re-read the Work Manifest and confirmed GitHub branch `work/28-mcp-tooling-platform` is canonical; Sandbox is a supporting verification/evidence copy.
+- The Sandbox inventory showed stale canonical records and generated `__pycache__` artifacts. No cache/bytecode artifact was promoted or treated as source.
+- Used GitHub Contents as source for each artifact below. For every transfer, readback was obtained through the Sandbox diagnostic read and compared by exact text equality.
+
+### BUILD / VERIFY — EXACT READBACK
+| Artifact | GitHub source blob SHA | Sandbox readback |
+|---|---|---|
+| `00_ROOT/WORK_MANIFEST.md` | `3aa82147c525f6c8b3befd726fb91d3489fc578d` | EXACT MATCH |
+| `00_ROOT/BIEN_BAN.md` | `7130a0ed258baef8e57575b8baf1bbab39f570cf` | EXACT MATCH |
+| `00_ROOT/WORK_STRUCTURE_STANDARD.md` | `69e082a9080e22b70b21d77539a31b5d15609948` | EXACT MATCH |
+| `00_ROOT/WORK_DOCUMENT_REGISTER.md` | `c16008efe6ae2059f4dddb2c9c3d936d208ca7f3` | EXACT MATCH |
+| `00_ROOT/NHAT_KY_THI_CONG.md` | `b62a42446502ec763a390936aa110ed40f615918` | EXACT MATCH; includes JRN-W28-023 |
+| `01_PLAN/WORK28_MASTER_EXECUTION_PLAN_V2.0.md` | `bdc4f682a8fbff346357e2394c3c512176d85764` | EXACT MATCH |
+| `03_ARCHITECTURE/WORK28_ARCHITECTURE_DECISION_V2.md` | `3720ee455e5bb8e07de1bc4b4756615506ed5799` | EXACT MATCH |
+| `.github/workflows/work28-mcp-tooling.yml` | `aef70150c274ecb076bcb3e94c558892e3b52573` | EXACT MATCH |
+| `04_CODE/execution_host/process_job.py` | `85f4866df7710aa2ad0fe1601ae319c470f1718a` | EXACT MATCH |
+| `05_TEST/test_process_job_suspended_spawn.py` | `831691a44a56d8634a4b13243d664b21b47f64ae` | EXACT MATCH |
+
+- Each Sandbox readback matched the GitHub source text exactly. No code was edited in this batch; this was a one-way canonical artifact sync.
+- The journal itself is synchronized after this entry is committed, then read back and checked in Sandbox.
+
+### LIMITATIONS / NOT CLAIMED
+- This batch does not establish complete synchronization of every Work 28 file, binary artifacts, local PC checkout, or runtime deployment.
+- Sandbox inventory contains additional historical/evidence/source files requiring file-by-file classification and SHA reconciliation. Generated caches are excluded.
+- No pytest, CI, live MCP protocol test, runtime restart, or product E2E was run by this synchronization operation.
+- Branch divergence from `main` is not resolved; no merge/rebase/force-push was performed.
+
+**STATUS:** 10 CANONICAL / SELECTED ARTIFACTS GITHUB → SANDBOX EXACT-MATCH / FULL WORKSPACE SYNC STILL OPEN / WORK ACTIVE — INTEGRATION BLOCKED — NOT RELEASED / EXECUTION GATE CLOSED.
