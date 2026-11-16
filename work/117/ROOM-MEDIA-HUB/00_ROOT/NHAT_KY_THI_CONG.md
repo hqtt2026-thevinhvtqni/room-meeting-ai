@@ -440,3 +440,12 @@ Em đã đọc và phân tích mã nguồn thực tế của ba Work liên quan:
 - Result: User role decision is recorded. No claim that Go/Vibe have been dispatched, accepted work or verified access. No source code changed and no implementation started.
 - Status: ROLE DECISION RECORDED; PLAN/TASK BOARD UPDATE IN PROGRESS; BUILD NOT AUTHORIZED.
 - Next: Read back all four records, sync the exact same contents to GitHub main, and verify full-content parity.
+
+
+## 2026-11-17 — Xu / AI-01 — Đồng bộ quyết định Builder Go/Vibe và xác minh parity
+- Scope: Đồng bộ quyết định phân vai Builder mới của Vinh trên cả bốn hồ sơ quản trị Sandbox và GitHub main.
+- Method: Đọc lại bốn file Sandbox; cập nhật bốn file tương ứng trên GitHub main; fetch lại và so sánh toàn bộ nội dung.
+- Evidence: GitHub update commits: Biên bản d9b572e3ab5eda71f7e2dc15b3a4160962e2bb02; Nhật ký b5595f61bad5270b6971139eef38382e4075d652; Plan fab8b931d94197f7ee868d89a3e30ba1fcdac36b; Task Board dfc46a4c50b638b6f4a39ae10e4837d2ffd1e31e.
+- Pre-final-journal full-content readback: 00_ROOT/BIEN_BAN.md: MATCH (blob 20fd15a59aa8f2b5ca059ab2a9db75ac4405298b); 00_ROOT/NHAT_KY_THI_CONG.md: MATCH (blob bd53ec482b6445db67e75cde03805832f6f30ee3); 04_PLAN/IMPLEMENTATION_ROADMAP.md: MATCH (blob eb685a670eb311df9f8d1d54d0aed2a1003701ce); 00_ROOT/TASK_BOARD.md: MATCH (blob 567c82f474deb9a5051b2fdc1174c4c728a94a47).
+- Result: Builder decision and BUILD definition synchronized. The Journal receives this final sync entry and is synced/read back once more.
+- Boundary: Documentation-only update. No agent dispatch or task acceptance is claimed; no source code changed; BUILD remains NOT AUTHORIZED pending architecture gate and explicit Vinh approval.
