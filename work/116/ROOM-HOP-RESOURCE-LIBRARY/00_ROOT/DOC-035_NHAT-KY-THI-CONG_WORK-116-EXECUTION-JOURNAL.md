@@ -91,3 +91,11 @@
 - Result: VERIFICATION PASS. WORK_MANIFEST.md updated to "GitHub main sync: VERIFIED 2026-11-16".
 - Scope limits: static catalog validation only; no external API/MCP call, no credentials, no runtime integration, no PASS claimed for any external source.
 - Remaining: W0000 portfolio index registration still unchecked; runtime/API verification of individual sources remains future work per record status.
+
+
+## 2026-11-16 — Vibe (for Vinh, autonomous authorization) — W0000 portfolio registration done
+- Scope: Close the "W0000 portfolio index registration not yet checked" item from the previous entries.
+- Method: Located the canonical W0000 portfolio register DOC-018 on branch work/0000-governance-baseline (path work/0000-governance/01_DISCOVER/DOC-018_DANH-MUC-WORK-TOAN-CONG-TY_COMPANY-WORK-PORTFOLIO-REGISTER.md); confirmed W116 was absent; appended a Work 116 registration entry following the established Work 112 entry pattern.
+- Evidence: W0000 DOC-018 commit 12d9898 (registration entry with status, authority, purpose, non-duplication boundary, canonical source, catalog verification evidence and portfolio note).
+- Result: W116 is now registered in the company Work portfolio register. This journal closes the registration item.
+- Scope limits: documentation only; W0000 registry metadata (56-entry snapshot table) intentionally not rewritten; no external API/MCP call, no credentials, no runtime integration.
