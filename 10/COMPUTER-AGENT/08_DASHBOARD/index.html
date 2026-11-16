@@ -3,52 +3,83 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ROOM-HOP Computer Agent</title>
+<title>ROOM-HOP Computer Workforce</title>
 <style>
-body{font-family:system-ui,sans-serif;max-width:1000px;margin:auto;padding:24px}
-.card{border:1px solid #ccc;border-radius:12px;padding:16px;margin:12px 0}
+:root{color-scheme:light dark}
+body{font-family:system-ui,sans-serif;max-width:1000px;margin:auto;padding:24px;line-height:1.5}
+.card{border:1px solid #8886;border-radius:12px;padding:16px;margin:12px 0}
+label{display:block;font-weight:600;margin:10px 0 4px}
+input,textarea{box-sizing:border-box;width:100%;padding:10px;border:1px solid #8888;border-radius:8px;font:inherit}
+textarea{font-family:ui-monospace,monospace}
+button{padding:10px 14px;margin:10px 8px 0 0;cursor:pointer}
 #status{font-weight:700}
-button{padding:10px 14px;margin-right:8px}
-pre{white-space:pre-wrap;word-break:break-word}
+small{opacity:.8}
+pre{white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere}
 </style>
 </head>
 <body>
-<h1>ROOM-HOP Computer Agent</h1>
+<h1>ROOM-HOP Computer Workforce</h1>
+<p>Dashboard điều khiển Computer Agent. Token chỉ được giữ trong ô nhập của tab hiện tại; không lưu vào mã nguồn, URL hay local storage.</p>
 <div class="card">
   <div>Agent API: <span id="status">CHECKING…</span></div>
-  <button onclick="checkHealth()">Refresh</button>
+  <label for="api">API URL</label>
+  <input id="api" value="http://127.0.0.1:8787">
+  <label for="token">Bearer token</label>
+  <input id="token" type="password" autocomplete="off" placeholder="Nhập token đã cấu hình trên máy chạy Agent">
+  <button id="refresh" type="button">Refresh health</button>
+  <small>Dashboard phải được mở từ Origin có trong COMPUTER_AGENT_ALLOWED_ORIGINS, ví dụ http://127.0.0.1:3000. Không mở trực tiếp bằng file://.</small>
 </div>
 <div class="card">
   <h2>Task</h2>
-  <textarea id="task" rows="4" style="width:100%" placeholder="Mô tả task cho Computer Agent"></textarea>
-  <button onclick="executeTask()">Execute</button>
+  <label for="task">Mục tiêu</label>
+  <textarea id="task" rows="2" placeholder="Mô tả mục tiêu cần thực hiện"></textarea>
+  <label for="actions">Actions JSON</label>
+  <textarea id="actions" rows="7">[
+  {"type":"observe"}
+]</textarea>
+  <label for="verification">Verification JSON</label>
+  <textarea id="verification" rows="5">{
+  "checks": [
+    {"field":"text","contains":"thay-bang-ket-qua-mong-doi"}
+  ]
+}</textarea>
+  <button id="execute" type="button">Execute task</button>
+  <small>Chỉ gửi task khi đã xác định actions và post-condition. Không có post-condition thì runtime không được tự suy diễn PASS.</small>
 </div>
 <div class="card">
-  <h2>Evidence</h2>
+  <h2>Evidence / Result</h2>
   <pre id="evidence">Chưa có runtime evidence.</pre>
 </div>
 <script>
-const API='http://127.0.0.1:8787';
+const byId=(id)=>document.getElementById(id);
+function apiBase(){return byId('api').value.trim().replace(/\/$/,'');}
+function authHeaders(){return {'Authorization':'Bearer '+byId('token').value,'Content-Type':'application/json'};}
 async function checkHealth(){
-  const el=document.getElementById('status');
+  const el=byId('status');
   try{
-    const r=await fetch(API+'/health');
+    const r=await fetch(apiBase()+'/health',{headers:byId('token').value?{'Authorization':'Bearer '+byId('token').value}:{}});
     const d=await r.json();
-    el.textContent=d.status==='ok'?'CONNECTED':'BLOCKED';
-  }catch(e){el.textContent='OFFLINE';}
+    el.textContent=d.status==='ok'?'CONNECTED'+(d.execution_busy?' — BUSY':''):'BLOCKED';
+  }catch(e){el.textContent='OFFLINE / ORIGIN BLOCKED';}
 }
 async function executeTask(){
-  const task=document.getElementById('task').value.trim();
-  if(!task)return;
-  const out=document.getElementById('evidence');
+  const out=byId('evidence');
+  const task=byId('task').value.trim();
+  if(!task){out.textContent='BLOCKED: cần nhập mục tiêu task.';return;}
+  if(!byId('token').value){out.textContent='BLOCKED: cần nhập Bearer token.';return;}
   try{
-    const r=await fetch(API+'/agent/execute',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({task})
+    const actions=JSON.parse(byId('actions').value);
+    const verification=JSON.parse(byId('verification').value);
+    const r=await fetch(apiBase()+'/agent/execute',{
+      method:'POST',headers:authHeaders(),
+      body:JSON.stringify({task,actions,verification})
     });
-    out.textContent=JSON.stringify(await r.json(),null,2);
+    const payload=await r.json();
+    out.textContent=JSON.stringify({http_status:r.status,...payload},null,2);
   }catch(e){out.textContent=JSON.stringify({status:'BLOCKED',error:String(e)},null,2);}
 }
+byId('refresh').addEventListener('click',checkHealth);
+byId('execute').addEventListener('click',executeTask);
 checkHealth();
 </script>
 </body>
