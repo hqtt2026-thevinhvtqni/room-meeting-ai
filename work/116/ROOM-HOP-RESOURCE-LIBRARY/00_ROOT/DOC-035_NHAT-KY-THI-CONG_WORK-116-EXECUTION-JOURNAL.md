@@ -76,3 +76,18 @@
 - Evidence boundary: Search result evidence supports discovery references only. Portal/API contracts, bulk export rights, licenses, authentication, rate limits, freshness and runtime compatibility remain unverified unless a specific source record states otherwise. No API/MCP calls, credentialed access, payments, filings, or transactions were performed.
 - Data integrity: Existing resource records preserved; new records marked candidate_source_discovery_not_runtime_tested; JSON schema version advanced to 1.4.
 - Verification required: JSON parse, 42 unique category codes, 42 unique resource IDs (count includes SRC-001), required fields, Sandbox/GitHub exact parity after write. No PASS may be claimed for external source execution.
+
+
+## 2026-11-16 — Vibe (for Vinh, autonomous authorization) — Post-expansion verification PASS
+- Scope: Close the verification required by the 2026-11-14 taxonomy expansion entry and the manifest "UPDATE IN PROGRESS" line.
+- Method: Fetched RESOURCE_CATALOG.json from GitHub main at head 51d9177 and validated structurally; cross-checked SOURCE_CATALOG.md coverage of all 18 new seed records and taxonomy headings.
+- Evidence:
+  - JSON parse: OK; schema_version 1.4; last_updated 2026-11-14.
+  - Resources: 42 total, 42 unique resource_ids, no duplicates.
+  - Categories: 42 total, 42 unique codes, contiguous RES-01..RES-42, no duplicates.
+  - Required fields (resource_id, name, type, category, purpose, canonical_url, documentation_url, protocol_or_endpoint, auth, pricing_or_quota, status, source_reachability, runtime_test, compatible_work_ids, constraints): 0 missing across all 42 records.
+  - SOURCE_CATALOG.md contains all 18 seed IDs AGR-001..DRR-001 and the RES-25..RES-42 taxonomy headings; consistent with RESOURCE_CATALOG.json.
+- Minor observation (non-blocking): older records use suffixed category strings (e.g. "RES-03-finance-investment") while new seeds use bare codes (e.g. "RES-25"); both resolve to the same unique category codes. Normalization can be considered later but is not a defect.
+- Result: VERIFICATION PASS. WORK_MANIFEST.md updated to "GitHub main sync: VERIFIED 2026-11-16".
+- Scope limits: static catalog validation only; no external API/MCP call, no credentials, no runtime integration, no PASS claimed for any external source.
+- Remaining: W0000 portfolio index registration still unchecked; runtime/API verification of individual sources remains future work per record status.
