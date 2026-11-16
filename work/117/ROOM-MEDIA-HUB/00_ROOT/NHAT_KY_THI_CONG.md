@@ -392,3 +392,19 @@ Em đã đọc và phân tích mã nguồn thực tế của ba Work liên quan:
 - Result: DOCUMENTATION SYNC + READBACK PARITY — PASS (14/14). This PASS applies only to the listed documentation files and does not represent product/runtime/build verification.
 - Governance status unchanged: architecture provisional; provider not selected; consultation pending; BUILD NOT AUTHORIZED.
 - Timestamp note: Exact wall-clock time not captured; date only.
+
+
+## 2026-11-17 — Xu / AI-01 — Chuẩn hóa bốn hồ sơ quản trị và phân vai thi công
+- Scope: Cập nhật W117 theo chỉ đạo của Vinh về một bộ hồ sơ xuyên suốt và tách vai trò Cla khỏi feature building.
+- Method: Đọc danh mục Sandbox và đọc lại Biên bản, Nhật ký, Manifest, Document Register, Implementation Roadmap, Product Requirements và ADR draft; lập lại Implementation Plan tổng hợp WP/gates/roles; tạo Task Board canonical; append quyết định vào Biên bản và entry vào Nhật ký.
+- Evidence:
+  - Sandbox inventory trước cập nhật có BIEN_BAN.md, NHAT_KY_THI_CONG.md và IMPLEMENTATION_ROADMAP.md; chưa có file Task Board canonical.
+  - Existing roadmap mới có các phase tổng quát, chưa có 12 workstreams, owner boundary, task-level acceptance và blocker register.
+  - Existing minutes recorded Cla as architecture reviewer but did not yet record Vinh's latest role separation and four-record governance rule.
+- Changes:
+  1. Updated canonical Plan at ROOM-MEDIA-HUB/04_PLAN/IMPLEMENTATION_ROADMAP.md with 12 work packages, 7 delivery phases, role boundaries, gates, zero-cost guardrails and build authorization constraints.
+  2. Created canonical Task Board at ROOM-MEDIA-HUB/00_ROOT/TASK_BOARD.md with 13 tasks, dependencies, proposed owners, acceptance evidence and blockers.
+  3. Appended Vinh's role and four-record governance decision to the existing canonical Biên bản.
+- Result: Sandbox writes submitted; final readback and GitHub parity must be verified before declaring sync PASS.
+- Status: DOCUMENT UPDATE IN PROGRESS; BUILD NOT AUTHORIZED.
+- Next: Read back all four canonical records from Sandbox, sync the same four paths to GitHub main, then fetch GitHub versions and compare full content.
