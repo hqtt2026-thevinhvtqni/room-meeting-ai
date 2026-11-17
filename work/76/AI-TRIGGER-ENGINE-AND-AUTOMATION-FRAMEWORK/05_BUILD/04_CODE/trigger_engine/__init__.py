@@ -69,3 +69,6 @@ __all__ += [
     "PolicyRequest", "PolicyResult", "SchedulerBlocked", "SourceRegistration",
     "StateTransitionError", "TimeScheduler",
 ]
+
+from .retry import DuplicateExecution, IdempotencyGuard, RetryDecision, RetryPlanner
+__all__ += ["DuplicateExecution", "IdempotencyGuard", "RetryDecision", "RetryPlanner"]
