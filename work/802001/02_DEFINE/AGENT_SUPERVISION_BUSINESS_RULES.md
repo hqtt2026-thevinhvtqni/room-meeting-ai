@@ -3,7 +3,7 @@
 
 - Work: 802001
 - Artifact ID: W802001-DEF-001
-- Version: 0.2 — INDEPENDENT REVIEW INCORPORATED (VIBE)
+- Version: 0.3 — POST-REVIEW GOVERNANCE REFERENCE CORRECTION
 - Date: 2026-11-17
 - Governing standard: Work 70
 - Status: REVIEWED — NOT APPROVED POLICY (Vinh approval pending)
@@ -14,9 +14,9 @@ Tài liệu này chuyển 10 tình huống lịch sử trong DISCOVER thành b�
 
 Đây là bản DEFINE dự thảo, không phải quyết định phê duyệt policy, không phải đặc tả kỹ thuật cuối cùng và không chứng minh ROOM-HOP đã có runtime monitoring/reminder/enforcement.
 
-W70 tiếp tục là chuẩn quản trị gốc. Trạng thái trong tài liệu này chỉ áp dụng cho assignment/finding; không thay thế lifecycle state hoặc Gate G0–G9 của W70. DOC-057 kiểm tra điều kiện nhận việc; DOC-096 giữ chuẩn phiên, nguồn sự thật và nhật ký.
+W70 tiếp tục là chuẩn quản trị gốc. Trạng thái trong tài liệu này chỉ áp dụng cho assignment/finding; không thay thế lifecycle state hoặc Gate G0–G9 của W70. DOC-001 xác định authority/source boundaries; DOC-004/005 giữ chuẩn lifecycle/Gate; DOC-033 điều chỉnh tài liệu/lưu trữ; DOC-035 là nhật ký thi công cấp Work; DOC-057 kiểm tra điều kiện tham gia/nhận assignment. DOC-096 là tài liệu Retrieval/DecisionRAG, không phải chuẩn phiên hoặc nhật ký.
 
-Lưu ý truy nguyên (v0.2 review): DOC-096 được trích dẫn là chuẩn bắt buộc nhưng chưa định vị được bản hiện hành trong repo (không thấy trong `work/70/.../00_ROOT`). Trích dẫn này là UNVERIFIED-REFERENCE cho đến khi Xu/Vinh cung cấp canonical path; không dựng nội dung thay nguồn.
+Đính chính truy nguyên sau phản biện Vibe: DOC-096 đã được tìm thấy tại `work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/03_ARCHITECT/DOC-096_RETRIEVAL-STRATEGY-AND-DECISIONRAG-ADOPTION.md`; nội dung chính thức là Retrieval đa phương pháp/DecisionRAG (P1, research only), không phải session integrity hoặc journal control. W802001 đã gán sai nội dung cho DOC-096. Căn cứ nhật ký phải tham chiếu DOC-035; quy tắc tài liệu/lưu trữ tham chiếu DOC-033; DOC-057 chỉ áp dụng cho điều kiện entry/assignment. Không sử dụng DOC-096 làm căn cứ cho policy W802001.
 
 ## 2. Đơn vị theo dõi và dữ liệu tối thiểu
 Đơn vị theo dõi là một assignment gắn với Work/WP cụ thể. Mỗi assignment cần có:
