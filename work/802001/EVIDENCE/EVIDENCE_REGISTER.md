@@ -5,5 +5,8 @@
 | W802001-E-0001 | W802001 hiện có cấu trúc legacy và các hồ sơ E2E cũ | Sandbox listing Work 802001 | Xu / AI-01 | sandbox_list | RECORDED — STRUCTURE OBSERVED |
 | W802001-E-0002 | W70 có lifecycle root chuẩn và các DOC quản trị liên quan | Work 70 DOC-001/004/005/033/057/096 | Xu / AI-01 | sandbox_read_probe | RECORDED — SOURCE READ |
 | W802001-E-0003 | Manifest W802001 cũ chỉ có nội dung tối thiểu; Content Index mô tả mục tiêu E2E auto-wake | 802001 WORK_MANIFEST.md + WORK_CONTENT_INDEX.md | Xu / AI-01 | sandbox_read_probe | RECORDED — SOURCE READ |
+| W802001-E-0004 | Hồ sơ lịch sử ghi nhận phân biệt plumbing/mock với real LLM/Real Ka acceptance; có các blocker về identity, connector, idempotency và evidence integrity | 03_ARCHITECTURE/REPORT_802001_PHASE2.md; 03_ARCHITECTURE/RUNBOOK_REAL_KA.md; 04_CODE/CODE_ANALYSIS.md; 05_TEST/TEST_ANALYSIS.md; 06_EVIDENCE/AUTO-WARE/04_GAP_ANALYSIS.md; 06_EVIDENCE/AUTO-WARE/05_DECISION.md | Xu / AI-01 (source review) | sandbox_list + sandbox_read_probe | RECORDED — HISTORICAL SOURCE REVIEW |
+| W802001-E-0005 | Transcript có ghi quyết định phân biệt System Wake với Agent Wake và tạm dừng nhánh Workspace Agent/API | transcript.md; 06_EVIDENCE/AUTO-WARE/05_DECISION.md | Xu / AI-01 (source review) | sandbox_read_probe | RECORDED — TRANSCRIPT CLAIM; NOT RUNTIME RE-TEST |
+| W802001-E-0006 | Đã lập danh mục 10 tình huống lịch sử và chuỗi giám sát suy ra | 01_DISCOVER/AGENT_SUPERVISION_CASE_INVENTORY.md | Xu / AI-01 | Cross-reference historical records | DISCOVERY BASELINE — NEEDS REVIEW |
 
-Evidence này chỉ hỗ trợ baseline/documentation claims; không chứng minh runtime enforcement, Agent bị chặn thật hoặc AOG đã triển khai.
+Evidence này chỉ hỗ trợ baseline/documentation và historical-record claims; không chứng minh runtime enforcement, Agent bị chặn thật hoặc AOG đã triển khai.

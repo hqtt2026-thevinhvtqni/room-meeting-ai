@@ -60,3 +60,18 @@
 - Trạng thái: GIT PUSH/REMOTE REF UPDATE SUCCESS; POST-SYNC READBACK PENDING.
 - Giới hạn: Đây là đồng bộ 10 hồ sơ canonical, không phải mirror toàn bộ legacy files/folders; không thay đổi code/runtime; không xác nhận test/QE hay runtime enforcement.
 - Bước tiếp theo: xác minh commit, branch HEAD và nội dung các file canonical trên GitHub; cập nhật trạng thái sau readback.
+
+
+## W802001-LOG-0005 — 2026-11-17 (+07:00)
+- Actor: Xu / AI-01
+- Work: 802001
+- Loại bản ghi: DISCOVER / HISTORICAL CASE EXTRACTION
+- Phạm vi: Truy vết hồ sơ lịch sử Work 802001 để nhận diện tình huống thực tế phục vụ nghiệp vụ theo dõi, nhắc nhở, hướng dẫn và điều chỉnh Agent.
+- Phương pháp: sandbox_list toàn bộ Work; đọc SOURCE_INVENTORY, EXTENSION_POINTS, ARCHITECTURE, REPORT_802001_PHASE2, RUNBOOK_REAL_KA, CODE_ANALYSIS, TEST_ANALYSIS, EVIDENCE, README_EVIDENCE, KA_E2E_RESPONSE, E2E transcript, AUTO-WARE DECISION/GAP_ANALYSIS và transcript gốc.
+- Kết quả: lập inventory 10 case: (C-01) phân biệt MOCK/plumbing với real acceptance; (C-02) phân biệt System Wake và Agent Wake; (C-03) identity khai báo/speaker null; (C-04) self-loop; (C-05) connector local và RealLLMAdapter chưa triển khai; (C-06) idempotency process-local; (C-07) test làm biến đổi evidence; (C-08) tài liệu/source/runtime không khớp; (C-09) thiếu quyền/token/môi trường; (C-10) thay đổi scope và quyết định PAUSED.
+- Phân loại bằng chứng: các case được ghi trực tiếp trong báo cáo/code/test/evidence được đánh dấu VERIFIED-IN-RECORD; các kết luận chỉ có trong transcript đánh dấu REPORTED-IN-TRANSCRIPT; bài học giám sát là hướng suy ra, chưa phải policy được duyệt.
+- Hồ sơ tạo/cập nhật: 01_DISCOVER/AGENT_SUPERVISION_CASE_INVENTORY.md; WORK_CONTENT_INDEX.md; DOCUMENT_REGISTER.md; EVIDENCE_REGISTER.md; IMPLEMENTATION_ROADMAP.md (v1.2).
+- Readback: PENDING tại thời điểm ghi log.
+- Trạng thái: DISCOVERY BASELINE CREATED; WP-802001-01 vẫn IN_PROGRESS; BUILD NOT AUTHORIZED.
+- Giới hạn: nguồn hiện tại tập trung vào một Work kỹ thuật; chưa đủ đại diện toàn bộ hành vi Agent trong ROOM-HOP; chưa xác lập severity/SLA/reminder cadence; không sửa code/runtime/API/MCP và không di chuyển/xóa legacy.
+- Bước tiếp theo: readback các hồ sơ vừa ghi; sau đó DEFINE finding taxonomy, severity, checkpoint/reminder, correction/recheck và escalation authority dựa trên các case đã xác minh.
