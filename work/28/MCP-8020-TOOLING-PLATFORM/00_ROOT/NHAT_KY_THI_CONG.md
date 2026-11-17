@@ -967,3 +967,47 @@ Xu approves three contract directions:
 - Branch divergence from `main` is not resolved; no merge/rebase/force-push was performed.
 
 **STATUS:** 10 CANONICAL / SELECTED ARTIFACTS GITHUB → SANDBOX EXACT-MATCH / FULL WORKSPACE SYNC STILL OPEN / WORK ACTIVE — INTEGRATION BLOCKED — NOT RELEASED / EXECUTION GATE CLOSED.
+
+
+## 2026-11-18 — JRN-W28-025 — Autonomous WP2 recovery implementation and independent handoff
+
+**Người thực hiện:** Vi  
+**Chức danh:** CODER / Implementation Lead  
+**Execution time:** 2026-11-18 05:11:16 UTC+07:00  
+**Priority:** P0 — WP2 HIGH findings
+
+### READ / TRACE
+- Re-read the canonical Work Manifest, Master Execution Plan, Auto E2E Runbook, architecture decision, WP1 status and canonical GitHub branch HEAD.
+- Confirmed GitHub branch `work/28-mcp-tooling-platform` HEAD at takeover: `8301a7f8fb6a91689482710a9006e2cdbab709c4`.
+- Re-read Ka's independent security review `KA_WP2_SERVICE_REGISTRY_CLEANUP_SECURITY_REVIEW_20261115.md`, including HIGH findings WP2-SVC-01, WP2-SVC-02, WP2-SVC-03 and WP2-EVID-04.
+- Confirmed historical MCP :8020 remains quarantined; no traffic, restart, mutation or deployment action was performed.
+
+### DECIDE
+- Continue on an isolated feature branch; do not modify the canonical target branch directly.
+- Preserve the Core :8000 authority boundary, historical listener quarantine, Execution Gate CLOSED and release NOT_RELEASED.
+- Prioritize service registry ownership and cleanup evidence before expanding tools or runtime wiring.
+
+### BUILD
+- Created branch `auto/work28-vi-wp2-recovery-20261118` from the exact canonical base SHA.
+- Updated `execution_host/host.py`: serialized service registry transitions; retained registry handles until cleanup is verified; blocked service replacement after uncertain cleanup; preserved BLOCKED state; considered process-tree membership when reporting status.
+- Updated `execution_host/host_run.py`: preserved `JobObjectUnavailable.process_reaped` and notes in cleanup evidence; no false `no_process` claim for an unconfirmed suspended-spawn abort.
+- Extended `tests/test_wp2_service_mapping_and_race.py` with regression coverage for cleanup retry, stale leader replacement, dead leader/live members, same-name concurrent starts and spawn-abort evidence.
+- Opened draft PR #61: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/61
+- Branch is ahead of base by 5 commits; three changed files in compare. No merge performed.
+
+### VERIFY
+- GitHub readback verified the changed files and latest blob SHAs.
+- PR head observed at handoff: `8ad00128de931adf2a3beacc647056dfb4a4663c`.
+- Exact-SHA workflow run and combined commit status queries returned empty arrays; CI is therefore **NOT VERIFIED**, not PASS.
+- No local Python execution or PC test was performed. Test files are authored but execution is pending.
+- No runtime, Core, listener or production changes were made.
+
+### HANDOFF / REQUIRED NEXT GATES
+- Staged independent QA handoff for An: `10_AI_DEBUG_HANDOFF/00_INBOX/AN/VI_WP2_RECOVERY_PR61_QA_HANDOFF_20261118.md`.
+- Staged independent security review handoff for Ka: `10_AI_DEBUG_HANDOFF/00_INBOX/KA/VI_WP2_RECOVERY_PR61_SECURITY_REVIEW_HANDOFF_20261118.md`.
+- Handoffs are persisted, but no acknowledgement or review result is claimed.
+- If exact-SHA native Windows CI cannot be obtained, request Anh Vinh to run the PC validation pack; until then WP2 remains NOT VERIFIED.
+
+**STATUS:** WP2 RECOVERY PATCH STAGED IN PR #61 / CI NOT VERIFIED / AN + KA INDEPENDENT REVIEW REQUIRED / EXECUTION GATE CLOSED / NOT RELEASED.
+
+**Signature:** [KÝ: VI | CODER]
