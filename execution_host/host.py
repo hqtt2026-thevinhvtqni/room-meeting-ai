@@ -415,7 +415,10 @@ class ExecutionHost:
                 returncode = process.poll()
                 if name in self._service_cleanup_blocked:
                     status = "BLOCKED"
-                    members = process.members_count() if isinstance(process, ManagedProcess) else None
+                    try:
+                        members = process.members_count() if isinstance(process, ManagedProcess) else None
+                    except Exception:
+                        members = None
                 elif returncode is None:
                     status = "PASS"
                     members = process.members_count() if isinstance(process, ManagedProcess) else None
