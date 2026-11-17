@@ -12,7 +12,8 @@ Theo dõi, nhắc nhở, hướng dẫn, điều chỉnh và kiểm tra lại Ag
 - 00_ROOT/DOCUMENT_REGISTER.md — canonical artifact index.
 - 00_ROOT/NHAT_KY_THI_CONG.md — chronological execution/audit journal.
 - 01_DISCOVER/AGENT_SUPERVISION_CASE_INVENTORY.md — historical cases and discovery findings.
-- 02_DEFINE/AGENT_SUPERVISION_BUSINESS_RULES.md — DEFINE business rules v0.1, FOR REVIEW / NOT APPROVED.
+- 02_DEFINE/AGENT_SUPERVISION_BUSINESS_RULES.md — DEFINE business rules, currently v0.1 and NOT APPROVED.
+- 02_DEFINE/VIBE_INDEPENDENT_REVIEW_PACKAGE.md — canonical review handoff/result record for Vibe; acknowledgement and review pending.
 - 03_ARCHITECT/AGENT_OPERATIONAL_GATE_ARCHITECTURE.md — business process architecture.
 - 04_PLAN/IMPLEMENTATION_ROADMAP.md — WP and phase plan.
 - 06_VERIFY/VERIFICATION_PLAN.md — verification plan.
