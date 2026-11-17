@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>W117 Dashboard — ROOM MEDIA HUB</title>
+  <link rel="stylesheet" href="assets/dashboard.css" />
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <h1>W117 Dashboard</h1>
+      <div class="badges" id="header-badges"></div>
+    </div>
+    <div class="meta" id="header-meta">Loading snapshot…</div>
+  </header>
+
+  <nav id="main-nav">
+    <button class="active" data-view="overview">Work Overview</button>
+    <button data-view="tasks">Task Board</button>
+    <button data-view="agents">Agent Monitor</button>
+    <button data-view="timeline">Activity & Evidence</button>
+  </nav>
+
+  <main>
+    <div id="load-error" class="error-box hidden"></div>
+
+    <section id="view-overview">
+      <div class="warning-box">
+        ⚠️ Dashboard is <strong>read-only</strong>. All metrics come from the canonical snapshot.
+        No progress or Agent online status is invented. Unverified states are shown explicitly.
+      </div>
+      <div class="grid grid-4" id="overview-cards"></div>
+      <div class="card" style="margin-top:1.25rem">
+        <h3>Scope Boundary (strict)</h3>
+        <ul class="scope-list">
+          <li><span class="ok">IN SCOPE</span> Read-only operational Dashboard for W117 (Overview, Task Board, Agent Monitor, Activity & Evidence)</li>
+          <li><span class="bad">OUT OF SCOPE</span> ROOM MEDIA HUB product implementation (T009–T011), paid services, cloud accounts, real media upload, production deployment/release</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="view-tasks" class="hidden">
+      <h2 class="section-title">Dashboard Task Register</h2>
+      <div class="card table-wrap">
+        <table>
+          <thead>
+            <tr><th>Task ID</th><th>Deliverable</th><th>Owner</th><th>Status</th></tr>
+          </thead>
+          <tbody id="dash-tasks-body"></tbody>
+        </table>
+      </div>
+
+      <h2 class="section-title" style="margin-top:2rem">Product Task Register (reference only)</h2>
+      <div class="card table-wrap">
+        <table>
+          <thead>
+            <tr><th>Task ID</th><th>Deliverable</th><th>Owner</th><th>Status</th></tr>
+          </thead>
+          <tbody id="product-tasks-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="view-agents" class="hidden">
+      <h2 class="section-title">Agent Monitor</h2>
+      <div class="warning-box">
+        Agent online/session status is shown only when supported by verifiable evidence.
+        Most agents remain <strong>DISPATCH/ACK NOT VERIFIED</strong>.
+      </div>
+      <div class="agent-grid" id="agents-grid"></div>
+    </section>
+
+    <section id="view-timeline" class="hidden">
+      <h2 class="section-title">Activity & Evidence Timeline</h2>
+      <div class="timeline" id="timeline"></div>
+    </section>
+
+    <div class="provenance" id="provenance"></div>
+  </main>
+
+  <script src="assets/dashboard.js"></script>
+</body>
+</html>
