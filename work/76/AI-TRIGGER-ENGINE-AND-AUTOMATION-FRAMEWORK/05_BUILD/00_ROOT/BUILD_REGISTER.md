@@ -118,3 +118,11 @@ PR #55 contains a proposed implementation, tests and CI workflow on an unmerged 
 ## WP-76-09 responsive source adjustment — 2026-11-18 05:49 +07:00
 - Work Entry gate grid now uses three columns on desktop, two on tablet and one on mobile.
 - CSS breakpoint source updated; no browser rendering or device interaction test was run.
+
+
+## Latest PR #60 branch-head CI after dashboard snapshot reconciliation — 2026-11-18 05:52 +07:00
+- Exact branch head: `15ea37e9b102b8fa54a3ff035102f0e71e407e03`.
+- GitHub Actions run `44194106594` SUCCESS:
+  - Python 3.11: 71 passed / 0 failed; job `134430849431`; JUnit artifact `14377188728`; ZIP SHA256 `d299ca148895bb36d7dccc66e6e025157a3590248d9bb3e24c463f58c226bebe`.
+  - Python 3.12: 71 passed / 0 failed; job `134430850089`; JUnit artifact `14376974287`; ZIP SHA256 `2293bb726d86d45986943955038e4e5fdc2356d482c61e3efbf7f353db0dbd5d`.
+- This is exact current branch-head CI; it validates Python tests only and does not exercise browser/mobile dashboard behavior.
