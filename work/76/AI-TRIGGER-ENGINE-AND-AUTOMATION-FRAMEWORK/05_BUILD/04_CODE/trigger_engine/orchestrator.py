@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from enum import Enum
+from threading import Lock
 from typing import Protocol
 
 class ExecutionState(str,Enum):
@@ -60,18 +61,54 @@ class Transition:
 class TransitionSink(Protocol):
     def append_transition(self,transition:Transition)->None: ...
 class ExecutionStateMachine:
-    def __init__(self,sink:TransitionSink|None): self._sink=sink; self._states={}
+    def __init__(self,sink:TransitionSink|None):
+        self._sink=sink
+        self._states={}
+        # Prevent concurrent in-process transitions from observing the same state.
+        # Durable multi-process stores must enforce from_state CAS atomically.
+        self._lock=Lock()
+
     def start(self,execution_id:str,correlation_id:str)->ExecutionState:
-        if self._sink is None: raise StateTransitionError("durable transition/audit sink unavailable")
-        if not execution_id or execution_id in self._states: raise StateTransitionError("execution_id empty or duplicate")
-        self._sink.append_transition(Transition(execution_id,None,ExecutionState.RECEIVED,datetime.now(timezone.utc),"execution created",correlation_id))
-        self._states[execution_id]=ExecutionState.RECEIVED
-        return ExecutionState.RECEIVED
+        if self._sink is None:
+            raise StateTransitionError("durable transition/audit sink unavailable")
+        if not isinstance(execution_id,str) or not execution_id.strip():
+            raise StateTransitionError("execution_id must be a non-empty string")
+        if not isinstance(correlation_id,str) or not correlation_id.strip():
+            raise StateTransitionError("correlation_id must be a non-empty string")
+        with self._lock:
+            if execution_id in self._states:
+                raise StateTransitionError("execution_id duplicate")
+            transition=Transition(execution_id,None,ExecutionState.RECEIVED,datetime.now(timezone.utc),"execution created",correlation_id)
+            try:
+                self._sink.append_transition(transition)
+            except Exception as exc:
+                raise StateTransitionError("durable transition append failed") from exc
+            self._states[execution_id]=ExecutionState.RECEIVED
+            return ExecutionState.RECEIVED
+
     def transition(self,execution_id:str,target:ExecutionState,reason:str,correlation_id:str)->ExecutionState:
-        if self._sink is None: raise StateTransitionError("durable transition/audit sink unavailable")
-        current=self._states.get(execution_id)
-        if current is None or target not in _ALLOWED.get(current,set()): raise StateTransitionError(f"illegal transition: {current} -> {target}")
-        self._sink.append_transition(Transition(execution_id,current,target,datetime.now(timezone.utc),reason,correlation_id))
-        self._states[execution_id]=target
-        return target
-    def state(self,execution_id:str)->ExecutionState|None: return self._states.get(execution_id)
+        if self._sink is None:
+            raise StateTransitionError("durable transition/audit sink unavailable")
+        if not isinstance(execution_id,str) or not execution_id.strip():
+            raise StateTransitionError("execution_id must be a non-empty string")
+        if not isinstance(target,ExecutionState):
+            raise StateTransitionError("target must be an ExecutionState")
+        if not isinstance(reason,str) or not reason.strip():
+            raise StateTransitionError("reason must be a non-empty string")
+        if not isinstance(correlation_id,str) or not correlation_id.strip():
+            raise StateTransitionError("correlation_id must be a non-empty string")
+        with self._lock:
+            current=self._states.get(execution_id)
+            if current is None or target not in _ALLOWED.get(current,set()):
+                raise StateTransitionError(f"illegal transition: {current} -> {target}")
+            transition=Transition(execution_id,current,target,datetime.now(timezone.utc),reason,correlation_id)
+            try:
+                self._sink.append_transition(transition)
+            except Exception as exc:
+                raise StateTransitionError("durable transition append failed") from exc
+            self._states[execution_id]=target
+            return target
+
+    def state(self,execution_id:str)->ExecutionState|None:
+        with self._lock:
+            return self._states.get(execution_id)
