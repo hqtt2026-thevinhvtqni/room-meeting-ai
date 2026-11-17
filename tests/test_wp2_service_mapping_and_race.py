@@ -191,7 +191,7 @@ class ServiceRegistryRecoveryTests(unittest.TestCase):
                 process_reaped=True,
                 as_dict=lambda: {"process_reaped": True, "notes": ["group_drained"]},
             )
-            managed.cleanup = Mock(side_effect=[failed, passed])
+            managed.cleanup = Mock(side_effect=[failed, failed, passed])
             host.processes["svc"] = managed
 
             first = host.stop_service("svc", ctx)
