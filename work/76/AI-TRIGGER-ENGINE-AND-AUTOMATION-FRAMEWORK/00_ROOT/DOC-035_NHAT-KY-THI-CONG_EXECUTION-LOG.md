@@ -839,3 +839,21 @@ This is a governance/assignment and preparation record only. Xu did not alter so
 **CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
 **NGÀY:** 18/11/2026
 **GIỜ - PHÚT:** 05:53 — UTC+7
+
+
+---
+
+### 2026-11-18 06:32 +07:00 — Co gia cố Gateway schema/source binding và Policy boundary
+- Actor: Co — AI-07, theo ủy quyền trực tiếp của Vinh.
+- WP-76-02: phát hiện `SourceRegistration.schema` được yêu cầu lúc đăng ký nhưng chưa được gọi trong `EventGateway.ingest`. Đã thêm thực thi schema trước Event/replay reservation; schema exception → `GatewayRejected`; rejected event không tiêu thụ event ID.
+- WP-76-02: khóa nhầm lẫn source identity bằng cách yêu cầu registration map key đúng tuyệt đối `SourceRegistration.source_id`, từ chối value sai kiểu/mismatch.
+- WP-76-05: validate đủ 7 trường identity/scope của `PolicyRequest`; PolicyAdapter chỉ chấp nhận PolicyResult có PolicyOutcome enum hợp lệ, reason không rỗng và decision_ref/policy_revision có giá trị; approval_ref phải là chuỗi không rỗng. Request/provider envelope lỗi → INDETERMINATE; approval invalid → DENY.
+- Tests: W76-GW-004 (schema rejection + service outage); W76-GW-005 (registration identity mismatch/type); W76-PL-003 (request/provider response/approval_ref malformed).
+- Exact branch-head CI run `44200662865` trên `aaa84763611dd30084b002fd2fe419d24717755b`: Python 3.11 **81/81 PASS**, job `134453571124`, artifact `14381636110`, SHA256 `9bbe48658ea931c10dd0603b78d818e6adab7611806a60616ecdb97b6fb284d6`; Python 3.12 **81/81 PASS**, job `134453571408`, artifact `14381780587`, SHA256 `f4860d384a7e1b01ea6dd56ee8d0f5c881b8d34ce2e870000f5480237891c20b`.
+- EV-76-047…EV-76-050 added; Build Register and Dashboard updated. CI remains branch-only. Production key provider/Core policy provider, independent QE, Core/runtime E2E and acceptance remain pending.
+- PR #60 remains DRAFT/OPEN/UNMERGED. No merge or release action.
+
+**TÊN:** Co
+**CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
+**NGÀY:** 18/11/2026
+**GIỜ - PHÚT:** 06:32 — UTC+7
