@@ -84,9 +84,8 @@ def test_policy_provider_exception_fails_closed():
 
 def test_state_machine_requires_audit_sink_and_legal_transitions():
     machine=ExecutionStateMachine(None)
-    machine.start("x","c")
     with pytest.raises(StateTransitionError):
-        machine.transition("x",ExecutionState.VALIDATED,"ok","c")
+        machine.start("x","c")
     sink=Sink(); machine=ExecutionStateMachine(sink); machine.start("y","c")
     assert machine.transition("y",ExecutionState.VALIDATED,"schema valid","c")==ExecutionState.VALIDATED
     with pytest.raises(StateTransitionError):
@@ -115,3 +114,34 @@ def test_audit_sink_failure_does_not_advance_hash_head():
     writer=AuditWriter(Broken())
     with pytest.raises(AuditUnavailable):
         writer.write(record_id="r",work_id="76",actor_ref="a",action="x",outcome="y",correlation_id="c",payload={})
+
+from trigger_engine.retry import IdempotencyGuard, DuplicateExecution, RetryPlanner
+from trigger_engine.models import RetryPolicy
+
+def test_retry_planner_is_bounded_and_stops_at_budget():
+    planner=RetryPlanner(RetryPolicy(max_attempts=3,backoff_seconds=5,max_backoff_seconds=8))
+    now=datetime(2026,11,18,12,tzinfo=timezone.utc)
+    first=planner.plan(completed_attempts=1,now=now,retryable=True)
+    second=planner.plan(completed_attempts=2,now=now,retryable=True)
+    final=planner.plan(completed_attempts=3,now=now,retryable=True)
+    assert first.due_at==now+timedelta(seconds=5)
+    assert second.due_at==now+timedelta(seconds=8)
+    assert final.retry is False
+
+def test_retry_planner_never_retries_non_retryable_failure():
+    planner=RetryPlanner(RetryPolicy(max_attempts=4,backoff_seconds=1))
+    result=planner.plan(completed_attempts=1,now=datetime.now(timezone.utc),retryable=False)
+    assert result.retry is False and result.due_at is None
+
+def test_idempotency_guard_requires_durable_atomic_store():
+    with pytest.raises(RuntimeError):
+        IdempotencyGuard(None).claim("76","k",now=datetime.now(timezone.utc),ttl_seconds=60)
+    class Store:
+        def __init__(self): self.keys=set()
+        def claim(self,scope,key,expires_at):
+            if (scope,key) in self.keys: return False
+            self.keys.add((scope,key)); return True
+    guard=IdempotencyGuard(Store()); now=datetime.now(timezone.utc)
+    guard.claim("76","k",now=now,ttl_seconds=60)
+    with pytest.raises(DuplicateExecution):
+        guard.claim("76","k",now=now,ttl_seconds=60)
