@@ -168,3 +168,11 @@ PR #55 contains a proposed implementation, tests and CI workflow on an unmerged 
 - Updated `work/76-co-autonomous-build-v2` by fast-forward ref update with expected-head lease. Post-update compare: 124 commits ahead, 0 behind main; PR #60 remains OPEN/DRAFT/UNMERGED and GitHub reports mergeable=true.
 - Exact merge-head CI is running; do not claim it passes until the run for `ebbb12...` completes.
 - This synchronizes main into the PR branch only. It does not merge Work 76 into main or approve/accept/release it.
+
+
+## Exact CI after main synchronization — 2026-11-18 06:32 +07:00
+- Exact current branch head: `00ddbb311d34448e2a352a884a3579e91a08eb62`.
+- GitHub Actions PR run `44201936129` SUCCESS:
+  - Python 3.12: 81 passed / 0 failed; job `134457977310`; JUnit artifact `14380894154`; ZIP SHA256 `aa86cc6cd9c12938c5d5cd1c2e85b8343ee623f1bc15a8d9df82fe6e605b853a`.
+  - Python 3.11: 81 passed / 0 failed; job `134457977984`; JUnit artifact `14382370324`; ZIP SHA256 `0904dc894f0dd02ca687b387579655c24ff18a37cca1d81f9228e554109f0dc7`.
+- After main sync, compare is 128 ahead / 0 behind; PR #60 remains OPEN/DRAFT/UNMERGED; GitHub mergeable=true / clean.
