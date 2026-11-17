@@ -29,4 +29,4 @@ class PolicyAdapter:
         try: valid=self._approval.verify_current(approval_ref,request)
         except Exception: valid=False
         if valid is not True: return PolicyResult(PolicyOutcome.DENY,result.decision_ref,result.policy_revision,"approval invalid, expired or out of scope")
-        return result
+        return PolicyResult(PolicyOutcome.ALLOW,result.decision_ref,result.policy_revision,"required approval verified")
