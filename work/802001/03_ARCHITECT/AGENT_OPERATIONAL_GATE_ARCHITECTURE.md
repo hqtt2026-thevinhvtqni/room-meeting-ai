@@ -52,7 +52,7 @@ ASSIGNED → BRIEFED → IN_PROGRESS → ON_TRACK / AT_RISK / BLOCKED / DEVIATIO
 - Journal/evidence: lưu vết có thể đọc lại, truy nguyên actor, thời gian, source và kết quả.
 
 ## 8. Phân biệt với Work 70
-W70 G0–G9 kiểm soát chuyển pha Work; DOC-057 kiểm soát điều kiện tham gia/nhận assignment; DOC-096 kiểm soát tính toàn vẹn phiên và nhật ký. W802001 chuẩn hóa nghiệp vụ giám sát/hướng dẫn Agent trong khi thực hiện assignment và dùng các chuẩn W70 làm căn cứ. Các lớp bổ sung nhau, không thay thế nhau.
+W70 G0–G9 kiểm soát chuyển pha Work; DOC-057 kiểm soát điều kiện tham gia/nhận assignment; DOC-033 điều chỉnh tài liệu/lưu trữ; DOC-035 là nhật ký thi công cấp Work. DOC-096 là tài liệu Retrieval/DecisionRAG, không phải chuẩn phiên/nhật ký. W802001 chuẩn hóa nghiệp vụ giám sát/hướng dẫn Agent trong khi thực hiện assignment và dùng đúng các chuẩn W70 làm căn cứ. Các lớp bổ sung nhau, không thay thế nhau.
 
 ## 9. Nguyên tắc dữ liệu và trách nhiệm
 - Mọi status phải gắn source, timestamp, owner và freshness.
