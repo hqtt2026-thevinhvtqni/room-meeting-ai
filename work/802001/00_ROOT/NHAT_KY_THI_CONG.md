@@ -75,3 +75,16 @@
 - Trạng thái: DISCOVERY BASELINE CREATED; WP-802001-01 vẫn IN_PROGRESS; BUILD NOT AUTHORIZED.
 - Giới hạn: nguồn hiện tại tập trung vào một Work kỹ thuật; chưa đủ đại diện toàn bộ hành vi Agent trong ROOM-HOP; chưa xác lập severity/SLA/reminder cadence; không sửa code/runtime/API/MCP và không di chuyển/xóa legacy.
 - Bước tiếp theo: readback các hồ sơ vừa ghi; sau đó DEFINE finding taxonomy, severity, checkpoint/reminder, correction/recheck và escalation authority dựa trên các case đã xác minh.
+
+
+## W802001-LOG-0006 — 2026-11-17 (+07:00)
+- Actor: Xu / AI-01
+- Work: 802001
+- Loại bản ghi: GIT SYNC / DISCOVERY READBACK
+- Phạm vi: Đồng bộ bộ hồ sơ DISCOVER mới lên GitHub main và xác minh nội dung từ remote.
+- Commit: 7fb906ad94a11b13f74d19a875dfbaab5903a17d — `W802001: add Agent supervision discovery cases`.
+- File đã đồng bộ: 01_DISCOVER/AGENT_SUPERVISION_CASE_INVENTORY.md; 00_ROOT/WORK_CONTENT_INDEX.md; 00_ROOT/DOCUMENT_REGISTER.md; EVIDENCE/EVIDENCE_REGISTER.md; 04_PLAN/IMPLEMENTATION_ROADMAP.md; 00_ROOT/NHAT_KY_THI_CONG.md.
+- Remote readback: 6/6 file tồn tại; inventory có đủ 10 case C-01..C-10; journal có LOG-0005; roadmap vẫn ghi WP-802001-01 IN_PROGRESS và BUILD NOT AUTHORIZED.
+- Trạng thái: GIT SYNC SUCCESS; REMOTE READBACK PASS 6/6.
+- Giới hạn: readback xác nhận nội dung file đã đồng bộ, không phải QE/acceptance; chưa chạy lại runtime hay kiểm thử enforcement.
+- Bước tiếp theo: đưa case inventory vào DEFINE, chuẩn hóa taxonomy/severity/checkpoint/reminder/correction/recheck/escalation; cần reviewer độc lập trước khi chốt policy.
