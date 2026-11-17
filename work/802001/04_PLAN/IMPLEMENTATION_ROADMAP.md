@@ -11,7 +11,7 @@ Chuẩn hóa và xây dựng nghiệp vụ theo dõi, nhắc nhở, hướng d�
 | WP | Nội dung | Deliverable | Trạng thái | Điều kiện hoàn thành |
 |---|---|---|---|---|
 | WP-802001-01 | DISCOVER: thu thập tình huống thực tế Agent nhận việc, thi công, báo cáo, sai/lệch/chậm/blocked | Case inventory + process trace | BASELINE COMPLETE — LIMITED TO 10 HISTORICAL CASES | Ghi rõ giới hạn nguồn; bổ sung khi có case từ Work khác; không khái quát hóa quá mức |
-| WP-802001-02 | DEFINE: chuẩn hóa assignment, checkpoint, reminder, correction, recheck, escalation | Business rules + reminder matrix | IN_PROGRESS — DRAFT v0.1 CREATED | Independent review; resolve open questions; Vinh approval before policy becomes binding |
+| WP-802001-02 | DEFINE: chuẩn hóa assignment, checkpoint, reminder, correction, recheck, escalation | Business rules + reminder matrix + independent review record | IN_PROGRESS — VIBE HANDOFF CREATED; REVIEW PENDING | Vibe review, resolve open findings; Vinh approval before policy becomes binding |
 | WP-802001-03 | ARCHITECT: mô hình dữ liệu/trạng thái và điểm quan sát/kiểm soát trong ROOM-HOP | Business/technical architecture + ADR | PLANNED | READ/TRACE các nguồn và execution/observation paths; reviewer độc lập |
 | WP-802001-04 | PLAN: WP, dependency, owner, acceptance, journal/evidence | WP register + test strategy | PLANNED | Bám lifecycle và Gate W70; một nguồn canonical |
 | WP-802001-05 | BUILD: triển khai theo kiến trúc được duyệt | Source + build journal | NOT_AUTHORIZED | Chỉ mở sau G4 PASS và quyết định phê duyệt |
