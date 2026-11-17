@@ -10,7 +10,7 @@
 | WP-76-06 | Orchestration, dedupe and retry | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; state/retry/idempotency ports; explicit duplicate vs store-unavailable outcomes and strict argument validation added; durable backend not integrated; exact-head CI run 44192865531 PASS 65/65 on Python 3.11/3.12 | `trigger_engine/orchestrator.py`, `retry.py`; `test_work_packages.py` |
 | WP-76-07 | Verified AI dispatch adapter | Co / AI-07 (discovery/design only) | Xu + Qw | BLOCKED — no verified transport, target identity, receiver receipt or ACK | `05_BUILD/03_ARCHITECTURE` |
 | WP-76-08 | Audit and evidence store | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; append-only sink contract only; strict canonical JSON audit digest + non-finite payload regression added; exact-head CI run 44192173589 PASS 54/54 on Python 3.11/3.12; durable store/retention ADR pending | `trigger_engine/audit.py`; `test_work_packages.py` |
-| WP-76-09 | Read-only dashboard | Xu (accountable); Co (Vinh-authorized implementation contribution) | An / Qw | IN_REVIEW — separate Work Entry WE-G0…WE-G5 panel and descriptive-status filter normalization implemented; browser/mobile QE pending | `DASHBOARD` |
+| WP-76-09 | Read-only dashboard | Xu (accountable); Co (Vinh-authorized implementation contribution) | An / Qw | IN_REVIEW — separate Work Entry WE-G0…WE-G5 panel, descriptive-status filter normalization and responsive gate grid (tablet/mobile breakpoints) implemented; browser/mobile QE pending | `DASHBOARD` |
 
 PR #55 contains a proposed implementation, tests and CI workflow on an unmerged branch. This is not a merged implementation on main, not runtime/integration verification, and not acceptance. WP status must be updated only with attributable evidence.
 
@@ -113,3 +113,8 @@ PR #55 contains a proposed implementation, tests and CI workflow on an unmerged 
 - Work Package filters and status colors now normalize descriptive values such as `IN_REVIEW — ...` and `BLOCKED — ...` to the leading status code.
 - PRODUCT_STATUS schema now includes `work_entry`; snapshot identifies DOC-007 assessment date and stale/source limitation.
 - Browser/mobile rendering, responsive interaction, accessibility and independent QE remain NOT RUN. No UI PASS is claimed.
+
+
+## WP-76-09 responsive source adjustment — 2026-11-18 05:49 +07:00
+- Work Entry gate grid now uses three columns on desktop, two on tablet and one on mobile.
+- CSS breakpoint source updated; no browser rendering or device interaction test was run.
