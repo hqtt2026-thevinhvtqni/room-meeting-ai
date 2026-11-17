@@ -2,10 +2,10 @@
 - Updated: 2026-11-17 | State: DESIGN PREPARATION ONLY
 | Task | Nội dung | Owner | Status | Exit evidence |
 |---|---|---|---|---|
-| 501-T001 | Tạo Work và hồ sơ chuẩn | Xu | IN_PROGRESS | Sandbox readback |
+| 501-T001 | Tạo Work và hồ sơ chuẩn | Xu | DONE | Sandbox readback + GitHub main fetch verification |
 | 501-T002 | Đối soát Works 01/11/23/52/70/22/50 và runtime | Xu + reviewers | PLANNED | Source/version inventory |
 | 501-T003 | Kiểm kê phần cứng local | Cla/Go | BLOCKED | Hardware facts verified |
-| 501-T004 | Hoàn thiện brief phản biện | Xu | IN_PROGRESS | Brief persisted and read back |
+| 501-T004 | Hoàn thiện brief phản biện | Xu | DONE | Brief persisted and read back in Sandbox and GitHub |
 | 501-T005 | Technical review | Cla | PENDING ACK | Signed findings and evidence |
 | 501-T006 | Security/privacy review | Ka | PENDING ACK | Threat model and findings |
 | 501-T007 | QE review | Qw | PENDING ACK | Test matrix and acceptance thresholds |
