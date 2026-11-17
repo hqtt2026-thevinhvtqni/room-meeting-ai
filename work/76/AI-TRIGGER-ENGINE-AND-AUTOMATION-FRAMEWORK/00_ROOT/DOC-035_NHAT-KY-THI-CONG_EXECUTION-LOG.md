@@ -924,3 +924,21 @@ This is a governance/assignment and preparation record only. Xu did not alter so
 **CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
 **NGÀY:** 18/11/2026
 **GIỜ - PHÚT:** 06:32 — UTC+7
+
+
+---
+
+### 2026-11-18 06:32 +07:00 — Co gia cố concurrency cho Audit và Execution State
+- WP-76-08: phát hiện AuditWriter tính previous_hash và cập nhật _head không có khóa; nhiều thread có thể cùng đọc một head và tạo nhánh hash chain. Đã thêm process-local Lock bao trọn tính record hash → sink append → head update; occurred_at được gán trong critical section.
+- Regression W76-AU-002 chạy 40 append đồng thời và xác minh sink rows tạo thành một chuỗi previous_hash liên tục, không fork.
+- WP-76-06: ExecutionStateMachine không khóa khi đọc state/append transition/cập nhật state; hai thread có thể cùng commit từ một state cũ. Đã thêm process-local Lock, strict validation cho execution_id/correlation_id/target/reason, và chuyển sink exception thành StateTransitionError fail-closed.
+- Regression W76-OR-002 đồng thời thực hiện hai transition giống nhau: chỉ một transition được ghi; transition thứ hai bị từ chối. Bổ sung malformed metadata tests.
+- CI lần đầu phát hiện test cũ vẫn đòi raw OSError; Co giữ declared error contract StateTransitionError và cập nhật test để xác minh OSError được giữ trong __cause__. Failed runs `44202563515` / `44202590801` được ghi nhận; không che giấu.
+- Exact head `364c02d61c4c08e0cea1363d904bf4d4cc36cc82`, run `44202710464` SUCCESS: Python 3.11 **88/88 PASS** (job `134460645123`, artifact `14382526195`, SHA256 `dbd79c5b5d19adbaebb7da4a6090aa03fa05da7d5a3c05fc1fa7b6fa20fac046`); Python 3.12 **88/88 PASS** (job `134460645497`, artifact `14382701267`, SHA256 `ff3f5d305ef9d698ea9eafe1945e484570ed47392a7c9b323209b3a490f1fcbc`).
+- Giới hạn: lock chỉ bảo vệ trong một process; production vẫn cần atomic cross-process CAS/append, durable head recovery và state hydration. WP-76-06/08 vẫn IN_REVIEW, không tuyên bố production complete.
+- EV-76-055…EV-76-057 added.
+
+**TÊN:** Co
+**CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
+**NGÀY:** 18/11/2026
+**GIỜ - PHÚT:** 06:32 — UTC+7
