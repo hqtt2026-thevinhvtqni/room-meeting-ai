@@ -84,3 +84,11 @@ Dashboard v0.2 đọc JSON tĩnh từ repository. Chưa có Core API, authentica
 - The matrix is a specification only; tests remain NOT RUN and no approval or gate transition is implied.
 - Sandbox capability evidence EV-76-021 is limited to the current OChat tool session; trusted AI-07 identity binding and PC/VS Code Bridge remain NOT VERIFIED.
 - Current source remains LOCAL_SNAPSHOT, not Core live. Dashboard browser/mobile QE remains NOT RUN.
+
+
+## Static correction — lifecycle gates vs participant Work Entry gates — 2026-11-18
+- `index.html` now renders a separate Work Entry panel for Co / AI-07, sourced from the Work 76 DOC-007 snapshot.
+- Lifecycle phase-gate count is explicitly labelled “Lifecycle gate”; it is not combined with WE-G0…WE-G5.
+- Snapshot records WE-G0…WE-G3 PASS and WE-G4/WE-G5 BLOCKED. Vinh's 2026-11-18 autonomous build delegation is noted, but does not substitute for trusted AI-07 runtime identity/permission verification.
+- WP status filtering and visual labels now normalize descriptive status strings (e.g. `IN_REVIEW — ...`, `BLOCKED — ...`) to their leading status code.
+- Source mode remains `local_snapshot`; browser/mobile rendering, responsive interaction, accessibility and independent QE are NOT RUN. No browser PASS is claimed.
