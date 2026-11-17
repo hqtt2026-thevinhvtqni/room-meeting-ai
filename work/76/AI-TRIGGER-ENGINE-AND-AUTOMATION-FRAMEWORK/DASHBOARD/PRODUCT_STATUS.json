@@ -1,7 +1,7 @@
 {
   "work_id": "76",
   "product_name": "AI Trigger Engine & Automation Framework",
-  "summary": "Work 76 tiếp tục hardening WP-76-08 Audit và WP-76-02 Event Gateway. Audit canonicalization exact-head CI 54/54 trên Python 3.11/3.12; Event Gateway hardening exact-head CI run 44192558442: 58/58 trên cả hai phiên bản. Đây là branch CI; independent Canonical QE, merged-main, Core/runtime, verified dispatch và E2E vẫn pending.",
+  "summary": "Work 76 tiếp tục hardening WP-76-02 Event Gateway, WP-76-06 Idempotency/Retry và WP-76-08 Audit. Event Gateway exact-head CI 58/58 trên Python 3.11/3.12; Audit exact-head CI 54/54. WP-76-06 vừa phân biệt duplicate với store unavailable, bổ sung validation và regression; CI cho thay đổi mới đang chờ. Durable production stores, Core/runtime, verified dispatch, independent QE và E2E vẫn pending.",
   "standard_id": "ROOM-HOP-WORK-MASTER",
   "standard_version": "1.2",
   "work_status": "ACTIVE",
@@ -9,9 +9,9 @@
   "current_phase": "01_DISCOVER",
   "source_mode": "local_snapshot",
   "freshness": "LOCAL_SNAPSHOT",
-  "revision": "W76-DASHBOARD-0.3.18",
-  "warning_vi": "LOCAL SNAPSHOT — chưa kết nối Core live. PR #60 draft, chưa merge. Event Gateway exact-head CI run 44192558442: Python 3.11 58/58 PASS; Python 3.12 58/58 PASS (EV-76-036). Audit exact-head CI 54/54 (EV-76-034). Branch CI only, not Canonical QE/runtime/E2E/release. WP-76-07 vẫn BLOCKED.",
-  "updated_at": "2026-11-17T22:42:28.000Z",
+  "revision": "W76-DASHBOARD-0.3.19",
+  "warning_vi": "LOCAL SNAPSHOT — chưa kết nối Core live. PR #60 draft, chưa merge. Event Gateway exact-head CI 58/58 (EV-76-036); Audit exact-head CI 54/54 (EV-76-034). Idempotency/Retry hardening mới commit, CI chưa xác minh (EV-76-037). Branch CI only, not Canonical QE/runtime/E2E/release. WP-76-07 vẫn BLOCKED.",
+  "updated_at": "2026-11-17T22:43:28.000Z",
   "phases": [
     {
       "phase_id": "01_DISCOVER",
