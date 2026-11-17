@@ -138,3 +138,12 @@ Cập nhật phần “VIBE REVIEW RESULT” ở cuối chính hồ sơ này v�
 
 ---
 **Handoff note:** This file is the single canonical review handoff/result record for Vibe in Work 802001. Do not create parallel review reports unless Vinh explicitly authorizes them.
+
+## 10. XU POST-REVIEW TRACE CORRECTION — 2026-11-17
+
+- Reviewer verdict của Vibe tại §9 được giữ nguyên: ACCEPT WITH CHANGES. Các chỉnh sửa nghiệp vụ v0.2 vẫn được bảo toàn.
+- Đối soát sau review phát hiện VF-01 đã mô tả vấn đề là “không tìm thấy DOC-096 trong W70 00_ROOT”. Truy vấn toàn repository và đọc DOC-055 cho thấy canonical DOC-096 thực tế tồn tại tại `work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/03_ARCHITECT/DOC-096_RETRIEVAL-STRATEGY-AND-DECISIONRAG-ADOPTION.md`.
+- Nội dung DOC-096 là Retrieval đa phương pháp/DecisionRAG, Priority P1, research only; không phải session integrity/journal control. Do đó lỗi gốc nghiêm trọng hơn việc thiếu path: W802001 đã gán sai ý nghĩa cho DOC-096. Việc chỉ thêm nhãn UNVERIFIED-REFERENCE ở v0.2 chưa giải quyết đúng lỗi.
+- Nguồn chuẩn đã đối chiếu: W70 DOC-055 Register (ghi canonical path và mô tả DOC-096); DOC-096 exact fetch; W70 DOC-035 (quy định nhật ký append-only, sự kiện, thời điểm, actor, phạm vi, kết quả và bằng chứng); W70 DOC-033 (documentation/storage); DOC-057 (Work Entry Gate).
+- Disposition: VF-01 PATH QUESTION = RESOLVED; MISCLASSIFICATION = CORRECTED IN DEFINE v0.3, BIEN_BAN v1.2, WORK_MANIFEST v1.2, WORK_CONTENT_INDEX, ARCHITECTURE v1.2 and ROADMAP v1.5. Historical §9 finding remains unchanged for auditability.
+- Limitation: this correction is document/source trace only; no runtime/session enforcement was tested. Policy remains NOT APPROVED; BUILD NOT AUTHORIZED.
