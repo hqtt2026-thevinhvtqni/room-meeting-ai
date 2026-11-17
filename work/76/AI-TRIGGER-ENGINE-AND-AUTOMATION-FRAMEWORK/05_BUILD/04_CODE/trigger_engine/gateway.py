@@ -102,6 +102,13 @@ class EventGateway:
         payload = data.get("payload")
         if not isinstance(payload, dict):
             raise GatewayRejected("payload must be an object")
+        # The registered schema is an enforcement boundary, not merely
+        # registration metadata. Validate before reserving replay identity so
+        # rejected payloads cannot consume a legitimate event_id.
+        try:
+            reg.schema.validate(payload)
+        except Exception as exc:
+            raise GatewayRejected("payload schema validation failed") from exc
         try:
             payload_json = canonical_json(payload)
             event = Event(eid, source_id, etype, occurred_at, payload)
