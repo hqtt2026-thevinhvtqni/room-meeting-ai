@@ -1,7 +1,7 @@
 {
   "work_id": "76",
   "product_name": "AI Trigger Engine & Automation Framework",
-  "summary": "Work 76 đã gia cố WP-76-02 Event Gateway, WP-76-03 Scheduler, WP-76-06 Idempotency/Retry và WP-76-08 Audit. Exact-head CI gần nhất run 44193167465 trên head a2f8131c080826bd57916222da1308386e7aa215: Python 3.11/3.12 đều 71 passed, 0 failed. Các lần CI trước: Gateway 58/58, Audit 54/54. Đây là branch CI; durable production stores, recurrence/DST/HA, Core/runtime, verified dispatch, independent QE và E2E vẫn pending. Dashboard bổ sung panel Work Entry WE-G0…WE-G5 riêng biệt và chuẩn hóa filter/status hiển thị; Work Entry snapshot vẫn ghi rõ WE-G4/G5 BLOCKED. Static dashboard correction: separate participant Work Entry panel added; status filters normalize descriptive WP status strings. Browser/mobile QE remains NOT RUN. Work Entry gate grid has desktop/tablet/mobile CSS breakpoints; actual device/browser rendering remains unverified. Evidence list and recent activity are synchronized through EV-76-043; WP-76-02/03/06/08 status strings include latest branch CI results; WP-76-09 records static UI changes with browser QE pending. Latest PR #60 branch-head CI run 44194106594 at 15ea37e9b102b8fa54a3ff035102f0e71e407e03: Python 3.11/3.12 both 71 passed, 0 failed (EV-76-044). Browser/mobile QE remains pending. WP-76-07 dispatch capability was rechecked against the current connected tool inventory; no verified dispatch/receiver-ACK action is exposed in this session. Exact current PR #60 branch-head CI run 44194387756 at e9fe4f2a2b8db1d57e958b53976dcd4f6f5d8b72: Python 3.11/3.12 both 71 passed, 0 failed (EV-76-046). WP-76-02 now enforces registered payload schema and binds registration key to source identity; WP-76-05 validates PolicyRequest and authoritative decision envelopes. Exact branch-head CI run 44200662865: Python 3.11/3.12 both 81 passed, 0 failed (EV-76-050).",
+  "summary": "Work 76 đã gia cố WP-76-02 Event Gateway, WP-76-03 Scheduler, WP-76-06 Idempotency/Retry và WP-76-08 Audit. Exact-head CI gần nhất run 44193167465 trên head a2f8131c080826bd57916222da1308386e7aa215: Python 3.11/3.12 đều 71 passed, 0 failed. Các lần CI trước: Gateway 58/58, Audit 54/54. Đây là branch CI; durable production stores, recurrence/DST/HA, Core/runtime, verified dispatch, independent QE và E2E vẫn pending. Dashboard bổ sung panel Work Entry WE-G0…WE-G5 riêng biệt và chuẩn hóa filter/status hiển thị; Work Entry snapshot vẫn ghi rõ WE-G4/G5 BLOCKED. Static dashboard correction: separate participant Work Entry panel added; status filters normalize descriptive WP status strings. Browser/mobile QE remains NOT RUN. Work Entry gate grid has desktop/tablet/mobile CSS breakpoints; actual device/browser rendering remains unverified. Evidence list and recent activity are synchronized through EV-76-043; WP-76-02/03/06/08 status strings include latest branch CI results; WP-76-09 records static UI changes with browser QE pending. Latest PR #60 branch-head CI run 44194106594 at 15ea37e9b102b8fa54a3ff035102f0e71e407e03: Python 3.11/3.12 both 71 passed, 0 failed (EV-76-044). Browser/mobile QE remains pending. WP-76-07 dispatch capability was rechecked against the current connected tool inventory; no verified dispatch/receiver-ACK action is exposed in this session. Exact current PR #60 branch-head CI run 44194387756 at e9fe4f2a2b8db1d57e958b53976dcd4f6f5d8b72: Python 3.11/3.12 both 71 passed, 0 failed (EV-76-046). WP-76-02 now enforces registered payload schema and binds registration key to source identity; WP-76-05 validates PolicyRequest and authoritative decision envelopes. Exact branch-head CI run 44200662865: Python 3.11/3.12 both 81 passed, 0 failed (EV-76-050). Latest post-reconciliation exact PR #60 head 4320d7ad7a5862ad46942e96097257d92efd04b8: GitHub Actions run 44200888299, Python 3.11/3.12 each 81 passed / 0 failed (EV-76-051). PR is mergeable clean but remains draft/unmerged.",
   "standard_id": "ROOM-HOP-WORK-MASTER",
   "standard_version": "1.2",
   "work_status": "ACTIVE",
@@ -9,9 +9,9 @@
   "current_phase": "01_DISCOVER",
   "source_mode": "local_snapshot",
   "freshness": "LOCAL_SNAPSHOT",
-  "revision": "W76-DASHBOARD-0.3.30",
-  "warning_vi": "LOCAL SNAPSHOT — chưa kết nối Core live. PR #60 draft, chưa merge. Latest exact branch-head CI run 44200662865: Python 3.11 81/81 PASS; Python 3.12 81/81 PASS. CI is not independent QE or runtime E2E. WP-76-02 production key provider and WP-76-05 Core policy provider pending; WP-76-07 and Work Entry WE-G4/G5 remain BLOCKED.",
-  "updated_at": "2026-11-17T23:35:21.000Z",
+  "revision": "W76-DASHBOARD-0.3.31",
+  "warning_vi": "LOCAL SNAPSHOT — chưa kết nối Core live. PR #60 draft, chưa merge; GitHub reports mergeable clean but branch is 12 commits behind main. Latest exact-head CI run 44200888299: Python 3.11/3.12 both 81/81 PASS; branch CI only. Independent QE/runtime E2E/production providers pending. WP-76-07 and Work Entry WE-G4/G5 remain BLOCKED.",
+  "updated_at": "2026-11-17T23:36:57.000Z",
   "phases": [
     {
       "phase_id": "01_DISCOVER",
@@ -558,6 +558,13 @@
       "title": "Gateway schema/source identity and Policy boundary hardening",
       "detail": "Gateway now executes registered schema before replay reservation, rejects registration-key/source-id mismatch; PolicyRequest and authoritative provider decision envelope are validated fail-closed. Exact branch-head CI 81/81 on Python 3.11/3.12.",
       "status": "BRANCH CI PASS — EV-76-050"
+    },
+    {
+      "date": "2026-11-18",
+      "actor": "Co / AI-07",
+      "title": "Latest exact-head CI and PR integration-state check",
+      "detail": "Exact PR #60 head 4320d7ad7a5862ad46942e96097257d92efd04b8: 81/81 on Python 3.11 and 3.12. GitHub PR state is OPEN/DRAFT, mergeable clean; branch is 12 commits behind main.",
+      "status": "BRANCH CI PASS — EV-76-051; MERGE/ACCEPTANCE NOT PERFORMED"
     }
   ],
   "evidence": [
@@ -896,6 +903,13 @@
       "claim": "Run 44200662865 on exact head aaa84763611dd30084b002fd2fe419d24717755b: Python 3.11 and 3.12 each 81 passed / 0 failed; JUnit artifact IDs and SHA256 in Evidence Register.",
       "path": "GitHub Actions run 44200662865; artifacts 14381636110 / 14381780587",
       "status": "VERIFIED — BRANCH CI ONLY; independent QE/runtime E2E NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-051",
+      "title": "Latest post-reconciliation exact-head CI",
+      "claim": "Run 44200888299 on exact head 4320d7ad7a5862ad46942e96097257d92efd04b8: Python 3.11 and 3.12 each 81 passed / 0 failed; PR #60 remains draft/unmerged, GitHub mergeable clean; branch 12 commits behind main.",
+      "path": "GitHub Actions run 44200888299; PR #60",
+      "status": "VERIFIED — EXACT BRANCH CI ONLY; independent QE/runtime E2E NOT VERIFIED"
     }
   ],
   "work_entry": {
