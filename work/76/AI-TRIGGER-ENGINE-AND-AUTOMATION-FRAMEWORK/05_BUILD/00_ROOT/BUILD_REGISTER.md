@@ -3,7 +3,7 @@
 | WP | Package | Owner | Reviewer | Status | Canonical evidence |
 |---|---|---|---|---|---|
 | WP-76-01 | Trigger Registry and schema | Co / AI-07 | Ka / AI-02 (independent QE pending) | IN_REVIEW — PR #60 draft; branch CI PASS | `05_BUILD/04_CODE/trigger_engine/{models,registry}.py`; `05_BUILD/05_TEST/test_trigger_engine.py` |
-| WP-76-02 | Event Gateway and source validation | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; branch CI PASS; production verifier/key provider pending | `trigger_engine/gateway.py`; `test_work_packages.py` |
+| WP-76-02 | Event Gateway and source validation | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; typed malformed event validation, strict canonical payload digest, validate-before-replay reservation and fail-closed replay-store errors added; production verifier/key provider pending; CI pending | `trigger_engine/gateway.py`; `test_work_packages.py` |
 | WP-76-03 | Scheduler and TIME triggers | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; UTC one-shot only; recurrence/DST/HA BLOCKED by ADR-76-005 | `trigger_engine/scheduler.py`; `test_work_packages.py` |
 | WP-76-04 | Typed Condition Evaluator | Co / AI-07 | Ka / AI-02 (independent QE pending) | IN_REVIEW — PR #60 draft; branch CI PASS | `trigger_engine/conditions.py`; `test_trigger_engine.py` |
 | WP-76-05 | Policy adapter and approval | Co / AI-07 | Ka architecture review; Qw QE (ACK pending) | IN_REVIEW — PR #60 draft; fail-closed adapter contract; Core provider not integrated | `trigger_engine/policy.py`; `test_work_packages.py` |
@@ -55,3 +55,12 @@ PR #55 contains a proposed implementation, tests and CI workflow on an unmerged 
   - Python 3.11: 54 passed / 0 failed; job `134424142019`; JUnit artifact `14376992432`; ZIP SHA256 `7aceb1286c5a98a300bed13e7994337f972ec4638111f018f2f640a067e6002d`.
   - Python 3.12: 54 passed / 0 failed; job `134424140869`; JUnit artifact `14378105646`; ZIP SHA256 `78b262e086b4be6e5da6c76518769df5acc9d13bbd9749e215dc55448cda8418`.
 - This is exact-head GitHub branch CI, not independent Canonical QE, main verification, Core/runtime integration, E2E or acceptance.
+
+
+## Event Gateway hardening — 2026-11-18 05:41 +07:00
+- Source: `trigger_engine/gateway.py` now validates event_type before set membership, validates timezone-aware received_at, uses strict canonical JSON for payload digest, constructs/validates Event before reserving replay identity, and maps replay-store failure to declared GatewayRejected.
+- Source registration now validates trusted Work id, event-type set and callable schema validator; constructor validates positive integer limits and registration mapping.
+- Regression tests cover unhashable event_type, NaN payload not consuming replay key, replay-store outage and naive received_at.
+- Commits: gateway source `ba418cbb26fc140564e3e10ea497fc19f47e756c`; tests `d891fe3ee11176a476eba26389edae2dfb20695a`.
+- CI for this source/test head has not yet been observed; no test PASS is claimed for this change.
+- WP-76-02 remains IN_REVIEW; production signature/key provider and durable replay store remain external dependencies (ADR-76-002 OPEN).
