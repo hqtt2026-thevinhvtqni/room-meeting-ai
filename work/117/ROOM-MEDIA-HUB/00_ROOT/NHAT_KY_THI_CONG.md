@@ -688,3 +688,15 @@ E2E RESULT: 43/43 passed, 0 failed
   - GitHub write operations returned commit SHAs successfully; no media binaries, credentials or real user media uploaded.
 - Status: GITHUB WRITES COMPLETED; FULL TREE AND CONTENT READBACK VERIFICATION PENDING.
 - Next: Verify GitHub recursive tree contains every canonical Sandbox file; compare exact contents for all W117 text files and confirm branch HEAD. Record PASS only if all expected files match.
+
+## 2026-11-17 11:35:58 +07 — Xu / AI-01 — GitHub main readback parity verification
+- Scope: Verify W117 Sandbox canonical files against GitHub `main` after synchronization.
+- Method: Read each canonical Sandbox file through Sandbox diagnostic readback; fetch the matching GitHub file at `work/117/ROOM-MEDIA-HUB/`; compare complete text content exactly. Also fetched the recursive Git tree and branch metadata.
+- Evidence:
+  - GitHub branch: `main`; HEAD before this verification record update: `537b208c7150878984eb4a6ebef007845f5a57a6`.
+  - Recursive tree response: `truncated=false`; 63 paths under W117 (38 files + 25 tracked directories).
+  - Exact content comparison: 38/38 tracked Sandbox files matched GitHub byte-for-byte at text-content level (all 15 existing canonical documents, 13 directory markers, 8 Dashboard files, and 2 evidence files).
+  - Canonical GitHub paths include `05_BUILD/04_CODE/dashboard/`, root `EVIDENCE/`, and lifecycle directories `06_VERIFY/` through `09_OPERATE/`.
+  - Empty legacy Sandbox directories are not represented in GitHub because Git does not track empty directories; they contain no files in the current inventory. No legacy files or user media were uploaded.
+- Result: GITHUB MAIN SYNC + READBACK PARITY — PASS (38/38 tracked files). This PASS applies to W117 tracked source/document structure only; it does not mean runtime tests, independent QE, PC parity, Work 70 physical normalization, architecture approval, product BUILD, deployment or release are PASS.
+- Next: Keep this commit as canonical; separately run Dashboard tests from the new path and verify PC clone only when PC access is available/authorized.
