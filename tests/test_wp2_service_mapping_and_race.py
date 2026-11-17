@@ -17,15 +17,18 @@ import sys
 import tempfile
 import threading
 import time
+from types import SimpleNamespace
 import unittest
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from execution_host.host import ExecutionHost
 from execution_host.models import WorkContext
 from execution_host.process_job import (
     JobObjectUnavailable,
+    ManagedProcess,
     spawn_managed,
+    spawn_managed_service,
 )
 
 
@@ -160,6 +163,251 @@ class ConcurrentSpawnCleanupTests(unittest.TestCase):
             for i, reaped, poll in results:
                 self.assertTrue(reaped, f"worker {i}: not reaped")
                 self.assertIsNotNone(poll, f"worker {i}: still running")
+
+
+class FakeServiceProcess:
+    def __init__(self, pid: int, returncode: int | None = None):
+        self.pid = pid
+        self.returncode = returncode
+
+    def poll(self):
+        return self.returncode
+
+
+class ServiceRegistryRecoveryTests(unittest.TestCase):
+    def test_stop_retains_registry_entry_until_cleanup_is_verified(self):
+        with tempfile.TemporaryDirectory() as td:
+            ctx = _ctx(Path(td))
+            host = ExecutionHost()
+            managed = ManagedProcess(
+                process=FakeServiceProcess(7001, returncode=None),
+                platform="linux",
+                created_via_spawn=True,
+            )
+            failed = SimpleNamespace(
+                process_reaped=False,
+                as_dict=lambda: {"process_reaped": False, "notes": ["child_still_alive"]},
+            )
+            passed = SimpleNamespace(
+                process_reaped=True,
+                as_dict=lambda: {"process_reaped": True, "notes": ["group_drained"]},
+            )
+            managed.cleanup = Mock(side_effect=[failed, failed, passed])
+            host.processes["svc"] = managed
+
+            first = host.stop_service("svc", ctx)
+            self.assertEqual(first["status"], "BLOCKED")
+            self.assertIs(host.processes.get("svc"), managed)
+            self.assertEqual(host.service_status("svc", ctx)["status"], "BLOCKED")
+
+            # A new start must retry cleanup, not claim the still-running service is healthy.
+            with patch("execution_host.host.spawn_managed_service") as spawn:
+                retry_start = host.start_service("svc", [sys.executable, "-c", "pass"], ctx)
+            self.assertEqual(retry_start["status"], "BLOCKED")
+            spawn.assert_not_called()
+
+            second = host.stop_service("svc", ctx)
+            self.assertEqual(second["status"], "PASS")
+            self.assertNotIn("svc", host.processes)
+
+    def test_start_does_not_replace_exited_leader_with_unreaped_descendants(self):
+        with tempfile.TemporaryDirectory() as td:
+            ctx = _ctx(Path(td))
+            host = ExecutionHost()
+            managed = ManagedProcess(
+                process=FakeServiceProcess(7002, returncode=0),
+                platform="linux",
+                created_via_spawn=True,
+            )
+            failed = SimpleNamespace(
+                process_reaped=False,
+                as_dict=lambda: {"process_reaped": False, "notes": ["descendant_remains"]},
+            )
+            managed.cleanup = Mock(return_value=failed)
+            host.processes["svc"] = managed
+
+            with patch("execution_host.host.spawn_managed_service") as spawn:
+                result = host.start_service("svc", [sys.executable, "-c", "pass"], ctx)
+
+            self.assertEqual(result["status"], "BLOCKED")
+            self.assertEqual(result["blocker"], "existing_service_cleanup_unverified")
+            self.assertIs(host.processes.get("svc"), managed)
+            spawn.assert_not_called()
+
+    def test_service_status_does_not_call_dead_leader_stopped_with_live_members(self):
+        with tempfile.TemporaryDirectory() as td:
+            ctx = _ctx(Path(td))
+            host = ExecutionHost()
+            managed = ManagedProcess(
+                process=FakeServiceProcess(7003, returncode=0),
+                platform="linux",
+                created_via_spawn=True,
+            )
+            managed.members_count = Mock(return_value=1)
+            host.processes["svc"] = managed
+
+            result = host.service_status("svc", ctx)
+            self.assertEqual(result["status"], "BLOCKED")
+            self.assertEqual(result["pid"], 7003)
+            self.assertEqual(result["members"], 1)
+            self.assertEqual(result["readiness"], "NOT_CHECKED")
+
+    def test_concurrent_same_name_starts_register_exactly_one_process(self):
+        with tempfile.TemporaryDirectory() as td:
+            ctx = _ctx(Path(td))
+            host = ExecutionHost()
+            managed = ManagedProcess(
+                process=FakeServiceProcess(7004, returncode=None),
+                platform="linux",
+                created_via_spawn=True,
+                job_object="ATTACHED",
+            )
+            calls = []
+            results = []
+            errors = []
+            lock = threading.Lock()
+
+            def fake_spawn(args, *, cwd, env):
+                time.sleep(0.05)
+                with lock:
+                    calls.append(1)
+                return managed
+
+            def worker():
+                try:
+                    result = host.start_service("svc", [sys.executable, "-c", "pass"], ctx)
+                    with lock:
+                        results.append(result)
+                except Exception as exc:
+                    with lock:
+                        errors.append(repr(exc))
+
+            with patch("execution_host.host.spawn_managed_service", side_effect=fake_spawn):
+                threads = [threading.Thread(target=worker) for _ in range(6)]
+                for thread in threads:
+                    thread.start()
+                for thread in threads:
+                    thread.join(timeout=10)
+
+            self.assertEqual(errors, [])
+            self.assertEqual(len(results), 6)
+            self.assertEqual(len(calls), 1)
+            self.assertTrue(all(item["pid"] == 7004 for item in results))
+            self.assertEqual(sum(bool(item.get("already_running")) for item in results), 5)
+            self.assertIs(host.processes.get("svc"), managed)
+
+
+class AdditionalServiceBoundaryTests(unittest.TestCase):
+    def test_generic_spawn_oserror_maps_to_structured_blocked_without_false_reap(self):
+        with tempfile.TemporaryDirectory() as td:
+            ctx = _ctx(Path(td))
+            host = ExecutionHost()
+            with patch(
+                "execution_host.host.spawn_managed_service",
+                side_effect=OSError("injected process creation failure"),
+            ):
+                result = host.start_service("svc", [sys.executable, "-c", "pass"], ctx)
+
+            self.assertEqual(result["status"], "BLOCKED")
+            self.assertEqual(result["blocker"], "service_spawn_failed")
+            self.assertEqual(result["spawn_error_type"], "OSError")
+            self.assertIsNone(result["process_reaped"])
+            self.assertNotIn("svc", host.processes)
+
+    def test_service_status_does_not_claim_application_readiness(self):
+        with tempfile.TemporaryDirectory() as td:
+            ctx = _ctx(Path(td))
+            host = ExecutionHost()
+            managed = ManagedProcess(
+                process=FakeServiceProcess(7010, returncode=None),
+                platform="linux",
+                created_via_spawn=True,
+            )
+            host.processes["svc"] = managed
+            result = host.service_status("svc", ctx)
+            self.assertEqual(result["status"], "PASS")
+            self.assertEqual(result["readiness"], "NOT_CHECKED")
+
+    def test_restart_drains_real_child_after_parent_leader_exits(self):
+        with tempfile.TemporaryDirectory() as td:
+            ctx = _ctx(Path(td))
+            host = ExecutionHost()
+            child_code = "import time; time.sleep(30)"
+            parent_code = "import subprocess,sys; subprocess.Popen([sys.executable, '-c', sys.argv[1]])"
+            old = spawn_managed_service(
+                [sys.executable, "-c", parent_code, child_code],
+                cwd=ctx.execution_workspace,
+                env={},
+            )
+            old.process.wait(timeout=10)
+            self.assertIsNotNone(old.poll(), "service leader should exit before replacement")
+
+            deadline = time.monotonic() + 10
+            members = old.members_count()
+            while members in (0, None) and time.monotonic() < deadline:
+                time.sleep(0.05)
+                members = old.members_count()
+            self.assertGreater(members or 0, 0, "child process should remain in the managed tree")
+
+            cleanup_results = []
+            real_cleanup = old.cleanup
+
+            def capture_cleanup(*args, **kwargs):
+                result = real_cleanup(*args, **kwargs)
+                cleanup_results.append(result)
+                return result
+
+            old.cleanup = capture_cleanup
+            replacement = ManagedProcess(
+                process=FakeServiceProcess(7011, returncode=None),
+                platform="linux",
+                created_via_spawn=True,
+                job_object="ATTACHED",
+            )
+            host.processes["svc"] = old
+
+            with patch("execution_host.host.spawn_managed_service", return_value=replacement) as spawn:
+                result = host.start_service("svc", [sys.executable, "-c", "pass"], ctx)
+
+            self.assertEqual(result["status"], "PASS")
+            self.assertEqual(len(cleanup_results), 1)
+            self.assertTrue(cleanup_results[0].process_reaped, cleanup_results[0].notes)
+            self.assertIs(host.processes.get("svc"), replacement)
+            spawn.assert_called_once()
+
+
+class SpawnFailureCleanupEvidenceTests(unittest.TestCase):
+    def test_unreaped_suspended_spawn_is_not_reported_as_no_process(self):
+        with tempfile.TemporaryDirectory() as td:
+            ctx = _ctx(Path(td))
+            host = ExecutionHost()
+            failure = JobObjectUnavailable(
+                ["AssignProcessToJobObject_failed_err=5", "abort_wait_timeout"],
+                process_reaped=False,
+            )
+            with patch("execution_host.host_run.spawn_managed", side_effect=failure):
+                result = host.execute_command(ctx, [sys.executable, "-c", "pass"])
+
+            cleanup = result["cleanup"]
+            self.assertFalse(cleanup["process_reaped"])
+            self.assertIn("suspended_spawn_abort_reap_unconfirmed", cleanup["notes"])
+            self.assertNotIn("no_process", cleanup["notes"])
+
+    def test_reaped_suspended_spawn_preserves_positive_abort_evidence(self):
+        with tempfile.TemporaryDirectory() as td:
+            ctx = _ctx(Path(td))
+            host = ExecutionHost()
+            failure = JobObjectUnavailable(
+                ["AssignProcessToJobObject_failed_err=5"],
+                process_reaped=True,
+            )
+            with patch("execution_host.host_run.spawn_managed", side_effect=failure):
+                result = host.execute_command(ctx, [sys.executable, "-c", "pass"])
+
+            cleanup = result["cleanup"]
+            self.assertTrue(cleanup["process_reaped"])
+            self.assertIn("suspended_spawn_abort_reaped", cleanup["notes"])
+            self.assertNotIn("no_process", cleanup["notes"])
 
 
 if __name__ == "__main__":
