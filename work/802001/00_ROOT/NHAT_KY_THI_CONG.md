@@ -152,3 +152,16 @@
 - Unresolved/open: VF-01 canonical path DOC-096; VF-10 quy tắc readback đề xuất; xác nhận có cần thêm reviewer khác trước khi trình Vinh phê duyệt policy.
 - Trạng thái: REVIEW COMMIT VERIFIED; DEFINE v0.2 REVIEWED — NOT APPROVED POLICY; BUILD NOT AUTHORIZED.
 - Bước tiếp theo: Xu/Vinh xử lý open questions trong §9 của handoff package; quyết định trình phê duyệt policy. Không mở BUILD.
+
+## W802001-LOG-0012 — 2026-11-17 19:44 +07:00
+- Actor: Xu / AI-01 (điều phối; identity theo phiên, không tuyên bố xác thực runtime độc lập)
+- Work: 802001
+- Loại bản ghi: POST-REVIEW MAIN AUDIT / JOURNAL RECONCILIATION
+- Phạm vi: Đối soát các thay đổi trên GitHub main sau commit phản biện Vibe d0ef503a1060fd2eddc709f7a5761028e0cbc08a.
+- Phương pháp: search commits theo W802001; fetch hai commit liên quan mới hơn; compare d0ef503a1060fd2eddc709f7a5761028e0cbc08a...HEAD b42bb8bb829a1ee4ee4914b8a7462fcca9d20eab; fetch lại DEFINE, handoff, roadmap và journal từ main.
+- Kết quả đối soát: main hiện tại HEAD b42bb8bb829a1ee4ee4914b8a7462fcca9d20eab; compare báo ahead_by=43, trong đó các thay đổi thuộc Work 802001 là 02 file: (1) DEFINE v0.2 được sửa tại commit 0b64b5cf2a730ea2979bc9a59d64d3f642111469 để cập nhật §13 từ draft v0.1 thành v0.2 đã phản biện; (2) journal được bổ sung LOG-0011 tại commit 6c044f2007c7ecc9a81a3be1c2df596ec0e9bb49. Các thay đổi còn lại trong compare thuộc Work khác, không đưa vào phạm vi audit W802001.
+- Phát hiện cần lưu ý: commit sửa §13 (0b64b5c) xuất hiện sau commit ghi LOG-0011 (6c044f2) và chưa có bản ghi riêng trong journal tại thời điểm audit. Commit này chỉ sửa một dòng trạng thái trong DEFINE, không thay đổi nội dung quy tắc; nay đã được ghi nhận tại LOG-0012.
+- Readback hiện tại: DEFINE header v0.2; trạng thái REVIEWED — NOT APPROVED POLICY; handoff ghi Vibe review COMPLETED — ACCEPT WITH CHANGES; roadmap v1.4 ghi WP-802001-02 REVIEW COMPLETED — AWAITING VINH APPROVAL; journal có LOG-0010/0011. GitHub fetch trả nội dung và blob SHA cho các file đã kiểm tra.
+- Open items chưa được tự ý quyết định: VF-01 canonical path DOC-096 vẫn UNVERIFIED-REFERENCE; VF-10 quy tắc readback sau mỗi lần ghi hồ sơ canonical vẫn là OPEN QUESTION; chưa có quyết định của Vinh về việc cần thêm reviewer Ka/Cla/Qw hay trình duyệt policy ngay.
+- Trạng thái: POST-REVIEW AUDIT RECORDED; DEFINE v0.2 REVIEWED BUT NOT APPROVED; BUILD NOT AUTHORIZED. Đây là đối soát tài liệu/Git, không phải QE, runtime test hoặc xác nhận enforcement.
+- Bước tiếp theo: Xu cần truy nguyên canonical path DOC-096 từ Work 70 và đưa ra đề xuất xử lý VF-10; sau đó trình Vinh quyết định policy approval và nhu cầu reviewer bổ sung. Không mở BUILD trước quyết định/phê duyệt và W70 G4 PASS.
