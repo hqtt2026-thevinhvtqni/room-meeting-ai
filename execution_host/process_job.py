@@ -445,11 +445,11 @@ class ManagedProcess:
 
     def cleanup(self, *, terminate_first: bool = True, wait_timeout: float = 5.0) -> CleanupResult:
         notes: list[str] = []
-        if not self.created_via_spawn:
+        unmanaged_tree = not self.created_via_spawn
+        if unmanaged_tree:
             notes.append("wrapped_existing_popen")
             notes.append("job_object_cannot_attach_retroactively")
             notes.append("process_tree_membership_unknown_fail_closed")
-            drained = False
         if self.job_object != "ATTACHED":
             notes.append("job_object_not_attached")
 
@@ -458,7 +458,7 @@ class ManagedProcess:
         terminate_sent = False
         kill_sent = False
         waited = False
-        drained = True
+        drained = not unmanaged_tree
         win_job = (
             self.platform.startswith("win")
             and self.job_object == "ATTACHED"
