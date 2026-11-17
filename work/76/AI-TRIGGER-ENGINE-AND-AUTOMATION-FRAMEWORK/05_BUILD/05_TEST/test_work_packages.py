@@ -384,3 +384,74 @@ def test_gateway_rejects_registration_key_source_identity_mismatch():
 def test_gateway_rejects_non_registration_values():
     with pytest.raises(ValueError, match="keys must exactly match"):
         EventGateway({"source-a": object()}, Verifier(), Replay())
+
+
+# W76-AU-002 — serialize concurrent in-process audit appends into one hash chain
+def test_audit_writer_concurrent_appends_do_not_fork_hash_chain():
+    from concurrent.futures import ThreadPoolExecutor
+
+    sink = Sink()
+    writer = AuditWriter(sink)
+
+    def write_one(i):
+        return writer.write(
+            record_id=f"concurrent-{i}", work_id="76", actor_ref="svc:test",
+            action="execute", outcome="accepted", correlation_id="parallel",
+            payload={"index": i},
+        )
+
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        records = list(pool.map(write_one, range(40)))
+
+    assert len(records) == 40
+    assert len(sink.rows) == 40
+    assert sink.rows[0].previous_hash == ""
+    for previous, current in zip(sink.rows, sink.rows[1:]):
+        assert current.previous_hash == previous.record_hash
+
+
+# W76-OR-002 — serialize concurrent state transitions and reject malformed metadata
+def test_state_machine_concurrent_same_state_transition_only_commits_once():
+    from concurrent.futures import ThreadPoolExecutor
+    from threading import Barrier
+
+    sink = Sink()
+    machine = ExecutionStateMachine(sink)
+    machine.start("exec-concurrent", "corr-concurrent")
+    barrier = Barrier(2)
+
+    def advance():
+        barrier.wait()
+        try:
+            return machine.transition(
+                "exec-concurrent", ExecutionState.SOURCE_AUTHENTICATED,
+                "source verified", "corr-concurrent",
+            )
+        except StateTransitionError:
+            return "REJECTED"
+
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        results = list(pool.map(lambda _: advance(), range(2)))
+
+    assert results.count(ExecutionState.SOURCE_AUTHENTICATED) == 1
+    assert results.count("REJECTED") == 1
+    assert machine.state("exec-concurrent") == ExecutionState.SOURCE_AUTHENTICATED
+    assert len(sink.rows) == 2
+
+
+@pytest.mark.parametrize("execution_id,correlation_id", [
+    ("", "corr"), (None, "corr"), ("exec", ""), ("exec", None),
+])
+def test_state_machine_start_rejects_malformed_identity(execution_id, correlation_id):
+    machine = ExecutionStateMachine(Sink())
+    with pytest.raises(StateTransitionError):
+        machine.start(execution_id, correlation_id)
+
+
+def test_state_machine_rejects_untyped_target_and_missing_transition_metadata():
+    machine = ExecutionStateMachine(Sink())
+    machine.start("exec-valid", "corr-valid")
+    with pytest.raises(StateTransitionError, match="target must"):
+        machine.transition("exec-valid", "FAILED", "reason", "corr-valid")
+    with pytest.raises(StateTransitionError, match="reason"):
+        machine.transition("exec-valid", ExecutionState.FAILED, "", "corr-valid")
