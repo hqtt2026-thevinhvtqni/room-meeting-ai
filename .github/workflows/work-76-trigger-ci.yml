@@ -18,7 +18,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '${{ matrix.python-version }}'
-      - run: python -m pip install --upgrade pip pytest
+      - run: python -m pip install --upgrade pip pytest jsonschema
       - name: Run Work 76 tests
         env:
           PYTHONPATH: '${{ env.WORK76 }}/05_BUILD/04_CODE'
