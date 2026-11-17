@@ -92,3 +92,5 @@ Dashboard v0.2 đọc JSON tĩnh từ repository. Chưa có Core API, authentica
 - Snapshot records WE-G0…WE-G3 PASS and WE-G4/WE-G5 BLOCKED. Vinh's 2026-11-18 autonomous build delegation is noted, but does not substitute for trusted AI-07 runtime identity/permission verification.
 - WP status filtering and visual labels now normalize descriptive status strings (e.g. `IN_REVIEW — ...`, `BLOCKED — ...`) to their leading status code.
 - Source mode remains `local_snapshot`; browser/mobile rendering, responsive interaction, accessibility and independent QE are NOT RUN. No browser PASS is claimed.
+
+- 2026-11-18: Work Entry panel responsive CSS uses three columns on desktop, two on tablet and one on mobile. Source-only adjustment; device/browser QE remains NOT RUN.
