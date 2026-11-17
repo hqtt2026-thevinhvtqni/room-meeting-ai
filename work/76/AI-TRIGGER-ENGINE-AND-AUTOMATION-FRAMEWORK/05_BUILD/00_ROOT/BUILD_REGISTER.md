@@ -152,3 +152,11 @@ PR #55 contains a proposed implementation, tests and CI workflow on an unmerged 
 - Regression tests added: W76-GW-004 (2 tests), W76-GW-005 (2 tests), W76-PL-003 (6 test cases including parametrized malformed responses).
 - Exact branch-head GitHub Actions run `44200662865` on head `aaa84763611dd30084b002fd2fe419d24717755b`: Python 3.11 **81 passed / 0 failed**, job `134453571124`, artifact `14381636110`, ZIP SHA256 `9bbe48658ea931c10dd0603b78d818e6adab7611806a60616ecdb97b6fb284d6`; Python 3.12 **81 passed / 0 failed**, job `134453571408`, artifact `14381780587`, ZIP SHA256 `f4860d384a7e1b01ea6dd56ee8d0f5c881b8d34ce2e870000f5480237891c20b`.
 - CI is branch-level exact-head evidence. WP-76-02/05 remain IN_REVIEW; production source key provider and Core policy provider remain external. No independent QE/runtime E2E/acceptance claim.
+
+
+## Latest post-reconciliation exact-head CI — 2026-11-18 06:32 +07:00
+- Exact current branch/PR #60 head: `4320d7ad7a5862ad46942e96097257d92efd04b8`.
+- GitHub Actions PR run `44200888299` SUCCESS:
+  - Python 3.11: 81 passed / 0 failed; job `134454344249`; JUnit artifact `14381915480`; ZIP SHA256 `60be358bd1ae39e3f490f77b492b0edd4a198d470ad594ddb89f4e2072ee841a`.
+  - Python 3.12: 81 passed / 0 failed; job `134454344715`; JUnit artifact `14380309550`; ZIP SHA256 `a0564536382234e66cadadc6eef0e7e7464c0d8b67863ebdc3eec62ae581e66e`.
+- PR #60 remains OPEN/DRAFT/UNMERGED. GitHub reports mergeable=true, mergeable_state=clean. Current branch comparison: 119 commits ahead and 12 behind main; no merge/rebase/acceptance/release performed.
