@@ -334,13 +334,13 @@ class ExecutionHost:
             existing = self.processes.get(name)
             if existing and existing.poll() is None and name not in self._service_cleanup_blocked:
                 return {
+                    **self.identity(),
                     "status": "PASS",
                     "name": name,
                     "pid": existing.pid,
                     "already_running": True,
                     "execution_id": ctx.execution_id,
                     "job_object": getattr(existing, "job_object", "NOT_ATTACHED"),
-                    **self.identity(),
                 }
 
             if existing is not None:
@@ -356,6 +356,7 @@ class ExecutionHost:
                 if not reaped:
                     self._service_cleanup_blocked.add(name)
                     return {
+                        **self.identity(),
                         "status": "BLOCKED",
                         "name": name,
                         "blocker": "existing_service_cleanup_unverified",
@@ -363,7 +364,6 @@ class ExecutionHost:
                         "returncode": returncode,
                         "pid": getattr(existing, "pid", None),
                         "execution_id": ctx.execution_id,
-                        **self.identity(),
                     }
                 # Only release the old handle after the entire process tree is reaped.
                 if self.processes.get(name) is existing:
@@ -376,6 +376,7 @@ class ExecutionHost:
                 managed = spawn_managed_service(args, cwd=workspace, env=env)
             except JobObjectUnavailable as exc:
                 return {
+                    **self.identity(),
                     "status": "BLOCKED",
                     "name": name,
                     "blocker": getattr(exc, "blocker", "job_object_attach_failed"),
@@ -384,13 +385,13 @@ class ExecutionHost:
                     "pid": None,
                     "execution_id": ctx.execution_id,
                     "job_object": "NOT_ATTACHED",
-                    **self.identity(),
                 }
             except OSError as exc:
                 # Preserve generic spawn failures as structured BLOCKED results.
                 # Unknown reap state remains None; never manufacture a cleanup PASS.
                 process_reaped = getattr(exc, "process_reaped", None)
                 return {
+                    **self.identity(),
                     "status": "BLOCKED",
                     "name": name,
                     "blocker": "service_spawn_failed",
@@ -400,17 +401,16 @@ class ExecutionHost:
                     "pid": None,
                     "execution_id": ctx.execution_id,
                     "job_object": "NOT_ATTACHED",
-                    **self.identity(),
                 }
             self.processes[name] = managed
 
             return {
+                **self.identity(),
                 "status": "PASS",
                 "name": name,
                 "pid": managed.pid,
                 "execution_id": ctx.execution_id,
                 "job_object": managed.job_object,
-                **self.identity(),
             }
 
     def service_status(
@@ -451,6 +451,7 @@ class ExecutionHost:
                     status = "STOPPED"
 
             return {
+                **self.identity(),
                 "status": status,
                 "name": name,
                 "pid": pid,
@@ -458,7 +459,6 @@ class ExecutionHost:
                 "members": members,
                 "readiness": "NOT_CHECKED",
                 "execution_id": ctx.execution_id,
-                **self.identity(),
             }
 
     def stop_service(
@@ -471,10 +471,10 @@ class ExecutionHost:
             managed = self.processes.get(name)
             if managed is None:
                 return {
+                    **self.identity(),
                     "status": "STOPPED",
                     "name": name,
                     "execution_id": ctx.execution_id,
-                    **self.identity(),
                 }
 
             try:
@@ -495,6 +495,7 @@ class ExecutionHost:
                 self._service_cleanup_blocked.add(name)
 
             return {
+                **self.identity(),
                 "status": "PASS" if reaped else "BLOCKED",
                 "blocker": None if reaped else "service_cleanup_unverified",
                 "name": name,
@@ -502,7 +503,6 @@ class ExecutionHost:
                 "execution_id": ctx.execution_id,
                 "process_reaped": reaped,
                 "cleanup": cleanup,
-                **self.identity(),
             }
 
     def git_validate(self, ctx):
