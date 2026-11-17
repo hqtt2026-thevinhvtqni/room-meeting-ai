@@ -335,3 +335,40 @@ def test_gateway_schema_exception_fails_closed_without_replay_reservation():
     with pytest.raises(GatewayRejected, match="schema validation failed"):
         gateway.ingest("source-a", {"x-valid": "yes"}, body, received_at=now)
     assert replay.seen == set()
+
+ 
+# W76-PL-003 — policy requests/results must carry typed authoritative identity
+def test_policy_rejects_incomplete_request_before_provider_call():
+    class ProviderSpy:
+        def __init__(self):
+            self.called = False
+        def evaluate_current(self, request):
+            self.called = True
+            return PolicyResult(PolicyOutcome.ALLOW, "decision-1", "rev-1", "allowed")
+
+    with pytest.raises(ValueError, match="principal_ref"):
+        PolicyRequest("", "76", "WP-76-05", "notify", "policy-1", "assignment-1", "corr-1")
+
+    provider = ProviderSpy()
+    result = PolicyAdapter(provider).authorize(None)
+    assert result.outcome == PolicyOutcome.INDETERMINATE
+    assert provider.called is False
+
+
+@pytest.mark.parametrize("provider_result", [
+    PolicyResult("ALLOW", "decision-1", "rev-1", "allowed"),
+    PolicyResult(PolicyOutcome.ALLOW, "", "rev-1", "allowed"),
+    PolicyResult(PolicyOutcome.ALLOW, "decision-1", "", "allowed"),
+    PolicyResult(PolicyOutcome.ALLOW, "decision-1", "rev-1", ""),
+])
+def test_policy_malformed_authoritative_response_fails_indeterminate(provider_result):
+    request = PolicyRequest("principal", "76", "WP-76-05", "notify", "policy-1", "assignment-1", "corr-1")
+    result = PolicyAdapter(Provider(provider_result)).authorize(request)
+    assert result.outcome == PolicyOutcome.INDETERMINATE
+
+
+def test_policy_approval_ref_must_be_non_empty_string():
+    request = PolicyRequest("principal", "76", "WP-76-05", "notify", "policy-1", "assignment-1", "corr-1")
+    need = PolicyResult(PolicyOutcome.REQUIRE_APPROVAL, "decision-1", "rev-1", "approval required")
+    result = PolicyAdapter(Provider(need), Approval()).authorize(request, object())
+    assert result.outcome == PolicyOutcome.DENY
