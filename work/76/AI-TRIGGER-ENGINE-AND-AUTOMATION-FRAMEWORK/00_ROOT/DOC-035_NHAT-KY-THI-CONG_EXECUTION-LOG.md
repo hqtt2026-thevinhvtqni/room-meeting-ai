@@ -526,3 +526,23 @@ This is a governance/assignment and preparation record only. Xu did not alter so
 - CI run 44186088850: Python 3.11 initially 46 passed / 1 failed due to an incorrect test expectation (verified approval should return ALLOW). Co corrected the assertion in `0bbb3d13fa616cdd7b3f88c4022d3d3595490b70`. Fresh post-fix CI has not yet been observed; Python 3.12 initial job was still running at last check. No PASS claim.
 - Limits: no Core authorization integration, production signature/key provider, durable database/queue/audit sink, recurrence/DST policy, AI dispatch transport/receiver receipt/ACK, PC Bridge, runtime or browser/mobile E2E. WP-76-07 remains BLOCKED. No lifecycle gate, Build status, acceptance or release advanced.
 - Status: implementation branch and draft PR established; CI correction awaiting fresh run; independent QE/review pending; NOT MERGED / NOT RELEASED.
+
+
+---
+
+### 2026-11-18 05:05:50 +07:00 — Co hoàn tất first implementation slice và CI matrix cho PR #60
+- Actor: Co — AI Coder / Execution Assistant.
+- Vinh's direct authority reaffirmed: Co autonomously executes Work 76 without Xu step-by-step coordination. Vinh is contacted only for PC/VS Code/terminal access or independent review/final decision.
+- Code refinements after first CI failures:
+  - Policy adapter now returns ALLOW only after the current approval verifier explicitly confirms the approval; missing/invalid/expired/out-of-scope approval returns DENY.
+  - Execution state machine aligned to DOC-004 sequence: source authentication, validation, normalization, dedupe, trigger load, condition evaluation, policy evaluation, approval, queue, dispatch, receiver receipt/ACK, action authorization/execution, outcome recording. Initial RECEIVED transition is appended before in-memory state commits; sink failure leaves state uncreated.
+  - Added WP-76-06 bounded exponential RetryPlanner and atomic IdempotencyGuard ports. Production durability still depends on an injected store.
+  - Regression tests now cover the expanded state path, durable transition append, retry budget/backoff and duplicate idempotency.
+- Active branch/PR: `work/76-co-autonomous-build-v2`, PR #60 draft, head `790d2986eb2d9a61d1c4dcc610457e1874738f30`, based on main `9b366fe5ade05568436644ac385d7504a2673605`. PR #59 is a superseded draft; PR #55 remains preserved as earlier proposal history. No PR merged.
+- CI evidence: GitHub Actions run 44186456898 completed SUCCESS for both matrix jobs. Python 3.11: 50 passed, 0 failed (job 134404178701); JUnit artifact ID 14373942943, ZIP SHA256 `3405b9abc6907226f0b8b25c5443a2c9d738eadd50c67e8e7f50a58f20156191`. Python 3.12: 50 passed, 0 failed (job 134404179159); JUnit artifact ID 14374232019, ZIP SHA256 `e3e12bf8b7db0cc98b4eb1c86b97abc4548e98daedf10c167b97eea3a34a26b2`.
+- Canonical Build Register reconciled on PR #60: WP-76-01/02/03/04/05/06/08 are IN_REVIEW against draft PR #60 with explicit limits; WP-76-07 remains BLOCKED; WP-76-09 remains IN_REVIEW. No WP marked DONE/ACCEPTED. Evidence Register added EV-76-028 (source inventory), EV-76-029 (branch CI + JUnit digests), EV-76-030 (Sandbox journal capability/readback).
+- Canonical DOC-035 was appended in Sandbox and read_probe verified the unique marker. The matching journal, Build Register and Evidence Register updates are committed on PR #60 branch; GitHub branch read-back still required after this entry.
+- Work Entry caveat: Sandbox write/read-back is proven for this tool session, but trusted runtime identity binding to AI-07 remains unverified. No PC/VS Code Bridge tool is exposed in this session. This does not invalidate the GitHub Actions CI results but blocks any claim of local PC execution.
+- Remaining dependencies: real Core principal/Work/WP authorization; production source signature/key provider; durable event/queue/idempotency/transition/audit storage; scheduler recurrence/DST/HA and missed-run policy; dispatch provider/target identity/receiver receipt/authenticated ACK; independent QE/review; runtime and browser/mobile E2E.
+- WP-76-07 remains BLOCKED. No lifecycle gate transition, production configuration change, merge, acceptance, release or deployment was performed.
+- Status: first implementation slice and branch CI matrix PASS (50/50 on Python 3.11 and 3.12); PR #60 DRAFT/OPEN/UNMERGED; independent QE and runtime integration pending; NOT RELEASED.
