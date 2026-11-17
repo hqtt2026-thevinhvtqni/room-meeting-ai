@@ -4,7 +4,7 @@
 |---|---|---|---|---|---|
 | WP-76-01 | Trigger Registry and schema | Co / AI-07 | Ka / AI-02 (independent QE pending) | IN_REVIEW — PR #60 draft; branch CI PASS | `05_BUILD/04_CODE/trigger_engine/{models,registry}.py`; `05_BUILD/05_TEST/test_trigger_engine.py` |
 | WP-76-02 | Event Gateway and source validation | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; typed malformed event validation, strict canonical payload digest, validate-before-replay reservation and fail-closed replay-store errors added; production verifier/key provider pending; exact-head CI run 44192558442 PASS 58/58 on Python 3.11/3.12 | `trigger_engine/gateway.py`; `test_work_packages.py` |
-| WP-76-03 | Scheduler and TIME triggers | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; UTC one-shot only; due-store exceptions/indeterminate results fail closed; recurrence/DST/HA BLOCKED by ADR-76-005; latest scheduler hardening CI pending | `trigger_engine/scheduler.py`; `test_work_packages.py` |
+| WP-76-03 | Scheduler and TIME triggers | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; UTC one-shot only; due-store exceptions/indeterminate results fail closed; recurrence/DST/HA BLOCKED by ADR-76-005; latest scheduler hardening exact-head CI run 44193037401 PASS 71/71 on Python 3.11/3.12 | `trigger_engine/scheduler.py`; `test_work_packages.py` |
 | WP-76-04 | Typed Condition Evaluator | Co / AI-07 | Ka / AI-02 (independent QE pending) | IN_REVIEW — PR #60 draft; branch CI PASS | `trigger_engine/conditions.py`; `test_trigger_engine.py` |
 | WP-76-05 | Policy adapter and approval | Co / AI-07 | Ka architecture review; Qw QE (ACK pending) | IN_REVIEW — PR #60 draft; fail-closed adapter contract; Core provider not integrated | `trigger_engine/policy.py`; `test_work_packages.py` |
 | WP-76-06 | Orchestration, dedupe and retry | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; state/retry/idempotency ports; explicit duplicate vs store-unavailable outcomes and strict argument validation added; durable backend not integrated; exact-head CI run 44192865531 PASS 65/65 on Python 3.11/3.12 | `trigger_engine/orchestrator.py`, `retry.py`; `test_work_packages.py` |
@@ -89,3 +89,11 @@ PR #55 contains a proposed implementation, tests and CI workflow on an unmerged 
   - Python 3.11: 65 passed / 0 failed; job `134426542685`; JUnit artifact `14376124853`; ZIP SHA256 `d074fd728886d714d71a02297c32e1159fce8e9bb51cb835b30adf488a154203`.
   - Python 3.12: 65 passed / 0 failed; job `134426542018`; JUnit artifact `14376353840`; ZIP SHA256 `6838b6fb6d2a77b38fce9630a96d30dcaef8b81b60626fa27c7f0543c3543614`.
 - This exact-head CI includes WP-76-06 idempotency changes; it predates WP-76-03 scheduler changes committed afterwards. CI for latest scheduler changes remains pending.
+
+
+## WP-76-03 scheduler exact-head CI — 2026-11-18 05:45 +07:00
+- Exact head: `40b73865b0174132eb18e78500ff14e2684d91fa`.
+- GitHub Actions run `44193037401` SUCCESS:
+  - Python 3.11: 71 passed / 0 failed; job `134427144495`; JUnit artifact `14376823329`; ZIP SHA256 `09658c6f4ad99b827ecf18ed43f4616e5c67b40773baa5ce18840392ee5bec41`.
+  - Python 3.12: 71 passed / 0 failed; job `134427144856`; JUnit artifact `14377871600`; ZIP SHA256 `541676ec20827b6261415feebee4b1d9220ab7665f09c245444264cb81cd84b2`.
+- This exact-head CI includes scheduler hardening and all prior branch changes. It is branch CI only, not independent Canonical QE or runtime integration.
