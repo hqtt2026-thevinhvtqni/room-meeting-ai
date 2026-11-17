@@ -160,3 +160,11 @@ PR #55 contains a proposed implementation, tests and CI workflow on an unmerged 
   - Python 3.11: 81 passed / 0 failed; job `134454344249`; JUnit artifact `14381915480`; ZIP SHA256 `60be358bd1ae39e3f490f77b492b0edd4a198d470ad594ddb89f4e2072ee841a`.
   - Python 3.12: 81 passed / 0 failed; job `134454344715`; JUnit artifact `14380309550`; ZIP SHA256 `a0564536382234e66cadadc6eef0e7e7464c0d8b67863ebdc3eec62ae581e66e`.
 - PR #60 remains OPEN/DRAFT/UNMERGED. GitHub reports mergeable=true, mergeable_state=clean. Current branch comparison: 119 commits ahead and 12 behind main; no merge/rebase/acceptance/release performed.
+
+
+## Main synchronization — 2026-11-18 06:32 +07:00
+- Previous PR #60 branch was 12 commits behind main. GitHub compare showed the 12 main-side commits changed only Work 502 files; no changed paths overlapped the 21 Work 76 PR files.
+- Created a two-parent merge commit `ebbb12ef9cacac77ac5f9eff9f2142bef47f7e08`, with current main `6c3789dfb49a0db2149d49f74941e803f1ae702e` as first parent and previous Work 76 head `4cf1a0c5503bc3074d019658677cc6324d114838` as second parent.
+- Updated `work/76-co-autonomous-build-v2` by fast-forward ref update with expected-head lease. Post-update compare: 124 commits ahead, 0 behind main; PR #60 remains OPEN/DRAFT/UNMERGED and GitHub reports mergeable=true.
+- Exact merge-head CI is running; do not claim it passes until the run for `ebbb12...` completes.
+- This synchronizes main into the PR branch only. It does not merge Work 76 into main or approve/accept/release it.
