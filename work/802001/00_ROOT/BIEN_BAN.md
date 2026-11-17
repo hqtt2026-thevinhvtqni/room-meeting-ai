@@ -1,7 +1,7 @@
 # BIÊN BẢN / MINUTES — WORK 802001
 
 - Work ID: 802001
-- Version: 1.1 — SCOPE CLARIFICATION
+- Version: 1.2 — GOVERNANCE REFERENCE CORRECTION
 - Date: 2026-11-17
 - Chủ trì: Xu / AI-01; thẩm quyền cuối cùng: Vinh
 - Chuẩn bắt buộc: Work 70 — DOC-001, DOC-004, DOC-005, DOC-033, DOC-035, DOC-057
