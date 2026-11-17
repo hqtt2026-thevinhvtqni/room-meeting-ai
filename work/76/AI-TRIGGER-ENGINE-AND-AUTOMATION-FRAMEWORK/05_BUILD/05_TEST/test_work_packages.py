@@ -100,8 +100,9 @@ def test_state_machine_commits_only_after_sink_append():
             if self.calls>1: raise OSError("disk")
     sink=FailAfterStart()
     machine=ExecutionStateMachine(sink); machine.start("z","c")
-    with pytest.raises(OSError):
+    with pytest.raises(StateTransitionError, match="append failed") as exc:
         machine.transition("z",ExecutionState.SOURCE_AUTHENTICATED,"authenticated","c")
+    assert isinstance(exc.value.__cause__, OSError)
     assert machine.state("z")==ExecutionState.RECEIVED
 
 def test_audit_writer_hash_chain_and_fail_closed():
