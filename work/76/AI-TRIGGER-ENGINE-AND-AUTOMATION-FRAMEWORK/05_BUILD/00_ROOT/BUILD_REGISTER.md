@@ -192,3 +192,11 @@ PR #55 contains a proposed implementation, tests and CI workflow on an unmerged 
 - Scope limit: locks are process-local. Production sink must provide atomic cross-process compare-and-swap/append, persisted head recovery and durable state hydration. Those integrations remain NOT IMPLEMENTED.
 - First CI attempt caught an outdated test expecting raw OSError from transition sink; contract was deliberately normalized to StateTransitionError with OSError preserved as __cause__, and test corrected. Failed runs 44202563515 / 44202590801 were superseded by exact-head success below.
 - Exact latest head `364c02d61c4c08e0cea1363d904bf4d4cc36cc82`, run `44202710464` SUCCESS: Python 3.11 and 3.12 each 88 passed / 0 failed.
+
+
+## Exact CI after concurrency hardening and governance sync — 2026-11-18 06:32 +07:00
+- Exact branch head tested: `b29a561119476a395bb4d2a4e00681da78f3df1f`.
+- GitHub Actions PR run `44202889699` SUCCESS:
+  - Python 3.11: 88 passed / 0 failed; job `134461250746`; JUnit artifact `14381479247`; ZIP SHA256 `fe3733970eb3b58b3f12541e4ea0b0c5d1188005493f188ad6bfc46d002484c9`.
+  - Python 3.12: 88 passed / 0 failed; job `134461251130`; JUnit artifact `14381713649`; ZIP SHA256 `a97332f8d3c795418c109e54598c5c5e2f7da2da6d4a8916acf654f8adad1875`.
+- Branch comparison: 145 ahead / 0 behind main. PR #60 OPEN/DRAFT/UNMERGED; GitHub mergeable=true / clean.
