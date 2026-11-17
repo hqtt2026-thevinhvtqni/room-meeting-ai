@@ -3,13 +3,13 @@
 | WP | Package | Owner | Reviewer | Status | Canonical evidence |
 |---|---|---|---|---|---|
 | WP-76-01 | Trigger Registry and schema | Co / AI-07 | Ka / AI-02 (independent QE pending) | IN_REVIEW — PR #60 draft; branch CI PASS | `05_BUILD/04_CODE/trigger_engine/{models,registry}.py`; `05_BUILD/05_TEST/test_trigger_engine.py` |
-| WP-76-02 | Event Gateway and source validation | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; typed malformed event validation, strict canonical payload digest, validate-before-replay reservation and fail-closed replay-store errors added; production verifier/key provider pending; CI pending | `trigger_engine/gateway.py`; `test_work_packages.py` |
+| WP-76-02 | Event Gateway and source validation | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; typed malformed event validation, strict canonical payload digest, validate-before-replay reservation and fail-closed replay-store errors added; production verifier/key provider pending; exact-head CI run 44192558442 PASS 58/58 on Python 3.11/3.12 | `trigger_engine/gateway.py`; `test_work_packages.py` |
 | WP-76-03 | Scheduler and TIME triggers | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; UTC one-shot only; recurrence/DST/HA BLOCKED by ADR-76-005 | `trigger_engine/scheduler.py`; `test_work_packages.py` |
 | WP-76-04 | Typed Condition Evaluator | Co / AI-07 | Ka / AI-02 (independent QE pending) | IN_REVIEW — PR #60 draft; branch CI PASS | `trigger_engine/conditions.py`; `test_trigger_engine.py` |
 | WP-76-05 | Policy adapter and approval | Co / AI-07 | Ka architecture review; Qw QE (ACK pending) | IN_REVIEW — PR #60 draft; fail-closed adapter contract; Core provider not integrated | `trigger_engine/policy.py`; `test_work_packages.py` |
 | WP-76-06 | Orchestration, dedupe and retry | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; state/retry/idempotency ports; durable backend not integrated | `trigger_engine/orchestrator.py`, `retry.py`; `test_work_packages.py` |
 | WP-76-07 | Verified AI dispatch adapter | Co / AI-07 (discovery/design only) | Xu + Qw | BLOCKED — no verified transport, target identity, receiver receipt or ACK | `05_BUILD/03_ARCHITECTURE` |
-| WP-76-08 | Audit and evidence store | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; append-only sink contract only; strict canonical JSON audit digest + non-finite payload regression added; durable store/retention ADR pending; CI queued | `trigger_engine/audit.py`; `test_work_packages.py` |
+| WP-76-08 | Audit and evidence store | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; append-only sink contract only; strict canonical JSON audit digest + non-finite payload regression added; exact-head CI run 44192173589 PASS 54/54 on Python 3.11/3.12; durable store/retention ADR pending | `trigger_engine/audit.py`; `test_work_packages.py` |
 | WP-76-09 | Read-only dashboard | Xu | An / Qw | IN_REVIEW — browser/mobile QE pending | `DASHBOARD` |
 
 PR #55 contains a proposed implementation, tests and CI workflow on an unmerged branch. This is not a merged implementation on main, not runtime/integration verification, and not acceptance. WP status must be updated only with attributable evidence.
@@ -64,3 +64,11 @@ PR #55 contains a proposed implementation, tests and CI workflow on an unmerged 
 - Commits: gateway source `ba418cbb26fc140564e3e10ea497fc19f47e756c`; tests `d891fe3ee11176a476eba26389edae2dfb20695a`.
 - CI for this source/test head has not yet been observed; no test PASS is claimed for this change.
 - WP-76-02 remains IN_REVIEW; production signature/key provider and durable replay store remain external dependencies (ADR-76-002 OPEN).
+
+
+## Event Gateway exact-head CI — 2026-11-18 05:42 +07:00
+- Exact PR #60 head: `1a5de9a7007f6b1f80e3153395f94d0342ea4595`.
+- GitHub Actions run `44192558442` completed SUCCESS:
+  - Python 3.11: 58 passed / 0 failed; job `134425485586`; JUnit artifact `14378131037`; ZIP SHA256 `14c67337ed3f281b546eca9da0b2f938b6b5aaabf027277aa7af920d02c4ff27`.
+  - Python 3.12: 58 passed / 0 failed; job `134425485016`; JUnit artifact `14376393806`; ZIP SHA256 `caa7ef0f9243fb70ac2ffd496beb8ee6e69a90c3b2f71ee753f21dfca0e7d799`.
+- CI is branch-level exact-head evidence only. No independent Canonical QE, merged-main, Core/runtime integration, E2E or release claim.
