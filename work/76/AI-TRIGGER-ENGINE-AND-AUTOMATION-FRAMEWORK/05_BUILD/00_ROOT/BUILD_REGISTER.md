@@ -7,7 +7,7 @@
 | WP-76-03 | Scheduler and TIME triggers | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; UTC one-shot only; recurrence/DST/HA BLOCKED by ADR-76-005 | `trigger_engine/scheduler.py`; `test_work_packages.py` |
 | WP-76-04 | Typed Condition Evaluator | Co / AI-07 | Ka / AI-02 (independent QE pending) | IN_REVIEW — PR #60 draft; branch CI PASS | `trigger_engine/conditions.py`; `test_trigger_engine.py` |
 | WP-76-05 | Policy adapter and approval | Co / AI-07 | Ka architecture review; Qw QE (ACK pending) | IN_REVIEW — PR #60 draft; fail-closed adapter contract; Core provider not integrated | `trigger_engine/policy.py`; `test_work_packages.py` |
-| WP-76-06 | Orchestration, dedupe and retry | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; state/retry/idempotency ports; durable backend not integrated | `trigger_engine/orchestrator.py`, `retry.py`; `test_work_packages.py` |
+| WP-76-06 | Orchestration, dedupe and retry | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; state/retry/idempotency ports; explicit duplicate vs store-unavailable outcomes and strict argument validation added; durable backend not integrated; CI pending | `trigger_engine/orchestrator.py`, `retry.py`; `test_work_packages.py` |
 | WP-76-07 | Verified AI dispatch adapter | Co / AI-07 (discovery/design only) | Xu + Qw | BLOCKED — no verified transport, target identity, receiver receipt or ACK | `05_BUILD/03_ARCHITECTURE` |
 | WP-76-08 | Audit and evidence store | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; append-only sink contract only; strict canonical JSON audit digest + non-finite payload regression added; exact-head CI run 44192173589 PASS 54/54 on Python 3.11/3.12; durable store/retention ADR pending | `trigger_engine/audit.py`; `test_work_packages.py` |
 | WP-76-09 | Read-only dashboard | Xu | An / Qw | IN_REVIEW — browser/mobile QE pending | `DASHBOARD` |
@@ -72,3 +72,12 @@ PR #55 contains a proposed implementation, tests and CI workflow on an unmerged 
   - Python 3.11: 58 passed / 0 failed; job `134425485586`; JUnit artifact `14378131037`; ZIP SHA256 `14c67337ed3f281b546eca9da0b2f938b6b5aaabf027277aa7af920d02c4ff27`.
   - Python 3.12: 58 passed / 0 failed; job `134425485016`; JUnit artifact `14376393806`; ZIP SHA256 `caa7ef0f9243fb70ac2ffd496beb8ee6e69a90c3b2f71ee753f21dfca0e7d799`.
 - CI is branch-level exact-head evidence only. No independent Canonical QE, merged-main, Core/runtime integration, E2E or release claim.
+
+
+## WP-76-06 idempotency fail-closed hardening — 2026-11-18 05:43 +07:00
+- `IdempotencyGuard` now distinguishes a true duplicate (`False`) from an unavailable/indeterminate store result or store exception; unavailable conditions raise `IdempotencyUnavailable` and remain fail-closed.
+- Validates non-empty Work/key, positive integer TTL excluding bool, and timezone-aware datetime. `RetryPlanner` now validates the clock and requires a strict boolean retryable flag.
+- Exported `IdempotencyUnavailable` from the package.
+- Regression tests cover store exception, indeterminate response, malformed Work/key/TTL and retry planner malformed inputs.
+- Commits: retry source `e22150bd6b9b5a0b101597f5a594ce33fed4569e`; package export `2da13d98bec7730620eba845d7127a394cb48bd1`; tests `987234acd5a5228d7c75e33ae510b1b4edfa7894`.
+- CI exact-head for this source/test change not yet observed; no PASS is claimed. Durable atomic store remains external (ADR-76-004 OPEN).
