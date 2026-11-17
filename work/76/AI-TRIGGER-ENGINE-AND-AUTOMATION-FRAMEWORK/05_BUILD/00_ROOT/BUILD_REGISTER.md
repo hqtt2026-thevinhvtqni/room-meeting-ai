@@ -97,3 +97,11 @@ PR #55 contains a proposed implementation, tests and CI workflow on an unmerged 
   - Python 3.11: 71 passed / 0 failed; job `134427144495`; JUnit artifact `14376823329`; ZIP SHA256 `09658c6f4ad99b827ecf18ed43f4616e5c67b40773baa5ce18840392ee5bec41`.
   - Python 3.12: 71 passed / 0 failed; job `134427144856`; JUnit artifact `14377871600`; ZIP SHA256 `541676ec20827b6261415feebee4b1d9220ab7665f09c245444264cb81cd84b2`.
 - This exact-head CI includes scheduler hardening and all prior branch changes. It is branch CI only, not independent Canonical QE or runtime integration.
+
+
+## Final exact-head CI after WP-76-03/06 hardening — 2026-11-18 05:46 +07:00
+- Exact PR #60 head: `a2f8131c080826bd57916222da1308386e7aa215`.
+- GitHub Actions run `44193167465` SUCCESS:
+  - Python 3.11: 71 passed / 0 failed; job `134427588220`; JUnit artifact `14376898453`; ZIP SHA256 `02496a6479663053a60642b44dac0b5ee78dc309f4aa8faf4e5252e10bb27923`.
+  - Python 3.12: 71 passed / 0 failed; job `134427587805`; JUnit artifact `14378400952`; ZIP SHA256 `f7c310009121d28e8603ae9afe2ad4aa3c50a853387a7c46473ffb95d16309aa`.
+- Exact-head branch CI covers the current scheduler/idempotency changes. It remains branch CI, not independent QE, merged-main, Core/runtime or E2E.
