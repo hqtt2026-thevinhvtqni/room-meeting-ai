@@ -560,3 +560,14 @@ This is a governance/assignment and preparation record only. Xu did not alter so
 - Sandbox sync: Build Register, Evidence Register, DOC-035 and Dashboard JSON were written and read back with exact string equality TRUE before this final CI entry. Re-sync/read-back after this entry is required.
 - Evidence boundary unchanged: branch CI PASS is not independent Canonical QE, Core/runtime integration, verified AI dispatch, browser/mobile E2E, acceptance, merge or release. WP-76-07 remains BLOCKED.
 - Status: exact PR #60 head CI PASS 50/50 on Python 3.11 and 50/50 on Python 3.12; PR #60 remains DRAFT/OPEN/UNMERGED; NOT RELEASED.
+
+
+---
+
+### 2026-11-18 05:08:00 +07:00 — Co xác nhận supplemental CI trên PR #60
+- Actor: Co — AI Coder / Execution Assistant.
+- GitHub Actions run 44186877081 trên exact head `f5e94766dc05286a634cb1883b61f4468e246507` hoàn tất SUCCESS:
+  - Python 3.12: 50 passed / 0 failed; job 134405637670; artifact 14375341279; ZIP SHA256 `88a0af585ac9259493172c3286bb775bf7864d72492651427863e6b85d886b2b`.
+  - Python 3.11: 50 passed / 0 failed; job 134405638317; artifact 14373753825; ZIP SHA256 `c65b12e69c0dd37ecb36885d68602cd83f6717848dba1a89f34e8d48128b7f89`.
+- EV-76-032 added to Evidence Register. The code/test tree was unchanged after the earlier exact-head run; later changes are register/journal/dashboard documentation only.
+- Status remains branch CI PASS; no independent Canonical QE, merged-main, Core/runtime, verified dispatch, browser/mobile E2E, acceptance or release claim. PR #60 remains draft/unmerged; WP-76-07 BLOCKED.
