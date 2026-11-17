@@ -58,3 +58,11 @@ No parallel minutes, plan or journal files should be created. Update these canon
 - Root `03_ARCHITECT/` is the correct canonical architecture phase and remains unchanged.
 - Root `01_ORIGINAL/`, `02_EXTENSION/`, `03_ARCHITECTURE/`, `04_CODE/`, `05_TEST/`, `07_RELEASE/` are legacy misplaced directories; inventory showed no files in them at audit time. Directory retirement is pending a fresh inventory and supported delete-directory capability.
 - Structure normalization status: Dashboard implementation/data 7/7 exact parity; 8 old Dashboard files and 2 old evidence files deleted after copy; canonical docs and evidence read back. Empty legacy directory entries remain. Post-migration test execution, GitHub/PC parity and independent QE pending.
+
+
+## GitHub synchronization — 2026-11-17
+- Repository: `hqtt2026-thevinhvtqni/room-meeting-ai`; branch: `main`.
+- Canonical path: `work/117/ROOM-MEDIA-HUB/`.
+- Current sync scope: canonical lifecycle markers, Dashboard implementation and tests, Dashboard evidence, and updated Work records.
+- GitHub write operations completed; exact full-tree/content parity verification is in progress. Do not treat write success alone as synchronization PASS.
+- Product BUILD remains NOT AUTHORIZED.
