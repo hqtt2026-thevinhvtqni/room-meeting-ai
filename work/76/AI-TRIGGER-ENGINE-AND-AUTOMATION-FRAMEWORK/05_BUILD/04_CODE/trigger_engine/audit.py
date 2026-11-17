@@ -1,6 +1,7 @@
 """Audit record contract and fail-closed writer; sink durability is external."""
 from __future__ import annotations
 import hashlib
+from threading import Lock
 from dataclasses import dataclass
 from datetime import datetime,timezone
 from typing import Protocol,Any
@@ -20,6 +21,9 @@ class AuditWriter:
     def __init__(self,sink:AppendOnlyAuditSink|None):
         self._sink=sink
         self._head=""
+        # Serializes in-process appends; production sinks must also enforce
+        # atomic append/CAS across processes.
+        self._lock=Lock()
 
     def write(self,*,record_id:str,work_id:str,actor_ref:str,action:str,outcome:str,correlation_id:str,payload:Any)->AuditRecord:
         if self._sink is None:
@@ -33,13 +37,14 @@ class AuditWriter:
         payload_json=canonical_json(payload)
         digest=hashlib.sha256(payload_json.encode("utf-8")).hexdigest()
         occurred=datetime.now(timezone.utc)
-        base={"record_id":record_id,"work_id":work_id,"actor_ref":actor_ref,"action":action,"outcome":outcome,
-              "correlation_id":correlation_id,"occurred_at":occurred.isoformat(),"payload_digest":digest,"previous_hash":self._head}
-        record_hash=hashlib.sha256(canonical_json(base).encode("utf-8")).hexdigest()
-        record=AuditRecord(record_id,work_id,actor_ref,action,outcome,correlation_id,occurred,digest,self._head,record_hash)
-        try:
-            self._sink.append(record)
-        except Exception as exc:
-            raise AuditUnavailable("audit append failed; protected operation fails closed") from exc
-        self._head=record_hash
-        return record
+        with self._lock:
+            base={"record_id":record_id,"work_id":work_id,"actor_ref":actor_ref,"action":action,"outcome":outcome,
+                  "correlation_id":correlation_id,"occurred_at":occurred.isoformat(),"payload_digest":digest,"previous_hash":self._head}
+            record_hash=hashlib.sha256(canonical_json(base).encode("utf-8")).hexdigest()
+            record=AuditRecord(record_id,work_id,actor_ref,action,outcome,correlation_id,occurred,digest,self._head,record_hash)
+            try:
+                self._sink.append(record)
+            except Exception as exc:
+                raise AuditUnavailable("audit append failed; protected operation fails closed") from exc
+            self._head=record_hash
+            return record
