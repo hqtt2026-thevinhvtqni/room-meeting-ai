@@ -303,11 +303,17 @@ class ExecutionHost:
         process = managed
         if process.poll() is None:
             self._cleanup_process(process, terminate_first=True)
-        reaped = process.poll() is not None
-        return reaped, {
-            "process_reaped": reaped,
+        leader_reaped = process.poll() is not None
+        return False, {
+            "process_reaped": False,
+            "leader_reaped": leader_reaped,
+            "process_tree_verified": False,
+            "members": None,
             "job_object": "NOT_ATTACHED",
-            "notes": ["legacy_unmanaged_process_cleanup"],
+            "notes": [
+                "legacy_unmanaged_process_cleanup",
+                "process_tree_membership_unknown_fail_closed",
+            ],
         }, process.returncode
 
     def start_service(
@@ -447,8 +453,8 @@ class ExecutionHost:
                     # membership cannot be proven empty.
                     status = "STOPPED" if members == 0 else "BLOCKED"
                 else:
-                    members = 0
-                    status = "STOPPED"
+                    members = None
+                    status = "PASS" if returncode is None else "BLOCKED"
 
             return {
                 **self.identity(),
