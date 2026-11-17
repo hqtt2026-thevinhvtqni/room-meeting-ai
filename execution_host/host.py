@@ -48,6 +48,7 @@ class ExecutionHost:
         self.processes: dict[str, ManagedProcess] = {}
         # Serialize registry transitions so same-name starts/stops cannot orphan a process.
         self._processes_lock = threading.RLock()
+        self._service_cleanup_blocked: set[str] = set()
 
     def identity(self) -> dict[str, Any]:
         return self.runtime_identity.as_dict()
@@ -331,7 +332,7 @@ class ExecutionHost:
         # This deliberately serializes service starts/stops to prevent same-name races.
         with self._processes_lock:
             existing = self.processes.get(name)
-            if existing and existing.poll() is None:
+            if existing and existing.poll() is None and name not in self._service_cleanup_blocked:
                 return {
                     "status": "PASS",
                     "name": name,
@@ -353,6 +354,7 @@ class ExecutionHost:
                     }
                     returncode = getattr(getattr(existing, "process", existing), "returncode", None)
                 if not reaped:
+                    self._service_cleanup_blocked.add(name)
                     return {
                         "status": "BLOCKED",
                         "name": name,
@@ -366,6 +368,7 @@ class ExecutionHost:
                 # Only release the old handle after the entire process tree is reaped.
                 if self.processes.get(name) is existing:
                     self.processes.pop(name, None)
+                self._service_cleanup_blocked.discard(name)
 
             # Job Object (Windows) / session leader (POSIX) is established at spawn.
             # Containment failure is returned as structured BLOCKED; no registry entry.
@@ -410,7 +413,10 @@ class ExecutionHost:
             else:
                 pid = process.pid
                 returncode = process.poll()
-                if returncode is None:
+                if name in self._service_cleanup_blocked:
+                    status = "BLOCKED"
+                    members = process.members_count() if isinstance(process, ManagedProcess) else None
+                elif returncode is None:
                     status = "PASS"
                     members = process.members_count() if isinstance(process, ManagedProcess) else None
                 elif isinstance(process, ManagedProcess):
@@ -461,8 +467,12 @@ class ExecutionHost:
                 }
                 returncode = getattr(getattr(managed, "process", managed), "returncode", None)
 
-            if reaped and self.processes.get(name) is managed:
-                self.processes.pop(name, None)
+            if reaped:
+                self._service_cleanup_blocked.discard(name)
+                if self.processes.get(name) is managed:
+                    self.processes.pop(name, None)
+            else:
+                self._service_cleanup_blocked.add(name)
 
             return {
                 "status": "PASS" if reaped else "BLOCKED",
