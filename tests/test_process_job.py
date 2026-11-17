@@ -31,23 +31,43 @@ _IS_WIN = sys.platform.startswith("win")
 
 
 class PosixCounterTests(unittest.TestCase):
-    def test_empty_and_blank_lines_do_not_block_count(self):
+    def test_verified_empty_group_returns_zero(self):
+        fake = subprocess.CompletedProcess(args=[], returncode=0, stdout="", stderr="")
+        with patch("execution_host.process_job.subprocess.run", return_value=fake):
+            self.assertEqual(_posix_group_members(999), 0)
+
+    def test_counts_only_valid_live_members_of_requested_group(self):
         fake = subprocess.CompletedProcess(
-            args=[], returncode=0, stdout="\n  123\n\n  456 \n", stderr=""
+            args=[], returncode=0,
+            stdout="123 999 S\n456 999 Z\n789 1000 R\n", stderr=""
         )
         with patch("execution_host.process_job.subprocess.run", return_value=fake):
-            self.assertEqual(_posix_group_members(999), 2)
+            self.assertEqual(_posix_group_members(999), 1)
 
-    def test_non_digit_tokens_skipped(self):
-        fake = subprocess.CompletedProcess(
-            args=[], returncode=0, stdout="abc\n42\n", stderr=""
-        )
+    def test_probe_oserror_returns_unknown(self):
+        with patch("execution_host.process_job.subprocess.run", side_effect=OSError("ps missing")):
+            self.assertIsNone(_posix_group_members(999))
+
+    def test_probe_timeout_returns_unknown(self):
+        with patch(
+            "execution_host.process_job.subprocess.run",
+            side_effect=subprocess.TimeoutExpired(cmd=["ps"], timeout=5),
+        ):
+            self.assertIsNone(_posix_group_members(999))
+
+    def test_nonzero_exit_returns_unknown(self):
+        fake = subprocess.CompletedProcess(args=["ps"], returncode=1, stdout="", stderr="failed")
         with patch("execution_host.process_job.subprocess.run", return_value=fake):
-            self.assertEqual(_posix_group_members(1), 1)
+            self.assertIsNone(_posix_group_members(999))
 
-    def test_invalid_pgid(self):
-        self.assertEqual(_posix_group_members(0), 0)
-        self.assertEqual(_posix_group_members(-1), 0)
+    def test_malformed_output_returns_unknown(self):
+        fake = subprocess.CompletedProcess(args=["ps"], returncode=0, stdout="not-a-process-row\n", stderr="")
+        with patch("execution_host.process_job.subprocess.run", return_value=fake):
+            self.assertIsNone(_posix_group_members(999))
+
+    def test_invalid_pgid_returns_unknown(self):
+        self.assertIsNone(_posix_group_members(0))
+        self.assertIsNone(_posix_group_members(-1))
 
 
 class ManagedProcessTests(unittest.TestCase):
@@ -120,7 +140,27 @@ class SpawnLifecycleTests(unittest.TestCase):
         result = managed.cleanup(terminate_first=False)
         self.assertIn("wrapped_existing_popen", result.notes)
         self.assertIn("job_object_cannot_attach_retroactively", result.notes)
+        self.assertIn("process_tree_membership_unknown_fail_closed", result.notes)
         self.assertEqual(result.job_object, "NOT_ATTACHED")
+        self.assertFalse(result.process_reaped)
+
+    @unittest.skipIf(_IS_WIN, "POSIX process-group membership probe")
+    def test_cleanup_probe_failure_is_blocked_not_reaped(self):
+        managed = spawn_managed(
+            [sys.executable, "-c", "import time; time.sleep(30)"],
+            cwd=".",
+            env={"PATH": os.environ.get("PATH", "")},
+        )
+        try:
+            with patch(
+                "execution_host.process_job.subprocess.run",
+                side_effect=OSError("injected ps failure"),
+            ):
+                result = managed.cleanup(terminate_first=True, wait_timeout=0.2)
+            self.assertFalse(result.process_reaped)
+            self.assertIn("group_membership_unknown_fail_closed", result.notes)
+        finally:
+            managed.cleanup(terminate_first=True, wait_timeout=5.0)
 
     def test_isolation_status_not_verified(self):
         self.assertEqual(ISOLATION_STATUS, "NOT_VERIFIED")
