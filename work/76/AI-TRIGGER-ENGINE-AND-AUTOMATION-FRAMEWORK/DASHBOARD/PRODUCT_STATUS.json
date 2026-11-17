@@ -9,9 +9,9 @@
   "current_phase": "01_DISCOVER",
   "source_mode": "local_snapshot",
   "freshness": "LOCAL_SNAPSHOT",
-  "revision": "W76-DASHBOARD-0.3.13",
-  "warning_vi": "LOCAL SNAPSHOT — chưa kết nối Core live. PR #60 draft, chưa merge. Exact head CI run 44186703015: Python 3.11 50/50 PASS; Python 3.12 50/50 PASS; EV-76-031. Đây là branch CI, không phải Canonical QE, runtime/E2E hoặc release. WP-76-07 vẫn BLOCKED.",
-  "updated_at": "2026-11-17T22:07:21.289Z",
+  "revision": "W76-DASHBOARD-0.3.14",
+  "warning_vi": "LOCAL SNAPSHOT — chưa kết nối Core live. PR #60 draft, chưa merge. Supplemental exact-head CI run 44186877081: Python 3.11 50/50 PASS; Python 3.12 50/50 PASS; EV-76-032. Branch CI only, not Canonical QE/runtime/E2E/release. WP-76-07 vẫn BLOCKED.",
+  "updated_at": "2026-11-17T22:08:18.303Z",
   "phases": [
     {
       "phase_id": "01_DISCOVER",
@@ -380,6 +380,13 @@
     {
       "date": "2026-11-18",
       "actor": "Co — AI Coder / Execution Assistant",
+      "title": "PR #60 supplemental exact-head CI",
+      "detail": "Run 44186877081 trên head f5e94766dc05286a634cb1883b61f4468e246507: Python 3.11 50/50 PASS, Python 3.12 50/50 PASS. EV-76-032; không có source/test changes sau lần kiểm chứng trước.",
+      "status": "BRANCH CI PASS / IN_REVIEW"
+    },
+    {
+      "date": "2026-11-18",
+      "actor": "Co — AI Coder / Execution Assistant",
       "title": "PR #60 exact-head CI re-verification",
       "detail": "Sau khi cập nhật Build Register, Evidence Register, DOC-035 và Dashboard JSON, compare xác nhận 4 commit tiếp theo chỉ đổi hồ sơ/dashboard, không đổi source/test. GitHub Actions run 44186703015 trên exact head acb6dd5052c4c6dfb5a2c5cc4d46fe2e94920da2: Python 3.11 50/50 PASS, Python 3.12 50/50 PASS.",
       "status": "BRANCH CI PASS / IN_REVIEW"
@@ -699,6 +706,13 @@
       "title": "Final PR #60 exact-head CI",
       "claim": "Run 44186703015 on exact head acb6dd5052c4c6dfb5a2c5cc4d46fe2e94920da2: Python 3.11 and 3.12 each 50 passed / 0 failed; JUnit artifacts and SHA256 digests are recorded in canonical Evidence Register. Branch CI only.",
       "path": "PR #60 · GitHub Actions run 44186703015 · DOC-035 / Evidence Register",
+      "status": "VERIFIED — BRANCH CI ONLY; INDEPENDENT QE NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-032",
+      "title": "Supplemental PR #60 exact-head CI",
+      "claim": "Run 44186877081 on head f5e94766dc05286a634cb1883b61f4468e246507: Python 3.11 and 3.12 each 50 passed / 0 failed; JUnit artifacts and SHA256 digests recorded in canonical Evidence Register. Branch CI only.",
+      "path": "PR #60 · GitHub Actions run 44186877081 · DOC-035 / Evidence Register",
       "status": "VERIFIED — BRANCH CI ONLY; INDEPENDENT QE NOT VERIFIED"
     }
   ]
