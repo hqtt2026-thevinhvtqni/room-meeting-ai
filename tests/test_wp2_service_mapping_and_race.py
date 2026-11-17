@@ -28,6 +28,7 @@ from execution_host.process_job import (
     JobObjectUnavailable,
     ManagedProcess,
     spawn_managed,
+    spawn_managed_service,
 )
 
 
@@ -291,6 +292,85 @@ class ServiceRegistryRecoveryTests(unittest.TestCase):
             self.assertEqual(len(calls), 1)
             self.assertEqual(sum(bool(item.get("already_running")) for item in results), 5)
             self.assertIs(host.processes.get("svc"), managed)
+
+
+class AdditionalServiceBoundaryTests(unittest.TestCase):
+    def test_generic_spawn_oserror_maps_to_structured_blocked_without_false_reap(self):
+        with tempfile.TemporaryDirectory() as td:
+            ctx = _ctx(Path(td))
+            host = ExecutionHost()
+            with patch(
+                "execution_host.host.spawn_managed_service",
+                side_effect=OSError("injected process creation failure"),
+            ):
+                result = host.start_service("svc", [sys.executable, "-c", "pass"], ctx)
+
+            self.assertEqual(result["status"], "BLOCKED")
+            self.assertEqual(result["blocker"], "service_spawn_failed")
+            self.assertEqual(result["spawn_error_type"], "OSError")
+            self.assertIsNone(result["process_reaped"])
+            self.assertNotIn("svc", host.processes)
+
+    def test_service_status_does_not_claim_application_readiness(self):
+        with tempfile.TemporaryDirectory() as td:
+            ctx = _ctx(Path(td))
+            host = ExecutionHost()
+            managed = ManagedProcess(
+                process=FakeServiceProcess(7010, returncode=None),
+                platform="linux",
+                created_via_spawn=True,
+            )
+            host.processes["svc"] = managed
+            result = host.service_status("svc", ctx)
+            self.assertEqual(result["status"], "PASS")
+            self.assertEqual(result["readiness"], "NOT_CHECKED")
+
+    def test_restart_drains_real_child_after_parent_leader_exits(self):
+        with tempfile.TemporaryDirectory() as td:
+            ctx = _ctx(Path(td))
+            host = ExecutionHost()
+            child_code = "import time; time.sleep(30)"
+            parent_code = "import subprocess,sys; subprocess.Popen([sys.executable, '-c', sys.argv[1]])"
+            old = spawn_managed_service(
+                [sys.executable, "-c", parent_code, child_code],
+                cwd=ctx.execution_workspace,
+                env={},
+            )
+            old.process.wait(timeout=10)
+            self.assertIsNotNone(old.poll(), "service leader should exit before replacement")
+
+            deadline = time.monotonic() + 10
+            members = old.members_count()
+            while members in (0, None) and time.monotonic() < deadline:
+                time.sleep(0.05)
+                members = old.members_count()
+            self.assertGreater(members or 0, 0, "child process should remain in the managed tree")
+
+            cleanup_results = []
+            real_cleanup = old.cleanup
+
+            def capture_cleanup(*args, **kwargs):
+                result = real_cleanup(*args, **kwargs)
+                cleanup_results.append(result)
+                return result
+
+            old.cleanup = capture_cleanup
+            replacement = ManagedProcess(
+                process=FakeServiceProcess(7011, returncode=None),
+                platform="linux",
+                created_via_spawn=True,
+                job_object="ATTACHED",
+            )
+            host.processes["svc"] = old
+
+            with patch("execution_host.host.spawn_managed_service", return_value=replacement) as spawn:
+                result = host.start_service("svc", [sys.executable, "-c", "pass"], ctx)
+
+            self.assertEqual(result["status"], "PASS")
+            self.assertEqual(len(cleanup_results), 1)
+            self.assertTrue(cleanup_results[0].process_reaped, cleanup_results[0].notes)
+            self.assertIs(host.processes.get("svc"), replacement)
+            spawn.assert_called_once()
 
 
 class SpawnFailureCleanupEvidenceTests(unittest.TestCase):
