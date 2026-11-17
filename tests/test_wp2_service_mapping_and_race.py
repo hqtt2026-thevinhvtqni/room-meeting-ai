@@ -248,7 +248,9 @@ class ServiceRegistryRecoveryTests(unittest.TestCase):
 
             result = host.service_status("svc", ctx)
             self.assertEqual(result["status"], "BLOCKED")
+            self.assertEqual(result["pid"], 7003)
             self.assertEqual(result["members"], 1)
+            self.assertEqual(result["readiness"], "NOT_CHECKED")
 
     def test_concurrent_same_name_starts_register_exactly_one_process(self):
         with tempfile.TemporaryDirectory() as td:
@@ -290,6 +292,7 @@ class ServiceRegistryRecoveryTests(unittest.TestCase):
             self.assertEqual(errors, [])
             self.assertEqual(len(results), 6)
             self.assertEqual(len(calls), 1)
+            self.assertTrue(all(item["pid"] == 7004 for item in results))
             self.assertEqual(sum(bool(item.get("already_running")) for item in results), 5)
             self.assertIs(host.processes.get("svc"), managed)
 
