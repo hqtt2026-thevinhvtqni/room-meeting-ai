@@ -279,3 +279,59 @@ def test_scheduler_rejects_invalid_clock_before_store_claim():
     with pytest.raises(ValueError):
         TimeScheduler(store).due(schedule,"not-a-datetime")
     assert store.called is False
+
+
+# W76-GW-004 — registered payload schema is enforced before replay reservation
+def test_gateway_schema_rejection_does_not_consume_replay_identity():
+    now = datetime(2026, 11, 18, 12, tzinfo=timezone.utc)
+    replay = Replay()
+    schema = Schema()
+    gateway = EventGateway(
+        {"source-a": SourceRegistration("source-a", "76", frozenset({"order.created"}), schema)},
+        Verifier(),
+        replay,
+    )
+
+    def body(payload):
+        return json.dumps({
+            "event_id": "same-event-id",
+            "event_type": "order.created",
+            "occurred_at": now.isoformat(),
+            "payload": payload,
+        }).encode()
+
+    # Missing required schema field must be rejected and must not reserve the
+    # event ID; the corrected retry with the same ID must still be accepted.
+    with pytest.raises(GatewayRejected, match="schema validation failed"):
+        gateway.ingest("source-a", {"x-valid": "yes"}, body({"other": 1}), received_at=now)
+    assert replay.seen == set()
+
+    accepted = gateway.ingest(
+        "source-a", {"x-valid": "yes"}, body({"value": 1}), received_at=now
+    )
+    assert accepted.event.event_id == "same-event-id"
+    assert replay.seen == {("source-a", "same-event-id")}
+
+
+def test_gateway_schema_exception_fails_closed_without_replay_reservation():
+    now = datetime(2026, 11, 18, 12, tzinfo=timezone.utc)
+    replay = Replay()
+
+    class BrokenSchema:
+        def validate(self, payload):
+            raise RuntimeError("schema service unavailable")
+
+    gateway = EventGateway(
+        {"source-a": SourceRegistration("source-a", "76", frozenset({"order.created"}), BrokenSchema())},
+        Verifier(),
+        replay,
+    )
+    body = json.dumps({
+        "event_id": "schema-outage",
+        "event_type": "order.created",
+        "occurred_at": now.isoformat(),
+        "payload": {"value": 1},
+    }).encode()
+    with pytest.raises(GatewayRejected, match="schema validation failed"):
+        gateway.ingest("source-a", {"x-valid": "yes"}, body, received_at=now)
+    assert replay.seen == set()
