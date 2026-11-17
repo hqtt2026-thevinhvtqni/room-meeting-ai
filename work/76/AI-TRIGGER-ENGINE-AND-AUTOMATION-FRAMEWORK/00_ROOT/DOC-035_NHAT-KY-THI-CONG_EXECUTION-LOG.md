@@ -625,3 +625,25 @@ This is a governance/assignment and preparation record only. Xu did not alter so
 **CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
 **NGÀY:** 18/11/2026
 **GIỜ - PHÚT:** 05:40 — UTC+7
+
+
+---
+
+### 2026-11-18 05:41:30 +07:00 — Co hardening WP-76-02 Event Gateway
+- Actor: Co — AI Coder / Execution Assistant (AI-07).
+- Rà soát source phát hiện event_type không phải string có thể gây TypeError khi kiểm tra membership; payload NaN có thể đi tới Event validation sau khi replay key đã bị reserve; replay-store exception chưa được chuẩn hóa.
+- Đã cập nhật `trigger_engine/gateway.py`:
+  - Kiểm tra type của source_id, headers, event_type, received_at và source registration.
+  - Dùng shared strict `canonical_json` cho payload digest.
+  - Tạo và validate Event trước khi reserve replay identity, tránh dữ liệu lỗi chiếm replay key.
+  - Bắt lỗi replay store và trả GatewayRejected fail-closed.
+  - Giới hạn cấu hình constructor bằng positive integer, loại bool.
+- Bổ sung 4 regression tests: unhashable event_type; non-finite payload không consume replay key; replay-store outage; naive received_at.
+- GitHub commits: source `ba418cbb26fc140564e3e10ea497fc19f47e756c`; tests `d891fe3ee11176a476eba26389edae2dfb20695a`.
+- CI exact-head cho thay đổi này chưa được quan sát tại thời điểm ghi; không tuyên bố PASS. WP-76-02 IN_REVIEW, ADR-76-002 OPEN.
+- WP-76-07 vẫn BLOCKED; PR #60 DRAFT/OPEN/UNMERGED; không thay đổi gate, acceptance hoặc release.
+
+**TÊN:** Co
+**CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
+**NGÀY:** 18/11/2026
+**GIỜ - PHÚT:** 05:41 — UTC+7
