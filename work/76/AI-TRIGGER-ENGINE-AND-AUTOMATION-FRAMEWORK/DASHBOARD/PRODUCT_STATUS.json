@@ -1,7 +1,7 @@
 {
   "work_id": "76",
   "product_name": "AI Trigger Engine & Automation Framework",
-  "summary": "Work 76 đã gia cố WP-76-02 Event Gateway, WP-76-03 Scheduler, WP-76-06 Idempotency/Retry và WP-76-08 Audit. Exact-head CI gần nhất run 44193167465 trên head a2f8131c080826bd57916222da1308386e7aa215: Python 3.11/3.12 đều 71 passed, 0 failed. Các lần CI trước: Gateway 58/58, Audit 54/54. Đây là branch CI; durable production stores, recurrence/DST/HA, Core/runtime, verified dispatch, independent QE và E2E vẫn pending. Dashboard bổ sung panel Work Entry WE-G0…WE-G5 riêng biệt và chuẩn hóa filter/status hiển thị; Work Entry snapshot vẫn ghi rõ WE-G4/G5 BLOCKED. Static dashboard correction: separate participant Work Entry panel added; status filters normalize descriptive WP status strings. Browser/mobile QE remains NOT RUN.",
+  "summary": "Work 76 đã gia cố WP-76-02 Event Gateway, WP-76-03 Scheduler, WP-76-06 Idempotency/Retry và WP-76-08 Audit. Exact-head CI gần nhất run 44193167465 trên head a2f8131c080826bd57916222da1308386e7aa215: Python 3.11/3.12 đều 71 passed, 0 failed. Các lần CI trước: Gateway 58/58, Audit 54/54. Đây là branch CI; durable production stores, recurrence/DST/HA, Core/runtime, verified dispatch, independent QE và E2E vẫn pending. Dashboard bổ sung panel Work Entry WE-G0…WE-G5 riêng biệt và chuẩn hóa filter/status hiển thị; Work Entry snapshot vẫn ghi rõ WE-G4/G5 BLOCKED. Static dashboard correction: separate participant Work Entry panel added; status filters normalize descriptive WP status strings. Browser/mobile QE remains NOT RUN. Work Entry gate grid has desktop/tablet/mobile CSS breakpoints; actual device/browser rendering remains unverified.",
   "standard_id": "ROOM-HOP-WORK-MASTER",
   "standard_version": "1.2",
   "work_status": "ACTIVE",
@@ -9,9 +9,9 @@
   "current_phase": "01_DISCOVER",
   "source_mode": "local_snapshot",
   "freshness": "LOCAL_SNAPSHOT",
-  "revision": "W76-DASHBOARD-0.3.24",
-  "warning_vi": "LOCAL SNAPSHOT — chưa kết nối Core live. PR #60 draft, chưa merge. Dashboard now shows lifecycle gates separately from Work Entry WE-G0…WE-G5; snapshot WE-G4/G5 BLOCKED. Static source correction only; browser/mobile QE not run. Latest branch CI run 44193167465: 71/71 on Python 3.11/3.12; does not cover browser behavior.",
-  "updated_at": "2026-11-17T22:47:59.000Z",
+  "revision": "W76-DASHBOARD-0.3.25",
+  "warning_vi": "LOCAL SNAPSHOT — chưa kết nối Core live. PR #60 draft, chưa merge. Lifecycle gates và Work Entry WE-G0…WE-G5 được hiển thị riêng; WE-G4/G5 BLOCKED. Desktop/tablet/mobile CSS breakpoints đã thêm nhưng browser/device QE chưa chạy. Latest Python branch CI does not verify UI rendering.",
+  "updated_at": "2026-11-17T22:49:44.000Z",
   "phases": [
     {
       "phase_id": "01_DISCOVER",
