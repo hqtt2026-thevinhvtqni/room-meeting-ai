@@ -1,0 +1,82 @@
+{
+  "meta": {
+    "work_id": "117",
+    "work_name": "ROOM-MEDIA-HUB",
+    "snapshot_at": "2026-11-17T05:55:00+07:00",
+    "generated_by": "Go / AI-06",
+    "sources": [
+      "00_ROOT/TASK_BOARD.md",
+      "00_ROOT/NHAT_KY_THI_CONG.md",
+      "00_ROOT/BIEN_BAN.md"
+    ],
+    "authorization": {
+      "dashboard_build": "AUTHORIZED",
+      "product_build": "NOT AUTHORIZED",
+      "authority": "Vinh",
+      "date": "2026-11-17"
+    },
+    "rules": [
+      "No fabricated progress metrics",
+      "No invented Agent online/session status",
+      "Unverified states shown as DISPATCH/ACK NOT VERIFIED",
+      "Read-only operational dashboard only"
+    ]
+  },
+  "overview": {
+    "dashboard_status": "AUTHORIZED",
+    "product_status": "NOT AUTHORIZED",
+    "primary_builder": "Go / AI-06",
+    "primary_builder_ack": "2026-11-17 05:55 +07",
+    "dashboard_tasks_ack_in_progress": 4,
+    "dashboard_tasks_total": 9,
+    "product_tasks_authorized": 0,
+    "product_tasks_total": 13
+  },
+  "dashboard_tasks": [
+    {"id": "W117-DASH-001", "title": "Own end-to-end Dashboard delivery; define data contract", "owner": "Go / AI-06", "status": "ACKNOWLEDGED + IN_PROGRESS"},
+    {"id": "W117-DASH-002", "title": "Dashboard shell, Work Overview & Task Board views", "owner": "Go / AI-06", "status": "ACKNOWLEDGED + IN_PROGRESS"},
+    {"id": "W117-DASH-003", "title": "Agent Monitor with explicit evidence states", "owner": "Go / AI-06", "status": "ACKNOWLEDGED + IN_PROGRESS"},
+    {"id": "W117-DASH-004", "title": "Activity & Evidence timeline from Journal", "owner": "Go / AI-06", "status": "ACKNOWLEDGED + IN_PROGRESS"},
+    {"id": "W117-DASH-005", "title": "Independent technical review (data flow, source-of-truth)", "owner": "Cla / AI-03", "status": "ASSIGNED — DISPATCH UNCONFIRMED"},
+    {"id": "W117-DASH-006", "title": "Independent CSA review (read-only, auth boundary)", "owner": "Ka / AI-02", "status": "ASSIGNED — DISPATCH UNCONFIRMED"},
+    {"id": "W117-DASH-007", "title": "Define independent QE matrix & acceptance criteria", "owner": "Qw / AI-05", "status": "ASSIGNED — DISPATCH UNCONFIRMED"},
+    {"id": "W117-DASH-008", "title": "Execute independent tests; verify fixes", "owner": "Qw / AI-05", "status": "ASSIGNED — DISPATCH UNCONFIRMED"},
+    {"id": "W117-DASH-009", "title": "Integrate, handoff package, mark complete after evidence", "owner": "Go / AI-06", "status": "ACKNOWLEDGED (waiting reviews)"}
+  ],
+  "product_tasks": [
+    {"id": "W117-T001", "title": "Maintain canonical architecture/context", "owner": "Xu; Cla", "status": "IN_PROGRESS"},
+    {"id": "W117-T002", "title": "Re-verify W33 source and service/API state", "owner": "Cla", "status": "PLANNED"},
+    {"id": "W117-T003", "title": "Verify Core identity/authorization contract", "owner": "Cla; Ka", "status": "BLOCKED"},
+    {"id": "W117-T004", "title": "Threat model, privacy, encryption review", "owner": "Ka", "status": "BLOCKED"},
+    {"id": "W117-T005", "title": "Independent QE strategy for P0 requirements", "owner": "Qw", "status": "BLOCKED"},
+    {"id": "W117-T006", "title": "Compare topology, zero-cost options, billing risk", "owner": "Xu; Go", "status": "IN_PROGRESS"},
+    {"id": "W117-T007", "title": "Verify Go/Vibe dispatch & access", "owner": "Xu", "status": "IN_PROGRESS"},
+    {"id": "W117-T008", "title": "Finalize architecture baseline + ADR", "owner": "Xu; Cla; Ka", "status": "NOT READY"},
+    {"id": "W117-T009", "title": "Foundation implementation after gate", "owner": "Go; Vibe; Qc", "status": "NOT AUTHORIZED"},
+    {"id": "W117-T010", "title": "Media processing, gallery UI, search", "owner": "Go; Vibe; Qc", "status": "NOT AUTHORIZED"},
+    {"id": "W117-T011", "title": "Backup/recovery & ops pipeline", "owner": "Go; Cla; Vibe", "status": "NOT AUTHORIZED"},
+    {"id": "W117-T012", "title": "Independent regression & security verification", "owner": "Qw", "status": "NOT RUN"},
+    {"id": "W117-T013", "title": "Product acceptance & release", "owner": "Vinh; Xu", "status": "NOT AUTHORIZED"}
+  ],
+  "agents": [
+    {"name": "Go / AI-06", "role": "Primary Builder (Dashboard)", "status": "ACKNOWLEDGED + IN_PROGRESS", "evidence": "Journal entry 2026-11-17 05:55 +07"},
+    {"name": "Xu / AI-01", "role": "Coordinator / Canonical records", "status": "ACTIVE (coordinator)", "evidence": "Multiple Journal + Task Board updates"},
+    {"name": "Cla / AI-03", "role": "Technical assurance / review", "status": "DISPATCH/ACK NOT VERIFIED", "evidence": "No ACK recorded"},
+    {"name": "Ka / AI-02", "role": "CSA / Security reviewer", "status": "DISPATCH/ACK NOT VERIFIED", "evidence": "No ACK recorded"},
+    {"name": "Qw / AI-05", "role": "Independent QE", "status": "DISPATCH/ACK NOT VERIFIED", "evidence": "No ACK recorded"},
+    {"name": "Vibe", "role": "Architecture challenger + GitHub support", "status": "DISPATCH/ACK NOT VERIFIED", "evidence": "Role selected; no execution ACK"},
+    {"name": "Qc", "role": "UI/Backend coder", "status": "DISPATCH/ACK NOT VERIFIED", "evidence": "No ACK recorded"},
+    {"name": "Vinh", "role": "Product Owner / Final authority", "status": "AUTHORITY", "evidence": "Biên bản sections 12–13"}
+  ],
+  "timeline": [
+    {"time": "2026-11-17 05:55 +07", "actor": "Go / AI-06", "desc": "Explicit ACK of Dashboard assignment. Started implementation of W117-DASH-001..004. Updated TASK_BOARD statuses."},
+    {"time": "2026-11-17", "actor": "Vinh", "desc": "Authorized dedicated W117 Dashboard BUILD (read-only). Selected Go as primary Builder, Vibe as independent challenger."},
+    {"time": "2026-11-16 21:28 +07", "actor": "Go / AI-06", "desc": "Completed Egress Sensitivity Analysis. Deliverable: EGRESS_SENSITIVITY_ANALYSIS.md"},
+    {"time": "2026-11-16 21:22 +07", "actor": "Go / AI-06", "desc": "Completed Hybrid Cost Evaluation (H1). Deliverable: COST_EVALUATION_HYBRID.md"},
+    {"time": "2026-11-16 21:18 +07", "actor": "Xu / AI-01", "desc": "Confirmed shared Room-wide scope. Completed source inspection of W33/W26/W29."},
+    {"time": "2026-11-16 21:16 +07", "actor": "Go / AI-06", "desc": "Logged and confirmed content update from Xu regarding shared scope."},
+    {"time": "2026-11-16 21:12 +07", "actor": "Ka", "desc": "Recorded scope decision and technical findings (W117-LOG-20261116-001)."},
+    {"time": "2026-11-16 21:02 +07", "actor": "Xu / AI-01", "desc": "Created initial W117 planning package (Manifest, Biên bản, Journal, Requirements, Architecture docs)."},
+    {"time": "2026-11-16 20:55 +07", "actor": "Xu / AI-01", "desc": "Intake and existing-Work discovery. Sandbox Work 117 created."}
+  ]
+}
