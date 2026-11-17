@@ -372,3 +372,15 @@ def test_policy_approval_ref_must_be_non_empty_string():
     need = PolicyResult(PolicyOutcome.REQUIRE_APPROVAL, "decision-1", "rev-1", "approval required")
     result = PolicyAdapter(Provider(need), Approval()).authorize(request, object())
     assert result.outcome == PolicyOutcome.DENY
+
+
+# W76-GW-005 — registration lookup key must match its trusted source identity
+def test_gateway_rejects_registration_key_source_identity_mismatch():
+    registration = SourceRegistration("source-b", "76", frozenset({"order.created"}), Schema())
+    with pytest.raises(ValueError, match="keys must exactly match"):
+        EventGateway({"source-a": registration}, Verifier(), Replay())
+
+
+def test_gateway_rejects_non_registration_values():
+    with pytest.raises(ValueError, match="keys must exactly match"):
+        EventGateway({"source-a": object()}, Verifier(), Replay())
