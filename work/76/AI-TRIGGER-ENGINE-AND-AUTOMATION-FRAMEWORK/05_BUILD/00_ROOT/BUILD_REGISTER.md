@@ -9,7 +9,7 @@
 | WP-76-05 | Policy adapter and approval | Co / AI-07 | Ka architecture review; Qw QE (ACK pending) | IN_REVIEW — PR #60 draft; fail-closed adapter contract; Core provider not integrated | `trigger_engine/policy.py`; `test_work_packages.py` |
 | WP-76-06 | Orchestration, dedupe and retry | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; state/retry/idempotency ports; durable backend not integrated | `trigger_engine/orchestrator.py`, `retry.py`; `test_work_packages.py` |
 | WP-76-07 | Verified AI dispatch adapter | Co / AI-07 (discovery/design only) | Xu + Qw | BLOCKED — no verified transport, target identity, receiver receipt or ACK | `05_BUILD/03_ARCHITECTURE` |
-| WP-76-08 | Audit and evidence store | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; append-only sink contract only; durable store/retention ADR pending | `trigger_engine/audit.py`; `test_work_packages.py` |
+| WP-76-08 | Audit and evidence store | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; append-only sink contract only; strict canonical JSON audit digest + non-finite payload regression added; durable store/retention ADR pending; CI queued | `trigger_engine/audit.py`; `test_work_packages.py` |
 | WP-76-09 | Read-only dashboard | Xu | An / Qw | IN_REVIEW — browser/mobile QE pending | `DASHBOARD` |
 
 PR #55 contains a proposed implementation, tests and CI workflow on an unmerged branch. This is not a merged implementation on main, not runtime/integration verification, and not acceptance. WP status must be updated only with attributable evidence.
@@ -39,3 +39,11 @@ PR #55 contains a proposed implementation, tests and CI workflow on an unmerged 
 - Latest branch head after documentation/dashboard reconciliation: `acb6dd5052c4c6dfb5a2c5cc4d46fe2e94920da2`. GitHub Actions run 44186703015 on this exact head also completed SUCCESS: Python 3.11 50/50 and Python 3.12 50/50; JUnit artifacts 14374851948 and 14374162503. This is still branch CI only.
 
 - Supplemental exact-head CI confirmation: run 44186877081 on head `f5e94766dc05286a634cb1883b61f4468e246507` completed SUCCESS (Python 3.11/3.12 each 50/50). Changes since the previous exact-head check were documentation/register/dashboard only; source and tests were unchanged.
+
+
+## Co autonomous hardening — audit canonicalization — 2026-11-18 05:38 +07:00
+- Source change: `trigger_engine/audit.py` now uses the shared strict `canonical_json` encoder for payload digests and record hashes. JSON key ordering/encoding is deterministic and NaN/Infinity are rejected before append.
+- Regression additions in `test_work_packages.py`: equivalent mappings with different key insertion order yield identical payload digests; NaN, positive Infinity and negative Infinity are rejected and do not append to the sink.
+- Commits: source `a7f2599d44f71a7ed3a9669d8ddc1528f5fd5140`; tests `f0db324f1ef68faf4ec8acf66868549bc5e2ca32`.
+- Exact source/test commit CI: GitHub Actions run `44192090937`, status QUEUED at recording time. No PASS is claimed until completion and exact-head verification.
+- WP-76-08 remains IN_REVIEW; durable store, atomic append, retention and recovery remain external dependencies under ADR-76-007. No WP status is DONE/accepted.
