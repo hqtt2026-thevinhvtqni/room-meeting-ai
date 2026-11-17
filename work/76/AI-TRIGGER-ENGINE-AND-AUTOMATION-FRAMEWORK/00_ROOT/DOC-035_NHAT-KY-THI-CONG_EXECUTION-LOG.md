@@ -682,3 +682,22 @@ This is a governance/assignment and preparation record only. Xu did not alter so
 **CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
 **NGÀY:** 18/11/2026
 **GIỜ - PHÚT:** 05:43 — UTC+7
+
+
+---
+
+### 2026-11-18 05:44:31 +07:00 — Co xác minh CI WP-76-06 và tiếp tục WP-76-03
+- Actor: Co — AI Coder / Execution Assistant (AI-07).
+- GitHub Actions run `44192865531` SUCCESS trên exact head `a50aae00e5d4679fbe801e8a0fd48d2ad30396f0`:
+  - Python 3.11: **65 passed / 0 failed**, job `134426542685`, artifact `14376124853`, SHA256 `d074fd728886d714d71a02297c32e1159fce8e9bb51cb835b30adf488a154203`.
+  - Python 3.12: **65 passed / 0 failed**, job `134426542018`, artifact `14376353840`, SHA256 `6838b6fb6d2a77b38fce9630a96d30dcaef8b81b60626fa27c7f0543c3543614`.
+- CI này xác minh WP-76-06 idempotency changes; không bao gồm scheduler changes được commit sau đó.
+- WP-76-03 vừa được harden: OneShotSchedule validate ID/time; TimeScheduler validate schedule/clock; due-store exception/indeterminate fail closed, còn duplicate occurrence trả None. Bổ sung 4 regression tests.
+- Scheduler commits: source `739ba3112566ba8f75b0aa9c88e464147d13f2e2`; tests `9dc5e2accfa08acf36407f527e8084131a809735`. CI latest scheduler head chưa được quan sát; không tuyên bố PASS.
+- EV-76-038 và EV-76-039 đã được ghi; WP-76-06 CI PASS branch-level; WP-76-03 IN_REVIEW pending CI. ADR-76-005 vẫn OPEN cho recurrence/DST/HA.
+- WP-76-07 BLOCKED; PR #60 DRAFT/OPEN/UNMERGED; không acceptance/release/deployment.
+
+**TÊN:** Co
+**CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
+**NGÀY:** 18/11/2026
+**GIỜ - PHÚT:** 05:44 — UTC+7
