@@ -959,3 +959,20 @@ This is a governance/assignment and preparation record only. Xu did not alter so
 **CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
 **NGÀY:** 18/11/2026
 **GIỜ - PHÚT:** 06:32 — UTC+7
+
+
+---
+
+### 2026-11-18 06:32 +07:00 — Co đối chiếu và sửa trạng thái hồ sơ Discover/Verify/Work Entry
+- Phát hiện DOC-002 và DOC-006 còn ghi runtime implementation/CI NOT_AVAILABLE hoặc verification NOT_EXECUTED toàn bộ, không còn đúng sau khi Work 76 đã có source/tests và branch CI.
+- Cập nhật DOC-002: ghi partial source implementation + branch CI evidence EV-76-058; lifecycle vẫn 01_DISCOVER, phase G0/G1 NOT_READY, WE-G4/G5 BLOCKED, WP-76-07 BLOCKED, chưa release.
+- Cập nhật DOC-006: chuyển trạng thái tổng thành PARTIALLY EXECUTED / NOT APPROVED; nêu rõ phần đã chạy (unit/regression branch CI) và các phần còn NOT_EXECUTED (independent QE, Core/runtime E2E, dispatch/ACK, browser/mobile, performance/SLO, privacy/retention, recovery).
+- Bổ sung DOC-007 addendum ghi ủy quyền trực tiếp của Vinh ngày 18/11 cho Co tự thi công nhánh Work 76 và đồng bộ Sandbox; không suy diễn trusted runtime identity/permission, PC Bridge hay quyền protected runtime.
+- Cập nhật DOC-008 để phân biệt WE-G4/G5 BLOCKED với phạm vi branch/Sandbox implementation được Vinh trực tiếp ủy quyền.
+- GitHub→Sandbox read-back exact cho DOC-002, DOC-006, DOC-007, DOC-008. EV-76-059 added; Dashboard revision W76-DASHBOARD-0.3.37.
+- Không đổi lifecycle gate, Work Entry gate, WP acceptance, merge/release.
+
+**TÊN:** Co
+**CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
+**NGÀY:** 18/11/2026
+**GIỜ - PHÚT:** 06:32 — UTC+7
