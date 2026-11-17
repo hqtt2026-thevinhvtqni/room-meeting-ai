@@ -171,3 +171,41 @@ def test_audit_rejects_non_finite_payload_without_appending(payload):
     with pytest.raises(ValueError):
         writer.write(record_id="invalid",work_id="76",actor_ref="svc:test",action="ingest",outcome="accepted",correlation_id="c1",payload=payload)
     assert sink.rows==[]
+
+
+# W76-EG-001 — malformed gateway inputs fail closed before replay reservation
+def test_gateway_rejects_unhashable_event_type_as_gateway_error():
+    now=datetime(2026,11,18,12,tzinfo=timezone.utc)
+    replay=Replay()
+    gateway=EventGateway({"source-a":SourceRegistration("source-a","76",frozenset({"order.created"}),Schema())},Verifier(),replay)
+    body=b'{"event_id":"e-bad","event_type":[],"occurred_at":"2026-11-18T12:00:00+00:00","payload":{"value":1}}'
+    with pytest.raises(GatewayRejected):
+        gateway.ingest("source-a",{"x-valid":"yes"},body,received_at=now)
+    assert replay.seen==set()
+
+def test_gateway_rejects_non_finite_payload_before_replay_reservation():
+    now=datetime(2026,11,18,12,tzinfo=timezone.utc)
+    replay=Replay()
+    gateway=EventGateway({"source-a":SourceRegistration("source-a","76",frozenset({"order.created"}),Schema())},Verifier(),replay)
+    body=b'{"event_id":"e-nan","event_type":"order.created","occurred_at":"2026-11-18T12:00:00+00:00","payload":{"value":NaN}}'
+    with pytest.raises(GatewayRejected):
+        gateway.ingest("source-a",{"x-valid":"yes"},body,received_at=now)
+    assert replay.seen==set()
+
+def test_gateway_replay_store_exception_is_declared_fail_closed_error():
+    class BrokenReplay:
+        def reserve(self,source_id,event_id,expires_at): raise OSError("store offline")
+    now=datetime(2026,11,18,12,tzinfo=timezone.utc)
+    gateway=EventGateway({"source-a":SourceRegistration("source-a","76",frozenset({"order.created"}),Schema())},Verifier(),BrokenReplay())
+    body=json.dumps({"event_id":"e-2","event_type":"order.created","occurred_at":now.isoformat(),"payload":{"value":1}}).encode()
+    with pytest.raises(GatewayRejected,match="replay protection unavailable"):
+        gateway.ingest("source-a",{"x-valid":"yes"},body,received_at=now)
+
+def test_gateway_rejects_naive_received_at():
+    now=datetime(2026,11,18,12)
+    replay=Replay()
+    gateway=EventGateway({"source-a":SourceRegistration("source-a","76",frozenset({"order.created"}),Schema())},Verifier(),replay)
+    body=json.dumps({"event_id":"e-3","event_type":"order.created","occurred_at":"2026-11-18T12:00:00+00:00","payload":{"value":1}}).encode()
+    with pytest.raises(GatewayRejected,match="received_at"):
+        gateway.ingest("source-a",{"x-valid":"yes"},body,received_at=now)
+    assert replay.seen==set()
