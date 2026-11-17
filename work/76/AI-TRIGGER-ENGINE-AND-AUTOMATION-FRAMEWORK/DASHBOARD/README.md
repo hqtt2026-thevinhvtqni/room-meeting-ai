@@ -94,3 +94,6 @@ Dashboard v0.2 đọc JSON tĩnh từ repository. Chưa có Core API, authentica
 - Source mode remains `local_snapshot`; browser/mobile rendering, responsive interaction, accessibility and independent QE are NOT RUN. No browser PASS is claimed.
 
 - 2026-11-18: Work Entry panel responsive CSS uses three columns on desktop, two on tablet and one on mobile. Source-only adjustment; device/browser QE remains NOT RUN.
+
+- Dashboard revision W76-DASHBOARD-0.3.26: evidence projection synchronized through EV-76-043; Work Package status strings reflect current branch CI and remaining dependencies; participant Work Entry snapshot is required by schema.
+- Snapshot remains local_snapshot. Work Entry WE-G4/G5 are BLOCKED; browser/mobile QE is NOT RUN.
