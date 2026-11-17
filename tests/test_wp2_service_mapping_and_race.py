@@ -179,7 +179,7 @@ class ServiceRegistryRecoveryTests(unittest.TestCase):
             ctx = _ctx(Path(td))
             host = ExecutionHost()
             managed = ManagedProcess(
-                process=FakeServiceProcess(7001, returncode=0),
+                process=FakeServiceProcess(7001, returncode=None),
                 platform="linux",
                 created_via_spawn=True,
             )
@@ -197,6 +197,13 @@ class ServiceRegistryRecoveryTests(unittest.TestCase):
             first = host.stop_service("svc", ctx)
             self.assertEqual(first["status"], "BLOCKED")
             self.assertIs(host.processes.get("svc"), managed)
+            self.assertEqual(host.service_status("svc", ctx)["status"], "BLOCKED")
+
+            # A new start must retry cleanup, not claim the still-running service is healthy.
+            with patch("execution_host.host.spawn_managed_service") as spawn:
+                retry_start = host.start_service("svc", [sys.executable, "-c", "pass"], ctx)
+            self.assertEqual(retry_start["status"], "BLOCKED")
+            spawn.assert_not_called()
 
             second = host.stop_service("svc", ctx)
             self.assertEqual(second["status"], "PASS")
