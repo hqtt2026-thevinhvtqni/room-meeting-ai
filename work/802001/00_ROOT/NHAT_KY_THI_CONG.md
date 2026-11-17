@@ -115,3 +115,15 @@
 - Trạng thái: REVIEW DISPATCH BLOCKED — NO SUITABLE REVIEW CHANNEL; DEFINE v0.1 vẫn FOR INDEPENDENT REVIEW.
 - Giới hạn: Chưa có phản hồi độc lập từ Ka, Cla hoặc Qw; chưa có policy approval của Vinh.
 - Bước tiếp theo: Khi có kênh/phiên review phù hợp, gửi tài liệu 02_DEFINE/AGENT_SUPERVISION_BUSINESS_RULES.md và yêu cầu phản biện 7 câu hỏi mục 12; ghi nhận từng phản hồi vào cùng hồ sơ canonical và journal. Không mở BUILD.
+
+
+## W802001-LOG-0009 — 2026-11-17 07:55 +07:00
+- Actor: Xu / AI-01 (điều phối; identity theo phiên hiện tại, chưa phải xác thực runtime độc lập)
+- Work: 802001
+- Loại bản ghi: INDEPENDENT REVIEW HANDOFF TO VIBE
+- Phạm vi: Tạo và chuyển hồ sơ phản biện độc lập DEFINE v0.1 cho Vibe thực hiện trên GitHub.
+- Phương pháp: Đọc lại từ GitHub main tài liệu DEFINE, Case Inventory, Architecture, Biên bản, Roadmap, Content Index, Document Register và Journal; tạo handoff package với scope, nguồn bắt buộc, quyền Git, giới hạn, quy trình READ→TRACE→REVIEW→DECIDE→EDIT→VERIFY→HANDOFF, acceptance criteria và vùng kết quả do Vibe tự điền.
+- Kết quả: tạo `02_DEFINE/VIBE_INDEPENDENT_REVIEW_PACKAGE.md` làm hồ sơ bàn giao/kết quả duy nhất; cập nhật Content Index, Document Register và Roadmap để chỉ rõ Vibe review đang pending.
+- Ranh giới: giao Vibe phản biện và chỉnh sửa tài liệu trên GitHub main trong phạm vi tài liệu; không cho phép sửa code/runtime/API/MCP, không mở BUILD, không đổi policy/authority/scope, không xóa legacy/evidence; Vibe không tự phê duyệt policy. Chưa có bằng chứng Vibe đã nhận việc.
+- Trạng thái: HANDOFF CREATED — GITHUB SYNC/READBACK PENDING; VIBE ACK PENDING; REVIEW NOT STARTED.
+- Bước tiếp theo: đọc lại GitHub sau commit; Vibe mở hồ sơ trên main, thực hiện review, sửa tài liệu có căn cứ, commit và cập nhật kết quả/journal.
