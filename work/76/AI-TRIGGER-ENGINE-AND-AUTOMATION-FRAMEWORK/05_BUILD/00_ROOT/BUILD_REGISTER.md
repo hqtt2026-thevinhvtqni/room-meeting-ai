@@ -2,15 +2,15 @@
 
 | WP | Package | Owner | Reviewer | Status | Canonical evidence |
 |---|---|---|---|---|---|
-| WP-76-01 | Trigger Registry and schema | Vibe (PR #55 proposal; participant Work Entry not verified) | Ka / AI-02 (assignment-specific QE Lead; G4/G5 blocked) | IN_REVIEW — PR #55 unmerged | PR #55: 05_BUILD/04_CODE/trigger_engine/registry.py; models.py; CI/test evidence EV-76-026/027 |
-| WP-76-02 | Event Gateway and source validation | Co / AI-07 (delegated; WE-G5 blocked) | Qw (nomination; ACK/entry pending) | PLANNED | 05_BUILD/04_CODE |
-| WP-76-03 | Scheduler and TIME triggers | Co / AI-07 (delegated; WE-G5 blocked) | Qw (nomination; ACK/entry pending) | PLANNED | 05_BUILD/04_CODE |
-| WP-76-04 | Typed Condition Evaluator | Vibe (PR #55 proposal; participant Work Entry not verified) | Ka / AI-02 (assignment-specific QE Lead; G4/G5 blocked) | IN_REVIEW — PR #55 unmerged | PR #55: 05_BUILD/04_CODE/trigger_engine/conditions.py; tests in 05_BUILD/05_TEST/test_trigger_engine.py |
-| WP-76-05 | Policy adapter and approval | Co / AI-07 (delegated; WE-G5 blocked) | Ka architecture (nomination); Qw QE (nomination) | PLANNED | 05_BUILD/03_ARCHITECTURE |
-| WP-76-06 | Orchestration, dedupe and retry | Co / AI-07 (delegated; WE-G5 blocked) | Qw (nomination; ACK/entry pending) | PLANNED | 05_BUILD/04_CODE |
-| WP-76-07 | Verified AI dispatch adapter | Co / AI-07 (discovery/design only) | Xu + Qw (nomination only) | BLOCKED — transport unverified | 05_BUILD/03_ARCHITECTURE |
-| WP-76-08 | Audit and evidence store | Co / AI-07 (delegated; WE-G5 blocked) | Qw (nomination; ACK/entry pending) | PLANNED | 05_BUILD/04_CODE |
-| WP-76-09 | Read-only dashboard | Xu | An / Qw (nominations; ACK/entry pending) | IN_REVIEW | DASHBOARD |
+| WP-76-01 | Trigger Registry and schema | Co / AI-07 | Ka / AI-02 (independent QE pending) | IN_REVIEW — PR #60 draft; branch CI PASS | `05_BUILD/04_CODE/trigger_engine/{models,registry}.py`; `05_BUILD/05_TEST/test_trigger_engine.py` |
+| WP-76-02 | Event Gateway and source validation | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; branch CI PASS; production verifier/key provider pending | `trigger_engine/gateway.py`; `test_work_packages.py` |
+| WP-76-03 | Scheduler and TIME triggers | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; UTC one-shot only; recurrence/DST/HA BLOCKED by ADR-76-005 | `trigger_engine/scheduler.py`; `test_work_packages.py` |
+| WP-76-04 | Typed Condition Evaluator | Co / AI-07 | Ka / AI-02 (independent QE pending) | IN_REVIEW — PR #60 draft; branch CI PASS | `trigger_engine/conditions.py`; `test_trigger_engine.py` |
+| WP-76-05 | Policy adapter and approval | Co / AI-07 | Ka architecture review; Qw QE (ACK pending) | IN_REVIEW — PR #60 draft; fail-closed adapter contract; Core provider not integrated | `trigger_engine/policy.py`; `test_work_packages.py` |
+| WP-76-06 | Orchestration, dedupe and retry | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; state/retry/idempotency ports; durable backend not integrated | `trigger_engine/orchestrator.py`, `retry.py`; `test_work_packages.py` |
+| WP-76-07 | Verified AI dispatch adapter | Co / AI-07 (discovery/design only) | Xu + Qw | BLOCKED — no verified transport, target identity, receiver receipt or ACK | `05_BUILD/03_ARCHITECTURE` |
+| WP-76-08 | Audit and evidence store | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; append-only sink contract only; durable store/retention ADR pending | `trigger_engine/audit.py`; `test_work_packages.py` |
+| WP-76-09 | Read-only dashboard | Xu | An / Qw | IN_REVIEW — browser/mobile QE pending | `DASHBOARD` |
 
 PR #55 contains a proposed implementation, tests and CI workflow on an unmerged branch. This is not a merged implementation on main, not runtime/integration verification, and not acceptance. WP status must be updated only with attributable evidence.
 
@@ -26,3 +26,12 @@ PR #55 contains a proposed implementation, tests and CI workflow on an unmerged 
 - CI run 43541364364 (pytest 3.11/3.12, DOC-006 regression IDs W76-CE-001…004, W76-RG-001…002, W76-MD-001…002, W76-EV-001…002) COMPLETED SUCCESS on commit 8e73fdf.
 - WP statuses above are unchanged: branch-level CI PASS is not canonical Build evidence. WP-76-01…08 may move out of PLANNED only after independent review (Xu/Ka), QE reproduction, PR merge approval by Vinh and read-back on main. WP-76-07 remains BLOCKED (no dispatch transport implemented or claimed).
 - PR #53 (prototype) remains NOT APPROVED / preserved as audit evidence.
+
+
+## Co autonomous implementation reconciliation — 2026-11-18
+- PR #55 remains open/draft/unmerged as the original proposal history; its branch is divergent from current main and is not the active integration candidate.
+- PR #59 is superseded by PR #60; do not merge PR #59.
+- Active candidate: PR #60, branch `work/76-co-autonomous-build-v2`, head `790d2986eb2d9a61d1c4dcc610457e1874738f30`, based on current main `9b366fe5ade05568436644ac385d7504a2673605`.
+- GitHub Actions run 44186456898 completed successfully: Python 3.11 = 50 passed; Python 3.12 = 50 passed. Raw JUnit artifacts are retained in Actions. This is branch CI only, not independent QE, merged-main verification, Core integration, runtime/E2E or release.
+- The new packages expose injected ports and fail-closed behavior. No production crypto/key provider, Core authorization implementation, durable queue/database/audit store, recurrence/DST/HA policy or AI dispatch transport is claimed.
+- All statuses remain IN_REVIEW/BLOCKED as above; no WP is marked DONE or accepted.
