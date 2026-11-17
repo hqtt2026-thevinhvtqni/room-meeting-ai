@@ -769,3 +769,23 @@ This is a governance/assignment and preparation record only. Xu did not alter so
 **CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
 **NGÀY:** 18/11/2026
 **GIỜ - PHÚT:** 05:49 — UTC+7
+
+
+---
+
+### 2026-11-18 05:51:31 +07:00 — Co đồng bộ Dashboard evidence snapshot
+- Actor: Co — AI Coder / Execution Assistant (AI-07).
+- Rà soát sau static correction cho thấy PRODUCT_STATUS.json vẫn chỉ liệt kê evidence đến EV-76-032 và WP status strings chưa phản ánh các exact-head CI mới.
+- Đã cập nhật Dashboard PRODUCT_STATUS.json:
+  - Thêm EV-76-033…EV-76-043 vào evidence projection (đủ claim/path/status; giữ phân biệt branch CI với static-only UI review).
+  - Cập nhật WP-76-02/03/06/08 với CI exact-head và dependency còn mở; WP-76-09 phản ánh panel Work Entry, filter normalization và responsive CSS nhưng browser/mobile QE vẫn pending.
+  - Thêm recent_activity cho Audit, Event Gateway, Idempotency/Scheduler và Dashboard static correction.
+  - Revision: `W76-DASHBOARD-0.3.26`; source_mode vẫn `local_snapshot`.
+- Schema đặt `work_entry` thành required field; Work Entry snapshot vẫn WE-G0…G3 PASS, WE-G4/G5 BLOCKED.
+- Không thay đổi lifecycle gate, quyền, ownership, acceptance hoặc release. Dashboard chưa được browser/device QE.
+- Các thay đổi Dashboard và hồ sơ được tiếp tục đồng bộ sang Sandbox; read-back exact equality sẽ được xác nhận riêng.
+
+**TÊN:** Co
+**CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
+**NGÀY:** 18/11/2026
+**GIỜ - PHÚT:** 05:51 — UTC+7
