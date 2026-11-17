@@ -92,11 +92,15 @@ def test_state_machine_requires_audit_sink_and_legal_transitions():
         machine.transition("y",ExecutionState.SUCCEEDED,"skip","c")
 
 def test_state_machine_commits_only_after_sink_append():
-    class BrokenSink:
-        def append_transition(self, row): raise OSError("disk")
-    machine=ExecutionStateMachine(BrokenSink()); machine.start("z","c")
+    class FailAfterStart:
+        def __init__(self): self.calls=0
+        def append_transition(self, row):
+            self.calls+=1
+            if self.calls>1: raise OSError("disk")
+    sink=FailAfterStart()
+    machine=ExecutionStateMachine(sink); machine.start("z","c")
     with pytest.raises(OSError):
-        machine.transition("z",ExecutionState.VALIDATED,"valid","c")
+        machine.transition("z",ExecutionState.SOURCE_AUTHENTICATED,"authenticated","c")
     assert machine.state("z")==ExecutionState.RECEIVED
 
 def test_audit_writer_hash_chain_and_fail_closed():
