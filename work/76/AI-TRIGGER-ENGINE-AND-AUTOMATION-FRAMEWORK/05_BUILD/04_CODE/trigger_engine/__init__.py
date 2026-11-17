@@ -70,5 +70,5 @@ __all__ += [
     "StateTransitionError", "TimeScheduler",
 ]
 
-from .retry import DuplicateExecution, IdempotencyGuard, RetryDecision, RetryPlanner
-__all__ += ["DuplicateExecution", "IdempotencyGuard", "RetryDecision", "RetryPlanner"]
+from .retry import DuplicateExecution, IdempotencyGuard, IdempotencyUnavailable, RetryDecision, RetryPlanner
+__all__ += ["DuplicateExecution", "IdempotencyGuard", "IdempotencyUnavailable", "RetryDecision", "RetryPlanner"]
