@@ -1,7 +1,7 @@
 {
   "work_id": "76",
   "product_name": "AI Trigger Engine & Automation Framework",
-  "summary": "Work 76 đã gia cố WP-76-02 Event Gateway, WP-76-03 Scheduler, WP-76-06 Idempotency/Retry và WP-76-08 Audit. Exact-head CI gần nhất run 44193167465 trên head a2f8131c080826bd57916222da1308386e7aa215: Python 3.11/3.12 đều 71 passed, 0 failed. Các lần CI trước: Gateway 58/58, Audit 54/54. Đây là branch CI; durable production stores, recurrence/DST/HA, Core/runtime, verified dispatch, independent QE và E2E vẫn pending. Dashboard bổ sung panel Work Entry WE-G0…WE-G5 riêng biệt và chuẩn hóa filter/status hiển thị; Work Entry snapshot vẫn ghi rõ WE-G4/G5 BLOCKED. Static dashboard correction: separate participant Work Entry panel added; status filters normalize descriptive WP status strings. Browser/mobile QE remains NOT RUN. Work Entry gate grid has desktop/tablet/mobile CSS breakpoints; actual device/browser rendering remains unverified.",
+  "summary": "Work 76 đã gia cố WP-76-02 Event Gateway, WP-76-03 Scheduler, WP-76-06 Idempotency/Retry và WP-76-08 Audit. Exact-head CI gần nhất run 44193167465 trên head a2f8131c080826bd57916222da1308386e7aa215: Python 3.11/3.12 đều 71 passed, 0 failed. Các lần CI trước: Gateway 58/58, Audit 54/54. Đây là branch CI; durable production stores, recurrence/DST/HA, Core/runtime, verified dispatch, independent QE và E2E vẫn pending. Dashboard bổ sung panel Work Entry WE-G0…WE-G5 riêng biệt và chuẩn hóa filter/status hiển thị; Work Entry snapshot vẫn ghi rõ WE-G4/G5 BLOCKED. Static dashboard correction: separate participant Work Entry panel added; status filters normalize descriptive WP status strings. Browser/mobile QE remains NOT RUN. Work Entry gate grid has desktop/tablet/mobile CSS breakpoints; actual device/browser rendering remains unverified. Evidence list and recent activity are synchronized through EV-76-043; WP-76-02/03/06/08 status strings include latest branch CI results; WP-76-09 records static UI changes with browser QE pending.",
   "standard_id": "ROOM-HOP-WORK-MASTER",
   "standard_version": "1.2",
   "work_status": "ACTIVE",
@@ -9,9 +9,9 @@
   "current_phase": "01_DISCOVER",
   "source_mode": "local_snapshot",
   "freshness": "LOCAL_SNAPSHOT",
-  "revision": "W76-DASHBOARD-0.3.25",
-  "warning_vi": "LOCAL SNAPSHOT — chưa kết nối Core live. PR #60 draft, chưa merge. Lifecycle gates và Work Entry WE-G0…WE-G5 được hiển thị riêng; WE-G4/G5 BLOCKED. Desktop/tablet/mobile CSS breakpoints đã thêm nhưng browser/device QE chưa chạy. Latest Python branch CI does not verify UI rendering.",
-  "updated_at": "2026-11-17T22:49:44.000Z",
+  "revision": "W76-DASHBOARD-0.3.26",
+  "warning_vi": "LOCAL SNAPSHOT — chưa kết nối Core live. PR #60 draft, chưa merge. Branch CI: Audit 54/54, Event Gateway 58/58, Idempotency/Scheduler 71/71 on Python 3.11/3.12. Dashboard Work Entry panel and responsive CSS are static-source changes only; browser/device QE not run. WE-G4/G5 remain BLOCKED; WP-76-07 remains BLOCKED.",
+  "updated_at": "2026-11-17T22:51:05.000Z",
   "phases": [
     {
       "phase_id": "01_DISCOVER",
@@ -112,7 +112,7 @@
     {
       "wp_id": "WP-76-02",
       "title": "Event Gateway and source validation",
-      "status": "IN_REVIEW — PR #60 draft; production verifier/key provider pending",
+      "status": "IN_REVIEW — Event Gateway hardening exact-head CI 58/58 on Python 3.11/3.12; production verifier/key provider and durable replay store pending",
       "owner": "Co / AI-07 (delegated; WE-G5 BLOCKED)",
       "reviewer": "Qw (nomination; ACK/entry pending)",
       "evidence_refs": [
@@ -122,7 +122,7 @@
     {
       "wp_id": "WP-76-03",
       "title": "Scheduler and TIME triggers",
-      "status": "IN_REVIEW — PR #60 draft; UTC one-shot only; recurrence/DST blocked",
+      "status": "IN_REVIEW — UTC one-shot + due-store fail-closed hardening; exact-head CI 71/71 on Python 3.11/3.12; recurrence/DST/HA blocked",
       "owner": "Co / AI-07 (delegated; WE-G5 BLOCKED)",
       "reviewer": "Qw (nomination; ACK/entry pending)",
       "evidence_refs": [
@@ -152,7 +152,7 @@
     {
       "wp_id": "WP-76-06",
       "title": "Orchestration, dedupe and retry",
-      "status": "IN_REVIEW — PR #60 draft; durable idempotency/queue backend pending",
+      "status": "IN_REVIEW — idempotency store failure vs duplicate distinguished; exact-head CI 71/71 on Python 3.11/3.12; durable backend pending",
       "owner": "Co / AI-07 (delegated; WE-G5 BLOCKED)",
       "reviewer": "Qw (nomination; ACK/entry pending)",
       "evidence_refs": [
@@ -172,7 +172,7 @@
     {
       "wp_id": "WP-76-08",
       "title": "Audit and evidence store",
-      "status": "IN_REVIEW — PR #60 draft; durable audit sink/retention pending",
+      "status": "IN_REVIEW — strict canonical audit digest; exact-head CI 54/54 on Python 3.11/3.12; durable audit sink/retention pending",
       "owner": "Co / AI-07 (delegated; WE-G5 BLOCKED)",
       "reviewer": "Qw (nomination; ACK/entry pending)",
       "evidence_refs": [
@@ -182,7 +182,7 @@
     {
       "wp_id": "WP-76-09",
       "title": "Read-only Work 76 dashboard v0.2",
-      "status": "IN_REVIEW — browser/mobile QE pending",
+      "status": "IN_REVIEW — Work Entry panel, lifecycle/WE gate separation, status filter normalization and responsive CSS implemented; browser/mobile QE pending",
       "owner": "Xu",
       "reviewer": "An / Qw (nominations; ACK/entry pending)",
       "evidence_refs": [
@@ -502,6 +502,34 @@
       "title": "Observable acceptance criteria matrix for FR/NFR",
       "detail": "Bổ sung tiêu chí đạt, điều kiện lỗi/fail-closed và bằng chứng bắt buộc cho FR-01…FR-10, NFR-01…NFR-07; không chạy test, không mở Build.",
       "status": "SPECIFIED / NOT EXECUTED / NOT APPROVED"
+    },
+    {
+      "date": "2026-11-18",
+      "actor": "Co / AI-07",
+      "title": "Audit canonicalization hardening",
+      "detail": "Strict canonical_json for payload digest and hash chain; regression rejects NaN/Infinity. Exact-head CI 54/54 on Python 3.11 and 3.12.",
+      "status": "BRANCH CI PASS — EV-76-034"
+    },
+    {
+      "date": "2026-11-18",
+      "actor": "Co / AI-07",
+      "title": "Event Gateway fail-closed hardening",
+      "detail": "Strict event validation, canonical payload digest, validate-before-replay reservation and fail-closed replay store. Exact-head CI 58/58 on Python 3.11 and 3.12.",
+      "status": "BRANCH CI PASS — EV-76-036"
+    },
+    {
+      "date": "2026-11-18",
+      "actor": "Co / AI-07",
+      "title": "Idempotency and Scheduler hardening",
+      "detail": "Distinguishes duplicate from unavailable store; validates schedule and clock; due-store errors fail closed. Exact-head CI 71/71 on Python 3.11 and 3.12.",
+      "status": "BRANCH CI PASS — EV-76-041"
+    },
+    {
+      "date": "2026-11-18",
+      "actor": "Co / AI-07",
+      "title": "Dashboard Work Entry visibility correction",
+      "detail": "Added separate participant WE-G0…WE-G5 panel, normalized WP filters and responsive CSS. Static source review only; browser/mobile QE not run.",
+      "status": "STATIC SOURCE UPDATE — BROWSER QE PENDING"
     }
   ],
   "evidence": [
@@ -714,6 +742,83 @@
       "claim": "Run 44186877081 on head f5e94766dc05286a634cb1883b61f4468e246507: Python 3.11 and 3.12 each 50 passed / 0 failed; JUnit artifacts and SHA256 digests recorded in canonical Evidence Register. Branch CI only.",
       "path": "PR #60 · GitHub Actions run 44186877081 · DOC-035 / Evidence Register",
       "status": "VERIFIED — BRANCH CI ONLY; INDEPENDENT QE NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-033",
+      "title": "Audit canonicalization hardening",
+      "claim": "AuditWriter uses strict canonical_json; key-order-independent digest; rejects NaN/Infinity without sink append.",
+      "path": "trigger_engine/audit.py; test_work_packages.py",
+      "status": "IMPLEMENTED; CI confirmed by EV-76-034"
+    },
+    {
+      "evidence_id": "EV-76-034",
+      "title": "Audit canonicalization exact-head CI",
+      "claim": "Run 44192173589 on exact head: Python 3.11/3.12 54 passed each.",
+      "path": "GitHub Actions run 44192173589; JUnit artifacts 14376992432 / 14378105646",
+      "status": "VERIFIED — BRANCH CI ONLY"
+    },
+    {
+      "evidence_id": "EV-76-035",
+      "title": "Event Gateway fail-closed hardening",
+      "claim": "Validates event_type/received_at/source config; strict canonical payload; validates Event before replay reservation; replay store errors fail closed.",
+      "path": "trigger_engine/gateway.py; test_work_packages.py",
+      "status": "IMPLEMENTED; CI confirmed by EV-76-036"
+    },
+    {
+      "evidence_id": "EV-76-036",
+      "title": "Event Gateway exact-head CI",
+      "claim": "Run 44192558442: Python 3.11/3.12 58 passed each.",
+      "path": "GitHub Actions run 44192558442; JUnit artifacts 14378131037 / 14376393806",
+      "status": "VERIFIED — BRANCH CI ONLY"
+    },
+    {
+      "evidence_id": "EV-76-037",
+      "title": "Idempotency store failure distinction",
+      "claim": "IdempotencyUnavailable distinguishes store outage/indeterminate result from true duplicate; strict scope/key/TTL/clock validation.",
+      "path": "trigger_engine/retry.py; test_work_packages.py",
+      "status": "IMPLEMENTED; CI confirmed by EV-76-038"
+    },
+    {
+      "evidence_id": "EV-76-038",
+      "title": "Idempotency exact-head CI",
+      "claim": "Run 44192865531: Python 3.11/3.12 65 passed each.",
+      "path": "GitHub Actions run 44192865531; JUnit artifacts 14376124853 / 14376353840",
+      "status": "VERIFIED — BRANCH CI ONLY"
+    },
+    {
+      "evidence_id": "EV-76-039",
+      "title": "Scheduler due-store hardening",
+      "claim": "Validates schedule/clock and fails closed on due-store exception/indeterminate result; duplicate claim remains no-op.",
+      "path": "trigger_engine/scheduler.py; test_work_packages.py",
+      "status": "IMPLEMENTED; CI confirmed by EV-76-040/041"
+    },
+    {
+      "evidence_id": "EV-76-040",
+      "title": "Scheduler exact-head CI",
+      "claim": "Run 44193037401: Python 3.11/3.12 71 passed each.",
+      "path": "GitHub Actions run 44193037401; JUnit artifacts 14376823329 / 14377871600",
+      "status": "VERIFIED — BRANCH CI ONLY"
+    },
+    {
+      "evidence_id": "EV-76-041",
+      "title": "Latest exact-head branch CI",
+      "claim": "Run 44193167465 on exact head a2f813...: Python 3.11/3.12 71 passed each; includes scheduler and idempotency hardening.",
+      "path": "GitHub Actions run 44193167465; JUnit artifacts 14376898453 / 14378400952",
+      "status": "VERIFIED — BRANCH CI ONLY"
+    },
+    {
+      "evidence_id": "EV-76-042",
+      "title": "Dashboard Work Entry static correction",
+      "claim": "Separate WE-G0…WE-G5 panel; lifecycle gate count separated; descriptive WP status filter normalized; snapshot WE-G4/G5 BLOCKED.",
+      "path": "DASHBOARD/index.html; PRODUCT_STATUS.json; schema; README",
+      "status": "VERIFIED — STATIC SOURCE/DATA ONLY; browser QE NOT RUN"
+    },
+    {
+      "evidence_id": "EV-76-043",
+      "title": "Dashboard responsive CSS source",
+      "claim": "Work Entry gate grid uses 3 desktop, 2 tablet and 1 mobile columns.",
+      "path": "DASHBOARD/index.html commit c24c5c8bf6def54497e222ddc3ae109b02719d11",
+      "status": "VERIFIED — STATIC CSS ONLY; browser/device QE NOT RUN"
     }
   ],
   "work_entry": {
