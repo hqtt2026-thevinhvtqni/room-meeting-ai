@@ -36,8 +36,8 @@ class AuditWriter:
         # the audit chain with implementation-dependent digests.
         payload_json=canonical_json(payload)
         digest=hashlib.sha256(payload_json.encode("utf-8")).hexdigest()
-        occurred=datetime.now(timezone.utc)
         with self._lock:
+            occurred=datetime.now(timezone.utc)
             base={"record_id":record_id,"work_id":work_id,"actor_ref":actor_ref,"action":action,"outcome":outcome,
                   "correlation_id":correlation_id,"occurred_at":occurred.isoformat(),"payload_digest":digest,"previous_hash":self._head}
             record_hash=hashlib.sha256(canonical_json(base).encode("utf-8")).hexdigest()
