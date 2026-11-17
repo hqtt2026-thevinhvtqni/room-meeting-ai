@@ -1,7 +1,7 @@
 {
   "work_id": "76",
   "product_name": "AI Trigger Engine & Automation Framework",
-  "summary": "Nền tảng dùng chung để đăng ký, tiếp nhận sự kiện, đánh giá điều kiện và kích hoạt nhiệm vụ AI có kiểm soát. Ưu tiên hiện tại: hoàn thiện Dashboard theo chuẩn Work 70 trước khi mở triển khai runtime.",
+  "summary": "Work 76 đang triển khai Trigger Engine theo nhánh PR #60. Trigger Registry/Condition Evaluator và các interface fail-closed cho Event Gateway, UTC one-shot Scheduler, Policy/Approval, Orchestration/Dedupe/Retry và Audit đã có source + regression tests; CI branch PASS 50/50 trên Python 3.11 và 3.12. Chưa có Core/runtime adapters, durable production stores, verified AI dispatch, independent QE hoặc E2E.",
   "standard_id": "ROOM-HOP-WORK-MASTER",
   "standard_version": "1.2",
   "work_status": "ACTIVE",
@@ -9,9 +9,9 @@
   "current_phase": "01_DISCOVER",
   "source_mode": "local_snapshot",
   "freshness": "LOCAL_SNAPSHOT",
-  "revision": "W76-DASHBOARD-0.3.11",
-  "warning_vi": "LOCAL SNAPSHOT — chưa kết nối Core live. Cập nhật 2026-11-14 09:50 UTC+7; Evidence EV-76-025: xác minh độc lập Round 2 APPROVE cho 5 fix trên PR #55 (branch-level, reviewer input, chưa phải QE canonical). CI PASS run 43547006333.",
-  "updated_at": "2026-11-14T02:42:37.091Z",
+  "revision": "W76-DASHBOARD-0.3.12",
+  "warning_vi": "LOCAL SNAPSHOT — chưa kết nối Core live. PR #60 là draft, chưa merge. GitHub Actions run 44186456898: Python 3.11 50/50 PASS; Python 3.12 50/50 PASS; JUnit artifacts EV-76-029. Đây chỉ là branch CI, không phải Canonical QE, runtime/E2E hay release. WP-76-07 vẫn BLOCKED.",
+  "updated_at": "2026-11-17T22:06:20.568Z",
   "phases": [
     {
       "phase_id": "01_DISCOVER",
@@ -56,9 +56,9 @@
     {
       "phase_id": "05_BUILD",
       "name_vi": "Thi công",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "gate_status": "NOT_READY",
-      "owner": "Co / AI-07 (delegated; WE-G5 BLOCKED)",
+      "owner": "Co / AI-07 (Vinh direct autonomous delegation; identity binding still NOT_VERIFIED)",
       "evidence_refs": [
         "05_BUILD/00_ROOT/BUILD_REGISTER.md"
       ]
@@ -66,9 +66,9 @@
     {
       "phase_id": "06_VERIFY",
       "name_vi": "Kiểm chứng",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "gate_status": "NOT_READY",
-      "owner": "Qw / An",
+      "owner": "Independent QE pending; branch CI evidence available",
       "evidence_refs": [
         "06_VERIFY/DOC-006_VERIFICATION-PLAN.md"
       ]
@@ -102,7 +102,7 @@
     {
       "wp_id": "WP-76-01",
       "title": "Trigger Registry and schema",
-      "status": "PLANNED",
+      "status": "IN_REVIEW — PR #60 draft; branch CI PASS",
       "owner": "Co / AI-07 (delegated; WE-G5 BLOCKED)",
       "reviewer": "Qw (nomination; ACK/entry pending)",
       "evidence_refs": [
@@ -112,7 +112,7 @@
     {
       "wp_id": "WP-76-02",
       "title": "Event Gateway and source validation",
-      "status": "PLANNED",
+      "status": "IN_REVIEW — PR #60 draft; production verifier/key provider pending",
       "owner": "Co / AI-07 (delegated; WE-G5 BLOCKED)",
       "reviewer": "Qw (nomination; ACK/entry pending)",
       "evidence_refs": [
@@ -122,7 +122,7 @@
     {
       "wp_id": "WP-76-03",
       "title": "Scheduler and TIME triggers",
-      "status": "PLANNED",
+      "status": "IN_REVIEW — PR #60 draft; UTC one-shot only; recurrence/DST blocked",
       "owner": "Co / AI-07 (delegated; WE-G5 BLOCKED)",
       "reviewer": "Qw (nomination; ACK/entry pending)",
       "evidence_refs": [
@@ -132,7 +132,7 @@
     {
       "wp_id": "WP-76-04",
       "title": "Typed Condition Evaluator",
-      "status": "PLANNED",
+      "status": "IN_REVIEW — PR #60 draft; branch CI PASS",
       "owner": "Co / AI-07 (delegated; WE-G5 BLOCKED)",
       "reviewer": "Qw (nomination; ACK/entry pending)",
       "evidence_refs": [
@@ -142,7 +142,7 @@
     {
       "wp_id": "WP-76-05",
       "title": "Policy adapter and approval",
-      "status": "PLANNED",
+      "status": "IN_REVIEW — PR #60 draft; Core policy provider not integrated",
       "owner": "Co / AI-07 (delegated; WE-G5 BLOCKED)",
       "reviewer": "Qw (nomination; ACK/entry pending)",
       "evidence_refs": [
@@ -152,7 +152,7 @@
     {
       "wp_id": "WP-76-06",
       "title": "Orchestration, dedupe and retry",
-      "status": "PLANNED",
+      "status": "IN_REVIEW — PR #60 draft; durable idempotency/queue backend pending",
       "owner": "Co / AI-07 (delegated; WE-G5 BLOCKED)",
       "reviewer": "Qw (nomination; ACK/entry pending)",
       "evidence_refs": [
@@ -162,7 +162,7 @@
     {
       "wp_id": "WP-76-07",
       "title": "Verified AI dispatch adapter",
-      "status": "BLOCKED",
+      "status": "BLOCKED — verified transport/target identity/receipt/ACK unavailable",
       "owner": "Co / AI-07 (discovery/design only)",
       "reviewer": "Qw (nomination; ACK/entry pending)",
       "evidence_refs": [
@@ -172,7 +172,7 @@
     {
       "wp_id": "WP-76-08",
       "title": "Audit and evidence store",
-      "status": "PLANNED",
+      "status": "IN_REVIEW — PR #60 draft; durable audit sink/retention pending",
       "owner": "Co / AI-07 (delegated; WE-G5 BLOCKED)",
       "reviewer": "Qw (nomination; ACK/entry pending)",
       "evidence_refs": [
@@ -182,7 +182,7 @@
     {
       "wp_id": "WP-76-09",
       "title": "Read-only Work 76 dashboard v0.2",
-      "status": "IN_REVIEW",
+      "status": "IN_REVIEW — browser/mobile QE pending",
       "owner": "Xu",
       "reviewer": "An / Qw (nominations; ACK/entry pending)",
       "evidence_refs": [
@@ -239,7 +239,7 @@
       "severity": "HIGH",
       "status": "OPEN",
       "owner": "Xu / Co",
-      "detail_vi": "Delegation đã được ghi DOC-007; còn thiếu bằng chứng identity/tool permissions riêng của Co và xác minh các phụ thuộc/ACK cần thiết."
+      "detail_vi": "Vinh đã tái xác nhận ủy quyền tự chủ trực tiếp cho Co; vẫn chưa có bằng chứng trusted runtime identity AI-07 và quyền theo session. Sandbox write/read-back của tool session đã được kiểm chứng, không thay thế identity attestation."
     },
     {
       "id": "B-76-07",
@@ -377,6 +377,13 @@
     }
   ],
   "recent_activity": [
+    {
+      "date": "2026-11-18",
+      "actor": "Co — AI Coder / Execution Assistant",
+      "title": "PR #60 — first implementation slice and CI matrix",
+      "detail": "Tạo nhánh sạch từ main; port Registry/Condition; bổ sung Gateway, UTC one-shot Scheduler, Policy/Approval, execution state machine, idempotency/retry và Audit ports. GitHub Actions run 44186456898: 50/50 PASS Python 3.11 và 50/50 PASS Python 3.12. PR #60 DRAFT/UNMERGED; independent QE, Core/runtime integration và E2E còn pending.",
+      "status": "BRANCH CI PASS / IN_REVIEW"
+    },
     {
       "date": "2026-11-14",
       "actor": "Vibe (delegated by Vinh)",
@@ -658,6 +665,27 @@
       "claim": "Grok Round 2 xác minh độc lập tại head d14f018e: cả 5 fix H1/M1/M2/L1/L2 PASS, 36/36 test PASS (Python 3.12.3, pytest 9.0.3), không phát hiện mới. Reviewer input, chưa phải bằng chứng QE canonical.",
       "path": "GROK_INDEPENDENT_REVIEW_PR55_ROUND2.md · PR #55 · DOC-035 2026-11-14 09:50 +07:00",
       "status": "VERIFIED (BRANCH-LEVEL ONLY; QE CANONICAL PENDING)"
+    },
+    {
+      "evidence_id": "EV-76-028",
+      "title": "Autonomous implementation branch PR #60",
+      "claim": "Branch từ current main chứa Trigger Registry/Condition baseline và các module WP-76-02/03/05/06/08 cùng 11 regression tests bổ sung. Các adapter production vẫn là injected ports.",
+      "path": "PR #60 · work/76-co-autonomous-build-v2 · head 790d2986eb2d9a61d1c4dcc610457e1874738f30",
+      "status": "VERIFIED — source inventory; production integrations pending"
+    },
+    {
+      "evidence_id": "EV-76-029",
+      "title": "Python matrix CI and JUnit artifacts",
+      "claim": "GitHub Actions run 44186456898: Python 3.11 50 passed / 0 failed; Python 3.12 50 passed / 0 failed. JUnit artifacts 14373942943 and 14374232019 with recorded ZIP SHA256 in canonical Evidence Register. Branch CI only, not independent Canonical QE.",
+      "path": "GitHub Actions run 44186456898 · PR #60 · DOC-035 / Evidence Register",
+      "status": "VERIFIED — BRANCH CI ONLY; INDEPENDENT QE NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-030",
+      "title": "Sandbox journal write/read-back",
+      "claim": "Co session appended canonical DOC-035 through MCP 8030 and read_probe confirmed unique journal marker; temporary diagnostic file was read back and deleted. Trusted AI-07 identity binding remains unverified.",
+      "path": "Sandbox MCP 8030 · 00_ROOT/DOC-035_NHAT-KY-THI-CONG_EXECUTION-LOG.md",
+      "status": "VERIFIED — SESSION CAPABILITY ONLY"
     }
   ]
 }
