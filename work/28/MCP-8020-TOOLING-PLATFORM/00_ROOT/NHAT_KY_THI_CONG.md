@@ -1011,3 +1011,48 @@ Xu approves three contract directions:
 **STATUS:** WP2 RECOVERY PATCH STAGED IN PR #61 / CI NOT VERIFIED / AN + KA INDEPENDENT REVIEW REQUIRED / EXECUTION GATE CLOSED / NOT RELEASED.
 
 **Signature:** [KÝ: VI | CODER]
+
+
+## 2026-11-18 — JRN-W28-026 — Exact-SHA Linux/Windows CI and PC gate disposition
+
+**Người thực hiện:** Vi  
+**Chức danh:** CODER / Implementation Lead  
+**Execution time:** 2026-11-18 05:16:43 UTC+07:00  
+**Priority:** P0 — WP2 recovery verification
+
+### BUILD / VERIFY
+- Final code head: `27ecdebc94a1ec177a899db8971ed4d76d7d2004`; PR merge-ref tested by GitHub Actions: `198fc781f4509eb765259ce8e61d193d2ef0e64d`.
+- GitHub Actions run #357: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44188086218
+- Workflow conclusion: **SUCCESS**.
+- `tests/test_wp2_service_mapping_and_race.py`: Linux **14 passed**; Windows Server 2022 **14 passed**.
+- Existing execution-host lifecycle tests: Linux and Windows jobs **PASS**.
+- Work 28 unit/regression suite: **348 tests OK**; full pytest: **348 passed, 238 subtests passed**.
+- Compile step: PASS.
+- Immutable exact-SHA source archive build and extracted-artifact retest: PASS.
+- A Windows PID-field collision was found in earlier run #356; Vi corrected identity-field ordering and added assertions. The corrected run #357 is green on both platforms.
+
+### AUTO E2E GATE
+- CI preconditions: **PASS**.
+- Deployed MCP → Core → Runtime E2E: **BLOCKED**.
+- Overall Auto E2E: **BLOCKED**.
+- Execution Gate: **CLOSED**.
+- Release: **NOT_RELEASED**.
+- The generated gate report identifies the missing verified live MCP 8030 build/process identity and actual `tools/list` parity evidence as blockers. CI success does not prove live deployment or Core authorization.
+
+### PC VALIDATION REQUIRED
+Canonical plan: `05_TEST/WORK28_PC_VALIDATION_PLAN_21_TOOLS.md`.
+- G1: PC unit/provider/SDK contract validation — NOT RUN.
+- G2: live MCP `tools/list` exact 31-name/schema parity — NOT RUN.
+- G3: Core authorization and negative security checks — NOT RUN.
+- G4: live MCP → Core → provider → readback E2E — NOT RUN.
+These checks require the owner's PC / approved live MCP environment. Vi did not claim to execute them.
+
+### HANDOFF
+- An: independent QA handoff updated to exact head `27ecdebc94a1ec177a899db8971ed4d76d7d2004`; native CI evidence included; independent reproduction still required.
+- Ka: independent security handoff updated to exact head `27ecdebc94a1ec177a899db8971ed4d76d7d2004`; review scope includes lock/registry ownership, spawn exceptions, cleanup truthfulness and live authorization boundary.
+- No reviewer acknowledgement/result is claimed.
+- No merge, production mutation, listener restart or Execution Gate opening occurred.
+
+**STATUS:** WP2 CODE + LINUX/WINDOWS CI PASS / AN + KA REVIEW REQUIRED / PC G1–G4 REQUIRED / LIVE E2E BLOCKED / NOT RELEASED.
+
+**Signature:** [KÝ: VI | CODER]
