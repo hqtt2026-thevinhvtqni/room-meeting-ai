@@ -87,6 +87,7 @@ def test_state_machine_requires_audit_sink_and_legal_transitions():
     with pytest.raises(StateTransitionError):
         machine.start("x","c")
     sink=Sink(); machine=ExecutionStateMachine(sink); machine.start("y","c")
+    assert machine.transition("y",ExecutionState.SOURCE_AUTHENTICATED,"source authenticated","c")==ExecutionState.SOURCE_AUTHENTICATED
     assert machine.transition("y",ExecutionState.VALIDATED,"schema valid","c")==ExecutionState.VALIDATED
     with pytest.raises(StateTransitionError):
         machine.transition("y",ExecutionState.SUCCEEDED,"skip","c")
