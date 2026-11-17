@@ -165,3 +165,17 @@
 - Open items chưa được tự ý quyết định: VF-01 canonical path DOC-096 vẫn UNVERIFIED-REFERENCE; VF-10 quy tắc readback sau mỗi lần ghi hồ sơ canonical vẫn là OPEN QUESTION; chưa có quyết định của Vinh về việc cần thêm reviewer Ka/Cla/Qw hay trình duyệt policy ngay.
 - Trạng thái: POST-REVIEW AUDIT RECORDED; DEFINE v0.2 REVIEWED BUT NOT APPROVED; BUILD NOT AUTHORIZED. Đây là đối soát tài liệu/Git, không phải QE, runtime test hoặc xác nhận enforcement.
 - Bước tiếp theo: Xu cần truy nguyên canonical path DOC-096 từ Work 70 và đưa ra đề xuất xử lý VF-10; sau đó trình Vinh quyết định policy approval và nhu cầu reviewer bổ sung. Không mở BUILD trước quyết định/phê duyệt và W70 G4 PASS.
+
+## W802001-LOG-0013 — 2026-11-17 19:45 +07:00
+- Actor: Xu / AI-01 (điều phối; identity theo phiên, không tuyên bố xác thực runtime độc lập)
+- Work: 802001
+- Loại bản ghi: GOVERNANCE SOURCE TRACE / POST-REVIEW CORRECTION
+- Phạm vi: Xác minh lại VF-01 của Vibe và toàn bộ tham chiếu DOC-096 trong hồ sơ W802001.
+- Phương pháp: GitHub code search toàn repository với từ khóa DOC-096; đọc DOC-055 Work 70 Document Register; exact fetch canonical DOC-096, DOC-035, DOC-001, DOC-056; tìm và fetch DOC-033, DOC-057 canonical paths; rà soát các hồ sơ W802001 bị ảnh hưởng.
+- Kết quả nguồn: DOC-096 canonical path là `work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/03_ARCHITECT/DOC-096_RETRIEVAL-STRATEGY-AND-DECISIONRAG-ADOPTION.md`; nội dung là Retrieval đa phương pháp/DecisionRAG, Priority P1, research only. DOC-055 xác nhận định danh/path này. DOC-035 là Work execution journal và quy định append-only; DOC-033 là documentation/storage standard; DOC-057 là Work Entry Gate. Không có căn cứ trong Register cho việc gọi DOC-096 là session/journal control.
+- Phát hiện: W802001 Manifest, Biên bản, Content Index, Architecture và DEFINE trước đó gán sai chức năng session/journal cho DOC-096. Vibe VF-01 mới dừng ở việc chưa thấy DOC-096 trong 00_ROOT; chưa phát hiện nội dung DOC-096 không khớp. Đây là lỗi tham chiếu governance trong hồ sơ W802001, không phải lỗi Agent được giao thi công.
+- Sửa hồ sơ canonical trên GitHub main: WORK_MANIFEST v1.2; BIEN_BAN v1.2; WORK_CONTENT_INDEX; DOCUMENT_REGISTER (DEF-001 v0.3); AGENT_OPERATIONAL_GATE_ARCHITECTURE v1.2; DEFINE v0.3; VIBE_INDEPENDENT_REVIEW_PACKAGE §10; IMPLEMENTATION_ROADMAP v1.5. Các nội dung nghiệp vụ Vibe đã bổ sung trong v0.2 được giữ nguyên; chỉ sửa tham chiếu chuẩn, version và trạng thái liên quan.
+- Readback: từng file đã được fetch lại sau update; kết quả nội dung khớp bản ghi dự kiến. Các commit chính: Manifest 2ac8dfe86fbe13127d34ee6b39c3f44f26b6d0ab; Biên bản a1b50b8aea98c36f72c4b2159350e11fc7ccf526; Architecture 6611fb4bf9d8c1cf52d113f054f2f7f633abfe1d; Content Index 56cb113feece37617e1fffccb803fd8e85c7d9d8; Document Register 80635b8ef3f6899f739eae64fb53b00ee07b5cdb; Handoff 4ed7016cef55b16d6c1356152135cea1d77cc8a2 và 17b050d9843d867436797d3b677e6ebb31c6e121; Roadmap 4f0df63a46d3ecadf03571234a7dd447e910d578.
+- Disposition: VF-01 path question RESOLVED; actual DOC-096 semantic misclassification CORRECTED. Historical Vibe §9 remains intact; Xu's correction is appended in handoff §10.
+- Trạng thái: SOURCE TRACE PASS; DOCUMENT CORRECTION GITHUB READBACK PASS. Policy NOT APPROVED; BUILD NOT AUTHORIZED. Không chạy runtime/QE/enforcement test.
+- Bước tiếp theo: đánh giá VF-10 (readback sau mỗi lần ghi hồ sơ canonical) và lập đề xuất quyết định cho Vinh; xác định có cần thêm reviewer Ka/Cla/Qw trước khi phê duyệt policy. Không mở BUILD.
