@@ -16,7 +16,8 @@
     "revision",
     "ai_assignments",
     "recent_activity",
-    "evidence"
+    "evidence",
+    "work_entry"
   ],
   "properties": {
     "work_id": {
