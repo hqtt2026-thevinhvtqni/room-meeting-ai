@@ -161,7 +161,7 @@ Escalation là yêu cầu xem xét/quyết định, không tự động kết lu
 7. Quy trình xử lý finding liên quan đến nhiều Agent hoặc nhiều Work cần quy tắc liên kết nào?
 
 ## 13. Giới hạn và điều kiện phê duyệt
-- Đây là DEFINE draft v0.1, chưa phải policy được Vinh phê duyệt.
+- Đây là DEFINE v0.2 đã qua phản biện độc lập, chưa phải policy được Vinh phê duyệt.
 - Không đặt SLA cố định, không tuyên bố tự động hóa, không mở BUILD.
 - Cần review độc lập và cập nhật phản biện trước khi Xu trình Vinh phê duyệt.
 - Sau khi được duyệt, phải cập nhật Biên bản/decision canonical nếu có thay đổi quyết định; không tạo biên bản song song.
