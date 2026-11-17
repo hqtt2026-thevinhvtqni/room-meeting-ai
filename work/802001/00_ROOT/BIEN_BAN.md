@@ -4,7 +4,7 @@
 - Version: 1.1 — SCOPE CLARIFICATION
 - Date: 2026-11-17
 - Chủ trì: Xu / AI-01; thẩm quyền cuối cùng: Vinh
-- Chuẩn bắt buộc: Work 70 — DOC-001, DOC-004, DOC-005, DOC-033, DOC-057, DOC-096
+- Chuẩn bắt buộc: Work 70 — DOC-001, DOC-004, DOC-005, DOC-033, DOC-035, DOC-057
 - Status: BUSINESS SCOPE BASELINE — TECHNICAL DESIGN / IMPLEMENTATION NOT APPROVED
 
 ## 1. Mục tiêu đúng của Work 802001
@@ -24,10 +24,10 @@ Trọng tâm không phải xây một bộ máy kỹ thuật Gate độc lập t
 9. Ghi toàn bộ nhắc nhở, hướng dẫn, phản hồi, điều chỉnh, kiểm tra và kết quả vào Nhật ký/nguồn dữ liệu canonical.
 
 ## 3. Phân biệt chuẩn Work 70 và nghiệp vụ W802001
-- W70 là chuẩn gốc về cấu trúc Work, lifecycle, state, Gate vòng đời, tài liệu, evidence, session integrity và dashboard.
+- W70 là chuẩn gốc về cấu trúc Work, lifecycle, state, Gate vòng đời, tài liệu, evidence, nhật ký và dashboard.
 - W70 G0–G9 không bị thay thế hoặc đánh số lại bởi W802001.
 - DOC-057 Work Entry Gate kiểm tra điều kiện tham gia/nhận việc; không thay thế việc theo dõi Agent trong lúc thi công.
-- DOC-096 kiểm soát phiên AI, nguồn chuẩn, nhật ký và bàn giao; W802001 áp dụng các yêu cầu đó cho nghiệp vụ theo dõi/hướng dẫn.
+- DOC-033 điều chỉnh tài liệu/lưu trữ; DOC-035 là nhật ký thi công cấp Work và quy định cách ghi nhận sự kiện, kết quả, trạng thái, bằng chứng. DOC-057 kiểm tra điều kiện tham gia/nhận assignment. DOC-096 là tài liệu Retrieval/DecisionRAG, không phải chuẩn phiên hoặc nhật ký và không được dùng làm căn cứ cho nghiệp vụ W802001.
 - Nghiệp vụ W802001 là lớp vận hành theo dõi và hỗ trợ tuân thủ trong quá trình thực hiện. Gate chặn hành động chỉ là một biện pháp áp dụng khi có rủi ro, không phải toàn bộ sản phẩm.
 
 ## 4. Nguyên tắc vận hành
