@@ -37,3 +37,5 @@ PR #55 contains a proposed implementation, tests and CI workflow on an unmerged 
 - All statuses remain IN_REVIEW/BLOCKED as above; no WP is marked DONE or accepted.
 
 - Latest branch head after documentation/dashboard reconciliation: `acb6dd5052c4c6dfb5a2c5cc4d46fe2e94920da2`. GitHub Actions run 44186703015 on this exact head also completed SUCCESS: Python 3.11 50/50 and Python 3.12 50/50; JUnit artifacts 14374851948 and 14374162503. This is still branch CI only.
+
+- Supplemental exact-head CI confirmation: run 44186877081 on head `f5e94766dc05286a634cb1883b61f4468e246507` completed SUCCESS (Python 3.11/3.12 each 50/50). Changes since the previous exact-head check were documentation/register/dashboard only; source and tests were unchanged.
