@@ -47,3 +47,11 @@ PR #55 contains a proposed implementation, tests and CI workflow on an unmerged 
 - Commits: source `a7f2599d44f71a7ed3a9669d8ddc1528f5fd5140`; tests `f0db324f1ef68faf4ec8acf66868549bc5e2ca32`.
 - Exact source/test commit CI: GitHub Actions run `44192090937`, status QUEUED at recording time. No PASS is claimed until completion and exact-head verification.
 - WP-76-08 remains IN_REVIEW; durable store, atomic append, retention and recovery remain external dependencies under ADR-76-007. No WP status is DONE/accepted.
+
+
+## Audit canonicalization CI result — 2026-11-18 05:40 +07:00
+- Exact PR #60 head: `6489bb162cb37325b87cd4b35c9ab723a703e1be`.
+- GitHub Actions run `44192173589` completed SUCCESS on this exact head:
+  - Python 3.11: 54 passed / 0 failed; job `134424142019`; JUnit artifact `14376992432`; ZIP SHA256 `7aceb1286c5a98a300bed13e7994337f972ec4638111f018f2f640a067e6002d`.
+  - Python 3.12: 54 passed / 0 failed; job `134424140869`; JUnit artifact `14378105646`; ZIP SHA256 `78b262e086b4be6e5da6c76518769df5acc9d13bbd9749e215dc55448cda8418`.
+- This is exact-head GitHub branch CI, not independent Canonical QE, main verification, Core/runtime integration, E2E or acceptance.
