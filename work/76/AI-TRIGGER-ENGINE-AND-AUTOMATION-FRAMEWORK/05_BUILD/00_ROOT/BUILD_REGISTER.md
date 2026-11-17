@@ -10,7 +10,7 @@
 | WP-76-06 | Orchestration, dedupe and retry | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; state/retry/idempotency ports; explicit duplicate vs store-unavailable outcomes and strict argument validation added; durable backend not integrated; exact-head CI run 44192865531 PASS 65/65 on Python 3.11/3.12 | `trigger_engine/orchestrator.py`, `retry.py`; `test_work_packages.py` |
 | WP-76-07 | Verified AI dispatch adapter | Co / AI-07 (discovery/design only) | Xu + Qw | BLOCKED — no verified transport, target identity, receiver receipt or ACK | `05_BUILD/03_ARCHITECTURE` |
 | WP-76-08 | Audit and evidence store | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; append-only sink contract only; strict canonical JSON audit digest + non-finite payload regression added; exact-head CI run 44192173589 PASS 54/54 on Python 3.11/3.12; durable store/retention ADR pending | `trigger_engine/audit.py`; `test_work_packages.py` |
-| WP-76-09 | Read-only dashboard | Xu | An / Qw | IN_REVIEW — browser/mobile QE pending | `DASHBOARD` |
+| WP-76-09 | Read-only dashboard | Xu (accountable); Co (Vinh-authorized implementation contribution) | An / Qw | IN_REVIEW — separate Work Entry WE-G0…WE-G5 panel and descriptive-status filter normalization implemented; browser/mobile QE pending | `DASHBOARD` |
 
 PR #55 contains a proposed implementation, tests and CI workflow on an unmerged branch. This is not a merged implementation on main, not runtime/integration verification, and not acceptance. WP status must be updated only with attributable evidence.
 
@@ -105,3 +105,11 @@ PR #55 contains a proposed implementation, tests and CI workflow on an unmerged 
   - Python 3.11: 71 passed / 0 failed; job `134427588220`; JUnit artifact `14376898453`; ZIP SHA256 `02496a6479663053a60642b44dac0b5ee78dc309f4aa8faf4e5252e10bb27923`.
   - Python 3.12: 71 passed / 0 failed; job `134427587805`; JUnit artifact `14378400952`; ZIP SHA256 `f7c310009121d28e8603ae9afe2ad4aa3c50a853387a7c46473ffb95d16309aa`.
 - Exact-head branch CI covers the current scheduler/idempotency changes. It remains branch CI, not independent QE, merged-main, Core/runtime or E2E.
+
+
+## WP-76-09 static dashboard correction — 2026-11-18 05:47 +07:00
+- Added a separate participant Work Entry panel for Co / AI-07, sourced from DOC-007 snapshot; WE-G0…WE-G3 PASS and WE-G4/G5 BLOCKED are displayed independently of lifecycle phase gates.
+- Lifecycle gate summary explicitly labels its scope; no combined Work Entry/lifecycle gate count.
+- Work Package filters and status colors now normalize descriptive values such as `IN_REVIEW — ...` and `BLOCKED — ...` to the leading status code.
+- PRODUCT_STATUS schema now includes `work_entry`; snapshot identifies DOC-007 assessment date and stale/source limitation.
+- Browser/mobile rendering, responsive interaction, accessibility and independent QE remain NOT RUN. No UI PASS is claimed.
