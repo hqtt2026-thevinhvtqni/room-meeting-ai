@@ -51,7 +51,13 @@ class EventGateway:
             raise ValueError("replay_window_seconds must be a positive integer")
         if not isinstance(registrations, Mapping):
             raise ValueError("registrations must be a mapping")
-        self._registrations, self._verifier, self._replay = dict(registrations), verifier, replay_store
+        normalized = dict(registrations)
+        for key, registration in normalized.items():
+            if (not isinstance(key, str) or not key.strip()
+                    or not isinstance(registration, SourceRegistration)
+                    or key != registration.source_id):
+                raise ValueError("registration keys must exactly match validated SourceRegistration.source_id")
+        self._registrations, self._verifier, self._replay = normalized, verifier, replay_store
         self._max_body, self._window = max_body_bytes, replay_window_seconds
 
     def ingest(self, source_id: str, headers: Mapping[str, str], body: bytes,
