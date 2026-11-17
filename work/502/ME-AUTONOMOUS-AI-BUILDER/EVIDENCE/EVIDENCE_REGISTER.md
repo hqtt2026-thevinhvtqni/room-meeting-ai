@@ -12,4 +12,4 @@
 | W502-E-0006 | Work 502 generated starter structure conflicts with direct lifecycle folder normalization | sandbox_list(work_id=502) | RECORDED — STRUCTURE OBSERVED |
 | W502-E-0007 | Eight canonical design records were written and read back from Sandbox | sandbox_write + sandbox_read_probe for manifest, minutes, journal, task board, architecture, consultation, roadmap and evidence register | PASS — SANDBOX READBACK ONLY |
 
-No runtime, build, QA, deployment or product acceptance evidence exists yet.
+| W502-E-0008 | Eight canonical records synchronized to GitHub main and matched Sandbox byte-for-byte | GitHub fetch_file + Sandbox sandbox_read_probe exact content comparison; latest observed commit 1a8e1a3451e3e05eea3c7d40c1205d7fb46aa405 | PASS — GITHUB CONTENT SYNC ONLY |\n\nNo runtime, build, QA, deployment or product acceptance evidence exists yet.
