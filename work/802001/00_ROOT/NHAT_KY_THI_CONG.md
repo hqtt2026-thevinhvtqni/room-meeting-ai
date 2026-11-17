@@ -88,3 +88,17 @@
 - Trạng thái: GIT SYNC SUCCESS; REMOTE READBACK PASS 6/6.
 - Giới hạn: readback xác nhận nội dung file đã đồng bộ, không phải QE/acceptance; chưa chạy lại runtime hay kiểm thử enforcement.
 - Bước tiếp theo: đưa case inventory vào DEFINE, chuẩn hóa taxonomy/severity/checkpoint/reminder/correction/recheck/escalation; cần reviewer độc lập trước khi chốt policy.
+
+
+## W802001-LOG-0007 — 2026-11-17 07:51 +07:00
+- Actor: Xu / AI-01 (điều phối; identity theo phiên hiện tại, chưa phải xác thực runtime độc lập)
+- Work: 802001
+- Loại bản ghi: DEFINE / BUSINESS RULES DRAFT
+- Phạm vi: Chuyển baseline 10 case DISCOVER thành quy tắc nghiệp vụ dự thảo cho theo dõi, nhắc nhở, hướng dẫn, correction, recheck và escalation.
+- Phương pháp: Đọc lại Biên bản, Content Index, Document Register, Roadmap, Evidence Register, Journal và Case Inventory từ GitHub main; đối chiếu Sandbox listing và đọc lại Journal bằng sandbox_read_probe. Sandbox sandbox_read trả kết quả rỗng trong lượt này nên dùng read_probe để lấy nội dung có kiểm chứng.
+- Kết quả: tạo 02_DEFINE/AGENT_SUPERVISION_BUSINESS_RULES.md v0.1, gồm đơn vị assignment; taxonomy finding; severity S0–S3; checkpoint/reminder theo sự kiện; correction; recheck/đóng finding; authority; journal/evidence; escalation và câu hỏi cần reviewer phản biện.
+- Ranh giới: v0.1 là FOR INDEPENDENT REVIEW — NOT APPROVED POLICY; không đặt SLA chung; không gán mọi lỗi cho Agent; không tự suy diễn identity/authority; không tuyên bố runtime monitoring/reminder/enforcement; không mở BUILD.
+- Hồ sơ cập nhật: WORK_CONTENT_INDEX.md; DOCUMENT_REGISTER.md; IMPLEMENTATION_ROADMAP.md v1.3; EVIDENCE_REGISTER.md; NHAT_KY_THI_CONG.md.
+- Trạng thái: DEFINE DRAFT CREATED; SANDBOX WRITE/READBACK PENDING; GIT SYNC PENDING.
+- Giới hạn: chưa có phản biện độc lập từ Ka/Cla/Qw; chưa có quyết định phê duyệt policy của Vinh; taxonomy/severity/reminder cadence còn cần kiểm chứng qua nhiều Work.
+- Bước tiếp theo: readback Sandbox và GitHub; tổ chức independent review theo vai trò; xử lý comment trước khi trình Vinh phê duyệt. BUILD NOT AUTHORIZED.
