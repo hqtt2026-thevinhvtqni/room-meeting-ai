@@ -97,3 +97,5 @@ Dashboard v0.2 đọc JSON tĩnh từ repository. Chưa có Core API, authentica
 
 - Dashboard revision W76-DASHBOARD-0.3.26: evidence projection synchronized through EV-76-043; Work Package status strings reflect current branch CI and remaining dependencies; participant Work Entry snapshot is required by schema.
 - Snapshot remains local_snapshot. Work Entry WE-G4/G5 are BLOCKED; browser/mobile QE is NOT RUN.
+
+- 2026-11-18: Gateway now invokes the registered payload schema before replay reservation and enforces registration-key/source-id equality; PolicyRequest and authoritative provider decision envelopes receive strict fail-closed validation. Exact-head CI run 44200662865: 81/81 on Python 3.11 and 3.12 (branch CI only).
