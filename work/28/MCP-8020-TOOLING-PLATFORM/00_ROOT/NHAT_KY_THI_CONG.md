@@ -1056,3 +1056,41 @@ These checks require the owner's PC / approved live MCP environment. Vi did not 
 **STATUS:** WP2 CODE + LINUX/WINDOWS CI PASS / AN + KA REVIEW REQUIRED / PC G1–G4 REQUIRED / LIVE E2E BLOCKED / NOT RELEASED.
 
 **Signature:** [KÝ: VI | CODER]
+
+
+## 2026-11-18 — JRN-W28-029 — Fail-closed remediation for PR #61 independent review findings
+
+**Người thực hiện:** Vi  
+**Chức danh:** CODER / Implementation Lead  
+**Execution time:** 2026-11-17T22:59:10.351Z (UTC)  
+**PR:** https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/61  
+**Feature branch:** `auto/work28-vi-wp2-recovery-20261118`
+
+### READ / TRACE
+- Read An's formal `CHANGES_REQUESTED` review ID `5947789771` and Ka's independent review comment `6962882614` against PR head `d6cf0763870eb860fe630e890bc0190ef3de9335`.
+- Re-read the exact feature-branch source in `execution_host/host.py`, `execution_host/process_job.py`, `tests/test_process_job.py` and `tests/test_wp2_service_mapping_and_race.py`.
+- Confirmed the two HIGH findings are grounded: raw legacy Popen cleanup could attest leader exit as full tree cleanup; POSIX ps probe failures/non-zero exit could be mistaken for a verified empty group.
+- Confirmed the review also requires explicit concurrent start/stop/status interleaving coverage.
+
+### BUILD — FEATURE BRANCH ONLY
+- `execution_host/process_job.py`: changed POSIX membership observation to tri-state (verified integer count / UNKNOWN=None); invalid PGID, OSError, timeout, non-zero ps exit and malformed output now return UNKNOWN; POSIX drain fails closed on UNKNOWN; wrapped/unmanaged Popen cleanup cannot claim process-tree reaping.
+- `execution_host/host.py`: legacy raw Popen cleanup now returns BLOCKED with `process_tree_verified=false`, `members=null`, and retains the registry entry; dead legacy Popen status is BLOCKED, not STOPPED.
+- `tests/test_process_job.py`: added fault-injection coverage for OSError, timeout, non-zero ps exit, malformed output, invalid PGID and cleanup UNKNOWN behavior; updated legacy Popen expectation.
+- `tests/test_wp2_service_mapping_and_race.py`: added legacy Popen registry-retention/no-replacement regressions and barrier-controlled concurrent start/stop/status coverage.
+- Commits on feature branch: `17bdc1072df23e7e3521cabd621ab07be67573a4`, `0aeabd165e795b2b175d6dc334a9649a9f74c3ce`, `a8f5de856955a194046d796a9eafec19d886b481`, `30bd6eb963b0ecac8158dd3620028d7c3688a856`, `e56654e1a43c573eb21e61833eda78d7aace4257`.
+
+### VERIFY — STRICT EVIDENCE
+- GitHub readback confirms PR #61 remains OPEN, not merged, with feature head `e56654e1a43c573eb21e61833eda78d7aace4257`.
+- No new GitHub Actions workflow run or commit status was returned for this head at the time of this entry. CI is **NOT RUN / NOT VERIFIED** for the remediation commits.
+- No local Python/pytest execution is claimed. Windows and Linux test results remain pending.
+- No source change was made to the PC's dirty `main` checkout; no branch switch, reset, stash, deployment, listener restart or live service mutation occurred.
+
+### HANDOFF / NEXT
+- An: independently retest exact feature head `e56654e1a43c573eb21e61833eda78d7aace4257`, especially POSIX OSError/timeout/non-zero/malformed probe cases, surviving descendants, legacy Popen registry retention and concurrency interleaving. Record native Linux + Windows results and raw logs.
+- Ka: independently re-review exact head and confirm both HIGH findings and the MEDIUM interleaving gap are closed; inspect whether UNKNOWN propagates to every cleanup/status/replacement path.
+- Vi: obtain exact-SHA Linux and Windows CI; inspect any failures and remediate before requesting final approvals.
+- Keep PR #61 open. No merge, deployment, Execution Gate opening or release.
+
+**STATUS:** SOURCE REMEDIATION COMMITTED / CI NOT VERIFIED / AN RETEST + KA REVIEW PENDING / LIVE E2E BLOCKED / EXECUTION GATE CLOSED / NOT RELEASED.
+
+**Signature:** [KÝ: VI | CODER]
