@@ -244,3 +244,38 @@ def test_retry_planner_rejects_non_boolean_retryable_and_invalid_clock():
         planner.plan(completed_attempts=1,now=datetime.now(timezone.utc),retryable=1)
     with pytest.raises(ValueError):
         planner.plan(completed_attempts=1,now="not-a-datetime",retryable=True)
+
+
+# W76-SC-001 — scheduler store failures are distinct from already-claimed occurrences
+def test_scheduler_store_exception_fails_closed_with_declared_error():
+    class BrokenDue:
+        def claim_once(self,schedule_id,key): raise OSError("store offline")
+    schedule=OneShotSchedule("s","76",datetime(2026,11,18,12,tzinfo=timezone.utc))
+    with pytest.raises(SchedulerBlocked,match="claim failed"):
+        TimeScheduler(BrokenDue()).due(schedule,datetime(2026,11,18,12,tzinfo=timezone.utc))
+
+def test_scheduler_indeterminate_store_result_is_blocked_not_duplicate():
+    class UnknownDue:
+        def claim_once(self,schedule_id,key): return None
+    schedule=OneShotSchedule("s","76",datetime(2026,11,18,12,tzinfo=timezone.utc))
+    with pytest.raises(SchedulerBlocked,match="indeterminate"):
+        TimeScheduler(UnknownDue()).due(schedule,datetime(2026,11,18,12,tzinfo=timezone.utc))
+
+@pytest.mark.parametrize("schedule_id,work_id,run_at", [
+    (None,"76",datetime(2026,11,18,12,tzinfo=timezone.utc)),
+    ("s"," ",datetime(2026,11,18,12,tzinfo=timezone.utc)),
+    ("s","76","2026-11-18T12:00:00Z"),
+])
+def test_scheduler_rejects_malformed_schedule_fields(schedule_id,work_id,run_at):
+    with pytest.raises(ValueError):
+        OneShotSchedule(schedule_id,work_id,run_at)
+
+def test_scheduler_rejects_invalid_clock_before_store_claim():
+    class DueSpy:
+        def __init__(self): self.called=False
+        def claim_once(self,schedule_id,key): self.called=True; return True
+    store=DueSpy()
+    schedule=OneShotSchedule("s","76",datetime(2026,11,18,12,tzinfo=timezone.utc))
+    with pytest.raises(ValueError):
+        TimeScheduler(store).due(schedule,"not-a-datetime")
+    assert store.called is False
