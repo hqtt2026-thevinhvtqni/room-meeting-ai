@@ -590,3 +590,21 @@ This is a governance/assignment and preparation record only. Xu did not alter so
 - **Review / PC:** Co tiếp tục tự triển khai phần có thể thực hiện qua GitHub và Sandbox. Khi cần PC/VS Code/terminal hoặc review độc lập, Co sẽ báo trực tiếp Vinh với lý do, thao tác cần thiết và bằng chứng hiện có; không yêu cầu Xu điều phối từng chặng.
 - **Quyền hạn bảo lưu:** Không tự merge, không tự tuyên bố acceptance/release/deployment và không tự thay đổi gate được bảo vệ nếu chưa có thẩm quyền tương ứng.
 - **Trạng thái:** AUTONOMOUS EXECUTION AUTHORIZED BY VINH; PR #60 DRAFT; BRANCH CI PASS; INDEPENDENT REVIEW / RUNTIME E2E / WP-76-07 PENDING; NOT MERGED / NOT RELEASED.
+
+
+---
+
+### 2026-11-18 05:38:58 +07:00 — Co tiếp tục hardening WP-76-08: strict canonical audit digest
+- Actor: Co — AI Coder / Execution Assistant (AI-07).
+- Rà soát source phát hiện AuditWriter dùng JSON mặc định cho payload digest và record hash, có thể chấp nhận NaN/Infinity, không đồng nhất với canonical JSON của Trigger Engine.
+- Đã sửa `05_BUILD/04_CODE/trigger_engine/audit.py`: dùng shared `canonical_json` cho payload digest và record hash; dữ liệu không canonical bị từ chối trước khi append sink.
+- Đã bổ sung regression trong `05_BUILD/05_TEST/test_work_packages.py`: mapping có thứ tự key khác nhau cho cùng digest; NaN, +Infinity, -Infinity bị từ chối và sink không nhận record.
+- GitHub commits: source `a7f2599d44f71a7ed3a9669d8ddc1528f5fd5140`; test `f0db324f1ef68faf4ec8acf66868549bc5e2ca32`.
+- GitHub Actions run `44192090937` trên PR #60 source/test head: QUEUED tại thời điểm ghi. Chưa tuyên bố PASS; phải đợi CI hoàn tất và đối chiếu exact head.
+- WP-76-08 vẫn IN_REVIEW; durable audit store, atomicity, retention/recovery chưa được tích hợp (ADR-76-007 OPEN). WP-76-07 vẫn BLOCKED vì chưa có verified dispatch transport/target identity/receipt/ACK.
+- Ranh giới: PR #60 vẫn draft/unmerged; không đổi lifecycle gate; không acceptance/release/deployment.
+
+**TÊN:** Co
+**CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
+**NGÀY:** 18/11/2026
+**GIỜ - PHÚT:** 05:38 — UTC+7
