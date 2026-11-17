@@ -24,7 +24,7 @@ Theo dõi, nhắc nhở, hướng dẫn, điều chỉnh và kiểm tra lại Ag
 Assignment intake → briefing → acknowledgement → checkpoint setup → progress observation → compliance/drift check → reminder/coaching → correction submission → recheck → resume/close/escalate → journal/evidence.
 
 ## W70 alignment
-Work 70 is the mandatory governance template. DOC-057 handles entry/assignment readiness; DOC-096 handles session integrity and journal discipline; W70 lifecycle gates remain authoritative. W802001's assignment supervision process complements these standards and does not replace or renumber them.
+Work 70 is the mandatory governance template. DOC-001 defines Work authority/source boundaries; DOC-004/005 govern lifecycle and gates; DOC-033 governs documentation/storage; DOC-035 is the Work execution journal; DOC-057 handles Work/assignment entry readiness. DOC-096 is the Retrieval/DecisionRAG architecture addendum and is not a session/journal control. W802001 complements these standards and does not replace or renumber them.
 
 ## Phase boundary
 DEFINE v0.2 incorporates the Vibe independent review (ACCEPT WITH CHANGES) and is not approved policy. BUILD remains NOT AUTHORIZED until DISCOVER/DEFINE/ARCHITECT/PLAN satisfy W70 and G4 is PASS with explicit approval.
