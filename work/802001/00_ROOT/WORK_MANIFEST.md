@@ -5,7 +5,7 @@
 - Product: Nghiệp vụ theo dõi và hướng dẫn Agent trong quá trình thực hiện Work/assignment
 - Owner / Final Authority: Vinh
 - Lifecycle Orchestrator: Xu / AI-01
-- Governing standard: Work 70 — DOC-001, DOC-004, DOC-005, DOC-033, DOC-057, DOC-096
+- Governing standard: Work 70 — DOC-001, DOC-004, DOC-005, DOC-033, DOC-035, DOC-057
 - Status: ACTIVE — BUSINESS STANDARDIZATION / TECHNICAL DESIGN NOT APPROVED
 - Scope revision: 2026-11-17 v1.1
 
