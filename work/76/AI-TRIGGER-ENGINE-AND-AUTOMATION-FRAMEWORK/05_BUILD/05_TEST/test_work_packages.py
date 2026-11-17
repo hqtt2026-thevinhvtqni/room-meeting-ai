@@ -74,7 +74,7 @@ def test_policy_requires_current_approval():
     need=PolicyResult(PolicyOutcome.REQUIRE_APPROVAL,"d1","r1","approval required")
     adapter=PolicyAdapter(Provider(need),Approval())
     assert adapter.authorize(request).outcome==PolicyOutcome.DENY
-    assert adapter.authorize(request,"approved").outcome==PolicyOutcome.REQUIRE_APPROVAL
+    assert adapter.authorize(request,"approved").outcome==PolicyOutcome.ALLOW
 
 def test_policy_provider_exception_fails_closed():
     class Broken:
