@@ -68,3 +68,11 @@ Every material operation, dispatch, test, sync and outcome must be recorded with
 - Evidence: all eight GitHub fetch_file results returned content and blob SHA; each exact_match=true against current Sandbox source. Latest observed Work 502 commit: 1a8e1a3451e3e05eea3c7d40c1205d7fb46aa405.
 - Result: PASS for eight-file GitHub main synchronization and exact content readback. PC parity NOT VERIFIED. No AutoGPT installation/runtime, model download, API key, billing, deployment or product test performed.
 - Next: complete source-contract and independent architecture review; resolve generated starter-folder structure before implementation; keep BUILD blocked pending Vinh approval.
+
+
+## RUN-0009 — 2026-11-18 — Final journal/evidence synchronization readback
+- Scope: synchronize the post-sync journal, minutes and evidence-register amendments to GitHub main.
+- Method: update_file using fetched blob SHAs, then fetch_file and compare exact content with Sandbox read_probe.
+- Evidence: exact_match=true for NHAT_KY_THI_CONG.md, BIEN_BAN.md and EVIDENCE_REGISTER.md. Update commits: 48b8ce5b8f5f7fbb85231a2b2d21359ce933fe1d; 4df8f42ad2500a3dcf06e7d77f806afc1f8776d7; 6fe4e92081b2584ef091fa202a4a9a1d898929e6.
+- Result: PASS for final readback of these three updated records. GitHub content sync is verified; PC parity remains NOT VERIFIED.
+- Next: independent design review and remaining source-contract discovery; no implementation until G-BUILD approval.
