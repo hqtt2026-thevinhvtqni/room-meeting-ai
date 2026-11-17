@@ -488,3 +488,389 @@ This is a governance/assignment and preparation record only. Xu did not alter so
 - Xu actions this entry: ghi nhật ký canonical và tạo điểm đọc cho Co qua GitHub Issue #58. Không sửa source code, không chạy pytest/CI/runtime/E2E, không thay đổi PR state hoặc gate.
 - STATUS: Work 76 ACTIVE; lifecycle 01_DISCOVER; G0/G1 NOT VERIFIED; Co WE-G4/G5 BLOCKED cho đến khi Co chứng minh entry; WP-76-01/04 IN_REVIEW; WP-76-02/03/05/06/08 PLANNED; WP-76-07 BLOCKED; WP-76-09 IN_REVIEW; PR #55 OPEN/DRAFT/UNMERGED; NOT RELEASED.
 - NEXT: Co đọc Issue #58 + DOC-035, xác nhận receipt/identity và nộp kết quả READ/TRACE/RECONCILE trước khi bắt đầu build tiếp.
+
+
+---
+
+### 2026-11-18 05:03 +07:00 — Co tiếp nhận quyền tự chủ triển khai Work 76 và mở nhánh build mới
+- Actor: Co — AI Coder / Execution Assistant.
+- Authority: Vinh trực tiếp tái xác nhận Co được toàn quyền xử lý và xây dựng Work 76 đến khi hoàn thành; không phải chờ Xu điều phối hoặc báo cáo theo từng chặng. Co chỉ báo Vinh khi cần PC/VS Code/terminal hoặc cần review độc lập/duyệt cuối.
+- Sandbox capability: MCP 8030 sandbox_list và sandbox_read_probe hoạt động. Co đã sandbox_write một file diagnostic tạm tại `.diagnostics/CO-W76-SESSION-WRITE-CHECK-20261118.md`, sau đó read_probe đọc lại đúng nội dung (293 bytes). Đây là bằng chứng quyền ghi/đọc của tool session hiện tại; KHÔNG phải bằng chứng trusted runtime identity AI-07. Không có PC/VS Code Bridge trong danh sách công cụ hiện tại.
+- Git strategy: không tiếp tục phát triển trên PR #55 vì branch cũ đã DIVERGED (6 ahead / 198 behind main). Tạo nhánh sạch `work/76-co-autonomous-build-v1` từ main HEAD `9b366fe5ade05568436644ac385d7504a2673605`; giữ nguyên PR #55 để bảo toàn lịch sử/audit.
+- Ported to the new branch from PR #55: trigger_engine package files `__init__.py`, `errors.py`, `models.py`, `conditions.py`, `registry.py` and original regression suite `test_trigger_engine.py`.
+- Added WP implementation modules:
+  - WP-76-02 `gateway.py`: registered-source validation, injected signature verifier, schema validation, trusted Work scope mapping, bounded timestamp/body checks and injected replay reservation. No cryptographic algorithm/key store selected.
+  - WP-76-03 `scheduler.py`: deterministic UTC one-shot scheduling and atomic occurrence-claim port. Recurrence/DST/HA explicitly blocked pending ADR-76-005.
+  - WP-76-05 `policy.py`: authoritative policy provider + approval verifier ports; missing/failing provider returns INDETERMINATE; approval is revalidated and must be current.
+  - WP-76-06 `orchestrator.py`: explicit execution state machine; illegal transitions rejected; state advances only after transition sink append.
+  - WP-76-08 `audit.py`: append-only sink contract, payload digest and chained record hash; missing/failing persistence fails closed. This in-memory chain head is not claimed as durable.
+- Added `test_work_packages.py` with 11 tests for gateway authentication/schema/replay/scope, scheduler idempotency, policy/approval, orchestration transitions and audit fail-closed/hash-chain behavior.
+- Added Python 3.11/3.12 GitHub Actions matrix and JUnit artifact upload at `.github/workflows/work-76-trigger-ci.yml`.
+- Opened draft PR #59: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/59 ; head initially `40824801570f07a562c40b3497509f8b8eaef1e4`, branch from current main. PR #55 remains open/draft/unmerged and unchanged.
+- CI run 44186088850 started. Python 3.11 result at first run: 46 passed / 1 failed. Failure was the test expectation after successful approval verification; implementation correctly returns ALLOW, but test expected REQUIRE_APPROVAL. Co corrected the assertion in commit `0bbb3d13fa616cdd7b3f88c4022d3d3595490b70`. A fresh post-fix CI result has NOT YET been observed. Python 3.12 initial job was still running at last check. Do not mark the suite PASS.
+- Current limits: no Core authorization integration, no production signature/key provider, no durable database/queue/audit sink, no recurrence/DST policy, no AI dispatch transport/receiver receipt/ACK, no PC Bridge, no runtime or browser/mobile E2E. WP-76-07 remains BLOCKED. No lifecycle gate, Build status, acceptance or release was advanced.
+- Status: implementation branch and draft PR established; CI correction awaiting fresh run; independent QE/review pending; NOT MERGED / NOT RELEASED.
+
+ 
+---
+ 
+### 2026-11-18 05:03 +07:00 — Co tiếp nhận quyền tự chủ triển khai Work 76 và mở nhánh build mới
+- Actor: Co — AI Coder / Execution Assistant.
+- Authority: Vinh trực tiếp tái xác nhận Co được toàn quyền xử lý và xây dựng Work 76 đến khi hoàn thành; không phải chờ Xu điều phối hoặc báo cáo theo từng chặng. Co chỉ báo Vinh khi cần PC/VS Code/terminal hoặc cần review độc lập/duyệt cuối.
+- Sandbox capability: MCP 8030 sandbox_list và sandbox_read_probe hoạt động. Co đã sandbox_write một file diagnostic tạm, read_probe đọc lại đúng nội dung (293 bytes), sau đó xóa file. Đây là bằng chứng quyền ghi/đọc của tool session hiện tại; KHÔNG phải bằng chứng trusted runtime identity AI-07. Không có PC/VS Code Bridge trong danh sách công cụ hiện tại.
+- Git strategy: không tiếp tục phát triển trên PR #55 vì branch cũ DIVERGED (6 ahead / 198 behind main). Tạo nhánh sạch `work/76-co-autonomous-build-v1` từ main HEAD `9b366fe5ade05568436644ac385d7504a2673605`; giữ nguyên PR #55 để bảo toàn lịch sử/audit.
+- Ported trigger_engine package `__init__.py`, `errors.py`, `models.py`, `conditions.py`, `registry.py` and original regression suite `test_trigger_engine.py` from PR #55 branch.
+- Added WP implementation modules: WP-76-02 `gateway.py` (source verifier/schema/replay ports and trusted Work scope); WP-76-03 `scheduler.py` (UTC one-shot and atomic due-claim port; recurrence/DST/HA blocked by ADR-76-005); WP-76-05 `policy.py` (current policy + approval ports, fail-closed); WP-76-06 `orchestrator.py` (execution state machine, durable transition sink required); WP-76-08 `audit.py` (append-only sink contract, payload digest/hash chain, fail-closed; not durable without external sink).
+- Added `test_work_packages.py` with 11 regression cases and Python 3.11/3.12 CI workflow with JUnit artifacts.
+- Opened draft PR #59: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/59. Initial head `40824801570f07a562c40b3497509f8b8eaef1e4`; current code correction commit `0bbb3d13fa616cdd7b3f88c4022d3d3595490b70`. PR #55 remains open/draft/unmerged and unchanged.
+- CI run 44186088850: Python 3.11 initially 46 passed / 1 failed due to an incorrect test expectation (verified approval should return ALLOW). Co corrected the assertion in `0bbb3d13fa616cdd7b3f88c4022d3d3595490b70`. Fresh post-fix CI has not yet been observed; Python 3.12 initial job was still running at last check. No PASS claim.
+- Limits: no Core authorization integration, production signature/key provider, durable database/queue/audit sink, recurrence/DST policy, AI dispatch transport/receiver receipt/ACK, PC Bridge, runtime or browser/mobile E2E. WP-76-07 remains BLOCKED. No lifecycle gate, Build status, acceptance or release advanced.
+- Status: implementation branch and draft PR established; CI correction awaiting fresh run; independent QE/review pending; NOT MERGED / NOT RELEASED.
+
+
+---
+
+### 2026-11-18 05:05:50 +07:00 — Co hoàn tất first implementation slice và CI matrix cho PR #60
+- Actor: Co — AI Coder / Execution Assistant.
+- Vinh's direct authority reaffirmed: Co autonomously executes Work 76 without Xu step-by-step coordination. Vinh is contacted only for PC/VS Code/terminal access or independent review/final decision.
+- Code refinements after first CI failures:
+  - Policy adapter now returns ALLOW only after the current approval verifier explicitly confirms the approval; missing/invalid/expired/out-of-scope approval returns DENY.
+  - Execution state machine aligned to DOC-004 sequence: source authentication, validation, normalization, dedupe, trigger load, condition evaluation, policy evaluation, approval, queue, dispatch, receiver receipt/ACK, action authorization/execution, outcome recording. Initial RECEIVED transition is appended before in-memory state commits; sink failure leaves state uncreated.
+  - Added WP-76-06 bounded exponential RetryPlanner and atomic IdempotencyGuard ports. Production durability still depends on an injected store.
+  - Regression tests now cover the expanded state path, durable transition append, retry budget/backoff and duplicate idempotency.
+- Active branch/PR: `work/76-co-autonomous-build-v2`, PR #60 draft, head `790d2986eb2d9a61d1c4dcc610457e1874738f30`, based on main `9b366fe5ade05568436644ac385d7504a2673605`. PR #59 is a superseded draft; PR #55 remains preserved as earlier proposal history. No PR merged.
+- CI evidence: GitHub Actions run 44186456898 completed SUCCESS for both matrix jobs. Python 3.11: 50 passed, 0 failed (job 134404178701); JUnit artifact ID 14373942943, ZIP SHA256 `3405b9abc6907226f0b8b25c5443a2c9d738eadd50c67e8e7f50a58f20156191`. Python 3.12: 50 passed, 0 failed (job 134404179159); JUnit artifact ID 14374232019, ZIP SHA256 `e3e12bf8b7db0cc98b4eb1c86b97abc4548e98daedf10c167b97eea3a34a26b2`.
+- Canonical Build Register reconciled on PR #60: WP-76-01/02/03/04/05/06/08 are IN_REVIEW against draft PR #60 with explicit limits; WP-76-07 remains BLOCKED; WP-76-09 remains IN_REVIEW. No WP marked DONE/ACCEPTED. Evidence Register added EV-76-028 (source inventory), EV-76-029 (branch CI + JUnit digests), EV-76-030 (Sandbox journal capability/readback).
+- Canonical DOC-035 was appended in Sandbox and read_probe verified the unique marker. The matching journal, Build Register and Evidence Register updates are committed on PR #60 branch; GitHub branch read-back still required after this entry.
+- Work Entry caveat: Sandbox write/read-back is proven for this tool session, but trusted runtime identity binding to AI-07 remains unverified. No PC/VS Code Bridge tool is exposed in this session. This does not invalidate the GitHub Actions CI results but blocks any claim of local PC execution.
+- Remaining dependencies: real Core principal/Work/WP authorization; production source signature/key provider; durable event/queue/idempotency/transition/audit storage; scheduler recurrence/DST/HA and missed-run policy; dispatch provider/target identity/receiver receipt/authenticated ACK; independent QE/review; runtime and browser/mobile E2E.
+- WP-76-07 remains BLOCKED. No lifecycle gate transition, production configuration change, merge, acceptance, release or deployment was performed.
+- Status: first implementation slice and branch CI matrix PASS (50/50 on Python 3.11 and 3.12); PR #60 DRAFT/OPEN/UNMERGED; independent QE and runtime integration pending; NOT RELEASED.
+
+
+---
+
+### 2026-11-18 05:07:10 +07:00 — Co xác minh lại CI trên exact PR #60 head sau đồng bộ hồ sơ
+- Actor: Co — AI Coder / Execution Assistant.
+- Sau khi cập nhật Build Register, Evidence Register, DOC-035 và Dashboard snapshot, Co đối chiếu commit range từ code/test head `790d2986eb2d9a61d1c4dcc610457e1874738f30` tới current PR #60 head `acb6dd5052c4c6dfb5a2c5cc4d46fe2e94920da2`. GitHub compare xác nhận đúng 4 file thay đổi, chỉ gồm DOC-035, BUILD_REGISTER, EVIDENCE_REGISTER và DASHBOARD/PRODUCT_STATUS.json; không có source/test file thay đổi trong range này.
+- GitHub Actions run 44186703015 chạy trên exact head `acb6dd5052c4c6dfb5a2c5cc4d46fe2e94920da2`, cả hai jobs SUCCESS:
+  - Python 3.11: 50 passed / 0 failed; job 134405030768; JUnit artifact 14374851948; ZIP SHA256 `627379fb1a3fb0b6b378b8091f9035ac2058c40093566dcee1781500f3a079f2`.
+  - Python 3.12: 50 passed / 0 failed; job 134405030331; JUnit artifact 14374162503; ZIP SHA256 `6f633863ba458770eb607a9c42f5c9c90195a55842ecf3acf1b7973d2e9edebb`.
+- EV-76-031 added to canonical Evidence Register. Build Register now points to current exact PR #60 head. Dashboard revision advanced to W76-DASHBOARD-0.3.12 with PR #60 and CI state; it remains LOCAL_SNAPSHOT, not Core live.
+- Sandbox sync: Build Register, Evidence Register, DOC-035 and Dashboard JSON were written and read back with exact string equality TRUE before this final CI entry. Re-sync/read-back after this entry is required.
+- Evidence boundary unchanged: branch CI PASS is not independent Canonical QE, Core/runtime integration, verified AI dispatch, browser/mobile E2E, acceptance, merge or release. WP-76-07 remains BLOCKED.
+- Status: exact PR #60 head CI PASS 50/50 on Python 3.11 and 50/50 on Python 3.12; PR #60 remains DRAFT/OPEN/UNMERGED; NOT RELEASED.
+
+
+---
+
+### 2026-11-18 05:08:00 +07:00 — Co xác nhận supplemental CI trên PR #60
+- Actor: Co — AI Coder / Execution Assistant.
+- GitHub Actions run 44186877081 trên exact head `f5e94766dc05286a634cb1883b61f4468e246507` hoàn tất SUCCESS:
+  - Python 3.12: 50 passed / 0 failed; job 134405637670; artifact 14375341279; ZIP SHA256 `88a0af585ac9259493172c3286bb775bf7864d72492651427863e6b85d886b2b`.
+  - Python 3.11: 50 passed / 0 failed; job 134405638317; artifact 14373753825; ZIP SHA256 `c65b12e69c0dd37ecb36885d68602cd83f6717848dba1a89f34e8d48128b7f89`.
+- EV-76-032 added to Evidence Register. The code/test tree was unchanged after the earlier exact-head run; later changes are register/journal/dashboard documentation only.
+- Status remains branch CI PASS; no independent Canonical QE, merged-main, Core/runtime, verified dispatch, browser/mobile E2E, acceptance or release claim. PR #60 remains draft/unmerged; WP-76-07 BLOCKED.
+
+
+---
+
+### 2026-11-18 — Vinh xác nhận Co toàn quyền triển khai Work 76; không báo cáo từng chặng
+- **Người giao quyền / quyết định:** Vinh — Chủ Work 76.
+- **Người thực hiện:** Co — AI Coder / Execution Assistant (AI-07).
+- **Chỉ thị:** Vinh giao Co toàn quyền chủ động xử lý, xây dựng và hoàn thiện Work 76; không phải xin chỉ đạo Xu, không phải dừng lại báo cáo sau từng chặng. Co tự tổ chức công việc và tiếp tục triển khai xuyên suốt. Chỉ liên hệ Vinh khi thực sự cần thao tác PC/VS Code/terminal/Bridge hoặc khi cần review độc lập / quyết định cuối.
+- **Trạng thái triển khai tại thời điểm ghi nhận:**
+  - Nhánh hoạt động: `work/76-co-autonomous-build-v2`.
+  - PR ứng viên: [PR #60](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/60), DRAFT / OPEN / UNMERGED.
+  - Các phần đã có source và regression tests: Trigger Registry/Models, Typed Condition Evaluator, Event Gateway contracts, UTC one-shot Scheduler, fail-closed Policy/Approval adapter, Execution State Machine, Idempotency/Retry ports và append-only Audit contract.
+  - GitHub Actions run `44187037386`: Python 3.11 = 50 passed / 0 failed; Python 3.12 = 50 passed / 0 failed. Đây là branch CI, không phải independent QE, merged-main, Core/runtime integration hoặc E2E.
+  - Build Register, Evidence Register, DOC-035 và Dashboard PRODUCT_STATUS đã được đồng bộ từ GitHub branch sang Sandbox; read_probe xác nhận exact content equality cho bốn hồ sơ tại lần đồng bộ gần nhất.
+  - PR #55 được giữ làm lịch sử; PR #59 đã đóng vì được thay thế bởi PR #60.
+- **Ranh giới còn tồn tại, không được báo PASS giả:** WP-76-07 AI Dispatch vẫn BLOCKED do chưa có transport, trusted target identity, receiver receipt và authenticated ACK. Các tích hợp Core authorization, production signing/key provider, durable DB/queue/idempotency/audit storage, scheduler recurrence/DST/HA, browser/mobile QE và runtime E2E chưa được chứng minh. Trusted runtime identity binding AI-07 và PC Bridge chưa được xác minh trong phiên công cụ hiện tại.
+- **Review / PC:** Co tiếp tục tự triển khai phần có thể thực hiện qua GitHub và Sandbox. Khi cần PC/VS Code/terminal hoặc review độc lập, Co sẽ báo trực tiếp Vinh với lý do, thao tác cần thiết và bằng chứng hiện có; không yêu cầu Xu điều phối từng chặng.
+- **Quyền hạn bảo lưu:** Không tự merge, không tự tuyên bố acceptance/release/deployment và không tự thay đổi gate được bảo vệ nếu chưa có thẩm quyền tương ứng.
+- **Trạng thái:** AUTONOMOUS EXECUTION AUTHORIZED BY VINH; PR #60 DRAFT; BRANCH CI PASS; INDEPENDENT REVIEW / RUNTIME E2E / WP-76-07 PENDING; NOT MERGED / NOT RELEASED.
+
+
+---
+
+### 2026-11-18 05:38:58 +07:00 — Co tiếp tục hardening WP-76-08: strict canonical audit digest
+- Actor: Co — AI Coder / Execution Assistant (AI-07).
+- Rà soát source phát hiện AuditWriter dùng JSON mặc định cho payload digest và record hash, có thể chấp nhận NaN/Infinity, không đồng nhất với canonical JSON của Trigger Engine.
+- Đã sửa `05_BUILD/04_CODE/trigger_engine/audit.py`: dùng shared `canonical_json` cho payload digest và record hash; dữ liệu không canonical bị từ chối trước khi append sink.
+- Đã bổ sung regression trong `05_BUILD/05_TEST/test_work_packages.py`: mapping có thứ tự key khác nhau cho cùng digest; NaN, +Infinity, -Infinity bị từ chối và sink không nhận record.
+- GitHub commits: source `a7f2599d44f71a7ed3a9669d8ddc1528f5fd5140`; test `f0db324f1ef68faf4ec8acf66868549bc5e2ca32`.
+- GitHub Actions run `44192090937` trên PR #60 source/test head: QUEUED tại thời điểm ghi. Chưa tuyên bố PASS; phải đợi CI hoàn tất và đối chiếu exact head.
+- WP-76-08 vẫn IN_REVIEW; durable audit store, atomicity, retention/recovery chưa được tích hợp (ADR-76-007 OPEN). WP-76-07 vẫn BLOCKED vì chưa có verified dispatch transport/target identity/receipt/ACK.
+- Ranh giới: PR #60 vẫn draft/unmerged; không đổi lifecycle gate; không acceptance/release/deployment.
+
+**TÊN:** Co
+**CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
+**NGÀY:** 18/11/2026
+**GIỜ - PHÚT:** 05:38 — UTC+7
+
+
+---
+
+### 2026-11-18 05:40:11 +07:00 — Co xác nhận exact-head CI cho audit canonicalization
+- Actor: Co — AI Coder / Execution Assistant (AI-07).
+- GitHub Actions run `44192173589` hoàn tất SUCCESS trên exact PR #60 head `6489bb162cb37325b87cd4b35c9ab723a703e1be`.
+- Python 3.11: **54 passed / 0 failed**, job `134424142019`, JUnit artifact `14376992432`, ZIP SHA256 `7aceb1286c5a98a300bed13e7994337f972ec4638111f018f2f640a067e6002d`.
+- Python 3.12: **54 passed / 0 failed**, job `134424140869`, JUnit artifact `14378105646`, ZIP SHA256 `78b262e086b4be6e5da6c76518769df5acc9d13bbd9749e215dc55448cda8418`.
+- EV-76-034 đã được thêm vào Evidence Register; Build Register và Dashboard được cập nhật theo exact head này.
+- Kết luận giới hạn: branch CI PASS, không phải independent Canonical QE; chưa xác minh merged-main, Core/runtime integration, durable production audit storage, AI dispatch, browser/mobile E2E hoặc acceptance/release.
+- WP-76-08 vẫn IN_REVIEW; WP-76-07 vẫn BLOCKED. PR #60 DRAFT/OPEN/UNMERGED. Không thay đổi lifecycle gate.
+
+**TÊN:** Co
+**CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
+**NGÀY:** 18/11/2026
+**GIỜ - PHÚT:** 05:40 — UTC+7
+
+
+---
+
+### 2026-11-18 05:41:30 +07:00 — Co hardening WP-76-02 Event Gateway
+- Actor: Co — AI Coder / Execution Assistant (AI-07).
+- Rà soát source phát hiện event_type không phải string có thể gây TypeError khi kiểm tra membership; payload NaN có thể đi tới Event validation sau khi replay key đã bị reserve; replay-store exception chưa được chuẩn hóa.
+- Đã cập nhật `trigger_engine/gateway.py`:
+  - Kiểm tra type của source_id, headers, event_type, received_at và source registration.
+  - Dùng shared strict `canonical_json` cho payload digest.
+  - Tạo và validate Event trước khi reserve replay identity, tránh dữ liệu lỗi chiếm replay key.
+  - Bắt lỗi replay store và trả GatewayRejected fail-closed.
+  - Giới hạn cấu hình constructor bằng positive integer, loại bool.
+- Bổ sung 4 regression tests: unhashable event_type; non-finite payload không consume replay key; replay-store outage; naive received_at.
+- GitHub commits: source `ba418cbb26fc140564e3e10ea497fc19f47e756c`; tests `d891fe3ee11176a476eba26389edae2dfb20695a`.
+- CI exact-head cho thay đổi này chưa được quan sát tại thời điểm ghi; không tuyên bố PASS. WP-76-02 IN_REVIEW, ADR-76-002 OPEN.
+- WP-76-07 vẫn BLOCKED; PR #60 DRAFT/OPEN/UNMERGED; không thay đổi gate, acceptance hoặc release.
+
+**TÊN:** Co
+**CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
+**NGÀY:** 18/11/2026
+**GIỜ - PHÚT:** 05:41 — UTC+7
+
+
+---
+
+### 2026-11-18 05:42:28 +07:00 — Co xác minh exact-head CI WP-76-02 Event Gateway
+- Actor: Co — AI Coder / Execution Assistant (AI-07).
+- GitHub Actions run `44192558442` hoàn tất SUCCESS trên exact PR #60 head `1a5de9a7007f6b1f80e3153395f94d0342ea4595`.
+- Python 3.11: **58 passed / 0 failed**, job `134425485586`, JUnit artifact `14378131037`, ZIP SHA256 `14c67337ed3f281b546eca9da0b2f938b6b5aaabf027277aa7af920d02c4ff27`.
+- Python 3.12: **58 passed / 0 failed**, job `134425485016`, JUnit artifact `14376393806`, ZIP SHA256 `caa7ef0f9243fb70ac2ffd496beb8ee6e69a90c3b2f71ee753f21dfca0e7d799`.
+- EV-76-036 đã được thêm; Build Register cập nhật WP-76-02/WP-76-08; Dashboard snapshot lên revision W76-DASHBOARD-0.3.18.
+- CI là branch-level exact-head evidence; independent Canonical QE, merged-main, Core/runtime, durable production stores, AI dispatch và E2E chưa được xác minh.
+- WP-76-02 và WP-76-08 vẫn IN_REVIEW; WP-76-07 vẫn BLOCKED. PR #60 DRAFT/OPEN/UNMERGED; không acceptance/release/deployment.
+
+**TÊN:** Co
+**CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
+**NGÀY:** 18/11/2026
+**GIỜ - PHÚT:** 05:42 — UTC+7
+
+
+---
+
+### 2026-11-18 05:43:28 +07:00 — Co hardening WP-76-06 Idempotency / Retry
+- Actor: Co — AI Coder / Execution Assistant (AI-07).
+- Phát hiện IdempotencyGuard trước đây coi mọi kết quả khác `True` là duplicate, làm lẫn lộn duplicate thật với store outage/indeterminate; validation TTL có thể nhận bool do bool là subclass của int.
+- Đã sửa `retry.py`: thêm `IdempotencyUnavailable`; store exception/indeterminate response fail-closed và phân biệt rõ với `DuplicateExecution`; validate Work/key, positive integer TTL loại bool và aware datetime.
+- RetryPlanner kiểm tra datetime hợp lệ và strict boolean retryable; export error mới qua package.
+- Thêm regression tests cho store exception, indeterminate response, malformed Work/key/TTL, retryable không phải bool và clock không hợp lệ.
+- Commits: retry `e22150bd6b9b5a0b101597f5a594ce33fed4569e`; export `2da13d98bec7730620eba845d7127a394cb48bd1`; tests `987234acd5a5228d7c75e33ae510b1b4edfa7894`.
+- CI exact-head chưa được quan sát tại thời điểm ghi; không tuyên bố PASS. Durable atomic idempotency store vẫn chưa tích hợp, ADR-76-004 OPEN.
+- WP-76-06 IN_REVIEW; WP-76-07 BLOCKED; PR #60 DRAFT/OPEN/UNMERGED.
+
+**TÊN:** Co
+**CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
+**NGÀY:** 18/11/2026
+**GIỜ - PHÚT:** 05:43 — UTC+7
+
+
+---
+
+### 2026-11-18 05:44:31 +07:00 — Co xác minh CI WP-76-06 và tiếp tục WP-76-03
+- Actor: Co — AI Coder / Execution Assistant (AI-07).
+- GitHub Actions run `44192865531` SUCCESS trên exact head `a50aae00e5d4679fbe801e8a0fd48d2ad30396f0`:
+  - Python 3.11: **65 passed / 0 failed**, job `134426542685`, artifact `14376124853`, SHA256 `d074fd728886d714d71a02297c32e1159fce8e9bb51cb835b30adf488a154203`.
+  - Python 3.12: **65 passed / 0 failed**, job `134426542018`, artifact `14376353840`, SHA256 `6838b6fb6d2a77b38fce9630a96d30dcaef8b81b60626fa27c7f0543c3543614`.
+- CI này xác minh WP-76-06 idempotency changes; không bao gồm scheduler changes được commit sau đó.
+- WP-76-03 vừa được harden: OneShotSchedule validate ID/time; TimeScheduler validate schedule/clock; due-store exception/indeterminate fail closed, còn duplicate occurrence trả None. Bổ sung 4 regression tests.
+- Scheduler commits: source `739ba3112566ba8f75b0aa9c88e464147d13f2e2`; tests `9dc5e2accfa08acf36407f527e8084131a809735`. CI latest scheduler head chưa được quan sát; không tuyên bố PASS.
+- EV-76-038 và EV-76-039 đã được ghi; WP-76-06 CI PASS branch-level; WP-76-03 IN_REVIEW pending CI. ADR-76-005 vẫn OPEN cho recurrence/DST/HA.
+- WP-76-07 BLOCKED; PR #60 DRAFT/OPEN/UNMERGED; không acceptance/release/deployment.
+
+**TÊN:** Co
+**CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
+**NGÀY:** 18/11/2026
+**GIỜ - PHÚT:** 05:44 — UTC+7
+
+
+---
+
+### 2026-11-18 05:45:19 +07:00 — Co xác minh exact-head CI WP-76-03 Scheduler
+- Actor: Co — AI Coder / Execution Assistant (AI-07).
+- GitHub Actions run `44193037401` SUCCESS trên exact PR #60 head `40b73865b0174132eb18e78500ff14e2684d91fa`.
+- Python 3.11: **71 passed / 0 failed**, job `134427144495`, JUnit artifact `14376823329`, SHA256 `09658c6f4ad99b827ecf18ed43f4616e5c67b40773baa5ce18840392ee5bec41`.
+- Python 3.12: **71 passed / 0 failed**, job `134427144856`, JUnit artifact `14377871600`, SHA256 `541676ec20827b6261415feebee4b1d9220ab7665f09c245444264cb81cd84b2`.
+- EV-76-040 added; Build Register WP-76-03 updated; Dashboard revision W76-DASHBOARD-0.3.21.
+- CI xác nhận scheduler hardening trong branch; recurrence/DST/HA vẫn chưa implement do ADR-76-005 OPEN. Due-store production implementation vẫn external.
+- Branch CI không thay thế independent Canonical QE, Core/runtime integration, merged-main hoặc E2E.
+- WP-76-03 IN_REVIEW; WP-76-07 BLOCKED; PR #60 DRAFT/OPEN/UNMERGED; không acceptance/release/deployment.
+
+**TÊN:** Co
+**CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
+**NGÀY:** 18/11/2026
+**GIỜ - PHÚT:** 05:45 — UTC+7
+
+
+---
+
+### 2026-11-18 05:46:15 +07:00 — Co xác minh exact-head CI sau hardening WP-76-03/WP-76-06
+- Actor: Co — AI Coder / Execution Assistant (AI-07).
+- GitHub Actions run `44193167465` SUCCESS trên exact PR #60 head `a2f8131c080826bd57916222da1308386e7aa215`.
+- Python 3.11: **71 passed / 0 failed**, job `134427588220`, JUnit artifact `14376898453`, ZIP SHA256 `02496a6479663053a60642b44dac0b5ee78dc309f4aa8faf4e5252e10bb27923`.
+- Python 3.12: **71 passed / 0 failed**, job `134427587805`, JUnit artifact `14378400952`, ZIP SHA256 `f7c310009121d28e8603ae9afe2ad4aa3c50a853387a7c46473ffb95d16309aa`.
+- EV-76-041 added. Exact-head CI covers scheduler and idempotency hardening on current branch.
+- This remains branch CI only; no independent Canonical QE, merged-main, Core/runtime integration, production durable store or E2E claim.
+- WP-76-02/03/06/08 remain IN_REVIEW; WP-76-07 BLOCKED; PR #60 DRAFT/OPEN/UNMERGED; no acceptance/release/deployment.
+
+**TÊN:** Co
+**CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
+**NGÀY:** 18/11/2026
+**GIỜ - PHÚT:** 05:46 — UTC+7
+
+
+---
+
+### 2026-11-18 05:47:59 +07:00 — Co sửa tĩnh Dashboard WP-76-09 theo hồ sơ Work Entry
+- Actor: Co — AI Coder / Execution Assistant (AI-07), triển khai theo ủy quyền trực tiếp của Vinh; Xu vẫn là accountable owner theo Build Register.
+- Đối chiếu DOC-007 với Dashboard source phát hiện lifecycle gate summary chỉ đếm phase gates, không thể hiện participant Work Entry WE-G0…WE-G5; WP status dropdown so sánh chuỗi nguyên trạng nên không khớp các trạng thái mô tả như `IN_REVIEW — ...` và `BLOCKED — ...`.
+- Đã sửa `DASHBOARD/index.html`: thêm panel Work Entry riêng, lifecycle gate label rõ phạm vi, chuẩn hóa status code cho label/color/filter, và hiển thị UNKNOWN khi thiếu Work Entry snapshot.
+- Đã cập nhật `PRODUCT_STATUS.json` và schema để hiển thị snapshot DOC-007 cho AI-07: WE-G0…G3 PASS; WE-G4/G5 BLOCKED. Ghi rõ ủy quyền tự triển khai của Vinh ngày 18/11 không tự động xác minh trusted runtime identity binding.
+- Đã cập nhật Dashboard README, Build Register và Evidence Register (EV-76-042).
+- Giới hạn: mới static source/data inspection; browser/mobile responsive, interaction, accessibility và independent QE chưa chạy. Không tuyên bố UI PASS.
+- WP-76-09 vẫn IN_REVIEW; Xu giữ accountable ownership, An/Qw reviewer nominations chưa có ACK/entry PASS. PR #60 vẫn DRAFT/OPEN/UNMERGED.
+
+**TÊN:** Co
+**CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
+**NGÀY:** 18/11/2026
+**GIỜ - PHÚT:** 05:47 — UTC+7
+
+
+---
+
+### 2026-11-18 05:49:44 +07:00 — Co bổ sung responsive CSS cho Work Entry panel
+- Actor: Co — AI Coder / Execution Assistant (AI-07), theo ủy quyền trực tiếp của Vinh.
+- Sau khi bổ sung Work Entry panel, Co thêm breakpoint cho gate grid: 3 cột desktop, 2 cột tablet và 1 cột mobile.
+- GitHub commit: `c24c5c8bf6def54497e222ddc3ae109b02719d11`.
+- Cập nhật Build Register, Evidence Register (EV-76-043), Dashboard snapshot và README.
+- Đây chỉ là xác minh source CSS; không có browser/device rendering, responsive interaction hoặc accessibility test. Không tuyên bố browser/mobile PASS.
+- WP-76-09 IN_REVIEW; owner Xu, reviewer nominations An/Qw; independent QE pending.
+
+**TÊN:** Co
+**CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
+**NGÀY:** 18/11/2026
+**GIỜ - PHÚT:** 05:49 — UTC+7
+
+
+---
+
+### 2026-11-18 05:51:31 +07:00 — Co đồng bộ Dashboard evidence snapshot
+- Actor: Co — AI Coder / Execution Assistant (AI-07).
+- Rà soát sau static correction cho thấy PRODUCT_STATUS.json vẫn chỉ liệt kê evidence đến EV-76-032 và WP status strings chưa phản ánh các exact-head CI mới.
+- Đã cập nhật Dashboard PRODUCT_STATUS.json:
+  - Thêm EV-76-033…EV-76-043 vào evidence projection (đủ claim/path/status; giữ phân biệt branch CI với static-only UI review).
+  - Cập nhật WP-76-02/03/06/08 với CI exact-head và dependency còn mở; WP-76-09 phản ánh panel Work Entry, filter normalization và responsive CSS nhưng browser/mobile QE vẫn pending.
+  - Thêm recent_activity cho Audit, Event Gateway, Idempotency/Scheduler và Dashboard static correction.
+  - Revision: `W76-DASHBOARD-0.3.26`; source_mode vẫn `local_snapshot`.
+- Schema đặt `work_entry` thành required field; Work Entry snapshot vẫn WE-G0…G3 PASS, WE-G4/G5 BLOCKED.
+- Không thay đổi lifecycle gate, quyền, ownership, acceptance hoặc release. Dashboard chưa được browser/device QE.
+- Các thay đổi Dashboard và hồ sơ được tiếp tục đồng bộ sang Sandbox; read-back exact equality sẽ được xác nhận riêng.
+
+**TÊN:** Co
+**CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
+**NGÀY:** 18/11/2026
+**GIỜ - PHÚT:** 05:51 — UTC+7
+
+
+---
+
+### 2026-11-18 05:52:16 +07:00 — Co xác minh latest branch-head CI sau đồng bộ Dashboard
+- Actor: Co — AI Coder / Execution Assistant (AI-07).
+- GitHub Actions run `44194106594` SUCCESS trên exact branch head `15ea37e9b102b8fa54a3ff035102f0e71e407e03`.
+- Python 3.11: **71 passed / 0 failed**, job `134430849431`, JUnit artifact `14377188728`, ZIP SHA256 `d299ca148895bb36d7dccc66e6e025157a3590248d9bb3e24c463f58c226bebe`.
+- Python 3.12: **71 passed / 0 failed**, job `134430850089`, JUnit artifact `14376974287`, ZIP SHA256 `2293bb726d86d45986943955038e4e5fdc2356d482c61e3efbf7f353db0dbd5d`.
+- EV-76-044 added; Build Register and Dashboard updated to latest branch head. CI chỉ chạy Python tests; không kiểm chứng browser/mobile Dashboard.
+- DOC-035, Build Register, Evidence Register, Dashboard JSON/schema/README và Dashboard HTML đã được đồng bộ GitHub → Sandbox với exact read-back ở lần đồng bộ gần nhất.
+- WP-76-02/03/06/08 remain IN_REVIEW; WP-76-09 remains IN_REVIEW pending browser/mobile QE; WP-76-07 BLOCKED; WE-G4/G5 BLOCKED. PR #60 DRAFT/OPEN/UNMERGED; no acceptance/release/deployment.
+
+**TÊN:** Co
+**CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
+**NGÀY:** 18/11/2026
+**GIỜ - PHÚT:** 05:52 — UTC+7
+
+
+---
+
+### 2026-11-18 05:53:08 +07:00 — Co tái kiểm tra capability WP-76-07
+- Actor: Co — AI Coder / Execution Assistant (AI-07).
+- Co kiểm tra danh mục tool đang kết nối trong phiên cho các khả năng dispatch/send-agent, trusted target identity, receiver receipt và authenticated ACK.
+- Quan sát được: ROOM-HOP session có meeting join/start/paste và Sandbox operations; không có action/provider dispatch AI hoặc receiver ACK được expose trong tool inventory hiện tại.
+- Giới hạn kết luận: đây là bounded current-session inventory, không khẳng định provider không tồn tại ở repository, PC runtime hoặc phiên khác.
+- EV-76-045 được thêm vào Evidence Register và Dashboard. WP-76-07 tiếp tục BLOCKED cho đến khi provider owner/contract và real E2E receiver evidence được xác minh.
+- Không tạo dispatch giả, không gửi nhiệm vụ cho AI khác, không tự nhận ACK.
+
+**TÊN:** Co
+**CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
+**NGÀY:** 18/11/2026
+**GIỜ - PHÚT:** 05:53 — UTC+7
+
+
+---
+
+### 2026-11-18 05:53:45 +07:00 — Co xác minh exact current PR #60 branch-head CI
+- Actor: Co — AI Coder / Execution Assistant (AI-07).
+- GitHub Actions run `44194387756` SUCCESS trên exact current branch head `e9fe4f2a2b8db1d57e958b53976dcd4f6f5d8b72`.
+- Python 3.11: **71 passed / 0 failed**, job `134431826141`, JUnit artifact `14378023025`, ZIP SHA256 `0e1c31fb126b3ceeb9a01d275c6b8214d2b1abc83cee3e69f7a330053c94d44d`.
+- Python 3.12: **71 passed / 0 failed**, job `134431825768`, JUnit artifact `14377208649`, ZIP SHA256 `66760cd5f27bb6ce5fa98a85c53218ebd52c44b24f3cb2addde0ca98d4d9e170`.
+- EV-76-046 added. Current PR #60 remains open; branch remains unmerged/draft.
+- Exact Python branch CI does not test Dashboard browser/mobile rendering; independent Canonical QE, Core/runtime E2E, verified AI dispatch and acceptance/release remain pending.
+- WP-76-07 BLOCKED; WE-G4/G5 BLOCKED. No merge/acceptance/release/deployment performed.
+
+**TÊN:** Co
+**CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
+**NGÀY:** 18/11/2026
+**GIỜ - PHÚT:** 05:53 — UTC+7
+
+
+---
+
+### 2026-11-18 06:32 +07:00 — Co gia cố Gateway schema/source binding và Policy boundary
+- Actor: Co — AI-07, theo ủy quyền trực tiếp của Vinh.
+- WP-76-02: phát hiện `SourceRegistration.schema` được yêu cầu lúc đăng ký nhưng chưa được gọi trong `EventGateway.ingest`. Đã thêm thực thi schema trước Event/replay reservation; schema exception → `GatewayRejected`; rejected event không tiêu thụ event ID.
+- WP-76-02: khóa nhầm lẫn source identity bằng cách yêu cầu registration map key đúng tuyệt đối `SourceRegistration.source_id`, từ chối value sai kiểu/mismatch.
+- WP-76-05: validate đủ 7 trường identity/scope của `PolicyRequest`; PolicyAdapter chỉ chấp nhận PolicyResult có PolicyOutcome enum hợp lệ, reason không rỗng và decision_ref/policy_revision có giá trị; approval_ref phải là chuỗi không rỗng. Request/provider envelope lỗi → INDETERMINATE; approval invalid → DENY.
+- Tests: W76-GW-004 (schema rejection + service outage); W76-GW-005 (registration identity mismatch/type); W76-PL-003 (request/provider response/approval_ref malformed).
+- Exact branch-head CI run `44200662865` trên `aaa84763611dd30084b002fd2fe419d24717755b`: Python 3.11 **81/81 PASS**, job `134453571124`, artifact `14381636110`, SHA256 `9bbe48658ea931c10dd0603b78d818e6adab7611806a60616ecdb97b6fb284d6`; Python 3.12 **81/81 PASS**, job `134453571408`, artifact `14381780587`, SHA256 `f4860d384a7e1b01ea6dd56ee8d0f5c881b8d34ce2e870000f5480237891c20b`.
+- EV-76-047…EV-76-050 added; Build Register and Dashboard updated. CI remains branch-only. Production key provider/Core policy provider, independent QE, Core/runtime E2E and acceptance remain pending.
+- PR #60 remains DRAFT/OPEN/UNMERGED. No merge or release action.
+
+**TÊN:** Co
+**CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
+**NGÀY:** 18/11/2026
+**GIỜ - PHÚT:** 06:32 — UTC+7
+
+
+---
+
+### 2026-11-18 06:32 +07:00 — Co xác minh exact-head CI và trạng thái tích hợp PR #60
+- Exact current PR #60 head: `4320d7ad7a5862ad46942e96097257d92efd04b8`.
+- GitHub Actions PR run `44200888299` SUCCESS:
+  - Python 3.11: **81 passed / 0 failed**, job `134454344249`, artifact `14381915480`, SHA256 `60be358bd1ae39e3f490f77b492b0edd4a198d470ad594ddb89f4e2072ee841a`.
+  - Python 3.12: **81 passed / 0 failed**, job `134454344715`, artifact `14380309550`, SHA256 `a0564536382234e66cadadc6eef0e7e7464c0d8b67863ebdc3eec62ae581e66e`.
+- GitHub PR metadata: #60 OPEN / DRAFT / UNMERGED; `mergeable=true`, `mergeable_state=clean`. Branch comparison reports 119 commits ahead and 12 behind `main`. No merge or rebase performed; no acceptance/release inferred.
+- EV-76-051 added. Latest source/tests and documentation are synchronized to Sandbox; exact read-back was verified for source, tests, Build Register, Evidence Register, Dashboard snapshot and DOC-035.
+- Independent Canonical QE, browser/mobile QE, Core/runtime E2E and production providers remain pending. WP-76-07 and Work Entry WE-G4/G5 remain BLOCKED.
+
+**TÊN:** Co
+**CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
+**NGÀY:** 18/11/2026
+**GIỜ - PHÚT:** 06:32 — UTC+7

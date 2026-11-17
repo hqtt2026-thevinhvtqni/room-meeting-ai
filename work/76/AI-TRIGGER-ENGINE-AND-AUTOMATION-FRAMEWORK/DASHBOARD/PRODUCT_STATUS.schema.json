@@ -16,7 +16,8 @@
     "revision",
     "ai_assignments",
     "recent_activity",
-    "evidence"
+    "evidence",
+    "work_entry"
   ],
   "properties": {
     "work_id": {
@@ -304,6 +305,65 @@
           },
           "status": {
             "type": "string"
+          }
+        }
+      }
+    },
+    "work_entry": {
+      "type": "object",
+      "required": [
+        "participant_id",
+        "status",
+        "assessed_at",
+        "source_ref",
+        "gates"
+      ],
+      "properties": {
+        "participant_id": {
+          "type": "string"
+        },
+        "participant_name": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "assessed_at": {
+          "type": "string",
+          "format": "date"
+        },
+        "freshness": {
+          "type": "string"
+        },
+        "source_ref": {
+          "type": "string"
+        },
+        "note_vi": {
+          "type": "string"
+        },
+        "gates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "gate_id",
+              "title",
+              "status"
+            ],
+            "properties": {
+              "gate_id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "detail_vi": {
+                "type": "string"
+              }
+            }
           }
         }
       }
