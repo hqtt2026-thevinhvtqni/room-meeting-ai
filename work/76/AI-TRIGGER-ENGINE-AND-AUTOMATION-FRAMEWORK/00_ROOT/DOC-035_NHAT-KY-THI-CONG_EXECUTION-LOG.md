@@ -546,3 +546,17 @@ This is a governance/assignment and preparation record only. Xu did not alter so
 - Remaining dependencies: real Core principal/Work/WP authorization; production source signature/key provider; durable event/queue/idempotency/transition/audit storage; scheduler recurrence/DST/HA and missed-run policy; dispatch provider/target identity/receiver receipt/authenticated ACK; independent QE/review; runtime and browser/mobile E2E.
 - WP-76-07 remains BLOCKED. No lifecycle gate transition, production configuration change, merge, acceptance, release or deployment was performed.
 - Status: first implementation slice and branch CI matrix PASS (50/50 on Python 3.11 and 3.12); PR #60 DRAFT/OPEN/UNMERGED; independent QE and runtime integration pending; NOT RELEASED.
+
+
+---
+
+### 2026-11-18 05:07:10 +07:00 — Co xác minh lại CI trên exact PR #60 head sau đồng bộ hồ sơ
+- Actor: Co — AI Coder / Execution Assistant.
+- Sau khi cập nhật Build Register, Evidence Register, DOC-035 và Dashboard snapshot, Co đối chiếu commit range từ code/test head `790d2986eb2d9a61d1c4dcc610457e1874738f30` tới current PR #60 head `acb6dd5052c4c6dfb5a2c5cc4d46fe2e94920da2`. GitHub compare xác nhận đúng 4 file thay đổi, chỉ gồm DOC-035, BUILD_REGISTER, EVIDENCE_REGISTER và DASHBOARD/PRODUCT_STATUS.json; không có source/test file thay đổi trong range này.
+- GitHub Actions run 44186703015 chạy trên exact head `acb6dd5052c4c6dfb5a2c5cc4d46fe2e94920da2`, cả hai jobs SUCCESS:
+  - Python 3.11: 50 passed / 0 failed; job 134405030768; JUnit artifact 14374851948; ZIP SHA256 `627379fb1a3fb0b6b378b8091f9035ac2058c40093566dcee1781500f3a079f2`.
+  - Python 3.12: 50 passed / 0 failed; job 134405030331; JUnit artifact 14374162503; ZIP SHA256 `6f633863ba458770eb607a9c42f5c9c90195a55842ecf3acf1b7973d2e9edebb`.
+- EV-76-031 added to canonical Evidence Register. Build Register now points to current exact PR #60 head. Dashboard revision advanced to W76-DASHBOARD-0.3.12 with PR #60 and CI state; it remains LOCAL_SNAPSHOT, not Core live.
+- Sandbox sync: Build Register, Evidence Register, DOC-035 and Dashboard JSON were written and read back with exact string equality TRUE before this final CI entry. Re-sync/read-back after this entry is required.
+- Evidence boundary unchanged: branch CI PASS is not independent Canonical QE, Core/runtime integration, verified AI dispatch, browser/mobile E2E, acceptance, merge or release. WP-76-07 remains BLOCKED.
+- Status: exact PR #60 head CI PASS 50/50 on Python 3.11 and 50/50 on Python 3.12; PR #60 remains DRAFT/OPEN/UNMERGED; NOT RELEASED.
