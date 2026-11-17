@@ -12,6 +12,6 @@
 - Candidate technologies only: LiteLLM, Ollama, llama.cpp and existing ROOM-HOP adapters. None is selected as final baseline yet.
 - Related Works to inspect/reuse: 01, 11, 23, 52, 70, 22 and 50. Do not assume integration readiness.
 - Canonical records: 00_ROOT/BIEN_BAN.md; 00_ROOT/NHAT_KY_THI_CONG.md; 00_ROOT/TASK_BOARD.md; 04_PLAN/IMPLEMENTATION_ROADMAP.md; 03_ARCHITECT/ARCHITECTURE_PROPOSAL.md; 03_ARCHITECT/ARCHITECTURE_CONSULTATION_BRIEF.md.
-- GitHub target: hqtt2026-thevinhvtqni/room-meeting-ai, branch main, path work/501/HQTT-UNIVERSAL-LLM-HUB/. Sync status must be verified independently.
+- GitHub sync: VERIFIED on main at commit 94e58f13b7cb695561c83c9f6e752339fd7f5e92; seven canonical records fetched successfully. PC parity NOT VERIFIED.
 - Sandbox starter folders 01_ORIGINAL through 07_RELEASE are preserved; do not delete or silently treat as W70 canonical lifecycle mapping.
 - Current gates: discovery and design consultation in progress; BUILD, deployment and release are not authorized.
