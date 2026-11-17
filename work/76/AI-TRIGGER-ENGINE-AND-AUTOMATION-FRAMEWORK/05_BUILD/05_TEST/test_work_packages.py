@@ -150,3 +150,24 @@ def test_idempotency_guard_requires_durable_atomic_store():
     guard.claim("76","k",now=now,ttl_seconds=60)
     with pytest.raises(DuplicateExecution):
         guard.claim("76","k",now=now,ttl_seconds=60)
+
+
+# W76-AU-001 — audit payloads use strict canonical JSON
+def test_audit_payload_digest_is_canonical_across_mapping_order():
+    sink=Sink()
+    writer=AuditWriter(sink)
+    first=writer.write(record_id="canonical-1",work_id="76",actor_ref="svc:test",action="ingest",outcome="accepted",correlation_id="c1",payload={"b":2,"a":1})
+    second=writer.write(record_id="canonical-2",work_id="76",actor_ref="svc:test",action="ingest",outcome="accepted",correlation_id="c1",payload={"a":1,"b":2})
+    assert first.payload_digest==second.payload_digest
+
+@pytest.mark.parametrize("payload", [
+    {"amount": float("nan")},
+    {"amount": float("inf")},
+    {"nested": [1, float("-inf")]},
+])
+def test_audit_rejects_non_finite_payload_without_appending(payload):
+    sink=Sink()
+    writer=AuditWriter(sink)
+    with pytest.raises(ValueError):
+        writer.write(record_id="invalid",work_id="76",actor_ref="svc:test",action="ingest",outcome="accepted",correlation_id="c1",payload=payload)
+    assert sink.rows==[]
