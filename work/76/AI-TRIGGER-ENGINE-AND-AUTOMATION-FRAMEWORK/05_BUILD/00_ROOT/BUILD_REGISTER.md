@@ -4,10 +4,10 @@
 |---|---|---|---|---|---|
 | WP-76-01 | Trigger Registry and schema | Co / AI-07 | Ka / AI-02 (independent QE pending) | IN_REVIEW — PR #60 draft; branch CI PASS | `05_BUILD/04_CODE/trigger_engine/{models,registry}.py`; `05_BUILD/05_TEST/test_trigger_engine.py` |
 | WP-76-02 | Event Gateway and source validation | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; typed malformed event validation, strict canonical payload digest, validate-before-replay reservation and fail-closed replay-store errors added; production verifier/key provider pending; exact-head CI run 44192558442 PASS 58/58 on Python 3.11/3.12 | `trigger_engine/gateway.py`; `test_work_packages.py` |
-| WP-76-03 | Scheduler and TIME triggers | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; UTC one-shot only; recurrence/DST/HA BLOCKED by ADR-76-005 | `trigger_engine/scheduler.py`; `test_work_packages.py` |
+| WP-76-03 | Scheduler and TIME triggers | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; UTC one-shot only; due-store exceptions/indeterminate results fail closed; recurrence/DST/HA BLOCKED by ADR-76-005; latest scheduler hardening CI pending | `trigger_engine/scheduler.py`; `test_work_packages.py` |
 | WP-76-04 | Typed Condition Evaluator | Co / AI-07 | Ka / AI-02 (independent QE pending) | IN_REVIEW — PR #60 draft; branch CI PASS | `trigger_engine/conditions.py`; `test_trigger_engine.py` |
 | WP-76-05 | Policy adapter and approval | Co / AI-07 | Ka architecture review; Qw QE (ACK pending) | IN_REVIEW — PR #60 draft; fail-closed adapter contract; Core provider not integrated | `trigger_engine/policy.py`; `test_work_packages.py` |
-| WP-76-06 | Orchestration, dedupe and retry | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; state/retry/idempotency ports; explicit duplicate vs store-unavailable outcomes and strict argument validation added; durable backend not integrated; CI pending | `trigger_engine/orchestrator.py`, `retry.py`; `test_work_packages.py` |
+| WP-76-06 | Orchestration, dedupe and retry | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; state/retry/idempotency ports; explicit duplicate vs store-unavailable outcomes and strict argument validation added; durable backend not integrated; exact-head CI run 44192865531 PASS 65/65 on Python 3.11/3.12 | `trigger_engine/orchestrator.py`, `retry.py`; `test_work_packages.py` |
 | WP-76-07 | Verified AI dispatch adapter | Co / AI-07 (discovery/design only) | Xu + Qw | BLOCKED — no verified transport, target identity, receiver receipt or ACK | `05_BUILD/03_ARCHITECTURE` |
 | WP-76-08 | Audit and evidence store | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; append-only sink contract only; strict canonical JSON audit digest + non-finite payload regression added; exact-head CI run 44192173589 PASS 54/54 on Python 3.11/3.12; durable store/retention ADR pending | `trigger_engine/audit.py`; `test_work_packages.py` |
 | WP-76-09 | Read-only dashboard | Xu | An / Qw | IN_REVIEW — browser/mobile QE pending | `DASHBOARD` |
@@ -81,3 +81,11 @@ PR #55 contains a proposed implementation, tests and CI workflow on an unmerged 
 - Regression tests cover store exception, indeterminate response, malformed Work/key/TTL and retry planner malformed inputs.
 - Commits: retry source `e22150bd6b9b5a0b101597f5a594ce33fed4569e`; package export `2da13d98bec7730620eba845d7127a394cb48bd1`; tests `987234acd5a5228d7c75e33ae510b1b4edfa7894`.
 - CI exact-head for this source/test change not yet observed; no PASS is claimed. Durable atomic store remains external (ADR-76-004 OPEN).
+
+
+## WP-76-06 exact-head CI — 2026-11-18 05:44 +07:00
+- Exact head: `a50aae00e5d4679fbe801e8a0fd48d2ad30396f0`.
+- GitHub Actions run `44192865531` SUCCESS:
+  - Python 3.11: 65 passed / 0 failed; job `134426542685`; JUnit artifact `14376124853`; ZIP SHA256 `d074fd728886d714d71a02297c32e1159fce8e9bb51cb835b30adf488a154203`.
+  - Python 3.12: 65 passed / 0 failed; job `134426542018`; JUnit artifact `14376353840`; ZIP SHA256 `6838b6fb6d2a77b38fce9630a96d30dcaef8b81b60626fa27c7f0543c3543614`.
+- This exact-head CI includes WP-76-06 idempotency changes; it predates WP-76-03 scheduler changes committed afterwards. CI for latest scheduler changes remains pending.
