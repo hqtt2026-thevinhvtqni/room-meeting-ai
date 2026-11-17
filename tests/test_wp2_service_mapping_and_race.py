@@ -297,6 +297,132 @@ class ServiceRegistryRecoveryTests(unittest.TestCase):
             self.assertIs(host.processes.get("svc"), managed)
 
 
+class LegacyPopenFailClosedTests(unittest.TestCase):
+    def test_dead_legacy_popen_is_blocked_and_never_replaced(self):
+        with tempfile.TemporaryDirectory() as td:
+            ctx = _ctx(Path(td))
+            host = ExecutionHost()
+
+            class DeadLegacyPopen:
+                pid = 7020
+                returncode = 0
+                def poll(self):
+                    return 0
+
+            legacy = DeadLegacyPopen()
+            host.processes["svc"] = legacy
+
+            status = host.service_status("svc", ctx)
+            self.assertEqual(status["status"], "BLOCKED")
+            self.assertIsNone(status["members"])
+
+            with patch("execution_host.host.spawn_managed_service") as spawn:
+                result = host.start_service("svc", [sys.executable, "-c", "pass"], ctx)
+
+            self.assertEqual(result["status"], "BLOCKED")
+            self.assertEqual(result["blocker"], "existing_service_cleanup_unverified")
+            self.assertIs(host.processes.get("svc"), legacy)
+            spawn.assert_not_called()
+
+    def test_stop_legacy_popen_never_claims_tree_reaped(self):
+        with tempfile.TemporaryDirectory() as td:
+            ctx = _ctx(Path(td))
+            host = ExecutionHost()
+
+            class DeadLegacyPopen:
+                pid = 7021
+                returncode = 0
+                def poll(self):
+                    return 0
+
+            legacy = DeadLegacyPopen()
+            host.processes["svc"] = legacy
+            result = host.stop_service("svc", ctx)
+
+            self.assertEqual(result["status"], "BLOCKED")
+            self.assertFalse(result["process_reaped"])
+            self.assertIs(host.processes.get("svc"), legacy)
+
+
+class ConcurrentStartStopStatusTests(unittest.TestCase):
+    def test_barrier_controlled_start_stop_status_has_one_registry_owner(self):
+        with tempfile.TemporaryDirectory() as td:
+            ctx = _ctx(Path(td))
+            host = ExecutionHost()
+            cleanup_entered = threading.Event()
+            allow_cleanup = threading.Event()
+
+            old = ManagedProcess(
+                process=FakeServiceProcess(7030, returncode=None),
+                platform="linux",
+                created_via_spawn=True,
+            )
+            def delayed_cleanup(*args, **kwargs):
+                cleanup_entered.set()
+                if not allow_cleanup.wait(timeout=5):
+                    raise AssertionError("cleanup release timed out")
+                return SimpleNamespace(
+                    process_reaped=True,
+                    as_dict=lambda: {"process_reaped": True, "notes": ["verified_empty"]},
+                )
+            old.cleanup = Mock(side_effect=delayed_cleanup)
+            host.processes["svc"] = old
+
+            replacement = ManagedProcess(
+                process=FakeServiceProcess(7031, returncode=None),
+                platform="linux",
+                created_via_spawn=True,
+                job_object="ATTACHED",
+            )
+            stop_results = []
+            start_results = []
+            status_results = []
+            errors = []
+
+            def stop_worker():
+                try:
+                    stop_results.append(host.stop_service("svc", ctx))
+                except Exception as exc:
+                    errors.append(repr(exc))
+
+            def start_worker():
+                try:
+                    start_results.append(host.start_service("svc", [sys.executable, "-c", "pass"], ctx))
+                except Exception as exc:
+                    errors.append(repr(exc))
+
+            def status_worker():
+                try:
+                    status_results.append(host.service_status("svc", ctx))
+                except Exception as exc:
+                    errors.append(repr(exc))
+
+            with patch("execution_host.host.spawn_managed_service", return_value=replacement) as spawn:
+                stop_thread = threading.Thread(target=stop_worker)
+                stop_thread.start()
+                self.assertTrue(cleanup_entered.wait(timeout=5), "stop did not enter cleanup")
+
+                start_thread = threading.Thread(target=start_worker)
+                status_thread = threading.Thread(target=status_worker)
+                start_thread.start()
+                status_thread.start()
+                allow_cleanup.set()
+
+                for thread in (stop_thread, start_thread, status_thread):
+                    thread.join(timeout=10)
+                    self.assertFalse(thread.is_alive(), "registry transition thread hung")
+
+            self.assertEqual(errors, [])
+            self.assertEqual(len(stop_results), 1)
+            self.assertEqual(stop_results[0]["status"], "PASS")
+            self.assertEqual(len(start_results), 1)
+            self.assertEqual(start_results[0]["status"], "PASS")
+            self.assertEqual(len(status_results), 1)
+            self.assertIn(status_results[0]["status"], {"PASS", "STOPPED"})
+            self.assertIs(host.processes.get("svc"), replacement)
+            spawn.assert_called_once()
+
+
 class AdditionalServiceBoundaryTests(unittest.TestCase):
     def test_generic_spawn_oserror_maps_to_structured_blocked_without_false_reap(self):
         with tempfile.TemporaryDirectory() as td:
