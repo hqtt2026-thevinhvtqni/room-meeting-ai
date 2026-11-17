@@ -386,6 +386,22 @@ class ExecutionHost:
                     "job_object": "NOT_ATTACHED",
                     **self.identity(),
                 }
+            except OSError as exc:
+                # Preserve generic spawn failures as structured BLOCKED results.
+                # Unknown reap state remains None; never manufacture a cleanup PASS.
+                process_reaped = getattr(exc, "process_reaped", None)
+                return {
+                    "status": "BLOCKED",
+                    "name": name,
+                    "blocker": "service_spawn_failed",
+                    "spawn_error_type": type(exc).__name__,
+                    "notes": list(getattr(exc, "notes", ())),
+                    "process_reaped": process_reaped if isinstance(process_reaped, bool) else None,
+                    "pid": None,
+                    "execution_id": ctx.execution_id,
+                    "job_object": "NOT_ATTACHED",
+                    **self.identity(),
+                }
             self.processes[name] = managed
 
             return {
@@ -440,6 +456,7 @@ class ExecutionHost:
                 "pid": pid,
                 "returncode": returncode,
                 "members": members,
+                "readiness": "NOT_CHECKED",
                 "execution_id": ctx.execution_id,
                 **self.identity(),
             }
