@@ -3,7 +3,7 @@
 - Work Name: ROOM-MEDIA-HUB
 - Vietnamese Name: TRUNG TÂM LƯU TRỮ VÀ QUẢN LÝ ẢNH / VIDEO ROOM-HOP
 - Product Name: ROOM MEDIA HUB
-- Status: ACTIVE — DISCOVER / ARCHITECTURE CONSULTATION PREPARATION; STRUCTURE NORMALIZATION IN PROGRESS
+- Status: ACTIVE — DASHBOARD BUILD AUTHORIZED AND IN PROGRESS (Dashboard scope only, Vinh 2026-11-17); MEDIA HUB PRODUCT BUILD NOT AUTHORIZED; architecture/consultation still in DISCOVER/ARCHITECTURE preparation; STRUCTURE NORMALIZATION IN PROGRESS
 - Authority: Vinh
 - Executive Coordinator: Xu / AI-01
 - Canonical repository target: hqtt2026-thevinhvtqni/room-meeting-ai
@@ -27,3 +27,4 @@
 - Dashboard working package canonical path: 05_BUILD/04_CODE/dashboard/ (read-only Dashboard authorization only)
 - Legacy paths identified for retirement after parity/readback: root 01_ORIGINAL/, 02_EXTENSION/, 03_ARCHITECTURE/, 04_CODE/, 05_TEST/, 06_EVIDENCE/, 07_RELEASE/. Root 03_ARCHITECT/ remains canonical and is NOT a duplicate.
 - Normalization control: copies are verified before legacy files are deleted; no destructive directory operation is assumed available.
+

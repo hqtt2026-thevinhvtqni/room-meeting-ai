@@ -5,7 +5,7 @@
 - Coordinator: Xu / AI-01
 - Date: 2026-11-17
 - Status: W117 DASHBOARD BUILD AUTHORIZED (DASHBOARD SCOPE ONLY); MEDIA HUB PRODUCT BUILD NOT AUTHORIZED
-- Last updated by: Go / AI-06 (2026-11-17 06:15 +07) — complete working Dashboard package delivered
+- Last updated by: Vibe (2026-11-17 11:42 +07) — GitHub support pass: snapshot refresh + Xu audit fixes 1–6; Vibe ACK recorded in Journal
 
 ## Status legend
 PLANNED = defined, not started; ASSIGNED — DISPATCH UNCONFIRMED = allocated in canonical board, agent receipt not verified; ACKNOWLEDGED = agent explicitly accepted; READY = dependencies and authorization satisfied; IN_PROGRESS = evidence-backed work underway; BLOCKED = cannot proceed and blocker is recorded; DONE = task action completed; PASS = verification criterion passed; FAIL = verification failed; NOT RUN = no test executed; NOT AUTHORIZED = requires explicit approval.
@@ -70,6 +70,7 @@ Every task state change must be reflected here and appended to the single canoni
 | W117-DASH-007 | Define independent QE matrix and measurable acceptance criteria | Qw / AI-05 | Xu | DASH-001; can draft in parallel | Traceability matrix and test cases covering overview, tasks, agents, timeline, stale/missing data and error states | ASSIGNED — DISPATCH UNCONFIRMED |
 | W117-DASH-008 | Execute independent functional/regression/accessibility/data-integrity tests; verify fixes | Qw / AI-05 | Go accountable for fixes; Qc implements fixes | Testable preview build | Test logs, reproducible evidence, defect list and PASS/FAIL recommendation | ASSIGNED — DISPATCH UNCONFIRMED |
 | W117-DASH-009 | Integrate, reconcile findings, complete handoff package and mark Dashboard complete only after evidence | Go / AI-06 | Xu coordinates; Cla/Ka/Qw sign off their domains | DASH-002–008 | Working preview, source revision, evidence, known limitations, independent QE PASS and technical/security disposition | IN_PROGRESS — package ready; waiting independent sign-off |
+| W117-DASH-010 | Vibe GitHub support: refresh snapshot from canonical Task Board/Journal; apply Xu audit fixes (KPI derivation, Xu runtime state, HTML escaping, focus visibility, README data-source alignment) | Vibe | Go integrates; Cla/Ka/Qw review as part of DASH-005–008 | Vinh's standing instruction (build through unconfirmed items, record debts) | EVIDENCE/DASHBOARD_AUDIT_FIX_20261117_VIBE.md; Journal entry 2026-11-17 11:42 +07 | DONE (implementation) — awaiting independent review |
 
 ### Dashboard role allocation
 - Go / AI-06: single accountable Builder and integration lead; drives all Dashboard tasks to completion. **Explicit ACK + working package delivered 2026-11-17.**
@@ -84,6 +85,8 @@ Every task state change must be reflected here and appended to the single canoni
 ### Dispatch and acceptance truth
 The current ROOM-HOP Build MCP tool surface available to Xu exposes Sandbox read/write/list operations but no Agent task-dispatch or session-assignment operation. Therefore the allocations above are authoritative task assignments, but are NOT evidence that any Agent has received or accepted them unless an explicit ACK is recorded in the Journal (as Go did on 2026-11-17). Unverified agents remain "ASSIGNED — DISPATCH UNCONFIRMED". Do not mark an Agent IN_PROGRESS merely because its name appears here.
 
+Recorded ACKs: Go / AI-06 (2026-11-17 05:55 +07, Journal); Vibe (2026-11-17 11:42 +07, Journal — self-ACK of the DASH-010 support scope). All other agents remain DISPATCH UNCONFIRMED.
+
 ### Working package location
 ```
 05_BUILD/04_CODE/dashboard/
@@ -95,3 +98,4 @@ The current ROOM-HOP Build MCP tool surface available to Xu exposes Sandbox read
 EVIDENCE/DASHBOARD_PREVIEW_20261117.md
 ```
 Run: `cd 05_BUILD/04_CODE/dashboard && python tests/test_snapshot.py && python run.py` → http://127.0.0.1:8170/
+

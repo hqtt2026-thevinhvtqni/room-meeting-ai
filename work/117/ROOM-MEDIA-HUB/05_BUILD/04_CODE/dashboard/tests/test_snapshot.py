@@ -34,8 +34,8 @@ def main() -> int:
             failures.append(f"missing key: {key}")
 
     # Counts must match canonical Task Board
-    if len(data.get("dashboard_tasks", [])) != 9:
-        failures.append(f"dashboard_tasks count != 9 (got {len(data.get('dashboard_tasks', []))})")
+    if len(data.get("dashboard_tasks", [])) != 10:
+        failures.append(f"dashboard_tasks count != 10 (got {len(data.get('dashboard_tasks', []))})")
     if len(data.get("product_tasks", [])) != 13:
         failures.append(f"product_tasks count != 13 (got {len(data.get('product_tasks', []))})")
 
@@ -81,3 +81,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
+

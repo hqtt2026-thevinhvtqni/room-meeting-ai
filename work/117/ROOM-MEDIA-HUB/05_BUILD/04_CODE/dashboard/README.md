@@ -1,6 +1,6 @@
 # W117 Operational Dashboard
 
-**Status:** WORKING PREVIEW + E2E PASS (Go / AI-06)  
+**Status:** WORKING PREVIEW + E2E PASS (Go / AI-06); audit-fix pass + snapshot refresh (Vibe, 2026-11-17)  
 **Authorization:** Dashboard BUILD only (Vinh, 2026-11-17). **Product BUILD is NOT authorized.**
 
 ## What this is
@@ -9,16 +9,19 @@ A dedicated, **read-only** operational Dashboard for Work 117 only.
 | View | Content |
 |------|---------|
 | Work Overview | Status cards + strict scope boundary |
-| Task Board | Dashboard tasks (9) + Product tasks (13, reference) |
+| Task Board | Dashboard tasks (10) + Product tasks (13, reference) |
 | Agent Monitor | Role, status, evidence provenance — no invented online state |
 | Activity & Evidence | Timeline derived from canonical Journal |
 
 ## Source of truth
+Parsed data inputs:
 - `00_ROOT/TASK_BOARD.md`
 - `00_ROOT/NHAT_KY_THI_CONG.md`
+
+Informational provenance only (not parsed into the snapshot):
 - `00_ROOT/BIEN_BAN.md`
 
-Data is loaded from `data/snapshot.json` (generated from the canonical files above).
+Data is loaded from `data/snapshot.json` (generated from the canonical files above). All KPI card values are derived from the task arrays in the snapshot, not hand-written. All data-driven strings are HTML-escaped before rendering.
 
 **Rules enforced**
 - No fabricated progress metrics
@@ -50,8 +53,9 @@ Then open: **http://127.0.0.1:8170/**
 
 ## Automated E2E
 - Suite: `tests/test_e2e.py`
-- Last run: **43/43 PASS** (2026-11-17)
-- Evidence: `EVIDENCE/DASHBOARD_E2E_TEST_20261117.md`
+- Last full run: **43/43 PASS** (2026-11-17, builder self-test, pre-relocation path)
+- Note: suite counts were updated to 10 dashboard tasks after W117-DASH-010 was added; a fresh run from the canonical path is recorded as a pending debt until executed in a Python environment.
+- Evidence: `EVIDENCE/DASHBOARD_E2E_TEST_20261117.md`, `EVIDENCE/DASHBOARD_AUDIT_FIX_20261117_VIBE.md`
 - Coverage: snapshot integrity, static assets, HTML markers, JS contract, HTTP server (/, snapshot, assets, 404, auth boundary)
 
 ## Project layout
@@ -77,3 +81,4 @@ dashboard/
 
 ## Owner
 Go / AI-06 — Primary Builder & integration lead
+

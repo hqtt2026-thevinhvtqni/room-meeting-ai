@@ -84,10 +84,10 @@ def test_snapshot_integrity(r: Results) -> dict | None:
         else:
             r.fail(f"key present: {key}")
 
-    if len(data.get("dashboard_tasks", [])) == 9:
-        r.ok("dashboard_tasks count == 9")
+    if len(data.get("dashboard_tasks", [])) == 10:
+        r.ok("dashboard_tasks count == 10")
     else:
-        r.fail("dashboard_tasks count == 9", f"got {len(data.get('dashboard_tasks', []))}")
+        r.fail("dashboard_tasks count == 10", f"got {len(data.get('dashboard_tasks', []))}")
 
     if len(data.get("product_tasks", [])) == 13:
         r.ok("product_tasks count == 13")
@@ -271,3 +271,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
+
