@@ -209,3 +209,38 @@ def test_gateway_rejects_naive_received_at():
     with pytest.raises(GatewayRejected,match="received_at"):
         gateway.ingest("source-a",{"x-valid":"yes"},body,received_at=now)
     assert replay.seen==set()
+
+
+# W76-ID-001 — idempotency storage failures are distinct from duplicates
+def test_idempotency_store_failure_is_unavailable_not_duplicate():
+    from trigger_engine.retry import IdempotencyUnavailable
+    class Broken:
+        def claim(self,scope,key,expires_at): raise OSError("database offline")
+    with pytest.raises(IdempotencyUnavailable,match="claim failed"):
+        IdempotencyGuard(Broken()).claim("76","k",now=datetime.now(timezone.utc),ttl_seconds=60)
+
+def test_idempotency_indeterminate_store_result_fails_closed():
+    from trigger_engine.retry import IdempotencyUnavailable
+    class Indeterminate:
+        def claim(self,scope,key,expires_at): return None
+    with pytest.raises(IdempotencyUnavailable,match="indeterminate"):
+        IdempotencyGuard(Indeterminate()).claim("76","k",now=datetime.now(timezone.utc),ttl_seconds=60)
+
+@pytest.mark.parametrize("kwargs", [
+    {"work_id":None,"idempotency_key":"k","ttl_seconds":60},
+    {"work_id":"76","idempotency_key":" ","ttl_seconds":60},
+    {"work_id":"76","idempotency_key":"k","ttl_seconds":True},
+    {"work_id":"76","idempotency_key":"k","ttl_seconds":0},
+])
+def test_idempotency_guard_rejects_malformed_scope_key_or_ttl(kwargs):
+    class Store:
+        def claim(self,scope,key,expires_at): return True
+    with pytest.raises(ValueError):
+        IdempotencyGuard(Store()).claim(kwargs["work_id"],kwargs["idempotency_key"],now=datetime.now(timezone.utc),ttl_seconds=kwargs["ttl_seconds"])
+
+def test_retry_planner_rejects_non_boolean_retryable_and_invalid_clock():
+    planner=RetryPlanner(RetryPolicy(max_attempts=3,backoff_seconds=1))
+    with pytest.raises(ValueError):
+        planner.plan(completed_attempts=1,now=datetime.now(timezone.utc),retryable=1)
+    with pytest.raises(ValueError):
+        planner.plan(completed_attempts=1,now="not-a-datetime",retryable=True)
