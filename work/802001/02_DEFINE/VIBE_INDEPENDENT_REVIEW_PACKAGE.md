@@ -8,7 +8,7 @@
 - Date: 2026-11-17
 - Target branch: main
 - Status: VIBE REVIEW COMPLETED — VERDICT RECORDED IN §9; VINH APPROVAL PENDING
-- Canonical subject under review: `02_DEFINE/AGENT_SUPERVISION_BUSINESS_RULES.md` (W802001-DEF-001, v0.1 → v0.2)
+- Canonical subject under review: `02_DEFINE/AGENT_SUPERVISION_BUSINESS_RULES.md` (W802001-DEF-001, v0.1 → v0.2; Xu post-review reference correction → v0.3)
 - Governing standard: Work 70
 
 ## 1. Mục tiêu bàn giao
@@ -23,7 +23,7 @@ Vibe được đề nghị thực hiện phản biện độc lập đối với
 3. `work/802001/03_ARCHITECT/AGENT_OPERATIONAL_GATE_ARCHITECTURE.md` — kiến trúc nghiệp vụ hiện tại.
 4. `work/802001/00_ROOT/BIEN_BAN.md` — phạm vi và quyết định đã ghi.
 5. `work/802001/04_PLAN/IMPLEMENTATION_ROADMAP.md` — WP/trạng thái/gate.
-6. Work 70 canonical standards, đặc biệt DOC-001, DOC-004, DOC-005, DOC-033, DOC-057 và DOC-096 (đọc bản hiện hành trên repo, nếu truy cập được).
+6. Work 70 canonical standards, đặc biệt DOC-001, DOC-004, DOC-005, DOC-033, DOC-035, DOC-055 và DOC-057. DOC-096 chỉ là Retrieval/DecisionRAG architecture addendum, không phải session/journal control.
 
 Nếu nguồn không đọc được, ghi rõ BLOCKED và đường dẫn/điều kiện còn thiếu; không tự dựng nội dung thay nguồn.
 
@@ -35,7 +35,7 @@ Phản biện tối thiểu các chủ đề:
 - Reminder: event-driven cadence có chống spam, xử lý múi giờ, thời gian không hoạt động, Agent đã phản hồi và tình huống BLOCKED tốt không?
 - Authority: quyền của Vinh, Xu, Work Owner, Agent, Reviewer/QE, System Owner có chồng lấn hoặc tạo quyền ngầm không?
 - Evidence/journal: bằng chứng tối thiểu có thể truy nguyên, readback, kiểm tra độc lập và chống self-certification không?
-- Governance: tương thích Work 70; không thay thế lifecycle/Gates W70; ranh giới DOC-057/DOC-096; không tạo policy mới trái thẩm quyền.
+- Governance: tương thích Work 70; không thay thế lifecycle/Gates W70; ranh giới DOC-033/DOC-035/DOC-057; không tạo policy mới trái thẩm quyền.
 - Failure modes: multi-agent/multi-work findings, false positives, missing prerequisites, stale docs, system failures, reviewer conflict of interest, repeat findings, appeal/dispute, privacy/secret handling.
 - Khả năng triển khai: quy tắc nào cần DEFINE thêm, quy tắc nào chỉ nên để ARCHITECT/PLAN; không thiết kế code khi nghiệp vụ chưa ổn định.
 
