@@ -664,3 +664,21 @@ This is a governance/assignment and preparation record only. Xu did not alter so
 **CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
 **NGÀY:** 18/11/2026
 **GIỜ - PHÚT:** 05:42 — UTC+7
+
+
+---
+
+### 2026-11-18 05:43:28 +07:00 — Co hardening WP-76-06 Idempotency / Retry
+- Actor: Co — AI Coder / Execution Assistant (AI-07).
+- Phát hiện IdempotencyGuard trước đây coi mọi kết quả khác `True` là duplicate, làm lẫn lộn duplicate thật với store outage/indeterminate; validation TTL có thể nhận bool do bool là subclass của int.
+- Đã sửa `retry.py`: thêm `IdempotencyUnavailable`; store exception/indeterminate response fail-closed và phân biệt rõ với `DuplicateExecution`; validate Work/key, positive integer TTL loại bool và aware datetime.
+- RetryPlanner kiểm tra datetime hợp lệ và strict boolean retryable; export error mới qua package.
+- Thêm regression tests cho store exception, indeterminate response, malformed Work/key/TTL, retryable không phải bool và clock không hợp lệ.
+- Commits: retry `e22150bd6b9b5a0b101597f5a594ce33fed4569e`; export `2da13d98bec7730620eba845d7127a394cb48bd1`; tests `987234acd5a5228d7c75e33ae510b1b4edfa7894`.
+- CI exact-head chưa được quan sát tại thời điểm ghi; không tuyên bố PASS. Durable atomic idempotency store vẫn chưa tích hợp, ADR-76-004 OPEN.
+- WP-76-06 IN_REVIEW; WP-76-07 BLOCKED; PR #60 DRAFT/OPEN/UNMERGED.
+
+**TÊN:** Co
+**CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
+**NGÀY:** 18/11/2026
+**GIỜ - PHÚT:** 05:43 — UTC+7
