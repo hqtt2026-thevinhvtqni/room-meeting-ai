@@ -1,7 +1,7 @@
 {
   "work_id": "76",
   "product_name": "AI Trigger Engine & Automation Framework",
-  "summary": "Work 76 tiếp tục hardening WP-76-02 Event Gateway, WP-76-03 Scheduler, WP-76-06 Idempotency/Retry và WP-76-08 Audit. Exact-head CI: Event Gateway 58/58, Audit 54/54, Idempotency/Retry 65/65 trên Python 3.11/3.12. Scheduler vừa bổ sung validation và fail-closed due-store handling; CI cho thay đổi mới chưa xác minh. Durable production stores, Core/runtime, verified dispatch, independent QE và E2E vẫn pending.",
+  "summary": "Work 76 tiếp tục hardening WP-76-02 Event Gateway, WP-76-03 Scheduler, WP-76-06 Idempotency/Retry và WP-76-08 Audit. Exact-head CI đã đạt: Event Gateway 58/58; Audit 54/54; Idempotency/Retry 65/65; Scheduler 71/71 trên Python 3.11/3.12. Đây là branch CI; durable production stores, recurrence/DST/HA, Core/runtime, verified dispatch, independent QE và E2E vẫn pending.",
   "standard_id": "ROOM-HOP-WORK-MASTER",
   "standard_version": "1.2",
   "work_status": "ACTIVE",
@@ -9,9 +9,9 @@
   "current_phase": "01_DISCOVER",
   "source_mode": "local_snapshot",
   "freshness": "LOCAL_SNAPSHOT",
-  "revision": "W76-DASHBOARD-0.3.20",
-  "warning_vi": "LOCAL SNAPSHOT — chưa kết nối Core live. PR #60 draft, chưa merge. Event Gateway CI 58/58 (EV-76-036); Audit CI 54/54 (EV-76-034); Idempotency/Retry CI 65/65 (EV-76-038). Scheduler hardening mới commit, CI chưa xác minh (EV-76-039). Branch CI only, not Canonical QE/runtime/E2E/release. WP-76-07 vẫn BLOCKED.",
-  "updated_at": "2026-11-17T22:44:31.000Z",
+  "revision": "W76-DASHBOARD-0.3.21",
+  "warning_vi": "LOCAL SNAPSHOT — chưa kết nối Core live. PR #60 draft, chưa merge. Exact-head CI: Scheduler 71/71 (EV-76-040); Event Gateway 58/58 (EV-76-036); Audit 54/54 (EV-76-034); Idempotency/Retry 65/65 (EV-76-038). Branch CI only, not Canonical QE/runtime/E2E/release. WP-76-07 vẫn BLOCKED.",
+  "updated_at": "2026-11-17T22:45:19.000Z",
   "phases": [
     {
       "phase_id": "01_DISCOVER",
