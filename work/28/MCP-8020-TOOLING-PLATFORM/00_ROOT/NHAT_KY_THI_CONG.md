@@ -967,3 +967,61 @@ Xu approves three contract directions:
 - Branch divergence from `main` is not resolved; no merge/rebase/force-push was performed.
 
 **STATUS:** 10 CANONICAL / SELECTED ARTIFACTS GITHUB → SANDBOX EXACT-MATCH / FULL WORKSPACE SYNC STILL OPEN / WORK ACTIVE — INTEGRATION BLOCKED — NOT RELEASED / EXECUTION GATE CLOSED.
+
+
+## 2026-11-18 — JRN-W28-027 — Ka independent security review of PR #61 (WP2 recovery)
+
+**Người thực hiện:** Ka  
+**Chức danh:** Chief Security Architect (CSA) — Independent Architecture/Security Reviewer  
+**Execution time:** 2026-11-18 05:26 UTC+07:00  
+**Priority:** P1 — WP2 process-tree cleanup integrity  
+**Review target:** PR #61 — `auto/work28-vi-wp2-recovery-20261118`  
+**PR HEAD reviewed:** `d6cf0763870eb860fe630e890bc0190ef3de9335`  
+**Code commit under test:** `27ecdebc94a1ec177a899db8971ed4d76d7d2004`  
+**CI evidence:** Actions run #357 SUCCESS; WP2 workflow run #19 SUCCESS.
+
+### READ / TRACE
+- Re-read the canonical Work Manifest, Master Execution Plan and Architecture Decision. Confirmed GitHub branch `work/28-mcp-tooling-platform` remains canonical; PR branch is isolated and is not merged.
+- Confirmed the governance boundary: Core :8000 remains the sole authority; MCP :8030 is the supported Build/Verification lane; historical MCP :8020 remains quarantined and DO NOT USE; Execution Gate CLOSED; release NOT_RELEASED.
+- Read PR #61 metadata, complete changed-file inventory, patch, `execution_host/host.py`, `execution_host/host_run.py`, `execution_host/process_job.py`, `execution_host/host_cleanup_bridge.py`, regression tests, Vi's security handoff and existing journal entries JRN-W28-025/026.
+- PR #61 is OPEN and unmerged. PR HEAD is `d6cf076...`; code commit `27ecdeb...` is the commit named in the CI evidence. GitHub currently shows no submitted PR reviews, inline review threads or discussion comments.
+- Actions run #357 and WP2 run #19 both report SUCCESS. This verifies CI execution only; Ka did not independently execute pytest or native Windows tests in this review.
+
+### REVIEW — FINDINGS
+
+**KA-W28-PR61-01 — HIGH / P1 — Legacy Popen cleanup can falsely attest process-tree cleanup**
+- Location: `execution_host/host.py`, `_cleanup_service_entry()` legacy non-`ManagedProcess` branch and `service_status()` legacy branch.
+- The fallback terminates/waits only for the raw Popen leader, then sets `process_reaped=True` when that leader exits. It does not inspect or drain descendants, and records only `legacy_unmanaged_process_cleanup`. `service_status()` also reports a dead raw Popen as STOPPED with `members=0` without membership proof.
+- A surviving child can therefore outlive the registry entry while cleanup is reported PASS.
+- Required remediation: fail closed for raw/unmanaged Popen entries unless process-tree membership can be independently proven and drained. Do not retrofit/claim Windows Job Object containment after spawn. Retain the registry handle and return BLOCKED when tree state is unknown.
+- Required regression: raw Popen leader exits while child remains; verify stop/restart stays BLOCKED, handle is retained, and no replacement starts. Include unknown membership and native Windows behavior.
+
+**KA-W28-PR61-02 — HIGH / P1 — POSIX process-membership probe converts inspection failure into zero members**
+- Location: `execution_host/process_job.py`, `_posix_group_members()`, consumed by `ManagedProcess.members_count()` and `_drain_posix_group()`.
+- The helper returns integer 0 on `OSError` or `subprocess.TimeoutExpired`. Callers interpret 0 as an empty process group: `_drain_posix_group()` returns drained=True, and `service_status()` can report a dead leader STOPPED. An unavailable or timed-out `ps` probe is indistinguishable from verified zero descendants.
+- Although this helper predates PR #61, the recovery patch relies on its result to decide whether to release the service registry entry. It is therefore in the security-critical acceptance path.
+- Required remediation: represent inspection failure as UNKNOWN (for example `None`), propagate UNKNOWN as BLOCKED, and never release the registry handle or spawn a replacement unless group emptiness is positively verified.
+- Required regression: inject missing `ps`, timeout, non-zero exit and unusable output while a child remains; verify cleanup and status remain BLOCKED and registry ownership is retained.
+
+**KA-W28-PR61-03 — MEDIUM / P2 — Concurrency regression does not cover start/stop interleavings**
+- The new same-name concurrency test verifies multiple concurrent starts, but not concurrent start/stop/status interleavings or a cleanup exception racing a new start.
+- Required additional regression: coordinate same-name start and stop threads with barriers/fault injection; assert one registry owner, no orphan process, no replacement before verified cleanup, and stable BLOCKED recovery. Repeat on Linux and Windows.
+
+### POSITIVE REVIEW NOTES
+- The RLock around inspect → cleanup → spawn → register and around stop/status is a sound direction for same-instance registry serialization.
+- Failed ManagedProcess cleanup retains the registry object and sets a BLOCKED marker; restart retries cleanup instead of spawning over uncertain state.
+- Suspended-spawn abort evidence preserves the supplied `process_reaped` boolean and avoids manufacturing `no_process` when abort is unconfirmed.
+- Runtime identity is expanded before service-specific `pid` fields, avoiding the reported PID-key collision in the inspected response paths.
+- `readiness=NOT_CHECKED` correctly avoids treating process existence as application readiness.
+
+### DECISION / REQUIRED NEXT
+- **PR #61: NOT APPROVED — REQUEST CHANGES.** GitHub rejected a formal REQUEST_CHANGES review because the connected GitHub identity is also the PR author; the findings are recorded as a PR conversation comment and in this canonical journal.
+- The two HIGH findings block acceptance of the WP2 recovery slice until fixed and retested on the exact updated PR head.
+- Vi remains BUILD OWNER and may autonomously remediate within the isolated PR branch. No merge, force-push, production deployment, Core mutation, listener restart or Execution Gate opening is authorized by this review.
+- An's independent QA remains a separate required gate; CI results do not substitute for An's acknowledgement/reproduction.
+- Auto E2E remains BLOCKED pending verified live MCP :8030 process/build identity and raw `tools/list` name/schema parity evidence. PC G1–G4 remain NOT RUN.
+- Preserve Execution Gate CLOSED and release NOT_RELEASED.
+
+**STATUS:** SOURCE REVIEW COMPLETE / NOT APPROVED — REQUEST CHANGES / 2 HIGH + 1 MEDIUM FINDINGS / AN INDEPENDENT QA PENDING / LIVE E2E BLOCKED / EXECUTION GATE CLOSED / NOT RELEASED.
+
+**Signature:** [KÝ: KA | CSA — INDEPENDENT REVIEWER]
