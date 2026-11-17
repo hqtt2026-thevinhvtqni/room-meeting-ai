@@ -52,4 +52,4 @@ AutoGPT version/tag; license review chi tiết; Docker/host topology; cấu hìn
 Hoàn tất source/contract discovery của ROOM-HOP Core, Gateway, Agent Runtime, Sandbox/Execution Host, Work 501, Work 14, Work 30, Work 15, Work 16, Work 22 và Work 50; phản biện độc lập; xác minh AutoGPT release/license/security/deployment requirements; chốt threat model, data flow, API contracts, test strategy, rollback và resource budget; Vinh phê duyệt rõ ràng cho BUILD.
 
 ## 8. Phạm vi phiên hiện tại
-Đã tạo Sandbox Work 502 bằng identity xu được ROOM-HOP xác nhận hợp lệ. Đã ghi nhận kiến trúc thiết kế sơ bộ. Chưa cài đặt AutoGPT, tải image/model, tạo key, gọi API, bật billing, tạo cloud resource, chạy test runtime hoặc triển khai. GitHub main sync chưa được thực hiện trong lần này.
+Đã tạo Sandbox Work 502 bằng identity xu được ROOM-HOP xác nhận hợp lệ. Đã ghi nhận kiến trúc thiết kế sơ bộ. Chưa cài đặt AutoGPT, tải image/model, tạo key, gọi API, bật billing, tạo cloud resource, chạy test runtime hoặc triển khai. GitHub main: 8 canonical records synchronized and exact-readback verified at commit 1a8e1a3451e3e05eea3c7d40c1205d7fb46aa405; PC parity NOT VERIFIED.
