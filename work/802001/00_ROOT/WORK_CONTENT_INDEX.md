@@ -12,8 +12,8 @@ Theo dõi, nhắc nhở, hướng dẫn, điều chỉnh và kiểm tra lại Ag
 - 00_ROOT/DOCUMENT_REGISTER.md — canonical artifact index.
 - 00_ROOT/NHAT_KY_THI_CONG.md — chronological execution/audit journal.
 - 01_DISCOVER/AGENT_SUPERVISION_CASE_INVENTORY.md — historical cases and discovery findings.
-- 02_DEFINE/AGENT_SUPERVISION_BUSINESS_RULES.md — DEFINE business rules, currently v0.1 and NOT APPROVED.
-- 02_DEFINE/VIBE_INDEPENDENT_REVIEW_PACKAGE.md — canonical review handoff/result record for Vibe; acknowledgement and review pending.
+- 02_DEFINE/AGENT_SUPERVISION_BUSINESS_RULES.md — DEFINE business rules, currently v0.2 (Vibe review incorporated) and NOT APPROVED.
+- 02_DEFINE/VIBE_INDEPENDENT_REVIEW_PACKAGE.md — canonical review handoff/result record for Vibe; review COMPLETED (ACCEPT WITH CHANGES), Vinh approval pending.
 - 03_ARCHITECT/AGENT_OPERATIONAL_GATE_ARCHITECTURE.md — business process architecture.
 - 04_PLAN/IMPLEMENTATION_ROADMAP.md — WP and phase plan.
 - 06_VERIFY/VERIFICATION_PLAN.md — verification plan.
@@ -27,7 +27,7 @@ Assignment intake → briefing → acknowledgement → checkpoint setup → prog
 Work 70 is the mandatory governance template. DOC-057 handles entry/assignment readiness; DOC-096 handles session integrity and journal discipline; W70 lifecycle gates remain authoritative. W802001's assignment supervision process complements these standards and does not replace or renumber them.
 
 ## Phase boundary
-DEFINE v0.1 is a working draft for independent review, not approved policy. BUILD remains NOT AUTHORIZED until DISCOVER/DEFINE/ARCHITECT/PLAN satisfy W70 and G4 is PASS with explicit approval.
+DEFINE v0.2 incorporates the Vibe independent review (ACCEPT WITH CHANGES) and is not approved policy. BUILD remains NOT AUTHORIZED until DISCOVER/DEFINE/ARCHITECT/PLAN satisfy W70 and G4 is PASS with explicit approval.
 
 ## Legacy preservation
 Former E2E auto-wake/transcript-response files and folders remain preserved. No deletion, move or rename is authorized until file inventory, mapping, readback and approval are complete.

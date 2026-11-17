@@ -7,8 +7,8 @@
 - Sender/coordinator: Xu / AI-01
 - Date: 2026-11-17
 - Target branch: main
-- Status: READY FOR VIBE REVIEW — HANDOFF RECORDED; VIBE ACKNOWLEDGEMENT NOT YET VERIFIED
-- Canonical subject under review: `02_DEFINE/AGENT_SUPERVISION_BUSINESS_RULES.md` (W802001-DEF-001, v0.1)
+- Status: VIBE REVIEW COMPLETED — VERDICT RECORDED IN §9; VINH APPROVAL PENDING
+- Canonical subject under review: `02_DEFINE/AGENT_SUPERVISION_BUSINESS_RULES.md` (W802001-DEF-001, v0.1 → v0.2)
 - Governing standard: Work 70
 
 ## 1. Mục tiêu bàn giao
@@ -90,25 +90,50 @@ Cập nhật phần “VIBE REVIEW RESULT” ở cuối chính hồ sơ này v�
 
 ## 8. Trạng thái bàn giao
 - Handoff package: CREATED ON GITHUB MAIN.
-- Vibe acknowledgement: PENDING — chưa có bằng chứng Vibe đã mở/nhận hồ sơ.
-- Independent review: NOT STARTED / PENDING VIBE.
+- Vibe acknowledgement: RECORDED — Vibe đã mở, đọc và thực hiện review trên GitHub main (xem §9 và journal LOG-0010).
+- Independent review: COMPLETED — ACCEPT WITH CHANGES.
 - Policy approval: NOT APPROVED.
 - BUILD: NOT AUTHORIZED.
 
 ## 9. VIBE REVIEW RESULT — VIBE ONLY TO COMPLETE
-> Vibe: cập nhật phần này sau khi thực sự thực hiện review. Không để Xu điền thay verdict của reviewer.
 
-- Reviewer:
-- Review date/time:
-- Starting main HEAD:
-- Final commit SHA:
-- Verdict:
+- Reviewer: Vibe (Mistral Vibe agent; identity chỉ theo dấu vết commit trong repo này, không tuyên bố xác thực danh tính ngoài Git).
+- Review date/time: 2026-11-17, khoảng 08:00–08:10 +07:00.
+- Starting main HEAD: `5040acdc58bcd0930a4b718f4c209ac390618596` (commit "W802001: mark Vibe review handoff pending in roadmap").
+- Final commit SHA: ghi tại `00_ROOT/NHAT_KY_THI_CONG.md` W802001-LOG-0011 sau readback (commit xác minh đi sau commit review).
+- Verdict: **ACCEPT WITH CHANGES** — cấu trúc DEFINE v0.1 đạt yêu cầu; áp dụng các chỉnh sửa có căn cứ thành v0.2; không có finding Critical; policy vẫn NOT APPROVED.
 - Findings:
+
+| ID | Severity | Topic | Source/evidence | Issue | Recommendation | Disposition |
+|---|---|---|---|---|---|---|
+| VF-01 | Major | Governance/traceability | Directory listing `work/70/.../00_ROOT` tại HEAD 5040acdc; DEFINE §1; BIEN_BAN header; Content Index | DOC-096 được trích là chuẩn bắt buộc nhưng không định vị được bản hiện hành trong repo (W70 00_ROOT không có file DOC-096; DOC-055 cũng chưa được quét toàn repo) | Giữ trích dẫn, đánh dấu UNVERIFIED-REFERENCE; Xu/Vinh cung cấp canonical path của DOC-096 (hoặc sửa trích dẫn) trước khi phê duyệt policy | OPEN QUESTION cho Xu/Vinh; ghi chú đã thêm vào DEFINE §1 |
+| VF-02 | Minor | Assignment lifecycle | DEFINE §2, §10 vs ARCHITECT v1.1 §6 vs BIEN_BAN v1.1 §5 | Ba hồ sơ mô tả ba bộ trạng thái không khớp hoàn toàn; DEFINE §10 thiếu NEEDS_BRIEFING dù §2 có dùng; REMINDED/COACHED được ghi như trạng thái ở ARCHITECT/BIEN_BAN | Bổ sung NEEDS_BRIEFING vào DEFINE §10; ghi rõ REMINDED/COACHED là nhãn sự kiện, không phải trạng thái; đối chiếu lại khi truy vết ARCHITECT | CHANGE — đã áp dụng trong DEFINE v0.2 §10 |
+| VF-03 | Minor | Reminder | DEFINE §5 | Thiếu quy tắc múi giờ, thời gian không hoạt động và xử lý Agent offline/biết trước; chỉ có chống spam | Thêm quy tắc timezone (mặc định +07:00), quiet hours, offline → dời mốc, không tính MISSED trong khoảng không hoạt động | CHANGE — đã áp dụng trong DEFINE v0.2 §5 |
+| VF-04 | Minor | Failure modes | DEFINE §12 câu 7 (mở) | Thiếu quy tắc liên kết finding nhiều Agent/nhiều Work | Ghi một finding per assignment gắn root-cause/correlation ID chung; đóng/mở độc lập theo evidence; chi tiết để ARCHITECT/PLAN | CHANGE — đã áp dụng ở mức DEFINE v0.2 §3 |
+| VF-05 | Minor | Failure modes / evidence | DEFINE §7 | Thiếu quy tắc reviewer conflict-of-interest và khiếu nại/dispute | Reviewer không được là người tạo correction/evidence bị kiểm tra; xung đột lợi ích → đổi reviewer hoặc escalate; một lần khiếu nại có căn cứ mới, Vinh quyết định cuối | CHANGE — đã áp dụng trong DEFINE v0.2 §7 |
+| VF-06 | Observation | Failure modes (intent) | DEFINE §12 câu 6 (mở) | Chưa phân biệt lỗi vô ý / lặp lại do hướng dẫn kém / cố ý không tuân thủ | Giữ nguyên tắc không gắn nhãn động cơ khi thiếu bằng chứng; thêm ghi chú xem xét cả trách nhiệm điều phối; phân loại chi tiết DEFER đến khi có thêm case | DEFER — ghi chú đã thêm ở DEFINE v0.2 §3 |
+| VF-07 | Observation | Severity | DEFINE §4 | Ví dụ S2 "bỏ checkpoint" có thể che giấu trạng thái PASS giả (thuộc S1); ranh giới S0–S3 nhìn chung rõ, severity provisional là hợp lý | Bổ sung chú thích nâng mức khi bỏ checkpoint che giấu PASS giả | CHANGE (nhẹ) — đã áp dụng trong DEFINE v0.2 §4 |
+| VF-08 | Observation | Taxonomy | DEFINE §3 | Một số tình huống khớp nhiều nhóm (STATUS_REPORTING vs QUALITY_ACCEPTANCE; EVIDENCE_JOURNAL vs DOCUMENTATION_DRIFT) | Quy tắc "một nhóm chính + nhãn phụ" đã có; thêm tie-breaker không cần thiết ở v0.2; theo dõi qua các case thực tế | KEEP — theo dõi |
+| VF-09 | Observation | Khả năng triển khai | DEFINE §5, §9 vs ARCHITECT §10 | Cơ chế lập lịch reminder, xác thực identity, schema lưu journal là việc thiết kế, không phải quy tắc nghiệp vụ | Giữ ranh giới DEFINE: chỉ quy tắc nghiệp vụ; cơ chế/chọn công nghệ để ARCHITECT | KEEP |
+| VF-10 | Observation | Evidence/journal | DEFINE §9; DOC-033 §10; DOC-001 invariant 7 | Đã đủ chống self-certification (Agent không tự đóng finding, reviewer độc lập cho S0/S1); chưa có quy tắc bắt buộc readback sau mỗi lần ghi tài liệu của chính supervisor | Đề xuất bổ sung "mọi lần ghi hồ sơ canonical phải readback trước khi coi là RECORDED" khi DEFINE lên bản kế tiếp | OPEN QUESTION (đề xuất nhỏ) |
+
 - Traceability:
-- Files changed:
-- Verification/readback:
-- Open questions:
-- Policy approval: NOT APPROVED (unless separately approved by Vinh with explicit record).
+  - VF-02..VF-07 gắn với DEFINE §12 câu hỏi 1–7 và các case C-01..C-10 trong `01_DISCOVER/AGENT_SUPERVISION_CASE_INVENTORY.md` (VERIFIED-IN-RECORD/REPORTED-IN-TRANSCRIPT theo inventory; không có finding nào dựa trên NOT-OBSERVED).
+  - VF-01 gắn với yêu cầu nguồn mục 2.6 của handoff (DOC-096 "nếu truy cập được") và DOC-057 §9 (không kết luận "không tồn tại" từ một lần tìm).
+  - VF-08, VF-09, VF-10 là observation/đề xuất mới của reviewer, không phải thay đổi policy.
+- Files changed (commit review):
+  1. `02_DEFINE/AGENT_SUPERVISION_BUSINESS_RULES.md` — v0.1 → v0.2: ghi chú DOC-096 unverified (VF-01); multi-agent/multi-work linkage + không gắn nhãn động cơ (VF-04, VF-06); chú thích nâng S2→S1 (VF-07); quy tắc múi giờ/offline (VF-03); reviewer independence + appeal (VF-05); NEEDS_BRIEFING + ghi chú REMINDED/COACHED (VF-02); cập nhật §12.
+  2. `02_DEFINE/VIBE_INDEPENDENT_REVIEW_PACKAGE.md` — ghi kết quả review (mục 8, 9).
+  3. `00_ROOT/DOCUMENT_REGISTER.md` — cập nhật version/status W802001-DEF-001 và W802001-REV-VIBE-001.
+  4. `00_ROOT/WORK_CONTENT_INDEX.md` — phản ánh DEFINE v0.2 và review completed.
+  5. `04_PLAN/IMPLEMENTATION_ROADMAP.md` — v1.4: WP-802001-02 "REVIEW COMPLETED — AWAITING VINH APPROVAL".
+  6. `00_ROOT/NHAT_KY_THI_CONG.md` — append LOG-0010 (review) và LOG-0011 (readback/verification).
+- Verification/readback: sau commit review, đọc lại toàn bộ 6 file từ GitHub `main` (xem LOG-0011); kiểm tra nhất quán version/status giữa DEFINE, register, index, roadmap, journal. Không chạy test runtime (không thuộc phạm vi; BUILD NOT AUTHORIZED).
+- Open questions cần Xu/Vinh quyết định:
+  1. VF-01: canonical path của DOC-096 (hoặc điều chỉnh trích dẫn chuẩn).
+  2. VF-10: có đưa quy tắc readback bắt buộc sau mỗi lần ghi hồ sơ canonical vào DEFINE bản kế tiếp không.
+  3. Xác nhận DEFINE v0.2 đủ điều kiện trình Vinh phê duyệt policy, hay cần thêm phản biện từ reviewer khác (Ka/Cla/Qw) trước.
+- Policy approval: NOT APPROVED (Vinh chưa phê duyệt; không tuyên bố approval).
 - BUILD: NOT AUTHORIZED.
 
 ---

@@ -3,10 +3,10 @@
 
 - Work: 802001
 - Artifact ID: W802001-DEF-001
-- Version: 0.1 — WORKING DRAFT
+- Version: 0.2 — INDEPENDENT REVIEW INCORPORATED (VIBE)
 - Date: 2026-11-17
 - Governing standard: Work 70
-- Status: FOR INDEPENDENT REVIEW — NOT APPROVED POLICY
+- Status: REVIEWED — NOT APPROVED POLICY (Vinh approval pending)
 - Authority: Vinh (final approval); Xu / AI-01 (coordination and draft owner)
 
 ## 1. Mục đích và ranh giới
@@ -15,6 +15,8 @@ Tài liệu này chuyển 10 tình huống lịch sử trong DISCOVER thành b�
 Đây là bản DEFINE dự thảo, không phải quyết định phê duyệt policy, không phải đặc tả kỹ thuật cuối cùng và không chứng minh ROOM-HOP đã có runtime monitoring/reminder/enforcement.
 
 W70 tiếp tục là chuẩn quản trị gốc. Trạng thái trong tài liệu này chỉ áp dụng cho assignment/finding; không thay thế lifecycle state hoặc Gate G0–G9 của W70. DOC-057 kiểm tra điều kiện nhận việc; DOC-096 giữ chuẩn phiên, nguồn sự thật và nhật ký.
+
+Lưu ý truy nguyên (v0.2 review): DOC-096 được trích dẫn là chuẩn bắt buộc nhưng chưa định vị được bản hiện hành trong repo (không thấy trong `work/70/.../00_ROOT`). Trích dẫn này là UNVERIFIED-REFERENCE cho đến khi Xu/Vinh cung cấp canonical path; không dựng nội dung thay nguồn.
 
 ## 2. Đơn vị theo dõi và dữ liệu tối thiểu
 Đơn vị theo dõi là một assignment gắn với Work/WP cụ thể. Mỗi assignment cần có:
@@ -43,7 +45,9 @@ Một finding có một nhóm chính và có thể có nhãn phụ:
 - DOCUMENTATION_DRIFT: hồ sơ hướng dẫn/manifest/decision không khớp hiện trạng.
 - UNKNOWN: chưa đủ bằng chứng để phân loại; giữ mở và tiếp tục TRACE.
 
-Không mặc định mọi finding là lỗi cá nhân Agent. Trước khi quy trách nhiệm phải phân biệt: Agent execution error, system deficiency, missing prerequisite/permission, stale or conflicting documentation, reviewer/coordination error, and unknown cause.
+Không mặc định mọi finding là lỗi cá nhân Agent. Trước khi quy trách nhiệm phải phân biệt: Agent execution error, system deficiency, missing prerequisite/permission, stale or conflicting documentation, reviewer/coordination error, and unknown cause. Không gắn nhãn động cơ (cố ý/vô ý) nếu thiếu bằng chứng; khi nghi ngờ lặp lại do hướng dẫn kém, xem xét cả trách nhiệm điều phối trước khi quy cho Agent.
+
+Khi một finding liên quan đến nhiều Agent hoặc nhiều Work: ghi một bản ghi finding cho mỗi assignment bị ảnh hưởng, gắn chung một root-cause/correlation ID để truy nguyên; quyết định đóng/mở từng bản ghi độc lập theo evidence của assignment đó. Quy trình liên kết chi tiết là việc của ARCHITECT/PLAN, không chuẩn hóa thêm ở DEFINE v0.2.
 
 ## 4. Severity — mức độ ảnh hưởng
 Mức độ dựa trên tác động thực tế và khả năng gây hậu quả, không dựa trên cảm xúc hay số lần nhắc đơn thuần.
@@ -52,7 +56,7 @@ Mức độ dựa trên tác động thực tế và khả năng gây hậu qu�
 |---|---|---|---|
 | S0 Critical | Có nguy cơ tức thời về bảo mật, dữ liệu, hành động phá hủy, vượt quyền nghiêm trọng hoặc làm sai lệch nguồn sự thật trọng yếu | Lộ credential; xóa/ghi đè dữ liệu ngoài phạm vi; tiếp tục hành động bị cấm | Dừng/hold hành động rủi ro ngay; bảo toàn evidence; báo người có thẩm quyền; không tự ý khôi phục/xóa dấu vết |
 | S1 High | Có khả năng làm sai quyết định, sai kiến trúc/scope, sai actor/authority hoặc tạo trạng thái PASS giả | Khẳng định Real E2E khi chỉ có MOCK; dùng identity chưa xác thực để thực hiện hành động có quyền | Cảnh báo rõ; hold bước phụ thuộc; yêu cầu correction và independent recheck |
-| S2 Medium | Sai quy trình/nguồn/cấu trúc/chất lượng có thể sửa được, chưa gây tác động nghiêm trọng | Dùng tài liệu cũ; bỏ checkpoint; thiếu readback/evidence quan trọng | Hướng dẫn sửa có hạn/checkpoint; theo dõi correction và recheck |
+| S2 Medium | Sai quy trình/nguồn/cấu trúc/chất lượng có thể sửa được, chưa gây tác động nghiêm trọng | Dùng tài liệu cũ; bỏ checkpoint; thiếu readback/evidence quan trọng (nếu bỏ checkpoint có thể che giấu trạng thái PASS giả thì nâng S1) | Hướng dẫn sửa có hạn/checkpoint; theo dõi correction và recheck |
 | S3 Low | Sai sót nhỏ, phạm vi hẹp, không ảnh hưởng tính đúng đắn hoặc an toàn tổng thể | Lỗi định dạng/naming cục bộ, thiếu metadata không trọng yếu | Nhắc nhẹ hoặc gom vào checkpoint gần nhất; tránh spam |
 
 Severity ban đầu là provisional. Supervisor phải ghi lý do, tác động, confidence và căn cứ. Khi chưa rõ mức độ, chọn mức tạm thời thận trọng, ghi UNKNOWN/NEEDS_TRACE; không tự nâng thành vi phạm.
@@ -63,6 +67,8 @@ Không đặt một SLA/tần suất chung cho mọi Agent/Work trong bản 0.1.
 - Deadline, dependency và thời gian cần để tạo ra evidence có ý nghĩa.
 - Độ mới/độ ổn định của nguồn chuẩn và mức độ quan trọng của deliverable.
 - Lịch làm việc, thời gian phản hồi đã thống nhất và trạng thái blocked.
+
+Múi giờ và thời gian không hoạt động: mọi mốc checkpoint/deadline trong reminder phải ghi rõ timezone (mặc định +07:00 trừ khi assignment ghi khác); không tính Agent là MISSED/NO_RESPONSE trong khoảng thời gian không hoạt động đã thống nhất; khi Agent offline/biết trước sẽ vắng, chuyển sang chờ đến thời điểm hoạt động kế tiếp thay vì xếp thành vi phạm.
 
 Các loại nhắc:
 1. UPCOMING: nhắc trước checkpoint theo lịch đã thống nhất; chỉ nhắc nếu có ích và chưa có evidence hoàn thành.
@@ -95,6 +101,8 @@ Agent nộp correction không đồng nghĩa finding đã đóng. Recheck phải
 Trạng thái finding:
 OPEN → ACKNOWLEDGED → GUIDANCE_SENT → CORRECTION_REQUIRED → CORRECTION_SUBMITTED → RECHECK → (VERIFIED_CLOSED | REOPENED | BLOCKED | ESCALATED).
 
+Reviewer độc lập và tranh chấp: người recheck không được là Agent đã tạo correction, và với S0/S1 cần người không tham gia tạo evidence bị kiểm tra. Nếu reviewer có xung đột lợi ích (cùng tạo evidence, cùng assignment, quan hệ chỉ đạo trực tiếp với actor) thì thay reviewer khác do Xu chỉ định hoặc escalate lên Vinh. Agent/Work Owner không đồng ý kết luận recheck có quyền khiếu nại một lần: nêu căn cứ mới hoặc evidence mới cho Xu; nếu vẫn không thống nhất, Vinh quyết định. Khiếu nại không tự đổi trạng thái finding.
+
 VERIFIED_CLOSED chỉ được reviewer/supervisor có thẩm quyền ghi sau recheck PASS. Agent không tự đóng finding do chính mình xử lý. Với S0/S1 hoặc thay đổi ảnh hưởng quyết định/nguồn sự thật, yêu cầu reviewer độc lập với người tạo correction. BLOCKED không phải CLOSED; phải có blocker, owner điều kiện và điều kiện tiếp tục.
 
 ## 8. Quyền hạn và trách nhiệm
@@ -118,7 +126,8 @@ Mỗi sự kiện có ý nghĩa phải ghi vào journal canonical của Work, t�
 Không ghi credential/secret vào journal. Không sửa/xóa evidence gốc để làm test pass; lưu input, output và hash/readback tách biệt khi phù hợp.
 
 ## 10. Tiêu chí chuyển trạng thái
-- ASSIGNED → BRIEFED: đủ mục tiêu, scope, role, nguồn chuẩn, output, acceptance, checkpoint và journal path.
+- ASSIGNED → NEEDS_BRIEFING: assignment đã ghi nhận nhưng chưa đủ dữ liệu briefing thiết yếu (mục 2); không suy diễn nhận việc từ im lặng.
+- NEEDS_BRIEFING → BRIEFED: đủ mục tiêu, scope, role, nguồn chuẩn, output, acceptance, checkpoint và journal path.
 - BRIEFED → ACKNOWLEDGED: Agent phản hồi xác nhận hiểu nhiệm vụ/giới hạn/checkpoint; acknowledgement không đồng nghĩa đã thực thi.
 - IN_PROGRESS → ON_TRACK: có artifact/progress evidence phù hợp checkpoint.
 - IN_PROGRESS → AT_RISK: checkpoint/quality/dependency có dấu hiệu đe dọa deadline hoặc acceptance; nêu căn cứ.
@@ -127,6 +136,8 @@ Không ghi credential/secret vào journal. Không sửa/xóa evidence gốc đ�
 - CORRECTION_SUBMITTED → RECHECK: correction và evidence đã được nộp đầy đủ để kiểm tra.
 - RECHECK → VERIFIED_CLOSED: reviewer xác nhận đủ acceptance evidence và không còn tác động tồn dư.
 - ANY → ESCALATED: có điều kiện escalation theo mục 11 và đã ghi rõ người nhận/quyết định cần xin.
+
+Ghi chú đồng bộ (v0.2): REMINDED/COACHED trong ARCHITECT v1.1 và Biên bản v1.1 là nhãn sự kiện (reminder/guidance đã gửi), không phải trạng thái assignment độc lập; việc gửi reminder không đổi trạng thái, chỉ đổi trạng thái finding/reminder hiện hành. Cần đối chiếu lại khi ARCHITECT được truy vết tiếp.
 
 ## 11. Điều kiện escalation
 Escalate khi có một trong các tình huống:
@@ -140,6 +151,7 @@ Escalate khi có một trong các tình huống:
 Escalation là yêu cầu xem xét/quyết định, không tự động kết luận vi phạm. Giữ nguyên evidence và trạng thái chưa được xác minh.
 
 ## 12. Các điểm cần reviewer phản biện trước khi chốt
+> Cập nhật v0.2: phản biện độc lập của Vibe đã ghi tại `02_DEFINE/VIBE_INDEPENDENT_REVIEW_PACKAGE.md` mục 9; câu hỏi 1, 3, 4, 7 đã xử lý bằng chỉnh sửa v0.2; câu hỏi 2, 5, 6 còn mở ở mức observation/defer.
 1. Taxonomy đã bao phủ đủ lỗi nghiệp vụ ngoài ví dụ kỹ thuật của W802001 chưa?
 2. Severity S0–S3 có ranh giới rõ và phù hợp các Work khác nhau không?
 3. Cơ chế checkpoint/event-driven reminder có chống spam và xử lý múi giờ/Agent không hoạt động hợp lý không?

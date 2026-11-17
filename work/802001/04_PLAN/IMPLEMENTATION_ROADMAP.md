@@ -1,8 +1,8 @@
 # KẾ HOẠCH TRIỂN KHAI / IMPLEMENTATION ROADMAP — WORK 802001
 
-- Version: 1.3 — DEFINE BUSINESS RULES DRAFT CREATED
+- Version: 1.4 — DEFINE INDEPENDENT REVIEW COMPLETED (VIBE)
 - Date: 2026-11-17
-- Status: DEFINE IN PROGRESS — BUILD NOT AUTHORIZED
+- Status: DEFINE REVIEWED — AWAITING VINH APPROVAL; BUILD NOT AUTHORIZED
 - Governing standard: Work 70
 
 ## Mục tiêu
@@ -11,7 +11,7 @@ Chuẩn hóa và xây dựng nghiệp vụ theo dõi, nhắc nhở, hướng d�
 | WP | Nội dung | Deliverable | Trạng thái | Điều kiện hoàn thành |
 |---|---|---|---|---|
 | WP-802001-01 | DISCOVER: thu thập tình huống thực tế Agent nhận việc, thi công, báo cáo, sai/lệch/chậm/blocked | Case inventory + process trace | BASELINE COMPLETE — LIMITED TO 10 HISTORICAL CASES | Ghi rõ giới hạn nguồn; bổ sung khi có case từ Work khác; không khái quát hóa quá mức |
-| WP-802001-02 | DEFINE: chuẩn hóa assignment, checkpoint, reminder, correction, recheck, escalation | Business rules + reminder matrix + independent review record | IN_PROGRESS — VIBE HANDOFF CREATED; REVIEW PENDING | Vibe review, resolve open findings; Vinh approval before policy becomes binding |
+| WP-802001-02 | DEFINE: chuẩn hóa assignment, checkpoint, reminder, correction, recheck, escalation | Business rules + reminder matrix + independent review record | REVIEW COMPLETED (VIBE: ACCEPT WITH CHANGES; DEFINE v0.2) — AWAITING VINH APPROVAL | Xử lý open questions (DOC-096 path, readback rule); Vinh approval trước khi policy binding |
 | WP-802001-03 | ARCHITECT: mô hình dữ liệu/trạng thái và điểm quan sát/kiểm soát trong ROOM-HOP | Business/technical architecture + ADR | PLANNED | READ/TRACE các nguồn và execution/observation paths; reviewer độc lập |
 | WP-802001-04 | PLAN: WP, dependency, owner, acceptance, journal/evidence | WP register + test strategy | PLANNED | Bám lifecycle và Gate W70; một nguồn canonical |
 | WP-802001-05 | BUILD: triển khai theo kiến trúc được duyệt | Source + build journal | NOT_AUTHORIZED | Chỉ mở sau G4 PASS và quyết định phê duyệt |
@@ -30,7 +30,7 @@ Chuẩn hóa và xây dựng nghiệp vụ theo dõi, nhắc nhở, hướng d�
 Đã trích xuất 10 case từ hồ sơ lịch sử của chính Work 802001. Đây là historical-record evidence có phạm vi hạn chế; không đại diện toàn bộ Agent/Work và không phải kết luận vi phạm cá nhân.
 
 ## DEFINE baseline
-Đã tạo W802001-DEF-001 v0.1 tại 02_DEFINE/AGENT_SUPERVISION_BUSINESS_RULES.md. Nội dung gồm taxonomy, severity S0–S3, checkpoint/reminder theo sự kiện, correction/recheck, authority, journal/evidence và escalation. Tài liệu đang FOR INDEPENDENT REVIEW — NOT APPROVED POLICY. Không có SLA cố định; không tuyên bố runtime automation.
+W802001-DEF-001 đã qua phản biện độc lập của Vibe: verdict ACCEPT WITH CHANGES; DEFINE cập nhật v0.2 (bổ sung múi giờ/offline cho reminder, reviewer independence/appeal, multi-agent/multi-work linkage, NEEDS_BRIEFING, ghi chú DOC-096 unverified). Kết quả chi tiết tại `02_DEFINE/VIBE_INDEPENDENT_REVIEW_PACKAGE.md` mục 9. Tài liệu vẫn NOT APPROVED POLICY. Không có SLA cố định; không tuyên bố runtime automation.
 
 ## Điều kiện chuyển tiếp
-WP-802001-02 chỉ hoàn tất sau phản biện độc lập, xử lý câu hỏi mở và Vinh phê duyệt policy. Sau đó mới chuyển sang truy vết ARCHITECT; BUILD vẫn phụ thuộc W70 G4 PASS và phê duyệt rõ ràng.
+WP-802001-02 chỉ hoàn tất sau khi xử lý open questions (canonical path DOC-096; quy tắc readback đề xuất) và Vinh phê duyệt policy. Sau đó mới chuyển sang truy vết ARCHITECT; BUILD vẫn phụ thuộc W70 G4 PASS và phê duyệt rõ ràng.
