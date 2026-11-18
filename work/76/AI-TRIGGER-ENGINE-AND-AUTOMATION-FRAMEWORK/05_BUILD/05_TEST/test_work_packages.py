@@ -474,3 +474,21 @@ def test_gateway_rejects_duplicate_json_keys_without_consuming_replay_identity(e
         gateway.ingest("source-a", {"x-valid": "yes"}, envelope.encode(), received_at=now)
     assert replay.seen == set()
 
+
+
+# W76-GW-005 — replay expiry overflow fails closed before store reservation.
+def test_gateway_replay_expiry_overflow_does_not_reserve_identity():
+    now = datetime(2026, 11, 18, 12, tzinfo=timezone.utc)
+    replay = Replay()
+    gateway = EventGateway(
+        {"source-a": SourceRegistration("source-a", "76", frozenset({"order.created"}), Schema())},
+        Verifier(), replay, replay_window_seconds=10**100,
+    )
+    body = json.dumps({
+        "event_id": "evt-overflow", "event_type": "order.created",
+        "occurred_at": now.isoformat(), "payload": {"value": 1},
+    }).encode()
+    with pytest.raises(GatewayRejected, match="replay expiry exceeds"):
+        gateway.ingest("source-a", {"x-valid": "yes"}, body, received_at=now)
+    assert replay.seen == set()
+
