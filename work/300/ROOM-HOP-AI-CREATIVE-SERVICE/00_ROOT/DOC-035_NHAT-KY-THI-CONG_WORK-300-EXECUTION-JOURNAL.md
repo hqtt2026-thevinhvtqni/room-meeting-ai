@@ -144,3 +144,15 @@ that flag.
 - No provider/API call, model download, account creation, image generation, video generation or paid activity performed.
 - Status: PASS — Sponsor instructions and outcome definitions documented. BLOCKED — local model feasibility pending Vinh's actual hardware specifications; product storyboard pending original product photo. W500 media capability NOT VERIFIED.
 - Next: conduct a focused architecture/provider review (Xu + Mê + Ka/Cla + Qw) only to verify whether W500 has a real media adapter/runtime and whether integration is within approved contracts; no implementation. Continue provider-documentation research and prepare blank storyboard template.
+
+
+## 2026-11-19 — Xu / AI-01 — Scope correction and GitHub review handoff
+- Scope: reconcile Vinh's latest direction that W300 is image/photo only; preserve existing GitHub W300 history/source; publish a review packet for independent AI reviewers.
+- Method: inspected Sandbox Work 300 inventory and read back manifest, brief, product scope, architecture baseline, provider matrix, zero-cash pilot plan, review request, roadmap and acceptance criteria using Sandbox diagnostic read. Inspected GitHub main ref/tree and fetched canonical W300 manifest, register, decision log, minutes, journal and roadmap.
+- Evidence: Sandbox Work 300 still displays the legacy runtime folder TRAO-DOI-VA-GIOI-THIEU, while its manifest declares AI-IMAGE-AND-PHOTO-STUDIO and Work 29 as separate video scope. GitHub preflight main HEAD was 90a85068caf24cd2ad634ae439d9565e9b6f5584; canonical GitHub W300 folder is work/300/ROOM-HOP-AI-CREATIVE-SERVICE/. Existing GitHub dashboard source is preserved as a legacy UI prototype.
+- Decision: latest Work Owner clarification supersedes prior W300 video-oriented scope/pilot where conflicting. Historical records and dashboard source are preserved; no deletion or code overwrite.
+- Synchronization scope: canonical manifest, register, decision log, minutes, journal, plus one consolidated image/photo review packet and one reviewer handoff.
+- Review status: READY FOR USER-DIRECTED REVIEW HANDOFF. This commit does not mean any AI reviewer has responded or approved the architecture.
+- Safety: no provider/API call, image upload, account creation, key creation, billing activation, paid activity, code build or runtime test performed.
+- Verification: GitHub write/readback to be checked after commit. Product acceptance NOT RUN; architecture/security/QE review PENDING.
+- Next: Vinh may direct Ka, Cla, Kha, Go, Qw and Nu to review the packet. Xu will reconcile actual findings into this single DOC-034; no build before that decision.
