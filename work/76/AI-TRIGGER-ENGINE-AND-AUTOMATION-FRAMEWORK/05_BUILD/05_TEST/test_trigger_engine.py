@@ -399,3 +399,31 @@ def test_registry_from_dict_rejects_duplicate_trigger_version_records():
     with pytest.raises(RegistryError, match="duplicate trigger version"):
         TriggerRegistry.from_dict({"triggers": [snapshot, snapshot]})
 
+
+
+# W76-RG-006 — registry public identity and revision inputs are strictly typed.
+@pytest.mark.parametrize("trigger_id,version", [
+    (None, 1), ("", 1), ("   ", 1), ("trg-1", True), ("trg-1", 0), ("trg-1", "1"),
+])
+def test_registry_rejects_malformed_trigger_lookup_identity(trigger_id, version):
+    registry = TriggerRegistry()
+    with pytest.raises(ValidationError):
+        registry.get(trigger_id, version)
+
+
+@pytest.mark.parametrize("expected_revision", [True, 0, -1, "1"])
+def test_registry_rejects_malformed_expected_revision(expected_revision):
+    registry = TriggerRegistry()
+    registry.publish(make_trigger())
+    with pytest.raises(ValidationError, match="expected_revision"):
+        registry.activate("trg-1", 1, expected_revision=expected_revision)
+
+
+@pytest.mark.parametrize("trigger_id", [None, "", "   ", 7])
+def test_registry_rejects_malformed_trigger_filters(trigger_id):
+    registry = TriggerRegistry()
+    with pytest.raises(ValidationError, match="filter"):
+        registry.active_triggers(trigger_id)
+    with pytest.raises(ValidationError, match="filter"):
+        registry.list_triggers(trigger_id)
+
