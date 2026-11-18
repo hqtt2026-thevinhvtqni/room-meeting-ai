@@ -456,3 +456,21 @@ def test_state_machine_rejects_untyped_target_and_missing_transition_metadata():
         machine.transition("exec-valid", "FAILED", "reason", "corr-valid")
     with pytest.raises(StateTransitionError, match="reason"):
         machine.transition("exec-valid", ExecutionState.FAILED, "", "corr-valid")
+
+
+# W76-GW-004 — duplicate JSON object keys are rejected before replay reservation.
+@pytest.mark.parametrize("envelope", [
+    '{"event_id":"first","event_id":"second","event_type":"order.created","occurred_at":"2026-11-18T12:00:00+00:00","payload":{"value":1}}',
+    '{"event_id":"event-1","event_type":"order.created","occurred_at":"2026-11-18T12:00:00+00:00","payload":{"value":1,"value":2}}',
+])
+def test_gateway_rejects_duplicate_json_keys_without_consuming_replay_identity(envelope):
+    now = datetime(2026, 11, 18, 12, tzinfo=timezone.utc)
+    replay = Replay()
+    gateway = EventGateway(
+        {"source-a": SourceRegistration("source-a", "76", frozenset({"order.created"}), Schema())},
+        Verifier(), replay,
+    )
+    with pytest.raises(GatewayRejected, match="duplicate object keys"):
+        gateway.ingest("source-a", {"x-valid": "yes"}, envelope.encode(), received_at=now)
+    assert replay.seen == set()
+
