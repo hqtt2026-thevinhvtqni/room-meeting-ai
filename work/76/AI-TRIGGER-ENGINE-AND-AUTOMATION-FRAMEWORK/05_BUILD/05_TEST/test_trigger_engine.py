@@ -328,3 +328,28 @@ def test_w76_ce_006_non_boolean_result_is_error_not_match():
     # Boolean literals still evaluate normally; truthy non-bool does not.
     assert evaluate({"type": "literal", "value": True}, {}, event_time=NOW, now=NOW).outcome == "MATCH"
     assert evaluate({"type": "literal", "value": "yes"}, {}, event_time=NOW, now=NOW).outcome == "ERROR"
+
+
+# W76-RG-004 — concurrent activation preserves single-ACTIVE-version invariant.
+def test_registry_concurrent_activation_keeps_exactly_one_active_version():
+    from concurrent.futures import ThreadPoolExecutor
+    from threading import Barrier
+
+    registry = TriggerRegistry()
+    versions = 12
+    for version in range(1, versions + 1):
+        registry.publish(make_trigger(version=version))
+    barrier = Barrier(versions)
+
+    def activate(version):
+        barrier.wait()
+        return registry.activate("trg-1", version)
+
+    with ThreadPoolExecutor(max_workers=versions) as pool:
+        list(pool.map(activate, range(1, versions + 1)))
+
+    active = registry.active_triggers("trg-1")
+    assert len(active) == 1
+    assert sum(t.status == "ACTIVE" for t in registry.list_triggers("trg-1")) == 1
+    assert sum(t.status == "RETIRED" for t in registry.list_triggers("trg-1")) == versions - 1
+
