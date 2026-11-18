@@ -281,3 +281,12 @@ PR #55 contains a proposed implementation, tests and CI workflow on an unmerged 
   - Python 3.11: 94 passed / 0 failed; job `135110998524`; JUnit artifact `14468277059`; ZIP SHA256 `a91906767c5beeb9dfc7fec915a6fff43dd100b7862cc5f0f109d182c280892b`.
 - The subsequent record-only commit updates Build Register, Evidence Register, Dashboard and DOC-035; it does not modify source or tests. CI is triggered again by the record sync.
 - **Branch comparison correction:** current main head `237996f6ce1a55cfde16bfdd2ed8e65bcd6eaefa`; PR #60 branch is 197 commits ahead / 38 behind main. PR #60 remains OPEN/DRAFT/UNMERGED, mergeable=true / clean. Prior “189 ahead / 0 behind” summary is stale. No rebase or merge performed.
+
+
+## Exact source/test head after final FrozenDict immutability hardening — 2026-11-19 03:35 +07:00
+- Exact source/test head: `5fc0bb6a94a8924e8cb30f8a9b1dd9505d763b27`.
+- GitHub Actions PR run `44392571805` SUCCESS:
+  - Python 3.12: 94 passed / 0 failed; job `135113828649`; JUnit artifact `14468547568`; ZIP SHA256 `b71e99d97ed2d225fd3c3bceb6bc994ff207b5473fe4b4c90ca08d21ae025d34`.
+  - Python 3.11: 94 passed / 0 failed; job `135113829411`; JUnit artifact `14467742957`; ZIP SHA256 `d995773f8ea486ca7c373c12c660bc1d72791523e102c8974ee9338605cfe39e`.
+- W76-MD-004 now also rejects reassignment of FrozenDict's backing attribute, not only mutation of the MappingProxyType mapping.
+- CI is branch PR CI only. Independent QE, cross-process durable CAS, browser/mobile and Core/runtime E2E remain pending.
