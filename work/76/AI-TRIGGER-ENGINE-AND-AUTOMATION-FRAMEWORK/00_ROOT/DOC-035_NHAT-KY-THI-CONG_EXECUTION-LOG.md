@@ -1241,3 +1241,18 @@ This is a governance/assignment and preparation record only. Xu did not alter so
 **CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
 **NGÀY:** 19/11/2026
 **GIỜ - PHÚT:** 03:46 — UTC+7
+
+
+---
+
+### 2026-11-19 03:46:54 +07:00 — Co xác minh latest exact-head CI sau sửa duplicate-key
+- Exact tested head `fa6d9b51f7dd14a980af0bab04d0dc5655f39f0d`; PR run `44394574461` SUCCESS:
+  - Python 3.11: **99 passed / 0 failed**, job `135120916565`, artifact `14468984143`, SHA256 `6d133976ff9fef668c53f27a7c2d6810cb4abb16b2dc24efa8ed3e276aae0355`.
+  - Python 3.12: **99 passed / 0 failed**, job `135120917426`, artifact `14468259431`, SHA256 `0570b1e52e2e20b387cdf12aa9d0c1c92716c82ad94b9118a3453ada5e326605`.
+- EV-76-081 added. CI is branch-only; no independent QE or runtime E2E claimed.
+- Last branch compare read: 216 ahead / 38 behind main; PR #60 remains OPEN/DRAFT/UNMERGED and mergeable clean.
+
+**TÊN:** Co
+**CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
+**NGÀY:** 19/11/2026
+**GIỜ - PHÚT:** 03:46 — UTC+7

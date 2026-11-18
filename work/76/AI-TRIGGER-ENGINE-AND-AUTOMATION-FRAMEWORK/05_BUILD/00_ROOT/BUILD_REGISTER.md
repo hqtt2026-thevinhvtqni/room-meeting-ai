@@ -330,3 +330,11 @@ PR #55 contains a proposed implementation, tests and CI workflow on an unmerged 
 - Corrected helper placement after the actual declaration. Latest exact branch head `9f34c0c7aa3cc5f12ac1b1a8fa9bdc11088c322e`, PR run `44394367137` SUCCESS: Python 3.11/3.12 each 99 passed / 0 failed (EV-76-080).
 - Added tests for duplicate event_id and nested payload keys; both assert replay identity is not consumed.
 - Branch compare: 215 ahead / 38 behind main; PR #60 OPEN/DRAFT/UNMERGED, mergeable clean. No rebase/merge.
+
+
+## Latest exact-head CI after duplicate-key fix and full record sync — 2026-11-19 03:46 +07:00
+- Exact tested head: `fa6d9b51f7dd14a980af0bab04d0dc5655f39f0d`.
+- GitHub Actions PR run `44394574461` SUCCESS:
+  - Python 3.11: 99 passed / 0 failed; job `135120916565`; artifact `14468984143`; SHA256 `6d133976ff9fef668c53f27a7c2d6810cb4abb16b2dc24efa8ed3e276aae0355`.
+  - Python 3.12: 99 passed / 0 failed; job `135120917426`; artifact `14468259431`; SHA256 `0570b1e52e2e20b387cdf12aa9d0c1c92716c82ad94b9118a3453ada5e326605`.
+- Last compare read: 216 ahead / 38 behind main. PR #60 OPEN/DRAFT/UNMERGED, mergeable=true / clean. No rebase/merge.
