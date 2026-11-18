@@ -16,6 +16,7 @@ import json
 import math
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from types import MappingProxyType
 from typing import Any, Iterator, Mapping
 
 from .errors import ValidationError
@@ -46,7 +47,12 @@ def deep_freeze(value: Any, _depth: int = 0) -> Any:
             raise ValidationError("non-finite float is not allowed")
         return value
     if isinstance(value, Mapping):
-        return FrozenDict({str(k): deep_freeze(v, _depth + 1) for k, v in value.items()})
+        frozen_items = {}
+        for key, item in value.items():
+            if not isinstance(key, str):
+                raise ValidationError("mapping keys must be strings")
+            frozen_items[key] = deep_freeze(item, _depth + 1)
+        return FrozenDict(frozen_items)
     if isinstance(value, (list, tuple)):
         return tuple(deep_freeze(v, _depth + 1) for v in value)
     raise ValidationError(f"unsupported value type: {type(value).__name__}")
@@ -67,7 +73,7 @@ class FrozenDict(Mapping):
     __slots__ = ("_data",)
 
     def __init__(self, data: Mapping[str, Any]) -> None:
-        object.__setattr__(self, "_data", dict(data))
+        object.__setattr__(self, "_data", MappingProxyType(dict(data)))
 
     def __getitem__(self, key: str) -> Any:
         return self._data[key]
