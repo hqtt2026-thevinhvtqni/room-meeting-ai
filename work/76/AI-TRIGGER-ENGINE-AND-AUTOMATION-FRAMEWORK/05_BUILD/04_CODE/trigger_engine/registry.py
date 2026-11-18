@@ -160,15 +160,28 @@ class TriggerRegistry:
 
     @classmethod
     def from_dict(cls, data: Mapping[str, Any]) -> "TriggerRegistry":
+        if not isinstance(data, Mapping):
+            raise ValidationError("registry snapshot must be a mapping")
+        items = data.get("triggers", [])
+        if not isinstance(items, list):
+            raise ValidationError("registry snapshot 'triggers' must be a list")
         registry = cls()
         # H1 (Grok review): fail closed when persisted data carries more than
         # one ACTIVE version for the same trigger_id. The single-ACTIVE
         # invariant must hold at load time, not only at activation time.
         active_seen: dict[str, int] = {}
-        for item in data.get("triggers", []):
+        for index, item in enumerate(items):
+            if not isinstance(item, Mapping):
+                raise ValidationError(f"registry trigger at index {index} must be a mapping")
             trigger = Trigger.from_dict(item)
+            key = (trigger.trigger_id, trigger.version)
+            if key in registry._triggers:
+                raise RegistryError(
+                    f"corrupt registry data: duplicate trigger version "
+                    f"{trigger.trigger_id} v{trigger.version}"
+                )
             # Restore persisted state directly; publish() only accepts DRAFT.
-            registry._triggers[(trigger.trigger_id, trigger.version)] = trigger
+            registry._triggers[key] = trigger
             if trigger.status == "ACTIVE":
                 previous = active_seen.get(trigger.trigger_id)
                 if previous is not None:
