@@ -26,7 +26,10 @@ class IdempotencyGuard:
             raise ValueError("ttl_seconds must be a positive integer")
         if not isinstance(now,datetime) or now.tzinfo is None:
             raise ValueError("now must be a timezone-aware datetime")
-        expires=now.astimezone(timezone.utc)+timedelta(seconds=ttl_seconds)
+        try:
+            expires=now.astimezone(timezone.utc)+timedelta(seconds=ttl_seconds)
+        except OverflowError as exc:
+            raise ValueError("ttl_seconds exceeds supported datetime range") from exc
         try:
             claimed=self._store.claim(work_id,idempotency_key,expires)
         except Exception as exc:
@@ -59,5 +62,8 @@ class RetryPlanner:
         if completed_attempts >= self._policy.max_attempts:
             return RetryDecision(False,completed_attempts,None,"retry budget exhausted")
         delay=min(float(self._policy.backoff_seconds)*(2**(completed_attempts-1)),float(self._policy.max_backoff_seconds))
-        due=now.astimezone(timezone.utc)+timedelta(seconds=delay)
+        try:
+            due=now.astimezone(timezone.utc)+timedelta(seconds=delay)
+        except OverflowError as exc:
+            raise ValueError("retry due time exceeds supported datetime range") from exc
         return RetryDecision(True,completed_attempts+1,due,"bounded exponential backoff")
