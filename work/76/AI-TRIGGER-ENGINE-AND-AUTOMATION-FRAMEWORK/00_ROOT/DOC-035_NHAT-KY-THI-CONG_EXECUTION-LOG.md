@@ -1193,3 +1193,20 @@ This is a governance/assignment and preparation record only. Xu did not alter so
 **CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
 **NGÀY:** 19/11/2026
 **GIỜ - PHÚT:** 03:39 — UTC+7
+
+
+---
+
+### 2026-11-19 03:41:11 +07:00 — Co xác minh CI sau hardening persisted snapshot
+- Exact synchronized branch head tại thời điểm test: `c02e84a7bfdabb393d47452a47ece2510aa44220`.
+- GitHub Actions PR run `44393424405` SUCCESS:
+  - Python 3.11: **97 passed / 0 failed**, job `135116871188`, JUnit artifact `14468888227`, SHA256 `8f8c8aa2d2e333b396aeaf718be869853b78a1abd8347c4d7f542ee38cc9022`.
+  - Python 3.12: **97 passed / 0 failed**, job `135116870470`, JUnit artifact `14468508265`, SHA256 `6cd16af2a58f7e10de8f2bd43b5d5a8e71a5b34cb52f852ee64e683e4db57ec1`.
+- EV-76-077 added. Run includes new malformed/duplicate persisted snapshot regressions and Dashboard schema tests.
+- PR #60 remains OPEN/DRAFT/UNMERGED. Branch comparison 209 ahead / 38 behind main; no rebase/merge.
+- Sandbox read-back for changed source/tests and governance files was exact. Independent QE, browser/mobile, Core/runtime E2E, durable cross-process CAS and WP-76-07 remain open.
+
+**TÊN:** Co
+**CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
+**NGÀY:** 19/11/2026
+**GIỜ - PHÚT:** 03:41 — UTC+7

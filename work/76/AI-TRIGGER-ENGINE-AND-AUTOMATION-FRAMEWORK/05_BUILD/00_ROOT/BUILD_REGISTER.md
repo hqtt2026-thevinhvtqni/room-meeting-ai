@@ -306,3 +306,11 @@ PR #55 contains a proposed implementation, tests and CI workflow on an unmerged 
 - Regressions W76-MD-005 / W76-RG-005 added for malformed and duplicate persisted snapshots.
 - Exact source/test head `4cf9be690df06f8887e2fd02dc59c53096a07166`; PR CI run `44393206734` SUCCESS: Python 3.11/3.12 each 97 passed / 0 failed (EV-76-076).
 - Branch comparison refreshed: 209 ahead / 38 behind main; PR #60 OPEN/DRAFT/UNMERGED, mergeable=true / clean. No rebase/merge.
+
+
+## Exact synchronized branch-head CI after persisted snapshot validation — 2026-11-19 03:41 +07:00
+- Exact branch head at test time: `c02e84a7bfdabb393d47452a47ece2510aa44220`.
+- GitHub Actions PR run `44393424405` SUCCESS:
+  - Python 3.12: 97 passed / 0 failed; job `135116870470`; JUnit artifact `14468508265`; ZIP SHA256 `6cd16af2a58f7e10de8f2bd43b5d5a8e71a5b34cb52f852ee64e683e4db57ec1`.
+  - Python 3.11: 97 passed / 0 failed; job `135116871188`; JUnit artifact `14468888227`; ZIP SHA256 `8f8c8aa2d2e333b396aeaf718be869853b78a1abd8347c4d7f542ee38cc9022`.
+- This is PR branch CI only; it is not independent Canonical QE, browser/mobile QE or Core/runtime E2E.
