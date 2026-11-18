@@ -156,3 +156,8 @@ This current section supersedes the earlier video-oriented W300 pilot and roadma
 - Provider calls/image uploads: NOT RUN.
 - E2E/product acceptance: NOT RUN.
 - Video and public MCP: EXCLUDED from current W300 scope.
+
+
+---
+
+> **SCOPE CONTROL NOTICE — 2026-11-19:** W300 is image/photo only. Earlier video-generation, image-to-video, video assembly and public-MCP items in this roadmap are historical/superseded and are not active W300 scope. Video belongs to Work 29. Current review and build-gate status is governed by DOC-034 section 11. BUILD remains NOT AUTHORIZED.
