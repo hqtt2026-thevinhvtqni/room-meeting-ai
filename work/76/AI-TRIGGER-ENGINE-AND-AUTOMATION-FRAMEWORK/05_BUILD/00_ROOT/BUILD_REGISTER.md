@@ -356,3 +356,11 @@ PR #55 contains a proposed implementation, tests and CI workflow on an unmerged 
 - Regression tests verify no replay identity/store claim is consumed on overflow and no raw OverflowError escapes.
 - Exact source/test head `390a81fb831c9a312170b39ff9641b0707ea07ad`; PR run `44395652838` SUCCESS: Python 3.11/3.12 each 115 passed / 0 failed (EV-76-085).
 - Branch comparison: 225 ahead / 38 behind main; PR #60 OPEN/DRAFT/UNMERGED, mergeable clean.
+
+
+## Exact synchronized branch-head CI after datetime overflow hardening — 2026-11-19 03:55 +07:00
+- Exact tested head: `8cc3f352a893246fbeed10f1ccdfe412ba8bbd3d`.
+- GitHub Actions PR run `44395940533` SUCCESS:
+  - Python 3.12: 115 passed / 0 failed; job `135125695287`; artifact `14471115472`; ZIP SHA256 `7c0d2dd86665c3214afb5a57656cb3769790ad020af8b737799b264c939d95ba`.
+  - Python 3.11: 115 passed / 0 failed; job `135125695383`; artifact `14471485238`; ZIP SHA256 `d1d527f21cdd00acde5b82fad7982abae2e61906ae098122bc8ff8226edc7425`.
+- Branch comparison: 226 ahead / 38 behind main. PR #60 OPEN/DRAFT/UNMERGED, mergeable=true / clean. No rebase/merge.
