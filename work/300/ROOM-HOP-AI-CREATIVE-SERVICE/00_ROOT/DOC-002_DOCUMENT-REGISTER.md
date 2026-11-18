@@ -17,3 +17,5 @@ No second canonical minutes or journal is authorized. The review packet contains
 
 | PATHMAP | W300 Path Map | 00_ROOT/W300_PATH_MAP.md | ACTIVE — canonical path/identity mapping |
 | CONSOLIDATION | Pilot 01 Review Consolidation | DOC-034 section 11 / DOC-035 Entry 016 | ACTIVE — review synthesis |
+
+| REVIEW-CLA | Cla Independent Review | 03_ARCHITECT/CLA_REVIEW_PILOT_01.md | MIRRORED FROM SANDBOX; READBACK VERIFIED |
