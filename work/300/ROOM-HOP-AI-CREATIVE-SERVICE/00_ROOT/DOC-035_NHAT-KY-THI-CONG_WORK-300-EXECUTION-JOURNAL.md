@@ -220,3 +220,11 @@ that flag.
   - Implementation Roadmap readback: contains prominent image/photo-only scope-control notice.
 - Status: PASS — all five updated files were read back and expected content was found. This is documentation synchronization PASS only; it is not architecture, security, QE, product or runtime PASS.
 - Next: receive Qw independent QE review; continue correcting model contracts/cost controls in design; wait for Vinh's explicit BUILD gate decision.
+
+
+## 2026-11-19 — Entry 018 — Xu / AI-01 — Correct Pilot 01 reviewer packet
+- Scope: prevent the initial reviewer packet from continuing to present the invalid 20-step cost example or imply source-preserving FLUX.2 klein editing.
+- Method: appended a clearly labeled review addendum, preserving the original packet history while explicitly superseding conflicting examples and workflow labels.
+- Evidence: update commit ae6c63b786aa830a329f44b8130bce8bda910f06; subsequent GitHub readback confirms the addendum is present and includes the 4-step provisional arithmetic example, klein deferral, zero-spend hard gates and local-first prerequisite.
+- Status: PASS — packet documentation correction and readback only. The calculated 43.2 Neurons is a published-rate arithmetic example (one tile, four steps), not measured usage; no account dashboard was checked.
+- Next: continue waiting for Qw independent QE review; no provider call or BUILD authorization.
