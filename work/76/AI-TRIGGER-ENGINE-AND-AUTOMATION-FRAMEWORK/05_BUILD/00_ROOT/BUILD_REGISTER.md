@@ -238,3 +238,11 @@ PR #55 contains a proposed implementation, tests and CI workflow on an unmerged 
   - Python 3.11: 90 passed / 0 failed; job `134468652338`; JUnit artifact `14384055313`; ZIP SHA256 `0ee49086d2aa198e50bdc03931174388a9508395fb9af22cf11501caf48cd5d6`.
   - Python 3.12: 90 passed / 0 failed; job `134468652577`; JUnit artifact `14383890371`; ZIP SHA256 `1f2bc76493b3115c1a4923e07e677159e3d510ee2d58fb7446e344c71d1f8f22`.
 - Branch comparison: 177 ahead / 0 behind main. PR #60 OPEN/DRAFT/UNMERGED; GitHub mergeable=true / clean.
+
+
+## Final exact-head CI after reviewer and record synchronization — 2026-11-18 06:32 +07:00
+- Exact current PR #60 head: `b97577c034e738f4de1c5a57114a4a83abbf995c`.
+- GitHub Actions PR run `44205298126` SUCCESS:
+  - Python 3.12: 90 passed / 0 failed; job `134469561304`; JUnit artifact `14383676019`; ZIP SHA256 `e1c668e8be993f3f182e6356181afd54a4d77f240a1bab9c016c9731f7921a95`.
+  - Python 3.11: 90 passed / 0 failed; job `134469561596`; JUnit artifact `14383218108`; ZIP SHA256 `1993bfca0523ce69a5bf7053c3585928ee86aba1f77db37b79b6c782ebb7e616`.
+- Branch comparison: 181 ahead / 0 behind main. PR #60 OPEN/DRAFT/UNMERGED; GitHub mergeable=true / clean.
