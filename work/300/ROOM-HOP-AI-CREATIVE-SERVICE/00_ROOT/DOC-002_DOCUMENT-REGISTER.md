@@ -13,3 +13,7 @@
 | CODE | Lovable UI source snapshot | 05_BUILD/04_CODE/dashboard/ | PRESERVED / LEGACY / NOT VERIFIED |
 
 No second canonical minutes or journal is authorized. The review packet contains the current image/photo brief, scope, architecture baseline, provider matrix, pilot plan, review questions and acceptance criteria. The existing dashboard source is preserved for traceability and is not accepted as implementation of the current scope.
+
+
+| PATHMAP | W300 Path Map | 00_ROOT/W300_PATH_MAP.md | ACTIVE — canonical path/identity mapping |
+| CONSOLIDATION | Pilot 01 Review Consolidation | DOC-034 section 11 / DOC-035 Entry 016 | ACTIVE — review synthesis |
