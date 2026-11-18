@@ -1,8 +1,8 @@
 # KẾ HOẠCH TRIỂN KHAI / IMPLEMENTATION ROADMAP — WORK 802001
 
-- Version: 1.5 — POST-REVIEW GOVERNANCE REFERENCE CORRECTION
+- Version: 1.6 — DEFINE APPROVED / ARCHITECTURE EXPLORATION STARTED
 - Date: 2026-11-17
-- Status: DEFINE REVIEWED — AWAITING VINH APPROVAL; BUILD NOT AUTHORIZED
+- Status: DEFINE v0.3 APPROVED BY VINH; ARCHITECTURE EXPLORATION ACTIVE; BUILD NOT AUTHORIZED
 - Governing standard: Work 70
 
 ## Mục tiêu
@@ -11,8 +11,8 @@ Chuẩn hóa và xây dựng nghiệp vụ theo dõi, nhắc nhở, hướng d�
 | WP | Nội dung | Deliverable | Trạng thái | Điều kiện hoàn thành |
 |---|---|---|---|---|
 | WP-802001-01 | DISCOVER: thu thập tình huống thực tế Agent nhận việc, thi công, báo cáo, sai/lệch/chậm/blocked | Case inventory + process trace | BASELINE COMPLETE — LIMITED TO 10 HISTORICAL CASES | Ghi rõ giới hạn nguồn; bổ sung khi có case từ Work khác; không khái quát hóa quá mức |
-| WP-802001-02 | DEFINE: chuẩn hóa assignment, checkpoint, reminder, correction, recheck, escalation | Business rules + reminder matrix + independent review record | REVIEW COMPLETED (VIBE: ACCEPT WITH CHANGES; DEFINE v0.2) — AWAITING VINH APPROVAL | Đã truy nguyên và sửa sai tham chiếu DOC-096. VF-10 được đối chiếu: DOC-033 §4 đã bắt buộc exact readback/version-hash verification và ghi evidence; DOC-035 quy định journal append-only, nên không tạo policy trùng. Còn quyết định của Vinh về reviewer bổ sung và policy approval. |
-| WP-802001-03 | ARCHITECT: mô hình dữ liệu/trạng thái và điểm quan sát/kiểm soát trong ROOM-HOP | Business/technical architecture + ADR | PLANNED | READ/TRACE các nguồn và execution/observation paths; reviewer độc lập |
+| WP-802001-02 | DEFINE: chuẩn hóa assignment, checkpoint, reminder, correction, recheck, escalation | Business rules + reminder matrix + independent review record | DONE — DEFINE v0.3 APPROVED BY VINH (2026-11-18) | Vibe independent review ACCEPT WITH CHANGES; Xu corrected DOC-096 misclassification and resolved VF-10 against DOC-033/DOC-035; Vinh approved the business baseline. |
+| WP-802001-03 | ARCHITECT: mô hình dữ liệu/trạng thái và điểm quan sát/kiểm soát trong ROOM-HOP | Architecture v2.0 + ownership/interface map + ADR + independent review | IN_PROGRESS — AUTHORIZED EXPLORATION ONLY | READ/TRACE source and execution/observation paths; reconcile W70/W52/W16/W37/W14/W33/W112 ownership; Vibe independent architecture review; resolve blockers; G3 decision remains separate. |
 | WP-802001-04 | PLAN: WP, dependency, owner, acceptance, journal/evidence | WP register + test strategy | PLANNED | Bám lifecycle và Gate W70; một nguồn canonical |
 | WP-802001-05 | BUILD: triển khai theo kiến trúc được duyệt | Source + build journal | NOT_AUTHORIZED | Chỉ mở sau G4 PASS và quyết định phê duyệt |
 | WP-802001-06 | VERIFY: theo dõi, nhắc, hướng dẫn, sửa, recheck, escalation và enforcement nếu có | Verification report + evidence | NOT_STARTED | Kiểm thử thật, negative cases, reviewer độc lập |
@@ -30,7 +30,7 @@ Chuẩn hóa và xây dựng nghiệp vụ theo dõi, nhắc nhở, hướng d�
 Đã trích xuất 10 case từ hồ sơ lịch sử của chính Work 802001. Đây là historical-record evidence có phạm vi hạn chế; không đại diện toàn bộ Agent/Work và không phải kết luận vi phạm cá nhân.
 
 ## DEFINE baseline
-W802001-DEF-001 đã qua phản biện độc lập của Vibe: verdict ACCEPT WITH CHANGES; DEFINE v0.3 giữ các thay đổi nghiệp vụ từ v0.2 và sửa sai tham chiếu Work 70: DOC-035 là nhật ký, DOC-033 là tài liệu/lưu trữ, DOC-057 là Work Entry Gate; DOC-096 là Retrieval/DecisionRAG, không phải session/journal control. Kết quả review gốc tại `02_DEFINE/VIBE_INDEPENDENT_REVIEW_PACKAGE.md` mục 9 và đính chính của Xu tại mục 10. Tài liệu vẫn NOT APPROVED POLICY. Không có SLA cố định; không tuyên bố runtime automation.
+W802001-DEF-001 đã qua phản biện độc lập của Vibe: verdict ACCEPT WITH CHANGES; DEFINE v0.3 giữ các thay đổi nghiệp vụ từ v0.2 và sửa sai tham chiếu Work 70. Vinh phê duyệt v0.3 làm baseline nghiệp vụ ngày 2026-11-18. Không có SLA cố định; không tuyên bố runtime automation.
 
 ## Điều kiện chuyển tiếp
-WP-802001-02 chỉ hoàn tất sau khi Vinh quyết định nhu cầu reviewer bổ sung và phê duyệt policy; các tham chiếu governance đã được sửa, VF-10 đã được đối chiếu với DOC-033/DOC-035. Sau đó mới chuyển sang truy vết ARCHITECT; BUILD vẫn phụ thuộc W70 G4 PASS và phê duyệt rõ ràng.
+WP-802001-02 is DONE: Vinh approved DEFINE v0.3 as the business baseline on 2026-11-18. WP-802001-03 may proceed as explicitly authorized architecture exploration under DOC-047; this does not claim G2 PASS or G3 PASS. BUILD remains NOT AUTHORIZED until architecture and plan are approved, G4 PASS is evidenced, and Vinh issues a separate BUILD authorization.
