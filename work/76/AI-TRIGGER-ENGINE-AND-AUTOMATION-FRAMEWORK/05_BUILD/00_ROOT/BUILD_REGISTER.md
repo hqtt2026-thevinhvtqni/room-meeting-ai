@@ -322,3 +322,11 @@ PR #55 contains a proposed implementation, tests and CI workflow on an unmerged 
   - Python 3.11: 97 passed / 0 failed; job `135117879881`; JUnit artifact `14468343656`; ZIP SHA256 `f45607c23d071744803a30c47d9449fa84477a13872a61190b54c46c01007042`.
   - Python 3.12: 97 passed / 0 failed; job `135117880004`; JUnit artifact `14467903588`; ZIP SHA256 `54720ba132770fd2d24af97fef76b9e7229b1baeb8c6203e1d54a97af0f08aa7`.
 - Branch comparison refreshed after governance/evidence sync: **211 ahead / 38 behind main**. PR #60 OPEN/DRAFT/UNMERGED, mergeable=true / clean. No rebase/merge.
+
+
+## WP-76-02 duplicate JSON key hardening and CI correction — 2026-11-19 03:46 +07:00
+- Added strict `object_pairs_hook` to reject duplicate JSON object keys at every nesting level before event schema validation/replay reservation.
+- First implementation patch referenced the helper but failed to insert its definition because the actual `GatewayRejected` declaration inherits `ValidationError`, not `RuntimeError`. CI exposed this immediately: run `44394229622` failed on both Python versions with 9 failed / 90 passed due to NameError `_reject_duplicate_object_keys`.
+- Corrected helper placement after the actual declaration. Latest exact branch head `9f34c0c7aa3cc5f12ac1b1a8fa9bdc11088c322e`, PR run `44394367137` SUCCESS: Python 3.11/3.12 each 99 passed / 0 failed (EV-76-080).
+- Added tests for duplicate event_id and nested payload keys; both assert replay identity is not consumed.
+- Branch compare: 215 ahead / 38 behind main; PR #60 OPEN/DRAFT/UNMERGED, mergeable clean. No rebase/merge.

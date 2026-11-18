@@ -1225,3 +1225,19 @@ This is a governance/assignment and preparation record only. Xu did not alter so
 **CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
 **NGÀY:** 19/11/2026
 **GIỜ - PHÚT:** 03:42 — UTC+7
+
+
+---
+
+### 2026-11-19 03:46:01 +07:00 — Co xử lý duplicate JSON keys và ghi rõ lỗi CI ban đầu
+- WP-76-02: thêm object_pairs_hook để từ chối duplicate JSON object keys ở mọi cấp lồng nhau; kiểm tra diễn ra trước schema validation và replay reservation. Test gồm duplicate event_id và duplicate key trong payload; replay identity phải còn nguyên khi reject.
+- CI lần đầu run `44394229622` FAIL: Python 3.11/3.12 đều 9 failed / 90 passed. Root cause: patch chèn helper không khớp declaration thật `GatewayRejected(ValidationError)`, dẫn đến NameError `_reject_duplicate_object_keys`. Co giữ nguyên evidence thất bại EV-76-079, không che giấu.
+- Đã sửa helper placement ở commit `9f34c0c7aa3cc5f12ac1b1a8fa9bdc11088c322e`.
+- Latest PR run `44394367137` SUCCESS: Python 3.11 **99/99**, Python 3.12 **99/99**; EV-76-080.
+- Branch compare: 215 ahead / 38 behind main. PR #60 OPEN/DRAFT/UNMERGED, mergeable clean. No rebase/merge.
+- WP-76-02 production verifier/key provider và durable replay store vẫn pending; independent QE/runtime/browser QE chưa chạy.
+
+**TÊN:** Co
+**CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
+**NGÀY:** 19/11/2026
+**GIỜ - PHÚT:** 03:46 — UTC+7
