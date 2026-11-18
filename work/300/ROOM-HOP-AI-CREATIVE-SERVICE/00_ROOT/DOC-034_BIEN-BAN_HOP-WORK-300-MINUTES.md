@@ -171,3 +171,29 @@ The W117 audit is secondary evidence, not the original W29 source tree. Direct i
 - BUILD gate: remains CLOSED pending Qw/Go reconciliations and Vinh's final decision.
 
 Evidence boundary: this addendum reflects the Kha report forwarded by Vinh; no direct W29 source inspection or integration test is claimed.
+
+
+## 13. QW INDEPENDENT QE REVIEW — PILOT 01 (2026-11-19)
+**Reviewer:** Qw / AI-05. **Verdict:** APPROVE WITH CONDITIONS (review report supplied by Vinh). **Scope:** acceptance criteria, fatal failures, cost guard and local-first processing. Static review only; no BUILD/API call.
+
+### 13.1 Review corrections and dispositions
+1. **43.2 Neurons terminology:** Qw correctly flags that this is not FLOPs or VRAM. Xu clarifies: Neurons is Cloudflare Workers AI's platform usage/billing-meter unit, not a hardware-performance measurement. The 43.2 figure is arithmetic from published per-tile/per-step rates for one tile and four steps; it is neither measured consumption nor a FLOPs/VRAM estimate. Keep it only with this explicit qualification; otherwise omit it from user-facing performance claims.
+2. **FLUX.2 klein 4B:** retain deferral. Do not call it source-preserving inpainting/editing without a verified model contract and masking behavior.
+3. **Circuit Breaker:** ACCEPT as a mandatory design requirement, but Qw's sample local counter is illustrative and insufficient alone. Before any API adapter, require one centralized network-call gateway; persistent atomic reservation/counting across restarts/processes; a pilot-wide hard cap of three submissions; fail-closed behavior when state is missing/corrupt/unavailable; explicit budget enable flag; zero/unknown budget blocks before network; no automatic retry; single-flight; timeout becomes UNKNOWN/POTENTIALLY CONSUMED until reconciled. The counter must be reserved before dispatch and never decremented automatically after ambiguous outcomes.
+4. **Local preflight:** invalid/corrupt/unsupported image, excessive bytes/pixels or dimensions must fail locally with a stable error code and no cloud transfer. Validate actual file bytes, not extension alone.
+5. **Fatal errors:** adopt Qw's fatal categories with corrections below.
+
+### 13.2 Pilot 01 fatal vetoes
+- **FATAL-01 — Quota/budget drain:** more than three total pilot submissions, any automatic retry, duplicate submission, or submission while the cost gate is closed. This is a hard FAIL regardless of visual quality.
+- **FATAL-02 — Execution-boundary/timeout failure:** processing placed on the wrong runtime, exceeding the verified runtime's CPU/memory/time limits, or an ambiguous timeout followed by an unsafe retry. Do not copy generic 10–50 ms / 30 s figures into acceptance criteria without pinning the exact Cloudflare product, plan and execution mode. Local Python processing does not consume Worker CPU time unless that code actually runs inside the Worker.
+- **FATAL-03 — Local OOM/resource exhaustion:** unbounded decode/load of large images causes process crash or system instability. Enforce byte/pixel/dimension limits and safe decode before allocation; streaming/tiled decode only if supported and tested.
+- **FATAL-04 — Silent failure / invalid success:** HTTP 200 with an error payload, malformed/empty body, non-image bytes, failed decode, zero-byte output or mismatched metadata must never be marked SUCCEEDED. Validate response schema, content type, byte signature, decode, dimensions and non-empty output.
+
+### 13.3 Gate disposition
+Qw's review is received and reconciled. The four fatal vetoes become proposed mandatory Pilot 01 acceptance gates. The exact Worker limits and actual account billing safeguards remain UNKNOWN until product/plan-specific evidence is recorded. This review does not prove zero VND and does not authorize a provider call.
+
+### 13.4 Xu decision after Qw + Kha
+- Qw: received; APPROVE WITH CONDITIONS for QE/acceptance design.
+- Kha: received; APPROVE WITH CONDITIONS for future interoperability design only; contract NOT FROZEN.
+- Go: cost-control review received previously; circuit-breaker hardening above remains a required reconciliation, not a claim of Go approval of this exact implementation.
+- BUILD: CLOSED. Cloud/API: NOT AUTHORIZED. Vinh retains final GO/NO-GO authority.
