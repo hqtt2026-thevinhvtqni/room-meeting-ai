@@ -43,12 +43,22 @@ class TriggerRegistry:
 
     # -- helpers ---------------------------------------------------------
     def _get(self, trigger_id: str, version: int) -> Trigger:
+        if not isinstance(trigger_id, str) or not trigger_id.strip():
+            raise ValidationError("trigger_id must be a non-empty string")
+        if isinstance(version, bool) or not isinstance(version, int) or version < 1:
+            raise ValidationError("version must be a positive integer")
         trigger = self._triggers.get((trigger_id, version))
         if trigger is None:
             raise RegistryError(f"trigger not found: {trigger_id} v{version}")
         return trigger
 
     def _check_revision(self, trigger: Trigger, expected_revision: int | None) -> None:
+        if expected_revision is not None and (
+            isinstance(expected_revision, bool)
+            or not isinstance(expected_revision, int)
+            or expected_revision < 1
+        ):
+            raise ValidationError("expected_revision must be a positive integer")
         if expected_revision is not None and trigger.revision != expected_revision:
             raise ConcurrencyError(
                 f"revision conflict for {trigger.trigger_id} v{trigger.version}: "
@@ -132,6 +142,8 @@ class TriggerRegistry:
 
     def active_triggers(self, trigger_id: str | None = None) -> list[Trigger]:
         """All ACTIVE versions; at most one per trigger_id by invariant."""
+        if trigger_id is not None and (not isinstance(trigger_id, str) or not trigger_id.strip()):
+            raise ValidationError("trigger_id filter must be a non-empty string")
         with self._lock:
             result: list[Trigger] = []
             seen: set[str] = set()
@@ -144,6 +156,8 @@ class TriggerRegistry:
             return result
 
     def list_triggers(self, trigger_id: str | None = None) -> list[Trigger]:
+        if trigger_id is not None and (not isinstance(trigger_id, str) or not trigger_id.strip()):
+            raise ValidationError("trigger_id filter must be a non-empty string")
         with self._lock:
             return [
                 trigger
