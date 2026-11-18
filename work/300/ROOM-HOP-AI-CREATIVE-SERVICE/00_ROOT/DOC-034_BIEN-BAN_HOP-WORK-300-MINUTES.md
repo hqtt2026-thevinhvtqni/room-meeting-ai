@@ -85,3 +85,60 @@ Vinh clarified that Work 300 is for image processing, photo editing/enhancement,
 - No provider calls, image uploads, paid activity, billing activation or product code before review reconciliation and an explicit build-gate decision.
 - Requested reviewers: Ka (architecture/security), Cla (technical architecture/API), Kha (product/provider strategy), Go (cost controls), Qw (independent QE), and Nu (Manus) for independent research if available.
 - This is a scope correction, not final architecture approval. DOC-034 remains DRAFT until reviewer findings are reconciled and Vinh approves the final decision.
+
+
+---
+
+# 11. INDEPENDENT REVIEW CONSOLIDATION — PILOT 01 (2026-11-19)
+**Status: REVIEW IN PROGRESS / APPROVE WITH CONDITIONS / ARCHITECTURE NOT FROZEN / BUILD NOT AUTHORIZED**
+
+## 11.1 Evidence and reviewer status
+This section consolidates reviewer reports supplied to Xu and the Cla report read back from Sandbox Work 300. A report is not treated as an independent runtime test. No provider call, account inspection, image upload, billing operation or code execution is evidenced in this review round.
+
+| Reviewer | Scope | Result received | Evidence location / qualification |
+|---|---|---|---|
+| Ka / AI-02 | Architecture, security, privacy | APPROVE WITH CONDITIONS; 8 findings KAI-300-01…08 | Reported in GitHub DOC-035 Entry 015; reviewer reports GitHub readback. |
+| Cla / AI-03 | API contract, technical architecture, local processing | APPROVE WITH CONDITIONS; 8 findings CLA-300-01…08 | Sandbox `TRAO-DOI-VA-GIOI-THIEU/03_ARCHITECTURE/CLA_REVIEW_PILOT_01.md`, readback 16,796 bytes. |
+| Kha / AI-04 | Product strategy/provider selection | Recommendations received; no final approval verdict stated in supplied report | User-forwarded review text; no canonical reviewer file/commit supplied. |
+| Go / AI-06 | Free quota, overage and cost controls | APPROVE WITH CONDITIONS; 6 findings | User-forwarded review text; no canonical reviewer file/commit supplied. |
+| Nu / Manus | Independent feasibility | NOT COUNTED as completed review | Supplied note only confirms a synchronization/status check; no technical findings or verified runtime identity. |
+| Qw / AI-05 | Independent QE | PENDING | No review report received. |
+
+## 11.2 Consolidated findings register
+### P1 — Must resolve before any BUILD authorization
+1. **Model contract / steps (KAI-300-02, CLA-300-01):** The packet's illustrative 20-step FLUX.1 schnell cost example is invalid according to the reviewers' cited model schema. Ka and Cla report default 4 steps and maximum 8. Correct the estimate and pin the exact model request/response schema, document date and model version. Validate prompt length and reject unsupported fields. Output dimensions/format must be measured from returned bytes, not assumed.
+2. **FLUX.2 klein workflow naming and limitations (CLA-300-02, Go Finding 3):** Do not describe the candidate as guaranteed source-preserving photo editing or mask/inpaint. Cla reports a reference-conditioned image-to-image contract, up to four reference images, no mask, and input-size constraints that remain partly ASSUMED for klein 4B. Rename P300-02 to reference-conditioned image generation/editing; explicitly state that pixel/layout preservation is not guaranteed. Keep this model out of the initial pilot until its exact model-specific schema and price are independently pinned.
+3. **Zero-spend gate (KAI-300-03, CLA-300-03, Go Findings 1–4, 6):** A three-request cap is only a smoke-test bound, not proof of zero spend. Before any cloud call, verify account plan is Workers Free, payment method/paid overage is not enabled, the exact model is available on Free, and quota is visible. If any check is unavailable or a model requires Paid, mark BLOCKED and do not upgrade. Add a deterministic pre-flight estimator with conservative tile rounding, a daily pilot budget/buffer, one job at a time, no automatic retry, and stop-all on quota/unknown error. Treat timeout as potentially consumed until reconciled. Capture dashboard usage before/after a permitted call. The 10,000 Neurons/day allocation and per-model prices remain public-document figures until account evidence is recorded.
+4. **Job lifecycle and duplicate spend (CLA-300-04):** Specify CREATED → VALIDATED → APPROVED → SUBMITTED → SUCCEEDED / FAILED / BLOCKED, single-flight admission, duplicate-job prevention, explicit timeout semantics, no automatic retry and no async queue for Pilot 01. Any unknown error fails closed.
+5. **Local-first prerequisite (CLA-300-05, Go Finding 5):** Implement and pass local deterministic image utilities before cloud adapters. Keep the implementation lightweight for the reported HP EliteBook 840 G3 constraints; first verify current device measurements rather than treating the historical hardware note as current. Include safe decode, byte/pixel limits, magic-byte format detection, EXIF orientation, metadata/GPS removal policy, resize/crop/convert, SHA-256 and atomic writes.
+6. **Security, privacy, rights and retention (KAI-300-04, 06, 08; CLA-300-06):** Complete data-flow/trust-boundary diagram and threat model; define image rights/consent, cloud-transfer approval, retention/deletion, logging, metadata and secret handling. Do not log prompts/base64/image URLs/tokens; remove GPS/EXIF from exported outputs by default unless the owner explicitly approves another policy.
+7. **Technical acceptance and quality (KAI-300-07, CLA-300-07):** Keep human visual rubric but add objective gates: successful decode, expected dimensions/format from actual bytes, non-empty/non-uniform image checks, metadata/hash manifest and critical-defect veto. A mean score cannot override a critical failure.
+8. **Canonical source/path ambiguity (CLA-300-08):** Publish one path map distinguishing Work ID, Sandbox runtime folder, product identity and GitHub canonical root. GitHub main is the canonical record location; Sandbox remains working/evidence mirror. Do not claim all Sandbox files are synchronized until explicitly compared.
+
+### P2 — Resolve in design or before cross-Work integration
+9. **Provenance manifest (CLA-300-06):** Define versioned per-job manifest with input/output hashes, dimensions, detected formats, byte sizes, rights/consent reference, transforms, provider/model, contract date, parameter record, estimated/actual usage, request/status/latency, retry count, QC and terms snapshot reference. Never store secrets or base64.
+10. **Cross-Work data contract (Kha):** Kha proposes a shared schema/DTO for possible future W300-to-Work-29 image handoff. Treat this as a future interoperability recommendation, not a dependency or scope expansion. Define only a minimal export metadata contract now; do not couple W300 build to video or implement Image-to-Video.
+11. **Legacy dashboard isolation (Kha):** Kha recommends moving legacy dashboard to an archive branch or read-only area outside build scope. Decision: preserve current source untouched and mark it LEGACY / NOT VERIFIED. No physical move, branch migration or deletion until impact/dependency review and explicit authorization; a clear build exclusion and dependency boundary is required first.
+
+## 11.3 Provider and pilot decision
+- **FLUX.1 schnell:** retain as the only first cloud candidate, conditional on model contract correction, Workers Free eligibility and zero-spend controls. Use the documented default of 4 steps unless current official schema says otherwise; reject steps above the verified maximum.
+- **FLUX.2 klein 4B:** defer from initial cloud pilot until exact schema, input constraints and pricing are independently verified. Do not label it source-preserving photo editing.
+- **Local deterministic utilities:** first implementation and test target after BUILD gate; design and test specifications may continue now.
+- **Stability AI and other providers:** remain conditional alternatives, not active dependencies.
+- **No provider API call, image upload, paid use, billing activation or credential exchange is authorized by this review.**
+
+## 11.4 Kha recommendations — disposition
+- Prefer FLUX.1 schnell for a bounded PoC: ACCEPT AS CONDITIONAL CANDIDATE, not final model approval.
+- Consider FLUX.2 klein 4B as later benchmark: ACCEPT DEFERMENT.
+- Prepare a minimal output metadata/DTO for possible future Work 29 interoperability: ACCEPT FOR DESIGN ONLY; no video scope in W300.
+- Physically isolate legacy dashboard: DEFER pending dependency/impact assessment; preserve source in place and exclude it from current build.
+
+## 11.5 Gate decision by Xu / AI-01
+**DECISION: APPROVE WITH CONDITIONS FOR DOCUMENTATION / RESEARCH / DESIGN ONLY.**
+- Architecture freeze: NOT APPROVED.
+- Product code/provider adapter: NOT AUTHORIZED.
+- Cloud/API test: NOT AUTHORIZED.
+- Billing/payment changes: NOT AUTHORIZED.
+- BUILD gate: CLOSED.
+
+Conditions to return for owner decision: resolve P1 items 1–8, receive Qw independent QE review, obtain any outstanding Kha/Go reports as canonical artifacts if required, verify provider terms/account/quota and current hardware evidence, then present one reconciled decision in this DOC-034. Vinh retains final authority to open BUILD.
