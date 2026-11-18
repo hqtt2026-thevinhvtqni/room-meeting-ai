@@ -140,3 +140,11 @@ Rename the candidate workflow to **reference-conditioned image generation/editin
 
 ### Evidence status
 All model schema and pricing observations above are attributed to reviewer static research. They are not account-level or experimentally verified measurements. Architecture remains unfrozen; BUILD and provider calls remain unauthorized.
+
+
+---
+
+## CROSS-WORK INTEROPERABILITY NOTE — KHA REVIEW (2026-11-19)
+Kha's static review concludes that deferring FLUX.2 klein 4B does not block future W300↔W29 interoperability. A model-neutral, versioned image artifact contract is proposed. Candidate mandatory fields: `contract_version`, `asset_id`, `artifact_uri`, `media_type`, `width_px`, `height_px`, `created_at`. Recommended integrity/provenance fields: `sha256`, `byte_size`, rights/consent reference, task/provider/model/version, prompt reference, seed where supported, QC status and metadata policy. Other fields remain optional.
+
+**Not frozen / not an integration requirement:** W117 is a secondary audit, not W29's original source tree. Inspect W29's real DTO/import path, validation/error handling, file and batch limits, authorization and storage lifecycle before freezing the contract. Use a storage-neutral authorized artifact URI; do not assume local absolute paths or public URLs. W300 must not call W29 internals and must remain image/photo-only. See DOC-034 section 12 and DOC-035 Entry 020.
