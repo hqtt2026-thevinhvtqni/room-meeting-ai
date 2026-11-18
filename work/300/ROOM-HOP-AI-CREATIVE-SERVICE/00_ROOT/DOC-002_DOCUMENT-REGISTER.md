@@ -19,3 +19,5 @@ No second canonical minutes or journal is authorized. The review packet contains
 | CONSOLIDATION | Pilot 01 Review Consolidation | DOC-034 section 11 / DOC-035 Entry 016 | ACTIVE — review synthesis |
 
 | REVIEW-CLA | Cla Independent Review | 03_ARCHITECT/CLA_REVIEW_PILOT_01.md | MIRRORED FROM SANDBOX; READBACK VERIFIED |
+
+| REVIEW-KHA | Kha W300↔W29 Interoperability Review | 03_ARCHITECT/KHA_REVIEW_W300_W29_INTEROPERABILITY.md | RECEIVED / READBACK PENDING |
