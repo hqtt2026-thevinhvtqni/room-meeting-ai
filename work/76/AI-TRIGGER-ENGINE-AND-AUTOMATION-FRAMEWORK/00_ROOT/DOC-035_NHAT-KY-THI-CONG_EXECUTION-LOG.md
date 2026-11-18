@@ -1271,3 +1271,20 @@ This is a governance/assignment and preparation record only. Xu did not alter so
 **CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
 **NGÀY:** 19/11/2026
 **GIỜ - PHÚT:** 03:50 — UTC+7
+
+
+---
+
+### 2026-11-19 03:53:54 +07:00 — Co harden datetime overflow ở Gateway / Idempotency / Retry
+- Event Gateway: tính replay expiry tách riêng và bắt OverflowError; nếu replay window vượt datetime range thì GatewayRejected trước khi gọi ReplayStore.reserve.
+- IdempotencyGuard: TTL overflow chuyển thành ValueError trước khi gọi store.claim.
+- RetryPlanner: due_at vượt datetime.max chuyển thành ValueError có khai báo, không để OverflowError thô thoát ra.
+- Thêm regression chứng minh không tạo replay/idempotency claim khi thời gian hết miền biểu diễn.
+- Exact source/test head `390a81fb831c9a312170b39ff9641b0707ea07ad`; PR run `44395652838` SUCCESS: Python 3.11 **115/115**, Python 3.12 **115/115**; EV-76-084/085.
+- Branch compare: 225 ahead / 38 behind main; PR #60 OPEN/DRAFT/UNMERGED, mergeable clean.
+- Production key provider, durable replay/idempotency stores, independent QE, browser/mobile QE, Core/runtime E2E và WP-76-07 vẫn pending.
+
+**TÊN:** Co
+**CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
+**NGÀY:** 19/11/2026
+**GIỜ - PHÚT:** 03:53 — UTC+7

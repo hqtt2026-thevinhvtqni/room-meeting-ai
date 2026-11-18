@@ -347,3 +347,12 @@ PR #55 contains a proposed implementation, tests and CI workflow on an unmerged 
 - First test draft incorrectly treated `None` as an invalid filter; CI caught the incorrect expectation (run 44395027259: 1 failed / 112 passed on both Python versions). Test corrected to preserve documented optional-filter semantics.
 - Exact corrected source/test head `9841b008887e13e678920abbae8044046e490a8a`; PR run `44395153259` SUCCESS: Python 3.11/3.12 each 112 passed / 0 failed (EV-76-083).
 - Branch comparison: 220 ahead / 38 behind main; PR #60 OPEN/DRAFT/UNMERGED, mergeable clean.
+
+
+## WP-76-02 / WP-76-06 datetime overflow hardening — 2026-11-19 03:53 +07:00
+- Event Gateway now computes replay expiry in a guarded step; an oversized configured replay window that exceeds datetime range returns GatewayRejected before replay-store reservation.
+- IdempotencyGuard now converts TTL-to-datetime overflow into declared ValueError before invoking the store.
+- RetryPlanner now converts due-time overflow near datetime.max into declared ValueError rather than leaking OverflowError.
+- Regression tests verify no replay identity/store claim is consumed on overflow and no raw OverflowError escapes.
+- Exact source/test head `390a81fb831c9a312170b39ff9641b0707ea07ad`; PR run `44395652838` SUCCESS: Python 3.11/3.12 each 115 passed / 0 failed (EV-76-085).
+- Branch comparison: 225 ahead / 38 behind main; PR #60 OPEN/DRAFT/UNMERGED, mergeable clean.
