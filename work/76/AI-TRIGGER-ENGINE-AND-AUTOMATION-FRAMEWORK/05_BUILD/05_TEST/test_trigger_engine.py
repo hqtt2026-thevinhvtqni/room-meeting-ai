@@ -353,3 +353,21 @@ def test_registry_concurrent_activation_keeps_exactly_one_active_version():
     assert sum(t.status == "ACTIVE" for t in registry.list_triggers("trg-1")) == 1
     assert sum(t.status == "RETIRED" for t in registry.list_triggers("trg-1")) == versions - 1
 
+
+
+# W76-MD-004 — strict JSON object keys and defensive immutable backing storage.
+@pytest.mark.parametrize("condition", [
+    {1: "numeric key"},
+    {1: "collision", "1": "string key"},
+])
+def test_w76_md_004_rejects_non_string_mapping_keys(condition):
+    with pytest.raises(ValidationError, match="mapping keys must be strings"):
+        make_trigger(condition=condition)
+
+
+def test_w76_md_004_frozen_mapping_backing_store_cannot_be_mutated():
+    trigger = make_trigger()
+    with pytest.raises(TypeError):
+        trigger.condition._data["injected"] = True
+    assert "injected" not in trigger.condition
+
