@@ -94,6 +94,28 @@ Cách lấy tín hiệu tiến độ từ Agent/Room; mô hình assignment/check
 - NOT VERIFIED: runtime route, deployed composition, provider/adapter capability, persistence, event transport, scheduler, authorization enforcement or live end-to-end behavior not proven.
 - PROPOSED: logical components and contracts in this architecture; not existing implementations.
 
+### Source revision pins used for this proposal
+
+| Source | GitHub main blob SHA read |
+|---|---|
+| W70 DOC-001 | 0131e012ce67ce5dd8c17a258fb592c7f3d3641a |
+| W70 DOC-004 | d55e84002fe1a0152fab4de270faf8af0a13eff5 |
+| W70 DOC-005 | 5f7a6e15910186872c10a639c43ebc04498c3585 |
+| W70 DOC-006 (D70-017 / D70-023) | 53c5a7cfdb02bc38e4213010004e1f0ad137d87f |
+| W70 DOC-033 | 599caa7da6dd2c81fc5440481e79fe15b92c94dd |
+| W70 DOC-035 | f910ef171ff47390a83d689447e9b7b8b10244c8 |
+| W70 DOC-042 | a9a949b56ae615cdc5aced0ba1563ab45e97ab8f |
+| W70 DOC-043 | 883123766f8c5457e6f905ae15682d718aa9acfa |
+| W70 DOC-044 | 508cbde08e1f376cdeba9475330aa880a9f63797 |
+| W70 DOC-047 | 23e083c02373ce5ff33d1397852f1eec9c526301 |
+| W70 DOC-057 | 23798cc1ff90445ab8c1593c283cd6a1b83a1fca |
+| W70 DOC-063 | 55be0bbcd6c215f5f1158a4e74738b9a4a750cfd |
+| W70 DOC-071 | 12f11320dc9da89b27de21313b698224d74519ce |
+| W70 DOC-072 | 513d65d3d360dcb732607d07e2eee558cd02f005 |
+| W112 Cross-Work DOC-001 | 6340a7b054a37540da8c16d0b9743266b0765c97 |
+
+These pins identify the exact source contents read for this draft. Re-fetch and compare before relying on them after any source update.
+
 No endpoint, event broker, database, queue, scheduler, provider, model, credential or deployment topology is asserted to exist.
 
 ## 13. System ownership and bounded context
