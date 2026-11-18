@@ -137,7 +137,11 @@ class EventGateway:
         # Reserve replay identity only after the entire event has passed
         # validation; malformed data must not consume a valid event_id.
         try:
-            reserved = self._replay.reserve(source_id, eid, now + timedelta(seconds=self._window))
+            replay_expires_at = now + timedelta(seconds=self._window)
+        except OverflowError as exc:
+            raise GatewayRejected("replay expiry exceeds supported datetime range") from exc
+        try:
+            reserved = self._replay.reserve(source_id, eid, replay_expires_at)
         except Exception as exc:
             raise GatewayRejected("replay protection unavailable") from exc
         if reserved is not True:
