@@ -1107,3 +1107,22 @@ This is a governance/assignment and preparation record only. Xu did not alter so
 **CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
 **NGÀY:** 18/11/2026
 **GIỜ - PHÚT:** 06:32 — UTC+7
+
+
+---
+
+### 2026-11-19 03:29:39 +07:00 — Co harden Trigger Registry concurrency và immutable model
+- Actor: Co — AI-07, theo ủy quyền thi công trực tiếp của Vinh.
+- Phát hiện WP-76-01: TriggerRegistry không có in-process lock, trong khi single-ACTIVE invariant cần bảo vệ qua chuỗi lookup → retire previous → commit. Race condition có thể cho phép nhiều thread activate các version khác nhau trước khi commit.
+- Sửa `registry.py`: thêm RLock cho publish/activate/pause/resume/disable, get/list/active và to_dict. Dùng RLock vì activate/resume gọi active_triggers lồng trong vùng khóa. Ghi rõ đây chỉ là process-local; production repository vẫn phải thực thi cross-process CAS bền vững.
+- Thêm regression W76-RG-004: 12 version được activate đồng thời; sau khi hoàn tất phải có đúng 1 ACTIVE và 11 RETIRED.
+- Phát hiện model: deep_freeze trước đây ép key bằng str(), có thể làm mất phân biệt giữa key số và key chuỗi. Đã chuyển sang reject mọi mapping key không phải string.
+- FrozenDict backing store chuyển sang MappingProxyType; thêm W76-MD-004 để thử key collision và mutation qua backing map.
+- Exact branch head `e53b913cd7cf6644f62a1ccce13c4c9bc74141cc`; run `44391467230` SUCCESS: Python 3.11 **94/94**, Python 3.12 **94/94**. EV-76-069…071 được thêm.
+- GitHub compare: 197 ahead / 38 behind main; PR #60 OPEN/DRAFT/UNMERGED, mergeable clean. Không rebase/merge. Independent QE, durable cross-process CAS, browser/mobile QE, Core/runtime E2E vẫn chưa xác minh.
+- Tiếp theo: tiếp tục kiểm tra concurrency và persistence boundaries; đồng bộ code/test/records sang Sandbox bằng exact read-back.
+
+**TÊN:** Co
+**CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
+**NGÀY:** 19/11/2026
+**GIỜ - PHÚT:** 03:29 — UTC+7
