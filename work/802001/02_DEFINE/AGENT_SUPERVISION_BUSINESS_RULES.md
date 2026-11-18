@@ -6,7 +6,7 @@
 - Version: 0.3 — POST-REVIEW GOVERNANCE REFERENCE CORRECTION
 - Date: 2026-11-17
 - Governing standard: Work 70
-- Status: REVIEWED — NOT APPROVED POLICY (Vinh approval pending)
+- Status: APPROVED BY VINH — BASELINE BUSINESS POLICY (2026-11-18); ARCHITECTURE EXPLORATION AUTHORIZED; BUILD NOT AUTHORIZED
 - Authority: Vinh (final approval); Xu / AI-01 (coordination and draft owner)
 
 ## 1. Mục đích và ranh giới
@@ -161,8 +161,8 @@ Escalation là yêu cầu xem xét/quyết định, không tự động kết lu
 7. Quy trình xử lý finding liên quan đến nhiều Agent hoặc nhiều Work cần quy tắc liên kết nào?
 
 ## 13. Giới hạn và điều kiện phê duyệt
-- Đây là DEFINE v0.2 đã qua phản biện độc lập, chưa phải policy được Vinh phê duyệt.
+- Đây là DEFINE v0.3 đã qua phản biện độc lập của Vibe (ACCEPT WITH CHANGES) và được Vinh phê duyệt làm baseline nghiệp vụ ngày 2026-11-18.
 - Không đặt SLA cố định, không tuyên bố tự động hóa, không mở BUILD.
-- Cần review độc lập và cập nhật phản biện trước khi Xu trình Vinh phê duyệt.
+- Phản biện độc lập đã hoàn tất tại `02_DEFINE/VIBE_INDEPENDENT_REVIEW_PACKAGE.md` §9; đính chính nguồn chuẩn tại §10. Vinh đã phê duyệt baseline v0.3; mọi thay đổi nội dung policy tiếp theo phải có decision/change record.
 - Sau khi được duyệt, phải cập nhật Biên bản/decision canonical nếu có thay đổi quyết định; không tạo biên bản song song.
-- BUILD chỉ được xem xét sau khi DEFINE/ARCHITECT/PLAN hoàn tất theo Gate W70, G4 PASS và có phê duyệt rõ ràng.
+- Phê duyệt DEFINE không phải phê duyệt kiến trúc kỹ thuật, API, runtime, provider, lưu trữ, chi phí hoặc BUILD. ARCHITECT được phép khảo sát/thiết kế theo DOC-047; G2 chưa được tự động đánh dấu PASS. BUILD chỉ được xem xét sau khi ARCHITECT/PLAN hoàn tất, G4 PASS theo DOC-004 và có quyết định cho phép riêng.
