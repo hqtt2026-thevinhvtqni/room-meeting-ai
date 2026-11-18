@@ -290,3 +290,11 @@ PR #55 contains a proposed implementation, tests and CI workflow on an unmerged 
   - Python 3.11: 94 passed / 0 failed; job `135113829411`; JUnit artifact `14467742957`; ZIP SHA256 `d995773f8ea486ca7c373c12c660bc1d72791523e102c8974ee9338605cfe39e`.
 - W76-MD-004 now also rejects reassignment of FrozenDict's backing attribute, not only mutation of the MappingProxyType mapping.
 - CI is branch PR CI only. Independent QE, cross-process durable CAS, browser/mobile and Core/runtime E2E remain pending.
+
+
+## Exact final synchronized branch-head CI — 2026-11-19 03:37 +07:00
+- Exact branch head at test time: `0d8d3a5d251a26d80fdcb2c5298f8d914d8c9ade`.
+- GitHub Actions PR run `44392770629` SUCCESS:
+  - Python 3.11: 94 passed / 0 failed; job `135114523396`; JUnit artifact `14469187669`; ZIP SHA256 `90818dafe479ee185daeec430c024de0f49eb1bbe0b9b83497f383bb0c0a8041`.
+  - Python 3.12: 94 passed / 0 failed; job `135114523860`; JUnit artifact `14469467187`; ZIP SHA256 `06744427163fd00356b537567e76a6bb3fd46b392b4b055e0ba17fde0f3b6d76`.
+- This run includes the latest FrozenDict attribute-reassignment regression and all dashboard schema assertions. Subsequent commit is records-only; source/test files are unchanged.
