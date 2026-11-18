@@ -75,6 +75,9 @@ class FrozenDict(Mapping):
     def __init__(self, data: Mapping[str, Any]) -> None:
         object.__setattr__(self, "_data", MappingProxyType(dict(data)))
 
+    def __setattr__(self, name: str, value: Any) -> None:
+        raise TypeError("FrozenDict is immutable")
+
     def __getitem__(self, key: str) -> Any:
         return self._data[key]
 
