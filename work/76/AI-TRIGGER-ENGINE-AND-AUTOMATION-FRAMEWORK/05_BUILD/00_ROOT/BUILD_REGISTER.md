@@ -272,3 +272,12 @@ PR #55 contains a proposed implementation, tests and CI workflow on an unmerged 
 - Regression: W76-MD-004 tests non-string/colliding keys and direct backing-store mutation rejection.
 - Exact PR #60 head: `e53b913cd7cf6644f62a1ccce13c4c9bc74141cc`; GitHub Actions run `44391467230` SUCCESS: Python 3.11 94/94; Python 3.12 94/94 (EV-76-071).
 - Branch comparison refreshed: 197 commits ahead / 38 behind main; PR #60 OPEN/DRAFT/UNMERGED, mergeable=true / clean. No rebase or merge performed.
+
+
+## Latest tested source/test head after WP-76-01 hardening — 2026-11-19 03:29 +07:00
+- Exact tested source/test and pre-reconciliation branch head: `15a6a343af10747cf53ed90cf092d18553bac259`.
+- GitHub Actions PR run `44391759119` SUCCESS:
+  - Python 3.12: 94 passed / 0 failed; job `135110998250`; JUnit artifact `14467837159`; ZIP SHA256 `523a98d606ea921c0d1fe97accd0f146274bfa24b5fbb1282235842ac230b1a6`.
+  - Python 3.11: 94 passed / 0 failed; job `135110998524`; JUnit artifact `14468277059`; ZIP SHA256 `a91906767c5beeb9dfc7fec915a6fff43dd100b7862cc5f0f109d182c280892b`.
+- The subsequent record-only commit updates Build Register, Evidence Register, Dashboard and DOC-035; it does not modify source or tests. CI is triggered again by the record sync.
+- **Branch comparison correction:** current main head `237996f6ce1a55cfde16bfdd2ed8e65bcd6eaefa`; PR #60 branch is 197 commits ahead / 38 behind main. PR #60 remains OPEN/DRAFT/UNMERGED, mergeable=true / clean. Prior “189 ahead / 0 behind” summary is stale. No rebase or merge performed.
