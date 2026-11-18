@@ -57,3 +57,13 @@ Mỗi finding phải có: mô tả cụ thể, căn cứ, evidence, mức độ,
 
 ## 8. Hồ sơ canonical
 Biên bản: 00_ROOT/BIEN_BAN.md; Manifest: 00_ROOT/WORK_MANIFEST.md; Kế hoạch: 04_PLAN/IMPLEMENTATION_ROADMAP.md; Kiến trúc nghiệp vụ: 03_ARCHITECT/AGENT_OPERATIONAL_GATE_ARCHITECTURE.md; Nhật ký: 00_ROOT/NHAT_KY_THI_CONG.md; Verification: 06_VERIFY/VERIFICATION_PLAN.md; Evidence: EVIDENCE/EVIDENCE_REGISTER.md; Dashboard: DASHBOARD/README.md.
+
+## 9. Quyết định D802001-001 — Phê duyệt DEFINE v0.3 và cho phép khảo sát kiến trúc (2026-11-18)
+
+- **Người quyết định:** Vinh — Product Owner / thẩm quyền cuối cùng.
+- **Bằng chứng quyết định:** Chỉ thị trực tiếp trong phiên làm việc ngày 2026-11-18: “ok chốt Xu tiếp đi”.
+- **Nội dung:** Chấp nhận kết quả phản biện độc lập của Vibe (ACCEPT WITH CHANGES); phê duyệt W802001-DEF-001 v0.3 làm baseline nghiệp vụ chính thức cho theo dõi, nhắc nhở, hướng dẫn, correction, recheck và escalation Agent.
+- **Ủy quyền tiếp theo:** Cho phép Xu chuyển WP-802001-03 sang ARCHITECT exploration theo W70 DOC-047; được đọc/truy vết nguồn, lập mô hình logic, data ownership, state mapping, interface assumptions, ADR và gói phản biện độc lập.
+- **Giới hạn:** Đây không phải G2 PASS, G3 PASS, G4 PASS; không phê duyệt API/route/schema, runtime, provider, event transport, database/storage, lịch scheduler, credential, chi phí, sửa code hoặc triển khai. Không mở BUILD.
+- **Điều kiện tiếp tục:** Kiến trúc phải đối chiếu ownership W70/W52/W16/W37/W14/W33/W112, ghi rõ các capability chưa xác minh, được phản biện độc lập và trình Vinh quyết định G3 trước khi lập kế hoạch triển khai. BUILD chỉ được xem xét sau PLAN, G4 PASS có evidence và quyết định cấp phép riêng của Vinh.
+- **Trạng thái:** DEFINE BASELINE APPROVED BY VINH; ARCHITECTURE EXPLORATION AUTHORIZED; TECHNICAL ARCHITECTURE NOT APPROVED; BUILD NOT AUTHORIZED.
