@@ -148,3 +148,26 @@ All model schema and pricing observations above are attributed to reviewer stati
 Kha's static review concludes that deferring FLUX.2 klein 4B does not block future W300↔W29 interoperability. A model-neutral, versioned image artifact contract is proposed. Candidate mandatory fields: `contract_version`, `asset_id`, `artifact_uri`, `media_type`, `width_px`, `height_px`, `created_at`. Recommended integrity/provenance fields: `sha256`, `byte_size`, rights/consent reference, task/provider/model/version, prompt reference, seed where supported, QC status and metadata policy. Other fields remain optional.
 
 **Not frozen / not an integration requirement:** W117 is a secondary audit, not W29's original source tree. Inspect W29's real DTO/import path, validation/error handling, file and batch limits, authorization and storage lifecycle before freezing the contract. Use a storage-neutral authorized artifact URI; do not assume local absolute paths or public URLs. W300 must not call W29 internals and must remain image/photo-only. See DOC-034 section 12 and DOC-035 Entry 020.
+
+
+---
+
+## QE ADDENDUM — Qw review and mandatory fatal vetoes (2026-11-19)
+
+### Neurons terminology correction
+Cloudflare Workers AI Neurons are the platform usage-meter unit used in pricing; they are not FLOPs, VRAM or a direct hardware-performance metric. The provisional 43.2 value (one 512×512 tile, four steps) is arithmetic from published rates only, not measured consumption. Do not describe it as an estimate of FLOPs/VRAM or as actual billed usage.
+
+### Circuit Breaker — mandatory design requirements (not implemented)
+- One centralized gateway is the only route to provider network calls.
+- Persistently and atomically reserve/count submissions across process restarts and concurrent workers; cap the entire Pilot 01 at three submissions, not merely three per process/session.
+- Require an explicit budget-enable flag and verified zero-spend account gate. Missing/corrupt/unavailable state, zero budget or unknown budget fails closed before network dispatch.
+- Reserve the count before dispatch; no automatic retry, no duplicate submission, one in-flight job at a time. A timeout is UNKNOWN/POTENTIALLY CONSUMED and must not release the reservation until usage is reconciled.
+- Local image validation (byte signature, decode, format, byte/pixel/dimension limits) must pass before any cloud transfer. Fail locally with stable error codes.
+
+### Fatal vetoes
+1. FATAL-01: more than three pilot submissions, any automatic retry/duplicate, or any submission while cost gate is closed.
+2. FATAL-02: wrong execution boundary, verified runtime resource/time limit breach, or unsafe retry after ambiguous timeout. Pin exact product/plan/execution-mode limits; do not copy generic CPU figures. Local Python processing does not use Worker CPU unless executed in the Worker.
+3. FATAL-03: local OOM/resource exhaustion due to unbounded image decode/allocation; enforce safe limits before allocation.
+4. FATAL-04: HTTP 200 with error payload, malformed/empty/non-image response, failed decode, zero-byte output or metadata mismatch is never SUCCEEDED.
+
+These are design/acceptance requirements only. No implementation or API call is authorized. See DOC-034 sections 12–13 and DOC-035 Entries 020–021.
