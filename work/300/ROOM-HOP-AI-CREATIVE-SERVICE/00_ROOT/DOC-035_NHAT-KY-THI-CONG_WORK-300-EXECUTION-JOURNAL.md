@@ -207,3 +207,16 @@ that flag.
 - Xu decision: APPROVE WITH CONDITIONS for documentation/research/design only. Architecture freeze NOT APPROVED; code BUILD NOT AUTHORIZED; provider calls/uploads/billing changes NOT AUTHORIZED.
 - Evidence boundary: review synthesis is based on reviewer reports and static document review. No new provider call, account dashboard check, image upload, code execution, runtime test or billing action performed in this entry.
 - Next: obtain Qw independent QE report; verify exact official model contract/pricing and account Free eligibility before any cloud test; resolve P1 findings and submit reconciled DOC-034 to Vinh for gate decision.
+
+
+## 2026-11-19 — Entry 017 — Xu / AI-01 — GitHub consolidation readback
+- Scope: verify the review consolidation, path map, register and scope-control notice on GitHub main.
+- Method: fetched each updated canonical file again from main and checked for the expected review IDs, gate decision and path-map sections.
+- Evidence:
+  - DOC-034 readback: 17,463 bytes; contains the independent review consolidation, KAI-300-01 and CLA-300-01 registers, and explicit BUILD NOT AUTHORIZED.
+  - DOC-035 readback: 37,770 bytes; contains Entry 016.
+  - W300_PATH_MAP.md readback: 2,753 bytes; maps Work ID 300, Sandbox runtime folder, product identity and GitHub canonical root.
+  - DOC-002 readback: contains the W300 path-map registration.
+  - Implementation Roadmap readback: contains prominent image/photo-only scope-control notice.
+- Status: PASS — all five updated files were read back and expected content was found. This is documentation synchronization PASS only; it is not architecture, security, QE, product or runtime PASS.
+- Next: receive Qw independent QE review; continue correcting model contracts/cost controls in design; wait for Vinh's explicit BUILD gate decision.
