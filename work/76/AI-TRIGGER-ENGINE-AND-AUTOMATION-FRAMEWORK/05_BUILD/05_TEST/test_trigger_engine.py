@@ -427,3 +427,33 @@ def test_registry_rejects_malformed_trigger_filters(trigger_id):
     with pytest.raises(ValidationError, match="filter"):
         registry.list_triggers(trigger_id)
 
+
+
+# W76-RT-001 — oversized TTL and datetime-boundary retry do not leak OverflowError.
+def test_idempotency_guard_rejects_ttl_that_overflows_datetime():
+    from trigger_engine.retry import IdempotencyGuard
+
+    class Store:
+        called = False
+        def claim(self, scope, key, expires_at):
+            self.called = True
+            return True
+
+    store = Store()
+    guard = IdempotencyGuard(store)
+    with pytest.raises(ValueError, match="ttl_seconds exceeds"):
+        guard.claim("76", "key", now=NOW, ttl_seconds=10**100)
+    assert store.called is False
+
+
+def test_retry_planner_rejects_due_time_beyond_datetime_max():
+    from trigger_engine.retry import RetryPlanner
+
+    planner = RetryPlanner(RetryPolicy(max_attempts=3, backoff_seconds=1, max_backoff_seconds=10))
+    with pytest.raises(ValueError, match="retry due time exceeds"):
+        planner.plan(
+            completed_attempts=1,
+            now=datetime.max.replace(tzinfo=UTC),
+            retryable=True,
+        )
+
