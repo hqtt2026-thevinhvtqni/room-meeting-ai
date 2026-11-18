@@ -247,3 +247,13 @@ that flag.
 - Xu disposition: APPROVE WITH CONDITIONS for interoperability design only. Contract remains PROPOSAL / NOT FROZEN. No W29 integration, no video scope in W300, no BUILD or API call authorized.
 - Status: PASS — report receipt and documentation reconciliation only; no technical runtime test performed.
 - Next: retain contract proposal; obtain direct W29 source evidence before interface freeze; reconcile Qw and Go cost/QE conditions before final gate decision.
+
+
+## 2026-11-19 06:28 +07:00 — Entry 021 — Xu / AI-01 — Receive and reconcile Qw independent QE review
+- Scope: review Pilot 01 acceptance criteria, fatal vetoes, Circuit Breaker and local image preflight.
+- Source: Qw report forwarded by Vinh; report explicitly states no BUILD/API call and static evidence basis.
+- Findings accepted with corrections: three-request cap is not a cost mechanism by itself; require one centralized call gateway, persistent atomic pilot-wide reservation/count, fail-closed state, explicit budget enable, no retry, single-flight and timeout-as-potentially-consumed. Invalid local images/limits must fail with stable errors before cloud transfer. Adopt four fatal veto categories: quota drain/retry, execution-boundary/timeout, local OOM/resource exhaustion, and silent/invalid success.
+- Technical correction: Neurons is Cloudflare Workers AI's usage-meter unit, not FLOPs or VRAM. The 43.2 figure is published-rate arithmetic only (one tile/four steps), not measured consumption or a hardware metric. Qw's suggested replacement wording as VRAM/FLOPs is not adopted.
+- FATAL-02 qualification: do not assert generic Worker CPU/time limits without identifying the exact product, plan and execution mode. Local Python work does not consume Worker CPU unless run inside that Worker. Unsafe retry after ambiguous timeout remains fatal.
+- Status: PASS — review receipt and documentation reconciliation only; no code, account inspection, model call or runtime test.
+- Next: incorporate fatal gates and circuit-breaker spec into design before any future BUILD decision; obtain exact runtime/account evidence; Vinh makes final GO/NO-GO decision.
