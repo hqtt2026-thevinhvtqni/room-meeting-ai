@@ -237,3 +237,13 @@ that flag.
 - Evidence: GitHub create commit b9e9ad0dd585b29009893331326dba4c4faad6bf; readback 14,022 bytes and contains CLA-300-08 and verdict APPROVE WITH CONDITIONS.
 - Status: PASS — review report mirrored and read back. The GitHub text size differs from Sandbox's reported 16,796 bytes; content was checked for key report sections, but byte-for-byte equivalence has not been proven.
 - Next: register report in DOC-002 and keep DOC-034 as the sole consolidated decision record.
+
+
+## 2026-11-19 06:28 +07:00 — Entry 020 — Xu / AI-01 — Receive and reconcile Kha W300↔W29 review
+- Scope: record Kha's independent static review of FLUX.2 deferral and future image artifact interoperability.
+- Source: Kha report forwarded by Vinh; report states its basis was W300 REVIEW_PACKET_PILOT_01.md and W117 EXISTING_WORK_TECHNICAL_AUDIT.md only.
+- Findings: FLUX.2 klein 4B deferral does not block future interoperability if W29 consumes a model-neutral normalized image artifact. Kha proposes a versioned contract with contract_version, asset_id, artifact_uri, media_type, dimensions and created_at; integrity/provenance fields include SHA-256, byte size, rights/consent reference and model/task/QC details. W300 and W29 remain independently deployable; exchange artifacts through a versioned interface, not internal function calls.
+- Evidence gaps: W117 is not the W29 source tree. Actual W29 DTO/import path, validation/error behavior, file/byte/pixel limits, batch/bandwidth, access control, storage lifecycle and accepted format/color/orientation remain UNKNOWN pending direct source audit.
+- Xu disposition: APPROVE WITH CONDITIONS for interoperability design only. Contract remains PROPOSAL / NOT FROZEN. No W29 integration, no video scope in W300, no BUILD or API call authorized.
+- Status: PASS — report receipt and documentation reconciliation only; no technical runtime test performed.
+- Next: retain contract proposal; obtain direct W29 source evidence before interface freeze; reconcile Qw and Go cost/QE conditions before final gate decision.
