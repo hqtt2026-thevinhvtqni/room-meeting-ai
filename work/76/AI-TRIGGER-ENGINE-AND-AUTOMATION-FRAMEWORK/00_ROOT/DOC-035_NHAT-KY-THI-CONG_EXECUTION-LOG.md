@@ -993,3 +993,20 @@ This is a governance/assignment and preparation record only. Xu did not alter so
 **CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
 **NGÀY:** 18/11/2026
 **GIỜ - PHÚT:** 06:32 — UTC+7
+
+
+---
+
+### 2026-11-18 06:32 +07:00 — Co đưa Dashboard JSON Schema vào CI
+- WP-76-09: thêm `05_BUILD/05_TEST/test_dashboard_schema.py`, dùng `jsonschema.Draft202012Validator` và `FormatChecker` để kiểm tra schema + `PRODUCT_STATUS.json`.
+- CI workflow cài `jsonschema` như test-only dependency. Test cũng khóa các non-claim quan trọng: source_mode phải là `local_snapshot`; WE-G4/G5 và WP-76-07 phải vẫn BLOCKED.
+- Exact current head `fddf0aadc884765ac358ffbdebc0a86ebe8d291e`, run `44204158568` SUCCESS:
+  - Python 3.11: **90/90 PASS**, job `134465683853`, artifact `14381893887`, SHA256 `298392a0b49f4772c3c40dbde5bfa0925b12b806c1f2965063850582f6a7a2c9`.
+  - Python 3.12: **90/90 PASS**, job `134465684272`, artifact `14382272479`, SHA256 `fcae88738cfc5afa26d31f9927b96eb903d72db53f8d8cbb3bb813804f8596cb`.
+- EV-76-061/062 added. Đây là formal JSON Schema + Python branch CI, không phải browser/mobile rendering, interaction hoặc accessibility QE.
+- WP-76-09 remains IN_REVIEW; browser/mobile QE pending.
+
+**TÊN:** Co
+**CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
+**NGÀY:** 18/11/2026
+**GIỜ - PHÚT:** 06:32 — UTC+7
