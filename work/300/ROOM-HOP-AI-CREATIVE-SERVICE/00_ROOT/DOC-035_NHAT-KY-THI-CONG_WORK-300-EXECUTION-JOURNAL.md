@@ -156,3 +156,11 @@ that flag.
 - Safety: no provider/API call, image upload, account creation, key creation, billing activation, paid activity, code build or runtime test performed.
 - Verification: GitHub write/readback to be checked after commit. Product acceptance NOT RUN; architecture/security/QE review PENDING.
 - Next: Vinh may direct Ka, Cla, Kha, Go, Qw and Nu to review the packet. Xu will reconcile actual findings into this single DOC-034; no build before that decision.
+
+
+## 2026-11-19 — Xu / AI-01 — Roadmap correction and main-branch verification
+- Scope: align the existing canonical implementation roadmap with the current image/photo-only W300 boundary.
+- Method: fetched the existing roadmap from main, appended the current image/photo-only phase plan and explicit supersession of the old video-oriented roadmap items, committed the update, then fetched the main branch ref.
+- Evidence: roadmap update commit cb408779ce7d73754b5bdd2c7401d34c7cc551c1; main branch readback returned the same HEAD SHA.
+- Status: PASS — roadmap write and branch-head readback. This is documentation synchronization only, not product build/test PASS.
+- Next: independent AI reviewers inspect the review packet and return evidence-backed findings for reconciliation into DOC-034.
