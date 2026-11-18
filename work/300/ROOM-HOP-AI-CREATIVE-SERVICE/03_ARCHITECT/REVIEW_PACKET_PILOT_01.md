@@ -107,3 +107,36 @@ For every finding: finding / evidence or source / severity / recommendation / ac
 
 ## 9. Hard review boundary
 No code, provider call, image upload, billing activation, paid use or credential exchange during review. Return findings to Xu/Vinh for reconciliation into the single canonical DOC-034. Review completion does not authorize build; explicit build-gate decision is required.
+
+
+---
+
+## REVIEW ADDENDUM — corrections after independent review (2026-11-19)
+This addendum supersedes conflicting examples/labels earlier in this packet. See canonical DOC-034 section 11 for the consolidated decision.
+
+### FLUX.1 schnell
+- Do not use the earlier illustrative 20-step example. Ka and Cla report the official model schema default is 4 steps and maximum is 8. The exact schema must be pinned to a dated official model page before implementation.
+- The earlier estimate of 196.8 Neurons for 20 steps is invalid for this model and is withdrawn.
+- A provisional arithmetic example based on the published pricing formula, one 512×512 tile and 4 steps, is 4.80 + (4 × 9.60) = 43.2 Neurons. This is a calculation from published rates, not measured usage; tile rounding and actual account metering remain to be verified.
+
+### FLUX.2 klein 4B
+- Do not describe this candidate as guaranteed source-preserving photo editing, mask editing or inpainting.
+- Cla's review characterizes the documented workflow as reference-conditioned image generation; exact klein-specific input limits and steps contain unresolved documentation discrepancies. Treat any assumed limit as UNKNOWN until the exact official model page/changelog confirms it.
+- Defer this model from Pilot 01 cloud calls until the model-specific request/response schema, image limits and pricing are independently pinned. It is not required to pass the initial pilot.
+
+### Zero-spend hard gates
+- A maximum of three requests is only a smoke-test cap, not proof of zero cost.
+- Before any cloud request: verify Workers Free plan, no Paid upgrade/payment method/auto-recharge, exact model eligibility on Free, visible remaining free quota, and a conservative preflight cost estimate with buffer.
+- If any fact is unavailable, a model requires Paid, or any quota/unknown error occurs: BLOCK and stop; never upgrade, retry automatically or submit a second job concurrently.
+- Treat timeout as potentially billable/consumed until usage is reconciled. Capture account usage before and after any separately authorized call.
+- No cloud request is authorized by this addendum.
+
+### Local-first prerequisite
+- Local image inspection, safe decode, dimensions/pixel/byte limits, magic-byte format detection, EXIF orientation, metadata/GPS policy, resize/crop/convert, SHA-256, thumbnails and atomic output handling must be specified and tested before any cloud adapter.
+- Keep dependencies lightweight. Re-measure the target PC before using historical hardware figures as current facts.
+
+### P300-02 wording
+Rename the candidate workflow to **reference-conditioned image generation/editing**. Explicitly state that source pixel/layout preservation is not guaranteed. Local deterministic transformations remain separate from generative editing.
+
+### Evidence status
+All model schema and pricing observations above are attributed to reviewer static research. They are not account-level or experimentally verified measurements. Architecture remains unfrozen; BUILD and provider calls remain unauthorized.
