@@ -80,9 +80,12 @@ class EventGateway:
         if verified is not True:
             raise GatewayRejected("source authentication failed")
         try:
-            data = json.loads(body.decode("utf-8"))
-        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
-            raise GatewayRejected("body must be UTF-8 JSON") from exc
+            data = json.loads(
+                body.decode("utf-8"),
+                object_pairs_hook=_reject_duplicate_object_keys,
+            )
+        except (UnicodeDecodeError, ValueError) as exc:
+            raise GatewayRejected("body must be UTF-8 JSON without duplicate object keys") from exc
         if not isinstance(data, dict):
             raise GatewayRejected("event envelope must be an object")
         eid, etype, occurred = data.get("event_id"), data.get("event_type"), data.get("occurred_at")
