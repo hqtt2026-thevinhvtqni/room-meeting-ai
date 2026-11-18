@@ -124,3 +124,12 @@ that flag.
 - Changes recorded on main: DOC-003 commit 2973fc0c715563f5ee4e5ab1a68a7d61648053e0; DOC-034 commit 2775e10a1443c34ae2045286a7557c510d2bf398; Roadmap commit e6c79e27ce966c098080a7c2d5eb5f9c7ba9245c.
 - Status: PASS — Founder decision and bounded pilot constraints recorded; initial provider research completed. BLOCKED — no complete zero-cost end-to-end image/video route verified; local GPU capacity unknown. NOT STARTED — storyboard, image/video generation, QA and handoff.
 - Next: verify exact readback and current main head; obtain the pilot product photo and exact brief; check local compute capability only through an approved, no-cost read-only diagnostic or obtain an explicitly available no-cost hosted option. Prepare storyboard for Vinh/Mê approval. Do not generate media before approval.
+
+
+## 2026-11-18 — Entry 012 — Xu / AI-01 — GitHub main exact readback after pilot decision updates
+- Scope: verify the three canonical governance updates and the pilot roadmap update after the writes in Entry 011.
+- Method: exact-fetch each changed file from branch main and read repository main ref.
+- Evidence: DOC-003 exact readback succeeded (blob SHA fa3b5cb1cdf36f530d11704ed2f78b99934265cf); DOC-034 exact readback succeeded (blob SHA 5c069d69f6cd28e987adea18c0553f03cb120152); DOC-035 exact readback succeeded (blob SHA bbb0ce41677cbc95da4890345191b7f140489dc4); Implementation Roadmap exact readback succeeded (blob SHA 9904ba26ec6045bbee314cc908780fa9573b17df). Each returned file contains the W300-PILOT decision/track marker.
+- Git ref evidence: immediately before this journal amendment, refs/heads/main resolved to commit 744324b074fe44f22d4e82f1bd4faae8a92ee60b.
+- Status: PASS — all four updated files were fetched from main and the expected pilot records were present. This verifies documentation synchronization only; it does not verify provider execution, media generation, product functionality or acceptance.
+- Next: obtain the actual product image asset from the pilot sponsor; prepare the three-scene storyboard for explicit approval; verify local compute feasibility without installing/downloading models or incurring cost.
