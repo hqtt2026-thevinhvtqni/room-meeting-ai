@@ -1,37 +1,36 @@
 # DOC-003 — DECISION LOG / W300
 
-## D300-001 — Product scope
+## D300-001 — Product scope (historical)
 - Date: 2026-11-15
 - Decision by: Vinh
-- Decision: W300 covers both image and video; access direction is a public MCP service, with user registration to be introduced later.
-- Status: USER-CONFIRMED SCOPE.
-- Conditions: public endpoint must be isolated from internal ROOM-HOP; quotas, abuse protection, identity, tenant isolation and cost controls remain mandatory design topics.
-- Not implied: anonymous unlimited access, real provider selection, production release.
+- Original decision: image + video creative service, with a public MCP direction.
+- Status: SUPERSEDED where conflicting by D300-005 (2026-11-19).
 
 ## D300-002 — Git source of truth
 - Date: 2026-11-15
 - Decision by: Vinh
-- Decision: build and maintain W300 source in the existing ROOM-HOP GitHub repository on main.
-- Canonical location: work/300/ROOM-HOP-AI-CREATIVE-SERVICE/
+- Decision: maintain W300 source in hqtt2026-thevinhvtqni/room-meeting-ai on main under work/300/ROOM-HOP-AI-CREATIVE-SERVICE/
 - Status: USER-INSTRUCTED.
-- Implementation: preserve the existing Lovable UI prototype as an isolated Work subproject. Do not connect Lovable to the repository root because that could overwrite unrelated ROOM-HOP files.
 
 ## D300-003 — UI/backend boundary
 - Date: 2026-11-15
-- Decision by: Xu (coordination safeguard)
-- Decision: the Lovable project is a UI prototype and demo-only request simulator. It must not claim real AI generation, live progress, billing, persistence or MCP connectivity.
-- Status: ACTIVE SAFETY CONSTRAINT.
-- Architecture review remains pending. Production backend implementation is not authorized by this UI snapshot.
+- Decision by: Xu
+- Decision: existing Lovable project is a UI prototype and demo-only request simulator; it must not claim real AI generation, live progress, billing, persistence or MCP connectivity.
+- Status: ACTIVE SAFETY CONSTRAINT; source preserved as legacy prototype pending review.
 
-
-## D300-004 — W300-PILOT authorization
+## D300-004 — W300-PILOT authorization (historical)
 - Date: 2026-11-18
-- Decision by: Vinh (Founder)
-- Decision: approve one bounded pilot workflow: create a 15-second 9:16 product advertisement from one supplied product photo; create three storyboard scenes (opening, coffee pour, product/CTA); obtain storyboard approval before any video generation; generate three scene images, three 5-second clips and assemble one final video; perform independent QA and handoff the final video, source images, storyboard, execution journal and cost record.
-- Pilot customer hypothesis: small product shops / brands in Vietnam. This is a pilot hypothesis, not a confirmed market-wide segmentation decision.
-- Budget: API spend ceiling = 0 VND. No paid API calls, paid trials, subscriptions, credit-card activation, automatic top-ups or other chargeable usage are authorized. If a step cannot be completed using verified no-cost resources, record BLOCKED and report; do not switch to paid resources.
-- Deadline: 7 calendar days from 2026-11-18; target completion by 2026-11-25. Deadline does not override safety, approval or evidence gates.
-- Provider: research only; prefer genuinely free options. No provider is selected until access terms, free allowance, billing safeguards, model identity, commercial-use terms and feasibility are verified.
-- Scope exclusions: public MCP, registration, tiering, billing, production backend, new AI agents, public release and unrelated feature expansion remain out of this pilot.
-- Approval gates: storyboard must be approved by Vinh/Mê before video generation. No paid spend is permitted under this decision. Existing DOC-001 architecture/security restrictions remain in force.
-- Status: USER-AUTHORIZED BOUNDED PILOT; execution remains gated by zero-cost provider/compute feasibility and storyboard approval.
+- Decision by: Vinh
+- Original decision: bounded 15-second product video advertisement pilot with three scenes and image-to-video.
+- Status: SUPERSEDED for W300 by D300-005. Preserve as audit history; video work belongs to Work 29.
+
+## D300-005 — Scope correction: W300 is image/photo only
+- Date: 2026-11-19
+- Decision by: Vinh (Work Owner); recorded by Xu / AI-01.
+- Decision: W300 is dedicated to image processing, photo editing/enhancement, AI image creation and Photo AI workflows. Work 29 remains the independent HQTT AI Video Studio.
+- Supersedes D300-001 and D300-004 wherever they assign video production, image-to-video, video assembly or public-MCP exposure to W300. Historical entries are retained and not deleted.
+- Public MCP, registration, tiers and public release are outside the current W300 scope and remain unauthorized unless separately decided.
+- Current pilot proposal: zero-cash image pilot with text-to-image (FLUX.1 schnell candidate), image editing (FLUX.2 klein 4B candidate) and deterministic local image utilities. Model IDs/pricing are documented candidates only; account/quota/terms and actual quality remain unverified.
+- Safety: no paid calls, payment method activation, auto-recharge, API invocation or private/customer-image upload. Initial cloud test cap is at most 3 requests, only after visible free quota and overage safeguards are verified.
+- Build gate: no product code or provider integration until Architecture/Security and QE findings are reconciled into the single canonical DOC-034 and the build gate is explicitly opened.
+- Status: ACTIVE SCOPE CORRECTION; reviews pending.
