@@ -215,3 +215,12 @@ PR #55 contains a proposed implementation, tests and CI workflow on an unmerged 
 - Validates the complete `DASHBOARD/PRODUCT_STATUS.json` against `PRODUCT_STATUS.schema.json`, validates the schema itself, and asserts source_mode=local_snapshot plus WE-G4/G5 and WP-76-07 remain explicitly BLOCKED.
 - Browser rendering, mobile rendering, interaction and accessibility remain NOT RUN; JSON Schema validity is not UI QE.
 - Exact current PR #60 head `fddf0aadc884765ac358ffbdebc0a86ebe8d291e`, run `44204158568`: Python 3.11 and 3.12 each 90 passed / 0 failed.
+
+
+## Exact latest head with formal Dashboard schema test — 2026-11-18 06:32 +07:00
+- Exact branch head: `af97b5f00a8964905b777ddf0e8670121ec2aaa8`.
+- GitHub Actions PR run `44204384974` SUCCESS:
+  - Python 3.12: 90 passed / 0 failed; job `134466446538`; JUnit artifact `14382842107`; ZIP SHA256 `4360a8c8846f61267b7fcabeedb50a9951e40921230e15170ed8b6a65e5f513d`.
+  - Python 3.11: 90 passed / 0 failed; job `134466446792`; JUnit artifact `14383276926`; ZIP SHA256 `7be221c123f24aadd11dc03faac9ad8e4d151080f13796348a1a58f2d5bd09fb`.
+- This run includes Draft 2020-12 Dashboard schema/data validation and explicit blocked-gate assertions; it does not run browser/mobile UI QE.
+- Branch comparison: 169 ahead / 0 behind main. PR #60 remains OPEN/DRAFT/UNMERGED and mergeable clean.
