@@ -6,8 +6,9 @@
 - Owner / Final Authority: Vinh
 - Lifecycle Orchestrator: Xu / AI-01
 - Governing standard: Work 70 — DOC-001, DOC-004, DOC-005, DOC-033, DOC-035, DOC-057
-- Status: ACTIVE — BUSINESS STANDARDIZATION / TECHNICAL DESIGN NOT APPROVED
-- Scope revision: 2026-11-17 v1.2 — governance reference correction
+- Status: ACTIVE — DEFINE APPROVED / ARCHITECTURE EXPLORATION AUTHORIZED / BUILD NOT AUTHORIZED
+- Scope revision: 2026-11-18 v1.3 — DEFINE v0.3 approved by Vinh; architecture exploration authorized
+- Current phase pointer: 03_ARCHITECT — AUTHORIZED EXPLORATION ONLY; G2 NOT ASSESSED/PASS; G3 NOT READY; BUILD NOT AUTHORIZED
 
 ## Purpose
 Theo dõi Agent từ lúc nhận việc đến khi hoàn tất; hướng dẫn trước khi làm; theo dõi checkpoint; phát hiện sai/lệch/chậm/blocked/thiếu evidence; nhắc nhở; hướng dẫn sửa; kiểm tra lại; escalation và ghi nhật ký.
