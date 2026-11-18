@@ -142,3 +142,32 @@ This section consolidates reviewer reports supplied to Xu and the Cla report rea
 - BUILD gate: CLOSED.
 
 Conditions to return for owner decision: resolve P1 items 1–8, receive Qw independent QE review, obtain any outstanding Kha/Go reports as canonical artifacts if required, verify provider terms/account/quota and current hardware evidence, then present one reconciled decision in this DOC-034. Vinh retains final authority to open BUILD.
+
+
+---
+
+## 12. KHA REVIEW ADDENDUM — W300 / W29 INTEROPERABILITY (2026-11-19)
+**Reviewer:** Kha / AI-04 (Gemini) — report forwarded by Vinh. **Verdict:** APPROVE WITH CONDITIONS for future interoperability design only.
+
+### 12.1 Review conclusion
+Deferring FLUX.2 klein 4B does not block future W300↔W29 interoperability. W29 should consume a normalized image artifact contract, not depend on W300's internal generation model. Model choice remains internal to W300.
+
+### 12.2 Output contract proposal — NOT FROZEN
+Candidate mandatory fields: `contract_version`, `asset_id` (UUID recommended), `artifact_uri` (storage-neutral; no public URL or machine-specific absolute path assumption), `media_type` (MIME), `width_px`, `height_px` (measured from decoded bytes), and `created_at` (ISO 8601 with timezone).
+Recommended integrity/provenance: `sha256`, `byte_size`, rights/consent reference, origin task, provider/model/version, prompt reference, seed if supported, QC status and metadata policy. Tags, color profile, orientation, alpha, crop/safe-area hints and aspect ratio may remain optional until W29 requirements prove otherwise.
+
+This is a design proposal, not a frozen W29 interface. Do not mandate `file_path` or public `url`; actual storage/access architecture is unknown. Do not assume UUID v4, PNG/JPEG-only, or any optional field is a W29 requirement without source evidence.
+
+### 12.3 Independence
+Use a versioned artifact package and opaque authorized artifact URI. W300 exports; W29 imports independently. Avoid shared internal functions or a shared mutable database. Version major changes explicitly; unsupported major versions must fail with a clear error. No video or image-to-video feature enters W300 scope.
+
+### 12.4 W29 evidence still missing
+The W117 audit is secondary evidence, not the original W29 source tree. Direct inspection is still required for actual input DTO/import path, validation and error handling, max file/byte/pixel limits, batch/bandwidth constraints, auth/access control, storage lifecycle, accepted formats/color/orientation and source-preservation behavior.
+
+### 12.5 Xu disposition
+- FLUX.2 klein deferral: ACCEPT.
+- Interoperability contract: ACCEPT FOR DESIGN ONLY; NOT FROZEN.
+- W29 integration: NOT AUTHORIZED until direct source audit and interface review.
+- BUILD gate: remains CLOSED pending Qw/Go reconciliations and Vinh's final decision.
+
+Evidence boundary: this addendum reflects the Kha report forwarded by Vinh; no direct W29 source inspection or integration test is claimed.
