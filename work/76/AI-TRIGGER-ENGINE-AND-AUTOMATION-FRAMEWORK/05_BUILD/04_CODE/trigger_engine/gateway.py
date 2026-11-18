@@ -8,6 +8,16 @@ from .errors import ValidationError
 from .models import Event, MAX_PAYLOAD_BYTES, canonical_json
 
 class GatewayRejected(ValidationError): pass
+
+
+def _reject_duplicate_object_keys(pairs):
+    """Reject ambiguous JSON objects instead of silently keeping the last key."""
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError("duplicate JSON object key")
+        result[key] = value
+    return result
 class SignatureVerifier(Protocol):
     def verify(self, source_id: str, headers: Mapping[str, str], body: bytes) -> bool: ...
 class ReplayStore(Protocol):
