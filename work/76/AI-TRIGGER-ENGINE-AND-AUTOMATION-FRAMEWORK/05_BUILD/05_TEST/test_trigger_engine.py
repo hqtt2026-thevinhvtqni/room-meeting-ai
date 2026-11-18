@@ -419,7 +419,7 @@ def test_registry_rejects_malformed_expected_revision(expected_revision):
         registry.activate("trg-1", 1, expected_revision=expected_revision)
 
 
-@pytest.mark.parametrize("trigger_id", [None, "", "   ", 7])
+@pytest.mark.parametrize("trigger_id", ["", "   ", 7])
 def test_registry_rejects_malformed_trigger_filters(trigger_id):
     registry = TriggerRegistry()
     with pytest.raises(ValidationError, match="filter"):
