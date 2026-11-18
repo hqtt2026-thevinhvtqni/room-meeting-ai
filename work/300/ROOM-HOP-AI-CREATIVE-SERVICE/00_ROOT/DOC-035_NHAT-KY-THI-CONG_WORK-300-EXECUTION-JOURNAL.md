@@ -190,3 +190,20 @@ that flag.
 - Overall disposition: APPROVE WITH CONDITIONS for continued documentation/research only; NOT APPROVED for architecture freeze or BUILD. P1 findings KAI-300-01 through KAI-300-06 and KAI-300-08 must be resolved or explicitly accepted by Vinh before the build gate. KAI-300-07 must be incorporated into QE acceptance design. External account/quota/license facts remain UNKNOWN until verified in the actual account/official model terms.
 - Evidence boundary: this is a static review, not an account audit, runtime test, penetration test, model quality test or independent QE result. No spend incurred; no provider call made.
 - Handoff: submit these findings to Xu for reconciliation into canonical DOC-034. Do not modify DOC-034 or DOC-001/DOC-003 as part of this reviewer submission.
+
+
+---
+
+## 2026-11-19 — Entry 016 — Xu / AI-01 — Consolidate Cla, Ka, Kha and Go Pilot 01 reviews
+- Scope: receive and reconcile independent review findings for W300 Pilot 01 into canonical GitHub DOC-034/DOC-035.
+- Sources:
+  1. Cla report read back from Sandbox path `TRAO-DOI-VA-GIOI-THIEU/03_ARCHITECTURE/CLA_REVIEW_PILOT_01.md` (16,796 bytes), containing CLA-300-01…08 and verdict APPROVE WITH CONDITIONS.
+  2. Ka review reported in GitHub DOC-035 Entry 015, KAI-300-01…08, verdict APPROVE WITH CONDITIONS.
+  3. Kha review findings forwarded by Work Owner: prefer FLUX.1 schnell for bounded PoC; defer klein 4B; define minimal shared output metadata; preserve but isolate legacy dashboard. No final verdict supplied.
+  4. Go review findings forwarded by Work Owner: six cost-control findings; verdict APPROVE WITH CONDITIONS.
+  5. Nu status note: synchronization check only; no technical review findings; not counted as completed review.
+- Key reconciliation: correct the invalid 20-step schnell example (reviewers cite default 4/max 8); reclassify klein 4B as reference-conditioned image generation rather than guaranteed source-preserving photo editing; defer klein pending model-specific contract/pricing; make Workers Free eligibility, no paid overage, preflight cost estimation, no retry, single-flight and stop-on-quota hard gates; local deterministic utilities must pass before cloud adapters; complete threat model, rights/consent, retention/deletion, provenance and objective QC; add canonical path map.
+- Kha recommendation disposition: FLUX.1 retained only as conditional first cloud candidate; klein deferred; shared DTO accepted for design-only minimal export metadata, without coupling W300 to Work 29; physical relocation of legacy dashboard deferred pending impact/dependency assessment. Legacy source remains preserved and excluded from current build.
+- Xu decision: APPROVE WITH CONDITIONS for documentation/research/design only. Architecture freeze NOT APPROVED; code BUILD NOT AUTHORIZED; provider calls/uploads/billing changes NOT AUTHORIZED.
+- Evidence boundary: review synthesis is based on reviewer reports and static document review. No new provider call, account dashboard check, image upload, code execution, runtime test or billing action performed in this entry.
+- Next: obtain Qw independent QE report; verify exact official model contract/pricing and account Free eligibility before any cloud test; resolve P1 findings and submit reconciled DOC-034 to Vinh for gate decision.
