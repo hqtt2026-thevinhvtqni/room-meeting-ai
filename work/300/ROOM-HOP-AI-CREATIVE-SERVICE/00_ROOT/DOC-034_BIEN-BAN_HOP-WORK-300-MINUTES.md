@@ -69,3 +69,19 @@ These definitions do not authorize BUILD before storyboard approval and do not c
 
 ### Work 500 relationship
 Work 500 (LLM HUB) may be evaluated as a possible orchestration/model-routing layer, but its demo or agent orchestration is not evidence of image-generation or image-to-video capability. No W500 integration is included in W300-PILOT until a focused technical review verifies a concrete adapter/provider contract and the Founder approves any scope change.
+
+
+## 10. Founder scope correction — W300 image/photo only (2026-11-19)
+**CURRENT PRODUCT DIRECTION — supersedes earlier video-oriented W300 scope and pilot where they conflict.**
+
+Vinh clarified that Work 300 is for image processing, photo editing/enhancement, AI image creation and Photo AI. Work 29 remains the separate HQTT AI Video Studio.
+
+- Remove video generation, image-to-video, storyboard-to-video and video assembly from W300's active product scope.
+- The earlier 15-second video-ad pilot recorded in D300-004 remains historical evidence only; it is superseded for W300 and must not drive current implementation.
+- The previous public MCP direction is not part of the current W300 baseline and is not authorized by this correction.
+- Preserve the existing Lovable UI source snapshot in GitHub for auditability, but label it LEGACY / NOT VERIFIED. Do not delete it or treat it as the current product.
+- Current review target: AI Image & Photo Studio architecture and bounded zero-cash image pilot covering text-to-image, image editing and local deterministic image utilities.
+- Cloudflare FLUX.1 schnell and FLUX.2 klein 4B are candidates documented in the review packet, not account-verified or experimentally validated.
+- No provider calls, image uploads, paid activity, billing activation or product code before review reconciliation and an explicit build-gate decision.
+- Requested reviewers: Ka (architecture/security), Cla (technical architecture/API), Kha (product/provider strategy), Go (cost controls), Qw (independent QE), and Nu (Manus) for independent research if available.
+- This is a scope correction, not final architecture approval. DOC-034 remains DRAFT until reviewer findings are reconciled and Vinh approves the final decision.
