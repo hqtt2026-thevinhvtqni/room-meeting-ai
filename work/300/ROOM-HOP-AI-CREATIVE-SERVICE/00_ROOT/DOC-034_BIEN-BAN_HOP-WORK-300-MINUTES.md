@@ -45,3 +45,27 @@ Public MCP exposure, customer registration/tiering, billing, production backend,
 
 ## 8. Provider research status at decision time
 No provider is selected. Public documentation reviewed indicates that hosted media APIs may require account keys and/or usage credits; free web access is not proof of free API access. Local open-weight video generation may avoid API charges but requires capable local GPU resources and a separate hardware feasibility check. Provider/compute decision remains OPEN.
+
+
+## 9. Product Sponsor confirmation — research/storyboard phase and acceptance definitions (2026-11-18)
+The Product Sponsor confirms the Founder-approved W300-PILOT constraints: 0 VND API budget; deadline 2026-11-25; no image/video generation or API invocation before the detailed storyboard receives explicit approval from both Vinh and the Product Sponsor.
+
+### Provider research requirements
+- Cloudflare Workers AI: verify model-by-model which image models are available under the Free allocation, daily quota/Neuron limits, account/card requirements and applicable restrictions. Cite official documentation; do not infer that a model is free merely because the platform has a Free tier.
+- Pollinations: treat as NOT AUTHORIZED unless official terms prove the exact API route can be used without Pollen purchase, BYOP key, payment method, paid trial or other charge.
+- Wan 2.2 local: do not declare feasibility until Vinh's actual CPU, GPU, RAM and free disk capacity are documented and compared with the exact model's official requirements. No model download or installation is authorized in this research phase.
+- No personal API keys, paid trials or credit-card-gated trials. No API calls of any kind before storyboard approval.
+
+### Storyboard preparation
+Prepare a blank three-scene storyboard template only. Do not insert stock images, AI demo images or an unapproved product image. Each scene must specify camera angle, lighting, action and exact on-screen text. Product identity and claims must come only from the actual product photo and facts explicitly confirmed by Vinh.
+
+### Pilot acceptance status definitions
+- PASS: playable final 15-second video and all six quantitative acceptance criteria from the original Sponsor review are met, including three-scene coverage, 9:16 aspect ratio, product integrity, complete evidence, independent QA and measured cost/time.
+- PARTIAL PASS: approved storyboard exists; at least one provider has been tested with documented proof of genuinely free use after storyboard approval; one playable 5-second single-scene demo exists; and the remaining two scenes are explicitly BLOCKED with evidence explaining why they cannot be completed at 0 VND. This is a valid partial outcome, not full product acceptance.
+- FAIL: no supporting evidence; unauthorized paid API use; fabricated/substituted product image; or claiming completion without a playable video link/file.
+- QA must report actual findings. QA is not required to invent a defect; absence of defects is acceptable only with reproducible inspection evidence.
+
+These definitions do not authorize BUILD before storyboard approval and do not change the 0 VND ceiling.
+
+### Work 500 relationship
+Work 500 (LLM HUB) may be evaluated as a possible orchestration/model-routing layer, but its demo or agent orchestration is not evidence of image-generation or image-to-video capability. No W500 integration is included in W300-PILOT until a focused technical review verifies a concrete adapter/provider contract and the Founder approves any scope change.
