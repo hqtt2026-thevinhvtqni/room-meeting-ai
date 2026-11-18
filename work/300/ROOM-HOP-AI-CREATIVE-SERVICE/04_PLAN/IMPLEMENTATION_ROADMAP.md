@@ -44,3 +44,51 @@
 
 ## UI prototype
 The Lovable UI snapshot is a demo-only front-end shell. It may be refined independently as a visual prototype, but it does not close any production gate above.
+
+
+---
+
+## Bounded execution track — W300-PILOT (Founder-approved 2026-11-18)
+This track is a constrained validation experiment inside W300; it does not replace the broader product roadmap or approve production architecture.
+
+### Approved objective
+Produce one playable 15-second (±2s), 9:16 product advertisement from one customer-supplied product photo and one brief, using three scenes: opening, coffee pour, product close/CTA. The pilot brief is a test input; do not invent product claims, origin, certifications or ingredients beyond what the supplied asset/brief explicitly states.
+
+### Work sequence and gates
+1. READ: inspect supplied image and brief; create job/work record; identify unknowns and prohibited assumptions.
+2. TRACE: record agent/operator, provider/model/version, timestamps, usage/token data when exposed, compute source and evidence.
+3. ANALYZE: prepare concept and exactly three storyboard scenes.
+4. DECIDE: obtain explicit Vinh/Mê storyboard approval before image/video generation.
+5. BUILD: only use resources verified to incur zero API/compute charges and requiring no payment activation. Create three scene images, three 5-second clips and assemble the final video. If infeasible, stop and record BLOCKED.
+6. VERIFY: independent QA checks duration, aspect ratio, scene coverage, product/logo/text integrity, playability and source-to-output correspondence. Do not require fabricated defects.
+7. HANDOFF: deliver final playable video, three source images, storyboard, journal and cost/time record.
+
+### Acceptance criteria
+- Playable video link/file; not a screenshot.
+- Three scenes match approved storyboard; duration 13–17 seconds; aspect ratio 9:16.
+- Product identity/logo/packaging text are inspected against the original. Any visible distortion is recorded; no unsupported claim may be introduced.
+- DOC-035 contains reproducible evidence for each operation, model/provider/version, time and approval.
+- Independent QA report includes checks performed, evidence, defects if any, remediation and final disposition.
+- API spend = 0 VND; elapsed time in minutes, human interventions and redo count are recorded.
+- Any paid or payment-card-gated operation is prohibited. A blocked workflow is an honest result, not a PASS.
+
+### Fixed constraints
+- API budget: 0 VND.
+- Deadline: 2026-11-25 (7 calendar days from approval date 2026-11-18).
+- Provider status: RESEARCH ONLY; no provider selected.
+- Excluded: public MCP, registration/tiering, billing, production backend, public release, new AI agents and unrelated feature expansion.
+- Storyboard approval is mandatory before generating images/video. No generation is authorized by this roadmap update alone.
+
+### Provider research — preliminary, not a selection
+- Pollinations documentation describes image and video API endpoints, but generation requests require a secret key and account-specific Pollen/payment or user-authorized usage flows; do not assume API calls are free. Verify live model pricing and account balance/limits before any call. (Docs: https://gen.pollinations.ai/docs)
+- Cloudflare Workers AI documents a 10,000-Neuron/day free allocation on Workers Free, with overage failing unless upgraded; model-specific restrictions apply. It may be considered for image generation only after confirming the exact model is available within the free allocation. It does not establish a complete free video pipeline. (Docs: https://developers.cloudflare.com/workers-ai/platform/pricing/)
+- Wan2.2 provides open image-to-video weights, including TI2V-5B at 720p/24fps, but official documentation identifies consumer GPU requirements (e.g. RTX 4090 for the 5B path). It is a local-compute candidate only after hardware verification; local electricity/time are not API charges but must be disclosed as operational cost. (Repo: https://github.com/Wan-Video/Wan2.2)
+- Conclusion: NO END-TO-END ZERO-COST PROVIDER/COMPUTE PATH VERIFIED YET. No API request or model download is authorized merely by this research note.
+
+### Pilot status
+- Founder authorization: PASS.
+- Storyboard approval: PENDING.
+- Provider/compute feasibility: BLOCKED / NOT VERIFIED.
+- Generation: NOT STARTED.
+- QA: NOT RUN.
+- Handoff: NOT READY.
