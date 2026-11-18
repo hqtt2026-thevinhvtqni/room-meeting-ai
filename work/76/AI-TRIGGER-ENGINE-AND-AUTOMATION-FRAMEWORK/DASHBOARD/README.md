@@ -99,3 +99,7 @@ Dashboard v0.2 đọc JSON tĩnh từ repository. Chưa có Core API, authentica
 - Snapshot remains local_snapshot. Work Entry WE-G4/G5 are BLOCKED; browser/mobile QE is NOT RUN.
 
 - 2026-11-18: Gateway now invokes the registered payload schema before replay reservation and enforces registration-key/source-id equality; PolicyRequest and authoritative provider decision envelopes receive strict fail-closed validation. Exact-head CI run 44200662865: 81/81 on Python 3.11 and 3.12 (branch CI only).
+
+- CI now installs `jsonschema` as a test-only dependency and runs `05_BUILD/05_TEST/test_dashboard_schema.py`.
+- The test validates Draft 2020-12 schema and PRODUCT_STATUS.json with format checking, and asserts local_snapshot plus explicit blocked WE-G4/WE-G5/WP-76-07 statuses.
+- Passing this test validates the data contract only; browser/mobile rendering, interaction and accessibility QE remain separate and NOT RUN.
