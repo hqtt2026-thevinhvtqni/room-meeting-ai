@@ -369,5 +369,7 @@ def test_w76_md_004_frozen_mapping_backing_store_cannot_be_mutated():
     trigger = make_trigger()
     with pytest.raises(TypeError):
         trigger.condition._data["injected"] = True
+    with pytest.raises(TypeError, match="FrozenDict is immutable"):
+        trigger.condition._data = {}
     assert "injected" not in trigger.condition
 
