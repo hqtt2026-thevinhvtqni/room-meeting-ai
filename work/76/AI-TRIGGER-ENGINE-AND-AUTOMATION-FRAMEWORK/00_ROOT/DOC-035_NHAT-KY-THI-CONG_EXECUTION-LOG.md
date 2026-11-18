@@ -1176,3 +1176,20 @@ This is a governance/assignment and preparation record only. Xu did not alter so
 **CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
 **NGÀY:** 19/11/2026
 **GIỜ - PHÚT:** 03:37 — UTC+7
+
+
+---
+
+### 2026-11-19 03:39:05 +07:00 — Co harden persisted Trigger/Registry snapshot
+- Phát hiện biên nạp dữ liệu persisted chưa đóng: Trigger.from_dict có thể để TypeError lọt ra khi snapshot/action sai kiểu; Registry.from_dict chưa reject duplicate cùng (trigger_id, version) và malformed root/items.
+- Sửa `models.py`: validate snapshot/action Mapping; validate type của policy_ref/content_digest.
+- Sửa `registry.py`: validate root Mapping, triggers list, từng item Mapping; reject duplicate trigger version record; giữ kiểm tra multi-ACTIVE corruption.
+- Thêm regression W76-MD-005 / W76-RG-005.
+- Exact source/test head `4cf9be690df06f8887e2fd02dc59c53096a07166`; GitHub Actions PR run `44393206734` SUCCESS: Python 3.11 **97/97**, Python 3.12 **97/97**. EV-76-075/076 added.
+- GitHub compare: 209 ahead / 38 behind main. PR #60 OPEN/DRAFT/UNMERGED, mergeable clean; không rebase/merge.
+- Remaining: cross-process durable CAS, independent QE, browser/mobile QE, Core/runtime E2E, WP-76-07 dispatch and Work Entry WE-G4/G5.
+
+**TÊN:** Co
+**CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
+**NGÀY:** 19/11/2026
+**GIỜ - PHÚT:** 03:39 — UTC+7

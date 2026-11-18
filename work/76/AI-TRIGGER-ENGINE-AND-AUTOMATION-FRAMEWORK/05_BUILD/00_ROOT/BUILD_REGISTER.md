@@ -298,3 +298,11 @@ PR #55 contains a proposed implementation, tests and CI workflow on an unmerged 
   - Python 3.11: 94 passed / 0 failed; job `135114523396`; JUnit artifact `14469187669`; ZIP SHA256 `90818dafe479ee185daeec430c024de0f49eb1bbe0b9b83497f383bb0c0a8041`.
   - Python 3.12: 94 passed / 0 failed; job `135114523860`; JUnit artifact `14469467187`; ZIP SHA256 `06744427163fd00356b537567e76a6bb3fd46b392b4b055e0ba17fde0f3b6d76`.
 - This run includes the latest FrozenDict attribute-reassignment regression and all dashboard schema assertions. Subsequent commit is records-only; source/test files are unchanged.
+
+
+## WP-76-01 persisted snapshot validation — 2026-11-19 03:39 +07:00
+- `Trigger.from_dict` now rejects non-mapping snapshots and non-mapping action records with declared ValidationError; validates policy_ref/content_digest types.
+- `TriggerRegistry.from_dict` now rejects non-mapping root snapshots, non-list trigger collections, non-mapping items, duplicate (trigger_id, version) records, and retains fail-closed multi-ACTIVE detection.
+- Regressions W76-MD-005 / W76-RG-005 added for malformed and duplicate persisted snapshots.
+- Exact source/test head `4cf9be690df06f8887e2fd02dc59c53096a07166`; PR CI run `44393206734` SUCCESS: Python 3.11/3.12 each 97 passed / 0 failed (EV-76-076).
+- Branch comparison refreshed: 209 ahead / 38 behind main; PR #60 OPEN/DRAFT/UNMERGED, mergeable=true / clean. No rebase/merge.
