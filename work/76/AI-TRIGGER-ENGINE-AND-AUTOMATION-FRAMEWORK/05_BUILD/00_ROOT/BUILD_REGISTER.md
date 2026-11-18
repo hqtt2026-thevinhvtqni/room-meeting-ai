@@ -2,7 +2,7 @@
 
 | WP | Package | Owner | Reviewer | Status | Canonical evidence |
 |---|---|---|---|---|---|
-| WP-76-01 | Trigger Registry and schema | Co / AI-07 | Ka / AI-02 (assignment record is PR #55 preparation-only; PR #60 scope/identity/entry not verified) | IN_REVIEW — PR #60 draft; branch CI PASS | `05_BUILD/04_CODE/trigger_engine/{models,registry}.py`; `05_BUILD/05_TEST/test_trigger_engine.py` |
+| WP-76-01 | Trigger Registry and schema | Co / AI-07 | Ka / AI-02 (assignment record is PR #55 preparation-only; PR #60 scope/identity/entry not verified) | IN_REVIEW — process-local RLock now serializes publish/activate/pause/resume/disable/read snapshots; concurrent 12-version activation regression added; strict string-only JSON mapping keys and MappingProxyType backing added; exact-head CI 94/94 on Python 3.11/3.12 (EV-76-071); durable cross-process registry/CAS still pending | `05_BUILD/04_CODE/trigger_engine/{models,registry}.py`; `05_BUILD/05_TEST/test_trigger_engine.py` |
 | WP-76-02 | Event Gateway and source validation | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — registered payload schema is now enforced before replay reservation; registration key must match trusted source_id; schema/replay failures fail closed; production verifier/key provider pending; exact-head CI run 44200662865 PASS 81/81 on Python 3.11/3.12 | `trigger_engine/gateway.py`; `test_work_packages.py` |
 | WP-76-03 | Scheduler and TIME triggers | Co / AI-07 | Qw (ACK/entry pending) | IN_REVIEW — PR #60 draft; UTC one-shot only; due-store exceptions/indeterminate results fail closed; recurrence/DST/HA BLOCKED by ADR-76-005; latest scheduler hardening exact-head CI run 44193037401 PASS 71/71 on Python 3.11/3.12 | `trigger_engine/scheduler.py`; `test_work_packages.py` |
 | WP-76-04 | Typed Condition Evaluator | Co / AI-07 | Ka / AI-02 (independent QE pending) | IN_REVIEW — PR #60 draft; branch CI PASS | `trigger_engine/conditions.py`; `test_trigger_engine.py` |
@@ -262,3 +262,13 @@ PR #55 contains a proposed implementation, tests and CI workflow on an unmerged 
   - Python 3.11: 90 passed / 0 failed; job `134471510699`; JUnit artifact `14383097946`; ZIP SHA256 `cbe679a1ad7d65bed7bb984c4df60670180cde660a0eaf3fc2b765e7c91762a0`.
   - Python 3.12: 90 passed / 0 failed; job `134471511141`; JUnit artifact `14383124111`; ZIP SHA256 `090c94be6849d6449cb50735d2ebcbe3c65ea76664ecfdf96899f51c704b09fe`.
 - Branch comparison: 189 ahead / 0 behind main. PR #60 OPEN/DRAFT/UNMERGED; GitHub mergeable=true / clean.
+
+
+## WP-76-01 / model immutability hardening — 2026-11-19 03:29 +07:00
+- Finding: TriggerRegistry's single-ACTIVE-version lifecycle invariant was only protected by sequential logic. Unlike AuditWriter and ExecutionStateMachine, it had no in-process synchronization; concurrent activations could race between active-version lookup and commit.
+- Change: Added a reentrant lock around publish, activate, pause, resume, disable, reads and serialized snapshots. Reentrancy is required because activate/resume call active_triggers while holding the same registry lock. Durable multi-process CAS remains an external repository requirement.
+- Regression: W76-RG-004 concurrently activates 12 versions of one trigger and asserts exactly one ACTIVE and 11 RETIRED.
+- Model finding: deep_freeze previously coerced arbitrary mapping keys with str(), potentially collapsing distinct keys (e.g. 1 and "1"). It now rejects non-string keys. FrozenDict backing storage now uses MappingProxyType so callers cannot mutate its private backing mapping by direct access.
+- Regression: W76-MD-004 tests non-string/colliding keys and direct backing-store mutation rejection.
+- Exact PR #60 head: `e53b913cd7cf6644f62a1ccce13c4c9bc74141cc`; GitHub Actions run `44391467230` SUCCESS: Python 3.11 94/94; Python 3.12 94/94 (EV-76-071).
+- Branch comparison refreshed: 197 commits ahead / 38 behind main; PR #60 OPEN/DRAFT/UNMERGED, mergeable=true / clean. No rebase or merge performed.
