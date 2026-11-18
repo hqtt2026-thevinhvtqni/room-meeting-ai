@@ -172,6 +172,10 @@ class Trigger:
             raise ValidationError(f"status must be one of {TRIGGER_STATUSES}")
         if isinstance(self.revision, bool) or not isinstance(self.revision, int) or self.revision < 1:
             raise ValidationError("revision must be a positive integer")
+        if not isinstance(self.policy_ref, str):
+            raise ValidationError("policy_ref must be a string")
+        if not isinstance(self.content_digest, str):
+            raise ValidationError("content_digest must be a string")
         if not isinstance(self.action, ActionSpec):
             raise ValidationError("action must be an ActionSpec")
         object.__setattr__(self, "condition", deep_freeze(self.condition))
@@ -241,8 +245,12 @@ class Trigger:
 
     @classmethod
     def from_dict(cls, data: Mapping[str, Any]) -> "Trigger":
+        if not isinstance(data, Mapping):
+            raise ValidationError("trigger snapshot must be a mapping")
         try:
             action = data["action"]
+            if not isinstance(action, Mapping):
+                raise ValidationError("trigger action snapshot must be a mapping")
             trigger = cls(
                 trigger_id=data["trigger_id"],
                 name=data["name"],
