@@ -166,3 +166,12 @@ Escalation là yêu cầu xem xét/quyết định, không tự động kết lu
 - Phản biện độc lập đã hoàn tất tại `02_DEFINE/VIBE_INDEPENDENT_REVIEW_PACKAGE.md` §9; đính chính nguồn chuẩn tại §10. Vinh đã phê duyệt baseline v0.3; mọi thay đổi nội dung policy tiếp theo phải có decision/change record.
 - Sau khi được duyệt, phải cập nhật Biên bản/decision canonical nếu có thay đổi quyết định; không tạo biên bản song song.
 - Phê duyệt DEFINE không phải phê duyệt kiến trúc kỹ thuật, API, runtime, provider, lưu trữ, chi phí hoặc BUILD. ARCHITECT được phép khảo sát/thiết kế theo DOC-047; G2 chưa được tự động đánh dấu PASS. BUILD chỉ được xem xét sau khi ARCHITECT/PLAN hoàn tất, G4 PASS theo DOC-004 và có quyết định cho phép riêng.
+
+## 14. Approval record
+
+- **Approval:** APPROVED BY VINH — 2026-11-18.
+- **Approved artifact:** W802001-DEF-001 v0.3, with Vibe independent review verdict ACCEPT WITH CHANGES and Xu's source-reference correction recorded in the canonical review package.
+- **Approved meaning:** Baseline business policy for Agent Work Supervision & Guidance within the scope of Work 802001.
+- **Not included:** technical architecture approval, API/schema approval, runtime enforcement, provider/adapter capability, event transport, persistent storage, scheduler implementation, credential, external service or cost approval.
+- **Next phase:** architecture exploration is authorized by D802001-001; this approval does not imply W70 G2/G3/G4 PASS and does not authorize BUILD.
+- Any substantive change to this policy requires a new traceable change/decision record; this approved baseline must not be silently overwritten.
