@@ -19,7 +19,7 @@ def test_dashboard_product_status_matches_json_schema():
     Draft202012Validator.check_schema(schema)
     validator = Draft202012Validator(schema, format_checker=FormatChecker())
     errors = sorted(validator.iter_errors(data), key=lambda error: list(error.path))
-    assert not errors, "\\n".join(
+    assert not errors, chr(10).join(
         f"{list(error.path)}: {error.message}" for error in errors
     )
 
