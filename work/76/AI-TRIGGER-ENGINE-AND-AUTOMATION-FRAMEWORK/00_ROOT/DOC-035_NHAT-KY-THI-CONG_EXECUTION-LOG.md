@@ -1027,3 +1027,18 @@ This is a governance/assignment and preparation record only. Xu did not alter so
 **CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
 **NGÀY:** 18/11/2026
 **GIỜ - PHÚT:** 06:32 — UTC+7
+
+
+---
+
+### 2026-11-18 06:32 +07:00 — Co làm rõ reviewer scope và trạng thái CI
+- Đối chiếu `WE-ASG-W76-KA-QE-20261114.md`: assignment hiện ghi nguồn review PR #55, trạng thái PREPARATION_ONLY / WE-G4-G5 BLOCKED. Hồ sơ này không chứng minh Ka live identity/capability và không tự mở rộng scope review sang PR #60.
+- Cập nhật Build Register và Dashboard reviewer fields để phân biệt assignment PR #55, PR #60 scope pending, và các nomination Qw/An chưa ACK. Không tự gán reviewer, không tự xác nhận QE.
+- Exact PR #60 head `7a78326eb67e9db09f5628534bd430de5e2fee3d`, run `44204707706` SUCCESS: Python 3.12 **90/90 PASS** (job `134467553455`, artifact `14382747330`, SHA256 `ad6828edc3719b4e9a9e308200c3d355e7e784be9562901a60719c0cb41ae08f`); Python 3.11 **90/90 PASS** (job `134467553852`, artifact `14382931981`, SHA256 `ebcbc99a21e5885f2aa54da78ff9376551647a3739792a8171b6982651b7d6c9`).
+- EV-76-064 added. Branch compare 173 ahead / 0 behind main; PR #60 OPEN/DRAFT/UNMERGED.
+- Independent Canonical QE cannot honestly start until reviewer assignment scope and actual reviewer session identity/capability are confirmed. WE-G4/G5 remain BLOCKED.
+
+**TÊN:** Co
+**CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
+**NGÀY:** 18/11/2026
+**GIỜ - PHÚT:** 06:32 — UTC+7
