@@ -114,3 +114,45 @@ QA must report actual defects, not manufacture one. A no-defect result is valid 
 Work 500 is a candidate orchestration/model-routing layer only. Its demo, agent flow or UI screenshot does not prove image or video generation. W500 integration is outside this Pilot until a focused technical review establishes a working, no-cost-compatible provider adapter and Vinh approves a scope change.
 
 The Sponsor's acceptance amendment does not relax the storyboard approval gate, 0 VND ceiling or 2026-11-25 deadline.
+
+
+---
+
+## 2026-11-19 — Current roadmap correction: W300 image/photo only
+This current section supersedes the earlier video-oriented W300 pilot and roadmap items where they conflict. Video generation, image-to-video, storyboard-to-video and video assembly belong to Work 29, not W300.
+
+### Phase 01 — Discovery / review (current)
+1. Confirm image/photo-only scope — recorded in DOC-003 D300-005.
+2. Preserve the existing dashboard source as LEGACY / NOT VERIFIED; do not treat it as the accepted current product UI.
+3. Obtain independent reviews from Ka, Cla, Kha, Go, Qw and Nu if available.
+4. Reconcile reviewer findings into the single canonical DOC-034.
+5. Obtain Vinh's decision on the final architecture and explicit build gate.
+
+### Phase 02 — Design (gated)
+1. Finalize image task contracts and provider-agnostic adapter interface.
+2. Define local/cloud data flow, explicit consent and image provenance.
+3. Define input/output formats, dimensions, size limits and metadata.
+4. Define quota, cost and paid-overage fail-closed controls.
+5. Define retention/deletion, region, rights and secret-handling policies.
+6. Finalize quality rubric and objective file/image validation.
+
+### Phase 03 — Build (NOT AUTHORIZED)
+1. Start with deterministic local utilities after architecture approval.
+2. Add text-to-image and image-editing adapters only after account/quota/terms checks and explicit build authorization.
+3. Keep provider integrations replaceable; do not build public MCP or video functions in W300.
+
+### Phase 04 — Verify
+- Unit/integration tests for local utilities and provider adapters.
+- File validity, metadata/hash, dimensions and format checks.
+- Independent visual quality review, privacy/security checks and quota/overage verification.
+- Record every result in DOC-035 with method, evidence and PASS/FAIL/BLOCKED.
+
+### Current gates
+- Image/photo scope: DOCUMENTED.
+- Provider candidates/pricing: DOCUMENTED; account access/quota/retention/rights not verified.
+- Architecture/security review: PENDING.
+- Independent QE review: PENDING.
+- Build: NOT AUTHORIZED.
+- Provider calls/image uploads: NOT RUN.
+- E2E/product acceptance: NOT RUN.
+- Video and public MCP: EXCLUDED from current W300 scope.
