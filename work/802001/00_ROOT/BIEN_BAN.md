@@ -1,11 +1,11 @@
 # BIÊN BẢN / MINUTES — WORK 802001
 
 - Work ID: 802001
-- Version: 1.2 — GOVERNANCE REFERENCE CORRECTION
+- Version: 1.3 — VINH APPROVAL OF DEFINE BASELINE / ARCHITECTURE EXPLORATION
 - Date: 2026-11-17
 - Chủ trì: Xu / AI-01; thẩm quyền cuối cùng: Vinh
 - Chuẩn bắt buộc: Work 70 — DOC-001, DOC-004, DOC-005, DOC-033, DOC-035, DOC-057
-- Status: BUSINESS SCOPE BASELINE — TECHNICAL DESIGN / IMPLEMENTATION NOT APPROVED
+- Status: DEFINE v0.3 APPROVED BY VINH — ARCHITECTURE EXPLORATION AUTHORIZED — BUILD NOT AUTHORIZED
 
 ## 1. Mục tiêu đúng của Work 802001
 Work 802001 chuẩn hóa nghiệp vụ **theo dõi, nhắc nhở, hướng dẫn và điều chỉnh Agent trong suốt quá trình Agent thực hiện Work/assignment/thi công**, dựa trên nghiệp vụ và quy trình đã được phê duyệt trong Work tương ứng.
