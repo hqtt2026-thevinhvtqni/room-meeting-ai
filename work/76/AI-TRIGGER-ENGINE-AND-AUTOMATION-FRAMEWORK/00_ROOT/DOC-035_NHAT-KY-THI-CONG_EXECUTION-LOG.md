@@ -1256,3 +1256,18 @@ This is a governance/assignment and preparation record only. Xu did not alter so
 **CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
 **NGÀY:** 19/11/2026
 **GIỜ - PHÚT:** 03:46 — UTC+7
+
+
+---
+
+### 2026-11-19 03:50:34 +07:00 — Co harden registry API và xử lý test expectation
+- TriggerRegistry: lookup yêu cầu trigger_id non-empty string và version positive integer (không nhận bool); expected_revision từ chối bool/non-int/non-positive; active_triggers/list_triggers validate filter nếu được truyền tường minh. `None` giữ nghĩa hợp lệ là không lọc.
+- CI run `44395027259` FAIL một test trên mỗi Python version (112 pass): test draft nhầm khi kỳ vọng None filter bị từ chối. Đây là test expectation sai, không phải product behavior sai. Co giữ evidence EV-76-082 và sửa test.
+- Corrected exact source/test head `9841b008887e13e678920abbae8044046e490a8a`; PR run `44395153259` SUCCESS: Python 3.11 **112/112**, Python 3.12 **112/112**. EV-76-083 added.
+- Branch compare: 220 ahead / 38 behind main; PR #60 OPEN/DRAFT/UNMERGED, mergeable clean.
+- Cross-process CAS, independent QE, Core/runtime E2E, browser/mobile QE và WP-76-07 vẫn pending.
+
+**TÊN:** Co
+**CHỨC DANH:** AI-07 — AI Coder / Execution Assistant
+**NGÀY:** 19/11/2026
+**GIỜ - PHÚT:** 03:50 — UTC+7

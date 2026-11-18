@@ -338,3 +338,12 @@ PR #55 contains a proposed implementation, tests and CI workflow on an unmerged 
   - Python 3.11: 99 passed / 0 failed; job `135120916565`; artifact `14468984143`; SHA256 `6d133976ff9fef668c53f27a7c2d6810cb4abb16b2dc24efa8ed3e276aae0355`.
   - Python 3.12: 99 passed / 0 failed; job `135120917426`; artifact `14468259431`; SHA256 `0570b1e52e2e20b387cdf12aa9d0c1c92716c82ad94b9118a3453ada5e326605`.
 - Last compare read: 216 ahead / 38 behind main. PR #60 OPEN/DRAFT/UNMERGED, mergeable=true / clean. No rebase/merge.
+
+
+## WP-76-01 strict registry API input validation — 2026-11-19 03:50 +07:00
+- Registry lookup now validates trigger_id as non-empty string and version as positive non-bool integer.
+- expected_revision now rejects bool, non-integer and non-positive values before compare-and-swap.
+- active_triggers/list_triggers reject malformed explicit filters; `None` remains the valid “no filter” value.
+- First test draft incorrectly treated `None` as an invalid filter; CI caught the incorrect expectation (run 44395027259: 1 failed / 112 passed on both Python versions). Test corrected to preserve documented optional-filter semantics.
+- Exact corrected source/test head `9841b008887e13e678920abbae8044046e490a8a`; PR run `44395153259` SUCCESS: Python 3.11/3.12 each 112 passed / 0 failed (EV-76-083).
+- Branch comparison: 220 ahead / 38 behind main; PR #60 OPEN/DRAFT/UNMERGED, mergeable clean.
