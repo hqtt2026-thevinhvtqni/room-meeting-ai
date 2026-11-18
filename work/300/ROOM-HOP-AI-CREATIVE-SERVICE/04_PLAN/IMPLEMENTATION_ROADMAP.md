@@ -92,3 +92,25 @@ Produce one playable 15-second (±2s), 9:16 product advertisement from one custo
 - Generation: NOT STARTED.
 - QA: NOT RUN.
 - Handoff: NOT READY.
+
+
+## Sponsor amendment — research/storyboard restrictions and outcome classes (2026-11-18)
+
+### Before storyboard approval — RESEARCH ONLY
+1. Cloudflare Workers AI: produce a model-by-model evidence table from official docs showing model name, task support, Free allocation/quota, card/payment requirement, restrictions and source link. Mark each model USE-ELIGIBLE / UNVERIFIED / BLOCKED. Do not call any API.
+2. Pollinations: presume prohibited unless the exact API route is proven to be fully no-cost with no Pollen purchase, BYOP key, payment method or paid trial. No API call.
+3. Wan 2.2: ask Vinh for CPU/GPU/RAM/free disk and verify against official requirements. No inference about his hardware; no downloads or installations.
+4. Prepare a blank three-scene storyboard template only. No stock imagery, AI demo imagery or substitute product image. Each scene must specify camera angle, lighting, action and on-screen text. Wait for the real product photo and explicit Vinh + Sponsor approval.
+5. No image/video API call or local generation of any kind before storyboard approval, including nominally free endpoints. No personal API keys and no card-required trials.
+
+### Acceptance outcome classes
+- PASS: playable 15-second final video and all six original Sponsor acceptance criteria satisfied.
+- PARTIAL PASS: approved storyboard + documented test of at least one verified free provider after approval + playable 5-second one-scene demo + evidence-based BLOCKED explanation for the other two scenes under the 0 VND ceiling.
+- FAIL: evidence absent; paid API used without authorization; fabricated/substituted product image used; or completion claimed without a playable video link/file.
+
+QA must report actual defects, not manufacture one. A no-defect result is valid only with reproducible inspection evidence.
+
+### W500 integration boundary
+Work 500 is a candidate orchestration/model-routing layer only. Its demo, agent flow or UI screenshot does not prove image or video generation. W500 integration is outside this Pilot until a focused technical review establishes a working, no-cost-compatible provider adapter and Vinh approves a scope change.
+
+The Sponsor's acceptance amendment does not relax the storyboard approval gate, 0 VND ceiling or 2026-11-25 deadline.
