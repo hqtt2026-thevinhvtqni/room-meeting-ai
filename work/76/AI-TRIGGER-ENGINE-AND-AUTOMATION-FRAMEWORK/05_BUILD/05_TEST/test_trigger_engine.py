@@ -373,3 +373,29 @@ def test_w76_md_004_frozen_mapping_backing_store_cannot_be_mutated():
         trigger.condition._data = {}
     assert "injected" not in trigger.condition
 
+
+
+# W76-MD-005 / W76-RG-005 — malformed and duplicate persisted registry records fail closed.
+def test_trigger_from_dict_rejects_non_mapping_and_malformed_action():
+    with pytest.raises(ValidationError, match="trigger snapshot must be a mapping"):
+        Trigger.from_dict(None)
+    data = make_trigger().to_dict()
+    data["action"] = None
+    with pytest.raises(ValidationError, match="action snapshot must be a mapping"):
+        Trigger.from_dict(data)
+
+
+def test_registry_from_dict_rejects_malformed_snapshot_shapes():
+    with pytest.raises(ValidationError, match="registry snapshot must be a mapping"):
+        TriggerRegistry.from_dict(None)
+    with pytest.raises(ValidationError, match="triggers.*must be a list"):
+        TriggerRegistry.from_dict({"triggers": None})
+    with pytest.raises(ValidationError, match="at index 0"):
+        TriggerRegistry.from_dict({"triggers": [None]})
+
+
+def test_registry_from_dict_rejects_duplicate_trigger_version_records():
+    snapshot = make_trigger().to_dict()
+    with pytest.raises(RegistryError, match="duplicate trigger version"):
+        TriggerRegistry.from_dict({"triggers": [snapshot, snapshot]})
+
