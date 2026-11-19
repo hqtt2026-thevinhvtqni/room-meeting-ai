@@ -412,3 +412,13 @@
 - Read-back: GitHub blob SHA Journal `3630d4d54ea3ae62a55a91af1f66f14b67458b5c`, Proposal `486db20af64164513748aa3742d62df04d84d06c`, GAP `59dd49323b61c0023ec522505a0bbc179739315f`; Sandbox probe status=ok and exact Entry 038 / Addendum 29 markers in all three files.
 - No code/schema/test/provider/runtime/dispatch/reviewer contact/merge/release. Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
 - Disposition: GAP-01 OPEN/P0; E2 delivery receipt NOT PROVEN; E3 recipient-bound ACK NOT PROVEN; ACK-before-any-possible-Host-side-effect NOT ENFORCED/NOT PROVEN.
+
+
+## Chi tiết kỳ 0029 — 2026-11-19
+
+- Trọng tâm: Work17 GAP-01 — đối chiếu W52 HostPort với W14 canonical Execution Host source.
+- W52 HostPort yêu cầu async open(adapter, task) trả persistent bidirectional RpcPort (request/notify/receive/respond/close), Host-owned stream/process lifecycle và confirmed descendant stop. W14 POST /execute là one-shot HTTP WorkContext+ExecutionRequest qua W12ExecutionAdapter tới RealExecutionHost.execute()/subprocess.run(), trả kết quả đã hoàn tất; W14 ExecutionHostBridge chỉ POST /execute. Không thấy trực tiếp HostPort/RpcPort implementation hay binding W52 host.open→W14 endpoint trong các source đã kiểm tra.
+- W14 có process execution boundary thật trong source nhưng không tương đương interactive Codex/Qwen RPC session. Bất kỳ binding tương lai phải do W14 sở hữu, được Core authorization và recipient ACK gate trước process spawn. W13 authorized boolean trong context được kiểm tra cục bộ; online Core grant lookup chưa thấy trong bounded source, giữ riêng GAP-11.
+- Added Journal Entry 039, Technical Proposal Addendum 30, GAP Register Entry 039. GitHub commits: Journal `f333518f2893e8bc97119283dbe925517a5c956f`; Proposal `2b70899d3c9e0c09a29558810ca47afb74ea13cf`; GAP `315f2be7d0910278c931e77cca9ba815379cefc6`.
+- No W14 endpoint call, process spawn, Core/Host runtime, test/provider/dispatch/reviewer contact, source change outside Work17, merge or release.
+- Disposition: W52↔W14 HostPort binding NOT PROVEN; GAP-01 OPEN/P0; E2/E3 NOT PROVEN; ACK-before-side-effect NOT PROVEN; READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
