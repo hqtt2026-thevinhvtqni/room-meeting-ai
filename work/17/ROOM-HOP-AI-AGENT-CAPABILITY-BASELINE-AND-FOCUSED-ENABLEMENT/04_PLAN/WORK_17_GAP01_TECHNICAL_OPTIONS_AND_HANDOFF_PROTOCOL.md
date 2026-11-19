@@ -330,3 +330,17 @@ Read-only fetch of room_hop_mcp/core_http_main.py and room_hop_mcp/adapter/http_
 - The entrypoint docstring claims an additive Work execution-authority mount, but inspected composition returns only create_http_app(service); the inspected adapter contains no such route. Record this as a bounded source/documentation discrepancy, not proof about every deployment or branch.
 
 Disposition: Core OpenAI/Anthropic connector source exists (Addendum 19), but connector-to-Core-HTTP runtime wiring and a Work dispatch route are NOT PROVEN in inspected main sources. Do not create a parallel app/dispatcher in Work17. GAP-01 OPEN/P0; E2/E3 NOT PROVEN; READ/TRACE ONLY. No runtime, HTTP, provider or test invocation occurred.
+
+
+### 21. W1111 Core Execution Authority V1.2 branch candidate — reuse boundary and review blockers
+
+Read-only comparison of branch work/w1111-core-execution-authority-v1-2 and PR #48 found an existing Core execution-grant implementation candidate:
+
+- Core source core/execution_authority.py implements enrolled service-credential authentication, Work/purpose-scoped short-lived grants and an append-only hash-chained JSONL journal.
+- Branch-specific room_hop_mcp/adapter/http_server.py mounts the five execution-authority routes through mount_execution_authority_routes; main's inspected adapter does not. Branch W13 Host source validates the grant online and binds pytest execution to the Work source snapshot.
+- PR #48 is OPEN/DRAFT, unmerged; current head c70eb2b82f54a000a81263dc519078ddf105f075; compare main...branch reports DIVERGED, ahead 157 / behind 648, mergeable=false. Historical CI success on 9bbeed63... is not current-head proof; no PR-triggered run was returned for current head by the available query (push runs not covered).
+- W1111 approval record states DR-1..DR-4 approved, Gate 2 implementation authorized, but Gate 3 runtime alignment, Gate 4 live/security E2E and Gate 5 wiring/publishing remain NOT OPEN. No Work17 authority to merge/deploy/restart or access secrets follows from this.
+
+Static integrity blocker: branch ExecutionAuthority.record_run() validates that submitted source hash is 64-hex but does not compare it to the source hash bound to the Work policy/grant. The branch unit test configures a...a, submits b...b, and expects the run record to succeed. This contradicts the stated exact-source binding requirement. Candidate defect to return to W1111/PR #48 owner review; not changed by Work17.
+
+GAP-01 boundary: Execution grants authorize an enrolled service identity to perform a Work/purpose operation. They do not implement AI member private-session dispatch, provider delivery receipt or recipient-bound ACK. Keep execution authority separate from Agent Assignment dispatch. Do not create a duplicate execution authority in Work17 and do not merge the diverged branch.
