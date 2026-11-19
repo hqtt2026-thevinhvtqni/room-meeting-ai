@@ -233,3 +233,21 @@ o đến khi read-back và kiểm tra commit/branch hoàn tất.
 - Trạng thái: DONE cho bounded cross-Work reconciliation và GitHub artifact read-back. W17 GAP-04 OPEN; GAP-11 P0 OPEN; G3 E2E NOT PASS; W1111 T07 children vẫn READY — ACK REQUIRED; protected execution DENY / NOT RELEASED; independent QE/security gate unresolved.
 - Giới hạn: không tìm thấy/fetch được file DOC-117 gốc trong lượt này; contract được đối chiếu qua W1111 tracker và các tham chiếu hiện có. W28 runbook được đọc từ GitHub search evidence; không suy diễn branch đã deploy. Không có runtime exposure/deployment claim.
 - Bước tiếp theo: chờ ACK có chứng cứ của đúng ba owner hiện hữu; Xu tích hợp contract duy nhất và dependencies. Sau khi các package có bằng chứng, phải tổ chức independent QE/security verification theo đúng authority; không được bỏ qua chỉ vì W1111 hiện giới hạn roster coder.
+
+
+## 2026-11-19 13:42 +07 — Entry 016: GAP-01 dispatch / delivery / ACK source reconciliation
+
+- Người thực hiện: Xu / AI-01.
+- Trọng tâm: Work 17 only — GAP-01 (Dispatch & ACK), không mở rộng triển khai hoặc thay đổi phạm vi Work.
+- Phạm vi nguồn: Work 17 evidence acceptance criteria, AI member matrix, Work 70 DOC-054, DOC-072 và DOC-067; bounded documentary/source-record inspection.
+- Phương pháp: fetch canonical GitHub main files, kiểm tra trạng thái/định nghĩa delivery receipt, ACK, trace ID, idempotency và giới hạn assignment. Không gọi provider/private session, không dispatch, không chạy runtime/test, không sửa source/permission/config.
+- Evidence đã đọc:
+  1. W17 Evidence Acceptance Criteria blob `52c48fec6231c55cc97a29dc44c3ec00798aea32`: Dispatch & ACK phải có delivery receipt + ACK với trace ID khớp dispatch log; E3 phải liên kết request→dispatch→ACK→execution→artifact→verification; retry phải idempotent. Nâng khỏi READ/TRACE ONLY cần quyết định Vinh.
+  2. W70 DOC-054 blob `ccf3353edf846d560ff8239d671400cded099a98`: ASSIGNMENT READY không xác nhận recipient đã nhận; tài liệu nêu không có công cụ dispatch trực tiếp trong phiên được mô tả; chỉ xác nhận receipt khi có phản hồi/artefact định danh từ chính AI.
+  3. W70 DOC-072 blob `513d65d3d360dcb732607d07e2eee558cd02f005`: DESIGN ONLY / NOT APPROVED / NOT IMPLEMENTED; phân biệt assignment, handoff packet, delivery receipt, ACK và Work/Gate acceptance.
+  4. W70 DOC-067 blob `2e801b38c52fbafda875f3b2b8c5f74fcf2bfdfb`: WP70-QA có ACK của Qw cho assignment Work70 riêng, nhưng không phải ACK Work17; QA execution vẫn BLOCKED/NOT RUN.
+  5. W17 AI Member Matrix blob `435144f7d156a213a0bfadabb9e7b0fb09fb31b5`: dispatch/ACK vẫn NOT_PROVEN; roster ID conflicts giữ mở.
+- Sản phẩm: tạo `06_EVIDENCE/WORK_17_GAP01_DISPATCH_ACK_SOURCE_RECONCILIATION.md`; GitHub create commit `e72b89b87d9febe26b98b02d9cd894823630095e`; fetch read-back blob `999617f32143cafd0b767cf2a7082987e98ec923`.
+- Kết luận: GAP-01 OPEN / P0; current evidence E0–E1 documentary/process only; E2 delivery receipt absent from inspected W17 evidence; E3 trace NOT PROVEN. Không suy luận từ DOC-054 readiness, artifact contribution hoặc Qw's separate Work70 ACK. Không khẳng định mọi external/manual interaction đều không tồn tại; phạm vi chỉ là canonical evidence đã kiểm tra.
+- Trạng thái điều hành: Work17 remains READ/TRACE ONLY; no dispatch or provider call; protected execution DENY / NOT RELEASED. Mọi live dispatch trial cần quyết định rõ của Vinh, task/identity/scope cụ thể, approved transport và trusted auth boundary.
+- Bước tiếp theo: tiếp tục read-only discovery đúng Work17 về dispatch capability/adapter path và kiểm tra có thể cấp E1 source evidence hay không; không gửi việc thật hoặc tạo ACK giả.
