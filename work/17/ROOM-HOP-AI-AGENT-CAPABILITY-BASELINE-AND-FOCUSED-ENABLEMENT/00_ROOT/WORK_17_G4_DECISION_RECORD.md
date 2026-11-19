@@ -22,8 +22,8 @@ Chuẩn hóa cấu trúc không đồng nghĩa ép tất cả Work phải cùng 
 | Qw | Kiểm thử độc lập tiêu chí nghiệm thu |
 | Vinh | Quyết định cuối cùng cho phép di trú |
 
-## 4. Sổ theo do Vibe thực hiện từ quyết định này (commit ghi nhận)
-- Coverage v1.1: commit 5eb8c982 (số liệu corrected, tách 06_VERIFY/06_EVIDENCE, maturity note).
+## 4. Các việc Vibe đã thực hiện từ quyết định này (commit ghi nhận)
+- Coverage v1.1: commit 5eb8c982 (đã sửa số liệu, tách 06_VERIFY/06_EVIDENCE, maturity note).
 - Proposal v1.1: commit của kỳ này.
 - Biên bản này: commit của kỳ này.
-- Tính chất: hồ sơ lưu kết luật của G4 — chờ Vinh duyệt; chưa có lệnh di trú.
+- Tính chất: hồ sơ lưu kết quả của G4 — chờ Vinh duyệt; chưa có lệnh di trú.
