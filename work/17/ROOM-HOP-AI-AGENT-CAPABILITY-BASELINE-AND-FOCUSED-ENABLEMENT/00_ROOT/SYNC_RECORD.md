@@ -324,3 +324,14 @@
 - Boundary: execution grant không phải AI member dispatch/private-session delivery/recipient ACK; E2/E3 GAP-01 vẫn NOT PROVEN. Không duplicate, merge, deploy, restart, test, secret, provider hoặc dispatch operation.
 - Added Journal Entry 030, Technical Proposal Addendum 21 and GAP Register Entry 030. Read-back verification pending.
 - Disposition: GAP-01 OPEN/P0; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
+
+
+## Chi tiết kỳ 0021 — 2026-11-19
+
+- Trọng tâm: Work17 GAP-01 — contract compatibility giữa W1111 Core Execution Authority candidate và W112 DOC-001 / W70 DOC-063 / DOC-065.
+- DOC-001 requires assignment/task/assignee/accountable role/scope/permission/capability/dependency/status/ACK refs; recipient ACK bound to assignment; event/evidence correlation and provenance. DOC-063 requires trusted principal + assignment/ACK + exact scope + gate/source/version/expiry/revocation and commit-time revalidation. DOC-065 requires assignment/dispatch/attempt/AI recipient/session/delivery receipt/recipient-bound ACK.
+- W1111 PR #48 candidate is Work/purpose-scoped service execution grant + run record; not Agent Assignment or provider/private-session delivery/ACK. It cannot close GAP-01 E2/E3.
+- Sources: W112 DOC-001 blob 6340a7b054a37540da8c16d0b9743266b0765c97; W70 DOC-063 blob 55be0bbcd6c215f5f1158a4e74738b9a4a750cfd; W70 DOC-065 blob a18db833f7286400ca702b850f072df6d834c4f1. All are draft/design only, not runtime approval.
+- Added Journal Entry 031, Technical Proposal Addendum 22 and GAP Register Entry 031. No code/runtime/test/dispatch/merge/deploy/secret changes.
+- Disposition: GAP-01 OPEN/P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
+- GitHub main and Sandbox read-back verification pending.
