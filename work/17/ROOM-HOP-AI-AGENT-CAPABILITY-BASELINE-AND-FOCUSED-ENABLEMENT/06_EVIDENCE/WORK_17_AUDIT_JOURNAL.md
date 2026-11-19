@@ -144,3 +144,22 @@ o đến khi read-back và kiểm tra commit/branch hoàn tất.
 - Trạng thái: DONE cho G1 intake/read-back 54 manifest; NOT PASS cho toàn bộ G1 portfolio reconciliation. Manifest evidence chỉ E0; chưa audit dependencies, owners omitted, historical 56→71, source parity hoặc runtime. GAP-06 và GAP-07 vẫn OPEN.
 - Giới hạn: Không chạy source/test/runtime; không cập nhật Sandbox của 54 Work; GitHub chỉ nhận cập nhật Work 17 portfolio doc. Sandbox↔GitHub parity chưa được chứng minh.
 - Bước tiếp theo: đối chiếu 54 record với DOC-018/Work Index để phân loại chênh lệch 56→71; truy vết owner/dependency/canonical record cho các anomaly; tiếp tục G2 agent capability evidence mà không nâng trạng thái từ E0.
+
+
+## 2026-11-19 09:28:04 +07 — Entry 011: G2 source-trace ma trận 13 loại Agent
+- Người thực hiện: Xu / AI-01.
+- Phạm vi: kiểm tra source-level trên GitHub main cho 13 loại Agent trong WORK_17_AGENT_CAPABILITY_MATRIX.md; chỉ nâng cấp mức evidence tối đa khi có source/config phù hợp; giữ trạng thái UNASSESSED nếu chưa có E2+.
+- Phương pháp: xác nhận GitHub main recursive tree (tree SHA `309463636bc2bc420e5baf616ab1efeec54333f2`, truncated=false); fetch/read source và tài liệu liên quan; đối chiếu mô tả module, connector, test và trạng thái Work. Không chạy test hay gọi provider/runtime.
+- Kết quả ma trận: đủ 13/13 dòng được đọc lại. Tất cả vẫn `UNASSESSED`. Có 7 dòng có source E1 ở mức candidate (Simple Reflex, LLM-based, Tool-Using, Memory/context, Multi-Agent orchestration, Web-Browsing, Computer-Using); 5 dòng chỉ có tài liệu E0 (Planning, Self-Improving, RAG, Coding Agent, Autonomous Agent); 1 dòng Hierarchical Agent chưa xác định được source implementation chuyên biệt.
+- Source trace quan trọng:
+  1. `agents/me_agent.py` (blob `3915134e4f9cb8c3ad660b946edcac4e0cc597eb`) tự mô tả là local rule-based placeholder; chỉ là ứng viên phân loại Simple Reflex.
+  2. `core/agent_registry.py` (blob `7e4b98e68fa1a208ebd5788d9235d9c222e402a3`) nêu registry v0.1 chỉ đọc/validate YAML, chưa xử lý permissions/authority và chưa gọi API thật.
+  3. `core/file_ops_agent.py` (`02fe29420699f5a7c5df19ea182d92d9899ca8e5`) và `core/vscode_agent.py` (`47c9233c343c531cbe81353f62095e281f9d4d58`) là tool/file operation source, không tự chứng minh coding-agent reasoning.
+  4. `core/context_loader.py` (`0f686e594d248dfd93287271e8ac4d483feb5ef2`) chỉ gợi ý keyword và đóng gói file do người chọn; `context/XU_MEMORY.md` (`af64eff272d353e6eec986aaa846904de687186d`) là file tĩnh. Không chứng minh memory retrieval/writeback tự động hoặc drift control.
+  5. `run_meeting.py` ghi rõ v0.1 dùng scripted exchange, chưa gọi API AI thật; `run_meeting_v2.py` dùng MockConnector cho phần lớn participants. `core/connectors.py` (`809c4d2fca01e6fcdaf26b91bf34b1af26dfd15a`) và `core/discussion.py` (`aa722f95235f613c288ba212074527ed2ce01ebc`) là orchestration source nhưng chưa có real multi-provider dispatch/ACK E2E trong lần kiểm tra này.
+  6. `30/GPT-AUTONOMOUS-BUILD-TEAM/02_EXTENSION/MODEL_4AI_PLANNING_LOOP_V2.md` là protocol document, không phải planner implementation.
+  7. Work 103 DecisionRAG plan (`97ae3873caa15f3260b1d8a172747cad19f32881`) ghi PROPOSED EXPERIMENT — NOT EXECUTED; Work 502 roadmap (`76c84dac7d842e2c8a8f0026c9613c12776fd31d`) ghi BUILD NOT AUTHORIZED.
+  8. Browser adapter (`room_hop_mcp/browser_agent_adapter/adapter.py`, blob `0ced9207c1897b9a7b572b7fefa44fec2dd92b76`) và Work 10 computer runtime (`10/COMPUTER-AGENT/04_CODE/agent_runtime.py`, blob `e8153c180afc571efc5fe3e2b2afdee3afc88d13`) tồn tại ở E1; không tạo session/artifact/teardown runtime trong lần này.
+- Cập nhật ma trận trên GitHub main: commit `d8268dc5ac61ca1b9ac5fafe66824de255d3d364`; blob `e402dffbe25ee043b9a8d476fd23ff2093db4804`. Các row được bổ sung source path và phương pháp xác minh còn thiếu; không cấp PASS.
+- Trạng thái: DONE cho source-trace; G2 chưa PASS. Không có E2/E3/E4; không chạy tests, provider calls, browser/computer sessions, process hoặc deployment. Không có source/runtime change.
+- Bước tiếp theo: đối soát DOC-010/DOC-043 và AI member identity/session evidence; xử lý mapping conflict AI-06/07/08 bằng decision của Vinh; sau đó mới xác định thử nghiệm E2/E3 nào được phép thực hiện.
