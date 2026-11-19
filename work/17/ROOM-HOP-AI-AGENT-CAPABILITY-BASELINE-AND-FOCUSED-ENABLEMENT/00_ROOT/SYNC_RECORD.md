@@ -108,3 +108,17 @@
 - Sandbox: append Entry 016 trả status=ok; sandbox_read_probe xác nhận Entry 016 tồn tại. Journal Sandbox và GitHub vẫn có khác biệt lịch sử/độ dài; full byte parity NOT VERIFIED. GAP-01 report hiện chỉ có GitHub mirror; Sandbox mirror NOT PRESENT / NOT VERIFIED.
 - Kết luận: GAP-01 OPEN / P0; E2 delivery receipt chưa được chứng minh; E3 trace NOT PROVEN. DOC-054 assignment-ready không phải receipt; Qw ACK trong DOC-067 thuộc assignment Work70 riêng, không dùng làm ACK Work17. No dispatch/provider call/test/runtime/permission/source mutation occurred.
 - Trạng thái Work17: READ/TRACE ONLY; GAP-01 OPEN; GAP-04 OPEN; GAP-11 P0 OPEN; G3 NOT PASS; protected execution DENY / NOT RELEASED.
+
+
+## Chi tiết kỳ 0008 — 2026-11-19
+
+- Trọng tâm: Work 17 GAP-01 — kiểm tra capability surface dispatch thực tế của ROOM-HOP MCP 8030; không mở rộng sang implementation.
+- Phạm vi kiểm tra: tool schemas hiện expose; read-only `list_meetings`, `get_room_structure`, `get_room_context`; W70 DOC-066 plan. Không gọi meeting join/start/add-paste, không dispatch/provider/private session, không runtime/test.
+- Kết quả: tool inventory gồm Sandbox CRUD/list/read và Meeting list/get/transcript/join/start/add-paste + room structure/context. Không có action gửi assignment đến private AI session, không có provider delivery receipt hoặc private-session ACK retrieval. Room structure trả room-hop-build v1.0 với declared capabilities Sandbox; Room context nêu Working Source read-only, Sandbox là AI Build Zone, AI không merge/commit/push. Meeting list/relay không chứng minh private-session delivery.
+- W70 DOC-066 blob `8278b5199b5802ac915d412df499a181dd37342a`: PLANNED / IMPLEMENTATION NOT AUTHORIZED / TESTS NOT RUN; Session Handoff MVP là đề xuất tương lai, chưa triển khai.
+- GitHub artifacts:
+  - GAP-01 report addendum commit `032c709ce148da7fb9a46f29eba97c2f9ad80f20`; blob `d87f5c046822faca5e0cb40932768746dbffa76b`.
+  - GAP register GAP-01 update commit `8cf408a221e788aa80bf297b93151054e1df81bc`; blob `ef0534bf715eb87c045e2542d4d80969a1b0e439`.
+  - Journal Entry 017 commit `46d3214291217e4200d93b1d46609d46e7f91278`; blob `a7b5b77f47ab22cf6f769673d432d1051493a7d8`.
+- Sandbox: Entry 017 append status=ok; read-back pending at time of this record.
+- Disposition: GAP-01 OPEN / P0; E2 receipt NOT PROVEN; E3 trace NOT PROVEN; Work17 READ/TRACE ONLY. No handoff packet, dispatch, provider call, private session, meeting mutation, runtime/test, permission/config/secret/source code change.
