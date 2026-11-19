@@ -476,3 +476,10 @@
 - Không thay đổi trạng thái GAP: GAP-01 OPEN/P0; E2 provider receipt NOT PROVEN; E3 Assignment→Dispatch→Delivery→ACK NOT PROVEN. Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED; BUILD/live dispatch/pilot NOT AUTHORIZED.
 - Not performed: không gửi reviewer; không code/source modification; không branch/PR/merge; không provider call, live dispatch hoặc test.
 - Next: chờ Vinh yêu cầu phát hành review packet; sau phản biện mới tổng hợp một biên bản quyết định duy nhất và cập nhật GAP/journal theo evidence.
+
+
+### Read-back closure — Entry 026 / kỳ 0016
+
+- GitHub main fresh fetch verified: technical proposal Addendum 17 blob `a208c544b41624a5ed258ba0ff00e488b65c7b2a`; Journal Entry 026 blob `1825b9c03740b35b3dbfa6b7f9b45bcfb2be9b76`; SYNC_RECORD period 0016 blob `b2b0e0d46e7b59dea98ef0ee85339830541a6974` before this closure update.
+- Sandbox `sandbox_read_probe` verified status=ok and exact latest markers in all three files: proposal Addendum 17, journal Entry 026, SYNC_RECORD period 0016. Read-back is content-level confirmation; no claim of byte-for-byte full-file parity beyond these markers.
+- Verification disposition: GitHub and Sandbox latest content read-back PASS for the three touched artifacts. GAP-01 remains OPEN/P0; E2/E3 NOT PROVEN; Ka/Cla NOT SENT; READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
