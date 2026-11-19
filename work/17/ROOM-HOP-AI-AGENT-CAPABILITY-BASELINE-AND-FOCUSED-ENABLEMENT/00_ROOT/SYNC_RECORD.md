@@ -95,3 +95,16 @@
 - Sandbox: append Entry 015 vào `06_EVIDENCE/WORK_17_AUDIT_JOURNAL.md`; sandbox_read_probe trả status=ok và nội dung có Entry 015. Độ dài/byte count khác GitHub journal từ các lịch sử Entry 007 và nội dung khác trước đó; không tuyên bố hai bản byte-identical hoặc parity toàn bộ.
 - Task governance: không dispatch/assign Cla, Ka hoặc Qw vì Work 1111 task plan quy định chỉ Co, Xuco, Vi trong coder roster; cả ba task vẫn READY — ACK REQUIRED. Independent QE/security verification là điều kiện bắt buộc chưa được giải quyết, không được bỏ qua hoặc tự nghiệm thu.
 - Kết luận: GitHub memo/journal read-back PASS; Sandbox journal append/read-back PASS; memo Sandbox mirror NOT PRESENT / NOT VERIFIED; full journal parity NOT VERIFIED. W17 GAP-04 OPEN; GAP-11 P0 OPEN; G3 E2E NOT PASS; protected execution DENY / NOT RELEASED. Không có source/runtime/test/endpoint/dispatch/permission/secret/deployment action.
+
+
+## Chi tiết kỳ 0007 — 2026-11-19
+
+- Trọng tâm: Work 17 GAP-01 Dispatch / Delivery / ACK; không mở rộng sang implementation hoặc Work khác.
+- Phạm vi read/trace: W17 Evidence Acceptance Criteria; W17 AI Member Capability Matrix; W70 DOC-054, DOC-072, DOC-067. Các tài liệu W70 chỉ được dùng làm nguồn quy tắc/đối chiếu; không thay thế bằng chứng nhận việc của Work17.
+- Sản phẩm GitHub:
+  - `06_EVIDENCE/WORK_17_GAP01_DISPATCH_ACK_SOURCE_RECONCILIATION.md` — create commit `e72b89b87d9febe26b98b02d9cd894823630095e`; read-back blob `999617f32143cafd0b767cf2a7082987e98ec923`.
+  - `06_EVIDENCE/WORK_17_AUDIT_JOURNAL.md` Entry 016 — commit `59a315d5ebd1cd8c61ecd5e188a5276e669af08d`; read-back blob `ede0fa2c4bd7d7fb0eff315e9287e42e706bce71`.
+- Evidence đối chiếu: W17 acceptance criteria blob `52c48fec6231c55cc97a29dc44c3ec00798aea32`; W17 AI member matrix blob `435144f7d156a213a0bfadabb9e7b0fb09fb31b5`; DOC-054 blob `ccf3353edf846d560ff8239d671400cded099a98`; DOC-072 blob `513d65d3d360dcb732607d07e2eee558cd02f005`; DOC-067 blob `2e801b38c52fbafda875f3b2b8c5f74fcf2bfdfb`.
+- Sandbox: append Entry 016 trả status=ok; sandbox_read_probe xác nhận Entry 016 tồn tại. Journal Sandbox và GitHub vẫn có khác biệt lịch sử/độ dài; full byte parity NOT VERIFIED. GAP-01 report hiện chỉ có GitHub mirror; Sandbox mirror NOT PRESENT / NOT VERIFIED.
+- Kết luận: GAP-01 OPEN / P0; E2 delivery receipt chưa được chứng minh; E3 trace NOT PROVEN. DOC-054 assignment-ready không phải receipt; Qw ACK trong DOC-067 thuộc assignment Work70 riêng, không dùng làm ACK Work17. No dispatch/provider call/test/runtime/permission/source mutation occurred.
+- Trạng thái Work17: READ/TRACE ONLY; GAP-01 OPEN; GAP-04 OPEN; GAP-11 P0 OPEN; G3 NOT PASS; protected execution DENY / NOT RELEASED.
