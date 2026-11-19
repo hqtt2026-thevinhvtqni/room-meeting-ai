@@ -477,3 +477,12 @@
 - Ranh giới giữ nguyên: Core identity/auth; W70 lifecycle/Assignment; W52 communication; W501 provider/model capability; W502 MÊ product/adapter; W14 execution boundary; W33 evidence candidate. Work17 không dựng bản sao registry/router/orchestrator/evidence store.
 - Added Journal Entry 045 (commit 91bdf753e479f94241da6e0f134f66810edf4316, blob cbb5c6999d4413fbde99bf5821a35f041d373deb) and GAP-01 addendum Entry 045 (commit 3a5546aaa156027b6825ab874940db393e2222ee, blob 37a3484992f712f8d31ecb9b109ef5da153eba66).
 - Disposition: GAP-01 OPEN/P0; E2/E3 NOT PROVEN; provider-call source only; live receipt and ACK binding NOT PROVEN; Work501/502 BUILD NOT AUTHORIZED; protected execution DENY / NOT RELEASED.
+
+
+## Chi tiết kỳ 0035 — 2026-11-19
+
+- Trọng tâm: Work17 GAP-05/GAP-09 — đối chiếu role ID với runtime identity alias.
+- Work502 RUN-0003 (journal blob c6b27dc47d13400b14e158079c743767c594be2d) ghi nhận thao tác tạo Sandbox: identity_id="AI-01" bị DENIED/UNKNOWN_IDENTITY; identity_id="xu" được ALLOW cho đúng thao tác tạo Work 502. Đây là bằng chứng có phạm vi hẹp cho alias runtime của endpoint Sandbox; không chứng minh authenticated provider session, identity toàn hệ thống hay dispatch/ACK.
+- Work17 matrix (blob 435144f7d156a213a0bfadabb9e7b0fb09fb31b5) tiếp tục giữ Identity/Session NOT_VERIFIED và Dispatch/ACK NOT_PROVEN. AI-06/07/08 conflict chưa được Vinh quyết định; đề xuất mapping không được dùng cho authorization. Qw/Qween QA khác Qc/Qwen Coder.
+- Added Journal Entry 046 (commit f3b72d93abd0d11cad396f48606912a826da158d, blob f5cda038cfb9cd2fe7fb8660677e1e4b3dc5705b) and GAP-05/GAP-09 addendum Entry 046 (commit 660a529bb8b2de99270719875b378932ab010496, blob 8678a8a9e861e12c2c5f66c4e70ae44129ccae4a).
+- Disposition: GAP-05/GAP-09 OPEN; role label / runtime principal / provider account / session ID phải tách biệt; no roster/permission mutation; protected execution DENY / NOT RELEASED.
