@@ -300,3 +300,15 @@
 - Added Journal Entry 028, Technical Proposal Addendum 19 and GAP Register Entry 028. No source/runtime changes; no provider/API call, dispatch, test or reviewer contact.
 - Disposition unchanged: GAP-01 OPEN/P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
 - GitHub main and Sandbox read-back verification pending; no PASS claimed before read-back.
+
+
+## Chi tiết kỳ 0019 — 2026-11-19
+
+- Trọng tâm: Work17 GAP-01 — trace Core HTTP entrypoint và xác minh connector có được wiring vào runtime API hay không.
+- core_http_main.py build_app() tạo MeetingManager/MeetingService và trả create_http_app(service); không import/construct AgentConnector, OpenAIConnector, AnthropicConnector hoặc run_discussion.
+- HTTP adapter đã inspect chỉ định nghĩa identity + Meeting routes; không có Work Assignment/dispatch/provider/receipt/ACK/evidence route. Docstring của entrypoint nhắc additive Work execution-authority mount nhưng composition/adapter được inspect không thể hiện mount đó; ghi nhận bounded doc/source discrepancy, không suy rộng mọi deployment/branch.
+- Kết luận: provider connector source có tồn tại (Entry 028), nhưng connector-to-Core-HTTP runtime wiring và Work dispatch route NOT PROVEN. Không tạo HTTP app/dispatcher thứ hai.
+- Sources: core_http_main.py blob 8dd6bb5ea500026d932ca52eb6079c980d722ab0; http_server.py blob 54cb3ecbce2e6b13083f31c14f0c1f0738f1457d.
+- Added Journal Entry 029, Technical Proposal Addendum 20 and GAP Register Entry 029. No source/runtime change; no HTTP probe, provider call, dispatch or test.
+- Disposition unchanged: GAP-01 OPEN/P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
+- GitHub main and Sandbox read-back verification pending.
