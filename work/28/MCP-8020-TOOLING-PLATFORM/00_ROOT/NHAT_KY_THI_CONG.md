@@ -1025,3 +1025,49 @@ Xu approves three contract directions:
 **STATUS:** SOURCE REVIEW COMPLETE / NOT APPROVED — REQUEST CHANGES / 2 HIGH + 1 MEDIUM FINDINGS / AN INDEPENDENT QA PENDING / LIVE E2E BLOCKED / EXECUTION GATE CLOSED / NOT RELEASED.
 
 **Signature:** [KÝ: KA | CSA — INDEPENDENT REVIEWER]
+
+
+## 2026-11-19 — JRN-W28-028 — Xu GitHub verification and continuation handoff for PR #61 / WP2 recovery
+
+**Người thực hiện:** Xu — Work coordinator / acceptance control  
+**Scope:** Read-only verification of PR #61, its feature branch, workflow evidence, review comments and Windows retest handoff; canonical journal append only.  
+**Repository:** `hqtt2026-thevinhvtqni/room-meeting-ai`  
+**Canonical branch:** `work/28-mcp-tooling-platform`  
+**PR:** #61 — `Work 28: recover WP2 service registry cleanup and abort evidence`  
+**Feature branch:** `auto/work28-vi-wp2-recovery-20261118`
+
+### READ / TRACE — GitHub state at this checkpoint
+- Read the canonical Work 28 journal on `work/28-mcp-tooling-platform`; source blob before this append: `88d5a746ac60a5d02af56cc661983ed7ffa5c672`. The latest entry present in this canonical journal readback was JRN-W28-027. PR-side references to later Vi remediation notes were not treated as proof that those notes had already been appended to this canonical journal.
+- Read PR #61 and confirmed: state OPEN; merged=false; mergeable=false; head SHA `1455283d99d647aae45462149bcf5f02372ee4ea`; base branch `work/28-mcp-tooling-platform`; base SHA `8301a7f8fb6a91689482710a9006e2cdbab709c4`. Feature branch HEAD independently read back as the same `1455283d99d647aae45462149bcf5f02372ee4ea`.
+- Read PR comments/reviews:
+  - Ka comment `6962882614`: NOT APPROVED / REQUEST CHANGES against earlier reviewed HEAD `d6cf0763870eb860fe630e890bc0190ef3de9335`; two HIGH/P1 findings (legacy raw Popen cleanup could falsely attest tree cleanup; POSIX membership probe could convert inspection failure to zero members) and one MEDIUM/P2 concurrency interleaving gap.
+  - An formal review `5947789771`: CHANGES_REQUESTED against the same earlier HEAD; independently identified the POSIX fail-open cleanup evidence issue and requested native Linux retest.
+  - Vi comment `6963584185`: reports isolated Windows retest on exact source SHA `1455283d99d647aae45462149bcf5f02372ee4ea`, PowerShell/Python 3.12.9; compileall PASS; test_process_job 18 tests with 1 POSIX-only skip; service mapping/race 17 passed; suspended-spawn 17 passed; total 52 passed, 1 skipped. This is a developer-reported PC transcript handoff, not an independent execution by Xu or An.
+- Queried GitHub Actions workflow runs on the feature branch:
+  - Runs #357 and WP2 #19: SUCCESS on code SHA `27ecdebc94a1ec177a899db8971ed4d76d7d2004`.
+  - Runs #358 and WP2 #20: SUCCESS on documentation/handoff SHA `d6cf0763870eb860fe630e890bc0190ef3de9335`.
+  - No listed workflow run was associated with latest code SHA `1455283d99d647aae45462149bcf5f02372ee4ea` at this check.
+- Inspected selected PR patches for POSIX membership fault handling, process-job regression tests, suspended-spawn abort evidence and this journal path. The diff includes tri-state UNKNOWN handling and fail-closed tests; static patch inspection is not runtime proof.
+
+### ANALYZE
+- The two HIGH findings have corresponding source-level remediation in the latest PR branch, and the Windows focused test results are reported by Vi. However, the latest code SHA has no matching GitHub Actions run in the queried run list, and the Windows transcript is not an independent QA result.
+- Earlier green CI runs do not transfer to the latest code SHA. Run #358 / WP2 #20 tested the documentation/handoff SHA, not the current feature head.
+- Ka's and An's REQUEST CHANGES decisions remain the latest independent review dispositions visible in PR comments. No later APPROVED review or independent retest evidence was found in the inspected PR comments.
+- PR remains OPEN, unmerged and mergeable=false. Do not infer merge readiness from a green workflow on an earlier SHA or from source patch presence.
+
+### DECIDE
+- Keep PR #61 OPEN and **DO NOT MERGE**.
+- Preserve Work 28 status ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED.
+- Do not deploy, restart listeners, mutate Core, change branch refs, force-push, or interact with the quarantined historical MCP :8020 listener.
+- Continue the approved four-AI boundary: Vi = implementation owner; An = independent QA; Ka = independent security/architecture review; Xu = coordination and acceptance control.
+
+### NEXT — execution order
+1. **Vi:** trigger/obtain Linux + Windows CI for the exact latest feature code SHA `1455283d99d647aae45462149bcf5f02372ee4ea` (or a later final code SHA if source changes); record run IDs, tested SHA, jobs and raw logs. Do not claim the existing #357/#358 runs as evidence for this latest SHA.
+2. **An:** independently retest the exact final code SHA, prioritizing POSIX OSError/timeout/non-zero/malformed probe cases, surviving descendants, legacy raw Popen registry retention/no replacement, and start/stop/status interleavings. Record environment, commands, raw output and untested areas. If independent execution is unavailable, record BLOCKED / NOT RUN rather than PASS.
+3. **Ka:** re-review the exact final code SHA and confirm each HIGH/MEDIUM finding is closed with source and test evidence; retain REQUEST CHANGES if any acceptance condition remains unresolved.
+4. **Xu:** reconcile exact-SHA CI, An QA and Ka review; update this canonical journal before any merge decision. Merge remains prohibited until all required gates pass.
+
+### STATUS
+**GITHUB PR/BRANCH READBACK PASS / PATCH-LEVEL REMEDIATION OBSERVED / WINDOWS FOCUSED TESTS REPORTED BY VI (NOT INDEPENDENT) / LATEST-HEAD CI NOT VERIFIED / AN RETEST PENDING / KA APPROVAL PENDING / PR OPEN — DO NOT MERGE / EXECUTION GATE CLOSED / NOT RELEASED.**
+
+**Signature:** [KÝ: XU | WORK COORDINATOR]
