@@ -20,6 +20,8 @@ Do not implement a new dispatcher, API, database, queue or parallel Assignment R
 - DOC-064 blob `0cd5cc7108310a93c98a289cc9a27f89b951b5dc`: target hybrid architecture; implementation not authorized.
 - DOC-065 blob `a18db833f7286400ca702b850f072df6d834c4f1`: provider-neutral contract proposal; route names deferred until Core owner mapping.
 - DOC-066 blob `8278b5199b5802ac915d412df499a181dd37342a`: implementation unauthorized, tests NOT RUN; Session Handoff MVP is future work, not an existing capability.
+- W70 D70-023 (Decision Log blob `53c5a7cfdb02bc38e4213010004e1f0ad137d87f`) and W112 Related Work Integration Index blob `7043e61807d4e46399fca0f5faf532ea2ae317c9` explicitly assign target ownership: W70 Work lifecycle/control plane; W52 Agent-to-Agent task/event orchestration and provider adapters; W37 investigates/evidences the single Core, which remains the source of truth; W33 Evidence Hub; W112 cross-Work contracts/mapping; W14 execution boundary. D70-023 says independent review is pending and implementation/migration/release are not authorized.
+- DOC-071 current blob `12f11320dc9da89b27de21313b698224d74519ce` continues to find Work/WP/Assignment persistence and Work Evidence Registry NOT FOUND IN INSPECTED SCOPE / NOT VERIFIED, and accountable Core maintainer NOT IDENTIFIED. Logical ownership is therefore known at governance level; accountable runtime maintainer, APIs and deployed persistence are not.
 - Entry 017: exposed 8030 tools do not include private-session dispatch or provider receipt/ACK retrieval.
 - Entry 018: Browser Agent Adapter Meeting marker/read-back proves artifact recording in Meeting, not provider delivery or AI ACK.
 - Entry 019: inspected Core HTTP composition exposes Meeting/identity routes, not Assignment/Evidence routes; roster/principal registries are not authorization services; W112 DOC-001 is draft, not runtime enforcement.
@@ -29,17 +31,17 @@ These are bounded source/tool-surface findings, not proof that no external, sepa
 
 ## 3. Ownership map — target boundary, not runtime proof
 
-| Concern | Target boundary | Current evidence | Required decision |
+| Concern | Target owner/boundary | Current evidence | Required decision/evidence |
 |---|---|---|---|
-| Work/WP/Gate | W70 governance / approved Core projection | Documents exist; live store not proven | Name canonical service and owner |
-| Assignment record | Existing approved Core/Work service, if present | Owner/API/store not identified | Named accountable owner; persistence/schema proof |
-| Identity/auth | W0000 identity governance + enforced Core auth | Registries are not authenticated authorization | Trusted principal, scope, expiry, revoke, audit |
-| AI orchestration | W52 target responsibility | Runtime authority not proven here | W52 owner confirms interface/non-overlap |
-| Cross-Work correlation | W112 target contract | DOC-001 draft, not runtime-approved | Governance approval; no parallel ID scheme |
-| Evidence provenance | Existing approved W33/Core service | Evidence owner/API not identified | Owner, immutable refs, retention/privacy |
-| Adapter/build boundary | Existing approved Core/Gateway/Build | No private-session dispatch exposed | Verify existing capability; no assumed gateway |
+| Work lifecycle, assignment policy and gates | W70 owns lifecycle/control plane (D70-023) | Ownership explicitly decided; runtime implementation/persistence not proven | Map W70 authority to an existing approved Core service; no parallel control plane |
+| Core authoritative data/persistence | W37 investigates/evidences the single Core; D70-023 names Core as source of truth | DOC-071 finds Work/Assignment persistence NOT VERIFIED; accountable Core maintainer NOT IDENTIFIED | Identify live Core maintainer, API/router, store and audit semantics; W37 workspace is not itself Core |
+| Agent-to-Agent dispatch/orchestration | W52 owns task/event orchestration and provider adapters (D70-023) | Target ownership decided; actual dispatch path/provider adapters not verified | W52 owner confirms current adapter/transport implementation and non-overlap |
+| Identity/authentication | W0000 governance registry + enforced Core authorization boundary | Roster/principal registries are not authenticated authorization | Trusted principal source, scope, expiry, revocation and audit proof |
+| Evidence storage/provenance | W33 owns Evidence Hub (D70-023) | Target ownership decided; Work Evidence Registry API/persistence NOT VERIFIED | W33 owner confirms existing store, immutable refs, retention/privacy and Core linkage |
+| Cross-Work correlation | W112 owns cross-Work contracts/mapping | DOC-001 draft, not runtime-approved | Approve/adopt contract through governance; no parallel ID scheme |
+| Execution boundary | W14 owns execution host (D70-023) | Host security/runtime evidence remains a separate open gap | Keep ACK separate from execution grants; no execution permission implied |
 
-If no existing Core service owns Assignment state, stop and request an owner-authored architecture decision through Work 70. W17/W52 must not silently assume ownership.
+If an existing Core service/API does not implement the approved W70/W52/W33 boundaries, stop and request an owner-authored architecture decision through Work 70. W17 must not silently take component ownership or create replacement services.
 
 ## 4. Transport option assessment
 
