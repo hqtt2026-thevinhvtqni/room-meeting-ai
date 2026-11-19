@@ -547,3 +547,12 @@
 - GAP Register Entry 052 commit 1e79070707c8f1963b2c443e261c36dbdfeb40aa; blob d16acb1637712472062be8a7f7213a5ee859c374; bytes 38217; marker true.
 - Disposition: Core↔Host grant integration NOT PROVEN; Work28 not main/deployment proof; GAP-11 OPEN/P0; GAP-01 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
 - Sandbox parity: PENDING exact write/read-back.
+
+
+## Sync Period 0042 — Work17 Entry 053 / current-main Work28 module absence (2026-11-19T15:21:36.742Z UTC)
+
+- Exact main fetch returned NOT_FOUND for four candidate-only paths: core/execution_authority/http_server.py; core/execution_authority/authority.py; execution_host/work28_core_grant_client.py; execution_host/work28_dispatch.py.
+- Journal Entry 053 commit 7769cbd8372e715298f37dfcd5cc6e3c4b4daa2c; blob 940bb03ee822ef2c20c74f76cc801e9d38400f4f; bytes 204843; marker true.
+- GAP Register Entry 053 commit 870637afd9f54415275835019a7a136fc4c8e13c; blob 5a3f1db21355e746409e34f56c87e569c668f351; bytes 38897; marker true.
+- Disposition: Work28 remains candidate only; current-main Core grant/Host integration NOT PRESENT AT INSPECTED PATHS; GAP-11 OPEN/P0; GAP-01 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
+- Sandbox parity: PENDING exact write/read-back.
