@@ -346,3 +346,14 @@
 - Added Journal Entry 032, Technical Proposal Addendum 23 and GAP Register Entry 032. No source/runtime/test/dispatch/merge/deploy/secret change.
 - Disposition: GAP-01 OPEN/P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
 - GitHub main and Sandbox read-back verification pending.
+
+
+## Chi tiết kỳ 0023 — 2026-11-19
+
+- Trọng tâm: Work17 GAP-01 — full-tree reconciliation W52 branch; phân biệt legacy Meeting provider connector với Work Assignment dispatch.
+- Branch `work/52-room-universal-ai-communication-orchestration` HEAD `afd93ea8960d4cf9b27a57338b75f8d51624c170`, tree `6bd3411c0381c1d8bd595d23b68bf8b583273c10`; recursive tree 398 entries, truncated=false. Branch có `docs/work52/*`, `core/connectors.py`, `core/discussion.py`; Entry 027's missing-path finding chỉ áp dụng các path mới `room_a2a/*`/manifest được kiểm tra, không phải toàn branch.
+- Legacy Core connector implements synchronous OpenAI/Anthropic Meeting-turn provider calls. DiscussionEngine dispatches round-robin Meeting participants; AgentResponse lacks provider receipt/request ID and Assignment/dispatch/attempt/correlation-bound authenticated ACK. W52 plan records G0 IN PROGRESS; G1-G6 NOT STARTED. No current W52 A2A source promotion/deployment proven.
+- Added Journal Entry 033, Technical Proposal Addendum 24 and GAP Register Entry 033. Corrected sequence labels to avoid collision with existing Entry 030–032 / Addenda 21–23. GitHub main commits: Journal `83912665480084fd5099b8768472bd6bcf18151e`; Proposal `ff18e1a6c9eb09ec87ceb37b631dd7cde1ae25f2`; GAP Register `533d9f038e4ad759aa6086ec4890dab50ac9e59f`.
+- Read-back: GitHub blob SHA Journal `83dc9251bedbed2c6ef1a53720e0144e545a3c41`, Proposal `17b06b38408754a9abe9897770805e49683ccb40`, GAP Register `9dbcf993c90c178a17f81f042aab146d6413c379`; Sandbox probe returned status=ok and exact Entry 033 / Addendum 24 markers for all three files.
+- No source/runtime/branch change, merge/migration, provider call, test, dispatch, recipient contact or execution-authority action.
+- Disposition unchanged: GAP-01 OPEN/P0; E2 provider receipt NOT PROVEN; E3 Assignment→Dispatch→Delivery→accountable ACK NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
