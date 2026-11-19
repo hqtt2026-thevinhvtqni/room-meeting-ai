@@ -632,3 +632,22 @@
 - Limits: document/source interface inspection only; no code/schema/test execution, provider invocation, runtime, dispatch, reviewer contact, merge, or component write.
 - Disposition: GAP-01 OPEN/P0; E2 receipt NOT PROVEN; E3 recipient-bound ACK NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
 - Next: verify exact canonical-source and branch mapping for W52 candidate 0.1.0-r2 and identify any owner-approved newer revision after 2026-10-24; then prepare a minimal compatibility change request referencing existing W112 Addenda 11.9–11.13 rather than designing a parallel spec.
+
+
+## Entry 037 — W52 release blockers and gate closure dependency order (2026-11-19 18:43:47.920+07)
+
+- Actor: Xu / AI-01. Scope: READ/TRACE ONLY; read W52 INDEX, WORK_MANIFEST, known-limits-blocked.md, HANDOFF_R2_20261024.md, G0_gap_analysis.md, candidate manifest. No W52 file changes.
+- Current W52 status is ACTIVE / DESIGN-FIRST / NOT RELEASED. Gate snapshot: G0 documentation/inventory recorded but runtime/source bindings unverified; G1 draft contract/schema with independent review/runtime validation open; G2 restricted prototype/fixtures, native providers and Host integration blocked; G3 threat model/permission matrix exist but independent security acceptance open; G4 candidate r2 has historical coder checks only; G5 NOT RUN/BLOCKED; G6 handoff material exists but final gate/release acceptance open.
+- W52 known blockers:
+  - B01 Core task/identity binding BLOCKED: requires actual CorePort route/transaction/registry contract and linked request/state/audit. Core builder/decision boundary is Vinh + Xu per explicit system direction; remaining evidence gap is exact canonical Core runtime route/composition, persisted transaction semantics and identity binding, not absence of a Core owner.
+  - B02 W14 scoped transport BLOCKED: requires verified HostPort.open/stop, Work isolation, version/identity and process-tree stop evidence.
+  - B03 Two live providers BLOCKED in candidate environment: Codex/Qwen absent from PATH in historical probe; needs fresh authorized native handshake/invocation evidence on canonical Host. Historical probe must not be treated as current environment state.
+  - B04 Independent acceptance OPEN: An exact-hash retest and Ka evidence/scope review; no substituted signatures.
+  - B05 Full product workflow BLOCKED: write/tool/approval/resume/child-cancel orchestration and restart recovery are absent from restricted no-tool prototype.
+  - B06 Production source trace NOT VERIFIED: PC deployment SHA/config unavailable; GitHub/Sandbox source snapshots are not proof of live deployment.
+- Gate sequence/exit evidence: (1) pin current W52 candidate source and canonical path/revision; (2) bind CorePort to Vinh+Xu-governed Core route and prove transaction/identity; (3) bind W14 HostPort and prove zero side effects before recipient ACK plus stop/isolation; (4) correct/version ACK + receipt contract and lifecycle gate under W52 ownership; (5) fresh provider environment preflight then native Codex/Qwen handshake; (6) An independent exact-hash tests and Ka independent architecture/security review; (7) authorized S3/S4/S5 cross-Work E2E and W70 acceptance. These are dependencies, not permission to execute.
+- Source-map finding: W52 Sandbox candidate 0.1.0-r2 is not fully synchronized to the existing GitHub W52 historical branch; prior W112 index records only four older docs on branch and 0/4 exact parity with Sandbox root docs. No canonical promotion of the r2 candidate to GitHub/main or live deployment is proven. Preserve the branch and Sandbox candidate; no bulk copy/merge.
+- Evidence quality: VI_BUILD is historical coder evidence (independent_review=false; live_e2e=BLOCKED); 2026-10-28 29/29 hash check is historical integrity only. No fresh rehash, native provider test or independent reviewer result was produced in this pass.
+- Limits: static document/evidence review only; no provider CLI probe, runtime, test, Core/W14 service, dispatch, reviewer contact, source write, branch mutation or release.
+- Disposition: W52 remains ACTIVE / DESIGN-FIRST / NOT RELEASED; GAP-01 OPEN/P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
+- Next: source-pinned canonical W52 inventory and W52 owner change-request package with acceptance tests referencing W112 A2A-01..15 and B01..B06. Do not request An/Ka review until exact candidate SHA, scope, and supported delivery route are known; current review briefs remain prepared but NOT DELIVERED.
