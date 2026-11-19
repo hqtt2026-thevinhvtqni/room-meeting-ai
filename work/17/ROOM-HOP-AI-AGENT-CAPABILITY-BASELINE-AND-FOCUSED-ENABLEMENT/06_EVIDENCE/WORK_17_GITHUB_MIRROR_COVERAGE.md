@@ -30,11 +30,11 @@
 | 17 | nested | 00_ROOT, 01_ORIGINAL, 02_DEFINE, 03_ARCHITECT, 04_PLAN, 06_EVIDENCE | Theo cấu trúc mặc định Sandbox |
 | 28 | nested | 01_PLAN | Chỉ một khu |
 | 70 | nested | đủ 00_ROOT→09 + DASHBOARD | Control plane |
-| 75 | nested | một thư mục Work | Chưa liệt kê sâu |
-| 76 | nested | một thư mục Work | Chưa liệt kê sâu |
-| 300 | nested | một thư mục Work | Chưa liệt kê sâu |
-| 501 | nested | một thư mục Work | Chưa liệt kê sâu |
-| 502 | nested | một thư mục Work | Chưa liệt kê sâu |
+| 75 | nested | 00_ROOT, 02_DEFINE, 03_ARCHITECT, 04_PLAN, 06_VERIFY, DASHBOARD | Thiếu 01_DISCOVER, 05_BUILD và khu evidence chuẩn |
+| 76 | nested | đủ 00_ROOT→09_OPERATE + 06_EVIDENCE + DASHBOARD | Đầy đủ; cần chuẩn hoá tên khu evidence |
+| 300 | nested | 00_ROOT, 03_ARCHITECT, 04_PLAN, 05_BUILD | Thiếu 01–02, 06–09 |
+| 501 | nested | 00_ROOT, 03_ARCHITECT, 04_PLAN | Thiếu 01–02, 05–09 |
+| 502 | nested | 00_ROOT, 03_ARCHITECTURE (không chuẩn), 04_PLAN, EVIDENCE (không chuẩn) | Tên khu lệch chuẩn: ARCHITECTURE vs ARCHITECT; EVIDENCE không có tiền tố số |
 | 802001 | flat | 00_ROOT–06_VERIFY + DASHBOARD, EVIDENCE | ID 6 chữ số không khớp dãy chuẩn |
 
 ## 3. Hai phát hiện cấu trúc cần chốt chuẩn (cho G4)
