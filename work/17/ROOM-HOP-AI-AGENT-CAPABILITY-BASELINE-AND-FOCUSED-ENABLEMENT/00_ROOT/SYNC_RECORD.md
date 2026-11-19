@@ -368,3 +368,13 @@
 - Read-back: GitHub blob SHA Journal `9342d70b89bf645e53c053ffed68ec64d7a69daa`, Proposal `f58c03c90fb45ddc9a0ce4c94520adb4f3bccf94`, GAP `0f9d29e739893e7c468fb4ca027374565e770ae6`; Sandbox probe returned status=ok and exact Entry 034 / Addendum 25 markers.
 - No W52 source changes, runtime/provider invocation, Python test, dispatch, recipient contact, branch mutation, merge or release.
 - Disposition: GAP-01 OPEN/P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
+
+
+## Chi tiết kỳ 0025 — 2026-11-19
+
+- Trọng tâm: Work17 GAP-01 — đối chiếu W52 v0.1 task/event/state schema với W70 DOC-065 và W112 DOC-001.
+- Phát hiện: task schema đóng không có typed assignment_id/dispatch_id/attempt_id/permission_ref/delivery_receipt_ref/recipient identity proof/ack_ref/accepted-scope digest. Event enum không có DISPATCHED/DELIVERY_RECEIPT/recipient ACK event; state table không có ACK state. ADR-001 có nói ACK phải là recipient event xác minh được nhưng schema v0.1 chưa biểu diễn. Kết hợp Entry034 lifecycle ordering, E2/E3 chưa được chứng minh.
+- W52 Sandbox files chỉ đọc; không sửa candidate/schema. Không test/provider/runtime/dispatch. W52 vẫn ACTIVE/DESIGN-FIRST/NOT RELEASED; Work17 READ/TRACE ONLY; protected execution DENY/NOT RELEASED.
+- Added Journal Entry 035, Technical Proposal Addendum 26, GAP Register Entry 035. GitHub commits: Journal `0cc35eb67178b3284bfd65298741de559f5781fe`; Proposal `0c6d439eff1d438db441a34575a419b3401446c1`; GAP `33678a3cca619f71806e5464a7ecd338ea6bc118`.
+- Read-back: GitHub blob SHA Journal `dcb425de2d3a76a00dbf8cc092f7356c135ef460`, Proposal `fe2f0f1e8bad95cb121a292fa22f95b5a10aae19`, GAP `893e8517b203e9dc0e8f90f2546f42b1cd750817`; Sandbox probe returned status=ok and exact Entry 035 / Addendum 26 markers.
+- Disposition unchanged: GAP-01 OPEN/P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
