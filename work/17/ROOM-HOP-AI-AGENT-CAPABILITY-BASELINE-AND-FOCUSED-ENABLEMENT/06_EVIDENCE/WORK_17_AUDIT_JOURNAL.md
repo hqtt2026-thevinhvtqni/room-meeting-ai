@@ -217,3 +217,19 @@ o đến khi read-back và kiểm tra commit/branch hoàn tất.
 - Tài liệu: tạo `06_EVIDENCE/WORK_17_CORE_AUTHORITY_SOURCE_TRACE.md`, commit `fdf8a4fedf02e8291c3bf30f9aa97427a3b94d49`; cập nhật `04_PLAN/WORK_17_GAP_REGISTER.md`, thêm GAP-11 P0 và mở rộng GAP-04, commit `6d74d4ab52785fe125c723fb6c08492b7b509e97`.
 - Trạng thái: DONE cho bounded source trace và tài liệu read-back pending; G3 end-to-end NOT PASS; GAP-04 OPEN; GAP-11 OPEN P0; protected execution DENY / NOT RELEASED. Không sửa source/runtime, không chạy test, không gọi endpoint, không thay đổi secret/quyền.
 - Bước tiếp theo: đối chiếu phát hiện với W32 DOC-117, W28 grant design và W1111 security tracker; chuẩn bị brief phản biện cho Cla (CTO) và Ka (CSA), yêu cầu Qw thiết kế negative-test acceptance. Chỉ sau review và quyết định G6/G7 mới lập remediation build plan.
+
+
+## 2026-11-19 13:21 +07 — Entry 015: Reconcile Core/Auth finding with W32 DOC-117, W28 and W1111 T07
+
+- Người thực hiện: Xu / AI-01.
+- Phạm vi: đối chiếu Work 17 Entry 014/Core Authority source trace với W32 DOC-117, Work 28 Auto E2E runbook, Work 1111 security-boundary tracker, coder task breakdown và AI Task Board.
+- Phương pháp: GitHub main search + fetch exact canonical files; so sánh contract, ownership, task status và security disposition. Không chạy source/test/runtime, không gọi endpoint, không dispatch AI, không sửa code/config/secret/permission.
+- Kết quả:
+  1. W1111 tracker ghi DOC-117 là controlling fail-closed contract: trusted principal; Work/canonical state; exact active Assignment/Task/owner/ACK/revocation; exact normalized resource/path and action; repository/ref/commit/blob hash; named isolated environment; issued-at/expiry/revocation/policy/gate/correlation; Work Entry and applicable gate authorization. Missing/stale/unverifiable => DENY; revalidate before effect/commit; audit persistence failure => DENY.
+  2. W1111 tracker phân loại W28 grant work là candidate only; chưa có bằng chứng đáp ứng đầy đủ Assignment/ACK, exact path/action, source SHA, isolated environment và commit-time revalidation; không được coi là deployed/merged.
+  3. Work 28 runbook yêu cầu exact source commit, runtime/Host identity, registered tool-list digest, trusted principal/Core authorization, canonical Work/snapshot/source hash, OS isolation attestation, actual exit code, process cleanup, protected evidence và matching read-back hash; reported PASS text không phải evidence.
+  4. W1111 coder plan và task board khẳng định chỉ Co, Xuco, Vi là active coder roster; child tasks W1111-T07-CO/XUCO/VI đều READY — ACK REQUIRED. No additional reviewer/QA/architect/AI is assigned under current plan. Vì vậy không dispatch/assign Cla, Ka hoặc Qw; independent QE/security verification vẫn là required unresolved gate, không được tự nghiệm thu.
+  5. Reconciliation memo được tạo trên GitHub main: `06_EVIDENCE/WORK_17_AUTHORIZATION_REMEDIATION_RECONCILIATION.md`, create commit `cf3b2d12ed960c5ff56db42a8afe8b7693de2385`; fetch read-back blob `523047b200bdab06471af0a2768312bf906e55a7`, kiểm tra nội dung có DOC-117 và xác nhận không tự ý mở rộng roster.
+- Trạng thái: DONE cho bounded cross-Work reconciliation và GitHub artifact read-back. W17 GAP-04 OPEN; GAP-11 P0 OPEN; G3 E2E NOT PASS; W1111 T07 children vẫn READY — ACK REQUIRED; protected execution DENY / NOT RELEASED; independent QE/security gate unresolved.
+- Giới hạn: không tìm thấy/fetch được file DOC-117 gốc trong lượt này; contract được đối chiếu qua W1111 tracker và các tham chiếu hiện có. W28 runbook được đọc từ GitHub search evidence; không suy diễn branch đã deploy. Không có runtime exposure/deployment claim.
+- Bước tiếp theo: chờ ACK có chứng cứ của đúng ba owner hiện hữu; Xu tích hợp contract duy nhất và dependencies. Sau khi các package có bằng chứng, phải tổ chức independent QE/security verification theo đúng authority; không được bỏ qua chỉ vì W1111 hiện giới hạn roster coder.
