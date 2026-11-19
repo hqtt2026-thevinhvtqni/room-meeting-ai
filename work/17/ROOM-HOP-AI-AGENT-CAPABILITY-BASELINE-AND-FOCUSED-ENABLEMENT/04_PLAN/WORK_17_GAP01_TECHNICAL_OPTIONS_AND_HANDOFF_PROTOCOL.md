@@ -287,3 +287,22 @@ No implementation, branch promotion, live dispatch or provider test is authorize
 - No parallel dispatcher, event bus, Assignment database, evidence store or execution host without explicit Vinh decision and W70 governance.
 - If canonical source cannot be proven, mark BLOCKED / NOT VERIFIED; do not fill gaps with assumptions.
 - Work17 remains READ/TRACE ONLY; protected execution DENY / NOT RELEASED. Ka/Cla review request remains unsent pending Vinh's instruction.
+
+
+## 18. Addendum — Review dispatch capability and W52 branch reconciliation (2026-11-19)
+
+### 18.1 Review dispatch capability check
+Xu inspected the currently exposed ROOM-HOP Build MCP tool surface and available connected actions for a supported, auditable way to send a task/message to named ROOM agents. The exposed ROOM-HOP tools include Sandbox read/write/list and legacy meeting read/join/start/paste operations; no Assignment/Dispatch/Agent-message send operation was exposed. The legacy Meeting surface is excluded from use because its runtime is a known unsafe/broken boundary for this Work. No verified direct messaging endpoint or authenticated Ka/Cla recipient identity is available in the current tool surface.
+
+**Disposition:** reviewer briefs remain PREPARED / NOT DELIVERED. This is a tooling boundary, not a decision to wait for Vinh. Xu must not claim that Ka/Cla were contacted, fabricate ACKs, or use a known-broken meeting path to simulate delivery. Continue all preparatory, source-trace and evidence work that is independently executable. When an approved, verifiable agent-dispatch route becomes available, Xu may use it within delegated authority and record the actual delivery receipt/recipient ACK separately.
+
+### 18.2 W52 branch read-only reconciliation
+GitHub branch search in `hqtt2026-thevinhvtqni/room-meeting-ai` returned exactly `work/52-room-universal-ai-communication-orchestration` for query `work/52`. Fetching its `README.md` succeeded (blob `677ed190bf05735de326064d5e0ac323d38642ba`). That README onboards to the legacy ROOM HOP v0.2 context set (`AGENTS.md`, `context/PROJECT_STATE.md`, `context/XU_CORE.md`, `context/XU_SESSION.md`, `context/XU_MEMORY.md`) and records an Aug-2026 state focused on MockConnector / Real API verification. Branch `AGENTS.md` blob `83d12cf8c29c8b167ef61ac04d10daab2411125d`; `PROJECT_STATE.md` blob `8c2bc37ac39e977ce3af9f1aa894b958f0e5de52`; `XU_CORE.md` blob `3e1ba4f51345100bfce33d98b9137bc05e16ed7b`; `XU_SESSION.md` blob `7d0ffaee0fc2e290c18bf4744af22a91a0e422bf`; `XU_MEMORY.md` blob `af64eff272d353e6eec986aaa846904de687186d`.
+ 
+The following expected W52 source paths were NOT FOUND on that branch ref: `room_a2a/adapters.py`, `room_a2a/contracts.py`, `room_a2a/transport.py`, `WORK_MANIFEST.md`, `work/52/WORK_MANIFEST.md`. This bounded check does not prove the entire branch lacks W52 source; it proves only that the known candidate paths are not present at those locations and that its root README/context are legacy v0.2 onboarding. The W52 Sandbox candidate source remains the evidence base for the prior adapter trace; canonical source promotion/mapping remains NOT VERIFIED. No merge, migration or branch mutation performed.
+
+### 18.3 Consequences
+- Do not treat existence of a branch named for W52 as proof that the W52 Sandbox candidate source is promoted or canonical.
+- Do not treat branch-level v0.2 Meeting/MockConnector state as proof of current provider dispatch, authenticated receipt or recipient ACK.
+- Keep W52 owner boundary for Agent-to-Agent orchestration; W70 Assignment authority, Core identity/permission/state, W14 Host transport, W33 evidence and W112 compatibility boundaries unchanged.
+- GAP-01 remains OPEN/P0; E2 provider receipt and E3 Assignment→Dispatch→Delivery→ACK remain NOT PROVEN. READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
