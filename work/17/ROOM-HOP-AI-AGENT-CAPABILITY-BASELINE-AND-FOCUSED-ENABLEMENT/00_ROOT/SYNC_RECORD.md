@@ -486,3 +486,14 @@
 - Work17 matrix (blob 435144f7d156a213a0bfadabb9e7b0fb09fb31b5) tiếp tục giữ Identity/Session NOT_VERIFIED và Dispatch/ACK NOT_PROVEN. AI-06/07/08 conflict chưa được Vinh quyết định; đề xuất mapping không được dùng cho authorization. Qw/Qween QA khác Qc/Qwen Coder.
 - Added Journal Entry 046 (commit f3b72d93abd0d11cad396f48606912a826da158d, blob f5cda038cfb9cd2fe7fb8660677e1e4b3dc5705b) and GAP-05/GAP-09 addendum Entry 046 (commit 660a529bb8b2de99270719875b378932ab010496, blob 8678a8a9e861e12c2c5f66c4e70ae44129ccae4a).
 - Disposition: GAP-05/GAP-09 OPEN; role label / runtime principal / provider account / session ID phải tách biệt; no roster/permission mutation; protected execution DENY / NOT RELEASED.
+
+
+## Sync Period 0036 — Work17 Entry 047 / roster authority and DOC-096 collision (2026-11-19T14:59:21.367Z UTC)
+
+- GitHub branch: main; repository: hqtt2026-thevinhvtqni/room-meeting-ai.
+- Source trace: Work0000 Sandbox DOC-010; Work70 main DOC-043 (blob 883123766f8c5457e6f905ae15682d718aa9acfa), DOC-055 (blob 4c540c6c71e24a763befb7a479f44076fe6210c1), registered DOC-096 Retrieval Strategy (blob d59d11fa2a9ebc72b99f0ed759d745f0c641e1d4); Work70 Sandbox DOC-096 Session Integrity copy (main exact-path NOT_FOUND) and DOC-057 read-only policy check.
+- New Work17 journal Entry 047 committed: commit f0d95593efe29a4f025e2398311401eff7f5c26c; blob d92a4d5d442f1750de1c6d4c9bffec917cb9e2e2; marker read-back true; bytes 176747.
+- New GAP Register Entry 047 committed: commit ae1b20688841f664e4436a88a2d74e701e430ad3; blob 27b329fabee3a902a33aedee4db2398f9aa68522; marker read-back true; bytes 30341.
+- Reconciliation result: DOC-043 current-main controlled register maps AI-06=Go and AI-07=Co; Qc has no numeric ID there. DOC-010 remains conflicted index; DOC-025 is legacy. Sandbox-only DOC-096 session-control file conflicts by DOC-ID with the DOC-096 retrieval document registered on main and is not registered/canonical on main. Qc ID remains unresolved; no ID/permission mutation.
+- Disposition unchanged: GAP-05 OPEN; GAP-09 OPEN; identity/session NOT_VERIFIED; Dispatch/ACK NOT_PROVEN; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED; Work17 READ/TRACE/ANALYZE ONLY.
+- Sandbox parity for this period: PENDING until exact GitHub read-back contents are written and compared through Sandbox probe.
