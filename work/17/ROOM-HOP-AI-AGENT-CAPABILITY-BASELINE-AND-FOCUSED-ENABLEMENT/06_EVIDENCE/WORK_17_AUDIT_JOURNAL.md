@@ -163,3 +163,21 @@ o đến khi read-back và kiểm tra commit/branch hoàn tất.
 - Cập nhật ma trận trên GitHub main: commit `d8268dc5ac61ca1b9ac5fafe66824de255d3d364`; blob `e402dffbe25ee043b9a8d476fd23ff2093db4804`. Các row được bổ sung source path và phương pháp xác minh còn thiếu; không cấp PASS.
 - Trạng thái: DONE cho source-trace; G2 chưa PASS. Không có E2/E3/E4; không chạy tests, provider calls, browser/computer sessions, process hoặc deployment. Không có source/runtime change.
 - Bước tiếp theo: đối soát DOC-010/DOC-043 và AI member identity/session evidence; xử lý mapping conflict AI-06/07/08 bằng decision của Vinh; sau đó mới xác định thử nghiệm E2/E3 nào được phép thực hiện.
+
+
+## 2026-11-19 09:29:43 +07 — Entry 012: Reconcile AI member roster and intake Vibe layout proposal
+- Người thực hiện: Xu / AI-01.
+- Phạm vi: đối chiếu AI member matrix với DOC-010 Work 0000, DOC-025/DOC-043/DOC-096 Work 70; kiểm tra nguyên tắc dispatch/ACK tại DOC-054/DOC-072; đọc proposal layout mới do Vibe đưa lên GitHub main.
+- Phương pháp: sandbox_read_probe các canonical/declared roster documents và role matrix; đọc lại AI member matrix, proposal trên GitHub main; không đổi roster nguồn, không thay stable ID, không migrate layout.
+- Roster conflict xác nhận:
+  1. Work 0000 DOC-010 v1.1 (2026-11-03) và Work 70 DOC-025 v1.3 (được DOC-025 tự ghi LEGACY / REFERENCE) đều ghi AI-06=Qc, AI-07=Go, AI-08=Co.
+  2. Work 70 DOC-043 và DOC-096 addenda 2026-11-11 ghi AI-06=Go, AI-07=Co; Qc không được gán numeric ID trong mapping mới.
+  3. Đây là xung đột stable ID thật. Không tự sửa DOC-010/DOC-043 hoặc cấp quyền dựa trên các ID tranh chấp.
+  4. Đề xuất của Xu trình Vinh quyết định: AI-06=Go (CFO), AI-07=Co (Coder Assistant), AI-08=Qc (Qwen Coder). Chưa áp dụng; chờ Vinh phê duyệt và chủ sở hữu roster cập nhật Decision Log/canonical register.
+  5. Qw giữ AI-05 QE/QA; nhãn Qween và provider/model Qwen trong DOC-025 cần tách bạch, không suy ra provider từ role label.
+- Dispatch/ACK: DOC-054 nêu ASSIGNMENT READY không chứng minh AI đã nhận việc; DOC-072 xác nhận private-session dispatch/delivery/ACK chưa được thực thi/chứng minh trong phạm vi toolset được kiểm tra. Vì vậy member matrix giữ NOT_PROVEN cho dispatch/ACK. Artifact contribution được ghi nhận riêng, không thay bằng chứng session identity.
+- Token/cost: DOC-010 và DOC-025 không có provider usage evidence; toàn bộ giữ NOT_AVAILABLE, không nhập 0 hoặc ước lượng.
+- Vibe proposal: GitHub commit `da6c9ba8974482708ef5ff42cdb0439ac7c7ca1a` thêm `03_ARCHITECT/WORK_17_LAYOUT_STANDARDIZATION_PROPOSAL.md`; read-back xác nhận nội dung ở trạng thái PROPOSAL / CHƯA THỰC THI. Proposal đề xuất nested layout và chuẩn hóa khu Evidence; không có migration nào được thực hiện bởi Xu. Số liệu 8 nested/9 flat là claim trong proposal, chưa được Xu tái kiểm kê độc lập trong Entry này.
+- Cập nhật AI member matrix trên GitHub main: commit `301b3845bcf3b8e9931c3535d3546e2b745da5ff`; blob `435144f7d156a213a0bfadabb9e7b0fb09fb31b5`. Ma trận có 14 AI ID + dòng Support Vibe; mọi identity/session chưa có proof đều NOT_VERIFIED; AI-06/07/08 giữ CONFLICT/UNMAPPED; không cấp quyền.
+- Trạng thái: DONE cho source reconciliation và matrix read-back; DECISION REQUIRED từ Vinh cho mapping AI-06/07/08. Không có dispatch, provider call, permission grant, layout migration, source/runtime change hoặc test execution.
+- Bước tiếp theo: chờ quyết định stable ID của Vinh; sau đó cập nhật đúng canonical roster và Work 70 register qua decision control. Tiếp tục G2 chỉ với các evidence source/session hợp lệ; không dùng proposal layout để di trú trước G4/G7.
