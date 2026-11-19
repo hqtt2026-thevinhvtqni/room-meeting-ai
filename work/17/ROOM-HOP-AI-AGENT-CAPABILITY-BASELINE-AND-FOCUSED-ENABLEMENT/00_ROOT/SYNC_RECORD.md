@@ -575,4 +575,4 @@
 - Journal Entry 055 committed: commit b4d87e6cde2f8f74c6ac0453270f10dc4403fc48; new blob 40420b741a191a124c921dcb74449700e6d4db57; bytes 214124.
 - Correction: Sync Period 0043's Sandbox parity PENDING label was stale; parity was verified at this point in time. Work Sandbox paths are relative to work_id (do not prefix with work/17/).
 - Disposition unchanged: GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED; Work17 READ / TRACE / ANALYZE ONLY.
-- Sandbox parity for this period: PENDING until the updated Journal and Sync Record are written and exact read-back verified.
+- Sandbox parity for this period: VERIFIED. After both updates were written, GitHub main was re-fetched and the three Sandbox files were read back; Journal, GAP Register and Sync Record all returned status=ok and exactMatch=true.
