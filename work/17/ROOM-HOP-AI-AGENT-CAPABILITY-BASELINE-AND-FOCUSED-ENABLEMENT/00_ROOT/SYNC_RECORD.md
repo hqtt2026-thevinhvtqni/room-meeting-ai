@@ -288,3 +288,15 @@
 - W52 branch search found `work/52-room-universal-ai-communication-orchestration`. Root README and context docs on that ref describe legacy ROOM HOP v0.2 / Aug-2026. Expected candidate paths room_a2a/adapters.py, contracts.py, transport.py and W52 manifests were NOT FOUND at tested locations. Bounded check only; no broad absence claim.
 - No source/branch mutation, merge, migration, provider call, live dispatch or tests. GAP-01 OPEN/P0; E2/E3 NOT PROVEN; READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
 - GitHub main writes: technical proposal Addendum 18, journal Entry 027 and this SYNC_RECORD period 0017; read-back to be completed after writes.
+
+
+## Chi tiết kỳ 0018 — 2026-11-19
+
+- Trọng tâm: Work17 GAP-01 — trace read-only Core v0.2 provider connectors và ranh giới với Work Assignment.
+- Positive source finding: core/connectors.py có OpenAIConnector và AnthropicConnector gọi API thật theo Meeting-turn contract; không kết luận Core hoàn toàn không có provider connector.
+- Boundary finding: AgentResponse chỉ giữ status/content/raw text; chưa thấy provider receipt/request ID, recipient authentication, assignment/dispatch/attempt/correlation/idempotency binding hoặc accountable ACK. DiscussionEngine là Meeting participant round-robin, không phải W70 Work Assignment dispatcher. AgentRegistry defer permissions/authority; identity_resolution chỉ registry classification.
+- run_meeting_v2.py inspected main path luôn gọi build_mock_connectors(); test_connectors.py chỉ kiểm tra parsing/mock và missing key/model guards; test_discussion.py dùng MockConnector. Historical MISSION-2026-001 report (2026-08-15) ghi real API NOT TESTED; không dùng historical report làm runtime proof hiện tại.
+- Source blobs: core/connectors.py 809c4d2fca01e6fcdaf26b91bf34b1af26dfd15a; core/discussion.py aa722f95235f613c288ba212074527ed2ce01ebc; core/agent_registry.py 7e4b98e68fa1a208ebd5788d9235d9c222e402a3; core/identity_resolution.py 207c0ea74e3c77929c1723b0e66beba4ccf36201; run_meeting_v2.py 3506137f465c38995fd10472dc2e982f17e23a01; tests/test_connectors.py 356d7580ddef49faf074f9519fbfffc71f7a4a81; tests/test_discussion.py 8028b93be998c122d57cf129d0a3ff12c5734da5.
+- Added Journal Entry 028, Technical Proposal Addendum 19 and GAP Register Entry 028. No source/runtime changes; no provider/API call, dispatch, test or reviewer contact.
+- Disposition unchanged: GAP-01 OPEN/P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
+- GitHub main and Sandbox read-back verification pending; no PASS claimed before read-back.
