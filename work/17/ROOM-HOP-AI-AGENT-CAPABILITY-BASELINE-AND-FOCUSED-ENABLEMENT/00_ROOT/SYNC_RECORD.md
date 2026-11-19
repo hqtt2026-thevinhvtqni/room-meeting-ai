@@ -205,3 +205,20 @@
 - Sandbox journal/proposal/GAP append đều trả status=ok; fresh read-back sẽ xác minh.
 - Disposition: GAP-01 OPEN / P0; E2 provider delivery receipt NOT PROVEN; E3 assignment→dispatch→delivery→ACK NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED; BUILD/live dispatch/pilot NOT AUTHORIZED. Không gửi review packet; Ka/Cla chưa review/ACK.
 - HEAD main trước khi ghi kỳ 0012: 29dc7fe029f2fcdb7e9941de5fbf2a3b13c59d6a; commit chứa bản cập nhật SYNC_RECORD sẽ tiến thêm một commit.
+
+
+## Chi tiết kỳ 0013 — 2026-11-19
+
+- Trọng tâm: Work 17 GAP-01 — kiểm tra khả năng bind W52 HostPort vào W14 Execution Host hiện hữu; read-only source trace.
+- W14 sources read qua Sandbox probe: WORK_MANIFEST; execution_host/host.py, server.py, adapters.py, identity.py, security.py, models.py, w12_adapter.py, wee_bridge.py; integrated_w13/test_execution_host.py; W14 current status snapshot, dependency audit và post-consolidation source review.
+- Kết luận compatibility: W52 HostPort cần long-lived bidirectional RpcPort; W14 HTTP source đã inspect chỉ có GET /health và POST /execute, W12ExecutionAdapter chạy one-shot command và trả ExecutionResult. W14 adapters đã inspect là Browser/GitHub/CI, không phải Codex/Qwen provider transport. **NO DIRECT BINDING PROVEN**; không được đánh đồng command execution với provider delivery/AI ACK.
+- Security boundary: W14 WorkContext.authorized là boolean caller-supplied trong source đã inspect; chưa thấy online Core grant validation. Trỏ GAP-11, không nâng thành authorization proof.
+- W14 manifest/status: ACTIVE / UNLOCKED; security closure, independent review và full current E2E còn mở. Sandbox source presence không chứng minh deployed/listening.
+- GitHub main commits:
+  - ee59888366817d17fccb3e0a666f32a379fd1492 — Journal Entry 023.
+  - 657f4bcd5a8a06a80a901f39aa9bea4207b7efb3 — technical proposal addendum W52/W14 compatibility.
+  - 6206a98e29c444605703ba76d9d983bd405219a2 — GAP Register Entry 023.
+- Sandbox journal/proposal/GAP append trả status=ok; fresh read-back sẽ xác minh.
+- Không gọi W14 /execute, không khởi động Host, không gọi provider, không chạy test, không sửa W14/W52/Core, không mở endpoint/service mới.
+- Disposition: GAP-01 OPEN / P0; E2/E3 NOT PROVEN; W52→W14 HostPort binding NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED; BUILD/live dispatch/pilot NOT AUTHORIZED; Ka/Cla review NOT SENT.
+- HEAD main trước khi ghi kỳ 0013: 6206a98e29c444605703ba76d9d983bd405219a2; commit chứa bản cập nhật SYNC_RECORD sẽ tiến thêm một commit.
