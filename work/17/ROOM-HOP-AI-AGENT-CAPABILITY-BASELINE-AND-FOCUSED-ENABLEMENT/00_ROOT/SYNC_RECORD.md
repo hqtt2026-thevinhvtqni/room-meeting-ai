@@ -189,3 +189,19 @@
 - Sandbox operations: proposal overwrite, journal Entry 021 append và GAP Register overwrite đều trả status=ok. Fresh read-back sẽ xác nhận nội dung; không suy ra parity chỉ từ write acknowledgement.
 - Disposition: GAP-01 OPEN / P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED; BUILD/live dispatch/pilot NOT AUTHORIZED. Không gửi review packet hoặc assignment tới Ka/Cla/AI member.
 - HEAD main trước khi ghi kỳ 0011: `f40650fe54261491c411f29c0f4e87784806967b`; commit chứa bản cập nhật SYNC_RECORD sẽ tiến thêm một commit.
+
+
+## Chi tiết kỳ 0012 — 2026-11-19
+
+- Trọng tâm: Work 17 GAP-01 — sửa governance correction về Core theo xác nhận trực tiếp của Vinh; trace W52 candidate provider adapters và đồng bộ bằng chứng.
+- Core ownership correction: Vinh xác nhận Core do Vinh và Xu cùng xây dựng. Không tiếp tục truy tìm external Core maintainer. W37 là boundary điều tra/evidence về Core. Các điểm còn NOT VERIFIED là runtime Core API/router, Work/Assignment persistence, authorization binding và evidence-store runtime — không phải danh tính người xây dựng Core.
+- W52 Sandbox trace: kiểm tra manifest, A2A contract, adapter interface, capability matrix, implementation spec, adapters.py, transport.py, engine.py, policy.py, contracts.py và review/test evidence qua sandbox_read_probe. sandbox_read thường trả empty object; probe trả nội dung. Không chạy source/test/provider.
+- Kết quả: W52 có candidate Codex App Server + Qwen ACP adapters; cả hai no-tool/read-only, chỉ advertise task.stream_events. Không có bằng chứng trong adapter registry đã đọc về adapter Gemini/Claude/Grok/Mistral hoặc universal provider API. CorePort/AuthorityPort/W14 HostPort là injected interfaces, chưa có production binding. Live Codex/Qwen BLOCKED theo capability matrix; Core authoritative dispatch/identity ACK BLOCKED; independent An/Ka OPEN; full E2E NOT RUN. W52 ACTIVE / DESIGN-FIRST / NOT RELEASED.
+- Không chứng minh Sandbox/GitHub byte parity hoặc canonical W52 promotion; không merge/migrate.
+- GitHub main commits:
+  - 151485b8d1305b976de272320a7c60e747fe0da9 — Journal Entry 022.
+  - 97481b379ac9107e7920a6910a93b35219e9e913 — technical proposal addendum sửa Core ownership và ghi W52 trace.
+  - 29dc7fe029f2fcdb7e9941de5fbf2a3b13c59d6a — GAP Register addendum Entry 022.
+- Sandbox journal/proposal/GAP append đều trả status=ok; fresh read-back sẽ xác minh.
+- Disposition: GAP-01 OPEN / P0; E2 provider delivery receipt NOT PROVEN; E3 assignment→dispatch→delivery→ACK NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED; BUILD/live dispatch/pilot NOT AUTHORIZED. Không gửi review packet; Ka/Cla chưa review/ACK.
+- HEAD main trước khi ghi kỳ 0012: 29dc7fe029f2fcdb7e9941de5fbf2a3b13c59d6a; commit chứa bản cập nhật SYNC_RECORD sẽ tiến thêm một commit.
