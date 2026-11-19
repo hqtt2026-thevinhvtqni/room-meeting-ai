@@ -357,3 +357,14 @@
 - Read-back: GitHub blob SHA Journal `83dc9251bedbed2c6ef1a53720e0144e545a3c41`, Proposal `17b06b38408754a9abe9897770805e49683ccb40`, GAP Register `9dbcf993c90c178a17f81f042aab146d6413c379`; Sandbox probe returned status=ok and exact Entry 033 / Addendum 24 markers for all three files.
 - No source/runtime/branch change, merge/migration, provider call, test, dispatch, recipient contact or execution-authority action.
 - Disposition unchanged: GAP-01 OPEN/P0; E2 provider receipt NOT PROVEN; E3 Assignment→Dispatch→Delivery→accountable ACK NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
+
+
+## Chi tiết kỳ 0024 — 2026-11-19
+
+- Trọng tâm: Work17 GAP-01 — static trace Work52 Sandbox A2A candidate 0.1.0-r2, tập trung lifecycle ACCEPTED/RUNNING và recipient ACK.
+- Phát hiện: Engine.execute() chuyển ACCEPTED trước HostPort.open(), chuyển RUNNING trước adapter.run() thực hiện Codex/Qwen protocol handshake. State-machine prose lại định nghĩa ACCEPTED là adapter nhận và RUNNING là runtime bắt đầu. Không có explicit authenticated recipient ACK event/receipt gắn Assignment/dispatch/attempt/session/correlation. AuthorityPort/CorePort/HostPort chỉ là injected Protocol; chưa có production implementations trong candidate. Codex/Qwen protocol/turn responses không tự chứng minh recipient identity/Assignment ACK.
+- Tests dùng MemoryCore/Authority/ScriptedRpc/Host test doubles; VI_BUILD summary 2026-10-23 ghi independent_review=false, local checks PASS theo coder, live_e2e BLOCKED. An retest/Ka ACK chưa verified trong evidence đọc được.
+- Added Journal Entry 034, Technical Proposal Addendum 25, GAP Register Entry 034. GitHub commits: Journal `854fb6a6c056af09f5a34ea12a6530f000006706`; Proposal `67fc9fc9ae7f47d762af8a5db36c496d64cb7c48`; GAP `d6e4c02fd8c524a1b5166651f753eea63dc9a4ea`.
+- Read-back: GitHub blob SHA Journal `9342d70b89bf645e53c053ffed68ec64d7a69daa`, Proposal `f58c03c90fb45ddc9a0ce4c94520adb4f3bccf94`, GAP `0f9d29e739893e7c468fb4ca027374565e770ae6`; Sandbox probe returned status=ok and exact Entry 034 / Addendum 25 markers.
+- No W52 source changes, runtime/provider invocation, Python test, dispatch, recipient contact, branch mutation, merge or release.
+- Disposition: GAP-01 OPEN/P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
