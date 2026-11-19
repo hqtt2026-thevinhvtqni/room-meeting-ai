@@ -271,3 +271,33 @@ o đến khi read-back và kiểm tra commit/branch hoàn tất.
 - Kết luận: exposed 8030 tool surface in this session has no verified private-session dispatch/receipt/ACK path. GAP-01 OPEN / P0; E2 delivery receipt NOT PROVEN; E3 trace NOT PROVEN. This does not prove no separate user-operated/manual or external connector exists.
 - Giới hạn và boundary: Work 17 remains READ/TRACE ONLY. No handoff packet, no live dispatch, no private-session access, no provider call, no meeting mutation, no runtime/test, no permission/config/secret/source code change.
 - Bước tiếp theo: bounded read-only inspection of canonical DOC-064/065/044 and relevant adapter source only if available; identify a real approved handoff channel and its receipt semantics. Any live handoff/dispatch trial requires Vinh's explicit scope/authority decision. Do not mark E2/E3 or ACK.
+
+
+## 2026-11-19 13:39:13 +07 — Entry 018: Source trace phân biệt adapter thực thi và AI-member dispatch
+
+- Người thực hiện: Xu / AI-01.
+- Phạm vi: Work 17 GAP-01 only; read-only GitHub main source inspection và đối chiếu DOC-044/064/065/066. Không triển khai.
+- Phương pháp: GitHub code search các nhóm dispatch/adapter/assignment/ACK; fetch exact source files và document blobs; trace chức năng gọi thực tế trong Browser Agent Adapter; so sánh với yêu cầu provider delivery receipt + accountable ACK.
+- Source evidence:
+  1. `room_hop_mcp/browser_agent_adapter/adapter.py`, blob `0ced9207c1897b9a7b572b7fefa44fec2dd92b76`: Playwright browser workflow. `submit_to_roomhop()` list meeting, chọn meeting active/open, post marker `ROOMHOP_BROWSER_AGENT_ARTIFACT` bằng `add_paste_to_meeting`, rồi đọc transcript để xác nhận artifact marker. PASS tại đây chỉ là browser artifact marker read-back trong Meeting; không phải provider delivery receipt, không chứng minh AI nhận assignment, không phải ACK.
+  2. `execution_host/adapters.py`, blob `6a84f72cf5b596ceba77ab67a4cc9f9e245a4cda`: BrowserAdapter/GitHubGateway/CIAdapter protocols; unavailable adapter trả NOT_CONFIGURED. Không phải AI provider transport.
+  3. `execution_host/git_adapter.py`, blob `9f869f1b1fa8d64e50a89f71a05da0720bcf5a03`: repo/branch/head validation và gated Git commit/push; không phải dispatch.
+  4. `10/COMPUTER-AGENT/04_CODE/browser_adapter.py`, blob `8e176d07a0f83d0431e16aba221c6e83adc7fa63`: Playwright browser control adapter.
+  5. `10/COMPUTER-AGENT/04_CODE/agent_api.py`, blob `44e16cf75af614b93146f86863beceaf445c35e6`: local `/agent/execute` invokes browser AgentRuntime; inspected handler has no provider-session send/ACK route.
+  6. `10/COMPUTER-AGENT/04_CODE/agent_runtime.py`, blob `e8153c180afc571efc5fe3e2b2afdee3afc88d13`: executes canonical browser actions and records action evidence.
+  7. `wee/capabilities.py`, blob `9b11a1075176d33483ba2995fc46bccf132433dd`: discovers shell/git/runtime/browser/CI/evidence, not external AI private-session delivery.
+  8. `room_hop_mcp/core_http_main.py`, blob `8dd6bb5ea500026d932ca52eb6079c980d722ab0`: inspected entrypoint builds MeetingService + HTTP app; no dispatch orchestrator mount visible.
+  9. `room_hop_mcp/adapter/http_server.py`, blob `54cb3ecbce2e6b13083f31c14f0c1f0738f1457d`: read-only identity discovery and Meeting routes including add-paste; not private AI-session dispatch.
+- Contract evidence:
+  - DOC-044 blob `508cbde08e1f376cdeba9475330aa880a9f63797`: active assignment template covers identity, source baseline, permission, deliverables, acceptance, evidence and closure.
+  - DOC-064 blob `0cd5cc7108310a93c98a289cc9a27f89b951b5dc`: target modes NATIVE_CONNECTOR, SESSION_HANDOFF, ROOM_MEETING_RELAY, API_ADAPTER, UNSUPPORTED; explicitly separates packet creation, delivery, ACK and Meeting relay.
+  - DOC-065 blob `a18db833f7286400ca702b850f072df6d834c4f1`: defines transport receipt, ACK provenance, manual-attested receipt and idempotency; Core route names intentionally deferred pending owner mapping.
+  - DOC-066 blob `8278b5199b5802ac915d412df499a181dd37342a`: implementation unauthorized; tests NOT RUN; Phase 2 handoff MVP remains future plan.
+- Updated artifacts:
+  - GAP-01 source reconciliation report §9: commit `60ff61586a0e1b64395509876274c067f8a39801`, blob `78010ce9684afd7e44f4fdb8580be186d56992a6`.
+  - GAP register GAP-01 row: commit `aa8de28cda2c13d471c2682f529a4f0dd996680b`, blob `ad5ec87f2c61a3b699157aa670dd638864a33df1`.
+- Kết luận: các adapter source được kiểm tra là browser automation, local execution, Git/CI abstraction và Meeting artifact relay; chưa có bằng chứng source cho provider adapter dispatch assignment vào private AI session. Đây là bounded source finding, không phải chứng minh tuyệt đối không tồn tại connector ngoài scope.
+- Trạng thái: GAP-01 OPEN / P0; E2 provider delivery receipt NOT PROVEN; E3 assignment→dispatch→delivery→accountable ACK NOT PROVEN. Work17 READ/TRACE ONLY.
+- Không thực hiện: không gửi dispatch/handoff; không gọi provider/private session; không chạy browser workflow/runtime/test; không mutate Meeting; không thay đổi code/config/secret/permission.
+- Timestamp note: time source returned `2026-11-19T13:39:13+07:00`, earlier than the timestamp recorded in prior Entry 017 (`14:02 +07`). Preserve the returned clock value and flag this journal chronology inconsistency; do not silently rewrite the prior entry.
+- Bước tiếp theo: trace canonical Core owner/assignment/evidence boundary only as needed for GAP-01; do not design a parallel registry or invent routes. Implementation remains blocked until authorized Work Entry, Core owner mapping, trusted channel and explicit decision for any live handoff.
