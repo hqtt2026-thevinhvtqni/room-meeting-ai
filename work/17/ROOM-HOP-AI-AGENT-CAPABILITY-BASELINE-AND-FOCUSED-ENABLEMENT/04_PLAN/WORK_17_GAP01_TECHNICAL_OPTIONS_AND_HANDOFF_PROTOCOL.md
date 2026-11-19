@@ -194,3 +194,23 @@ W52's HostPort contract requires an adapter-specific, long-lived RpcPort with re
 Therefore W14's ability to execute a command must not be confused with delivery to an AI provider or recipient ACK. W14 RuntimeIdentity identifies the host process, not the AI recipient. In addition, the inspected W14 WorkContext authorization is a caller-supplied boolean and does not itself prove online Core grant validation; see W17 GAP-11 for that separate security gap.
 
 **Disposition:** W52→W14 HostPort direct binding NOT PROVEN / contract mismatch in inspected interfaces. No endpoint was called and no runtime was started. Any reuse must remain inside the existing W14 execution boundary and require Core-authorized WorkContext/agent identity, Host-owned stdio/RPC lifecycle, bounded framing/output, cancel/stop confirmation and evidence correlation. This is a design question for W14/W70/Core governance, not authorization to add a parallel endpoint or executor. GAP-01 remains OPEN / P0; E2/E3 NOT PROVEN; READ/TRACE ONLY.
+
+## 15. Addendum — Core / W70 / W33 end-to-end responsibility trace (2026-11-19)
+
+The intended ownership chain is:
+- W70 Control Plane: Work/WP/Task lifecycle, Assignment policy, permissions/gates/decisions and dashboard projection (DOC-095).
+- Core (Vinh + Xu): authoritative shared service/state and identity boundary; the inspected Core HTTP app currently composes Meeting and identity routes, not Work Assignment/Dispatch/Evidence routes.
+- W52: provider-neutral Agent-to-Agent orchestration, provider adapters and task/event delivery semantics.
+- W14: execution-host and process/transport boundary.
+- W33: durable shared file/evidence storage.
+- W112: cross-Work integration contracts, dependency/evidence correlation and integration coordination.
+
+Core evidence: core_http_main.py composes create_http_app; inspected http_server.py mounts /identities and Meeting routes only. identity_resolution.py resolves Principal/Agent Registry entries. agent_registry.py explicitly defers permissions/authority; identity existence is not dispatch authorization. Meeting membership policy is not Work Assignment authority. This is bounded source inspection, not a claim about all deployments.
+
+W70 evidence: DOC-095 is DESIGN BASELINE / IMPLEMENTATION NOT AUTHORIZED and explicitly lists runtime dispatch/event delivery/evidence parity/concurrency/recovery as not fully verified. DOC-044 is ACTIVE/TEMPLATE, not a runtime Assignment API. DOC-005 requires server-side authorization, version/CAS, gate/evidence checks, audit correlation and idempotency, but the inspected Core routes do not establish that implementation.
+
+W33 evidence: Work 33 is an offline CLI-first content-addressed store (SHA-256 blobs + SQLite + audit). v1 has no HTTP server. put accepts caller-supplied --agent attribution string; this is not authenticated provider identity. A10 integration remains BLOCKED pending Core/MCP write path and credentials. Thus W33 is a reusable storage component, not a proven live Work Evidence Registry ingress.
+
+Combined verdict: no live integrated chain is proven. W70's Assignment design, Core identity registry, W52 adapter candidates, W14 execution host and W33 store are distinct pieces with unclosed runtime contracts. Do not bypass W70/Core authorization, do not call a W14 command result provider ACK, and do not let W33's agent metadata authenticate a sender. W112 should coordinate the cross-Work contract without taking ownership away from component Works. No new dispatcher/API/database/queue is proposed.
+
+GAP-01 remains OPEN / P0; E2/E3 NOT PROVEN; Work 17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED; BUILD/live dispatch/pilot NOT AUTHORIZED.
