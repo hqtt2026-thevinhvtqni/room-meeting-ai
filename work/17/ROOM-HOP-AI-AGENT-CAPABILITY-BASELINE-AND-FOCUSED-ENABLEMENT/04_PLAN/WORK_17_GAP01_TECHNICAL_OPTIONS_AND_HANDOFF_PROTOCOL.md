@@ -440,3 +440,21 @@ W112 DOC-001 Addenda 11.1–11.13 already define ownership, state separation, lo
 **Minimal owner-level proposal (not authorized implementation):** W52 prepares a versioned compatible contract for Assignment/Dispatch/Attempt/DeliveryReceipt/RecipientACK; W70 confirms Assignment/readiness semantics; Core confirms authoritative identity/permission and durable ACK record; W14 proves Host.open is side-effect-free until ACK or remains after the gate; W112 updates the mapping and S0–S5 tests. Preserve v0.1 candidate unchanged until the owner-approved version decision.
 
 W52 0.1.0-r2 remains ACTIVE / DESIGN-FIRST / NOT RELEASED; candidate manifest dated 2026-10-24 and 2026-10-28 hash reconciliation are historical evidence, not fresh current rehash or live proof. GAP-01 OPEN/P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
+
+
+### 28. W52 release blocker dependency order — B01..B06 and G0..G6
+
+W52 Sandbox `known-limits-blocked.md` records B01 Core task/identity binding BLOCKED; B02 W14 scoped transport BLOCKED; B03 two live providers BLOCKED in the historical candidate environment; B04 independent acceptance OPEN; B05 full workflow (write/tool/approval/resume/child-cancel/restart recovery) BLOCKED; B06 production source trace NOT VERIFIED. INDEX reports G0 inventory recorded but runtime bindings unverified; G1 contract review open; G2 adapter/native providers/Host blocked; G3 independent security acceptance open; G4 coder-only candidate; G5 E2E NOT RUN/BLOCKED; G6 final handoff/release open.
+
+**Core ownership clarification:** Vinh + Xu are the Core builders/decision boundary. B01 is not an invitation to search for another Core owner. The unresolved evidence is the exact canonical Core route/service composition, persisted transaction/state semantics and authenticated identity binding at runtime.
+
+**Dependency order (proposal only):**
+1. Pin current W52 source/candidate revision and exact canonical path; distinguish Sandbox candidate, historical GitHub branch and deployed runtime.
+2. Bind W52 CorePort to the existing Vinh+Xu-governed Core boundary; prove identity/transaction/state/audit behavior.
+3. Bind W52 HostPort to W14; prove open/stop/isolation and zero process/session/tool side effects before valid durable ACK.
+4. W52 owner versions the contract for Assignment/Dispatch/Attempt/DeliveryReceipt/RecipientACK and enforces ACK-before-Host-open; reference W112 DOC-001 Addenda 11.9–11.13 and tests A2A-01..15.
+5. Fresh authorized environment preflight and native Codex/Qwen handshake evidence.
+6. An exact-hash independent retest; Ka independent architecture/security review.
+7. Authorized cross-Work S3/S4/S5 E2E, W70 gate and final acceptance.
+
+This sequence is a dependency map, not authorization to execute. Historical CLI absence and historical hash/test results must not be described as current measurements. No code, provider, runtime, test, dispatch or release operation was performed. W52 remains ACTIVE / DESIGN-FIRST / NOT RELEASED; Work17 GAP-01 OPEN/P0; E2/E3 NOT PROVEN.
