@@ -457,3 +457,13 @@
 - Added Journal Entry 043 (commit 7924cd493be0230b3b30ec0266c6a69e8c928328, blob 0f9bf20bd5a4428149ae1f298b1d337ae4b81f62) and GAP Register Entry 043 (commit 4c42c93fb93481f2e543ad7eafc954bde73d3724, blob b8663a9d9efaeff4796813308401b2f4285cefdb).
 - Disposition: GAP-01 OPEN/P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
 
+
+
+## Chi tiết kỳ 0033 — 2026-11-19
+
+- Trọng tâm: Work17 GAP-11 — fresh current-main Core Execution Authority route composition check.
+- core_http_main.py docstring claims additive grant mount, but actual build_app() only calls create_http_app(MeetingService) and imports no authority adapter. Full main http_server.py exposes identity and Meeting routes only; no Work execution-grant routes. Main core/execution_authority.py and execution_authority_http.py return NOT_FOUND.
+- This contradicts CORE_EXECUTION_AUTHORITY_V1_2_DEPLOYMENT.md, which says the routes are mounted, and tests/test_core_http_main.py, which expects an absent route to return 503 when unconfigured. Static inference only; tests were NOT RUN and no endpoint was called. PR #48 remains an unmerged branch candidate, not main.
+- Main Execution Host POST /execute accepts caller WorkContext and WEE bridge sends authorized=True without Core bearer grant/service credential in the inspected path. Protected execution remains DENY / NOT RELEASED.
+- Added Journal Entry 044 (commit 6b19323b8b6e0916bec4ca2671edaa2ade292bdf, blob c5fee1bb98ddaf7e3a03c56cdd3a189b36d8c592) and GAP-11 addendum Entry 044 (commit 41d5fd2fd49c7acd77a784d6ed8a970878ef62c6, blob 4830b0dd8e2fd6c104ed9afd009f2c37ec6c64a3).
+- Disposition: GAP-11 OPEN/P0; current-main grant route NOT MOUNTED IN INSPECTED ENTRYPOINT/ADAPTER; Host authorization NOT VERIFIED; GAP-01 E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY.
