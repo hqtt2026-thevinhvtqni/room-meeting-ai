@@ -241,3 +241,49 @@ W112 already defines the cross-Work contract baseline in DOC-001 v1.0. It is DRA
 W112's 2026-11-09 index records W52 NOT SYNCED (branch exists but no W52 Work-document subtree), W33 on a Work branch, W14 PARTIAL SYNC on a release branch, and W37 as investigation workspace rather than proof of Core source ownership. These are dated mapping records, not current branch-state proofs; exact canonical repo/branch/commit must be freshly reconciled before integration. Vinh's direct Core ownership correction (Vinh + Xu) governs Work17's Core-builder boundary.
 
 No implementation, branch promotion, live dispatch or provider test is authorized by this matrix. GAP-01 remains OPEN/P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY.
+
+
+## 17. Addendum — Prepared independent review packets (2026-11-19)
+
+**Preparation state: READY FOR FOUNDER-TRIGGERED REVIEW; NOT SENT.** These briefs are embedded in the existing canonical technical proposal. No separate packet files were created. Ka/Cla have not been contacted. Release requires Vinh's explicit instruction.
+
+### Packet K — Ka (CSA / architecture and security boundary review)
+
+**Objective:** challenge whether GAP-01 can connect W70 Assignment authority, Core identity/permission, W52 provider dispatch, W14 execution/transport, W33 evidence persistence and W70 projection without bypassing ownership or weakening security.
+
+**Read set:** this Work17 proposal (Addenda 14–17), Audit Journal Entries 023–026, GAP-01/GAP-11; W112 DOC-001 v1.0, Integration Charter and Related Work Integration Index; W70 DOC-095, DOC-044 and DOC-005. Use owner-approved source snapshots only after exact repository/branch/commit reconciliation.
+
+**Questions (every answer must cite source/path/line/commit):**
+1. Is the authority chain complete and non-circular? Identify who creates, authorizes, dispatches, receives, ACKs, permits execution, accepts output and writes evidence. Preserve Vinh+Xu as Core builders and Vinh as decision authority.
+2. Can W70 Assignment transitions be enforced server-side with authenticated actor, permission/grant validation, expected-version/CAS, expiry/revocation, idempotency and audit correlation? Distinguish normative DOCs from live routes/persistence.
+3. What cryptographic/authenticated proof binds ACK to the actual receiving AI/provider session and exact assignment_id, correlation_id, causation_id, idempotency_key, source_revision and delivery_attempt? Explain why browser marker, user attestation, host process identity, nonce or artifact arrival is insufficient for VERIFIED ACK.
+4. Can W52 long-lived provider communication coexist with W14's inspected one-shot /execute surface without creating a second dispatcher/executor or confusing host identity with recipient identity? State the smallest owner-preserving contract delta.
+5. Does W33 CLI-first, caller-attributed write path meet authenticated evidence-ingress needs? If not, identify the authorized owner boundary; do not propose a parallel evidence store.
+6. Threat-model replay/spoofed/stale ACK, wrong recipient, assignment substitution, duplicate dispatch, timeout/unknown delivery, retry storms, permission revocation, out-of-order events, concurrent transitions, partial persistence and evidence tampering. Specify fail-closed and recovery behavior.
+7. Are MOCK/SNAPSHOT/SANDBOX/LIVE and RECORDED/VERIFIED/NOT_RUN/NOT_VERIFIED/REJECTED sufficiently separated? Identify false-PASS paths.
+
+**Required output:** verdict per question (PASS/GAP/BLOCKED/NOT REVIEWED), evidence references and bounded scope, ranked critical risks, minimum prerequisites before design approval/implementation/live pilot, and confirmation no recommendation creates a parallel dispatcher/bus/store/bypass. Static review only.
+
+### Packet C — Cla (CTO / code and integration feasibility review)
+
+**Objective:** verify technical feasibility against canonical source, distinguish reusable code from deployed runtime behavior, and identify minimum changes within existing component ownership.
+
+**Read set:** same Work17 proposal/journal/GAP and W112/W70 docs as Packet K; Core HTTP composition and identity/registry source; W52 adapter interfaces and candidate Codex/Qwen adapters; W14 HostPort/HTTP server/adapters; W33 CLI/store/integration acceptance criterion. Every source claim must include repository, branch, commit and exact path. Sandbox snapshots are not canonical until reconciled.
+
+**Questions (code-level evidence required):**
+1. Reconcile canonical repository/branch/commit and source-of-truth for Core, W52, W14, W33 and W70. Mark missing/stale/partial/unverified mappings; do not infer from branch names or commit authors.
+2. Trace Assignment creation → dispatch → provider transport → receipt → recipient ACK → execution authorization → artifact submission → evidence persistence → W70 projection. Name implemented symbol/route/interface and tests at each hop, or mark NOT FOUND / NOT VERIFIED.
+3. Compare W52 HostPort/RpcPort with W14 HTTP /execute and adapters. Can an existing transport satisfy bidirectional streaming, cancellation, correlation and lifecycle, or is a versioned adapter contract needed? Keep one execution host.
+4. Inspect Codex App Server and Qwen ACP candidates: do they submit to authenticated provider sessions and expose delivery receipts/authenticated ACK, or are they read-only/no-tool candidates? Separate interface declaration from operational proof.
+5. Inspect Core route composition/registries: do Assignment/Dispatch/Evidence routes, authenticated actor resolution, server-side permission grants, durable state and concurrency controls exist? Meeting membership and registry identity are not Work authority.
+6. Inspect W33 ingress/retrieval: are immutable SHA-256 content, authenticated actor attribution, event/assignment correlation, idempotent writes and durable retrieval available through an authorized Core path? Do not add a second store.
+7. Propose smallest ordered implementation slices assigned to existing owners (W70/Core/W52/W14/W33/W112/W32-QE), with dependency gates and acceptance evidence. Include negative tests for spoofing, replay, stale revision, wrong assignment, duplicate delivery, timeout/unknown delivery, revocation and concurrency.
+
+**Required output:** source-backed call graph; per-hop IMPLEMENTED/PARTIAL/DESIGN ONLY/NOT FOUND/NOT VERIFIED matrix; canonical-source reconciliation; minimal owner-preserving change list; test/evidence matrix; blockers and sequencing. No code changes, branch writes, provider calls, tests or live dispatch during review.
+
+### Common reviewer constraints and decision rule
+- Review is advisory only; it cannot approve implementation, release protected execution or authorize a pilot.
+- Dispatch, transport success, browser marker, artifact arrival, user-mediated submission or host process completion are not recipient ACK.
+- No parallel dispatcher, event bus, Assignment database, evidence store or execution host without explicit Vinh decision and W70 governance.
+- If canonical source cannot be proven, mark BLOCKED / NOT VERIFIED; do not fill gaps with assumptions.
+- Work17 remains READ/TRACE ONLY; protected execution DENY / NOT RELEASED. Ka/Cla review request remains unsent pending Vinh's instruction.
