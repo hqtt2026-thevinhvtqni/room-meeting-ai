@@ -181,3 +181,19 @@ o đến khi read-back và kiểm tra commit/branch hoàn tất.
 - Cập nhật AI member matrix trên GitHub main: commit `301b3845bcf3b8e9931c3535d3546e2b745da5ff`; blob `435144f7d156a213a0bfadabb9e7b0fb09fb31b5`. Ma trận có 14 AI ID + dòng Support Vibe; mọi identity/session chưa có proof đều NOT_VERIFIED; AI-06/07/08 giữ CONFLICT/UNMAPPED; không cấp quyền.
 - Trạng thái: DONE cho source reconciliation và matrix read-back; DECISION REQUIRED từ Vinh cho mapping AI-06/07/08. Không có dispatch, provider call, permission grant, layout migration, source/runtime change hoặc test execution.
 - Bước tiếp theo: chờ quyết định stable ID của Vinh; sau đó cập nhật đúng canonical roster và Work 70 register qua decision control. Tiếp tục G2 chỉ với các evidence source/session hợp lệ; không dùng proposal layout để di trú trước G4/G7.
+
+## 2026-11-19 10:40 +07 — Entry 013: Read-back G4 layout decision and current mirror coverage
+
+- Người thực hiện: Xu / AI-01.
+- Phạm vi: kiểm tra các cập nhật mới trên GitHub main sau Entry 012; đối chiếu quyết định layout G4, proposal v1.1, coverage mirror và trạng thái journal Sandbox.
+- Phương pháp: tìm commit gần nhất trong repository; fetch qua GitHub Contents API các file G4 decision record, layout proposal, GitHub mirror coverage, GAP register và execution plan; đọc Sandbox tree và journal bằng sandbox_list + sandbox_read_probe với đường dẫn tương đối có prefix tên Work.
+- Kết quả read-back GitHub main:
+  1. G4 layout decision record tồn tại, blob dea88b7450aee852bf2b8391097d0ebdb6fbb5fd; trạng thái G4 CONDITIONAL / MIGRATION NOT AUTHORIZED. Đây là quyết định kiến trúc có điều kiện của Xu được Vibe lưu lại theo nội dung do Vinh chuyển, không phải quyết định cuối cùng cho phép di trú của Vinh.
+  2. Proposal v1.1 tồn tại, blob cafadbf09e56e4f21af783ef058734f3aee61305; quy định nested là chuẩn, flat là LEGACY; phân biệt 06_VERIFY (kiểm chứng) với 06_EVIDENCE (kho bằng chứng); maturity tiers; parity prerequisites; không di trú hàng loạt và không xóa cấu trúc cũ khi chưa có quyết định G7 của Vinh.
+  3. GitHub mirror coverage tồn tại, blob c217eb792107b93d26b6d256468d17451bb054c1; báo cáo 17 workfolder, 9 nested / 8 flat, 54/71 Sandbox Work chưa có GitHub mirror. Deep-scan 7 Work được ghi nhận; số liệu layout đã được chỉnh theo đối soát.
+  4. GAP register vẫn ghi GAP-01 đến GAP-10 OPEN. Đặc biệt GAP-06 (56→71 lineage), GAP-07 (54 mirror missing), GAP-05 (AI-06/07/08 roster conflict), GAP-01/02/03/04 (dispatch/ACK, telemetry, execution/browser, Core/auth/persistence) chưa được đóng bằng bằng chứng.
+  5. Kế hoạch Work 17 vẫn yêu cầu G3 trace end-to-end, G4 gap/dependency/ownership/security analysis, G5 independent review, G6 Vinh decision, G7 build authorization. Vì vậy quyết định layout G4 có điều kiện không được hiểu nhầm là toàn bộ Gate G4 của Work 17 đã PASS.
+- Sandbox journal: sandbox_list(work_id=17) xác nhận file journal tại ROOM-HOP-AI-AGENT-CAPABILITY-BASELINE-AND-FOCUSED-ENABLEMENT/06_EVIDENCE/WORK_17_AUDIT_JOURNAL.md. sandbox_read_probe đúng đường dẫn trả status=ok; nội dung Sandbox dừng ở Entry 012 và khác bản GitHub ở Entry 007. Không ghi đè hoặc xóa khác biệt lịch sử; Entry 013 được append độc lập vào cả hai bản.
+- Phân loại: DONE cho read-back tài liệu GitHub; G4 layout = CONDITIONAL; toàn bộ G4 Work 17 = NOT CLAIMED PASS; G7 migration = NOT AUTHORIZED; Sandbox/GitHub journal parity = NOT VERIFIED do Entry 007 discrepancy và khác biệt các tài liệu sản phẩm.
+- Giới hạn: không chạy source, test, runtime, provider, dispatch/ACK hoặc browser/computer session; không di trú, không sửa roster, không đóng gap. Các blob SHA xác nhận nội dung file trên GitHub tại lần đọc, không chứng minh runtime.
+- Bước tiếp theo: tiếp tục G3/G4 theo thứ tự ưu tiên từ Core/auth trust boundary → dispatch/ACK → execution/evidence → independent QA; đồng thời phân loại 56→71 và xử lý mirror coverage theo tier. Chờ quyết định riêng của Vinh trước mọi thay đổi stable ID hoặc migration G7.
