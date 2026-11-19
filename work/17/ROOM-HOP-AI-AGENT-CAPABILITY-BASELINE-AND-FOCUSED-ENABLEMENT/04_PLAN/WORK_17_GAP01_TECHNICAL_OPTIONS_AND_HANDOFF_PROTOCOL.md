@@ -358,7 +358,7 @@ Cross-check against W112 DOC-001 v1.0 (DRAFT), W70 DOC-063 (DRAFT / design only)
 Disposition: PR #48 is a useful execution-authorization candidate only; it cannot replace W70 Assignment authority, W52 provider dispatch or DOC-065 delivery/ACK. It does not close GAP-01 E2/E3. DOC-001/DOC-063/DOC-065 remain unapproved for runtime enforcement; do not duplicate registries or dispatchers in Work17.
 
 
-### 22. W52 branch full-tree reconciliation — legacy connector source is Meeting-scoped, not Work dispatch
+### 24. W52 branch full-tree reconciliation — legacy connector source is Meeting-scoped, not Work dispatch
 
 Branch `work/52-room-universal-ai-communication-orchestration` resolves to commit `afd93ea8960d4cf9b27a57338b75f8d51624c170` (tree `6bd3411c0381c1d8bd595d23b68bf8b583273c10`; 398 entries, not truncated). This corrects the scope of Entry 027: the branch DOES contain `docs/work52/{README,BIEN_BAN,KE_HOACH_THI_CONG_XU,NHAT_KY_HOP_THI_CONG}.md` and legacy `core/connectors.py` / `core/discussion.py`. The earlier missing-path finding applied only to newer `room_a2a/*` candidate adapters/contracts/transport and manifest locations tested, not all W52 files.
 
