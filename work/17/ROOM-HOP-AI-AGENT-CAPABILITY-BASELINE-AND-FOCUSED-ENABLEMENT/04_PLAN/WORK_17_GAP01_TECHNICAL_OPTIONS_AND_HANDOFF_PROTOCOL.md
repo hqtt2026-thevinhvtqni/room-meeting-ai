@@ -369,3 +369,23 @@ Branch `work/52-room-universal-ai-communication-orchestration` resolves to commi
 - W52 plan/log remain at initialization/G0 inventory stage. The older connector does not prove newer W52 A2A candidate source is canonical or deployed.
 
 Disposition: legacy Meeting provider-call primitive EXISTS IN SOURCE; current W52 Work dispatch/delivery/ACK chain NOT PROVEN. Do not use legacy Meeting surface as workaround; no branch merge/migration, provider call, test or dispatch occurred. GAP-01 OPEN/P0; E2/E3 NOT PROVEN; READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
+
+
+### 23. Consolidated GAP-01 ownership and closure-evidence map
+
+| Boundary / owner | Reusable evidence found | Missing proof to close GAP-01 |
+|---|---|---|
+| W70 Assignment/lifecycle | DOC-044 template; DOC-095 design baseline; DOC-005 state-machine requirements | Live Assignment service/persistence, server-side authority, ACK-bound transitions, version/idempotency/audit |
+| Core identity/auth | AgentRegistry + identity_resolution membership only; W1111 PR #48 service execution grant candidate | Authenticated AI recipient identity/session, active Assignment binding, scope/expiry/revocation/source/gate checks; distinguish service identity from AI identity |
+| Core Meeting connectors | OpenAI/Anthropic provider-call source | Main HTTP runtime wiring, Work Assignment context, provider receipt/request ID and assignment/dispatch correlation; current v2 runner path uses MockConnector |
+| W52 orchestration | Sandbox Codex App Server + Qwen ACP read-only/no-tool candidate | Canonical source mapping, live provider invocation, target/session authentication, delivery receipt, cancel/recovery |
+| W14 transport | Existing Host/Execution Host source | Compatible bidirectional HostPort/RpcPort binding within W14 boundary; one-shot /execute or pytest grant is not provider delivery |
+| W33 evidence | Offline CLI-first hash-addressed store | Authenticated durable ingress/read/version/retention and Assignment/event/source provenance binding |
+| W112 compatibility | DOC-001 assignment/event/evidence schema baseline | Independent review + owner approval; mapping into existing APIs, no duplicate bus/store |
+| Ka/Cla review delivery | Review packets prepared | Supported authenticated agent-message delivery route and separate reviewer ACK |
+
+Minimum E2 proof: trusted provider/adapter receipt for actual delivery to intended session, bound to assignment_id + dispatch_id + attempt_id + target/session + correlation/idempotency + timestamp + source/payload digest. HTTP acceptance alone is insufficient.
+
+Minimum E3 proof: authenticated receiving AI response or explicitly lower-assurance manual receipt, bound to same assignment/dispatch/attempt, with decision, accepted-scope digest, ack_ref, timestamp and provenance. No response means no ACK. Host execution result, Meeting transcript paste or human-entered AI name is not provider ACK.
+
+Architecture direction: existing ownership boundaries contain reusable fragments, but full-chain proof is missing at trust-boundary bindings. Reuse W70/Core/W52/W14/W33/W112; do not create a parallel dispatcher, identity registry, queue, event bus or evidence store. GAP-01 remains OPEN/P0; E2/E3 NOT PROVEN; READ/TRACE ONLY; protected execution DENY / NOT RELEASED. This matrix is not BUILD approval.
