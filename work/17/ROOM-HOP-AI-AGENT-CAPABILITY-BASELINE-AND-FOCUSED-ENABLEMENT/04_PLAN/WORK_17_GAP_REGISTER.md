@@ -139,3 +139,9 @@ GAP-09 / GAP-05 addendum — Entry 046 (2026-11-19 21:43 +07): Work502 canonical
 - Evidence: Work28 Core authority server blob `6363c277ce410d3f5465f449b730199e06e5024c` is a separate process defaulting to 127.0.0.1:8001 with POST grant issue, GET single-grant status and POST run record; no GET grant collection route. Host client blob `75b28b49a8d2ce7561d722519af293d00fac13aa` GETs one URL expecting a JSON list and falls back to local file registry if URL is unset; Work70 DOC-061 confirms fetch-exception fallback. Core `room_hop_mcp/core_http_main.py` NOT_FOUND on branch; Meeting adapter remains unchanged. Work28 dispatch blob `22d5dcd385e301a43fcd0e1c3e901ff2c90abac9` defaults to command mode, which does not require a grant; snapshot mode binds grant/hash but snapshot_only is opt-in. In-process tests use test-issued in-memory grants, not Core service integration; not run.
 - Disposition: source-level API mismatch and fallback risk; Work28 not main/deployment proof; GAP-11 OPEN/P0; GAP-01 OPEN/P0; Core↔Host integration NOT PROVEN; per-AI/assignment identity and ACK NOT PROVEN; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
 - No source, API, credentials, config, runtime, test, PR or branch changes. See Work17 Journal Entry 052.
+
+
+### Entry 053 — Current-main absence of Work28 Core Authority / Host integration files (2026-11-19T15:21:36.742Z UTC)
+
+- Exact current-main path fetches returned NOT_FOUND for `core/execution_authority/http_server.py`, `core/execution_authority/authority.py`, `execution_host/work28_core_grant_client.py`, and `execution_host/work28_dispatch.py`. These exist on Work28 branch but not at those exact paths on main.
+- Disposition: Work28 remains separate candidate, not integrated main; current-main Core grant/Host integration NOT PRESENT AT INSPECTED PATHS; GAP-11 OPEN/P0; GAP-01 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. No source or branch changes.
