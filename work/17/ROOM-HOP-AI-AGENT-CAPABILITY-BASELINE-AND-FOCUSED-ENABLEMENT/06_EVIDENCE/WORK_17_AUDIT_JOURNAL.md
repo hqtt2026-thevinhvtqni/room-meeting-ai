@@ -131,3 +131,16 @@ o đến khi read-back và kiểm tra commit/branch hoàn tất.
 - Status: DONE for source-level trust-boundary trace; implementation/runtime/security verification NOT RUN. Do not mark authorization or Execution Host capability PASS.
 - Required next steps: (a) identify deployed bind/network boundary and any authenticated proxy/middleware; (b) define trusted principal injection from Core auth, remove reliance on caller-supplied identity string for authority; (c) replace authorized bool with verifiable scoped grant/token/reference validated by Core/Execution Host at request time; (d) decide whether HTTP paste needs optional identity_id and how manual provenance is represented; (e) create positive and negative integration tests with spoofed identities, missing/expired/revoked grants, and unauthorized network callers; (f) obtain independent QE.
 - No source changes, no endpoint calls, no process execution, no tests run.
+
+
+## 2026-11-19 09:26:43 +07 — Entry 010: G1 intake read-back cho 54 Work chưa có GitHub mirror
+- Người thực hiện: Xu / AI-01.
+- Phạm vi: làm mới Sandbox Work registry; đối chiếu với 17 Workfolder mirror đã kiểm kê trên GitHub main; đọc manifest/canonical pointer cho 54 Work còn lại; bổ sung bảng G1 vào WORK_17_PORTFOLIO_RECONCILIATION.md.
+- Phương pháp: `sandbox_list_works` trả 71 Work; tính tập ID không thuộc danh sách mirror 17; `sandbox_list(work_id)` cho từng Work trong tập 54; xác định đường dẫn manifest; `sandbox_read_probe` đọc nội dung manifest và DOC-001 pointer target. Công cụ `sandbox_read` ở lần thử đầu trả object rỗng cho manifest; không xem đó là read success, chuyển sang read_probe và nhận nội dung có status=ok.
+- Kết quả: 54/54 Work ID được kiểm tra; 54/54 `manifest_exists=true`; 54/54 manifest hoặc DOC-001 target được đọc thành công. Không ghi file hoặc sửa nội dung trong 54 Work thành phần.
+- Đối chiếu: Sandbox registry = 71; GitHub workfolder mirror snapshot = 17; tập thiếu mirror = 54; phép tính 17 + 54 = 71. Tất cả 54 dòng được ghi `MIRROR_MISSING`, không gắn `NOT_FOUND`.
+- G1 table được bổ sung vào `06_EVIDENCE/WORK_17_PORTFOLIO_RECONCILIATION.md`, commit GitHub main `a5bb0e1c1a05d6314e67b5f789126d0d462df581`. Bảng gồm ID, tên từ registry, trạng thái và owner chỉ khi Manifest nêu rõ, canonical manifest path.
+- Ngoại lệ cần giữ mở: W03 có 2 manifest; W14 có WORK_MANIFEST và DOC-001; W30 có nested GitHub mirror copy; W32 root manifest là pointer DOC-001; W37/W38/W39 có root manifest và nested same-ID Work; W40/W91/W96/W104/W092 có additional nested/same-ID records. W0000/W32/W71 pointer đã được theo đến DOC-001 target. Không đổi tên, xóa hoặc tự gộp cấu trúc.
+- Trạng thái: DONE cho G1 intake/read-back 54 manifest; NOT PASS cho toàn bộ G1 portfolio reconciliation. Manifest evidence chỉ E0; chưa audit dependencies, owners omitted, historical 56→71, source parity hoặc runtime. GAP-06 và GAP-07 vẫn OPEN.
+- Giới hạn: Không chạy source/test/runtime; không cập nhật Sandbox của 54 Work; GitHub chỉ nhận cập nhật Work 17 portfolio doc. Sandbox↔GitHub parity chưa được chứng minh.
+- Bước tiếp theo: đối chiếu 54 record với DOC-018/Work Index để phân loại chênh lệch 56→71; truy vết owner/dependency/canonical record cho các anomaly; tiếp tục G2 agent capability evidence mà không nâng trạng thái từ E0.
