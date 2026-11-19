@@ -331,3 +331,19 @@ o đến khi read-back và kiểm tra commit/branch hoàn tất.
 - Giới hạn: source trace bounded to exact paths and contract files listed; không chứng minh mọi external/manual provider path đều không tồn tại. Không xác minh runtime bind/proxy/deployed build, không chạy test hoặc endpoint. DOC-071 là baseline tài liệu 2026-11-02; lần này đã fetch lại các source blob liên quan nhưng không mở rộng thành full repository audit.
 - Không thực hiện: không dispatch, không tạo handoff packet, không gửi vào phiên AI, không gọi provider/API, không thay đổi source/runtime/permission/secret/config, không tạo API/database/dispatcher mới.
 - Bước tiếp theo: lập phương án kỹ thuật READ/TRACE ONLY gồm ownership decision request cho Core maintainer; handoff/receipt assurance matrix; correlation/ACK state machine; và điều kiện chuyển từ MANUAL_ATTESTED lên connector-verified. Xin review kiến trúc/bảo mật độc lập trước khi đề xuất bất kỳ BUILD hoặc live trial nào.
+
+
+## 2026-11-19 14:25:33 +07 — Entry 020: GAP-01 technical options and Session Handoff protocol proposal
+
+- Người thực hiện: Xu / AI-01.
+- Phạm vi: Work 17 GAP-01 only; lập phương án kỹ thuật READ/TRACE ONLY từ DOC-044, W70 DOC-064/065/066, source trace Entries 017–019 và GAP-01 reconciliation.
+- Phương pháp: đọc lại canonical documents trên GitHub main; lập options matrix, target ownership map, manual handoff protocol, receipt/ACK assurance levels, correlation/idempotency/replay invariants, failure matrix, review gates và pilot prerequisites. Không chạy source/test/runtime, không gọi provider/private session, không tạo assignment thật, không gửi review request.
+- Sản phẩm: `04_PLAN/WORK_17_GAP01_TECHNICAL_OPTIONS_AND_HANDOFF_PROTOCOL.md`. Nội dung là PROPOSAL ONLY — NOT APPROVED FOR BUILD OR LIVE DISPATCH. GitHub create commit `06f259ce929fa251dada9eaf1deee5692550d59c`; Sandbox write trả `status=ok`.
+- GAP Register: cập nhật duy nhất evidence reference của GAP-01 để trỏ Entries 016–019 và proposal; trạng thái vẫn OPEN / P0. GitHub update commit `dc598cf6b9f9537c26f4d0d5c3b30dfbacff2064`; Sandbox write trả `status=ok`.
+- Kết luận phương án: ưu tiên nghiên cứu SESSION_HANDOFF vì giữ conversation hiện tại và không cần provider API call cho thao tác handoff; đây là user-mediated transfer, không phải automatic dispatch. Tách HANDOFF_READY, HANDOFF_SUBMITTED, MANUAL_ATTESTED, ACKNOWLEDGED_MANUAL và ACKNOWLEDGED_VERIFIED. Nonce echo chỉ liên kết phản hồi với packet, không xác thực mật mã AI/session.
+- Ownership: W70 là target Work/WP/Gate governance; Assignment/Evidence authoritative owner/service vẫn NOT IDENTIFIED trong inspected source scope. W0000 identity governance, W52 orchestration, W112 correlation, W33 evidence là target boundaries cần owner xác nhận; không suy ra implementation hiện hữu.
+- Review: chuẩn bị yêu cầu phản biện Ka (security) và Cla (technical) nhưng KHÔNG gửi vì chưa có approved assignment/handoff channel. Core accountable maintainer cũng chưa xác định; không tự gán.
+- Điều kiện pilot tương lai: named Core owner + authoritative persistence contract; quyết định Work Entry của Vinh; Ka/technical review; independent QE; one unambiguous AI/session; privacy/retention; no code execution, repo write, secrets, API spend or privileged action. Manual P1/P2 không đóng E2/E3.
+- Trạng thái: GAP-01 OPEN / P0; E2 provider delivery receipt NOT PROVEN; E3 assignment→dispatch→delivery→ACK NOT PROVEN; Work 17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED; BUILD/live dispatch/pilot NOT AUTHORIZED.
+- Không thực hiện: không tạo API/database/queue/dispatcher/Assignment Registry; không thay đổi source/runtime/permission/config/secret; không gửi packet hoặc giao việc thật; không gọi AI/provider; không tuyên bố Ka/Cla đã review hoặc ACK.
+- Bước tiếp theo: tiếp tục READ/TRACE xác định accountable Core maintainer từ ownership/governance records hiện có; sau đó mới trình review packet theo cơ chế được phê duyệt. Không mở Work mới, không triển khai.
