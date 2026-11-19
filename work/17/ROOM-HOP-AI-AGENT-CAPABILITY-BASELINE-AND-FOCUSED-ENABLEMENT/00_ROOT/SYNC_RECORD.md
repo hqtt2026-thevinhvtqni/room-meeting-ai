@@ -422,3 +422,16 @@
 - Added Journal Entry 039, Technical Proposal Addendum 30, GAP Register Entry 039. GitHub commits: Journal `f333518f2893e8bc97119283dbe925517a5c956f`; Proposal `2b70899d3c9e0c09a29558810ca47afb74ea13cf`; GAP `315f2be7d0910278c931e77cca9ba815379cefc6`.
 - No W14 endpoint call, process spawn, Core/Host runtime, test/provider/dispatch/reviewer contact, source change outside Work17, merge or release.
 - Disposition: W52↔W14 HostPort binding NOT PROVEN; GAP-01 OPEN/P0; E2/E3 NOT PROVEN; ACK-before-side-effect NOT PROVEN; READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
+
+
+## Chi tiết kỳ 0030 — 2026-11-19
+
+- Trọng tâm: Work17 GAP-11 — truy nguyên trạng thái hiện tại của Core Execution Authority V1.2 tại W1111 PR #48.
+- GitHub PR #48 vẫn OPEN / DRAFT / UNMERGED / mergeable=false; head `c70eb2b82f54a000a81263dc519078ddf105f075`, cập nhật gần nhất theo GitHub là 2026-11-11. Không coi source branch là `main` hoặc deployed runtime.
+- Positive source: branch có Core service credential digest authentication, Work/purpose short-lived grant, expiry/revocation, hash-chained append-only store, HTTP issue/status/validate/run-record/revoke; W13 bridge lấy grant và W13 kiểm tra online + Work source snapshot trước khi gọi W12. Tất cả là source-level candidate evidence.
+- Confirmed defect: `ExecutionAuthority.record_run()` không so submitted `source_sha256` với grant-bound Work policy hash. Test hiện tại tạo policy hash a…a, gửi run hash b…b và khẳng định HTTP 200. Hash-chained storage không tự sửa được sai lệch provenance đầu vào.
+- Task board W1111 vẫn T07-CO/XUCO/VI = READY — ACK REQUIRED; Gate 2 prior approval không mở Gate 3 runtime, Gate 4 live/security E2E hay Gate 5 wiring/publishing.
+- PR #48 không thay thế W70 Assignment lifecycle hoặc W52 recipient-bound provider ACK; thiếu assignment/task/dispatch/attempt/recipient-session/delivery receipt/ACK binding. E2/E3 NOT PROVEN.
+- Added Journal Entry 041 and GAP-11 addendum Entry 041. Journal commit `f54107484f9477c2507aa8bc66c0b775e58459da`, blob `5e9afe2c78e43a99be3568384f53115039d8a713`.
+- Disposition: GAP-11 OPEN/P0; GAP-01 OPEN/P0; main integration/live runtime NOT VERIFIED; exact-current-head CI NOT VERIFIED; protected execution DENY / NOT RELEASED; Work17 READ/TRACE ONLY.
+- No source/test/branch/PR/runtime/secret/dispatch/merge/deploy changes.
