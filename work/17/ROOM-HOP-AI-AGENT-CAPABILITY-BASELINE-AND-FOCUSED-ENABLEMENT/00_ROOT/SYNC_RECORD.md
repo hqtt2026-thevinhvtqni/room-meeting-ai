@@ -149,3 +149,11 @@
 - Sandbox: Entry 018 append returned status=ok; read-back pending.
 - Timestamp integrity: time source returned 13:39:13 +07, earlier than Entry 017's recorded 14:02 +07. Entry 018 preserves the returned timestamp and flags chronology inconsistency; no silent rewrite of prior entry.
 - Disposition: GAP-01 OPEN / P0; E2 provider receipt NOT PROVEN; E3 dispatch/delivery/ACK trace NOT PROVEN; Work17 READ/TRACE ONLY. No dispatch, provider call, browser workflow, meeting mutation, runtime/test, code/config/secret/permission change.
+
+
+### Read-back closure — kỳ 0009
+
+- GitHub fresh fetch PASS: GAP-01 report §9 blob `78010ce9684afd7e44f4fdb8580be186d56992a6`; GAP register blob `ad5ec87f2c61a3b699157aa670dd638864a33df1`; Journal Entry 018 blob `34711ed1962477e6d6b1d39b7a642a6198ae41c4`; period 0009 present.
+- Sandbox journal read-back PASS: `sandbox_read_probe` status=ok; Entry 018 present (returned representation length 55,157 chars).
+- Scope caveat: only journal Entry 018 was appended/read back in Sandbox. GAP-01 report and GAP register are GitHub-only; Sandbox mirrors NOT PRESENT / NOT VERIFIED. Full journal byte parity remains NOT VERIFIED due historical differences.
+- Final period 0009 status: GitHub report/GAP/journal/SYNC read-back PASS; Sandbox journal append/read-back PASS; full Sandbox/GitHub parity NOT VERIFIED; GAP-01 OPEN / P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY.
