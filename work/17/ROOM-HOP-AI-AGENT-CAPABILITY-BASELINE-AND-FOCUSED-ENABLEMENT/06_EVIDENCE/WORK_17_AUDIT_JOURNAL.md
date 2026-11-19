@@ -927,3 +927,13 @@
 - Disposition: Work28 = separate source candidate, not main/deployed; Core Authority ↔ Host grant fetch integration NOT PROVEN and contract mismatch PRESENT IN INSPECTED SOURCE; command-mode grant bypass is available by default in source; GAP-11 OPEN/P0; GAP-01 OPEN/P0; per-AI identity/assignment/ACK NOT PROVEN; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
 - Limits: branch source reads and API shape comparison only; no HTTP call, test, CI rerun, credential/env inspection, runtime, deployment, source mutation, PR or merge.
 - Next: owner-controlled versioned integration must align Core issue/status/validate/run contract with Host grant retrieval/validation, remove local fallback for protected execution, require snapshot-only for grant-bound execution, and bind authenticated recipient/assignment identity. Work17 does not implement these changes.
+
+
+## Entry 053 — Exact current-main absence check for Work28 authority integration modules (2026-11-19T15:21:36.742Z UTC)
+
+- Actor: Xu / AI-01. Scope: READ / TRACE ONLY. Exact-path fetch on current GitHub main for Work28 branch-only integration files, after Entry 052 identified the branch candidate. No write outside Work17, no code/runtime/API/test/PR/merge action.
+- Exact current-main fetch results: `core/execution_authority/http_server.py` → NOT_FOUND (404); `core/execution_authority/authority.py` → NOT_FOUND (404); `execution_host/work28_core_grant_client.py` → NOT_FOUND (404); `execution_host/work28_dispatch.py` → NOT_FOUND (404).
+- Reconciliation: Work28's Core authority server and Host grant-client/dispatch implementation are not present at these exact paths on current main. The existing main Host handler remains `execution_host/server.py` blob `45aec57525b5d55bb63544b7bd7fd23062e06151`; earlier main route trace remains unchanged. Do not describe Work28 candidate as integrated into main.
+- Disposition: current-main Core grant/Host integration NOT PRESENT AT INSPECTED PATHS; Work28 remains separate divergent source candidate; GAP-11 OPEN/P0; GAP-01 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
+- Limits: four exact GitHub main path fetches only. No source/runtime/CI/network/secret/test or branch operation.
+- Next: preserve current-main/candidate distinction; wait for owner-controlled versioned integration and independent evidence rather than merging or copying Work28 into main from Work17.
