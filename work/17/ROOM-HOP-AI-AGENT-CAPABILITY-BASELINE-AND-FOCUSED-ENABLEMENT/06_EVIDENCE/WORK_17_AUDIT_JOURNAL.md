@@ -753,3 +753,35 @@
 - GitHub/sync status: no GitHub file write, commit, push or read-back sync was available/performed in this step. Sandbox changes are not yet proven present on GitHub main. Do not label GitHub parity VERIFIED for these changed files.
 - Guardrails unchanged: GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. No provider call, dispatch, credentials, external endpoint, cross-Work edit or deployment.
 - Result: SOURCE BUILD PREPARED / SANDBOX READ-BACK CONFIRMED / RUNTIME BLOCKED BY TOOL CAPABILITY. Next: PC/VS Code Node tests and browser E2E; then independent QE and GitHub main synchronization/read-back.
+
+
+## Entry 058 — GitHub main publication and exact source read-back (2026-11-20T06:35:05+07:00)
+
+- Actor: Xu / AI-01. Scope: publish the Work17 dashboard integrity source build and evidence to the repository's canonical GitHub `main`; no other Work was modified.
+- Publication method: GitHub Contents API, sequential file updates/creates on `main`; each operation returned a commit SHA. No force update, branch rewrite, merge or deployment.
+- Published commits:
+  - `server.js`: `5206a084d443ca41d23648327def7555ba18e4cc`
+  - `app.js`: `36e1f8da333d9627cdd6cc4fb49c97a10685a0e9`
+  - `index.html`: `9c2ab43c6a0338c81d6c50fc3d104da2e02b7d24`
+  - `package.json`: `dd1fa9b128e16230cc2159bb30dc312cc4899b01`
+  - Journal Entry 056–057: `66aa768bd33b3c62180b850e12f24a815a41931d`
+  - `mcp-bridge-stub.js`: `3267513485f9ba4ffc3559436a5ff8e93d5f1a7e`
+  - `BRIDGE_CONTRACT.md`: `2ba6be51c17dcbe61bfb74c391bf31cab9482d41`
+  - `README.md`: `fcad2ec33c1ee563c91172c622e9aca2e12c9ebf`
+  - `TODO.md`: `6b5a4787405a534f31ad617b9986492f95dc0632`
+  - `05_TEST/WORK17_DASHBOARD.test.js`: `2a4ba80f585f6217c9507a2f04c2633a8a37e47a`
+- Exact read-back: fetched all 10 changed files from GitHub `main` and compared with their Work17 Sandbox source strings. All 10 exactMatch=true. Blob SHAs:
+  - server.js `19ba950258557d293086002dc9c92b90dd5fcbf7`
+  - app.js `6783abbe6661f00efc78359796e095b804f44adc`
+  - mcp-bridge-stub.js `3d559160e3760ac45f206c3fa9eab6f0bdec103d`
+  - index.html `a350eb03a12bc49a47a26e49b0bf5aa77fbf3598`
+  - package.json `268423ba136e8a9c9a4f13354f74a83669887dbf`
+  - BRIDGE_CONTRACT.md `7583b4e65672306d51bc34e8c7b57307b3f64f92`
+  - README.md `3223aa487d909674f74ae0d585b64ea5d89a68da`
+  - TODO.md `dc343ad83dc25762f10373b622c1ee98ef542889`
+  - WORK17_DASHBOARD.test.js `85feb0d853574982734c99e57511ffd3ae842f1d`
+  - WORK_17_AUDIT_JOURNAL.md `1405d00a0009f2c584db8f26cc504ada4b6ce67c`
+- GitHub publication and exact source read-back are verified for these 10 paths. This does NOT mean Node tests, browser E2E, independent QE or live MCP bridge have passed.
+- Runtime status remains NOT RUN because available Build MCP 8030 has no Node execution surface. PC/VS Code is now required for the regression suite and browser E2E.
+- Guardrails unchanged: GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. No provider calls, dispatch, credential access, cross-Work source changes or deployment.
+- Result: GITHUB MAIN SOURCE SYNC VERIFIED / 10 OF 10 EXACT MATCH / RUNTIME BLOCKED PENDING PC.
