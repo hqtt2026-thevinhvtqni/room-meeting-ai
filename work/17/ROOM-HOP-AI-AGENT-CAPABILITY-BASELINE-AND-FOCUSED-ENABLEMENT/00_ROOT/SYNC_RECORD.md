@@ -157,3 +157,20 @@
 - Sandbox journal read-back PASS: `sandbox_read_probe` status=ok; Entry 018 present (returned representation length 55,157 chars).
 - Scope caveat: only journal Entry 018 was appended/read back in Sandbox. GAP-01 report and GAP register are GitHub-only; Sandbox mirrors NOT PRESENT / NOT VERIFIED. Full journal byte parity remains NOT VERIFIED due historical differences.
 - Final period 0009 status: GitHub report/GAP/journal/SYNC read-back PASS; Sandbox journal append/read-back PASS; full Sandbox/GitHub parity NOT VERIFIED; GAP-01 OPEN / P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY.
+
+
+## Chi tiết kỳ 0010 — 2026-11-19
+
+- Trọng tâm: Work 17 GAP-01 — lập phương án kỹ thuật Session Handoff, receipt/ACK assurance và owner resolution; không triển khai.
+- GitHub commits trong kỳ:
+  - `06f259ce929fa251dada9eaf1deee5692550d59c` — tạo `04_PLAN/WORK_17_GAP01_TECHNICAL_OPTIONS_AND_HANDOFF_PROTOCOL.md` (proposal only).
+  - `dc598cf6b9f9537c26f4d0d5c3b30dfbacff2064` — cập nhật GAP-01 evidence reference; trạng thái OPEN / P0 không đổi.
+  - `3173b3872790adacf4aaec1db0199b66f4405821` — Journal Entry 020.
+- Sandbox operations:
+  - Proposal write trả `status=ok`.
+  - GAP Register write trả `status=ok`.
+  - Journal Entry 020 append trả `status=ok`.
+  - Read-back parity sẽ được kết luận sau fresh probe; không suy ra parity từ write/append acknowledgement.
+- Nội dung phương án: SESSION_HANDOFF là candidate ưu tiên để giữ conversation và tránh API call, nhưng là user-mediated transfer; phân tách HANDOFF_READY / HANDOFF_SUBMITTED / MANUAL_ATTESTED / ACKNOWLEDGED_MANUAL / ACKNOWLEDGED_VERIFIED; nonce echo không phải identity proof. Core Assignment/Evidence owner vẫn NOT IDENTIFIED trong inspected scope.
+- Disposition: GAP-01 OPEN / P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED; BUILD/live dispatch/pilot NOT AUTHORIZED. Ka/Cla review packets mới chỉ chuẩn bị trong tài liệu, KHÔNG gửi; không có AI ACK.
+- HEAD main trước khi ghi kỳ 0010: `3173b3872790adacf4aaec1db0199b66f4405821`; commit chứa bản cập nhật SYNC_RECORD sẽ tiến thêm một commit.
