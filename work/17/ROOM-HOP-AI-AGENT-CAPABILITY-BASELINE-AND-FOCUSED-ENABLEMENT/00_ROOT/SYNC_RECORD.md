@@ -467,3 +467,13 @@
 - Main Execution Host POST /execute accepts caller WorkContext and WEE bridge sends authorized=True without Core bearer grant/service credential in the inspected path. Protected execution remains DENY / NOT RELEASED.
 - Added Journal Entry 044 (commit 6b19323b8b6e0916bec4ca2671edaa2ade292bdf, blob c5fee1bb98ddaf7e3a03c56cdd3a189b36d8c592) and GAP-11 addendum Entry 044 (commit 41d5fd2fd49c7acd77a784d6ed8a970878ef62c6, blob 4830b0dd8e2fd6c104ed9afd009f2c37ec6c64a3).
 - Disposition: GAP-11 OPEN/P0; current-main grant route NOT MOUNTED IN INSPECTED ENTRYPOINT/ADAPTER; Host authorization NOT VERIFIED; GAP-01 E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY.
+
+
+## Chi tiết kỳ 0034 — 2026-11-19
+
+- Trọng tâm: Work17 GAP-01 — đối chiếu provider connector primitive với Work501 (LLM Hub) và Work502 (MÊ Autonomous AI Builder).
+- core/connectors.py có Anthropic/OpenAI HTTP-call classes, nhưng AgentResponse không lưu structured provider receipt/model-version/usage metadata và không bind assignment/dispatch/attempt/session/correlation/ACK. AgentRegistry ghi rõ permissions/authority DEFERRED; DiscussionEngine chỉ xoay vòng Meeting; run_meeting_v2 dùng mock connectors. Không có provider call/test trong kỳ này.
+- Work501: ACTIVE DESIGN/CONSULTATION, BUILD NOT AUTHORIZED; proposal only, ADRs OPEN, zero-cost guard. Work502: DISCOVER/DESIGN, G-BUILD NOT READY; AutoGPT adapter/tool gateway/evidence pipeline là logical proposal, chưa là integration proof.
+- Ranh giới giữ nguyên: Core identity/auth; W70 lifecycle/Assignment; W52 communication; W501 provider/model capability; W502 MÊ product/adapter; W14 execution boundary; W33 evidence candidate. Work17 không dựng bản sao registry/router/orchestrator/evidence store.
+- Added Journal Entry 045 (commit 91bdf753e479f94241da6e0f134f66810edf4316, blob cbb5c6999d4413fbde99bf5821a35f041d373deb) and GAP-01 addendum Entry 045 (commit 3a5546aaa156027b6825ab874940db393e2222ee, blob 37a3484992f712f8d31ecb9b109ef5da153eba66).
+- Disposition: GAP-01 OPEN/P0; E2/E3 NOT PROVEN; provider-call source only; live receipt and ACK binding NOT PROVEN; Work501/502 BUILD NOT AUTHORIZED; protected execution DENY / NOT RELEASED.
