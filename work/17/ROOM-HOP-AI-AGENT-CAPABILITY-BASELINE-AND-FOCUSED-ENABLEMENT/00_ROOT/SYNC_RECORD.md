@@ -165,6 +165,7 @@
 - GitHub commits trong kỳ:
   - `06f259ce929fa251dada9eaf1deee5692550d59c` — tạo `04_PLAN/WORK_17_GAP01_TECHNICAL_OPTIONS_AND_HANDOFF_PROTOCOL.md` (proposal only).
   - `dc598cf6b9f9537c26f4d0d5c3b30dfbacff2064` — cập nhật GAP-01 evidence reference; trạng thái OPEN / P0 không đổi.
+  - `d1ac9f6698264edf9fe5c13abde104c74bb16396` — cập nhật GAP Register để trỏ cả Journal Entry 020; trạng thái OPEN / P0 không đổi.
   - `3173b3872790adacf4aaec1db0199b66f4405821` — Journal Entry 020.
 - Sandbox operations:
   - Proposal write trả `status=ok`.
