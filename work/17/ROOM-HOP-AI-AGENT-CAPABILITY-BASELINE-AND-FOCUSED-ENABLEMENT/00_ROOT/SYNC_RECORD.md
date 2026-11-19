@@ -435,3 +435,14 @@
 - Added Journal Entry 041 and GAP-11 addendum Entry 041. Journal commit `f54107484f9477c2507aa8bc66c0b775e58459da`, blob `5e9afe2c78e43a99be3568384f53115039d8a713`.
 - Disposition: GAP-11 OPEN/P0; GAP-01 OPEN/P0; main integration/live runtime NOT VERIFIED; exact-current-head CI NOT VERIFIED; protected execution DENY / NOT RELEASED; Work17 READ/TRACE ONLY.
 - No source/test/branch/PR/runtime/secret/dispatch/merge/deploy changes.
+
+
+## Chi tiết kỳ 0031 — 2026-11-19
+
+- Trọng tâm: Work17 GAP-01 — đối chiếu W70 DOC-044 assignment template với W112 DOC-001 cross-Work Assignment/receipt contract và AI Member Capability Matrix.
+- DOC-044 là ACTIVE/TEMPLATE, có identity/scope/permission/source/deliverable/acceptance/evidence/closure nhưng không có typed dispatch attempt, provider/session target, delivery receipt, recipient identity proof, ACK payload/ref, correlation/idempotency chain. W112 DOC-001 định nghĩa các trường/lifecycle/event/retry ở §§4.2–4.6 nhưng vẫn DRAFT, NOT APPROVED FOR RUNTIME ENFORCEMENT; transport/API/evidence/auth còn NOT DECIDED/NOT VERIFIED ở §9.
+- AI Member Capability Matrix vẫn Dispatch/ACK NOT_PROVEN cho toàn bộ member; identity/session NOT_VERIFIED; AI-06/07/08 CONFLICT/UNMAPPED. Không có bằng chứng runtime Assignment service, provider delivery receipt hoặc recipient-authenticated ACK ingress.
+- Added Journal Entry 042 (commit `f5f3c268674a3708a411609934ac9de247f9a636`, blob `b04b1006f2cbff83911edf65fbca655bc3f8e7c6`) and GAP Register Entry 042 (commit `d0359f1196a2f70a9c1bdbba2e61a8c1edb47537`, blob `1c1aaf30a84ca2adc349b783bf9f3ad847136760`).
+- Sources: W70 DOC-044 blob `508cbde08e1f376cdeba9475330aa880a9f63797`; W112 DOC-001 blob `6340a7b054a37540da8c16d0b9743266b0765c97`; Work17 member matrix blob `435144f7d156a213a0bfadabb9e7b0fb09fb31b5`.
+- No runtime/API/test/provider/dispatch/meeting/permission/credential or non-Work17 source changes. Ownership boundaries preserved; no duplicate dispatcher/store proposed.
+- Disposition: GAP-01 OPEN/P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
