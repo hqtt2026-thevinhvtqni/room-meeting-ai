@@ -356,3 +356,16 @@ Cross-check against W112 DOC-001 v1.0 (DRAFT), W70 DOC-063 (DRAFT / design only)
 - W1111 PR #48 Execution Authority candidate grants a service identity a Work/purpose-scoped execution token and records an execution run. The inspected grant schema is not the DOC-001 Assignment lifecycle and has no provider/session delivery or recipient-bound ACK contract.
 
 Disposition: PR #48 is a useful execution-authorization candidate only; it cannot replace W70 Assignment authority, W52 provider dispatch or DOC-065 delivery/ACK. It does not close GAP-01 E2/E3. DOC-001/DOC-063/DOC-065 remain unapproved for runtime enforcement; do not duplicate registries or dispatchers in Work17.
+
+
+### 22. W52 branch full-tree reconciliation — legacy connector source is Meeting-scoped, not Work dispatch
+
+Branch `work/52-room-universal-ai-communication-orchestration` resolves to commit `afd93ea8960d4cf9b27a57338b75f8d51624c170` (tree `6bd3411c0381c1d8bd595d23b68bf8b583273c10`; 398 entries, not truncated). This corrects the scope of Entry 027: the branch DOES contain `docs/work52/{README,BIEN_BAN,KE_HOACH_THI_CONG_XU,NHAT_KY_HOP_THI_CONG}.md` and legacy `core/connectors.py` / `core/discussion.py`. The earlier missing-path finding applied only to newer `room_a2a/*` candidate adapters/contracts/transport and manifest locations tested, not all W52 files.
+
+- W52 README: ACTIVE / DESIGN-FIRST / NOT RELEASED; provider-neutral A2A design, reuse Core/Gateway/Agent Runtime/MCP 8030/Sandbox; no production changes before gates. Plan says G0 IN PROGRESS and G1-G6 NOT STARTED. Design/plan is not implementation or release proof.
+- Legacy `core/connectors.py` (blob `809c4d2fca01e6fcdaf26b91bf34b1af26dfd15a`) contains AgentConnector.send_turn() and synchronous OpenAI/Anthropic provider HTTP calls, plus Mock/Internal connectors. This is a genuine provider-call primitive for Meeting turns.
+- `core/discussion.py` (blob `aa722f95235f613c288ba212074527ed2ce01ebc`) selects Meeting participants round-robin and persists Meeting messages/events. It does not bind a W70 Work Assignment, permission_ref, dispatch_id/attempt, provider receipt, recipient-authenticated ACK or W33 evidence reference.
+- Identity Resolution / Meeting JOIN policy is not Work authorization or provider-side recipient authentication. AgentResponse is status/content/raw only. Claude/Xu model fields are blank in the inspected branch snapshot; Ka internal configuration does not establish an independent reachable runtime.
+- W52 plan/log remain at initialization/G0 inventory stage. The older connector does not prove newer W52 A2A candidate source is canonical or deployed.
+
+Disposition: legacy Meeting provider-call primitive EXISTS IN SOURCE; current W52 Work dispatch/delivery/ACK chain NOT PROVEN. Do not use legacy Meeting surface as workaround; no branch merge/migration, provider call, test or dispatch occurred. GAP-01 OPEN/P0; E2/E3 NOT PROVEN; READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
