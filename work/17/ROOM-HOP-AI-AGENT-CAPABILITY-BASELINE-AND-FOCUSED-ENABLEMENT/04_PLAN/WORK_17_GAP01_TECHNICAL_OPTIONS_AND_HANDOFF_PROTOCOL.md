@@ -214,3 +214,30 @@ W33 evidence: Work 33 is an offline CLI-first content-addressed store (SHA-256 b
 Combined verdict: no live integrated chain is proven. W70's Assignment design, Core identity registry, W52 adapter candidates, W14 execution host and W33 store are distinct pieces with unclosed runtime contracts. Do not bypass W70/Core authorization, do not call a W14 command result provider ACK, and do not let W33's agent metadata authenticate a sender. W112 should coordinate the cross-Work contract without taking ownership away from component Works. No new dispatcher/API/database/queue is proposed.
 
 GAP-01 remains OPEN / P0; E2/E3 NOT PROVEN; Work 17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED; BUILD/live dispatch/pilot NOT AUTHORIZED.
+
+## 16. Addendum — Reuse W112 DOC-001; no parallel cross-Work contract (2026-11-19)
+
+W112 already defines the cross-Work contract baseline in DOC-001 v1.0. It is DRAFT / DESIGN BASELINE and NOT APPROVED FOR RUNTIME ENFORCEMENT. Reuse it as the candidate common contract; do not duplicate its assignment/event/evidence schemas inside Work17 or build a parallel dispatcher, event bus, evidence store or lifecycle engine.
+
+| Boundary | Authority / component responsibility | Existing contract/source evidence | Current evidence status | Required closure evidence |
+|---|---|---|---|---|
+| Work/WP/Task/Assignment lifecycle | W70 policy and lifecycle authority | DOC-095, DOC-044, DOC-005 | Design/template; no live Assignment route proven in inspected Core app | Owner-approved versioned contract, server-side state transition API, CAS/version guard, authorization and journal readback |
+| Core identity/authority/state | Core built by Vinh + Xu; Vinh decision authority | Core HTTP app, identity_resolution, Agent/Principal Registry | Meeting/identity routes inspected; Agent Registry defers permission/authority; Work Assignment/Dispatch routes not found in inspected app | Exact deployed source/commit and route map; authenticated principal/agent resolution; server-side grant checks; authoritative persistence |
+| Provider dispatch/events | W52 | A2A contract, adapter-interface, room_a2a adapter registry | Sandbox candidate Codex App Server + Qwen ACP only; W52 not mapped to canonical GitHub Work subtree per W112 index (dated 2026-11-09) | Owner-approved canonical repo/branch/commit; native runtime adapter; authenticated provider receipt; correlated ACK |
+| Execution/transport | W14 | W14 HostPort/HTTP source | W52 HostPort requires long-lived RPC; inspected W14 exposes one-shot /execute; direct binding not proven | Versioned RPC/stdio contract within W14 boundary; Core-authorized identity; cancel/stop and process evidence; no second executor |
+| Evidence storage | W33 | RSFEH architecture/data model/CLI | CLI-only v1; no HTTP server; Core/MCP integration A10 BLOCKED; W33 branch mapping requires refresh | Canonical branch/commit; Core-authorized write path; authenticated actor; immutable content hash and retrievable evidence refs |
+| Cross-Work compatibility | W112 | DOC-001 v1.0, Integration Charter | DRAFT, not runtime enforcement; explicit assignment/event/evidence semantics already exist | Owner review, version compatibility, contract fixtures, S0–S5 integration evidence |
+| Quality and acceptance | W32 / independent QE / W70 | DOC-001 test levels + W70 gates | No live integrated E2E or independent QE PASS established | Replay/idempotency/concurrency/security/recovery tests, independent QE, Founder acceptance |
+
+### Required event/receipt invariants to preserve
+1. DISPATCHED is not ACKNOWLEDGED. Artifact arrival or host command success is not recipient ACK.
+2. ACK must be attributable to authenticated receiving identity and the exact assignment_id; include correlation_id, causation_id, idempotency_key, source_revision and delivery_attempt.
+3. Provider receipt, recipient ACK, execution permission and acceptance are separate facts and separate state transitions.
+4. Unknown identity, missing permission, stale revision, replay or mismatched assignment must fail closed.
+5. Evidence states RECORDED, VERIFIED, NOT_RUN, NOT_VERIFIED, REJECTED remain distinct. MOCK/SNAPSHOT/SANDBOX evidence cannot be promoted to LIVE.
+6. W70 retains lifecycle authority; Core enforces shared identity/authority/state; W52 owns provider communication; W14 owns execution host; W33 stores evidence; W112 coordinates cross-boundary contracts. No owner is replaced.
+
+### Canonical-source blockers
+W112's 2026-11-09 index records W52 NOT SYNCED (branch exists but no W52 Work-document subtree), W33 on a Work branch, W14 PARTIAL SYNC on a release branch, and W37 as investigation workspace rather than proof of Core source ownership. These are dated mapping records, not current branch-state proofs; exact canonical repo/branch/commit must be freshly reconciled before integration. Vinh's direct Core ownership correction (Vinh + Xu) governs Work17's Core-builder boundary.
+
+No implementation, branch promotion, live dispatch or provider test is authorized by this matrix. GAP-01 remains OPEN/P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY.
