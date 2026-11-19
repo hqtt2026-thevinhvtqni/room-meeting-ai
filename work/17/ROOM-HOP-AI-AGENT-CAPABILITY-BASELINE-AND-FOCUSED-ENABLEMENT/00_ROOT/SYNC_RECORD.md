@@ -68,3 +68,16 @@
 - Read-back cuối kỳ: G4 decision record blob `dea88b7450aee852bf2b8391097d0ebdb6fbb5fd`; proposal v1.1 blob `cafadbf09e56e4f21af783ef058734f3aee61305`; coverage blob `c217eb792107b93d26b6d256468d17451bb054c1`; journal GitHub đã được cập nhật ở commit `3622701e082e0c35cbbf629485216ea5b68519d6`.
 - Sandbox: Entry 013 đã được append và read-back xác nhận trong đúng journal Work 17. GitHub journal read-back cũng xác nhận Entry 013. Journal Entry 007 vẫn khác nhau giữa Sandbox và GitHub; vì vậy parity toàn bộ journal = NOT VERIFIED, không ghi đè lịch sử.
 - Kết luận: GitHub read-back PASS cho hồ sơ G4/coverage được nêu; append accepted cho hai journal nhưng read-back parity chỉ kết luận sau xác minh. G4 layout = CONDITIONAL; G7 migration = NOT AUTHORIZED; không có source/runtime/test/provider/dispatch execution.
+
+## Chi tiết kỳ 0005 — 2026-11-19
+
+- Snapshot source trace: GitHub main HEAD trước lượt audit `384283a2d2894700436e3a1d1ea15369f1ca3402`; recursive tree `truncated=false`, 1,097 entries.
+- Phạm vi: Core/Auth/Execution Host trust-boundary source trace; tạo report, cập nhật GAP-04/GAP-11, append Journal Entry 014 trên GitHub và Sandbox.
+- Commit ghi nhận:
+  - `fdf8a4fedf02e8291c3bf30f9aa97427a3b94d49` — tạo `06_EVIDENCE/WORK_17_CORE_AUTHORITY_SOURCE_TRACE.md`.
+  - `6d74d4ab52785fe125c723fb6c08492b7b509e97` — cập nhật GAP-04 và thêm GAP-11 P0.
+  - `b4d66e4757c5d0758b4ee51072ade5e2d1a0e050` — Journal Entry 014 trên GitHub main.
+- Read-back GitHub: report blob `21b59c6a3b3578d30e39c4c3690b08470e82aa0e`; GAP register blob `42549d9bfcc0026f3edc55d0c95e994004272ab6`; journal blob `196863025e812c5b571dc8b05c3f65e6ecafadac`; cả ba file đọc lại được, report có F-01 và GAP-11, register có GAP-11, journal có Entry 014.
+- Sandbox: Journal Entry 014 đã append và read-back xác nhận. Các sản phẩm report và GAP register mới/cập nhật trong kỳ hiện chỉ có GitHub mirror; chưa có Sandbox mirror. Không tuyên bố full parity.
+- Kết luận: GitHub read-back PASS cho report/GAP/journal; Sandbox journal append/read-back PASS; sản phẩm report/GAP parity NOT VERIFIED. G3 end-to-end NOT PASS; GAP-04 OPEN; GAP-11 OPEN P0; protected execution DENY / NOT RELEASED.
+- Giới hạn: source/doc trace only; không chạy pytest, không gọi endpoint, không process/runtime/network probe, không xác minh live exposure, không đổi code/config/secret/permission, không build remediation.
