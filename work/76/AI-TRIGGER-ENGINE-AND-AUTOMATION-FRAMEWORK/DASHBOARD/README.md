@@ -84,3 +84,22 @@ Dashboard v0.2 đọc JSON tĩnh từ repository. Chưa có Core API, authentica
 - The matrix is a specification only; tests remain NOT RUN and no approval or gate transition is implied.
 - Sandbox capability evidence EV-76-021 is limited to the current OChat tool session; trusted AI-07 identity binding and PC/VS Code Bridge remain NOT VERIFIED.
 - Current source remains LOCAL_SNAPSHOT, not Core live. Dashboard browser/mobile QE remains NOT RUN.
+
+
+## Static correction — lifecycle gates vs participant Work Entry gates — 2026-11-18
+- `index.html` now renders a separate Work Entry panel for Co / AI-07, sourced from the Work 76 DOC-007 snapshot.
+- Lifecycle phase-gate count is explicitly labelled “Lifecycle gate”; it is not combined with WE-G0…WE-G5.
+- Snapshot records WE-G0…WE-G3 PASS and WE-G4/WE-G5 BLOCKED. Vinh's 2026-11-18 autonomous build delegation is noted, but does not substitute for trusted AI-07 runtime identity/permission verification.
+- WP status filtering and visual labels now normalize descriptive status strings (e.g. `IN_REVIEW — ...`, `BLOCKED — ...`) to their leading status code.
+- Source mode remains `local_snapshot`; browser/mobile rendering, responsive interaction, accessibility and independent QE are NOT RUN. No browser PASS is claimed.
+
+- 2026-11-18: Work Entry panel responsive CSS uses three columns on desktop, two on tablet and one on mobile. Source-only adjustment; device/browser QE remains NOT RUN.
+
+- Dashboard revision W76-DASHBOARD-0.3.26: evidence projection synchronized through EV-76-043; Work Package status strings reflect current branch CI and remaining dependencies; participant Work Entry snapshot is required by schema.
+- Snapshot remains local_snapshot. Work Entry WE-G4/G5 are BLOCKED; browser/mobile QE is NOT RUN.
+
+- 2026-11-18: Gateway now invokes the registered payload schema before replay reservation and enforces registration-key/source-id equality; PolicyRequest and authoritative provider decision envelopes receive strict fail-closed validation. Exact-head CI run 44200662865: 81/81 on Python 3.11 and 3.12 (branch CI only).
+
+- CI now installs `jsonschema` as a test-only dependency and runs `05_BUILD/05_TEST/test_dashboard_schema.py`.
+- The test validates Draft 2020-12 schema and PRODUCT_STATUS.json with format checking, and asserts local_snapshot plus explicit blocked WE-G4/WE-G5/WP-76-07 statuses.
+- Passing this test validates the data contract only; browser/mobile rendering, interaction and accessibility QE remain separate and NOT RUN.

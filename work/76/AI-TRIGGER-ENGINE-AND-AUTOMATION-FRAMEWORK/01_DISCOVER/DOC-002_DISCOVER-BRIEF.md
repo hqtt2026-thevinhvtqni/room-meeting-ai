@@ -53,5 +53,5 @@ The following findings answer parts of the discovery questions but do not close 
 ### Discovery disposition
 - Discovery questions are now classified as OPEN, PARTIALLY SPECIFIED or BLOCKED with explicit evidence boundaries; none is promoted to APPROVED merely because a design proposal exists.
 - DOC-004 sections H/H.3 hold the detailed cross-Work dependency map and exact source paths/blob SHAs.
-- DOC-006 holds the FR/NFR-to-verification traceability matrix; all new test IDs are specifications, not executed tests.
-- Lifecycle remains 01_DISCOVER; G0/G1 NOT VERIFIED; Co WE-G4/G5 BLOCKED; WP-76-07 BLOCKED; runtime implementation and CI evidence NOT_AVAILABLE; NOT RELEASED.
+- DOC-006 holds the FR/NFR-to-verification traceability matrix. A subset of unit/regression tests has now been implemented and executed in GitHub branch CI; see EV-76-058 for exact-head evidence (88/88 on Python 3.11 and 3.12). This does not close unexecuted E2E, integration, browser/mobile, independent QE or acceptance criteria.
+- Lifecycle remains 01_DISCOVER; phase gates G0/G1 NOT_READY; Co WE-G4/G5 BLOCKED; WP-76-07 BLOCKED. Partial source implementation and branch CI evidence are AVAILABLE, but production providers, Core/runtime integration, independent QE and release readiness remain NOT_VERIFIED / NOT_RELEASED.
