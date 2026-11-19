@@ -312,3 +312,15 @@
 - Added Journal Entry 029, Technical Proposal Addendum 20 and GAP Register Entry 029. No source/runtime change; no HTTP probe, provider call, dispatch or test.
 - Disposition unchanged: GAP-01 OPEN/P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
 - GitHub main and Sandbox read-back verification pending.
+
+
+## Chi tiết kỳ 0020 — 2026-11-19
+
+- Trọng tâm: Work17 GAP-01 — đối chiếu candidate Core Execution Authority V1.2 trên W1111 branch / PR #48.
+- Phát hiện tích cực: branch work/w1111-core-execution-authority-v1-2 có Core ExecutionAuthority, five grant routes, branch-specific HTTP adapter mount và W13 online grant/source-snapshot validation. Main chưa có adapter mount này.
+- PR #48 OPEN/DRAFT/unmerged; head c70eb2b82f54a000a81263dc519078ddf105f075; compare main...branch DIVERGED, ahead 157 / behind 648, mergeable=false. Historical CI PASS ở 9bbeed63... không phải current head proof; query hiện tại không trả PR-triggered run cho c70eb2b (push run visibility không được connector bao phủ).
+- W1111 approval record: DR-1..DR-4 APPROVED; Gate 2 implementation OPEN/AUTHORIZED; Gate 3 runtime, Gate 4 live/security E2E, Gate 5 wiring/publishing NOT OPEN.
+- Static defect candidate: record_run() không so sánh source_sha256 gửi lên với source hash trong Work policy; test ghi rõ policy a...a nhưng chấp nhận run hash b...b. Chuyển cho W1111/PR #48 review, không sửa từ W17.
+- Boundary: execution grant không phải AI member dispatch/private-session delivery/recipient ACK; E2/E3 GAP-01 vẫn NOT PROVEN. Không duplicate, merge, deploy, restart, test, secret, provider hoặc dispatch operation.
+- Added Journal Entry 030, Technical Proposal Addendum 21 and GAP Register Entry 030. Read-back verification pending.
+- Disposition: GAP-01 OPEN/P0; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
