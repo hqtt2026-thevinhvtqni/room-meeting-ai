@@ -458,3 +458,12 @@ W52 Sandbox `known-limits-blocked.md` records B01 Core task/identity binding BLO
 7. Authorized cross-Work S3/S4/S5 E2E, W70 gate and final acceptance.
 
 This sequence is a dependency map, not authorization to execute. Historical CLI absence and historical hash/test results must not be described as current measurements. No code, provider, runtime, test, dispatch or release operation was performed. W52 remains ACTIVE / DESIGN-FIRST / NOT RELEASED; Work17 GAP-01 OPEN/P0; E2/E3 NOT PROVEN.
+
+
+### 29. Exact source correction — ACCEPTED is internal; Host.open side effects remain unknown
+
+Direct W52 Sandbox `engine.py` line trace: line 97 records internal ACCEPTED; line 104 calls `host.open(adapter, task)`; line 107 records RUNNING after Host.open returns; lines 108–109 call `adapter.run()`. Thus ACCEPTED is not assigned-agent acceptance. Host.open precedes RUNNING and provider-specific adapter.run, but its side-effect semantics are not established by this candidate source.
+
+W112 DOC-001 §11.11 already supplies the precise security finding: Host.open may itself create/start an external runtime session. No recipient ACK contract/evidence readback gate is proven before Host.open, and there is no proof Host.open is side-effect-free. The correct invariant is **verified recipient ACK before any Host operation that can spawn a process, create a session or activate tools**. W112 §11.9 requires durable ACK readback; §11.10 A2A-11..15 remain NOT RUN. Reuse W112; do not duplicate its cross-Work architecture.
+
+This clarifies, rather than reverses, Addendum 25: ACCEPTED → Host.open → RUNNING → adapter.run is the observed source order. Do not interpret ACCEPTED as recipient ACK or claim side effects are blocked before ACK. W14 must prove Host.open semantics; W52 must own the versioned ACK/receipt contract; Core owns identity/permission enforcement; W70 owns Assignment; W33 evidence; W112 mapping. W70 DOC-065 and W112 DOC-001 remain DRAFT, not runtime enforcement. GAP-01 OPEN/P0; E2/E3 and ACK-before-side-effect NOT PROVEN; READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
