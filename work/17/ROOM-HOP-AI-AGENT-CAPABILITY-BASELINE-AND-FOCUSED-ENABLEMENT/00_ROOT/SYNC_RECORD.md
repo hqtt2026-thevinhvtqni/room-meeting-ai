@@ -389,3 +389,15 @@
 - Read-back: GitHub blob SHA Journal `6b026c3af256d93d93e509e7cf8cfd9b9b9be8f1`, Proposal `1ccac6c6a2e9b7c28bf4b0f7bb7d1c532e02fb17`, GAP `804ce82b09ced4f524dbf9af91d7d7cdc6bed2de`; Sandbox probe status=ok and exact Entry 036 / Addendum 27 markers in all three files.
 - No W52/W70/W112 source change, test, provider, runtime, dispatch, reviewer contact, merge or release.
 - Disposition: GAP-01 OPEN/P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
+
+
+## Chi tiết kỳ 0027 — 2026-11-19
+
+- Trọng tâm: Work17 GAP-01 — đối chiếu W52 B01–B06 và G0–G6 readiness/known blockers.
+- Xác nhận W52 ACTIVE / DESIGN-FIRST / NOT RELEASED. G1 independent review/runtime validation OPEN; G2 native providers + Host BLOCKED; G3 independent security acceptance OPEN; G4 historical coder-only candidate; G5 E2E NOT RUN/BLOCKED; G6 final handoff/release OPEN.
+- B01 Core task/identity binding BLOCKED: Core builder/decision boundary là Vinh + Xu; bằng chứng route/service composition, persisted transaction/state và authenticated identity binding còn thiếu. B02 W14 HostPort/isolation/stop BLOCKED. B03 native Codex/Qwen BLOCKED theo historical environment probe (không coi là hiện trạng hôm nay). B04 An/Ka independent acceptance OPEN. B05 full tool/write/approval/resume/cancel/recovery BLOCKED. B06 production source SHA/config NOT VERIFIED.
+- Dependency order được ghi trong Work17 Addendum 28: pin canonical candidate/source → Core binding → W14 HostPort + no-side-effect-before-ACK → W52 versioned ACK/receipt contract → fresh provider preflight → An/Ka independent review → authorized S3/S4/S5 E2E + W70 acceptance. Đây là thứ tự phụ thuộc, không phải authorization.
+- Added Journal Entry 037, Technical Proposal Addendum 28, GAP Register Entry 037. GitHub commits: Journal `dc5c9ec1d7ba0d8b4885b379dc65b6ab9030a652`; Proposal `b63b7f432bc64509becd67f88b2c1bca12dd279d`; GAP `b50e937694358138ae363c09abf6ef5c20f39518`.
+- Read-back: GitHub blob SHA Journal `f38430c70d095b41488d10b2a1836580d2001603`, Proposal `931ad74f006da0e4b55b318ba021a511bf457e19`, GAP `0111f8858f451aa30f59031ab6adc75ef6f73e63`; Sandbox probe status=ok and exact Entry 037 / Addendum 28 markers.
+- No source/runtime/test/provider/dispatch/reviewer contact/merge/release action.
+- Disposition: GAP-01 OPEN/P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
