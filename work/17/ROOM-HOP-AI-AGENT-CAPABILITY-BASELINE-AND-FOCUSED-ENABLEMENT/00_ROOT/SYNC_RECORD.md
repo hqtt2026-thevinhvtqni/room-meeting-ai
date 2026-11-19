@@ -53,3 +53,18 @@
   - Audit Journal — blob `7b3dd5c86aeed191b8ae099c53e173b3cb784ebb`, xác nhận Entry 010, 011, 012.
 - Sandbox read-back: W17 Sandbox tree hiện có Manifest, Execution Plan và Audit Journal; các hồ sơ sản phẩm G1/G2 do Vibe/Xu cập nhật trên GitHub chưa có bản mirror tương ứng trong Sandbox. Do đó không tuyên bố Sandbox ↔ GitHub parity.
 - Kết luận: kỳ 0003 PASS cho GitHub read-back của các hồ sơ được liệt kê; NOT VERIFIED cho Sandbox mirror, local PC checkout, CI và runtime. Không có source/runtime execution hoặc migration.
+
+## Chi tiết kỳ 0004 — 2026-11-19
+
+- HEAD main trước khi ghi kỳ 0004: `3622701e082e0c35cbbf629485216ea5b68519d6` (commit cập nhật Journal Entry 013). Commit chứa bản cập nhật SYNC_RECORD sẽ tiến thêm một commit.
+- Phạm vi: read-back G4 layout decision có điều kiện, proposal v1.1, GitHub mirror coverage; ghi nhận Entry 013 độc lập vào journal Sandbox và GitHub.
+- Các commit G4/coverage được đọc trong kỳ:
+  - `5eb8c982d5eed453cb109711d0350d7a8993ea58` — coverage v1.1: sửa số nested/flat, tách 06_VERIFY và 06_EVIDENCE, bổ sung maturity note.
+  - `17198e461e2c6a479b0555b58cade1f601f32291` — proposal v1.1 và G4 decision record; migration chưa được cho phép.
+  - `4d0418648333440fb5503038fdc49882a15036fd` — copy-edit proposal v1.1.
+  - `b55852c710d0d7b816c704a8a112368f1fb24f15` — copy-edit G4 decision record.
+  - `c1bb687465759ff0c4f9c59ae5a3d2d41fd270a8` — align coverage section 3 và W103 row theo G4 decision.
+  - `3622701e082e0c35cbbf629485216ea5b68519d6` — Journal Entry 013 trên GitHub main.
+- Read-back cuối kỳ: G4 decision record blob `dea88b7450aee852bf2b8391097d0ebdb6fbb5fd`; proposal v1.1 blob `cafadbf09e56e4f21af783ef058734f3aee61305`; coverage blob `c217eb792107b93d26b6d256468d17451bb054c1`; journal GitHub đã được cập nhật ở commit `3622701e082e0c35cbbf629485216ea5b68519d6`.
+- Sandbox: Entry 013 đã được append vào đúng đường dẫn journal trong Work 17; cần read-back sau append. Journal Entry 007 vẫn khác nhau giữa Sandbox và GitHub; không ghi đè lịch sử.
+- Kết luận: GitHub read-back PASS cho hồ sơ G4/coverage được nêu; append accepted cho hai journal nhưng read-back parity chỉ kết luận sau xác minh. G4 layout = CONDITIONAL; G7 migration = NOT AUTHORIZED; không có source/runtime/test/provider/dispatch execution.
