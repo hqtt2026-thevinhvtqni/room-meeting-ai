@@ -97,3 +97,17 @@ A future GAP-01 closure candidate must include all of the following, tied by one
 ## 7. Limitations
 
 This reconciliation fetched the three named Work 70 records and Work 17's current acceptance criteria/matrices. It did not exhaustively inspect every external provider, user-owned private session, manual handoff channel or deployed adapter. No claim is made that a provider cannot receive work; only that the inspected canonical evidence does not prove a Work 17 E3 dispatch/ACK trace.
+
+
+## 8. Additional bounded capability discovery — ROOM-HOP MCP 8030 / 2026-11-19
+
+This addendum records the actual tool inventory exposed to the current review session and the ROOM-HOP Build service self-description. It is a capability-surface observation, not proof about every deployment, branch or external connector.
+
+- The exposed ROOM-HOP 8030 tool inventory contains Sandbox operations (list/read/create/write/append/delete/create Work/list Works), Meeting operations (list/get/transcript/join/start/add paste), and room structure/context reads.
+- No tool in this exposed inventory accepts an AI member assignment and dispatches it to a private ChatGPT/Gemini/Qwen/Claude conversation; no provider delivery receipt or private-session ACK retrieval action is exposed.
+- `get_room_structure` returned service `room-hop-build`, version `1.0`, with capabilities limited to Sandbox operations. `get_room_context` states Sandbox is the AI Build Zone, Working Source is read-only, and AI cannot merge/commit/push.
+- `list_meetings` returned meeting records, but meeting list availability is not assignment dispatch. `add_paste_to_meeting` is a ROOM Meeting relay action; it does not prove delivery into a private AI session or identify an authenticated recipient. No meeting was joined, started, or modified in this discovery.
+- This confirms the previously documented limitation for the tool surface available in this session: current exposed 8030 operations do not provide a verified private-session dispatch path. It does not prove that no other user-operated/manual handoff or separately deployed connector exists.
+- Work 70 DOC-066 remains `PLANNED — IMPLEMENTATION NOT AUTHORIZED / TESTS NOT RUN`; its Phase 2 Session Handoff MVP (immutable handoff packet + user submission + manual receipt import) is a proposed future workflow, not a current Work 17 capability. No handoff packet was generated or submitted.
+
+**Disposition:** GAP-01 OPEN / P0; E2 delivery receipt NOT PROVEN; E3 dispatch→delivery→ACK trace NOT PROVEN. Work 17 remains READ/TRACE ONLY. No live dispatch, private-session access, provider call, meeting mutation, runtime/test, permission or source change occurred.
