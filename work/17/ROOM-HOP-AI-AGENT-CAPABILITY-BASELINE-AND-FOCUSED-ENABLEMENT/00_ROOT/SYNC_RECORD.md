@@ -239,3 +239,19 @@
 - Không gọi Core HTTP, W14 /execute, W33 CLI, provider; không chạy test; không sửa component source; không mở endpoint/dispatcher/queue/database mới; không gửi review request.
 - Disposition: GAP-01 OPEN/P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED; BUILD/live dispatch/pilot NOT AUTHORIZED; Ka/Cla reviews NOT SENT.
 - HEAD main trước kỳ 0014: 05f2bdfed18595d42779f6b5639e9214e3f0cf9f; SYNC_RECORD commit sẽ tiến thêm một commit.
+
+## Chi tiết kỳ 0015 — 2026-11-19
+
+- Trọng tâm: Work 17 GAP-01 — tái sử dụng W112 DOC-001 làm cross-Work contract baseline; lập ma trận trách nhiệm và khoảng trống bằng chứng.
+- W112 DOC-001 v1.0 (DRAFT / DESIGN BASELINE; NOT APPROVED FOR RUNTIME ENFORCEMENT) và Integration Charter đã được đọc từ Sandbox. DOC-001 quy định Assignment/ACK attributable, event envelope (correlation/causation/idempotency/source revision), evidence provenance, status semantics, retry/concurrency/recovery và phân lớp MOCK/SNAPSHOT/SANDBOX/LIVE.
+- W112 ownership: W70 lifecycle authority; W0000 identity/roster/permission; W21 capabilities; W33 evidence storage; W52 communication; W14 execution host; W112 cross-work contracts/verification only. No duplicate engines/stores/bus.
+- Canonical-source mapping warning from W112 Related Work Integration Index dated 2026-11-09: W52 branch exists but no W52 Work-document subtree (NOT SYNCED); W33 mapped to Work branch; W14 PARTIAL SYNC on release branch; W37 is investigation workspace, not proof of Core runtime source ownership. These are dated mapping records, not fresh branch-state proof. Vinh's direct instruction governs Work17 Core builder boundary: Vinh + Xu.
+- Updated existing Work17 technical proposal with responsibility matrix and contract invariants; no duplicate contract or new Work created.
+- GitHub main commits:
+  - 930ce4244c313679fa89e35367e06cfc7585bed1 — Journal Entry 025.
+  - 715540a89f87e47e889a690d5d3732c69d3e1633 — Technical Proposal Addendum 16 responsibility matrix.
+  - f2d36ac97b0f292c2c6aea97844f2c3804b6568e — GAP Register Entry 025.
+- Sandbox append succeeded for journal/proposal/GAP; read-back required after sync.
+- No implementation, branch promotion, live dispatch, provider call, test or review request sent. Work17 remains READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
+- Disposition: GAP-01 OPEN/P0; E2 provider receipt NOT PROVEN; E3 Assignment→Dispatch→Delivery→ACK NOT PROVEN; W112 DOC-001 DRAFT only; canonical W52/W33/W14 source mapping requires refresh; Ka/Cla reviews NOT SENT.
+- HEAD main before period 0015: f2d36ac97b0f292c2c6aea97844f2c3804b6568e; SYNC_RECORD update advances HEAD.
