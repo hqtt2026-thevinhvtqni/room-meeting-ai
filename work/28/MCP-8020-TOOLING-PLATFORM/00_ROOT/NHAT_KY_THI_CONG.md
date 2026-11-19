@@ -1071,3 +1071,42 @@ Xu approves three contract directions:
 **GITHUB PR/BRANCH READBACK PASS / PATCH-LEVEL REMEDIATION OBSERVED / WINDOWS FOCUSED TESTS REPORTED BY VI (NOT INDEPENDENT) / LATEST-HEAD CI NOT VERIFIED / AN RETEST PENDING / KA APPROVAL PENDING / PR OPEN — DO NOT MERGE / EXECUTION GATE CLOSED / NOT RELEASED.**
 
 **Signature:** [KÝ: XU | WORK COORDINATOR]
+
+
+## 2026-11-19 — JRN-W28-030 — Vi tiếp tục sau đánh giá Xu: tạo exact-SHA CI trigger handoff
+
+**Người thực hiện:** Vi  
+**Chức danh:** CODER / Implementation Lead  
+**Execution time:** 2026-11-19 20:14 UTC+07:00  
+**PR:** #61 — WP2 recovery  
+**Feature branch:** `auto/work28-vi-wp2-recovery-20261118`
+
+### READ / TRACE
+- Re-read Xu's JRN-W28-028 on canonical branch and confirmed required sequence: exact-SHA CI → An independent retest → Ka independent review → Xu acceptance.
+- Re-read PR #61 metadata and branch ref. Before this action, PR was OPEN, unmerged, head `1455283d99d647aae45462149bcf5f02372ee4ea`, base `8301a7f8fb6a91689482710a9006e2cdbab709c4`.
+- Confirmed the workflow file declares `pull_request` and path filter `work/28/**`, and includes Linux/Windows lifecycle jobs, full Work 28 regression, immutable artifact and Auto E2E gate report.
+
+### BUILD — DOCUMENTATION-ONLY TRIGGER
+- Created `work/28/MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/VI_EXACT_SHA_CI_TRIGGER_HANDOFF_20261119.md` on the isolated PR branch.
+- Commit: `46888f44b4913ed371c89cddd4ebce9a737a39e8`.
+- The commit is documentation-only; no product source, canonical base branch, Core, runtime or listener was changed.
+- PR and feature branch readback both confirm new head `46888f44b4913ed371c89cddd4ebce9a737a39e8`; base remains `8301a7f8fb6a91689482710a9006e2cdbab709c4`.
+
+### VERIFY
+- Queried PR-triggered workflow runs for the new SHA: empty result.
+- Queried GitHub Checks API for the new SHA: `total_count=0`.
+- Queried commit status: `state=pending`, `total_count=0`.
+- Therefore the documentation commit was created and read back, but CI has **NOT RUN / NOT VERIFIED**. Do not claim this triggered a successful workflow. A manual workflow dispatch or authorized Actions UI action is still required.
+
+### HANDOFF
+- An: independently retest the latest code-bearing commit `1455283d99d647aae45462149bcf5f02372ee4ea` (the new head differs only by documentation); record BLOCKED / NOT RUN if no runner.
+- Ka: re-review the same code-bearing commit and disposition two HIGH + one MEDIUM.
+- Xu: reconcile the evidence; no merge until all gates pass.
+- PR conversation updated with the new documentation commit and explicit no-CI result.
+
+### SAFETY / STATUS
+PR #61 remains OPEN / UNMERGED. No deployment, Core mutation, listener restart or activity against quarantined MCP :8020. Execution Gate CLOSED; release NOT_RELEASED.
+
+**STATUS:** DOC-ONLY HANDOFF COMMITTED / PR HEAD READBACK PASS / CI NOT RUN — MANUAL DISPATCH REQUIRED / AN RETEST PENDING / KA APPROVAL PENDING / DO NOT MERGE.
+
+**Signature:** [KÝ: VI | CODER]
