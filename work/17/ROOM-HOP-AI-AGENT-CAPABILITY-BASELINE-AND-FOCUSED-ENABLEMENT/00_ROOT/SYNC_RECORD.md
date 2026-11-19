@@ -255,3 +255,20 @@
 - No implementation, branch promotion, live dispatch, provider call, test or review request sent. Work17 remains READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
 - Disposition: GAP-01 OPEN/P0; E2 provider receipt NOT PROVEN; E3 Assignment→Dispatch→Delivery→ACK NOT PROVEN; W112 DOC-001 DRAFT only; canonical W52/W33/W14 source mapping requires refresh; Ka/Cla reviews NOT SENT.
 - HEAD main before period 0015: f2d36ac97b0f292c2c6aea97844f2c3804b6568e; SYNC_RECORD update advances HEAD.
+
+
+## Chi tiết kỳ 0016 — 2026-11-19
+
+- Trọng tâm: chuẩn bị (không gửi) hai bộ hồ sơ phản biện độc lập cho Ka và Cla theo chỉ đạo của Vinh; không tạo file packet riêng, không tạo Work mới.
+- Đã bổ sung Addendum 17 vào technical proposal canonical:
+  - Packet K / Ka: kiến trúc, authority chain, authenticated recipient ACK, security threat model, fail-closed/recovery, W70/Core/W52/W14/W33/W112 boundaries.
+  - Packet C / Cla: canonical source reconciliation, code-level call graph, interface/route proof, W52↔W14 compatibility, Codex/Qwen adapter proof, Core authorization/persistence, W33 evidence ingress, minimal owner-preserving implementation slices.
+  - Common constraints: static review only; no code changes, provider calls, tests, dispatch or execution release; no parallel dispatcher/bus/store/host.
+- Vinh đang ngoài và yêu cầu Xu tiếp tục chuẩn bị; Ka/Cla review packets explicitly NOT SENT until Vinh requests.
+- GitHub main commits:
+  - 8146ca5169a72441c5970d6b20fd4dd48a976381 — Technical Proposal Addendum 17.
+  - 70edeeaafb99fee1326e1dfa67a0add9a0ace66d — Journal Entry 026.
+- Sandbox append returned status=ok for proposal and journal. Fresh GitHub + Sandbox read-back is the next verification step.
+- No GAP status change: GAP-01 OPEN/P0; E2 provider receipt NOT PROVEN; E3 Assignment→Dispatch→Delivery→ACK NOT PROVEN. Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED; BUILD/live dispatch/pilot NOT AUTHORIZED.
+- Not performed: no reviewer contact/request; no code/source change; no branch/PR/merge; no provider invocation, live dispatch or test.
+- HEAD main before SYNC_RECORD period 0016 update: 70edeeaafb99fee1326e1dfa67a0add9a0ace66d; this SYNC_RECORD update advances main by one commit.
