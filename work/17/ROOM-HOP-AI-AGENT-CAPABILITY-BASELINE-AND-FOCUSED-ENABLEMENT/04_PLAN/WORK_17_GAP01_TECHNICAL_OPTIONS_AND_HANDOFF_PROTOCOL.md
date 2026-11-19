@@ -404,3 +404,16 @@ Static read of Work52 Sandbox candidate 0.1.0-r2 found a lifecycle ordering mism
 **Required correction/acceptance boundary:** ACCEPTED must follow authenticated receiver acceptance, RUNNING must follow verified runtime-start evidence, and recipient ACK must be a separate explicit event bound to the same Work Assignment/dispatch attempt and provider target/session. Provider protocol response or turn completion cannot be silently promoted to recipient identity proof. Persist a trusted receipt with provider-native refs and correlation/idempotency/source/payload digests. Keep CorePort/AuthorityPort under Core, HostPort under W14, A2A orchestration under W52, and Assignment semantics under W70/W112; no duplicate dispatcher or registry in Work17.
 
 Disposition: W52 prototype is a substantive reusable source candidate, but E2 provider receipt and E3 recipient-bound authenticated ACK remain NOT PROVEN. W52 ACTIVE / DESIGN-FIRST / NOT RELEASED. Work17 GAP-01 OPEN/P0; READ/TRACE ONLY; protected execution DENY / NOT RELEASED. No tests/provider/runtime/dispatch or source changes were performed in this review.
+
+
+### 26. W52 v0.1 schema compatibility gap — Assignment / delivery receipt / recipient ACK are not modeled
+
+Read-only inspection of W52 `a2a-task.schema.json`, `a2a-event.schema.json` and `state-transitions.json` shows:
+
+- Task v0.1 has task/work/requester/assigned identity+adapter/role/capability/input/output/constraints/scope/permissions/acceptance fields, but no typed `assignment_id`, `dispatch_id`, `attempt_id`, `permission_ref`, `delivery_receipt_ref`, recipient identity proof, `ack_ref` or accepted-scope digest. The schema is closed (`additionalProperties:false`); extension keys are restricted to `x-*`.
+- Event v0.1 includes TASK_CREATED, STATE_CHANGED, PROGRESS, MESSAGE, tool/approval/artifact/cancel/retry/error/verdict/evidence/heartbeat events, but no explicit DISPATCHED, DELIVERY_RECEIPT or recipient ACK event. Existing producer/provenance fields do not themselves enforce provider identity or assignment/dispatch/attempt/session/source-digest binding.
+- State v0.1 has QUEUED/ACCEPTED/RUNNING/WAITING_APPROVAL and terminal states; no separate ACK state. ADR-001 says ACK must be a verifiable recipient event, but that intent is not represented by the v0.1 closed schemas.
+
+This is a design-to-schema gap, not a claim that W52 has no ACK intent. Compared with W112 DOC-001 and W70 DOC-065, the v0.1 contract does not carry the full Assignment/dispatch/receipt/recipient-ACK provenance. Combined with Addendum 25's lifecycle ordering finding, the prototype cannot yet prove E2/E3. Do not mutate v0.1 in Work17 or add duplicate schemas; W52/W70/W112 owners must decide a versioned compatibility mapping. ADR-001 remains PROPOSED, schemas DRAFT, Work52 ACTIVE / NOT RELEASED.
+
+GAP-01 OPEN/P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED. No code/schema/runtime/test/provider/dispatch change performed.
