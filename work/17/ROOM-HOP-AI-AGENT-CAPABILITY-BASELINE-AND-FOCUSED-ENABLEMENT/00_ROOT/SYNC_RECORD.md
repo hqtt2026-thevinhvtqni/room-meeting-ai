@@ -9,6 +9,7 @@
 |----|------|----------------------------------|----------------|------------|
 | 0001 | 2026-11-19 | 2fe3950ae184c746c42f4d7e6db271bcb6f89318 (theo Journal Entry 005) | 3 hồ sơ nền tảng | READ-BACK PASS (Entry 004–005) |
 | 0002 | 2026-11-19 | `6d1f3df418dc18273169d7f7fc4d248d07f5b10d` (commit tạo 6 hồ sơ); `fc460261a6e0d3b0376e0035be19d8cf022d82af` (commit ghi Journal Entry 007) | 6 file mới + Journal Entry 007 | GITHUB READ-BACK PASS; SANDBOX MIRROR NOT PRESENT |
+| 0003 | 2026-11-19 | `61b4fbbaee5f79fad3f17f43af7dbe176de77b63` (HEAD trước SYNC_RECORD kỳ 0003) | G1 54-Work intake; G2 13-Agent source matrix; AI Member roster reconciliation; Vibe layout proposal; Journal Entry 010–012 | GITHUB READ-BACK PASS; SANDBOX MIRROR NOT PRESENT |
 
 ## Hướng dẫn cập nhật
 
@@ -31,3 +32,24 @@
 - Main HEAD trước cập nhật xác minh này: `3ace5b926a1fcd7c49908f943b26f05f4fedcb95`; journal hiện có Entry 007, 008 và 009. HEAD này là mốc kiểm tra hiện tại, không thay thế hai commit lịch sử của kỳ 0002.
 - Sandbox read-back: `sandbox_list(work_id=17)` không liệt kê `00_ROOT/SYNC_RECORD.md` hoặc 5 hồ sơ sản phẩm còn lại; Sandbox hiện chỉ liệt kê Manifest, Execution Plan và Audit Journal trong cấu trúc W17. Vì vậy KHÔNG tuyên bố Sandbox ↔ GitHub parity. Kỳ 0002 chỉ PASS cho GitHub read-back; mirror sang Sandbox = NOT PRESENT / NOT VERIFIED.
 - Giới hạn: chưa sửa hoặc tạo bản sao trong Sandbox; chưa xác minh local PC checkout, CI, runtime hay capability. Không có thay đổi source/runtime.
+
+
+## Chi tiết kỳ 0003 — 2026-11-19
+
+- HEAD `main` trước khi ghi kỳ 0003: `61b4fbbaee5f79fad3f17f43af7dbe176de77b63`. Đây là mốc đọc; commit chứa bản cập nhật SYNC_RECORD sẽ tiến thêm một commit.
+- Các commit trong kỳ:
+  - `a5bb0e1c1a05d6314e67b5f789126d0d462df581` — bổ sung 54 dòng G1 vào WORK_17_PORTFOLIO_RECONCILIATION.md.
+  - `fe30ef4abf165f1534745281113da837c5c88304` — Journal Entry 010.
+  - `d8268dc5ac61ca1b9ac5fafe66824de255d3d364` — cập nhật source trace cho ma trận 13 Agent.
+  - `728112b12ca78150ddc8f644f8da586a1dac58c4` — Journal Entry 011.
+  - `da6c9ba8974482708ef5ff42cdb0439ac7c7ca1a` — Vibe tạo layout standardization proposal; PROPOSAL ONLY, chưa di trú.
+  - `301b3845bcf3b8e9931c3535d3546e2b745da5ff` — mở rộng AI member matrix thành 14 AI ID + Support Vibe; giữ conflict AI-06/07/08.
+  - `61b4fbbaee5f79fad3f17f43af7dbe176de77b63` — Journal Entry 012.
+- Read-back cuối trước kỳ ghi SYNC_RECORD:
+  - Portfolio reconciliation — blob `179b8048202fd92e2c105c510458ff7e83fddf60`, xác nhận 54 dòng G1.
+  - Agent capability matrix — blob `e402dffbe25ee043b9a8d476fd23ff2093db4804`, xác nhận đủ 13 dòng; tất cả UNASSESSED.
+  - AI member matrix — blob `435144f7d156a213a0bfadabb9e7b0fb09fb31b5`, xác nhận 14 AI ID + Support Vibe; identity/session NOT_VERIFIED và conflict giữ mở.
+  - Layout proposal — blob `0db94ff4140e1a72d39cc313935fea556af8c7f4`, xác nhận proposal tồn tại, chưa thực thi.
+  - Audit Journal — blob `7b3dd5c86aeed191b8ae099c53e173b3cb784ebb`, xác nhận Entry 010, 011, 012.
+- Sandbox read-back: W17 Sandbox tree hiện có Manifest, Execution Plan và Audit Journal; các hồ sơ sản phẩm G1/G2 do Vibe/Xu cập nhật trên GitHub chưa có bản mirror tương ứng trong Sandbox. Do đó không tuyên bố Sandbox ↔ GitHub parity.
+- Kết luận: kỳ 0003 PASS cho GitHub read-back của các hồ sơ được liệt kê; NOT VERIFIED cho Sandbox mirror, local PC checkout, CI và runtime. Không có source/runtime execution hoặc migration.
