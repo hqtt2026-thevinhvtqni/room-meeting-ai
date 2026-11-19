@@ -222,3 +222,20 @@
 - Không gọi W14 /execute, không khởi động Host, không gọi provider, không chạy test, không sửa W14/W52/Core, không mở endpoint/service mới.
 - Disposition: GAP-01 OPEN / P0; E2/E3 NOT PROVEN; W52→W14 HostPort binding NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED; BUILD/live dispatch/pilot NOT AUTHORIZED; Ka/Cla review NOT SENT.
 - HEAD main trước khi ghi kỳ 0013: 6206a98e29c444605703ba76d9d983bd405219a2; commit chứa bản cập nhật SYNC_RECORD sẽ tiến thêm một commit.
+
+## Chi tiết kỳ 0014 — 2026-11-19
+
+- Trọng tâm: Work 17 GAP-01 — trace trách nhiệm tích hợp Core/W70/W33, nối với kết quả W52/W14 đã ghi ở kỳ trước.
+- Core GitHub main source read-only: core_http_main.py, adapter/http_server.py, meeting_manager.py, identity_resolution.py, agent_registry.py, principal_registry.py. App composition đã inspect chỉ mount identity + Meeting routes; chưa thấy Work/Assignment/Dispatch/Evidence routes. Agent Registry ghi rõ permissions/authority deferred; identity resolution không đồng nghĩa dispatch authorization. Đây là bounded source trace, không khẳng định mọi deployment/branch đều giống nhau.
+- W70 Sandbox docs: DOC-095 design baseline; DOC-044 active template; DOC-005 state machine. W70 là Control Plane theo thiết kế; DOC-095 nói runtime dispatch/event delivery/evidence parity/concurrency/recovery chưa fully verified. DOC-044 không phải runtime Assignment API. DOC-005 yêu cầu server-side auth, version/CAS, gate/evidence, audit correlation và idempotency.
+- W33 Sandbox source: offline CLI-first store; SHA-256 blob + SQLite + audit; v1 không có HTTP server. CLI put --agent là caller-supplied attribution metadata, không phải authenticated provider identity. A10 Core/MCP integration BLOCKED đến khi có Core/MCP write path + credentials.
+- Integrated verdict: W70 Assignment → Core authority/state → W52 provider orchestration → W14 host transport → W33 evidence → W70 projection hiện là target architecture, chưa có bằng chứng integrated runtime. Không có component nào được phép bypass ranh giới component khác; W112 điều phối hợp đồng liên Work.
+- Journal Entry 024 timestamp được hiệu chỉnh thành 17:39 +07 trong Sandbox và GitHub.
+- GitHub main commits:
+  - 925af214474c15da61b55b7e5928b10a8b60471c — Journal Entry 024 (Core/W70/W33).
+  - c0b0709b5bc106e94f0cef1947681a7b32a803cf — Technical Proposal Addendum 15.
+  - 05f2bdfed18595d42779f6b5639e9214e3f0cf9f — GAP Register Entry 024.
+- Sandbox journal/proposal/GAP were written; fresh read-back remains required.
+- Không gọi Core HTTP, W14 /execute, W33 CLI, provider; không chạy test; không sửa component source; không mở endpoint/dispatcher/queue/database mới; không gửi review request.
+- Disposition: GAP-01 OPEN/P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED; BUILD/live dispatch/pilot NOT AUTHORIZED; Ka/Cla reviews NOT SENT.
+- HEAD main trước kỳ 0014: 05f2bdfed18595d42779f6b5639e9214e3f0cf9f; SYNC_RECORD commit sẽ tiến thêm một commit.
