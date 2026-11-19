@@ -35,3 +35,15 @@
 - Commit: xem kết quả commit SHA trong biên bản bàn giao của phiên này; cần xác minh HEAD main và đọc lại từng file để chốt đồng bộ.
 - Trạng thái: WRITE_ACCEPTED — GitHub API đã chấp nhận các thao tác tạo file. Chưa ghi PASS cho đồng bộ cho đến khi read-back và kiểm tra commit/branch hoàn tất.
 - Giới hạn: Chỉ đồng bộ 3 hồ sơ nền tảng; chưa đồng bộ toàn bộ cấu trúc rỗng Sandbox, chưa xác minh GitHub Actions hoặc local PC.
+
+
+## 2026-11-19 — Entry 004: Xác minh GitHub main và read-back
+- Người thực hiện: Xu / AI-01.
+- Phương pháp: Fetch lại 3 file trên branch main; đọc nội dung và blob SHA; truy vấn branch main để xác nhận HEAD.
+- Kết quả: Cả 3 file đọc lại thành công và nội dung đúng Work 17:
+  - 00_ROOT/WORK_MANIFEST.md — blob 8766e4d8ce6f44064fa47041910389b14719865b.
+  - 01_ORIGINAL/WORK_17_EXECUTION_PLAN.md — blob 4576038ff657c2c4e2b2b04caf4eb7a4ea820e4f.
+  - 06_EVIDENCE/WORK_17_AUDIT_JOURNAL.md — blob 744630fd1621d258f492c8b6ba870a4fe1b28b42 (bản trước Entry 004).
+- GitHub main HEAD xác nhận: c23ade04d0d9b63ab53acb1ee17d1ae811e6dbd3; commit cuối có message docs(work-17): record audit baseline and GitHub sync.
+- Trạng thái: PASS — 3 hồ sơ nền tảng đã được tạo trên GitHub main và read-back xác nhận. Đây là PASS cho đăng ký tài liệu, không phải PASS cho audit/capability/runtime.
+- Giới hạn: Chưa xác minh local PC checkout/pull, CI, Sandbox-to-GitHub tự động sync hoặc các thư mục rỗng. Không có thay đổi source/runtime.
