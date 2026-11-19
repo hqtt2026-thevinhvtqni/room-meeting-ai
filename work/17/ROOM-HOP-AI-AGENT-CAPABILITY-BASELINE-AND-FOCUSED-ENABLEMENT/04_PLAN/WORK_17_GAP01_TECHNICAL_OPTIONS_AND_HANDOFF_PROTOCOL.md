@@ -306,3 +306,16 @@ The following expected W52 source paths were NOT FOUND on that branch ref: `room
 - Do not treat branch-level v0.2 Meeting/MockConnector state as proof of current provider dispatch, authenticated receipt or recipient ACK.
 - Keep W52 owner boundary for Agent-to-Agent orchestration; W70 Assignment authority, Core identity/permission/state, W14 Host transport, W33 evidence and W112 compatibility boundaries unchanged.
 - GAP-01 remains OPEN/P0; E2 provider receipt and E3 Assignment→Dispatch→Delivery→ACK remain NOT PROVEN. READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
+
+
+### 19. Core v0.2 provider connector trace — positive source finding, bounded scope
+
+Read-only GitHub main fetch of core/connectors.py, core/discussion.py, core/agent_registry.py, core/identity_resolution.py, run_meeting_v2.py and inspected tests establishes:
+
+- Core contains source implementations for synchronous OpenAI Chat Completions and Anthropic Messages calls behind AgentConnector.send_turn(MeetingContextForAgent) -> AgentResponse. This is a positive provider-call primitive for Meeting turns; do not state Core has no provider connector.
+- The inspected return contract reduces provider output to parsed text/status. It does not expose provider delivery receipt/request ID, authenticated recipient identity, Work assignment_id, dispatch_id, attempt/correlation/idempotency binding or attributable ACK proof.
+- run_discussion() dispatches by Meeting participant order and writes Meeting messages/events. It is not W70 Work Assignment lifecycle and does not prove Assignment authority, Work dispatch state or W33 evidence ingress.
+- Inspected run_meeting_v2.py main path calls build_mock_connectors(); it does not select the real OpenAI/Anthropic connectors. Inspected connector tests cover parsing, mock behavior and missing key/model guards, not a successful provider HTTP round trip. MISSION-2026-001 report dated 2026-08-15 also records real API NOT TESTED; historical evidence only.
+- Agent Registry explicitly defers permissions/authority; identity resolution only identifies registry membership and does not authenticate provider-side recipient or authorize a Work Assignment.
+
+Architecture disposition: reuse candidate = Core existing provider-call primitive, only after verifying a live supported caller and preserving Core ownership. Missing proof remains the bridge from W70 Assignment → Core authorization/dispatch → provider delivery receipt → recipient-bound ACK → evidence. Do not build a second connector registry or dispatcher in Work17. Source-level only; no provider call, test, runtime or credential check occurred. GAP-01 remains OPEN/P0, E2/E3 NOT PROVEN, READ/TRACE ONLY.
