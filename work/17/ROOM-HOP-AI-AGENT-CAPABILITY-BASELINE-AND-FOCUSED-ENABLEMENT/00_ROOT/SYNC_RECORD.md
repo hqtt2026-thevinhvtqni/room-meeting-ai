@@ -507,3 +507,13 @@
 - Finding: registry principal names are descriptive config identifiers, not HQTT role IDs; Go/Co/Qc aliases are not established in the inspected directory; YAML permission/authority maps are empty; session/provider identity and dispatch/ACK remain NOT_VERIFIED/NOT_PROVEN.
 - Disposition: GAP-05 OPEN; GAP-09 OPEN; GAP-01 OPEN/P0; E2/E3 NOT PROVEN; Work17 READ/TRACE/ANALYZE ONLY; protected execution DENY / NOT RELEASED.
 - Sandbox parity: PENDING exact write/read-back.
+
+
+## Sync Period 0038 — Work17 Entry 049 / identity and authorization trace (2026-11-19T15:04:52.436Z UTC)
+
+- GitHub main source reads: AgentRegistry, PrincipalRegistry, IdentityResolution, MeetingManager, Governance, FileOpsAgent, VSCodeAgent, identity-claim detector, provider entrypoints and governance tests; no test/runtime/provider execution.
+- Journal Entry 049 commit 0f36e62021424cdbfe1db484d1eb2330298f42f1; blob 40c0923ded19da95ae8b3ca956a45c715b966e92; bytes 187548; marker true.
+- GAP Register Entry 049 commit 0e0f0b96d849f581d1ede87690c22360a437305b; blob 4f13c1613a99b43ce1d4875f3d9059933ea777bd; bytes 33392; marker true.
+- Finding: registry resolution is membership-only; MeetingManager labels registry+invitation as auth_verified; GOV.check is a separate static identity path with unknown/empty fallback to agent_llama; tests assert this fallback; Claude/Gemini file-action entrypoints are configured as vinh. Source-level risk only; no live exploit/deployment claim.
+- Disposition: GAP-09 OPEN; GAP-11 OPEN/P0; GAP-01 OPEN/P0; identity/session NOT_VERIFIED; authorization enforcement NOT_VERIFIED; E2/E3 NOT PROVEN; Work17 READ/TRACE/ANALYZE ONLY; protected execution DENY / NOT RELEASED.
+- Sandbox parity: PENDING exact write/read-back.
