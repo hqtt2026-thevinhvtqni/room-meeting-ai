@@ -344,3 +344,15 @@ Read-only comparison of branch work/w1111-core-execution-authority-v1-2 and PR #
 Static integrity blocker: branch ExecutionAuthority.record_run() validates that submitted source hash is 64-hex but does not compare it to the source hash bound to the Work policy/grant. The branch unit test configures a...a, submits b...b, and expects the run record to succeed. This contradicts the stated exact-source binding requirement. Candidate defect to return to W1111/PR #48 owner review; not changed by Work17.
 
 GAP-01 boundary: Execution grants authorize an enrolled service identity to perform a Work/purpose operation. They do not implement AI member private-session dispatch, provider delivery receipt or recipient-bound ACK. Keep execution authority separate from Agent Assignment dispatch. Do not create a duplicate execution authority in Work17 and do not merge the diverged branch.
+
+
+### 22. Contract compatibility — Execution Authority grant is not Agent Assignment dispatch
+
+Cross-check against W112 DOC-001 v1.0 (DRAFT), W70 DOC-063 (DRAFT / design only) and W70 DOC-065 v1.0 (DRAFT contract proposal) confirms distinct responsibilities:
+
+- DOC-001 Assignment requires assignment/task/assignee/accountable role/scope/permission/capability/dependencies/status/ACK references; ACK must be attributable to receiving identity and assignment ID. Events/evidence require correlation, causation, idempotency, source revision and provenance.
+- DOC-063 requires trusted principal + Work/WP/assignment + exact action/resource scope + source revision + Gate/WP snapshot + expiry/revocation + policy version + idempotency/version checks, with assignment and verifiable ACK before protected action and commit-time revalidation.
+- DOC-065 requires assignment_id, dispatch_id, attempt_id, ai_id, adapter/session target, delivery receipt/status, identity proof and recipient-bound ACK; dispatch is not ACK.
+- W1111 PR #48 Execution Authority candidate grants a service identity a Work/purpose-scoped execution token and records an execution run. The inspected grant schema is not the DOC-001 Assignment lifecycle and has no provider/session delivery or recipient-bound ACK contract.
+
+Disposition: PR #48 is a useful execution-authorization candidate only; it cannot replace W70 Assignment authority, W52 provider dispatch or DOC-065 delivery/ACK. It does not close GAP-01 E2/E3. DOC-001/DOC-063/DOC-065 remain unapproved for runtime enforcement; do not duplicate registries or dispatchers in Work17.
