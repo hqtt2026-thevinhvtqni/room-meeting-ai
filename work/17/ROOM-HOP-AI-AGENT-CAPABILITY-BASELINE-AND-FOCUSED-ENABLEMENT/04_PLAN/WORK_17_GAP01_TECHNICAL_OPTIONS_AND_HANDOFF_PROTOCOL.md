@@ -319,3 +319,14 @@ Read-only GitHub main fetch of core/connectors.py, core/discussion.py, core/agen
 - Agent Registry explicitly defers permissions/authority; identity resolution only identifies registry membership and does not authenticate provider-side recipient or authorize a Work Assignment.
 
 Architecture disposition: reuse candidate = Core existing provider-call primitive, only after verifying a live supported caller and preserving Core ownership. Missing proof remains the bridge from W70 Assignment → Core authorization/dispatch → provider delivery receipt → recipient-bound ACK → evidence. Do not build a second connector registry or dispatcher in Work17. Source-level only; no provider call, test, runtime or credential check occurred. GAP-01 remains OPEN/P0, E2/E3 NOT PROVEN, READ/TRACE ONLY.
+
+
+### 20. Core HTTP composition check — provider connector wiring remains unproven
+
+Read-only fetch of room_hop_mcp/core_http_main.py and room_hop_mcp/adapter/http_server.py on GitHub main:
+
+- build_app() constructs MeetingManager/MeetingService and returns create_http_app(service); this entrypoint does not import or construct AgentConnector, OpenAIConnector, AnthropicConnector, connector factory or run_discussion.
+- The inspected HTTP adapter defines only identity and Meeting routes (GET /identities, GET /meetings, GET /meetings/{id}, GET /meetings/{id}/transcript; POST Meeting paste/create/open/join/start/close). No Work Assignment/dispatch/provider invocation/receipt/ACK/evidence-ingress route is defined in this file.
+- The entrypoint docstring claims an additive Work execution-authority mount, but inspected composition returns only create_http_app(service); the inspected adapter contains no such route. Record this as a bounded source/documentation discrepancy, not proof about every deployment or branch.
+
+Disposition: Core OpenAI/Anthropic connector source exists (Addendum 19), but connector-to-Core-HTTP runtime wiring and a Work dispatch route are NOT PROVEN in inspected main sources. Do not create a parallel app/dispatcher in Work17. GAP-01 OPEN/P0; E2/E3 NOT PROVEN; READ/TRACE ONLY. No runtime, HTTP, provider or test invocation occurred.
