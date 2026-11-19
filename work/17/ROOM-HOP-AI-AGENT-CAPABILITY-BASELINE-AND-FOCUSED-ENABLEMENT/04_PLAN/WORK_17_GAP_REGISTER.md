@@ -29,3 +29,6 @@
 1. Không đóng gap nào chỉ bằng cách viết thêm tài liệu mô tả; cần bằng chứng đúng cấp.
 2. Mỗi gap P0 phải có: owner được chỉ, Work phụ thuộc, mốc dự kiến trước Gate tương ứng.
 3. Việc sửa Work thành phần để xử lý gap phải đi qua Gate G7 (sau quyết định của Vinh) và hội ý Work 70.
+
+
+**GAP-01 addendum — Entry 022 (2026-11-19):** Core is jointly built by Vinh and Xu; no external Core maintainer search is required. Runtime API/router, Assignment persistence and live authorization binding remain NOT VERIFIED. W52 Sandbox contains candidate Codex App Server + Qwen ACP adapters only; both are read-only/no-tool and advertise task.stream_events. Live Codex/Qwen, CorePort/AuthorityPort/W14 HostPort bindings, provider receipt and authenticated ACK remain BLOCKED/NOT VERIFIED. W52 candidate is reusable source, not proven live dispatch. Evidence: Journal Entry 022; W52 WORK_MANIFEST.md, adapter-interface.md, capability-matrix.md, room_a2a/adapters.py, contracts.py, XU_STATIC_REVIEW_R2_20261029.md. Status remains OPEN / P0.
