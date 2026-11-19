@@ -537,3 +537,13 @@
 - GAP Register Entry 051 commit 752575d3c37920824015393c43a8c06648b5a23b; blob bde060f0a65a2b3e07ef1fdda8e74372c002fb61; bytes 36915; marker true.
 - Disposition: Work28 candidate not main/deployment proof; GAP-11 OPEN/P0; GAP-01 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED; Work17 READ/TRACE/ANALYZE ONLY.
 - Sandbox parity: PENDING exact write/read-back.
+
+
+## Sync Period 0041 — Work17 Entry 052 / Work28 Core Authority and Host client contract (2026-11-19T15:19:46.796Z UTC)
+
+- Work28 branch head ae4636c96f47ac983681d8471a5c0ea13829de4d; static reads of Core execution authority HTTP server, authority service, Host grant client/dispatch and branch tests.
+- Finding: Core authority is separate port-8001 process with POST issue / GET single grant status / POST run record; Host client GETs one URL expecting a JSON list and may fall back to local registry. Branch dispatch defaults to command mode without grant; snapshot-only is opt-in. Branch tests use in-memory test-issued grants; no Core service E2E or CI evidence returned.
+- Journal Entry 052 commit ce1b3307bbaf6402ca13475987fa07991d3fe995; blob 1532b2b05efcf1ed5b398da22a1f0896185e8748; bytes 203302; marker true.
+- GAP Register Entry 052 commit 1e79070707c8f1963b2c443e261c36dbdfeb40aa; blob d16acb1637712472062be8a7f7213a5ee859c374; bytes 38217; marker true.
+- Disposition: Core↔Host grant integration NOT PROVEN; Work28 not main/deployment proof; GAP-11 OPEN/P0; GAP-01 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
+- Sandbox parity: PENDING exact write/read-back.
