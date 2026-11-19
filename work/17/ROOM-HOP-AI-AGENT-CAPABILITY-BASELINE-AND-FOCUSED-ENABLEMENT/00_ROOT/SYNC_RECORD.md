@@ -122,3 +122,11 @@
   - Journal Entry 017 commit `46d3214291217e4200d93b1d46609d46e7f91278`; blob `a7b5b77f47ab22cf6f769673d432d1051493a7d8`.
 - Sandbox: Entry 017 append status=ok; read-back pending at time of this record.
 - Disposition: GAP-01 OPEN / P0; E2 receipt NOT PROVEN; E3 trace NOT PROVEN; Work17 READ/TRACE ONLY. No handoff packet, dispatch, provider call, private session, meeting mutation, runtime/test, permission/config/secret/source code change.
+
+
+### Read-back closure — kỳ 0008
+
+- GitHub read-back: SYNC period 0008, GAP-01 report addendum, GAP register update and Journal Entry 017 all verified by fresh fetch; blob SHAs match the recorded outputs.
+- Sandbox journal read-back: `sandbox_read_probe` status=ok; Entry 017 present (journal length 50,372 chars in returned representation).
+- Scope: only journal Entry 017 mirrored to Sandbox in this cycle. GAP-01 report and GAP register are GitHub-only; Sandbox mirrors NOT PRESENT / NOT VERIFIED. Full Sandbox/GitHub journal byte parity remains NOT VERIFIED due historical differences.
+- Final period 0008 status: GitHub report/GAP/journal read-back PASS; Sandbox journal append/read-back PASS; report/GAP Sandbox parity NOT VERIFIED; GAP-01 remains OPEN / P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY.
