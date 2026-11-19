@@ -130,3 +130,22 @@
 - Sandbox journal read-back: `sandbox_read_probe` status=ok; Entry 017 present (journal length 50,372 chars in returned representation).
 - Scope: only journal Entry 017 mirrored to Sandbox in this cycle. GAP-01 report and GAP register are GitHub-only; Sandbox mirrors NOT PRESENT / NOT VERIFIED. Full Sandbox/GitHub journal byte parity remains NOT VERIFIED due historical differences.
 - Final period 0008 status: GitHub report/GAP/journal read-back PASS; Sandbox journal append/read-back PASS; report/GAP Sandbox parity NOT VERIFIED; GAP-01 remains OPEN / P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY.
+
+
+## Chi tiết kỳ 0009 — 2026-11-19
+
+- Trọng tâm: Work 17 GAP-01 — phân biệt source adapters đang có với adapter giao assignment đến private AI session.
+- Phạm vi: GitHub main bounded source inspection của browser_agent_adapter, execution_host adapters, Computer Agent browser adapter/API/runtime, wee capability discovery, Core HTTP entrypoint/Meeting HTTP adapter; đối chiếu DOC-044/064/065/066. Không thực thi source hoặc runtime.
+- Kết luận kỹ thuật:
+  - Browser Agent Adapter `submit_to_roomhop()` chỉ gửi marker artifact browser execution vào ROOM Meeting qua `add_paste_to_meeting`, rồi read-back transcript. Kết quả PASS ở đó là Meeting artifact read-back, không phải provider delivery receipt/AI assignment ACK.
+  - Execution Host adapter protocols là BrowserAdapter/GitHubGateway/CIAdapter; Git adapter xác thực repo/branch/head; Computer Agent API gọi Browser AgentRuntime; wee capability discovery tập trung shell/git/runtime/browser/CI/evidence.
+  - Core HTTP entrypoint/HTTP adapter được inspect chỉ mount MeetingService routes và identity discovery; không thấy dispatch orchestrator/private-session provider route trong inspected source.
+  - Đây là bounded source finding; không kết luận tuyệt đối không có connector riêng ngoài source/scope đã inspect.
+- DOC-044 active assignment template; DOC-064 target architecture; DOC-065 contract proposal; DOC-066 implementation NOT AUTHORIZED / tests NOT RUN. Các tài liệu này chưa chứng minh implementation.
+- GitHub artifacts:
+  - GAP-01 report §9 commit `60ff61586a0e1b64395509876274c067f8a39801`, blob `78010ce9684afd7e44f4fdb8580be186d56992a6`.
+  - GAP register commit `aa8de28cda2c13d471c2682f529a4f0dd996680b`, blob `ad5ec87f2c61a3b699157aa670dd638864a33df1`.
+  - Journal Entry 018 commit `533277a0ba13bf0826c85a130a22330b2ce110ff`, blob `34711ed1962477e6d6b1d39b7a642a6198ae41c4`.
+- Sandbox: Entry 018 append returned status=ok; read-back pending.
+- Timestamp integrity: time source returned 13:39:13 +07, earlier than Entry 017's recorded 14:02 +07. Entry 018 preserves the returned timestamp and flags chronology inconsistency; no silent rewrite of prior entry.
+- Disposition: GAP-01 OPEN / P0; E2 provider receipt NOT PROVEN; E3 dispatch/delivery/ACK trace NOT PROVEN; Work17 READ/TRACE ONLY. No dispatch, provider call, browser workflow, meeting mutation, runtime/test, code/config/secret/permission change.
