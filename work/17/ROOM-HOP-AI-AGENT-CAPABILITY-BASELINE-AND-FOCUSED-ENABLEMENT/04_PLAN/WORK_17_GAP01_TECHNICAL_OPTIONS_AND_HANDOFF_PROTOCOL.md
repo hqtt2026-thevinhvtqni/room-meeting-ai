@@ -185,3 +185,12 @@ CorePort, AuthorityPort, and HostPort are injected interfaces, not production bi
 **Disposition:** W52 is a reusable candidate component, not a proven active dispatch route. No provider delivery receipt, authenticated recipient ACK or E3 assignment trace was established. Sandbox/GitHub parity and canonical W52 promotion were not tested. No code, test, runtime, provider, branch or release action was performed. GAP-01 remains OPEN / P0; E2/E3 NOT PROVEN; Work 17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED; BUILD/live dispatch/pilot NOT AUTHORIZED.
 
 **Next read-only step:** trace whether the existing W14 Host and Core composition can bind the two W52 adapters without creating parallel services; verify exact route/contract and deployed runtime evidence before any integration proposal. Ka/Cla reviews remain NOT SENT.
+
+
+## 14. Addendum — W52 HostPort / W14 boundary compatibility (2026-11-19)
+
+W52's HostPort contract requires an adapter-specific, long-lived RpcPort with request/notify/receive/respond and a confirmed stop operation. The inspected W14 HTTP surface exposes only GET /health and POST /execute. W14 W12ExecutionAdapter accepts a one-shot command and returns an ExecutionResult; W14's declared adapters are BrowserAdapter, GitHubGateway and CIAdapter. No direct W52 HostPort binding or bidirectional provider transport is present in the inspected source.
+
+Therefore W14's ability to execute a command must not be confused with delivery to an AI provider or recipient ACK. W14 RuntimeIdentity identifies the host process, not the AI recipient. In addition, the inspected W14 WorkContext authorization is a caller-supplied boolean and does not itself prove online Core grant validation; see W17 GAP-11 for that separate security gap.
+
+**Disposition:** W52→W14 HostPort direct binding NOT PROVEN / contract mismatch in inspected interfaces. No endpoint was called and no runtime was started. Any reuse must remain inside the existing W14 execution boundary and require Core-authorized WorkContext/agent identity, Host-owned stdio/RPC lifecycle, bounded framing/output, cancel/stop confirmation and evidence correlation. This is a design question for W14/W70/Core governance, not authorization to add a parallel endpoint or executor. GAP-01 remains OPEN / P0; E2/E3 NOT PROVEN; READ/TRACE ONLY.
