@@ -8,7 +8,7 @@
 | Kỳ | Ngày | HEAD main tại thời điểm cập nhật | File liên quan | Trạng thái |
 |----|------|----------------------------------|----------------|------------|
 | 0001 | 2026-11-19 | 2fe3950ae184c746c42f4d7e6db271bcb6f89318 (theo Journal Entry 005) | 3 hồ sơ nền tảng | READ-BACK PASS (Entry 004–005) |
-| 0002 | 2026-11-19 | (điền sau push kỳ này) | Bộ sản phẩm kỳ 1 (7 file mới) | PENDING |
+| 0002 | 2026-11-19 | 6d1f3df418dc18273169d7f7fc4d248d07f5b10d (push bộ sản phẩm); fc460261a6e0d3b0376e0035be19d8cf022d82af (Journal Entry 007) | 6 file mới + Journal Entry 007 | READ-BACK PASS |
 
 ## Hướng dẫn cập nhật
 
