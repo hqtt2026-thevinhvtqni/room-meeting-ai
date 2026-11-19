@@ -576,3 +576,15 @@
 - Correction: Sync Period 0043's Sandbox parity PENDING label was stale; parity was verified at this point in time. Work Sandbox paths are relative to work_id (do not prefix with work/17/).
 - Disposition unchanged: GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED; Work17 READ / TRACE / ANALYZE ONLY.
 - Sandbox parity for this period: VERIFIED. After both updates were written, GitHub main was re-fetched and the three Sandbox files were read back; Journal, GAP Register and Sync Record all returned status=ok and exactMatch=true.
+
+
+## Sync Period 0045 — Dashboard integrity hardening (2026-11-20)
+
+- Scope: Work17 dashboard source, regression test, documentation and audit journal only.
+- GitHub branch: `main`. Publication was performed as sequential Contents API commits; no force-push, branch rewrite, deployment or cross-Work change.
+- Source commits: server.js `5206a084d443ca41d23648327def7555ba18e4cc`; app.js `36e1f8da333d9627cdd6cc4fb49c97a10685a0e9`; index.html `9c2ab43c6a0338c81d6c50fc3d104da2e02b7d24`; package.json `dd1fa9b128e16230cc2159bb30dc312cc4899b01`; mcp-bridge-stub.js `3267513485f9ba4ffc3559436a5ff8e93d5f1a7e`; BRIDGE_CONTRACT.md `2ba6be51c17dcbe61bfb74c391bf31cab9482d41`; README.md `fcad2ec33c1ee563c91172c622e9aca2e12c9ebf`; TODO.md `6b5a4787405a534f31ad617b9986492f95dc0632`; WORK17_DASHBOARD.test.js `2a4ba80f585f6217c9507a2f04c2633a8a37e47a`.
+- Journal Entries 056–058 published: commit `18e60d2ea3352c6618d911c4287709801b01cb13`; blob `57d3680111081a367cfa9def79d6bde0bca3cdde`.
+- Exact GitHub main ↔ Sandbox read-back for the 10 source/artifact paths before Entry058 append: all 10 exactMatch=true (full blob SHAs and evidence in Journal Entry 058). Journal was subsequently updated with Entry058 and committed separately as above.
+- Sync status: SOURCE SYNC VERIFIED for the listed paths at the recorded point in time. Runtime tests, browser E2E and independent QE remain NOT RUN; no runtime PASS is implied.
+- Guardrails: GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
+- Next: PC/VS Code executes `npm test` and browser E2E; journal actual output before any PASS claim.
