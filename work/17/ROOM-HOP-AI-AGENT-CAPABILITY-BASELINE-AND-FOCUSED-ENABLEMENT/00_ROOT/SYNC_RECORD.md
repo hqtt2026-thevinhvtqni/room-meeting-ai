@@ -401,3 +401,14 @@
 - Read-back: GitHub blob SHA Journal `f38430c70d095b41488d10b2a1836580d2001603`, Proposal `931ad74f006da0e4b55b318ba021a511bf457e19`, GAP `0111f8858f451aa30f59031ab6adc75ef6f73e63`; Sandbox probe status=ok and exact Entry 037 / Addendum 28 markers.
 - No source/runtime/test/provider/dispatch/reviewer contact/merge/release action.
 - Disposition: GAP-01 OPEN/P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
+
+
+## Chi tiết kỳ 0028 — 2026-11-19
+
+- Trọng tâm: Work17 GAP-01 — đính chính chính xác thứ tự W52 Engine và ranh giới side-effect của Host.open.
+- W52 Sandbox engine.py lines 97, 104–109: internal ACCEPTED → host.open() → RUNNING → adapter.run(). ACCEPTED không phải recipient ACK. Host.open side-effect semantics chưa được chứng minh; W112 DOC-001 §11.11 cảnh báo Host.open có thể tạo/chạy runtime session. Vì vậy không có bằng chứng ACK gate trước Host.open và không được khẳng định side effect bị chặn trước ACK.
+- W112 §§11.9–11.13 đã có baseline ACK-before-execution và tests A2A-11..15 NOT RUN; Work17 tham chiếu lại, không tạo kiến trúc trùng. W70 DOC-065/W112 DOC-001 vẫn DRAFT, chưa phải runtime enforcement.
+- Added Journal Entry 038, Technical Proposal Addendum 29, GAP Register Entry 038. GitHub main commits: Journal `7dba0259456b522da8bf591d76f55cfa4ee638f8`; Proposal `28b423b56ea7e5028c07e352165112e4deca371b`; GAP `4d46356e6bf7ec92717c5341bcb12354a9b40acd`.
+- Read-back: GitHub blob SHA Journal `3630d4d54ea3ae62a55a91af1f66f14b67458b5c`, Proposal `486db20af64164513748aa3742d62df04d84d06c`, GAP `59dd49323b61c0023ec522505a0bbc179739315f`; Sandbox probe status=ok and exact Entry 038 / Addendum 29 markers in all three files.
+- No code/schema/test/provider/runtime/dispatch/reviewer contact/merge/release. Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
+- Disposition: GAP-01 OPEN/P0; E2 delivery receipt NOT PROVEN; E3 recipient-bound ACK NOT PROVEN; ACK-before-any-possible-Host-side-effect NOT ENFORCED/NOT PROVEN.
