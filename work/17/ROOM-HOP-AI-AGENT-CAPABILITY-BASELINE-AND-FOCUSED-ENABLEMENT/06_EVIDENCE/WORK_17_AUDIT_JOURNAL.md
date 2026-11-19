@@ -251,3 +251,23 @@ o đến khi read-back và kiểm tra commit/branch hoàn tất.
 - Kết luận: GAP-01 OPEN / P0; current evidence E0–E1 documentary/process only; E2 delivery receipt absent from inspected W17 evidence; E3 trace NOT PROVEN. Không suy luận từ DOC-054 readiness, artifact contribution hoặc Qw's separate Work70 ACK. Không khẳng định mọi external/manual interaction đều không tồn tại; phạm vi chỉ là canonical evidence đã kiểm tra.
 - Trạng thái điều hành: Work17 remains READ/TRACE ONLY; no dispatch or provider call; protected execution DENY / NOT RELEASED. Mọi live dispatch trial cần quyết định rõ của Vinh, task/identity/scope cụ thể, approved transport và trusted auth boundary.
 - Bước tiếp theo: tiếp tục read-only discovery đúng Work17 về dispatch capability/adapter path và kiểm tra có thể cấp E1 source evidence hay không; không gửi việc thật hoặc tạo ACK giả.
+
+
+## 2026-11-19 14:02 +07 — Entry 017: ROOM-HOP dispatch capability surface discovery
+
+- Người thực hiện: Xu / AI-01.
+- Phạm vi: Work 17 GAP-01 only; read-only inspection of exposed ROOM-HOP 8030 tool inventory and service self-description, plus DOC-066 dispatch plan.
+- Phương pháp: inspect available tool schemas; call read-only `list_meetings`, `get_room_structure`, `get_room_context`; inspect DOC-066 from GitHub main. Không gọi join/start/add-paste; không dispatch; không provider/private session; không runtime/test/source execution.
+- Kết quả tool inventory:
+  1. Toolset hiện có Sandbox list/read/create/write/append/delete/create Work/list Works; Meeting list/get/transcript/join/start/add-paste; room structure/context.
+  2. Không có tool exposed nhận Work assignment và gửi đến private ChatGPT/Gemini/Qwen/Claude session; không có provider delivery receipt/private-session ACK retrieval action.
+  3. `get_room_structure`: service room-hop-build v1.0; declared capabilities chỉ gồm Sandbox operations.
+  4. `get_room_context`: Sandbox là AI Build Zone; Working Source read-only; AI không thể merge/commit/push.
+  5. `list_meetings` trả danh sách meeting, nhưng meeting listing không phải assignment dispatch. Meeting add-paste chỉ là relay trong ROOM Meeting, không chứng minh delivery vào private AI session hoặc recipient authenticated. Không meeting nào được join/start/modify trong lượt này.
+  6. W70 DOC-066 blob `8278b5199b5802ac915d412df499a181dd37342a` giữ trạng thái PLANNED / IMPLEMENTATION NOT AUTHORIZED / TESTS NOT RUN; Phase 2 Session Handoff MVP là thiết kế tương lai, chưa phải capability hiện tại.
+- Cập nhật hồ sơ:
+  - GAP-01 report addendum: `06_EVIDENCE/WORK_17_GAP01_DISPATCH_ACK_SOURCE_RECONCILIATION.md`; commit `032c709ce148da7fb9a46f29eba97c2f9ad80f20`, blob `d87f5c046822faca5e0cb40932768746dbffa76b`.
+  - GAP register GAP-01 row updated to reference Entries 002/016/017 and report; commit `8cf408a221e788aa80bf297b93151054e1df81bc`, blob `ef0534bf715eb87c045e2542d4d80969a1b0e439`.
+- Kết luận: exposed 8030 tool surface in this session has no verified private-session dispatch/receipt/ACK path. GAP-01 OPEN / P0; E2 delivery receipt NOT PROVEN; E3 trace NOT PROVEN. This does not prove no separate user-operated/manual or external connector exists.
+- Giới hạn và boundary: Work 17 remains READ/TRACE ONLY. No handoff packet, no live dispatch, no private-session access, no provider call, no meeting mutation, no runtime/test, no permission/config/secret/source code change.
+- Bước tiếp theo: bounded read-only inspection of canonical DOC-064/065/044 and relevant adapter source only if available; identify a real approved handoff channel and its receipt semantics. Any live handoff/dispatch trial requires Vinh's explicit scope/authority decision. Do not mark E2/E3 or ACK.
