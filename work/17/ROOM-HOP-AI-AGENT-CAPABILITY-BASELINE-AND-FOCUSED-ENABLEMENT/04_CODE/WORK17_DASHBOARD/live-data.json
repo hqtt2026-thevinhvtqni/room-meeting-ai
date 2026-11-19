@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "source": "mcp-cache",
+    "fresh": false,
+    "syncedAt": "2026-11-19T18:40:00+07:00",
+    "workId": "17",
+    "note": "Refreshed cache từ MCP sandbox_list_works + sandbox_list + gap register + audit journal (2026-11-19 18:40 +07). Bridge MCP_BRIDGE_URL vẫn chưa cấu hình."
+  },
+  "summary": {
+    "works": 71,
+    "mirrors": 17,
+    "agentsRead": 13,
+    "p0Open": 5
+  },
+  "gates": [
+    {"id": "G0", "name": "Inventory snapshot", "state": "REFRESHED", "detail": "71 Work snapshot; nguồn registry đã được đọc lại lúc 18:40."},
+    {"id": "G1", "name": "Portfolio intake", "state": "IN PROGRESS", "detail": "54 manifest đã intake; reconciliation 56→71 và mirror coverage còn mở."},
+    {"id": "G2", "name": "Capability matrix", "state": "NOT VERIFIED", "detail": "13/13 dòng đã đọc; 0 dòng có E2+ runtime evidence."},
+    {"id": "G3", "name": "E2E trace", "state": "BLOCKED", "detail": "Dispatch/ACK, execution/browser và Core authority chưa được chứng minh."},
+    {"id": "G4", "name": "Gap & security analysis", "state": "OPEN", "detail": "Trust boundary và ownership analysis còn các P0/P1."},
+    {"id": "G5", "name": "Independent review", "state": "NOT STARTED", "detail": "Chưa có independent QE/review đủ điều kiện."},
+    {"id": "G6", "name": "Vinh decision", "state": "PENDING", "detail": "Cần quyết định roster conflict và kiến trúc/ưu tiên."},
+    {"id": "G7", "name": "Build authorization", "state": "LOCKED", "detail": "Chỉ mở sau quyết định G6; chưa được phép triển khai."}
+  ],
+  "portfolio": {"works": 71, "mirrors": 17, "missingMirrors": 54},
+  "agents": [
+    ["Simple Reflex Agent", "E1", "candidate source", "agents/me_agent.py"],
+    ["LLM-based Agent", "E1", "candidate source", "core/agent_registry.py"],
+    ["Tool-Using Agent", "E1", "candidate source", "core/file_ops_agent.py"],
+    ["Planning Agent", "E0", "document only", "MODEL_4AI_PLANNING_LOOP_V2.md"],
+    ["Memory-Enabled Agent", "E1", "static context only", "core/context_loader.py"],
+    ["Multi-Agent System", "E1", "orchestration source", "run_meeting_v2.py"],
+    ["Hierarchical Agent", "E0", "not identified", "—"],
+    ["Self-Improving Agent", "E0", "document only", "—"],
+    ["RAG Agent", "E0", "proposed / not executed", "W103 DecisionRAG plan"],
+    ["Coding Agent", "E0", "not proven", "core/vscode_agent.py"],
+    ["Web-Browsing Agent", "E1", "adapter exists", "browser_agent_adapter/adapter.py"],
+    ["Computer-Using Agent", "E1", "runtime source", "10/.../agent_runtime.py"],
+    ["Autonomous Agent", "E0", "build not authorized", "W502 roadmap"]
+  ],
+  "members": [
+    ["AI-01", "Xu / coordinator", "identity: declared", "dispatch: NOT PROVEN"],
+    ["AI-05", "Qw / QE-QA", "runtime: NOT VERIFIED", "usage: NOT AVAILABLE"],
+    ["AI-06/07/08", "Go / Co / Qc mapping conflict", "identity: CONFLICT", "permission: NOT GRANTED"],
+    ["Vibe", "support / contributor", "participation: declared", "ACK: NOT PROVEN"]
+  ],
+  "gaps": [
+    ["GAP-01", "Dispatch / ACK chưa chứng minh", "Dispatch & acknowledgment", "P0", "OPEN", "Một dispatch thật có provider receipt + accountable ACK (E3).", "G3"],
+    ["GAP-02", "Token / cost telemetry unavailable", "Observability & cost", "P0", "OPEN", "Usage table theo member, model, session từ metering (E2).", "G4"],
+    ["GAP-03", "Execution / browser chain chưa E2E", "Execution", "P0", "OPEN", "Browser task thật có session record + artifact hash (E3).", "G3"],
+    ["GAP-04", "Core authority / persistence chưa xác minh", "Core authority & orchestration", "P0", "OPEN", "Core grant fail-closed, owner, persistence, host validation (E3).", "G3"],
+    ["GAP-11", "Host trust boundary dựa trên authorized boolean", "Security & execution authority", "P0", "OPEN", "Service auth + scoped grant + online validation + negative tests (E3).", "G4"],
+    ["GAP-05", "Xung đột mapping AI-06 / AI-07 / AI-08", "Identity & authorization", "P1", "CONFLICT", "Quyết định Vinh + DOC-010 v1.2 + Decision Log.", "G6"],
+    ["GAP-06", "Sandbox 71 vs DOC-018 snapshot 56", "Portfolio reconciliation", "P1", "OPEN", "Phân loại từng chênh lệch: mới / legacy / trùng / anomaly.", "G1"],
+    ["GAP-07", "54 Work chưa có GitHub mirror", "Evidence & governance", "P1", "OPEN", "MVSR tăng từ 17/71 lên ≥70/71 hoặc nêu ngoại lệ.", "G1"],
+    ["GAP-09", "Runtime identity roster phần lớn NOT VERIFIED", "Identity & session", "P1", "NOT VERIFIED", "Mỗi member có evidence level E0–E4, không theo khai báo.", "G2"],
+    ["GAP-08", "Journal self-reference commit SHA", "Evidence & governance", "P2", "OPEN", "Chuyển sang SYNC_RECORD; không ghi SHA HEAD vào journal.", "G4"],
+    ["GAP-10", "Tham chiếu kiến trúc cũ / legacy", "Canonical source", "P2", "OPEN", "Danh sách legacy refs và đề xuất xử lý qua Work 70.", "G4"]
+  ],
+  "e2e": [
+    ["01", "Request", "Work / WP intent", "W70 control plane", "OPEN"],
+    ["02", "Assignment", "dispatch + ACK", "Core / provider transport", "BLOCKED"],
+    ["03", "AI session", "identity + model + policy", "W52 / member adapter", "NOT VERIFIED"],
+    ["04", "Tool execution", "host / browser / computer", "W14 / W10 / W27", "NOT VERIFIED"],
+    ["05", "Artifact", "hash + provenance", "W33 evidence store", "BLOCKED"],
+    ["06", "Verification", "review + regression", "W51 / QE", "NOT STARTED"],
+    ["07", "Projection", "dashboard / handoff", "W70 / W17", "DESIGN ONLY"]
+  ]
+}

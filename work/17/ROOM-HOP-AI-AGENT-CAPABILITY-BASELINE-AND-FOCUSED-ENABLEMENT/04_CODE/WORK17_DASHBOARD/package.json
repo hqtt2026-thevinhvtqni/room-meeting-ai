@@ -1,0 +1,14 @@
+{
+  "name": "work17dash",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Work 17 AI Agent Capability Dashboard — evidence-first view",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
