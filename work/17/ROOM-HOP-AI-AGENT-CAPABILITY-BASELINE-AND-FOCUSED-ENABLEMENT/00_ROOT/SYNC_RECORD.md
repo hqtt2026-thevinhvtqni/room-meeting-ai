@@ -272,3 +272,10 @@
 - No GAP status change: GAP-01 OPEN/P0; E2 provider receipt NOT PROVEN; E3 Assignment→Dispatch→Delivery→ACK NOT PROVEN. Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED; BUILD/live dispatch/pilot NOT AUTHORIZED.
 - Not performed: no reviewer contact/request; no code/source change; no branch/PR/merge; no provider invocation, live dispatch or test.
 - HEAD main before SYNC_RECORD period 0016 update: 70edeeaafb99fee1326e1dfa67a0add9a0ace66d; this SYNC_RECORD update advances main by one commit.
+
+
+### Read-back closure — kỳ 0016
+
+- GitHub main fresh fetch PASS: proposal Addendum 17 blob `a208c544b41624a5ed258ba0ff00e488b65c7b2a`; journal Entry 026 blob `1825b9c03740b35b3dbfa6b7f9b45bcfb2be9b76`; SYNC_RECORD period 0016 blob `b2b0e0d46e7b59dea98ef0ee85339830541a6974` before this closure update.
+- Sandbox `sandbox_read_probe` PASS for all three touched files; exact latest markers found: Addendum 17, Entry 026, period 0016. This confirms content presence, not full byte-for-byte parity.
+- Final state: three touched artifacts read-back PASS in GitHub and Sandbox; Ka/Cla NOT SENT; GAP-01 OPEN/P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
