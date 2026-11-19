@@ -20,7 +20,7 @@
 | Work | Layout | Cấu trúc có mặt | Đánh giá cấu trúc |
 |------|--------|------------------|-------------------|
 | 0001 | flat | 00_ROOT→09_OPERATE + DASHBOARD, 06_VERIFY và 06_EVIDENCE | Đủ vòng đời; 06_VERIFY (kiểm chứng) và 06_EVIDENCE (kho bằng chứng) là hai khu ĐỀU CHUẨN, không trùng chức năng |
-| 103 | nested (kèm evidence flat) | ROOM-HOP-RAG-RETRIEVAL-CAPABILITY + 06_EVIDENCE | LẪN LỘN: evidence nằm ngoài thư mục Work chuẩn |
+| 103 | nested | ROOM-HOP-RAG-RETRIEVAL-CAPABILITY (03_ARCHITECTURE, 06_EVIDENCE) + 06_EVIDENCE flat bên ngoài | Lệch kép: evidence nằm cả trong lẫn ngoài thư mục Work; dùng tên 03_ARCHITECTURE không chuẩn |
 | 1111 | flat | 00_ROOT, 01_DISCOVER, 02_EXTENSION (không chuẩn), 03-06, EVIDENCE | 02_EXTENSION là tên khu không thuộc bộ chuẩn |
 | 112 | flat | 00_ROOT, 03_ARCHITECT, 04_PLAN | Thiếu 01–02 lifecycle |
 | 113 | flat | 00_ROOT–06_VERIFY + DASHBOARD, EVIDENCE | Gần đủ; thiếu 07–09; khu EVIDENCE trần cần lift lên 06_EVIDENCE |
@@ -39,8 +39,8 @@
 
 ## 3. Các phát hiện cấu trúc — cập nhật theo quyết định điều kiện của Xu (G4)
 
-1. HAI CHUẨN LAYOUT SONG SONG: nested `<ID>/<WORK-NAME>/` (theo Sandbox) và flat `<ID>/…` → nguy cơ bằng chứng rơi vào nhánh không canonical. Khuyến nghị: coi flat là LEGACY cho tới khi có quyết định của Vinh, không tự dịch chuyển.
-2. LẪN LỘN 06_EVIDENCE vs EVIDENCE, song song với 06_VERIFY (0001, 115, 117): cần một tên chuẩn duy nhất trước G5.
+1. HAI CHUẨN LAYOUT SONG SONG: nested là chuẩn (G4 đã duyệt); flat = LEGACY, KHÔNG di trú tới khi Vinh quyết định cuối (G7).
+2. Phân biệt đã chốt (G4): 06_VERIFY = khu kiểm chứng, 06_EVIDENCE = kho bằng chứng duy nhất, cả hai đều chuẩn. Lệch thật: khu EVIDENCE trần (113, 115, 117, 802001, 502) cần lift lên 06_EVIDENCE khi di trú.
 
 3. MATURITY KHÁC NHAU (theo Xu): Work sơ khai (W116, W28, W501...) không bị ép đủ vòng đời; nghiệm thu theo maturity tier — xem proposal v1.1 mục 2.5.
 
