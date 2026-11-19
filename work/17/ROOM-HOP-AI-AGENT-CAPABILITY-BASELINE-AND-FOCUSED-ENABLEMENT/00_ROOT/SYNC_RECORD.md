@@ -175,3 +175,17 @@
 - Nội dung phương án: SESSION_HANDOFF là candidate ưu tiên để giữ conversation và tránh API call, nhưng là user-mediated transfer; phân tách HANDOFF_READY / HANDOFF_SUBMITTED / MANUAL_ATTESTED / ACKNOWLEDGED_MANUAL / ACKNOWLEDGED_VERIFIED; nonce echo không phải identity proof. Core Assignment/Evidence owner vẫn NOT IDENTIFIED trong inspected scope.
 - Disposition: GAP-01 OPEN / P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED; BUILD/live dispatch/pilot NOT AUTHORIZED. Ka/Cla review packets mới chỉ chuẩn bị trong tài liệu, KHÔNG gửi; không có AI ACK.
 - HEAD main trước khi ghi kỳ 0010: `3173b3872790adacf4aaec1db0199b66f4405821`; commit chứa bản cập nhật SYNC_RECORD sẽ tiến thêm một commit.
+
+
+## Chi tiết kỳ 0011 — 2026-11-19
+
+- Trọng tâm: Work 17 GAP-01 — đối chiếu ownership governance baseline D70-023 với W112 và DOC-071; sửa proposal để phân biệt domain owner với runtime maintainer.
+- GitHub commits:
+  - `6260aa6e98d68b5439768a21dfacce35241e0b35` — cập nhật ownership map trong GAP-01 technical proposal.
+  - `b842fe6d2c421317bf11d742461cd84afdcbbce0` — Journal Entry 021.
+  - `f40650fe54261491c411f29c0f4e87784806967b` — GAP Register trỏ Entry 021; GAP-01 vẫn OPEN / P0.
+- Evidence mới đối chiếu: W70 DOC-006 D70-023 blob `53c5a7cfdb02bc38e4213010004e1f0ad137d87f`; W112 RELATED_WORK_INTEGRATION_INDEX blob `7043e61807d4e46399fca0f5faf532ea2ae317c9`; W70 DOC-071 blob `12f11320dc9da89b27de21313b698224d74519ce`.
+- Ownership conclusion: domain ownership được xác định — W70 lifecycle/control plane; W52 Agent-to-Agent task/event orchestration/provider adapters; W37 Core source-of-truth investigation boundary; W33 Evidence Hub; W112 cross-Work contracts/mapping; W14 execution boundary. Tuy nhiên accountable human Core maintainer, live Core API/router, Work/Assignment persistence, Work Evidence Registry runtime và provider dispatch/receipt vẫn NOT IDENTIFIED / NOT VERIFIED.
+- Sandbox operations: proposal overwrite, journal Entry 021 append và GAP Register overwrite đều trả status=ok. Fresh read-back sẽ xác nhận nội dung; không suy ra parity chỉ từ write acknowledgement.
+- Disposition: GAP-01 OPEN / P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED; BUILD/live dispatch/pilot NOT AUTHORIZED. Không gửi review packet hoặc assignment tới Ka/Cla/AI member.
+- HEAD main trước khi ghi kỳ 0011: `f40650fe54261491c411f29c0f4e87784806967b`; commit chứa bản cập nhật SYNC_RECORD sẽ tiến thêm một commit.
