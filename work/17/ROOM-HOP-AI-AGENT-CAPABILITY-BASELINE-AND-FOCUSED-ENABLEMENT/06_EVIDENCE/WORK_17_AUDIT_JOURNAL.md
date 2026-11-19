@@ -347,3 +347,20 @@ o đến khi read-back và kiểm tra commit/branch hoàn tất.
 - Trạng thái: GAP-01 OPEN / P0; E2 provider delivery receipt NOT PROVEN; E3 assignment→dispatch→delivery→ACK NOT PROVEN; Work 17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED; BUILD/live dispatch/pilot NOT AUTHORIZED.
 - Không thực hiện: không tạo API/database/queue/dispatcher/Assignment Registry; không thay đổi source/runtime/permission/config/secret; không gửi packet hoặc giao việc thật; không gọi AI/provider; không tuyên bố Ka/Cla đã review hoặc ACK.
 - Bước tiếp theo: tiếp tục READ/TRACE xác định accountable Core maintainer từ ownership/governance records hiện có; sau đó mới trình review packet theo cơ chế được phê duyệt. Không mở Work mới, không triển khai.
+
+
+## 2026-11-19 14:25 +07 — Entry 021: Reconcile governance ownership baseline D70-023 / W112
+
+- Người thực hiện: Xu / AI-01.
+- Phạm vi: Work 17 GAP-01 only; kiểm tra ownership boundaries để tránh gán nhầm owner giữa W70, W52, W37, W33, W112 và W14.
+- Phương pháp: fetch GitHub main exact canonical files: W70 DOC-071, W70 DOC-006 Decision Log, W112 RELATED_WORK_INTEGRATION_INDEX; đối chiếu D70-023 và source/runtime findings. Read-only document inspection.
+- Evidence:
+  1. W70 DOC-006 blob `53c5a7cfdb02bc38e4213010004e1f0ad137d87f`: D70-023 explicitly sets architecture ownership baseline — W70 Work lifecycle/control plane and policy gates; W52 Agent-to-Agent task/event orchestration and provider adapters; W16 deterministic workflow; W112 cross-Work contracts/mapping/evidence coordination; W37 single Core source of truth; W14 execution boundary; W32 CI; W33 Evidence Hub; W38 Gateway; W39 Build MCP; W0000 governance registry. Decision states independent review pending and implementation/migration/release not authorized.
+  2. W112 RELATED_WORK_INTEGRATION_INDEX blob `7043e61807d4e46399fca0f5faf532ea2ae317c9` repeats the ownership boundaries and says W112 does not replace component owners.
+  3. W70 DOC-071 blob `12f11320dc9da89b27de21313b698224d74519ce` continues to state Work/WP/Assignment persistence NOT VERIFIED, Work Evidence Registry NOT VERIFIED, accountable Core maintainer NOT IDENTIFIED. It also records bounded metadata search (no CODEOWNERS / no matching issue or PR) and explicitly warns not to infer ownership from commit authors.
+- Correction to Entry 020 proposal: logical/domain ownership IS identified by D70-023. The unresolved issue is not "who owns Assignment as a business domain": W70 owns lifecycle/control plane; W52 owns agent task/event dispatch and provider adapters; W37 is the Core investigation/source-of-truth boundary; W33 owns Evidence Hub. Still NOT IDENTIFIED / NOT VERIFIED: accountable human Core maintainer, actual live Core service/API/router, Work/Assignment persistence, and deployed provider adapter/receipt path.
+- Updated proposal `04_PLAN/WORK_17_GAP01_TECHNICAL_OPTIONS_AND_HANDOFF_PROTOCOL.md` to distinguish governance ownership from runtime implementation ownership and cite D70-023/W112/DOC-071. GitHub update commit `6260aa6e98d68b5439768a21dfacce35241e0b35`; Sandbox write status=ok.
+- Kết luận: target ownership map is now grounded; runtime/service ownership and dispatch remain unverified. D70-023 itself is not a dispatch contract, provider receipt, runtime proof or authorization to implement.
+- Trạng thái: GAP-01 OPEN / P0; E2 provider delivery receipt NOT PROVEN; E3 assignment→dispatch→delivery→ACK NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED; BUILD/live dispatch/pilot NOT AUTHORIZED.
+- Không thực hiện: không contact/assign AI members; không gửi review packet; không sửa DOC-006/DOC-071/W112; không tạo API/database/dispatcher; không chạy runtime/test/provider; không thay đổi permission/config/secret.
+- Bước tiếp theo: yêu cầu Core accountable maintainer identity/authority được chỉ định qua governance hiện có; song song chờ independent review D70-023 và DOC-064/065. Không tự gán maintainer từ commit authors.
