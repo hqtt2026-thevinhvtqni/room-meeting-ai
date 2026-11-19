@@ -517,3 +517,13 @@
 - Finding: registry resolution is membership-only; MeetingManager labels registry+invitation as auth_verified; GOV.check is a separate static identity path with unknown/empty fallback to agent_llama; tests assert this fallback; Claude/Gemini file-action entrypoints are configured as vinh. Source-level risk only; no live exploit/deployment claim.
 - Disposition: GAP-09 OPEN; GAP-11 OPEN/P0; GAP-01 OPEN/P0; identity/session NOT_VERIFIED; authorization enforcement NOT_VERIFIED; E2/E3 NOT PROVEN; Work17 READ/TRACE/ANALYZE ONLY; protected execution DENY / NOT RELEASED.
 - Sandbox parity: PENDING exact write/read-back.
+
+
+## Sync Period 0039 — Work17 Entry 050 / HTTP identity and Host authorization boundary (2026-11-19T15:14:24.663Z UTC)
+
+- Current-main static source reads: HTTP adapter, MeetingManager/Service, Governance, FileOpsAgent, Execution Host server/models/security and governance tests; no runtime/API/test/provider/network action.
+- Journal Entry 050 commit 3805477b0901e151048644453865814aaba99042; blob 9558936d1d1ed784a863af98f9a16381be21861e; bytes 193525; marker true.
+- GAP Register Entry 050 commit 0ee18ce2ffa81b13a0a7c9b684de4925ebd0d634; blob 25ee2036a7a81f9a34578db0d93be2950b710cf5; bytes 35330; marker true.
+- Finding: HTTP JOIN trusts body identity_id in inspected adapter and records auth_verified without inspected session binding; Execution Host accepts WorkContext.authorized bool and validates only true/false without Core grant verification in inspected path; default local bind/network exposure remains unverified. Corrected Entry049 test-coverage overstatement: test explicitly covers empty identity, not arbitrary unknown identity.
+- Disposition: GAP-09 OPEN; GAP-11 OPEN/P0; GAP-01 OPEN/P0; identity/session binding NOT VERIFIED; Host grant verification NOT PRESENT IN INSPECTED PATH; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED; Work17 READ/TRACE/ANALYZE ONLY.
+- Sandbox parity: PENDING exact write/read-back.
