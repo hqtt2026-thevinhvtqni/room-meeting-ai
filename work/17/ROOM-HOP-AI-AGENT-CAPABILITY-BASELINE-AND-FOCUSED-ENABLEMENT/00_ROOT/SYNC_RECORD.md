@@ -378,3 +378,14 @@
 - Added Journal Entry 035, Technical Proposal Addendum 26, GAP Register Entry 035. GitHub commits: Journal `0cc35eb67178b3284bfd65298741de559f5781fe`; Proposal `0c6d439eff1d438db441a34575a419b3401446c1`; GAP `33678a3cca619f71806e5464a7ecd338ea6bc118`.
 - Read-back: GitHub blob SHA Journal `dcb425de2d3a76a00dbf8cc092f7356c135ef460`, Proposal `fe2f0f1e8bad95cb121a292fa22f95b5a10aae19`, GAP `893e8517b203e9dc0e8f90f2546f42b1cd750817`; Sandbox probe returned status=ok and exact Entry 035 / Addendum 26 markers.
 - Disposition unchanged: GAP-01 OPEN/P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
+
+
+## Chi tiết kỳ 0026 — 2026-11-19
+
+- Trọng tâm: Work17 GAP-01 — đối chiếu trực tiếp W70 DOC-065/DOC-044, W112 DOC-001 Addenda 11.1–11.13 và W52 candidate 0.1.0-r2.
+- Kết quả matrix: W52 v0.1 PARTIAL ở identity/source/scope/event/evidence; thiếu typed Assignment/Dispatch/Attempt/Delivery Receipt/Recipient ACK; lifecycle W70 và W52 phải giữ riêng. W52 Manifest/ADR có ACK intent nhưng schema/event/Engine không có ACK gate. W112 đã có loss-aware cross-map, ACK-before-Host.open semantics và A2A-01..15 tests NOT RUN; Work17 tái sử dụng, không tạo spec song song.
+- W52 Index/Manifest: ACTIVE / DESIGN-FIRST / NOT RELEASED; pointer 0.1.0-r2; Candidate Manifest dated 2026-10-24; hash reconciliation 2026-10-28 là lịch sử, không phải fresh rehash hoặc live proof. CorePort/AuthorityPort/HostPort là injected Protocols, không có production implementation trong candidate.
+- Added Journal Entry 036, Technical Proposal Addendum 27, GAP Register Entry 036. GitHub main commits: Journal `49563a649e083e051b0160a6fff22e1391a77791`; Proposal `26bc6cd5fc6b8749702582392a3f2fb88da80f02`; GAP `9e5675dedd9c97e89d334a0cea4895c948863418`.
+- Read-back: GitHub blob SHA Journal `6b026c3af256d93d93e509e7cf8cfd9b9b9be8f1`, Proposal `1ccac6c6a2e9b7c28bf4b0f7bb7d1c532e02fb17`, GAP `804ce82b09ced4f524dbf9af91d7d7cdc6bed2de`; Sandbox probe status=ok and exact Entry 036 / Addendum 27 markers in all three files.
+- No W52/W70/W112 source change, test, provider, runtime, dispatch, reviewer contact, merge or release.
+- Disposition: GAP-01 OPEN/P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
