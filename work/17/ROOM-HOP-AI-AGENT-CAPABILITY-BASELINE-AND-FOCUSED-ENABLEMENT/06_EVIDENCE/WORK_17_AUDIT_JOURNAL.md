@@ -47,3 +47,10 @@
 - GitHub main HEAD xác nhận: c23ade04d0d9b63ab53acb1ee17d1ae811e6dbd3; commit cuối có message docs(work-17): record audit baseline and GitHub sync.
 - Trạng thái: PASS — 3 hồ sơ nền tảng đã được tạo trên GitHub main và read-back xác nhận. Đây là PASS cho đăng ký tài liệu, không phải PASS cho audit/capability/runtime.
 - Giới hạn: Chưa xác minh local PC checkout/pull, CI, Sandbox-to-GitHub tự động sync hoặc các thư mục rỗng. Không có thay đổi source/runtime.
+
+
+## 2026-11-19 — Entry 005: Commit cuối sau khi hoàn tất nhật ký
+- Commit HEAD mới nhất của main sau khi ghi Entry 004 vào journal: 2fe3950ae184c746c42f4d7e6db271bcb6f89318.
+- Blob SHA của journal sau cập nhật: cee2bc8b7c5a179778652e7a6a38d51a97ee8b14.
+- Read-back xác nhận Entry 004 và nội dung journal đã tồn tại trên main.
+- Trạng thái: PASS — journal cuối cùng đã được đồng bộ và đọc lại từ GitHub main. Commit c23ade04... ở Entry 004 là HEAD trước lần cập nhật journal này; commit cuối hiện tại là 2fe3950....
