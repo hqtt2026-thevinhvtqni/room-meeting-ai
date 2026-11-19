@@ -111,3 +111,45 @@ This addendum records the actual tool inventory exposed to the current review se
 - Work 70 DOC-066 remains `PLANNED — IMPLEMENTATION NOT AUTHORIZED / TESTS NOT RUN`; its Phase 2 Session Handoff MVP (immutable handoff packet + user submission + manual receipt import) is a proposed future workflow, not a current Work 17 capability. No handoff packet was generated or submitted.
 
 **Disposition:** GAP-01 OPEN / P0; E2 delivery receipt NOT PROVEN; E3 dispatch→delivery→ACK trace NOT PROVEN. Work 17 remains READ/TRACE ONLY. No live dispatch, private-session access, provider call, meeting mutation, runtime/test, permission or source change occurred.
+
+
+## 9. Source-level adapter discrimination — 2026-11-19
+
+A bounded GitHub main source inspection was performed to distinguish existing browser/execution adapters from the AI-member dispatch adapters required by GAP-01.
+
+### Source evidence inspected
+
+| Source | Blob SHA | Observed responsibility | GAP-01 relevance |
+|---|---|---|---|
+| `room_hop_mcp/browser_agent_adapter/adapter.py` | `0ced9207c1897b9a7b572b7fefa44fec2dd92b76` | Playwright browser workflow; emits execution artifact and calls `submit_to_roomhop` | Not an AI-member dispatch adapter |
+| `execution_host/adapters.py` | `6a84f72cf5b596ceba77ab67a4cc9f9e245a4cda` | Protocols for BrowserAdapter, GitHubGateway and CIAdapter; missing adapters return NOT_CONFIGURED | Execution/evidence integrations, not provider conversation transport |
+| `execution_host/git_adapter.py` | `9f869f1b1fa8d64e50a89f71a05da0720bcf5a03` | Validates repo/branch/head; gated Git commit/push methods | Repository adapter, not AI dispatch |
+| `10/COMPUTER-AGENT/04_CODE/browser_adapter.py` | `8e176d07a0f83d0431e16aba221c6e83adc7fa63` | Playwright browser controls (observe/navigate/click/type/etc.) | Computer/browser control, not provider conversation transport |
+| `10/COMPUTER-AGENT/04_CODE/agent_api.py` | `44e16cf75af614b93146f86863beceaf445c35e6` | Local HTTP `/agent/execute` invokes browser AgentRuntime | Executes browser tasks; no provider-session send/ACK route in inspected handler |
+| `10/COMPUTER-AGENT/04_CODE/agent_runtime.py` | `e8153c180afc571efc5fe3e2b2afdee3afc88d13` | Runs canonical browser actions and records action evidence | Browser action runtime, not AI-member dispatch |
+| `wee/capabilities.py` | `9b11a1075176d33483ba2995fc46bccf132433dd` | Local capability discovery for shell/git/runtime/browser/CI/evidence | Does not discover external AI private-session delivery |
+| `room_hop_mcp/core_http_main.py` | `8dd6bb5ea500026d932ca52eb6079c980d722ab0` | Builds MeetingService + HTTP app | No dispatch orchestrator mount visible in inspected entrypoint |
+| `room_hop_mcp/adapter/http_server.py` | `54cb3ecbce2e6b13083f31c14f0c1f0738f1457d` | Identity discovery and Meeting routes incl. add-paste | Meeting relay, not private AI-session dispatch |
+
+### Critical distinction in Browser Agent Adapter
+
+The inspected `submit_to_roomhop()` implementation:
+1. lists available meetings;
+2. chooses configured or active/open/started meeting;
+3. posts a `ROOMHOP_BROWSER_AGENT_ARTIFACT` marker using `add_paste_to_meeting`;
+4. reads the meeting transcript and checks whether execution/work/artifact identifiers appear.
+
+Its `pass` result therefore means the browser execution artifact marker was read back from a ROOM-HOP Meeting transcript. It is not a provider delivery receipt, does not prove an AI assignee received an assignment, and does not produce an accountable AI ACK. Reusing this result as GAP-01 evidence would be a category error.
+
+### Contract reconciliation
+
+- DOC-044 blob `508cbde08e1f376cdeba9475330aa880a9f63797` is the active assignment template: identity, source baseline, permission, deliverables, acceptance, test/evidence and closure fields.
+- DOC-064 blob `0cd5cc7108310a93c98a289cc9a27f89b951b5dc` defines target adapter modes: NATIVE_CONNECTOR, SESSION_HANDOFF, ROOM_MEETING_RELAY, API_ADAPTER and UNSUPPORTED; explicitly says handoff packet creation is not delivery and Meeting relay is not private conversation access.
+- DOC-065 blob `a18db833f7286400ca702b850f072df6d834c4f1` defines transport receipt, ACK provenance, manual-attested receipt and idempotency invariants; route names are intentionally omitted pending Core owner mapping.
+- DOC-066 blob `8278b5199b5802ac915d412df499a181dd37342a` keeps implementation unauthorized and tests NOT RUN; Phase 2 handoff MVP is a future plan.
+
+### Disposition
+
+The inspected source adapters support browser automation, local execution, Git/CI abstractions and Meeting artifact recording. They do not establish an implemented, verified provider adapter for dispatching Work assignments into AI members' existing private sessions. This is a bounded source finding, not proof that no separately deployed or user-operated channel exists.
+
+GAP-01 remains OPEN / P0. E2 provider delivery receipt NOT PROVEN; E3 assignment→dispatch→delivery→accountable ACK trace NOT PROVEN. Work 17 remains READ/TRACE ONLY. No browser workflow, provider call, meeting mutation, dispatch, runtime/test, permission or source code change was executed in this inspection.
