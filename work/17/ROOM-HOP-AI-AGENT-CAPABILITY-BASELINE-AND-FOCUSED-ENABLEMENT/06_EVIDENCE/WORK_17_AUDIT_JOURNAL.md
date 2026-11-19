@@ -464,3 +464,15 @@
 - Status: GAP-01 OPEN/P0; E2 provider receipt NOT PROVEN; E3 Assignment→Dispatch→Delivery→ACK NOT PROVEN; W112 DOC-001 DRAFT only; W52 canonical GitHub source mapping NOT VERIFIED; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED; BUILD/live dispatch/pilot NOT AUTHORIZED.
 - Not performed: no code changes; no branch/PR/merge; no dispatch/provider invocation; no test; no review request sent.
 - Next: construct an evidence-backed responsibility/contract matrix inside the existing Work17 technical proposal, explicitly marking source-of-truth, canonical source mapping, current interface, unresolved contract and acceptance evidence. Then prepare (not send) Ka/Cla review packets.
+
+
+## Entry 026 — Chuẩn bị bộ hồ sơ phản biện Ka/Cla (2026-11-19)
+
+- Scope: GAP-01 P0; soạn hai review brief độc lập ngay trong technical proposal canonical hiện hành; không tạo file/bản chuẩn song song.
+- Packet K / Ka (CSA): phản biện kiến trúc và security boundary của chuỗi W70 Assignment → Core identity/authority → W52 provider dispatch → W14 host transport → W33 evidence → W70 projection; kiểm tra authenticated recipient ACK, permission, CAS/idempotency, replay/spoofing, recovery và fail-closed.
+- Packet C / Cla (CTO): kiểm chứng call graph bằng source; đối chiếu canonical repo/branch/commit; xác định API/interface thực thi, W52↔W14 mismatch, adapter Codex/Qwen có thực sự dispatch/ACK không, Core route/authorization/persistence, W33 authenticated ingress; đề xuất lát triển khai tối thiểu theo đúng owner.
+- Mỗi packet yêu cầu verdict có dẫn chứng, bounded scope và blockers. Cả hai bị giới hạn review tĩnh; không sửa code, không gọi provider, không chạy test, không dispatch.
+- Trạng thái gửi: NOT SENT. Chỉ phát hành/gửi khi anh Vinh chủ động yêu cầu. Chuẩn bị packet không đồng nghĩa đã có ý kiến hay review của Ka/Cla.
+- Không thay đổi trạng thái GAP: GAP-01 OPEN/P0; E2 provider receipt NOT PROVEN; E3 Assignment→Dispatch→Delivery→ACK NOT PROVEN. Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED; BUILD/live dispatch/pilot NOT AUTHORIZED.
+- Not performed: không gửi reviewer; không code/source modification; không branch/PR/merge; không provider call, live dispatch hoặc test.
+- Next: chờ Vinh yêu cầu phát hành review packet; sau phản biện mới tổng hợp một biên bản quyết định duy nhất và cập nhật GAP/journal theo evidence.
