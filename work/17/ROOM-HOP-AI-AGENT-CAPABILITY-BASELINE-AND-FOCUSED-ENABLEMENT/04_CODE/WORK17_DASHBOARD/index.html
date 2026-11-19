@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Work 17 · AI Agent Capability Dashboard</title>
+  <meta name="description" content="Evidence-first capability dashboard for ROOM-HOP Work 17" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark">17</span>
+        <div>
+          <p class="eyebrow">ROOM-HOP / CAPABILITY CONTROL</p>
+          <h1>AI Agent Capability Dashboard</h1>
+        </div>
+      </div>
+      <div class="header-meta">
+        <span class="status-dot"></span>
+        <span>ACTIVE · READ / TRACE ONLY</span>
+        <span class="date">19 Nov 2026</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div>
+          <p class="eyebrow">WORK 17 · EVIDENCE-FIRST VIEW</p>
+          <h2>Biết chính xác điều gì đã được chứng minh.</h2>
+          <p class="hero-copy">Dashboard này không biến tài liệu, source hoặc roster thành bằng chứng runtime. Mọi trạng thái OPEN, BLOCKED và NOT VERIFIED được giữ nguyên theo audit.</p>
+        </div>
+        <div class="hero-callout">
+          <span class="callout-label">CURRENT READ</span>
+          <strong>G0 snapshot refreshed</strong>
+          <span>G1 intake in progress · G2–G7 not passed</span>
+        </div>
+      </section>
+
+      <section class="live-toolbar">
+        <div id="liveStatus" class="live-status state-cache">
+          <span class="live-led"></span>
+          <div>
+            <strong>MCP CACHE</strong>
+            <span>Đang kiểm tra nguồn dữ liệu…</span>
+          </div>
+          <small>—</small>
+        </div>
+        <button id="refreshLive" class="refresh-button" type="button">Refresh MCP</button>
+      </section>
+
+      <section id="connectionAlert" class="connection-alert alert-reconnecting" hidden role="status" aria-live="polite"></section>
+
+      <section class="kpi-grid" id="kpis" aria-label="Key metrics"></section>
+
+      <section class="control-bar">
+        <div class="section-label">CONTROL FILTERS</div>
+        <div class="filters">
+          <select id="statusFilter" aria-label="Lọc theo trạng thái">
+            <option value="all">Tất cả trạng thái</option>
+            <option>OPEN</option>
+            <option>NOT VERIFIED</option>
+            <option>BLOCKED</option>
+            <option>PARTIAL</option>
+            <option>CONFLICT</option>
+          </select>
+          <select id="priorityFilter" aria-label="Lọc theo ưu tiên">
+            <option value="all">Tất cả ưu tiên</option>
+            <option>P0</option>
+            <option>P1</option>
+            <option>P2</option>
+          </select>
+          <select id="gateFilter" aria-label="Lọc theo gate">
+            <option value="all">Tất cả gate</option>
+            <option>G0</option>
+            <option>G1</option>
+            <option>G2</option>
+            <option>G3</option>
+            <option>G4</option>
+            <option>G5</option>
+            <option>G6</option>
+            <option>G7</option>
+          </select>
+          <input id="searchFilter" type="search" placeholder="Tìm gap, agent, Work..." aria-label="Tìm kiếm" />
+        </div>
+      </section>
+
+      <div class="content-grid">
+        <section class="panel panel-wide">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">GATE PROGRESSION</p>
+              <h3>Control plane maturity</h3>
+            </div>
+            <span class="tiny-badge">0 PASS CLAIMS</span>
+          </div>
+          <div id="gates" class="gate-list"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">PORTFOLIO</p>
+              <h3>71 Work snapshot</h3>
+            </div>
+            <span class="tiny-badge">G1 IN PROGRESS</span>
+          </div>
+          <div id="portfolio"></div>
+        </section>
+      </div>
+
+      <div class="content-grid">
+        <section class="panel panel-wide">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">13 AGENT TYPES</p>
+              <h3>Capability baseline</h3>
+            </div>
+            <span class="tiny-badge">ALL UNASSESSED</span>
+          </div>
+          <div id="agents" class="table-wrap"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">MEMBER LAYER</p>
+              <h3>AI member readiness</h3>
+            </div>
+            <span class="tiny-badge">EVIDENCE E0–E1</span>
+          </div>
+          <div id="members"></div>
+        </section>
+      </div>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">OPEN RISK REGISTER</p>
+            <h3>Gaps requiring decision or proof</h3>
+          </div>
+          <span class="tiny-badge" id="gapCount"></span>
+        </div>
+        <div id="gaps" class="gap-list"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">TRACE MAP</p>
+            <h3>End-to-end chain</h3>
+          </div>
+          <span class="tiny-badge">DESIGN ≠ LIVE PROOF</span>
+        </div>
+        <div id="e2e" class="trace-map"></div>
+      </section>
+
+      <section class="evidence-note">
+        <div class="note-icon">i</div>
+        <div>
+          <strong>Evidence boundary</strong>
+          <p>Dashboard ưu tiên dữ liệu từ MCP bridge qua <code>/api/live</code>. Nếu bridge chưa cấu hình hoặc không phản hồi, hệ thống hiển thị MCP CACHE cùng timestamp và cảnh báo, không giả mạo trạng thái live. Nguồn Work 17 vẫn phải tuân thủ read-only evidence boundary.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer>WORK 17 · Owner: Vinh · Coordinator: Xu / AI-01 · Read-only research surface</footer>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>
