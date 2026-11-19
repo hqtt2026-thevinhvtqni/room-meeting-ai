@@ -81,3 +81,17 @@
 - Sandbox: Journal Entry 014 đã append và read-back xác nhận. Các sản phẩm report và GAP register mới/cập nhật trong kỳ hiện chỉ có GitHub mirror; chưa có Sandbox mirror. Không tuyên bố full parity.
 - Kết luận: GitHub read-back PASS cho report/GAP/journal; Sandbox journal append/read-back PASS; sản phẩm report/GAP parity NOT VERIFIED. G3 end-to-end NOT PASS; GAP-04 OPEN; GAP-11 OPEN P0; protected execution DENY / NOT RELEASED.
 - Giới hạn: source/doc trace only; không chạy pytest, không gọi endpoint, không process/runtime/network probe, không xác minh live exposure, không đổi code/config/secret/permission, không build remediation.
+
+
+## Chi tiết kỳ 0006 — 2026-11-19
+
+- Phạm vi: đối chiếu Entry 014 Core/Auth source finding với W32 DOC-117, W28 execution-grant candidate và Work 1111 security tracker/task ownership; tạo memo reconciliation và ghi Entry 015.
+- GitHub commit:
+  - `cf3b2d12ed960c5ff56db42a8afe8b7693de2385` — tạo `06_EVIDENCE/WORK_17_AUTHORIZATION_REMEDIATION_RECONCILIATION.md`.
+  - `3ea827bbe9fe3762f6ca2c11e15d2186128a6d00` — append Journal Entry 015.
+- Read-back GitHub:
+  - Reconciliation memo blob `523047b200bdab06471af0a2768312bf906e55a7`; nội dung xác nhận DOC-117 tuple, W28 chỉ là candidate, W1111 coder roster ba người, independent QE gate còn mở.
+  - Journal blob `d767c1f508c6fba8abde102b39de6bba895c6899`; Entry 015 tồn tại.
+- Sandbox: append Entry 015 vào `06_EVIDENCE/WORK_17_AUDIT_JOURNAL.md`; sandbox_read_probe trả status=ok và nội dung có Entry 015. Độ dài/byte count khác GitHub journal từ các lịch sử Entry 007 và nội dung khác trước đó; không tuyên bố hai bản byte-identical hoặc parity toàn bộ.
+- Task governance: không dispatch/assign Cla, Ka hoặc Qw vì Work 1111 task plan quy định chỉ Co, Xuco, Vi trong coder roster; cả ba task vẫn READY — ACK REQUIRED. Independent QE/security verification là điều kiện bắt buộc chưa được giải quyết, không được bỏ qua hoặc tự nghiệm thu.
+- Kết luận: GitHub memo/journal read-back PASS; Sandbox journal append/read-back PASS; memo Sandbox mirror NOT PRESENT / NOT VERIFIED; full journal parity NOT VERIFIED. W17 GAP-04 OPEN; GAP-11 P0 OPEN; G3 E2E NOT PASS; protected execution DENY / NOT RELEASED. Không có source/runtime/test/endpoint/dispatch/permission/secret/deployment action.
