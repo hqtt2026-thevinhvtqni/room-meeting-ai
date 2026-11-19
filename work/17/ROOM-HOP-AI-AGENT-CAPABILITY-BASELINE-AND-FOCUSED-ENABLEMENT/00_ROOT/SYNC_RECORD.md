@@ -66,5 +66,5 @@
   - `c1bb687465759ff0c4f9c59ae5a3d2d41fd270a8` — align coverage section 3 và W103 row theo G4 decision.
   - `3622701e082e0c35cbbf629485216ea5b68519d6` — Journal Entry 013 trên GitHub main.
 - Read-back cuối kỳ: G4 decision record blob `dea88b7450aee852bf2b8391097d0ebdb6fbb5fd`; proposal v1.1 blob `cafadbf09e56e4f21af783ef058734f3aee61305`; coverage blob `c217eb792107b93d26b6d256468d17451bb054c1`; journal GitHub đã được cập nhật ở commit `3622701e082e0c35cbbf629485216ea5b68519d6`.
-- Sandbox: Entry 013 đã được append vào đúng đường dẫn journal trong Work 17; cần read-back sau append. Journal Entry 007 vẫn khác nhau giữa Sandbox và GitHub; không ghi đè lịch sử.
+- Sandbox: Entry 013 đã được append và read-back xác nhận trong đúng journal Work 17. GitHub journal read-back cũng xác nhận Entry 013. Journal Entry 007 vẫn khác nhau giữa Sandbox và GitHub; vì vậy parity toàn bộ journal = NOT VERIFIED, không ghi đè lịch sử.
 - Kết luận: GitHub read-back PASS cho hồ sơ G4/coverage được nêu; append accepted cho hai journal nhưng read-back parity chỉ kết luận sau xác minh. G4 layout = CONDITIONAL; G7 migration = NOT AUTHORIZED; không có source/runtime/test/provider/dispatch execution.
