@@ -417,3 +417,26 @@ Read-only inspection of W52 `a2a-task.schema.json`, `a2a-event.schema.json` and 
 This is a design-to-schema gap, not a claim that W52 has no ACK intent. Compared with W112 DOC-001 and W70 DOC-065, the v0.1 contract does not carry the full Assignment/dispatch/receipt/recipient-ACK provenance. Combined with Addendum 25's lifecycle ordering finding, the prototype cannot yet prove E2/E3. Do not mutate v0.1 in Work17 or add duplicate schemas; W52/W70/W112 owners must decide a versioned compatibility mapping. ADR-001 remains PROPOSED, schemas DRAFT, Work52 ACTIVE / NOT RELEASED.
 
 GAP-01 OPEN/P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED. No code/schema/runtime/test/provider/dispatch change performed.
+
+
+### 27. W70/W52/W112 cross-contract compatibility matrix — reuse W112 Addenda 11.1–11.13
+
+**Scope:** read-only comparison of W70 DOC-065/DOC-044, W112 DOC-001 v1.0 (including Addenda 11.1–11.13), and W52 Sandbox candidate pointer 0.1.0-r2. No component file changed.
+
+| Contract area | W52 v0.1 coverage | W70/W112 requirement | Disposition |
+|---|---|---|---|
+| Work/task identity | work_id, task_id, correlation_id, assigned_agent.identity/adapter | assignment_id, WP/task correlation, accountable role, assignee identity ref, dependency and ACK refs | PARTIAL |
+| Source/scope/permission | input artifact path+SHA, workspace allow/deny paths, tool permissions | repo/branch/commit/working tree; read/write/execute/network/prohibited scope; permission grant ref and expiry | PARTIAL |
+| Dispatch/attempt | adapter, correlation, retry_of, task idempotency | dispatch_id, attempt_id, adapter mode, target/session, payload digest, issued/expiry, delivery attempt | MISSING typed binding |
+| Delivery receipt | no first-class delivery status/receipt event in inspected event model | CREATED/SEND_ATTEMPTED/DELIVERED/DELIVERY_UNKNOWN/DELIVERY_FAILED + provider/adapter receipt | MISSING |
+| Recipient ACK | Manifest/ADR states explicit authenticated ACK intent; schema/event/Engine lacks ACK ref/event/gate | recipient identity proof, explicit decision, accepted-scope digest, assignment/task/correlation/source/permission binding, durable readback | MISSING / NOT ENFORCED |
+| Event provenance | event_id/task_id/correlation/seq/producer/provenance/native_ref/raw_sha256 | causation/idempotency/source revision/payload/delivery attempt/trace/authorization refs | PARTIAL |
+| Evidence | artifact/event/verdict/evidence refs | immutable repo/branch/commit/blob, exact path+SHA, method/command/env/time/result/output/limitation/reviewer/journal/AC | PARTIAL |
+| Lifecycle | QUEUED/ACCEPTED/RUNNING/WAITING_APPROVAL/SUCCEEDED… | separate W70 Assignment lifecycle and readiness/execution authorization | DISTINCT; map loss-aware, never flatten |
+| Authority/Host | CorePort/AuthorityPort/HostPort Protocols; no production implementations in candidate | Core authority and W14 Host enforcement | INJECTED ONLY / NOT VERIFIED |
+
+W112 DOC-001 Addenda 11.1–11.13 already define ownership, state separation, loss-aware mapping, ACK semantics, event correlation, retry/recovery, A2A-01..15 acceptance cases and the precise ACK-before-Host.open gap. Work17 reuses that baseline; it must not create a parallel cross-Work architecture or claim the existing design is approved/runtime-enforced.
+
+**Minimal owner-level proposal (not authorized implementation):** W52 prepares a versioned compatible contract for Assignment/Dispatch/Attempt/DeliveryReceipt/RecipientACK; W70 confirms Assignment/readiness semantics; Core confirms authoritative identity/permission and durable ACK record; W14 proves Host.open is side-effect-free until ACK or remains after the gate; W112 updates the mapping and S0–S5 tests. Preserve v0.1 candidate unchanged until the owner-approved version decision.
+
+W52 0.1.0-r2 remains ACTIVE / DESIGN-FIRST / NOT RELEASED; candidate manifest dated 2026-10-24 and 2026-10-28 hash reconciliation are historical evidence, not fresh current rehash or live proof. GAP-01 OPEN/P0; E2/E3 NOT PROVEN; Work17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
