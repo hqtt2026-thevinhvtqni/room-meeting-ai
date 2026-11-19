@@ -6,7 +6,8 @@
   "description": "Work 17 AI Agent Capability Dashboard — evidence-first view",
   "scripts": {
     "dev": "node server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "node --test ../../05_TEST/WORK17_DASHBOARD.test.js"
   },
   "engines": {
     "node": ">=18"
