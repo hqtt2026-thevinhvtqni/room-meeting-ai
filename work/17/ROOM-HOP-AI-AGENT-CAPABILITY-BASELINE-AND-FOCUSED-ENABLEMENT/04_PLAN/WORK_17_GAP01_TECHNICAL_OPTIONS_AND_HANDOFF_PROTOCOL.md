@@ -172,3 +172,16 @@ Immediate next read-only action: identify accountable Core maintainer from exist
 GAP-01 OPEN / P0; E2 provider delivery receipt NOT PROVEN; E3 assignment→dispatch→delivery→ACK NOT PROVEN; Core Assignment/Evidence owner NOT IDENTIFIED in inspected scope; SESSION_HANDOFF is a review candidate only; Work 17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED; BUILD/live dispatch/pilot NOT AUTHORIZED.
 
 This is an analysis artifact only. It does not close a gap, approve a contract delta, create an assignment, prove delivery or authorize implementation.
+
+
+## 13. Addendum — Core ownership correction and W52 adapter evidence (2026-11-19)
+
+**Correction from Vinh:** Core is jointly built by Vinh and Xu. Do not search for an external Core maintainer or interpret missing CODEOWNERS/PR metadata as unknown Core ownership. Vinh remains the decision authority; Xu is the delegated co-architect/coordinator. W37 is the Core investigation/evidence boundary, not a substitute owner of Core's creation. This supersedes the earlier wording in Entries 020–021 and §3/§10/§11/§12 that suggested an unidentified accountable human Core maintainer. The unresolved questions are implementation facts: exact live Core API/router composition, Work/Assignment persistence, authorization binding and evidence-store runtime—not who built Core.
+
+**W52 read-only trace:** W52 Sandbox contains a candidate room_a2a package and tests/evidence. The inspected adapter registry contains only CodexAdapter (Codex App Server) and QwenAdapter (ACP v1). Both advertise only task.stream_events; the documented profile is no-tool/read-only. This is not a universal provider adapter and does not prove access to private ChatGPT/Gemini/Claude/Grok/Mistral sessions or cloud provider APIs. Live Codex/Qwen are recorded BLOCKED in the capability matrix (CLI absent in the recorded probe environment); native invocation and stream/cancel remain unverified.
+
+CorePort, AuthorityPort, and HostPort are injected interfaces, not production bindings. W52 requires the existing Core for task/event persistence and authorization, and W14 for Host-owned process/transport lifecycle. W52's 2026-10-29 static review records CorePort/AuthorityPort/W14 HostPort and native Codex/Qwen invocation BLOCKED; full E2E NOT RUN. Historical 42/42 coder tests are not independent PASS. W52 remains ACTIVE / DESIGN-FIRST / NOT RELEASED.
+
+**Disposition:** W52 is a reusable candidate component, not a proven active dispatch route. No provider delivery receipt, authenticated recipient ACK or E3 assignment trace was established. Sandbox/GitHub parity and canonical W52 promotion were not tested. No code, test, runtime, provider, branch or release action was performed. GAP-01 remains OPEN / P0; E2/E3 NOT PROVEN; Work 17 READ/TRACE ONLY; protected execution DENY / NOT RELEASED; BUILD/live dispatch/pilot NOT AUTHORIZED.
+
+**Next read-only step:** trace whether the existing W14 Host and Core composition can bind the two W52 adapters without creating parallel services; verify exact route/contract and deployed runtime evidence before any integration proposal. Ka/Cla reviews remain NOT SENT.
