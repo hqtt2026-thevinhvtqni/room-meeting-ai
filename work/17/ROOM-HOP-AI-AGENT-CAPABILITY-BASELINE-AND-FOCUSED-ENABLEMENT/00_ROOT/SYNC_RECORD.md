@@ -497,3 +497,13 @@
 - Reconciliation result: DOC-043 current-main controlled register maps AI-06=Go and AI-07=Co; Qc has no numeric ID there. DOC-010 remains conflicted index; DOC-025 is legacy. Sandbox-only DOC-096 session-control file conflicts by DOC-ID with the DOC-096 retrieval document registered on main and is not registered/canonical on main. Qc ID remains unresolved; no ID/permission mutation.
 - Disposition unchanged: GAP-05 OPEN; GAP-09 OPEN; identity/session NOT_VERIFIED; Dispatch/ACK NOT_PROVEN; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED; Work17 READ/TRACE/ANALYZE ONLY.
 - Sandbox parity for this period: PENDING until exact GitHub read-back contents are written and compared through Sandbox probe.
+
+
+## Sync Period 0037 — Work17 Entry 048 / Core Agent Registry principal mapping (2026-11-19T15:01:37.112Z UTC)
+
+- GitHub main source inventory: agents/ directory listing plus 11 exact YAML fetches; no YAML/config changes.
+- Work17 Journal Entry 048 commit 455ab8f5c17aa485ce81b8ca21ea004923ca0ba8; blob 480fb53c85937cee7a50dd377a317c0e8c48cbb8; bytes 181960; marker true.
+- Work17 GAP Register Entry 048 commit ce1701530e468816e0a72eb014d694c36ec4de33; blob 6cb46186eb30c033391fbdcb5a72beab167675fb; bytes 31787; marker true.
+- Finding: registry principal names are descriptive config identifiers, not HQTT role IDs; Go/Co/Qc aliases are not established in the inspected directory; YAML permission/authority maps are empty; session/provider identity and dispatch/ACK remain NOT_VERIFIED/NOT_PROVEN.
+- Disposition: GAP-05 OPEN; GAP-09 OPEN; GAP-01 OPEN/P0; E2/E3 NOT PROVEN; Work17 READ/TRACE/ANALYZE ONLY; protected execution DENY / NOT RELEASED.
+- Sandbox parity: PENDING exact write/read-back.
