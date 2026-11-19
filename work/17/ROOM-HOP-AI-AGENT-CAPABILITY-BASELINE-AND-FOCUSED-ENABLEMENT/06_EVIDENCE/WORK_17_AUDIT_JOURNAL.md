@@ -963,3 +963,15 @@
 - Disposition: GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2 provider delivery receipt NOT PROVEN; E3 end-to-end Assignment/Dispatch/Delivery/ACK/Execution/Evidence NOT PROVEN; Core owner/API/persistence NOT VERIFIED in inspected source scope; W52/W14/W33 candidates remain non-main/non-release proof; protected execution DENY / NOT RELEASED.
 - Limits: exact GitHub file reads, branch compares, ref/head reads, PR searches and workflow-run lookups; no runtime/test/provider/dispatch/endpoint/secret operation. Findings are bounded to inspected paths/branches and do not claim no external/manual channel exists.
 - Next: stop repeating broad source searches. Maintain this chain map as the current Work17 handoff; only reopen a component when its owner supplies a new exact source revision, a real runtime contract, or new E2 evidence. Any W33 v0.2 reconstruction, W52 build, W14 source promotion or live dispatch remains outside Work17 authorization and requires its respective owner/Gate/Vinh decision.
+
+
+## Entry 055 — Exact GitHub main ↔ Work17 Sandbox parity verification ( 2026-11-19T23:18:31.630Z UTC )
+
+- Actor: Xu / AI-01. Scope: READ / TRACE / SYNC VERIFICATION ONLY. Re-fetched the three canonical Work17 files from GitHub `main` and read the corresponding files from Sandbox Work ID `17` using Work-relative paths. No non-Work17 file, source, branch, runtime, provider, dispatch, permission or configuration was changed.
+- Exact parity results before this entry:
+  1. `06_EVIDENCE/WORK_17_AUDIT_JOURNAL.md`: GitHub blob `1f99221864defb095c9f682f933a41c9d950d96a`; GitHub/Sandbox UTF-8 bytes 212321 / 212321; exact string equality TRUE.
+  2. `04_PLAN/WORK_17_GAP_REGISTER.md`: GitHub blob `26f12ca6f637fcd44ba767854013c70be2fa5ce2`; GitHub/Sandbox UTF-8 bytes 40698 / 40698; exact string equality TRUE.
+  3. `00_ROOT/SYNC_RECORD.md`: GitHub blob `8b8621a164f91048fa6f6c9008194a2be432da26`; GitHub/Sandbox UTF-8 bytes 71513 / 71513; exact string equality TRUE.
+- Operational correction: Sandbox tool paths are relative to Work ID `17`; prefixing the relative path with `work/17/` returns FileNotFoundError. Repeating with the correct Work-relative path succeeded. No file content was changed during the read checks.
+- Reconciliation: all three canonical Work17 files were byte-length and content-equal at the point of verification. The previous Sync Period 0043 label `Sandbox parity: PENDING` was stale; this entry and Sync Period 0044 correct that status to VERIFIED for the three files above. This is a point-in-time parity result, not a permanent guarantee against later edits.
+- Disposition unchanged: GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED; Work17 remains READ / TRACE / ANALYZE ONLY. No new implementation or runtime evidence was produced.
