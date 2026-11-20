@@ -156,3 +156,10 @@
 - **Kiểm soát thay đổi:** không tạo Issue/comment test; không thêm/xóa label; không sửa workflow; không thay đổi permission; không merge PR #66; không áp dụng B-118-010.
 - **Kết luận vòng kiểm tra hiện tại:** chưa có test runtime mới sau Entry 015. Trạng thái vẫn là T-01 BLOCKED / T-02 PASS một phần / T-03 NOT VERIFIED / T-04 NOT VERIFIED / T-05 BLOCKED-NOT RUN / T-06 DONE. Không đánh dấu PASS toàn bộ.
 - **Bước tiếp:** chờ điều kiện label `w118-handoff` để chạy T-01; cần tài khoản/actor độc lập cho T-02 anti-spoof; cần mapping login có thẩm quyền để kết luận T-03; cần một run FAIL phù hợp từ W300/W70 để kiểm tra T-04; T-05 chỉ tiếp tục khi có ACK riêng cho thay đổi listener. B-118-010 vẫn chỉ được triển khai khi Vinh ra lệnh chính xác “ÁP DỤNG B-118-010”.
+
+## Entry 017 — Điều kiện T-01 được thỏa: label w118-handoff đã gắn lên Issue #65
+- **Thời gian:** 2026-11-20 (sau Entry 016)
+- **Phạm vi:** áp dụng điều kiện đã thống nhất ("tạo label thủ công qua UI là hợp lệ, không phá freeze") — Vibe gắn label w118-handoff lên Issue #65 bằng công cụ quản trị issue (issue_write update), label được XÁC MINH đã tồn tại ở cấp repo (get_label: LA_kwDOT6hVUc8AAAADEDp-Fw, màu mặc định ededed) và đã nằm trong danh sách 2 labels của Issue #65 (issue_read: enhancement + w118-handoff).
+- **Lưu ý trung thực:** lần đọc trang Issues đầu tiên vẫn thấy chỉ enhancement (dấu hiệu cache/cập nhật trễ); nguồn sự thật dùng cho Entry này là API issue_read thành công đồng loại. Xu nên xác minh lại bằng view của mình.
+- **T-01 chuyển từ BLOCKED -> READY TO RUN:** chờ run của sự kiện issues(labeled) xuất hiện trên Actions và bot comment "W118 pilot: handoff registered" trên #65. Lúc kiểm tra gần nhất chưa thấy run mới (trang Actions vẫn hiển thị tới run #5); Xu xác minh runtime theo chuẩn run URL + SHA + job conclusion + output.
+- **Không đổi gì khác:** không sửa workflow, không merge PR #66, không đụng quyền; B-118-010 giữ khóa.
