@@ -44,3 +44,12 @@ Không tự ý thay đổi branch protection, secrets/tokens, quyền tổ chứ
 
 ## 8. Điều kiện chuyển giai đoạn
 Không chuyển sang BUILD cho đến khi Biên bản kiến trúc/thiết kế được hoàn thiện, các tác nhân liên quan phản biện, Xu tổng hợp và Vinh phê duyệt theo quy trình HQTT.
+
+
+## Amendment — Owner authorization to BUILD (2026-11-20)
+
+Vinh explicitly authorized Ka to decide the Auto E2E system architecture and continue implementation on GitHub through the acceptance handoff. Xu and Vinh retain independent and final acceptance authority. This decision supersedes the earlier planning-only phase restriction for W118 implementation; it does not waive security controls, independent review, evidence requirements or release gates.
+
+Current implementation branch: `work/118-auto-e2e-v2`, created from canonical `main` SHA `41e8397600505d94434b5830e7aea1a012db77a2`. The earlier PR #66 remains unmerged and is not the implementation base.
+
+Current phase: **BUILD / VERIFY — ACTIVE, NOT RELEASED**.
