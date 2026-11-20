@@ -70,6 +70,34 @@ class Work118WorkflowContractTests(unittest.TestCase):
         controlled = data["jobs"]["controlled-failure"]
         self.assertIn("refs/heads/work/118-auto-e2e-v2", controlled["if"])
 
+
+    def test_controlled_dispatch_targets_isolated_branch_and_input(self):
+        data = self.load_yaml(WORKFLOW)
+        dispatch = data["jobs"]["controlled-failure-dispatch"]
+        run_script = next(step["run"] for step in dispatch["steps"] if "gh workflow run" in step.get("run", ""))
+        self.assertIn("--ref work/118-auto-e2e-v2", run_script)
+        self.assertIn("failure_injection=controlled", run_script)
+
+    def test_diagnostics_listens_to_w118_w300_and_work70(self):
+        data = self.load_yaml(DIAGNOSTICS)
+        workflows = data["on"]["workflow_run"]["workflows"]
+        self.assertIn("W118 Auto E2E Validation", workflows)
+        self.assertIn("W300 Dashboard CI", workflows)
+        self.assertIn("Work 70 Preview Host Tests", workflows)
+
+    def test_ack_result_is_deduplicated_by_source_comment_id(self):
+        data = self.load_yaml(WORKFLOW)
+        run_script = next(step["run"] for step in data["jobs"]["ack-verification"]["steps"] if "MARKER=" in step.get("run", ""))
+        self.assertIn("w118-ack-result", run_script)
+        self.assertIn("COMMENT_ID", run_script)
+
+    def test_diagnostics_runtime_uses_workflow_sha_and_attempt_keys(self):
+        data = self.load_yaml(DIAGNOSTICS)
+        run_script = data["jobs"]["diagnostics"]["steps"][-1]["run"]
+        self.assertIn('--workflow-id "$WF_ID"', run_script)
+        self.assertIn('--sha "$SHA"', run_script)
+        self.assertIn('--attempt "$RUN_ATTEMPT"', run_script)
+
     def test_diagnostics_planner_is_part_of_runtime(self):
         self.assertTrue(Path("scripts/w118/diagnostics.py").is_file())
         self.assertTrue(Path("tests/w118/test_diagnostics.py").is_file())
