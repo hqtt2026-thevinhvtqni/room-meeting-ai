@@ -73,7 +73,7 @@ Preview Host is the first delivery priority of Work 70 until a usable, verified 
 - Xu / AI-01: coordinate, architecture, acceptance matrix, evidence/journal, decision gates.
 - Ka / AI-02: independent architecture/security review of DOC-089 and host boundary.
 - Code owner: implement source and scripts after review; no unverified assignment is claimed.
-- Qw / AI-05: independent QE after implementation and frozen test inputs.
+- Go / AI-06: default QE/QA owner under D70-026 after implementation and frozen test inputs.
 - Vinh: final decision on network exposure, acceptance and release.
 
 MCP 8030 can create/read/write Sandbox artifacts only. It cannot run the host, access the user's PC process table, configure Tailscale, or produce a verified preview URL. Those deployment actions require the user's PC environment or an explicitly connected execution host.
