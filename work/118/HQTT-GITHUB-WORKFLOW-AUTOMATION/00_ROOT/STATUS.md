@@ -197,3 +197,15 @@ The workflow_run listener requires default-branch presence for real runtime veri
 - Current branch compare: 220 commits ahead / 0 behind Main; PR #67 remains OPEN, mergeable and unmerged.
 - Latest head validation [Run #44758608904](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44758608904) SUCCESS; 52/52 tests PASS; artifact `14638958067`.
 - Runtime event E2E remains unverified; Xu Stage A and Vinh Stage B remain pending. ACTIVE — NOT RELEASED.
+
+
+## Current acceptance handoff snapshot — 2026-11-21 20:00 +07:00
+
+- **Handoff:** [BB-118-002 — Auto E2E v2 acceptance package](../10_HANDOFF/BB-118-002_BIEN-BAN-BAN-GIAO-NGHIEM-THU-AUTO-E2E-V2.md), Priority P0 / Read order 10.
+- **PR #67:** OPEN / not merged / not released; Xu formal review pending; Vinh final acceptance pending.
+- **Feature HEAD:** `93d5263c2a32150a96648d54b8afb7b1b13e4b7e`; Main tip `8339f1f2a004704e76b163acd8db66d6d596cef1`; merge base `cf2537e07bfd71d5823bd98f8673b3ab5644fcdc`; **234 ahead / 68 behind — DIVERGED**.
+- **Latest CI:** [Run #44835843136](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44835843136) — validate SUCCESS; 52 tests PASS in 0.230s; artifact ID `14679240377` present/unexpired.
+- **Runtime:** handoff, ACK, acceptance-review, controlled-failure and diagnostics event jobs SKIPPED; live event E2E NOT VERIFIED.
+- **Identity:** D70-026 Go is sole default QE/QA and CFO; no technical permission implied. Xu/Go GitHub logins remain NOT VERIFIED; role map remains deny-by-default.
+- **Current state:** READY FOR XU INDEPENDENT REVIEW — ACTIVE / NOT ACCEPTED / NOT RELEASED. No merge/release performed.
+- **Journal:** Entry 059 in `EVIDENCE/NHAT-KY-THI-CONG.md`.
