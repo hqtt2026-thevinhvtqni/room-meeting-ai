@@ -111,3 +111,8 @@
 - Prepared [RT-118-001 — Post-Merge Runtime E2E Runbook](../09_RUNTIME/RT-118-001_POST-MERGE-E2E-RUNBOOK.md), priority P0.
 - Runbook covers PR checklist, handoff, owner ACK denial, mapped executor ACK positive path (identity-blocked), controlled failure dispatch, diagnostics issue deduplication, review event and Work 70 boundary.
 - **State:** PREPARED — NOT EXECUTED. Requires Xu review and Vinh final acceptance before main integration.
+
+
+## Staged acceptance gate — 2026-11-20
+
+The workflow_run listener requires default-branch presence for real runtime verification. The release gate is therefore staged: (A) Xu design/security review of PR #67; (B) Vinh explicit non-release integration authorization; (C) Ka runs RT-118-001; (D) Xu independently reviews runtime evidence; (E) Vinh final product acceptance; (F) separate release decision. Main integration does not equal acceptance or release. No merge is authorized by this amendment itself.
