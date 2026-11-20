@@ -7,6 +7,7 @@
       "roles": ["owner"],
       "ack_roles": [],
       "can_accept": true,
+      "can_trigger_controlled_test": true,
       "active": true
     },
     "thevinhqtni-1911": {
