@@ -24,7 +24,7 @@
 | W118-10-02 | Fail-closed role map | DONE | Two owner logins mapped to acceptance only; no executor identities guessed |
 | W118-10-03 | ACK authorization engine | DONE | Exact token, role and issue binding; deny by default |
 | W118-10-04 | Independent review authorization | DONE | Self-review and unmapped reviewer denied |
-| W118-10-05 | Idempotent handoff event | IMPLEMENTED | Marker keyed by issue and label event ID; runtime pending after deployment |
+| W118-10-05 | Idempotent handoff event | IMPLEMENTED | Marker keyed by issue number + label ID + issue.updated_at; runtime pending after deployment |
 | W118-10-06 | Idempotent ACK result | IMPLEMENTED | Marker keyed by source comment ID; runtime pending after deployment |
 | W118-10-07 | CI failure diagnostics | IMPLEMENTED | Separate workflow; key = workflow ID + commit SHA; runtime pending after deployment |
 | W118-10-08 | CI evidence artifact | IMPLEMENTED | Run ID, attempt, SHA, event and test outcome; RECORDED only |
