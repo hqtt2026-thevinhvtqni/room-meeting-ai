@@ -52,3 +52,14 @@ Build the unified, role-adaptive ROOM-HOP user-facing dashboard for Web and Mobi
 
 ## Initial structure note
 The creation tool supplied a legacy scaffold (01_ORIGINAL, 02_EXTENSION, 03_ARCHITECTURE, 04_CODE, 05_TEST, 06_EVIDENCE, 07_RELEASE). Those entries are preserved; they are not treated as the W70 canonical lifecycle structure. The W70-aligned structure is being instantiated alongside them. No legacy path is deleted or silently renamed.
+
+
+## Product source baseline — delegated Auto E2E delivery (2026-11-21)
+- **Canonical repository:** `hqtt2026-thevinhvtqni/room-meeting-ai`.
+- **Canonical product source path:** `work/113/ROOM-HOP-UNIVERSAL-DASHBOARD/05_BUILD/04_CODE/product/`.
+- **Implementation branch:** `work/113/room-hop-universal-dashboard-auto-e2e`, created from GitHub main at commit `8339f1f2a004704e76b163acd8db66d6d596cef1` and fetched at the same SHA at branch creation.
+- **Work records:** remain under `work/113/ROOM-HOP-UNIVERSAL-DASHBOARD/` on main; code changes are isolated to the implementation branch and delivered through PR/review, not direct code commits to main.
+- **Boundary:** `DASHBOARD/` remains the W113 Work Dashboard read-only projection; it is not the Universal Dashboard product source. Product code belongs under `05_BUILD/04_CODE/product/`.
+- **Source status:** canonical location and branch are declared; product implementation has not yet been created. No claim of build, runtime or E2E PASS.
+- **Excluded source:** `hqtt2026-thevinhvtqni/PL.room-meeting-ai.dash` remains an unrelated earlier project and is not adopted, copied, migrated or used as a dependency.
+- **Authority:** D-113-005 / D-113-006 and assignment `ASG-W113-CO-AUTOE2E-20261121`; Co owns W113 architecture/implementation under the recorded boundaries; Vinh retains final acceptance.
