@@ -124,3 +124,8 @@ The final acceptance bundle must contain:
 - **Artifact:** `w118-run-evidence-44749396083-1`, ID `14635085374`, not expired at inspection.
 - **Coverage:** CI source/tested revision provenance; diagnostics subscription includes PR checklist; all prior role, idempotency, ACK label, event artifact and safe PR notifier contracts.
 - **Runtime boundary:** event-specific jobs were skipped on the push run; no live event E2E PASS is claimed.
+
+
+## Runtime execution package
+
+Post-merge event execution order and expected outcomes are specified in [RT-118-001](../09_RUNTIME/RT-118-001_POST-MERGE-E2E-RUNBOOK.md). This runbook is prepared only; no issue/comment/diagnostics runtime result is marked PASS before its actual GitHub event evidence exists.
