@@ -101,6 +101,18 @@ class Work118WorkflowContractTests(unittest.TestCase):
         self.assertIn("refs/heads/work/118-auto-e2e-v2", controlled["if"])
 
 
+    def test_direct_controlled_failure_dispatch_is_role_authorized(self):
+        data = self.load_yaml(WORKFLOW)
+        job = data["jobs"]["controlled-failure"]
+        steps = job["steps"]
+        checkout = next(step for step in steps if step.get("name") == "Checkout trusted controlled-test policy")
+        self.assertEqual(checkout["with"]["ref"], "${{ github.event.repository.default_branch }}")
+        auth = next(step for step in steps if step.get("name") == "Authorize direct controlled-failure dispatch actor")
+        self.assertEqual(auth["env"]["AUTHOR"], "${{ github.actor }}")
+        self.assertIn("controlled_test_authorization.py", auth["run"])
+        failure = next(step for step in steps if step.get("name") == "Emit controlled failure for diagnostics E2E")
+        self.assertEqual(failure["if"], "steps.authorize_direct_dispatch.outputs.authorized == 'true'")
+
     def test_controlled_dispatch_targets_isolated_branch_and_input(self):
         data = self.load_yaml(WORKFLOW)
         dispatch = data["jobs"]["controlled-failure-dispatch"]
