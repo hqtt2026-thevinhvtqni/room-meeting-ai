@@ -698,3 +698,16 @@
 - **Ranh giới:** Không cấp quyền, không cập nhật role-map.json, không tạo GitHub login/principal, không chứng minh provider session hoặc runtime identity. Go GitHub identity/access vẫn NOT VERIFIED. D70-024 chỉ giải quyết stable-ID mapping; GAP-05 đóng ở phạm vi numeric mapping.
 - **Trạng thái:** DOC-010 v1.2 + W0000 DOC-004 D0000-012 written and exact-read-back PASS; DOC-043/DOC-006/Work17 matrix/GAP exact-read-back PASS. No permission changes. Runtime identity/access NOT VERIFIED.
 - **Bước tiếp theo:** Các Work khác khi được chạm tới phải tham chiếu D70-024; không cần sửa hàng loạt nhật ký lịch sử. Work17 dashboard snapshot còn stale và phải refresh có kiểm soát trước khi hiển thị như dữ liệu mới.
+
+
+## Entry 057 — Điều chỉnh vai trò Go: CFO + QE/QA mặc định toàn HQTT
+- **Thời điểm:** 2026-11-21 20:00 +07:00.
+- **Actor:** Xu / AI-01.
+- **Authority:** Vinh trực tiếp xác nhận Go có vai trò QE/QA ngang Qw trên toàn bộ Work, đồng thời giữ vai trò CFO.
+- **Quyết định áp dụng:** D70-025 (Work 70 DOC-006); DOC-043 được cập nhật làm canonical controlled role/permission register.
+- **Mapping vai trò:** AI-05 Qw = QE/QA mặc định toàn HQTT; AI-06 Go = CFO/Cost Analyst + QE/QA mặc định toàn HQTT. Go và Qw cùng có phạm vi QE/QA, không thay thế nhau. Go không bị giới hạn ở assignment override của W118 Issue #44; assignment tại Issue #44 chỉ là phân công cụ thể trong vai trò mặc định toàn HQTT.
+- **Nguyên tắc độc lập:** Go/Qw không tự review deliverable do chính mình thực hiện; phải có reviewer độc lập khác khi có xung đột tác giả/thực thi.
+- **Phân biệt quyền:** Đã mở rộng vai trò/trách nhiệm nghiệp vụ QE/QA của Go trên mọi Work theo phê duyệt của Vinh. Không tự tạo GitHub login, token, runtime principal, collaborator grant hoặc quyền kỹ thuật trên repository/MCP/Sandbox. Các quyền kỹ thuật vẫn cần xác minh và cấp riêng theo deny-by-default.
+- **Kiểm thử runtime/session:** NOT RUN; không tuyên bố Go đã đăng nhập/dispatch/ACK hoặc có quyền truy cập kỹ thuật.
+- **Trạng thái:** DECISION RECORDED; canonical DOC-043/DOC-006 updated; exact read-back and cross-Work sync pending.
+- **Bước tiếp theo:** Exact read-back hai tài liệu canonical; đồng bộ DOC-010 Work 0000, Work 17 capability matrix và các Work/assignment đang hiểu Go chỉ là CFO hoặc chỉ QE/QA riêng W118; không sửa lịch sử.
