@@ -6,6 +6,7 @@ import yaml
 
 WORKFLOW = Path(".github/workflows/w118-workflow-automation.yml")
 DIAGNOSTICS = Path(".github/workflows/w118-failure-diagnostics.yml")
+PR_CHECKLIST = Path(".github/workflows/w118-pr-review-checklist.yml")
 
 
 class Work118WorkflowContractTests(unittest.TestCase):
@@ -99,14 +100,17 @@ class Work118WorkflowContractTests(unittest.TestCase):
         self.assertIn('--attempt "$RUN_ATTEMPT"', run_script)
 
 
-    def test_pr_checklist_is_same_repo_pr_scoped_and_idempotent(self):
-        data = self.load_yaml(WORKFLOW)
-        job = data["jobs"]["pr-checklist"]
-        self.assertIn("pull_request", job["if"])
+    def test_pr_checklist_uses_safe_pull_request_target(self):
+        data = self.load_yaml(PR_CHECKLIST)
+        self.assertIn("pull_request_target", data["on"])
+        self.assertEqual(data["permissions"], {"contents": "read", "issues": "write"})
+        job = data["jobs"]["checklist"]
         self.assertIn("head.repo.full_name == github.repository", job["if"])
+        self.assertFalse(any("checkout" in step.get("uses", "") for step in job["steps"]))
         run_script = next(step["run"] for step in job["steps"] if "MARKER=" in step.get("run", ""))
         self.assertIn("w118-pr-checklist", run_script)
         self.assertIn("HEAD_SHA", run_script)
+        self.assertIn("gh issue comment", run_script)
 
     def test_authorized_ack_applies_state_label_only_after_authorization(self):
         data = self.load_yaml(WORKFLOW)
@@ -120,7 +124,7 @@ class Work118WorkflowContractTests(unittest.TestCase):
 
     def test_event_jobs_upload_recorder_artifacts(self):
         data = self.load_yaml(WORKFLOW)
-        for job_name in ("pr-checklist", "handoff", "ack-verification", "acceptance-review"):
+        for job_name in ("handoff", "ack-verification", "acceptance-review"):
             steps = data["jobs"][job_name]["steps"]
             self.assertTrue(any(step.get("uses") == "actions/upload-artifact@v4" for step in steps), job_name)
             self.assertTrue(any("event evidence" in step.get("name", "").lower() for step in steps), job_name)
