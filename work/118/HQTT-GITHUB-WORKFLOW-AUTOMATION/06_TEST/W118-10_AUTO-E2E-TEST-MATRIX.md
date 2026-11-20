@@ -50,3 +50,18 @@ The final acceptance bundle must contain:
 - **Test output:** `Ran 26 tests in 0.071s`; `OK`.
 - **Artifact:** `w118-run-evidence-44746386416-1`, artifact ID `14632693408`, not expired at inspection.
 - **Scope:** unit/contract and YAML/event/permission contract tests. The event jobs were skipped because this was a push event; no real handoff, ACK or diagnostics event is claimed by this run.
+
+
+## Verification update — 2026-11-20 (30 tests)
+
+- **Run:** [44746898664](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44746898664)
+- **Commit:** `c49323b0241f0adc5b7827d58ce45916d628c832`
+- **Job:** `validate` — SUCCESS.
+- **Test output:** `Ran 30 tests in 0.103s`; `OK`.
+- **Artifact:** `w118-run-evidence-44746898664-1`, artifact ID `14633311975`, not expired at inspection.
+- **Added coverage:** owner-gated controlled diagnostics trigger, branch-scoped fault injection, unauthorized trigger denial and handoff re-application idempotency contract.
+- **Event scope:** push run; event-specific jobs were skipped. This run does not claim live handoff, ACK or diagnostics runtime.
+
+| ID | Scenario | Current state |
+|---|---|---|
+| T10-18 | Controlled diagnostics test trigger authorization | PASS — unit/contract coverage; live dispatch pending default-branch deployment |
