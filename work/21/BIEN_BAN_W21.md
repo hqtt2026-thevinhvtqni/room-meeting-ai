@@ -66,3 +66,12 @@ Quyết định: Lưu toàn bộ phân tích và khuyến nghị Hybrid vào Wor
 - BUILD: Tạo branch từ main; cập nhật Manifest và Document Register để ghi mapping; cập nhật research note để phân biệt quyền đồng bộ hồ sơ với quyền cài đặt/triển khai; đồng bộ README, backlog, research note, Manifest, Register, Biên bản và Nhật ký.
 - Boundary: Chỉ đồng bộ hồ sơ nghiên cứu/governance. Không cài đặt, không chạy mã, không tích hợp runtime, không sửa main, không merge PR.
 - Status: branch created; file writes/readback and PR creation pending.
+
+
+### GitHub synchronization result — 2026-11-20
+- Repository: hqtt2026-thevinhvtqni/room-meeting-ai.
+- Branch: `work/21-ai-skills`, created from `main` @ `70ae3fb762bd4719facbf9448919aa2ab9516429`.
+- Mapping: Sandbox root-level Work records → `work/21/`; Sandbox `AI-SKILLS/` → `work/21/AI-SKILLS/`.
+- Files synchronized and exact-readback compared: 7/7 — README.md, 07_RESEARCH_BACKLOG.md, 09_AI_TEMPLATES_PHAN_DONG_GIANG_RESEARCH.md, AI-SKILLS/00_ROOT/WORK_MANIFEST.md, AI-SKILLS/00_ROOT/DOCUMENT_REGISTER.md, BIEN_BAN_W21.md, NHAT_KY_THI_CONG_W21.md.
+- Result: PASS for seven exact GitHub branch file readbacks only. This is partial Work-record sync, not complete Work 21 tree parity, not main merge, not Work acceptance/release.
+- PR: pending creation after final journal/register update.
