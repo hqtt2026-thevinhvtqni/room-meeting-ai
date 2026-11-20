@@ -614,3 +614,10 @@
 - Current-main Host model exposes caller-supplied `authorized: bool`; security validator checks that boolean locally; HTTP `/execute` parses caller WorkContext; command allow-list includes Python/Node/Git/shell executables. This conflicts with V1.2 deployment guide's online Core grant, no caller WorkContext and pytest-only claims.
 - Recorded in Journal Entry 062. No Host request/process/test/runtime action. DOC-DRIFT-02 CONFIRMED; GAP-11 OPEN/P0; protected execution DENY / NOT RELEASED.
 - Next: identify exact V1.2 intended source revision; reconcile source hash binding and command restrictions; independent positive/negative runtime evidence remains required.
+
+## Sync Period 0050 — GAP-01 canonical contract reuse (2026-11-20T08:02:00+07:00)
+
+- Reconciled Work112 DOC-001 ownership and assignment/event/evidence contract with Work17 GAP-01 report and W52 candidate analysis. No new dispatcher/registry/queue/bus/evidence store is needed or authorized.
+- Minimum chain: W70 assignment → Core identity/permission → W52 dispatch/attempt/provider receipt → authenticated recipient ACK with durable Core read-back → W14 Host only after ACK → W33 evidence → W112 loss-aware mapping.
+- W52 candidate remains missing typed dispatch/attempt/target binding, first-class receipt, durable ACK event/gate and production Core/Authority/Host bindings; internal ACCEPTED is not assignment ACK. Host.open side-effect semantics remain unproven.
+- Entry 063 records source refs and fail-closed conditions. No code/runtime/test/dispatch/provider/permission changes. GAP-01 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
