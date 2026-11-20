@@ -115,3 +115,41 @@ This is a research order, not an adoption decision. Candidate ranking must be ev
 - Phan Đông Giang AI Templates: https://phandonggiang.com/ai-templates
 - Reference library: https://aitmpl.com/
 
+
+
+## 11. Work 300 — capability-driven application intake (2026-11-20)
+
+Work 300 (AI Image & Photo Studio) is the first concrete consumer used to validate W21 capability research. This is a demand-to-skill mapping, not a scope transfer: W21 owns reusable Skill research/specifications; W17 owns member capability evidence; W300 owns product requirements and implementation. W300 remains image/photo-only; video is outside its scope (Work 29). No provider call, installation, runtime change, code implementation or product build is authorized by this mapping.
+
+### W300 capability demand
+| ID | Required capability | W21 research/Skill output | Acceptance evidence to design |
+|---|---|---|---|
+| W300-CAP-01 | Safe local image processing | Image validation/processing Skill | Signature/decode/byte-pixel-dimension bounds; orientation/metadata policy; deterministic transform tests |
+| W300-CAP-02 | Provider/model research | Provider/model evaluation Skill | Exact official model/version/schema/pricing/free eligibility; source snapshot; unknowns remain UNKNOWN |
+| W300-CAP-03 | Image generation/editing | Image task workflow Skill | Separate generation, reference-conditioned editing and deterministic edits; no unproven promise of source pixel/layout preservation |
+| W300-CAP-04 | Image quality assurance | Image QA Skill | Decode/output integrity, dimensions, content rubric, hard-fail taxonomy and independent repeatability |
+| W300-CAP-05 | Cost/quota safety | Budget gate + circuit-breaker Skill | Persistent atomic submission cap, preflight, fail-closed unknown budget, no auto retry/duplicate, timeout reconciliation |
+| W300-CAP-06 | Privacy/security | Image data security Skill | Rights/consent, explicit cloud transfer, secret handling, temporary-file/log policy, EXIF/GPS and deletion controls |
+| W300-CAP-07 | Artifact provenance | Image artifact contract Skill | Versioned storage-neutral artifact URI, measured MIME/dimensions, SHA-256, byte size, provenance and QC status |
+| W300-CAP-08 | Multi-agent evidence workflow | Evidence-first handoff Skill | Assignment scope, owner/reviewer, journal entry, reproducible evidence, status and handoff; no fake dispatch/ACK |
+
+### Proposed role mapping (not an assignment or capability PASS)
+- Xu / AI-01: coordinate demand-to-skill traceability and evidence reconciliation.
+- Kha / AI-04: source-backed model/provider and product research.
+- Cla / AI-03: technical contract, image-processing and provider-adapter review.
+- Ka / AI-02: architecture, privacy, security and trust-boundary review.
+- Go / AI-06: cost, quota and budget-control review.
+- Qw / AI-05: independent QA criteria, negative tests and acceptance design.
+- Nu / Manus: independent research candidate; runtime identity/session and execution capability remain NOT_VERIFIED until evidenced.
+- Vi / AI-09 and Qc / Qwen Coder: implementation candidates only after explicit task grants; availability, identity and runtime access are not inferred from role labels.
+- An / AI-10: test execution candidate; test identity and independent status must be evidenced per assignment.
+
+### Required W21 outputs
+1. Portable Skill specifications with purpose, inputs/outputs, preconditions, permissions, provider dependencies, stop conditions, error handling and evidence contract.
+2. Mapping to the existing W21 Skill schema/registry; duplication and ownership check before creating a new Skill.
+3. Proposed member-to-skill capability mapping for W17, separating declared/researched/source-inspected/runtime-tested levels.
+4. Candidate validation plan and evidence rubric; no test is claimed executed by this research intake.
+5. W300 handoff packet referencing canonical DOC-034/DOC-035 and exact acceptance criteria; W300 owner decides adoption.
+
+### Status
+DEMAND MAPPED — research/design only. Skill implementations NOT BUILT; member assignments NOT ISSUED; runtime/provider execution NOT RUN; W300 architecture/build gates unchanged. W21 is not authorized to modify W300 product source or W17 canonical capability verdicts.
