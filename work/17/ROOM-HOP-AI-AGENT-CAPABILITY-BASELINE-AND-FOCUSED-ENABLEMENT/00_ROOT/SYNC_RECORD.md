@@ -642,3 +642,11 @@
 - W52 branch mapping remains NOT SYNCED as a canonical Work subtree; inspected branch snapshot describes legacy Meeting-turn provider connectors, not assignment dispatch with delivery receipt and recipient-bound ACK.
 - No Meeting response, browser marker or handoff packet can be promoted to assignment delivery/ACK evidence. GAP-01 OPEN/P0; E2/E3 NOT PROVEN; ACK-before-Host NOT PROVEN; READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
 - Entry 066 added. No runtime, provider, Core route, private session, code or permission changes.
+
+## Sync Period 0054 — PR #48 Core Authority candidate reconciliation (2026-11-20T08:31:00+07:00)
+
+- Candidate branch `work/w1111-core-execution-authority-v1-2` compares against current main as DIVERGED, 157 commits ahead / 772 behind; not merge-ready.
+- Candidate has source for Core service-credential authentication, Work/purpose grant, online Host validation, source snapshot check, pytest-only purpose and hash-chained JSONL run journal. PR description reports exact-HEAD CI success but also states production credential/policy/journal provisioning, start-dev wiring and live probes remain pending.
+- Candidate grant contract does not show W70 Assignment/dispatch/attempt/provider receipt/recipient ACK binding. It may address a portion of GAP-11, not GAP-01.
+- PR #48 remains a separate unmerged candidate; do not treat as current main or production authority. Core owner still NOT IDENTIFIED in bounded trace.
+- Entry 067 recorded. No merge, runtime, credential, source or permission changes. GAP-01/GAP-11 remain OPEN; protected execution DENY / NOT RELEASED.
