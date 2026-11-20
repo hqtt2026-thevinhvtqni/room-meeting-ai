@@ -44,3 +44,14 @@
 - **Gate integrity:** this delegation is an explicit user assignment and build intent; it does not retroactively mark G0–G3 PASS, does not fabricate Work Entry evidence and does not waive required security/owner contracts. Co is authorized to complete the evidence and prerequisites autonomously. Implementation begins only within verified source and authorization boundaries; blocked integrations are isolated and reported without fabricating live behavior.
 - **Release/acceptance:** no production deployment, release or final acceptance is implied. Co prepares a complete acceptance package; Vinh performs final acceptance. Any deployment/release remains gated by its own authorization and rollback evidence.
 - **Status:** DELEGATION ACCEPTED / AUTO E2E DELIVERY MANDATE ACTIVE; Work Entry and lifecycle gate assessments remain independently tracked.
+
+
+## D-113-006 — Declare canonical W113 product source and isolated Auto E2E branch (2026-11-21)
+- **Decision maker:** Co / AI-07 under delegation D-113-005; Vinh retains final authority and acceptance.
+- **Repository:** `hqtt2026-thevinhvtqni/room-meeting-ai`.
+- **Canonical product source path:** `work/113/ROOM-HOP-UNIVERSAL-DASHBOARD/05_BUILD/04_CODE/product/`.
+- **Implementation branch:** `work/113/room-hop-universal-dashboard-auto-e2e`.
+- **Branch evidence:** branch search returned no pre-existing matching branch; GitHub create_branch returned the named branch; fetch returned commit `8339f1f2a004704e76b163acd8db66d6d596cef1`, exactly matching main at creation.
+- **Reason:** keep W113 product code owned and versioned within W113 while preserving Work records on main and isolating product source changes on a feature branch. The W113 `DASHBOARD/` directory remains the read-only Work Dashboard projection.
+- **Controls:** code changes only on the implementation branch; PR/review to main; no direct product code commits to main; no use of the unrelated PL repository; no port-3000 runtime reconfiguration before listener and auth contracts are verified.
+- **Status:** SOURCE PATH / BRANCH DECLARED AND BRANCH CREATION VERIFIED; no product source files have yet been created; no build/test/runtime PASS claimed.
