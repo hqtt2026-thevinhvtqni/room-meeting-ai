@@ -663,3 +663,26 @@
 - **Kiểm thử:** NOT RUN — đây là source reconciliation, không phải xác minh runtime/session.
 - **Trạng thái:** DONE — đối soát và ghi nhận quy tắc phân biệt vai trò; BLOCKED — global stable-ID conflict remains open; Go identity/access NOT VERIFIED.
 - **Bước tiếp theo:** Vinh quyết định stable ID cho Qc và phê duyệt bản roster canonical; sau đó đồng bộ một nguồn chuẩn và cập nhật alias/mapping ở các Work liên quan theo Decision Log, không ghi đè lịch sử.
+
+
+## Entry 055 — Áp dụng phê duyệt stable AI identity mapping D70-024
+- **Thời điểm:** 2026-11-21 05:50 +07:00.
+- **Actor:** Xu / AI-01 — điều phối và cập nhật hồ sơ theo quyết định của Vinh.
+- **Authority:** Vinh trực tiếp phê duyệt: AI-06 Go, AI-07 Co, AI-08 Qc.
+- **Phạm vi:** Ghi Decision Log và cập nhật canonical roster/role register cùng Work 17 records liên quan. Giữ nguyên lịch sử; không cấp hoặc thay đổi quyền.
+- **Các cập nhật GitHub main đã thực hiện tuần tự:**
+  1. Work 70 DOC-043 canonical role/permission register: commit 3471ce2bec91dce96d2bbd0315c2884f0dbc7a79; blob 2150e1ddddf440f3e937bb92c164e76d3e48fb7b. Qc được định danh AI-08; bổ sung mục stable identity mapping D70-024, phân biệt Qw/Qween với Qc/Qwen.
+  2. Work 70 DOC-006 canonical Decision Log: commit ef686b177d5ebc8f38f86a2c6f6d33a313d6778d; blob 5d5365cf7da714ed0ef24f297846980ab359ba80. Ghi D70-024, phạm vi, rationale, lịch sử supersession và ranh giới không cấp quyền.
+  3. Work 17 AI member capability matrix: commit 0a0bf9cb7a9e27920ff4a61e2c25b1fe91707cd7; blob b9acfe3492b5669140185896a141198068a8b94a. Ba dòng AI-06/07/08 được chuẩn hóa; trạng thái session/dispatch/permission/capability giữ NOT_VERIFIED / NOT_PROVEN.
+  4. Work 17 GAP register: commit a190e4a0b55054f1c7c4b89ce054392a20d313b6; blob 6af209c3265a5daf63212535990068db086f5e2c. GAP-05 đóng đối với xung đột numeric stable ID; xác thực session và quyền vẫn là các vấn đề riêng chưa đóng.
+- **Mapping được áp dụng:**
+  - AI-05 Qw — QE/QA mặc định; không thay đổi.
+  - AI-06 Go — CFO / Cost Analyst mặc định.
+  - AI-07 Co — Coder Assistant.
+  - AI-08 Qc — Qwen Coder.
+- **Work-specific assignment:** Go tiếp tục là AI-06 với role mặc định CFO; nhiệm vụ QE/QA ở W118 Issue #44 chỉ là assignment override theo quyết định riêng của Vinh, không đổi global role.
+- **DOC-010 / DOC-025 lịch sử:** Bản DOC-010 v1.1 nằm trong W0000 Sandbox theo các trace trước, không có canonical GitHub main path được xác minh trong lượt này; DOC-025 v1.3 được xác định là LEGACY / REFERENCE. Không ghi đè nội dung lịch sử. D70-024 và DOC-043 hiện là nguồn áp dụng cho stable mapping. Cần owner W0000 xử lý DOC-010 Sandbox copy/alias theo governance và đồng bộ reference; không tạo bản sao DOC-010 mới trên GitHub khi chưa xác định đúng canonical path/ownership.
+- **Quyền và runtime:** Không có collaborator grant, token, role-map principal, permission scope, provider session hoặc runtime identity nào được tạo/sửa. Go GitHub login/access vẫn NOT VERIFIED; W118 role-map giữ deny-by-default.
+- **Kiểm tra:** Các nội dung đã được ghi qua GitHub API; exact read-back toàn bộ 4 file sau commit cần thực hiện ở bước verify. Không chạy runtime tests; không tuyên bố identity/session PASS.
+- **Trạng thái:** DECISION APPLIED; canonical DOC-043 + DOC-006 updated; Work17 matrix + GAP-05 synced. Runtime identity/access NOT VERIFIED. Historical DOC-010 Sandbox reconciliation BLOCKED pending canonical path/owner.
+- **Bước tiếp theo:** Exact-fetch read-back 4 updated files; xác nhận D70-024/mapping/permission boundary; sau đó lập yêu cầu đồng bộ DOC-010 tại đúng canonical source do W0000 owner quản lý. Tiếp tục W118 Automation độc lập với Go's GitHub identity blocker.
