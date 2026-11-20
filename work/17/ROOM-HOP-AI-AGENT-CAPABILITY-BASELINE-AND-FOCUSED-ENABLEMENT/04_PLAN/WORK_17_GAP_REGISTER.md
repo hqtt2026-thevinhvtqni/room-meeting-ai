@@ -17,7 +17,7 @@
 | GAP-02 | Token/cost telemetry NOT_AVAILABLE cho toàn bộ AI member | Observability & cost | P0 | Journal Entry 002 | Bảng usage (member, model, session) từ nguồn metering, cấp E2 | OPEN |
 | GAP-03 | Chuỗi execution/browser chưa E2E verified | Execution | P0 | Journal Entry 002 (tham chiếu DOC-018) | Một tác vụ browser thật: session record + artifact hash, cấp E3 | OPEN |
 | GAP-04 | Core owner/API/auth/persistence chưa xác minh; Core execution-grant routes chưa được chứng minh mount vào entrypoint; authoritative Work persistence/owner chưa xác minh | Core authority & orchestration | P0 | Journal Entry 002 + WORK_17_CORE_AUTHORITY_SOURCE_TRACE.md (2026-11-19) | Trace request thật qua Core, grant fail-closed, owner được chỉ định, Work persistence/audit và Host online validation; E3 | OPEN |
-| GAP-05 | Xung đột mapping AI-06/AI-07/AI-08 trong DOC-010 | Identity & authorization | P1 | Journal Entry 002 | Quyết định của Vinh + cập nhật DOC-010 v1.2, ghi Decision Log | OPEN |
+| GAP-05 | Xung đột stable mapping AI-06/AI-07/AI-08 | Identity & authorization | P1 | Work 70 DOC-006 D70-024; DOC-043; Work17 matrix addendum | CLOSED — stable-ID decision applied; identity/session and access verification remain separate OPEN items |
 | GAP-06 | Chênh lệch danh mục: Sandbox 71 Work vs DOC-018 snapshot 56 Work (+15 chưa phân loại) | Portfolio reconciliation | P1 | Journal Entry 002 | Mỗi Work chênh lệch được phân loại: mới hợp lệ / legacy / trùng / anomaly | OPEN |
 | GAP-07 | GitHub main chỉ mirror 17 workfolder; 54 Work còn lại không có bản canonical trên GitHub | Evidence & governance | P1 | WORK_17_PORTFOLIO_RECONCILIATION.md kỳ 2026-11-19 | MVSR tăng từ 17/71 lên ≥ 70/71 hoặc ghi rõ ngoại lệ có lý do | OPEN |
 | GAP-08 | Journal self-reference commit SHA (Entry 004/005) | Evidence & governance | P2 | Journal Entry 005 | Chuyển sang SYNC_RECORD.md; dừng ghi SHA HEAD vào thân journal | OPEN |
@@ -154,3 +154,10 @@ GAP-09 / GAP-05 addendum — Entry 046 (2026-11-19 21:43 +07): Work502 canonical
 - W14 release branch head `65992f04d6989e199d91355f0bd977cfc6258c4a`, DIVERGED 6 ahead / 1,543 behind; isolated pipeline/bridge candidate. Bridge blob `2f92e6ca3af7c897c4b5ff26a889e84e0844a823` sends one-shot POST `/execute` with `authorized:true` in WorkContext; no Assignment/Dispatch/Attempt/recipient ACK binding in inspected bridge. W14 journal keeps AUD-005 BLOCKED, candidate v5 NOT APPROVED, PC E2E NOT VERIFIED, release NOT AUTHORIZED.
 - W33 branch head `5adccd732cdf26f33c38c87d57499b079f7db210`, DIVERGED 16 ahead / 1,536 behind; delta is 15 docs only; source/test/evidence implementation absent in inspected branch delta; AC-01…09 PENDING/BLOCKED; original v0.1 17/17 PASS NOT VERIFIED; v0.2 requires Vinh decision.
 - No verified continuous Assignment → authenticated dispatch/delivery receipt → recipient-bound ACK → authorized Host execution → authoritative evidence-ingress chain. GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. No non-Work17 files/branches changed.
+
+
+### GAP-05 closure addendum — Vinh decision D70-024 (2026-11-21)
+- Vinh approved stable mapping: AI-06 Go, AI-07 Co, AI-08 Qc. Work 70 DOC-006 D70-024 records the binding decision; DOC-043 canonical controlled register and Work17 AI member matrix were updated on GitHub main.
+- GAP-05 is CLOSED for numeric stable-ID conflict. Historical DOC-010 v1.1 / DOC-025 v1.3 contents are not rewritten; their conflicting mapping is superseded for current use.
+- This closure does NOT prove authenticated provider sessions, GitHub login, runtime principal, repository permission, capability, dispatch or ACK. Those remain NOT_VERIFIED / NOT_PROVEN and are tracked by their respective gaps. No permission grant or runtime change occurred.
+- Work17 dashboard snapshot remains stale until its owner refreshes it from canonical records; do not infer live status from cached dashboard data.
