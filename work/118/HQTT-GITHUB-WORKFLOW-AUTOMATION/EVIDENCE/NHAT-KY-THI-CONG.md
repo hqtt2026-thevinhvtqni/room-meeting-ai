@@ -227,3 +227,20 @@
 - **Giới hạn:** kết quả chứng minh GitHub đã xác thực và gắn đúng actor vào sự kiện/comment; không chứng minh danh tính ngoài đời của người điều khiển account, cũng không chứng minh quyền role trong HQTT.
 - **Kiểm soát thay đổi:** không có code/workflow/permission/PR mutation; PR #66 vẫn OPEN; B-118-010 vẫn khóa; T-05 không mở rộng.
 - **Bước tiếp:** T-03 cần một bảng login ↔ role được phê duyệt làm nguồn chuẩn; sau đó thiết kế kiểm thử actor được phép và actor không được phép. T-02 chỉ được đóng hoàn toàn khi có bằng chứng từ chối actor không được ủy quyền, không chỉ job success cho token có prefix.
+
+
+## Entry 022 — Vinh phê duyệt mapping hai GitHub account thuộc cùng chủ sở hữu HQTT
+- **Thời gian:** 2026-11-20 (UTC+7).
+- **Phạm vi:** ghi nhận quyết định của Vinh về quyền sở hữu hai GitHub login dùng trong phép thử T-02; chỉ cập nhật hồ sơ governance trên main. Không sửa workflow, permission, secret, branch protection hoặc PR.
+- **Xác nhận của Vinh trong cuộc trao đổi:** hai tài khoản GitHub `hqtt2026-thevinhvtqni` và `thevinhqtni-1911` đều do chính Vinh sở hữu/sử dụng; việc dùng tài khoản thứ hai để kiểm thử không gây vấn đề.
+- **Mapping được chủ sở hữu xác nhận:**
+  - `hqtt2026-thevinhvtqni` → Vinh / HQTT Owner.
+  - `thevinhqtni-1911` → Vinh / HQTT Owner (tài khoản thứ hai).
+  - Hai login là hai danh tính tài khoản GitHub riêng biệt trong sự kiện/audit, nhưng cùng một chủ thể và cùng cấp vai trò theo xác nhận của Vinh.
+- **Đối chiếu runtime đã có:** T-02 Run #8 `44740499758` ghi nhận actor `thevinhqtni-1911` chính xác; comment ACK ID `7040167626`; bot response ID `7040170680`. Bằng chứng này xác minh GitHub actor, không tự chứng minh authorization policy.
+- **Kết luận T-03:** **MAPPING APPROVED BY OWNER — DOCUMENTED** cho hai login nêu trên. **RUNTIME AUTHORIZATION NOT VERIFIED**: workflow pilot hiện chỉ kiểm tra prefix `ACKED-`; chưa thực thi allowlist/role policy và chưa có phép thử một actor ngoài danh sách bị từ chối.
+- **Phân biệt kiểm thử:** T-02 positive test với account thứ hai của cùng chủ sở hữu là kiểm tra event/actor propagation, không phải kiểm thử người dùng độc lập hay unauthorized denial. Cần một actor không nằm trong mapping để kiểm tra từ chối; không tự tạo hoặc mượn tài khoản khi chưa được Vinh chỉ định.
+- **Kiểm soát thay đổi:** PR #66 giữ OPEN; B-118-010 chưa áp dụng; không thay đổi workflow hay quyền GitHub. T-05 vẫn BLOCKED / NOT RUN.
+- **Bước tiếp:** cập nhật ma trận danh tính/role chính thức bằng mapping vừa được duyệt; thiết kế test allow/deny; giữ trạng thái runtime authorization NOT VERIFIED cho tới khi policy được triển khai và có bằng chứng từ chối actor không được phép. T-04 tiếp tục chờ CI FAIL tự nhiên.
+- **Nguyên tắc audit:** lưu cả GitHub login thực tế và HQTT principal/role đã ánh xạ; không gộp hai login thành một actor trong log.
+
