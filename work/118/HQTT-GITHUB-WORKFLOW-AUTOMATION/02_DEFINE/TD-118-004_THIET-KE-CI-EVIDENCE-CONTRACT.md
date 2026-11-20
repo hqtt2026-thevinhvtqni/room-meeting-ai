@@ -37,3 +37,14 @@ Không thêm field bắt buộc; register cũ vẫn hợp lệ v1.1. Việc nân
 
 ## 5. Điều kiện ghi nhận kết quả run
 CI PASS của một run chỉ có giá trị khi:	run URL + commit SHA + evidence row đã ghi + artifact còn tồn tại hoặc diagnostics issue chứa output. Thiếu bất kỳ mục nào thì ghi NOT VERIFIED.
+
+
+## Amendment — Auto E2E v2 evidence artifact (2026-11-20)
+
+The feature branch implementation writes one immutable artifact per validation run: `w118-run-evidence-<run_id>-<attempt>`. It contains schema_version, work_id, workflow, run_id, run_attempt, source_commit, event, test_outcome, state=`RECORDED`, and an explicit limitation that CI evidence does not constitute review or acceptance.
+
+- Artifact retention currently 30 days; retention is a pilot setting, not a Work 70 policy change.
+- The artifact is uploaded even when the contract-test step fails, provided the evidence-writing step can run.
+- No write is made to Work 70's `EVIDENCE_REGISTER.json`; the v1.2 extension remains subject to Work 70 owner approval.
+- CI checks run on push, pull_request and workflow_dispatch. Mutation permissions are isolated to the specific handoff, ACK, review and diagnostics jobs.
+- A successful run proves only the tests/jobs executed for that run and exact SHA.
