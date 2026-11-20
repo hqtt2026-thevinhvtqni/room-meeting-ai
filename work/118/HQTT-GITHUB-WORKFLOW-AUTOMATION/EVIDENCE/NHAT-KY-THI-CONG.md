@@ -125,3 +125,10 @@
 - **Bằng chứng:** TD-118-011 + B-118-010; phạm vi hoàn toàn docs-only, đúng freeze.
 - **Trạng thái Work:** Vòng kiểm thử độc lập IN PROGRESS — đang chờ Xu thực hiện T-01..T-05; T-06 đã có sẵn hồ sơ để Xu xác nhận.
 - **Bước tiếp:** Xu chạy T-01..T-05; khi vòng test đóng + Vinh ACK APPLY B-118-010, Vibe triển khai fix theo thứ tự AC-R3 -> AC-R4 -> AC-R1 -> AC-R5 -> AC-R6.
+
+## Entry 014 — Vibe xác nhận lập trường kiểm thử của Xu (freeze tiếp tục)
+- **Thời gian:** 2026-11-20 (sau Entry 013)
+- **Nội dung:** Xu khẳng định tiếp tục vòng kiểm thử độc lập theo thứ tự T-01 -> T-05, đối chiếu T-06; nguyên tắc mỗi test cần Run URL + Commit SHA + Job conclusion + output thật; phân biệt rõ DONE / PASS / BLOCKED.
+- **Vibe xác nhận:** freeze vẫn được giữ — không merge PR #66, không sửa workflow, không đổi quyền/labels, không ghi PASS thiếu bằng chứng runtime. Trạng thái T theo bảng của Xu được chấp nhận là trạng thái chính thức của vòng test tại thời điểm này.
+- **Điều kiện chờ từ phía vận hành:** label w118-handoff cần tồn tại trước T-01 — tạo thủ công qua UI repo (không phải sửa code) được coi là hợp lệ trong vòng test.
+- **Trạng thái Work:** vòng kiểm thử độc lập IN PROGRESS; Vibe chờ kết quả, chỉ ghi hồ sơ.
