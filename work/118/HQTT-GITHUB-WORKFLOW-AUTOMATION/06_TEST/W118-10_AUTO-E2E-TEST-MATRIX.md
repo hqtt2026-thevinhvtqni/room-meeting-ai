@@ -115,3 +115,12 @@ The final acceptance bundle must contain:
 
 - Added contract test that CI run evidence binds source commit, tested commit/ref, repository, actor, run URL and PR identity.
 - Added diagnostics subscription for `W118 PR Review Checklist`; contract test confirms the listener covers W118, PR checklist, W300 and Work 70 and does not self-listen.
+
+
+## Latest verified contract run — 2026-11-20
+
+- **Run:** [44749396083](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44749396083)
+- **Result:** SUCCESS; `Ran 45 tests in 0.229s`; `OK`.
+- **Artifact:** `w118-run-evidence-44749396083-1`, ID `14635085374`, not expired at inspection.
+- **Coverage:** CI source/tested revision provenance; diagnostics subscription includes PR checklist; all prior role, idempotency, ACK label, event artifact and safe PR notifier contracts.
+- **Runtime boundary:** event-specific jobs were skipped on the push run; no live event E2E PASS is claimed.
