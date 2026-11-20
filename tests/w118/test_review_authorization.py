@@ -45,7 +45,7 @@ class Work118ReviewAuthorizationTests(unittest.TestCase):
             self.role_map, "hqtt2026-thevinhvtqni", "hqtt2026-thevinhvtqni"
         )
         self.assertFalse(allowed)
-        self.assertIn("self-review", reason)
+        self.assertIn("same HQTT principal", reason)
 
     def test_unmapped_reviewer_is_denied(self):
         allowed, _, _ = authorize_acceptance(
