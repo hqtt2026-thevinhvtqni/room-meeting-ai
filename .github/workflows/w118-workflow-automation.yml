@@ -109,6 +109,7 @@ jobs:
       - name: Checkout trusted authorization policy
         uses: actions/checkout@v4
       - name: Authorize controlled failure test
+        id: authorize_controlled_failure
         env:
           AUTHOR: ${{ github.event.comment.user.login }}
         run: |
@@ -116,6 +117,7 @@ jobs:
           python scripts/w118/controlled_test_authorization.py --login "$AUTHOR" > /tmp/test-auth.json
           cat /tmp/test-auth.json >> "$GITHUB_STEP_SUMMARY"
           ALLOWED=$(python -c 'import json; print("true" if json.load(open("/tmp/test-auth.json"))["authorized"] else "false")')
+          echo "authorized=$ALLOWED" >> "$GITHUB_OUTPUT"
           if [ "$ALLOWED" != "true" ]; then
             echo "Controlled diagnostics test denied; no workflow dispatched." >> "$GITHUB_STEP_SUMMARY"
             exit 0
