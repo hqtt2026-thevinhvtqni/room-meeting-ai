@@ -19,7 +19,7 @@ Danh sách AI chỉ là khai báo vai trò. Không chứng minh agent đang ho�
 | AI-05 Qw — QE/QA | Test độc lập, review, phân loại defect, xác minh evidence | Read/test; ghi kết quả review | Sửa kết quả để biến FAIL thành PASS; tự accept/release |
 | AI-06 Go — CFO/Cost Analyst | Phân tích chi phí, ngân sách và hiệu quả | Read cost data được cấp; đề xuất | Phê duyệt chi phí/đăng ký dịch vụ mới |
 | AI-07 Co — Coder Assistant | Hỗ trợ code/debug theo WP | Quyền giới hạn theo assignment | Merge/release/accept |
-| Qc — Qwen Coder | Thực thi code/UI/backend theo assignment và capability thực tế | GitHub/repository nếu đã kết nối và được cấp | Không được giả định có MCP/Sandbox; không QE độc lập |
+| AI-08 Qc — Qwen Coder | Thực thi code/UI/backend theo assignment và capability thực tế | GitHub/repository nếu đã kết nối và được cấp | Không được giả định có MCP/Sandbox; không QE độc lập |
 | La — Dola AI | Adapter hỗ trợ theo nhiệm vụ được xác minh | Chỉ quyền được kiểm tra thực tế | Không suy diễn model/backend/capability chưa xác minh |
 | An — Human Tester | Kiểm thử thao tác và nghiệm thu kỹ thuật được phân công | Test environment và evidence capture | Không thay quyền Product Owner |
 
@@ -47,3 +47,14 @@ Mỗi lần tham gia ghi AI ID, assignment ID, thời điểm, input/version, ac
 
 ## 7. Xung đột vai trò
 Nếu cùng agent vừa thực thi vừa review, phải chỉ định reviewer độc lập khác. Nếu không có, kết quả chỉ là self-check, không đủ cho gate PASS.
+
+## 8. Stable identity mapping — Decision D70-024 (2026-11-21)
+Theo quyết định trực tiếp của Vinh ghi tại D70-024:
+- AI-06 = Go — CFO / Cost Analyst.
+- AI-07 = Co — Coder Assistant.
+- AI-08 = Qc — Qwen Coder.
+- AI-05 = Qw — QE/QA; Qw/Qween không phải Qc/Qwen.
+Mapping này thay thế các mapping lịch sử mâu thuẫn trong DOC-010 v1.1 và DOC-025 v1.3. Không xóa hoặc viết lại lịch sử; các bản cũ được giữ làm evidence lịch sử và không còn là nguồn áp dụng cho stable ID hiện hành.
+- AI ID chỉ là stable roster identifier. Không chứng minh provider session, GitHub login, runtime principal, permission, dispatch/ACK hoặc capability thực tế.
+- Mọi quyền tiếp tục deny-by-default, chỉ cấp theo assignment cụ thể sau xác minh danh tính/session và phê duyệt quyền riêng; quyết định mapping này KHÔNG cấp hoặc thay đổi bất kỳ quyền nào.
+- Work-specific role override phải được ghi trong assignment/Decision Log của Work đó, không sửa role mặc định toàn HQTT.
