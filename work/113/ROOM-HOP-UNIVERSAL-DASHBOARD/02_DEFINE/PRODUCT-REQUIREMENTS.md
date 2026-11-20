@@ -41,3 +41,15 @@ Rebuilding domain services; changing authoritative Work lifecycle; replacing W00
 - AC-10 Vinh explicitly accepts release after W70 gates and evidence are satisfied.
 
 All requirements remain proposed until DISCOVER and DEFINE gates are completed.
+
+
+## Requirement intake addendum — shared Dashboard ingress on port 3000 (2026-11-21)
+
+**Status: PROPOSED REQUIREMENT — DISCOVERY/ARCHITECTURE REVIEW REQUIRED; NOT AN IMPLEMENTATION OR ROUTING APPROVAL.**
+
+- **FR-16 — Shared ROOM-HOP Dashboard entry point:** All authorized Work Dashboards in ROOM-HOP shall be reachable through one shared Dashboard ingress on port `3000`, rather than requiring each Work Dashboard to expose an independent public listener/port. The shared ingress shall resolve navigation to the appropriate Work Dashboard using a stable Work identity (for example, Work ID); the concrete URL/path pattern and routing mechanism remain undecided pending architecture and contract verification.
+- **FR-17 — Preserve per-Work dashboard boundaries:** A shared port/ingress is a transport and navigation consolidation only. It shall not merge Work records, lifecycle state, permissions, evidence, sessions or data stores. Each Work Dashboard remains a projection of its own canonical Work records and access policy. W70 DOC-085's distinction between Work Dashboard and Product Dashboard remains mandatory; a shared ingress does not turn all Work Dashboards into one Product Dashboard.
+- **NFR-16 — Single-listener and isolation constraint:** The shared ingress shall have one authoritative listener on port `3000`; Work modules shall be mounted/routed behind it and must not independently compete to bind the same port. Authentication and authorization must be enforced for each target Work/resource by verified owning services; route concealment or client-side filtering is not security.
+- **Discovery/architecture constraints:** Confirm current port-3000 process ownership and runtime topology in the technical Work; identify the authorized routing/hosting boundary, stable Work identifier, deep-link behavior, session handling, failure isolation, and per-Work authorization contract. Do not infer that the current port-3000 service already supports this topology. Do not implement or change runtime configuration under this requirement intake.
+
+**Traceability:** Vinh's explicit product direction on 2026-11-21; W113 DOC-001/DOC-006/DOC-008/DOC-009; W70 DOC-085 (Work Dashboard ≠ Product Dashboard). This addendum records the requirement only; it does not pass DEFINE/ARCHITECT gates or authorize BUILD.
