@@ -142,3 +142,10 @@ The workflow_run listener requires default-branch presence for real runtime veri
 - **PR #67:** OPEN / READY FOR REVIEW / mergeable=true; branch 123 commits ahead / 0 behind main; 30 files changed.
 - **Reviews:** no GitHub review submitted yet at readback. Xu Stage A review remains pending.
 - **Integration:** Vinh Stage B authorization remains pending; no merge/release.
+
+
+## Latest ready-for-review validation — 2026-11-20
+
+- Run [#44750417015](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44750417015) SUCCESS; 45 tests passed; artifact ID `14635330750` exists and is unexpired.
+- PR #67 OPEN / READY FOR REVIEW / mergeable=true; 126 commits ahead / 0 behind main; 30 files changed.
+- Xu Stage A review remains pending; no GitHub review exists at latest readback. Vinh Stage B integration authorization remains pending.
