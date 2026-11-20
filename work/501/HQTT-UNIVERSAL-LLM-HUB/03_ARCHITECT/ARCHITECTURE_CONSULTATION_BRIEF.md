@@ -18,7 +18,7 @@ Vinh chốt LOCAL FIRST; GLOBAL CONTROL; MODEL ARENA = YES; ZERO-COST FIRST. Kh�
 Review Core/Gateway/Runtime boundary, invocation contract, capability negotiation, local runtime, concurrency/queue/retry/timeout/fallback, LiteLLM overlap, API versioning and observability. Deliver corrected architecture, contracts, failure matrix and source evidence. No implementation.
 ### Ka / AI-02 — CSA/security/privacy
 Challenge global control, paid deny, secrets, endpoint allowlist/SSRF, egress, prompt/response handling, cross-Agent isolation, model output/tool execution, provider retention, supply chain and audit integrity. Deliver threat scenarios, severity, mitigation, residual risks and mandatory gates. No implementation.
-### Qw / AI-05 — QE
+### Go / AI-06 — QE/QA (default HQTT owner under D70-026)
 Review registry/policy correctness, capability mismatch, local/cloud fallback, quota exhaustion, paid-deny invariants, redaction, concurrency, audit failure, Arena partial failure, evaluator bias and reproducibility. Deliver test matrix, measurable acceptance thresholds and evidence requirements. No implementation.
 ### Go / AI-06 — local feasibility and cost
 Use verified hardware facts only. Compare Ollama/llama.cpp/current environment; estimate CPU/GPU/RAM/VRAM/disk, throughput and concurrency; identify electricity, bandwidth, storage and overage risks. Do not install/download/create accounts/enable billing.
