@@ -608,3 +608,9 @@
 - Current-main deployment guide claims integrated grant routes and online grant validation at Host. Exact source reads show Core grant modules NOT_FOUND, current HTTP adapter has no grant-route mount, and current Host still accepts caller-supplied WorkContext at POST /execute.
 - Recorded DOC-DRIFT-02 in Journal Entry 061. The guide is not proof of current-main integration or deployment; intended branch/revision must be identified by its owner. No Core/Host/deployment change made.
 - GAP-11 remains OPEN/P0; GAP-01 remains OPEN/P0 because execution grant is not provider dispatch/recipient ACK. E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
+
+## Sync Period 0049 — Current Host trust-boundary confirmation (2026-11-20T07:54:00+07:00)
+
+- Current-main Host model exposes caller-supplied `authorized: bool`; security validator checks that boolean locally; HTTP `/execute` parses caller WorkContext; command allow-list includes Python/Node/Git/shell executables. This conflicts with V1.2 deployment guide's online Core grant, no caller WorkContext and pytest-only claims.
+- Recorded in Journal Entry 062. No Host request/process/test/runtime action. DOC-DRIFT-02 CONFIRMED; GAP-11 OPEN/P0; protected execution DENY / NOT RELEASED.
+- Next: identify exact V1.2 intended source revision; reconcile source hash binding and command restrictions; independent positive/negative runtime evidence remains required.
