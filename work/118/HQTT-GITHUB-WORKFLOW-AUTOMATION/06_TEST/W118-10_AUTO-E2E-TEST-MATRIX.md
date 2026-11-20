@@ -99,3 +99,13 @@ The final acceptance bundle must contain:
 - Added contract checks: ACK label is applied only inside the authorized branch; handoff/ACK/review jobs upload event artifacts; PR checklist uses safe `pull_request_target` with no checkout; path filters include the checklist workflow.
 - The PR checklist write attempt in ordinary pull_request context failed because the GitHub token was read-only. The design was corrected to a dedicated base-context workflow; no token permission escalation was made.
 - Latest verified count before this amendment: 43 tests PASS in Run #44748809778; next CI run validates the path-filter test and final documentation.
+
+
+## Latest event-contract verification — 2026-11-20
+
+- **Run:** [44748965030](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44748965030)
+- **Result:** SUCCESS; `Ran 44 tests in 0.175s`; `OK`.
+- **Artifact:** `w118-run-evidence-44748965030-1`, ID `14634556693`, not expired at inspection.
+- **New coverage:** OPERATION event evidence builder; immutable RECORDED state; ACK label applied only after authorization; safe `pull_request_target` checklist; same-repository scope; no PR code checkout; workflow path filter coverage.
+- **Known event failure and correction:** ordinary pull_request token could not add comments (`Resource not accessible by integration`). The write action was removed from that context and moved to the base-context notifier; no broader token permission was requested.
+- **Runtime limitation:** handoff, ACK, review and workflow_run diagnostics events remain pending default-branch integration.
