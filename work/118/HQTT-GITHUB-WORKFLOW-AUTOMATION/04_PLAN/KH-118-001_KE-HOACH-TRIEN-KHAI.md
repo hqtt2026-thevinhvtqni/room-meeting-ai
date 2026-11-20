@@ -5,11 +5,11 @@ Thiết kế và kiểm chứng có kiểm soát cơ chế điều phối GitHub
 
 | WP | Hạng mục | Đầu ra | Trạng thái |
 |---|---|---|---|
-| W118-01 | Kiểm kê hiện trạng GitHub và Work 70 | Danh mục workflow, events, quyền, CI, API, gaps | PLANNED |
+| W118-01 | Kiểm kê hiện trạng GitHub và Work 70 | Danh mục workflow, events, quyền, CI, API, gaps | DONE 2026-11-20 — [EVIDENCE/W118-01_GITHUB_DISCOVERY_20261120.md](../EVIDENCE/W118-01_GITHUB_DISCOVERY_20261120.md); gap chính: 0/8 cơ chế event-driven tồn tại; BLOCKED phụ: secrets/webhook cấp repo cần Vinh xác nhận |
 | W118-02 | Chuẩn hóa Issue/Branch/Commit/PR | Quy ước và templates | PLANNED |
-| W118-03 | Thiết kế CI và evidence contract | Ma trận jobs, artifacts, SHA, logs, exit code | PLANNED |
-| W118-04 | Thiết kế event orchestration | Event → actor → action → permission → result | PLANNED |
-| W118-05 | Thiết kế failure/retry/idempotency | State machine và giới hạn retry | PLANNED |
+| W118-03 | Thiết kế CI và evidence contract | Ma trận jobs, artifacts, SHA, logs, exit code | PLANNED — khuyến nghị tái dùng schema evidence W70 |
+| W118-04 | Thiết kế event orchestration | Event → actor → action → permission → result | PLANNED — khuyến nghị GitHub-native events trước, webhook sau |
+| W118-05 | Thiết kế failure/retry/idempotency | State machine và giới hạn retry | PLANNED — gồm item chống vòng lặp CI autofix (w300) |
 | W118-06 | Thiết kế review/acceptance/merge gates | Gate matrix và quyền phê duyệt | PLANNED |
 | W118-07 | Thiết kế audit journal/dashboard | Data contract và provenance | PLANNED |
 | W118-08 | Phản biện và chốt kiến trúc | Biên bản kiến trúc được duyệt | PLANNED |
