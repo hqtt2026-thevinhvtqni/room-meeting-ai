@@ -31,9 +31,9 @@ Xu reviews the implementation independently and records PASS / BLOCKED / NEEDS C
 
 ## 3. Verified CI evidence
 
-- [Run #44748049548](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44748049548): SUCCESS; 36 tests passed; artifact `w118-run-evidence-44748049548-1`, ID `14633817327`.
-- The run was a push event. Event-specific jobs were skipped. This evidence does not prove live handoff, ACK, review or diagnostics runtime.
-- PR branch is based on main and was 71 commits ahead / 0 behind at the latest comparison.
+- [Run #44835843136](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44835843136): validate SUCCESS; 52 tests passed in 0.230s; artifact `w118-run-evidence-44835843136-1`, ID `14679240377`, SHA-256 `5d6a7bbcb10c0caeaa5ba05f6f96d16cb54c823d6af475418c9bab0d5ec6c024`, present and unexpired at readback.
+- This PR validation ran only `validate`; `handoff`, `ack-verification`, `acceptance-review`, `controlled-failure` and `controlled-failure-dispatch` were SKIPPED. This is unit/contract proof only, not live event E2E.
+- Current compare: Main `8339f1f2a004704e76b163acd8db66d6d596cef1`; feature HEAD `93d5263c2a32150a96648d54b8afb7b1b13e4b7e`; merge base `cf2537e07bfd71d5823bd98f8673b3ab5644fcdc`; 234 ahead / 68 behind (DIVERGED).
 
 ## 4. Known blockers Xu must not silently waive
 
@@ -41,6 +41,7 @@ Xu reviews the implementation independently and records PASS / BLOCKED / NEEDS C
 2. No executor identity for Ka/Vi/An is inferred; positive live ACK remains blocked until a real actor identity is verified and mapped.
 3. Work 70 Evidence Register integration remains blocked pending Work 70 schema/owner approval.
 4. Real GitHub event E2E and workflow_run diagnostics must be executed after the reviewed workflow is integrated into default branch.
+5. Go (AI-06) is the sole default QE/QA under D70-026, but Go's GitHub login and repository access are not verified; no executor permission is inferred or granted.
 
 ## 5. Review result
 
