@@ -45,5 +45,13 @@ class Work118DiagnosticsTests(unittest.TestCase):
         self.assertEqual(plan["update_marker"], "<!-- w118-diagnostic-update:77:2 -->")
 
 
+    def test_closed_issue_is_reused_by_exact_key(self):
+        key = diagnostic_key(19, "f" * 40)
+        issues = [
+            {"number": 201, "state": "closed", "body": f"resolved\\n<!-- {key} -->"},
+        ]
+        self.assertEqual(find_existing_issue(issues, key), "201")
+
+
 if __name__ == "__main__":
     unittest.main()
