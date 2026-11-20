@@ -50,6 +50,15 @@ class Work118WorkflowContractTests(unittest.TestCase):
         self.assertNotIn("gh pr merge", review_steps)
         self.assertNotIn("auto-merge", review_steps)
 
+
+    def test_handoff_idempotency_distinguishes_reapplied_label(self):
+        data = self.load_yaml(WORKFLOW)
+        steps = data["jobs"]["handoff"]["steps"]
+        env = next(step["env"] for step in steps if "ISSUE_UPDATED_AT" in step.get("env", {}))
+        self.assertEqual(env["ISSUE_UPDATED_AT"], "${{ github.event.issue.updated_at }}")
+        run_script = next(step["run"] for step in steps if "MARKER=" in step.get("run", ""))
+        self.assertIn("${ISSUE_UPDATED_AT}", run_script)
+
     def test_diagnostics_planner_is_part_of_runtime(self):
         self.assertTrue(Path("scripts/w118/diagnostics.py").is_file())
         self.assertTrue(Path("tests/w118/test_diagnostics.py").is_file())
