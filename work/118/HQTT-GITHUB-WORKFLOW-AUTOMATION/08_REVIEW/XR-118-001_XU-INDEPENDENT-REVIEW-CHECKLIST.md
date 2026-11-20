@@ -62,3 +62,8 @@ A Xu PASS permits Vinh to perform final product acceptance; it does not itself s
 13. **P0 — ACK state mutation:** verify `w118-acked` is applied only after active actor/role/Issue authorization passes; denied ACK causes no label mutation.
 14. **P0 — Event evidence:** handoff, ACK and review artifacts are bound to source event, run/attempt, actor, decision and SHA; state remains RECORDED and no Work 70 register is mutated.
 15. **P0 — PR checklist notifier:** `pull_request_target` workflow must not checkout or execute PR head code; it must be same-repository scoped, least-privilege and idempotent per PR head SHA.
+
+
+## Runtime execution plan
+
+The post-merge execution sequence is defined in [RT-118-001 — Post-Merge Runtime E2E Runbook](../09_RUNTIME/RT-118-001_POST-MERGE-E2E-RUNBOOK.md). Xu should review the sequence and expected security outcomes before Vinh authorizes main integration. The runbook is PREPARED, not executed; no runtime PASS is implied.
