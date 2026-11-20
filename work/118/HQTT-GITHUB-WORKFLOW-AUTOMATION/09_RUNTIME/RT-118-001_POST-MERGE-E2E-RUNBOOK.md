@@ -38,7 +38,7 @@
 - A reviewer account mapped to the same principal as the PR author is denied.
 - Unmapped reviewer/actor is denied.
 - Unmapped PR author prevents a claim of reviewer independence.
-- Only the dedicated controlled-test permission can dispatch fault injection. The direct job checks the actual workflow actor; if a GITHUB_TOKEN dispatch is attributed to `github-actions[bot]`, the failure step must be denied. In that case Vinh must initiate the controlled `workflow_dispatch` directly from the Actions UI as the mapped owner; do not pass or trust a caller-supplied actor field. The direct job checks the actual workflow actor; if a GITHUB_TOKEN dispatch is attributed to `github-actions[bot]`, the failure step must be denied. In that case Vinh must initiate the controlled `workflow_dispatch` directly from the Actions UI as the mapped owner; do not pass or trust a caller-supplied actor field.
+- Only the dedicated controlled-test permission can dispatch fault injection. The direct job checks the actual workflow actor; if a GITHUB_TOKEN dispatch is attributed to `github-actions[bot]`, the failure step must be denied. In that case Vinh must initiate the controlled `workflow_dispatch` directly from the Actions UI as the mapped owner; do not pass or trust a caller-supplied actor field.
 - Fault injection cannot run on main.
 - The diagnostics workflow does not listen to itself.
 - No automatic retry, auto-merge or auto-release occurs.
