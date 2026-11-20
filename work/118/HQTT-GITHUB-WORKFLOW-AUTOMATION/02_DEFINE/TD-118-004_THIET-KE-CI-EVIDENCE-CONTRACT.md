@@ -59,3 +59,8 @@ The `scripts/w118/event_evidence.py` builder creates an OPERATION artifact for h
 - Review artifact: `w118-review-evidence-<run_id>-<attempt>`.
 - PR checklist is recorded by a deduplicated GitHub comment from a separate base-context workflow; ordinary pull_request validation stays read-only.
 - Work 70 register integration remains blocked until Work 70 approves the schema/owner contract.
+
+
+### Run provenance refinement — 2026-11-20
+
+The validation artifact now distinguishes `source_commit` (PR head SHA when applicable) from `tested_commit` (the exact checked-out GitHub Actions revision), and records repository, source ref, tested ref, actor, workflow ref, run URL, PR number and PR base SHA. This prevents a PR merge-ref test from being misrepresented as a test of the source branch SHA alone.
