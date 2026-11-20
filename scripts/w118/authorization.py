@@ -1,8 +1,8 @@
 """Fail-closed GitHub actor authorization for Work 118.
 
-This module deliberately separates execution ACK permission from acceptance
-permission. An owner account is not an execution actor merely because it is
-trusted to accept work.
+This module deliberately separates execution ACK, independent-review and
+project-owner final-acceptance permissions. An owner account is not an
+independent reviewer or execution actor merely because it owns the project.
 """
 from __future__ import annotations
 
@@ -17,7 +17,7 @@ ACK_RE = re.compile(r"^ACKED-([a-z][a-z0-9_-]*)\s+([1-9][0-9]*)$")
 
 def load_role_map(path: str | Path) -> dict[str, Any]:
     data = json.loads(Path(path).read_text(encoding="utf-8"))
-    if data.get("schema_version") != "1.0":
+    if data.get("schema_version") != "1.1":
         raise ValueError("unsupported role-map schema_version")
     if data.get("policy") != "deny-by-default":
         raise ValueError("role-map must use deny-by-default")
