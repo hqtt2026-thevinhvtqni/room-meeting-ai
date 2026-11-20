@@ -63,8 +63,8 @@ Mapping này thay thế các mapping lịch sử mâu thuẫn trong DOC-010 v1.1
 - Quyền kỹ thuật GitHub/repository/MCP/Sandbox/runtime, login, token và principal vẫn deny-by-default; cần xác minh và cấp riêng. Vai trò nghiệp vụ QE/QA không tự tạo quyền truy cập hệ thống.
 
 
-## 9. Vai trò kép Go — Decision D70-025 (2026-11-21)
-Theo phê duyệt trực tiếp của Vinh, AI-06 Go giữ đồng thời hai vai trò mặc định cấp HQTT: CFO/Cost Analyst và QE/QA. Phạm vi QE/QA của Go ngang AI-05 Qw trên toàn bộ Work. Qw tiếp tục giữ vai trò QE/QA mặc định; hai thành viên cùng đảm nhiệm QE/QA, không thay thế nhau. Go không bị giới hạn ở assignment override của W118 Issue #44. Phân công theo Work/WP chỉ là phân công trách nhiệm cụ thể, không phải điều kiện phát sinh vai trò. Quyền kỹ thuật, login, token và runtime principal vẫn phải xác minh/cấp riêng theo deny-by-default.
+## 9. Vai trò kép Go — Decision D70-025 (2026-11-21) — HISTORICAL / SUPERSEDED BY D70-026
+D70-025 từng xác lập Go giữ CFO + QE/QA và Qw tiếp tục QE/QA đồng thời. Theo quyết định mới hơn D70-026, phần “Go và Qw cùng giữ QE/QA mặc định” đã bị thay thế: Go hiện là QE/QA mặc định duy nhất toàn HQTT; Qw không còn vai trò QE/QA mặc định. D70-025 được giữ nguyên làm lịch sử, không còn là authority hiện hành cho phân công QE/QA. Các ranh giới về quyền kỹ thuật, login, token và runtime principal vẫn giữ nguyên.
 
 
 ## 10. Vai trò QE/QA mặc định của Go thay Qw — Decision D70-026 (2026-11-21)
