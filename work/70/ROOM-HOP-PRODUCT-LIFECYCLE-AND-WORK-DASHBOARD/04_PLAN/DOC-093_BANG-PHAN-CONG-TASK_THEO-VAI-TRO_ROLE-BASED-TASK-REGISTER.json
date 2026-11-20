@@ -1118,7 +1118,7 @@
       "progress_percent": 0,
       "evidence_refs": [],
       "blockers": [],
-      "next_action": "Thực thi test được phân quyền; bàn giao Qw/An review độc lập",
+      "next_action": "Thực thi test được phân quyền; bàn giao Go/An review độc lập",
       "status_note": "Task baseline được khởi tạo theo vòng đời. Chưa ghi nhận ACK hoặc evidence thực thi cho task này; không suy diễn DONE/PASS.",
       "updated_at": "2026-11-08T12:10:00+07:00",
       "execution_steps": [
@@ -1718,5 +1718,13 @@
     ],
     "autonomy_boundary": "Only within verified identity, capability, task scope, permission, source revision, environment and gates. No bypass of security/authorization or reserved Product Owner decisions.",
     "notification_policy": "No repetitive progress polling. Notify on material milestone, final handoff or genuine blocker requiring external authority/access."
+  },
+  "governance_addendum": {
+    "decision": "D70-026",
+    "effective_date": "2026-11-21",
+    "default_qeqa_owner": "Go / AI-06",
+    "supersedes": "Qw / AI-05 as default QE/QA owner",
+    "history_policy": "Historical journal entries and prior decisions are preserved; this register reflects current default role.",
+    "boundary": "Go must not independently review Go-authored deliverables. This role does not grant GitHub/runtime permissions or prove dispatch/ACK."
   }
 }
