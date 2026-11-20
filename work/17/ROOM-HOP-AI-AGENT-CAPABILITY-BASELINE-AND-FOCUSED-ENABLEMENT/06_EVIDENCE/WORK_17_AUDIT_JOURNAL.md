@@ -1396,3 +1396,29 @@
 - Disposition: W70 document/source authority reconciliation OPEN; WP70-CO remains historical ACK + Sandbox-only preparatory artifact; canonical Assignment service/API/persistence/ACK verifier NOT VERIFIED; GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
 - Hành động: READ/TRACE only; no W70 writes, sync, merge, migration, mirror cleanup, source promotion or test/runtime action.
 - Bước tiếp theo: use DOC-056 migration rules and W70 authority to reconcile DOC-001/003/035/055 versions, preserve both histories, then establish one exact canonical DOC-035/DOC-055 revision and source mapping for any retained 05_BUILD code. Until then, do not reuse WP70-CO prototype as canonical Assignment authority.
+
+## Entry 078 — W70 DOC-042 manual orchestration contract versus machine-enforced Assignment service (2026-11-20T19:20+07:00)
+
+- Người thực hiện: Xu / AI-01.
+- Phạm vi: Kiểm tra DOC-042 End-to-End Execution Orchestration để xác định liệu quy trình vận hành hiện hữu có cung cấp Assignment authority/service hay chỉ là procedural governance; đối chiếu GitHub main với Sandbox direct-root.
+- Phương pháp: Fetch exact GitHub main DOC-042 và Sandbox Work70 direct-root DOC-042; so sánh prefix/content; trích các quy tắc Assignment, ACK, state, Work Entry, journal/readback và enforcement. Không gọi API, không dispatch, không thay đổi Work70.
+- GitHub main DOC-042 blob a9a949b56ae615cdc5aced0ba1563ab45e97ab8f, 5,451 chars, version 1.0 / 2026-10-30. Sandbox direct-root DOC-042 có 15,910 chars; GitHub main content là exact prefix của Sandbox, Sandbox có addenda 2026-11-10 và 2026-11-11 chưa xuất hiện trong GitHub main snapshot.
+- DOC-042 base procedural contract:
+  - Mỗi Assignment phải có Work/WP/Task, owner/assignee, scope/source, permissions, deliverables, acceptance, dependencies và reviewer; thiếu nguồn/quyền/đầu ra/acceptance thì không READY.
+  - Assignment/WP statuses là các trạng thái nghiệp vụ được ghi trong hồ sơ; Core là nguồn sự thật dự kiến cho identity/permission/state/decision/evidence metadata khi API được triển khai/xác minh. Không có route/service/storage contract được tạo bởi DOC-042.
+- Sandbox DOC-042 addendum 2026-11-10:
+  - Phân biệt Work Entry status và Assignment status; không suy ra Assignment transition từ issue/source-map resolution.
+  - READY yêu cầu participant G0–G5 PASS, canonical source/ref/starting SHA, scope/permission, deliverables/acceptance, dependency, reviewer/QE route và recipient ACK trước IN_PROGRESS.
+  - Mọi transition cần before→action→after, evidence và journal/readback; assignment state phải cập nhật theo điều kiện riêng.
+  - EXECUTION_AUTHORIZED là trạng thái riêng, cần G0–G5 PASS, bounded authorization, recipient ACK và tool-level enforcement; tài liệu nói rõ document-only permission claim không phải enforcement evidence.
+- Sandbox DOC-042 addendum 2026-11-11:
+  - DOC-096 được đặt làm operating control cho session identity, complete latest journal intake, task/evidence/source/permission reconciliation, append-only correction, serialized writes và exact readback.
+  - DOC-042 quy định writer phải scan toàn bộ DOC-035, tìm max ID và kiểm tra record cuối trước khi append; machine-enforced identity/uniqueness/locking vẫn NOT VERIFIED.
+- Ý nghĩa đối với Assignment authority:
+  - DOC-042 là operating procedure/human-governed orchestration contract. DOC-044 là template; DOC-093/DOC-094 là planning registers; DOC-035 là journal/evidence trail. Chúng hỗ trợ quản trị thủ công và truy vết, nhưng không tự tạo Assignment API/service, durable transaction, authenticated ACK ingest, event store hay online authorization middleware.
+  - Các addenda trong Sandbox cung cấp điều kiện chính sách rất rõ, nhưng GitHub main chỉ có bản prefix trước các addenda; exact parity chưa đạt. Nội dung quy định G0–G5/ACK/tool enforcement là policy requirement, không chứng minh máy đã enforce.
+  - Kết hợp W70 DOC-071/072 và current-main Core source đã trace: Core Work/WP/Assignment/Evidence API, persistent store, authenticated ACK service và runtime vẫn NOT VERIFIED.
+- Kết luận: W70 có một quy trình điều phối thủ công/record-based có yêu cầu ACK và readback; chưa có bằng chứng Assignment service có thể quản lý state tự động hoặc cung cấp ACK reference có thẩm quyền cho PR #48 Execution Grant. Không được nhầm manual operating procedure với implemented control plane.
+- Disposition: GAP-01 OPEN/P0; GAP-11 OPEN/P0; procedural Assignment governance PRESENT (documented); machine-enforced Assignment authority/ACK NOT VERIFIED; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
+- Hành động: READ/TRACE only. Không triển khai route/store, không sync DOC-042, không sửa W70 journal/register, không gọi Core/Host/provider, không tạo dispatcher/ledger.
+- Bước tiếp theo: dùng W70 authority để reconcile DOC-042 addenda với GitHub main theo DOC-056; sau đó xác định Core API/service thật nếu được cung cấp, hoặc lập proposal thuộc Core/W70 ownership. Chỉ khi có source + persistence + auth + test evidence mới xem xét nối ACK vào Execution Grant.
