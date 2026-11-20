@@ -324,3 +324,15 @@
 - **Test coverage:** same-principal multi-login review denial; unmapped PR author denial; distinct-principal acceptance positive case; ACK/role/issue checks; diagnostics key and retry markers; owner-gated controlled failure test; event and permission contracts.
 - **Giới hạn:** this is a push/contract test run. Handoff, ACK, review and diagnostics event jobs were skipped; no live event E2E is claimed. Xu and Vinh acceptance remain pending.
 - **Trạng thái:** CONTRACT TESTS PASS / RUNTIME E2E PENDING / ACTIVE — NOT RELEASED.
+
+
+## Entry 029 — 36-test CI pass and Xu review package prepared
+- **Người thực hiện:** Ka — Delegated Technical Lead / Work 118 Build Owner.
+- **Thời gian:** 2026-11-20 20:52 UTC+07:00.
+- **Mã đầu việc:** W118-10 / W118-12.
+- **Bằng chứng:** [Run #44748049548](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44748049548) SUCCESS; job `validate` SUCCESS; `Ran 36 tests in 0.068s`; `OK`. Artifact `w118-run-evidence-44748049548-1`, ID `14633817327`, exists and was unexpired at readback.
+- **Coverage:** thêm contract assertions cho controlled dispatch branch/input, W118/W300/Work70 diagnostics subscriptions, ACK result dedup theo source comment ID và diagnostics workflow/SHA/attempt keys.
+- **Review package:** tạo `XR-118-001_XU-INDEPENDENT-REVIEW-CHECKLIST.md`, P0, 12 gates theo thứ tự ưu tiên. Checklist ghi rõ các mục runtime/identity/Work70 đang BLOCKED, không được nâng thành PASS.
+- **Branch/PR:** PR #67 OPEN / DRAFT; branch sạch 0-behind main tại lần đối chiếu gần nhất; không merge.
+- **Trạng thái:** 36 UNIT/CONTRACT TESTS PASS; RUNTIME EVENT E2E PENDING; Xu REVIEW PENDING; Vinh FINAL ACCEPTANCE PENDING.
+- **Bước tiếp:** chờ CI của commit checklist; cập nhật PR #67; chuyển gói phản biện cho Xu. Sau Xu disposition và Vinh acceptance mới thực hiện main integration và runtime event tests.
