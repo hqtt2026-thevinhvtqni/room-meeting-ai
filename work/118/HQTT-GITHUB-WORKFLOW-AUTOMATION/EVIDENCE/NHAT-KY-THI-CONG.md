@@ -195,3 +195,24 @@
 - **Bước tiếp:** T-02 cần actor độc lập để thử anti-spoof; T-03 cần mapping login/role được xác nhận; T-04 cần run FAIL thực tế từ W300/W70 và job diagnostics có kết quả; T-05 chờ ACK riêng. Mọi kết luận PASS tiếp theo phải có run URL, commit SHA, job conclusion và output thực tế.
 - **Nguyên tắc:** “Chứng minh hệ thống làm được trước, mới kết luận hệ thống đã làm được.”
 
+## Entry 020 — T-04 historical CI failure scan: failures found, but all predate W118 listener
+- **Thời gian:** 2026-11-20 (UTC+7).
+- **Phạm vi:** read-only rà soát lịch sử CI của W300 và W70 để tìm run FAIL thực tế có thể làm đầu vào cho T-04; kiểm tra workflow listener W118 và issue diagnostics. Không chạy workflow, không tạo lỗi, không retry, không sửa file workflow, không tạo issue/label.
+- **Nguồn workflow hiện hành trên main:**
+  - `.github/workflows/w300-dashboard-ci.yml`, blob SHA `14cecadb8b9eb1d0f05670d5a95fd2ef41471467`, workflow name `W300 Dashboard CI`.
+  - `.github/workflows/work70-preview-host.yml`, blob SHA `debe034f4a25672d02b6733d919f1baadca909e2`, workflow name `Work 70 Preview Host Tests`.
+  - `.github/workflows/w118-workflow-automation.yml`, blob SHA `72cd444b93d5fe7c67f500423cc1c00ddfdeb985`; listener dùng `workflow_run` với hai workflow name nêu trên, event type `completed`; job diagnostics chỉ chạy khi conclusion của upstream run là `failure`.
+- **W300 — historical failures found:** Work 300 DOC-035 ghi các run ngày 2026-11-15:
+  - Run `43677317548` (#3), commit `51d84558ee45cac6e965157abf169a28c9d33b42`: job Dashboard CI conclusion failure tại checkout source do stray gitlink/submodule; các bước tiếp theo skipped.
+  - Run `43677565968` (#4), commit `ed62a3af863a0f2159f7c231e0b23a498766c99d`: job failure tại TypeScript check; ESLint/unit tests/build skipped.
+  - Work 300 DOC-035 còn ghi run #7 `43680383282` typecheck failure và run #10 `43682888076` ESLint failure trong chuỗi xử lý ngày 2026-11-15; các lỗi được xử lý và chuỗi sau đó có run #11/#12 success.
+  - Đã gọi GitHub job-details cho run #3 và #4; cả hai trả về job completed/failure, phù hợp hồ sơ Work 300.
+- **W70 — historical failures found:** Work 70 DOC-035 ghi các run ngày 2026-11-07:
+  - Run `42363481084`, commit `828b628937c2e966e446ad181306449ec4eb3d9a`: job Document Register and Code Validation failure do hai test fixture mới dùng literal backslash-n; Preview Host Ubuntu/Windows success.
+  - Run `42365401117`, commit `13379e3bac99ff3494b2406d7b52c41e81cd4b33`: job Document Register and Code Validation failure do fixture newline; Preview Host Ubuntu/Windows success.
+  - Đã gọi GitHub job-details cho cả hai run; kết quả khớp: job Document Register and Code Validation completed/failure, hai job Preview Host completed/success.
+- **Vì sao các run trên KHÔNG đủ cho T-04:** các lần FAIL đều xảy ra ngày 2026-11-07 hoặc 2026-11-15, trước khi workflow W118 listener được đưa lên main ngày 2026-11-20. GitHub `workflow_run` không phát lại hồi tố cho các run đã hoàn tất trước khi listener tồn tại. Do đó không thể dùng các failure lịch sử để tuyên bố job `ci-failure-diagnostics` của W118 đã chạy.
+- **Issue diagnostics:** GitHub issue search với query `label:w118-blocked` và title pattern `[w118] CI FAIL` không trả về issue phù hợp ở thời điểm kiểm tra. Đây là kết quả tìm kiếm hiện thời, không phải bằng chứng về toàn bộ issue đã đóng hoặc đã xóa.
+- **Kết luận T-04:** **NOT VERIFIED — historical failures exist, but none is eligible to prove W118 listener runtime.** Cần chờ một lần CI FAIL tự nhiên mới từ W300 hoặc W70 sau khi listener đang hoạt động; sau đó xác minh W118 run event `workflow_run`, job `ci-failure-diagnostics` success, issue `w118-blocked` chứa upstream run URL + SHA và hành vi create/update đúng. Không chủ động làm hỏng CI.
+- **Kiểm soát thay đổi:** không có workflow/code/permission/PR mutation; PR #66 giữ OPEN; B-118-010 tiếp tục khóa.
+- **Bước tiếp:** theo dõi lần CI W300/W70 tiếp theo; khi upstream run hoàn tất với conclusion failure, đối chiếu ngay W118 Actions run và issue diagnostics. Nếu CI tiếp theo đều SUCCESS thì T-04 vẫn chờ, không được tạo FAIL nhân tạo.
