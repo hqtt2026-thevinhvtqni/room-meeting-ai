@@ -136,3 +136,18 @@ D70-021 supersedes only the top-level folder-name portion of D70-001 and D70-004
 5. Vai trò nghiệp vụ không đồng nghĩa với GitHub login, runtime principal, token hoặc quyền kỹ thuật. D70-025 không tự cấp quyền hệ thống; quyền kỹ thuật vẫn deny-by-default và cần xác minh/cấp riêng.
 6. W118 Issue #44 là một phân công cụ thể nằm trong vai trò QE/QA toàn HQTT của Go, không phải nguồn duy nhất tạo ra vai trò đó.
 7. DOC-043 là canonical role/permission register; Work liên quan đồng bộ theo D70-025, không viết lại lịch sử.
+
+
+## 14. Quyết định D70-026 — Go thay Qw làm QE/QA mặc định toàn HQTT (2026-11-21)
+| Decision ID | Decision / Quyết định | Rationale / Lý do | Status / Trạng thái |
+|---|---|---|---|
+| D70-026 | Theo chỉ thị trực tiếp mới nhất của Vinh, AI-06 Go thay AI-05 Qw làm QE/QA mặc định duy nhất trên toàn HQTT và mọi Work. Go đồng thời giữ vai trò CFO/Cost Analyst. Qw không còn là QE/QA mặc định. | Chốt một đầu mối QE/QA mặc định thống nhất là Go, đồng thời giữ trách nhiệm CFO của Go; loại bỏ cách hiểu hai QE/QA mặc định cùng cấp. | APPROVED BY VINH — ACTIVE; SUPERSEDES D70-025 QE/QA ROLE PORTION |
+
+**Ranh giới D70-026:**
+1. D70-026 thay thế phần D70-025 quy định Go và Qw cùng giữ QE/QA mặc định. D70-025 được giữ nguyên làm lịch sử; không xóa/viết lại.
+2. D70-024 stable ID không đổi: AI-05 Qw; AI-06 Go; AI-07 Co; AI-08 Qc.
+3. AI-06 Go hiện là CFO/Cost Analyst + QE/QA mặc định duy nhất trên toàn bộ Work. AI-05 Qw vẫn tồn tại trong roster nhưng không còn vai trò QE/QA mặc định.
+4. Mọi phân công QE/QA owner/reviewer theo Work/WP áp dụng Go, trừ khi Vinh có quyết định khác bằng văn bản.
+5. Go không tự review deliverable do chính mình thực hiện; phải có reviewer độc lập khác.
+6. Vai trò nghiệp vụ không tự tạo GitHub login, token, runtime principal, collaborator permission hoặc quyền MCP/Sandbox; quyền kỹ thuật vẫn deny-by-default và phải xác minh/cấp riêng.
+7. Các Work liên quan đồng bộ theo D70-026; chỉ cập nhật nguồn hiện hành và bổ sung addendum, không sửa lịch sử.
