@@ -78,3 +78,11 @@ A final code review found that login-only self-review detection would allow two 
 - **Fix:** same-principal cross-account review is denied; unmapped PR author denies an independence claim; distinct mapped principal with active acceptance permission is allowed.
 - **CI:** [Run #44747589539](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44747589539) SUCCESS; 32 tests passed; artifact ID `14634211524` exists and was unexpired at readback.
 - **Scope:** unit/contract proof only. Runtime pull_request_review event evidence and Xu identity mapping remain pending.
+
+
+## Event-level automation update — 2026-11-20
+
+- Authorized ACK applies the `w118-acked` label after authorization succeeds; denied/unmapped actors do not change issue state.
+- Handoff, ACK and review event jobs write separate OPERATION evidence artifacts using `event_evidence.py`, all state RECORDED.
+- PR review checklist is posted by a dedicated `pull_request_target` workflow. It does not checkout or execute PR code, only accepts same-repository PRs, and has job-scoped `issues:write` with `contents:read`.
+- The initial pull_request-context comment attempt failed with `Resource not accessible by integration`; it was removed and replaced with the base-context notifier. This is recorded as a permission-boundary correction, not hidden.
