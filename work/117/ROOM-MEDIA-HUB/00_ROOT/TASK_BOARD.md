@@ -77,7 +77,7 @@ Every task state change must be reflected here and appended to the single canoni
 - Qc: UI/Backend implementation partner under Go's task breakdown.
 - Cla / AI-03: technical assurance and runtime-contract verification; not the feature lead.
 - Ka / AI-02: independent CSA/security review.
-- Qw / AI-05: independent QE; does not approve its own implementation.
+- Go / AI-06: default QE/QA owner under D70-026; does not independently review Go-authored implementation.
 - Vibe: architecture challenger and optional GitHub support on a clearly scoped task; no delivery dependency unless access and acceptance are verified.
 - Xu / AI-01: coordinator, canonical records and blocker resolution; does not substitute record writes for Agent dispatch.
 - Vinh: final authority outside the explicitly granted Dashboard build scope.
