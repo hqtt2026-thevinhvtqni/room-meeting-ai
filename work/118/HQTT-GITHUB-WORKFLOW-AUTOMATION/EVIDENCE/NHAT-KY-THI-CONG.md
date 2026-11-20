@@ -350,3 +350,15 @@
 - **PR:** #67 OPEN / DRAFT / mergeable=true; branch 89 ahead / 0 behind main at readback. No merge.
 - **Giới hạn:** push run; event-specific jobs skipped. Live handoff/ACK/PR review/workflow_run diagnostics E2E remains pending default-branch integration. Xu and Vinh acceptance pending.
 - **Trạng thái:** 44 UNIT/CONTRACT TESTS PASS / EVENT RUNTIME E2E PENDING / ACTIVE — NOT RELEASED.
+
+
+## Entry 032 — 45-test CI, provenance contract and diagnostics subscription
+- **Người thực hiện:** Ka — Delegated Technical Lead / Work 118 Build Owner.
+- **Thời gian:** 2026-11-20 21:02 UTC+07:00.
+- **Mã đầu việc:** W118-10 — Auto E2E evidence and diagnostics.
+- **Bằng chứng:** [Run #44749396083](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44749396083) SUCCESS; `Ran 45 tests in 0.229s`; `OK`. Artifact `w118-run-evidence-44749396083-1`, ID `14635085374`, exists and was unexpired at readback.
+- **Provenance:** CI artifact now records source commit separately from tested commit, plus source/tested refs, actor, repository, workflow ref, run URL, PR number and base SHA.
+- **Diagnostics:** listener now subscribes to W118 Auto E2E, W118 PR Review Checklist, legacy W118 pilot, W300 Dashboard CI and Work 70 Preview Host Tests; no self-listener.
+- **Branch/PR:** PR #67 OPEN / DRAFT / mergeable=true; branch 102 commits ahead / 0 behind main; 29 files changed. No merge.
+- **Giới hạn:** run was a push event; issue/comment/ACK/review/workflow_run event jobs skipped. Runtime E2E remains NOT VERIFIED; Xu review and Vinh final acceptance pending.
+- **Trạng thái:** 45 UNIT/CONTRACT TESTS PASS / RUNTIME EVENT E2E PENDING / ACTIVE — NOT RELEASED.
