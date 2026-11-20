@@ -48,3 +48,14 @@ The feature branch implementation writes one immutable artifact per validation r
 - No write is made to Work 70's `EVIDENCE_REGISTER.json`; the v1.2 extension remains subject to Work 70 owner approval.
 - CI checks run on push, pull_request and workflow_dispatch. Mutation permissions are isolated to the specific handoff, ACK, review and diagnostics jobs.
 - A successful run proves only the tests/jobs executed for that run and exact SHA.
+
+
+## Amendment — event-level OPERATION artifacts (2026-11-20)
+
+The `scripts/w118/event_evidence.py` builder creates an OPERATION artifact for handoff, ACK and review events. Required fields bind Work ID, event type/ID, source commit, run ID/attempt, actor and decision. Each record is immutable and remains `RECORDED`; it explicitly states that it is not a Work 70 Evidence Register row and cannot self-promote to VERIFIED/ACCEPTED/RELEASED.
+
+- Handoff artifact: `w118-handoff-evidence-<run_id>-<attempt>`.
+- ACK artifact: `w118-ack-evidence-<run_id>-<attempt>`; includes whether the authorized `w118-acked` label was applied.
+- Review artifact: `w118-review-evidence-<run_id>-<attempt>`.
+- PR checklist is recorded by a deduplicated GitHub comment from a separate base-context workflow; ordinary pull_request validation stays read-only.
+- Work 70 register integration remains blocked until Work 70 approves the schema/owner contract.
