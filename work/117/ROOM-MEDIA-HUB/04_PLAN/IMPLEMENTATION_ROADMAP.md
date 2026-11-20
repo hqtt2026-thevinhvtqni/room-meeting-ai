@@ -19,7 +19,7 @@ GitHub stores source, schemas, policy and documentation only; never raw media bi
 4. Go (Grok) is the selected primary Builder and accountable lead for W117 construction, subject to task dispatch/access confirmation.
 5. Vibe (Mistral) is the independent architecture challenger and GitHub-based supporting Builder; Vibe may review Go's design and code, identify risks, propose alternatives and contribute code on explicitly assigned GitHub tasks. Vibe does not replace Go as lead and does not self-accept its own work.
 6. Cla is CTO technical assurance only: technical reconciliation, repair, technical planning, code review, debugging and root-cause analysis; not the default feature Builder.
-7. Qc is the implementation coder for assigned UI/Backend work. Qw is independent QE/QA and must not approve its own implementation.
+7. Qc is the implementation coder for assigned UI/Backend work. Go / AI-06 is the default QE/QA owner under D70-026; Go must not independently review deliverables Go implemented.
 6. Exactly four canonical project-control records are maintained across the Work: one Journal, one Minutes, one Plan and one Task Board. Supporting technical artifacts may remain as evidence/annexes, but must not become competing control records.
 7. Sandbox and GitHub main are parallel construction environments. Keep the same canonical relative paths and reconcile changes; no separate Work branch is introduced for this sync.
 
@@ -32,7 +32,7 @@ GitHub stores source, schemas, policy and documentation only; never raw media bi
 | Go / AI-06 (Grok) | Primary Builder / construction lead | Accountable for W117 build delivery, technical task decomposition and integration coordination; execution begins only through authorized task dispatch and confirmed access |
 | Vibe (Mistral) | Independent architecture challenger + supporting Builder | Independently reviews Go's architecture/design and implementation; contributes code on GitHub for explicitly assigned tasks; GitHub-only workflow; does not replace Go as lead |
 | Qc (Qwen Coder) | Implementation coder | UI/Backend code implementation on authorized scope; GitHub-only/no MCP |
-| Qw (Qween) | Independent QE/QA | Test design, execution, evidence and independent acceptance recommendation; not implementation owner |
+| Go / AI-06 (Grok) | CFO + default QE/QA | HQTT-wide QE/QA ownership, test design/execution/evidence and independent review where not the author; retains CFO responsibilities |
 | Ka / AI-02 | CSA independent reviewer | Security, privacy, governance, architecture and risk review |
 
 Builder leadership decision: Go is SELECTED as primary Builder by Vinh. Vibe is SELECTED as independent architecture challenger and supporting GitHub Builder. This records the user's role decision, not proof that either agent has been dispatched, accepted a task or has verified repository access. Do not claim execution has started until dispatch, acceptance and access are evidenced.
@@ -57,7 +57,7 @@ Builder leadership decision: Go is SELECTED as primary Builder by Vinh. Vibe is 
 | Phase | Included WPs | Deliverable | Exit gate | Current status |
 |---|---|---|---|---|
 | P0 — Discover & reconcile | WP01, WP03, WP04, WP06 | Verified as-is map for W33/W26/W29/Core; dependency and risk map | Source/contract evidence recorded; unknowns explicit | IN PROGRESS |
-| P1 — Define & consult | WP01, WP07, WP12 | Approved requirements/NFR, security and QE strategy, agent review findings | Cla/Ka/Qw findings received or explicitly blocked; Vibe independent architecture review received or explicitly blocked; Vinh scope approval | BLOCKED / PENDING |
+| P1 — Define & consult | WP01, WP07, WP12 | Approved requirements/NFR, security and QE strategy, agent review findings | Cla/Ka/Go findings received or explicitly blocked; Vibe independent architecture review received or explicitly blocked; Vinh scope approval | BLOCKED / PENDING |
 | P2 — Architecture baseline | WP01, WP03, WP04, WP06, WP07, WP11 | Final architecture, data model, ADR, cost and recovery model | Independent review and explicit Vinh architecture-gate approval | NOT READY |
 | P3 — Foundation build | WP02, WP03, WP04, WP06, WP07, WP11 | Secure backend/catalog/storage/API foundation | Authorized WP scope; code review; contract and security tests | NOT AUTHORIZED |
 | P4 — Product build | WP05, WP08, WP09 | Media workflows and user experience | Product acceptance tests pass on synthetic/approved sample data | NOT AUTHORIZED |
@@ -99,5 +99,9 @@ Builder leadership decision: Go is SELECTED as primary Builder by Vinh. Vibe is 
 2. Complete technical reconciliation of W33/W26/W29/Core and zero-cost provider evidence.
 3. Dispatch the architecture challenge to Vibe and obtain independent findings; record unavailable/undelivered review honestly.
 4. Verify Go's execution channel, GitHub access and explicit task acceptance; verify Vibe's GitHub access and review/support acceptance.
-5. Obtain independent Cla/Ka/Qw findings through authorized channels; record unavailable reviewers honestly.
+5. Obtain independent Cla/Ka/Go QE/QA findings through authorized channels; record unavailable reviewers honestly.
 6. Present architecture gate package to Vinh. Do not begin implementation until explicit BUILD approval.
+
+
+## 10. HQTT-wide role update — D70-026 (2026-11-21)
+Go / AI-06 replaces Qw / AI-05 as the sole default QE/QA owner across HQTT and all Works; Go retains CFO / Cost Analyst. Qw remains AI-05 in the roster but is no longer the default QE/QA member. Apply Go as W117 QE/QA owner in current task planning. Historical minutes/journal entries that named Qw remain preserved as historical records. Go must not independently review Go-authored/implemented deliverables; use a separate independent reviewer. This role decision does not prove dispatch, task acceptance, GitHub login, repository access or runtime session. D70-026 does not change BUILD authorization or any product/cost/deployment gate.
