@@ -35,3 +35,11 @@
 - **Kiểm thử CI / runtime:** NOT RUN.
 - **Trạng thái:** W118-02 DRAFT (chờ phản biện — không coi là DONE vì chưa qua review); W118-08 IN PROGRESS (brief sẵn sàng giao Ka/Xu).
 - **Bước tiếp:** giao brief cho Ka review độc lập; Xu tổng hợp ý kiến; Vinh ACK để chuyển gate G1/G2 trước khi chốt kiến trúc.
+
+## Entry 004 — W118-03/04/05 thiết kế (docs-only DRAFT)
+- **Thời gian:** 2026-11-20 (UTC+7)
+- **Phạm vi:** TD-118-004 (CI & evidence contract), TD-118-005 (event orchestration), TD-118-006 (failure/retry/idempotency). Đã đọc schema EVIDENCE_REGISTER v1.1 của Work 70: additionalProperties false, không có field run-level, nên đề xuất extension v1.2 (ci_run_id, ci_job, ci_conclusion, ci_url) dạng optional, backward-compatible.
+- **Bằng chứng:** 3 file TD mới trong 02_DEFINE + commit của entry này.
+- **Kiểm thử CI / runtime:** NOT RUN.
+- **Trạng thái:** cả 3 thiết kế DRAFT chờ phản biện; KHÔNG PASS.
+- **Bước tiếp:** Ka review các TD kèm DC-118-003; Xu tổng hợp; Vinh ACK.
