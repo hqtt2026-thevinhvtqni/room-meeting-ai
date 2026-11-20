@@ -161,3 +161,11 @@ READ: liệt kê Work 21; đọc manifest, transcript và metadata mẫu. BUILD:
 - VERIFY: exact-path readback and draft PR creation pending. No tests, provider calls, installations, QE, acceptance or product build performed.
 - Status: PASS only for bounded source inspection and demand mapping draft; Skill specifications NOT BUILT; W17 member profile update is proposal-only; W300 architecture/build status unchanged.
 - Next: exact readback; open draft PR; request Ka/Cla/Qw review before merging or promoting canonical capability changes.
+
+
+### Read-back and PR handoff — 2026-11-20
+- Exact-path fetch on `work/21-w300-capability-alignment` completed for all six changed files: W21 backlog, W21 research note, W21 Biên bản, W21 Nhật ký, W17 AI member capability matrix and W17 audit journal. All six files returned readable content and the expected new section/entry markers; blob SHAs were captured in the GitHub tool result.
+- PR #64 created: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/64; base `main`, head `work/21-w300-capability-alignment`; OPEN / DRAFT / UNMERGED; 6 files changed, 105 additions, 0 deletions at creation.
+- PR base observed as `32845ec25168c902810aceb84de16c1701a4d886`; head `284e2ffb30f11d6b64ce283e00ace9e53a79af20`. Main was not modified by this work.
+- Result: PASS for six changed-file readbacks and PR creation only. Merge/review, full Work 21 tree parity, Skill implementation, W17 capability promotion, runtime/provider test, W300 product acceptance and build remain NOT DONE / NOT AUTHORIZED.
+- Next: independent review by Ka / Cla / Qw; resolve review findings and preserve Vinh's final authority before merge or any assignment.
