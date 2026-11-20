@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 
 from scripts.w118.authorization import (
-    authorize_acceptance,
+    authorize_independent_review,
     authorize_ack,
     load_role_map,
     parse_ack,
@@ -24,13 +24,16 @@ class Work118AuthorizationTests(unittest.TestCase):
             "roles": ["coder"],
             "ack_roles": [],
             "can_accept": False,
+            "can_independently_review": False,
             "can_trigger_controlled_test": False,
             "active": True,
         }
         for login in ("hqtt2026-thevinhvtqni", "thevinhqtni-1911"):
-            allowed, reason, principal = authorize_acceptance(role_map, login, "different-principal")
-            self.assertTrue(allowed, reason)
-            self.assertEqual(principal, "vinh")
+            self.assertTrue(role_map["principals"][login]["can_accept"])
+            self.assertFalse(role_map["principals"][login]["can_independently_review"])
+            allowed, reason, _ = authorize_independent_review(role_map, login, "different-principal")
+            self.assertFalse(allowed)
+            self.assertIn("independent reviewer", reason)
 
     def test_owner_accounts_cannot_ack_execution_roles(self):
         for login in ("hqtt2026-thevinhvtqni", "thevinhqtni-1911"):
@@ -43,7 +46,9 @@ class Work118AuthorizationTests(unittest.TestCase):
         self.assertFalse(allowed)
 
     def test_self_review_is_denied(self):
-        allowed, reason, _ = authorize_acceptance(self.role_map, "hqtt2026-thevinhvtqni", "hqtt2026-thevinhvtqni")
+        role_map = copy.deepcopy(self.role_map)
+        role_map["principals"]["hqtt2026-thevinhvtqni"]["can_independently_review"] = True
+        allowed, reason, _ = authorize_independent_review(role_map, "hqtt2026-thevinhvtqni", "hqtt2026-thevinhvtqni")
         self.assertFalse(allowed)
         self.assertIn("same HQTT principal", reason)
 
@@ -54,6 +59,7 @@ class Work118AuthorizationTests(unittest.TestCase):
             "roles": ["tester"],
             "ack_roles": ["tester"],
             "can_accept": False,
+            "can_independently_review": False,
             "can_trigger_controlled_test": False,
             "active": False,
         }
@@ -93,6 +99,7 @@ class Work118AuthorizationTests(unittest.TestCase):
             "roles": ["tester"],
             "ack_roles": ["tester"],
             "can_accept": False,
+            "can_independently_review": False,
             "can_trigger_controlled_test": False,
             "active": True,
         }
@@ -111,6 +118,7 @@ class Work118AuthorizationTests(unittest.TestCase):
             "roles": ["tester"],
             "ack_roles": ["tester"],
             "can_accept": False,
+            "can_independently_review": False,
             "can_trigger_controlled_test": False,
             "active": True,
         }
@@ -128,6 +136,7 @@ class Work118AuthorizationTests(unittest.TestCase):
             "roles": ["tester"],
             "ack_roles": ["owner"],
             "can_accept": False,
+            "can_independently_review": False,
             "can_trigger_controlled_test": False,
             "active": True,
         }
