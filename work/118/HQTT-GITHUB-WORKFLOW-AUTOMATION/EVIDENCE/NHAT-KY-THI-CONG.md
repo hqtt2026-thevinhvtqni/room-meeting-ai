@@ -384,3 +384,14 @@
 - **Staged gate:** Stage A Xu review is ready; Stage B Vinh non-release integration authorization is NOT YET GRANTED. Main remains unchanged; no merge/release.
 - **Runtime:** event jobs skipped on push; live handoff/ACK/diagnostics E2E not claimed.
 - **Trạng thái:** READY FOR XU STAGE A REVIEW / ACTIVE — NOT RELEASED.
+
+
+## Entry 035 — PR #67 marked Ready for Xu Stage A review
+- **Người thực hiện:** Ka — Delegated Technical Lead / Work 118 Build Owner.
+- **Thời gian:** 2026-11-20 21:10 UTC+07:00.
+- **Mã đầu việc:** W118-12 — Independent review handoff.
+- **PR:** #67, https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/67 — OPEN / READY FOR REVIEW / mergeable=true. Branch `work/118-auto-e2e-v2` remains 120 commits ahead / 0 behind main at handoff.
+- **Latest CI:** Run #44750129069 SUCCESS; 45 tests passed; artifact ID `14634847057`.
+- **Review:** Xu Stage A design/security review explicitly requested with XR-118-001. Runtime runbook RT-118-001 is attached.
+- **Authority boundary:** Vinh Stage B non-release integration authorization remains pending. No merge, final acceptance or release has occurred.
+- **Trạng thái:** READY FOR XU REVIEW / ACTIVE — NOT RELEASED.
