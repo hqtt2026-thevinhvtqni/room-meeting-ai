@@ -1455,3 +1455,38 @@
 - Disposition: W76 Registry/Condition candidate = PARTIAL / unmerged; Event/Policy/Orchestration/Audit candidate = PR description only, not independently source-verified; WP-76-07 = BLOCKED; GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
 - Hành động: READ/TRACE only; no PR merge, checkout, source change, CI trigger, test, dispatch, provider, Host, permission or gate action.
 - Bước tiếp theo: if W76 PR #60 becomes relevant, first inspect exact PR head/files/check-runs and reconcile its source against W76 BUILD_REGISTER/DOC-035; preserve WP-76-07 BLOCKED until actual provider receipt + authenticated recipient ACK E2E evidence exists. Do not use W76 as a substitute Assignment ledger.
+
+## Entry 080 — PR #60 cross-Work scope, stale W17 snapshots and injected-port-only dispatch candidate (2026-11-20T19:20+07:00)
+
+- Người thực hiện: Xu / AI-01.
+- Phạm vi: kiểm tra PR #60 exact metadata, changed-file inventory, W17 snapshot content at PR head and selected W76 code modules; xác định rủi ro đối với current Work17 journal/register và mức độ hiện thực của W76 dispatch/orchestration.
+- Phương pháp: GitHub get_pr_info, list_pr_changed_filenames, fetch exact PR-head files by commit SHA, fetch current main files, fetch selected W76 PR-head modules. Không checkout, không merge, không chạy CI/test, không thay đổi PR/branch/source.
+- PR #60 metadata:
+  - URL https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/60; state OPEN; draft=true; merged=false; mergeable=false.
+  - Title: W76 autonomous build v2 — fail-closed trigger engine work packages. Base main SHA 9b366fe5ade05568436644ac385d7504a2673605; head branch work/76-co-autonomous-build-v2 SHA d524ca56003518fd339572570612fd6f33e3269f; base SHA differs from current main HEAD 372e7c6035fde37a610102b20b5e01f39a5d92ec.
+  - 348 commits; 70 changed files; +7,655 / -113. GitHub reports mergeable=false. No merge/approval performed.
+- Changed-file scope by Work:
+  - W17: 15 files (Manifest, execution plan, matrices, G4 decision record, GAP register, journal, sync record and evidence reports).
+  - W300: 11 files; W502: 8 files; W76: 25 files; W802001: 10 files; .github workflow: 1 file.
+  - Therefore PR #60 is not a W76-only patch; it contains broad cross-Work snapshots and governance/evidence changes across five Works.
+- Exact PR-head vs current-main W17 drift:
+  1. SYNC_RECORD: PR head blob 7c7951a31c6a6dbdd6b853617c7ff636fdf1bdc1, 14,603 chars; current main blob 2c1ae72492531598a8355d82293dc8ceb43c7b8f, 106,550 chars; exact match=false.
+  2. AUDIT_JOURNAL: PR head blob a7b5b77f47ab22cf6f769673d432d1051493a7d8, 46,028 chars; current main blob 94975ac7bc28a2ff1fa0e7fdadf4519ee9a976ea, 313,928 chars; exact match=false.
+  3. GAP_REGISTER: PR head blob ef0534bf715eb87c045e2542d4d80969a1b0e439, 4,097 chars; current main blob 26f12ca6f637fcd44ba767854013c70be2fa5ce2, 40,698 chars; exact match=false.
+  - PR-head W17 files are substantially older snapshots and do not contain current Entries 072–079 / Sync Periods 0059–0066. A merge or conflict resolution that accepts PR-head copies wholesale could discard current Work17 history/evidence. Since PR is mergeable=false and cross-Work, no automatic merge or overwrite is safe.
+- W76 PR #60 body states it supersedes PR #59 and adds Event Gateway, UTC one-shot Scheduler, Policy/Approval, execution state machine, idempotency/retry and audit sink contracts with regression tests. The same body explicitly says DRAFT; no Core provider, durable production backend, recurrence/DST policy or AI dispatch transport is claimed; WP-76-07 remains BLOCKED.
+- Selected PR-head W76 source review:
+  - trigger_engine/gateway.py blob d692db513396c836b52081473653ac368a5f9771: EventGateway requires injected SignatureVerifier, ReplayStore and schema; it does not provide concrete crypto/replay persistence implementations.
+  - trigger_engine/policy.py blob d195bc3f263ec7bd3ea0fff107b5885b6e540d6e: PolicyProvider and ApprovalVerifier are Protocol ports; missing provider returns INDETERMINATE. No concrete Core adapter is supplied in this file.
+  - trigger_engine/orchestrator.py blob bedd8ac7fe19f92b169223a43a06ecd91d32cc99: defines lifecycle states and in-process transition guard; TransitionSink is an injected Protocol. It stores current state in an in-memory dict and notes durable multi-process CAS must be enforced externally. It does not call a dispatch provider or action executor.
+  - trigger_engine/retry.py blob 7ba730eca05b25014e22787663a62a7dc7636ca1: IdempotencyStore is an injected Protocol; no concrete durable/atomic store implementation is included in this module.
+  - trigger_engine/audit.py blob 8bae52387292eb28b0a99cd5dacc6e1f2aa6079a: AppendOnlyAuditSink is an injected Protocol; fail-closed if sink absent, but sink durability/atomicity is external.
+  - PR changed-file inventory includes gateway/policy/orchestrator/retry/audit/scheduler modules but no concrete AI provider dispatch adapter/dispatcher module or recipient receipt/ACK transport implementation. This matches PR body and WP-76-07 BLOCKED.
+  - Source inspection only; no tests/CI run by Xu in this trace. PR tests and CI claims are not promoted to runtime/independent QE evidence.
+- Reconciliation and risk:
+  - PR #60 may contain useful W76 contracts/prototype code, but its W17 file copies are stale relative to current main and its scope spans W17/W300/W502/W76/W802001. The PR's draft/open/unmerged/mergeable=false status means no production or canonical promotion.
+  - Preserve current W17 main journal, sync record and gap register. Do not cherry-pick or resolve PR #60 by replacing Work17 files. Any future W76-only adoption requires a scoped file-by-file diff and explicit preservation of current W17 content, plus W76 owner/gate/QE authority.
+  - W76 dispatch remains BLOCKED; PR #60 does not provide the missing Assignment authority, provider transport, receiver receipt or authenticated ACK required by GAP-01.
+- Disposition: PR #60 OPEN/DRAFT/UNMERGED/MERGEABLE=false; cross-Work scope risk confirmed; W17 current main records preserved; W76 dispatch NOT IMPLEMENTED/CLAIMED; WP-76-07 BLOCKED; GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
+- Hành động: READ/TRACE only. No PR edit/close/merge, no branch operation, no cherry-pick, no file replacement, no CI/test, no dispatch/provider/Host call.
+- Bước tiếp theo: treat PR #60 as a separate candidate. If any W76 component is to be reused, request a narrow W76-only patch/PR from current main and explicitly exclude W17/W300/W502/W802001 governance snapshots; verify durable Core/provider implementations and recipient ACK before any WP-76-07 status change.
