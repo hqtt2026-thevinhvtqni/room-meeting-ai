@@ -4,6 +4,7 @@ on:
   workflow_run:
     workflows:
       - "W118 Auto E2E Validation"
+      - "W118 PR Review Checklist"
       - "W118 Workflow Automation Pilot"
       - "W300 Dashboard CI"
       - "Work 70 Preview Host Tests"
