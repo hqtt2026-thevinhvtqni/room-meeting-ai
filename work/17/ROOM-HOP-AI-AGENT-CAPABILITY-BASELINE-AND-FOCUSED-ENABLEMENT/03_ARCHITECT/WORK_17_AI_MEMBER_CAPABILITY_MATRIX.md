@@ -13,9 +13,9 @@
 | AI-03 Cla | CTO / Code-Debug Lead — Claude | NOT_VERIFIED | NOT_PROVEN | UNASSESSED | Exact model/session/repository access NOT_VERIFIED | DOC-010 roster E0; no attributable ACK found in inspected dispatch records | NOT_AVAILABLE | — |
 | AI-04 Kha | Strategy & Product Architect — Gemini | NOT_VERIFIED | NOT_PROVEN | UNASSESSED | Exact model/session/provider invocation NOT_VERIFIED | DOC-010 roster E0 | NOT_AVAILABLE | — |
 | AI-05 Qw | QE / Independent QA; Qween role label | NOT_VERIFIED | NOT_PROVEN | QE scope/independence must be checked per assignment | Exact provider/model/session NOT_VERIFIED | DOC-010 roster E0; DOC-043 defines QE role | NOT_AVAILABLE | DOC-025 legacy text labels provider “Qwen”; distinguish Qween QA role from Qc Qwen Coder |
-| AI-06 | CONFLICT: DOC-010 v1.1 says Qc / Qwen Coder; DOC-043 + DOC-096 say Go / CFO | CONFLICT — do not authenticate by ID | NOT_PROVEN | BLOCKED for ID-based authorization until reconciled | Provider/session binding NOT_VERIFIED | DOC-010, DOC-025, DOC-043, DOC-096 (E0) | NOT_AVAILABLE | Stable ID conflict; Xu recommends AI-06 = Go, pending Vinh decision |
-| AI-07 | CONFLICT: DOC-010 v1.1 says Go / CFO; DOC-043 + DOC-096 say Co / Coder Assistant | CONFLICT — do not authenticate by ID | NOT_PROVEN | BLOCKED for ID-based authorization until reconciled | Provider/session binding NOT_VERIFIED | DOC-010, DOC-025, DOC-043, DOC-096 (E0) | NOT_AVAILABLE | Stable ID conflict; Xu recommends AI-07 = Co, pending Vinh decision |
-| AI-08 | DOC-010 v1.1 says Co / GPT Coder Assistant; no numeric assignment for Qc in newer DOC-043 / DOC-096 mapping | CONFLICT / UNMAPPED | NOT_PROVEN | BLOCKED for ID-based authorization until reconciled | Qc provider/model/session NOT_VERIFIED | DOC-010, DOC-025, DOC-043, DOC-096 (E0) | NOT_AVAILABLE | Xu recommends AI-08 = Qc / Qwen Coder, pending Vinh decision |
+| AI-06 Go | CFO / Cost Analyst — stable ID approved by Vinh in D70-024; supersedes legacy DOC-010/DOC-025 mapping | NOT_VERIFIED — roster ID is not session proof | NOT_PROVEN | No permission inferred from ID; verify per assignment | Provider/session binding NOT_VERIFIED | DOC-043 current canonical register; DOC-006 D70-024 | NOT_AVAILABLE | Historical conflict resolved for stable ID; runtime identity/access remains unverified |
+| AI-07 Co | Coder Assistant — stable ID approved by Vinh in D70-024; supersedes legacy DOC-010/DOC-025 mapping | NOT_VERIFIED — roster ID is not session proof | NOT_PROVEN | No permission inferred from ID; verify per assignment | Provider/session binding NOT_VERIFIED | DOC-043 current canonical register; DOC-006 D70-024 | NOT_AVAILABLE | Historical conflict resolved for stable ID; runtime identity/access remains unverified |
+| AI-08 Qc | Qwen Coder — stable ID approved by Vinh in D70-024; supersedes legacy DOC-010/DOC-025 mapping | NOT_VERIFIED — roster ID is not session proof | NOT_PROVEN | No permission inferred from ID; verify per assignment | Qwen provider/model/session NOT_VERIFIED | DOC-043 current canonical register; DOC-006 D70-024 | NOT_AVAILABLE | Historical conflict resolved for stable ID; runtime identity/access remains unverified |
 | AI-09 Vi | Coder / Implementation Engineer — GPT | NOT_VERIFIED | NOT_PROVEN | Repository/path/branch grant must be verified per task | Exact model/session and access NOT_VERIFIED | DOC-010 roster E0 | NOT_AVAILABLE | — |
 | AI-10 An | Tester / Test Engineer — GPT | NOT_VERIFIED | NOT_PROVEN | Test-environment access must be verified per task | Test execution identity NOT_VERIFIED | DOC-010 roster E0 | NOT_AVAILABLE | Independent QE status is assignment-specific; not assumed |
 | AI-11 Mê | CXO / Customer Experience — Meta AI | NOT_VERIFIED | NOT_PROVEN | UNASSESSED | Provider/backend/session NOT_VERIFIED | DOC-010 roster E0; historical local MeAgent source is not Meta AI identity proof | NOT_AVAILABLE | Separate local placeholder from external Meta AI participant |
@@ -48,3 +48,12 @@
 - DOC-010 and DOC-025 contain no verified provider usage ledger; all token/cost fields remain NOT_AVAILABLE. No zero or estimate is substituted.
 - The local `agents/me_agent.py` source is a rule-based placeholder; it is not evidence that external AI-11 Mê / Meta AI has connected or participated.
 - No identity IDs, permissions, provider sessions or token records were changed by this reconciliation.
+
+
+## Approved roster mapping addendum — D70-024 (2026-11-21)
+Vinh approved the stable identity mapping in Work 70 DOC-006 D70-024:
+- AI-06 = Go (CFO / Cost Analyst).
+- AI-07 = Co (Coder Assistant).
+- AI-08 = Qc (Qwen Coder).
+- AI-05 = Qw (QE/QA) remains distinct from Qc/Qwen.
+The old DOC-010 v1.1 / DOC-025 v1.3 mapping is preserved as historical evidence and superseded for current stable-ID use. This resolves the numeric roster conflict only. All identity/session fields remain NOT_VERIFIED unless independently proven; Dispatch/ACK remains NOT_PROVEN; token telemetry remains NOT_AVAILABLE; no permissions are granted by this decision. Go's W118 Issue #44 QE/QA assignment remains a Work-specific override and does not change AI-06's global CFO role.
