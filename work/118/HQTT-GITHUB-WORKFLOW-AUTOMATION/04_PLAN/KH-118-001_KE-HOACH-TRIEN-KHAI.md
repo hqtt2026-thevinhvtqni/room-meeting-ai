@@ -5,7 +5,7 @@ Thiết kế và kiểm chứng có kiểm soát cơ chế điều phối GitHub
 
 | WP | Hạng mục | Đầu ra | Trạng thái |
 |---|---|---|---|
-| W118-01 | Kiểm kê hiện trạng GitHub và Work 70 | Danh mục workflow, events, quyền, CI, API, gaps | PLANNED |
+| W118-01 | Kiểm kê hiện trạng GitHub và Work 70 | Danh mục workflow, events, quyền, CI, API, gaps | DONE — 01_DISCOVER/W118-01 + Entry 002 |
 | W118-02 | Chuẩn hóa Issue/Branch/Commit/PR | Quy ước và templates | PLANNED |
 | W118-03 | Thiết kế CI và evidence contract | Ma trận jobs, artifacts, SHA, logs, exit code | PLANNED |
 | W118-04 | Thiết kế event orchestration | Event → actor → action → permission → result | PLANNED |
@@ -16,7 +16,7 @@ Thiết kế và kiểm chứng có kiểm soát cơ chế điều phối GitHub
 | W118-09 | Pilot có giới hạn | CI/event flow chạy thật trong phạm vi thử nghiệm | BLOCKED — chờ phê duyệt thiết kế |
 
 ## Cổng kiểm soát
-- G0: xác nhận hiện trạng và phạm vi.
+- G0: xác nhận hiện trạng và phạm vi. → **G0 ĐẠT theo Entry 002.**
 - G1: yêu cầu và state machine được xác định.
 - G2: kiến trúc, bảo mật, quyền và evidence contract được phản biện.
 - G3: Vinh phê duyệt trước BUILD.
