@@ -177,3 +177,21 @@
 - **Trạng thái vòng kiểm thử sau Entry 018:** T-01 PASS (runtime, 2 lần) / T-02 PASS một phần / T-03 NOT VERIFIED / T-04 NOT VERIFIED / T-05 BLOCKED-NOT RUN / T-06 DONE.
 - **Bước tiếp:** Xu tiếp tục T-02 anti-spoof, T-03 (mapping role -> login), T-04 (một run FAIL phù hợp từ W300/W70), T-05 (chờ ACK riêng cho listener). Remediation B-118-010 vẫn chỉ mở khi Vinh ra lệnh chính xác "ÁP DỤNG B-118-010".
 
+## Entry 019 — Xu đối soát độc lập T-01 và chốt trạng thái vòng nghiệm thu sau Entry 018
+- **Thời gian:** 2026-11-20 (UTC+7).
+- **Phạm vi:** xác minh read-only các bằng chứng T-01 do Vinh cung cấp và trạng thái runtime pilot; ghi nhật ký docs-only. Không chạy lại event, không thêm/gỡ label, không tạo comment, không sửa workflow, không merge PR #66.
+- **Nguồn/commit đối chiếu:** journal main trước khi ghi Entry 019 có blob SHA `a1716e79c09cd29fdd07e7a38289a6de0b32acbd`, độ dài 24.026 ký tự, chứa Entry 001–009 và 011–018; khoảng trống Entry 010 được giữ nguyên theo chủ ý. Commit khôi phục/ghi Entry 018 được xác định là `21e19ee`.
+- **Issue #65:** API read xác nhận trạng thái OPEN và hai label `enhancement`, `w118-handoff`.
+- **Bằng chứng output T-01:** đọc comments của Issue #65 xác nhận hai comment từ `github-actions[bot]`, comment ID `7039391585` và `7039426355`, đều chứa nội dung “W118 pilot: handoff registered”.
+- **Bằng chứng Actions T-01:** Run #6 ID `44734981146` và Run #7 ID `44735217935`; event `labeled`; cả hai `completed / success`. Đọc job details xác nhận job `handoff-brief` success; hai job `ack-verification` và `ci-failure-diagnostics` skipped trong các run này. Hai lần handoff output tương ứng với hai comment bot nêu trên.
+- **Kết luận T-01:** **PASS — runtime verified 2 lần**. Kết luận chỉ áp dụng cho event Issue labeled → job handoff-brief chạy thành công và ghi comment bot; không suy rộng rằng cả ba job đều chạy trong cùng run.
+- **T-02:** **PASS một phần**. Bằng chứng ACK-verification trước đó vẫn là Run #2 ID `44690614366`, event `issue_comment`, conclusion success. Chưa có thử nghiệm anti-spoof từ actor/tài khoản độc lập; chưa chứng minh authorization theo danh tính.
+- **T-03:** **NOT VERIFIED**. Chưa có bằng chứng mapping GitHub login ↔ vai trò được chủ thể có thẩm quyền xác nhận, cũng chưa có runtime kiểm tra actor/role.
+- **T-04:** **NOT VERIFIED**. Chưa có run CI FAIL phù hợp từ W300 hoặc W70 chứng minh job `ci-failure-diagnostics` chạy thành công và tạo/cập nhật issue chẩn đoán. Không dùng lỗi parse YAML cũ hoặc các job skipped làm bằng chứng.
+- **T-05:** **BLOCKED / NOT RUN**. Chưa có ACK riêng cho việc mở rộng listener để W118 tự theo dõi lỗi của chính mình; không sửa workflow trong vòng freeze.
+- **T-06:** **DONE** — giữ nguyên hồ sơ đối chiếu TD-118-011 và remediation plan B-118-010 đã ghi trước đó.
+- **Tình trạng sản phẩm:** 2/3 job có runtime evidence riêng (handoff-brief và ack-verification); job ci-failure-diagnostics chưa verified. STATUS.md trên main hiện phản ánh mức 2/3 và vẫn ghi **XU NOT ACCEPTED**. Không chấp nhận sản phẩm W118 ở thời điểm này.
+- **Kiểm soát thay đổi:** không có thay đổi workflow, quyền, PR hoặc remediation; B-118-010 vẫn khóa. Chỉ triển khai khi Vinh ra lệnh chính xác “ÁP DỤNG B-118-010” trên Issue #65.
+- **Bước tiếp:** T-02 cần actor độc lập để thử anti-spoof; T-03 cần mapping login/role được xác nhận; T-04 cần run FAIL thực tế từ W300/W70 và job diagnostics có kết quả; T-05 chờ ACK riêng. Mọi kết luận PASS tiếp theo phải có run URL, commit SHA, job conclusion và output thực tế.
+- **Nguyên tắc:** “Chứng minh hệ thống làm được trước, mới kết luận hệ thống đã làm được.”
+
