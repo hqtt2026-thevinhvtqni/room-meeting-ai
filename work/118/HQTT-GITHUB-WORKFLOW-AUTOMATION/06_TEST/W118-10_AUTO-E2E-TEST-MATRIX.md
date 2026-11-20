@@ -109,3 +109,9 @@ The final acceptance bundle must contain:
 - **New coverage:** OPERATION event evidence builder; immutable RECORDED state; ACK label applied only after authorization; safe `pull_request_target` checklist; same-repository scope; no PR code checkout; workflow path filter coverage.
 - **Known event failure and correction:** ordinary pull_request token could not add comments (`Resource not accessible by integration`). The write action was removed from that context and moved to the base-context notifier; no broader token permission was requested.
 - **Runtime limitation:** handoff, ACK, review and workflow_run diagnostics events remain pending default-branch integration.
+
+
+## Provenance and diagnostics coverage update — 2026-11-20
+
+- Added contract test that CI run evidence binds source commit, tested commit/ref, repository, actor, run URL and PR identity.
+- Added diagnostics subscription for `W118 PR Review Checklist`; contract test confirms the listener covers W118, PR checklist, W300 and Work 70 and does not self-listen.
