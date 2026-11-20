@@ -328,8 +328,11 @@ jobs:
       contents: read
       issues: write
     steps:
-      - name: Checkout acceptance policy
+      - name: Checkout trusted default-branch acceptance policy
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
       - name: Verify independent acceptance authority
         id: review
         env:
