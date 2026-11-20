@@ -8,4 +8,4 @@
   3. ci-failure-diagnostics: khi CI của W300/W70 FAIL, mở hoặc cập nhật 1 issue chẩn đoán duy nhất có label w118-blocked (run URL + SHA + quy tắc retry cap 2, không retry vô hạn).
 - **An toàn thiết kế:** GITHUB_TOKEN events không tự kích hoạt lại workflow (không vòng lặp); least-privilege (issues: write, contents: read); timeout 5 phút mỗi job; khớp thiết kế TD-118-005/006/007/008.
 - **Chưa có trong v1:** evidence row tự động vào register W70 (chờ ACK schema v1.2), realtime ROOM-HOP, auto-merge (cấm vĩnh viễn theo TD-118-007).
-- **Trạng thái:** PILOT RUNTIME VERIFIED (2026-11-20) — run #2 SUCCESS trong 6 giây (comment event trên Issue #65), bot github-actions đã đăng comment bằng chứng "W118 pilot: ACK recorded" kèm actor. Hồ sơ đủ để Xu nghiệm thu (G4/G5).
+- **Trạng thái:** PILOT RUNTIME VERIFIED ở mức 1/3 job (ack-verification) nhưng **XU NOT ACCEPTED 2026-11-20** (hồ sơ XU-118-AC-001 — AC-R1..AC-R6). Đang chạy vòng kiểm thử độc lập theo [KT-118-009](../04_PLAN/KT-118-009_KE-HOACH-KIEM-THU-BO-SUNG.md): main giữ nguyên, PR #66 chưa merge, không sửa mã trong vòng nghiệm thu.
