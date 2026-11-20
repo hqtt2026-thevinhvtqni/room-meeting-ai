@@ -24,8 +24,7 @@
 
 ## AD-3 — Failure path có capped retry
 - Phát biểu: khi CI FAIL, không auto-thử lại máy móc: chặn ở cap tối đa 2 lần retry, sau đó mark issue `w118-blocked` + assign actor; chống
-  vòng lặp bằng cờ "[skip-loop]" trong commit của bot + limit 2 mutation/run
-  con.
+  vòng lặp bằng cờ "[skip-loop]" trong commit của bot + limit 2 mutation run con tối đa.
 - Tiền tiêu: count-tracked bằng evidence row, không bằng memory bot.
 
 ## AD-4 — Review/nghiệm thu qua PR gate
@@ -34,13 +33,13 @@
 
 ## AD-5 — Evidence ghi qua commit riêng của bot
 - Phát biểu: sau mỗi run, workflow commit evidence row (file JSON) vào nhánh
-  evidence-``work/…`` bằng GITHUB_TOKEN có scope giới hạn; GITHUB_TOKEN push
+  `evidence/<tên-work>` bằng GITHUB_TOKEN có scope giới hạn; GITHUB_TOKEN push
   không trigger workflow (đã chạy lâu) do đó an toàn khỏi vòng lặp CI.
 - Mở: chính sách lịch retry chi tiết (schedule) cần Ka thẩm định thêm.
 
 ## AD-6 — Conventions vẫn giả lập cho docs-only trên main
 - Phát biểu: hồ sơ W118 trước G3 vẫn commit thẳng main (docs-only); flow PR
-  bắt buộc chỉ key các path code/mutation sau khi pilot.
+  bắt buộc chỉ áp dụng cho các path code/mutation sau khi pilot.
 
 ## Câu hỏi cần trả lời khi phản biện
 1. AD-1: có cần giữ webhook ROOM-HOP như mục tiêu v2 rõ ràng không?
