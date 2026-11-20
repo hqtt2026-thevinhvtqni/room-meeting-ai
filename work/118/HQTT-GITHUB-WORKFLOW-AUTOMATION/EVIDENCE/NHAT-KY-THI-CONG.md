@@ -362,3 +362,13 @@
 - **Branch/PR:** PR #67 OPEN / DRAFT / mergeable=true; branch 102 commits ahead / 0 behind main; 29 files changed. No merge.
 - **Giới hạn:** run was a push event; issue/comment/ACK/review/workflow_run event jobs skipped. Runtime E2E remains NOT VERIFIED; Xu review and Vinh final acceptance pending.
 - **Trạng thái:** 45 UNIT/CONTRACT TESTS PASS / RUNTIME EVENT E2E PENDING / ACTIVE — NOT RELEASED.
+
+
+## Entry 033 — Post-merge runtime E2E execution runbook prepared
+- **Người thực hiện:** Ka — Delegated Technical Lead / Work 118 Build Owner.
+- **Thời gian:** 2026-11-20 21:05 UTC+07:00.
+- **Mã đầu việc:** W118-11 — Runtime E2E.
+- **Đầu ra:** `RT-118-001_POST-MERGE-E2E-RUNBOOK.md`, priority P0, gồm 10 bước: PR checklist notifier; handoff; owner ACK denial; executor ACK positive path; controlled failure dispatch; diagnostics issue creation; duplicate delivery; Xu review event; artifact integrity; Work 70 boundary.
+- **Security conditions:** Vinh owner accounts cannot ACK execution; positive executor ACK remains blocked until a real login is verified and mapped; fault injection only on isolated W118 branch; no self-listener, no auto-retry/merge/release.
+- **Cleanup:** retain Actions runs/artifacts and test Issues; close rather than delete test records.
+- **Status:** PREPARED — NOT EXECUTED. Requires Xu review and Vinh final acceptance before default-branch integration.
