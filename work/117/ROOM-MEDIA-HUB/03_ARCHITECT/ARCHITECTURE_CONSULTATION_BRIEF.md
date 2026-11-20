@@ -44,7 +44,7 @@ For each reviewer, provide: (1) findings, (2) evidence/source inspected, (3) alt
 ## 7. Assigned consultation roles (proposed routing; not yet accepted)
 - Cla / AI-03: technical architecture, W33 source review, storage adapter feasibility, data consistency and integration.
 - Ka / AI-02: independent architecture/CSA, identity, authorization, privacy, threat model, encryption and data lifecycle.
-- Qw / AI-05: independent QE, integrity, replication failure, recovery, contract/E2E testability and acceptance.
+- Go / AI-06: default QE/QA owner under D70-026; independent QE, integrity, replication failure, recovery, contract/E2E testability and acceptance.
 - Go / AI-06: cost model, capacity forecast, egress, storage tiers, backup and operating cost.
 - Co / AI coder assistant: feasibility and work-package decomposition after architectural alignment.
 
