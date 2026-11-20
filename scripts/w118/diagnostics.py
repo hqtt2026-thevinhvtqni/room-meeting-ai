@@ -32,7 +32,7 @@ def update_marker(run_id: str | int, attempt: str | int) -> str:
     return f"<!-- w118-diagnostic-update:{run_number}:{attempt_number} -->"
 
 
-def find_existing_open_issue(issues: list[dict[str, Any]], key: str) -> str:
+def find_existing_issue(issues: list[dict[str, Any]], key: str) -> str:
     marker = f"<!-- {key} -->"
     for issue in issues:
         body = issue.get("body") or ""
@@ -49,7 +49,7 @@ def build_plan(issues: list[dict[str, Any]], workflow_id: str | int, sha: str,
     return {
         "idempotency_key": key,
         "update_marker": marker,
-        "existing_issue": find_existing_open_issue(issues, key),
+        "existing_issue": find_existing_issue(issues, key),
     }
 
 
