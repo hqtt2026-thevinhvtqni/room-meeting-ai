@@ -643,3 +643,12 @@ E2E RESULT: 43/43 passed, 0 failed
   2. Lập migration map cho từng path hiện hữu: source, tests, evidence, legacy/empty folders; ghi old path → target path, file inventory, hash/content parity, inbound links, rollback. Không move/delete trước khi mapping và exact readback.
   3. Dự kiến đưa Dashboard source vào 05_BUILD/04_CODE/dashboard/, tests vào 05_BUILD/05_TEST/ hoặc giữ nested tests như artifact của app nhưng phải có mapping rõ; evidence cấp Work vào EVIDENCE/; thiết lập 06_VERIFY, 07_ACCEPT, 08_RELEASE, 09_OPERATE, DASHBOARD theo đúng vai trò khi cần.
   4. Sửa README và đồng bộ data contract; snapshot phải có as-of rõ ràng và không dùng số liệu/status cũ hơn nguồn. Self-test phải phát hiện stale snapshot hoặc ghi rõ giới hạn.
+
+
+## 2026-11-21 — Entry bổ sung: Đồng bộ QE/QA W117 theo D70-026
+- **Authority:** Chỉ thị trực tiếp mới nhất của Vinh; Work 70 DOC-006 D70-026.
+- **Thay đổi hiện hành:** Go / AI-06 thay Qw / AI-05 làm QE/QA mặc định duy nhất toàn HQTT và W117; Go vẫn giữ CFO/Cost Analyst. Qw còn trong roster AI-05 nhưng không còn vai trò QE/QA mặc định.
+- **Hồ sơ GitHub cập nhật:** W117 Biên bản Mục 14; W117 Plan Mục 10 và role table. Các mục/entry cũ ghi Qw là QE/QA được bảo toàn làm lịch sử, không viết lại.
+- **Nguyên tắc độc lập:** Go không tự review deliverable do Go xây dựng; cần reviewer độc lập khác.
+- **Ranh giới:** Không có dispatch/ACK/access/session nào được suy ra từ thay đổi vai trò. BUILD authorization và các gate khác không thay đổi.
+- **Trạng thái:** W117 minutes/plan updated; journal addendum recorded. Exact read-back pending.
