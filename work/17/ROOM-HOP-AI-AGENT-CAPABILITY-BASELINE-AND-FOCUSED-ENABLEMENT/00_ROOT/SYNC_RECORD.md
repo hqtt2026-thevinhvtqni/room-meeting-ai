@@ -602,3 +602,9 @@
 - Recorded as DOC-DRIFT-01 in Journal Entry 060. No code or documentation edit applied; the live acceptance guard remains unchanged.
 - PC/browser queue: npm test; stub response; dashboard never shows LIVE for stub; reconnect/backoff; invalid cache; symlink/encoded traversal; GET/HEAD; independent QE.
 - Runtime NOT RUN; GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
+
+## Sync Period 0048 — Execution Authority deployment-guide/source mismatch (2026-11-20T07:49:00+07:00)
+
+- Current-main deployment guide claims integrated grant routes and online grant validation at Host. Exact source reads show Core grant modules NOT_FOUND, current HTTP adapter has no grant-route mount, and current Host still accepts caller-supplied WorkContext at POST /execute.
+- Recorded DOC-DRIFT-02 in Journal Entry 061. The guide is not proof of current-main integration or deployment; intended branch/revision must be identified by its owner. No Core/Host/deployment change made.
+- GAP-11 remains OPEN/P0; GAP-01 remains OPEN/P0 because execution grant is not provider dispatch/recipient ACK. E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
