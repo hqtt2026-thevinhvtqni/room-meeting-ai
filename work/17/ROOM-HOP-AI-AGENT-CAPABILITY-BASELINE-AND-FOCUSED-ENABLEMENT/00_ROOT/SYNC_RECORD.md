@@ -766,3 +766,15 @@
 - Entry 077 added. No W70 write/sync/migration/source promotion/test/runtime/branch operation.
 - WP70-CO remains historical ACK + Sandbox-only preparatory artifact; Assignment service/API/persistence/ACK verifier NOT VERIFIED. GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
 - Next: W70 authority must reconcile DOC-001/003/035/055 under DOC-056, preserve history and establish one exact canonical revision/source mapping before any reuse of WP70-CO code. No parallel Assignment store/dispatcher.
+
+## Sync Period 0065 — DOC-042 operating procedure versus machine-enforced Assignment authority (2026-11-20T19:20+07:00)
+
+- DOC-042 GitHub main blob a9a949b56ae615cdc5aced0ba1563ab45e97ab8f (5,451 chars; v1.0/2026-10-30) is an exact prefix of Sandbox direct-root DOC-042 (15,910 chars). Sandbox contains 2026-11-10 and 2026-11-11 addenda not present in main.
+- DOC-042 defines manual Assignment completeness/status rules. Sandbox addenda require participant G0–G5 PASS, exact source/scope/permission, reviewer/QE route and recipient ACK before IN_PROGRESS; EXECUTION_AUTHORIZED additionally requires bounded authorization and tool-level enforcement.
+- DOC-042 also requires append-only journal/readback and full-journal sequence preflight. It explicitly states machine-enforced identity/uniqueness/locking remains NOT VERIFIED.
+- DOC-042 is procedural governance, not an Assignment API/service, durable state transaction, authenticated ACK ingest, event store or online authorization middleware. DOC-044 remains a template; DOC-093/094 remain draft planning registers; DOC-035 is a journal/evidence trail.
+- Current-main Core source and W70 DOC-071/072 trace still do not establish Work/WP/Assignment/Evidence API, persistent Assignment state, authenticated ACK service or runtime.
+- Result: procedural Assignment governance exists in documentation; machine-enforced Assignment authority and ACK remain NOT VERIFIED. No ACK reference can yet be proven as an online precondition to PR #48 grant issuance.
+- Entry 078 added. No DOC-042 sync/edit, API, store, route, test, provider, Host, permission or branch operation.
+- GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED; READ/TRACE/ANALYZE ONLY.
+- Next: W70 authority reconcile DOC-042 addenda with GitHub main under DOC-056; continue only against a verified Core API/service source if supplied. No parallel Assignment ledger/dispatcher.
