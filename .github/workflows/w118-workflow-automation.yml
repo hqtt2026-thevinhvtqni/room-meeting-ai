@@ -333,6 +333,11 @@ jobs:
         with:
           ref: ${{ github.event.repository.default_branch }}
           persist-credentials: false
+      - name: Resolve trusted policy commit
+        id: policy
+        run: |
+          set -euo pipefail
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
       - name: Verify independent acceptance authority
         id: review
         env:
@@ -369,6 +374,10 @@ jobs:
           PR_AUTHOR: ${{ github.event.pull_request.user.login }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
           REVIEW_ID: ${{ github.event.review.id }}
+          POLICY_SHA: ${{ steps.policy.outputs.sha }}
+          EVENT_SHA: ${{ github.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
           mkdir -p .w118-event-evidence
           python - <<'PY'
@@ -378,12 +387,19 @@ jobs:
           record = build_event_evidence(
               event_type="pull_request_review",
               event_id=f"review-{os.environ['REVIEW_ID']}",
-              source_commit=os.environ["GITHUB_SHA"],
+              source_commit=os.environ["POLICY_SHA"],
               run_id=int(os.environ["GITHUB_RUN_ID"]),
               run_attempt=int(os.environ["GITHUB_RUN_ATTEMPT"]),
               actor=os.environ["REVIEWER"],
               decision=os.environ["DECISION"],
-              details={"pr_number": int(os.environ["PR_NUMBER"]), "pr_author": os.environ["PR_AUTHOR"]},
+              details={
+                  "pr_number": int(os.environ["PR_NUMBER"]),
+                  "pr_author": os.environ["PR_AUTHOR"],
+                  "policy_commit": os.environ["POLICY_SHA"],
+                  "event_commit": os.environ["EVENT_SHA"],
+                  "pr_head_sha": os.environ["PR_HEAD_SHA"],
+                  "pr_base_sha": os.environ["PR_BASE_SHA"],
+              },
           )
           Path(".w118-event-evidence/review.json").write_text(json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
           PY
