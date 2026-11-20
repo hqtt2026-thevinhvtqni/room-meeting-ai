@@ -91,3 +91,8 @@ Principal-level self-review hardening is implemented and verified by [Run #44747
 - Run evidence binds source commit and tested commit separately, plus actor, repository, ref, run URL and PR metadata.
 - Failure diagnostics now subscribes to the W118 PR checklist workflow as well as W118, W300 and Work 70, without self-listening.
 - PR #67 remains DRAFT, mergeable, 102 ahead / 0 behind main. Runtime event E2E, Xu review and Vinh acceptance remain pending.
+
+
+## Staged gate clarification — 2026-11-20
+
+To test the workflow_run listener on real GitHub events, the workflow must be present on the default branch. The gate is split: Xu design/security review → Vinh explicit non-release integration authorization → Ka runtime E2E → Xu runtime evidence review → Vinh final product acceptance → separate release decision. Merge alone does not set ACCEPTED/RELEASED. No integration is performed without the explicit Vinh authorization at Stage B.
