@@ -697,3 +697,18 @@
 - Entry 072 added. No code, route, provider, Host, runtime, test, permission or branch changes. PR #48 remains DIVERGED/unmerged candidate; its PR-body CI statement is not freshly verified workflow evidence.
 - GAP-01 OPEN/P0; GAP-11 OPEN/P0 on current main; E2/E3 NOT PROVEN; ACK-before-Host NOT PROVEN; protected execution DENY / NOT RELEASED; READ/TRACE/ANALYZE ONLY.
 - Next: trace the actual authoritative W70 Assignment state/read-back and existing Core identity/authorization interfaces; prove whether an ACK reference can be validated online without introducing parallel state.
+
+## Sync Period 0060 — W70 Assignment prototype versus Core authority/current-main source (2026-11-20T19:20:00+07:00)
+
+- W70 DOC-064 current-main blob 0cd5cc7108310a93c98a289cc9a27f89b951b5dc is DRAFT / IMPLEMENTATION NOT AUTHORIZED. It requires Core/Work Registry authority only after Core contract/API verification; recipient ACK must bind assignment_id, dispatch_id, AI identity proof, accepted scope, version, expiry and nonce/idempotency.
+- W70 DOC-066 current-main blob 8278b5199b5802ac915d412df499a181dd37342a remains PLANNED / IMPLEMENTATION NOT AUTHORIZED / TESTS NOT RUN. It explicitly defers Assignment lifecycle persistence and says stop if the authoritative Core service is absent; do not create a local shadow source.
+- W70 Sandbox lifecycle_domain.py is pure domain guard code. validate_assignment_ready() checks DOC-044 completeness/shape only; it does not authenticate recipient, verify receipt/ACK, persist state or audit.
+- W70 Sandbox work_registry.py is pure in-memory Work/WP registry only; no Assignment aggregate, DispatchAttempt, delivery receipt or ACK store. README states no persistence/API/database/audit/authorization/Core integration.
+- Test files exist but were not run in this trace. README's older local 10-test claim is not a fresh run and explicitly lacked Sandbox runtime readback.
+- Exact GitHub main fetch returned NOT_FOUND for the four W70 Sandbox source/test paths; do not treat these files as current-main source or deployed runtime.
+- Current-main Core PrincipalRegistry/IdentityResolution are directory/type resolution, not Work authorization. Inspected HTTP adapter exposes read-only /identities and Meeting routes; executable core_http_main.build_app() composes create_http_app(service) without an Assignment/Work Authority router in the inspected source.
+- GitHub code search found no AssignmentService, transition_assignment, assignment_store, assignment_registry, dispatch_attempt or work_registry implementation in the indexed repo; absence is bounded to inspected source/search surfaces, not a universal proof.
+- Result: W70 Assignment contract/template + Sandbox domain/Work-WP prototype exist; authoritative Assignment API/service, durable state, authenticated ACK ingest/verifier, transaction/audit/read-back and runtime remain NOT VERIFIED. No source was promoted, synchronized or modified.
+- Entry 073 added. No test, route, Host, provider, dispatch, permission, code or branch operation.
+- GAP-01 OPEN/P0; GAP-11 OPEN/P0 on current main; Assignment service/persistence NOT VERIFIED; recipient-authenticated ACK NOT PROVEN; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED; READ/TRACE/ANALYZE ONLY.
+- Next: reconcile DOC-044/DOC-093/DOC-094 with the Sandbox guard and inspect W70 BUILD_REGISTER/ownership/migration evidence to determine whether the prototype is approved/candidate-only and identify the single authoritative Assignment source. Do not assume the Sandbox WorkRegistry is Core authority.
