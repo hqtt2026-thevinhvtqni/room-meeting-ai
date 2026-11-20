@@ -55,3 +55,8 @@ Vinh has explicitly delegated technical decisions and implementation of the Auto
 - Latest CI: Run `44747085807` SUCCESS, 30 tests passed; artifact ID `14632579474`.
 - PR #66 remains unmerged and is preserved as the earlier pilot history; do not merge it as the implementation branch.
 - Real issue/comment and workflow_run runtime E2E is the next implementation/verification gate after the reviewed integration is authorized.
+
+
+## Security verification update — 2026-11-20
+
+Principal-level self-review hardening is implemented and verified by [Run #44747589539](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44747589539): 32 tests PASS; evidence artifact ID `14634211524`. This closes the identified same-owner multi-login bypass at unit/contract level. Runtime review event and Xu identity mapping remain pending; no acceptance or merge state is inferred.
