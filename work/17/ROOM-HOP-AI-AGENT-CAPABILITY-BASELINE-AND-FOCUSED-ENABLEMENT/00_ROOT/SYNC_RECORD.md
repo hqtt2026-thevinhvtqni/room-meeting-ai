@@ -753,3 +753,16 @@
 - Entry 076 added. No branch/code/test/route/Host/provider/permission/gate operation performed.
 - GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED; READ/TRACE/ANALYZE ONLY.
 - Next: reconcile W70 DOC-035/DOC-055 current Sandbox and GitHub versions for latest authoritative register/journal and any superseding/closure decision for WP70-CO. Treat absent superseding decision as historical partial deliverable, not active assignment or live authority.
+
+## Sync Period 0064 — W70 canonical root and DOC-001/003/035/055 version divergence (2026-11-20T19:20+07:00)
+
+- W70 DOC-001 GitHub main: v1.6 / 2026-11-07 / Standard 1.2; Sandbox direct-root: v1.5 / 2026-11-08 / Standard 1.3. Both describe authority and mapping, but content/version claims differ.
+- W70 DOC-003 GitHub main v1.3 / 2026-11-07; Sandbox direct-root v1.2 / 2026-11-08. Sandbox DOC-003 explicitly identifies direct Work root as canonical and nested work/70/... Sandbox tree as legacy partial mirror, read-only/non-authoritative; DOC-035/DOC-055 nested mirror are divergent.
+- W70 DOC-055 GitHub main v3.3 / 2026-11-07 (242 lines, 42,132 chars); Sandbox direct-root v2.18 / 2026-11-17 (450 lines, 65,553 chars). Both claim ACTIVE — SINGLE SOURCE OF TRUTH but full contents differ; Sandbox has later addenda through 2026-11-17.
+- W70 DOC-035 GitHub main (1,559 lines, 268,543 chars) has records through 2026-11-13; Sandbox direct-root (3,165 lines, 526,770 chars) has later records through 2026-11-17 including Entry 084. Full content differs. Sandbox DOC-003 says these files must be archived/reconciled before disposition.
+- DOC-001/003 rules say 05_BUILD is a mapping/coordination area; product source is canonical only in an explicitly declared repository/path. A file's presence or commit in the coordination branch does not make it canonical.
+- W70 WP70-CO source artifacts are in Sandbox direct-root 05_BUILD/04_CODE only; no declared canonical product source mapping and no exact files on GitHub main or work/70/05-build branch. Classify as Sandbox preparatory artifacts, not canonical source or production Assignment service.
+- Result: W70 document-control/source authority reconciliation remains OPEN. Exact readback within each store is not parity between stores. Work17 did not overwrite, sync, migrate, clean mirrors or choose one W70 document version as authoritative.
+- Entry 077 added. No W70 write/sync/migration/source promotion/test/runtime/branch operation.
+- WP70-CO remains historical ACK + Sandbox-only preparatory artifact; Assignment service/API/persistence/ACK verifier NOT VERIFIED. GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
+- Next: W70 authority must reconcile DOC-001/003/035/055 under DOC-056, preserve history and establish one exact canonical revision/source mapping before any reuse of WP70-CO code. No parallel Assignment store/dispatcher.
