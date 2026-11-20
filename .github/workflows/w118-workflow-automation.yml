@@ -1,79 +1,221 @@
-# W118 HQTT GitHub Workflow Automation — PILOT v1
-# Work 118: event orchestration GitHub-native, least-privilege.
-# Safety: GITHUB_TOKEN events do not re-trigger workflows (no loop by design).
-
-name: W118 Workflow Automation Pilot
+name: W118 Auto E2E Validation
+run-name: W118 Auto E2E — ${{ github.event_name }} — ${{ github.ref_name }}
 
 on:
+  push:
+    branches:
+      - main
+      - work/118-auto-e2e-v2
+    paths:
+      - ".github/workflows/w118-workflow-automation.yml"
+      - ".github/workflows/w118-failure-diagnostics.yml"
+      - ".github/w118/**"
+      - "scripts/w118/**"
+      - "tests/w118/**"
+      - "work/118/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/w118-workflow-automation.yml"
+      - ".github/workflows/w118-failure-diagnostics.yml"
+      - ".github/w118/**"
+      - "scripts/w118/**"
+      - "tests/w118/**"
+      - "work/118/**"
+  workflow_dispatch:
+    inputs:
+      failure_injection:
+        description: "Controlled failure-path test; only permitted on the W118 feature branch"
+        required: false
+        default: "none"
+        type: choice
+        options: [none, controlled]
   issues:
     types: [labeled]
   issue_comment:
     types: [created]
-  workflow_run:
-    workflows: ["W300 Dashboard CI", "Work 70 Preview Host Tests"]
-    types: [completed]
+  pull_request_review:
+    types: [submitted]
 
 permissions:
-  issues: write
   contents: read
 
+concurrency:
+  group: w118-${{ github.workflow }}-${{ github.event.issue.number || github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
 jobs:
-  handoff-brief:
-    if: github.event_name == 'issues' && github.event.label.name == 'w118-handoff'
+  validate:
+    if: github.event_name == 'push' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout exact event revision
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned YAML parser
+        run: python -m pip install --disable-pip-version-check PyYAML==6.0.2
+      - name: Run W118 contract tests
+        id: tests
+        run: python -m unittest discover -s tests/w118 -v
+      - name: Write run evidence
+        if: always()
+        env:
+          TEST_OUTCOME: ${{ steps.tests.outcome }}
+        run: |
+          mkdir -p .w118-evidence
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          record = {
+              "schema_version": "1.0",
+              "work_id": "118",
+              "workflow": "W118 Auto E2E Validation",
+              "run_id": int(os.environ["GITHUB_RUN_ID"]),
+              "run_attempt": int(os.environ["GITHUB_RUN_ATTEMPT"]),
+              "source_commit": os.environ["GITHUB_SHA"],
+              "event": os.environ["GITHUB_EVENT_NAME"],
+              "test_outcome": os.environ.get("TEST_OUTCOME", "unknown"),
+              "state": "RECORDED",
+              "limitations": ["CI evidence does not constitute independent review or Work acceptance."]
+          }
+          Path(".w118-evidence/run-evidence.json").write_text(
+              json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+          )
+          PY
+          cat .w118-evidence/run-evidence.json >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload immutable run evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: w118-run-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .w118-evidence/run-evidence.json
+          if-no-files-found: error
+          retention-days: 30
+
+  controlled-failure:
+    if: github.event_name == 'workflow_dispatch' && inputs.failure_injection == 'controlled' && github.ref == 'refs/heads/work/118-auto-e2e-v2'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions:
+      contents: read
+    steps:
+      - name: Emit controlled failure for diagnostics E2E
+        run: |
+          echo "W118 controlled failure-path test; no production workflow is modified."
+          exit 17
+
+  handoff:
+    if: github.event_name == 'issues' && github.event.action == 'labeled' && github.event.label.name == 'w118-handoff' && !github.event.issue.pull_request
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+    concurrency:
+      group: w118-handoff-${{ github.event.issue.number }}-${{ github.event.label.id }}
+      cancel-in-progress: false
     steps:
-      - name: Post handoff brief
+      - name: Checkout role policy
+        uses: actions/checkout@v4
+      - name: Record handoff exactly once per issue-label event
         env:
           GH_TOKEN: ${{ github.token }}
           ISSUE: ${{ github.event.issue.number }}
+          LABEL_ID: ${{ github.event.label.id }}
+          LABELER: ${{ github.event.sender.login }}
         run: |
-          gh issue comment "$ISSUE" --repo "$GITHUB_REPOSITORY" --body "W118 pilot: handoff registered. Assignment is a nomination only. The worker must comment ACKED-<role> to confirm receipt. Evidence will be recorded in the Work evidence register."
+          set -euo pipefail
+          MARKER="<!-- w118-handoff:${ISSUE}:${LABEL_ID} -->"
+          if gh api --paginate "repos/${GITHUB_REPOSITORY}/issues/${ISSUE}/comments?per_page=100" --jq '.[].body' | grep -Fq "$MARKER"; then
+            echo "Handoff already recorded: $MARKER" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          cat > /tmp/handoff.md <<EOF
+          W118 handoff event recorded.
+
+          - Issue: #${ISSUE}
+          - Label event: ${LABEL_ID}
+          - Label applied by: @${LABELER}
+          - ACK format: `ACKED-<role> ${ISSUE}`
+          - Authorization: only active principals and explicitly mapped ACK roles in `.github/w118/role-map.json` are accepted.
+          - Unmapped actor/role: denied; no assignment or state transition is inferred.
+
+          ${MARKER}
+          EOF
+          gh issue comment "$ISSUE" --repo "$GITHUB_REPOSITORY" --body-file /tmp/handoff.md
 
   ack-verification:
-    if: github.event_name == 'issue_comment' && startsWith(github.event.comment.body, 'ACKED-') && !github.event.issue.pull_request
+    if: github.event_name == 'issue_comment' && github.event.action == 'created' && startsWith(github.event.comment.body, 'ACKED-') && !github.event.issue.pull_request
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
     steps:
-      - name: Record ACK evidence
+      - name: Checkout role policy
+        uses: actions/checkout@v4
+      - name: Verify actor, requested role, and issue binding
         env:
           GH_TOKEN: ${{ github.token }}
-          ISSUE: ${{ github.event.issue.number }}
           AUTHOR: ${{ github.event.comment.user.login }}
+          BODY: ${{ github.event.comment.body }}
+          ISSUE: ${{ github.event.issue.number }}
+          COMMENT_ID: ${{ github.event.comment.id }}
         run: |
-          printf '%s' \
-            'W118 pilot: ACK recorded. ' \
-            "- Actor: $AUTHOR. " \
-            'Token acked: yes (body starts with ACKED-). ' \
-            'Limitation: role mapping check is MANUAL in pilot v1; coordinator (Xu) must verify the actor login against the Work role file during acceptance.' \
-            > /tmp/ack.md
-          gh issue comment "$ISSUE" --repo "$GITHUB_REPOSITORY" --body-file /tmp/ack.md
+          set -euo pipefail
+          python scripts/w118/authorization.py --login "$AUTHOR" --body "$BODY" --issue "$ISSUE" > /tmp/ack-result.json
+          cat /tmp/ack-result.json >> "$GITHUB_STEP_SUMMARY"
+          AUTHORIZED=$(python -c 'import json; print("true" if json.load(open("/tmp/ack-result.json"))["authorized"] else "false")')
+          ROLE=$(python -c 'import json; print(json.load(open("/tmp/ack-result.json")).get("role", "unknown"))')
+          REASON=$(python -c 'import json; print(json.load(open("/tmp/ack-result.json"))["reason"])')
+          MARKER="<!-- w118-ack-result:${COMMENT_ID} -->"
+          if gh api --paginate "repos/${GITHUB_REPOSITORY}/issues/${ISSUE}/comments?per_page=100" --jq '.[].body' | grep -Fq "$MARKER"; then
+            echo "ACK result already recorded for comment ${COMMENT_ID}." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          if [ "$AUTHORIZED" = "true" ]; then
+            printf 'W118 ACK VERIFIED\n\n- Actor: @%s\n- Role: %s\n- Issue: #%s\n- Result: authorized by role map.\n\n%s\n' "$AUTHOR" "$ROLE" "$ISSUE" "$MARKER" > /tmp/ack-response.md
+          else
+            printf 'W118 ACK UNVERIFIED — no assignment or state transition was made.\n\n- Actor: @%s\n- Requested role: %s\n- Issue: #%s\n- Reason: %s\n\n%s\n' "$AUTHOR" "$ROLE" "$ISSUE" "$REASON" "$MARKER" > /tmp/ack-response.md
+          fi
+          gh issue comment "$ISSUE" --repo "$GITHUB_REPOSITORY" --body-file /tmp/ack-response.md
 
-  ci-failure-diagnostics:
-    if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'failure'
+  acceptance-review:
+    if: github.event_name == 'pull_request_review' && github.event.action == 'submitted' && github.event.review.state == 'approved'
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
     steps:
-      - name: Create or update failure diagnostics issue
+      - name: Checkout acceptance policy
+        uses: actions/checkout@v4
+      - name: Verify independent acceptance authority
         env:
           GH_TOKEN: ${{ github.token }}
-          RUN_ID: ${{ github.event.workflow_run.id }}
-          RUN_URL: ${{ github.event.workflow_run.html_url }}
-          WF_NAME: ${{ github.event.workflow_run.name }}
-          SHA: ${{ github.event.workflow_run.head_sha }}
+          REVIEWER: ${{ github.event.review.user.login }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REVIEW_ID: ${{ github.event.review.id }}
         run: |
-          gh label create w118-blocked --repo "$GITHUB_REPOSITORY" --color D93F0B --description "W118 pilot: CI FAIL or BLOCKED, owner pending" 2>/dev/null || true
-          TITLE="[w118] CI FAIL: $WF_NAME run $RUN_ID"
-          EXISTING=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --label w118-blocked --search "$TITLE" --json number -q '.[].number' | head -n 1)
-          cat > /tmp/body.md <<EOF
-          W118 pilot failure diagnostics.
-          - Workflow: $WF_NAME
-          - Run: $RUN_URL
-          - Commit: $SHA
-          - Owner of fix: pending assignment. Do not retry before an actor comments RETRY-1 or RETRY-2 with a reason (retry cap 2).
-          EOF
-          if [ -n "$EXISTING" ]; then
-            gh issue comment "$EXISTING" --repo "$GITHUB_REPOSITORY" --body-file /tmp/body.md
-          else
-            gh issue create --repo "$GITHUB_REPOSITORY" --title "$TITLE" --label w118-blocked --body-file /tmp/body.md
+          set -euo pipefail
+          python scripts/w118/review_authorization.py --reviewer "$REVIEWER" --pr-author "$PR_AUTHOR" > /tmp/review-result.json
+          cat /tmp/review-result.json >> "$GITHUB_STEP_SUMMARY"
+          ALLOWED=$(python -c 'import json; print("true" if json.load(open("/tmp/review-result.json"))["authorized"] else "false")')
+          if [ "$ALLOWED" != "true" ]; then
+            echo "Review is visible in GitHub but is not an authorized W118 acceptance decision." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
           fi
+          MARKER="<!-- w118-review-result:${REVIEW_ID} -->"
+          if gh api --paginate "repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments?per_page=100" --jq '.[].body' | grep -Fq "$MARKER"; then
+            echo "Review result already recorded." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          printf 'W118 independent acceptance reviewer verified: @%s. This records reviewer authority only; it does not merge or release.\n\n%s\n' "$REVIEWER" "$MARKER" > /tmp/review-response.md
+          gh issue comment "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/review-response.md
