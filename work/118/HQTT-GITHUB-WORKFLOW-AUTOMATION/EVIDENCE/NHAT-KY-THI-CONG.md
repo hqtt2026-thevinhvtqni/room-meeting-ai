@@ -300,3 +300,15 @@
 - **Phạm vi thay đổi:** authorization engine, review authorization tests, TD-118-007, implementation record và test matrix; không thay đổi main.
 - **Trạng thái:** FIX IMPLEMENTED — chờ CI xác nhận sau commit; không nâng trạng thái runtime review lên PASS.
 - **Bước tiếp:** xác minh CI mới nhất; cập nhật PR #67; tiếp tục Xu independent review. PR vẫn Draft, không merge.
+
+
+## Entry 027 — Principal-level self-review bypass fixed and 32-test CI verified
+- **Người thực hiện:** Ka — Delegated Technical Lead / Work 118 Build Owner.
+- **Thời gian:** 2026-11-20 20:48 UTC+07:00 (GitHub Actions evidence window).
+- **Mã đầu việc:** W118-10 — Review authorization security.
+- **Root cause correction:** first CI after principal-level review hardening exposed stale test assumptions: tests treated an unmapped PR author as independent and expected a login-only self-review message. The production policy was intentionally fail-closed; test fixtures/assertions were corrected to represent mapped principals.
+- **Final code behavior:** reviewer and PR author must both resolve to active principals; same principal is denied even across two GitHub logins; unknown PR author is denied because independence cannot be verified; a distinct mapped principal with active acceptance permission is allowed.
+- **Evidence:** [Run #44747589539](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44747589539) SUCCESS; job `validate` SUCCESS; `Ran 32 tests in 0.064s`; `OK`. Artifact `w118-run-evidence-44747589539-1`, ID `14634211524`, exists and was unexpired at readback.
+- **State:** principal-level authorization unit/contract coverage PASS. Runtime PR review event and Xu mapping remain NOT VERIFIED.
+- **PR:** #67 remains OPEN / DRAFT / mergeable; no merge.
+- **Next:** complete latest CI after doc updates, maintain PR #67 as the active review path, and wait for Xu's independent disposition before main integration.
