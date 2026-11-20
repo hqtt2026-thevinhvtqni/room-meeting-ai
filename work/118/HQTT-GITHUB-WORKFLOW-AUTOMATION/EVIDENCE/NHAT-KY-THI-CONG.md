@@ -43,3 +43,11 @@
 - **Kiểm thử CI / runtime:** NOT RUN.
 - **Trạng thái:** cả 3 thiết kế DRAFT chờ phản biện; KHÔNG PASS.
 - **Bước tiếp:** Ka review các TD kèm DC-118-003; Xu tổng hợp; Vinh ACK.
+
+## Entry 005 — W118-06/07 thiết kế (docs-only DRAFT)
+- **Thời gian:** 2026-11-20 (UTC+7)
+- **Phạm vi:** TD-118-007 (gate matrix: MERGE cần CI PASS + evidence RECORDED + 1 review độc lập; ACCEPTANCE cần evidence VERIFIED bởi Ka; RELEASE do Vinh duyệt; không auto-merge) và TD-118-008 (evidence register là nguồn bot-ghi duy nhất ở state RECORDED; Dashboard W70 là read-only projection; reconciliation định kỳ đăng lên issue audit; bot append-only, không ghi đè nhật ký người).
+- **Bằng chứng:** 2 file TD mới trong 02_DEFINE; commit của entry này. Readback 3 file TD trước đó tại commit 389d3d7 đã sạch.
+- **Kiểm thử CI / runtime:** NOT RUN.
+- **Trạng thái:** W118-06, W118-07 DRAFT. Hoàn tất soạn thảo W118-01..07; còn lại chờ W118-08 phản biện tổng hợp.
+- **Bước tiếp:** cập nhật DC-118-003 tham chiếu đủ bộ TD; Ka review; Xu tổng hợp; Vinh ACK (chuyển G2 sang G3).

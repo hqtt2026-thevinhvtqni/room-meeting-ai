@@ -10,9 +10,9 @@ Thiết kế và kiểm chứng có kiểm soát cơ chế điều phối GitHub
 | W118-03 | Thiết kế CI và evidence contract | Ma trận jobs, artifacts, SHA, logs, exit code | DRAFT 2026-11-20 — [TD-118-004](../02_DEFINE/TD-118-004_THIET-KE-CI-EVIDENCE-CONTRACT.md); cần extension schema v1.2 |
 | W118-04 | Thiết kế event orchestration | Event → actor → action → permission → result | DRAFT 2026-11-20 — [TD-118-005](../02_DEFINE/TD-118-005_THIET-KE-EVENT-ORCHESTRATION.md); ACK magic-token |
 | W118-05 | Thiết kế failure/retry/idempotency | State machine và giới hạn retry | DRAFT 2026-11-20 — [TD-118-006](../02_DEFINE/TD-118-006_THIET-KE-FAILURE-RETRY-IDEMPOTENCY.md) |
-| W118-06 | Thiết kế review/acceptance/merge gates | Gate matrix và quyền phê duyệt | PLANNED |
-| W118-07 | Thiết kế audit journal/dashboard | Data contract và provenance | PLANNED |
-| W118-08 | Phản biện và chốt kiến trúc | Biên bản kiến trúc được duyệt | IN PROGRESS — [DC-118-003](../02_DEFINE/DC-118-003_BRIEF-PHAN-BIEN-KIEN-TRUC.md) brief 6 AD giao phản biện |
+| W118-06 | Thiết kế review/acceptance/merge gates | Gate matrix và quyền phê duyệt | DRAFT 2026-11-20 — [TD-118-007](../02_DEFINE/TD-118-007_THIET-KE-GATE-MATRIX.md) |
+| W118-07 | Thiết kế audit journal/dashboard | Data contract và provenance | DRAFT 2026-11-20 — [TD-118-008](../02_DEFINE/TD-118-008_THIET-KE-AUDIT-DASHBOARD-CONTRACT.md) |
+| W118-08 | Phản biện và chốt kiến trúc | Biên bản kiến trúc được duyệt | IN PROGRESS — DC-118-003 + TD-118-004..008 đủ bộ hồ sơ chờ Ka review / Xu tổng hợp / Vinh ACK |
 | W118-09 | Pilot có giới hạn | CI/event flow chạy thật trong phạm vi thử nghiệm | BLOCKED — chờ phê duyệt thiết kế |
 
 ## Cổng kiểm soát
