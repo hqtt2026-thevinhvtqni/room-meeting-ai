@@ -116,3 +116,12 @@
 ## Staged acceptance gate — 2026-11-20
 
 The workflow_run listener requires default-branch presence for real runtime verification. The release gate is therefore staged: (A) Xu design/security review of PR #67; (B) Vinh explicit non-release integration authorization; (C) Ka runs RT-118-001; (D) Xu independently reviews runtime evidence; (E) Vinh final product acceptance; (F) separate release decision. Main integration does not equal acceptance or release. No merge is authorized by this amendment itself.
+
+
+## Xu review readiness — 2026-11-20
+
+- **Latest branch CI:** [Run #44749959595](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44749959595) SUCCESS; 45 tests passed; artifact ID `14635085964` exists and is unexpired at inspection.
+- **PR #67:** OPEN / DRAFT / mergeable=true; 116 commits ahead / 0 behind main; 30 files changed at readback.
+- **Review:** PR package and P0 checklist XR-118-001 are ready for Xu's Stage A design/security review.
+- **Integration:** Stage B remains NOT AUTHORIZED. No merge or release.
+- **After review:** Vinh may explicitly authorize non-release integration for RT-118-001; Xu then reviews runtime evidence; Vinh performs final acceptance and separate release decision.
