@@ -35,7 +35,7 @@ Thứ tự: (1) local model đủ năng lực và được phép; (2) free cloud
 ## 7. Bảo mật và chi phí
 Paid provider mặc định DISABLED/DENY ở server-side. Secret chỉ tham chiếu qua secret store được duyệt. Không log prompt/response nhạy cảm mặc định; redaction, retention và access control phải được thiết kế. Local inference vẫn cần sandbox, egress control, resource limits và kiểm tra nguồn/license model.
 ## 8. Phản biện trước BUILD
-Cla/AI-03: technical/runtime; Ka/AI-02: security/privacy/CSA; Qw/AI-05: QE/testability; Go/AI-06: local feasibility/cost; Vibe: adversarial architecture; Kha: provider/Gemini và Work 23; Qc: adapter feasibility không code; Gem: Agent operating model. Phân công là kế hoạch, chưa chứng minh đã dispatch hoặc reviewer đã nhận.
+Cla/AI-03: technical/runtime; Ka/AI-02: security/privacy/CSA; Go/AI-06: default QE/QA/testability under D70-026; Go/AI-06: local feasibility/cost; Vibe: adversarial architecture; Kha: provider/Gemini và Work 23; Qc: adapter feasibility không code; Gem: Agent operating model. Phân công là kế hoạch, chưa chứng minh đã dispatch hoặc reviewer đã nhận.
 ## 9. Vấn đề còn mở
 Phần cứng thực tế; runtime local; lựa chọn LiteLLM hay adapter hiện hữu; Core/Gateway/Runtime contract; provider free-tier đủ điều kiện; secret store/database/log retention; Arena rubric/dataset; Dashboard ownership; data classification; deployment topology.
 ## 10. Điều kiện thoát thiết kế
