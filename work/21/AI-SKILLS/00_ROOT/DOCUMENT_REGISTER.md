@@ -15,7 +15,7 @@ Rule reference: Work 70 DOC-056; preserve legacy files until controlled migratio
 | ROOM-HOP application | 06_ROOM_HOP_APPLICATION.md | Architecture/context | Existing |
 | Research backlog | 07_RESEARCH_BACKLOG.md | Plan/research | Updated — item 19 added |
 | External skills research | 08_EXTERNAL_SKILLS_JAMESROCHABRUN_AND_TEAM_HYBRID.md | Research | Existing |
-| AI Templates library research | 09_AI_TEMPLATES_PHAN_DONG_GIANG_RESEARCH.md → GitHub `work/21-ai-skills:work/21/09_AI_TEMPLATES_PHAN_DONG_GIANG_RESEARCH.md` | Research | Created — research only; GitHub branch exact readback PASS |
+| AI Templates library research | 09_AI_TEMPLATES_PHAN_DONG_GIANG_RESEARCH.md → GitHub `work/21-ai-skills:work/21/09_AI_TEMPLATES_PHAN_DONG_GIANG_RESEARCH.md` | Research | Created — research only; merged to main via PR #62; exact readback PASS |
 | Work Dashboard | AI-SKILLS/08_DASHBOARD/ | Dashboard | Scaffold created |
 | Dashboard Preview | AI-SKILLS/09_DASHBOARD_PREVIEW/ | Preview | Storage scaffold only |
 | Build mapping | AI-SKILLS/05_BUILD/ | Build mapping | Scaffold created |
@@ -32,5 +32,8 @@ This register is an initial inventory, not a complete numbered DOC register. Doc
 - Branch: work/21-ai-skills
 - Base: main @ 70ae3fb762bd4719facbf9448919aa2ab9516429
 - Mapping: Sandbox root-level records → work/21/; Sandbox AI-SKILLS/ → work/21/AI-SKILLS/
-- Exact-readback verified: README, 07_RESEARCH_BACKLOG, 09_AI_TEMPLATES research note, WORK_MANIFEST, DOCUMENT_REGISTER, BIEN_BAN_W21, NHAT_KY_THI_CONG_W21 (7/7).
+- Exact-readback verified on main after PR #62 merge: README, 07_RESEARCH_BACKLOG, 09_AI_TEMPLATES research note, WORK_MANIFEST, DOCUMENT_REGISTER, BIEN_BAN_W21, NHAT_KY_THI_CONG_W21 (7/7).
 - Scope is partial record synchronization; remaining Work 21 files/folders not yet reconciled or claimed synchronized.
+
+- Merge: PR #62 merged to main; merge commit `2095c1181daaee49dc58390fc2ca7a6576336155`.
+- Full Work 21 tree parity: NOT VERIFIED; only the 7 listed records are synchronized.
