@@ -43,11 +43,11 @@
 2. **Evidence contract:** tái dùng mẫu schema của Work 70 (EVIDENCE_REGISTER.json + validator) thay vì chế contract mới; mỗi run CI ghi một evidence row (run_id, SHA, job, exit code, timestamp, actor).
 3. **Branch/commit convention:** thêm job lint-nhẹ (docs-only) kiểm tra pattern branch/commit-message khi có PR, không block docs push trên main giai đoạn đầu.
 4. **Failure path:** tiếp tục pattern "diagnostics lên issue" của w300, bổ sung assign + label + retry counter (cap 2–3 lần, sau đó BLOCKED có người chịu trách nhiệm).
-5. **Không autoload merge:** trotz CI PASS, merge chỉ qua PR review của actor được chỉ định (vẫn khớp nguyên tắc 00_ROOT §3).
+5. **Không auto-merge:** dù CI PASS, merge chỉ qua PR review của actor được chỉ định (vẫn khớp nguyên tắc 00_ROOT §3).
 6. **Di sản w300 cần giám sát:** autofix-commit-loop từ CI — phải là design item của W118-05 (idempotency/anti-loop), không nhân rộng trước khi có giới hạn.
 
-## 5. Bloc khối & giới hạn hiện tại
-- Job logs của Actions không đọc được không cần quyền admin (đã biết từ Work 300) → bằng chứng CI phải lấy từ artifacts/diagnostics issue/summary, không từ raw log.
+## 5. Bế tắc & giới hạn hiện tại
+- Job logs của Actions chỉ đọc được khi có quyền admin (đã biết từ Work 300) → bằng chứng CI phải lấy từ artifacts/diagnostics issue/summary, không từ raw log.
 - Chưa kiểm kê được secrets/webhook cài ở cấp repo settings (API read-only không thấy) → phần này ghi BLOCKED cần Vinh xác nhận qua UI.
 - Không có bất kỳ kiểm thử runtime nào trong giai đoạn này; không có PASS nào.
 
