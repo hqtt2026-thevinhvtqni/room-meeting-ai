@@ -1268,3 +1268,42 @@
 - Disposition: GAP-01 OPEN/P0; GAP-11 OPEN/P0 trên current main; Assignment service/API/persistence NOT VERIFIED; recipient-authenticated ACK NOT PROVEN; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED; Work17 READ/TRACE/ANALYZE ONLY.
 - Hành động: READ/TRACE/ANALYZE בלבד. Không chạy tests, không gọi API/Host, không sửa code, không đồng bộ W70 prototype sang GitHub, không tạo schema/store/dispatcher, không merge/cherry-pick PR #48.
 - Bước tiếp theo: đối chiếu DOC-044/DOC-093/DOC-094 với lifecycle_domain.py để xác định khoảng cách giữa Assignment template/planning register và domain guard; kiểm tra BUILD_REGISTER/ownership trong W70 xem spike này có được chấp thuận/migration/commit hay vẫn là candidate. Chỉ sau đó xác định nguồn duy nhất có thể làm authoritative Assignment; không giả định W70 Sandbox registry là dịch vụ Core.
+
+## Entry 074 — W70 Assignment register, build ownership và Sandbox/GitHub version drift (2026-11-20T19:20+07:00)
+
+- Người thực hiện: Xu / AI-01.
+- Phạm vi: Tiếp nối Entry 073; kiểm tra DOC-044, DOC-093, DOC-094, BUILD_REGISTER, BUILD_MAPPING_REGISTER và WP70-CO spike để xác định trạng thái phê duyệt/ownership của Assignment prototype và nguồn hồ sơ có thẩm quyền.
+- Phương pháp: Sandbox read_probe các canonical/candidate W70 files; parse JSON và đếm status/ID; fetch exact GitHub main DOC-044/093/094 và bốn code/test paths; so sánh toàn văn và schema/version. Không chạy test, không sửa W70, không migrate hoặc đồng bộ file.
+- DOC-044 Assignment Contract:
+  - GitHub main path DOC-044 blob 508cbde08e1f376cdeba9475330aa880a9f63797, 86 lines / 2,254 chars; status ACTIVE / TEMPLATE. Template có assignment identity, status, source baseline, permissions, deliverables, acceptance/test/evidence fields; rules nói DRAFT không phải quyền thực thi.
+  - W70 Sandbox DOC-044 có 168 lines / 9,250 chars; nội dung GitHub main là exact prefix đến dòng 86, nhưng Sandbox có thêm addenda từ dòng 88 trở đi. Addenda bổ sung liên kết Task ID DOC-093; READY→IN_PROGRESS yêu cầu assigned identity ACK được ghi và read-back; state transition history; Work Entry G0–G5; execution authorization và scope-specific decision evidence.
+  - Kết quả: phần addenda trong Sandbox không có trong GitHub main snapshot đã fetch. Không coi các điều khoản bổ sung này là nội dung đã đồng bộ/được main phê duyệt chỉ vì có ở Sandbox. Cần giữ drift có provenance, không ghi đè bên nào trong Work17.
+- DOC-093 Role-based Task Register:
+  - GitHub main blob 5c099c847b1ae19f29b0a195243da62ecb1e856b, schema_version 1.2-end-to-end-task-ownership; Sandbox schema_version 1.1-detailed-task-contract.
+  - Cả hai bản có 36 task, cùng ID sequence và cùng assignment_status distribution: 27 PROPOSED, 9 PROPOSED_NOT_VERIFIED. Cả hai đều DRAFT_NOT_APPROVED; policy nói role assignment không chứng minh availability, capability, ACK hoặc execution.
+  - Toàn văn không khớp; GitHub main 1,723 lines / 88,421 chars, Sandbox 1,691 lines / 86,601 chars. GitHub là revision mới hơn về schema/content theo version string và kích thước, nhưng chưa thực hiện merge/sync ngược Sandbox.
+- DOC-094 Product/Phase Task Register:
+  - GitHub main blob 08af0a17b991ec53a07cf75b08ad651eb67cbf15, schema_version 1.1-end-to-end-phase-ownership; Sandbox schema_version 1.0.0.
+  - Cả hai bản có 18 Phase Tasks, cùng ID sequence và cùng assignment_status distribution: 18 PROPOSED_NOT_ACKNOWLEDGED. Cả hai DRAFT_NOT_APPROVED; DOC-094 nói DOC-093 là sole source của Agent Tasks, các shared task links không chứng minh assignment/ACK riêng cho Product Task, và thiếu ACK/evidence thì không được suy ra IN_PROGRESS.
+  - Toàn văn không khớp: GitHub main 766 lines / 37,959 chars; Sandbox 761 lines / 37,037 chars. GitHub main schema version cao hơn; không thực hiện sync/migration.
+- W70 BUILD_REGISTER và BUILD_MAPPING_REGISTER từ Sandbox:
+  - BUILD_REGISTER.json liệt kê sáu WP-70-01..06; WP-70-02 là Work Package registry (IN_PROGRESS), WP-70-04 Core read integration (BLOCKED, owner field Xu / Core owner TBD), WP-70-06 independent verification/handoff (PLANNED). Không có WP riêng được liệt kê cho Assignment/Dispatch/ACK service hoặc WP70-CO spike.
+  - BUILD_MAPPING_REGISTER ghi ACTIVE / MIGRATION IN PROGRESS; BUILD_REGISTER Markdown/JSON là LEGACY SOURCE / RECONCILIATION REQUIRED; Work Package register/schema mới là proposed target, NOT APPROVED; các candidate chưa canonical promotion. Mapping register nói migration chưa được thực hiện và không được xóa/ghi đè nguồn trước khi có kế hoạch, approval và readback.
+  - Exact GitHub main fetch trả NOT_FOUND cho `work/70/.../05_BUILD/00_ROOT/BUILD_REGISTER.json` và BUILD_MAPPING_REGISTER.md; các hồ sơ này hiện được đọc từ W70 Sandbox, không chứng minh main parity.
+- WP70-CO spike:
+  - WP70_CO_SPIKE_README.md ghi PREPARATORY SPIKE — NOT PRODUCTION / NOT INTEGRATED / NOT ACCEPTED; reproducible test command explicitly NOT RUN in that session.
+  - README liệt kê ngoài scope: assignment/ACK, persistence, audit transaction, idempotency, optimistic concurrency, events, Core routes, Dashboard và Execution Host calls. Vì vậy spike này không phải Assignment lifecycle service.
+  - WP70_CO_REGISTRY_README và WP70_CO_DOMAIN_GUARD_README cũng giới hạn WorkRegistry/domain guards ở in-memory/pure logic; không có authority/persistence/API. Không có bằng chứng trong BUILD_REGISTER/MAPPING_REGISTER rằng spike được phê duyệt thành sản phẩm hoặc được promote.
+- Exact GitHub main source status:
+  - DOC-044, DOC-093, DOC-094 tồn tại trên main với các blob SHA nêu trên.
+  - W70 Sandbox lifecycle_domain.py, work_registry.py, test_lifecycle_domain.py, test_work_registry.py không tồn tại tại các đường dẫn tương ứng dưới work/70/.../05_BUILD/04_CODE trên GitHub main (NOT_FOUND).
+  - Build Register/Mapping Register cũng NOT_FOUND tại đường dẫn main đã kiểm tra. Không được tuyên bố W70 code spike/build register đã được đồng bộ lên main.
+- Kết luận:
+  - DOC-044 là ACTIVE/TEMPLATE, không phải Assignment API/service; GitHub main thiếu các addenda có trong Sandbox.
+  - DOC-093/DOC-094 là planning registers DRAFT_NOT_APPROVED. Statuses và IDs nhất quán giữa hai bản, nhưng schema/version và content drift; không bản nào chứng minh live Assignment ledger hoặc recipient ACK.
+  - WP70-CO là preparatory prototype, explicit NOT PRODUCTION/NOT INTEGRATED/NOT ACCEPTED; Assignment/ACK bị loại khỏi scope; tests NOT RUN.
+  - W70 Build Register hiện có không giao một WP riêng cho Assignment/Dispatch/ACK service; WP-70-04 Core read integration vẫn BLOCKED. Candidate code không được xem là authority đã được phê duyệt.
+  - Chưa xác định được nguồn duy nhất authoritative Assignment state/ACK. Không dùng Sandbox prototype, planning register hay template làm substitute cho Core.
+- Disposition: GAP-01 OPEN/P0; GAP-11 OPEN/P0; Assignment service/API/persistence NOT VERIFIED; recipient-authenticated ACK NOT PROVEN; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED; Work17 READ/TRACE/ANALYZE ONLY.
+- Hành động: READ/TRACE/ANALYZE. Không sync/migrate W70 files, không sửa template/register, không promote WP70-CO, không chạy test/route/Host/provider, không tạo Assignment service/store/dispatcher và không thay đổi quyền/branch.
+- Bước tiếp theo: trace canonical DOC-055/Document Register và DOC-035 W70 journal để xác định lịch sử promotion/approval và mapping authority cho DOC-044/093/094/WP70-CO; nếu chưa có quyết định/phê duyệt thì ghi candidate-only. Sau đó quay về Core source/runtime evidence, không tạo hệ thống song song.
