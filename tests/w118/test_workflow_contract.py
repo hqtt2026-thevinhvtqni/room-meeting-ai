@@ -137,6 +137,15 @@ class Work118WorkflowContractTests(unittest.TestCase):
         self.assertIn(path, data["on"]["push"]["paths"])
         self.assertIn(path, data["on"]["pull_request"]["paths"])
 
+
+    def test_ci_evidence_binds_source_and_tested_revision(self):
+        data = self.load_yaml(WORKFLOW)
+        steps = data["jobs"]["validate"]["steps"]
+        run_script = next(step["run"] for step in steps if step.get("name") == "Write run evidence")
+        for field in ('"repository"', '"run_url"', '"actor"', '"source_ref"', '"source_commit"', '"tested_ref"', '"tested_commit"', '"pull_request_number"'):
+            self.assertIn(field, run_script)
+        self.assertIn('"state": "RECORDED"', run_script)
+
     def test_diagnostics_planner_is_part_of_runtime(self):
         self.assertTrue(Path("scripts/w118/diagnostics.py").is_file())
         self.assertTrue(Path("tests/w118/test_diagnostics.py").is_file())
