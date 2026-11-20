@@ -23,7 +23,7 @@ AutoGPT Platform is the selected candidate engine; self-host preferred; Work 502
 ## Reviewer assignments
 - Cla / AI-03: technical architecture, AutoGPT internals, adapter, queue, state, concurrency and failure recovery. No code.
 - Ka / AI-02: security, authorization boundary, secrets, egress, sandbox, prompt injection and license risk. No code.
-- Qw / AI-05: QA independence, acceptance criteria, test matrix, evidence integrity and retry limits. No code.
+- Go / AI-06: default HQTT QE/QA owner under D70-026; QA independence, acceptance criteria, test matrix, evidence integrity and retry limits. No code.
 - Vibe: adversarial challenge; try to falsify the proposal and identify simpler alternatives. No implementation.
 - Go / AI-06: local infrastructure, hardware/resource and zero-cost feasibility. No installation/download/account/billing.
 - Qc: source/API/MCP/block feasibility and implementation boundary. No code.
