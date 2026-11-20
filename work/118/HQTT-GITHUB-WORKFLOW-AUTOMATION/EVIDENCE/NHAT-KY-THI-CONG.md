@@ -336,3 +336,17 @@
 - **Branch/PR:** PR #67 OPEN / DRAFT; branch sạch 0-behind main tại lần đối chiếu gần nhất; không merge.
 - **Trạng thái:** 36 UNIT/CONTRACT TESTS PASS; RUNTIME EVENT E2E PENDING; Xu REVIEW PENDING; Vinh FINAL ACCEPTANCE PENDING.
 - **Bước tiếp:** chờ CI của commit checklist; cập nhật PR #67; chuyển gói phản biện cho Xu. Sau Xu disposition và Vinh acceptance mới thực hiện main integration và runtime event tests.
+
+
+## Entry 031 — Event evidence, ACK state label and safe PR checklist notifier
+- **Người thực hiện:** Ka — Delegated Technical Lead / Work 118 Build Owner.
+- **Thời gian:** 2026-11-20 20:58 UTC+07:00.
+- **Mã đầu việc:** W118-10 — Auto E2E event automation.
+- **Implemented:** `event_evidence.py` creates immutable OPERATION event artifacts bound to Work 118, source event ID, source SHA, run ID/attempt, actor and decision; state is always RECORDED. Handoff, ACK and review jobs upload artifacts.
+- **ACK state transition:** only an authorized actor/role/Issue binding applies label `w118-acked`. Unauthorized/unmapped ACK produces `ACK UNVERIFIED` and no Issue state mutation.
+- **PR checklist:** an attempt to post from ordinary `pull_request` context failed with `Resource not accessible by integration (addComment)`; the same job also lacked the event evidence helper in base SHA. Ka removed the write job from that context and created a separate `pull_request_target` notifier with `contents:read` + `issues:write`, same-repository scope, no checkout and no execution of PR code. This avoids broadening the normal PR token.
+- **CI evidence:** [Run #44748965030](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44748965030) SUCCESS; `Ran 44 tests in 0.175s`; `OK`. Artifact `w118-run-evidence-44748965030-1`, ID `14634556693`, exists and was unexpired at readback.
+- **Test coverage:** event evidence record validation; ACK label only inside authorized branch; handoff/ACK/review artifact uploads; safe pull_request_target notifier; same-repo condition; no PR checkout; path filters.
+- **PR:** #67 OPEN / DRAFT / mergeable=true; branch 89 ahead / 0 behind main at readback. No merge.
+- **Giới hạn:** push run; event-specific jobs skipped. Live handoff/ACK/PR review/workflow_run diagnostics E2E remains pending default-branch integration. Xu and Vinh acceptance pending.
+- **Trạng thái:** 44 UNIT/CONTRACT TESTS PASS / EVENT RUNTIME E2E PENDING / ACTIVE — NOT RELEASED.
