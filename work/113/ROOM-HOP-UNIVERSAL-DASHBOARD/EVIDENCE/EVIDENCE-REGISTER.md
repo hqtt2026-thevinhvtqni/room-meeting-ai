@@ -1,10 +1,30 @@
 # W113 EVIDENCE REGISTER
-- Document ID: DOC-014 | Priority: P1 | Read order: 14 | Status: ACTIVE — INITIALIZED
+- Document ID: DOC-014 | Priority: P1 | Read order: 14
+- Version: 1.1
+- Updated: 2026-11-13 04:59 (+07)
+- Status: ACTIVE — DISCOVERY EVIDENCE INDEX
 - Canonical cross-phase evidence index. Evidence is registered once; other records link here.
 
 | Evidence ID | Date | Scope | Method / source | Result | Status |
 |---|---|---|---|---|---|
-| EV-113-001 | 2026-11-09 | Work portfolio discovery | ROOM-HOP 8030 sandbox_list_works; count=61 | Inventory returned 61 Works. No exact unified Dashboard Work identified in scoped review; full audit not complete. | RECORDED — discovery only |
+| EV-113-001 | 2026-11-09 | Work portfolio discovery | ROOM-HOP 8030 sandbox_list_works; count=61 | Initial registry snapshot. No exact unified Dashboard Work identified in scoped review; full audit not complete. | RECORDED — discovery only |
 | EV-113-002 | 2026-11-09 | Existing dashboard boundaries | W0000 dashboard README; W70 DOC-085 and requirements; W71 Sandbox tree | W0000 dashboard is read-only Company snapshot; W70 separates Work/Product dashboards; W71 is Meeting-specific. | RECORDED — readback evidence |
 | EV-113-003 | 2026-11-09 | Work creation | sandbox_create_work(work_id=113, work_name=ROOM-HOP-UNIVERSAL-DASHBOARD, identity_id=xu) | status=ok; authorization=ALLOW; resource=sandbox/works/113. | RECORDED — creation acknowledgement |
 | EV-113-004 | 2026-11-09 | Initial scaffold | sandbox_list and sandbox_read_probe | Work root and generated manifest read back; legacy scaffold paths observed and preserved. | RECORDED — partial readback |
+| EV-113-005 | 2026-11-13 | Current Work registry and W70 governance | 8030 sandbox_list_works (count=64); W70 DOC-042, DOC-043, DOC-085, DOC-096, DOC-064, DOC-065, DOC-068 readback | Confirmed current registry count=64; W70 Work Dashboard vs Product Dashboard split; assignment, role/capability, session and evidence controls; Hybrid AI Dispatch remains design proposal, not runtime proof. | RECORDED — source readback; no gate PASS |
+| EV-113-006 | 2026-11-13 | W52 AI communication/orchestration | W52 A2A task contract, state machine, capability matrix, permission matrix, error/retry/cancel and gap analysis | Provider-neutral task/event design exists but remains DRAFT; live provider/runtime dispatch and Core-authenticated ACK are not verified in the inspected capability profile. | RECORDED — design evidence only |
+| EV-113-007 | 2026-11-13 | W112 cross-Work integration | W112 Integration Charter and DOC-001 Cross-Work Integration Contract Baseline | Cross-Work correlation/contract ownership is defined as design baseline; baseline is DRAFT and not approved for runtime enforcement; event transport, live assignment/ACK, evidence store and lease/auth runtime remain unverified. | RECORDED — design evidence only |
+| EV-113-008 | 2026-11-13 | W114 graph/agent collaboration boundary | W114 ADRP-114-001, Agent Task Bridge Contract, Dispatch Capability Matrix, Task Registry crosswalk, AI Team Directory schema and Manifest | W114 is design-only/read-only graph layer; current 8030 surface has Meeting/Sandbox actions but no typed task dispatch, private-session inbox, delivery receipt or authenticated ACK. | RECORDED — readback evidence; no dispatch claim |
+| EV-113-009 | 2026-11-13 | Identity, Gateway, authorization and Meeting ownership | W11 Member Contract/Production Integration Boundary/Security Boundary; W01 Gateway source and dashboard README; W02 README; W71 Product Architecture | Existing ownership and boundary designs are documented; live API, auth enforcement and full integration contracts are not proven by inspected files. | RECORDED — static/read-only inspection |
+| EV-113-010 | 2026-11-13 | Existing Dashboard source candidate | GitHub private repo hqtt2026-thevinhvtqni/PL.room-meeting-ai.dash, main @ dc4be09bc43c02630f60eb892782e72a07c782b8; README, package, session contract, Bridge, Dashboard and mock files fetched | Repository is a Meeting Session Lifecycle UI/Contract Lab, not a proven Universal Dashboard. RoomHOPBridge.ts defaults to mock; inspected real bridge calls Core/Workspace from browser code. No tests run; source not adopted. | RECORDED — static source review only |
+| EV-113-011 | 2026-11-13 | W113 Sandbox ↔ GitHub plan parity | GitHub main branch @ 3e2140cd573497142ff8b4b457fcd6779c14123c; fetch W113 DOC-009 blob d592e79390b37a31db48406583e4b61a315d4dd9; compare with Sandbox DOC-009 v2.0 | GitHub main still contains older DRAFT roadmap, not Sandbox approved plan v2.0. Current 8030 context says AI cannot commit/push/merge; no sync attempted. | RECORDED — divergence verified; sync BLOCKED |
+| EV-113-012 | 2026-11-13 | W113 multi-AI consultation inventory | W113 DOC-015/DOC-016, DOC-005 journal, Mê consultation supplied in conversation | Co substantive opinion recorded; Mê substantive input received in conversation; Kha-labelled item in journal is scope/brief only; no substantive Ka/Cla/Qw/Go response or authenticated ACK located in W113 records inspected. | RECORDED — consultation status only; no dispatch/ACK claim |
+
+## Evidence limitations
+- Sandbox readback proves stored text, not GitHub parity or runtime behavior.
+- GitHub file fetch proves repository content at the stated ref, not local execution or deployed service behavior.
+- Static code inspection is not a test run.
+- A design document, roster entry, task packet, Meeting message or ACK label alone does not prove private-session delivery, execution, authorization or PASS.
+
+| EV-113-013 | 2026-11-13 | Core/Gateway/Execution Host/Build MCP ownership | W37 Core scope and mirror rule; W38 Gateway Manifest; W39 Work identity; W14 Manifest and absorbed Execution Host Boundary; current 8030 room context/tool inventory | W37/W38 are evidence workspaces, not proof of live services; W14 boundary says no executable Work Host/process/Git/CI/browser adapter through current 8030 surface; 8030 has no typed private dispatch/ACK. | RECORDED — owner-boundary evidence; runtime remains NOT VERIFIED |
+| EV-113-014 | 2026-11-13 | AI identity, skill authority and portfolio registry reconciliation | W0000 DOC-010/DOC-018; W70 DOC-043; W21 Manifest and Skill Contract; 8030 sandbox_list_works count=64 | W0000 DOC-010 AI-ID mapping conflicts with W70 DOC-043; W21 says Skill does not grant authority; W0000 inventory snapshot 56 (2026-11-03) differs from current 8030 count 64. | RECORDED — governance discrepancies; reconciliation BLOCKED |
