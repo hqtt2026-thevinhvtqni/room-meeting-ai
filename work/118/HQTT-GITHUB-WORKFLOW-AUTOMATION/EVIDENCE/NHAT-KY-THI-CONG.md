@@ -132,3 +132,11 @@
 - **Vibe xác nhận:** freeze vẫn được giữ — không merge PR #66, không sửa workflow, không đổi quyền/labels, không ghi PASS thiếu bằng chứng runtime. Trạng thái T theo bảng của Xu được chấp nhận là trạng thái chính thức của vòng test tại thời điểm này.
 - **Điều kiện chờ từ phía vận hành:** label w118-handoff cần tồn tại trước T-01 — tạo thủ công qua UI repo (không phải sửa code) được coi là hợp lệ trong vòng test.
 - **Trạng thái Work:** vòng kiểm thử độc lập IN PROGRESS; Vibe chờ kết quả, chỉ ghi hồ sơ.
+
+## Entry 015 — KHÓA TRẠNG THÁI KIỂM THỬ (mốc chính thức của Xu)
+- **Thời gian:** 2026-11-20 (sau Entry 014)
+- **Trạng thái khóa do Xu:** T-01 BLOCKED (chờ label w118-handoff tạo thủ công UI — hợp lệ, không phá freeze) / T-02 PASS một phần / T-03, T-04 NOT VERIFIED / T-05 NOT VERIFIED đầy đủ / T-06 DONE (hồ sơ TD-118-011).
+- **Hai bên cam kết thống nhất:** không merge PR #66, không sửa workflow, không đổi quyền/labels ngoài điều kiện T-01, không PASS thiếu runtime evidence.
+- **Điểm kết thúc vòng:** Xu tổng hợp kết quả T-01..T-05 + lỗi tồn tại + bằng chứng Actions + đối chiếu AC-R1..R6 + kiến nghị B-118-010; remediation CHỈ triển khai khi Vinh ra lệnh chính xác "ÁP DỤNG B-118-010".
+- **Nguyên tắc xuyên suốt W118 được ghi làm chuẩn:** chứng minh hệ thống làm được trước, mới kết luận hệ thống đã làm được.
+- **Vibe:** chờ; chỉ ghi hồ sơ; không sinh commit nào khác ngoài nhật ký/hồ sơ kết quả kiểm thử.
