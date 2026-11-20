@@ -116,4 +116,4 @@
 - **Thời gian:** 2026-11-20
 - **Chốt freeze phiên bản:** Vibe sẽ không chủ động push/phát sinh bất kỳ thay đổi nào trong .github/workflows hay hồ sơ W118 khác ngoài Nhật ký này + hồ sơ kết quả kiểm thử của Xu.
 - **Thứ tự ưu tiên theo KT-118-009:** T-01 (label w118-handoff) -> T-02/T-03 (ACK & actor test) -> T-04 (runtime diagnostics re-run Run #1) -> T-05 (đề xuất mở listener) -> T-06 (đối chiếu PR vs main).
-- **Định nghĩa xong vòng kiểm thử:** có đủ 6 (hoặc có trường hợp SKIP có chú thích) kết quả thực thi với run URL + SHA, trạng thái mới củaeron STATUS.
+- **Định nghĩa xong vòng kiểm thử:** có đủ 6 (hoặc có trường hợp SKIP có chú thích) kết quả thực thi với run URL + SHA, trạng thái mới của STATUS.

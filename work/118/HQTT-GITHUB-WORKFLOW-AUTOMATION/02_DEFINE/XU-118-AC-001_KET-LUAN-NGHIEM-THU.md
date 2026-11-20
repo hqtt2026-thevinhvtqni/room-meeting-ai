@@ -1,4 +1,4 @@
- 클래스# XU-118-AC-001 — KẾT LUẬN NGHIỆM THU ĐỘC LẬP CỦA XU
+# XU-118-AC-001 — KẾT LUẬN NGHIỆM THU ĐỘC LẬP CỦA XU
 
 - **Work:** W118 — HQTT GitHub Workflow Automation
 - **Ngày:** 2026-11-20
