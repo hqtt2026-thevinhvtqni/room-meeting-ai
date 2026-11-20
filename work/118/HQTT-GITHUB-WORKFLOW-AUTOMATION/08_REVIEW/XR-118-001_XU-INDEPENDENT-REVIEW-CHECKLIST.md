@@ -55,3 +55,10 @@ Xu must record:
 - **Date-time:** ISO 8601 with timezone
 
 A Xu PASS permits Vinh to perform final product acceptance; it does not itself set Work 118 to ACCEPTED or RELEASED.
+
+
+## Additional review checks — event evidence and PR notifier
+
+13. **P0 — ACK state mutation:** verify `w118-acked` is applied only after active actor/role/Issue authorization passes; denied ACK causes no label mutation.
+14. **P0 — Event evidence:** handoff, ACK and review artifacts are bound to source event, run/attempt, actor, decision and SHA; state remains RECORDED and no Work 70 register is mutated.
+15. **P0 — PR checklist notifier:** `pull_request_target` workflow must not checkout or execute PR head code; it must be same-repository scoped, least-privilege and idempotent per PR head SHA.
