@@ -23,7 +23,7 @@
 | T10-14 | W300 or W70 natural failure after listener deployment | W118 diagnostics captures exact run URL and SHA | PENDING — wait for eligible real event |
 | T10-15 | Evidence artifact retrieval | Artifact contains run ID, attempt, SHA, event and outcome | PASS — artifact exists for run 44745874397 |
 | T10-16 | Work 70 Evidence Register write | Only after Work 70 schema approval | BLOCKED — no schema mutation authorized |
-| T10-17 | Xu acceptance reviewer identity | Xu mapped to verified GitHub login and accepted review recorded | BLOCKED — identity not yet confirmed |\n| T10-19 | Review policy provenance | pull_request_review authorization loads role map and verifier only from trusted default branch; no PR-controlled checkout credentials | IMPLEMENTED — regression test added; CI pending |
+| T10-17 | Xu acceptance reviewer identity | Xu mapped to verified GitHub login and accepted review recorded | BLOCKED — identity not yet confirmed |\n| T10-19 | Review policy provenance | pull_request_review authorization loads role map and verifier only from trusted default branch; no PR-controlled checkout credentials | PASS — regression test in Run #44755364888; 46 tests total |
 
 ## 1. Evidence rules
 
@@ -137,3 +137,4 @@ Post-merge event execution order and expected outcomes are specified in [RT-118-
 - Artifact `w118-run-evidence-44749959595-1`, ID `14635085964`, not expired at inspection.
 - PR #67 head `6824976dc133790d47aedcf0e5a385e875b2f198`; branch 116 ahead / 0 behind main.
 - This is contract/unit CI only. Handoff, ACK, review and workflow_run runtime jobs were skipped on push; runtime E2E remains pending.
+\n\n## P0 review-policy provenance regression evidence — 2026-11-20\n\n- **Run:** [44755364888](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44755364888) — validate SUCCESS.\n- **Test output:** `Ran 46 tests in 0.234s`; `OK`.\n- **Tested commit:** `a5c4c52ef660c60e98c480f5bc63bfaf26e81d1e`.\n- **Regression:** `test_review_authorization_checks_out_trusted_default_branch` PASS.\n- **Artifact:** `w118-run-evidence-44755364888-1`, ID `14636718273`, SHA-256 `c5b8d9a860c111079304579d74213ff516fe1016952bd74756aac4719b670689`, unexpired at readback.\n- **Scope:** PR synchronize validation; handoff, ACK, acceptance-review and controlled-failure event jobs were SKIPPED. This is unit/contract proof only, not runtime event E2E.\n
