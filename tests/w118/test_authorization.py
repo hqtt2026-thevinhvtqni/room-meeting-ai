@@ -44,6 +44,7 @@ class Work118AuthorizationTests(unittest.TestCase):
             "roles": ["tester"],
             "ack_roles": ["tester"],
             "can_accept": False,
+            "can_trigger_controlled_test": False,
             "active": False,
         }
         with tempfile.TemporaryDirectory() as tmp:
@@ -51,6 +52,15 @@ class Work118AuthorizationTests(unittest.TestCase):
             path.write_text(json.dumps(data), encoding="utf-8")
             role_map = load_role_map(path)
         allowed, _, _ = authorize_ack(role_map, "disabled-user", "tester")
+        self.assertFalse(allowed)
+
+
+    def test_only_owner_accounts_can_trigger_controlled_diagnostics_test(self):
+        from scripts.w118.authorization import authorize_controlled_test
+        for login in ("hqtt2026-thevinhvtqni", "thevinhqtni-1911"):
+            allowed, reason = authorize_controlled_test(self.role_map, login)
+            self.assertTrue(allowed, reason)
+        allowed, _ = authorize_controlled_test(self.role_map, "unknown-contributor")
         self.assertFalse(allowed)
 
     def test_ack_parser_requires_exact_role_and_issue(self):
@@ -67,6 +77,7 @@ class Work118AuthorizationTests(unittest.TestCase):
             "roles": ["tester"],
             "ack_roles": ["tester"],
             "can_accept": False,
+            "can_trigger_controlled_test": False,
             "active": True,
         }
         with tempfile.TemporaryDirectory() as tmp:
@@ -84,6 +95,7 @@ class Work118AuthorizationTests(unittest.TestCase):
             "roles": ["tester"],
             "ack_roles": ["tester"],
             "can_accept": False,
+            "can_trigger_controlled_test": False,
             "active": True,
         }
         with tempfile.TemporaryDirectory() as tmp:
@@ -100,6 +112,7 @@ class Work118AuthorizationTests(unittest.TestCase):
             "roles": ["tester"],
             "ack_roles": ["owner"],
             "can_accept": False,
+            "can_trigger_controlled_test": False,
             "active": True,
         }
         with tempfile.TemporaryDirectory() as tmp:
