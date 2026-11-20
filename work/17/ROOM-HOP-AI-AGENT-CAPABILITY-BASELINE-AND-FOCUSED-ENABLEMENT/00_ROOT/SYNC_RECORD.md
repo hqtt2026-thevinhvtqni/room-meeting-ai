@@ -634,3 +634,11 @@
 - DOC-093: DRAFT_NOT_APPROVED, 36 Agent Task rows (27 PROPOSED; 9 PROPOSED_NOT_VERIFIED). DOC-094: DRAFT_NOT_APPROVED, 18 Phase Task rows (18 PROPOSED_NOT_ACKNOWLEDGED). Sample records have empty evidence/journal refs. These are planning registers, not active dispatch/ACK proof.
 - DOC-005 state-change invariants and DOC-044 assignment template are normative design only. Live Assignment API/service, persistence, authenticated caller, ACK-bound transitions and audit read-back remain NOT VERIFIED.
 - Entry 065 added. No W70 files changed, no assignment/dispatch/runtime/test. GAP-01 OPEN/P0; E2/E3 NOT PROVEN; READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
+
+## Sync Period 0053 — W70 dispatch/authorization design vs W52 legacy connector (2026-11-20T08:18:00+07:00)
+
+- DOC-063 is DRAFT / NOT APPROVED / NOT IMPLEMENTED; its commit-time auth, ACK, expiry/revocation and audit rules are design requirements only.
+- DOC-064 is target architecture / implementation unauthorized. DOC-065 is a logical contract proposal; route/API/database/Core service existence is expressly not claimed.
+- W52 branch mapping remains NOT SYNCED as a canonical Work subtree; inspected branch snapshot describes legacy Meeting-turn provider connectors, not assignment dispatch with delivery receipt and recipient-bound ACK.
+- No Meeting response, browser marker or handoff packet can be promoted to assignment delivery/ACK evidence. GAP-01 OPEN/P0; E2/E3 NOT PROVEN; ACK-before-Host NOT PROVEN; READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
+- Entry 066 added. No runtime, provider, Core route, private session, code or permission changes.
