@@ -30,7 +30,7 @@ Trong v1 KHÔNG có hoạt động mutation tự động nào khác; mọi mutat
 
 ## Amendment — Auto E2E v2 actor and event policy (2026-11-20)
 
-- Handoff is triggered only by an Issue `labeled` event with `w118-handoff`; the output comment is deduplicated by issue number + label event ID.
+- Handoff is triggered only by an Issue `labeled` event with `w118-handoff`; the output comment is deduplicated by issue number + label ID + `issue.updated_at` (distinguishes a later remove/re-apply cycle while deduplicating the same event delivery).
 - ACK is accepted only when the full comment body matches `ACKED-<role> <issue-number>`, the issue number matches the event, and the GitHub login is active and explicitly mapped to that ACK role.
 - A valid GitHub login is not automatically an authorized ROOM-HOP role. Unknown login, inactive account, wrong role or issue mismatch is denied; the workflow records `ACK UNVERIFIED` and makes no assignment/state transition.
 - Vinh's two confirmed GitHub logins map to the same owner principal for acceptance only. They have no execution ACK roles.
