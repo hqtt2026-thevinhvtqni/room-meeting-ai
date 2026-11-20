@@ -66,3 +66,8 @@ Latest completed full contract run before this documentation update: [Run 447463
 A controlled test dispatcher is now implemented in the orchestrator workflow. It requires an exact `W118-TEST-DIAGNOSTICS` comment on a dedicated issue titled `[W118 E2E TEST]...`, the existing `w118-handoff` label, and an active principal with `can_trigger_controlled_test=true`. Only the two owner-confirmed accounts currently satisfy this permission. The dispatcher starts `workflow_dispatch` on the isolated W118 feature branch with `failure_injection=controlled`; the failure job is hard-scoped to that branch. After the diagnostics listener is integrated into default branch, the resulting failed run can exercise the real `workflow_run` listener without deliberately breaking main or production workflows.
 
 This dispatcher is implemented and contract-tested; the actual dispatch and diagnostics issue creation remain PENDING until controlled deployment is accepted.
+
+
+## Review independence hardening — 2026-11-20
+
+A final code review found that login-only self-review detection would allow two GitHub accounts mapped to the same HQTT principal to review each other. The implementation now resolves both reviewer and PR author through the role map and denies review when they map to the same principal. An unmapped PR author also fails closed because independence cannot be proven. Tests cover same-principal cross-account denial, unknown-author denial and a mapped different-principal positive case.
