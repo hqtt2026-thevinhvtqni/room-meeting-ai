@@ -244,3 +244,30 @@
 - **Bước tiếp:** cập nhật ma trận danh tính/role chính thức bằng mapping vừa được duyệt; thiết kế test allow/deny; giữ trạng thái runtime authorization NOT VERIFIED cho tới khi policy được triển khai và có bằng chứng từ chối actor không được phép. T-04 tiếp tục chờ CI FAIL tự nhiên.
 - **Nguyên tắc audit:** lưu cả GitHub login thực tế và HQTT principal/role đã ánh xạ; không gộp hai login thành một actor trong log.
 
+
+
+## Entry 023 — Rà soát Issue security #44 và đề xuất phân công AI chịu trách nhiệm
+- **Thời gian:** 2026-11-20 (UTC+7).
+- **Phạm vi:** Issue #44 — P0: Bind Manus AI-18 to authenticated session and Work 99 room; PR liên quan #45; xác định AI owner, reviewer và QE; ghi nhận vào nhật ký W118.
+- **Phương pháp:** Đọc trực tiếp Issue #44 và metadata hiện hành; đối chiếu nội dung yêu cầu bảo mật, trạng thái assignee/labels/comments; đối chiếu PR #45 đã được kiểm tra trước đó trong phiên.
+- **Bằng chứng:**
+  - Issue #44: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/issues/44
+  - PR #45: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/45
+  - Issue #44 đang OPEN, nhãn `security`, không có assignee, ưu tiên P0; nội dung yêu cầu trusted server-side session identity, JOIN derive identity từ session tin cậy, Work 99 meeting binding, read receipt phía server và positive/negative tests.
+  - PR #45 là Draft/OPEN, chưa merge; chỉ sửa cách ghi nhận identity evidence, chưa triển khai xác thực phiên Manus; automated tests/runtime verification chưa được xác nhận PASS.
+- **Quyết định phân công theo vai trò HQTT (đề xuất chính thức của Xu):**
+  - **AI-03 Cla — Assignee/Implementation Owner:** chịu trách nhiệm kỹ thuật chính; đọc Core/Gateway/Meeting flow, đề xuất thiết kế trusted session context/token claims, thực hiện phần code sau khi kiến trúc được chốt; không tự cấp quyền rộng hoặc dùng caller-supplied identity làm bằng chứng xác thực.
+  - **AI-02 Ka — Security/Architecture Reviewer:** phản biện độc lập trust boundary, session binding, identity mismatch/revocation, authorization và audit semantics; không tự nghiệm thu phần code do Cla thực hiện.
+  - **AI-05 Qw — QE/QA Owner:** xây dựng và chạy positive/negative regression tests; xác minh forged identity, unknown/revoked identity, non-invited meeting, wrong Work/room, stale/missing read receipt; cung cấp run/test evidence.
+  - **Xu — Coordinator/Gate Owner:** điều phối phụ thuộc Work 22 (security policy), Work 99 (onboarding/room ownership), Work 70 (Entry Gate contract); theo dõi blocker và chỉ chuyển gate khi có bằng chứng.
+  - **Manus AI-18:** đối tượng được provision/onboard; không phải assignee xử lý Issue #44.
+- **Giới hạn GitHub assignment:** GitHub Issue #44 hiện chưa có assignee. Chưa tìm thấy bằng chứng mapping giữa AI-03 Cla và một GitHub login có quyền nhận Issue trong repository. Vì vậy **chưa gán assignee trực tiếp trên GitHub**; không dùng login của Vinh hoặc tự suy đoán username AI. Cần đăng ký/ xác minh GitHub login thực của Cla trong AI_TEAM_DIRECTORY rồi mới cập nhật assignee. Phân công vai trò HQTT trong nhật ký không đồng nghĩa GitHub đã ghi nhận assignee.
+- **Hướng xử lý theo thứ tự:**
+  1. Xác minh GitHub login của Cla và quyền nhận Issue; sau đó gán Cla làm assignee chính.
+  2. Ka review kiến trúc trusted session identity trước khi triển khai phần xác thực.
+  3. Cla xử lý Core/Gateway session context và JOIN identity derivation; giữ nguyên ranh giới least privilege.
+  4. Ka review PR độc lập; Qw chạy test matrix và ghi bằng chứng.
+  5. Chỉ đóng Issue #44 khi session authentication + Work 99 binding + server-observed receipts + positive/negative tests đều được xác minh; PR #45 không được xem là hoàn thành toàn Issue.
+- **Kết quả:** DONE — đã truy vết và xác lập đề xuất phân công AI theo vai trò. **GitHub assignee mutation: BLOCKED** do chưa có GitHub login đã xác minh cho AI-03 Cla. Issue #44 vẫn OPEN; không thay đổi trạng thái, label hoặc PR.
+- **Kiểm thử CI/runtime:** NOT RUN — đây là hoạt động phân công và rà soát hồ sơ, không phải kiểm thử sản phẩm.
+- **Bước tiếp:** tra cứu/đăng ký login GitHub được ủy quyền cho AI-03 Cla; khi mapping được xác minh, cập nhật assignee Issue #44 và ghi lại kết quả readback. 
