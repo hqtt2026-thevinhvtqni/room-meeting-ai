@@ -83,3 +83,11 @@ Principal-level self-review hardening is implemented and verified by [Run #44747
 - Authorized ACK applies `w118-acked` only after role authorization; handoff/ACK/review event artifacts remain RECORDED and outside Work 70 register.
 - PR checklist notifier is isolated in `pull_request_target` and does not checkout/execute PR code. The normal pull_request job stays read-only.
 - PR #67 remains DRAFT, 89 commits ahead / 0 behind main. Xu independent review and Vinh final acceptance are pending.
+
+
+## Latest provenance verification — 2026-11-20
+
+- Run [#44749396083](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44749396083) SUCCESS; 45 tests passed; artifact ID `14635085374`.
+- Run evidence binds source commit and tested commit separately, plus actor, repository, ref, run URL and PR metadata.
+- Failure diagnostics now subscribes to the W118 PR checklist workflow as well as W118, W300 and Work 70, without self-listening.
+- PR #67 remains DRAFT, mergeable, 102 ahead / 0 behind main. Runtime event E2E, Xu review and Vinh acceptance remain pending.
