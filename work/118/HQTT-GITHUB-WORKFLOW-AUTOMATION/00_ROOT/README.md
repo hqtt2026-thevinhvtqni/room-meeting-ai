@@ -4,8 +4,8 @@
 **Tên tiếng Anh:** HQTT GitHub Workflow Automation  
 **Mã Work:** W118  
 **Issue chính:** [#65](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/issues/65)  
-**Trạng thái:** ACTIVE — DISCOVER / DEFINE  
-**Phạm vi hiện tại:** Khảo sát, xác định yêu cầu và thiết kế; chưa bật tự động hóa thực thi.
+**Trạng thái:** ACTIVE — BUILD / VERIFY (OWNER AUTHORIZED)  
+**Phạm vi hiện tại:** Xây dựng và kiểm chứng Auto E2E v2 trên branch riêng; runtime event E2E và nghiệm thu còn chờ gate.
 
 ## 1. Mục tiêu
 Kết nối Issue → Assignment → Branch → Commit/Push → CI → Failure handling hoặc Review → Acceptance → Merge → Work Journal/Dashboard thành một luồng có thể truy vết và điều phối được.
@@ -43,7 +43,7 @@ Không tự ý thay đổi branch protection, secrets/tokens, quyền tổ chứ
 - Work 70 — Product Lifecycle & Work Dashboard: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/tree/main/work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD
 
 ## 8. Điều kiện chuyển giai đoạn
-Không chuyển sang BUILD cho đến khi Biên bản kiến trúc/thiết kế được hoàn thiện, các tác nhân liên quan phản biện, Xu tổng hợp và Vinh phê duyệt theo quy trình HQTT.
+Điều kiện lịch sử trước BUILD: hoàn thiện Biên bản kiến trúc/thiết kế, phản biện và Vinh phê duyệt. Điều kiện này đã được Vinh thay thế bằng quyết định ủy quyền BUILD ngày 2026-11-20 cho Ka. Xu vẫn giữ quyền phản biện/ nghiệm thu độc lập và Vinh giữ nghiệm thu cuối; không bỏ qua kiểm soát bảo mật, bằng chứng, hoặc gate phát hành.
 
 
 ## Amendment — Owner authorization to BUILD (2026-11-20)
