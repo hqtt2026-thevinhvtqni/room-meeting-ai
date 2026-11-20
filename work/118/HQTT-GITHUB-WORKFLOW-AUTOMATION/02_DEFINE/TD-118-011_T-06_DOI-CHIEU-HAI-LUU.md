@@ -15,7 +15,7 @@
 | Xác thực actor | bắt đầu có (magic-token +); role mapping manual | không liên quan |
 
 ## 2. Kết luận đối chiếu (kiểm chứng thực tế cấu trúc)
-- Hai luồng KHÔNG chồng lấn chức năng: một bên là event orchestration, một bên là docs-CI. Có thể tách riêng nếu mọi bên đồng ý boundary rõ ràng, mỗi luồng 1 MAINT knowledge.
+- Hai luồng KHÔNG chồng lấn chức năng: một bên là event orchestration, một bên là docs-CI. Có thể tách riêng nếu mọi bên đồng ý boundary rõ ràng, mỗi luồng có người bảo trì riêng.
 - RỦI RO MERGE PR #66 nguyên trạng thái: job validate-w118-docs sẽ FAIL vì hai file hồ sơ bắt buộc vắng mặt trên main (đây là lý do run của nó chưa bao giờ được xét trên main).
 - CRITICAL: nếu cả hai sống cùng repo, w118-coordination-ci.yml job diagnostics dùng label ci-diagnostic trong khi luồng main dùng w118-blocked — 2 label khác mục đích tương tự => tạo nhiễu. Cần chuẩn hóa 1 label.
 
@@ -25,5 +25,5 @@
 3. Giữ một label diagnostics duy nhất: w118-blocked. Bỏ ci-diagnostic trong đề nghị merge lại sau.
 
 ## 4. Bằng chứng
-- Nội dung w118-coordination-ci.yml theo sha 05b3fe3 (kết quả đọc lỗi: "get_file_contents" kết quả kết hợp).
+- Nội dung w118-coordination-ci.yml được đọc theo head branch tại sha 05b3fe3 (đã khớp kết quả giữa hai API đọc file).
 - Base PR #66: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/66 (open, draft: true); head branch work/118-github-workflow-automation.
