@@ -86,3 +86,12 @@
 - **Latest completed CI at package creation:** [Run #44748049548](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44748049548), SUCCESS; 36 tests passed; artifact ID `14633817327`.
 - **PR #67:** OPEN / DRAFT / mergeable; no merge. Xu review pending; Vinh final acceptance pending.
 - **Runtime blockers:** executor identity mapping, Xu identity mapping, actual GitHub event E2E and Work 70 schema approval.
+
+
+## Event evidence and PR notifier verification — 2026-11-20
+
+- **Latest CI:** [Run #44748965030](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44748965030) SUCCESS; 44 tests passed; artifact ID `14634556693` exists and was unexpired at inspection.
+- **Event artifacts:** handoff, ACK and PR review jobs now write immutable OPERATION artifacts in state RECORDED. Authorized ACK applies `w118-acked`; denied ACK does not mutate the Issue.
+- **PR checklist:** moved to separate `pull_request_target` workflow after ordinary pull_request token was confirmed read-only. The notifier does not checkout or execute PR code.
+- **PR #67:** OPEN / DRAFT / mergeable=true; 89 commits ahead / 0 behind main; 29 files changed at readback.
+- **Runtime:** event-specific jobs are still pending default-branch integration; no live handoff/ACK/diagnostics PASS is claimed.
