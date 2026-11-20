@@ -104,3 +104,10 @@
 - **Failure diagnostics:** monitors W118 Auto E2E, W118 PR Review Checklist, legacy W118 pilot, W300 and Work 70; it does not listen to itself.
 - **PR #67:** OPEN / DRAFT / mergeable=true; 102 commits ahead / 0 behind main; 29 files changed at readback.
 - **Runtime:** issue/comment, ACK label and workflow_run diagnostic runtime remains pending approved default-branch integration.
+
+
+## Runtime E2E execution package — 2026-11-20
+
+- Prepared [RT-118-001 — Post-Merge Runtime E2E Runbook](../09_RUNTIME/RT-118-001_POST-MERGE-E2E-RUNBOOK.md), priority P0.
+- Runbook covers PR checklist, handoff, owner ACK denial, mapped executor ACK positive path (identity-blocked), controlled failure dispatch, diagnostics issue deduplication, review event and Work 70 boundary.
+- **State:** PREPARED — NOT EXECUTED. Requires Xu review and Vinh final acceptance before main integration.
