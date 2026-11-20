@@ -676,3 +676,11 @@
 - Source-level TOCTOU risk: source hash check precedes process launch; immutable snapshot or launch-time recheck not shown. No race tested.
 - Sandbox W12/W13 trees are not current GitHub main; integration test source is not live deployment/CI proof. No Assignment/dispatch/receipt/recipient ACK binding.
 - GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. Entry 070 recorded.
+
+## Sync Period 0058 — PR #48 grant replay, idempotency and revocation review (2026-11-20T08:06:28+07:00)
+
+- PR #48 binds service identity + Work + purpose + source SHA and has short-lived bearer grants, online revocation checks and local hash-chained JSONL.
+- Grant issuance and run recording lack idempotency/deduplication keys; retries can create duplicate GRANT_ISSUED/RUN_RECORDED events.
+- Revocation/expiry is checked at validation and run-record time, but no active-run cancellation or validation lock through process spawn/execution is shown.
+- Append lock/fsync protects individual append records; it does not create an atomic transaction across validation, execution, revocation and result recording. Local JSONL is not yet shared production evidence storage.
+- No Assignment/dispatch/attempt/receipt/recipient ACK fields. GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. Entry 071 recorded.
