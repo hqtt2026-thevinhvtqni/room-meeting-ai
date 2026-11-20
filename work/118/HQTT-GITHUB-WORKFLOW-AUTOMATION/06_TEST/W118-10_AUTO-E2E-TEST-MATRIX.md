@@ -73,3 +73,12 @@ The final acceptance bundle must contain:
 - Reviewer mapped, PR author unmapped: DENY (independence not verifiable).
 - Reviewer and PR author mapped to distinct principals: ALLOW only if reviewer has active acceptance permission.
 - These cases are now part of the feature-branch unit test suite; runtime review event evidence remains pending.
+
+
+## Principal-level review CI evidence — 2026-11-20
+
+- **Run:** [44747589539](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44747589539)
+- **Commit:** `999691e8863b40f77602d15f2e12a1ec85985a58`
+- **Result:** validate SUCCESS; `Ran 32 tests in 0.064s`; `OK`.
+- **Artifact:** `w118-run-evidence-44747589539-1`, ID `14634211524`, not expired at inspection.
+- **New security assertions:** same HQTT principal via two GitHub logins is denied; unmapped PR author is denied; different mapped principal is accepted only with active acceptance permission.
