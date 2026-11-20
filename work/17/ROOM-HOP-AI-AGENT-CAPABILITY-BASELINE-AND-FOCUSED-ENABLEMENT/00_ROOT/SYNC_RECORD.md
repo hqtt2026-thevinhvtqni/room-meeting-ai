@@ -627,3 +627,10 @@
 - Work70 DOC-066 current-main search evidence states PLANNED — IMPLEMENTATION NOT AUTHORIZED / TESTS NOT RUN. Its Session Handoff MVP is a future proposal, not a current dispatch capability.
 - Work17 source reconciliation confirms exposed 8030 tools do not send to private AI sessions or retrieve provider receipts/ACK; Meeting paste is relay only. SESSION_HANDOFF remains a design direction; no packet or submission was created.
 - E2/E3 remain NOT PROVEN; GAP-01 OPEN/P0; READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
+
+## Sync Period 0052 — W70 assignment authority source reconciliation (2026-11-20T08:11:00+07:00)
+
+- Inspected W70 DOC-055/005/044/093/094/095 current-main canonical records. W70 owns Control Plane/assignment at design level; W52 owns AI provider orchestration; W37 Core investigation; W112 cross-Work mapping; W14 execution boundary.
+- DOC-093: DRAFT_NOT_APPROVED, 36 Agent Task rows (27 PROPOSED; 9 PROPOSED_NOT_VERIFIED). DOC-094: DRAFT_NOT_APPROVED, 18 Phase Task rows (18 PROPOSED_NOT_ACKNOWLEDGED). Sample records have empty evidence/journal refs. These are planning registers, not active dispatch/ACK proof.
+- DOC-005 state-change invariants and DOC-044 assignment template are normative design only. Live Assignment API/service, persistence, authenticated caller, ACK-bound transitions and audit read-back remain NOT VERIFIED.
+- Entry 065 added. No W70 files changed, no assignment/dispatch/runtime/test. GAP-01 OPEN/P0; E2/E3 NOT PROVEN; READ/TRACE ONLY; protected execution DENY / NOT RELEASED.
