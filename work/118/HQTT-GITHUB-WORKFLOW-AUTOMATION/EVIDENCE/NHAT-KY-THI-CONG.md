@@ -117,3 +117,11 @@
 - **Chốt freeze phiên bản:** Vibe sẽ không chủ động push/phát sinh bất kỳ thay đổi nào trong .github/workflows hay hồ sơ W118 khác ngoài Nhật ký này + hồ sơ kết quả kiểm thử của Xu.
 - **Thứ tự ưu tiên theo KT-118-009:** T-01 (label w118-handoff) -> T-02/T-03 (ACK & actor test) -> T-04 (runtime diagnostics re-run Run #1) -> T-05 (đề xuất mở listener) -> T-06 (đối chiếu PR vs main).
 - **Định nghĩa xong vòng kiểm thử:** có đủ 6 (hoặc có trường hợp SKIP có chú thích) kết quả thực thi với run URL + SHA, trạng thái mới của STATUS.
+
+## Entry 013 — Vibe hoàn tất T-06 đối chiếu 2 luồng + soạn sẵn remediation plan (docs-only)
+- **Thời gian:** 2026-11-20 (sau Entry 012)
+- **Phạm vi:** T-06 của KT-118-009 — đối chiếu w118-workflow-automation.yml (main) vs w118-coordination-ci.yml (PR #66, head 05b3fe3); soạn sẵn B-118-010 remediation plan cho AC-R1..R6 nhưng KHÔNG áp dụng trong vòng test (freeze).
+- **Phát hiện chính của T-06:** (1) hai luồng không chồng lấn chức năng (event orchestration vs docs-CI); (2) merge PR #66 nguyên trạng thái sẽ tự FAIL vì 2 file hồ sơ bắt buộc chỉ tồn tại trên nhánh PR; (3) hai luồng dùng 2 label diagnostics khác nhau (w118-blocked vs ci-diagnostic) cần chuẩn hóa; (4) diagnostics của PR #66 không đồng nhất (title chứa SHA làm mỗi fail tạo issue mới).
+- **Bằng chứng:** TD-118-011 + B-118-010; phạm vi hoàn toàn docs-only, đúng freeze.
+- **Trạng thái Work:** Vòng kiểm thử độc lập IN PROGRESS — đang chờ Xu thực hiện T-01..T-05; T-06 đã có sẵn hồ sơ để Xu xác nhận.
+- **Bước tiếp:** Xu chạy T-01..T-05; khi vòng test đóng + Vinh ACK APPLY B-118-010, Vibe triển khai fix theo thứ tự AC-R3 -> AC-R4 -> AC-R1 -> AC-R5 -> AC-R6.
