@@ -35,6 +35,8 @@ def load_role_map(path: str | Path) -> dict[str, Any]:
             raise ValueError(f"{login}: active must be boolean")
         if not isinstance(entry.get("can_accept"), bool):
             raise ValueError(f"{login}: can_accept must be boolean")
+        if not isinstance(entry.get("can_trigger_controlled_test"), bool):
+            raise ValueError(f"{login}: can_trigger_controlled_test must be boolean")
         if not set(entry.get("ack_roles", [])).issubset(set(entry.get("roles", []))):
             raise ValueError(f"{login}: ack_roles must be a subset of roles")
     return data
@@ -63,6 +65,15 @@ def authorize_acceptance(role_map: dict[str, Any], login: str, pull_request_auth
     if not entry or not entry.get("active", False) or not entry.get("can_accept", False):
         return False, "actor is not mapped as an active acceptance authority", None
     return True, "authorized acceptance reviewer", entry.get("principal")
+
+
+def authorize_controlled_test(role_map: dict[str, Any], login: str) -> tuple[bool, str]:
+    entry = role_map.get("principals", {}).get(login)
+    if not entry or not entry.get("active", False):
+        return False, "actor is not mapped as an active principal"
+    if not entry.get("can_trigger_controlled_test", False):
+        return False, "actor is not authorized to trigger controlled diagnostics tests"
+    return True, "authorized controlled diagnostics test"
 
 
 def main() -> int:
