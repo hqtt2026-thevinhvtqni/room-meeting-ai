@@ -312,3 +312,15 @@
 - **State:** principal-level authorization unit/contract coverage PASS. Runtime PR review event and Xu mapping remain NOT VERIFIED.
 - **PR:** #67 remains OPEN / DRAFT / mergeable; no merge.
 - **Next:** complete latest CI after doc updates, maintain PR #67 as the active review path, and wait for Xu's independent disposition before main integration.
+
+
+## Entry 028 — Final 32-test CI after principal-level review hardening
+- **Người thực hiện:** Ka — Delegated Technical Lead / Work 118 Build Owner.
+- **Thời gian:** 2026-11-20 20:50 UTC+07:00 (GitHub Actions evidence window).
+- **Mã đầu việc:** W118-10 — Auto E2E v2.
+- **Bằng chứng:** [Run #44747797589](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44747797589), workflow `W118 Auto E2E Validation`, job `validate` SUCCESS; log `Ran 32 tests in 0.106s`; `OK`. Artifact `w118-run-evidence-44747797589-1`, ID `14634046784`, exists and was unexpired at readback.
+- **Commit:** `52ee35920156b4966a7b4d60b214ed3c80001b76`.
+- **Branch/PR:** `work/118-auto-e2e-v2`; Draft PR #67 OPEN / mergeable=true; branch 65 commits ahead / 0 behind main at readback.
+- **Test coverage:** same-principal multi-login review denial; unmapped PR author denial; distinct-principal acceptance positive case; ACK/role/issue checks; diagnostics key and retry markers; owner-gated controlled failure test; event and permission contracts.
+- **Giới hạn:** this is a push/contract test run. Handoff, ACK, review and diagnostics event jobs were skipped; no live event E2E is claimed. Xu and Vinh acceptance remain pending.
+- **Trạng thái:** CONTRACT TESTS PASS / RUNTIME E2E PENDING / ACTIVE — NOT RELEASED.
