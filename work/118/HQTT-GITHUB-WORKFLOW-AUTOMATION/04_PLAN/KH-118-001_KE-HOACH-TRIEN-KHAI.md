@@ -13,7 +13,7 @@ Thiết kế và kiểm chứng có kiểm soát cơ chế điều phối GitHub
 | W118-06 | Thiết kế review/acceptance/merge gates | Gate matrix và quyền phê duyệt | DRAFT 2026-11-20 — [TD-118-007](../02_DEFINE/TD-118-007_THIET-KE-GATE-MATRIX.md) |
 | W118-07 | Thiết kế audit journal/dashboard | Data contract và provenance | DRAFT 2026-11-20 — [TD-118-008](../02_DEFINE/TD-118-008_THIET-KE-AUDIT-DASHBOARD-CONTRACT.md) |
 | W118-08 | Phản biện và chốt kiến trúc | Biên bản kiến trúc được duyệt | IN PROGRESS — DC-118-003 + TD-118-004..008 đủ bộ hồ sơ chờ Ka review / Xu tổng hợp / Vinh ACK |
-| W118-09 | Pilot có giới hạn | CI/event flow chạy thật trong phạm vi thử nghiệm | BLOCKED — chờ phê duyệt thiết kế |
+| W118-09 | Pilot có giới hạn | CI/event flow chạy thật trong phạm vi thử nghiệm | DEPLOYED 2026-11-20 — workflow w118-workflow-automation.yml; RUNTIME TEST_PENDING, test xanh thì trình Xu nghiệm thu |
 
 ## Cổng kiểm soát
 - G0: xác nhận hiện trạng và phạm vi.

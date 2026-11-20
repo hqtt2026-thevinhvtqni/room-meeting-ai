@@ -51,3 +51,12 @@
 - **Kiểm thử CI / runtime:** NOT RUN.
 - **Trạng thái:** W118-06, W118-07 DRAFT. Hoàn tất soạn thảo W118-01..07; còn lại chờ W118-08 phản biện tổng hợp.
 - **Bước tiếp:** cập nhật DC-118-003 tham chiếu đủ bộ TD; Ka review; Xu tổng hợp; Vinh ACK (chuyển G2 sang G3).
+
+## Entry 006 — PRODUCT v1 pilot deployed (code)
+- **Thời gian:** 2026-11-20 (UTC+7)
+- **Phạm vi:** Theo quyết định của Vinh ("sản phẩm trước, Xu nghiệm thu, Vibe quyết cấu trúc"): Vibe quyết cấu trúc, bỏ vòng phản biện dài, triển khai pilot v1 thật.
+- **Sản phẩm:** .github/workflows/w118-workflow-automation.yml — 3 jobs (handoff-brief, ack-verification, ci-failure-diagnostics), least-privilege, chống vòng lặp nhờ GITHUB_TOKEN không tự re-trigger, chống retry vô hạn bằng quy trình RETRY-n với cap 2.
+- **Cấu trúc:** 1 workflow duy nhất, 3 trigger (issues / issue_comment / workflow_run), không webhook, không PAT, không auto-merge.
+- **Bằng chứng:** commit sản phẩm + readback; STATUS.md trong 00_ROOT.
+- **Kiểm thử:** cú pháp file được kiểm tra kỹ bằng tay; RUNTIME TEST_PENDING — cần issue gắn label w118-handoff và comment ACKED-test để có bằng chứng chạy thật trước khi Xu nghiệm thu.
+- **Trạng thái Work:** BUILD (PILOT DEPLOYED) — chờ runtime evidence.
