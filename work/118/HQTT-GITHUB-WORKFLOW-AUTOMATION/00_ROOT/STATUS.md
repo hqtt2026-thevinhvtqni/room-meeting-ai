@@ -13,8 +13,8 @@
 
 ## Cập nhật kiểm thử độc lập — 2026-11-20 (Entry 021)
 - **T-02 ACK runtime:** PASS — tài khoản GitHub `thevinhqtni-1911` comment `ACKED-test-65`; W118 Run #8 success, job `ack-verification` success, bot ghi đúng actor. [Run #8](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44740499758).
-- **T-02 anti-spoof/authorization:** NOT VERIFIED — pilot v1 chỉ kiểm tra prefix `ACKED-`; role mapping còn MANUAL, chưa chứng minh actor không được ủy quyền bị từ chối.
-- **T-03:** NOT VERIFIED — cần login ↔ role mapping được phê duyệt.
+- **T-02 anti-spoof/authorization:** NOT VERIFIED — pilot v1 chỉ kiểm tra prefix `ACKED-`; mapping hai login của Vinh đã được chủ sở hữu duyệt ở Entry 022, nhưng workflow chưa thực thi allowlist/role policy và chưa chứng minh actor ngoài mapping bị từ chối.
+- **T-03:** MAPPING APPROVED / DOCUMENTED (Entry 022) — hai login của Vinh cùng ánh xạ tới HQTT Owner; runtime authorization vẫn NOT VERIFIED.
 - **T-04:** NOT VERIFIED — chờ một CI FAIL tự nhiên sau khi W118 listener hoạt động.
 - **T-05:** BLOCKED — chưa có ACK riêng để mở rộng self-listener.
 - **Freeze:** main chỉ cập nhật hồ sơ kiểm thử; không sửa workflow/permission, không merge PR #66; B-118-010 chưa được áp dụng.
