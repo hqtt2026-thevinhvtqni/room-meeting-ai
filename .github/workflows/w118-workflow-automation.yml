@@ -98,6 +98,82 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+  pr-checklist:
+    if: github.event_name == 'pull_request' && (contains(github.event.pull_request.title, 'W118') || contains(github.event.pull_request.body, 'W118')) && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - name: Checkout trusted base revision
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+      - name: Post W118 review checklist once per PR head
+        id: checklist
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          SENDER: ${{ github.event.sender.login }}
+        run: |
+          set -euo pipefail
+          echo "decision=CHECKLIST_FAILED" >> "$GITHUB_OUTPUT"
+          MARKER="<!-- w118-pr-checklist:${PR_NUMBER}:${HEAD_SHA} -->"
+          if gh api --paginate "repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments?per_page=100" --jq '.[].body' | grep -Fq "$MARKER"; then
+            echo "decision=CHECKLIST_DUPLICATE_SKIPPED" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          cat > /tmp/review-checklist.md <<EOF
+          W118 independent review checklist is required for this PR.
+
+          - PR author: @${PR_AUTHOR}
+          - Event actor: @${SENDER}
+          - Review checklist: https://github.com/${GITHUB_REPOSITORY}/blob/main/work/118/HQTT-GITHUB-WORKFLOW-AUTOMATION/08_REVIEW/XR-118-001_XU-INDEPENDENT-REVIEW-CHECKLIST.md
+          - Acceptance authority: Xu independent review, then Vinh final product acceptance.
+          - This comment does not assign a reviewer, approve the PR, merge or release.
+
+          ${MARKER}
+          EOF
+          gh issue comment "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/review-checklist.md
+          echo "decision=CHECKLIST_COMMENTED" >> "$GITHUB_OUTPUT"
+      - name: Write PR event evidence
+        if: always()
+        env:
+          DECISION: ${{ steps.checklist.outputs.decision || 'CHECKLIST_FAILED' }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          SENDER: ${{ github.event.sender.login }}
+        run: |
+          mkdir -p .w118-event-evidence
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from scripts.w118.event_evidence import build_event_evidence
+          record = build_event_evidence(
+              event_type="pull_request",
+              event_id=f"pr-{os.environ['PR_NUMBER']}-{os.environ['HEAD_SHA']}",
+              source_commit=os.environ["HEAD_SHA"],
+              run_id=int(os.environ["GITHUB_RUN_ID"]),
+              run_attempt=int(os.environ["GITHUB_RUN_ATTEMPT"]),
+              actor=os.environ["SENDER"],
+              decision=os.environ["DECISION"],
+              details={"pr_number": int(os.environ["PR_NUMBER"]), "pr_author": os.environ["PR_AUTHOR"]},
+          )
+          Path(".w118-event-evidence/pr-checklist.json").write_text(json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+          PY
+      - name: Upload PR event evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: w118-pr-checklist-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .w118-event-evidence/pr-checklist.json
+          if-no-files-found: error
+          retention-days: 30
+
   controlled-failure-dispatch:
     if: github.event_name == 'issue_comment' && github.event.action == 'created' && github.event.comment.body == 'W118-TEST-DIAGNOSTICS' && startsWith(github.event.issue.title, '[W118 E2E TEST]') && contains(github.event.issue.labels.*.name, 'w118-handoff') && !github.event.issue.pull_request
     runs-on: ubuntu-latest
@@ -154,6 +230,7 @@ jobs:
       - name: Checkout role policy
         uses: actions/checkout@v4
       - name: Record handoff exactly once per issue-label event
+        id: handoff
         env:
           GH_TOKEN: ${{ github.token }}
           ISSUE: ${{ github.event.issue.number }}
@@ -162,9 +239,11 @@ jobs:
           LABELER: ${{ github.event.sender.login }}
         run: |
           set -euo pipefail
+          echo "decision=HANDOFF_FAILED" >> "$GITHUB_OUTPUT"
           MARKER="<!-- w118-handoff:${ISSUE}:${LABEL_ID}:${ISSUE_UPDATED_AT} -->"
           if gh api --paginate "repos/${GITHUB_REPOSITORY}/issues/${ISSUE}/comments?per_page=100" --jq '.[].body' | grep -Fq "$MARKER"; then
             echo "Handoff already recorded: $MARKER" >> "$GITHUB_STEP_SUMMARY"
+            echo "decision=HANDOFF_DUPLICATE_SKIPPED" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           cat > /tmp/handoff.md <<EOF
@@ -180,6 +259,41 @@ jobs:
           ${MARKER}
           EOF
           gh issue comment "$ISSUE" --repo "$GITHUB_REPOSITORY" --body-file /tmp/handoff.md
+          echo "decision=HANDOFF_RECORDED" >> "$GITHUB_OUTPUT"
+      - name: Write handoff event evidence
+        if: always()
+        env:
+          DECISION: ${{ steps.handoff.outputs.decision || 'HANDOFF_FAILED' }}
+          ISSUE: ${{ github.event.issue.number }}
+          LABEL_ID: ${{ github.event.label.id }}
+          ISSUE_UPDATED_AT: ${{ github.event.issue.updated_at }}
+          LABELER: ${{ github.event.sender.login }}
+        run: |
+          mkdir -p .w118-event-evidence
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from scripts.w118.event_evidence import build_event_evidence
+          record = build_event_evidence(
+              event_type="issues.labeled",
+              event_id=f"issue-{os.environ['ISSUE']}-label-{os.environ['LABEL_ID']}-{os.environ['ISSUE_UPDATED_AT']}",
+              source_commit=os.environ["GITHUB_SHA"],
+              run_id=int(os.environ["GITHUB_RUN_ID"]),
+              run_attempt=int(os.environ["GITHUB_RUN_ATTEMPT"]),
+              actor=os.environ["LABELER"],
+              decision=os.environ["DECISION"],
+              details={"issue": int(os.environ["ISSUE"]), "label_id": os.environ["LABEL_ID"]},
+          )
+          Path(".w118-event-evidence/handoff.json").write_text(json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+          PY
+      - name: Upload handoff event evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: w118-handoff-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .w118-event-evidence/handoff.json
+          if-no-files-found: error
+          retention-days: 30
 
   ack-verification:
     if: github.event_name == 'issue_comment' && github.event.action == 'created' && startsWith(github.event.comment.body, 'ACKED-') && !github.event.issue.pull_request
@@ -192,6 +306,7 @@ jobs:
       - name: Checkout role policy
         uses: actions/checkout@v4
       - name: Verify actor, requested role, and issue binding
+        id: ack
         env:
           GH_TOKEN: ${{ github.token }}
           AUTHOR: ${{ github.event.comment.user.login }}
@@ -200,6 +315,8 @@ jobs:
           COMMENT_ID: ${{ github.event.comment.id }}
         run: |
           set -euo pipefail
+          echo "decision=ACK_FAILED" >> "$GITHUB_OUTPUT"
+          echo "label_applied=false" >> "$GITHUB_OUTPUT"
           python scripts/w118/authorization.py --login "$AUTHOR" --body "$BODY" --issue "$ISSUE" > /tmp/ack-result.json
           cat /tmp/ack-result.json >> "$GITHUB_STEP_SUMMARY"
           AUTHORIZED=$(python -c 'import json; print("true" if json.load(open("/tmp/ack-result.json"))["authorized"] else "false")')
@@ -208,14 +325,55 @@ jobs:
           MARKER="<!-- w118-ack-result:${COMMENT_ID} -->"
           if gh api --paginate "repos/${GITHUB_REPOSITORY}/issues/${ISSUE}/comments?per_page=100" --jq '.[].body' | grep -Fq "$MARKER"; then
             echo "ACK result already recorded for comment ${COMMENT_ID}." >> "$GITHUB_STEP_SUMMARY"
+            echo "decision=ACK_DUPLICATE_SKIPPED" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           if [ "$AUTHORIZED" = "true" ]; then
-            printf 'W118 ACK VERIFIED\n\n- Actor: @%s\n- Role: %s\n- Issue: #%s\n- Result: authorized by role map.\n\n%s\n' "$AUTHOR" "$ROLE" "$ISSUE" "$MARKER" > /tmp/ack-response.md
+            gh label create w118-acked --repo "$GITHUB_REPOSITORY" --color 0E8A16 --description "Work 118 ACK verified by mapped actor" 2>/dev/null || true
+            gh issue edit "$ISSUE" --repo "$GITHUB_REPOSITORY" --add-label w118-acked
+            echo "decision=ACK_AUTHORIZED" >> "$GITHUB_OUTPUT"
+            echo "label_applied=true" >> "$GITHUB_OUTPUT"
+            printf 'W118 ACK VERIFIED\n\n- Actor: @%s\n- Role: %s\n- Issue: #%s\n- Result: authorized by role map; label `w118-acked` applied.\n\n%s\n' "$AUTHOR" "$ROLE" "$ISSUE" "$MARKER" > /tmp/ack-response.md
           else
+            echo "decision=ACK_DENIED" >> "$GITHUB_OUTPUT"
             printf 'W118 ACK UNVERIFIED — no assignment or state transition was made.\n\n- Actor: @%s\n- Requested role: %s\n- Issue: #%s\n- Reason: %s\n\n%s\n' "$AUTHOR" "$ROLE" "$ISSUE" "$REASON" "$MARKER" > /tmp/ack-response.md
           fi
           gh issue comment "$ISSUE" --repo "$GITHUB_REPOSITORY" --body-file /tmp/ack-response.md
+      - name: Write ACK event evidence
+        if: always()
+        env:
+          DECISION: ${{ steps.ack.outputs.decision || 'ACK_FAILED' }}
+          AUTHOR: ${{ github.event.comment.user.login }}
+          ISSUE: ${{ github.event.issue.number }}
+          COMMENT_ID: ${{ github.event.comment.id }}
+          BODY: ${{ github.event.comment.body }}
+          LABEL_APPLIED: ${{ steps.ack.outputs.label_applied || 'false' }}
+        run: |
+          mkdir -p .w118-event-evidence
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from scripts.w118.event_evidence import build_event_evidence
+          record = build_event_evidence(
+              event_type="issue_comment",
+              event_id=f"comment-{os.environ['COMMENT_ID']}",
+              source_commit=os.environ["GITHUB_SHA"],
+              run_id=int(os.environ["GITHUB_RUN_ID"]),
+              run_attempt=int(os.environ["GITHUB_RUN_ATTEMPT"]),
+              actor=os.environ["AUTHOR"],
+              decision=os.environ["DECISION"],
+              details={"issue": int(os.environ["ISSUE"]), "comment_id": os.environ["COMMENT_ID"], "label_applied": os.environ["LABEL_APPLIED"] == "true"},
+          )
+          Path(".w118-event-evidence/ack.json").write_text(json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+          PY
+      - name: Upload ACK event evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: w118-ack-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .w118-event-evidence/ack.json
+          if-no-files-found: error
+          retention-days: 30
 
   acceptance-review:
     if: github.event_name == 'pull_request_review' && github.event.action == 'submitted' && github.event.review.state == 'approved'
@@ -228,6 +386,7 @@ jobs:
       - name: Checkout acceptance policy
         uses: actions/checkout@v4
       - name: Verify independent acceptance authority
+        id: review
         env:
           GH_TOKEN: ${{ github.token }}
           REVIEWER: ${{ github.event.review.user.login }}
@@ -236,17 +395,55 @@ jobs:
           REVIEW_ID: ${{ github.event.review.id }}
         run: |
           set -euo pipefail
+          echo "decision=REVIEW_FAILED" >> "$GITHUB_OUTPUT"
           python scripts/w118/review_authorization.py --reviewer "$REVIEWER" --pr-author "$PR_AUTHOR" > /tmp/review-result.json
           cat /tmp/review-result.json >> "$GITHUB_STEP_SUMMARY"
           ALLOWED=$(python -c 'import json; print("true" if json.load(open("/tmp/review-result.json"))["authorized"] else "false")')
           if [ "$ALLOWED" != "true" ]; then
             echo "Review is visible in GitHub but is not an authorized W118 acceptance decision." >> "$GITHUB_STEP_SUMMARY"
+            echo "decision=REVIEW_UNVERIFIED" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           MARKER="<!-- w118-review-result:${REVIEW_ID} -->"
           if gh api --paginate "repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments?per_page=100" --jq '.[].body' | grep -Fq "$MARKER"; then
             echo "Review result already recorded." >> "$GITHUB_STEP_SUMMARY"
+            echo "decision=REVIEW_DUPLICATE_SKIPPED" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           printf 'W118 independent acceptance reviewer verified: @%s. This records reviewer authority only; it does not merge or release.\n\n%s\n' "$REVIEWER" "$MARKER" > /tmp/review-response.md
           gh issue comment "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/review-response.md
+          echo "decision=REVIEW_AUTHORIZED" >> "$GITHUB_OUTPUT"
+      - name: Write review event evidence
+        if: always()
+        env:
+          DECISION: ${{ steps.review.outputs.decision || 'REVIEW_FAILED' }}
+          REVIEWER: ${{ github.event.review.user.login }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REVIEW_ID: ${{ github.event.review.id }}
+        run: |
+          mkdir -p .w118-event-evidence
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from scripts.w118.event_evidence import build_event_evidence
+          record = build_event_evidence(
+              event_type="pull_request_review",
+              event_id=f"review-{os.environ['REVIEW_ID']}",
+              source_commit=os.environ["GITHUB_SHA"],
+              run_id=int(os.environ["GITHUB_RUN_ID"]),
+              run_attempt=int(os.environ["GITHUB_RUN_ATTEMPT"]),
+              actor=os.environ["REVIEWER"],
+              decision=os.environ["DECISION"],
+              details={"pr_number": int(os.environ["PR_NUMBER"]), "pr_author": os.environ["PR_AUTHOR"]},
+          )
+          Path(".w118-event-evidence/review.json").write_text(json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+          PY
+      - name: Upload review event evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: w118-review-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .w118-event-evidence/review.json
+          if-no-files-found: error
+          retention-days: 30
