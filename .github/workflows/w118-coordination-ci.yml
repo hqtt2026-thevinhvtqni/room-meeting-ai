@@ -1,0 +1,105 @@
+name: W118 Coordination CI
+
+on:
+  push:
+    paths:
+      - 'work/118/**'
+      - '.github/workflows/w118-coordination-ci.yml'
+  pull_request:
+    paths:
+      - 'work/118/**'
+      - '.github/workflows/w118-coordination-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  validate-w118-docs:
+    name: Validate W118 docs & plan integrity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate workflow YAML syntax
+        run: |
+          python3 - <<'PY'
+          import sys
+          try:
+              import yaml
+          except ImportError:
+              print('PyYAML not available: skipped YAML parse (limitation)'); sys.exit(0)
+          import glob
+          ok = True
+          for f in glob.glob('.github/workflows/w118-*.yml'):
+              try:
+                  yaml.safe_load(open(f))
+                  print(f'OK yaml: {f}')
+              except Exception as e:
+                  print(f'FAIL yaml: {f}: {e}'); ok = False
+          sys.exit(0 if ok else 1)
+          PY
+      - name: Validate W118 documents structure
+        run: |
+          python3 - <<'PY'
+          import sys, re
+          base = 'work/118/HQTT-GITHUB-WORKFLOW-AUTOMATION'
+          required = {
+              '00_ROOT/README.md': ['## '],
+              '02_DEFINE/BB-118-001_BIEN-BAN-KHOI-TAO.md': ['# '],
+              '04_PLAN/KH-118-001_KE-HOACH-TRIEN-KHAI.md': ['W118-01', 'W118-09', 'G3'],
+              '01_DISCOVER/W118-01_KIEM-KE-HIEN-TRANG-GITHUB-WORK70.md': ['W118-01'],
+              '02_DEFINE/W118-02_CHUAN-HOA-ISSUE-BRANCH-COMMIT-PR.md': ['W118-02'],
+          }
+          ok = True
+          for rel, needles in required.items():
+              p = f'{base}/{rel}'
+              try:
+                  t = open(p, encoding='utf-8').read()
+              except OSError:
+                  print(f'FAIL missing: {p}'); ok = False; continue
+              for n in needles:
+                  if n not in t:
+                      print(f'FAIL {p}: missing marker "{n}"'); ok = False
+          journal = open(base + '/EVIDENCE/NHAT-KY-THI-CONG.md', encoding='utf-8').read()
+          entries = re.findall(r"^## Entry\s+(\d+)", journal, re.M)
+          if not entries:
+              print('FAIL journal has no entries'); ok = False
+          else:
+              print(f'journal entries: {sorted(set(int(e) for e in entries))}')
+          w2 = open(base + '/02_DEFINE/W118-02_CHUAN-HOA-ISSUE-BRANCH-COMMIT-PR.md', encoding='utf-8').read()
+          for lab in ['status/queued','status/in-progress','status/in-review','status/accepted','status/blocked','status/failed-ci','type/debt']:
+              if lab not in w2:
+                  print(f'FAIL W118-02 missing label {lab}'); ok = False
+          print('RESULT:', 'PASS' if ok else 'FAIL')
+          sys.exit(0 if ok else 1)
+          PY
+      - name: Report W118 state summary
+        if: always()
+        run: |
+          echo "## W118 CI summary" >> $GITHUB_STEP_SUMMARY
+          grep -h '^| W118-' work/118/HQTT-GITHUB-WORKFLOW-AUTOMATION/04_PLAN/KH-118-001_KE-HOACH-TRIEN-KHAI.md >> $GITHUB_STEP_SUMMARY || true
+
+  failure-diagnostic:
+    name: Diagnostic issue on failure (idempotent)
+    needs: validate-w118-docs
+    if: failure() && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dedupe check then create diagnostic issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SHA: ${{ github.sha }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          TITLE="W118 CI FAIL @ $(echo "$SHA" | cut -c1-8)"
+          EXISTING=$(gh issue list --state open --label ci-diagnostic --json title --jq "[.[] | select(.title == \"$TITLE\")] | length" || echo 0)
+          if [ "$EXISTING" != "0" ]; then
+            echo "duplicate exists, only commenting"
+            gh issue list --state open --label ci-diagnostic --json number,title --jq ".[] | select(.title == \"$TITLE\") | .number" | head -1 | xargs -I{} gh issue comment {} --body "FAIL again at $(echo $SHA | cut -c1-8): $RUN_URL"
+            exit 0
+          fi
+          gh issue create --title "$TITLE" --label ci-diagnostic --body "Commit: $(echo $SHA | cut -c1-8)
+Run: $RUN_URL
+Actor: ci-bot (idempotent dedupe by sha)
+Limitation: job log download can can quyen admin - chi kem log truncated trong job summary." || echo "issue create failed (no permission) — limitation ghi nhan"
