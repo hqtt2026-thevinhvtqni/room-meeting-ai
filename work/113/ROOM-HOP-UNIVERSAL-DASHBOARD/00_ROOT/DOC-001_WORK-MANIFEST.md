@@ -12,7 +12,7 @@
 - Sandbox: Work 113 via ROOM-HOP Build MCP 8030
 - GitHub Work records repository: hqtt2026-thevinhvtqni/room-meeting-ai
 - GitHub Work records canonical path: work/113/ROOM-HOP-UNIVERSAL-DASHBOARD/ on main
-- Product source repository/path: NOT DECLARED; existing PL.room-meeting-ai.dash is a candidate for discovery only, not yet adopted as W113 canonical source
+- Product source repository/path: NOT DECLARED. The separate repository `hqtt2026-thevinhvtqni/PL.room-meeting-ai.dash` is an independent earlier project, unrelated to W113; it is NOT a W113 source, candidate, dependency, migration target or code reference.
 - Product Dashboard: W113 product itself; canonical source NOT DECLARED
 
 ## Purpose
