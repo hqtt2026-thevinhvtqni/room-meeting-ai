@@ -712,3 +712,17 @@
 - Entry 073 added. No test, route, Host, provider, dispatch, permission, code or branch operation.
 - GAP-01 OPEN/P0; GAP-11 OPEN/P0 on current main; Assignment service/persistence NOT VERIFIED; recipient-authenticated ACK NOT PROVEN; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED; READ/TRACE/ANALYZE ONLY.
 - Next: reconcile DOC-044/DOC-093/DOC-094 with the Sandbox guard and inspect W70 BUILD_REGISTER/ownership/migration evidence to determine whether the prototype is approved/candidate-only and identify the single authoritative Assignment source. Do not assume the Sandbox WorkRegistry is Core authority.
+
+## Sync Period 0061 — W70 Assignment register and prototype approval/version drift (2026-11-20T19:20+07:00)
+
+- DOC-044 GitHub main blob 508cbde08e1f376cdeba9475330aa880a9f63797 is ACTIVE / TEMPLATE (86 lines). Sandbox copy is 168 lines; GitHub content is an exact prefix, while Sandbox adds Task ID linkage, ACK/read-back before IN_PROGRESS, state history and G0–G5/execution-authorization fields. Sandbox-only addenda are not main-synced.
+- DOC-093 GitHub main is schema 1.2-end-to-end-task-ownership; Sandbox is 1.1-detailed-task-contract. Both contain 36 same task IDs and status counts 27 PROPOSED / 9 PROPOSED_NOT_VERIFIED; both DRAFT_NOT_APPROVED. Full content differs.
+- DOC-094 GitHub main is schema 1.1-end-to-end-phase-ownership; Sandbox is 1.0.0. Both contain 18 same phase task IDs and 18 PROPOSED_NOT_ACKNOWLEDGED; both DRAFT_NOT_APPROVED. Full content differs.
+- W70 Sandbox BUILD_REGISTER lists six WPs; WP-70-02 is Work Package registry, WP-70-04 Core read integration is BLOCKED, WP-70-06 verification is PLANNED. No dedicated Assignment/Dispatch/ACK service WP is listed.
+- W70 BUILD_MAPPING_REGISTER says BUILD_REGISTER artifacts are legacy/reconciliation-required and proposed replacements are NOT APPROVED; migration/promotion has not occurred. Exact GitHub main fetch for BUILD_REGISTER and BUILD_MAPPING_REGISTER paths returned NOT_FOUND.
+- WP70-CO README marks the code as PREPARATORY SPIKE — NOT PRODUCTION / NOT INTEGRATED / NOT ACCEPTED. Assignment/ACK, persistence, audit, idempotency, concurrency, events and Core routes are explicitly out of scope; tests NOT RUN in the documented session.
+- W70 Sandbox lifecycle_domain/work_registry/test files remain NOT_FOUND at corresponding GitHub main paths. No promotion or parity is claimed.
+- Result: DOC-044 is a template; DOC-093/DOC-094 are draft planning registers; WP70-CO is a non-production domain/registry spike. None is an authoritative Assignment service/ACK store. Sandbox/GitHub version drift must be preserved and reconciled by W70 authority, not silently overwritten by Work17.
+- Entry 074 added. No W70 file, code, test, route, Host, provider, permission, branch or migration operation performed.
+- GAP-01 OPEN/P0; GAP-11 OPEN/P0; Assignment service/API/persistence NOT VERIFIED; recipient-authenticated ACK NOT PROVEN; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED; READ/TRACE/ANALYZE ONLY.
+- Next: inspect W70 canonical DOC-055 and DOC-035 for document ownership/promotion decisions covering DOC-044/093/094 and WP70-CO; then continue bounded Core source/runtime authority trace. No parallel Assignment store/dispatcher.
