@@ -129,3 +129,11 @@ The final acceptance bundle must contain:
 ## Runtime execution package
 
 Post-merge event execution order and expected outcomes are specified in [RT-118-001](../09_RUNTIME/RT-118-001_POST-MERGE-E2E-RUNBOOK.md). This runbook is prepared only; no issue/comment/diagnostics runtime result is marked PASS before its actual GitHub event evidence exists.
+
+
+## Latest branch validation — 2026-11-20
+
+- Run [#44749959595](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44749959595): SUCCESS; `Ran 45 tests in 0.138s`; `OK`.
+- Artifact `w118-run-evidence-44749959595-1`, ID `14635085964`, not expired at inspection.
+- PR #67 head `6824976dc133790d47aedcf0e5a385e875b2f198`; branch 116 ahead / 0 behind main.
+- This is contract/unit CI only. Handoff, ACK, review and workflow_run runtime jobs were skipped on push; runtime E2E remains pending.
