@@ -711,3 +711,14 @@
 - **Kiểm thử runtime/session:** NOT RUN; không tuyên bố Go đã đăng nhập/dispatch/ACK hoặc có quyền truy cập kỹ thuật.
 - **Trạng thái:** DECISION RECORDED; canonical DOC-043/DOC-006 updated; exact read-back and cross-Work sync pending.
 - **Bước tiếp theo:** Exact read-back hai tài liệu canonical; đồng bộ DOC-010 Work 0000, Work 17 capability matrix và các Work/assignment đang hiểu Go chỉ là CFO hoặc chỉ QE/QA riêng W118; không sửa lịch sử.
+
+
+## Entry 058 — D70-026: Go thay Qw làm QE/QA mặc định toàn HQTT
+- **Thời điểm:** 2026-11-21 20:15 +07:00.
+- **Authority:** Chỉ thị trực tiếp mới nhất của Vinh: Go thay Qw trên Git; Go là QE/QA mặc định thay Qw, đồng thời giữ CFO.
+- **Quyết định:** Work 70 DOC-006 D70-026 supersedes phần QE/QA của D70-025. AI-06 Go = CFO/Cost Analyst + QE/QA mặc định duy nhất toàn HQTT; AI-05 Qw vẫn là stable roster member nhưng không còn QE/QA mặc định. Stable ID mapping D70-024 không đổi.
+- **Git records updated:** Work 70 DOC-043 + DOC-006; Work 17 AI member capability matrix + audit journal; Work 117 Minutes + Plan + Journal. W118 branch journal ghi nhận Entry 058.
+- **Lịch sử:** D70-025, W117 các mục/entry cũ và W118 Entry 057 được giữ nguyên như lịch sử. D70-026 là authority mới nhất.
+- **Ranh giới:** Go không tự review deliverable do Go thực hiện. Quyết định vai trò không tự tạo GitHub login, collaborator permission, token, runtime principal hoặc dispatch/ACK. Go's technical identity/access remains separately verified; no permission grant performed.
+- **Trạng thái:** ROLE AUTHORITY RECORDED; cross-Work current records updated for W17/W117; exact read-back verification pending. W76 dashboard is a stale local snapshot and was intentionally not rewritten as current data.
+- **Bước tiếp theo:** Exact read-back all changed files; inventory remaining current role assignments referencing Qw in active Work records and update only authoritative/current documents, preserving historical evidence.
