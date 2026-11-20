@@ -684,3 +684,16 @@
 - Revocation/expiry is checked at validation and run-record time, but no active-run cancellation or validation lock through process spawn/execution is shown.
 - Append lock/fsync protects individual append records; it does not create an atomic transaction across validation, execution, revocation and result recording. Local JSONL is not yet shared production evidence storage.
 - No Assignment/dispatch/attempt/receipt/recipient ACK fields. GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. Entry 071 recorded.
+
+
+## Sync Period 0059 — W70/W112 Assignment ACK → Core Execution Grant prerequisite mapping (2026-11-20T09:21:00+07:00)
+
+- Reconciled PR #48 grant contract against W70 DOC-005/063/065 and W112 DOC-001 using prior exact source/design traces.
+- W70 DOC-005 defines server-side transition invariants; DOC-063 requires trusted principal + assignment/ACK resolution but is explicitly draft/design/not implemented; DOC-065 defines logical assignment/dispatch/attempt/session/receipt/ACK identifiers but is a contract proposal, not an API/database implementation.
+- W70 DOC-093 and DOC-094 remain draft planning registers, not an active Assignment ledger or ACK source. Live Assignment API/service, persistence, authenticated state-changing caller, ACK verifier and authoritative read-back remain NOT VERIFIED.
+- PR #48 grant scope (service identity + Work + purpose + source SHA) has no assignment/dispatch/attempt/provider-session/receipt/recipient-proof/ACK binding. It cannot establish ACK-before-Host.
+- Required reuse path: authoritative W70 Assignment state → Core identity/permission and online ACK validation → W52 dispatch/attempt/provider receipt/recipient-bound ACK → grant bound to immutable ACK/scope/version → W14 Host → W33 evidence → W112 mapping. No second dispatcher/queue/ledger is authorized.
+- Do not infer recipient ACK from internal ACCEPTED, HTTP success, Meeting paste, GitHub/Sandbox writes, roster identity, nonce echo or artifact presence.
+- Entry 072 added. No code, route, provider, Host, runtime, test, permission or branch changes. PR #48 remains DIVERGED/unmerged candidate; its PR-body CI statement is not freshly verified workflow evidence.
+- GAP-01 OPEN/P0; GAP-11 OPEN/P0 on current main; E2/E3 NOT PROVEN; ACK-before-Host NOT PROVEN; protected execution DENY / NOT RELEASED; READ/TRACE/ANALYZE ONLY.
+- Next: trace the actual authoritative W70 Assignment state/read-back and existing Core identity/authorization interfaces; prove whether an ACK reference can be validated online without introducing parallel state.
