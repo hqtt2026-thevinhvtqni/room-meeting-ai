@@ -59,6 +59,17 @@ class Work118WorkflowContractTests(unittest.TestCase):
         run_script = next(step["run"] for step in steps if "MARKER=" in step.get("run", ""))
         self.assertIn("${ISSUE_UPDATED_AT}", run_script)
 
+
+    def test_controlled_failure_dispatch_is_owner_gated_and_branch_scoped(self):
+        data = self.load_yaml(WORKFLOW)
+        dispatch = data["jobs"]["controlled-failure-dispatch"]
+        self.assertEqual(dispatch["permissions"]["actions"], "write")
+        self.assertIn("W118-TEST-DIAGNOSTICS", dispatch["if"])
+        self.assertIn("[W118 E2E TEST]", dispatch["if"])
+        self.assertIn("steps.authorize_controlled_failure.outputs.authorized", dispatch["steps"][-1]["if"])
+        controlled = data["jobs"]["controlled-failure"]
+        self.assertIn("refs/heads/work/118-auto-e2e-v2", controlled["if"])
+
     def test_diagnostics_planner_is_part_of_runtime(self):
         self.assertTrue(Path("scripts/w118/diagnostics.py").is_file())
         self.assertTrue(Path("tests/w118/test_diagnostics.py").is_file())
