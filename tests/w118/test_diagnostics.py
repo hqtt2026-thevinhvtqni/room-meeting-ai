@@ -3,7 +3,7 @@ import unittest
 from scripts.w118.diagnostics import (
     build_plan,
     diagnostic_key,
-    find_existing_open_issue,
+    find_existing_issue,
     update_marker,
 )
 
@@ -30,13 +30,13 @@ class Work118DiagnosticsTests(unittest.TestCase):
         self.assertNotEqual(update_marker(55, 1), update_marker(55, 2))
         self.assertEqual(update_marker("55", "1"), "<!-- w118-diagnostic-update:55:1 -->")
 
-    def test_existing_open_issue_is_reused_by_exact_key(self):
+    def test_existing_issue_is_reused_by_exact_key(self):
         key = diagnostic_key(9, "d" * 40)
         issues = [
             {"number": 100, "body": "unrelated"},
             {"number": 101, "body": f"diagnostic\n<!-- {key} -->"},
         ]
-        self.assertEqual(find_existing_open_issue(issues, key), "101")
+        self.assertEqual(find_existing_issue(issues, key), "101")
 
     def test_plan_contains_issue_and_attempt_idempotency(self):
         key = diagnostic_key(9, "e" * 40)
