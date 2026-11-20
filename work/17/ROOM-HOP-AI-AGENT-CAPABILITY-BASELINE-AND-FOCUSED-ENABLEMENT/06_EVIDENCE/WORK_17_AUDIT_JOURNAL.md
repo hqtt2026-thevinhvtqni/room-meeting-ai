@@ -1422,3 +1422,36 @@
 - Disposition: GAP-01 OPEN/P0; GAP-11 OPEN/P0; procedural Assignment governance PRESENT (documented); machine-enforced Assignment authority/ACK NOT VERIFIED; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
 - Hành động: READ/TRACE only. Không triển khai route/store, không sync DOC-042, không sửa W70 journal/register, không gọi Core/Host/provider, không tạo dispatcher/ledger.
 - Bước tiếp theo: dùng W70 authority để reconcile DOC-042 addenda với GitHub main theo DOC-056; sau đó xác định Core API/service thật nếu được cung cấp, hoặc lập proposal thuộc Core/W70 ownership. Chỉ khi có source + persistence + auth + test evidence mới xem xét nối ACK vào Execution Grant.
+
+## Entry 079 — W76 Trigger Engine candidate cross-check: WP-76-07 dispatch remains blocked (2026-11-20T19:20+07:00)
+
+- Người thực hiện: Xu / AI-01.
+- Phạm vi: Kiểm tra W76 như một candidate cross-Work có thể cung cấp event/trigger/AI dispatch; đối chiếu DOC-004 architecture, DOC-006 verification plan, BUILD_REGISTER, DOC-035 journal và các PR search results #55/#60.
+- Phương pháp: Fetch exact GitHub main W76 records; GitHub code search TriggerEngine, dispatch_event, create_assignment, send_assignment, assignment_id/idempotency_key, ACKNOWLEDGED receiver; search PRs theo trigger engine. Không checkout branch, không chạy CI/test, không gọi provider, không sửa W76.
+- W76 DOC-004 architecture (GitHub main blob 0cdf5d737c3d889546ddb654b683ae9dff23a9f8):
+  - Tách Trigger Registry, Event Gateway, Scheduler, Event Bus/Queue, Condition Evaluator, Policy/Authorization Adapter, Dispatcher, Audit/Evidence Store thành logical components.
+  - Dispatch contract target yêu cầu assignment_id, correlation_id, trusted target identity reference, Work/WP scope, allow-listed action, idempotency key, expiry và policy decision reference; trạng thái QUEUED/SENT/RECEIVED/ACKNOWLEDGED là facts riêng, không suy ra ACK từ enqueue/transport acceptance.
+  - DOC-004 §H nói authoritative Core principal/Work authorization API, event-source authentication, durable queue/outbox, scheduler, target identity/receipt/ACK vẫn chưa xác minh; ADR-76-001..008 OPEN / NOT APPROVED; no implementation authorization.
+  - DOC-004 kết luận WP-76-07 BLOCKED cho đến khi dispatch provider, identity resolver, receipt và ACK schema được xác minh.
+- W76 DOC-006 verification plan (GitHub main blob 8cad3ad027214a2608debe789d1f38dc3414d2a3):
+  - Overall NOT_STARTED; toàn bộ là test plan, không có test execution claim.
+  - FR-05 Dispatch = BLOCKED BY TRANSPORT / NOT RUN; required evidence là redacted dispatch envelope, provider request/response, receiver receipt/ACK, correlation/idempotency trace và state-transition audit.
+  - NFR/security/audit tests yêu cầu server-derived auth, append-only provenance và fail-closed khi audit store unavailable; chưa có test/runtime proof.
+- W76 BUILD_REGISTER current main blob 9c1f92bd4f357ddd4b40ec08bfb3d899d806baf1:
+  - WP-76-01 Trigger Registry và WP-76-04 Typed Condition Evaluator IN_REVIEW theo PR #55 unmerged; WP-76-02 Event Gateway, WP-76-03 Scheduler, WP-76-05 Policy/Approval, WP-76-06 Orchestration và WP-76-08 Audit/Evidence Store PLANNED; WP-76-07 Verified AI Dispatch Adapter BLOCKED — transport unverified.
+  - Build Register nói PR #55 branch-level CI không phải merged-main/runtime/acceptance evidence; participant Work Entry/QE còn blocked hoặc chưa verified.
+- W76 DOC-035 current main blob 1ba9a87cdb867f599b2f059a0b3e3f5155f7c82d3 (66,408 chars) records latest status in inspected entries: WP-76-07 remains BLOCKED; no dispatch transport, identity binding, receiver receipt or ACK. DOC-035 also records no actual AI dispatch capability in inspected 8030 tool surface.
+- Current PR search evidence:
+  - PR #55 (https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/55) body describes Vibe's corrected Registry/Condition Evaluator implementation proposal, test matrix and CI runs on an unmerged branch; it explicitly says WP-76-07 no dispatch transport implemented or claimed.
+  - PR #60 (https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/60) search result body says it supersedes PR #59 and adds Event Gateway, UTC one-shot scheduler, policy/approval, execution state machine, idempotency/retry and audit sink contracts with regression tests. Its own body says DRAFT; no Core provider, durable production backend, recurrence/DST policy or AI dispatch transport is claimed; WP-76-07 remains blocked. This is PR-description evidence only; no PR60 source diff/head CI was independently inspected in this trace.
+  - W76 current-main BUILD_REGISTER/DOC-035 still describe PR #55 and do not reference PR #60 in the inspected content. Record this as a cross-record freshness discrepancy; do not infer PR #60 has been accepted or update WP status.
+- GitHub code search results:
+  - No indexed result for TriggerEngine, dispatch_event, create_assignment or send_assignment. assignment_id/idempotency_key results are W70/W17/W76/W112 design documents, not a runtime dispatch implementation.
+  - Search coverage is bounded to indexed default-branch source and query terms; absence from search is not proof across all branches/deployments.
+- Conclusion:
+  - W76 is a design + partial trigger registry/condition-engine candidate; PR #55 provides branch-level code/CI claims for registry/evaluator, and PR #60 body describes a wider draft proposal, but neither evidence source claims a working AI dispatch transport.
+  - WP-76-07 remains explicitly BLOCKED for real provider transport, trusted target identity, receiver receipt and recipient ACK. W76 cannot currently serve as the missing W70 Assignment/AI dispatch authority or close GAP-01.
+  - W76 still depends on Core authority and durable evidence; its DOC-004 design must not be treated as a deployed queue/dispatcher or ACK verifier.
+- Disposition: W76 Registry/Condition candidate = PARTIAL / unmerged; Event/Policy/Orchestration/Audit candidate = PR description only, not independently source-verified; WP-76-07 = BLOCKED; GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
+- Hành động: READ/TRACE only; no PR merge, checkout, source change, CI trigger, test, dispatch, provider, Host, permission or gate action.
+- Bước tiếp theo: if W76 PR #60 becomes relevant, first inspect exact PR head/files/check-runs and reconcile its source against W76 BUILD_REGISTER/DOC-035; preserve WP-76-07 BLOCKED until actual provider receipt + authenticated recipient ACK E2E evidence exists. Do not use W76 as a substitute Assignment ledger.
