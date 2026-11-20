@@ -288,3 +288,15 @@
 - **Issue tracking:** posted build/PR/evidence update to Issue #65 and PR #67.
 - **Trạng thái:** BUILD IMPLEMENTED / CONTRACT TESTS PASS / RUNTIME E2E PENDING / ACTIVE — NOT RELEASED.
 - **Bước tiếp:** wait for Xu's independent review disposition; address findings on the feature branch; only after Xu review and Vinh final acceptance may main integration proceed, followed by controlled handoff/ACK and workflow_run diagnostics E2E.
+
+
+## Entry 026 — Close same-principal self-review bypass discovered during Ka's code review
+- **Người thực hiện:** Ka — Delegated Technical Lead / Work 118 Build Owner.
+- **Thời gian:** 2026-11-20 20:47 UTC+07:00.
+- **Mã đầu việc:** W118-10 — Review authorization security.
+- **Phát hiện:** kiểm tra độc lập mã review authorization cho thấy so sánh GitHub login đơn thuần không đủ. Hai login khác nhau nhưng cùng map về principal Vinh có thể tạo self-review chéo tài khoản nếu chỉ so sánh chuỗi login.
+- **Khắc phục:** `authorize_acceptance` hiện resolve cả reviewer và PR author qua role map; từ chối nếu hai account cùng HQTT principal. Nếu PR author chưa được map vào principal đang hoạt động, workflow cũng từ chối kết luận reviewer độc lập. Chỉ reviewer có quyền acceptance, active và khác principal mới được xác nhận.
+- **Kiểm thử bổ sung:** cùng principal / khác login DENY; PR author không map DENY; hai principal khác nhau với reviewer có quyền ACCEPT ALLOW.
+- **Phạm vi thay đổi:** authorization engine, review authorization tests, TD-118-007, implementation record và test matrix; không thay đổi main.
+- **Trạng thái:** FIX IMPLEMENTED — chờ CI xác nhận sau commit; không nâng trạng thái runtime review lên PASS.
+- **Bước tiếp:** xác minh CI mới nhất; cập nhật PR #67; tiếp tục Xu independent review. PR vẫn Draft, không merge.
