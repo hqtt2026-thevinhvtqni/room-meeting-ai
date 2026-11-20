@@ -132,3 +132,12 @@ Vinh approved the W113 implementation-plan baseline in conversation on 2026-11-1
 **Plan status: APPROVED PLAN BASELINE.**
 **Architecture status: CONSULTATION / RECONCILIATION IN PROGRESS.**
 **Build status: NOT AUTHORIZED.**
+
+
+## Delegated Auto E2E delivery addendum (2026-11-21)
+- Assignment: `ASG-W113-CO-AUTOE2E-20261121`; Co is the end-to-end architecture and implementation lead under Vinh's D-113-005 delegation.
+- Canonical product source: `work/113/ROOM-HOP-UNIVERSAL-DASHBOARD/05_BUILD/04_CODE/product/` in `hqtt2026-thevinhvtqni/room-meeting-ai`; implementation branch: `work/113/room-hop-universal-dashboard-auto-e2e` (created from main and fetched at the same base commit).
+- Shared Dashboard ingress :3000 is an architectural requirement, not a verified current runtime fact. Listener owner, route contract and server-side authorization must be established before changing the running service.
+- Auto E2E replaces manual step-by-step approvals with automated quality gates and evidence, not with bypasses of Work Entry, domain-owner contracts, independent QE or final acceptance.
+- Co proceeds autonomously through discovery, architecture, bounded implementation and test preparation. Product code mutation begins only after source baseline and applicable gate/owner authorization are evidenced. No auto-deploy; Vinh remains final acceptance authority.
+- This addendum does not change G0–G5 status and does not mark any implementation or test as PASS.
