@@ -4,7 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 
-from scripts.w118.authorization import load_role_map, authorize_acceptance
+from scripts.w118.authorization import load_role_map, authorize_independent_review
 
 
 def main() -> int:
@@ -15,7 +15,7 @@ def main() -> int:
     args = parser.parse_args()
 
     role_map = load_role_map(args.config)
-    allowed, reason, principal = authorize_acceptance(role_map, args.reviewer, args.pr_author)
+    allowed, reason, principal = authorize_independent_review(role_map, args.reviewer, args.pr_author)
     print(json.dumps({
         "authorized": allowed,
         "reason": reason,
