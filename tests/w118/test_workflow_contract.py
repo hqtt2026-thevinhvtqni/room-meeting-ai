@@ -98,6 +98,33 @@ class Work118WorkflowContractTests(unittest.TestCase):
         self.assertIn('--sha "$SHA"', run_script)
         self.assertIn('--attempt "$RUN_ATTEMPT"', run_script)
 
+
+    def test_pr_checklist_is_same_repo_pr_scoped_and_idempotent(self):
+        data = self.load_yaml(WORKFLOW)
+        job = data["jobs"]["pr-checklist"]
+        self.assertIn("pull_request", job["if"])
+        self.assertIn("head.repo.full_name == github.repository", job["if"])
+        run_script = next(step["run"] for step in job["steps"] if "MARKER=" in step.get("run", ""))
+        self.assertIn("w118-pr-checklist", run_script)
+        self.assertIn("HEAD_SHA", run_script)
+
+    def test_authorized_ack_applies_state_label_only_after_authorization(self):
+        data = self.load_yaml(WORKFLOW)
+        run_script = next(step["run"] for step in data["jobs"]["ack-verification"]["steps"] if "AUTHORIZED=" in step.get("run", ""))
+        authorized_branch = run_script.index('if [ "$AUTHORIZED" = "true" ]; then')
+        label_mutation = run_script.index("gh issue edit")
+        denied_branch = run_script.index("else", authorized_branch)
+        self.assertLess(authorized_branch, label_mutation)
+        self.assertLess(label_mutation, denied_branch)
+        self.assertIn("w118-acked", run_script)
+
+    def test_event_jobs_upload_recorder_artifacts(self):
+        data = self.load_yaml(WORKFLOW)
+        for job_name in ("pr-checklist", "handoff", "ack-verification", "acceptance-review"):
+            steps = data["jobs"][job_name]["steps"]
+            self.assertTrue(any(step.get("uses") == "actions/upload-artifact@v4" for step in steps), job_name)
+            self.assertTrue(any("event evidence" in step.get("name", "").lower() for step in steps), job_name)
+
     def test_diagnostics_planner_is_part_of_runtime(self):
         self.assertTrue(Path("scripts/w118/diagnostics.py").is_file())
         self.assertTrue(Path("tests/w118/test_diagnostics.py").is_file())
