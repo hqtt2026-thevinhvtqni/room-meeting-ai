@@ -54,3 +54,8 @@
 - Work 70 register integration is either approved and tested by Work 70 or explicitly excluded from this release.
 - Xu completes independent review; Vinh gives final acceptance.
 - No auto-merge. Merge/release occurs only after the human acceptance gates are satisfied.
+
+
+## Verification update — 2026-11-20
+
+Latest completed full contract run before this documentation update: [Run 44746386416](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44746386416), commit `326f4d1fc312d991b601075990a96dd7969fde11`, job `validate` SUCCESS, `26 tests / OK`. Artifact `w118-run-evidence-44746386416-1` (ID `14632693408`) was present and unexpired. Event jobs were skipped on the push event; runtime E2E is still pending.
