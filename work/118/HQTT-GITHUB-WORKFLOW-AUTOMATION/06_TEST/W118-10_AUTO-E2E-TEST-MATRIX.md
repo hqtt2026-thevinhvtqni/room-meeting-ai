@@ -91,3 +91,11 @@ The final acceptance bundle must contain:
 - Test output: `Ran 32 tests in 0.106s`; `OK`.
 - Artifact: `w118-run-evidence-44747797589-1`, ID `14634046784`, not expired at inspection.
 - Event-specific jobs were skipped on the push event; this remains contract/unit evidence, not live GitHub event E2E.
+
+
+## Event evidence / PR checklist coverage — 2026-11-20
+
+- Added `event_evidence.py` tests: event/run binding, immutable RECORDED state, Work 70 boundary and invalid input rejection.
+- Added contract checks: ACK label is applied only inside the authorized branch; handoff/ACK/review jobs upload event artifacts; PR checklist uses safe `pull_request_target` with no checkout; path filters include the checklist workflow.
+- The PR checklist write attempt in ordinary pull_request context failed because the GitHub token was read-only. The design was corrected to a dedicated base-context workflow; no token permission escalation was made.
+- Latest verified count before this amendment: 43 tests PASS in Run #44748809778; next CI run validates the path-filter test and final documentation.
