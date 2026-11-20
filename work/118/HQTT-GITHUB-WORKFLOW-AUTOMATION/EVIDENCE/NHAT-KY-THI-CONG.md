@@ -244,3 +244,19 @@
 - **Bước tiếp:** cập nhật ma trận danh tính/role chính thức bằng mapping vừa được duyệt; thiết kế test allow/deny; giữ trạng thái runtime authorization NOT VERIFIED cho tới khi policy được triển khai và có bằng chứng từ chối actor không được phép. T-04 tiếp tục chờ CI FAIL tự nhiên.
 - **Nguyên tắc audit:** lưu cả GitHub login thực tế và HQTT principal/role đã ánh xạ; không gộp hai login thành một actor trong log.
 
+
+
+## Entry 023 — Vinh authorizes Ka to build Auto E2E v2; first implementation and CI evidence
+- **Người thực hiện:** Ka — Delegated Technical Lead / Work 118 Build Owner.
+- **Thời gian:** 2026-11-20 20:39 UTC+07:00 (implementation and GitHub Actions evidence window).
+- **Mã đầu việc:** W118-10 — Auto E2E v2.
+- **Quyết định nguồn:** Vinh explicitly authorized Ka to decide the Auto E2E system and continue building on Git through the acceptance handoff. Xu and Vinh retain acceptance authority; Ka cannot self-accept, self-merge or self-release.
+- **Canonical base:** GitHub `main` SHA `41e8397600505d94434b5830e7aea1a012db77a2`. Created clean feature branch `work/118-auto-e2e-v2`; it is 27 commits ahead / 0 behind main at this entry. PR #66 was not used as the base and remains unmerged.
+- **Implemented files:** `.github/w118/role-map.json`; `.github/workflows/w118-workflow-automation.yml`; `.github/workflows/w118-failure-diagnostics.yml`; `scripts/w118/authorization.py`; `scripts/w118/review_authorization.py`; `scripts/w118/diagnostics.py`; tests under `tests/w118/`; implementation, test and release gate records under Work 118.
+- **Security behavior:** deny-by-default actor/role mapping; exact ACK syntax and issue binding; owner accounts are acceptance-only and cannot ACK executor roles; self-review denied; unmapped reviewer/actor denied. Xu and execution-agent GitHub logins remain unconfigured rather than guessed.
+- **Idempotency:** handoff keyed by issue + label event ID; ACK result keyed by source comment ID; diagnostics keyed by workflow ID + commit SHA, with run ID + attempt update marker. Diagnostics listener is separate from the orchestrator and does not listen to itself.
+- **Evidence:** GitHub Actions Run `44746143577` completed SUCCESS. Job `validate` SUCCESS. Log output: `Ran 26 tests`, `OK`. Run URL: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44746143577. Evidence artifact `w118-run-evidence-44746143577-1`, artifact ID `14633196579`, exists and is not expired.
+- **Exact scope of PASS:** contract/unit tests and YAML/event/permission contract checks passed on the feature branch. Handoff/ACK runtime on the new workflow, workflow_run diagnostics runtime, Work 70 Evidence Register integration and Xu identity mapping are NOT YET VERIFIED.
+- **No mutation to main:** no main push, no merge, no secret/branch-protection change, no Work 70 schema change. All implementation changes are isolated to the feature branch.
+- **Trạng thái:** BUILD IN PROGRESS / PARTIAL PASS. Work 118 remains ACTIVE — NOT RELEASED.
+- **Bước tiếp:** finish edge-case review; verify latest CI after documentation amendments; open a review PR; request Xu's independent review and Vinh's final acceptance; after approved integration, execute real GitHub event E2E and controlled failure diagnostics test.
