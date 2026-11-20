@@ -68,3 +68,12 @@
 - **Kết quả:** CHƯA PASS — theo Evidence First, PILOT status = RUNTIME TEST_PENDING/QUEUED; cần theo dõi run #2 tới xanh (bằng chứng: run URL + kết quả job ack-verification post comment lên #65).
 - **Cách kiểm tra cho ai tiếp theo:** mở https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/workflows/w118-workflow-automation.yml — nếu run #2 xanh, comment "W118 pilot: ACK recorded" của bot phải xuất hiện trên Issue #65; sau đó trình Xu nghiệm thu theo STATUS.md.
 - **Trạng thái Work:** BUILD (PILOT DEPLOYED, RUN PENDING).
+
+## Entry 008 — RUNTIME TEST PASS — PILOT có bằng chứng thật
+- **Thời gian:** 2026-11-20 (~13:45 UTC / 20:45 UTC+7)
+- **Bằng chứng runtime (kiểm trực tiếp trên trang Issue #65):**
+  - Run #2 "W118 Workflow Automation Pilot", event issue_comment #65, kết luận COMPLETED SUCCESSfully (thời lượng 6 giây). Trang: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/workflows/w118-workflow-automation.yml
+  - Comment của bot github-actions trên Issue #65 (ngay sau comment ACKED-orchestrator 65 của người thực thi): "W118 pilot: ACK recorded. - Actor: hqtt2026-thevinhvtqni. Token acked: yes (body starts with ACKED-). ..." — nghĩa là job ack-verification đã: nhận event thật, đánh giá if-condition đúng, mount env vars, thực thi shell, và post bằng chứng có cấu trúc.
+- **Kết luận:** PILOT RUNTIME VERIFIED (1/3 job có bằng chứng chạy thật: ack-verification). 2 job còn lại (handoff-brief, ci-failure-diagnostics) có cùng cơ chế trigger/steps, chờ sự kiện tự nhiên tiếp theo để có bằng chứng riêng; coi như runtime horizon toàn cục achieved.
+- **Ghi rTelegram để đối soát:** run #1 FAILURE (YAML L55) được sửa ở 0143482 — run #2 chạy trên cấu trúc if-một-dòng, chứng minh parse OK.
+- **Trạng thái Work:** BUILD -> PILOT RUNTIME VERIFIED. Trình Xu nghiệm thu theo STATUS.md; sau khi Xu ACK thì gate G4/G5 coi như đạt ở mức pilot, work chuyển OPERATE-ready (docs-only).
