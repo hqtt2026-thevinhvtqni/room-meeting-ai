@@ -46,3 +46,12 @@ Vinh has explicitly delegated technical decisions and implementation of the Auto
 **Current CI:** Run `44746143577` SUCCESS; 26 unit/contract tests passed. This is contract-level evidence only, not full runtime E2E.
 
 **Current blockers:** verified GitHub login for Xu; executor identity mappings for Ka/Vi/An (no guesses); Work 70 approval for any Evidence Register schema extension; actual diagnostics runtime after listener deployment.
+
+
+## Review handoff update — 2026-11-20
+
+- Active build branch: `work/118-auto-e2e-v2`, 46 commits ahead / 0 behind main at PR creation.
+- Draft PR: [#67](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/67), open and mergeable; awaiting Xu independent review and Vinh final acceptance.
+- Latest CI: Run `44747085807` SUCCESS, 30 tests passed; artifact ID `14632579474`.
+- PR #66 remains unmerged and is preserved as the earlier pilot history; do not merge it as the implementation branch.
+- Real issue/comment and workflow_run runtime E2E is the next implementation/verification gate after the reviewed integration is authorized.
