@@ -148,3 +148,16 @@ READ: liệt kê Work 21; đọc manifest, transcript và metadata mẫu. BUILD:
 - No merge, no direct main write, no runtime or product changes.
 - Status: PARTIAL SYNC — seven scoped records exact-readback verified; remaining Work 21 tree not reconciled. PR awaits review; merge not authorized/performed.
 - Next: reconcile remaining Work 21 tree and obtain independent review before any merge decision.
+
+
+## W21-W300-CAPABILITY-ALIGNMENT — 2026-11-20
+- Actor: Xu / AI-01. Scope: align W21 research priorities with W300 image/photo capability demand and prepare a proposed member-to-skill mapping for W17.
+- READ: GitHub main `2095c1181daaee49dc58390fc2ca7a6576336155`; fetched W21 Manifest, backlog, AI Templates research note, W21 minutes/register/journal; fetched W300 DOC-034, DOC-035 and REVIEW_PACKET_PILOT_01; fetched W17 member capability matrix and audit journal.
+- TRACE: W300 conceptual architecture includes Workspace, Job Orchestrator, Image Task Adapters, Local Processing Engine, Artifact Store, Quality Gate and Provider Registry. Its review conditions require local-first image validation, strict cost gate/circuit breaker, output validation, artifact provenance and security controls. W300 provider calls/build are not authorized; architecture approval remains conditional. W300 scope is image/photo only; video is Work 29.
+- W17 baseline: canonical member matrix records identity/session and dispatch/ACK as NOT_VERIFIED/NOT_PROVEN. Role declarations do not prove capability. W17 remains owner of member evidence; W21 must not fork/overwrite canonical verdicts.
+- ANALYZE: derived eight capability demand areas and mapped them to reusable W21 Skill research outputs. Role mapping is proposal only; no assignment, capability verdict or runtime access is inferred.
+- DECIDE: W300 is the first demand-driven validation consumer for W21; no new Work. W21 owns portable Skill specs; W17 owns member capability evidence; W300 owns product scope and implementation.
+- BUILD: updated backlog item 20, research note section 11, and this Biên bản/Nhật ký on dedicated branch `work/21-w300-capability-alignment`. No implementation code or runtime changes.
+- VERIFY: exact-path readback and draft PR creation pending. No tests, provider calls, installations, QE, acceptance or product build performed.
+- Status: PASS only for bounded source inspection and demand mapping draft; Skill specifications NOT BUILT; W17 member profile update is proposal-only; W300 architecture/build status unchanged.
+- Next: exact readback; open draft PR; request Ka/Cla/Qw review before merging or promoting canonical capability changes.
