@@ -19,6 +19,7 @@
 17. Chuyển đổi 5–6 core external Skills sang format Manifest ROOM-HOP — chỉ đề xuất nghiên cứu, chưa triển khai.
 18. Mẫu `docs/ai-workflows/` portable cho team hỗn hợp (Claude + non-Claude).
 19. **AI Templates Library Research — Phan Đông Giang / aitmpl.com** — xem `09_AI_TEMPLATES_PHAN_DONG_GIANG_RESEARCH.md`; research-only, item-level inventory and compatibility remain OPEN.
+20. **W300 Capability-Driven Skills Enablement** — nghiên cứu 8 năng lực ảnh W300 cần: xử lý ảnh an toàn, nghiên cứu model/provider, tạo/chỉnh sửa ảnh, QA ảnh, kiểm soát chi phí/quota, bảo mật/riêng tư, provenance tài sản và quy trình AI đa tác nhân có bằng chứng. Chuẩn hóa Skill contract và cách kiểm chứng; không cài đặt, không gọi provider, không triển khai.
 
 ## NOW / LATER
 
