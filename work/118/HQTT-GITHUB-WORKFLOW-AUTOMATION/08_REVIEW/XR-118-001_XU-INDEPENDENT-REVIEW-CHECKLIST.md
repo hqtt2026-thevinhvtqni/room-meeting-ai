@@ -61,7 +61,7 @@ A Xu design/security PASS permits Vinh to consider a separate non-release integr
 
 13. **P0 — ACK state mutation:** verify `w118-acked` is applied only after active actor/role/Issue authorization passes; denied ACK causes no label mutation.
 14. **P0 — Event evidence:** handoff, ACK and review artifacts are bound to source event, run/attempt, actor, decision and SHA; state remains RECORDED and no Work 70 register is mutated.
-15. **P0 — PR checklist notifier:** `pull_request_target` workflow must not checkout or execute PR head code; it must be same-repository scoped, least-privilege and idempotent per PR head SHA.
+15. **P0 — PR checklist notifier:** `pull_request_target` workflow must not checkout or execute PR head code; it must be same-repository scoped, least-privilege and idempotent per PR head SHA.\n16. **P0 — Independent-review authority separation:** the review workflow must require `can_independently_review`; project-owner `can_accept` authority must not be treated as independent review. Verify same-principal denial and that no unverified Xu login is enabled.
 
 
 ## Runtime execution plan
