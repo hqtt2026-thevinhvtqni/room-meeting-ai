@@ -686,3 +686,15 @@
 - **Kiểm tra:** Các nội dung đã được ghi qua GitHub API; exact read-back toàn bộ 4 file sau commit cần thực hiện ở bước verify. Không chạy runtime tests; không tuyên bố identity/session PASS.
 - **Trạng thái:** DECISION APPLIED; canonical DOC-043 + DOC-006 updated; Work17 matrix + GAP-05 synced. Runtime identity/access NOT VERIFIED. Historical DOC-010 Sandbox reconciliation BLOCKED pending canonical path/owner.
 - **Bước tiếp theo:** Exact-fetch read-back 4 updated files; xác nhận D70-024/mapping/permission boundary; sau đó lập yêu cầu đồng bộ DOC-010 tại đúng canonical source do W0000 owner quản lý. Tiếp tục W118 Automation độc lập với Go's GitHub identity blocker.
+
+
+## Entry 056 — Đồng bộ DOC-010 và Decision Log Work 0000 sau D70-024
+- **Thời điểm:** 2026-11-21 05:55 +07:00.
+- **Phạm vi:** Tiếp tục đồng bộ nguồn roster company-level đúng canonical path trong Work 0000 Sandbox sau khi Entry 055 đã ghi nhận chưa xác định được path.
+- **Canonical Sandbox path:** Work 0000 / HQTT COMPANY — MASTER GOVERNANCE & WORK INDEX / 05_BUILD / 00_ROOT / AI_TEAM_AND_TOKEN_USAGE.md (DOC-010).
+- **DOC-010:** cập nhật v1.2, ngày 2026-11-21; AI-06 Go, AI-07 Co, AI-08 Qc; AI-05 Qw giữ nguyên. Ghi D70-024, đánh dấu mapping lịch sử DOC-010 v1.1 / DOC-025 v1.3 superseded cho stable-ID hiện hành; không viết lại lịch sử. Sandbox write ACKNOWLEDGED và exact read-back PASS cho version, ba dòng mapping, D70-024, supersession note và no-permission-change boundary.
+- **Work 0000 DOC-004 Decision Log:** thêm D0000-012 làm cross-reference tới Work 70 D70-024; không tạo quyết định mapping song song, xác định D70-024 là authority chi tiết. Sandbox write ACKNOWLEDGED và exact read-back PASS cho D0000-012, mapping và no-permission-change boundary.
+- **Nguồn canonical trên GitHub main đã exact read-back:** Work 70 DOC-043 blob 2150e1ddddf440f3e937bb92c164e76d3e48fb7b; DOC-006 blob 5d5365cf7da714ed0ef24f297846980ab359ba80; Work 17 matrix blob b9acfe3492b5669140185896a141198068a8b94a; Work 17 GAP register blob 6af209c3265a5daf63212535990068db086f5e2c.
+- **Ranh giới:** Không cấp quyền, không cập nhật role-map.json, không tạo GitHub login/principal, không chứng minh provider session hoặc runtime identity. Go GitHub identity/access vẫn NOT VERIFIED. D70-024 chỉ giải quyết stable-ID mapping; GAP-05 đóng ở phạm vi numeric mapping.
+- **Trạng thái:** DOC-010 v1.2 + W0000 DOC-004 D0000-012 written and exact-read-back PASS; DOC-043/DOC-006/Work17 matrix/GAP exact-read-back PASS. No permission changes. Runtime identity/access NOT VERIFIED.
+- **Bước tiếp theo:** Các Work khác khi được chạm tới phải tham chiếu D70-024; không cần sửa hàng loạt nhật ký lịch sử. Work17 dashboard snapshot còn stale và phải refresh có kiểm soát trước khi hiển thị như dữ liệu mới.
