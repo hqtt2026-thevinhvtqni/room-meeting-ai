@@ -604,3 +604,23 @@
 - **Cập nhật Git:** sẽ sửa comment ownership proposal trên Issue #44 để ghi AI-06 Go thay AI-05 Qw; Entry 047 được giữ nguyên như lịch sử, Entry 052 là bản điều chỉnh có hiệu lực mới nhất.
 - **Trạng thái:** DECISION RECORDED / GitHub ownership comment update pending verification / Issue #44 vẫn OPEN.
 - **Bước tiếp:** xác minh Go có thể nhận nhiệm vụ QE/QA và GitHub identity phù hợp; sau đó mới cân nhắc gán quyền/assignee. Ka vẫn giữ vai trò review độc lập; không đóng Issue khi chưa đủ acceptance evidence.
+
+## Entry 053 — Xác minh danh tính GitHub và quyền truy cập của Go / AI-06
+- **Người thực hiện:** Xu — W118 Coordinator.
+- **Thời gian:** 2026-11-21 (UTC+07:00).
+- **Phạm vi:** READ / TRACE ONLY — đối chiếu hồ sơ HQTT, nhật ký W117, cấu hình phân quyền W118 và dấu vết GitHub hiện có. Không cấp quyền, không thêm login, không thay đổi Issue/PR/workflow/role policy.
+- **Nguồn và phương pháp đã kiểm tra:**
+  1. Work 70 DOC-043, blob `883123766f8c5457e6f905ae15682d718aa9acfa`: ghi AI-06 Go — CFO/Cost Analyst; đồng thời nêu role roster không tự chứng minh kết nối, quyền hoặc authorization.
+  2. Work 17 capability matrix, blob `435144f7d156a213a0bfadabb9e7b0fb09fb31b5`: ghi rõ xung đột DOC-010/DOC-025 (AI-06=Qc, AI-07=Go) với DOC-043/DOC-096 (AI-06=Go, AI-07=Co); trạng thái identity/session của AI-06 là CONFLICT / NOT VERIFIED và không được dùng ID để tự động cấp quyền. Work 17 cũng ghi mapping đề xuất AI-06 Go / AI-07 Co / AI-08 Qc chưa được chuẩn hóa trong DOC-010.
+  3. Work 117 Journal, blob `18a13f24e5c2459be8de830d32b25abb18e52c9f`, mục 2026-11-17 05:55 +07: có bản ghi Go / AI-06 tự ACK nhận phạm vi Dashboard. Đây là bằng chứng ghi nhận ACK trong nhật ký và có working package W117; mục này không kèm GitHub login, user ID, authenticated event actor hoặc bằng chứng session/provider độc lập.
+  4. W118 `.github/w118/role-map.json`, blob `0ce3ffe2ab8d6e03b8f5f36d98b563a16faed76b`: chỉ khai báo hai login `hqtt2026-thevinhvtqni` và `thevinhqtni-1911`, cả hai ánh xạ về principal Vinh; ghi rõ chưa cấu hình executor login cho tới khi danh tính và role được xác minh. Không có principal/login Go.
+  5. W118 Issue #44 và các kết quả tìm kiếm GitHub trong repository: không tìm thấy GitHub login nào được xác nhận là Go. Search theo “Go GitHub account”, “Grok GitHub login” và “AI-06 Go” chỉ trả về role/docs/nhật ký, không đưa ra một tài khoản có thể quy thuộc chắc chắn cho Go.
+- **Kết quả xác minh:**
+  - **Role theo phạm vi W118:** DECISION RECORDED — theo chỉ thị trực tiếp của Vinh, Go thay Qw làm QE/QA Owner tại Issue #44. Đây là phân công nghiệp vụ, không phải xác thực tài khoản.
+  - **Tên AI-06 Go trong hồ sơ Work 70:** DOCUMENTED, nhưng mapping số AI toàn HQTT vẫn có xung đột nguồn tại Work 17; chỉ thị của Vinh được áp dụng cho phân công W118, không tự ý sửa DOC-010 hoặc kết luận xung đột toàn cục đã đóng.
+  - **GitHub login của Go:** NOT VERIFIED — chưa có username/login được xác nhận hoặc bằng chứng actor/session nối với Go.
+  - **Quyền repository của Go:** NOT VERIFIED / BLOCKED — do chưa có login để gọi kiểm tra collaborator permission. Không thể kết luận Go đã có hay chưa có quyền truy cập chỉ từ việc các artifact W117 tồn tại trên GitHub.
+  - **ACK W117:** có bản ghi ACK trong Journal và package Dashboard; chưa đủ để xác thực GitHub account, phiên AI hoặc tác giả runtime của Go.
+  - **W118 authorization:** Go chưa được thêm vào `role-map.json`; chính sách deny-by-default và nguyên tắc không dùng hai tài khoản của Vinh để đại diện Go được giữ nguyên.
+- **Kết luận:** **BLOCKED — IDENTITY / REPOSITORY ACCESS NOT VERIFIED.** Không tìm thấy bằng chứng đủ mạnh để gắn một GitHub login cụ thể với Go. Không suy đoán username, không cấp quyền, không gán Go làm GitHub assignee/reviewer và không cho Go ACK role qua W118 policy ở trạng thái hiện tại.
+- **Bước tiếp theo:** cần một bằng chứng trực tiếp từ phiên Go (ví dụ Go tự cung cấp GitHub profile/login trong đúng phiên làm việc và xác nhận liên kết với AI-06), sau đó Xu mới kiểm tra login đó có quyền gì trên repository. Chỉ sau khi mapping được chủ sở hữu xác nhận và quyền tối thiểu được duyệt mới đề xuất cập nhật role map; QE/QA không được cấp quyền independent reviewer.
