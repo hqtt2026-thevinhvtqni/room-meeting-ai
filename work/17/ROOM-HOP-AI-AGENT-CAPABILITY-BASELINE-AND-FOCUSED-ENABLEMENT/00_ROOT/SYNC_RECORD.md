@@ -791,3 +791,16 @@
 - Result: W76 is a partial trigger-engine candidate and does not provide authoritative Assignment service or AI delivery/ACK. WP-76-07 remains BLOCKED; GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
 - Entry 079 added. No PR/source/CI/test/dispatch/provider/Host/permission/gate action.
 - Next: inspect PR #60 exact head/files/check-runs only if required; retain WP-76-07 BLOCKED until real provider receipt + authenticated recipient ACK E2E evidence is available.
+
+## Sync Period 0067 — PR #60 cross-Work scope and stale W17 snapshot risk (2026-11-20T19:20+07:00)
+
+- PR #60 is OPEN, DRAFT, unmerged, mergeable=false; base main SHA 9b366fe5ade05568436644ac385d7504a2673605; head work/76-co-autonomous-build-v2 SHA d524ca56003518fd339572570612fd6f33e3269f; current main HEAD at check 372e7c6035fde37a610102b20b5e01f39a5d92ec. It has 348 commits, 70 files, +7,655/-113.
+- PR changed-file inventory spans W17=15, W300=11, W502=8, W76=25, W802001=10 and .github=1. It is not W76-only.
+- PR-head W17 snapshots differ materially from current main: SYNC_RECORD 14,603 vs 106,550 chars; AUDIT_JOURNAL 46,028 vs 313,928 chars; GAP_REGISTER 4,097 vs 40,698 chars. PR-head blobs do not contain current Entries 072–079 / Sync Periods 0059–0066.
+- A merge/conflict resolution accepting PR-head W17 copies wholesale could lose current journal, sync and gap history. No merge, cherry-pick or overwrite was performed; current W17 main files are preserved.
+- PR #60 body states no Core provider, durable production backend, recurrence/DST policy or AI dispatch transport; WP-76-07 remains BLOCKED.
+- PR-head W76 gateway/policy/orchestrator/retry/audit modules use injected Protocol ports (SignatureVerifier, ReplayStore, PolicyProvider, ApprovalVerifier, TransitionSink, IdempotencyStore, AppendOnlyAuditSink). Orchestrator holds only in-process state and delegates durable CAS/sink implementation externally. No concrete AI dispatch adapter/recipient receipt/ACK transport appears in changed-file inventory.
+- Selected blob SHAs: gateway d692db513396c836b52081473653ac368a5f9771; policy d195bc3f263ec7bd3ea0fff107b5885b6e540d6e; orchestrator bedd8ac7fe19f92b169223a43a06ecd91d32cc99; retry 7ba730eca05b25014e22787663a62a7dc7636ca1; audit 8bae52387292eb28b0a99cd5dacc6e1f2aa6079a.
+- Result: PR #60 is a broad draft candidate, not a production dispatcher or Assignment authority. WP-76-07 remains BLOCKED; GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
+- Entry 080 added. No PR/branch/source/file/test/CI/dispatch/provider/Host/permission operation.
+- Next: any W76 reuse must be a narrow W76-only change based on current main, excluding W17/W300/W502/W802001 snapshots, with concrete durable Core/provider/ACK evidence before changing dispatch status.
