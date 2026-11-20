@@ -191,6 +191,14 @@ class Work118WorkflowContractTests(unittest.TestCase):
         self.assertTrue(Path("scripts/w118/diagnostics.py").is_file())
         self.assertTrue(Path("tests/w118/test_diagnostics.py").is_file())
 
+    def test_diagnostics_reuses_closed_issue_for_same_idempotency_key(self):
+        data = self.load_yaml(DIAGNOSTICS)
+        steps = data["jobs"]["diagnostics"]["steps"]
+        run_script = next(step["run"] for step in steps if step.get("name") == "Create or update one diagnostic issue per workflow and commit")
+        self.assertIn('--state all', run_script)
+        self.assertIn('gh issue reopen', run_script)
+        self.assertIn('diagnostic_key', run_script)
+
     def test_diagnostics_only_runs_for_failed_upstream_runs(self):
         data = self.load_yaml(DIAGNOSTICS)
         condition = data["jobs"]["diagnostics"]["if"]
