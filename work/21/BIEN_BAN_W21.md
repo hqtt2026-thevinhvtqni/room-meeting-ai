@@ -83,3 +83,11 @@ Quyết định: Lưu toàn bộ phân tích và khuyến nghị Hybrid vào Wor
 - GitHub PR snapshot: 7 changed files, 495 additions, 0 deletions, 10 commits at creation time.
 - No merge performed. PR mergeable=false at creation snapshot; review/merge readiness not inferred.
 - Synchronization result remains PARTIAL: 7 scoped records exact-readback verified; remaining Work 21 tree not yet reconciled.
+
+
+### Merge and main readback closeout — 2026-11-20
+- PR #62 successfully merged to `main` by explicit owner instruction; merge commit `2095c1181daaee49dc58390fc2ca7a6576336155`.
+- Fetched all 7 scoped paths from `main`; all exist. Main HEAD observed at merge commit above.
+- Paths: `work/21/README.md`, `work/21/07_RESEARCH_BACKLOG.md`, `work/21/09_AI_TEMPLATES_PHAN_DONG_GIANG_RESEARCH.md`, `work/21/AI-SKILLS/00_ROOT/WORK_MANIFEST.md`, `work/21/AI-SKILLS/00_ROOT/DOCUMENT_REGISTER.md`, `work/21/BIEN_BAN_W21.md`, `work/21/NHAT_KY_THI_CONG_W21.md`.
+- Result: PASS for presence/readability of 7 scoped files on main. Full Work 21 tree parity remains NOT VERIFIED; no claim that all Work 21 artifacts have been synchronized.
+- Research-only boundary remains: no install, execution, integration or implementation.

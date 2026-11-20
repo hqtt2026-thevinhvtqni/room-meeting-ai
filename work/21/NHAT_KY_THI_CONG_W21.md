@@ -148,3 +148,18 @@ READ: liệt kê Work 21; đọc manifest, transcript và metadata mẫu. BUILD:
 - No merge, no direct main write, no runtime or product changes.
 - Status: PARTIAL SYNC — seven scoped records exact-readback verified; remaining Work 21 tree not reconciled. PR awaits review; merge not authorized/performed.
 - Next: reconcile remaining Work 21 tree and obtain independent review before any merge decision.
+
+
+### PR #62 merge and main verification — 2026-11-20
+- PR #62: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/62; successfully merged to main.
+- Merge commit / observed main HEAD: `2095c1181daaee49dc58390fc2ca7a6576336155`.
+- Exact-path fetch from main confirmed all 7 scoped files exist and are readable:
+  - `work/21/README.md` — blob `453e732651f88c14291b33a1d23eb448cb1cec6a`
+  - `work/21/07_RESEARCH_BACKLOG.md` — blob `10e197ce9c44a18bab3b1926a26cd51dd5d205f1`
+  - `work/21/09_AI_TEMPLATES_PHAN_DONG_GIANG_RESEARCH.md` — blob `732f6c246eca57db17d8146e8add54f384955991`
+  - `work/21/AI-SKILLS/00_ROOT/WORK_MANIFEST.md` — blob `1d9fe285402fb5cfe6f85c62070f58f73a9f6550`
+  - `work/21/AI-SKILLS/00_ROOT/DOCUMENT_REGISTER.md` — blob `273c87e610e2ed85f2c0c12a49f2b798bd39f7cf`
+  - `work/21/BIEN_BAN_W21.md` — blob `ae76506cf871a89cc010e95526d219733a2a0e72`
+  - `work/21/NHAT_KY_THI_CONG_W21.md` — blob `2d3412f9b4b139b118facdb0178ebfb30f4c6e15`
+- Status: PASS for seven scoped files present/readable on main. This is PARTIAL synchronization; full Work 21 tree parity remains NOT VERIFIED. No tests/QE/acceptance/release claim.
+- Next: reconcile remaining Work 21 file inventory and synchronize only after mapping/preservation review.
