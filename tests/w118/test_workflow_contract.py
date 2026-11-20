@@ -44,6 +44,14 @@ class Work118WorkflowContractTests(unittest.TestCase):
         self.assertEqual(data["jobs"]["ack-verification"]["permissions"]["issues"], "write")
         self.assertEqual(data["permissions"], {"contents": "read"})
 
+    def test_review_authorization_checks_out_trusted_default_branch(self):
+        data = self.load_yaml(WORKFLOW)
+        steps = data["jobs"]["acceptance-review"]["steps"]
+        checkout = next(step for step in steps if step.get("name") == "Checkout trusted default-branch acceptance policy")
+        self.assertEqual(checkout["uses"], "actions/checkout@v4")
+        self.assertEqual(checkout["with"]["ref"], "${{ github.event.repository.default_branch }}")
+        self.assertEqual(checkout["with"]["persist-credentials"], "false")
+
     def test_review_job_does_not_merge_or_release(self):
         data = self.load_yaml(WORKFLOW)
         self.assertIn("pull_request_review", data["on"])
