@@ -31,3 +31,8 @@
 - The workflow can verify an acceptance review only when the reviewer login is explicitly mapped, active and different from the PR author. Xu's login must be confirmed before adding it to the role map; no inferred mapping is allowed.
 - An authorized review comment records reviewer authority only. It does not change the Work to ACCEPTED, merge the PR or release the product.
 - No auto-merge or auto-release. Main integration is blocked until the Xu/Vinh acceptance gates are satisfied.
+
+
+### Independent-review identity hardening — 2026-11-20
+
+Review independence is checked at the HQTT principal level, not only by comparing GitHub login strings. Two GitHub accounts mapped to the same principal cannot review each other's PR as independent reviewers. If the PR author's login is not mapped to an active principal, the workflow cannot prove reviewer independence and fails closed. This prevents the two owner-confirmed Vinh accounts from bypassing self-review restrictions by using different logins.
