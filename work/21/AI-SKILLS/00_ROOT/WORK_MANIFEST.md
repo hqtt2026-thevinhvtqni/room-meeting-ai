@@ -9,7 +9,7 @@
 - Product Owner / Final Authority: Vinh
 - Lifecycle Orchestrator: Xu / AI-01
 - Architecture Reviewer: Ka / AI-02
-- Independent QE: Qw / AI-05
+- Default QE/QA: Go / AI-06 (D70-026)
 - Sandbox: Work 21 via ROOM-HOP MCP 8030
 - Canonical repository: hqtt2026-thevinhvtqni/room-meeting-ai (GitHub synchronization for this normalization: NOT VERIFIED)
 - Canonical source path (GitHub mapping established 2026-11-20): branch `work/21-ai-skills`; Work root `work/21/AI-SKILLS/` maps Sandbox `AI-SKILLS/`; root-level records map under `work/21/` with identical filenames. Research note `09_AI_TEMPLATES_PHAN_DONG_GIANG_RESEARCH.md` maps to `work/21/09_AI_TEMPLATES_PHAN_DONG_GIANG_RESEARCH.md`. Base commit: `70ae3fb762bd4719facbf9448919aa2ab9516429` (room-meeting-ai/main). GitHub synchronization: PARTIAL — 7 scoped governance/research records merged to main via PR #62; exact main readback verified. Remaining Work 21 tree not yet reconciled.
