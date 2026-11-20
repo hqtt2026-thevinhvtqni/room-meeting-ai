@@ -83,3 +83,12 @@ Quyết định: Lưu toàn bộ phân tích và khuyến nghị Hybrid vào Wor
 - GitHub PR snapshot: 7 changed files, 495 additions, 0 deletions, 10 commits at creation time.
 - No merge performed. PR mergeable=false at creation snapshot; review/merge readiness not inferred.
 - Synchronization result remains PARTIAL: 7 scoped records exact-readback verified; remaining Work 21 tree not yet reconciled.
+
+
+## 2026-11-20 — W300 capability-driven research direction
+- Decision direction: use Work 300 as the first practical demand case for Work 21 reusable AI Skills; do not create another Work.
+- Boundary: W21 owns reusable Skill research/specifications; W17 remains canonical owner of AI member capability/evidence profiles; W300 owns image/photo product requirements and implementation. W300 remains image/photo-only; video belongs to Work 29.
+- Eight demand areas: safe local image processing; provider/model research; image generation/editing; image QA; cost/quota circuit breaker; privacy/security; artifact provenance; multi-agent evidence workflow.
+- Proposed role mapping is a research hypothesis only, not assignment, authorization, runtime identity proof or capability PASS. Member/session/dispatch/ACK and tool access remain governed by W17 evidence and per-task permission.
+- Research-only boundary: no install, model download, provider/API call, credential/payment activation, runtime/config change, code implementation or W300 source modification. No W300 architecture/build gate is advanced.
+- Next: define reusable Skill contracts against W21 schema, reconcile duplication/ownership, prepare evidence-based capability mapping for W17 and a bounded handoff packet for W300.
