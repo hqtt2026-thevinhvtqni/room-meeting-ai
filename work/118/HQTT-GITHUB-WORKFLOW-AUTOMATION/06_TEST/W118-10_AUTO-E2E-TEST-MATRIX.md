@@ -16,7 +16,7 @@
 | T10-07 | Duplicate handoff label event | One handoff comment per issue/label event ID | IMPLEMENTED; runtime pending |
 | T10-08 | PR author approves own PR | Rejected as independent acceptance | PASS — unit test |
 | T10-09 | Unmapped reviewer approves PR | Not counted as W118 acceptance | PASS — unit test |
-| T10-10 | Same workflow and SHA fail more than once | Reuse one open diagnostic issue | PASS — unit test; runtime pending |
+| T10-10 | Same workflow and SHA fail more than once | Reuse the same diagnostic issue; reopen it if previously closed | PASS — unit test and T10-25 contract; runtime pending |
 | T10-11 | Different workflow or SHA fails | Distinct idempotency key | PASS — unit test |
 | T10-12 | Same run is retried | Attempt-specific update marker; no automatic retry | PASS — unit test |
 | T10-13 | Controlled W118 validation failure | Diagnostics workflow observes failure and creates/updates issue | PENDING — diagnostics workflow must be on default branch |
