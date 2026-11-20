@@ -61,3 +61,11 @@
 - **Review owner:** Xu — independent technical/security review pending. Vinh — final product acceptance pending.
 - **Merge:** NOT AUTHORIZED YET; no merge or release has occurred.
 - **PR #66:** retained unmerged as historical pilot; it is not the active implementation base and is superseded by PR #67 for ongoing build/review.
+
+
+## Principal-level review security update — 2026-11-20
+
+- **Latest CI:** [Run #44747589539](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44747589539) SUCCESS; 32 tests passed; artifact ID `14634211524`.
+- **Security fix:** reviewer and PR author are resolved to HQTT principals; different GitHub accounts mapped to the same principal cannot self-review. Unmapped PR authors fail closed.
+- **PR #67:** remains OPEN / DRAFT / mergeable; latest source changes are on `work/118-auto-e2e-v2`, still based on main with no behind commits.
+- **Runtime status:** no handoff, ACK or workflow_run diagnostics runtime PASS is claimed yet; these remain pending authorized integration.
