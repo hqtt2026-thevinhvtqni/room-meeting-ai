@@ -121,3 +121,18 @@ D70-021 supersedes only the top-level folder-name portion of D70-001 and D70-004
 4. DOC-010 v1.1 và DOC-025 v1.3 giữ nguyên như bằng chứng lịch sử; mapping cũ được đánh dấu superseded về stable ID, không dùng để phân quyền hoặc dispatch.
 5. DOC-043 là canonical controlled register về role/permission. Work 17 capability matrix và các dashboard/gap records phải phản ánh mapping mới nhưng giữ nguyên các trạng thái identity/session NOT_VERIFIED, Dispatch/ACK NOT_PROVEN, capability NOT_VERIFIED.
 6. Mỗi Work đồng bộ phải ghi nguồn D70-024 và revision DOC-043; không sửa lịch sử nhật ký đã phát hành, chỉ thêm addendum mới.
+
+
+## 13. Quyết định D70-025 — Vai trò kép Go: CFO + QE/QA toàn HQTT (2026-11-21)
+| Decision ID | Decision / Quyết định | Rationale / Lý do | Status / Trạng thái |
+|---|---|---|---|
+| D70-025 | Theo phê duyệt trực tiếp của Vinh: AI-06 Go đảm nhiệm đồng thời CFO/Cost Analyst và QE/QA mặc định trên toàn HQTT, áp dụng cho mọi Work. AI-05 Qw tiếp tục giữ vai trò QE/QA mặc định; Go và Qw có phạm vi vai trò QE/QA ngang nhau, cùng tồn tại, không thay thế nhau. Go không bị giới hạn ở Work-specific override W118 Issue #44. | Bảo đảm HQTT có hai thành viên cùng đảm nhiệm kiểm thử/đảm bảo chất lượng; Go vừa phụ trách tài chính vừa tham gia QE/QA trên toàn bộ Work. | APPROVED BY VINH — ACTIVE HQTT-WIDE ROLE AUTHORITY |
+
+**Ranh giới D70-025:**
+1. D70-025 bổ sung vai trò nghiệp vụ QE/QA mặc định cho Go trên toàn bộ Work; D70-024 vẫn là quyết định stable identity mapping.
+2. Qw tiếp tục là QE/QA mặc định; không hạ cấp hoặc thay thế Qw.
+3. Phân công owner/reviewer theo Work/WP không giới hạn vai trò mặc định của Go hoặc Qw.
+4. Agent không tự review deliverable do chính mình thực hiện; khi có xung đột phải có reviewer độc lập khác.
+5. Vai trò nghiệp vụ không đồng nghĩa với GitHub login, runtime principal, token hoặc quyền kỹ thuật. D70-025 không tự cấp quyền hệ thống; quyền kỹ thuật vẫn deny-by-default và cần xác minh/cấp riêng.
+6. W118 Issue #44 là một phân công cụ thể nằm trong vai trò QE/QA toàn HQTT của Go, không phải nguồn duy nhất tạo ra vai trò đó.
+7. DOC-043 là canonical role/permission register; Work liên quan đồng bộ theo D70-025, không viết lại lịch sử.
