@@ -55,3 +55,12 @@
 - **Reason:** keep W113 product code owned and versioned within W113 while preserving Work records on main and isolating product source changes on a feature branch. The W113 `DASHBOARD/` directory remains the read-only Work Dashboard projection.
 - **Controls:** code changes only on the implementation branch; PR/review to main; no direct product code commits to main; no use of the unrelated PL repository; no port-3000 runtime reconfiguration before listener and auth contracts are verified.
 - **Status:** SOURCE PATH / BRANCH DECLARED AND BRANCH CREATION VERIFIED; no product source files have yet been created; no build/test/runtime PASS claimed.
+
+
+## D-113-007 — Correct source baseline disposition pending PC reconciliation (2026-11-21)
+- **Decision maker:** Co / AI-07 under D-113-005; Vinh retains final authority.
+- **Correction:** D-113-006's declared path `work/113/ROOM-HOP-UNIVERSAL-DASHBOARD/05_BUILD/04_CODE/product/` and branch `work/113/room-hop-universal-dashboard-auto-e2e` are retained as an isolated W113 candidate/staging location, not certified as the final canonical product source.
+- **New evidence considered:** prior PC trace dated 2026-11-20 reported a root Vite app (`package.json`, `vite.config.js`, `index.html` → `/dashboard/main.tsx`, untracked `dashboard/room-hop/`), local main HEAD `05db862cd2ff01cd288cf64cf0be5a9aa05ee816` behind 728, and no listener on :3000 at the last probe. This is historical conversation evidence, not a fresh PC attestation in this session.
+- **Decision:** preserve the existing local working tree. No pull/reset/clean/checkout/overwrite. Do not create a second competing Dashboard app. Final canonical source path/branch remains pending exact PC inventory and hash/revision reconciliation.
+- **Runtime:** shared :3000 remains the target ingress; last historical probe found no listener. Current startup/route owner and auth boundary remain NOT VERIFIED. No runtime mutation.
+- **Status:** SOURCE RECONCILIATION REQUIRED; no product code created; no test/runtime PASS claimed.
