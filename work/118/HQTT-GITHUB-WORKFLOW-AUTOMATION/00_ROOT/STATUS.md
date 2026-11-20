@@ -188,3 +188,4 @@ The workflow_run listener requires default-branch presence for real runtime veri
 - **Xu Stage A:** PENDING. **Vinh Stage B:** PENDING.
 - **Runtime:** event-specific jobs remain SKIPPED on PR synchronize; no runtime E2E PASS claimed.
 - **Work state:** ACTIVE — BUILD / VERIFY — NOT RELEASED.
+\n\n## Documentation integrity and latest branch head — 2026-11-20\n\n- Escaped literal line-break sequences were normalized in README, STATUS, plan, implementation, test matrix, release gate, Xu checklist and journal; file readback confirms no literal `\\n` sequences remain in those Markdown documents.\n- Current branch compare: 218 commits ahead / 0 behind Main; PR #67 remains OPEN, mergeable and unmerged.\n- Latest contract evidence remains 52/52 PASS at Run #44758004387; latest head documentation-validation run is in progress and will be read back separately.\n- Runtime event E2E remains unverified; Xu Stage A and Vinh Stage B remain pending. ACTIVE — NOT RELEASED.\n
