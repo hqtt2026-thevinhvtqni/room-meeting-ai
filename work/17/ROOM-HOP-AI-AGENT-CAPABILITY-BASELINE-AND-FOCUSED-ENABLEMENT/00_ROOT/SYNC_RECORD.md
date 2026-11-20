@@ -651,7 +651,7 @@
 - PR #48 remains a separate unmerged candidate; do not treat as current main or production authority. Core owner still NOT IDENTIFIED in bounded trace.
 - Entry 067 recorded. No merge, runtime, credential, source or permission changes. GAP-01/GAP-11 remain OPEN; protected execution DENY / NOT RELEASED.
 
-## Sync Period 0055 — Core ownership correction and current-main authority wiring (2026-11-20T08:44:00+07:00)
+## Sync Period 0055 — Core ownership correction and current-main authority wiring (2026-11-20T08:06:28+07:00)
 
 - Governance corrected: Core is jointly built by Vinh and Xu; W37 is the Core investigation/evidence boundary, not external maintainer discovery. Unresolved facts concern runtime/source mapping and technical enforcement, not who built Core.
 - Current main `core_http_main.py` docstring says authority is mounted, but actual `build_app()` composes Meeting-only `create_http_app`; current-main `http_server.py` does not import or mount the authority routes. Source/docstring contradiction confirmed by exact file read.
@@ -659,10 +659,20 @@
 - PR #48 remains unmerged candidate, not current Core; production configuration/wiring/live probes remain pending per PR description.
 - Entry 068 recorded. GAP-01/GAP-11 OPEN/P0; E2/E3 and ACK-before-Host NOT PROVEN; protected execution DENY / NOT RELEASED.
 
-## Sync Period 0056 — PR #48 changed-file inventory and port risk (2026-11-20T08:55:00+07:00)
+## Sync Period 0056 — PR #48 changed-file inventory and port risk (2026-11-20T08:06:28+07:00)
 
 - PR #48 changes 88 paths across Core, root Execution Host, W12, W13, W1111 docs/evidence, CI/dependencies and desktop.ini; it is not a Core-only patch.
 - Selected patches add Core grant module/routes/mount and online Host validation, but depend on canonical W12/W13 components and tests. Blindly porting only Core files may break contracts; porting all risks duplicate/overwriting current-main sources.
 - Local JSONL hash-chain journal is not proof of shared Work Assignment transactional persistence or production Evidence Hub.
 - Minimal port matrix is a proposal only; no code change or branch operation. GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
 - Entry 069 recorded.
+
+## Sync Period 0057 — W12/W13 canonical Sandbox contract trace (2026-11-20T08:06:28+07:00)
+
+- Corrected the prior 0055–0056 timestamps to the observed local clock 08:06:28 +07:00; earlier future stamps were invalid.
+- W12 canonical resolver builds typed WorkContext from a Work binding JSON; W12 controller itself blocks test execution until an adapter runs the bound entrypoint. W12 RealExecutionHost provides process isolation/cleanup source logic.
+- W13 candidate bridge obtains Core pytest grant, Host validates online, binds Core Work paths/source SHA, maps context through W13 adapter to W12 RealExecutionHost, then records run/evidence to Core.
+- W13 adapter constructs W12 WorkBinding from grant-derived context; it does not invoke W12 CanonicalWorkAuthority.resolve(). Do not claim both are enforced in this path.
+- Source-level TOCTOU risk: source hash check precedes process launch; immutable snapshot or launch-time recheck not shown. No race tested.
+- Sandbox W12/W13 trees are not current GitHub main; integration test source is not live deployment/CI proof. No Assignment/dispatch/receipt/recipient ACK binding.
+- GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. Entry 070 recorded.
