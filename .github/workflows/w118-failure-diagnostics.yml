@@ -45,8 +45,8 @@ jobs:
         run: |
           set -euo pipefail
           gh label create w118-blocked --repo "$GITHUB_REPOSITORY" --color D93F0B --description "W118 CI failure requires an assigned human/AI owner" 2>/dev/null || true
-          gh issue list --repo "$GITHUB_REPOSITORY" --state open --label w118-blocked --limit 1000 --json number,body > /tmp/open-diagnostics.json
-          python scripts/w118/diagnostics.py --issues-json /tmp/open-diagnostics.json --workflow-id "$WF_ID" --sha "$SHA" --run-id "$RUN_ID" --attempt "$RUN_ATTEMPT" > /tmp/diagnostic-plan.json
+          gh issue list --repo "$GITHUB_REPOSITORY" --state all --label w118-blocked --limit 1000 --json number,body,state > /tmp/all-diagnostics.json
+          python scripts/w118/diagnostics.py --issues-json /tmp/all-diagnostics.json --workflow-id "$WF_ID" --sha "$SHA" --run-id "$RUN_ID" --attempt "$RUN_ATTEMPT" > /tmp/diagnostic-plan.json
           KEY=$(python -c 'import json; print(json.load(open("/tmp/diagnostic-plan.json"))["idempotency_key"])')
           UPDATE_MARKER=$(python -c 'import json; print(json.load(open("/tmp/diagnostic-plan.json"))["update_marker"])')
           EXISTING=$(python -c 'import json; print(json.load(open("/tmp/diagnostic-plan.json"))["existing_issue"])')
@@ -70,6 +70,10 @@ jobs:
             if gh api --paginate "repos/${GITHUB_REPOSITORY}/issues/${EXISTING}/comments?per_page=100" --jq '.[].body' | grep -Fq "$UPDATE_MARKER"; then
               echo "Diagnostic update already recorded for run ${RUN_ID} attempt ${RUN_ATTEMPT}." >> "$GITHUB_STEP_SUMMARY"
             else
+              STATE=$(gh issue view "$EXISTING" --repo "$GITHUB_REPOSITORY" --json state --jq .state)
+              if [ "$STATE" = "CLOSED" ]; then
+                gh issue reopen "$EXISTING" --repo "$GITHUB_REPOSITORY"
+              fi
               gh issue comment "$EXISTING" --repo "$GITHUB_REPOSITORY" --body-file /tmp/diagnostic.md
             fi
           else
