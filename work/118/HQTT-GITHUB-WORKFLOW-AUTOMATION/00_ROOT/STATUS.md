@@ -95,3 +95,12 @@
 - **PR checklist:** moved to separate `pull_request_target` workflow after ordinary pull_request token was confirmed read-only. The notifier does not checkout or execute PR code.
 - **PR #67:** OPEN / DRAFT / mergeable=true; 89 commits ahead / 0 behind main; 29 files changed at readback.
 - **Runtime:** event-specific jobs are still pending default-branch integration; no live handoff/ACK/diagnostics PASS is claimed.
+
+
+## Provenance and diagnostics contract verification — 2026-11-20
+
+- **Latest CI:** [Run #44749396083](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44749396083) SUCCESS; 45 tests passed; artifact ID `14635085374` exists and is unexpired at inspection.
+- **Run provenance:** artifact now separates PR source SHA from tested SHA and records branch/ref, actor, repository, workflow ref, run URL and PR base SHA.
+- **Failure diagnostics:** monitors W118 Auto E2E, W118 PR Review Checklist, legacy W118 pilot, W300 and Work 70; it does not listen to itself.
+- **PR #67:** OPEN / DRAFT / mergeable=true; 102 commits ahead / 0 behind main; 29 files changed at readback.
+- **Runtime:** issue/comment, ACK label and workflow_run diagnostic runtime remains pending approved default-branch integration.
