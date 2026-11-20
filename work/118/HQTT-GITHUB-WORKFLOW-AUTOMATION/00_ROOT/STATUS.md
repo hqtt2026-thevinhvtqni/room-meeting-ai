@@ -42,3 +42,12 @@
 - **Not yet verified:** real handoff/ACK runtime on the new workflow after default-branch deployment; failure diagnostics event end-to-end; Xu's GitHub reviewer mapping; Work 70 Evidence Register integration.
 - **Safety:** no executor login inferred; both owner accounts are acceptance-only; no auto-retry, auto-merge, secret, branch protection or Work 70 schema mutation.
 - **Next:** finish review of workflow edge cases, update canonical plan/journal, open a review PR, obtain Xu's independent review and Vinh's final acceptance before main integration.
+
+
+## Auto E2E v2 verification update — 2026-11-20
+
+- **Latest verified run:** [44746898664](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44746898664), commit `c49323b0241f0adc5b7827d58ce45916d628c832`.
+- **Result:** validate SUCCESS; 30 tests passed in 0.103s; evidence artifact ID `14633311975` exists and is not expired at inspection.
+- **Coverage added:** owner-gated controlled diagnostics test trigger, fail-closed authorization, branch-scoped fault injection, diagnostics idempotency planner and handoff re-application key.
+- **Known intermediate failure:** Run `44746809735` failed because the second owner login did not yet have the newly required `can_trigger_controlled_test` boolean. The role map was corrected in commit `811d5173543888bd274fc54b782a3731b251847e`; subsequent run `44746898664` passed. The failure is retained as build evidence, not hidden.
+- **Still pending:** actual event jobs and workflow_run diagnostics runtime require the reviewed workflow to be integrated into default branch. The controlled failure test is isolated to `work/118-auto-e2e-v2`.
