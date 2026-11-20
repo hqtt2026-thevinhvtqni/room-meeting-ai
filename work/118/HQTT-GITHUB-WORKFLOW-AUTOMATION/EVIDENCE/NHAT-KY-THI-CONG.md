@@ -27,3 +27,11 @@
 - **Kiểm thử CI / runtime:** NOT RUN — bước này thuần khảo sát, không triển khai gì.
 - **Trạng thái Work:** DISCOVER / DEFINE — IN PROGRESS (W118-01 DONE; kế hoạch KH-118-001 đã cập nhật).
 - **Bước tiếp theo:** W118-02 — soạn quy ước Issue/Branch/Commit/PR + templates (nháp); đồng thời soạn brief phản biện kiến trúc để phục vụ W118-08.
+
+## Entry 003 — W118-02 Quy ước + DC-118-003 brief phản biện (docs-only DRAFT)
+- **Thời gian:** 2026-11-20 (UTC+7)
+- **Phạm vi:** W118-02 soạn quy ước Issue/Branch/Commit/PR (QC-118-002, DRAFT) và DC-118-003 brief phản biện kiến trúc (6 AD) để chuẩn bị W118-08; đồng thời sửa lỗi văn bản phát hiện khi readback commit `229d2b0`.
+- **Bằng chứng:** 2 file mới trong 02_DEFINE; commits `229d2b0` và commit sửa lỗi của phiên này.
+- **Kiểm thử CI / runtime:** NOT RUN.
+- **Trạng thái:** W118-02 DRAFT (chờ phản biện — không coi là DONE vì chưa qua review); W118-08 IN PROGRESS (brief sẵn sàng giao Ka/Xu).
+- **Bước tiếp:** giao brief cho Ka review độc lập; Xu tổng hợp ý kiến; Vinh ACK để chuyển gate G1/G2 trước khi chốt kiến trúc.

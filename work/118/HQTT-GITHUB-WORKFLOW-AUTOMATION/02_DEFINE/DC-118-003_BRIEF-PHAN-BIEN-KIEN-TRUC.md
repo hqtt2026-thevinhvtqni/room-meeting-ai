@@ -8,12 +8,12 @@
 - **Đối tượng cần phản biện:** 6 quyết định kiến trúc (AD-1..AD-6) dưới đây.
 
 ## AD-1 — Dùng GitHub-native events trước, webhook sau
-- Phát biểu: Điều phối触摸 v1 hoàn toàn qua workflow GitHub events (`issues`,
+- Phát biểu: Điều phối trong v1 hoàn toàn qua workflow GitHub events (`issues`,
   `issue_comment`, `pull_request`, `push`) + labels một mục đích. Không có
   webhook server ROOM-HOP trong v1.
 - Lý do: giảm bề mặt xác thực HMAC/replay/idempotency cần trả lời trước khi có
   test thật; GitHub Actions sẵn có identity + secrets scoped.
-- Trade-off/Pconditional:ROOM-HOP không nghe event realtime, chỉ xem trung gian qua evidence
+- Trade-off: ROOM-HOP không nghe event realtime, chỉ xem trung gian qua evidence
   file. Khó mở rộng cross-repo sau này.
 
 ## AD-2 — Tái dùng schema evidence Work 70
@@ -23,8 +23,7 @@
   mapping run_id/SHA/exit_code nếu field chưa có — kiểm tra trước khi chốt.
 
 ## AD-3 — Failure path có capped retry
-- Phát biểu: khi CI FAIL, không auto-thử lại máy móc: cấu hình `failure-exit`
-  chặn ở cap 2 restarts, sau đó mark issue `w118-blocked` + assign actor; chống
+- Phát biểu: khi CI FAIL, không auto-thử lại máy móc: chặn ở cap tối đa 2 lần retry, sau đó mark issue `w118-blocked` + assign actor; chống
   vòng lặp bằng cờ "[skip-loop]" trong commit của bot + limit 2 mutation/run
   con.
 - Tiền tiêu: count-tracked bằng evidence row, không bằng memory bot.
@@ -37,7 +36,7 @@
 - Phát biểu: sau mỗi run, workflow commit evidence row (file JSON) vào nhánh
   evidence-``work/…`` bằng GITHUB_TOKEN có scope giới hạn; GITHUB_TOKEN push
   không trigger workflow (đã chạy lâu) do đó an toàn khỏi vòng lặp CI.
-- camera: chi tiết lần nói thức chắc chắn cần schedule KA.
+- Mở: chính sách lịch retry chi tiết (schedule) cần Ka thẩm định thêm.
 
 ## AD-6 — Conventions vẫn giả lập cho docs-only trên main
 - Phát biểu: hồ sơ W118 trước G3 vẫn commit thẳng main (docs-only); flow PR

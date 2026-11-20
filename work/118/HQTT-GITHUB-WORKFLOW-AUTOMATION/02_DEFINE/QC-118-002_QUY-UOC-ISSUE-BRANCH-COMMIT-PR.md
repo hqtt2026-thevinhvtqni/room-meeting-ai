@@ -2,7 +2,7 @@
 
 - **Work:** W118 — HQTT GitHub Workflow Automation
 - **Ngày:** 2026-11-20
-- **Trạng thái:** DRAFT (nháp phục vụ phản biện) — CHƯA áp dụng强制 scope toàn repo, chỉ ràng buộc các flow vận hành đầu tiên.
+- **Trạng thái:** DRAFT (nháp phục vụ phản biện) — CHƯA bắt buộc áp dụng trên toàn repo, chỉ ràng buộc các flow vận hành đầu tiên.
 
 ## 1. Quy ước Issue
 - Mỗi Work chính có ít nhất 1 Issue tracking (mẫu: #65 cho W118). Title bắt đầu bằng mã Work: `W118 — <mô tả ngắn>`.
@@ -14,8 +14,8 @@
 - Mọi issue event liên quan điều phối phải có comment bằng chứng do actor ghi (không phải bot tự suy).
 
 ## 2. Quy ước Branch
-- Nhánh làm việc theo Work: `work/<số>-<kebab-case-tên>` (đã là pattern đa số: 28, 32, 103...). Nhánh phụ trợ: `work/<số>/ Nhánh nhỏ kebab` chỉ dùng khi cần tách topic trong cùng Work (viết: `work/<số>/kebab-topic`).
-- Nhánh cấm pattern tự do không mang mã Work ad-hoc (exception: hạ tầng repo như `chore/*` vớiReviewer chỉ định).
+- Nhánh làm việc theo Work: `work/<số>-<kebab-case-tên>` (đã là pattern đa số: 28, 32, 103...). Nhánh phụ trợ: `work/<số>/kebab-topic` chỉ dùng khi cần tách topic trong cùng Work.
+- Nhánh cấm pattern tự do không mang mã Work ad-hoc (exception: hạ tầng repo như `chore/*` với reviewer được chỉ định).
 - Pilot W118 bắt buộc: branch gắn comment issue đầu tiên có "branch: <tên>" để đối soát.
 
 ## 3. Quy ước Commit
