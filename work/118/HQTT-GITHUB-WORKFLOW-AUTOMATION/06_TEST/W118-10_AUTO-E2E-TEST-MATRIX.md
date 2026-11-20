@@ -40,3 +40,13 @@ The final acceptance bundle must contain:
 - Diagnostics issue URL and duplicate-delivery proof.
 - Downloadable evidence artifact and its SHA.
 - Xu review and Vinh acceptance record.
+
+
+## CI evidence update — 2026-11-20
+
+- **Run:** [44746386416](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44746386416)
+- **Commit:** `326f4d1fc312d991b601075990a96dd7969fde11`
+- **Job:** `validate` — SUCCESS.
+- **Test output:** `Ran 26 tests in 0.071s`; `OK`.
+- **Artifact:** `w118-run-evidence-44746386416-1`, artifact ID `14632693408`, not expired at inspection.
+- **Scope:** unit/contract and YAML/event/permission contract tests. The event jobs were skipped because this was a push event; no real handoff, ACK or diagnostics event is claimed by this run.
