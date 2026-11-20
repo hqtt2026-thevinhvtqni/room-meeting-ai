@@ -1,3 +1,4 @@
+import copy
 import json
 import tempfile
 import unittest
@@ -17,8 +18,17 @@ class Work118AuthorizationTests(unittest.TestCase):
         cls.role_map = load_role_map(".github/w118/role-map.json")
 
     def test_owner_accounts_are_mapped_for_acceptance(self):
+        role_map = copy.deepcopy(self.role_map)
+        role_map["principals"]["different-principal"] = {
+            "principal": "coder",
+            "roles": ["coder"],
+            "ack_roles": [],
+            "can_accept": False,
+            "can_trigger_controlled_test": False,
+            "active": True,
+        }
         for login in ("hqtt2026-thevinhvtqni", "thevinhqtni-1911"):
-            allowed, reason, principal = authorize_acceptance(self.role_map, login, "reviewer-not-owner")
+            allowed, reason, principal = authorize_acceptance(role_map, login, "different-principal")
             self.assertTrue(allowed, reason)
             self.assertEqual(principal, "vinh")
 
@@ -35,7 +45,7 @@ class Work118AuthorizationTests(unittest.TestCase):
     def test_self_review_is_denied(self):
         allowed, reason, _ = authorize_acceptance(self.role_map, "hqtt2026-thevinhvtqni", "hqtt2026-thevinhvtqni")
         self.assertFalse(allowed)
-        self.assertIn("self-review", reason)
+        self.assertIn("same HQTT principal", reason)
 
     def test_inactive_actor_is_denied(self):
         data = json.loads(Path(".github/w118/role-map.json").read_text(encoding="utf-8"))
