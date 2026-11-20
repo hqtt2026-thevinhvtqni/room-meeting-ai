@@ -96,3 +96,10 @@ Principal-level self-review hardening is implemented and verified by [Run #44747
 ## Staged gate clarification — 2026-11-20
 
 To test the workflow_run listener on real GitHub events, the workflow must be present on the default branch. The gate is split: Xu design/security review → Vinh explicit non-release integration authorization → Ka runtime E2E → Xu runtime evidence review → Vinh final product acceptance → separate release decision. Merge alone does not set ACCEPTED/RELEASED. No integration is performed without the explicit Vinh authorization at Stage B.
+
+
+## Xu review readiness — 2026-11-20
+
+- Latest CI [Run #44749959595](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44749959595): SUCCESS; 45 tests passed; artifact ID `14635085964`.
+- PR #67 is 116 ahead / 0 behind main, OPEN / DRAFT / mergeable; 30 files changed.
+- Stage A (Xu independent design/security review) is ready. Stage B (Vinh non-release integration authorization) is not yet granted. Runtime tests remain pending integration; no final acceptance/release is claimed.
