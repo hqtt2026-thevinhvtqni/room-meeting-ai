@@ -77,3 +77,27 @@
 - **Kết luận:** PILOT RUNTIME VERIFIED (1/3 job có bằng chứng chạy thật: ack-verification). 2 job còn lại (handoff-brief, ci-failure-diagnostics) có cùng cơ chế trigger/steps, chờ sự kiện tự nhiên tiếp theo để có bằng chứng riêng; cùng runtime đã đạt ở mức nền tảng.
 - **Điểm đối soát:** run #1 FAILURE (YAML L55) được sửa ở 0143482 — run #2 chạy trên cấu trúc if-một-dòng, chứng minh parse OK.
 - **Trạng thái Work:** BUILD -> PILOT RUNTIME VERIFIED. Trình Xu nghiệm thu theo STATUS.md; sau khi Xu ACK thì gate G4/G5 coi như đạt ở mức pilot, work chuyển OPERATE-ready (docs-only).
+
+
+## Entry 009 — Nghiệm thu độc lập GitHub W118 (NOT ACCEPTED)
+- **Thời gian:** 2026-11-20 (UTC+7).
+- **Phạm vi:** Kiểm tra nghiệm thu hồ sơ W118 trên GitHub `main`: Issue #65, PR #66, workflow pilot, Actions runs, STATUS, kế hoạch và các thiết kế event/retry/gate.
+- **Phương pháp:** Đọc trực tiếp GitHub API; kiểm tra PR changed-files, Issue labels, metadata workflow run, nội dung STATUS.md, KH-118-001, TD-118-005/006/007 và nhật ký hiện hành.
+- **Bằng chứng:**
+  - Issue #65: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/issues/65 — Issue đang mở, nhãn hiện thấy là `enhancement`; chưa thấy bằng chứng nhãn `w118-handoff` được dùng để kiểm thử handoff.
+  - PR #66: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/66 — PR ở trạng thái Draft/chưa merge; thay đổi gồm workflow `w118-coordination-ci.yml`, templates và hồ sơ thiết kế/pilot. Không đồng nhất tên với workflow pilot đang được STATUS.md mô tả là `w118-workflow-automation.yml`; cần đối chiếu hai luồng và commit head trước khi chốt.
+  - Run #2: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44690614366 — workflow `W118 Workflow Automation Pilot`, event `issue_comment`, kết luận `success`, head SHA `0143482692afa7a0569218a8e656665e19e54ce8`. Nhật ký/STATUS ghi nhận bot đã đăng comment ACK recorded trên Issue #65. Đây là bằng chứng runtime thật cho job `ack-verification`.
+  - Run #1: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44690358863 — được hồ sơ hiện có ghi nhận thất bại do lỗi YAML; không dùng lần thất bại này làm bằng chứng kiểm thử job diagnostics.
+  - STATUS.md: `PILOT RUNTIME VERIFIED`, nhưng chính tài liệu giới hạn bằng chứng ở 1/3 job.
+  - KH-118-001: W118-02..08 vẫn DRAFT/IN PROGRESS; W118-09 có runtime evidence nhưng không thay thế review/acceptance.
+  - TD-118-005: thiết kế yêu cầu mapping role → GitHub login và xác minh actor; bằng chứng thực tế hiện mới cho thấy workflow ACK kiểm tra nội dung bắt đầu bằng `ACKED-`, chưa chứng minh mapping danh tính/role được áp dụng.
+  - TD-118-006: chưa có run kiểm thử FAIL thực tế chứng minh diagnostics issue được tạo/cập nhật đúng, chống trùng và giới hạn retry.
+  - TD-118-007: yêu cầu review độc lập và evidence VERIFIED; PR #66 vẫn Draft, chưa có bằng chứng merge/review đạt điều kiện.
+- **Kết quả nghiệm thu: NOT ACCEPTED — chưa đủ điều kiện nghiệm thu toàn Work.** Chỉ xác nhận có runtime success giới hạn cho `ack-verification`; không suy rộng thành PASS cho toàn bộ sản phẩm.
+- **Phân loại:**
+  - PASS có giới hạn: pilot `ack-verification` đã chạy thành công trên GitHub Actions.
+  - NOT VERIFIED: `handoff-brief`, `ci-failure-diagnostics`, kiểm thử failure/retry/idempotency, đồng bộ Evidence Register/Dashboard.
+  - BLOCKED: xác thực actor/role theo mapping; review độc lập và điều kiện nghiệm thu PR; đối chiếu workflow pilot trên main với workflow trong PR #66.
+- **Giới hạn thao tác:** Chỉ đọc/truy vết và ghi nhật ký; không sửa mã/workflow, không đổi labels/permissions, không merge PR, không bật auto-merge.
+- **Bước tiếp theo:** (1) đối chiếu hai workflow và xác định một luồng pilot canonical; (2) lập test cases riêng cho handoff, ACK identity/role và diagnostics FAIL; (3) bổ sung bằng chứng retry/idempotency; (4) yêu cầu review độc lập theo TD-118-007; (5) cập nhật Evidence Register/Dashboard sau khi schema được chốt. Mỗi test phải có run URL, commit SHA, job conclusion và output thực tế.
+- **Trạng thái:** WORK 118 = NOT ACCEPTED / PILOT PARTIALLY VERIFIED. Không đánh dấu G4/G5 PASS toàn Work.
