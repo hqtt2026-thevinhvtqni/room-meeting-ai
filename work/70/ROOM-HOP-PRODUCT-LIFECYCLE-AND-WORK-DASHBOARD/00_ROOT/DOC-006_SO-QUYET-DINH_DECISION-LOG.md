@@ -107,3 +107,17 @@ D70-021 supersedes only the top-level folder-name portion of D70-001 and D70-004
 4. Durable scheduling, queue ownership, outbox/idempotency và ranh giới retry giữa W52 task delivery với W16 workflow step vẫn là open contract items; chưa triển khai khi chưa phân công ownership và kiểm thử.
 5. DecisionRAG thuộc W103 vẫn EXPERIMENT / NOT APPROVED; cần blind labeled set, corpus/query snapshot/hash, false-abstention vs unsupported-answer/leak analysis, Precision@k, Recall@k, MRR, answerability/coverage, latency/cost và independent review.
 6. Không có gate PASS, nghiệm thu hoặc release nào được suy ra từ quyết định này.
+
+
+## 12. Quyết định D70-024 — Chuẩn hóa stable AI identity mapping toàn HQTT (2026-11-21)
+| Decision ID | Decision / Quyết định | Rationale / Lý do | Status / Trạng thái |
+|---|---|---|---|
+| D70-024 | Theo phê duyệt trực tiếp của Vinh: AI-06 = Go (CFO/Cost Analyst); AI-07 = Co (Coder Assistant); AI-08 = Qc (Qwen Coder). AI-05 = Qw (QE/QA) được giữ nguyên và phân biệt rõ Qween/Qw với Qwen/Qc. Mapping này là stable ID toàn HQTT, thay thế các mapping xung đột cũ trong DOC-010 v1.1 và DOC-025 v1.3; không xóa hoặc viết lại lịch sử. DOC-043 là canonical controlled role/permission register; các Work khác phải đồng bộ tham chiếu theo quyết định này. | Chấm dứt xung đột ID gây giao nhầm nhiệm vụ, nhầm người thực hiện/reviewer và nhầm quyền giữa Go, Co, Qc, Qw. Tách stable roster identity khỏi session authentication, GitHub login, runtime principal, capability và permission. | APPROVED BY VINH — ACTIVE; synchronization in progress |
+
+**Ranh giới và kiểm soát D70-024:**
+1. Quyết định chỉ chuẩn hóa stable AI ID và role mapping. Không xác thực bất kỳ provider session/GitHub login nào; không chứng minh hoạt động, dispatch, ACK hoặc capability runtime.
+2. Không cấp, mở rộng hoặc thay đổi quyền GitHub/repository/MCP/Sandbox. Deny-by-default tiếp tục có hiệu lực; mọi quyền cần xác minh principal và phê duyệt riêng.
+3. AI-05 Qw vẫn là QE/QA mặc định; AI-06 Go chỉ nhận QE/QA ở Work/WP cụ thể khi có assignment override do Vinh quyết định. Assignment override không thay đổi role mặc định.
+4. DOC-010 v1.1 và DOC-025 v1.3 giữ nguyên như bằng chứng lịch sử; mapping cũ được đánh dấu superseded về stable ID, không dùng để phân quyền hoặc dispatch.
+5. DOC-043 là canonical controlled register về role/permission. Work 17 capability matrix và các dashboard/gap records phải phản ánh mapping mới nhưng giữ nguyên các trạng thái identity/session NOT_VERIFIED, Dispatch/ACK NOT_PROVEN, capability NOT_VERIFIED.
+6. Mỗi Work đồng bộ phải ghi nguồn D70-024 và revision DOC-043; không sửa lịch sử nhật ký đã phát hành, chỉ thêm addendum mới.
