@@ -592,3 +592,15 @@
 - **Limitation:** diagnostics workflow_run event was not triggered; this validates unit/contract logic only.
 - **Trạng thái:** T10-25 PASS / 52 unit-contract tests PASS / runtime workflow_run E2E PENDING / ACTIVE — NOT RELEASED.
 - **Bước tiếp:** update Xu review package and continue runtime readiness review.
+
+## Entry 052 — Điều chỉnh phân công QE/QA Issue #44: AI-06 Go thay AI-05 Qw
+- **Người quyết định:** Vinh — Final Owner.
+- **Người ghi nhận:** Xu — W118 Coordinator.
+- **Thời gian:** 2026-11-21 (UTC+07:00).
+- **Phạm vi:** cập nhật đề xuất phân công tại Issue #44 và nội dung Entry 047; không thay đổi mã nguồn, quyền GitHub, trạng thái Issue hoặc PR.
+- **Quyết định:** theo chỉ thị của Vinh, **AI-06 Go thay AI-05 Qw** ở vị trí **QE/QA Owner** cho Issue #44. Phạm vi Go tiếp nhận gồm thiết kế/chạy positive-negative regression tests và tổng hợp bằng chứng kiểm thử/runtime cho luồng trusted session identity, JOIN authorization, Work 99 meeting binding và server-observed read receipt.
+- **Các vai trò còn lại giữ nguyên:** AI-03 Cla — Implementation Owner (chưa gán GitHub assignee vì login chưa được xác minh); AI-02 Ka — Security/Architecture Reviewer; Xu — Coordinator/Gate Owner; Manus AI-18 — đối tượng onboarding.
+- **Ranh giới:** đây là thay đổi phân công vai trò HQTT theo quyết định của Vinh; không đồng nghĩa Go đã có GitHub login/quyền repo hoặc đã thực hiện kiểm thử. Không tự gán username, không cấp quyền, không ghi nhận test PASS khi chưa có bằng chứng. Go cần xác nhận năng lực/phạm vi test và login hợp lệ trước khi được giao thao tác trực tiếp trên GitHub.
+- **Cập nhật Git:** sẽ sửa comment ownership proposal trên Issue #44 để ghi AI-06 Go thay AI-05 Qw; Entry 047 được giữ nguyên như lịch sử, Entry 052 là bản điều chỉnh có hiệu lực mới nhất.
+- **Trạng thái:** DECISION RECORDED / GitHub ownership comment update pending verification / Issue #44 vẫn OPEN.
+- **Bước tiếp:** xác minh Go có thể nhận nhiệm vụ QE/QA và GitHub identity phù hợp; sau đó mới cân nhắc gán quyền/assignee. Ka vẫn giữ vai trò review độc lập; không đóng Issue khi chưa đủ acceptance evidence.
