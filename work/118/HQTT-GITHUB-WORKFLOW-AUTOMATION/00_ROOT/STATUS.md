@@ -69,3 +69,12 @@
 - **Security fix:** reviewer and PR author are resolved to HQTT principals; different GitHub accounts mapped to the same principal cannot self-review. Unmapped PR authors fail closed.
 - **PR #67:** remains OPEN / DRAFT / mergeable; latest source changes are on `work/118-auto-e2e-v2`, still based on main with no behind commits.
 - **Runtime status:** no handoff, ACK or workflow_run diagnostics runtime PASS is claimed yet; these remain pending authorized integration.
+
+
+## Latest verification and review state — 2026-11-20
+
+- **Latest branch run:** [44747797589](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44747797589) SUCCESS; `validate` SUCCESS; 32 tests passed; artifact ID `14634046784` exists and was unexpired at inspection.
+- **Active PR:** [#67](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/67), OPEN / DRAFT / mergeable=true.
+- **Branch:** `work/118-auto-e2e-v2`, 65 commits ahead / 0 behind main at this readback.
+- **Security review:** same-principal multi-login self-review bypass closed and covered by tests. No executor or Xu identity is inferred.
+- **Acceptance:** Xu independent review and Vinh final acceptance remain pending. No merge/release has occurred.
