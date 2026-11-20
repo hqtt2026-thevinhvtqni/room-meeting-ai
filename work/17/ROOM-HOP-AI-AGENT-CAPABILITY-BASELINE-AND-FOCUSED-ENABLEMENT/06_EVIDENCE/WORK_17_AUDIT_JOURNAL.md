@@ -1053,3 +1053,12 @@
 - Runtime: npm test NOT RUN; browser E2E NOT RUN; independent QE NOT RUN. PC/VS Code remains required. No PASS claim.
 - Disposition: journal continuity recovery and static review DONE; DOC-DRIFT-01 OPEN; GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
 - Next: on PC/VS Code run npm test from 04_CODE/WORK17_DASHBOARD, then browser E2E and capture exact output. Correct DOC-DRIFT-01 after confirming the preferred stub wording; route any runtime failures into a separate triage list before repair.
+## Entry 060 — Confirmed dashboard documentation drift and PC test queue (2026-11-20T07:42:00+07:00)
+
+- Actor: Xu / AI-01. Scope: Work17 dashboard documentation-to-source reconciliation only; no code/runtime/dispatch/provider/permission/deployment change.
+- Exact source evidence: current-main mcp-bridge-stub.js blob 3d559160e3760ac45f206c3fa9eab6f0bdec103d explicitly returns source=mcp-stub, fresh=false, realMcp=false. The server's live acceptance requires source=mcp-live and fresh=true.
+- Confirmed DOC-DRIFT-01 spans two documents: README.md says the local stub is for the live path and that a healthy bridge will show MCP LIVE; BRIDGE_CONTRACT.md §5 says the stub returns source=mcp-live/fresh=true and is used to test the live path. Both statements contradict the current stub implementation and the integrity addendum in the same contract. Actual code behavior is correctly fail-closed; documentation is stale.
+- Disposition: documentation-only defect, not a runtime exploit or code defect. Leave correction queued; do not change the live acceptance rule to accommodate the stub.
+- PC/browser verification queue: (1) npm test; (2) launch stub and verify it returns mcp-stub/fresh=false/realMcp=false; (3) launch dashboard against stub and verify UI never displays MCP LIVE; (4) exercise reconnect/backoff and last-valid-data retention; (5) invalid/unreadable cache; (6) symlink escape and encoded traversal; (7) GET/HEAD behavior; (8) independent QE review.
+- Status: DOC-DRIFT-01 CONFIRMED / FIX NOT APPLIED; runtime checks NOT RUN. GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
+- Next: after PC evidence is captured, correct README and BRIDGE_CONTRACT §5 to describe stub-cache replay as non-live, then rerun the relevant regression and browser checks.
