@@ -54,7 +54,7 @@ Xu must record:
 - **Reviewer identity:** verified GitHub login and HQTT principal
 - **Date-time:** ISO 8601 with timezone
 
-A Xu PASS permits Vinh to perform final product acceptance; it does not itself set Work 118 to ACCEPTED or RELEASED.
+A Xu design/security PASS permits Vinh to consider a separate non-release integration authorization so runtime E2E can run on the default branch. After integration, Xu must review actual runtime evidence; Vinh then gives final product acceptance. Neither review nor integration alone sets Work 118 to ACCEPTED or RELEASED.
 
 
 ## Additional review checks — event evidence and PR notifier
@@ -67,3 +67,11 @@ A Xu PASS permits Vinh to perform final product acceptance; it does not itself s
 ## Runtime execution plan
 
 The post-merge execution sequence is defined in [RT-118-001 — Post-Merge Runtime E2E Runbook](../09_RUNTIME/RT-118-001_POST-MERGE-E2E-RUNBOOK.md). Xu should review the sequence and expected security outcomes before Vinh authorizes main integration. The runbook is PREPARED, not executed; no runtime PASS is implied.
+
+
+## Staged acceptance boundary
+
+- **Stage A:** Xu reviews design/security and records disposition on PR #67.
+- **Stage B:** Vinh may authorize a controlled, non-release main integration solely to execute runtime E2E. The merge does not mean accepted/released.
+- **Stage C/D:** Ka executes RT-118-001; Xu independently reviews actual event evidence.
+- **Stage E/F:** Vinh records final product acceptance and, separately, release authorization.
