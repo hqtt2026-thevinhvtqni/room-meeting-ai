@@ -31,7 +31,7 @@ Mỗi chuyển trạng thái phải có comment/evidence row có timestamp làm 
 - Failure diagnostics runs in a separate workflow, not in the orchestrator workflow. It listens to W118 Auto E2E Validation, the legacy W118 pilot during migration, W300 Dashboard CI and Work 70 Preview Host Tests. It does not listen to itself.
 - Diagnostic issue key: `workflow_id + head_sha`. Repeated runs for the same workflow and commit reuse one open `w118-blocked` issue.
 - Diagnostic update marker: `run_id + run_attempt`; repeated delivery of the same attempt is ignored, while a new attempt is recorded separately.
-- Handoff marker: issue number + GitHub label ID. ACK result marker: source comment ID. These markers prevent duplicate comments on event redelivery/re-run.
+- Handoff marker: issue number + GitHub label ID + issue.updated_at (distinguishes a later remove/re-apply cycle while deduplicating the same event delivery). ACK result marker: source comment ID. These markers prevent duplicate comments on event redelivery/re-run.
 - Concurrency groups serialize mutations for the same issue/event or workflow/commit key.
 - No automatic retry is implemented. Retry remains actor-approved, reasoned and bounded to two attempts under the existing policy.
 - Unit tests cover key stability, workflow/SHA separation, existing issue reuse, attempt-specific markers and invalid key rejection. Real workflow_run runtime remains pending deployment.
