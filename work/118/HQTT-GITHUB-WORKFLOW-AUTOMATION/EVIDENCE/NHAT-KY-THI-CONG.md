@@ -624,3 +624,42 @@
   - **W118 authorization:** Go chưa được thêm vào `role-map.json`; chính sách deny-by-default và nguyên tắc không dùng hai tài khoản của Vinh để đại diện Go được giữ nguyên.
 - **Kết luận:** **BLOCKED — IDENTITY / REPOSITORY ACCESS NOT VERIFIED.** Không tìm thấy bằng chứng đủ mạnh để gắn một GitHub login cụ thể với Go. Không suy đoán username, không cấp quyền, không gán Go làm GitHub assignee/reviewer và không cho Go ACK role qua W118 policy ở trạng thái hiện tại.
 - **Bước tiếp theo:** cần một bằng chứng trực tiếp từ phiên Go (ví dụ Go tự cung cấp GitHub profile/login trong đúng phiên làm việc và xác nhận liên kết với AI-06), sau đó Xu mới kiểm tra login đó có quyền gì trên repository. Chỉ sau khi mapping được chủ sở hữu xác nhận và quyền tối thiểu được duyệt mới đề xuất cập nhật role map; QE/QA không được cấp quyền independent reviewer.
+
+
+## Entry 054 — Đối soát bảng danh tính AI và khóa ranh giới vai trò
+- **Người thực hiện:** Xu — W118 Coordinator.
+- **Thời gian:** 2026-11-21 05:44 +07:00.
+- **Phạm vi:** READ / TRACE / ANALYZE; rà soát nguồn roster và vai trò để ngăn gán nhầm AI ID, vai trò mặc định, vai trò theo Work và quyền GitHub. Chỉ cập nhật nhật ký W118; không sửa roster gốc, role-map, permissions, Issue, PR hoặc workflow.
+- **Nguồn đã đối chiếu:**
+  1. Work 70 DOC-043, file 00_ROOT/DOC-043_MA-TRAN-VAI-TRO-VA-QUYEN-AI_AI-ROLE-PERMISSION-MATRIX.md, blob 883123766f8c5457e6f905ae15682d718aa9acfa, trạng thái ACTIVE / CONTROLLED REGISTER. DOC-043 xác định AI-01 Xu, AI-02 Ka, AI-03 Cla, AI-04 Kha, AI-05 Qw, AI-06 Go, AI-07 Co; Qc (Qwen Coder) được liệt kê riêng nhưng KHÔNG có numeric AI ID trong register này. DOC-043 cũng nêu roster chỉ khai báo vai trò, không chứng minh session, kết nối, quyền hay hoạt động.
+  2. Work 17 capability matrix, blob 435144f7d156a213a0bfadabb9e7b0fb09fb31b5, và Work 17 Journal Entry 047: DOC-010 v1.1 + DOC-025 legacy ghi AI-06=Qc, AI-07=Go, AI-08=Co; DOC-043 hiện hành ghi AI-06=Go, AI-07=Co, Qc không có ID. Work 17 xác nhận đây là xung đột stable ID thật; đề xuất AI-08=Qc chưa được phê duyệt và không được dùng cho authorization.
+  3. Work 17 capability matrix: AI-09 Vi, AI-10 An, AI-11 Mê, AI-12 La, AI-13 De, AI-14 Xuco; đây là roster khai báo của ma trận năng lực, không tự nâng thành bằng chứng phiên hoạt động hoặc quyền.
+  4. W118 Entry 052–053: Go được Vinh chỉ định thay Qw làm QE/QA Owner RIÊNG cho Issue #44; Entry 053 xác nhận GitHub login và quyền repo của Go chưa xác minh. Việc này không thay đổi vai trò mặc định CFO của AI-06 Go và không biến Go thành AI-05.
+- **Kết quả đối soát / cách dùng tạm thời an toàn:**
+  - AI-01 Xu — điều phối / CEO.
+  - AI-02 Ka — CSA / phản biện kiến trúc, bảo mật độc lập.
+  - AI-03 Cla — CTO / chủ trì triển khai kỹ thuật theo assignment.
+  - AI-04 Kha — chiến lược / kiến trúc sản phẩm.
+  - AI-05 Qw — QE/QA mặc định của HQTT; không đồng nhất Qw/Qween với Qc/Qwen.
+  - AI-06 Go — CFO / phân tích chi phí mặc định; tại W118 Issue #44 có assignment override do Vinh quyết định: QE/QA Owner theo phạm vi Issue #44. Go vẫn BLOCKED về thao tác GitHub trực tiếp cho tới khi xác minh identity/access.
+  - AI-07 Co — Coder Assistant.
+  - Qc — Qwen Coder; numeric AI ID CHƯA ĐƯỢC CHỐT. Không tự gán AI-08.
+  - AI-09 Vi — Coder / Implementation Engineer.
+  - AI-10 An — Tester / Test Engineer (roster khai báo).
+  - AI-11 Mê — CXO / Customer Experience; không suy diễn local placeholder là phiên Meta AI.
+  - AI-12 La — COO / PMO, Dola AI.
+  - AI-13 De — CRO / Evidence & Risk Control, DeepSeek.
+  - AI-14 Xuco Coder — phiên ChatGPT coder riêng; không nhập làm AI-01 Xu hoặc AI-07 Co.
+  - Vibe — hỗ trợ coding bên ngoài, không phải AI ID đánh số.
+  - Manus AI-18 — onboarding subject theo Issue #44; không phải Cla, không phải Go và không phải người thực hiện Issue #44.
+- **Quy tắc chống nhầm được áp dụng trong W118:**
+  1. Stable AI ID / tên thành viên / provider-product / model-session / GitHub login / runtime principal là các trường riêng; không suy ra trường này từ trường kia.
+  2. Role mặc định toàn HQTT và assignment role theo Work/WP là hai lớp riêng. Assignment override chỉ có hiệu lực đúng Work/WP, có người quyết định và phạm vi rõ; không sửa global roster.
+  3. Quyền GitHub không phát sinh từ AI ID hoặc role assignment; cần xác minh login, actor/session binding và quyền repo độc lập.
+  4. Người thực thi không tự làm reviewer độc lập cho deliverable của mình. QE/QA không được tự cấp quyền merge/release/accept.
+  5. Khi nguồn stable ID mâu thuẫn, giữ CONFLICT / UNASSIGNED; không tự động hóa authorization dựa trên ID tranh chấp.
+- **Kết luận:** Role mapping làm việc an toàn theo DOC-043 hiện hành cho AI-01…AI-07 và AI-09…AI-14; Qc chưa có numeric ID. Xung đột AI-06/07/08 giữa DOC-010/DOC-025 và DOC-043 chưa được đóng ở cấp toàn HQTT. W118-specific Go QE/QA assignment được giữ như quyết định theo Issue #44, không phải thay đổi global identity/role. Go GitHub identity/access vẫn BLOCKED.
+- **Giới hạn / quyết định còn thiếu:** Chưa có quyền để Xu tự sửa DOC-010, DOC-043 hoặc DOC-025. Cần Vinh phê duyệt mapping stable ID toàn cục (đặc biệt AI-08/Qc) và chỉ định chủ sở hữu roster thực hiện cập nhật canonical register + Decision Log. Cho tới lúc đó, không cập nhật role-map hoặc cấp quyền dựa trên mapping đang tranh chấp.
+- **Kiểm thử:** NOT RUN — đây là source reconciliation, không phải xác minh runtime/session.
+- **Trạng thái:** DONE — đối soát và ghi nhận quy tắc phân biệt vai trò; BLOCKED — global stable-ID conflict remains open; Go identity/access NOT VERIFIED.
+- **Bước tiếp theo:** Vinh quyết định stable ID cho Qc và phê duyệt bản roster canonical; sau đó đồng bộ một nguồn chuẩn và cập nhật alias/mapping ở các Work liên quan theo Decision Log, không ghi đè lịch sử.
