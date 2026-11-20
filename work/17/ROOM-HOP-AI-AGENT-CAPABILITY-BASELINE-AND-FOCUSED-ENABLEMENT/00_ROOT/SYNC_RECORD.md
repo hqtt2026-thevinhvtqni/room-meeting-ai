@@ -650,3 +650,11 @@
 - Candidate grant contract does not show W70 Assignment/dispatch/attempt/provider receipt/recipient ACK binding. It may address a portion of GAP-11, not GAP-01.
 - PR #48 remains a separate unmerged candidate; do not treat as current main or production authority. Core owner still NOT IDENTIFIED in bounded trace.
 - Entry 067 recorded. No merge, runtime, credential, source or permission changes. GAP-01/GAP-11 remain OPEN; protected execution DENY / NOT RELEASED.
+
+## Sync Period 0055 — Core ownership correction and current-main authority wiring (2026-11-20T08:44:00+07:00)
+
+- Governance corrected: Core is jointly built by Vinh and Xu; W37 is the Core investigation/evidence boundary, not external maintainer discovery. Unresolved facts concern runtime/source mapping and technical enforcement, not who built Core.
+- Current main `core_http_main.py` docstring says authority is mounted, but actual `build_app()` composes Meeting-only `create_http_app`; current-main `http_server.py` does not import or mount the authority routes. Source/docstring contradiction confirmed by exact file read.
+- Current-main AgentRegistry/PrincipalRegistry/IdentityResolution are identity directories and membership resolution; they do not establish authenticated principal proof or Work authorization.
+- PR #48 remains unmerged candidate, not current Core; production configuration/wiring/live probes remain pending per PR description.
+- Entry 068 recorded. GAP-01/GAP-11 OPEN/P0; E2/E3 and ACK-before-Host NOT PROVEN; protected execution DENY / NOT RELEASED.
