@@ -274,3 +274,17 @@
 - **Giới hạn bằng chứng:** run #44746898664 là push event; các job handoff/ACK/controlled dispatch bị SKIPPED theo điều kiện event. Chưa tuyên bố runtime event E2E hoặc diagnostics issue creation đã PASS.
 - **Trạng thái:** BUILD / VERIFY — PARTIAL PASS; ACTIVE — NOT RELEASED.
 - **Bước tiếp:** hoàn tất review workflow edge cases; mở PR từ branch sạch 0-behind main; Xu phản biện độc lập; Vinh nghiệm thu; chỉ sau khi chấp thuận mới tích hợp default branch và chạy controlled diagnostics E2E + handoff/ACK event tests.
+
+
+## Entry 025 — Draft PR #67 opened; Auto E2E v2 handed to Xu for independent review
+- **Người thực hiện:** Ka — Delegated Technical Lead / Work 118 Build Owner.
+- **Thời gian:** 2026-11-20 20:45 UTC+07:00 (PR creation and evidence readback window).
+- **Mã đầu việc:** W118-10 / W118-11 / W118-12.
+- **Hành động:** kiểm tra branch so với main; xác nhận branch `work/118-auto-e2e-v2` ahead 46 / behind 0; mở Draft PR #67 từ branch sạch, không sử dụng PR #66 làm base.
+- **PR:** https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/67 — OPEN / DRAFT / mergeable=true; head SHA `7235dcc0227ae481765e511fa04880b9e847a077`; 25 files changed.
+- **CI evidence:** Run `44747085807` SUCCESS; job `validate` SUCCESS; `Ran 30 tests in 0.072s`; `OK`. Artifact `w118-run-evidence-44747085807-1`, ID `14632579474`, exists and was unexpired at readback. Event-specific jobs were SKIPPED because the run was a push event; no runtime E2E is claimed.
+- **Review request:** Xu — independent architecture/security review pending. Vinh — final product acceptance pending. No reviewer login is guessed and no automatic reviewer mapping is added.
+- **PR #66:** remains OPEN/DRAFT and unmerged as historical pilot evidence; PR #67 is the active build/review path. No merge performed.
+- **Issue tracking:** posted build/PR/evidence update to Issue #65 and PR #67.
+- **Trạng thái:** BUILD IMPLEMENTED / CONTRACT TESTS PASS / RUNTIME E2E PENDING / ACTIVE — NOT RELEASED.
+- **Bước tiếp:** wait for Xu's independent review disposition; address findings on the feature branch; only after Xu review and Vinh final acceptance may main integration proceed, followed by controlled handoff/ACK and workflow_run diagnostics E2E.
