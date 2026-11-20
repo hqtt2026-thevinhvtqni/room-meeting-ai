@@ -588,3 +588,11 @@
 - Sync status: SOURCE SYNC VERIFIED for the listed paths at the recorded point in time. Runtime tests, browser E2E and independent QE remain NOT RUN; no runtime PASS is implied.
 - Guardrails: GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
 - Next: PC/VS Code executes `npm test` and browser E2E; journal actual output before any PASS claim.
+## Sync Period 0046 — Journal continuity recovery and dashboard static review (2026-11-20T07:39:00+07:00)
+
+- GitHub main journal was found to jump from Entry 041 to Entry 056; exact line-range reads confirmed Entries 042–055 were absent from that revision. Sandbox Work17 journal held Entries 001–055. Recovered the exact GitHub Entries 056–058 and restored the full chronological sequence before appending Entry 059.
+- Journal recovery published to GitHub main and written to Sandbox Work ID 17. This period is not considered parity-verified until the post-write read-back below.
+- Static dashboard review covered server.js, app.js, regression test, README and TODO at the exact blob SHAs recorded in Journal Entry 059. Confirmed documentation drift: README's stub walkthrough says MCP LIVE, while stub output is intentionally mcp-stub/fresh=false. DOC-DRIFT-01 OPEN; no code change in this period.
+- Test coverage gaps queued for PC/browser: actual stub behavior, client render/reconnect/backoff, invalid/unreadable cache, symlink containment and HEAD semantics. These are unverified cases, not confirmed defects.
+- Runtime tests, browser E2E and independent QE remain NOT RUN. GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
+- Next: PC/VS Code npm test, browser E2E, exact output capture; then triage and repair only evidenced failures.
