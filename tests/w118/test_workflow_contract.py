@@ -129,6 +129,13 @@ class Work118WorkflowContractTests(unittest.TestCase):
             self.assertTrue(any(step.get("uses") == "actions/upload-artifact@v4" for step in steps), job_name)
             self.assertTrue(any("event evidence" in step.get("name", "").lower() for step in steps), job_name)
 
+
+    def test_pr_checklist_workflow_is_covered_by_orchestrator_path_filters(self):
+        data = self.load_yaml(WORKFLOW)
+        path = ".github/workflows/w118-pr-review-checklist.yml"
+        self.assertIn(path, data["on"]["push"]["paths"])
+        self.assertIn(path, data["on"]["pull_request"]["paths"])
+
     def test_diagnostics_planner_is_part_of_runtime(self):
         self.assertTrue(Path("scripts/w118/diagnostics.py").is_file())
         self.assertTrue(Path("tests/w118/test_diagnostics.py").is_file())
