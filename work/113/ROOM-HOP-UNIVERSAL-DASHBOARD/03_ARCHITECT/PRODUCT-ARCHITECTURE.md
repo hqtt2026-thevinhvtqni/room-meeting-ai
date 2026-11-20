@@ -220,3 +220,24 @@ Open blockers before live integration: current :3000 listener and startup owners
 **Architecture status:** W113 DESIGN BASELINE RECORDED BY DELEGATED ARCHITECT; CONTRACTS/RUNTIME NOT VERIFIED; independent architecture/security review pending.  
 **Build status:** delegated Auto E2E mandate active; implementation may proceed only after exact source baseline and applicable owner/gate authorization are evidenced.  
 **Acceptance:** Vinh only.
+
+
+---
+
+## Addendum — correction: source and runtime baseline are not yet reconciled (2026-11-21)
+
+A prior PC trace retrieved from the conversation record on 2026-11-20 reported:
+- Root Vite entry: root `index.html` → `/dashboard/main.tsx`; root `package.json` and `vite.config.js`; strict port-3000 configuration.
+- The `dashboard/` tree (including `dashboard/room-hop/` and `dashboard/entry/`) and root `package.json` / `vite.config.js` were untracked in local Git status.
+- Local `main` was at `05db862cd2ff01cd288cf64cf0be5a9aa05ee816`, 728 commits behind; Node v24.18.0 and npm 11.16.0; `dashboard/package.json` and `dashboard/node_modules` absent.
+- Last port-3000 probe reported no listener; HTTP/TCP connection refused.
+- `start-dev.ps1` was reported to check `dashboard/package.json` although the Vite package is at repository root.
+- Two SessionLifecycleBridge implementations reportedly diverged (one restores latest draft on F5; the other returns null); mock and real RoomHOP bridges coexist; persistence was reported optimistic with errors logged but no demonstrated rollback/readback.
+
+**Evidence classification:** prior-session PC observations only; not freshly re-run or independently read from PC in this session. W1111 owns technical tracing and repair of runtime/source issues; W113 owns product architecture and product behavior.
+
+**Correction to Section J above:** the W113 source path and branch declared in D-113-006 are candidate/staging only until the local root Vite tree is read-only inventoried and exact hashes are mapped. Do not build a second app in parallel or overwrite the local tree. Final product source integration must preserve the existing Vite entry and route/bridge work after the source owner and branch strategy are verified.
+
+**Port 3000 disposition:** shared ingress remains a product requirement. The last reported PC probe found no active listener, so it is incorrect to describe port 3000 as currently serving the Dashboard. The process owner, startup command, route registry and server-side auth contract remain NOT VERIFIED. No process/listener change has been made.
+
+**Current architecture status:** logical design baseline recorded; source topology and runtime deployment not verified; PC source reconciliation and W1111 technical handoff are required before selecting the final implementation integration point.
