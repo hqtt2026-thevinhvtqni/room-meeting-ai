@@ -1337,3 +1337,29 @@
 - Disposition: GAP-01 OPEN/P0; GAP-11 OPEN/P0; WP70-CO historical ACK RECORDED, deliverable limited to preparatory spike; Assignment service/API/persistence/ACK verifier NOT VERIFIED; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED; Work17 READ/TRACE/ANALYZE ONLY.
 - Hành động: chỉ đọc và ghi nhận bằng chứng; không gửi task mới cho Co, không gọi provider, không chạy test, không sửa/migrate W70 source/register/journal, không promote prototype, không mở G4/BUILD.
 - Bước tiếp theo: xác minh DOC-054 và DOC-035/055 canonical authority/version history trong W70, phân loại chính xác WP70-CO deliverable đã giao so với deliverable đã có; sau đó xác định có cần một quyết định W70 để tiếp tục Lifecycle Engine hay chỉ reuse prototype. Assignment/ACK service vẫn phải dựa trên Core authority đã được xác minh, không tạo store song song.
+
+## Entry 076 — DOC-054 branch/main đối chiếu và xác nhận WP70-CO source không được promote lên GitHub (2026-11-20T19:20+07:00)
+
+- Người thực hiện: Xu / AI-01.
+- Phạm vi: Kiểm tra DOC-054 trên GitHub main, branch work/70/05-build và W70 Sandbox; xác định branch mapping, Build Register và code source của WP70-CO có được lưu trên branch hay đã được promote thành canonical product source.
+- Phương pháp: GitHub search_branches; fetch DOC-054 main/branch; Sandbox read_probe DOC-054; fetch branch Build Register/Build Mapping Register; exact fetch bốn source/test files theo cả main và branch. Không sửa/merge branch, không tạo commit, không chạy test.
+- DOC-054 identity/revision:
+  - GitHub main DOC-054 blob ccf3353edf846d560ff8239d671400cded099a98, 16,639 chars. Branch work/70/05-build DOC-054 blob f2b19142facc512a0e20f93b6d7933cdedcf8c90, 11,038 chars. Sandbox canonical DOC-054 cũng 11,038 chars và khớp byte-for-byte với branch.
+  - GitHub main bắt đầu bằng toàn bộ nội dung branch/Sandbox (main starts_with branch=true) rồi có addendum 2026-11-07 giao Vi hoàn thiện Dashboard. Không có bằng chứng trong phần mở rộng này rằng WP70-CO được mở lại hoặc có Assignment service mới.
+  - DOC-054 phần gốc xác định WP70-CO scope gồm assignment lifecycle/event-audit/idempotent commands; đồng thời quy định Sandbox/MCP 8030 không phải kênh dispatch và Xu chỉ xác nhận AI nhận việc khi có phản hồi/artefact định danh từ chính AI.
+  - Bảng evidence-based assignment status trong DOC-054 ghi Co: CODE/TEST ARTIFACTS RECEIVED; explicit ACK receipt not separately evidenced in DOC-054; execution là preparatory domain logic only, not integrated/not production, không có Core/API/persistence permission. DOC-035 Sandbox có ghi historical Co ACK ở 2026-10-31; hai loại bằng chứng được giữ riêng, không suy diễn thành provider-signed receipt.
+- Branch role and mapping:
+  - GitHub branch work/70/05-build tồn tại. Branch Build Mapping Register blob a9a14fb845328c3e1273769f502b3486465c3bbd, 5,069 chars, ghi rõ branch này là mapping/coordination branch, không phải canonical product source repository.
+  - Branch Build Mapping Register phân loại Build Register JSON/Markdown là LEGACY SOURCE / RECONCILIATION REQUIRED; proposed Work-level register/schema là NOT APPROVED; migration/promotion chưa thực hiện. Status 05_BUILD normalization ACTIVE / MIGRATION NOT VERIFIED.
+  - Branch Build Register JSON blob 1e449304834f91d86e91c2b68465a81475d65393 có sáu WP-70-01..06; WP-70-02 là Work Package registry. Không có WP riêng cho Assignment/Dispatch/ACK service hoặc WP70-CO.
+- WP70-CO source promotion check:
+  - GitHub fetch exact branch work/70/05-build trả NOT_FOUND cho `work/70/.../05_BUILD/04_CODE/lifecycle_domain.py`, `work_registry.py`, `test_lifecycle_domain.py`, `test_work_registry.py`, WP70_CO_SPIKE_README.md.
+  - GitHub fetch exact main cũng trả NOT_FOUND cho các path tương ứng dưới `work/70/.../05_BUILD/04_CODE` (đã ghi Entry 073–074).
+  - Vì vậy code/test prototype hiện chỉ được đọc trong W70 Sandbox; không có trong branch coordination được DOC-054 dùng, cũng không có trong GitHub main canonical Work tree. Không có source commit/blob SHA GitHub để gắn vào deliverable WP70-CO.
+- Reconciliation:
+  - WP70-CO có historical ACK trong W70 DOC-035; DOC-054 ghi nhận code/test artifacts đã nhận ở mức deliverable, nhưng giới hạn rõ là preparatory, chưa tích hợp/production và không có quyền Core/API/persistence.
+  - Branch work/70/05-build là coordination/mapping, không phải canonical product source. Việc branch có DOC-054/Build Register không làm Sandbox code tự động trở thành source đã được GitHub hóa hoặc production.
+  - Không có cơ sở kết luận Co đã hoàn thành toàn bộ scope assignment lifecycle/event/audit/idempotency. Không có cơ sở mở lại assignment hoặc giao Co build tiếp; cần W70 authority xác định disposition và G4/Work Entry trước.
+- Disposition: WP70-CO historical ACK RECORDED; artifact receipt recorded in DOC-054; complete scope NOT DELIVERED/NOT VERIFIED; code remains Sandbox-only preparatory prototype; no GitHub source promotion; GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
+- Hành động: READ/TRACE only. Không push/merge/copy code, không tạo branch mới, không sửa DOC-054/Build Register, không mở G4/BUILD, không chạy test/Host/provider.
+- Bước tiếp theo: tiếp tục đối chiếu DOC-055/DOC-035 latest Sandbox versus GitHub versions để xác định authoritative journal/register version and whether WP70-CO has an explicit superseding/closure decision. If none, record as historical partial deliverable; do not treat as active assignment or reuse as live authority.
