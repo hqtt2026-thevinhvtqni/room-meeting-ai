@@ -27,10 +27,12 @@ def load_role_map(path: str | Path) -> dict[str, Any]:
     for login, entry in principals.items():
         if not isinstance(login, str) or not login or not isinstance(entry, dict):
             raise ValueError("invalid principal entry")
-        if not isinstance(entry.get("roles", []), list):
-            raise ValueError(f"{login}: roles must be a list")
-        if not isinstance(entry.get("ack_roles", []), list):
-            raise ValueError(f"{login}: ack_roles must be a list")
+        if not isinstance(entry.get("principal"), str) or not entry.get("principal"):
+            raise ValueError(f"{login}: principal must be a non-empty string")
+        if not isinstance(entry.get("roles", []), list) or not all(isinstance(x, str) and x for x in entry.get("roles", [])):
+            raise ValueError(f"{login}: roles must be a list of non-empty strings")
+        if not isinstance(entry.get("ack_roles", []), list) or not all(isinstance(x, str) and x for x in entry.get("ack_roles", [])):
+            raise ValueError(f"{login}: ack_roles must be a list of non-empty strings")
         if not isinstance(entry.get("active"), bool):
             raise ValueError(f"{login}: active must be boolean")
         if not isinstance(entry.get("can_accept"), bool):
@@ -59,12 +61,16 @@ def authorize_ack(role_map: dict[str, Any], login: str, role: str) -> tuple[bool
 
 
 def authorize_acceptance(role_map: dict[str, Any], login: str, pull_request_author: str) -> tuple[bool, str, str | None]:
-    if login == pull_request_author:
-        return False, "self-review is not an independent acceptance", None
-    entry = role_map.get("principals", {}).get(login)
+    principals = role_map.get("principals", {})
+    entry = principals.get(login)
     if not entry or not entry.get("active", False) or not entry.get("can_accept", False):
         return False, "actor is not mapped as an active acceptance authority", None
-    return True, "authorized acceptance reviewer", entry.get("principal")
+    author_entry = principals.get(pull_request_author)
+    if not author_entry or not author_entry.get("active", False):
+        return False, "PR author principal is not mapped; reviewer independence cannot be verified", None
+    if entry.get("principal") == author_entry.get("principal"):
+        return False, "reviewer and PR author resolve to the same HQTT principal", None
+    return True, "authorized independent acceptance reviewer", entry.get("principal")
 
 
 def authorize_controlled_test(role_map: dict[str, Any], login: str) -> tuple[bool, str]:
