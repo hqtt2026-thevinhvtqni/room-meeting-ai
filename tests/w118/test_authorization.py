@@ -17,7 +17,7 @@ class Work118AuthorizationTests(unittest.TestCase):
     def setUpClass(cls):
         cls.role_map = load_role_map(".github/w118/role-map.json")
 
-    def test_owner_accounts_are_mapped_for_acceptance(self):
+    def test_owner_accounts_are_final_acceptance_only(self):
         role_map = copy.deepcopy(self.role_map)
         role_map["principals"]["different-principal"] = {
             "principal": "coder",
@@ -144,6 +144,15 @@ class Work118AuthorizationTests(unittest.TestCase):
             path = Path(tmp) / "roles.json"
             path.write_text(json.dumps(data), encoding="utf-8")
             with self.assertRaises(ValueError):
+                load_role_map(path)
+
+    def test_role_map_rejects_missing_independent_review_permission(self):
+        data = json.loads(Path(".github/w118/role-map.json").read_text(encoding="utf-8"))
+        del data["principals"]["hqtt2026-thevinhvtqni"]["can_independently_review"]
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "roles.json"
+            path.write_text(json.dumps(data), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "can_independently_review"):
                 load_role_map(path)
 
 
