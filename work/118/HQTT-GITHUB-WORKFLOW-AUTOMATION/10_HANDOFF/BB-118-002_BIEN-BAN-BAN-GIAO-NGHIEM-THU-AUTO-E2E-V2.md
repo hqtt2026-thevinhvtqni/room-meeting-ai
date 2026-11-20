@@ -116,3 +116,18 @@ Không thực hiện rebase, force-push, merge hoặc kéo toàn bộ 68 commit 
 - **Action:** Đối soát PR, branch divergence, CI jobs, test log, artifact, formal review records và governance D70-026; lập hồ sơ bàn giao có thứ tự gate.
 - **Result:** 52 contract/unit tests PASS; artifact còn hiệu lực; event-specific jobs SKIPPED; PR OPEN / UNMERGED; Xu review PENDING; Vinh acceptance PENDING; runtime E2E NOT VERIFIED.
 - **Next owner:** Xu — independent review; sau đó Vinh — final product acceptance / controlled integration decision.
+
+
+## X. Post-handoff readback — 2026-11-21
+
+Sau khi ghi BB-118-002, Ka đã exact-fetch lại hồ sơ, checklist, runbook, STATUS và Journal trên branch; các file đọc lại đúng nội dung đã ghi.
+
+- **Current feature HEAD:** `cb695fc9ac1ded9740256284e0699808e70bef77`.
+- **Current Main tip:** `6ec0e96695a92f997534fe5c792dd49c80a94cb8`.
+- **Merge base:** `cf2537e07bfd71d5823bd98f8673b3ab5644fcdc`.
+- **Current compare:** 239 commits ahead / 74 commits behind — DIVERGED. Main advanced during the handoff; do not treat the earlier 234/68 snapshot as current.
+- **Post-documentation CI:** [Run #44837128251](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44837128251), tested head `cb695fc9ac1ded9740256284e0699808e70bef77`; validate SUCCESS; **52 tests PASS / 0.278s**.
+- **Artifact:** `w118-run-evidence-44837128251-1`, ID `14678787462`, SHA-256 `68440f5411665e91a4623d4c5dbff3126ed9b6f1ebb92e499002c4b57bac9c06`, expires 2026-12-20T23:29:29Z; present and unexpired at readback.
+- **Event-specific jobs:** handoff, ACK, acceptance-review, controlled-failure and controlled-failure-dispatch SKIPPED. Runtime E2E remains NOT VERIFIED.
+- **PR:** #67 OPEN / READY FOR REVIEW / unmerged / unreleased. Formal review submissions and review threads remain empty.
+- **Disposition:** BB-118-002 is handed to Xu for Stage A independent review. Vinh's final product acceptance and any non-release integration authorization remain pending.
