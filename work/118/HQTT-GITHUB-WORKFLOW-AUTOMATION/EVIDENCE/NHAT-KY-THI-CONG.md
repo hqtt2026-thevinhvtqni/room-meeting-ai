@@ -260,3 +260,17 @@
 - **No mutation to main:** no main push, no merge, no secret/branch-protection change, no Work 70 schema change. All implementation changes are isolated to the feature branch.
 - **Trạng thái:** BUILD IN PROGRESS / PARTIAL PASS. Work 118 remains ACTIVE — NOT RELEASED.
 - **Bước tiếp:** finish edge-case review; verify latest CI after documentation amendments; open a review PR; request Xu's independent review and Vinh's final acceptance; after approved integration, execute real GitHub event E2E and controlled failure diagnostics test.
+
+
+## Entry 024 — Fail-closed test expansion, controlled diagnostics harness and 30-test CI
+- **Người thực hiện:** Ka — Delegated Technical Lead / Work 118 Build Owner.
+- **Thời gian:** 2026-11-20 20:44 UTC+07:00 (GitHub Actions evidence window).
+- **Mã đầu việc:** W118-10 — Auto E2E v2.
+- **Hành động:** bổ sung quyền `can_trigger_controlled_test` tách biệt với quyền ACK và quyền nghiệm thu; tạo CLI kiểm tra người kích hoạt fault-injection; thêm job chỉ nhận comment chính xác `W118-TEST-DIAGNOSTICS` trên Issue test có title prefix `[W118 E2E TEST]` và label `w118-handoff`; chỉ dispatch controlled failure trên branch `work/118-auto-e2e-v2`. Không cho phép chạy fault injection trên main.
+- **Idempotency refinement:** handoff marker được nâng từ issue + label ID lên issue + label ID + `issue.updated_at`, để phân biệt lần gỡ/gắn lại label hợp lệ mà vẫn deduplicate cùng event.
+- **Kiểm thử:** mở rộng test suite lên 30 tests, gồm role authorization, owner-only controlled-test permission, unauthorized denial, diagnostics key/retry marker, event scoping, job permissions và branch-scoped failure injection.
+- **Bằng chứng CI:** Run `44746898664` — SUCCESS; job `validate` SUCCESS; log `Ran 30 tests in 0.103s`; `OK`. URL: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44746898664. Artifact `w118-run-evidence-44746898664-1`, ID `14633311975`, tồn tại và chưa hết hạn tại thời điểm đọc.
+- **Failure được ghi nhận:** Run `44746809735` FAIL do role map thiếu trường `can_trigger_controlled_test` cho account thứ hai. Root cause đã xác định; map được sửa ở commit `811d5173543888bd274fc54b782a3731b251847e`; run sau đó `44746898664` PASS. Không xóa hoặc che giấu lần FAIL này.
+- **Giới hạn bằng chứng:** run #44746898664 là push event; các job handoff/ACK/controlled dispatch bị SKIPPED theo điều kiện event. Chưa tuyên bố runtime event E2E hoặc diagnostics issue creation đã PASS.
+- **Trạng thái:** BUILD / VERIFY — PARTIAL PASS; ACTIVE — NOT RELEASED.
+- **Bước tiếp:** hoàn tất review workflow edge cases; mở PR từ branch sạch 0-behind main; Xu phản biện độc lập; Vinh nghiệm thu; chỉ sau khi chấp thuận mới tích hợp default branch và chạy controlled diagnostics E2E + handoff/ACK event tests.
