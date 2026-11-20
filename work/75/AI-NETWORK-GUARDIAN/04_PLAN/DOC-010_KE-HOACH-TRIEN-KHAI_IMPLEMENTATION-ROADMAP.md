@@ -4,10 +4,10 @@ Status: ACTIVE / DESIGN BASELINE. Work is not released.
 
 | WP | Work package | Owner proposal | Reviewer | Status |
 |---|---|---|---|---|
-| WP75-01 | Work progress dashboard and product baseline | Xu / AI-01 | Qw / AI-05 | ACTIVE |
+| WP75-01 | Work progress dashboard and product baseline | Xu / AI-01 | Go / AI-06 | ACTIVE |
 | WP75-02 | Router and office LAN discovery | Xu + Vinh | Ka / AI-02 | BLOCKED — router/topology inputs missing |
 | WP75-03 | Read-only collector and router adapter | Cla / AI-03 | Ka / AI-02 | PLANNED |
-| WP75-04 | Deterministic network conflict detection | Vi (capability to verify) | Qw / AI-05 | PLANNED |
+| WP75-04 | Deterministic network conflict detection | Vi (capability to verify) | Go / AI-06 | PLANNED |
 | WP75-05 | Evidence-grounded local AI diagnosis | Xu + local AI engineer TBD | Ka / AI-02 | PLANNED |
 | WP75-06 | Mobile/PC integration, security, QA and release | Qw + An | Vinh | PLANNED |
 
