@@ -52,6 +52,13 @@ class Work118WorkflowContractTests(unittest.TestCase):
         self.assertEqual(checkout["with"]["ref"], "${{ github.event.repository.default_branch }}")
         self.assertEqual(checkout["with"]["persist-credentials"], "false")
 
+    def test_ack_verification_is_scoped_to_w118_handoff_issues(self):
+        data = self.load_yaml(WORKFLOW)
+        condition = data["jobs"]["ack-verification"]["if"]
+        self.assertIn("w118-handoff", condition)
+        self.assertIn("github.event.issue.labels.*.name", condition)
+        self.assertIn("!github.event.issue.pull_request", condition)
+
     def test_review_job_does_not_merge_or_release(self):
         data = self.load_yaml(WORKFLOW)
         self.assertIn("pull_request_review", data["on"])
