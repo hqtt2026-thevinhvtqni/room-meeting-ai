@@ -78,3 +78,11 @@
 - **Branch:** `work/118-auto-e2e-v2`, 65 commits ahead / 0 behind main at this readback.
 - **Security review:** same-principal multi-login self-review bypass closed and covered by tests. No executor or Xu identity is inferred.
 - **Acceptance:** Xu independent review and Vinh final acceptance remain pending. No merge/release has occurred.
+
+
+## Xu independent review package — 2026-11-20
+
+- **Review checklist:** [XR-118-001](../08_REVIEW/XR-118-001_XU-INDEPENDENT-REVIEW-CHECKLIST.md), priority P0, 12 ordered review gates.
+- **Latest completed CI at package creation:** [Run #44748049548](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44748049548), SUCCESS; 36 tests passed; artifact ID `14633817327`.
+- **PR #67:** OPEN / DRAFT / mergeable; no merge. Xu review pending; Vinh final acceptance pending.
+- **Runtime blockers:** executor identity mapping, Xu identity mapping, actual GitHub event E2E and Work 70 schema approval.
