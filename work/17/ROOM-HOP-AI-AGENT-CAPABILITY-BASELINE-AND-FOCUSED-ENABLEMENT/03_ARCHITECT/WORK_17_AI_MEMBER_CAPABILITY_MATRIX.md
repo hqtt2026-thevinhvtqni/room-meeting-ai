@@ -48,3 +48,37 @@
 - DOC-010 and DOC-025 contain no verified provider usage ledger; all token/cost fields remain NOT_AVAILABLE. No zero or estimate is substituted.
 - The local `agents/me_agent.py` source is a rule-based placeholder; it is not evidence that external AI-11 Mê / Meta AI has connected or participated.
 - No identity IDs, permissions, provider sessions or token records were changed by this reconciliation.
+
+
+## W300 demand-to-member capability mapping — proposal only (2026-11-20)
+
+This section links W300 image/photo demand to existing roster roles for focused assessment. It does not change canonical identity/session, dispatch/ACK, permission, runtime or token status. All those fields retain existing NOT_VERIFIED / NOT_PROVEN / UNASSESSED values until independent evidence is recorded.
+
+| Member | Candidate capability area to assess | Proposed evidence required | Current verdict |
+|---|---|---|---|
+| Xu / AI-01 | Coordination, traceability, evidence reconciliation | Reproducible plan, source links, journal, decision and handoff trace | NOT_ASSESSED |
+| Ka / AI-02 | Architecture, privacy, security, trust boundaries | Independent threat/data-flow review, permission and failure-mode findings | NOT_ASSESSED |
+| Cla / AI-03 | Image-processing design, API/provider contracts, technical debugging | Exact schema/source review, bounded tests when authorized, error-path analysis | NOT_ASSESSED |
+| Kha / AI-04 | Model/provider research and product trade-offs | Official model/version/pricing/eligibility evidence, source date and unknowns register | NOT_ASSESSED |
+| Qw / AI-05 | Independent image QA and acceptance design | Rubric, hard-fail taxonomy, repeatability/negative-test plan and independent results | NOT_ASSESSED |
+| Go / AI-06 | Cost, quota and budget safety | Pricing arithmetic separated from measured usage; preflight and budget-control review | NOT_ASSESSED |
+| Nu / Manus | Independent source research and candidate workflow execution | Identity/session proof, exact source/version, reproducible evidence and permission boundary | NOT_VERIFIED; runtime capability not inferred |
+| Vi / AI-09 | Implementation candidate for approved image processing/adapter tasks | Task-specific repo/path/branch grant, patch, tests and review evidence | NOT_ASSESSED; role is not availability proof |
+| An / AI-10 | Test execution candidate | Exact test environment, identity, commands, results and artifact hashes | NOT_ASSESSED; independent status is task-specific |
+| Qc / Qwen Coder | UI/backend implementation candidate if explicitly assigned | Resolve roster-ID conflict first; task-specific grant, patch, CI and review evidence | ID/identity conflict OPEN; no authorization inferred |
+
+### W300 capability demand taxonomy for G2 evidence planning
+1. Safe local image processing and bounded decoding.
+2. Provider/model research and exact compatibility/pricing verification.
+3. Image generation vs reference-conditioned editing vs deterministic transformations.
+4. Image output QA, integrity, dimensions and content acceptance.
+5. Cost/quota gates, persistent circuit breaker and safe timeout handling.
+6. Image privacy/security, rights/consent, metadata and deletion.
+7. Versioned artifact provenance, storage-neutral URI and SHA-256 integrity.
+8. Evidence-first multi-agent workflow and honest handoff/ACK semantics.
+
+### Controls
+- This is demand mapping, not evidence of capability. No row becomes E2/E3/E4 from this proposal.
+- Do not alter canonical roster identity, numeric IDs, provider/session identity, permissions or token ledger; existing roster conflicts remain unresolved.
+- W21 supplies Skill research/specification; W17 retains canonical member-capability verdicts; W300 retains product acceptance and build authority.
+- Independent review and Vinh decision are required before any canonical matrix promotion or implementation assignment.
