@@ -122,3 +122,20 @@ READ: liệt kê Work 21; đọc manifest, transcript và metadata mẫu. BUILD:
 - Boundary: Research/governance records only. No package install, script execution, MCP/plugin activation, runtime/config change, main write, merge, product implementation or acceptance claim.
 - Status: IN PROGRESS until all intended files are read back and the PR is created.
 - Next: exact GitHub readback; update this journal with per-file commits/blob SHAs and PR details; compare branch tree to declared sync scope.
+
+
+### GitHub exact readback — 2026-11-20
+- Branch: `work/21-ai-skills`; base main SHA `70ae3fb762bd4719facbf9448919aa2ab9516429`.
+- Exact UTF-8 content comparison: 7/7 Sandbox records equal GitHub branch records.
+- Paths and GitHub blob SHAs:
+  - `work/21/README.md` — `453e732651f88c14291b33a1d23eb448cb1cec6a`
+  - `work/21/07_RESEARCH_BACKLOG.md` — `10e197ce9c44a18bab3b1926a26cd51dd5d205f1`
+  - `work/21/09_AI_TEMPLATES_PHAN_DONG_GIANG_RESEARCH.md` — `732f6c246eca57db17d8146e8add54f384955991`
+  - `work/21/AI-SKILLS/00_ROOT/WORK_MANIFEST.md` — `1d9fe285402fb5cfe6f85c62070f58f73a9f6550`
+  - `work/21/AI-SKILLS/00_ROOT/DOCUMENT_REGISTER.md` — `ded95adcf93c42e78475252e32ca0b1c9c7f13c0`
+  - `work/21/BIEN_BAN_W21.md` — `9d435d4ba2e176ecae2d1d6e7e3c50eb18d6dad4`
+  - `work/21/NHAT_KY_THI_CONG_W21.md` — `08368fec53d71f3ce015848eab6819a0ee7be4b2`
+- Result: PASS — exact content equality for these 7 paths on the feature branch.
+- Limitation: This is PARTIAL synchronization of scoped records. Remaining Work 21 files/folders are not yet inventoried or synchronized; no full-tree parity claim.
+- Main unchanged; no merge; no installation, runtime, test, QE, acceptance or release operation.
+- Next: update register/journal with readback result, open draft PR, inspect PR metadata and final branch state.
