@@ -9,8 +9,8 @@
 
 ## 1. Preconditions
 
-1. Xu has completed independent review of Draft PR #67 and recorded disposition.
-2. Vinh has explicitly accepted the implementation and authorized main integration.
+1. Xu has completed independent design/security review of PR #67 and recorded disposition.
+2. Vinh has explicitly authorized a controlled, non-release main integration for runtime verification only. Final product acceptance remains pending until after runtime evidence review.
 3. PR #67 is merged by the authorized process; no direct push or force-push to main.
 4. Default branch contains the orchestrator, diagnostics listener, PR checklist notifier, role map and event evidence helper.
 5. The existing `w118-handoff` label is present. The current Work 118 Issue #65 has this label.
@@ -54,4 +54,4 @@ After the runtime tests:
 
 ## 5. Acceptance exit
 
-Runtime E2E is not complete until tests 01–03 and 05–10 have actual GitHub event evidence. Test 04 remains a separately tracked blocker until a real executor identity is verified. Xu records the independent disposition; Vinh records final product acceptance. Only then may the Work move from ACTIVE — NOT RELEASED to ACCEPTED / RELEASED under the authorized release process.
+Runtime E2E is not complete until tests 01–03 and 05–10 have actual GitHub event evidence. Test 04 remains a separately tracked blocker until a real executor identity is verified. Xu records independent design/security review before integration and independently reviews runtime evidence after tests. Vinh records final product acceptance after runtime review and makes a separate release decision. Main integration alone does not change ACTIVE — NOT RELEASED.
