@@ -68,3 +68,10 @@ Principal-level self-review hardening is implemented and verified by [Run #44747
 - PR #67 is OPEN / DRAFT / mergeable=true; branch `work/118-auto-e2e-v2` is 65 ahead / 0 behind main.
 - Same-principal cross-account self-review denial is implemented and tested.
 - Xu's independent review and Vinh's final acceptance are still pending. Real issue/comment and diagnostics runtime tests remain after approved default-branch integration.
+
+
+## Xu review package update — 2026-11-20
+
+- Added P0 review checklist `XR-118-001` with 12 ordered gates covering design, identity, ACK, self-review, idempotency, failure/retry, controlled fault injection, least privilege, evidence, cross-Work boundary, runtime E2E and release.
+- Latest completed CI [Run #44748049548](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44748049548): SUCCESS, 36 tests passed; artifact ID `14633817327`.
+- PR #67 remains DRAFT for Xu independent review. Vinh final acceptance and main integration remain pending.
