@@ -25,8 +25,8 @@
 | 02 | Handoff event | Create `[W118 E2E TEST] handoff` Issue and apply `w118-handoff` | One handoff comment; `w118-handoff-evidence` artifact | PASS/BLOCKED |
 | 03 | Owner cannot execute | Vinh comments `ACKED-ka <issue-number>` | `ACK UNVERIFIED`; no `w118-acked` label; ACK_DENIED artifact | PASS/BLOCKED |
 | 04 | Executor ACK positive | Only after a real executor login is verified and mapped, that actor comments `ACKED-<mapped-role> <issue-number>` | `w118-acked` label; ACK_VERIFIED comment; ACK_AUTHORIZED artifact | BLOCKED until identity verified |
-| 05 | Controlled diagnostics dispatch | Vinh comments exactly `W118-TEST-DIAGNOSTICS` on the dedicated test Issue with `w118-handoff` label | Owner authorization passes; workflow_dispatch starts only on `work/118-auto-e2e-v2` | PASS/BLOCKED |
-| 06 | Controlled failure | Dispatch run executes fault-injection job | Run fails with deliberate exit 17 on isolated branch; no main code change | PASS/BLOCKED |
+| 05 | Controlled diagnostics dispatch | Vinh comments exactly `W118-TEST-DIAGNOSTICS` on the dedicated test Issue with `w118-handoff` label | Owner-comment dispatcher authorizes the source actor and dispatches only on `work/118-auto-e2e-v2`; capture downstream `github.actor` | PASS/BLOCKED |
+| 06 | Controlled failure | Direct-dispatch job re-authorizes the actual downstream `github.actor` against trusted default-branch role map | If actual actor is mapped owner, run fails with deliberate exit 17 on isolated branch; if actor is `github-actions[bot]` or unknown, job fails closed/skips fault injection; no spoofed actor input | PASS/BLOCKED |
 | 07 | Diagnostics issue creation | Observe `W118 Failure Diagnostics` workflow_run | Exactly one `w118-blocked` issue keyed by workflow ID + SHA; exact run URL/ID/attempt/branch/SHA | PASS/BLOCKED |
 | 08 | Diagnostics duplicate delivery | Rerun the failed upstream run/attempt | Same diagnostic issue reused; one update marker per run attempt; no duplicate Issue | PASS/BLOCKED |
 | 09 | Review event | Xu submits an approved review after Xu login is verified/mapped and PR author is a different principal | REVIEW_AUTHORIZED artifact/comment; no merge or release | PASS/BLOCKED |
@@ -38,7 +38,7 @@
 - A reviewer account mapped to the same principal as the PR author is denied.
 - Unmapped reviewer/actor is denied.
 - Unmapped PR author prevents a claim of reviewer independence.
-- Only the dedicated controlled-test permission can dispatch fault injection. The direct job checks the actual workflow actor; if a GITHUB_TOKEN dispatch is attributed to `github-actions[bot]`, the failure step must be denied. In that case Vinh must initiate the controlled `workflow_dispatch` directly from the Actions UI as the mapped owner; do not pass or trust a caller-supplied actor field.
+- Only the dedicated controlled-test permission can dispatch fault injection. The direct job checks the actual workflow actor; if a GITHUB_TOKEN dispatch is attributed to `github-actions[bot]`, the failure step must be denied. In that case Vinh must initiate the controlled `workflow_dispatch` directly from the Actions UI as the mapped owner; do not pass or trust a caller-supplied actor field. The direct job checks the actual workflow actor; if a GITHUB_TOKEN dispatch is attributed to `github-actions[bot]`, the failure step must be denied. In that case Vinh must initiate the controlled `workflow_dispatch` directly from the Actions UI as the mapped owner; do not pass or trust a caller-supplied actor field.
 - Fault injection cannot run on main.
 - The diagnostics workflow does not listen to itself.
 - No automatic retry, auto-merge or auto-release occurs.
