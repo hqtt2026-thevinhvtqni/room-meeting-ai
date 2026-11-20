@@ -65,3 +65,11 @@ The final acceptance bundle must contain:
 | ID | Scenario | Current state |
 |---|---|---|
 | T10-18 | Controlled diagnostics test trigger authorization | PASS — unit/contract coverage; live dispatch pending default-branch deployment |
+
+
+## Review identity security cases — 2026-11-20
+
+- Same principal, different GitHub logins: DENY.
+- Reviewer mapped, PR author unmapped: DENY (independence not verifiable).
+- Reviewer and PR author mapped to distinct principals: ALLOW only if reviewer has active acceptance permission.
+- These cases are now part of the feature-branch unit test suite; runtime review event evidence remains pending.
