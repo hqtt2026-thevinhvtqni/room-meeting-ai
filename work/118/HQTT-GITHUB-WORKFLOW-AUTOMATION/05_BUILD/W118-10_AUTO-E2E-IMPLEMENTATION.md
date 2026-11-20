@@ -71,3 +71,10 @@ This dispatcher is implemented and contract-tested; the actual dispatch and diag
 ## Review independence hardening — 2026-11-20
 
 A final code review found that login-only self-review detection would allow two GitHub accounts mapped to the same HQTT principal to review each other. The implementation now resolves both reviewer and PR author through the role map and denies review when they map to the same principal. An unmapped PR author also fails closed because independence cannot be proven. Tests cover same-principal cross-account denial, unknown-author denial and a mapped different-principal positive case.
+
+
+## Principal-level review verification — 2026-11-20
+
+- **Fix:** same-principal cross-account review is denied; unmapped PR author denies an independence claim; distinct mapped principal with active acceptance permission is allowed.
+- **CI:** [Run #44747589539](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44747589539) SUCCESS; 32 tests passed; artifact ID `14634211524` exists and was unexpired at readback.
+- **Scope:** unit/contract proof only. Runtime pull_request_review event evidence and Xu identity mapping remain pending.
