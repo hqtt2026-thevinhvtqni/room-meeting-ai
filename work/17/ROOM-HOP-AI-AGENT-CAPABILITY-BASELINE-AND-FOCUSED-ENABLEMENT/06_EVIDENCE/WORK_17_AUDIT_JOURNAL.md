@@ -785,3 +785,13 @@
 - Runtime status remains NOT RUN because available Build MCP 8030 has no Node execution surface. PC/VS Code is now required for the regression suite and browser E2E.
 - Guardrails unchanged: GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. No provider calls, dispatch, credential access, cross-Work source changes or deployment.
 - Result: GITHUB MAIN SOURCE SYNC VERIFIED / 10 OF 10 EXACT MATCH / RUNTIME BLOCKED PENDING PC.
+
+
+## Entry 067 — W21/W300 capability-demand mapping cross-reference (2026-11-20)
+- Actor: Xu / AI-01. Scope: read-only review of W300 image/photo requirements and W21 Skill research; prepare a non-authoritative member-to-skill demand mapping without changing member verdicts or issuing assignments.
+- Sources: W300 DOC-034, DOC-035, REVIEW_PACKET_PILOT_01; W21 Manifest, research backlog and AI Templates research note; current W17 member capability matrix.
+- Findings: W300 requires safe local image processing, verified provider/model research, image generation/editing distinction, image QA, persistent cost/quota circuit breaker, privacy/security, artifact provenance and evidence-first workflow. W300 is image/photo-only; video belongs to Work 29. No provider calls/build are authorized by inspected W300 records.
+- W17 member matrix currently records identity/session and dispatch/ACK as NOT_VERIFIED/NOT_PROVEN; role labels and historical artifact contributions do not prove current runtime availability or capability. Existing Qc/Go/Co numeric-ID roster conflict remains unresolved.
+- Action: prepared proposal-only demand-to-member mapping. No member capability verdict, identity, permission, session, token telemetry or canonical roster field was promoted or modified.
+- Status: PASS for bounded source inspection and proposal preparation only; no new E2/E3/E4 evidence; no test, provider call, dispatch, installation or runtime operation performed. GAP-01 and G2 status unchanged.
+- Next: review W21 Skill contract proposals with Ka/Cla/Qw; reconcile roster identity conflict under its existing owner; only then update canonical member profiles from actual evidence. Vinh decision required before assignment or implementation.
