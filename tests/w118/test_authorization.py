@@ -59,6 +59,40 @@ class Work118AuthorizationTests(unittest.TestCase):
         self.assertIsNone(parse_ack("ACKED-tester"))
         self.assertIsNone(parse_ack("ACKED-TESTER 65"))
 
+
+    def test_explicitly_mapped_executor_can_ack_its_own_role(self):
+        data = json.loads(Path(".github/w118/role-map.json").read_text(encoding="utf-8"))
+        data["principals"]["fixture-executor"] = {
+            "principal": "fixture-executor",
+            "roles": ["tester"],
+            "ack_roles": ["tester"],
+            "can_accept": False,
+            "active": True,
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "roles.json"
+            path.write_text(json.dumps(data), encoding="utf-8")
+            role_map = load_role_map(path)
+        allowed, reason, principal = authorize_ack(role_map, "fixture-executor", "tester")
+        self.assertTrue(allowed, reason)
+        self.assertEqual(principal, "fixture-executor")
+
+    def test_executor_cannot_ack_another_role(self):
+        data = json.loads(Path(".github/w118/role-map.json").read_text(encoding="utf-8"))
+        data["principals"]["fixture-executor"] = {
+            "principal": "fixture-executor",
+            "roles": ["tester"],
+            "ack_roles": ["tester"],
+            "can_accept": False,
+            "active": True,
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "roles.json"
+            path.write_text(json.dumps(data), encoding="utf-8")
+            role_map = load_role_map(path)
+        allowed, _, _ = authorize_ack(role_map, "fixture-executor", "coder")
+        self.assertFalse(allowed)
+
     def test_role_map_rejects_ack_role_not_in_roles(self):
         data = json.loads(Path(".github/w118/role-map.json").read_text(encoding="utf-8"))
         data["principals"]["bad-user"] = {
