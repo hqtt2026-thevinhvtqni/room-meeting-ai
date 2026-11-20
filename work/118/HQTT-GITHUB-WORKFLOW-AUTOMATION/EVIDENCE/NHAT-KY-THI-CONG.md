@@ -405,3 +405,13 @@
 - **Review:** no review submitted yet at readback. Xu Stage A independent design/security review is pending.
 - **Authority:** Vinh Stage B non-release integration authorization has not been granted; no merge/release.
 - **Trạng thái:** READY FOR XU REVIEW / ACTIVE — NOT RELEASED.
+
+
+## Entry 037 — Latest ready-for-review CI and acceptance wait state
+- **Người thực hiện:** Ka — Delegated Technical Lead / Work 118 Build Owner.
+- **Thời gian:** 2026-11-20 21:14 UTC+07:00.
+- **CI:** [Run #44750417015](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44750417015) SUCCESS; `Ran 45 tests in 0.281s`; `OK`. Artifact `w118-run-evidence-44750417015-1`, ID `14635330750`, exists and was unexpired at readback.
+- **PR:** #67 OPEN / READY FOR REVIEW / mergeable=true; head `34e09a84c568cc3076cbd606117049806c17ed2c`; 126 commits ahead / 0 behind main; 30 files changed.
+- **Review state:** no GitHub review submitted at latest readback. Xu Stage A design/security review pending.
+- **Integration authority:** Vinh Stage B non-release integration authorization pending. Ka has not merged or released.
+- **Trạng thái:** READY FOR XU REVIEW / ACTIVE — NOT RELEASED.
