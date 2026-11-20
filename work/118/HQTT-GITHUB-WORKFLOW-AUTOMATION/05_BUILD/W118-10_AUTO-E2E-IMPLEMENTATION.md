@@ -94,3 +94,9 @@ A final code review found that login-only self-review detection would allow two 
 - Handoff/ACK/review event evidence artifacts are implemented. ACK state label `w118-acked` is applied only on authorized actor/role/issue binding.
 - PR checklist notifier moved to `pull_request_target` after actual PR-context token write was denied. It uses no checkout and runs no PR code, restricted to same-repository PRs.
 - PR #67 remains Draft; event jobs were skipped on the push validation run and are not yet runtime verified.
+
+
+## Provenance and diagnostics subscription update — 2026-11-20
+
+- CI run artifact distinguishes PR source SHA from the exact tested SHA and records repository, actor, branch/ref, workflow ref, run URL, PR number and base SHA.
+- Failure diagnostics now subscribes to the separate `W118 PR Review Checklist` workflow as well as W118, W300 and Work 70. It remains non-self-listening.
