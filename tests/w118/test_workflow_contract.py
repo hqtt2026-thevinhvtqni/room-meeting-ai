@@ -41,9 +41,7 @@ class Work118WorkflowContractTests(unittest.TestCase):
         self.assertEqual(data["jobs"]["validate"]["permissions"], {"contents": "read"})
         self.assertEqual(data["jobs"]["handoff"]["permissions"]["issues"], "write")
         self.assertEqual(data["jobs"]["ack-verification"]["permissions"]["issues"], "write")
-        self.assertNotIn("contents", data["permissions"]) if False else self.assertEqual(
-            data["permissions"], {"contents": "read"}
-        )
+        self.assertEqual(data["permissions"], {"contents": "read"})
 
     def test_review_job_does_not_merge_or_release(self):
         data = self.load_yaml(WORKFLOW)
