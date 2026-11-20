@@ -86,3 +86,11 @@ A final code review found that login-only self-review detection would allow two 
 - Handoff, ACK and review event jobs write separate OPERATION evidence artifacts using `event_evidence.py`, all state RECORDED.
 - PR review checklist is posted by a dedicated `pull_request_target` workflow. It does not checkout or execute PR code, only accepts same-repository PRs, and has job-scoped `issues:write` with `contents:read`.
 - The initial pull_request-context comment attempt failed with `Resource not accessible by integration`; it was removed and replaced with the base-context notifier. This is recorded as a permission-boundary correction, not hidden.
+
+
+## Event automation verification — 2026-11-20
+
+- CI [Run #44748965030](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44748965030) SUCCESS; 44 tests passed; artifact ID `14634556693`.
+- Handoff/ACK/review event evidence artifacts are implemented. ACK state label `w118-acked` is applied only on authorized actor/role/issue binding.
+- PR checklist notifier moved to `pull_request_target` after actual PR-context token write was denied. It uses no checkout and runs no PR code, restricted to same-repository PRs.
+- PR #67 remains Draft; event jobs were skipped on the push validation run and are not yet runtime verified.
