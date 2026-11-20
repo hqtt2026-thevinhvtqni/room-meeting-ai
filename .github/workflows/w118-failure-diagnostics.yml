@@ -1,0 +1,70 @@
+name: W118 Failure Diagnostics
+
+on:
+  workflow_run:
+    workflows:
+      - "W118 Auto E2E Validation"
+      - "W118 Workflow Automation Pilot"
+      - "W300 Dashboard CI"
+      - "Work 70 Preview Host Tests"
+    types: [completed]
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostics:
+    if: github.event.workflow_run.conclusion == 'failure'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+    concurrency:
+      group: w118-diagnostics-${{ github.event.workflow_run.workflow_id }}-${{ github.event.workflow_run.head_sha }}
+      cancel-in-progress: false
+    steps:
+      - name: Create or update one diagnostic issue per workflow and commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+          RUN_URL: ${{ github.event.workflow_run.html_url }}
+          WF_NAME: ${{ github.event.workflow_run.name }}
+          WF_ID: ${{ github.event.workflow_run.workflow_id }}
+          SHA: ${{ github.event.workflow_run.head_sha }}
+          BRANCH: ${{ github.event.workflow_run.head_branch }}
+          UPSTREAM_EVENT: ${{ github.event.workflow_run.event }}
+        run: |
+          set -euo pipefail
+          gh label create w118-blocked --repo "$GITHUB_REPOSITORY" --color D93F0B --description "W118 CI failure requires an assigned human/AI owner" 2>/dev/null || true
+          KEY="w118-diagnostic:${WF_ID}:${SHA}"
+          UPDATE_MARKER="<!-- w118-diagnostic-update:${RUN_ID}:${RUN_ATTEMPT} -->"
+          gh issue list --repo "$GITHUB_REPOSITORY" --state open --label w118-blocked --limit 1000 --json number,body > /tmp/open-diagnostics.json
+          EXISTING=$(python -c 'import json,sys; key=sys.argv[1]; rows=json.load(open("/tmp/open-diagnostics.json")); print(next((str(x["number"]) for x in rows if key in (x.get("body") or "")), ""))' "$KEY")
+          cat > /tmp/diagnostic.md <<EOF
+          W118 CI failure diagnostics.
+
+          - Workflow: ${WF_NAME}
+          - Workflow ID: ${WF_ID}
+          - Run: ${RUN_URL}
+          - Run ID / attempt: ${RUN_ID} / ${RUN_ATTEMPT}
+          - Commit: ${SHA}
+          - Branch: ${BRANCH}
+          - Upstream event: ${UPSTREAM_EVENT}
+          - Fix owner: UNASSIGNED — assignment requires an explicit authorized actor.
+          - Retry policy: no automatic retry; maximum two actor-approved retries, each with a reason and new evidence.
+
+          Idempotency key: ${KEY}
+          ${UPDATE_MARKER}
+          EOF
+          if [ -n "$EXISTING" ]; then
+            if gh api --paginate "repos/${GITHUB_REPOSITORY}/issues/${EXISTING}/comments?per_page=100" --jq '.[].body' | grep -Fq "$UPDATE_MARKER"; then
+              echo "Diagnostic update already recorded for run ${RUN_ID} attempt ${RUN_ATTEMPT}." >> "$GITHUB_STEP_SUMMARY"
+            else
+              gh issue comment "$EXISTING" --repo "$GITHUB_REPOSITORY" --body-file /tmp/diagnostic.md
+            fi
+          else
+            printf '\n<!-- %s -->\n' "$KEY" >> /tmp/diagnostic.md
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "[W118][CI-FAIL] ${WF_NAME} — ${SHA:0:7}" --label w118-blocked --body-file /tmp/diagnostic.md
+          fi
