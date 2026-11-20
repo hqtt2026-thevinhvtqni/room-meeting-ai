@@ -51,3 +51,13 @@
 - **Coverage added:** owner-gated controlled diagnostics test trigger, fail-closed authorization, branch-scoped fault injection, diagnostics idempotency planner and handoff re-application key.
 - **Known intermediate failure:** Run `44746809735` failed because the second owner login did not yet have the newly required `can_trigger_controlled_test` boolean. The role map was corrected in commit `811d5173543888bd274fc54b782a3731b251847e`; subsequent run `44746898664` passed. The failure is retained as build evidence, not hidden.
 - **Still pending:** actual event jobs and workflow_run diagnostics runtime require the reviewed workflow to be integrated into default branch. The controlled failure test is isolated to `work/118-auto-e2e-v2`.
+
+
+## Review handoff — Draft PR #67 (2026-11-20)
+
+- **Active implementation PR:** [#67 — W118 Auto E2E v2](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/67), OPEN / DRAFT / mergeable=true.
+- **Branch:** `work/118-auto-e2e-v2`; clean base from main; 46 commits ahead / 0 behind at PR creation.
+- **Latest CI:** [Run #44747085807](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44747085807) SUCCESS; 30 tests passed; artifact ID `14632579474` exists and is unexpired at inspection.
+- **Review owner:** Xu — independent technical/security review pending. Vinh — final product acceptance pending.
+- **Merge:** NOT AUTHORIZED YET; no merge or release has occurred.
+- **PR #66:** retained unmerged as historical pilot; it is not the active implementation base and is superseded by PR #67 for ongoing build/review.
