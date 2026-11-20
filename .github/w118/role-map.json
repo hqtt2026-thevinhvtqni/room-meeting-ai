@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "policy": "deny-by-default",
+  "principals": {
+    "hqtt2026-thevinhvtqni": {
+      "principal": "vinh",
+      "roles": ["owner"],
+      "ack_roles": [],
+      "can_accept": true,
+      "active": true
+    },
+    "thevinhqtni-1911": {
+      "principal": "vinh",
+      "roles": ["owner"],
+      "ack_roles": [],
+      "can_accept": true,
+      "active": true
+    }
+  },
+  "notes": [
+    "Both GitHub logins are separately retained in audit records and map to the owner principal, per the owner-confirmed Work 118 Entry 022.",
+    "No executor login is configured until its GitHub identity and role are independently verified.",
+    "Unmapped actors and roles are denied. Owner accounts are acceptance-only and cannot ACK execution roles."
+  ]
+}
