@@ -197,7 +197,8 @@ class Work118WorkflowContractTests(unittest.TestCase):
         run_script = next(step["run"] for step in steps if step.get("name") == "Create or update one diagnostic issue per workflow and commit")
         self.assertIn('--state all', run_script)
         self.assertIn('gh issue reopen', run_script)
-        self.assertIn('diagnostic_key', run_script)
+        self.assertIn('--workflow-id "$WF_ID"', run_script)
+        self.assertIn('--sha "$SHA"', run_script)
 
     def test_diagnostics_only_runs_for_failed_upstream_runs(self):
         data = self.load_yaml(DIAGNOSTICS)
