@@ -1,4 +1,4 @@
-# STATUS — WORK 118 (PRODUCT v1 PILOT)
+# STATUS — WORK 118 (AUTO E2E BUILD v2)
 
 - **Ngày:** 2026-11-20
 - **Quyết định Vinh (2026-11-20):** Vibe tự quyết cấu trúc; vòng phản biện dài bỏ; Xu nghiệm thu sản phẩm.
@@ -29,3 +29,16 @@
 - T-02 Run #8 vẫn chỉ chứng minh event/actor propagation từ account thứ hai; không chứng minh unauthorized denial.
 - Không sửa workflow/permission; PR #66 OPEN; B-118-010 vẫn khóa chờ lệnh chính xác; T-05 vẫn BLOCKED.
 - Nhật ký chuẩn: Entry 022 trong `EVIDENCE/NHAT-KY-THI-CONG.md`.
+
+
+## Current owner-authorized build state — 2026-11-20
+
+- **Decision:** Vinh authorized Ka to decide and build the Auto E2E system on Git through acceptance. Xu and Vinh remain the only acceptance authorities.
+- **Phase:** BUILD / VERIFY — ACTIVE, NOT RELEASED. This current phase supersedes the historical pilot freeze recorded above; the historical test results and Xu's NOT ACCEPTED decision remain unchanged as evidence about pilot v1.
+- **Canonical base:** main `41e8397600505d94434b5830e7aea1a012db77a2`.
+- **Build branch:** `work/118-auto-e2e-v2`.
+- **Implemented:** fail-closed role map; ACK authorization; independent review authorization; handoff/ACK idempotency markers; separate failure diagnostics workflow; per-run evidence artifact; 26 contract/unit tests in the latest completed CI run.
+- **Latest completed test evidence:** Run `44746143577`, conclusion SUCCESS, job `validate` SUCCESS, 26 tests passed; https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44746143577.
+- **Not yet verified:** real handoff/ACK runtime on the new workflow after default-branch deployment; failure diagnostics event end-to-end; Xu's GitHub reviewer mapping; Work 70 Evidence Register integration.
+- **Safety:** no executor login inferred; both owner accounts are acceptance-only; no auto-retry, auto-merge, secret, branch protection or Work 70 schema mutation.
+- **Next:** finish review of workflow edge cases, update canonical plan/journal, open a review PR, obtain Xu's independent review and Vinh's final acceptance before main integration.
