@@ -37,6 +37,8 @@ def load_role_map(path: str | Path) -> dict[str, Any]:
             raise ValueError(f"{login}: active must be boolean")
         if not isinstance(entry.get("can_accept"), bool):
             raise ValueError(f"{login}: can_accept must be boolean")
+        if not isinstance(entry.get("can_independently_review"), bool):
+            raise ValueError(f"{login}: can_independently_review must be boolean")
         if not isinstance(entry.get("can_trigger_controlled_test"), bool):
             raise ValueError(f"{login}: can_trigger_controlled_test must be boolean")
         if not set(entry.get("ack_roles", [])).issubset(set(entry.get("roles", []))):
@@ -60,17 +62,17 @@ def authorize_ack(role_map: dict[str, Any], login: str, role: str) -> tuple[bool
     return True, "authorized", entry.get("principal")
 
 
-def authorize_acceptance(role_map: dict[str, Any], login: str, pull_request_author: str) -> tuple[bool, str, str | None]:
+def authorize_independent_review(role_map: dict[str, Any], login: str, pull_request_author: str) -> tuple[bool, str, str | None]:
     principals = role_map.get("principals", {})
     entry = principals.get(login)
-    if not entry or not entry.get("active", False) or not entry.get("can_accept", False):
-        return False, "actor is not mapped as an active acceptance authority", None
+    if not entry or not entry.get("active", False) or not entry.get("can_independently_review", False):
+        return False, "actor is not mapped as an active independent reviewer", None
     author_entry = principals.get(pull_request_author)
     if not author_entry or not author_entry.get("active", False):
         return False, "PR author principal is not mapped; reviewer independence cannot be verified", None
     if entry.get("principal") == author_entry.get("principal"):
         return False, "reviewer and PR author resolve to the same HQTT principal", None
-    return True, "authorized independent acceptance reviewer", entry.get("principal")
+    return True, "authorized independent reviewer", entry.get("principal")
 
 
 def authorize_controlled_test(role_map: dict[str, Any], login: str) -> tuple[bool, str]:
