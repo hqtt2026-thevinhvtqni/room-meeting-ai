@@ -59,6 +59,20 @@ class Work118WorkflowContractTests(unittest.TestCase):
         self.assertIn("github.event.issue.labels.*.name", condition)
         self.assertIn("!github.event.issue.pull_request", condition)
 
+    def test_review_evidence_binds_policy_commit_and_pr_revisions(self):
+        data = self.load_yaml(WORKFLOW)
+        steps = data["jobs"]["acceptance-review"]["steps"]
+        policy_step = next(step for step in steps if step.get("name") == "Resolve trusted policy commit")
+        self.assertEqual(policy_step["id"], "policy")
+        evidence_step = next(step for step in steps if step.get("name") == "Write review event evidence")
+        self.assertEqual(evidence_step["env"]["POLICY_SHA"], "${{ steps.policy.outputs.sha }}")
+        self.assertEqual(evidence_step["env"]["PR_HEAD_SHA"], "${{ github.event.pull_request.head.sha }}")
+        self.assertEqual(evidence_step["env"]["PR_BASE_SHA"], "${{ github.event.pull_request.base.sha }}")
+        self.assertIn('source_commit=os.environ["POLICY_SHA"]', evidence_step["run"])
+        self.assertIn('"event_commit": os.environ["EVENT_SHA"]', evidence_step["run"])
+        self.assertIn('"pr_head_sha": os.environ["PR_HEAD_SHA"]', evidence_step["run"])
+        self.assertIn('"pr_base_sha": os.environ["PR_BASE_SHA"]', evidence_step["run"])
+
     def test_review_job_does_not_merge_or_release(self):
         data = self.load_yaml(WORKFLOW)
         self.assertIn("pull_request_review", data["on"])
