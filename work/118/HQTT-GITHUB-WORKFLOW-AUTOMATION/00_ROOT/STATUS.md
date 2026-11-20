@@ -19,3 +19,13 @@
 - **T-05:** BLOCKED — chưa có ACK riêng để mở rộng self-listener.
 - **Freeze:** main chỉ cập nhật hồ sơ kiểm thử; không sửa workflow/permission, không merge PR #66; B-118-010 chưa được áp dụng.
 - **Nhật ký chuẩn:** Entry 021 trong `EVIDENCE/NHAT-KY-THI-CONG.md`.
+
+
+## Quyết định chủ sở hữu — Identity mapping (Entry 022)
+- Vinh xác nhận hai GitHub login `hqtt2026-thevinhvtqni` và `thevinhqtni-1911` đều thuộc mình.
+- Mapping được duyệt: cả hai login → cùng HQTT principal **Vinh / HQTT Owner**; vẫn giữ nguyên login riêng trong audit log.
+- T-03 mapping: **APPROVED / DOCUMENTED**.
+- T-03 runtime authorization: **NOT VERIFIED** — workflow pilot chưa thực thi allowlist/role policy và chưa có negative test từ actor ngoài mapping.
+- T-02 Run #8 vẫn chỉ chứng minh event/actor propagation từ account thứ hai; không chứng minh unauthorized denial.
+- Không sửa workflow/permission; PR #66 OPEN; B-118-010 vẫn khóa chờ lệnh chính xác; T-05 vẫn BLOCKED.
+- Nhật ký chuẩn: Entry 022 trong `EVIDENCE/NHAT-KY-THI-CONG.md`.
