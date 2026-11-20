@@ -21,3 +21,13 @@
 ## 3. Khác biệt so với hiện trạng
 - Hiện tại cả 2 workflow đều trigger thẳng trên main, hồ sơ docs không đi qua PR nên không có vết review nào ở cấp công cụ.
 - Đề xuất: hồ sơ docs-only trên main giữ nguyên trong giai đoạn trước G3; mọi mutation code/CI sau G3 bắt buộc đi qua PR theo gate matrix trên.
+
+
+## Amendment — Auto E2E v2 acceptance authority (2026-11-20)
+
+- Ka is the delegated build and technical decision owner, not an acceptance authority.
+- Xu performs independent architecture/security/runtime review and records a review disposition.
+- Vinh retains final product acceptance and release authority.
+- The workflow can verify an acceptance review only when the reviewer login is explicitly mapped, active and different from the PR author. Xu's login must be confirmed before adding it to the role map; no inferred mapping is allowed.
+- An authorized review comment records reviewer authority only. It does not change the Work to ACCEPTED, merge the PR or release the product.
+- No auto-merge or auto-release. Main integration is blocked until the Xu/Vinh acceptance gates are satisfied.
