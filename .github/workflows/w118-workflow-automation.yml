@@ -98,6 +98,34 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+  controlled-failure-dispatch:
+    if: github.event_name == 'issue_comment' && github.event.action == 'created' && github.event.comment.body == 'W118-TEST-DIAGNOSTICS' && startsWith(github.event.issue.title, '[W118 E2E TEST]') && contains(github.event.issue.labels.*.name, 'w118-handoff') && !github.event.issue.pull_request
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: write
+    steps:
+      - name: Checkout trusted authorization policy
+        uses: actions/checkout@v4
+      - name: Authorize controlled failure test
+        env:
+          AUTHOR: ${{ github.event.comment.user.login }}
+        run: |
+          set -euo pipefail
+          python scripts/w118/controlled_test_authorization.py --login "$AUTHOR" > /tmp/test-auth.json
+          cat /tmp/test-auth.json >> "$GITHUB_STEP_SUMMARY"
+          ALLOWED=$(python -c 'import json; print("true" if json.load(open("/tmp/test-auth.json"))["authorized"] else "false")')
+          if [ "$ALLOWED" != "true" ]; then
+            echo "Controlled diagnostics test denied; no workflow dispatched." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+      - name: Dispatch controlled failure on isolated W118 branch
+        if: steps.authorize_controlled_failure.outputs.authorized == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run w118-workflow-automation.yml --repo "$GITHUB_REPOSITORY" --ref work/118-auto-e2e-v2 --field failure_injection=controlled
+
   controlled-failure:
     if: github.event_name == 'workflow_dispatch' && inputs.failure_injection == 'controlled' && github.ref == 'refs/heads/work/118-auto-e2e-v2'
     runs-on: ubuntu-latest
