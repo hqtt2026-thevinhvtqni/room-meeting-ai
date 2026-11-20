@@ -19,7 +19,7 @@ Thiết kế và kiểm chứng có kiểm soát cơ chế điều phối GitHub
 - G0: xác nhận hiện trạng và phạm vi.
 - G1: yêu cầu và state machine được xác định.
 - G2: kiến trúc, bảo mật, quyền và evidence contract được phản biện.
-- G3: Vinh phê duyệt trước BUILD.
+- G3: Vinh phê duyệt trước BUILD — APPROVED 2026-11-20 by explicit owner delegation to Ka for Auto E2E build; security and acceptance gates remain mandatory.
 - G4: pilot end-to-end có bằng chứng thật.
 - G5: nghiệm thu độc lập trước khi mở rộng.
 
@@ -29,3 +29,20 @@ Thiết kế và kiểm chứng có kiểm soát cơ chế điều phối GitHub
 - Không merge tự động trong pilot.
 - Không ghi PASS nếu thiếu run URL, commit SHA, logs và kết quả thực tế.
 - Mọi blocker phải nêu: vấn đề / bằng chứng đã thử / nút thắt / phương án / điều kiện còn thiếu.
+
+
+## Amendment — BUILD authorization and Auto E2E v2 (2026-11-20)
+
+Vinh has explicitly delegated technical decisions and implementation of the Auto E2E system to Ka through the acceptance handoff. Xu and Vinh retain acceptance authority; Ka must not self-accept or self-release.
+
+| WP | Hạng mục | Đầu ra | Trạng thái |
+|---|---|---|---|
+| W118-10 | Auto E2E v2 implementation | Role authorization, event handlers, failure diagnostics, CI evidence artifact, contract tests and runtime matrix | BUILD IN PROGRESS on `work/118-auto-e2e-v2` |
+| W118-11 | Real GitHub event E2E | Handoff, ACK allow/deny, duplicate delivery and failure diagnostics runtime evidence | PENDING controlled deployment after Xu review |
+| W118-12 | Acceptance and release handoff | Independent Xu review, Vinh final acceptance, release evidence bundle | PENDING |
+
+**G3:** owner BUILD authorization recorded. This does not authorize auto-merge, release, secrets/branch-protection changes or modifications to Work 70's evidence schema.
+
+**Current CI:** Run `44746143577` SUCCESS; 26 unit/contract tests passed. This is contract-level evidence only, not full runtime E2E.
+
+**Current blockers:** verified GitHub login for Xu; executor identity mappings for Ka/Vi/An (no guesses); Work 70 approval for any Evidence Register schema extension; actual diagnostics runtime after listener deployment.
