@@ -128,10 +128,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           ISSUE: ${{ github.event.issue.number }}
           LABEL_ID: ${{ github.event.label.id }}
+          ISSUE_UPDATED_AT: ${{ github.event.issue.updated_at }}
           LABELER: ${{ github.event.sender.login }}
         run: |
           set -euo pipefail
-          MARKER="<!-- w118-handoff:${ISSUE}:${LABEL_ID} -->"
+          MARKER="<!-- w118-handoff:${ISSUE}:${LABEL_ID}:${ISSUE_UPDATED_AT} -->"
           if gh api --paginate "repos/${GITHUB_REPOSITORY}/issues/${ISSUE}/comments?per_page=100" --jq '.[].body' | grep -Fq "$MARKER"; then
             echo "Handoff already recorded: $MARKER" >> "$GITHUB_STEP_SUMMARY"
             exit 0
