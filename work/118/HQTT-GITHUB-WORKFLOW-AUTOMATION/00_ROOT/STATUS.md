@@ -8,4 +8,4 @@
   3. ci-failure-diagnostics: khi CI của W300/W70 FAIL, mở hoặc cập nhật 1 issue chẩn đoán duy nhất có label w118-blocked (run URL + SHA + quy tắc retry cap 2, không retry vô hạn).
 - **An toàn thiết kế:** GITHUB_TOKEN events không tự kích hoạt lại workflow (không vòng lặp); least-privilege (issues: write, contents: read); timeout 5 phút mỗi job; khớp thiết kế TD-118-005/006/007/008.
 - **Chưa có trong v1:** evidence row tự động vào register W70 (chờ ACK schema v1.2), realtime ROOM-HOP, auto-merge (cấm vĩnh viễn theo TD-118-007).
-- **Trạng thái:** DEPLOYED PILOT — cần 1 runtime test thật (issue gắn label w118-handoff + 1 comment ACKED-test), kết quả ghi vào nhật ký trước khi trình Xu nghiệm thu.
+- **Trạng thái:** DEPLOYED PILOT — run #2 (runtime test qua comment ACKED) đang QUEUED tại thời điểm ghi nhật ký Entry 007; PILOT NOT PASS cho tới khi run #2 xanh và bot comment bằng chứng có trên Issue #65.

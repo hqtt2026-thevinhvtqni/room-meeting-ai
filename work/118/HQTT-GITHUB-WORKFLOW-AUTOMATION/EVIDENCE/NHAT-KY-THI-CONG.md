@@ -60,3 +60,11 @@
 - **Bằng chứng:** commit sản phẩm + readback; STATUS.md trong 00_ROOT.
 - **Kiểm thử:** cú pháp file được kiểm tra kỹ bằng tay; RUNTIME TEST_PENDING — cần issue gắn label w118-handoff và comment ACKED-test để có bằng chứng chạy thật trước khi Xu nghiệm thu.
 - **Trạng thái Work:** BUILD (PILOT DEPLOYED) — chờ runtime evidence.
+
+## Entry 007 — Runtime test W118 pilot — RUN QUEUED (chưa PASS)
+- **Thời gian:** 2026-11-20 ~13:31 UTC (UTC+7 ~20:31)
+- **Phạm vi:** Bật runtime thật cho pilot: comment ACKED-orchestrator 65 (id 7032614831 rồi 7032645457) kích hoạt workflow W118 Workflow Automation Pilot.
+- **Trình tự commit phiên này:** 7665f47 (deploy pilot v1) -> run #1 FAILURE do YAML parse lỗi tại L55 (bằng chứng: annotation "Invalid workflow file ... #L55" trên trang run) -> 549b480 (sửa printf xuống dòng) -> 0143482 (viết lại if một dòng, bỏ folded if, bỏ concurrency phức tạp) -> run #2 (Issue comment #65, created) ở trạng thái QUEUED tại thời điểm ghi (bằng chứng trang Actions, ~15 phút mà chưa có runner).
+- **Kết quả:** CHƯA PASS — theo Evidence First, PILOT status = RUNTIME TEST_PENDING/QUEUED; cần theo dõi run #2 tới xanh (bằng chứng: run URL + kết quả job ack-verification post comment lên #65).
+- **Cách kiểm tra cho ai tiếp theo:** mở https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/workflows/w118-workflow-automation.yml — nếu run #2 xanh, comment "W118 pilot: ACK recorded" của bot phải xuất hiện trên Issue #65; sau đó trình Xu nghiệm thu theo STATUS.md.
+- **Trạng thái Work:** BUILD (PILOT DEPLOYED, RUN PENDING).
