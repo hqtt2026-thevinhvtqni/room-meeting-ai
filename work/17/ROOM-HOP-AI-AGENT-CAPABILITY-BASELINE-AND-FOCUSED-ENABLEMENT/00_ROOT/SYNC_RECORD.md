@@ -596,3 +596,9 @@
 - Test coverage gaps queued for PC/browser: actual stub behavior, client render/reconnect/backoff, invalid/unreadable cache, symlink containment and HEAD semantics. These are unverified cases, not confirmed defects.
 - Runtime tests, browser E2E and independent QE remain NOT RUN. GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
 - Next: PC/VS Code npm test, browser E2E, exact output capture; then triage and repair only evidenced failures.
+## Sync Period 0047 — Dashboard stub documentation drift confirmed (2026-11-20T07:42:00+07:00)
+
+- Exact current-main stub source confirms mcp-stub/fresh=false/realMcp=false. README and BRIDGE_CONTRACT.md §5 still describe the stub as returning mcp-live/fresh=true and imply it should display MCP LIVE. This contradicts the implementation and the contract's integrity addendum.
+- Recorded as DOC-DRIFT-01 in Journal Entry 060. No code or documentation edit applied; the live acceptance guard remains unchanged.
+- PC/browser queue: npm test; stub response; dashboard never shows LIVE for stub; reconnect/backoff; invalid cache; symlink/encoded traversal; GET/HEAD; independent QE.
+- Runtime NOT RUN; GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
