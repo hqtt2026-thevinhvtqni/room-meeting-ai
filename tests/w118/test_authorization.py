@@ -63,6 +63,12 @@ class Work118AuthorizationTests(unittest.TestCase):
         allowed, _ = authorize_controlled_test(self.role_map, "unknown-contributor")
         self.assertFalse(allowed)
 
+
+    def test_unmapped_actor_cannot_trigger_controlled_failure(self):
+        from scripts.w118.authorization import authorize_controlled_test
+        allowed, _ = authorize_controlled_test(self.role_map, "unknown-contributor")
+        self.assertFalse(allowed)
+
     def test_ack_parser_requires_exact_role_and_issue(self):
         self.assertEqual(parse_ack("ACKED-tester 65"), ("tester", 65))
         self.assertIsNone(parse_ack("please ACKED-tester 65"))
