@@ -35,3 +35,8 @@ Mỗi chuyển trạng thái phải có comment/evidence row có timestamp làm 
 - Concurrency groups serialize mutations for the same issue/event or workflow/commit key.
 - No automatic retry is implemented. Retry remains actor-approved, reasoned and bounded to two attempts under the existing policy.
 - Unit tests cover key stability, workflow/SHA separation, existing issue reuse, attempt-specific markers and invalid key rejection. Real workflow_run runtime remains pending deployment.
+
+
+### Diagnostics subscription refinement — 2026-11-20
+
+The separate failure listener now also monitors `W118 PR Review Checklist` in addition to W118 Auto E2E, the legacy W118 pilot, W300 Dashboard CI and Work 70 Preview Host Tests. The listener still does not listen to itself.
