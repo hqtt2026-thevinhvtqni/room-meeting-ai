@@ -141,3 +141,12 @@ Vinh approved the W113 implementation-plan baseline in conversation on 2026-11-1
 - Auto E2E replaces manual step-by-step approvals with automated quality gates and evidence, not with bypasses of Work Entry, domain-owner contracts, independent QE or final acceptance.
 - Co proceeds autonomously through discovery, architecture, bounded implementation and test preparation. Product code mutation begins only after source baseline and applicable gate/owner authorization are evidenced. No auto-deploy; Vinh remains final acceptance authority.
 - This addendum does not change G0–G5 status and does not mark any implementation or test as PASS.
+
+
+## Auto E2E gate and source-reconciliation correction (2026-11-21)
+- D-113-005 delegation remains active; Co continues autonomous preparation and source/contract discovery.
+- The source path under W113 `05_BUILD/04_CODE/product/` and branch `work/113/room-hop-universal-dashboard-auto-e2e` are candidate/staging only. A prior PC trace reported a root Vite application under `dashboard/` with untracked files and a local branch 728 commits behind; this was not freshly re-attested in this session. Preserve the local dirty tree and reconcile exact hashes before selecting the final source integration point.
+- Last historical PC probe reported no active listener on :3000. The shared ingress remains a target requirement, not a live service.
+- DOC-057 requires G0–G5 PASS for the exact participant/assignment/source revision before protected implementation or execution. Co's intake evidence is collected, but G0 is partial; G1–G3 await formal evaluator; G4 is blocked by unverified session identity and lack of scoped execution enforcement; G5 is blocked by dependencies.
+- MCP 8030 capability readback confirms Sandbox file operations only; no process/pytest/browser runner is exposed. No CI dispatch tool is exposed in the current connector tool list. Do not claim Auto E2E execution until a real runner and exact-SHA artifacts exist.
+- Next: obtain trusted identity/assignment verification through Xu/authorized owner; read-only PC source and port inventory; verify tool-level execution route; then close Work Entry and begin bounded implementation. No user step-by-step approval is required; escalate only genuine authority/access blockers.
