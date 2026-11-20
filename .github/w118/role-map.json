@@ -22,6 +22,6 @@
   "notes": [
     "Both GitHub logins are separately retained in audit records and map to the owner principal, per the owner-confirmed Work 118 Entry 022.",
     "No executor login is configured until its GitHub identity and role are independently verified.",
-    "Unmapped actors and roles are denied. Owner accounts are acceptance-only and cannot ACK execution roles."
+    "Unmapped actors and roles are denied. Owner accounts may accept work and trigger the isolated diagnostics test only; they cannot ACK execution roles."
   ]
 }
