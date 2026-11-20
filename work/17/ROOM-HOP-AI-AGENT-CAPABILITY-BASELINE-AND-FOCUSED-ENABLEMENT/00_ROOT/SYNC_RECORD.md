@@ -741,3 +741,15 @@
 - Result: WP70-CO historical ACK and preparatory domain spike are real documented artifacts, but assignment lifecycle service, dispatch/receipt/ACK persistence, Core authorization, audit transaction, API and runtime remain NOT VERIFIED. GAP-01/GAP-11 stay OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
 - Entry 075 added. No new Co dispatch, test, code, migration, permission, gate or branch operation.
 - Next: verify W70 DOC-054 and canonical DOC-035/DOC-055 authority/version history, classify assigned vs delivered WP70-CO scope, and determine whether W70 requires an explicit decision before any continuation. No parallel Assignment store/dispatcher.
+
+## Sync Period 0063 — DOC-054 branch/main and WP70-CO source promotion check (2026-11-20T19:20+07:00)
+
+- DOC-054 main blob ccf3353edf846d560ff8239d671400cded099a98 (16,639 chars) starts with the full branch/Sandbox version f2b19142facc512a0e20f93b6d7933cdedcf8c90 (11,038 chars); branch DOC-054 is byte-identical to Sandbox. Main adds a 2026-11-07 Vi Dashboard assignment addendum, not a WP70-CO implementation update.
+- DOC-054 records WP70-CO scope including assignment lifecycle, event/audit trail and idempotent commands. Its evidence table says Co code/test artifacts received but preparatory only, not integrated/not production, no Core/API/persistence permission; explicit ACK receipt is not separately evidenced in DOC-054. W70 DOC-035 separately records historical Co ACK on 2026-10-31. Keep these evidence classes distinct.
+- Branch work/70/05-build exists. Its Build Mapping Register blob a9a14fb845328c3e1273769f502b3486465c3bbd states this is a mapping/coordination branch, not canonical product source; migration is not verified and proposed Work-level registers are not approved.
+- Branch Build Register JSON blob 1e449304834f91d86e91c2b68465a81475d65393 lists six WPs; WP-70-02 is Work Package registry, no separate Assignment/Dispatch/ACK service WP is listed.
+- Exact GitHub fetch returned NOT_FOUND on both branch and main for WP70-CO lifecycle_domain.py, work_registry.py, test files and spike README at the inspected Work paths. Those source artifacts remain Sandbox-only; no GitHub source promotion/blob SHA is established.
+- Result: WP70-CO historical ACK and preparatory artifacts are recorded, but full assigned scope is not proven delivered. Branch presence of DOC-054/Build Register does not promote Sandbox code to canonical/production source. No active assignment or implementation authorization inferred.
+- Entry 076 added. No branch/code/test/route/Host/provider/permission/gate operation performed.
+- GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED; READ/TRACE/ANALYZE ONLY.
+- Next: reconcile W70 DOC-035/DOC-055 current Sandbox and GitHub versions for latest authoritative register/journal and any superseding/closure decision for WP70-CO. Treat absent superseding decision as historical partial deliverable, not active assignment or live authority.
