@@ -37,3 +37,11 @@ Trong v1 KHÔNG có hoạt động mutation tự động nào khác; mọi mutat
 - Xu's GitHub login and execution-agent logins are not guessed. They remain unconfigured until verified and approved.
 - Pull request review events are recorded only for mapped acceptance reviewers who are not the PR author. The workflow does not merge.
 - Output comments are deduplicated by source comment/review ID. Bot-generated output does not match the ACK prefix and cannot recurse into ACK handling.
+
+
+## Amendment — event evidence and PR checklist hardening (2026-11-20)
+
+- Authorized ACK now applies the `w118-acked` Issue label only after actor, role and Issue binding pass. Unauthorized ACK records `ACK UNVERIFIED` and does not mutate Issue state.
+- Handoff, ACK and PR review events write a separate immutable OPERATION event artifact bound to source event ID, run ID/attempt, actor, decision and source SHA. State remains RECORDED; no Work 70 register write is performed.
+- PR checklist notification is isolated in `w118-pr-review-checklist.yml` using `pull_request_target`, with only `contents: read` and `issues: write`, same-repository PR scope, and no checkout or execution of PR code. It posts one checklist comment per PR head SHA.
+- The ordinary `pull_request` validation workflow remains read-only. A failed attempt to comment from pull_request context confirmed the repository token was read-only; the write action was moved to the safe base-context workflow rather than requesting broader token access.
