@@ -63,3 +63,16 @@ The creation tool supplied a legacy scaffold (01_ORIGINAL, 02_EXTENSION, 03_ARCH
 - **Source status:** canonical location and branch are declared; product implementation has not yet been created. No claim of build, runtime or E2E PASS.
 - **Excluded source:** `hqtt2026-thevinhvtqni/PL.room-meeting-ai.dash` remains an unrelated earlier project and is not adopted, copied, migrated or used as a dependency.
 - **Authority:** D-113-005 / D-113-006 and assignment `ASG-W113-CO-AUTOE2E-20261121`; Co owns W113 architecture/implementation under the recorded boundaries; Vinh retains final acceptance.
+
+
+## Source baseline correction — local PC Vite application reconciliation (2026-11-21)
+**Correction to the preceding source-baseline addendum:** the path `work/113/ROOM-HOP-UNIVERSAL-DASHBOARD/05_BUILD/04_CODE/product/` and branch `work/113/room-hop-universal-dashboard-auto-e2e` are a **W113 isolated candidate/staging location**, not yet the final canonical source baseline.
+
+A prior PC trace in the conversation record (2026-11-20) reported an existing root Vite application: root `package.json` and `vite.config.js`, `index.html` importing `/dashboard/main.tsx`, and an untracked `dashboard/` tree including `dashboard/room-hop/`. The same trace reported local `main` at `05db862cd2ff01cd288cf64cf0be5a9aa05ee816`, 728 commits behind, and untracked `dashboard/`, `app_workspace/`, `package.json` and `vite.config.js`. It also reported no listener on port 3000 at the last probe. These are **historical PC findings from the prior session, not freshly re-attested in this session**.
+
+Therefore:
+- Do not treat the new GitHub branch (based on main commit `8339f1f2a004704e76b163acd8db66d6d596cef1`) as containing the local root Vite application.
+- Do not pull, reset, clean, checkout, overwrite or delete the local dirty/untracked tree.
+- The final canonical product source must be selected only after read-only PC inventory and exact path/hash/revision reconciliation of the existing root Vite app, then recorded in Manifest and Decision Log.
+- The candidate W113 source path/branch may be retained as an isolated design/build staging area, but do not create a competing second application or duplicate the existing Dashboard shell.
+- The current :3000 host is not live at the last historical probe; startup/route owner remains NOT VERIFIED. No listener change or runtime restart is authorized by this source-path declaration.
