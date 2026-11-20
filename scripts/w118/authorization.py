@@ -1,0 +1,92 @@
+"""Fail-closed GitHub actor authorization for Work 118.
+
+This module deliberately separates execution ACK permission from acceptance
+permission. An owner account is not an execution actor merely because it is
+trusted to accept work.
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import re
+from pathlib import Path
+from typing import Any
+
+ACK_RE = re.compile(r"^ACKED-([a-z][a-z0-9_-]*)\s+([1-9][0-9]*)$")
+
+
+def load_role_map(path: str | Path) -> dict[str, Any]:
+    data = json.loads(Path(path).read_text(encoding="utf-8"))
+    if data.get("schema_version") != "1.0":
+        raise ValueError("unsupported role-map schema_version")
+    if data.get("policy") != "deny-by-default":
+        raise ValueError("role-map must use deny-by-default")
+    principals = data.get("principals")
+    if not isinstance(principals, dict):
+        raise ValueError("principals must be an object")
+    for login, entry in principals.items():
+        if not isinstance(login, str) or not login or not isinstance(entry, dict):
+            raise ValueError("invalid principal entry")
+        if not isinstance(entry.get("roles", []), list):
+            raise ValueError(f"{login}: roles must be a list")
+        if not isinstance(entry.get("ack_roles", []), list):
+            raise ValueError(f"{login}: ack_roles must be a list")
+        if not isinstance(entry.get("active"), bool):
+            raise ValueError(f"{login}: active must be boolean")
+        if not isinstance(entry.get("can_accept"), bool):
+            raise ValueError(f"{login}: can_accept must be boolean")
+        if not set(entry.get("ack_roles", [])).issubset(set(entry.get("roles", []))):
+            raise ValueError(f"{login}: ack_roles must be a subset of roles")
+    return data
+
+
+def parse_ack(body: str) -> tuple[str, int] | None:
+    match = ACK_RE.fullmatch(body.strip())
+    if not match:
+        return None
+    return match.group(1), int(match.group(2))
+
+
+def authorize_ack(role_map: dict[str, Any], login: str, role: str) -> tuple[bool, str, str | None]:
+    entry = role_map.get("principals", {}).get(login)
+    if not entry or not entry.get("active", False):
+        return False, "actor is not mapped as an active principal", None
+    if role not in entry.get("ack_roles", []):
+        return False, f"actor is not authorized to ACK role '{role}'", entry.get("principal")
+    return True, "authorized", entry.get("principal")
+
+
+def authorize_acceptance(role_map: dict[str, Any], login: str, pull_request_author: str) -> tuple[bool, str, str | None]:
+    if login == pull_request_author:
+        return False, "self-review is not an independent acceptance", None
+    entry = role_map.get("principals", {}).get(login)
+    if not entry or not entry.get("active", False) or not entry.get("can_accept", False):
+        return False, "actor is not mapped as an active acceptance authority", None
+    return True, "authorized acceptance reviewer", entry.get("principal")
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--config", default=".github/w118/role-map.json")
+    parser.add_argument("--login", required=True)
+    parser.add_argument("--body", required=True)
+    parser.add_argument("--issue", required=True, type=int)
+    args = parser.parse_args()
+
+    role_map = load_role_map(args.config)
+    parsed = parse_ack(args.body)
+    if not parsed:
+        result = {"authorized": False, "reason": "ACK syntax invalid", "login": args.login, "issue": args.issue}
+    else:
+        role, issue_number = parsed
+        if issue_number != args.issue:
+            result = {"authorized": False, "reason": "ACK issue number does not match event issue", "login": args.login, "role": role, "issue": args.issue}
+        else:
+            allowed, reason, principal = authorize_ack(role_map, args.login, role)
+            result = {"authorized": allowed, "reason": reason, "login": args.login, "principal": principal, "role": role, "issue": args.issue}
+    print(json.dumps(result, ensure_ascii=False, sort_keys=True))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
