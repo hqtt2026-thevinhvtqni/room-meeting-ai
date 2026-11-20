@@ -72,6 +72,7 @@ jobs:
           WF_NAME: ${{ github.event.workflow_run.name }}
           SHA: ${{ github.event.workflow_run.head_sha }}
         run: |
+          gh label create w118-blocked --repo "$GITHUB_REPOSITORY" --color D93F0B --description "W118 pilot: CI FAIL or BLOCKED, owner pending" 2>/dev/null || true
           TITLE="[w118] CI FAIL: $WF_NAME run $RUN_ID"
           EXISTING=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --label w118-blocked --search "$TITLE" --json number -q '.[].number' | head -n 1)
           cat > /tmp/body.md <<EOF
