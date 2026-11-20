@@ -82,3 +82,12 @@ The final acceptance bundle must contain:
 - **Result:** validate SUCCESS; `Ran 32 tests in 0.064s`; `OK`.
 - **Artifact:** `w118-run-evidence-44747589539-1`, ID `14634211524`, not expired at inspection.
 - **New security assertions:** same HQTT principal via two GitHub logins is denied; unmapped PR author is denied; different mapped principal is accepted only with active acceptance permission.
+
+
+## Latest validation — 2026-11-20
+
+- Run [44747797589](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44747797589) SUCCESS.
+- Commit: `52ee35920156b4966a7b4d60b214ed3c80001b76`.
+- Test output: `Ran 32 tests in 0.106s`; `OK`.
+- Artifact: `w118-run-evidence-44747797589-1`, ID `14634046784`, not expired at inspection.
+- Event-specific jobs were skipped on the push event; this remains contract/unit evidence, not live GitHub event E2E.
