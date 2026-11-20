@@ -58,7 +58,7 @@ This staged gate avoids the circular dependency where the workflow_run listener 
 ## Current gate evidence — 2026-11-20
 
 - PR #67 is OPEN, mergeable, not merged; branch synchronized with Main (0 behind).
-- Latest CI [#44758133788](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44758133788) SUCCESS, 52 unit/contract tests PASS; artifact `14639616906`.
+- Latest CI [#44758608904](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44758608904) SUCCESS, 52 unit/contract tests PASS; artifact `14638958067`.
 - T10-19 through T10-25 regression gates PASS.
 - Xu independent review remains PENDING; Vinh Stage B non-release integration authorization remains PENDING.
 - Runtime handoff, positive/negative ACK, review, controlled fault injection and workflow_run diagnostics have not been executed; all were SKIPPED on PR synchronize.
