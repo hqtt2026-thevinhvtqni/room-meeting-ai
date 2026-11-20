@@ -41,7 +41,7 @@ Tăng tốc xây dựng bộ máy thực thi Work Lifecycle thật. Chia module 
 - Nếu Core thiếu endpoint, báo gap; không tự ý mở rộng Core ngoài phạm vi.
 
 ### WP70-QA — Test độc lập
-- Owner đề xuất: Qw / AI-05 (hoặc Test được Vinh chỉ định)
+- Owner mặc định: Go / AI-06 theo D70-026 (trừ quyết định khác của Vinh)
 - Phạm vi: test strategy; contract tests; state-transition matrix; negative/security tests; dependency/race/idempotency tests; regression và E2E sau tích hợp.
 - Đầu ra: test plan, test cases, defect log, reproducible commands, raw test results, independent QE report.
 - Viết test độc lập với implementation; không sửa code của Co/Vi để làm test xanh.
