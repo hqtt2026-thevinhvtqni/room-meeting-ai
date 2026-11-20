@@ -75,3 +75,11 @@ Principal-level self-review hardening is implemented and verified by [Run #44747
 - Added P0 review checklist `XR-118-001` with 12 ordered gates covering design, identity, ACK, self-review, idempotency, failure/retry, controlled fault injection, least privilege, evidence, cross-Work boundary, runtime E2E and release.
 - Latest completed CI [Run #44748049548](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44748049548): SUCCESS, 36 tests passed; artifact ID `14633817327`.
 - PR #67 remains DRAFT for Xu independent review. Vinh final acceptance and main integration remain pending.
+
+
+## Event automation verification update — 2026-11-20
+
+- [Run #44748965030](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44748965030): SUCCESS; 44 tests passed; artifact ID `14634556693`.
+- Authorized ACK applies `w118-acked` only after role authorization; handoff/ACK/review event artifacts remain RECORDED and outside Work 70 register.
+- PR checklist notifier is isolated in `pull_request_target` and does not checkout/execute PR code. The normal pull_request job stays read-only.
+- PR #67 remains DRAFT, 89 commits ahead / 0 behind main. Xu independent review and Vinh final acceptance are pending.
