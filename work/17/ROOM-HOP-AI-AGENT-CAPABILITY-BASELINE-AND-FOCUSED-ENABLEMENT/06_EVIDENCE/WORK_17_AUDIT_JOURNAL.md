@@ -1363,3 +1363,36 @@
 - Disposition: WP70-CO historical ACK RECORDED; artifact receipt recorded in DOC-054; complete scope NOT DELIVERED/NOT VERIFIED; code remains Sandbox-only preparatory prototype; no GitHub source promotion; GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
 - Hành động: READ/TRACE only. Không push/merge/copy code, không tạo branch mới, không sửa DOC-054/Build Register, không mở G4/BUILD, không chạy test/Host/provider.
 - Bước tiếp theo: tiếp tục đối chiếu DOC-055/DOC-035 latest Sandbox versus GitHub versions để xác định authoritative journal/register version and whether WP70-CO has an explicit superseding/closure decision. If none, record as historical partial deliverable; do not treat as active assignment or reuse as live authority.
+
+## Entry 077 — W70 canonical root, nested mirror và xung đột phiên bản DOC-001/003/035/055 (2026-11-20T19:20+07:00)
+
+- Người thực hiện: Xu / AI-01.
+- Phạm vi: Xác định source-of-truth boundaries của W70 để không dùng nhầm nested mirror hoặc 05_BUILD coordination artifacts làm canonical Assignment source; đối chiếu DOC-001, DOC-003, DOC-035, DOC-055 giữa GitHub main và Sandbox canonical root.
+- Phương pháp: Fetch exact GitHub main paths và Sandbox Work ID 70 direct-root paths; so sánh version/date/content length/line count; trích quy tắc canonical ownership và mirror disposition. Không đọc/ghi nested mirror, không đồng bộ/ghi đè, không thay đổi W70.
+- W70 DOC-001 comparison:
+  - GitHub main blob 0131e012ce67ce5dd8c17a258fb592c7f3d3641a: version 1.6 / 2026-11-07; Standard 1.2. Khai báo Sandbox Work 70 và GitHub main; branch work/70/05-build chỉ là 05_BUILD mapping/coordination, không phải canonical source repository; canonical source repo/path phải được khai báo tường minh.
+  - Sandbox direct-root DOC-001: version 1.5 / 2026-11-08; Standard 1.3; status ACTIVE — STANDARD CORRECTION RECORDED; PHYSICAL MIGRATION OPEN. Nội dung ghi DOC-003 governs Sandbox/GitHub mapping, DOC-055 controls canonical document path và DOC-096 là P0 operating control.
+  - Hai bản không exact-match; số version và Standard version không cùng một chuỗi tiến triển đơn giản (GitHub số cao hơn nhưng ngày cũ hơn; Sandbox số thấp hơn nhưng ngày mới hơn). Không tự kết luận bản nào thay thế bản nào.
+- W70 DOC-003 comparison:
+  - GitHub main blob 26220d7c1a2e50f6c179898accb2dbda0c7bb872: version 1.3 / 2026-11-07. Nêu Sandbox Work 70 root, GitHub main giữ lifecycle/root documentation, canonical Work records, evidence index và Dashboard; branch work/70/05-build chỉ là 05_BUILD mapping/engineering-coordination subtree, không sở hữu Work records hay product source.
+  - Sandbox direct-root DOC-003: version 1.2 / 2026-11-08; status ACTIVE — STRUCTURAL CORRECTION RECORDED; LEGACY MIGRATION OPEN. Xác định duy nhất canonical Sandbox root là ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/; nested work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/ là legacy partial mirror, read-only, non-authoritative; DOC-035 và DOC-055 trong nested mirror divergent và không được dùng làm nguồn.
+  - Sandbox DOC-003 nói rõ GitHub parity cho structural correction NOT VERIFIED; việc xác định canonical root không đồng nghĩa đã physical cleanup, GitHub sync hoặc PC sync.
+- W70 DOC-055 comparison:
+  - GitHub main blob 4c540c6c71e24a763befb7a479f44076fe6210c1: version 3.3 / 2026-11-07; status ACTIVE — SINGLE SOURCE OF TRUTH; 242 lines / 42,132 chars.
+  - Sandbox direct-root: version 2.18 / 2026-11-17; cùng status ACTIVE — SINGLE SOURCE OF TRUTH; 450 lines / 65,553 chars. Có thêm addenda 2026-11-14 và 2026-11-17 về DOC-091, W300/W117/W76 evidence, source parity và trạng thái QE.
+  - Toàn văn không khớp; cả hai bản cùng tuyên bố là single source of truth nhưng có version/content divergence. Không tự chọn hoặc overwrite; cần W70 authority reconcile theo DOC-056 và preserve append-only history.
+- W70 DOC-035 comparison:
+  - GitHub main blob f910ef171ff47390a83d689447e9b7b8b10244c8: 1,559 lines / 268,543 chars; tail có các mốc đến 2026-11-13.
+  - Sandbox direct-root: 3,165 lines / 526,770 chars; tail có Entry 084 ngày 2026-11-17 và các records 2026-11-16. Có WP70-CO historical records (2026-10-31/11-02), audit 2026-11-06, các source-parity findings và những sự kiện vận hành sau GitHub tail.
+  - Toàn văn không khớp. Sandbox DOC-003 trực tiếp cảnh báo DOC-035/DOC-055 có divergent content và cần archive/reconcile trước disposition. Không append vào W70, không copy Sandbox journal sang GitHub và không tuyên bố W70 journal parity.
+- Canonical source implications for WP70-CO:
+  - DOC-001 §34 nói product source/tests chỉ canonical trong repository/path được khai báo tường minh; 05_BUILD chỉ map đến nguồn đó. DOC-001 §26/§51 và DOC-003 §16/§34–37 nói file nằm trong 05_BUILD hoặc được commit vào coordination branch không tự thành canonical source.
+  - DOC-003 xác định Sandbox direct-root là canonical Work root; nested mirror là read-only/non-authoritative. Các W70 code files đã đọc trước đó nằm trong direct-root 05_BUILD/04_CODE nhưng chưa có mapping sang canonical product source repo/path và không tồn tại trên GitHub main/branch work/70/05-build.
+  - Do vậy W70 WP70-CO code chỉ có thể được phân loại là Sandbox preparatory artifact/temporary mapping candidate, không phải canonical source hoặc production Assignment service. Đây là kết luận được hỗ trợ bởi cả source README, DOC-035 audit và ownership/sync rules.
+- Bounded conclusion:
+  - Có một xung đột document-control thực tế giữa GitHub main và Sandbox canonical root ở DOC-001/003/035/055. Các phiên bản khác nhau vẫn cùng tồn tại; exact readback của từng nơi không đồng nghĩa parity giữa hai nơi.
+  - W70 DOC-003 phân biệt rõ canonical direct-root với nested legacy mirror; vòng truy vết này chỉ dùng direct-root Sandbox và GitHub main/branch exact paths, không dùng nested mirror.
+  - Chưa thể xác định một bản DOC-035/DOC-055 duy nhất đã được hai hệ thống cùng xác nhận là latest synchronized version. W70 owner/authority cần reconcile; Work17 không tự sửa.
+- Disposition: W70 document/source authority reconciliation OPEN; WP70-CO remains historical ACK + Sandbox-only preparatory artifact; canonical Assignment service/API/persistence/ACK verifier NOT VERIFIED; GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
+- Hành động: READ/TRACE only; no W70 writes, sync, merge, migration, mirror cleanup, source promotion or test/runtime action.
+- Bước tiếp theo: use DOC-056 migration rules and W70 authority to reconcile DOC-001/003/035/055 versions, preserve both histories, then establish one exact canonical DOC-035/DOC-055 revision and source mapping for any retained 05_BUILD code. Until then, do not reuse WP70-CO prototype as canonical Assignment authority.
