@@ -102,7 +102,7 @@
 - **Bước tiếp theo:** (1) đối chiếu hai workflow và xác định một luồng pilot canonical; (2) lập test cases riêng cho handoff, ACK identity/role và diagnostics FAIL; (3) bổ sung bằng chứng retry/idempotency; (4) yêu cầu review độc lập theo TD-118-007; (5) cập nhật Evidence Register/Dashboard sau khi schema được chốt. Mỗi test phải có run URL, commit SHA, job conclusion và output thực tế.
 - **Trạng thái:** WORK 118 = NOT ACCEPTED / PILOT PARTIALLY VERIFIED. Không đánh dấu G4/G5 PASS toàn Work.
 
-## Entry 009 — Kết luận nghiệm thu của Xu: NOT ACCEPTED — vòng kiểm thử độc lập được thiết lập
+## Entry 011 — Vibe ghi nhận kết luận nghiệm thu của Xu (đồng bộ với Entry 009 của Xu)
 - **Thời gian:** 2026-11-20 (sau Entry 008)
 - **Phạm vi:** ghi nhận kết luận nghiệm thu độc lập của Xu trên Issue #65; không chỉnh sửa bất kỳ mã nguồn nào (đúng phương án của Xu).
 - **Kết luận của Xu:** NOT ACCEPTED — pilot chạy được một phần (Run #2 SUCCESS, ack-verification có bằng chứng) nhưng chưa đủ chuỗi end-to-end; AC-R1..AC-R6 (chi tiết hồ sơ XU-118-AC-001).
@@ -112,7 +112,7 @@
 - **Kiểm thử CI / runtime:** của vòng này — NOT RUN (đang chờ Xu thực hiện theo plan).
 - **Trạng thái Work:** BUILD/PILOT — XU NOT ACCEPTED, vòng kiểm thử độc lập IN PROGRESS.
 
-## Entry 010 — Trạng thái liên bắt buộc cho vòng kiểm thử độc lập (chốt trước khi tay bắt đầu)
+## Entry 012 — Chốt freeze phiên bản cho vòng kiểm thử độc lập
 - **Thời gian:** 2026-11-20
 - **Chốt freeze phiên bản:** Vibe sẽ không chủ động push/phát sinh bất kỳ thay đổi nào trong .github/workflows hay hồ sơ W118 khác ngoài Nhật ký này + hồ sơ kết quả kiểm thử của Xu.
 - **Thứ tự ưu tiên theo KT-118-009:** T-01 (label w118-handoff) -> T-02/T-03 (ACK & actor test) -> T-04 (runtime diagnostics re-run Run #1) -> T-05 (đề xuất mở listener) -> T-06 (đối chiếu PR vs main).
