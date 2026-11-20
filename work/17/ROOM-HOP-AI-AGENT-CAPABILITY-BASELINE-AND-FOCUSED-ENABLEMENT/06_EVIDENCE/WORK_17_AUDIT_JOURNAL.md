@@ -1226,3 +1226,45 @@
 - Disposition: GAP-01 OPEN/P0; GAP-11 OPEN/P0 trên current main; E2/E3 NOT PROVEN; recipient-authenticated ACK-before-Host NOT PROVEN; PR #48 là candidate riêng, chưa merge/production; protected execution DENY / NOT RELEASED; Work17 READ/TRACE/ANALYZE ONLY.
 - Hành động trong vòng này: chỉ tổng hợp và ghi nhận trace. Không sửa source, không port/cherry-pick/merge PR, không tạo Assignment/ACK/dispatcher mới, không gọi route, không chạy process/test, không gửi provider hoặc yêu cầu PC thao tác.
 - Bước tiếp theo: truy vết chính xác nguồn Assignment authority và cơ chế read-back hiện có trong W70/Core; xác định trường/định danh ACK có thể được xác minh online và liên kết vào grant mà không nhân đôi state. Chỉ sau khi contract/source authority được chứng minh mới lập đề xuất thay đổi; mọi implementation vẫn cần phê duyệt và review độc lập.
+
+## Entry 073 — W70 Sandbox Assignment prototype và đối chiếu với Core/GitHub main (2026-11-20T19:20:00+07:00)
+
+- Người thực hiện: Xu / AI-01.
+- Phạm vi: Tiếp tục GAP-01/GAP-11; truy vết các thành phần W70 có thể là Assignment authority gồm DOC-005, DOC-064, DOC-066, DOC-071, DOC-072; Sandbox source lifecycle_domain.py, work_registry.py, tests/README; đối chiếu exact GitHub main paths và Core identity/HTTP source.
+- Phương pháp: GitHub code search theo AssignmentService, assignment_id, class Assignment, assignment_store, assignment_registry, dispatch_attempt, ack_ref, work_registry; fetch exact current-main source; Sandbox list/read_probe Work 70 cho các file nguồn và evidence; chỉ đọc, không chạy test, không gọi route, không sửa Work 70/Core.
+- Phát hiện từ W70 DOC-064 (GitHub main blob 0cd5cc7108310a93c98a289cc9a27f89b951b5dc):
+  - Status DRAFT — ARCHITECTURE DECISION RECORDED / IMPLEMENTATION NOT AUTHORIZED.
+  - DOC-064 đặt Core/Work Registry làm authoritative store chỉ sau khi Core contract/API được xác minh; Assignment lifecycle và transport lifecycle phải tách biệt.
+  - Quy trình target yêu cầu AI ACK mang assignment_id, dispatch_id, AI identity proof, accepted/rejected, scope understood và ETA; ingest xác minh identity binding, assignment version, expiry, nonce/idempotency trước khi ghi ACKNOWLEDGED.
+  - SESSION_HANDOFF là user-mediated; packet tạo ra không phải delivery; receipt phải được nhập/kiểm chứng riêng. DOC-064 §107 nêu Core owner và authoritative Work/Assignment/Evidence APIs chưa được xác minh.
+- Phát hiện từ W70 DOC-066 (GitHub main blob 8278b5199b5802ac915d412df499a181dd37342a):
+  - Status PLANNED — IMPLEMENTATION NOT AUTHORIZED / TESTS NOT RUN.
+  - Phase 0 yêu cầu truy vết Work/Assignment structures; Phase 4 mới dự kiến implement state-transition guard, event dedupe, ordering, idempotency, retry/reconcile và lưu qua Core service đã được phê duyệt.
+  - DOC-066 nêu rõ nếu Core service không tồn tại thì dừng và trình Core-owned proposal; không tạo local shadow source/database.
+  - Test matrix gồm ACK đúng assignment/nonce, giả mạo AI ID, duplicate ACK, Core/persistence outage và concurrent version. Đây là test plan, không phải test evidence.
+- Phát hiện từ W70 Sandbox source:
+  1. ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/05_BUILD/04_CODE/lifecycle_domain.py (10,111 chars): module docstring nói rõ pure domain logic, không phải API, persistence, authorization service, audit writer hoặc authoritative Work state. validate_assignment_ready() kiểm tra completeness/shape của DOC-044 fields (assignment_id, work_id, wp_id, issuer, assigned_ai_id, reviewer, source baseline, permissions, deliverables, acceptance/test/evidence); hàm không xác minh principal, recipient, delivery receipt, ACK, expiry/nonce hay ghi state.
+  2. Cùng module có Work/WP/Gate transition guards; các tham số owner_authorized là facts đầu vào, docstring yêu cầu Core phải xác minh từ authenticated principal. Hàm evaluate trả GuardResult, không commit transition hoặc audit.
+  3. ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD/05_BUILD/04_CODE/work_registry.py (5,688 chars): WorkRegistry docstring ghi pure in-memory registry, không persistence/API/authorization/audit. Chỉ lưu WorkRecord và WorkPackageRecord trong dictionary; không có AssignmentRecord, DispatchAttempt, delivery receipt hay ACK aggregate.
+  4. test_lifecycle_domain.py có AssignmentTests chỉ kiểm tra DOC-044 READY completeness/shape; test_work_registry.py kiểm tra Work/WP in-memory/dependency/cycle. Có test source không chứng minh test đã chạy trong vòng này.
+  5. WP70_CO_REGISTRY_README.md ghi in-memory spike only, không persistence/API/database/audit/scheduler/authorization/Core integration. WP70_CO_DOMAIN_GUARD_README.md xác nhận không authenticate actor, persist Work/WP state, write audit, manage idempotency/concurrency, expose API hoặc call Core; README có ghi một lần test payload cục bộ 10 tests passed trong temporary directory, nhưng Sandbox runtime execution/readback khi đó không được xác minh. Không tái sử dụng claim này như test run mới.
+- GitHub parity/source check:
+  - Exact GitHub main fetch trả NOT_FOUND cho cả bốn path W70 tương ứng: lifecycle_domain.py, work_registry.py, test_lifecycle_domain.py, test_work_registry.py trong work/70/.../05_BUILD/04_CODE/.
+  - Vì vậy các file trên là Sandbox source snapshot, không phải current GitHub main source và không có bằng chứng deployed runtime. Không suy diễn chúng đã được đồng bộ.
+- Core identity/current-main source:
+  - core/principal_registry.py blob 1eda0c80f413c1405415f92e0e2ff3b82a43b5ef: human principal YAML directory; module nói không xử lý authorization/JOIN.
+  - core/identity_resolution.py blob 207c0ea74e3c77929c1723b0e66beba4ccf36201: phân loại identity type và registry membership; không chứng minh session-bound authentication hoặc Work permission.
+  - core/governance.py blob aa68e79304465b9bac3bfffe95d94943b97bfecd: capability map/source guard hiện có nhưng không cho thấy Work Assignment authority/ACK persistence.
+  - room_hop_mcp/adapter/http_server.py blob 54cb3ecbce2e6b13083f31c14f0c1f0738f1457d: /identities read-only và Meeting routes; không thấy Work/WP/Assignment/Evidence route trong file.
+  - room_hop_mcp/core_http_main.py blob 8dd6bb5ea500026d932ca52eb6079c980d722ab0: build_app gọi create_http_app(service); không có bằng chứng mount Assignment/Work Authority router trong executable composition đã đọc.
+- Search evidence and limitation:
+  - GitHub code search không trả AssignmentService, transition_assignment, assignment_store, assignment_registry, dispatch_attempt hoặc work_registry implementation. Search trả DOC-065/DOC-064/DOC-063, Work17 historical trace, W76 target design và W802001 supervision references; đây không phải Assignment runtime service.
+  - Search index absence không chứng minh tuyệt đối không có implementation ngoài repository/path/surface đã kiểm tra. Kết luận chính được giới hạn ở exact current-main paths/source đã đọc và W70 Sandbox files đã đọc.
+- Kết luận:
+  - W70 hiện có contract/template cho Assignment; Sandbox có domain completeness guard và Work/WP in-memory registry spike.
+  - Chưa tìm thấy Assignment aggregate/service/API, durable Assignment persistence, authenticated ACK ingest/verifier, state-transition transaction, event/audit read-back hoặc production runtime.
+  - W70 Sandbox prototype không được coi là Assignment authority và không thể nối trực tiếp PR #48 grant như một nguồn ACK có thẩm quyền.
+  - Đường nối hợp lệ vẫn phải tái sử dụng Core/W70 authority sau khi tìm được service/source contract thật; không nâng WorkRegistry in-memory thành source of truth, không tạo shadow store/dispatcher.
+- Disposition: GAP-01 OPEN/P0; GAP-11 OPEN/P0 trên current main; Assignment service/API/persistence NOT VERIFIED; recipient-authenticated ACK NOT PROVEN; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED; Work17 READ/TRACE/ANALYZE ONLY.
+- Hành động: READ/TRACE/ANALYZE בלבד. Không chạy tests, không gọi API/Host, không sửa code, không đồng bộ W70 prototype sang GitHub, không tạo schema/store/dispatcher, không merge/cherry-pick PR #48.
+- Bước tiếp theo: đối chiếu DOC-044/DOC-093/DOC-094 với lifecycle_domain.py để xác định khoảng cách giữa Assignment template/planning register và domain guard; kiểm tra BUILD_REGISTER/ownership trong W70 xem spike này có được chấp thuận/migration/commit hay vẫn là candidate. Chỉ sau đó xác định nguồn duy nhất có thể làm authoritative Assignment; không giả định W70 Sandbox registry là dịch vụ Core.
