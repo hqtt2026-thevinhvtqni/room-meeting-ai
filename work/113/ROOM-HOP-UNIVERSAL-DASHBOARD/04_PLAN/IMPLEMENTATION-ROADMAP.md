@@ -59,10 +59,10 @@ The multi-AI collaboration capability is surfaced and integrated by W113; underl
 - Ka / AI-02: independent architecture/security boundary review.
 - Cla / AI-03: technical/runtime feasibility and code/security review when assigned.
 - Kha / AI-04: product strategy, user journeys and product requirements.
-- Qw / AI-05: independent QE, test strategy and acceptance evidence.
+- Go / AI-06: default QE/QA owner under D70-026; test strategy and acceptance evidence.
 - Go / AI-06: cost, operational risk and independent assurance within demonstrated capability.
 - Co / AI-07, Vi and Qc: implementation support only after build authorization and scoped assignments.
-- An: test execution support under Qw/independent QE direction.
+- An: test execution support under Go / default QE/QA direction.
 - Mê / other consultants: independent architecture input; consultation does not grant implementation authority.
 
 Actual identity, capability, session reachability and permission must be verified at assignment time. A role label is not an authorization credential. No AI may approve its own implementation.
