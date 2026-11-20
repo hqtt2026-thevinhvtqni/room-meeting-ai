@@ -122,3 +122,12 @@ This confirms product scope only. It does not approve a storage vendor, detailed
 - Data truth: Dashboard reads the canonical W117 Task Board and Journal. It must not fabricate progress, task completion, Agent online state, dispatch, ACK or runtime activity. Unverified states must be displayed as unverified.
 - Explicit boundary: This authorization applies ONLY to the W117 Dashboard. It does not authorize the W117 media-hub product implementation (T009–T011), paid services, billing/payment setup, cloud account/token creation, real-media upload, production deployment or release. Those remain separately gated.
 - Status: DASHBOARD BUILD AUTHORIZED; AGENT DISPATCH/ACK NOT VERIFIED; IMPLEMENTATION NOT YET EVIDENCED.
+
+
+## 14. Quyết định điều chỉnh QE/QA toàn HQTT — áp dụng D70-026 (2026-11-21)
+- Authority: Vinh / Product Owner; chỉ thị trực tiếp mới nhất.
+- Go / AI-06 thay Qw / AI-05 làm QE/QA mặc định duy nhất trên toàn HQTT và mọi Work. Go đồng thời giữ vai trò CFO/Cost Analyst.
+- Qw / AI-05 vẫn tồn tại trong stable roster nhưng không còn giữ vai trò QE/QA mặc định. Các nội dung cũ tại Mục 5 và Mục 13 nhắc Qw làm QE/QA được giữ nguyên như lịch sử tại thời điểm ghi nhận; từ thời điểm D70-026 có hiệu lực, Go là đầu mối QE/QA áp dụng cho W117.
+- Quy tắc độc lập: Go không tự review/accept deliverable do Go thực hiện; chỉ định reviewer độc lập khác (ví dụ Ka hoặc reviewer đủ điều kiện khác) cho phần có xung đột.
+- Ranh giới: vai trò nghiệp vụ không tự chứng minh Go đã nhận task, đăng nhập GitHub, có session hoặc quyền repository/runtime. Dispatch, access và ACK phải có bằng chứng riêng. Không thay đổi scope BUILD, chi phí, upload media, deployment hoặc release.
+- Status: ROLE AUTHORITY UPDATED; DISPATCH/ACCESS NOT VERIFIED; BUILD/RELEASE GATES UNCHANGED.
