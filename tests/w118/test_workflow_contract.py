@@ -83,6 +83,7 @@ class Work118WorkflowContractTests(unittest.TestCase):
         data = self.load_yaml(DIAGNOSTICS)
         workflows = data["on"]["workflow_run"]["workflows"]
         self.assertIn("W118 Auto E2E Validation", workflows)
+        self.assertIn("W118 PR Review Checklist", workflows)
         self.assertIn("W300 Dashboard CI", workflows)
         self.assertIn("Work 70 Preview Host Tests", workflows)
 
