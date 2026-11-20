@@ -1490,3 +1490,13 @@
 - Disposition: PR #60 OPEN/DRAFT/UNMERGED/MERGEABLE=false; cross-Work scope risk confirmed; W17 current main records preserved; W76 dispatch NOT IMPLEMENTED/CLAIMED; WP-76-07 BLOCKED; GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
 - Hành động: READ/TRACE only. No PR edit/close/merge, no branch operation, no cherry-pick, no file replacement, no CI/test, no dispatch/provider/Host call.
 - Bước tiếp theo: treat PR #60 as a separate candidate. If any W76 component is to be reused, request a narrow W76-only patch/PR from current main and explicitly exclude W17/W300/W502/W802001 governance snapshots; verify durable Core/provider implementations and recipient ACK before any WP-76-07 status change.
+
+
+## 2026-11-21 — Entry bổ sung: Áp dụng D70-026 thay đổi QE/QA mặc định
+- **Authority:** Chỉ thị trực tiếp mới nhất của Vinh.
+- **Quyết định:** Go / AI-06 thay Qw / AI-05 làm QE/QA mặc định duy nhất toàn HQTT và mọi Work; Go đồng thời giữ CFO/Cost Analyst. Qw vẫn là thành viên roster AI-05 nhưng không còn vai trò QE/QA mặc định.
+- **Nguồn:** Work 70 DOC-006 D70-026 và DOC-043 canonical role register.
+- **Tác động W17:** Matrix đã cập nhật AI-05 Qw và AI-06 Go theo vai trò hiện hành; stable ID AI-05/AI-06 không thay đổi.
+- **Ranh giới:** Go có trách nhiệm nghiệp vụ QE/QA toàn HQTT; GitHub login, session, dispatch/ACK, capability runtime và quyền kỹ thuật vẫn NOT_VERIFIED/NOT_PROVEN nếu chưa có bằng chứng riêng. Go không tự review deliverable do Go thực hiện.
+- **Lịch sử:** D70-025 và các entry cũ giữ nguyên; D70-026 supersedes vai trò QE/QA trong D70-025.
+- **Trạng thái:** DOC-043/DOC-006 updated; W17 matrix updated; journal addendum recorded. Exact read-back pending.
