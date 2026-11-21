@@ -460,13 +460,12 @@ if os.name == "nt":
                     f"WaitForSingleObject(worker) failed: {ctypes.get_last_error()}"
                 )
 
-            # A worker can exit while a browser/descendant remains in the job.
-            # Such a process is not an acceptable successful completion.
-            if not timed_out and job.active_processes() > 0:
-                self.forced_cleanup = True
-                job.terminate()
-            reader.join(float(cleanup_timeout_seconds) + 2.0)
+            # Give the OS a short grace period to retire the signaled worker
+            # from Job Object accounting. If stdout remains open, a descendant
+            # may still hold the pipe; then fail closed and terminate the job.
+            reader.join(min(1.0, float(cleanup_timeout_seconds)))
             if reader.is_alive():
+                self.forced_cleanup = True
                 job.terminate()
                 reader.join(float(cleanup_timeout_seconds) + 2.0)
             if reader.is_alive():
@@ -856,8 +855,8 @@ class HostOwnerLease:
 class ProcessSupervisor:
     """Run one workflow in an OS-contained worker process.
 
-    Windows is accepted only when a suspended worker is assigned to a named
-    Job Object before its primary thread is resumed. POSIX process groups are
+    Windows is accepted only when CreateProcessW atomically places the worker
+    in a named Job Object through PROC_THREAD_ATTRIBUTE_JOB_LIST. POSIX process groups are
     a limited test/development profile; production Linux remains fail-closed
     unless an explicit limited-profile override is supplied.
     """
@@ -1002,6 +1001,13 @@ class ProcessSupervisor:
                         result["error"] = (result.get("error") or "") + "; worker exited nonzero"
 
             active_after = job.active_processes()
+            if active_after:
+                # Allow a short OS accounting grace after worker exit before
+                # deciding that a descendant leaked from an otherwise clean run.
+                grace_deadline = time.monotonic() + min(0.75, self.cleanup_timeout_seconds)
+                while active_after and time.monotonic() < grace_deadline:
+                    time.sleep(0.05)
+                    active_after = job.active_processes()
             if active_after:
                 forced_cleanup = True
                 if cleanup_action == "none":

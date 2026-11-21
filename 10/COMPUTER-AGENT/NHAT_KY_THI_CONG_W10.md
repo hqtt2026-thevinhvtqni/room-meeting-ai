@@ -1271,3 +1271,14 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - **Corrections made in Sandbox:** initialize stdin/stdout pipe variables as `wintypes.HANDLE()`; set `COMPUTER_AGENT_ALLOW_DESTRUCTIVE=1` only in the dedicated CI real-browser E2E server environment so the contract-required download action is explicitly allowed. Default API policy remains destructive-deny.
 - **Next:** rerun full cross-platform CI; verify Windows atomic Job List process creation + API tests + Chromium E2E; verify Linux HTTP API + browser E2E with explicit test-only destructive permission. Do not call either platform integrated E2E PASS until both pass.
 - **KÝ: Co | AI-07**
+
+
+## W10-CI-RUN44-DIAGNOSIS-20261122-01 — 2026-11-22 05:38 (UTC+07:00)
+- **Name:** Co | **Title:** AI-07 / End-to-End Architecture & Implementation Lead
+- **Run:** GitHub Actions #44, ID `44957683489`, commit `dac5600f98fbfec4149c59afb87e483c2adcb8eb`.
+- **Integrated Real Chromium E2E:** PASS on both Ubuntu 24.04 and Windows Server 2022 through the HTTP API + isolated worker + ProcessSupervisor. Both returned HTTP 200, state trace PLANNED→RUNNING→VERIFYING→PASS, 13 action steps, screenshot evidence, and `containment_empty_verified=true`. Windows evidence profile `OS_JOB_OBJECT_ATOMIC_JOB_LIST`; Linux profile `LIMITED_NOT_CGROUP_V2`.
+- **Linux regression:** all 4 suites PASS; 140 checks PASS, 0 FAIL, 1 Windows-only SKIP; HTTP API 37/37.
+- **Windows regression:** offline contract 60/60 PASS; safety 45/45 PASS; process containment 2/2 PASS. HTTP API had 6 failures because the very fast fake-adapter worker could still appear in Job Object active-process accounting immediately after its process handle became signaled. Adapter close was recorded on its owner thread; the false-positive forced cleanup converted otherwise valid requests to BLOCKED. Real Chromium E2E on the same runner did not exhibit the issue and passed.
+- **Correction made in Sandbox:** added a bounded OS accounting grace period after worker exit before classifying remaining Job Object members as leaked; if members persist beyond the grace, the supervisor still terminates and returns BLOCKED. Reader-pipe closure also gets a short grace and remains fail-closed.
+- **Disposition:** integrated browser E2E now proven on both hosted OSes; Windows HTTP fake-adapter regression needs rerun. Work 10 remains ACTIVE — NOT RELEASED; Linux hardened cgroup-v2 and physical Windows 10 PC evidence remain open.
+- **KÝ: Co | AI-07**
