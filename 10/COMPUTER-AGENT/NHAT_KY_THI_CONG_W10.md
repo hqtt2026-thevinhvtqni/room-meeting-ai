@@ -1333,3 +1333,29 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - New files: 06_EVIDENCE/W10_P0_ACCEPTANCE_MANIFEST_V8.schema.json; 06_EVIDENCE/W10_P0_CATEGORY_OUTCOME_POLICY_V8.json; 06_EVIDENCE/W10_P0_VALIDATOR_ATTESTATION_V1.schema.json; 04_CODE/acceptance_validator.py; 05_TEST/test_acceptance_validator.py.
 - **Status:** implementation written in Sandbox; CI not yet run; no V8 PASS claimed. Production HMAC key/pinned hashes not provisioned on Owner PC. P0 validator remains OPEN; Work 10 ACTIVE — NOT RELEASED.
 - **KÝ: Co | AI-07**
+
+
+## W10-CI-RUN52-20261122-01 — 2026-11-22 06:10 (UTC+07:00)
+- **Name:** Co
+- **Title:** AI-07 / End-to-End Architecture & Implementation Lead
+- **Run:** GitHub Actions #52, ID `44959557526`, commit `843a532d2c08bc4bbd404fcd165ff5d619c130f6`, branch `work/10-computer-agent-mirror`.
+- **Ubuntu 24.04:** 183 PASS / 0 FAIL / 2 SKIP. Six suites: contract 60, safety 41, HTTP 52, containment 2, host operations 12, V8 validator 16. Real Chromium E2E PASS.
+- **Windows Server 2022:** 189 PASS / 0 FAIL / 0 SKIP. Six suites: contract 60, safety 45, HTTP 52, containment 2, host operations 14, V8 validator 16. Real Chromium E2E PASS. Job Object evidence: active_processes_after_cleanup=0; containment_empty_verified=true.
+- **Artifacts:** Linux ID 14728674665, SHA-256 `2d6338874ff0977c9e47a51e5a21bfbc87b45a159e90a288558b11a070b79b75`; Windows ID 14729430156, SHA-256 `7cd16b4fdda217a9d4b1bdcba37b4d30a822891b1ebbd7859ea393d0921099a2`.
+- **Predecessor:** Run #51 failed both OSes at http_api and acceptance_validator subprocess launch/exit; job summary did not expose exact stderr. Run #52 passed; no unsupported root cause asserted.
+- **Limitations:** Windows Server 2022 is not physical Windows 10 PC; Linux process group remains LIMITED_NOT_CGROUP_V2; production HMAC key not provisioned; ROOM-HOP Dashboard/PC Bridge E2E open.
+- **Evidence:** `06_EVIDENCE/W10_CROSS_PLATFORM_CI_EVIDENCE_20261122_RUN52.md`.
+- **KÝ: Co | AI-07**
+
+## W10-SOURCE-PARITY-HARDENING-20261122-01 — 2026-11-22 06:10 (UTC+07:00)
+- Compared 31 Sandbox files across source/test/architecture/config with GitHub branch.
+- Three LOCKED contracts and PC Host Capability Contract exact match; main runtime, process supervisor, worker, host operations and test modules exact match.
+- One source mismatch found: Sandbox `04_CODE/acceptance_validator.py` contained stricter category catalog/policy identity/version/outcome-state validation than GitHub.
+- Mirrored the Sandbox version to GitHub branch. Commit: `29daa718509b1c3906527a8cd9358104061e3b85`.
+- CI #53 (ID `44960863874`) triggered on this commit; IN_PROGRESS at journal time. Do not infer test PASS until completion.
+- **KÝ: Co | AI-07**
+
+## W10-CI-RUN53-PENDING-20261122-01 — 2026-11-22 06:10 (UTC+07:00)
+- Run #53 / ID `44960863874`, tested commit `29daa718509b1c3906527a8cd9358104061e3b85`.
+- Cross-platform workflow triggered after syncing acceptance validator hardening. Status IN_PROGRESS at record time.
+- **KÝ: Co | AI-07**
