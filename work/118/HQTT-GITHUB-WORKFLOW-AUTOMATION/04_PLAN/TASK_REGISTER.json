@@ -7,7 +7,7 @@
   "authority": "Vinh",
   "source_of_truth": "Sandbox Work 118 / HQTT-GITHUB-WORKFLOW-AUTOMATION/04_PLAN/TASK_REGISTER.json",
   "github_mirror": "https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/blob/work/118-auto-e2e-v2/work/118/HQTT-GITHUB-WORKFLOW-AUTOMATION/04_PLAN/TASK_REGISTER.json",
-  "model": "Work-specific adaptation of Work 70 DOC-093, aligned with W112 DOC-001 as a DRAFT_NOT_APPROVED compatibility reference.",
+  "model": "W118 Work-level planning Task Register modeled on W70 DOC-093. It is not a runtime Core Task/Assignment database; Core :8000 is the sole runtime Task/Event authority.",
   "status_model": [
     "PLANNED",
     "READY",
@@ -17,26 +17,14 @@
     "DONE",
     "CANCELLED"
   ],
-  "assignment_status_model": [
-    "UNASSIGNED",
-    "PROPOSED",
-    "DISPATCHED",
-    "ACKNOWLEDGED",
-    "IN_PROGRESS",
-    "SUBMITTED",
-    "ACCEPTED",
-    "REJECTED",
-    "BLOCKED",
-    "CANCELLED"
-  ],
   "rules": [
-    "One canonical Task Register for W118; Sandbox is its operational authority.",
-    "Task status and Assignment status are separate state machines.",
-    "GitHub Issue is a mirror, not Task authority; GitHub Assignee is not AI ACK.",
-    "CI PASS/FAIL is evidence only; it cannot set Task DONE or Assignment ACCEPTED.",
-    "Every state change and runtime observation is appended to the canonical Work Journal.",
-    "Never mark DONE without deliverable, evidence and Owner acceptance.",
-    "SQLite runtime store is an operational transaction/event adapter; it is not a second canonical Task Register."
+    "One canonical Work-level planning Task Register for W118; Sandbox is its operational project-planning authority.",
+    "This register tracks W118 implementation tasks and Work Package progress; it is not the runtime Core Task/Assignment/Event store.",
+    "Core :8000 is the sole canonical runtime Task/Assignment/Event authority; W102 owns Agent Loop policy; W12 owns execution/GitHub/CI bridge.",
+    "GitHub Issue mirror is generated from a normalized Core Task snapshot, not directly from this planning register.",
+    "execution_mode is a Work-level implementation authorization classification, not a runtime Agent Assignment state.",
+    "Owner-directed build tasks require owner_directive_ref; no Agent principal/ACK is fabricated.",
+    "Do not create a local Task database, dispatcher, event queue, event bus, execution host or CI engine in W118."
   ],
   "tasks": [
     {
@@ -49,7 +37,6 @@
       "accountable_role": "ORCHESTRATOR",
       "role_name": "Xu / AI-01",
       "assigned_identity": null,
-      "assignment_status": "UNASSIGNED",
       "reviewer_role": "QE/QA",
       "inputs": [
         "TD-118-012",
@@ -109,8 +96,10 @@
       "branch": null,
       "commit_sha": null,
       "ci_run_id": null,
-      "execution_mode": "OWNER_DIRECTED_SESSION",
-      "owner_directive_ref": "owner-directive:vinh:2026-11-21"
+      "execution_mode": "OWNER_DIRECTED_BUILD",
+      "owner_directive_ref": "owner-directive:vinh:2026-11-21",
+      "core_task_id": null,
+      "correlation_id": null
     },
     {
       "task_id": "W118-TASK-014",
@@ -122,7 +111,6 @@
       "accountable_role": "IDENTITY_AUTHORITY",
       "role_name": "Xu / AI-01 coordinates; Vinh owns identity authority",
       "assigned_identity": null,
-      "assignment_status": "UNASSIGNED",
       "reviewer_role": "Security/QE",
       "inputs": [
         "W118 role-map",
@@ -182,8 +170,10 @@
       "branch": null,
       "commit_sha": null,
       "ci_run_id": null,
-      "execution_mode": "AGENT_ASSIGNMENT",
-      "owner_directive_ref": null
+      "execution_mode": "CORE_AGENT_TASK",
+      "owner_directive_ref": null,
+      "core_task_id": null,
+      "correlation_id": null
     },
     {
       "task_id": "W118-TASK-015",
@@ -195,7 +185,6 @@
       "accountable_role": "ORCHESTRATOR",
       "role_name": "Xu / AI-01",
       "assigned_identity": null,
-      "assignment_status": "UNASSIGNED",
       "reviewer_role": "QE/QA",
       "inputs": [
         "W118-TASK-013",
@@ -258,8 +247,10 @@
       "branch": null,
       "commit_sha": null,
       "ci_run_id": null,
-      "execution_mode": "AGENT_ASSIGNMENT",
-      "owner_directive_ref": null
+      "execution_mode": "CORE_AGENT_TASK",
+      "owner_directive_ref": null,
+      "core_task_id": null,
+      "correlation_id": null
     },
     {
       "task_id": "W118-TASK-016",
@@ -271,7 +262,6 @@
       "accountable_role": "ORCHESTRATOR",
       "role_name": "Xu / AI-01",
       "assigned_identity": null,
-      "assignment_status": "UNASSIGNED",
       "reviewer_role": "QE/QA",
       "inputs": [
         "W118-TASK-013",
@@ -337,8 +327,10 @@
       "branch": null,
       "commit_sha": null,
       "ci_run_id": null,
-      "execution_mode": "OWNER_DIRECTED_SESSION",
-      "owner_directive_ref": "owner-directive:vinh:2026-11-21"
+      "execution_mode": "OWNER_DIRECTED_BUILD",
+      "owner_directive_ref": "owner-directive:vinh:2026-11-21",
+      "core_task_id": null,
+      "correlation_id": null
     },
     {
       "task_id": "W118-TASK-017",
@@ -350,7 +342,6 @@
       "accountable_role": "ORCHESTRATOR",
       "role_name": "Xu / AI-01",
       "assigned_identity": null,
-      "assignment_status": "UNASSIGNED",
       "reviewer_role": "Security/QE",
       "inputs": [
         "W118-TASK-013",
@@ -417,8 +408,10 @@
       "branch": null,
       "commit_sha": null,
       "ci_run_id": null,
-      "execution_mode": "OWNER_DIRECTED_SESSION",
-      "owner_directive_ref": "owner-directive:vinh:2026-11-21"
+      "execution_mode": "OWNER_DIRECTED_BUILD",
+      "owner_directive_ref": "owner-directive:vinh:2026-11-21",
+      "core_task_id": null,
+      "correlation_id": null
     },
     {
       "task_id": "W118-TASK-018",
@@ -430,7 +423,6 @@
       "accountable_role": "DATA_GOVERNANCE",
       "role_name": "Xu / AI-01 coordinates; Vinh/W70 owner authority",
       "assigned_identity": null,
-      "assignment_status": "UNASSIGNED",
       "reviewer_role": "W70 QE/Owner",
       "inputs": [
         "W118-TASK-013",
@@ -494,8 +486,10 @@
       "branch": null,
       "commit_sha": null,
       "ci_run_id": null,
-      "execution_mode": "AGENT_ASSIGNMENT",
-      "owner_directive_ref": null
+      "execution_mode": "CORE_AGENT_TASK",
+      "owner_directive_ref": null,
+      "core_task_id": null,
+      "correlation_id": null
     },
     {
       "task_id": "W118-TASK-019",
@@ -507,7 +501,6 @@
       "accountable_role": "QE/OWNER",
       "role_name": "Xu coordinates; Vinh final acceptance",
       "assigned_identity": null,
-      "assignment_status": "UNASSIGNED",
       "reviewer_role": "Independent QE + Vinh",
       "inputs": [
         "W118-TASK-013",
@@ -574,8 +567,10 @@
       "branch": null,
       "commit_sha": null,
       "ci_run_id": null,
-      "execution_mode": "AGENT_ASSIGNMENT",
-      "owner_directive_ref": null
+      "execution_mode": "CORE_AGENT_TASK",
+      "owner_directive_ref": null,
+      "core_task_id": null,
+      "correlation_id": null
     }
   ],
   "task_count": 7,
