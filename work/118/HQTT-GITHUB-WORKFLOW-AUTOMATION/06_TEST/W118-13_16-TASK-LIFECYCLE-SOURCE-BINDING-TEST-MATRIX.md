@@ -69,3 +69,20 @@
 - Full lifecycle runtime E2E and product acceptance.
 
 **Disposition:** contract PASS at tested SHA; no claim of live runtime E2E or W118 product acceptance.
+
+
+## 5. Task Register and Task/Assignment separation update
+
+| Test ID | Scenario | Expected result | Current evidence |
+|---|---|---|---|
+| T13-18 | New Task creation | Task status PLANNED; Assignment status UNASSIGNED | PASS |
+| T13-19 | Task READY transition | Only Owner/Orchestrator can change Task status | PASS |
+| T13-20 | Assignment PROPOSED/DISPATCHED/ACKNOWLEDGED | Separate Assignment state changes; Task status remains READY | PASS |
+| T13-21 | Executor ACK | Exact assigned principal and dispatch ID required | PASS |
+| T13-22 | Task IN_PROGRESS | Cannot start before Assignment ACKNOWLEDGED | PASS |
+| T13-23 | Assignment ACCEPTED | Requires independent verifier evidence | PASS |
+| T13-24 | Task DONE | Requires Assignment ACCEPTED and Owner acceptance evidence | PASS |
+| T13-25 | Issue link | Separate readback event; does not change Task status | PASS |
+| T13-26 | External push/CI observation | Appends evidence; Task and Assignment status unchanged | PASS |
+
+**Latest combined contract CI:** tested SHA `3b8847568facbaa1517ece7af111deb4818c5ed3`; push run #44879608573 SUCCESS; 127 tests PASS / 0.380s; artifact ID 14697605476; SHA-256 `1ba2e30c35c67d33bda977e0eef320c726c290e5dabeffbdb675e96311f35438`.
