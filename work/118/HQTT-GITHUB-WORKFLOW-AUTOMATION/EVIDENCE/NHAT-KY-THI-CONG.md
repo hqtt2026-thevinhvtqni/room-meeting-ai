@@ -1446,3 +1446,17 @@
 - **Evidence record:** Exact-head audit comment posted to PR #68 (comment ID `7069816272`). This journal entry is a documentation-only update; its new commit will require its own exact-head CI readback before claiming validation for that later SHA.
 - **Disposition:** ACTIVE — NOT ACCEPTED — NOT RELEASED. Implementation freeze retained. B-118-010 PREPARED / NOT APPLIED; no Main merge and no release.
 - **Next step:** Xu independent review and authorized runtime test cycle; update status only with new evidence, without promoting CI contract PASS to runtime or acceptance PASS.
+
+
+## Entry 023 — Preliminary independent source review finding and identity correction
+
+- **Priority:** 01 — P0/P1 review integrity; source finding classified P1.
+- **Date-Time:** 2026-11-22 04:58 (UTC+07:00).
+- **Scope:** Read-only source review of current PR #68 HEAD `7d8cf9c4b5e1feff79e569036d8d72a16850d143`, focusing on GitHub Issue mirror identity and the evidence/authorization boundary. No implementation changes.
+- **Finding P1-118-01 — Forged/duplicate Issue marker can hijack the Task mirror:** In `scripts/w118/github_issue_adapter.py`, `_find_task_issue()` accepts a predictable body marker as identity, returns the first matching Issue, does not detect duplicate marker matches, and `mirror_core_task()` does not enforce equality with `CoreTaskProjection.issue_id` when Core has an existing Issue binding. A user able to create Issues can inject the marker and cause a mirror operation to select/update an unintended Issue. Core state remains authoritative, but GitHub mirror identity and source provenance can be corrupted. Existing tests cover PR marker exclusion and normal idempotency, not forged/duplicate markers or stored-ID mismatch.
+- **Required correction:** fail closed when multiple matches exist; require exact match to Core's recorded `issue_id` when present; on first creation, bind the returned Issue ID through the canonical Core lock/registration path before allowing future updates; add adversarial regression tests.
+- **Review disposition:** preliminary source review **NEEDS CHANGES — P1-118-01 OPEN**. This is not a formal GitHub APPROVE/REQUEST_CHANGES review because the connected GitHub identity is the repository owner `hqtt2026-thevinhvtqni`, not a verified Xu login. Formal reviews and inline review threads remain 0.
+- **Attribution correction:** Entry 022's `Name / Title: Xu` must be read as the assistant-session audit label only, not as proof that a GitHub review was submitted by a verified Xu principal. GitHub evidence comments were posted under the authenticated repository-owner account. No Xu GitHub identity is inferred.
+- **Evidence comment:** preliminary finding and attribution clarification posted on PR #68 as issue comment ID `7069844269`; this is not a formal review event.
+- **Preservation:** keep implementation freeze; no merge, B-118-010 application, or release. Runtime lifecycle remains NOT VERIFIED; exact-head contract CI PASS does not close this finding or acceptance gates.
+- **Next step:** Ka to assess and propose a remediation diff; do not apply it until the review/approval path is respected. Xu re-reviews the corrected source; Vinh retains final product acceptance.
