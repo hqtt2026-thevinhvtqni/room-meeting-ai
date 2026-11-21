@@ -108,7 +108,9 @@
       "issue_url": null,
       "branch": null,
       "commit_sha": null,
-      "ci_run_id": null
+      "ci_run_id": null,
+      "execution_mode": "OWNER_DIRECTED_SESSION",
+      "owner_directive_ref": "owner-directive:vinh:2026-11-21"
     },
     {
       "task_id": "W118-TASK-014",
@@ -179,7 +181,9 @@
       "issue_url": null,
       "branch": null,
       "commit_sha": null,
-      "ci_run_id": null
+      "ci_run_id": null,
+      "execution_mode": "AGENT_ASSIGNMENT",
+      "owner_directive_ref": null
     },
     {
       "task_id": "W118-TASK-015",
@@ -253,7 +257,9 @@
       "issue_url": null,
       "branch": null,
       "commit_sha": null,
-      "ci_run_id": null
+      "ci_run_id": null,
+      "execution_mode": "AGENT_ASSIGNMENT",
+      "owner_directive_ref": null
     },
     {
       "task_id": "W118-TASK-016",
@@ -330,7 +336,9 @@
       "issue_url": null,
       "branch": null,
       "commit_sha": null,
-      "ci_run_id": null
+      "ci_run_id": null,
+      "execution_mode": "OWNER_DIRECTED_SESSION",
+      "owner_directive_ref": "owner-directive:vinh:2026-11-21"
     },
     {
       "task_id": "W118-TASK-017",
@@ -408,7 +416,9 @@
       "issue_url": null,
       "branch": null,
       "commit_sha": null,
-      "ci_run_id": null
+      "ci_run_id": null,
+      "execution_mode": "OWNER_DIRECTED_SESSION",
+      "owner_directive_ref": "owner-directive:vinh:2026-11-21"
     },
     {
       "task_id": "W118-TASK-018",
@@ -483,7 +493,9 @@
       "issue_url": null,
       "branch": null,
       "commit_sha": null,
-      "ci_run_id": null
+      "ci_run_id": null,
+      "execution_mode": "AGENT_ASSIGNMENT",
+      "owner_directive_ref": null
     },
     {
       "task_id": "W118-TASK-019",
@@ -561,7 +573,9 @@
       "issue_url": null,
       "branch": null,
       "commit_sha": null,
-      "ci_run_id": null
+      "ci_run_id": null,
+      "execution_mode": "AGENT_ASSIGNMENT",
+      "owner_directive_ref": null
     }
   ],
   "task_count": 7,
