@@ -197,3 +197,14 @@ Sau khi ghi BB-118-002, Ka đã exact-fetch lại hồ sơ, checklist, runbook, 
 - **Event jobs:** handoff, ACK, acceptance-review, controlled-failure and controlled-failure-dispatch SKIPPED; runtime E2E NOT VERIFIED.
 - **Reviews:** formal PR reviews empty; inline review threads empty at exact readback.
 - **Disposition:** SHA-pin gate PASS; contract verification PASS; Xu review PENDING; Vinh acceptance PENDING; no rebase, merge or release.
+
+
+### G. Latest validation snapshot — 2026-11-21
+
+- **Exact feature HEAD tested:** `8e9bf8e952a2d97778fe6e16d84f6db05ffcbcdc`.
+- **CI:** [Run #44846716357](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44846716357), push validation; workflow SUCCESS; `validate` SUCCESS; **53 tests PASS / 0.402s**; T10-26 PASS.
+- **Artifact:** `w118-run-evidence-44846716357-1`, ID `14682678487`, SHA-256 digest `81a634f99b9de2c490adc32e01f637ee1d37ed5a30625100a0b0a71fce45d849`; present/unexpired at readback; expires 2026-12-21T00:53:08Z.
+- **Runtime:** all five event-specific jobs SKIPPED; live runtime E2E NOT VERIFIED.
+- **Git compare at this snapshot:** Main `5f8390910178012feaf37510452bc39804b296db`; feature `8e9bf8e952a2d97778fe6e16d84f6db05ffcbcdc`; merge base `cf2537e07bfd71d5823bd98f8673b3ab5644fcdc`; **263 ahead / 82 behind — DIVERGED**.
+- **PR state:** OPEN / not merged / not released; raw GitHub PR API `mergeable=true`, `mergeable_state=unstable`; this is not merge authorization.
+- **Reviews:** zero formal review submissions and zero inline review threads.
