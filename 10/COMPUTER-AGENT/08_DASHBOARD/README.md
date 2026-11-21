@@ -21,7 +21,7 @@ Use the Work 10 root as the current directory and two PowerShell terminals.
 $token = python -c "import secrets; print(secrets.token_urlsafe(32))"
 $env:COMPUTER_AGENT_API_TOKEN = $token
 Set-Clipboard -Value $token
-$env:COMPUTER_AGENT_ALLOWED_ORIGINS = "http://127.0.0.1:3000"
+$env:COMPUTER_AGENT_ALLOWED_ORIGINS = "http://127.0.0.1:3010"
 $env:COMPUTER_AGENT_WORK_ID = "10"
 python .\04_CODE\agent_api.py
 ```
@@ -31,10 +31,10 @@ Keep this terminal open; the API binds to loopback by default. The generated tok
 **Terminal B — serve the Dashboard**
 
 ```powershell
-python -m http.server 3000 --bind 127.0.0.1 --directory .\08_DASHBOARD
+python -m http.server 3010 --bind 127.0.0.1 --directory .\08_DASHBOARD
 ```
 
-Open exactly `http://127.0.0.1:3000` (not `file://`, not a public hostname). Wait until the header shows `CONNECTED · W10`; verify the Work ID, version, lease, and policy. Paste the clipboard token into the password field only when ready to run.
+Open exactly `http://127.0.0.1:3010` (not `file://`, not a public hostname). Wait until the header shows `CONNECTED · W10`; verify the Work ID, version, lease, and policy. Paste the clipboard token into the password field only when ready to run.
 
 ## Running a real workflow
 
@@ -58,3 +58,8 @@ python .\05_TEST\test_dashboard_contract.py
 This checks source-level UI invariants and JavaScript syntax only. It is **not** a live browser/API integration test. P4 remains NOT VERIFIED until the operational page is opened in a supported browser against the exact Work 10 API revision and live health + an approved end-to-end workflow are observed with retained evidence. The Sandbox's real-browser/CI evidence for other revisions does not certify this Dashboard change, Windows behavior, or the user's PC.
 
 `09_DASHBOARD_PREVIEW/` and root `preview/` are layout/demo previews. Their JSON is sample data and must never be presented as current runtime state.
+
+
+## Shared Dashboard ingress boundary — 2026-11-22
+
+Port `3000` is reserved for the single shared ROOM-HOP Dashboard ingress owned by W113. This Work 10 Dashboard is a standalone local development/acceptance UI and therefore serves on loopback port `3010` during isolated testing. Work 10 must not start a competing listener on port 3000. Production Work 10 Dashboard access must be mounted/registered by W113 under its approved Work route; the route path and embedding contract are not guessed here. The Agent API remains loopback-only and its exact Origin allow-list must be configured for the approved host origin before any integration. W113 integration is NOT VERIFIED.
