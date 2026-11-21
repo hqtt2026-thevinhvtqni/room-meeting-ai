@@ -1152,3 +1152,27 @@ PR #61 remains OPEN / UNMERGED. No deployment, Core mutation, listener restart o
 - Work 28 status unchanged: ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; execution gate CLOSED.
 
 **Signature:** Ka / AI-02 — CSA / ROOM-WIDE GitHub + Sandbox Reconciliation Owner.
+
+
+## 2026-11-21 16:28 UTC+7 — JRN-W28-032 — Ka follow-up P0 / stale Issue triage
+
+**Name:** Ka / AI-02  
+**Title:** CSA / ROOM-WIDE GitHub + Sandbox Reconciliation Owner (delegated)  
+**Date-Time:** 2026-11-21 16:28 +07:00  
+**Priority:** P1  
+**Read order:** 32  
+**Reference:** RA-W28-20261121-001, Section 7.
+
+### Additional issue dispositions
+- Issue #39: retained as historical append-only Work32 CI log; historical 188/188 pilot runs are not current Work32 acceptance.
+- Issue #44 / PR #45: P0 remains OPEN; PR #45 is only audit-truthfulness correction, branch 2 ahead / 1,111 behind main, zero formal review/thread; no trusted Manus session authentication or Work99 binding; no merge.
+- Issue #56: W300 TS2345 diagnostic remains tied to exact SHA `cffe439a919bbee5f181cdfa1d16f832ecf5e9de`; no matching canonical Work300 source branch found in this repo snapshot; OPEN / BLOCKED.
+- Issue #57: explicit REJECT / BLOCKED for current bounded Work32 execution proposal; protected execution DENIED; no implementation/test/runner/PC/PR mutation permission; Cla response absent, no ACK inferred.
+- Issue #58: PR #60 remains active W76 v2 draft; dispatch transport/target receipt/authenticated ACK, runtime/PC E2E and canonical QE remain blocked/pending.
+
+### Result
+- **PASS:** comments and current dispositions recorded for the additional long-standing/P0 tickets.
+- **BLOCKED:** all protected execution and product acceptance gates remain controlled by their respective Work owners.
+- **NO MERGE / NO RELEASE:** unchanged.
+
+**Signature:** Ka / AI-02 — CSA / ROOM-WIDE GitHub + Sandbox Reconciliation Owner.
