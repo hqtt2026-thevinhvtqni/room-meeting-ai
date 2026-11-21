@@ -33,7 +33,7 @@
 
 ## 3. Verification state
 
-- **Current refactor:** new stateless adapters and tests are being integrated; latest exact-head CI after this ownership refactor is pending readback.
+- **Exact contract CI:** Push Run #44882420198 SUCCESS on SHA `5f02a9eafbf68eb0bcfca2942733882dab9cc5bf`; 94 tests PASS / 0.209s; artifact `14697683781`, SHA-256 `a2703f70b4a250197b14a84bb5408cef18f2917266f542c7850a54c70e098abc`. This is contract/unit evidence only; event jobs were SKIPPED.
 - **Runtime E2E:** NOT RUN.
 - **Sandbox code execution:** not available through the current Build MCP session (file operations only).
 - **GitHub Issue API:** no live Core-snapshot/lock-backed create-readback yet.
@@ -56,3 +56,13 @@
 - No local runtime Task DB, Agent Registry, dispatcher, event queue/Event Bus, Execution Host, Git Gateway or CI engine in W118.
 - CI PASS is evidence only; not Task DONE, Assignment ACCEPTED, merge or release.
 - No rebase/merge to main, branch-protection change or release without Vinh's explicit authorization.
+
+
+## 6. Audit refresh — 2026-11-21 16:02 +07:00
+
+- **Audit record:** RA-118-002 (P0, read order 13); Journal Entry 075.
+- **Branch integration:** `main...${branch}` observed 440 ahead / 86 behind, DIVERGED; integration BLOCKED pending path-level classification. No rebase/merge performed.
+- **PR review:** #67 OPEN / UNMERGED; formal review submissions 0; inline review threads 0.
+- **Runtime:** Core Task/lock/Event ports, W102 identity/Assignment, W12/W13 Host/GitHub/CI adapter and W70 schema ACK remain BLOCKED / NOT VERIFIED.
+- **Source binding:** aggregate branch result `UNBOUND_LEGACY_BRANCH`; no Task association inferred.
+- **Disposition:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED.
