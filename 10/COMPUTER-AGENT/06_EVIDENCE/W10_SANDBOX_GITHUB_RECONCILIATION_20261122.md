@@ -84,3 +84,20 @@ The original reconciliation text said An's independent review was pending. That 
 - GitHub Actions run #29 (ID 44953846300) passed syntax, offline contract tests and real Chromium E2E on commit `afa7c084104e336b63cbd1cd37dd4bfe21a4a23b`; its scope is Ubuntu 24.04 GitHub runner code only. The subsequent branch commit `e7e3397c1034f4a3225e6dff07b4be3f387b4647` changed the journal only, not production code.
 - An's V7 review is complete and findings remain open. V8 design proposal and An review task are mirrored; task acknowledgement/review is still pending.
 - Disposition unchanged: documentation/evidence mirror materially improved; full Sandbox/GitHub parity remains PARTIAL / NOT COMPLETE; G0 and P0 remain BLOCKED; Work 10 ACTIVE — NOT RELEASED.
+
+
+## Full path inventory disposition — 2026-11-22 06:32 (UTC+07:00)
+
+A new complete path inventory was generated from the live Sandbox listing and GitHub branch tree:
+- Sandbox: 157 files under `COMPUTER-AGENT/`.
+- GitHub branch: 64 files under `10/COMPUTER-AGENT/`.
+- Shared paths: 64.
+- Sandbox-only files: 93.
+- GitHub-only files: 0.
+- One Sandbox-only `.github/` directory contains the Sandbox-local workflow copy.
+
+All accepted source/test/architecture/config files are in the shared set and were compared exactly in the independent source/test batches. The three LOCKED contracts are exact-match. Selected current governance, evidence, Dashboard, runbook and handover files were also read back and compared after updates.
+
+The 93 Sandbox-only files have explicit KEEP / SANDBOX-ONLY disposition in `06_EVIDENCE/W10_FULL_PATH_INVENTORY_DISPOSITION_20261122.md`: generated caches/locks/runtime outputs (10), original/reference/preview material (8), historical evidence/design records (47), immutable AI debug handoff archive (26), superseded 2026-11-17 handover (1), transcript archive (1). They are intentionally not bulk-synced to the canonical branch.
+
+Disposition: accepted source/test/architecture/config parity is PASS for the current shared set; path inventory reconciliation is complete by explicit dispositions. Directory trees are not identical by design. Work 10 remains ACTIVE — NOT RELEASED.
