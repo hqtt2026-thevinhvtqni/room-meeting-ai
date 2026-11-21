@@ -64,3 +64,14 @@ Current phase: **BUILD / VERIFY — ACTIVE, NOT RELEASED**.
 - **Review:** Xu Stage A pending; Vinh Stage B non-release integration authorization pending.
 - **Runtime:** real handoff/ACK/review/diagnostics event E2E has not run; PR synchronize jobs skip event-specific workflows.
 - **State:** ACTIVE — BUILD / VERIFY — NOT RELEASED.
+
+
+## Scope reconciliation and product acceptance boundary — 2026-11-21
+
+The product objective in Issue #65 is broader than Auto E2E validation alone. The full lifecycle includes Issue Management, AI Assignment and verified ACK, Execution Tracking, Issue–Branch–Commit–Push binding, CI feedback, Work Journal/Evidence, and Work 70 Dashboard projection.
+
+- **Current disposition:** W118-10 Auto E2E is a partial automation layer, not proof of the complete Work Management product.
+- **Required reconciliation:** [RA-118-001 — Scope comparison and completion plan](../04_PLAN/RA-118-001_BANG-DOI-CHIEU-PHAM-VI-VA-KE-HOACH-HOAN-THIEN.md), Priority P0 / Read order 12.
+- Proposed W118-13..W118-19 remain pending Xu independent review; no new Work is created.
+- GitHub Assignee, ACK, execution-start, CI result, Work acceptance and release are separate states.
+- Work 70 remains the source of truth for the Work Dashboard; W118 must not create a second Dashboard or mutate its schema without approval.
