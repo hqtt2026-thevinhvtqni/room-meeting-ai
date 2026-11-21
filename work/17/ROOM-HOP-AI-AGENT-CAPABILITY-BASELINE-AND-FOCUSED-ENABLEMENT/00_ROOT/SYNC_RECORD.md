@@ -891,3 +891,13 @@
 - Combined with Entry 086, the inspected current-main MCP, Browser and HTTP app compositions do not construct a Work Assignment/ACK service. No durable Assignment/ACK store was located in those inspected paths. Alternate external/separate deployment remains NOT VERIFIED.
 - GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. READ/TRACE/ANALYZE ONLY. Entry 087 added.
 - Next: look for separately deployed Core service/configuration or external persistence adapter outside these entrypoints; do not create duplicate authority in W17.
+
+
+## Sync Period 0075 — W37 and current 8030 tool surface boundary (2026-11-21T16:45:32+07:00)
+
+- W37 inventory has 35 paths; `04_CODE` contains only `.gitkeep`. W37 scope/snapshot explicitly states it is an evidence workspace for the single Core :8000, not Core 2; exact source-to-port mapping/live process remain NOT VERIFIED.
+- Current assistant-session connector inventory contains 18 ROOM-HOP 8030 tools: Sandbox and Meeting operations; no typed Assignment create/read/update, task dispatch, private provider-session send, delivery receipt, recipient ACK or Assignment read-back action.
+- This is evidence about the current exposed tool surface only, not proof of all internal Core routes or other sessions. Meeting paste/Sandbox writes are not delivery/ACK.
+- Combined with current-main app-composition trace, Assignment/ACK remains NOT LOCATED in inspected source and tool surfaces. Alternate deployed Core service remains UNKNOWN/NOT VERIFIED.
+- GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. READ/TRACE/ANALYZE ONLY. Entry 088 added.
+- Next: seek source-backed evidence for any separately deployed Core service/route or persistence adapter; if unavailable, prepare architecture blocker/decision brief, not a parallel dispatcher.
