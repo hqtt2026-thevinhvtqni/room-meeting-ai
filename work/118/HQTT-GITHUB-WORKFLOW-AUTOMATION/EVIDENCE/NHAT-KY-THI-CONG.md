@@ -1209,3 +1209,53 @@
 
 - **Entry result:** DONE — execution-mode distinction implemented and tested; no Agent identity/ACK fabricated.
 - **Work state:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED.
+
+
+## Entry 075 — Audit tồn đọng lâu ngày và đối soát theo TD-118-012 v1.2
+
+- **Name:** Ka / AI-02
+- **Title:** CSA / W118 Delegated Build Owner
+- **Date-Time:** 2026-11-21 16:02 +07:00
+- **Authority:** Vinh đã ủy quyền Ka quyết định kỹ thuật và xây W118 đến bàn giao nghiệm thu; Xu giữ phản biện độc lập; Vinh giữ nghiệm thu sản phẩm và quyết định release.
+- **Priority:** P0
+- **Read order:** 13
+- **Reference:** RA-118-002 — Rà soát tồn đọng, đối soát kiến trúc v1.2 và kế hoạch đóng blocker.
+
+### 1. Phạm vi kiểm tra
+- Đọc Issue #65, PR #67, branch `work/118-auto-e2e-v2`, TD-118-012 v1.2, README, STATUS, KH-118-001, TASK_REGISTER, adapter implementation/test matrix, XR-118-001, BB-118-002 và nhật ký đến Entry 074.
+- Đối chiếu `main...`feature branch, formal PR reviews, review threads, GitHub Actions run/jobs/logs/artifacts.
+- Không thay đổi main, không rebase/merge, không sửa secrets/permissions/branch protection, không ghi Work70 schema.
+
+### 2. Evidence xác minh
+- Push run #44882420198 trên SHA `5f02a9eafbf68eb0bcfca2942733882dab9cc5bf`: validate SUCCESS; job log xác nhận 94 tests / 0.209s.
+- Event jobs handoff-request-capture, ack-claim-capture, review-observation-capture đều SKIPPED.
+- Artifact ID `14697683781`, SHA-256 `a2703f70b4a250197b14a84bb5408cef18f2917266f542c7850a54c70e098abc`, present; expires 2026-12-21.
+- PR run #44882422288: validate SUCCESS; các event jobs tiếp tục SKIPPED. Artifact ID `14698875552`, SHA-256 `97152807cf040ac20b122a5a6e3cb854aa7e211f6df357d66600a1a74c31e2fb`.
+- Source binding trên aggregate feature branch = `UNBOUND_LEGACY_BRANCH`; không suy diễn Task binding.
+- PR #67 OPEN / UNMERGED; formal review submissions = 0; inline review threads = 0.
+- Compare snapshot 2026-11-21 16:02 +07:00: feature branch 440 ahead / 86 behind main, DIVERGED; merge base `cf2537e07bfd71d5823bd98f8673b3ab5644fcdc`.
+
+### 3. Tồn tại lâu ngày và xử lý
+1. **Kiến trúc cũ không còn phù hợp:** RA-118-001 có đề xuất Agent Registry/dispatcher và state machine W118-local. TD-118-012 v1.2 là baseline owner-directed mới; không triển khai lại các thành phần trùng Core/W102/W12.
+2. **Nhật ký tụt sau implementation:** Entry 074 còn mô tả SQLite TaskRegistry/webhook inbox/event reconciler; README/STATUS/Build note hiện tại đã chuyển sang stateless adapter. Đã ghi nhận và cập nhật nhật ký bằng Entry 075; RA-118-002 là hồ sơ đối soát mới.
+3. **STATUS stale:** mục exact-head CI pending không còn đúng với evidence run #44882420198. Đã cập nhật STATUS với 94 tests, exact SHA, artifact và giới hạn runtime.
+4. **Branch divergence:** 440/86 DIVERGED. Ghi nhận BLOCKED cho tích hợp; không rebase/merge mù.
+5. **Runtime blockers:** Core Task API/field map/lock/Event ingress; W102 verified principal/Assignment/ACK; W12/W13 Host/GitHub Gateway/CIAdapter; W70 schema owner ACK đều chưa có bằng chứng cung cấp cho W118. Giữ BLOCKED, không giả lập.
+6. **Review/QE:** Xu formal review chưa có submission/thread; Go QE identity/access chưa được xác minh trong bằng chứng hiện có. Không suy đoán login hoặc cấp quyền.
+
+### 4. Task Register snapshot
+- W118-TASK-013: IN_PROGRESS / OWNER_DIRECTED_BUILD; Core API/field map BLOCKED.
+- W118-TASK-014: BLOCKED; W102/Core identity & Assignment.
+- W118-TASK-015: BLOCKED; W12/W13 execution.
+- W118-TASK-016: IN_PROGRESS / OWNER_DIRECTED_BUILD; Core lock/API, live Issue API và task-scoped push BLOCKED.
+- W118-TASK-017: IN_PROGRESS / OWNER_DIRECTED_BUILD; Core Event ingress và production webhook BLOCKED.
+- W118-TASK-018: BLOCKED; W70 schema/owner ACK.
+- W118-TASK-019: PLANNED; chờ các gate runtime trước.
+
+### 5. Result / next action
+- **PASS:** exact contract CI 94/94 tại SHA đã nêu; artifact metadata và digest đã đọc lại.
+- **PASS:** cập nhật STATUS và ghi Entry 075 để phản ánh đúng trạng thái.
+- **BLOCKED:** runtime E2E, Issue mirror thật, task-scoped push, Core event persistence, verified Agent dispatch/ACK, W70 projection.
+- **BLOCKED:** tích hợp nhánh do 440/86 DIVERGED; cần phân loại 86 commit Main mới trước khi có quyết định.
+- **PENDING:** Xu phản biện RA-118-002 / TD-118-012 v1.2; Go QE chỉ sau khi xác minh identity/access.
+- **Work state:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED.
