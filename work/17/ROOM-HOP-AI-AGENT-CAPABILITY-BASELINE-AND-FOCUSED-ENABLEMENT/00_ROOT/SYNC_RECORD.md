@@ -1047,3 +1047,15 @@
 - Disposition remains GAP-11 OPEN / NOT ACCEPTED; GAP-01 OPEN/P0; protected execution DENY / NOT RELEASED. No candidate code, PR, CI, runtime or deployment action.
 - Journal Entry 101 committed: `7887dd557c815b5d6922c638425aa21e1cd38e40`. GitHub main read-back required; Sandbox parity remains BLOCKED, no Sandbox write.
 - Next: keep checklist as evidence baseline; only revisit changed candidate revision, exact-head CI or PC handoff evidence.
+
+
+## Sync Period 0089 — Exact-HEAD W1111 CI verified on PR #48
+
+- Corrected the CI evidence gap in Period 0087 / Entry 100 and Period 0088 / Entry 101.
+- Direct GitHub Actions query by exact head SHA `c70eb2b82f54a000a81263dc519078ddf105f075` found run `43074281024` (run #154), event `push`, conclusion `success`; job `authority-tests` / `130709930041` also completed `success`.
+- All three configured test stages completed: Core authority/Host authority/Core HTTP; W12 canonical Host; W13 Core-grant bridge + W12 integration. Exact-HEAD CI evidence is now PASS for this candidate SHA. The earlier empty PR-triggered-only result was a query-scope limitation, not proof of absent CI.
+- PR #48 remains OPEN/DRAFT/UNMERGED/non-mergeable. No merge or candidate branch changes.
+- CI PASS does not close independent QE, live Core :8000/W13 :8031 deployment/runtime, production config/credential/persistent journal, PC/Sandbox parity, or GAP-01 Assignment/dispatch/receipt/ACK gates.
+- Disposition unchanged: GAP-11 OPEN / NOT ACCEPTED; GAP-01 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
+- Journal Entry 102 committed to GitHub main: `1790bb564e21e8d335d1d664e3a03a97dd29ff89`. Sync read-back required. Sandbox parity remains separately BLOCKED; no Sandbox write.
+- Next: do not repeat unchanged-SHA CI checks. Resume only on changed candidate revision or new independent/runtime evidence.
