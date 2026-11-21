@@ -220,3 +220,16 @@ The workflow_run listener requires default-branch presence for real runtime veri
 - **PR #67:** OPEN / READY FOR REVIEW / unmerged / unreleased; no formal review submissions or review threads.
 - **State:** BUILD / CONTRACT VERIFY PASS; READY FOR XU REVIEW; ACTIVE — NOT ACCEPTED — NOT RELEASED.
 - **Journal:** Entry 060 in `EVIDENCE/NHAT-KY-THI-CONG.md`.
+
+
+## Xu review reconciliation — current snapshot (2026-11-21 07:44 +07:00)
+
+- **Source:** direct GitHub PR #67, compare `main...work/118-auto-e2e-v2`, workflow run and artifact readback.
+- **PR #67:** OPEN / `draft=false` / unmerged / unreleased.
+- **Feature HEAD at review intake:** `1a99add2d752e3bd21d7c892eeced5f0f0ee7c18`; **Main HEAD:** `5f8390910178012feaf37510452bc39804b296db`; **merge base:** `cf2537e07bfd71d5823bd98f8673b3ab5644fcdc`; **244 ahead / 82 behind — DIVERGED**. This current snapshot supersedes earlier 239/74, 243/82 and 242/74 entries for reporting; historical entries are retained.
+- **Selected baseline CI:** [Run #44838531259](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44838531259), exact tested commit `1a99add2d752e3bd21d7c892eeced5f0f0ee7c18`; validate SUCCESS; 52 tests PASS / 0.193s; artifact ID `14680060235`, digest `f903025a1a386670f391239807dabde8ff3573b4a11186a53cb6d23b2cfee2b7`, present/unexpired at readback.
+- **Runtime:** handoff, ACK, acceptance-review and controlled-failure jobs SKIPPED; runtime event E2E NOT VERIFIED.
+- **Security remediation:** mutable action tags identified and replaced by full SHA pins; regression T10-26 and XR gate 20 P0 added. Pinning CI/readback is pending; do not mark PASS before CI.
+- **Identity:** Xu and Go GitHub logins remain NOT VERIFIED; no executor identity or permission is inferred. Role map remains fail-closed.
+- **Acceptance:** Xu review PENDING; Vinh final acceptance PENDING; no merge/release authorization or action.
+- **Next:** finish pinning CI, exact-readback all changed documents, then return the corrected handoff to Xu for independent review.
