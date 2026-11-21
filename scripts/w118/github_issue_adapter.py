@@ -1,156 +1,62 @@
-"""Idempotent Sandbox-to-GitHub Issue mirror adapter for W118 Tasks.
+"""GitHub Issue mirror adapter for Core :8000 Task snapshots.
 
-Sandbox remains the Task authority. GitHub Issues are collaboration mirrors.
-This adapter never assigns GitHub users, closes Issues, or changes Task state.
+This module has no Task database. The caller must supply a normalized Core
+Task projection and a Core-issued per-Task mirror lock lease. Core remains the
+only runtime Task/Assignment/Event authority.
 """
 from __future__ import annotations
 
-import json
-import re
-import urllib.error
-import urllib.parse
-import urllib.request
 from typing import Any, Callable, Mapping
+
+from .core_task_adapter import (
+    CoreTaskProjection,
+    core_task_issue_marker,
+    project_core_task_to_issue,
+)
 
 
 class GitHubIssueError(RuntimeError):
-    """GitHub API operation failed or returned an unverifiable result."""
+    """GitHub Issue API operation failed or returned inconsistent data."""
 
 
 class IssueLookupIncomplete(GitHubIssueError):
-    """The Issue scan was incomplete; creating another Issue would be unsafe."""
-
-
-Transport = Callable[[str, str, Mapping[str, Any] | None], tuple[int, Mapping[str, str], Any]]
-
-
-def task_issue_marker(task_id: str) -> str:
-    if not isinstance(task_id, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._:-]{0,127}", task_id):
-        raise ValueError("task_id is invalid")
-    return f"<!-- room-hop-task-id:{task_id} -->"
-
-
-def build_task_issue_body(task: Mapping[str, Any]) -> str:
-    required = ("work_id", "wp_id", "task_id", "title", "objective")
-    for field in required:
-        if not isinstance(task.get(field), str) or not task[field].strip():
-            raise ValueError(f"{field} must be a non-empty string")
-    marker = task_issue_marker(task["task_id"])
-    criteria = task.get("acceptance_criteria", [])
-    if not isinstance(criteria, list) or not criteria:
-        raise ValueError("acceptance_criteria must be a non-empty list")
-    criterion_lines = []
-    for item in criteria:
-        if not isinstance(item, Mapping):
-            raise ValueError("each acceptance criterion must be an object")
-        criterion_lines.append(
-            f"- **{item.get('id', 'AC')}** — {item.get('description', '')} "
-            f"(Verify: {item.get('verification_method', '')})"
-        )
-    scope_in = task.get("scope_in", [])
-    scope_out = task.get("scope_out", [])
-    priority = task.get("priority", "P2")
-    return "\n".join([
-        marker,
-        f"<!-- Work-ID: {task['work_id']} WP-ID: {task['wp_id']} Task-ID: {task['task_id']} -->",
-        "## Sandbox Task mirror",
-        f"- **Work:** {task['work_id']}",
-        f"- **Work Package:** {task['wp_id']}",
-        f"- **Task:** {task['task_id']}",
-        f"- **Priority:** {priority}",
-        f"- **Sandbox owner:** {task.get('owner_principal', 'UNASSIGNED')}",
-        "",
-        "## Objective",
-        task["objective"].strip(),
-        "",
-        "## Scope in",
-        *([f"- {item}" for item in scope_in] if scope_in else ["- Not specified"]),
-        "",
-        "## Scope out",
-        *([f"- {item}" for item in scope_out] if scope_out else ["- None specified"]),
-        "",
-        "## Acceptance criteria",
-        *criterion_lines,
-        "",
-        "---",
-        "This Issue mirrors a Task whose lifecycle authority remains in Sandbox. "
-        "GitHub Assignee is not proof of AI assignment or ACK. CI success does not "
-        "constitute Task acceptance. Do not close this Issue until Sandbox confirms "
-        "Owner acceptance and successful Issue-state readback.",
-    ])
+    """The adapter cannot prove that no matching Issue already exists."""
 
 
 class GitHubIssueAdapter:
-    """Create/update and read back a Task Issue using an injected GitHub token."""
-
     def __init__(
         self,
-        repository: str,
-        token: str,
+        transport: Callable[..., tuple[int, Mapping[str, str], Any]],
         *,
-        transport: Transport | None = None,
-        api_base: str = "https://api.github.com",
-        max_issue_pages: int = 50,
+        repository: str,
+        max_issue_pages: int = 20,
     ) -> None:
-        if not isinstance(repository, str) or not re.fullmatch(
-            r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repository
-        ):
-            raise ValueError("repository must use owner/name format")
-        if not isinstance(token, str) or not token.strip():
-            raise ValueError("GitHub token is required")
-        if type(max_issue_pages) is not int or max_issue_pages < 1 or max_issue_pages > 100:
-            raise ValueError("max_issue_pages must be between 1 and 100")
+        if not isinstance(repository, str) or repository.count("/") != 1:
+            raise ValueError("repository must be owner/name")
+        if type(max_issue_pages) is not int or max_issue_pages < 1:
+            raise ValueError("max_issue_pages must be a positive integer")
+        self.transport = transport
         self.repository = repository
-        self._token = token.strip()
-        self._transport = transport or self._urllib_transport
-        self._api_base = api_base.rstrip("/")
-        self._max_issue_pages = max_issue_pages
+        self.max_issue_pages = max_issue_pages
 
-    def _urllib_transport(
-        self, method: str, path: str, body: Mapping[str, Any] | None
-    ) -> tuple[int, Mapping[str, str], Any]:
-        url = f"{self._api_base}{path}"
-        data = json.dumps(body).encode("utf-8") if body is not None else None
-        request = urllib.request.Request(
-            url,
-            data=data,
-            method=method,
-            headers={
-                "Accept": "application/vnd.github+json",
-                "Authorization": f"Bearer {self._token}",
-                "X-GitHub-Api-Version": "2022-11-28",
-                "Content-Type": "application/json",
-                "User-Agent": "ROOM-HOP-W118-Issue-Adapter",
-            },
-        )
-        try:
-            with urllib.request.urlopen(request, timeout=20) as response:
-                raw = response.read()
-                payload = json.loads(raw.decode("utf-8")) if raw else None
-                return response.status, dict(response.headers.items()), payload
-        except urllib.error.HTTPError as exc:
-            raw = exc.read()
-            detail = raw.decode("utf-8", errors="replace")
-            raise GitHubIssueError(f"GitHub API {method} {path} returned HTTP {exc.code}: {detail}") from exc
-        except urllib.error.URLError as exc:
-            raise GitHubIssueError(f"GitHub API transport failed: {exc}") from exc
-
-    def _request(
-        self, method: str, path: str, body: Mapping[str, Any] | None = None
-    ) -> tuple[int, Mapping[str, str], Any]:
-        status, headers, payload = self._transport(method, path, body)
-        if status < 200 or status >= 300:
-            raise GitHubIssueError(f"GitHub API {method} {path} returned HTTP {status}")
-        return status, headers, payload
+    def _request(self, method: str, path: str, payload: Mapping[str, Any] | None = None) -> tuple[int, Mapping[str, str], Any]:
+        status, headers, body = self.transport(method, path, payload)
+        if status == 403 or status == 429:
+            raise GitHubIssueError("GitHub API rate/permission limit; retry only after policy/Retry-After")
+        if status >= 500:
+            raise GitHubIssueError("GitHub API server error")
+        if status >= 400:
+            raise GitHubIssueError(f"GitHub API returned HTTP {status}")
+        return status, headers, body
 
     def _find_task_issue(self, marker: str) -> Mapping[str, Any] | None:
-        for page in range(1, self._max_issue_pages + 1):
-            query = urllib.parse.urlencode({"state": "all", "per_page": 100, "page": page})
+        for page in range(1, self.max_issue_pages + 1):
             _, _, issues = self._request(
-                "GET", f"/repos/{self.repository}/issues?{query}"
+                "GET",
+                f"/repos/{self.repository}/issues?state=all&per_page=100&page={page}",
             )
             if not isinstance(issues, list):
-                raise GitHubIssueError("GitHub Issue listing did not return an array")
+                raise GitHubIssueError("Issue list response is not a list")
             for issue in issues:
                 if not isinstance(issue, Mapping) or "pull_request" in issue:
                     continue
@@ -171,24 +77,33 @@ class GitHubIssueAdapter:
         if issue.get("body") != expected_body:
             raise GitHubIssueError("Issue readback body mismatch")
         if "pull_request" in issue:
-            raise GitHubIssueError("Task mirror resolved to a Pull Request, not an Issue")
+            raise GitHubIssueError("Core Task mirror resolved to a Pull Request, not an Issue")
         return issue
 
-    def mirror_task(self, task: Mapping[str, Any]) -> dict[str, Any]:
-        """Create or update the Task Issue mirror and verify exact readback."""
-        title = f"[{task.get('work_id', 'W?')}] {task.get('title', '')}"
-        body = build_task_issue_body(task)
-        marker = task_issue_marker(task["task_id"])
+    def mirror_core_task(
+        self,
+        task: CoreTaskProjection,
+        *,
+        lock_lease_id: str,
+    ) -> dict[str, Any]:
+        """Create/update an Issue from a Core snapshot under a Core-issued lock."""
+        if not isinstance(task, CoreTaskProjection):
+            raise GitHubIssueError("task must be a normalized CoreTaskProjection")
+        if not isinstance(lock_lease_id, str) or not lock_lease_id.strip():
+            raise GitHubIssueError("Core per-Task lock lease is required; no local lock is created")
+        projection = project_core_task_to_issue(task)
+        title, body, labels = projection["title"], projection["body"], projection["labels"]
+        marker = core_task_issue_marker(task.task_id)
         existing = self._find_task_issue(marker)
         if existing:
             number = existing.get("number")
             if type(number) is not int or number < 1:
-                raise GitHubIssueError("existing Task Issue has an invalid number")
+                raise GitHubIssueError("existing Core Task Issue has an invalid number")
             if existing.get("title") != title or existing.get("body") != body:
                 self._request(
                     "PATCH",
                     f"/repos/{self.repository}/issues/{number}",
-                    {"title": title, "body": body},
+                    {"title": title, "body": body, "labels": labels},
                 )
                 action = "UPDATED"
             else:
@@ -197,7 +112,7 @@ class GitHubIssueAdapter:
             _, _, created = self._request(
                 "POST",
                 f"/repos/{self.repository}/issues",
-                {"title": title, "body": body},
+                {"title": title, "body": body, "labels": labels},
             )
             if not isinstance(created, Mapping) or type(created.get("number")) is not int:
                 raise GitHubIssueError("GitHub Issue creation returned no valid issue number")
@@ -210,11 +125,13 @@ class GitHubIssueAdapter:
             "issue_id": number,
             "issue_url": issue.get("html_url"),
             "repository": self.repository,
-            "work_id": task["work_id"],
-            "wp_id": task["wp_id"],
-            "task_id": task["task_id"],
+            "work_id": task.work_id,
+            "task_id": task.task_id,
+            "correlation_id": task.correlation_id,
+            "core_source_revision": task.source_revision,
             "readback_verified": True,
-            "authority": "GITHUB_ISSUE_MIRROR_SANDBOX_TASK_AUTHORITY",
+            "authority": "CORE_8000_TASK_AUTHORITY_GITHUB_ISSUE_MIRROR",
+            "lock_lease_id": lock_lease_id,
             "assignees_mutated": False,
             "issue_state_mutated": False,
         }
