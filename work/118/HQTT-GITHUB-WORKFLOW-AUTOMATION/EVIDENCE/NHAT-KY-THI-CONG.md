@@ -1069,3 +1069,53 @@
 
 - **Entry result:** DONE — W118-13/16 code foundations and push workflow contract implemented; exact tested revision PASS; runtime integration remains partial.
 - **Work state:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED.
+
+
+## Entry 071 — Issue mirror, webhook inbox and push/CI reconciliation foundations
+
+- **Name:** Xu / AI-01
+- **Title:** HQTT Coordinator / W118 Technical Build Owner
+- **Date-Time:** 2026-11-21 13:36 +07:00 (continuation of owner-directed build; individual commits and CI runs below carry exact execution times)
+- **Authority:** Vinh's direct instruction to build without waiting for multi-agent review remains active. Xu owns technical implementation; Vinh retains product acceptance, merge and release.
+- **Branch:** `work/118-auto-e2e-v2`; no rebase/merge to main.
+
+### 1. Additional implementation
+- `scripts/w118/github_issue_adapter.py`: builds Task Issue mirror with stable HTML marker, Work/WP/Task metadata, objective/scope/AC; scans paginated Issues and excludes PRs; creates or updates; repeated sync returns UNCHANGED; exact readback verifies number/title/body; incomplete scan fails closed; does not assign GitHub users or close Issue.
+- `tests/w118/test_github_issue_adapter.py`: fake transport tests create/readback, repeat idempotency, update, PR exclusion, incomplete scan fail-closed and invalid configuration.
+- `scripts/w118/webhook_inbox.py`: HMAC-SHA256 verification, UUID delivery ID, event allowlist, repository allowlist, payload hash, SQLite PENDING inbox, idempotent duplicate delivery, replay conflict for same delivery ID/different content, explicit processing result.
+- `tests/w118/test_webhook_inbox.py`: signature, malformed header, short secret, event allowlist, repository, JSON, UUID, duplicate/replay and processing-state tests.
+- `scripts/w118/event_reconciler.py`: reconciles signed push events to exact Sandbox Task/Issue/SHA; records source evidence without changing Task state; consumes completed CI events only from allowlisted W118 validation workflow and only when head SHA matches a previously reconciled push; CI-before-push remains DEFERRED/PENDING; CI PASS/FAIL recorded as evidence only.
+- `tests/w118/test_event_reconciler.py`: push binding, legacy unbound branch, out-of-order CI, CI PASS/FAIL evidence-only, wrong Issue mismatch, unapproved workflow and duplicate processing.
+
+### 2. CI evidence
+- Issue mirror + webhook inbox source SHA `343fb526f5284ca1dcc4a55d463d58bf0c437340`: push run #44877554435 SUCCESS; 108 tests PASS / 0.503s; artifact ID 14696481659; SHA-256 `9414a8c7184099475557f1a651c2e8efaed31eb1f5e839d59c4bbaaea2e4f0f6`.
+- Push/CI event reconciler source SHA `4e5c1e0d23cf145ddbcfca88c32255069ab3c642`: push run [#44877879841](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44877879841) SUCCESS; **118 tests PASS / 0.380s**; PR run [#44877883249](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44877883249) SUCCESS.
+- Latest artifact ID `14697131158`; SHA-256 `db783c9329e95f2cdb0dce68c21911d56bb2bc7e318088fb53617936c9861011`.
+- Existing aggregate branch source binding remains `UNBOUND_LEGACY_BRANCH`; no Task is inferred. No live task-specific branch push or production webhook callback has been executed.
+
+### 3. Corrections / failures retained
+- Issue adapter first test run failed because a test expected uppercase `Work-ID` while the body used lowercase `work-id`; normalized the marker format and reran successfully.
+- Earlier source binding and workflow integration failures remain recorded in Entry 070; no failed run was reclassified as PASS.
+
+### 4. Documentation
+- Updated W118-13/16 implementation note with Issue mirror, WebhookInbox and event reconciler scope/limits.
+- Added `W118-13_17-ISSUE-MIRROR-WEBHOOK-INBOX-TEST-MATRIX.md` and `W118-17-PUSH-CI-EVENT-RECONCILIATION-TEST-MATRIX.md`.
+- Updated README, STATUS and KH-118-001 to link evidence and preserve runtime limits.
+
+### 5. Current boundaries / blockers
+- GitHub Issue adapter uses injected transport/token; no live production GitHub API mutation and no per-Task lock deployed. Concurrent create race must be prevented by Sandbox service lock.
+- WebhookInbox is a library only; no HTTP route/worker deployed to ROOM-HOP Event Listener :8050; no production secret/TLS/request-size/network policy configured.
+- Event reconciler is a library only; no durable shared Task Registry service connected to Event Listener; no production webhook delivery or workflow_run callback.
+- Agent Registry/principal verification, dispatch, positive ACK, heartbeat/reassignment remain unimplemented/not verified.
+- Work 70 Evidence Register/Dashboard remains read-only/blocked pending schema owner approval.
+- CI event-specific handoff, ACK, review and controlled failure jobs are not equivalent to this in-memory reconciliation test and remain skipped in full workflow run.
+
+### 6. Next steps
+1. Mirror the exact tested GitHub source revision into W118 Sandbox `04_CODE` with source SHA manifest; make Sandbox the working/execution origin for the next implementation slice.
+2. Inspect ROOM-HOP Event Listener :8050 integration surface and implement a secured route/worker without allocating a new port.
+3. Expose TaskRegistry through a durable Sandbox service and connect Issue adapter with per-Task lock.
+4. Run one real GitHub Issue mirror and one task-scoped branch push/CI callback after service credentials and event endpoint are configured.
+5. Add Agent Registry/dispatch only when a real principal is verified; do not infer from role labels.
+
+- **Entry result:** DONE — Issue mirror, webhook inbox and push/CI reconciliation contract foundations implemented; exact tested source SHA PASS; live runtime integration remains pending.
+- **Work state:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED.
