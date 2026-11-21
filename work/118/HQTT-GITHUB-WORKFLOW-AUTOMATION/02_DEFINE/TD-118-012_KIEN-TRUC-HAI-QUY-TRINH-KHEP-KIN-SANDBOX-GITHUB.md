@@ -5,13 +5,13 @@
 - **Tên tiếng Việt:** Kiến trúc điều phối vòng đời Task và vòng đời mã nguồn giữa Sandbox–GitHub
 - **Tên tiếng Anh:** Sandbox–GitHub Dual Closed-Loop Architecture
 - **Phương án nền:** A — Sandbox khởi phát, GitHub kiểm soát phiên bản
-- **Trạng thái:** DRAFT FOR MULTI-AGENT REVIEW — NOT APPROVED — NO CODE AUTHORIZED BY THIS DOCUMENT
+- **Trạng thái:** OWNER-DIRECTED BUILD BASELINE — BUILD AUTHORIZED BY VINH — PRODUCT ACCEPTANCE PENDING
 - **Phạm vi:** Hai quy trình A/B, trạng thái, quyền, hợp đồng dữ liệu, sự kiện, lỗi, bằng chứng và kế hoạch kiểm thử.
 - **Ngày lập:** 2026-11-21 (UTC+07:00)
 - **Nguồn đối chiếu:** Issue #65; W118 README/STATUS; RA-118-001; TD-118-004..008; BB-118-002; role-map; workflow và test matrix hiện hành.
 - **Git snapshot tại thời điểm đối chiếu:** `main` và `work/118-auto-e2e-v2` DIVERGED, 286 commits ahead / 84 behind; merge base `cf2537e07bfd71d5823bd98f8673b3ab5644fcdc`. Không thực hiện đồng bộ nhánh trong tài liệu này.
 
-> Đây là bản kiến trúc đề xuất để phản biện và chốt hồ sơ. Không phải quyết định cho phép BUILD, không sửa workflow/code, không thay đổi quyền, secrets, branch protection, Work 70 schema, không merge/rebase/release.
+> Vinh đã chỉ thị ngày 2026-11-21: “xây đi Xu theo ý mình chưa cần phản biện”. Xu được quyền tự quyết định kỹ thuật và triển khai theo kiến trúc này trên nhánh W118. Không cần chờ phản biện đa tác nhân để bắt đầu BUILD. Quyền này không bao gồm thay đổi quyền/secrets/branch protection, sửa schema Work 70, merge vào main, phát hành hoặc tự nghiệm thu sản phẩm.
 
 ---
 
@@ -141,7 +141,7 @@ flowchart LR
 
 1. **TASK_AUTHORIZED:** chỉ Task đã READY/ASSIGNED/ACKED theo policy mới được mở quyền code.
 2. **BASE_RESOLVED:** Sandbox đọc repository, target branch, exact base SHA và branch policy; kiểm tra branch không stale hoặc diverged ngoài ngưỡng.
-3. **BRANCH_CREATED:** tạo branch theo quy ước `work/{work_id}/task-{task_id}-{slug}` (quy ước cần chốt với repository policy); không dùng branch dùng chung cho nhiều Task nếu chưa có quyết định.
+3. **BRANCH_CREATED:** tạo branch theo quy ước `work/{work_id}/task-{task_id}` (không thêm slug để tránh parsing mơ hồ và bắt buộc liên kết ổn định); không dùng branch dùng chung cho nhiều Task nếu chưa có quyết định.
 4. **CODE_AND_LOCAL_TEST:** Agent chỉ sửa trong scope; ghi command, test, output và file changes vào execution journal.
 5. **COMMIT_CREATED:** commit message bắt buộc có Work/Task/Issue reference; commit metadata lưu author principal và exact parent SHA.
 6. **PUSH_REQUESTED:** Sandbox kiểm tra diff/scope, branch ownership, base SHA và liên kết Issue trước khi push.
@@ -464,22 +464,20 @@ Không mở code cho WP nào khi hợp đồng dữ liệu, quyền, acceptance 
 7. Quy tắc retry cap 2, lease/heartbeat/timeout và reassignment có phù hợp vận hành thực tế?
 8. Cần tách PR review, technical verification, product acceptance và merge authorization thành các actor/policy nào?
 
-### 12.2 Điều kiện để chuyển DRAFT thành kiến trúc được chốt
+### 12.2 Điều kiện vận hành theo chỉ thị BUILD của Vinh
 
-- Ka phản biện tính khả thi và mapping với implementation hiện hữu.
-- Cla phản biện kiến trúc runtime, event transport, failure recovery và security.
-- Qw/QE phản biện testability, negative tests, evidence completeness và acceptance criteria.
-- Xu tổng hợp phản biện độc lập, giải quyết mâu thuẫn và xác nhận kiến trúc đủ chặt.
-- Vinh phê duyệt các quyết định sản phẩm/authority còn thuộc Owner.
-- Cập nhật một Biên bản kiến trúc duy nhất và Nhật ký chuẩn; đánh dấu version, decision IDs và trạng thái từng câu hỏi.
-- Chỉ sau đó mới phát hành implementation plan được duyệt và cho phép BUILD theo từng WP.
+- Không chờ vòng phản biện Ka/Cla/Qw; Xu chịu trách nhiệm tự thiết kế, tự kiểm tra và giải trình quyết định kỹ thuật.
+- Khi phát hiện điểm thiếu bằng chứng, identity hoặc quyền, Xu ghi BLOCKED và không tự cấp quyền/giả định runtime principal.
+- Mỗi WP phải có code, test, exact-SHA CI evidence và Nhật ký; lỗi test phải được sửa trước khi mở WP phụ thuộc.
+- Các quyết định thuộc Product Owner, đặc biệt Work 70 schema, quyền tổ chức, merge/release và nghiệm thu cuối, vẫn phải giữ đúng thẩm quyền của Vinh.
+- Cập nhật TD-118-012 và Nhật ký theo từng quyết định kỹ thuật; không tạo Biên bản song song chỉ để lặp nội dung.
 
 ## 13. Trạng thái và giới hạn
 
-- **Architecture:** DRAFT FOR MULTI-AGENT REVIEW.
+- **Architecture:** OWNER-DIRECTED BUILD BASELINE; Xu technical decisions authorized.
 - **Selected option:** A — Sandbox initiates; GitHub controls versioning.
-- **Code change:** NONE authorized by this document.
-- **Runtime test:** NOT RUN by this architecture drafting activity.
+- **Build authority:** Vinh's direct instruction on 2026-11-21; multi-agent review is not a prerequisite.
+- **Runtime integration:** incremental; each exact-SHA result is reported separately.
 - **Git integration:** no rebase/merge/force-push.
 - **W70 schema/permissions/secrets:** unchanged.
 - **W118 overall:** ACTIVE — NOT ACCEPTED — NOT RELEASED.
