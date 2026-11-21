@@ -21,7 +21,7 @@
 
 **Sandbox/ROOM-HOP là nơi khởi phát và điều phối công việc. GitHub là hệ thống kiểm soát phiên bản và thực thi CI.** Hai hệ thống kết nối bằng sự kiện có định danh, hợp đồng dữ liệu versioned và cơ chế đối soát.
 
-- Sandbox tạo Work Plan, Work Package (WP), Task; kiểm tra điều kiện sẵn sàng; quyết định yêu cầu năng lực; điều phối Agent; theo dõi tiến độ và nghiệm thu nội bộ.
+- Sandbox tạo Work Plan, Work Package (WP), Task; W118 dùng một Task Register riêng theo mẫu DOC-093 của Work 70 (DOC-056 §9), không dùng ID của W70. Task Register trong Sandbox là nguồn chuẩn; SQLite runtime store là transactional adapter/event log, không phải một Task Register cạnh tranh.
 - GitHub lưu Issue, Branch, Commit, Push, Pull Request (PR), Review và GitHub Actions; là nguồn sự thật cho lịch sử mã nguồn và kết quả CI.
 - GitHub Issue là bản ghi cộng tác/đối soát của Task, không thay thế Task record trong Sandbox.
 - Dashboard Work 70 chỉ đọc dữ liệu đã chuẩn hóa từ nguồn được ủy quyền; W118 không tạo Dashboard thứ hai và không tự ý mở rộng schema W70.
@@ -45,10 +45,10 @@ Hai vòng liên kết qua `work_id`, `wp_id`, `task_id`, `issue_id`, `assignment
 
 ### 1.3 Nguyên tắc không được phá vỡ
 
-1. **Plan/Task authority:** Sandbox sở hữu kế hoạch và trạng thái vòng đời Task.
+1. **Plan/Task authority:** Sandbox sở hữu một Task Register chuẩn riêng cho W118 theo mẫu DOC-093; SQLite là operational store/adapter, GitHub Issue là mirror. Không tạo Task source thứ hai. W112 DOC-001 được dùng làm compatibility reference trong khi trạng thái của W112 vẫn DRAFT_NOT_APPROVED.
 2. **Source authority:** GitHub sở hữu Issue/PR/Branch/Commit/CI state và lịch sử phiên bản.
 3. **Identity before authority:** không có principal đã xác minh thì không dispatch/ACK/accept bằng suy đoán.
-4. **Assignment ≠ ACK ≠ STARTED:** ba trạng thái riêng, ba bằng chứng riêng.
+4. **Task status ≠ Assignment status:** hai state machine độc lập; Assignment PROPOSED/DISPATCHED/ACKNOWLEDGED/IN_PROGRESS/SUBMITTED/ACCEPTED không được gộp vào Task PLANNED/READY/IN_PROGRESS/BLOCKED/IN_REVIEW/DONE/CANCELLED.
 5. **Push ≠ Issue linkage:** mọi push thuộc Task phải chứng minh liên kết Work/Task/Issue và exact SHA.
 6. **CI PASS ≠ Task complete:** CI chỉ là một điều kiện kỹ thuật.
 7. **Review ≠ Acceptance ≠ Merge ≠ Release:** bốn quyết định riêng biệt.
@@ -96,7 +96,7 @@ flowchart LR
 
 1. **PLAN_CREATED:** Vinh/Work Owner tạo hoặc phê duyệt mục tiêu, phạm vi, rủi ro và tiêu chí hoàn thành trong Sandbox.
 2. **WP_DEFINED:** Orchestrator phân rã thành WP/Task/Subtask; mỗi Task có scope nhỏ, dependency, priority, acceptance criteria và evidence expectation.
-3. **TASK_READY:** validator kiểm tra đủ trường, dependency đã thỏa, quyền và nguồn lực. Thiếu trường thì DRAFT/BLOCKED, không tạo lệnh thực thi.
+3. **TASK_READY:** validator kiểm tra đủ trường, dependency đã thỏa, quyền và nguồn lực. Thiếu trường thì PLANNED/BLOCKED, không tạo lệnh thực thi.
 4. **ISSUE_MIRRORED:** Sandbox tạo/cập nhật GitHub Issue theo `task_id`; Issue body mang metadata contract và liên kết về Work/Task.
 5. **AGENT_SELECTED:** policy chọn Agent theo role, capability, trust level, availability, workload và permission. Kết quả chọn phải giải thích được.
 6. **ASSIGNMENT_CREATED:** tạo assignment record độc lập với GitHub Assignee; ghi agent principal, capability match, policy version và lease.
@@ -110,28 +110,59 @@ flowchart LR
 14. **ACCEPTED:** người có thẩm quyền nghiệm thu xác nhận; ghi actor, scope, exact commit/evidence.
 15. **CLOSED:** chỉ đóng Task khi acceptance policy thỏa; GitHub Issue được đóng theo đồng bộ có điều kiện. Nếu Task bị từ chối, Issue vẫn mở hoặc được mở lại theo policy.
 
-### 3.2 State machine của Task
+### 3.2 Task status machine — Work-level lifecycle
 
-| Trạng thái | Ý nghĩa | Điều kiện vào | Ai được chuyển |
+Task status dùng chung vocabulary tương thích DOC-093/W112; đây là trạng thái của deliverable, không phải trạng thái giao việc.
+
+| Task status | Ý nghĩa | Điều kiện vào | Quyền chuyển |
 |---|---|---|---|
-| DRAFT | Task đang soạn | tạo mới | Owner / Planner |
-| READY | Đủ điều kiện giao | schema + scope + AC + dependency hợp lệ | Planner/Validator |
-| ISSUE_LINKED | Issue đã liên kết | Issue ID/URL readback thành công | Orchestrator |
-| ASSIGNED | Đã chọn Agent, chưa dispatch | policy match + principal verified | Orchestrator |
-| DISPATCHED | Lệnh giao đã gửi | dispatch receipt | Orchestrator |
-| ACKED | Agent xác nhận nhận việc | ACK identity + assignment binding hợp lệ | ACK Verifier |
-| STARTED | Agent bắt đầu | start event hợp lệ | Assigned Agent |
-| IN_PROGRESS | Đang thực thi | heartbeat/progress hợp lệ | Assigned Agent / Orchestrator |
-| BLOCKED | Không thể tiếp tục | blocker record có evidence | Agent / Orchestrator / QE |
-| VERIFYING | Đã nộp kết quả | completion package đầy đủ | Orchestrator |
-| VERIFIED | Đạt kiểm tra kỹ thuật/AC | verifier evidence PASS | QE/Reviewer |
-| ACCEPTED | Owner nghiệm thu | acceptance decision hợp lệ | Vinh / delegate được ủy quyền rõ |
-| CLOSED | Task kết thúc | acceptance + sync readback | Orchestrator |
-| REJECTED | Không đạt nghiệm thu | review/acceptance reject có lý do | Reviewer / Owner |
-| CANCELLED | Chủ động hủy | cancellation reason + actor | Owner |
-| EXPIRED | Hết lease/ACK timeout | timeout policy + no valid heartbeat | Orchestrator |
+| PLANNED | Task đã được ghi vào Task Register, chưa sẵn sàng giao | tạo Task + scope/AC/dependency | Owner / Planner |
+| READY | Đủ điều kiện thực thi | DoR, dependency, scope, AC và nguồn lực hợp lệ | Owner / Orchestrator |
+| IN_PROGRESS | Task đang được thực hiện | Assignment đã ACKNOWLEDGED/IN_PROGRESS | Orchestrator |
+| BLOCKED | Task không thể tiếp tục | blocker + evidence + owner xử lý | Owner / Orchestrator / Verifier |
+| IN_REVIEW | Deliverable đang được kiểm tra | Assignment SUBMITTED + review package | Orchestrator |
+| DONE | Task hoàn tất | Assignment ACCEPTED + Owner acceptance evidence | Vinh / Owner được ủy quyền |
+| CANCELLED | Task bị hủy có lý do | explicit cancellation decision | Owner |
 
-**Transition cấm:** READY→ACKED; ASSIGNED→STARTED; CI_PASS→ACCEPTED; Agent tự chuyển ACCEPTED/CLOSED; GitHub Issue closed tự động làm Task ACCEPTED; unverified actor thực hiện state mutation.
+Transitions:
+- PLANNED → READY / CANCELLED
+- READY → IN_PROGRESS / BLOCKED / CANCELLED
+- IN_PROGRESS → IN_REVIEW / BLOCKED / CANCELLED
+- BLOCKED → READY / IN_PROGRESS / CANCELLED
+- IN_REVIEW → DONE / BLOCKED / IN_PROGRESS
+- DONE và CANCELLED là terminal.
+
+### 3.3 Assignment status machine — independent lifecycle
+
+| Assignment status | Ý nghĩa | Điều kiện vào | Quyền chuyển |
+|---|---|---|---|
+| UNASSIGNED | Chưa có Assignment record | Task mới tạo | hệ thống |
+| PROPOSED | Đã chọn Agent/principal và ghi policy/capability evidence | identity verified + capability match | Orchestrator |
+| DISPATCHED | Đã gửi dispatch, có receipt | runtime dispatch receipt | Orchestrator |
+| ACKNOWLEDGED | Agent xác nhận nhận đúng assignment | signed/verified ACK + assignment/dispatch binding | Assigned Agent |
+| IN_PROGRESS | Agent đã bắt đầu thực thi | ACK hợp lệ + start event | Assigned Agent |
+| SUBMITTED | Agent nộp deliverable | result/evidence package | Assigned Agent |
+| ACCEPTED | Reviewer độc lập chấp nhận deliverable | verification evidence PASS | Verifier |
+| REJECTED | Reviewer từ chối deliverable | reason + evidence | Verifier |
+| BLOCKED | Assignment bị chặn | blocker + reason | Agent / Orchestrator / Verifier |
+| CANCELLED | Assignment bị hủy | explicit reason | Owner / Orchestrator |
+
+Transitions:
+- UNASSIGNED → PROPOSED
+- PROPOSED → DISPATCHED / CANCELLED
+- DISPATCHED → ACKNOWLEDGED / BLOCKED / CANCELLED
+- ACKNOWLEDGED → IN_PROGRESS / BLOCKED / CANCELLED
+- IN_PROGRESS → SUBMITTED / BLOCKED / CANCELLED
+- SUBMITTED → ACCEPTED / REJECTED / BLOCKED
+- BLOCKED → PROPOSED / DISPATCHED / CANCELLED
+- REJECTED → PROPOSED / CANCELLED
+- ACCEPTED và CANCELLED là terminal.
+
+**Invariant:** Assignment ACCEPTED không tự động làm Task DONE; Task chỉ DONE khi Owner nghiệm thu. Issue link, branch, push, CI và PR/review là execution/source evidence, không phải Task status. CI PASS không tự chuyển Task hoặc Assignment sang ACCEPTED. ACK không tự chứng minh identity; caller phải xác minh principal trước.
+
+### 3.4 Execution/source observations
+
+Issue mirror, branch creation, commit, push, CI run, PR và review được ghi thành event/evidence riêng có exact IDs/SHA. Chúng không được dùng làm trạng thái Task/Assignment thay thế. Khi có đủ điều kiện, Orchestrator/Verifier/Owner mới phát một transition thuộc đúng state machine.
 
 ---
 
@@ -147,8 +178,8 @@ flowchart LR
 6. **PUSH_REQUESTED:** Sandbox kiểm tra diff/scope, branch ownership, base SHA và liên kết Issue trước khi push.
 7. **PUSH_CONFIRMED:** GitHub trả exact commit SHA/ref; Sandbox chỉ ghi PUSHED sau readback xác nhận remote ref trỏ đúng SHA.
 8. **CI_QUEUED/RUNNING:** nhận workflow run ID, event, ref, head SHA, attempt.
-9. **CI_PASS:** chỉ khi run kết thúc success và evidence gắn đúng SHA; chuyển Task sang trạng thái kỹ thuật VERIFIED hoặc READY_FOR_REVIEW, không tự ACCEPT.
-10. **CI_FAIL:** tạo Failure record liên kết Task/Issue/assignment/run/SHA; chuyển Task BLOCKED hoặc REPAIR_REQUIRED; dispatch sửa lỗi chỉ sau policy check.
+9. **CI_PASS:** chỉ khi run kết thúc success và evidence gắn đúng SHA; ghi source/CI observation. Không tự chuyển Task status hoặc Assignment status.
+10. **CI_FAIL:** tạo Failure evidence liên kết Task/Issue/assignment/run/SHA; Orchestrator quyết định có chuyển Task BLOCKED hay không theo policy và ghi reason; không tự động thay trạng thái.
 11. **REPAIR_LOOP:** mỗi lần sửa là attempt mới, commit mới; retry có giới hạn và nguyên nhân; không retry vô hạn.
 12. **PR_OPENED:** PR gắn Task/Issue/Work IDs, base/head SHA, checklist và evidence.
 13. **REVIEW:** reviewer độc lập ghi APPROVED/CHANGES_REQUESTED; review không tự merge.
@@ -228,10 +259,15 @@ flowchart LR
 | risk_level | enum | Có | LOW/MEDIUM/HIGH/CRITICAL |
 | dependencies | string[] | Có | Task IDs phụ thuộc |
 | issue_id / issue_url | string/null | Sau mirror | Liên kết GitHub |
-| state | enum | Có | Task state machine §3.2 |
+| status | enum | Có | PLANNED/READY/IN_PROGRESS/BLOCKED/IN_REVIEW/DONE/CANCELLED |
+| assignment_status | enum | Có | UNASSIGNED/PROPOSED/DISPATCHED/ACKNOWLEDGED/IN_PROGRESS/SUBMITTED/ACCEPTED/REJECTED/BLOCKED/CANCELLED |
+| accountable_role / reviewer_role | string | Có | Trách nhiệm và kiểm tra độc lập theo Work-specific role map |
 | owner_principal | string | Có | Principal chịu trách nhiệm |
-| assigned_agent_id | string/null | Khi assigned | Agent registry ID |
-| assignment_id | string/null | Khi assigned | Assignment record |
+| assigned_identity / assigned_agent_id | string/null | Khi proposed | Identity/Agent Registry ID |
+| assignment_id | string/null | Khi proposed | Assignment record |
+| issue_id / issue_url | number/string/null | Sau mirror | GitHub Issue mirror; không phải Task authority |
+| deliverable / next_action / blockers | string/object | Có | Output, hành động kế tiếp, blocker |
+| progress_percent | integer | Có | 0–100, theo evidence/policy |
 | due_at | timestamp/null | Không | Hạn |
 | created_at / updated_at | timestamp | Có | Audit time |
 | version | integer | Có | Optimistic concurrency |
@@ -239,7 +275,7 @@ flowchart LR
 
 ### 6.3 Assignment record — schema đề xuất v1
 
-Bắt buộc: `assignment_id`, `work_id`, `task_id`, `agent_id`, `principal_id`, `capability_match[]`, `policy_version`, `selected_at`, `lease_expires_at`, `dispatch_id`, `dispatch_status`, `ack_deadline`, `ack_event_id`, `state`, `attempt`, `reassigned_from`, `reason`.
+Assignment status độc lập với Task status; không cập nhật Task status chỉ vì Assignment đổi trạng thái. Bắt buộc: `assignment_id`, `work_id`, `task_id`, `agent_id`, `principal_id`, `capability_match[]`, `policy_version`, `selected_at`, `lease_expires_at`, `dispatch_id`, `dispatch_status`, `ack_deadline`, `ack_event_id`, `state`, `attempt`, `reassigned_from`, `reason`.
 
 Assignment chỉ được tạo khi Agent active, identity verified, capability match và runtime route available. GitHub Assignee là field mirror tùy chọn, không phải assignment authority.
 
@@ -474,7 +510,7 @@ Không mở code cho WP nào khi hợp đồng dữ liệu, quyền, acceptance 
 
 ## 13. Trạng thái và giới hạn
 
-- **Architecture:** OWNER-DIRECTED BUILD BASELINE; Xu technical decisions authorized.
+- **Architecture:** OWNER-DIRECTED BUILD BASELINE; Xu technical decisions authorized; Task/Assignment status model aligned with W70 DOC-056 §9 and W112 DOC-001 compatibility contract.
 - **Selected option:** A — Sandbox initiates; GitHub controls versioning.
 - **Build authority:** Vinh's direct instruction on 2026-11-21; multi-agent review is not a prerequisite.
 - **Runtime integration:** incremental; each exact-SHA result is reported separately.
