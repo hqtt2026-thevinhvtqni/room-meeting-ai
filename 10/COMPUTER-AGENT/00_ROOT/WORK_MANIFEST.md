@@ -283,3 +283,9 @@ Co xác lập ranh giới tích hợp: Work10 là local Computer Agent provider,
 ## W10-INVENTORY-COUNT-CORRECTION-20261122-02 — 2026-11-22 06:36 (UTC+07:00)
 
 Sau khi tạo và đồng bộ integration boundary handoff, snapshot mới: Sandbox 159 files; GitHub 66 files; shared 66; Sandbox-only 93; GitHub-only 0. Một thư mục `.github/` chỉ ở Sandbox. 93 Sandbox-only file dispositions không đổi. Inventory report đã được cập nhật.
+
+
+## W10-CI-RUN104-20261122-01 — 2026-11-22 06:37 (UTC+07:00)
+
+Co | AI-07. GitHub Actions Run #104 (ID `44963124942`) tested commit `ee6b6cf06643fc92aac1572290e5b3918b481ade` and completed SUCCESS on Ubuntu 24.04 and Windows Server 2022. Ubuntu: 200 PASS / 0 FAIL / 2 SKIP; Windows: 206 PASS / 0 FAIL / 0 SKIP. Seven suites passed on both OSes, including Dashboard static 17 PASS and V8 validator 16 PASS; real Chromium E2E PASS. This is the first complete cross-platform run after moving Work10 standalone Dashboard origin to port 3010 (not 3000). Artifacts: Linux ID `14729759048`, SHA-256 `d3ecf4849ca7b98c0624b165f1b488564617f9e43fdbb5a90f0a45edec587029`; Windows ID `14729409940`, SHA-256 `5fe5ababa06291bd1b4dde3eef1574bde1f182781db435bc4e46306225c2ea6e`. Evidence: `06_EVIDENCE/W10_CROSS_PLATFORM_CI_EVIDENCE_20261122_RUN104.md`. Run #104 precedes POSIX cleanup polling/stress-test patch; Run #105/#106 are follow-up checks.
+
