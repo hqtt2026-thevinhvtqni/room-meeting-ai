@@ -156,3 +156,43 @@ An must report findings and exact disposition. This document does not close any 
 **No PASS is claimed. No runtime source, tests, configuration or locked contract was modified.**
 
 KÝ: Co | AI-07
+
+
+## Owner-delegated implementation status — 2026-11-22 06:40 (UTC+07:00)
+
+This addendum supersedes the earlier sections that described V8 as design-only, required An review before implementation, or stated that the validator/tests had not run.
+
+### Owner authorization and review disposition
+- Vinh delegated Co to continue Work 10 implementation and handover without waiting for An's V8 review.
+- The An V8 review task is WAIVED BY OWNER. This is not an An review, ACK or approval; none is claimed.
+- P0 implementation is authorized to proceed under the Owner's delegation, strictly within the three existing LOCKED contracts. No contract change, main merge, deployment or release is implied.
+
+### Implemented artifacts
+- `06_EVIDENCE/W10_P0_ACCEPTANCE_MANIFEST_V8.schema.json`
+- `06_EVIDENCE/W10_P0_CATEGORY_OUTCOME_POLICY_V8.json`
+- `06_EVIDENCE/W10_P0_VALIDATOR_ATTESTATION_V1.schema.json`
+- `04_CODE/acceptance_validator.py`
+- `05_TEST/test_acceptance_validator.py`
+
+The implementation checks schema validity, exact category catalog and policy identity/version, category-specific outcome/lease/owner state allowlists, expected/observed state equality, trusted runner/source/schema/validator/policy pins, artifact and fixture SHA-256 references, and HMAC-signed validator attestation. Caller-provided consistency flags are not accepted as proof.
+
+### Verification evidence
+- Run #53: 16 V8 validator checks PASS on Ubuntu 24.04 and Windows Server 2022 after category/policy hardening.
+- Run #69: 16 validator checks PASS per OS, plus 17 Dashboard static checks.
+- Run #104: V8 validator 16 PASS per OS.
+- Run #106: V8 validator 16 PASS per OS; full regression 200 PASS + 2 expected SKIP on Ubuntu and 206 PASS on Windows.
+- Exact run evidence and artifact digests are stored in the corresponding `W10_CROSS_PLATFORM_CI_EVIDENCE` files and `W10_POSIX_CLEANUP_REMEDIATION_CI_20261122_RUN99_105_106.md`.
+
+### Remaining limitations
+- CI HMAC key is TEST-ONLY; production key and exact pins have not been provisioned on Owner's Windows 10 PC.
+- V8 tests run on hosted CI; Owner PC acceptance NOT RUN.
+- V8 validation does not replace OS process-tree evidence. Windows Job Object passes on hosted Windows Server 2022; Linux remains LIMITED_NOT_CGROUP_V2.
+- ROOM-HOP Core/PC Bridge/Dashboard integration is not implemented or verified.
+- Three LOCKED contracts remain unchanged.
+
+### F-15 and final gate
+This amendment does not decide F-15. TaskResult/Workflow timeout mapping remains OWNER DECISION REQUIRED; Co will not infer or change contract semantics. P0 implementation is in progress under Owner delegation, but P0 acceptance/release is not complete.
+
+**Current status:** V8 validator implementation + hosted CI verification PASS; production trust provisioning and Owner PC acceptance OPEN; Work 10 ACTIVE — NOT RELEASED.
+
+**KÝ: Co | AI-07 / End-to-End Architecture & Implementation Lead**
