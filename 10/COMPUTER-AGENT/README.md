@@ -62,7 +62,7 @@ API version: **1.4.0**. Work 10 remains ACTIVE — NOT RELEASED. No merge to mai
 
 A separate endpoint is being added without changing the LOCKED browser Action Contract:
 
-- POST /agent/host/execute — list_directory, read_file, write_file, run_pytest, run_powershell_script.
+- POST /agent/host/execute — list_directory, read_file, write_file, run_pytest, run_powershell_script, validate_acceptance_manifest.
 - All host operations run inside the same ProcessSupervisor worker containment as browser workflows.
 - Allowed roots are configured with COMPUTER_AGENT_HOST_ALLOWED_ROOTS.
 - Writes are disabled unless COMPUTER_AGENT_HOST_WRITABLE_ROOTS is explicitly configured.
@@ -85,3 +85,10 @@ Evidence: 06_EVIDENCE/W10_HOST_CAPABILITIES_CI_EVIDENCE_20261122_RUN49.md.
 This does not yet prove the Owner's physical Windows 10 PC. Configure COMPUTER_AGENT_HOST_ALLOWED_ROOTS explicitly; write_file remains disabled unless COMPUTER_AGENT_HOST_WRITABLE_ROOTS is set; PowerShell remains disabled unless COMPUTER_AGENT_HOST_POWERSHELL_ROOTS is set. Approved pytest tests and PowerShell scripts execute with the service account's privileges, so only trusted roots/scripts should be configured. There is no generic shell endpoint.
 
 Remaining release gates: physical Windows 10 validation, V8 semantic acceptance validator, Linux cgroup-v2, ROOM-HOP PC Bridge/Dashboard integration and full Sandbox↔GitHub source parity. Work 10 remains ACTIVE — NOT RELEASED.
+
+
+### V8 acceptance validator (implementation in progress)
+
+The same host endpoint now includes validate_acceptance_manifest. It validates the V8 manifest schema, recomputes expected/observed state equality, applies the pinned category/outcome policy, rejects UNKNOWN lease/owner states for PASS, verifies fixture/artifact hashes and trusted runner/source identity, and writes a separate HMAC-signed attestation. It does not trust caller-supplied consistency flags.
+
+Production validation is fail-closed until these host settings are provisioned: COMPUTER_AGENT_VALIDATOR_SHA256, COMPUTER_AGENT_VALIDATOR_SCHEMA_SHA256, COMPUTER_AGENT_VALIDATOR_POLICY_SHA256, COMPUTER_AGENT_VALIDATOR_HMAC_KEY (secret, at least 32 bytes), COMPUTER_AGENT_VALIDATOR_KEY_ID and COMPUTER_AGENT_SOURCE_COMMIT. CI uses a test-only key and does not prove production key provisioning. The V8 validator suite has been added but is awaiting the next CI run.

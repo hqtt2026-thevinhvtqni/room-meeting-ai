@@ -1323,3 +1323,13 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - **Evidence:** `06_EVIDENCE/W10_HOST_CAPABILITIES_CI_EVIDENCE_20261122_RUN49.md` includes detailed counts, artifact hashes and limitations.
 - **Disposition:** Browser API + OS containment + file-system + pytest + Windows PowerShell capabilities PASS on hosted CI. Physical Windows 10 PC remains NOT RUN; Linux cgroup-v2, V8 validator, ROOM-HOP integration and full parity remain open. Work 10 ACTIVE — NOT RELEASED.
 - **KÝ: Co | AI-07**
+
+
+## W10-V8-SEMANTIC-VALIDATOR-IMPLEMENTATION-20261122-01 — 2026-11-22 06:00 (UTC+07:00)
+- **Name:** Co | **Title:** AI-07 / End-to-End Architecture & Implementation Lead
+- Implemented V8 manifest schema (caller consistency flags removed), category/outcome policy, attestation schema and semantic validator. Validator recomputes expected/observed state equality; category-specific allowed PASS outcomes; safe final state; fixture/artifact SHA-256; oracle references; runner identity; source commit; and validator/schema/policy pinned hashes.
+- HMAC-SHA256 attestation is signed only when the validator, schema and policy pins match and a key of at least 32 bytes + key ID are configured. Missing trust config returns BLOCKED, never PASS. CI uses TEST-ONLY key.
+- Added host API operation validate_acceptance_manifest through ProcessSupervisor, health validator_ready, and adversarial unit/HTTP tests.
+- New files: 06_EVIDENCE/W10_P0_ACCEPTANCE_MANIFEST_V8.schema.json; 06_EVIDENCE/W10_P0_CATEGORY_OUTCOME_POLICY_V8.json; 06_EVIDENCE/W10_P0_VALIDATOR_ATTESTATION_V1.schema.json; 04_CODE/acceptance_validator.py; 05_TEST/test_acceptance_validator.py.
+- **Status:** implementation written in Sandbox; CI not yet run; no V8 PASS claimed. Production HMAC key/pinned hashes not provisioned on Owner PC. P0 validator remains OPEN; Work 10 ACTIVE — NOT RELEASED.
+- **KÝ: Co | AI-07**

@@ -214,3 +214,18 @@ GitHub Actions #49 (run ID 44958804750, commit c11319e26bc6578baaf71e664152c259e
 Work 10 remains ACTIVE — NOT RELEASED. No main merge or production release is authorized.
 
 **KÝ: Co | AI-07 / End-to-End Architecture & Implementation Lead**
+
+
+## V8 acceptance validator implementation — 2026-11-22 06:00 (UTC+07:00)
+
+Co has begun implementing the V8 integrity design without waiting for An review, under the Owner's delegation. New artifacts in Sandbox:
+- 06_EVIDENCE/W10_P0_ACCEPTANCE_MANIFEST_V8.schema.json — removes caller consistency flags; PASS schema excludes UNKNOWN lease/owner and requires safe final state.
+- 06_EVIDENCE/W10_P0_CATEGORY_OUTCOME_POLICY_V8.json — category-specific PASS outcome, lease and owner policy.
+- 06_EVIDENCE/W10_P0_VALIDATOR_ATTESTATION_V1.schema.json — signed validator output schema.
+- 04_CODE/acceptance_validator.py — JSON Schema + semantic validator; verifies exact state tuple, category outcome, host/source provenance, fixture/artifact bytes and HMAC signature.
+- 05_TEST/test_acceptance_validator.py — adversarial tests for forged flags, mismatched states, UNKNOWN states, disallowed outcomes, hash substitution, oracle refs, runner/source forgery, missing key and stale validator pins.
+- Host API operation validate_acceptance_manifest is routed through ProcessSupervisor; health reports validator_ready.
+
+Trust boundary: production validator returns BLOCKED unless validator/schema/policy hashes, source commit, key ID and a protected HMAC key are provisioned. CI uses a TEST-ONLY key and cannot be treated as production trust configuration. This implementation is written but has NOT yet passed CI. P0 validator remains OPEN pending execution evidence and local key provisioning.
+
+**KÝ: Co | AI-07 / End-to-End Architecture & Implementation Lead**

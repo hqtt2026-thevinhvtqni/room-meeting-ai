@@ -1,0 +1,171 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:room-hop:work10:p0:validator-attestation:v1",
+  "title": "Work 10 P0 Validator Attestation v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "attestation_version",
+    "validator_id",
+    "validator_version",
+    "validator_sha256",
+    "schema_sha256",
+    "policy_sha256",
+    "input_sha256",
+    "semantic_result_sha256",
+    "runner_provenance",
+    "result",
+    "issued_at",
+    "signature"
+  ],
+  "properties": {
+    "attestation_version": {
+      "const": "1.0.0"
+    },
+    "validator_id": {
+      "const": "W10-P0-ACCEPTANCE-VALIDATOR"
+    },
+    "validator_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "validator_sha256": {
+      "type": "string",
+      "pattern": "^[a-fA-F0-9]{64}$"
+    },
+    "schema_sha256": {
+      "type": "string",
+      "pattern": "^[a-fA-F0-9]{64}$"
+    },
+    "policy_sha256": {
+      "type": "string",
+      "pattern": "^[a-fA-F0-9]{64}$"
+    },
+    "input_sha256": {
+      "type": "string",
+      "pattern": "^[a-fA-F0-9]{64}$"
+    },
+    "semantic_result_sha256": {
+      "type": "string",
+      "pattern": "^[a-fA-F0-9]{64}$"
+    },
+    "runner_provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "runner_id",
+        "pid",
+        "os_family",
+        "host_build",
+        "architecture",
+        "python_version",
+        "source_commit",
+        "execution_id",
+        "started_at"
+      ],
+      "properties": {
+        "runner_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pid": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "os_family": {
+          "enum": [
+            "windows",
+            "linux"
+          ]
+        },
+        "host_build": {
+          "type": "string",
+          "minLength": 1
+        },
+        "architecture": {
+          "enum": [
+            "x86_64",
+            "arm64"
+          ]
+        },
+        "python_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_commit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "execution_id": {
+          "type": "string",
+          "minLength": 16
+        },
+        "started_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "validation_status",
+        "acceptance_eligible",
+        "manifest_verdict",
+        "errors"
+      ],
+      "properties": {
+        "validation_status": {
+          "enum": [
+            "PASS",
+            "FAIL"
+          ]
+        },
+        "acceptance_eligible": {
+          "type": "boolean"
+        },
+        "manifest_verdict": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "BLOCKED",
+            "UNSUPPORTED"
+          ]
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "issued_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "key_id",
+        "value"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "HMAC-SHA256"
+        },
+        "key_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^[a-fA-F0-9]{64}$"
+        }
+      }
+    }
+  }
+}

@@ -210,3 +210,8 @@ A new suite, test_host_operations.py, covers allowlisted directory listing, file
 | Total | 170 PASS / 0 FAIL / 0 SKIP | 164 PASS / 0 FAIL / 2 expected SKIP |
 
 Host operations verified: list/read/write, SHA-256/read-back, explicit overwrite, traversal/symlink rejection, pytest, PowerShell .ps1 allow-list on Windows, and no generic shell operation. Full details and hashes: 06_EVIDENCE/W10_HOST_CAPABILITIES_CI_EVIDENCE_20261122_RUN49.md. Physical Windows 10 PC validation remains open.
+
+
+## V8 acceptance validator coverage — implementation written, CI pending
+
+New suite test_acceptance_validator.py covers schema strictness, caller-flag rejection, state equality, UNKNOWN lease/owner rejection, category-specific outcomes, artifact/fixture hash substitution, oracle references, runner/source identity, HMAC verification, stale pins and fail-closed configuration. HTTP tests exercise validate_acceptance_manifest through the ProcessSupervisor worker and verify the signed attestation is written. No PASS is claimed until the next CI run.

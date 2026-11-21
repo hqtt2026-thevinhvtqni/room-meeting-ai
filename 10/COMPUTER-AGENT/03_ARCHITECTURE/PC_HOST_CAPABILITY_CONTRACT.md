@@ -23,6 +23,7 @@ No generic shell, arbitrary command string, or powershell -Command operation is 
 | write_file | path, content; optional encoding, overwrite | Requires explicit writable-root allow-list; bounded content; no overwrite unless overwrite=true; atomic write/read-back/hash |
 | run_pytest | paths list; optional cwd | Fixed executable sys.executable -m pytest -q; paths/cwd must remain inside allowed roots; no arbitrary CLI flags or shell |
 | run_powershell_script | script; optional string arguments list | Windows only; existing .ps1 must be inside explicit PowerShell script roots; invokes powershell.exe/pwsh -NoProfile -NonInteractive -File; no inline command |
+| validate_acceptance_manifest | manifest_path, evidence_root, attestation_path | V8 JSON Schema + semantic category policy + exact state comparison + fixture/artifact SHA-256 + trusted host/source provenance + HMAC-signed attestation; requires pinned hashes and protected HMAC key |
 
 ## 3. Host configuration
 
@@ -75,3 +76,18 @@ KÝ: Co | AI-07 / End-to-End Architecture & Implementation Lead
 PC Host Capability Contract v1.0 is implemented in host_operations.py and POST /agent/host/execute. GitHub Actions #49 passes on hosted Windows Server 2022 and Ubuntu 24.04. Windows covers PowerShell; both cover file operations and pytest. See 06_EVIDENCE/W10_HOST_CAPABILITIES_CI_EVIDENCE_20261122_RUN49.md.
 
 Status: IMPLEMENTED — HOSTED CI PASS. Physical Windows 10 validation, operator-specific root configuration, low-privilege service account/ACL review and ROOM-HOP integration remain open. The allow-list is an API boundary, not an OS sandbox for approved pytest/PowerShell code; only trusted scripts and test roots may be configured.
+
+
+## V8 acceptance validator trust configuration
+
+The host capability API also exposes validate_acceptance_manifest. It rejects caller-authored consistency flags (not part of the V8 schema), recomputes expected/observed equality, checks category-specific allowed outcomes, disallows UNKNOWN lease/owner states on PASS, verifies fixture/artifact bytes and runner/source identity, and writes a separate HMAC-SHA256 attestation.
+
+Required host configuration:
+- COMPUTER_AGENT_VALIDATOR_SHA256 — pinned acceptance_validator.py SHA-256.
+- COMPUTER_AGENT_VALIDATOR_SCHEMA_SHA256 — pinned V8 schema SHA-256.
+- COMPUTER_AGENT_VALIDATOR_POLICY_SHA256 — pinned category policy SHA-256.
+- COMPUTER_AGENT_VALIDATOR_HMAC_KEY — secret key of at least 32 bytes.
+- COMPUTER_AGENT_VALIDATOR_KEY_ID — stable key identifier.
+- COMPUTER_AGENT_SOURCE_COMMIT — expected source commit SHA (CI may use GITHUB_SHA).
+
+If any pin/key is missing or mismatched, validator returns BLOCKED and emits no trusted PASS attestation. CI uses a clearly labelled test-only HMAC key; that key is not production trust material. The allow-listed pytest/PowerShell code runs with the host service account's privileges and is not an OS-level filesystem sandbox.

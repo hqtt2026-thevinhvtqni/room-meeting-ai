@@ -1,0 +1,158 @@
+{
+  "policy_id": "W10-P0-CATEGORY-OUTCOME-POLICY",
+  "policy_version": "1.0.0",
+  "schema_version": "1.2.0",
+  "description": "Category-specific outcome and final-state acceptance policy. PASS is a test verdict; the observed outcome may be REJECTED/TERMINATED for a successful negative test.",
+  "categories": {
+    "OS_PROFILE": {
+      "pass_allowed_outcomes": [
+        "PASS"
+      ],
+      "allowed_lease_states": [
+        "RELEASED"
+      ],
+      "allowed_owner_states": [
+        "CURRENT",
+        "NONE"
+      ]
+    },
+    "HTTP_ABORT": {
+      "pass_allowed_outcomes": [
+        "REJECTED",
+        "TERMINATED",
+        "BLOCKED"
+      ],
+      "allowed_lease_states": [
+        "RELEASED"
+      ],
+      "allowed_owner_states": [
+        "CURRENT",
+        "FENCED"
+      ]
+    },
+    "SPAWN": {
+      "pass_allowed_outcomes": [
+        "PASS",
+        "REJECTED",
+        "BLOCKED"
+      ],
+      "allowed_lease_states": [
+        "RELEASED"
+      ],
+      "allowed_owner_states": [
+        "CURRENT"
+      ]
+    },
+    "CRASH_RECOVERY": {
+      "pass_allowed_outcomes": [
+        "TERMINATED",
+        "BLOCKED",
+        "REJECTED"
+      ],
+      "allowed_lease_states": [
+        "RELEASED"
+      ],
+      "allowed_owner_states": [
+        "FENCED",
+        "NONE"
+      ]
+    },
+    "IPC": {
+      "pass_allowed_outcomes": [
+        "PASS",
+        "REJECTED",
+        "BLOCKED"
+      ],
+      "allowed_lease_states": [
+        "RELEASED"
+      ],
+      "allowed_owner_states": [
+        "CURRENT",
+        "FENCED"
+      ]
+    },
+    "SERIALIZATION": {
+      "pass_allowed_outcomes": [
+        "PASS",
+        "REJECTED",
+        "BLOCKED"
+      ],
+      "allowed_lease_states": [
+        "RELEASED"
+      ],
+      "allowed_owner_states": [
+        "CURRENT"
+      ]
+    },
+    "ACTION": {
+      "pass_allowed_outcomes": [
+        "PASS",
+        "FAIL",
+        "REJECTED",
+        "BLOCKED",
+        "TERMINATED"
+      ],
+      "allowed_lease_states": [
+        "RELEASED"
+      ],
+      "allowed_owner_states": [
+        "CURRENT"
+      ]
+    },
+    "WORKFLOW": {
+      "pass_allowed_outcomes": [
+        "PASS",
+        "FAIL",
+        "REJECTED",
+        "BLOCKED",
+        "TERMINATED"
+      ],
+      "allowed_lease_states": [
+        "RELEASED"
+      ],
+      "allowed_owner_states": [
+        "CURRENT",
+        "FENCED"
+      ]
+    },
+    "SAFETY": {
+      "pass_allowed_outcomes": [
+        "REJECTED",
+        "BLOCKED"
+      ],
+      "allowed_lease_states": [
+        "RELEASED"
+      ],
+      "allowed_owner_states": [
+        "CURRENT"
+      ]
+    },
+    "RETRY": {
+      "pass_allowed_outcomes": [
+        "PASS",
+        "FAIL",
+        "REJECTED",
+        "BLOCKED"
+      ],
+      "allowed_lease_states": [
+        "RELEASED"
+      ],
+      "allowed_owner_states": [
+        "CURRENT"
+      ]
+    },
+    "HASH": {
+      "pass_allowed_outcomes": [
+        "PASS",
+        "REJECTED",
+        "BLOCKED"
+      ],
+      "allowed_lease_states": [
+        "RELEASED"
+      ],
+      "allowed_owner_states": [
+        "CURRENT"
+      ]
+    }
+  }
+}

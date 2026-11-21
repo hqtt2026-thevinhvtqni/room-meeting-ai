@@ -139,3 +139,17 @@ No generic shell or powershell -Command is exposed. This API is separate from th
 - [x] run_powershell_script only allowlisted .ps1 via -File — Windows Server 2022 PASS; Linux correctly BLOCKED.
 - [x] Host operations include ProcessSupervisor containment evidence — Windows/Linux HTTP tests PASS.
 - [ ] Physical Windows 10 PC host operations — NOT RUN; hosted CI is not a substitute.
+
+
+## V8 semantic acceptance validator — CI validation pending (2026-11-22)
+
+- [ ] V8 schema validates expected/observed state tuples and rejects caller-supplied consistency_check — tests added.
+- [ ] Category/outcome policy permits successful negative tests (e.g. SAFETY verdict PASS with observed REJECTED) and rejects disallowed outcomes — tests added.
+- [ ] PASS excludes UNKNOWN lease/owner and requires safe final state — tests added.
+- [ ] Fixture and artifact bytes are independently SHA-256 checked; oracle refs must point to verified PRESENT artifacts — tests added.
+- [ ] Trusted runner/source identity, validator/schema/policy pinned hashes and HMAC-signed attestation — tests added.
+- [ ] Missing key or stale hash pin returns BLOCKED, never PASS — tests added.
+- [ ] Host API validate_acceptance_manifest runs inside ProcessSupervisor and writes attestation under writable root — HTTP tests added.
+- [ ] Production HMAC key + pins provisioned on Owner's Windows 10 PC — NOT RUN.
+
+CI test key is TEST-ONLY and is not production trust material. No V8 PASS is claimed until the next CI run.
