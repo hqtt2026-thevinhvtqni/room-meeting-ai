@@ -901,3 +901,12 @@
 - Combined with current-main app-composition trace, Assignment/ACK remains NOT LOCATED in inspected source and tool surfaces. Alternate deployed Core service remains UNKNOWN/NOT VERIFIED.
 - GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. READ/TRACE/ANALYZE ONLY. Entry 088 added.
 - Next: seek source-backed evidence for any separately deployed Core service/route or persistence adapter; if unavailable, prepare architecture blocker/decision brief, not a parallel dispatcher.
+
+
+## Sync Period 0076 — 8030 service identity versus Core :8000 boundary (2026-11-21T16:46:26+07:00)
+
+- `get_room_structure()` and `get_room_context()` both identify connected service as `room-hop-build` v1.0; context declares Sandbox as AI Build Zone, Working Source read-only, Sandbox read/write, and AI cannot merge/commit/push.
+- These calls expose Build/Sandbox capabilities, not Core :8000 routes, health, persistence or Assignment/ACK state. Current 8030 tool inventory is not a full Core API inventory.
+- No live Core HTTP probe was performed; Core runtime and separately configured endpoint remain NOT VERIFIED, not assumed unavailable.
+- GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. Entry 089 added.
+- Next: inspect repository configuration/entrypoints for a declared Core URL/port and separate launcher; do not guess endpoint or call an unverified URL.
