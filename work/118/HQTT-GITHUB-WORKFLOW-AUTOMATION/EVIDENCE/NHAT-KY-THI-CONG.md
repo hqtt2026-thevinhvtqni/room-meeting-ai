@@ -1009,3 +1009,63 @@
 - **Next:** exact-readback both documents; obtain reviewer findings; update one canonical architecture/decision record and this journal; only after approval prepare implementation authorization by WP.
 - **Entry result:** DONE — documentation draft created; not architecture approval and not W118 acceptance.
 - **Work state:** ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+## Entry 070 — Owner-directed build: Task lifecycle and GitHub source binding
+
+- **Name:** Xu / AI-01
+- **Title:** HQTT Coordinator / W118 Technical Build Owner
+- **Date-Time:** 2026-11-21 13:36 +07:00 (owner directive timestamp; subsequent implementation/CI activity follows this entry)
+- **Authority:** Vinh instructed: “xây đi Xu theo ý mình chưa cần phản biện”. Xu may make technical design decisions and build without waiting for multi-agent review. This does not authorize merge, release, Work 70 schema mutation, or final product acceptance.
+- **Baseline:** TD-118-012 changed from multi-agent-review draft to OWNER-DIRECTED BUILD BASELINE. README and implementation plan updated. No new Work created.
+- **Branch:** `work/118-auto-e2e-v2`; no rebase/merge to main.
+
+### 1. Read / trace findings
+- Feature branch and PR #67 were read back from GitHub. Branch HEAD before this build was `8b6cfa534f51c09cb11b5c516e521588e6bab245`; compare with main remained DIVERGED (290 ahead / 84 behind at intake). PR #67 remained OPEN / UNMERGED.
+- Existing W118 code covered event-scoped handoff/ACK/review/diagnostics contracts but did not contain a Sandbox Task Registry or deterministic Issue–Branch–Commit–Push binding.
+- Existing CI triggers already included `scripts/w118/**`, `tests/w118/**`, and `work/118/**`, enabling contract validation on feature pushes.
+
+### 2. Implemented code
+- `scripts/w118/task_lifecycle.py`: Task schema v1.0; SQLite Task Registry; append-only event history; explicit state transition graph; owner/orchestrator/executor/verifier role gates; verified-identity assertion required; active assignment principal binding for ACK/START/PROGRESS/COMPLETE/BLOCKED; dispatch ID binding; assignment evidence; VERIFIED/ACCEPTED evidence requirements; Issue readback before CLOSED; optimistic concurrency; idempotency request hash; protected transition-detail allowlist.
+- `tests/w118/test_task_lifecycle.py`: tests for valid/invalid Task, owner authority, unverified identity, state transitions, assignment/dispatch binding, separate acceptance, evidence requirements, Issue readback, stale version, idempotency, immutable Task fields and append-only event history.
+- `scripts/w118/source_binding.py`: canonical task branch parser `work/{work_id}/task-{task_id}`; commit trailer validation for Work-ID, Task-ID, Issue; push payload repository/ref/head SHA validation; every commit bound to the same Work/Task/Issue; reject force push/deletion/missing SHA; legacy aggregate branches explicitly return UNBOUND_LEGACY_BRANCH and do not infer Task state.
+- `tests/w118/test_source_binding.py`: branch, repository, trailers, mixed Issue, exact SHA, force push, deletion and missing commit tests.
+- `.github/workflows/w118-workflow-automation.yml`: add task-scoped branch filter; invoke source-binding validator on push; record `source_binding_status` in CI evidence; include source-binding JSON in artifact. Legacy aggregate branch is expected to report UNBOUND, not PASS.
+- `tests/w118/test_workflow_contract.py`: assert workflow invokes push validator and records evidence/artifact paths.
+
+### 3. Build/verify chronology and corrections
+- Task lifecycle foundation commit `6bb79a7a86fe6d983887e6845a1b69bed3755c71`; initial tests `b73a85eb2c18ff2fec71888a5c016de672e60d1e`; hardening commits `849d84d74571a20bb9c2b1d476c3d7f7584a188c` and `b598dcc6afd61da9fc5b7fcd8859e682e975ea95`.
+- Source-binding foundation `45f9441bd6f2927020fe53ee00ec423e68204b8a`; repository check/test updates `a13f6dcec229f0734fdaac5e071322266f9f9ef0`, `32b1c1daff5d9dd22ddb43e000ef8f15d6aa79a6`, `1f49dcd8f41cdffaf22f9ddb6f15372d5ce5b1ef`, `12453342b579ff5abffe06ac4fc5fa54d05dabd3`, `a2030e9230274d4ec050bce0c8b01bb44fa7d591`.
+- CI failures were not hidden: GitHub logs exposed (a) escaped multiline function signature SyntaxError; (b) wrong-repository test not raising because expected repository check was missing; (c) CLI did not accept `--repository`; (d) artifact directory path did not match upload behavior. Fixes were committed and re-run. Failed runs remain historical FAIL and are not counted as PASS.
+- Source-binding exact-head contract run [#44876926415](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44876926415): commit `3136931ddfb56e4574dd3f87a9484f1619693746`; validate SUCCESS; 85 tests PASS / 0.450s.
+- Workflow-integrated exact-head run [#44877054701](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44877054701): tested commit `5e131e108a7195ca1ff5ae96b3fadb119e4bc31b`; push validate SUCCESS; **86 tests PASS / 0.332s**. PR validate [#44877057892](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44877057892) SUCCESS.
+- Artifact ID `14696186741`; SHA-256 `9dae6385ae1e68572305ee6314bf1edf046361fc9993301cc85367603c56531a`.
+- Source-binding artifact reported `UNBOUND_LEGACY_BRANCH` on `work/118-auto-e2e-v2`; this is correct and proves no Task association is guessed. No live task-scoped branch push has been executed yet.
+
+### 4. Documentation updated
+- TD-118-012 — OWNER-DIRECTED BUILD BASELINE.
+- `05_BUILD/W118-13_16_TASK-LIFECYCLE-AND-SOURCE-BINDING.md` — implementation scope and limits.
+- `06_TEST/W118-13_16-TASK-LIFECYCLE-SOURCE-BINDING-TEST-MATRIX.md` — test matrix.
+- KH-118-001, README and STATUS updated; README links to canonical architecture/build/test documents.
+
+### 5. Limits / blockers preserved
+- SQLite registry is not yet deployed behind a ROOM-HOP service/API; durability/backup/multi-process runtime policy not verified.
+- `identity_verified` is a trusted caller assertion; no real Agent principal verifier/registry is connected.
+- No real agent dispatch, positive production ACK, heartbeat or reassignment E2E.
+- GitHub Issue mirror adapter and task-specific branch push live test remain pending.
+- CI PASS/FAIL callback to the Sandbox Task Registry remains unimplemented.
+- Work 70 Evidence Register/Dashboard projection remains blocked pending owner/schema ACK; no W70 schema changes.
+- Event-specific handoff, ACK, acceptance-review, controlled-failure and dispatch jobs were SKIPPED in the validation run; runtime E2E NOT VERIFIED.
+- Current feature branch has subsequent documentation commits after tested code SHA; exact latest-HEAD CI is tracked separately and must not reuse earlier SHA evidence.
+
+### 6. Next steps
+1. Complete exact latest-HEAD CI readback after documentation updates.
+2. Build a signed GitHub webhook inbox / Sandbox event endpoint with delivery-ID idempotency and repository allowlist.
+3. Build GitHub Issue mirror adapter with readback and idempotency.
+4. Integrate Task Registry into a ROOM-HOP service with durable storage and real authenticated caller identity.
+5. Implement Agent Registry/dispatch only after a real runtime principal is verified.
+6. Implement CI result reconciliation to exact Task/SHA, then controlled task-scoped branch E2E.
+7. Keep Work 70 projection read-only until authorized schema approval.
+
+- **Entry result:** DONE — W118-13/16 code foundations and push workflow contract implemented; exact tested revision PASS; runtime integration remains partial.
+- **Work state:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED.
