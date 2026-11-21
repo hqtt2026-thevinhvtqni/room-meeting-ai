@@ -991,3 +991,21 @@
 - **PR validation evidence at intake:** branch HEAD b694abe80d2c9f86871f7303543dd234da2bd205; run #44860083377 validate SUCCESS; five event-specific jobs SKIPPED; artifact 14689611980 (SHA-256 8cf8ad90845070b4ccc38e5a019dd8f159d5077b44945a2cd46cecebdee4a382). This was a pull_request event; its tested revision is the PR merge ref, not asserted to equal the branch HEAD. Branch compare at intake: 278 ahead / 84 behind — DIVERGED.
 - **Disposition:** W118 overall remains ACTIVE — NOT ACCEPTED — NOT RELEASED. RA-118-001 is DRAFT FOR XU INDEPENDENT REVIEW. Proposed W118-13..W118-19 are not yet approved implementation decisions. No merge/rebase/release or Work 70 schema mutation performed.
 - **Next:** Xu reviews the scope matrix, state boundaries, proposed work packages and acceptance criteria; after review, Ka continues implementation within W118 under existing delegation and approved boundaries.
+
+## Entry 069 — Draft architecture for the two Sandbox–GitHub closed loops
+
+- **Name:** Xu / AI-01
+- **Title:** HQTT Coordinator / W118 Architecture Draft Owner
+- **Date-Time:** 2026-11-21 11:23:04 +07:00
+- **Authority:** Vinh selected Option A — Sandbox initiates, GitHub controls versioning. This authorizes architecture drafting and dossier preparation only; no code authorization is implied.
+- **Scope:** W118 Plan-to-Task Orchestration (Loop A) and Sandbox–GitHub Source/CI Loop (Loop B); state matrix, permissions, data contracts, event catalog, error/retry policy, test plan and implementation gates.
+- **Method:** Read-only GitHub inspection of W118 README, STATUS, RA-118-001, BB-118-002, role-map, existing workflow and canonical journal; compare main vs `work/118-auto-e2e-v2`; then create documentation-only drafts.
+- **Git baseline:** `main` vs `work/118-auto-e2e-v2` = DIVERGED, 286 ahead / 84 behind; merge base `cf2537e07bfd71d5823bd98f8673b3ab5644fcdc`. No rebase/merge performed.
+- **Findings preserved:** RA-118-001 remains DRAFT FOR XU INDEPENDENT REVIEW; current role-map is deny-by-default and contains only the two Owner logins with empty `ack_roles`; no verified executor principal was found; Assignment/Execution Tracking/Issue–Push binding/CI-to-Task state transition/W70 Dashboard integration remain missing or unproven. Contract CI PASS is not runtime E2E.
+- **Created document:** `02_DEFINE/TD-118-012_KIEN-TRUC-HAI-QUY-TRINH-KHEP-KIN-SANDBOX-GITHUB.md`, commit `cc4bb813c7c191bbe08f9cf42db40a4b0a0e5d0f`.
+- **Created consultation brief:** `02_DEFINE/DC-118-004_BRIEF-PHAN-BIEN-KIEN-TRUC-HAI-QUY-TRINH.md`, commit `6ee27191338c8f9180c193cce0144e3fdd2d2a6c`.
+- **Architecture disposition:** DRAFT FOR MULTI-AGENT REVIEW — NOT APPROVED. Review requested from Ka (implementation mapping), Cla (runtime/security), Qw (QE/testability), then Xu synthesis and Vinh product decisions.
+- **Code/runtime:** NONE. No workflow, script, role-map, permission, secret, branch protection, W70 schema, PR, merge or release was changed.
+- **Next:** exact-readback both documents; obtain reviewer findings; update one canonical architecture/decision record and this journal; only after approval prepare implementation authorization by WP.
+- **Entry result:** DONE — documentation draft created; not architecture approval and not W118 acceptance.
+- **Work state:** ACTIVE — NOT ACCEPTED — NOT RELEASED.
