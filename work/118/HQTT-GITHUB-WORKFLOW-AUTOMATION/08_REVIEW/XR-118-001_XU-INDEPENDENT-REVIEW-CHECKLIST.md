@@ -1,5 +1,13 @@
 # XR-118-001 — XU INDEPENDENT REVIEW CHECKLIST
 
+> **CANONICAL REMEDIATION SNAPSHOT — 2026-11-21 08:38:39 +07:00**
+> - CI validate artifact classification is now `CI_CONTRACT`, not `RUNTIME`.
+> - Regression T10-27 PASS in [Run #44851353422](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44851353422); 54 tests PASS / 0.223s.
+> - Exact tested source commit: `acb7f510b5885d045b165f739540ee85e57d7439`; artifact ID `14685143198`; SHA-256 `a326f03eae720de5af6ff531e1105e2311c0738a4661f71f940d661eb9b3b6a1`.
+> - Artifact ZIP was downloaded and JSON read back: `evidence_type=CI_CONTRACT`, `state=RECORDED`, `test_outcome=success`, and tested commit matches.
+> - This canonical block supersedes all earlier "latest" snapshots below. Older snapshots remain historical audit records only.
+
+
 - **Work:** W118 — HQTT GitHub Workflow Automation
 - **Priority:** P0 — independent security and product-integrity gate
 - **Reviewer:** Xu — Independent Reviewer / Architecture Acceptance
@@ -24,7 +32,7 @@ Xu reviews the implementation independently and records PASS / BLOCKED / NEEDS C
 | 06 | P0 | Failure/retry safety | Separate diagnostics workflow, no self-listener, no automatic retry loop | REVIEW |
 | 07 | P0 | Controlled fault injection | Owner-only trigger; dedicated test issue; failure scoped to feature branch | REVIEW |
 | 08 | P0 | Least privilege | Global contents:read; job-scoped issues/actions write; no secrets or branch-protection change | REVIEW |
-| 09 | P0 | Evidence integrity | Exact SHA/run/attempt artifact, RECORDED state, no false acceptance | REVIEW |
+| 09 | P0 | Evidence integrity | Exact SHA/run/attempt artifact; CI validate artifact must be CI_CONTRACT, event recorder artifacts OPERATION; RECORDED only, no false acceptance | NEEDS CHANGES → REMEDIATION IMPLEMENTED; Xu re-review required |
 | 10 | P0 | Cross-Work boundary | No Work 70 schema/register mutation without Work 70 approval | REVIEW |
 | 11 | P0 | Runtime E2E plan | Handoff, ACK deny/allow, duplicate delivery, workflow_run diagnostics after integration | BLOCKED — not deployed |
 | 12 | P0 | Release gate | Xu independent disposition followed by Vinh final acceptance; no auto-merge | PENDING |
@@ -97,3 +105,13 @@ The post-merge execution sequence is defined in [RT-118-001 — Post-Merge Runti
 - **Latest exact-head CI:** [Run #44846568184](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44846568184), commit `9adda44a0c4dc70937740adc7bfdcd2c04022a69`; validate SUCCESS; 53 tests PASS / 0.281s; artifact ID `14683391201`, digest `baed365631b810b748dc6903376c373784d0bfb0f81302167cedd63c0db5526f`, present/unexpired at readback. Event jobs remained SKIPPED; runtime E2E remains NOT VERIFIED.
 
 - **Latest exact-head repeat validation:** [Run #44846837186](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44846837186), commit `364ff4c7c2f170de7e700e2b5e2ce9167747c74f`; validate SUCCESS; 53 tests PASS / 0.283s; artifact ID `14682809297`, digest `a21e0e26b2a411896af9b279bc270ef693303fe546d00f0e247e1877a7e767fc`, present/unexpired. All event jobs skipped; runtime E2E remains NOT VERIFIED.
+
+
+## P0 evidence classification remediation — 2026-11-21
+
+- Xu finding addressed: CI contract-validation artifact was mislabeled `RUNTIME`.
+- Fix: validation workflow now emits `evidence_type=CI_CONTRACT`; event artifacts continue as `OPERATION`.
+- Regression T10-27 verifies correct type, rejects RUNTIME, preserves RECORDED and non-acceptance limitation.
+- CI: [Run #44851353422](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44851353422); exact tested source commit `acb7f510b5885d045b165f739540ee85e57d7439`; validate SUCCESS; 54 tests PASS / 0.223s.
+- Artifact ID `14685143198`, digest `a326f03eae720de5af6ff531e1105e2311c0738a4661f71f940d661eb9b3b6a1`; ZIP and JSON downloaded/read; actual JSON confirms `CI_CONTRACT`, `RECORDED`, `test_outcome=success` and tested SHA match.
+- Disposition: implementation/test PASS; gate 09 awaits Xu independent re-review. Runtime E2E NOT VERIFIED.
