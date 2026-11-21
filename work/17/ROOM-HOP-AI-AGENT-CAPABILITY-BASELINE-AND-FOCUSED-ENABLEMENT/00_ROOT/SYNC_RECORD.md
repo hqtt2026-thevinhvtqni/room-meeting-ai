@@ -970,3 +970,16 @@
 - This is contract layering, not permission to alter DOC-044 or create another registry. Runtime integration remains missing/unverified.
 - GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. READ/TRACE/ANALYZE ONLY.
 - Sandbox parity remains BLOCKED; no Sandbox write attempted. GitHub main read-back required.
+
+
+## Sync Period 0083 — DOC-063 / Core main / W1111 PR #48 execution-authority comparison
+
+- Journal Entry 096 records the bounded read-only comparison. DOC-063 remains DRAFT/DESIGN ONLY/NOT APPROVED/NOT IMPLEMENTED.
+- Current main still has no ExecutionAuthority module/router mount. The W1111 PR #48 candidate branch DOES mount the Authority routes through the modified `create_http_app()`; this corrects the incomplete first-pass entrypoint-only interpretation. Candidate source is not main or deployed-runtime proof.
+- Reusable candidate components: service-credential digest authentication; Work/purpose/expiry grants; source-SHA policy binding; online Host validation; fail-closed pytest-only operation; append-only hash-chained JSONL grant/run journal.
+- Candidate does not bind W70 Assignment/dispatch/attempt/provider session/delivery receipt/recipient identity proof/ACK/accepted-scope digest. It does not close GAP-01 E2/E3.
+- Candidate residuals: no grant/run idempotency; validation/launch/revocation not atomic across an active process; local JSONL is not provisioned shared production durability evidence.
+- PR #48 refreshed: OPEN/DRAFT/NOT MERGEABLE, head `c70eb2b82f54a000a81263dc519078ddf105f075`; compare DIVERGED, +157/-952, merge-base `82a490ad16c72e77ca3c9c8d9f83feabcb6f4e54`. Historical CI cited in PR body is not the refreshed head's independently retrieved CI evidence. No blind merge/cherry-pick.
+- No live endpoint/process test. GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. READ/TRACE/ANALYZE ONLY.
+- Sandbox parity remains BLOCKED; no Sandbox write attempted.
+- Journal Entry 096 GitHub commit: `bf17c54fd6d45cd80ea7575eb9e091e486b97f1d`. Journal read-back will be recorded after verification.
