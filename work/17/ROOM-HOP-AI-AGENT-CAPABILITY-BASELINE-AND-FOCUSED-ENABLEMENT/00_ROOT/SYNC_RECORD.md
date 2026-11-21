@@ -910,3 +910,14 @@
 - No live Core HTTP probe was performed; Core runtime and separately configured endpoint remain NOT VERIFIED, not assumed unavailable.
 - GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. Entry 089 added.
 - Next: inspect repository configuration/entrypoints for a declared Core URL/port and separate launcher; do not guess endpoint or call an unverified URL.
+
+
+## Sync Period 0077 — Core launcher, execution-authority mount and documentation mismatch (2026-11-21T16:48:02+07:00)
+
+- Current-main `core_http_main.py` contains a Uvicorn launcher defaulting to 127.0.0.1:8000; this proves source launcher only, not live process.
+- Its `build_app()` composes MeetingManager → MeetingService → `create_http_app(service)`. Current `http_server.py` exposes Meeting and `/identities` only; no execution-authority router mount.
+- Deployment guide claims Work execution-grant routes are mounted and test `test_core_http_main.py` expects POST `/works/{work_id}/execution-grants` to return 503 when unconfigured. But `core/execution_authority.py` and `room_hop_mcp/adapter/execution_authority_http.py` are NOT_FOUND on current main, and no router is mounted in the fetched app. Static source mismatch; test NOT RUN; no live HTTP status observed.
+- Current requirements.txt lists pyyaml, pytest, python-dotenv and groq only; FastAPI/Uvicorn are not declared there despite imports. Installed environment unknown.
+- Current Host still accepts caller work_context and trusts authorized boolean in local validator; this reconfirms GAP-11 source finding, not a live exploit.
+- Core launcher source PRESENT; live runtime NOT VERIFIED; execution-authority route NOT PRESENT in inspected current-main app composition. GAP-11 OPEN/P0; GAP-01 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. Entry 090 added.
+- Next: inspect for any separately launched Core service/runtime configuration outside this entrypoint; no code changes authorized.
