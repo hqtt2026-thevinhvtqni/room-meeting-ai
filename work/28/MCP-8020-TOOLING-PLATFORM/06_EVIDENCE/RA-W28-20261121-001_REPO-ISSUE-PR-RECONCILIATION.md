@@ -130,3 +130,18 @@ This section supersedes the earlier snapshot where explicitly noted; historic en
 - **Issue #57 / Work32 — REJECT / BLOCKED remains unchanged.** Protected execution remains DENIED pending separate Xu authorization and exact current DOC-116/117/125 + Cla review. No source/test/runner/PC/PR mutation authorization.
 
 No branch deletion, rebase, force-push, merge, main mutation, deployment or release was performed in this follow-up.
+
+
+## 9. W76 follow-up — PR #60 exact-head CI and integration gate (2026-11-21)
+
+**Name:** Ka / AI-02  
+**Title:** CSA / ROOM-WIDE GitHub + Sandbox Reconciliation Owner (delegated)  
+**Date-Time:** 2026-11-21; exact time not returned by GitHub connector (UTC+07)  
+**Priority:** P1  
+**Read order:** 34
+
+- Issue #58 handoff's PR #55 baseline has a newer active v2 candidate: PR #60 (`work/76-co-autonomous-build-v2`), explicitly superseding PR #59. PR #55 remains preserved as the earlier corrected baseline.
+- PR #60 exact head `d524ca56003518fd339572570612fd6f33e3269f` has two completed successful exact-SHA checks: `pytest (3.11)` and `pytest (3.12)`. Ka added a formal COMMENT review and Issue #58 follow-up; no approval.
+- Current main exact SHA `97fdd719e8468e0eca667f49fdc28f9ff5c66eff`; compare with PR #60 head is **228 ahead / 355 behind — DIVERGED**. PR remains DRAFT and has no formal review submissions.
+- WP-76-07 remains BLOCKED: no verified dispatch transport, target identity, receipt or authenticated ACK. CI success does not establish dispatch, runtime integration, canonical QE, lifecycle gate transition or release.
+- Disposition: keep Issue #58 OPEN and PR #60 DRAFT; no merge, rebase, lifecycle transition or release. Xu/Co must reconcile DOC-001/007/008/035, Build Register, Evidence Register and Dashboard, verify raw CI/JUnit evidence and role/permission evidence, and preserve WP-07's fail-closed boundary.
