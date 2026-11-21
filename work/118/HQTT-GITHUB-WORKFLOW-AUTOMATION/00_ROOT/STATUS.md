@@ -187,3 +187,14 @@
 - **PR #67:** CLOSED / UNMERGED / superseded; history preserved.
 - **Subsequent documentation updates:** any later docs-only commit does not change the tested source/test behavior at SHA 076a74d.
 - **Disposition:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED; Xu independent review and Vinh acceptance pending.
+
+
+## 18. Independent acceptance freeze and Xu test plan — 2026-11-22 06:10 +07:00
+
+- **Xu acceptance:** canonical `XU-118-AC-001` dated 2026-11-20 remains NOT ACCEPTED, with AC-R1..AC-R6. This conclusion is not superseded by contract/unit test PASS.
+- **KT-118-009:** T-06 comparison is documented; T-01 handoff runtime, T-02 ACK anti-spoof observation, T-03 actor mapping, T-04 controlled diagnostics failure and T-05 self-listener behavior remain pending in the independent acceptance record.
+- **B-118-010:** remediation plan remains PREPARED / NOT APPLIED. Its explicit gate requires Xu to close the test cycle and Vinh to ACK `APPLY B-118-010`. No remediation from that plan is applied by this update.
+- **PR #68:** new clean candidate after Vinh's later autonomous build delegation; READY FOR REVIEW / OPEN / UNMERGED. It is not independently reviewed yet (0 formal reviews / 0 review comments). Xu GitHub login is unverified; no reviewer identity inferred.
+- **Build evidence:** exact tested source SHA `076a74d8f19e6ca63ac45ff2150910122316c049`, Run #44951562713 SUCCESS, 95 tests PASS. Docs-only revalidation Run #44951654158 SUCCESS, 95 tests PASS at SHA `bd5c1042c5ffc3363a160942f19f324749a27534`; artifact 14726175667.
+- **Freeze from this point:** no further workflow/implementation changes while Xu's independent review/test plan is open, except evidence, journal and status updates. No Main merge, no B-118-010 application, no release.
+- **Disposition:** ACTIVE — NOT ACCEPTED — NOT RELEASED. T-01..T-05 and Xu review remain explicit acceptance gates.
