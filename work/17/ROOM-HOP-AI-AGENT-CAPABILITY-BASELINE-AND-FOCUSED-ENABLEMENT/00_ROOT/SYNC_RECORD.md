@@ -1059,3 +1059,14 @@
 - Disposition unchanged: GAP-11 OPEN / NOT ACCEPTED; GAP-01 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
 - Journal Entry 102 committed to GitHub main: `1790bb564e21e8d335d1d664e3a03a97dd29ff89`. Sync read-back required. Sandbox parity remains separately BLOCKED; no Sandbox write.
 - Next: do not repeat unchanged-SHA CI checks. Resume only on changed candidate revision or new independent/runtime evidence.
+
+
+## Sync Period 0090 — Core grant lifecycle residuals traced at exact PR #48 HEAD
+
+- Entry 103 traces the Core authority grant issuance/validation/run-record code, HTTP tests and W13 Host execution sequence at unchanged HEAD `c70eb2b82f54a000a81263dc519078ddf105f075`.
+- Confirmed source defects: issuance event omits immutable source/policy snapshot; validation reloads current Work policy; direct run-record accepts SHA mismatch (candidate HTTP test explicitly expects 200 for a`×64 grant policy and b`×64 submitted run); grant issue/run append have no idempotency key; revoke/expiry is not atomic with an active W12 process and late record rejection does not stop already executed side effects.
+- Existing safeguards retained: hash-chained/fsynced append-only journal, bearer token digest storage, W13 online grant validation and pre-execution source snapshot check, remote TLS requirement outside loopback.
+- No race, restart, retry, code/test change, CI rerun, runtime, credential or deployment action was performed. Findings are source/control-flow evidence, not a live exploit claim.
+- Exact-HEAD CI remains PASS per Entry 102; production acceptance remains NOT PASS. GAP-11 OPEN / NOT ACCEPTED; GAP-01 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
+- Journal Entry 103 committed to GitHub main: `10b46f123ec5cf2370a1e7f2fcfe53325428a5da`. GitHub read-back required; Sandbox parity remains separately BLOCKED.
+- Next: wait for a changed candidate revision before repeating source review; PC runtime review requires the user's PC handoff.
