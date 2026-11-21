@@ -56,3 +56,8 @@ This version supersedes conflicting Sandbox statements that identify another rep
 - No source/test/config divergence remains among accepted shared implementation files. The directory trees are reconciled by explicit dispositions, not by identical file counts.
 - Evidence: `06_EVIDENCE/W10_FULL_PATH_INVENTORY_DISPOSITION_20261122.md`.
 - Work 10 remains ACTIVE — NOT RELEASED. Physical Windows 10, production V8 trust configuration, Linux cgroup-v2, ROOM-HOP integration and Owner acceptance remain open.
+
+
+## Inventory count correction — 2026-11-22 06:33 (UTC+07:00)
+
+After adding the full inventory disposition document itself, the live snapshot is: Sandbox 158 files; GitHub 65 files; shared 65; Sandbox-only 93; GitHub-only 0; one Sandbox-only `.github/` directory. The prior 157/64/64 count was the immediately preceding snapshot before the inventory document was added. The 93 Sandbox-only file dispositions are unchanged and fully itemized in `06_EVIDENCE/W10_FULL_PATH_INVENTORY_DISPOSITION_20261122.md`.
