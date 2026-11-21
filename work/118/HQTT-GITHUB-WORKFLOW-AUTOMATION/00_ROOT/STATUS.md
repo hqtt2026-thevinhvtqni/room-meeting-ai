@@ -332,3 +332,13 @@ The workflow_run listener requires default-branch presence for real runtime veri
 - **Git governance:** no rebase, merge, release, permission/secret/branch-protection changes or Work 70 schema changes.
 - **Work state:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED.
 - **Next:** wire Issue mirror adapter and a secure Sandbox event inbox; then add runtime identity/dispatch only after a real principal is verified.
+
+
+## Dual-loop build extension — Issue mirror and webhook inbox (2026-11-21)
+
+- **W118-13 GitHub Issue mirror adapter:** `scripts/w118/github_issue_adapter.py` now builds a stable Task marker/body, scans all Issue pages (excluding PRs), creates or updates the Issue, then exact-readbacks number/title/body. Repeated sync returns UNCHANGED; incomplete scan fails closed. It never assigns GitHub users or closes Issues. No production token/API call was executed; Sandbox-side per-Task lock still required to prevent concurrent create races.
+- **W118-17 webhook inbox:** `scripts/w118/webhook_inbox.py` verifies HMAC-SHA256 signature, UUID delivery ID, allowlisted event type and exact repository; stores immutable payload hash and PENDING state in SQLite; duplicate delivery is idempotent; same delivery ID with different content is rejected. Inbox receipt does not mutate Task state.
+- **Exact tested source SHA:** `343fb526f5284ca1dcc4a55d463d58bf0c437340`; push run [#44877554435](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44877554435) SUCCESS; **108 tests PASS / 0.503s**; PR run [#44877559607](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44877559607) SUCCESS.
+- **Artifact:** ID `14696481659`; SHA-256 `9414a8c7184099475557f1a651c2e8efaed31eb1f5e839d59c4bbaaea2e4f0f6`.
+- **Still pending:** live GitHub Issue API call; HTTP route in existing ROOM-HOP Event Listener :8050; production webhook secret/TLS/request-size/network configuration; Sandbox service integration and event reconciliation; task-scoped branch live push; CI result callback to exact Task; verified Agent dispatch/ACK; Work 70 projection approval.
+- **Work state:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED.
