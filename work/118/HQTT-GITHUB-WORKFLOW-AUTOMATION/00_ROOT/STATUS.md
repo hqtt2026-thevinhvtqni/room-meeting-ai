@@ -233,3 +233,13 @@ The workflow_run listener requires default-branch presence for real runtime veri
 - **Identity:** Xu and Go GitHub logins remain NOT VERIFIED; no executor identity or permission is inferred. Role map remains fail-closed.
 - **Acceptance:** Xu review PENDING; Vinh final acceptance PENDING; no merge/release authorization or action.
 - **Next:** finish pinning CI, exact-readback all changed documents, then return the corrected handoff to Xu for independent review.
+
+
+## P0 action SHA pinning verification — 2026-11-21 07:44 +07:00
+
+- **Result:** T10-26 PASS; all W118 `uses:` references are pinned to full 40-character official action commit SHAs; no mutable action tags/branches remain in the three W118 workflow files.
+- **CI:** [Run #44846434712](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44846434712), exact tested commit `bad7e086a28a6de2ebf24e116268bf2a766cc7db`; validate SUCCESS; **53 tests PASS / 0.394s**.
+- **Artifact:** ID `14682593399`, digest `2cf1648dfb552c9fd9e15d62b23098dbaf2f7cbd9bb7ba16444858b2e6081f20`, present/unexpired at readback.
+- **Limitation:** all five event-specific runtime jobs SKIPPED; runtime E2E remains NOT VERIFIED.
+- **Current branch compare at this verification:** Main `5f8390910178012feaf37510452bc39804b296db`; feature HEAD `bad7e086a28a6de2ebf24e116268bf2a766cc7db`; merge base `cf2537e07bfd71d5823bd98f8673b3ab5644fcdc`; 255 ahead / 82 behind — DIVERGED.
+- **State:** SHA-pin remediation PASS; contract verification PASS; Xu review PENDING; Vinh acceptance PENDING; no merge/release.
