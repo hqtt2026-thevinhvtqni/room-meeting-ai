@@ -309,3 +309,10 @@ After adding Run #104 and POSIX remediation evidence to both sides, inventory: S
 
 Owner's direct delegation (22/11/2026 06:10 UTC+07) supersedes the prior V8 review wait state: Co is authorized to continue Work 10 implementation, source/test changes, verification on available hosts, Sandbox/GitHub sync and handover without waiting for An review. An V8 review task is marked WAIVED BY OWNER; no An ACK/review/approval is claimed. P0 implementation may proceed under this delegation but must remain within the three LOCKED contracts. No contract change or release/merge is implied. F-15 TaskResult/Workflow timeout mapping remains OWNER DECISION REQUIRED; the earlier Biên bản wording that attributed a specific F-15 decision to Owner has been corrected in an append-only clarification. Current remaining gates: physical Windows 10, production V8 HMAC key/pins, Linux cgroup-v2, W24/W112/W14/W113 integration disposition and final Owner acceptance.
 
+
+
+## W10-OWNER-DELEGATION-AND-P0-STATUS-CORRECTION-20261122-02 — 2026-11-22 06:41 (UTC+07:00)
+
+Owner delegation authorizes Co to proceed with P0 implementation and handover without waiting for An review. The V8 review task is WAIVED BY OWNER; no An review/ACK/approval is claimed. Earlier P0 BLOCKED/NOT AUTHORIZED statements remain historical and are superseded by this direct owner delegation for implementation work. Three LOCKED contracts remain unchanged. F-15 TaskResult/Workflow timeout mapping remains OWNER DECISION REQUIRED; no owner decision was inferred. The previous Biên bản sentence attributing an F-15 mapping to Owner has been corrected.
+
+Current inventory: Sandbox 161 files; GitHub 69; shared 69; Sandbox-only 92; GitHub-only 0; one Sandbox-only `.github/` directory. Updated inventory file lists all 92 Sandbox-only paths and dispositions.
