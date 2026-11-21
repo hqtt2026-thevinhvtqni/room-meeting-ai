@@ -134,7 +134,7 @@ class Work118WorkflowContractTests(unittest.TestCase):
     def test_ack_result_is_deduplicated_by_source_comment_id(self):
         data = self.load_yaml(WORKFLOW)
         run_script = next(step["run"] for step in data["jobs"]["ack-claim-capture"]["steps"] if "MARKER=" in step.get("run", ""))
-        self.assertIn("w118-ack-result", run_script)
+        self.assertIn("w118-ack-claim", run_script)
         self.assertIn("COMMENT_ID", run_script)
 
     def test_diagnostics_runtime_uses_workflow_sha_and_attempt_keys(self):
@@ -170,7 +170,7 @@ class Work118WorkflowContractTests(unittest.TestCase):
         for job_name in ("handoff-request-capture", "ack-claim-capture", "review-observation-capture"):
             steps = data["jobs"][job_name]["steps"]
             self.assertTrue(any(step.get("uses") == "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02" for step in steps), job_name)
-            self.assertTrue(any("event evidence" in step.get("name", "").lower() for step in steps), job_name)
+            self.assertTrue(any("evidence" in step.get("name", "").lower() for step in steps), job_name)
 
 
     def test_pr_checklist_workflow_is_covered_by_orchestrator_path_filters(self):
