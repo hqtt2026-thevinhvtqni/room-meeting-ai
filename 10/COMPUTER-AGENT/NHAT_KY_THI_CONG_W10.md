@@ -1157,3 +1157,18 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Xác minh tiếp G
 
 ## W10-SYNC-CLOSEOUT-20261122-01 — 2026-11-22 04:54 (UTC+07:00)
 Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đồng bộ: Sandbox 155 entries, GitHub branch 44, shared 43, Sandbox-only 112, GitHub-only 1 (`05_TEST/HOST_E2E_RUNBOOK.md`); counts gồm file và thư mục. Đã đồng bộ/mirror 11 tệp governance/evidence/task/CI, trong đó các file được đọc lại và so sánh exact UTF-8; WORK_MANIFEST và NHAT_KY_THI_CONG cũng exact match. Source/test còn divergent ở agent_api.py, agent_runtime.py, models.py, browser_adapter.py, test_p0_p5.py; test_http.py chỉ có Sandbox. GitHub Actions run #29 (44953846300) SUCCESS trên commit `afa7c084104e336b63cbd1cd37dd4bfe21a4a23b`, syntax + offline contract + real Chromium E2E đều PASS trên Ubuntu 24.04; commit sau đó `e7e3397c1034f4a3225e6dff07b4be3f387b4647` chỉ cập nhật journal. An V7 review đã hoàn tất; V8 design proposal và task re-review đã tạo, chưa có ACK/review. Full sync vẫn PARTIAL / NOT COMPLETE; G0/P0 BLOCKED; Work 10 ACTIVE — NOT RELEASED. Không promote source/test, không merge/release.
+
+
+## W10-CI-RUN31-32-20261122-01 — 2026-11-22 05:04 (UTC+07:00)
+- **Name:** Co
+- **Title:** AI-07 / End-to-End Architecture & Implementation Lead
+- **Date-Time:** 2026-11-22 05:04 (UTC+07:00)
+- **Scope:** Kiểm tra lại GitHub Actions cho nhánh `work/10-computer-agent-mirror` sau khi các lần chạy #31/#32 trước đó còn IN_PROGRESS.
+- **Evidence:** GitHub API branch-filtered workflow run listing xác nhận:
+  - Run #31 — ID `44953971884`, status `completed`, conclusion `success`, tested commit `367a2c5c0f111887321213d25dac1d624c40fe56`.
+  - Run #32 — ID `44953983905`, status `completed`, conclusion `success`, tested commit `080c97efe787dc1f1b6bd800cbc0e9436e8b8d73` (HEAD tại thời điểm kiểm tra).
+- **Disposition:** CI GitHub branch #31/#32 SUCCESS. Đây chỉ là kết quả workflow trên GitHub runner; không chứng minh Sandbox source parity, Windows PC/PowerShell, Job Object/process isolation, V8 semantic validator hoặc ROOM-HOP integration.
+- **Boundary:** Không sửa source/test/config/three LOCKED contracts; không promote code, không merge main, không release. V8 static review response chưa thấy trong Sandbox; task 20261122_08 vẫn ghi REVIEW REQUEST PREPARED — NOT YET ACKNOWLEDGED. Không tự ghi nhận An ACK hoặc review.
+- **Current gate:** Documentation/evidence sync remains PASS for files explicitly mirrored; source parity PARTIAL/BLOCKED; P0 implementation BLOCKED / NOT AUTHORIZED; Work 10 ACTIVE — NOT RELEASED.
+- **Next:** Chờ An trả kết quả static adversarial review V8; song song chuẩn bị kế hoạch parity remediation nhưng không ghi đè/promote source divergent khi P0 chưa được authorize.
+- **KÝ: Co | AI-07 / End-to-End Architecture & Implementation Lead**
