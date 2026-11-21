@@ -1790,3 +1790,29 @@ Called read-only `get_room_structure()` and `get_room_context()` through the cur
 - GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
 - READ/TRACE/ANALYZE ONLY. No Core or production operation invoked.
 - Next: inspect repository configuration and current service entrypoints for a declared Core URL/port and separate runtime launcher; do not guess or call a URL absent from verified configuration.
+
+
+## Entry 090 — Core :8000 launcher versus missing execution-authority mount (2026-11-21T16:48:02+07:00)
+
+### Scope and method
+Read-only exact current-main fetch of `room_hop_mcp/core_http_main.py`, `room_hop_mcp/adapter/http_server.py`, `CORE_EXECUTION_AUTHORITY_V1_2_DEPLOYMENT.md`, `tests/test_core_http_main.py`, `core/execution_authority.py`, `room_hop_mcp/adapter/execution_authority_http.py`, `requirements.txt` and current Host source. No test or HTTP request was executed.
+
+### Findings
+1. **Core :8000 launcher exists in source.** `room_hop_mcp/core_http_main.py` blob `8dd6bb5ea500026d932ca52eb6079c980d722ab0` has `uvicorn.run(app, host=ROOM_HOP_CORE_BIND default 127.0.0.1, port=ROOM_HOP_CORE_PORT default 8000)` under `__main__`. This proves a source launcher/config default, not that a process is running or deployed.
+2. **Executable app composition still omits execution-authority router.** Same file's `build_app()` constructs MeetingManager → MeetingService → `create_http_app(service)`. Current `http_server.py` blob `54cb3ecbce2e6b13083f31c14f0c1f0738f1457d` contains Meeting and `/identities` routes only. It does not import/mount `execution_authority_http`.
+3. **Document/test/source contradiction:** `CORE_EXECUTION_AUTHORITY_V1_2_DEPLOYMENT.md` blob `ce130f1f9a95daeaafff75ef37eacd4dffc797e2` claims the same Core process mounts Work execution-grant routes and documents `POST /works/{work_id}/execution-grants` plus related endpoints. `tests/test_core_http_main.py` blob `4ffa0f9a977f53387b3350644da02a68ac89890d` expects that POST to return 503 when authority is unconfigured. However, `core/execution_authority.py` and `room_hop_mcp/adapter/execution_authority_http.py` both return NOT_FOUND on exact current-main fetch; and the actual app factory does not mount an alternate router. Static implication: the documented/tested route is not present in the inspected current-main app composition, so the test expectation is not supported by the current source as fetched (a request to an unregistered path would normally fall through to 404). Test was NOT RUN; no observed HTTP status is claimed.
+4. **Configuration/dependency note:** current `requirements.txt` blob `59e0a4c07842154d82784eff85a9b412c6b33263` contains only pyyaml, pytest, python-dotenv and groq; it does not declare FastAPI/Uvicorn despite the Core HTTP module importing them. This is a packaging/configuration gap for reproducible installation, not proof they are absent from a particular installed environment.
+5. **Execution Host remains old caller-context path on main.** Current `execution_host/server.py` blob `45aec57525b5d55bb63544b7bd7fd23062e06151` still accepts caller `work_context` on POST `/execute`; current `execution_host/security.py` blob `4aa20fbc9c5939c49c85222916dc28fb8dd8075b` trusts `ctx.authorized` boolean. This is the previously recorded GAP-11 source finding, reconfirmed by exact fetch; no Host invoked.
+
+### Reconciliation
+- Correct statement: Core :8000 has a launcher entrypoint in current-main source, but the fetched executable composition does not mount the documented Work execution-authority routes.
+- The deployment guide and test appear aligned to a candidate/historical authority design rather than the current-main app factory. Do not treat their existence as proof of route implementation or passing tests.
+- The route omission is separate from GAP-01: even the PR #48 execution-grant candidate did not bind provider dispatch/receipt/recipient ACK to W70 Assignment IDs. Thus it cannot close GAP-01.
+
+### Disposition
+- Core launcher source: PRESENT; live process/deployment: NOT VERIFIED.
+- Execution-authority route on inspected current-main app: NOT PRESENT in source composition; deployment guide/test expectation contradicts source. Test NOT RUN.
+- GAP-11 OPEN/P0; protected execution DENY / NOT RELEASED.
+- GAP-01 OPEN/P0; Assignment/dispatch/receipt/recipient ACK still NOT PROVEN; E2/E3 NOT PROVEN.
+- READ/TRACE/ANALYZE ONLY. No code, test, API, runtime, provider, Host, permission, branch or deployment change.
+- Next: inspect whether another separately launched Core service/runtime is configured outside this repository entrypoint; otherwise preserve this as a current-main source defect for a later authorized W37/Core reconciliation, not a W17 code patch.
