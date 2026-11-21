@@ -140,3 +140,16 @@
 - **Exact source candidate:** `bcdcc44c10f3371d9d9b17f35f412dd3e1189bf8`; PR #68 remains READY FOR REVIEW / OPEN / UNMERGED; compare remains W118-only against Main. Exact-head CI is triggered by this status update and must be read back before claiming PASS for this amendment.
 - **Blocker:** W118-TASK-015 remains BLOCKED until W14 supplies verified canonical source/ref, Work Authority/ExecutionHostBridge schema and live runtime evidence. Do not modify W12/W13 or create a parallel execution path.
 - **Disposition:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED. No merge/release.
+
+
+## 14. W14 ownership correction — exact contract verification — 2026-11-22 05:35 +07:00
+
+- **Canonical dependency:** W14 is the sole integrated execution/product owner. W12/W13 are absorbed internal foundations; earlier W118 owner references are superseded by TD-118-012 v1.3.
+- **W14 status:** ACTIVE / UNLOCKED; current canonical GitHub source/ref parity NOT VERIFIED; full product E2E NOT VERIFIED; live :8031 E2E NOT RUN / BLOCKED in inspected W14 evidence.
+- **W118 Task Register:** W118-TASK-015 renamed to W14 Work Authority/ExecutionHostBridge integration and remains BLOCKED pending W14 source/API/runtime proof. No W12/W13 modifications or parallel host/Gateway.
+- **Regression:** added `test_execution_integration_is_owned_by_w14_not_w12_w13`; Task Register contract now checks W14 ownership and W12/W13 absorption.
+- **Exact tested code SHA:** `4470b555914894c4ad5a6cb98743dc6637a179a1`; PR run [#44950893033](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44950893033) SUCCESS; **95 tests PASS / 0.295s**; artifact ID `14725229117`; SHA-256 `69a181f509a16e83ba346223d7ab4d8290cce1f051749d5a1749239d597af29f`.
+- **Runtime boundary:** handoff, ACK-claim and review-observation jobs SKIPPED on PR synchronize. This remains contract CI only; no runtime lifecycle E2E.
+- **PR #68:** READY FOR REVIEW / OPEN / UNMERGED; current branch head at this status update `63123cecfc37de111836b610d22cc570c72eaebb`; Main `792bdd71e5345949e0c1f26ff9f95a8513dfa7d5`; 20 ahead / 0 behind; 45 changed paths W118-only.
+- **PR #67:** CLOSED / UNMERGED / superseded; history preserved.
+- **Disposition:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED. Xu independent review and Vinh product acceptance pending; no merge/release.
