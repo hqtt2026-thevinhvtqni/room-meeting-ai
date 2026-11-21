@@ -1,5 +1,13 @@
 # BB-118-002 — BIÊN BẢN BÀN GIAO NGHIỆM THU AUTO E2E v2
 
+> **CANONICAL REMEDIATION SNAPSHOT — 2026-11-21 08:38:39 +07:00**
+> - CI validate artifact classification is now `CI_CONTRACT`, not `RUNTIME`.
+> - Regression T10-27 PASS in [Run #44851353422](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44851353422); 54 tests PASS / 0.223s.
+> - Exact tested source commit: `acb7f510b5885d045b165f739540ee85e57d7439`; artifact ID `14685143198`; SHA-256 `a326f03eae720de5af6ff531e1105e2311c0738a4661f71f940d661eb9b3b6a1`.
+> - Artifact ZIP was downloaded and JSON read back: `evidence_type=CI_CONTRACT`, `state=RECORDED`, `test_outcome=success`, and tested commit matches.
+> - This canonical block supersedes all earlier "latest" snapshots below. Older snapshots remain historical audit records only.
+
+
 - **Work:** W118 — HQTT GitHub Workflow Automation
 - **Document ID:** BB-118-002
 - **Priority:** P0 — acceptance handoff / security and runtime gate
@@ -7,11 +15,11 @@
 - **Prepared by:** Ka — CSA / Delegated Technical Lead / Build Owner
 - **Independent reviewer:** Xu — Independent Reviewer
 - **Final product owner:** Vinh — Project Owner
-- **Date-Time:** 2026-11-21 20:00 +07:00
+- **Date-Time:** 2026-11-21 08:38:39 +07:00
 - **Repository:** hqtt2026-thevinhvtqni/room-meeting-ai
 - **PR:** [#67 — W118: Auto E2E v2](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/67)
 - **Branch:** `work/118-auto-e2e-v2`
-- **Branch HEAD:** `93d5263c2a32150a96648d54b8afb7b1b13e4b7e`
+- **Last reconciled source HEAD:** `acb7f510b5885d045b165f739540ee85e57d7439` (subsequent documentation-only reconciliation commits are tracked by the final PR snapshot)
 - **Work state:** READY FOR INDEPENDENT REVIEW — ACTIVE / NOT ACCEPTED / NOT RELEASED
 
 ## I. Mục đích bàn giao
@@ -28,7 +36,7 @@ Bàn giao phiên bản Auto E2E v2 trên PR #67 cho Xu phản biện/đánh giá
 6. `tests/w118/` — bộ kiểm thử unit/contract và workflow contract.
 7. Hồ sơ triển khai, test matrix, release gate, checklist Xu và runtime runbook trong thư mục Work 118.
 
-## III. Bằng chứng xác minh hiện tại
+## III. Bằng chứng xác minh ban đầu — HISTORICAL (superseded by canonical remediation snapshot)
 
 | Hạng mục | Bằng chứng | Kết quả |
 |---|---|---|
@@ -218,3 +226,15 @@ Sau khi ghi BB-118-002, Ka đã exact-fetch lại hồ sơ, checklist, runbook, 
 - **Runtime:** all event-specific jobs SKIPPED; runtime E2E NOT VERIFIED.
 - **Git compare at exact tested HEAD:** Main `5f8390910178012feaf37510452bc39804b296db`; merge base `cf2537e07bfd71d5823bd98f8673b3ab5644fcdc`; 266 ahead / 82 behind — DIVERGED.
 - **PR raw API:** OPEN; `mergeable=true`; `mergeable_state=clean` at this readback. This is metadata only and does not replace Xu review, Vinh acceptance or separate release authority.
+
+
+### I. Evidence Integrity remediation — current canonical result
+
+- Finding: CI validation artifact was mislabeled `RUNTIME` although job `validate` only runs unit/contract validation.
+- Source fix: `.github/workflows/w118-workflow-automation.yml` now writes `evidence_type=CI_CONTRACT`. Event recorder artifacts remain `OPERATION`.
+- Regression: `test_ci_run_evidence_is_classified_as_ci_contract_not_runtime` (T10-27) asserts CI_CONTRACT, rejects RUNTIME, preserves RECORDED and the non-acceptance limitation.
+- CI: [Run #44851353422](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44851353422); push event; exact tested commit `acb7f510b5885d045b165f739540ee85e57d7439`; validate SUCCESS; **54 tests PASS / 0.223s**.
+- Artifact: `w118-run-evidence-44851353422-1`, ID `14685143198`, SHA-256 `a326f03eae720de5af6ff531e1105e2311c0738a4661f71f940d661eb9b3b6a1`; present/unexpired, expires 2026-12-21T01:38:38Z. ZIP downloaded and JSON read directly; confirmed `CI_CONTRACT`, `RECORDED`, `test_outcome=success`, `tested_commit=acb7f510b5885d045b165f739540ee85e57d7439`, run ID `44851353422`.
+- Runtime boundary: handoff, ACK, acceptance-review, controlled-failure and controlled-failure-dispatch all SKIPPED; runtime E2E remains NOT VERIFIED.
+- Git snapshot at tested source commit: Main `5f8390910178012feaf37510452bc39804b296db`; merge base `cf2537e07bfd71d5823bd98f8673b3ab5644fcdc`; 272 ahead / 82 behind — DIVERGED. PR #67 OPEN, unmerged; mergeability clean at readback. No rebase, merge or release.
+- Disposition: implementation and artifact integrity PASS; Xu independent review PENDING; Vinh acceptance PENDING; ACTIVE — NOT ACCEPTED — NOT RELEASED.
