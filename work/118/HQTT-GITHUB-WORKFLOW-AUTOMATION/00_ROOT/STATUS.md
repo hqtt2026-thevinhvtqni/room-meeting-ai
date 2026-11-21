@@ -265,3 +265,14 @@ The workflow_run listener requires default-branch presence for real runtime veri
 - **Main:** `5f8390910178012feaf37510452bc39804b296db`; **merge base:** `cf2537e07bfd71d5823bd98f8673b3ab5644fcdc`; **263 ahead / 82 behind — DIVERGED**.
 - **PR #67:** OPEN, unmerged, unreleased; raw API reports `mergeable=true` / `mergeable_state=unstable`; no integration authorization.
 - **Formal reviews / threads:** 0 / 0. Xu review PENDING; Vinh acceptance PENDING.
+
+
+## Repeat verification — latest exact tested HEAD (2026-11-21)
+
+- **Feature HEAD tested:** `364ff4c7c2f170de7e700e2b5e2ce9167747c74f`.
+- **CI:** [Run #44846837186](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44846837186); SUCCESS; validate SUCCESS; **53 tests PASS / 0.283s**; T10-26 PASS.
+- **Artifact:** ID `14682809297`, SHA-256 `a21e0e26b2a411896af9b279bc270ef693303fe546d00f0e247e1877a7e767fc`, present/unexpired.
+- **Runtime:** all event-specific jobs SKIPPED; runtime E2E NOT VERIFIED.
+- **Main:** `5f8390910178012feaf37510452bc39804b296db`; merge base `cf2537e07bfd71d5823bd98f8673b3ab5644fcdc`; 266 ahead / 82 behind — DIVERGED.
+- **PR raw API:** OPEN / unmerged / `mergeable=true` / `mergeable_state=clean` at readback; no integration or release action.
+- **Xu review:** PENDING; **Vinh acceptance:** PENDING.
