@@ -131,3 +131,47 @@ Sau khi ghi BB-118-002, Ka đã exact-fetch lại hồ sơ, checklist, runbook, 
 - **Event-specific jobs:** handoff, ACK, acceptance-review, controlled-failure and controlled-failure-dispatch SKIPPED. Runtime E2E remains NOT VERIFIED.
 - **PR:** #67 OPEN / READY FOR REVIEW / unmerged / unreleased. Formal review submissions and review threads remain empty.
 - **Disposition:** BB-118-002 is handed to Xu for Stage A independent review. Vinh's final product acceptance and any non-release integration authorization remain pending.
+
+
+## XI. Amendment — Xu review reconciliation and supply-chain remediation (2026-11-21)
+
+**Document status:** P0 amendment; the snapshots in Sections III, IV and X remain preserved as historical records. This section is the latest verified readback and supersedes earlier values for current-state reporting.
+
+### A. Authoritative GitHub snapshot before SHA-pin remediation
+
+- **PR #67:** OPEN; `draft=false`; `merged=false`; not released.
+- **Feature HEAD at review intake:** `1a99add2d752e3bd21d7c892eeced5f0f0ee7c18`.
+- **Main HEAD:** `5f8390910178012feaf37510452bc39804b296db`.
+- **Merge base:** `cf2537e07bfd71d5823bd98f8673b3ab5644fcdc`.
+- **Compare:** 244 ahead / 82 behind — DIVERGED. No rebase, force-push, merge or release was performed.
+
+### B. Correct CI evidence at review intake
+
+- **Run:** [#44838531259](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44838531259), PR validation, exact tested head `1a99add2d752e3bd21d7c892eeced5f0f0ee7c18`.
+- **Result:** workflow SUCCESS; `validate` SUCCESS; **52 tests PASS / 0.193s**.
+- **Artifact:** `w118-run-evidence-44838531259-1`, ID `14680060235`, SHA-256 digest `f903025a1a386670f391239807dabde8ff3573b4a11186a53cb6d23b2cfee2b7`; present and unexpired at readback (expiry 2026-12-20T23:40:43Z).
+- **Event jobs:** `handoff`, `ack-verification`, `acceptance-review`, `controlled-failure` and `controlled-failure-dispatch` all SKIPPED. Runtime event E2E remains NOT VERIFIED.
+- Runs #44837481914 and #44837495313 are not merged into this evidence record; the selected run is bound to the exact HEAD above.
+
+### C. Supply-chain finding and remediation
+
+- Initial audit found mutable tags in the orchestrator and diagnostics workflow: `actions/checkout@v4`, `actions/setup-python@v5`, `actions/upload-artifact@v4`.
+- Remediation now pins the official action commits:
+  - checkout v4.2.2 — `11bd71901bbe5b1630ceea73d27597364c9af683`.
+  - setup-python v5.6.0 — `a26af69be951a213d495a4c3e4e4022e16d87065`.
+  - upload-artifact v4.6.2 — `ea165f8d65b6e75b540449e92b4886f43607fa02`.
+- Each candidate was verified against its official repository: fetching `action.yml` at the release tag and at the SHA returned identical blob SHAs.
+- Added regression T10-26 and XR-118-001 gate 20 (P0) to reject mutable/non-SHA action references. **Gate result remains PENDING until the pinning CI run succeeds and exact readback confirms every action reference.**
+- Work70 DOC-001/002/033/038/039/040 and DOC-055 were read as the applicable governance baseline. No explicit HQTT SHA-enforcement clause was located in those records; this remediation is therefore recorded as a W118 P0 security control aligned with GitHub's official immutable-SHA guidance, not attributed to an unverified HQTT decision.
+
+### D. Acceptance boundary
+
+- Xu independent design/security review: PENDING; no formal GitHub review submission confirmed.
+- Vinh final product acceptance: PENDING.
+- Runtime event E2E: NOT VERIFIED.
+- Main integration / merge / release: NOT AUTHORIZED / NOT PERFORMED.
+- No executor identity or Xu login was inferred; role map remains deny-by-default.
+
+**Người cập nhật:** Ka — CSA / W118 Build Owner.  
+**Chức danh:** Delegated Technical Lead / Architecture Reviewer.  
+**Ngày giờ:** 2026-11-21 07:44 +07:00.
