@@ -274,3 +274,12 @@ Co | AI-07. Sau khi tạo và đồng bộ chính tài liệu inventory, số l�
 
 Co đã tạo và đồng bộ `07_RELEASE/W10_HANDOVER_PACKAGE_20261122.md` cùng `07_RELEASE/README.md`. Đây là gói bàn giao cho Owner review, không phải nghiệm thu cuối hay release. Run #69 xác nhận 17 Dashboard static assertions PASS trên mỗi OS; Windows 206 PASS, Ubuntu 200 PASS + 2 SKIP. Các gate còn mở: physical Windows 10, production HMAC key/pins, Linux cgroup-v2, ROOM-HOP PC Bridge integration và Owner acceptance. Không merge main/deploy/release.
 
+
+
+## W10-ROOM-HOP-BOUNDARY-AND-PORT-3010-20261122-01 — 2026-11-22 06:35 (UTC+07:00)
+
+Co xác lập ranh giới tích hợp: Work10 là local Computer Agent provider, loopback-only; W24 giữ Core authorization + authenticated PC transport; W112 giữ cross-Work contracts; W14 giữ canonical W12/W13/W14 execution boundary; W113 giữ shared Dashboard ingress port 3000. Work10 standalone Dashboard chuyển sang loopback port 3010, không chiếm port 3000. Không remote expose API, không bypass Core, không thay W14, không sửa các Work khác. Handoff: `06_EVIDENCE/W10_ROOM_HOP_INTEGRATION_BOUNDARY_HANDOFF_20261122.md`. Integration runtime W10↔W24/W14/W113 còn NOT IMPLEMENTED / NOT VERIFIED.
+
+## W10-INVENTORY-COUNT-CORRECTION-20261122-02 — 2026-11-22 06:36 (UTC+07:00)
+
+Sau khi tạo và đồng bộ integration boundary handoff, snapshot mới: Sandbox 159 files; GitHub 66 files; shared 66; Sandbox-only 93; GitHub-only 0. Một thư mục `.github/` chỉ ở Sandbox. 93 Sandbox-only file dispositions không đổi. Inventory report đã được cập nhật.
