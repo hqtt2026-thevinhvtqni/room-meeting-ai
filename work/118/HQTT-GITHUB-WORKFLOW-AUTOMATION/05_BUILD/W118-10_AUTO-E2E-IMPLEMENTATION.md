@@ -135,3 +135,14 @@ A bypass was identified: a repository writer could call `workflow_dispatch` dire
 ## P1 diagnostics idempotency across closed Issues — 2026-11-20
 
 The diagnostics planner previously searched only open `w118-blocked` Issues. If an operator closed a diagnostic Issue and the same workflow ID + commit SHA failed again, the workflow could create a duplicate despite the stable idempotency key. The query now includes all Issue states; an existing closed Issue is reopened and updated rather than duplicated. Regression test T10-25 covers closed-Issue reuse. Run [#44758004387](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44758004387) completed SUCCESS with 52 tests PASS, including the closed-Issue reuse unit test and workflow contract. Artifact ID `14640485869`. The diagnostics workflow_run job itself was not executed on PR synchronize.
+
+
+## P0 supply-chain hardening — GitHub Actions SHA pinning (2026-11-21)
+
+The W118 orchestrator and failure-diagnostics workflows now reference first-party actions by full immutable commit SHA rather than mutable major-version tags. Human-readable release tags remain inline comments. The selected commits were verified against the official action repositories by fetching `action.yml` at both the release tag and SHA and comparing the returned blob SHA:
+
+- `actions/checkout` v4.2.2 — `11bd71901bbe5b1630ceea73d27597364c9af683`.
+- `actions/setup-python` v5.6.0 — `a26af69be951a213d495a4c3e4e4022e16d87065`.
+- `actions/upload-artifact` v4.6.2 — `ea165f8d65b6e75b540449e92b4886f43607fa02`.
+
+Regression T10-26 enforces that all `uses:` references in the three W118 workflows are pinned to 40-character commit SHAs. This is a workflow supply-chain hardening change; event semantics, permissions, triggers and product behavior are not intentionally changed. CI verification is required before marking the gate PASS.
