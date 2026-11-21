@@ -85,4 +85,4 @@
 | T13-25 | Issue link | Separate readback event; does not change Task status | PASS |
 | T13-26 | External push/CI observation | Appends evidence; Task and Assignment status unchanged | PASS |
 
-**Latest combined contract CI:** tested SHA `3b8847568facbaa1517ece7af111deb4818c5ed3`; push run #44879608573 SUCCESS; 127 tests PASS / 0.380s; artifact ID 14697605476; SHA-256 `1ba2e30c35c67d33bda977e0eef320c726c290e5dabeffbdb675e96311f35438`.
+**Latest combined contract CI:** exact branch-head SHA `45b2cda82a99589afe33f2838656c5bbae8069f5`; push run [#44879719166](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44879719166) SUCCESS; 127 tests PASS / 0.257s; artifact ID 14697318273; SHA-256 `de06cfb5787728c7fb214fb80c485f6efe33e2738ad9376db0ea66748b8f2514`.
