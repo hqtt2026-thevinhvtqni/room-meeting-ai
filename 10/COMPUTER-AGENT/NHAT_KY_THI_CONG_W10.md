@@ -1418,3 +1418,17 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - Run #69: Windows 206 PASS / 0 FAIL / 0 SKIP; Ubuntu 200 PASS / 0 FAIL / 2 expected SKIP; Dashboard static 17 PASS and V8 validator 16 PASS per OS.
 - Open: physical Windows 10, production HMAC key/pins, Linux cgroup-v2, ROOM-HOP PC Bridge E2E and Owner acceptance.
 - **KÝ: Co | AI-07**
+
+
+## W10-ROOM-HOP-BOUNDARY-AND-PORT-3010-20261122-01 — 2026-11-22 06:35 (UTC+07:00)
+- Work10 API remains local loopback-only. No remote API exposure or Core bypass.
+- W24 owns PC Source Bridge/Core authorization/authenticated transport; W112 owns cross-Work contracts; W14 owns canonical W12/W13/W14 execution; W113 owns shared Dashboard ingress :3000.
+- Work10 standalone Dashboard moved to :3010; Work10 must not create a competing :3000 listener.
+- Integration handoff: `06_EVIDENCE/W10_ROOM_HOP_INTEGRATION_BOUNDARY_HANDOFF_20261122.md`.
+- W10↔W24/W14/W113 runtime integration remains NOT IMPLEMENTED / NOT VERIFIED.
+- **KÝ: Co | AI-07**
+
+## W10-INVENTORY-COUNT-CORRECTION-20261122-02 — 2026-11-22 06:36 (UTC+07:00)
+- After creating and mirroring the integration handoff, current inventory: Sandbox 159 files; GitHub 66; shared 66; Sandbox-only 93; GitHub-only 0; one Sandbox-only `.github/` directory.
+- The 93 Sandbox-only dispositions are unchanged.
+- **KÝ: Co | AI-07**
