@@ -226,5 +226,20 @@ class Work118WorkflowContractTests(unittest.TestCase):
         self.assertIn("failure", condition)
 
 
+    def test_push_workflow_enforces_task_source_binding_and_records_outcome(self):
+        data = self.load_yaml(WORKFLOW)
+        self.assertIn("work/W*/task-W*-TASK-*", data["on"]["push"]["branches"])
+        steps = data["jobs"]["validate"]["steps"]
+        binding = next(step for step in steps if step.get("id") == "source_binding")
+        self.assertEqual(binding["if"], "github.event_name == 'push'")
+        self.assertIn("source_binding.py", binding["run"])
+        self.assertIn("--event", binding["run"])
+        self.assertIn("--repository", binding["run"])
+        evidence = next(step for step in steps if step.get("name") == "Write run evidence")
+        self.assertIn("SOURCE_BINDING_STATUS", evidence["env"])
+        self.assertIn('"source_binding_status"', evidence["run"])
+        upload = next(step for step in steps if step.get("name") == "Upload immutable run evidence")
+        self.assertEqual(upload["with"]["path"], ".w118-evidence/")
+
 if __name__ == "__main__":
     unittest.main()
