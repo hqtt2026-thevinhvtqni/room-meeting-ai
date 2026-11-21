@@ -1404,3 +1404,17 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - Remaining Sandbox-only files are primarily historical/debug handoff, original/reference, preview/sample, generated evidence/lock and Python cache. Record explicit KEEP/SANDBOX-ONLY dispositions; do not bulk-sync cache/locks/previews or unreviewed debug packages.
 - Full path disposition is still IN PROGRESS.
 - **KÝ: Co | AI-07**
+
+
+## W10-INVENTORY-COUNT-CORRECTION-20261122-01 — 2026-11-22 06:33 (UTC+07:00)
+- After adding the inventory disposition file to both sides, the live counts are Sandbox 158 files; GitHub 65; shared 65; Sandbox-only 93; GitHub-only 0; one Sandbox-only `.github/` directory.
+- Previous 157/64 counts were the snapshot before adding the inventory document.
+- 93 Sandbox-only files are itemized with KEEP/SANDBOX-ONLY reasons in `06_EVIDENCE/W10_FULL_PATH_INVENTORY_DISPOSITION_20261122.md`.
+- **KÝ: Co | AI-07**
+
+## W10-HANDOVER-PACKAGE-20261122-01 — 2026-11-22 06:33 (UTC+07:00)
+- Created and mirrored `07_RELEASE/W10_HANDOVER_PACKAGE_20261122.md` and updated `07_RELEASE/README.md`.
+- Handover is prepared for Owner review; it is not final acceptance or release.
+- Run #69: Windows 206 PASS / 0 FAIL / 0 SKIP; Ubuntu 200 PASS / 0 FAIL / 2 expected SKIP; Dashboard static 17 PASS and V8 validator 16 PASS per OS.
+- Open: physical Windows 10, production HMAC key/pins, Linux cgroup-v2, ROOM-HOP PC Bridge E2E and Owner acceptance.
+- **KÝ: Co | AI-07**
