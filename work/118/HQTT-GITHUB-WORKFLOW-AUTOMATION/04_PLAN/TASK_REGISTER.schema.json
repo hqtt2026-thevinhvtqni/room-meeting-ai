@@ -67,23 +67,6 @@
         ]
       }
     },
-    "assignment_status_model": {
-      "type": "array",
-      "items": {
-        "enum": [
-          "UNASSIGNED",
-          "PROPOSED",
-          "DISPATCHED",
-          "ACKNOWLEDGED",
-          "IN_PROGRESS",
-          "SUBMITTED",
-          "ACCEPTED",
-          "REJECTED",
-          "BLOCKED",
-          "CANCELLED"
-        ]
-      }
-    },
     "rules": {
       "type": "array",
       "items": {
@@ -106,7 +89,6 @@
           "accountable_role",
           "role_name",
           "assigned_identity",
-          "assignment_status",
           "reviewer_role",
           "inputs",
           "deliverable",
@@ -126,7 +108,9 @@
           "completion_rule",
           "owner_principal",
           "execution_mode",
-          "owner_directive_ref"
+          "owner_directive_ref",
+          "core_task_id",
+          "correlation_id"
         ],
         "properties": {
           "task_id": {
@@ -169,20 +153,6 @@
             "type": [
               "string",
               "null"
-            ]
-          },
-          "assignment_status": {
-            "enum": [
-              "UNASSIGNED",
-              "PROPOSED",
-              "DISPATCHED",
-              "ACKNOWLEDGED",
-              "IN_PROGRESS",
-              "SUBMITTED",
-              "ACCEPTED",
-              "REJECTED",
-              "BLOCKED",
-              "CANCELLED"
             ]
           },
           "reviewer_role": {
@@ -326,11 +296,23 @@
           },
           "execution_mode": {
             "enum": [
-              "AGENT_ASSIGNMENT",
-              "OWNER_DIRECTED_SESSION"
+              "OWNER_DIRECTED_BUILD",
+              "CORE_AGENT_TASK"
             ]
           },
           "owner_directive_ref": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "core_task_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "correlation_id": {
             "type": [
               "string",
               "null"
