@@ -1,17 +1,26 @@
 from __future__ import annotations
 
+import asyncio
+import ipaddress
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as FutureTimeoutError
+from functools import wraps
 import json
 import os
+import socket
+import sys
 import time
+from threading import RLock
 import uuid
 from pathlib import Path
+from urllib.parse import urlsplit, urlunsplit
 from typing import Any
 
-import requests
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from playwright.sync_api import sync_playwright, Browser, Page
+
+from integration.room_hop_integration import RoomHopIntegration, RoomHopIntegrationConfig
 
 
 ROOT = Path(__file__).resolve().parent
@@ -19,16 +28,104 @@ EVIDENCE = ROOT / "evidence"
 EVIDENCE.mkdir(exist_ok=True)
 app = FastAPI(title="ROOM-HOP Browser Agent Adapter", version="1.1.0")
 
+MAX_BROWSER_WAIT_MS = 5000
+MAX_BROWSER_WORKFLOW_STEPS = 10
+BROWSER_OPERATION_TIMEOUT_SECONDS = 120
+
+def _redact_url(value: str) -> str:
+    """Remove query strings and fragments before evidence/transcript persistence."""
+    try:
+        parts = urlsplit(str(value))
+        return urlunsplit((parts.scheme, parts.netloc, parts.path, "", ""))
+    except ValueError:
+        return "[invalid-url]"
+
+
+def _validate_navigation_url(value: str) -> None:
+    """Fail closed for non-web schemes and non-public destinations."""
+    try:
+        parts = urlsplit(str(value))
+        host = parts.hostname
+        if parts.scheme.lower() not in {"http", "https"} or not host:
+            raise ValueError("Browser navigation permits only http/https URLs.")
+        if parts.username is not None or parts.password is not None:
+            raise ValueError("Credentials embedded in browser URLs are not permitted.")
+    except ValueError:
+        raise
+
+    allowed_test_hosts = {
+        item.strip().lower()
+        for item in os.getenv("ROOMHOP_BROWSER_ALLOWED_HOSTS", "").split(",")
+        if item.strip()
+    }
+    if os.getenv("ROOMHOP_TEST_MODE") == "1" and host.lower() in allowed_test_hosts:
+        return
+
+    try:
+        addresses = {
+            item[4][0]
+            for item in socket.getaddrinfo(host, parts.port, type=socket.SOCK_STREAM)
+        }
+    except OSError:
+        raise ValueError("Browser destination DNS resolution failed.") from None
+    if not addresses:
+        raise ValueError("Browser destination did not resolve.")
+    for address in addresses:
+        try:
+            parsed_ip = ipaddress.ip_address(address)
+        except ValueError:
+            raise ValueError("Browser destination resolved to an invalid IP.") from None
+        if not parsed_ip.is_global:
+            raise ValueError("Browser destination resolves to a non-public IP address.")
+
+
+def _safe_evidence_path(name: str) -> Path:
+    """Confine evidence filenames to the adapter evidence directory."""
+    if not isinstance(name, str) or not name or name in {".", ".."}:
+        raise ValueError("Evidence filename is required.")
+    candidate = Path(name)
+    if (
+        candidate.is_absolute()
+        or candidate.name != name
+        or "/" in name
+        or "\\" in name
+        or any(character in name for character in '<>:"|?*')
+        or any(ord(character) < 32 for character in name)
+        or name.endswith((" ", "."))
+    ):
+        raise ValueError("Evidence filename must be a safe plain basename.")
+    stem = name.split(".", 1)[0].upper()
+    reserved_windows_names = {"CON", "PRN", "AUX", "NUL"}
+    reserved_windows_names.update(f"{prefix}{index}" for prefix in ("COM", "LPT") for index in range(1, 10))
+    reserved_windows_names.update(f"{prefix}{suffix}" for prefix in ("COM", "LPT") for suffix in ("¹", "²", "³"))
+    if stem in reserved_windows_names:
+        raise ValueError("Evidence filename uses a reserved Windows device name.")
+    root = EVIDENCE.resolve()
+    resolved = (root / name).resolve()
+    if resolved.parent != root:
+        raise ValueError("Evidence path escapes the evidence directory.")
+    return resolved
+
 
 class WorkflowRequest(BaseModel):
     url: str
-    steps: list[dict[str, Any]] = Field(default_factory=list)
-    work_id: str = "browser-e2e"
+    steps: list[dict[str, Any]] = Field(default_factory=list, max_length=MAX_BROWSER_WORKFLOW_STEPS)
+    work_id: str = Field(default="browser-e2e", max_length=64)
     collect_screenshot: bool = True
+
+
+def _serialized_operation(method):
+    """Serialize access to the process-wide Playwright state; nested calls are re-entrant."""
+    @wraps(method)
+    def wrapped(self, *args, **kwargs):
+        with self._operation_lock:
+            return method(self, *args, **kwargs)
+    return wrapped
 
 
 class Adapter:
     def __init__(self):
+        self._operation_lock = RLock()
         self.pw = None
         self.browser: Browser | None = None
         self.context = None
@@ -41,25 +138,23 @@ class Adapter:
         self.logs.append(item)
         return item
 
+    @_serialized_operation
     def start(self):
         if self.page:
             return {"status": "already_started"}
 
-        self.pw = sync_playwright().start()
         executable = os.getenv("ROOMHOP_BROWSER_EXECUTABLE")
-        launch_kwargs: dict[str, Any] = {
-            "headless": True,
-            "args": ["--no-sandbox"],
-        }
-        if executable:
-            launch_kwargs["executable_path"] = executable
+        if self.browser is None:
+            self.pw = sync_playwright().start()
+            launch_kwargs: dict[str, Any] = {
+                "headless": True,
+                "args": [],
+            }
+            if executable:
+                launch_kwargs["executable_path"] = executable
+            self.browser = self.pw.chromium.launch(**launch_kwargs)
 
-        self.browser = self.pw.chromium.launch(**launch_kwargs)
-        self.context = self.browser.new_context(
-            accept_downloads=True,
-            viewport={"width": 1280, "height": 900},
-        )
-        self.page = self.context.new_page()
+        self._create_context()
         self.started_at = time.time()
         self.log(
             "browser_start",
@@ -72,23 +167,69 @@ class Adapter:
             "executable": executable or "playwright-managed",
         }
 
+    def _create_context(self):
+        if self.browser is None:
+            raise RuntimeError("Browser process is not started.")
+        self.context = self.browser.new_context(
+            accept_downloads=True,
+            service_workers="block",
+            viewport={"width": 1280, "height": 900},
+        )
+        self.context.route("**/*", self._guard_route)
+        self.context.route_web_socket("**/*", self._block_websocket)
+        self.page = self.context.new_page()
+        return self.context
+
+    def _close_context(self) -> None:
+        context = self.context
+        self.context = None
+        self.page = None
+        if context is not None:
+            context.close()
+
+    def _replace_context(self):
+        """Start a clean browser storage/session boundary for one workflow."""
+        self._close_context()
+        return self._create_context()
+
     def require(self) -> Page:
         if not self.page:
             self.start()
         assert self.page is not None
         return self.page
 
+    @staticmethod
+    def _guard_route(route) -> None:
+        try:
+            _validate_navigation_url(route.request.url)
+        except ValueError:
+            route.abort()
+        else:
+            route.continue_()
+
+    @staticmethod
+    def _block_websocket(websocket_route) -> None:
+        """Fail closed: the Browser Adapter does not permit WebSocket egress."""
+        websocket_route.close(
+            code=1008,
+            reason="WebSocket egress is disabled by Work32 policy.",
+        )
+
+    @_serialized_operation
     def navigate(self, url: str):
+        _validate_navigation_url(url)
         p = self.require()
         r = p.goto(url, wait_until="domcontentloaded", timeout=30000)
+        _validate_navigation_url(p.url)
         p.wait_for_timeout(500)
-        self.log("browser_navigate", url=p.url, status=r.status if r else None)
-        return {"url": p.url, "status": r.status if r else None, "title": p.title()}
+        self.log("browser_navigate", url=_redact_url(p.url), status=r.status if r else None)
+        return {"url": _redact_url(p.url), "status": r.status if r else None, "title": p.title()}
 
+    @_serialized_operation
     def inspect(self):
         p = self.require()
         data = {
-            "url": p.url,
+            "url": _redact_url(p.url),
             "title": p.title(),
             "headings": p.locator("h1,h2,h3").all_text_contents()[:20],
             "links": p.locator("a").all_text_contents()[:30],
@@ -97,464 +238,471 @@ class Adapter:
         self.log("browser_inspect", **data)
         return data
 
+    @_serialized_operation
     def click(self, selector: str):
         p = self.require()
         p.locator(selector).first.click(timeout=15000)
         p.wait_for_timeout(500)
         self.log("browser_click", selector=selector)
-        return {"url": p.url, "title": p.title()}
+        return {"url": _redact_url(p.url), "title": p.title()}
 
+    @_serialized_operation
     def type(self, selector: str, text: str):
         p = self.require()
         p.locator(selector).first.fill(text, timeout=15000)
         self.log("browser_type", selector=selector, chars=len(text))
         return {"selector": selector, "typed": len(text)}
 
+    @_serialized_operation
     def wait(self, ms: int = 1000):
+        if isinstance(ms, bool) or not isinstance(ms, int) or not 0 <= ms <= MAX_BROWSER_WAIT_MS:
+            raise ValueError(f"wait ms must be an integer between 0 and {MAX_BROWSER_WAIT_MS}.")
         self.require().wait_for_timeout(ms)
         self.log("browser_wait", ms=ms)
         return {"waited_ms": ms}
 
+    @_serialized_operation
     def extract(self, selectors: dict[str, str]):
         p = self.require()
         out = {k: p.locator(v).all_text_contents()[:20] for k, v in selectors.items()}
-        out["url"] = p.url
+        out["url"] = _redact_url(p.url)
         out["title"] = p.title()
         self.log("browser_extract", fields=list(selectors))
         return out
 
+    @_serialized_operation
     def screenshot(self, name: str = "page.png"):
         p = self.require()
-        path = EVIDENCE / name
+        path = _safe_evidence_path(name)
         p.screenshot(path=str(path), full_page=True)
         self.log("browser_screenshot", path=str(path))
         return {"path": str(path)}
 
+    @_serialized_operation
     def download(self, selector: str, name: str | None = None):
         p = self.require()
         with p.expect_download(timeout=20000) as pending:
             p.locator(selector).first.click()
         download = pending.value
-        path = EVIDENCE / (name or download.suggested_filename)
+        path = _safe_evidence_path(name or download.suggested_filename)
         download.save_as(str(path))
         self.log("browser_download", selector=selector, path=str(path))
         return {"path": str(path), "suggested_filename": download.suggested_filename}
 
+    @_serialized_operation
     def close(self):
         if self.browser:
+            self._close_context()
             self.browser.close()
             if self.pw:
                 self.pw.stop()
             self.browser = None
-            self.page = None
+            self.pw = None
             self.log("browser_close")
         return {"status": "closed"}
 
+    @_serialized_operation
     def workflow(self, req: WorkflowRequest):
         self.logs = []
         self.start()
-        self.navigate(req.url)
-        results = []
+        isolated_context = self.browser is not None
+        if isolated_context:
+            self._replace_context()
+        try:
+            self.navigate(req.url)
+            results = []
 
-        for step in req.steps:
-            op = step["op"]
-            if op == "inspect":
-                results.append(self.inspect())
-            elif op == "click":
-                results.append(self.click(step["selector"]))
-            elif op == "type":
-                results.append(self.type(step["selector"], step["text"]))
-            elif op == "wait":
-                results.append(self.wait(step.get("ms", 1000)))
-            elif op == "extract":
-                results.append(self.extract(step["selectors"]))
-            elif op == "screenshot":
-                results.append(self.screenshot(step.get("name", "page.png")))
-            else:
-                raise ValueError(f"unsupported operation: {op}")
+            for step in req.steps:
+                op = step["op"]
+                if op == "inspect":
+                    results.append(self.inspect())
+                elif op == "click":
+                    results.append(self.click(step["selector"]))
+                elif op == "type":
+                    results.append(self.type(step["selector"], step["text"]))
+                elif op == "wait":
+                    results.append(self.wait(step.get("ms", 1000)))
+                elif op == "extract":
+                    results.append(self.extract(step["selectors"]))
+                elif op == "screenshot":
+                    results.append(self.screenshot(step.get("name", "page.png")))
+                else:
+                    raise ValueError(f"unsupported operation: {op}")
 
-        final = {
-            "execution_id": str(uuid.uuid4()),
-            "work_id": req.work_id,
-            "ok": True,
-            "final_url": self.page.url,
-            "page_title": self.page.title(),
-            "results": results,
-            "logs": self.logs,
-            "started_at": self.started_at,
-            "finished_at": time.time(),
-        }
+            final = {
+                "execution_id": str(uuid.uuid4()),
+                "evidence_id": str(uuid.uuid4()),
+                "work_id": req.work_id,
+                "ok": True,
+                "final_url": _redact_url(self.page.url),
+                "page_title": self.page.title(),
+                "results": results,
+                "logs": self.logs,
+                "started_at": self.started_at,
+                "finished_at": time.time(),
+            }
 
-        out = EVIDENCE / f"{req.work_id}-{int(time.time())}.json"
-        out.write_text(json.dumps(final, indent=2, ensure_ascii=False), encoding="utf-8")
-        final["evidence_json"] = str(out)
-        final["roomhop_submission"] = submit_to_roomhop(final)
-        return final
+            out = _safe_evidence_path(f"{req.work_id}-{int(time.time())}.json")
+            out.write_text(json.dumps(final, indent=2, ensure_ascii=False), encoding="utf-8")
+            final["evidence_json"] = str(out)
+            final["roomhop_submission"] = _submit_to_roomhop_from_worker(final)
+            return final
+        finally:
+            if isolated_context:
+                self._close_context()
 
 
 adapter = Adapter()
+# FastAPI sync endpoints may execute on different worker threads. Playwright's
+# synchronous objects must remain owned by one thread, so all adapter calls are
+# dispatched through this single-worker executor.
+_BROWSER_EXECUTOR = ThreadPoolExecutor(max_workers=1, thread_name_prefix="roomhop-browser-adapter")
 
 
-def _roomhop_endpoint() -> str:
-    endpoint = os.getenv("ROOMHOP_MCP_URL")
-    if not endpoint:
-        raise RuntimeError("ROOMHOP_MCP_URL not configured")
-    return endpoint.rstrip("/")
+def _run_browser_operation(operation, *args, **kwargs):
+    future = _BROWSER_EXECUTOR.submit(operation, *args, **kwargs)
+    try:
+        return future.result(timeout=BROWSER_OPERATION_TIMEOUT_SECONDS)
+    except FutureTimeoutError:
+        future.cancel()
+        raise HTTPException(
+            status_code=504,
+            detail="Browser operation exceeded its bounded execution window; outcome may be uncertain; do not retry automatically.",
+        ) from None
 
 
-_ROOMHOP_SESSION_ID: str | None = None
-_ROOMHOP_PROTOCOL_VERSION: str | None = None
-
-
-def _parse_mcp_response(response: requests.Response) -> dict[str, Any]:
-    content_type = response.headers.get("content-type", "").lower()
-    raw = response.text
-
-    if not raw.strip():
-        raise RuntimeError(
-            "ROOM-HOP MCP empty response: "
-            f"status={response.status_code} content_type={content_type!r} "
-            f"headers={{k: v for k, v in response.headers.items() if k.lower() in ['content-type', 'mcp-session-id', 'mcp-protocol-version']}}"
-        )
-
-    if "application/json" in content_type:
-        data = response.json()
-    elif "text/event-stream" in content_type:
-        data = None
-        for line in raw.splitlines():
-            if line.startswith("data:"):
-                event_data = line[5:].strip()
-                if not event_data:
-                    continue
-                try:
-                    candidate = json.loads(event_data)
-                except json.JSONDecodeError:
-                    continue
-                if isinstance(candidate, dict) and ("result" in candidate or "error" in candidate):
-                    data = candidate
-        if data is None:
-            raise RuntimeError(
-                "ROOM-HOP MCP SSE contained no JSON-RPC result/error: "
-                f"status={response.status_code} body={raw[:1000]!r}"
-            )
-    else:
-        try:
-            data = json.loads(raw)
-        except json.JSONDecodeError as exc:
-            raise RuntimeError(
-                "ROOM-HOP MCP unexpected response: "
-                f"status={response.status_code} content_type={content_type!r} body={raw[:1000]!r}"
-            ) from exc
-
-    if not isinstance(data, dict):
-        raise RuntimeError(f"ROOM-HOP MCP returned non-object response: {data!r}")
-    if "error" in data:
-        raise RuntimeError(f"ROOM-HOP MCP error: {data['error']}")
-    return data
-
-
-def _roomhop_headers() -> dict[str, str]:
-    headers = {
-        "Content-Type": "application/json",
-        "Accept": "application/json, text/event-stream",
-    }
-    if _ROOMHOP_SESSION_ID:
-        headers["Mcp-Session-Id"] = _ROOMHOP_SESSION_ID
-    if _ROOMHOP_PROTOCOL_VERSION:
-        headers["MCP-Protocol-Version"] = _ROOMHOP_PROTOCOL_VERSION
-    return headers
-
-
-def _roomhop_post(payload: dict[str, Any]) -> dict[str, Any]:
-    global _ROOMHOP_SESSION_ID, _ROOMHOP_PROTOCOL_VERSION
-
-    response = requests.post(
-        _roomhop_endpoint(),
-        json=payload,
-        headers=_roomhop_headers(),
-        timeout=float(os.getenv("ROOMHOP_MCP_TIMEOUT", "20")),
-    )
-    response.raise_for_status()
-
-    session_id = response.headers.get("Mcp-Session-Id")
-    if session_id:
-        _ROOMHOP_SESSION_ID = session_id
-
-    protocol_version = response.headers.get("MCP-Protocol-Version")
-    if protocol_version:
-        _ROOMHOP_PROTOCOL_VERSION = protocol_version
-
-    return _parse_mcp_response(response)
-
-
-def _roomhop_notification(payload: dict[str, Any]) -> None:
-    global _ROOMHOP_SESSION_ID, _ROOMHOP_PROTOCOL_VERSION
-
-    response = requests.post(
-        _roomhop_endpoint(),
-        json=payload,
-        headers=_roomhop_headers(),
-        timeout=float(os.getenv("ROOMHOP_MCP_TIMEOUT", "20")),
-    )
-    response.raise_for_status()
-
-    session_id = response.headers.get("Mcp-Session-Id")
-    if session_id:
-        _ROOMHOP_SESSION_ID = session_id
-
-    protocol_version = response.headers.get("MCP-Protocol-Version")
-    if protocol_version:
-        _ROOMHOP_PROTOCOL_VERSION = protocol_version
-
-
-def _roomhop_initialize() -> None:
-    global _ROOMHOP_SESSION_ID, _ROOMHOP_PROTOCOL_VERSION
-
-    if _ROOMHOP_SESSION_ID:
-        return
-
-    versions = [
-        os.getenv("ROOMHOP_MCP_PROTOCOL_VERSION", "2025-03-26"),
-        "2025-06-18",
-    ]
-    last_error: Exception | None = None
-
-    for version in versions:
-        try:
-            data = _roomhop_post(
-                {
-                    "jsonrpc": "2.0",
-                    "id": str(uuid.uuid4()),
-                    "method": "initialize",
-                    "params": {
-                        "protocolVersion": version,
-                        "capabilities": {},
-                        "clientInfo": {
-                            "name": "room-hop-browser-agent-adapter",
-                            "version": "1.1.0",
-                        },
-                    },
-                }
-            )
-            negotiated = data.get("result", {}).get("protocolVersion")
-            if negotiated:
-                _ROOMHOP_PROTOCOL_VERSION = str(negotiated)
-            _roomhop_notification(
-                {
-                    "jsonrpc": "2.0",
-                    "method": "notifications/initialized",
-                }
-            )
-            return
-        except Exception as exc:
-            last_error = exc
-            _ROOMHOP_SESSION_ID = None
-            _ROOMHOP_PROTOCOL_VERSION = None
-
-    raise RuntimeError(f"ROOM-HOP MCP initialize failed: {last_error}")
-
-
-def roomhop_rpc(method: str, params: dict[str, Any] | None = None, request_id: str | None = None):
-    if method not in {"initialize", "notifications/initialized"}:
-        _roomhop_initialize()
-
-    payload = {
-        "jsonrpc": "2.0",
-        "id": request_id or str(uuid.uuid4()),
-        "method": method,
-    }
-    if params is not None:
-        payload["params"] = params
-
-    return _roomhop_post(payload)
-
-
-def roomhop_tools_list() -> list[dict[str, Any]]:
-    data = roomhop_rpc("tools/list")
-    return data.get("result", {}).get("tools", [])
-
-
-def roomhop_tool_call(name: str, arguments: dict[str, Any] | None = None):
-    return roomhop_rpc(
-        "tools/call",
-        {"name": name, "arguments": arguments or {}},
-    )
-
-
-def _tool_names(tools: list[dict[str, Any]]) -> set[str]:
-    return {str(tool.get("name")) for tool in tools}
-
-
-def _extract_tool_result(data: dict[str, Any]) -> Any:
-    result = data.get("result", {})
-    content = result.get("content", [])
-    for item in content:
-        if item.get("type") in {"json", "application/json"}:
-            if "json" in item:
-                return item["json"]
-        if "text" in item:
-            raw = item["text"]
-            try:
-                return json.loads(raw)
-            except Exception:
-                return raw
-    return result
-
-
-def submit_to_roomhop(result: dict[str, Any]):
-    endpoint = os.getenv("ROOMHOP_MCP_URL")
-    if not endpoint:
+def _execute_workflow(req: WorkflowRequest):
+    try:
+        return {"ok": True, "value": adapter.workflow(req)}
+    except Exception as exc:
         return {
-            "status": "deferred",
-            "reason": "ROOMHOP_MCP_URL not configured",
-            "local_evidence": result["evidence_json"],
+            "ok": False,
+            "detail": {"error": str(exc), "logs": list(adapter.logs)},
         }
 
-    try:
-        tools = roomhop_tools_list()
-        names = _tool_names(tools)
-        required = {"list_meetings", "add_paste_to_meeting", "get_transcript"}
-        missing = sorted(required - names)
-        if missing:
+
+
+def _contains_exact_marker(value: Any, marker: str) -> bool:
+    if isinstance(value, str):
+        return marker in value
+    if isinstance(value, dict):
+        return any(_contains_exact_marker(item, marker) for item in value.values())
+    if isinstance(value, list):
+        return any(_contains_exact_marker(item, marker) for item in value)
+    return False
+
+
+async def _submit_to_roomhop_stdio(
+    result: dict[str, Any],
+    meeting_id: str,
+    identity_id: str,
+    meetings_dir: Path,
+) -> dict[str, Any]:
+    """Use the canonical Work32 Public V1 stdio client for one isolated handoff."""
+    repo_root = Path(__file__).resolve().parents[2]
+    # Pass only the two required values; stdio_client adds its safe default
+    # environment. Never forward the Browser Adapter's full environment.
+    child_env = {
+        "ROOM_HOP_MEETINGS_DIR": str(meetings_dir),
+        "PYTHONPATH": str(repo_root),
+    }
+    integration = RoomHopIntegration(
+        RoomHopIntegrationConfig(
+            python_executable=sys.executable,
+            cwd=str(repo_root),
+            env=child_env,
+            # The runner uses Python's embeddable distribution, which ignores
+            # PYTHONPATH. Inject the exact checkout root before importing Public V1.
+            python_args=[
+                "-c",
+                "import sys, runpy; "
+                f"sys.path.insert(0, {str(repo_root)!r}); "
+                "runpy.run_module('room_hop_mcp', run_name='__main__')",
+            ],
+        )
+    )
+
+    expected_tools = {
+        "list_meetings",
+        "get_meeting",
+        "get_transcript",
+        "add_paste_to_meeting",
+    }
+
+    async with integration.session() as session:
+        tools_result = await session.list_tools()
+        actual_tools = {tool.name for tool in tools_result.tools}
+        if actual_tools != expected_tools:
             return {
                 "status": "blocked",
-                "reason": "ROOM-HOP MCP public contract missing required recording/read tools",
-                "missing_tools": missing,
-                "endpoint": endpoint,
+                "reason": "ROOM-HOP MCP tool inventory does not exactly match ADR-002 Public V1",
+                "expected_tools": sorted(expected_tools),
+                "actual_tools": sorted(actual_tools),
+                "meeting_id": meeting_id,
+                "identity_id": identity_id,
             }
 
-        meetings = _extract_tool_result(roomhop_tool_call("list_meetings"))
-        meeting_items = meetings.get("meetings", []) if isinstance(meetings, dict) else []
-        preferred = os.getenv("ROOMHOP_MEETING_ID")
-        meeting = next((m for m in meeting_items if m.get("id") == preferred), None) if preferred else None
-
-        if meeting is None:
-            meeting = next(
-                (m for m in meeting_items if str(m.get("status", "")).lower() in {"active", "open", "started"}),
-                None,
-            )
-        if meeting is None:
+        meetings = await integration.list_meetings(session)
+        target = next(
+            (item for item in meetings if item.get("id") == meeting_id),
+            None,
+        )
+        if target is None:
             return {
                 "status": "blocked",
-                "reason": "No active ROOM-HOP meeting available for recording",
-                "endpoint": endpoint,
+                "reason": "Configured disposable test meeting was not found; no fallback is permitted",
+                "meeting_id": meeting_id,
+                "identity_id": identity_id,
             }
 
-        meeting_id = meeting["id"]
+        meeting = await integration.get_meeting(session, meeting_id)
+        status = str(meeting.get("status", "")).lower()
+        if status not in {"active", "open", "started"}:
+            return {
+                "status": "blocked",
+                "reason": "Configured disposable test meeting is not active",
+                "meeting_id": meeting_id,
+                "meeting_status": meeting.get("status"),
+                "identity_id": identity_id,
+            }
+
         artifact = {
             "artifact_type": "browser_workflow_execution",
             "execution_id": result["execution_id"],
+            "evidence_id": result["evidence_id"],
             "work_id": result["work_id"],
             "evidence_json": Path(result["evidence_json"]).name,
             "final_url": result["final_url"],
-            "page_title": result["page_title"],
         }
         marker = "ROOMHOP_BROWSER_AGENT_ARTIFACT " + json.dumps(
             artifact, ensure_ascii=False, sort_keys=True
         )
 
-        handoff = _extract_tool_result(
-            roomhop_tool_call(
-                "add_paste_to_meeting",
-                {
-                    "meeting_id": meeting_id,
-                    "text": marker,
-                    "identity_id": os.getenv("ROOMHOP_IDENTITY_ID", "xu"),
-                },
-            )
+        handoff = await integration.add_paste_to_meeting(
+            session,
+            meeting_id,
+            marker,
+            identity_id=identity_id,
         )
-
-        transcript = _extract_tool_result(
-            roomhop_tool_call("get_transcript", {"meeting_id": meeting_id})
-        )
-        transcript_text = json.dumps(transcript, ensure_ascii=False)
-        read_back = all(
+        transcript = await integration.get_transcript(session, meeting_id)
+        transcript_text = json.dumps(transcript, ensure_ascii=False, sort_keys=True)
+        read_back = _contains_exact_marker(transcript, marker) and all(
             token in transcript_text
-            for token in [result["execution_id"], result["work_id"], Path(result["evidence_json"]).name]
+            for token in (
+                result["execution_id"],
+                result["evidence_id"],
+                result["work_id"],
+                Path(result["evidence_json"]).name,
+            )
         )
 
         return {
             "status": "pass" if read_back else "blocked",
-            "endpoint": endpoint,
+            "reason": None if read_back else "Exact execution artifact was not found in transcript readback",
             "meeting_id": meeting_id,
+            "identity_id": identity_id,
             "handoff": handoff,
             "read_back": read_back,
             "artifact": artifact,
-            "contract_tools": sorted(names),
+            "contract_tools": sorted(actual_tools),
+            "transport": "stdio",
+            "meetings_dir": str(meetings_dir),
+        }
+
+
+DEFAULT_MCP_TIMEOUT_SECONDS = 30.0
+MAX_MCP_TIMEOUT_SECONDS = 120.0
+
+
+def _mcp_timeout_seconds() -> float:
+    raw = os.getenv("ROOMHOP_MCP_TIMEOUT_SECONDS", str(DEFAULT_MCP_TIMEOUT_SECONDS))
+    try:
+        timeout = float(raw)
+    except (TypeError, ValueError) as exc:
+        raise ValueError("ROOMHOP_MCP_TIMEOUT_SECONDS must be numeric") from exc
+    if not (0 < timeout <= MAX_MCP_TIMEOUT_SECONDS):
+        raise ValueError(
+            f"ROOMHOP_MCP_TIMEOUT_SECONDS must be greater than 0 and at most {MAX_MCP_TIMEOUT_SECONDS:g}"
+        )
+    return timeout
+
+
+def submit_to_roomhop(result: dict[str, Any]):
+    """Synchronous Browser Adapter boundary; each handoff owns one bounded stdio session."""
+    if os.getenv("ROOMHOP_TEST_MODE") != "1":
+        return {
+            "status": "blocked",
+            "reason": "ROOM-HOP transcript submission requires ROOMHOP_TEST_MODE=1",
+        }
+
+    meeting_id = os.getenv("ROOMHOP_TEST_MEETING_ID")
+    identity_id = os.getenv("ROOMHOP_TEST_IDENTITY_ID")
+    test_store = os.getenv("ROOMHOP_TEST_MEETINGS_DIR")
+    if not meeting_id or not identity_id or not test_store:
+        return {
+            "status": "blocked",
+            "reason": "Explicit ROOMHOP_TEST_MEETING_ID, ROOMHOP_TEST_IDENTITY_ID and ROOMHOP_TEST_MEETINGS_DIR are required",
+        }
+
+    meetings_dir = Path(test_store).expanduser()
+    if not meetings_dir.is_absolute():
+        return {
+            "status": "blocked",
+            "reason": "ROOMHOP_TEST_MEETINGS_DIR must be an absolute path",
+        }
+    meetings_dir = meetings_dir.resolve()
+    if not meetings_dir.is_dir():
+        return {
+            "status": "blocked",
+            "reason": "Configured disposable test meetings directory does not exist",
+            "meetings_dir": str(meetings_dir),
+        }
+    store_marker = meetings_dir / ".roomhop-disposable-test-store"
+    try:
+        marker_value = store_marker.read_text(encoding="utf-8").strip()
+    except OSError:
+        marker_value = ""
+    if marker_value != "ROOM-HOP-WORK32-DISPOSABLE-TEST-STORE":
+        return {
+            "status": "blocked",
+            "reason": "Disposable test store marker is missing or invalid; no MCP subprocess was started",
+            "meetings_dir": str(meetings_dir),
+        }
+
+    try:
+        timeout_seconds = _mcp_timeout_seconds()
+    except ValueError as exc:
+        return {"status": "blocked", "reason": str(exc)}
+
+    # Guard before constructing the coroutine: asyncio.run cannot be nested.
+    try:
+        asyncio.get_running_loop()
+    except RuntimeError:
+        pass
+    else:
+        return {
+            "status": "blocked",
+            "reason": "Nested event loops are not allowed; call from the synchronous Browser Adapter worker",
+        }
+
+    try:
+        return asyncio.run(
+            asyncio.wait_for(
+                _submit_to_roomhop_stdio(
+                    result,
+                    meeting_id=meeting_id,
+                    identity_id=identity_id,
+                    meetings_dir=meetings_dir,
+                ),
+                timeout=timeout_seconds,
+            )
+        )
+    except asyncio.TimeoutError:
+        # The append may have reached Core before timeout; never retry automatically.
+        return {
+            "status": "blocked",
+            "reason": "MCP stdio submission timed out; append outcome is uncertain; do not retry automatically",
+            "meeting_id": meeting_id,
+            "identity_id": identity_id,
+            "timeout_seconds": timeout_seconds,
+            "transport": "stdio",
         }
     except Exception as exc:
         return {
             "status": "blocked",
-            "reason": str(exc),
-            "endpoint": endpoint,
+            "reason": f"{type(exc).__name__}: {exc}",
+            "meeting_id": meeting_id,
+            "identity_id": identity_id,
+            "transport": "stdio",
         }
+
+
+
+def _submit_to_roomhop_from_worker(result: dict[str, Any]) -> dict[str, Any]:
+    """Run MCP stdio outside Playwright's synchronous API event-loop thread."""
+    with ThreadPoolExecutor(max_workers=1, thread_name_prefix="roomhop-mcp-submit") as executor:
+        return executor.submit(submit_to_roomhop, result).result()
+
+
+def _configured_port() -> int:
+    raw = os.getenv("ROOMHOP_BROWSER_ADAPTER_PORT", "8787")
+    try:
+        port = int(raw)
+    except (TypeError, ValueError) as exc:
+        raise RuntimeError("ROOMHOP_BROWSER_ADAPTER_PORT must be an integer") from exc
+    if not 1 <= port <= 65535:
+        raise RuntimeError("ROOMHOP_BROWSER_ADAPTER_PORT must be between 1 and 65535")
+    return port
 
 
 @app.get("/health")
 def health():
+    browser_started = _run_browser_operation(lambda: adapter.page is not None)
     return {
         "ok": True,
         "service": "room-hop-browser-agent-adapter",
-        "browser_started": adapter.page is not None,
+        "browser_started": browser_started,
+        "port": _configured_port(),
     }
 
 
 @app.post("/browser/start")
 def start():
-    return adapter.start()
+    return _run_browser_operation(adapter.start)
 
 
 @app.post("/browser/navigate")
 def navigate(body: dict):
-    return adapter.navigate(body["url"])
+    return _run_browser_operation(adapter.navigate, body["url"])
 
 
 @app.post("/browser/inspect")
 def inspect():
-    return adapter.inspect()
+    return _run_browser_operation(adapter.inspect)
 
 
 @app.post("/browser/click")
 def click(body: dict):
-    return adapter.click(body["selector"])
+    return _run_browser_operation(adapter.click, body["selector"])
 
 
 @app.post("/browser/type")
 def type_text(body: dict):
-    return adapter.type(body["selector"], body["text"])
+    return _run_browser_operation(adapter.type, body["selector"], body["text"])
 
 
 @app.post("/browser/wait")
 def wait(body: dict | None = None):
-    return adapter.wait((body or {}).get("ms", 1000))
+    return _run_browser_operation(adapter.wait, (body or {}).get("ms", 1000))
 
 
 @app.post("/browser/extract")
 def extract(body: dict):
-    return adapter.extract(body["selectors"])
+    return _run_browser_operation(adapter.extract, body["selectors"])
 
 
 @app.post("/browser/screenshot")
 def screenshot(body: dict | None = None):
-    return adapter.screenshot((body or {}).get("name", "page.png"))
+    return _run_browser_operation(adapter.screenshot, (body or {}).get("name", "page.png"))
 
 
 @app.post("/browser/download")
 def download(body: dict):
-    return adapter.download(body["selector"], body.get("name"))
+    return _run_browser_operation(adapter.download, body["selector"], body.get("name"))
 
 
 @app.post("/browser/execute_workflow")
 def execute(req: WorkflowRequest):
-    try:
-        return adapter.workflow(req)
-    except Exception as exc:
-        raise HTTPException(500, detail={"error": str(exc), "logs": adapter.logs})
+    # Execute and snapshot failures on the same dedicated browser thread.
+    result = _run_browser_operation(_execute_workflow, req)
+    if not result["ok"]:
+        raise HTTPException(500, detail=result["detail"])
+    return result["value"]
 
 
 @app.post("/browser/close")
 def close():
-    return adapter.close()
+    return _run_browser_operation(adapter.close)
 
 
 TOOLS = [
@@ -596,17 +744,17 @@ def mcp(payload: dict):
         name = payload.get("params", {}).get("name")
         args = payload.get("params", {}).get("arguments", {})
         routes = {
-            "browser_start": lambda: adapter.start(),
-            "browser_navigate": lambda: adapter.navigate(args["url"]),
-            "browser_inspect": lambda: adapter.inspect(),
-            "browser_click": lambda: adapter.click(args["selector"]),
-            "browser_type": lambda: adapter.type(args["selector"], args["text"]),
-            "browser_wait": lambda: adapter.wait(args.get("ms", 1000)),
-            "browser_extract": lambda: adapter.extract(args["selectors"]),
-            "browser_screenshot": lambda: adapter.screenshot(args.get("name", "page.png")),
-            "browser_download": lambda: adapter.download(args["selector"], args.get("name")),
-            "browser_execute_workflow": lambda: adapter.workflow(WorkflowRequest(**args)),
-            "browser_close": lambda: adapter.close(),
+            "browser_start": lambda: _run_browser_operation(adapter.start),
+            "browser_navigate": lambda: _run_browser_operation(adapter.navigate, args["url"]),
+            "browser_inspect": lambda: _run_browser_operation(adapter.inspect),
+            "browser_click": lambda: _run_browser_operation(adapter.click, args["selector"]),
+            "browser_type": lambda: _run_browser_operation(adapter.type, args["selector"], args["text"]),
+            "browser_wait": lambda: _run_browser_operation(adapter.wait, args.get("ms", 1000)),
+            "browser_extract": lambda: _run_browser_operation(adapter.extract, args["selectors"]),
+            "browser_screenshot": lambda: _run_browser_operation(adapter.screenshot, args.get("name", "page.png")),
+            "browser_download": lambda: _run_browser_operation(adapter.download, args["selector"], args.get("name")),
+            "browser_execute_workflow": lambda: _run_browser_operation(adapter.workflow, WorkflowRequest(**args)),
+            "browser_close": lambda: _run_browser_operation(adapter.close),
         }
 
         if name not in routes:
