@@ -54,7 +54,7 @@ The previous local SQLite TaskRegistry, durable webhook inbox, event reconciler 
 
 ## 6. Current implementation boundaries
 
-<badge color="warning">Runtime integration blocked</badge>
+**Runtime integration blocked**
 
 - Core Task read API/schema/approved field map and per-Task lock are not exposed to W118.
 - Core Event ingress/deduplication port is not exposed.
@@ -67,14 +67,14 @@ The previous local SQLite TaskRegistry, durable webhook inbox, event reconciler 
 
 | Gate | Status |
 |---|---|
-| Architecture / ownership alignment | <badge color="success">Baseline set by Vinh</badge> |
+| Architecture / ownership alignment | **BASELINE SET BY VINH** |
 | Core Task projection adapter | Contract tests; Core API field map pending |
 | GitHub Issue mirror | Contract tests; live Core/GitHub lock and API pending |
 | Source binding | Contract tests; task-scoped live push pending |
 | Webhook/event adapter | Contract tests; Core event port pending |
-| W102 identity/Assignment | <badge color="warning">Blocked by Core/W102 integration</badge> |
-| W12/W13 execution/CI | <badge color="warning">Blocked by host/adapter availability</badge> |
-| W70 Dashboard | <badge color="warning">Blocked by schema/owner approval</badge> |
+| W102 identity/Assignment | **BLOCKED — Core/W102 integration** |
+| W12/W13 execution/CI | **BLOCKED — host/adapter availability** |
+| W70 Dashboard | **BLOCKED — schema/owner approval** |
 | Full runtime E2E / Vinh acceptance | Not run |
 
 No rebase, merge to main, release or branch-protection change is authorized by this Work state.
