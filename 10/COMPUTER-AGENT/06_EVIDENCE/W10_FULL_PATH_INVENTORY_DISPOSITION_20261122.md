@@ -2,7 +2,7 @@
 
 - Document ID: W10-FULL-PATH-INVENTORY-20261122-01
 - Work: 10 — COMPUTER-AGENT
-- Date-Time: 2026-11-22 06:41 (UTC+07:00)
+- Date-Time: 2026-11-22 06:43 (UTC+07:00)
 - Canonical repository: `hqtt2026-thevinhvtqni/room-meeting-ai`
 - Branch: `work/10-computer-agent-mirror`
 - Sandbox Work ID: `10`
@@ -11,9 +11,9 @@
 
 | Measure | Count |
 |---|---:|
-| Sandbox files under `COMPUTER-AGENT/` | 161 |
-| GitHub branch files under `10/COMPUTER-AGENT/` | 69 |
-| Shared paths | 69 |
+| Sandbox files under `COMPUTER-AGENT/` | 163 |
+| GitHub branch files under `10/COMPUTER-AGENT/` | 71 |
+| Shared paths | 71 |
 | Sandbox-only files | 92 |
 | GitHub-only files | 0 |
 | Sandbox-only `.github/` directory | 1 |
@@ -166,7 +166,7 @@ Historical transcript archive; not a runtime artifact or canonical source.
 
 ## 5. Synchronization disposition
 
-**Accepted source/test/architecture/config parity: PASS for the current shared set.** All 69 shared paths are present; no source/test/config divergence remains in the shared implementation set. The 92 Sandbox-only files and one parent directory are intentionally retained as historical/reference/generated Sandbox material, as itemized above.
+**Accepted source/test/architecture/config parity: PASS for the current shared set.** All 71 shared paths are present; no source/test/config divergence remains in the shared implementation set. The 92 Sandbox-only files and one parent directory are intentionally retained as historical/reference/generated Sandbox material, as itemized above.
 
 This is a reconciled working/canonical branch inventory, not a claim that the two directory trees have identical file counts. Work 10 remains ACTIVE — NOT RELEASED pending physical Windows 10 acceptance, production V8 key provisioning, Linux cgroup-v2 disposition, ROOM-HOP integration and Owner's final acceptance.
 
