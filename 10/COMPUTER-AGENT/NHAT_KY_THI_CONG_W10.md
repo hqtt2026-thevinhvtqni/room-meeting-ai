@@ -1379,3 +1379,28 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - Remaining acceptance gaps: physical Windows 10 setup/ACL/Chrome/PowerShell; production HMAC key and trusted hash provisioning; Linux cgroup-v2; ROOM-HOP Dashboard/PC Bridge E2E; final full inventory parity; handover package.
 - Work remains ACTIVE — NOT RELEASED. No main merge/release.
 - **KÝ: Co | AI-07**
+
+
+## W10-CI-RUN69-20261122-01 — 2026-11-22 06:31 (UTC+07:00)
+- **Name:** Co
+- **Title:** AI-07 / End-to-End Architecture & Implementation Lead
+- **Run:** #69 / ID `44962226803`; tested commit `d6aa3283dec649e57bd51bc47299e3596f39b8ac`.
+- **Result:** Ubuntu 24.04 SUCCESS — 200 PASS / 0 FAIL / 2 SKIP; Windows Server 2022 SUCCESS — 206 PASS / 0 FAIL / 0 SKIP.
+- **Dashboard static contract:** 17 PASS on each OS. **V8 validator:** 16 PASS on each OS. Real Chromium E2E PASS.
+- **Artifacts:** Linux 14730191774 SHA-256 `88a725422f3495a82c0dd37242e5c2cf44d5f925763a1523df387dea1873968e`; Windows 14730515415 SHA-256 `1644d1ce85e6d06a38c404a03e15ff7f7063c15ee21fff467c32c97a3f264948`.
+- **Evidence:** `06_EVIDENCE/W10_CROSS_PLATFORM_CI_EVIDENCE_20261122_RUN69.md`.
+- **KÝ: Co | AI-07**
+
+## W10-DASHBOARD-REGRESSION-RESOLUTION-20261122-01 — 2026-11-22 06:31 (UTC+07:00)
+- Run #63 failed because GitHub had an obsolete 1.7 KB Dashboard while Sandbox had the secured 20.5 KB operational Dashboard; static contract test correctly rejected missing hooks.
+- Synced the actual Dashboard + README; did not remove or weaken the test.
+- Run #67 passed after Dashboard sync. Its test count showed 0 because the test output prefix did not match the suite counter. Corrected output format in commit `d6aa3283dec649e57bd51bc47299e3596f39b8ac`.
+- Run #69 confirms Dashboard static contract **17 PASS on both OSes**. Live local Dashboard/API on Owner PC remains NOT RUN.
+- **KÝ: Co | AI-07**
+
+## W10-INVENTORY-RECONCILIATION-20261122-02 — 2026-11-22 06:31 (UTC+07:00)
+- Inventory: Sandbox 156 files; GitHub branch 62; shared 62; Sandbox-only 94; GitHub-only 0.
+- 30 source/test/architecture/config files independently compared and exact-match; all three LOCKED contracts exact-match.
+- Remaining Sandbox-only files are primarily historical/debug handoff, original/reference, preview/sample, generated evidence/lock and Python cache. Record explicit KEEP/SANDBOX-ONLY dispositions; do not bulk-sync cache/locks/previews or unreviewed debug packages.
+- Full path disposition is still IN PROGRESS.
+- **KÝ: Co | AI-07**
