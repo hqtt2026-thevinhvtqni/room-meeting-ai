@@ -1282,3 +1282,23 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - **Correction made in Sandbox:** added a bounded OS accounting grace period after worker exit before classifying remaining Job Object members as leaked; if members persist beyond the grace, the supervisor still terminates and returns BLOCKED. Reader-pipe closure also gets a short grace and remains fail-closed.
 - **Disposition:** integrated browser E2E now proven on both hosted OSes; Windows HTTP fake-adapter regression needs rerun. Work 10 remains ACTIVE — NOT RELEASED; Linux hardened cgroup-v2 and physical Windows 10 PC evidence remain open.
 - **KÝ: Co | AI-07**
+
+
+## W10-CI-RUN45-20261122-01 — 2026-11-22 05:40 (UTC+07:00)
+- **Name:** Co | **Title:** AI-07 / End-to-End Architecture & Implementation Lead
+- **Run:** GitHub Actions #45, ID `44957836070`, commit `bba3c18fab5b81f02177d002b91eeee0b9db87d5`, branch `work/10-computer-agent-mirror`; both Windows Server 2022 and Ubuntu 24.04 jobs SUCCESS.
+- **Windows:** 60 contract + 45 safety + 37 HTTP + 2 containment/owner lease = 144 PASS / 0 FAIL / 0 SKIP. Integrated HTTP API + real Chromium E2E PASS: HTTP 200, 13 actions, 15 evidence entries, state trace PLANNED→RUNNING→VERIFYING→PASS; Job Object profile `OS_JOB_OBJECT_ATOMIC_JOB_LIST`, active processes 0, forced cleanup false; screenshot 21,662 bytes. Artifact ID `14728032174`, ZIP SHA-256 `666d826ce49a3080cd4e1af53c05dde9b4aaa34f23725ae72363acc0f9844619`.
+- **Linux:** 60 contract + 41 safety + 37 HTTP + 2 containment/owner lease = 140 PASS / 0 FAIL / 1 Windows-only SKIP. Integrated API + Chromium E2E PASS: HTTP 200, 13 actions, 15 evidence entries, state trace PLANNED→RUNNING→VERIFYING→PASS; limited process-group profile, containment empty verified, forced cleanup false; screenshot 28,465 bytes. Artifact ID `14728212970`, ZIP SHA-256 `a54a3a160cca570fba5461407d8279d0f0cf885fc4509ad1621fd7e6f3a34f6d`.
+- Detailed hashes, host inventory, artifact references and limitations: `06_EVIDENCE/W10_API_PROCESS_E2E_EVIDENCE_20261122_RUN45.md`.
+- **Disposition:** API + process supervisor + real-browser integrated E2E is now proven on both hosted OS profiles. Windows Job Object profile is strong; Linux remains limited, not cgroup v2. Hosted Windows Server is not the physical Windows 10 PC. Filesystem/PowerShell capabilities, V8 semantic acceptance validator, ROOM-HOP integration, PC validation and final parity remain open. Work 10 ACTIVE — NOT RELEASED.
+- **KÝ: Co | AI-07**
+
+
+## W10-PC-HOST-CAPABILITY-IMPLEMENTATION-20261122-01 — 2026-11-22 05:45 (UTC+07:00)
+- **Name:** Co | **Title:** AI-07 / End-to-End Architecture & Implementation Lead
+- Added separate contract `03_ARCHITECTURE/PC_HOST_CAPABILITY_CONTRACT.md` (does not modify the three LOCKED contracts or browser Action Contract).
+- Added `04_CODE/host_operations.py` with list_directory, read_file, write_file, run_pytest and Windows-only run_powershell_script. All paths use explicit allowlisted roots; writes and PowerShell are disabled by default; file writes require explicit overwrite and read-back SHA-256; pytest uses a fixed command vector; PowerShell runs only allowlisted .ps1 files via -File; no generic shell or powershell -Command.
+- Added API route `POST /agent/host/execute`, delegated through the same ProcessSupervisor worker; worker mode dispatch added. API version 1.5.0.
+- Added host capability unit tests and HTTP API integration tests; updated run_all_tests to include the new suite.
+- **Status:** Sandbox implementation written; CI not yet run. Do not claim host capability PASS. Physical Windows 10 validation remains open. Work 10 ACTIVE — NOT RELEASED.
+- **KÝ: Co | AI-07**

@@ -144,3 +144,47 @@ GitHub Actions workflow `Work 10 Real Browser E2E` completed SUCCESS for exact c
 - F-15 is interpreted conservatively under the existing locked Safety Policy §3: single-action timeout => ActionResult failure; workflow deadline => TaskResult BLOCKED; uncertain continuing side effects => BLOCKED with execution lease held until containment/cleanup proof; TaskResult FAIL only after known termination/failure.
 - Three contracts remain LOCKED and read-only. No main merge, production deployment or release without separate Owner acceptance.
 - Execution target: Linux + Windows GitHub Actions with retained evidence; local physical PC remains separately unverified unless directly exercised.
+
+
+## Current execution status superseding historical gate summaries — 2026-11-22 05:40 (UTC+07:00)
+
+**Owner authorization:** `06_EVIDENCE/W10_OWNER_DELEGATION_AND_IMPLEMENTATION_AUTHORIZATION_20261122_01.md` records Vinh's explicit delegation to Co to continue implementation through evidence-backed handover. An V8 review/ACK is not a prerequisite. Historical V7/V8 reports remain immutable.
+
+**Implemented and verified on GitHub branch `work/10-computer-agent-mirror`:**
+- Agent API now delegates each workflow to an isolated `execution_worker.py` process managed by `ProcessSupervisor`.
+- Windows worker is created atomically inside a named Job Object through `CreateProcessW` + `PROC_THREAD_ATTRIBUTE_JOB_LIST`; Job Object uses KILL_ON_JOB_CLOSE; parent owns deadline and verifies active-process count reaches zero before releasing request admission.
+- HostOwnerLease provides an exclusive OS file lock and monotonic owner generation; per-run JSON journals persist owner generation, containment locator, PID and state transitions; startup recovery is fail-closed when identity/containment cannot be reconciled.
+- Timeout semantics implement F-15 conservatively: ActionResult fail + outcome_uncertain; enclosing TaskResult BLOCKED; forced cleanup never becomes PASS.
+- CI #45 (run ID `44957836070`, commit `bba3c18fab5b81f02177d002b91eeee0b9db87d5`) passed on Windows Server 2022 and Ubuntu 24.04. Both real Chromium E2E scenarios ran through HTTP API + ProcessSupervisor and passed. Evidence: `06_EVIDENCE/W10_API_PROCESS_E2E_EVIDENCE_20261122_RUN45.md`.
+
+| Gate | Current disposition | Evidence / limitation |
+|---|---|---|
+| P0 Windows Job Object execution path | PASS on hosted Windows Server 2022 | Atomic Job List worker creation; HTTP + Chromium E2E; 144/144 checks |
+| P0 Linux execution path | PASS — LIMITED profile only | POSIX process group; 140 PASS / 1 Windows-only SKIP; not cgroup-v2 |
+| P0 V8 semantic acceptance validator | OPEN / NOT IMPLEMENTED | Trusted provenance, category/outcome policy and negative validator suite remain |
+| P1 HTTP security boundary | PASS on hosted Windows + Linux CI | Bearer auth, exact Origin, request size/content validation, execution lease |
+| Real Chromium E2E through API | PASS on hosted Windows + Linux | 13 actions, 15 evidence entries, screenshots retained in run artifacts |
+| Physical Windows 10 PC validation | NOT RUN | Hosted Windows Server is not Owner's PC; PowerShell/ACL/Chrome profile/local install still required |
+| File-system / PowerShell / pytest host capabilities | NOT IMPLEMENTED | Current locked Action Contract remains browser-oriented; separate capability contract/API required |
+| ROOM-HOP Dashboard / PC Bridge integration | OPEN | No integrated ROOM-HOP end-to-end evidence yet |
+| Full Sandbox↔GitHub source parity | NOT YET RECHECKED | Reconcile all accepted source/test/config files and exact hashes after current implementation |
+| Main merge / release | NOT AUTHORIZED | Owner retains final acceptance and release authority |
+
+Three LOCKED contracts (`ACTION_CONTRACT.md`, `WORKFLOW_CONTRACT.md`, `SAFETY_POLICY.md`) remain unchanged. Work 10 remains ACTIVE — NOT RELEASED.
+
+**KÝ: Co | AI-07 / End-to-End Architecture & Implementation Lead**
+
+
+## PC host capabilities — 2026-11-22 05:45 (UTC+07:00)
+
+Co has added a separate, non-Action-Contract host capability surface:
+- New architecture contract: 03_ARCHITECTURE/PC_HOST_CAPABILITY_CONTRACT.md.
+- New module: 04_CODE/host_operations.py.
+- New endpoint: POST /agent/host/execute, delegated to the same ProcessSupervisor worker.
+- Operations: list_directory, read_file, write_file (explicit writable roots + read-back/hash), run_pytest (fixed Python module command), run_powershell_script (existing allowlisted .ps1 only; Windows only).
+- Default is read-only: writable roots and PowerShell roots are empty unless operator explicitly configures them. No generic shell or inline PowerShell command is exposed.
+- New unit/HTTP tests are being added. CI validation is pending; this is not yet a PASS or release acceptance.
+
+API version advanced to 1.5.0 in Sandbox. Three LOCKED contracts remain unchanged. Work 10 remains ACTIVE — NOT RELEASED.
+
+**KÝ: Co | AI-07 / End-to-End Architecture & Implementation Lead**
