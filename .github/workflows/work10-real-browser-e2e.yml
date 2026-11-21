@@ -1,4 +1,4 @@
-name: Work 10 Real Browser E2E
+name: Work 10 Cross-Platform Verification
 
 on:
   push:
@@ -14,13 +14,13 @@ permissions:
   contents: read
 
 jobs:
-  real-browser:
-    # Pinned on purpose: ubuntu-latest now resolves to ubuntu-26.04, which
-    # playwright 1.55.0 does not support ("Playwright does not support
-    # chromium on ubuntu26.04-x64"). 24.04 is the newest LTS supported by
-    # the pinned playwright version. Re-evaluate when upgrading playwright.
-    runs-on: ubuntu-24.04
-    timeout-minutes: 15
+  cross-platform:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2022]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
     defaults:
       run:
         shell: bash
@@ -35,30 +35,44 @@ jobs:
           cache: pip
           cache-dependency-path: 10/COMPUTER-AGENT/requirements.txt
 
-      - name: Install dependencies
+      - name: Install dependencies (Linux)
+        if: runner.os == 'Linux'
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r 10/COMPUTER-AGENT/requirements.txt
           python -m playwright install --with-deps chromium
 
+      - name: Install dependencies (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r 10/COMPUTER-AGENT/requirements.txt
+          python -m playwright install chromium
+
+      - name: Host inventory
+        run: |
+          python -c "import json,platform,sys; print(json.dumps({'python':sys.version,'platform':platform.platform(),'system':platform.system(),'release':platform.release(),'version':platform.version(),'machine':platform.machine()},indent=2))"
+
       - name: Syntax check
         run: |
-          python -m py_compile 10/COMPUTER-AGENT/04_CODE/*.py
-          python -m py_compile 10/COMPUTER-AGENT/05_TEST/e2e_real_browser.py
-          python -m py_compile 10/COMPUTER-AGENT/05_TEST/test_p0_p5.py
+          python -m compileall -q 10/COMPUTER-AGENT/04_CODE 10/COMPUTER-AGENT/05_TEST
 
-      - name: Offline contract tests
-        run: python 10/COMPUTER-AGENT/05_TEST/test_p0_p5.py
+      - name: Offline, safety and HTTP regression suites
+        run: |
+          python 10/COMPUTER-AGENT/05_TEST/run_all_tests.py
 
       - name: Real Chromium E2E
-        run: python 10/COMPUTER-AGENT/05_TEST/e2e_real_browser.py
+        run: |
+          python 10/COMPUTER-AGENT/05_TEST/e2e_real_browser.py
 
-      - name: Upload browser evidence
+      - name: Upload execution evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: work10-real-browser-evidence
+          name: work10-evidence-${{ runner.os }}
           path: |
+            10/COMPUTER-AGENT/06_EVIDENCE/offline-test-evidence.json
             10/COMPUTER-AGENT/06_EVIDENCE/real-browser-e2e-result.json
             10/COMPUTER-AGENT/06_EVIDENCE/real-browser-e2e.png
           if-no-files-found: warn
+          retention-days: 14
