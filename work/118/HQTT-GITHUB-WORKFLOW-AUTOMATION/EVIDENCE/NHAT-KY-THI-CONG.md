@@ -849,3 +849,23 @@
 - **Review/acceptance:** Xu independent review PENDING; Vinh final product acceptance PENDING. Xu/Go GitHub identities remain NOT VERIFIED; no executor mapping or permission inferred.
 - **Kết luận:** action SHA pinning **PASS**; T10-26 **PASS**; contract/unit validation **PASS**; runtime E2E **NOT VERIFIED**; Xu review **PENDING**; Vinh acceptance **PENDING**; merge/release **NOT PERFORMED**.
 - **Bước tiếp:** chuyển hồ sơ đã hiệu chỉnh cho Xu tiếp tục independent review; giữ PR #67 OPEN, không rebase/merge/release cho tới khi đúng gate và có quyết định riêng của Vinh.
+
+
+## Entry 064 — Exact readback sau khi hoàn tất hiệu chỉnh hồ sơ
+
+- **Người thực hiện:** Ka — CSA / W118 Build Owner.
+- **Chức danh:** Delegated Technical Lead / Architecture Reviewer.
+- **Người nhận:** Xu — Independent Reviewer; Vinh — Final Product Owner.
+- **Ngày giờ:** 2026-11-21 07:44 +07:00.
+- **Mã Work:** W118 / W118-10.
+- **Ưu tiên:** P0 — final readback before independent review.
+- **Phạm vi:** exact-fetch workflow refs, T10-26, BB-118-002, STATUS, XR-118-001, Test Matrix, Journal; đọc PR state, compare, reviews, threads, CI jobs và artifact. Không rebase/merge/release hoặc thay đổi quyền.
+- **Action refs:** orchestrator có 11 action uses, diagnostics có 2, PR checklist không dùng action; tất cả refs đều có full 40-character SHA. Không còn mutable tag/branch ref trong ba workflow files.
+- **Checklist:** XR-118-001 gate 20 P0 đã cập nhật PASS; T10-26 PASS; Test Matrix PASS; BB-118-002 Amendment XI/F, STATUS và Entry 062–064 đã exact-readback.
+- **Latest CI:** [Run #44846568184](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44846568184), exact tested commit `9adda44a0c4dc70937740adc7bfdcd2c04022a69`; validate SUCCESS; **53 tests PASS / 0.281s**.
+- **Artifact:** `w118-run-evidence-44846568184-1`, ID `14683391201`, digest `baed365631b810b748dc6903376c373784d0bfb0f81302167cedd63c0db5526f`; present/unexpired at readback.
+- **Runtime:** handoff, ACK, acceptance-review, controlled-failure, controlled-failure-dispatch SKIPPED; runtime E2E NOT VERIFIED.
+- **GitHub state:** PR #67 OPEN, draft=false, merged=false; feature `9adda44a0c4dc70937740adc7bfdcd2c04022a69`; Main `5f8390910178012feaf37510452bc39804b296db`; merge base `cf2537e07bfd71d5823bd98f8673b3ab5644fcdc`; **259 ahead / 82 behind — DIVERGED**. Raw PR API reports mergeable=true / mergeable_state=unstable. No merge attempted.
+- **Review records:** zero formal review submissions; zero inline review threads. Xu review remains PENDING.
+- **Kết luận:** hồ sơ đã được hiệu chỉnh và readback PASS; SHA pinning/contract tests PASS; runtime E2E NOT VERIFIED; Xu review PENDING; Vinh acceptance PENDING; no integration/merge/release.
+- **Bước tiếp:** chuyển gói hồ sơ đã hiệu chỉnh cho Xu tiếp tục independent review; chờ Xu disposition và quyết định riêng của Vinh trước mọi non-release integration.
