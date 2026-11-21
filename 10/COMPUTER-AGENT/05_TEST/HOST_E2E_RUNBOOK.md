@@ -174,3 +174,12 @@ The full suite now includes `dashboard_live_e2e` (7 checks). Run #135:
 - Real Chromium API/runtime E2E: PASS per OS.
 
 See `06_EVIDENCE/W10_LIVE_DASHBOARD_API_EVIDENCE_20261122_RUN135.md`. Hosted CI does not replace Owner PC acceptance.
+
+
+## Local launcher / shutdown scripts — 2026-11-22
+
+- `START_WORK10_LOCAL.ps1`: validates Python 3.12 and loopback ports 8787/3010, keeps writes and PowerShell roots disabled, generates a per-session bearer token, starts the Agent API and standalone Dashboard on loopback, checks health/Work ID 10, records process IDs without storing the token, copies the token to clipboard and opens the Dashboard. It never binds port 3000.
+- `STOP_WORK10_LOCAL.ps1`: refuses to stop while an execution is active; validates process command line and start time against the session record before stopping only the two Work 10 processes.
+- Run `./05_TEST/START_WORK10_LOCAL.ps1` after dependencies are installed, or add `-InstallDependencies` to install requirements and Chromium. Stop with `./05_TEST/STOP_WORK10_LOCAL.ps1`.
+- The launcher does not configure production V8 HMAC trust, enable writes or enable PowerShell. Those remain explicit operator actions.
+- `test_windows_launcher_contract.py` has 10 static safety assertions; GitHub Windows CI also parses both PowerShell files with the PowerShell AST parser.
