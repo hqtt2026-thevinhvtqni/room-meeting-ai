@@ -18,6 +18,7 @@ from scripts.w118.webhook_inbox import WebhookInbox
 
 
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
+ALLOWED_CI_WORKFLOWS = {"W118 Auto E2E Validation"}
 
 
 class ReconciliationError(RuntimeError):
@@ -112,6 +113,8 @@ def reconcile_delivery(
         run = payload.get("workflow_run")
         if not isinstance(run, Mapping):
             raise ReconciliationError("workflow_run payload is missing workflow_run object")
+        if run.get("name") not in ALLOWED_CI_WORKFLOWS:
+            raise ReconciliationError("workflow_run name is not authorized for W118 Task reconciliation")
         if action != "completed" or run.get("status") != "completed":
             result = {"decision": "IGNORED_NON_COMPLETION", "task_state_changed": False}
             inbox.mark_processed(delivery_id, result)
