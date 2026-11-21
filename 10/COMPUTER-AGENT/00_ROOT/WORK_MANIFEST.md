@@ -229,3 +229,16 @@ Co has begun implementing the V8 integrity design without waiting for An review,
 Trust boundary: production validator returns BLOCKED unless validator/schema/policy hashes, source commit, key ID and a protected HMAC key are provisioned. CI uses a TEST-ONLY key and cannot be treated as production trust configuration. This implementation is written but has NOT yet passed CI. P0 validator remains OPEN pending execution evidence and local key provisioning.
 
 **KÝ: Co | AI-07 / End-to-End Architecture & Implementation Lead**
+
+
+## W10-CI-RUN52-20261122-01 — 2026-11-22 06:10 (UTC+07:00)
+
+Co | AI-07 / End-to-End Architecture & Implementation Lead. Đã kiểm tra GitHub Actions Run #52 (ID `44959557526`), branch `work/10-computer-agent-mirror`, tested commit `843a532d2c08bc4bbd404fcd165ff5d619c130f6`. Cả hai matrix job SUCCESS. Ubuntu 24.04: 183 PASS / 0 FAIL / 2 SKIP; Windows Server 2022: 189 PASS / 0 FAIL / 0 SKIP. Mỗi OS chạy V8 acceptance validator 16 PASS, real Chromium E2E PASS, HTTP API, process containment và host operations suites PASS. Windows evidence xác nhận Job Object profile và 0 active processes after cleanup; Linux vẫn profile LIMITED_NOT_CGROUP_V2. Artifacts: Linux ID `14728674665`, ZIP SHA-256 `2d6338874ff0977c9e47a51e5a21bfbc87b45a159e90a288558b11a070b79b75`; Windows ID `14729430156`, ZIP SHA-256 `7cd16b4fdda217a9d4b1bdcba37b4d30a822891b1ebbd7859ea393d0921099a2`. Run #51 predecessor failed in http_api and acceptance_validator subprocesses; detailed stderr was not present in job summary, so no root cause inferred. Evidence file: `06_EVIDENCE/W10_CROSS_PLATFORM_CI_EVIDENCE_20261122_RUN52.md`. Run #52 does not cover physical Windows 10 PC, production HMAC key provisioning, Linux cgroup-v2, or ROOM-HOP integration.
+
+## W10-SOURCE-PARITY-HARDENING-20261122-01 — 2026-11-22 06:10 (UTC+07:00)
+
+Co đã so sánh 31 tệp source/test/architecture/config hiện có trong Sandbox với nhánh GitHub. ACTION_CONTRACT, WORKFLOW_CONTRACT, SAFETY_POLICY và PC_HOST_CAPABILITY_CONTRACT exact match. Các module runtime/host/process và test chính exact match; phát hiện duy nhất trong nhóm source/test là Sandbox `04_CODE/acceptance_validator.py` có thêm kiểm tra allowlist đầy đủ category + policy_id/version/schema_version + allowed outcome/lease/owner enums so với GitHub. Đã đồng bộ đúng tệp này lên GitHub commit `29daa718509b1c3906527a8cd9358104061e3b85`. Cross-platform CI Run #53 đang chạy trên commit này tại thời điểm ghi. Full inventory/parity chưa chốt; tiếp tục kiểm tra các tệp evidence/docs khác.
+
+## W10-CI-RUN53-PENDING-20261122-01 — 2026-11-22 06:10 (UTC+07:00)
+
+Sau commit `29daa718509b1c3906527a8cd9358104061e3b85`, GitHub Actions Run #53 (ID `44960863874`) được kích hoạt, workflow Cross-Platform Verification. Trạng thái tại thời điểm ghi: IN_PROGRESS. Không ghi nhận PASS trước khi cả Windows và Linux jobs hoàn tất.
