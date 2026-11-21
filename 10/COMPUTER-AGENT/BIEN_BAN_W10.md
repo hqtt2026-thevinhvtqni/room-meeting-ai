@@ -878,3 +878,21 @@ Bàn giao An thực hiện static adversarial re-review theo Review Task v7. Ch�
 - **Tình trạng tại thời điểm ghi:** Hosted CI trên Windows Server 2022/Ubuntu đã chứng minh browser API, ProcessSupervisor, host operations và V8 validator; Run #69 thêm 17 Dashboard static assertions PASS mỗi OS. Physical Windows 10, production HMAC key, Linux cgroup-v2, ROOM-HOP integration và final inventory dispositions vẫn là các gate cần đóng/Owner chấp thuận giới hạn.
 - **Hiệu lực:** Co tiếp tục thực hiện không cần xin duyệt từng đoạn; chỉ trình Owner khi cần quyết định chính sách/hợp đồng, khi có blocker không thể vượt qua bằng kỹ thuật, hoặc tại bước nghiệm thu/release cuối.
 - **KÝ GHI NHẬN:** Co | AI-07 / End-to-End Architecture & Implementation Lead
+
+
+## BIÊN BẢN W10 — QUYẾT ĐỊNH RANH GIỚI TÍCH HỢP ROOM-HOP / DASHBOARD — 2026-11-22 06:35 (UTC+07:00)
+
+- **Tên:** Co
+- **Chức danh:** AI-07 / End-to-End Architecture & Implementation Lead
+- **Ngày:** 22/11/2026
+- **Giờ:** 06:35 (UTC+07:00)
+- **Căn cứ:** Owner delegation; W24 PC Bridge Architecture; W112 Cross-Work Integration Contract Baseline; W14 Manifest; W113 Product Architecture.
+- **Quyết định kỹ thuật trong phạm vi Work 10:**
+  1. Work 10 là local Computer Agent provider, API loopback-only; local bearer token không thay thế Core authorization.
+  2. W24 là boundary PC Source Bridge + Core authorization + authenticated PC transport; hiện chưa có Core adapter/PC transport thật, nên Work 10 không mở API ra mạng và không gọi trực tiếp như remote bridge.
+  3. W112 là owner cross-Work contract; baseline hiện DRAFT, chưa runtime-enforced.
+  4. W14 vẫn là sole product/delivery/release owner của W12/W13/W14 autonomous E2E; Work10 ProcessSupervisor chỉ bảo vệ worker của Work10, không thay W14 canonical execution boundary.
+  5. W113 sở hữu shared Dashboard ingress port 3000. Work10 standalone development/acceptance UI chuyển sang loopback port 3010; không tạo listener cạnh tranh trên port 3000. Production Work10 dashboard phải được W113 đăng ký/mount qua route được duyệt.
+- **Tình trạng:** Integration W10↔W24, W10↔W14 và W10↔W113 NOT IMPLEMENTED / NOT VERIFIED. Đã tạo handoff `06_EVIDENCE/W10_ROOM_HOP_INTEGRATION_BOUNDARY_HANDOFF_20261122.md`.
+- **Giới hạn:** Không sửa Work24, W112, W14 hoặc W113 trong phạm vi Work10; không đoán endpoint/route; không expose API remote.
+- **KÝ GHI NHẬN:** Co | AI-07
