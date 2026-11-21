@@ -101,3 +101,8 @@ All accepted source/test/architecture/config files are in the shared set and wer
 The 93 Sandbox-only files have explicit KEEP / SANDBOX-ONLY disposition in `06_EVIDENCE/W10_FULL_PATH_INVENTORY_DISPOSITION_20261122.md`: generated caches/locks/runtime outputs (10), original/reference/preview material (8), historical evidence/design records (47), immutable AI debug handoff archive (26), superseded 2026-11-17 handover (1), transcript archive (1). They are intentionally not bulk-synced to the canonical branch.
 
 Disposition: accepted source/test/architecture/config parity is PASS for the current shared set; path inventory reconciliation is complete by explicit dispositions. Directory trees are not identical by design. Work 10 remains ACTIVE — NOT RELEASED.
+
+
+## Inventory count correction — 2026-11-22 06:33 (UTC+07:00)
+
+The inventory document itself was added to both Sandbox and GitHub after the preceding snapshot. Updated live counts: Sandbox 158 files, GitHub 65 files, shared 65, Sandbox-only 93, GitHub-only 0, plus one Sandbox-only `.github/` directory. The 93 KEEP/SANDBOX-ONLY file dispositions remain unchanged.
