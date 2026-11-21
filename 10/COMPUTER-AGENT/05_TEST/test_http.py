@@ -104,6 +104,12 @@ class Server:
             except subprocess.TimeoutExpired:
                 self.proc.kill()
                 self.proc.wait(timeout=5)
+        try:
+            server_stderr = self.proc.stderr.read() if self.proc.stderr else ""
+            if server_stderr.strip():
+                print("  DEBUG API server stderr:", server_stderr[-6000:])
+        except Exception:
+            pass
         for stream in (self.proc.stdout, self.proc.stderr):
             try:
                 stream.close()
@@ -207,6 +213,9 @@ def main():
         check("unknown action over HTTP -> 400", lambda: status == 400 and "invalid_action" in body["error"])
 
         status, body = server.request("POST", "/agent/execute", WORKFLOW)
+        if status != 200 or body.get("status") != "PASS":
+            print("  DEBUG first workflow response:", status, json.dumps(body, ensure_ascii=False, default=str))
+            print("  DEBUG fake adapter log:", server.log())
         check("valid workflow -> 200 PASS", lambda: status == 200 and body["status"] == "PASS")
         check("response carries state_trace PLANNED..PASS",
               lambda: body["state_trace"][0] == "PLANNED" and body["state_trace"][-1] == "PASS")
