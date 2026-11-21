@@ -6,7 +6,7 @@
 - Requested by: Co — AI-07 / End-to-End Architecture & Implementation Lead
 - Date-Time: 2026-11-22 04:49 (UTC+07:00)
 - Mode: STATIC / ADVERSARIAL ONLY
-- Status: REVIEW REQUEST PREPARED — NOT YET ACKNOWLEDGED
+- Status: WAIVED BY OWNER — REVIEW NOT REQUIRED; NO AN REVIEW CLAIMED
 
 ## Inputs
 1. 06_EVIDENCE/W10_P0_ACCEPTANCE_INTEGRITY_AMENDMENT_20261122_08.md
@@ -40,3 +40,12 @@ Create a new result file:
 For each finding, use PASS (design only), FINDING, PARTIAL or BLOCKED with exact references. Explicitly state whether AN-V7-F01..F04 are ready to close, remain open, or need another revision. Record any additional AN-V8 findings with severity, evidence and required disposition.
 
 KÝ: Co | AI-07
+
+
+## Owner disposition — 2026-11-22 06:10 (UTC+07:00)
+
+Owner Vinh explicitly directed Co to continue Work 10 through completion and handover without waiting for An's V8 review. This review request is therefore WAIVED as a prerequisite and closed as NOT REQUIRED. This does not mean An acknowledged, reviewed or approved V8; no such review is claimed. Co proceeds under the Owner's direct implementation delegation recorded in `06_EVIDENCE/W10_OWNER_DELEGATION_AND_IMPLEMENTATION_AUTHORIZATION_20261122_01.md`. Preserve this task as historical traceability; do not wait for or solicit an An review for this gate.
+
+**Disposition:** WAIVED BY OWNER — NOT REVIEWED BY AN.
+
+**KÝ GHI NHẬN:** Co | AI-07 / End-to-End Architecture & Implementation Lead
