@@ -15,11 +15,13 @@
 **Code:** `scripts/w118/task_lifecycle.py`
 
 ### Implemented
+- Canonical Work-specific Task Register snapshot `04_PLAN/TASK_REGISTER.json` and schema `TASK_REGISTER.schema.json`, modeled on W70 DOC-093 under DOC-056 §9. Sandbox copy is the operational authority; GitHub copy is the versioned mirror.
+- Separate Task status model (PLANNED/READY/IN_PROGRESS/BLOCKED/IN_REVIEW/DONE/CANCELLED) and Assignment status model (UNASSIGNED/PROPOSED/DISPATCHED/ACKNOWLEDGED/IN_PROGRESS/SUBMITTED/ACCEPTED/REJECTED/BLOCKED/CANCELLED), aligned to W112 DOC-001 as a compatibility reference (W112 remains DRAFT_NOT_APPROVED).
 - Versioned Task contract `schema_version=1.0` with Work/WP/Task IDs, objective, scope, priority, acceptance criteria, required capabilities, risk, dependencies and owner principal.
-- SQLite Task Registry; Task snapshot and append-only `task_events`.
-- Explicit state transition graph: DRAFT → READY → ISSUE_LINKED → ASSIGNED → DISPATCHED → ACKED → STARTED → IN_PROGRESS → COMPLETED → VERIFYING → VERIFIED → ACCEPTED → CLOSED; controlled BLOCKED/REJECTED/CANCELLED/EXPIRED recovery paths.
+- SQLite operational transaction store; Task snapshot and append-only `task_events`. It is an adapter/event store, not a second canonical Task Register.
+- Separate Task and Assignment transition graphs; Issue link is a source observation, not a Task status. Assignment ACK/submit/accept cannot implicitly set Task DONE.
 - Actor role allowlist and mandatory `identity_verified=True` from trusted caller; unverified actors fail closed.
-- Assignment binding: ACK/START/PROGRESS/COMPLETE must come from the active assigned principal; ACK dispatch ID must match active dispatch.
+- Assignment binding: ACK/IN_PROGRESS/SUBMITTED must come from the active assigned principal; ACK dispatch ID must match active dispatch. Task DONE requires Assignment ACCEPTED plus Owner evidence.
 - Owner binding: Owner transitions must come from the Task's owner principal.
 - Required assignment evidence: assignment ID, agent ID, principal, policy version, capability match and evidence reference.
 - Required dispatch receipt; ACK nonce is represented only by a reference, not stored raw.
