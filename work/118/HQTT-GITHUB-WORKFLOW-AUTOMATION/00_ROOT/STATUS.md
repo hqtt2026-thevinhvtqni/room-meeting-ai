@@ -66,3 +66,15 @@
 - **Runtime:** Core Task/lock/Event ports, W102 identity/Assignment, W12/W13 Host/GitHub/CI adapter and W70 schema ACK remain BLOCKED / NOT VERIFIED.
 - **Source binding:** aggregate branch result `UNBOUND_LEGACY_BRANCH`; no Task association inferred.
 - **Disposition:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED.
+
+
+## 7. Autonomous audit refresh — 2026-11-22 03:42 +07:00
+
+- **Authority:** Vinh delegated autonomous technical execution to Ka through completion and Xu independent review; Vinh retains final product acceptance and separate release authority.
+- **GitHub readback:** main HEAD `43efc145c9f7007284366e8edb4f4805191bb3ad`; feature branch HEAD `069b5237c49daadda6bc2e0708352a66071d0599`; PR #67 OPEN / UNMERGED, mergeable=true.
+- **Current compare:** `main...work/118-auto-e2e-v2` = DIVERGED, 446 ahead / 57 behind; merge base `2fb5963379f475d362a897ba2d0c99c83b4ed64a`. The earlier 86-behind figure is stale. No rebase, force-push or merge performed.
+- **PR validation:** Run #44889342960 completed SUCCESS for PR #67 associated with head SHA `069b5237c49daadda6bc2e0708352a66071d0599`. Job `validate` SUCCESS; `handoff-request-capture`, `ack-claim-capture`, and `review-observation-capture` SKIPPED. This is contract validation only, not runtime lifecycle E2E.
+- **Workflow scope:** current workflow listens to push, pull_request, issues.labeled, issue_comment.created and pull_request_review.submitted. The event-specific jobs are observation-only and do not create Core Assignment, verify Agent identity, or transition Core Task state.
+- **Sandbox/GitHub consistency:** ROOM-HOP Sandbox work 118 lists legacy `task_lifecycle.py`, `event_reconciler.py`, `webhook_inbox.py` and related tests under `04_CODE`; current GitHub branch instead uses stateless Core/GitHub adapters under `scripts/w118` and explicitly removes local Task DB/event queue ownership. Sandbox file reads in this session returned empty objects, so content-level synchronization cannot be verified. Treat Sandbox/GitHub code mirror as BLOCKED pending reliable readback; do not overwrite either side blindly.
+- **Branch protection:** GitHub branch API reports `main` as unprotected. No protection or repository setting changed. This is a governance risk to be addressed through the repository owner/admin process, not by silently changing settings.
+- **Disposition:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED. Runtime Core/W102/W12/W13/W70 integrations remain unverified as recorded above. No acceptance, merge or release implied by this audit.
