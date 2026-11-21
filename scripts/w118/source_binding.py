@@ -79,6 +79,10 @@ def validate_push_payload(
     repository = payload.get("repository")
     if not isinstance(repository, Mapping) or not repository.get("full_name"):
         raise SourceBindingError("push payload requires repository.full_name")
+    if not isinstance(expected_repository, str) or not expected_repository.strip():
+        raise SourceBindingError("expected_repository must be configured")
+    if repository["full_name"] != expected_repository:
+        raise SourceBindingError("push repository does not match configured repository")
     ref = payload.get("ref")
     if not isinstance(ref, str) or not ref.startswith("refs/heads/"):
         raise SourceBindingError("push ref must identify a branch")
