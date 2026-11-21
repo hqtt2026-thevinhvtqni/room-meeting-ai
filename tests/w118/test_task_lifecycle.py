@@ -195,7 +195,7 @@ class Work118TaskLifecycleTests(unittest.TestCase):
     def test_task_in_progress_requires_acknowledged_assignment(self):
         self.ready_and_link_issue()
         with self.assertRaises(TransitionDenied):
-            self.task_status("IN_PROGRESS", "orchestrator", "room:orchestrator", 3, "01")
+            self.task_status("IN_PROGRESS", "orchestrator", "room:orchestrator", 3, "02")
 
     def test_agent_cannot_accept_own_assignment(self):
         self.propose_dispatch_ack()
