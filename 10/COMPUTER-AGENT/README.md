@@ -78,3 +78,12 @@ The current owner handover candidate is `07_RELEASE/W10_HANDOVER_PACKAGE_2026112
 ## Shared Dashboard ingress boundary — 2026-11-22
 
 Port `3000` is reserved for the single shared ROOM-HOP Dashboard ingress owned by W113. This Work 10 Dashboard is a standalone local development/acceptance UI and therefore serves on loopback port `3010` during isolated testing. Work 10 must not start a competing listener on port 3000. Production Work 10 Dashboard access must be mounted/registered by W113 under its approved Work route; the route path and embedding contract are not guessed here. The Agent API remains loopback-only and its exact Origin allow-list must be configured for the approved host origin before any integration. W113 integration is NOT VERIFIED.
+
+
+## Latest follow-up verification — 2026-11-22
+
+- Run #104: port-3010 standalone Dashboard change passed on Windows Server 2022 and Ubuntu 24.04 (206 PASS / 0 FAIL / 0 SKIP; 200 PASS / 0 FAIL / 2 SKIP).
+- Run #99 had exposed an intermittent Ubuntu process-group cleanup race. Co added bounded post-SIGKILL group polling and a three-cycle descendant stress test.
+- Runs #105 and #106 passed on both OSes; Run #106 passed the three-cycle POSIX cleanup stress test. Current hosted regression baseline remains Windows 206 PASS and Ubuntu 200 PASS + 2 expected SKIP.
+- Evidence: `06_EVIDENCE/W10_CROSS_PLATFORM_CI_EVIDENCE_20261122_RUN104.md` and `06_EVIDENCE/W10_POSIX_CLEANUP_REMEDIATION_CI_20261122_RUN99_105_106.md`.
+- Linux remains LIMITED_NOT_CGROUP_V2; physical Windows 10 and ROOM-HOP integration remain open.
