@@ -6,7 +6,7 @@
   "baseline_status": "OWNER_DIRECTED_BUILD",
   "authority": "Vinh",
   "source_of_truth": "Sandbox Work 118 / HQTT-GITHUB-WORKFLOW-AUTOMATION/04_PLAN/TASK_REGISTER.json",
-  "github_mirror": "work/118/HQTT-GITHUB-WORKFLOW-AUTOMATION/04_PLAN/TASK_REGISTER.json",
+  "github_mirror": "https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/blob/work/118-auto-e2e-v2/work/118/HQTT-GITHUB-WORKFLOW-AUTOMATION/04_PLAN/TASK_REGISTER.json",
   "model": "Work-specific adaptation of Work 70 DOC-093, aligned with W112 DOC-001 as a DRAFT_NOT_APPROVED compatibility reference.",
   "status_model": [
     "PLANNED",
