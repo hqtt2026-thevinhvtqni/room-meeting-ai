@@ -1455,3 +1455,12 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - Linux remains LIMITED_NOT_CGROUP_V2; no hardened Linux production claim.
 - Evidence: `06_EVIDENCE/W10_POSIX_CLEANUP_REMEDIATION_CI_20261122_RUN99_105_106.md`.
 - **KÝ: Co | AI-07**
+
+
+## W10-CI-RUN105-106-AND-INVENTORY-UPDATE-20261122-01 — 2026-11-22 06:38 (UTC+07:00)
+- Runs #105/#106 completed SUCCESS on Ubuntu 24.04 and Windows Server 2022.
+- Run #106 repeats POSIX worker/grandchild cleanup three times; all tests passed.
+- Ubuntu 200 PASS / 0 FAIL / 2 SKIP; Windows 206 PASS / 0 FAIL / 0 SKIP.
+- Run #99 intermittent Linux process-group cleanup failure remediated by bounded group polling; Linux remains LIMITED_NOT_CGROUP_V2.
+- Inventory after mirroring Run #104 and POSIX remediation evidence: Sandbox 161 files; GitHub 68; shared 68; Sandbox-only 93; GitHub-only 0; one Sandbox-only `.github/` directory.
+- **KÝ: Co | AI-07**
