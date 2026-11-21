@@ -1496,3 +1496,22 @@
 - **Remediation boundary:** P1-118-01 remediation proposal may be prepared as a reviewable diff/spec, but implementation remains frozen until Xu closes independent review/test scope. P1-118-02 remains blocked until the authoritative Core lease API/contract and evidence are available; adapter must fail closed rather than fabricate authority.
 - **Disposition:** CI contract validation PASS only; runtime E2E NOT VERIFIED; source-binding NOT RUN; P1 findings remain open; PR #68 OPEN / UNMERGED; W118 ACTIVE — NOT ACCEPTED — NOT RELEASED. No Main merge, no B-118-010 application, no release.
 - **Next step:** Keep the freeze. Ka assesses the P1-01 remediation design and supplies Core contract evidence for P1-02; Xu independently reviews the proposed boundary and later verifies any authorized remediation. Vinh retains final product acceptance and release authority.
+
+
+
+## Entry 026 — Exact-head CI readback after Entry 025 journal commit
+
+- **Priority:** 01 — P0 — Evidence integrity / exact-head CI verification.
+- **Date-Time:** 2026-11-22 05:34:59 (UTC+07:00).
+- **Name / Title:** Ka — W118 technical execution / evidence recorder.
+- **Scope:** Read-only verification of the branch HEAD, workflow run #44957473719, job/step conclusions, and artifact metadata after the Entry 025 journal commit. No implementation or workflow edits; no merge, no Main change, no release.
+- **PR / Branch:** PR #68 remains OPEN / UNMERGED; branch `work/118-auto-e2e-v2-clean`.
+- **Journal commit / exact HEAD:** `20b260fed6c6590c3dc76fe3cff6152f2c30ea27`; branch endpoint confirms this exact HEAD.
+- **Workflow:** [Run #44957473719](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44957473719) — **SUCCESS**; event `pull_request`; completed at 2026-11-21 22:34:59 UTC (2026-11-22 05:34:59 UTC+07:00); run head SHA matches `20b260fed6c6590c3dc76fe3cff6152f2c30ea27`.
+- **Job result:** `validate` SUCCESS. Checkout exact event revision, Python setup, pinned YAML parser installation, W118 contract tests, evidence write, and artifact upload all SUCCESS. `Validate Task-to-Issue source binding for push` SKIPPED because this run was triggered by `pull_request`.
+- **Lifecycle jobs:** `handoff-request-capture`, `ack-claim-capture`, and `review-observation-capture` all SKIPPED. These skipped jobs are not PASS and do not prove runtime lifecycle E2E.
+- **Artifact:** `w118-run-evidence-44957473719-1`; ID `14728007702`; size 685 bytes; digest `sha256:e98772d84385fba3267b64966b7a99ba477c2ebf32b28dd706368854bd3e96cf`; unexpired at readback. Metadata verified; artifact payload not independently inspected.
+- **Conclusion:** **PASS có giới hạn** for contract validation on exact HEAD `20b260fed6c6590c3dc76fe3cff6152f2c30ea27`. This is not full lifecycle runtime E2E, not Task-to-Issue source-binding verification, and not Work acceptance.
+- **Open findings / controls:** P1-118-01 remains OPEN / NEEDS CHANGES; P1-118-02 remains BLOCKED at the authoritative Core lease-contract boundary. Keep implementation freeze; do not merge Main, apply B-118-010, or release. Xu independent review and Vinh product acceptance remain outstanding.
+- **Disposition:** PR #68 OPEN / UNMERGED; W118 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+- **Next step:** Preserve the freeze; Ka continues evidence-based P1 remediation assessment within the approved boundary; Xu performs independent review; Vinh retains final acceptance authority.
