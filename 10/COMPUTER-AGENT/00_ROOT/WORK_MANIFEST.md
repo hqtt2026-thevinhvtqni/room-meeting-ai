@@ -120,3 +120,10 @@ Agent API v1.3.0 now validates the verification block before acquiring the execu
 
 ## Addendum — dedicated adapter owner thread (2026-11-17)
 Runtime now routes adapter start, every action, final observation and close through one dedicated daemon owner thread. This removes the prior design's per-action thread switching at source level and aligns with Playwright Sync API thread affinity. HTTP cleanup waits for a timed-out Future and queues close on that same owner thread before releasing the process-wide lease. A fake-adapter regression captures thread IDs across start, timed-out action and deferred close. This is not a Playwright host PASS; the worker remains non-cancellable and a permanently stuck call holds the lease. G1 remains BLOCKED pending host execution and recovery validation.
+
+
+## Addendum — AN independent V7 review received (2026-11-19)
+
+Recorded by Co on 2026-11-22 04:49 (UTC+07:00): the independent review is COMPLETE, not pending. Source: `10_AI_DEBUG_HANDOFF/03_VALIDATION/AN_P0_DESIGN_REVIEW_RESULT_20261119_07.md`.
+
+An's static adversarial review leaves AN-V7-F01 through AN-V7-F04 OPEN/BLOCKED: caller-authored consistency flags are not trusted proof; PASS must exclude UNKNOWN lease/owner states using category-aware semantics; category-disallowed outcomes and forged flags need explicit negative cases; and schema/semantic validator execution evidence is absent. AN-V6-F01..F03 are NOT READY TO CLOSE; F04 remains PARTIAL/BLOCKED. P0 implementation remains BLOCKED / NOT AUTHORIZED and release remains NOT AUTHORIZED. Next: Ka/Co revise the design and negative catalogue, then request An re-review; any executable validator task remains separate from P0 runtime implementation and requires an approved execution host.
