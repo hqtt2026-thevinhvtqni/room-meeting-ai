@@ -1205,3 +1205,13 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - **E2E:** Real Chromium step was skipped because the offline suite exited nonzero; no browser PASS is claimed from run #37.
 - **Status:** Source/test files remain Sandbox↔GitHub exact for the synchronized set; CI overall FAIL until HTTP assertion correction is rerun. No P0 process-isolation implementation yet; current runtime remains thread-worker only.
 - **KÝ: Co | AI-07**
+
+
+## W10-CI-RUN38-DIAGNOSIS-20261122-01 — 2026-11-22 05:11 (UTC+07:00)
+- **Name:** Co | **Title:** AI-07 / End-to-End Architecture & Implementation Lead
+- **Evidence:** GitHub Actions run #38, ID `44956114653`, commit `0f780eec21bd00c2afb8ccab533b1943b91bfc9c`, Ubuntu 24.04 + Windows Server 2022.
+- **Offline / safety / HTTP:** Windows PASS 144/144 checks, 0 skipped; Ubuntu PASS 140 checks, 0 failed, 1 skipped (Windows-only path test). The HTTP owner-thread assertion correction is validated on both OSes.
+- **Real Chromium E2E:** Both OS jobs reached the browser test but failed during final cleanup with `greenlet.error: Cannot switch to a different thread`. Root cause: `e2e_real_browser.py` called `adapter.close()` from the main thread even though AgentRuntime owns Playwright on its dedicated adapter thread.
+- **Correction:** Updated E2E cleanup to call `runtime.close_adapter()` and `runtime.shutdown_adapter_worker()`, preserving Playwright thread affinity; if a timed-out call remains active, wait for it before orderly close. Next CI will verify.
+- **Status:** Cross-platform offline/safety/HTTP suites PASS. Browser E2E remains BLOCKED until the cleanup correction is rerun. P0 OS process containment is still not implemented at this point.
+- **KÝ: Co | AI-07**

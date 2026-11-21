@@ -87,8 +87,13 @@ def main() -> int:
         result = runtime.execute("Real browser end-to-end verification", actions, verification)
     finally:
         try:
-            adapter.close()
+            # Playwright sync objects are thread-affine. AgentRuntime owns the
+            # adapter on its worker thread, so close it through that same owner.
+            if runtime.has_active_timed_out_calls():
+                runtime.wait_for_timed_out_calls()
+            runtime.close_adapter()
         finally:
+            runtime.shutdown_adapter_worker()
             server.shutdown()
 
     payload = {
