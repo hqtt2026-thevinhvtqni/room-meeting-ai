@@ -1443,3 +1443,15 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - Evidence: `06_EVIDENCE/W10_CROSS_PLATFORM_CI_EVIDENCE_20261122_RUN104.md`.
 - Run #104 predates the POSIX cleanup polling/stress-test patch; follow-up runs #105/#106 pending.
 - **KÝ: Co | AI-07**
+
+
+## W10-POSIX-CLEANUP-REMEDIATION-20261122-01 — 2026-11-22 06:37 (UTC+07:00)
+- Run #99 Linux failure: process group was checked immediately after leader exit; descendant/zombie reaping could lag, producing a fail-closed false negative. Windows job passed.
+- Patched `terminate_posix_process_group` to SIGTERM, bounded grace, SIGKILL and poll group identity until deadline; no PASS until group disappears.
+- POSIX process-containment test now runs three worker/grandchild cleanup cycles per invocation.
+- Run #105: Ubuntu 200 PASS / 0 FAIL / 2 SKIP; Windows 206 PASS / 0 FAIL / 0 SKIP.
+- Run #106: Ubuntu 200 PASS / 0 FAIL / 2 SKIP; Windows 206 PASS / 0 FAIL / 0 SKIP. Three-cycle stress passed on Ubuntu.
+- Run #106 artifacts: Linux 14729499872 SHA-256 `5009ab7adb92adf03556932b62b43a9bf0506aaafd7ccb15b3c9701803b0169c`; Windows 14730148883 SHA-256 `045169804bfdc1d7f0b925a61dec4568256dcac95ecdf031d8835dc9e54e2fde`.
+- Linux remains LIMITED_NOT_CGROUP_V2; no hardened Linux production claim.
+- Evidence: `06_EVIDENCE/W10_POSIX_CLEANUP_REMEDIATION_CI_20261122_RUN99_105_106.md`.
+- **KÝ: Co | AI-07**
