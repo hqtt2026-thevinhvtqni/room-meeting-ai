@@ -87,7 +87,7 @@ class Server:
             "COMPUTER_AGENT_FAKE_LOG": str(self.log_path),
             "COMPUTER_AGENT_ALLOWED_DOMAINS": "127.0.0.1",
             "COMPUTER_AGENT_API_TOKEN": "test-token-work10",
-            "COMPUTER_AGENT_ALLOWED_ORIGINS": "http://127.0.0.1:3000",
+            "COMPUTER_AGENT_ALLOWED_ORIGINS": "http://127.0.0.1:3010",
             "COMPUTER_AGENT_ACTION_TIMEOUT_SECONDS": "0.2",
             "COMPUTER_AGENT_FAKE_SLOW_CLICK_SECONDS": "1.5",
             "COMPUTER_AGENT_ALLOW_LIMITED_PROCESS_GROUP": "1",
@@ -118,7 +118,7 @@ class Server:
 
     def request(self, method, path, payload=None, headers=None):
         data = None if payload is None else json.dumps(payload).encode()
-        request_headers = {"Content-Type": "application/json", "Origin": "http://127.0.0.1:3000",
+        request_headers = {"Content-Type": "application/json", "Origin": "http://127.0.0.1:3010",
                            "Authorization": "Bearer test-token-work10"}
         if headers:
             request_headers.update(headers)
