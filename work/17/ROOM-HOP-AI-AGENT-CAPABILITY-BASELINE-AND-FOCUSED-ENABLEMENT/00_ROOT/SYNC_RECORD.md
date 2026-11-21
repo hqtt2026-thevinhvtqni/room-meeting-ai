@@ -1103,3 +1103,13 @@
 - Work17 Entry 106 committed to main: `8c387a5ba53fb0d19780abbe4175f0a3cc58db6b`. Journal and sync readback required. No implementation/dispatch/runtime action; Sandbox parity remains BLOCKED.
 - Disposition unchanged: GAP-01 OPEN/P0; GAP-11 OPEN/NOT ACCEPTED; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
 - Status: W112 ownership boundary trace PASS; live cross-Work enforcement NOT VERIFIED.
+
+
+## Sync Period 0094 — W70 Assignment / W52 Dispatch-ACK contract reconciliation
+
+- Read back W70 DOC-095/D70-023, DOC-042 and DOC-044 against Work17 GAP-01 reconciliation and W112 DOC-001. W70 owns Work lifecycle/assignment policy; W52 owns Agent-to-Agent dispatch/provider adapters; W16 deterministic workflow; W112 cross-Work mapping; W37 Core truth boundary; W14 execution boundary; W33 Evidence Hub.
+- Contract mismatch recorded: W70 DOC-042/DOC-044 Assignment status model is DRAFT/READY/IN_PROGRESS/BLOCKED/IN_REVIEW/DONE/CANCELLED and has no DISPATCHED/DELIVERED/ACKNOWLEDGED states. W112 DOC-001 draft adds DISPATCHED/ACKNOWLEDGED/SUBMITTED. Do not silently merge these: keep W70 authoritative Assignment/WP status separate from W52 delivery/receipt/ACK transport state; require owner-approved explicit mapping/version before runtime enforcement.
+- DOC-044 is a template, not dispatch API. READY is not delivery; delivery receipt is not ACK; ACK is not acceptance; execution grant is not provider delivery/recipient ACK. W70 DOC-042 explicitly requires source/scope/permissions/deliverables/acceptance before READY and verified evidence before DONE.
+- W52 candidate adapters remain prior Sandbox evidence only: read-only/no-tool candidates; live provider invocation, canonical deployable source mapping, Core authority binding, W14 HostPort binding, provider receipt and authenticated ACK NOT VERIFIED. W14 HTTP Host surface is not bidirectional provider transport. Current exposed 8030 inventory has no private-session dispatch/receipt/ACK action.
+- Work17 Entry 107 committed to main: `59491792c7a886d2c02903b0e88c4a5ba1adfb7e`. Journal/sync readback follows. No component code, dispatch, runtime, credential, CI, permission, merge or release action.
+- Disposition unchanged: GAP-01 OPEN/P0; GAP-11 OPEN/NOT ACCEPTED; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED; READ/TRACE ONLY.
