@@ -1653,3 +1653,39 @@ The two sides are adjacent but not substitutable: W14 supplies an authorized Wor
 - W52 HostPort ↔ W14 bridge concrete implementation: NOT LOCATED / NOT PROVEN.
 - GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
 - READ/TRACE/ANALYZE ONLY. No source, test, runtime, provider, Host, API, permission or branch action.
+
+
+## Entry 085 — W70 Assignment/ACK authority source trace (2026-11-21T16:40:48+07:00)
+
+### Scope and method
+Read-only Sandbox trace of W70 DOC-044, DOC-057, DOC-063, DOC-065, DOC-093, DOC-094, DOC-096, DOC-035, Evidence Register, role-task dashboard projection and WP70 lifecycle/registry prototype source. No code execution, runtime/API/dispatch/ACK invocation, provider call, PC action or W70 mutation.
+
+### Findings
+
+1. **W70 policy and template are not a live Assignment service.** DOC-044 is ACTIVE/TEMPLATE and defines assignment fields, ACK prerequisite for IN_PROGRESS and separate preparation/execution/acceptance states. DOC-057 is ACTIVE policy but explicitly says technical enforcement is NOT VERIFIED until tools enforce authorization and negative tests exist. DOC-063 remains DRAFT / DESIGN ONLY / NOT APPROVED / NOT IMPLEMENTED; its desired authorization flow resolves an active Assignment and verifiable ACK from a trusted source, but does not implement that source.
+
+2. **DOC-065 is a contract proposal, not an operational dispatcher.** It defines assignment_id, dispatch_id, attempt_id, provider/session target, adapter receipt, delivery states, ACK payload, identity_proof_ref/manual_receipt_ref, accepted_scope_digest, nonce and event envelope. It intentionally omits route names pending mapping to actual Core conventions and explicitly requires Core mapping/security/QE before implementation approval. No route/database/service existence is claimed.
+
+3. **Current W70 registers are proposed planning baselines.** DOC-093 JSON: `DRAFT_NOT_APPROVED`, 36 tasks; 27 `PROPOSED`, 9 `PROPOSED_NOT_VERIFIED`; sample tasks have empty evidence_refs. DOC-094 JSON: `DRAFT_NOT_APPROVED`, 18 phase tasks; all 18 `PROPOSED_NOT_ACKNOWLEDGED`, with empty evidence_refs and journal_refs in sampled records. DOC-094 explicitly says its phase tasks are not separate acknowledged assignments. These registers cannot serve as live Assignment/ACK ledger.
+
+4. **Dashboard projection is not authority.** `DASHBOARD/execution/ROLE_TASK_STATUS.json` identifies DOC-093 as source, is read-only, reports source_status `DRAFT_NOT_APPROVED`, generated 2026-11-08, and data integrity only `SANDBOX_READBACK_OK_BROWSER_NOT_VERIFIED`. It is a projection, not an authorization/dispatch endpoint.
+
+5. **Prototype source explicitly lacks persistence and trusted enforcement.** `lifecycle_domain.py` says it is pure domain guard, not API, persistence, authorization service, audit writer or authoritative Work state. `validate_assignment_ready()` checks DOC-044 shape/readiness only and does not grant execution permission. `work_registry.py` declares itself pure in-memory, not persistence/API/authorization/audit. WP70 README says not integrated/not accepted and Core must persist state/audit atomically; registry README says no persistence, API, database, audit, scheduler, authorization or Core integration. Historical local unit-test claims are not fresh Sandbox/runtime verification.
+
+6. **Historical operational evidence agrees that dispatch/ACK was unavailable on the inspected exposed surface.** Canonical W70 DOC-035 entry dated 2026-11-13 records that exposed 8030 meeting tools then had no meeting-create, agent-dispatch, task-assignment or participant-ACK action; queried inboxes were empty; `AGENT ACK = NONE`. This is bounded historical evidence only, not a fresh inventory of today's complete Core internal routes or all private provider sessions.
+
+7. **Evidence register is artifact inventory, not assignment event ledger.** W70 Evidence Register entries are static artifact references with producer/time/state. No inspected record binds an Assignment ID to a dispatch attempt, provider receipt, recipient identity proof, ACK event and authoritative state read-back.
+
+### Conclusion / authoritative source status
+- **W70 policy authority:** identifiable (Vinh authority; Xu coordinates; DOC-057 policy active).
+- **W70 Assignment data authority:** not located as a live service/API or durable transactional store in inspected Sandbox artifacts. DOC-093/DOC-094 are draft planning registers; DOC-044 is a template; DOC-063/065 are proposals.
+- **Recipient ACK authority:** not located. No current source in this trace establishes trusted recipient identity, ACK persistence, sequence/version enforcement or read-back.
+- **Core integration:** not located in these W70 artifacts. The actual Core :8000 internal routes remain a separate bounded source trace; absence from W70 Sandbox is not proof of absence in Core.
+- **Smallest truthful architecture boundary:** reuse W70 DOC-044/DOC-057 semantics and DOC-065 logical identifiers; Core must be the authenticated authority/persistence boundary for Assignment, identity, permission and ACK; W52 should carry provider dispatch/receipt/session events; W14 remains execution Host; no second dispatcher, assignment ledger, ACK store or event bus should be created. This is a target mapping, not an implemented fact or implementation authorization.
+
+### Disposition
+- GAP-01 OPEN/P0: no authoritative Assignment/dispatch/recipient-ACK service or persisted ACK proof located.
+- GAP-11 OPEN/P0: protected execution authority enforcement remains unverified on current main; W70 policy is not technical enforcement.
+- E2/E3 NOT PROVEN; provider delivery receipt NOT PROVEN; recipient-authenticated ACK NOT PROVEN; protected execution DENY / NOT RELEASED.
+- READ/TRACE/ANALYZE ONLY. No source, W70 artifact, test, runtime, provider, Host, API, permission, branch or release changed.
+- Next bounded step: inspect current-main Core :8000 route composition and persistence/event models for an existing authoritative Assignment/ACK endpoint or store. Do not infer absence from W70 alone; do not implement a parallel service.
