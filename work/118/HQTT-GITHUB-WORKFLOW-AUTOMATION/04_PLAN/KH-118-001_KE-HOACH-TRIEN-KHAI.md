@@ -1,307 +1,96 @@
-# KH-118-001 — KẾ HOẠCH TRIỂN KHAI WORK 118
+# KH-118-001 — KẾ HOẠCH TRIỂN KHAI W118
 
-## Mục tiêu
-Thiết kế và kiểm chứng có kiểm soát cơ chế điều phối GitHub → ROOM-HOP → CI → review → Work evidence.
+- **Work:** W118 — HQTT GitHub Workflow Automation
+- **Version:** 1.2
+- **Architecture:** TD-118-012 v1.2
+- **Selected option:** A — Sandbox initiates; GitHub controls versioning
+- **Status:** OWNER-DIRECTED BUILD PLAN — ACTIVE
+- **Owner:** Vinh
+- **Coordinator:** Xu / AI-01
+- **Date:** 2026-11-21
 
-| WP | Hạng mục | Đầu ra | Trạng thái |
+## 1. Objective
+
+Build two connected closed loops:
+1. Plan → Core Task → W102 Agent Loop → W12/W13 Execute → Verify → Owner Accept → Close.
+2. Sandbox → W12/W13 → GitHub Branch/Commit/Push → GitHub Actions CI → W118 stateless adapter → Core Event → W102/W12 recovery.
+
+W118 builds GitHub-specific adapters only. It must reuse Core :8000, W102, W12/W13, W70 and existing identity/event services.
+
+## 2. Ownership boundaries
+
+| Owner | Responsibility |
+|---|---|
+| W118 Work Task Register | W118 implementation plan/WP progress only; not runtime Task state |
+| Core :8000 | Sole canonical runtime Task/Assignment/Event authority |
+| W102 | Agent Loop policy, selection, dispatch/ACK decisions |
+| W01/W02/W22 + Core | Verified principal, authentication and authorization |
+| W12/W13 | WEE, execution host, Git/GitHub Gateway and CIAdapter |
+| W52 | A2A contract reference (DRAFT) |
+| W70 | Work lifecycle, Evidence Register and read-only Dashboard |
+| GitHub | Version/source history, Issues/PRs, branch/commit and Actions CI |
+
+W118 must not create a local Task DB, Agent Registry, dispatcher, durable event queue/Event Bus, Execution Host, Git Gateway or CI engine.
+
+## 3. Work Package plan
+
+| WP | Scope | Status | Deliverable / gate |
 |---|---|---|---|
-| W118-01 | Kiểm kê hiện trạng GitHub và Work 70 | Danh mục workflow, events, quyền, CI, API, gaps | DONE 2026-11-20 — [EVIDENCE/W118-01_GITHUB_DISCOVERY_20261120.md](../EVIDENCE/W118-01_GITHUB_DISCOVERY_20261120.md); gap chính: 0/8 cơ chế event-driven tồn tại; BLOCKED phụ: secrets/webhook cấp repo cần Vinh xác nhận |
-| W118-02 | Chuẩn hóa Issue/Branch/Commit/PR | Quy ước và templates | DRAFT 2026-11-20 — [QC-118-002](../02_DEFINE/QC-118-002_QUY-UOC-ISSUE-BRANCH-COMMIT-PR.md); templates chỉ tạo sau G3 |
-| W118-03 | Thiết kế CI và evidence contract | Ma trận jobs, artifacts, SHA, logs, exit code | DRAFT 2026-11-20 — [TD-118-004](../02_DEFINE/TD-118-004_THIET-KE-CI-EVIDENCE-CONTRACT.md); cần extension schema v1.2 |
-| W118-04 | Thiết kế event orchestration | Event → actor → action → permission → result | DRAFT 2026-11-20 — [TD-118-005](../02_DEFINE/TD-118-005_THIET-KE-EVENT-ORCHESTRATION.md); ACK magic-token |
-| W118-05 | Thiết kế failure/retry/idempotency | State machine và giới hạn retry | DRAFT 2026-11-20 — [TD-118-006](../02_DEFINE/TD-118-006_THIET-KE-FAILURE-RETRY-IDEMPOTENCY.md) |
-| W118-06 | Thiết kế review/acceptance/merge gates | Gate matrix và quyền phê duyệt | DRAFT 2026-11-20 — [TD-118-007](../02_DEFINE/TD-118-007_THIET-KE-GATE-MATRIX.md) |
-| W118-07 | Thiết kế audit journal/dashboard | Data contract và provenance | DRAFT 2026-11-20 — [TD-118-008](../02_DEFINE/TD-118-008_THIET-KE-AUDIT-DASHBOARD-CONTRACT.md) |
-| W118-08 | Phản biện và chốt kiến trúc | Biên bản kiến trúc được duyệt | IN PROGRESS — DC-118-003 + TD-118-004..008 đủ bộ hồ sơ chờ Ka review / Xu tổng hợp / Vinh ACK |
-| W118-09 | Pilot có giới hạn | CI/event flow chạy thật trong phạm vi thử nghiệm | RUNTIME VERIFIED 2026-11-20 — run #2 SUCCESS 6s + bot comment bằng chứng trên Issue #65; trình Xu nghiệm thu (G4/G5) |
-
-## Cổng kiểm soát
-- G0: xác nhận hiện trạng và phạm vi.
-- G1: yêu cầu và state machine được xác định.
-- G2: kiến trúc, bảo mật, quyền và evidence contract được phản biện.
-- G3: Vinh phê duyệt trước BUILD — APPROVED 2026-11-20 by explicit owner delegation to Ka for Auto E2E build; security and acceptance gates remain mandatory.
-- G4: pilot end-to-end có bằng chứng thật.
-- G5: nghiệm thu độc lập trước khi mở rộng.
-
-## Quy tắc thực hiện
-- Không triển khai trước G3.
-- Không coi trạng thái CI xanh là nghiệm thu sản phẩm.
-- Không merge tự động trong pilot.
-- Không ghi PASS nếu thiếu run URL, commit SHA, logs và kết quả thực tế.
-- Mọi blocker phải nêu: vấn đề / bằng chứng đã thử / nút thắt / phương án / điều kiện còn thiếu.
-
-
-## Amendment — BUILD authorization and Auto E2E v2 (2026-11-20)
-
-Vinh has explicitly delegated technical decisions and implementation of the Auto E2E system to Ka through the acceptance handoff. Xu and Vinh retain acceptance authority; Ka must not self-accept or self-release.
-
-| WP | Hạng mục | Đầu ra | Trạng thái |
-|---|---|---|---|
-| W118-10 | Auto E2E v2 implementation | Role authorization, event handlers, failure diagnostics, CI evidence artifact, contract tests and runtime matrix | BUILD IN PROGRESS on `work/118-auto-e2e-v2` |
-| W118-11 | Real GitHub event E2E | Handoff, ACK allow/deny, duplicate delivery and failure diagnostics runtime evidence | PENDING controlled deployment after Xu review |
-| W118-12 | Acceptance and release handoff | Independent Xu review, Vinh final acceptance, release evidence bundle | PENDING |
-
-**G3:** owner BUILD authorization recorded. This does not authorize auto-merge, release, secrets/branch-protection changes or modifications to Work 70's evidence schema.
-
-**Current CI:** Run `44746143577` SUCCESS; 26 unit/contract tests passed. This is contract-level evidence only, not full runtime E2E.
-
-**Current blockers:** verified GitHub login for Xu; executor identity mappings for Ka/Vi/An (no guesses); Work 70 approval for any Evidence Register schema extension; actual diagnostics runtime after listener deployment.
-
-
-## Review handoff update — 2026-11-20
-
-- Active build branch: `work/118-auto-e2e-v2`, 46 commits ahead / 0 behind main at PR creation.
-- Draft PR: [#67](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/67), open and mergeable; awaiting Xu independent review and Vinh final acceptance.
-- Latest CI: Run `44747085807` SUCCESS, 30 tests passed; artifact ID `14632579474`.
-- PR #66 remains unmerged and is preserved as the earlier pilot history; do not merge it as the implementation branch.
-- Real issue/comment and workflow_run runtime E2E is the next implementation/verification gate after the reviewed integration is authorized.
-
-
-## Security verification update — 2026-11-20
-
-Principal-level self-review hardening is implemented and verified by [Run #44747589539](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44747589539): 32 tests PASS; evidence artifact ID `14634211524`. This closes the identified same-owner multi-login bypass at unit/contract level. Runtime review event and Xu identity mapping remain pending; no acceptance or merge state is inferred.
-
-
-## Latest CI / PR state — 2026-11-20
-
-- [Run #44747797589](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44747797589): SUCCESS, 32 tests passed, artifact ID `14634046784`.
-- PR #67 is OPEN / DRAFT / mergeable=true; branch `work/118-auto-e2e-v2` is 65 ahead / 0 behind main.
-- Same-principal cross-account self-review denial is implemented and tested.
-- Xu's independent review and Vinh's final acceptance are still pending. Real issue/comment and diagnostics runtime tests remain after approved default-branch integration.
-
-
-## Xu review package update — 2026-11-20
-
-- Added P0 review checklist `XR-118-001` with 12 ordered gates covering design, identity, ACK, self-review, idempotency, failure/retry, controlled fault injection, least privilege, evidence, cross-Work boundary, runtime E2E and release.
-- Latest completed CI [Run #44748049548](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44748049548): SUCCESS, 36 tests passed; artifact ID `14633817327`.
-- PR #67 remains DRAFT for Xu independent review. Vinh final acceptance and main integration remain pending.
-
-
-## Event automation verification update — 2026-11-20
-
-- [Run #44748965030](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44748965030): SUCCESS; 44 tests passed; artifact ID `14634556693`.
-- Authorized ACK applies `w118-acked` only after role authorization; handoff/ACK/review event artifacts remain RECORDED and outside Work 70 register.
-- PR checklist notifier is isolated in `pull_request_target` and does not checkout/execute PR code. The normal pull_request job stays read-only.
-- PR #67 remains DRAFT, 89 commits ahead / 0 behind main. Xu independent review and Vinh final acceptance are pending.
-
-
-## Latest provenance verification — 2026-11-20
-
-- Run [#44749396083](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44749396083) SUCCESS; 45 tests passed; artifact ID `14635085374`.
-- Run evidence binds source commit and tested commit separately, plus actor, repository, ref, run URL and PR metadata.
-- Failure diagnostics now subscribes to the W118 PR checklist workflow as well as W118, W300 and Work 70, without self-listening.
-- PR #67 remains DRAFT, mergeable, 102 ahead / 0 behind main. Runtime event E2E, Xu review and Vinh acceptance remain pending.
-
-
-## Staged gate clarification — 2026-11-20
-
-To test the workflow_run listener on real GitHub events, the workflow must be present on the default branch. The gate is split: Xu design/security review → Vinh explicit non-release integration authorization → Ka runtime E2E → Xu runtime evidence review → Vinh final product acceptance → separate release decision. Merge alone does not set ACCEPTED/RELEASED. No integration is performed without the explicit Vinh authorization at Stage B.
-
-
-## Xu review readiness — 2026-11-20
-
-- Latest CI [Run #44749959595](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44749959595): SUCCESS; 45 tests passed; artifact ID `14635085964`.
-- PR #67 is 116 ahead / 0 behind main, OPEN / DRAFT / mergeable; 30 files changed.
-- Stage A (Xu independent design/security review) is ready. Stage B (Vinh non-release integration authorization) is not yet granted. Runtime tests remain pending integration; no final acceptance/release is claimed.
-
-
-## Stage A handoff — 2026-11-20
-
-PR #67 is OPEN / READY FOR REVIEW / mergeable=true. Latest CI Run #44750129069 SUCCESS, 45 tests passed, artifact ID `14634847057`. Xu's independent design/security review is requested. Vinh's explicit Stage B non-release integration authorization is still pending. Ka has not merged or released the Work.
-
-
-## Final pre-review CI — 2026-11-20
-
-Run [#44750267341](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44750267341) SUCCESS; 45 tests passed; artifact ID `14634727841`. PR #67 is OPEN / READY FOR REVIEW / mergeable=true; 123 commits ahead / 0 behind main. No Xu review has been submitted yet; no Vinh integration authorization or merge has occurred.
-
-
-## Latest ready-for-review validation — 2026-11-20
-
-Run [#44750417015](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44750417015) SUCCESS; 45 tests passed; artifact ID `14635330750`. PR #67 remains READY FOR REVIEW, 126 ahead / 0 behind main. Xu Stage A review and Vinh Stage B non-release integration authorization are pending; no merge or release.
-
-
-## P0 remediation — review policy provenance (2026-11-20 21:39 UTC+07:00)
-
-- **Finding:** the `pull_request_review` job used unqualified checkout; the event ref can be the PR merge ref, so PR-controlled role-map/authorization files could influence reviewer authorization.
-- **Decision:** Ka treats this as P0 and fixes before Xu review handoff is considered technically ready.
-- **Implementation:** checkout is pinned to `${{ github.event.repository.default_branch }}`; `persist-credentials: false`; regression test T10-19 asserts both controls.
-- **Commits:** workflow `032f56d1fae57a53380327ffc02dc151f313408f`; regression test `a5c4c52ef660c60e98c480f5bc63bfaf26e81d1e`; test matrix `5d11e4b99696ebe07990b468449ae492df71484e`; implementation note `8c9f5a8ce62083028a590865979575314483e41a`.
-- **CI:** PR run `44755364888` is IN_PROGRESS at this log update; no PASS is claimed.
-- **Next:** inspect job result and test count; if PASS, continue full workflow security audit and refresh PR review package. Runtime event E2E still requires Xu review and separate Vinh non-release integration authorization.
-
-
-## P0 remediation verification — 2026-11-20
-
-- Run [#44755364888](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44755364888): validate SUCCESS; 46 tests PASS in 0.234s.
-- T10-19 trusted review-policy provenance regression PASS.
-- Artifact ID `14636718273`; SHA-256 `c5b8d9a860c111079304579d74213ff516fe1016952bd74756aac4719b670689`.
-- Event-specific jobs were skipped; runtime event E2E remains PENDING. Xu review and Vinh Stage B non-release integration authorization remain outstanding.
-
-
-## P0 remediation — ACK Work-scope boundary (2026-11-20)
-
-- **Finding:** ACK authorization previously validated actor, role and Issue number binding but did not require the Issue itself to be a W118 handoff. A mapped executor could therefore cause a W118 ACK label on an unrelated repository Issue.
-- **Decision:** fail closed unless the source Issue carries `w118-handoff` and is not a PR.
-- **Implementation:** ACK job event condition now enforces both constraints; regression test T10-20 added.
-- **Commits:** workflow `d43c21d327b1e93722ff2fb1861c458f04cb7517`; test `6db3296e663b27008d9269cd191ac2edea990b6f`; matrix `57aca3ee00497283b2f19e9beebc999a968b6c63`; implementation note `fd02875638c07590620f635c9fd7a12c8fb9ee4f`.
-- **CI:** awaiting PR synchronize validation; no PASS claimed for T10-20 yet.
-- **Next:** verify CI and continue event-scope/security audit. Runtime E2E remains gated by Xu review and Vinh Stage B authorization.
-
-
-## ACK Work-scope remediation verification — 2026-11-20
-
-- Run [#44755648230](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44755648230): validate SUCCESS; 47 tests PASS in 0.319s.
-- T10-20 PASS: ACK job requires `w118-handoff` label and rejects PR events.
-- Artifact ID `14637735820`; SHA-256 `c4ec772682b4a967d903ded718af9ed806f3c37af614394d486e7b746ecbd79c`.
-- Event-specific jobs remain SKIPPED on PR synchronize; runtime event E2E remains PENDING.
-
-
-## P0 remediation — independent-review authority separation (2026-11-20)
-
-- **Finding:** the review event used `can_accept`, conflating Vinh's final product acceptance authority with Xu's independent review authority.
-- **Decision:** add separate `can_independently_review` permission; review authorization must not rely on `can_accept`. Owner logins retain final acceptance permission and are explicitly denied independent-review permission. Xu remains unmapped until identity confirmation.
-- **Implementation:** role-map schema validation, authorizer, review CLI and tests updated; XR-118-001 gate 16 added.
-- **CI:** Run [#44755930029](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44755930029) SUCCESS; 47 tests PASS in 0.229s; artifact ID `14637227755`.
-- **Intermediate CI:** Run #44755893780 failed during sequential refactor because the function rename reached the source before the two test imports were updated; final test commit corrected both imports and Run #44755930029 passed. No unresolved test failure is hidden.
-- **Runtime:** real review event and verified Xu identity remain BLOCKED/PENDING; no runtime PASS.
-
-
-## Role-map schema 1.1 verification — 2026-11-20
-
-- Run [#44756198541](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44756198541): validate SUCCESS; 48 tests PASS in 0.321s.
-- Role map schema 1.1 requires `can_independently_review`; missing-field rejection T10-22 PASS.
-- Artifact ID `14638126091`; SHA-256 `681be1785735281a936d774f0de422c973fc9dc48871c53262d10c26dfe1fabf`.
-- Event-specific jobs remain SKIPPED; runtime E2E remains PENDING.
-
-
-## P0 remediation — review event evidence provenance (2026-11-20)
-
-- **Finding:** after pinning review authorization to the trusted default branch, the event evidence still used `github.sha` (PR merge/event SHA) as `source_commit`, which did not identify the policy revision actually used.
-- **Decision:** evidence must distinguish policy source commit from PR/event revisions.
-- **Implementation:** resolve checked-out policy SHA; set it as `source_commit`; record event SHA, PR head SHA and PR base SHA in artifact details; add T10-23 contract test and XR checklist gate 17.
-- **CI:** regression test committed; validation pending. No PASS claim.
-- **Next:** verify CI and inspect resulting run artifact schema. Runtime review event remains pending default-branch integration.
-
-
-## Review evidence provenance verification — 2026-11-20
-
-- Run [#44756410351](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44756410351): validate SUCCESS; 49 tests PASS in 0.207s.
-- T10-23 PASS: review evidence binds the trusted policy commit separately from event, PR head and PR base SHAs.
-- Artifact ID `14638351674`; SHA-256 `c13688e45484886f302aac1046464587c821a098488259f447442409b0b51a9a`.
-- Event-specific jobs remain SKIPPED; runtime review event E2E remains PENDING.
-
-
-## P0 remediation — direct fault-injection dispatch authorization (2026-11-20)
-
-- **Finding:** owner-only issue-comment dispatch could be bypassed by a repository writer directly invoking `workflow_dispatch` with `failure_injection=controlled`.
-- **Decision:** authorize the actor again inside the controlled-failure job using the trusted default-branch role map; do not rely solely on the upstream dispatcher.
-- **Implementation:** direct dispatch job checks out default-branch policy, validates `github.actor` with `controlled_test_authorization.py`, and executes exit code 17 only when authorization output is true. Added T10-24 and XR checklist gate 18.
-- **CI:** regression test committed; validation pending. No PASS claim.
-- **Next:** verify CI and retain fail-closed behavior for unknown actors.
-
-
-## Direct fault-injection authorization verification — 2026-11-20
-
-- Run [#44757234204](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44757234204): validate SUCCESS; 50 tests PASS in 0.201s.
-- T10-24 PASS: direct workflow_dispatch requires a trusted default-branch actor authorization result before failure injection.
-- Artifact ID `14638571210`; SHA-256 `0dd1c6dc177ea53d6f64e231b7367e36dbce348b374b36c73c69abf8df4274a8`.
-- Runtime propagation of the actor from the owner-comment dispatcher remains unverified until the controlled workflow is executed after approved integration.
-
-
-## P1 remediation — diagnostics idempotency across closure (2026-11-20)
-
-- **Finding:** diagnostics queried only open `w118-blocked` Issues; a repeated failure with the same workflow ID + SHA after closure could create a duplicate.
-- **Decision:** idempotency key must remain unique across Issue state changes.
-- **Implementation:** query all Issue states; reuse and reopen the existing Issue when a new run attempt arrives; add T10-25 and XR checklist gate 19.
-- **CI:** regression test committed; validation pending. No PASS claim.
-
-
-## Diagnostics idempotency across closure verification — 2026-11-20
-
-- Run [#44758004387](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44758004387): validate SUCCESS; 52 tests PASS in 0.394s.
-- T10-25 PASS: closed diagnostic Issue is found by the stable workflow ID + commit SHA key; workflow reopens/updates rather than creating a duplicate.
-- Artifact ID `14640485869`; SHA-256 `b029bddc43da57df2b0199b1dde40987fbe096ed82dda23f2f4571fa5f2ec949`.
-- Intermediate Run #44757920850 failed due to an over-specific contract assertion; assertion corrected and final run passed.
-- Actual workflow_run failure event remains pending controlled runtime execution.
-
-
-## P0 security review amendment — immutable GitHub Actions references (2026-11-21)
-
-- **W118-10 scope:** pin all first-party actions used by the orchestrator and diagnostics workflows to full commit SHAs, with release-version comments; enforce the rule through regression test T10-26.
-- **Reason:** mutable action tags can move independently of the reviewed source. GitHub's official secure-use guidance identifies a full-length commit SHA as the immutable action reference.
-- **Verification:** selected action SHAs were checked against the official repositories and matching release tags. CI result is pending until the pinning regression runs on the updated feature branch.
-- **Boundary:** no event trigger, permission, actor authorization, business logic, default-branch integration, merge or release change is included.
-
-
-## Scope reconciliation — RA-118-001 (2026-11-21)
-
-- **Priority:** P0; **Read order:** 12.
-- **Name / Title:** Ka / AI-02 — CSA / W118 Build Owner (delegated).
-- **Date-Time:** 2026-11-21 10:15 +07:00.
-- RA-118-001 đối chiếu mục tiêu gốc Issue #65 với W118-10 hiện tại. Kết luận: Auto E2E contract automation là một phần của sản phẩm; Issue Management, AI Assignment/dispatch, Execution Tracking, Issue–Branch–Commit–Push binding, CI feedback và Work 70 Dashboard projection chưa hoàn tất hoặc chưa có runtime evidence.
-- Đề xuất W118-13..W118-19 trong RA-118-001 là work packages nằm trong W118, **PROPOSED — PENDING XU REVIEW**, không phải Work mới và chưa được coi là thiết kế đã duyệt.
-- Không thay đổi G3/G5, quyền Work 70, identity mapping, main, merge hoặc release authority. W118-10 contract PASS không đóng W118 tổng thể.
-- Hồ sơ đối chiếu: [RA-118-001](RA-118-001_BANG-DOI-CHIEU-PHAM-VI-VA-KE-HOACH-HOAN-THIEN.md).
-
-## Owner-directed execution update — W118-13 and W118-16 (2026-11-21)
-
-Vinh directed Xu to proceed with the dual-loop build without waiting for multi-agent review. TD-118-012 is the implementation baseline. Xu owns technical sequencing and must preserve fail-closed identity, permission, evidence and acceptance boundaries.
-
-| WP | Implementation slice | Current status | Evidence / remaining work |
-|---|---|---|---|
-| W118-13 | Sandbox Task Contract & Lifecycle Registry | FOUNDATION IMPLEMENTED; CI PASS | `scripts/w118/task_lifecycle.py`; SQLite event history, state transitions, identity/role gates, versioning and idempotency; tests included in 86/86 PASS exact-head CI. Sandbox service deployment and runtime principal verifier remain pending. |
-| W118-14 | Agent Registry & Assignment | BLOCKED / NOT IMPLEMENTED | Need verified Agent runtime principal, capability registry, availability, secure lease and dispatch receipt. No identity inferred from role names. |
-| W118-15 | Dispatch, ACK & Execution Tracking | CONTRACT FOUNDATION ONLY | Task state model includes DISPATCHED/ACKED/STARTED/IN_PROGRESS; live runtime dispatch/ACK, heartbeat and timeout recovery not yet wired. |
-| W118-16 | Issue–Branch–Commit–Push Binding | CONTRACT IMPLEMENTED; WORKFLOW WIRED; TASK-BRANCH RUNTIME TEST PENDING | `scripts/w118/source_binding.py` + push workflow step. Existing aggregate branch returns UNBOUND_LEGACY_BRANCH. Exact task branch event not yet exercised. |
-| W118-17 | CI Feedback & Failure Routing | NOT IMPLEMENTED / NOT VERIFIED | Need exact run result to Sandbox inbox, map run SHA to Task, route CI failure and bounded repair. Existing diagnostics automation remains separate and is not Task reconciliation. |
-| W118-18 | Work 70 Evidence & Dashboard Projection | BLOCKED | Work 70 schema/owner ACK required; no schema mutation or Dashboard write authorized. |
-| W118-19 | Full Lifecycle E2E & Acceptance | NOT STARTED | Requires real Sandbox runtime, verified Agent principal, event path, independent evidence and Vinh acceptance. |
-
-**Latest exact-head evidence:** feature HEAD `5e131e108a7195ca1ff5ae96b3fadb119e4bc31b`; push run #44877054701 and PR run #44877057892 SUCCESS; 86 tests PASS / 0.332s; artifact ID 14696186741; digest `9dae6385ae1e68572305ee6314bf1edf046361fc9993301cc85367603c56531a`. CI event-specific jobs remain SKIPPED; do not claim runtime E2E.
-
-
-## Additional implementation progress — Issue mirror and webhook inbox (2026-11-21)
-
-| WP | New implementation | Status | Runtime boundary |
-|---|---|---|---|
-| W118-13 | `scripts/w118/github_issue_adapter.py`: Task marker, paginated Issue lookup, create/update, exact readback, duplicate prevention, fail-closed incomplete scan | CONTRACT IMPLEMENTED | Fake transport tests only; no production token/API call; per-Task lock still required |
-| W118-17 | `scripts/w118/webhook_inbox.py`: HMAC-SHA256, delivery UUID, event/repository allowlist, payload hash, idempotent inbox, replay conflict | CONTRACT IMPLEMENTED | No HTTP route deployed to Event Listener :8050; no secret/TLS/network config; inbox does not update Task state |
-
-**Exact CI evidence:** source SHA `343fb526f5284ca1dcc4a55d463d58bf0c437340`; push run #44877554435 SUCCESS; 108 tests PASS / 0.503s; artifact ID 14696481659; SHA-256 `9414a8c7184099475557f1a651c2e8efaed31eb1f5e839d59c4bbaaea2e4f0f6`. Runtime E2E remains NOT VERIFIED.
-
-
-## W118-17 event reconciliation progress (2026-11-21)
-
-- `scripts/w118/event_reconciler.py` implements evidence-only reconciliation for signed push and completed workflow_run events.
-- Push binds to exact repository/Work/Task/Issue/SHA and appends source evidence without changing Task state.
-- CI event must originate from `W118 Auto E2E Validation`, and its head SHA must match a previously reconciled push event. Out-of-order CI remains PENDING/DEFERRED until push evidence exists.
-- CI PASS/FAIL is stored as evidence only; it cannot transition Task to VERIFIED/ACCEPTED/CLOSED.
-- Exact SHA `4e5c1e0d23cf145ddbcfca88c32255069ab3c642`: push run #44877879841 SUCCESS, 118 tests PASS / 0.380s; artifact 14697131158, digest `db783c9329e95f2cdb0dce68c21911d56bb2bc7e318088fb53617936c9861011`.
-- Remaining gap: no deployed Event Listener route/worker or production webhook secret; runtime event path remains NOT VERIFIED.
-
-
-## Task Register and state-model alignment update (2026-11-21)
-
-- W118 now has one Work-specific `TASK_REGISTER.json` and `TASK_REGISTER.schema.json`, modeled on W70 DOC-093 as required by W70 DOC-056 §9. The Sandbox copy is the operational authority; GitHub stores the versioned mirror.
-- Task status and Assignment status are independent state machines. The W118 Task status vocabulary is PLANNED/READY/IN_PROGRESS/BLOCKED/IN_REVIEW/DONE/CANCELLED. Assignment status is UNASSIGNED/PROPOSED/DISPATCHED/ACKNOWLEDGED/IN_PROGRESS/SUBMITTED/ACCEPTED/REJECTED/BLOCKED/CANCELLED.
-- SQLite TaskRegistry is an operational transaction/event adapter, not a competing canonical Task Register. The runtime adapter must synchronize with the Sandbox register before production use.
-- W112 DOC-001 is a compatibility design reference only while W112 remains DRAFT_NOT_APPROVED; no W70 schema is changed.
-- Exact tested code/schema SHA `3b8847568facbaa1517ece7af111deb4818c5ed3`: 127 tests PASS / 0.380s; run #44879608573 SUCCESS; artifact 14697605476, digest `1ba2e30c35c67d33bda977e0eef320c726c290e5dabeffbdb675e96311f35438`.
-
-
-## Latest exact-head verification and Sandbox sync (2026-11-21)
-
-- Exact tested branch head: `45b2cda82a99589afe33f2838656c5bbae8069f5`; GitHub Actions run #44879719166 SUCCESS; 127 tests PASS / 0.257s; artifact ID 14697318273; digest `de06cfb5787728c7fb214fb80c485f6efe33e2738ad9376db0ea66748b8f2514`.
-- Sandbox Work 118 now contains the Task Register and schema, code modules/tests, architecture, implementation/test notes and a sync manifest. Sandbox readback is the verification for the mirrored files; GitHub remains branch/PR/CI authority.
-- No Python execution was available through the Sandbox MCP in this session; test execution evidence is from GitHub Actions only.
-
-
-## Owner-directed execution mode (2026-11-21)
-
-- Tasks W118-TASK-013/016/017 are explicitly `OWNER_DIRECTED_SESSION`, with `owner_directive_ref=owner-directive:vinh:2026-11-21`; Assignment remains UNASSIGNED because no runtime Agent principal is verified.
-- Agent-assigned Tasks (including W118-TASK-014/015/018/019) require verified principal and Assignment ACKNOWLEDGED before Task status IN_PROGRESS.
-- This preserves the distinction between Vinh's direct authorization for Xu to build in this conversation and a production ROOM-HOP Agent runtime identity.
-- Owner-directed mode contract tests: run #44880193690 SUCCESS; 130 tests PASS / 0.512s; artifact ID 14697279628; digest `0eeb2d5cdf89a31c9d8e2346c04f1083c4d1d9699154f572cb70b73c94e56807`.
-
-
-Latest owner-directed execution test: SHA `108595c61f2d2ad9097dda1eed3252f7cfbec7e0`; run #44880271750 SUCCESS; 130 tests PASS / 0.402s; artifact ID 14697951120; SHA-256 `8e33daf7a33c3a7131acad64f3d56f04be9a0e519f72e2aeb2f389aa6d864138`.
+| W118-13 | Core Task projection adapter | IN_PROGRESS | Read-only Core snapshot DTO with explicit Core-owner field map; no local Task persistence. Blocked on Core API schema/port. |
+| W118-14 | W102/Core identity and Assignment integration | BLOCKED | Handoff/ACK claims forwarded to Core/W102; no local Agent Registry or dispatcher. Blocked on verified principal and Core/W102 port. |
+| W118-15 | W12/W13 execution bridge integration | BLOCKED | W118 Work Authority mapped to W12 WEE/GitHub Gateway/CIAdapter and W13 Host. Blocked on host/adapter availability. |
+| W118-16 | Core Task → GitHub Issue mirror and source binding | IN_PROGRESS | Core projection → Issue create/update/readback under Core lock; task branch/commit/push exact binding. Live Core lock/API and task-scoped push pending. |
+| W118-17 | Stateless webhook verifier and Core event adapter | IN_PROGRESS | HMAC verification and push/CI/Issue event intent normalization; no local inbox/event store. Core Event ingress pending. |
+| W118-18 | W70 Evidence Register/Dashboard projection | BLOCKED | Read-only schema mapping after W70 owner/schema ACK. No W70 schema changes. |
+| W118-19 | Full lifecycle runtime E2E and acceptance | PLANNED | One non-sensitive pilot from Sandbox Plan to Vinh acceptance; requires W118-13..18 gates. |
+
+## 4. Current code scope
+
+- `scripts/w118/core_task_adapter.py` — read-only Core Task snapshot normalization using explicit field map.
+- `scripts/w118/github_issue_adapter.py` — Core Task Issue mirror, Core lock lease required, paginated lookup and exact readback.
+- `scripts/w118/source_binding.py` — Task branch/commit/Issue/exact-SHA validator.
+- `scripts/w118/github_webhook_verifier.py` — stateless HMAC-SHA256 and delivery envelope verification.
+- `scripts/w118/github_event_adapter.py` — stateless GitHub event-to-Core event intent mapping.
+- `.github/workflows/w118-workflow-automation.yml` — CI contract; handoff request, ACK claim and PR review observation only.
+- Tests: Core projection, Issue mirror, source binding, webhook verifier, event adapter, Task Register contract and workflow contract.
+
+Removed/superseded from W118 implementation path:
+- SQLite TaskRegistry / local Task lifecycle store.
+- Durable webhook inbox and local event reconciler.
+- GitHub-login authorization scripts for Agent ACK/review acceptance.
+These duplicated Core/W102/W12 ownership and are not part of the approved architecture.
+
+## 5. Build and verification sequence
+
+1. Finish stateless adapter tests and observation-only GitHub workflow contract.
+2. Run exact-head GitHub Actions CI; inspect test summary, run ID, tested SHA and artifact digest.
+3. Obtain actual Core Task API schema, explicit field map, per-Task lock lease and Event ingress from Core owner.
+4. Integrate W102 identity/Assignment policy; verify one real runtime principal.
+5. Obtain W12/W13 Work Authority schema, execution host and GitHub Gateway/CIAdapter route.
+6. Obtain W70 read-only Evidence Register/Dashboard mapping approval.
+7. Run one non-sensitive full runtime E2E; collect independent QE evidence.
+8. Submit exact revision and evidence to Vinh for acceptance.
+
+## 6. Test and evidence requirements
+
+Each test record must include test ID, environment, source SHA, actor/principal, input, method/command, expected/actual result, GitHub run ID/attempt, artifact URL/digest, PASS/FAIL/BLOCKED and next step.
+
+Contract tests are not runtime E2E. CI PASS does not imply Task DONE, Assignment ACCEPTED, product acceptance, merge or release.
+
+## 7. Blockers
+
+| Blocker | Owner | Release condition |
+|---|---|---|
+| Core Task API schema/field map unavailable | Core :8000 owner | Approved API schema and read port |
+| Core lock and Event ingress unavailable | Core :8000 owner | Lock lease + idempotent event append/readback |
+| No verified Agent principal/Assignment port | W102 + W01/W02/W22 + Core | Positive/negative identity and ACK tests |
+| W12/W13 host/CI adapter not exposed | W12/W13 owner | Real execution ID, logs, GitHub ref and CI evidence |
+| W70 projection schema approval pending | W70 owner | Written schema/owner ACK |
+| Runtime E2E not run | Xu/QE/Vinh | All prior blockers resolved |
+
+## 8. Governance
+
+- Vinh authorized Xu to proceed with build without waiting for multi-agent review.
+- This plan does not authorize permission escalation, branch protection bypass, merge, release or product acceptance.
+- PR #67 remains open/unmerged; no rebase or merge to main.
+- W118 remains ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED.
