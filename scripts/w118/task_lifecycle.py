@@ -299,6 +299,81 @@ class TaskRegistry:
             raise KeyError(f"unknown task_id: {task_id}")
         return json.loads(row["payload_json"])
 
+    def record_observation(
+        self,
+        task_id: str,
+        event_type: str,
+        *,
+        actor_principal: str,
+        actor_role: str,
+        identity_verified: bool,
+        event_id: str,
+        idempotency_key: str,
+        occurred_at: str,
+        evidence_refs: Sequence[str] = (),
+        details: Mapping[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        """Append a verified external observation without changing Task state."""
+        self._require_verified_actor(actor_principal, actor_role, identity_verified)
+        if actor_role != "orchestrator":
+            raise TransitionDenied("only the orchestrator may record external observations")
+        if event_type not in {"source.push_bound", "ci.run_completed", "github.issue_observed"}:
+            raise TaskValidationError("external observation event type is not allowlisted")
+        event_id = _non_empty(event_id, "event_id")
+        idempotency_key = _non_empty(idempotency_key, "idempotency_key")
+        occurred_at = _timestamp(occurred_at)
+        if not isinstance(evidence_refs, (list, tuple)) or not all(
+            isinstance(value, str) and value.strip() for value in evidence_refs
+        ):
+            raise TaskValidationError("evidence_refs must be a list of non-empty strings")
+        if details is None:
+            details_dict = {}
+        elif isinstance(details, Mapping):
+            details_dict = dict(details)
+        else:
+            raise TaskValidationError("details must be an object")
+        if not details_dict:
+            raise TaskValidationError("external observation requires details")
+        request_body = {
+            "task_id": task_id, "event_type": event_type, "actor_principal": actor_principal,
+            "actor_role": actor_role, "evidence_refs": list(evidence_refs), "details": details_dict,
+        }
+        request_hash = hashlib.sha256(
+            json.dumps(request_body, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        ).hexdigest()
+
+        self._db.execute("BEGIN IMMEDIATE")
+        try:
+            prior = self._db.execute(
+                "SELECT request_hash FROM task_events WHERE idempotency_key = ?", (idempotency_key,)
+            ).fetchone()
+            if prior:
+                if prior["request_hash"] != request_hash:
+                    raise IdempotencyConflict("observation idempotency key reused with different content")
+                self._db.execute("COMMIT")
+                return {"task": self.get_task(task_id), "replayed": True}
+
+            row = self._db.execute(
+                "SELECT state FROM tasks WHERE task_id = ?", (task_id,)
+            ).fetchone()
+            if not row:
+                raise KeyError(f"unknown task_id: {task_id}")
+            state = row["state"]
+            self._db.execute(
+                "INSERT INTO task_events VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (
+                    event_id, task_id, event_type, state, state, actor_principal, actor_role,
+                    occurred_at, idempotency_key, request_hash,
+                    json.dumps(list(evidence_refs), sort_keys=True),
+                    json.dumps(details_dict, sort_keys=True),
+                ),
+            )
+            self._db.execute("COMMIT")
+        except Exception:
+            self._db.execute("ROLLBACK")
+            raise
+        return {"task": self.get_task(task_id), "replayed": False}
+
     def list_events(self, task_id: str) -> list[dict[str, Any]]:
         rows = self._db.execute(
             "SELECT * FROM task_events WHERE task_id = ? ORDER BY rowid", (task_id,)
