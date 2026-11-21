@@ -153,3 +153,11 @@
 - **PR #68:** READY FOR REVIEW / OPEN / UNMERGED; current branch head at this status update `63123cecfc37de111836b610d22cc570c72eaebb`; Main `792bdd71e5345949e0c1f26ff9f95a8513dfa7d5`; 20 ahead / 0 behind; 45 changed paths W118-only.
 - **PR #67:** CLOSED / UNMERGED / superseded; history preserved.
 - **Disposition:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED. Xu independent review and Vinh product acceptance pending; no merge/release.
+
+
+## 15. W70 draft-governance boundary — 2026-11-22 05:45 +07:00
+
+- W70 DOC-093 is `DRAFT_NOT_APPROVED`; W118 uses its structure as a reference only. No promotion to approved W118 schema or runtime authority is implied.
+- W118 Task Register explicitly states it is a Work planning artifact, not runtime Task/Assignment/Event authority. Core :8000 remains sole runtime authority.
+- W118 Evidence Register/Dashboard projection remains BLOCKED pending W70 owner-approved schema and ACK.
+- Added a contract assertion that DOC-093 remains DRAFT_NOT_APPROVED. Exact source candidate `dbdd71d6758abfdf614a59dce2fe5f081cb6a454`; exact-head CI pending.
