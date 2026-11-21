@@ -87,7 +87,25 @@
 - Production webhook secret, TLS termination, request-size limit, network binding, durable volume and worker lifecycle are not configured.
 - A reconciler must consume PENDING events and map them to Task/SHA before any Task transition.
 
-## 5. Tests and evidence
+## 5. W118-17 — GitHub Event Reconciler
+
+**Code:** `scripts/w118/event_reconciler.py`
+
+### Implemented
+- Reconciles authenticated push deliveries into the exact Sandbox Task only when repository, Work ID, Task ID and Issue ID all match.
+- Records source binding as an append-only evidence observation; Task state and version do not change.
+- Reconciles completed CI events only for the allowlisted `W118 Auto E2E Validation` workflow.
+- Requires exact `head_sha` to match a previously reconciled push observation for the same Task branch.
+- Handles out-of-order delivery: CI arriving before its push evidence remains PENDING/DEFERRED; it can be retried after push reconciliation.
+- Records CI PASS and CI FAIL as evidence-only outcomes; neither changes Task acceptance state.
+- Legacy aggregate branch events are marked UNBOUND; unknown Task/Issue mismatch or invalid run evidence is blocked.
+
+### Deliberate limits
+- Reconciler is a tested library, not yet a background worker or HTTP endpoint.
+- It currently handles push and workflow_run only; issues/issue_comment/pull_request/review events remain deferred for later handlers.
+- The identity assertion is based on the authenticated inbox and internal Event Listener principal; production service authentication and deployment remain pending.
+
+## 6. Tests and evidence
 
 - `tests/w118/test_task_lifecycle.py`: lifecycle, authorization, identity, owner/assignment binding, evidence requirements, stale version, idempotency, append-only event history and immutable Task fields.
 - `tests/w118/test_source_binding.py`: task branch parsing, legacy branch no-inference, repository binding, commit trailers, mixed Issue rejection, exact head SHA, force-push, deletion and missing commit rejection.
@@ -100,15 +118,15 @@
 - Push to the existing aggregate branch correctly recorded `source_binding_status=UNBOUND_LEGACY_BRANCH`; this is not a Task-level PASS and no Task state was inferred. Task-specific branch push binding is not yet exercised by a live test.
 - All event-specific jobs (handoff, ACK, acceptance review, controlled failure and dispatch) were SKIPPED. Runtime E2E remains NOT VERIFIED.
 
-## 6. Next build slices
+## 7. Next build slices
 
-1. Add the webhook inbox as a secured route in the existing ROOM-HOP Event Listener :8050; do not allocate a new port.
-2. Wire Task Registry to the Issue mirror adapter with per-task locking and durable readback.
-3. Add Branch/Commit/PR metadata reconciliation with exact SHA and no automatic Task acceptance.
+1. Add WebhookInbox and event_reconciler to the existing ROOM-HOP Event Listener :8050; do not allocate a new port.
+2. Wire Task Registry to the Issue mirror adapter with per-Task locking and durable readback.
+3. Add Issues/PR/review event handlers and reconcile Issue/PR state without auto-acceptance.
 4. Expose Task Registry through the ROOM-HOP service API and durable storage policy.
 5. Add runtime dispatch/ACK only after an actual verified Agent principal and permission path exist.
-6. Add controlled integration tests for CI PASS/FAIL callbacks, duplicate/out-of-order events and exact Task routing.
+6. Execute a controlled live task-scoped branch push and CI callback E2E.
 
-## 7. Acceptance boundary
+## 8. Acceptance boundary
 
 This implementation note records code existence and contract scope only. It does not assert full Loop A/B, live runtime E2E, Agent identity readiness, Work 70 integration, product acceptance, merge permission or release.
