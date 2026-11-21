@@ -1485,3 +1485,17 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - Three LOCKED contracts remain unchanged.
 - F-15 TaskResult/Workflow timeout mapping remains OWNER DECISION REQUIRED; earlier Biên bản wording was corrected.
 - **KÝ: Co | AI-07**
+
+
+## W10-LIVE-DASHBOARD-API-RUN135-20261122-01 — 2026-11-22 06:42 (UTC+07:00)
+- Run #135 / ID `44963956538`, commit `a3d935066ffa2dbada32bdd7cf1c94599e6463cf`.
+- Added `dashboard_live_e2e` Playwright suite: starts API :8787 and Dashboard :3010; checks live health, Work ID, consent gating and token clearing. 7 PASS per OS.
+- Ubuntu: 207 PASS / 0 FAIL / 2 SKIP; Windows Server 2022: 213 PASS / 0 FAIL / 0 SKIP. Real Chromium API/runtime E2E PASS.
+- Artifacts: Linux 14730642888 SHA-256 `197f37dd1beaab4589a85a2c7f7b76c6b98b3e40a4bbc73f6835648a17c1284d`; Windows 14730518600 SHA-256 `ec8703ec46cd80026bc46ee0df56b700fc0528d922a6c8ae861ef4f64d86a5e1`.
+- Evidence: `06_EVIDENCE/W10_LIVE_DASHBOARD_API_EVIDENCE_20261122_RUN135.md`.
+- Smoke test does not click Execute; Owner's physical Windows 10 acceptance remains NOT RUN.
+- **KÝ: Co | AI-07**
+
+## W10-INVENTORY-COUNT-CORRECTION-20261122-04 — 2026-11-22 06:42 (UTC+07:00)
+- After adding live Dashboard E2E test + evidence file to both sides: Sandbox 163 files; GitHub 71; shared 71; Sandbox-only 92; GitHub-only 0; one Sandbox-only `.github/` directory.
+- **KÝ: Co | AI-07**
