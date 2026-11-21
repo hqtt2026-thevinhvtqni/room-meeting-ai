@@ -983,3 +983,5 @@
 - No live endpoint/process test. GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. READ/TRACE/ANALYZE ONLY.
 - Sandbox parity remains BLOCKED; no Sandbox write attempted.
 - Journal Entry 096 GitHub commit: `bf17c54fd6d45cd80ea7575eb9e091e486b97f1d`. Journal read-back will be recorded after verification.
+
+- Final read-back verification: Journal Entry 096 is present on main (blob `db09e61c1496d81d6881b52553c8324d2dff2e6c`); Sync Period 0083 is present on main (blob `a6a80a02b939251effb4d27d72a951fbba5b8f6f`). Both reads returned the updated full content. GitHub journal/sync read-back = PASS for this period; this does not imply Sandbox parity.
