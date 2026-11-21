@@ -44,3 +44,15 @@ This version supersedes conflicting Sandbox statements that identify another rep
 - Canonical blobs fetched: agent_api.py 98db4b060a2727e57e2fa1cc9bebd37dc9e8a32b; agent_runtime.py e8153c180afc571efc5fe3e2b2afdee3afc88d13; browser_adapter.py a25849fef0e2259ace7a0693bd6146152e1471db; test_p0_p5.py af730f03f5116b5f82a8b44886c8543e4b3dde21.
 - The latter three hashes match the inspected Candidate branch report. Canonical test_http.py and Work Manifest fetches returned 404.
 - Conclusion: no Sandbox v1.3.0 remediation has been synchronized to canonical. G0 remains BLOCKED. Read-only audit only; no GitHub write occurred.
+
+
+## Full path reconciliation addendum — 2026-11-22 06:32 (UTC+07:00)
+
+- Inventory under `COMPUTER-AGENT/`: Sandbox 157 files; GitHub branch 64 files; shared paths 64; Sandbox-only files 93; GitHub-only files 0. Sandbox also retains one Sandbox-only `.github/` directory for its local workflow copy.
+- All accepted source/test/architecture/config paths are shared and exact UTF-8 match in the independent comparison set; the three LOCKED contracts are exact-match.
+- Current operational Dashboard, host API contract, host runbook, V8 validator, current CI evidence, Owner handover package, Work Manifest, BIÊN BẢN and NHẬT KÝ are represented on the canonical branch.
+- The 93 Sandbox-only files are explicitly classified in `06_EVIDENCE/W10_FULL_PATH_INVENTORY_DISPOSITION_20261122.md`: 10 generated/transient files, 8 original/reference/preview files (including Sandbox-local duplicate workflow), 47 historical evidence/design files, 26 immutable AI debug handoff files, 1 superseded 2026-11-17 handover and 1 transcript archive.
+- KEEP / SANDBOX-ONLY is intentional; do not bulk-copy caches, locks, runtime-generated outputs, sample previews, historical AI debug packages or superseded handover material into the canonical branch.
+- No source/test/config divergence remains among accepted shared implementation files. The directory trees are reconciled by explicit dispositions, not by identical file counts.
+- Evidence: `06_EVIDENCE/W10_FULL_PATH_INVENTORY_DISPOSITION_20261122.md`.
+- Work 10 remains ACTIVE — NOT RELEASED. Physical Windows 10, production V8 trust configuration, Linux cgroup-v2, ROOM-HOP integration and Owner acceptance remain open.
