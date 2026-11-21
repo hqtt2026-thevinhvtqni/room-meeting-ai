@@ -1,5 +1,13 @@
 # STATUS — WORK 118 (AUTO E2E BUILD v2)
 
+> **CANONICAL REMEDIATION SNAPSHOT — 2026-11-21 08:38:39 +07:00**
+> - CI validate artifact classification is now `CI_CONTRACT`, not `RUNTIME`.
+> - Regression T10-27 PASS in [Run #44851353422](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44851353422); 54 tests PASS / 0.223s.
+> - Exact tested source commit: `acb7f510b5885d045b165f739540ee85e57d7439`; artifact ID `14685143198`; SHA-256 `a326f03eae720de5af6ff531e1105e2311c0738a4661f71f940d661eb9b3b6a1`.
+> - Artifact ZIP was downloaded and JSON read back: `evidence_type=CI_CONTRACT`, `state=RECORDED`, `test_outcome=success`, and tested commit matches.
+> - This canonical block supersedes all earlier "latest" snapshots below. Older snapshots remain historical audit records only.
+
+
 - **Ngày:** 2026-11-20
 - **Quyết định Vinh (2026-11-20):** Vibe tự quyết cấu trúc; vòng phản biện dài bỏ; Xu nghiệm thu sản phẩm.
 - **Sản phẩm v1:** workflow ".github/workflows/w118-workflow-automation.yml" (W118 Workflow Automation Pilot), 3 jobs:
@@ -276,3 +284,17 @@ The workflow_run listener requires default-branch presence for real runtime veri
 - **Main:** `5f8390910178012feaf37510452bc39804b296db`; merge base `cf2537e07bfd71d5823bd98f8673b3ab5644fcdc`; 266 ahead / 82 behind — DIVERGED.
 - **PR raw API:** OPEN / unmerged / `mergeable=true` / `mergeable_state=clean` at readback; no integration or release action.
 - **Xu review:** PENDING; **Vinh acceptance:** PENDING.
+
+
+## Canonical current state — evidence classification remediation (2026-11-21 08:38:39 +07:00)
+
+- Source fix commit: `acb7f510b5885d045b165f739540ee85e57d7439`; CI validate artifact classification changed from `RUNTIME` to `CI_CONTRACT`; event evidence remains `OPERATION`.
+- Regression T10-27: `test_ci_run_evidence_is_classified_as_ci_contract_not_runtime` PASS.
+- CI: [Run #44851353422](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44851353422); push; validate SUCCESS; **54 tests PASS / 0.223s**.
+- Artifact ID `14685143198`, name `w118-run-evidence-44851353422-1`, digest `a326f03eae720de5af6ff531e1105e2311c0738a4661f71f940d661eb9b3b6a1`; downloaded ZIP and JSON exact-readback confirms `CI_CONTRACT`, `RECORDED`, `test_outcome=success`, tested commit `acb7f510b5885d045b165f739540ee85e57d7439`.
+- Event jobs handoff, ACK, acceptance-review, controlled-failure and controlled-failure-dispatch SKIPPED; runtime E2E NOT VERIFIED.
+- Compare at tested source commit: Main `5f8390910178012feaf37510452bc39804b296db`; merge base `cf2537e07bfd71d5823bd98f8673b3ab5644fcdc`; **272 ahead / 82 behind — DIVERGED**.
+- PR #67 OPEN / unmerged / unreleased; mergeability clean at readback. No rebase/merge/release.
+- Evidence classification implementation + regression PASS; Xu review PENDING; Vinh acceptance PENDING; ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+> All preceding "latest" blocks are historical. Use only this canonical current-state block for current reporting.
