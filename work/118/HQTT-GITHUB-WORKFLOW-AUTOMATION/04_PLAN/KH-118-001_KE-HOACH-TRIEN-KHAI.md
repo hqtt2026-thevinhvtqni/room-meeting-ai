@@ -278,3 +278,12 @@ Vinh directed Xu to proceed with the dual-loop build without waiting for multi-a
 - CI PASS/FAIL is stored as evidence only; it cannot transition Task to VERIFIED/ACCEPTED/CLOSED.
 - Exact SHA `4e5c1e0d23cf145ddbcfca88c32255069ab3c642`: push run #44877879841 SUCCESS, 118 tests PASS / 0.380s; artifact 14697131158, digest `db783c9329e95f2cdb0dce68c21911d56bb2bc7e318088fb53617936c9861011`.
 - Remaining gap: no deployed Event Listener route/worker or production webhook secret; runtime event path remains NOT VERIFIED.
+
+
+## Task Register and state-model alignment update (2026-11-21)
+
+- W118 now has one Work-specific `TASK_REGISTER.json` and `TASK_REGISTER.schema.json`, modeled on W70 DOC-093 as required by W70 DOC-056 §9. The Sandbox copy is the operational authority; GitHub stores the versioned mirror.
+- Task status and Assignment status are independent state machines. The W118 Task status vocabulary is PLANNED/READY/IN_PROGRESS/BLOCKED/IN_REVIEW/DONE/CANCELLED. Assignment status is UNASSIGNED/PROPOSED/DISPATCHED/ACKNOWLEDGED/IN_PROGRESS/SUBMITTED/ACCEPTED/REJECTED/BLOCKED/CANCELLED.
+- SQLite TaskRegistry is an operational transaction/event adapter, not a competing canonical Task Register. The runtime adapter must synchronize with the Sandbox register before production use.
+- W112 DOC-001 is a compatibility design reference only while W112 remains DRAFT_NOT_APPROVED; no W70 schema is changed.
+- Exact tested code/schema SHA `3b8847568facbaa1517ece7af111deb4818c5ed3`: 127 tests PASS / 0.380s; run #44879608573 SUCCESS; artifact 14697605476, digest `1ba2e30c35c67d33bda977e0eef320c726c290e5dabeffbdb675e96311f35438`.
