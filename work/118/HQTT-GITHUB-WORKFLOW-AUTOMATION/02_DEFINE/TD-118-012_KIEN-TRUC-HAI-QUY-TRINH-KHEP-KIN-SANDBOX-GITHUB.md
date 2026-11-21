@@ -8,8 +8,8 @@
 - **Trạng thái:** OWNER-DIRECTED BUILD BASELINE — BUILD AUTHORIZED BY VINH — PRODUCT ACCEPTANCE PENDING
 - **Phạm vi:** Hai quy trình A/B, trạng thái, quyền, hợp đồng dữ liệu, sự kiện, lỗi, bằng chứng và kế hoạch kiểm thử.
 - **Ngày lập:** 2026-11-21 (UTC+07:00)
-- **Nguồn đối chiếu:** Issue #65; W118 README/STATUS; RA-118-001; TD-118-004..008; BB-118-002; role-map; workflow và test matrix hiện hành.
-- **Git snapshot tại thời điểm đối chiếu:** `main` và `work/118-auto-e2e-v2` DIVERGED, 286 commits ahead / 84 behind; merge base `cf2537e07bfd71d5823bd98f8673b3ab5644fcdc`. Không thực hiện đồng bộ nhánh trong tài liệu này.
+- **Nguồn đối chiếu:** Issue #65; W118 README/STATUS; RA-118-001; TD-118-004..008; BB-118-002; role-map; W70 DOC-056 §9 / DOC-093 model; W112 DOC-001 (DRAFT_NOT_APPROVED compatibility reference); workflow và test matrix hiện hành.
+- **Git snapshot tại thời điểm cập nhật:** feature branch `45b2cda82a99589afe33f2838656c5bbae8069f5`; main `2fb5963379f475d362a897ba2d0c99c83b4ed64a`; DIVERGED, 363 commits ahead / 86 behind; merge base `cf2537e07bfd71d5823bd98f8673b3ab5644fcdc`. Không rebase/merge.
 
 > Vinh đã chỉ thị ngày 2026-11-21: “xây đi Xu theo ý mình chưa cần phản biện”. Xu được quyền tự quyết định kỹ thuật và triển khai theo kiến trúc này trên nhánh W118. Không cần chờ phản biện đa tác nhân để bắt đầu BUILD. Quyền này không bao gồm thay đổi quyền/secrets/branch protection, sửa schema Work 70, merge vào main, phát hành hoặc tự nghiệm thu sản phẩm.
 
