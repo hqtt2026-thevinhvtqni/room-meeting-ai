@@ -96,12 +96,19 @@ def validate_push_payload(\n    payload: Mapping[str, Any], *, expected_reposito
         raise SourceBindingError("push after must be a full 40-character commit SHA")
     if payload.get("deleted") is True:
         raise SourceBindingError("task branch deletion cannot be accepted as a source push")
+    if payload.get("forced") is True:
+        raise SourceBindingError("force-push is not allowed for task-scoped source branches")
     commits = payload.get("commits")
     if not isinstance(commits, list) or not commits:
         raise SourceBindingError("task-scoped push must include commit messages")
     head_commit = payload.get("head_commit")
     if not isinstance(head_commit, Mapping) or head_commit.get("id") != after:
         raise SourceBindingError("head_commit.id must match push after SHA")
+
+    if not any(
+        isinstance(commit, Mapping) and commit.get("id") == after for commit in commits
+    ):
+        raise SourceBindingError("push after SHA must be present in the commits list")
 
     issue_ids: set[int] = set()
     checked = []
