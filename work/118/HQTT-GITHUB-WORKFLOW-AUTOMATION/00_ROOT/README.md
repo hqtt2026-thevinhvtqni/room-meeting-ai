@@ -41,6 +41,7 @@ Không tự ý thay đổi branch protection, secrets/tokens, quyền tổ chứ
 ## 7.1 Kiến trúc hai quy trình khép kín Sandbox–GitHub (BUILD BASELINE — OWNER AUTHORIZED)
 
 - [TD-118-012 — Kiến trúc hai quy trình khép kín Sandbox–GitHub](../02_DEFINE/TD-118-012_KIEN-TRUC-HAI-QUY-TRINH-KHEP-KIN-SANDBOX-GITHUB.md)
+- [W118-13/16 — Task Lifecycle & Source Binding implementation](../05_BUILD/W118-13_16_TASK-LIFECYCLE-AND-SOURCE-BINDING.md)
 - [DC-118-004 — Brief phản biện kiến trúc (tham khảo, không chặn BUILD)](../02_DEFINE/DC-118-004_BRIEF-PHAN-BIEN-KIEN-TRUC-HAI-QUY-TRINH.md)
 - Nhật ký: Entry 069 trong [NHAT-KY-THI-CONG.md](../EVIDENCE/NHAT-KY-THI-CONG.md)
 
@@ -86,3 +87,12 @@ The product objective in Issue #65 is broader than Auto E2E validation alone. Th
 ## Owner directive — proceed without multi-agent review (2026-11-21)
 
 Vinh instructed Xu to proceed with building the two closed-loop Sandbox–GitHub workflows according to Xu's technical judgment, without waiting for multi-agent consultation. TD-118-012 is the owner-authorized build baseline. Implementation remains incremental on `work/118-auto-e2e-v2`; no rebase, merge to main, release, permission/secret/branch-protection change, or Work 70 schema mutation is authorized by this directive. Final product acceptance remains with Vinh.
+
+
+## Build progress — W118-13 / W118-16 (2026-11-21)
+
+- Sandbox Task Registry and state-transition contract implemented in `scripts/w118/task_lifecycle.py`.
+- GitHub push source-binding validator implemented in `scripts/w118/source_binding.py` and wired into the W118 push validation workflow.
+- Exact-head validation at `5e131e108a7195ca1ff5ae96b3fadb119e4bc31b`: 86 tests PASS; push and PR validate jobs SUCCESS. Artifact ID `14696186741`.
+- Current push branch is an aggregate legacy branch, so source binding reports `UNBOUND_LEGACY_BRANCH` and does not infer a Task. Task-specific push runtime test is pending.
+- Agent dispatch/verified ACK, GitHub Issue mirror, Sandbox API deployment, CI-to-Task reconciliation and Work 70 projection remain NOT IMPLEMENTED / NOT VERIFIED.
