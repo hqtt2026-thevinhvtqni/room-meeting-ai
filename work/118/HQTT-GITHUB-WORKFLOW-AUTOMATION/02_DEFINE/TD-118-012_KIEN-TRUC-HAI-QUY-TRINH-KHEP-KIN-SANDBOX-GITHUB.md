@@ -96,19 +96,19 @@ flowchart LR
 
 1. **PLAN_CREATED:** Vinh/Work Owner tạo hoặc phê duyệt mục tiêu, phạm vi, rủi ro và tiêu chí hoàn thành trong Sandbox.
 2. **WP_DEFINED:** Orchestrator phân rã thành WP/Task/Subtask; mỗi Task có scope nhỏ, dependency, priority, acceptance criteria và evidence expectation.
-3. **TASK_READY:** validator kiểm tra đủ trường, dependency đã thỏa, quyền và nguồn lực. Thiếu trường thì PLANNED/BLOCKED, không tạo lệnh thực thi.
-4. **ISSUE_MIRRORED:** Sandbox tạo/cập nhật GitHub Issue theo `task_id`; Issue body mang metadata contract và liên kết về Work/Task.
+3. **TASK_READY:** validator kiểm tra đủ trường, dependency đã thỏa, quyền và nguồn lực; Task chuyển PLANNED → READY. Thiếu điều kiện thì giữ PLANNED hoặc chuyển BLOCKED theo quyết định có evidence.
+4. **ISSUE_MIRRORED:** Sandbox tạo/cập nhật GitHub Issue theo `task_id`; Issue body mang metadata contract và liên kết về Work/Task. Readback thành công chỉ cập nhật Issue link, không tự đổi Task status.
 5. **AGENT_SELECTED:** policy chọn Agent theo role, capability, trust level, availability, workload và permission. Kết quả chọn phải giải thích được.
-6. **ASSIGNMENT_CREATED:** tạo assignment record độc lập với GitHub Assignee; ghi agent principal, capability match, policy version và lease.
-7. **DISPATCHED:** gửi task qua runtime route đã xác minh; lưu dispatch receipt, correlation ID và thời điểm.
-8. **ACKED / ACK_DENIED:** Agent trả ACK có actor principal, assignment ID, Task ID và nonce/dispatch reference; verifier xác minh danh tính, quyền, hạn ACK và chống replay.
-9. **STARTED:** Agent phát sự kiện bắt đầu riêng sau ACK; không tự động suy ra STARTED từ ACK.
-10. **IN_PROGRESS:** Agent gửi heartbeat/progress có sequence number; Sandbox ghi nhận tiến độ và evidence refs.
-11. **BLOCKED / RECOVERY:** Agent nêu blocker có cấu trúc; Orchestrator có thể giữ, đổi người, hủy lease hoặc yêu cầu quyết định của Owner. Không tự giao lại khi còn lease hợp lệ.
-12. **COMPLETED:** Agent nộp kết quả, commit/PR/evidence và checklist tự kiểm tra; đây chưa phải nghiệm thu.
-13. **VERIFYING:** QE/Reviewer kiểm tra acceptance criteria và bằng chứng độc lập.
-14. **ACCEPTED:** người có thẩm quyền nghiệm thu xác nhận; ghi actor, scope, exact commit/evidence.
-15. **CLOSED:** chỉ đóng Task khi acceptance policy thỏa; GitHub Issue được đóng theo đồng bộ có điều kiện. Nếu Task bị từ chối, Issue vẫn mở hoặc được mở lại theo policy.
+6. **ASSIGNMENT_PROPOSED:** tạo Assignment record độc lập với Task; ghi Agent principal, capability match, policy version, accountable role và lease. GitHub Assignee không thay Assignment.
+7. **ASSIGNMENT_DISPATCHED:** gửi Task qua runtime route đã xác minh; lưu dispatch receipt, correlation ID và thời điểm.
+8. **ASSIGNMENT_ACKNOWLEDGED / ACK_DENIED:** Agent trả ACK có actor principal, Assignment ID, Task ID và dispatch nonce/reference; verifier xác minh danh tính, quyền, hạn ACK và chống replay.
+9. **ASSIGNMENT_IN_PROGRESS:** Agent phát start event riêng sau ACK; Assignment mới chuyển IN_PROGRESS. Orchestrator chuyển Task READY → IN_PROGRESS theo policy; không suy ra Task status từ một comment.
+10. **PROGRESS:** Agent gửi heartbeat/progress có sequence number; Sandbox ghi nhận tiến độ và evidence refs.
+11. **BLOCKED / RECOVERY:** Assignment có thể BLOCKED; Orchestrator/Owner quyết định Task có cần chuyển BLOCKED hay không. Không tự giao lại khi còn lease hợp lệ.
+12. **ASSIGNMENT_SUBMITTED:** Agent nộp kết quả, commit/PR/evidence và checklist tự kiểm tra; đây chưa phải nghiệm thu.
+13. **TASK_IN_REVIEW:** Orchestrator chuyển Task IN_PROGRESS → IN_REVIEW khi Assignment SUBMITTED và review package đầy đủ.
+14. **ASSIGNMENT_ACCEPTED / REJECTED:** QE/Reviewer kiểm tra deliverable; ACCEPTED/REJECTED chỉ cập nhật Assignment status. Không tự làm Task DONE.
+15. **TASK_DONE / ISSUE_CLOSE:** Vinh/Owner nghiệm thu Task và evidence, chuyển Task sang DONE; sau đó adapter đồng bộ đóng GitHub Issue và readback. Merge/release vẫn là quyết định riêng.
 
 ### 3.2 Task status machine — Work-level lifecycle
 
@@ -170,7 +170,7 @@ Issue mirror, branch creation, commit, push, CI run, PR và review được ghi 
 
 ### 4.1 Luồng chuẩn
 
-1. **TASK_AUTHORIZED:** chỉ Task đã READY/ASSIGNED/ACKED theo policy mới được mở quyền code.
+1. **TASK_AUTHORIZED:** chỉ Task status READY/IN_PROGRESS và Assignment status ACKNOWLEDGED/IN_PROGRESS theo policy mới được mở quyền code.
 2. **BASE_RESOLVED:** Sandbox đọc repository, target branch, exact base SHA và branch policy; kiểm tra branch không stale hoặc diverged ngoài ngưỡng.
 3. **BRANCH_CREATED:** tạo branch theo quy ước `work/{work_id}/task-{task_id}` (không thêm slug để tránh parsing mơ hồ và bắt buộc liên kết ổn định); không dùng branch dùng chung cho nhiều Task nếu chưa có quyết định.
 4. **CODE_AND_LOCAL_TEST:** Agent chỉ sửa trong scope; ghi command, test, output và file changes vào execution journal.
