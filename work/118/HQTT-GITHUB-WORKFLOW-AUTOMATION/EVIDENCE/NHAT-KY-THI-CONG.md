@@ -1175,3 +1175,37 @@
 - **Runtime limits:** Event Listener :8050 not modified; no production secret/TLS, Agent identity, live Issue API or task-specific push E2E.
 - **Entry result:** DONE — Sandbox mirror refreshed and readback verified; GitHub remains version-control/PR/CI authority.
 - **Work state:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED.
+
+
+## Entry 074 — Explicit Owner-directed execution mode; preserve unverified Agent boundary
+
+- **Name:** Xu / AI-01
+- **Title:** HQTT Coordinator / W118 Task Lifecycle Owner
+- **Date-Time:** 2026-11-21 13:36 +07:00 (continuation of Vinh's owner-directed BUILD instruction)
+- **Authority:** Vinh directly instructed Xu to build without waiting for multi-agent review. This is an explicit Owner directive for this conversation/build session, not proof of a production ROOM-HOP Agent runtime principal.
+
+### 1. Problem addressed
+- Task Register tasks W118-TASK-013/016/017 were IN_PROGRESS while Assignment remained UNASSIGNED because no verified executor principal/ACK role exists in the runtime registry.
+- The prior rule requiring every Task IN_PROGRESS to have Assignment ACKNOWLEDGED incorrectly coupled the two independent state machines and could not represent Owner-directed work without fabricating an Agent identity.
+
+### 2. Correction
+- Added `execution_mode` to Task contract: `AGENT_ASSIGNMENT` or `OWNER_DIRECTED_SESSION`.
+- `OWNER_DIRECTED_SESSION` requires `owner_directive_ref`; it permits Task IN_PROGRESS while Assignment remains UNASSIGNED. No Agent principal, GitHub login, dispatch or ACK is invented.
+- `AGENT_ASSIGNMENT` still requires Assignment ACKNOWLEDGED/IN_PROGRESS before Task IN_PROGRESS.
+- Updated canonical W118 Task Register JSON/schema: W118-TASK-013, 016, 017 use OWNER_DIRECTED_SESSION with `owner-directive:vinh:2026-11-21`; all retain `assigned_identity=null` and `assignment_status=UNASSIGNED`. Other tasks remain AGENT_ASSIGNMENT and are blocked/planned until identity gates pass.
+- Updated TD-118-012, implementation note, test matrix, README, STATUS and KH-118-001.
+
+### 3. Tests and evidence
+- Added positive test for owner-directed Task entering IN_PROGRESS with explicit directive while Assignment remains UNASSIGNED.
+- Added negative test: owner-directed execution without directive reference is rejected.
+- Latest exact tested code SHA `108595c61f2d2ad9097dda1eed3252f7cfbec7e0`; GitHub Actions push run [#44880271750](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44880271750) SUCCESS; **130 tests PASS / 0.402s**.
+- Artifact ID `14697951120`; SHA-256 `8e33daf7a33c3a7131acad64f3d56f04be9a0e519f72e2aeb2f389aa6d864138`.
+- Source binding on aggregate branch remains UNBOUND_LEGACY_BRANCH; no Task state inferred.
+
+### 4. Limits
+- This is a recorded Owner-directed session, not a verified runtime Agent assignment.
+- The Task Register is in Sandbox; SQLite runtime adapter still not deployed/connected to a durable Sandbox service.
+- Event Listener :8050 route/worker, production webhook secret/TLS, live Issue API, task-scoped branch push and full runtime E2E remain pending.
+
+- **Entry result:** DONE — execution-mode distinction implemented and tested; no Agent identity/ACK fabricated.
+- **Work state:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED.
