@@ -23,3 +23,12 @@ Real-browser tests must be run on the machine with Chromium/Playwright installed
 6. Clear resets consent and disables Execute.
 
 This smoke test does not click Execute and does not run a real workflow. The separate `e2e_real_browser.py` suite verifies the API/runtime browser workflow. Port 3000 remains reserved for W113's shared Dashboard ingress.
+
+
+## Local launcher / shutdown scripts — 2026-11-22
+
+- `START_WORK10_LOCAL.ps1`: validates Python 3.12 and loopback ports 8787/3010, keeps writes and PowerShell roots disabled, generates a per-session bearer token, starts the Agent API and standalone Dashboard on loopback, checks health/Work ID 10, records process IDs without storing the token, copies the token to clipboard and opens the Dashboard. It never binds port 3000.
+- `STOP_WORK10_LOCAL.ps1`: refuses to stop while an execution is active; validates process command line and start time against the session record before stopping only the two Work 10 processes.
+- Run `./05_TEST/START_WORK10_LOCAL.ps1` after dependencies are installed, or add `-InstallDependencies` to install requirements and Chromium. Stop with `./05_TEST/STOP_WORK10_LOCAL.ps1`.
+- The launcher does not configure production V8 HMAC trust, enable writes or enable PowerShell. Those remain explicit operator actions.
+- `test_windows_launcher_contract.py` has 10 static safety assertions; GitHub Windows CI also parses both PowerShell files with the PowerShell AST parser.
