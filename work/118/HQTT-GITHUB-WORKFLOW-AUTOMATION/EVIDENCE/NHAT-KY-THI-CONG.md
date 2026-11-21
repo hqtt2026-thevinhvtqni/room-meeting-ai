@@ -1430,3 +1430,19 @@
 - **Quyết định bảo toàn:** Giữ implementation freeze trong khi Xu review/test cycle mở. B-118-010 vẫn PREPARED — NOT APPLIED; không áp dụng khi chưa có Xu close test cycle và ACK rõ ràng của Vinh. Không merge Main, không release.
 - **Kết luận trạng thái:** **ACTIVE — NOT ACCEPTED — NOT RELEASED.** Contract CI PASS có giới hạn; runtime lifecycle và acceptance chưa PASS.
 - **Bước tiếp theo:** Chờ/tiếp nhận kết quả phản biện độc lập của Xu; sau đó xử lý findings đúng phạm vi và chạy lại các acceptance tests trên runtime được ủy quyền.
+
+## Entry 022 — Exact-current-HEAD CI and lifecycle boundary audit PR #68
+
+- **Priority:** 01 — P0 — Evidence integrity / exact source verification.
+- **Name / Title:** Xu — Independent reviewer / audit coordinator.
+- **Date-Time:** 2026-11-22 04:53 (UTC+07:00).
+- **Scope:** Direct GitHub readback of PR metadata, branch compare, exact HEAD workflow, job outcomes, logs, artifact JSON, review submissions and review threads. No implementation or workflow changes.
+- **PR:** #68 OPEN / UNMERGED; branch `work/118-auto-e2e-v2-clean`; current source HEAD `cffd1b4b986883056a419ffad70d600f9534e210`; base Main `792bdd71e5345949e0c1f26ff9f95a8513dfa7d5`; compare 36 commits ahead / 0 behind; 45 changed paths, all W118-only.
+- **Exact-head CI:** Run [#44953776403](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44953776403) SUCCESS. Source SHA `cffd1b4b986883056a419ffad70d600f9534e210`; tested PR merge SHA `5aba7f46c2b456ff39b5c86a39c3fafc2db272ec`. Validate job SUCCESS; logs confirm 95 tests ran in 0.290s.
+- **Skipped scope:** `handoff-request-capture`, `ack-claim-capture`, `review-observation-capture` all SKIPPED. Task-to-Issue source-binding step SKIPPED because the event was `pull_request`; no source-binding result was produced.
+- **Artifact:** `w118-run-evidence-44953776403-1`, ID `14726786119`, digest `sha256:792914edecc8d1bb22c9588b5628f0200e8ed9d7626d4972413a91e02316a0ad`. Downloaded and read JSON confirms `evidence_type=CI_CONTRACT`, `test_outcome=success`, `source_commit=cffd1b4b986883056a419ffad70d600f9534e210`, `tested_commit=5aba7f46c2b456ff39b5c86a39c3fafc2db272ec`, `source_binding_status=NOT_RUN`.
+- **Review:** Formal review submissions 0; inline review threads 0. Issue-discussion comments are evidence notes only and are not formal PR reviews. Existing PR description and earlier comment still cite old HEAD `ca861cbe...` and 32 commits ahead; this audit corrects the current verified values.
+- **Runtime conclusion:** CI contract/unit tests PASS; runtime lifecycle E2E NOT VERIFIED. The run does not establish Issue → verified Core Assignment/ACK → execution → task-scoped push → CI feedback → acceptance. T-01..T-05 and Xu independent review remain open; Core/W102/W14/W70 runtime and approval gates remain unresolved.
+- **Evidence record:** Exact-head audit comment posted to PR #68 (comment ID `7069816272`). This journal entry is a documentation-only update; its new commit will require its own exact-head CI readback before claiming validation for that later SHA.
+- **Disposition:** ACTIVE — NOT ACCEPTED — NOT RELEASED. Implementation freeze retained. B-118-010 PREPARED / NOT APPLIED; no Main merge and no release.
+- **Next step:** Xu independent review and authorized runtime test cycle; update status only with new evidence, without promoting CI contract PASS to runtime or acceptance PASS.
