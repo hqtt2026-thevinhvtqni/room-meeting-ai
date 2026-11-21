@@ -1689,3 +1689,34 @@ Read-only Sandbox trace of W70 DOC-044, DOC-057, DOC-063, DOC-065, DOC-093, DOC-
 - E2/E3 NOT PROVEN; provider delivery receipt NOT PROVEN; recipient-authenticated ACK NOT PROVEN; protected execution DENY / NOT RELEASED.
 - READ/TRACE/ANALYZE ONLY. No source, W70 artifact, test, runtime, provider, Host, API, permission, branch or release changed.
 - Next bounded step: inspect current-main Core :8000 route composition and persistence/event models for an existing authoritative Assignment/ACK endpoint or store. Do not infer absence from W70 alone; do not implement a parallel service.
+
+
+## Entry 086 — Current-main Core HTTP composition and Assignment/ACK route trace (2026-11-21T16:42:48+07:00)
+
+### Scope and method
+Fetched exact current-main blobs for `room_hop_mcp/adapter/http_server.py`, `room_hop_mcp/core_http_main.py`, `core/agent_registry.py`, `core/identity_resolution.py`, `core/principal_registry.py`, `core/discussion.py` and `core/connectors.py`; inspected route decorators/composition and bounded indexed code searches for Assignment/dispatch/ACK service and route symbols. No Core process/API invocation, no tests, no Host/provider calls and no source changes.
+
+### Exact current-main source evidence
+- `room_hop_mcp/adapter/http_server.py` blob `54cb3ecbce2e6b13083f31c14f0c1f0738f1457d`: `create_http_app(service, principal_registry, agent_registry)` registers GET `/identities`; Meeting GET routes (`/meetings`, detail, transcript); Meeting POST routes (paste, create, open, join, start, close). No Assignment/Dispatch/ACK route is present in this fetched file.
+- `room_hop_mcp/core_http_main.py` blob `8dd6bb5ea500026d932ca52eb6079c980d722ab0`: although its module docstring mentions an additive Work execution-authority route, executable `build_app()` constructs `MeetingManager` and `MeetingService`, then returns `create_http_app(service)`. It does not import or mount an ExecutionAuthority/Assignment router in this composition. This is a source/docstring-to-executable-composition mismatch; it is not a live HTTP observation.
+- `core/agent_registry.py` blob `7e4b98e68fa1a208ebd5788d9235d9c222e402a3`, `core/principal_registry.py` blob `1eda0c80f413c1405415f92e0e2ff3b82a43b5ef`, and `core/identity_resolution.py` blob `207c0ea74e3c77929c1723b0e66beba4ccf36201` provide YAML directory loading and identity type/membership resolution. The identity-resolution module explicitly limits itself to determining human_principal vs ai_agent and does not perform Meeting policy, Work authorization, assignment state or recipient-session authentication.
+- `core/connectors.py` blob `809c4d2fca01e6fcdaf26b91bf34b1af26dfd15a` exposes provider connectors through `send_turn()` and `AgentResponse`; `core/discussion.py` blob `aa722f95235f613c288ba212074527ed2ce01ebc` runs Meeting participant round-robin. These remain Meeting-turn primitives, not Work Assignment dispatch/receipt/ACK.
+- Bounded GitHub code searches: exact route patterns `@app.post("/assignments` and `@router.post("/assignments` returned zero indexed results; `class DispatchService` and `include_router(` returned zero indexed results. Searches for assignment/dispatch/ACK terms returned documentation and prior audit records, not a concrete current-main Assignment/ACK implementation. Search-index absence is supporting bounded evidence only, not a universal proof.
+
+### Finding
+The fetched current-main executable HTTP composition does not expose an Assignment/Dispatch/recipient-ACK route through the inspected `create_http_app()` / `build_app()` path. Core has identity directories/resolution and Meeting connectors, but those are not evidence of Work assignment authority or recipient-authenticated ACK. The docstring's claim about an additive Work execution-authority route is not matched by the executable composition in this blob. No live route probe was made; deployment/runtime state remains unverified.
+
+### Required distinction
+- Core identity directory/type resolution ≠ authenticated principal assurance.
+- Meeting `send_turn()` response ≠ Work assignment delivery receipt.
+- Meeting participant round-robin ≠ W70 Assignment dispatch.
+- HTTP request acceptance or meeting paste ≠ recipient ACK.
+- Source composition absence in this inspected entrypoint ≠ proof no alternate/internal Core service exists elsewhere.
+
+### Disposition
+- Current-main inspected Core HTTP entrypoint: Assignment/Dispatch/ACK route NOT PRESENT in the composed app source reviewed.
+- Alternate/internal Core route or separate runtime service: NOT VERIFIED / UNKNOWN.
+- Durable Assignment state, authenticated ACK ingress, transaction/version/idempotency enforcement and authoritative read-back: NOT LOCATED in inspected current-main paths.
+- GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
+- READ/TRACE/ANALYZE ONLY. No source, tests, runtime, provider, Host, API, permission, branch or release action.
+- Next: trace any separate Core service composition/configuration and persistence modules that may be outside `core_http_main.py`; only after that bounded trace decide whether Assignment/ACK authority is absent or simply not wired into this HTTP entrypoint.
