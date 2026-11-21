@@ -27,7 +27,7 @@ def push_payload(**overrides):
         "ref": f"refs/heads/{BRANCH}",
         "after": SHA2,
         "deleted": False,
-        "commits": [{"id": SHA1, "message": MESSAGE}],
+        "commits": [{"id": SHA1, "message": MESSAGE}, {"id": SHA2, "message": MESSAGE}],
         "head_commit": {"id": SHA2, "message": MESSAGE},
     }
     payload.update(overrides)
@@ -92,6 +92,15 @@ class Work118SourceBindingTests(unittest.TestCase):
 
     def test_rejects_head_sha_mismatch(self):
         payload = push_payload(head_commit={"id": SHA1, "message": MESSAGE})
+        with self.assertRaises(SourceBindingError):
+            validate_push_payload(payload, expected_repository=REPOSITORY)
+
+    def test_rejects_force_push(self):
+        with self.assertRaises(SourceBindingError):
+            validate_push_payload(push_payload(forced=True), expected_repository=REPOSITORY)
+
+    def test_rejects_head_sha_not_in_commits(self):
+        payload = push_payload(commits=[{"id": SHA1, "message": MESSAGE}])
         with self.assertRaises(SourceBindingError):
             validate_push_payload(payload, expected_repository=REPOSITORY)
 
