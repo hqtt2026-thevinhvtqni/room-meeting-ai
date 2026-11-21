@@ -53,7 +53,41 @@
 - GitHub event authenticity is expected to be supplied by the trusted GitHub Actions event context; a standalone arbitrary JSON file must not be treated as authenticated.
 - PR linkage, branch creation, remote ref readback and CI callback reconciliation remain next implementation slices.
 
-## 3. Tests and evidence
+## 3. W118-13 — GitHub Issue mirror adapter
+
+**Code:** `scripts/w118/github_issue_adapter.py`
+
+### Implemented
+- Builds a stable Issue body with Work/WP/Task IDs, objective, scope, priority, acceptance criteria and an HTML Task marker.
+- Finds an existing Task Issue across paginated Issue listings; excludes Pull Requests.
+- Creates a missing Issue or updates an existing one; repeats return UNCHANGED rather than creating a second Issue.
+- Fails closed if the Issue scan reaches its configured page limit without a complete search.
+- Reads the Issue back and verifies number, title and exact body before returning a mirror receipt.
+- Does not set GitHub Assignees, close Issues or mutate Sandbox Task state.
+
+### Deliberate limits
+- Adapter uses an injected GitHub token/transport; no production token or API mutation was used in these tests.
+- Concurrent mirror calls still require a Sandbox-side per-task lock/reservation to prevent a create race.
+- The Task Registry is not yet wired to invoke this adapter; runtime service integration remains pending.
+
+## 4. W118-17 — Authenticated GitHub Webhook Inbox
+
+**Code:** `scripts/w118/webhook_inbox.py`
+
+### Implemented
+- Verifies GitHub `X-Hub-Signature-256` using HMAC-SHA256 and constant-time comparison.
+- Requires a UUID delivery ID, allowlisted event type, configured repository match and timezone-aware receive timestamp.
+- Persists raw payload provenance and SHA-256 digest in SQLite.
+- Deduplicates identical delivery IDs/payloads; rejects reuse of a delivery ID with different content.
+- Tracks PENDING/PROCESSED inbox state and stores processing result.
+- Explicitly does not mutate Task state on receipt.
+
+### Deliberate limits
+- This is an inbox library, not yet an HTTP route in ROOM-HOP Event Listener :8050.
+- Production webhook secret, TLS termination, request-size limit, network binding, durable volume and worker lifecycle are not configured.
+- A reconciler must consume PENDING events and map them to Task/SHA before any Task transition.
+
+## 5. Tests and evidence
 
 - `tests/w118/test_task_lifecycle.py`: lifecycle, authorization, identity, owner/assignment binding, evidence requirements, stale version, idempotency, append-only event history and immutable Task fields.
 - `tests/w118/test_source_binding.py`: task branch parsing, legacy branch no-inference, repository binding, commit trailers, mixed Issue rejection, exact head SHA, force-push, deletion and missing commit rejection.
@@ -66,15 +100,15 @@
 - Push to the existing aggregate branch correctly recorded `source_binding_status=UNBOUND_LEGACY_BRANCH`; this is not a Task-level PASS and no Task state was inferred. Task-specific branch push binding is not yet exercised by a live test.
 - All event-specific jobs (handoff, ACK, acceptance review, controlled failure and dispatch) were SKIPPED. Runtime E2E remains NOT VERIFIED.
 
-## 4. Next build slices
+## 6. Next build slices
 
-1. Wire push source-binding validator into the trusted W118 GitHub Actions push path, preserving legacy branch as explicitly UNBOUND.
-2. Build GitHub Issue mirror adapter with create/readback/update idempotency; Sandbox remains Task authority.
+1. Add the webhook inbox as a secured route in the existing ROOM-HOP Event Listener :8050; do not allocate a new port.
+2. Wire Task Registry to the Issue mirror adapter with per-task locking and durable readback.
 3. Add Branch/Commit/PR metadata reconciliation with exact SHA and no automatic Task acceptance.
-4. Add runtime dispatch/ACK only after an actual verified Agent principal and permission path exist.
-5. Expose the SQLite registry through a ROOM-HOP service adapter and durable storage policy.
+4. Expose Task Registry through the ROOM-HOP service API and durable storage policy.
+5. Add runtime dispatch/ACK only after an actual verified Agent principal and permission path exist.
 6. Add controlled integration tests for CI PASS/FAIL callbacks, duplicate/out-of-order events and exact Task routing.
 
-## 5. Acceptance boundary
+## 7. Acceptance boundary
 
 This implementation note records code existence and contract scope only. It does not assert full Loop A/B, live runtime E2E, Agent identity readiness, Work 70 integration, product acceptance, merge permission or release.
