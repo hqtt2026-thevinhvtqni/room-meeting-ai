@@ -264,3 +264,13 @@ Run #63 fail được truy nguyên: GitHub Dashboard cũ 1.7 KB không có các 
 ## W10-INVENTORY-RECONCILIATION-20261122-02 — 2026-11-22 06:31 (UTC+07:00)
 
 Inventory snapshot hiện tại: Sandbox 156 files trong `COMPUTER-AGENT/`; GitHub branch 62 files; shared 62; Sandbox-only 94; GitHub-only 0. Toàn bộ 62 shared files đang được đối chiếu; 30 source/test/architecture/config files đã exact UTF-8 match trong các lượt kiểm tra độc lập. Ba LOCKED contracts exact match. Sandbox-only còn lại chủ yếu là historical/debug handoff, reference/original, preview/sample, generated runtime evidence/lock và cache files; cần ghi KEEP/SANDBOX-ONLY dispositions, không bulk-sync pycache, locks, preview samples hoặc debug packages không được chấp thuận. Full inventory disposition chưa chốt.
+
+
+## W10-INVENTORY-COUNT-CORRECTION-20261122-01 — 2026-11-22 06:33 (UTC+07:00)
+
+Co | AI-07. Sau khi tạo và đồng bộ chính tài liệu inventory, số lượng tăng một file ở mỗi phía: Sandbox 158 files; GitHub 65 files; shared 65; Sandbox-only 93; GitHub-only 0; một thư mục `.github/` chỉ ở Sandbox. Bản snapshot trước đó 157/64 là thời điểm trước khi inventory document được thêm. Danh sách 93 file Sandbox-only được phân loại đầy đủ trong `06_EVIDENCE/W10_FULL_PATH_INVENTORY_DISPOSITION_20261122.md`. Các file đó giữ SANDBOX-ONLY theo nhóm generated/transient, reference/preview, historical evidence, debug handoff, superseded handover và transcript.
+
+## W10-HANDOVER-PACKAGE-20261122-01 — 2026-11-22 06:33 (UTC+07:00)
+
+Co đã tạo và đồng bộ `07_RELEASE/W10_HANDOVER_PACKAGE_20261122.md` cùng `07_RELEASE/README.md`. Đây là gói bàn giao cho Owner review, không phải nghiệm thu cuối hay release. Run #69 xác nhận 17 Dashboard static assertions PASS trên mỗi OS; Windows 206 PASS, Ubuntu 200 PASS + 2 SKIP. Các gate còn mở: physical Windows 10, production HMAC key/pins, Linux cgroup-v2, ROOM-HOP PC Bridge integration và Owner acceptance. Không merge main/deploy/release.
+
