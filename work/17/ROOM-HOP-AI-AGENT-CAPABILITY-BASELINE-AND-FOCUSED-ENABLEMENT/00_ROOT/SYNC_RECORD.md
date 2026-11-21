@@ -985,3 +985,15 @@
 - Journal Entry 096 GitHub commit: `bf17c54fd6d45cd80ea7575eb9e091e486b97f1d`. Journal read-back will be recorded after verification.
 
 - Final read-back verification: Journal Entry 096 is present on main (blob `db09e61c1496d81d6881b52553c8324d2dff2e6c`); Sync Period 0083 is present on main (blob `a6a80a02b939251effb4d27d72a951fbba5b8f6f`). Both reads returned the updated full content. GitHub journal/sync read-back = PASS for this period; this does not imply Sandbox parity.
+
+
+## Sync Period 0084 — PR #48 source-snapshot integrity defect
+
+- Entry 097 directly inspected PR #48 candidate `core/execution_authority.py` and `tests/test_execution_authority.py`.
+- Work policy/grant binds source SHA `a`×64; `record_run()` validates caller-supplied SHA format but does not compare it with the grant-bound Work policy SHA.
+- Candidate HTTP test sends `b`×64 to the run-record endpoint using the valid grant and asserts HTTP 200 plus a recorded `b`×64. The candidate test suite therefore explicitly accepts a mismatched run SHA. Static source/test defect confirmed; no test/runtime was executed.
+- Consequence: RUN_RECORDED can attribute status/evidence to a source snapshot different from the authorized grant snapshot. Candidate-only source/test finding, not a live exploit/deployment claim.
+- Proposed correction: derive expected SHA from trusted grant policy, reject mismatch before append, test domain+HTTP negative path and unchanged journal, test exact-match positive path, then exact-head CI + independent QE after authorized patch.
+- This defect is separate from missing W70 Assignment/Dispatch/Receipt/recipient ACK; GAP-01 remains OPEN/P0 and E2/E3 NOT PROVEN. GAP-11 candidate remains OPEN / NOT ACCEPTED. Protected execution DENY / NOT RELEASED.
+- READ/TRACE/ANALYZE ONLY. No code/test/PR/branch/endpoint/Host/credential/deployment change. Sandbox parity remains BLOCKED; no Sandbox write.
+- Journal Entry 097 commit: `516c511cec0a6e10374a1ceab3bff07ebe411690`.
