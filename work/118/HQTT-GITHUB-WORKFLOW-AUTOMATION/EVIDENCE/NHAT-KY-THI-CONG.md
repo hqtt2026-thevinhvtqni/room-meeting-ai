@@ -1533,3 +1533,22 @@
 - **Documentation drift:** PR body still cites historical HEAD `ca861cbe30edd69b49a8ce26259fc7daf27b4b2a` and 32 commits ahead. README and STATUS snapshots are also behind the live PR state. They are not treated as authoritative current evidence.
 - **Disposition:** Contract CI PASS on exact HEAD only; runtime lifecycle E2E and Task-to-Issue source-binding remain NOT VERIFIED / NOT RUN. Xu acceptance remains NOT ACCEPTED; T-01..T-05 pending; B-118-010 PREPARED / NOT APPLIED. Implementation freeze retained. PR #68 OPEN / UNMERGED; W118 ACTIVE — NOT ACCEPTED — NOT RELEASED.
 - **Next step:** Keep the freeze. Xu must independently close the review/test cycle before implementation changes resume; Core/W37 must provide the authoritative lease contract and executable proof for P1-118-02. Vinh retains final product acceptance and release authority.
+
+
+
+## Entry 028 — Exact-head verification after Entry 027 and PR description reconciliation
+
+- **Priority:** 01 — P0 — Evidence integrity / freeze control.
+- **Name / Title:** Ka — CSA / Delegated Technical Lead, Work 118.
+- **Date-Time:** 2026-11-22 06:21 (UTC+07:00).
+- **Scope:** Read-only source and CI verification at the post-Entry-027 HEAD; update PR #68 description to remove stale snapshot claims. No implementation/workflow changes, no Main mutation, no merge, no B-118-010 application, no release.
+- **PR / Branch:** PR #68 remains OPEN / UNMERGED; branch `work/118-auto-e2e-v2-clean`; base Main `792bdd71e5345949e0c1f26ff9f95a8513dfa7d5`.
+- **HEAD reconciliation:** Entry 027 correctly recorded implementation/source HEAD `129723ad579e0b729e55d40f88c90d07a1a06cf3`. The subsequent documentation-only journal commit moved the live PR HEAD to `9bd6ff2fac0e7176fd6bd99a65a4757eba31bd8e`. Live PR metadata confirms 42 commits ahead / 0 behind and 45 changed files. No source implementation change is attributed to the documentation commit.
+- **Exact-head CI:** [Run #44961164229](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44961164229) — SUCCESS; event `pull_request`; run head SHA exactly matches `9bd6ff2fac0e7176fd6bd99a65a4757eba31bd8e`. Job `validate` SUCCESS; contract test step SUCCESS; evidence write/upload SUCCESS. Task-to-Issue source-binding SKIPPED because event was `pull_request`. Jobs `handoff-request-capture`, `ack-claim-capture`, and `review-observation-capture` all SKIPPED.
+- **Artifact:** `w118-run-evidence-44961164229-1`; ID `14729229033`; size 685 bytes; digest `sha256:a6fbeeef5a98c80acdf9c41858f63ed38bf1662d1b67be84aa24b2e26c8d5a81`; created 2026-11-21 23:19:00 UTC; unexpired at readback. Metadata verified; payload not independently inspected.
+- **P1-118-01 exact-source recheck:** At HEAD `9bd6ff2...`, `_find_task_issue()` still returns the first matching marker and does not reject duplicate matches. `mirror_core_task()` does not enforce equality between the selected Issue number and Core's recorded `task.issue_id`. Adapter tests still lack adversarial duplicate/forged-marker and stored-ID-mismatch cases. **OPEN / NEEDS CHANGES.**
+- **P1-118-02 exact-source recheck:** At HEAD `9bd6ff2...`, `mirror_core_task()` only checks that `lock_lease_id` is a non-empty string. No Core-issued authenticity proof, Task binding, expiry/revocation validation, or authoritative Core lease contract is demonstrated in W118. **BLOCKED at Core contract boundary / OPEN.** Do not invent a local validator.
+- **Independent review:** Formal PR reviews = 0; inline review threads = 0 at latest live readback. Xu's GitHub identity is not verified; no reviewer identity is inferred. Xu independent review remains PENDING.
+- **PR description:** Updated to reflect the live HEAD, commit count, exact-head CI, skipped lifecycle/source-binding jobs, both P1 findings, review status, and freeze/release controls. The description explicitly states it is a navigation summary, not evidence; live source and workflow endpoints govern.
+- **Disposition:** Contract CI PASS only; runtime lifecycle E2E NOT VERIFIED; source-binding NOT RUN; P1-118-01 OPEN / NEEDS CHANGES; P1-118-02 BLOCKED / OPEN; Xu review PENDING; Vinh product acceptance NOT ACCEPTED. PR #68 OPEN / UNMERGED; Work 118 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+- **Preservation:** Implementation/workflow freeze retained. No Main merge, no B-118-010 application, no release.
