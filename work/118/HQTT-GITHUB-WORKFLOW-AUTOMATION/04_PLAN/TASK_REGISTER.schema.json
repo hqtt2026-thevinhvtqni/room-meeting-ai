@@ -14,7 +14,6 @@
     "source_of_truth",
     "model",
     "status_model",
-    "assignment_status_model",
     "rules",
     "tasks",
     "task_count",
