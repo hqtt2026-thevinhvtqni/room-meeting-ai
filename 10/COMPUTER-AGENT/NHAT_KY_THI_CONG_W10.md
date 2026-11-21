@@ -1464,3 +1464,12 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - Run #99 intermittent Linux process-group cleanup failure remediated by bounded group polling; Linux remains LIMITED_NOT_CGROUP_V2.
 - Inventory after mirroring Run #104 and POSIX remediation evidence: Sandbox 161 files; GitHub 68; shared 68; Sandbox-only 93; GitHub-only 0; one Sandbox-only `.github/` directory.
 - **KÝ: Co | AI-07**
+
+
+## W10-OWNER-DELEGATION-CURRENT-GATE-20261122-01 — 2026-11-22 06:39 (UTC+07:00)
+- Owner authorized Co to continue Work 10 implementation, source/test, available-host verification, Sandbox/GitHub sync and handover without waiting for An review.
+- V8 An review task is WAIVED BY OWNER; no An review/ACK/approval is claimed.
+- P0 implementation may proceed under this delegation within the existing three LOCKED contracts; no contract change or release/merge is implied.
+- **F-15 correction:** Owner did not issue a separate TaskResult/Workflow timeout mapping decision. F-15 remains OWNER DECISION REQUIRED; prior Biên bản wording attributing a specific F-15 decision to Owner is corrected.
+- Remaining gates: physical Windows 10, production V8 HMAC key/pins, Linux cgroup-v2, cross-Work integration and final Owner acceptance.
+- **KÝ: Co | AI-07**
