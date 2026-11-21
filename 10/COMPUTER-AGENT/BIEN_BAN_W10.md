@@ -862,3 +862,19 @@ Bàn giao An thực hiện static adversarial re-review theo Review Task v7. Ch�
 - **Trạng thái:** Implementation được ủy quyền; Work 10 vẫn ACTIVE — NOT RELEASED. Không có PASS nào được tuyên bố chỉ bằng quyết định này.
 - **Hồ sơ:** `06_EVIDENCE/W10_OWNER_DELEGATION_AND_IMPLEMENTATION_AUTHORIZATION_20261122_01.md`.
 - **KÝ: Co | AI-07**
+
+
+## BIÊN BẢN W10 — QUYẾT ĐỊNH ỦY QUYỀN TRIỂN KHAI & BÀN GIAO — 2026-11-22 06:31 (UTC+07:00)
+
+- **Tên:** Vinh
+- **Chức danh:** Project Owner / Final Acceptance Authority
+- **Người được ủy quyền:** Co — AI-07 / End-to-End Architecture & Implementation Lead
+- **Ngày:** 22/11/2026
+- **Giờ:** 06:10 UTC+07 (theo chỉ đạo của Owner trong hội thoại; bản ghi được Co cập nhật lúc 06:31 UTC+07)
+- **Quyết định:** Owner ủy quyền Co tiếp tục Work 10 tự chủ cho đến khi hoàn thiện kỹ thuật, kiểm chứng, đồng bộ Sandbox/GitHub và chuẩn bị bàn giao nghiệm thu. Không yêu cầu chờ An phản biện V8; review V8 của An được bỏ khỏi critical path.
+- **Phạm vi:** Co được quyết định thứ tự triển khai, sửa mã nguồn/test, chạy kiểm thử trên execution host khả dụng, xử lý finding kỹ thuật, tạo evidence, đồng bộ nhánh canonical `work/10-computer-agent-mirror`, hoàn thiện runbook và handover package.
+- **Giới hạn:** Không sửa ba hợp đồng LOCKED (`ACTION_CONTRACT.md`, `WORKFLOW_CONTRACT.md`, `SAFETY_POLICY.md`) nếu không có quyết định thay đổi hợp đồng riêng; không giả lập bằng chứng PC Windows 10; không merge main/deploy/release khi chưa có Owner phê duyệt riêng.
+- **F-15:** Owner đã cho phép diễn giải bảo thủ theo Safety Policy hiện hành: single-action timeout ghi ActionResult FAIL; workflow deadline BLOCKED; nếu side effect còn uncertain hoặc worker chưa kết thúc thì TaskResult BLOCKED và giữ execution lease cho đến khi containment/cleanup được xác nhận; không được PASS khi kết quả không chắc chắn. Đây là cách triển khai, không sửa hợp đồng.
+- **Tình trạng tại thời điểm ghi:** Hosted CI trên Windows Server 2022/Ubuntu đã chứng minh browser API, ProcessSupervisor, host operations và V8 validator; Run #69 thêm 17 Dashboard static assertions PASS mỗi OS. Physical Windows 10, production HMAC key, Linux cgroup-v2, ROOM-HOP integration và final inventory dispositions vẫn là các gate cần đóng/Owner chấp thuận giới hạn.
+- **Hiệu lực:** Co tiếp tục thực hiện không cần xin duyệt từng đoạn; chỉ trình Owner khi cần quyết định chính sách/hợp đồng, khi có blocker không thể vượt qua bằng kỹ thuật, hoặc tại bước nghiệm thu/release cuối.
+- **KÝ GHI NHẬN:** Co | AI-07 / End-to-End Architecture & Implementation Lead
