@@ -847,3 +847,12 @@
 - No source/test/runtime/provider/Host/API/permission/branch change. No live call performed. W17 remains READ/TRACE/ANALYZE ONLY.
 - GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. Entry 083 added.
 - Next: compare W52 adapter-interface with W14 bridge request/response contracts to define the smallest loss-aware mapping; no implementation before authoritative W70/Core Assignment and ACK source is proven.
+
+
+## Sync Period 0071 — W52 HostPort versus W14 execution bridge (2026-11-21T16:36:36+07:00)
+
+- W52 HostPort.open(adapter, task) must return a bidirectional RpcPort supporting request/notify/receive/respond/close; stop must confirm all descendant provider processes exited.
+- W14 ExecutionHostBridge and WEE ExecutionHostBridge are HTTP request/response clients for the canonical W13 POST /execute contract. They preserve WorkContext, execution envelope, runtime and evidence metadata but do not expose a provider RPC stream or the W52 RpcPort contract.
+- W14 RealExecutionHost has scoped subprocess.run and optional Popen start_service/process registry, with browser/Git/CI as injected adapters. The inspected code does not implement W52 HostPort, Codex/ACP session RPC, provider-session identity binding or W52 cancellation/stream lifecycle.
+- Therefore W14 is the correct sole Host owner, but its existing HTTP bridge cannot be relabelled as a concrete W52 HostPort. A W14-owned provider-process adapter behind the existing authorized boundary is a possible design direction only; it requires explicit process identity/isolation/stream/stop guarantees and Core/W70 Assignment + recipient ACK binding.
+- No implementation authorized or performed. GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. Entry 084 added.
