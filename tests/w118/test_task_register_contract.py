@@ -52,7 +52,7 @@ class Work118TaskRegisterContractTests(unittest.TestCase):
 
     def test_register_declares_sandbox_authority_and_github_mirror(self):
         self.assertIn("Sandbox", self.register["source_of_truth"])
-        self.assertIn("GitHub", self.register["github_mirror"])
+        self.assertIn("github.com", self.register["github_mirror"])
         self.assertTrue(any("not a second canonical Task Register" in rule for rule in self.register["rules"]))
 
 
