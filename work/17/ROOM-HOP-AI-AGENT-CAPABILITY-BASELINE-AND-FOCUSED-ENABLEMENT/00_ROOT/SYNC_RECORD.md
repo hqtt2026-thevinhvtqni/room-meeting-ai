@@ -881,3 +881,13 @@
 - Current inspected Core HTTP entrypoint has no Assignment/Dispatch/ACK route; alternate internal service/runtime and durable state remain NOT VERIFIED. No live HTTP call, test, runtime, provider or Host invocation.
 - GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. Entry 086 added.
 - Next: inspect separate Core service composition/configuration and persistence modules beyond this HTTP entrypoint; avoid claiming Core-wide absence until that bounded search is completed.
+
+
+## Sync Period 0074 — Current-main runtime entrypoint/persistence cross-check (2026-11-21T16:44:20+07:00)
+
+- Re-fetched all seven source files referenced by W70 DOC-071; each current-main blob SHA matches the SHA catalogued by DOC-071, so its bounded source observations for these files remain current.
+- MCP STDIO entrypoint composes MeetingManager → MeetingService → Meeting MCP adapter. Browser entrypoint composes Browser adapter with Meeting list/detail/transcript/paste routes. Meeting service/manager persist Meeting-scoped artifacts, not Work/WP/Assignment state.
+- `requirements.txt` is 58 bytes and declares no database/ORM dependency; supporting package-level evidence only, not proof no optional/external store exists.
+- Combined with Entry 086, the inspected current-main MCP, Browser and HTTP app compositions do not construct a Work Assignment/ACK service. No durable Assignment/ACK store was located in those inspected paths. Alternate external/separate deployment remains NOT VERIFIED.
+- GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. READ/TRACE/ANALYZE ONLY. Entry 087 added.
+- Next: look for separately deployed Core service/configuration or external persistence adapter outside these entrypoints; do not create duplicate authority in W17.
