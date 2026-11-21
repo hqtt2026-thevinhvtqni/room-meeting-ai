@@ -45,56 +45,48 @@ class Work118WorkflowContractTests(unittest.TestCase):
         data = self.load_yaml(WORKFLOW)
         self.assertIn("issues", data["on"])
         self.assertIn("issue_comment", data["on"])
-        self.assertIn("w118-handoff", data["jobs"]["handoff"]["if"])
-        self.assertIn("ACKED-", data["jobs"]["ack-verification"]["if"])
+        self.assertIn("w118-handoff", data["jobs"]["handoff-request-capture"]["if"])
+        self.assertIn("ACKED-", data["jobs"]["ack-claim-capture"]["if"])
 
     def test_mutation_permissions_are_job_scoped(self):
         data = self.load_yaml(WORKFLOW)
         self.assertEqual(data["jobs"]["validate"]["permissions"], {"contents": "read"})
-        self.assertEqual(data["jobs"]["handoff"]["permissions"]["issues"], "write")
-        self.assertEqual(data["jobs"]["ack-verification"]["permissions"]["issues"], "write")
+        self.assertEqual(data["jobs"]["handoff-request-capture"]["permissions"]["issues"], "write")
+        self.assertEqual(data["jobs"]["ack-claim-capture"]["permissions"]["issues"], "write")
         self.assertEqual(data["permissions"], {"contents": "read"})
 
-    def test_review_authorization_checks_out_trusted_default_branch(self):
+    def test_review_observation_captures_pr_revisions_without_authorizing_acceptance(self):
         data = self.load_yaml(WORKFLOW)
-        steps = data["jobs"]["acceptance-review"]["steps"]
-        checkout = next(step for step in steps if step.get("name") == "Checkout trusted default-branch acceptance policy")
-        self.assertEqual(checkout["uses"], "actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683")
-        self.assertEqual(checkout["with"]["ref"], "${{ github.event.repository.default_branch }}")
-        self.assertEqual(checkout["with"]["persist-credentials"], "false")
-
-    def test_ack_verification_is_scoped_to_w118_handoff_issues(self):
-        data = self.load_yaml(WORKFLOW)
-        condition = data["jobs"]["ack-verification"]["if"]
-        self.assertIn("w118-handoff", condition)
-        self.assertIn("github.event.issue.labels.*.name", condition)
-        self.assertIn("!github.event.issue.pull_request", condition)
-
-    def test_review_evidence_binds_policy_commit_and_pr_revisions(self):
-        data = self.load_yaml(WORKFLOW)
-        steps = data["jobs"]["acceptance-review"]["steps"]
-        policy_step = next(step for step in steps if step.get("name") == "Resolve trusted policy commit")
-        self.assertEqual(policy_step["id"], "policy")
-        evidence_step = next(step for step in steps if step.get("name") == "Write review event evidence")
-        self.assertEqual(evidence_step["env"]["POLICY_SHA"], "${{ steps.policy.outputs.sha }}")
+        steps = data["jobs"]["review-observation-capture"]["steps"]
+        evidence_step = next(step for step in steps if step.get("name") == "Write review observation evidence")
         self.assertEqual(evidence_step["env"]["PR_HEAD_SHA"], "${{ github.event.pull_request.head.sha }}")
         self.assertEqual(evidence_step["env"]["PR_BASE_SHA"], "${{ github.event.pull_request.base.sha }}")
-        self.assertIn('source_commit=os.environ["POLICY_SHA"]', evidence_step["run"])
-        self.assertIn('"event_commit": os.environ["EVENT_SHA"]', evidence_step["run"])
-        self.assertIn('"pr_head_sha": os.environ["PR_HEAD_SHA"]', evidence_step["run"])
-        self.assertIn('"pr_base_sha": os.environ["PR_BASE_SHA"]', evidence_step["run"])
+        self.assertIn('"reviewer_authority_verified": False', evidence_step["run"])
+        self.assertIn('"task_acceptance_changed": False', evidence_step["run"])
+        self.assertNotIn("review_authorization.py", str(steps))
 
-    def test_review_job_does_not_merge_or_release(self):
+    def test_ack_claim_capture_is_scoped_but_does_not_verify_or_transition_assignment(self):
+        data = self.load_yaml(WORKFLOW)
+        condition = data["jobs"]["ack-claim-capture"]["if"]
+        self.assertIn("w118-handoff", condition)
+        self.assertIn("ACKED-", condition)
+        steps = data["jobs"]["ack-claim-capture"]["steps"]
+        capture = next(step for step in steps if step.get("name") == "Capture ACK claim without authorizing Agent identity")
+        self.assertNotIn("authorization.py", capture["run"])
+        self.assertNotIn("gh issue edit", capture["run"])
+        self.assertIn("No Assignment ACKNOWLEDGED state", capture["run"])
+
+    def test_review_observation_does_not_merge_or_release(self):
         data = self.load_yaml(WORKFLOW)
         self.assertIn("pull_request_review", data["on"])
-        review_steps = str(data["jobs"]["acceptance-review"])
+        review_steps = str(data["jobs"]["review-observation-capture"])
         self.assertNotIn("gh pr merge", review_steps)
         self.assertNotIn("auto-merge", review_steps)
 
 
     def test_handoff_idempotency_distinguishes_reapplied_label(self):
         data = self.load_yaml(WORKFLOW)
-        steps = data["jobs"]["handoff"]["steps"]
+        steps = data["jobs"]["handoff-request-capture"]["steps"]
         env = next(step["env"] for step in steps if "ISSUE_UPDATED_AT" in step.get("env", {}))
         self.assertEqual(env["ISSUE_UPDATED_AT"], "${{ github.event.issue.updated_at }}")
         run_script = next(step["run"] for step in steps if "MARKER=" in step.get("run", ""))
@@ -141,7 +133,7 @@ class Work118WorkflowContractTests(unittest.TestCase):
 
     def test_ack_result_is_deduplicated_by_source_comment_id(self):
         data = self.load_yaml(WORKFLOW)
-        run_script = next(step["run"] for step in data["jobs"]["ack-verification"]["steps"] if "MARKER=" in step.get("run", ""))
+        run_script = next(step["run"] for step in data["jobs"]["ack-claim-capture"]["steps"] if "MARKER=" in step.get("run", ""))
         self.assertIn("w118-ack-result", run_script)
         self.assertIn("COMMENT_ID", run_script)
 
@@ -165,19 +157,17 @@ class Work118WorkflowContractTests(unittest.TestCase):
         self.assertIn("HEAD_SHA", run_script)
         self.assertIn("gh issue comment", run_script)
 
-    def test_authorized_ack_applies_state_label_only_after_authorization(self):
+    def test_no_github_ack_label_is_treated_as_assignment_state(self):
         data = self.load_yaml(WORKFLOW)
-        run_script = next(step["run"] for step in data["jobs"]["ack-verification"]["steps"] if "AUTHORIZED=" in step.get("run", ""))
-        authorized_branch = run_script.index('if [ "$AUTHORIZED" = "true" ]; then')
-        label_mutation = run_script.index("gh issue edit")
-        denied_branch = run_script.index("else", authorized_branch)
-        self.assertLess(authorized_branch, label_mutation)
-        self.assertLess(label_mutation, denied_branch)
-        self.assertIn("w118-acked", run_script)
+        steps = data["jobs"]["ack-claim-capture"]["steps"]
+        run_script = next(step["run"] for step in steps if step.get("name") == "Capture ACK claim without authorizing Agent identity")
+        self.assertNotIn("w118-acked", run_script)
+        self.assertNotIn("gh issue edit", run_script)
+        self.assertIn("assignment", run_script.lower())
 
     def test_event_jobs_upload_recorder_artifacts(self):
         data = self.load_yaml(WORKFLOW)
-        for job_name in ("handoff", "ack-verification", "acceptance-review"):
+        for job_name in ("handoff-request-capture", "ack-claim-capture", "review-observation-capture"):
             steps = data["jobs"][job_name]["steps"]
             self.assertTrue(any(step.get("uses") == "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02" for step in steps), job_name)
             self.assertTrue(any("event evidence" in step.get("name", "").lower() for step in steps), job_name)
