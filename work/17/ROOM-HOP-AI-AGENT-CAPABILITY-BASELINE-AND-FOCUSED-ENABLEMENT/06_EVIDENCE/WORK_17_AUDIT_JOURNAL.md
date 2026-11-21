@@ -2086,3 +2086,17 @@ Read-only source/test inspection at PR #48 head branch `work/w1111-core-executio
 - Next: hold this checklist as W17 evidence; await no PC action. Continue read-only source reconciliation only if a new candidate revision or exact-head CI evidence appears; otherwise avoid re-reading unchanged files.
 - Evidence basis: Entries 096–100; PR #48 head and compare; Core source blob `163b126178b67c6e0a3f68ba33eaf7b9e6d91503`; W13 source/test blobs in Entries 099–100; deployment guide `a747443d711811ddfa2ded7998e83202e2cb2432`; CI workflow `27b42a1083feb72b30e1fad094fa938ac9e4860b`.
 - Evidence status: checklist synthesis COMPLETE; no code/test/CI/runtime PASS claimed.
+
+
+## Entry 102 — Exact-HEAD CI readback correction for W1111 / PR #48 (2026-11-21T17:52:00+07:00)
+
+- Scope: read-only GitHub verification of PR #48 current metadata and Actions run filtered by exact candidate HEAD; correct Entry 101's stale CI disposition. No candidate source/test/PR modification, CI dispatch/re-run, merge, PC/runtime, credential or deployment action.
+- PR #48 readback: OPEN, DRAFT, UNMERGED, non-mergeable; head branch `work/w1111-core-execution-authority-v1-2`; exact HEAD `c70eb2b82f54a000a81263dc519078ddf105f075`; base SHA `a663bd5afda524cb9dc7ca685945ca96c68d664d`.
+- Exact-HEAD Actions query: run `43074281024`, run #154, event `push`, head SHA exactly `c70eb2b82f54a000a81263dc519078ddf105f075`, completed `success`; job `authority-tests`, job ID `130709930041`, also `success`.
+- Job step readback confirms all three test stages completed successfully: Core authority + Host authority + Core HTTP tests; W12 canonical host tests; W13 Core-grant bridge + W12 integration tests. This closes the exact-HEAD CI evidence gap recorded in Entries 100–101. The earlier PR-triggered-only query returned an empty list because it did not expose push runs; it was not evidence that no exact-head run existed.
+- Evidence boundary: this is GitHub Actions source/CI PASS for the exact candidate SHA only. It does not establish independent QE acceptance, deployed Core :8000 wiring, W13 :8031 live runtime, production credential/policy/journal provisioning, PC/Sandbox parity, or production E2E.
+- Candidate source residuals from Entry 100 remain open unless separately changed and re-reviewed: immutable grant issuance snapshot/policy version; direct run-record SHA equality; issue/run idempotency; atomic active-run revoke/expiry and process-stop lifecycle; Core launcher wiring/config; Assignment/Dispatch/Attempt/provider receipt/recipient ACK separation.
+- Disposition unchanged: GAP-11 OPEN / NOT ACCEPTED; GAP-01 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
+- Next: retain exact-HEAD CI as PASS evidence; do not repeat CI discovery for this unchanged SHA. Continue only with newly changed candidate revision or evidence source; PC/runtime verification waits for Vinh's PC and separately authorized handoff.
+- Evidence IDs: PR #48 `https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/48`; Actions run `https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/43074281024`; job `130709930041`.
+- Status: exact-HEAD CI READBACK PASS; production acceptance NOT PASS.
