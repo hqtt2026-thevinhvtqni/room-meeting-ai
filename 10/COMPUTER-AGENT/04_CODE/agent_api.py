@@ -27,7 +27,7 @@ _HOST_OWNER_LEASE: HostOwnerLease | None = None
 
 
 def allowed_origins() -> set[str]:
-    raw = os.getenv("COMPUTER_AGENT_ALLOWED_ORIGINS", "http://127.0.0.1:3000")
+    raw = os.getenv("COMPUTER_AGENT_ALLOWED_ORIGINS", "http://127.0.0.1:3010")
     return {item.strip() for item in raw.split(",") if item.strip()}
 
 
