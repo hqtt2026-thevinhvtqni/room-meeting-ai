@@ -1070,3 +1070,14 @@
 - Exact-HEAD CI remains PASS per Entry 102; production acceptance remains NOT PASS. GAP-11 OPEN / NOT ACCEPTED; GAP-01 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
 - Journal Entry 103 committed to GitHub main: `10b46f123ec5cf2370a1e7f2fcfe53325428a5da`. GitHub read-back required; Sandbox parity remains separately BLOCKED.
 - Next: wait for a changed candidate revision before repeating source review; PC runtime review requires the user's PC handoff.
+
+
+## Sync Period 0091 — PR #48 stale-base divergence recorded
+
+- PR #48 remains OPEN/DRAFT/UNMERGED at unchanged HEAD `c70eb2b82f54a000a81263dc519078ddf105f075`; no review submissions or inline review threads returned.
+- Compared PR branch with current `main`: branches diverged; `main` is ahead by 970 commits and PR branch is behind by 157 commits. PR base SHA is still `a663bd5afda524cb9dc7ca685945ca96c68d664d`; PR metadata last updated 2026-11-11T18:04:43Z.
+- Exact-HEAD CI run `43074281024` remains PASS only for the old candidate SHA, not for integration against current main. PR body contains stale CI/head references; Entry 102 remains the authoritative exact-HEAD evidence.
+- No rebase, merge, PR update, source edit, CI dispatch or runtime action. Candidate must be refreshed against current main by its owner and then re-reviewed on the new diff/HEAD.
+- Disposition unchanged: GAP-11 OPEN / NOT ACCEPTED; GAP-01 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED; PC runtime deferred.
+- Journal Entry 104 committed to main: `23f6d0c836c6320ebb6bee93ecc3f2ac71cd8ddb`. Journal read-back and this sync record read-back required. Sandbox parity remains BLOCKED; no Sandbox write.
+- Status: branch-divergence finding CONFIRMED; integration acceptance NOT PASS.
