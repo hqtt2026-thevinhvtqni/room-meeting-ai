@@ -146,3 +146,14 @@ Store evidence under Work 10 `06_EVIDENCE`; do not hand-edit test output.
 - No merge to main or release without Owner's separate approval.
 
 **KÝ: Co | AI-07 / End-to-End Architecture & Implementation Lead**
+
+
+## Current CI baseline update — 2026-11-22
+
+After adding the Dashboard static contract suite, Run #69 is the current hosted regression baseline:
+- Windows Server 2022: 206 PASS / 0 FAIL / 0 SKIP.
+- Ubuntu 24.04: 200 PASS / 0 FAIL / 2 expected SKIP.
+- Dashboard static contract: 17 PASS on each OS.
+- V8 validator: 16 PASS on each OS.
+
+See `06_EVIDENCE/W10_CROSS_PLATFORM_CI_EVIDENCE_20261122_RUN69.md`. This is hosted CI, not Owner PC acceptance.
