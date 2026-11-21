@@ -239,7 +239,9 @@ class Work118WorkflowContractTests(unittest.TestCase):
         self.assertIn("SOURCE_BINDING_STATUS", evidence["env"])
         self.assertIn('"source_binding_status"', evidence["run"])
         upload = next(step for step in steps if step.get("name") == "Upload immutable run evidence")
-        self.assertEqual(upload["with"]["path"], ".w118-evidence/")
+        self.assertIn(".w118-evidence/run-evidence.json", upload["with"]["path"])
+        self.assertIn(".w118-evidence/source-binding.json", upload["with"]["path"])
+        self.assertEqual(upload["with"]["if-no-files-found"], "warn")
 
 if __name__ == "__main__":
     unittest.main()
