@@ -174,3 +174,16 @@
 - W14 remains sole integrated execution owner; W12/W13 absorbed; W14 source/runtime parity and full product E2E NOT VERIFIED.
 - PR #68 remains READY FOR REVIEW / OPEN / UNMERGED; PR #67 CLOSED / UNMERGED / superseded.
 - Disposition: ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED.
+
+
+## 17. Exact-head verification after W14/W70 governance corrections — 2026-11-22 06:00 +07:00
+
+- **PR #68:** READY FOR REVIEW / OPEN / UNMERGED; branch `work/118-auto-e2e-v2-clean`; tested head `076a74d8f19e6ca63ac45ff2150910122316c049`; Main `792bdd71e5345949e0c1f26ff9f95a8513dfa7d5`; compare 27 ahead / 0 behind; 45 W118-only paths.
+- **Exact-head CI:** Run #44951562713 SUCCESS; 95 tests PASS / 0.215s; artifact 14725821955; SHA-256 `65ec8adb4db6994475b1e79bddc741411f536367f9e600a4636c33b92675d832`.
+- **Architecture:** W14 is sole integrated execution owner; W12/W13 are absorbed internal foundations. W14 source/ref parity and full product E2E remain NOT VERIFIED. W118-TASK-015 remains BLOCKED.
+- **Governance:** W70 DOC-093 is DRAFT_NOT_APPROVED; structural reference only. W70 projection remains BLOCKED pending approved schema and owner ACK.
+- **Task Register:** no Assignment runtime state; Core :8000 sole runtime authority; W118 planning register and schema are aligned; regression tests guard W14 owner and DOC-093 draft state.
+- **Runtime limitation:** event-specific handoff/ACK/review jobs SKIPPED; no live runtime lifecycle E2E claim.
+- **PR #67:** CLOSED / UNMERGED / superseded; history preserved.
+- **Subsequent documentation updates:** any later docs-only commit does not change the tested source/test behavior at SHA 076a74d.
+- **Disposition:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED; Xu independent review and Vinh acceptance pending.
