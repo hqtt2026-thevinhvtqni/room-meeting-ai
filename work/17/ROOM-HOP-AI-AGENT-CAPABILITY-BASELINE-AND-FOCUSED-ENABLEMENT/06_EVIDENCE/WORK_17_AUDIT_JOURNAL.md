@@ -1744,3 +1744,27 @@ The inspected current-main MCP STDIO and Browser HTTP entrypoints remain Meeting
 - GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
 - READ/TRACE/ANALYZE ONLY; no source, tests, runtime, provider, Host, API, permission, branch or release change.
 - Next: identify any separately deployed Core service/configuration or external persistence adapter not represented by these package entrypoints; if none can be evidenced, report the bounded source gap and preserve Core as the intended authority rather than implementing a duplicate in W17.
+
+
+## Entry 088 — W37 Core evidence boundary and live 8030 tool-surface inventory (2026-11-21T16:45:32+07:00)
+
+### Scope and method
+Read-only Sandbox inventory/read of W37 Core evidence workspace; enumerate the currently available ROOM-HOP 8030 connector tools in this assistant session; compare with W70/W52 Assignment/dispatch requirements. No Core/8030 business operation, Meeting, provider, API, Host or runtime invocation.
+
+### Findings
+1. **W37 is an evidence workspace, not a source mirror or second Core.** Sandbox inventory contains 35 paths. `04_CODE` has only `.gitkeep`; no Core implementation source, API service or persistence adapter is stored there. `CORE_8000_SCOPE.md` explicitly lists process entrypoint, routers, DTOs, application/domain boundaries, persistence/transactions, auth, audit and health as items to verify from source. Its evidence boundary says architecture baseline from ROOM CONTEXT is not proof of a live :8000 endpoint or health. `MAIN_SOURCE_STRUCTURE_SNAPSHOT_REFERENCE_20261019.md` says exact file-to-port mapping and source-content copy are NOT VERIFIED. This is consistent with the single-Core rule: W37 is not Core 2.
+
+2. **Current connector tool inventory in this session:** 18 ROOM-HOP 8030 tools are available: Sandbox read/list/create/write/append/delete and Work inventory/context/structure; Meeting list/get/transcript/join/start/paste. The exposed inventory has no typed Assignment create/update/read, task dispatch, private provider-session send, delivery receipt retrieval, recipient ACK ingest/verify or Assignment state read-back action. Tool availability is session/connector evidence only; it does not prove the complete internal Core :8000 API surface or tools available in other sessions.
+
+3. **Cross-source reconciliation:** W37 cannot supply missing Core implementation evidence because it deliberately contains no copied Core source. Current-main repository source traces in Entries 086–087 show inspected MCP/Browser/HTTP entrypoints are Meeting/Identity scoped. The current 8030 tool surface likewise exposes Sandbox/Meeting operations only. No inspected source/tool surface closes the authoritative Assignment/ACK chain.
+
+### Conclusion
+- Single Core ownership principle remains intact: Core :8000 is intended authority; W37 is a read-only evidence workspace, not an alternate implementation.
+- W37 source-to-port mapping, live process state and any alternate deployed Core service remain NOT VERIFIED.
+- Current session's 8030 tool surface has no typed Assignment/dispatch/receipt/recipient-ACK action. Do not use Meeting paste, Sandbox writes, or file creation as substitute delivery/ACK evidence.
+- The combined evidence supports a bounded conclusion: Assignment/ACK capability is NOT LOCATED in inspected current-main app compositions, W37 source workspace, or this session's exposed 8030 tools. It does not prove no alternate/private Core service exists elsewhere.
+
+### Disposition
+- GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2/E3 NOT PROVEN; provider receipt NOT PROVEN; recipient-authenticated ACK NOT PROVEN; protected execution DENY / NOT RELEASED.
+- READ/TRACE/ANALYZE ONLY. No source, Work37, Core, API, provider, Host, test, runtime, permission or branch change.
+- Next: seek source-backed proof of any separately deployed Core service/route or persistence adapter from its actual service composition/configuration; if unavailable, preserve UNKNOWN for alternate deployments and prepare a concise architecture blocker/decision brief rather than implement a parallel dispatcher.
