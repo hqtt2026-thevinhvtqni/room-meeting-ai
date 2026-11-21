@@ -124,7 +124,9 @@
           "verification_method",
           "evidence_required",
           "completion_rule",
-          "owner_principal"
+          "owner_principal",
+          "execution_mode",
+          "owner_directive_ref"
         ],
         "properties": {
           "task_id": {
@@ -319,6 +321,18 @@
           "ci_run_id": {
             "type": [
               "integer",
+              "null"
+            ]
+          },
+          "execution_mode": {
+            "enum": [
+              "AGENT_ASSIGNMENT",
+              "OWNER_DIRECTED_SESSION"
+            ]
+          },
+          "owner_directive_ref": {
+            "type": [
+              "string",
               "null"
             ]
           }
