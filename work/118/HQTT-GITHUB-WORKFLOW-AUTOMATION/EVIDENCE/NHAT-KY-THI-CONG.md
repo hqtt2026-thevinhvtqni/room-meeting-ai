@@ -1362,3 +1362,16 @@
 - **PR state:** #68 READY FOR REVIEW / OPEN / UNMERGED; 27 ahead / 0 behind; 45 changed paths W118-only. #67 CLOSED / UNMERGED / superseded.
 - **Runtime:** handoff/ACK/review event jobs skipped; full runtime E2E not verified.
 - **Disposition:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED. No merge/release.
+
+
+## Entry 084 — Preserve Xu independent acceptance gate / freeze
+- **Thời gian:** 2026-11-22 06:10 (UTC+07:00).
+- **Người thực hiện:** Ka / AI-02.
+- **Chức danh:** CSA / Autonomous W118 Build Owner theo ủy quyền của Vinh.
+- **Ưu tiên / Thứ tự đọc:** P0 / 22.
+- **Finding:** Read back Issue #65 comments and canonical docs `XU-118-AC-001`, `KT-118-009`, `B-118-010`. Xu's 2026-11-20 independent acceptance conclusion is NOT ACCEPTED (AC-R1..AC-R6). T-06 is documented; T-01..T-05 remain pending. B-118-010 is prepared but not applied.
+- **Binding remediation gate:** B-118-010 requires Xu to close the independent test cycle and Vinh to explicitly ACK `APPLY B-118-010` on Issue #65. This exact gate has not been recorded; Ka did not apply B-118-010.
+- **Current candidate:** PR #68 is a new isolated candidate under Vinh's later autonomous build delegation, READY FOR REVIEW / OPEN / UNMERGED; no independent reviews/comments yet. Xu GitHub login is unverified; no reviewer identity inferred.
+- **Contract evidence:** 95 tests PASS on tested source SHA `076a74d8f19e6ca63ac45ff2150910122316c049` (Run #44951562713); docs-only revalidation Run #44951654158 SUCCESS, 95 tests PASS at `bd5c1042c5ffc3363a160942f19f324749a27534`, artifact 14726175667. Event-specific jobs skipped; not runtime E2E.
+- **Action:** freeze further workflow/implementation modifications while Xu's independent review/test plan remains open; continue only evidence, journal and status updates. No Main merge, B-118-010 application or release.
+- **Kết quả:** Xu's NOT ACCEPTED conclusion preserved; T-01..T-05 remain acceptance gates; Work 118 remains ACTIVE — NOT ACCEPTED — NOT RELEASED.
