@@ -92,3 +92,8 @@ Port `3000` is reserved for the single shared ROOM-HOP Dashboard ingress owned b
 ## Owner delegation and P0 gate — 2026-11-22
 
 Vinh delegated Co to continue implementation and handover without waiting for An's V8 review. The An review task is marked WAIVED BY OWNER; no An review/ACK/approval is claimed. P0 implementation may proceed within the three LOCKED contracts. F-15 TaskResult/Workflow timeout mapping remains OWNER DECISION REQUIRED; no timeout semantics are inferred or changed. See `BIEN_BAN_W10.md`, `06_EVIDENCE/W10_P0_ACCEPTANCE_INTEGRITY_AMENDMENT_20261122_08.md` and `07_RELEASE/W10_HANDOVER_PACKAGE_20261122.md`.
+
+
+## Latest live Dashboard/API smoke — 2026-11-22
+
+Run #135 passed a new Playwright live Dashboard/API smoke on hosted Ubuntu 24.04 and Windows Server 2022. It starts the local API on :8787 and standalone Dashboard on :3010, verifies live health/Work ID, explicit-consent gating and in-memory token clearing. Seven checks PASS per OS. Totals: Ubuntu 207 PASS + 2 expected SKIP; Windows 213 PASS. This does not replace physical Windows 10 acceptance or ROOM-HOP W113 integration. Evidence: `06_EVIDENCE/W10_LIVE_DASHBOARD_API_EVIDENCE_20261122_RUN135.md`.
