@@ -118,6 +118,15 @@ class Work118TaskLifecycleTests(unittest.TestCase):
                 occurred_at="2026-11-21T06:00:00Z",
             )
 
+    def test_task_id_must_match_work_id_contract(self):
+        invalid = {**self.task, "task_id": "W117-TASK-002"}
+        with self.assertRaises(TaskValidationError):
+            self.registry.create_task(
+                invalid, actor_principal="owner:vinh", actor_role="owner",
+                identity_verified=True, event_id="evt-wrong-work-id",
+                occurred_at="2026-11-21T06:00:00Z",
+            )
+
     def test_task_cannot_be_readied_by_executor(self):
         with self.assertRaises(TransitionDenied):
             self.transition("READY", "executor", "agent:ka-runtime", 1, "05")
