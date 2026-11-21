@@ -151,10 +151,11 @@ def validate_push_payload(
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--event", required=True, help="Path to a trusted GitHub push event JSON file")
+    parser.add_argument("--repository", required=True, help="Expected owner/repository")
     args = parser.parse_args()
     payload = json.loads(Path(args.event).read_text(encoding="utf-8"))
     try:
-        result = validate_push_payload(payload)
+        result = validate_push_payload(payload, expected_repository=args.repository)
     except (SourceBindingError, TypeError, ValueError) as exc:
         print(json.dumps({"status": "REJECTED", "reason": str(exc)}, sort_keys=True))
         return 1
