@@ -106,3 +106,12 @@ Disposition: accepted source/test/architecture/config parity is PASS for the cur
 ## Inventory count correction — 2026-11-22 06:33 (UTC+07:00)
 
 The inventory document itself was added to both Sandbox and GitHub after the preceding snapshot. Updated live counts: Sandbox 158 files, GitHub 65 files, shared 65, Sandbox-only 93, GitHub-only 0, plus one Sandbox-only `.github/` directory. The 93 KEEP/SANDBOX-ONLY file dispositions remain unchanged.
+
+
+## W10-ROOM-HOP-BOUNDARY-AND-PORT-3010-20261122-01 — 2026-11-22 06:35 (UTC+07:00)
+
+Co xác lập ranh giới tích hợp: Work10 là local Computer Agent provider, loopback-only; W24 giữ Core authorization + authenticated PC transport; W112 giữ cross-Work contracts; W14 giữ canonical W12/W13/W14 execution boundary; W113 giữ shared Dashboard ingress port 3000. Work10 standalone Dashboard chuyển sang loopback port 3010, không chiếm port 3000. Không remote expose API, không bypass Core, không thay W14, không sửa các Work khác. Handoff: `06_EVIDENCE/W10_ROOM_HOP_INTEGRATION_BOUNDARY_HANDOFF_20261122.md`. Integration runtime W10↔W24/W14/W113 còn NOT IMPLEMENTED / NOT VERIFIED.
+
+## W10-INVENTORY-COUNT-CORRECTION-20261122-02 — 2026-11-22 06:36 (UTC+07:00)
+
+Sau khi tạo và đồng bộ integration boundary handoff, snapshot mới: Sandbox 159 files; GitHub 66 files; shared 66; Sandbox-only 93; GitHub-only 0. Một thư mục `.github/` chỉ ở Sandbox. 93 Sandbox-only file dispositions không đổi. Inventory report đã được cập nhật.
