@@ -29,6 +29,8 @@ Xu reviews the implementation independently and records PASS / BLOCKED / NEEDS C
 | 11 | P0 | Runtime E2E plan | Handoff, ACK deny/allow, duplicate delivery, workflow_run diagnostics after integration | BLOCKED — not deployed |
 | 12 | P0 | Release gate | Xu independent disposition followed by Vinh final acceptance; no auto-merge | PENDING |
 
+20. **P0 — GitHub Actions supply-chain pinning:** every `uses:` reference in all W118 workflows must pin a full 40-character commit SHA from the action's official repository; retain the human-readable release tag as a comment; verify the pinned commit matches the intended release and add regression coverage. Mutable tags/branches are not accepted for this gate.
+
 ## 3. Verified CI evidence
 
 - [Run #44835843136](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44835843136): validate SUCCESS; 52 tests passed in 0.230s; artifact `w118-run-evidence-44835843136-1`, ID `14679240377`, SHA-256 `5d6a7bbcb10c0caeaa5ba05f6f96d16cb54c823d6af475418c9bab0d5ec6c024`, present and unexpired at readback.
@@ -80,3 +82,14 @@ The post-merge execution sequence is defined in [RT-118-001 — Post-Merge Runti
 - **Stage B:** Vinh may authorize a controlled, non-release main integration solely to execute runtime E2E. The merge does not mean accepted/released.
 - **Stage C/D:** Ka executes RT-118-001; Xu independently reviews actual event evidence.
 - **Stage E/F:** Vinh records final product acceptance and, separately, release authorization.
+
+
+## P0 supply-chain pinning review — 2026-11-21
+
+- Initial source audit found mutable references to `actions/checkout@v4`, `actions/setup-python@v5` and `actions/upload-artifact@v4` in the orchestrator and diagnostics workflows.
+- The candidate pins were verified by fetching `action.yml` from both the official release tag and exact commit SHA; blob SHA matched for each pair:
+  - checkout v4.2.2 — `11bd71901bbe5b1630ceea73d27597364c9af683`.
+  - setup-python v5.6.0 — `a26af69be951a213d495a4c3e4e4022e16d87065`.
+  - upload-artifact v4.6.2 — `ea165f8d65b6e75b540449e92b4886f43607fa02`.
+- The W118 workflows are being normalized to those immutable references. Gate 20 remains PENDING until the regression CI run succeeds and exact readback confirms zero mutable action refs.
+- GitHub's official secure-use guidance identifies full-length commit SHA as the immutable action reference; the Work 70 standards read for this audit did not expose a separate explicit SHA-pinning clause, so this finding is recorded as a W118 P0 security control rather than attributed to an unlocated HQTT rule.
