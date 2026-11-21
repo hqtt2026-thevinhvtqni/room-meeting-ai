@@ -78,3 +78,17 @@
 - **Sandbox/GitHub consistency:** ROOM-HOP Sandbox work 118 lists legacy `task_lifecycle.py`, `event_reconciler.py`, `webhook_inbox.py` and related tests under `04_CODE`; current GitHub branch instead uses stateless Core/GitHub adapters under `scripts/w118` and explicitly removes local Task DB/event queue ownership. Sandbox file reads in this session returned empty objects, so content-level synchronization cannot be verified. Treat Sandbox/GitHub code mirror as BLOCKED pending reliable readback; do not overwrite either side blindly.
 - **Branch protection:** GitHub branch API reports `main` as unprotected. No protection or repository setting changed. This is a governance risk to be addressed through the repository owner/admin process, not by silently changing settings.
 - **Disposition:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED. Runtime Core/W102/W12/W13/W70 integrations remain unverified as recorded above. No acceptance, merge or release implied by this audit.
+
+
+## 8. Current autonomous build snapshot — 2026-11-22 04:20 +07:00
+
+- **Authority:** Vinh delegated autonomous technical execution to Ka through Xu independent review and Vinh product acceptance. No self-acceptance or release.
+- **Canonical PR candidate:** [PR #68](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/68), branch `work/118-auto-e2e-v2-clean`, OPEN / DRAFT / UNMERGED.
+- **Base/head at isolation:** main `43efc145c9f7007284366e8edb4f4805191bb3ad`; clean head `c291c29890ad726c1afdfca00f7832662622c19a`; compare 1 ahead / 0 behind. Compare file list contains W118 paths only; no W113/W117/W17/W70 changes are part of this PR.
+- **Superseded candidate:** PR #67 remains OPEN / UNMERGED for evidence preservation; its head was `e85b323ae096278bd37b6fa621873a71c22e393c`, compare 448 ahead / 57 behind and 99 changed files. It is not the delivery candidate; do not merge it.
+- **Exact-head CI:** PR run [#44948921625](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44948921625), exact source HEAD `c291c29890ad726c1afdfca00f7832662622c19a`; validate SUCCESS; **94 tests PASS / 0.208s**; artifact ID `14724581468`, SHA-256 `9661e45026e42edda828ef6294dbd14d45d811597e324aba4da8d81935c11da4`.
+- **Runtime boundary:** handoff-request, ACK-claim and review-observation jobs SKIPPED on PR synchronize. No real Core/W102/W12/W13/W70 runtime lifecycle E2E is claimed.
+- **Sandbox mirror:** 20 current GitHub files have been written into Sandbox `04_CODE` (role map, 3 workflows, 7 stateless scripts, 9 tests). Legacy SQLite Task lifecycle/webhook inbox/event reconciler files are scheduled for removal after the mirror manifest and implementation note are updated. Sandbox read uses the diagnostic readback path; ordinary read currently returns an empty object.
+- **Task Register:** Sandbox remains operational source. Canonical register and schema have been reconciled to TD-118-012 v1.2: owner-directed build mode is explicit; no Agent identity or ACK is inferred; GitHub mirror points to PR #68 branch.
+- **Remaining blockers:** Core Task API/field map/lock/Event ingress; W102 verified principal and Assignment; W12/W13 Work Authority/runtime; W70 schema/owner ACK; live Issue API and task-scoped push; production webhook endpoint; Xu independent review and Vinh product acceptance.
+- **Disposition:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED. No merge, release, secret, permission or Work 70 schema mutation.
