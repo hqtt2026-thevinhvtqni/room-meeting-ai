@@ -1720,3 +1720,27 @@ The fetched current-main executable HTTP composition does not expose an Assignme
 - GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
 - READ/TRACE/ANALYZE ONLY. No source, tests, runtime, provider, Host, API, permission, branch or release action.
 - Next: trace any separate Core service composition/configuration and persistence modules that may be outside `core_http_main.py`; only after that bounded trace decide whether Assignment/ACK authority is absent or simply not wired into this HTTP entrypoint.
+
+
+## Entry 087 — Current-main MCP/Browser runtime and persistence boundary cross-check (2026-11-21T16:44:20+07:00)
+
+### Scope and method
+Re-fetched current-main source blobs referenced by W70 DOC-071 to verify whether its 2026-11-02 source trace still matches current main: `room_hop_mcp/__main__.py`, `room_hop_mcp/adapter/server.py`, `room_hop_mcp/browser_main.py`, `room_hop_mcp/adapter/browser_server.py`, `core/meeting_service.py`, `core/meeting_manager.py`, `requirements.txt`. Read-only GitHub fetch; no process/API/test/runtime invocation.
+
+### Findings
+- Current-main blob SHAs exactly match the source SHAs catalogued by DOC-071 for all seven fetched files: `__main__.py` `43adaa746f8e51a6ecce762a7b01694d0411d105`; MCP `server.py` `f34b4eebc847dac31feb7c9161c2d8bded812991`; `browser_main.py` `0d9e8956c52c2276388df56bf7336ba82766e0d1`; `browser_server.py` `1b9dfe4b9d3f62e08a324ff146a9a50bb63e1313`; `meeting_service.py` `0b80a81663c1be328c41878a6762d16d95378aab`; `meeting_manager.py` `d4d7b28f0f0df9208648d0870c42cb6e451eda50`; `requirements.txt` `59e0a4c07842154d82784eff85a9b412c6b33263`.
+- `room_hop_mcp/__main__.py` composes MeetingManager → MeetingService → MCP adapter `create_server()`; adapter server source defines Meeting operations only.
+- `room_hop_mcp/browser_main.py` imports `create_browser_app()`; Browser adapter source registers Meeting list/detail/transcript/paste routes only.
+- `core/meeting_service.py` delegates to MeetingManager and is Meeting-specific. `core/meeting_manager.py` persists Meeting-scoped files under meetings; it is not a Work/WP/Assignment transactional store.
+- Current `requirements.txt` is 58 bytes and contains no declared database/ORM dependency. This is supporting evidence for the inspected package configuration, not proof no optional/external storage integration exists elsewhere.
+- DOC-071's source-level observations about these seven files remain current at the fetched main revision. Its source baseline HEAD and broader owner/runtime conclusions remain historical/bounded and must not be promoted to a current exhaustive repository/runtime claim.
+
+### Conclusion
+The inspected current-main MCP STDIO and Browser HTTP entrypoints remain Meeting-only compositions. Together with Entry 086, the current-main Core HTTP app factory also lacks an Assignment/Dispatch/ACK router in its executable composition. No inspected current-main entrypoint in this bounded set constructs a Work/WP/Assignment service or durable Assignment/ACK store. Runtime deployment and alternate services outside these entrypoints remain NOT VERIFIED.
+
+### Disposition
+- Current-main inspected entrypoints: Meeting/Identity capabilities only; Work Assignment/ACK service not located in these compositions.
+- Work-scoped durable persistence and transactional audit: NOT LOCATED in inspected current-main paths; not a universal absence claim.
+- GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
+- READ/TRACE/ANALYZE ONLY; no source, tests, runtime, provider, Host, API, permission, branch or release change.
+- Next: identify any separately deployed Core service/configuration or external persistence adapter not represented by these package entrypoints; if none can be evidenced, report the bounded source gap and preserve Core as the intended authority rather than implementing a duplicate in W17.
