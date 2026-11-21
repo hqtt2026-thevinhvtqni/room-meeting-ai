@@ -2047,3 +2047,42 @@ Read-only source/test inspection at PR #48 head branch `work/w1111-core-executio
 - Next: consolidate these candidate findings into a bounded W1111 review/acceptance checklist, preserving W17 read-only boundary; do not patch PR #48 or launch any service.
 - Evidence refs: `core/execution_authority.py` blob `163b126178b67c6e0a3f68ba33eaf7b9e6d91503`; W13 server blob `b0d8308121a63332e1f0dcbff15e6f0da9c273e0`; W13 bridge blob `712170a82cdd8a3b910fe4cadca6f13b91f129a9`; W13 W12 adapter blob `e20d281eea8241baa8a13666b6c3a8668dff1305`; deployment guide blob `a747443d711811ddfa2ded7998e83202e2cb2432`; CI workflow blob `27b42a1083feb72b30e1fad094fa938ac9e4860b`; E2E test blob `42e8e86002f62aac02fba8da244cecec6d1c29c3`; candidate Core test blob `4ea5158c07df1e66183a6fbe7a6f79042332605d`.
 - Evidence status: source/config/test-definition review COMPLETE for this bounded scope; no CI or runtime PASS claimed.
+
+
+## Entry 101 — Bounded W1111 candidate review and acceptance checklist (2026-11-21T17:41:00+07:00)
+
+- Scope: consolidate Entries 096–100 into an owner-ready review checklist for W1111 / PR #48. Work17 remains READ/TRACE/ANALYZE only; no PR comment, code/test edit, branch update, merge, runtime, credential or deployment action.
+- Candidate source baseline: PR #48 head `c70eb2b82f54a000a81263dc519078ddf105f075`; OPEN/DRAFT/UNMERGED/non-mergeable and highly diverged from current main per Entry 092. Do not merge/cherry-pick blindly.
+- **A. Core authority / grant integrity — required before acceptance**
+  - Persist immutable `source_sha256` and Work-policy revision/version in GRANT_ISSUED; validate old grants against the issuance snapshot, not a newly loaded mutable Work policy.
+  - In `record_run`, compare submitted SHA to the immutable grant-bound SHA; reject mismatch before append. Negative test must assert no RUN_RECORDED event was added; positive test must assert exact match. Existing candidate HTTP test currently expects mismatched SHA success.
+  - Add stable idempotency keys for grant issue and run recording; duplicate requests must return the original logical result and not append a second grant/run event.
+  - Define active-run revocation/expiry semantics: atomic admission/lease or equivalent; cancellation/termination behavior during an active process; verify process-tree stop before claiming cancellation; ensure late run-record failure cannot disguise a process that already ran.
+  - Preserve append-only hash-chain, but provision the journal path, access controls, backup/restore and production durability; hash chain alone does not prove shared durable production storage.
+- **B. W13/W12 integration — required before runtime acceptance**
+  - Select exactly one canonical W13 code path: deployment guide identifies `13/EXECUTION-HOST-INFRASTRUCTURE/04_CODE/execution_host` and W12 canonical RealExecutionHost; explicitly keep root-level legacy bridge out of the production route.
+  - Verify W13 server startup from the intended code directory, W12 source resolution, environment configuration, bind address and runtime build hash. Do not launch a second Host or second Core process on occupied ports.
+  - Wire the candidate Core HTTP app into the existing Core service manager/start-dev.ps1 under controlled PC handoff; current guide says this is still pending. Confirm route mount and fail-closed behavior in the actual process.
+  - Ensure service credential is provisioned only in the WEE runtime environment, digest only in Core, remote traffic HTTPS, no secret logging, and Work policies/store path are canonical and current.
+- **C. Verification evidence — required before any PASS**
+  - Run the candidate workflow on the exact current PR head; retain workflow/run/job IDs, head SHA, test commands and logs. Test definitions and old/historical SHA runs are not current-head CI.
+  - Execute W13 bridge tests, Core→WEE→W13→W12 integration test, Core route tests, W12 host/process cleanup tests; add negative tests for policy drift, SHA mismatch, duplicate retries, grant expiry/revocation during execution, malformed/oversized request, and evidence write failure.
+  - Independent QE must inspect exact head and reproduce both positive and negative cases. Separate source-level review, local integration test, CI PASS and deployed PC runtime PASS.
+  - On PC, verify actual Core :8000 PID/launcher/config, actual W13 :8031 PID/build hash/bind, Core grant routes, source snapshot equality, process-tree cleanup and durable run-record read-back. PC verification is deferred until Vinh has PC.
+- **D. Ownership boundary — do not overload W1111**
+  - W1111/Core execution grant remains service identity + Work + purpose + timeout + source/policy authority.
+  - W70 owns Assignment lifecycle; W52 owns provider-neutral AI dispatch/session/receipt; W14 owns execution Host boundary; W33 owns durable evidence; W112 owns cross-Work mapping. Assignment ID/dispatch ID/attempt ID/provider receipt/recipient identity proof/ACK must be resolved through those approved contracts, not silently inferred from an execution grant.
+  - E2 provider receipt and E3 recipient-authenticated ACK remain separate GAP-01 gates. A successful pytest Host result is not AI assignment delivery or ACK.
+- **Current candidate disposition matrix**
+  - W13-local grant-aware bridge/Host/W12 adapter source: PRESENT; W13 E2E test definition: PRESENT, NOT RUN.
+  - Candidate Core route mount: PRESENT on PR branch; current-main/deployed Core route: NOT VERIFIED / absent from inspected main composition.
+  - Core entrypoint wired to existing PC launcher: NOT DONE per candidate deployment guide.
+  - Exact-head CI / independent QE / deployed runtime: NOT VERIFIED.
+  - Direct Core run-record SHA equality: FAIL in candidate test contract.
+  - Immutable issuance snapshot, grant/run idempotency, active-run revoke/expiry control: NOT IMPLEMENTED in inspected candidate source.
+  - Assignment/dispatch/receipt/recipient ACK binding: NOT PRESENT in this grant model.
+  - GAP-11 OPEN / NOT ACCEPTED; GAP-01 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
+- **Recommended owner correction order (proposal only):** (1) immutable source/policy snapshot + run SHA equality; (2) grant/run idempotency; (3) revocation/expiry and process-stop lifecycle; (4) one canonical W13 package and Core startup wiring; (5) exact-head CI + independent QE; (6) PC runtime handoff. Assignment/ACK integration remains a separate W70/W52/W14 contract decision.
+- Next: hold this checklist as W17 evidence; await no PC action. Continue read-only source reconciliation only if a new candidate revision or exact-head CI evidence appears; otherwise avoid re-reading unchanged files.
+- Evidence basis: Entries 096–100; PR #48 head and compare; Core source blob `163b126178b67c6e0a3f68ba33eaf7b9e6d91503`; W13 source/test blobs in Entries 099–100; deployment guide `a747443d711811ddfa2ded7998e83202e2cb2432`; CI workflow `27b42a1083feb72b30e1fad094fa938ac9e4860b`.
+- Evidence status: checklist synthesis COMPLETE; no code/test/CI/runtime PASS claimed.
