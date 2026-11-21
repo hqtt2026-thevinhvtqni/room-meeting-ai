@@ -1585,3 +1585,44 @@
 - Semantic gap ACCEPTED-before-Host phải được ghi nhận như finding cần owner xử lý trong W52; W17 không sửa code W52 và không tự thay đổi semantics.
 - GAP-01 OPEN/P0; GAP-11 OPEN/P0; provider delivery receipt NOT PROVEN; recipient-authenticated ACK NOT PROVEN; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED; READ/TRACE/ANALYZE ONLY.
 - Bước tiếp theo: truy vết W52 CorePort/AuthorityPort/HostPort binding references và W14/W37 canonical boundary evidence ở Sandbox, xác định có implementation thật ở Work khác hay chỉ là interface/contract. Không gọi runtime/host/provider và không tạo hệ thống song song.
+
+
+## Entry 083 — Concrete binding trace: W11 / W14 / W30 / W37 (2026-11-21T16:33:54+07:00)
+
+### Scope and method
+Read-only Sandbox trace of canonical Work boundary records and selected source/evidence files. No runtime, provider, Host, API, test, or PC invocation. No source code or Work other than Work 17 modified.
+
+### Findings
+
+1. **W37 / Core :8000 evidence boundary**
+   - W37 manifest and architecture files describe Work 37 as an evidence/documentation workspace for the one live Core :8000, not a second Core.
+   - Its 04_CODE directory contains no implementation files in the observed Sandbox inventory. CORE_8000_SCOPE.md explicitly lists process entrypoint, routers, DTOs, persistence/transactions, authz, audit and health as items still to verify; the structure snapshot states exact file-to-port mapping and live process loading are NOT VERIFIED.
+   - Therefore W37 provides governance/scope and a place to collect evidence, but this trace did not locate a concrete W37 production CorePort or AuthorityPort binding. This does not imply the live Core has no such internal services.
+
+2. **W14 / canonical execution boundary**
+   - W14 W12_W13_ABSORPTION_RECORD.md makes W14 the sole product/delivery owner for the combined execution product; W12/W13 are internal foundations, not parallel products. The documented path is W14 workflow → ExecutionHostBridge → canonical W13 POST /execute → W12 WorkContext/policy → W09.1 Browser Agent/Chromium → W14 evidence/UI.
+   - Historical W14 Sandbox FINAL_RESULT.json records contain PASS for specific fixture workflows, with Browser Agent work09.1-browser-agent, execution boundary work13-execution-host, correlated W13 envelope/runtime identity and screenshot/artifact references. These are useful historical positive records for those fixture runs, not a fresh 2026-11-21 PC check or proof of universal Codex/Qwen provider-session transport.
+   - W13 canonical PC attestation dated 2026-10-12 reports one POST /execute attestation request PASS and matching runtime identity. Its own interpretation limits the result to that request and says it does not prove the full W14 Browser UI → W13 → W09.1 → Chromium → W14 evidence flow.
+   - W14 AUD-005 records and restoration addenda continue to state AUD-005 BLOCKED / NOT PASS, candidate not approved, parser/full integrated Windows harness not run, and full product E2E/current PC acceptance NOT VERIFIED.
+   - W14 W13 /execute boundary is a scoped Work execution interface. It is not, by itself, the W52 HostPort.open(adapter, task) implementation that starts and manages a Codex App Server or Qwen ACP private provider session. No concrete W52-to-W14 HostPort binding was located in the inspected records.
+
+3. **W11 / member identity and provider adapter**
+   - W11 PRODUCTION_INTEGRATION_BOUNDARY.md specifies a desired sequence through Core identity resolution, Meeting Policy, membership mutation, canonical message/event path and Core-owned persistence/deduplication. It explicitly says guessed Core calls were not implemented because source contracts were unreadable.
+   - api_adapter.py contains a MockProvider and a RealProviderBoundary; the latter raises NotImplementedError after credential-presence check. ACCEPTANCE.md labels mock adapter mechanics PASS but production identity registration/join BLOCKED and real provider BLOCKED (AI_PROVIDER_API_KEY absent).
+   - Thus W11 supplies useful member/message contract semantics and mock mechanics, but not a concrete production Core identity binding or live provider dispatch/receipt/recipient-ACK implementation in the inspected source.
+
+4. **W30 / task dispatch**
+   - W30 recorded MCP/Core dispatch trace (2026-10-19) found inbox-read/proposal/meeting/Sandbox operations but no exposed task-create/dispatch operation in that inventory; queried inboxes were empty. The trace explicitly says a separate internal Core route outside the exposed surface was not proven absent.
+   - W30 adapter tests use a local fake MCP server and explicitly label mock results as T0 evidence only, not real ROOM-HOP execution. No concrete provider delivery receipt or recipient-authenticated ACK binding was found in the inspected W30 evidence.
+   - This is bounded historical evidence; it is not a fresh inventory of the current exposed tool surface.
+
+5. **Cross-Work binding conclusion**
+   - W52 CorePort/AuthorityPort/HostPort remain injected interfaces with no production implementations in its candidate package. The inspected neighboring Works provide: (a) Core ownership/scope documentation in W37, (b) W11 desired identity/message boundary plus mock provider, (c) W14 scoped execution Host and historical fixture evidence, and (d) W30 historical task-surface trace.
+   - No inspected source supplies the complete concrete binding set required by W52: authoritative Core task/identity/authorization adapter + W14-backed provider-process HostPort for Codex/Qwen + target private-session binding + provider delivery receipt + recipient-authenticated ACK + durable Core read-back.
+   - W14 /execute success, W11 mock success, W30 task-shaped artifacts, and W52 internal ACCEPTED state must not be combined or relabelled as Assignment delivery/ACK.
+
+### Disposition
+- Reuse boundaries: W37 remains the single-Core evidence boundary; W11 remains member identity/message contract owner; W14 remains the single execution product/Host boundary; W52 remains candidate A2A orchestration/adapters. No duplicate Core, dispatcher, Host, queue, registry, Assignment ledger or evidence store is proposed.
+- GAP-01 OPEN/P0; GAP-11 OPEN/P0; provider delivery receipt NOT PROVEN; recipient-authenticated ACK NOT PROVEN; W52 concrete Core/Authority/Host bindings NOT LOCATED in inspected Sandbox artifacts; E2/E3 NOT PROVEN.
+- Protected execution DENY / NOT RELEASED. READ/TRACE/ANALYZE ONLY.
+- Next bounded step: inspect W52 adapter-interface and W14 bridge request/response contracts side-by-side for the smallest loss-aware mapping, then record required existing boundary contracts and explicit gaps. Do not implement until the authoritative W70/Core Assignment and recipient ACK source is proven.
