@@ -439,6 +439,9 @@ class TaskRegistry:
                 raise TransitionDenied(f"Task status transition {from_status} -> {to_status} is not allowed")
             if actor_role not in TASK_TARGET_ROLES.get(to_status, set()):
                 raise TransitionDenied(f"role '{actor_role}' cannot transition Task to {to_status}")
+            current_payload = json.loads(row["payload_json"])
+            if actor_role == "owner" and actor_principal != current_payload.get("owner_principal"):
+                raise TransitionDenied("owner principal does not match Task owner")
             if to_status == "IN_PROGRESS" and row["assignment_status"] not in {"ACKNOWLEDGED", "IN_PROGRESS"}:
                 raise TransitionDenied("Task can enter IN_PROGRESS only after Assignment ACKNOWLEDGED")
             if to_status == "IN_REVIEW" and row["assignment_status"] != "SUBMITTED":
