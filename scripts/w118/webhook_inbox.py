@@ -190,7 +190,8 @@ class WebhookInbox:
             raise KeyError(f"unknown delivery_id: {delivery_id}")
         result = dict(row)
         result["payload"] = json.loads(result.pop("payload_json"))
-        result["result"] = json.loads(result.pop("result_json")) if result["result_json"] else None
+        result_json = result.pop("result_json")
+        result["result"] = json.loads(result_json) if result_json else None
         return result
 
     def mark_processed(self, delivery_id: str, result: Mapping[str, Any]) -> None:
