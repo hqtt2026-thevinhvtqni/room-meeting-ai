@@ -38,6 +38,12 @@ Không tự ý thay đổi branch protection, secrets/tokens, quyền tổ chứ
 7. ACCEPT: review độc lập và nghiệm thu.
 8. OPERATE: theo dõi vận hành, sự cố và cải tiến.
 
+## 7.1 Kiến trúc hai quy trình khép kín Sandbox–GitHub (đang phản biện)
+
+- [TD-118-012 — Kiến trúc hai quy trình khép kín Sandbox–GitHub](../02_DEFINE/TD-118-012_KIEN-TRUC-HAI-QUY-TRINH-KHEP-KIN-SANDBOX-GITHUB.md)
+- [DC-118-004 — Brief phản biện kiến trúc](../02_DEFINE/DC-118-004_BRIEF-PHAN-BIEN-KIEN-TRUC-HAI-QUY-TRINH.md)
+- Nhật ký: Entry 069 trong [NHAT-KY-THI-CONG.md](../EVIDENCE/NHAT-KY-THI-CONG.md)
+
 ## 7. Liên kết
 - GitHub Issue: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/issues/65
 - Work 70 — Product Lifecycle & Work Dashboard: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/tree/main/work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD
