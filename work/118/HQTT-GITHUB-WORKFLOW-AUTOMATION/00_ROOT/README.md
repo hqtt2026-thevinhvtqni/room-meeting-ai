@@ -41,6 +41,8 @@ Không tự ý thay đổi branch protection, secrets/tokens, quyền tổ chứ
 ## 7.1 Kiến trúc hai quy trình khép kín Sandbox–GitHub (BUILD BASELINE — OWNER AUTHORIZED)
 
 - [TD-118-012 — Kiến trúc hai quy trình khép kín Sandbox–GitHub](../02_DEFINE/TD-118-012_KIEN-TRUC-HAI-QUY-TRINH-KHEP-KIN-SANDBOX-GITHUB.md)
+- [TASK_REGISTER.json — W118 canonical Task Register snapshot (Sandbox authority)](../04_PLAN/TASK_REGISTER.json)
+- [TASK_REGISTER.schema.json — W118 Task Register schema](../04_PLAN/TASK_REGISTER.schema.json)
 - [W118-13/16 — Task Lifecycle & Source Binding implementation](../05_BUILD/W118-13_16_TASK-LIFECYCLE-AND-SOURCE-BINDING.md)
 - [W118-13/16 — Test Matrix](../06_TEST/W118-13_16-TASK-LIFECYCLE-SOURCE-BINDING-TEST-MATRIX.md)
 - [W118-13/17 — Issue Mirror & Webhook Inbox Test Matrix](../06_TEST/W118-13_17-ISSUE-MIRROR-WEBHOOK-INBOX-TEST-MATRIX.md)
@@ -116,3 +118,11 @@ Vinh instructed Xu to proceed with building the two closed-loop Sandbox–GitHub
 - Out-of-order CI events are deferred until matching push evidence exists. CI PASS/FAIL is evidence-only; it never accepts or closes a Task.
 - Exact tested SHA `4e5c1e0d23cf145ddbcfca88c32255069ab3c642`: 118 tests PASS / 0.380s; push run #44877879841 SUCCESS; artifact ID `14697131158`.
 - Reconciler is not yet deployed as a worker/route in ROOM-HOP Event Listener :8050; runtime E2E remains NOT VERIFIED.
+
+
+## Task Register alignment — W70 DOC-056 / W112 cross-Work contract
+
+- W118 maintains one Work-specific Task Register, modeled on W70 DOC-093 as required by W70 DOC-056 §9; W118 IDs remain W118-specific and are not copied from W70.
+- Task status and Assignment status are independent state machines. GitHub Issue/Branch/Commit/CI records are mirrors/evidence, not the Task status authority.
+- W112 DOC-001 is used as a compatibility reference only while its baseline remains DRAFT_NOT_APPROVED.
+- Canonical operational authority is the Sandbox Task Register. The GitHub `TASK_REGISTER.json` is its versioned mirror; SQLite is a runtime transaction/event adapter, not a competing register.
