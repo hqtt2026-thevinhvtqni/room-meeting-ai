@@ -7,6 +7,7 @@ Covers the current Workflow Contract:
   * explicit post-condition checks run against the FINAL observation by default.
 """
 import sys
+import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -139,6 +140,31 @@ def test_verification_logic():
     partial = runtime.execute("t", [Action("observe")],
                               verification={"checks": [{"field": "text"}]})
     check("Check without 'contains' -> BLOCKED", lambda: partial.status == "BLOCKED")
+
+
+
+def test_action_timeout_semantics():
+    print("\n=== 2.6 Timeout Semantics ===")
+
+    class SlowAdapter(FakeAdapter):
+        def click(self, target):
+            time.sleep(0.35)
+            return super().click(target)
+
+    runtime = AgentRuntime(
+        SlowAdapter(),
+        policy=SafetyPolicy(action_timeout_seconds=0.05),
+    )
+    result = runtime.execute("timeout semantics", [Action("click", target="slow")])
+    check("single-action timeout is recorded as ActionResult fail",
+          lambda: result.steps[0].status == "fail")
+    check("single-action timeout marks outcome uncertain",
+          lambda: result.steps[0].outcome_uncertain is True)
+    check("uncertain action timeout blocks enclosing TaskResult",
+          lambda: result.status == "BLOCKED" and result.state_trace[-1] == "BLOCKED")
+    runtime.wait_for_timed_out_calls()
+    runtime.close_adapter()
+    runtime.shutdown_adapter_worker()
 
 
 def test_evidence_completeness():

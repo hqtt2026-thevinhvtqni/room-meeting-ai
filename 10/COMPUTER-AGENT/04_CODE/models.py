@@ -133,6 +133,7 @@ class ActionResult:
     observation: dict[str, Any] = field(default_factory=dict)
     error: str | None = None
     status: str = "success"  # success | fail | blocked
+    outcome_uncertain: bool = False
     attempts: int = 1
     timeout_seconds: float | None = None
     duration_ms: int | None = None

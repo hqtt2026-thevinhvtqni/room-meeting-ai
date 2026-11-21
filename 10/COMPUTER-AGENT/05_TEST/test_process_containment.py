@@ -9,6 +9,7 @@ from __future__ import annotations
 import os
 import subprocess
 import sys
+import tempfile
 import time
 from pathlib import Path
 
@@ -16,6 +17,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "04_CODE"))
 
 from process_supervisor import (
     ContainmentError,
+    HostOwnerLease,
     WindowsJob,
     terminate_posix_process_group,
     wait_pid_exit,
@@ -43,6 +45,28 @@ CHILD_CODE = (
     "print(p.pid, flush=True); "
     "time.sleep(60)"
 )
+
+
+
+def test_host_owner_lease_fencing():
+    with tempfile.TemporaryDirectory(prefix="w10-owner-lease-") as temp:
+        first = HostOwnerLease(temp).acquire()
+        try:
+            try:
+                HostOwnerLease(temp).acquire()
+            except ContainmentError:
+                pass
+            else:
+                raise AssertionError("second owner acquired an already-held host lease")
+            first_generation = first.generation
+        finally:
+            first.release()
+        second = HostOwnerLease(temp).acquire()
+        try:
+            if second.generation != first_generation + 1:
+                raise AssertionError("owner generation did not advance monotonically")
+        finally:
+            second.release()
 
 
 def test_windows_job_object():
@@ -118,6 +142,7 @@ def test_posix_process_group():
 
 def main():
     print("Work 10 — Process Containment Tests")
+    check("exclusive host owner lease and monotonic fencing generation", test_host_owner_lease_fencing)
     if os.name == "nt":
         check("Windows Job Object contains and kills descendant tree", test_windows_job_object)
     else:

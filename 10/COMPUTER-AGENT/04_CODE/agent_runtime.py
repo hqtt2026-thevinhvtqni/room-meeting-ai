@@ -193,7 +193,11 @@ class AgentRuntime:
                 evidence.append(self._evidence_entry(action, result))
 
                 if not result.ok:
-                    final_status = "BLOCKED" if result.status == "blocked" else "FAIL"
+                    final_status = (
+                        "BLOCKED"
+                        if result.outcome_uncertain or result.status == "blocked"
+                        else "FAIL"
+                    )
                     return finish(final_status, result.error)
 
             # --- VERIFYING ---
@@ -495,7 +499,8 @@ class AgentRuntime:
                 # Retrying could dispatch a duplicate click/type/download while
                 # the first call is alive; timeout is therefore terminal here.
                 return ActionResult(
-                    False, action, error=f"ActionTimeout: {exc}; worker may still be active", status="blocked",
+                    False, action, error=f"ActionTimeout: {exc}; worker may still be active",
+                    status="fail", outcome_uncertain=True,
                     attempts=attempts, timeout_seconds=timeout,
                     duration_ms=int((self._clock() - started) * 1000),
                 )

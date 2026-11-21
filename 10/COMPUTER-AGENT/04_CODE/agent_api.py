@@ -6,10 +6,13 @@ import json
 import os
 import sys
 import threading
+from dataclasses import asdict
+from pathlib import Path
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 from agent_runtime import AgentRuntime
 from models import Action, ActionValidationError, SafetyPolicy
+from process_supervisor import HostOwnerLease, ProcessSupervisor
 
 PORT = int(os.getenv("COMPUTER_AGENT_PORT", "8787"))
 HEADLESS = os.getenv("COMPUTER_AGENT_HEADLESS", "0") == "1"
@@ -20,6 +23,7 @@ SERVICE_VERSION = "1.3.0"
 # requests; never allow a second request to dispatch while a timed-out worker
 # from the first request may still touch the shared browser/adapter lifecycle.
 _EXECUTION_LOCK = threading.Lock()
+_HOST_OWNER_LEASE: HostOwnerLease | None = None
 
 
 def allowed_origins() -> set[str]:
@@ -109,6 +113,13 @@ class Handler(BaseHTTPRequestHandler):
                     "action_timeout_seconds": policy.action_timeout_seconds,
                     "workflow_timeout_seconds": policy.workflow_timeout_seconds,
                 },
+                "process_containment_profile": (
+                    "windows-job-object-kill-on-close-v1" if os.name == "nt"
+                    else ("posix-process-group-limited-v1"
+                          if os.getenv("COMPUTER_AGENT_ALLOW_LIMITED_PROCESS_GROUP") == "1"
+                          else "UNSUPPORTED_CGROUP_V2_REQUIRED")
+                ),
+                "owner_generation": _HOST_OWNER_LEASE.generation if _HOST_OWNER_LEASE else None,
             }, origin=origin if origin else None)
         self._send(404, {"status": "FAIL", "error": "not_found"}, origin=origin if origin else None)
 
@@ -169,75 +180,54 @@ class Handler(BaseHTTPRequestHandler):
                 "detail": "another workflow is active or a timed-out adapter worker has not terminated",
             }, origin=origin)
 
-        adapter = None
-        runtime = None
-        result = None
+        result_payload = None
         try:
-            adapter = build_adapter()
-            runtime = AgentRuntime(adapter, policy=build_policy(), work_id=WORK_ID)
-            result = runtime.execute(task, actions, body.get("verification"))
-        except Exception as exc:  # adapter construction / unexpected runtime failure
-            return self._send(500, {"status": "FAIL",
-                                    "error": f"{type(exc).__name__}: {exc}"}, origin=origin)
-        finally:
-            has_active_worker = (
-                runtime is not None and runtime.has_active_timed_out_calls()
+            policy = build_policy()
+            work_root = policy.work_root or str(Path(__file__).resolve().parents[1])
+            owner_generation = _HOST_OWNER_LEASE.generation if _HOST_OWNER_LEASE else 0
+            supervisor = ProcessSupervisor(
+                work_root=work_root,
+                owner_generation=owner_generation,
             )
-            if runtime is not None and has_active_worker:
-                # Wait for the timed-out call, then close on the same adapter-owner
-                # thread. Keep the global lease throughout this deferred cleanup.
-                def deferred_cleanup():
-                    try:
-                        runtime.wait_for_timed_out_calls()
-                        try:
-                            runtime.close_adapter()
-                        except Exception as cleanup_error:
-                            print(
-                                f"Work10 deferred adapter cleanup failed: {type(cleanup_error).__name__}: {cleanup_error}",
-                                file=sys.stderr, flush=True,
-                            )
-                        runtime.shutdown_adapter_worker()
-                    finally:
-                        _EXECUTION_LOCK.release()
+            request_payload = {
+                "task": task,
+                "actions": [asdict(action) for action in actions],
+                "verification": body.get("verification"),
+                "policy": asdict(policy),
+                "work_id": WORK_ID,
+            }
+            # Parent deadline includes a small response/cleanup margin. The
+            # child runtime still enforces its own workflow deadline.
+            result_payload = supervisor.execute(
+                request_payload,
+                timeout_seconds=float(policy.workflow_timeout_seconds) + 5.0,
+            )
+        except Exception as exc:
+            result_payload = {
+                "status": "BLOCKED",
+                "error": f"process_supervisor_error: {type(exc).__name__}: {exc}",
+                "work_id": WORK_ID,
+                "state_trace": ["PLANNED", "RUNNING", "VERIFYING", "BLOCKED"],
+                "steps": [],
+                "evidence": [],
+            }
+        finally:
+            # The request lease is released only after ProcessSupervisor has
+            # verified the OS containment empty or returned an explicit BLOCKED.
+            _EXECUTION_LOCK.release()
 
-                try:
-                    threading.Thread(
-                        target=deferred_cleanup,
-                        name="work10-deferred-adapter-cleanup",
-                        daemon=True,
-                    ).start()
-                except Exception as start_error:
-                    # Fail closed: retain the lease rather than close an adapter
-                    # concurrently with a possibly active worker. /health stays busy.
-                    print(
-                        f"Work10 deferred cleanup thread could not start: {type(start_error).__name__}: {start_error}",
-                        file=sys.stderr, flush=True,
-                    )
-            else:
-                try:
-                    if runtime is not None:
-                        try:
-                            runtime.close_adapter()
-                        except Exception as cleanup_error:
-                            print(
-                                f"Work10 adapter cleanup failed: {type(cleanup_error).__name__}: {cleanup_error}",
-                                file=sys.stderr, flush=True,
-                            )
-                        finally:
-                            runtime.shutdown_adapter_worker()
-                    elif adapter is not None:
-                        adapter.close()
-                finally:
-                    _EXECUTION_LOCK.release()
-
-
-        if result is None:
-            return self._send(500, {"status": "FAIL", "error": "execution_failed"}, origin=origin)
-        code = 200 if result.status == "PASS" else 409
-        return self._send(code, result.__dict__, origin=origin)
+        if result_payload is None:
+            return self._send(500, {"status": "BLOCKED", "error": "execution_result_missing"}, origin=origin)
+        code = 200 if result_payload.get("status") == "PASS" else 409
+        return self._send(code, result_payload, origin=origin)
 
 
 def serve(port: int = PORT, host: str = "127.0.0.1") -> ThreadingHTTPServer:
+    global _HOST_OWNER_LEASE
+    if _HOST_OWNER_LEASE is None:
+        policy = build_policy()
+        work_root = policy.work_root or str(Path(__file__).resolve().parents[1])
+        _HOST_OWNER_LEASE = HostOwnerLease(work_root).acquire()
     return ThreadingHTTPServer((host, port), Handler)
 
 
@@ -248,4 +238,9 @@ if __name__ == "__main__":
     try:
         server.serve_forever()
     except KeyboardInterrupt:
-        sys.exit(0)
+        pass
+    finally:
+        server.server_close()
+        if _HOST_OWNER_LEASE is not None:
+            _HOST_OWNER_LEASE.release()
+            _HOST_OWNER_LEASE = None
