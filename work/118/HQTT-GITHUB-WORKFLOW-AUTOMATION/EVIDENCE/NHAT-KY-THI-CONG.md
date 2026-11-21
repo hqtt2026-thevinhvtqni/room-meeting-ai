@@ -1273,3 +1273,19 @@
 - **Hành động:** Cập nhật STATUS và nhật ký bằng snapshot hiện hành; giữ nguyên PR, branch và main; không rebase/force-push/merge; không ghi đè Sandbox khi chưa có readback tin cậy.
 - **Kết quả:** Audit snapshot ghi nhận; implementation/runtime chưa được nâng trạng thái PASS. W118 tiếp tục ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED.
 - **Bước tiếp theo:** Phân loại toàn bộ 446 commits/57 commits divergence và 99 PR files; khôi phục đường readback Sandbox hoặc xác định canonical source; sau đó hoàn thiện exact-head CI và runtime integration theo TD-118-012.
+
+
+## Entry 077 — Isolate W118 delivery branch and reconcile Sandbox code mirror
+- **Thời gian:** 2026-11-22 04:20 (UTC+07:00).
+- **Người thực hiện:** Ka / AI-02.
+- **Chức danh:** CSA / Autonomous W118 Build Owner theo ủy quyền của Vinh.
+- **Ưu tiên / Thứ tự đọc:** P0 / 14.
+- **Phạm vi:** PR #67 scope/divergence audit; create clean W118 branch; exact-head CI; Sandbox/GitHub code mirror; Task Register alignment.
+- **Finding P0:** PR #67 included unrelated W113/W117/W17/W70 changes and had 448 commits ahead / 57 behind Main at the current compare. It was not safe as the delivery candidate. No merge/rebase/force-push was performed.
+- **Corrective action:** Created `work/118-auto-e2e-v2-clean` directly from Main `43efc145c9f7007284366e8edb4f4805191bb3ad`; overlaid only W118 paths from the reviewed feature snapshot; committed `c291c29890ad726c1afdfca00f7832662622c19a`; compare is 1 ahead / 0 behind. Opened PR #68; PR #67 remains unmerged for history preservation.
+- **Scope verification:** compare file list contains only W118 files; no cross-Work modifications are included in PR #68.
+- **CI evidence:** PR run #44948921625 tested exact source HEAD `c291c29890ad726c1afdfca00f7832662622c19a`; validate SUCCESS; 94/94 tests PASS; artifact 14724581468; digest `9661e45026e42edda828ef6294dbd14d45d811597e324aba4da8d81935c11da4`. Event-specific jobs were SKIPPED; this is contract CI only.
+- **Sandbox/GitHub mismatch:** Sandbox 04_CODE still contained older SQLite TaskRegistry/webhook inbox/event reconciler implementation, which conflicts with TD-118-012 v1.2 prohibiting local Task DB/event queue. Wrote the current GitHub stateless code/workflows/tests into Sandbox 04_CODE (20 files); legacy files are being retired after manifest/doc update. Ordinary sandbox_read returned empty; sandbox_read_probe returned readable content and was used for evidence.
+- **Task Register reconciliation:** Sandbox Task Register remains operational source; updated its execution_mode to OWNER_DIRECTED_BUILD under Vinh's 2026-11-22 autonomous directive, preserved all Task states/blockers and kept Agent identities/ACK unassigned/uninferred; updated GitHub mirror URL to clean branch. Copied TD-118-012 v1.2 schema into Sandbox.
+- **Open blockers:** no Core API/field map/Event port; no verified W102 principal/Assignment; no W12/W13 runtime; no W70 schema ACK; no live Issue API/task-scoped push/webhook route; Xu review and Vinh acceptance pending.
+- **Disposition:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED. No merge or release.
