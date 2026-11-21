@@ -1036,3 +1036,14 @@
 - GAP-11 OPEN / NOT ACCEPTED; GAP-01 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. No patch, CI execution, launch, credentials or runtime action.
 - Journal Entry 100 committed: `e8089773c17bfc675c6ba685293a143fcbb7e3b4`. GitHub main read-back required; Sandbox parity remains BLOCKED, no Sandbox write.
 - Next: prepare a bounded W1111 review/acceptance checklist; keep W17 read-only.
+
+
+## Sync Period 0088 — W1111 candidate acceptance checklist
+
+- Entry 101 consolidates the bounded review checklist for PR #48 without modifying the candidate branch.
+- Acceptance prerequisites: immutable grant-bound source/policy snapshot; run SHA equality; grant/run idempotency; active revoke/expiry lifecycle; canonical W13/W12 runtime path; Core app wired into existing service manager; credential/policy/store provisioning; exact-head CI; independent QE; PC runtime/read-back.
+- W13-local grant-aware bridge and integration test source exist, but test not run; root bridge remains legacy; candidate Core entrypoint not wired to current start-dev/Core PID per deployment guide.
+- Core grant is not W70 Assignment/dispatch/attempt/provider receipt/recipient ACK. GAP-01 E2/E3 remain NOT PROVEN.
+- Disposition remains GAP-11 OPEN / NOT ACCEPTED; GAP-01 OPEN/P0; protected execution DENY / NOT RELEASED. No candidate code, PR, CI, runtime or deployment action.
+- Journal Entry 101 committed: `7887dd557c815b5d6922c638425aa21e1cd38e40`. GitHub main read-back required; Sandbox parity remains BLOCKED, no Sandbox write.
+- Next: keep checklist as evidence baseline; only revisit changed candidate revision, exact-head CI or PC handoff evidence.
