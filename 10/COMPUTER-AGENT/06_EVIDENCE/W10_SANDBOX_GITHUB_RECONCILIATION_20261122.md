@@ -120,3 +120,8 @@ Sau khi tạo và đồng bộ integration boundary handoff, snapshot mới: San
 ## Inventory count correction — 2026-11-22 06:38 (UTC+07:00)
 
 After adding the Run #104 evidence and POSIX cleanup remediation evidence to both Sandbox and GitHub, the current inventory is Sandbox 161 files; GitHub 68 files; shared 68; Sandbox-only 93; GitHub-only 0; one Sandbox-only `.github/` directory. The 93 Sandbox-only KEEP dispositions are unchanged.
+
+
+## Inventory count correction — 2026-11-22 06:41 (UTC+07:00)
+
+The P0 implementation readiness gate was added to the canonical branch and the full inventory file was regenerated. Current live snapshot: Sandbox 161 files; GitHub 69 files; shared 69; Sandbox-only 92; GitHub-only 0; one Sandbox-only `.github/` directory. Sandbox-only groups: generated/transient 10, reference/preview 8, historical evidence/design 46, AI debug archive 26, superseded handover 1, transcript 1. The updated path list is in `06_EVIDENCE/W10_FULL_PATH_INVENTORY_DISPOSITION_20261122.md`.
