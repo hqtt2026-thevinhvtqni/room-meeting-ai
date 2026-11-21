@@ -348,30 +348,25 @@ Bắt buộc: `evidence_id`, `evidence_type` (`OPERATION`, `CI_CONTRACT`, `RUNTI
 
 | Event | Producer | Consumer | Điều kiện/hiệu ứng |
 |---|---|---|---|
-| `plan.created` | Sandbox | Planner | Tạo kế hoạch |
-| `task.ready` | Validator | Orchestrator | Task đủ điều kiện |
-| `issue.mirrored` | GitHub adapter | Task Registry | Issue ID/URL readback |
-| `agent.selected` | Assignment service | Journal | Lưu policy match |
-| `task.dispatched` | Orchestrator | Agent runtime | Có dispatch receipt |
-| `task.acknowledged` | Agent | ACK verifier | Verify identity + binding |
-| `task.ack_denied` | ACK verifier | Orchestrator | Không chuyển assignment sang ACKED |
-| `task.started` | Agent | Task Registry | Chỉ sau ACK hợp lệ |
-| `task.progress` | Agent | Task Registry | Sequence/heartbeat hợp lệ |
-| `task.blocked` | Agent/QE | Orchestrator | Tạo blocker và owner |
-| `task.completed` | Agent | Verifier | Nộp result/evidence |
-| `source.branch_created` | Sandbox/GitHub | Source tracker | Branch gắn Task |
-| `source.commit_pushed` | GitHub | Sandbox reconciler | Xác nhận exact SHA |
-| `ci.queued` / `ci.started` | GitHub Actions | Sandbox | Telemetry |
-| `ci.passed` / `ci.failed` | GitHub Actions | Sandbox | Update verification/failure state |
-| `pr.opened` | GitHub | Sandbox | Link PR/Task |
-| `review.submitted` | GitHub | Review verifier | Validate reviewer authority |
-| `task.verified` | QE/Verifier | Owner | AC verified |
-| `task.accepted` | Vinh/authorized Owner | Task Registry | Final acceptance |
-| `task.closed` | Orchestrator | GitHub | Close mirror after readback |
-| `task.reopened` | Owner/Policy | Sandbox/GitHub | Reopen with reason |
-| `reconciliation.required` | Reconciler | Operator | Conflict/manual review |
+| `plan.created` | Sandbox | Planner | Ghi Plan/WP |
+| `task.created` | Task Register | Orchestrator | Tạo Task ở PLANNED |
+| `task.status_changed` | Owner/Orchestrator/Verifier | Task Register | Chỉ đổi Task status theo §3.2 |
+| `assignment.status_changed` | Orchestrator/Assigned Agent/Verifier | Assignment Register | Chỉ đổi Assignment status theo §3.3 |
+| `github.issue_linked` | GitHub Issue adapter | Task Register adapter | Issue readback; không đổi Task status |
+| `agent.selected` | Assignment policy | Journal | Ghi capability/policy match |
+| `assignment.dispatched` | Orchestrator | Agent runtime | Có dispatch receipt |
+| `assignment.acknowledged` | Verified Agent | ACK verifier | Identity + assignment + dispatch binding |
+| `assignment.submitted` | Assigned Agent | Verifier | Result/evidence package |
+| `assignment.accepted` / `assignment.rejected` | Verifier | Owner/Task Register | Không tự chuyển Task DONE |
+| `source.push_bound` | GitHub push webhook | Sandbox reconciler | Exact Work/Task/Issue/SHA; evidence only |
+| `ci.run_completed` | GitHub Actions | Sandbox reconciler | Exact SHA; CI PASS/FAIL evidence only |
+| `pr.opened` / `pr.merged` | GitHub | Sandbox reconciler | PR state observation |
+| `review.submitted` | GitHub | Review verifier | Verify reviewer principal/authority |
+| `task.done` | Owner | Task Register | Explicit acceptance + evidence |
+| `github.issue_closed` | GitHub adapter | Sandbox reconciler | Close only after Task DONE and readback |
+| `reconciliation.required` | Reconciler | Operator | Conflict, missing event or mismatch |
 
-Every event must include envelope §6.4; delivery is at-least-once; consumer persists processed `event_id`/idempotency key before side effects or uses transactional outbox/inbox.
+Every event must include the compatible envelope in §6.4. Delivery is at-least-once; consumers persist delivery/event ID and idempotency key before side effects or use transactional outbox/inbox. Event receipt alone never implies Task/Assignment status change.
 
 ---
 
