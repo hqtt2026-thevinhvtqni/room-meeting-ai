@@ -61,7 +61,7 @@
 ## 6. Audit refresh — 2026-11-21 16:02 +07:00
 
 - **Audit record:** RA-118-002 (P0, read order 13); Journal Entry 075.
-- **Branch integration:** `main...${branch}` observed 440 ahead / 86 behind, DIVERGED; integration BLOCKED pending path-level classification. No rebase/merge performed.
+- **Branch integration:** `main...work/118-auto-e2e-v2` observed 443 ahead / 86 behind (after three audit-document commits; code-test SHA remains 5f02a9e), DIVERGED; integration BLOCKED pending path-level classification. No rebase/merge performed.
 - **PR review:** #67 OPEN / UNMERGED; formal review submissions 0; inline review threads 0.
 - **Runtime:** Core Task/lock/Event ports, W102 identity/Assignment, W12/W13 Host/GitHub/CI adapter and W70 schema ACK remain BLOCKED / NOT VERIFIED.
 - **Source binding:** aggregate branch result `UNBOUND_LEGACY_BRANCH`; no Task association inferred.
