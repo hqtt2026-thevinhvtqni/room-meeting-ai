@@ -223,3 +223,11 @@ Run [#44750417015](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/acti
 - Artifact ID `14640485869`; SHA-256 `b029bddc43da57df2b0199b1dde40987fbe096ed82dda23f2f4571fa5f2ec949`.
 - Intermediate Run #44757920850 failed due to an over-specific contract assertion; assertion corrected and final run passed.
 - Actual workflow_run failure event remains pending controlled runtime execution.
+
+
+## P0 security review amendment — immutable GitHub Actions references (2026-11-21)
+
+- **W118-10 scope:** pin all first-party actions used by the orchestrator and diagnostics workflows to full commit SHAs, with release-version comments; enforce the rule through regression test T10-26.
+- **Reason:** mutable action tags can move independently of the reviewed source. GitHub's official secure-use guidance identifies a full-length commit SHA as the immutable action reference.
+- **Verification:** selected action SHAs were checked against the official repositories and matching release tags. CI result is pending until the pinning regression runs on the updated feature branch.
+- **Boundary:** no event trigger, permission, actor authorization, business logic, default-branch integration, merge or release change is included.
