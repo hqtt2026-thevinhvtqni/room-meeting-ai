@@ -7,7 +7,7 @@
 - **Priority / Read order:** P0 / 12
 - **Canonical assessment:** [RA-118-001](../04_PLAN/RA-118-001_BANG-DOI-CHIEU-PHAM-VI-VA-KE-HOACH-HOAN-THIEN.md).
 - **Product status:** W118 ACTIVE — NOT ACCEPTED — NOT RELEASED. Auto E2E contract automation is partial; full HQTT Work Management lifecycle is not complete.
-- **Verified intake snapshot:** PR #67 head b694abe80d2c9f86871f7303543dd234da2bd205; Run #44860083377 validate SUCCESS; five event-specific jobs SKIPPED; artifact ID 14689611980; branch 278 ahead / 84 behind Main — DIVERGED.
+- **Verified intake snapshot:** PR #67 branch HEAD b694abe80d2c9f86871f7303543dd234da2bd205; Run #44860083377 validate SUCCESS; five event-specific jobs SKIPPED; artifact ID 14689611980; pull_request event means tested revision is the PR merge ref, not asserted equal to branch HEAD; branch 278 ahead / 84 behind Main — DIVERGED.
 - **Gaps:** Issue schema/classification; capability-based AI assignment and dispatch; separate ACK/STARTED/IN_PROGRESS/COMPLETED/BLOCKED tracking; Issue–Branch–Commit–Push binding; CI PASS/FAIL feedback to task lifecycle; Work 70 Evidence Register/Dashboard projection.
 - **Proposal:** W118-13..W118-19 in RA-118-001 — PROPOSED / PENDING XU REVIEW; no new Work.
 - **Governance:** no inferred executor identities; GitHub Assignee is not ACK; no Work 70 schema change; no rebase, merge or release.
