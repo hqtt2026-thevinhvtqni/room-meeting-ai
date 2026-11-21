@@ -112,33 +112,35 @@ def test_posix_process_group():
     if os.name == "nt":
         print("  SKIP  POSIX process-group test requires POSIX")
         return
-    proc = subprocess.Popen(
-        [sys.executable, "-c", CHILD_CODE],
-        stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-        text=True, start_new_session=True,
-    )
-    try:
-        if proc.stdout.readline().strip() != "READY":
-            raise AssertionError("worker did not reach inert pre-start gate")
-        proc.stdin.write("START\n")
-        proc.stdin.flush()
-        grandchild_pid = int(proc.stdout.readline().strip())
-        time.sleep(0.1)
-        if not terminate_posix_process_group(proc, timeout_seconds=3):
-            raise AssertionError("process group did not become empty")
-        if not wait_pid_exit(grandchild_pid, timeout_seconds=5):
-            raise AssertionError(f"grandchild {grandchild_pid} survived process-group kill")
-    finally:
-        if proc.poll() is None:
-            try:
-                os.killpg(proc.pid, 9)
-            except ProcessLookupError:
-                pass
-            proc.wait(timeout=5)
-        for stream in (proc.stdin, proc.stdout, proc.stderr):
-            if stream:
-                stream.close()
-
+    # Repeat the descendant lifecycle to expose orphan/zombie cleanup races.
+    for iteration in range(1, 4):
+        proc = subprocess.Popen(
+            [sys.executable, "-c", CHILD_CODE],
+            stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+            text=True, start_new_session=True,
+        )
+        grandchild_pid = None
+        try:
+            if proc.stdout.readline().strip() != "READY":
+                raise AssertionError(f"iteration {iteration}: worker did not reach inert pre-start gate")
+            proc.stdin.write("START\n")
+            proc.stdin.flush()
+            grandchild_pid = int(proc.stdout.readline().strip())
+            time.sleep(0.1)
+            if not terminate_posix_process_group(proc, timeout_seconds=5):
+                raise AssertionError(f"iteration {iteration}: process group did not become empty")
+            if not wait_pid_exit(grandchild_pid, timeout_seconds=5):
+                raise AssertionError(f"iteration {iteration}: grandchild {grandchild_pid} survived process-group kill")
+        finally:
+            if proc.poll() is None:
+                try:
+                    os.killpg(proc.pid, 9)
+                except ProcessLookupError:
+                    pass
+                proc.wait(timeout=5)
+            for stream in (proc.stdin, proc.stdout, proc.stderr):
+                if stream:
+                    stream.close()
 
 def main():
     print("Work 10 — Process Containment Tests")
