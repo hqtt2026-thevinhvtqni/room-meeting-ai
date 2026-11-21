@@ -869,3 +869,21 @@
 - **Review records:** zero formal review submissions; zero inline review threads. Xu review remains PENDING.
 - **Kết luận:** hồ sơ đã được hiệu chỉnh và readback PASS; SHA pinning/contract tests PASS; runtime E2E NOT VERIFIED; Xu review PENDING; Vinh acceptance PENDING; no integration/merge/release.
 - **Bước tiếp:** chuyển gói hồ sơ đã hiệu chỉnh cho Xu tiếp tục independent review; chờ Xu disposition và quyết định riêng của Vinh trước mọi non-release integration.
+
+
+## Entry 065 — Latest exact-head CI and acceptance snapshot
+
+- **Người thực hiện:** Ka — CSA / W118 Build Owner.
+- **Chức danh:** Delegated Technical Lead / Architecture Reviewer.
+- **Người nhận:** Xu — Independent Reviewer; Vinh — Final Product Owner.
+- **Ngày giờ:** 2026-11-21 07:44 +07:00.
+- **Mã Work:** W118 / W118-10.
+- **Ưu tiên:** P0 — current evidence readback.
+- **CI:** [Run #44846716357](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44846716357), exact tested commit `8e9bf8e952a2d97778fe6e16d84f6db05ffcbcdc`; workflow SUCCESS; validate SUCCESS; **53 tests PASS / 0.402s**; T10-26 PASS.
+- **Artifact:** `w118-run-evidence-44846716357-1`, ID `14682678487`, SHA-256 digest `81a634f99b9de2c490adc32e01f637ee1d37ed5a30625100a0b0a71fce45d849`; present/unexpired at readback; expiry 2026-12-21T00:53:08Z.
+- **Action pinning:** exact workflow readback previously confirmed 11 action refs in orchestrator, 2 in diagnostics, none in PR checklist; all full 40-character SHAs. T10-26 and XR gate 20 PASS.
+- **Runtime:** all five event-specific jobs SKIPPED; runtime E2E NOT VERIFIED.
+- **GitHub snapshot:** PR #67 OPEN / draft=false / merged=false; feature `8e9bf8e952a2d97778fe6e16d84f6db05ffcbcdc`; Main `5f8390910178012feaf37510452bc39804b296db`; merge base `cf2537e07bfd71d5823bd98f8673b3ab5644fcdc`; **263 ahead / 82 behind — DIVERGED**. Raw PR API: mergeable=true / mergeable_state=unstable.
+- **Reviews:** zero formal review submissions; zero inline review threads. Xu independent review PENDING; Vinh final product acceptance PENDING.
+- **Kết luận:** current code/contract/SHA-pin validation PASS; runtime E2E NOT VERIFIED; no rebase, merge or release.
+- **Bước tiếp:** chuyển bộ hồ sơ đã cập nhật cho Xu phản biện độc lập; chờ disposition của Xu và quyết định riêng của Vinh trước mọi non-release integration.
