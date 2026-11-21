@@ -29,6 +29,7 @@ SUITES = [
     ("process_containment", "test_process_containment.py"),
     ("host_operations", "test_host_operations.py"),
     ("acceptance_validator", "test_acceptance_validator.py"),
+    ("dashboard_contract", "test_dashboard_contract.py"),
 ]
 HASH_GLOBS = [
     "04_CODE/*.py", "04_CODE/*.md", "05_TEST/*.py", "05_TEST/*.html",
