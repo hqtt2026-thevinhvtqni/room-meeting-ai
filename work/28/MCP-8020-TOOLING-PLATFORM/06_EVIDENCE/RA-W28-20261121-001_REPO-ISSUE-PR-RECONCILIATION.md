@@ -99,3 +99,15 @@ More recent open Issues #39, #44, #56, #57, #58 and #65 were not closed or rewri
 - **Result:** Audited old Issues and PRs, compared branches, closed four safely superseded/unsuitable PRs, retained unresolved work with explicit blockers.
 - **Disposition:** PARTIAL CLEANUP — ACTIVE WORK PRESERVED — NO MERGE / NO RELEASE.
 - **Vinh acceptance:** NOT REQUESTED.
+
+
+## 7. Follow-up triage — 2026-11-21 16:28 +07:00
+
+Additional current open-ticket dispositions recorded after the initial inventory:
+- **Issue #39 (Work32 CI Evidence Log):** kept as append-only historical log; its old pilot runs are not current Work32 acceptance. Current Work32 candidates are PRs #49/#52/#54 and Issue #57.
+- **Issue #44 / PR #45 (AI-18 session identity):** P0 remains OPEN. PR #45 only removes the false `auth_verified=true` assertion and marks session authentication NOT_VERIFIED; it does not authenticate Manus or bind Work99. Branch is 2 ahead / 1,111 behind main; formal reviews 0, inline threads 0. No merge.
+- **Issue #56 (W300 typecheck):** concrete TS2345 failure remains tied to SHA `cffe439a919bbee5f181cdfa1d16f832ecf5e9de`; repository branch search found no matching Work300 source branch in this snapshot. Keep OPEN / BLOCKED pending canonical source and owner.
+- **Issue #57 (W32 bounded execution authorization):** Ka explicitly recorded REJECT / BLOCKED for the current proposal. Protected execution remains DENIED; no source/test/runner/PC/PR mutation or merge authorization was given. Cla's response is absent after the stated deadline; no ACK is inferred.
+- **Issue #58 (W76):** PR #60 remains the active v2 draft; WP-76-07 dispatch/receipt/ACK remains BLOCKED, runtime/PC E2E and canonical QE pending. Keep OPEN.
+
+These comments supplement the first-pass issue/PR inventory; they do not change any Work acceptance or release state.
