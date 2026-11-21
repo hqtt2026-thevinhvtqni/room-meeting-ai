@@ -158,7 +158,7 @@ Transitions:
 - REJECTED → PROPOSED / CANCELLED
 - ACCEPTED và CANCELLED là terminal.
 
-**Invariant:** Assignment ACCEPTED không tự động làm Task DONE; Task chỉ DONE khi Owner nghiệm thu. Issue link, branch, push, CI và PR/review là execution/source evidence, không phải Task status. CI PASS không tự chuyển Task hoặc Assignment sang ACCEPTED. ACK không tự chứng minh identity; caller phải xác minh principal trước.
+**Invariant:** Assignment ACCEPTED không tự động làm Task DONE; Task chỉ DONE khi Owner nghiệm thu. Với execution_mode=AGENT_ASSIGNMENT, Task IN_PROGRESS cần Assignment ACKNOWLEDGED/IN_PROGRESS. Với execution_mode=OWNER_DIRECTED_SESSION, chỉ cho phép khi có owner_directive_ref do Owner cấp; không gán Agent principal/ACK giả. Issue link, branch, push, CI và PR/review là execution/source evidence, không phải Task status. CI PASS không tự chuyển Task hoặc Assignment sang ACCEPTED. ACK không tự chứng minh identity; caller phải xác minh principal trước.
 
 ### 3.4 Execution/source observations
 
