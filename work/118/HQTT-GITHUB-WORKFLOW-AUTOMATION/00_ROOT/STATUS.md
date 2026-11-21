@@ -254,3 +254,14 @@ The workflow_run listener requires default-branch presence for real runtime veri
 - **Runtime:** five event-specific jobs SKIPPED; runtime E2E NOT VERIFIED.
 - **Reviews:** formal PR review submissions = 0; inline review threads = 0.
 - **Disposition:** SHA pinning PASS; contract validation PASS; Xu independent review PENDING; Vinh final acceptance PENDING; no integration/merge/release.
+
+
+## Latest verified snapshot — 2026-11-21 07:44 +07:00
+
+- **Feature HEAD tested:** `8e9bf8e952a2d97778fe6e16d84f6db05ffcbcdc`.
+- **CI:** [Run #44846716357](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44846716357), SUCCESS; validate SUCCESS; **53 tests PASS / 0.402s**; T10-26 PASS.
+- **Artifact:** ID `14682678487`, digest `81a634f99b9de2c490adc32e01f637ee1d37ed5a30625100a0b0a71fce45d849`, present/unexpired at readback.
+- **Runtime:** handoff, ACK, acceptance-review, controlled-failure and controlled-failure-dispatch SKIPPED; runtime E2E NOT VERIFIED.
+- **Main:** `5f8390910178012feaf37510452bc39804b296db`; **merge base:** `cf2537e07bfd71d5823bd98f8673b3ab5644fcdc`; **263 ahead / 82 behind — DIVERGED**.
+- **PR #67:** OPEN, unmerged, unreleased; raw API reports `mergeable=true` / `mergeable_state=unstable`; no integration authorization.
+- **Formal reviews / threads:** 0 / 0. Xu review PENDING; Vinh acceptance PENDING.
