@@ -192,6 +192,47 @@ class Work118TaskLifecycleTests(unittest.TestCase):
                 "dispatch_id": "dispatch-wrong", "ack_event_id": "ack-002", "ack_nonce_ref": "nonce-ref-002",
             })
 
+    def test_owner_directed_execution_can_start_without_fabricated_agent_ack(self):
+        direct_task = {
+            **self.task,
+            "task_id": "W118-TASK-002",
+            "execution_mode": "OWNER_DIRECTED_SESSION",
+            "owner_directive_ref": "owner-directive:vinh:2026-11-21",
+        }
+        self.registry.create_task(
+            direct_task, actor_principal="owner:vinh", actor_role="owner",
+            identity_verified=True, event_id="evt-direct-create",
+            occurred_at="2026-11-21T06:00:00Z",
+        )
+        self.registry.transition_task(
+            "W118-TASK-002", "READY",
+            actor_principal="owner:vinh", actor_role="owner", identity_verified=True,
+            expected_version=1, event_id="evt-direct-ready", idempotency_key="idem-direct-ready",
+            occurred_at="2026-11-21T06:01:00Z",
+        )
+        result = self.registry.transition_task(
+            "W118-TASK-002", "IN_PROGRESS",
+            actor_principal="room:orchestrator", actor_role="orchestrator", identity_verified=True,
+            expected_version=2, event_id="evt-direct-start", idempotency_key="idem-direct-start",
+            occurred_at="2026-11-21T06:02:00Z",
+        )
+        self.assertEqual(result["task"]["status"], "IN_PROGRESS")
+        self.assertEqual(result["task"]["assignment_status"], "UNASSIGNED")
+        self.assertEqual(result["task"]["execution_mode"], "OWNER_DIRECTED_SESSION")
+
+    def test_owner_directed_execution_requires_directive_reference(self):
+        invalid = {
+            **self.task,
+            "task_id": "W118-TASK-003",
+            "execution_mode": "OWNER_DIRECTED_SESSION",
+        }
+        with self.assertRaises(TaskValidationError):
+            self.registry.create_task(
+                invalid, actor_principal="owner:vinh", actor_role="owner",
+                identity_verified=True, event_id="evt-direct-no-ref",
+                occurred_at="2026-11-21T06:00:00Z",
+            )
+
     def test_task_in_progress_requires_acknowledged_assignment(self):
         self.ready_and_link_issue()
         with self.assertRaises(TransitionDenied):
