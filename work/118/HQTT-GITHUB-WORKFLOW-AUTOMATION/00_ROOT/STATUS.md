@@ -353,3 +353,12 @@ The workflow_run listener requires default-branch presence for real runtime veri
 - **Artifact:** ID `14697131158`; SHA-256 `db783c9329e95f2cdb0dce68c21911d56bb2bc7e318088fb53617936c9861011`.
 - **Runtime remains pending:** Event Listener :8050 route/worker deployment, secret/TLS/request limits, durable DB, real GitHub webhook and workflow_run callback, Issue API token, Task Registry service, Agent Registry/dispatch and live task branch.
 - **Work state:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED.
+
+
+## Task Register alignment update (2026-11-21)
+
+- Canonical W118 Task Register created at `04_PLAN/TASK_REGISTER.json` with schema `TASK_REGISTER.schema.json`; Sandbox copy is the operational authority, GitHub copy is versioned mirror.
+- State models aligned to Work-level DOC-093 pattern: Task statuses PLANNED/READY/IN_PROGRESS/BLOCKED/IN_REVIEW/DONE/CANCELLED; Assignment statuses UNASSIGNED/PROPOSED/DISPATCHED/ACKNOWLEDGED/IN_PROGRESS/SUBMITTED/ACCEPTED/REJECTED/BLOCKED/CANCELLED.
+- SQLite TaskRegistry is a runtime transaction/event adapter and not a second canonical Task Register. Runtime synchronization to the Sandbox Task Register remains pending.
+- Task Register contract test and separated state-machine CI at SHA `3b8847568facbaa1517ece7af111deb4818c5ed3`: 127 tests PASS / 0.380s; push run #44879608573 SUCCESS; artifact 14697605476.
+- W112 DOC-001 remains DRAFT_NOT_APPROVED; used as compatibility reference only. W70 schema unchanged.
