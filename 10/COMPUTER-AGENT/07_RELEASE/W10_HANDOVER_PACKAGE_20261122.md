@@ -56,6 +56,7 @@ The separate `PC_HOST_CAPABILITY_CONTRACT.md` adds host operations without chang
 | #104 | Standalone Dashboard moved to port 3010 | 206 PASS | 200 PASS + 2 SKIP | PASS; preserves shared :3000 ingress |
 | #105 | POSIX cleanup polling remediation | 206 PASS | 200 PASS + 2 SKIP | PASS |
 | #106 | POSIX cleanup three-cycle descendant stress | 206 PASS | 200 PASS + 2 SKIP | PASS; three-cycle test passed |
+| #135 | Live Dashboard/API health + consent smoke | 213 PASS | 207 PASS + 2 SKIP | PASS; 7 live UI assertions per OS |
 
 Evidence files:
 - `06_EVIDENCE/W10_API_PROCESS_E2E_EVIDENCE_20261122_RUN45.md`
@@ -65,6 +66,7 @@ Evidence files:
 - `06_EVIDENCE/W10_CROSS_PLATFORM_CI_EVIDENCE_20261122_RUN69.md`
 - `06_EVIDENCE/W10_CROSS_PLATFORM_CI_EVIDENCE_20261122_RUN104.md`
 - `06_EVIDENCE/W10_POSIX_CLEANUP_REMEDIATION_CI_20261122_RUN99_105_106.md`
+- `06_EVIDENCE/W10_LIVE_DASHBOARD_API_EVIDENCE_20261122_RUN135.md`
 
 Runs #52, #53, #69, #104, #105 and #106 each execute 16 V8 validator checks successfully on both OS runners. Run #53 tests the additional category catalog, policy ID/version/schema version and category outcome/lease/owner allow-list validation. Run #69 adds 17 Dashboard static assertions per OS. Run #104 verifies Work 10's standalone UI on port 3010. Runs #105/#106 remediate and stress-test the Linux limited process-group cleanup race first seen in Run #99.
 
@@ -124,7 +126,7 @@ This session has no direct local PowerShell/desktop executor, so these steps are
 
 - Canonical branch contains the current Work 10 source, test suite, core contracts, PC Host Capability Contract, operational Dashboard and current runbooks.
 - The 30 source/test/architecture/config files independently sampled in the current reconciliation pass were exact-match between Sandbox and GitHub after the updates; all three LOCKED contracts are exact-match.
-- Current inventory: Sandbox has 161 files under `COMPUTER-AGENT/`; GitHub branch has 69; 69 paths are shared and 92 are Sandbox-only; GitHub-only paths = 0. The 93 Sandbox-only files have explicit KEEP/SANDBOX-ONLY dispositions in `06_EVIDENCE/W10_FULL_PATH_INVENTORY_DISPOSITION_20261122.md`; they include historical/debug records, original/reference files, preview/sample data, generated evidence/lock files and Python caches. Do not bulk-copy caches, locks, preview samples or unreviewed debug packages into the canonical branch.
+- Current inventory: Sandbox has 163 files under `COMPUTER-AGENT/`; GitHub branch has 71; 71 paths are shared and 92 are Sandbox-only; GitHub-only paths = 0. The 93 Sandbox-only files have explicit KEEP/SANDBOX-ONLY dispositions in `06_EVIDENCE/W10_FULL_PATH_INVENTORY_DISPOSITION_20261122.md`; they include historical/debug records, original/reference files, preview/sample data, generated evidence/lock files and Python caches. Do not bulk-copy caches, locks, preview samples or unreviewed debug packages into the canonical branch.
 - No GitHub-only Work 10 file remains in the inventory snapshot.
 - Branch history is preserved; no force push, main merge, deployment or release was performed.
 
@@ -194,3 +196,13 @@ The integration handoff is recorded in `06_EVIDENCE/W10_ROOM_HOP_INTEGRATION_BOU
 - P0 implementation is authorized to proceed under the Owner's delegation, within the three existing LOCKED contracts. No contract change, main merge, deployment or release is implied.
 - F-15 TaskResult/Workflow timeout mapping remains OWNER DECISION REQUIRED. An earlier Biên bản sentence attributing a specific timeout mapping decision to Owner was corrected in the official record. Co will not infer or modify F-15 semantics.
 - Work 10 remains ACTIVE — NOT RELEASED pending physical Windows 10 acceptance, production trust configuration, Linux cgroup-v2 disposition, ROOM-HOP integration decisions and final Owner acceptance.
+
+
+## 14. Live Dashboard/API smoke verification — 2026-11-22
+
+Run #135 (ID `44963956538`) adds a Playwright live smoke test that starts the Work 10 Agent API on loopback :8787 and the standalone Dashboard on :3010. It verifies cross-origin live health, Work ID 10, Execute disabled before consent, enabled after valid health/token/consent, and Clear removing the in-memory token/resetting consent. Seven assertions passed on each OS. The test does not click Execute; real browser workflow remains covered by the separate API/runtime Chromium E2E suite.
+
+- Ubuntu 24.04: 207 PASS / 0 FAIL / 2 expected SKIP.
+- Windows Server 2022: 213 PASS / 0 FAIL / 0 SKIP.
+- Evidence: `06_EVIDENCE/W10_LIVE_DASHBOARD_API_EVIDENCE_20261122_RUN135.md`.
+- Physical Windows 10 live Dashboard/API acceptance remains NOT RUN.
