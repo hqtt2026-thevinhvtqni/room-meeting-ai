@@ -1477,3 +1477,22 @@
 - **Review identity:** Formal GitHub PR review by verified Xu identity remains NOT RECORDED; repository-owner-authenticated issue comments are discussion/evidence notes, not formal Xu review. Formal review submissions and inline review threads remain unverified/zero per last readback.
 - **Disposition:** PR #68 OPEN / UNMERGED; Work 118 ACTIVE — NOT ACCEPTED — NOT RELEASED. Keep implementation freeze; no Main merge, no B-118-010 application, no release.
 - **Next step:** Ka to assess P1 findings and propose remediation within delegated scope; Xu independent re-review and T-01..T-05 acceptance evidence remain outstanding; Vinh retains final acceptance authority.
+
+
+## Entry 025 — Exact-head reconciliation after PR #68 HEAD advanced
+
+- **Priority:** 01 — P0 — Evidence integrity / freeze control.
+- **Date-Time:** 2026-11-22 05:34:33 (UTC+07:00).
+- **Scope:** Direct GitHub readback of PR #68, compare, formal reviews, inline review comments, exact-head CI jobs/artifact metadata, and source/test files at HEAD. Documentation/evidence only; no implementation/workflow edits, no merge, no release.
+- **PR / Branch:** PR #68 remains OPEN / UNMERGED; branch `work/118-auto-e2e-v2-clean`.
+- **Exact current HEAD:** `3c438da754a32913bf143bfbfdbdd9a11849bef9`.
+- **Base Main:** `792bdd71e5345949e0c1f26ff9f95a8513dfa7d5`.
+- **Compare:** 39 commits ahead / 0 behind; 45 changed files (confirmed in PR snapshot). Formal PR reviews: 0; inline review comments/threads: 0.
+- **PR description drift:** PR body still reports the historical HEAD `ca861cbe30edd69b49a8ce26259fc7daf27b4b2a` and 32 commits ahead. Treat body/README/STATUS snapshots as historical until reconciled; current state is sourced from live PR/compare endpoints.
+- **Exact-head CI:** Run [#44955013312](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44955013312) is SUCCESS on source HEAD `3c438da754a32913bf143bfbfdbdd9a11849bef9`. Job `validate` SUCCESS; workflow contract tests step SUCCESS. Task-to-Issue source-binding step SKIPPED because event is `pull_request`. Jobs `handoff-request-capture`, `ack-claim-capture`, and `review-observation-capture` all SKIPPED.
+- **Artifact:** `w118-run-evidence-44955013312-1`; ID `14727262483`; digest `sha256:6baa0025c23127466fefc764273efefa07cf91742611992212fd72d6b9caa9be`; artifact is present and unexpired at readback. Artifact metadata verified; no claim of runtime E2E is made.
+- **P1-118-01 — Issue mirror identity:** exact-source readback of `scripts/w118/github_issue_adapter.py` confirms `_find_task_issue()` returns the first marker match; `mirror_core_task()` looks up by marker and does not enforce equality with `task.issue_id` when Core has an existing binding. Current tests cover ordinary creation/idempotency, PR-marker exclusion and incomplete scans, but no adversarial duplicate/forged marker or Core Issue-ID mismatch cases. **OPEN / NEEDS CHANGES.**
+- **P1-118-02 — Core lease verification:** exact-source readback confirms `mirror_core_task()` checks only that `lock_lease_id` is a non-empty string. No proof in this adapter that Core issued the lease, that it is bound to this Task, or that it is current/unexpired. Existing test checks only rejection of an empty string. **BLOCKED at Core contract boundary / OPEN; do not invent a local lease validator.**
+- **Remediation boundary:** P1-118-01 remediation proposal may be prepared as a reviewable diff/spec, but implementation remains frozen until Xu closes independent review/test scope. P1-118-02 remains blocked until the authoritative Core lease API/contract and evidence are available; adapter must fail closed rather than fabricate authority.
+- **Disposition:** CI contract validation PASS only; runtime E2E NOT VERIFIED; source-binding NOT RUN; P1 findings remain open; PR #68 OPEN / UNMERGED; W118 ACTIVE — NOT ACCEPTED — NOT RELEASED. No Main merge, no B-118-010 application, no release.
+- **Next step:** Keep the freeze. Ka assesses the P1-01 remediation design and supplies Core contract evidence for P1-02; Xu independently reviews the proposed boundary and later verifies any authorized remediation. Vinh retains final product acceptance and release authority.
