@@ -51,7 +51,7 @@ def hash_sources() -> dict:
     return manifest
 
 
-def run_suite(name: str, script: str) -> dict:
+def run_suite(name: str, script: str, evidence_dir: Path) -> dict:
     started = utc_now()
     proc = subprocess.run(
         [sys.executable, str(TEST_DIR / script)],
@@ -61,7 +61,13 @@ def run_suite(name: str, script: str) -> dict:
     passed = output.count("  PASS  ")
     failed = output.count("  FAIL  ")
     skipped = output.count("  SKIP  ")
-    tail = [line for line in output.splitlines() if line.strip()][-6:]
+    tail = [line for line in output.splitlines() if line.strip()][-12:]
+    log_dir = evidence_dir / "test-logs"
+    log_dir.mkdir(parents=True, exist_ok=True)
+    log_path = log_dir / f"{name}.log"
+    log_path.write_text(output, encoding="utf-8")
+    failure_lines = [line for line in output.splitlines()
+                     if "  FAIL  " in line or "Traceback" in line or "AssertionError" in line]
     return {
         "suite": name,
         "script": f"05_TEST/{script}",
@@ -74,6 +80,8 @@ def run_suite(name: str, script: str) -> dict:
         "finished_at": utc_now(),
         "output_lines": len(output.splitlines()),
         "output_tail": tail,
+        "output_failures": failure_lines,
+        "output_log": str(log_path.relative_to(evidence_dir)).replace("\\", "/"),
     }
 
 
@@ -82,14 +90,16 @@ def main() -> int:
     parser.add_argument("--evidence-dir", default=str(ROOT / "06_EVIDENCE"))
     args = parser.parse_args()
 
-    results = [run_suite(name, script) for name, script in SUITES]
+    evidence_dir = Path(args.evidence_dir).resolve()
+    evidence_dir.mkdir(parents=True, exist_ok=True)
+    results = [run_suite(name, script, evidence_dir) for name, script in SUITES]
     total_pass = sum(r["checks_passed"] for r in results)
     total_fail = sum(r["checks_failed"] for r in results)
     total_skipped = sum(r.get("checks_skipped", 0) for r in results)
     suites_ok = all(r["status"] == "PASS" for r in results)
 
-    host_result = ROOT / "06_EVIDENCE" / "real-browser-e2e-result.json"
-    host_shot = ROOT / "06_EVIDENCE" / "real-browser-e2e.png"
+    host_result = evidence_dir / "real-browser-e2e-result.json"
+    host_shot = evidence_dir / "real-browser-e2e.png"
     host_e2e = "EVIDENCE PRESENT" if host_result.exists() and host_shot.exists() else "NOT RUN"
 
     payload = {

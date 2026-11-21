@@ -72,6 +72,7 @@ jobs:
           name: work10-evidence-${{ runner.os }}
           path: |
             10/COMPUTER-AGENT/06_EVIDENCE/offline-test-evidence.json
+            10/COMPUTER-AGENT/06_EVIDENCE/test-logs/*.log
             10/COMPUTER-AGENT/06_EVIDENCE/real-browser-e2e-result.json
             10/COMPUTER-AGENT/06_EVIDENCE/real-browser-e2e.png
           if-no-files-found: warn

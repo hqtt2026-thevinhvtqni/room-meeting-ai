@@ -286,10 +286,20 @@ def main():
             line.split(":", 1)[1] for line in event_log[slow_end_index + 1:]
             if line.startswith("close-thread:")
         ]
+        same_owner_thread = (
+            bool(start_thread_ids and close_thread_ids)
+            and len(slow_thread_ids) == 2
+            and len({start_thread_ids[-1], *slow_thread_ids, close_thread_ids[0]}) == 1
+        )
+        if not same_owner_thread:
+            print("  DEBUG thread ownership:", {
+                "start_thread_ids": start_thread_ids,
+                "slow_thread_ids": slow_thread_ids,
+                "close_thread_ids": close_thread_ids,
+                "event_log": event_log,
+            })
         check("adapter start, action and deferred close share one owner thread",
-              lambda: bool(start_thread_ids and close_thread_ids)
-              and len(slow_thread_ids) == 2
-              and len({start_thread_ids[-1], *slow_thread_ids, close_thread_ids[0]}) == 1)
+              lambda: same_owner_thread)
         status, body = server.request("POST", "/agent/execute", WORKFLOW)
         check("new workflow permitted after orphan worker cleanup",
               lambda: status == 200 and body.get("status") == "PASS")

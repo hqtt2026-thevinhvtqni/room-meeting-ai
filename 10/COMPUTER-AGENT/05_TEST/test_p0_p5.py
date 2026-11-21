@@ -62,10 +62,11 @@ def test_click_type_separation():
     result = runtime.execute("t", [
         Action("click", target="Start task"),
         Action("type", target="Task name", value="Work 10 REAL E2E"),
+        Action("observe"),
     ], verification=VERIFY)
 
     check("Explicit click + type both succeed",
-          lambda: result.status == "PASS" and len(result.steps) == 2)
+          lambda: result.status == "PASS" and len(result.steps) == 3)
     check("click semantic preserved", lambda: result.steps[0].action.type == "click")
     check("type semantic preserved", lambda: result.steps[1].action.type == "type")
     check("type cannot fake click",
@@ -146,10 +147,11 @@ def test_evidence_completeness():
     result = runtime.execute("t", [
         Action("click", target="A"),
         Action("type", target="B", value="C"),
+        Action("observe"),
     ], verification=VERIFY)
 
     action_entries = [e for e in result.evidence if e.get("action") not in (None, "verify")]
-    check("Evidence has one entry per action", lambda: len(action_entries) == 2)
+    check("Evidence has one entry per action", lambda: len(action_entries) == 3)
     check("Evidence contains action type", lambda: action_entries[0]["action"] == "click")
     check("Evidence contains ok flag", lambda: "ok" in action_entries[0])
     check("Evidence contains observation", lambda: "observation" in action_entries[0])
@@ -214,7 +216,7 @@ def test_failure_handling():
 
     sleeps = []
     runtime = AgentRuntime(TransientOnce(), sleep=sleeps.append)
-    retried = runtime.execute("t", [Action("click", target="Y")], verification=VERIFY)
+    retried = runtime.execute("t", [Action("click", target="Y"), Action("observe")], verification=VERIFY)
     check("Transient failure retried then PASS", lambda: retried.status == "PASS")
     check("Retry attempts recorded", lambda: retried.steps[0].attempts == 2)
     check("Backoff applied at >= 500 ms", lambda: sleeps and all(s >= 0.5 for s in sleeps))

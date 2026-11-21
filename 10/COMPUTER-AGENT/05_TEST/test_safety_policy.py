@@ -55,7 +55,7 @@ def test_destructive_requires_allow():
     print("\n=== SAFETY 2: destructive actions (§4) ===")
     adapter = FakeAdapter()
     result = AgentRuntime(adapter).execute(
-        "download evidence", [Action("download", target="Download evidence")],
+        "download evidence", [Action("download", target="Download evidence"), Action("observe")],
         verification=VERIFY)
     check("download without allow -> BLOCKED",
           lambda: blocked_with(result, "destructive_not_allowed"))
@@ -63,7 +63,7 @@ def test_destructive_requires_allow():
 
     allowed = FakeAdapter()
     ok = AgentRuntime(allowed, policy=SafetyPolicy(allow_destructive=True)).execute(
-        "download evidence", [Action("download", target="Download evidence")],
+        "download evidence", [Action("download", target="Download evidence"), Action("observe")],
         verification=VERIFY)
     check("download with explicit allow -> PASS", lambda: ok.status == "PASS")
 
@@ -83,18 +83,18 @@ def test_boundary_path():
           lambda: blocked_with(outside, "boundary_path"))
 
     inside = AgentRuntime(FakeAdapter()).execute(
-        "shot", [Action("screenshot", args={"path": "06_EVIDENCE/real.png"})],
+        "shot", [Action("screenshot", args={"path": "06_EVIDENCE/real.png"}), Action("observe")],
         verification=VERIFY)
     check("screenshot inside 06_EVIDENCE -> PASS", lambda: inside.status == "PASS")
 
     bare = AgentRuntime(FakeAdapter()).execute(
-        "shot", [Action("screenshot", args={"path": "bare.png"})],
+        "shot", [Action("screenshot", args={"path": "bare.png"}), Action("observe")],
         verification=VERIFY)
     check("bare screenshot filename defaults into Evidence -> PASS",
           lambda: bare.status == "PASS")
 
     root = AgentRuntime(FakeAdapter(), policy=SafetyPolicy(work_root=str(ROOT))).execute(
-        "shot", [Action("screenshot", args={"path": str(ROOT / "06_EVIDENCE" / "a.png")})],
+        "shot", [Action("screenshot", args={"path": str(ROOT / "06_EVIDENCE" / "a.png")}), Action("observe")],
         verification=VERIFY)
     check("absolute path inside work_root -> PASS", lambda: root.status == "PASS")
 
