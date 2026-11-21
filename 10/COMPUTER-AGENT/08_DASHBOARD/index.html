@@ -3,53 +3,257 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ROOM-HOP Computer Agent</title>
+<title>Work 10 · Computer Agent · Live Dashboard</title>
 <style>
-body{font-family:system-ui,sans-serif;max-width:1000px;margin:auto;padding:24px}
-.card{border:1px solid #ccc;border-radius:12px;padding:16px;margin:12px 0}
-#status{font-weight:700}
-button{padding:10px 14px;margin-right:8px}
-pre{white-space:pre-wrap;word-break:break-word}
+:root{color-scheme:dark;--bg:#0e1116;--panel:#161b22;--panel2:#1c2330;--line:#2a3441;--text:#e6edf3;--muted:#8b97a5;--accent:#e0653a;--ok:#3fb950;--warn:#d29922;--bad:#f85149;--radius:10px}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}button,input,textarea{font:inherit}button{border:1px solid var(--accent);border-radius:7px;background:var(--accent);color:#1a1207;padding:9px 15px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;cursor:pointer}button:hover{filter:brightness(1.12)}button:disabled{opacity:.45;cursor:not-allowed}button.secondary{background:transparent;color:var(--text);border-color:var(--line)}.layout{max-width:1440px;margin:auto;padding:24px;display:grid;gap:18px}.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;border-bottom:1px solid var(--line);padding-bottom:16px}.top h1{font-size:24px;margin:0}.top p{margin:5px 0 0;color:var(--muted)}.pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:6px 11px;font-weight:700;font-size:11px;letter-spacing:.06em}.dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}.pill.ok{color:var(--ok);border-color:#285b35}.pill.ok .dot{background:var(--ok)}.pill.warn{color:var(--warn);border-color:#59491d}.pill.warn .dot{background:var(--warn)}.pill.bad{color:var(--bad);border-color:#5b2724}.pill.bad .dot{background:var(--bad)}.grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(320px,.9fr);gap:18px;align-items:start}.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}.card h2{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin:0;padding:12px 16px;border-bottom:1px solid var(--line)}.body{padding:16px;display:grid;gap:13px}.healthfacts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.fact{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px}.fact small{display:block;color:var(--muted);font-size:10px;letter-spacing:.08em;text-transform:uppercase}.fact strong{display:block;margin-top:3px;overflow-wrap:anywhere}.field{display:grid;gap:6px}.field span{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}input[type=text],input[type=password],textarea{width:100%;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:7px;padding:10px 11px;font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace}textarea{min-height:130px;resize:vertical}input:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:1px}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.hint,.muted{color:var(--muted);font-size:12px;margin:0}.alert{border:1px solid #59491d;background:#241f11;color:#e6c46d;padding:10px 12px;border-radius:7px;font-size:12px}.alert.red{border-color:#5b2724;background:#271413;color:#ffaaa5}.consent{display:flex;gap:9px;align-items:flex-start;color:var(--muted);font-size:12px}.consent input{margin-top:3px}.actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.scroll{overflow:auto}table{width:100%;border-collapse:collapse;font-size:12px}th,td{text-align:left;padding:8px 9px;border-bottom:1px solid var(--line);vertical-align:top}th{background:var(--panel2);color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.08em}tr:last-child td{border-bottom:0}.status-pass{color:var(--ok)}.status-fail{color:var(--bad)}.status-blocked{color:var(--warn)}pre{margin:0;padding:12px;background:var(--bg);border:1px solid var(--line);border-radius:7px;max-height:320px;overflow:auto;white-space:pre-wrap;word-break:break-word;font:11px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--muted)}.hidden{display:none!important}
+@media(max-width:900px){.grid{grid-template-columns:1fr}.healthfacts{grid-template-columns:1fr 1fr}}@media(max-width:620px){.layout{padding:14px}.top{display:grid}.row{grid-template-columns:1fr}.healthfacts{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
-<h1>ROOM-HOP Computer Agent</h1>
-<div class="card">
-  <div>Agent API: <span id="status">CHECKING…</span></div>
-  <button onclick="checkHealth()">Refresh</button>
-</div>
-<div class="card">
-  <h2>Task</h2>
-  <textarea id="task" rows="4" style="width:100%" placeholder="Mô tả task cho Computer Agent"></textarea>
-  <button onclick="executeTask()">Execute</button>
-</div>
-<div class="card">
-  <h2>Evidence</h2>
-  <pre id="evidence">Chưa có runtime evidence.</pre>
+<div class="layout">
+  <header class="top">
+    <div><h1>Work 10 · Computer Agent</h1><p>Live control dashboard · dữ liệu health và execution lấy trực tiếp từ Agent API.</p></div>
+    <div class="actions"><span class="pill warn" id="healthPill"><i class="dot"></i><span id="healthLabel">CHƯA KẾT NỐI</span></span><button class="secondary" id="refreshHealth">Kiểm tra API</button></div>
+  </header>
+  <div id="originWarning" class="alert red hidden"></div>
+  <section class="card">
+    <h2>Trạng thái Agent API · read-only</h2>
+    <div class="body">
+      <div class="healthfacts">
+        <div class="fact"><small>API</small><strong id="apiUrl">—</strong></div>
+        <div class="fact"><small>Work ID</small><strong id="workId">Chưa xác minh</strong></div>
+        <div class="fact"><small>Service / version</small><strong id="serviceVersion">Chưa xác minh</strong></div>
+        <div class="fact"><small>Execution lease</small><strong id="leaseState">Chưa xác minh</strong></div>
+        <div class="fact"><small>Destructive actions</small><strong id="destructivePolicy">Chưa xác minh</strong></div>
+        <div class="fact"><small>Health cập nhật</small><strong id="healthTime">Chưa kiểm tra</strong></div>
+      </div>
+      <p class="hint" id="healthDetail">Health chỉ xác minh kết nối và cấu hình hiệu lực; không đọc lịch sử tác vụ, không tự tạo PASS.</p>
+    </div>
+  </section>
+  <div class="grid">
+    <section class="card">
+      <h2>Thực thi workflow · có tác động thật</h2>
+      <div class="body">
+        <div class="alert">Nút Execute gửi yêu cầu tới browser adapter của Agent API. Chỉ nhập action/target đã được phê duyệt; thao tác có thể ảnh hưởng trang hoặc tài nguyên thật theo policy máy chủ.</div>
+        <label class="field"><span>API bearer token · chỉ giữ trong bộ nhớ trang</span><input type="password" id="apiToken" autocomplete="off" spellcheck="false" placeholder="Nhập token đã cấu hình trên máy chạy Agent API"></label>
+        <label class="field"><span>Tên task</span><input type="text" id="task" autocomplete="off" placeholder="Mục tiêu workflow đã được phê duyệt"></label>
+        <div class="row">
+          <label class="field"><span>Actions · JSON array</span><textarea id="actions" spellcheck="false" placeholder='[{"type":"navigate","value":"http://127.0.0.1:9000/your-approved-target"},{"type":"observe"}]'></textarea></label>
+          <label class="field"><span>Verification · post-condition JSON</span><textarea id="verification" spellcheck="false" placeholder='{"checks":[{"field":"text","contains":"expected result"}]}'></textarea></label>
+        </div>
+        <label class="consent"><input type="checkbox" id="confirmReal"><span>Tôi xác nhận đã rà soát target, actions và post-condition; tôi hiểu nút Execute sẽ chạy workflow thật trong scope/policy của Agent API.</span></label>
+        <div class="actions"><button id="run" disabled>Execute workflow</button><button id="clear" class="secondary">Xóa form và kết quả</button><span class="muted" id="runNote">Chỉ nhập dữ liệu sau khi health xác nhận đúng Work 10.</span></div>
+        <p id="runError" class="alert red hidden" role="alert"></p>
+      </div>
+    </section>
+    <section class="card">
+      <h2>Kết quả lượt chạy · phản hồi runtime</h2>
+      <div class="body">
+        <div class="actions"><span class="pill warn" id="resultPill"><i class="dot"></i><span id="resultLabel">CHƯA CHẠY</span></span><span class="muted" id="resultMeta"></span></div>
+        <p class="muted" id="resultSummary">Chưa có kết quả trong phiên trang này.</p>
+        <div class="scroll"><table id="checksTable" class="hidden"><thead><tr><th>Field</th><th>Expected text</th><th>Kết quả</th></tr></thead><tbody></tbody></table></div>
+        <div><strong>State trace</strong><div id="trace" class="muted">Chưa có trace.</div></div>
+      </div>
+    </section>
+  </div>
+  <section class="card"><h2>Evidence · từng action từ runtime</h2><div class="body scroll"><table id="evidenceTable"><thead><tr><th>#</th><th>Action</th><th>Target</th><th>Status</th><th>Attempts</th><th>ms</th><th>Error</th></tr></thead><tbody><tr><td colspan="7" class="muted">Chưa có evidence.</td></tr></tbody></table></div></section>
+  <section class="card"><h2>Final observation · dữ liệu trả về</h2><div class="body"><pre id="observation">Chưa có observation.</pre><details><summary>Raw response JSON</summary><pre id="rawResponse">Chưa có response.</pre></details></div></section>
+  <footer class="muted">Token không được lưu vào localStorage/sessionStorage hoặc URL. Kết quả chỉ tồn tại trong bộ nhớ của tab; API hiện không cung cấp lịch sử chạy bền vững.</footer>
 </div>
 <script>
-const API='http://127.0.0.1:8787';
-async function checkHealth(){
-  const el=document.getElementById('status');
-  try{
-    const r=await fetch(API+'/health');
-    const d=await r.json();
-    el.textContent=d.status==='ok'?'CONNECTED':'BLOCKED';
-  }catch(e){el.textContent='OFFLINE';}
+'use strict';
+const EXPECTED_WORK_ID = '10';
+const API = (location.protocol === 'http:' && location.hostname)
+  ? `${location.protocol}//${location.hostname}:8787`
+  : 'http://127.0.0.1:8787';
+const $ = (id) => document.getElementById(id);
+const state = { health: null, checkedAt: 0, busy: false };
+$('apiUrl').textContent = API;
+
+function setPill(el, label, tone) {
+  el.className = `pill ${tone}`;
+  el.querySelector('span').textContent = label;
 }
-async function executeTask(){
-  const task=document.getElementById('task').value.trim();
-  if(!task)return;
-  const out=document.getElementById('evidence');
-  try{
-    const r=await fetch(API+'/agent/execute',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({task})
-    });
-    out.textContent=JSON.stringify(await r.json(),null,2);
-  }catch(e){out.textContent=JSON.stringify({status:'BLOCKED',error:String(e)},null,2);}
+function timeText(date) { return new Intl.DateTimeFormat('vi-VN', {dateStyle:'short', timeStyle:'medium'}).format(date); }
+function setHealthFailure(message) {
+  state.health = null;
+  setPill($('healthPill'), 'OFFLINE / BLOCKED', 'bad');
+  $('workId').textContent = 'Chưa xác minh';
+  $('serviceVersion').textContent = 'Chưa xác minh';
+  $('leaseState').textContent = 'Chưa xác minh';
+  $('destructivePolicy').textContent = 'Chưa xác minh';
+  $('healthDetail').textContent = message;
+  updateRunButton();
+}
+function updateRunButton() {
+  const fresh = state.health && Date.now() - state.checkedAt < 30000;
+  const ready = fresh && state.health.work_id === EXPECTED_WORK_ID && state.health.status === 'ok' && !state.health.execution_busy;
+  $('run').disabled = !(ready && $('confirmReal').checked && !state.busy);
+}
+async function checkHealth() {
+  const button = $('refreshHealth');
+  button.disabled = true;
+  setPill($('healthPill'), 'ĐANG KIỂM TRA', 'warn');
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 5000);
+  try {
+    if (location.protocol !== 'http:') throw new Error('Hãy mở Dash qua HTTP loopback, không dùng file:// hoặc HTTPS.');
+    const response = await fetch(`${API}/health`, {cache:'no-store', signal:controller.signal});
+    const data = await response.json();
+    if (!response.ok || data.status !== 'ok' || data.service !== 'computer-agent') throw new Error(`Health không hợp lệ (HTTP ${response.status}).`);
+    if (String(data.work_id) !== EXPECTED_WORK_ID) throw new Error(`Sai Work ID: API trả về ${String(data.work_id)}; Dash chỉ chấp nhận Work 10.`);
+    state.health = data;
+    state.checkedAt = Date.now();
+    $('workId').textContent = String(data.work_id);
+    $('serviceVersion').textContent = `${data.service} v${data.version}`;
+    $('leaseState').textContent = data.execution_busy ? 'BUSY — không nhận workflow mới' : 'IDLE';
+    $('destructivePolicy').textContent = data.policy?.allow_destructive === true ? 'ĐƯỢC BẬT — kiểm tra kỹ' : 'TẮT';
+    $('healthTime').textContent = timeText(new Date(state.checkedAt));
+    $('healthDetail').textContent = `Kết nối trực tiếp tới ${API}; policy và lease lấy từ /health. Không có lịch sử task trong API.`;
+    setPill($('healthPill'), data.execution_busy ? 'CONNECTED · BUSY' : 'CONNECTED · W10', data.execution_busy ? 'warn' : 'ok');
+  } catch (error) {
+    setHealthFailure(error.name === 'AbortError' ? 'Health timeout sau 5 giây.' : `Không xác minh được Agent API: ${error.message}`);
+    $('healthTime').textContent = timeText(new Date());
+  } finally {
+    clearTimeout(timer);
+    button.disabled = false;
+    updateRunButton();
+  }
+}
+function clearResult() {
+  setPill($('resultPill'), 'CHƯA CHẠY', 'warn');
+  $('resultMeta').textContent = '';
+  $('resultSummary').textContent = 'Chưa có kết quả trong phiên trang này.';
+  $('trace').textContent = 'Chưa có trace.';
+  $('observation').textContent = 'Chưa có observation.';
+  $('rawResponse').textContent = 'Chưa có response.';
+  $('checksTable').classList.add('hidden');
+  $('checksTable').querySelector('tbody').replaceChildren();
+  $('evidenceTable').querySelector('tbody').innerHTML = '<tr><td colspan="7" class="muted">Chưa có evidence.</td></tr>';
+}
+function setRunError(message) { $('runError').textContent = message; $('runError').classList.remove('hidden'); }
+function validatePayload() {
+  const task = $('task').value.trim();
+  if (!task) throw new Error('Nhập tên task.');
+  let actions, verification;
+  try { actions = JSON.parse($('actions').value); } catch (e) { throw new Error(`Actions JSON không hợp lệ: ${e.message}`); }
+  if (!Array.isArray(actions) || actions.length === 0) throw new Error('Actions phải là array không rỗng.');
+  try { verification = JSON.parse($('verification').value); } catch (e) { throw new Error(`Verification JSON không hợp lệ: ${e.message}`); }
+  if (!verification || !Array.isArray(verification.checks) || verification.checks.length === 0) throw new Error('Cần ít nhất một verification check rõ ràng để không suy PASS từ observation chung.');
+  const token = $('apiToken').value.trim();
+  if (!token) throw new Error('Nhập bearer token đã cấu hình trên máy Agent API.');
+  return {task, actions, verification, token};
+}
+function toneFor(status) { return status === 'PASS' ? 'ok' : status === 'FAIL' ? 'bad' : 'warn'; }
+function renderTrace(trace) {
+  $('trace').textContent = Array.isArray(trace) && trace.length ? trace.join('  →  ') : 'Runtime không trả state trace.';
+}
+function renderChecks(evidence) {
+  const verify = [...(evidence || [])].reverse().find(x => x.action === 'verify');
+  if (!verify) return;
+  const failures = verify.failures || [];
+  const body = $('checksTable').querySelector('tbody');
+  body.replaceChildren();
+  (verify.checks || []).forEach(check => {
+    const failed = failures.some(f => String(f).includes(String(check.field)) && String(f).includes(String(check.contains)));
+    const row = document.createElement('tr');
+    for (const value of [check.field ?? '—', String(check.contains ?? '—'), failed ? 'FAIL' : 'PASS']) {
+      const cell = document.createElement('td'); cell.textContent = value;
+      if (value === 'FAIL') cell.className = 'status-fail';
+      else if (value === 'PASS') cell.className = 'status-pass';
+      row.appendChild(cell);
+    }
+    body.appendChild(row);
+  });
+  $('checksTable').classList.remove('hidden');
+}
+function renderEvidence(evidence) {
+  const tbody = $('evidenceTable').querySelector('tbody');
+  tbody.replaceChildren();
+  const rows = (evidence || []).filter(e => e.action && e.action !== 'verify');
+  if (!rows.length) { const tr=document.createElement('tr'); const td=document.createElement('td'); td.colSpan=7;td.textContent='Runtime không trả action evidence.';td.className='muted';tr.appendChild(td);tbody.appendChild(tr);return; }
+  rows.forEach((entry, i) => {
+    const tr = document.createElement('tr');
+    const vals = [i+1, entry.action, entry.target ?? '—', entry.status ?? '—', entry.attempts ?? '—', entry.duration_ms ?? '—', entry.error ?? ''];
+    vals.forEach((value, index) => { const td=document.createElement('td');td.textContent=String(value);if(index===3) td.className=entry.status==='success'?'status-pass':entry.status==='blocked'?'status-blocked':'status-fail';tr.appendChild(td); });
+    tbody.appendChild(tr);
+  });
+}
+function renderResult(data, httpStatus, elapsed) {
+  const status = ['PASS','FAIL','BLOCKED'].includes(data.status) ? data.status : 'FAIL';
+  setPill($('resultPill'), status, toneFor(status));
+  $('resultMeta').textContent = `HTTP ${httpStatus} · ${elapsed} ms · ${data.started_at || 'không có started_at'}`;
+  $('resultSummary').textContent = data.error || (status === 'PASS' ? 'PASS do Agent API trả về; đối chiếu evidence và post-condition bên dưới.' : 'Không PASS. Xem error, trace và evidence từ runtime.');
+  renderTrace(data.state_trace);
+  renderChecks(data.evidence);
+  renderEvidence(data.evidence);
+  const verifyEvidence = [...(data.evidence || [])].reverse().find(e => e.action === 'verify' && e.observation);
+  const observations = (data.evidence || []).filter(e => e.action && e.action !== 'verify' && e.observation);
+  const finalObservation = verifyEvidence?.observation ?? observations.at(-1)?.observation;
+  $('observation').textContent = finalObservation ? JSON.stringify(finalObservation, null, 2) : 'Runtime không trả final observation.';
+  $('rawResponse').textContent = JSON.stringify(data, null, 2);
+}
+async function runWorkflow() {
+  $('runError').classList.add('hidden');
+  try {
+    if (!state.health || Date.now() - state.checkedAt >= 30000) await checkHealth();
+    updateRunButton();
+    if (!state.health || state.health.status !== 'ok' || String(state.health.work_id) !== EXPECTED_WORK_ID) throw new Error('Agent API chưa được xác minh cho đúng Work 10.');
+    if (state.health.execution_busy) throw new Error('Agent API đang BUSY; không gửi workflow mới.');
+    if (!$('confirmReal').checked) throw new Error('Cần xác nhận đã rà soát payload và hiểu thao tác sẽ chạy thật.');
+    const {task, actions, verification, token} = validatePayload();
+    clearResult();
+    state.busy = true; updateRunButton();
+    $('runNote').textContent = 'Đang gửi workflow tới Agent API…';
+    const started = performance.now();
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 660000);
+    try {
+      const response = await fetch(`${API}/agent/execute`, {
+        method:'POST', cache:'no-store', signal:controller.signal,
+        headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},
+        body:JSON.stringify({task, actions, verification})
+      });
+      const raw = await response.text();
+      let data;
+      try { data = JSON.parse(raw); } catch { throw new Error(`Agent API trả JSON không hợp lệ (HTTP ${response.status}).`); }
+      renderResult(data, response.status, Math.round(performance.now()-started));
+      if (response.status !== 200 && data.status === 'PASS') {
+        setPill($('resultPill'),'BLOCKED','warn');
+        $('resultSummary').textContent = 'HTTP/API status không khớp với PASS; coi là BLOCKED cho tới khi điều tra.';
+      }
+    } finally { clearTimeout(timer); }
+  } catch (error) {
+    setRunError(error.name === 'AbortError' ? 'Request timeout. Kết quả side effect chưa chắc chắn; không tự gửi lại. Kiểm tra health và trạng thái browser trước khi retry.' : error.message);
+    if (error.name === 'AbortError') { setPill($('resultPill'),'BLOCKED','warn'); $('resultSummary').textContent='Kết quả không xác định sau timeout; không retry tự động.'; }
+  } finally {
+    state.busy = false;
+    $('runNote').textContent = '';
+    updateRunButton();
+    checkHealth();
+  }
+}
+$('refreshHealth').addEventListener('click', checkHealth);
+$('run').addEventListener('click', runWorkflow);
+$('confirmReal').addEventListener('change', updateRunButton);
+$('clear').addEventListener('click', () => { $('task').value='';$('actions').value='';$('verification').value='';$('apiToken').value='';$('confirmReal').checked=false;$('runError').classList.add('hidden');clearResult();updateRunButton(); });
+document.addEventListener('visibilitychange', () => { if (!document.hidden) checkHealth(); });
+if (location.protocol !== 'http:' || !['127.0.0.1','localhost'].includes(location.hostname)) {
+  $('originWarning').textContent = 'Dash chỉ được chạy local qua HTTP loopback, ưu tiên http://127.0.0.1:3000. API chỉ bind 127.0.0.1; không public hoặc reverse-proxy endpoint này.';
+  $('originWarning').classList.remove('hidden');
 }
 checkHealth();
+setInterval(() => { if (!document.hidden) checkHealth(); }, 15000);
 </script>
 </body>
 </html>
+
+<!-- Compatibility guard: health.work_id can be JSON string or number. -->
+<script>
+function updateRunButton() {
+  const fresh = state.health && Date.now() - state.checkedAt < 30000;
+  const ready = fresh && String(state.health.work_id) === EXPECTED_WORK_ID && state.health.status === 'ok' && !state.health.execution_busy;
+  $('run').disabled = !(ready && $('confirmReal').checked && !state.busy);
+}
+</script>
