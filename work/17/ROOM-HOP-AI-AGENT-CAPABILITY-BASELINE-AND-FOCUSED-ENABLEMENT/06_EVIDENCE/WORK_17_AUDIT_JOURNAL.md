@@ -1840,3 +1840,23 @@ Current-main repository provides a Core HTTP launcher source but no verifiable s
 - GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
 - READ/TRACE/ANALYZE ONLY; no source, test, runtime, service, deployment, provider, Host, permission or branch action.
 - Next: prepare a bounded blocker/decision brief distinguishing source defect (route mount/test/docs mismatch) from deployment unknown (actual Core service config/process), then continue source-only evidence collection. PC/service-manager attestation remains deferred until PC is available; do not ask for it now.
+
+
+## Entry 092 — Fresh PR #48 status and current-main divergence (2026-11-21T16:51:29+07:00)
+
+### Scope and method
+Fetched current PR #48 metadata and compared current `main` with branch `work/w1111-core-execution-authority-v1-2`. Read-only GitHub metadata/compare; no PR review, branch update, merge, test, deployment or source mutation.
+
+### Findings
+- PR #48 remains `open`, `draft=true`, `merged=false`, `mergeable=false`; last updated timestamp from GitHub metadata is 2026-11-11T18:04:43Z. Head SHA `c70eb2b82f54a000a81263dc519078ddf105f075`; base `main` SHA stored in PR metadata `a663bd5afda524cb9dc7ca685945ca96c68d664d`.
+- Fresh compare against current main: `status=diverged`, `ahead_by=157`, `behind_by=944`, merge base `82a490ad16c72e77ca3c9c8d9f83feabcb6f4e54`, 88 changed paths. This is more divergent from current main than the earlier recorded comparison; do not cherry-pick or merge as a unit.
+- PR body still reports successful historical CI on its branch head and explicitly states production Core startup/service-manager wiring, production credentials/Work policy/journal provisioning, live PC/cloud probes and runtime parity are pending. These are PR-body claims, not newly retrieved workflow run evidence in this pass.
+- Candidate contains Core grant authority/routes and W12/W13 Host changes, but does not implement W70 assignment_id/dispatch_id/attempt_id/provider receipt/recipient-authenticated ACK. It cannot close GAP-01 even if execution grant candidate is preserved.
+- The current-main route mismatch recorded in Entry 090 remains: current main lacks the authority module/router while deployment guide/test describes the intended candidate behavior.
+
+### Disposition
+- PR #48 is a separate broad candidate, not current Core and not merge-ready. Preserve it for controlled owner/security review; do not transplant 88 files or silently port only selected files.
+- GAP-11 OPEN/P0; current-main execution authority route absent in inspected composition; candidate live deployment NOT VERIFIED.
+- GAP-01 OPEN/P0; Assignment/dispatch/provider receipt/recipient ACK binding absent from this candidate; E2/E3 NOT PROVEN.
+- READ/TRACE/ANALYZE ONLY. No PR, branch, source, test, runtime, credential, permission or deployment action.
+- Next: maintain strict separation between (a) Core execution-grant candidate remediation for GAP-11 and (b) W70/W52 Assignment delivery/ACK chain for GAP-01; no combined patch or merge until architecture and source baselines are reconciled.
