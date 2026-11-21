@@ -162,3 +162,15 @@ See `06_EVIDENCE/W10_CROSS_PLATFORM_CI_EVIDENCE_20261122_RUN69.md`. This is host
 ## Shared Dashboard ingress boundary — 2026-11-22
 
 Port `3000` is reserved for the single shared ROOM-HOP Dashboard ingress owned by W113. This Work 10 Dashboard is a standalone local development/acceptance UI and therefore serves on loopback port `3010` during isolated testing. Work 10 must not start a competing listener on port 3000. Production Work 10 Dashboard access must be mounted/registered by W113 under its approved Work route; the route path and embedding contract are not guessed here. The Agent API remains loopback-only and its exact Origin allow-list must be configured for the approved host origin before any integration. W113 integration is NOT VERIFIED.
+
+
+## Current live Dashboard/API smoke baseline — Run #135
+
+The full suite now includes `dashboard_live_e2e` (7 checks). Run #135:
+- Windows Server 2022: 213 PASS / 0 FAIL / 0 SKIP.
+- Ubuntu 24.04: 207 PASS / 0 FAIL / 2 expected SKIP.
+- Dashboard static contract: 17 PASS per OS.
+- Dashboard live health/API/consent smoke: 7 PASS per OS.
+- Real Chromium API/runtime E2E: PASS per OS.
+
+See `06_EVIDENCE/W10_LIVE_DASHBOARD_API_EVIDENCE_20261122_RUN135.md`. Hosted CI does not replace Owner PC acceptance.
