@@ -68,7 +68,7 @@ def validate_commit_binding(
     return trailers
 
 
-def validate_push_payload(payload: Mapping[str, Any]) -> dict[str, Any]:
+def validate_push_payload(\n    payload: Mapping[str, Any], *, expected_repository: str\n) -> dict[str, Any]:
     """Validate a trusted GitHub push event payload without mutating Task state."""
     if not isinstance(payload, Mapping):
         raise SourceBindingError("push payload must be an object")
