@@ -80,3 +80,8 @@ After adding the Run #104 evidence and POSIX cleanup remediation evidence to bot
 ## Inventory count correction — 2026-11-22 06:41 (UTC+07:00)
 
 The P0 implementation readiness gate was added to the canonical branch and the full inventory file was regenerated. Current live snapshot: Sandbox 161 files; GitHub 69 files; shared 69; Sandbox-only 92; GitHub-only 0; one Sandbox-only `.github/` directory. Sandbox-only groups: generated/transient 10, reference/preview 8, historical evidence/design 46, AI debug archive 26, superseded handover 1, transcript 1. The updated path list is in `06_EVIDENCE/W10_FULL_PATH_INVENTORY_DISPOSITION_20261122.md`.
+
+
+## Inventory count correction — 2026-11-22 06:43 (UTC+07:00)
+
+After adding the Dashboard live E2E test and Run #135 evidence to both Sandbox and GitHub, the current snapshot is Sandbox 163 files; GitHub 71 files; shared 71; Sandbox-only 92; GitHub-only 0; one Sandbox-only `.github/` directory. The 92 Sandbox-only KEEP dispositions are unchanged and itemized in `06_EVIDENCE/W10_FULL_PATH_INVENTORY_DISPOSITION_20261122.md`.
