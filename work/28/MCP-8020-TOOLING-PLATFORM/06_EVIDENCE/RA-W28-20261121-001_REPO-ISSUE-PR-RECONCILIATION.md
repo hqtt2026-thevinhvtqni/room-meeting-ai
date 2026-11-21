@@ -111,3 +111,22 @@ Additional current open-ticket dispositions recorded after the initial inventory
 - **Issue #58 (W76):** PR #60 remains the active v2 draft; WP-76-07 dispatch/receipt/ACK remains BLOCKED, runtime/PC E2E and canonical QE pending. Keep OPEN.
 
 These comments supplement the first-pass issue/PR inventory; they do not change any Work acceptance or release state.
+
+
+## 8. Follow-up verification — 2026-11-21 (UTC+07; connector did not return execution clock)
+
+**Name:** Ka / AI-02  
+**Title:** CSA / ROOM-WIDE GitHub + Sandbox Reconciliation Owner (delegated)  
+**Date-Time:** 2026-11-21; exact time not returned by GitHub connector (UTC+07)  
+**Priority:** P1  
+**Read order:** 33
+
+This section supersedes the earlier snapshot where explicitly noted; historic entries above are preserved.
+
+- **Issue #56 / W300 TS2345 — CLOSED / COMPLETED.** The original diagnostic was tied to historical SHA `cffe439a919bbee5f181cdfa1d16f832ecf5e9de`. Correct canonical path is `work/300/ROOM-HOP-AI-CREATIVE-SERVICE/05_BUILD/04_CODE/dashboard/src/lib/w300/store.tsx`. Fix commit `d07307c459a8fc44afaee7be40d4732823da3497` applies JobPatch key-by-key and removes optional properties when value is undefined. Follow-up formatting commit `6dcb1a89ca0dd625d9560003f2271be015505eb8` descends from CI source SHA `896b08ed70157409bd44a6903d632b31c215b184`. W300 CI run [#43682996529](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/43682996529) SUCCESS; TypeScript, ESLint, unit tests and production build all passed. Issue comment records evidence; issue closed with reason completed. This closes the diagnostic only, not all Work300 acceptance.
+- **Issue #44 / PR #45 — P0 OPEN / BLOCKED.** Current main `48b01932f85d6ac964fabe15b44d1469b454c5b6` still contains `auth_verified: True` based on caller-supplied registry identity. PR #45 head `71b8abeb04ab0af9090a763fafba2e1abf25a7ba` removes the false assertion and records unverified session binding; this narrow source correction is sound, but it does not authenticate a live session. PR head has zero check runs/statuses and compares 2 ahead / 1,139 behind main (DIVERGED). Ka submitted a formal COMMENT review, not approval. Per Issue #44, Cla is primary implementation owner, Ka independent reviewer, Go QE/QA, Xu coordinator; no identities/assignees inferred. No merge.
+- **PR #61 / Work28 WP2 — OPEN / BLOCKED.** Latest head `46888f44b4913ed371c89cddd4ebce9a737a39e8` now returns unknown for POSIX process-group probe failures and includes OSError/timeout/non-zero/malformed-output fault tests, addressing An's prior HIGH fail-open finding at source/test level. However exact head has zero check runs and statuses; it is 24 ahead / 12 behind Work28 base and GitHub reports mergeable=false. Ka submitted a formal COMMENT review; no approval, merge or Execution Gate opening.
+- **Issue #3 / PR #2 — PARTIALLY IMPLEMENTED / NOT ACCEPTED.** Current main contains MeetingManager.list_meetings(), Meeting.get_transcript() and MeetingService wrappers. Tests cover multiple list results, status filter, limit and transcript retrieval. Focused empty/single list and get_transcript not-found tests are not evidenced. PR #2 remains OPEN/DRAFT; 11 ahead / 1,774 behind main, DIVERGED, with older unique Governance/MCP changes requiring path-level reconciliation. Ka posted a review comment; no merge.
+- **Issue #57 / Work32 — REJECT / BLOCKED remains unchanged.** Protected execution remains DENIED pending separate Xu authorization and exact current DOC-116/117/125 + Cla review. No source/test/runner/PC/PR mutation authorization.
+
+No branch deletion, rebase, force-push, merge, main mutation, deployment or release was performed in this follow-up.
