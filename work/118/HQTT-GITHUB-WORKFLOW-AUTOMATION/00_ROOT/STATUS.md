@@ -370,3 +370,10 @@ The workflow_run listener requires default-branch presence for real runtime veri
 - GitHub Actions push run #44879719166 SUCCESS; 127 tests PASS / 0.257s; artifact ID 14697318273; SHA-256 `de06cfb5787728c7fb214fb80c485f6efe33e2738ad9376db0ea66748b8f2514`.
 - Source binding on the aggregate feature branch correctly reports `UNBOUND_LEGACY_BRANCH`; task-specific branch runtime binding remains untested.
 - Task Register and separate Task/Assignment state model are included in the tested revision.
+
+
+## Owner-directed execution exception (2026-11-21)
+
+- W118-TASK-013, W118-TASK-016 and W118-TASK-017 use `execution_mode=OWNER_DIRECTED_SESSION` with an explicit Owner directive reference. Their Assignment status remains UNASSIGNED; no Agent runtime principal or ACK is fabricated.
+- Agent-assigned execution still requires verified principal and Assignment ACKNOWLEDGED before Task IN_PROGRESS.
+- Code tests: push run #44880193690 SUCCESS; 130 tests PASS / 0.512s at SHA `4bd94d43251f26e88200d6e0f1ef9c19354bc426`; artifact ID 14697279628.
