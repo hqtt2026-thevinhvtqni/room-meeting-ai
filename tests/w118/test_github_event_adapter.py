@@ -86,7 +86,7 @@ class GitHubEventAdapterTests(unittest.TestCase):
     def test_task_scoped_push_maps_to_core_evidence_intent(self):
         verified = delivery("push", push_payload())
         result = normalize_github_delivery(
-            verified, core_task(), expected_repository=REPOSITORY, allowed_ci_workflow=WORKFLOW
+            verified, core_task=core_task(), expected_repository=REPOSITORY, allowed_ci_workflow=WORKFLOW
         )
         self.assertEqual(result["status"], "NORMALIZED")
         intent = result["event_intent"]
@@ -100,7 +100,7 @@ class GitHubEventAdapterTests(unittest.TestCase):
     def test_aggregate_branch_is_unbound_and_emits_no_event(self):
         verified = delivery("push", push_payload(branch="work/118-auto-e2e-v2"))
         result = normalize_github_delivery(
-            verified, core_task(), expected_repository=REPOSITORY, allowed_ci_workflow=WORKFLOW
+            verified, core_task=core_task(), expected_repository=REPOSITORY, allowed_ci_workflow=WORKFLOW
         )
         self.assertEqual(result["status"], "UNBOUND")
         self.assertIsNone(result["event_intent"])
@@ -109,7 +109,7 @@ class GitHubEventAdapterTests(unittest.TestCase):
         verified = delivery("push", push_payload(task_id="W118-TASK-999"))
         with self.assertRaises(GitHubEventAdapterError):
             normalize_github_delivery(
-                verified, core_task(), expected_repository=REPOSITORY, allowed_ci_workflow=WORKFLOW
+                verified, core_task=core_task(), expected_repository=REPOSITORY, allowed_ci_workflow=WORKFLOW
             )
 
     def test_push_issue_mismatch_is_rejected(self):
@@ -177,7 +177,7 @@ class GitHubEventAdapterTests(unittest.TestCase):
             "issue": {"number": 65, "state": "closed", "html_url": "https://github.com/example/repo/issues/65"},
         })
         result = normalize_github_delivery(
-            verified, core_task(), expected_repository=REPOSITORY, allowed_ci_workflow=WORKFLOW
+            verified, core_task=core_task(), expected_repository=REPOSITORY, allowed_ci_workflow=WORKFLOW
         )
         self.assertEqual(result["status"], "NORMALIZED")
         self.assertEqual(result["event_intent"]["payload"]["state_effect"], "OBSERVATION_ONLY_CORE_DECIDES_TASK_STATE")
@@ -189,7 +189,7 @@ class GitHubEventAdapterTests(unittest.TestCase):
             "issue": {"number": 999, "state": "closed"},
         })
         result = normalize_github_delivery(
-            verified, core_task(), expected_repository=REPOSITORY, allowed_ci_workflow=WORKFLOW
+            verified, core_task=core_task(), expected_repository=REPOSITORY, allowed_ci_workflow=WORKFLOW
         )
         self.assertEqual(result["status"], "UNHANDLED")
         self.assertIsNone(result["event_intent"])
@@ -198,7 +198,7 @@ class GitHubEventAdapterTests(unittest.TestCase):
         fake = {"signature_verified": False, "repository": REPOSITORY}
         with self.assertRaises(GitHubEventAdapterError):
             normalize_github_delivery(
-                fake, core_task(), expected_repository=REPOSITORY, allowed_ci_workflow=WORKFLOW
+                fake, core_task=core_task(), expected_repository=REPOSITORY, allowed_ci_workflow=WORKFLOW
             )
 
 
