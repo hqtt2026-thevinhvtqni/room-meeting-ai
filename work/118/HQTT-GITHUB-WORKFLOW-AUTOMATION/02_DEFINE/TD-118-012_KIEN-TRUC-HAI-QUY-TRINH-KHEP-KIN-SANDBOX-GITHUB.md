@@ -102,7 +102,7 @@ flowchart LR
 6. **ASSIGNMENT_PROPOSED:** tạo Assignment record độc lập với Task; ghi Agent principal, capability match, policy version, accountable role và lease. GitHub Assignee không thay Assignment.
 7. **ASSIGNMENT_DISPATCHED:** gửi Task qua runtime route đã xác minh; lưu dispatch receipt, correlation ID và thời điểm.
 8. **ASSIGNMENT_ACKNOWLEDGED / ACK_DENIED:** Agent trả ACK có actor principal, Assignment ID, Task ID và dispatch nonce/reference; verifier xác minh danh tính, quyền, hạn ACK và chống replay.
-9. **ASSIGNMENT_IN_PROGRESS:** Agent phát start event riêng sau ACK; Assignment mới chuyển IN_PROGRESS. Orchestrator chuyển Task READY → IN_PROGRESS theo policy; không suy ra Task status từ một comment.
+9. **ASSIGNMENT_IN_PROGRESS:** Agent phát start event riêng sau ACK; Assignment mới chuyển IN_PROGRESS. Orchestrator chuyển Task READY → IN_PROGRESS theo policy. Ngoại lệ OWNER_DIRECTED_SESSION chỉ hợp lệ khi có owner_directive_ref; không tạo Assignment/Agent ACK giả.
 10. **PROGRESS:** Agent gửi heartbeat/progress có sequence number; Sandbox ghi nhận tiến độ và evidence refs.
 11. **BLOCKED / RECOVERY:** Assignment có thể BLOCKED; Orchestrator/Owner quyết định Task có cần chuyển BLOCKED hay không. Không tự giao lại khi còn lease hợp lệ.
 12. **ASSIGNMENT_SUBMITTED:** Agent nộp kết quả, commit/PR/evidence và checklist tự kiểm tra; đây chưa phải nghiệm thu.
