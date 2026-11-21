@@ -1,5 +1,13 @@
 # W118-10 — AUTO E2E TEST MATRIX
 
+> **CANONICAL REMEDIATION SNAPSHOT — 2026-11-21 08:38:39 +07:00**
+> - CI validate artifact classification is now `CI_CONTRACT`, not `RUNTIME`.
+> - Regression T10-27 PASS in [Run #44851353422](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44851353422); 54 tests PASS / 0.223s.
+> - Exact tested source commit: `acb7f510b5885d045b165f739540ee85e57d7439`; artifact ID `14685143198`; SHA-256 `a326f03eae720de5af6ff531e1105e2311c0738a4661f71f940d661eb9b3b6a1`.
+> - Artifact ZIP was downloaded and JSON read back: `evidence_type=CI_CONTRACT`, `state=RECORDED`, `test_outcome=success`, and tested commit matches.
+> - This canonical block supersedes all earlier "latest" snapshots below. Older snapshots remain historical audit records only.
+
+
 - **Work:** W118
 - **Priority:** P0
 - **Test owner:** Ka builds the harness; Xu independently reviews; Vinh gives final acceptance.
@@ -32,6 +40,7 @@
 | T10-24 | Direct fault-injection authorization | Direct workflow_dispatch is authorized against trusted default-branch role map before failure injection | PASS — regression test in Run #44757234204; 50 tests total |
 | T10-25 | Diagnostic issue idempotency across closure | A closed diagnostic Issue with the same workflow_id + commit SHA is reopened/updated instead of creating a duplicate | PASS — unit + workflow contract tests in Run #44758004387; 52 tests total |
 | T10-26 | GitHub Actions supply-chain pinning | Every `uses:` in W118 workflows references a verified full 40-character commit SHA; no mutable tags/branches | PASS — Run #44846434712; 53 tests total |
+| T10-27 | CI evidence classification integrity | Validate artifact MUST be `CI_CONTRACT`, MUST NOT be `RUNTIME`; state remains RECORDED and limitation prevents acceptance promotion | PASS — regression in Run #44851353422; 54 tests; artifact JSON exact-readback confirms `CI_CONTRACT` |
 
 ## 1. Evidence rules
 
@@ -228,3 +237,11 @@ Post-merge event execution order and expected outcomes are specified in [RT-118-
 
 - **Artifact:** `w118-run-evidence-44846434712-1`, ID `14682593399`, SHA-256 digest `2cf1648dfb552c9fd9e15d62b23098dbaf2f7cbd9bb7ba16444858b2e6081f20`; present/unexpired at readback (expires 2026-12-21T00:50:34Z).
 - **Runtime limitation:** handoff, ACK, acceptance-review, controlled-failure and controlled-failure-dispatch jobs were SKIPPED. This run proves contract/action-pin behavior only; runtime event E2E remains NOT VERIFIED.
+
+
+## Canonical evidence-classification regression — 2026-11-21
+
+- T10-27 PASS: workflow contract test asserts `evidence_type=CI_CONTRACT`, rejects `RUNTIME`, verifies `state=RECORDED` and the non-acceptance limitation.
+- [Run #44851353422](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44851353422); tested commit `acb7f510b5885d045b165f739540ee85e57d7439`; 54 tests PASS / 0.223s.
+- Artifact ID `14685143198`, digest `a326f03eae720de5af6ff531e1105e2311c0738a4661f71f940d661eb9b3b6a1`; downloaded ZIP and JSON exact-readback confirms the expected field values and tested commit.
+- Event-specific jobs SKIPPED; runtime E2E remains NOT VERIFIED.
