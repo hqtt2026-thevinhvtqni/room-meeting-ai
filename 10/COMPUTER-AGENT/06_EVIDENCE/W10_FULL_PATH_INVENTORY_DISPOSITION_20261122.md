@@ -11,14 +11,14 @@
 
 | Measure | Count |
 |---|---:|
-| Sandbox files under `COMPUTER-AGENT/` | 159 |
-| GitHub branch files under `10/COMPUTER-AGENT/` | 66 |
-| Shared paths | 66 |
+| Sandbox files under `COMPUTER-AGENT/` | 161 |
+| GitHub branch files under `10/COMPUTER-AGENT/` | 68 |
+| Shared paths | 68 |
 | Sandbox-only files | 93 |
 | GitHub-only files | 0 |
 | Sandbox-only `.github/` directory | 1 |
 
-The 66 shared paths are all represented on both sides. The 93 Sandbox-only files below have explicit KEEP / SANDBOX-ONLY dispositions; the Sandbox and GitHub directory trees are therefore intentionally not byte-for-byte identical. No GitHub-only Work 10 file remains in this snapshot.
+The 68 shared paths are all represented on both sides. The 93 Sandbox-only files below have explicit KEEP / SANDBOX-ONLY dispositions; the Sandbox and GitHub directory trees are therefore intentionally not byte-for-byte identical. No GitHub-only Work 10 file remains in this snapshot.
 
 ## 2. Shared-path verification
 
@@ -167,7 +167,7 @@ Historical transcript archive; not a runtime artifact or canonical source.
 
 ## 5. Synchronization disposition
 
-**Accepted source/test/architecture/config parity: PASS for the current shared set.** All 66 shared paths are present; no source/test/config divergence remains in the shared implementation set. The 93 Sandbox-only files and one parent directory are intentionally retained as historical/reference/generated Sandbox material, as itemized above.
+**Accepted source/test/architecture/config parity: PASS for the current shared set.** All 68 shared paths are present; no source/test/config divergence remains in the shared implementation set. The 93 Sandbox-only files and one parent directory are intentionally retained as historical/reference/generated Sandbox material, as itemized above.
 
 This is a reconciled working/canonical branch inventory, not a claim that the two directory trees have identical file counts. Work 10 remains ACTIVE — NOT RELEASED pending physical Windows 10 acceptance, production V8 key provisioning, Linux cgroup-v2 disposition, ROOM-HOP integration and Owner's final acceptance.
 
