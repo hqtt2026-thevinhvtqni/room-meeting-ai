@@ -295,3 +295,11 @@ Co | AI-07. GitHub Actions Run #104 (ID `44963124942`) tested commit `ee6b6cf066
 
 Co | AI-07. Run #99 (ID `44963052277`) exposed one intermittent Ubuntu process-containment failure: `process group did not become empty` after the worker leader exited while an orphaned descendant could still be awaiting init reaping. Windows job passed. Co hardened `terminate_posix_process_group` to keep polling group identity until the bounded deadline after SIGKILL, and expanded the POSIX worker/grandchild test to three cycles. Run #105 (ID `44963236229`, commit `e46189f...`) passed both OSes: Ubuntu 200 PASS/0 FAIL/2 SKIP; Windows 206 PASS/0 FAIL/0 SKIP. Run #106 (ID `44963255436`, commit `12992e1...`) passed both OSes with the three-cycle stress test. Real Chromium E2E PASS on both. Evidence: `06_EVIDENCE/W10_POSIX_CLEANUP_REMEDIATION_CI_20261122_RUN99_105_106.md`. This closes the observed intermittent CI failure, not the Linux cgroup-v2 production gate; POSIX remains LIMITED_NOT_CGROUP_V2.
 
+
+
+## W10-CI-RUN105-106-AND-INVENTORY-UPDATE-20261122-01 — 2026-11-22 06:38 (UTC+07:00)
+
+Run #105 and #106 completed SUCCESS on Ubuntu 24.04 and Windows Server 2022. Run #106 included the three-cycle POSIX worker/grandchild cleanup test. Current results: Ubuntu 200 PASS / 0 FAIL / 2 SKIP; Windows 206 PASS / 0 FAIL / 0 SKIP. Run #99's intermittent group-empty check failure is remediated by bounded polling and repeated stress test; Linux remains LIMITED_NOT_CGROUP_V2. Evidence: `06_EVIDENCE/W10_POSIX_CLEANUP_REMEDIATION_CI_20261122_RUN99_105_106.md`.
+
+After adding Run #104 and POSIX remediation evidence to both sides, inventory: Sandbox 161 files; GitHub 68 files; shared 68; Sandbox-only 93; GitHub-only 0; one Sandbox-only `.github/` directory. All 68 shared paths exist; accepted source/test/architecture/config files remain exact-match. 93 Sandbox-only paths retain explicit dispositions in `06_EVIDENCE/W10_FULL_PATH_INVENTORY_DISPOSITION_20261122.md`.
+
