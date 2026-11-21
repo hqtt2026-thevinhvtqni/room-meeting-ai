@@ -1473,3 +1473,15 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - **F-15 correction:** Owner did not issue a separate TaskResult/Workflow timeout mapping decision. F-15 remains OWNER DECISION REQUIRED; prior Biên bản wording attributing a specific F-15 decision to Owner is corrected.
 - Remaining gates: physical Windows 10, production V8 HMAC key/pins, Linux cgroup-v2, cross-Work integration and final Owner acceptance.
 - **KÝ: Co | AI-07**
+
+
+## W10-INVENTORY-COUNT-CORRECTION-20261122-03 — 2026-11-22 06:41 (UTC+07:00)
+- After syncing the P0 readiness gate and regenerating inventory: Sandbox 161 files; GitHub 69; shared 69; Sandbox-only 92; GitHub-only 0; one Sandbox-only `.github/` directory.
+- Sandbox-only groups: generated/transient 10; reference/preview 8; historical evidence/design 46; AI debug archive 26; superseded handover 1; transcript 1.
+- **KÝ: Co | AI-07**
+
+## W10-OWNER-DELEGATION-AND-P0-STATUS-CORRECTION-20261122-02 — 2026-11-22 06:41 (UTC+07:00)
+- P0 implementation may proceed under Owner's direct delegation; An V8 review is waived and is not an acceptance prerequisite. No An review/ACK/approval is claimed.
+- Three LOCKED contracts remain unchanged.
+- F-15 TaskResult/Workflow timeout mapping remains OWNER DECISION REQUIRED; earlier Biên bản wording was corrected.
+- **KÝ: Co | AI-07**
