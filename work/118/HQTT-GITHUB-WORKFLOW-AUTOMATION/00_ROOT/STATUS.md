@@ -92,3 +92,15 @@
 - **Task Register:** Sandbox remains operational source. Canonical register and schema have been reconciled to TD-118-012 v1.2: owner-directed build mode is explicit; no Agent identity or ACK is inferred; GitHub mirror points to PR #68 branch.
 - **Remaining blockers:** Core Task API/field map/lock/Event ingress; W102 verified principal and Assignment; W12/W13 Work Authority/runtime; W70 schema/owner ACK; live Issue API and task-scoped push; production webhook endpoint; Xu independent review and Vinh product acceptance.
 - **Disposition:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED. No merge, release, secret, permission or Work 70 schema mutation.
+
+
+## 9. Exact-head verification after Task Register/schema reconciliation — 2026-11-22 04:45 +07:00
+
+- **Active PR:** #68, branch `work/118-auto-e2e-v2-clean`, OPEN / DRAFT / UNMERGED; Main base `43efc145c9f7007284366e8edb4f4805191bb3ad`; compare 6 ahead / 0 behind at this snapshot; all 45 PR paths are W118-only.
+- **Task Register correction:** removed Assignment runtime state (`assignment_status_model` and per-task `assignment_status`) from the W118 planning register. Core :8000 remains the only runtime Task/Assignment/Event authority. Schema required fields now all exist in schema properties. Sandbox and GitHub Task Register contents are byte-identical; 7 tasks retained with owner-directed build mode and no inferred Agent identity/ACK.
+- **Sandbox code mirror:** updated to stateless Core/GitHub adapters; removed legacy SQLite Task lifecycle, webhook inbox and event reconciler modules and their tests from active code. SYNC-MANIFEST v1.3 records the new boundary.
+- **Exact-head CI:** Run [#44949541833](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44949541833), exact tested HEAD `aa842ea97746e95658c1166e83d697ea4f696343`; validate SUCCESS; **94 tests PASS / 0.175s**; artifact ID `14724508925`, SHA-256 `3e0215713b07ba0f19b9b74383dc8011a3deeb4d1c38039b4b067be8eb279aee`.
+- **CI limitation:** handoff-request, ACK-claim and review-observation jobs SKIPPED on PR synchronize. This is contract CI only; no runtime lifecycle E2E claim.
+- **Known intermediate failure:** Runs #44949264655, #44949331177 and #44949341488 failed because the first Sandbox Task Register mirror retained Assignment state fields that TD-118-012 v1.2 forbids. The contract tests exposed this. Register/schema were corrected; exact-head run #44949541833 then passed. Failures remain visible in Actions history.
+- **Remaining blockers:** Core Task API/field map/lock/Event ingress; W102 verified principal/Assignment; W12/W13 Work Authority/runtime; live Issue API/task-scoped push; production webhook route/secret/TLS; W70 schema/owner ACK; Xu independent review and Vinh product acceptance.
+- **Disposition:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED. No merge, release, secret/permission change or W70 schema mutation.

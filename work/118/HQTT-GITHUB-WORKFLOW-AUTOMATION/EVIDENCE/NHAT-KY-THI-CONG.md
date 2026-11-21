@@ -1289,3 +1289,19 @@
 - **Task Register reconciliation:** Sandbox Task Register remains operational source; updated its execution_mode to OWNER_DIRECTED_BUILD under Vinh's 2026-11-22 autonomous directive, preserved all Task states/blockers and kept Agent identities/ACK unassigned/uninferred; updated GitHub mirror URL to clean branch. Copied TD-118-012 v1.2 schema into Sandbox.
 - **Open blockers:** no Core API/field map/Event port; no verified W102 principal/Assignment; no W12/W13 runtime; no W70 schema ACK; no live Issue API/task-scoped push/webhook route; Xu review and Vinh acceptance pending.
 - **Disposition:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED. No merge or release.
+
+
+## Entry 078 — Task Register contract correction and exact-head CI PASS
+- **Thời gian:** 2026-11-22 04:45 (UTC+07:00).
+- **Người thực hiện:** Ka / AI-02.
+- **Chức danh:** CSA / Autonomous W118 Build Owner theo ủy quyền của Vinh.
+- **Ưu tiên / Thứ tự đọc:** P0 / 17.
+- **Phạm vi:** Task Register/schema reconciliation, Sandbox mirror retirement of legacy local state, exact-head CI verification on PR #68.
+- **Finding:** Sandbox Task Register v1.0 vẫn chứa `assignment_status_model` và per-task `assignment_status`, mâu thuẫn TD-118-012 v1.2 vì Assignment runtime state thuộc Core :8000. Schema cũng yêu cầu một top-level field không còn thuộc model.
+- **Correction:** Giữ Sandbox làm nguồn Task Register vận hành; bỏ Assignment runtime fields khỏi planning register; giữ Task status, execution_mode, owner_directive_ref, core_task_id/correlation_id mapping. Cập nhật model/rules để nêu rõ Core :8000 là runtime authority. Sửa schema để required fields là subset của properties. Sandbox và GitHub mirror đã đối chiếu byte-identical; 7 Task giữ nguyên status/blocker, không gán Agent identity hoặc ACK.
+- **Code mirror:** Đồng bộ 20 file stateless từ PR #68 vào Sandbox 04_CODE; loại bỏ 6 legacy SQLite Task lifecycle/webhook inbox/event reconciler files khỏi active mirror; cập nhật README, implementation note và SYNC-MANIFEST v1.3.
+- **Exact-head CI:** Run #44949541833 SUCCESS tại SHA `aa842ea97746e95658c1166e83d697ea4f696343`; 94 tests PASS / 0.175s; artifact ID 14724508925; SHA-256 `3e0215713b07ba0f19b9b74383dc8011a3deeb4d1c38039b4b067be8eb279aee`.
+- **Negative evidence retained:** Runs #44949264655, #44949331177, #44949341488 failed on the stale Assignment-state fields. Không xóa hoặc che giấu; sửa theo đúng contract test và rerun exact HEAD đạt PASS.
+- **Runtime limitation:** 3 event-specific jobs SKIPPED; chưa có Core/W102/W12/W13/W70 runtime E2E. Các external ports/identity/schema ACK còn BLOCKED.
+- **Git disposition:** PR #68 là delivery candidate sạch, 6 ahead / 0 behind; PR #67 giữ unmerged như lịch sử, không dùng để merge. Không merge/release.
+- **Kết quả:** Task Register/schema contract PASS; exact-head CI PASS; Sandbox code mirror stateless aligned; W118 tổng thể vẫn ACTIVE — NOT ACCEPTED — NOT RELEASED.
