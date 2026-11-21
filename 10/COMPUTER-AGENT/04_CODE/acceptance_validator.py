@@ -130,6 +130,24 @@ def _load_trust_files():
     schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
     policy = json.loads(POLICY_PATH.read_text(encoding="utf-8"))
     Draft202012Validator.check_schema(schema)
+    expected_categories = {
+        "OS_PROFILE", "HTTP_ABORT", "SPAWN", "CRASH_RECOVERY", "IPC",
+        "SERIALIZATION", "ACTION", "WORKFLOW", "SAFETY", "RETRY", "HASH",
+    }
+    if policy.get("policy_id") != "W10-P0-CATEGORY-OUTCOME-POLICY":
+        raise RuntimeError("unexpected category outcome policy id")
+    if policy.get("policy_version") != "1.0.0" or policy.get("schema_version") != "1.2.0":
+        raise RuntimeError("unsupported category outcome policy version")
+    if set(policy.get("categories", {})) != expected_categories:
+        raise RuntimeError("category outcome policy catalog is incomplete or has unknown categories")
+    valid_outcomes = {"PASS", "FAIL", "BLOCKED", "UNSUPPORTED", "TERMINATED", "REJECTED"}
+    for category, item in policy["categories"].items():
+        if not item.get("pass_allowed_outcomes") or not set(item.get("pass_allowed_outcomes", [])) <= valid_outcomes:
+            raise RuntimeError(f"invalid pass outcome policy for {category}")
+        if not item.get("allowed_lease_states") or not set(item.get("allowed_lease_states", [])) <= {"RELEASED", "HELD"}:
+            raise RuntimeError(f"invalid lease-state policy for {category}")
+        if not item.get("allowed_owner_states") or not set(item.get("allowed_owner_states", [])) <= {"CURRENT", "FENCED", "NONE"}:
+            raise RuntimeError(f"invalid owner-state policy for {category}")
     return Draft202012Validator(schema, format_checker=FormatChecker()), policy
 
 
@@ -293,6 +311,9 @@ def verify_attestation(attestation: dict, key: bytes, *, expected_input_sha256: 
             return False
         unsigned = copy.deepcopy(attestation)
         unsigned.pop("signature")
+        result_hash = _sha256_bytes(_canonical(attestation["result"]))
+        if not hmac.compare_digest(result_hash, attestation["semantic_result_sha256"]):
+            return False
         actual = hmac.new(key, _canonical(unsigned), hashlib.sha256).hexdigest()
         if not hmac.compare_digest(actual, signature["value"]):
             return False
