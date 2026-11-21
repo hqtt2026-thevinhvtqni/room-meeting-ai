@@ -242,3 +242,12 @@ Co đã so sánh 31 tệp source/test/architecture/config hiện có trong Sandb
 ## W10-CI-RUN53-PENDING-20261122-01 — 2026-11-22 06:10 (UTC+07:00)
 
 Sau commit `29daa718509b1c3906527a8cd9358104061e3b85`, GitHub Actions Run #53 (ID `44960863874`) được kích hoạt, workflow Cross-Platform Verification. Trạng thái tại thời điểm ghi: IN_PROGRESS. Không ghi nhận PASS trước khi cả Windows và Linux jobs hoàn tất.
+
+
+## W10-CI-RUN53-20261122-01 — 2026-11-22 06:10 (UTC+07:00)
+
+Co | AI-07 / End-to-End Architecture & Implementation Lead. Run #53 (ID `44960863874`) on exact commit `29daa718509b1c3906527a8cd9358104061e3b85` completed SUCCESS on Ubuntu 24.04 and Windows Server 2022. Ubuntu: 183 PASS / 0 FAIL / 2 SKIP; Windows: 189 PASS / 0 FAIL / 0 SKIP. V8 acceptance validator 16 PASS on each OS; Chromium E2E, syntax, contract, safety, HTTP, containment and host operations PASS. Artifacts: Linux ID `14728729586`, SHA-256 `cca2583aca62d247c43b795205d63837570e451f3f98e87d4558c035cdcd2b26`; Windows ID `14729905280`, SHA-256 `f6254b5e1fb0c5d27b98def8434cb2f59781e5c45fffd0af2e771eff61d780bf`. This run specifically tests the hardened category/policy checks added to Sandbox acceptance_validator.py and mirrored in commit 29daa. Evidence: `06_EVIDENCE/W10_CROSS_PLATFORM_CI_EVIDENCE_20261122_RUN53.md`. Physical Windows 10, production HMAC key, Linux cgroup-v2 and ROOM-HOP integration remain open.
+
+## W10-CURRENT-STATUS-20261122-01 — 2026-11-22 06:10 (UTC+07:00)
+
+Hosted cross-platform implementation is substantially verified: browser API + ProcessSupervisor + Windows Job Object + host file operations + pytest + allowlisted PowerShell + V8 validator pass on hosted Windows/Linux. Remaining release blockers are physical Windows 10 PC installation/ACL/Chrome profile/PowerShell validation; production validator secret/hash provisioning; hardened Linux cgroup-v2 profile; ROOM-HOP Dashboard/PC Bridge integrated E2E; full inventory reconciliation and handover packaging. No main merge/release.
