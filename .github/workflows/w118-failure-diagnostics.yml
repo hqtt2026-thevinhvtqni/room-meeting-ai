@@ -1,0 +1,82 @@
+name: W118 Failure Diagnostics
+
+on:
+  workflow_run:
+    workflows:
+      - "W118 Auto E2E Validation"
+      - "W118 PR Review Checklist"
+      - "W118 Workflow Automation Pilot"
+      - "W300 Dashboard CI"
+      - "Work 70 Preview Host Tests"
+    types: [completed]
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostics:
+    if: github.event.workflow_run.conclusion == 'failure'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+    concurrency:
+      group: w118-diagnostics-${{ github.event.workflow_run.workflow_id }}-${{ github.event.workflow_run.head_sha }}
+      cancel-in-progress: false
+    steps:
+      - name: Checkout diagnostics planner
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.12"
+      - name: Create or update one diagnostic issue per workflow and commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+          RUN_URL: ${{ github.event.workflow_run.html_url }}
+          WF_NAME: ${{ github.event.workflow_run.name }}
+          WF_ID: ${{ github.event.workflow_run.workflow_id }}
+          SHA: ${{ github.event.workflow_run.head_sha }}
+          BRANCH: ${{ github.event.workflow_run.head_branch }}
+          UPSTREAM_EVENT: ${{ github.event.workflow_run.event }}
+        run: |
+          set -euo pipefail
+          gh label create w118-blocked --repo "$GITHUB_REPOSITORY" --color D93F0B --description "W118 CI failure requires an assigned human/AI owner" 2>/dev/null || true
+          gh issue list --repo "$GITHUB_REPOSITORY" --state all --label w118-blocked --limit 1000 --json number,body,state > /tmp/all-diagnostics.json
+          python scripts/w118/diagnostics.py --issues-json /tmp/all-diagnostics.json --workflow-id "$WF_ID" --sha "$SHA" --run-id "$RUN_ID" --attempt "$RUN_ATTEMPT" > /tmp/diagnostic-plan.json
+          KEY=$(python -c 'import json; print(json.load(open("/tmp/diagnostic-plan.json"))["idempotency_key"])')
+          UPDATE_MARKER=$(python -c 'import json; print(json.load(open("/tmp/diagnostic-plan.json"))["update_marker"])')
+          EXISTING=$(python -c 'import json; print(json.load(open("/tmp/diagnostic-plan.json"))["existing_issue"])')
+          cat > /tmp/diagnostic.md <<EOF
+          W118 CI failure diagnostics.
+
+          - Workflow: ${WF_NAME}
+          - Workflow ID: ${WF_ID}
+          - Run: ${RUN_URL}
+          - Run ID / attempt: ${RUN_ID} / ${RUN_ATTEMPT}
+          - Commit: ${SHA}
+          - Branch: ${BRANCH}
+          - Upstream event: ${UPSTREAM_EVENT}
+          - Fix owner: UNASSIGNED — assignment requires an explicit authorized actor.
+          - Retry policy: no automatic retry; maximum two actor-approved retries, each with a reason and new evidence.
+
+          Idempotency key: ${KEY}
+          ${UPDATE_MARKER}
+          EOF
+          if [ -n "$EXISTING" ]; then
+            if gh api --paginate "repos/${GITHUB_REPOSITORY}/issues/${EXISTING}/comments?per_page=100" --jq '.[].body' | grep -Fq "$UPDATE_MARKER"; then
+              echo "Diagnostic update already recorded for run ${RUN_ID} attempt ${RUN_ATTEMPT}." >> "$GITHUB_STEP_SUMMARY"
+            else
+              STATE=$(gh issue view "$EXISTING" --repo "$GITHUB_REPOSITORY" --json state --jq .state)
+              if [ "$STATE" = "CLOSED" ]; then
+                gh issue reopen "$EXISTING" --repo "$GITHUB_REPOSITORY"
+              fi
+              gh issue comment "$EXISTING" --repo "$GITHUB_REPOSITORY" --body-file /tmp/diagnostic.md
+            fi
+          else
+            printf '\n<!-- %s -->\n' "$KEY" >> /tmp/diagnostic.md
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "[W118][CI-FAIL] ${WF_NAME} — ${SHA:0:7}" --label w118-blocked --body-file /tmp/diagnostic.md
+          fi
