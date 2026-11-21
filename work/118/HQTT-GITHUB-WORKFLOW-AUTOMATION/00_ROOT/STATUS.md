@@ -377,3 +377,6 @@ The workflow_run listener requires default-branch presence for real runtime veri
 - W118-TASK-013, W118-TASK-016 and W118-TASK-017 use `execution_mode=OWNER_DIRECTED_SESSION` with an explicit Owner directive reference. Their Assignment status remains UNASSIGNED; no Agent runtime principal or ACK is fabricated.
 - Agent-assigned execution still requires verified principal and Assignment ACKNOWLEDGED before Task IN_PROGRESS.
 - Code tests: push run #44880193690 SUCCESS; 130 tests PASS / 0.512s at SHA `4bd94d43251f26e88200d6e0f1ef9c19354bc426`; artifact ID 14697279628.
+
+
+Latest owner-directed execution CI (2026-11-21): exact tested source SHA `108595c61f2d2ad9097dda1eed3252f7cfbec7e0`; push run #44880271750 SUCCESS; 130 tests PASS / 0.402s; artifact ID 14697951120; SHA-256 `8e33daf7a33c3a7131acad64f3d56f04be9a0e519f72e2aeb2f389aa6d864138`. The following documentation-only commits are not yet included in this tested SHA.
