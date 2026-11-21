@@ -118,7 +118,7 @@ Task status dùng chung vocabulary tương thích DOC-093/W112; đây là trạn
 |---|---|---|---|
 | PLANNED | Task đã được ghi vào Task Register, chưa sẵn sàng giao | tạo Task + scope/AC/dependency | Owner / Planner |
 | READY | Đủ điều kiện thực thi | DoR, dependency, scope, AC và nguồn lực hợp lệ | Owner / Orchestrator |
-| IN_PROGRESS | Task đang được thực hiện | Assignment đã ACKNOWLEDGED/IN_PROGRESS | Orchestrator |
+| IN_PROGRESS | Task đang được thực hiện | Assignment đã ACKNOWLEDGED/IN_PROGRESS; hoặc OWNER_DIRECTED_SESSION có owner_directive_ref | Orchestrator |
 | BLOCKED | Task không thể tiếp tục | blocker + evidence + owner xử lý | Owner / Orchestrator / Verifier |
 | IN_REVIEW | Deliverable đang được kiểm tra | Assignment SUBMITTED + review package | Orchestrator |
 | DONE | Task hoàn tất | Assignment ACCEPTED + Owner acceptance evidence | Vinh / Owner được ủy quyền |
@@ -170,7 +170,7 @@ Issue mirror, branch creation, commit, push, CI run, PR và review được ghi 
 
 ### 4.1 Luồng chuẩn
 
-1. **TASK_AUTHORIZED:** chỉ Task status READY/IN_PROGRESS và Assignment status ACKNOWLEDGED/IN_PROGRESS theo policy mới được mở quyền code.
+1. **TASK_AUTHORIZED:** chỉ Task status READY/IN_PROGRESS được mở quyền code; nếu execution_mode=AGENT_ASSIGNMENT thì Assignment phải ACKNOWLEDGED/IN_PROGRESS; nếu OWNER_DIRECTED_SESSION thì phải có owner_directive_ref.
 2. **BASE_RESOLVED:** Sandbox đọc repository, target branch, exact base SHA và branch policy; kiểm tra branch không stale hoặc diverged ngoài ngưỡng.
 3. **BRANCH_CREATED:** tạo branch theo quy ước `work/{work_id}/task-{task_id}` (không thêm slug để tránh parsing mơ hồ và bắt buộc liên kết ổn định); không dùng branch dùng chung cho nhiều Task nếu chưa có quyết định.
 4. **CODE_AND_LOCAL_TEST:** Agent chỉ sửa trong scope; ghi command, test, output và file changes vào execution journal.
@@ -255,6 +255,8 @@ Canonical record: `04_PLAN/TASK_REGISTER.json` in Sandbox Work 118. The GitHub f
 | inputs / scope_in / scope_out | string[] | Có | Inputs and scope boundaries |
 | accountable_role / role_name / reviewer_role | string | Có | Accountability and independent check |
 | owner_principal | string | Có | Verified Owner principal |
+| execution_mode | enum | Có | AGENT_ASSIGNMENT / OWNER_DIRECTED_SESSION |
+| owner_directive_ref | string/null | Khi OWNER_DIRECTED_SESSION | Explicit Vinh/Owner directive; no fabricated Agent identity |
 | assigned_identity / assignment_id | string/null | Khi assigned | Agent identity and Assignment record |
 | assignment_status | enum | Có | Separate Assignment state machine §3.3 |
 | status | enum | Có | PLANNED/READY/IN_PROGRESS/BLOCKED/IN_REVIEW/DONE/CANCELLED |
