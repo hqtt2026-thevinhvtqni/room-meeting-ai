@@ -1860,3 +1860,35 @@ Fetched current PR #48 metadata and compared current `main` with branch `work/w1
 - GAP-01 OPEN/P0; Assignment/dispatch/provider receipt/recipient ACK binding absent from this candidate; E2/E3 NOT PROVEN.
 - READ/TRACE/ANALYZE ONLY. No PR, branch, source, test, runtime, credential, permission or deployment action.
 - Next: maintain strict separation between (a) Core execution-grant candidate remediation for GAP-11 and (b) W70/W52 Assignment delivery/ACK chain for GAP-01; no combined patch or merge until architecture and source baselines are reconciled.
+
+
+## Entry 093 — Bounded blocker and decision map: GAP-01 / GAP-11 / runtime unknown (2026-11-21T16:57:55+07:00)
+
+### Scope and method
+Re-read canonical Work17 journal and Sync Record from GitHub main. Attempted Sandbox read-back before update. The diagnostic Sandbox response returned only a 159,478-character prefix of the 372,778-character GitHub journal (common prefix 149,597 characters, then divergence/truncation); ordinary sandbox_read returned an empty object. Therefore exact Sandbox parity could not be established and no Sandbox overwrite/append was attempted. Consolidated already-recorded source evidence from Entries 087–092 and Sync Periods 0071–0079 into a decision-ready blocker map. No source mutation outside Work17, no code/test/API/runtime/provider/Host/dispatch/PR operation.
+
+### Blocker separation
+1. **GAP-11 — Core execution authority (current-main source defect + candidate not deployable):** current-main Core HTTP launcher exists, but its executable app composition does not mount the execution-authority router described by the deployment guide/test; the authority module/adapter are absent from the inspected current-main tree. Current-main Host still accepts caller-supplied work_context and trusts a caller-context authorized boolean. PR #48 preserves a more complete separate candidate, but remains OPEN/DRAFT/unmerged/mergeable=false and diverged 157 ahead / 944 behind across 88 paths; its candidate has no proven production startup, credential/policy/journal provisioning or live runtime. Do not merge/cherry-pick as a unit. This is source-level evidence, not proof of a live exploit or deployed Core state.
+2. **GAP-01 — Assignment → provider delivery → recipient ACK:** W70 lifecycle/assignment ownership and W52 provider-neutral task/event candidate are identifiable, but no inspected source proves a live authoritative Assignment service or the complete binding assignment_id → dispatch_id/attempt_id → target provider/session → provider delivery receipt → recipient-authenticated ACK → Core read-back. W52's internal ACCEPTED state is not recipient ACK; PR #48 execution grants do not supply this chain. Do not create a parallel dispatcher, registry, queue, ACK ledger or evidence store in W17.
+3. **Runtime/deployment unknown — defer to PC evidence:** current-main contains a Core :8000 launcher, but no separate service manager/deployment configuration was located in the inspected repository tree. This cannot reveal PC-only or external configuration. Therefore live Core process, bind address, health, loaded source revision, dependencies and external persistence remain NOT VERIFIED. Do not infer Core is stopped/absent; do not guess a URL or probe an unverified endpoint.
+
+### Decision and ownership boundaries
+- Preserve the existing single Core :8000 as the intended authority boundary; Vinh and Xu remain the Core builder/decision pair. W37 is the evidence workspace, not a second Core.
+- W70 remains owner of Assignment lifecycle and gate semantics; Core resolves authenticated identity/authority and authoritative state; W52 owns provider-neutral orchestration/adapters; W14 owns the execution Host boundary; W33 owns durable evidence; W112 owns cross-Work compatibility mapping.
+- First reconcile the current-main Core source/doc/test mismatch under an explicitly authorized W37/Core change plan. Separately reconcile the W70/W52 Assignment-delivery-ACK contract against actual Core authority interfaces. Only after those source contracts are reconciled should PC runtime/deployment evidence and controlled tests be scheduled.
+- PR #48 remains a separately preserved candidate for controlled security/architecture review; no merge, transplant or release decision is made by this entry.
+
+### Required evidence to unblock
+- GAP-11 source gate: one canonical Core app composition with the intended authority router, tests that match actual registered routes, Host-side online authority validation before process launch, and fail-closed behavior; then independent source review.
+- GAP-01 contract gate: authoritative W70 Assignment state and Core identity/permission resolution; dispatch/attempt/target/session correlation; provider-issued delivery receipt; recipient identity proof and explicit scope-bound ACK; durable Core read-back; ACK-before-any-possible-Host-side-effect. Existing ownership boundaries only; no duplicate service.
+- Runtime gate: when PC is available, record exact host/service manager, process/PID, bind/listener, health response, loaded commit/source hash, dependency environment and persistence location with timestamp and command/output. Runtime evidence must be journaled before any PASS claim.
+- E2 provider delivery receipt and E3 recipient-bound ACK remain NOT PROVEN. E2/E3 are not interchangeable with HTTP acceptance, Meeting paste, GitHub/Sandbox writes, internal ACCEPTED state or execution result.
+
+### Disposition
+- GAP-01 OPEN/P0; GAP-11 OPEN/P0.
+- Current-main Core execution-authority route: NOT PRESENT in inspected app composition; deployment/runtime state UNKNOWN/NOT VERIFIED.
+- Assignment dispatch/provider receipt/recipient ACK chain: NOT PROVEN.
+- PR #48: OPEN / DRAFT / UNMERGED / NOT MERGEABLE; preserve separately; no merge.
+- E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
+- READ/TRACE/ANALYZE ONLY. No code, test, runtime, provider, Host, dispatch, permission, branch, PR or deployment action.
+- Next: continue bounded read-only trace only where it can resolve a specific source contract; otherwise hold implementation until W37/Core source reconciliation is explicitly authorized and PC runtime evidence becomes available.
