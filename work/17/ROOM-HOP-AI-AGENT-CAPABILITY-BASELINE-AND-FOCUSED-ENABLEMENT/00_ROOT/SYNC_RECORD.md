@@ -997,3 +997,5 @@
 - This defect is separate from missing W70 Assignment/Dispatch/Receipt/recipient ACK; GAP-01 remains OPEN/P0 and E2/E3 NOT PROVEN. GAP-11 candidate remains OPEN / NOT ACCEPTED. Protected execution DENY / NOT RELEASED.
 - READ/TRACE/ANALYZE ONLY. No code/test/PR/branch/endpoint/Host/credential/deployment change. Sandbox parity remains BLOCKED; no Sandbox write.
 - Journal Entry 097 commit: `516c511cec0a6e10374a1ceab3bff07ebe411690`.
+
+- Final read-back: Journal Entry 097 present on main (blob `0e1f174bbc0f2253f071c434afb3aab638de88b1`); Sync Period 0084 present on main (blob `a6aea5761f613c32a3b1145708d7d718f4c1cca7`); both fetched successfully. GitHub journal/sync read-back PASS for Period 0084; Sandbox parity remains separately BLOCKED.
