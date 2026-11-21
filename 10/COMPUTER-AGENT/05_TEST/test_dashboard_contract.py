@@ -49,7 +49,7 @@ class Inventory(HTMLParser):
 def check(condition: bool, label: str):
     if not condition:
         raise AssertionError(label)
-    print(f"PASS  {label}")
+    print(f"  PASS  {label}")
 
 
 def main():
@@ -92,7 +92,7 @@ def main():
         Path(js_path).unlink(missing_ok=True)
         check(result.returncode == 0, f"inline JavaScript parses with node --check: {result.stderr.strip()}")
     else:
-        print("SKIP  node unavailable; inline JavaScript syntax was not checked")
+        print("  SKIP  node unavailable; inline JavaScript syntax was not checked")
 
     print("Static Dashboard contract checks complete. No API/browser workflow was executed.")
 
@@ -105,4 +105,4 @@ if __name__ == "__main__":
 _dashboard_source = DASH.read_text(encoding="utf-8")
 if "String(state.health.work_id) === EXPECTED_WORK_ID" not in _dashboard_source:
     raise AssertionError("execution guard must normalize Work ID type")
-print("PASS  execution guard normalizes Work ID type")
+print("  PASS  execution guard normalizes Work ID type")
