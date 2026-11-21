@@ -111,3 +111,13 @@ Update only after inspecting the exact branch-head run and its artifact. Contrac
 ## Ownership correction — 2026-11-22
 
 R05/R06 runtime owner is W14. W12/W13 are absorbed internal components, not standalone owners. W14 canonical source/API/runtime parity remains NOT VERIFIED; runtime integration cases remain BLOCKED.
+
+
+## 8. Current exact-head contract verification — 2026-11-22
+
+- **Tested source SHA:** `dbdd71d6758abfdf614a59dce2fe5f081cb6a454`.
+- **GitHub Actions:** PR run #44951313523 SUCCESS; 95 tests PASS / 0.208s.
+- **Artifact:** ID 14724769218; SHA-256 `2758b161a6e47427c48b966b4bcd5d3bbe1135e7c7b0398316eb87e249372e42`.
+- Added regression guard: W14 is sole integrated execution owner; W12/W13 are absorbed internal foundations; W70 DOC-093 remains DRAFT_NOT_APPROVED.
+- **Runtime tests R01–R08:** NOT RUN / BLOCKED. W14 source/runtime parity, Core API/event port, W102 principal/Assignment and W70 approved schema/owner ACK are unavailable or unverified.
+- Contract CI PASS is not runtime E2E, independent review, product acceptance or release.
