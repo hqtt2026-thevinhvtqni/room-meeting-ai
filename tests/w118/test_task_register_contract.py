@@ -59,7 +59,7 @@ class Work118TaskRegisterContractTests(unittest.TestCase):
         self.assertIn("Sandbox", self.register["source_of_truth"])
         self.assertIn("github.com", self.register["github_mirror"])
         self.assertTrue(any("Core :8000" in rule for rule in self.register["rules"]))
-        self.assertTrue(any("not the runtime Core Task" in self.register["model"] for _ in [0]))
+        self.assertTrue(any("not a runtime Core Task" in self.register["model"] for _ in [0]))
 
 
 if __name__ == "__main__":
