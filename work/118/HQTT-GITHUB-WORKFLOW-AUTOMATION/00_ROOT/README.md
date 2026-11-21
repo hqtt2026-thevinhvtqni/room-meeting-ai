@@ -134,3 +134,10 @@ Vinh instructed Xu to proceed with building the two closed-loop Sandbox–GitHub
 - Canonical operational Task Register: Sandbox `04_PLAN/TASK_REGISTER.json`; GitHub path is the versioned mirror. SQLite is the runtime transaction/event adapter, not a second canonical register.
 - Exact tested branch head `45b2cda82a99589afe33f2838656c5bbae8069f5`: 127 tests PASS / 0.257s; push run #44879719166 SUCCESS; artifact 14697318273.
 - No full runtime E2E, Agent identity/dispatch, production webhook endpoint, live Issue API, task-specific push or Work 70 projection has been verified.
+
+
+## Owner-directed execution mode
+
+- Tasks W118-TASK-013, W118-TASK-016 and W118-TASK-017 are marked `OWNER_DIRECTED_SESSION` with an explicit Owner directive reference. Their Assignment status remains `UNASSIGNED`; no unverified Agent principal or ACK is invented.
+- Agent-assigned Tasks must still pass verified principal → Assignment PROPOSED → DISPATCHED → ACKNOWLEDGED before Task IN_PROGRESS.
+- Owner-directed execution exception CI: 130 tests PASS at SHA `4bd94d43251f26e88200d6e0f1ef9c19354bc426`, run #44880193690 SUCCESS.
