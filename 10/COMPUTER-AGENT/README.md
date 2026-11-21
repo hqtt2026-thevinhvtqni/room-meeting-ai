@@ -87,3 +87,8 @@ Port `3000` is reserved for the single shared ROOM-HOP Dashboard ingress owned b
 - Runs #105 and #106 passed on both OSes; Run #106 passed the three-cycle POSIX cleanup stress test. Current hosted regression baseline remains Windows 206 PASS and Ubuntu 200 PASS + 2 expected SKIP.
 - Evidence: `06_EVIDENCE/W10_CROSS_PLATFORM_CI_EVIDENCE_20261122_RUN104.md` and `06_EVIDENCE/W10_POSIX_CLEANUP_REMEDIATION_CI_20261122_RUN99_105_106.md`.
 - Linux remains LIMITED_NOT_CGROUP_V2; physical Windows 10 and ROOM-HOP integration remain open.
+
+
+## Owner delegation and P0 gate — 2026-11-22
+
+Vinh delegated Co to continue implementation and handover without waiting for An's V8 review. The An review task is marked WAIVED BY OWNER; no An review/ACK/approval is claimed. P0 implementation may proceed within the three LOCKED contracts. F-15 TaskResult/Workflow timeout mapping remains OWNER DECISION REQUIRED; no timeout semantics are inferred or changed. See `BIEN_BAN_W10.md`, `06_EVIDENCE/W10_P0_ACCEPTANCE_INTEGRITY_AMENDMENT_20261122_08.md` and `07_RELEASE/W10_HANDOVER_PACKAGE_20261122.md`.
