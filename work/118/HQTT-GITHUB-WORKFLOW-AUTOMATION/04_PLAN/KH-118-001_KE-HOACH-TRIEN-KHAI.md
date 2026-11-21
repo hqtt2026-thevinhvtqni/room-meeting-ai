@@ -294,3 +294,11 @@ Vinh directed Xu to proceed with the dual-loop build without waiting for multi-a
 - Exact tested branch head: `45b2cda82a99589afe33f2838656c5bbae8069f5`; GitHub Actions run #44879719166 SUCCESS; 127 tests PASS / 0.257s; artifact ID 14697318273; digest `de06cfb5787728c7fb214fb80c485f6efe33e2738ad9376db0ea66748b8f2514`.
 - Sandbox Work 118 now contains the Task Register and schema, code modules/tests, architecture, implementation/test notes and a sync manifest. Sandbox readback is the verification for the mirrored files; GitHub remains branch/PR/CI authority.
 - No Python execution was available through the Sandbox MCP in this session; test execution evidence is from GitHub Actions only.
+
+
+## Owner-directed execution mode (2026-11-21)
+
+- Tasks W118-TASK-013/016/017 are explicitly `OWNER_DIRECTED_SESSION`, with `owner_directive_ref=owner-directive:vinh:2026-11-21`; Assignment remains UNASSIGNED because no runtime Agent principal is verified.
+- Agent-assigned Tasks (including W118-TASK-014/015/018/019) require verified principal and Assignment ACKNOWLEDGED before Task status IN_PROGRESS.
+- This preserves the distinction between Vinh's direct authorization for Xu to build in this conversation and a production ROOM-HOP Agent runtime identity.
+- Owner-directed mode contract tests: run #44880193690 SUCCESS; 130 tests PASS / 0.512s; artifact ID 14697279628; digest `0eeb2d5cdf89a31c9d8e2346c04f1083c4d1d9699154f572cb70b73c94e56807`.
