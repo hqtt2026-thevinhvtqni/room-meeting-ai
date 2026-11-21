@@ -38,10 +38,10 @@ Không tự ý thay đổi branch protection, secrets/tokens, quyền tổ chứ
 7. ACCEPT: review độc lập và nghiệm thu.
 8. OPERATE: theo dõi vận hành, sự cố và cải tiến.
 
-## 7.1 Kiến trúc hai quy trình khép kín Sandbox–GitHub (đang phản biện)
+## 7.1 Kiến trúc hai quy trình khép kín Sandbox–GitHub (BUILD BASELINE — OWNER AUTHORIZED)
 
 - [TD-118-012 — Kiến trúc hai quy trình khép kín Sandbox–GitHub](../02_DEFINE/TD-118-012_KIEN-TRUC-HAI-QUY-TRINH-KHEP-KIN-SANDBOX-GITHUB.md)
-- [DC-118-004 — Brief phản biện kiến trúc](../02_DEFINE/DC-118-004_BRIEF-PHAN-BIEN-KIEN-TRUC-HAI-QUY-TRINH.md)
+- [DC-118-004 — Brief phản biện kiến trúc (tham khảo, không chặn BUILD)](../02_DEFINE/DC-118-004_BRIEF-PHAN-BIEN-KIEN-TRUC-HAI-QUY-TRINH.md)
 - Nhật ký: Entry 069 trong [NHAT-KY-THI-CONG.md](../EVIDENCE/NHAT-KY-THI-CONG.md)
 
 ## 7. Liên kết
@@ -49,7 +49,7 @@ Không tự ý thay đổi branch protection, secrets/tokens, quyền tổ chứ
 - Work 70 — Product Lifecycle & Work Dashboard: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/tree/main/work/70/ROOM-HOP-PRODUCT-LIFECYCLE-AND-WORK-DASHBOARD
 
 ## 8. Điều kiện chuyển giai đoạn
-Điều kiện lịch sử trước BUILD: hoàn thiện Biên bản kiến trúc/thiết kế, phản biện và Vinh phê duyệt. Điều kiện này đã được Vinh thay thế bằng quyết định ủy quyền BUILD ngày 2026-11-20 cho Ka. Xu vẫn giữ quyền phản biện/ nghiệm thu độc lập và Vinh giữ nghiệm thu cuối; không bỏ qua kiểm soát bảo mật, bằng chứng, hoặc gate phát hành.
+Điều kiện lịch sử chờ phản biện đã được thay thế bởi chỉ thị trực tiếp của Vinh ngày 2026-11-21: Xu tự quyết định kỹ thuật và BUILD theo phương án A, không cần chờ Ka/Cla/Qw phản biện. Xu chịu trách nhiệm thiết kế, triển khai, kiểm thử và ghi nhật ký; Vinh giữ quyền nghiệm thu sản phẩm, merge và release. Không bỏ qua kiểm soát bảo mật, identity, quyền, bằng chứng hoặc gate phát hành.
 
 
 ## Amendment — Owner authorization to BUILD (2026-11-20)
@@ -81,3 +81,8 @@ The product objective in Issue #65 is broader than Auto E2E validation alone. Th
 - Proposed W118-13..W118-19 remain pending Xu independent review; no new Work is created.
 - GitHub Assignee, ACK, execution-start, CI result, Work acceptance and release are separate states.
 - Work 70 remains the source of truth for the Work Dashboard; W118 must not create a second Dashboard or mutate its schema without approval.
+
+
+## Owner directive — proceed without multi-agent review (2026-11-21)
+
+Vinh instructed Xu to proceed with building the two closed-loop Sandbox–GitHub workflows according to Xu's technical judgment, without waiting for multi-agent consultation. TD-118-012 is the owner-authorized build baseline. Implementation remains incremental on `work/118-auto-e2e-v2`; no rebase, merge to main, release, permission/secret/branch-protection change, or Work 70 schema mutation is authorized by this directive. Final product acceptance remains with Vinh.
