@@ -76,3 +76,13 @@ Legacy duplicate tests/modules `task_lifecycle.py`, `webhook_inbox.py`, `event_r
 - Sandbox MCP in this session exposes file operations only; tests are executed by GitHub Actions.
 
 **Disposition:** stateless adapter contracts only. Runtime integration is BLOCKED until the existing owning services expose their approved ports. W118 remains ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+## Exact-head CI verification — 2026-11-21
+
+- Tested feature branch SHA: `5f02a9eafbf68eb0bcfca2942733882dab9cc5bf`.
+- Push run [#44882420198](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44882420198): SUCCESS — **94 tests PASS / 0.209s**.
+- PR run [#44882422288](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44882422288): SUCCESS.
+- Artifact ID `14697683781`; SHA-256 `a2703f70b4a250197b14a84bb5408cef18f2917266f542c7850a54c70e098abc`.
+- Source binding result for the aggregate feature branch: `UNBOUND_LEGACY_BRANCH` (expected; no Task inference).
+- This proves adapter/workflow contract tests only. Core API, W102 identity/Assignment, W12/W13 execution, Core event persistence and full runtime E2E remain NOT VERIFIED.
