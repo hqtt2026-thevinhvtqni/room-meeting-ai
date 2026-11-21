@@ -96,3 +96,12 @@ No rebase, merge to main, release or branch-protection change is authorized by t
 - Active branch: `work/118-auto-e2e-v2-clean`; latest source commit at this update: `3bdde3221426a96db8c812185ee780283326ca4f`.
 - Compare: 12 commits ahead / 0 behind; all 45 changed paths are W118-only.
 - Latest completed validation: Run #44949848909, parent SHA `7ae56f961ec6908abc1060d321389b6d71d301cf`, 94 tests PASS; artifact 14724958058. The subsequent status-only commit does not change code; exact latest-head revalidation remains requested.
+
+
+## Current handoff — 2026-11-22
+
+- **PR #68:** READY FOR REVIEW / OPEN / UNMERGED; branch `work/118-auto-e2e-v2-clean`; based on Main `792bdd71e5345949e0c1f26ff9f95a8513dfa7d5`; 13 ahead / 0 behind; 45 changed paths, all W118-only.
+- **Last exact tested code/documentation baseline:** SHA `052689084fba6f548df5c44637f652735628ad83`; Run #44949913071 SUCCESS; 94 tests PASS; artifact 14724444908.
+- **PR #67:** CLOSED / UNMERGED / superseded; history preserved.
+- **Sandbox parity:** Task Register/schema byte-identical; stateless code mirror aligned to TD-118-012 v1.2; retired local SQLite Task/event files absent.
+- **Acceptance:** Xu independent review pending; Vinh product acceptance pending; no merge or release.
