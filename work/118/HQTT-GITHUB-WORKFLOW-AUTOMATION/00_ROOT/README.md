@@ -129,3 +129,8 @@ W118-TASK-015 is now explicitly blocked on W14's canonical Work Authority/Execut
 ## W70 governance and current test baseline — 2026-11-22
 
 W70 DOC-093 is DRAFT_NOT_APPROVED and is used only as a structural reference. W118's planning register is not runtime authority; Core :8000 owns runtime Task/Assignment/Event. W14 is the sole integrated execution owner; W12/W13 are absorbed. Exact source SHA `dbdd71d6758abfdf614a59dce2fe5f081cb6a454` passed 95 tests in Run #44951313523; artifact 14724769218. W14 source/runtime and W70 schema/owner ACK remain BLOCKED.
+
+
+## Current exact-head handoff — 2026-11-22
+
+PR #68 is READY FOR REVIEW / OPEN / UNMERGED. Exact tested head `076a74d8f19e6ca63ac45ff2150910122316c049` passed 95 tests in Run #44951562713 (artifact 14725821955). W14 is the sole integrated execution owner; W12/W13 are absorbed. W14 source/runtime remains unverified. W70 DOC-093 is DRAFT_NOT_APPROVED. Xu independent review and Vinh product acceptance remain pending.
