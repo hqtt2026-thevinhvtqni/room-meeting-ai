@@ -161,7 +161,7 @@ Sau khi ghi BB-118-002, Ka đã exact-fetch lại hồ sơ, checklist, runbook, 
   - setup-python v5.6.0 — `a26af69be951a213d495a4c3e4e4022e16d87065`.
   - upload-artifact v4.6.2 — `ea165f8d65b6e75b540449e92b4886f43607fa02`.
 - Each candidate was verified against its official repository: fetching `action.yml` at the release tag and at the SHA returned identical blob SHAs.
-- Added regression T10-26 and XR-118-001 gate 20 (P0) to reject mutable/non-SHA action references. **Gate result remains PENDING until the pinning CI run succeeds and exact readback confirms every action reference.**
+- Added regression T10-26 and XR-118-001 gate 20 (P0) to reject mutable/non-SHA action references. **Gate result: PASS — [Run #44846434712](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44846434712), exact tested commit `bad7e086a28a6de2ebf24e116268bf2a766cc7db`; T10-26 PASS; 53 tests PASS / 0.394s. Exact workflow readback confirms no mutable `uses:` references.**
 - Work70 DOC-001/002/033/038/039/040 and DOC-055 were read as the applicable governance baseline. No explicit HQTT SHA-enforcement clause was located in those records; this remediation is therefore recorded as a W118 P0 security control aligned with GitHub's official immutable-SHA guidance, not attributed to an unverified HQTT decision.
 
 ### D. Acceptance boundary
@@ -175,3 +175,13 @@ Sau khi ghi BB-118-002, Ka đã exact-fetch lại hồ sơ, checklist, runbook, 
 **Người cập nhật:** Ka — CSA / W118 Build Owner.  
 **Chức danh:** Delegated Technical Lead / Architecture Reviewer.  
 **Ngày giờ:** 2026-11-21 07:44 +07:00.
+
+
+### E. Post-remediation verification
+
+- **Verified feature HEAD:** `bad7e086a28a6de2ebf24e116268bf2a766cc7db`.
+- **CI:** [Run #44846434712](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44846434712), PR validation, conclusion SUCCESS; `validate` SUCCESS; **53 tests PASS / 0.394s**; T10-26 SHA-pinning regression PASS.
+- **Artifact:** `w118-run-evidence-44846434712-1`, ID `14682593399`, SHA-256 digest `2cf1648dfb552c9fd9e15d62b23098dbaf2f7cbd9bb7ba16444858b2e6081f20`; present/unexpired at readback; expiry 2026-12-21T00:50:34Z.
+- **Event jobs:** handoff, ACK, acceptance-review, controlled-failure and controlled-failure-dispatch SKIPPED; runtime E2E remains NOT VERIFIED.
+- **Compare at verification:** Main `5f8390910178012feaf37510452bc39804b296db`; feature `bad7e086a28a6de2ebf24e116268bf2a766cc7db`; merge base `cf2537e07bfd71d5823bd98f8673b3ab5644fcdc`; **255 ahead / 82 behind — DIVERGED**.
+- **Disposition:** action SHA pinning and contract tests PASS; Xu independent review PENDING; Vinh product acceptance PENDING; no integration, merge or release.
