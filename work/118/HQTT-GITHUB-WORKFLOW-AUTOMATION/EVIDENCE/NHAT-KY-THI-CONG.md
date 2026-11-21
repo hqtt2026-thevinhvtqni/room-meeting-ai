@@ -1460,3 +1460,20 @@
 - **Evidence comment:** preliminary finding and attribution clarification posted on PR #68 as issue comment ID `7069844269`; this is not a formal review event.
 - **Preservation:** keep implementation freeze; no merge, B-118-010 application, or release. Runtime lifecycle remains NOT VERIFIED; exact-head contract CI PASS does not close this finding or acceptance gates.
 - **Next step:** Ka to assess and propose a remediation diff; do not apply it until the review/approval path is respected. Xu re-reviews the corrected source; Vinh retains final product acceptance.
+
+
+## Entry 024 — Exact-head CI readback sau Entry 023
+
+- **Priority:** 01 — P0 — Evidence integrity / exact source verification.
+- **Date-Time:** 2026-11-22 04:59 (UTC+07:00).
+- **Scope:** Đọc trực tiếp GitHub Actions run, jobs và artifact metadata cho PR #68 sau khi ghi Entry 023. Chỉ xác minh; không sửa implementation/workflow, không merge, không release.
+- **PR / Branch:** PR #68; `work/118-auto-e2e-v2-clean`; source HEAD `c1afa546fa15de30a9449844414ae3f49e1032af`.
+- **Workflow:** [Run #44954245303](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44954245303) — **SUCCESS**; event `pull_request`; run completed at 2026-11-21 21:58:24 UTC.
+- **Job result:** `validate` SUCCESS. Steps checkout exact event revision, Python setup, pinned YAML parser install, W118 contract tests, evidence write and artifact upload all SUCCESS. Step `Validate Task-to-Issue source binding for push` SKIPPED because this was a `pull_request` event.
+- **Lifecycle jobs:** `handoff-request-capture`, `ack-claim-capture`, `review-observation-capture` all SKIPPED. Their absence is not a PASS and does not establish runtime lifecycle behavior.
+- **Artifact metadata:** `w118-run-evidence-44954245303-1`; ID `14727415238`; digest `sha256:d52d8d3e4e2b47069ab86c9498b399c64d2b451bd9fe3f9d581123a7cf14235a`; created 2026-11-21 21:58:21 UTC. This readback verified artifact presence and metadata; artifact JSON content was not independently inspected in this entry.
+- **Kết luận:** **PASS có giới hạn** cho job contract validation trên source HEAD `c1afa546fa15de30a9449844414ae3f49e1032af`. Không kết luận runtime E2E, Task-to-Issue source binding, handoff/ACK/review capture hoặc acceptance PASS.
+- **Review finding status:** P1-118-01 (Issue mirror forged/duplicate marker and stored-ID mismatch) and P1-118-02 (lease verification gap) remain OPEN / NEEDS CHANGES pending Ka assessment and remediation evidence. No implementation changes were made.
+- **Review identity:** Formal GitHub PR review by verified Xu identity remains NOT RECORDED; repository-owner-authenticated issue comments are discussion/evidence notes, not formal Xu review. Formal review submissions and inline review threads remain unverified/zero per last readback.
+- **Disposition:** PR #68 OPEN / UNMERGED; Work 118 ACTIVE — NOT ACCEPTED — NOT RELEASED. Keep implementation freeze; no Main merge, no B-118-010 application, no release.
+- **Next step:** Ka to assess P1 findings and propose remediation within delegated scope; Xu independent re-review and T-01..T-05 acceptance evidence remain outstanding; Vinh retains final acceptance authority.
