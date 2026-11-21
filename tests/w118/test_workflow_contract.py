@@ -1,3 +1,4 @@
+import re
 import unittest
 from pathlib import Path
 
@@ -10,6 +11,16 @@ PR_CHECKLIST = Path(".github/workflows/w118-pr-review-checklist.yml")
 
 
 class Work118WorkflowContractTests(unittest.TestCase):
+    def test_all_workflow_actions_are_pinned_to_full_commit_shas(self):
+        for path in (WORKFLOW, DIAGNOSTICS, PR_CHECKLIST):
+            references = re.findall(r"^\\s*uses:\\s*([^\\s#]+)", path.read_text(encoding="utf-8"), re.MULTILINE)
+            for reference in references:
+                self.assertRegex(
+                    reference,
+                    r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+@[0-9a-f]{40}$",
+                    f"{path} contains a mutable or non-SHA action reference: {reference}",
+                )
+
     def load_yaml(self, path):
         return yaml.load(path.read_text(encoding="utf-8"), Loader=yaml.BaseLoader)
 
@@ -48,7 +59,7 @@ class Work118WorkflowContractTests(unittest.TestCase):
         data = self.load_yaml(WORKFLOW)
         steps = data["jobs"]["acceptance-review"]["steps"]
         checkout = next(step for step in steps if step.get("name") == "Checkout trusted default-branch acceptance policy")
-        self.assertEqual(checkout["uses"], "actions/checkout@v4")
+        self.assertEqual(checkout["uses"], "actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683")
         self.assertEqual(checkout["with"]["ref"], "${{ github.event.repository.default_branch }}")
         self.assertEqual(checkout["with"]["persist-credentials"], "false")
 
@@ -168,7 +179,7 @@ class Work118WorkflowContractTests(unittest.TestCase):
         data = self.load_yaml(WORKFLOW)
         for job_name in ("handoff", "ack-verification", "acceptance-review"):
             steps = data["jobs"][job_name]["steps"]
-            self.assertTrue(any(step.get("uses") == "actions/upload-artifact@v4" for step in steps), job_name)
+            self.assertTrue(any(step.get("uses") == "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02" for step in steps), job_name)
             self.assertTrue(any("event evidence" in step.get("name", "").lower() for step in steps), job_name)
 
 
