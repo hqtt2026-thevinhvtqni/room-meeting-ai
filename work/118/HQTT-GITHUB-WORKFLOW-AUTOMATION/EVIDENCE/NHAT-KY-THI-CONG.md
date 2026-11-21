@@ -1320,3 +1320,18 @@
 - **Runtime blockers:** Core Task API/field map/lock/Event ingress; W102 verified principal/Assignment; W12/W13 execution integration; live Issue API/task-scoped push; production webhook endpoint; W70 schema/owner ACK. Event-specific PR jobs are skipped, so runtime E2E remains NOT VERIFIED.
 - **Governance:** no Main merge, release, secret/permission/branch-protection change or W70 schema mutation.
 - **Disposition:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED. Handoff to Xu for independent review after technical build baseline.
+
+
+## Entry 081 — W14 ownership reconciliation and 95-test contract verification
+- **Thời gian:** 2026-11-22 05:35 (UTC+07:00).
+- **Người thực hiện:** Ka / AI-02.
+- **Chức danh:** CSA / Autonomous W118 Build Owner theo ủy quyền của Vinh.
+- **Ưu tiên / Thứ tự đọc:** P0 / 19.
+- **Finding:** W12 and W13 are COMPLETED/ABSORBED internal foundations. W14 is the sole product/delivery/release owner for the integrated Work Authority, ExecutionHostBridge, GitHub Gateway/CI and full E2E. W14 remains ACTIVE but current source parity and full product E2E are NOT VERIFIED; W13 live :8031 evidence remains NOT RUN / BLOCKED.
+- **Correction:** TD-118-012 updated to v1.3; README, RA-118-002 addendum, adapter implementation note, test matrix and W118-TASK-015 now target W14 only. W12/W13 remain historical/internal. No W12/W13 source was changed.
+- **Task Register:** Task 015 now blocks on W14 canonical source/ref and Work Authority/ExecutionHostBridge API/runtime. Task states/blockers remain honest; no Agent identity/ACK inferred.
+- **Regression test:** `test_execution_integration_is_owned_by_w14_not_w12_w13` added.
+- **Exact tested code SHA:** `4470b555914894c4ad5a6cb98743dc6637a179a1`; Run #44950893033 SUCCESS; **95 tests PASS / 0.295s**; artifact 14725229117; SHA-256 `69a181f509a16e83ba346223d7ab4d8290cce1f051749d5a1749239d597af29f`.
+- **Runtime limitation:** event-specific PR jobs SKIPPED; Core/W102/W14/W70 runtime E2E remains NOT VERIFIED.
+- **PR disposition:** PR #68 READY FOR REVIEW / OPEN / UNMERGED; PR #67 CLOSED / UNMERGED / superseded. No merge/release.
+- **Kết quả:** ownership contract corrected and regression-verified; Work 118 remains ACTIVE — NOT ACCEPTED — NOT RELEASED.
