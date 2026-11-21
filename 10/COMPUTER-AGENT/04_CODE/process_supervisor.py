@@ -615,46 +615,78 @@ else:
 def terminate_posix_process_group(process: subprocess.Popen, timeout_seconds: float = 5.0) -> bool:
     """Terminate a process group created with start_new_session=True.
 
-    This is a limited fallback. It is not a substitute for a cgroup-v2
-    controller where hostile descendants may create a new session.
+    The leader may exit before an orphaned descendant has been reaped by init.
+    Therefore, after SIGKILL, poll the process-group identity until the bounded
+    deadline instead of treating the first post-kill killpg(0) probe as final.
+    This remains a limited fallback, not a cgroup-v2 containment guarantee.
     """
     if os.name == "nt":
         raise ContainmentUnsupported("POSIX process groups are unavailable on Windows")
-    try:
-        os.killpg(process.pid, signal.SIGTERM)
-    except ProcessLookupError:
-        return True
-    try:
-        process.wait(timeout=timeout_seconds)
-    except subprocess.TimeoutExpired:
+    pgid = process.pid
+    deadline = time.monotonic() + max(0.1, float(timeout_seconds))
+
+    def group_exists() -> bool | None:
         try:
-            os.killpg(process.pid, signal.SIGKILL)
+            os.killpg(pgid, 0)
+            return True
         except ProcessLookupError:
-            pass
+            return False
+        except PermissionError:
+            return None
+
+    try:
+        os.killpg(pgid, signal.SIGTERM)
+    except ProcessLookupError:
         try:
-            process.wait(timeout=timeout_seconds)
+            process.wait(timeout=max(0.0, deadline - time.monotonic()))
         except subprocess.TimeoutExpired:
             return False
-    try:
-        os.killpg(process.pid, 0)
-    except ProcessLookupError:
-        return True
-    except PermissionError:
-        return False
-    try:
-        os.killpg(process.pid, signal.SIGKILL)
-    except ProcessLookupError:
-        return True
-    try:
-        process.wait(timeout=timeout_seconds)
-    except subprocess.TimeoutExpired:
-        return False
-    try:
-        os.killpg(process.pid, 0)
-        return False
-    except ProcessLookupError:
         return True
 
+    # Give cooperative members a short bounded grace period. The group may
+    # outlive its leader, so leader exit alone is never treated as empty.
+    grace_deadline = min(deadline, time.monotonic() + 0.25)
+    while time.monotonic() < grace_deadline:
+        try:
+            process.wait(timeout=min(0.05, max(0.001, grace_deadline - time.monotonic())))
+        except subprocess.TimeoutExpired:
+            pass
+        exists = group_exists()
+        if exists is False:
+            return process.poll() is not None
+        if exists is None:
+            return False
+        time.sleep(0.02)
+
+    # Kill any remaining descendants, including a group whose leader already
+    # exited. Keep checking until the group disappears or the deadline expires.
+    try:
+        os.killpg(pgid, signal.SIGKILL)
+    except ProcessLookupError:
+        pass
+    except PermissionError:
+        return False
+
+    try:
+        process.wait(timeout=max(0.0, deadline - time.monotonic()))
+    except subprocess.TimeoutExpired:
+        return False
+
+    while time.monotonic() < deadline:
+        exists = group_exists()
+        if exists is False:
+            return True
+        if exists is None:
+            return False
+        try:
+            os.killpg(pgid, signal.SIGKILL)
+        except ProcessLookupError:
+            return True
+        except PermissionError:
+            return False
+        time.sleep(0.05)
+
+    return group_exists() is False
 
 def _utc_now() -> str:
     from datetime import datetime, timezone
