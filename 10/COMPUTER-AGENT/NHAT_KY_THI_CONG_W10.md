@@ -1133,3 +1133,7 @@ Serializer helper và digest/freshness được ghi nhận PASS ở mức thiế
 - Gate: Work 10 ACTIVE — NOT RELEASED; P0 BLOCKED / NOT AUTHORIZED; ba contracts LOCKED (byte/hash independent verification not performed).
 - Next: Ka amend findings V7-F01..03/expand negative cases; validation task separate only after review and authorization.
 - [KÝ: AN | TESTER]
+
+
+## W10-SYNC-20261122-01 — 2026-11-22 04:48 (UTC+07:00)
+Co — AI-07 / End-to-End Architecture & Implementation Lead. Đã kiểm kê Sandbox Work 10 và GitHub canonical branch `work/10-computer-agent-mirror`; đồng bộ 7 tệp quản trị/evidence (WORK_MANIFEST, SYNC_POLICY v1.2, README, BIEN_BAN_W10, NHAT_KY_THI_CONG_W10, P0 amendment v7, P0 schema v7). Đã đọc lại GitHub và so sánh nội dung UTF-8 với Sandbox: 7/7 EXACT MATCH. Ghi nhận GitHub commit cuối cho đợt đồng bộ tài liệu: `41a1873f5cfb5aa48e2b03b92a2d0707c4ee2b17`; reconciliation report commit: `bd6afc884b5e9d9e1a867ce751c0907a22dca88a`. Inventory tại thời điểm đối chiếu: Sandbox 151 entries, GitHub 38 entries, 37 shared paths, 114 Sandbox-only paths, 1 GitHub-only path. Source/test vẫn DIVERGENT: agent_api.py, agent_runtime.py, models.py, browser_adapter.py, test_p0_p5.py; test_http.py chỉ có trong Sandbox. Không promote source/test vì P0 amendment v7 ghi implementation BLOCKED / NOT AUTHORIZED, validator/host tests NOT RUN và An review còn pending. Ba hợp đồng LOCKED không sửa. Kết luận: documentation/evidence sync cho 7 tệp COMPLETE; full sync PARTIAL / NOT COMPLETE; G0 BLOCKED; Work 10 ACTIVE — NOT RELEASED. Không merge/release/force push.
