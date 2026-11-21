@@ -2,7 +2,7 @@
 
 - Document ID: W10-FULL-PATH-INVENTORY-20261122-01
 - Work: 10 — COMPUTER-AGENT
-- Date-Time: 2026-11-22 06:32 (UTC+07:00)
+- Date-Time: 2026-11-22 06:41 (UTC+07:00)
 - Canonical repository: `hqtt2026-thevinhvtqni/room-meeting-ai`
 - Branch: `work/10-computer-agent-mirror`
 - Sandbox Work ID: `10`
@@ -12,13 +12,13 @@
 | Measure | Count |
 |---|---:|
 | Sandbox files under `COMPUTER-AGENT/` | 161 |
-| GitHub branch files under `10/COMPUTER-AGENT/` | 68 |
-| Shared paths | 68 |
-| Sandbox-only files | 93 |
+| GitHub branch files under `10/COMPUTER-AGENT/` | 69 |
+| Shared paths | 69 |
+| Sandbox-only files | 92 |
 | GitHub-only files | 0 |
 | Sandbox-only `.github/` directory | 1 |
 
-The 68 shared paths are all represented on both sides. The 93 Sandbox-only files below have explicit KEEP / SANDBOX-ONLY dispositions; the Sandbox and GitHub directory trees are therefore intentionally not byte-for-byte identical. No GitHub-only Work 10 file remains in this snapshot.
+The shared paths are all represented on both sides. The Sandbox-only files below have explicit KEEP / SANDBOX-ONLY dispositions; the Sandbox and GitHub directory trees are intentionally not byte-for-byte identical. No GitHub-only Work 10 file remains in this snapshot.
 
 ## 2. Shared-path verification
 
@@ -87,7 +87,6 @@ Immutable historical reviews, old candidate audits, old design amendments, debug
 - `06_EVIDENCE/W10_P0_CANDIDATE_IMPLEMENTATION_20261116.md`
 - `06_EVIDENCE/W10_P0_CRASH_ACCEPTANCE_MATRIX_V6.csv`
 - `06_EVIDENCE/W10_P0_CROSS_REQUEST_TIMEOUT_CONTAINMENT_20261117_01.md`
-- `06_EVIDENCE/W10_P0_IMPLEMENTATION_READINESS_GATE_20261118_01.md`
 - `06_EVIDENCE/W10_P0_PROCESS_ISOLATION_DESIGN_20261117_01.md`
 - `06_EVIDENCE/W10_P0_PROCESS_ISOLATION_DESIGN_AMENDMENT_20261118_01.md`
 - `06_EVIDENCE/W10_P0_PROCESS_ISOLATION_DESIGN_AMENDMENT_20261118_02.md`
@@ -167,7 +166,7 @@ Historical transcript archive; not a runtime artifact or canonical source.
 
 ## 5. Synchronization disposition
 
-**Accepted source/test/architecture/config parity: PASS for the current shared set.** All 68 shared paths are present; no source/test/config divergence remains in the shared implementation set. The 93 Sandbox-only files and one parent directory are intentionally retained as historical/reference/generated Sandbox material, as itemized above.
+**Accepted source/test/architecture/config parity: PASS for the current shared set.** All 69 shared paths are present; no source/test/config divergence remains in the shared implementation set. The 92 Sandbox-only files and one parent directory are intentionally retained as historical/reference/generated Sandbox material, as itemized above.
 
 This is a reconciled working/canonical branch inventory, not a claim that the two directory trees have identical file counts. Work 10 remains ACTIVE — NOT RELEASED pending physical Windows 10 acceptance, production V8 key provisioning, Linux cgroup-v2 disposition, ROOM-HOP integration and Owner's final acceptance.
 
