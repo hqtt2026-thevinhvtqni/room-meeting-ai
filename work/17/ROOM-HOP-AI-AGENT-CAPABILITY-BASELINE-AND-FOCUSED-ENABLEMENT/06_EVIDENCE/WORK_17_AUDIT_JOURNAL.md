@@ -2115,3 +2115,15 @@ Read-only source/test inspection at PR #48 head branch `work/w1111-core-executio
 - **Disposition:** exact-HEAD CI remains PASS per Entry 102. These source defects keep GAP-11 OPEN / NOT ACCEPTED. GAP-01 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. No live exploit or production runtime defect claimed.
 - Next: do not patch candidate or rerun unchanged CI from Work17. Await a new candidate revision for source re-review; PC runtime review remains deferred until PC handoff. Preserve this entry as exact-head evidence baseline.
 - Status: bounded source/test trace COMPLETE; runtime/race verification NOT RUN.
+
+
+## Entry 104 — PR #48 stale-base and branch-divergence check (2026-11-21)
+
+- Scope: read-only GitHub metadata/review/commit comparison for PR #48 and canonical `main`; no branch mutation, rebase, merge, code edit, CI dispatch, runtime, credential or deployment action.
+- PR metadata readback: OPEN, DRAFT, UNMERGED, `mergeable=false`; head branch `work/w1111-core-execution-authority-v1-2`, HEAD `c70eb2b82f54a000a81263dc519078ddf105f075`; base SHA remains `a663bd5afda524cb9dc7ca685945ca96c68d664d`; `updated_at=2026-11-11T18:04:43Z`. No submitted PR reviews and no inline review threads returned.
+- Compared PR head branch to current `main`: GitHub compare status `diverged`; `main` is ahead by 970 commits and the PR branch is behind by 157 commits (970 commits unique to main, 157 unique to PR branch from compare metadata). This is a material integration-staleness risk; the candidate is not current with main and cannot be treated as ready for integration based on its old exact-HEAD CI alone.
+- PR description itself contains older CI/head references (including `e81cfafb...` and `9bbeed63...`) that do not match the authoritative current PR HEAD `c70eb2b...`; retain Entry 102 exact-HEAD run `43074281024` as the correct CI evidence for `c70eb2b...`. Do not use stale PR-body text as current status evidence.
+- No changed candidate revision or new CI/review evidence found. Exact-HEAD CI for `c70eb2b...` remains PASS as source/CI evidence only; it does not validate the current `main` integration state. No rebase/merge recommendation is issued without a fresh conflict-aware review of the 157-commit delta and renewed verification.
+- Disposition unchanged: GAP-11 OPEN / NOT ACCEPTED; GAP-01 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. PC runtime review remains deferred until Vinh's PC handoff.
+- Next: keep PR #48 untouched; require candidate owner to produce a fresh integration candidate based on current `main`, then review only the new diff/HEAD and exact-HEAD CI. Do not replay the old branch onto main automatically.
+- Status: GitHub metadata/review readback PASS; branch-divergence finding CONFIRMED; integration acceptance NOT PASS.
