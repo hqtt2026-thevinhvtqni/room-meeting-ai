@@ -33,6 +33,8 @@ def parse_task_branch(branch: str) -> dict[str, str] | None:
         raise SourceBindingError("branch must be a non-empty string")
     match = BRANCH_RE.fullmatch(branch)
     if not match:
+        if branch.startswith(("work/W", "work/w")):
+            raise SourceBindingError("task-scoped branch does not match the canonical naming contract")
         return None
     binding = match.groupdict()
     if binding["work_id"] != binding["task_id"].split("-TASK-", 1)[0]:
