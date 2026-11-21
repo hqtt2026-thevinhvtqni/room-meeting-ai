@@ -830,3 +830,22 @@
 - Merge/release: NOT AUTHORIZED / NOT PERFORMED.
 
 **Bước tiếp:** chờ CI sau SHA-pin remediation, exact-readback toàn bộ hồ sơ, ghi kết quả CI vào nhật ký và chuyển Xu tiếp tục phản biện.
+
+
+## Entry 063 — P0 action SHA pinning and regression verification PASS
+
+- **Người thực hiện:** Ka — CSA / W118 Build Owner.
+- **Chức danh:** Delegated Technical Lead / Architecture Reviewer.
+- **Người nhận:** Xu — Independent Reviewer; Vinh — Final Product Owner.
+- **Ngày giờ:** 2026-11-21 07:44 +07:00.
+- **Mã Work:** W118 / W118-10.
+- **Ưu tiên:** P0 — supply-chain security remediation and regression verification.
+- **Phạm vi:** xác minh pin SHA cho GitHub Actions, kiểm thử T10-26, exact-readback CI jobs/artifact và cập nhật hồ sơ. Không thay đổi event semantics, permissions, identity map, merge/release state.
+- **Remediation:** `actions/checkout`, `actions/setup-python`, `actions/upload-artifact` trong orchestrator và diagnostics đã được pin tới full 40-character commit SHA. Official release tag và commit SHA đã được đối chiếu bằng blob SHA của `action.yml`. Checklist XR-118-001 gate 20 P0 và test T10-26 đã được bổ sung.
+- **CI:** [Run #44846434712](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44846434712), exact tested commit `bad7e086a28a6de2ebf24e116268bf2a766cc7db`; workflow SUCCESS; job `validate` SUCCESS; **53 tests PASS / 0.394s**. Test `test_all_workflow_actions_are_pinned_to_full_commit_shas` PASS.
+- **Artifact:** `w118-run-evidence-44846434712-1`, ID `14682593399`, SHA-256 digest `2cf1648dfb552c9fd9e15d62b23098dbaf2f7cbd9bb7ba16444858b2e6081f20`; present/unexpired at readback; expiry 2026-12-21T00:50:34Z.
+- **Runtime limitation:** `handoff`, `ack-verification`, `acceptance-review`, `controlled-failure` and `controlled-failure-dispatch` all SKIPPED. Runtime event E2E remains NOT VERIFIED.
+- **GitHub snapshot at this verification:** PR #67 OPEN, `draft=false`, `merged=false`; feature HEAD `bad7e086a28a6de2ebf24e116268bf2a766cc7db`; Main `5f8390910178012feaf37510452bc39804b296db`; merge base `cf2537e07bfd71d5823bd98f8673b3ab5644fcdc`; **255 ahead / 82 behind — DIVERGED**.
+- **Review/acceptance:** Xu independent review PENDING; Vinh final product acceptance PENDING. Xu/Go GitHub identities remain NOT VERIFIED; no executor mapping or permission inferred.
+- **Kết luận:** action SHA pinning **PASS**; T10-26 **PASS**; contract/unit validation **PASS**; runtime E2E **NOT VERIFIED**; Xu review **PENDING**; Vinh acceptance **PENDING**; merge/release **NOT PERFORMED**.
+- **Bước tiếp:** chuyển hồ sơ đã hiệu chỉnh cho Xu tiếp tục independent review; giữ PR #67 OPEN, không rebase/merge/release cho tới khi đúng gate và có quyết định riêng của Vinh.
