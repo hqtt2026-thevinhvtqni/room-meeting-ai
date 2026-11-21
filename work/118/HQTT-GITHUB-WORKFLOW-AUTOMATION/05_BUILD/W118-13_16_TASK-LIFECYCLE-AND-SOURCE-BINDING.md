@@ -3,7 +3,7 @@
 - **Work:** W118
 - **Architecture:** TD-118-012
 - **Authority:** Vinh directed Xu to BUILD without waiting for multi-agent review (2026-11-21).
-- **Status:** FOUNDATION IMPLEMENTED — EXACT-HEAD CI VERIFYING — RUNTIME INTEGRATION PENDING
+- **Status:** FOUNDATION IMPLEMENTED — EXACT-HEAD CI PASS — RUNTIME INTEGRATION PENDING
 - **Branch:** `work/118-auto-e2e-v2`
 - **Scope:** first executable foundations for Loop A (Sandbox Task lifecycle) and Loop B (GitHub source-to-Task binding).
 - **Non-scope:** no GitHub Issue API mutation, no agent dispatch, no production ACK identity, no push webhook state mutation, no Work 70 write, no merge/release.
@@ -58,9 +58,13 @@
 - `tests/w118/test_task_lifecycle.py`: lifecycle, authorization, identity, owner/assignment binding, evidence requirements, stale version, idempotency, append-only event history and immutable Task fields.
 - `tests/w118/test_source_binding.py`: task branch parsing, legacy branch no-inference, repository binding, commit trailers, mixed Issue rejection, exact head SHA, force-push, deletion and missing commit rejection.
 - Existing workflow already triggers contract validation when `scripts/w118/**` or `tests/w118/**` changes.
-- The first Task-only exact-head validation on commit `849d84d74571a20bb9c2b1d476c3d7f7584a188c` ran 69 tests successfully (CI contract only; event-specific jobs skipped).
-- A later CI failure exposed a malformed multiline function signature in the newly added source-binding module. This was identified from GitHub job logs and corrected in commit `9cf06e8d37431d4cba8872827ece60e9d245770a`. Do not count the failed run as PASS.
-- **Latest exact-head result:** pending readback; update only after the run for the exact feature HEAD completes and its job log is inspected.
+- First Task-only exact-head validation on `849d84d74571a20bb9c2b1d476c3d7f7584a188c`: 69 tests PASS (CI contract only; event-specific jobs skipped).
+- Source-binding test phase exposed a malformed multiline signature, then a missing repository CLI argument and artifact-path mismatch. Each failure was read from the actual GitHub job log and corrected; failed runs are retained as failures, not PASS.
+- Source-binding contract exact-head validation on `3136931ddfb56e4574dd3f87a9484f1619693746`: **85 tests PASS / 0.450s**, run [#44876926415](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44876926415), validate SUCCESS.
+- Workflow-integrated exact-head validation on `5e131e108a7195ca1ff5ae96b3fadb119e4bc31b`: **86 tests PASS / 0.332s**, run [#44877054701](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44877054701), validate SUCCESS; PR validation [#44877057892](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44877057892) also SUCCESS.
+- Artifact ID `14696186741`, SHA-256 `9dae6385ae1e68572305ee6314bf1edf046361fc9993301cc85367603c56531a`. Artifact includes run evidence and source-binding result.
+- Push to the existing aggregate branch correctly recorded `source_binding_status=UNBOUND_LEGACY_BRANCH`; this is not a Task-level PASS and no Task state was inferred. Task-specific branch push binding is not yet exercised by a live test.
+- All event-specific jobs (handoff, ACK, acceptance review, controlled failure and dispatch) were SKIPPED. Runtime E2E remains NOT VERIFIED.
 
 ## 4. Next build slices
 
