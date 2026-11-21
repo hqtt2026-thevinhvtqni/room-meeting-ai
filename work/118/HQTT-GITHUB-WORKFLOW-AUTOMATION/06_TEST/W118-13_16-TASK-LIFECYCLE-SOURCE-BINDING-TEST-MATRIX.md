@@ -79,10 +79,16 @@
 | T13-19 | Task READY transition | Only Owner/Orchestrator can change Task status | PASS |
 | T13-20 | Assignment PROPOSED/DISPATCHED/ACKNOWLEDGED | Separate Assignment state changes; Task status remains READY | PASS |
 | T13-21 | Executor ACK | Exact assigned principal and dispatch ID required | PASS |
-| T13-22 | Task IN_PROGRESS | Cannot start before Assignment ACKNOWLEDGED | PASS |
+| T13-22 | Agent-assigned Task IN_PROGRESS | Requires Assignment ACKNOWLEDGED/IN_PROGRESS | PASS |
 | T13-23 | Assignment ACCEPTED | Requires independent verifier evidence | PASS |
 | T13-24 | Task DONE | Requires Assignment ACCEPTED and Owner acceptance evidence | PASS |
 | T13-25 | Issue link | Separate readback event; does not change Task status | PASS |
 | T13-26 | External push/CI observation | Appends evidence; Task and Assignment status unchanged | PASS |
 
 **Latest combined contract CI:** exact branch-head SHA `45b2cda82a99589afe33f2838656c5bbae8069f5`; push run [#44879719166](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44879719166) SUCCESS; 127 tests PASS / 0.257s; artifact ID 14697318273; SHA-256 `de06cfb5787728c7fb214fb80c485f6efe33e2738ad9376db0ea66748b8f2514`.
+
+
+| T13-27 | OWNER_DIRECTED_SESSION | Task may enter IN_PROGRESS with explicit Owner directive reference while Assignment remains UNASSIGNED | PASS |
+| T13-28 | OWNER_DIRECTED_SESSION without directive reference | Reject; do not fabricate Agent identity or ACK | PASS |
+
+**Owner-directed execution CI:** tested SHA `4bd94d43251f26e88200d6e0f1ef9c19354bc426`; push run #44880193690 SUCCESS; 130 tests PASS / 0.512s; artifact ID 14697279628; SHA-256 `0eeb2d5cdf89a31c9d8e2346c04f1083c4d1d9699154f572cb70b73c94e56807`.
