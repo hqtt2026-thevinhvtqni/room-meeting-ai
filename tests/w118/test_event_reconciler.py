@@ -159,7 +159,7 @@ class Work118EventReconcilerTests(unittest.TestCase):
         signed_ingest(self.inbox, ci_delivery, "workflow_run", workflow_payload(conclusion="failure"))
         result = self.reconcile(ci_delivery)
         self.assertEqual(result["decision"], "CI_FAIL_EVIDENCE_ONLY")
-        self.assertEqual(self.registry.get_task("W118-TASK-001")["state"], "ISSUE_LINKED")
+        self.assertEqual(self.registry.get_task("W118-TASK-001")["status"], "READY")
 
     def test_wrong_issue_binding_is_blocked_and_delivery_remains_pending(self):
         delivery = "123e4567-e89b-12d3-a456-426614174007"
