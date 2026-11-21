@@ -251,3 +251,16 @@ Co | AI-07 / End-to-End Architecture & Implementation Lead. Run #53 (ID `4496086
 ## W10-CURRENT-STATUS-20261122-01 — 2026-11-22 06:10 (UTC+07:00)
 
 Hosted cross-platform implementation is substantially verified: browser API + ProcessSupervisor + Windows Job Object + host file operations + pytest + allowlisted PowerShell + V8 validator pass on hosted Windows/Linux. Remaining release blockers are physical Windows 10 PC installation/ACL/Chrome profile/PowerShell validation; production validator secret/hash provisioning; hardened Linux cgroup-v2 profile; ROOM-HOP Dashboard/PC Bridge integrated E2E; full inventory reconciliation and handover packaging. No main merge/release.
+
+
+## W10-CI-RUN69-20261122-01 — 2026-11-22 06:31 (UTC+07:00)
+
+Co | AI-07 / End-to-End Architecture & Implementation Lead. GitHub Actions Run #69 (ID `44962226803`), exact commit `d6aa3283dec649e57bd51bc47299e3596f39b8ac`, SUCCESS trên Ubuntu 24.04 và Windows Server 2022. Ubuntu: 200 PASS / 0 FAIL / 2 SKIP; Windows: 206 PASS / 0 FAIL / 0 SKIP. Dashboard static contract: 17 PASS mỗi OS; V8 validator 16 PASS mỗi OS; Real Chromium E2E PASS. Artifacts: Linux ID `14730191774`, SHA-256 `88a725422f3495a82c0dd37242e5c2cf44d5f925763a1523df387dea1873968e`; Windows ID `14730515415`, SHA-256 `1644d1ce85e6d06a38c404a03e15ff7f7063c15ee21fff467c32c97a3f264948`. Evidence: `06_EVIDENCE/W10_CROSS_PLATFORM_CI_EVIDENCE_20261122_RUN69.md`.
+
+## W10-DASHBOARD-REGRESSION-RESOLUTION-20261122-01 — 2026-11-22 06:31 (UTC+07:00)
+
+Run #63 fail được truy nguyên: GitHub Dashboard cũ 1.7 KB không có các live-health/input/evidence hooks trong Sandbox Dashboard 20.5 KB; static contract test phát hiện đúng mismatch. Co đồng bộ Dashboard thật và README lên GitHub, không bỏ hoặc nới test. Run #67 pass sau sync; phát hiện check counter không đếm Dashboard PASS vì output prefix thiếu hai dấu cách. Co sửa test output và Run #69 xác nhận 17 assertions PASS trên cả Windows/Linux. Dashboard static contract PASS; live Dashboard/API integration trên PC Owner vẫn NOT RUN.
+
+## W10-INVENTORY-RECONCILIATION-20261122-02 — 2026-11-22 06:31 (UTC+07:00)
+
+Inventory snapshot hiện tại: Sandbox 156 files trong `COMPUTER-AGENT/`; GitHub branch 62 files; shared 62; Sandbox-only 94; GitHub-only 0. Toàn bộ 62 shared files đang được đối chiếu; 30 source/test/architecture/config files đã exact UTF-8 match trong các lượt kiểm tra độc lập. Ba LOCKED contracts exact match. Sandbox-only còn lại chủ yếu là historical/debug handoff, reference/original, preview/sample, generated runtime evidence/lock và cache files; cần ghi KEEP/SANDBOX-ONLY dispositions, không bulk-sync pycache, locks, preview samples hoặc debug packages không được chấp thuận. Full inventory disposition chưa chốt.
