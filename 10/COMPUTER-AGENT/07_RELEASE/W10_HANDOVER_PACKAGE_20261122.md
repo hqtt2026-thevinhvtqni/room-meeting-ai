@@ -124,7 +124,7 @@ This session has no direct local PowerShell/desktop executor, so these steps are
 
 - Canonical branch contains the current Work 10 source, test suite, core contracts, PC Host Capability Contract, operational Dashboard and current runbooks.
 - The 30 source/test/architecture/config files independently sampled in the current reconciliation pass were exact-match between Sandbox and GitHub after the updates; all three LOCKED contracts are exact-match.
-- Current inventory: Sandbox has 156 files under `COMPUTER-AGENT/`; GitHub branch has 59; 59 paths are shared and 97 are Sandbox-only. The Sandbox-only set includes historical/debug records, original/reference files, preview/sample data, generated evidence/lock files and Python cache files. Their KEEP/SANDBOX-ONLY dispositions must be recorded in the final inventory reconciliation; do not bulk-copy caches, locks, preview samples or unreviewed debug packages into the canonical branch.
+- Current inventory: Sandbox has 161 files under `COMPUTER-AGENT/`; GitHub branch has 68; 68 paths are shared and 93 are Sandbox-only; GitHub-only paths = 0. The 93 Sandbox-only files have explicit KEEP/SANDBOX-ONLY dispositions in `06_EVIDENCE/W10_FULL_PATH_INVENTORY_DISPOSITION_20261122.md`; they include historical/debug records, original/reference files, preview/sample data, generated evidence/lock files and Python caches. Do not bulk-copy caches, locks, preview samples or unreviewed debug packages into the canonical branch.
 - No GitHub-only Work 10 file remains in the inventory snapshot.
 - Branch history is preserved; no force push, main merge, deployment or release was performed.
 
@@ -174,7 +174,7 @@ The integration handoff is recorded in `06_EVIDENCE/W10_ROOM_HOP_INTEGRATION_BOU
 - Work 14 remains sole owner of the W12/W13/W14 autonomous E2E product/execution boundary. W10 ProcessSupervisor is only the containment boundary for W10's own agent.
 - Work 113 owns the shared ROOM-HOP Dashboard ingress on port `3000`. Work 10's standalone development/acceptance UI has been moved to loopback port `3010`; it must not create a competing listener on port 3000.
 - W10 production Dashboard route mounting, W24 authenticated transport integration and W14 capability consumption are NOT IMPLEMENTED / NOT VERIFIED.
-- A fresh cross-platform CI run is required for the port-3010 code/test change; the Run #69 baseline predates that change.
+- The port-3010 code/test change was validated by Run #104: Windows 206 PASS and Ubuntu 200 PASS + 2 SKIP; see `06_EVIDENCE/W10_CROSS_PLATFORM_CI_EVIDENCE_20261122_RUN104.md`.
 
 
 ## 12. Latest process-cleanup and port-boundary verification — 2026-11-22 06:37 (UTC+07:00)
@@ -185,3 +185,12 @@ The integration handoff is recorded in `06_EVIDENCE/W10_ROOM_HOP_INTEGRATION_BOU
 - Run #106 passed on both OSes with the three-cycle POSIX descendant stress test: Ubuntu 200 PASS / 0 FAIL / 2 SKIP; Windows 206 PASS / 0 FAIL / 0 SKIP.
 - Evidence: `06_EVIDENCE/W10_POSIX_CLEANUP_REMEDIATION_CI_20261122_RUN99_105_106.md`.
 - Linux remains `LIMITED_NOT_CGROUP_V2`; this closes the observed flaky cleanup test, not the hardened Linux production containment gate.
+
+
+## 13. Owner delegation, review waiver and F-15 status — 2026-11-22 06:39 (UTC+07:00)
+
+- Owner explicitly delegated Co to continue Work 10 through implementation, evidence, Sandbox/GitHub synchronization and handover without waiting for An's V8 review.
+- The V8 review task is marked WAIVED BY OWNER. This is not an An review, ACK or approval; none is claimed.
+- P0 implementation is authorized to proceed under the Owner's delegation, within the three existing LOCKED contracts. No contract change, main merge, deployment or release is implied.
+- F-15 TaskResult/Workflow timeout mapping remains OWNER DECISION REQUIRED. An earlier Biên bản sentence attributing a specific timeout mapping decision to Owner was corrected in the official record. Co will not infer or modify F-15 semantics.
+- Work 10 remains ACTIVE — NOT RELEASED pending physical Windows 10 acceptance, production trust configuration, Linux cgroup-v2 disposition, ROOM-HOP integration decisions and final Owner acceptance.
