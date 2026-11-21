@@ -31,7 +31,7 @@
 | T10-23 | Review evidence provenance | Review OPERATION artifact binds exact trusted policy commit, PR head SHA, PR base SHA and event SHA | PASS — regression test in Run #44756410351; 49 tests total |
 | T10-24 | Direct fault-injection authorization | Direct workflow_dispatch is authorized against trusted default-branch role map before failure injection | PASS — regression test in Run #44757234204; 50 tests total |
 | T10-25 | Diagnostic issue idempotency across closure | A closed diagnostic Issue with the same workflow_id + commit SHA is reopened/updated instead of creating a duplicate | PASS — unit + workflow contract tests in Run #44758004387; 52 tests total |
-| T10-26 | GitHub Actions supply-chain pinning | Every `uses:` in W118 workflows references a verified full 40-character commit SHA; no mutable tags/branches | PENDING — regression CI after SHA-pin remediation |
+| T10-26 | GitHub Actions supply-chain pinning | Every `uses:` in W118 workflows references a verified full 40-character commit SHA; no mutable tags/branches | PASS — Run #44846434712; 53 tests total |
 
 ## 1. Evidence rules
 
@@ -223,4 +223,8 @@ Post-merge event execution order and expected outcomes are specified in [RT-118-
 - **Finding:** mutable action tags were present in the orchestrator and diagnostics workflow. Exact references and remediation are tracked by XR-118-001 gate 20.
 - **Selected official action commits:** checkout v4.2.2 `11bd71901bbe5b1630ceea73d27597364c9af683`; setup-python v5.6.0 `a26af69be951a213d495a4c3e4e4022e16d87065`; upload-artifact v4.6.2 `ea165f8d65b6e75b540449e92b4886f43607fa02`.
 - **Regression:** T10-26 scans all three W118 workflow files and rejects any action reference not ending in a full 40-character lowercase commit SHA.
-- **CI:** pending after the source/test commit; no PASS claimed in this amendment.
+- **CI:** [Run #44846434712](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44846434712), tested commit `bad7e086a28a6de2ebf24e116268bf2a766cc7db`; validate SUCCESS; 53 tests PASS / 0.394s. T10-26 PASS.
+
+
+- **Artifact:** `w118-run-evidence-44846434712-1`, ID `14682593399`, SHA-256 digest `2cf1648dfb552c9fd9e15d62b23098dbaf2f7cbd9bb7ba16444858b2e6081f20`; present/unexpired at readback (expires 2026-12-21T00:50:34Z).
+- **Runtime limitation:** handoff, ACK, acceptance-review, controlled-failure and controlled-failure-dispatch jobs were SKIPPED. This run proves contract/action-pin behavior only; runtime event E2E remains NOT VERIFIED.
