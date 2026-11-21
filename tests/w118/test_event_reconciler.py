@@ -98,12 +98,11 @@ class Work118EventReconcilerTests(unittest.TestCase):
             expected_version=1, event_id="evt-task-ready", idempotency_key="idem-task-ready",
             occurred_at="2026-11-21T06:01:00Z",
         )
-        self.registry.transition_task(
-            "W118-TASK-001", "ISSUE_LINKED",
+        self.registry.link_issue(
+            "W118-TASK-001", 65, "https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/issues/65",
             actor_principal="room:orchestrator", actor_role="orchestrator", identity_verified=True,
             expected_version=2, event_id="evt-issue-linked", idempotency_key="idem-issue-linked",
-            occurred_at="2026-11-21T06:02:00Z",
-            details={"issue_id": 65, "issue_url": "https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/issues/65"},
+            occurred_at="2026-11-21T06:02:00Z", evidence_refs=["github://issues/65/readback"],
         )
 
     def tearDown(self):
@@ -123,7 +122,7 @@ class Work118EventReconcilerTests(unittest.TestCase):
         self.assertEqual(result["status"], "PROCESSED")
         self.assertEqual(result["decision"], "PUSH_BOUND")
         task = self.registry.get_task("W118-TASK-001")
-        self.assertEqual(task["state"], "ISSUE_LINKED")
+        self.assertEqual(task["status"], "READY")
         self.assertEqual(task["version"], 3)
         observation = self.registry.list_events("W118-TASK-001")[-1]
         self.assertEqual(observation["event_type"], "source.push_bound")
@@ -149,7 +148,7 @@ class Work118EventReconcilerTests(unittest.TestCase):
         self.assertEqual(self.reconcile(push_delivery)["decision"], "PUSH_BOUND")
         ci = self.reconcile(ci_delivery)
         self.assertEqual(ci["decision"], "CI_PASS_EVIDENCE_ONLY")
-        self.assertEqual(self.registry.get_task("W118-TASK-001")["state"], "ISSUE_LINKED")
+        self.assertEqual(self.registry.get_task("W118-TASK-001")["status"], "READY")
         self.assertEqual(self.registry.list_events("W118-TASK-001")[-1]["event_type"], "ci.run_completed")
 
     def test_ci_failure_is_recorded_as_evidence_not_task_acceptance_or_state_change(self):
