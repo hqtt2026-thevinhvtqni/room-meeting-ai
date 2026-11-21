@@ -141,3 +141,6 @@ Vinh instructed Xu to proceed with building the two closed-loop Sandbox–GitHub
 - Tasks W118-TASK-013, W118-TASK-016 and W118-TASK-017 are marked `OWNER_DIRECTED_SESSION` with an explicit Owner directive reference. Their Assignment status remains `UNASSIGNED`; no unverified Agent principal or ACK is invented.
 - Agent-assigned Tasks must still pass verified principal → Assignment PROPOSED → DISPATCHED → ACKNOWLEDGED before Task IN_PROGRESS.
 - Owner-directed execution exception CI: 130 tests PASS at SHA `4bd94d43251f26e88200d6e0f1ef9c19354bc426`, run #44880193690 SUCCESS.
+
+
+Latest owner-directed execution contract: 130 tests PASS at SHA `108595c61f2d2ad9097dda1eed3252f7cfbec7e0`, run #44880271750 SUCCESS; artifact ID 14697951120. The execution mode records the Owner directive while leaving Assignment UNASSIGNED; it does not infer a verified runtime Agent identity.
