@@ -1,0 +1,73 @@
+# WORK 10 — SANDBOX / GITHUB RECONCILIATION
+- Record: W10-SYNC-20261122-01
+- Date-Time: 2026-11-22 04:48 (UTC+07:00)
+- Executor: Co — AI-07 / End-to-End Architecture & Implementation Lead
+- Scope: read-only inventory + documentation/evidence synchronization
+- Canonical repository: `hqtt2026-thevinhvtqni/room-meeting-ai`
+- Canonical branch: `work/10-computer-agent-mirror`
+- Branch HEAD before this synchronization: `7ea300b2d3d14552f9dfc31038b83b59d1dc2ab6`
+- Protected baseline retained: `0cad66c59560450d68b06e76a659a6c44104e811`
+
+## 1. Inventory result
+- Sandbox Work ID 10: 151 listed entries under `COMPUTER-AGENT/`.
+- GitHub canonical branch before this record: 38 listed entries under `10/COMPUTER-AGENT/`.
+- Shared paths: 37.
+- Sandbox-only paths: 114.
+- GitHub-only path: `05_TEST/HOST_E2E_RUNBOOK.md`.
+- This is a path inventory, not a claim that all shared file contents match.
+
+## 2. Documentation/evidence synchronized Sandbox → GitHub
+The following seven paths were written to the canonical branch and then fetched back from GitHub. Every readback was compared byte-for-byte as decoded UTF-8 text with Sandbox; all seven comparisons were EXACT MATCH.
+
+| Sandbox path | GitHub path | Result |
+|---|---|---|
+| `00_ROOT/WORK_MANIFEST.md` | `10/COMPUTER-AGENT/00_ROOT/WORK_MANIFEST.md` | UPDATED / EXACT |
+| `00_ROOT/SYNC_POLICY.md` | `10/COMPUTER-AGENT/00_ROOT/SYNC_POLICY.md` | UPDATED / EXACT |
+| `README.md` | `10/COMPUTER-AGENT/README.md` | UPDATED / EXACT |
+| `BIEN_BAN_W10.md` | `10/COMPUTER-AGENT/BIEN_BAN_W10.md` | CREATED / EXACT |
+| `NHAT_KY_THI_CONG_W10.md` | `10/COMPUTER-AGENT/NHAT_KY_THI_CONG_W10.md` | CREATED / EXACT |
+| `06_EVIDENCE/W10_P0_ACCEPTANCE_INTEGRITY_AMENDMENT_20261119_07.md` | same relative path under `10/COMPUTER-AGENT/` | CREATED / EXACT |
+| `06_EVIDENCE/W10_P0_ACCEPTANCE_MANIFEST_V7.schema.json` | same relative path under `10/COMPUTER-AGENT/` | CREATED / EXACT |
+
+GitHub commit SHAs returned by the write operations:
+- Manifest: `6663b10c729da74f53cd6d7f4395a8ac7edf9b49`
+- Sync Policy v1.2: `9ef90e4b797ecb1a062b9292ec9f8d7b6b04757e`
+- README: `a0975639ea03ed13e85b15d625404d7dd02efefe`
+- Work minutes: `a0576cd1d7102bac0e90d443f54ec4bf7e6eedfb`
+- Construction journal: `9cdb66aa0ebcbb227aa588c4ef02d31e119378b1`
+- P0 amendment v7: `c85e335e7b30fbb65069ba49911773c316cc4574`
+- P0 schema v7: `41a1873f5cfb5aa48e2b03b92a2d0707c4ee2b17`
+
+## 3. Source/test divergence — NOT synchronized
+Static content comparison confirms the following Sandbox files differ from the canonical branch:
+- `04_CODE/agent_api.py`
+- `04_CODE/agent_runtime.py`
+- `04_CODE/models.py`
+- `04_CODE/browser_adapter.py`
+- `05_TEST/test_p0_p5.py`
+
+The Sandbox also contains `05_TEST/test_http.py`, which is absent from the canonical branch. The canonical branch's current code remains the older implementation. These differences are not overwritten or promoted in this synchronization.
+
+Reason: the latest Work 10 P0 acceptance amendment dated 2026-11-19 explicitly records P0 implementation as BLOCKED / NOT AUTHORIZED, validator and host tests NOT RUN, and An's independent re-review still pending. Copying the Sandbox runtime/tests into the canonical branch now would bypass those gates and would not establish verified source parity.
+
+## 4. Protected boundaries
+- The three locked contracts remain unchanged: `ACTION_CONTRACT.md`, `WORKFLOW_CONTRACT.md`, `SAFETY_POLICY.md`.
+- No force push, history rewrite, merge, release, or production change.
+- No code or test file was promoted.
+- The separate `Computer-Agent` repository was not treated as canonical and was not modified.
+
+## 5. Current disposition
+- Documentation/governance/evidence sync: **COMPLETE for the seven paths listed above; readback exact**.
+- Full Sandbox ↔ GitHub synchronization: **PARTIAL / NOT COMPLETE**.
+- Source parity G0: **BLOCKED**.
+- Runtime/security/host validation gates: **BLOCKED / NOT RUN** as recorded in the current Work 10 manifest and P0 amendment.
+- Work 10: **ACTIVE — NOT RELEASED**.
+
+## 6. Next authorized sequence
+1. Reconcile the remaining 114 Sandbox-only paths into KEEP / UPDATE / CONFLICT / SANDBOX-ONLY classes; do not bulk-copy cache, generated, or proposal artifacts.
+2. Obtain An's independent re-review of the V7 acceptance design and required authorization for P0 implementation.
+3. On an approved child branch, implement only the accepted changes; preserve the three locked contracts.
+4. Run exact-revision offline/HTTP tests and supported Windows/Chromium host validation; retain source hashes and artifacts.
+5. Reconcile accepted source/test files to the canonical branch and repeat exact readback.
+
+**No PASS is claimed for runtime tests, PC execution, Chromium E2E, or release.**
