@@ -17,7 +17,7 @@ from process_supervisor import HostOwnerLease, ProcessSupervisor
 PORT = int(os.getenv("COMPUTER_AGENT_PORT", "8787"))
 HEADLESS = os.getenv("COMPUTER_AGENT_HEADLESS", "0") == "1"
 WORK_ID = os.getenv("COMPUTER_AGENT_WORK_ID", "10")
-SERVICE_VERSION = "1.3.0"
+SERVICE_VERSION = "1.5.0"
 
 # One process-wide browser lease. ThreadingHTTPServer can receive concurrent
 # requests; never allow a second request to dispatch while a timed-out worker
@@ -84,7 +84,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_OPTIONS(self):
         origin = self.headers.get("Origin", "")
-        if self.path != "/agent/execute":
+        if self.path not in {"/agent/execute", "/agent/host/execute"}:
             return self._send(404, {"status": "FAIL", "error": "not_found"})
         requested_method = self.headers.get("Access-Control-Request-Method", "").upper()
         requested_headers = {h.strip().lower() for h in self.headers.get("Access-Control-Request-Headers", "").split(",") if h.strip()}
@@ -120,6 +120,17 @@ class Handler(BaseHTTPRequestHandler):
                           else "UNSUPPORTED_CGROUP_V2_REQUIRED")
                 ),
                 "owner_generation": _HOST_OWNER_LEASE.generation if _HOST_OWNER_LEASE else None,
+                "host_capability_endpoint": "/agent/host/execute",
+                "host_capabilities": {
+                    "supported_operations": [
+                        "list_directory", "read_file", "write_file", "run_pytest",
+                        "run_powershell_script",
+                    ],
+                    "read_roots": "configured" if os.getenv("COMPUTER_AGENT_HOST_ALLOWED_ROOTS") else "work10_default",
+                    "write_enabled": bool(os.getenv("COMPUTER_AGENT_HOST_WRITABLE_ROOTS")),
+                    "powershell_enabled": os.name == "nt" and bool(os.getenv("COMPUTER_AGENT_HOST_POWERSHELL_ROOTS")),
+                    "pytest_enabled": True,
+                },
             }, origin=origin if origin else None)
         self._send(404, {"status": "FAIL", "error": "not_found"}, origin=origin if origin else None)
 
@@ -134,8 +145,9 @@ class Handler(BaseHTTPRequestHandler):
             return self._send(401, {"status": "BLOCKED", "error": "unauthorized"}, origin=origin)
         if self.headers.get("Content-Type", "").split(";", 1)[0].strip().lower() != "application/json":
             return self._send(415, {"status": "BLOCKED", "error": "content_type_must_be_application_json"}, origin=origin)
-        if self.path != "/agent/execute":
+        if self.path not in {"/agent/execute", "/agent/host/execute"}:
             return self._send(404, {"status": "FAIL", "error": "not_found"}, origin=origin)
+        is_host_endpoint = self.path == "/agent/host/execute"
         if self.headers.get("Transfer-Encoding"):
             return self._send(400, {"status": "FAIL", "error": "transfer_encoding_not_supported"}, origin=origin)
 
@@ -153,31 +165,43 @@ class Handler(BaseHTTPRequestHandler):
         if not isinstance(body, dict):
             return self._send(400, {"status": "FAIL", "error": "request_body_must_be_object"}, origin=origin)
 
-        task = body.get("task")
-        if not isinstance(task, str) or not task.strip():
-            return self._send(400, {"status": "FAIL", "error": "task must be a non-empty string"}, origin=origin)
-        raw_actions = body.get("actions")
-        if not isinstance(raw_actions, list):
-            return self._send(400, {"status": "FAIL", "error": "actions must be a list"}, origin=origin)
+        task = ""
+        actions = []
+        operation = None
+        arguments = {}
+        if is_host_endpoint:
+            operation = body.get("operation")
+            arguments = body.get("arguments", {})
+            from host_operations import HostOperations
+            if not isinstance(operation, str) or operation not in HostOperations.ALLOWED_OPERATIONS:
+                return self._send(400, {"status": "BLOCKED", "error": "host_operation_not_allowed"}, origin=origin)
+            if not isinstance(arguments, dict):
+                return self._send(400, {"status": "FAIL", "error": "arguments_must_be_object"}, origin=origin)
+        else:
+            task = body.get("task")
+            if not isinstance(task, str) or not task.strip():
+                return self._send(400, {"status": "FAIL", "error": "task must be a non-empty string"}, origin=origin)
+            raw_actions = body.get("actions")
+            if not isinstance(raw_actions, list):
+                return self._send(400, {"status": "FAIL", "error": "actions must be a list"}, origin=origin)
+            try:
+                actions = [Action(**a) for a in raw_actions]
+            except (TypeError, ActionValidationError) as exc:
+                return self._send(400, {"status": "FAIL",
+                                        "error": f"invalid_action: {exc}"}, origin=origin)
 
-        try:
-            actions = [Action(**a) for a in raw_actions]
-        except (TypeError, ActionValidationError) as exc:
-            return self._send(400, {"status": "FAIL",
-                                    "error": f"invalid_action: {exc}"}, origin=origin)
-
-        invalid_verification = AgentRuntime._validate_verification(body.get("verification"))
-        if invalid_verification:
-            return self._send(409, {
-                "status": "BLOCKED",
-                "error": f"policy_violation[{invalid_verification['rule']}]: {invalid_verification['detail']}",
-            }, origin=origin)
+            invalid_verification = AgentRuntime._validate_verification(body.get("verification"))
+            if invalid_verification:
+                return self._send(409, {
+                    "status": "BLOCKED",
+                    "error": f"policy_violation[{invalid_verification['rule']}]: {invalid_verification['detail']}",
+                }, origin=origin)
 
         if not _EXECUTION_LOCK.acquire(blocking=False):
             return self._send(409, {
                 "status": "BLOCKED",
                 "error": "execution_busy",
-                "detail": "another workflow is active or a timed-out adapter worker has not terminated",
+                "detail": "another workflow is active or prior process containment has not reconciled",
             }, origin=origin)
 
         result_payload = None
@@ -189,13 +213,23 @@ class Handler(BaseHTTPRequestHandler):
                 work_root=work_root,
                 owner_generation=owner_generation,
             )
-            request_payload = {
-                "task": task,
-                "actions": [asdict(action) for action in actions],
-                "verification": body.get("verification"),
-                "policy": asdict(policy),
-                "work_id": WORK_ID,
-            }
+            if is_host_endpoint:
+                request_payload = {
+                    "mode": "host",
+                    "operation": operation,
+                    "arguments": arguments,
+                    "policy": asdict(policy),
+                    "work_id": WORK_ID,
+                }
+            else:
+                request_payload = {
+                    "mode": "browser",
+                    "task": task,
+                    "actions": [asdict(action) for action in actions],
+                    "verification": body.get("verification"),
+                    "policy": asdict(policy),
+                    "work_id": WORK_ID,
+                }
             # Parent deadline includes a small response/cleanup margin. The
             # child runtime still enforces its own workflow deadline.
             result_payload = supervisor.execute(

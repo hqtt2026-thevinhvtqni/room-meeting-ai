@@ -77,8 +77,7 @@ def main() -> int:
 
         # Import application modules only after the parent has released the
         # start gate, proving containment has already been assigned.
-        from agent_runtime import AgentRuntime
-        from models import Action, SafetyPolicy
+        from models import SafetyPolicy
 
         policy_data = dict(request.get("policy") or {})
         if "allowed_path_prefixes" in policy_data:
@@ -86,6 +85,24 @@ def main() -> int:
         if policy_data.get("allowed_domains") is not None:
             policy_data["allowed_domains"] = tuple(policy_data["allowed_domains"])
         policy = SafetyPolicy(**policy_data)
+
+        if request.get("mode", "browser") == "host":
+            from host_operations import HostOperations
+            result = HostOperations(policy).execute(
+                request.get("operation"), request.get("arguments")
+            )
+            cleanup_pending = bool(result.pop("cleanup_pending", False))
+            payload = {
+                "request_id": request_id,
+                "result": result,
+                "cleanup_pending": cleanup_pending,
+                "worker_pid": os.getpid(),
+            }
+            print(json.dumps(payload, ensure_ascii=False, default=str), flush=True)
+            return 0
+
+        from agent_runtime import AgentRuntime
+        from models import Action
         actions = [Action(**item) for item in request.get("actions", [])]
 
         runtime = AgentRuntime(None, policy=policy, work_id=str(request.get("work_id", "10")))

@@ -27,6 +27,7 @@ SUITES = [
     ("safety_policy_negative", "test_safety_policy.py"),
     ("http_api", "test_http.py"),
     ("process_containment", "test_process_containment.py"),
+    ("host_operations", "test_host_operations.py"),
 ]
 HASH_GLOBS = [
     "04_CODE/*.py", "04_CODE/*.md", "05_TEST/*.py", "05_TEST/*.html",
@@ -125,6 +126,8 @@ def main() -> int:
             "offline": "agent contracts, safety policy enforcement, HTTP API (deterministic adapter double)",
             "not_covered": [
                 "real Chromium/Playwright behaviour",
+                "physical Windows 10 PC execution and local ACL/Chrome profile validation",
+                "Linux cgroup-v2 production containment",
                 "integrated ROOM-HOP E2E",
                 "P4 dashboard behaviour in a real browser",
             ],
@@ -137,7 +140,7 @@ def main() -> int:
             "checks_skipped": total_skipped,
             "overall": "PASS" if suites_ok and total_fail == 0 else "FAIL",
             "host_chromium_e2e": host_e2e,
-            "release_gate": "NOT READY (P0 process containment and integrated ROOM-HOP E2E remain open)",
+            "release_gate": "NOT READY (physical Windows 10 validation, V8 semantic validator, Linux cgroup-v2 and ROOM-HOP integration remain open)",
         },
         "suites": results,
         "source_hashes_sha256": hash_sources(),

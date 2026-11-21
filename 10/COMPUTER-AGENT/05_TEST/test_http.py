@@ -14,6 +14,7 @@ against the deterministic adapter double (no Chromium needed here), and proves:
 import json
 import os
 import signal
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -42,6 +43,14 @@ def check(name, fn):
 class Server:
     def __init__(self):
         self.log_path = Path(tempfile.mkstemp(prefix="work10-fake-", suffix=".log")[1])
+        self.host_root = Path(tempfile.mkdtemp(prefix="work10-host-root-"))
+        (self.host_root / "sample.txt").write_text("W10_HOST_READ_OK", encoding="utf-8")
+        (self.host_root / "test_sample.py").write_text(
+            "def test_host_pytest_smoke():\n    assert 6 * 7 == 42\n", encoding="utf-8"
+        )
+        (self.host_root / "probe.ps1").write_text(
+            "Write-Output 'W10_PS_OK'\n", encoding="utf-8"
+        )
         env = dict(os.environ)
         env.update({
             "COMPUTER_AGENT_PORT": "0",
@@ -53,6 +62,10 @@ class Server:
             "COMPUTER_AGENT_ACTION_TIMEOUT_SECONDS": "0.2",
             "COMPUTER_AGENT_FAKE_SLOW_CLICK_SECONDS": "1.5",
             "COMPUTER_AGENT_ALLOW_LIMITED_PROCESS_GROUP": "1",
+            "COMPUTER_AGENT_HOST_ALLOWED_ROOTS": str(self.host_root),
+            "COMPUTER_AGENT_HOST_WRITABLE_ROOTS": str(self.host_root),
+            "COMPUTER_AGENT_HOST_POWERSHELL_ROOTS": str(self.host_root),
+            "COMPUTER_AGENT_HOST_COMMAND_TIMEOUT_SECONDS": "30",
             "PYTHONPATH": f"{CODE}{os.pathsep}{TEST_DIR}{os.pathsep}{env.get('PYTHONPATH', '')}",
             "PYTHONUNBUFFERED": "1",
         })
@@ -115,6 +128,7 @@ class Server:
                 stream.close()
             except Exception:
                 pass
+        shutil.rmtree(self.host_root, ignore_errors=True)
 
 
 VERIFY = {"checks": [{"field": "text", "contains": "SUBMITTED"}]}
@@ -147,6 +161,10 @@ def main():
         check("/health exposes effective policy",
               lambda: health["policy"]["allow_destructive"] is False
               and health["policy"]["max_action_retries"] == 2)
+        check("/health reports host capability enablement separately",
+              lambda: "run_pytest" in health["host_capabilities"]["supported_operations"]
+              and health["host_capabilities"]["write_enabled"] is True
+              and health["host_capabilities"]["powershell_enabled"] is (os.name == "nt"))
 
         status, body = server.request("GET", "/nope")
         check("unknown GET -> 404", lambda: status == 404)
@@ -158,6 +176,12 @@ def main():
         status, body = server.request("POST", "/agent/execute", WORKFLOW,
                                       headers={"Authorization": "Bearer wrong-token"})
         check("invalid bearer token -> 401", lambda: status == 401 and body.get("error") == "unauthorized")
+
+        status, body = server.request("POST", "/agent/host/execute",
+                                      {"operation": "list_directory", "arguments": {"path": "."}},
+                                      headers={"Authorization": ""})
+        check("host capability endpoint requires bearer token",
+              lambda: status == 401 and body.get("error") == "unauthorized")
 
         status, body = server.request("POST", "/agent/execute", WORKFLOW,
                                       headers={"Origin": "https://attacker.invalid"})
@@ -182,6 +206,11 @@ def main():
                                       headers={"Access-Control-Request-Method": "POST",
                                                "Access-Control-Request-Headers": "authorization, content-type"})
         check("approved Origin preflight -> 204", lambda: status == 204)
+
+        status, body = server.request("OPTIONS", "/agent/host/execute",
+                                      headers={"Access-Control-Request-Method": "POST",
+                                               "Access-Control-Request-Headers": "authorization, content-type"})
+        check("host capability preflight -> 204", lambda: status == 204)
 
         status, body = server.request("OPTIONS", "/agent/execute",
                                       headers={"Origin": "https://attacker.invalid",
@@ -265,6 +294,63 @@ def main():
         status, body = server.request("POST", "/agent/execute", destructive)
         check("destructive action -> 409 BLOCKED",
               lambda: status == 409 and "destructive_not_allowed" in body["error"])
+
+        # Separate host capability contract: filesystem and pytest operations
+        # are allowlisted and use the same ProcessSupervisor boundary.
+        host_list = {"operation": "list_directory", "arguments": {"path": "."}}
+        status, host_body = server.request("POST", "/agent/host/execute", host_list)
+        check("host list_directory -> 200 PASS",
+              lambda: status == 200 and host_body.get("status") == "PASS"
+              and any(x.get("name") == "sample.txt" for x in host_body["result"]["entries"]))
+        host_read = {"operation": "read_file", "arguments": {"path": "sample.txt"}}
+        status, host_body = server.request("POST", "/agent/host/execute", host_read)
+        check("host read_file -> 200 PASS with SHA-256",
+              lambda: status == 200 and host_body.get("status") == "PASS"
+              and host_body["result"].get("content") == "W10_HOST_READ_OK"
+              and len(host_body["result"].get("sha256", "")) == 64)
+        host_write = {"operation": "write_file", "arguments": {
+            "path": "created.txt", "content": "W10_HOST_WRITE_OK"
+        }}
+        status, host_body = server.request("POST", "/agent/host/execute", host_write)
+        check("host write_file -> 200 PASS with read-back",
+              lambda: status == 200 and host_body.get("status") == "PASS"
+              and host_body["result"].get("readback_verified") is True)
+        status, overwrite_body = server.request("POST", "/agent/host/execute", host_write)
+        check("host write_file refuses implicit overwrite",
+              lambda: status == 409 and overwrite_body.get("status") == "BLOCKED")
+        overwrite = {"operation": "write_file", "arguments": {
+            "path": "created.txt", "content": "W10_HOST_WRITE_V2", "overwrite": True
+        }}
+        status, overwrite_body = server.request("POST", "/agent/host/execute", overwrite)
+        check("host write_file requires explicit overwrite=true",
+              lambda: status == 200 and overwrite_body.get("status") == "PASS"
+              and overwrite_body["result"].get("overwritten") is True)
+        traversal = {"operation": "read_file", "arguments": {"path": "../outside.txt"}}
+        status, traversal_body = server.request("POST", "/agent/host/execute", traversal)
+        check("host file traversal outside allowlisted root -> BLOCKED",
+              lambda: status == 409 and traversal_body.get("status") == "BLOCKED")
+        pytest_request = {"operation": "run_pytest", "arguments": {
+            "cwd": str(server.host_root), "paths": ["test_sample.py"]
+        }}
+        status, pytest_body = server.request("POST", "/agent/host/execute", pytest_request)
+        check("host run_pytest -> 200 PASS",
+              lambda: status == 200 and pytest_body.get("status") == "PASS"
+              and pytest_body["result"].get("exit_code") == 0)
+        powershell_request = {"operation": "run_powershell_script", "arguments": {
+            "script": "probe.ps1"
+        }}
+        status, powershell_body = server.request("POST", "/agent/host/execute", powershell_request)
+        if os.name == "nt":
+            check("host run_powershell_script -> 200 PASS on Windows",
+                  lambda: status == 200 and powershell_body.get("status") == "PASS"
+                  and "W10_PS_OK" in powershell_body["result"].get("stdout", ""))
+        else:
+            check("host run_powershell_script blocked on non-Windows",
+                  lambda: status == 409 and powershell_body.get("status") == "BLOCKED")
+        check("host operation response includes process-containment evidence",
+              lambda: any(e.get("action") == "process_supervisor"
+                          and e.get("containment_empty_verified") is True
+                          for e in host_body.get("evidence", [])))
 
         # A timed-out action is executed inside an OS containment. The
         # parent kills the worker tree before returning BLOCKED and releases

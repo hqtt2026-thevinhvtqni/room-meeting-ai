@@ -45,3 +45,29 @@ Follow `04_CODE/README.md` and `08_DASHBOARD/README.md`. Generate a fresh local 
 See `00_ROOT/WORK_MANIFEST.md`, `05_TEST/TEST_PLAN.md`, and `07_RELEASE/README.md`. G0 source parity, G1 runtime lifecycle, G2 current HTTP controls, G3 Windows artifact boundary, G4 exact-source browser E2E, G5–G10 product/integration evidence, and G11 release authorization are not accepted.
 
 **No commit, push, PR, merge, tag, production visibility change, or release was performed.**
+
+
+## Current execution status — 2026-11-22 (supersedes older process-isolation paragraphs above)
+
+The runtime no longer relies only on a thread-owned adapter worker. Each HTTP workflow is delegated to a separate `execution_worker.py` process through `ProcessSupervisor`. On Windows, the worker is created atomically inside a named Job Object using `PROC_THREAD_ATTRIBUTE_JOB_LIST`; KILL_ON_JOB_CLOSE covers worker/browser descendants. The API owner holds an exclusive host lease, persists owner generation and per-run process journals, enforces a parent deadline, and verifies the containment is empty before releasing request admission. If timeout or uncertain cleanup requires forced termination, the TaskResult is BLOCKED, never PASS.
+
+**Verified milestone:** GitHub Actions #45 passed on hosted Windows Server 2022 and Ubuntu 24.04. Real Chromium E2E was submitted through the HTTP API and process supervisor on both platforms. Windows: 144/144 checks; Linux: 140 PASS + 1 Windows-only SKIP. See `06_EVIDENCE/W10_API_PROCESS_E2E_EVIDENCE_20261122_RUN45.md`.
+
+**Important boundaries:** Linux process-group containment is a LIMITED test profile, not cgroup-v2. The hosted Windows runner is not the Owner's physical Windows 10 PC. The V8 semantic acceptance validator, local PC PowerShell/ACL/Chrome profile validation, file-system/PowerShell/pytest host capability API, ROOM-HOP integration and full source parity remain open. The current LOCKED Action Contract is browser-oriented; no unsupported system-command capability is implied.
+
+API version: **1.4.0**. Work 10 remains ACTIVE — NOT RELEASED. No merge to main, deployment or production release is authorized.
+
+
+## PC host capability API — version 1.5.0 (implementation in progress)
+
+A separate endpoint is being added without changing the LOCKED browser Action Contract:
+
+- POST /agent/host/execute — list_directory, read_file, write_file, run_pytest, run_powershell_script.
+- All host operations run inside the same ProcessSupervisor worker containment as browser workflows.
+- Allowed roots are configured with COMPUTER_AGENT_HOST_ALLOWED_ROOTS.
+- Writes are disabled unless COMPUTER_AGENT_HOST_WRITABLE_ROOTS is explicitly configured.
+- PowerShell is disabled unless COMPUTER_AGENT_HOST_POWERSHELL_ROOTS is explicitly configured; only existing .ps1 files are run through -File.
+- Pytest uses the fixed command sys.executable -m pytest -q and allowlisted test paths.
+- No arbitrary shell, cmd.exe /c or powershell -Command endpoint exists.
+
+This capability API is not yet release-accepted. Its unit/HTTP/Windows PowerShell tests and physical Windows 10 PC validation must pass before it is marked complete.
