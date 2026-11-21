@@ -190,6 +190,15 @@ class Work118WorkflowContractTests(unittest.TestCase):
         self.assertIn(path, data["on"]["pull_request"]["paths"])
 
 
+    def test_ci_run_evidence_is_classified_as_ci_contract_not_runtime(self):
+        data = self.load_yaml(WORKFLOW)
+        steps = data["jobs"]["validate"]["steps"]
+        run_script = next(step["run"] for step in steps if step.get("name") == "Write run evidence")
+        self.assertIn('"evidence_type": "CI_CONTRACT"', run_script)
+        self.assertNotIn('"evidence_type": "RUNTIME"', run_script)
+        self.assertIn('"state": "RECORDED"', run_script)
+        self.assertIn("CI evidence does not constitute independent review or Work acceptance", run_script)
+
     def test_ci_evidence_binds_source_and_tested_revision(self):
         data = self.load_yaml(WORKFLOW)
         steps = data["jobs"]["validate"]["steps"]
