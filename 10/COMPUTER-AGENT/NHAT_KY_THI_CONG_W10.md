@@ -1313,3 +1313,13 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - **Host operations suite:** did not import because standalone test runner did not add 04_CODE to sys.path. Fixed by adding Work 10 code path. Added HTTP diagnostic output for run_pytest response to capture exact command stderr/exit code.
 - **Next:** rerun CI, diagnose pytest command failure from response output; do not mark host capability complete until all host operation suites pass on both OSes.
 - **KÝ: Co | AI-07**
+
+
+## W10-CI-RUN49-20261122-01 — 2026-11-22 05:52 (UTC+07:00)
+- **Name:** Co | **Title:** AI-07 / End-to-End Architecture & Implementation Lead
+- **Run:** GitHub Actions #49, ID `44958804750`, commit `c11319e26bc6578baaf71e664152c259ee0c1e37`; both Windows Server 2022 and Ubuntu 24.04 SUCCESS.
+- **Windows:** contract 60 + safety 45 + HTTP API 49 + containment/owner lease 2 + host operations 14 = **170 PASS / 0 FAIL / 0 SKIP**. Real Chromium API E2E PASS (13 actions, 15 evidence). Host operations PASS including list/read/write/read-back/hash/overwrite, traversal/symlink rejection, pytest, and allowlisted PowerShell .ps1 execution. Artifact ID `14728826352`, ZIP SHA-256 `28612379a95de8247cfc5a4c7a9c6c1690b62ad873e6c8fac309ecd136260249`.
+- **Linux:** contract 60 + safety 41 + HTTP API 49 + containment 2 + host operations 12 = **164 PASS / 0 FAIL / 2 SKIP** (Windows-only safety case + PowerShell-only test). Real Chromium API E2E PASS; host file operations + pytest PASS; PowerShell correctly BLOCKED on non-Windows. Artifact ID `14728158260`, ZIP SHA-256 `53f88be0f1e151318fd3f7760578a0498536fa6db267eda0e5999bf5d666ea1b`.
+- **Evidence:** `06_EVIDENCE/W10_HOST_CAPABILITIES_CI_EVIDENCE_20261122_RUN49.md` includes detailed counts, artifact hashes and limitations.
+- **Disposition:** Browser API + OS containment + file-system + pytest + Windows PowerShell capabilities PASS on hosted CI. Physical Windows 10 PC remains NOT RUN; Linux cgroup-v2, V8 validator, ROOM-HOP integration and full parity remain open. Work 10 ACTIVE — NOT RELEASED.
+- **KÝ: Co | AI-07**

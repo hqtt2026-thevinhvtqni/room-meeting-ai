@@ -71,3 +71,17 @@ A separate endpoint is being added without changing the LOCKED browser Action Co
 - No arbitrary shell, cmd.exe /c or powershell -Command endpoint exists.
 
 This capability API is not yet release-accepted. Its unit/HTTP/Windows PowerShell tests and physical Windows 10 PC validation must pass before it is marked complete.
+
+
+## PC host capability API — hosted CI acceptance update (2026-11-22)
+
+API version 1.5.0 now exposes the separate POST /agent/host/execute contract. GitHub Actions #49 passed on both hosted OSes:
+- Windows Server 2022: 170 PASS / 0 FAIL / 0 SKIP, including allowlisted PowerShell .ps1 execution.
+- Ubuntu 24.04: 164 PASS / 0 FAIL / 2 expected SKIP, including file operations and pytest; PowerShell correctly unavailable.
+- Both also passed API-integrated real Chromium E2E and process containment.
+
+Evidence: 06_EVIDENCE/W10_HOST_CAPABILITIES_CI_EVIDENCE_20261122_RUN49.md.
+
+This does not yet prove the Owner's physical Windows 10 PC. Configure COMPUTER_AGENT_HOST_ALLOWED_ROOTS explicitly; write_file remains disabled unless COMPUTER_AGENT_HOST_WRITABLE_ROOTS is set; PowerShell remains disabled unless COMPUTER_AGENT_HOST_POWERSHELL_ROOTS is set. Approved pytest tests and PowerShell scripts execute with the service account's privileges, so only trusted roots/scripts should be configured. There is no generic shell endpoint.
+
+Remaining release gates: physical Windows 10 validation, V8 semantic acceptance validator, Linux cgroup-v2, ROOM-HOP PC Bridge/Dashboard integration and full Sandbox↔GitHub source parity. Work 10 remains ACTIVE — NOT RELEASED.

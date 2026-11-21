@@ -196,3 +196,17 @@ The run proves hosted runner behavior only. Physical Windows 10 PC validation, V
 ## PC host capability test coverage — 2026-11-22 (CI pending)
 
 A new suite, test_host_operations.py, covers allowlisted directory listing, file read/hash, traversal rejection, explicit write/read-back/overwrite, pytest execution, disabled-by-default writes, symlink escape and Windows-only PowerShell execution. HTTP API tests exercise the same operations through POST /agent/host/execute and ProcessSupervisor. These tests are written but have not yet been run in the next CI commit. No PASS is claimed yet.
+
+
+## Host capability CI acceptance — run #49 (2026-11-22)
+
+| Suite | Windows Server 2022 | Ubuntu 24.04 |
+|---|---:|---:|
+| Offline contract | 60 PASS | 60 PASS |
+| Safety negative | 45 PASS | 41 PASS / 1 expected SKIP |
+| HTTP API (browser + host endpoint) | 49 PASS | 49 PASS |
+| Process containment / owner lease | 2 PASS | 2 PASS |
+| Host operations | 14 PASS | 12 PASS / 1 PowerShell-only SKIP |
+| Total | 170 PASS / 0 FAIL / 0 SKIP | 164 PASS / 0 FAIL / 2 expected SKIP |
+
+Host operations verified: list/read/write, SHA-256/read-back, explicit overwrite, traversal/symlink rejection, pytest, PowerShell .ps1 allow-list on Windows, and no generic shell operation. Full details and hashes: 06_EVIDENCE/W10_HOST_CAPABILITIES_CI_EVIDENCE_20261122_RUN49.md. Physical Windows 10 PC validation remains open.

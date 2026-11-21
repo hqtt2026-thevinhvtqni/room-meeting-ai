@@ -128,3 +128,14 @@ No release gate is closed solely by hosted CI. Work 10 remains ACTIVE — NOT RE
 - [ ] Physical Windows 10 PC host operations — NOT RUN.
 
 No generic shell or powershell -Command is exposed. This API is separate from the LOCKED browser Action Contract.
+
+
+## PC host capability CI disposition — 2026-11-22
+
+- [x] list_directory/read_file within allowlisted roots — Windows/Linux HTTP and unit tests PASS.
+- [x] read_file rejects traversal and symlink escape — unit tests PASS.
+- [x] write_file disabled by default; explicit root + overwrite flag + read-back SHA-256 — unit/HTTP tests PASS.
+- [x] run_pytest fixed command, allowlisted paths, no ambient plugin autoload — Windows/Linux PASS.
+- [x] run_powershell_script only allowlisted .ps1 via -File — Windows Server 2022 PASS; Linux correctly BLOCKED.
+- [x] Host operations include ProcessSupervisor containment evidence — Windows/Linux HTTP tests PASS.
+- [ ] Physical Windows 10 PC host operations — NOT RUN; hosted CI is not a substitute.

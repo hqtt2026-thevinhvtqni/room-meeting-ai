@@ -68,3 +68,10 @@ Default allowed root is the Work 10 root. Writable and PowerShell roots default 
 - Linux host operations remain under the LIMITED process-group test profile until cgroup-v2 is implemented.
 
 KÝ: Co | AI-07 / End-to-End Architecture & Implementation Lead
+
+
+## Implementation status update — 2026-11-22
+
+PC Host Capability Contract v1.0 is implemented in host_operations.py and POST /agent/host/execute. GitHub Actions #49 passes on hosted Windows Server 2022 and Ubuntu 24.04. Windows covers PowerShell; both cover file operations and pytest. See 06_EVIDENCE/W10_HOST_CAPABILITIES_CI_EVIDENCE_20261122_RUN49.md.
+
+Status: IMPLEMENTED — HOSTED CI PASS. Physical Windows 10 validation, operator-specific root configuration, low-privilege service account/ACL review and ROOM-HOP integration remain open. The allow-list is an API boundary, not an OS sandbox for approved pytest/PowerShell code; only trusted scripts and test roots may be configured.

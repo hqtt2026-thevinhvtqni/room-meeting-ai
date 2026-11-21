@@ -188,3 +188,29 @@ Co has added a separate, non-Action-Contract host capability surface:
 API version advanced to 1.5.0 in Sandbox. Three LOCKED contracts remain unchanged. Work 10 remains ACTIVE — NOT RELEASED.
 
 **KÝ: Co | AI-07 / End-to-End Architecture & Implementation Lead**
+
+
+## PC host capability acceptance update — 2026-11-22 05:52 (UTC+07:00)
+
+GitHub Actions #49 (run ID 44958804750, commit c11319e26bc6578baaf71e664152c259ee0c1e37) proves the separate PC host capability API on hosted CI:
+- Windows Server 2022: 170 PASS / 0 FAIL / 0 SKIP; file list/read/write, traversal/symlink rejection, pytest and allowlisted PowerShell .ps1 all PASS.
+- Ubuntu 24.04: 164 PASS / 0 FAIL / 2 expected SKIP; file list/read/write, traversal/symlink rejection and pytest PASS; PowerShell correctly blocked on non-Windows.
+- Both platforms' real Chromium E2E and ProcessSupervisor tests PASS.
+- Detailed evidence: 06_EVIDENCE/W10_HOST_CAPABILITIES_CI_EVIDENCE_20261122_RUN49.md.
+
+| Gate | Current disposition | Boundary |
+|---|---|---|
+| Browser HTTP API + real Chromium | PASS — hosted Windows/Linux | Not yet ROOM-HOP integrated |
+| Windows Job Object worker containment | PASS — hosted Windows Server 2022 | Physical Windows 10 still NOT RUN |
+| File-system host operations | PASS — hosted Windows/Linux | Explicit roots; direct API path allow-list only, not OS sandbox |
+| Pytest host execution | PASS — hosted Windows/Linux | Fixed command, allowlisted paths, plugin autoload disabled |
+| PowerShell host execution | PASS — hosted Windows Server 2022 | Allowlisted .ps1 only; disabled by default |
+| Linux cgroup-v2 production containment | OPEN / NOT IMPLEMENTED | Current Linux profile remains LIMITED process group |
+| V8 semantic acceptance validator | OPEN / NOT IMPLEMENTED | Trusted runner attestation and negative suite outstanding |
+| Physical Windows 10 PC validation | NOT RUN | Local install, ACL, Chrome profile, PowerShell and repo-root tests outstanding |
+| ROOM-HOP Dashboard / PC Bridge E2E | OPEN | No integrated evidence yet |
+| Full Sandbox↔GitHub source parity | NOT YET RECHECKED | Exact hashes/inventory still required |
+
+Work 10 remains ACTIVE — NOT RELEASED. No main merge or production release is authorized.
+
+**KÝ: Co | AI-07 / End-to-End Architecture & Implementation Lead**
