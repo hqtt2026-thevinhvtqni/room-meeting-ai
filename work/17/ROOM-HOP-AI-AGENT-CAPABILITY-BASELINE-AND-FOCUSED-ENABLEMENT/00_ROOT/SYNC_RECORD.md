@@ -951,3 +951,13 @@
 - Current-main source mismatch is not a live exploit finding; runtime unknown does not mean Core absent/stopped. No unverified endpoint probe.
 - E2 provider receipt and E3 recipient-bound ACK NOT PROVEN; GAP-01/GAP-11 OPEN/P0; protected execution DENY / NOT RELEASED. READ/TRACE/ANALYZE ONLY.
 - Entry 093 committed to GitHub main. Sandbox read-back is currently truncated/empty and exact parity is BLOCKED; no Sandbox overwrite was attempted.
+
+
+## Sync Period 0081 — W70 Assignment/lifecycle evidence reconciliation
+
+- Entry 094 records W70 DOC-065/DOC-066/DOC-072 as design/planned/not approved/not implemented; no verified live Assignment API or authoritative persistence.
+- W70 DOC-035 records a Co / AI-07 narrative ACK and historical local payload tests 10/10; DOC-054/DOC-066 later use a stricter/different ACK status and say explicit receipt/no ACK. Preserve the historical ACK record, but classify typed dispatch-correlated recipient identity proof and E3 as NOT PROVEN.
+- Lifecycle domain guard is a preparatory Sandbox artifact; expected current-main source paths returned 404. Historical 10/10 was local payload testing, not canonical source/Sandbox runtime test. No provider receipt, DispatchAttempt persistence, recipient ACK verifier or Core read-back proven.
+- Do not promote the prototype to a parallel registry/store or dispatcher. Preserve W70/Core/W52/W14/W33/W112 ownership boundaries.
+- GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. READ/TRACE/ANALYZE ONLY.
+- Sandbox parity remains BLOCKED; no Sandbox overwrite/append attempted. GitHub main updated and read-back checked.
