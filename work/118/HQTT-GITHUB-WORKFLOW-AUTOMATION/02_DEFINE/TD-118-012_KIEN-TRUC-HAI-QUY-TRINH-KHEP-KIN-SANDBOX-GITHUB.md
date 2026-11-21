@@ -408,16 +408,16 @@ Every event must include the compatible envelope in §6.4. Delivery is at-least-
 
 | Gate | Điều kiện PASS | Trạng thái hiện tại theo evidence đã đọc |
 |---|---|---|
-| G-A Plan/Task contract | Task schema, AC, dependencies, IDs và Issue mirror round-trip | DESIGN REQUIRED |
-| G-B Identity/Assignment | Verified Agent Registry, capability matching, dispatch receipt, positive/negative ACK | BLOCKED — no executor ACK principal |
-| G-C Execution tracking | STARTED/progress/heartbeat/BLOCKED/timeout/reassign E2E | NOT IMPLEMENTED / NOT VERIFIED |
-| G-D Source binding | Issue–Branch–Commit–Push exact binding | NOT PROVEN |
-| G-E CI feedback | Exact SHA CI PASS/FAIL returns to correct Task; diagnostics idempotent | CONTRACT PARTIAL; RUNTIME NOT VERIFIED |
-| G-F Review/Acceptance | Independent review + Owner acceptance separate | POLICY PARTIAL; runtime identity pending |
-| G-G Journal/Evidence | Event/evidence linked to canonical journal/register | PARTIAL; W70 register integration pending |
-| G-H Dashboard | Work 70 read-only projection parity and freshness | BLOCKED — schema/owner approval pending |
-| G-I Security/reliability | permission, spoof, replay, race, duplicate, lost event, crash-window tests | CONTRACT PARTIAL; runtime tests pending |
-| G-J Product acceptance | Xu review + Vinh acceptance exact revision | NOT STARTED for this architecture |
+| G-A Task/Assignment contract | W118 Task Register schema; separate Task/Assignment status; issue link readback contract | CONTRACT IMPLEMENTED; latest exact CI readback pending |
+| G-B Identity/Assignment | Verified Agent Registry, capability matching, dispatch receipt, positive/negative ACK | BLOCKED — no verified executor principal |
+| G-C Execution tracking | Assignment ACK/start/progress/submit/timeout/reassign E2E | CONTRACT PARTIAL; runtime NOT VERIFIED |
+| G-D Source binding | Issue–Branch–Commit–Push exact binding | CONTRACT IMPLEMENTED; task-scoped live push pending |
+| G-E CI feedback | Exact SHA CI PASS/FAIL returns to correct Task as evidence; bounded repair policy | CONTRACT IMPLEMENTED; Event Listener runtime NOT VERIFIED |
+| G-F Review/Acceptance | Assignment ACCEPTED and Task DONE separate; Owner acceptance evidence | CONTRACT MODEL IMPLEMENTED; runtime authority pending |
+| G-G Journal/Evidence | Event/evidence linked to canonical Work journal and W118 Task Register | PARTIAL; operational sync and W70 Evidence Register pending |
+| G-H Dashboard | Work 70 read-only projection parity and freshness | BLOCKED — W70 schema/owner approval pending |
+| G-I Security/reliability | identity, spoof, replay, duplicate, out-of-order, crash-window and permission tests | CONTRACT PARTIAL; runtime tests pending |
+| G-J Product acceptance | Xu technical handoff + Vinh acceptance of exact revision | NOT STARTED for this architecture |
 
 W118 tổng thể chỉ được coi là hoàn tất khi tất cả gate bắt buộc có evidence PASS; không lấy trung bình hoặc thay thế một gate BLOCKED bằng CI xanh.
 
