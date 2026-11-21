@@ -19,7 +19,7 @@
 - Separate Task status model (PLANNED/READY/IN_PROGRESS/BLOCKED/IN_REVIEW/DONE/CANCELLED) and Assignment status model (UNASSIGNED/PROPOSED/DISPATCHED/ACKNOWLEDGED/IN_PROGRESS/SUBMITTED/ACCEPTED/REJECTED/BLOCKED/CANCELLED), aligned to W112 DOC-001 as a compatibility reference (W112 remains DRAFT_NOT_APPROVED).
 - Versioned Task contract `schema_version=1.0` with Work/WP/Task IDs, objective, scope, priority, acceptance criteria, required capabilities, risk, dependencies and owner principal.
 - SQLite operational transaction store; Task snapshot and append-only `task_events`. It is an adapter/event store, not a second canonical Task Register.
-- Separate Task and Assignment transition graphs; Issue link is a source observation, not a Task status. Assignment ACK/submit/accept cannot implicitly set Task DONE.
+- Separate Task and Assignment transition graphs; Issue link is a source observation, not a Task status. Assignment ACK/submit/accept cannot implicitly set Task DONE. Explicit OWNER_DIRECTED_SESSION may progress a Task with an Owner directive reference while Assignment remains UNASSIGNED; no Agent principal/ACK is fabricated.
 - Actor role allowlist and mandatory `identity_verified=True` from trusted caller; unverified actors fail closed.
 - Assignment binding: ACK/IN_PROGRESS/SUBMITTED must come from the active assigned principal; ACK dispatch ID must match active dispatch. Task DONE requires Assignment ACCEPTED plus Owner evidence.
 - Owner binding: Owner transitions must come from the Task's owner principal.
