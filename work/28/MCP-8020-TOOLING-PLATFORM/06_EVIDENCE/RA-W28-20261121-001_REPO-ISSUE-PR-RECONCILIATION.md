@@ -15,7 +15,7 @@
 
 At the 2026-11-21 audit snapshot:
 - 22 open Issues were visible; 16 were created before 2026-11-01.
-- 30 open Pull Requests were visible; 10 had not been updated since before 2026-11-01.
+- 32 open Pull Requests were visible; 10 had not been updated since before 2026-11-01.
 - Several old PR branches are divergent from current `main` by more than 1,000 commits. Their historical work must not be blindly merged.
 - Four PRs were closed only after a clear supersession/no-unique-commit or unsuitable-generated-artifact determination: **#7, #35, #43, #53**. All branches/history remain preserved; none was merged.
 - Other old PRs with unique code, evidence or unresolved review gates remain open and are explicitly triaged below.
