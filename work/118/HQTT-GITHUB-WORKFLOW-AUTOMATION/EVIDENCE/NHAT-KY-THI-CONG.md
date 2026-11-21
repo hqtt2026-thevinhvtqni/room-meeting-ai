@@ -1335,3 +1335,15 @@
 - **Runtime limitation:** event-specific PR jobs SKIPPED; Core/W102/W14/W70 runtime E2E remains NOT VERIFIED.
 - **PR disposition:** PR #68 READY FOR REVIEW / OPEN / UNMERGED; PR #67 CLOSED / UNMERGED / superseded. No merge/release.
 - **Kết quả:** ownership contract corrected and regression-verified; Work 118 remains ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+## Entry 082 — W70 draft status guard and exact-head contract CI
+- **Thời gian:** 2026-11-22 05:50 (UTC+07:00).
+- **Người thực hiện:** Ka / AI-02.
+- **Chức danh:** CSA / Autonomous W118 Build Owner theo ủy quyền của Vinh.
+- **Ưu tiên / Thứ tự đọc:** P0 / 20.
+- **Finding:** W70 DOC-093 is DRAFT_NOT_APPROVED. It may be used as structural reference only; it cannot be treated as an approved W118 schema, assignment authority or runtime contract. W70 Evidence Register/Dashboard projection requires explicit owner-approved schema and ACK.
+- **Correction:** W118 Task Register model/rules now state the DOC-093 draft boundary. Regression assertion added to `test_register_declares_sandbox_planning_and_core_runtime_authority`. Core :8000 remains sole runtime Task/Assignment/Event authority.
+- **Exact tested source SHA:** `dbdd71d6758abfdf614a59dce2fe5f081cb6a454`; Run #44951313523 SUCCESS; 95 tests PASS / 0.208s; artifact 14724769218; SHA-256 `2758b161a6e47427c48b966b4bcd5d3bbe1135e7c7b0398316eb87e249372e42`.
+- **Runtime limitation:** event-specific handoff/ACK/review jobs skipped; W14 source/runtime, Core/W102 integration and W70 projection remain BLOCKED/NOT VERIFIED.
+- **Disposition:** PR #68 READY FOR REVIEW / OPEN / UNMERGED; PR #67 CLOSED / UNMERGED; no merge/release. Work 118 remains ACTIVE — NOT ACCEPTED — NOT RELEASED.

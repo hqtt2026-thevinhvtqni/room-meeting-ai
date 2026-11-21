@@ -124,3 +124,8 @@ W118-TASK-015 is now explicitly blocked on W14's canonical Work Authority/Execut
 - Exact tested code SHA `4470b555914894c4ad5a6cb98743dc6637a179a1`; Run #44950893033 SUCCESS; 95 tests PASS; artifact 14725229117.
 - PR #68 READY FOR REVIEW / OPEN / UNMERGED; 20 ahead / 0 behind; 45 changed paths W118-only. PR #67 CLOSED / UNMERGED / superseded.
 - Runtime event jobs were skipped; no full runtime E2E or acceptance is claimed.
+
+
+## W70 governance and current test baseline — 2026-11-22
+
+W70 DOC-093 is DRAFT_NOT_APPROVED and is used only as a structural reference. W118's planning register is not runtime authority; Core :8000 owns runtime Task/Assignment/Event. W14 is the sole integrated execution owner; W12/W13 are absorbed. Exact source SHA `dbdd71d6758abfdf614a59dce2fe5f081cb6a454` passed 95 tests in Run #44951313523; artifact 14724769218. W14 source/runtime and W70 schema/owner ACK remain BLOCKED.

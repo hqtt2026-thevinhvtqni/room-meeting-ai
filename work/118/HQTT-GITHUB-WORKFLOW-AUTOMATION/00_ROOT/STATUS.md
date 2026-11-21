@@ -161,3 +161,16 @@
 - W118 Task Register explicitly states it is a Work planning artifact, not runtime Task/Assignment/Event authority. Core :8000 remains sole runtime authority.
 - W118 Evidence Register/Dashboard projection remains BLOCKED pending W70 owner-approved schema and ACK.
 - Added a contract assertion that DOC-093 remains DRAFT_NOT_APPROVED. Exact source candidate `dbdd71d6758abfdf614a59dce2fe5f081cb6a454`; exact-head CI pending.
+
+
+## 16. W70 draft governance and exact contract CI — 2026-11-22 05:50 +07:00
+
+- W70 DOC-093 is DRAFT_NOT_APPROVED; W118 uses its structure as reference only. No schema promotion or runtime authority is implied. W70 Evidence Register/Dashboard projection remains BLOCKED pending approved schema and owner ACK.
+- W118 Task Register explicitly separates Work planning metadata from Core runtime Task/Assignment/Event. Core :8000 remains sole runtime authority.
+- Regression test asserts DOC-093 remains DRAFT_NOT_APPROVED.
+- **Exact tested source SHA:** `dbdd71d6758abfdf614a59dce2fe5f081cb6a454`; Run #44951313523 SUCCESS; **95 tests PASS / 0.208s**; artifact ID `14724769218`; SHA-256 `2758b161a6e47427c48b966b4bcd5d3bbe1135e7c7b0398316eb87e249372e42`.
+- Run event-specific handoff/ACK/review jobs were SKIPPED; runtime E2E remains NOT VERIFIED.
+- Subsequent status/journal/README update is documentation-only; no source/test behavior changed after dbdd71d.
+- W14 remains sole integrated execution owner; W12/W13 absorbed; W14 source/runtime parity and full product E2E NOT VERIFIED.
+- PR #68 remains READY FOR REVIEW / OPEN / UNMERGED; PR #67 CLOSED / UNMERGED / superseded.
+- Disposition: ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED.
