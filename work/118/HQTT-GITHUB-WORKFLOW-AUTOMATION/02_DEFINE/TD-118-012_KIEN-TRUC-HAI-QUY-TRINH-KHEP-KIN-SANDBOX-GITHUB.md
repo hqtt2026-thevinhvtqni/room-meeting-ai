@@ -242,42 +242,41 @@ Issue mirror, branch creation, commit, push, CI run, PR và review được ghi 
 - Field chưa xác minh dùng `null`/unknown; không điền giá trị phỏng đoán.
 - Mọi state-changing record có actor, authority, provenance, correlation và evidence.
 
-### 6.2 Task record — schema đề xuất v1
+### 6.2 Task record — W118 Work-specific Task Register v1
+
+Canonical record: `04_PLAN/TASK_REGISTER.json` in Sandbox Work 118. The GitHub file is the versioned mirror. SQLite is a transactional runtime adapter/event store and must reconcile to the canonical Sandbox Register; it is not a competing Task Register.
 
 | Field | Kiểu | Bắt buộc | Ý nghĩa |
 |---|---|---:|---|
-| schema_version | string | Có | `1.0` |
-| work_id | string | Có | Mã Work, ví dụ W118 |
-| wp_id | string | Có | Work Package |
-| task_id | string | Có | ID Task ổn định |
-| title | string | Có | Tiêu đề ngắn |
-| objective | string | Có | Kết quả cần đạt |
-| scope_in / scope_out | string[] | Có | Phạm vi làm/không làm |
-| priority | enum | Có | P0/P1/P2/P3 |
-| acceptance_criteria | object[] | Có | AC ID, condition, verification method |
-| required_capabilities | string[] | Có | Năng lực cần có |
-| risk_level | enum | Có | LOW/MEDIUM/HIGH/CRITICAL |
-| dependencies | string[] | Có | Task IDs phụ thuộc |
-| issue_id / issue_url | string/null | Sau mirror | Liên kết GitHub |
+| schema_version | string | Có | Contract version |
+| work_id / wp_id / task_id | string | Có | Work/WP/Task identity; Task ID is Work-scoped |
+| phase / phase_name | string | Có | Lifecycle phase |
+| task_title / objective | string | Có | Deliverable and outcome |
+| inputs / scope_in / scope_out | string[] | Có | Inputs and scope boundaries |
+| accountable_role / role_name / reviewer_role | string | Có | Accountability and independent check |
+| owner_principal | string | Có | Verified Owner principal |
+| assigned_identity / assignment_id | string/null | Khi assigned | Agent identity and Assignment record |
+| assignment_status | enum | Có | Separate Assignment state machine §3.3 |
 | status | enum | Có | PLANNED/READY/IN_PROGRESS/BLOCKED/IN_REVIEW/DONE/CANCELLED |
-| assignment_status | enum | Có | UNASSIGNED/PROPOSED/DISPATCHED/ACKNOWLEDGED/IN_PROGRESS/SUBMITTED/ACCEPTED/REJECTED/BLOCKED/CANCELLED |
-| accountable_role / reviewer_role | string | Có | Trách nhiệm và kiểm tra độc lập theo Work-specific role map |
-| owner_principal | string | Có | Principal chịu trách nhiệm |
-| assigned_identity / assigned_agent_id | string/null | Khi proposed | Identity/Agent Registry ID |
-| assignment_id | string/null | Khi proposed | Assignment record |
-| issue_id / issue_url | number/string/null | Sau mirror | GitHub Issue mirror; không phải Task authority |
-| deliverable / next_action / blockers | string/object | Có | Output, hành động kế tiếp, blocker |
-| progress_percent | integer | Có | 0–100, theo evidence/policy |
-| due_at | timestamp/null | Không | Hạn |
-| created_at / updated_at | timestamp | Có | Audit time |
-| version | integer | Có | Optimistic concurrency |
-| evidence_refs | string[] | Không | Evidence IDs |
+| priority / risk_level | enum | Có | P0–P3 / LOW–CRITICAL |
+| deliverable / acceptance_criteria | string/object[] | Có | Output and verifiable AC |
+| dependencies | string[] | Có | Task IDs |
+| progress_percent | integer/null | Có | 0–100 or NOT_CALCULATED; no invented estimate |
+| blockers / next_action / status_note | array/string | Có | Current operational state |
+| execution_steps / verification_method | string[]/string | Có | How work is executed and verified |
+| evidence_required / evidence_refs | string[] | Có | Required and recorded evidence |
+| completion_rule | string | Có | Rule for Task DONE |
+| issue_id / issue_url | number/string/null | Sau mirror | GitHub Issue mirror, never Task authority |
+| branch / commit_sha / ci_run_id | string/number/null | Khi source event | Exact source/CI references |
+| created_at / updated_at / version | timestamp/integer | Có | Audit and optimistic concurrency |
 
-### 6.3 Assignment record — schema đề xuất v1
+### 6.3 Assignment record — independent schema v1
 
-Assignment status độc lập với Task status; không cập nhật Task status chỉ vì Assignment đổi trạng thái. Bắt buộc: `assignment_id`, `work_id`, `task_id`, `agent_id`, `principal_id`, `capability_match[]`, `policy_version`, `selected_at`, `lease_expires_at`, `dispatch_id`, `dispatch_status`, `ack_deadline`, `ack_event_id`, `state`, `attempt`, `reassigned_from`, `reason`.
+Assignment lifecycle is separate from Task status. Required fields include `assignment_id`, `work_id`, `task_id`, `agent_id`, `principal_id`, `accountable_role`, `capability_match[]`, `policy_version`, `selected_at`, `lease_expires_at`, `dispatch_id`, `dispatch_receipt_ref`, `ack_deadline`, `ack_event_id`, `assignment_status`, `attempt`, `reassigned_from`, `reason` and evidence references.
 
-Assignment chỉ được tạo khi Agent active, identity verified, capability match và runtime route available. GitHub Assignee là field mirror tùy chọn, không phải assignment authority.
+- Assignment starts as UNASSIGNED (no record), then PROPOSED → DISPATCHED → ACKNOWLEDGED → IN_PROGRESS → SUBMITTED → ACCEPTED/REJECTED; BLOCKED/CANCELLED are controlled side paths.
+- Only verified Agent principal may ACK/execute/submit; only verifier may ACCEPT/REJECT; Owner acceptance is a separate Task transition to DONE.
+- GitHub Assignee is an optional mirror field and never the Assignment authority.
 
 ### 6.4 Event envelope — compatible with cross-Work contract
 
