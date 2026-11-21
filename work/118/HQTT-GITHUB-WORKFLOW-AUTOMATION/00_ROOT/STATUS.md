@@ -362,3 +362,11 @@ The workflow_run listener requires default-branch presence for real runtime veri
 - SQLite TaskRegistry is a runtime transaction/event adapter and not a second canonical Task Register. Runtime synchronization to the Sandbox Task Register remains pending.
 - Task Register contract test and separated state-machine CI at SHA `3b8847568facbaa1517ece7af111deb4818c5ed3`: 127 tests PASS / 0.380s; push run #44879608573 SUCCESS; artifact 14697605476.
 - W112 DOC-001 remains DRAFT_NOT_APPROVED; used as compatibility reference only. W70 schema unchanged.
+
+
+## Latest exact branch-head verification (2026-11-21)
+
+- Feature branch tested SHA: `45b2cda82a99589afe33f2838656c5bbae8069f5`.
+- GitHub Actions push run #44879719166 SUCCESS; 127 tests PASS / 0.257s; artifact ID 14697318273; SHA-256 `de06cfb5787728c7fb214fb80c485f6efe33e2738ad9376db0ea66748b8f2514`.
+- Source binding on the aggregate feature branch correctly reports `UNBOUND_LEGACY_BRANCH`; task-specific branch runtime binding remains untested.
+- Task Register and separate Task/Assignment state model are included in the tested revision.
