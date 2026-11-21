@@ -316,3 +316,12 @@ Owner's direct delegation (22/11/2026 06:10 UTC+07) supersedes the prior V8 revi
 Owner delegation authorizes Co to proceed with P0 implementation and handover without waiting for An review. The V8 review task is WAIVED BY OWNER; no An review/ACK/approval is claimed. Earlier P0 BLOCKED/NOT AUTHORIZED statements remain historical and are superseded by this direct owner delegation for implementation work. Three LOCKED contracts remain unchanged. F-15 TaskResult/Workflow timeout mapping remains OWNER DECISION REQUIRED; no owner decision was inferred. The previous Biên bản sentence attributing an F-15 mapping to Owner has been corrected.
 
 Current inventory: Sandbox 161 files; GitHub 69; shared 69; Sandbox-only 92; GitHub-only 0; one Sandbox-only `.github/` directory. Updated inventory file lists all 92 Sandbox-only paths and dispositions.
+
+
+## W10-LIVE-DASHBOARD-API-RUN135-20261122-01 — 2026-11-22 06:42 (UTC+07:00)
+
+Co | AI-07. GitHub Actions Run #135 (ID `44963956538`) tested commit `a3d935066ffa2dbada32bdd7cf1c94599e6463cf` and passed on Ubuntu 24.04 + Windows Server 2022. New `dashboard_live_e2e` Playwright suite starts Agent API :8787 and Work10 standalone Dashboard :3010; verifies live cross-origin health, Work ID 10, Execute consent gate, in-memory token clearing and reset. Seven checks PASS on each OS. Ubuntu: 207 PASS / 0 FAIL / 2 SKIP; Windows: 213 PASS / 0 FAIL / 0 SKIP. Real Chromium API/runtime E2E PASS. Artifacts: Linux ID `14730642888`, SHA-256 `197f37dd1beaab4589a85a2c7f7b76c6b98b3e40a4bbc73f6835648a17c1284d`; Windows ID `14730518600`, SHA-256 `ec8703ec46cd80026bc46ee0df56b700fc0528d922a6c8ae861ef4f64d86a5e1`. Evidence: `06_EVIDENCE/W10_LIVE_DASHBOARD_API_EVIDENCE_20261122_RUN135.md`. The smoke test does not click Execute; local physical Windows 10 acceptance remains NOT RUN.
+
+## W10-INVENTORY-COUNT-CORRECTION-20261122-04 — 2026-11-22 06:42 (UTC+07:00)
+
+After adding `05_TEST/test_dashboard_live_e2e.py` and its Run #135 evidence to both Sandbox and GitHub, current inventory: Sandbox 163 files; GitHub 71 files; shared 71; Sandbox-only 92; GitHub-only 0; one Sandbox-only `.github/` directory.
