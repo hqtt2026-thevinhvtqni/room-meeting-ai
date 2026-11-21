@@ -146,9 +146,14 @@ class Meeting:
             {
                 "event": "JOIN_ACCEPTED",
                 "identity": {
+                    # Backward-compatible ID field is a caller claim, not
+                    # proof that the live transport session owns this identity.
                     "id": identity_id,
                     "type": resolution.identity_type,
-                    "auth_verified": True,
+                    "registry_resolved": True,
+                    "resolved_via": resolution.resolved_via,
+                    "identity_binding": "CALLER_SUPPLIED_UNVERIFIED",
+                    "session_authenticated": "NOT_VERIFIED",
                 },
                 "authorization": {
                     "policy_source": (

@@ -153,3 +153,29 @@ def test_close_generates_final_md(manager):
 def test_get_meeting_not_found_raises(manager):
     with pytest.raises(MeetingError):
         manager.get_meeting("KHONG_TON_TAI")
+
+def test_join_record_separates_registry_resolution_from_session_auth(manager):
+    meeting = manager.create_meeting(
+        meeting_id="TEST-JOIN-AUTH-EVIDENCE",
+        topic="JOIN identity evidence",
+        participants=["xu", "claude"],
+        context_files=[],
+    )
+    meeting.open_session()
+
+    record = meeting.join_request("xu")
+
+    assert record["event"] == "JOIN_ACCEPTED"
+    assert record["identity"]["id"] == "xu"
+    assert record["identity"]["registry_resolved"] is True
+    assert record["identity"]["resolved_via"] in {
+        "agent_registry",
+        "principal_registry",
+    }
+    assert record["identity"]["identity_binding"] == (
+        "CALLER_SUPPLIED_UNVERIFIED"
+    )
+    assert record["identity"]["session_authenticated"] == "NOT_VERIFIED"
+    assert "auth_verified" not in record["identity"]
+    # Meeting invitation policy is a separate authorization decision.
+    assert record["authorization"]["policy_check"] == "PASS"
