@@ -73,3 +73,8 @@ The suite writes logs and `06_EVIDENCE/offline-test-evidence.json`. A hosted CI 
 GitHub Actions Run #69 passed on hosted Windows Server 2022 and Ubuntu 24.04 after the secured Dashboard and static contract suite were synchronized. Windows: 206 PASS / 0 FAIL / 0 SKIP; Ubuntu: 200 PASS / 0 FAIL / 2 expected SKIP. Dashboard static contract 17 PASS per OS; V8 validator 16 PASS per OS; real Chromium E2E PASS. See `06_EVIDENCE/W10_CROSS_PLATFORM_CI_EVIDENCE_20261122_RUN69.md`.
 
 The current owner handover candidate is `07_RELEASE/W10_HANDOVER_PACKAGE_20261122.md`. Work remains ACTIVE — NOT RELEASED pending physical Windows 10, production V8 trust provisioning, Linux cgroup-v2 disposition, ROOM-HOP integration and final inventory dispositions.
+
+
+## Shared Dashboard ingress boundary — 2026-11-22
+
+Port `3000` is reserved for the single shared ROOM-HOP Dashboard ingress owned by W113. This Work 10 Dashboard is a standalone local development/acceptance UI and therefore serves on loopback port `3010` during isolated testing. Work 10 must not start a competing listener on port 3000. Production Work 10 Dashboard access must be mounted/registered by W113 under its approved Work route; the route path and embedding contract are not guessed here. The Agent API remains loopback-only and its exact Origin allow-list must be configured for the approved host origin before any integration. W113 integration is NOT VERIFIED.
