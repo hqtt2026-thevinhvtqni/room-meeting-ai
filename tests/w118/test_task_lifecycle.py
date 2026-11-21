@@ -71,11 +71,14 @@ class Work118TaskLifecycleTests(unittest.TestCase):
                 "assignment_id": "asg-001",
                 "assigned_agent_id": "agent-ka",
                 "assigned_principal": "agent:ka-runtime",
+                "assignment_policy_version": "policy-1",
+                "capability_match": ["python"],
+                "assignment_evidence_ref": "assignment://001",
             },
         )
         self.transition(
             "DISPATCHED", "orchestrator", "room:orchestrator", 4, "04",
-            {"dispatch_id": "dispatch-001"},
+            {"dispatch_id": "dispatch-001", "dispatch_receipt_ref": "dispatch://receipt-001"},
         )
 
     def test_create_starts_in_draft_with_version_one_and_event(self):
@@ -133,7 +136,7 @@ class Work118TaskLifecycleTests(unittest.TestCase):
         self.transition("ACCEPTED", "owner", "owner:vinh", 11, "11", evidence=["evidence://acceptance"])
         self.transition(
             "CLOSED", "orchestrator", "room:orchestrator", 12, "12",
-            {"issue_sync_verified": True},
+            {"issue_sync_verified": True, "issue_sync_evidence_ref": "github://issue/65/readback"},
         )
         task = self.registry.get_task("W118-TASK-001")
         self.assertEqual(task["state"], "CLOSED")
@@ -212,6 +215,25 @@ class Work118TaskLifecycleTests(unittest.TestCase):
                 actor_principal="owner:vinh", actor_role="owner", identity_verified=True,
                 expected_version=2, event_id="evt-conflict", idempotency_key="idem-01",
                 occurred_at="2026-11-21T06:02:00Z", details={"reason": "different operation"},
+            )
+
+    def test_owner_principal_must_match_task_owner(self):
+        with self.assertRaises(TransitionDenied):
+            self.registry.transition_task(
+                "W118-TASK-001", "READY",
+                actor_principal="owner:other", actor_role="owner", identity_verified=True,
+                expected_version=1, event_id="evt-other-owner", idempotency_key="idem-other-owner",
+                occurred_at="2026-11-21T06:01:00Z",
+            )
+
+    def test_transition_details_cannot_overwrite_task_identity_or_state(self):
+        with self.assertRaises(TaskValidationError):
+            self.registry.transition_task(
+                "W118-TASK-001", "READY",
+                actor_principal="owner:vinh", actor_role="owner", identity_verified=True,
+                expected_version=1, event_id="evt-payload-overwrite", idempotency_key="idem-payload-overwrite",
+                occurred_at="2026-11-21T06:01:00Z",
+                details={"owner_principal": "owner:attacker"},
             )
 
     def test_invalid_transition_is_rejected(self):
