@@ -268,3 +268,13 @@ Vinh directed Xu to proceed with the dual-loop build without waiting for multi-a
 | W118-17 | `scripts/w118/webhook_inbox.py`: HMAC-SHA256, delivery UUID, event/repository allowlist, payload hash, idempotent inbox, replay conflict | CONTRACT IMPLEMENTED | No HTTP route deployed to Event Listener :8050; no secret/TLS/network config; inbox does not update Task state |
 
 **Exact CI evidence:** source SHA `343fb526f5284ca1dcc4a55d463d58bf0c437340`; push run #44877554435 SUCCESS; 108 tests PASS / 0.503s; artifact ID 14696481659; SHA-256 `9414a8c7184099475557f1a651c2e8efaed31eb1f5e839d59c4bbaaea2e4f0f6`. Runtime E2E remains NOT VERIFIED.
+
+
+## W118-17 event reconciliation progress (2026-11-21)
+
+- `scripts/w118/event_reconciler.py` implements evidence-only reconciliation for signed push and completed workflow_run events.
+- Push binds to exact repository/Work/Task/Issue/SHA and appends source evidence without changing Task state.
+- CI event must originate from `W118 Auto E2E Validation`, and its head SHA must match a previously reconciled push event. Out-of-order CI remains PENDING/DEFERRED until push evidence exists.
+- CI PASS/FAIL is stored as evidence only; it cannot transition Task to VERIFIED/ACCEPTED/CLOSED.
+- Exact SHA `4e5c1e0d23cf145ddbcfca88c32255069ab3c642`: push run #44877879841 SUCCESS, 118 tests PASS / 0.380s; artifact 14697131158, digest `db783c9329e95f2cdb0dce68c21911d56bb2bc7e318088fb53617936c9861011`.
+- Remaining gap: no deployed Event Listener route/worker or production webhook secret; runtime event path remains NOT VERIFIED.
