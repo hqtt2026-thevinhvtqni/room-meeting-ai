@@ -17,14 +17,14 @@ Implementation must remain observable and testable.
 
 The local API is loopback-only by default and requires both:
 - `COMPUTER_AGENT_API_TOKEN`: operator-managed bearer secret; never place it in source, URL, logs, or committed files.
-- `COMPUTER_AGENT_ALLOWED_ORIGINS`: comma-separated exact browser origins. Default: `http://127.0.0.1:3000`.
+- `COMPUTER_AGENT_ALLOWED_ORIGINS`: comma-separated exact browser origins. Default: `http://127.0.0.1:3010`.
 
 `POST /agent/execute` rejects missing/invalid bearer credentials (401), non-allowlisted or missing Origin (403), and non-JSON content (415). Preflight is limited to POST with Authorization and Content-Type. Request bodies are capped at 1 MiB; chunked Transfer-Encoding is rejected; verification schema is validated before adapter construction. `/health` is read-only and unauthenticated but still rejects an explicitly supplied unapproved Origin. Do not expose the API beyond loopback without a separately reviewed transport design.
 
 Dashboard must be served from an exact allowlisted HTTP origin (not opened as `file://`). The operator enters the token into the password field; the page keeps it in memory only and sends it in the Authorization header.
 
 
-## Local operator startup (PowerShell)
+## Local operator startup (PowerShell) — standalone dev port 3010
 
 Use two separate PowerShell terminals. Run from the Work 10 source directory.
 
@@ -34,14 +34,14 @@ Use two separate PowerShell terminals. Run from the Work 10 source directory.
    $env:COMPUTER_AGENT_API_TOKEN = $token
    Set-Clipboard -Value $token
 2. Set the exact Dashboard origin:
-   $env:COMPUTER_AGENT_ALLOWED_ORIGINS = "http://127.0.0.1:3000"
+   $env:COMPUTER_AGENT_ALLOWED_ORIGINS = "http://127.0.0.1:3010"
 3. Start the API:
    python .\04_CODE\agent_api.py
 
 **Terminal B — Dashboard**
 1. Serve 08_DASHBOARD from the Work 10 root:
-   python -m http.server 3000 --bind 127.0.0.1 --directory .\08_DASHBOARD
-2. Open http://127.0.0.1:3000 and paste the clipboard token into the password field.
+   python -m http.server 3010 --bind 127.0.0.1 --directory .\08_DASHBOARD
+2. Open http://127.0.0.1:3010 and paste the clipboard token into the password field.
 
 Do not print the token into logs, add it to .env files committed to Git, place it in a URL, or paste it into ROOM-HOP chat/evidence. Stop both local servers when finished. These startup steps are documentation only and have NOT been executed in this session.
 
@@ -73,3 +73,8 @@ Cross-platform GitHub Actions Run #53 tested commit `29daa718509b1c3906527a8cd93
 ## Local operator setup
 
 Use the operator runbook in `05_TEST/HOST_E2E_RUNBOOK.md` and the PC Host Capability Contract. Keep the API bound to loopback, set an operator-managed bearer token, configure exact Dashboard origins and explicit filesystem roots. Keep writable and PowerShell roots disabled unless the operator intentionally enables them. Do not put API tokens or production HMAC keys in source control, URLs, browser storage, screenshots or evidence logs.
+
+
+## Shared Dashboard ingress boundary — 2026-11-22
+
+Port `3000` is reserved for the single shared ROOM-HOP Dashboard ingress owned by W113. This Work 10 Dashboard is a standalone local development/acceptance UI and therefore serves on loopback port `3010` during isolated testing. Work 10 must not start a competing listener on port 3000. Production Work 10 Dashboard access must be mounted/registered by W113 under its approved Work route; the route path and embedding contract are not guessed here. The Agent API remains loopback-only and its exact Origin allow-list must be configured for the approved host origin before any integration. W113 integration is NOT VERIFIED.
