@@ -1,29 +1,29 @@
 {
-  "schema_version": "1.1",
-  "policy": "deny-by-default",
+  "schema_version": "1.2",
+  "authority": "HISTORICAL_AUDIT_REFERENCE_ONLY",
+  "policy": "NOT_A_RUNTIME_AUTHORIZATION_SOURCE",
   "principals": {
     "hqtt2026-thevinhvtqni": {
-      "principal": "vinh",
-      "roles": ["owner"],
+      "principal": "owner:vinh",
+      "roles": [
+        "owner"
+      ],
       "ack_roles": [],
-      "can_accept": true,
-      "can_independently_review": false,
-      "can_trigger_controlled_test": true,
-      "active": true
+      "active_for_audit": true
     },
     "thevinhqtni-1911": {
-      "principal": "vinh",
-      "roles": ["owner"],
+      "principal": "owner:vinh",
+      "roles": [
+        "owner"
+      ],
       "ack_roles": [],
-      "can_accept": true,
-      "can_independently_review": false,
-      "can_trigger_controlled_test": true,
-      "active": true
+      "active_for_audit": true
     }
   },
   "notes": [
-    "Both GitHub logins are separately retained in audit records and map to the owner principal, per the owner-confirmed Work 118 Entry 022.",
-    "No executor login is configured until its GitHub identity and role are independently verified.",
-    "Unmapped actors and roles are denied. Owner accounts may accept work and trigger the isolated diagnostics test only; they cannot ACK execution roles."
+    "These two GitHub logins were owner-confirmed as belonging to Vinh and are retained only for historical audit context.",
+    "This file is not used for Core Task, Agent identity, Assignment, ACK, review, acceptance, merge or release authorization.",
+    "Core :8000 with W01/W02/W22 is the only runtime identity and authorization authority.",
+    "GitHub login is not a ROOM-HOP runtime principal."
   ]
 }
