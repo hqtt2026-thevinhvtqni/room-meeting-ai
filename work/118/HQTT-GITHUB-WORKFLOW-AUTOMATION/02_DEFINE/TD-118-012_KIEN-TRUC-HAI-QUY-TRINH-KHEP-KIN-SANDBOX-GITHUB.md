@@ -1,0 +1,486 @@
+# TD-118-012 — KIẾN TRÚC HAI QUY TRÌNH KHÉP KÍN SANDBOX–GITHUB
+
+- **Work:** W118 — HQTT GitHub Workflow Automation
+- **Document ID:** TD-118-012
+- **Tên tiếng Việt:** Kiến trúc điều phối vòng đời Task và vòng đời mã nguồn giữa Sandbox–GitHub
+- **Tên tiếng Anh:** Sandbox–GitHub Dual Closed-Loop Architecture
+- **Phương án nền:** A — Sandbox khởi phát, GitHub kiểm soát phiên bản
+- **Trạng thái:** DRAFT FOR MULTI-AGENT REVIEW — NOT APPROVED — NO CODE AUTHORIZED BY THIS DOCUMENT
+- **Phạm vi:** Hai quy trình A/B, trạng thái, quyền, hợp đồng dữ liệu, sự kiện, lỗi, bằng chứng và kế hoạch kiểm thử.
+- **Ngày lập:** 2026-11-21 (UTC+07:00)
+- **Nguồn đối chiếu:** Issue #65; W118 README/STATUS; RA-118-001; TD-118-004..008; BB-118-002; role-map; workflow và test matrix hiện hành.
+- **Git snapshot tại thời điểm đối chiếu:** `main` và `work/118-auto-e2e-v2` DIVERGED, 286 commits ahead / 84 behind; merge base `cf2537e07bfd71d5823bd98f8673b3ab5644fcdc`. Không thực hiện đồng bộ nhánh trong tài liệu này.
+
+> Đây là bản kiến trúc đề xuất để phản biện và chốt hồ sơ. Không phải quyết định cho phép BUILD, không sửa workflow/code, không thay đổi quyền, secrets, branch protection, Work 70 schema, không merge/rebase/release.
+
+---
+
+## 1. Quyết định kiến trúc
+
+### 1.1 Phương án A được chọn
+
+**Sandbox/ROOM-HOP là nơi khởi phát và điều phối công việc. GitHub là hệ thống kiểm soát phiên bản và thực thi CI.** Hai hệ thống kết nối bằng sự kiện có định danh, hợp đồng dữ liệu versioned và cơ chế đối soát.
+
+- Sandbox tạo Work Plan, Work Package (WP), Task; kiểm tra điều kiện sẵn sàng; quyết định yêu cầu năng lực; điều phối Agent; theo dõi tiến độ và nghiệm thu nội bộ.
+- GitHub lưu Issue, Branch, Commit, Push, Pull Request (PR), Review và GitHub Actions; là nguồn sự thật cho lịch sử mã nguồn và kết quả CI.
+- GitHub Issue là bản ghi cộng tác/đối soát của Task, không thay thế Task record trong Sandbox.
+- Dashboard Work 70 chỉ đọc dữ liệu đã chuẩn hóa từ nguồn được ủy quyền; W118 không tạo Dashboard thứ hai và không tự ý mở rộng schema W70.
+- Mọi thay đổi trạng thái phải có event/evidence; không suy diễn trạng thái từ một nhãn hoặc một comment đơn lẻ.
+
+### 1.2 Hai vòng khép kín
+
+**Quy trình A — Plan-to-Task Orchestration**
+
+`Plan → WP → Task → Issue → Select Agent → Dispatch → ACK → Start → Execute → Verify → Accept/Close`
+
+Vòng A trả lời: *việc gì cần làm, ai được giao, ai đã nhận, đang ở đâu, bằng chứng nào cho phép đóng?*
+
+**Quy trình B — Sandbox–GitHub Source/CI Loop**
+
+`Approved Task → Sync Base → Branch → Code/Test → Commit/Push → GitHub CI → PASS/FAIL → Sandbox Reconcile → Review → Acceptance Gate`
+
+Vòng B trả lời: *mã nào được sửa, trên nhánh nào, commit nào đã push, CI đã kiểm tra SHA nào, lỗi được trả về Task nào?*
+
+Hai vòng liên kết qua `work_id`, `wp_id`, `task_id`, `issue_id`, `assignment_id`, `branch`, `commit_sha`, `run_id`, `pr_id` và `evidence_id`.
+
+### 1.3 Nguyên tắc không được phá vỡ
+
+1. **Plan/Task authority:** Sandbox sở hữu kế hoạch và trạng thái vòng đời Task.
+2. **Source authority:** GitHub sở hữu Issue/PR/Branch/Commit/CI state và lịch sử phiên bản.
+3. **Identity before authority:** không có principal đã xác minh thì không dispatch/ACK/accept bằng suy đoán.
+4. **Assignment ≠ ACK ≠ STARTED:** ba trạng thái riêng, ba bằng chứng riêng.
+5. **Push ≠ Issue linkage:** mọi push thuộc Task phải chứng minh liên kết Work/Task/Issue và exact SHA.
+6. **CI PASS ≠ Task complete:** CI chỉ là một điều kiện kỹ thuật.
+7. **Review ≠ Acceptance ≠ Merge ≠ Release:** bốn quyết định riêng biệt.
+8. **At-least-once event delivery + idempotent processing:** không giả định event chỉ đến một lần.
+9. **No silent overwrite:** xung đột dữ liệu phải vào reconciliation, không ghi đè âm thầm.
+10. **Fail closed:** thiếu quyền, schema, identity, evidence hoặc trạng thái không hợp lệ thì BLOCKED/DENIED.
+
+---
+
+## 2. Sơ đồ kiến trúc logic
+
+```mermaid
+flowchart LR
+  V[Vinh / Product Owner] --> S[Sandbox / ROOM-HOP]
+  S --> P[Plan & Task Registry]
+  P --> O[Orchestrator]
+  O --> R[Agent Registry & Policy]
+  O -->|Issue create/update| G[GitHub Issues]
+  O -->|Dispatch task| A[Verified AI Agent]
+  A -->|ACK / progress / evidence| O
+  A -->|Branch / commit / push| G
+  G --> CI[GitHub Actions / CI]
+  CI -->|Run result + exact SHA| E[Event Gateway / Reconciler]
+  G -->|Issue / PR / review events| E
+  E --> O
+  O --> J[Canonical Work Journal]
+  O --> ER[Evidence Register contract]
+  ER --> D[Work 70 Dashboard - read-only]
+  G --> PR[PR / Review]
+  PR --> O
+  V -->|Final acceptance / release decision| O
+```
+
+**Trust boundaries**
+- Sandbox ↔ GitHub: authenticated API/app identity, scoped permissions, signed/validated event envelope.
+- Orchestrator ↔ Agent: verified runtime principal, capability policy, dispatch receipt and ACK binding.
+- GitHub event ↔ Sandbox: validate repository, event type, sender, delivery ID, source SHA, task binding and replay window.
+- Work 70: read-only projection until the W70 schema owner explicitly approves any contract extension.
+
+---
+
+## 3. Quy trình A — Plan → Task → Execute → Verify → Close
+
+### 3.1 Luồng chuẩn
+
+1. **PLAN_CREATED:** Vinh/Work Owner tạo hoặc phê duyệt mục tiêu, phạm vi, rủi ro và tiêu chí hoàn thành trong Sandbox.
+2. **WP_DEFINED:** Orchestrator phân rã thành WP/Task/Subtask; mỗi Task có scope nhỏ, dependency, priority, acceptance criteria và evidence expectation.
+3. **TASK_READY:** validator kiểm tra đủ trường, dependency đã thỏa, quyền và nguồn lực. Thiếu trường thì DRAFT/BLOCKED, không tạo lệnh thực thi.
+4. **ISSUE_MIRRORED:** Sandbox tạo/cập nhật GitHub Issue theo `task_id`; Issue body mang metadata contract và liên kết về Work/Task.
+5. **AGENT_SELECTED:** policy chọn Agent theo role, capability, trust level, availability, workload và permission. Kết quả chọn phải giải thích được.
+6. **ASSIGNMENT_CREATED:** tạo assignment record độc lập với GitHub Assignee; ghi agent principal, capability match, policy version và lease.
+7. **DISPATCHED:** gửi task qua runtime route đã xác minh; lưu dispatch receipt, correlation ID và thời điểm.
+8. **ACKED / ACK_DENIED:** Agent trả ACK có actor principal, assignment ID, Task ID và nonce/dispatch reference; verifier xác minh danh tính, quyền, hạn ACK và chống replay.
+9. **STARTED:** Agent phát sự kiện bắt đầu riêng sau ACK; không tự động suy ra STARTED từ ACK.
+10. **IN_PROGRESS:** Agent gửi heartbeat/progress có sequence number; Sandbox ghi nhận tiến độ và evidence refs.
+11. **BLOCKED / RECOVERY:** Agent nêu blocker có cấu trúc; Orchestrator có thể giữ, đổi người, hủy lease hoặc yêu cầu quyết định của Owner. Không tự giao lại khi còn lease hợp lệ.
+12. **COMPLETED:** Agent nộp kết quả, commit/PR/evidence và checklist tự kiểm tra; đây chưa phải nghiệm thu.
+13. **VERIFYING:** QE/Reviewer kiểm tra acceptance criteria và bằng chứng độc lập.
+14. **ACCEPTED:** người có thẩm quyền nghiệm thu xác nhận; ghi actor, scope, exact commit/evidence.
+15. **CLOSED:** chỉ đóng Task khi acceptance policy thỏa; GitHub Issue được đóng theo đồng bộ có điều kiện. Nếu Task bị từ chối, Issue vẫn mở hoặc được mở lại theo policy.
+
+### 3.2 State machine của Task
+
+| Trạng thái | Ý nghĩa | Điều kiện vào | Ai được chuyển |
+|---|---|---|---|
+| DRAFT | Task đang soạn | tạo mới | Owner / Planner |
+| READY | Đủ điều kiện giao | schema + scope + AC + dependency hợp lệ | Planner/Validator |
+| ISSUE_LINKED | Issue đã liên kết | Issue ID/URL readback thành công | Orchestrator |
+| ASSIGNED | Đã chọn Agent, chưa dispatch | policy match + principal verified | Orchestrator |
+| DISPATCHED | Lệnh giao đã gửi | dispatch receipt | Orchestrator |
+| ACKED | Agent xác nhận nhận việc | ACK identity + assignment binding hợp lệ | ACK Verifier |
+| STARTED | Agent bắt đầu | start event hợp lệ | Assigned Agent |
+| IN_PROGRESS | Đang thực thi | heartbeat/progress hợp lệ | Assigned Agent / Orchestrator |
+| BLOCKED | Không thể tiếp tục | blocker record có evidence | Agent / Orchestrator / QE |
+| VERIFYING | Đã nộp kết quả | completion package đầy đủ | Orchestrator |
+| VERIFIED | Đạt kiểm tra kỹ thuật/AC | verifier evidence PASS | QE/Reviewer |
+| ACCEPTED | Owner nghiệm thu | acceptance decision hợp lệ | Vinh / delegate được ủy quyền rõ |
+| CLOSED | Task kết thúc | acceptance + sync readback | Orchestrator |
+| REJECTED | Không đạt nghiệm thu | review/acceptance reject có lý do | Reviewer / Owner |
+| CANCELLED | Chủ động hủy | cancellation reason + actor | Owner |
+| EXPIRED | Hết lease/ACK timeout | timeout policy + no valid heartbeat | Orchestrator |
+
+**Transition cấm:** READY→ACKED; ASSIGNED→STARTED; CI_PASS→ACCEPTED; Agent tự chuyển ACCEPTED/CLOSED; GitHub Issue closed tự động làm Task ACCEPTED; unverified actor thực hiện state mutation.
+
+---
+
+## 4. Quy trình B — Sandbox → GitHub → CI → Sandbox
+
+### 4.1 Luồng chuẩn
+
+1. **TASK_AUTHORIZED:** chỉ Task đã READY/ASSIGNED/ACKED theo policy mới được mở quyền code.
+2. **BASE_RESOLVED:** Sandbox đọc repository, target branch, exact base SHA và branch policy; kiểm tra branch không stale hoặc diverged ngoài ngưỡng.
+3. **BRANCH_CREATED:** tạo branch theo quy ước `work/{work_id}/task-{task_id}-{slug}` (quy ước cần chốt với repository policy); không dùng branch dùng chung cho nhiều Task nếu chưa có quyết định.
+4. **CODE_AND_LOCAL_TEST:** Agent chỉ sửa trong scope; ghi command, test, output và file changes vào execution journal.
+5. **COMMIT_CREATED:** commit message bắt buộc có Work/Task/Issue reference; commit metadata lưu author principal và exact parent SHA.
+6. **PUSH_REQUESTED:** Sandbox kiểm tra diff/scope, branch ownership, base SHA và liên kết Issue trước khi push.
+7. **PUSH_CONFIRMED:** GitHub trả exact commit SHA/ref; Sandbox chỉ ghi PUSHED sau readback xác nhận remote ref trỏ đúng SHA.
+8. **CI_QUEUED/RUNNING:** nhận workflow run ID, event, ref, head SHA, attempt.
+9. **CI_PASS:** chỉ khi run kết thúc success và evidence gắn đúng SHA; chuyển Task sang trạng thái kỹ thuật VERIFIED hoặc READY_FOR_REVIEW, không tự ACCEPT.
+10. **CI_FAIL:** tạo Failure record liên kết Task/Issue/assignment/run/SHA; chuyển Task BLOCKED hoặc REPAIR_REQUIRED; dispatch sửa lỗi chỉ sau policy check.
+11. **REPAIR_LOOP:** mỗi lần sửa là attempt mới, commit mới; retry có giới hạn và nguyên nhân; không retry vô hạn.
+12. **PR_OPENED:** PR gắn Task/Issue/Work IDs, base/head SHA, checklist và evidence.
+13. **REVIEW:** reviewer độc lập ghi APPROVED/CHANGES_REQUESTED; review không tự merge.
+14. **SANDBOX_RECONCILE:** đồng bộ CI/PR/review state và evidence về Task; mismatch chuyển RECONCILIATION_REQUIRED.
+15. **ACCEPTANCE_GATE:** Owner nghiệm thu theo sản phẩm/AC; merge/release là quyết định riêng.
+
+### 4.2 Ma trận trạng thái GitHub và Sandbox
+
+| GitHub signal | Sandbox projection | Có được tự chuyển Task? | Quy tắc |
+|---|---|---:|---|
+| Issue opened | ISSUE_LINKED | Có, sau readback | Kiểm tra Work/Task metadata |
+| Issue assigned | ASSIGNEE_SET | Không | Không chứng minh AI ACK |
+| Handoff label | HANDOFF_REQUESTED | Không | Chỉ là yêu cầu dispatch |
+| Verified ACK event | ACKED | Có | Identity + role + assignment binding |
+| Push event | PUSH_OBSERVED | Chưa | Cần exact SHA + Task binding |
+| CI queued/running | CI_RUNNING | Không | Cập nhật telemetry |
+| CI success | CI_PASS | Chỉ sang READY_FOR_REVIEW/VERIFIED | Không đóng Task |
+| CI failure | CI_FAIL / BLOCKED | Có, theo failure policy | Gắn đúng Task và attempt |
+| PR opened | PR_OPEN | Không | Bắt đầu review path |
+| Review approved | REVIEW_APPROVED | Không | Reviewer authority đã xác minh |
+| Owner acceptance | ACCEPTED | Có | Explicit decision + exact SHA |
+| PR merged | MERGED | Không tự nghiệm thu | Chỉ phản ánh merge state |
+| Release published | RELEASED | Không | Cần quyết định release riêng |
+
+---
+
+## 5. Phân quyền và ranh giới tin cậy
+
+### 5.1 Vai trò
+
+| Vai trò | Trách nhiệm | Quyền được phép | Không được suy diễn |
+|---|---|---|---|
+| Vinh — Product Owner | Phê duyệt Plan/scope, nghiệm thu sản phẩm, quyết định merge/release | Owner decisions; final acceptance; explicit release authorization | Không phải mặc định là executor ACK |
+| Xu — Orchestrator/Independent Reviewer | Điều phối, policy review, reconciliation, independent technical/security review | Điều phối theo quyền runtime đã xác minh; review độc lập | Governance role không tự tạo GitHub login/token |
+| Ka — Architecture/Build Lead | Thiết kế, triển khai sau gate, cung cấp evidence | Code/build trong phạm vi được ủy quyền | Không tự nghiệm thu sản phẩm |
+| Go — QE/QA | Kiểm thử độc lập theo D70-026 | QE verdict khi identity/access được xác minh | Vai trò QA không tự cấp quyền repo |
+| Agent Executor | Thực hiện Task đã dispatch | Chỉ quyền tối thiểu trên Task/branch được giao | Không tự assign, accept, merge hoặc release |
+| GitHub App / Service Principal | Đồng bộ Issue, event, CI, evidence | Short-lived token, repository-scoped, permissions tối thiểu | Không dùng quyền admin hoặc token cá nhân làm mặc định |
+| Work 70 Dashboard | Hiển thị projection | Read-only | Không ghi ngược Task/Issue |
+
+### 5.2 Quy tắc quyền
+
+- Role-map hiện tại là deny-by-default và mới có hai login Owner của Vinh; `ack_roles` rỗng. **Không có executor principal đủ điều kiện ACK production ở snapshot đã đọc.**
+- Chỉ thêm Agent principal sau khi xác minh login/runtime identity, owner, role, capability, active status và quyền thực tế.
+- Ưu tiên GitHub App installation token ngắn hạn; không dùng PAT cá nhân dài hạn làm kiến trúc mặc định.
+- Tách quyền `contents: read`, ghi branch, `issues: write`, `pull-requests: write`, `actions: read` theo job. Không cấp `administration`, secrets write, branch-protection bypass, merge hoặc release permission cho executor.
+- Policy được checkout từ trusted ref; không thực thi policy từ PR head không tin cậy.
+- Review độc lập phải khác actor/author theo policy; Owner acceptance không thay review độc lập.
+- Mọi quyền thực thi phải kiểm tra tại runtime, không chỉ dựa trên JSON role-map hoặc comment text.
+
+---
+
+## 6. Hợp đồng dữ liệu (Data Contract)
+
+### 6.1 Quy tắc chung
+
+- JSON UTF-8; schema có version; field names dùng snake_case; timestamp ISO-8601 UTC có offset hoặc Z.
+- ID ổn định, không tái sử dụng; event ID và idempotency key duy nhất trong phạm vi được quy định.
+- Không nhúng secret/token/password vào Issue, journal hoặc artifact.
+- Field chưa xác minh dùng `null`/unknown; không điền giá trị phỏng đoán.
+- Mọi state-changing record có actor, authority, provenance, correlation và evidence.
+
+### 6.2 Task record — schema đề xuất v1
+
+| Field | Kiểu | Bắt buộc | Ý nghĩa |
+|---|---|---:|---|
+| schema_version | string | Có | `1.0` |
+| work_id | string | Có | Mã Work, ví dụ W118 |
+| wp_id | string | Có | Work Package |
+| task_id | string | Có | ID Task ổn định |
+| title | string | Có | Tiêu đề ngắn |
+| objective | string | Có | Kết quả cần đạt |
+| scope_in / scope_out | string[] | Có | Phạm vi làm/không làm |
+| priority | enum | Có | P0/P1/P2/P3 |
+| acceptance_criteria | object[] | Có | AC ID, condition, verification method |
+| required_capabilities | string[] | Có | Năng lực cần có |
+| risk_level | enum | Có | LOW/MEDIUM/HIGH/CRITICAL |
+| dependencies | string[] | Có | Task IDs phụ thuộc |
+| issue_id / issue_url | string/null | Sau mirror | Liên kết GitHub |
+| state | enum | Có | Task state machine §3.2 |
+| owner_principal | string | Có | Principal chịu trách nhiệm |
+| assigned_agent_id | string/null | Khi assigned | Agent registry ID |
+| assignment_id | string/null | Khi assigned | Assignment record |
+| due_at | timestamp/null | Không | Hạn |
+| created_at / updated_at | timestamp | Có | Audit time |
+| version | integer | Có | Optimistic concurrency |
+| evidence_refs | string[] | Không | Evidence IDs |
+
+### 6.3 Assignment record — schema đề xuất v1
+
+Bắt buộc: `assignment_id`, `work_id`, `task_id`, `agent_id`, `principal_id`, `capability_match[]`, `policy_version`, `selected_at`, `lease_expires_at`, `dispatch_id`, `dispatch_status`, `ack_deadline`, `ack_event_id`, `state`, `attempt`, `reassigned_from`, `reason`.
+
+Assignment chỉ được tạo khi Agent active, identity verified, capability match và runtime route available. GitHub Assignee là field mirror tùy chọn, không phải assignment authority.
+
+### 6.4 Event envelope — schema đề xuất v1
+
+```json
+{
+  "schema_version": "1.0",
+  "event_id": "evt_<unique>",
+  "event_type": "task.acknowledged",
+  "occurred_at": "2026-11-21T10:00:00Z",
+  "producer": "room-hop-orchestrator",
+  "actor": {
+    "principal_id": "agent:<verified-id>",
+    "github_login": null,
+    "identity_verified": true,
+    "role": "executor"
+  },
+  "work_id": "W118",
+  "wp_id": "W118-14",
+  "task_id": "W118-TASK-001",
+  "issue_id": 123,
+  "assignment_id": "asg_<unique>",
+  "correlation_id": "corr_<unique>",
+  "causation_id": "evt_<parent>",
+  "idempotency_key": "task.acknowledged:<assignment_id>:<nonce>",
+  "source": {
+    "system": "sandbox",
+    "repository": "owner/repo",
+    "branch": null,
+    "commit_sha": null,
+    "run_id": null
+  },
+  "payload": {},
+  "evidence_refs": []
+}
+```
+
+**Validation:** event type allowlist; schema version supported; actor active/authorized; IDs consistent; timestamp within policy window; nonce/replay checked; idempotency key unique; payload size bounded; source SHA validated against GitHub when present.
+
+### 6.5 Source/CI evidence record
+
+Bắt buộc: `evidence_id`, `evidence_type` (`OPERATION`, `CI_CONTRACT`, `RUNTIME_E2E`, `REVIEW`, `ACCEPTANCE`), `work_id`, `task_id`, `issue_id`, `repository`, `branch`, `commit_sha`, `run_id`, `run_attempt`, `conclusion`, `actor`, `created_at`, `artifact_uri`, `sha256`, `provenance`, `limitations`.
+
+**Không phân loại CI unit/contract run thành RUNTIME_E2E.** Mọi evidence phải chỉ rõ exact tested SHA và giới hạn của phép thử.
+
+### 6.6 Data ownership matrix
+
+| Data domain | Nguồn ghi chuẩn | Nguồn đọc/chiếu | Xử lý xung đột |
+|---|---|---|---|
+| Plan/WP/Task/assignment/progress | Sandbox Task Registry | GitHub Issue mirror, W70 Dashboard | Sandbox version + event reconciliation |
+| Issue/PR/review/comment/label | GitHub | Sandbox mirror | GitHub readback; không ghi đè bằng cache |
+| Branch/commit/push/ref | GitHub | Sandbox execution record | Exact SHA/ref reconciliation |
+| CI run/job/artifact metadata | GitHub Actions | Sandbox evidence index | Run ID + attempt + SHA |
+| Agent identity/capability | Verified Agent Registry / approved role policy | Sandbox dispatcher | Fail closed khi chưa xác minh |
+| Journal | Canonical Work Journal | Dashboard/evidence consumers | Append-only; correction bằng entry mới |
+| Work Evidence Register | W70-approved schema/source | Dashboard | Chỉ cập nhật sau W70 owner ACK |
+| Dashboard view | Work 70 | Read-only clients | Không làm nguồn ghi trạng thái |
+
+---
+
+## 7. Danh mục sự kiện (Event Catalog)
+
+| Event | Producer | Consumer | Điều kiện/hiệu ứng |
+|---|---|---|---|
+| `plan.created` | Sandbox | Planner | Tạo kế hoạch |
+| `task.ready` | Validator | Orchestrator | Task đủ điều kiện |
+| `issue.mirrored` | GitHub adapter | Task Registry | Issue ID/URL readback |
+| `agent.selected` | Assignment service | Journal | Lưu policy match |
+| `task.dispatched` | Orchestrator | Agent runtime | Có dispatch receipt |
+| `task.acknowledged` | Agent | ACK verifier | Verify identity + binding |
+| `task.ack_denied` | ACK verifier | Orchestrator | Không chuyển assignment sang ACKED |
+| `task.started` | Agent | Task Registry | Chỉ sau ACK hợp lệ |
+| `task.progress` | Agent | Task Registry | Sequence/heartbeat hợp lệ |
+| `task.blocked` | Agent/QE | Orchestrator | Tạo blocker và owner |
+| `task.completed` | Agent | Verifier | Nộp result/evidence |
+| `source.branch_created` | Sandbox/GitHub | Source tracker | Branch gắn Task |
+| `source.commit_pushed` | GitHub | Sandbox reconciler | Xác nhận exact SHA |
+| `ci.queued` / `ci.started` | GitHub Actions | Sandbox | Telemetry |
+| `ci.passed` / `ci.failed` | GitHub Actions | Sandbox | Update verification/failure state |
+| `pr.opened` | GitHub | Sandbox | Link PR/Task |
+| `review.submitted` | GitHub | Review verifier | Validate reviewer authority |
+| `task.verified` | QE/Verifier | Owner | AC verified |
+| `task.accepted` | Vinh/authorized Owner | Task Registry | Final acceptance |
+| `task.closed` | Orchestrator | GitHub | Close mirror after readback |
+| `task.reopened` | Owner/Policy | Sandbox/GitHub | Reopen with reason |
+| `reconciliation.required` | Reconciler | Operator | Conflict/manual review |
+
+Every event must include envelope §6.4; delivery is at-least-once; consumer persists processed `event_id`/idempotency key before side effects or uses transactional outbox/inbox.
+
+---
+
+## 8. Lỗi, retry và phục hồi
+
+| Error code | Tình huống | Xử lý | Retry |
+|---|---|---|---|
+| E_IDENTITY_UNVERIFIED | Actor không có principal mapping | DENY + audit; không ACK/dispatch | Không tự retry |
+| E_PERMISSION_DENIED | Token/role không đủ quyền | BLOCKED; yêu cầu cấp quyền đúng thẩm quyền | Sau khi quyền được sửa |
+| E_SCHEMA_INVALID | Payload thiếu/sai field | QUARANTINE + lỗi validator | Chỉ sau sửa payload |
+| E_TASK_NOT_READY | Dependency/AC chưa đủ | Giữ DRAFT/BLOCKED | Sau khi điều kiện đổi |
+| E_AGENT_UNAVAILABLE | Agent offline/busy | Không dispatch; chọn candidate khác theo policy | Có giới hạn |
+| E_ACK_TIMEOUT | Không ACK trước deadline | Hết lease; mark EXPIRED; reassignment có kiểm soát | Tối đa theo policy |
+| E_ACK_REPLAY | ACK nonce/event đã dùng | Reject duplicate; idempotent no-op | Không |
+| E_DUPLICATE_EVENT | Event giao lại | Trả kết quả xử lý cũ | Không tạo side effect |
+| E_BRANCH_CONFLICT | Branch/ref/base không như dự kiến | Freeze push; reconcile base | Manual/approved |
+| E_TASK_LINK_MISSING | Push không gắn Task/Issue hợp lệ | Reject/flag; không ghi PUSHED hợp lệ | Sau bổ sung binding |
+| E_CI_FAILED | CI conclusion failure | Ghi failure record; gắn đúng Task/SHA; tạo repair task | Tối đa 2 retry tự động cho lỗi transient; sau đó human decision |
+| E_CI_STALE_SHA | CI chạy SHA khác SHA dự kiến | Không dùng kết quả cho commit mới | Trigger CI đúng SHA |
+| E_GITHUB_RATE_LIMIT | API 403/429/rate limit | Backoff theo Retry-After; queue event | Có giới hạn |
+| E_EVENT_LOST | Không nhận callback trong SLA | Periodic reconciliation qua GitHub API | Poll có giới hạn |
+| E_STATE_CONFLICT | Version/state transition không hợp lệ | Optimistic lock; giữ nguyên state; tạo conflict record | Sau reconcile |
+| E_EVIDENCE_MISSING | Thiếu artifact/log/sha256 | Không PASS gate; giữ BLOCKED | Sau khi thu evidence |
+| E_DASHBOARD_SCHEMA_UNAPPROVED | W70 schema chưa ACK | Không ghi W70; giữ evidence ở W118 staging | Chỉ sau approval |
+| E_MERGE_UNAUTHORIZED | Có yêu cầu merge không có quyền | DENY; audit; không merge | Chỉ explicit Owner authorization |
+
+### 8.1 Retry policy
+
+- Retry chỉ cho lỗi transient: network timeout, 429, 5xx, runner interruption; exponential backoff + jitter; tôn trọng Retry-After.
+- Không retry lỗi identity, permission, schema, missing linkage hoặc policy deny.
+- Mỗi action có `attempt`, `max_attempts`, `next_retry_at`, `last_error`.
+- Mặc định tối đa 2 lần retry tự động cho CI repair/transient workflow; quá ngưỡng chuyển BLOCKED/HUMAN_DECISION. Giá trị cuối cùng cần review cùng policy W118 hiện hữu.
+- Có dead-letter/quarantine queue cho event lỗi không thể xử lý; không xóa event gốc.
+- Periodic reconciliation là cơ chế phục hồi khi webhook/event bị mất; không dùng poll để ghi đè dữ liệu authority.
+
+---
+
+## 9. Ma trận trạng thái tổng hợp và tiêu chí đóng
+
+| Gate | Điều kiện PASS | Trạng thái hiện tại theo evidence đã đọc |
+|---|---|---|
+| G-A Plan/Task contract | Task schema, AC, dependencies, IDs và Issue mirror round-trip | DESIGN REQUIRED |
+| G-B Identity/Assignment | Verified Agent Registry, capability matching, dispatch receipt, positive/negative ACK | BLOCKED — no executor ACK principal |
+| G-C Execution tracking | STARTED/progress/heartbeat/BLOCKED/timeout/reassign E2E | NOT IMPLEMENTED / NOT VERIFIED |
+| G-D Source binding | Issue–Branch–Commit–Push exact binding | NOT PROVEN |
+| G-E CI feedback | Exact SHA CI PASS/FAIL returns to correct Task; diagnostics idempotent | CONTRACT PARTIAL; RUNTIME NOT VERIFIED |
+| G-F Review/Acceptance | Independent review + Owner acceptance separate | POLICY PARTIAL; runtime identity pending |
+| G-G Journal/Evidence | Event/evidence linked to canonical journal/register | PARTIAL; W70 register integration pending |
+| G-H Dashboard | Work 70 read-only projection parity and freshness | BLOCKED — schema/owner approval pending |
+| G-I Security/reliability | permission, spoof, replay, race, duplicate, lost event, crash-window tests | CONTRACT PARTIAL; runtime tests pending |
+| G-J Product acceptance | Xu review + Vinh acceptance exact revision | NOT STARTED for this architecture |
+
+W118 tổng thể chỉ được coi là hoàn tất khi tất cả gate bắt buộc có evidence PASS; không lấy trung bình hoặc thay thế một gate BLOCKED bằng CI xanh.
+
+---
+
+## 10. Kế hoạch kiểm thử đề xuất
+
+### 10.1 Test layers
+
+1. **Unit:** state transition, schema validation, policy matching, idempotency key, retry calculator, SHA/link parser.
+2. **Contract:** Sandbox ↔ GitHub Issue/PR/Actions payloads; Agent dispatch/ACK; evidence envelope; backward compatibility.
+3. **Integration:** GitHub test Issue, isolated branch, push exact SHA, Actions callback, Sandbox reconciliation.
+4. **Runtime E2E:** chạy thật một Task không nhạy cảm từ Plan đến Close; ghi toàn bộ event, actor và artifacts.
+5. **Security/adversarial:** spoofed ACK, unverified login, privilege escalation, self-review, replay, duplicate event, forged Task ID, malicious PR context.
+6. **Reliability:** timeout, retry, 429/5xx, lost webhook, runner cancellation, process crash giữa side effect và persistence, out-of-order events.
+7. **Dashboard/data quality:** parity, freshness, duplicate/missing evidence, stale state, permission/read-only.
+
+### 10.2 Test case matrix
+
+| ID | Kịch bản | Kết quả mong đợi | Evidence tối thiểu |
+|---|---|---|---|
+| T-A01 | Tạo Plan → WP → Task hợp lệ | READY; ID duy nhất | Task JSON + journal |
+| T-A02 | Task thiếu AC/dependency | DRAFT/BLOCKED; không dispatch | Validation error |
+| T-A03 | Agent capability match | Chọn đúng Agent, giải thích match | Assignment record |
+| T-A04 | Agent unverified/offline | DENY/NO_CANDIDATE | Policy decision |
+| T-A05 | ACK đúng identity/assignment | ACKED đúng Task | Runtime event + actor |
+| T-A06 | ACK giả/replay/sai Task | DENIED; state không đổi | Negative event evidence |
+| T-A07 | ACK không START | Vẫn ACKED, không giả STARTED | State snapshot |
+| T-A08 | Heartbeat timeout | EXPIRED/BLOCKED, lease recovery | Timeline |
+| T-A09 | Duplicate dispatch/event | Một side effect duy nhất | Idempotency readback |
+| T-B01 | Branch tạo từ exact base SHA | Branch link đúng Task | Git ref + base SHA |
+| T-B02 | Commit thiếu Task/Issue ID | Reject/flag; không cho push hợp lệ | Validator log |
+| T-B03 | Push đúng Task/Issue/SHA | PUSH_CONFIRMED | GitHub ref readback |
+| T-B04 | CI chạy đúng SHA và PASS | READY_FOR_REVIEW, không ACCEPT | Run + artifact |
+| T-B05 | CI FAIL | BLOCKED/REPAIR_REQUIRED đúng Task | Run + diagnostics Issue |
+| T-B06 | CI callback duplicate | Không tạo diagnostics duplicate | Event IDs + issue count |
+| T-B07 | CI result stale SHA | Reject evidence cho SHA mới | SHA mismatch log |
+| T-B08 | Out-of-order push/CI events | Reconciler giữ trạng thái đúng | Event timeline |
+| T-B09 | PR review bởi actor không đủ quyền | REVIEW_UNVERIFIED | Review event + policy |
+| T-B10 | CI PASS nhưng AC fail | Không VERIFIED/ACCEPTED | Verification report |
+| T-B11 | Owner acceptance đúng SHA | ACCEPTED, audit rõ | Acceptance record |
+| T-B12 | Merge/release không được phép | DENY; repo unchanged | Permission/audit evidence |
+| T-X01 | GitHub 429/5xx | Retry bounded; no duplicate | Retry log |
+| T-X02 | Webhook bị mất | Reconciliation phát hiện | API snapshot vs event store |
+| T-X03 | Crash sau GitHub write trước local ack | Idempotent recover | Crash/restart trace |
+| T-X04 | W70 schema chưa ACK | Không ghi Dashboard/Register | Denial record |
+| T-X05 | Dashboard parity/freshness | Projection đúng nguồn và thời điểm | Snapshot + source IDs |
+
+### 10.3 Điều kiện test PASS
+
+Mỗi test phải ghi: test ID, environment, actor/principal, input, command/method, source revision, exact SHA, GitHub Issue/PR/run IDs, expected/actual, artifact URL + digest, PASS/FAIL/BLOCKED và next step. Không dùng screenshot đơn lẻ thay thế event/API/artifact khi dữ liệu cấu trúc có thể lấy được.
+
+---
+
+## 11. Kế hoạch triển khai theo gói — chỉ sau khi hồ sơ được chốt
+
+| Thứ tự | Work Package đề xuất | Phạm vi | Gate trước khi code |
+|---|---|---|---|
+| WP-A1 | Task Contract & State Machine | Task schema, validator, transition engine | Architecture + schema approval |
+| WP-A2 | Agent Registry & Assignment | principal, capability, availability, matching, lease | Identity/permission approval |
+| WP-A3 | Dispatch, ACK & Execution Tracking | dispatch receipt, ACK, START, heartbeat, recovery | Runtime principal verified |
+| WP-B1 | Issue/Branch/Commit Binding | Issue mirror, branch/commit convention, exact SHA validator | GitHub contract approval |
+| WP-B2 | CI Feedback & Repair Loop | CI callbacks, failure routing, bounded retry | CI event contract + isolated test |
+| WP-B3 | Journal/Evidence Reconciliation | append-only journal, evidence contract | Evidence ownership approved |
+| WP-B4 | Work 70 Projection | read-only Dashboard projection | W70 owner/schema ACK |
+| WP-X | Full Lifecycle E2E & Security | full pilot, fault injection, adversarial tests | all preceding gates |
+
+Không mở code cho WP nào khi hợp đồng dữ liệu, quyền, acceptance criteria và test plan của WP đó chưa được chốt.
+
+---
+
+## 12. Hồ sơ cần phản biện và quyết định còn mở
+
+### 12.1 Câu hỏi bắt buộc cho phản biện
+
+1. Sandbox Task Registry có nên là nguồn chuẩn cho Task state trong khi GitHub Issue là mirror/collaboration record? Có ngoại lệ nào cần GitHub trở thành authority?
+2. Cơ chế Agent Registry/dispatch nên dùng ROOM-HOP runtime principal nào; cách xác minh identity và capability ra sao?
+3. ACK nên được ký/bind với dispatch nonce, assignment ID và Task ID bằng cơ chế nào trong runtime hiện có?
+4. Branch convention và một-Task-một-branch có phù hợp repository hiện hành? Cách xử lý multi-task PR?
+5. Event transport ưu tiên webhook, GitHub Actions callback, polling reconciliation hay hybrid? SLA và replay protection?
+6. Evidence Register W70 cần schema/owner ACK nào; W118 chỉ được staging đến khi có ACK?
+7. Quy tắc retry cap 2, lease/heartbeat/timeout và reassignment có phù hợp vận hành thực tế?
+8. Cần tách PR review, technical verification, product acceptance và merge authorization thành các actor/policy nào?
+
+### 12.2 Điều kiện để chuyển DRAFT thành kiến trúc được chốt
+
+- Ka phản biện tính khả thi và mapping với implementation hiện hữu.
+- Cla phản biện kiến trúc runtime, event transport, failure recovery và security.
+- Qw/QE phản biện testability, negative tests, evidence completeness và acceptance criteria.
+- Xu tổng hợp phản biện độc lập, giải quyết mâu thuẫn và xác nhận kiến trúc đủ chặt.
+- Vinh phê duyệt các quyết định sản phẩm/authority còn thuộc Owner.
+- Cập nhật một Biên bản kiến trúc duy nhất và Nhật ký chuẩn; đánh dấu version, decision IDs và trạng thái từng câu hỏi.
+- Chỉ sau đó mới phát hành implementation plan được duyệt và cho phép BUILD theo từng WP.
+
+## 13. Trạng thái và giới hạn
+
+- **Architecture:** DRAFT FOR MULTI-AGENT REVIEW.
+- **Selected option:** A — Sandbox initiates; GitHub controls versioning.
+- **Code change:** NONE authorized by this document.
+- **Runtime test:** NOT RUN by this architecture drafting activity.
+- **Git integration:** no rebase/merge/force-push.
+- **W70 schema/permissions/secrets:** unchanged.
+- **W118 overall:** ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
