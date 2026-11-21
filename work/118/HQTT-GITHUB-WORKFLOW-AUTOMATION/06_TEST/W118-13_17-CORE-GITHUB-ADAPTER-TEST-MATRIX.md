@@ -97,3 +97,12 @@
 ## 8. Exact CI evidence
 
 Update only after inspecting the exact branch-head run and its artifact. Contract CI PASS must never be reported as runtime E2E or product acceptance.
+
+
+## Exact-head CI result
+
+- SHA `5f02a9eafbf68eb0bcfca2942733882dab9cc5bf`
+- Push run #44882420198 SUCCESS — 94 tests PASS / 0.209s
+- PR run #44882422288 SUCCESS
+- Artifact ID 14697683781; SHA-256 `a2703f70b4a250197b14a84bb5408cef18f2917266f542c7850a54c70e098abc`
+- Runtime integration tests R01–R08 remain NOT RUN because Core/W102/W12/W13/W70 ports/approvals are unavailable.
