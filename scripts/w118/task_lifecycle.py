@@ -82,12 +82,35 @@ _REQUIRED_TASK_STRINGS = (
 )
 _REQUIRED_DETAILS = {
     "ISSUE_LINKED": ("issue_id", "issue_url"),
-    "ASSIGNED": ("assignment_id", "assigned_agent_id", "assigned_principal"),
-    "DISPATCHED": ("dispatch_id",),
+    "ASSIGNED": (
+        "assignment_id", "assigned_agent_id", "assigned_principal",
+        "assignment_policy_version", "capability_match", "assignment_evidence_ref",
+    ),
+    "DISPATCHED": ("dispatch_id", "dispatch_receipt_ref"),
     "ACKED": ("dispatch_id", "ack_event_id", "ack_nonce_ref"),
     "COMPLETED": ("result_ref",),
     "VERIFYING": ("result_ref",),
-    "CLOSED": ("issue_sync_verified",),
+    "CLOSED": ("issue_sync_verified", "issue_sync_evidence_ref"),
+    "BLOCKED": ("reason",),
+    "CANCELLED": ("reason",),
+    "EXPIRED": ("reason",),
+    "REJECTED": ("reason",),
+}
+_ALLOWED_DETAILS = {
+    "ISSUE_LINKED": {"issue_id", "issue_url"},
+    "ASSIGNED": {
+        "assignment_id", "assigned_agent_id", "assigned_principal",
+        "assignment_policy_version", "capability_match", "assignment_evidence_ref",
+    },
+    "DISPATCHED": {"dispatch_id", "dispatch_receipt_ref"},
+    "ACKED": {"dispatch_id", "ack_event_id", "ack_nonce_ref"},
+    "COMPLETED": {"result_ref"},
+    "VERIFYING": {"result_ref"},
+    "CLOSED": {"issue_sync_verified", "issue_sync_evidence_ref"},
+    "BLOCKED": {"reason"},
+    "CANCELLED": {"reason"},
+    "EXPIRED": {"reason"},
+    "REJECTED": {"reason"},
 }
 _ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$")
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
@@ -315,15 +338,23 @@ class TaskRegistry:
         event_id = _non_empty(event_id, "event_id")
         idempotency_key = _non_empty(idempotency_key, "idempotency_key")
         occurred_at = _timestamp(occurred_at)
-        if not isinstance(expected_version, int) or expected_version < 1:
+        if type(expected_version) is not int or expected_version < 1:
             raise TaskValidationError("expected_version must be a positive integer")
         if not isinstance(evidence_refs, (list, tuple)) or not all(
             isinstance(x, str) and x.strip() for x in evidence_refs
         ):
             raise TaskValidationError("evidence_refs must be a list of non-empty strings")
-        details_dict = dict(details or {})
-        if not isinstance(details_dict, dict):
+        if details is None:
+            details_dict = {}
+        elif isinstance(details, Mapping):
+            details_dict = dict(details)
+        else:
             raise TaskValidationError("details must be an object")
+        unknown_details = set(details_dict) - _ALLOWED_DETAILS.get(to_state, set())
+        if unknown_details:
+            raise TaskValidationError(
+                "unsupported transition detail fields: " + ", ".join(sorted(unknown_details))
+            )
         request_body = {
             "task_id": task_id, "to_state": to_state, "actor_principal": actor_principal,
             "actor_role": actor_role, "expected_version": expected_version,
@@ -363,11 +394,17 @@ class TaskRegistry:
                 if field not in details_dict:
                     raise TaskValidationError(f"{to_state} requires details.{field}")
                 if field == "issue_id":
-                    if not isinstance(details_dict[field], int) or details_dict[field] < 1:
+                    if type(details_dict[field]) is not int or details_dict[field] < 1:
                         raise TaskValidationError("details.issue_id must be a positive integer")
                 elif field == "issue_sync_verified":
                     if details_dict[field] is not True:
                         raise TaskValidationError("Issue close requires successful GitHub readback")
+                elif field == "capability_match":
+                    values = details_dict[field]
+                    if not isinstance(values, list) or not values or not all(
+                        isinstance(value, str) and value.strip() for value in values
+                    ):
+                        raise TaskValidationError("details.capability_match must be a non-empty string list")
                 else:
                     _non_empty(details_dict[field], f"details.{field}")
 
