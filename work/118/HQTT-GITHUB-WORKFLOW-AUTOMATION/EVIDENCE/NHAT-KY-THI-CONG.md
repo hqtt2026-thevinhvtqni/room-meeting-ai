@@ -1119,3 +1119,59 @@
 
 - **Entry result:** DONE — Issue mirror, webhook inbox and push/CI reconciliation contract foundations implemented; exact tested source SHA PASS; live runtime integration remains pending.
 - **Work state:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED.
+
+
+## Entry 072 — Align Task Register and separate Task/Assignment state machines
+
+- **Name:** Xu / AI-01
+- **Title:** HQTT Coordinator / W118 Architecture and Build Owner
+- **Date-Time:** 2026-11-21 13:36 +07:00 (continuation of Owner-directed build)
+- **Authority:** Vinh's instruction to build without waiting for multi-agent review remains active; Xu may make technical corrections and implementation decisions. No merge/release or final acceptance authority is implied.
+- **Reason for correction:** Inspection of W70 DOC-056 §9 and W112 DOC-001 showed the Work-level model separates Task status from Assignment status. The first W118 implementation had combined them. W112 DOC-001 remains DRAFT_NOT_APPROVED; it is used as a compatibility reference only.
+
+### 1. Architecture correction
+- TD-118-012 now specifies one W118 Work-specific Task Register modeled on W70 DOC-093 / DOC-056 §9; no W70 Task IDs or schema changes are introduced.
+- Task statuses are PLANNED/READY/IN_PROGRESS/BLOCKED/IN_REVIEW/DONE/CANCELLED.
+- Assignment statuses are UNASSIGNED/PROPOSED/DISPATCHED/ACKNOWLEDGED/IN_PROGRESS/SUBMITTED/ACCEPTED/REJECTED/BLOCKED/CANCELLED.
+- Issue link, push, CI and PR are evidence/observations, not Task statuses. Assignment ACCEPTED does not imply Task DONE; only Owner acceptance can mark Task DONE.
+- W118 canonical Task Register path: Sandbox `04_PLAN/TASK_REGISTER.json`; GitHub stores the versioned mirror. SQLite TaskRegistry is an operational transaction/event adapter and not a competing canonical register.
+- Event envelope now includes cross-Work fields such as actor_identity_id, recorded_at, source_revision, delivery_attempt, trace_ref and authorization_ref; product_task_id/phase_task_id remain null unless an approved mapping exists.
+
+### 2. Implemented and tested
+- Refactored `scripts/w118/task_lifecycle.py` to independent Task and Assignment state machines, with Owner/Executor/Verifier authorization, exact assignment/dispatch binding, Issue link readback, optimistic versioning, idempotency and append-only evidence observations.
+- Refactored `tests/w118/test_task_lifecycle.py` and `tests/w118/test_event_reconciler.py` to verify separate status domains and that push/CI evidence does not mutate Task/Assignment status.
+- Created `04_PLAN/TASK_REGISTER.json` (7 Work-specific Tasks W118-TASK-013..019) and `TASK_REGISTER.schema.json`; assignment remains UNASSIGNED where no verified runtime principal exists; progress_percent remains null/NOT_CALCULATED rather than fabricated.
+- Added `tests/w118/test_task_register_contract.py` for Task ID uniqueness, Work scoping, separate status vocabularies, dependency integrity, identity/assignment safety and Sandbox/GitHub ownership.
+- Updated TD-118-012, implementation note, test matrix, README, KH-118-001 and STATUS.
+
+### 3. Exact CI evidence
+- Latest tested branch head: `45b2cda82a99589afe33f2838656c5bbae8069f5`.
+- Push run [#44879719166](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44879719166): SUCCESS; **127 tests PASS / 0.257s**.
+- Artifact ID `14697318273`; SHA-256 `de06cfb5787728c7fb214fb80c485f6efe33e2738ad9376db0ea66748b8f2514`.
+- Push source-binding status on the aggregate feature branch remains `UNBOUND_LEGACY_BRANCH`, expected and safe; no Task inference.
+- Event-specific live handoff/ACK/review/failure jobs remain SKIPPED; runtime E2E NOT VERIFIED.
+
+### 4. Remaining limits
+- Task Register is now present in Sandbox, but the SQLite runtime adapter is not yet deployed or connected to a durable Sandbox service/API.
+- No real Agent principal, dispatch, ACK, heartbeat or reassignment has been verified.
+- No live GitHub Issue API operation, task-specific branch push, production webhook route/secret/TLS or CI callback has been executed.
+- W70 Evidence Register/Dashboard integration remains blocked pending owner/schema approval; no W70 schema was modified.
+
+- **Entry result:** DONE — Task/Assignment model corrected, canonical Work-specific Task Register created, 127 contract tests PASS at exact tested SHA; runtime integration pending.
+- **Work state:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED.
+
+## Entry 073 — Refresh W118 Sandbox working copy from exact GitHub snapshot
+
+- **Name:** Xu / AI-01
+- **Title:** HQTT Coordinator / Sandbox–GitHub Synchronization
+- **Date-Time:** 2026-11-21 13:36 +07:00 (sync activity during this build session)
+- **Direction:** GitHub feature branch → Sandbox Work 118 bootstrap/refresh. This is a one-time source bootstrap; subsequent implementation edits are to originate in Sandbox, then sync to GitHub for version control and CI.
+- **Git source:** `hqtt2026-thevinhvtqni/room-meeting-ai`, branch `work/118-auto-e2e-v2`; tested code snapshot `45b2cda82a99589afe33f2838656c5bbae8069f5`; CI run #44879719166, 127 tests PASS.
+- **Files refreshed:** Task Register JSON/schema; Task/Assignment lifecycle code and tests; source binding, Issue adapter, webhook inbox, event reconciler; workflow YAML; architecture TD-118-012; implementation note; test matrices; KH-118-001; STATUS; README; Work Manifest; sync manifest and journal pointer.
+- **Sandbox destinations:** `04_PLAN/TASK_REGISTER.json`, `04_PLAN/TASK_REGISTER.schema.json`, `04_CODE/scripts/w118/*`, `04_CODE/tests/w118/*`, `04_CODE/.github/workflows/w118-workflow-automation.yml`, `02_DEFINE/TD-118-012*`, `04_CODE/W118-13_16*`, `05_TEST/*`, `04_PLAN/KH-118-001*`, `00_ROOT/STATUS.md` and README.
+- **Manifest:** `04_CODE/SYNC-MANIFEST.json` records branch, tested SHA, CI run, artifact ID/digest and runtime limitations.
+- **Readback:** Sandbox read_probe confirmed Task Register, schema, Task lifecycle module, event reconciler and architecture file contents; sandbox_list confirms code/test/workflow paths. File-write operations returned status=ok.
+- **Execution limit:** Build MCP exposed file operations only; no Python execution command was available. No claim that tests ran in Sandbox; all 127 tests were executed by GitHub Actions.
+- **Runtime limits:** Event Listener :8050 not modified; no production secret/TLS, Agent identity, live Issue API or task-specific push E2E.
+- **Entry result:** DONE — Sandbox mirror refreshed and readback verified; GitHub remains version-control/PR/CI authority.
+- **Work state:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED.
