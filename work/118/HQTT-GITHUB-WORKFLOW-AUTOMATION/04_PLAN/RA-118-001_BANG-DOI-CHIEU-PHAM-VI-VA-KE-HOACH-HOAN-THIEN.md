@@ -36,8 +36,8 @@ W118-10 hiện chủ yếu xây tầng 1. Tầng 2 chưa được triển khai h
 - Main HEAD: 61939922098a6f8e8b3d0c5fe34511c3e57aa838.
 - Merge base: cf2537e07bfd71d5823bd98f8673b3ab5644fcdc.
 - Compare: **278 ahead / 84 behind — DIVERGED**. Không rebase/merge trong đợt đối chiếu.
-- Exact-head PR validation: [Run #44860083377](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44860083377), tested SHA khớp feature HEAD; validate SUCCESS.
-- Artifact: w118-run-evidence-44860083377-1, ID 14689611980, SHA-256 8cf8ad90845070b4ccc38e5a019dd8f159d5077b44945a2cd46cecebdee4a382, chưa hết hạn tại readback.
+- PR validation at intake: [Run #44860083377](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44860083377), validate SUCCESS; artifact metadata bound the run to branch HEAD b694abe80d2c9f86871f7303543dd234da2bd205. This is a pull_request event, so the tested revision is the PR merge ref, not the branch HEAD.
+- Artifact: w118-run-evidence-44860083377-1, ID 14689611980, SHA-256 8cf8ad90845070b4ccc38e5a019dd8f159d5077b44945a2cd46cecebdee4a382, chưa hết hạn tại readback. Artifact content from this run was not separately downloaded in this assessment.
 - Trong run này, handoff, ack-verification, acceptance-review, controlled-failure và controlled-failure-dispatch đều SKIPPED. Đây là CI contract evidence, không phải runtime event E2E.
 
 ## 3. Bảng đối chiếu yêu cầu — triển khai — bằng chứng
