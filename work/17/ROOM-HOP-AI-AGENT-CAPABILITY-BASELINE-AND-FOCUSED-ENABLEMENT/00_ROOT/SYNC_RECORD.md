@@ -834,3 +834,16 @@
 - No Work52 files, source, tests, provider, Host, Core route, branch or permissions changed. Entry 082 added.
 - GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED; READ/TRACE/ANALYZE ONLY.
 - Next: trace actual CorePort/AuthorityPort/HostPort implementations and canonical W14/W37 boundary evidence across Sandbox Works; distinguish interface declarations from concrete bindings. No runtime invocation.
+
+
+## Sync Period 0070 — W11/W14/W30/W37 concrete binding trace (2026-11-21T16:33:54+07:00)
+
+- W37: Core :8000 single-source-of-truth evidence workspace only; no source files in observed 04_CODE; process/router/persistence/authz/live port mapping remain NOT VERIFIED. This is not evidence that Core lacks internal services.
+- W14: sole owner of combined W12/W13 execution product. Historical fixture FINAL_RESULT.json records and 2026-10-12 W13 POST /execute attestation show specific scoped PASS results with runtime identity, but do not establish a fresh current PC check, universal provider session transport, or complete current W14 acceptance. AUD-005 remains BLOCKED / NOT PASS; integrated Windows harness/full product E2E NOT VERIFIED in the inspected latest restoration records.
+- W14 POST /execute is not the W52 HostPort.open(adapter, task) Codex/Qwen provider-session binding. No concrete W52-to-W14 HostPort adapter was located.
+- W11 production boundary is specified but Core identity/join calls are deliberately not guessed; API adapter real provider boundary raises NotImplementedError; acceptance labels Mock mechanics PASS while production Core identity/join and real provider remain BLOCKED.
+- W30 historical dispatch trace found no exposed task-create/dispatch operation in that then-current inventory and empty queried inboxes; it did not prove absence of a separate internal Core route. Adapter tests explicitly use a fake MCP server.
+- Combined result: neighboring Works contain contracts, mock mechanics and a scoped execution Host, but inspected sources do not supply concrete W52 CorePort/AuthorityPort/HostPort bindings plus provider receipt, private-session target proof, recipient-authenticated ACK and durable Core read-back.
+- No source/test/runtime/provider/Host/API/permission/branch change. No live call performed. W17 remains READ/TRACE/ANALYZE ONLY.
+- GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. Entry 083 added.
+- Next: compare W52 adapter-interface with W14 bridge request/response contracts to define the smallest loss-aware mapping; no implementation before authoritative W70/Core Assignment and ACK source is proven.
