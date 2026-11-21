@@ -1,31 +1,68 @@
-# STATUS — WORK 118 (PRODUCT v1 PILOT)
+# W118 — Current Status
 
-- **Ngày:** 2026-11-20
-- **Quyết định Vinh (2026-11-20):** Vibe tự quyết cấu trúc; vòng phản biện dài bỏ; Xu nghiệm thu sản phẩm.
-- **Sản phẩm v1:** workflow ".github/workflows/w118-workflow-automation.yml" (W118 Workflow Automation Pilot), 3 jobs:
-  1. handoff-brief: issue gắn label w118-handoff được comment hướng dẫn nhận việc.
-  2. ack-verification: comment bắt đầu bằng "ACKED-" được ghi nhận bằng chứng (anti-spoof manual ở pilot v1; Xu kiểm tra mapping role khi nghiệm thu).
-  3. ci-failure-diagnostics: khi CI của W300/W70 FAIL, mở hoặc cập nhật 1 issue chẩn đoán duy nhất có label w118-blocked (run URL + SHA + quy tắc retry cap 2, không retry vô hạn).
-- **An toàn thiết kế:** GITHUB_TOKEN events không tự kích hoạt lại workflow (không vòng lặp); least-privilege (issues: write, contents: read); timeout 5 phút mỗi job; khớp thiết kế TD-118-005/006/007/008.
-- **Chưa có trong v1:** evidence row tự động vào register W70 (chờ ACK schema v1.2), realtime ROOM-HOP, auto-merge (cấm vĩnh viễn theo TD-118-007).
-- **Trạng thái:** PILOT RUNTIME VERIFIED ở mức **2/3 job** (ack-verification + handoff-brief, Entry 018: Runs #6/#7 success, 2 comment bot "handoff registered" trên Issue #65) nhưng **XU NOT ACCEPTED 2026-11-20** (hồ sơ XU-118-AC-001 — AC-R1..AC-R6). Đang chạy vòng kiểm thử độc lập theo [KT-118-009](../04_PLAN/KT-118-009_KE-HOACH-KIEM-THU-BO-SUNG.md): main giữ nguyên, PR #66 chưa merge, không sửa mã trong vòng nghiệm thu.
+- **Work:** W118 — HQTT GitHub Workflow Automation
+- **Status:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED
+- **Selected architecture:** A — Sandbox initiates; GitHub controls versioning
+- **Architecture baseline:** TD-118-012 v1.2 — owner-directed implementation baseline
+- **Implementation branch:** `work/118-auto-e2e-v2`
+- **PR:** #67 — OPEN / UNMERGED
+- **Owner:** Vinh
+- **Coordinator:** Xu / AI-01
+- **Last status refresh:** 2026-11-21 (UTC+07:00)
+
+## 1. Architecture ownership
+
+- Core :8000 is the sole runtime Task/Assignment/Event authority.
+- W102 owns Agent Loop policy and Assignment decisions.
+- W01/W02/W22 + Core own identity and authorization.
+- W12/W13 own WEE, GitHub Gateway, CIAdapter and Execution Host.
+- W70 owns Work lifecycle, Evidence Register and Dashboard schema.
+- W52 A2A contract is a DRAFT reference; W16 is an architecture reference, not assumed as a live runtime.
+- W118 owns only the Work planning Task Register and GitHub-specific adapters.
+
+## 2. Current W118 implementation
+
+- Work planning register: `04_PLAN/TASK_REGISTER.json` (7 W118 implementation tasks); it is not a runtime Core Task database.
+- `core_task_adapter.py`: read-only Core Task projection using explicit owner-approved field map.
+- `github_issue_adapter.py`: Core Task Issue mirror; requires Core per-Task lock lease and exact readback.
+- `source_binding.py`: branch/commit/Issue/exact-SHA validation.
+- `github_webhook_verifier.py`: stateless HMAC and delivery-envelope verification.
+- `github_event_adapter.py`: stateless GitHub event-to-Core event-intent mapping.
+- Workflow jobs now capture handoff request, ACK claim and PR review observation only; they do not assign Agents, verify ACK or accept Tasks.
+- Previous W118-local SQLite TaskRegistry, webhook inbox, event reconciler and GitHub-login authorization scripts have been removed because they duplicated existing Core/W102/W12 ownership.
+
+## 3. Verification state
+
+- **Exact contract CI:** Push Run #44882420198 SUCCESS on SHA `5f02a9eafbf68eb0bcfca2942733882dab9cc5bf`; 94 tests PASS / 0.209s; artifact `14697683781`, SHA-256 `a2703f70b4a250197b14a84bb5408cef18f2917266f542c7850a54c70e098abc`. This is contract/unit evidence only; event jobs were SKIPPED.
+- **Runtime E2E:** NOT RUN.
+- **Sandbox code execution:** not available through the current Build MCP session (file operations only).
+- **GitHub Issue API:** no live Core-snapshot/lock-backed create-readback yet.
+- **Core Event API:** not exposed to W118.
+- **W102 Agent identity/Assignment:** no verified runtime principal or dispatch/ACK round-trip.
+- **W12/W13:** execution host and CIAdapter unavailable/not exposed in current session.
+- **W70:** no schema or dashboard write; owner/schema ACK pending.
+
+## 4. Required next steps
+
+1. Finish and pass exact-head CI for stateless Core/GitHub adapters and observation-only workflow jobs.
+2. Obtain actual Core Task API schema, field map, per-Task lock and Event ingress from Core owner.
+3. Bind W102 identity/Assignment policy and verified Agent principal.
+4. Bind W12/W13 Work Authority, GitHub Gateway and CIAdapter.
+5. Obtain W70 read-only Evidence Register/Dashboard mapping approval.
+6. Run one non-sensitive full runtime E2E and submit exact evidence for Vinh acceptance.
+
+## 5. Governance
+
+- No local runtime Task DB, Agent Registry, dispatcher, event queue/Event Bus, Execution Host, Git Gateway or CI engine in W118.
+- CI PASS is evidence only; not Task DONE, Assignment ACCEPTED, merge or release.
+- No rebase/merge to main, branch-protection change or release without Vinh's explicit authorization.
 
 
-## Cập nhật kiểm thử độc lập — 2026-11-20 (Entry 021)
-- **T-02 ACK runtime:** PASS — tài khoản GitHub `thevinhqtni-1911` comment `ACKED-test-65`; W118 Run #8 success, job `ack-verification` success, bot ghi đúng actor. [Run #8](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44740499758).
-- **T-02 anti-spoof/authorization:** NOT VERIFIED — pilot v1 chỉ kiểm tra prefix `ACKED-`; mapping hai login của Vinh đã được chủ sở hữu duyệt ở Entry 022, nhưng workflow chưa thực thi allowlist/role policy và chưa chứng minh actor ngoài mapping bị từ chối.
-- **T-03:** MAPPING APPROVED / DOCUMENTED (Entry 022) — hai login của Vinh cùng ánh xạ tới HQTT Owner; runtime authorization vẫn NOT VERIFIED.
-- **T-04:** NOT VERIFIED — chờ một CI FAIL tự nhiên sau khi W118 listener hoạt động.
-- **T-05:** BLOCKED — chưa có ACK riêng để mở rộng self-listener.
-- **Freeze:** main chỉ cập nhật hồ sơ kiểm thử; không sửa workflow/permission, không merge PR #66; B-118-010 chưa được áp dụng.
-- **Nhật ký chuẩn:** Entry 021 trong `EVIDENCE/NHAT-KY-THI-CONG.md`.
+## 6. Audit refresh — 2026-11-21 16:02 +07:00
 
-
-## Quyết định chủ sở hữu — Identity mapping (Entry 022)
-- Vinh xác nhận hai GitHub login `hqtt2026-thevinhvtqni` và `thevinhqtni-1911` đều thuộc mình.
-- Mapping được duyệt: cả hai login → cùng HQTT principal **Vinh / HQTT Owner**; vẫn giữ nguyên login riêng trong audit log.
-- T-03 mapping: **APPROVED / DOCUMENTED**.
-- T-03 runtime authorization: **NOT VERIFIED** — workflow pilot chưa thực thi allowlist/role policy và chưa có negative test từ actor ngoài mapping.
-- T-02 Run #8 vẫn chỉ chứng minh event/actor propagation từ account thứ hai; không chứng minh unauthorized denial.
-- Không sửa workflow/permission; PR #66 OPEN; B-118-010 vẫn khóa chờ lệnh chính xác; T-05 vẫn BLOCKED.
-- Nhật ký chuẩn: Entry 022 trong `EVIDENCE/NHAT-KY-THI-CONG.md`.
+- **Audit record:** RA-118-002 (P0, read order 13); Journal Entry 075.
+- **Branch integration:** `main...work/118-auto-e2e-v2` remains DIVERGED and 86 commits behind at the audit snapshot; the ahead count increases with this branch's audit-only documentation commits. Re-fetch compare immediately before any integration; integration BLOCKED pending path-level classification. No rebase/merge performed.
+- **PR review:** #67 OPEN / UNMERGED; formal review submissions 0; inline review threads 0.
+- **Runtime:** Core Task/lock/Event ports, W102 identity/Assignment, W12/W13 Host/GitHub/CI adapter and W70 schema ACK remain BLOCKED / NOT VERIFIED.
+- **Source binding:** aggregate branch result `UNBOUND_LEGACY_BRANCH`; no Task association inferred.
+- **Disposition:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED.
