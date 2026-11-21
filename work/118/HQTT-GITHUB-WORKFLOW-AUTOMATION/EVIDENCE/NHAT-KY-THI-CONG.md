@@ -924,3 +924,57 @@
 - **GitHub snapshot tại source commit:** Main `5f8390910178012feaf37510452bc39804b296db`; merge base `cf2537e07bfd71d5823bd98f8673b3ab5644fcdc`; 272 ahead / 82 behind — DIVERGED. PR #67 OPEN, chưa merge; mergeability clean tại readback. Không rebase, merge, release.
 - **Disposition:** code fix + regression + artifact content verification PASS; Xu independent review gate 09 PENDING re-review; Vinh product acceptance PENDING; Work ACTIVE — NOT ACCEPTED — NOT RELEASED.
 - **Bước tiếp:** chuyển hồ sơ đã hiệu chỉnh cho Xu phản biện tiếp; Ka không tự nâng Evidence Integrity review gate lên PASS thay Xu.
+
+
+## Entry 068 — Rà soát độc lập phân giao Issue → AI → Push → CI và ghi nhận khoảng trống
+
+- **Người thực hiện:** Xu — AI-01 / HQTT Coordinator & Independent Reviewer.
+- **Người nhận:** Vinh — Product Owner; Ka — CSA / W118 Build Owner.
+- **Ngày giờ:** 2026-11-21 10:14:13 +07:00.
+- **Mã Work:** W118.
+- **Ưu tiên:** P0 — xác định đúng phạm vi sản phẩm và mức độ hoàn thiện luồng quản lý công việc.
+- **Phạm vi:** rà soát hồ sơ W118, thiết kế TD-118-005 và workflow `.github/workflows/w118-workflow-automation.yml` trên nhánh `work/118-auto-e2e-v2`; đối chiếu mục tiêu phân giao/quản lý Issue, trách nhiệm AI, liên kết Branch/Commit/Push, CI và cập nhật tiến độ. Không sửa source/workflow, không đổi quyền/labels, không rebase/merge/release.
+
+### 1. Bằng chứng đã đối chiếu
+
+- Feature HEAD được Ka bàn giao: `19aa6af8420d1569ad03f65bd1896bf614ab65ad`.
+- Workflow có xử lý event `issues.labeled` cho handoff, `issue_comment` cho ACK và `push` để chạy validate trong phạm vi path/điều kiện cấu hình.
+- Thiết kế/README mô tả chuỗi mục tiêu: `Issue → Assignment → Branch → Commit/Push → CI → Failure handling / Review → Acceptance → Merge → Work Journal/Dashboard`.
+- Workflow hiện có nền tảng GitHub Issue, handoff label, thông báo và cơ chế ACK; Push có thể kích hoạt CI theo điều kiện đã cấu hình.
+- Kết quả kiểm tra code trước đó: Run [#44851856542](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44851856542) tại HEAD `19aa6af8420d1569ad03f65bd1896bf614ab65ad`, job `validate` SUCCESS, **54 tests PASS**; artifact ID `14686135547`, SHA-256 `f151e868f1fee6c5d68255145460945777653fc12e94b5c307894451f8bf96f6`. Ka báo cáo JSON artifact có `evidence_type=CI_CONTRACT`, `state=RECORDED`, `test_outcome=success`, tested commit khớp HEAD. Đây là bằng chứng CI contract, không phải runtime E2E.
+- Event-specific jobs trong run kiểm tra vẫn SKIPPED; không có bằng chứng mới xác nhận handoff/ACK/assignment/diagnostics chạy end-to-end trong lượt rà soát này.
+
+### 2. Ma trận năng lực Issue / Assignment / Execution / Push / CI
+
+| Năng lực | Hiện trạng theo bằng chứng | Phân loại |
+|---|---|---|
+| Tạo Issue làm đầu việc | GitHub Issues và hồ sơ Issue W118 đã tồn tại | NỀN TẢNG CÓ |
+| Handoff bằng label | Workflow có nhánh xử lý `issues.labeled` | ĐÃ CÓ CODE; runtime E2E CHƯA XÁC MINH |
+| Gửi yêu cầu nhận việc / thông báo | Có bước handoff/notification trong workflow | ĐÃ CÓ CODE; runtime E2E CHƯA XÁC MINH |
+| AI xác nhận ACK | Có xử lý `issue_comment` và kiểm tra ACK | ĐÃ CÓ CODE; chưa đủ chứng minh xác thực đúng danh tính AI |
+| Tự chọn/phân công AI phù hợp | Chưa có bằng chứng hoàn chỉnh về bộ điều phối chọn agent theo năng lực/tải/quyền và ghi nhận kết quả | CHƯA HOÀN THIỆN |
+| Theo dõi người/AI chịu trách nhiệm | Có role-map/khái niệm actor, nhưng chưa chứng minh luồng owner → ACK → execution → completion nhất quán | CHƯA HOÀN THIỆN |
+| Phân biệt Assigned và Accepted | GitHub Assignee hoặc label không chứng minh AI đích đã nhận việc | GAP NGHIỆP VỤ |
+| Liên kết Issue ↔ Branch | Chưa xác minh được cơ chế bắt buộc và kiểm tra liên kết | CHƯA CHỨNG MINH |
+| Liên kết Issue ↔ Commit/Push | Chưa xác minh được quy tắc bắt buộc gắn Issue ID/commit và đối soát quan hệ | CHƯA CHỨNG MINH |
+| Push kích hoạt CI | Workflow có trigger `push` với path/điều kiện cấu hình | CÓ CODE; chỉ trong phạm vi trigger đã định |
+| CI FAIL tạo/cập nhật Issue chẩn đoán | Có code/thiết kế diagnostics, nhưng chưa có run E2E chứng minh tạo/cập nhật đúng và idempotent | CODE CÓ; RUNTIME CHƯA VERIFIED |
+| CI PASS cập nhật trạng thái Work/Issue | Chưa có bằng chứng cập nhật tiến độ có thẩm quyền, liên kết đúng Issue/Work | CHƯA CHỨNG MINH |
+| Tổng hợp tiến độ, owner và blocker toàn Work | Chưa có luồng live aggregation đầy đủ từ Issue/Branch/CI/ACK vào Work dashboard | CHƯA HOÀN THIỆN |
+
+### 3. Kết luận rà soát
+
+- Ka đã đưa Issue–handoff–ACK–Push–CI vào phạm vi thiết kế và triển khai một phần; **chưa có cơ sở kết luận chức năng phân giao/quản lý Issue → AI đã hoàn thành**.
+- W118 cần được đánh giá theo hai lớp riêng: (a) CI/evidence automation; (b) quản lý vòng đời đầu việc và phân giao thực thi cho AI. PASS của 54 contract tests chỉ chứng minh lớp kiểm tra hợp đồng đang chạy, không thay thế bằng chứng lớp (b).
+- Không đồng nhất GitHub Assignee với AI đã nhận việc; không đồng nhất ACK theo nội dung comment với xác thực danh tính/ủy quyền; không suy diễn Push có liên kết đúng Issue chỉ vì workflow được kích hoạt.
+- Cần Ka lập ma trận đối chiếu chính thức cho năm miền: Issue Management, AI Assignment, Execution Tracking, Push–CI Integration, Work Progress/Dashboard; mỗi dòng ghi requirement, code path, trạng thái implemented/designed/missing, test/run evidence và phần còn thiếu. Chưa mở rộng implementation trước khi chốt ma trận và xác định thứ tự ưu tiên.
+- Xu tiếp tục giữ độc lập Gate 09; **không nâng PASS** chỉ dựa trên CI validate. Runtime E2E NOT VERIFIED; Xu review PENDING; Vinh acceptance PENDING; PR #67 OPEN/unmerged; không rebase/merge/release.
+
+### 4. Bước tiếp theo
+
+1. Ka phản hồi ma trận năng lực năm miền bằng evidence path/line và test evidence cụ thể; phân loại rõ đã có code, mới thiết kế, còn thiếu, runtime chưa xác minh.
+2. Xu đối chiếu ma trận với mục tiêu W118 và BB-118-002; xác định phần nào thuộc scope hiện tại, phần nào cần quyết định điều chỉnh phạm vi.
+3. Chỉ sau khi Vinh chốt hướng và hồ sơ được cập nhật mới lập kế hoạch implementation/test tiếp theo. Giữ nguyên quyền nghiệm thu cuối cùng của Vinh.
+
+- **Trạng thái Entry:** DONE — ghi nhận kết quả rà soát và khoảng trống; không đồng nghĩa W118 DONE.
+- **Trạng thái Work:** ACTIVE — NOT ACCEPTED — NOT RELEASED.
