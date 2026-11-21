@@ -1768,3 +1768,25 @@ Read-only Sandbox inventory/read of W37 Core evidence workspace; enumerate the c
 - GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2/E3 NOT PROVEN; provider receipt NOT PROVEN; recipient-authenticated ACK NOT PROVEN; protected execution DENY / NOT RELEASED.
 - READ/TRACE/ANALYZE ONLY. No source, Work37, Core, API, provider, Host, test, runtime, permission or branch change.
 - Next: seek source-backed proof of any separately deployed Core service/route or persistence adapter from its actual service composition/configuration; if unavailable, preserve UNKNOWN for alternate deployments and prepare a concise architecture blocker/decision brief rather than implement a parallel dispatcher.
+
+
+## Entry 089 — Current 8030 service identity and Core connectivity boundary (2026-11-21T16:46:26+07:00)
+
+### Scope and method
+Called read-only `get_room_structure()` and `get_room_context()` through the currently connected ROOM-HOP 8030 service. No Core :8000 HTTP call, no meeting action, no Sandbox mutation beyond Work17 journal recording, no provider/Host/test/runtime operation.
+
+### Raw observations
+- `get_room_structure()` returned `status=ok`, `service=room-hop-build`, `version=1.0`, sandbox root `.ai-workspace\\sessions\\AI-BUILD-GATEWAY-V1\\workspace`, and capabilities limited to Sandbox list/read/create/write/append/delete/create_work/list_works.
+- `get_room_context()` returned `service=room-hop-build`, `version=1.0`, rule `Sandbox is the AI BUILD ZONE`, boundary `Working Source is read-only; Sandbox is read/write`, and merge rule `AI cannot merge, commit, or push`.
+
+### Interpretation and limits
+- The currently connected 8030 endpoint identifies itself as the Build/Sandbox service, not Core :8000. These calls do not expose Core HTTP routes, Core process health, Work persistence or Assignment/ACK state.
+- Therefore earlier 8030 tool inventory findings must be interpreted as the exposed Build/Sandbox connector surface, not a complete inventory of Core :8000. No direct live Core runtime probe was performed in this session.
+- The Core route conclusions in Entries 086–087 remain source-level current-main observations only; deployed Core runtime and any separately configured Core endpoint remain NOT VERIFIED.
+
+### Disposition
+- Current connected service identity: `room-hop-build` v1.0 — VERIFIED from its self-reported read-only context response.
+- Direct Core :8000 connectivity/API/health through this session: NOT AVAILABLE / NOT VERIFIED; do not infer Core failure or absence.
+- GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
+- READ/TRACE/ANALYZE ONLY. No Core or production operation invoked.
+- Next: inspect repository configuration and current service entrypoints for a declared Core URL/port and separate runtime launcher; do not guess or call a URL absent from verified configuration.
