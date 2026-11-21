@@ -181,7 +181,7 @@
       "phase": "05_BUILD",
       "phase_name": "Build",
       "task_title": "W14 Work Authority and Execution Host integration",
-      "objective": "Integrate W118 with W14's canonical Work Authority and ExecutionHostBridge, using absorbed W12/W13 components only behind W14; W118 must not call W12/W13 as independent product systems.",
+      "objective": "Integrate W118 with W14's canonical Work Authority and ExecutionHostBridge. W12/W13 are absorbed internal foundations and may be used only behind W14; W118 must not call them as independent product systems.",
       "accountable_role": "ORCHESTRATOR",
       "role_name": "Xu / AI-01",
       "assigned_identity": null,
@@ -582,5 +582,5 @@
   ],
   "task_count": 7,
   "created_at": "2026-11-21T13:36:00+07:00",
-  "updated_at": "2026-11-22T05:20:00+07:00"
+  "updated_at": "2026-11-22T05:30:00+07:00"
 }
