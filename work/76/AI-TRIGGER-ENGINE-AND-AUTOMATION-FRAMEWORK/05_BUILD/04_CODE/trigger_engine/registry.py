@@ -1,0 +1,207 @@
+"""Work 76 trigger registry with single-ACTIVE-version invariant.
+
+Implements DOC-004 lifecycle invariants:
+- at most one ACTIVE version per trigger_id; activation atomically retires
+  the previous ACTIVE version (regression W76-RG-001),
+- expected-revision compare-and-swap for state changes,
+- pause/resume/disable transitions with persistence round-trip consistency
+  (W76-RG-002),
+- reload from persisted data fails closed on multi-ACTIVE corruption
+  (W76-RG-003, Grok review H1).
+"""
+
+from __future__ import annotations
+
+from threading import RLock
+from typing import Any, Mapping
+
+from .errors import ConcurrencyError, RegistryError, StateError, ValidationError
+from .models import Trigger
+
+VALID_TRANSITIONS = {
+    "DRAFT": {"ACTIVE", "DISABLED"},
+    "ACTIVE": {"PAUSED", "DISABLED", "RETIRED"},
+    "PAUSED": {"ACTIVE", "DISABLED"},
+    "DISABLED": set(),
+    "RETIRED": set(),
+}
+
+
+class TriggerRegistry:
+    """In-memory canonical registry with JSON round-trip support.
+
+    L2 (Grok review, architectural limitation): this registry keeps state in
+    memory only. Durability is the caller's responsibility via to_dict /
+    from_dict round-trips; the engine itself performs no persistence.
+    """
+
+    def __init__(self) -> None:
+        self._triggers: dict[tuple[str, int], Trigger] = {}
+        # Protect the single-ACTIVE invariant and revision CAS across threads.
+        # The durable production repository must still enforce cross-process CAS.
+        self._lock = RLock()
+
+    # -- helpers ---------------------------------------------------------
+    def _get(self, trigger_id: str, version: int) -> Trigger:
+        if not isinstance(trigger_id, str) or not trigger_id.strip():
+            raise ValidationError("trigger_id must be a non-empty string")
+        if isinstance(version, bool) or not isinstance(version, int) or version < 1:
+            raise ValidationError("version must be a positive integer")
+        trigger = self._triggers.get((trigger_id, version))
+        if trigger is None:
+            raise RegistryError(f"trigger not found: {trigger_id} v{version}")
+        return trigger
+
+    def _check_revision(self, trigger: Trigger, expected_revision: int | None) -> None:
+        if expected_revision is not None and (
+            isinstance(expected_revision, bool)
+            or not isinstance(expected_revision, int)
+            or expected_revision < 1
+        ):
+            raise ValidationError("expected_revision must be a positive integer")
+        if expected_revision is not None and trigger.revision != expected_revision:
+            raise ConcurrencyError(
+                f"revision conflict for {trigger.trigger_id} v{trigger.version}: "
+                f"expected {expected_revision}, actual {trigger.revision}"
+            )
+
+    def _active(self, trigger_id: str) -> Trigger | None:
+        actives = self.active_triggers(trigger_id=trigger_id)
+        return actives[0] if actives else None
+
+    def _commit(self, updated: list[Trigger]) -> None:
+        for trigger in updated:
+            self._triggers[(trigger.trigger_id, trigger.version)] = trigger
+
+    # -- public API ------------------------------------------------------
+    def publish(self, trigger: Trigger) -> Trigger:
+        with self._lock:
+            if not isinstance(trigger, Trigger):
+                raise ValidationError("publish expects a Trigger instance")
+            key = (trigger.trigger_id, trigger.version)
+            if key in self._triggers:
+                raise RegistryError(f"trigger version already exists: {trigger.trigger_id} v{trigger.version}")
+            if trigger.status != "DRAFT":
+                raise StateError("new versions must be published as DRAFT")
+            self._triggers[key] = trigger
+            return trigger
+
+    def activate(self, trigger_id: str, version: int, expected_revision: int | None = None) -> Trigger:
+        with self._lock:
+            trigger = self._get(trigger_id, version)
+            self._check_revision(trigger, expected_revision)
+            if trigger.status not in ("DRAFT", "PAUSED"):
+                raise StateError(f"cannot activate from status {trigger.status}")
+            updates = [trigger.with_status("ACTIVE", trigger.revision + 1)]
+            current = self._active(trigger_id)
+            if current is not None and current.version != version:
+                # Atomic single-ACTIVE invariant: retire the previous ACTIVE
+                # version in the same commit (W76-RG-001).
+                updates.append(current.with_status("RETIRED", current.revision + 1))
+            self._commit(updates)
+            return updates[0]
+
+    def pause(self, trigger_id: str, version: int, expected_revision: int | None = None) -> Trigger:
+        with self._lock:
+            trigger = self._get(trigger_id, version)
+            self._check_revision(trigger, expected_revision)
+            if "PAUSED" not in VALID_TRANSITIONS[trigger.status]:
+                raise StateError(f"cannot pause from status {trigger.status}")
+            updated = trigger.with_status("PAUSED", trigger.revision + 1)
+            self._commit([updated])
+            return updated
+
+    def resume(self, trigger_id: str, version: int, expected_revision: int | None = None) -> Trigger:
+        with self._lock:
+            trigger = self._get(trigger_id, version)
+            self._check_revision(trigger, expected_revision)
+            if "ACTIVE" not in VALID_TRANSITIONS[trigger.status]:
+                raise StateError(f"cannot resume from status {trigger.status}")
+            current = self._active(trigger_id)
+            if current is not None and current.version != version:
+                raise StateError(
+                    f"another version ({current.version}) is ACTIVE; retire it before resuming v{version}"
+                )
+            updated = trigger.with_status("ACTIVE", trigger.revision + 1)
+            self._commit([updated])
+            return updated
+
+    def disable(self, trigger_id: str, version: int, expected_revision: int | None = None) -> Trigger:
+        with self._lock:
+            trigger = self._get(trigger_id, version)
+            self._check_revision(trigger, expected_revision)
+            if "DISABLED" not in VALID_TRANSITIONS[trigger.status]:
+                raise StateError(f"cannot disable from status {trigger.status}")
+            updated = trigger.with_status("DISABLED", trigger.revision + 1)
+            self._commit([updated])
+            return updated
+
+    def get(self, trigger_id: str, version: int) -> Trigger:
+        with self._lock:
+            return self._get(trigger_id, version)
+
+    def active_triggers(self, trigger_id: str | None = None) -> list[Trigger]:
+        """All ACTIVE versions; at most one per trigger_id by invariant."""
+        if trigger_id is not None and (not isinstance(trigger_id, str) or not trigger_id.strip()):
+            raise ValidationError("trigger_id filter must be a non-empty string")
+        with self._lock:
+            result: list[Trigger] = []
+            seen: set[str] = set()
+            for (tid, _version), trigger in sorted(self._triggers.items()):
+                if trigger_id is not None and tid != trigger_id:
+                    continue
+                if trigger.status == "ACTIVE" and tid not in seen:
+                    seen.add(tid)
+                    result.append(trigger)
+            return result
+
+    def list_triggers(self, trigger_id: str | None = None) -> list[Trigger]:
+        if trigger_id is not None and (not isinstance(trigger_id, str) or not trigger_id.strip()):
+            raise ValidationError("trigger_id filter must be a non-empty string")
+        with self._lock:
+            return [
+                trigger
+                for (tid, _version), trigger in sorted(self._triggers.items())
+                if trigger_id is None or tid == trigger_id
+            ]
+
+    # -- persistence -----------------------------------------------------
+    def to_dict(self) -> dict:
+        with self._lock:
+            return {
+                "triggers": [trigger.to_dict() for trigger in self.list_triggers()],
+            }
+
+    @classmethod
+    def from_dict(cls, data: Mapping[str, Any]) -> "TriggerRegistry":
+        if not isinstance(data, Mapping):
+            raise ValidationError("registry snapshot must be a mapping")
+        items = data.get("triggers", [])
+        if not isinstance(items, list):
+            raise ValidationError("registry snapshot 'triggers' must be a list")
+        registry = cls()
+        # H1 (Grok review): fail closed when persisted data carries more than
+        # one ACTIVE version for the same trigger_id. The single-ACTIVE
+        # invariant must hold at load time, not only at activation time.
+        active_seen: dict[str, int] = {}
+        for index, item in enumerate(items):
+            if not isinstance(item, Mapping):
+                raise ValidationError(f"registry trigger at index {index} must be a mapping")
+            trigger = Trigger.from_dict(item)
+            key = (trigger.trigger_id, trigger.version)
+            if key in registry._triggers:
+                raise RegistryError(
+                    f"corrupt registry data: duplicate trigger version "
+                    f"{trigger.trigger_id} v{trigger.version}"
+                )
+            # Restore persisted state directly; publish() only accepts DRAFT.
+            registry._triggers[key] = trigger
+            if trigger.status == "ACTIVE":
+                previous = active_seen.get(trigger.trigger_id)
+                if previous is not None:
+                    raise RegistryError(
+                        f"corrupt registry data: trigger {trigger.trigger_id} has "
+                        f"multiple ACTIVE versions ({previous}, {trigger.version})"
+                    )
+                active_seen[trigger.trigger_id] = trigger.version
+        return registry

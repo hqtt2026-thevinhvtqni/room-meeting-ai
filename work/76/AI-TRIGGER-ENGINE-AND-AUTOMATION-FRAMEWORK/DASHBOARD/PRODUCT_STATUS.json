@@ -1,7 +1,7 @@
 {
   "work_id": "76",
   "product_name": "AI Trigger Engine & Automation Framework",
-  "summary": "Nền tảng dùng chung để đăng ký, tiếp nhận sự kiện, đánh giá điều kiện và kích hoạt nhiệm vụ AI có kiểm soát. Ưu tiên hiện tại: hoàn thiện Dashboard theo chuẩn Work 70 trước khi mở triển khai runtime.",
+  "summary": "Work 76 đã gia cố WP-76-02 Event Gateway, WP-76-03 Scheduler, WP-76-06 Idempotency/Retry và WP-76-08 Audit. Exact-head CI gần nhất run 44193167465 trên head a2f8131c080826bd57916222da1308386e7aa215: Python 3.11/3.12 đều 71 passed, 0 failed. Các lần CI trước: Gateway 58/58, Audit 54/54. Đây là branch CI; durable production stores, recurrence/DST/HA, Core/runtime, verified dispatch, independent QE và E2E vẫn pending. Dashboard bổ sung panel Work Entry WE-G0…WE-G5 riêng biệt và chuẩn hóa filter/status hiển thị; Work Entry snapshot vẫn ghi rõ WE-G4/G5 BLOCKED. Static dashboard correction: separate participant Work Entry panel added; status filters normalize descriptive WP status strings. Browser/mobile QE remains NOT RUN. Work Entry gate grid has desktop/tablet/mobile CSS breakpoints; actual device/browser rendering remains unverified. Evidence list and recent activity are synchronized through EV-76-043; WP-76-02/03/06/08 status strings include latest branch CI results; WP-76-09 records static UI changes with browser QE pending. Latest PR #60 branch-head CI run 44194106594 at 15ea37e9b102b8fa54a3ff035102f0e71e407e03: Python 3.11/3.12 both 71 passed, 0 failed (EV-76-044). Browser/mobile QE remains pending. WP-76-07 dispatch capability was rechecked against the current connected tool inventory; no verified dispatch/receiver-ACK action is exposed in this session. Exact current PR #60 branch-head CI run 44194387756 at e9fe4f2a2b8db1d57e958b53976dcd4f6f5d8b72: Python 3.11/3.12 both 71 passed, 0 failed (EV-76-046). WP-76-02 now enforces registered payload schema and binds registration key to source identity; WP-76-05 validates PolicyRequest and authoritative decision envelopes. Exact branch-head CI run 44200662865: Python 3.11/3.12 both 81 passed, 0 failed (EV-76-050). Latest post-reconciliation exact PR #60 head 4320d7ad7a5862ad46942e96097257d92efd04b8: GitHub Actions run 44200888299, Python 3.11/3.12 each 81 passed / 0 failed (EV-76-051). PR is mergeable clean but remains draft/unmerged. PR #60 branch synchronized with latest main using two-parent merge commit ebbb12ef9cacac77ac5f9eff9f2142bef47f7e08; branch compare is now 124 ahead / 0 behind. Exact merge-head CI pending. After main synchronization, exact branch head 00ddbb311d34448e2a352a884a3579e91a08eb62 passed 81/81 on Python 3.11 and 3.12 (EV-76-053). Branch compare is 128 ahead / 0 behind; PR remains draft/unmerged. Latest exact PR #60 head 7c1720106a82e47dff113a119efe0195070fad47 passed 81/81 on Python 3.11 and 3.12 (EV-76-054). Branch is 132 ahead / 0 behind main; PR remains draft/unmerged. WP-76-06 and WP-76-08 now serialize in-process state transitions/audit chain writes with concurrent regressions; exact-head CI run 44202710464: Python 3.11/3.12 each 88 passed, 0 failed (EV-76-057). Cross-process CAS and durable persistence remain pending. Latest source/test head b29a561119476a395bb4d2a4e00681da78f3df1f passed 88/88 on Python 3.11 and 3.12 (EV-76-058). Work 76 branch is 145 ahead / 0 behind main; PR remains draft/unmerged. DOC-002/DOC-006/DOC-007/DOC-008 were reconciled to reflect partial branch implementation/CI, Vinh's direct authorization and remaining Work Entry/verification blockers (EV-76-059). Latest exact PR #60 head 7766c0adbef87efe9aa11e77b080bf0518d23963 passed 88/88 on Python 3.11 and 3.12 (EV-76-060). Discover/Verify/Work Entry records reconciled; branch 156 ahead / 0 behind main. WP-76-01/02/03/04/05/06/08 statuses reconciled to full-suite exact-head CI 88/88 on Python 3.11/3.12 (EV-76-060); external production dependencies and independent QE remain open. Automated Draft 2020-12 Dashboard JSON Schema validation is now part of branch CI; latest exact head fddf0aadc884765ac358ffbdebc0a86ebe8d291e passed 90/90 on Python 3.11/3.12 (EV-76-062). Browser/mobile QE remains pending. Latest exact PR #60 head af97b5f00a8964905b777ddf0e8670121ec2aaa8 passed 90/90 on Python 3.11 and 3.12, including Draft 2020-12 Dashboard schema validation (EV-76-063). Branch 169 ahead / 0 behind main. Reviewer metadata reconciled to Build Register: Ka assignment is PR #55 preparation-only, not verified PR #60 review scope; Qw/An remain nominations. Latest exact branch-head CI run 44204707706: 90/90 on Python 3.11/3.12 (EV-76-064). Latest exact PR #60 head b18090643fc45fdc90e1bae761bce6fc6bc92aaf passed 90/90 on Python 3.11 and 3.12 (EV-76-065). Branch 177 ahead / 0 behind main; reviewer identity/scope and independent QE remain pending. Final current PR #60 head b97577c034e738f4de1c5a57114a4a83abbf995c passed 90/90 on Python 3.11 and 3.12 (EV-76-066). Branch 181 ahead / 0 behind main; PR remains draft/unmerged. Latest exact PR #60 head ee9dcfd84cf4431ad58086de3a5092e470bb8626 passed 90/90 on Python 3.11 and 3.12 (EV-76-067). Branch 185 ahead / 0 behind main; PR remains draft/unmerged. Exact current PR #60 head 88c884e2b815b8766b9c901c9bc9a3f13fe2b3f9 passed 90/90 on Python 3.11 and 3.12 (EV-76-068). Branch 189 ahead / 0 behind main; PR remains draft/unmerged. WP-76-01 received registry concurrency and strict immutable model hardening; exact PR #60 head e53b913cd7cf6644f62a1ccce13c4c9bc74141cc passed 94/94 on Python 3.11 and 3.12 (EV-76-071). WP-76-01 registry concurrency and model immutability hardening is recorded through EV-76-072; latest tested source/test head achieved 94/94 on Python 3.11/3.12. FrozenDict now rejects both backing-map mutation and backing-attribute reassignment; latest source/test head passed 94/94 on Python 3.11/3.12 (EV-76-073). Final synchronized branch-head CI run 44392770629: 94/94 on Python 3.11 and 3.12 (EV-76-074). Persisted Trigger/Registry snapshots now reject malformed and duplicate records; exact source/test head passed 97/97 on Python 3.11/3.12 (EV-76-076). Exact synchronized branch-head CI after persisted snapshot hardening: 97/97 on Python 3.11 and 3.12 (EV-76-077). Latest synchronized branch-head CI run 44393713127: 97/97 on Python 3.11 and 3.12 (EV-76-078); branch compare 211 ahead / 38 behind main. Event Gateway now rejects duplicate JSON object keys at all nesting levels before replay reservation; initial CI failure was recorded and fixed; current source/test CI 99/99 on Python 3.11/3.12 (EV-76-080). Latest exact-head CI after duplicate-key helper correction and record sync: 99/99 on Python 3.11/3.12 (EV-76-081). TriggerRegistry public lookup/revision/filter inputs now have strict validation; an incorrect None-filter test expectation was corrected; current source/test head passed 112/112 on Python 3.11/3.12 (EV-76-083). Gateway replay expiry, idempotency TTL and retry due-time datetime overflow now fail closed before side effects; exact source/test CI 115/115 on Python 3.11/3.12 (EV-76-085). Exact synchronized branch-head CI after datetime overflow hardening: 115/115 on Python 3.11 and 3.12 (EV-76-086).",
   "standard_id": "ROOM-HOP-WORK-MASTER",
   "standard_version": "1.2",
   "work_status": "ACTIVE",
@@ -9,9 +9,9 @@
   "current_phase": "01_DISCOVER",
   "source_mode": "local_snapshot",
   "freshness": "LOCAL_SNAPSHOT",
-  "revision": "W76-DASHBOARD-0.3.11",
-  "warning_vi": "LOCAL SNAPSHOT — chưa kết nối Core live. Cập nhật 2026-11-14 09:50 UTC+7; Evidence EV-76-025: xác minh độc lập Round 2 APPROVE cho 5 fix trên PR #55 (branch-level, reviewer input, chưa phải QE canonical). CI PASS run 43547006333.",
-  "updated_at": "2026-11-14T02:42:37.091Z",
+  "revision": "W76-DASHBOARD-0.3.59",
+  "warning_vi": "LOCAL SNAPSHOT — chưa kết nối Core live. PR #60 draft, chưa merge. Exact synchronized branch-head CI run 44395940533: Python 3.11/3.12 115/115 PASS. Datetime overflow guards are contract-level only; production providers and durable stores pending. Independent QE, browser/mobile QE and Core/runtime E2E pending. WP-76-07 and Work Entry WE-G4/G5 remain BLOCKED. Branch compare 226 ahead / 38 behind main; PR mergeable clean, not merged.",
+  "updated_at": "2026-11-18T20:54:58.000Z",
   "phases": [
     {
       "phase_id": "01_DISCOVER",
@@ -56,9 +56,9 @@
     {
       "phase_id": "05_BUILD",
       "name_vi": "Thi công",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "gate_status": "NOT_READY",
-      "owner": "Co / AI-07 (delegated; WE-G5 BLOCKED)",
+      "owner": "Co / AI-07 (Vinh direct autonomous delegation; identity binding still NOT_VERIFIED)",
       "evidence_refs": [
         "05_BUILD/00_ROOT/BUILD_REGISTER.md"
       ]
@@ -66,9 +66,9 @@
     {
       "phase_id": "06_VERIFY",
       "name_vi": "Kiểm chứng",
-      "status": "NOT_STARTED",
+      "status": "IN_PROGRESS",
       "gate_status": "NOT_READY",
-      "owner": "Qw / An",
+      "owner": "Independent QE pending; branch CI evidence available",
       "evidence_refs": [
         "06_VERIFY/DOC-006_VERIFICATION-PLAN.md"
       ]
@@ -102,9 +102,9 @@
     {
       "wp_id": "WP-76-01",
       "title": "Trigger Registry and schema",
-      "status": "PLANNED",
+      "status": "IN_REVIEW — process-local RLock; concurrent activation regression; strict immutable JSON model; malformed/duplicate persisted snapshot rejection; strict registry lookup/revision/filter inputs; latest exact source/test CI 112/112 on Python 3.11/3.12 (EV-76-083); durable cross-process CAS and independent QE pending",
       "owner": "Co / AI-07 (delegated; WE-G5 BLOCKED)",
-      "reviewer": "Qw (nomination; ACK/entry pending)",
+      "reviewer": "Ka / AI-02 (assignment record PR #55 preparation-only; PR #60 scope/identity/entry not verified)",
       "evidence_refs": [
         "05_BUILD/00_ROOT/BUILD_REGISTER.md"
       ]
@@ -112,7 +112,7 @@
     {
       "wp_id": "WP-76-02",
       "title": "Event Gateway and source validation",
-      "status": "PLANNED",
+      "status": "IN_REVIEW — duplicate JSON keys rejected before replay reservation; replay expiry overflow fails closed before store mutation; exact source/test CI 115/115 on Python 3.11/3.12 (EV-76-085); production verifier/key provider and durable replay store pending",
       "owner": "Co / AI-07 (delegated; WE-G5 BLOCKED)",
       "reviewer": "Qw (nomination; ACK/entry pending)",
       "evidence_refs": [
@@ -122,7 +122,7 @@
     {
       "wp_id": "WP-76-03",
       "title": "Scheduler and TIME triggers",
-      "status": "PLANNED",
+      "status": "IN_REVIEW — UTC one-shot and due-store fail-closed; Full branch suite exact-head CI 90/90 on Python 3.11 and 3.12 (EV-76-063); recurrence/DST/HA policy and scheduler integration pending",
       "owner": "Co / AI-07 (delegated; WE-G5 BLOCKED)",
       "reviewer": "Qw (nomination; ACK/entry pending)",
       "evidence_refs": [
@@ -132,9 +132,9 @@
     {
       "wp_id": "WP-76-04",
       "title": "Typed Condition Evaluator",
-      "status": "PLANNED",
+      "status": "IN_REVIEW — typed Condition Evaluator and malformed AST regressions; Full branch suite exact-head CI 90/90 on Python 3.11 and 3.12 (EV-76-063); independent Canonical QE pending",
       "owner": "Co / AI-07 (delegated; WE-G5 BLOCKED)",
-      "reviewer": "Qw (nomination; ACK/entry pending)",
+      "reviewer": "Ka / AI-02 (assignment record PR #55 preparation-only; PR #60 scope/identity/entry not verified)",
       "evidence_refs": [
         "03_ARCHITECT/DOC-004_TRIGGER-ENGINE-ARCHITECTURE.md"
       ]
@@ -142,9 +142,9 @@
     {
       "wp_id": "WP-76-05",
       "title": "Policy adapter and approval",
-      "status": "PLANNED",
+      "status": "IN_REVIEW — PolicyRequest/decision envelope validation fail-closed; Full branch suite exact-head CI 90/90 on Python 3.11 and 3.12 (EV-76-063); Core policy provider and approval integration pending",
       "owner": "Co / AI-07 (delegated; WE-G5 BLOCKED)",
-      "reviewer": "Qw (nomination; ACK/entry pending)",
+      "reviewer": "Ka architecture review (PR #60 scope pending); Qw QE nomination (ACK/entry pending)",
       "evidence_refs": [
         "03_ARCHITECT/DOC-004_TRIGGER-ENGINE-ARCHITECTURE.md"
       ]
@@ -152,7 +152,7 @@
     {
       "wp_id": "WP-76-06",
       "title": "Orchestration, dedupe and retry",
-      "status": "PLANNED",
+      "status": "IN_REVIEW — idempotency store failure/duplicate distinguished; TTL overflow rejected before store claim; retry datetime overflow declared; exact source/test CI 115/115 on Python 3.11/3.12 (EV-76-085); durable backend pending",
       "owner": "Co / AI-07 (delegated; WE-G5 BLOCKED)",
       "reviewer": "Qw (nomination; ACK/entry pending)",
       "evidence_refs": [
@@ -162,9 +162,9 @@
     {
       "wp_id": "WP-76-07",
       "title": "Verified AI dispatch adapter",
-      "status": "BLOCKED",
+      "status": "BLOCKED — verified transport/target identity/receipt/ACK unavailable",
       "owner": "Co / AI-07 (discovery/design only)",
-      "reviewer": "Qw (nomination; ACK/entry pending)",
+      "reviewer": "Xu + Qw (provider owner/ACK pending)",
       "evidence_refs": [
         "03_ARCHITECT/DOC-004_TRIGGER-ENGINE-ARCHITECTURE.md"
       ]
@@ -172,7 +172,7 @@
     {
       "wp_id": "WP-76-08",
       "title": "Audit and evidence store",
-      "status": "PLANNED",
+      "status": "IN_REVIEW — process-local audit chain serialization and concurrency regressions; Full branch suite exact-head CI 90/90 on Python 3.11 and 3.12 (EV-76-063); cross-process append/CAS, persisted-head recovery and durable retention pending",
       "owner": "Co / AI-07 (delegated; WE-G5 BLOCKED)",
       "reviewer": "Qw (nomination; ACK/entry pending)",
       "evidence_refs": [
@@ -182,7 +182,7 @@
     {
       "wp_id": "WP-76-09",
       "title": "Read-only Work 76 dashboard v0.2",
-      "status": "IN_REVIEW",
+      "status": "IN_REVIEW — Work Entry panel, lifecycle/WE gate separation, status filter normalization and responsive CSS implemented; Draft 2020-12 JSON Schema/data validation automated in CI (EV-76-061/062); browser/mobile QE pending",
       "owner": "Xu",
       "reviewer": "An / Qw (nominations; ACK/entry pending)",
       "evidence_refs": [
@@ -239,7 +239,7 @@
       "severity": "HIGH",
       "status": "OPEN",
       "owner": "Xu / Co",
-      "detail_vi": "Delegation đã được ghi DOC-007; còn thiếu bằng chứng identity/tool permissions riêng của Co và xác minh các phụ thuộc/ACK cần thiết."
+      "detail_vi": "Vinh đã tái xác nhận ủy quyền tự chủ trực tiếp cho Co; vẫn chưa có bằng chứng trusted runtime identity AI-07 và quyền theo session. Sandbox write/read-back của tool session đã được kiểm chứng, không thay thế identity attestation."
     },
     {
       "id": "B-76-07",
@@ -378,6 +378,27 @@
   ],
   "recent_activity": [
     {
+      "date": "2026-11-18",
+      "actor": "Co — AI Coder / Execution Assistant",
+      "title": "PR #60 supplemental exact-head CI",
+      "detail": "Run 44186877081 trên head f5e94766dc05286a634cb1883b61f4468e246507: Python 3.11 50/50 PASS, Python 3.12 50/50 PASS. EV-76-032; không có source/test changes sau lần kiểm chứng trước.",
+      "status": "BRANCH CI PASS / IN_REVIEW"
+    },
+    {
+      "date": "2026-11-18",
+      "actor": "Co — AI Coder / Execution Assistant",
+      "title": "PR #60 exact-head CI re-verification",
+      "detail": "Sau khi cập nhật Build Register, Evidence Register, DOC-035 và Dashboard JSON, compare xác nhận 4 commit tiếp theo chỉ đổi hồ sơ/dashboard, không đổi source/test. GitHub Actions run 44186703015 trên exact head acb6dd5052c4c6dfb5a2c5cc4d46fe2e94920da2: Python 3.11 50/50 PASS, Python 3.12 50/50 PASS.",
+      "status": "BRANCH CI PASS / IN_REVIEW"
+    },
+    {
+      "date": "2026-11-18",
+      "actor": "Co — AI Coder / Execution Assistant",
+      "title": "PR #60 — first implementation slice and CI matrix",
+      "detail": "Tạo nhánh sạch từ main; port Registry/Condition; bổ sung Gateway, UTC one-shot Scheduler, Policy/Approval, execution state machine, idempotency/retry và Audit ports. GitHub Actions run 44186456898: 50/50 PASS Python 3.11 và 50/50 PASS Python 3.12. PR #60 DRAFT/UNMERGED; independent QE, Core/runtime integration và E2E còn pending.",
+      "status": "BRANCH CI PASS / IN_REVIEW"
+    },
+    {
       "date": "2026-11-14",
       "actor": "Vibe (delegated by Vinh)",
       "title": "Xác minh độc lập Round 2 APPROVE cho 5 fix PR #55 (EV-76-025)",
@@ -481,6 +502,251 @@
       "title": "Observable acceptance criteria matrix for FR/NFR",
       "detail": "Bổ sung tiêu chí đạt, điều kiện lỗi/fail-closed và bằng chứng bắt buộc cho FR-01…FR-10, NFR-01…NFR-07; không chạy test, không mở Build.",
       "status": "SPECIFIED / NOT EXECUTED / NOT APPROVED"
+    },
+    {
+      "date": "2026-11-18",
+      "actor": "Co / AI-07",
+      "title": "Audit canonicalization hardening",
+      "detail": "Strict canonical_json for payload digest and hash chain; regression rejects NaN/Infinity. Exact-head CI 54/54 on Python 3.11 and 3.12.",
+      "status": "BRANCH CI PASS — EV-76-034"
+    },
+    {
+      "date": "2026-11-18",
+      "actor": "Co / AI-07",
+      "title": "Event Gateway fail-closed hardening",
+      "detail": "Strict event validation, canonical payload digest, validate-before-replay reservation and fail-closed replay store. Exact-head CI 58/58 on Python 3.11 and 3.12.",
+      "status": "BRANCH CI PASS — EV-76-036"
+    },
+    {
+      "date": "2026-11-18",
+      "actor": "Co / AI-07",
+      "title": "Idempotency and Scheduler hardening",
+      "detail": "Distinguishes duplicate from unavailable store; validates schedule and clock; due-store errors fail closed. Exact-head CI 71/71 on Python 3.11 and 3.12.",
+      "status": "BRANCH CI PASS — EV-76-041"
+    },
+    {
+      "date": "2026-11-18",
+      "actor": "Co / AI-07",
+      "title": "Dashboard Work Entry visibility correction",
+      "detail": "Added separate participant WE-G0…WE-G5 panel, normalized WP filters and responsive CSS. Static source review only; browser/mobile QE not run.",
+      "status": "STATIC SOURCE UPDATE — BROWSER QE PENDING"
+    },
+    {
+      "date": "2026-11-18",
+      "actor": "Co / AI-07",
+      "title": "Latest PR #60 branch-head CI",
+      "detail": "Run 44194106594 on exact branch head 15ea37e9b102b8fa54a3ff035102f0e71e407e03: Python 3.11/3.12 both 71 passed / 0 failed. This is Python branch CI, not browser/mobile QE.",
+      "status": "BRANCH CI PASS — EV-76-044"
+    },
+    {
+      "date": "2026-11-18",
+      "actor": "Co / AI-07",
+      "title": "WP-76-07 dispatch capability re-check",
+      "detail": "Current connected tool inventory has meeting join/start/paste and Sandbox tools but no verified AI dispatch/target identity/receiver ACK action. Provider absence outside this session is not inferred.",
+      "status": "BLOCKED — EV-76-045"
+    },
+    {
+      "date": "2026-11-18",
+      "actor": "Co / AI-07",
+      "title": "Exact current PR #60 branch-head CI",
+      "detail": "Run 44194387756 on head e9fe4f2a2b8db1d57e958b53976dcd4f6f5d8b72: Python 3.11 and 3.12 each 71 passed / 0 failed. This does not verify browser/mobile UI.",
+      "status": "BRANCH CI PASS — EV-76-046"
+    },
+    {
+      "date": "2026-11-18",
+      "actor": "Co / AI-07",
+      "title": "Gateway schema/source identity and Policy boundary hardening",
+      "detail": "Gateway now executes registered schema before replay reservation, rejects registration-key/source-id mismatch; PolicyRequest and authoritative provider decision envelope are validated fail-closed. Exact branch-head CI 81/81 on Python 3.11/3.12.",
+      "status": "BRANCH CI PASS — EV-76-050"
+    },
+    {
+      "date": "2026-11-18",
+      "actor": "Co / AI-07",
+      "title": "Latest exact-head CI and PR integration-state check",
+      "detail": "Exact PR #60 head 4320d7ad7a5862ad46942e96097257d92efd04b8: 81/81 on Python 3.11 and 3.12. GitHub PR state is OPEN/DRAFT, mergeable clean; branch is 12 commits behind main.",
+      "status": "BRANCH CI PASS — EV-76-051; MERGE/ACCEPTANCE NOT PERFORMED"
+    },
+    {
+      "date": "2026-11-18",
+      "actor": "Co / AI-07",
+      "title": "Synchronized PR #60 branch with latest main",
+      "detail": "No overlapping changed paths; created two-parent merge commit ebbb12ef9cacac77ac5f9eff9f2142bef47f7e08. Work 76 branch now 124 ahead / 0 behind main. Exact merge-head CI pending.",
+      "status": "BRANCH SYNC COMPLETE — CI PENDING"
+    },
+    {
+      "date": "2026-11-18",
+      "actor": "Co / AI-07",
+      "title": "Exact-head CI after main synchronization",
+      "detail": "Head 00ddbb311d34448e2a352a884a3579e91a08eb62: 81/81 Python 3.11 and 3.12. Branch 128 ahead / 0 behind main; PR #60 remains draft/unmerged.",
+      "status": "BRANCH CI PASS — EV-76-053"
+    },
+    {
+      "date": "2026-11-18",
+      "actor": "Co / AI-07",
+      "title": "Latest exact branch-head CI after main synchronization",
+      "detail": "Exact head 7c1720106a82e47dff113a119efe0195070fad47: 81/81 on Python 3.11 and 3.12. Branch 132 ahead / 0 behind main; PR #60 draft/unmerged.",
+      "status": "BRANCH CI PASS — EV-76-054"
+    },
+    {
+      "date": "2026-11-18",
+      "actor": "Co / AI-07",
+      "title": "Audit and execution-state concurrency hardening",
+      "detail": "Added process-local serialization for audit hash chain and state transitions, strict transition metadata and concurrency regressions. Exact-head CI 88/88 on Python 3.11/3.12; cross-process durable CAS remains pending.",
+      "status": "BRANCH CI PASS — EV-76-057"
+    },
+    {
+      "date": "2026-11-18",
+      "actor": "Co / AI-07",
+      "title": "Exact branch-head CI after audit/state concurrency hardening",
+      "detail": "Source/test head b29a561119476a395bb4d2a4e00681da78f3df1f: 88/88 on Python 3.11 and 3.12. Branch 145 ahead / 0 behind main; PR #60 remains draft/unmerged.",
+      "status": "BRANCH CI PASS — EV-76-058"
+    },
+    {
+      "date": "2026-11-18",
+      "actor": "Co / AI-07",
+      "title": "Reconciled Work Entry and verification documentation",
+      "detail": "Updated DOC-002/DOC-006/DOC-007/DOC-008 to reflect partial branch implementation/CI, Vinh's direct authorization, and continuing identity/QE/E2E blockers; exact GitHub→Sandbox read-back.",
+      "status": "DOCUMENT PARITY VERIFIED — EV-76-059"
+    },
+    {
+      "date": "2026-11-18",
+      "actor": "Co / AI-07",
+      "title": "Exact branch-head CI after governance record reconciliation",
+      "detail": "Exact head 7766c0adbef87efe9aa11e77b080bf0518d23963: 88/88 on Python 3.11 and 3.12; branch 156 ahead / 0 behind main; PR #60 remains draft/unmerged.",
+      "status": "BRANCH CI PASS — EV-76-060"
+    },
+    {
+      "date": "2026-11-18",
+      "actor": "Co / AI-07",
+      "title": "Automated Dashboard JSON Schema validation",
+      "detail": "Added Draft 2020-12 schema/data validation to Work 76 CI; asserts local_snapshot and blocked Work Entry/dispatch gates. Exact-head CI 90/90 on Python 3.11/3.12; browser/mobile QE remains pending.",
+      "status": "BRANCH CI PASS — EV-76-062"
+    },
+    {
+      "date": "2026-11-18",
+      "actor": "Co / AI-07",
+      "title": "Exact-head CI with Dashboard schema validation",
+      "detail": "Head af97b5f00a8964905b777ddf0e8670121ec2aaa8: 90/90 on Python 3.11 and 3.12 including JSON Schema validation; branch 169 ahead / 0 behind main; PR remains draft/unmerged.",
+      "status": "BRANCH CI PASS — EV-76-063"
+    },
+    {
+      "date": "2026-11-18",
+      "actor": "Co / AI-07",
+      "title": "Reviewer scope reconciliation and exact-head CI",
+      "detail": "Clarified that Ka's assignment record is PR #55 preparation-only and does not establish PR #60 review/identity. Latest head 7a78326: 90/90 Python 3.11/3.12.",
+      "status": "BRANCH CI PASS — EV-76-064; QE BLOCKED"
+    },
+    {
+      "date": "2026-11-18",
+      "actor": "Co / AI-07",
+      "title": "Exact branch-head CI after reviewer scope reconciliation",
+      "detail": "Exact head b18090643fc45fdc90e1bae761bce6fc6bc92aaf: 90/90 Python 3.11/3.12; PR #60 remains draft/unmerged, branch 177 ahead / 0 behind main.",
+      "status": "BRANCH CI PASS — EV-76-065; INDEPENDENT QE PENDING"
+    },
+    {
+      "date": "2026-11-18",
+      "actor": "Co / AI-07",
+      "title": "Final exact branch-head CI after reviewer/governance sync",
+      "detail": "Head b97577c034e738f4de1c5a57114a4a83abbf995c: 90/90 on Python 3.11 and 3.12; branch 181 ahead / 0 behind main; PR #60 remains draft/unmerged.",
+      "status": "BRANCH CI PASS — EV-76-066; INDEPENDENT QE PENDING"
+    },
+    {
+      "date": "2026-11-18",
+      "actor": "Co / AI-07",
+      "title": "Exact latest PR #60 head CI",
+      "detail": "Head ee9dcfd84cf4431ad58086de3a5092e470bb8626: 90/90 on Python 3.11 and 3.12; branch 185 ahead / 0 behind main; PR remains draft/unmerged.",
+      "status": "BRANCH CI PASS — EV-76-067; INDEPENDENT QE PENDING"
+    },
+    {
+      "date": "2026-11-18",
+      "actor": "Co / AI-07",
+      "title": "Exact current branch-head CI",
+      "detail": "Head 88c884e2b815b8766b9c901c9bc9a3f13fe2b3f9: 90/90 on Python 3.11 and 3.12; branch 189 ahead / 0 behind main; PR #60 remains draft/unmerged.",
+      "status": "BRANCH CI PASS — EV-76-068; INDEPENDENT QE PENDING"
+    },
+    {
+      "date": "2026-11-19",
+      "actor": "Co / AI-07",
+      "title": "TriggerRegistry concurrency and immutable model hardening",
+      "detail": "Added process-local RLock across registry lifecycle and read/snapshot operations; 12-version concurrent activation regression; reject non-string JSON keys; MappingProxyType backing; exact branch-head CI 94/94 on Python 3.11/3.12.",
+      "status": "BRANCH CI PASS — EV-76-071; independent QE pending"
+    },
+    {
+      "date": "2026-11-19",
+      "actor": "Co / AI-07",
+      "title": "WP-76-01 hardening CI and evidence reconciliation",
+      "detail": "Source/test head 15a6a343af10747cf53ed90cf092d18553bac259: 94/94 on Python 3.11 and 3.12. Added EV-76-069…072. Registry locking is process-local; cross-process durable CAS remains pending.",
+      "status": "BRANCH CI PASS — EV-76-072; independent QE pending"
+    },
+    {
+      "date": "2026-11-19",
+      "actor": "Co / AI-07",
+      "title": "FrozenDict immutability boundary closed",
+      "detail": "FrozenDict now rejects reassignment of its backing attribute in addition to exposing a read-only MappingProxyType; regression added. Exact source/test head 5fc0bb6a94a8924e8cb30f8a9b1dd9505d763b27 passed 94/94 on Python 3.11/3.12.",
+      "status": "BRANCH CI PASS — EV-76-073; independent QE pending"
+    },
+    {
+      "date": "2026-11-19",
+      "actor": "Co / AI-07",
+      "title": "Exact synchronized branch-head CI",
+      "detail": "Head 0d8d3a5d251a26d80fdcb2c5298f8d914d8c9ade: 94/94 on Python 3.11 and 3.12, including final model immutability regression and dashboard schema tests.",
+      "status": "BRANCH CI PASS — EV-76-074; independent QE pending"
+    },
+    {
+      "date": "2026-11-19",
+      "actor": "Co / AI-07",
+      "title": "Persisted Trigger/Registry snapshot hardening",
+      "detail": "Rejects malformed root, action and trigger list records; duplicate trigger version snapshots now fail closed; policy_ref/content_digest type validation added. Exact source/test CI 97/97 on Python 3.11/3.12.",
+      "status": "BRANCH CI PASS — EV-76-076; independent QE pending"
+    },
+    {
+      "date": "2026-11-19",
+      "actor": "Co / AI-07",
+      "title": "Exact synchronized branch-head CI after snapshot validation",
+      "detail": "Head c02e84a7bfdabb393d47452a47ece2510aa44220: 97/97 on Python 3.11 and 3.12. Includes malformed/duplicate persisted Trigger/Registry snapshot regressions and dashboard schema tests.",
+      "status": "BRANCH CI PASS — EV-76-077; independent QE pending"
+    },
+    {
+      "date": "2026-11-19",
+      "actor": "Co / AI-07",
+      "title": "Latest synchronized branch-head CI and compare refresh",
+      "detail": "Head 97974aaefccb481a9362a8882458a4d7e4631dc6: 97/97 on Python 3.11 and 3.12. PR #60 remains draft/unmerged; branch compare 211 ahead / 38 behind main.",
+      "status": "BRANCH CI PASS — EV-76-078; independent QE pending"
+    },
+    {
+      "date": "2026-11-19",
+      "actor": "Co / AI-07",
+      "title": "Strict duplicate JSON key rejection at Event Gateway",
+      "detail": "Added nested object duplicate-key rejection before schema validation and replay reservation. Initial CI caught a helper-definition insertion mismatch (EV-76-079); corrected helper placement and reran exact head at 99/99 on Python 3.11/3.12 (EV-76-080).",
+      "status": "BRANCH CI PASS AFTER FIX — EV-76-080; failure preserved in evidence"
+    },
+    {
+      "date": "2026-11-19",
+      "actor": "Co / AI-07",
+      "title": "Latest exact-head CI after duplicate-key fix",
+      "detail": "Head fa6d9b51f7dd14a980af0bab04d0dc5655f39f0d: 99/99 on Python 3.11 and 3.12. The earlier helper insertion failure remains preserved in EV-76-079; current helper and regression tests pass.",
+      "status": "BRANCH CI PASS — EV-76-081; independent QE pending"
+    },
+    {
+      "date": "2026-11-19",
+      "actor": "Co / AI-07",
+      "title": "Strict TriggerRegistry API input validation",
+      "detail": "Validates trigger id/version, expected revision and explicit filters. Initial test incorrectly treated None as invalid although it means no filter; CI caught it, expectation corrected. Current exact head passed 112/112 on Python 3.11/3.12.",
+      "status": "BRANCH CI PASS AFTER TEST CORRECTION — EV-76-083"
+    },
+    {
+      "date": "2026-11-19",
+      "actor": "Co / AI-07",
+      "title": "Datetime overflow fail-closed hardening",
+      "detail": "Gateway replay expiry, idempotency TTL and retry due-time overflow now produce declared errors before store side effects; tests assert no replay/idempotency claim. Exact source/test CI 115/115 on Python 3.11/3.12.",
+      "status": "BRANCH CI PASS — EV-76-085; independent QE pending"
+    },
+    {
+      "date": "2026-11-19",
+      "actor": "Co / AI-07",
+      "title": "Exact synchronized branch-head CI after datetime overflow hardening",
+      "detail": "Head 8cc3f352a893246fbeed10f1ccdfe412ba8bbd3d: 115/115 on Python 3.11 and 3.12. Confirms Gateway replay-expiry, Idempotency TTL and Retry due-time overflow regressions.",
+      "status": "BRANCH CI PASS — EV-76-086; independent QE pending"
     }
   ],
   "evidence": [
@@ -658,6 +924,466 @@
       "claim": "Grok Round 2 xác minh độc lập tại head d14f018e: cả 5 fix H1/M1/M2/L1/L2 PASS, 36/36 test PASS (Python 3.12.3, pytest 9.0.3), không phát hiện mới. Reviewer input, chưa phải bằng chứng QE canonical.",
       "path": "GROK_INDEPENDENT_REVIEW_PR55_ROUND2.md · PR #55 · DOC-035 2026-11-14 09:50 +07:00",
       "status": "VERIFIED (BRANCH-LEVEL ONLY; QE CANONICAL PENDING)"
+    },
+    {
+      "evidence_id": "EV-76-028",
+      "title": "Autonomous implementation branch PR #60",
+      "claim": "Branch từ current main chứa Trigger Registry/Condition baseline và các module WP-76-02/03/05/06/08 cùng 11 regression tests bổ sung. Các adapter production vẫn là injected ports.",
+      "path": "PR #60 · work/76-co-autonomous-build-v2 · head 790d2986eb2d9a61d1c4dcc610457e1874738f30",
+      "status": "VERIFIED — source inventory; production integrations pending"
+    },
+    {
+      "evidence_id": "EV-76-029",
+      "title": "Python matrix CI and JUnit artifacts",
+      "claim": "GitHub Actions run 44186456898: Python 3.11 50 passed / 0 failed; Python 3.12 50 passed / 0 failed. JUnit artifacts 14373942943 and 14374232019 with recorded ZIP SHA256 in canonical Evidence Register. Branch CI only, not independent Canonical QE.",
+      "path": "GitHub Actions run 44186456898 · PR #60 · DOC-035 / Evidence Register",
+      "status": "VERIFIED — BRANCH CI ONLY; INDEPENDENT QE NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-030",
+      "title": "Sandbox journal write/read-back",
+      "claim": "Co session appended canonical DOC-035 through MCP 8030 and read_probe confirmed unique journal marker; temporary diagnostic file was read back and deleted. Trusted AI-07 identity binding remains unverified.",
+      "path": "Sandbox MCP 8030 · 00_ROOT/DOC-035_NHAT-KY-THI-CONG_EXECUTION-LOG.md",
+      "status": "VERIFIED — SESSION CAPABILITY ONLY"
+    },
+    {
+      "evidence_id": "EV-76-031",
+      "title": "Final PR #60 exact-head CI",
+      "claim": "Run 44186703015 on exact head acb6dd5052c4c6dfb5a2c5cc4d46fe2e94920da2: Python 3.11 and 3.12 each 50 passed / 0 failed; JUnit artifacts and SHA256 digests are recorded in canonical Evidence Register. Branch CI only.",
+      "path": "PR #60 · GitHub Actions run 44186703015 · DOC-035 / Evidence Register",
+      "status": "VERIFIED — BRANCH CI ONLY; INDEPENDENT QE NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-032",
+      "title": "Supplemental PR #60 exact-head CI",
+      "claim": "Run 44186877081 on head f5e94766dc05286a634cb1883b61f4468e246507: Python 3.11 and 3.12 each 50 passed / 0 failed; JUnit artifacts and SHA256 digests recorded in canonical Evidence Register. Branch CI only.",
+      "path": "PR #60 · GitHub Actions run 44186877081 · DOC-035 / Evidence Register",
+      "status": "VERIFIED — BRANCH CI ONLY; INDEPENDENT QE NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-033",
+      "title": "Audit canonicalization hardening",
+      "claim": "AuditWriter uses strict canonical_json; key-order-independent digest; rejects NaN/Infinity without sink append.",
+      "path": "trigger_engine/audit.py; test_work_packages.py",
+      "status": "IMPLEMENTED; CI confirmed by EV-76-034"
+    },
+    {
+      "evidence_id": "EV-76-034",
+      "title": "Audit canonicalization exact-head CI",
+      "claim": "Run 44192173589 on exact head: Python 3.11/3.12 54 passed each.",
+      "path": "GitHub Actions run 44192173589; JUnit artifacts 14376992432 / 14378105646",
+      "status": "VERIFIED — BRANCH CI ONLY"
+    },
+    {
+      "evidence_id": "EV-76-035",
+      "title": "Event Gateway fail-closed hardening",
+      "claim": "Validates event_type/received_at/source config; strict canonical payload; validates Event before replay reservation; replay store errors fail closed.",
+      "path": "trigger_engine/gateway.py; test_work_packages.py",
+      "status": "IMPLEMENTED; CI confirmed by EV-76-036"
+    },
+    {
+      "evidence_id": "EV-76-036",
+      "title": "Event Gateway exact-head CI",
+      "claim": "Run 44192558442: Python 3.11/3.12 58 passed each.",
+      "path": "GitHub Actions run 44192558442; JUnit artifacts 14378131037 / 14376393806",
+      "status": "VERIFIED — BRANCH CI ONLY"
+    },
+    {
+      "evidence_id": "EV-76-037",
+      "title": "Idempotency store failure distinction",
+      "claim": "IdempotencyUnavailable distinguishes store outage/indeterminate result from true duplicate; strict scope/key/TTL/clock validation.",
+      "path": "trigger_engine/retry.py; test_work_packages.py",
+      "status": "IMPLEMENTED; CI confirmed by EV-76-038"
+    },
+    {
+      "evidence_id": "EV-76-038",
+      "title": "Idempotency exact-head CI",
+      "claim": "Run 44192865531: Python 3.11/3.12 65 passed each.",
+      "path": "GitHub Actions run 44192865531; JUnit artifacts 14376124853 / 14376353840",
+      "status": "VERIFIED — BRANCH CI ONLY"
+    },
+    {
+      "evidence_id": "EV-76-039",
+      "title": "Scheduler due-store hardening",
+      "claim": "Validates schedule/clock and fails closed on due-store exception/indeterminate result; duplicate claim remains no-op.",
+      "path": "trigger_engine/scheduler.py; test_work_packages.py",
+      "status": "IMPLEMENTED; CI confirmed by EV-76-040/041"
+    },
+    {
+      "evidence_id": "EV-76-040",
+      "title": "Scheduler exact-head CI",
+      "claim": "Run 44193037401: Python 3.11/3.12 71 passed each.",
+      "path": "GitHub Actions run 44193037401; JUnit artifacts 14376823329 / 14377871600",
+      "status": "VERIFIED — BRANCH CI ONLY"
+    },
+    {
+      "evidence_id": "EV-76-041",
+      "title": "Latest exact-head branch CI",
+      "claim": "Run 44193167465 on exact head a2f813...: Python 3.11/3.12 71 passed each; includes scheduler and idempotency hardening.",
+      "path": "GitHub Actions run 44193167465; JUnit artifacts 14376898453 / 14378400952",
+      "status": "VERIFIED — BRANCH CI ONLY"
+    },
+    {
+      "evidence_id": "EV-76-042",
+      "title": "Dashboard Work Entry static correction",
+      "claim": "Separate WE-G0…WE-G5 panel; lifecycle gate count separated; descriptive WP status filter normalized; snapshot WE-G4/G5 BLOCKED.",
+      "path": "DASHBOARD/index.html; PRODUCT_STATUS.json; schema; README",
+      "status": "VERIFIED — STATIC SOURCE/DATA ONLY; browser QE NOT RUN"
+    },
+    {
+      "evidence_id": "EV-76-043",
+      "title": "Dashboard responsive CSS source",
+      "claim": "Work Entry gate grid uses 3 desktop, 2 tablet and 1 mobile columns.",
+      "path": "DASHBOARD/index.html commit c24c5c8bf6def54497e222ddc3ae109b02719d11",
+      "status": "VERIFIED — STATIC CSS ONLY; browser/device QE NOT RUN"
+    },
+    {
+      "evidence_id": "EV-76-044",
+      "title": "Latest PR #60 branch-head CI",
+      "claim": "Run 44194106594 on exact head 15ea37e9b102b8fa54a3ff035102f0e71e407e03: Python 3.11 and 3.12 each 71 passed / 0 failed; JUnit artifacts and SHA256 are in Evidence Register.",
+      "path": "GitHub Actions run 44194106594; PR #60; JUnit artifacts 14377188728 / 14376974287",
+      "status": "VERIFIED — BRANCH CI ONLY; browser/mobile QE NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-045",
+      "title": "WP-76-07 current-session dispatch capability inventory",
+      "claim": "No AI dispatch/send-agent provider with target identity/receiver ACK action is exposed in the connected tool inventory for this session; scope is session-only.",
+      "path": "Current connected tool inventory; DOC-035; ADR-76-006",
+      "status": "VERIFIED — CURRENT SESSION INVENTORY ONLY; WP-76-07 BLOCKED"
+    },
+    {
+      "evidence_id": "EV-76-046",
+      "title": "Exact current PR #60 branch-head CI",
+      "claim": "Run 44194387756 on exact head e9fe4f2a2b8db1d57e958b53976dcd4f6f5d8b72: Python 3.11/3.12 each 71 passed / 0 failed; JUnit artifacts and SHA256 are in Evidence Register.",
+      "path": "GitHub Actions run 44194387756; JUnit artifacts 14378023025 / 14377208649",
+      "status": "VERIFIED — BRANCH CI ONLY; browser/mobile QE NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-047",
+      "title": "Gateway payload schema enforcement",
+      "claim": "Ingest invokes registered schema before replay reservation; schema rejection/outage fail closed and do not consume event ID.",
+      "path": "gateway.py; test_work_packages.py",
+      "status": "IMPLEMENTED; exact-head CI EV-76-050"
+    },
+    {
+      "evidence_id": "EV-76-048",
+      "title": "Gateway source identity binding",
+      "claim": "Registration keys must exactly match validated SourceRegistration.source_id; invalid registration values rejected.",
+      "path": "gateway.py; test_work_packages.py",
+      "status": "IMPLEMENTED; exact-head CI EV-76-050"
+    },
+    {
+      "evidence_id": "EV-76-049",
+      "title": "Policy request/decision envelope hardening",
+      "claim": "Validates request identity/scope fields, typed outcomes, decision refs/revision/reason and approval_ref; malformed results fail closed.",
+      "path": "policy.py; test_work_packages.py",
+      "status": "IMPLEMENTED; exact-head CI EV-76-050"
+    },
+    {
+      "evidence_id": "EV-76-050",
+      "title": "Exact PR #60 branch-head CI",
+      "claim": "Run 44200662865 on exact head aaa84763611dd30084b002fd2fe419d24717755b: Python 3.11 and 3.12 each 81 passed / 0 failed; JUnit artifact IDs and SHA256 in Evidence Register.",
+      "path": "GitHub Actions run 44200662865; artifacts 14381636110 / 14381780587",
+      "status": "VERIFIED — BRANCH CI ONLY; independent QE/runtime E2E NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-051",
+      "title": "Latest post-reconciliation exact-head CI",
+      "claim": "Run 44200888299 on exact head 4320d7ad7a5862ad46942e96097257d92efd04b8: Python 3.11 and 3.12 each 81 passed / 0 failed; PR #60 remains draft/unmerged, GitHub mergeable clean; branch 12 commits behind main.",
+      "path": "GitHub Actions run 44200888299; PR #60",
+      "status": "VERIFIED — EXACT BRANCH CI ONLY; independent QE/runtime E2E NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-052",
+      "title": "PR #60 synchronized with latest main",
+      "claim": "Created two-parent merge commit ebbb12ef9cacac77ac5f9eff9f2142bef47f7e08; no changed-path overlap between 12 main-side commits and 21 Work 76 PR files; branch is 124 ahead / 0 behind main.",
+      "path": "GitHub compare API; PR #60; merge commit ebbb12ef9cacac77ac5f9eff9f2142bef47f7e08",
+      "status": "VERIFIED — BRANCH SYNC ONLY; exact merge-head CI pending"
+    },
+    {
+      "evidence_id": "EV-76-053",
+      "title": "Exact branch-head CI after main synchronization",
+      "claim": "Run 44201936129 on exact head 00ddbb311d34448e2a352a884a3579e91a08eb62: Python 3.11/3.12 each 81 passed / 0 failed; branch 128 ahead / 0 behind main; PR remains draft/unmerged.",
+      "path": "GitHub Actions run 44201936129; PR #60; merge commit ebbb12ef9cacac77ac5f9eff9f2142bef47f7e08",
+      "status": "VERIFIED — BRANCH CI ONLY; independent QE/runtime E2E NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-054",
+      "title": "Latest exact branch-head CI after main synchronization",
+      "claim": "Run 44202173003 on exact head 7c1720106a82e47dff113a119efe0195070fad47: Python 3.11/3.12 each 81 passed / 0 failed; branch 132 ahead / 0 behind main; PR remains draft/unmerged.",
+      "path": "GitHub Actions run 44202173003; PR #60",
+      "status": "VERIFIED — BRANCH CI ONLY; independent QE/runtime E2E NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-055",
+      "title": "Audit hash-chain concurrency hardening",
+      "claim": "Process-local lock serializes previous_hash/sink append/head update; 40 concurrent writes remain one chain; cross-process CAS/persisted head pending.",
+      "path": "audit.py; test_work_packages.py",
+      "status": "IMPLEMENTED; exact-head CI EV-76-057"
+    },
+    {
+      "evidence_id": "EV-76-056",
+      "title": "Execution state concurrency hardening",
+      "claim": "Process-local lock serializes transitions and state reads; validates metadata; sink failures become StateTransitionError; concurrent same-state transition commits once.",
+      "path": "orchestrator.py; test_work_packages.py",
+      "status": "IMPLEMENTED; exact-head CI EV-76-057"
+    },
+    {
+      "evidence_id": "EV-76-057",
+      "title": "Exact current branch-head CI",
+      "claim": "Run 44202710464 on exact head 364c02d61c4c08e0cea1363d904bf4d4cc36cc82: Python 3.11/3.12 each 88 passed / 0 failed; JUnit artifacts and SHA256 recorded.",
+      "path": "GitHub Actions run 44202710464; artifacts 14382526195 / 14382701267",
+      "status": "VERIFIED — BRANCH CI ONLY; production persistence/independent QE NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-058",
+      "title": "Latest exact source/test-head CI after concurrency hardening",
+      "claim": "Run 44202889699 on exact head b29a561119476a395bb4d2a4e00681da78f3df1f: Python 3.11/3.12 each 88 passed / 0 failed; branch 145 ahead / 0 behind main; PR remains draft/unmerged.",
+      "path": "GitHub Actions run 44202889699; PR #60",
+      "status": "VERIFIED — BRANCH CI ONLY; independent QE/runtime E2E NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-059",
+      "title": "Governance records reconciled with actual implementation evidence",
+      "claim": "DOC-002 partial implementation/CI status; DOC-006 partial verification status; DOC-007 Vinh direct authorization addendum while WE-G4/G5 remain BLOCKED; DOC-008 corrected register status. Exact Sandbox read-back for all four.",
+      "path": "DOC-002; DOC-006; DOC-007; DOC-008; Sandbox read_probe",
+      "status": "VERIFIED — DOCUMENT PARITY ONLY; no gate transition"
+    },
+    {
+      "evidence_id": "EV-76-060",
+      "title": "Latest exact PR #60 branch-head CI after governance reconciliation",
+      "claim": "Run 44203679955 on exact head 7766c0adbef87efe9aa11e77b080bf0518d23963: Python 3.11/3.12 each 88 passed / 0 failed; branch 156 ahead / 0 behind main; PR remains draft/unmerged.",
+      "path": "GitHub Actions run 44203679955; PR #60",
+      "status": "VERIFIED — BRANCH CI ONLY; independent QE/runtime E2E NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-061",
+      "title": "Dashboard JSON Schema validation automated",
+      "claim": "Draft 2020-12 schema is checked and PRODUCT_STATUS.json validated with format checking; asserts local snapshot and blocked Work Entry/dispatch gates.",
+      "path": "05_BUILD/05_TEST/test_dashboard_schema.py; CI workflow; Dashboard data/schema",
+      "status": "IMPLEMENTED; exact-head CI EV-76-062"
+    },
+    {
+      "evidence_id": "EV-76-062",
+      "title": "Exact branch-head CI with Dashboard schema validation",
+      "claim": "Run 44204158568 on exact head fddf0aadc884765ac358ffbdebc0a86ebe8d291e: Python 3.11/3.12 each 90 passed / 0 failed, including formal JSON Schema validation.",
+      "path": "GitHub Actions run 44204158568; JUnit artifacts 14381893887 / 14382272479",
+      "status": "VERIFIED — BRANCH CI ONLY; browser/mobile QE NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-063",
+      "title": "Latest exact branch-head CI with Dashboard schema validation",
+      "claim": "Run 44204384974 on exact head af97b5f00a8964905b777ddf0e8670121ec2aaa8: Python 3.11/3.12 each 90 passed / 0 failed, including formal Dashboard schema/data validation; branch 169 ahead / 0 behind main.",
+      "path": "GitHub Actions run 44204384974; PR #60; JUnit artifacts 14383276926 / 14382842107",
+      "status": "VERIFIED — BRANCH CI ONLY; browser/mobile QE NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-064",
+      "title": "Latest exact branch-head CI and reviewer-scope reconciliation",
+      "claim": "Run 44204707706 on exact head 7a78326eb67e9db09f5628534bd430de5e2fee3d: Python 3.11/3.12 each 90 passed / 0 failed; branch 173 ahead / 0 behind main; PR #60 draft/unmerged. Ka assignment record is scoped to PR #55 preparation-only, not verified PR #60 QE.",
+      "path": "GitHub Actions run 44204707706; Build Register; WE-ASG-W76-KA-QE-20261114",
+      "status": "VERIFIED — BRANCH CI ONLY; independent QE NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-065",
+      "title": "Exact branch-head CI after reviewer-scope reconciliation",
+      "claim": "Run 44205030095 on exact head b18090643fc45fdc90e1bae761bce6fc6bc92aaf: Python 3.11/3.12 each 90 passed / 0 failed; branch 177 ahead / 0 behind main; PR draft/unmerged.",
+      "path": "GitHub Actions run 44205030095; PR #60",
+      "status": "VERIFIED — BRANCH CI ONLY; independent QE/browser/mobile/runtime E2E NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-066",
+      "title": "Final exact PR #60 branch-head CI after governance sync",
+      "claim": "Run 44205298126 on exact head b97577c034e738f4de1c5a57114a4a83abbf995c: Python 3.11/3.12 each 90 passed / 0 failed; branch 181 ahead / 0 behind main; PR remains draft/unmerged.",
+      "path": "GitHub Actions run 44205298126; PR #60",
+      "status": "VERIFIED — BRANCH CI ONLY; independent QE/browser/mobile/runtime E2E NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-067",
+      "title": "Exact latest PR #60 head CI",
+      "claim": "Run 44205577448 on exact head ee9dcfd84cf4431ad58086de3a5092e470bb8626: Python 3.11/3.12 each 90 passed / 0 failed; branch 185 ahead / 0 behind main; PR draft/unmerged.",
+      "path": "GitHub Actions run 44205577448; PR #60",
+      "status": "VERIFIED — BRANCH CI ONLY; independent QE/browser/mobile/runtime E2E NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-068",
+      "title": "Exact current PR #60 branch-head CI",
+      "claim": "Run 44205870351 on exact head 88c884e2b815b8766b9c901c9bc9a3f13fe2b3f9: Python 3.11/3.12 each 90 passed / 0 failed; branch 189 ahead / 0 behind main; PR remains draft/unmerged.",
+      "path": "GitHub Actions run 44205870351; PR #60",
+      "status": "VERIFIED — BRANCH CI ONLY; independent QE/browser/mobile/runtime E2E NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-069",
+      "title": "TriggerRegistry process-local concurrency hardening",
+      "claim": "RLock protects lifecycle mutations, reads and snapshots; 12-version concurrent activation test asserts one ACTIVE. Cross-process CAS remains external.",
+      "path": "05_BUILD/04_CODE/trigger_engine/registry.py; test_trigger_engine.py",
+      "status": "IMPLEMENTED — BRANCH SOURCE; independent QE pending"
+    },
+    {
+      "evidence_id": "EV-76-070",
+      "title": "Strict mapping keys and immutable backing store",
+      "claim": "deep_freeze rejects non-string keys; FrozenDict backing uses MappingProxyType; regressions cover key collision and backing mutation.",
+      "path": "05_BUILD/04_CODE/trigger_engine/models.py; test_trigger_engine.py",
+      "status": "IMPLEMENTED — BRANCH SOURCE; independent QE pending"
+    },
+    {
+      "evidence_id": "EV-76-071",
+      "title": "Exact current PR #60 head CI",
+      "claim": "Run 44391467230 on exact head e53b913cd7cf6644f62a1ccce13c4c9bc74141cc: Python 3.11/3.12 each 94 passed / 0 failed; JUnit artifacts and SHA256 recorded in Evidence Register.",
+      "path": "GitHub Actions run 44391467230; jobs 135109975375 / 135109975797; artifacts 14467449686 / 14469850016",
+      "status": "VERIFIED — BRANCH CI ONLY; independent QE/runtime E2E NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-072",
+      "title": "Latest tested source/test head after WP-76-01 hardening",
+      "claim": "Run 44391759119 on source/test head 15a6a343af10747cf53ed90cf092d18553bac259: Python 3.11/3.12 each 94 passed / 0 failed; artifact IDs and SHA256 in Evidence Register.",
+      "path": "GitHub Actions run 44391759119; artifacts 14467837159 / 14468277059",
+      "status": "VERIFIED — BRANCH CI ONLY; independent QE/runtime E2E NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-073",
+      "title": "Exact source/test head after FrozenDict immutability hardening",
+      "claim": "Run 44392571805 on source/test head 5fc0bb6a94a8924e8cb30f8a9b1dd9505d763b27: Python 3.11/3.12 each 94 passed / 0 failed; includes rejection of FrozenDict backing attribute reassignment.",
+      "path": "GitHub Actions run 44392571805; artifacts 14468547568 / 14467742957",
+      "status": "VERIFIED — BRANCH CI ONLY; independent QE/runtime E2E NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-074",
+      "title": "Exact synchronized PR #60 branch-head CI",
+      "claim": "Run 44392770629 on branch head 0d8d3a5d251a26d80fdcb2c5298f8d914d8c9ade: Python 3.11/3.12 each 94 passed / 0 failed; includes final FrozenDict reassignment regression and dashboard schema assertions.",
+      "path": "GitHub Actions run 44392770629; artifacts 14469187669 / 14469467187",
+      "status": "VERIFIED — BRANCH CI ONLY; independent QE/runtime E2E NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-075",
+      "title": "Persisted Trigger/Registry snapshot validation",
+      "claim": "Trigger.from_dict rejects malformed snapshot/action types; TriggerRegistry.from_dict rejects malformed root/list/items and duplicate trigger versions; multi-ACTIVE corruption remains fail-closed.",
+      "path": "05_BUILD/04_CODE/trigger_engine/models.py; registry.py; test_trigger_engine.py",
+      "status": "IMPLEMENTED — BRANCH SOURCE; independent QE pending"
+    },
+    {
+      "evidence_id": "EV-76-076",
+      "title": "Exact source/test head after persisted snapshot hardening",
+      "claim": "Run 44393206734 on source/test head 4cf9be690df06f8887e2fd02dc59c53096a07166: Python 3.11/3.12 each 97 passed / 0 failed; artifacts and SHA256 in Evidence Register.",
+      "path": "GitHub Actions run 44393206734; artifacts 14468413188 / 14468542988",
+      "status": "VERIFIED — BRANCH CI ONLY; independent QE/runtime E2E NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-077",
+      "title": "Exact synchronized branch-head CI after persisted snapshot validation",
+      "claim": "Run 44393424405 on branch head c02e84a7bfdabb393d47452a47ece2510aa44220: Python 3.11/3.12 each 97 passed / 0 failed; JUnit artifact IDs and SHA256 in Evidence Register.",
+      "path": "GitHub Actions run 44393424405; artifacts 14468508265 / 14468888227",
+      "status": "VERIFIED — BRANCH CI ONLY; independent QE/runtime E2E NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-078",
+      "title": "Latest synchronized PR #60 branch-head CI",
+      "claim": "Run 44393713127 on branch head 97974aaefccb481a9362a8882458a4d7e4631dc6: Python 3.11/3.12 each 97 passed / 0 failed; artifact IDs and SHA256 in Evidence Register.",
+      "path": "GitHub Actions run 44393713127; artifacts 14468343656 / 14467903588",
+      "status": "VERIFIED — BRANCH CI ONLY; independent QE/runtime E2E NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-079",
+      "title": "Failed CI caught duplicate-key helper insertion error",
+      "claim": "Run 44394229622 failed 9 tests on each Python version (90 passed) because helper definition was not inserted; NameError identified and fixed in following commit.",
+      "path": "GitHub Actions run 44394229622; jobs 135119703033 / 135119705580; fix commit 9f34c0c7aa3cc5f12ac1b1a8fa9bdc11088c322e",
+      "status": "FAILED — ROOT CAUSE IDENTIFIED AND FIXED"
+    },
+    {
+      "evidence_id": "EV-76-080",
+      "title": "Exact source/test head after duplicate JSON key fix",
+      "claim": "Run 44394367137 on head 9f34c0c7aa3cc5f12ac1b1a8fa9bdc11088c322e: Python 3.11/3.12 each 99 passed / 0 failed; duplicate envelope/payload key regressions included.",
+      "path": "GitHub Actions run 44394367137; artifacts 14469159343 / 14467739525",
+      "status": "VERIFIED — BRANCH CI ONLY; independent QE/runtime E2E NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-081",
+      "title": "Latest exact-head CI after duplicate-key fix and record sync",
+      "claim": "Run 44394574461 on head fa6d9b51f7dd14a980af0bab04d0dc5655f39f0d: Python 3.11/3.12 each 99 passed / 0 failed; artifacts and SHA256 recorded in Evidence Register.",
+      "path": "GitHub Actions run 44394574461; artifacts 14468984143 / 14468259431",
+      "status": "VERIFIED — BRANCH CI ONLY; independent QE/runtime E2E NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-082",
+      "title": "Failed CI caught invalid optional-filter test expectation",
+      "claim": "Run 44395027259 failed one test per Python version because test incorrectly expected None (the valid no-filter value) to be rejected; expectation corrected.",
+      "path": "GitHub Actions run 44395027259; jobs 135122528243 / 135122528769; fix commit 9841b008887e13e678920abbae8044046e490a8a",
+      "status": "FAILED — TEST EXPECTATION CORRECTED"
+    },
+    {
+      "evidence_id": "EV-76-083",
+      "title": "Exact corrected source/test head after registry API validation",
+      "claim": "Run 44395153259 on head 9841b008887e13e678920abbae8044046e490a8a: Python 3.11/3.12 each 112 passed / 0 failed; strict registry API input tests included.",
+      "path": "GitHub Actions run 44395153259; artifacts 14470440042 / 14470585036",
+      "status": "VERIFIED — BRANCH CI ONLY; independent QE/runtime E2E NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-084",
+      "title": "Datetime-boundary overflow fail-closed hardening",
+      "claim": "Gateway replay expiry, idempotency TTL and retry due-time overflows now become declared errors before side-effect/store calls; regressions assert no replay/idempotency reservation.",
+      "path": "05_BUILD/04_CODE/trigger_engine/gateway.py; retry.py; test_work_packages.py; test_trigger_engine.py",
+      "status": "IMPLEMENTED — BRANCH SOURCE; independent QE pending"
+    },
+    {
+      "evidence_id": "EV-76-085",
+      "title": "Exact source/test head after datetime overflow hardening",
+      "claim": "Run 44395652838 on head 390a81fb831c9a312170b39ff9641b0707ea07ad: Python 3.11/3.12 each 115 passed / 0 failed; regression suite includes replay/TTL/retry datetime overflow.",
+      "path": "GitHub Actions run 44395652838; artifacts 14470350504 / 14469614812",
+      "status": "VERIFIED — BRANCH CI ONLY; independent QE/runtime E2E NOT VERIFIED"
+    },
+    {
+      "evidence_id": "EV-76-086",
+      "title": "Exact synchronized branch-head CI after datetime overflow hardening",
+      "claim": "Run 44395940533 on head 8cc3f352a893246fbeed10f1ccdfe412ba8bbd3d: Python 3.11/3.12 each 115 passed / 0 failed; artifacts and SHA256 in Evidence Register.",
+      "path": "GitHub Actions run 44395940533; artifacts 14471115472 / 14471485238",
+      "status": "VERIFIED — BRANCH CI ONLY; independent QE/runtime E2E NOT VERIFIED"
     }
-  ]
+  ],
+  "work_entry": {
+    "participant_id": "AI-07",
+    "participant_name": "Co",
+    "status": "BLOCKED",
+    "assessed_at": "2026-11-13",
+    "freshness": "STALE",
+    "source_ref": "00_ROOT/DOC-007_HO-SO-NHAN-VIEC_CO_WORK-ENTRY-RECORD.md §3",
+    "note_vi": "Snapshot theo DOC-007. Vinh đã trực tiếp ủy quyền Co tự triển khai ngày 18/11/2026, nhưng ủy quyền không thay thế xác minh trusted runtime identity binding. WE-G4/G5 vẫn BLOCKED cho đến khi có bằng chứng identity/permission và điều kiện entry.",
+    "gates": [
+      {
+        "gate_id": "WE-G0",
+        "title": "Work identity",
+        "status": "PASS",
+        "detail_vi": "Work 76 Manifest, canonical GitHub path và Sandbox Work ID 76 đã được kiểm tra."
+      },
+      {
+        "gate_id": "WE-G1",
+        "title": "Applicable procedures",
+        "status": "PASS",
+        "detail_vi": "Đã đọc manifest, discovery, architecture, roadmap, build/evidence registers và verification plan."
+      },
+      {
+        "gate_id": "WE-G2",
+        "title": "Document standards/register",
+        "status": "PASS",
+        "detail_vi": "DOC-008 Document Register đã được tạo và read-back theo DOC-007."
+      },
+      {
+        "gate_id": "WE-G3",
+        "title": "Current state/history",
+        "status": "PASS",
+        "detail_vi": "Đã đối chiếu nhật ký, evidence, build register, manifest và dashboard snapshot."
+      },
+      {
+        "gate_id": "WE-G4",
+        "title": "Assignment, permissions and dependencies",
+        "status": "BLOCKED",
+        "detail_vi": "Vinh đã ủy quyền tự triển khai; tuy nhiên trusted runtime identity binding AI-07, quyền công cụ gắn identity và reviewer ACK chưa được xác minh độc lập."
+      },
+      {
+        "gate_id": "WE-G5",
+        "title": "Ready to execute",
+        "status": "BLOCKED",
+        "detail_vi": "Theo DOC-007, WE-G5 chỉ PASS sau khi WE-G0…WE-G4 PASS; WE-G4 hiện vẫn BLOCKED."
+      }
+    ]
+  }
 }
