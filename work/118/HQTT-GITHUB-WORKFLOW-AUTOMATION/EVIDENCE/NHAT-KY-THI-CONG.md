@@ -1305,3 +1305,18 @@
 - **Runtime limitation:** 3 event-specific jobs SKIPPED; chưa có Core/W102/W12/W13/W70 runtime E2E. Các external ports/identity/schema ACK còn BLOCKED.
 - **Git disposition:** PR #68 là delivery candidate sạch, 6 ahead / 0 behind; PR #67 giữ unmerged như lịch sử, không dùng để merge. Không merge/release.
 - **Kết quả:** Task Register/schema contract PASS; exact-head CI PASS; Sandbox code mirror stateless aligned; W118 tổng thể vẫn ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+## Entry 079 — Exact-head CI and Xu review handoff
+- **Thời gian:** 2026-11-22 05:05 (UTC+07:00).
+- **Người thực hiện:** Ka / AI-02.
+- **Chức danh:** CSA / Autonomous W118 Build Owner theo ủy quyền của Vinh.
+- **Ưu tiên / Thứ tự đọc:** P0 / 18.
+- **Delivery candidate:** PR #68 — READY FOR REVIEW / OPEN / UNMERGED; branch `work/118-auto-e2e-v2-clean`; verified head `052689084fba6f548df5c44637f652735628ad83`; Main `792bdd71e5345949e0c1f26ff9f95a8513dfa7d5`; compare 13 ahead / 0 behind; 45 changed paths W118-only.
+- **Exact-head CI:** Run #44949913071 SUCCESS; 94 tests PASS / 0.303s; artifact ID 14724444908; digest `4c45798a365cf1822954a716610932f911c4531e7ee51488f0419cd3abf099e9`.
+- **Sandbox parity:** current stateless adapters/workflows/tests mirrored; six legacy SQLite modules/tests deleted; Task Register and schema byte-identical between Sandbox and GitHub; schema required list valid; no local Assignment runtime state in W118 planning register.
+- **Superseded PR:** #67 CLOSED / UNMERGED; body records supersession; history retained; no merge performed.
+- **Review handoff:** PR #68 marked READY FOR REVIEW. Xu GitHub login remains unverified; no identity inferred and no reviewer request sent. Independent review is pending.
+- **Runtime blockers:** Core Task API/field map/lock/Event ingress; W102 verified principal/Assignment; W12/W13 execution integration; live Issue API/task-scoped push; production webhook endpoint; W70 schema/owner ACK. Event-specific PR jobs are skipped, so runtime E2E remains NOT VERIFIED.
+- **Governance:** no Main merge, release, secret/permission/branch-protection change or W70 schema mutation.
+- **Disposition:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED. Handoff to Xu for independent review after technical build baseline.
