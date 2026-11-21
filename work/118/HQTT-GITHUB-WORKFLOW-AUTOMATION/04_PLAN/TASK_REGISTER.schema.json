@@ -1,0 +1,341 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "W118-TASK-REGISTER.schema.json",
+  "title": "W118 Work-specific Task Register",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "work_id",
+    "document_id",
+    "title",
+    "baseline_status",
+    "authority",
+    "source_of_truth",
+    "model",
+    "status_model",
+    "assignment_status_model",
+    "rules",
+    "tasks",
+    "task_count",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "work_id": {
+      "const": "W118"
+    },
+    "document_id": {
+      "const": "TASK_REGISTER"
+    },
+    "title": {
+      "type": "string"
+    },
+    "baseline_status": {
+      "enum": [
+        "OWNER_DIRECTED_BUILD",
+        "ACTIVE",
+        "SUPERSEDED"
+      ]
+    },
+    "authority": {
+      "type": "string"
+    },
+    "source_of_truth": {
+      "type": "string"
+    },
+    "github_mirror": {
+      "type": "string"
+    },
+    "model": {
+      "type": "string"
+    },
+    "status_model": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "PLANNED",
+          "READY",
+          "IN_PROGRESS",
+          "BLOCKED",
+          "IN_REVIEW",
+          "DONE",
+          "CANCELLED"
+        ]
+      }
+    },
+    "assignment_status_model": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "UNASSIGNED",
+          "PROPOSED",
+          "DISPATCHED",
+          "ACKNOWLEDGED",
+          "IN_PROGRESS",
+          "SUBMITTED",
+          "ACCEPTED",
+          "REJECTED",
+          "BLOCKED",
+          "CANCELLED"
+        ]
+      }
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "tasks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "task_id",
+          "wp_id",
+          "phase",
+          "phase_name",
+          "task_title",
+          "objective",
+          "accountable_role",
+          "role_name",
+          "assigned_identity",
+          "assignment_status",
+          "reviewer_role",
+          "inputs",
+          "deliverable",
+          "acceptance_criteria",
+          "dependencies",
+          "status",
+          "progress_percent",
+          "progress_status",
+          "evidence_refs",
+          "blockers",
+          "next_action",
+          "status_note",
+          "execution_steps",
+          "scope_boundary",
+          "verification_method",
+          "evidence_required",
+          "completion_rule",
+          "owner_principal"
+        ],
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "pattern": "^W118-TASK-[0-9]{3}$"
+          },
+          "wp_id": {
+            "type": "string",
+            "pattern": "^W118-[0-9]{2}$"
+          },
+          "phase": {
+            "enum": [
+              "01_DISCOVER",
+              "02_DEFINE",
+              "03_ARCHITECT",
+              "04_PLAN",
+              "05_BUILD",
+              "06_VERIFY",
+              "07_ACCEPT",
+              "08_RELEASE",
+              "09_OPERATE"
+            ]
+          },
+          "phase_name": {
+            "type": "string"
+          },
+          "task_title": {
+            "type": "string"
+          },
+          "objective": {
+            "type": "string"
+          },
+          "accountable_role": {
+            "type": "string"
+          },
+          "role_name": {
+            "type": "string"
+          },
+          "assigned_identity": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "assignment_status": {
+            "enum": [
+              "UNASSIGNED",
+              "PROPOSED",
+              "DISPATCHED",
+              "ACKNOWLEDGED",
+              "IN_PROGRESS",
+              "SUBMITTED",
+              "ACCEPTED",
+              "REJECTED",
+              "BLOCKED",
+              "CANCELLED"
+            ]
+          },
+          "reviewer_role": {
+            "type": "string"
+          },
+          "inputs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "deliverable": {
+            "type": "string"
+          },
+          "acceptance_criteria": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "description",
+                "verification_method"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "verification_method": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^W118-TASK-[0-9]{3}$"
+            }
+          },
+          "status": {
+            "enum": [
+              "PLANNED",
+              "READY",
+              "IN_PROGRESS",
+              "BLOCKED",
+              "IN_REVIEW",
+              "DONE",
+              "CANCELLED"
+            ]
+          },
+          "progress_percent": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 100
+          },
+          "progress_status": {
+            "enum": [
+              "NOT_CALCULATED",
+              "CALCULATED_FROM_EVIDENCE"
+            ]
+          },
+          "evidence_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "blockers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "next_action": {
+            "type": "string"
+          },
+          "status_note": {
+            "type": "string"
+          },
+          "execution_steps": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "scope_boundary": {
+            "type": "string"
+          },
+          "verification_method": {
+            "type": "string"
+          },
+          "evidence_required": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "completion_rule": {
+            "type": "string"
+          },
+          "owner_principal": {
+            "type": "string"
+          },
+          "issue_id": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "issue_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "branch": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "commit_sha": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "ci_run_id": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "task_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}
