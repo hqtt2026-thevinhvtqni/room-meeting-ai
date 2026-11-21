@@ -1515,3 +1515,21 @@
 - **Open findings / controls:** P1-118-01 remains OPEN / NEEDS CHANGES; P1-118-02 remains BLOCKED at the authoritative Core lease-contract boundary. Keep implementation freeze; do not merge Main, apply B-118-010, or release. Xu independent review and Vinh product acceptance remain outstanding.
 - **Disposition:** PR #68 OPEN / UNMERGED; W118 ACTIVE — NOT ACCEPTED — NOT RELEASED.
 - **Next step:** Preserve the freeze; Ka continues evidence-based P1 remediation assessment within the approved boundary; Xu performs independent review; Vinh retains final acceptance authority.
+
+
+## Entry 027 — Current exact-head reconciliation; implementation freeze retained
+
+- **Priority:** 01 — P0 — Evidence integrity / freeze control.
+- **Name / Title:** Ka — CSA / Delegated Technical Lead, Work 118.
+- **Date-Time:** 2026-11-22 06:17 (UTC+07:00).
+- **Scope:** Read-only reconciliation of live PR #68 metadata, branch compare, current source/tests, formal review records, and exact-head Actions run. This entry is documentation-only; no implementation/workflow changes, no Main mutation, no merge, no B-118-010 application, no release.
+- **PR / Branch:** PR #68 remains OPEN / UNMERGED; branch `work/118-auto-e2e-v2-clean`; base Main `792bdd71e5345949e0c1f26ff9f95a8513dfa7d5`.
+- **Exact current source HEAD:** `129723ad579e0b729e55d40f88c90d07a1a06cf3`; compare confirms 41 commits ahead / 0 behind. PR snapshot reports 45 changed files.
+- **Formal review:** GitHub PR reviews endpoint returned 0 formal review submissions; inline review comments endpoint returned 0. No Xu identity is inferred.
+- **Exact-head CI:** Run [#44958124759](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44958124759), run number 862, event `pull_request`, head SHA exactly matches `129723ad579e0b729e55d40f88c90d07a1a06cf3`, conclusion SUCCESS. Job `validate` SUCCESS; `Run W118 contract tests` SUCCESS; evidence write/upload SUCCESS. Task-to-Issue source-binding step SKIPPED because event was `pull_request`. Jobs `handoff-request-capture`, `ack-claim-capture`, `review-observation-capture` all SKIPPED.
+- **Artifact:** `w118-run-evidence-44958124759-1`; ID `14727553837`; size 687 bytes; digest `sha256:38c24db20a52af69b54c3ba6503a9d540b9e3ea1d1abc8f2bd3a9c0f4ff0bc7c`; unexpired at readback. Metadata verified; payload not independently inspected.
+- **P1-118-01 source recheck:** At this exact HEAD, `_find_task_issue()` still returns the first marker match. It does not reject multiple matching Issues. `mirror_core_task()` does not compare the selected Issue ID with Core's recorded `task.issue_id`. Existing test file still lacks adversarial duplicate/forged marker and stored-ID mismatch tests. **OPEN / NEEDS CHANGES.**
+- **P1-118-02 source recheck:** At this exact HEAD, `mirror_core_task()` only checks that `lock_lease_id` is a non-empty string. No Core-issued proof, Task binding, expiry/revocation validation, or authoritative lease endpoint is implemented. **BLOCKED at Core contract boundary / OPEN.** Do not invent a local validator or claim this is solvable solely inside W118.
+- **Documentation drift:** PR body still cites historical HEAD `ca861cbe30edd69b49a8ce26259fc7daf27b4b2a` and 32 commits ahead. README and STATUS snapshots are also behind the live PR state. They are not treated as authoritative current evidence.
+- **Disposition:** Contract CI PASS on exact HEAD only; runtime lifecycle E2E and Task-to-Issue source-binding remain NOT VERIFIED / NOT RUN. Xu acceptance remains NOT ACCEPTED; T-01..T-05 pending; B-118-010 PREPARED / NOT APPLIED. Implementation freeze retained. PR #68 OPEN / UNMERGED; W118 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+- **Next step:** Keep the freeze. Xu must independently close the review/test cycle before implementation changes resume; Core/W37 must provide the authoritative lease contract and executable proof for P1-118-02. Vinh retains final product acceptance and release authority.
