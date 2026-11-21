@@ -1964,3 +1964,34 @@ Read-only comparison of W70 DOC-063, current-main Core HTTP/Execution Host sourc
 - GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
 - READ/TRACE/ANALYZE ONLY. No implementation, tests, dispatch, Host execution, PR mutation, merge or deployment.
 - Sandbox parity remains BLOCKED; no Sandbox write attempted. GitHub main is the canonical updated journal destination for this evidence round.
+
+
+## Entry 097 — PR #48 source-snapshot integrity defect reproduced by candidate HTTP test (2026-11-21T17:10:44+07:00)
+
+### Scope and method
+Read-only source/test inspection at PR #48 head branch `work/w1111-core-execution-authority-v1-2`. Fetched exact `core/execution_authority.py` blob `163b126178b67c6e0a3f68ba33eaf7b9e6d91503` and `tests/test_execution_authority.py` blob `4ea5158c07df1e66183a6fbe7a6f79042332605d`. Compared grant policy binding, `record_run()` validation and the HTTP integration test. No tests were executed; no endpoint, Host, process, credential or runtime was invoked.
+
+### Findings
+1. **Grant binds a policy source SHA.** The Work policy requires a 64-hex `source_sha256`; `issue_grant()` returns the configured policy SHA in the grant response and persists the grant identity/work/purpose/token digest. In the test fixture, W28 policy SHA is `a` repeated 64 times.
+2. **Run recording validates only SHA syntax, not equality to the grant-bound source.** In `record_run()`, the candidate revalidates the bearer grant, loads its GRANT_ISSUED event, and checks that supplied `source_sha256` matches the 64-hex format. It does not compare the supplied value with the Work policy's `source_sha256` or the source SHA returned by `validate_grant_token()`. It then appends the supplied value to `RUN_RECORDED`.
+3. **Candidate test explicitly accepts a mismatched SHA over HTTP.** `test_http_grant_flow_is_authenticated_and_work_scoped` issues a grant for W28 whose policy SHA is `a`×64, then POSTs `source_sha256=` `b`×64 to `/works/W28/execution-grants/{grant_id}/runs` with the valid bearer grant. The test asserts HTTP 200 and asserts the returned record contains `b`×64. This is direct source/test evidence that the candidate's test suite treats a grant/run source mismatch as accepted behavior. No runtime reproduction was performed.
+4. **Security/assurance consequence.** The run journal can attribute PASS/evidence refs to a source hash different from the source snapshot authorized by the grant. This breaks the intended source-snapshot integrity chain between policy, grant, Host execution and recorded run. It is a verified candidate code/test defect; it is not proof of a live exploit, current-main vulnerability, or deployed runtime exposure.
+5. **Relationship to DOC-063 and earlier findings.** DOC-063 requires source revision binding and commit-time revalidation. PR #48 candidate implements a source SHA field and Host-side snapshot checks, but the run-record endpoint does not enforce equality at the evidence-recording boundary. This is separate from the previously recorded missing Assignment/Dispatch/Receipt/recipient ACK binding. Both remain blockers; fixing this defect alone would not close GAP-01 or prove E2/E3.
+6. **Test coverage implication.** The test should be treated as a negative assurance failure, not positive evidence of source integrity: it explicitly codifies acceptance of `a` policy versus `b` run. No fresh exact-head CI run was retrieved; tests were not executed in this audit.
+
+### Required correction / acceptance criteria (proposal only; no code change)
+- At run-record time, derive the authoritative expected source SHA from the grant's Work policy / validated grant record, not from caller input.
+- Reject any submitted `source_sha256` that differs from the grant-bound expected SHA; return a fail-closed 4xx and append no `RUN_RECORDED` event.
+- Add negative tests for mismatch over both domain method and HTTP route; verify journal remains unchanged after rejection.
+- Add positive test proving exact matching SHA is recorded; verify the exact same immutable snapshot identifier flows from grant issuance through Host launch and final evidence.
+- Ensure run-record idempotency and atomic lifecycle handling are addressed separately; this fix does not solve those existing gaps.
+- Re-run exact-head CI and independent review after an authorized patch; do not infer PASS from existing historical CI.
+
+### Disposition
+- PR #48 source-snapshot run-record integrity: **FAIL — candidate source/test mismatch confirmed by static inspection**.
+- Current-main impact: not assessed as a live runtime issue; candidate branch only.
+- GAP-11 execution-authority candidate readiness: remains OPEN / NOT ACCEPTED pending correction, integration and runtime evidence.
+- GAP-01 assignment dispatch/receipt/recipient ACK: OPEN / P0; E2/E3 NOT PROVEN.
+- Protected execution: DENY / NOT RELEASED.
+- READ/TRACE/ANALYZE ONLY. No code/test/PR/branch/endpoint/Host/credential/deployment action.
+- Sandbox parity remains BLOCKED; no Sandbox write attempted. GitHub main is the canonical updated journal destination for this evidence round.
