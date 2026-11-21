@@ -287,3 +287,10 @@ Vinh directed Xu to proceed with the dual-loop build without waiting for multi-a
 - SQLite TaskRegistry is an operational transaction/event adapter, not a competing canonical Task Register. The runtime adapter must synchronize with the Sandbox register before production use.
 - W112 DOC-001 is a compatibility design reference only while W112 remains DRAFT_NOT_APPROVED; no W70 schema is changed.
 - Exact tested code/schema SHA `3b8847568facbaa1517ece7af111deb4818c5ed3`: 127 tests PASS / 0.380s; run #44879608573 SUCCESS; artifact 14697605476, digest `1ba2e30c35c67d33bda977e0eef320c726c290e5dabeffbdb675e96311f35438`.
+
+
+## Latest exact-head verification and Sandbox sync (2026-11-21)
+
+- Exact tested branch head: `45b2cda82a99589afe33f2838656c5bbae8069f5`; GitHub Actions run #44879719166 SUCCESS; 127 tests PASS / 0.257s; artifact ID 14697318273; digest `de06cfb5787728c7fb214fb80c485f6efe33e2738ad9376db0ea66748b8f2514`.
+- Sandbox Work 118 now contains the Task Register and schema, code modules/tests, architecture, implementation/test notes and a sync manifest. Sandbox readback is the verification for the mirrored files; GitHub remains branch/PR/CI authority.
+- No Python execution was available through the Sandbox MCP in this session; test execution evidence is from GitHub Actions only.
