@@ -88,3 +88,11 @@ No rebase, merge to main, release or branch-protection change is authorized by t
 - **Sandbox 04_CODE:** synchronized to the stateless Core/GitHub adapter implementation from PR #68. TD-118-012 v1.2 is controlling: no W118 Task DB, webhook inbox, durable event queue, Agent Registry, dispatcher, Execution Host, Git Gateway or CI engine.
 - **Task Register:** Sandbox is operational source; GitHub is versioned mirror. Owner-directed build authorization is recorded without fabricating Agent identity, Assignment or ACK.
 - **State:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED.
+
+
+## Latest mainline synchronization — 2026-11-22
+
+- Main HEAD: `792bdd71e5345949e0c1f26ff9f95a8513dfa7d5`.
+- Active branch: `work/118-auto-e2e-v2-clean`; latest source commit at this update: `3bdde3221426a96db8c812185ee780283326ca4f`.
+- Compare: 12 commits ahead / 0 behind; all 45 changed paths are W118-only.
+- Latest completed validation: Run #44949848909, parent SHA `7ae56f961ec6908abc1060d321389b6d71d301cf`, 94 tests PASS; artifact 14724958058. The subsequent status-only commit does not change code; exact latest-head revalidation remains requested.
