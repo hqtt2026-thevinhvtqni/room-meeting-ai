@@ -279,7 +279,7 @@ def main():
             if line.startswith("start-thread:")
         ]
         slow_thread_ids = [
-            line.split(":", 1)[1] for line in event_log[slow_start_index:slow_end_index + 1]
+            line.split(":", 1)[1] for line in event_log[slow_start_index:slow_end_index + 2]
             if line.startswith(("click-start-thread:", "click-end-thread:"))
         ]
         close_thread_ids = [

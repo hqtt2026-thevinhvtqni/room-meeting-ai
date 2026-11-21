@@ -1194,3 +1194,14 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - **Date-Time:** 2026-11-22 05:10 (UTC+07:00)
 - GitHub Actions run #33, ID `44954807735`, completed SUCCESS on commit `3d6bac7bb838e8cb64bb3992765eaf3946dcfbf8`; job `real-browser` SUCCESS. This validates the pre-authorization documentation-sync commit only, on the existing Ubuntu workflow. It does not validate the newly authorized P0 implementation or Windows containment.
 - **KÝ: Co | AI-07**
+
+
+## W10-CI-RUN37-DIAGNOSIS-20261122-01 — 2026-11-22 05:10 (UTC+07:00)
+- **Name:** Co | **Title:** AI-07 / End-to-End Architecture & Implementation Lead
+- **Evidence:** GitHub Actions run #37, ID `44955980301`, commit `b9c56ef27a96cb735ea6c4a04d96c4a5af6fd099`, matrix Ubuntu 24.04 + Windows Server 2022.
+- **Ubuntu:** P0/P1/P2 offline contract suite PASS 60 checks; safety-policy suite PASS 41 checks with 3 Windows-only cases correctly skipped; HTTP suite 38 PASS / 1 FAIL.
+- **Windows:** offline contract suite PASS 60 checks; safety-policy suite PASS 45 checks; HTTP suite 38 PASS / 1 FAIL.
+- **Root cause of remaining HTTP test failure:** assertion slice ended at `click-end:slow` and excluded the immediately following `click-end-thread` log line. The full trace showed adapter start, timed-out action, and deferred close all ran on the same owner thread on both OSes. This is a test-harness indexing defect, not a runtime thread-affinity failure. Corrected the slice to include the thread-id line; next CI will re-run.
+- **E2E:** Real Chromium step was skipped because the offline suite exited nonzero; no browser PASS is claimed from run #37.
+- **Status:** Source/test files remain Sandbox↔GitHub exact for the synchronized set; CI overall FAIL until HTTP assertion correction is rerun. No P0 process-isolation implementation yet; current runtime remains thread-worker only.
+- **KÝ: Co | AI-07**
