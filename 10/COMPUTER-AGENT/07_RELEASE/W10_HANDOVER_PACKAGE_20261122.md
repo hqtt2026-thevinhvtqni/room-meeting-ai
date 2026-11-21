@@ -156,3 +156,16 @@ Work 10 remains **ACTIVE — NOT RELEASED**. This document is a handover package
 Run #69 (ID `44962226803`) completed SUCCESS after the secured operational Dashboard was synchronized and the test-output counter was corrected. Windows Server 2022: 206 PASS / 0 FAIL / 0 SKIP; Ubuntu 24.04: 200 PASS / 0 FAIL / 2 expected SKIP. Dashboard static contract = 17 PASS on each OS; V8 validator = 16 PASS on each OS; real Chromium E2E = PASS. Evidence: `06_EVIDENCE/W10_CROSS_PLATFORM_CI_EVIDENCE_20261122_RUN69.md`.
 
 Run #69 validates static Dashboard invariants and JavaScript syntax; it does not establish a live Dashboard/API workflow on the Owner's physical PC.
+
+
+## 11. ROOM-HOP integration and shared Dashboard boundary — 2026-11-22 06:35 (UTC+07:00)
+
+The integration handoff is recorded in `06_EVIDENCE/W10_ROOM_HOP_INTEGRATION_BOUNDARY_HANDOFF_20261122.md`.
+
+- Work 10 remains a local loopback-only Computer Agent provider. Its bearer token and Origin allow-list are not a substitute for ROOM-HOP Core authorization.
+- Work 24 owns the shared PC Source Bridge/Core authorization/authenticated PC transport boundary. Its current Core/transport seam is fail-closed and not yet wired to the PC. Work 10 is not remotely exposed or called as a bypass.
+- Work 112 owns cross-Work contract definitions and integration verification; its baseline remains DRAFT and not approved for runtime enforcement.
+- Work 14 remains sole owner of the W12/W13/W14 autonomous E2E product/execution boundary. W10 ProcessSupervisor is only the containment boundary for W10's own agent.
+- Work 113 owns the shared ROOM-HOP Dashboard ingress on port `3000`. Work 10's standalone development/acceptance UI has been moved to loopback port `3010`; it must not create a competing listener on port 3000.
+- W10 production Dashboard route mounting, W24 authenticated transport integration and W14 capability consumption are NOT IMPLEMENTED / NOT VERIFIED.
+- A fresh cross-platform CI run is required for the port-3010 code/test change; the Run #69 baseline predates that change.
