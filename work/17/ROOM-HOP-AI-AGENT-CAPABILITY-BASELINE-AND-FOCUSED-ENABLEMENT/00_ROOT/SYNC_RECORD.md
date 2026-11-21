@@ -804,3 +804,18 @@
 - Result: PR #60 is a broad draft candidate, not a production dispatcher or Assignment authority. WP-76-07 remains BLOCKED; GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
 - Entry 080 added. No PR/branch/source/file/test/CI/dispatch/provider/Host/permission operation.
 - Next: any W76 reuse must be a narrow W76-only change based on current main, excluding W17/W300/W502/W802001 snapshots, with concrete durable Core/provider/ACK evidence before changing dispatch status.
+
+
+## Sync Period 0068 — Core Meeting provider connectors are not Work Assignment dispatch/ACK (2026-11-21T09:30+07:00)
+
+- GitHub main direct fetch verified:
+  - `core/connectors.py` blob `809c4d2fca01e6fcdaf26b91bf34b1af26dfd15a` defines AgentConnector.send_turn, AnthropicConnector, OpenAIConnector, MockConnector and AgentResponse(status/content/raw).
+  - `core/discussion.py` blob `aa722f95235f613c288ba212074527ed2ce01ebc` runs a Meeting participant round-robin and writes Meeting log events/messages; it does not implement W70 Assignment lifecycle, dispatch attempt, provider receipt or recipient ACK.
+  - `run_meeting_v2.py` blob `3506137f465c38995fd10472dc2e982f17e23a01` calls build_mock_connectors() in the inspected entrypoint; real connector classes existing elsewhere do not prove a live provider call.
+- AgentResponse schema has no provider receipt/request ID, assignment_id, dispatch_id, attempt_id, trusted target/session binding, correlation/idempotency key, recipient identity proof or ack_ref.
+- W17 GAP01 source reconciliation blob `78010ce9684afd7e44f4fdb8580be186d56992a6` states E3 requires one trace linking canonical Assignment, member identity/session, dispatch attempt, actual provider receipt, recipient-attributable explicit ACK and (for execution) grant/run/evidence. Prepared order, Sandbox write, GitHub commit, roster, Meeting paste or Xu coordination note is not receipt/ACK.
+- Bounded GitHub code searches for assignment/dispatch/provider receipt/recipient ACK and send_assignment did not locate a concrete Work Assignment dispatcher/receipt/ACK implementation in indexed main results. Search coverage is bounded and does not prove absence from all branches, Sandbox or deployments.
+- Reconciliation: Core provider connector capability exists at Meeting-turn level; Work Assignment delivery/receipt/recipient ACK remains NOT LOCATED / NOT PROVEN. Do not state Core has no provider connectors, and do not equate Meeting provider calls with W52 Assignment dispatch.
+- No code/test/CI/provider/API/Meeting/Host/permission/branch action. READ/TRACE/ANALYZE ONLY.
+- GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. Entry 081 added.
+- Next: bounded trace W52 Sandbox implementation against this main source boundary; classify reusable protocol pieces versus missing provider adapter, receipt and authenticated ACK. Do not create parallel dispatcher/ledger.
