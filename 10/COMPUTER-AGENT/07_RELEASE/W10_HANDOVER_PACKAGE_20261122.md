@@ -53,14 +53,20 @@ The separate `PC_HOST_CAPABILITY_CONTRACT.md` adds host operations without chang
 | #53 | Same after V8 category/policy hardening | 189 PASS | 183 PASS + 2 SKIP | PASS |
 | #67 | Dashboard HTML synchronized + static contract suite included | 189 PASS | 183 PASS + 2 SKIP | PASS; initial assertion count display was corrected in a follow-up |
 | #69 | Dashboard assertion count correction + full static Dashboard suite | 206 PASS | 200 PASS + 2 SKIP | PASS; 17 Dashboard assertions on each OS |
+| #104 | Standalone Dashboard moved to port 3010 | 206 PASS | 200 PASS + 2 SKIP | PASS; preserves shared :3000 ingress |
+| #105 | POSIX cleanup polling remediation | 206 PASS | 200 PASS + 2 SKIP | PASS |
+| #106 | POSIX cleanup three-cycle descendant stress | 206 PASS | 200 PASS + 2 SKIP | PASS; three-cycle test passed |
 
 Evidence files:
 - `06_EVIDENCE/W10_API_PROCESS_E2E_EVIDENCE_20261122_RUN45.md`
 - `06_EVIDENCE/W10_HOST_CAPABILITIES_CI_EVIDENCE_20261122_RUN49.md`
 - `06_EVIDENCE/W10_CROSS_PLATFORM_CI_EVIDENCE_20261122_RUN52.md`
 - `06_EVIDENCE/W10_CROSS_PLATFORM_CI_EVIDENCE_20261122_RUN53.md`
+- `06_EVIDENCE/W10_CROSS_PLATFORM_CI_EVIDENCE_20261122_RUN69.md`
+- `06_EVIDENCE/W10_CROSS_PLATFORM_CI_EVIDENCE_20261122_RUN104.md`
+- `06_EVIDENCE/W10_POSIX_CLEANUP_REMEDIATION_CI_20261122_RUN99_105_106.md`
 
-Run #52 and #53 each execute 16 V8 validator checks successfully on both OS runners. Run #53 tests the additional category catalog, policy ID/version/schema version and category outcome/lease/owner allow-list validation.
+Runs #52, #53, #69, #104, #105 and #106 each execute 16 V8 validator checks successfully on both OS runners. Run #53 tests the additional category catalog, policy ID/version/schema version and category outcome/lease/owner allow-list validation. Run #69 adds 17 Dashboard static assertions per OS. Run #104 verifies Work 10's standalone UI on port 3010. Runs #105/#106 remediate and stress-test the Linux limited process-group cleanup race first seen in Run #99.
 
 ### What hosted CI proves
 
@@ -169,3 +175,13 @@ The integration handoff is recorded in `06_EVIDENCE/W10_ROOM_HOP_INTEGRATION_BOU
 - Work 113 owns the shared ROOM-HOP Dashboard ingress on port `3000`. Work 10's standalone development/acceptance UI has been moved to loopback port `3010`; it must not create a competing listener on port 3000.
 - W10 production Dashboard route mounting, W24 authenticated transport integration and W14 capability consumption are NOT IMPLEMENTED / NOT VERIFIED.
 - A fresh cross-platform CI run is required for the port-3010 code/test change; the Run #69 baseline predates that change.
+
+
+## 12. Latest process-cleanup and port-boundary verification — 2026-11-22 06:37 (UTC+07:00)
+
+- Run #104: 200 PASS / 0 FAIL / 2 SKIP on Ubuntu; 206 PASS / 0 FAIL / 0 SKIP on Windows. Confirms standalone Work 10 Dashboard origin/port 3010.
+- Run #99 exposed one intermittent Ubuntu limited process-group cleanup failure. Co changed the cleanup path to poll group identity until its bounded deadline and expanded the POSIX descendant test to three cycles.
+- Run #105 passed on both OSes after the cleanup implementation patch.
+- Run #106 passed on both OSes with the three-cycle POSIX descendant stress test: Ubuntu 200 PASS / 0 FAIL / 2 SKIP; Windows 206 PASS / 0 FAIL / 0 SKIP.
+- Evidence: `06_EVIDENCE/W10_POSIX_CLEANUP_REMEDIATION_CI_20261122_RUN99_105_106.md`.
+- Linux remains `LIMITED_NOT_CGROUP_V2`; this closes the observed flaky cleanup test, not the hardened Linux production containment gate.
