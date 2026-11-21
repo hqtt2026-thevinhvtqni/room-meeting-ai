@@ -179,6 +179,16 @@ def validate_task_record(task: Mapping[str, Any]) -> dict[str, Any]:
     result["acceptance_criteria"] = normalized
     if result["task_id"] in result["dependencies"]:
         raise TaskValidationError("a Task cannot depend on itself")
+    execution_mode = result.get("execution_mode", "AGENT_ASSIGNMENT")
+    if execution_mode not in {"AGENT_ASSIGNMENT", "OWNER_DIRECTED_SESSION"}:
+        raise TaskValidationError("execution_mode must be AGENT_ASSIGNMENT or OWNER_DIRECTED_SESSION")
+    result["execution_mode"] = execution_mode
+    if execution_mode == "OWNER_DIRECTED_SESSION":
+        result["owner_directive_ref"] = _non_empty(
+            result.get("owner_directive_ref"), "owner_directive_ref"
+        )
+    else:
+        result["owner_directive_ref"] = result.get("owner_directive_ref")
     result["status"] = "PLANNED"
     result["assignment_status"] = "UNASSIGNED"
     result["version"] = 1
@@ -442,8 +452,12 @@ class TaskRegistry:
             current_payload = json.loads(row["payload_json"])
             if actor_role == "owner" and actor_principal != current_payload.get("owner_principal"):
                 raise TransitionDenied("owner principal does not match Task owner")
-            if to_status == "IN_PROGRESS" and row["assignment_status"] not in {"ACKNOWLEDGED", "IN_PROGRESS"}:
-                raise TransitionDenied("Task can enter IN_PROGRESS only after Assignment ACKNOWLEDGED")
+            if to_status == "IN_PROGRESS":
+                if current_payload.get("execution_mode") == "OWNER_DIRECTED_SESSION":
+                    if not current_payload.get("owner_directive_ref"):
+                        raise TransitionDenied("owner-directed execution requires an explicit Owner directive reference")
+                elif row["assignment_status"] not in {"ACKNOWLEDGED", "IN_PROGRESS"}:
+                    raise TransitionDenied("agent-assigned Task can enter IN_PROGRESS only after Assignment ACKNOWLEDGED")
             if to_status == "IN_REVIEW" and row["assignment_status"] != "SUBMITTED":
                 raise TransitionDenied("Task can enter IN_REVIEW only after Assignment SUBMITTED")
             if to_status == "DONE":
