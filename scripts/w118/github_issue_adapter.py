@@ -52,7 +52,7 @@ def build_task_issue_body(task: Mapping[str, Any]) -> str:
     priority = task.get("priority", "P2")
     return "\n".join([
         marker,
-        f"<!-- work-id:{task['work_id']} wp-id:{task['wp_id']} task-id:{task['task_id']} -->",
+        f"<!-- Work-ID: {task['work_id']} WP-ID: {task['wp_id']} Task-ID: {task['task_id']} -->",
         "## Sandbox Task mirror",
         f"- **Work:** {task['work_id']}",
         f"- **Work Package:** {task['wp_id']}",
