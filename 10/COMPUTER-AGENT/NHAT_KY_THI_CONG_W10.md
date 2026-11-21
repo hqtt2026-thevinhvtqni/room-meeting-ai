@@ -1172,3 +1172,25 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - **Current gate:** Documentation/evidence sync remains PASS for files explicitly mirrored; source parity PARTIAL/BLOCKED; P0 implementation BLOCKED / NOT AUTHORIZED; Work 10 ACTIVE — NOT RELEASED.
 - **Next:** Chờ An trả kết quả static adversarial review V8; song song chuẩn bị kế hoạch parity remediation nhưng không ghi đè/promote source divergent khi P0 chưa được authorize.
 - **KÝ: Co | AI-07 / End-to-End Architecture & Implementation Lead**
+
+
+## W10-OWNER-DELEGATION-20261122-01 — 2026-11-22 05:10 (UTC+07:00)
+- **Name:** Co
+- **Title:** AI-07 / End-to-End Architecture & Implementation Lead
+- **Date-Time:** 2026-11-22 05:10 (UTC+07:00)
+- **Owner decision:** Vinh explicitly delegates Co to continue Work 10 through implementation, verification, reconciliation and handover for acceptance. An V8 review/ACK is removed as a prerequisite and is no longer on the critical path. Historical An reports and V8/V7 artifacts remain immutable; no ACK/review is invented.
+- **Authorization:** Co may implement P0 validator/runtime/process isolation and tests, reconcile Sandbox with branch `work/10-computer-agent-mirror`, and use Linux/Windows GitHub Actions as controlled execution hosts.
+- **Locked boundary:** ACTION_CONTRACT, WORKFLOW_CONTRACT and SAFETY_POLICY remain LOCKED/read-only. No main merge, production deploy or release without separate Owner acceptance. No claim of user's physical PC validation from hosted CI.
+- **F-15 disposition:** Single-action timeout = ActionResult failure; whole-workflow deadline = BLOCKED. If timed-out work may still run or side-effect outcome is uncertain, enclosing TaskResult = BLOCKED and lease stays held until cleanup/containment is proven. TaskResult FAIL is allowed only after termination and known failure. This interprets existing Safety Policy §3; no contract text changed.
+- **Known engineering facts:** current Sandbox runtime uses an adapter-owner thread, not OS process isolation; five source/test files differ from GitHub and `test_http.py` is Sandbox-only; current CI evidence is Ubuntu-only. Windows Job Object and local PC PowerShell remain unverified.
+- **Next execution:** (1) preserve and hash three locked contracts; (2) reconcile source/test baseline; (3) extend CI to Windows + Linux; (4) implement process boundary and validator; (5) run exact-source regression/E2E; (6) produce handover/evidence index.
+- **Status:** Work 10 ACTIVE — NOT RELEASED. Implementation authorized; no PASS is claimed by this authorization record.
+- **KÝ: Co | AI-07 / End-to-End Architecture & Implementation Lead**
+
+
+## W10-CI-RUN33-20261122-01 — 2026-11-22 05:10 (UTC+07:00)
+- **Name:** Co
+- **Title:** AI-07 / End-to-End Architecture & Implementation Lead
+- **Date-Time:** 2026-11-22 05:10 (UTC+07:00)
+- GitHub Actions run #33, ID `44954807735`, completed SUCCESS on commit `3d6bac7bb838e8cb64bb3992765eaf3946dcfbf8`; job `real-browser` SUCCESS. This validates the pre-authorization documentation-sync commit only, on the existing Ubuntu workflow. It does not validate the newly authorized P0 implementation or Windows containment.
+- **KÝ: Co | AI-07**

@@ -847,3 +847,18 @@ Bàn giao An thực hiện static adversarial re-review theo Review Task v7. Ch�
 - Không validator/host/runtime tests, không source/test/config/contract modifications.
 - Next: Ka xử lý AN-V7-F01..03, bổ sung negative cases; validation riêng sau review và authorization.
 - [KÝ: AN | TESTER]
+
+
+## BIÊN BẢN W10 — OWNER DELEGATION / IMPLEMENTATION AUTHORIZATION
+- **Tên:** Co
+- **Chức danh:** AI-07 / End-to-End Architecture & Implementation Lead
+- **Ngày:** 22/11/2026
+- **Giờ:** 05:10 (UTC+07:00)
+- **Chủ quyết định:** Vinh — Project Owner / Final Acceptance Authority.
+- **Quyết định:** Owner ủy quyền Co tiếp tục Work 10 đến khi hoàn thiện kỹ thuật và chuẩn bị bàn giao nghiệm thu. Không cần chờ An review/ACK V8; An review không còn là gate bắt buộc. Các báo cáo review lịch sử giữ nguyên, không được sửa hoặc ghi nhận giả là đã ACK.
+- **Phạm vi ủy quyền:** Co được triển khai P0 validator, runtime/process isolation, tests; đồng bộ Sandbox với nhánh `work/10-computer-agent-mirror`; sử dụng GitHub Actions Linux/Windows làm execution host; lập đầy đủ evidence và handover.
+- **Ranh giới:** Ba hợp đồng ACTION_CONTRACT, WORKFLOW_CONTRACT, SAFETY_POLICY vẫn LOCKED/read-only. Không merge main, deploy hoặc release production khi chưa có nghiệm thu/approval riêng của Owner. Không coi CI hosted là xác minh PC vật lý của Owner.
+- **F-15:** Single-action timeout ghi ActionResult failure; whole-workflow deadline BLOCKED; nếu action có thể còn chạy hoặc side-effect chưa rõ, TaskResult BLOCKED và giữ lease đến khi cleanup/containment được xác minh. Không sửa contract.
+- **Trạng thái:** Implementation được ủy quyền; Work 10 vẫn ACTIVE — NOT RELEASED. Không có PASS nào được tuyên bố chỉ bằng quyết định này.
+- **Hồ sơ:** `06_EVIDENCE/W10_OWNER_DELEGATION_AND_IMPLEMENTATION_AUTHORIZATION_20261122_01.md`.
+- **KÝ: Co | AI-07**

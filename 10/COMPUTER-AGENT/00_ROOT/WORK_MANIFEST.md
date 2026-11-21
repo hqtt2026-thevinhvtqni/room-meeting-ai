@@ -135,3 +135,12 @@ Co prepared `06_EVIDENCE/W10_P0_ACCEPTANCE_INTEGRITY_AMENDMENT_20261122_08.md` i
 
 ## Addendum — GitHub Actions Run 26 evidence (2026-11-22)
 GitHub Actions workflow `Work 10 Real Browser E2E` completed SUCCESS for exact commit `cd423e5fe304775162b74577523457150fa3a016` on `work/10-computer-agent-mirror`. Job `real-browser` passed syntax check, offline contract tests (log: `Offline contract tests: ALL PASSED`) and real Chromium E2E (result `status: PASS`, state trace PLANNED → RUNNING → VERIFYING → PASS). Evidence: `06_EVIDENCE/W10_GITHUB_ACTIONS_CI_EVIDENCE_20261122_RUN26.md`; run ID 44953668873; artifact ID 14726835944; artifact SHA-256 `1f02e24c6e475692d758908a8125000b2c10225f792de1643d6c4ea1cddd6d99`. This certifies the GitHub branch source at that exact commit on Ubuntu 24.04 only. It does not certify divergent Sandbox source, Windows PC execution, P0 process isolation, V7/V8 validator or ROOM-HOP integration. Work 10 remains ACTIVE — NOT RELEASED.
+
+
+## Owner delegation and implementation authority — 2026-11-22
+- Owner Vinh delegated Co to continue Work 10 through implementation, verification, reconciliation and handover for acceptance; see `06_EVIDENCE/W10_OWNER_DELEGATION_AND_IMPLEMENTATION_AUTHORIZATION_20261122_01.md`.
+- An V8 review/ACK is not a prerequisite and is removed from the critical path. Historical An findings remain immutable evidence and are not represented as reviewed/closed.
+- P0 implementation is now OWNER-AUTHORIZED within this scope. This authorization does not make implementation or host tests PASS.
+- F-15 is interpreted conservatively under the existing locked Safety Policy §3: single-action timeout => ActionResult failure; workflow deadline => TaskResult BLOCKED; uncertain continuing side effects => BLOCKED with execution lease held until containment/cleanup proof; TaskResult FAIL only after known termination/failure.
+- Three contracts remain LOCKED and read-only. No main merge, production deployment or release without separate Owner acceptance.
+- Execution target: Linux + Windows GitHub Actions with retained evidence; local physical PC remains separately unverified unless directly exercised.
