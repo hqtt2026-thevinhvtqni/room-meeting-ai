@@ -110,3 +110,8 @@ No rebase, merge to main, release or branch-protection change is authorized by t
 ## Architecture ownership correction — 2026-11-22
 
 W14 is the sole product/delivery owner for the integrated execution path. W12 and W13 are absorbed internal foundations, not independent product owners or direct W118 integration targets. W118 must consume W14's approved Work Authority and ExecutionHostBridge contract. W14 source parity and full runtime E2E remain NOT VERIFIED; W118-TASK-015 remains BLOCKED. No W12/W13 source modification or parallel host/Gateway is permitted.
+
+
+## W14 dependency confirmation — 2026-11-22
+
+W118-TASK-015 is now explicitly blocked on W14's canonical Work Authority/ExecutionHostBridge source and runtime contract. W12/W13 are absorbed internal foundations only. The Task Register/test contract update is at commit `4470b555914894c4ad5a6cb98743dc6637a179a1`; exact-head validation is required before review handoff.
