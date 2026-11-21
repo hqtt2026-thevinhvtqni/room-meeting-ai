@@ -35,7 +35,7 @@ Generate a local bearer token and keep it only in this PowerShell session:
 $token = python -c "import secrets; print(secrets.token_urlsafe(32))"
 $env:COMPUTER_AGENT_API_TOKEN = $token
 Set-Clipboard -Value $token
-$env:COMPUTER_AGENT_ALLOWED_ORIGINS = "http://127.0.0.1:3000"
+$env:COMPUTER_AGENT_ALLOWED_ORIGINS = "http://127.0.0.1:3010"
 $env:COMPUTER_AGENT_WORK_ID = "10"
 $env:COMPUTER_AGENT_HOST_ALLOWED_ROOTS = (Get-Location).Path
 $env:COMPUTER_AGENT_HOST_WRITABLE_ROOTS = ""
@@ -63,16 +63,16 @@ The path allow-list is an API boundary, not an OS sandbox for code inside a pyte
 ## 5. Serve Dashboard (Terminal B)
 
 ```powershell
-python -m http.server 3000 --bind 127.0.0.1 --directory .\08_DASHBOARD
+python -m http.server 3010 --bind 127.0.0.1 --directory .\08_DASHBOARD
 ```
 
-Open exactly `http://127.0.0.1:3000`. Wait for live health to identify service `computer-agent`, Work ID `10`, version and execution lease. Paste the bearer token into the in-memory password field only. Do not save it in browser storage, URL, task payload or evidence.
+Open exactly `http://127.0.0.1:3010`. Wait for live health to identify service `computer-agent`, Work ID `10`, version and execution lease. Paste the bearer token into the in-memory password field only. Do not save it in browser storage, URL, task payload or evidence.
 
 ## 6. Validate host API operations
 
 All POST calls require both:
 - `Authorization: Bearer <token>`
-- `Origin: http://127.0.0.1:3000`
+- `Origin: http://127.0.0.1:3010`
 - `Content-Type: application/json`
 
 Example PowerShell request for a read-only directory listing:
@@ -80,7 +80,7 @@ Example PowerShell request for a read-only directory listing:
 ```powershell
 $headers = @{
   Authorization = "Bearer $token"
-  Origin = "http://127.0.0.1:3000"
+  Origin = "http://127.0.0.1:3010"
 }
 $body = @{
   operation = "list_directory"
@@ -157,3 +157,8 @@ After adding the Dashboard static contract suite, Run #69 is the current hosted 
 - V8 validator: 16 PASS on each OS.
 
 See `06_EVIDENCE/W10_CROSS_PLATFORM_CI_EVIDENCE_20261122_RUN69.md`. This is hosted CI, not Owner PC acceptance.
+
+
+## Shared Dashboard ingress boundary — 2026-11-22
+
+Port `3000` is reserved for the single shared ROOM-HOP Dashboard ingress owned by W113. This Work 10 Dashboard is a standalone local development/acceptance UI and therefore serves on loopback port `3010` during isolated testing. Work 10 must not start a competing listener on port 3000. Production Work 10 Dashboard access must be mounted/registered by W113 under its approved Work route; the route path and embedding contract are not guessed here. The Agent API remains loopback-only and its exact Origin allow-list must be configured for the approved host origin before any integration. W113 integration is NOT VERIFIED.
