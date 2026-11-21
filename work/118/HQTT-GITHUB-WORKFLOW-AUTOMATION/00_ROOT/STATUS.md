@@ -130,3 +130,13 @@
 - **Review:** PR #68 marked READY FOR REVIEW. No Xu GitHub login inferred or reviewer request sent without verified identity. Xu independent review remains PENDING.
 - **Runtime:** event-specific jobs SKIPPED; no live Core/W102/W12/W13/W70 lifecycle E2E claim. External runtime blockers remain open.
 - **Disposition:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED. No merge/release.
+
+
+## 13. W14 ownership correction — 2026-11-22 05:25 +07:00
+
+- **Finding:** W12 and W13 are COMPLETED/ABSORBED internal foundations. W14 is the sole product/delivery/release owner for integrated Work Authority, ExecutionHostBridge, GitHub Gateway/CI and full E2E. Earlier W118 references to W12/W13 as current owners are superseded by TD-118-012 v1.3.
+- **W14 evidence:** W14 manifest ACTIVE / sole product owner; W14 DOC-001 says canonical GitHub source/ref parity NOT VERIFIED and full product E2E NOT VERIFIED; W13 bridge record says live :8031 E2E NOT RUN / BLOCKED. No current W14 API/source/runtime contract is verified in this audit.
+- **W118 correction:** Task 015 now targets W14 Work Authority/ExecutionHostBridge; W12/W13 are only absorbed internal modules. Task Register, TD-118-012 v1.3, README, RA-118-002 addendum, adapter implementation note and test matrix updated. Added a regression test enforcing W14 ownership.
+- **Exact source candidate:** `bcdcc44c10f3371d9d9b17f35f412dd3e1189bf8`; PR #68 remains READY FOR REVIEW / OPEN / UNMERGED; compare remains W118-only against Main. Exact-head CI is triggered by this status update and must be read back before claiming PASS for this amendment.
+- **Blocker:** W118-TASK-015 remains BLOCKED until W14 supplies verified canonical source/ref, Work Authority/ExecutionHostBridge schema and live runtime evidence. Do not modify W12/W13 or create a parallel execution path.
+- **Disposition:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED. No merge/release.
