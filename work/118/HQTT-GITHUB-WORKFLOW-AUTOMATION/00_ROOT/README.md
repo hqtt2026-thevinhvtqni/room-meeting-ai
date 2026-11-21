@@ -43,6 +43,7 @@ Không tự ý thay đổi branch protection, secrets/tokens, quyền tổ chứ
 - [TD-118-012 — Kiến trúc hai quy trình khép kín Sandbox–GitHub](../02_DEFINE/TD-118-012_KIEN-TRUC-HAI-QUY-TRINH-KHEP-KIN-SANDBOX-GITHUB.md)
 - [W118-13/16 — Task Lifecycle & Source Binding implementation](../05_BUILD/W118-13_16_TASK-LIFECYCLE-AND-SOURCE-BINDING.md)
 - [W118-13/16 — Test Matrix](../06_TEST/W118-13_16-TASK-LIFECYCLE-SOURCE-BINDING-TEST-MATRIX.md)
+- [W118-13/17 — Issue Mirror & Webhook Inbox Test Matrix](../06_TEST/W118-13_17-ISSUE-MIRROR-WEBHOOK-INBOX-TEST-MATRIX.md)
 - [DC-118-004 — Brief phản biện kiến trúc (tham khảo, không chặn BUILD)](../02_DEFINE/DC-118-004_BRIEF-PHAN-BIEN-KIEN-TRUC-HAI-QUY-TRINH.md)
 - Nhật ký: Entry 069 trong [NHAT-KY-THI-CONG.md](../EVIDENCE/NHAT-KY-THI-CONG.md)
 
@@ -97,3 +98,11 @@ Vinh instructed Xu to proceed with building the two closed-loop Sandbox–GitHub
 - Exact-head validation at `5e131e108a7195ca1ff5ae96b3fadb119e4bc31b`: 86 tests PASS; push and PR validate jobs SUCCESS. Artifact ID `14696186741`.
 - Current push branch is an aggregate legacy branch, so source binding reports `UNBOUND_LEGACY_BRANCH` and does not infer a Task. Task-specific push runtime test is pending.
 - Agent dispatch/verified ACK, GitHub Issue mirror, Sandbox API deployment, CI-to-Task reconciliation and Work 70 projection remain NOT IMPLEMENTED / NOT VERIFIED.
+
+
+## Build progress — Issue mirror and webhook inbox foundations (2026-11-21)
+
+- `scripts/w118/github_issue_adapter.py` adds an idempotent Task Issue mirror with stable Task marker, paginated lookup, create/update and exact readback; it never assigns GitHub users or closes Issues.
+- `scripts/w118/webhook_inbox.py` verifies HMAC-SHA256, delivery UUID, event/repository allowlists and persists an idempotent pending inbox; receiving an event does not mutate Task state.
+- Exact tested source SHA `343fb526f5284ca1dcc4a55d463d58bf0c437340`: 108 tests PASS / 0.503s; push run #44877554435 SUCCESS; artifact ID `14696481659`.
+- Live GitHub Issue API call, production webhook endpoint, runtime secret/TLS and Sandbox reconciliation remain pending. Event-specific workflow jobs remain SKIPPED.
