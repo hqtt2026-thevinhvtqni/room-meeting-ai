@@ -1110,3 +1110,45 @@ PR #61 remains OPEN / UNMERGED. No deployment, Core mutation, listener restart o
 **STATUS:** DOC-ONLY HANDOFF COMMITTED / PR HEAD READBACK PASS / CI NOT RUN — MANUAL DISPATCH REQUIRED / AN RETEST PENDING / KA APPROVAL PENDING / DO NOT MERGE.
 
 **Signature:** [KÝ: VI | CODER]
+
+
+## 2026-11-21 17:05 UTC+7 — JRN-W28-031 — Ka rà soát Issue / PR / push tồn đọng toàn repository
+
+**Name:** Ka / AI-02  
+**Title:** CSA / ROOM-WIDE GitHub + Sandbox Reconciliation Owner (delegated)  
+**Date-Time:** 2026-11-21 17:05 +07:00  
+**Priority:** P1  
+**Read order:** 31  
+**Reference:** RA-W28-20261121-001 — ROOM-WIDE GITHUB ISSUE / PR / PUSH RECONCILIATION
+
+### READ / TRACE
+- Kiểm kê open Issues, open PRs, branches và recent commits của `hqtt2026-thevinhvtqni/room-meeting-ai`.
+- 22 Issues mở; 16 Issues được tạo trước 2026-11-01.
+- 30 PR mở; 10 PR không được cập nhật kể từ trước 2026-11-01.
+- Đối chiếu branch với main và với branch canonical của Work 15, 28, 33, 51, 76, 98.
+- Đọc Work28 manifest/journal, Work51 sync status, Work98 manifest/preview config, Work15 WORK.md, Work200 manifest và nội dung các Issue liên quan.
+
+### FINDINGS
+- Nhiều PR cũ đã DIVERGED với main trên 1,000 commit; không có căn cứ merge/rebase hàng loạt.
+- W28 vẫn execution gate CLOSED; MCP :8020 historical listener QUARANTINED / DO NOT USE; PR #61 có test candidate evidence nhưng PC/live E2E, An QA, Ka review còn pending.
+- W98 source transfer staged; build/E2E/live NOT VERIFIED; preview MOCK/BLOCKED.
+- W51 remains NOT DONE; sync record exists but independent QA/security/key-management gates remain.
+- W15 remains PHASE 0; PR #18 contains backend candidate but branch divergence 1/1 requires review.
+- W200 remains ACTIVE / PLAN-BUILD-VERIFY incomplete; Sandbox-only; AI cannot commit/push; live trading out of scope.
+- Core Issue #3: methods exist on main, but explicit get_transcript not-found regression coverage was not found in inspected test file.
+
+### ACTIONS EXECUTED
+- CLOSED PR #53: PR #55 explicitly replaces this prototype and preserves it as audit evidence.
+- CLOSED PR #35: current Work33 branch is 11 commits ahead, PR branch 0 ahead; no unique commits.
+- CLOSED PR #43: current Work51 branch is 72 commits ahead, PR branch 0 ahead; no unique commits.
+- CLOSED PR #7: stale Work98 branch contains generated .output/, node_modules/, .gitbundle and old workflow; current Work98 branch remains canonical source-transfer lane. No commits merged.
+- All four PR branches retained; no branch deletion, merge, rebase, force-push or main mutation.
+- All other old PRs with unique code/evidence or unresolved review gates remain open; no bulk closure.
+
+### RESULT / STATUS
+- **PASS:** inventory and branch comparisons recorded; four stale PRs safely closed and readback status verified by GitHub mutation responses.
+- **BLOCKED / PENDING:** remaining Issue and PR gates require owner review, exact-head CI, independent QA/security review or runtime evidence.
+- **NO MERGE / NO RELEASE:** preserved.
+- Work 28 status unchanged: ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; execution gate CLOSED.
+
+**Signature:** Ka / AI-02 — CSA / ROOM-WIDE GitHub + Sandbox Reconciliation Owner.
