@@ -303,3 +303,9 @@ Run #105 and #106 completed SUCCESS on Ubuntu 24.04 and Windows Server 2022. Run
 
 After adding Run #104 and POSIX remediation evidence to both sides, inventory: Sandbox 161 files; GitHub 68 files; shared 68; Sandbox-only 93; GitHub-only 0; one Sandbox-only `.github/` directory. All 68 shared paths exist; accepted source/test/architecture/config files remain exact-match. 93 Sandbox-only paths retain explicit dispositions in `06_EVIDENCE/W10_FULL_PATH_INVENTORY_DISPOSITION_20261122.md`.
 
+
+
+## W10-OWNER-DELEGATION-CURRENT-GATE-20261122-01 — 2026-11-22 06:39 (UTC+07:00)
+
+Owner's direct delegation (22/11/2026 06:10 UTC+07) supersedes the prior V8 review wait state: Co is authorized to continue Work 10 implementation, source/test changes, verification on available hosts, Sandbox/GitHub sync and handover without waiting for An review. An V8 review task is marked WAIVED BY OWNER; no An ACK/review/approval is claimed. P0 implementation may proceed under this delegation but must remain within the three LOCKED contracts. No contract change or release/merge is implied. F-15 TaskResult/Workflow timeout mapping remains OWNER DECISION REQUIRED; the earlier Biên bản wording that attributed a specific F-15 decision to Owner has been corrected in an append-only clarification. Current remaining gates: physical Windows 10, production V8 HMAC key/pins, Linux cgroup-v2, W24/W112/W14/W113 integration disposition and final Owner acceptance.
+
