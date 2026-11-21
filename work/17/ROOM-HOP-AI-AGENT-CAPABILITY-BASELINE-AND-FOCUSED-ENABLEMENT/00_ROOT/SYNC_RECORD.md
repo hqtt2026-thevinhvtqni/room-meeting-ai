@@ -941,3 +941,13 @@
 - Candidate covers execution grant only; no W70 Assignment/dispatch/attempt/provider receipt/recipient ACK binding. GAP-11 candidate and GAP-01 dispatch/ACK remain separate.
 - GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. Entry 092 added.
 - Next: keep GAP-11 execution grant candidate separate from GAP-01 Assignment delivery/ACK; reconcile current source baselines before any authorized integration.
+
+
+## Sync Period 0080 — Work17 blocker and decision map
+
+- Entry 093 separates three blockers: (1) GAP-11 current-main Core execution-authority route/doc/test mismatch and unproven PR #48 candidate; (2) GAP-01 missing proven Assignment→Dispatch/Attempt→Provider Receipt→recipient-authenticated ACK→Core read-back chain; (3) PC/external Core deployment/runtime unknown.
+- Core remains the single intended authority boundary, built/decided by Vinh + Xu; W37 is its evidence workspace, not Core 2. W70 owns Assignment lifecycle; Core identity/authority/state; W52 provider orchestration; W14 Host; W33 durable evidence; W112 compatibility mapping.
+- No parallel dispatcher/registry/queue/ACK ledger/evidence store. No PR #48 merge/cherry-pick; it remains DRAFT/OPEN/NOT MERGEABLE and highly diverged.
+- Current-main source mismatch is not a live exploit finding; runtime unknown does not mean Core absent/stopped. No unverified endpoint probe.
+- E2 provider receipt and E3 recipient-bound ACK NOT PROVEN; GAP-01/GAP-11 OPEN/P0; protected execution DENY / NOT RELEASED. READ/TRACE/ANALYZE ONLY.
+- Entry 093 committed to GitHub main. Sandbox read-back is currently truncated/empty and exact parity is BLOCKED; no Sandbox overwrite was attempted.
