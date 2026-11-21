@@ -126,3 +126,11 @@ Vinh instructed Xu to proceed with building the two closed-loop Sandbox–GitHub
 - Task status and Assignment status are independent state machines. GitHub Issue/Branch/Commit/CI records are mirrors/evidence, not the Task status authority.
 - W112 DOC-001 is used as a compatibility reference only while its baseline remains DRAFT_NOT_APPROVED.
 - Canonical operational authority is the Sandbox Task Register. The GitHub `TASK_REGISTER.json` is its versioned mirror; SQLite is a runtime transaction/event adapter, not a competing register.
+
+
+## Latest Task Register / lifecycle verification (2026-11-21)
+
+- W118 Task Register now follows W70 DOC-056 §9 / DOC-093 model; Task and Assignment status are separate. W112 DOC-001 is only a DRAFT_NOT_APPROVED compatibility reference.
+- Canonical operational Task Register: Sandbox `04_PLAN/TASK_REGISTER.json`; GitHub path is the versioned mirror. SQLite is the runtime transaction/event adapter, not a second canonical register.
+- Exact tested branch head `45b2cda82a99589afe33f2838656c5bbae8069f5`: 127 tests PASS / 0.257s; push run #44879719166 SUCCESS; artifact 14697318273.
+- No full runtime E2E, Agent identity/dispatch, production webhook endpoint, live Issue API, task-specific push or Work 70 projection has been verified.
