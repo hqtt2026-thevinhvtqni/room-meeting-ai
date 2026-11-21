@@ -1215,3 +1215,25 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - **Correction:** Updated E2E cleanup to call `runtime.close_adapter()` and `runtime.shutdown_adapter_worker()`, preserving Playwright thread affinity; if a timed-out call remains active, wait for it before orderly close. Next CI will verify.
 - **Status:** Cross-platform offline/safety/HTTP suites PASS. Browser E2E remains BLOCKED until the cleanup correction is rerun. P0 OS process containment is still not implemented at this point.
 - **KÝ: Co | AI-07**
+
+
+## W10-CI-RUN39-20261122-01 — 2026-11-22 05:22 (UTC+07:00)
+- **Name:** Co | **Title:** AI-07 / End-to-End Architecture & Implementation Lead
+- **Evidence:** GitHub Actions run #39, ID `44956259543`, tested commit `d4c75478a2f5ce62b483d079d6049096d03ffdaa`, both `cross-platform (windows-2022)` and `cross-platform (ubuntu-24.04)` SUCCESS.
+- **Windows Server 2022 / Python 3.12.10:** offline 60 PASS; safety 45 PASS; HTTP 39 PASS; total 144/144; real Chromium E2E PASS, state trace PLANNED→RUNNING→VERIFYING→PASS, 13 steps, 14 evidence entries. Artifact ID `14727394221`, ZIP SHA-256 `4d40f0dd3de4bc05bdc860b6192327cfed63594912b636bb4168240c086915c9`.
+- **Ubuntu 24.04 / Python 3.12.16:** offline 60 PASS; safety 41 PASS + 1 Windows-only skip; HTTP 39 PASS; total 140 PASS / 0 FAIL / 1 SKIP; real Chromium E2E PASS, 13 steps, 14 evidence entries. Artifact ID `14728010540`, ZIP SHA-256 `0c47e7717268263a671d60d047d5f984f1d1c2fe77af1f59e8dc4a8e4cb965fd`.
+- Detailed file hashes and limitations: `06_EVIDENCE/W10_CROSS_PLATFORM_CI_EVIDENCE_20261122_RUN39.md`.
+- **Limitations:** this run does not test Job Object/cgroup process-tree containment, durable owner fencing, V8 semantic validator, user's physical Windows 10 PC, or integrated ROOM-HOP. The offline JSON was generated before E2E and therefore still says host E2E NOT RUN; next workflow revision will reorder/finalize evidence.
+- **Next:** integrate Windows Job Object containment into the execution path; add dedicated OS process-tree tests; keep Linux cgroup-v2 status distinct from limited process-group fallback; fix CI evidence ordering.
+- **Status:** baseline CI PASS on both hosted OSes; P0 remains BLOCKED until process containment and validator gates pass. Work 10 ACTIVE — NOT RELEASED.
+- **KÝ: Co | AI-07**
+
+
+## W10-P0-PROCESS-CONTAINMENT-PRIMITIVES-20261122-01 — 2026-11-22 05:22 (UTC+07:00)
+- **Name:** Co | **Title:** AI-07 / End-to-End Architecture & Implementation Lead
+- **Implementation started under Owner delegation.** Added `04_CODE/process_supervisor.py`: Windows named Job Object with `JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE`, process assignment, active-process query and termination; POSIX process-group termination is explicitly marked LIMITED and not equivalent to cgroup v2.
+- Added `05_TEST/test_process_containment.py`: Windows worker+grandchild Job Object containment test; POSIX worker+grandchild process-group test. Added suite to `run_all_tests.py`.
+- This is a containment primitive + isolated test only; it is NOT yet wired into `agent_api.py`/production execution path, has no durable owner-fencing journal, and is not P0 PASS. Windows Job Object test must execute on Windows CI; Linux profile remains cgroup-v2 BLOCKED until an exact writable cgroup fixture exists.
+- Updated evidence generation to read the real-browser result status instead of treating mere file presence as PASS. Next workflow commit will run E2E before the offline evidence generator so the generated manifest can report browser status correctly.
+- Three locked contracts remain unchanged. No merge/main/release.
+- **KÝ: Co | AI-07**

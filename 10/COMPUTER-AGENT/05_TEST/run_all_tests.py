@@ -26,6 +26,7 @@ SUITES = [
     ("offline_contract_p0_p5", "test_p0_p5.py"),
     ("safety_policy_negative", "test_safety_policy.py"),
     ("http_api", "test_http.py"),
+    ("process_containment", "test_process_containment.py"),
 ]
 HASH_GLOBS = [
     "04_CODE/*.py", "04_CODE/*.md", "05_TEST/*.py", "05_TEST/*.html",
@@ -100,7 +101,15 @@ def main() -> int:
 
     host_result = evidence_dir / "real-browser-e2e-result.json"
     host_shot = evidence_dir / "real-browser-e2e.png"
-    host_e2e = "EVIDENCE PRESENT" if host_result.exists() and host_shot.exists() else "NOT RUN"
+    host_e2e = "NOT RUN"
+    if host_result.exists() and host_shot.exists():
+        try:
+            host_payload = json.loads(host_result.read_text(encoding="utf-8"))
+            host_e2e = host_payload.get("status", "INVALID")
+            if host_e2e not in ("PASS", "FAIL", "BLOCKED"):
+                host_e2e = "INVALID"
+        except (OSError, json.JSONDecodeError):
+            host_e2e = "INVALID"
 
     payload = {
         "work_id": "10",
@@ -128,7 +137,7 @@ def main() -> int:
             "checks_skipped": total_skipped,
             "overall": "PASS" if suites_ok and total_fail == 0 else "FAIL",
             "host_chromium_e2e": host_e2e,
-            "release_gate": "NOT READY (host Chromium E2E evidence still required)",
+            "release_gate": "NOT READY (P0 process containment and integrated ROOM-HOP E2E remain open)",
         },
         "suites": results,
         "source_hashes_sha256": hash_sources(),

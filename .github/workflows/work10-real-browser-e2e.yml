@@ -57,13 +57,14 @@ jobs:
         run: |
           python -m compileall -q 10/COMPUTER-AGENT/04_CODE 10/COMPUTER-AGENT/05_TEST
 
-      - name: Offline, safety and HTTP regression suites
-        run: |
-          python 10/COMPUTER-AGENT/05_TEST/run_all_tests.py
-
       - name: Real Chromium E2E
         run: |
           python 10/COMPUTER-AGENT/05_TEST/e2e_real_browser.py
+
+      - name: Offline, safety, HTTP and containment regression suites
+        if: always()
+        run: |
+          python 10/COMPUTER-AGENT/05_TEST/run_all_tests.py
 
       - name: Upload execution evidence
         if: always()
