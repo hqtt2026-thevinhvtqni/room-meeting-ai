@@ -75,3 +75,12 @@ Reason: the latest Work 10 P0 acceptance amendment dated 2026-11-19 explicitly r
 
 ## Correction — independent review status (2026-11-22 04:49 UTC+07:00)
 The original reconciliation text said An's independent review was pending. That statement reflected the V7 amendment's next-step note but was stale: the Sandbox already contains `10_AI_DEBUG_HANDOFF/03_VALIDATION/AN_P0_DESIGN_REVIEW_RESULT_20261119_07.md`, dated 2026-11-19. An completed the static review and left AN-V7-F01..F04 OPEN/BLOCKED; AN-V6-F01..F03 are not ready to close. P0 implementation remains BLOCKED / NOT AUTHORIZED. The seven-path exact-match sync result and source/test divergence findings above are unchanged.
+
+
+## Final snapshot after follow-on V8 and CI records — 2026-11-22 04:54 (UTC+07:00)
+- Current inventory: Sandbox 155 entries; GitHub branch 44 entries; 43 shared paths; 112 Sandbox-only paths; 1 GitHub-only path (`05_TEST/HOST_E2E_RUNBOOK.md`). Counts include directories and files.
+- In addition to the first seven governance/evidence files, the reconciliation report, V8 design amendment, An V8 review task and GitHub Actions CI evidence were also created on both sides and read back as exact UTF-8 matches. WORK_MANIFEST and construction journal updates were also read back as exact matches.
+- The five production source/test files remain divergent: `agent_api.py`, `agent_runtime.py`, `models.py`, `browser_adapter.py`, `test_p0_p5.py`; `test_http.py` remains Sandbox-only. No source/test promotion occurred.
+- GitHub Actions run #29 (ID 44953846300) passed syntax, offline contract tests and real Chromium E2E on commit `afa7c084104e336b63cbd1cd37dd4bfe21a4a23b`; its scope is Ubuntu 24.04 GitHub runner code only. The subsequent branch commit `e7e3397c1034f4a3225e6dff07b4be3f387b4647` changed the journal only, not production code.
+- An's V7 review is complete and findings remain open. V8 design proposal and An review task are mirrored; task acknowledgement/review is still pending.
+- Disposition unchanged: documentation/evidence mirror materially improved; full Sandbox/GitHub parity remains PARTIAL / NOT COMPLETE; G0 and P0 remain BLOCKED; Work 10 ACTIVE — NOT RELEASED.
