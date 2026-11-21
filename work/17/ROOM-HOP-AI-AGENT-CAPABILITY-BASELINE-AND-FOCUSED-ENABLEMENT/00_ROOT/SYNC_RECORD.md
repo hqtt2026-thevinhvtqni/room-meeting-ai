@@ -961,3 +961,12 @@
 - Do not promote the prototype to a parallel registry/store or dispatcher. Preserve W70/Core/W52/W14/W33/W112 ownership boundaries.
 - GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. READ/TRACE/ANALYZE ONLY.
 - Sandbox parity remains BLOCKED; no Sandbox overwrite/append attempted. GitHub main updated and read-back checked.
+
+
+## Sync Period 0082 — DOC-044 / DOC-065 contract layering
+
+- Entry 095 confirms DOC-044 is an ACTIVE assignment template with scope/source/permission/deliverable/acceptance/test/closure fields, not a provider transport receipt or recipient ACK schema.
+- DOC-065 proposes dispatch_id/attempt_id/target/session/receipt/identity proof/ACK/event fields but remains DRAFT / NOT IMPLEMENTATION APPROVED. DOC-066 says DOC-065 extends DOC-044 and does not replace it until migration approval; implementation/tests remain unauthorized/not run. DOC-072 remains design-only; Core Assignment API/persistence NOT VERIFIED.
+- This is contract layering, not permission to alter DOC-044 or create another registry. Runtime integration remains missing/unverified.
+- GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. READ/TRACE/ANALYZE ONLY.
+- Sandbox parity remains BLOCKED; no Sandbox write attempted. GitHub main read-back required.
