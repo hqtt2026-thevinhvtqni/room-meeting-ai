@@ -1012,3 +1012,15 @@
 - GAP-11 OPEN / NOT ACCEPTED; GAP-01 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. PC runtime checks deferred until Vinh has PC.
 - Journal Entry 098 committed: `595a55fd3623d4d70864b28780feb385958c8ffb`. GitHub main is canonical for this evidence round; Sandbox parity remains BLOCKED and no Sandbox write was attempted.
 - Next: inspect candidate grant issue/validate/run-record route contracts and exact PR-head tests, read-only.
+
+
+## Sync Period 0086 — W13-local Core-grant bridge correction and E2E test definition (2026-11-21T17:38:00+07:00)
+
+- Entry 099 corrects Entry 098: PR #48 includes a W13-local grant-aware WEE bridge and W13-local Core→WEE→W12 Host integration test under `13/EXECUTION-HOST-INFRASTRUCTURE/`.
+- W13 bridge obtains a Work/purpose grant using service credential, then sends the grant token and grant_id to the W13 Host; Host validates online Core grant and source snapshot before invoking W12ExecutionAdapter.
+- W13 E2E test constructs a real ExecutionAuthority and Core FastAPI routes through in-process TestClient, starts a local Host HTTP server, invokes W13 bridge, runs pytest in temp workspace, and checks evidence + RUN_RECORDED. Test definition exists but was NOT RUN; Core is not the deployed :8000 process.
+- Root-level generic bridge remains legacy and unchanged. W13-local package is a separate code tree; no inspected production launcher/runtime selection/deployment manifest proves it is active on PC. Candidate runtime wiring remains NOT VERIFIED.
+- Direct Core `record_run` SHA mismatch remains a source/test defect; W13 Host flow recomputes and submits the verified hash, so the direct API defect is not shown reachable through this Host route.
+- GAP-11 OPEN / NOT ACCEPTED; GAP-01 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. No code/test/runtime/credential/dispatch/deployment operation performed.
+- Journal Entry 099 committed: `7aa1f9384502c772e5440a5a934d339dad2474db`. GitHub main read-back required; Sandbox parity remains BLOCKED, no Sandbox write.
+- Next: inspect W13 package selection/launcher and candidate grant idempotency/revocation/Assignment-scope guarantees, read-only.
