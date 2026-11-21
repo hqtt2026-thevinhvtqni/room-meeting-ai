@@ -371,7 +371,11 @@ class TaskRegistry:
                 else:
                     _non_empty(details_dict[field], f"details.{field}")
 
-            if to_state in {"ACKED", "STARTED", "IN_PROGRESS", "COMPLETED"}:
+            if actor_role == "owner" and actor_principal != current.get("owner_principal"):
+                raise TransitionDenied("owner principal does not match Task owner")
+            if actor_role == "executor" and to_state in {
+                "ACKED", "STARTED", "IN_PROGRESS", "COMPLETED", "BLOCKED"
+            }:
                 if actor_principal != current.get("assigned_principal"):
                     raise TransitionDenied("executor principal does not match active assignment")
             if to_state == "ACKED" and details_dict["dispatch_id"] != current.get("dispatch_id"):
