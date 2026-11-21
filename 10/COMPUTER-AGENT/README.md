@@ -1,94 +1,68 @@
 # Work 10 — COMPUTER-AGENT
 
-**Work status: ACTIVE — NOT RELEASED.** This directory is the Work 10 Sandbox mirror and validation workspace, not the canonical release source.
+**Status: ACTIVE — NOT RELEASED.** Owner Vinh has delegated implementation, verification, Sandbox/GitHub reconciliation and handover preparation to Co. No merge to `main`, deployment or production release is authorized.
 
-## Authority and source boundary
+## Authority and source
 
-- Canonical repository: `hqtt2026-thevinhvtqni/room-meeting-ai`.
-- Canonical branch: `work/10-computer-agent-mirror`.
-- Protected baseline: `0cad66c59560450d68b06e76a659a6c44104e811`.
-- Sandbox Work ID: `10`, root: `COMPUTER-AGENT/`.
-- Reconcile GitHub and Sandbox file-by-file under `00_ROOT/SYNC_POLICY.md` before any synchronization. Do not overwrite divergent files or locked contracts.
-- `ACTION_CONTRACT.md`, `WORKFLOW_CONTRACT.md`, and `SAFETY_POLICY.md` remain LOCKED.
-- No Sandbox-only change is canonical or releasable until exact-source parity, independent review, tests, and owner approval are recorded.
+- Repository: `hqtt2026-thevinhvtqni/room-meeting-ai`
+- Working/canonical Work 10 branch: `work/10-computer-agent-mirror`
+- Sandbox Work ID: `10`; root: `COMPUTER-AGENT/`
+- Three browser contracts remain LOCKED and unchanged: `ACTION_CONTRACT.md`, `WORKFLOW_CONTRACT.md`, `SAFETY_POLICY.md`.
+- PC Host Capability Contract is a separate additive API contract; it does not add browser Action types or alter the three LOCKED contracts.
 
-## Current implementation status (2026-11-17)
+## Delivered implementation
 
-- Runtime verification semantics: omitted verification invokes Workflow Contract §3.4 minimum fresh-observation check; explicit empty/malformed verification is BLOCKED.
-- Screenshot/download evidence paths: source-level containment and filename controls added; Windows path execution remains NOT RUN.
-- HTTP API: v1.3.0 Sandbox implementation adds bearer authentication, exact Origin allow-list, restricted preflight, JSON/body-size validation, and a process-wide execution lease. A timed-out worker retains the lease and adapter cleanup is deferred until it exits.
-- Important residual risk: the timed-out worker is still not forcibly cancelled. The lease prevents a second HTTP workflow from dispatching and prevents premature adapter close. Runtime now owns one dedicated daemon thread for adapter start/actions/verification/close, addressing the Playwright thread-affinity design; this is not yet host-verified. A permanently stuck worker remains unresolved. Process isolation/cooperative cancellation and host validation are still required.
-- Dashboard: token is entered by the operator, kept in page memory only, and sent in the Authorization header. Serve it through the exact allow-listed HTTP origin; do not open as `file://`.
-- Current Python/HTTP tests and Chromium E2E: NOT RUN against this Sandbox revision. Test helpers were hardened so a returned boolean `False` is counted as FAIL; historical 101-check/7-check results do not certify current files.
-- Desktop, Workforce orchestration, multi-agent coordination, and ROOM-HOP Transcript integration: NOT VERIFIED.
-- Production/release authorization: BLOCKED_AUTH.
+- Browser automation API: `POST /agent/execute`; browser adapter and observable workflow verification.
+- HTTP security: bearer token, exact Origin allow-list, JSON-only requests, 1 MiB body limit, restricted preflight, loopback binding by default.
+- Process isolation: `ProcessSupervisor` launches a separate inert `execution_worker.py`; Windows uses Job Object kill-on-close and atomic process assignment before releasing the start gate. The parent enforces a deadline, validates response correlation and confirms containment empty before releasing the host lease.
+- PC host API: `POST /agent/host/execute` with `list_directory`, `read_file`, `write_file`, `run_pytest`, `run_powershell_script` and `validate_acceptance_manifest`.
+- Host operations use explicit path/script roots. Writes and PowerShell are disabled by default. There is no generic shell or inline PowerShell command.
+- V8 acceptance validator: JSON Schema + semantic category policy + expected/observed tuple comparison + runner/source/hash checks + HMAC-signed attestation. Missing or mismatched trust pins/key fail closed.
+- Operational Dashboard: live health and browser workflow UI. Static Dashboard contract test is included in the full suite.
 
-## Local validation (on an approved host)
+## Verified hosted evidence
 
-From the Work 10 root, use a dedicated virtual environment and install `requirements.txt`.
+- Run #49: hosted Windows Server 2022 and Ubuntu 24.04 host-capability API acceptance; Windows PowerShell included. See `06_EVIDENCE/W10_HOST_CAPABILITIES_CI_EVIDENCE_20261122_RUN49.md`.
+- Run #52: Windows 189 PASS / 0 FAIL / 0 SKIP; Ubuntu 183 PASS / 0 FAIL / 2 expected SKIP; both ran real Chromium E2E and 16 V8 validator tests. See `06_EVIDENCE/W10_CROSS_PLATFORM_CI_EVIDENCE_20261122_RUN52.md`.
+- Run #53: same cross-platform suite after acceptance-validator category/policy hardening; both OS jobs PASS. See `06_EVIDENCE/W10_CROSS_PLATFORM_CI_EVIDENCE_20261122_RUN53.md`.
+- The exact run, commit, job IDs, artifact IDs and SHA-256 digests are retained in those evidence files and in the GitHub Actions run history.
+
+## Remaining acceptance gates
+
+| Gate | Current state | What is still needed |
+|---|---|---|
+| Hosted browser/API/ProcessSupervisor | PASS | Retain evidence; no further claim beyond tested commits |
+| Windows Job Object | PASS on hosted Windows Server 2022 | Physical Windows 10 PC verification |
+| Host file operations / pytest / PowerShell | PASS on hosted runners | Local PC roots, ACL and service-account review |
+| V8 semantic validator | PASS unit/HTTP suite on hosted runners | Provision production key and pins; verify locally |
+| Linux containment | LIMITED / NOT RELEASE-ACCEPTED | Implement and test cgroup-v2 production profile |
+| Physical Windows 10 PC | NOT RUN | Local install, startup, ACL, Chrome profile, PowerShell and repo-root tests |
+| Dashboard / ROOM-HOP PC Bridge integration | OPEN | End-to-end integrated ROOM-HOP evidence |
+| Full Sandbox↔GitHub parity | RECONCILIATION IN PROGRESS | Exact inventory and content/hash readback for every accepted file |
+| Release | NOT AUTHORIZED | Owner's final acceptance and separate release decision |
+
+Hosted Windows Server 2022 is not the Owner's physical PC. Linux process-group containment is explicitly limited and is not cgroup-v2. CI uses a test-only HMAC key; it is not production trust material. Path allow-lists constrain direct API selection but are not an OS sandbox for approved pytest/PowerShell code; configure only trusted roots/scripts and use a low-privilege service account.
+
+## Local setup and validation
+
+Use `05_TEST/HOST_E2E_RUNBOOK.md` for the full Windows operator procedure. From the Work 10 root:
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
 python 05_TEST/run_all_tests.py
+python 05_TEST/e2e_real_browser.py
 ```
 
-The test runner writes `06_EVIDENCE/offline-test-evidence.json` with suite output and source hashes. Do not infer test success from static read-back.
+The suite writes logs and `06_EVIDENCE/offline-test-evidence.json`. A hosted CI result does not replace the local Windows 10 run. Keep API tokens and production HMAC keys out of source control, URLs, chat, screenshots and evidence logs.
 
-## Local API and Dashboard
+## Handover and release
 
-Follow `04_CODE/README.md` and `08_DASHBOARD/README.md`. Generate a fresh local token on the operator host, keep it out of source/evidence/chat, bind the API to loopback, and serve the Dashboard from its exact configured Origin.
+- Architecture and host API: `03_ARCHITECTURE/PC_HOST_CAPABILITY_CONTRACT.md`.
+- Current implementation map: `04_CODE/README.md`.
+- Tests and host procedure: `05_TEST/README.md`, `05_TEST/TEST_PLAN.md`, `05_TEST/HOST_E2E_RUNBOOK.md`.
+- Evidence: `06_EVIDENCE/`.
+- Handover candidate: `07_RELEASE/W10_HANDOVER_PACKAGE_20261122.md` (to be completed after parity and remaining host/integration gates).
 
-## Release gates
-
-See `00_ROOT/WORK_MANIFEST.md`, `05_TEST/TEST_PLAN.md`, and `07_RELEASE/README.md`. G0 source parity, G1 runtime lifecycle, G2 current HTTP controls, G3 Windows artifact boundary, G4 exact-source browser E2E, G5–G10 product/integration evidence, and G11 release authorization are not accepted.
-
-**No commit, push, PR, merge, tag, production visibility change, or release was performed.**
-
-
-## Current execution status — 2026-11-22 (supersedes older process-isolation paragraphs above)
-
-The runtime no longer relies only on a thread-owned adapter worker. Each HTTP workflow is delegated to a separate `execution_worker.py` process through `ProcessSupervisor`. On Windows, the worker is created atomically inside a named Job Object using `PROC_THREAD_ATTRIBUTE_JOB_LIST`; KILL_ON_JOB_CLOSE covers worker/browser descendants. The API owner holds an exclusive host lease, persists owner generation and per-run process journals, enforces a parent deadline, and verifies the containment is empty before releasing request admission. If timeout or uncertain cleanup requires forced termination, the TaskResult is BLOCKED, never PASS.
-
-**Verified milestone:** GitHub Actions #45 passed on hosted Windows Server 2022 and Ubuntu 24.04. Real Chromium E2E was submitted through the HTTP API and process supervisor on both platforms. Windows: 144/144 checks; Linux: 140 PASS + 1 Windows-only SKIP. See `06_EVIDENCE/W10_API_PROCESS_E2E_EVIDENCE_20261122_RUN45.md`.
-
-**Important boundaries:** Linux process-group containment is a LIMITED test profile, not cgroup-v2. The hosted Windows runner is not the Owner's physical Windows 10 PC. The V8 semantic acceptance validator, local PC PowerShell/ACL/Chrome profile validation, file-system/PowerShell/pytest host capability API, ROOM-HOP integration and full source parity remain open. The current LOCKED Action Contract is browser-oriented; no unsupported system-command capability is implied.
-
-API version: **1.4.0**. Work 10 remains ACTIVE — NOT RELEASED. No merge to main, deployment or production release is authorized.
-
-
-## PC host capability API — version 1.5.0 (implementation in progress)
-
-A separate endpoint is being added without changing the LOCKED browser Action Contract:
-
-- POST /agent/host/execute — list_directory, read_file, write_file, run_pytest, run_powershell_script, validate_acceptance_manifest.
-- All host operations run inside the same ProcessSupervisor worker containment as browser workflows.
-- Allowed roots are configured with COMPUTER_AGENT_HOST_ALLOWED_ROOTS.
-- Writes are disabled unless COMPUTER_AGENT_HOST_WRITABLE_ROOTS is explicitly configured.
-- PowerShell is disabled unless COMPUTER_AGENT_HOST_POWERSHELL_ROOTS is explicitly configured; only existing .ps1 files are run through -File.
-- Pytest uses the fixed command sys.executable -m pytest -q and allowlisted test paths.
-- No arbitrary shell, cmd.exe /c or powershell -Command endpoint exists.
-
-This capability API is not yet release-accepted. Its unit/HTTP/Windows PowerShell tests and physical Windows 10 PC validation must pass before it is marked complete.
-
-
-## PC host capability API — hosted CI acceptance update (2026-11-22)
-
-API version 1.5.0 now exposes the separate POST /agent/host/execute contract. GitHub Actions #49 passed on both hosted OSes:
-- Windows Server 2022: 170 PASS / 0 FAIL / 0 SKIP, including allowlisted PowerShell .ps1 execution.
-- Ubuntu 24.04: 164 PASS / 0 FAIL / 2 expected SKIP, including file operations and pytest; PowerShell correctly unavailable.
-- Both also passed API-integrated real Chromium E2E and process containment.
-
-Evidence: 06_EVIDENCE/W10_HOST_CAPABILITIES_CI_EVIDENCE_20261122_RUN49.md.
-
-This does not yet prove the Owner's physical Windows 10 PC. Configure COMPUTER_AGENT_HOST_ALLOWED_ROOTS explicitly; write_file remains disabled unless COMPUTER_AGENT_HOST_WRITABLE_ROOTS is set; PowerShell remains disabled unless COMPUTER_AGENT_HOST_POWERSHELL_ROOTS is set. Approved pytest tests and PowerShell scripts execute with the service account's privileges, so only trusted roots/scripts should be configured. There is no generic shell endpoint.
-
-Remaining release gates: physical Windows 10 validation, V8 semantic acceptance validator, Linux cgroup-v2, ROOM-HOP PC Bridge/Dashboard integration and full Sandbox↔GitHub source parity. Work 10 remains ACTIVE — NOT RELEASED.
-
-
-### V8 acceptance validator (implementation in progress)
-
-The same host endpoint now includes validate_acceptance_manifest. It validates the V8 manifest schema, recomputes expected/observed state equality, applies the pinned category/outcome policy, rejects UNKNOWN lease/owner states for PASS, verifies fixture/artifact hashes and trusted runner/source identity, and writes a separate HMAC-signed attestation. It does not trust caller-supplied consistency flags.
-
-Production validation is fail-closed until these host settings are provisioned: COMPUTER_AGENT_VALIDATOR_SHA256, COMPUTER_AGENT_VALIDATOR_SCHEMA_SHA256, COMPUTER_AGENT_VALIDATOR_POLICY_SHA256, COMPUTER_AGENT_VALIDATOR_HMAC_KEY (secret, at least 32 bytes), COMPUTER_AGENT_VALIDATOR_KEY_ID and COMPUTER_AGENT_SOURCE_COMMIT. CI uses a test-only key and does not prove production key provisioning. The V8 validator suite has been added but is awaiting the next CI run.
+**No false PASS. No physical-PC claim without physical-PC evidence. No main merge, deployment or release without Owner approval.**
