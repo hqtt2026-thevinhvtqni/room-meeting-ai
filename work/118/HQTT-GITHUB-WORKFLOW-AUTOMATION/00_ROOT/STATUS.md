@@ -1,3 +1,21 @@
+<!-- W118_SCOPE_RECONCILIATION_20261121 -->
+# CURRENT SCOPE RECONCILIATION — 2026-11-21 10:15 +07:00
+
+- **Name:** Ka / AI-02
+- **Title:** CSA / W118 Build Owner (delegated)
+- **Date-Time:** 2026-11-21 10:15 +07:00
+- **Priority / Read order:** P0 / 12
+- **Canonical assessment:** [RA-118-001](../04_PLAN/RA-118-001_BANG-DOI-CHIEU-PHAM-VI-VA-KE-HOACH-HOAN-THIEN.md).
+- **Product status:** W118 ACTIVE — NOT ACCEPTED — NOT RELEASED. Auto E2E contract automation is partial; full HQTT Work Management lifecycle is not complete.
+- **Verified intake snapshot:** PR #67 head b694abe80d2c9f86871f7303543dd234da2bd205; Run #44860083377 validate SUCCESS; five event-specific jobs SKIPPED; artifact ID 14689611980; branch 278 ahead / 84 behind Main — DIVERGED.
+- **Gaps:** Issue schema/classification; capability-based AI assignment and dispatch; separate ACK/STARTED/IN_PROGRESS/COMPLETED/BLOCKED tracking; Issue–Branch–Commit–Push binding; CI PASS/FAIL feedback to task lifecycle; Work 70 Evidence Register/Dashboard projection.
+- **Proposal:** W118-13..W118-19 in RA-118-001 — PROPOSED / PENDING XU REVIEW; no new Work.
+- **Governance:** no inferred executor identities; GitHub Assignee is not ACK; no Work 70 schema change; no rebase, merge or release.
+- **CI boundary:** the exact-head run validates contract tests only. Runtime E2E is NOT VERIFIED.
+- **Current exact docs HEAD and follow-up CI:** record in PR #67 after this status commit; do not use older historical snapshots as current.
+
+---
+
 # STATUS — WORK 118 (AUTO E2E BUILD v2)
 
 > **CANONICAL REMEDIATION SNAPSHOT — 2026-11-21 08:38:39 +07:00**
