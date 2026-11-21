@@ -7,7 +7,7 @@
   "authority": "Vinh",
   "source_of_truth": "Sandbox Work 118 / HQTT-GITHUB-WORKFLOW-AUTOMATION/04_PLAN/TASK_REGISTER.json",
   "github_mirror": "https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/blob/work/118-auto-e2e-v2-clean/work/118/HQTT-GITHUB-WORKFLOW-AUTOMATION/04_PLAN/TASK_REGISTER.json",
-  "model": "Work-specific adaptation of Work 70 DOC-093, aligned with W112 DOC-001 as a DRAFT_NOT_APPROVED compatibility reference.",
+  "model": "W118 Work-level planning Task Register modeled on W70 DOC-093. It is not a runtime Core Task/Assignment/Event database; Core :8000 is the sole runtime Task/Assignment/Event authority.",
   "status_model": [
     "PLANNED",
     "READY",
@@ -17,26 +17,14 @@
     "DONE",
     "CANCELLED"
   ],
-  "assignment_status_model": [
-    "UNASSIGNED",
-    "PROPOSED",
-    "DISPATCHED",
-    "ACKNOWLEDGED",
-    "IN_PROGRESS",
-    "SUBMITTED",
-    "ACCEPTED",
-    "REJECTED",
-    "BLOCKED",
-    "CANCELLED"
-  ],
   "rules": [
-    "One canonical Task Register for W118; Sandbox is its operational authority.",
-    "Task status and Assignment status are separate state machines.",
-    "GitHub Issue is a mirror, not Task authority; GitHub Assignee is not AI ACK.",
-    "CI PASS/FAIL is evidence only; it cannot set Task DONE or Assignment ACCEPTED.",
-    "Every state change and runtime observation is appended to the canonical Work Journal.",
-    "Never mark DONE without deliverable, evidence and Owner acceptance.",
-    "SQLite runtime store is an operational transaction/event adapter; it is not a second canonical Task Register."
+    "One canonical Work-level planning Task Register for W118; Sandbox is its operational project-planning authority.",
+    "This register tracks W118 implementation tasks and Work Package progress; it is not the runtime Core Task/Assignment/Event store.",
+    "Core :8000 is the sole canonical runtime Task/Assignment/Event authority; W102 owns Agent Loop policy; W12 owns execution/GitHub/CI bridge.",
+    "GitHub Issue mirror is generated from a normalized Core Task snapshot, not directly from this planning register.",
+    "execution_mode is a Work-level implementation authorization classification, not a runtime Agent Assignment state.",
+    "Owner-directed build tasks require owner_directive_ref; no Agent principal/ACK is fabricated.",
+    "Do not create a local Task database, dispatcher, durable event queue, event bus, execution host or CI engine in W118."
   ],
   "tasks": [
     {
@@ -44,19 +32,18 @@
       "wp_id": "W118-13",
       "phase": "05_BUILD",
       "phase_name": "Build",
-      "task_title": "Task Register and separate Task/Assignment lifecycle",
-      "objective": "Implement W118 Work-specific Task Register contract and transactional adapter with independent Task and Assignment state machines.",
+      "task_title": "Core Task projection adapter",
+      "objective": "Normalize an approved Core :8000 Task snapshot into a read-only GitHub-facing projection; do not create local runtime Task state.",
       "accountable_role": "ORCHESTRATOR",
       "role_name": "Xu / AI-01",
       "assigned_identity": null,
-      "assignment_status": "UNASSIGNED",
       "reviewer_role": "QE/QA",
       "inputs": [
         "TD-118-012",
         "W70 DOC-056 §9",
         "W112 DOC-001 compatibility reference"
       ],
-      "deliverable": "Task Register schema/data and tested lifecycle adapter",
+      "deliverable": "Core Task projection DTO and explicit field-map adapter",
       "acceptance_criteria": [
         {
           "id": "AC-013-1",
@@ -79,12 +66,11 @@
       "progress_percent": null,
       "progress_status": "NOT_CALCULATED",
       "evidence_refs": [
-        "scripts/w118/task_lifecycle.py",
-        "tests/w118/test_task_lifecycle.py",
-        "CI run #44879175383 (121 tests PASS)"
+        "scripts/w118/core_task_adapter.py",
+        "tests/w118/test_core_task_adapter.py"
       ],
       "blockers": [
-        "Runtime Task Register service adapter and durable deployment not yet connected."
+        "Core :8000 API schema/port and approved field map have not been exposed to W118."
       ],
       "next_action": "Complete stateless Core Task projection only after Core owner exposes the actual API schema, field map and approved read port.",
       "status_note": "Separate Task/Assignment lifecycle code passes contract CI; runtime service integration remains pending.",
@@ -110,26 +96,27 @@
       "commit_sha": null,
       "ci_run_id": null,
       "execution_mode": "OWNER_DIRECTED_BUILD",
-      "owner_directive_ref": "owner-directive:vinh:2026-11-22:autonomous-w118"
+      "owner_directive_ref": "owner-directive:vinh:2026-11-22:autonomous-w118",
+      "core_task_id": null,
+      "correlation_id": null
     },
     {
       "task_id": "W118-TASK-014",
       "wp_id": "W118-14",
       "phase": "05_BUILD",
       "phase_name": "Build",
-      "task_title": "Verified Agent Registry and Assignment policy",
-      "objective": "Select an eligible Agent using verified identity, role, capabilities, availability and least-privilege permission.",
+      "task_title": "W102/Core Agent identity and Assignment integration",
+      "objective": "Connect GitHub handoff/ACK observations to existing Core/W102 identity and Assignment policy without creating a W118 Agent Registry or dispatcher.",
       "accountable_role": "IDENTITY_AUTHORITY",
       "role_name": "Xu / AI-01 coordinates; Vinh owns identity authority",
       "assigned_identity": null,
-      "assignment_status": "UNASSIGNED",
       "reviewer_role": "Security/QE",
       "inputs": [
         "W118 role-map",
         "W112 DOC-001 assignment contract",
         "ROOM-HOP Agent Registry source"
       ],
-      "deliverable": "Verified Agent Registry adapter and auditable assignment decision",
+      "deliverable": "Approved integration mapping for Core principal, W102 policy decision and Assignment/ACK events",
       "acceptance_criteria": [
         {
           "id": "AC-014-1",
@@ -154,10 +141,11 @@
       "progress_percent": null,
       "progress_status": "NOT_CALCULATED",
       "evidence_refs": [
-        ".github/w118/role-map.json"
+        ".github/w118/role-map.json",
+        "W102 DOC-012"
       ],
       "blockers": [
-        "No verified executor principal/ACK role is present in current role-map; production runtime identity is not proven."
+        "Core identity/Assignment API and verified runtime principal are not exposed to W118."
       ],
       "next_action": "Obtain the Core/W102 identity and Assignment contract plus a verified principal fixture; do not infer identity or build a local Agent Registry.",
       "status_note": "Governance role labels do not prove runtime identity. No Agent can be marked eligible by inference.",
@@ -183,26 +171,27 @@
       "commit_sha": null,
       "ci_run_id": null,
       "execution_mode": "OWNER_DIRECTED_BUILD",
-      "owner_directive_ref": "owner-directive:vinh:2026-11-22:autonomous-w118"
+      "owner_directive_ref": "owner-directive:vinh:2026-11-22:autonomous-w118",
+      "core_task_id": null,
+      "correlation_id": null
     },
     {
       "task_id": "W118-TASK-015",
       "wp_id": "W118-15",
       "phase": "05_BUILD",
       "phase_name": "Build",
-      "task_title": "Dispatch, ACK and execution tracking",
-      "objective": "Dispatch a Task to a verified Agent and track ACK, start, progress, submission, timeout and recovery.",
+      "task_title": "W12/W13 execution bridge integration",
+      "objective": "Bind W118 Work Authority to existing W12 WEE, GitHub Gateway and CIAdapter and W13 Execution Host.",
       "accountable_role": "ORCHESTRATOR",
       "role_name": "Xu / AI-01",
       "assigned_identity": null,
-      "assignment_status": "UNASSIGNED",
       "reviewer_role": "QE/QA",
       "inputs": [
         "W118-TASK-013",
         "W118-TASK-014",
         "ROOM-HOP W52 communication and W14 execution host contracts"
       ],
-      "deliverable": "Verified dispatch/ACK protocol and execution timeline",
+      "deliverable": "W118 Work Authority adapter and verified W12/W13 execution integration",
       "acceptance_criteria": [
         {
           "id": "AC-015-1",
@@ -228,10 +217,11 @@
       "progress_percent": null,
       "progress_status": "NOT_CALCULATED",
       "evidence_refs": [
-        "scripts/w118/task_lifecycle.py"
+        "W12 Generic Work E2E",
+        "W13 Execution Host contract"
       ],
       "blockers": [
-        "Depends on verified Agent principal and the actual W52/W14 runtime integration contract."
+        "W12/W13 Work Authority schema and live execution host/CI adapter are not exposed to W118."
       ],
       "next_action": "Obtain W12/W13 Work Authority and execution contracts; bind existing services only, with no parallel execution host.",
       "status_note": "Task/Assignment state contracts exist; live dispatch and ACK are not implemented or verified.",
@@ -259,26 +249,27 @@
       "commit_sha": null,
       "ci_run_id": null,
       "execution_mode": "OWNER_DIRECTED_BUILD",
-      "owner_directive_ref": "owner-directive:vinh:2026-11-22:autonomous-w118"
+      "owner_directive_ref": "owner-directive:vinh:2026-11-22:autonomous-w118",
+      "core_task_id": null,
+      "correlation_id": null
     },
     {
       "task_id": "W118-TASK-016",
       "wp_id": "W118-16",
       "phase": "05_BUILD",
       "phase_name": "Build",
-      "task_title": "GitHub Issue and source binding",
-      "objective": "Mirror Sandbox Task to GitHub Issue and bind branch/commit/push/PR to exact Work, Task, Issue and SHA.",
+      "task_title": "Core Task to GitHub Issue and source binding",
+      "objective": "Mirror a normalized Core Task snapshot to a GitHub Issue and validate Task-scoped branch/commit/push binding.",
       "accountable_role": "ORCHESTRATOR",
       "role_name": "Xu / AI-01",
       "assigned_identity": null,
-      "assignment_status": "UNASSIGNED",
       "reviewer_role": "QE/QA",
       "inputs": [
         "W118-TASK-013",
         "TD-118-012",
         "GitHub Issues and push payload contract"
       ],
-      "deliverable": "Idempotent Issue adapter and exact source binding validator",
+      "deliverable": "Core Task Issue projection adapter and source binding validator",
       "acceptance_criteria": [
         {
           "id": "AC-016-1",
@@ -306,11 +297,10 @@
         "scripts/w118/github_issue_adapter.py",
         "scripts/w118/source_binding.py",
         "tests/w118/test_github_issue_adapter.py",
-        "tests/w118/test_source_binding.py",
-        "CI run #44879175383"
+        "tests/w118/test_source_binding.py"
       ],
       "blockers": [
-        "No live GitHub token/API mirror operation or task-scoped branch push has been executed."
+        "Core API field map/lock lease and live GitHub token are not exposed; task-scoped push has not run."
       ],
       "next_action": "Finish stateless Issue mirror/source-binding contracts; execute live Issue API and task-scoped push only when authorized credentials and Core source snapshot are available.",
       "status_note": "Contract code and tests exist; live GitHub API and task-specific branch runtime proof pending.",
@@ -338,26 +328,27 @@
       "commit_sha": null,
       "ci_run_id": null,
       "execution_mode": "OWNER_DIRECTED_BUILD",
-      "owner_directive_ref": "owner-directive:vinh:2026-11-22:autonomous-w118"
+      "owner_directive_ref": "owner-directive:vinh:2026-11-22:autonomous-w118",
+      "core_task_id": null,
+      "correlation_id": null
     },
     {
       "task_id": "W118-TASK-017",
       "wp_id": "W118-17",
       "phase": "05_BUILD",
       "phase_name": "Build",
-      "task_title": "Webhook inbox and CI event reconciliation",
-      "objective": "Receive authenticated GitHub events, deduplicate deliveries and reconcile push/CI evidence to the exact Sandbox Task.",
+      "task_title": "Stateless webhook verification and Core event intent adapter",
+      "objective": "Verify authenticated GitHub events and normalize them into Core event intents; Core owns persistence, deduplication, sequencing and reconciliation.",
       "accountable_role": "ORCHESTRATOR",
       "role_name": "Xu / AI-01",
       "assigned_identity": null,
-      "assignment_status": "UNASSIGNED",
       "reviewer_role": "Security/QE",
       "inputs": [
         "W118-TASK-013",
         "W118-TASK-016",
         "ROOM-HOP Event Listener :8050 ownership contract"
       ],
-      "deliverable": "HMAC webhook inbox and evidence-only push/CI reconciler integrated with Event Listener",
+      "deliverable": "Stateless HMAC verifier and GitHub event-to-Core event intent adapter",
       "acceptance_criteria": [
         {
           "id": "AC-017-1",
@@ -383,14 +374,13 @@
       "progress_percent": null,
       "progress_status": "NOT_CALCULATED",
       "evidence_refs": [
-        "scripts/w118/webhook_inbox.py",
-        "scripts/w118/event_reconciler.py",
-        "tests/w118/test_webhook_inbox.py",
-        "tests/w118/test_event_reconciler.py",
-        "CI run #44879175383"
+        "scripts/w118/github_webhook_verifier.py",
+        "scripts/w118/github_event_adapter.py",
+        "tests/w118/test_github_webhook_verifier.py",
+        "tests/w118/test_github_event_adapter.py"
       ],
       "blockers": [
-        "No HTTP route/worker deployed to Event Listener :8050; production webhook secret/TLS and durable DB are not configured."
+        "Core event ingress is not exposed; production webhook endpoint/secret/TLS is not configured."
       ],
       "next_action": "Complete stateless webhook verification/event normalization; forward to Core event port when exposed; do not persist a local inbox or queue.",
       "status_note": "Authenticated inbox/reconciler contracts pass in-memory tests; production event path is not deployed.",
@@ -418,7 +408,9 @@
       "commit_sha": null,
       "ci_run_id": null,
       "execution_mode": "OWNER_DIRECTED_BUILD",
-      "owner_directive_ref": "owner-directive:vinh:2026-11-22:autonomous-w118"
+      "owner_directive_ref": "owner-directive:vinh:2026-11-22:autonomous-w118",
+      "core_task_id": null,
+      "correlation_id": null
     },
     {
       "task_id": "W118-TASK-018",
@@ -430,7 +422,6 @@
       "accountable_role": "DATA_GOVERNANCE",
       "role_name": "Xu / AI-01 coordinates; Vinh/W70 owner authority",
       "assigned_identity": null,
-      "assignment_status": "UNASSIGNED",
       "reviewer_role": "W70 QE/Owner",
       "inputs": [
         "W118-TASK-013",
@@ -464,7 +455,7 @@
       "progress_status": "NOT_CALCULATED",
       "evidence_refs": [
         "W70 DOC-056",
-        "W70 EVIDENCE_REGISTER.schema.json"
+        "W70 Evidence Register schema"
       ],
       "blockers": [
         "W70 schema/owner ACK is required; W118 has no authority to mutate W70 schema or canonical Evidence Register."
@@ -495,7 +486,9 @@
       "commit_sha": null,
       "ci_run_id": null,
       "execution_mode": "OWNER_DIRECTED_BUILD",
-      "owner_directive_ref": "owner-directive:vinh:2026-11-22:autonomous-w118"
+      "owner_directive_ref": "owner-directive:vinh:2026-11-22:autonomous-w118",
+      "core_task_id": null,
+      "correlation_id": null
     },
     {
       "task_id": "W118-TASK-019",
@@ -507,7 +500,6 @@
       "accountable_role": "QE/OWNER",
       "role_name": "Xu coordinates; Vinh final acceptance",
       "assigned_identity": null,
-      "assignment_status": "UNASSIGNED",
       "reviewer_role": "Independent QE + Vinh",
       "inputs": [
         "W118-TASK-013",
@@ -547,7 +539,9 @@
       "progress_percent": null,
       "progress_status": "NOT_CALCULATED",
       "evidence_refs": [],
-      "blockers": [],
+      "blockers": [
+        "All prerequisite Core/W102/W12/W13/W70 runtime gates must pass before full E2E."
+      ],
       "next_action": "Run complete positive/negative lifecycle E2E after all external contracts and runtime integrations are available.",
       "status_note": "No full runtime E2E has been executed; contract tests are not product acceptance.",
       "execution_steps": [
@@ -575,10 +569,12 @@
       "commit_sha": null,
       "ci_run_id": null,
       "execution_mode": "OWNER_DIRECTED_BUILD",
-      "owner_directive_ref": "owner-directive:vinh:2026-11-22:autonomous-w118"
+      "owner_directive_ref": "owner-directive:vinh:2026-11-22:autonomous-w118",
+      "core_task_id": null,
+      "correlation_id": null
     }
   ],
   "task_count": 7,
   "created_at": "2026-11-21T13:36:00+07:00",
-  "updated_at": "2026-11-21T13:36:00+07:00"
+  "updated_at": "2026-11-22T04:30:00+07:00"
 }
