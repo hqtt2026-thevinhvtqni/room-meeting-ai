@@ -1237,3 +1237,27 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - Updated evidence generation to read the real-browser result status instead of treating mere file presence as PASS. Next workflow commit will run E2E before the offline evidence generator so the generated manifest can report browser status correctly.
 - Three locked contracts remain unchanged. No merge/main/release.
 - **KÝ: Co | AI-07**
+
+
+## W10-CI-RUN40-20261122-01 — 2026-11-22 05:22 (UTC+07:00)
+- **Name:** Co | **Title:** AI-07 / End-to-End Architecture & Implementation Lead
+- **Evidence:** GitHub Actions run #40, ID `44956485849`, commit `975f534c42acd5e5164430d784be47f96f77c1da`, Ubuntu 24.04 + Windows Server 2022, both SUCCESS.
+- **Windows:** offline/safety/HTTP 144/144 PASS; dedicated Windows Job Object test PASS: Job Object KILL_ON_JOB_CLOSE terminated a worker and grandchild; real Chromium E2E PASS. Artifact ID `14728215548`, ZIP SHA-256 `d75276de58bbf637ba53c347093c151d077044f64f8c08e0a19b78542de64e1e`.
+- **Linux:** offline/safety/HTTP 140 PASS + 1 Windows-only SKIP; POSIX process group worker+grandchild test PASS (LIMITED, not cgroup v2); real Chromium E2E PASS. Artifact ID `14728110742`, ZIP SHA-256 `545dd89eb419e9f60609c5c39023df5cddefc0a7c5df8a3876b1d461bdec34fd`.
+- Detailed evidence and file hashes: `06_EVIDENCE/W10_PROCESS_CONTAINMENT_CI_EVIDENCE_20261122_RUN40.md`.
+- **Critical limit:** Windows Job Object primitive is proven independently but is NOT yet integrated into the Agent API execution path. P0 remains OPEN. Linux cgroup-v2 remains BLOCKED; do not substitute process-group PASS.
+- **Next:** add worker subprocess protocol; assign Windows worker suspended to Job Object before resume; make parent enforce deadline/cleanup and verify containment empty; add durable host owner lease and run journal; keep Linux production profile fail-closed until cgroup-v2 is proven.
+- **KÝ: Co | AI-07**
+
+
+## W10-P0-SUPERVISOR-IMPLEMENTATION-20261122-01 — 2026-11-22 05:33 (UTC+07:00)
+- **Name:** Co | **Title:** AI-07 / End-to-End Architecture & Implementation Lead
+- **Owner authority:** Vinh delegated implementation through handover/acceptance; An review is not a prerequisite.
+- **Implemented in Sandbox (CI pending):** API delegates workflow execution to one `execution_worker.py` process; worker performs preflight before adapter construction and closes Playwright on its owner thread. Windows worker creation now uses native `CreateProcessW` + `PROC_THREAD_ATTRIBUTE_JOB_LIST` so Job Object membership is atomic at process creation, with restricted inherited pipe handles. Job uses `KILL_ON_JOB_CLOSE`; parent owns deadline, checks active process count and treats forced cleanup as TaskResult BLOCKED.
+- **Durability:** HostOwnerLease uses OS file lock + monotonic owner generation. Per-run JSON journals record containment locator, PID, owner generation and state. Startup recovery opens/terminates stale Windows Job Objects; if PID is alive but Job Object is absent, fail closed. POSIX recovery refuses PID-only kill when a process group remains.
+- **Linux:** process-group fallback is explicitly LIMITED, not cgroup-v2. API defaults fail-closed unless the test-only `COMPUTER_AGENT_ALLOW_LIMITED_PROCESS_GROUP=1` is set. Linux production P0 remains BLOCKED.
+- **F-15 implementation:** ActionResult timeout = `fail` + `outcome_uncertain=true`; enclosing TaskResult = BLOCKED; parent kills containment and verifies empty before lease release. Whole-workflow deadline BLOCKED. Three LOCKED contracts unchanged.
+- **E2E change:** Real Chromium E2E is being changed to submit through HTTP API and ProcessSupervisor, not instantiate AgentRuntime in the test process.
+- **Evidence/design note:** `06_EVIDENCE/W10_P0_PROCESS_SUPERVISOR_IMPLEMENTATION_20261122_01.md`.
+- **Status:** Code written in Sandbox; not yet mirrored or CI-validated at this timestamp. P0 remains BLOCKED pending next cross-platform CI and Windows PC evidence. Work 10 ACTIVE — NOT RELEASED.
+- **KÝ: Co | AI-07**
