@@ -42,6 +42,7 @@ Không tự ý thay đổi branch protection, secrets/tokens, quyền tổ chứ
 
 - [TD-118-012 — Kiến trúc hai quy trình khép kín Sandbox–GitHub](../02_DEFINE/TD-118-012_KIEN-TRUC-HAI-QUY-TRINH-KHEP-KIN-SANDBOX-GITHUB.md)
 - [W118-13/16 — Task Lifecycle & Source Binding implementation](../05_BUILD/W118-13_16_TASK-LIFECYCLE-AND-SOURCE-BINDING.md)
+- [W118-13/16 — Test Matrix](../06_TEST/W118-13_16-TASK-LIFECYCLE-SOURCE-BINDING-TEST-MATRIX.md)
 - [DC-118-004 — Brief phản biện kiến trúc (tham khảo, không chặn BUILD)](../02_DEFINE/DC-118-004_BRIEF-PHAN-BIEN-KIEN-TRUC-HAI-QUY-TRINH.md)
 - Nhật ký: Entry 069 trong [NHAT-KY-THI-CONG.md](../EVIDENCE/NHAT-KY-THI-CONG.md)
 
