@@ -1432,3 +1432,14 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - After creating and mirroring the integration handoff, current inventory: Sandbox 159 files; GitHub 66; shared 66; Sandbox-only 93; GitHub-only 0; one Sandbox-only `.github/` directory.
 - The 93 Sandbox-only dispositions are unchanged.
 - **KÝ: Co | AI-07**
+
+
+## W10-CI-RUN104-20261122-01 — 2026-11-22 06:37 (UTC+07:00)
+- **Run:** #104 / ID `44963124942`; tested commit `ee6b6cf06643fc92aac1572290e5b3918b481ade`.
+- **Ubuntu 24.04:** 200 PASS / 0 FAIL / 2 SKIP; **Windows Server 2022:** 206 PASS / 0 FAIL / 0 SKIP.
+- Seven suites passed on both OSes: contract, safety, HTTP, containment, host operations, V8 validator, Dashboard static (17 PASS each). Real Chromium E2E PASS.
+- Verifies Work10 standalone Dashboard origin moved to port 3010, leaving shared port 3000 for W113.
+- **Artifacts:** Linux 14729759048 SHA-256 `d3ecf4849ca7b98c0624b165f1b488564617f9e43fdbb5a90f0a45edec587029`; Windows 14729409940 SHA-256 `5fe5ababa06291bd1b4dde3eef1574bde1f182781db435bc4e46306225c2ea6e`.
+- Evidence: `06_EVIDENCE/W10_CROSS_PLATFORM_CI_EVIDENCE_20261122_RUN104.md`.
+- Run #104 predates the POSIX cleanup polling/stress-test patch; follow-up runs #105/#106 pending.
+- **KÝ: Co | AI-07**
