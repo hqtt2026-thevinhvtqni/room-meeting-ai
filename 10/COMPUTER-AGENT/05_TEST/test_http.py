@@ -333,6 +333,8 @@ def main():
             "cwd": str(server.host_root), "paths": ["test_sample.py"]
         }}
         status, pytest_body = server.request("POST", "/agent/host/execute", pytest_request)
+        if status != 200 or pytest_body.get("status") != "PASS":
+            print("  DEBUG host pytest response:", status, json.dumps(pytest_body, ensure_ascii=False, default=str))
         check("host run_pytest -> 200 PASS",
               lambda: status == 200 and pytest_body.get("status") == "PASS"
               and pytest_body["result"].get("exit_code") == 0)

@@ -1302,3 +1302,14 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - Added host capability unit tests and HTTP API integration tests; updated run_all_tests to include the new suite.
 - **Status:** Sandbox implementation written; CI not yet run. Do not claim host capability PASS. Physical Windows 10 validation remains open. Work 10 ACTIVE — NOT RELEASED.
 - **KÝ: Co | AI-07**
+
+
+## W10-CI-RUN46-DIAGNOSIS-20261122-01 — 2026-11-22 05:48 (UTC+07:00)
+- **Name:** Co | **Title:** AI-07 / End-to-End Architecture & Implementation Lead
+- **Run:** GitHub Actions #46, ID `44958513260`, commit `a818161d1576cf8e7e33012bebc896533f41995e`.
+- **Both OS:** real Chromium E2E through HTTP API + ProcessSupervisor PASS; syntax and host inventory PASS.
+- **Windows:** contract 60, safety 45, process containment 2 PASS; HTTP API 48 PASS / 1 FAIL. Windows PowerShell script operation PASS. Host list/read/write/traversal checks PASS. Failure: host run_pytest did not return PASS (response details not yet logged in this run).
+- **Linux:** contract 60, safety 41 PASS + 1 Windows-only SKIP, process containment 2 PASS; HTTP API 48 PASS / 1 FAIL. Host list/read/write/traversal checks PASS; PowerShell correctly BLOCKED on non-Windows. Failure: host run_pytest did not return PASS.
+- **Host operations suite:** did not import because standalone test runner did not add 04_CODE to sys.path. Fixed by adding Work 10 code path. Added HTTP diagnostic output for run_pytest response to capture exact command stderr/exit code.
+- **Next:** rerun CI, diagnose pytest command failure from response output; do not mark host capability complete until all host operation suites pass on both OSes.
+- **KÝ: Co | AI-07**
