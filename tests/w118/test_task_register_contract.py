@@ -60,6 +60,7 @@ class Work118TaskRegisterContractTests(unittest.TestCase):
         self.assertIn("github.com", self.register["github_mirror"])
         self.assertTrue(any("Core :8000" in rule for rule in self.register["rules"]))
         self.assertTrue(any("not a runtime Core Task" in self.register["model"] for _ in [0]))
+        self.assertIn("DRAFT_NOT_APPROVED", self.register["model"])
 
     def test_execution_integration_is_owned_by_w14_not_w12_w13(self):
         rules = "\\n".join(self.register["rules"])

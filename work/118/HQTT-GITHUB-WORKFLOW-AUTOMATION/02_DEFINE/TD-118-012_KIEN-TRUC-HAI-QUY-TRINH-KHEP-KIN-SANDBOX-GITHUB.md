@@ -903,3 +903,8 @@ No WP may introduce a second runtime Task database, Agent dispatcher, event bus,
 W14 is ACTIVE / UNLOCKED, but its manifest says current canonical GitHub source/ref parity is NOT VERIFIED and full product E2E is NOT VERIFIED. W13 bridge evidence records live :8031 E2E as NOT RUN / BLOCKED from the inspected session. W118 must therefore keep W118-TASK-015 BLOCKED until W14 provides its approved source/API/runtime contract and live evidence. Do not modify W12/W13 or create a parallel host/Gateway.
 
 This amendment supersedes earlier ownership-table entries in this document that describe W12/W13 as independent execution owners. Historical source references remain for provenance only.
+
+
+## Governance note — W70 DOC-093 draft status (2026-11-22)
+
+W70 DOC-093 is explicitly `DRAFT_NOT_APPROVED` in its canonical register. W118 may use its structure as a reference only; this does not approve DOC-093, promote it as a W118 schema, or grant runtime Task/Assignment authority. W118's Task Register remains a local planning artifact; Core :8000 remains runtime authority. Any W70 Evidence Register/Dashboard projection requires the W70 owner-approved schema and explicit ACK.
