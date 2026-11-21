@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - work/118-auto-e2e-v2
+      - 'work/W*/task-W*-TASK-*'
     paths:
       - ".github/workflows/w118-workflow-automation.yml"
       - ".github/workflows/w118-failure-diagnostics.yml"
@@ -65,10 +66,24 @@ jobs:
       - name: Run W118 contract tests
         id: tests
         run: python -m unittest discover -s tests/w118 -v
+      - name: Validate Task-to-Issue source binding for push
+        id: source_binding
+        if: github.event_name == 'push'
+        env:
+          EVENT_PATH: ${{ github.event_path }}
+          EXPECTED_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          mkdir -p .w118-evidence
+          python scripts/w118/source_binding.py --event "$EVENT_PATH" --repository "$EXPECTED_REPOSITORY" > .w118-evidence/source-binding.json
+          cat .w118-evidence/source-binding.json >> "$GITHUB_STEP_SUMMARY"
+          STATUS=$(python -c 'import json; print(json.load(open(".w118-evidence/source-binding.json"))["status"])')
+          echo "status=$STATUS" >> "$GITHUB_OUTPUT"
       - name: Write run evidence
         if: always()
         env:
           TEST_OUTCOME: ${{ steps.tests.outcome }}
+          SOURCE_BINDING_STATUS: ${{ steps.source_binding.outputs.status || 'NOT_RUN' }}
           PR_NUMBER: ${{ github.event.pull_request.number || '' }}
           PR_HEAD_SHA: ${{ github.event.pull_request.head.sha || '' }}
           PR_HEAD_REF: ${{ github.event.pull_request.head.ref || '' }}
@@ -102,6 +117,7 @@ jobs:
               "pull_request_number": int(os.environ["PR_NUMBER"]) if os.environ.get("PR_NUMBER") else None,
               "pull_request_base_sha": os.environ.get("PR_BASE_SHA") or None,
               "test_outcome": os.environ.get("TEST_OUTCOME", "unknown"),
+              "source_binding_status": os.environ.get("SOURCE_BINDING_STATUS", "NOT_RUN"),
               "state": "RECORDED",
               "limitations": ["CI evidence does not constitute independent review or Work acceptance."]
           }
@@ -115,7 +131,7 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: w118-run-evidence-${{ github.run_id }}-${{ github.run_attempt }}
-          path: .w118-evidence/run-evidence.json
+          path: .w118-evidence/
           if-no-files-found: error
           retention-days: 30
 
