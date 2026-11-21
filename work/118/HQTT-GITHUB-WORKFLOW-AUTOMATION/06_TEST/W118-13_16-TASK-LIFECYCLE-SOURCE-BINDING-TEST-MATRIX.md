@@ -92,3 +92,6 @@
 | T13-28 | OWNER_DIRECTED_SESSION without directive reference | Reject; do not fabricate Agent identity or ACK | PASS |
 
 **Owner-directed execution CI:** tested SHA `4bd94d43251f26e88200d6e0f1ef9c19354bc426`; push run #44880193690 SUCCESS; 130 tests PASS / 0.512s; artifact ID 14697279628; SHA-256 `0eeb2d5cdf89a31c9d8e2346c04f1083c4d1d9699154f572cb70b73c94e56807`.
+
+
+**Latest owner-directed execution test:** SHA `108595c61f2d2ad9097dda1eed3252f7cfbec7e0`; run #44880271750 SUCCESS; 130 tests PASS / 0.402s; artifact ID 14697951120; SHA-256 `8e33daf7a33c3a7131acad64f3d56f04be9a0e519f72e2aeb2f389aa6d864138`.
