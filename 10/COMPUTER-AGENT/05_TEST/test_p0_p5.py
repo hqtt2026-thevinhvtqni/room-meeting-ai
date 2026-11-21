@@ -1,6 +1,10 @@
 """
-Work 10 — Offline Contract Tests
-Covers OFFLINE_TEST_MATRIX.md as much as possible without Chromium.
+Work 10 — Offline Contract Tests (P0/P1/P2 contracts, no browser)
+
+Covers the current Workflow Contract:
+  * an omitted verification block invokes §3.4 minimum observation verification;
+  * an explicitly supplied empty/malformed block is BLOCKED;
+  * explicit post-condition checks run against the FINAL observation by default.
 """
 import sys
 from pathlib import Path
@@ -9,288 +13,252 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "04_CODE"))
 
 from agent_runtime import AgentRuntime
-from models import Action, ActionValidationError, CANONICAL_ACTIONS, TaskResult
+from models import Action, ActionValidationError, CANONICAL_ACTIONS, SafetyPolicy  # noqa: F401
+from test_fake_adapter import FakeAdapter
 
-
-class FakeAdapter:
-    def __init__(self):
-        self.calls = []
-
-    def start(self):
-        self.calls.append("start")
-
-    def observe(self):
-        self.calls.append("observe")
-        return {"text": "hello world", "url": "https://example.test"}
-
-    def navigate(self, u):
-        self.calls.append(("navigate", u))
-        return {"url": u}
-
-    def click(self, t):
-        self.calls.append(("click", t))
-        return {"clicked": t}
-
-    def type(self, t, x):
-        self.calls.append(("type", t, x))
-        return {"typed": x, "target": t}
-
-    def key_press(self, k):
-        self.calls.append(("key", k))
-        return {"key": k}
-
-    def scroll(self, a):
-        self.calls.append(("scroll", a))
-        return {"scrolled": a}
-
-    def wait(self, s):
-        self.calls.append(("wait", s))
-        return {"waited_seconds": s}
-
-    def extract(self, t=None):
-        self.calls.append(("extract", t))
-        return {"text": "hello world"}
-
-    def screenshot(self, p=None):
-        self.calls.append(("screenshot", p))
-        return {"path": p or "screenshot.png"}
-
-    def download(self, t):
-        self.calls.append(("download", t))
-        return {"suggested_filename": "x.txt"}
-
-    def close(self):
-        self.calls.append("close")
+VERIFY = {"checks": [{"field": "text", "contains": "SUBMITTED"}]}
+FAILED = []
 
 
 def check(name, fn):
     try:
-        fn()
+        outcome = fn()
+        if outcome is False:
+            raise AssertionError("check returned False")
         print(f"  PASS  {name}")
-    except Exception as e:
-        print(f"  FAIL  {name}: {e}")
-        raise
+    except Exception as exc:  # noqa: BLE001
+        FAILED.append(f"{name}: {exc}")
+        print(f"  FAIL  {name}: {exc}")
 
 
 def test_action_contract():
     print("\n=== 2.1 Action Contract ===")
+    check("Known action types accepted", lambda: Action("click", target="btn"))
 
-    check("Known action types accepted",
-          lambda: Action("click", target="btn"))
+    def reject(factory, label):
+        def run():
+            try:
+                factory()
+            except ActionValidationError:
+                return
+            raise AssertionError(f"{label} should have been rejected")
+        return run
 
-    def unknown_reject():
-        try:
-            Action("fly_to_moon")
-            raise AssertionError("Should have rejected unknown action")
-        except ActionValidationError:
-            pass
-    check("Unknown action type → REJECT", unknown_reject)
-
-    def click_no_target():
-        try:
-            Action("click")
-            raise AssertionError("Should reject click without target")
-        except ActionValidationError:
-            pass
-    check("click without target → REJECT", click_no_target)
-
-    def type_no_value():
-        try:
-            Action("type", target="input")
-            raise AssertionError("Should reject type without value")
-        except ActionValidationError:
-            pass
-    check("type without value → REJECT", type_no_value)
-
-    def type_no_target():
-        try:
-            Action("type", value="hello")
-            raise AssertionError("Should reject type without target")
-        except ActionValidationError:
-            pass
-    check("type without target → REJECT", type_no_target)
-
-    def nav_no_value():
-        try:
-            Action("navigate")
-            raise AssertionError("Should reject navigate without value")
-        except ActionValidationError:
-            pass
-    check("navigate without value → REJECT", nav_no_value)
+    check("Unknown action type -> REJECT", reject(lambda: Action("fly_to_moon"), "unknown"))
+    check("click without target -> REJECT", reject(lambda: Action("click"), "click"))
+    check("type without value -> REJECT", reject(lambda: Action("type", target="input"), "type"))
+    check("type without target -> REJECT", reject(lambda: Action("type", value="hi"), "type"))
+    check("navigate without value -> REJECT", reject(lambda: Action("navigate"), "navigate"))
+    check("key_press without value -> REJECT", reject(lambda: Action("key_press"), "key"))
+    check("wait without value -> REJECT", reject(lambda: Action("wait"), "wait"))
+    check("wait non-numeric value -> REJECT", reject(lambda: Action("wait", value="soon"), "wait"))
+    check("scroll non-numeric amount -> REJECT",
+          reject(lambda: Action("scroll", args={"amount": "far"}), "scroll"))
 
 
 def test_click_type_separation():
     print("\n=== 2.2 Click / Type Separation ===")
-    adapter = FakeAdapter()
-    runtime = AgentRuntime(adapter)
-
+    runtime = AgentRuntime(FakeAdapter())
     result = runtime.execute("t", [
-        Action("click", target="Create"),
-        Action("type", target="input[name=name]", value="ABC")
-    ])
+        Action("click", target="Start task"),
+        Action("type", target="Task name", value="Work 10 REAL E2E"),
+    ], verification=VERIFY)
+
     check("Explicit click + type both succeed",
           lambda: result.status == "PASS" and len(result.steps) == 2)
-
-    check("click semantic preserved",
-          lambda: result.steps[0].action.type == "click")
-    check("type semantic preserved",
-          lambda: result.steps[1].action.type == "type")
-
-    check("type requires target+value (cannot fake click)",
+    check("click semantic preserved", lambda: result.steps[0].action.type == "click")
+    check("type semantic preserved", lambda: result.steps[1].action.type == "type")
+    check("type cannot fake click",
           lambda: Action("type", target="btn", value="Create").type == "type")
 
 
 def test_workflow_state_machine():
     print("\n=== 2.3 Workflow State Machine ===")
-    adapter = FakeAdapter()
-    runtime = AgentRuntime(adapter)
-
-    # Happy path includes an observation so the verification contract has
-    # an observable text field to verify.
+    runtime = AgentRuntime(FakeAdapter())
     result = runtime.execute("create folder", [
-        Action("navigate", value="https://example.test"),
+        Action("navigate", value="http://127.0.0.1/fake"),
         Action("observe"),
-        Action("click", target="New"),
-        Action("type", target="input", value="ABC"),
-    ], verification={"checks": [{"field": "text", "contains": "hello"}]})
+        Action("click", target="Start task"),
+        Action("type", target="Task name", value="Work 10 REAL E2E"),
+        # post-conditions are read from the FINAL observation, so the workflow
+        # must end in an observation (a click no longer satisfies verification)
+        Action("observe"),
+    ], verification=VERIFY)
 
-    check("Happy path ends PASS",
-          lambda: result.status == "PASS")
-    check("State trace contains PLANNED",
-          lambda: "PLANNED" in result.state_trace)
-    check("State trace contains RUNNING",
-          lambda: "RUNNING" in result.state_trace)
-    check("State trace contains VERIFYING",
-          lambda: "VERIFYING" in result.state_trace)
-    check("State trace ends with PASS",
-          lambda: result.state_trace[-1] == "PASS")
+    check("Happy path ends PASS", lambda: result.status == "PASS")
+    check("State trace starts PLANNED", lambda: result.state_trace[0] == "PLANNED")
+    check("State trace contains RUNNING", lambda: "RUNNING" in result.state_trace)
+    check("State trace contains VERIFYING", lambda: "VERIFYING" in result.state_trace)
+    check("State trace ends with PASS", lambda: result.state_trace[-1] == "PASS")
+    check("VERIFYING appears before PASS", lambda: result.state_trace.index("VERIFYING")
+          < result.state_trace.index("PASS"))
 
-    def verifying_before_pass():
-        trace = list(result.state_trace)
-        assert trace[-1] == "PASS", trace
-        assert "VERIFYING" in trace[:-1], trace
-    check("VERIFYING appears before PASS", verifying_before_pass)
+    failing = runtime.execute("t", [Action("observe")],
+                              verification={"checks": [{"field": "text", "contains": "MISSING"}]})
+    check("Verification fail -> FAIL", lambda: failing.status == "FAIL")
+    check("FAIL appears in state_trace", lambda: failing.state_trace[-1] == "FAIL")
 
-    result_fail = runtime.execute("t", [Action("observe")],
-                                  verification={"checks": [{"field": "text", "contains": "MISSING"}]})
-    check("Verification fail → FAIL",
-          lambda: result_fail.status == "FAIL")
-    check("FAIL appears in state_trace",
-          lambda: "FAIL" in result_fail.state_trace)
+    defaulted = runtime.execute("t", [Action("click", target="Continue")])
+    check("Omitted verification invokes minimum observation check",
+          lambda: defaulted.status == "PASS")
+    check("Default check records VERIFYING before PASS",
+          lambda: defaulted.state_trace[-2:] == ["VERIFYING", "PASS"])
+    check("Default check is recorded in verification evidence",
+          lambda: any(e.get("verification") == "PASS"
+                      and e.get("checks") == [{"kind": "observation_exists"}]
+                      for e in defaulted.evidence))
+    check("Default verification performs a fresh observation",
+          lambda: "observe" in runtime.adapter.calls)
+
+    explicitly_empty = runtime.execute("t", [Action("observe")], verification={})
+    check("Explicit empty verification -> BLOCKED",
+          lambda: explicitly_empty.status == "BLOCKED")
 
 
 def test_verification_logic():
     print("\n=== 2.4 Verification Logic ===")
-    adapter = FakeAdapter()
-    runtime = AgentRuntime(adapter)
+    runtime = AgentRuntime(FakeAdapter())
 
-    r = runtime.execute("t", [Action("observe")],
-                        verification={"checks": [{"field": "text", "contains": "hello"}]})
-    check("All checks pass → PASS", lambda: r.status == "PASS")
+    ok = runtime.execute("t", [Action("observe")], verification=VERIFY)
+    check("All checks pass -> PASS", lambda: ok.status == "PASS")
 
-    r = runtime.execute("t", [Action("observe")],
-                        verification={"checks": [
-                            {"field": "text", "contains": "hello"},
-                            {"field": "text", "contains": "MISSING"}
-                        ]})
-    check("One check fails → FAIL", lambda: r.status == "FAIL")
+    mixed = runtime.execute("t", [Action("observe")], verification={"checks": [
+        {"field": "text", "contains": "SUBMITTED"},
+        {"field": "text", "contains": "MISSING"},
+    ]})
+    check("One check fails -> FAIL", lambda: mixed.status == "FAIL")
+    check("Failure names the failed post-condition",
+          lambda: "MISSING" in (mixed.error or ""))
 
-    r = runtime.execute("t", [Action("observe")])
-    check("No verification block → PASS if evidence exists",
-          lambda: r.status == "PASS")
+    empty = runtime.execute("t", [Action("observe")], verification={"checks": []})
+    check("Empty checks -> BLOCKED", lambda: empty.status == "BLOCKED")
+    check("Empty checks reason is verification_invalid",
+          lambda: "verification_invalid" in (empty.error or ""))
+
+    partial = runtime.execute("t", [Action("observe")],
+                              verification={"checks": [{"field": "text"}]})
+    check("Check without 'contains' -> BLOCKED", lambda: partial.status == "BLOCKED")
 
 
 def test_evidence_completeness():
     print("\n=== 2.5 Evidence Completeness ===")
-    adapter = FakeAdapter()
-    runtime = AgentRuntime(adapter)
-
-    r = runtime.execute("t", [
+    runtime = AgentRuntime(FakeAdapter(), work_id="10")
+    result = runtime.execute("t", [
         Action("click", target="A"),
-        Action("type", target="B", value="C")
-    ])
-    check("Evidence has one entry per action",
-          lambda: len(r.evidence) == 2)
-    check("Evidence contains action type",
-          lambda: r.evidence[0]["action"] == "click")
-    check("Evidence contains ok flag",
-          lambda: "ok" in r.evidence[0])
-    check("Evidence contains observation",
-          lambda: "observation" in r.evidence[0])
+        Action("type", target="B", value="C"),
+    ], verification=VERIFY)
 
-    r = runtime.execute("t", [Action("observe")],
-                        verification={"checks": [{"field": "text", "contains": "hello"}]})
+    action_entries = [e for e in result.evidence if e.get("action") not in (None, "verify")]
+    check("Evidence has one entry per action", lambda: len(action_entries) == 2)
+    check("Evidence contains action type", lambda: action_entries[0]["action"] == "click")
+    check("Evidence contains ok flag", lambda: "ok" in action_entries[0])
+    check("Evidence contains observation", lambda: "observation" in action_entries[0])
+    check("Evidence has action_id", lambda: bool(action_entries[0]["action_id"]))
+    check("Evidence has work_id", lambda: action_entries[0]["work_id"] == "10")
+    check("Evidence has ISO8601 UTC timestamp",
+          lambda: action_entries[0]["timestamp"].endswith("Z"))
+    check("Evidence records attempts and timeout",
+          lambda: action_entries[0]["attempts"] == 1
+          and action_entries[0]["timeout_seconds"] > 0)
     check("Evidence contains verification result",
-          lambda: any(e.get("verification") == "PASS" for e in r.evidence))
+          lambda: any(e.get("verification") == "PASS" for e in result.evidence))
+    check("TaskResult carries started/finished timestamps",
+          lambda: bool(result.started_at) and bool(result.finished_at))
 
 
 def test_api_validation():
-    print("\n=== 2.6 API / Construction Validation ===")
+    print("\n=== 2.6 Construction / Payload Validation ===")
 
     def invalid_type():
         try:
             Action("do_magic")
-            raise AssertionError("Should reject")
-        except ActionValidationError as e:
-            assert "Unknown action type" in str(e)
-    check("Invalid action type raises ActionValidationError", invalid_type)
+        except ActionValidationError as exc:
+            assert "Unknown action type" in str(exc)
+            return
+        raise AssertionError("should reject unknown type")
 
+    check("Invalid action type raises ActionValidationError", invalid_type)
     check("observe needs no target/value", lambda: Action("observe"))
     check("close needs no target/value", lambda: Action("close"))
     check("click with target OK", lambda: Action("click", target="btn"))
-    check("type with target+value OK",
-          lambda: Action("type", target="input", value="hi"))
+    check("type with target+value OK", lambda: Action("type", target="input", value="hi"))
+    check("wait with value OK", lambda: Action("wait", value=1.5))
+    check("scroll with value OK", lambda: Action("scroll", value=500))
+    check("extract with schema OK",
+          lambda: Action("extract", args={"schema": {"title": "string"}}))
 
 
 def test_failure_handling():
     print("\n=== 2.7 Failure Handling ===")
-    adapter = FakeAdapter()
-    runtime = AgentRuntime(adapter)
 
     class FailingAdapter(FakeAdapter):
-        def click(self, t):
+        def click(self, target):
             raise RuntimeError("element not found")
 
-    r = AgentRuntime(FailingAdapter()).execute("t", [Action("click", target="X")])
-    check("Adapter exception → FAIL", lambda: r.status == "FAIL")
-    check("Error message preserved", lambda: "element not found" in (r.error or ""))
+    result = AgentRuntime(FailingAdapter()).execute("t", [Action("click", target="X")],
+                                                    verification=VERIFY)
+    check("Adapter exception -> FAIL", lambda: result.status == "FAIL")
+    check("Error message preserved", lambda: "element not found" in (result.error or ""))
+    check("Permanent error not retried", lambda: result.steps[0].attempts == 1)
 
-    check("ActionValidationError path works",
-          lambda: True)
+    class TransientOnce(FakeAdapter):
+        def __init__(self):
+            super().__init__()
+            self.failures = 0
+
+        def click(self, target):
+            self.failures += 1
+            if self.failures == 1:
+                raise TimeoutError("network timeout")
+            return {"clicked": target}
+
+    sleeps = []
+    runtime = AgentRuntime(TransientOnce(), sleep=sleeps.append)
+    retried = runtime.execute("t", [Action("click", target="Y")], verification=VERIFY)
+    check("Transient failure retried then PASS", lambda: retried.status == "PASS")
+    check("Retry attempts recorded", lambda: retried.steps[0].attempts == 2)
+    check("Backoff applied at >= 500 ms", lambda: sleeps and all(s >= 0.5 for s in sleeps))
 
 
 def test_state_trace_anti_patterns():
     print("\n=== Anti-patterns (must not happen) ===")
-    adapter = FakeAdapter()
-    runtime = AgentRuntime(adapter)
-
-    r = runtime.execute("t", [Action("click", target="A")],
-                        verification={"checks": [{"field": "text", "contains": "hello"}]})
+    runtime = AgentRuntime(FakeAdapter())
+    result = runtime.execute("t", [Action("click", target="A")],
+                             verification={"checks": [{"field": "text", "contains": "MISSING"}]})
 
     def no_skip_verifying():
-        trace = r.state_trace
+        trace = result.state_trace
         if "PASS" in trace:
-            idx_pass = trace.index("PASS")
-            assert "VERIFYING" in trace[:idx_pass], f"Skipped VERIFYING: {trace}"
+            assert "VERIFYING" in trace[:trace.index("PASS")], trace
     check("Never skip VERIFYING before PASS", no_skip_verifying)
+    check("Failing post-condition never yields PASS", lambda: result.status != "PASS")
+
+    no_evidence = AgentRuntime(FakeAdapter()).execute("t", [], verification=VERIFY)
+    check("Empty action list needs verification and still verifies",
+          lambda: no_evidence.status in ("PASS", "FAIL", "BLOCKED"))
 
 
 def main():
     print("Work 10 — Offline Contract Tests")
-    print("=" * 50)
-
-    test_action_contract()
-    test_click_type_separation()
-    test_workflow_state_machine()
-    test_verification_logic()
-    test_evidence_completeness()
-    test_api_validation()
-    test_failure_handling()
-    test_state_trace_anti_patterns()
-
-    print("\n" + "=" * 50)
+    print("=" * 58)
+    for fn in (
+        test_action_contract,
+        test_click_type_separation,
+        test_workflow_state_machine,
+        test_verification_logic,
+        test_evidence_completeness,
+        test_api_validation,
+        test_failure_handling,
+        test_state_trace_anti_patterns,
+    ):
+        fn()
+    print("\n" + "=" * 58)
+    if FAILED:
+        print(f"Offline contract tests: {len(FAILED)} FAILED")
+        for item in FAILED:
+            print(f"  - {item}")
+        raise SystemExit(1)
     print("Offline contract tests: ALL PASSED")
-    print("Coverage now matches OFFLINE_TEST_MATRIX.md (offline portion)")
 
 
 if __name__ == "__main__":

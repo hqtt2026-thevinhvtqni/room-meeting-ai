@@ -1,7 +1,21 @@
+"""
+Work 10 — real Chromium/Playwright E2E (gate P3)
+
+MUST run on a host with Chromium + Playwright installed. The ROOM-HOP Sandbox
+cannot launch a local Chromium process, so this script never claims a result by
+itself: it writes 06_EVIDENCE/real-browser-e2e-result.json + .png and exits
+non-zero on anything but PASS.
+
+It serves 05_TEST over an ephemeral localhost port and drives the deterministic
+target page (browser_e2e_target.html), then verifies a post-condition on the
+FINAL observation — a click alone can never satisfy it. Adapter cleanup occurs
+in the finally block after verification; close is not a workflow action.
+
+Usage:  python 05_TEST/e2e_real_browser.py
+"""
 from __future__ import annotations
 
 import json
-import os
 import sys
 import threading
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
@@ -13,15 +27,7 @@ sys.path.insert(0, str(PROJECT / "04_CODE"))
 
 from agent_runtime import AgentRuntime
 from browser_adapter import PlaywrightBrowserAdapter
-from models import Action
-
-EVIDENCE_DIR = PROJECT / "06_EVIDENCE"
-RESULT_PATH = EVIDENCE_DIR / "real-browser-e2e-result.json"
-
-# Exit codes: distinguish env problems (BLOCKED) from genuine test failures (FAIL).
-EXIT_PASS, EXIT_FAIL, EXIT_BLOCKED = 0, 1, 2
-
-TASK = "Real browser end-to-end verification"
+from models import Action, SafetyPolicy
 
 
 class QuietHandler(SimpleHTTPRequestHandler):
@@ -29,71 +35,30 @@ class QuietHandler(SimpleHTTPRequestHandler):
         pass
 
 
-def write_evidence(payload):
-    EVIDENCE_DIR.mkdir(parents=True, exist_ok=True)
-    RESULT_PATH.write_text(
-        json.dumps(payload, ensure_ascii=False, indent=2, default=str),
-        encoding="utf-8",
-    )
-
-
-def preflight() -> str | None:
-    """Return None when the host environment is ready, else a BLOCKED reason.
-
-    Per the Workflow Contract: a missing environment is BLOCKED, not FAIL,
-    and must never be reported as PASS.
-    """
-    try:
-        import playwright  # noqa: F401
-    except ImportError:
-        return (
-            "BLOCKED: playwright is not installed. "
-            "Run: pip install -r 10/COMPUTER-AGENT/requirements.txt"
-        )
-    try:
-        from playwright.sync_api import sync_playwright
-        pw = sync_playwright().start()
-        try:
-            pw.chromium.launch(headless=True).close()
-        finally:
-            pw.stop()
-    except Exception as exc:
-        return (
-            f"BLOCKED: Chromium is not available for Playwright ({type(exc).__name__}: {exc}). "
-            "Run: playwright install chromium"
-        )
-    return None
-
-
 def start_server():
-    server = ThreadingHTTPServer(("127.0.0.1", 0), QuietHandler)
-    # Serve the deterministic test target from 05_TEST.
-    os.chdir(ROOT)
-    thread = threading.Thread(target=server.serve_forever, daemon=True)
-    thread.start()
+    handler = lambda *args, **kwargs: QuietHandler(*args, directory=str(ROOT), **kwargs)  # noqa: E731
+    server = ThreadingHTTPServer(("127.0.0.1", 0), handler)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
     return server
 
 
-def main():
-    reason = preflight()
-    if reason:
-        payload = {
-            "task": TASK,
-            "status": "BLOCKED",
-            "state_trace": ["PLANNED", "BLOCKED"],
-            "error": reason,
-            "steps": [],
-            "evidence": [],
-        }
-        write_evidence(payload)
-        print(reason)
-        raise SystemExit(EXIT_BLOCKED)
-
+def main() -> int:
     server = start_server()
     port = server.server_address[1]
+    evidence_dir = PROJECT / "06_EVIDENCE"
+    evidence_dir.mkdir(parents=True, exist_ok=True)
+
+    # SAFETY_POLICY §4: this workflow explicitly declares the one destructive
+    # action it needs (download of a file inside the Work), and §5 confines
+    # navigation to the local test server and artifacts to the Work root.
+    policy = SafetyPolicy(
+        allow_destructive=True,
+        allowed_domains=("127.0.0.1",),
+        work_root=str(PROJECT),
+    )
 
     adapter = PlaywrightBrowserAdapter(headless=True)
-    runtime = AgentRuntime(adapter)
+    runtime = AgentRuntime(adapter, policy=policy, work_id="10")
 
     actions = [
         Action("navigate", value=f"http://127.0.0.1:{port}/browser_e2e_target.html"),
@@ -101,46 +66,52 @@ def main():
         Action("click", target="Start task"),
         Action("type", target="Task name", value="Work 10 REAL E2E"),
         Action("key_press", value="TAB"),
-        Action("scroll", args={"amount": 500}),
-        Action("wait", args={"seconds": 0.2}),
+        Action("scroll", value=500),
         Action("click", target="Submit task"),
+        Action("wait", value=0.2),
         Action("observe"),
         Action("extract", target="#result"),
-        Action("screenshot", args={"path": str(EVIDENCE_DIR / "real-browser-e2e.png")}),
+        Action("screenshot", args={"path": str(evidence_dir / "real-browser-e2e.png")}),
         Action("download", target="Download evidence"),
         Action("observe"),
-        Action("close"),
     ]
 
     verification = {
         "checks": [
-            {"field": "text", "contains": "Work 10 REAL E2E"},
             {"field": "text", "contains": "SUBMITTED"},
+            {"field": "text", "contains": "Work 10 REAL E2E"},
         ]
     }
 
     try:
-        result = runtime.execute(TASK, actions, verification)
+        result = runtime.execute("Real browser end-to-end verification", actions, verification)
     finally:
-        # Never leak the browser or the local server, even on unexpected errors.
-        if adapter.browser:
+        try:
             adapter.close()
-        server.shutdown()
+        finally:
+            server.shutdown()
 
     payload = {
+        "work_id": "10",
+        "gate": "P3 — real Chromium E2E",
+        "host": {"platform": sys.platform, "python": sys.version.split()[0]},
         "status": result.status,
         "state_trace": result.state_trace,
         "error": result.error,
+        "started_at": result.started_at,
+        "finished_at": result.finished_at,
+        "policy": result.policy,
         "steps": [s.__dict__ for s in result.steps],
         "evidence": result.evidence,
     }
-    write_evidence(payload)
+    (evidence_dir / "real-browser-e2e-result.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2, default=str), encoding="utf-8"
+    )
 
-    print(json.dumps(payload, ensure_ascii=False, indent=2, default=str))
-    if result.status == "PASS":
-        raise SystemExit(EXIT_PASS)
-    raise SystemExit(EXIT_BLOCKED if result.status == "BLOCKED" else EXIT_FAIL)
+    print(json.dumps({k: payload[k] for k in ("status", "state_trace", "error")},
+                     ensure_ascii=False, indent=2))
+    return 0 if result.status == "PASS" else 1
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
