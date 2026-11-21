@@ -258,3 +258,13 @@ Vinh directed Xu to proceed with the dual-loop build without waiting for multi-a
 | W118-19 | Full Lifecycle E2E & Acceptance | NOT STARTED | Requires real Sandbox runtime, verified Agent principal, event path, independent evidence and Vinh acceptance. |
 
 **Latest exact-head evidence:** feature HEAD `5e131e108a7195ca1ff5ae96b3fadb119e4bc31b`; push run #44877054701 and PR run #44877057892 SUCCESS; 86 tests PASS / 0.332s; artifact ID 14696186741; digest `9dae6385ae1e68572305ee6314bf1edf046361fc9993301cc85367603c56531a`. CI event-specific jobs remain SKIPPED; do not claim runtime E2E.
+
+
+## Additional implementation progress — Issue mirror and webhook inbox (2026-11-21)
+
+| WP | New implementation | Status | Runtime boundary |
+|---|---|---|---|
+| W118-13 | `scripts/w118/github_issue_adapter.py`: Task marker, paginated Issue lookup, create/update, exact readback, duplicate prevention, fail-closed incomplete scan | CONTRACT IMPLEMENTED | Fake transport tests only; no production token/API call; per-Task lock still required |
+| W118-17 | `scripts/w118/webhook_inbox.py`: HMAC-SHA256, delivery UUID, event/repository allowlist, payload hash, idempotent inbox, replay conflict | CONTRACT IMPLEMENTED | No HTTP route deployed to Event Listener :8050; no secret/TLS/network config; inbox does not update Task state |
+
+**Exact CI evidence:** source SHA `343fb526f5284ca1dcc4a55d463d58bf0c437340`; push run #44877554435 SUCCESS; 108 tests PASS / 0.503s; artifact ID 14696481659; SHA-256 `9414a8c7184099475557f1a651c2e8efaed31eb1f5e839d59c4bbaaea2e4f0f6`. Runtime E2E remains NOT VERIFIED.
