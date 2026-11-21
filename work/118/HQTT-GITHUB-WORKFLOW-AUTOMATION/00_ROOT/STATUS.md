@@ -104,3 +104,10 @@
 - **Known intermediate failure:** Runs #44949264655, #44949331177 and #44949341488 failed because the first Sandbox Task Register mirror retained Assignment state fields that TD-118-012 v1.2 forbids. The contract tests exposed this. Register/schema were corrected; exact-head run #44949541833 then passed. Failures remain visible in Actions history.
 - **Remaining blockers:** Core Task API/field map/lock/Event ingress; W102 verified principal/Assignment; W12/W13 Work Authority/runtime; live Issue API/task-scoped push; production webhook route/secret/TLS; W70 schema/owner ACK; Xu independent review and Vinh product acceptance.
 - **Disposition:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED. No merge, release, secret/permission change or W70 schema mutation.
+
+
+## 10. Documentation commit exact-head revalidation — 2026-11-22 04:50 +07:00
+
+- Journal Entry 078 and this status snapshot were committed together at `9190994862d1275db6a3037816e77a3c209b96ae` after the 94/94 PASS at parent SHA `aa842ea97746e95658c1166e83d697ea4f696343`.
+- The implementation and Task Register/schema were already exact-head validated at parent SHA aa842ea (Run #44949541833, 94 PASS). Because the latest journal/status commit is documentation-only and was created through Git data APIs, a fresh PR validation is required before calling the latest HEAD verified.
+- Latest disposition remains ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED; no merge/release.
