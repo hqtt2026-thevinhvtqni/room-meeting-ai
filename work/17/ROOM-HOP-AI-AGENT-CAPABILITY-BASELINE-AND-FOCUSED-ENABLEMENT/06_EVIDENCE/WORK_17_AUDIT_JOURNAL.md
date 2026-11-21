@@ -1531,3 +1531,57 @@
 - Disposition: GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2 provider delivery receipt NOT PROVEN; E3 recipient ACK/dispatch trace NOT PROVEN; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED; READ/TRACE/ANALYZE ONLY.
 - Hành động: không sửa source, không chạy tests/CI, không gọi API/provider, không gửi assignment, không sử dụng Meeting relay, không gọi Host, không thay quyền/gate/branch.
 - Bước tiếp theo: trace các implementation/contract W52 đã có trong Sandbox và xác định chính xác phần nào có thể tái sử dụng, phần nào thiếu adapter/receipt/ACK; đồng thời giữ ranh giới rõ giữa W52 candidate Sandbox, GitHub main và deployed runtime. Không tạo dispatcher hoặc ledger thứ hai.
+
+
+## Entry 082 — W52 A2A candidate: provider adapter, injected authority ports, and ACCEPTED-before-Host semantic gap (2026-11-21T16:28:00+07:00)
+
+- Người thực hiện: Xu / AI-01.
+- Phạm vi: đọc bounded source và evidence trong Sandbox W52 để phân loại phần có thể tái sử dụng cho GAP-01; đối chiếu A2A task contract, adapter interface, Codex/Qwen adapters, transport, Engine, capability matrix, independent review và Auto-E2E reconciliation. Không thay đổi W52.
+- Phương pháp: sandbox_list(work_id=52); sandbox_read_probe các file:
+  - `03_ARCHITECTURE/a2a-contract-v0.1.md`
+  - `03_ARCHITECTURE/adapter-interface.md`
+  - `03_ARCHITECTURE/capability-matrix.md`
+  - `03_ARCHITECTURE/state-machine.md`
+  - `03_ARCHITECTURE/G0_gap_analysis.md`
+  - `04_CODE/room_a2a/contracts.py`, `adapters.py`, `transport.py`, `engine.py`
+  - `06_EVIDENCE/AUTO_E2E_RECONCILIATION_20261028.md`
+  - `06_EVIDENCE/KA_INDEPENDENT_REVIEW_20261024.md`
+  - `06_EVIDENCE/AN_RETEST_REVIEW_20261024.md`
+  - `06_EVIDENCE/VI_BUILD/20261023T200344139471Z/summary.json`
+- Không chạy test, không gọi provider, không mở Codex/Qwen session, không gọi Core/Authority/Host, không dispatch task, không thay code/branch/permission.
+
+### A. Thành phần có thể tái sử dụng — SOURCE/DESIGN PRESENT, chưa phải live capability
+
+1. W52 có provider-neutral task/event contract `room.a2a.task/0.1` và `room.a2a.event/0.1`; có `task_id`, `correlation_id`, `parent_task_id`, `retry_of`, `work_id`, assigned agent identity/adapter, idempotency key, scoped workspace, capability requirements và acceptance checks.
+2. Có adapter protocol candidate cho Codex App Server và Qwen ACP; Codex flow dùng initialize/thread/start/turn/start/notifications; Qwen flow dùng ACP initialize/session/new/session/prompt. Đây là protocol implementation/fixture scope, không phải bằng chứng vendor invocation.
+3. `LineRpc` có NDJSON framing, request multiplexing, timeout, size limit, strict JSON decode, duplicate-key/non-finite rejection và phân biệt dialect Codex/ACP. Source presence không thay thế provider conformance/live transport evidence.
+4. `Engine` có task state/event orchestration, policy checks, timeout/cancel handling, retry command và evidence digest/verdict separation. `SUCCEEDED` được tài liệu xác định không đồng nghĩa PASS; PASS là verdict riêng có evidence.
+5. W52 design đã nêu rõ không tự sở hữu executor: CorePort/AuthorityPort/HostPort phải được cung cấp từ các boundary có thẩm quyền hiện hữu; không có default production implementations trong candidate.
+
+### B. Khoảng trống trực tiếp đối với W70 Assignment / GAP-01
+
+1. Task contract không có các trường bắt buộc để bind W70 Assignment delivery: `assignment_id`, `dispatch_id`, `attempt_id`, provider delivery receipt, recipient/session identity proof, accepted-scope digest, explicit ACK reference, ACK nonce/expiry/version.
+2. Event schema/task state trong candidate mô tả vòng đời A2A nội bộ (QUEUED/ACCEPTED/RUNNING/SUCCEEDED...), không chứng minh event/state được nối vào authoritative W70 Assignment aggregate hay Core ACK ledger.
+3. CorePort/AuthorityPort/HostPort là injected Protocol interfaces. Auto-E2E reconciliation 2026-10-28 xác nhận Core task/identity binding BLOCKED; W14 scoped transport BLOCKED; live Codex/Qwen invocation BLOCKED; full Auto-E2E NOT RUN. Không có binding/runtime proof trong nguồn đã đọc.
+4. Capability matrix đánh dấu live Codex CLI và Qwen CLI BLOCKED: CLI absent trong môi trường probe hiện hành; không được suy diễn provider unavailable ở mọi môi trường hoặc PC của Vinh.
+5. Engine `submit()` xác minh authority/agent qua injected ports và tạo task trong CorePort; nhưng không đọc W70 Assignment state, không nhận provider delivery receipt, không ingest recipient-authenticated ACK.
+6. Engine `execute()` thực hiện `transition(ident, "ACCEPTED")` trước khi tạo job; sau đó trong coroutine mới gọi `host.open()`, tạo adapter và chuyển RUNNING. Vì vậy trong implementation được đọc, ACCEPTED xảy ra trước khi Host transport mở và trước khi adapter có thể nhận task. Điều này không phù hợp với mô tả trong state-machine/adapter contract rằng ACCEPTED là adapter đã nhận/đủ điều kiện. Đây là source-level semantic inconsistency; chưa chạy test hoặc tái hiện runtime. Không coi ACCEPTED là delivery receipt hoặc recipient ACK.
+7. CodexAdapter/QwenAdapter cancel() trả false sau interrupt/cancel notification; code yêu cầu Host.stop xác nhận. Đây là thiết kế fail-closed có ích cho cancellation, nhưng không cung cấp Assignment ACK.
+8. Candidate event provenance mặc định là orchestrator; adapter protocol progress không phải provider-signed receipt hay người nhận ACK. Event stream nội bộ không thể tự xác thực identity phiên AI.
+
+### C. Độ tin cậy của test/review evidence
+
+- VI_BUILD summary 2026-10-23T20:03:44Z ghi local checks exit 0, gồm schema, event/state và unittest; summary ghi rõ `independent_review=false`, scope là local contract/protocol test doubles, NOT live ROOM/provider E2E; prerequisites probe exit 2; live_e2e=BLOCKED.
+- W52 Auto-E2E reconciliation 2026-10-28 ghi candidate manifest 29/29 hash match ở thời điểm đó; đây là integrity check, không phải test, independent QA, provider identity proof hay live E2E.
+- An review ghi 42/42 là coder-reported, independent runtime CHỜ; Core/Authority/W14 Host và Codex/Qwen runtime E2E CHỜ/BLOCKED.
+- Ka review ghi ACK chưa xác minh; static follow-up IN PROGRESS, independent retest WAITING; Work 52 ACTIVE / NOT RELEASED.
+- Không lấy các báo cáo lịch sử này làm kết quả test mới tại ngày 2026-11-21. Không tuyên bố PASS độc lập hoặc runtime.
+
+### D. Kết luận tích hợp và disposition
+
+- W52 là candidate A2A orchestration/adapter framework có thể tái sử dụng có điều kiện cho provider-neutral protocol và task/event model.
+- W52 hiện chưa phải Assignment dispatcher, delivery receipt service, recipient ACK verifier hoặc production Core/Host binding.
+- Không fork W52 contract thành hợp đồng mới ở W17; không tạo dispatcher, queue, registry, Assignment ledger hoặc evidence store song song. Nếu tiếp tục thiết kế tích hợp, cần mapping loss-aware từ W70 Assignment ID/scope → W52 task/correlation/attempt → adapter/provider native reference/receipt → authenticated recipient ACK → Core read-back; chỉ triển khai sau khi authoritative Core/W70 boundary và W52 candidate promotion được xác nhận.
+- Semantic gap ACCEPTED-before-Host phải được ghi nhận như finding cần owner xử lý trong W52; W17 không sửa code W52 và không tự thay đổi semantics.
+- GAP-01 OPEN/P0; GAP-11 OPEN/P0; provider delivery receipt NOT PROVEN; recipient-authenticated ACK NOT PROVEN; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED; READ/TRACE/ANALYZE ONLY.
+- Bước tiếp theo: truy vết W52 CorePort/AuthorityPort/HostPort binding references và W14/W37 canonical boundary evidence ở Sandbox, xác định có implementation thật ở Work khác hay chỉ là interface/contract. Không gọi runtime/host/provider và không tạo hệ thống song song.
