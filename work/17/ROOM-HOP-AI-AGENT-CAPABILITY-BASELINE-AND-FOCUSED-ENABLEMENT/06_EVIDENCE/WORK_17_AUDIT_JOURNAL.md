@@ -1626,3 +1626,30 @@ Read-only Sandbox trace of canonical Work boundary records and selected source/e
 - GAP-01 OPEN/P0; GAP-11 OPEN/P0; provider delivery receipt NOT PROVEN; recipient-authenticated ACK NOT PROVEN; W52 concrete Core/Authority/Host bindings NOT LOCATED in inspected Sandbox artifacts; E2/E3 NOT PROVEN.
 - Protected execution DENY / NOT RELEASED. READ/TRACE/ANALYZE ONLY.
 - Next bounded step: inspect W52 adapter-interface and W14 bridge request/response contracts side-by-side for the smallest loss-aware mapping, then record required existing boundary contracts and explicit gaps. Do not implement until the authoritative W70/Core Assignment and recipient ACK source is proven.
+
+
+## Entry 084 — W52 HostPort ↔ W14 bridge contract mismatch (2026-11-21T16:36:36+07:00)
+
+### Scope and method
+Read-only side-by-side inspection of W52 adapter-interface.md and contracts.py, plus W14 execution_host_bridge.py, execution_host/wee_bridge.py, work_execution_environment/wee/bridge/real_host.py and W13_WEE_8031_BRIDGE_STATUS.md. No code execution, process launch, provider invocation or source change.
+
+### Direct contract comparison
+1. W52 HostPort contract requires async open(adapter, task) to create a provider-specific transport and return RpcPort. RpcPort requires request, notify, receive, respond and close. HostPort.stop(task_id) must return true only after all descendant runtime processes are confirmed exited. W52 LineRpc then expects a bidirectional bounded NDJSON stream with Codex/ACP dialect handling.
+2. W14 ExecutionHostBridge is an HTTP request/response client. It serializes a WorkContext and execution_request to POST /execute on the canonical W13 Host, then parses a bounded execution envelope/stdout result. Its product actions are browser workflow and Git operations; it does not expose a persistent provider RPC stream or the RpcPort methods required by W52.
+3. W14 reusable WEE ExecutionHostBridge likewise posts one execution request to /execute and normalizes a BridgeResult. It validates required WorkContext fields and preserves runtime/evidence metadata, but does not implement provider-specific open/receive/respond/close semantics.
+4. W14 RealExecutionHost provides scoped subprocess.run and an optional Popen-based start_service/process registry when explicitly enabled. Its browser capability is an injected adapter. The inspected source does not implement the W52 HostPort interface, does not return a Codex/ACP RpcPort, and does not demonstrate that a provider process is bound to W52 task/session identity, timeout, cancellation and evidence lifecycle.
+5. W14 bridge status document marks source/contract implementation WRITTEN but compile/pytest and live HTTP :8031 NOT RUN in that recorded session. Separate historical fixture and PC attestation records remain bounded to their stated runs; they do not fill this HostPort contract gap.
+
+### Finding
+The two sides are adjacent but not substitutable: W14 supplies an authorized Work-scoped HTTP execution boundary; W52 requires a long-lived provider-session transport with bidirectional RPC semantics. Treating W14 POST /execute or a successful browser fixture as an implementation of W52 HostPort would lose protocol/session/cancellation semantics and would be an unsupported integration claim.
+
+### Smallest safe integration direction (design-only)
+- Keep W14 as the sole execution Host owner; do not add a second executor in W52.
+- Define an explicit W14-owned provider-process adapter behind the existing W13/W12 authorized boundary, exposing the exact W52 RpcPort contract only after W14 confirms process spawn, executable identity/version, workspace/source binding, bounded streams, stderr redaction, cancellation and descendant-stop confirmation.
+- Bind Core-authorized Work/task and provider target/session identity before open; return provider-native reference/receipt and recipient-attributable ACK through the existing authoritative Core/W70 path. Do not let W52's internal ACCEPTED substitute for receipt or ACK.
+- This is an architecture direction only, not an authorization to implement. First prove the authoritative W70 Assignment/ACK source and W14 execution request policy contract.
+
+### Disposition
+- W52 HostPort ↔ W14 bridge concrete implementation: NOT LOCATED / NOT PROVEN.
+- GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
+- READ/TRACE/ANALYZE ONLY. No source, test, runtime, provider, Host, API, permission or branch action.
