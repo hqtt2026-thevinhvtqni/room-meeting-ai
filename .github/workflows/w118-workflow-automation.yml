@@ -86,7 +86,7 @@ jobs:
           record = {
               "schema_version": "1.0",
               "work_id": "118",
-              "evidence_type": "RUNTIME",
+              "evidence_type": "CI_CONTRACT",
               "workflow": "W118 Auto E2E Validation",
               "repository": os.environ["GITHUB_REPOSITORY"],
               "run_id": run_id,
