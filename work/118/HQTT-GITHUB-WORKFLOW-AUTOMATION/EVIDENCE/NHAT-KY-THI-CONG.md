@@ -1259,3 +1259,17 @@
 - **BLOCKED:** tích hợp nhánh do 440/86 DIVERGED; cần phân loại 86 commit Main mới trước khi có quyết định.
 - **PENDING:** Xu phản biện RA-118-002 / TD-118-012 v1.2; Go QE chỉ sau khi xác minh identity/access.
 - **Work state:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED.
+
+
+## Entry 076 — Autonomous GitHub/Sandbox consistency audit
+- **Thời gian:** 2026-11-22 03:42 (UTC+07:00).
+- **Người thực hiện:** Ka — Technical Build Owner theo ủy quyền của Vinh.
+- **Chức danh:** Autonomous Technical Execution / GitHub Integration Audit.
+- **Phạm vi:** Đối soát trực tiếp main, feature branch, PR #67, Actions run, workflow và ROOM-HOP Sandbox W118.
+- **Bằng chứng GitHub:** main `43efc145c9f7007284366e8edb4f4805191bb3ad`; branch `069b5237c49daadda6bc2e0708352a66071d0599`; PR #67 OPEN / UNMERGED; compare DIVERGED 446 ahead / 57 behind; merge base `2fb5963379f475d362a897ba2d0c99c83b4ed64a`.
+- **CI evidence:** PR run #44889342960 SUCCESS; validate job SUCCESS; three event-specific jobs SKIPPED. Không dùng kết quả này làm bằng chứng Runtime E2E.
+- **Phát hiện P0:** Sandbox 118 còn liệt kê implementation cũ gồm local task lifecycle, event reconciler và webhook inbox; GitHub branch hiện tại dùng stateless adapter, không cho phép W118 sở hữu runtime Task DB/Event queue. Sandbox read trả object rỗng nên chưa thể xác minh nội dung file hoặc đồng bộ an toàn.
+- **Phát hiện governance:** main branch đang không bật branch protection theo GitHub branch API; chưa thay đổi cấu hình.
+- **Hành động:** Cập nhật STATUS và nhật ký bằng snapshot hiện hành; giữ nguyên PR, branch và main; không rebase/force-push/merge; không ghi đè Sandbox khi chưa có readback tin cậy.
+- **Kết quả:** Audit snapshot ghi nhận; implementation/runtime chưa được nâng trạng thái PASS. W118 tiếp tục ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED.
+- **Bước tiếp theo:** Phân loại toàn bộ 446 commits/57 commits divergence và 99 PR files; khôi phục đường readback Sandbox hoặc xác định canonical source; sau đó hoàn thiện exact-head CI và runtime integration theo TD-118-012.
