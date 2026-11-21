@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.2",
+  "authority": "HISTORICAL_AUDIT_REFERENCE_ONLY",
+  "policy": "NOT_A_RUNTIME_AUTHORIZATION_SOURCE",
+  "principals": {
+    "hqtt2026-thevinhvtqni": {
+      "principal": "owner:vinh",
+      "roles": [
+        "owner"
+      ],
+      "ack_roles": [],
+      "active_for_audit": true
+    },
+    "thevinhqtni-1911": {
+      "principal": "owner:vinh",
+      "roles": [
+        "owner"
+      ],
+      "ack_roles": [],
+      "active_for_audit": true
+    }
+  },
+  "notes": [
+    "These two GitHub logins were owner-confirmed as belonging to Vinh and are retained only for historical audit context.",
+    "This file is not used for Core Task, Agent identity, Assignment, ACK, review, acceptance, merge or release authorization.",
+    "Core :8000 with W01/W02/W22 is the only runtime identity and authorization authority.",
+    "GitHub login is not a ROOM-HOP runtime principal."
+  ]
+}
