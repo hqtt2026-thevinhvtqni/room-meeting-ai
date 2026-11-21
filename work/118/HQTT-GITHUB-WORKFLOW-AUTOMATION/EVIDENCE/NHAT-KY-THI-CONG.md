@@ -1396,3 +1396,18 @@
 - **Trạng thái cổng:** Evidence integrity update RECORDED; Xu independent review NOT RECORDED; T-01..T-05 vẫn OPEN/PENDING theo hồ sơ Xu; Work 118 ACTIVE — NOT ACCEPTED — NOT RELEASED.
 - **Bước tiếp theo:** Giữ implementation freeze; chờ Xu review độc lập và đóng test cycle. Sau đó Ka chỉ xử lý findings trong phạm vi được phép; B-118-010 vẫn PREPARED / NOT APPLIED, không áp dụng nếu chưa có gate Xu + Vinh ACK.
 - **Giới hạn:** Chưa cập nhật STATUS.md trong entry này; chưa có runtime test trên Core/W102/W14/GitHub; không có thay đổi source implementation.
+
+
+## Entry 020 — Exact-head CI readback sau cập nhật STATUS và Journal Entry 019
+
+- **Thứ tự ưu tiên:** 01 — P0 — Evidence integrity / exact-head verification.
+- **Name:** Ka.
+- **Title:** CSA / Delegated Technical Lead — Work 118.
+- **Date-Time:** 2026-11-22 (UTC+07:00).
+- **Source HEAD:** `034816412a59aedb0f0c389f4ee4910c147e4883` trên `work/118-auto-e2e-v2-clean`.
+- **Workflow:** [Run #44953505468](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44953505468) — SUCCESS; tested merge ref `refs/pull/68/merge`, tested commit `45010bf9cdbba4de1c54144918ca135488c5ddc3`.
+- **Jobs:** `validate` SUCCESS; `handoff-request-capture`, `ack-claim-capture`, `review-observation-capture` SKIPPED; source-binding step SKIPPED vì pull_request event.
+- **Artifact:** ID `14726223889`, digest `sha256:2392d6c4ddf1e1b6a807344cd3bf6b1a08141ea3e4f8a901664d5c5788acc3da`; đã download và đọc JSON. Artifact xác nhận `CI_CONTRACT`, `RECORDED`, `test_outcome=success`, source SHA `034816412a59aedb0f0c389f4ee4910c147e4883`, tested merge SHA `45010bf9cdbba4de1c54144918ca135488c5ddc3`, `source_binding_status=NOT_RUN`.
+- **Kết luận:** exact source HEAD tại thời điểm cập nhật STATUS + Entry 019 có contract validation SUCCESS. Không có runtime lifecycle E2E; không nâng T-01..T-05 hoặc Xu acceptance.
+- **Trạng thái:** ACTIVE — NOT ACCEPTED — NOT RELEASED; PR #68 OPEN / UNMERGED. No Main merge, no B-118-010, no release.
+- **Bước tiếp theo:** tiếp tục giữ freeze implementation; Xu independent review và runtime acceptance tests vẫn là gate bắt buộc.
