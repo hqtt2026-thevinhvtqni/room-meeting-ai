@@ -342,3 +342,14 @@ The workflow_run listener requires default-branch presence for real runtime veri
 - **Artifact:** ID `14696481659`; SHA-256 `9414a8c7184099475557f1a651c2e8efaed31eb1f5e839d59c4bbaaea2e4f0f6`.
 - **Still pending:** live GitHub Issue API call; HTTP route in existing ROOM-HOP Event Listener :8050; production webhook secret/TLS/request-size/network configuration; Sandbox service integration and event reconciliation; task-scoped branch live push; CI result callback to exact Task; verified Agent dispatch/ACK; Work 70 projection approval.
 - **Work state:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED.
+
+
+## Push / CI event reconciliation foundation (2026-11-21)
+
+- **W118-17 event reconciler:** `scripts/w118/event_reconciler.py` now consumes authenticated inbox records for push and workflow_run. Push is bound to exact repository/Work/Task/Issue/SHA; CI run must come from allowlisted `W118 Auto E2E Validation` and match previously observed push SHA.
+- **Out-of-order:** CI-before-push returns DEFERRED and remains pending; it can be retried after source evidence arrives.
+- **State boundary:** source push and CI PASS/FAIL append evidence-only Task events. They do not change Task state, verify acceptance, close Issue, merge or release.
+- **Exact tested SHA:** `4e5c1e0d23cf145ddbcfca88c32255069ab3c642`; push run [#44877879841](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44877879841) SUCCESS; **118 tests PASS / 0.380s**; PR run [#44877883249](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44877883249) SUCCESS.
+- **Artifact:** ID `14697131158`; SHA-256 `db783c9329e95f2cdb0dce68c21911d56bb2bc7e318088fb53617936c9861011`.
+- **Runtime remains pending:** Event Listener :8050 route/worker deployment, secret/TLS/request limits, durable DB, real GitHub webhook and workflow_run callback, Issue API token, Task Registry service, Agent Registry/dispatch and live task branch.
+- **Work state:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED.
