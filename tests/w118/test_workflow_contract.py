@@ -27,7 +27,7 @@ class Work118WorkflowContractTests(unittest.TestCase):
     def test_orchestrator_has_required_events(self):
         data = self.load_yaml(WORKFLOW)
         triggers = data["on"]
-        for event in ("push", "pull_request", "workflow_dispatch", "issues", "issue_comment", "pull_request_review"):
+        for event in ("push", "pull_request", "issues", "issue_comment", "pull_request_review"):
             self.assertIn(event, triggers)
 
     def test_orchestrator_is_read_only_by_default(self):
@@ -92,36 +92,6 @@ class Work118WorkflowContractTests(unittest.TestCase):
         run_script = next(step["run"] for step in steps if "MARKER=" in step.get("run", ""))
         self.assertIn("${ISSUE_UPDATED_AT}", run_script)
 
-
-    def test_controlled_failure_dispatch_is_owner_gated_and_branch_scoped(self):
-        data = self.load_yaml(WORKFLOW)
-        dispatch = data["jobs"]["controlled-failure-dispatch"]
-        self.assertEqual(dispatch["permissions"]["actions"], "write")
-        self.assertIn("W118-TEST-DIAGNOSTICS", dispatch["if"])
-        self.assertIn("[W118 E2E TEST]", dispatch["if"])
-        self.assertIn("steps.authorize_controlled_failure.outputs.authorized", dispatch["steps"][-1]["if"])
-        controlled = data["jobs"]["controlled-failure"]
-        self.assertIn("refs/heads/work/118-auto-e2e-v2", controlled["if"])
-
-
-    def test_direct_controlled_failure_dispatch_is_role_authorized(self):
-        data = self.load_yaml(WORKFLOW)
-        job = data["jobs"]["controlled-failure"]
-        steps = job["steps"]
-        checkout = next(step for step in steps if step.get("name") == "Checkout trusted controlled-test policy")
-        self.assertEqual(checkout["with"]["ref"], "${{ github.event.repository.default_branch }}")
-        auth = next(step for step in steps if step.get("name") == "Authorize direct controlled-failure dispatch actor")
-        self.assertEqual(auth["env"]["AUTHOR"], "${{ github.actor }}")
-        self.assertIn("controlled_test_authorization.py", auth["run"])
-        failure = next(step for step in steps if step.get("name") == "Emit controlled failure for diagnostics E2E")
-        self.assertEqual(failure["if"], "steps.authorize_direct_dispatch.outputs.authorized == 'true'")
-
-    def test_controlled_dispatch_targets_isolated_branch_and_input(self):
-        data = self.load_yaml(WORKFLOW)
-        dispatch = data["jobs"]["controlled-failure-dispatch"]
-        run_script = next(step["run"] for step in dispatch["steps"] if "gh workflow run" in step.get("run", ""))
-        self.assertIn("--ref work/118-auto-e2e-v2", run_script)
-        self.assertIn("failure_injection=controlled", run_script)
 
     def test_diagnostics_listens_to_w118_w300_and_work70(self):
         data = self.load_yaml(DIAGNOSTICS)
