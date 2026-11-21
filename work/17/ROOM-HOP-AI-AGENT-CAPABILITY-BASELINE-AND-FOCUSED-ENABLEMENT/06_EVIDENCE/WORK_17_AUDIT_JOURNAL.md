@@ -1918,3 +1918,24 @@ Read current-main W70 DOC-054, DOC-065, DOC-066, DOC-072 and DOC-035; used bound
 - GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
 - READ/TRACE/ANALYZE ONLY. No source, test, API, provider, dispatch, Host, permission, branch, PR or deployment action.
 - Sandbox journal remains out of parity with GitHub: previous probe returned a shorter/divergent content snapshot and ordinary read returned empty. No Sandbox overwrite/append attempted; GitHub main is updated separately.
+
+
+## Entry 095 — DOC-044 template versus DOC-065 dispatch contract field boundary (2026-11-21T17:01:54+07:00)
+
+### Scope and method
+Fetched current-main W70 canonical DOC-044 from the path registered by DOC-055; compared its complete 86-line content with DOC-065, DOC-066 and the already inspected DOC-072. Read-only document/source-contract inspection only.
+
+### Findings
+- DOC-044 (blob `508cbde08e1f376cdeba9475330aa880a9f63797`) is ACTIVE / TEMPLATE. It includes Assignment ID, Work/WP, issuer/assignee, status, objective/scope, source baseline, permission contract, deliverables, acceptance, tests/evidence, execution report and closure. It does not define typed `dispatch_id`, `attempt_id`, provider adapter/target/session, provider transport receipt, recipient identity proof, ACK event/nonce, accepted-scope digest, callback signature or transport-vs-assignment status mapping.
+- DOC-065 (blob `a18db833f7286400ca702b850f072df6d834c4f1`) adds those logical dispatch/receipt/ACK/event fields, but remains DRAFT / CONTRACT PROPOSAL / NOT IMPLEMENTATION APPROVED; it explicitly does not assert API routes, database or Core service exist.
+- DOC-066 explicitly says DOC-065 extends DOC-044 but does not replace it until migration is approved; DOC-066 itself remains PLANNED / IMPLEMENTATION NOT AUTHORIZED / TESTS NOT RUN. DOC-072 keeps the integrated architecture design-only and says Core Work/Assignment/Evidence API and persistence are NOT VERIFIED.
+
+### Interpretation
+This is a deliberate contract layering, not necessarily a defect: DOC-044 is the active assignment template; DOC-065 is a proposed transport/event extension. The implementation gap is that the extension has not been approved/migrated into an authoritative runtime contract or bound to an actual Core Assignment store and dispatch/receipt/ACK ingress. Do not mutate DOC-044 ad hoc, copy DOC-065 fields into a second registry, or treat the logical sample as a live assignment.
+
+### Disposition
+- DOC-044 ACTIVE/TEMPLATE; DOC-065 DRAFT/NOT IMPLEMENTATION APPROVED; DOC-066 planned/no tests; DOC-072 design-only.
+- Assignment template exists; provider dispatch/receipt/recipient ACK implementation and Core persistence remain NOT VERIFIED.
+- GAP-01 OPEN/P0; E2/E3 NOT PROVEN; GAP-11 OPEN/P0; protected execution DENY / NOT RELEASED.
+- READ/TRACE/ANALYZE ONLY. No schema/API/source/test/provider/dispatch/Host/permission/branch/PR/deployment change.
+- Sandbox parity remains BLOCKED; no Sandbox write attempted. GitHub main is the canonical updated journal/sync destination for this evidence round.
