@@ -869,3 +869,15 @@
 - Reuse existing W70 semantics; Core remains intended authenticated identity/authority/persistence boundary, W52 provider dispatch/receipt/session events, W14 execution Host. No parallel dispatcher/ledger/ACK store/event bus proposed. Design mapping only, not implementation approval.
 - GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; delivery receipt/recipient ACK NOT PROVEN; protected execution DENY / NOT RELEASED. READ/TRACE/ANALYZE ONLY. Entry 085 added.
 - Next: trace current-main Core :8000 route composition and persistence/event models for an existing Assignment/ACK endpoint/store; do not infer absence from W70-only evidence.
+
+
+## Sync Period 0073 — Current-main Core route composition trace (2026-11-21T16:42:48+07:00)
+
+- Exact current-main `http_server.py` blob `54cb3ecbce2e6b13083f31c14f0c1f0738f1457d` exposes `/identities` GET and Meeting routes only; no Assignment/Dispatch/ACK route in this app factory.
+- Exact current-main `core_http_main.py` blob `8dd6bb5ea500026d932ca52eb6079c980d722ab0` docstring mentions additive Work execution-authority routes, but executable `build_app()` composes MeetingManager → MeetingService → `create_http_app(service)` only; no authority/Assignment router is mounted in this composition.
+- PrincipalRegistry/AgentRegistry/IdentityResolution blobs `1eda0c8...`, `7e4b98...`, `207c0ea...` provide directory and identity-type resolution, not Work authorization or recipient-session authentication.
+- Core Meeting connector/discussion blobs `809c4d2...` and `aa722f9...` provide Meeting-turn provider calls/round-robin, not Work Assignment dispatch, delivery receipt or recipient ACK.
+- Bounded code searches for assignment route decorators, DispatchService and include_router returned no indexed implementation; this supports but does not prove universal absence.
+- Current inspected Core HTTP entrypoint has no Assignment/Dispatch/ACK route; alternate internal service/runtime and durable state remain NOT VERIFIED. No live HTTP call, test, runtime, provider or Host invocation.
+- GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. Entry 086 added.
+- Next: inspect separate Core service composition/configuration and persistence modules beyond this HTTP entrypoint; avoid claiming Core-wide absence until that bounded search is completed.
