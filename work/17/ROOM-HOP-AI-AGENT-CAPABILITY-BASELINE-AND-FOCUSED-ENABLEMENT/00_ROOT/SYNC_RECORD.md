@@ -921,3 +921,13 @@
 - Current Host still accepts caller work_context and trusts authorized boolean in local validator; this reconfirms GAP-11 source finding, not a live exploit.
 - Core launcher source PRESENT; live runtime NOT VERIFIED; execution-authority route NOT PRESENT in inspected current-main app composition. GAP-11 OPEN/P0; GAP-01 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. Entry 090 added.
 - Next: inspect for any separately launched Core service/runtime configuration outside this entrypoint; no code changes authorized.
+
+
+## Sync Period 0078 — Recursive main tree and Core deployment configuration
+
+- Full recursive GitHub main tree SHA `321debc66e6027c7509f9dc05416e810643b0d1f`, not truncated, 1,187 entries. It contains the Core HTTP launcher and Meeting/Identity modules; no current-main execution_authority module or authority HTTP adapter.
+- `ROOM_HOP_CORE_PORT`/`ROOM_HOP_CORE_BIND` search finds only core_http_main.py and deployment guide. No separate Core service manager/start script, Docker/Compose, systemd/NSSM service definition or deployment workflow found in the filtered complete tree.
+- `.env.example` has no Core URL/port or Assignment/ACK store configuration. API_CONTRACT.md scopes Core authority to Meeting identity/lifecycle; run_meeting_v2 uses Mock connectors.
+- This establishes repository-source/config absence within current main only. PC-only/external Core deployment remains UNKNOWN; no claim Core is stopped or absent.
+- GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. Entry 091 added.
+- Next: prepare a bounded blocker/decision brief separating source defect from deployment unknown; defer PC/service-manager attestation until PC is available.
