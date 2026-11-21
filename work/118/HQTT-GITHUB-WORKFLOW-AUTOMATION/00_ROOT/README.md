@@ -78,3 +78,13 @@ The previous local SQLite TaskRegistry, durable webhook inbox, event reconciler 
 | Full runtime E2E / Vinh acceptance | Not run |
 
 No rebase, merge to main, release or branch-protection change is authorized by this Work state.
+
+
+## Current autonomous build snapshot — 2026-11-22
+
+- **Canonical PR:** [#68 — isolated W118 build](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/68), branch `work/118-auto-e2e-v2-clean`, based on current Main with 1 commit ahead / 0 behind at isolation.
+- **Exact-head CI:** Run [#44948921625](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44948921625), 94/94 contract tests PASS; artifact 14724581468. Event-specific jobs were skipped; runtime E2E is not claimed.
+- **PR #67:** retained unmerged as superseded history because its branch contained unrelated Work changes and extensive divergence. Do not use it for integration.
+- **Sandbox 04_CODE:** synchronized to the stateless Core/GitHub adapter implementation from PR #68. TD-118-012 v1.2 is controlling: no W118 Task DB, webhook inbox, durable event queue, Agent Registry, dispatcher, Execution Host, Git Gateway or CI engine.
+- **Task Register:** Sandbox is operational source; GitHub is versioned mirror. Owner-directed build authorization is recorded without fabricating Agent identity, Assignment or ACK.
+- **State:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED.
