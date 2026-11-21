@@ -188,21 +188,21 @@ Issue mirror, branch creation, commit, push, CI run, PR và review được ghi 
 
 ### 4.2 Ma trận trạng thái GitHub và Sandbox
 
-| GitHub signal | Sandbox projection | Có được tự chuyển Task? | Quy tắc |
+| GitHub signal | Sandbox projection | Có tự đổi Task/Assignment status? | Quy tắc |
 |---|---|---:|---|
-| Issue opened | ISSUE_LINKED | Có, sau readback | Kiểm tra Work/Task metadata |
-| Issue assigned | ASSIGNEE_SET | Không | Không chứng minh AI ACK |
-| Handoff label | HANDOFF_REQUESTED | Không | Chỉ là yêu cầu dispatch |
-| Verified ACK event | ACKED | Có | Identity + role + assignment binding |
-| Push event | PUSH_OBSERVED | Chưa | Cần exact SHA + Task binding |
-| CI queued/running | CI_RUNNING | Không | Cập nhật telemetry |
-| CI success | CI_PASS | Chỉ sang READY_FOR_REVIEW/VERIFIED | Không đóng Task |
-| CI failure | CI_FAIL / BLOCKED | Có, theo failure policy | Gắn đúng Task và attempt |
-| PR opened | PR_OPEN | Không | Bắt đầu review path |
-| Review approved | REVIEW_APPROVED | Không | Reviewer authority đã xác minh |
-| Owner acceptance | ACCEPTED | Có | Explicit decision + exact SHA |
-| PR merged | MERGED | Không tự nghiệm thu | Chỉ phản ánh merge state |
-| Release published | RELEASED | Không | Cần quyết định release riêng |
+| Issue opened / readback | `github.issue_linked` observation + issue_id/url | Không | Link field, không phải Task status |
+| Issue assigned | `github.assignee_observed` | Không | Không chứng minh AI Assignment/ACK |
+| Handoff label | `dispatch.requested` | Không | Chỉ yêu cầu dispatch; phải qua policy |
+| Verified ACK event | Assignment `ACKNOWLEDGED` | Có, Assignment only | Verified principal + assignment/dispatch binding |
+| Push event | `source.push_bound` observation | Không | Exact SHA + Task/Issue binding |
+| CI queued/running | `ci.run_observed` | Không | Telemetry only |
+| CI success | `ci.run_completed` evidence | Không | Exact SHA evidence; không tự ACCEPT/DONE |
+| CI failure | `ci.run_completed` evidence | Không | Orchestrator quyết định Task BLOCKED theo policy |
+| PR opened | `pr.opened` observation | Không | Link PR/Task/SHA |
+| Review approved | Assignment `ACCEPTED` (nếu đúng reviewer authority) | Assignment only | Task vẫn IN_REVIEW đến Owner decision |
+| Owner acceptance | Task `DONE` | Có, Task only | Explicit Owner decision + exact evidence |
+| PR merged | `pr.merged` observation | Không | Merge state không tự nghiệm thu Task |
+| Release published | `release.published` observation | Không | Cần quyết định release riêng |
 
 ---
 
@@ -236,7 +236,7 @@ Issue mirror, branch creation, commit, push, CI run, PR và review được ghi 
 
 ### 6.1 Quy tắc chung
 
-- JSON UTF-8; schema có version; field names dùng snake_case; timestamp ISO-8601 UTC có offset hoặc Z.
+- JSON UTF-8; schema có version; field names dùng snake_case; timestamp ISO-8601 UTC có offset hoặc Z. W118 Task Register follows W70 DOC-056 §9 by using a Work-specific DOC-093-style register; W112 DOC-001 is a compatibility reference while its baseline is DRAFT_NOT_APPROVED.
 - ID ổn định, không tái sử dụng; event ID và idempotency key duy nhất trong phạm vi được quy định.
 - Không nhúng secret/token/password vào Issue, journal hoặc artifact.
 - Field chưa xác minh dùng `null`/unknown; không điền giá trị phỏng đoán.
@@ -279,42 +279,49 @@ Assignment status độc lập với Task status; không cập nhật Task statu
 
 Assignment chỉ được tạo khi Agent active, identity verified, capability match và runtime route available. GitHub Assignee là field mirror tùy chọn, không phải assignment authority.
 
-### 6.4 Event envelope — schema đề xuất v1
+### 6.4 Event envelope — compatible with cross-Work contract
+
+W118 event payloads extend the common cross-Work event envelope described by W112 DOC-001 (currently DRAFT_NOT_APPROVED; used as a compatibility design reference, not claimed as an approved system-wide runtime contract).
 
 ```json
 {
   "schema_version": "1.0",
   "event_id": "evt_<unique>",
-  "event_type": "task.acknowledged",
+  "event_type": "assignment.acknowledged",
   "occurred_at": "2026-11-21T10:00:00Z",
-  "producer": "room-hop-orchestrator",
-  "actor": {
-    "principal_id": "agent:<verified-id>",
-    "github_login": null,
-    "identity_verified": true,
-    "role": "executor"
-  },
+  "recorded_at": "2026-11-21T10:00:01Z",
+  "actor_identity_id": "agent:<verified-principal>",
   "work_id": "W118",
-  "wp_id": "W118-14",
   "task_id": "W118-TASK-001",
-  "issue_id": 123,
-  "assignment_id": "asg_<unique>",
+  "product_task_id": null,
+  "phase_task_id": null,
+  "assignment_id": "W118-ASG-001",
   "correlation_id": "corr_<unique>",
   "causation_id": "evt_<parent>",
-  "idempotency_key": "task.acknowledged:<assignment_id>:<nonce>",
-  "source": {
-    "system": "sandbox",
-    "repository": "owner/repo",
+  "idempotency_key": "assignment.acknowledged:W118-ASG-001:<nonce-ref>",
+  "source_revision": "sha-or-runtime-revision",
+  "producer": "room-hop-event-listener",
+  "payload_ref": "evidence://event-payload/<id>",
+  "delivery_attempt": 1,
+  "trace_ref": "trace://<id>",
+  "authorization_ref": "authz://<decision-id>",
+  "evidence_refs": [],
+  "payload": {
+    "github_login": null,
+    "assignment_status": "ACKNOWLEDGED",
+    "issue_id": 65,
     "branch": null,
     "commit_sha": null,
     "run_id": null
-  },
-  "payload": {},
-  "evidence_refs": []
+  }
 }
 ```
 
-**Validation:** event type allowlist; schema version supported; actor active/authorized; IDs consistent; timestamp within policy window; nonce/replay checked; idempotency key unique; payload size bounded; source SHA validated against GitHub when present.
+- `product_task_id` / `phase_task_id` are null for W118 unless an approved cross-Work mapping exists; do not fabricate W70 IDs.
+- `actor_identity_id` must resolve to a verified principal; role labels and GitHub Assignee alone are insufficient.
+- `recorded_at` is assigned by the receiving service; `occurred_at` is supplied by the producer.
+- Delivery is at-least-once; consumers must persist delivery/event ID and idempotency key before side effects.
+- Event schema validation, replay protection, source SHA verification, payload-size limit and authorization reference are mandatory.
 
 ### 6.5 Source/CI evidence record
 
@@ -326,12 +333,13 @@ Bắt buộc: `evidence_id`, `evidence_type` (`OPERATION`, `CI_CONTRACT`, `RUNTI
 
 | Data domain | Nguồn ghi chuẩn | Nguồn đọc/chiếu | Xử lý xung đột |
 |---|---|---|---|
-| Plan/WP/Task/assignment/progress | Sandbox Task Registry | GitHub Issue mirror, W70 Dashboard | Sandbox version + event reconciliation |
+| Plan/WP/Task status/Assignment status/progress | W118 canonical Task Register in Sandbox (DOC-093-style Work-specific register); SQLite is operational transaction/event store adapter | GitHub Issue mirror, W70 read-only projection | Sandbox Register version + event reconciliation; never let GitHub overwrite Task status |
 | Issue/PR/review/comment/label | GitHub | Sandbox mirror | GitHub readback; không ghi đè bằng cache |
 | Branch/commit/push/ref | GitHub | Sandbox execution record | Exact SHA/ref reconciliation |
 | CI run/job/artifact metadata | GitHub Actions | Sandbox evidence index | Run ID + attempt + SHA |
 | Agent identity/capability | Verified Agent Registry / approved role policy | Sandbox dispatcher | Fail closed khi chưa xác minh |
 | Journal | Canonical Work Journal | Dashboard/evidence consumers | Append-only; correction bằng entry mới |
+| Assignment lifecycle | W118 Assignment Register/state in Sandbox; separate from Task status | GitHub labels/comments are hints only | Verified principal + assignment_id + dispatch_id; no Assignee inference |
 | Work Evidence Register | W70-approved schema/source | Dashboard | Chỉ cập nhật sau W70 owner ACK |
 | Dashboard view | Work 70 | Read-only clients | Không làm nguồn ghi trạng thái |
 
