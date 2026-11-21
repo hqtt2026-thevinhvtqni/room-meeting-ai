@@ -1024,3 +1024,15 @@
 - GAP-11 OPEN / NOT ACCEPTED; GAP-01 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. No code/test/runtime/credential/dispatch/deployment operation performed.
 - Journal Entry 099 committed: `7aa1f9384502c772e5440a5a934d339dad2474db`. GitHub main read-back required; Sandbox parity remains BLOCKED, no Sandbox write.
 - Next: inspect W13 package selection/launcher and candidate grant idempotency/revocation/Assignment-scope guarantees, read-only.
+
+
+## Sync Period 0087 — W13 launch and Core grant lifecycle residuals (2026-11-21T17:40:00+07:00)
+
+- Entry 100 confirms deployment guide specifies W13-local server + W12 canonical host; W13 module is launchable from its Work code directory, but no PC process/service evidence exists.
+- Candidate Core entrypoint is explicitly not wired into existing start-dev.ps1/current Core PID; credentials, Work policies and persistent store provisioning remain pending/unverified.
+- Candidate CI workflow includes W13 bridge and Core→WEE→W13→W12 integration tests. Exact-head PR-triggered run query returned no runs; push-run visibility is outside the query. Exact-head CI remains NOT VERIFIED.
+- Additional source-level grant residuals: source SHA and policy version are not persisted in GRANT_ISSUED; validation reads current Work policy; no idempotency for grant issuance or run recording; revocation/expiry is not atomic with active process execution; no Assignment/Dispatch/Attempt/provider receipt/recipient ACK binding.
+- Direct record_run source-SHA mismatch remains a candidate API defect; W13 Host route recomputes and passes the checked hash.
+- GAP-11 OPEN / NOT ACCEPTED; GAP-01 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. No patch, CI execution, launch, credentials or runtime action.
+- Journal Entry 100 committed: `e8089773c17bfc675c6ba685293a143fcbb7e3b4`. GitHub main read-back required; Sandbox parity remains BLOCKED, no Sandbox write.
+- Next: prepare a bounded W1111 review/acceptance checklist; keep W17 read-only.
