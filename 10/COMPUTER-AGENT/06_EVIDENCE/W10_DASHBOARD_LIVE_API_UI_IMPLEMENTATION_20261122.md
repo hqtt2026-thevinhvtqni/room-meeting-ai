@@ -37,3 +37,14 @@
 - Updated local candidate-copy digests (not server attestations): LF SHA-256 — HTML `7a0f91ada2c33ecaa4f6819070bc7b15109f3ce13ddff296173d28d3ccd2602e`, README `a0e4a782e0988d06cee29f8a9524450d6412000b474e1fe64a7b334f95e919b7`, test `e015f27bda0629e761fa2a28e7d52eedc8585a8d2fc8f0ded0aedc694a5d6878`. CRLF-normalized local candidate-copy SHA-256 — HTML `8f837336ccf08df82c1f46cc07433b4d2339ddbc566b635b285f0e79c578b89e`, README `ff94ddd5d4b7224490fa422d55a2705da4b44eb44d5d8f6c67e6a8b65cb07456`, test `1dd62e9e4e22c6df8d545511a1c852462b22c39511b06a2a3f76fcef7ca257c2`. These hashes identify local candidate copies only; the Work Sandbox read API does not return a digest. The Work update used an appended compatibility guard and matching test assertion, so do not interpret the local direct-edit HTML hash as an exact digest of the Work-resident file.
 - Work Sandbox updates were made to the Dashboard, static test, Test Plan, and this evidence note. Readback must confirm the appended changes. The Work-resident static test was not executed in Work Sandbox.
 - P4 live browser/API integration remains **NOT RUN / NOT VERIFIED**; Work status and release gates are unchanged.
+
+
+## Hosted CI follow-up — 2026-11-22 06:31 UTC+07
+
+- The earlier static-only candidate check is superseded by the cross-platform CI verification.
+- GitHub Actions Run #69, commit `d6aa3283dec649e57bd51bc47299e3596f39b8ac`, completed SUCCESS on Ubuntu 24.04 and Windows Server 2022.
+- `test_dashboard_contract.py`: 17 PASS / 0 FAIL on both OSes, including inline JavaScript syntax validation.
+- The first integrated suite attempt failed because the GitHub branch still held the old 1.7 KB Dashboard. The actual Sandbox 20.5 KB operational Dashboard and README were synchronized; the test was not weakened.
+- A second issue in test output formatting caused the runner to count 0 assertions despite a successful exit. The output prefix was corrected and Run #69 now counts 17 checks on both platforms.
+- Evidence: `06_EVIDENCE/W10_CROSS_PLATFORM_CI_EVIDENCE_20261122_RUN69.md`.
+- This remains a static UI contract test. Live Dashboard/API interaction on the Owner's physical Windows 10 PC is still NOT RUN.
