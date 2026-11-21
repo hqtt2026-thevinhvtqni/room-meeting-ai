@@ -7,7 +7,7 @@
 
 ## 1. Ownership correction
 
-Inspection of W102 DOC-012 and W12 Execution Bridge showed that Core :8000 is the sole runtime Task/Assignment/Event authority; W102 owns Agent Loop policy; W12/W13 own execution, Git/GitHub Gateway and CIAdapter. W52 is a DRAFT interoperability reference. W118 therefore does not own a runtime Task DB, dispatcher, durable event queue, Event Bus, Execution Host, Git Gateway or CI engine.
+Inspection of W102 DOC-012 and W12 Execution Bridge showed that Core :8000 is the sole runtime Task/Assignment/Event authority; W102 owns Agent Loop policy; W14 is the sole integrated execution owner; W12/W13 are absorbed internal foundations. W52 is a DRAFT interoperability reference. W118 therefore does not own a runtime Task DB, dispatcher, durable event queue, Event Bus, Execution Host, Git Gateway or CI engine.
 
 The earlier W118-local SQLite TaskRegistry, webhook inbox and event reconciler were removed from the implementation path. W118 now builds stateless adapters only.
 
@@ -27,7 +27,7 @@ The earlier W118-local SQLite TaskRegistry, webhook inbox and event reconciler w
 - Core :8000 owns Task identity/status, Assignment status, event IDs/sequence, idempotency and persistence.
 - W102 owns Agent selection/dispatch policy and identity/permission decisions.
 - W01/W02/W22 + Core provide verified principals.
-- W12/W13 own execution host, GitHub Gateway and CIAdapter.
+- W14 owns the integrated execution path; W12/W13 are absorbed internal modules.
 - W70 owns Work Dashboard/Evidence Register schema and read-only projection policy.
 - GitHub login, Issue Assignee, label, comment or review state is not a verified ROOM-HOP principal or Task transition.
 
@@ -71,7 +71,7 @@ Legacy duplicate tests/modules `task_lifecycle.py`, `webhook_inbox.py`, `event_r
 - Core Task read API, actual schema and approved field map are not exposed to W118.
 - Core per-Task lock and Core event ingress are not exposed.
 - W102 Agent identity/Assignment API and a verified runtime principal are not available in current evidence.
-- W12/W13 execution host and CIAdapter are not exposed/configured in this session.
+- W14 canonical source/API/runtime parity and Work Authority/ExecutionHostBridge are not verified.
 - No production webhook secret/TLS endpoint, live GitHub Issue create/readback, task-scoped push, Core event persistence or full runtime E2E has been run.
 - Sandbox MCP in this session exposes file operations only; tests are executed by GitHub Actions.
 
@@ -85,4 +85,9 @@ Legacy duplicate tests/modules `task_lifecycle.py`, `webhook_inbox.py`, `event_r
 - PR run [#44882422288](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44882422288): SUCCESS.
 - Artifact ID `14697683781`; SHA-256 `a2703f70b4a250197b14a84bb5408cef18f2917266f542c7850a54c70e098abc`.
 - Source binding result for the aggregate feature branch: `UNBOUND_LEGACY_BRANCH` (expected; no Task inference).
-- This proves adapter/workflow contract tests only. Core API, W102 identity/Assignment, W12/W13 execution, Core event persistence and full runtime E2E remain NOT VERIFIED.
+- This proves adapter/workflow contract tests only. Core API, W102 identity/Assignment, W14 integrated execution, Core event persistence and full runtime E2E remain NOT VERIFIED.
+
+
+## Ownership correction — 2026-11-22
+
+W14 is the sole product/delivery owner for the integrated execution, GitHub Gateway and CI path. W12/W13 are absorbed internal foundations only. W118 must consume W14's approved Work Authority/ExecutionHostBridge contract; W118-TASK-015 is BLOCKED until W14 source/runtime evidence is verified. No direct W12/W13 product integration or parallel host is allowed.

@@ -7,8 +7,8 @@
 ## 1. Purpose
 
 Build two connected workflows:
-1. **Plan → Core Task → W102 Agent Loop → W12/W13 Execute → Verify → Owner Accept → Close.**
-2. **Sandbox → W12/W13 → GitHub Branch/Commit/Push → GitHub Actions CI → W118 stateless adapter → Core Event → W102/W12 recovery.**
+1. **Plan → Core Task → W102 Agent Loop → W14 Execute → Verify → Owner Accept → Close.**
+2. **Sandbox → W14 → GitHub Branch/Commit/Push → GitHub Actions CI → W118 stateless adapter → Core Event → W102/W14 recovery.**
 
 W118 owns GitHub-specific adapters and evidence only. It does not create another runtime Task database, Agent Registry, dispatcher, event queue/Event Bus, Execution Host, Git Gateway or CI engine.
 
@@ -59,7 +59,7 @@ The previous local SQLite TaskRegistry, durable webhook inbox, event reconciler 
 - Core Task read API/schema/approved field map and per-Task lock are not exposed to W118.
 - Core Event ingress/deduplication port is not exposed.
 - W102 verified Agent identity/Assignment route is not available in current evidence.
-- W12/W13 execution host and CIAdapter are not exposed/configured in this session.
+- W14 canonical source/API/runtime parity and Work Authority/ExecutionHostBridge are not verified.
 - No production webhook secret/TLS route, live Issue API round-trip, task-scoped push or full runtime E2E has been executed.
 - Sandbox MCP in this session exposes file operations only; GitHub Actions executes the contract tests.
 
@@ -73,7 +73,7 @@ The previous local SQLite TaskRegistry, durable webhook inbox, event reconciler 
 | Source binding | Contract tests; task-scoped live push pending |
 | Webhook/event adapter | Contract tests; Core event port pending |
 | W102 identity/Assignment | **BLOCKED — Core/W102 integration** |
-| W12/W13 execution/CI | **BLOCKED — host/adapter availability** |
+| W14 execution/GitHub/CI | **BLOCKED — host/adapter availability** |
 | W70 Dashboard | **BLOCKED — schema/owner approval** |
 | Full runtime E2E / Vinh acceptance | Not run |
 
@@ -105,3 +105,8 @@ No rebase, merge to main, release or branch-protection change is authorized by t
 - **PR #67:** CLOSED / UNMERGED / superseded; history preserved.
 - **Sandbox parity:** Task Register/schema byte-identical; stateless code mirror aligned to TD-118-012 v1.2; retired local SQLite Task/event files absent.
 - **Acceptance:** Xu independent review pending; Vinh product acceptance pending; no merge or release.
+
+
+## Architecture ownership correction — 2026-11-22
+
+W14 is the sole product/delivery owner for the integrated execution path. W12 and W13 are absorbed internal foundations, not independent product owners or direct W118 integration targets. W118 must consume W14's approved Work Authority and ExecutionHostBridge contract. W14 source parity and full runtime E2E remain NOT VERIFIED; W118-TASK-015 remains BLOCKED. No W12/W13 source modification or parallel host/Gateway is permitted.

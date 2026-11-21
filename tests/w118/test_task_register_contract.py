@@ -61,6 +61,14 @@ class Work118TaskRegisterContractTests(unittest.TestCase):
         self.assertTrue(any("Core :8000" in rule for rule in self.register["rules"]))
         self.assertTrue(any("not a runtime Core Task" in self.register["model"] for _ in [0]))
 
+    def test_execution_integration_is_owned_by_w14_not_w12_w13(self):
+        rules = "\\n".join(self.register["rules"])
+        self.assertIn("W14 is the sole product/delivery owner", rules)
+        task = next(item for item in self.register["tasks"] if item["task_id"] == "W118-TASK-015")
+        self.assertIn("W14", task["task_title"])
+        self.assertIn("W12/W13 are absorbed", task["objective"])
+        self.assertTrue(any("W14 canonical" in blocker for blocker in task["blockers"]))
+
 
 if __name__ == "__main__":
     unittest.main()

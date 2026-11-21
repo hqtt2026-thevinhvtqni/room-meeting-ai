@@ -20,7 +20,7 @@
   "rules": [
     "One canonical Work-level planning Task Register for W118; Sandbox is its operational project-planning authority.",
     "This register tracks W118 implementation tasks and Work Package progress; it is not the runtime Core Task/Assignment/Event store.",
-    "Core :8000 is the sole canonical runtime Task/Assignment/Event authority; W102 owns Agent Loop policy; W12 owns execution/GitHub/CI bridge.",
+    "Core :8000 is the sole canonical runtime Task/Assignment/Event authority; W102 owns Agent Loop policy; W14 is the sole product/delivery owner for integrated execution, GitHub Gateway and CI; W12/W13 are absorbed internal foundations.",
     "GitHub Issue mirror is generated from a normalized Core Task snapshot, not directly from this planning register.",
     "execution_mode is a Work-level implementation authorization classification, not a runtime Agent Assignment state.",
     "Owner-directed build tasks require owner_directive_ref; no Agent principal/ACK is fabricated.",
@@ -180,8 +180,8 @@
       "wp_id": "W118-15",
       "phase": "05_BUILD",
       "phase_name": "Build",
-      "task_title": "W12/W13 execution bridge integration",
-      "objective": "Bind W118 Work Authority to existing W12 WEE, GitHub Gateway and CIAdapter and W13 Execution Host.",
+      "task_title": "W14 Work Authority and Execution Host integration",
+      "objective": "Integrate W118 with W14's canonical Work Authority and ExecutionHostBridge, using absorbed W12/W13 components only behind W14; W118 must not call W12/W13 as independent product systems.",
       "accountable_role": "ORCHESTRATOR",
       "role_name": "Xu / AI-01",
       "assigned_identity": null,
@@ -189,9 +189,12 @@
       "inputs": [
         "W118-TASK-013",
         "W118-TASK-014",
-        "ROOM-HOP W52 communication and W14 execution host contracts"
+        "W14 Work Manifest",
+        "W14 W12/W13 Absorption Record",
+        "W14 W13 Execution Host Bridge contract",
+        "W52 A2A draft as compatibility reference only"
       ],
-      "deliverable": "W118 Work Authority adapter and verified W12/W13 execution integration",
+      "deliverable": "W14-approved Work Authority/ExecutionHostBridge integration mapping and verified end-to-end call path",
       "acceptance_criteria": [
         {
           "id": "AC-015-1",
@@ -217,31 +220,34 @@
       "progress_percent": null,
       "progress_status": "NOT_CALCULATED",
       "evidence_refs": [
-        "W12 Generic Work E2E",
-        "W13 Execution Host contract"
+        "W14 AUTONOMOUS-E2E-BUILDER/00_ROOT/WORK_MANIFEST.md",
+        "W14 03_ARCHITECTURE/W12_W13_ABSORPTION_RECORD.md",
+        "W14 03_ARCHITECTURE/W13_WEE_8031_BRIDGE_STATUS.md",
+        "W12/W13 historical absorbed contracts"
       ],
       "blockers": [
-        "W12/W13 Work Authority schema and live execution host/CI adapter are not exposed to W118."
+        "W14 canonical GitHub source/ref and Work Authority/ExecutionHostBridge API/runtime are not verified; W14 manifest states full product E2E is NOT VERIFIED."
       ],
-      "next_action": "Obtain W12/W13 Work Authority and execution contracts; bind existing services only, with no parallel execution host.",
-      "status_note": "Task/Assignment state contracts exist; live dispatch and ACK are not implemented or verified.",
+      "next_action": "Obtain W14 canonical source and approved Work Authority/ExecutionHostBridge contract; verify runtime through W14's owner; do not modify W12/W13 historical source or create a parallel host.",
+      "status_note": "W12/W13 are absorbed internal foundations; W14 is the sole product owner. Current W14 source parity and live execution path remain unverified.",
       "execution_steps": [
-        "Map W52/W14 interface",
-        "Implement signed dispatch receipt",
-        "Implement ACK verifier",
-        "Add heartbeat/lease/recovery",
-        "Run runtime E2E"
+        "Read W14 current manifest and absorption record",
+        "Verify W14 canonical source/ref and runtime contract",
+        "Map W118 Work Authority projection to approved W14 fields",
+        "Verify W14 execution ID, runtime identity, GitHub operation and CI correlation",
+        "Run positive/negative integration E2E only after authorized runtime access"
       ],
-      "scope_boundary": "Reuse ROOM-HOP communication and execution owners; do not duplicate event bus, runtime or execution host.",
-      "verification_method": "Runtime E2E with verified principal and fault-injection tests.",
+      "scope_boundary": "W14 is sole product/delivery owner; W12/W13 source remains historical/internal; W118 supplies stateless GitHub-specific adapters only.",
+      "verification_method": "W14 source/hash readback, approved Work Authority/ExecutionHostBridge contract, runtime identity/endpoint attestation and exact Task execution evidence.",
       "evidence_required": [
-        "dispatch receipt",
-        "signed ACK evidence",
-        "principal authorization",
-        "heartbeat timeline",
-        "recovery tests"
+        "W14 source SHA/ref",
+        "approved Work Authority/ExecutionHostBridge schema",
+        "runtime health and identity evidence",
+        "execution ID/correlation ID",
+        "task-scoped branch/commit/push SHA",
+        "CI run and artifact digest"
       ],
-      "completion_rule": "A real Task completes dispatch/ACK/progress/submission lifecycle with identity and event evidence.",
+      "completion_rule": "A W14-approved integrated execution path runs one authorized W118 Task through the canonical host and GitHub/CI flow with exact provenance and positive/negative evidence.",
       "owner_principal": "owner:vinh",
       "issue_id": null,
       "issue_url": null,
@@ -540,9 +546,9 @@
       "progress_status": "NOT_CALCULATED",
       "evidence_refs": [],
       "blockers": [
-        "All prerequisite Core/W102/W12/W13/W70 runtime gates must pass before full E2E."
+        "Prerequisite Core/W102/W14/W70 runtime and approval gates must pass before full E2E."
       ],
-      "next_action": "Run complete positive/negative lifecycle E2E after all external contracts and runtime integrations are available.",
+      "next_action": "Run complete positive/negative lifecycle E2E through W14's canonical execution path after all external contracts and runtime integrations are available.",
       "status_note": "No full runtime E2E has been executed; contract tests are not product acceptance.",
       "execution_steps": [
         "Select a non-sensitive pilot Task",
@@ -576,5 +582,5 @@
   ],
   "task_count": 7,
   "created_at": "2026-11-21T13:36:00+07:00",
-  "updated_at": "2026-11-22T04:30:00+07:00"
+  "updated_at": "2026-11-22T05:20:00+07:00"
 }

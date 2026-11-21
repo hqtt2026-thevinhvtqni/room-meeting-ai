@@ -2,7 +2,7 @@
 
 - **Architecture:** TD-118-012 v1.2
 - **Status:** CONTRACT TEST PLAN — exact-head CI evidence linked below
-- **Rule:** Tests prove adapter behavior only; they do not prove Core/W102/W12/W13 runtime availability.
+- **Rule:** Tests prove adapter behavior only; they do not prove Core/W102/W14 runtime availability.
 
 ## 1. Core Task projection adapter
 
@@ -89,8 +89,8 @@
 | R02 | Core per-Task lock lease | Core :8000 owner |
 | R03 | Core Event Intent ingress and dedup | Core :8000 owner |
 | R04 | Agent identity/Assignment/ACK | W102 + W01/W02/W22 + Core |
-| R05 | Execution/branch/commit/push | W12/W13 |
-| R06 | CI adapter and callback | W12 + GitHub Actions |
+| R05 | Execution/branch/commit/push | W14 (absorbed W12/W13 modules) |
+| R06 | CI adapter and callback | W14 integrated path + GitHub Actions |
 | R07 | Work 70 projection parity | W70 owner/schema ACK |
 | R08 | Full Plan-to-Close E2E | All owners + Vinh acceptance |
 
@@ -105,4 +105,9 @@ Update only after inspecting the exact branch-head run and its artifact. Contrac
 - Push run #44882420198 SUCCESS — 94 tests PASS / 0.209s
 - PR run #44882422288 SUCCESS
 - Artifact ID 14697683781; SHA-256 `a2703f70b4a250197b14a84bb5408cef18f2917266f542c7850a54c70e098abc`
-- Runtime integration tests R01–R08 remain NOT RUN because Core/W102/W12/W13/W70 ports/approvals are unavailable.
+- Runtime integration tests R01–R08 remain NOT RUN because Core/W102/W14/W70 ports/approvals are unavailable.
+
+
+## Ownership correction — 2026-11-22
+
+R05/R06 runtime owner is W14. W12/W13 are absorbed internal components, not standalone owners. W14 canonical source/API/runtime parity remains NOT VERIFIED; runtime integration cases remain BLOCKED.
