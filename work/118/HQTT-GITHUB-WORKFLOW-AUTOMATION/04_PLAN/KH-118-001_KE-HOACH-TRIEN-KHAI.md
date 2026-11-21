@@ -242,3 +242,19 @@ Run [#44750417015](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/acti
 - Đề xuất W118-13..W118-19 trong RA-118-001 là work packages nằm trong W118, **PROPOSED — PENDING XU REVIEW**, không phải Work mới và chưa được coi là thiết kế đã duyệt.
 - Không thay đổi G3/G5, quyền Work 70, identity mapping, main, merge hoặc release authority. W118-10 contract PASS không đóng W118 tổng thể.
 - Hồ sơ đối chiếu: [RA-118-001](RA-118-001_BANG-DOI-CHIEU-PHAM-VI-VA-KE-HOACH-HOAN-THIEN.md).
+
+## Owner-directed execution update — W118-13 and W118-16 (2026-11-21)
+
+Vinh directed Xu to proceed with the dual-loop build without waiting for multi-agent review. TD-118-012 is the implementation baseline. Xu owns technical sequencing and must preserve fail-closed identity, permission, evidence and acceptance boundaries.
+
+| WP | Implementation slice | Current status | Evidence / remaining work |
+|---|---|---|---|
+| W118-13 | Sandbox Task Contract & Lifecycle Registry | FOUNDATION IMPLEMENTED; CI PASS | `scripts/w118/task_lifecycle.py`; SQLite event history, state transitions, identity/role gates, versioning and idempotency; tests included in 86/86 PASS exact-head CI. Sandbox service deployment and runtime principal verifier remain pending. |
+| W118-14 | Agent Registry & Assignment | BLOCKED / NOT IMPLEMENTED | Need verified Agent runtime principal, capability registry, availability, secure lease and dispatch receipt. No identity inferred from role names. |
+| W118-15 | Dispatch, ACK & Execution Tracking | CONTRACT FOUNDATION ONLY | Task state model includes DISPATCHED/ACKED/STARTED/IN_PROGRESS; live runtime dispatch/ACK, heartbeat and timeout recovery not yet wired. |
+| W118-16 | Issue–Branch–Commit–Push Binding | CONTRACT IMPLEMENTED; WORKFLOW WIRED; TASK-BRANCH RUNTIME TEST PENDING | `scripts/w118/source_binding.py` + push workflow step. Existing aggregate branch returns UNBOUND_LEGACY_BRANCH. Exact task branch event not yet exercised. |
+| W118-17 | CI Feedback & Failure Routing | NOT IMPLEMENTED / NOT VERIFIED | Need exact run result to Sandbox inbox, map run SHA to Task, route CI failure and bounded repair. Existing diagnostics automation remains separate and is not Task reconciliation. |
+| W118-18 | Work 70 Evidence & Dashboard Projection | BLOCKED | Work 70 schema/owner ACK required; no schema mutation or Dashboard write authorized. |
+| W118-19 | Full Lifecycle E2E & Acceptance | NOT STARTED | Requires real Sandbox runtime, verified Agent principal, event path, independent evidence and Vinh acceptance. |
+
+**Latest exact-head evidence:** feature HEAD `5e131e108a7195ca1ff5ae96b3fadb119e4bc31b`; push run #44877054701 and PR run #44877057892 SUCCESS; 86 tests PASS / 0.332s; artifact ID 14696186741; digest `9dae6385ae1e68572305ee6314bf1edf046361fc9993301cc85367603c56531a`. CI event-specific jobs remain SKIPPED; do not claim runtime E2E.
