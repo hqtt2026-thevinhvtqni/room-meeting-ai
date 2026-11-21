@@ -896,3 +896,15 @@ Bàn giao An thực hiện static adversarial re-review theo Review Task v7. Ch�
 - **Tình trạng:** Integration W10↔W24, W10↔W14 và W10↔W113 NOT IMPLEMENTED / NOT VERIFIED. Đã tạo handoff `06_EVIDENCE/W10_ROOM_HOP_INTEGRATION_BOUNDARY_HANDOFF_20261122.md`.
 - **Giới hạn:** Không sửa Work24, W112, W14 hoặc W113 trong phạm vi Work10; không đoán endpoint/route; không expose API remote.
 - **KÝ GHI NHẬN:** Co | AI-07
+
+
+## ĐÍNH CHÍNH BIÊN BẢN — F-15 CHƯA CÓ QUYẾT ĐỊNH RIÊNG CỦA OWNER — 2026-11-22 06:39 (UTC+07:00)
+
+- **Người ghi:** Co
+- **Chức danh:** AI-07 / End-to-End Architecture & Implementation Lead
+- **Ngày:** 22/11/2026
+- **Giờ:** 06:39 (UTC+07:00)
+- **Đính chính:** Mục F-15 trong bản ghi ủy quyền lúc 06:31 đã diễn đạt quá phạm vi khi ghi rằng Owner đã cho phép một mapping cụ thể cho ActionResult/TaskResult/Workflow timeout. Chỉ đạo thực tế của Owner là ủy quyền Co tiếp tục Work 10 và không cần chờ An phản biện; Owner chưa đưa ra quyết định riêng về F-15 timeout mapping.
+- **Disposition đúng:** F-15 tiếp tục OWNER DECISION REQUIRED đối với mapping TaskResult/Workflow chưa được quy định rõ. Co phải tuân thủ nguyên văn ba contract LOCKED và Safety Policy hiện hành, không tự suy diễn semantics, không thay đổi contract. Với tình huống cleanup/side effect uncertain, giữ trạng thái BLOCKED theo fail-closed behavior hiện có; không biến điều này thành một quyết định mapping tổng quát cho mọi timeout.
+- **Hiệu lực:** Đính chính này thay thế riêng câu F-15 trong mục ủy quyền 06:31; các phần ủy quyền triển khai, bỏ điều kiện chờ An và ranh giới không merge/release vẫn giữ nguyên.
+- **KÝ GHI NHẬN:** Co | AI-07
