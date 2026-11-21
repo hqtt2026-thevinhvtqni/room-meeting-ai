@@ -243,3 +243,14 @@ The workflow_run listener requires default-branch presence for real runtime veri
 - **Limitation:** all five event-specific runtime jobs SKIPPED; runtime E2E remains NOT VERIFIED.
 - **Current branch compare at this verification:** Main `5f8390910178012feaf37510452bc39804b296db`; feature HEAD `bad7e086a28a6de2ebf24e116268bf2a766cc7db`; merge base `cf2537e07bfd71d5823bd98f8673b3ab5644fcdc`; 255 ahead / 82 behind — DIVERGED.
 - **State:** SHA-pin remediation PASS; contract verification PASS; Xu review PENDING; Vinh acceptance PENDING; no merge/release.
+
+
+## Latest exact-head readback — 2026-11-21 07:44 +07:00
+
+- **PR #67:** OPEN / not merged / not released; raw GitHub PR API: `mergeable=true`, `mergeable_state=unstable`. This is not treated as merge authorization or a clean integration result.
+- **Feature HEAD at this readback:** `9adda44a0c4dc70937740adc7bfdcd2c04022a69`; Main `5f8390910178012feaf37510452bc39804b296db`; merge base `cf2537e07bfd71d5823bd98f8673b3ab5644fcdc`; **259 ahead / 82 behind — DIVERGED**.
+- **Latest CI:** [Run #44846568184](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44846568184), exact tested commit `9adda44a0c4dc70937740adc7bfdcd2c04022a69`; validate SUCCESS; **53 tests PASS / 0.281s**; T10-26 PASS.
+- **Artifact:** ID `14683391201`, digest `baed365631b810b748dc6903376c373784d0bfb0f81302167cedd63c0db5526f`, present/unexpired at readback.
+- **Runtime:** five event-specific jobs SKIPPED; runtime E2E NOT VERIFIED.
+- **Reviews:** formal PR review submissions = 0; inline review threads = 0.
+- **Disposition:** SHA pinning PASS; contract validation PASS; Xu independent review PENDING; Vinh final acceptance PENDING; no integration/merge/release.
