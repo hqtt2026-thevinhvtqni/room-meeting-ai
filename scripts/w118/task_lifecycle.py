@@ -112,7 +112,7 @@ _ALLOWED_DETAILS = {
     "EXPIRED": {"reason"},
     "REJECTED": {"reason"},
 }
-_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$")
+_TASK_ID_RE = re.compile(r"^(W[0-9]{3,4})-TASK-[0-9]{3,6}$")
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 
 
@@ -145,8 +145,11 @@ def validate_task_record(task: Mapping[str, Any]) -> dict[str, Any]:
 
     for field in _REQUIRED_TASK_STRINGS:
         result[field] = _non_empty(result.get(field), field)
-    if not _ID_RE.fullmatch(result["task_id"]):
-        raise TaskValidationError("task_id contains unsupported characters")
+    task_match = _TASK_ID_RE.fullmatch(result["task_id"])
+    if not task_match:
+        raise TaskValidationError("task_id must use W###-TASK-### format")
+    if task_match.group(1) != result["work_id"]:
+        raise TaskValidationError("task_id Work prefix must match work_id")
 
     if result.get("priority") not in {"P0", "P1", "P2", "P3"}:
         raise TaskValidationError("priority must be P0, P1, P2 or P3")
