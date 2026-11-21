@@ -57,6 +57,25 @@ jobs:
         run: |
           python -m compileall -q 10/COMPUTER-AGENT/04_CODE 10/COMPUTER-AGENT/05_TEST
 
+      - name: PowerShell launcher syntax (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $files = @(
+            "10/COMPUTER-AGENT/05_TEST/START_WORK10_LOCAL.ps1",
+            "10/COMPUTER-AGENT/05_TEST/STOP_WORK10_LOCAL.ps1"
+          )
+          foreach ($file in $files) {
+            $tokens = $null
+            $errors = $null
+            [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path $file), [ref]$tokens, [ref]$errors) | Out-Null
+            if ($errors.Count -gt 0) {
+              $errors | Format-List
+              throw "PowerShell syntax validation failed: $file"
+            }
+            Write-Host "PASS PowerShell syntax: $file"
+          }
+
       - name: Real Chromium E2E
         run: |
           python 10/COMPUTER-AGENT/05_TEST/e2e_real_browser.py
