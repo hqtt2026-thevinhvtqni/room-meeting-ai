@@ -1261,3 +1261,13 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - **Evidence/design note:** `06_EVIDENCE/W10_P0_PROCESS_SUPERVISOR_IMPLEMENTATION_20261122_01.md`.
 - **Status:** Code written in Sandbox; not yet mirrored or CI-validated at this timestamp. P0 remains BLOCKED pending next cross-platform CI and Windows PC evidence. Work 10 ACTIVE — NOT RELEASED.
 - **KÝ: Co | AI-07**
+
+
+## W10-CI-RUN42-DIAGNOSIS-20261122-01 — 2026-11-22 05:36 (UTC+07:00)
+- **Name:** Co | **Title:** AI-07 / End-to-End Architecture & Implementation Lead
+- **Run:** GitHub Actions #42, ID `44957457363`, tested API-integrated E2E commit.
+- **Ubuntu 24.04:** offline/safety/HTTP/process-containment suites PASS (140 PASS / 0 FAIL / 1 Windows-only SKIP; HTTP API 37/37). Real-browser API E2E reached ProcessSupervisor and returned verified-empty limited process group, but workflow was BLOCKED in preflight because the E2E-only API environment had not explicitly allowed the destructive `download` action. No browser actions were executed; not an E2E PASS.
+- **Windows Server 2022:** offline contract and safety suites PASS; HTTP API suite failed 12 assertions. Process containment primitive test still PASS. Root cause from E2E result: `TypeError: byref() argument must be a ctypes instance, not 'NoneType'` in native pipe creation because uninitialized pipe HANDLE variables were `None` rather than ctypes HANDLE objects.
+- **Corrections made in Sandbox:** initialize stdin/stdout pipe variables as `wintypes.HANDLE()`; set `COMPUTER_AGENT_ALLOW_DESTRUCTIVE=1` only in the dedicated CI real-browser E2E server environment so the contract-required download action is explicitly allowed. Default API policy remains destructive-deny.
+- **Next:** rerun full cross-platform CI; verify Windows atomic Job List process creation + API tests + Chromium E2E; verify Linux HTTP API + browser E2E with explicit test-only destructive permission. Do not call either platform integrated E2E PASS until both pass.
+- **KÝ: Co | AI-07**

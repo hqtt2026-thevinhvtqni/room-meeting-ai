@@ -508,7 +508,10 @@ if os.name == "nt":
         sa.nLength = ctypes.sizeof(sa)
         sa.lpSecurityDescriptor = None
         sa.bInheritHandle = True
-        stdin_read = stdin_write = stdout_read = stdout_write = None
+        stdin_read = wintypes.HANDLE()
+        stdin_write = wintypes.HANDLE()
+        stdout_read = wintypes.HANDLE()
+        stdout_write = wintypes.HANDLE()
         attr_buffer = None
         attr_list = None
         process_info = _ProcessInformation()
