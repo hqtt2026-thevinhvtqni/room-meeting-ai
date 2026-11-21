@@ -50,6 +50,15 @@ class Work118TaskRegisterContractTests(unittest.TestCase):
             if task["assigned_identity"] is None:
                 self.assertEqual(task["assignment_status"], "UNASSIGNED")
 
+    def test_owner_directed_tasks_have_directive_but_no_fabricated_agent_identity(self):
+        for task in self.register["tasks"]:
+            if task["execution_mode"] == "OWNER_DIRECTED_SESSION":
+                self.assertTrue(task["owner_directive_ref"])
+                self.assertIsNone(task["assigned_identity"])
+                self.assertEqual(task["assignment_status"], "UNASSIGNED")
+            else:
+                self.assertIsNone(task["owner_directive_ref"])
+
     def test_register_declares_sandbox_authority_and_github_mirror(self):
         self.assertIn("Sandbox", self.register["source_of_truth"])
         self.assertIn("github.com", self.register["github_mirror"])
