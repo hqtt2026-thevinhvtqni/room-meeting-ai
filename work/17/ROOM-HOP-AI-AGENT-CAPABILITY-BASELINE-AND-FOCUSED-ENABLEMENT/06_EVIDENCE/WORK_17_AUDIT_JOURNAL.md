@@ -1500,3 +1500,34 @@
 - **Ranh giới:** Go có trách nhiệm nghiệp vụ QE/QA toàn HQTT; GitHub login, session, dispatch/ACK, capability runtime và quyền kỹ thuật vẫn NOT_VERIFIED/NOT_PROVEN nếu chưa có bằng chứng riêng. Go không tự review deliverable do Go thực hiện.
 - **Lịch sử:** D70-025 và các entry cũ giữ nguyên; D70-026 supersedes vai trò QE/QA trong D70-025.
 - **Trạng thái:** DOC-043/DOC-006 updated; W17 matrix updated; journal addendum recorded. Exact read-back pending.
+
+
+## Entry 081 — W52/Core provider connector boundary versus Work Assignment dispatch and recipient ACK (2026-11-21T09:30+07:00)
+
+- Người thực hiện: Xu / AI-01.
+- Phạm vi: tiếp tục GAP-01 source trace trên GitHub main; kiểm tra trực tiếp Core v0.2 connector/discussion/meeting entrypoint và đối chiếu hồ sơ GAP-01 reconciliation đã có. Mục tiêu phân biệt khả năng gọi AI trong Meeting với khả năng giao Work Assignment có delivery receipt và recipient ACK.
+- Phương pháp: GitHub fetch_file trên main cho `core/connectors.py`, `core/discussion.py`, `run_meeting_v2.py` và W17 `WORK_17_GAP01_DISPATCH_ACK_SOURCE_RECONCILIATION.md`; GitHub code search giới hạn theo các cụm assignment/dispatch/provider receipt/recipient ACK và send_assignment. Không chạy code/test, không gọi provider, không mở phiên AI, không dispatch, không thao tác Host/runtime.
+- Nguồn trực tiếp và blob:
+  - `core/connectors.py` blob `809c4d2fca01e6fcdaf26b91bf34b1af26dfd15a`.
+  - `core/discussion.py` blob `aa722f95235f613c288ba212074527ed2ce01ebc`.
+  - `run_meeting_v2.py` blob `3506137f465c38995fd10472dc2e982f17e23a01`.
+  - W17 `WORK_17_GAP01_DISPATCH_ACK_SOURCE_RECONCILIATION.md` blob `78010ce9684afd7e44f4fdb8580be186d56992a6`.
+- Positive findings (VERIFIED SOURCE):
+  1. Core có abstraction `AgentConnector.send_turn()`, `AnthropicConnector`, `OpenAIConnector` và `MockConnector`; do đó không được kết luận Core hoàn toàn không có provider connector. Các connector là Meeting-turn interface, nhận `MeetingContextForAgent` và trả `AgentResponse(status, content, raw)`.
+  2. `AgentResponse` không có provider request/response ID, delivery receipt ID, assignment/dispatch/attempt ID, target session proof, correlation/idempotency key, recipient identity proof hoặc ACK reference.
+  3. `DiscussionEngine.run_discussion()` duyệt participants theo vòng, gọi `connector.send_turn(context)`, sau đó ghi `agent_pass`, `add_message` và `discussion_stopped` vào Meeting log. Đây là điều phối lượt nói trong Meeting, không phải W70 Assignment state machine; không có DISPATCHED/DELIVERY_RECEIPT/recipient ACK transition trong flow được kiểm tra.
+  4. `run_meeting_v2.py` gọi `build_mock_connectors(registry, participants)` trong entrypoint được fetch; do đó source entrypoint này mặc định dùng scripted MockConnector, không phải bằng chứng gọi provider thật. Sự tồn tại của Anthropic/OpenAI connector trong module không chứng minh key, provider request hay runtime success.
+  5. W17 GAP-01 reconciliation hiện hành đã xác định tiêu chí E3: một trace/correlation ID phải nối Assignment → dispatch attempt → provider delivery receipt → recipient-attributable explicit ACK → (nếu có) execution/evidence. Không được dùng Meeting paste, GitHub commit, Sandbox write, roster hoặc role label thay receipt/ACK.
+- Bounded search observations:
+  - Search theo `assignment dispatch provider receipt recipient ACK` trả về W17 reconciliation và tài liệu thiết kế/khác; không tìm được kết quả source runtime có endpoint/adapter gửi Work Assignment vào private AI session.
+  - Search theo `send_assignment` không tìm thấy dispatcher runtime; kết quả trùng khớp chủ yếu là hồ sơ W17 ghi nhận giới hạn tìm kiếm cũ. Search index có giới hạn; đây là NOT LOCATED trong phạm vi truy vấn, không phải chứng minh toàn repo/nhánh/deployment không tồn tại.
+  - Search có kết quả W17 SYNC_RECORD chứa source trace Core v0.2 trước đó: Meeting connector có thể gọi API, nhưng `AgentResponse` và DiscussionEngine không tạo receipt/ACK gắn Assignment. Kết quả này phù hợp với source fetch trực tiếp ở Entry 081.
+- Phân biệt trạng thái bằng chứng:
+  - VERIFIED: source-level Meeting provider connector abstractions tồn tại.
+  - VERIFIED: entrypoint `run_meeting_v2.py` được kiểm tra tạo mock connectors; không được nâng thành real-provider E2E.
+  - NOT LOCATED: Work Assignment dispatch adapter/endpoint và provider receipt/recipient ACK transport trong bounded GitHub main search.
+  - NOT PROVEN: live provider invocation, target private-session identity, delivery receipt, authenticated recipient ACK, retry/idempotency và E2E Assignment → ACK.
+- Kết luận: Core v0.2 có năng lực kết nối provider theo hợp đồng Meeting-turn, nhưng đây không phải W52/W70 Work Assignment dispatch. Đây là phân biệt quan trọng: ROOM-HOP có một phần khả năng gọi AI trong Meeting, song GAP-01 vẫn thiếu đường giao việc có định danh, receipt và ACK xác thực. Không phủ nhận connector hiện hữu; không thổi phồng connector thành dispatcher.
+- Disposition: GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2 provider delivery receipt NOT PROVEN; E3 recipient ACK/dispatch trace NOT PROVEN; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED; READ/TRACE/ANALYZE ONLY.
+- Hành động: không sửa source, không chạy tests/CI, không gọi API/provider, không gửi assignment, không sử dụng Meeting relay, không gọi Host, không thay quyền/gate/branch.
+- Bước tiếp theo: trace các implementation/contract W52 đã có trong Sandbox và xác định chính xác phần nào có thể tái sử dụng, phần nào thiếu adapter/receipt/ACK; đồng thời giữ ranh giới rõ giữa W52 candidate Sandbox, GitHub main và deployed runtime. Không tạo dispatcher hoặc ledger thứ hai.
