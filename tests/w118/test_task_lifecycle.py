@@ -249,6 +249,49 @@ class Work118TaskLifecycleTests(unittest.TestCase):
         with self.assertRaises(TransitionDenied):
             self.transition("ACKED", "executor", "agent:ka-runtime", 1, "01")
 
+    def test_external_source_observation_is_append_only_without_state_change(self):
+        result = self.registry.record_observation(
+            "W118-TASK-001", "source.push_bound",
+            actor_principal="github:webhook", actor_role="orchestrator", identity_verified=True,
+            event_id="delivery-push-001", idempotency_key="github:delivery-push-001",
+            occurred_at="2026-11-21T06:20:00Z",
+            evidence_refs=["github://commit/" + "a" * 40],
+            details={"branch": "work/W118/task-W118-TASK-001", "commit_sha": "a" * 40, "issue_id": 65},
+        )
+        self.assertFalse(result["replayed"])
+        self.assertEqual(result["task"]["state"], "DRAFT")
+        self.assertEqual(result["task"]["version"], 1)
+        event = self.registry.list_events("W118-TASK-001")[-1]
+        self.assertEqual(event["event_type"], "source.push_bound")
+        self.assertEqual(event["from_state"], event["to_state"])
+
+    def test_external_observation_is_idempotent(self):
+        kwargs = {
+            "actor_principal": "github:webhook",
+            "actor_role": "orchestrator",
+            "identity_verified": True,
+            "event_id": "delivery-push-002",
+            "idempotency_key": "github:delivery-push-002",
+            "occurred_at": "2026-11-21T06:21:00Z",
+            "evidence_refs": ["github://commit/" + "b" * 40],
+            "details": {"branch": "work/W118/task-W118-TASK-001", "commit_sha": "b" * 40, "issue_id": 65},
+        }
+        first = self.registry.record_observation("W118-TASK-001", "source.push_bound", **kwargs)
+        second = self.registry.record_observation("W118-TASK-001", "source.push_bound", **kwargs)
+        self.assertFalse(first["replayed"])
+        self.assertTrue(second["replayed"])
+        self.assertEqual(len(self.registry.list_events("W118-TASK-001")), 2)
+
+    def test_executor_cannot_record_github_observation(self):
+        with self.assertRaises(TransitionDenied):
+            self.registry.record_observation(
+                "W118-TASK-001", "source.push_bound",
+                actor_principal="agent:ka", actor_role="executor", identity_verified=True,
+                event_id="delivery-push-003", idempotency_key="github:delivery-push-003",
+                occurred_at="2026-11-21T06:22:00Z",
+                details={"commit_sha": "c" * 40},
+            )
+
     def test_event_history_is_append_only_and_ordered(self):
         self.transition("READY", "owner", "owner:vinh", 1, "01")
         events = self.registry.list_events("W118-TASK-001")
