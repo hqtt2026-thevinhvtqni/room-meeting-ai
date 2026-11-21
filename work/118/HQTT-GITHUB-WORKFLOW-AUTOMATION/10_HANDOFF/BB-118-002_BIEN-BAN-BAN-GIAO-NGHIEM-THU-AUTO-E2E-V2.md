@@ -208,3 +208,13 @@ Sau khi ghi BB-118-002, Ka đã exact-fetch lại hồ sơ, checklist, runbook, 
 - **Git compare at this snapshot:** Main `5f8390910178012feaf37510452bc39804b296db`; feature `8e9bf8e952a2d97778fe6e16d84f6db05ffcbcdc`; merge base `cf2537e07bfd71d5823bd98f8673b3ab5644fcdc`; **263 ahead / 82 behind — DIVERGED**.
 - **PR state:** OPEN / not merged / not released; raw GitHub PR API `mergeable=true`, `mergeable_state=unstable`; this is not merge authorization.
 - **Reviews:** zero formal review submissions and zero inline review threads.
+
+
+### H. Repeat verification on latest source/document snapshot — 2026-11-21
+
+- **Exact tested HEAD:** `364ff4c7c2f170de7e700e2b5e2ce9167747c74f`.
+- **CI:** [Run #44846837186](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44846837186), push validation; SUCCESS; validate SUCCESS; **53 tests PASS / 0.283s**; T10-26 PASS.
+- **Artifact:** `w118-run-evidence-44846837186-1`, ID `14682809297`, SHA-256 digest `a21e0e26b2a411896af9b279bc270ef693303fe546d00f0e247e1877a7e767fc`; present/unexpired; expires 2026-12-21T00:54:21Z.
+- **Runtime:** all event-specific jobs SKIPPED; runtime E2E NOT VERIFIED.
+- **Git compare at exact tested HEAD:** Main `5f8390910178012feaf37510452bc39804b296db`; merge base `cf2537e07bfd71d5823bd98f8673b3ab5644fcdc`; 266 ahead / 82 behind — DIVERGED.
+- **PR raw API:** OPEN; `mergeable=true`; `mergeable_state=clean` at this readback. This is metadata only and does not replace Xu review, Vinh acceptance or separate release authority.
