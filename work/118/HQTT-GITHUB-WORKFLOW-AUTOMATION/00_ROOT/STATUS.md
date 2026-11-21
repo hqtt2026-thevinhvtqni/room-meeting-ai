@@ -119,3 +119,14 @@
 - Synchronized the W118 clean branch using a two-parent merge commit `7ae56f961ec6908abc1060d321389b6d71d301cf`; tree is current Main plus W118-only paths. Compare is 11 ahead / 0 behind; 45 changed paths remain W118-only.
 - Prior exact-head PR validation Run #44949752047 SUCCESS at parent SHA `9190994862d1275db6a3037816e77a3c209b96ae`, 94 tests PASS; artifact 14724863171, digest `f2dfda563a082c6c1e75c3d05c06e38ef80af7c8e9d43b09452e6551bbdc7d74`. This does not verify the subsequent Mainline sync commit or this status update; fresh exact-head validation is required.
 - PR #68 remains the sole clean delivery candidate; PR #67 remains superseded and unmerged. No merge/release.
+
+
+## 12. Current verified handoff state — 2026-11-22 05:05 +07:00
+
+- **PR #68:** READY FOR REVIEW / OPEN / UNMERGED; branch `work/118-auto-e2e-v2-clean`; head at verification `052689084fba6f548df5c44637f652735628ad83`; base Main `792bdd71e5345949e0c1f26ff9f95a8513dfa7d5`; 13 ahead / 0 behind; 45 changed paths, all W118-only.
+- **Exact-head CI:** Run #44949913071 SUCCESS; 94 tests PASS / 0.303s; artifact ID 14724444908; digest `4c45798a365cf1822954a716610932f911c4531e7ee51488f0419cd3abf099e9`.
+- **Sandbox/GitHub parity:** Task Register and schema byte-identical; schema required fields all exist; 7 planning Tasks; no Assignment runtime fields in W118 register; no legacy SQLite Task lifecycle/inbox/reconciler files remain in active Sandbox code.
+- **PR #67:** CLOSED / UNMERGED; history retained; superseded due to cross-Work changes and divergence.
+- **Review:** PR #68 marked READY FOR REVIEW. No Xu GitHub login inferred or reviewer request sent without verified identity. Xu independent review remains PENDING.
+- **Runtime:** event-specific jobs SKIPPED; no live Core/W102/W12/W13/W70 lifecycle E2E claim. External runtime blockers remain open.
+- **Disposition:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED. No merge/release.
