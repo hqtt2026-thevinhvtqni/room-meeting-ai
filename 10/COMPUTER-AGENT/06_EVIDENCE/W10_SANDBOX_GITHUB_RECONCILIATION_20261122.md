@@ -115,3 +115,8 @@ Co xác lập ranh giới tích hợp: Work10 là local Computer Agent provider,
 ## W10-INVENTORY-COUNT-CORRECTION-20261122-02 — 2026-11-22 06:36 (UTC+07:00)
 
 Sau khi tạo và đồng bộ integration boundary handoff, snapshot mới: Sandbox 159 files; GitHub 66 files; shared 66; Sandbox-only 93; GitHub-only 0. Một thư mục `.github/` chỉ ở Sandbox. 93 Sandbox-only file dispositions không đổi. Inventory report đã được cập nhật.
+
+
+## Inventory count correction — 2026-11-22 06:38 (UTC+07:00)
+
+After adding the Run #104 evidence and POSIX cleanup remediation evidence to both Sandbox and GitHub, the current inventory is Sandbox 161 files; GitHub 68 files; shared 68; Sandbox-only 93; GitHub-only 0; one Sandbox-only `.github/` directory. The 93 Sandbox-only KEEP dispositions are unchanged.
