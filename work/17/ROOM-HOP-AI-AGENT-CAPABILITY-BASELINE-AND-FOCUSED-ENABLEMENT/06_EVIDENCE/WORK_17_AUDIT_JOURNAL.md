@@ -1816,3 +1816,27 @@ Read-only exact current-main fetch of `room_hop_mcp/core_http_main.py`, `room_ho
 - GAP-01 OPEN/P0; Assignment/dispatch/receipt/recipient ACK still NOT PROVEN; E2/E3 NOT PROVEN.
 - READ/TRACE/ANALYZE ONLY. No code, test, API, runtime, provider, Host, permission, branch or deployment change.
 - Next: inspect whether another separately launched Core service/runtime is configured outside this repository entrypoint; otherwise preserve this as a current-main source defect for a later authorized W37/Core reconciliation, not a W17 code patch.
+
+
+## Entry 091 — Recursive current-main tree and Core deployment-config search (2026-11-21T16:50:01+07:00)
+
+### Scope and method
+Fetched the full recursive GitHub `main` tree through the Git data API and filtered all 1,187 entries for Core/8000/launcher/service/deployment/configuration/persistence/Assignment/dispatch/ACK paths. Followed with bounded code searches for `ROOM_HOP_CORE_PORT`, `ROOM_HOP_CORE_BIND`, `core_http_main`, `uvicorn.run`, and Core service manager/start scripts; read `.env.example`, `context/XU_CORE.md`, `API_CONTRACT.md`, `run_meeting.py` and `run_meeting_v2.py`. No runtime/process/network probe and no source mutation.
+
+### Findings
+- Recursive tree SHA `321debc66e6027c7509f9dc05416e810643b0d1f`, `truncated=false`, 1,187 entries. Core-related implementation paths include the `core/` Meeting/Identity modules, `room_hop_mcp/core_http_main.py`, HTTP/MCP/Browser adapters, tests and the deployment guide. No `core/execution_authority.py` or `room_hop_mcp/adapter/execution_authority_http.py` exists in this current-main tree; both exact fetches returned NOT_FOUND.
+- Repository tree contains one explicit Core HTTP launcher source: `room_hop_mcp/core_http_main.py`, with default port 8000. Bounded code search for `ROOM_HOP_CORE_PORT` and `ROOM_HOP_CORE_BIND` returns only that launcher and the deployment guide. No separate Core service manager/start script, Docker/Compose file, systemd/NSSM service definition or deployment workflow was identified in the filtered complete tree.
+- `.env.example` blob `30cb61cc1b0882f50b278ff92841228014292845` contains only XU_CORE_EDIT_KEY, GEMINI_API_KEY and GROQ_API_KEY placeholders; no Core service URL/port, Assignment store or execution-authority configuration.
+- `API_CONTRACT.md` describes Core as authority for Meeting identity/lifecycle, not Work Assignment/ACK. `run_meeting.py` and `run_meeting_v2.py` are local Meeting workflows; v2 uses `build_mock_connectors()`, not Work Assignment dispatch.
+- `context/XU_CORE.md` is governance/identity context for Xu, not a Core server runtime/configuration source.
+- Search and tree are bounded to current GitHub `main` and its indexed repository; they cannot reveal PC-only service configuration, an external/private deployment, another repository or unindexed secrets/config. Do not conclude the live Core is absent or stopped.
+
+### Conclusion
+Current-main repository provides a Core HTTP launcher source but no verifiable separate production service-manager/deployment configuration or Assignment/ACK persistence configuration. The only documented execution-authority deployment guide describes a route mount that is absent from current-main source composition. Therefore the remaining uncertainty is specifically **deployment/runtime outside this repository snapshot**, not a reason to create a second Core or duplicate Assignment service in W17.
+
+### Disposition
+- Core :8000 launcher source: PRESENT; deployed process/service manager/current PID: NOT VERIFIED.
+- Current-main Assignment/ACK routes and durable store: NOT PRESENT/NOT LOCATED in inspected tree and composition; alternate external service remains UNKNOWN.
+- GAP-01 OPEN/P0; GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED.
+- READ/TRACE/ANALYZE ONLY; no source, test, runtime, service, deployment, provider, Host, permission or branch action.
+- Next: prepare a bounded blocker/decision brief distinguishing source defect (route mount/test/docs mismatch) from deployment unknown (actual Core service config/process), then continue source-only evidence collection. PC/service-manager attestation remains deferred until PC is available; do not ask for it now.
