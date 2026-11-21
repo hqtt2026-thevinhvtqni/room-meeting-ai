@@ -856,3 +856,16 @@
 - W14 RealExecutionHost has scoped subprocess.run and optional Popen start_service/process registry, with browser/Git/CI as injected adapters. The inspected code does not implement W52 HostPort, Codex/ACP session RPC, provider-session identity binding or W52 cancellation/stream lifecycle.
 - Therefore W14 is the correct sole Host owner, but its existing HTTP bridge cannot be relabelled as a concrete W52 HostPort. A W14-owned provider-process adapter behind the existing authorized boundary is a possible design direction only; it requires explicit process identity/isolation/stream/stop guarantees and Core/W70 Assignment + recipient ACK binding.
 - No implementation authorized or performed. GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. Entry 084 added.
+
+
+## Sync Period 0072 — W70 Assignment and recipient ACK authority trace (2026-11-21T16:40:48+07:00)
+
+- DOC-044 is an ACTIVE template; DOC-057 is active policy but explicitly states technical enforcement NOT VERIFIED; DOC-063 remains draft/design-only/not implemented; DOC-065 is a dispatch/ACK contract proposal with route names omitted pending actual Core mapping.
+- DOC-093 is DRAFT_NOT_APPROVED with 36 proposed tasks (27 PROPOSED, 9 PROPOSED_NOT_VERIFIED); DOC-094 is DRAFT_NOT_APPROVED with 18 phase tasks, all PROPOSED_NOT_ACKNOWLEDGED and sampled evidence/journal refs empty. Neither is a live Assignment/ACK ledger.
+- `DASHBOARD/execution/ROLE_TASK_STATUS.json` is a read-only projection of DOC-093, source still draft, generated 2026-11-08; not authority.
+- W70 `lifecycle_domain.py` is a pure domain guard, not API/persistence/authz/audit; `validate_assignment_ready()` is shape/readiness validation only. `work_registry.py` is explicitly in-memory only. READMEs say not integrated/not accepted and no Core integration.
+- W70 DOC-035 historical entry 2026-11-13 records no exposed 8030 task-assignment/dispatch/participant-ACK action and `AGENT ACK = NONE` at that time. Bounded historical evidence; not a fresh complete Core route inventory.
+- No inspected W70 artifact ties assignment_id → dispatch/attempt → provider receipt → recipient identity proof → ACK event → authoritative Core read-back. W70 policy authority is identifiable; live Assignment/ACK data authority is NOT LOCATED in inspected W70 artifacts. This does not prove Core :8000 lacks an internal route.
+- Reuse existing W70 semantics; Core remains intended authenticated identity/authority/persistence boundary, W52 provider dispatch/receipt/session events, W14 execution Host. No parallel dispatcher/ledger/ACK store/event bus proposed. Design mapping only, not implementation approval.
+- GAP-01/GAP-11 OPEN/P0; E2/E3 NOT PROVEN; delivery receipt/recipient ACK NOT PROVEN; protected execution DENY / NOT RELEASED. READ/TRACE/ANALYZE ONLY. Entry 085 added.
+- Next: trace current-main Core :8000 route composition and persistence/event models for an existing Assignment/ACK endpoint/store; do not infer absence from W70-only evidence.
