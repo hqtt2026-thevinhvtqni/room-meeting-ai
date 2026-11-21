@@ -904,3 +904,23 @@
 - **Reviews:** no formal PR review submissions or inline review threads. Xu review PENDING; Vinh acceptance PENDING.
 - **Kết luận:** SHA pinning and 53 contract tests PASS; runtime E2E NOT VERIFIED; no rebase, merge or release performed.
 - **Bước tiếp:** hand off the reconciled BB-118-002, STATUS, XR-118-001, Test Matrix and runtime runbook to Xu for independent review; await Xu disposition and Vinh's separate decision before integration/release.
+
+
+## Entry 067 — Sửa phân loại CI evidence và regression chống tái diễn
+
+- **Người thực hiện:** Ka — CSA / W118 Build Owner.
+- **Chức danh:** Delegated Technical Lead / Architecture Reviewer.
+- **Người nhận:** Xu — Independent Reviewer; Vinh — Final Product Owner.
+- **Ngày giờ:** 2026-11-21 08:38:39 +07:00.
+- **Mã Work:** W118 / W118-10.
+- **Ưu tiên:** P0 — Evidence Integrity / CI contract classification.
+- **Chỉ thị:** Xu yêu cầu sửa `evidence_type: RUNTIME` thành loại CI contract phù hợp, thêm regression, cập nhật BB-118-002, STATUS, Test Matrix, XR checklist và PR; giữ nguyên Entries 059–066; không rebase/merge/release.
+- **Phát hiện:** job `validate` chỉ chạy unit/contract tests nhưng writer của artifact `w118-run-evidence` gắn nhãn `RUNTIME`, gây hiểu sai bản chất bằng chứng.
+- **Sửa mã:** workflow `.github/workflows/w118-workflow-automation.yml` đổi `evidence_type` thành `CI_CONTRACT`. Event artifacts do handoff/ACK/review tạo ra vẫn là `OPERATION`; không thay đổi semantics.
+- **Regression mới:** `test_ci_run_evidence_is_classified_as_ci_contract_not_runtime`; khẳng định writer có `CI_CONTRACT`, không có `RUNTIME`, giữ `RECORDED` và limitation rằng CI không thay thế independent review/acceptance. Gắn T10-27.
+- **CI:** [Run #44851353422](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44851353422); event `push`; exact tested commit `acb7f510b5885d045b165f739540ee85e57d7439`; job `validate` SUCCESS; **54 tests PASS / 0.223s**; log có `Ran 54 tests` và `OK`.
+- **Artifact:** `w118-run-evidence-44851353422-1`, ID `14685143198`, SHA-256 `a326f03eae720de5af6ff531e1105e2311c0738a4661f71f940d661eb9b3b6a1`; unexpired tại readback, expiry 2026-12-21T01:38:38Z. Ka tải ZIP và đọc JSON thực tế; xác nhận `evidence_type=CI_CONTRACT`, `state=RECORDED`, `test_outcome=success`, `tested_commit=acb7f510b5885d045b165f739540ee85e57d7439`, run ID `44851353422`.
+- **Runtime limitation:** `handoff`, `ack-verification`, `acceptance-review`, `controlled-failure`, `controlled-failure-dispatch` đều SKIPPED; live runtime E2E NOT VERIFIED.
+- **GitHub snapshot tại source commit:** Main `5f8390910178012feaf37510452bc39804b296db`; merge base `cf2537e07bfd71d5823bd98f8673b3ab5644fcdc`; 272 ahead / 82 behind — DIVERGED. PR #67 OPEN, chưa merge; mergeability clean tại readback. Không rebase, merge, release.
+- **Disposition:** code fix + regression + artifact content verification PASS; Xu independent review gate 09 PENDING re-review; Vinh product acceptance PENDING; Work ACTIVE — NOT ACCEPTED — NOT RELEASED.
+- **Bước tiếp:** chuyển hồ sơ đã hiệu chỉnh cho Xu phản biện tiếp; Ka không tự nâng Evidence Integrity review gate lên PASS thay Xu.
