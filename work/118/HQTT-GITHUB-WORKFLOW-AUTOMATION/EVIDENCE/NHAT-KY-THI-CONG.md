@@ -775,21 +775,58 @@
 - **Next owner:** Xu — independent review; Vinh — final product acceptance and separate integration/release decisions.
 
 
-## Entry 062 — Xác nhận và chốt nhật ký bàn giao nghiệm thu W118
+## Entry 062 — Đối soát phản biện Xu và hiệu chỉnh hồ sơ W118
 
-- **Người ghi:** Ka — CSA / W118 Build Owner.
+- **Người thực hiện:** Ka — CSA / W118 Build Owner.
 - **Người nhận:** Xu — Independent Reviewer; Vinh — Final Product Owner.
-- **Ngày giờ:** 2026-11-21 20:00 +07:00.
+- **Chức danh:** Delegated Technical Lead / Architecture Reviewer.
+- **Ngày giờ:** 2026-11-21 07:44 +07:00.
 - **Mã Work:** W118 / W118-10.
-- **Ưu tiên:** P0 — Acceptance handoff / audit record.
-- **Yêu cầu:** Vinh yêu cầu Ka ghi nhật ký sau khi hoàn tất gói bàn giao nghiệm thu Auto E2E v2.
-- **Hồ sơ bàn giao:** `BB-118-002_BIEN-BAN-BAN-GIAO-NGHIEM-THU-AUTO-E2E-V2.md` đã được tạo trên branch `work/118-auto-e2e-v2`; PR #67 description đã được cập nhật để liên kết biên bản, checklist Xu, runtime runbook và các blocker.
-- **Kiểm thử mới nhất đã xác minh:** [GitHub Actions Run #44837481914](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44837481914), commit `13a5040f12e222ff2552f236963909230aa4c634`; workflow conclusion SUCCESS; job `validate` SUCCESS; **52 tests PASS / 0.392s**.
-- **Artifact:** `w118-run-evidence-44837481914-1`, ID `14678827431`, SHA-256 `600f74af010121443f6718b356aec424abc6d773609a20289dc82f227a0eaf97`; xác nhận tồn tại và chưa hết hạn tại lần đọc.
-- **Giới hạn bằng chứng:** các job `handoff`, `ack-verification`, `acceptance-review`, `controlled-failure`, `controlled-failure-dispatch` đều SKIPPED trong run này. Vì vậy runtime event E2E vẫn **NOT VERIFIED**, không được ghi PASS.
-- **Trạng thái PR:** PR #67 OPEN, `draft=false`, `merged=false`; head SHA `13a5040f12e222ff2552f236963909230aa4c634`. Không merge hoặc release.
-- **Đối chiếu Main tại thời điểm ghi Entry 062:** Main `5f8390910178012feaf37510452bc39804b296db`; feature PR head `13a5040f12e222ff2552f236963909230aa4c634`; merge base `cf2537e07bfd71d5823bd98f8673b3ab5644fcdc`; feature branch **243 commits ahead / 82 commits behind — DIVERGED**. Không rebase/merge mù; cần phân loại 82 commit Main trước khi tích hợp.
-- **Review / acceptance:** Xu independent review chưa có formal review submission hoặc review thread được xác nhận trong lần đối soát; Xu review **PENDING**. Vinh final product acceptance **PENDING**.
-- **Quyền:** Go (AI-06) là default QE/QA theo D70-026 nhưng GitHub identity/access chưa xác minh; Xu GitHub reviewer identity cũng chưa xác minh. Không tự gán login hoặc mở quyền.
-- **Kết luận:** Hồ sơ bàn giao và contract verification **PASS**; runtime E2E **NOT VERIFIED**; Xu review **PENDING**; Vinh acceptance **PENDING**; merge/release **NOT PERFORMED**.
-- **Bước tiếp theo:** Xu phản biện theo XR-118-001; Vinh thực hiện nghiệm thu cuối và quyết định riêng về non-release integration. Ka tiếp tục giữ nguyên trạng thái ACTIVE — NOT ACCEPTED — NOT RELEASED cho tới khi đủ bằng chứng và có quyết định đúng thẩm quyền.
+- **Ưu tiên:** P0 — evidence reconciliation / security review.
+- **Phạm vi:** đối soát trực tiếp PR #67, Main/feature/merge-base, CI/artifact, action references và hiệu chỉnh BB-118-002, STATUS, XR-118-001, Test Matrix, Implementation và Plan. Không rebase, merge, release, thay đổi quyền, secrets hoặc logic nghiệp vụ.
+
+### 1. GitHub snapshot đã xác minh
+
+- PR #67 OPEN, `draft=false`, `merged=false`.
+- Feature HEAD tại thời điểm đối soát: `1a99add2d752e3bd21d7c892eeced5f0f0ee7c18`.
+- Main HEAD: `5f8390910178012feaf37510452bc39804b296db`.
+- Merge base: `cf2537e07bfd71d5823bd98f8673b3ab5644fcdc`.
+- Compare: **244 ahead / 82 behind — DIVERGED**. Không rebase/merge mù; không tự tích hợp Main.
+
+### 2. CI và artifact baseline
+
+- Run [#44838531259](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44838531259), exact tested commit `1a99add2d752e3bd21d7c892eeced5f0f0ee7c18`.
+- Workflow SUCCESS; job `validate` SUCCESS; **52 tests PASS / 0.193s**.
+- Artifact `w118-run-evidence-44838531259-1`, ID `14680060235`, SHA-256 digest `f903025a1a386670f391239807dabde8ff3573b4a11186a53cb6d23b2cfee2b7`; present/unexpired at readback.
+- `handoff`, `ack-verification`, `acceptance-review`, `controlled-failure`, `controlled-failure-dispatch` đều SKIPPED. Runtime E2E NOT VERIFIED.
+- Các run #44837481914 và #44837495313 không được gộp làm cùng bằng chứng; run #44838531259 được chọn vì gắn chính xác với HEAD tại thời điểm đối soát.
+
+### 3. P0 action SHA pinning
+
+- Phát hiện mutable refs: `actions/checkout@v4`, `actions/setup-python@v5`, `actions/upload-artifact@v4`.
+- Đã chuẩn hóa orchestrator và diagnostics workflow sang SHA đầy đủ; xác minh tag/SHA qua việc fetch `action.yml` ở cả hai ref và so sánh blob SHA:
+  - checkout v4.2.2: `11bd71901bbe5b1630ceea73d27597364c9af683`.
+  - setup-python v5.6.0: `a26af69be951a213d495a4c3e4e4022e16d87065`.
+  - upload-artifact v4.6.2: `ea165f8d65b6e75b540449e92b4886f43607fa02`.
+- Thêm regression T10-26 và XR-118-001 gate 20 / P0; CI chưa hoàn tất tại thời điểm ghi Entry này, do đó gate pinning chưa được nâng PASS.
+- Đã đọc Work70 DOC-001, DOC-002, DOC-003, DOC-004, DOC-005, DOC-006, DOC-033, DOC-038, DOC-039, DOC-040 và DOC-055. Không tìm thấy điều khoản pin SHA riêng trong các tài liệu governance này; ghi nhận là W118 P0 security control theo hướng dẫn chính thức của GitHub, không quy thành chính sách HQTT chưa có bằng chứng.
+
+### 4. Hồ sơ cập nhật
+
+- BB-118-002: thêm Amendment XI, phân biệt snapshot lịch sử với snapshot hiện hành; cập nhật SHA, run, artifact, 244/82 và giới hạn runtime.
+- STATUS: thêm snapshot hiện hành và các gate PENDING.
+- XR-118-001: thêm gate 20 P0 về SHA pinning.
+- Test Matrix: thêm T10-26.
+- Implementation và Plan: ghi nhận remediation và cách kiểm chứng.
+- Entries 059–061 được giữ nguyên; Entry 062 này thay thế nội dung ghi nhận Entry 062 cũ với số liệu đã lỗi thời.
+
+### 5. Trạng thái và ranh giới
+
+- Contract baseline: PASS (52 tests ở Run #44838531259).
+- Pinning remediation: IMPLEMENTED; CI verification PENDING.
+- Runtime event E2E: NOT VERIFIED.
+- Xu independent review: PENDING; Vinh final acceptance: PENDING.
+- Xu/Go GitHub identities và executor mapping: NOT VERIFIED; không cấp quyền hoặc đoán login.
+- Merge/release: NOT AUTHORIZED / NOT PERFORMED.
+
+**Bước tiếp:** chờ CI sau SHA-pin remediation, exact-readback toàn bộ hồ sơ, ghi kết quả CI vào nhật ký và chuyển Xu tiếp tục phản biện.
