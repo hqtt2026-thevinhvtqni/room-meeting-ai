@@ -116,13 +116,13 @@ class GitHubEventAdapterTests(unittest.TestCase):
         verified = delivery("push", push_payload(issue_id=66))
         with self.assertRaises(GitHubEventAdapterError):
             normalize_github_delivery(
-                verified, core_task(issue_id=65), expected_repository=REPOSITORY, allowed_ci_workflow=WORKFLOW
+                verified, core_task=core_task(issue_id=65), expected_repository=REPOSITORY, allowed_ci_workflow=WORKFLOW
             )
 
     def test_push_without_core_issue_link_is_blocked(self):
         verified = delivery("push", push_payload())
         result = normalize_github_delivery(
-            verified, core_task(issue_id=None), expected_repository=REPOSITORY, allowed_ci_workflow=WORKFLOW
+            verified, core_task=core_task(issue_id=None), expected_repository=REPOSITORY, allowed_ci_workflow=WORKFLOW
         )
         self.assertEqual(result["status"], "BLOCKED")
         self.assertIsNone(result["event_intent"])
@@ -130,7 +130,7 @@ class GitHubEventAdapterTests(unittest.TestCase):
     def test_ci_before_core_push_evidence_is_deferred_without_local_queue(self):
         verified = delivery("workflow_run", workflow_payload())
         result = normalize_github_delivery(
-            verified, core_task(source_bindings=[]),
+            verified, core_task=core_task(source_bindings=[]),
             expected_repository=REPOSITORY, allowed_ci_workflow=WORKFLOW,
         )
         self.assertEqual(result["status"], "DEFERRED")
@@ -140,7 +140,7 @@ class GitHubEventAdapterTests(unittest.TestCase):
         binding = {"branch": "work/W118/task-W118-TASK-016", "head_sha": "a" * 40, "issue_id": 65}
         verified = delivery("workflow_run", workflow_payload())
         result = normalize_github_delivery(
-            verified, core_task(source_bindings=[binding]),
+            verified, core_task=core_task(source_bindings=[binding]),
             expected_repository=REPOSITORY, allowed_ci_workflow=WORKFLOW,
         )
         self.assertEqual(result["status"], "NORMALIZED")
@@ -155,7 +155,7 @@ class GitHubEventAdapterTests(unittest.TestCase):
         verified = delivery("workflow_run", workflow_payload(name="untrusted workflow"))
         with self.assertRaises(GitHubEventAdapterError):
             normalize_github_delivery(
-                verified, core_task(source_bindings=[{
+                verified, core_task=core_task(source_bindings=[{
                     "branch": "work/W118/task-W118-TASK-016", "head_sha": "a" * 40, "issue_id": 65,
                 }]), expected_repository=REPOSITORY, allowed_ci_workflow=WORKFLOW,
             )
@@ -164,7 +164,7 @@ class GitHubEventAdapterTests(unittest.TestCase):
         binding = {"branch": "work/W118/task-W118-TASK-016", "head_sha": "a" * 40, "issue_id": 65}
         verified = delivery("workflow_run", workflow_payload(conclusion="failure"))
         result = normalize_github_delivery(
-            verified, core_task(source_bindings=[binding]),
+            verified, core_task=core_task(source_bindings=[binding]),
             expected_repository=REPOSITORY, allowed_ci_workflow=WORKFLOW,
         )
         self.assertEqual(result["event_intent"]["payload"]["conclusion"], "failure")
