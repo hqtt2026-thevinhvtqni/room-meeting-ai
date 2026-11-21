@@ -28,6 +28,7 @@ SUITES = [
     ("http_api", "test_http.py"),
     ("process_containment", "test_process_containment.py"),
     ("host_operations", "test_host_operations.py"),
+    ("acceptance_validator", "test_acceptance_validator.py"),
 ]
 HASH_GLOBS = [
     "04_CODE/*.py", "04_CODE/*.md", "05_TEST/*.py", "05_TEST/*.html",
@@ -128,6 +129,7 @@ def main() -> int:
                 "real Chromium/Playwright behaviour",
                 "physical Windows 10 PC execution and local ACL/Chrome profile validation",
                 "Linux cgroup-v2 production containment",
+            "production validator HMAC key and pinned-hash provisioning on Owner PC",
                 "integrated ROOM-HOP E2E",
                 "P4 dashboard behaviour in a real browser",
             ],

@@ -11,19 +11,37 @@ against the deterministic adapter double (no Chromium needed here), and proves:
   * invalid payloads return 400;
   * a timed-out worker is terminated through OS containment before the lease is released.
 """
+import hashlib
 import json
 import os
+import platform
 import signal
 import shutil
 import subprocess
 import sys
 import tempfile
 import time
+import uuid
+from datetime import datetime, timedelta, timezone
 import urllib.error
 import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def utc_iso(value=None):
+    value = value or datetime.now(timezone.utc)
+    return value.astimezone(timezone.utc).isoformat(timespec="milliseconds").replace("+00:00", "Z")
+
+
+def sha256_bytes(value):
+    return hashlib.sha256(value).hexdigest()
+
+
+def host_architecture():
+    machine = platform.machine().casefold()
+    return "arm64" if machine in {"arm64", "aarch64"} else "x86_64"
 CODE = ROOT / "04_CODE"
 TEST_DIR = ROOT / "05_TEST"
 FAILED = []
@@ -52,7 +70,18 @@ class Server:
             "Write-Output 'W10_PS_OK'\n", encoding="utf-8"
         )
         env = dict(os.environ)
+        validator_schema = ROOT / "06_EVIDENCE" / "W10_P0_ACCEPTANCE_MANIFEST_V8.schema.json"
+        validator_policy = ROOT / "06_EVIDENCE" / "W10_P0_CATEGORY_OUTCOME_POLICY_V8.json"
+        validator_source = ROOT / "04_CODE" / "acceptance_validator.py"
+        self.source_commit = os.getenv("GITHUB_SHA") or ("a" * 40)
         env.update({
+            "COMPUTER_AGENT_VALIDATOR_SHA256": sha256_bytes(validator_source.read_bytes()),
+            "COMPUTER_AGENT_VALIDATOR_SCHEMA_SHA256": sha256_bytes(validator_schema.read_bytes()),
+            "COMPUTER_AGENT_VALIDATOR_POLICY_SHA256": sha256_bytes(validator_policy.read_bytes()),
+            "COMPUTER_AGENT_VALIDATOR_HMAC_KEY": "0123456789abcdef" * 4,
+            "COMPUTER_AGENT_VALIDATOR_KEY_ID": "W10-CI-TEST-ONLY",
+            "COMPUTER_AGENT_VALIDATOR_RUNNER_ID": platform.node(),
+            "COMPUTER_AGENT_SOURCE_COMMIT": self.source_commit,
             "COMPUTER_AGENT_PORT": "0",
             "COMPUTER_AGENT_ADAPTER_MODULE": "test_fake_adapter:FakeAdapter",
             "COMPUTER_AGENT_FAKE_LOG": str(self.log_path),
@@ -164,7 +193,9 @@ def main():
         check("/health reports host capability enablement separately",
               lambda: "run_pytest" in health["host_capabilities"]["supported_operations"]
               and health["host_capabilities"]["write_enabled"] is True
-              and health["host_capabilities"]["powershell_enabled"] is (os.name == "nt"))
+              and health["host_capabilities"]["powershell_enabled"] is (os.name == "nt")
+              and "validate_acceptance_manifest" in health["host_capabilities"]["supported_operations"]
+              and health["host_capabilities"]["validator_ready"] is True)
 
         status, body = server.request("GET", "/nope")
         check("unknown GET -> 404", lambda: status == 404)
@@ -338,6 +369,85 @@ def main():
         check("host run_pytest -> 200 PASS",
               lambda: status == 200 and pytest_body.get("status") == "PASS"
               and pytest_body["result"].get("exit_code") == 0)
+        # V8 semantic acceptance validator: caller flags are absent; trusted
+        # runner recomputes state equality, policy outcomes and artifact hashes.
+        fixture_bytes = b'{"fixture":"W10 V8 API fixture"}'
+        oracle_bytes = b"W10 V8 API oracle"
+        (server.host_root / "fixture.json").write_bytes(fixture_bytes)
+        (server.host_root / "oracle.log").write_bytes(oracle_bytes)
+        now = datetime.now(timezone.utc)
+        v8_state = {
+            "outcome": "REJECTED", "admission": "CLOSED", "gate": "CLOSED",
+            "process_state": "EXITED", "containment_state": "EMPTY",
+            "lease_state": "RELEASED", "owner_state": "CURRENT",
+        }
+        v8_manifest = {
+            "schema_version": "1.2.0", "work_id": "10",
+            "profile": {
+                "profile_id": "w10-v8-http-test",
+                "os_family": "windows" if os.name == "nt" else "linux",
+                "support_status": "SUPPORTED",
+                "fixture_sha256": sha256_bytes(fixture_bytes),
+                "host_build": platform.version(),
+                "architecture": host_architecture(),
+                "fixture_manifest_ref": "fixture.json",
+            },
+            "test": {"test_id": "W10-V8-HTTP-001", "category": "SAFETY",
+                     "review_revision": "V8"},
+            "stimulus": {"injection_point": "host-api-test",
+                         "description": "Forbidden host operation is rejected."},
+            "expected": dict(v8_state),
+            "observed": {**v8_state, "oracle_evidence": [{
+                "oracle_id": "HTTP-ORACLE-001", "source": "test_runner",
+                "result": "The forbidden operation was rejected.",
+                "artifact_ref": "oracle.log",
+            }]},
+            "artifacts": [
+                {"name": "fixture.json", "status": "PRESENT",
+                 "sha256": sha256_bytes(fixture_bytes)},
+                {"name": "oracle.log", "status": "PRESENT",
+                 "sha256": sha256_bytes(oracle_bytes)},
+            ],
+            "verdict": "PASS", "reviewer": "Co", "recorded_at": utc_iso(now),
+            "run_context": {
+                "execution_id": str(uuid.uuid4()), "runner_id": platform.node(),
+                "source_commit": server.source_commit,
+                "started_at": utc_iso(now - timedelta(seconds=2)),
+                "finished_at": utc_iso(now - timedelta(seconds=1)),
+            },
+        }
+        (server.host_root / "manifest.json").write_text(
+            json.dumps(v8_manifest, ensure_ascii=False), encoding="utf-8"
+        )
+        validator_request = {"operation": "validate_acceptance_manifest", "arguments": {
+            "manifest_path": "manifest.json",
+            "evidence_root": str(server.host_root),
+            "attestation_path": "attestation.json",
+        }}
+        status, validator_body = server.request(
+            "POST", "/agent/host/execute", validator_request
+        )
+        check("V8 validator API -> 200 PASS with acceptance eligibility",
+              lambda: status == 200 and validator_body.get("status") == "PASS"
+              and validator_body["result"].get("acceptance_eligible") is True)
+        check("V8 validator writes HMAC-signed attestation",
+              lambda: (server.host_root / "attestation.json").is_file()
+              and validator_body["result"]["attestation"]["signature"]["algorithm"] == "HMAC-SHA256")
+        disallowed_manifest = dict(v8_manifest)
+        disallowed_manifest["expected"] = {**v8_state, "outcome": "PASS"}
+        disallowed_manifest["observed"] = {
+            **v8_state, "outcome": "PASS", "oracle_evidence": v8_manifest["observed"]["oracle_evidence"]
+        }
+        (server.host_root / "manifest.json").write_text(
+            json.dumps(disallowed_manifest, ensure_ascii=False), encoding="utf-8"
+        )
+        status, validator_bad = server.request(
+            "POST", "/agent/host/execute", validator_request
+        )
+        check("V8 category policy rejects PASS with disallowed SAFETY outcome",
+              lambda: status == 409 and validator_bad.get("status") == "FAIL"
+              and validator_bad["result"].get("acceptance_eligible") is False)
+
         powershell_request = {"operation": "run_powershell_script", "arguments": {
             "script": "probe.ps1"
         }}

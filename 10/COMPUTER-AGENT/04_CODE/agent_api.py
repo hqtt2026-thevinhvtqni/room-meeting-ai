@@ -124,8 +124,15 @@ class Handler(BaseHTTPRequestHandler):
                 "host_capabilities": {
                     "supported_operations": [
                         "list_directory", "read_file", "write_file", "run_pytest",
-                        "run_powershell_script",
+                        "run_powershell_script", "validate_acceptance_manifest", "validate_acceptance_manifest",
                     ],
+                    "validator_ready": all(os.getenv(name) for name in (
+                        "COMPUTER_AGENT_VALIDATOR_SHA256",
+                        "COMPUTER_AGENT_VALIDATOR_SCHEMA_SHA256",
+                        "COMPUTER_AGENT_VALIDATOR_POLICY_SHA256",
+                        "COMPUTER_AGENT_VALIDATOR_HMAC_KEY",
+                        "COMPUTER_AGENT_VALIDATOR_KEY_ID",
+                    )),
                     "read_roots": "configured" if os.getenv("COMPUTER_AGENT_HOST_ALLOWED_ROOTS") else "work10_default",
                     "write_enabled": bool(os.getenv("COMPUTER_AGENT_HOST_WRITABLE_ROOTS")),
                     "powershell_enabled": os.name == "nt" and bool(os.getenv("COMPUTER_AGENT_HOST_POWERSHELL_ROOTS")),

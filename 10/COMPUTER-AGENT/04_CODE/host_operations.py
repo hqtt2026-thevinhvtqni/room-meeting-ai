@@ -40,7 +40,7 @@ class HostOperations:
 
     ALLOWED_OPERATIONS = {
         "list_directory", "read_file", "write_file", "run_pytest",
-        "run_powershell_script",
+        "run_powershell_script", "validate_acceptance_manifest",
     }
 
     def __init__(self, policy):
@@ -106,7 +106,7 @@ class HostOperations:
         terminal = status if status in {"PASS", "FAIL", "BLOCKED"} else "BLOCKED"
         evidence_result = {
             key: value for key, value in (result or {}).items()
-            if key not in {"content", "stdout", "stderr"}
+            if key not in {"content", "stdout", "stderr", "attestation"}
         }
         return {
             "status": terminal,
@@ -145,8 +145,10 @@ class HostOperations:
                 result = self._write_file(args)
             elif operation == "run_pytest":
                 result = self._run_pytest(args)
-            else:
+            elif operation == "run_powershell_script":
                 result = self._run_powershell(args)
+            else:
+                result = self._validate_acceptance_manifest(args)
             status = result.pop("_status", "PASS")
             cleanup_pending = bool(result.pop("_cleanup_pending", False))
             payload = self._base(status, operation, started, result=result,
@@ -348,6 +350,37 @@ class HostOperations:
                 Path(config_path).unlink(missing_ok=True)
             except OSError:
                 pass
+
+
+    def _validate_acceptance_manifest(self, args: dict) -> dict:
+        if not self.writable_roots:
+            raise HostOperationBlocked(
+                "validator attestation output disabled: configure COMPUTER_AGENT_HOST_WRITABLE_ROOTS"
+            )
+        manifest_path = self._resolve(
+            args.get("manifest_path"), self.allowed_roots, must_exist=True
+        )
+        evidence_root = self._resolve(
+            args.get("evidence_root", str(manifest_path.parent)),
+            self.allowed_roots, must_exist=True,
+        )
+        attestation_path = self._resolve(
+            args.get("attestation_path"), self.writable_roots, must_exist=False
+        )
+        if not self._inside(attestation_path, [evidence_root]):
+            raise HostOperationBlocked("attestation output must remain inside evidence_root")
+        from acceptance_validator import validate_file
+        validation = validate_file(manifest_path, evidence_root, attestation_path)
+        return {
+            "_status": validation.get("status", "BLOCKED"),
+            "acceptance_eligible": validation.get("acceptance_eligible", False),
+            "input_sha256": validation.get("input_sha256"),
+            "attestation_sha256": validation.get("attestation_sha256"),
+            "attestation_path": validation.get("attestation_path"),
+            "errors": validation.get("errors", []),
+            "attestation": validation.get("attestation"),
+            "error": validation.get("error"),
+        }
 
     def _run_powershell(self, args: dict) -> dict:
         if os.name != "nt":
