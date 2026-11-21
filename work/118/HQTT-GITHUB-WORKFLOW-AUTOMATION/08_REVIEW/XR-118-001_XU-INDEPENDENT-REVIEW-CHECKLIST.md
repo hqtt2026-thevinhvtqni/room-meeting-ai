@@ -29,7 +29,7 @@ Xu reviews the implementation independently and records PASS / BLOCKED / NEEDS C
 | 11 | P0 | Runtime E2E plan | Handoff, ACK deny/allow, duplicate delivery, workflow_run diagnostics after integration | BLOCKED — not deployed |
 | 12 | P0 | Release gate | Xu independent disposition followed by Vinh final acceptance; no auto-merge | PENDING |
 
-20. **P0 — GitHub Actions supply-chain pinning:** every `uses:` reference in all W118 workflows must pin a full 40-character commit SHA from the action's official repository; retain the human-readable release tag as a comment; verify the pinned commit matches the intended release and add regression coverage. Mutable tags/branches are not accepted for this gate.
+20. **P0 — GitHub Actions supply-chain pinning:** PASS — every `uses:` reference in all W118 workflows pins a full 40-character commit SHA from the action's official repository; release tag comments retained; official tag/SHA blob matches verified; regression T10-26 PASS in Run #44846434712 and again in Run #44846568184. Mutable tags/branches not found at exact readback.
 
 ## 3. Verified CI evidence
 
@@ -91,5 +91,7 @@ The post-merge execution sequence is defined in [RT-118-001 — Post-Merge Runti
   - checkout v4.2.2 — `11bd71901bbe5b1630ceea73d27597364c9af683`.
   - setup-python v5.6.0 — `a26af69be951a213d495a4c3e4e4022e16d87065`.
   - upload-artifact v4.6.2 — `ea165f8d65b6e75b540449e92b4886f43607fa02`.
-- The W118 workflows are being normalized to those immutable references. Gate 20 remains PENDING until the regression CI run succeeds and exact readback confirms zero mutable action refs.
+- The W118 workflows have been normalized to those immutable references. Gate 20 is PASS after successful T10-26 CI and exact readback confirmed zero mutable action refs.
 - GitHub's official secure-use guidance identifies full-length commit SHA as the immutable action reference; the Work 70 standards read for this audit did not expose a separate explicit SHA-pinning clause, so this finding is recorded as a W118 P0 security control rather than attributed to an unlocated HQTT rule.
+
+- **Latest exact-head CI:** [Run #44846568184](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44846568184), commit `9adda44a0c4dc70937740adc7bfdcd2c04022a69`; validate SUCCESS; 53 tests PASS / 0.281s; artifact ID `14683391201`, digest `baed365631b810b748dc6903376c373784d0bfb0f81302167cedd63c0db5526f`, present/unexpired at readback. Event jobs remained SKIPPED; runtime E2E remains NOT VERIFIED.
