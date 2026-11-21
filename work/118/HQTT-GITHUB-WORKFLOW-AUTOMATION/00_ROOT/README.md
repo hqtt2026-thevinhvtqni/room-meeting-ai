@@ -44,6 +44,7 @@ Không tự ý thay đổi branch protection, secrets/tokens, quyền tổ chứ
 - [W118-13/16 — Task Lifecycle & Source Binding implementation](../05_BUILD/W118-13_16_TASK-LIFECYCLE-AND-SOURCE-BINDING.md)
 - [W118-13/16 — Test Matrix](../06_TEST/W118-13_16-TASK-LIFECYCLE-SOURCE-BINDING-TEST-MATRIX.md)
 - [W118-13/17 — Issue Mirror & Webhook Inbox Test Matrix](../06_TEST/W118-13_17-ISSUE-MIRROR-WEBHOOK-INBOX-TEST-MATRIX.md)
+- [W118-17 — Push/CI Event Reconciliation Test Matrix](../06_TEST/W118-17-PUSH-CI-EVENT-RECONCILIATION-TEST-MATRIX.md)
 - [DC-118-004 — Brief phản biện kiến trúc (tham khảo, không chặn BUILD)](../02_DEFINE/DC-118-004_BRIEF-PHAN-BIEN-KIEN-TRUC-HAI-QUY-TRINH.md)
 - Nhật ký: Entry 069 trong [NHAT-KY-THI-CONG.md](../EVIDENCE/NHAT-KY-THI-CONG.md)
 
@@ -106,3 +107,12 @@ Vinh instructed Xu to proceed with building the two closed-loop Sandbox–GitHub
 - `scripts/w118/webhook_inbox.py` verifies HMAC-SHA256, delivery UUID, event/repository allowlists and persists an idempotent pending inbox; receiving an event does not mutate Task state.
 - Exact tested source SHA `343fb526f5284ca1dcc4a55d463d58bf0c437340`: 108 tests PASS / 0.503s; push run #44877554435 SUCCESS; artifact ID `14696481659`.
 - Live GitHub Issue API call, production webhook endpoint, runtime secret/TLS and Sandbox reconciliation remain pending. Event-specific workflow jobs remain SKIPPED.
+
+
+## Build progress — Push/CI reconciliation (2026-11-21)
+
+- `scripts/w118/event_reconciler.py` now reconciles authenticated push deliveries to an exact Task/Issue/SHA and records append-only evidence.
+- Completed CI events are accepted only from the allowlisted W118 validation workflow and only when the head SHA matches a previously reconciled push event.
+- Out-of-order CI events are deferred until matching push evidence exists. CI PASS/FAIL is evidence-only; it never accepts or closes a Task.
+- Exact tested SHA `4e5c1e0d23cf145ddbcfca88c32255069ab3c642`: 118 tests PASS / 0.380s; push run #44877879841 SUCCESS; artifact ID `14697131158`.
+- Reconciler is not yet deployed as a worker/route in ROOM-HOP Event Listener :8050; runtime E2E remains NOT VERIFIED.
