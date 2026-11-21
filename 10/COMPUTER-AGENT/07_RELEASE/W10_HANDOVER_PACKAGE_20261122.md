@@ -51,8 +51,8 @@ The separate `PC_HOST_CAPABILITY_CONTRACT.md` adds host operations without chang
 | #49 | Filesystem + pytest + PowerShell host API | 170 PASS | 164 PASS + 2 SKIP | PASS |
 | #52 | Full six-suite regression + V8 validator + Chromium | 189 PASS | 183 PASS + 2 SKIP | PASS |
 | #53 | Same after V8 category/policy hardening | 189 PASS | 183 PASS + 2 SKIP | PASS |
-| #67 | Dashboard HTML synchronized + static contract suite included | 189 PASS | 183 PASS + 2 SKIP | PASS; dashboard assertion count reporting was corrected in a follow-up |
-| #69 | Dashboard assertion count correction | Pending | Pending | IN PROGRESS at handover preparation |
+| #67 | Dashboard HTML synchronized + static contract suite included | 189 PASS | 183 PASS + 2 SKIP | PASS; initial assertion count display was corrected in a follow-up |
+| #69 | Dashboard assertion count correction + full static Dashboard suite | 206 PASS | 200 PASS + 2 SKIP | PASS; 17 Dashboard assertions on each OS |
 
 Evidence files:
 - `06_EVIDENCE/W10_API_PROCESS_E2E_EVIDENCE_20261122_RUN45.md`
@@ -149,3 +149,10 @@ This session has no direct local PowerShell/desktop executor, so these steps are
 Work 10 remains **ACTIVE — NOT RELEASED**. This document is a handover package, not an acceptance certificate.
 
 **KÝ: Co | AI-07 / End-to-End Architecture & Implementation Lead**
+
+
+## 10. Latest Dashboard static regression — 2026-11-22 06:31 (UTC+07:00)
+
+Run #69 (ID `44962226803`) completed SUCCESS after the secured operational Dashboard was synchronized and the test-output counter was corrected. Windows Server 2022: 206 PASS / 0 FAIL / 0 SKIP; Ubuntu 24.04: 200 PASS / 0 FAIL / 2 expected SKIP. Dashboard static contract = 17 PASS on each OS; V8 validator = 16 PASS on each OS; real Chromium E2E = PASS. Evidence: `06_EVIDENCE/W10_CROSS_PLATFORM_CI_EVIDENCE_20261122_RUN69.md`.
+
+Run #69 validates static Dashboard invariants and JavaScript syntax; it does not establish a live Dashboard/API workflow on the Owner's physical PC.
