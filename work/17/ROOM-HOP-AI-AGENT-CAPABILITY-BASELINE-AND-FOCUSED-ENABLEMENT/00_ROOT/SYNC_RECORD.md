@@ -999,3 +999,16 @@
 - Journal Entry 097 commit: `516c511cec0a6e10374a1ceab3bff07ebe411690`.
 
 - Final read-back: Journal Entry 097 present on main (blob `0e1f174bbc0f2253f071c434afb3aab638de88b1`); Sync Period 0084 present on main (blob `a6aea5761f613c32a3b1145708d7d718f4c1cca7`); both fetched successfully. GitHub journal/sync read-back PASS for Period 0084; Sandbox parity remains separately BLOCKED.
+
+
+## Sync Period 0085 — Core grant and WEE/W13/W14 execution-path reconciliation (2026-11-21T17:37:00+07:00)
+
+- Entry 098 traced current-main WEE bridge, W13 direct adapter and W1111 candidate Host endpoint.
+- Current-main WEE bridge sends legacy `{work_context, execution_request}` with caller boolean `authorized=true`, no Bearer token, no grant_id/purpose/source SHA. Its bridge test expects this legacy schema.
+- PR #48 candidate Host endpoint requires Bearer grant and exact `{work_id, grant_id, purpose, execution_request}` schema. Candidate branch's WEE bridge is byte-identical to main; no integrated bridge adaptation is present. Static contract incompatibility confirmed.
+- W13 adapter is unchanged and directly instantiates local `RealExecutionHost`; W13 integration test uses a local JSON CanonicalWorkAuthority and directly calls adapter.execute(), not Core online grant or HTTP Host.
+- Candidate Host route recomputes workspace SHA and checks it against the Core grant before execution; it sends that same computed SHA to Core record_run. Correction to Entry 097: the source-SHA mismatch remains proven for direct Core run-record API calls, but is not shown reachable through the candidate Host route, and the unchanged WEE bridge cannot call that route under its current contract.
+- Candidate Core grant and Host implementation are not integrated into a proven WEE/W13 end-to-end path. No code/test/runtime/HTTP/Host/credential/dispatch action performed.
+- GAP-11 OPEN / NOT ACCEPTED; GAP-01 OPEN/P0; E2/E3 NOT PROVEN; protected execution DENY / NOT RELEASED. PC runtime checks deferred until Vinh has PC.
+- Journal Entry 098 committed: `595a55fd3623d4d70864b28780feb385958c8ffb`. GitHub main is canonical for this evidence round; Sandbox parity remains BLOCKED and no Sandbox write was attempted.
+- Next: inspect candidate grant issue/validate/run-record route contracts and exact PR-head tests, read-only.
