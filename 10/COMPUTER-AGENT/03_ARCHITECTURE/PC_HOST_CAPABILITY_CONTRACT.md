@@ -1,7 +1,7 @@
 # WORK 10 — PC HOST CAPABILITY CONTRACT
 
 - Contract ID: W10-PC-HOST-CAPABILITY-1.0
-- Status: PROPOSED / IMPLEMENTATION IN PROGRESS
+- Status: IMPLEMENTED — HOSTED CI PASS; OWNER PC ACCEPTANCE PENDING
 - Owner: Work 10 — COMPUTER-AGENT
 - Scope: File system, PowerShell script execution and pytest execution on the local PC host.
 - Relationship: Separate from the LOCKED browser Action Contract. This document does not add action types or alter ACTION_CONTRACT.md, WORKFLOW_CONTRACT.md or SAFETY_POLICY.md.
@@ -91,3 +91,10 @@ Required host configuration:
 - COMPUTER_AGENT_SOURCE_COMMIT — expected source commit SHA (CI may use GITHUB_SHA).
 
 If any pin/key is missing or mismatched, validator returns BLOCKED and emits no trusted PASS attestation. CI uses a clearly labelled test-only HMAC key; that key is not production trust material. The allow-listed pytest/PowerShell code runs with the host service account's privileges and is not an OS-level filesystem sandbox.
+
+
+## Cross-platform V8 validator verification — 2026-11-22
+
+GitHub Actions Run #53 tested the hardened acceptance validator on Ubuntu 24.04 and Windows Server 2022. Both jobs passed the V8 acceptance validator suite (16 PASS each), HTTP API integration, host operations, process containment and real Chromium E2E. Exact commit: `29daa718509b1c3906527a8cd9358104061e3b85`; evidence: `06_EVIDENCE/W10_CROSS_PLATFORM_CI_EVIDENCE_20261122_RUN53.md`.
+
+This does not close production trust provisioning: CI's HMAC key is test-only. The Owner's physical Windows 10 PC, local ACL/service-account review and ROOM-HOP integration remain unverified. Linux remains a limited process-group profile until cgroup-v2 is implemented.
