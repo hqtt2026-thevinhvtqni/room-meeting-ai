@@ -231,3 +231,14 @@ Run [#44750417015](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/acti
 - **Reason:** mutable action tags can move independently of the reviewed source. GitHub's official secure-use guidance identifies a full-length commit SHA as the immutable action reference.
 - **Verification:** selected action SHAs were checked against the official repositories and matching release tags. CI result is pending until the pinning regression runs on the updated feature branch.
 - **Boundary:** no event trigger, permission, actor authorization, business logic, default-branch integration, merge or release change is included.
+
+
+## Scope reconciliation — RA-118-001 (2026-11-21)
+
+- **Priority:** P0; **Read order:** 12.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Build Owner (delegated).
+- **Date-Time:** 2026-11-21 10:15 +07:00.
+- RA-118-001 đối chiếu mục tiêu gốc Issue #65 với W118-10 hiện tại. Kết luận: Auto E2E contract automation là một phần của sản phẩm; Issue Management, AI Assignment/dispatch, Execution Tracking, Issue–Branch–Commit–Push binding, CI feedback và Work 70 Dashboard projection chưa hoàn tất hoặc chưa có runtime evidence.
+- Đề xuất W118-13..W118-19 trong RA-118-001 là work packages nằm trong W118, **PROPOSED — PENDING XU REVIEW**, không phải Work mới và chưa được coi là thiết kế đã duyệt.
+- Không thay đổi G3/G5, quyền Work 70, identity mapping, main, merge hoặc release authority. W118-10 contract PASS không đóng W118 tổng thể.
+- Hồ sơ đối chiếu: [RA-118-001](RA-118-001_BANG-DOI-CHIEU-PHAM-VI-VA-KE-HOACH-HOAN-THIEN.md).
