@@ -316,3 +316,19 @@ The workflow_run listener requires default-branch presence for real runtime veri
 - Evidence classification implementation + regression PASS; Xu review PENDING; Vinh acceptance PENDING; ACTIVE — NOT ACCEPTED — NOT RELEASED.
 
 > All preceding "latest" blocks are historical. Use only this canonical current-state block for current reporting.
+
+
+## Owner-directed dual-loop build — current implementation snapshot (2026-11-21 13:36 +07:00)
+
+- **Authority:** Vinh instructed Xu to build according to Xu's technical judgment without waiting for multi-agent review. This is build authorization only; Vinh retains final product acceptance, merge and release authority.
+- **Architecture:** TD-118-012 is now the OWNER-DIRECTED BUILD BASELINE; multi-agent review is not a prerequisite.
+- **W118-13 Task Lifecycle:** `scripts/w118/task_lifecycle.py` implemented with SQLite Task/event registry, versioned Task contract, explicit state machine, actor-role gates, assigned-principal binding, evidence requirements, optimistic concurrency, idempotency and protected detail allowlist.
+- **W118-16 Source Binding:** `scripts/w118/source_binding.py` implemented; push workflow invokes it for push events; canonical Task branch pattern `work/W118/task-W118-TASK-013`; every commit must include Work-ID, Task-ID and Issue trailers; force push/deletion rejected.
+- **Exact tested feature HEAD:** `5e131e108a7195ca1ff5ae96b3fadb119e4bc31b`; push run [#44877054701](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44877054701) SUCCESS, **86 tests PASS / 0.332s**; PR run [#44877057892](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44877057892) SUCCESS.
+- **Artifact:** ID `14696186741`; SHA-256 `9dae6385ae1e68572305ee6314bf1edf046361fc9993301cc85367603c56531a`; includes CI run evidence and source-binding output.
+- **Source-binding result on existing aggregate branch:** `UNBOUND_LEGACY_BRANCH`; expected and safe. It proves the validator does not guess Task linkage. No Task-specific branch push was executed yet.
+- **Runtime event jobs:** handoff, ACK, acceptance-review, controlled-failure and controlled-failure-dispatch SKIPPED; no live agent dispatch/ACK E2E claim.
+- **Still missing:** Sandbox service/API deployment and durable runtime integration; Agent Registry/principal verification and dispatch; GitHub Issue mirror; task-specific branch push live test; CI PASS/FAIL callback reconciliation to Task; Work 70 Evidence Register/Dashboard integration (schema/owner approval remains required).
+- **Git governance:** no rebase, merge, release, permission/secret/branch-protection changes or Work 70 schema changes.
+- **Work state:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED.
+- **Next:** wire Issue mirror adapter and a secure Sandbox event inbox; then add runtime identity/dispatch only after a real principal is verified.
