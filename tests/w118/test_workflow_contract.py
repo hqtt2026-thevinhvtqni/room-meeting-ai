@@ -13,7 +13,7 @@ PR_CHECKLIST = Path(".github/workflows/w118-pr-review-checklist.yml")
 class Work118WorkflowContractTests(unittest.TestCase):
     def test_all_workflow_actions_are_pinned_to_full_commit_shas(self):
         for path in (WORKFLOW, DIAGNOSTICS, PR_CHECKLIST):
-            references = re.findall(r"^\\s*uses:\\s*([^\\s#]+)", path.read_text(encoding="utf-8"), re.MULTILINE)
+            references = re.findall(r"^\s*uses:\s*([^\s#]+)", path.read_text(encoding="utf-8"), re.MULTILINE)
             for reference in references:
                 self.assertRegex(
                     reference,
