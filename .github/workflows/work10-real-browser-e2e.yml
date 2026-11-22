@@ -63,7 +63,8 @@ jobs:
         run: |
           $files = @(
             "10/COMPUTER-AGENT/05_TEST/START_WORK10_LOCAL.ps1",
-            "10/COMPUTER-AGENT/05_TEST/STOP_WORK10_LOCAL.ps1"
+            "10/COMPUTER-AGENT/05_TEST/STOP_WORK10_LOCAL.ps1",
+            "10/COMPUTER-AGENT/05_TEST/RUN_WORK10_ACCEPTANCE.ps1"
           )
           foreach ($file in $files) {
             $tokens = $null
