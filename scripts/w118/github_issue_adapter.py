@@ -23,6 +23,10 @@ class IssueLookupIncomplete(GitHubIssueError):
     """The adapter cannot prove that no matching Issue already exists."""
 
 
+class IssueLookupDuplicate(GitHubIssueError):
+    """More than one GitHub Issue carries the same Core Task marker."""
+
+
 class GitHubIssueAdapter:
     def __init__(
         self,
@@ -30,6 +34,7 @@ class GitHubIssueAdapter:
         *,
         repository: str,
         max_issue_pages: int = 20,
+        lease_validator: Callable[[str, CoreTaskProjection], bool] | None = None,
     ) -> None:
         if not isinstance(repository, str) or repository.count("/") != 1:
             raise ValueError("repository must be owner/name")
@@ -38,6 +43,9 @@ class GitHubIssueAdapter:
         self.transport = transport
         self.repository = repository
         self.max_issue_pages = max_issue_pages
+        # Integration port only; no local lease authority is implemented.
+        # Production writes stay disabled until Core supplies its validator.
+        self.lease_validator = lease_validator
 
     def _request(self, method: str, path: str, payload: Mapping[str, Any] | None = None) -> tuple[int, Mapping[str, str], Any]:
         status, headers, body = self.transport(method, path, payload)
@@ -49,7 +57,13 @@ class GitHubIssueAdapter:
             raise GitHubIssueError(f"GitHub API returned HTTP {status}")
         return status, headers, body
 
-    def _find_task_issue(self, marker: str) -> Mapping[str, Any] | None:
+    def _find_task_issues(self, marker: str) -> list[Mapping[str, Any]]:
+        """Return all matching Issues after a complete bounded scan.
+
+        Pull Requests are excluded. A full final page is not proof that the
+        scan is complete, so reaching the page ceiling fails closed.
+        """
+        matches: list[Mapping[str, Any]] = []
         for page in range(1, self.max_issue_pages + 1):
             _, _, issues = self._request(
                 "GET",
@@ -61,11 +75,11 @@ class GitHubIssueAdapter:
                 if not isinstance(issue, Mapping) or "pull_request" in issue:
                     continue
                 if marker in str(issue.get("body") or ""):
-                    return issue
+                    matches.append(issue)
             if len(issues) < 100:
-                return None
+                return matches
         raise IssueLookupIncomplete(
-            "Issue scan reached max_issue_pages; refusing to create a possible duplicate"
+            "Issue scan reached max_issue_pages; refusing mutation because duplicates may exist"
         )
 
     def _readback(self, number: int, expected_title: str, expected_body: str) -> Mapping[str, Any]:
@@ -91,10 +105,35 @@ class GitHubIssueAdapter:
             raise GitHubIssueError("task must be a normalized CoreTaskProjection")
         if not isinstance(lock_lease_id, str) or not lock_lease_id.strip():
             raise GitHubIssueError("Core per-Task lock lease is required; no local lock is created")
+        if self.lease_validator is None:
+            raise GitHubIssueError(
+                "authoritative Core lease validator is not configured; refusing GitHub mutation"
+            )
+        try:
+            lease_valid = self.lease_validator(lock_lease_id, task)
+        except Exception as exc:
+            raise GitHubIssueError("Core lease validation failed; refusing GitHub mutation") from exc
+        if lease_valid is not True:
+            raise GitHubIssueError("Core lease was not authoritatively validated; refusing GitHub mutation")
+
         projection = project_core_task_to_issue(task)
         title, body, labels = projection["title"], projection["body"], projection["labels"]
         marker = core_task_issue_marker(task.task_id)
-        existing = self._find_task_issue(marker)
+        matches = self._find_task_issues(marker)
+        if len(matches) > 1:
+            raise IssueLookupDuplicate(
+                f"multiple GitHub Issues carry Core Task marker for {task.task_id}; refusing mutation"
+            )
+        existing = matches[0] if matches else None
+        if task.issue_id is not None:
+            if existing is None:
+                raise GitHubIssueError(
+                    "Core has a persisted issue_id but no matching Task-marker Issue was found; refusing create"
+                )
+            if existing.get("number") != task.issue_id:
+                raise GitHubIssueError(
+                    "GitHub Task-marker Issue number does not match Core's persisted issue_id; refusing mutation"
+                )
         if existing:
             number = existing.get("number")
             if type(number) is not int or number < 1:
