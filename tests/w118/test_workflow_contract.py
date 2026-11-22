@@ -189,6 +189,7 @@ class Work118WorkflowContractTests(unittest.TestCase):
     def test_push_workflow_enforces_task_source_binding_and_records_outcome(self):
         data = self.load_yaml(WORKFLOW)
         self.assertIn("work/W*/task-W*-TASK-*", data["on"]["push"]["branches"])
+        self.assertIn("work/118-auto-e2e-v2-clean", data["on"]["push"]["branches"])
         steps = data["jobs"]["validate"]["steps"]
         binding = next(step for step in steps if step.get("id") == "source_binding")
         self.assertEqual(binding["if"], "github.event_name == 'push'")
