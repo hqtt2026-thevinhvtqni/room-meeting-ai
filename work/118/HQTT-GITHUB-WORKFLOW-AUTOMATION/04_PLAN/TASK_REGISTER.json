@@ -227,13 +227,14 @@
         "W14 03_ARCHITECTURE/W12_W13_ABSORPTION_RECORD.md",
         "W14 03_ARCHITECTURE/W13_WEE_8031_BRIDGE_STATUS.md",
         "W12/W13 historical absorbed contracts",
-        "work/118/HQTT-GITHUB-WORKFLOW-AUTOMATION/04_PLAN/RA-118-002_RÀ-SOÁT-TỒN-ĐỌNG-VÀ-ĐỐI-SOÁT-KIẾN-TRÚC.md#addendum-v1.3"
+        "work/118/HQTT-GITHUB-WORKFLOW-AUTOMATION/04_PLAN/RA-118-002_RÀ-SOÁT-TỒN-ĐỌNG-VÀ-ĐỐI-SOÁT-KIẾN-TRÚC.md#addendum-v1.3",
+        "work/118/HQTT-GITHUB-WORKFLOW-AUTOMATION/04_PLAN/RA-118-002_RÀ-SOÁT-TỒN-ĐỌNG-VÀ-ĐỐI-SOÁT-KIẾN-TRÚC.md#addendum-v1.4"
       ],
       "blockers": [
         "W14 canonical GitHub source/ref and Work Authority/ExecutionHostBridge API/runtime are not verified; W14 manifest states full product E2E is NOT VERIFIED."
       ],
       "next_action": "Obtain W14 canonical source and approved Work Authority/ExecutionHostBridge contract; verify runtime through W14's owner; do not modify W12/W13 historical source or create a parallel host.",
-      "status_note": "W12/W13 are absorbed internal foundations; W14 is the sole product owner. Current W14 source parity and live execution path remain unverified. Owner contract intake matrix and required source/contract/runtime evidence: RA-118-002 addendum v1.3. This is planning evidence only; no external authority or runtime PASS is inferred.",
+      "status_note": "W12/W13 are absorbed internal foundations; W14 is the sole product owner. Current W14 source parity and live execution path remain unverified. Owner contract intake matrix and required source/contract/runtime evidence: RA-118-002 addendum v1.3. This is planning evidence only; no external authority or runtime PASS is inferred. Work32 Core Execution Authority is an unmerged/un-deployed candidate; PR #52/#54 remain draft and the PC authority probe/release gate failed.",
       "execution_steps": [
         "Read W14 current manifest and absorption record",
         "Verify W14 canonical source/ref and runtime contract",
@@ -310,7 +311,8 @@
         "tests/w118/test_source_binding.py",
         "CI #906 / 45057857222 — 102 tests PASS",
         "Entry 055 — P1-118-01 and P1-118-02 audit",
-        "work/118/HQTT-GITHUB-WORKFLOW-AUTOMATION/04_PLAN/RA-118-002_RÀ-SOÁT-TỒN-ĐỌNG-VÀ-ĐỐI-SOÁT-KIẾN-TRÚC.md#addendum-v1.3"
+        "work/118/HQTT-GITHUB-WORKFLOW-AUTOMATION/04_PLAN/RA-118-002_RÀ-SOÁT-TỒN-ĐỌNG-VÀ-ĐỐI-SOÁT-KIẾN-TRÚC.md#addendum-v1.3",
+        "work/118/HQTT-GITHUB-WORKFLOW-AUTOMATION/04_PLAN/RA-118-002_RÀ-SOÁT-TỒN-ĐỌNG-VÀ-ĐỐI-SOÁT-KIẾN-TRÚC.md#addendum-v1.4"
       ],
       "blockers": [
         "Core owner-approved lease validation contract and authenticated validation port are not exposed; production mirror writes remain fail-closed.",
@@ -318,7 +320,7 @@
         "No live task-scoped GitHub push / source-binding event has been executed."
       ],
       "next_action": "Obtain Core-owner lease issuer/Work-Task-scope/audience/expiry/revocation/authentication contract and validation endpoint; then run real Core-backed positive/negative lease tests and authorized GitHub mirror round-trip.",
-      "status_note": "P1-118-01 fail-closed marker uniqueness and persisted Core issue_id binding implemented; 102 exact-head adapter/unit tests pass. P1-118-02 remains blocked: no Core-owned lease validation contract/API or live Core authority is available. Runtime GitHub mirror and task-scoped push remain unverified. Owner contract intake matrix and required source/contract/runtime evidence: RA-118-002 addendum v1.3. This is planning evidence only; no external authority or runtime PASS is inferred.",
+      "status_note": "P1-118-01 fail-closed marker uniqueness and persisted Core issue_id binding implemented; 102 exact-head adapter/unit tests pass. P1-118-02 remains blocked: no Core-owned lease validation contract/API or live Core authority is available. Runtime GitHub mirror and task-scoped push remain unverified. Owner contract intake matrix and required source/contract/runtime evidence: RA-118-002 addendum v1.3. This is planning evidence only; no external authority or runtime PASS is inferred. Work32 pytest_run Grant is NOT an Issue-mirror lock lease; do not wire it into lease_validator.",
       "execution_steps": [
         "Connect Sandbox Task Register",
         "Add per-Task mirror lock",
@@ -556,13 +558,14 @@
       "progress_percent": null,
       "progress_status": "NOT_CALCULATED",
       "evidence_refs": [
-        "work/118/HQTT-GITHUB-WORKFLOW-AUTOMATION/04_PLAN/RA-118-002_RÀ-SOÁT-TỒN-ĐỌNG-VÀ-ĐỐI-SOÁT-KIẾN-TRÚC.md#addendum-v1.3"
+        "work/118/HQTT-GITHUB-WORKFLOW-AUTOMATION/04_PLAN/RA-118-002_RÀ-SOÁT-TỒN-ĐỌNG-VÀ-ĐỐI-SOÁT-KIẾN-TRÚC.md#addendum-v1.3",
+        "work/118/HQTT-GITHUB-WORKFLOW-AUTOMATION/04_PLAN/RA-118-002_RÀ-SOÁT-TỒN-ĐỌNG-VÀ-ĐỐI-SOÁT-KIẾN-TRÚC.md#addendum-v1.4"
       ],
       "blockers": [
         "Prerequisite Core/W102/W14/W70 runtime and approval gates must pass before full E2E."
       ],
       "next_action": "Run complete positive/negative lifecycle E2E through W14's canonical execution path after all external contracts and runtime integrations are available.",
-      "status_note": "No full runtime E2E has been executed; contract tests are not product acceptance. Owner contract intake matrix and required source/contract/runtime evidence: RA-118-002 addendum v1.3. This is planning evidence only; no external authority or runtime PASS is inferred.",
+      "status_note": "No full runtime E2E has been executed; contract tests are not product acceptance. Owner contract intake matrix and required source/contract/runtime evidence: RA-118-002 addendum v1.3. This is planning evidence only; no external authority or runtime PASS is inferred. Work32 execution Grant candidate is not deployed or accepted; full E2E remains blocked pending Core/W14 runtime and independent review.",
       "execution_steps": [
         "Select a non-sensitive pilot Task",
         "Run full Plan-to-Task assignment",
@@ -595,5 +598,5 @@
   ],
   "task_count": 7,
   "created_at": "2026-11-21T13:36:00+07:00",
-  "updated_at": "2026-11-23T02:39:57+07:00"
+  "updated_at": "2026-11-23T02:44:59+07:00"
 }
