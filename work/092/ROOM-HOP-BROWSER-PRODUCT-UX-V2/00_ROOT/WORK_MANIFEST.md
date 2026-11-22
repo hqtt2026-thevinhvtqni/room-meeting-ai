@@ -13,3 +13,10 @@
 - **T6/T8/T17:** T6 PARTIAL (only TEST_ONLY UI states checked); T8 PASS for human-readable fixture action descriptions; T17 PARTIAL (file UI no network observed; server/process isolation not run). No detailed original acceptance clauses beyond existing row descriptions were found in the Work tree.
 - **Still NOT RUN/BLOCKED:** direct Work Sandbox/MCP execution, physical Android, screen reader/assistive technology, preview/server health/isolation, Browser Runtime, real agent/website/API, Nu independent dispatch/ACK, Xu independent review.
 - **Historical caution:** prior Actions runs and old `e2e-result.json`, `v2-e2e-result.json`, and runtime log are snapshots only. Older fixed-port/agent-Done claims are not current evidence. Each CI result belongs only to its exact head SHA; evidence-only commits outside the workflow filter do not acquire a run.
+
+
+## Xu review status (2026-11-23)
+- Xu completed a read-only review of the remote source, workflow, test definitions, evidence index and GitHub Actions metadata. Review decision: **PARTIAL — NOT ACCEPTED; Runtime BLOCKED**.
+- T8 is accepted only as human-readable TEST_ONLY fixture actions. T6 and T17 remain PARTIAL. Runtime, server/process isolation, physical Android and assistive-technology checks remain NOT RUN/BLOCKED.
+- Review record: `00_ROOT/BIEN_BAN_W092.md` (Xu review entry) and `02_EVIDENCE/NU_BUILD_JOURNAL.md` (Entry 018). The review did not change application source or workflow and did not run tests/services.
+- Latest verified Actions remains run `45001223713` at `f407c924a08c69074253ecde78f5199021542bd2`. Later commits are documentation/evidence-only; no new run is claimed at the later branch tip. No merge to `main`.
