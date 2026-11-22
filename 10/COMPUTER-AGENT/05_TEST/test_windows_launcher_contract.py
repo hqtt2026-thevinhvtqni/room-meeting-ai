@@ -5,6 +5,7 @@ import re
 ROOT = Path(__file__).resolve().parents[1]
 START = (ROOT / "05_TEST" / "START_WORK10_LOCAL.ps1").read_text(encoding="utf-8")
 STOP = (ROOT / "05_TEST" / "STOP_WORK10_LOCAL.ps1").read_text(encoding="utf-8")
+ACCEPTANCE = (ROOT / "05_TEST" / "RUN_WORK10_ACCEPTANCE.ps1").read_text(encoding="utf-8")
 
 
 def check(label: str, condition: bool) -> None:
@@ -46,9 +47,21 @@ def main() -> None:
     check("launcher failure cleans up the session record and secret variables",
           "Remove-Item -LiteralPath $sessionPath -Force" in START
           and "$token = $null" in START)
+    check("one-command acceptance runner is gated to Windows 10 client",
+          "Win32_OperatingSystem" in ACCEPTANCE and "Windows 10" in ACCEPTANCE and "ProductType -ne 1" in ACCEPTANCE)
+    check("acceptance runner performs launcher smoke, full suite and real browser E2E",
+          "START_WORK10_LOCAL.ps1" in ACCEPTANCE and "STOP_WORK10_LOCAL.ps1" in ACCEPTANCE
+          and "05_TEST/run_all_tests.py" in ACCEPTANCE and "05_TEST/e2e_real_browser.py" in ACCEPTANCE)
+    check("acceptance report captures source hashes and never writes secret values",
+          "Get-FileHash" in ACCEPTANCE and "production_v8_key_configured" in ACCEPTANCE
+          and "COMPUTER_AGENT_API_TOKEN =" not in ACCEPTANCE)
+    check("acceptance report keeps release gate open after local test success",
+          'release_gate = "OPEN"' in ACCEPTANCE and "HOST_TESTS_PASS" in ACCEPTANCE)
+    check("acceptance runner always writes a report even after a test failure",
+          "finally {" in ACCEPTANCE and "failure_reason" in ACCEPTANCE and "Set-Content -LiteralPath $reportPath" in ACCEPTANCE)
     check("launcher exposes no generic shell or inline PowerShell command",
           "Invoke-Expression" not in START and "powershell.exe -Command" not in START)
-    print("Windows launcher contract: 13 checks passed")
+    print("Windows launcher contract: 18 checks passed")
 
 
 if __name__ == "__main__":
