@@ -371,3 +371,11 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - W118 P1-118-02 remains BLOCKED for a separate Core-owned Task-scoped Issue-mirror lease; Work32 `pytest_run` Grant cannot authorize Issue POST/PATCH. W118-TASK-014 and protected execution remain blocked pending canonical owner contracts/runtime proof.
 - Exact source refs, scope and limitations: RA-118-002 addendum v1.5; Journal Entry 059. No external Work/runtime/credential/config mutation.
 - Overall: ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED; Runtime Auto E2E NOT RUN.
+
+
+## Exact-head CI — Entry 059 source audit snapshot
+
+- Source SHA `cfa242937baaec169a5f9149d72bacd04bbc533a`: push Run #971 / `45063623949` SUCCESS, 102 tests / 0.237s, `UNBOUND_LEGACY_BRANCH`; artifact `14770845821`, SHA-256 `f6db2380a7452d0b4ad6308499388d4ef262c2fddd6fd8bb7e01c0c65783a955`.
+- PR Run #972 / `45063628955` SUCCESS, 102 tests / 0.301s, `NOT_RUN` (push-only); artifact `14770312969`, 685 bytes. Event-capture jobs skipped.
+- Contract/unit CI only; no Core authority mount, Task source binding or Runtime Auto E2E proof. Full evidence: Journal Entry 059.
+- This status/journal write creates a new source HEAD; exact-head CI must be rerun. Overall remains ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.
