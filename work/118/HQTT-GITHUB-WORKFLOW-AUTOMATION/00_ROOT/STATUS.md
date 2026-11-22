@@ -1,21 +1,22 @@
 # W118 — Current Status
 
 - **Work:** W118 — HQTT GitHub Workflow Automation
-- **Status:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED
+- **Status:** ACTIVE — VERIFYING — NOT ACCEPTED — NOT RELEASED
 - **Selected architecture:** A — Sandbox initiates; GitHub controls versioning
-- **Architecture baseline:** TD-118-012 v1.2 — owner-directed implementation baseline
-- **Implementation branch:** `work/118-auto-e2e-v2`
-- **PR:** #67 — OPEN / UNMERGED
+- **Architecture baseline:** TD-118-012 v1.3 — owner-directed implementation baseline
+- **Implementation branch:** `work/118-auto-e2e-v2-clean`
+- **PR:** #68 — OPEN / UNMERGED (PR #67 superseded)
 - **Owner:** Vinh
 - **Coordinator:** Xu / AI-01
-- **Last status refresh:** 2026-11-21 (UTC+07:00)
+- **Last status refresh:** 2026-11-22 (UTC+07:00)
 
 ## 1. Architecture ownership
 
 - Core :8000 is the sole runtime Task/Assignment/Event authority.
 - W102 owns Agent Loop policy and Assignment decisions.
 - W01/W02/W22 + Core own identity and authorization.
-- W12/W13 own WEE, GitHub Gateway, CIAdapter and Execution Host.
+- W14 is the sole product/delivery owner for integrated Work Authority, ExecutionHostBridge, GitHub Gateway and CI path.
+- W12/W13 are absorbed internal foundations under W14, not independent W118 integration owners.
 - W70 owns Work lifecycle, Evidence Register and Dashboard schema.
 - W52 A2A contract is a DRAFT reference; W16 is an architecture reference, not assumed as a live runtime.
 - W118 owns only the Work planning Task Register and GitHub-specific adapters.
@@ -212,3 +213,19 @@
 - PR #68 evidence comment recorded (comment ID `7069733435`). Work journal Entry 019 records the full evidence and limitations.
 - **Current disposition:** ACTIVE — NOT ACCEPTED — NOT RELEASED. Xu independent review and T-01..T-05 remain pending/open. No Main merge, no B-118-010 application, no release.
 - **Next action:** Maintain implementation freeze while Xu review/test cycle remains open; continue only evidence/journal/status updates.
+
+## 2026-11-22 — Current authoritative status overlay (Ka)
+
+- **Priority:** 01 / P0 — Current candidate, CI provenance and acceptance routing.
+- **Name / Title:** Ka — CSA / Delegated Technical Lead, Work 118.
+- **Date-Time:** 2026-11-22 (UTC+07:00).
+- **Active PR:** [#68](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/68), branch `work/118-auto-e2e-v2-clean`, exact head `c64bd6f9cb6ab4fa72cf1bbfbabfb7257a254bd1`. PR #67 is superseded history.
+- **Branch comparison:** DIVERGED 59 ahead / 2 behind; Main-side delta is W092-only in the returned path set. No rebase/merge performed.
+- **Exact-head CI:** [Run #880](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44993439504), validate SUCCESS; raw log confirms 95 tests in 0.293s. Artifact ID `14742494287`, size 686 bytes, SHA-256 `babe4cfffd72135e70c8623df161404ef5036dd4461d1319d43ce4eeaf9c596c`. Artifact metadata/upload log verified; payload not independently parsed.
+- **Coverage limit:** Task-to-Issue push source-binding step and handoff/ACK/review-observation jobs were SKIPPED. CI #880 is contract/unit evidence, not Runtime Auto E2E.
+- **P1-118-01:** OPEN / NEEDS CHANGES — duplicate Issue marker and persisted Core `task.issue_id` equality not enforced/tested.
+- **P1-118-02:** BLOCKED — authoritative Core-issued lease contract/source/runtime evidence not pinned.
+- **W118-TASK-015:** BLOCKED — W14 canonical Work Authority/ExecutionHostBridge, server-side grant and ACK-before-side-effect runtime evidence not established.
+- **Runtime Auto E2E:** NOT VERIFIED. **Xu independent review:** PENDING. **Vinh acceptance:** NOT ACCEPTED.
+- **Review routing:** [RR-118-001](../EVIDENCE/RR-118-001_CURRENT-XU-REVIEW-ROUTING.md) is the current PR #68 routing overlay. Historical XR/release/handoff docs still contain PR #67 snapshots; their criteria are not waived or amended.
+- **Disposition:** ACTIVE — NOT ACCEPTED — NOT RELEASED. B-118-010 PREPARED / NOT APPLIED. No Main merge or release.
