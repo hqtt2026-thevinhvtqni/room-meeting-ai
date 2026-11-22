@@ -1546,3 +1546,18 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - PowerShell AST + local launcher start/stop smoke PASS; launcher 13 PASS; Dashboard static/live, V8 validator and Chromium E2E PASS.
 - Inventory: Sandbox 169 files; GitHub 77; shared 77; Sandbox-only 92; GitHub-only 0; one Sandbox-only `.github/` directory.
 - **KÝ: Co | AI-07**
+
+
+## W10-CANONICAL-HEAD-RUN195-20261122-01 — 2026-11-22 06:52 (UTC+07:00)
+- Latest branch HEAD Run #195 / ID `44965933111`, SHA `73b51f61b62d3b1664e8d9d0dd54e979eb5640b1`.
+- Windows 226 PASS / 0 FAIL / 0 SKIP; Ubuntu 220 PASS / 0 FAIL / 2 SKIP.
+- Code unchanged from Run #180; docs/evidence HEAD remains green.
+- Evidence: `06_EVIDENCE/W10_GITHUB_ACTIONS_CI_EVIDENCE_20261122_RUN195.md`.
+- **KÝ: Co | AI-07**
+
+
+## W10-RUN195-INVENTORY-UPDATE-20261122-01 — 2026-11-22 06:52 (UTC+07:00)
+- Run #195 is latest canonical HEAD CI: Windows 226 PASS / 0 FAIL / 0 SKIP; Ubuntu 220 PASS / 0 FAIL / 2 SKIP.
+- Current inventory: Sandbox 170 files; GitHub 78; shared 78; Sandbox-only 92; GitHub-only 0; one Sandbox-only `.github/` directory.
+- Evidence: `06_EVIDENCE/W10_GITHUB_ACTIONS_CI_EVIDENCE_20261122_RUN195.md`.
+- **KÝ: Co | AI-07**
