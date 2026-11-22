@@ -1813,3 +1813,48 @@ PR #61 remains OPEN / UNMERGED. No deployment, Core mutation, listener restart o
 **STATUS:** CANONICAL JOURNAL + 12 SELECTED SOURCE/TEST/WORKFLOW FILES SYNCED / EXACT TEXT READBACK PASS / WHOLE WORKSPACE SYNC NOT CLAIMED.
 
 **Signature:** [KÝ: VI | CODER]
+
+
+## 2026-11-23 02:03 UTC+07:00 — JRN-W28-049 — WP1 31-tool schema and handler-binding hardening integrated
+
+**Role:** Vi | CODER — implementation and integration owner  
+**PR:** #72 — https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/72  
+**Tested source SHA:** `e310882ceafd2705b79efb4718af7e8f3a4ea5fc`  
+**Merge commit:** `ab51accd1fb186c68beec8fcf08009c25c3dfa67`  
+**Signature:** [KÝ: VI | CODER]
+
+### READ / TRACE
+- Re-read the Sandbox WP1 vertical-slice status (2026-11-15), provider-composition gap audit (2026-11-03), Core authority dependency blocker and the 2026-10-26 live-entrypoint audit.
+- Sandbox source had a newer 31-tool registry/server than GitHub, plus two missing modules: Draft 2020-12 schema validation and exact handler binding. The 31-tool registry is the chosen source-level contract; no runtime listener/provider claim is inferred.
+- The current Sandbox entrypoint adapter is explicitly a contract scaffold and does not create a listener or execute work. The seven v54 execution/evidence tools return NOT_IMPLEMENTED (and arbitrary command is POLICY_REFUSED); it is not production registration.
+- Existing provider gap remains: six approved provider groups are required (Core, Sandbox, Sandbox extensions, Proposal, GitHub, Runtime); no verified composition root or real approved Core/Sandbox/Proposal/Runtime providers were found. In-memory reference providers and echo test providers are not production providers.
+
+### BUILD
+- Ported the latest Sandbox WP1 static contract hardening into canonical GitHub:
+  1. `mcp8020_unified_registry_v1.py`: 31 exact ordered names, unique-name/boundary checks, strict SHA-256 source hash pattern and schema validation at registry export.
+  2. `mcp8020_schema_validation_v1.py`: Draft 2020-12 schema validation, full argument validation and provider signature compatibility checks.
+  3. `mcp8020_tool_handler_binding.py`: exact handler-key set, no missing/extra handlers and signature validation before registration.
+  4. `mcp8020_unified_server_v1.py`: validates full JSON Schema before provider invocation and preserves empty mappings as structured JSON objects.
+  5. Added focused schema and handler-binding tests; declared `jsonschema>=4.20,<5` in requirements.
+- No listener, provider, Core endpoint or execution behavior was invented. This is a transport-neutral factory/contract improvement.
+
+### VERIFY — EXACT-SHA AUTO E2E
+- PR #72 exact tested source SHA: `e310882ceafd2705b79efb4718af7e8f3a4ea5fc`.
+- GitHub Actions run #393 / ID `45056547390`: **SUCCESS** on the exact PR head.
+- All five jobs succeeded: unit/regression, Linux lifecycle, Windows lifecycle, immutable exact-SHA source artifact retest and automatic E2E gate report.
+- Source artifact ID `14766644475`, digest `sha256:b63c4e6c6260ddbdaba6412f0067632d5a5a44c2f282ec52ea9cd99cbaef2cef`.
+- Auto E2E report artifact ID `14767397963`, digest `sha256:c77f9bbf38a0c3a9097416ac3a6920f2714624ba85d561e171dd98f34f071956`.
+- PR #72 merged after exact-head CI success. Canonical branch now points to merge commit `ab51accd1fb186c68beec8fcf08009c25c3dfa67`.
+
+### LIMITATIONS / ACCEPTANCE
+- **WP1 source contract/schema/binding:** IMPLEMENTED / EXACT-SHA CI PASS.
+- **WP1 live composition root/provider binding:** NOT VERIFIED / BLOCKED.
+- **WP0 raw MCP 8030 tools/list parity + process/build identity:** NOT VERIFIED.
+- **Core authorization/WorkContext and Runtime provider:** BLOCKED by missing approved Core execution-grant capability; do not use caller-supplied identity or local/in-memory state as authority.
+- **WP3-F01 Q4 upload grant:** NOT APPROVED; no upload implementation/side effects.
+- **Live MCP → Core → Runtime → Execution Host E2E:** BLOCKED. Execution Gate CLOSED. Release NOT_RELEASED.
+- No deployment, listener restart, Core mutation or activity against historical MCP :8020.
+
+**STATUS:** WP1 STATIC CONTRACT HARDENING INTEGRATED / EXACT-SHA AUTO E2E PASS / LIVE PROVIDER COMPOSITION AND DEPLOYED PARITY NOT VERIFIED / NOT RELEASED.
+
+**Signature:** [KÝ: VI | CODER]
