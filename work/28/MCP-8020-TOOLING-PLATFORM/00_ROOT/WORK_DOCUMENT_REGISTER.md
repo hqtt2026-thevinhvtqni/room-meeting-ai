@@ -31,3 +31,4 @@ Assign controlled codes only to official Work documents. Supporting evidence may
 | `A2E-W28-W32-ADOPTION-20261104-001` — `01_PLAN/WORK28_WORK32_PRODUCT_AUTO_E2E_ADOPTION_20261104.md` | Auto E2E adoption decision | Adaptation of Work 32 exact-SHA, product journey, evidence readback and immutable artifact pipeline to Work 28 security boundaries | Current |
 
 | `RA-W28-20261121-001` — `06_EVIDENCE/RA-W28-20261121-001_REPO-ISSUE-PR-RECONCILIATION.md` | Repository-wide issue/PR reconciliation | P1 / Read order 31; stale Issue and PR triage, exact branch comparisons and disposition | RECORDED — PARTIAL CLEANUP |
+| `XU-W28-WP3-F01-Q4-DESIGN-20261122-001` — `06_EVIDENCE/XU_WP3_F01_Q4_GRANT_DESIGN_REVISION_20261122.md` | Proposed security design | Revised upload capability grant contract for independent Ka review; no implementation authorization | PROPOSED / NOT APPROVED |

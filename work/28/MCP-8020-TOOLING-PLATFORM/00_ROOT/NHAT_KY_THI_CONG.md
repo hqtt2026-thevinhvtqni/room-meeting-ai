@@ -1352,3 +1352,35 @@ PR #61 remains OPEN / UNMERGED. No deployment, Core mutation, listener restart o
 **WP2 CANDIDATE EXACT-HEAD CI PASS / LINUX POSIX EMPTY-GROUP PROBE FIXED / WINDOWS LIFECYCLE PASS / FULL REGRESSION 348 PASS + 238 SUBTESTS PASS / IMMUTABLE ARTIFACT PASS / LIVE MCP-CORE-RUNTIME E2E BLOCKED / SANDBOX JOURNAL STALE / AN INDEPENDENT QA NOT AVAILABLE / KA APPROVAL NOT GRANTED FOR PR #69 / PR #69 DRAFT — DO NOT MERGE / EXECUTION GATE CLOSED / NOT RELEASED.**
 
 **Signature:** [KÝ: XU | TEMPORARY WORK COORDINATOR]
+
+
+## 2026-11-22 — JRN-W28-038 — Xu exact-head CI confirmation and WP3-F01 Q4 design revision
+
+**Người thực hiện:** Xu — temporary Work 28 coordinator / technical execution owner  
+**Canonical branch:** `work/28-mcp-tooling-platform`  
+**PR #69 latest tested head:** `449b8ef7cfbc9f0af6d8cfd09564b48269eb9ab4`
+
+### VERIFY — third PR #69 workflow
+- GitHub Actions run `44977448394` completed SUCCESS for PR #69 head `449b8ef7cfbc9f0af6d8cfd09564b48269eb9ab4`.
+- Jobs SUCCESS: `execution-host-lifecycle-linux`, `execution-host-lifecycle-windows`, `unit-regression-tests`, `Build and retest exact-SHA Work 28 source artifact`, `automatic-e2e-gate-report`.
+- The workflow report source snapshot is merge commit `04f01597ef38f6744c59cd7efce5c5da8b202961`; run head remains the PR head above.
+- E2E report artifact `work28-auto-e2e-report-44977448394` (ID `14735219634`); immutable source artifact `work28-source-artifact-04f01597ef38f6744c59cd7efce5c5da8b202961` (ID `14736193860`).
+- Automatic E2E report remains `overall_status=BLOCKED` because deployed Build MCP identity/tools-list parity, trusted Core principal/WorkContext evidence, approved deployed Runtime MCP + Execution Host/isolation attestation and the complete deployed request-to-evidence readback chain are not wired. Green CI jobs are not live E2E acceptance.
+
+### READ / ANALYZE — WP3-F01 Q4
+- Re-read `sandbox_tools_v1.py`, `mcp8020_sandbox_tools_v54.py`, `mcp_tool_registration_v1.py`, the existing Vi binary-upload source trace, Xu's Q1–Q3 decision record and Ka's Q4 review.
+- Confirmed no binary upload implementation or registration: current v1/v54 paths accept UTF-8 text; v1 write is bounded to 64 KiB; v54 read decodes UTF-8; no begin/chunk/finalize upload session exists.
+- Ka's review requires concrete grant binding, path scope, quotas, TTL, revocation, replay/idempotency, atomic state transitions, durable audit and failure cleanup. Q4 remains NOT APPROVED; implementation is not authorized.
+- Xu prepared the proposed design revision `XU-W28-WP3-F01-Q4-DESIGN-20261122-001` in `06_EVIDENCE/XU_WP3_F01_Q4_GRANT_DESIGN_REVISION_20261122.md`. It specifies a Core-issued least-privilege grant, trusted principal/session binding, canonical Work mapping/version, operation and path scope, immutable quota ceilings, begin/chunk/finalize/abort state machine, atomic reservation/idempotency/revocation, no-overwrite promotion, independent readback and durable audit.
+- The design explicitly remains PROPOSED / NOT APPROVED. It does not invent a Core endpoint, authorize implementation or replace Ka's independent review.
+
+### DECIDE / NEXT
+- Keep PR #69 DRAFT / DO NOT MERGE pending independent An QA and Ka approval. Do not claim Xu's self-check as independent review.
+- Submit the Q4 design revision for future Ka review when delegation is available. Until then, no WP3-F01 code, registration, staging or filesystem side effect.
+- Continue WP0 live provenance and WP4/WP5 source-to-runtime tracing. Current connector readback does not provide a deployed process ID/source SHA/build digest; issue #33 remains open for runtime provenance.
+- Keep Work status ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED.
+
+### STATUS
+**PR #69 EXACT-HEAD CI RUN #44977448394 PASS / LIVE DEPLOYED E2E BLOCKED / WP2 INDEPENDENT QA AND SECURITY APPROVAL PENDING / WP3-F01 Q4 DESIGN REVISION PREPARED BUT NOT APPROVED / IMPLEMENTATION BLOCKED / NOT RELEASED.**
+
+**Signature:** [KÝ: XU | TEMPORARY WORK COORDINATOR]
