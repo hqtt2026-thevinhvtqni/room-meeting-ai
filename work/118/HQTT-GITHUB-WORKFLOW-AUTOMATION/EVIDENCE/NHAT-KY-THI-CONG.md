@@ -1736,3 +1736,18 @@
 - **Non-blocking notices:** Raw log reports Node.js 20 deprecation for pinned GitHub Actions dependencies, plus `punycode` and legacy `url.parse()` deprecation notices. No test/job failure; no workflow change made under freeze.
 - **Disposition:** Exact branch-tip contract/unit CI **PASS — 95/95** at SHA `a4b37212...`. P1-118-01 OPEN / NEEDS CHANGES; P1-118-02 BLOCKED at owner-approved Core source/lease contract/runtime evidence boundary; Runtime Auto E2E NOT VERIFIED; Xu independent review PENDING; Vinh acceptance NOT ACCEPTED. PR #68 OPEN / UNMERGED; W118 ACTIVE — NOT ACCEPTED — NOT RELEASED. Branch remains DIVERGED 55/2; no B-118-010, Main merge or release.
 - **Next permitted action:** Preserve implementation freeze. Continue review and dependency-evidence work; do not treat contract CI PASS as runtime E2E or acceptance. This journal-only commit will require its own exact-head CI readback; avoid creating further journal commits solely to chase each journal-triggered CI run.
+
+
+## Entry 043 — CI #877 exact Entry 042 journal-tip verification
+
+- **Priority:** 01 — P0 — Journal-tip CI provenance / evidence integrity.
+- **Name / Title:** Ka — CSA / Delegated Technical Lead, Work 118.
+- **Date-Time:** 2026-11-22 13:25 (UTC+07:00).
+- **Scope:** Read-only verification of GitHub Actions run #877 associated with the exact Entry 042 journal commit; inspect job state, raw validate-job logs, skipped jobs and artifact metadata. No source/workflow change, no runtime/Core/W14/W70 mutation, no merge or release.
+- **Exact revision:** Run ID `44993174706`, run number 877, event `pull_request`, branch `work/118-auto-e2e-v2-clean`, exact head SHA `6a7e6faa33a433f8767f7e453b8da134096ee92c` (Entry 042 commit). Validate job ID `137118501599` COMPLETED / SUCCESS.
+- **Raw test evidence:** Decoded validate-job log confirms **Ran 95 tests in 0.140s — OK**. Checkout, Python setup, pinned YAML parser, contract tests, evidence write and artifact upload all succeeded.
+- **Artifact:** `w118-run-evidence-44993174706-1`, ID `14743175090`, size 683 bytes, SHA-256 `c4bc0260c32ebe9964bcb39905dfb1e8053e6dbaa5bf87994b0a45bd41274dd3`; GitHub metadata verified and not expired. Payload not independently downloaded/parsed.
+- **Skipped coverage:** Task-to-Issue push source-binding step, `handoff-request-capture`, `ack-claim-capture` and `review-observation-capture` were SKIPPED for this pull_request event. CI #877 is exact-journal-tip contract/unit evidence only, not live push binding, authenticated handoff/ACK/review, Core lease proof or Runtime Auto E2E.
+- **Warnings:** Node.js 20 deprecation warning for pinned GitHub Actions dependencies. No test/job failure; no workflow change under freeze.
+- **Disposition:** CI #877 **PASS — 95/95** for exact Entry 042 commit `6a7e6faa...`. PR #68 remains OPEN / UNMERGED; branch compare DIVERGED 56 ahead / 2 behind; formal reviews 0 and inline threads 0. P1-118-01 OPEN / NEEDS CHANGES; P1-118-02 BLOCKED; Runtime Auto E2E NOT VERIFIED; Xu review PENDING; Vinh acceptance NOT ACCEPTED; W118 ACTIVE — NOT ACCEPTED — NOT RELEASED. No B-118-010, Main merge or release.
+- **Next permitted action:** Keep implementation freeze. Continue Xu review preparation and bounded read-only dependency verification. Do not convert contract CI PASS into runtime E2E or product acceptance.
