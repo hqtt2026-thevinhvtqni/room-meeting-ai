@@ -1284,3 +1284,71 @@ PR #61 remains OPEN / UNMERGED. No deployment, Core mutation, listener restart o
 **XU TEMPORARY TAKEOVER ACKNOWLEDGED / CANONICAL BASELINE CI PASS ON SHA cc7dd01... / PR #61 SOURCE REMEDIATION OBSERVED BUT DIVERGED 24 AHEAD–16 BEHIND / PR #61 EXACT-HEAD CI NOT RUN / AN INDEPENDENT QA PENDING / KA APPROVAL NOT GRANTED / CLEAN WP2 INTEGRATION CANDIDATE TO BE PREPARED / EXECUTION GATE CLOSED / NOT RELEASED.**
 
 **Signature:** [KÝ: XU | TEMPORARY WORK COORDINATOR]
+
+
+## 2026-11-22 — JRN-W28-036 — Xu tích hợp WP2 candidate, sửa POSIX probe và xác minh exact-head CI
+
+**Người thực hiện:** Xu — temporary Work 28 coordinator / technical execution owner  
+**Canonical branch:** `work/28-mcp-tooling-platform`  
+**Integration branch:** `xu/work28-wp2-integration-20261122`  
+**Draft PR:** #69 — `https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/69`  
+**Canonical journal source blob before append:** `d3d05dc96103a4bdec3a27e336a1020cdb61cb46`
+
+### BUILD — clean integration candidate
+- Created integration branch from canonical commit `8179c8af90c19c36a15e4eeeef67c691f9d0839a`; no history from divergent PR #61 was merged/rebased.
+- Transplanted only six WP2 code/test/workflow files from PR #61: `execution_host/host.py`, `execution_host/host_run.py`, `execution_host/process_job.py`, `tests/test_process_job.py`, `tests/test_wp2_service_mapping_and_race.py`, `.github/workflows/work28-mcp-tooling.yml`.
+- GitHub compare before Xu's POSIX fix: 6 commits ahead / 0 behind. After fix: 8 commits ahead / 0 behind; six intended paths only.
+- Opened PR #69 as DRAFT. PR #61 remains OPEN and unchanged as the historical source branch. No merge or deployment.
+
+### RUN / DEBUG — exact first attempt
+- PR #69 initial head `91417f7d993457ea43cd133efab489298c25b6a3`; workflow run `44976860569`.
+- Windows lifecycle PASS; Linux lifecycle FAIL (5 tests); full unit regression later PASS.
+- Exact Linux failure evidence: `_posix_group_members()` used `ps -o pid=,pgid=,stat= -g <pgid>`. On an empty process group, the command may exit non-zero, and the fail-closed parser correctly returned UNKNOWN; this made legitimate empty-group cleanup unverifiable. This was a probe-command semantics defect, not grounds to weaken fail-closed behavior.
+
+### BUILD — Xu POSIX probe correction
+- Changed the probe to execute a successful full process-table snapshot `ps -o pid=,pgid=,stat=` and filter rows by the requested PGID in Python. A verified snapshot with no matching live members now returns 0; OSError, timeout, non-zero exit and malformed output remain UNKNOWN.
+- Replaced the empty-group unit case with a regression proving that a group is empty even while unrelated process groups remain active; asserted the exact ps invocation.
+- Source commit: `cd348175f4f33c02bc5c7e254b74177ef442b217`; test commit / candidate head: `f02084e1ada2e193aa798ee3f91452f55bef402b`.
+- Read back both files on the candidate branch and verified the updated source/test content.
+
+### VERIFY — GitHub Actions run #44976943948
+**PR head SHA:** `f02084e1ada2e193aa798ee3f91452f55bef402b`  
+**PR merge-ref/source snapshot used by workflow report:** `0ccad176010b3f719292a762cfa02b7e2ba81f2e`  
+**Run URL:** `https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44976943948`
+
+| Job | Result | Evidence |
+|---|---|---|
+| execution-host-lifecycle-linux | PASS | 18 unittest cases; 13 passed + 4 skipped in suspended-spawn pytest suite; WP2 service suite 17 passed; additional contract/security suites passed |
+| execution-host-lifecycle-windows | PASS | 18 unittest cases; suspended-spawn 17 passed; WP2 service suite 17 passed; additional contract/security suites passed |
+| unit-regression-tests | PASS | 348 passed; 238 subtests passed; compile step PASS |
+| immutable-source-artifact | PASS | exact-SHA source archive built and extracted/retested successfully |
+| automatic-e2e-gate-report | Job PASS; product E2E BLOCKED | report artifact uploaded; report says CI preconditions PASS, deployed MCP/Core/Runtime E2E BLOCKED |
+
+- Artifacts: `work28-auto-e2e-report-44976943948` (artifact ID `14736282057`); `work28-source-artifact-0ccad176010b3f719292a762cfa02b7e2ba81f2e` (artifact ID `14736013612`).
+- CI report explicitly records blockers: no verified live Build MCP process/build identity and tools/list parity artifact; no trusted deployed Core principal/WorkContext authorization evidence; no approved deployed Runtime MCP and Execution Host/isolation attestation; no complete deployed request-to-protected-evidence readback chain.
+- Therefore the workflow is green for source/CI/artifact preconditions only. It does not establish live E2E, independent QA/security approval, or product acceptance.
+
+### WP0 — Sandbox provenance spot-check
+- ROOM-HOP Build service read-only identity response: `service=room-hop-build`, `version=1.0`; returned room structure did not include a process ID, source commit, build hash or deployed artifact digest.
+- Sandbox Work `28` exists. Diagnostic readback via the proven probe confirmed exact content equality with canonical GitHub for `WORK_MANIFEST.md` and `WORK28_MASTER_EXECUTION_PLAN_V2.0.md`.
+- Sandbox canonical journal content does not match the current GitHub journal and does not contain JRN-W28-035; Sandbox journal snapshot is stale. No Sandbox write/sync was attempted.
+- Sandbox listing includes older implementation/evidence snapshot paths; no source-to-runtime provenance or registry parity is inferred from directory presence. Historical quarantined service/code is not used.
+- This confirms Sandbox is available for supporting read/verification, but the current live build identity and complete source-to-runtime correspondence remain NOT VERIFIED.
+
+### ANALYZE / DECIDE
+- WP2 source candidate now passes the currently configured native Linux/Windows lifecycle jobs, full Work 28 regression, and immutable source-artifact build/retest on the PR head/merge snapshot.
+- Keep PR #69 DRAFT and do not merge: independent An QA is not available in this temporary single-agent execution period; Ka's current COMMENTED review on PR #61 is not an approval of PR #69; live deployment/E2E remains BLOCKED.
+- PR #61 remains DIVERGED and must not be merged or rewritten.
+- Keep Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED; `ISOLATION_STATUS=NOT_VERIFIED`.
+
+### NEXT
+1. Continue Xu source-level review of WP2 and exact-head evidence; inspect workflow and source for any missing cases not covered by CI.
+2. Reconcile PR #69 base with any later canonical-branch movement before requesting merge; keep it a draft until independent review/QA gates are satisfied.
+3. Continue WP0 provenance inventory, especially live Build MCP process/build identity and tools/list schema parity. Use read-only probes; do not infer from Sandbox files.
+4. Advance WP3 binary upload only after mapping the existing Sandbox provider contract, authorization path, size limits, streaming behavior, checksum and readback. Do not claim implementation from the plan alone.
+5. Then trace clean Runtime MCP, Core :8000 authority and the :8031 execution boundary. No live execution/deployment until the authorized boundary and evidence chain are verified.
+
+### STATUS
+**WP2 CANDIDATE EXACT-HEAD CI PASS / LINUX POSIX EMPTY-GROUP PROBE FIXED / WINDOWS LIFECYCLE PASS / FULL REGRESSION 348 PASS + 238 SUBTESTS PASS / IMMUTABLE ARTIFACT PASS / LIVE MCP-CORE-RUNTIME E2E BLOCKED / SANDBOX JOURNAL STALE / AN INDEPENDENT QA NOT AVAILABLE / KA APPROVAL NOT GRANTED FOR PR #69 / PR #69 DRAFT — DO NOT MERGE / EXECUTION GATE CLOSED / NOT RELEASED.**
+
+**Signature:** [KÝ: XU | TEMPORARY WORK COORDINATOR]
