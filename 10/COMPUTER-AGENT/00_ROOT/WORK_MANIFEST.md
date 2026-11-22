@@ -345,3 +345,17 @@ After adding START/STOP scripts, launcher contract test and Run #157 evidence to
 
 Co | AI-07. Run #169 Windows HTTP API suite stopped after 20 PASS with WinError 10053 while urllib was uploading a 1 MiB+10 byte body. API correctly rejects Content-Length >1 MiB before reading body and returns 413; Windows client could still be sending the payload while server closed the connection. Co changed only test construction to send authenticated headers with oversized Content-Length via http.client without uploading the body. API limit/runtime unchanged. Run #175 (ID `44965429403`, commit `740798d7053061f5c8d0908d4882f8aed13f1a4b`) passed both OSes: Windows 225 PASS / 0 FAIL / 0 SKIP; Ubuntu 219 PASS / 0 FAIL / 2 SKIP; HTTP suite 52 PASS per OS. Evidence: `06_EVIDENCE/W10_HTTP_OVERSIZE_TEST_REMEDIATION_RUN169_175.md`.
 
+
+
+## W10-FINAL-LAUNCHER-HTTP-RUN180-20261122-01 — 2026-11-22 06:50 (UTC+07:00)
+
+Co | AI-07. GitHub Actions Run #180 (ID `44965583364`) tested commit `1d64e841b10bf1a68bc3dba2484ff0bcfbd7d415` and passed both OSes. Windows Server 2022: 226 PASS / 0 FAIL / 0 SKIP; Ubuntu 24.04: 220 PASS / 0 FAIL / 2 expected SKIP. Windows PowerShell AST, local launcher start/health/Dashboard/stop smoke, 13 launcher contract assertions, Dashboard static 17, Dashboard live 7, V8 validator 16 and real Chromium API/runtime E2E all PASS. The latest launcher clears the API token from the parent environment before starting the static Dashboard server and cleans its session record on startup failure. The oversized HTTP test now sends an oversized Content-Length without platform-dependent body upload; API still returns 413. Evidence: `06_EVIDENCE/W10_LOCAL_LAUNCHER_HTTP_CI_EVIDENCE_20261122_RUN180.md`. Physical Windows 10 acceptance remains NOT RUN.
+
+
+
+## W10-RUN180-INVENTORY-UPDATE-20261122-01 — 2026-11-22 06:51 (UTC+07:00)
+
+Latest hosted regression Run #180: Windows 226 PASS / 0 FAIL / 0 SKIP; Ubuntu 220 PASS / 0 FAIL / 2 expected SKIP. PowerShell AST, local launcher start/stop smoke, 13 launcher checks, Dashboard static/live, V8 validator and real Chromium E2E PASS. Evidence: `06_EVIDENCE/W10_LOCAL_LAUNCHER_HTTP_CI_EVIDENCE_20261122_RUN180.md`.
+
+After mirroring Run #180 evidence, current inventory: Sandbox 169 files; GitHub 77; shared 77; Sandbox-only 92; GitHub-only 0; one Sandbox-only `.github/` directory. All accepted source/test/architecture/config/launcher files are on the canonical branch.
+
