@@ -2189,3 +2189,15 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - **Scope:** Read-only GitHub source audit only. No test/runtime/API call, credential, config, branch or source change outside W118. No local authority/lease/host was created.
 - **Disposition:** ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED; Runtime Auto E2E NOT RUN.
 - **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-23 13:00 +07:00; Result: exact Main source/doc contradiction recorded with bounded claims; no external mutation.
+
+
+### Entry 059 addendum — exact-head CI for Main Core authority source audit
+
+- **Priority:** 01 — P0 — Verify W118 audit documentation at the exact tested revision.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-23 13:00 +07:00 (audit session; minute-level timestamp not captured).
+- Tested source SHA: `cfa242937baaec169a5f9149d72bacd04bbc533a`.
+- Push Run #971 / ID `45063623949`; validate job `137334855489`: COMPLETED / SUCCESS; raw log confirms **102 tests in 0.237s — OK**, `TEST_OUTCOME=success`, `SOURCE_BINDING_STATUS=UNBOUND_LEGACY_BRANCH`. Artifact `14770845821`, size 974 bytes, SHA-256 `f6db2380a7452d0b4ad6308499388d4ef262c2fddd6fd8bb7e01c0c65783a955`.
+- PR Run #972 / ID `45063628955`; validate job `137334883929`: COMPLETED / SUCCESS; raw log confirms **102 tests in 0.301s — OK**, `TEST_OUTCOME=success`, `SOURCE_BINDING_STATUS=NOT_RUN` (push-only). Artifact `14770312969`, size 685 bytes, not expired. Handoff-request, ACK-claim and review-observation jobs SKIPPED.
+- Both runs are W118 contract/unit CI only; they do not prove Core route mounting, Task source binding, cross-Work runtime or Runtime Auto E2E. This journal/status update creates a new HEAD and requires a new exact-head validation.
+- **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-23 13:00 +07:00; Result: exact-head 102-test push and PR CI passed for source-audit documentation snapshot; runtime blockers unchanged.
