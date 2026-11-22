@@ -1800,3 +1800,17 @@
 - **Documentation reconciliation:** Created `EVIDENCE/RR-118-001_CURRENT-XU-REVIEW-ROUTING.md` as a current routing overlay. It points Xu to PR #68 and records the exact CI #880 evidence while explicitly preserving all gate requirements. Historical XR-118-001, W118-RELEASE-GATE and BB-118-002 remain unmodified because their acceptance criteria must not be silently changed; their PR #67 pointers and old snapshots are marked stale by the overlay. Root README and STATUS were updated with current PR #68, TD-118-012 v1.3 ownership (W14 sole integrated owner; W12/W13 absorbed), branch divergence, CI and acceptance status. Historical entries are retained.
 - **Disposition:** W118 ACTIVE — NOT ACCEPTED — NOT RELEASED. P1-118-01 OPEN / NEEDS CHANGES; P1-118-02 BLOCKED; W118-TASK-015 BLOCKED; Runtime Auto E2E NOT VERIFIED; Xu review PENDING; Vinh acceptance NOT ACCEPTED. B-118-010 PREPARED / NOT APPLIED. No Main merge or release.
 - **Next permitted action:** Continue only evidence, journal and status/routing reconciliation under the current freeze. Do not modify implementation/workflow or acceptance criteria, apply B-118-010, rebase/merge Main or release without the required independent review and explicit owner approvals.
+
+
+## Entry 047 — Exact current documentation-reconciliation head CI #884
+
+- **Priority:** 01 — P0 — Exact-head CI provenance / documentation reconciliation validation.
+- **Name / Title:** Ka — CSA / Delegated Technical Lead, Work 118.
+- **Date-Time:** 2026-11-22 (UTC+07:00).
+- **Scope:** Verify the PR-triggered workflow run for the exact documentation-reconciliation head created by Entry 046. Inspect workflow run metadata, every job, raw validate-job log and artifact metadata. No source/workflow change, no runtime/Core/W14/W70 mutation, no merge or release.
+- **Exact revision:** `b30165802f8078ccc51cd97874c4b820dcace554`, branch `work/118-auto-e2e-v2-clean`; run ID `44994563080`, run #884, event `pull_request`, COMPLETED / SUCCESS.
+- **Validate job:** ID `137122681513`, COMPLETED / SUCCESS. Raw log confirms **Ran 95 tests in 0.292s — OK**.
+- **Artifact:** `w118-run-evidence-44994563080-1`, ID `14743596579`, size 684 bytes, SHA-256 `336cb874be65790a2fa3ccc5c7a795d9f3b7e02f28adf244bae882f1c1398d74`. Upload log digest matches GitHub artifact metadata; artifact is not expired. Payload not independently downloaded/parsed.
+- **Skipped coverage:** Task-to-Issue push source-binding step; `handoff-request-capture`; `ack-claim-capture`; `review-observation-capture`. Run #884 is exact-head contract/unit CI only, not live source binding, handoff, authenticated ACK, review lifecycle, Core lease authenticity or Runtime Auto E2E.
+- **Disposition:** CI #884 PASS — 95/95 for exact Entry 046 documentation-reconciliation head. PR #68 remains OPEN / UNMERGED. P1-118-01 OPEN / NEEDS CHANGES; P1-118-02 BLOCKED; W118-TASK-015 W14 dependency BLOCKED; Runtime Auto E2E NOT VERIFIED; Xu review PENDING; Vinh acceptance NOT ACCEPTED. W118 ACTIVE — NOT ACCEPTED — NOT RELEASED. No B-118-010, Main merge or release.
+- **Next permitted action:** Continue evidence and review preparation within the freeze. Do not interpret contract CI as runtime E2E or acceptance. Do not apply B-118-010, rebase/merge Main or release without required review and explicit owner authorization.
