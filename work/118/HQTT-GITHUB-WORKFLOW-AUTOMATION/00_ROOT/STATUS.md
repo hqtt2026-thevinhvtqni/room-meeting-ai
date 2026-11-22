@@ -310,3 +310,15 @@ W118 ACTIVE — NOT ACCEPTED — NOT RELEASED. Runtime Auto E2E NOT VERIFIED; Xu
 - **Artifact:** `14767388324`, size 686 bytes, SHA-256 `e06d4937c1c0401a461cfdb9e0ec299e2118d62d0d13caf5f01b4d4374de26e6`; payload not independently parsed.
 - Source binding NOT RUN; handoff/ACK/review-observation jobs SKIPPED. Contract/unit CI only, not Runtime Auto E2E.
 - **Xu disposition:** P1-118-01 NEEDS CHANGES; P1-118-02 BLOCKED; runtime integration BLOCKED / NOT VERIFIED. Overall ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+## Owner-directed end-to-end execution — Entry 055 (2026-11-23)
+
+- Directive W118-KA-END-TO-END-001 accepted and executed on the designated branch. Baseline dd358072eb3f48c027fcc5db4e7b882a0770d621 was verified identical to PR #68 head at start.
+- P1-118-01: adapter-level remediation implemented. Complete bounded Issue pagination; reject duplicate markers; require exact Core issue_id match; fail closed when Core issue_id exists but no matching Issue; no POST/PATCH in rejection cases. Regression suite covers zero/one/multiple, persisted-ID match/mismatch/not-found and cross-page duplicate.
+- P1-118-02: BLOCKED. Adapter now requires an injected lease_validator callback and rejects missing/false/exception/non-boolean validation before GitHub requests. Callback is only a local integration seam; no Core-approved validator/API/lease contract is available. No lease authority is simulated.
+- Exact code/test CI Run #906 / ID 45057857222: SUCCESS, 102 tests / 0.218s; validate job 137316985462. SOURCE_BINDING_STATUS=NOT_RUN; handoff/ACK/review jobs SKIPPED. Artifact 14767952983, SHA-256 da8fc14e2d3cd8a3b8003967de88a5620645f6a97ade50bed4fc2d66987f5d8a; payload not independently parsed. This is unit/contract CI, not Runtime Auto E2E.
+- Runs #903 and #904 failed due to a missing test-fixture injection for the newly required lease-validator seam; corrected in commit 0530e043d6891d5770e5557385c895008ca165ca. Run #905 then passed 101 tests; all attempts retained in canonical journal Entry 055.
+- Core Task/Event ports, W102 identity/Assignment/ACK, W14 execution/GitHub/CI path, W70 evidence schema/owner approval, W33 ingress and full Runtime Auto E2E remain NOT VERIFIED/BLOCKED.
+- Architecture ownership preserved; no duplicate runtime services; no external Work mutation. B-118-010 NOT APPLIED. No Main merge, release or self-acceptance.
+- Current product disposition remains ACTIVE — NEEDS CHANGES / BLOCKED — NOT ACCEPTED — NOT RELEASED. Xu independent review and Vinh acceptance are outstanding.

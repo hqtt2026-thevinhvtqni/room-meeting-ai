@@ -217,3 +217,12 @@ PR #68 is READY FOR REVIEW / OPEN / UNMERGED. Exact tested head `076a74d8f19e6ca
 - Actions tested synthetic merge ref `646cf8f42a81ec370c05511ecb154ed771bdaf9a`. Source binding NOT RUN; handoff/ACK/review-observation jobs SKIPPED.
 - Artifact `14767388324`, SHA-256 `e06d4937c1c0401a461cfdb9e0ec299e2118d62d0d13caf5f01b4d4374de26e6`; payload not independently parsed.
 - This does not change Xu's review findings or establish Runtime Auto E2E. See BB-118-003 and Journal Entry 054.
+
+
+## Owner-directed execution snapshot — 2026-11-23 (Entry 055)
+
+P1-118-01 adapter remediation is implemented: complete bounded marker scan, duplicate rejection, exact Core issue_id binding, and no replacement Issue when Core already has an ID. Regression coverage is in tests/w118/test_github_issue_adapter.py. P1-118-02 remains BLOCKED: W118 requires an injected lease_validator integration callback and fails closed without a positive result, but no Core-approved validator/API/contract exists. Unit-test stubs do not prove Core authority.
+
+Exact code/test head cb4bbc0662650051d538a4dcc6e7692176e5a865 passed PR Run #906 / 45057857222: 102 tests / 0.218s. SOURCE_BINDING_STATUS=NOT_RUN; handoff/ACK/review-observation jobs SKIPPED; Runtime Auto E2E NOT RUN. Artifact 14767952983; uploaded ZIP SHA-256 da8fc14e2d3cd8a3b8003967de88a5620645f6a97ade50bed4fc2d66987f5d8a; payload not independently parsed.
+
+Core/W102/W14/W70/W33 runtime integration remains blocked or not verified. Architecture ownership remains TD-118-012 v1.3. W118 has not modified external Work sources, secrets, permissions or branch protection. B-118-010 NOT APPLIED. No Main merge or release; PR #68 remains OPEN / UNMERGED. See canonical Journal Entry 055 and the adapter implementation/test matrix for detailed evidence and limitations.

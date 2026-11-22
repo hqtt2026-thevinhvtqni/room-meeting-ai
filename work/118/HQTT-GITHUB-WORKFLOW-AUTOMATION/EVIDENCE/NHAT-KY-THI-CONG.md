@@ -1940,3 +1940,54 @@
 - **Coverage boundary:** `SOURCE_BINDING_STATUS=NOT_RUN`; handoff-request, ACK-claim and review-observation jobs SKIPPED. Contract/unit CI only; Runtime Auto E2E remains NOT VERIFIED.
 - **Artifact:** `w118-run-evidence-45056947568-1`, ID `14767388324`, size 686 bytes, SHA-256 `e06d4937c1c0401a461cfdb9e0ec299e2118d62d0d13caf5f01b4d4374de26e6`. Metadata/upload digest read; payload not independently downloaded/parsed.
 - **Readback:** BB-118-003, README, STATUS, RR-118-001 and canonical journal were read back from the active branch. The next journal/status write is documentation-only and does not alter implementation behavior.
+
+
+## Entry 055 — Owner-directed end-to-end W118 remediation (P1-118-01 / P1-118-02)
+
+- **Priority:** 01 — P0 — Core Task/GitHub Issue identity and authority-boundary remediation.
+- **Name / Title:** Ka — AI-02 / CSA — Delegated Technical Lead, Work 118.
+- **Date-Time:** 2026-11-23 01:56 +07:00 (continued through the current session).
+- **Directive:** W118-KA-END-TO-END-001; owner Vinh; repository hqtt2026-thevinhvtqni/room-meeting-ai; branch work/118-auto-e2e-v2-clean; PR #68.
+- **Baseline verification:** supplied baseline dd358072eb3f48c027fcc5db4e7b882a0770d621 matched the active PR #68 head exactly at start (compare identical, 0 ahead / 0 behind). No Main rebase, merge or force-push.
+
+### P1-118-01 — implementation outcome
+
+- Replaced first-match lookup with complete bounded pagination and collection of all matching Task-marker Issues; Pull Requests remain excluded.
+- Zero matches + Core issue_id null permits one create; exactly one match permits update/readback; multiple matches reject before POST/PATCH.
+- When Core issue_id is set, only the one marker-bearing Issue with the exact same number is accepted. Missing marker Issue or mismatched number rejects; no replacement Issue is created.
+- A full final page at max_issue_pages is incomplete evidence and fails closed.
+- Added regressions for zero/one/multiple marker matches, persisted Core issue_id exact match/mismatch/not-found, later-page match, cross-page duplicate, PR exclusion and page-ceiling rejection.
+- Source commit dd6319e81ee331dd5098a27cda17f5f12105d74a; tests commit 8cd2048ffebadfc0b0679b5b964ee721bd6523cd; pagination test commit cb4bbc0662650051d538a4dcc6e7692176e5a865.
+
+### P1-118-02 — fail-closed port outcome
+
+- Added optional lease_validator callback as a W118 integration seam. Missing validator, false result, exception or non-boolean result rejects before any GitHub API request.
+- This callback is not a Core API contract, cryptographic verifier or proof of authority. The unit harness uses a deterministic stub only. No production Core validator, API, schema or authenticated lease fixture was found or added.
+- P1-118-02 remains BLOCKED. The Core owner must supply an approved validation contract and authenticated port proving issuer/principal, Work/Task binding, operation/resource scope, audience, expiry, revocation/current status, authentication/signature method and concurrency/lease exclusivity. Then test positive, wrong-Work/Task, wrong-scope/audience, expired, revoked, replay and contention cases against the actual Core service.
+- No Core/W102/W14/W70/W33 source was modified; no W118-local lease authority, database, queue, dispatcher, execution host or Git gateway was introduced.
+
+### Test and correction record
+
+- Workflow Run #903 / ID 45057712304: FAILED, 101 tests; first validation exposed that the pagination-limit fixture had not injected the newly required lease-validator test seam. This was a test-fixture defect, not a product PASS.
+- Workflow Run #904 / ID 45057739269: FAILED, same missing fixture injection; failure retained as history.
+- Test fixture corrected in commit 0530e043d6891d5770e5557385c895008ca165ca.
+- Workflow Run #905 / ID 45057798089: SUCCESS; 101 tests in 0.167s; validate job 137316794907. SOURCE_BINDING_STATUS=NOT_RUN; handoff/ACK/review-observation jobs SKIPPED. Artifact ID 14768341696, uploaded ZIP SHA-256 f6b2713814a5eb5c1f4815826d1d4ba72a62966162eef1b0f3cfe5795c9b43a0.
+- Added cross-page marker/duplicate regression in commit cb4bbc0662650051d538a4dcc6e7692176e5a865.
+- **Workflow Run #906 / ID 45057857222:** SUCCESS; validate job 137316985462; 102 tests in 0.218s; TEST_OUTCOME=success; SOURCE_BINDING_STATUS=NOT_RUN. Handoff-request, ACK-claim and review-observation jobs SKIPPED. Artifact w118-run-evidence-45057857222-1, ID 14767952983, size 685 bytes, uploaded ZIP SHA-256 da8fc14e2d3cd8a3b8003967de88a5620645f6a97ade50bed4fc2d66987f5d8a. Artifact payload not independently downloaded/parsed. Run #906 validates the code/test commit cb4bbc0662650051d538a4dcc6e7692176e5a865; later changes in this journal/documentation reconciliation are documentation-only and require their own exact-head CI.
+- Exact CI command from workflow: python -m unittest discover -s tests/w118 -v (Python 3.12).
+
+### Architecture and runtime integration
+
+- TD-118-012 v1.3 ownership remains: Core :8000 runtime Task/Assignment/Event; W102 Agent identity/capability/Assignment policy; W14 integrated execution and W12/W13 absorbed; W70 lifecycle/Evidence Register/Dashboard; W33 evidence ingress; W118 stateless GitHub adapters and W118 planning metadata only.
+- P1-118-01 adapter contract remediation: PASS in unit/contract suite; no live Core Task snapshot or GitHub Issue round-trip was run.
+- P1-118-02: BLOCKED; no authoritative Core lease validation contract/endpoint or runtime evidence.
+- Core Event ingress, W102 verified principal/Assignment/ACK, W14 Work Authority/ExecutionHostBridge/GitHub Gateway, W70 schema/owner approval and W33 evidence ingress remain NOT VERIFIED / BLOCKED.
+- Runtime Auto E2E Plan-to-Close: NOT RUN. SOURCE_BINDING_STATUS=NOT_RUN; do not count skipped jobs as PASS.
+
+### Governance and disposition
+
+- Implementation changes were confined to W118 source/tests/docs/register on the designated branch.
+- B-118-010 was not applied. No external Work mutation, secrets/permissions/branch-protection change, Main merge, release or self-acceptance.
+- PR #68 remains OPEN / UNMERGED. Xu independent review and Vinh final acceptance remain outstanding.
+- Disposition: ACTIVE — NEEDS CHANGES / BLOCKED — NOT ACCEPTED — NOT RELEASED. P1-118-01 implementation gate is remediated at adapter-contract level; full runtime/product gate is not complete.
+- Next: exact-head CI for the documentation reconciliation; then Xu independent review. Continue to require actual Core/W14/W102/W70/W33 owner contracts and runtime evidence before claiming Runtime Auto E2E.

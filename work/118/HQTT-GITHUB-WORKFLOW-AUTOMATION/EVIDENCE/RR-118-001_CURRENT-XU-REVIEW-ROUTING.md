@@ -128,3 +128,13 @@ PR #68 final documentation-only HEAD `c58513a27984a2c908c3013462dbf47b96f862da` 
 ## Exact-head CI refresh — 2026-11-23 01:46 +07:00
 
 PR #68 source head `1199ffb3f179f69bc82170499b5011516e94a12f` passed Run #899 / `45056947568`, validate job `137314162401`: **95 tests in 0.294s — OK**. Actions tested synthetic merge ref `646cf8f42a81ec370c05511ecb154ed771bdaf9a`. Source binding NOT_RUN; handoff/ACK/review-observation jobs SKIPPED. Artifact `14767388324`, SHA-256 `e06d4937c1c0401a461cfdb9e0ec299e2118d62d0d13caf5f01b4d4374de26e6`; payload not independently parsed. Contract/unit CI only; Runtime Auto E2E NOT VERIFIED. Xu findings and all gates in BB-118-003 remain unchanged.
+
+
+## Current owner-directed remediation routing — 2026-11-23 (Entry 055)
+
+- PR #68 / branch work/118-auto-e2e-v2-clean. Owner baseline dd358072eb3f48c027fcc5db4e7b882a0770d621 was identical to the branch head at execution start.
+- P1-118-01: adapter-level contract remediation implemented and covered by 102 tests at source/test commit cb4bbc0662650051d538a4dcc6e7692176e5a865. Unique full pagination, duplicate-marker fail-closed, exact persisted Core issue_id match, no create when persisted ID is missing, no POST/PATCH on rejected cases.
+- P1-118-02: BLOCKED. A lease_validator integration port is mandatory; absent/false/exception/non-boolean results fail closed before GitHub API calls. This port is not a Core API contract. No authoritative Core validation endpoint/contract/runtime fixture is available.
+- Exact CI Run #906 / 45057857222, validate job 137316985462: 102 tests in 0.218s — SUCCESS. SOURCE_BINDING_STATUS=NOT_RUN; handoff/ACK/review-observation jobs SKIPPED. Artifact 14767952983; SHA-256 da8fc14e2d3cd8a3b8003967de88a5620645f6a97ade50bed4fc2d66987f5d8a; payload not independently parsed. Contract/unit only; Runtime Auto E2E NOT RUN.
+- Runtime dependencies remain NOT VERIFIED/BLOCKED: Core Task/Event/lease, W102 principal/Assignment/ACK, W14 Work Authority/ExecutionHostBridge/GitHub Gateway/CI, W70 approved evidence schema, W33 evidence ingress.
+- PR #68 remains OPEN / UNMERGED. Xu independent review PENDING; Vinh acceptance NOT ACCEPTED. No B-118-010 application, Main merge or release.
