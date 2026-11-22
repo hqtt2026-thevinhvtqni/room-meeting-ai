@@ -155,7 +155,10 @@ class Work118GitHubIssueAdapterTests(unittest.TestCase):
     def test_incomplete_issue_scan_fails_closed_before_create(self):
         issues = [{"number": i + 1, "title": f"Issue {i}", "body": "no task marker"} for i in range(100)]
         fake = FakeGitHub(issues)
-        adapter = GitHubIssueAdapter(fake, repository=REPOSITORY, max_issue_pages=1)
+        adapter = GitHubIssueAdapter(
+            fake, repository=REPOSITORY, max_issue_pages=1,
+            lease_validator=lambda lease_id, task: True,
+        )
         with self.assertRaises(IssueLookupIncomplete):
             adapter.mirror_core_task(core_task(), lock_lease_id="core-lock-lease-003")
         self.assertFalse(any(call[0] == "POST" for call in fake.calls))
