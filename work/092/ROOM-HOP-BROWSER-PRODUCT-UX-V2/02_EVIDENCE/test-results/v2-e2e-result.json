@@ -1,0 +1,33 @@
+{
+  "status": "PASS",
+  "checks": {
+    "T1_launch": true,
+    "T2_browser_render": true,
+    "T3_navigation": true,
+    "T4_tabs": true,
+    "T5_task_input_run": true,
+    "T6_agent_connected_working_done": true,
+    "T7_action_timeline_sequence": true,
+    "T8_human_readable_actions": true,
+    "T9_runtime_evidence": true,
+    "T10_pass_after_completion_only": true,
+    "T11_human_control_toggle": true,
+    "T12_permissions": true,
+    "T13_desktop_1920x1080": true,
+    "T14_mobile_390x844": true,
+    "T15_demo_test_browse_search_workflow": true,
+    "T16_clean_run": true,
+    "T17_isolation": true
+  },
+  "final_workflow": {
+    "agent_state": "Done",
+    "action_state": "DONE",
+    "progress": "8 / 8 actions",
+    "evidence": "6 / 6",
+    "pass": "PASS · 6 / 6 verified",
+    "timeline": "8 events"
+  },
+  "desktop": "1920x1080 PASS",
+  "mobile": "390x844 PASS",
+  "runtime_url": "http://127.0.0.1:8787/"
+}

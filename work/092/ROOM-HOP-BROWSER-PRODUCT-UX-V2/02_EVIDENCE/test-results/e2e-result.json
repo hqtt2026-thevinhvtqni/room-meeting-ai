@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "checks": {
+    "T1_start_success": true,
+    "T2_browser_ui_render": true,
+    "T3_new_tab": true,
+    "T4_url_navigation_mock": true,
+    "T5_agent_connected": true,
+    "T6_browse_sequential_pass": true,
+    "T7_search_sequential_pass": true,
+    "T8_agent_workflow_sequential_pass": true,
+    "T9_action_history_updated": true,
+    "T10_evidence_updated_per_action": true,
+    "T11_pass_done_after_completion": true,
+    "T12_mobile_responsive": true,
+    "T13_one_command_start": true,
+    "T14_scope_boundaries_untouched": true
+  },
+  "desktop": "1920x1080 PASS",
+  "mobile": "390x844 PASS",
+  "runtime_url": "http://127.0.0.1:8787/",
+  "source_checks": "PASS"
+}

@@ -1,0 +1,7 @@
+{
+  "task_first_search": {"state_sequence": ["Connected", "Working", "Done"], "final": "PASS 6 / 6 verified"},
+  "workflow_clean_retest": {"actions": 8, "evidence": "6 / 6", "passVisible": true},
+  "human_control": {"take_control": true, "run_disabled": true, "give_control_to_agent": true},
+  "navigation_tabs": {"newTab": 2, "navigated": true, "back": true, "forward": true, "architecture_view": true},
+  "browse_demo": {"actions": 3, "status": "DONE", "passVisible": true}
+}

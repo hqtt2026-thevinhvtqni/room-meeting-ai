@@ -1,0 +1,8 @@
+{
+  "browse": {"actions": ["Navigate", "Inspect", "Screenshot"], "status": "PASS"},
+  "search": {"actions": ["Navigate", "Inspect", "Type", "Click", "Extract", "Screenshot"], "status": "PASS"},
+  "agent_workflow": {"actions": ["Navigate", "Inspect", "Type", "Click", "Extract", "Screenshot", "Wait", "DONE"], "status": "PASS"},
+  "search_runtime_final": {"status": "PASS", "history_count": "6/6", "evidence_count": "6/6"},
+  "workflow_runtime_final": {"status": "PASS", "history_count": "8/8", "evidence_count": "6/6"},
+  "new_tab_navigation_retest": {"newTab": 2, "navigated": true, "back": true, "forward": true, "reloadReady": true}
+}

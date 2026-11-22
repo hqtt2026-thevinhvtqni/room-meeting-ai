@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ROOM-HOP Browser — Product UX V2</title><link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar"><div class="brand"><span class="brand-mark">R</span><div><strong>ROOM-HOP BROWSER</strong><small>AI-assisted browsing · Product UX V2</small></div></div><div class="top-right"><span class="mock-badge">MOCK ONLY</span><span class="session-id">session_092_v2</span><span class="status-dot"></span></div></header>
+<main class="app-shell">
+  <section class="browser-product">
+    <div class="browser-chrome">
+      <div class="window-row"><div class="window-controls"><i></i><i></i><i></i></div><span class="chrome-title">ROOM-HOP Browser</span><span class="chrome-mode">LOCAL SESSION · MOCK</span></div>
+      <div class="tabs-row"><div id="tabs" class="tabs"></div><button id="newTabBtn" class="new-tab" aria-label="New tab">＋</button></div>
+      <div class="toolbar"><button id="backBtn" class="chrome-btn" title="Back">←</button><button id="forwardBtn" class="chrome-btn" title="Forward">→</button><button id="reloadBtn" class="chrome-btn" title="Reload">↻</button><div class="urlbar"><span class="lock">⌁</span><input id="urlInput" aria-label="URL bar" value="https://wikipedia.org"><span class="url-state">MOCK</span></div><button class="chrome-btn" title="More">⋮</button></div>
+    </div>
+    <div class="browser-main">
+      <div class="page-column"><div class="page-status"><span class="state-dot"></span><span id="pageState">READY</span><span class="separator">·</span><span>Browser Session 01</span><span class="control-status" id="controlStatus">● Agent controlled</span></div><div id="browserContent" class="browser-viewport"></div></div>
+      <aside class="agent-rail">
+        <div class="agent-rail-head"><div><span class="eyebrow">AI AGENT</span><h1><span class="agent-orb"></span><span id="agentStateLabel">Connected</span></h1></div><button id="railCollapse" class="rail-toggle" aria-label="Toggle details">↗</button></div>
+        <div class="task-box"><label for="taskInput">WHAT DO YOU WANT ME TO DO?</label><textarea id="taskInput" rows="2">Mở Wikipedia và tìm ROOM-HOP</textarea><button id="runBtn" class="primary-btn"><span>▶</span> Run task</button></div>
+        <div class="agent-summary"><div><span class="meta-label">CURRENT ACTION</span><strong id="currentAction">Ready when you are</strong><small id="currentHumanAction">Nhập task rồi bấm Run</small></div><span id="actionState" class="state-pill idle">IDLE</span></div>
+        <div class="progress-block"><div class="progress-head"><span>PROGRESS</span><b id="progressValue">0 / 6 actions</b></div><div class="progress-track"><span id="progressBar"></span></div><div class="next-line"><span>NEXT</span><strong id="nextAction">→ Mở Wikipedia</strong></div></div>
+        <div class="rail-section timeline-section"><div class="section-head"><h2>AGENT ACTIVITY</h2><span id="timelineCount">0 events</span></div><ol id="timeline" class="timeline"><li class="empty-timeline">Agent activity sẽ xuất hiện ở đây</li></ol></div>
+        <div class="rail-section evidence-section"><div class="section-head"><h2>SESSION EVIDENCE</h2><span id="evidenceCount">0 / 6</span></div><ul id="evidence" class="evidence-list"></ul><div id="passBox" class="pass-box hidden"><strong>PASS</strong><span id="passDetail">6 / 6 verified</span></div></div>
+        <div class="rail-section permissions"><div class="section-head"><h2>AGENT PERMISSIONS</h2><span class="permission-lock">SESSION</span></div><div class="permission-grid"><span>✓ Read page</span><span>✓ Inspect</span><span>✓ Click</span><span>✓ Type</span><span>✓ Wait</span><span>✓ Extract</span><span>✓ Screenshot</span></div></div>
+      </aside>
+    </div>
+    <div class="session-bar"><div class="session-state"><span class="state-dot"></span><div><b id="sessionState">Agent is ready</b><small id="sessionSubstate">Human can start a task</small></div></div><div class="identity-strip"><span>Agent <b>● Connected</b></span><span>Browser <b>● Active</b></span><span>Engine <b>MOCK</b></span></div><div class="control-box"><span class="meta-label">CONTROL</span><strong id="controlLabel">● Agent control</strong><button id="controlBtn" class="control-btn">Take control</button></div></div>
+  </section>
+  <section class="secondary-tools"><div class="secondary-tabs"><button class="secondary-tab active" data-panel="demoPanel">Demo / Test Mode</button><button class="secondary-tab" data-panel="architecturePanel">Developer / Architecture View</button></div><div id="demoPanel" class="secondary-panel"><div><span class="eyebrow">DEMO / TEST MODE</span><h2>Try a prepared workflow</h2><p>Giữ lại 3 scenario V1 để kiểm thử nhanh. Task-first vẫn là trải nghiệm chính.</p></div><div class="demo-actions"><button class="demo-choice selected" data-scenario="search"><b>Search</b><small>Navigate · Inspect · Type · Click · Extract</small></button><button class="demo-choice" data-scenario="browse"><b>Browse</b><small>Open · Inspect · Screenshot</small></button><button class="demo-choice" data-scenario="workflow"><b>Agent Workflow</b><small>Plan · Execute · Verify · Evidence</small></button></div></div><div id="architecturePanel" class="secondary-panel hidden"><div><span class="eyebrow">DEVELOPER VIEW</span><h2>Explicit mock boundaries</h2><p>Browser product UX được thiết kế để thay Mock Engine sau này mà không đổi UI contract.</p></div><div class="architecture-flow"><span>ROOM-HOP</span><b>↓</b><span>Browser Agent API <i>:8787</i></span><b>↓</b><span>ROOM-HOP Browser</span><b>↓</b><span>Chromium Engine <i>(MOCK)</i></span><b>↓</b><span>Web <i>(MOCK)</i></span><em>NO REAL CHROMIUM · NO EXTERNAL API · NO INTERNET</em></div></div></section>
+  <footer><span>ROOM-HOP Browser Product UX V2 · Static mock website</span><span>Work 092 · Evidence-first</span></footer>
+</main><script src="app.js"></script>
+</body></html>

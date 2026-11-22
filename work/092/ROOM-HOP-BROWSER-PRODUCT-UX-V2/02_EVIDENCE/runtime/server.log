@@ -1,0 +1,5 @@
+ROOM-HOP Browser V1 Prototype listening on http://0.0.0.0:8787
+GET /api/health 200
+GET /manus-routes.json 200
+GET / 200
+E2E browser runtime navigated to http://127.0.0.1:8787/

@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "mode": "static-file://",
+  "index_html": true,
+  "internal_css": true,
+  "internal_js": true,
+  "backend_dependency": false,
+  "external_requests": false,
+  "desktop_screenshot": "static-file-desktop-1920x1080.png",
+  "mobile_screenshot": "static-file-mobile-390x844.png"
+}
