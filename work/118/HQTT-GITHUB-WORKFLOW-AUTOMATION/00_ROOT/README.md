@@ -1,8 +1,8 @@
 # W118 — HQTT GitHub Workflow Automation
 
 **Selected architecture:** A — Sandbox initiates; GitHub controls versioning.  
-**Status:** ACTIVE — BUILD / VERIFY — NOT ACCEPTED — NOT RELEASED.  
-**Implementation branch:** `work/118-auto-e2e-v2`; PR #67 remains unmerged.
+**Status:** ACTIVE — VERIFYING — NOT ACCEPTED — NOT RELEASED.  
+**Implementation branch:** `work/118-auto-e2e-v2-clean`; [PR #68](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/68) is OPEN / UNMERGED. PR #67 is superseded history.
 
 ## 1. Purpose
 
@@ -18,13 +18,14 @@ W118 owns GitHub-specific adapters and evidence only. It does not create another
 - **Core :8000:** sole canonical runtime Task/Assignment/Event authority.
 - **W102:** Agent Loop policy, identity/capability routing and Assignment decisions.
 - **W52:** provider-neutral communication contract reference (DRAFT).
-- **W12/W13:** WEE, Git/GitHub Gateway, CIAdapter and Execution Host.
+- **W14:** sole product/delivery owner for integrated Work Authority, ExecutionHostBridge, GitHub Gateway and CI path.
+- **W12/W13:** absorbed internal foundations under W14; not independent W118 integration owners.
 - **W70:** Work lifecycle, Evidence Register and read-only Dashboard projection.
 - **GitHub:** source/version, Issues/PRs, branches/commits, Actions runs and artifacts.
 
 ## 3. Official W118 documents
 
-- [TD-118-012 — Dual closed-loop architecture v1.2](../02_DEFINE/TD-118-012_KIEN-TRUC-HAI-QUY-TRINH-KHEP-KIN-SANDBOX-GITHUB.md)
+- [TD-118-012 — Dual closed-loop architecture v1.3](../02_DEFINE/TD-118-012_KIEN-TRUC-HAI-QUY-TRINH-KHEP-KIN-SANDBOX-GITHUB.md)
 - [TASK_REGISTER.json — W118 Work planning register](../04_PLAN/TASK_REGISTER.json)
 - [TASK_REGISTER.schema.json — Work planning schema](../04_PLAN/TASK_REGISTER.schema.json)
 - [W118-13..17 — Core/GitHub adapter implementation](../05_BUILD/W118-13_17_CORE-GITHUB-ADAPTERS.md)
@@ -134,3 +135,14 @@ W70 DOC-093 is DRAFT_NOT_APPROVED and is used only as a structural reference. W1
 ## Current exact-head handoff — 2026-11-22
 
 PR #68 is READY FOR REVIEW / OPEN / UNMERGED. Exact tested head `076a74d8f19e6ca63ac45ff2150910122316c049` passed 95 tests in Run #44951562713 (artifact 14725821955). W14 is the sole integrated execution owner; W12/W13 are absorbed. W14 source/runtime remains unverified. W70 DOC-093 is DRAFT_NOT_APPROVED. Xu independent review and Vinh product acceptance remain pending.
+
+
+## Current status overlay — 2026-11-22 (UTC+07:00)
+
+- Canonical candidate: PR #68, branch `work/118-auto-e2e-v2-clean`, head `c64bd6f9cb6ab4fa72cf1bbfbabfb7257a254bd1`. PR #67 is superseded.
+- Latest exact-head contract CI: [Run #880](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44993439504), validate SUCCESS; raw log confirms 95 tests in 0.293s. Artifact ID `14742494287`, SHA-256 `babe4cfffd72135e70c8623df161404ef5036dd4461d1319d43ce4eeaf9c596c`.
+- Run #880 skipped Task-to-Issue push binding and handoff/ACK/review observation jobs. Contract CI is not Runtime Auto E2E.
+- Main comparison: DIVERGED 59 ahead / 2 behind; two Main-side commits are W092-only. No rebase or merge performed.
+- P1-118-01 OPEN / NEEDS CHANGES; P1-118-02 BLOCKED; W118-TASK-015 W14 dependency BLOCKED; Runtime Auto E2E NOT VERIFIED; Xu review PENDING; Vinh acceptance NOT ACCEPTED.
+- Current Xu review routing overlay: [RR-118-001](../EVIDENCE/RR-118-001_CURRENT-XU-REVIEW-ROUTING.md). Historical XR/release/handoff snapshots still reference PR #67; use RR-118-001 to route the active review to PR #68. Gate criteria are unchanged.
+- No B-118-010, Main merge or release. W118 remains ACTIVE — NOT ACCEPTED — NOT RELEASED.
