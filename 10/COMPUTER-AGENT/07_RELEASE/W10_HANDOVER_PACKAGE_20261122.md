@@ -130,7 +130,7 @@ This session has no direct local PowerShell/desktop executor, so these steps are
 
 - Canonical branch contains the current Work 10 source, test suite, core contracts, PC Host Capability Contract, operational Dashboard and current runbooks.
 - The 30 source/test/architecture/config files independently sampled in the current reconciliation pass were exact-match between Sandbox and GitHub after the updates; all three LOCKED contracts are exact-match.
-- Current inventory: Sandbox has 168 files under `COMPUTER-AGENT/`; GitHub branch has 76; 76 paths are shared and 92 are Sandbox-only; GitHub-only paths = 0. The 93 Sandbox-only files have explicit KEEP/SANDBOX-ONLY dispositions in `06_EVIDENCE/W10_FULL_PATH_INVENTORY_DISPOSITION_20261122.md`; they include historical/debug records, original/reference files, preview/sample data, generated evidence/lock files and Python caches. Do not bulk-copy caches, locks, preview samples or unreviewed debug packages into the canonical branch.
+- Current inventory: Sandbox has 169 files under `COMPUTER-AGENT/`; GitHub branch has 77; 77 paths are shared and 92 are Sandbox-only; GitHub-only paths = 0. The 93 Sandbox-only files have explicit KEEP/SANDBOX-ONLY dispositions in `06_EVIDENCE/W10_FULL_PATH_INVENTORY_DISPOSITION_20261122.md`; they include historical/debug records, original/reference files, preview/sample data, generated evidence/lock files and Python caches. Do not bulk-copy caches, locks, preview samples or unreviewed debug packages into the canonical branch.
 - No GitHub-only Work 10 file remains in the inventory snapshot.
 - Branch history is preserved; no force push, main merge, deployment or release was performed.
 
