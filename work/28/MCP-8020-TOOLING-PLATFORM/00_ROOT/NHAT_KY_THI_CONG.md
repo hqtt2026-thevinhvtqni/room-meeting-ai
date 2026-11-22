@@ -1528,3 +1528,49 @@ PR #61 remains OPEN / UNMERGED. No deployment, Core mutation, listener restart o
 **CANONICAL PLAN/RUNBOOK READBACK PASS / SANDBOX TEST-PLAN PROBE PASS / SANDBOX PYTEST EXECUTION BLOCKED — NOT RUN / DEPLOYED TOOLS-LIST + BUILD PROVENANCE NOT VERIFIED / LIVE E2E BLOCKED / PR #69 DRAFT / EXECUTION GATE CLOSED / NOT RELEASED.**
 
 **Signature:** [KÝ: XU | TEMPORARY WORK COORDINATOR]
+
+
+## 2026-11-22 14:47–14:52 UTC+07 — JRN-W28-042 — WP1 source-contract reconciliation: 54 catalog vs 31 unified server registry vs 13 registration adapter
+
+**Người thực hiện:** Xu — temporary Work 28 coordinator / technical execution owner  
+**Canonical branch:** `work/28-mcp-tooling-platform`  
+**Scope:** Source-only READ / TRACE / ANALYZE. No runtime listener started, no product code changed.
+
+### READ — exact source files and Git blob SHA
+| File | Blob SHA | What source declares |
+|---|---|---|
+| `04_CODE/mcp8020_catalog_v54.py` | `e51251f33ca8beb0d181cc8abdcb95875101faf1` | `CATALOG_VERSION=54.0.0-draft1`; 54 ToolSpec design entries |
+| `04_CODE/mcp8020_unified_registry_v1.py` | `b3b975c7ccc16d76595bdb6fa695a088639a4e2c` | `CONTRACT_VERSION=1.0.0`; 31 expected names = 18 legacy + 3 GitHub + 10 extensions |
+| `04_CODE/mcp_tool_registration_v1.py` | `b9f306c9e4765117af517be578139faabe8bab01` | 13 required v1 handlers; optional discovery adds 2 |
+| `04_CODE/mcp8020_unified_server_v1.py` | `65ab9cd41da231c97e5094cb6fab0a6b9c3c84cb` | Local MCP Server factory imports the 31-name unified registry and maps names to injected providers |
+| `05_TEST/test_mcp8020_unified_server_stdio_contract_v1.py` | `35dbef31e061d7ae15fb060c38888e3538118b58` | Real stdio subprocess test compares names and schemas against the 31-name registry |
+
+### TRACE — concrete inconsistencies
+1. The v54 catalog and v1 unified registry are distinct inventories with different names, groupings, schema shapes and contract versions. They are not one registry merely because both exist in the same Work.
+2. The v1 server factory imports `TOOL_SPECS` from `mcp8020_unified_registry_v1.py`, not the v54 catalog.
+3. The separate `mcp_tool_registration_v1.py` registers 13 required methods (+2 optional discovery) and does not itself import or validate the v54 54-tool catalog.
+4. The stdio test uses an `InertProvider` whose dynamic handler returns `{"accepted": true}`, but the test only calls `session.list_tools()`; it compares the 31 names and schemas and does not invoke tool handlers. Its own docstring correctly scopes it to transport/schema contract only.
+5. The server factory docstring says it does not open a listener. The v1 code therefore does not establish a deployed service or live :8030 registry. The current architecture also quarantines historical :8020; this source must not be used as authority to activate that listener.
+
+### ANALYZE
+- There are at least three source-side registry/registration surfaces: 54 design catalog entries, 31 unified server entries and 13 required v1 registration adapter methods (+2 optional discovery).
+- The 31-tool stdio test is valid evidence for local MCP transport and schema publication against its own registry only; it is not proof of parity with the v54 catalog, real provider execution, Core authorization, or deployed runtime.
+- A 54/31/13 count comparison alone cannot decide which surface is authoritative. Names, schemas, handler mapping, provider boundary, contract version and deployment identity must be reconciled together.
+- Contract version evidence is currently split: catalog draft `54.0.0-draft1`, unified registry `1.0.0`; the registration module does not declare a single global contract version. No approval evidence authorizing silent version unification was found in this source pass.
+
+### DECIDE
+- **G1 remains NOT VERIFIED.** Do not select or rewrite a canonical registry in code without the approved architecture decision and independent Ka review.
+- Preserve the v54 catalog as a design artifact; preserve v1 registry/server factory as a separate contract/test surface until formally reconciled.
+- Do not call the 31-tool test a 54-tool parity test or a live tools/list capture.
+- No activation/probe of quarantined historical :8020; no live traffic, deployment or execution.
+
+### NEXT
+1. Trace which server factory/registration module is actually used by the approved clean deployment source and exact process/build identity.
+2. Build a name-by-name matrix for v54 ↔ v1 registry ↔ registration adapter ↔ actual provider methods ↔ tests; mark absent/duplicate/renamed/schema mismatch.
+3. Prepare a decision brief for Ka only after source mapping is complete; do not claim Ka approval.
+4. Keep G1 NOT VERIFIED until raw deployed tools/list + schemas and source/build identity are linked.
+
+### STATUS
+**SOURCE READBACK PASS / 54-vs-31-vs-13 REGISTRY SURFACES CONFIRMED / LOCAL 31-TOOL STDIO TEST SCOPE LIMITED TO LIST+SCHEMA / LIVE REGISTRY PARITY NOT VERIFIED / G1 NOT VERIFIED / NO CODE OR RUNTIME CHANGE.**
+
+**Signature:** [KÝ: XU | TEMPORARY WORK COORDINATOR]
