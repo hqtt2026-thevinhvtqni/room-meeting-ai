@@ -168,3 +168,10 @@ Review focus now includes RA-118-002 addendum v1.3: validate the seven owner con
 PR inventory: #68 is current clean implementation candidate; #67 is CLOSED / UNMERGED; #66 remains OPEN / UNMERGED as historical pilot pending Xu's explicit decision on closure (per prior owner comment). No PR closure/merge requested by this routing update.
 
 Current disposition unchanged: P1-118-01 adapter-contract PASS only; P1-118-02 BLOCKED; Runtime Auto E2E NOT RUN; Vinh acceptance NOT ACCEPTED.
+## Xu review routing addendum — Entry 058 (2026-11-23)
+
+Please review RA-118-002 addendum v1.4 and Entry 058. Key decision: Work32 DOC-118 is Xu-approved architecture and the PR #52/#54 code is a promising Core execution Grant candidate, but both PRs remain draft/unmerged and exact-head release gates failed. Run #570 confirms runner identity but Core invalid-credential probe returned 404, so live Core mount remains unverified.
+
+Crucial scope distinction: Work32 Grant purpose is pytest_run and its validator is for the Execution Host identity. It is not a Core Task-scoped GitHub Issue mirror lock lease; do not approve its use for W118 Issue POST/PATCH. P1-118-02 remains BLOCKED pending a separate Core action-scoped mirror lease or an owner-approved equivalent.
+
+Work32 Grant may be considered only for W118 protected execution integration after W14/Core approval, exact source/security review, deployment and live runtime proof. Work28 and Work1111 candidates remain unapproved/unverified as detailed in Entry 058. No external Work changes or binding were made.
