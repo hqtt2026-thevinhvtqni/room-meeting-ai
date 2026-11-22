@@ -135,6 +135,17 @@ A task reaching SUCCEEDED is not a Work acceptance PASS. Acceptance requires com
 
 ## 8. Explicit non-claims and release boundary
 
+### 8.1 Existing Core V1.2 candidate — reuse evidence, not canonical implementation
+A read-only GitHub source reconciliation on 2026-11-23 found:
+- Current `main` HEAD `0902cd26518673aa078bb4c7c7899e1e4a95656a` contains `CORE_EXECUTION_AUTHORITY_V1_2_DEPLOYMENT.md` (blob `ce130f1f9a95daeaafff75ef37eacd4dffc797e2`) describing five execution-grant routes.
+- The same `main` source has `room_hop_mcp/core_http_main.py` blob `8dd6bb5ea500026d932ca52eb6079c980d722ab0`, whose `build_app()` returns `create_http_app(service)`; its `room_hop_mcp/adapter/http_server.py` blob `54cb3ecbce2e6b13083f31c14f0c1f0738f1457d` does not mount the execution-authority router. Main does not contain `core/execution_authority.py` or `room_hop_mcp/adapter/execution_authority_http.py` at the inspected paths. This is a static source finding; no endpoint was called.
+- PR #48 / branch `work/w1111-core-execution-authority-v1-2` contains reusable candidate modules (Core authority blob `163b126178b67c6e0a3f68ba33eaf7b9e6d91503`, HTTP adapter blob `48e05c0f5d8121e35ba9bea01ebd8f338529073c`) and historical CI claims. PR remains OPEN/DRAFT/NOT MERGED, has no submitted reviews or inline review threads in the inspected GitHub response, and the branch comparison against current main is DIVERGED (157 ahead / 986 behind at this inspection).
+- A source-level defect is present in candidate `ExecutionAuthority.record_run()`: it validates that submitted `source_sha256` is well-formed but does not compare it with the immutable source SHA bound to the issued grant/work policy. The candidate test explicitly submits `b`×64 when the policy is `a`×64 and expects HTTP 200. This contradicts exact-source binding and is a release blocker.
+- PR #48 also bundles W12/W13 host code and historical deployment assumptions. Because W14 is now the sole consolidated Host owner, the PR must not be merged wholesale or treated as W14 canonical source. Any reusable Core module must be selectively reconciled, fixed, re-tested on a fresh current-main branch and reviewed; no parallel Core may be created.
+
+Disposition: Core V1.2 is a reusable but defective, unmerged candidate — NOT current-main implementation, NOT deployed proof, NOT release-approved. The current Core source and candidate are separate provenance objects.
+
+
 - This V1.3 contract is an architecture baseline only. It does not prove implementation, deployment, service health, Agent enrollment, ACK, HostPort compatibility, browser/Computer execution or E2E.
 - Existing Core identity/meeting components are not presumed to implement execution grants or an authoritative task ledger.
 - Existing W14/W13 endpoints or historical attestations are not presumed to be the current canonical deployed Host until source/release provenance is reconciled.
