@@ -1664,3 +1664,48 @@ PR #61 remains OPEN / UNMERGED. No deployment, Core mutation, listener restart o
 6. Produce a single owner handoff with commits, workflow runs, artifacts, tests, known gaps and rollback instructions.
 
 **STATUS:** AUTONOMOUS EXECUTION AUTHORIZED / WP2 CANDIDATE CI PASS BUT NOT YET INTEGRATED ON CURRENT CANONICAL TIP / WP1 G1 NOT VERIFIED / WP3 Q4 BLOCKED / LIVE E2E BLOCKED / EXECUTION GATE CLOSED / NOT RELEASED.
+
+
+## 2026-11-23 01:35 UTC+07:00 — JRN-W28-045 — WP2 recovery integrated on canonical branch after exact-SHA Auto E2E
+
+**Role:** Vi | CODER — implementation and integration owner  
+**Signature:** [KÝ: VI | CODER]
+
+### BUILD / INTEGRATION
+- Created clean feature branch `vi/work28-auto-e2e-integration-20261123` from canonical journal commit `ab40590cebd557a41bf739ae1bebb9b088d5186c`.
+- Ported exactly six WP2 paths from the newer PR #69 candidate without copying its stale journal or overwriting the three newer canonical journal-only commits.
+- Opened PR #70 against the latest canonical baseline. PR head tested: `42d9c43ec4dbd573b1dad5318cfa0bf10433eab0`.
+- GitHub Actions Auto E2E run `45054861801` (run #387) completed **SUCCESS** on the exact PR head. All five jobs succeeded:
+  1. `unit-regression-tests`
+  2. `execution-host-lifecycle-linux`
+  3. `execution-host-lifecycle-windows`
+  4. `immutable-source-artifact`
+  5. `automatic-e2e-gate-report`
+- Artifacts retained:
+  - Source artifact ID `14767445570`, archive digest `sha256:dc1743f85d42e9c026f02620412480a429d5babd4a54baebb5de3e8a9b025d90`.
+  - Auto E2E report artifact ID `14766786821`, ZIP digest `sha256:518c03ccbe6f6f8d204950e5ae82e538b72f96497aa95c7de819d9381f1160d2`.
+- Merged PR #70 after exact-head CI success using expected head SHA. Merge commit: `2d006dcb5aaac5624d45cf88b173bf59d0dce55a`.
+- Verified canonical branch `work/28-mcp-tooling-platform` now points to the merge commit and all six code/test/workflow blobs exactly match the tested PR candidate:
+  - workflow `8876f1a9096ec54e5a78a073820755087e67ecbf`
+  - `execution_host/host.py` `0ee65126549c86caeb65fb0662b046d394fa8a03`
+  - `execution_host/host_run.py` `63bb92fe9e8f179a2f6ae4783f05c65bc841fd0d`
+  - `execution_host/process_job.py` `a8f56a2487dae72cc14a28926037943243907db3`
+  - `tests/test_process_job.py` `3be6003844a0a1f32dfb3308b7e1ef60f0a14d5b`
+  - `tests/test_wp2_service_mapping_and_race.py` `0e0d0f313df9d96bc0a87523b703130dc2f8bfe1`
+
+### VERIFY / LIMITATIONS
+- **PASS:** exact PR-head Auto E2E CI, Linux lifecycle, Windows lifecycle, immutable source artifact retest and machine report job.
+- **PASS:** post-merge canonical branch identity and exact six-file blob parity with the tested PR head.
+- No separate push-triggered workflow run or commit status was returned for merge commit `2d006dcb...`; the verified test run is explicitly tied to pre-merge source SHA `42d9c43...`, whose six changed blobs are unchanged in the merge commit.
+- The machine report job's contract keeps deployed MCP → Core → Runtime E2E BLOCKED; this is not live product acceptance.
+- No claim is made for live MCP 8030 process/build identity, raw tools/list parity, trusted Core WorkContext, Runtime/Execution Host deployment identity, OS isolation, protected evidence persistence or checksum readback.
+- No production listener was restarted; no Core state was mutated; historical MCP :8020 remains DO NOT USE.
+
+### STATUS / NEXT
+- WP2 service lifecycle recovery: **INTEGRATED / EXACT-SHA CI PASS** on canonical branch.
+- WP1 G1 registry/runtime provenance: **NOT VERIFIED**; JRN-W28-043 provider-composition discrepancy remains open.
+- WP3-F01 Q4 upload capability grant: **NOT APPROVED** per Ka's review and Xu's 2026-11-22 revised proposal; no upload implementation or side effects are authorized until decision owner approves the exact contract.
+- Live deployed product E2E: **BLOCKED**. Execution Gate: **CLOSED**. Release: **NOT_RELEASED**.
+- Continue WP1 startup call-site/provider composition trace, registry matrix and evidence plan. Continue WP4/WP5/WP6 only after their exact current contracts and live dependencies are traced; do not bypass Core authorization.
+
+**Signature:** [KÝ: VI | CODER]
