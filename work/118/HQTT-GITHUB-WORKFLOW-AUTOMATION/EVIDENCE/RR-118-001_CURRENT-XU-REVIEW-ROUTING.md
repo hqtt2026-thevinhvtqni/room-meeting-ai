@@ -85,3 +85,12 @@ Their acceptance criteria remain useful, but their candidate references and snap
 - P1-118-01 OPEN / NEEDS CHANGES; P1-118-02 BLOCKED; W118-TASK-015 W14 dependency BLOCKED; Runtime Auto E2E NOT VERIFIED.
 - Entry 049 revalidated the duplicate Issue marker / Core `task.issue_id` binding gap and non-empty-string-only lease check at exact branch HEAD. No implementation change under freeze.
 - W118 ACTIVE — NOT ACCEPTED — NOT RELEASED. B-118-010 PREPARED / NOT APPLIED. No Main merge or release.
+
+
+## Cross-Work authority-chain findings — 2026-11-22 (Journal Entry 051)
+
+- **Core / W70:** DOC-071/072 remain bounded evidence of missing/unverified Work authority API, Work-scoped authorization, persistence/audit and accountable Core owner in inspected source. Draft target contracts are not runtime proof.
+- **W14 / W52:** inspected W14 one-shot /execute path is not a proven implementation of W52 persistent HostPort/RpcPort. Recipient-authenticated ACK and ACK-before-host-side-effect are NOT PROVEN.
+- **W33:** authoritative Work evidence ingress remains NOT VERIFIED; Meeting transcript/browser artifact readback is not equivalent.
+- **W102:** no fresh implementation/source acceptance baseline established in this pass; keep NOT VERIFIED.
+- **W118 disposition:** P1-118-02 and W14 dependency BLOCKED; W52 dispatch/ACK and W33 evidence ingress NOT PROVEN; Runtime Auto E2E NOT VERIFIED. No implementation workaround is authorized. See journal Entry 051 for source references and scope limits.
