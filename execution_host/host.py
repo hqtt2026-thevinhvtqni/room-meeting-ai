@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import shutil
 import subprocess
+import threading
 from dataclasses import replace
 from datetime import datetime, timezone
 from pathlib import Path
@@ -45,6 +46,9 @@ class ExecutionHost:
         self.ci = ci
         self.runtime_identity = runtime_identity or RuntimeIdentity()
         self.processes: dict[str, ManagedProcess] = {}
+        # Serialize registry transitions so same-name starts/stops cannot orphan a process.
+        self._processes_lock = threading.RLock()
+        self._service_cleanup_blocked: set[str] = set()
 
     def identity(self) -> dict[str, Any]:
         return self.runtime_identity.as_dict()
@@ -290,6 +294,28 @@ class ExecutionHost:
             ),
         )
 
+    def _cleanup_service_entry(self, managed: Any) -> tuple[bool, dict[str, Any], int | None]:
+        """Clean a registry entry without discarding its handle on uncertainty."""
+        if isinstance(managed, ManagedProcess):
+            result = managed.cleanup(terminate_first=True, wait_timeout=5.0)
+            return result.process_reaped, result.as_dict(), managed.process.returncode
+
+        process = managed
+        if process.poll() is None:
+            self._cleanup_process(process, terminate_first=True)
+        leader_reaped = process.poll() is not None
+        return False, {
+            "process_reaped": False,
+            "leader_reaped": leader_reaped,
+            "process_tree_verified": False,
+            "members": None,
+            "job_object": "NOT_ATTACHED",
+            "notes": [
+                "legacy_unmanaged_process_cleanup",
+                "process_tree_membership_unknown_fail_closed",
+            ],
+        }, process.returncode
+
     def start_service(
         self,
         name: str,
@@ -298,24 +324,9 @@ class ExecutionHost:
     ) -> dict[str, Any]:
 
         _, workspace, _ = validate_context(ctx)
-
         args = validate_command(command)
 
-        existing = self.processes.get(name)
-
-        if existing and existing.poll() is None:
-            return {
-                "status": "PASS",
-                "name": name,
-                "pid": existing.pid,
-                "already_running": True,
-                "execution_id": ctx.execution_id,
-                "job_object": getattr(existing, "job_object", "NOT_ATTACHED"),
-                **self.identity(),
-            }
-
         env = safe_env()
-
         env.update(
             {
                 "ROOM_HOP_EXECUTION_ID": ctx.execution_id,
@@ -323,34 +334,90 @@ class ExecutionHost:
             }
         )
 
-        # Job Object (Windows) / session leader (POSIX) at spawn — Xu service path.
-        # Fail-closed mapping (WP2): a containment failure at spawn must surface
-        # as a structured BLOCKED result, never as an uncaught OSError, so no
-        # caller can mistake a failed spawn for a successful start.
-        try:
-            managed = spawn_managed_service(args, cwd=workspace, env=env)
-        except JobObjectUnavailable as exc:
-            return {
-                "status": "BLOCKED",
-                "name": name,
-                "blocker": getattr(exc, "blocker", "job_object_attach_failed"),
-                "notes": list(getattr(exc, "notes", ())),
-                "process_reaped": bool(getattr(exc, "process_reaped", False)),
-                "pid": None,
-                "execution_id": ctx.execution_id,
-                "job_object": "NOT_ATTACHED",
-                **self.identity(),
-            }
-        self.processes[name] = managed
+        # Hold the registry lock across inspect -> stale cleanup -> spawn -> register.
+        # This deliberately serializes service starts/stops to prevent same-name races.
+        with self._processes_lock:
+            existing = self.processes.get(name)
+            if existing and existing.poll() is None and name not in self._service_cleanup_blocked:
+                return {
+                    **self.identity(),
+                    "status": "PASS",
+                    "name": name,
+                    "pid": existing.pid,
+                    "already_running": True,
+                    "execution_id": ctx.execution_id,
+                    "job_object": getattr(existing, "job_object", "NOT_ATTACHED"),
+                }
 
-        return {
-            "status": "PASS",
-            "name": name,
-            "pid": managed.pid,
-            "execution_id": ctx.execution_id,
-            "job_object": managed.job_object,
-            **self.identity(),
-        }
+            if existing is not None:
+                try:
+                    reaped, cleanup, returncode = self._cleanup_service_entry(existing)
+                except Exception as exc:
+                    reaped = False
+                    cleanup = {
+                        "process_reaped": False,
+                        "notes": [f"cleanup_exception:{type(exc).__name__}"],
+                    }
+                    returncode = getattr(getattr(existing, "process", existing), "returncode", None)
+                if not reaped:
+                    self._service_cleanup_blocked.add(name)
+                    return {
+                        **self.identity(),
+                        "status": "BLOCKED",
+                        "name": name,
+                        "blocker": "existing_service_cleanup_unverified",
+                        "cleanup": cleanup,
+                        "returncode": returncode,
+                        "pid": getattr(existing, "pid", None),
+                        "execution_id": ctx.execution_id,
+                    }
+                # Only release the old handle after the entire process tree is reaped.
+                if self.processes.get(name) is existing:
+                    self.processes.pop(name, None)
+                self._service_cleanup_blocked.discard(name)
+
+            # Job Object (Windows) / session leader (POSIX) is established at spawn.
+            # Containment failure is returned as structured BLOCKED; no registry entry.
+            try:
+                managed = spawn_managed_service(args, cwd=workspace, env=env)
+            except JobObjectUnavailable as exc:
+                return {
+                    **self.identity(),
+                    "status": "BLOCKED",
+                    "name": name,
+                    "blocker": getattr(exc, "blocker", "job_object_attach_failed"),
+                    "notes": list(getattr(exc, "notes", ())),
+                    "process_reaped": bool(getattr(exc, "process_reaped", False)),
+                    "pid": None,
+                    "execution_id": ctx.execution_id,
+                    "job_object": "NOT_ATTACHED",
+                }
+            except OSError as exc:
+                # Preserve generic spawn failures as structured BLOCKED results.
+                # Unknown reap state remains None; never manufacture a cleanup PASS.
+                process_reaped = getattr(exc, "process_reaped", None)
+                return {
+                    **self.identity(),
+                    "status": "BLOCKED",
+                    "name": name,
+                    "blocker": "service_spawn_failed",
+                    "spawn_error_type": type(exc).__name__,
+                    "notes": list(getattr(exc, "notes", ())),
+                    "process_reaped": process_reaped if isinstance(process_reaped, bool) else None,
+                    "pid": None,
+                    "execution_id": ctx.execution_id,
+                    "job_object": "NOT_ATTACHED",
+                }
+            self.processes[name] = managed
+
+            return {
+                **self.identity(),
+                "status": "PASS",
+                "name": name,
+                "pid": managed.pid,
+                "execution_id": ctx.execution_id,
+                "job_object": managed.job_object,
+            }
 
     def service_status(
         self,
@@ -358,25 +425,47 @@ class ExecutionHost:
         ctx: WorkContext,
     ) -> dict[str, Any]:
 
-        process = self.processes.get(name)
+        with self._processes_lock:
+            process = self.processes.get(name)
+            if process is None:
+                status = "STOPPED"
+                pid = None
+                returncode = None
+                members = 0
+            else:
+                pid = process.pid
+                returncode = process.poll()
+                if name in self._service_cleanup_blocked:
+                    status = "BLOCKED"
+                    try:
+                        members = process.members_count() if isinstance(process, ManagedProcess) else None
+                    except Exception:
+                        members = None
+                elif returncode is None:
+                    status = "PASS"
+                    members = process.members_count() if isinstance(process, ManagedProcess) else None
+                elif isinstance(process, ManagedProcess):
+                    try:
+                        members = process.members_count()
+                    except Exception:
+                        members = None
+                    # A dead leader is not STOPPED while descendants remain or
+                    # membership cannot be proven empty.
+                    status = "STOPPED" if members == 0 else "BLOCKED"
+                else:
+                    members = None
+                    status = "PASS" if returncode is None else "BLOCKED"
 
-        return {
-            "status": (
-                "PASS"
-                if process
-                and process.poll() is None
-                else "STOPPED"
-            ),
-            "name": name,
-            "pid": process.pid if process else None,
-            "returncode": (
-                process.poll()
-                if process
-                else None
-            ),
-            "execution_id": ctx.execution_id,
-            **self.identity(),
-        }
+            return {
+                **self.identity(),
+                "status": status,
+                "name": name,
+                "pid": pid,
+                "returncode": returncode,
+                "members": members,
+                "readiness": "NOT_CHECKED",
+                "execution_id": ctx.execution_id,
+            }
 
     def stop_service(
         self,
@@ -384,38 +473,43 @@ class ExecutionHost:
         ctx: WorkContext,
     ) -> dict[str, Any]:
 
-        managed = self.processes.pop(name, None)
+        with self._processes_lock:
+            managed = self.processes.get(name)
+            if managed is None:
+                return {
+                    **self.identity(),
+                    "status": "STOPPED",
+                    "name": name,
+                    "execution_id": ctx.execution_id,
+                }
 
-        if not managed:
+            try:
+                reaped, cleanup, returncode = self._cleanup_service_entry(managed)
+            except Exception as exc:
+                reaped = False
+                cleanup = {
+                    "process_reaped": False,
+                    "notes": [f"cleanup_exception:{type(exc).__name__}"],
+                }
+                returncode = getattr(getattr(managed, "process", managed), "returncode", None)
+
+            if reaped:
+                self._service_cleanup_blocked.discard(name)
+                if self.processes.get(name) is managed:
+                    self.processes.pop(name, None)
+            else:
+                self._service_cleanup_blocked.add(name)
+
             return {
-                "status": "STOPPED",
-                "name": name,
-                "execution_id": ctx.execution_id,
                 **self.identity(),
+                "status": "PASS" if reaped else "BLOCKED",
+                "blocker": None if reaped else "service_cleanup_unverified",
+                "name": name,
+                "returncode": returncode,
+                "execution_id": ctx.execution_id,
+                "process_reaped": reaped,
+                "cleanup": cleanup,
             }
-
-        cleanup: dict = {}
-        if isinstance(managed, ManagedProcess):
-            result = managed.cleanup(terminate_first=True, wait_timeout=5.0)
-            cleanup = result.as_dict()
-            reaped = result.process_reaped
-            returncode = managed.process.returncode
-        else:
-            process = managed
-            if process.poll() is None:
-                self._cleanup_process(process, terminate_first=True)
-            reaped = process.poll() is not None
-            returncode = process.returncode
-
-        return {
-            "status": "PASS" if reaped else "FAILED",
-            "name": name,
-            "returncode": returncode,
-            "execution_id": ctx.execution_id,
-            "process_reaped": reaped,
-            "cleanup": cleanup,
-            **self.identity(),
-        }
 
     def git_validate(self, ctx):
         return GitAdapter(ctx).validate()
