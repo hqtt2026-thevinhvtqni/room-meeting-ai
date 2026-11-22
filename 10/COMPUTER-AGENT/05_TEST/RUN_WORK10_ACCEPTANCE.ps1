@@ -39,7 +39,8 @@ $report = [ordered]@{
     browser_e2e_exit_code = $null
     suite_log = $suiteLog
     browser_e2e_log = $browserLog
-    production_v8_key_configured = $false
+    production_v8_hmac_env_present = $false
+    production_v8_trust_validation = "NOT_RUN"
     room_hop_integration = "NOT_VERIFIED"
     linux_cgroup_v2 = "NOT_APPLICABLE_TO_WINDOWS_HOST"
     failure_reason = $null
@@ -90,7 +91,7 @@ try {
     try { $report.git_commit = (& git -C $WorkRoot rev-parse HEAD 2>$null | Out-String).Trim() } catch { $report.git_commit = "UNKNOWN" }
 
     $envKey = $env:COMPUTER_AGENT_V8_HMAC_KEY
-    $report.production_v8_key_configured = -not [string]::IsNullOrWhiteSpace($envKey)
+    $report.production_v8_hmac_env_present = -not [string]::IsNullOrWhiteSpace($envKey)
     $envKey = $null
 
     $launcherFiles = @(
