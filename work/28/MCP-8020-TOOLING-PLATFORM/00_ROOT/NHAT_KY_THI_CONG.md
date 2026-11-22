@@ -1384,3 +1384,61 @@ PR #61 remains OPEN / UNMERGED. No deployment, Core mutation, listener restart o
 **PR #69 EXACT-HEAD CI RUN #44977448394 PASS / LIVE DEPLOYED E2E BLOCKED / WP2 INDEPENDENT QA AND SECURITY APPROVAL PENDING / WP3-F01 Q4 DESIGN REVISION PREPARED BUT NOT APPROVED / IMPLEMENTATION BLOCKED / NOT RELEASED.**
 
 **Signature:** [KÝ: XU | TEMPORARY WORK COORDINATOR]
+
+
+## 2026-11-22 — JRN-W28-039 — Xu kiểm chứng WP1/WP4/WP5 và ổn định CI trigger
+
+**Người thực hiện:** Xu — temporary Work 28 coordinator / technical execution owner  
+**Canonical branch before commit:** `work/28-mcp-tooling-platform`  
+**Latest candidate PR head tested:** `b788355b045e2937f97cbb7b24d29d45961416a2`
+
+### VERIFY — PR #69 exact-head CI
+- GitHub Actions run `44977854122` completed SUCCESS on PR head `b788355b045e2937f97cbb7b24d29d45961416a2`.
+- Jobs SUCCESS: Linux lifecycle, Windows lifecycle, full unit/regression, immutable exact-SHA source artifact, automatic E2E gate report job.
+- The immutable source snapshot used by the workflow report is merge commit `1ef8fa8e4c5c456c69d01293a9db9bb423bbcbf0`.
+- Artifacts: `work28-source-artifact-1ef8fa8e4c5c456c69d01293a9db9bb423bbcbf0` (ID `14737010217`); `work28-auto-e2e-report-44977854122` (ID `14736541469`).
+- E2E report remains BLOCKED for deployed MCP/Core/Runtime identity, trusted Core WorkContext, approved Execution Host/isolation attestation and full request-to-protected-evidence readback. CI success is not live product acceptance.
+
+### CI trigger correction
+- During branch synchronization, an intermediate workflow edit produced invalid YAML at commit `d6b868f0356292e3e963c301c0f253ab68d5e624`; push run `44977828182` failed before creating jobs. This was caught by reading back the workflow, not treated as a product test result.
+- Corrected path-filter syntax in commit `b788355b045e2937f97cbb7b24d29d45961416a2`; GitHub then created PR workflow run `44977854122`, which passed all configured CI jobs.
+- Updated canonical workflow to trigger source CI on Work 28 executable code/test paths, root execution/Core/runtime code, requirements and the workflow itself. Journal, evidence and plan-only edits no longer trigger the full code CI. This preserves exact-source test evidence while avoiding repeated full runs for append-only journal updates.
+- The same scoped filter is present on the candidate branch and was exercised by run `44977854122`.
+
+### WP1 — source-side registry inventory
+- `mcp8020_catalog_v54.py` contains 54 ToolSpec entries: 24 marked IMPLEMENTED and 30 marked NOT_IMPLEMENTED. The 24 marked implemented are room and Sandbox file/metadata operations; the 30 not implemented include seven execution/evidence operations and the computer/browser tool family.
+- `mcp8020_unified_registry_v1.py` defines a separate 31-name prepared registry and explicitly says it does not prove live registration.
+- `mcp_tool_registration_v1.py` defines a third v1 registration surface: 13 required tools plus up to 2 optional discovery tools, with injected providers.
+- No current live deployed tools/list capture tied to a verified process/build identity proves which registry is authoritative or that schemas/handlers match. These are source-side contracts, not runtime parity evidence.
+- **G1 remains NOT VERIFIED** until one canonical registry/version is declared and exact deployed tools/list parity is proven.
+
+### WP4 — Runtime MCP / Execution Gateway
+- `runtime_tools_v1.py` is an adapter-only layer; it calls an injected Core function and does not execute processes.
+- `mcp8020_w13_core_client_v1.py` explicitly says STAGED / NOT WIRED; its run registry is in-memory and cancel is BLOCKED at the synchronous bridge boundary.
+- `mcp8020_w13_execute_envelope_v1.py` validates inputs then explicitly refuses with `W13_SAFE_SERVER_SIDE_ENTRYPOINT_ADAPTER_NOT_IMPLEMENTED`; it does not manufacture a legacy envelope.
+- `mcp8020_execution_gateway_v54.py` is protocol-complete but deliberately unwired; its default client returns BLOCKED.
+- No clean deployed Runtime MCP identity, source/build digest, health/readiness or live contract evidence was found. **G4 remains NOT VERIFIED.**
+
+### WP5 — Core authority
+- `mcp8020_core_authority_authorizer_v1.py` explicitly states STAGED / NOT WIRED into MCP registration or the v54 catalog.
+- `mcp8020_core_execution_session_v1.py` is also staged/not wired; local tests of its candidate do not prove deployed Core authorization.
+- The v1 RuntimeTools adapter requires an injected authenticated Core transport, but no deployed trusted principal/WorkContext route evidence is attached to the current E2E workflow.
+- Issue #26 remains OPEN and records the missing live authenticated MCP → Core → Execution Host → evidence chain. **G5 remains NOT VERIFIED.**
+
+### DECIDE
+- Keep G1, G4 and G5 NOT VERIFIED; do not promote status from source presence or local CI.
+- Keep WP3-F01 implementation blocked until Ka independently approves the revised Q4 grant design. The design record is PROPOSED only.
+- Keep PR #69 DRAFT and do not merge while An independent QA and Ka approval are unavailable.
+- Work remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED.
+
+### NEXT
+1. Complete the exact-head PR #69 workflow after canonical workflow synchronization; retain the candidate branch as a reviewable integration slice.
+2. Continue WP0 deployed Build MCP process/build identity and tools/list provenance; reconcile the service identity returned by the supporting connector with the deployed build evidence without assuming they are the same service.
+3. Resolve the single authoritative registry/version and prove tools/list/schema/handler parity.
+4. Keep Runtime MCP and Core integration blocked until an approved server-side route, trusted principal/WorkContext and safe W13 entrypoint adapter are evidenced.
+5. Await independent review/QA before WP2 acceptance or WP3 implementation.
+
+### STATUS
+**PR #69 EXACT-HEAD CI RUN #44977854122 PASS / WORKFLOW PATH FILTER CORRECTED / WP1 REGISTRY PARITY NOT VERIFIED / WP4 RUNTIME NOT VERIFIED / WP5 CORE AUTHORITY NOT VERIFIED / WP3-F01 Q4 PROPOSED NOT APPROVED / LIVE E2E BLOCKED / PR DRAFT — DO NOT MERGE / NOT RELEASED.**
+
+**Signature:** [KÝ: XU | TEMPORARY WORK COORDINATOR]
