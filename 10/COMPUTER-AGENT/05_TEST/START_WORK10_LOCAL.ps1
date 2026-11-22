@@ -92,6 +92,8 @@ try {
 
     $apiArguments = '"' + $apiScript + '"'
     $api = Start-Process -FilePath $PythonPath -ArgumentList $apiArguments -WorkingDirectory $WorkRoot -PassThru -WindowStyle Hidden -RedirectStandardOutput $apiOut -RedirectStandardError $apiErr
+    # Only the Agent API receives the bearer token; the static Dashboard server must not inherit it.
+    $env:COMPUTER_AGENT_API_TOKEN = $null
 
     $dashboardArguments = '-m http.server 3010 --bind 127.0.0.1 --directory "' + $dashboardDir + '"'
     $dashboard = Start-Process -FilePath $PythonPath -ArgumentList $dashboardArguments -WorkingDirectory $WorkRoot -PassThru -WindowStyle Hidden -RedirectStandardOutput $dashboardOut -RedirectStandardError $dashboardErr
