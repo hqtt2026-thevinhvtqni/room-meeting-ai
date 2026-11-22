@@ -2094,3 +2094,15 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - **W33:** Branch reconstruction proposal blob 7e0d1d1bef9b8549674ea99926444e560c5eec09 says the original v0.1.0 bytes were not recoverable in the 2026-11-05 review, its 17/17 PASS claim remains NOT VERIFIED, and v0.2 is a NEW artifact lineage requiring Vinh's explicit decision. Work Log blob 9014bdbe1e3b398075949634a0d7cc42696d6d90 confirms the branch was documentation-only and source/test synchronization remained BLOCKED at its recorded date. The newer Sandbox listing contains CLI/test/E2E file names, but without reading their contents or a newer owner decision we cannot determine whether they are a v0.2 reconstruction, nor treat them as an approved synchronized ingress. A10 live Core/MCP integration remains BLOCKED.
 - **Correction/limit:** The W33 README's historical A1–A9 / 17-test statement is not a current reproduced test result; the proposal explicitly says the 17/17 claim is NOT VERIFIED. W118 will not consume W33 as an authoritative ingress until the new artifact lineage, canonical source/ref, authenticated contract and runtime proof are established by W33 owner.
 - **W118 disposition:** W102 principal/Assignment authority and W33 authenticated evidence ingress remain NOT VERIFIED / BLOCKED. No external Work mutation, Sandbox read/read-probe, test, service call, or approval inference.
+
+
+### Entry 056 addendum — exact-head CI after W102/W33 owner-document clarification
+
+- **Priority:** 01 — P0 — Exact-SHA validation of the dependency evidence record.
+- **Name / Title:** Ka — AI-02 / CSA — Delegated Technical Lead, Work 118.
+- **Date-Time:** 2026-11-23 02:18 +07:00.
+- Tested source HEAD: 856d13e8e32a4b75ae8ed343c288e9a969b50af0.
+- Push Run #931 / ID 45060715858, validate job 137325783741: SUCCESS; raw log confirms 102 tests in 0.232s; TEST_OUTCOME=success; SOURCE_BINDING_STATUS=UNBOUND_LEGACY_BRANCH. Artifact 14769133300, size 974 bytes, metadata digest sha256:3c365274d21cfbf95f8a45142dedc4fa91bb76d8afc3e47b7986b2da1c2e5ec7; payload not independently parsed.
+- PR Run #932 / ID 45060721046, validate job 137325? (job ID 137325? see exact job response) COMPLETED / SUCCESS; raw log confirms 102 tests in 0.196s; TEST_OUTCOME=success; SOURCE_BINDING_STATUS=NOT_RUN (push-only). Handoff, ACK and review-observation jobs SKIPPED. Artifact 14769362454, size 683 bytes, metadata digest sha256:c626852eb11c0654b3a3c0aeaf52ca8709837d4a869e15755b6a971b97e8bec2; payload not independently parsed.
+- Both runs are contract/unit CI only. Neither proves live Core/W102/W14/W33/W70 authority or Runtime Auto E2E. No source or external Work was changed.
+- This journal addendum requires its own exact-head CI revalidation after commit.
