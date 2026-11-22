@@ -55,6 +55,10 @@ function Resolve-RootList([string[]]$Roots, [string]$Label) {
             throw "$Label root does not exist or is not a directory: $root"
         }
         $canonical = (Resolve-Path -LiteralPath $root).Path.TrimEnd([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar)
+        $pathRoot = [System.IO.Path]::GetPathRoot($canonical).TrimEnd([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar)
+        if ($canonical.Equals($pathRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
+            throw "$Label root cannot be a drive or network-share root: $root"
+        }
         if ($resolved -notcontains $canonical) { $resolved += $canonical }
     }
     return ,$resolved
