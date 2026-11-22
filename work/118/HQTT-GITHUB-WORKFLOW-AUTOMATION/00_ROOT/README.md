@@ -31,6 +31,7 @@ W118 owns GitHub-specific adapters and evidence only. It does not create another
 - [W118-13..17 — Core/GitHub adapter implementation](../05_BUILD/W118-13_17_CORE-GITHUB-ADAPTERS.md)
 - [W118-13..17 — Core/GitHub adapter test matrix](../06_TEST/W118-13_17-CORE-GITHUB-ADAPTER-TEST-MATRIX.md)
 - [KH-118-001 — Implementation plan](../04_PLAN/KH-118-001_KE-HOACH-TRIEN-KHAI.md)
+- [BB-118-003 — Xu independent audit minutes](../02_DEFINE/BB-118-003_BIEN-BAN-RA-SOAT-VA-PHAN-BIEN-DOC-LAP.md)
 - [Canonical Work Journal](../EVIDENCE/NHAT-KY-THI-CONG.md)
 
 ## 4. W118 adapter code
@@ -199,3 +200,12 @@ PR #68 is READY FOR REVIEW / OPEN / UNMERGED. Exact tested head `076a74d8f19e6ca
 - Main compare: DIVERGED 80 ahead / 2 behind; 46 W118-only changed paths. No rebase/merge/force-push.
 - P1-118-01 OPEN / NEEDS CHANGES; P1-118-02 BLOCKED; W14/W52 RPC and authenticated ACK NOT PROVEN; W70 authority/persistence and W33 ingress NOT VERIFIED; W102 baseline NOT VERIFIED; Runtime Auto E2E NOT VERIFIED.
 - Implementation/workflow freeze remains. B-118-010 PREPARED / NOT APPLIED. No substitute authority, Main merge, release or self-acceptance.
+
+
+## Xu independent audit snapshot — 2026-11-23 01:44 +07:00
+
+- Active review candidate: PR #68, branch `work/118-auto-e2e-v2-clean`, exact head `81cc0f375420e5b123030a773afaec663930106c`, OPEN / UNMERGED.
+- PR #66 remains OPEN / UNMERGED as an older pilot; PR #67 is CLOSED / UNMERGED / superseded. See BB-118-003 for full branch/PR reconciliation.
+- Exact PR validation Run #897: 95 contract/unit tests PASS; Actions tested synthetic merge ref `d2111f8f1b83e9e5eb3ce5bbd7aaaea454de20c3` for PR source head `81cc0f375420e5b123030a773afaec663930106c`. Source binding NOT RUN; handoff/ACK/review jobs SKIPPED. Runtime Auto E2E NOT VERIFIED.
+- Xu disposition: P1-118-01 NEEDS CHANGES; P1-118-02 BLOCKED; full runtime integration BLOCKED. W118 remains NOT ACCEPTED / NOT RELEASED.
+- Official review: [BB-118-003](../02_DEFINE/BB-118-003_BIEN-BAN-RA-SOAT-VA-PHAN-BIEN-DOC-LAP.md); journal Entry 054.
