@@ -5,7 +5,8 @@ on:
     branches:
       - work/28-mcp-tooling-platform
     paths:
-      - "work/28/**"
+      - "work/28/MCP-8020-TOOLING-PLATFORM/04_CODE/**",
+      "work/28/MCP-8020-TOOLING-PLATFORM/05_TEST/**"
       - "execution_host/**"
       - "core/execution_authority/**"
       - "room_hop_mcp/**"
@@ -14,7 +15,8 @@ on:
       - ".github/workflows/work28-mcp-tooling.yml"
   pull_request:
     paths:
-      - "work/28/**"
+      - "work/28/MCP-8020-TOOLING-PLATFORM/04_CODE/**",
+      "work/28/MCP-8020-TOOLING-PLATFORM/05_TEST/**"
       - "execution_host/**"
       - "core/execution_authority/**"
       - "room_hop_mcp/**"

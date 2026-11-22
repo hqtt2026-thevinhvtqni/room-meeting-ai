@@ -1354,56 +1354,33 @@ PR #61 remains OPEN / UNMERGED. No deployment, Core mutation, listener restart o
 **Signature:** [KÝ: XU | TEMPORARY WORK COORDINATOR]
 
 
-## 2026-11-22 — JRN-W28-037 — Xu đồng bộ candidate với canonical base và rà soát WP3-F01
+## 2026-11-22 — JRN-W28-038 — Xu exact-head CI confirmation and WP3-F01 Q4 design revision
 
 **Người thực hiện:** Xu — temporary Work 28 coordinator / technical execution owner  
-**Branch:** `xu/work28-wp2-integration-20261122`  
-**PR:** #69 (DRAFT)  
-**Journal source blob before append:** `da7d074eecca0dc723f461eaf47a6b04c494d8f3`
+**Canonical branch:** `work/28-mcp-tooling-platform`  
+**PR #69 latest tested head:** `449b8ef7cfbc9f0af6d8cfd09564b48269eb9ab4`
 
-### READ / TRACE — PR #69 base reconciliation
-- Canonical branch advanced from `8179c8af90c19c36a15e4eeeef67c691f9d0839a` to `d131cdf0f70aaf29523045e4bb749f2b6736eff8` when JRN-W28-036 was appended.
-- Candidate branch was safely advanced with a two-parent merge commit `391f43f093d2ff8856b3091db9e73fd2572c0823`, parents: candidate code head `f02084e1ada2e193aa798ee3f91452f55bef402b` and latest canonical commit `d131cdf0f70aaf29523045e4bb749f2b6736eff8`.
-- The merge tree preserved all six WP2 implementation/test/workflow paths and imported the latest canonical journal blob. No force-push or history rewrite was used.
-- GitHub compare now confirms PR #69 is 9 commits ahead / 0 behind; mergeable=true; still DRAFT. PR #61 remains unchanged and divergent.
+### VERIFY — third PR #69 workflow
+- GitHub Actions run `44977448394` completed SUCCESS for PR #69 head `449b8ef7cfbc9f0af6d8cfd09564b48269eb9ab4`.
+- Jobs SUCCESS: `execution-host-lifecycle-linux`, `execution-host-lifecycle-windows`, `unit-regression-tests`, `Build and retest exact-SHA Work 28 source artifact`, `automatic-e2e-gate-report`.
+- The workflow report source snapshot is merge commit `04f01597ef38f6744c59cd7efce5c5da8b202961`; run head remains the PR head above.
+- E2E report artifact `work28-auto-e2e-report-44977448394` (ID `14735219634`); immutable source artifact `work28-source-artifact-04f01597ef38f6744c59cd7efce5c5da8b202961` (ID `14736193860`).
+- Automatic E2E report remains `overall_status=BLOCKED` because deployed Build MCP identity/tools-list parity, trusted Core principal/WorkContext evidence, approved deployed Runtime MCP + Execution Host/isolation attestation and the complete deployed request-to-evidence readback chain are not wired. Green CI jobs are not live E2E acceptance.
 
-### VERIFY — second exact-head workflow
-- Current PR head at this checkpoint: `391f43f093d2ff8856b3091db9e73fd2572c0823`.
-- GitHub Actions run `44977231136` completed SUCCESS on the PR head/merge snapshot.
-- Jobs PASS: Linux lifecycle, Windows lifecycle, unit regression, immutable exact-SHA source artifact, automatic E2E report job.
-- The automatic E2E report again explicitly returns `ci_preconditions=PASS`, but `deployed_mcp_core_runtime_e2e=BLOCKED`, `overall_status=BLOCKED`, Execution Gate CLOSED, Release NOT_RELEASED.
-- E2E blocker categories remain: live Build MCP process/build identity and tools/list parity; trusted deployed Core principal/WorkContext authorization evidence; approved deployed Runtime MCP + Execution Host/isolation attestation; complete deployed request-to-protected-evidence readback chain.
-- This second run confirms the clean integration candidate still passes configured CI after canonical-base reconciliation. It does not replace independent QA/security review or live E2E.
+### READ / ANALYZE — WP3-F01 Q4
+- Re-read `sandbox_tools_v1.py`, `mcp8020_sandbox_tools_v54.py`, `mcp_tool_registration_v1.py`, the existing Vi binary-upload source trace, Xu's Q1–Q3 decision record and Ka's Q4 review.
+- Confirmed no binary upload implementation or registration: current v1/v54 paths accept UTF-8 text; v1 write is bounded to 64 KiB; v54 read decodes UTF-8; no begin/chunk/finalize upload session exists.
+- Ka's review requires concrete grant binding, path scope, quotas, TTL, revocation, replay/idempotency, atomic state transitions, durable audit and failure cleanup. Q4 remains NOT APPROVED; implementation is not authorized.
+- Xu prepared the proposed design revision `XU-W28-WP3-F01-Q4-DESIGN-20261122-001` in `06_EVIDENCE/XU_WP3_F01_Q4_GRANT_DESIGN_REVISION_20261122.md`. It specifies a Core-issued least-privilege grant, trusted principal/session binding, canonical Work mapping/version, operation and path scope, immutable quota ceilings, begin/chunk/finalize/abort state machine, atomic reservation/idempotency/revocation, no-overwrite promotion, independent readback and durable audit.
+- The design explicitly remains PROPOSED / NOT APPROVED. It does not invent a Core endpoint, authorize implementation or replace Ka's independent review.
 
-### WP2 source review — Windows pre-execution containment
-- Read back the candidate `execution_host/process_job.py` Windows spawn path.
-- Source order is: create Job Object before process creation; create process with `CREATE_SUSPENDED`; assign process to Job Object; resume initial thread only after assignment succeeds. Assignment/resume failure calls suspended-process abort and returns `JobObjectUnavailable` with reap evidence.
-- POSIX spawn uses `start_new_session=True` and captures PGID at creation. The candidate's cleanup still keeps `ISOLATION_STATUS=NOT_VERIFIED`; process-group containment is not claimed as OS sandboxing.
-- Source inspection supports the intended pre-execution containment order. CI PASS confirms configured tests, not independent adversarial review or a production OS-isolation proof.
-
-### WP3-F01 — static implementation audit
-- Read canonical `sandbox_tools_v1.py`: v1 Sandbox adapter accepts UTF-8 text only; `sandbox_write` is capped at 64 KiB UTF-8; no binary upload/session protocol.
-- Read `mcp8020_sandbox_tools_v54.py`: v54 Sandbox provider's write path accepts `content: str` and UTF-8 encodes it; read path decodes UTF-8 and returns DECODE_ERROR for non-UTF-8 ranges. No begin/chunk/finalize binary upload implementation was observed.
-- Read `mcp_tool_registration_v1.py`: registered v1 Sandbox methods are search/stat/read_range/write; no `sandbox_upload_file` or begin/chunk/finalize operations are registered.
-- Existing source trace `VI_WP3_BINARY_UPLOAD_SOURCE_TRACE_20261104.md` agrees: binary upload is absent and Core authorizer is staged, not wired into the inspected Sandbox service path.
-- Xu decision record `XU_WP3_F01_DECISION_RECORD_20261113.md`: Q1 trusted caller context, Q2 dynamic Core Work-to-Sandbox mapping and Q3 begin/chunk/finalize protocol were selected; Q4 capability-grant semantics were not approved and implementation was not authorized.
-- Ka review `KA_WP3_F01_Q4_CAPABILITY_GRANT_SECURITY_REVIEW_20261115.md` explicitly records Q4 NOT APPROVED / DESIGN INSUFFICIENT / REVISE REQUIRED. No upload staging, chunk acceptance, promotion or public upload registration is authorized by the current decision record.
-- Issue #26 remains OPEN: no proven Sandbox pytest execution or live MCP → Core → Execution Host E2E.
-- Issue #33 remains OPEN: committed tools/list capture integrity is not deployed runtime provenance; historical issue body identifies the deployed source/build provenance gap as unresolved.
-
-### DECIDE
-- Keep WP2 PR #69 DRAFT / DO NOT MERGE until independent review and QA can be completed; current green CI is retained as exact-head technical evidence only.
-- Do not implement or register WP3-F01 binary upload while Q4 grant semantics remain NOT APPROVED. Xu may prepare a revised design and tests, but may not substitute self-review for Ka's mandatory security approval.
-- Continue WP0 provenance and WP3 contract design work that has no side effects. No Sandbox writes, live execution, Core mutation, deployment, listener restart or release.
-- Preserve all product gates and Work status; do not promote G1–G7 from the current evidence.
-
-### NEXT
-1. Prepare a revised upload capability-grant design addressing Ka's required principal/session binding, Work mapping version, named capability, normalized path scope, quotas, TTL, revocation, replay/idempotency, no-overwrite, per-operation authorization and durable audit semantics. Keep it PROPOSED / NOT APPROVED.
-2. Continue WP0 source-to-runtime inventory using read-only evidence only; identify a trustworthy way to obtain deployed Build MCP process/build identity and tools/list capture tied to the exact deployed build.
-3. Continue tracing the clean Runtime MCP and Core :8000 authority paths; do not use legacy runtime/process state.
-4. Keep PR #69 as the isolated WP2 candidate; do not merge while independent review/QA is unavailable.
+### DECIDE / NEXT
+- Keep PR #69 DRAFT / DO NOT MERGE pending independent An QA and Ka approval. Do not claim Xu's self-check as independent review.
+- Submit the Q4 design revision for future Ka review when delegation is available. Until then, no WP3-F01 code, registration, staging or filesystem side effect.
+- Continue WP0 live provenance and WP4/WP5 source-to-runtime tracing. Current connector readback does not provide a deployed process ID/source SHA/build digest; issue #33 remains open for runtime provenance.
+- Keep Work status ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED.
 
 ### STATUS
-**PR #69 BASE RECONCILED / 9 AHEAD–0 BEHIND / MERGEABLE / DRAFT / EXACT-HEAD CI RUN #44977231136 SUCCESS / LIVE E2E BLOCKED / WP2 INDEPENDENT QA AND SECURITY APPROVAL PENDING / WP3-F01 IMPLEMENTATION BLOCKED BY Q4 NOT APPROVED / WORK 28 ACTIVE — INTEGRATION BLOCKED — NOT RELEASED.**
+**PR #69 EXACT-HEAD CI RUN #44977448394 PASS / LIVE DEPLOYED E2E BLOCKED / WP2 INDEPENDENT QA AND SECURITY APPROVAL PENDING / WP3-F01 Q4 DESIGN REVISION PREPARED BUT NOT APPROVED / IMPLEMENTATION BLOCKED / NOT RELEASED.**
 
 **Signature:** [KÝ: XU | TEMPORARY WORK COORDINATOR]
