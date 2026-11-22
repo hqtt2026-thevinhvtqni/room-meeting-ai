@@ -348,3 +348,11 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - W70 branches remain highly divergent (docs 13/1,256; 05-build 43/1,739). Existing Sandbox schemas/evidence do not authorize W118 writes or prove Core persistence.
 - Therefore prior 'W102 implementation not located' is narrowed to 'Sandbox artifacts exist; current approved source/runtime authority NOT VERIFIED'. W14 and W33 have the same source-parity/runtime-evidence gap. Core lease/Task/Event and W70 write authority remain NOT VERIFIED.
 - P1-118-02 BLOCKED; Runtime Auto E2E NOT RUN. See Journal Entry 056. No external Work mutation, no Sandbox read/read-probe, no merge/rebase/force-push/release.
+
+## Owner contract intake and PR inventory — Entry 057 (2026-11-23)
+
+- RA-118-002 addendum v1.3 now defines the exact owner inputs and evidence needed for Core Task read/lease/Event, W102 identity/Assignment/ACK, W14 Work Authority/ExecutionHostBridge, W33 authenticated evidence ingress and W70 read-only projection. No owner authority or runtime proof is inferred.
+- Strict order: owner-approved canonical source/hash → versioned authenticated contract → authorized non-sensitive runtime trace → stateless W118 binding → full cross-work E2E → Xu/QE → Vinh acceptance.
+- PR #66 remains OPEN / UNMERGED as a historical pilot because an existing owner comment explicitly says to await Xu confirmation before closing. It is DIVERGED 8 ahead / 198 behind, mergeable=false. PR #67 CLOSED / UNMERGED; PR #68 is current implementation/review candidate.
+- P1-118-01 PASS at adapter-contract level only; P1-118-02 BLOCKED; cross-work runtime bindings BLOCKED / NOT VERIFIED; Runtime Auto E2E NOT RUN; Xu review PENDING; Vinh acceptance NOT ACCEPTED.
+- This is a documentation-only update. Exact-head CI must be re-run. No external Work mutation, PR #66 closure, Main merge, release or self-acceptance.
