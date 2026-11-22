@@ -386,3 +386,13 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - Exact W14 Main canonical Manifest/journal/source path fetches returned NOT_FOUND. Work17 portfolio reconciliation identifies the W14 canonical Sandbox path; this does not prove Sandbox source absence and no Sandbox read was attempted.
 - Work17 GAP-01 Entry 039 distinguishes W14 one-shot POST `/execute` via W12ExecutionAdapter/RealExecutionHost from W52 persistent HostPort/RpcPort. Work17 GAP Register Entry 054 records the prior W14 release candidate as divergent, AUD-005 BLOCKED, candidate v5 NOT APPROVED and PC E2E NOT VERIFIED at that audit snapshot.
 - No W118 binding to an assumed W14 interface; no duplicate Host/session transport. W118-TASK-015/TASK-019 protected execution remains BLOCKED; Runtime Auto E2E NOT RUN. See RA-118-002 v1.6 and Journal Entry 060.
+
+
+## W70 dispatch / W102 identity and Assignment boundary — Entry 061
+
+- W70 DOC-064/065/066 remain draft/proposal/not authorized; DOC-068 records no proven private-session dispatch adapter/Core API; DOC-071 is read-only with Core owner/runtime unverified; DOC-072 is design-only/not approved/not implemented.
+- W70 DOC-093 is DRAFT_NOT_APPROVED and is not a W118 runtime contract. W70 DOC-043 role mapping does not authenticate runtime principals or prove Assignment/ACK.
+- W102 Sandbox artifact inventory and divergent GitHub candidate do not establish canonical source parity, live identity/Assignment API or authenticated recipient ACK.
+- W118-TASK-014 remains BLOCKED; no guessed W70/W102 API binding, local registry, dispatcher or evidence store created. W70 is read-only projection only after approved schema/authenticated read contract.
+- Full bounded evidence and limitations: RA-118-002 addendum v1.7 and Journal Entry 061. No external Work/Sandbox/runtime/permission/secret changes; Runtime Auto E2E NOT RUN.
+- Overall: ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED. Exact-head CI required after this documentation update.
