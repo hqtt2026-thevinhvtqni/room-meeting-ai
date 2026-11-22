@@ -10,3 +10,4 @@ groq>=0.11.0
 
 # Work 28 MCP Python SDK v1 Server decorator API
 mcp>=1.2.0,<2.0.0  # Work 28 currently uses MCP Python SDK v1 Server decorator API
+jsonschema>=4.20,<5  # Work 28 Draft 2020-12 schema validation
