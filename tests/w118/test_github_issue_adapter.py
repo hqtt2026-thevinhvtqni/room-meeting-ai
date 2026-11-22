@@ -205,6 +205,31 @@ class Work118GitHubIssueAdapterTests(unittest.TestCase):
             self.mirror(task=core_task(issue_id=19), adapter=adapter)
         self.assertFalse(any(method in ("POST", "PATCH") for method, _, _ in fake.calls))
 
+    def test_complete_scan_finds_issue_on_later_page_and_rejects_cross_page_duplicate(self):
+        marker = "<!-- room-hop-core-task:W118-TASK-016 -->"
+        unrelated = [
+            {"number": i + 1, "title": f"Unrelated {i}", "body": "no task marker"}
+            for i in range(100)
+        ]
+        match = {"number": 101, "title": "Task mirror", "body": marker}
+        fake = FakeGitHub(unrelated + [match])
+        adapter = GitHubIssueAdapter(
+            fake, repository=REPOSITORY, max_issue_pages=3,
+            lease_validator=lambda lease_id, task: True,
+        )
+        result = self.mirror(task=core_task(issue_id=101), adapter=adapter)
+        self.assertEqual(result["issue_id"], 101)
+        self.assertEqual(result["action"], "UPDATED")
+        self.assertEqual(sum(1 for method, path, _ in fake.calls if method == "GET" and path.endswith("/issues?state=all&per_page=100&page=1")), 1)
+        self.assertTrue(any("page=2" in path for method, path, _ in fake.calls if method == "GET"))
+
+        duplicate = {"number": 102, "title": "Duplicate", "body": marker}
+        fake.issues.append(duplicate)
+        fake.calls.clear()
+        with self.assertRaises(IssueLookupDuplicate):
+            self.mirror(task=core_task(issue_id=101), adapter=adapter)
+        self.assertFalse(any(method in ("POST", "PATCH") for method, _, _ in fake.calls))
+
     def test_matching_persisted_core_issue_id_is_the_only_accepted_issue(self):
         marker = "<!-- room-hop-core-task:W118-TASK-016 -->"
         issue = {"number": 23, "title": "Existing", "body": marker}
