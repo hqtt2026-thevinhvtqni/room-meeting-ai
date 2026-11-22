@@ -59,6 +59,7 @@ The separate `PC_HOST_CAPABILITY_CONTRACT.md` adds host operations without chang
 | #135 | Live Dashboard/API health + consent smoke | 213 PASS | 207 PASS + 2 SKIP | PASS; 7 live UI assertions per OS |
 | #157 | Local launcher PowerShell syntax + start/stop smoke | 224 PASS | 218 PASS + 2 SKIP | PASS; Windows AST + API/Dashboard start/stop smoke |
 | #180 | Final launcher token-isolation + HTTP regression | 226 PASS | 220 PASS + 2 SKIP | PASS; 13 launcher checks, Windows AST and start/stop smoke |
+| #195 | Latest canonical branch HEAD documentation/evidence sync | 226 PASS | 220 PASS + 2 SKIP | PASS; code unchanged from Run #180 |
 
 Evidence files:
 - `06_EVIDENCE/W10_API_PROCESS_E2E_EVIDENCE_20261122_RUN45.md`
@@ -71,6 +72,7 @@ Evidence files:
 - `06_EVIDENCE/W10_LIVE_DASHBOARD_API_EVIDENCE_20261122_RUN135.md`
 - `06_EVIDENCE/W10_LOCAL_LAUNCHER_CI_EVIDENCE_20261122_RUN157.md`
 - `06_EVIDENCE/W10_LOCAL_LAUNCHER_HTTP_CI_EVIDENCE_20261122_RUN180.md`
+- `06_EVIDENCE/W10_GITHUB_ACTIONS_CI_EVIDENCE_20261122_RUN195.md`
 
 Runs #52, #53, #69, #104, #105 and #106 each execute 16 V8 validator checks successfully on both OS runners. Run #53 tests the additional category catalog, policy ID/version/schema version and category outcome/lease/owner allow-list validation. Run #69 adds 17 Dashboard static assertions per OS. Run #104 verifies Work 10's standalone UI on port 3010. Runs #105/#106 remediate and stress-test the Linux limited process-group cleanup race first seen in Run #99.
 
@@ -130,7 +132,7 @@ This session has no direct local PowerShell/desktop executor, so these steps are
 
 - Canonical branch contains the current Work 10 source, test suite, core contracts, PC Host Capability Contract, operational Dashboard and current runbooks.
 - The 30 source/test/architecture/config files independently sampled in the current reconciliation pass were exact-match between Sandbox and GitHub after the updates; all three LOCKED contracts are exact-match.
-- Current inventory: Sandbox has 169 files under `COMPUTER-AGENT/`; GitHub branch has 77; 77 paths are shared and 92 are Sandbox-only; GitHub-only paths = 0. The 93 Sandbox-only files have explicit KEEP/SANDBOX-ONLY dispositions in `06_EVIDENCE/W10_FULL_PATH_INVENTORY_DISPOSITION_20261122.md`; they include historical/debug records, original/reference files, preview/sample data, generated evidence/lock files and Python caches. Do not bulk-copy caches, locks, preview samples or unreviewed debug packages into the canonical branch.
+- Current inventory: Sandbox has 170 files under `COMPUTER-AGENT/`; GitHub branch has 78; 78 paths are shared and 92 are Sandbox-only; GitHub-only paths = 0. The 93 Sandbox-only files have explicit KEEP/SANDBOX-ONLY dispositions in `06_EVIDENCE/W10_FULL_PATH_INVENTORY_DISPOSITION_20261122.md`; they include historical/debug records, original/reference files, preview/sample data, generated evidence/lock files and Python caches. Do not bulk-copy caches, locks, preview samples or unreviewed debug packages into the canonical branch.
 - No GitHub-only Work 10 file remains in the inventory snapshot.
 - Branch history is preserved; no force push, main merge, deployment or release was performed.
 
@@ -235,3 +237,8 @@ The CI smoke intentionally used `-NoClipboard -NoOpenBrowser`; it does not repla
 - Startup failure cleans up only its own processes and removes the session record.
 - The oversized HTTP request test now reliably verifies 413 on both OSes without platform-dependent client-side upload abort.
 - Evidence: `06_EVIDENCE/W10_LOCAL_LAUNCHER_HTTP_CI_EVIDENCE_20261122_RUN180.md`.
+
+
+## 17. Latest canonical branch HEAD — Run #195
+
+Run #195 tested current branch HEAD `73b51f61b62d3b1664e8d9d0dd54e979eb5640b1` after the final Manifest/Journal/inventory sync. Both jobs succeeded: Windows 226 PASS / 0 FAIL / 0 SKIP; Ubuntu 220 PASS / 0 FAIL / 2 expected SKIP. Runtime source/tests were unchanged from Run #180; this confirms the latest documentation/evidence HEAD remains green. Evidence: `06_EVIDENCE/W10_GITHUB_ACTIONS_CI_EVIDENCE_20261122_RUN195.md`.
