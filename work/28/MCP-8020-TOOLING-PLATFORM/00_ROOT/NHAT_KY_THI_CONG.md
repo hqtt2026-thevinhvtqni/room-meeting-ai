@@ -2035,3 +2035,35 @@ The push-triggered workflow runs were queried after the merge commits and are no
 **STATUS:** PR #73 MERGED / EXACT-HEAD AUTO E2E PASS / CORE CONTRACT PROVENANCE RECONCILED / LIVE DEPLOYMENT AND AUTHORITY STILL NOT VERIFIED.
 
 **Signature:** [KÝ: VI | CODER]
+
+
+## 2026-11-23 — JRN-W28-055 — PR #73 post-merge Auto E2E and Sandbox parity
+
+**Role:** Vi | CODER — implementation and integration owner  
+**Canonical merge SHA:** `7666c0c7de60583c77b466c1e08ea10a0a7d0cd7`  
+**Post-merge run:** #396 / `45060288335` — SUCCESS  
+**Handoff update commit:** `62ed29f72c4676ccfa2f5a99521864d19a4ddd67`  
+**Signature:** [KÝ: VI | CODER]
+
+### POST-MERGE EXACT-SHA VERIFICATION
+- Confirmed PR #73 merge commit is the exact canonical branch revision.
+- Push-triggered run #396 / ID `45060288335` completed **SUCCESS** on merge SHA `7666c0c7de60583c77b466c1e08ea10a0a7d0cd7`.
+- All five jobs succeeded: unit/regression, Linux lifecycle, Windows lifecycle, immutable exact-SHA source artifact retest and automatic E2E gate report.
+- Exact artifacts:
+  - Source archive ID `14769077832`, digest `sha256:086b2ca2ada57e0045b917861bed9d2b8b325f0a6944fefd46d0f095cca9b087`.
+  - Auto E2E report ID `14769580524`, digest `sha256:cbf0c1f8543fe259606428e7218759a48d965c97d43b72b519e653f3fa7ea104`.
+- Updated the owner handoff with the post-merge run and artifact identities.
+
+### SANDBOX READBACK
+- Synced canonical journal, owner handoff, Core V1.2 contract, Core authority package docstring snapshot and Core authority component-test source to Work 28 Sandbox.
+- Read each back with `sandbox_read_probe` and compared exact text against GitHub. Result: **5/5 exact_match=true**.
+- This is selected-document/source parity only; it does not prove deployment or live process identity.
+
+### CURRENT GATE
+- Core authority source/contract wording is now internally consistent: implementation candidate and CI-tested, while owner approval, deployed endpoint, identity enrollment, trusted W28 WorkContext and MCP/W13 wiring remain unverified.
+- PR #73 source/docs consistency fix is integrated and exact post-merge Auto E2E PASS.
+- Execution Gate remains CLOSED. Release remains NOT_RELEASED. No deployment, secret provisioning, listener restart or live execution was performed.
+
+**STATUS:** PR #73 POST-MERGE AUTO E2E PASS / 5 SANDBOX ARTIFACTS EXACTLY SYNCED / LIVE AUTHORITY AND RUNTIME ACCEPTANCE STILL BLOCKED.
+
+**Signature:** [KÝ: VI | CODER]
