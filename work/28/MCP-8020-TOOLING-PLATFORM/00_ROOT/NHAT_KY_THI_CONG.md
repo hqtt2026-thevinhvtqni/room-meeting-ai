@@ -1858,3 +1858,48 @@ PR #61 remains OPEN / UNMERGED. No deployment, Core mutation, listener restart o
 **STATUS:** WP1 STATIC CONTRACT HARDENING INTEGRATED / EXACT-SHA AUTO E2E PASS / LIVE PROVIDER COMPOSITION AND DEPLOYED PARITY NOT VERIFIED / NOT RELEASED.
 
 **Signature:** [KÝ: VI | CODER]
+
+
+## 2026-11-23 02:12 UTC+07:00 — JRN-W28-050 — Post-merge exact-SHA CI reconciliation and WP1 Sandbox source sync
+
+**Role:** Vi | CODER — implementation and integration owner  
+**Signature:** [KÝ: VI | CODER]
+
+### POST-MERGE CI RECONCILIATION
+The push-triggered workflow runs were queried after the merge commits and are now available. This supersedes the earlier "no push-triggered run returned yet" observation in JRN-W28-045.
+- PR #70 merge commit `2d006dcb5aaac5624d45cf88b173bf59d0dce55a`: push run #388 / ID `45055014499` — **SUCCESS**, all five jobs completed success.
+- PR #71 merge commit `dca6fd27ea119b64cee550395e0613289057b0f8`: push run #392 / ID `45055750014` — **SUCCESS**, all five jobs completed success.
+- PR #72 merge commit `ab51accd1fb186c68beec8fcf08009c25c3dfa67`: push run #394 / ID `45056717662` — **SUCCESS**, all five jobs completed success.
+- Each push run includes unit/regression, Linux lifecycle, Windows lifecycle, immutable exact-SHA source artifact retest and automatic E2E gate report. These post-merge runs now prove the integrated canonical merge commits themselves passed the configured workflow.
+- These results still do not prove live MCP/Core/Runtime deployment or release acceptance.
+
+### WP1 SANDBOX SOURCE SYNCHRONIZATION
+- Synced from canonical GitHub into Work 28 Sandbox:
+  - `04_CODE/mcp8020_unified_registry_v1.py`
+  - `04_CODE/mcp8020_unified_server_v1.py`
+  - `04_CODE/mcp8020_schema_validation_v1.py`
+  - `04_CODE/mcp8020_tool_handler_binding.py`
+  - `05_TEST/test_mcp8020_tool_handler_binding.py`
+  - `05_TEST/test_mcp8020_schema_validation_v1.py`
+  - `requirements.txt`
+- Read back each Sandbox file through `sandbox_read_probe` and compared with the canonical GitHub file text. Result: **7/7 exact_match=true**.
+- The full canonical journal through JRN-W28-049 was also written to Sandbox and read back with exact text equality. This entry is followed by another journal sync/readback.
+
+### CONSOLIDATED SELECTED-ARTIFACT PARITY
+- PR #70/#71 selected source/test/workflow batch: 12/12 exact text readbacks (JRN-W28-048).
+- PR #72 WP1 source/test/dependency batch: 7/7 exact text readbacks.
+- Journal through JRN-W28-049: exact text readback.
+- Total selected source/test/workflow artifacts verified across the two batches: **19/19**. This is not a claim that the entire Work Sandbox, local PC checkout, binary files, caches or runtime deployment are synchronized.
+
+### CURRENT GATES
+- WP2 lifecycle recovery: integrated; exact pre-merge and post-merge Auto E2E PASS.
+- WP5 Core-grant fail-closed startup + snapshot-only default: integrated; exact pre-merge and post-merge Auto E2E PASS.
+- WP1 31-tool registry schema and exact handler-binding contract: integrated; exact pre-merge and post-merge Auto E2E PASS.
+- WP1 provider composition/startup entrypoint, live tools/list schema parity and deployed process/build identity: NOT VERIFIED / BLOCKED.
+- WP3-F01 Q4 upload grant: NOT APPROVED; no upload side effects.
+- Core execution-grant route, trusted WorkContext, Runtime identity, OS isolation and protected evidence/readback: NOT VERIFIED.
+- Execution Gate CLOSED. Release NOT_RELEASED. No production deployment, listener restart or Core mutation.
+
+**STATUS:** POST-MERGE CI PASS ON THREE CANONICAL MERGE COMMITS / 19 SELECTED SOURCE-TEST-WORKFLOW FILES EXACTLY SYNCED / LIVE E2E STILL BLOCKED.
+
+**Signature:** [KÝ: VI | CODER]
