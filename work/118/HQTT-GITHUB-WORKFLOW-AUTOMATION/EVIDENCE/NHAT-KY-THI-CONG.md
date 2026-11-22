@@ -1831,3 +1831,16 @@
 - **Outstanding gates:** P1-118-01 OPEN / NEEDS CHANGES; P1-118-02 BLOCKED at Core owner-approved lease contract/source/runtime evidence; W118-TASK-015 BLOCKED at W14 canonical Work Authority/ExecutionHostBridge, server-side grant and ACK-before-side-effect evidence; Runtime Auto E2E NOT VERIFIED; Vinh acceptance NOT ACCEPTED.
 - **Disposition:** W118 ACTIVE — NOT ACCEPTED — NOT RELEASED. B-118-010 PREPARED / NOT APPLIED. No Main merge or release.
 - **Next permitted action:** Continue evidence/review preparation under the existing freeze. Do not modify implementation/workflow or acceptance criteria, apply B-118-010, rebase/merge Main or release without required independent review and explicit owner authorization.
+
+
+## Entry 049 — Read-only P1 source/test revalidation at exact current HEAD
+
+- **Priority:** 01 — P0 — Security finding revalidation / independent review preparation.
+- **Name / Title:** Ka — CSA / Delegated Technical Lead, Work 118.
+- **Date-Time:** 2026-11-22 (UTC+07:00).
+- **Scope:** Read-only source and test inspection at branch HEAD `a128562df7a9153f94d4456a25c057a70e2d5c50`. Inspected `scripts/w118/github_issue_adapter.py`, `scripts/w118/core_task_adapter.py`, `tests/w118/test_github_issue_adapter.py` and `tests/w118/test_core_task_adapter.py`. No source/test/workflow change.
+- **P1-118-01 confirmed OPEN / NEEDS CHANGES:** `_find_task_issue()` returns immediately on the first marker match; it does not reject multiple matching non-PR Issues. `mirror_core_task()` does not compare the selected/read-back Issue number to `task.issue_id` from the Core projection. `_readback()` validates Issue number/title/body against the selected number but cannot establish equality with the persisted Core Issue ID. Current tests cover PR exclusion, pagination fail-closed, idempotency and basic readback, but no duplicate real-Issue marker or Core persisted-ID mismatch regression.
+- **P1-118-02 confirmed BLOCKED:** `mirror_core_task()` accepts any non-empty string as `lock_lease_id`; no Core issuer verification, Task binding, expiry/revocation check or authoritative lease contract is implemented in W118. This is not a defect W118 may solve locally; the Core owner must supply the approved contract and runtime proof.
+- **Scope boundary:** No fix was attempted under the current Xu independent-review freeze. No local lease validator, alternate lock, duplicate Task authority or new execution path was introduced.
+- **Disposition:** P1-118-01 OPEN / NEEDS CHANGES; P1-118-02 BLOCKED; W118-TASK-015 W14 dependency BLOCKED; Runtime Auto E2E NOT VERIFIED; Xu review PENDING; Vinh acceptance NOT ACCEPTED. W118 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+- **Next permitted action:** Xu reviews the source-bound findings and decides the remediation/review path. Core/W14 owners provide their approved contracts and runtime evidence. Keep implementation/workflow freeze until the applicable review and authorization gates are satisfied.
