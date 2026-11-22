@@ -59,8 +59,8 @@ CI xanh không thay thế nghiệm thu sản phẩm hoặc Runtime Auto E2E.
 
 **Bằng chứng nguồn:**
 - `scripts/w118/github_issue_adapter.py`, blob SHA `86756a5d0b9977182e9e6d1575a77a0141ec48ee`.
-- `scripts/w118/core_task_adapter.py`, blob SHA `[reviewed at PR #68 HEAD]`.
-- `tests/w118/test_github_issue_adapter.py`, blob SHA `[reviewed at PR #68 HEAD]`.
+- `scripts/w118/core_task_adapter.py`, blob SHA `0c32b8d0397ff2c176ba6332c0c019fbcc1653e0`.
+- `tests/w118/test_github_issue_adapter.py`, blob SHA `d8a0b5e8d79d5983b1330ab07db48bb63d0d7928`.
 
 **Hiện trạng:** `_find_task_issue` trả về Issue đầu tiên có marker. `mirror_core_task` không kiểm tra có nhiều Issue cùng marker và không đối chiếu Issue number với `task.issue_id` trước khi PATCH/readback.
 
