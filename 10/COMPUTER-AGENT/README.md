@@ -107,3 +107,21 @@ Run #157 passed the Windows PowerShell AST syntax check and noninteractive local
 ## Local start / stop
 
 On the Owner's Windows PC, after installing dependencies, run `./05_TEST/START_WORK10_LOCAL.ps1` to start the local Agent API and standalone Dashboard, then paste the per-session bearer token copied to clipboard into the Dashboard. Stop with `./05_TEST/STOP_WORK10_LOCAL.ps1`. The launcher leaves file writes and PowerShell disabled by default and does not bind shared port 3000.
+
+
+## Recommended Windows operator commands
+
+Run from the Work 10 root in a normal, non-elevated PowerShell session:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
+.\05_TEST\START_WORK10_LOCAL.ps1 -PythonPath .\.venv\Scripts\python.exe
+```
+
+If dependencies are not installed yet, use `-InstallDependencies` once. Paste the copied token into the Dashboard password field. To stop safely:
+
+```powershell
+.\05_TEST\STOP_WORK10_LOCAL.ps1
+```
+
+The execution-policy change is process-scoped only and does not persist to the user's account or machine.
