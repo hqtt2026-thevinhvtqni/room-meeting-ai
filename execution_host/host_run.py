@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import subprocess
+import sys
 from datetime import datetime, timezone
 from typing import Any
 
@@ -35,6 +36,7 @@ def run_execute_command(host: Any, ctx: WorkContext, command: list[str], timeout
     stdout = ""
     stderr = ""
     blocker = None
+    spawn_abort_cleanup = None
 
     try:
         managed = spawn_managed(args, cwd=workspace, env=env)
@@ -67,6 +69,28 @@ def run_execute_command(host: Any, ctx: WorkContext, command: list[str], timeout
     except OSError as exc:
         blocker = redact(str(exc))
         status = "BLOCKED"
+        # JobObjectUnavailable can be raised after Popen created a suspended
+        # process. Preserve its abort/reap result instead of claiming no_process.
+        if managed is None and isinstance(getattr(exc, "process_reaped", None), bool):
+            reaped = bool(exc.process_reaped)
+            notes = list(getattr(exc, "notes", ()))
+            notes.append(
+                "suspended_spawn_abort_reaped" if reaped
+                else "suspended_spawn_abort_reap_unconfirmed"
+            )
+            spawn_abort_cleanup = {
+                "process_reaped": reaped,
+                "leader_pid": None,
+                "members_before": None,
+                "members_after": None,
+                "terminate_sent": False,
+                "kill_sent": False,
+                "waited": reaped,
+                "platform": sys.platform,
+                "job_object": "NOT_ATTACHED",
+                "session_leader": False,
+                "notes": notes,
+            }
 
     out_path.write_text(stdout, encoding="utf-8")
     err_path.write_text(stderr, encoding="utf-8")
@@ -87,7 +111,7 @@ def run_execute_command(host: Any, ctx: WorkContext, command: list[str], timeout
         "isolation": ISOLATION_STATUS,
         "authorization": ctx.authorized,
         "artifacts": [],
-        "cleanup": attested_cleanup(managed),
+        "cleanup": spawn_abort_cleanup if spawn_abort_cleanup is not None else attested_cleanup(managed),
         "runtime_instance_id": host.runtime_identity.instance_id,
         "runtime_build_hash": host.runtime_identity.build_hash,
         "runtime_started_at": host.runtime_identity.started_at,
