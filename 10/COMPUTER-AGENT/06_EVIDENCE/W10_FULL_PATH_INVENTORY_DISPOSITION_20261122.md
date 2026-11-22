@@ -2,7 +2,7 @@
 
 - Document ID: W10-FULL-PATH-INVENTORY-20261122-01
 - Work: 10 — COMPUTER-AGENT
-- Date-Time: 2026-11-22 06:46 (UTC+07:00)
+- Date-Time: 2026-11-22 06:51 (UTC+07:00)
 - Canonical repository: `hqtt2026-thevinhvtqni/room-meeting-ai`
 - Branch: `work/10-computer-agent-mirror`
 - Sandbox Work ID: `10`
@@ -11,28 +11,28 @@
 
 | Measure | Count |
 |---|---:|
-| Sandbox files under `COMPUTER-AGENT/` | 167 |
-| GitHub branch files under `10/COMPUTER-AGENT/` | 75 |
-| Shared paths | 75 |
+| Sandbox files under `COMPUTER-AGENT/` | 169 |
+| GitHub branch files under `10/COMPUTER-AGENT/` | 77 |
+| Shared paths | 77 |
 | Sandbox-only files | 92 |
 | GitHub-only files | 0 |
 | Sandbox-only `.github/` directory | 1 |
 
-The shared paths are all represented on both sides. The Sandbox-only files below have explicit KEEP / SANDBOX-ONLY dispositions; the Sandbox and GitHub directory trees are intentionally not byte-for-byte identical. No GitHub-only Work 10 file remains in this snapshot.
+No GitHub-only Work 10 file remains. The Sandbox-only files are explicitly retained by the KEEP dispositions below; the two trees are intentionally not identical by file count.
 
 ## 2. Shared-path verification
 
-- 34 accepted source/test/architecture/config/launcher files were independently fetched from Sandbox and GitHub and compared as exact UTF-8 text; all 34 matched.
-- The remaining shared governance/evidence/manifest/journal/dashboard/release files were compared in targeted batches; all compared content matched after each update/readback.
+- 34 accepted source/test/architecture/config/launcher files were independently fetched and compared as exact UTF-8 text; all 34 matched. Latest launcher and HTTP test changes are separately read-back checked and CI-verified.
+- Remaining shared governance/evidence/manifest/journal/dashboard/release files were compared in targeted batches; all compared content matched after each update/readback.
 - Three LOCKED contracts are exact-match: `ACTION_CONTRACT.md`, `WORKFLOW_CONTRACT.md`, `SAFETY_POLICY.md`.
-- Current accepted runtime source, test suites, local PowerShell launcher, host contract, operational Dashboard, current runbooks, owner authorization, current CI evidence, Work Manifest, BIÊN BẢN and NHẬT KÝ are on the canonical branch.
-- No divergent accepted source/test/config/launcher file is intentionally left Sandbox-only.
+- Current accepted runtime source, tests, local PowerShell launcher, host contract, operational Dashboard, runbooks, owner authorization, CI evidence, Work Manifest, BIÊN BẢN and NHẬT KÝ are on the canonical branch.
+- No accepted source/test/config/launcher file is intentionally left Sandbox-only.
 
 ## 3. Sandbox-only path dispositions
 
 ### A. Generated / transient artifacts — KEEP SANDBOX-ONLY
 
-Python bytecode caches, local owner lock/state, generated offline test output and legacy test evidence. These are machine/session outputs, not canonical source; regenerate on the execution host.
+Python bytecode caches, local owner lock/state, generated offline test output and legacy test evidence. Regenerate on the execution host.
 
 - `04_CODE/__pycache__/agent_api.cpython-312.pyc`
 - `04_CODE/__pycache__/agent_runtime.cpython-312.pyc`
@@ -47,7 +47,7 @@ Python bytecode caches, local owner lock/state, generated offline test output an
 
 ### B. Original/reference/preview material — KEEP SANDBOX-ONLY
 
-Original HTML, extension/reference files, Sandbox-local duplicate workflow and sample-only Dashboard preview. They are not current runtime source and must not be promoted as implementation.
+Original HTML, extension/reference files, Sandbox-local duplicate workflow and sample-only Dashboard preview; not current runtime source.
 
 - `.github/workflows/real-browser-e2e.yml`
 - `01_ORIGINAL/README.md`
@@ -60,7 +60,7 @@ Original HTML, extension/reference files, Sandbox-local duplicate workflow and s
 
 ### C. Historical evidence / superseded design records — KEEP SANDBOX-ONLY
 
-Immutable historical reviews, old candidate audits, old design amendments, debug reports and prior evidence snapshots. Current accepted implementation/evidence is mirrored separately; these historical records remain in Sandbox for traceability.
+Immutable historical reviews, old candidate audits, old design amendments, debug reports and prior evidence snapshots. Retain for traceability.
 
 - `06_EVIDENCE/CANONICAL_VERIFICATION_2026-10-27.md`
 - `06_EVIDENCE/GITHUB_SANDBOX_RECONCILIATION_20261116.md`
@@ -111,7 +111,7 @@ Immutable historical reviews, old candidate audits, old design amendments, debug
 
 ### D. AI debug handoff archive — KEEP SANDBOX-ONLY
 
-Immutable AI intake/review/task records and historical review reports. They are not current runtime source and are not silently promoted to the canonical branch.
+Immutable AI intake/review/task records and historical review reports; not current runtime source.
 
 - `10_AI_DEBUG_HANDOFF/00_INBOX/CLA_CTO/20261028_run01/DEBUG_REPORT.md`
 - `10_AI_DEBUG_HANDOFF/00_INBOX/CLA_CTO/20261028_run01/RUN_LOGS.md`
@@ -142,7 +142,7 @@ Immutable AI intake/review/task records and historical review reports. They are 
 
 ### E. Superseded owner handover — KEEP SANDBOX-ONLY
 
-2026-11-17 handover is a historical snapshot superseded by 07_RELEASE/W10_HANDOVER_PACKAGE_20261122.md.
+2026-11-17 handover is superseded by the 2026-11-22 handover package.
 
 - `07_RELEASE/WORK10_HANDOVER_TO_OWNER_20261117.md`
 
@@ -158,7 +158,7 @@ Historical transcript archive; not a runtime artifact or canonical source.
 
 ## 4. Explicit non-actions
 
-- No generated `__pycache__`, owner lock/state, or runtime-generated offline evidence was copied into GitHub.
+- No generated cache, owner lock/state, or runtime-generated offline evidence was copied into GitHub.
 - No sample preview data was promoted as live runtime evidence.
 - No historical AI debug intake or superseded design review was overwritten or represented as current approval.
 - No three LOCKED contracts were modified.
@@ -166,7 +166,7 @@ Historical transcript archive; not a runtime artifact or canonical source.
 
 ## 5. Synchronization disposition
 
-**Accepted source/test/architecture/config/launcher parity: PASS for the current shared set.** All 75 shared paths are present; no source/test/config/launcher divergence remains in the shared implementation set. The 92 Sandbox-only files and one parent directory are intentionally retained as historical/reference/generated Sandbox material, as itemized above.
+**Accepted source/test/architecture/config/launcher parity: PASS for the current shared set.** All 77 shared paths are present. The 92 Sandbox-only files and one parent directory are intentionally retained as historical/reference/generated Sandbox material, as itemized above.
 
 This is a reconciled working/canonical branch inventory, not a claim that the two directory trees have identical file counts. Work 10 remains ACTIVE — NOT RELEASED pending physical Windows 10 acceptance, production V8 key provisioning, Linux cgroup-v2 disposition, ROOM-HOP integration and Owner's final acceptance.
 
