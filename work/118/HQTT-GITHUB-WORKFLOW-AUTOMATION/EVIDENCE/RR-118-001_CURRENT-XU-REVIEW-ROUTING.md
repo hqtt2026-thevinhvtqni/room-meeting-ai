@@ -94,3 +94,17 @@ Their acceptance criteria remain useful, but their candidate references and snap
 - **W33:** authoritative Work evidence ingress remains NOT VERIFIED; Meeting transcript/browser artifact readback is not equivalent.
 - **W102:** no fresh implementation/source acceptance baseline established in this pass; keep NOT VERIFIED.
 - **W118 disposition:** P1-118-02 and W14 dependency BLOCKED; W52 dispatch/ACK and W33 evidence ingress NOT PROVEN; Runtime Auto E2E NOT VERIFIED. No implementation workaround is authorized. See journal Entry 051 for source references and scope limits.
+
+
+## Current routing overlay — 2026-11-23 (Journal Entry 052)
+
+**Current candidate:** PR #68 / `work/118-auto-e2e-v2-clean`, audit-start HEAD `b2bf8f40999fc6342e3816d32cd3e58844b71591`; OPEN / UNMERGED.
+
+- Exact-head CI #892 / run `44995631702`: validate SUCCESS, 95 contract/unit tests PASS. Artifact `14743329424`, SHA-256 `bd414206e88240fce8faa559540b0de7434b6c3bdc2724242ee60b45f5ce5d81`; payload not independently parsed.
+- Source-binding step and handoff/ACK/review-observation jobs were SKIPPED. `SOURCE_BINDING_STATUS=NOT_RUN`; Runtime Auto E2E NOT VERIFIED.
+- Formal reviews: 0; inline threads: 0. Xu review PENDING; Vinh acceptance NOT ACCEPTED.
+- Main comparison: DIVERGED 76 ahead / 2 behind; 46 W118-only changed paths. No rebase/merge/force-push.
+- Non-waivable gates remain: P1-118-01 OPEN / NEEDS CHANGES; P1-118-02 BLOCKED; W14/W52 RPC and authenticated ACK NOT PROVEN; W70 authority/persistence and W33 ingress NOT VERIFIED; W102 baseline NOT VERIFIED.
+- Implementation/workflow freeze remains. B-118-010 PREPARED / NOT APPLIED. No local substitute authority, Main merge or release.
+
+This overlay updates current routing metadata only. It does not replace the XR checklist, release gate, handoff criteria or Xu's independent decision.
