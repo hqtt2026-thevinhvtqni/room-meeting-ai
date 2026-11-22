@@ -1903,3 +1903,43 @@ The push-triggered workflow runs were queried after the merge commits and are no
 **STATUS:** POST-MERGE CI PASS ON THREE CANONICAL MERGE COMMITS / 19 SELECTED SOURCE-TEST-WORKFLOW FILES EXACTLY SYNCED / LIVE E2E STILL BLOCKED.
 
 **Signature:** [KÝ: VI | CODER]
+
+
+## 2026-11-23 02:20 UTC+07:00 — JRN-W28-051 — Stale PR cleanup and owner Auto E2E handoff
+
+**Role:** Vi | CODER — implementation and integration owner  
+**Handoff artifact:** `06_EVIDENCE/VI_OWNER_HANDOFF_AUTO_E2E_20261123.md`  
+**Handoff commit:** `34f0e026443a2d70ff557d190188e01b51fe2174`  
+**Signature:** [KÝ: VI | CODER]
+
+### PR CLEANUP
+- Rechecked PRs #61, #69, #70, #71 and #72.
+- PR #61 and PR #69 were OPEN, stale and based on older divergent snapshots. Their WP2 code was superseded by the tested latest-baseline integration in PR #70.
+- Added explicit supersession comments and closed PR #61 (comment ID `7083860364`) and PR #69 (comment ID `7083861213`).
+- PRs #70, #71 and #72 remain MERGED. No source change was discarded from the canonical branch.
+
+### POST-MERGE WORKFLOW EVIDENCE
+- Re-read the repository Actions run list and verified the post-merge push runs for all three integration commits:
+  - #388 / `45055014499` on `2d006dcb...`: all five jobs SUCCESS.
+  - #392 / `45055750014` on `dca6fd27...`: all five jobs SUCCESS.
+  - #394 / `45056717662` on `ab51accd...`: all five jobs SUCCESS.
+- This reconciles the later-arriving push-run evidence with JRN-W28-045/047/049. It does not change the live E2E gate disposition.
+
+### OWNER HANDOFF
+- Created the formal owner handoff artifact at `06_EVIDENCE/VI_OWNER_HANDOFF_AUTO_E2E_20261123.md`.
+- The document contains integrated PR/merge/test evidence, artifact IDs and SHA-256 digests, selected Sandbox parity, current acceptance matrix, live blockers, required owner dependencies and rollback sequence.
+- The handoff deliberately distinguishes source/CI PASS from live deployed product acceptance. It does not claim release readiness.
+
+### FINAL DISPOSITION AT THIS CHECKPOINT
+- WP2 lifecycle: INTEGRATED / exact pre-merge and post-merge CI PASS.
+- WP5 Core grant fail-closed + snapshot-only default: INTEGRATED / exact pre-merge and post-merge CI PASS.
+- WP1 31-tool schema/handler-binding contract: INTEGRATED / exact pre-merge and post-merge CI PASS.
+- WP0/WP1 live MCP 8030 process/build identity, raw tools/list parity and real provider composition: NOT VERIFIED / BLOCKED.
+- WP3-F01 Q4 upload capability grant: NOT APPROVED; no upload side effects.
+- Core execution-grant/WorkContext, Runtime identity, OS isolation and protected evidence/readback: NOT VERIFIED.
+- Execution Gate CLOSED. Release NOT_RELEASED. No deployment/listener restart/Core mutation; historical MCP :8020 remains DO NOT USE.
+- The only remaining route to full product acceptance is to satisfy the live deployment/Core authority prerequisites listed in the owner handoff. Vi can then resume Auto E2E without routine code-review waiting.
+
+**STATUS:** CODE/CI INTEGRATION COMPLETE FOR THREE SLICES / STALE PRs CLOSED / OWNER HANDOFF WRITTEN / LIVE PRODUCT ACCEPTANCE BLOCKED BY EXTERNAL AUTHORITY AND DEPLOYMENT EVIDENCE.
+
+**Signature:** [KÝ: VI | CODER]
