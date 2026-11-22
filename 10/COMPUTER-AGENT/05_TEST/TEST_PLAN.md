@@ -194,3 +194,8 @@ Add `-InstallDependencies` if requirements/Chromium are not installed. The repor
 ## Acceptance runner contract extension — 2026-11-22
 
 The Windows launcher contract suite now contains 18 static assertions: 13 prior launcher/stop checks plus 5 checks for the one-command Owner acceptance runner. GitHub Windows CI PowerShell AST parsing now includes `RUN_WORK10_ACCEPTANCE.ps1`. The new runner is intended for the physical Windows 10 PC; hosted Windows Server 2022 CI parses its syntax but does not execute it because the runner enforces a Windows 10 client profile. Full CI verification of this latest change is pending.
+
+
+## Production V8 trust field clarification — 2026-11-22
+
+The acceptance JSON field `production_v8_hmac_env_present` is only a presence check for the environment variable. It does not validate key format, key ID, schema/policy pins, HMAC signature or trust-chain correctness. `production_v8_trust_validation` is explicitly `NOT_RUN`. The secret value is never recorded. Production trust provisioning/validation remains a separate owner-controlled gate.
