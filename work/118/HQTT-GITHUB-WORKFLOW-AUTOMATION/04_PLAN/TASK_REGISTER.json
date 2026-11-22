@@ -304,13 +304,17 @@
         "scripts/w118/github_issue_adapter.py",
         "scripts/w118/source_binding.py",
         "tests/w118/test_github_issue_adapter.py",
-        "tests/w118/test_source_binding.py"
+        "tests/w118/test_source_binding.py",
+        "CI #906 / 45057857222 — 102 tests PASS",
+        "Entry 055 — P1-118-01 and P1-118-02 audit"
       ],
       "blockers": [
-        "Core API field map/lock lease and live GitHub token are not exposed; task-scoped push has not run."
+        "Core owner-approved lease validation contract and authenticated validation port are not exposed; production mirror writes remain fail-closed.",
+        "No approved Core Task snapshot/read port or live Core-issued lease fixture is available for runtime integration.",
+        "No live task-scoped GitHub push / source-binding event has been executed."
       ],
-      "next_action": "Finish stateless Issue mirror/source-binding contracts; execute live Issue API and task-scoped push only when authorized credentials and Core source snapshot are available.",
-      "status_note": "Contract code and tests exist; live GitHub API and task-specific branch runtime proof pending.",
+      "next_action": "Obtain Core-owner lease issuer/Work-Task-scope/audience/expiry/revocation/authentication contract and validation endpoint; then run real Core-backed positive/negative lease tests and authorized GitHub mirror round-trip.",
+      "status_note": "P1-118-01 fail-closed marker uniqueness and persisted Core issue_id binding implemented; 102 exact-head adapter/unit tests pass. P1-118-02 remains blocked: no Core-owned lease validation contract/API or live Core authority is available. Runtime GitHub mirror and task-scoped push remain unverified.",
       "execution_steps": [
         "Connect Sandbox Task Register",
         "Add per-Task mirror lock",
