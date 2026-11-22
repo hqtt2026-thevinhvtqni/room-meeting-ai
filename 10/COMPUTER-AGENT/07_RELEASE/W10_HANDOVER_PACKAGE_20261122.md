@@ -285,3 +285,8 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
 ```
 
 Add `-InstallDependencies` if needed. Do not run while the interactive START_WORK10_LOCAL session is active. The runner has not yet been executed on Owner's physical Windows 10 PC; CI PowerShell AST verification is pending.
+
+
+## Production V8 trust field clarification — 2026-11-22
+
+The acceptance JSON field `production_v8_hmac_env_present` is only a presence check for the environment variable. It does not validate key format, key ID, schema/policy pins, HMAC signature or trust-chain correctness. `production_v8_trust_validation` is explicitly `NOT_RUN`. The secret value is never recorded. Production trust provisioning/validation remains a separate owner-controlled gate.
