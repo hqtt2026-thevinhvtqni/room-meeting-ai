@@ -1499,3 +1499,15 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 ## W10-INVENTORY-COUNT-CORRECTION-20261122-04 — 2026-11-22 06:42 (UTC+07:00)
 - After adding live Dashboard E2E test + evidence file to both sides: Sandbox 163 files; GitHub 71; shared 71; Sandbox-only 92; GitHub-only 0; one Sandbox-only `.github/` directory.
 - **KÝ: Co | AI-07**
+
+
+## W10-LOCAL-LAUNCHER-RUN157-20261122-01 — 2026-11-22 06:45 (UTC+07:00)
+- Run #157 / ID `44964503556`, commit `af915dec86f3ff633163bc8d775ec435fa992643`.
+- Windows PowerShell AST syntax: START/STOP scripts PASS.
+- Windows launcher smoke: starts API :8787 + Dashboard :3010; Work ID 10 health + HTTP 200; STOP verifies commandline/start time and stops only session PIDs.
+- Windows: 224 PASS / 0 FAIL / 0 SKIP; Ubuntu: 218 PASS / 0 FAIL / 2 SKIP.
+- Launcher safety contract 11 PASS per OS; Dashboard static 17 PASS; Dashboard live 7 PASS; V8 validator 16 PASS; real Chromium E2E PASS.
+- Artifacts: Windows 14730956155 SHA-256 `4ebb98efe20ec6d2b0e6dcafb927ebe1bb89eb35f7092a3e3eb8f1a8e70fcc97`; Linux 14730652401 SHA-256 `7e3ef0b7ed8f52aa5b748dabab90febc8ec371441d198a3b7100798abdf0507d`.
+- Evidence: `06_EVIDENCE/W10_LOCAL_LAUNCHER_CI_EVIDENCE_20261122_RUN157.md`.
+- CI skipped clipboard/browser launch using noninteractive flags; physical Windows 10 acceptance remains NOT RUN.
+- **KÝ: Co | AI-07**
