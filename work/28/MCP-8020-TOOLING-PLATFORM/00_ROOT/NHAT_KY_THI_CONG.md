@@ -2100,3 +2100,19 @@ The remaining acceptance gap requires evidence from the actual ROOM-HOP PC. Chat
 **STATUS:** READ-ONLY LIVE EVIDENCE COLLECTOR PREPARED / NOT YET EXECUTED ON PC / LIVE G0 AND DEPLOYMENT ACCEPTANCE REMAIN BLOCKED.
 
 **Signature:** [KÝ: VI | CODER]
+
+
+## 2026-11-23 — JRN-W28-057 — Collector encoding portability correction
+
+**Role:** Vi | CODER — implementation and integration owner  
+**File:** `06_EVIDENCE/PC_READONLY_LIVE_PROVENANCE_COLLECTOR_20261123.ps1`  
+**Commit:** `c5c223250c6fe8a9597af5d1fb9d3a367757ed6d`  
+**Signature:** [KÝ: VI | CODER]
+
+- Replaced the UTF-8 no-BOM encoder construction with the explicit .NET constructor `[System.Text.UTF8Encoding]::new($false)` for PowerShell 5.1 compatibility.
+- This is a script portability correction only; no PC script execution is claimed. No service/process or local repository was touched.
+- Collector remains PREPARED / NOT RUN ON PC. Its endpoint and protocol result remain unverified until the owner runs the read-only collector.
+
+**STATUS:** COLLECTOR PORTABILITY PATCHED / NOT EXECUTED / LIVE PROVENANCE STILL BLOCKED.
+
+**Signature:** [KÝ: VI | CODER]
