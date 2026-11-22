@@ -259,3 +259,26 @@ The Windows launcher contract suite now contains 18 static assertions: 13 prior 
 ## Production V8 trust field clarification — 2026-11-22
 
 The acceptance JSON field `production_v8_hmac_env_present` is only a presence check for the environment variable. It does not validate key format, key ID, schema/policy pins, HMAC signature or trust-chain correctness. `production_v8_trust_validation` is explicitly `NOT_RUN`. The secret value is never recorded. Production trust provisioning/validation remains a separate owner-controlled gate.
+
+
+## Explicit PC filesystem / PowerShell scope configuration
+
+The launcher defaults to read-only access to the Work 10 folder. If the Owner wants the agent to read the full local repository, pass an explicit existing directory:
+
+```powershell
+./05_TEST/START_WORK10_LOCAL.ps1 -AllowedRoots @('D:\ROOM-HOP-CLEAN\room-meeting-ai')
+```
+
+Write access and script execution remain separately disabled unless explicitly enabled with roots contained inside `AllowedRoots`:
+
+```powershell
+./05_TEST/START_WORK10_LOCAL.ps1 -AllowedRoots @('D:\ROOM-HOP-CLEAN\room-meeting-ai') -WritableRoots @('D:\ROOM-HOP-CLEAN\room-meeting-ai\10\COMPUTER-AGENT\06_EVIDENCE') -EnableWrite
+./05_TEST/START_WORK10_LOCAL.ps1 -AllowedRoots @('D:\ROOM-HOP-CLEAN\room-meeting-ai') -PowerShellRoots @('D:\ROOM-HOP-CLEAN\room-meeting-ai\scripts') -EnablePowerShell
+```
+
+Each root must already exist; writable/PowerShell roots must be descendants of an allowed read root. Do not grant a drive root or broad system directory. `run_powershell_script` accepts allowlisted script files only, not inline shell commands. Keep both switches off for initial Owner acceptance.
+
+
+## Filesystem root boundary hardening — 2026-11-22
+
+The local launcher now defaults read access to the Work 10 directory. Any extra read roots must be existing directories; drive roots and network-share roots are rejected. Writable and PowerShell roots must be existing descendants of an allowed read root and require separate explicit `-EnableWrite` / `-EnablePowerShell` switches. The static launcher contract suite is now 22 checks (including default-root and drive/share-root rejection); this latest change is pending cross-platform CI.
