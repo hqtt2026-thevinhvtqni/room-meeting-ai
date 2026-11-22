@@ -1,0 +1,46 @@
+{
+  "mode": "local mirror from Work 092 MCP read-back",
+  "real_chromium": true,
+  "base_url": "http://127.0.0.1:39409/",
+  "viewport_runs": [
+    {
+      "viewport": "1920x1080",
+      "screenshot": "desktop-1920x1080.png"
+    },
+    {
+      "viewport": "390x844",
+      "screenshot": "mobile-390x844.png",
+      "dimensions": {
+        "scroll": 390,
+        "client": 390
+      }
+    }
+  ],
+  "checks": [
+    "desktop page loaded; mock boundary visible",
+    "mock tabs open/switch/close correctly; last tab cannot be closed",
+    "mock URL entry, Back, Forward, and Reload work without external navigation",
+    "human/agent mock control handoff gates Run while human control is active",
+    "empty task rejected; no demo step started",
+    "Search flow completed after grants; all 6 evidence entries marked simulated and artifact:none",
+    "untrusted task rendered as text; no injected img element",
+    "Browse is blocked with no grants and requires readPage+inspect+screenshot; run completes after grants",
+    "Agent Workflow scenario completes all 8 ordered mock actions; completion remains DEMO COMPLETE",
+    "mobile viewport has no horizontal page overflow",
+    "no external network requests, page errors, or console errors observed"
+  ],
+  "page_errors": [],
+  "console_errors": [],
+  "requests": [
+    "http://127.0.0.1:39409/",
+    "http://127.0.0.1:39409/styles.css",
+    "http://127.0.0.1:39409/workflow.js",
+    "http://127.0.0.1:39409/app.js",
+    "http://127.0.0.1:39409/",
+    "http://127.0.0.1:39409/styles.css",
+    "http://127.0.0.1:39409/workflow.js",
+    "http://127.0.0.1:39409/app.js"
+  ],
+  "status": "PASS",
+  "check_count": 11
+}

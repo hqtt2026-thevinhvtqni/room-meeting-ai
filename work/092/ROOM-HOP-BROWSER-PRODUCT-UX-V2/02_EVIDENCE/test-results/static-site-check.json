@@ -1,11 +1,11 @@
 {
-  "status": "PASS",
-  "mode": "static-file://",
-  "index_html": true,
-  "internal_css": true,
-  "internal_js": true,
-  "backend_dependency": false,
-  "external_requests": false,
-  "desktop_screenshot": "static-file-desktop-1920x1080.png",
-  "mobile_screenshot": "static-file-mobile-390x844.png"
+  "work_id": "092",
+  "timestamp": "2026-11-22T10:46:14+07:00",
+  "status": "PASS_ON_CLOUD_MIRROR_ONLY",
+  "method": "pytest static/API tests on Cloud Sandbox mirror from MCP read-back",
+  "pytest_total": 12,
+  "passed": 12,
+  "failed": 0,
+  "coverage": ["health mock contract", "root and routes", "local assets", "favicon data URI", "controls/permissions", "simulated evidence", "responsive CSS", "accessible tab close and final-tab guard"],
+  "limitations": "Not direct Work Sandbox or GitHub Actions; not a comprehensive accessibility audit or real browser-agent test."
 }

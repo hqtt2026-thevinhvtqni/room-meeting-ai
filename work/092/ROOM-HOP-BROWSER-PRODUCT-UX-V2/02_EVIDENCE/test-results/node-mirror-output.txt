@@ -1,0 +1,94 @@
+TAP version 13
+# Subtest: empty task is rejected
+ok 1 - empty task is rejected
+  ---
+  duration_ms: 1.416621
+  type: 'test'
+  ...
+# Subtest: search task text selects search and extracts the user query
+ok 2 - search task text selects search and extracts the user query
+  ---
+  duration_ms: 0.667489
+  type: 'test'
+  ...
+# Subtest: Vietnamese phrase tìm kiếm removes the verb from the query
+ok 3 - Vietnamese phrase tìm kiếm removes the verb from the query
+  ---
+  duration_ms: 0.407635
+  type: 'test'
+  ...
+# Subtest: English search command uses the supplied phrase rather than a fixed query
+ok 4 - English search command uses the supplied phrase rather than a fixed query
+  ---
+  duration_ms: 0.350534
+  type: 'test'
+  ...
+# Subtest: browse intent selects browse scenario
+ok 5 - browse intent selects browse scenario
+  ---
+  duration_ms: 1.198601
+  type: 'test'
+  ...
+# Subtest: workflow intent selects workflow scenario
+ok 6 - workflow intent selects workflow scenario
+  ---
+  duration_ms: 0.161559
+  type: 'test'
+  ...
+# Subtest: unclassified task respects the selected prepared scenario
+ok 7 - unclassified task respects the selected prepared scenario
+  ---
+  duration_ms: 0.359078
+  type: 'test'
+  ...
+# Subtest: browse permissions include only capabilities used by its demo steps
+ok 8 - browse permissions include only capabilities used by its demo steps
+  ---
+  duration_ms: 1.418875
+  type: 'test'
+  ...
+# Subtest: search permissions exclude workflow-only wait capability
+ok 9 - search permissions exclude workflow-only wait capability
+  ---
+  duration_ms: 0.383565
+  type: 'test'
+  ...
+# Subtest: missing permissions block a scenario until explicitly granted
+ok 10 - missing permissions block a scenario until explicitly granted
+  ---
+  duration_ms: 0.502328
+  type: 'test'
+  ...
+# Subtest: revoking a required permission blocks the scenario again
+ok 11 - revoking a required permission blocks the scenario again
+  ---
+  duration_ms: 0.212951
+  type: 'test'
+  ...
+# Subtest: switching to a narrower scenario drops no-longer-required grants
+ok 12 - switching to a narrower scenario drops no-longer-required grants
+  ---
+  duration_ms: 0.208754
+  type: 'test'
+  ...
+# Subtest: mock evidence has source, type, timestamp, status, and no artifact
+ok 13 - mock evidence has source, type, timestamp, status, and no artifact
+  ---
+  duration_ms: 0.15151
+  type: 'test'
+  ...
+# Subtest: completion is true only when every expected demo step succeeded
+ok 14 - completion is true only when every expected demo step succeeded
+  ---
+  duration_ms: 0.151555
+  type: 'test'
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 107.802775

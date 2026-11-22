@@ -1,0 +1,15 @@
+{
+  "work_id": "092",
+  "timestamp": "2026-11-22T10:46:14+07:00",
+  "status": "PASS_ON_CLOUD_MIRROR_ONLY",
+  "runner": "Cloud Sandbox local mirror reconstructed from MCP read-back; not direct Work Sandbox execution",
+  "command": "python -m pytest -q --junitxml=work092-pytest.xml",
+  "pytest_functions_authored": 12,
+  "test_cases_executed": 12,
+  "passed": 12,
+  "failed": 0,
+  "junit_report": "02_EVIDENCE/test-results/work092-pytest-mirror.xml",
+  "stdout": "02_EVIDENCE/test-results/pytest-mirror-output.txt",
+  "scope_note": "Mirror was reconstructed from Work 092 source read-back via MCP. Not a Work Sandbox, GitHub Actions, or production browser-agent run.",
+  "github_actions": "PENDING"
+}

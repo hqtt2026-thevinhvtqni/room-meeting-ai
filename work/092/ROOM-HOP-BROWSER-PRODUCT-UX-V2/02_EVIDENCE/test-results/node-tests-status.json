@@ -1,0 +1,13 @@
+{
+  "work_id": "092",
+  "timestamp": "2026-11-22T10:46:14+07:00",
+  "status": "PASS_ON_CLOUD_MIRROR_ONLY",
+  "command": "node --test tests/workflow.test.js",
+  "test_cases_authored": 14,
+  "test_cases_executed": 14,
+  "passed": 14,
+  "failed": 0,
+  "stdout": "02_EVIDENCE/test-results/node-mirror-output.txt",
+  "scope_note": "Cloud Sandbox mirror reconstructed from Work 092 MCP read-back; not Work Sandbox execution or GitHub Actions.",
+  "github_actions": "PENDING"
+}

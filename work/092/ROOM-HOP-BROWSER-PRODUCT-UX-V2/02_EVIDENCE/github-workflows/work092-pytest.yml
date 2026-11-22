@@ -1,0 +1,75 @@
+name: Work 092 tests
+
+on:
+  push:
+    paths:
+      - 'work/092/ROOM-HOP-BROWSER-PRODUCT-UX-V2/01_SOURCE/room-hop-browser-v1-prototype/**'
+      - '.github/workflows/work092-pytest.yml'
+  pull_request:
+    paths:
+      - 'work/092/ROOM-HOP-BROWSER-PRODUCT-UX-V2/01_SOURCE/room-hop-browser-v1-prototype/**'
+      - '.github/workflows/work092-pytest.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: work092-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Locate canonical source
+        id: source
+        shell: bash
+        run: |
+          if [[ -f "01_SOURCE/room-hop-browser-v1-prototype/server.py" ]]; then
+            echo "dir=01_SOURCE/room-hop-browser-v1-prototype" >> "$GITHUB_OUTPUT"
+          elif [[ -f "work/092/ROOM-HOP-BROWSER-PRODUCT-UX-V2/01_SOURCE/room-hop-browser-v1-prototype/server.py" ]]; then
+            echo "dir=work/092/ROOM-HOP-BROWSER-PRODUCT-UX-V2/01_SOURCE/room-hop-browser-v1-prototype" >> "$GITHUB_OUTPUT"
+          elif [[ -f "server.py" ]]; then
+            echo "dir=." >> "$GITHUB_OUTPUT"
+          else
+            echo 'Could not locate Work 092 canonical server.py' >&2
+            exit 1
+          fi
+
+      - name: Install pytest dependency
+        run: python -m pip install -r "${{ steps.source.outputs.dir }}/requirements-test.txt"
+
+      - name: Run pytest and write JUnit report
+        shell: bash
+        run: |
+          mkdir -p test-results
+          cd "${{ steps.source.outputs.dir }}"
+          python -m pytest -q --junitxml="$GITHUB_WORKSPACE/test-results/work092-pytest.xml"
+
+      - name: Test task/evidence/permission contracts
+        working-directory: ${{ steps.source.outputs.dir }}
+        run: node --test tests/workflow.test.js
+
+      - name: Upload pytest report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: work092-pytest-report
+          path: test-results/work092-pytest.xml
+          if-no-files-found: warn
+          retention-days: 14

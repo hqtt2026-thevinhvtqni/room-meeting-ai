@@ -1,7 +1,14 @@
-# Work 092 Evidence — Product UX V2
+# Work 092 Evidence Index
 
-Bản V2 đã được kiểm thử từ clean state trên runtime prototype. Browser View là vùng chính; Agent rail hỗ trợ task-first, timeline, evidence, permissions và human control.
+- `NU_ACK.md`: current-session executor ACK only; does not prove independent Nu dispatch.
+- `NU_BUILD_JOURNAL.md` / `NU_HANDOFF_LOG.md`: execution chronology and evidence boundaries.
+- `NU_ACCEPTANCE_REPORT.md`: current **PARTIAL — NOT ACCEPTED** decision.
+- `test-results/pytest-run-status.json`: 12/12 pass, Cloud Sandbox mirror only.
+- `test-results/node-tests-status.json`: 14/14 pass, Cloud Sandbox mirror only.
+- `test-results/browser-e2e-status.json` and `browser-e2e-mirror-result.json`: Playwright+Chromium 11/11, local mirror only.
+- `test-results/work092-pytest-mirror.xml`, `pytest-mirror-output.txt`, `node-mirror-output.txt`: local mirror outputs.
+- `screenshots/`: desktop/mobile screenshots of the static mock prototype; see its README for viewport/capture dimensions and provenance.
+- `github-workflows/work092-pytest.yml`: workflow staged and installed at repository root in this branch.
+- `test-results/github-actions-status.json`: pending until an Actions run is verified.
 
-Các kết quả chính nằm trong `test-results/v2-e2e-result.json` và `test-results/v2-interaction-trace.json`. Final Agent Workflow trả `Connected → Working → Done`, `8 / 8 actions`, `6 / 6`, `PASS · 6 / 6 verified` và `8 events`.
-
-Screenshot runtime V2: `screenshots/v2-desktop-1920x1080.png` và `screenshots/v2-mobile-390x844.png`. Work vẫn MOCK ONLY; không có Core/MCP/Opera/Internet/external API/real Chromium.
+All app actions and displayed evidence remain MOCK ONLY. Cloud mirror results are not direct Work Sandbox runs, GitHub CI, or real agent/browser/network validation. Historical PASS artifacts are not current proof.

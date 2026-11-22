@@ -1,0 +1,15 @@
+{
+  "work_id": "092",
+  "checked_at": "2026-11-22T10:50:00+07:00",
+  "repository": "hqtt2026-thevinhvtqni/room-meeting-ai",
+  "branch": "work092/one-shot-20261122",
+  "status": "PENDING_PUSH_AND_ACTIONS_RUN",
+  "workflow_path": ".github/workflows/work092-pytest.yml",
+  "workflow_installed_in_branch_worktree": true,
+  "workflow_run_id": null,
+  "run_url": null,
+  "head_sha": null,
+  "conclusion": null,
+  "junit_artifact": "work092-pytest-report",
+  "note": "Do not claim GitHub CI PASS until the pushed branch has an observed Actions run with SUCCESS conclusion and downloadable JUnit report."
+}
