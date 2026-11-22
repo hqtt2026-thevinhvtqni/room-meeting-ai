@@ -181,3 +181,51 @@ Xu should review:
 - **Date-Time:** 2026-11-23 02:39:57 +07:00
 - **Result:** Converted cross-Work blockers into owner-specific contract intake, security semantics, exact evidence requirements and ordered integration gates. No external Work source/runtime/permission/secret changed.
 - **Disposition:** ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.
+## Addendum v1.4 — Core Execution Authority candidate cross-check
+
+- **Document ID:** RA-118-002 (controlled addendum v1.4)
+- **Priority:** P0 — distinguish an implementation candidate from an approved/deployed authority and prevent scope-confused Grant reuse.
+- **Read order:** 15
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-23 02:44:59 +07:00.
+
+### A. Newly located candidate — Work32 Core-owned Execution Authority
+
+Work32 DOC-118 (blob 3a55fb81dc93f4243f1151bd020586a81e408fb8, branch work/32-core-owned-execution-authority-20261112) states Xu approved the architecture boundary: Core owns Work-scoped execution authority; Host owns process execution; Build MCP is not an authority. Its proposed/implemented Grant fields include Work, repository, allowed branch, expected Git HEAD, server-derived Agent principal, issuer service identity, Assignment ID, Task ID, Host identity, per-run source SHA-256, environment, exact pytest entrypoint, timeout, policy version and expiry. DOC-119 and DOC-121 describe two-phase Run Record and clean Git source binding.
+
+Read-only source trace on Work32 PR #54 branch work/32-main-integration-remediation-20261113 confirms candidate HTTP routes:
+- POST /works/{work_id}/execution-grants
+- GET /works/{work_id}/execution-grants/{grant_id}
+- GET /works/{work_id}/execution-grants/{grant_id}/validate
+- POST /works/{work_id}/execution-grants/{grant_id}/runs
+- POST /works/{work_id}/execution-grants/{grant_id}/runs/{run_id}/complete
+- POST /works/{work_id}/execution-grants/{grant_id}/revoke
+
+Exact implementation refs inspected: Core authority blob dd9becadd56a1df4c3f306de317b2f70f2b3b1db; HTTP adapter blob 0e7e00b8d9c39d0fcdcaf02e623a77dc532d4107; Host client blob adc36577a94efdd5c46d64c30065993d5cd02b3b; Host blob 1c5c05f9204510b98775069ed8378d8ac2c69e3f.
+
+### B. Why this does not clear W118 P1-118-02
+
+1. The Work32 Grant purpose in the implementation is explicitly pytest_run and the validation identity is the authorized Execution Host. It is a protected execution grant, not a GitHub Issue mirror lock lease. Reusing it to authorize W118 Issue POST/PATCH would be an action-scope violation. W118 must not wire this Grant into github_issue_adapter.lease_validator as a substitute.
+2. The Work32 implementation is not merged or deployed. PR #52 is OPEN / DRAFT / UNMERGED (head 2fb2de923aa7a592f6926457e0b93208e9cb2ed0); its exact-head run #464 / 43431555368 failed because the dedicated PC runner identity/release gate failed. PR #54 is OPEN / DRAFT / UNMERGED (head 2ad91ed45284d45ca1e241ec95f6598b735331db); exact-head run #570 / 43530604219 also failed its PC runner/release gate.
+3. Run #570 did reach the correct self-hosted runner ROOM-HOP-W32-PC (runner 2.338.2, Windows, X64; runner_identity=PASS), but the read-only Core invalid-credential probe expected HTTP 401/403 and received HTTP 404. The release gate records SELF_HOSTED_RESULT=failure. This is evidence that the expected live Core route/mount is not verified at that tested deployment, not evidence that the endpoint is deployed and working.
+4. Work32 PR #54 body records no Core/Host configuration/startup, no production credentials or Work policy provisioned, independent security review pending, and protected execution DENIED. The successful component/product CI lanes do not override the failed self-hosted authority probe.
+
+### C. Distinguish other Core candidates
+
+- **Work28:** PR #73 is CLOSED / MERGED only into base branch work/28-mcp-tooling-platform (not Main) and is a documentation/provenance correction. Work28 manifest at the inspected branch states Execution Gate CLOSED. Its V1.2 contract says Vinh approval is pending and no owner-approved/deployed endpoint has been verified. The implementation files on vi/work28-wp5-core-grant-fail-closed-20261123 are a divergent candidate branch (434 ahead / 1,793 behind Main), not an authorized live endpoint.
+- **Work1111:** PR #48 remains OPEN / DRAFT / UNMERGED, head c70eb2b82f54a000a81263dc519078ddf105f075, compare 157 ahead / 986 behind Main. Its current branch has no exact-head CI run. Prior independent trace identified source-hash binding mismatch, missing Task/Assignment authorization binding and revoke/run atomicity risk. Do not bind W118 to this candidate.
+
+### D. Revised dependency decisions
+
+- DEP-CORE-02 / P1-118-02 remains BLOCKED: W118 needs a Core-owned, authenticated, Task-scoped lease/lock contract whose action scope explicitly authorizes Issue mirror create/update. Work32 pytest_run Grant is not equivalent.
+- Work32 Core Execution Authority is now recorded as a candidate input for W118-TASK-015 / W118-TASK-019 protected execution integration only, pending Xu/Vinh authority gates, exact-source review, passing exact-head CI, independent security review, Core/Host deployment and live positive/negative runtime evidence.
+- No W118 code binding is permitted from this candidate until W14 confirms its canonical Host/ExecutionHostBridge path and Core confirms the deployed authority contract. No W118 local execution route or host is created.
+- No source, branch, runtime, secret, permission or configuration in Work28, Work32 or Work1111 was changed by this audit.
+
+### BIÊN BẢN — Addendum v1.4
+
+- **Name:** Ka / AI-02
+- **Title:** CSA / W118 Delegated Build Owner
+- **Date-Time:** 2026-11-23 02:44:59 +07:00
+- **Result:** Located and traced the Work32 Core Grant candidate, distinguished its pytest execution scope from W118 Issue mirror lease scope, and preserved fail-closed integration boundaries. PR #52/#54 remain draft and runtime gate failed.
+- **Disposition:** P1-118-02 BLOCKED; W118-TASK-015/019 dependency candidate identified but not authorized/deployed; Runtime Auto E2E NOT RUN.
