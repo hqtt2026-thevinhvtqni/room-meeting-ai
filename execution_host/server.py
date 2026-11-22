@@ -9,7 +9,6 @@ from .identity import RuntimeIdentity
 from .models import WorkContext, ExecutionRequest
 from .work28_dispatch import DispatchError, dispatch_execute
 from .work28_grant import ExecutionGrant, GrantError
-from .work28_grant_registry import load_grant_registry
 from .work28_core_grant_client import build_grant_source
 from .work28_readback import ReadbackError, load_sealed_result
 from .work28_evidence import EvidenceError
@@ -78,7 +77,7 @@ class Handler(BaseHTTPRequestHandler):
     authorized_works: frozenset | None = None
     grant_registry: dict | None = None
     evidence_root: str | None = None
-    snapshot_only: bool = False
+    snapshot_only: bool = True
     def _send(self,code,payload):
         data=json.dumps(payload,ensure_ascii=False).encode(); self.send_response(code); self.send_header('Content-Type','application/json'); self.send_header('Content-Length',str(len(data))); self.end_headers(); self.wfile.write(data)
     def do_GET(self):
@@ -169,7 +168,7 @@ class Handler(BaseHTTPRequestHandler):
         self._send(405, {'status': 'BLOCKED', 'reason': 'method_not_allowed'})
     def log_message(self,*args): pass
 
-def serve(host='127.0.0.1',port=8031,auth_token: str | None = None, authorized_works=None, grant_registry=None, evidence_root=None, snapshot_only=False):
+def serve(host='127.0.0.1',port=8031,auth_token: str | None = None, authorized_works=None, grant_registry=None, evidence_root=None, snapshot_only=True):
     identity=RuntimeIdentity(bind_address=f'{host}:{port}')
     Handler.host=ExecutionHost(runtime_identity=identity)
     Handler.auth_token=auth_token
@@ -182,14 +181,20 @@ def serve(host='127.0.0.1',port=8031,auth_token: str | None = None, authorized_w
 def main():
     config = load_execution_auth_config()
     announced = ', '.join(sorted(config['authorized_works']))
-    try:
-        grants = build_grant_source().fetch_grants()
-    except Exception:
-        grants = load_grant_registry()
+    # Core is the sole grant authority. Any missing/unreachable/invalid Core
+    # grant source aborts startup; never fall back to a local file registry.
+    grants = build_grant_source().fetch_grants()
     print('execution-host: armed; authorized works: ' + announced +
           '; grants=' + str(len(grants)), flush=True)
     evidence_root = os.environ.get('ROOM_HOP_EVIDENCE_ROOT')
-    snapshot_only = os.environ.get('ROOM_HOP_SNAPSHOT_ONLY', '').strip() in ('1', 'true', 'TRUE', 'yes')
+    raw_snapshot_only = os.environ.get('ROOM_HOP_SNAPSHOT_ONLY')
+    # Secure default: command mode stays disabled unless trusted deployment
+    # configuration explicitly opts out with 0/false/no/off.
+    snapshot_only = (
+        True
+        if raw_snapshot_only is None
+        else raw_snapshot_only.strip().lower() not in ('0', 'false', 'no', 'off')
+    )
     serve('127.0.0.1', 8031, grant_registry=grants, evidence_root=evidence_root, snapshot_only=snapshot_only, **config)
 
 if __name__=='__main__': main()
