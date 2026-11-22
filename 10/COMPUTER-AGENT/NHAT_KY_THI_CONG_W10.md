@@ -1561,3 +1561,12 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - Current inventory: Sandbox 170 files; GitHub 78; shared 78; Sandbox-only 92; GitHub-only 0; one Sandbox-only `.github/` directory.
 - Evidence: `06_EVIDENCE/W10_GITHUB_ACTIONS_CI_EVIDENCE_20261122_RUN195.md`.
 - **KÝ: Co | AI-07**
+
+
+## W10-OWNER-PC-ACCEPTANCE-RUNNER-20261122-01 — 2026-11-22 06:53 (UTC+07:00)
+- Created `05_TEST/RUN_WORK10_ACCEPTANCE.ps1` as a one-command Windows 10 acceptance runner.
+- It captures OS/Python/Playwright/Chromium/Git identity, PowerShell AST, local launcher smoke, full suite, real Chromium E2E, source hashes and timestamped JSON report/logs.
+- It never records secret values, leaves write/PowerShell roots disabled and keeps release gate OPEN.
+- Not yet executed on Owner PC; CI AST validation pending.
+- Inventory: Sandbox 171 files; GitHub 79; shared 79; Sandbox-only 92; GitHub-only 0.
+- **KÝ: Co | AI-07**
