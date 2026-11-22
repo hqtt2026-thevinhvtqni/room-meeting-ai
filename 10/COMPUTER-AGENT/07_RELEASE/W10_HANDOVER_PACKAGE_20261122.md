@@ -142,7 +142,7 @@ This ChatGPT session has no direct local PowerShell/desktop executor; the physic
 
 - Canonical branch contains the current Work 10 source, test suite, core contracts, PC Host Capability Contract, operational Dashboard and current runbooks.
 - The 30 source/test/architecture/config files independently sampled in the current reconciliation pass were exact-match between Sandbox and GitHub after the updates; all three LOCKED contracts are exact-match.
-- Current inventory: Sandbox has 170 files under `COMPUTER-AGENT/`; GitHub branch has 78; 78 paths are shared and 92 are Sandbox-only; GitHub-only paths = 0. The 93 Sandbox-only files have explicit KEEP/SANDBOX-ONLY dispositions in `06_EVIDENCE/W10_FULL_PATH_INVENTORY_DISPOSITION_20261122.md`; they include historical/debug records, original/reference files, preview/sample data, generated evidence/lock files and Python caches. Do not bulk-copy caches, locks, preview samples or unreviewed debug packages into the canonical branch.
+- Current inventory: Sandbox has 171 files under `COMPUTER-AGENT/`; GitHub branch has 79; 79 paths are shared and 92 are Sandbox-only; GitHub-only paths = 0. The 93 Sandbox-only files have explicit KEEP/SANDBOX-ONLY dispositions in `06_EVIDENCE/W10_FULL_PATH_INVENTORY_DISPOSITION_20261122.md`; they include historical/debug records, original/reference files, preview/sample data, generated evidence/lock files and Python caches. Do not bulk-copy caches, locks, preview samples or unreviewed debug packages into the canonical branch.
 - No GitHub-only Work 10 file remains in the inventory snapshot.
 - Branch history is preserved; no force push, main merge, deployment or release was performed.
 
@@ -271,3 +271,17 @@ Add `-InstallDependencies` if requirements/Chromium are not installed. The repor
 ## Acceptance runner contract extension — 2026-11-22
 
 The Windows launcher contract suite now contains 18 static assertions: 13 prior launcher/stop checks plus 5 checks for the one-command Owner acceptance runner. GitHub Windows CI PowerShell AST parsing now includes `RUN_WORK10_ACCEPTANCE.ps1`. The new runner is intended for the physical Windows 10 PC; hosted Windows Server 2022 CI parses its syntax but does not execute it because the runner enforces a Windows 10 client profile. Full CI verification of this latest change is pending.
+
+
+## 18. One-command physical Windows 10 acceptance runner — 2026-11-22
+
+Added `05_TEST/RUN_WORK10_ACCEPTANCE.ps1`. It is gated to a Windows 10 client, validates Python 3.12 and Playwright/Chromium, parses START/STOP PowerShell scripts, runs the noninteractive launcher smoke, executes the complete Python regression suite and real Chromium E2E, hashes accepted source/tests/contracts/schemas, and writes a timestamped JSON report plus full logs under `06_EVIDENCE/`. It records only whether a production V8 HMAC key is configured, never the key value. The report keeps `release_gate=OPEN`; local test PASS is not release acceptance.
+
+Run from Work 10 root:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
+./05_TEST/RUN_WORK10_ACCEPTANCE.ps1 -PythonPath ./.venv/Scripts/python.exe
+```
+
+Add `-InstallDependencies` if needed. Do not run while the interactive START_WORK10_LOCAL session is active. The runner has not yet been executed on Owner's physical Windows 10 PC; CI PowerShell AST verification is pending.
