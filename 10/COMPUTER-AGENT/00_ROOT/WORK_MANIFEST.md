@@ -339,3 +339,9 @@ Run #157 confirms PowerShell syntax and Windows local launcher start/stop smoke 
 
 After adding START/STOP scripts, launcher contract test and Run #157 evidence to both sides, inventory: Sandbox 167 files; GitHub 75; shared 75; Sandbox-only 92; GitHub-only 0. All 34 accepted source/test/architecture/config/launcher files independently compared exact UTF-8. Updated inventory: `06_EVIDENCE/W10_FULL_PATH_INVENTORY_DISPOSITION_20261122.md`.
 
+
+
+## W10-HTTP-OVERSIZE-TEST-REMEDIATION-20261122-01 — 2026-11-22 06:48 (UTC+07:00)
+
+Co | AI-07. Run #169 Windows HTTP API suite stopped after 20 PASS with WinError 10053 while urllib was uploading a 1 MiB+10 byte body. API correctly rejects Content-Length >1 MiB before reading body and returns 413; Windows client could still be sending the payload while server closed the connection. Co changed only test construction to send authenticated headers with oversized Content-Length via http.client without uploading the body. API limit/runtime unchanged. Run #175 (ID `44965429403`, commit `740798d7053061f5c8d0908d4882f8aed13f1a4b`) passed both OSes: Windows 225 PASS / 0 FAIL / 0 SKIP; Ubuntu 219 PASS / 0 FAIL / 2 SKIP; HTTP suite 52 PASS per OS. Evidence: `06_EVIDENCE/W10_HTTP_OVERSIZE_TEST_REMEDIATION_RUN169_175.md`.
+
