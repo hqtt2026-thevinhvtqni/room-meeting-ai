@@ -114,19 +114,29 @@ CI evidence is commit-specific. It does not prove local Windows 10 startup, ACLs
 
 ## 6. Local acceptance procedure for Owner PC
 
-Follow `05_TEST/HOST_E2E_RUNBOOK.md` on the physical Windows 10 PC. The minimum required evidence is:
+Follow `05_TEST/HOST_E2E_RUNBOOK.md` on the physical Windows 10 PC. The local operator scripts are now ready:
 
+1. Open a normal, non-elevated PowerShell session at the Work 10 root.
+2. Run `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force` (process scope only; not persistent).
+3. Run `./05_TEST/START_WORK10_LOCAL.ps1 -PythonPath ./.venv/Scripts/python.exe` (add `-InstallDependencies` only if dependencies/Chromium are not installed). This starts the local Agent API on loopback :8787 and Dashboard on :3010, checks health, creates a session record without the token, copies the per-session token to clipboard and opens the Dashboard.
+4. Paste the token into the Dashboard password field. Confirm Work ID 10 and API health. Do not enable write roots or PowerShell roots for the first acceptance pass.
+5. Stop the interactive launcher with `./05_TEST/STOP_WORK10_LOCAL.ps1`. It refuses to stop during active execution and validates process command line + start time.
+6. With the interactive launcher stopped, run `python 05_TEST/run_all_tests.py` and `python 05_TEST/e2e_real_browser.py`. The test runner starts its own temporary API/Dashboard instances; do not leave the interactive launcher running because it uses the same ports.
+7. Retain the full logs, evidence JSON, browser result JSON + screenshot, Windows build/Python/Playwright/Chrome inventory, ProcessSupervisor journal and Job Object containment-empty proof.
+8. Keep writable roots and PowerShell roots disabled unless Owner separately approves exact paths and scripts. Production V8 signature acceptance requires provisioning the production HMAC key and exact pins; never paste the key into chat or commit it.
+
+Required evidence:
 - exact Git commit and source/schema/policy SHA-256 values;
 - Python/Playwright/Chrome and Windows build inventory;
-- `python 05_TEST/run_all_tests.py` full output and generated evidence JSON;
-- `python 05_TEST/e2e_real_browser.py` result JSON + screenshot;
-- local API health response and approved Dashboard workflow response;
-- host `list_directory`, `read_file`, `run_pytest` and (only if explicitly enabled) `write_file` / approved PowerShell script evidence;
+- full test output and generated evidence JSON;
+- local API health + Dashboard health/consent smoke;
+- Chromium E2E result JSON + screenshot;
+- host `list_directory`, `read_file`, `run_pytest`; (only after explicit approval) `write_file` / approved PowerShell evidence;
 - ProcessSupervisor run journal and Windows containment-empty proof;
-- V8 attestation + signature verification result, with key redacted;
-- local root allow-lists and service-account/ACL disposition.
+- V8 attestation + signature verification result with key redacted;
+- root allow-lists and service-account/ACL disposition.
 
-This session has no direct local PowerShell/desktop executor, so these steps are documented but not claimed as executed.
+This ChatGPT session has no direct local PowerShell/desktop executor; the physical Windows 10 procedure is prepared but NOT RUN here.
 
 ## 7. Synchronization disposition
 
@@ -156,7 +166,7 @@ This session has no direct local PowerShell/desktop executor, so these steps are
 
 **ROOM-HOP integrated E2E:** OPEN.
 
-**Full inventory reconciliation:** IN PROGRESS.
+**Full inventory reconciliation:** COMPLETE BY EXPLICIT DISPOSITION — 170 Sandbox files; 78 GitHub files; 78 shared paths; 92 Sandbox-only files itemized; 0 GitHub-only paths.
 
 **Owner acceptance / release:** PENDING / NOT AUTHORIZED.
 
