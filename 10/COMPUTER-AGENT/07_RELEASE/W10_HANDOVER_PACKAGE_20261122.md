@@ -118,7 +118,7 @@ Follow `05_TEST/HOST_E2E_RUNBOOK.md` on the physical Windows 10 PC. The local op
 
 1. Open a normal, non-elevated PowerShell session at the Work 10 root.
 2. Run `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force` (process scope only; not persistent).
-3. Run `./05_TEST/START_WORK10_LOCAL.ps1 -PythonPath ./.venv/Scripts/python.exe` (add `-InstallDependencies` only if dependencies/Chromium are not installed). This starts the local Agent API on loopback :8787 and Dashboard on :3010, checks health, creates a session record without the token, copies the per-session token to clipboard and opens the Dashboard.
+3. Run `./05_TEST/START_WORK10_LOCAL.ps1` (add `-InstallDependencies` only if dependencies/Chromium are not installed). This starts the local Agent API on loopback :8787 and Dashboard on :3010, checks health, creates a session record without the token, copies the per-session token to clipboard and opens the Dashboard.
 4. Paste the token into the Dashboard password field. Confirm Work ID 10 and API health. Do not enable write roots or PowerShell roots for the first acceptance pass.
 5. Stop the interactive launcher with `./05_TEST/STOP_WORK10_LOCAL.ps1`. It refuses to stop during active execution and validates process command line + start time.
 6. With the interactive launcher stopped, run `python 05_TEST/run_all_tests.py` and `python 05_TEST/e2e_real_browser.py`. The test runner starts its own temporary API/Dashboard instances; do not leave the interactive launcher running because it uses the same ports.
@@ -262,7 +262,7 @@ Run from the Work 10 root:
 
 ```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
-./05_TEST/RUN_WORK10_ACCEPTANCE.ps1 -PythonPath ./.venv/Scripts/python.exe
+./05_TEST/RUN_WORK10_ACCEPTANCE.ps1
 ```
 
 Add `-InstallDependencies` if requirements/Chromium are not installed. The report stores only whether a production V8 HMAC key is configured, never the key value. It leaves `release_gate=OPEN`; passing local tests is not final Owner acceptance. It does not enable writes or PowerShell roots. Do not run it while the interactive START_WORK10_LOCAL session is active.
@@ -281,7 +281,7 @@ Run from Work 10 root:
 
 ```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
-./05_TEST/RUN_WORK10_ACCEPTANCE.ps1 -PythonPath ./.venv/Scripts/python.exe
+./05_TEST/RUN_WORK10_ACCEPTANCE.ps1
 ```
 
 Add `-InstallDependencies` if needed. Do not run while the interactive START_WORK10_LOCAL session is active. The runner has not yet been executed on Owner's physical Windows 10 PC; CI PowerShell AST verification is pending.
@@ -320,3 +320,6 @@ The local launcher now defaults read access to the Work 10 directory. Any extra 
 Run #230 tested commit `eac6db5ed228cea64d030839f07232c7a492a995`. Windows Server 2022: 235 PASS / 0 FAIL / 0 SKIP; Ubuntu 24.04: 229 PASS / 0 FAIL / 2 expected SKIP. The 22-check launcher/acceptance contract passed on both OSes. Windows PowerShell AST parsed START/STOP/RUN_WORK10_ACCEPTANCE; local launcher start/health/Dashboard/stop smoke passed. Additional root restrictions reject drive/share roots and require write/PowerShell roots to be descendants of explicit read roots with separate switches. Evidence: `06_EVIDENCE/W10_ROOT_BOUNDARY_ACCEPTANCE_RUNNER_CI_20261122_RUN230.md`.
 
 The physical Windows 10 acceptance runner itself is not executed by hosted CI because it intentionally requires a Windows 10 client. It remains ready for Owner PC execution.
+
+
+By default, the scripts select `python` from the current PowerShell PATH and require Python 3.12. If the correct interpreter is not first on PATH, pass `-PythonPath 'C:\path\to\python.exe'` explicitly. No fixed virtual-environment path is assumed.
