@@ -2241,3 +2241,16 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - **Limitations:** Search excerpts/document-register status are governance/source-index evidence, not proof of live API absence or runtime behavior. No Runtime Auto E2E was run.
 - **Disposition:** ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.
 - **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-23 03:17 +07:00; Result: W70/W102 integration boundaries recorded; no external Work mutation.
+
+
+### Entry 061 addendum — exact-head CI for W70/W102 integration boundary
+
+- **Priority:** 03 — P0 — Validate the W70/W102 audit documentation at exact source SHA.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-23 03:17 +07:00.
+- **Tested source SHA:** `8fdb0bd68d5ad10167fd83ff021fc912a9aa597d`.
+- **Push Run #989 / ID `45065868398`:** SUCCESS; validate job `137341787606`; raw log confirms **102 tests in 0.306s**, `TEST_OUTCOME=success`, `SOURCE_BINDING_STATUS=UNBOUND_LEGACY_BRANCH`. Artifact `14771820300`, 974 bytes, SHA-256 `15f4ca5fe9d722c2cc1fc7a1fb04c621bcefdc976e39f42f5920f513b5ef3149`.
+- **PR Run #990 / ID `45065875808`:** SUCCESS; validate job `137341795520`; raw log confirms **102 tests in 0.137s**, `TEST_OUTCOME=success`, `SOURCE_BINDING_STATUS=NOT_RUN` (push-only). Artifact `14771655985`, 684 bytes, SHA-256 `5e75b2857dc0947e49883c588486afac4caa8881ad8928e4d2ca6a58b400c0e1`.
+- Handoff-request, ACK-claim and review-observation capture jobs were SKIPPED. These runs validate W118 contract/unit CI only; they do not establish W70/W102 runtime authority, Task source binding or Runtime Auto E2E.
+- This journal/status update creates a new HEAD; fresh exact-head CI is required. Final run references will be recorded in PR #68 without another source edit.
+- **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-23 03:17 +07:00; Result: 102-test push and PR contract CI passed for source SHA `8fdb0bd`; integration blockers unchanged.
