@@ -124,9 +124,9 @@ $env:COMPUTER_AGENT_API_TOKEN = $token
 $env:COMPUTER_AGENT_ALLOWED_ORIGINS = "http://127.0.0.1:3010"
 $env:COMPUTER_AGENT_WORK_ID = "10"
 $env:COMPUTER_AGENT_PORT = "8787"
-$env:COMPUTER_AGENT_HOST_ALLOWED_ROOTS = [string]::Join([System.IO.Path]::PathSeparator, $resolvedAllowedRoots)
-$env:COMPUTER_AGENT_HOST_WRITABLE_ROOTS = [string]::Join([System.IO.Path]::PathSeparator, $resolvedWritableRoots)
-$env:COMPUTER_AGENT_HOST_POWERSHELL_ROOTS = [string]::Join([System.IO.Path]::PathSeparator, $resolvedPowerShellRoots)
+$env:COMPUTER_AGENT_HOST_ALLOWED_ROOTS = [string]::Join([string][System.IO.Path]::PathSeparator, [string[]]$resolvedAllowedRoots)
+$env:COMPUTER_AGENT_HOST_WRITABLE_ROOTS = [string]::Join([string][System.IO.Path]::PathSeparator, [string[]]$resolvedWritableRoots)
+$env:COMPUTER_AGENT_HOST_POWERSHELL_ROOTS = [string]::Join([string][System.IO.Path]::PathSeparator, [string[]]$resolvedPowerShellRoots)
 
 $api = $null
 $dashboard = $null
