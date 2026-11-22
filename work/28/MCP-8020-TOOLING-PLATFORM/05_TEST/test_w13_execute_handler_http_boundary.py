@@ -99,10 +99,14 @@ class ExecuteHttpBoundaryTests(unittest.TestCase):
             eh_server.Handler.host,
             eh_server.Handler.auth_token,
             eh_server.Handler.authorized_works,
+            eh_server.Handler.snapshot_only,
         )
         eh_server.Handler.host = self.host
         eh_server.Handler.auth_token = "secret-token"
         eh_server.Handler.authorized_works = frozenset({"W28"})
+        # This legacy HTTP-boundary test intentionally exercises command mode;
+        # opt out explicitly instead of relying on the secure runtime default.
+        eh_server.Handler.snapshot_only = False
         self.httpd = ThreadingHTTPServer(("127.0.0.1", 0), eh_server.Handler)
         self.base = "http://127.0.0.1:%d" % self.httpd.server_address[1]
         self.thread = threading.Thread(target=self.httpd.serve_forever, daemon=True)
@@ -113,7 +117,7 @@ class ExecuteHttpBoundaryTests(unittest.TestCase):
         self.httpd.server_close()
         self.thread.join(timeout=5)
         (eh_server.Handler.host, eh_server.Handler.auth_token,
-         eh_server.Handler.authorized_works) = self._saved
+         eh_server.Handler.authorized_works, eh_server.Handler.snapshot_only) = self._saved
 
     def test_missing_token_is_401_and_host_never_invoked(self):
         code, body = post(self.base, payload())
