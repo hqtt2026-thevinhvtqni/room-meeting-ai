@@ -276,3 +276,35 @@ Work17 GAP-11 addendum Entry 044 independently records the same exact source dis
 - **Date-Time:** 2026-11-23 13:00 +07:00 (audit session; minute-level timestamp not captured)
 - **Result:** Reconciled Main Core entrypoint, HTTP adapter, deployment guide and Work17 GAP-11 Entry 044. Found a concrete source/documentation contradiction; no runtime or external Work mutation.
 - **Disposition:** Core authority mount NOT VERIFIED; P1-118-02 BLOCKED; Runtime Auto E2E NOT RUN; NOT ACCEPTED / NOT RELEASED.
+
+
+## Addendum v1.6 — W14 canonical source path / host contract parity
+
+- **Document ID:** RA-118-002 (controlled addendum v1.6)
+- **Priority:** 02 — P0 — Verify W14's owner-approved canonical Host contract and source revision before W118 protected-execution binding.
+- **Read order:** 16
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-23 13:00 +07:00 (audit session; minute-level timestamp not captured).
+
+### A. Current GitHub Main path check
+
+- Work17 portfolio reconciliation on Main identifies W14 canonical Sandbox path as `AUTONOMOUS-E2E-BUILDER/00_ROOT/DOC-001_W14_WORK_MANIFEST.md`, and identifies Work13 absorbed by W14. The exact W14 Manifest, journal and source paths are NOT PRESENT at corresponding repository-root paths in the inspected Main tree (bounded fetches returned NOT_FOUND).
+- The Main repository therefore does not provide an exact W14 source/hash pin at those paths. This is a source-registration/parity gap, not evidence that W14 Sandbox source does not exist.
+- Work17 GAP Register Entry 039 says the inspected W14 implementation is one-shot POST `/execute` through W12ExecutionAdapter → RealExecutionHost.execute()/subprocess.run(), while W52 HostPort requires persistent bidirectional RpcPort lifecycle. No direct W52 HostPort binding was found.
+- Work17 GAP Register Entry 054 identifies W14 release branch HEAD `65992f04d6989e199d91355f0bd977cfc6258c4a` as an isolated candidate, DIVERGED 6 ahead / 1,543 behind at that audit snapshot; bridge blob `2f92e6ca3af7c897c4b5ff26a889e84e0844a823` sends one-shot POST `/execute` with caller `authorized:true`, without Assignment/Dispatch/Attempt/recipient-ACK binding. W14 journal at that time recorded AUD-005 BLOCKED, candidate v5 NOT APPROVED, PC E2E NOT VERIFIED and release NOT AUTHORIZED.
+
+### B. W118 integration decision
+
+1. W14 owner-approved canonical source/hash and current source parity: **NOT VERIFIED** in Main.
+2. W14 one-shot process execution is not interchangeable with W52 persistent interactive HostPort/RpcPort; do not adapt by assumption.
+3. Caller-provided `authorized:true` is not Core authorization. Do not call a side-effecting W14 endpoint from W118 until Core grant and recipient ACK gates are authoritative and verified before process spawn.
+4. W118-TASK-015/TASK-019 remain blocked for protected execution; W118 will not create a duplicate Host, process runner, provider session transport or Core authorization layer.
+5. This bounded audit did not read Sandbox, invoke runtime, run PC commands, or modify W14/W13/Core/W52 source. Historical Work17 evidence is used as a cross-reference, not represented as a fresh W14 source inspection.
+
+### BIÊN BẢN — Addendum v1.6
+
+- **Name:** Ka / AI-02
+- **Title:** CSA / W118 Delegated Build Owner
+- **Date-Time:** 2026-11-23 13:00 +07:00 (audit session; minute-level timestamp not captured)
+- **Result:** Exact W14 Main path checks returned NOT_FOUND; Work17 source trace distinguishes one-shot W14 process execution from persistent HostPort and records the release candidate's prior blocked state. No W14 or runtime mutation.
+- **Disposition:** W14 source parity NOT VERIFIED; protected execution BLOCKED; Runtime Auto E2E NOT RUN; W118 NOT ACCEPTED / NOT RELEASED.
