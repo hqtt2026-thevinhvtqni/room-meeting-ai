@@ -300,3 +300,13 @@ W118 ACTIVE — NOT ACCEPTED — NOT RELEASED. Runtime Auto E2E NOT VERIFIED; Xu
 - **Xu review:** P1-118-01 NEEDS CHANGES (duplicate Issue marker and Core `issue_id` mismatch not fail-closed); P1-118-02 BLOCKED (non-empty string is not lease authentication); runtime integration BLOCKED / NOT VERIFIED. PR #68 formal reviews = 0; inline threads = 0.
 - **Architecture:** TD-118-012 v1.3 / Architecture A retained. Core :8000 runtime authority; W102 identity/Assignment; W14 integrated execution; W12/W13 absorbed; W70 lifecycle/evidence/dashboard; W118 stateless GitHub adapters only.
 - **Overall:** ACTIVE — NEEDS CHANGES / BLOCKED — NOT ACCEPTED — NOT RELEASED. No source/workflow/runtime/permission/secret/Main mutation, merge or release. Full details: BB-118-003 and Journal Entry 054.
+
+
+## 10. Latest exact-head contract CI — 2026-11-23 01:46 +07:00
+
+- **PR #68 source head:** `1199ffb3f179f69bc82170499b5011516e94a12f`; latest documentation correction only.
+- **Run #899 / ID:** `45056947568`; validate job `137314162401` COMPLETED / SUCCESS; raw log **95 tests in 0.294s — OK**.
+- **Tested PR merge ref:** `646cf8f42a81ec370c05511ecb154ed771bdaf9a`.
+- **Artifact:** `14767388324`, size 686 bytes, SHA-256 `e06d4937c1c0401a461cfdb9e0ec299e2118d62d0d13caf5f01b4d4374de26e6`; payload not independently parsed.
+- Source binding NOT RUN; handoff/ACK/review-observation jobs SKIPPED. Contract/unit CI only, not Runtime Auto E2E.
+- **Xu disposition:** P1-118-01 NEEDS CHANGES; P1-118-02 BLOCKED; runtime integration BLOCKED / NOT VERIFIED. Overall ACTIVE — NOT ACCEPTED — NOT RELEASED.

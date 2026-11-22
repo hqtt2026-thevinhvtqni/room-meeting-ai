@@ -1930,3 +1930,13 @@
 - **Review disposition:** Xu internal technical review = NEEDS CHANGES for P1-118-01; BLOCKED for P1-118-02 and cross-Work runtime integration; overall W118 = ACTIVE — NEEDS CHANGES / BLOCKED — NOT ACCEPTED — NOT RELEASED. This is not a GitHub formal review submission; no Xu GitHub login is inferred. Vinh product acceptance and release authority remain separate.
 - **Controls:** Existing implementation/workflow freeze retained pending bounded remediation and owner-approved external contracts. No source/test/workflow mutation, secret/permission change, external Work mutation, B-118-010 application, Main merge or release. Only this audit record, status/routing refresh and review minutes are documentation changes.
 - **Next action:** Prepare one outcome-based Nu handoff for the bounded P1-118-01 fix only, with duplicate-marker and Core Issue-ID mismatch tests, exact-SHA CI and readback. Keep P1-118-02 and all runtime integrations BLOCKED until Core/W14/W102/W70 owners supply approved contracts and real runtime evidence. Xu re-reviews the resulting exact head; Vinh retains product acceptance and release decisions.
+
+
+### Entry 054 addendum — exact-head CI after source-reference correction (2026-11-23 01:46:35 +07:00)
+
+- **Documentation correction:** BB-118-003 source blob references were replaced with the exact blob SHAs read from PR #68 HEAD: `core_task_adapter.py` = `0c32b8d0397ff2c176ba6332c0c019fbcc1653e0`; `test_github_issue_adapter.py` = `d8a0b5e8d79d5983b1330ab07db48bb63d0d7928`. Correction commit: `1199ffb3f179f69bc82170499b5011516e94a12f`.
+- **Exact PR head validation:** Run #899 / ID `45056947568`; validate job `137314162401` COMPLETED / SUCCESS; raw log confirms **95 tests in 0.294s — OK**.
+- **Revision provenance:** PR source head `1199ffb3f179f69bc82170499b5011516e94a12f`; Actions checked out synthetic PR merge ref `646cf8f42a81ec370c05511ecb154ed771bdaf9a`. Run #899 therefore validates the PR merge candidate for that source head.
+- **Coverage boundary:** `SOURCE_BINDING_STATUS=NOT_RUN`; handoff-request, ACK-claim and review-observation jobs SKIPPED. Contract/unit CI only; Runtime Auto E2E remains NOT VERIFIED.
+- **Artifact:** `w118-run-evidence-45056947568-1`, ID `14767388324`, size 686 bytes, SHA-256 `e06d4937c1c0401a461cfdb9e0ec299e2118d62d0d13caf5f01b4d4374de26e6`. Metadata/upload digest read; payload not independently downloaded/parsed.
+- **Readback:** BB-118-003, README, STATUS, RR-118-001 and canonical journal were read back from the active branch. The next journal/status write is documentation-only and does not alter implementation behavior.

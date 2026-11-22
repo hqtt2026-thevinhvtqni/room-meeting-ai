@@ -138,3 +138,13 @@ Không tạo Task DB, Agent Registry, dispatcher, event queue, Execution Host, G
 - Nhật ký chính thức tương ứng: Entry 054 trong `EVIDENCE/NHAT-KY-THI-CONG.md`.
 
 **Kết luận:** W118 có nền tảng kỹ thuật đáng giữ lại, nhưng hiện chưa đủ điều kiện nghiệm thu. Ưu tiên sửa P1-118-01; giữ P1-118-02 và các tích hợp runtime ở trạng thái BLOCKED cho đến khi có hợp đồng và bằng chứng thật.
+
+
+## Addendum — exact-head documentation validation (2026-11-23 01:46:35 +07:00)
+
+- BB-118-003 source references were corrected to exact blob SHAs: `core_task_adapter.py` `0c32b8d0397ff2c176ba6332c0c019fbcc1653e0`; `test_github_issue_adapter.py` `d8a0b5e8d79d5983b1330ab07db48bb63d0d7928`.
+- The corrected document was committed at PR #68 source head `1199ffb3f179f69bc82170499b5011516e94a12f`.
+- Run #899 / `45056947568`, validate job `137314162401`, COMPLETED / SUCCESS; **95 tests in 0.294s — OK**.
+- Actions tested merge ref `646cf8f42a81ec370c05511ecb154ed771bdaf9a`; source binding NOT_RUN; handoff/ACK/review-observation jobs SKIPPED.
+- Artifact `14767388324`, SHA-256 `e06d4937c1c0401a461cfdb9e0ec299e2118d62d0d13caf5f01b4d4374de26e6`; payload not independently parsed.
+- This validation does not change P1-118-01 NEEDS CHANGES, P1-118-02 BLOCKED or Runtime Auto E2E NOT VERIFIED.
