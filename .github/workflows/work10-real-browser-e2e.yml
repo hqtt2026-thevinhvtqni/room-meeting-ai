@@ -76,6 +76,22 @@ jobs:
             Write-Host "PASS PowerShell syntax: $file"
           }
 
+      - name: Local launcher smoke (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $workRoot = (Resolve-Path "10/COMPUTER-AGENT").Path
+          & "10/COMPUTER-AGENT/05_TEST/START_WORK10_LOCAL.ps1" -WorkRoot $workRoot -PythonPath (Get-Command python).Source -NoClipboard -NoOpenBrowser
+          try {
+            $health = Invoke-RestMethod -Uri "http://127.0.0.1:8787/health" -TimeoutSec 5
+            if ([string]$health.work_id -ne "10") { throw "Launcher health Work ID mismatch" }
+            $dashboard = Invoke-WebRequest -Uri "http://127.0.0.1:3010/" -UseBasicParsing -TimeoutSec 5
+            if ($dashboard.StatusCode -ne 200) { throw "Launcher Dashboard did not return HTTP 200" }
+            Write-Host "PASS local Work 10 launcher API + Dashboard smoke"
+          } finally {
+            & "10/COMPUTER-AGENT/05_TEST/STOP_WORK10_LOCAL.ps1" -WorkRoot $workRoot
+          }
+
       - name: Real Chromium E2E
         run: |
           python 10/COMPUTER-AGENT/05_TEST/e2e_real_browser.py
