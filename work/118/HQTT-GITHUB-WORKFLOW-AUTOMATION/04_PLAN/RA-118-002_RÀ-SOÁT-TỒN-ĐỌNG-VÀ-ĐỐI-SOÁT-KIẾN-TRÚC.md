@@ -239,3 +239,40 @@ Exact implementation refs inspected: Core authority blob dd9becadd56a1df4c3f306d
 - This does not invalidate the Grant's narrower pytest_run authorization contract, but it means Work32 Grant alone cannot clear W118-TASK-014 (W102 identity/Assignment/ACK) or prove live Task/Assignment authority for W118-TASK-019.
 - Required before W118 can rely on it: Core/W102 owner must expose a canonical Assignment/Task read/authorization port or attest that the configured allow-list is the authoritative policy source with version/revocation semantics; positive/negative runtime tests must cover unassigned, stale, revoked, wrong Agent, wrong Task and missing ACK. No such proof currently exists.
 - **Decision:** W118-TASK-014 remains BLOCKED / NOT VERIFIED. P1-118-02 remains separately BLOCKED for the Issue-mirror action-scoped lock lease.
+
+## Addendum v1.5 — Main Core authority mount contradiction (cross-check Work17 GAP-11)
+
+- **Document ID:** RA-118-002 (controlled addendum v1.5)
+- **Priority:** P0 — do not treat a documented execution-grant route as deployed Core authority when the current Main composition does not mount it.
+- **Read order:** 15
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-23 13:00 +07:00 (audit session; minute-level timestamp not captured).
+
+### A. Exact Main source evidence
+
+Read-only fetch of repository Main at snapshot 0902cd26518673aa078bb4c7c7899e1e4a95656a returned:
+- `room_hop_mcp/core_http_main.py`, blob `8dd6bb5ea500026d932ca52eb6079c980d722ab0`: module docstring claims an additive Work execution-authority mount, but `build_app()` constructs MeetingManager/MeetingService and returns only `create_http_app(service)`; no execution-authority router is imported or mounted.
+- `room_hop_mcp/adapter/http_server.py`, blob `54cb3ecbce2e6b13083f31c14f0c1f0738f1457d`: inspected complete app factory defines identity and Meeting routes; no `/works/{work_id}/execution-grants` route or authority router inclusion exists in this file.
+- `CORE_EXECUTION_AUTHORITY_V1_2_DEPLOYMENT.md`, blob `ce130f1f9a95daeaafff75ef37eacd4dffc797e2`: claims the same Core entrypoint mounts execution-grant routes and documents issuance/status/validate/run/revoke endpoints.
+- Main `tests/test_core_http_main.py` search result expects POST `/works/W28/execution-grants` to return 503 when unconfigured; this expectation does not prove the route is actually mounted. Test was not run in this audit.
+
+### B. Cross-Work corroboration and limits
+
+Work17 GAP-11 addendum Entry 044 independently records the same exact source discrepancy and notes the deployment guide/test versus Main composition mismatch. This corroborates the source-level finding; it is not live HTTP evidence. The earlier Work32 PR #54 candidate remains OPEN/DRAFT/UNMERGED and its invalid-credential probe returned 404 instead of 401/403 on the tested deployment. No Core process, endpoint, credential or runtime was touched in this audit.
+
+### C. W118 decisions
+
+1. Core execution-grant authority on Main: **NOT MOUNTED IN INSPECTED MAIN COMPOSITION**. Live deployment status: **NOT VERIFIED**.
+2. W118 P1-118-02 remains BLOCKED: no Core-owned Task-scoped Issue-mirror lock/lease with explicit Issue create/update action scope has been proven. Work32 `pytest_run` Grant is not a substitute.
+3. W118-TASK-014 remains BLOCKED / NOT VERIFIED for canonical live W102 Assignment/Agent/ACK lifecycle.
+4. W118-TASK-015/TASK-019 remain blocked for protected execution until Core/W14 owners establish the canonical mounted contract, source/CI/security gates pass, deployment is proven and positive/negative runtime probes pass.
+5. W118 remains stateless; no local authority route, lease store, Core clone or alternate execution host is created.
+6. This is a bounded Main-source audit. It does not prove no other branch, service or Sandbox instance contains a different implementation.
+
+### BIÊN BẢN — Addendum v1.5
+
+- **Name:** Ka / AI-02
+- **Title:** CSA / W118 Delegated Build Owner
+- **Date-Time:** 2026-11-23 13:00 +07:00 (audit session; minute-level timestamp not captured)
+- **Result:** Reconciled Main Core entrypoint, HTTP adapter, deployment guide and Work17 GAP-11 Entry 044. Found a concrete source/documentation contradiction; no runtime or external Work mutation.
+- **Disposition:** Core authority mount NOT VERIFIED; P1-118-02 BLOCKED; Runtime Auto E2E NOT RUN; NOT ACCEPTED / NOT RELEASED.
