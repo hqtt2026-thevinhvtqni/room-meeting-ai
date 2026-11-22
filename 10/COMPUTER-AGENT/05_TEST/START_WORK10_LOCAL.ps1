@@ -2,7 +2,9 @@
 param(
     [string]$WorkRoot = (Split-Path -Parent $PSScriptRoot),
     [string]$PythonPath = "",
-    [switch]$InstallDependencies
+    [switch]$InstallDependencies,
+    [switch]$NoClipboard,
+    [switch]$NoOpenBrowser
 )
 
 $ErrorActionPreference = "Stop"
@@ -125,20 +127,23 @@ try {
     }
     $session | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath $sessionPath -Encoding UTF8
 
-    Set-Clipboard -Value $token
+    if (-not $NoClipboard) { Set-Clipboard -Value $token }
+    $token = $null
+    [Array]::Clear($randomBytes, 0, $randomBytes.Length)
     $env:COMPUTER_AGENT_API_TOKEN = $null
 
     Write-Host "WORK 10 LOCAL AGENT STARTED" -ForegroundColor Green
     Write-Host "API:       http://127.0.0.1:8787"
     Write-Host "Dashboard: http://127.0.0.1:3010"
     Write-Host "Work ID:   10"
-    Write-Host "Bearer token copied to clipboard; paste into the Dashboard password field."
+    if (-not $NoClipboard) { Write-Host "Bearer token copied to clipboard; paste into the Dashboard password field." }
+    else { Write-Host "Clipboard disabled for non-interactive smoke test." }
     Write-Host "Writable roots: DISABLED"
     Write-Host "PowerShell roots: DISABLED"
     Write-Host "Port 3000 is untouched and remains reserved for the shared ROOM-HOP Dashboard."
     Write-Host "Session record: $sessionPath"
     Write-Host "Stop with: .\STOP_WORK10_LOCAL.ps1"
-    Start-Process "http://127.0.0.1:3010"
+    if (-not $NoOpenBrowser) { Start-Process "http://127.0.0.1:3010" }
 } catch {
     Stop-StartedProcess $dashboard
     Stop-StartedProcess $api
