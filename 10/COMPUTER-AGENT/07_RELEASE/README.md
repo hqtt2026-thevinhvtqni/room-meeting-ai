@@ -18,3 +18,8 @@ Work 10 is **ACTIVE — NOT RELEASED**. This folder contains handover documentat
 6. Owner reviews evidence, open risks and handover package, then issues a separate written acceptance/release decision.
 
 No main merge, deployment, tag or production release is authorized by the handover package alone.
+
+
+## Current handover package — 2026-11-22
+
+Use `W10_HANDOVER_PACKAGE_20261122.md` as the current Owner handover package. Latest canonical branch HEAD CI: Run #195 — Windows 226 PASS; Ubuntu 220 PASS + 2 expected SKIP. Latest full code regression: Run #180. The package records local Windows launcher instructions, evidence links, explicit open gates and the final acceptance checklist. Work 10 remains ACTIVE — NOT RELEASED until Owner PC acceptance and remaining integration/security gates are closed.
