@@ -1511,3 +1511,11 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - Evidence: `06_EVIDENCE/W10_LOCAL_LAUNCHER_CI_EVIDENCE_20261122_RUN157.md`.
 - CI skipped clipboard/browser launch using noninteractive flags; physical Windows 10 acceptance remains NOT RUN.
 - **KÝ: Co | AI-07**
+
+
+## W10-LAUNCHER-INVENTORY-UPDATE-20261122-01 — 2026-11-22 06:46 (UTC+07:00)
+- Run #157: PowerShell AST + local launcher start/stop smoke PASS on hosted Windows Server 2022.
+- Windows 224 PASS / 0 FAIL / 0 SKIP; Ubuntu 218 PASS / 0 FAIL / 2 SKIP.
+- Inventory: Sandbox 167 files; GitHub 75; shared 75; Sandbox-only 92; GitHub-only 0; one Sandbox-only `.github/` directory.
+- 34 accepted source/test/architecture/config/launcher files independently exact-match.
+- **KÝ: Co | AI-07**
