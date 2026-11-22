@@ -1,13 +1,29 @@
 # STATIC SITE DELIVERY — WORK 092
 
-Work 092 is static HTML/CSS/JavaScript with an optional local Python static server and health endpoint.
+Work 092 is static HTML/CSS/JavaScript. The normal and tested path is opening `01_SOURCE/room-hop-browser-v1-prototype/index.html` directly with `file://`; no server is required.
 
-- Source: `01_SOURCE/room-hop-browser-v1-prototype/`.
-- Run with `./start.sh` or `python3 server.py`; local URL `http://127.0.0.1:8787/`.
-- No real browser control, external API, agent runtime or external browsing. UI actions/evidence are simulated.
+The optional Python preview server is opt-in only. If manually started, it binds `127.0.0.1` and asks the OS for port `0` (ephemeral), then prints the selected URL. It does not bind `0.0.0.0` or a fixed service port. This review did **not** start the server, probe any host/port, or test its health route/backend isolation. Do not treat the old fixed-port URL in historical files as current guidance.
 
-## Verification — 2026-11-22
+No real Browser Agent, controlled Chromium Runtime, external API, website request, or Internet access is part of the prototype. Scenario actions and evidence are local TEST_ONLY fixtures.
 
-Cloud Sandbox mirror reconstructed from MCP read-back: pytest 12/12, Node 14/14, Playwright+system Chromium 11/11. This is not direct Work Sandbox execution. GitHub Actions succeeded on branch code SHA `dcd75f0a39ca6a1e1b447f92793121c1fb3e2759` (run `44982525770`): JUnit 12 tests, 0 failures/errors; Node 14/14. [Run](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44982525770).
+## Current verification — 2026-11-22
 
-No comprehensive accessibility audit, production agent/browser test or backend isolation test was performed. Xu retains final acceptance; work remains PARTIAL.
+Run from `01_SOURCE/room-hop-browser-v1-prototype/`:
+
+```bash
+node --check app.js && node --check workflow.js
+node --test tests/workflow.test.js
+PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q -p no:cacheprovider tests/test_static_contract.py
+python3 tests/browser_smoke.py
+python3 tests/accessibility_audit.py
+```
+
+Observed results in the current Manus Sandbox branch checkout:
+
+- Node syntax: PASS (2 files); Node tests **18/18**.
+- Static pytest: **12/12**.
+- Playwright/system Chromium `file://` browser smoke: **33/33**; 0 external HTTP(S) requests.
+- Accessibility/responsive audit: **70/70**; 0 HTTP(S)/WebSocket requests; computed contrast samples all at least 4.5:1.
+- Desktop 1920×1080, tablet 768×1024, Android-like emulation 390×844 CSS px: no horizontal overflow. Android is emulation, not physical-device evidence.
+
+The scripts store current results in `02_EVIDENCE/test-results/browser-ui-smoke.json` and `accessibility-audit.json`, and UI-only screenshots in `02_EVIDENCE/screenshots/`. None is Browser Runtime/E2E evidence. GitHub Actions only runs static pytest and Node tests; current-source Actions verification is pending until a real run is confirmed. Direct Work Sandbox execution, server fixtures, Runtime and Xu acceptance remain NOT RUN/BLOCKED.

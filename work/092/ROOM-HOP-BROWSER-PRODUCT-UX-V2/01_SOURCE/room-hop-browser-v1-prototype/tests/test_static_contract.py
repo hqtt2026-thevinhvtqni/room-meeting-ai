@@ -49,7 +49,8 @@ def test_browser_tabs_and_secondary_panels_have_keyboard_semantics():
     assert 'role="tablist" aria-label="Additional TEST_ONLY information"' in html
     assert 'role="tabpanel" aria-labelledby="demoTab"' in html
     assert "selectInfoTab" in app
-    assert "Close TEST_ONLY tab" in app and "state.tabs.length <= 1" in app
+    assert 'id="closeTabBtn"' in html and "closeCurrentTab" in app
+    assert "state.tabs.length <= 1" in app
 
 
 def test_runtime_is_explicitly_disconnected_and_only_fixture_states_are_possible():
@@ -92,7 +93,7 @@ def test_styles_include_responsive_focus_and_reduced_motion_support():
     css = read("styles.css")
     assert "@media(max-width:480px)" in css
     assert "@media(max-width:780px)" in css
-    assert ".tab-select:focus-visible" in css
+    assert ".tab:focus-visible" in css
     assert "@media(prefers-reduced-motion:reduce)" in css
     assert "min-height:38px" in css
 
@@ -113,3 +114,23 @@ def test_no_external_script_or_runtime_client_is_declared():
     assert "fetch(" not in read("app.js")
     assert "XMLHttpRequest" not in read("app.js")
     assert "WebSocket" not in read("app.js")
+
+
+def test_optional_preview_server_is_loopback_only_and_uses_an_os_assigned_port():
+    server_source = read("server.py")
+    assert 'PREVIEW_HOST = "127.0.0.1"' in server_source
+    assert "PREVIEW_PORT = 0" in server_source
+    assert "0.0.0.0" not in server_source
+    assert "8787" not in server_source
+    assert "httpd.server_address" in server_source
+
+
+def test_browser_tablist_contains_only_tabs_and_has_external_close_control():
+    html = read("index.html")
+    app = read("app.js")
+    assert "select.setAttribute('role', 'tab')" in app
+    assert "select.setAttribute('aria-controls', 'browserContent')" in app
+    assert "tabList.append(select)" in app
+    assert 'id="closeTabBtn"' in html
+    assert "closeButton.disabled = state.tabs.length <= 1 || state.running" in app
+    assert "closeCurrentTab" in app

@@ -1,55 +1,87 @@
 # NU ACCEPTANCE REPORT — WORK 092
 
-**Date:** 2026-11-22 Asia/Ho_Chi_Minh
-**Executor:** Manus executor in current session
-**Disposition:** **PARTIAL — NOT ACCEPTED**; Xu retains final acceptance.
+**Ngày:** 2026-11-22 Asia/Ho_Chi_Minh
+**Executor:** Manus executor trong phiên hiện tại; không đại diện Nu hoặc Xu độc lập.
+**Disposition:** **PARTIAL — NOT ACCEPTED**. Runtime remains **BLOCKED**. Xu retains independent acceptance; Vinh retains final product decision.
 
-## Verified evidence
+## 1. Executive summary
 
-- Cloud Sandbox mirror from Work Sandbox MCP read-back: pytest **12/12**, Node **14/14**, JS syntax checks pass, Playwright+system Chromium **11/11 checks**.
-- GitHub Actions: SUCCESS on branch code SHA `dcd75f0a39ca6a1e1b447f92793121c1fb3e2759`; run ID `44982525770`; [run URL](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44982525770).
-- Actions JUnit artifact `work092-pytest-report`, ID `14738237995`, parsed as 12 tests / 0 failures / 0 errors / 0 skipped; Actions log confirms Node 14 passed / 0 failed.
-- Direct Work Sandbox shell/browser tests: NOT RUN (MCP 8030 has no runner). Mirror and CI are separate evidence.
+Đã hoàn thiện các sửa chữa trong phạm vi static Browser UI: TEST_ONLY/disconnected labels được giữ nguyên; tablist được chỉnh để chỉ có role=tab children, close-current-tab ở ngoài tablist và phục hồi focus; contrast màu được cải thiện; optional server đổi sang loopback + OS-ephemeral port. Kết quả hiện có: Node 18/18, pytest 12/12, `file://` smoke 33/33, accessibility/responsive audit 70/70, 0 HTTP(S)/WebSocket requests.
 
-## Fixes and E2E
+Đây là prototype acceptance evidence, không phải Browser Runtime, real-agent, real website, E2E service hoặc Xu acceptance.
 
-T5 task parsing/blank validation, T9 simulated provenance/artifact null, T12 demo-only permission gate. Fixed favicon 404 discovered in first Chromium run. Fixed inert × tab-close affordance as accessible button with final-tab protection. Mirror E2E covers desktop mock render, tabs, mock URL/Back/Forward/Reload, control gating, blank task, Search evidence provenance, XSS-safe text, Browse permission gate, 8-action Workflow, mobile no overflow and zero page/console/external-request errors. Screenshots are the mock UI, not a real external website.
+## 2. Work status
 
-## Matrix summary
+- **Product:** static TEST_ONLY UI, runtime DISCONNECTED.
+- **Overall:** PARTIAL — NOT ACCEPTED; no merge, no release.
+- **Direct Work Sandbox/MCP test execution:** NOT RUN; kiểm thử được chạy trên Work 092 branch clone trong Manus Sandbox. Không khởi chạy server/service.
+- **Nu independent dispatch/ACK:** NOT ESTABLISHED. Không giả danh Nu.
+- **Xu independent review:** NOT RUN; không tự nghiệm thu thay Xu.
 
-PASS on mirror: T1–T5, T7, T9–T16 (T10 demo-only); T6/T8/T17 remain PARTIAL. Direct Work Sandbox test execution remains NOT RUN. See `00_ROOT/BIEN_BAN_W092.md` for details.
+## 3. T6/T8/T17 acceptance matrix
 
-## GitHub sync
+| Criterion | Result | Evidence and limit |
+|---|---|---|
+| **T6 — agent-state transitions** | **PARTIAL** | UI fixture READY/RUNNING/HELD/COMPLETE và reset được kiểm tra; runtime giữ DISCONNECTED. Không có agent Connected/Working/Done thật. Hệ thống hiện hành không chứa tài liệu gốc chi tiết hơn ngoài row-level matrix; không suy diễn rằng các trạng thái fixture tương đương agent thật. |
+| **T8 — human-readable actions** | **PASS — TEST_ONLY UI** | Browse 3, Search 6, Workflow 8 hành động có label/mô tả người đọc được, trạng thái SIMULATED/TEST_ONLY và timeline. Không chứng minh hành động website thật; assistive-technology review chưa chạy. |
+| **T17 — isolation boundaries** | **PARTIAL** | Browser `file://` smoke/audit quan sát 0 HTTP(S)/WebSocket request; static contract kiểm tra không khai báo fetch/XHR/WebSocket client. Preview source bind `127.0.0.1`, port `0`; server không được khởi chạy, host/port không được probe, nên backend/process isolation NOT RUN. |
 
-Pushed `work092/one-shot-20261122`; code SHA `dcd75f0a39ca6a1e1b447f92793121c1fb3e2759`; not merged to main. Root workflow `.github/workflows/work092-pytest.yml` ran successfully. Logs, JUnit and artifact metadata are under `02_EVIDENCE/test-results/`; screenshots under `02_EVIDENCE/screenshots/` with mirror provenance.
+## 4. Accessibility audit
 
-## Final decision
+- Automated DOM/ARIA/name-source heuristic, direct tablist children semantics, roving tabindex, arrow-key navigation, focus outline, focus restoration after closing active tab, named controls, `aria-describedby`, `aria-selected`, `aria-pressed`, `aria-expanded`, `aria-busy`, progress values and error announcement: PASS trong các trường hợp đã kiểm tra.
+- Error message: visible, `role=alert`/assertive live region, input `aria-invalid=true`, focus trở lại trường task. Loading/Ready/Error/Disconnected: được kiểm tra. Reduced-motion spinner duration 0.00001s: PASS.
+- Mẫu cặp màu computed foreground/background kiểm tra ở ngưỡng 4.5:1: tất cả PASS; mức thấp nhất 4.71:1.
+- Giới hạn: đây không phải WCAG conformance certification; screen-reader/assistive technology, keyboard-only manual exploratory review trên thiết bị thật **NOT RUN**.
 
-**PARTIAL — NOT ACCEPTED.** CI passed for the pushed mock source, but direct Work Sandbox execution was not available, T6/T8/T17 remain partial, and a complete accessibility audit was not run. Xu decides final acceptance. No real browser-agent/website/API integration is claimed.
+## 5. Desktop / tablet / mobile test results
 
+Playwright + system Chromium chạy local `file://`; viewport được đặt bằng browser/emulation, không chỉ dựa vào CSS static inspection.
 
----
+| Target | Result | Screenshot evidence |
+|---|---|---|
+| Desktop 1920×1080 CSS px | PASS; horizontal overflow absent; full-page capture 1920×1971 | `screenshots/ui-only-desktop-1920x1080.png` |
+| Tablet 768×1024 CSS px | PASS; horizontal overflow absent; full-page capture 768×2274 | `screenshots/ui-only-tablet-768x1024.png` |
+| Android-like emulation 390×844 CSS px | PASS; touch toggle and no horizontal overflow; full-page capture 390×2770 CSS px | `screenshots/ui-only-android-emulation-390x844.png` |
 
-## CI verification addendum — 2026-11-22 14:09 (+07)
+Android result là Playwright device emulation với touch; **không phải thiết bị Android vật lý** (physical-device test NOT RUN).
 
-This addendum supersedes earlier statements that current-source GitHub Actions had not run. It does not supersede the partial acceptance disposition or expand the test scope.
+## 6. Port and preview safety
 
-- Canonical source/test files were synchronized from the MCP-read Work 092 source mirror only after all seven reported SHA-256 digests matched. The browser smoke test was also run locally on that exact snapshot: Node syntax 2/2; Node tests 18/18; static pytest 10/10; Playwright `file://` smoke 27/27; zero HTTP(S) requests.
-- Feature branch `work092/one-shot-20261122`, commit `76549220114b4d20cff78e525343837b7e6c9f4c`, was pushed without merging to `main`.
-- GitHub Actions run `44996828261` completed **SUCCESS** at the exact head SHA above: [Actions run 44996828261](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44996828261).
-- Job steps for checkout, setup, source location, pytest dependency, static-only pytest, Node contract tests and artifact upload all succeeded. Downloaded artifact `work092-ui-only-pytest-report` (ID `14744740180`, 663 bytes); parsed JUnit reports 10 tests, 0 failures, 0 errors, 0 skipped. Actions log reports Node 18 tests passed / 0 failed.
-- The workflow intentionally excluded `tests/test_server.py`, whose fixture starts an HTTP loopback server, and did not run Playwright. A non-blocking GitHub warning notes the configured actions currently target Node.js 20 and were forced onto Node.js 24; the run still completed successfully.
-- No service, Browser Runtime, external API/site, host/port, screenshot capture or real agent execution was used. Direct Work Sandbox execution remains **NOT RUN**; the Playwright result is file-based UI smoke, not Browser Agent E2E.
-- T6/T8/T17 remain PARTIAL; full accessibility/contrast audit and Xu's independent review are not evidenced. Runtime integration remains BLOCKED. Nu independent dispatch/ACK is not established.
+`server.py` hiện dùng `PREVIEW_HOST="127.0.0.1"`, `PREVIEW_PORT=0`, OS-assigned ephemeral port nếu được chạy thủ công. Không có preview URL cố định hoặc bind `0.0.0.0`. Server không được khởi chạy; `tests/test_server.py`, health route và process/backend isolation NOT RUN. Không có host/port probe hoặc cổng nào bị chiếm. `file://` là phương pháp tái lập kiểm thử hiện hành.
 
-**Disposition remains PARTIAL — NOT ACCEPTED.** Xu retains independent review; Vinh retains the final decision. No merge or release was performed.
+## 7. Test results
 
+- `node --check app.js && node --check workflow.js`: PASS.
+- `node --test tests/workflow.test.js`: **18/18 PASS**.
+- `PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q -p no:cacheprovider tests/test_static_contract.py`: **12/12 PASS**.
+- `python3 tests/browser_smoke.py`: **33/33 PASS**, file-based Chromium UI smoke; zero HTTP(S) request.
+- `python3 tests/accessibility_audit.py`: **70/70 PASS**, gồm computed contrast sample, keyboard, ARIA/state, three scenarios, desktop/tablet/mobile emulation; zero HTTP(S)/WebSocket request.
+- `git diff --check`: PASS.
+- `tests/test_server.py`, Browser Runtime, true external-browser E2E, HTTP preview/server isolation: **NOT RUN**.
 
-## Branch-tip CI follow-up — 2026-11-22 14:15 (+07)
+## 8. GitHub commit / branch / CI
 
-- Documentation/evidence follow-up commit `12f74b03e8397c5e366f932d40280cfc28e1d168` was pushed to the same unmerged feature branch after source/test commit `76549220114b4d20cff78e525343837b7e6c9f4c`. The five-file diff contained the manifest, README, acceptance report, build journal and Actions status JSON; application logic and workflow were unchanged. README lies under the workflow path filter, so Actions ran again for the new branch tip.
-- Run `44997247247` completed **SUCCESS** at exact branch-tip SHA `12f74b03e8397c5e366f932d40280cfc28e1d168`: [Actions run 44997247247](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44997247247). Job steps, static pytest, Node contract tests and artifact upload succeeded.
-- Downloaded artifact `work092-ui-only-pytest-report` (ID `14743304960`, 663 bytes); parsed JUnit reports 10 tests, 0 failures, 0 errors, 0 skipped. Actions log confirms Node tests 18 passed / 0 failed. The earlier run `44996828261` remains the source/test commit CI evidence at SHA `7654922…`.
-- The runner again emitted a non-blocking warning that the configured GitHub Actions versions target Node.js 20 and were forced onto Node.js 24. No server, Browser Runtime, external API/site, host/port probe, screenshot capture or real-agent execution was used.
+Branch đích: `work092/one-shot-20261122`; không merge `main`. CI gần nhất trước source update là run `44997247247`, SUCCESS tại SHA `12f74b03e8397c5e366f932d40280cfc28e1d168`, artifact ID `14743304960`. **Không được dùng run cũ này để chứng minh source hiện tại.** CI cho commit mới đang chờ push/run verification; SHA/run/artifact mới sẽ chỉ ghi sau khi đọc kết quả thật.
 
-**Disposition remains PARTIAL — NOT ACCEPTED.** This follow-up confirms the docs-bearing branch tip's static CI, not product/runtime acceptance. T6/T8/T17, full accessibility/contrast audit and Xu's independent review remain outstanding; runtime integration remains BLOCKED. No merge or release was performed; Xu reviews and Vinh decides.
+Workflow hiện chỉ chạy static pytest + Node; không chạy Playwright, `test_server.py` hay Runtime.
+
+## 9. Evidence index
+
+- `02_EVIDENCE/test-results/accessibility-audit.json` — 70 checks, full results and limits.
+- `02_EVIDENCE/test-results/browser-ui-smoke.json` — file-based smoke results and checks.
+- `02_EVIDENCE/screenshots/README.md` — inventory and provenance.
+- `02_EVIDENCE/screenshots/ui-only-desktop-1920x1080.png`
+- `02_EVIDENCE/screenshots/ui-only-tablet-768x1024.png`
+- `02_EVIDENCE/screenshots/ui-only-android-emulation-390x844.png`
+- `00_ROOT/BIEN_BAN_W092.md` — current T1–T17 matrix.
+- `02_EVIDENCE/NU_BUILD_JOURNAL.md` — commands, results and chronology.
+
+Legacy `e2e-result.json` and `v2-e2e-result.json` are archival only: they contain historical mock/agent claims and a fixed-port URL; they are not evidence for the current TEST_ONLY build or service isolation.
+
+## 10. Remaining blockers
+
+T6 remains PARTIAL because actual agent lifecycle transitions are not exercised and no detailed criterion source authorizes equating fixture states to real agent states. T17 remains PARTIAL because server/backend/process isolation was deliberately not run. Direct Work Sandbox execution, physical Android, screen-reader/assistive technology, live Browser Runtime, Nu independent dispatch/ACK, Xu independent review, and current-source GitHub Actions verification are **NOT RUN or BLOCKED** until their separate evidence exists.
+
+## 11. Recommendation
+
+Hand to Xu for independent source/evidence review as **ready for review, not accepted** after current commit and CI evidence are synchronized. Keep Runtime BLOCKED. Xu must decide whether T6's TEST_ONLY-only state model satisfies the prototype criterion; Vinh makes the final product/operation decision. Do not mark DONE/ACCEPTED based on this executor's report.

@@ -31,16 +31,30 @@ with sync_playwright() as p:
     # New tab, arrow-key selection/focus, close selected tab and focus restoration.
     page.get_by_role("button", name="Open TEST_ONLY tab").click()
     check("new local tab created", page.locator("#tabs [role='tab']").count() == 2)
+    check("tablist contains only role=tab children", page.locator("#tabs > [role='tab']").count() == 2 and page.locator("#tabs > button:not([role='tab'])").count() == 0)
     second = page.get_by_role("tab", name="Select TEST_ONLY tab: Test tab 2")
     check("new tab receives focus", page.evaluate("document.activeElement.id") == "mock-tab-2")
     second.press("ArrowLeft")
     check("ArrowLeft selects and focuses previous tab", page.evaluate("document.activeElement.id") == "mock-tab-1" and page.locator("#mock-tab-1").get_attribute("aria-selected") == "true")
-    page.get_by_role("button", name="Open TEST_ONLY tab").click()
-    page.get_by_role("button", name="Close TEST_ONLY tab: Test tab 3").click()
-    check("closing active tab restores focus to fallback", page.evaluate("document.activeElement.id") == "mock-tab-2" and page.locator("#mock-tab-2").get_attribute("aria-selected") == "true")
-    page.get_by_role("button", name="Close TEST_ONLY tab: Test tab 2").click()
-    check("closing next tab focuses remaining tab", page.evaluate("document.activeElement.id") == "mock-tab-1" and page.locator("#tabs [role='tab']").count() == 1)
-    check("last tab cannot be closed", page.get_by_role("button", name="Close TEST_ONLY tab: Local fixture").is_disabled())
+    page.locator("#mock-tab-1").press("ArrowRight")
+    check("ArrowRight selects and focuses the next tab", page.evaluate("document.activeElement.id") == "mock-tab-2" and page.locator("#mock-tab-2").get_attribute("aria-selected") == "true")
+    page.get_by_role("button", name="Close current TEST_ONLY tab: Test tab 2").click()
+    check("closing active tab restores focus to fallback", page.evaluate("document.activeElement.id") == "mock-tab-1" and page.locator("#tabs [role='tab']").count() == 1)
+    check("last tab cannot be closed", page.get_by_role("button", name="Close current TEST_ONLY tab: Local fixture").is_disabled())
+
+    # Address entry and navigation buttons modify only local fixture state.
+    address = page.locator("#urlInput")
+    address.fill("https://example.test/search?q=local-fixture")
+    address.press("Enter")
+    check("address entry changes only the local fixture URL", address.input_value() == "https://example.test/search?q=local-fixture" and "Sample fixture cards" in page.locator("#browserContent").inner_text())
+    page.get_by_role("button", name="Back in TEST_ONLY mock state").click()
+    check("Back restores the local root fixture", address.input_value() == "https://wikipedia.org" and "Local browser-view fixture" in page.locator("#browserContent").inner_text())
+    page.get_by_role("button", name="Forward in TEST_ONLY mock state").click()
+    check("Forward restores a local search fixture", "Special:Search" in address.input_value() and "Sample fixture cards" in page.locator("#browserContent").inner_text())
+    page.get_by_role("button", name="Reload TEST_ONLY mock view").click()
+    check("Reload exposes local loading state", page.locator("#browserContent").get_attribute("aria-busy") == "true" and "LOCAL UPDATE" in page.locator("#pageState").inner_text())
+    page.locator("#browserContent[aria-busy='false']").wait_for(timeout=5000)
+    check("Reload returns to disconnected local ready state", page.locator("#runtimeBadge").inner_text() == "DISCONNECTED" and "DISCONNECTED" in page.locator("#pageState").inner_text())
 
     # Secondary tablist keyboard/panel behavior.
     architecture = page.get_by_role("tab", name="Architecture limits")
@@ -87,3 +101,26 @@ with sync_playwright() as p:
     browser.close()
 
 print(json.dumps({"kind": "file_based_ui_smoke", "runtime_integration": False, "tests": len(checks), "passed": len(checks), "failed": 0, "checks": checks, "external_requests": external_requests}, ensure_ascii=False, indent=2))
+
+
+# Preserve the local UI-only result separately from Browser Runtime/E2E evidence.
+from datetime import datetime, timezone
+
+smoke_report = {
+    "work_id": "092",
+    "kind": "file_url_test_only_browser_ui_smoke",
+    "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+    "environment": {"browser": "system Chromium", "executable": "/usr/bin/chromium", "runner": "Playwright Python", "runtime_integration": False},
+    "summary": {"checks": len(checks), "passed": len(checks), "failed": 0},
+    "checks": checks,
+    "external_http_requests": external_requests,
+    "screenshots_captured": False,
+    "limits": [
+        "This is local file:// UI interaction evidence only, not Browser Runtime or real-agent E2E.",
+        "The prototype did not connect to an external website or API.",
+    ],
+    "status": "PASS",
+}
+smoke_report_path = ROOT.parents[1] / "02_EVIDENCE" / "test-results" / "browser-ui-smoke.json"
+smoke_report_path.parent.mkdir(parents=True, exist_ok=True)
+smoke_report_path.write_text(json.dumps(smoke_report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

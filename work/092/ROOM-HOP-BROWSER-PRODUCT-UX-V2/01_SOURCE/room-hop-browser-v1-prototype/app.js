@@ -57,12 +57,8 @@ function renderTabs({ focusTabId = null } = {}) {
   tabList.replaceChildren();
   for (const tab of state.tabs) {
     const selected = tab.id === state.tab;
-    const item = document.createElement('div');
-    item.className = `tab${selected ? ' active' : ''}`;
-    item.dataset.tab = String(tab.id);
-
     const select = document.createElement('button');
-    select.type = 'button'; select.className = 'tab-select'; select.id = `mock-tab-${tab.id}`;
+    select.type = 'button'; select.className = `tab${selected ? ' active' : ''}`; select.id = `mock-tab-${tab.id}`;
     select.setAttribute('role', 'tab'); select.setAttribute('aria-selected', String(selected));
     select.setAttribute('aria-controls', 'browserContent'); select.tabIndex = selected ? 0 : -1;
     select.setAttribute('aria-label', `Select TEST_ONLY tab: ${tab.title}`);
@@ -82,23 +78,22 @@ function renderTabs({ focusTabId = null } = {}) {
       event.preventDefault(); state.tab = tabs[nextIndex].id;
       renderTabs({ focusTabId: state.tab }); renderBrowser();
     });
-
-    const close = document.createElement('button');
-    close.type = 'button'; close.className = 'tab-close'; close.textContent = '×';
-    close.title = `Close TEST_ONLY tab: ${tab.title}`;
-    close.setAttribute('aria-label', `Close TEST_ONLY tab: ${tab.title}`);
-    close.disabled = state.tabs.length === 1;
-    close.addEventListener('click', () => {
-      if (state.tabs.length <= 1) return;
-      const closedIndex = state.tabs.findIndex((entry) => entry.id === tab.id);
-      state.tabs = state.tabs.filter((entry) => entry.id !== tab.id);
-      if (state.tab === tab.id) state.tab = state.tabs[Math.min(closedIndex, state.tabs.length - 1)].id;
-      renderTabs({ focusTabId: state.tab }); renderBrowser();
-    });
-    item.append(select, close); tabList.append(item);
+    tabList.append(select);
   }
+  const closeButton = $('#closeTabBtn');
+  closeButton.disabled = state.tabs.length <= 1 || state.running;
+  closeButton.setAttribute('aria-label', `Close current TEST_ONLY tab: ${activeTab().title}`);
+  closeButton.title = `Close current TEST_ONLY tab: ${activeTab().title}`;
+  $('#newTabBtn').disabled = state.running;
   $('#browserContent').setAttribute('aria-labelledby', `mock-tab-${state.tab}`);
   if (focusTabId !== null) document.getElementById(`mock-tab-${focusTabId}`)?.focus({ preventScroll: true });
+}
+function closeCurrentTab() {
+  if (state.tabs.length <= 1 || state.running) return;
+  const closedIndex = state.tabs.findIndex((tab) => tab.id === state.tab);
+  state.tabs = state.tabs.filter((tab) => tab.id !== state.tab);
+  state.tab = state.tabs[Math.min(closedIndex, state.tabs.length - 1)].id;
+  renderTabs({ focusTabId: state.tab }); renderBrowser();
 }
 function renderBrowser(mode = 'ready') {
   const tab = activeTab();
@@ -309,6 +304,7 @@ $('#newTabBtn').addEventListener('click', () => {
   state.tabs.push({ id, title: `Test tab ${id}`, url: 'about:blank' }); state.tab = id;
   renderTabs({ focusTabId: id }); renderBrowser();
 });
+$('#closeTabBtn').addEventListener('click', closeCurrentTab);
 $('#reloadBtn').addEventListener('click', () => {
   renderBrowser('loading'); clearTimeout(state.timer); state.timer = setTimeout(() => renderBrowser(), 250);
 });

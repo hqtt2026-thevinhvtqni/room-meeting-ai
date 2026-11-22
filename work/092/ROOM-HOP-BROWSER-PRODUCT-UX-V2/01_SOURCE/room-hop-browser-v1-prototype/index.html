@@ -23,6 +23,7 @@
       <div class="window-row"><div class="window-controls" aria-hidden="true"><i></i><i></i><i></i></div><span class="chrome-title">ROOM-HOP · Local test view</span><span class="chrome-mode">DISCONNECTED · NO NETWORK</span></div>
       <div class="tabs-row">
         <div id="tabs" class="tabs" role="tablist" aria-label="TEST_ONLY mock tabs" aria-orientation="horizontal"></div>
+        <button id="closeTabBtn" class="tab-close" type="button" aria-label="Close current TEST_ONLY tab: Local fixture" title="Close current TEST_ONLY tab: Local fixture" disabled>×</button>
         <button id="newTabBtn" class="new-tab" type="button" aria-label="Open TEST_ONLY tab">＋</button>
       </div>
       <div class="toolbar" aria-label="Mock navigation controls">
@@ -39,12 +40,12 @@
         <div id="browserContent" class="browser-viewport" role="tabpanel" tabindex="0" aria-label="TEST_ONLY local mock page" aria-live="polite" aria-busy="false"></div>
       </div>
       <aside class="agent-rail" aria-label="TEST_ONLY demo controls and status">
-        <div class="agent-rail-head"><div><span class="eyebrow">TEST_ONLY · NO AGENT</span><h1><span class="agent-orb" aria-hidden="true"></span><span id="agentStateLabel">DISCONNECTED</span></h1></div><button id="railCollapse" class="rail-toggle" type="button" aria-label="Toggle TEST_ONLY details" aria-expanded="true">↗</button></div>
-        <div class="task-box">
-          <label for="taskInput">TASK TO PREVIEW IN TEST_ONLY MODE</label>
-          <textarea id="taskInput" rows="2" aria-required="true" aria-describedby="taskHelp taskError">Mở Wikipedia và tìm ROOM-HOP</textarea>
-          <small id="taskHelp" class="task-help">Nội dung chỉ chọn một kịch bản cục bộ. Không được gửi tới agent, website hoặc Internet.</small>
-          <div id="taskError" class="task-error" role="alert" aria-live="assertive" hidden></div>
+  <div class="agent-rail-head"><div><span class="eyebrow">TEST_ONLY · NO AGENT</span><h1><span class="agent-orb" aria-hidden="true"></span><span id="agentStateLabel">DISCONNECTED</span></h1></div><button id="railCollapse" class="rail-toggle" type="button" aria-label="Toggle TEST_ONLY details" aria-expanded="true">↗</button></div>
+  <div class="task-box">
+    <label for="taskInput">TASK TO PREVIEW IN TEST_ONLY MODE</label>
+    <textarea id="taskInput" rows="2" aria-required="true" aria-describedby="taskHelp taskError" aria-invalid="false">Mở Wikipedia và tìm ROOM-HOP</textarea>
+    <small id="taskHelp" class="task-help">Nội dung chỉ chọn một kịch bản cục bộ. Không được gửi tới agent, website hoặc Internet.</small>
+    <div id="taskError" class="task-error" role="alert" aria-live="assertive" hidden></div>
           <button id="runBtn" class="primary-btn" type="button"><span aria-hidden="true">▶</span> Run TEST_ONLY demo</button>
           <button id="resetBtn" class="secondary-action" type="button">Reset TEST_ONLY state</button>
         </div>

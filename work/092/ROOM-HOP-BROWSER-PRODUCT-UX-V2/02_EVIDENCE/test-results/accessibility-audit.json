@@ -1,0 +1,389 @@
+{
+  "work_id": "092",
+  "kind": "file_url_test_only_accessibility_responsive_audit",
+  "timestamp_utc": "2026-11-22T07:59:54.146368+00:00",
+  "source": "/home/ubuntu/work092-one-shot/repo/work/092/ROOM-HOP-BROWSER-PRODUCT-UX-V2/01_SOURCE/room-hop-browser-v1-prototype",
+  "environment": {
+    "browser": "system Chromium",
+    "executable": "/usr/bin/chromium",
+    "runner": "Playwright Python",
+    "runtime_integration": false
+  },
+  "viewports_css_pixels": {
+    "desktop": "1920x1080",
+    "tablet": "768x1024",
+    "android_emulation": "390x844"
+  },
+  "summary": {
+    "checks": 70,
+    "passed": 70,
+    "failed": 0
+  },
+  "checks": [
+    {
+      "name": "file:// prototype loads with explicit disconnected boundary",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "initial activity is TEST_ONLY_READY, not agent connected",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "all visible controls/status widgets have a name source (automated heuristic)",
+      "status": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "browser tablist contains only tabs and follows roving-tabindex semantics",
+      "status": "PASS",
+      "detail": "{'controls': [{'tag': 'BUTTON', 'id': 'mock-tab-1', 'role': 'tab', 'name': 'Select TEST_ONLY tab: Local fixture'}, {'tag': 'BUTTON', 'id': 'closeTabBtn', 'role': None, 'name': 'Close current TEST_ONLY tab: Local fixture'}, {'tag': 'BUTTON', 'id': 'newTabBtn', 'role': None, 'name': 'Open TEST_ONLY tab'}, {'tag': 'BUTTON', 'id': 'backBtn', 'role': None, 'name': 'Back in TEST_ONLY mock state'}, {'tag': 'BUTTON', 'id': 'forwardBtn', 'role': None, 'name': 'Forward in TEST_ONLY mock state'}, {'tag': 'BUTTON', 'id': 'reloadBtn', 'role': None, 'name': 'Reload TEST_ONLY mock view'}, {'tag': 'INPUT', 'id': 'urlInput', 'role': None, 'name': 'TEST_ONLY mock address; local state only'}, {'tag': 'BUTTON', 'id': '', 'role': None, 'name': 'More TEST_ONLY mock controls'}, {'tag': 'BUTTON', 'id': 'railCollapse', 'role': None, 'name': 'Toggle TEST_ONLY details'}, {'tag': 'TEXTAREA', 'id': 'taskInput', 'role': None, 'name': 'TASK TO PREVIEW IN TEST_ONLY MODE'}, {'tag': 'BUTTON', 'id': 'runBtn', 'role': None, 'name': '▶ Run TEST_ONLY demo'}, {'tag': 'BUTTON', 'id': 'resetBtn', 'role': None, 'name': 'Reset TEST_ONLY state'}, {'tag': 'DIV', 'id': '', 'role': 'progressbar', 'name': 'TEST_ONLY script progress'}, {'tag': 'BUTTON', 'id': '', 'role': None, 'name': 'Enable TEST_ONLY permission: Read mock page'}, {'tag': 'BUTTON', 'id': '', 'role': None, 'name': 'Enable TEST_ONLY permission: Inspect mock UI'}, {'tag': 'BUTTON', 'id': '', 'role': None, 'name': 'Enable TEST_ONLY permission: Click in demo'}, {'tag': 'BUTTON', 'id': '', 'role': None, 'name': 'Enable TEST_ONLY permission: Type in demo'}, {'tag': 'BUTTON', 'id': '', 'role': None, 'name': 'Enable TEST_ONLY permission: Wait in demo'}, {'tag': 'BUTTON', 'id': '', 'role': None, 'name': 'Enable TEST_ONLY permission: Show mock results'}, {'tag': 'BUTTON', 'id': '', 'role': None, 'name': 'Enable TEST_ONLY permission: Screenshot action (test only)'}, {'tag': 'BUTTON', 'id': 'controlBtn', 'role': None, 'name': 'Hold TEST_ONLY demo'}, {'tag': 'BUTTON', 'id': 'demoTab', 'role': 'tab', 'name': 'Demo / Test Mode'}, {'tag': 'BUTTON', 'id': 'architectureTab', 'role': 'tab', 'name': 'Architecture limits'}, {'tag': 'BUTTON', 'id': '', 'role': None, 'name': 'Search demo\\nMock navigate · inspect · type · click · extract'}, {'tag': 'BUTTON', 'id': '', 'role': None, 'name': 'Browse demo\\nMock open · inspect · screenshot action'}, {'tag': 'BUTTON', 'id': '', 'role': None, 'name': 'TEST_ONLY workflow\\nMock plan · execute · verify · events'}], 'unnamed': [], 'tabCount': 1, 'selectedCount': 1, 'tabsOnly': True, 'roving': True, 'panelLinked': True, 'describedbyExists': True}"
+    },
+    {
+      "name": "selected browser tab labels the browser panel",
+      "status": "PASS",
+      "detail": "True"
+    },
+    {
+      "name": "all aria-describedby IDs resolve",
+      "status": "PASS",
+      "detail": "True"
+    },
+    {
+      "name": "contrast: chrome mode",
+      "status": "PASS",
+      "detail": "5.59:1; minimum 4.5:1; fg=rgb(130, 148, 160); bg=#121a23"
+    },
+    {
+      "name": "contrast: brand subtitle",
+      "status": "PASS",
+      "detail": "6.75:1; minimum 4.5:1; fg=rgb(139, 155, 171); bg=#0a0f15"
+    },
+    {
+      "name": "contrast: top bar status text",
+      "status": "PASS",
+      "detail": "6.75:1; minimum 4.5:1; fg=rgb(139, 155, 171); bg=#0a0f15"
+    },
+    {
+      "name": "contrast: selected browser tab text",
+      "status": "PASS",
+      "detail": "16.43:1; minimum 4.5:1; fg=rgb(240, 244, 247); bg=#10161e"
+    },
+    {
+      "name": "contrast: URL bar text",
+      "status": "PASS",
+      "detail": "5.87:1; minimum 4.5:1; fg=rgb(126, 145, 160); bg=#0a1016"
+    },
+    {
+      "name": "contrast: browser page status",
+      "status": "PASS",
+      "detail": "5.74:1; minimum 4.5:1; fg=rgb(132, 149, 163); bg=#111922"
+    },
+    {
+      "name": "contrast: muted browser fixture text",
+      "status": "PASS",
+      "detail": "5.62:1; minimum 4.5:1; fg=rgb(89, 106, 115); bg=#ffffff"
+    },
+    {
+      "name": "contrast: task helper text",
+      "status": "PASS",
+      "detail": "7.10:1; minimum 4.5:1; fg=rgb(145, 163, 174); bg=#0d141c"
+    },
+    {
+      "name": "contrast: task label",
+      "status": "PASS",
+      "detail": "5.76:1; minimum 4.5:1; fg=rgb(127, 146, 161); bg=#0d141c"
+    },
+    {
+      "name": "contrast: section counter",
+      "status": "PASS",
+      "detail": "4.71:1; minimum 4.5:1; fg=rgb(112, 131, 145); bg=#0d141c"
+    },
+    {
+      "name": "contrast: empty timeline text",
+      "status": "PASS",
+      "detail": "6.29:1; minimum 4.5:1; fg=rgb(135, 153, 165); bg=#0d141c"
+    },
+    {
+      "name": "contrast: permission status",
+      "status": "PASS",
+      "detail": "6.89:1; minimum 4.5:1; fg=rgb(151, 167, 174); bg=#111d25"
+    },
+    {
+      "name": "contrast: permission button label",
+      "status": "PASS",
+      "detail": "11.68:1; minimum 4.5:1; fg=rgb(210, 225, 229); bg=#17252d"
+    },
+    {
+      "name": "contrast: runtime banner body",
+      "status": "PASS",
+      "detail": "12.09:1; minimum 4.5:1; fg=rgb(232, 215, 188); bg=#211b13"
+    },
+    {
+      "name": "contrast: runtime banner title",
+      "status": "PASS",
+      "detail": "11.97:1; minimum 4.5:1; fg=rgb(255, 209, 138); bg=#211b13"
+    },
+    {
+      "name": "contrast: session substate",
+      "status": "PASS",
+      "detail": "5.60:1; minimum 4.5:1; fg=rgb(130, 148, 160); bg=#111a23"
+    },
+    {
+      "name": "contrast: footer on darkest body gradient stop",
+      "status": "PASS",
+      "detail": "6.29:1; minimum 4.5:1; fg=rgb(130, 148, 162); bg=#080b10"
+    },
+    {
+      "name": "contrast: footer on lightest body gradient stop",
+      "status": "PASS",
+      "detail": "5.53:1; minimum 4.5:1; fg=rgb(130, 148, 162); bg=#101c24"
+    },
+    {
+      "name": "task starts aria-valid and becomes announced invalid on blank input",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "keyboard Tab reaches a control and visible focus indicator appears",
+      "status": "PASS",
+      "detail": "{'focus': 'mock-tab-1', 'outline': '2px'}"
+    },
+    {
+      "name": "contrast: blank fixture helper text",
+      "status": "PASS",
+      "detail": "5.21:1; minimum 4.5:1; fg=rgb(86, 102, 110); bg=#edf0f2"
+    },
+    {
+      "name": "contrast: inactive browser tab text",
+      "status": "PASS",
+      "detail": "5.99:1; minimum 4.5:1; fg=rgb(145, 161, 173); bg=#19232d"
+    },
+    {
+      "name": "ArrowLeft moves selection/focus to previous browser tab",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ArrowRight returns selection/focus to the next browser tab",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "closing active tab restores focus to remaining tab",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "final browser tab close is disabled",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "secondary keyboard tab updates ARIA selection and panel",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "empty task error is visible, announced, invalid and focused",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "task error text contrast meets WCAG AA",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "hold gate is TEST_ONLY_HELD and run is blocked",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "resume returns to TEST_ONLY_READY",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "permission flags start ungranted and expose aria-pressed state",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Browse: TEST_ONLY running transition",
+      "status": "PASS",
+      "detail": "{'activity': 'TEST_ONLY_RUNNING', 'runtime': 'DISCONNECTED'}"
+    },
+    {
+      "name": "Browse: current action has readable description",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Browse: expected ordered action sequence",
+      "status": "PASS",
+      "detail": "['SIMULATED · TEST_ONLY · Navigate', 'SIMULATED · TEST_ONLY · Inspect', 'SIMULATED · TEST_ONLY · Screenshot']"
+    },
+    {
+      "name": "Browse: every timeline item has a human-readable description",
+      "status": "PASS",
+      "detail": "['2026-11-22T07:59:45.525Z · Mở trang mẫu (mô phỏng)', '2026-11-22T07:59:45.878Z · Kiểm tra fixture cục bộ', '2026-11-22T07:59:46.130Z · Mô phỏng bước screenshot']"
+    },
+    {
+      "name": "Browse: completion remains TEST_ONLY and disconnected",
+      "status": "PASS",
+      "detail": "{'activity': 'TEST_ONLY_COMPLETE', 'runtime': 'DISCONNECTED'}"
+    },
+    {
+      "name": "Browse: progress reaches all fixture steps",
+      "status": "PASS",
+      "detail": "3 / 3 steps"
+    },
+    {
+      "name": "contrast: timeline timestamp/description",
+      "status": "PASS",
+      "detail": "6.37:1; minimum 4.5:1; fg=rgb(136, 154, 166); bg=#0d141c"
+    },
+    {
+      "name": "contrast: evidence detail/provenance",
+      "status": "PASS",
+      "detail": "6.30:1; minimum 4.5:1; fg=rgb(136, 153, 165); bg=#0d141c"
+    },
+    {
+      "name": "Browse: reset returns to TEST_ONLY_READY and clears grants",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Search: TEST_ONLY running transition",
+      "status": "PASS",
+      "detail": "{'activity': 'TEST_ONLY_RUNNING', 'runtime': 'DISCONNECTED'}"
+    },
+    {
+      "name": "Search: current action has readable description",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Search: expected ordered action sequence",
+      "status": "PASS",
+      "detail": "['SIMULATED · TEST_ONLY · Navigate', 'SIMULATED · TEST_ONLY · Inspect', 'SIMULATED · TEST_ONLY · Type', 'SIMULATED · TEST_ONLY · Click', 'SIMULATED · TEST_ONLY · Extract', 'SIMULATED · TEST_ONLY · Screenshot']"
+    },
+    {
+      "name": "Search: every timeline item has a human-readable description",
+      "status": "PASS",
+      "detail": "['2026-11-22T07:59:47.359Z · Mở trang mẫu (mô phỏng)', '2026-11-22T07:59:47.712Z · Kiểm tra fixture cục bộ', '2026-11-22T07:59:47.964Z · Nhập từ khóa “khí hậu” vào fixture cục bộ', '2026-11-22T07:59:48.216Z · Kích hoạt tìm kiếm mô phỏng', '2026-11-22T07:59:48.470Z · Hiển thị dữ liệu mẫu', '2026-11-22T07:59:48.722Z · Mô phỏng bước screenshot']"
+    },
+    {
+      "name": "Search: completion remains TEST_ONLY and disconnected",
+      "status": "PASS",
+      "detail": "{'activity': 'TEST_ONLY_COMPLETE', 'runtime': 'DISCONNECTED'}"
+    },
+    {
+      "name": "Search: progress reaches all fixture steps",
+      "status": "PASS",
+      "detail": "6 / 6 steps"
+    },
+    {
+      "name": "Search: reset returns to TEST_ONLY_READY and clears grants",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Workflow: TEST_ONLY running transition",
+      "status": "PASS",
+      "detail": "{'activity': 'TEST_ONLY_RUNNING', 'runtime': 'DISCONNECTED'}"
+    },
+    {
+      "name": "Workflow: current action has readable description",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Workflow: expected ordered action sequence",
+      "status": "PASS",
+      "detail": "['SIMULATED · TEST_ONLY · Navigate', 'SIMULATED · TEST_ONLY · Inspect', 'SIMULATED · TEST_ONLY · Type', 'SIMULATED · TEST_ONLY · Click', 'SIMULATED · TEST_ONLY · Extract', 'SIMULATED · TEST_ONLY · Screenshot', 'SIMULATED · TEST_ONLY · Wait', 'SIMULATED · TEST_ONLY · DONE']"
+    },
+    {
+      "name": "Workflow: every timeline item has a human-readable description",
+      "status": "PASS",
+      "detail": "['2026-11-22T07:59:49.642Z · Mở trang mẫu (mô phỏng)', '2026-11-22T07:59:49.993Z · Kiểm tra fixture cục bộ', '2026-11-22T07:59:50.245Z · Nhập từ khóa “” vào fixture cục bộ', '2026-11-22T07:59:50.497Z · Kích hoạt tìm kiếm mô phỏng', '2026-11-22T07:59:50.749Z · Hiển thị dữ liệu mẫu', '2026-11-22T07:59:51.000Z · Mô phỏng bước screenshot', '2026-11-22T07:59:51.253Z · Chờ timer cục bộ', '2026-11-22T07:59:51.505Z · Kết thúc fixture']"
+    },
+    {
+      "name": "Workflow: completion remains TEST_ONLY and disconnected",
+      "status": "PASS",
+      "detail": "{'activity': 'TEST_ONLY_COMPLETE', 'runtime': 'DISCONNECTED'}"
+    },
+    {
+      "name": "Workflow: progress reaches all fixture steps",
+      "status": "PASS",
+      "detail": "8 / 8 steps"
+    },
+    {
+      "name": "Workflow: reset returns to TEST_ONLY_READY and clears grants",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "reload exposes loading state and aria-busy",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "reduced-motion limits spinner animation",
+      "status": "PASS",
+      "detail": "1e-05s"
+    },
+    {
+      "name": "loading returns to ready while runtime remains disconnected",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "desktop 1920x1080 has no horizontal overflow",
+      "status": "PASS",
+      "detail": "{'viewport': 1920, 'doc': 1920, 'body': 1920}"
+    },
+    {
+      "name": "tablet 768x1024 has no horizontal overflow",
+      "status": "PASS",
+      "detail": "{'viewport': 768, 'doc': 768, 'body': 768}"
+    },
+    {
+      "name": "Android mobile emulation 390x844 has no overflow and touch input",
+      "status": "PASS",
+      "detail": "{'viewport': 390, 'doc': 390, 'body': 390, 'touch': 1, 'mobile': True, 'ua': 'Android-like emulated browser'}"
+    },
+    {
+      "name": "mobile touch toggles only local TEST_ONLY permission",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "no HTTP(S)/WebSocket requests were made",
+      "status": "PASS",
+      "detail": "[]"
+    },
+    {
+      "name": "no browser console errors or uncaught page errors",
+      "status": "PASS",
+      "detail": "{'console': [], 'page': []}"
+    }
+  ],
+  "network_requests": [],
+  "console_errors": [],
+  "page_errors": [],
+  "screenshot_files": [
+    "02_EVIDENCE/screenshots/ui-only-desktop-1920x1080.png",
+    "02_EVIDENCE/screenshots/ui-only-tablet-768x1024.png",
+    "02_EVIDENCE/screenshots/ui-only-android-emulation-390x844.png"
+  ],
+  "limits": [
+    "Screenshots show only the local TEST_ONLY UI opened from file://; they are not evidence of Browser Runtime, an external website, or a real agent.",
+    "Android coverage is Playwright device emulation, not a physical Android device.",
+    "This automated audit is not a screen-reader/assistive-technology certification or independent Xu review.",
+    "The optional HTTP preview server was not started; its HTTP health route/backend isolation were not exercised."
+  ],
+  "status": "PASS"
+}
