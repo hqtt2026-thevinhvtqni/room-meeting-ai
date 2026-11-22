@@ -1,4 +1,4 @@
-name: Work 092 tests
+name: Work 092 UI-only tests
 
 on:
   push:
@@ -54,12 +54,12 @@ jobs:
       - name: Install pytest dependency
         run: python -m pip install -r "${{ steps.source.outputs.dir }}/requirements-test.txt"
 
-      - name: Run pytest and write JUnit report
+      - name: Run static contract pytest only (no server fixture)
         shell: bash
         run: |
           mkdir -p test-results
           cd "${{ steps.source.outputs.dir }}"
-          python -m pytest -q --junitxml="$GITHUB_WORKSPACE/test-results/work092-pytest.xml"
+          python -m pytest -q tests/test_static_contract.py --junitxml="$GITHUB_WORKSPACE/test-results/work092-static-pytest.xml"
 
       - name: Test task/evidence/permission contracts
         working-directory: ${{ steps.source.outputs.dir }}
@@ -69,7 +69,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: work092-pytest-report
-          path: test-results/work092-pytest.xml
+          name: work092-ui-only-pytest-report
+          path: test-results/work092-static-pytest.xml
           if-no-files-found: warn
           retention-days: 14

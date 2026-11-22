@@ -1,55 +1,87 @@
 <!doctype html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ROOM-HOP Browser — Product UX V2</title><link rel="stylesheet" href="styles.css"><link rel="icon" href="data:,">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080b10">
+  <title>ROOM-HOP Browser — Work 092 TEST_ONLY</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:,">
 </head>
 <body>
-<header class="topbar"><div class="brand"><span class="brand-mark">R</span><div><strong>ROOM-HOP BROWSER</strong><small>AI-assisted browsing · Product UX V2</small></div></div><div class="top-right"><span class="mock-badge">MOCK ONLY</span><span class="session-id">session_092_v2</span><span class="status-dot" aria-hidden="true"></span></div></header>
-<main class="app-shell">
-  <section class="browser-product">
+<header class="topbar">
+  <div class="brand"><span class="brand-mark" aria-hidden="true">R</span><div><strong>ROOM-HOP BROWSER</strong><small>Work 092 · UI test fixture</small></div></div>
+  <div class="top-right"><span class="runtime-badge" id="runtimeBadge">DISCONNECTED</span><span class="mock-badge">TEST_ONLY</span><span class="session-id">fixture_092</span></div>
+</header>
+<main id="mainContent" class="app-shell">
+  <div class="runtime-banner" role="status" aria-live="polite" aria-atomic="true">
+    <strong id="runtimeConnection">DISCONNECTED</strong>
+    <span><b>TEST_ONLY UI</b> — không có agent/runtime, trang web hoặc kết nối mạng thật.</span>
+  </div>
+  <section class="browser-product" aria-label="Work 092 TEST_ONLY browser interface">
     <div class="browser-chrome">
-      <div class="window-row"><div class="window-controls" aria-hidden="true"><i></i><i></i><i></i></div><span class="chrome-title">ROOM-HOP Browser</span><span class="chrome-mode">LOCAL SESSION · MOCK</span></div>
-      <div class="tabs-row"><div id="tabs" class="tabs"></div><button id="newTabBtn" class="new-tab" aria-label="New tab">＋</button></div>
-      <div class="toolbar"><button id="backBtn" class="chrome-btn" title="Back" aria-label="Back">←</button><button id="forwardBtn" class="chrome-btn" title="Forward" aria-label="Forward">→</button><button id="reloadBtn" class="chrome-btn" title="Reload" aria-label="Reload mock page">↻</button><div class="urlbar"><span class="lock" aria-hidden="true">⌁</span><input id="urlInput" aria-label="Mock URL bar" value="https://wikipedia.org"><span class="url-state">MOCK</span></div><button class="chrome-btn" title="More" aria-label="More mock controls">⋮</button></div>
+      <div class="window-row"><div class="window-controls" aria-hidden="true"><i></i><i></i><i></i></div><span class="chrome-title">ROOM-HOP · Local test view</span><span class="chrome-mode">DISCONNECTED · NO NETWORK</span></div>
+      <div class="tabs-row">
+        <div id="tabs" class="tabs" role="tablist" aria-label="TEST_ONLY mock tabs" aria-orientation="horizontal"></div>
+        <button id="newTabBtn" class="new-tab" type="button" aria-label="Open TEST_ONLY tab">＋</button>
+      </div>
+      <div class="toolbar" aria-label="Mock navigation controls">
+        <button id="backBtn" class="chrome-btn" type="button" title="Back in mock state" aria-label="Back in TEST_ONLY mock state">←</button>
+        <button id="forwardBtn" class="chrome-btn" type="button" title="Forward in mock state" aria-label="Forward in TEST_ONLY mock state">→</button>
+        <button id="reloadBtn" class="chrome-btn" type="button" title="Reload mock view" aria-label="Reload TEST_ONLY mock view">↻</button>
+        <div class="urlbar"><span class="lock" aria-hidden="true">⌁</span><input id="urlInput" type="text" aria-label="TEST_ONLY mock address; local state only" value="https://wikipedia.org" autocomplete="off" spellcheck="false"><span class="url-state">LOCAL</span></div>
+        <button class="chrome-btn" type="button" title="Mock controls" aria-label="More TEST_ONLY mock controls">⋮</button>
+      </div>
     </div>
     <div class="browser-main">
-      <div class="page-column"><div class="page-status"><span class="state-dot" aria-hidden="true"></span><span id="pageState">READY · MOCK</span><span class="separator">·</span><span>Browser Session 01</span><span class="control-status" id="controlStatus">● Demo control</span></div><div id="browserContent" class="browser-viewport"></div></div>
-      <aside class="agent-rail">
-        <div class="agent-rail-head"><div><span class="eyebrow">AI AGENT · SCRIPTED DEMO</span><h1><span class="agent-orb" aria-hidden="true"></span><span id="agentStateLabel">Connected · MOCK</span></h1></div><button id="railCollapse" class="rail-toggle" aria-label="Toggle details">↗</button></div>
+      <div class="page-column">
+        <div class="page-status"><span class="state-dot" aria-hidden="true"></span><span id="pageState" aria-live="polite">DISCONNECTED · TEST_ONLY LOCAL VIEW</span><span class="separator">·</span><span>Local fixture</span><span class="control-status" id="controlStatus">TEST_ONLY script ready</span></div>
+        <div id="browserContent" class="browser-viewport" role="tabpanel" tabindex="0" aria-label="TEST_ONLY local mock page" aria-live="polite" aria-busy="false"></div>
+      </div>
+      <aside class="agent-rail" aria-label="TEST_ONLY demo controls and status">
+        <div class="agent-rail-head"><div><span class="eyebrow">TEST_ONLY · NO AGENT</span><h1><span class="agent-orb" aria-hidden="true"></span><span id="agentStateLabel">DISCONNECTED</span></h1></div><button id="railCollapse" class="rail-toggle" type="button" aria-label="Toggle TEST_ONLY details" aria-expanded="true">↗</button></div>
         <div class="task-box">
-          <label for="taskInput">WHAT DO YOU WANT ME TO DEMO?</label>
+          <label for="taskInput">TASK TO PREVIEW IN TEST_ONLY MODE</label>
           <textarea id="taskInput" rows="2" aria-required="true" aria-describedby="taskHelp taskError">Mở Wikipedia và tìm ROOM-HOP</textarea>
-          <small id="taskHelp" class="task-help">Task chọn một kịch bản mô phỏng; không gửi đến agent, website hoặc Internet thật.</small>
+          <small id="taskHelp" class="task-help">Nội dung chỉ chọn một kịch bản cục bộ. Không được gửi tới agent, website hoặc Internet.</small>
           <div id="taskError" class="task-error" role="alert" aria-live="assertive" hidden></div>
-          <button id="runBtn" class="primary-btn"><span>▶</span> Run demo</button>
+          <button id="runBtn" class="primary-btn" type="button"><span aria-hidden="true">▶</span> Run TEST_ONLY demo</button>
+          <button id="resetBtn" class="secondary-action" type="button">Reset TEST_ONLY state</button>
         </div>
-        <div id="taskEcho" class="task-echo" hidden></div>
-        <div class="agent-summary"><div><span class="meta-label">CURRENT ACTION</span><strong id="currentAction">Ready when you are</strong><small id="currentHumanAction">Task will select a scripted demo</small></div><span id="actionState" class="state-pill idle">IDLE</span></div>
-        <div class="progress-block"><div class="progress-head"><span>DEMO PROGRESS</span><b id="progressValue">0 / 6 actions</b></div><div class="progress-track"><span id="progressBar"></span></div><div class="next-line"><span>NEXT</span><strong id="nextAction">→ Review demo permissions</strong></div></div>
-        <div class="rail-section timeline-section"><div class="section-head"><h2>DEMO ACTIVITY</h2><span id="timelineCount">0 mock events</span></div><ol id="timeline" class="timeline"><li class="empty-timeline">Demo events will appear here</li></ol></div>
-        <div class="rail-section evidence-section"><div class="section-head"><h2>SIMULATED EVIDENCE</h2><span id="evidenceCount">0 / 6 mock events</span></div><p class="evidence-notice">Không phải bằng chứng từ website thật. Không có tệp screenshot/artifact được tạo.</p><ul id="evidence" class="evidence-list"></ul><div id="passBox" class="pass-box demo-complete hidden"><strong>DEMO COMPLETE</strong><span id="passDetail">Script finished · simulated only</span></div></div>
+        <div id="taskEcho" class="task-echo" role="status" aria-live="polite" hidden></div>
+        <div class="agent-summary" aria-live="polite" aria-atomic="true"><div><span class="meta-label">LOCAL SCRIPT STATUS</span><strong id="currentAction">No runtime action</strong><small id="currentHumanAction">Preview a TEST_ONLY scenario</small></div><span id="actionState" class="state-pill idle">IDLE · TEST_ONLY</span></div>
+        <div class="progress-block"><div class="progress-head"><span>TEST_ONLY PROGRESS</span><b id="progressValue">0 / 6 steps</b></div><div class="progress-track" role="progressbar" aria-label="TEST_ONLY script progress" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0"><span id="progressBar"></span></div><div class="next-line"><span>NEXT</span><strong id="nextAction">→ Review TEST_ONLY permissions</strong></div></div>
+        <div class="rail-section timeline-section"><div class="section-head"><h2>SIMULATED ACTIVITY</h2><span id="timelineCount">0 mock events</span></div><ol id="timeline" class="timeline" aria-live="polite" aria-relevant="additions text"><li class="empty-timeline">No simulated events</li></ol></div>
+        <div class="rail-section evidence-section"><div class="section-head"><h2>SIMULATED EVIDENCE</h2><span id="evidenceCount">0 / 6 mock events</span></div><p class="evidence-notice">Không phải bằng chứng từ website thật. Không tạo ảnh/tệp screenshot.</p><ul id="evidence" class="evidence-list"></ul><div id="passBox" class="pass-box demo-complete hidden" role="status"><strong>TEST_ONLY DEMO COMPLETE</strong><span id="passDetail">Script finished · simulated only</span></div></div>
         <div class="rail-section permissions">
-          <div class="section-head"><h2>DEMO PERMISSIONS</h2><span class="permission-lock">MOCK ONLY</span></div>
-          <p class="permission-notice">Mặc định chưa cấp. Đây chỉ là trạng thái UI cho demo, không cấp quyền trình duyệt hay quyền bảo mật thật.</p>
+          <div class="section-head"><h2>TEST_ONLY PERMISSIONS</h2><span class="permission-lock">NO REAL GRANTS</span></div>
+          <p class="permission-notice">Mặc định chưa bật. Chỉ là cờ giao diện cục bộ, không cấp quyền trình duyệt hay quyền bảo mật thật.</p>
           <div class="permission-grid">
-            <div class="permission-item"><span>Read mock page</span><span data-permission-status="readPage">Not granted</span><button type="button" class="permission-toggle" data-permission="readPage" aria-pressed="false">Grant for demo</button></div>
-            <div class="permission-item"><span>Inspect mock UI</span><span data-permission-status="inspect">Not granted</span><button type="button" class="permission-toggle" data-permission="inspect" aria-pressed="false">Grant for demo</button></div>
-            <div class="permission-item"><span>Click in demo</span><span data-permission-status="click">Not granted</span><button type="button" class="permission-toggle" data-permission="click" aria-pressed="false">Grant for demo</button></div>
-            <div class="permission-item"><span>Type in demo</span><span data-permission-status="type">Not granted</span><button type="button" class="permission-toggle" data-permission="type" aria-pressed="false">Grant for demo</button></div>
-            <div class="permission-item"><span>Wait in demo</span><span data-permission-status="wait">Not granted</span><button type="button" class="permission-toggle" data-permission="wait" aria-pressed="false">Grant for demo</button></div>
-            <div class="permission-item"><span>Show mock results</span><span data-permission-status="extract">Not granted</span><button type="button" class="permission-toggle" data-permission="extract" aria-pressed="false">Grant for demo</button></div>
-            <div class="permission-item"><span>Screenshot action (demo)</span><span data-permission-status="screenshot">Not granted</span><button type="button" class="permission-toggle" data-permission="screenshot" aria-pressed="false">Grant for demo</button></div>
+            <div class="permission-item"><span>Read mock page</span><span data-permission-status="readPage">Not enabled</span><button type="button" class="permission-toggle" data-permission="readPage" aria-pressed="false">Enable for test</button></div>
+            <div class="permission-item"><span>Inspect mock UI</span><span data-permission-status="inspect">Not enabled</span><button type="button" class="permission-toggle" data-permission="inspect" aria-pressed="false">Enable for test</button></div>
+            <div class="permission-item"><span>Click in demo</span><span data-permission-status="click">Not enabled</span><button type="button" class="permission-toggle" data-permission="click" aria-pressed="false">Enable for test</button></div>
+            <div class="permission-item"><span>Type in demo</span><span data-permission-status="type">Not enabled</span><button type="button" class="permission-toggle" data-permission="type" aria-pressed="false">Enable for test</button></div>
+            <div class="permission-item"><span>Wait in demo</span><span data-permission-status="wait">Not enabled</span><button type="button" class="permission-toggle" data-permission="wait" aria-pressed="false">Enable for test</button></div>
+            <div class="permission-item"><span>Show mock results</span><span data-permission-status="extract">Not enabled</span><button type="button" class="permission-toggle" data-permission="extract" aria-pressed="false">Enable for test</button></div>
+            <div class="permission-item"><span>Screenshot action (test)</span><span data-permission-status="screenshot">Not enabled</span><button type="button" class="permission-toggle" data-permission="screenshot" aria-pressed="false">Enable for test</button></div>
           </div>
           <p id="permissionFeedback" class="permission-feedback" role="status" aria-live="polite"></p>
         </div>
       </aside>
     </div>
-    <div class="session-bar"><div class="session-state"><span class="state-dot" aria-hidden="true"></span><div><b id="sessionState">Demo is ready</b><small id="sessionSubstate">No real agent is connected</small></div></div><div class="identity-strip"><span>Agent <b>● Scripted demo</b></span><span>Page <b>● Local mock</b></span><span>Engine <b>MOCK</b></span></div><div class="control-box"><span class="meta-label">CONTROL</span><strong id="controlLabel">● Demo control</strong><button id="controlBtn" class="control-btn">Take control</button></div></div>
+    <div class="session-bar"><div class="session-state"><span class="state-dot" aria-hidden="true"></span><div><b id="sessionState">Runtime disconnected</b><small id="sessionSubstate">No real agent or browser session</small></div></div><div class="identity-strip"><span>Runtime <b>DISCONNECTED</b></span><span>Page <b>Local fixture</b></span><span>Mode <b>TEST_ONLY</b></span></div><div class="control-box"><span class="meta-label">SCRIPT GATE</span><strong id="controlLabel">TEST_ONLY ready</strong><button id="controlBtn" class="control-btn" type="button" aria-pressed="false">Hold demo</button></div></div>
   </section>
-  <section class="secondary-tools"><div class="secondary-tabs"><button class="secondary-tab active" data-panel="demoPanel">Demo / Test Mode</button><button class="secondary-tab" data-panel="architecturePanel">Developer / Architecture View</button></div><div id="demoPanel" class="secondary-panel"><div><span class="eyebrow">DEMO / TEST MODE</span><h2>Try a prepared workflow</h2><p>Ba kịch bản định sẵn để thử giao diện. Không điều khiển trang web thật.</p></div><div class="demo-actions"><button class="demo-choice selected" data-scenario="search"><b>Search</b><small>Mock navigate · inspect · type · click · extract</small></button><button class="demo-choice" data-scenario="browse"><b>Browse</b><small>Mock open · inspect · screenshot action</small></button><button class="demo-choice" data-scenario="workflow"><b>Agent Workflow</b><small>Mock plan · execute · verify · events</small></button></div></div><div id="architecturePanel" class="secondary-panel hidden"><div><span class="eyebrow">DEVELOPER VIEW</span><h2>Explicit mock boundaries</h2><p>Đây là giao diện tĩnh với kịch bản chạy phía client; không gọi Browser Agent API.</p></div><div class="architecture-flow"><span>ROOM-HOP UI</span><b>↓</b><span>Browser Agent API <i>(not connected)</i></span><b>↓</b><span>Mock workflow</span><b>↓</b><span>Local sample content</span><em>NO REAL CHROMIUM · NO EXTERNAL API · NO INTERNET</em></div></div></section>
-  <footer><span>ROOM-HOP Browser Product UX V2 · Static mock website</span><span>Work 092 · Mock evidence only</span></footer>
+  <section class="secondary-tools" aria-label="Secondary test information">
+    <div class="secondary-tabs" role="tablist" aria-label="Additional TEST_ONLY information" aria-orientation="horizontal">
+      <button class="secondary-tab active" id="demoTab" type="button" role="tab" aria-selected="true" aria-controls="demoPanel" tabindex="0" data-panel="demoPanel">Demo / Test Mode</button>
+      <button class="secondary-tab" id="architectureTab" type="button" role="tab" aria-selected="false" aria-controls="architecturePanel" tabindex="-1" data-panel="architecturePanel">Architecture limits</button>
+    </div>
+    <div id="demoPanel" class="secondary-panel" role="tabpanel" aria-labelledby="demoTab" tabindex="0"><div><span class="eyebrow">TEST_ONLY FIXTURES</span><h2>Preview a prepared script</h2><p>Ba kịch bản cục bộ để kiểm tra giao diện; không điều khiển website thật.</p></div><div class="demo-actions"><button class="demo-choice selected" type="button" data-scenario="search" aria-pressed="true"><b>Search demo</b><small>Mock navigate · inspect · type · click · extract</small></button><button class="demo-choice" type="button" data-scenario="browse" aria-pressed="false"><b>Browse demo</b><small>Mock open · inspect · screenshot action</small></button><button class="demo-choice" type="button" data-scenario="workflow" aria-pressed="false"><b>TEST_ONLY workflow</b><small>Mock plan · execute · verify · events</small></button></div></div>
+    <div id="architecturePanel" class="secondary-panel hidden" role="tabpanel" aria-labelledby="architectureTab" tabindex="0" hidden><div><span class="eyebrow">ARCHITECTURE LIMITS</span><h2>No runtime integration</h2><p>Giao diện tĩnh chạy fixture cục bộ. Không có đường gọi Browser Agent API hoặc Core.</p></div><div class="architecture-flow"><span>W092 UI</span><b>↓</b><span>Runtime <i>DISCONNECTED</i></span><b>×</b><span>Execution not configured</span><em>NO REAL CHROMIUM · NO EXTERNAL API · NO NETWORK</em></div></div>
+  </section>
+  <footer><span>ROOM-HOP Browser Product UX V2 · static UI fixture</span><span>Work 092 · TEST_ONLY · Runtime disconnected</span></footer>
 </main>
 <script src="workflow.js"></script>
 <script src="app.js"></script>
-</body></html>
+</body>
+</html>

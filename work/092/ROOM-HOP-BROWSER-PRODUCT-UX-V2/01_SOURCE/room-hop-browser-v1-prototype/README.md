@@ -1,45 +1,49 @@
-# ROOM-HOP Browser Product UX V2 — Static Mock Prototype
+# ROOM-HOP Browser Product UX V2 — TEST_ONLY UI
 
 ## Mục tiêu và ranh giới
 
-Đây là giao diện demo Browser Agent dùng HTML/CSS/JavaScript tĩnh, **MOCK ONLY**. Không kết nối agent, Chromium điều khiển thật, website, Internet, Core/MCP hoặc external API. UI cho phép nhập task để chọn một trong các kịch bản định sẵn (`Browse`, `Search`, `Agent Workflow`); nội dung result cards là dữ liệu mẫu, không phải thực thi task tự do.
+Đây là static HTML/CSS/JavaScript UI fixture. Runtime luôn **DISCONNECTED**; giao diện và các kịch bản đều **TEST_ONLY**. Không có Browser Agent, Chromium điều khiển, website, Internet, Core/MCP hay external API. Task chỉ chọn kịch bản cục bộ đã chuẩn bị; quyền là cờ UI, không phải browser/security permission. Các activity/evidence đều mô phỏng; screenshot action không tạo ảnh/tệp và completion không xác minh tác vụ ngoài đời.
 
-## T5 — Task input / Run
+## Hành vi UI
 
-`workflow.js` parse task có nội dung, nhận diện intent hỗ trợ, chọn scenario và trích từ khóa Search. Task rỗng bị từ chối; task không có intent dùng scenario demo đã chọn. `Run demo` yêu cầu các demo permission tối thiểu tương ứng được người dùng cấp trước. Nội dung task được đưa vào DOM bằng `textContent` ở các vùng hiển thị động.
+- Browser tabs, mock navigation/address bar, TEST_ONLY task input, local permission gate, hold/resume, reset, timeline/evidence provenance.
+- Tab/panel semantics, keyboard navigation bằng ArrowLeft/ArrowRight/Home/End, focus management cho mở/đóng tab, focus-visible styling, reduced-motion rule và responsive breakpoints.
+- Mọi màn hình phải thể hiện rõ DISCONNECTED/TEST_ONLY; không hiển thị trạng thái đã kết nối hoặc kết quả website thật.
 
-## T9 — Evidence provenance
+## Mở giao diện
 
-Các sự kiện hiển thị dưới nhãn **SIMULATED EVIDENCE**; mỗi bản ghi có `id`, `action`, `source=mock-engine`, `type=simulated`, `timestamp`, `status=simulated`, `artifact=null` và mô tả. Sự kiện screenshot ghi rõ không tạo ảnh/tệp. Khi mọi bước script hoàn tất, UI báo **DEMO COMPLETE**, không báo PASS hoặc xác minh task thật.
+Mở `index.html` trực tiếp bằng trình duyệt (`file://`). Không cần và không nên chạy `server.py`/`start.sh` để tái lập các kiểm tra UI-only dưới đây. Không nhập địa chỉ fixture được hiển thị như một URL website thật.
 
-## T12 — Demo permissions
+## Kiểm tra tái lập an toàn
 
-Mọi quyền khởi tạo `false`. Người dùng phải chọn `Grant for demo`; quyền có thể thu hồi. Chỉ các quyền cần cho scenario hiện tại mới được yêu cầu. Đây là trạng thái điều khiển trong UI demo, không phải browser permission hoặc security boundary thật.
-
-## Chạy prototype
-
-Yêu cầu Python 3.10+.
+Chạy tại thư mục `01_SOURCE/room-hop-browser-v1-prototype/`:
 
 ```bash
-./start.sh
-# hoặc: python3 server.py
-# mở http://127.0.0.1:8787/
-```
-
-Server bind `0.0.0.0:8787`, phục vụ static assets và `GET /api/health`. Chỉ chạy trong môi trường tin cậy; không công khai ra Internet. Có thể mở `index.html` trực tiếp nhưng khi đó không có health endpoint.
-
-## Kiểm thử
-
-```bash
-python3 -m pip install -r requirements-test.txt
-python3 -m pytest -q
+node --check app.js && node --check workflow.js
 node --test tests/workflow.test.js
+PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q -p no:cacheprovider tests/test_static_contract.py
 ```
 
-Python tests kiểm tra health/root/routes/assets/static contract. Node built-in tests kiểm tra parse task, permission requirements/missing grants, evidence schema và điều kiện hoàn tất demo. Đây là unit/API/static checks; không thay browser E2E, screenshot, accessibility audit hoặc xác minh Chromium/browser agent thực sự.
+Chỉ chạy `tests/test_static_contract.py` trong phạm vi UI-only: `tests/test_server.py` tạo `ThreadingHTTPServer` loopback/ephemeral trong fixture và không thuộc lệnh kiểm chứng này.
 
-## Bằng chứng lần chạy hiện tại
+**Optional file-based browser smoke** cần Python Playwright và Chromium khả dụng tại `/usr/bin/chromium`:
 
-Ngày 2026-11-22, mirror Cloud Sandbox được dựng từ source đã read-back qua MCP Work Sandbox chạy thành công: **pytest 12/12**, **Node 14/14**, và Playwright với executable Chromium **7/7 kiểm tra** trên viewport desktop/mobile. Kết quả E2E ghi rõ `mode=local mirror from Work 092 MCP read-back`; vì vậy đây **không** phải thực thi trực tiếp trong Work Sandbox và **không** phải GitHub Actions. GitHub CI được xác nhận riêng qua run URL/SHA sau khi Actions chạy.
+```bash
+python3 tests/browser_smoke.py
+```
 
-Screenshot E2E là capture toàn trang của prototype mô phỏng, không phải screenshot từ website bên ngoài. E2E có kiểm tra blank-task rejection, demo permissions, evidence provenance/artifact:none, XSS-safe text rendering, mobile overflow và không có request ngoài local server/page/console errors.
+Script mở `index.html` bằng `file://`, kiểm tra 27 tương tác/ARIA/focus/state/permission/reset/responsive cases và ghi nhận HTTP(S) requests. Nó không tạo ảnh, không kết nối network/runtime và không phải Browser Agent E2E. Trong Cloud Sandbox, Chromium được chạy headless với `--no-sandbox`; không suy rộng cấu hình này sang môi trường production.
+
+## Kết quả mới nhất (2026-11-22, Cloud Sandbox mirror)
+
+Từ source được đọc lại qua MCP và dựng thành mirror tạm:
+
+- `node --check app.js && node --check workflow.js`: PASS (2 files).
+- Node built-in tests: **18/18 passed**.
+- Static-only pytest: **10/10 passed**.
+- Playwright + system Chromium, `file://` UI smoke: **27/27 passed**; no HTTP(S) requests; không có screenshot file.
+- Environment: Python 3.12.3, pytest 8.4.2, Node 22.23.4, Playwright Python 1.64.1, Chromium 156.0.8078.73.
+
+Các kết quả này chỉ áp dụng cho Cloud Sandbox mirror và đúng bộ lệnh nêu trên. Work Sandbox direct runner **NOT RUN**. Không có GitHub Actions run mới cho UI source snapshot này. Actions cũ `44982525770`/SHA `dcd75f0a39ca6a1e1b447f92793121c1fb3e2759` là kết quả lịch sử của code snapshot trước; không xác nhận source/test hiện tại.
+
+Báo cáo cấu trúc và hash: `02_EVIDENCE/test-results/ui-only-verification-2026-11-22.json`. Trạng thái Work 092 vẫn **PARTIAL — NOT ACCEPTED**; T6/T8/T17, full accessibility audit, independent Xu review và mọi runtime integration còn mở/block.

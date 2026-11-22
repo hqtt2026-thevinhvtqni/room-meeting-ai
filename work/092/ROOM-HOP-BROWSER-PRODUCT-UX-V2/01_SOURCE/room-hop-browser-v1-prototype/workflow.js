@@ -15,8 +15,7 @@
 
   function resolveTask(input, selectedScenario) {
     const task = String(input == null ? '' : input).trim();
-    if (!task) return { ok: false, error: 'Hãy nhập yêu cầu trước khi chạy kịch bản demo.' };
-
+    if (!task) return { ok: false, error: 'Hãy nhập yêu cầu trước khi chạy kịch bản TEST_ONLY.' };
     let scenario = SCENARIOS.includes(selectedScenario) ? selectedScenario : 'search';
     const lower = task.toLocaleLowerCase();
     if (/\b(agent\s+workflow|workflow)\b/i.test(task) || lower.includes('quy trình')) scenario = 'workflow';
@@ -28,7 +27,7 @@
       const match = task.match(/(?:tìm(?:\s+kiếm)?|tra cứu|search(?:\s+for)?|find)\s+(.+)$/i);
       query = match ? match[1] : task.replace(/^\s*(?:please\s+)?(?:search(?:\s+for)?|find)\s+/i, '');
       query = query.replace(/\s+(?:on|in|trên)\s+wikipedia\s*$/i, '').replace(/[.!?]+\s*$/, '').trim();
-      if (!query) return { ok: false, error: 'Hãy thêm từ khóa cần tìm trong kịch bản Search.' };
+      if (!query) return { ok: false, error: 'Hãy thêm từ khóa cho kịch bản Search TEST_ONLY.' };
     }
     return { ok: true, task, scenario, query };
   }
@@ -45,7 +44,7 @@
   }
   function buildMockEvidence(id, action, detail, timestamp) {
     return {
-      id: String(id), action: String(action), source: 'mock-engine', sourceLabel: 'Mock demo engine',
+      id: String(id), action: String(action), source: 'mock-engine', sourceLabel: 'TEST_ONLY fixture',
       type: 'simulated', timestamp: timestamp || new Date().toISOString(), status: 'simulated',
       artifact: null, detail: String(detail)
     };
@@ -54,9 +53,13 @@
     return Number.isInteger(expectedSteps) && expectedSteps > 0 && Array.isArray(history) &&
       history.length === expectedSteps && history.every((item) => item && item.status === 'success');
   }
+  function getDemoUiState({ running = false, held = false, complete = false } = {}) {
+    const activity = complete ? 'TEST_ONLY_COMPLETE' : running ? 'TEST_ONLY_RUNNING' : held ? 'TEST_ONLY_HELD' : 'TEST_ONLY_READY';
+    return Object.freeze({ runtime: 'DISCONNECTED', activity, canRun: !running && !held });
+  }
 
   return Object.freeze({
     SCENARIOS, REQUIRED_PERMISSIONS, resolveTask, requiredPermissions,
-    permissionsForScenario, missingPermissions, buildMockEvidence, isDemoComplete
+    permissionsForScenario, missingPermissions, buildMockEvidence, isDemoComplete, getDemoUiState
   });
 });
