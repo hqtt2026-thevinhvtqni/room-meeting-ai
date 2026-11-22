@@ -1751,3 +1751,17 @@
 - **Warnings:** Node.js 20 deprecation warning for pinned GitHub Actions dependencies. No test/job failure; no workflow change under freeze.
 - **Disposition:** CI #877 **PASS — 95/95** for exact Entry 042 commit `6a7e6faa...`. PR #68 remains OPEN / UNMERGED; branch compare DIVERGED 56 ahead / 2 behind; formal reviews 0 and inline threads 0. P1-118-01 OPEN / NEEDS CHANGES; P1-118-02 BLOCKED; Runtime Auto E2E NOT VERIFIED; Xu review PENDING; Vinh acceptance NOT ACCEPTED; W118 ACTIVE — NOT ACCEPTED — NOT RELEASED. No B-118-010, Main merge or release.
 - **Next permitted action:** Keep implementation freeze. Continue Xu review preparation and bounded read-only dependency verification. Do not convert contract CI PASS into runtime E2E or product acceptance.
+
+
+## Entry 044 — Xu review and release handoff package still points to superseded PR #67
+
+- **Priority:** 01 — P0 — Independent-review routing / acceptance-document integrity.
+- **Name / Title:** Ka — CSA / Delegated Technical Lead, Work 118.
+- **Date-Time:** 2026-11-22 13:28 (UTC+07:00).
+- **Scope:** Read-only exact-branch inspection of XR-118-001, W118-RELEASE-GATE and BB-118-002 handoff against current PR #68 / superseded PR #67 state. No edits to review, release, architecture or implementation documents; journal-only evidence update.
+- **XR-118-001 finding:** The review checklist still names PR #67 as the review target and its opening canonical snapshot is dated 2026-11-21 08:38. It contains historic 54-test evidence and historical PR #67 branch divergence. The checklist includes useful review criteria, but its target and current-state evidence are not synchronized to active PR #68, current P1-118-01/P1-118-02 findings, current branch compare or latest CI #877.
+- **W118-RELEASE-GATE finding:** The release gate's Stage A and staged integration text still direct Xu/Ka to PR #67. Its current gate table is based on 52 tests and old event-job names; it does not reflect the current PR #68 evidence snapshot. State remains PENDING/BLOCKED; no acceptance or release is implied.
+- **BB-118-002 finding:** The handoff record identifies PR #67 and branch `work/118-auto-e2e-v2`, last reconciled source `acb7f510...`, and an earlier 54-test snapshot. This directs the independent reviewer to a superseded candidate rather than the isolated active PR #68.
+- **Cross-document impact:** Along with README/STATUS/KH-118-001 drift recorded in Entry 040, the Xu review checklist, release gate and handoff package are not yet a coherent current review bundle. Xu could be routed to the wrong PR or stale test baseline if these are used without the current PR #68 addenda. No reviewer identity, approval or review result is inferred.
+- **Disposition:** PR #68 remains OPEN / UNMERGED, current branch HEAD `32cb3766fa6ea4bd63ccc20e19fb9f79f3f5b637`; latest completed CI #877 validates preceding journal SHA `6a7e6faa...` with 95/95 contract tests. Exact current journal tip CI NOT VERIFIED. PR formal reviews 0 / inline threads 0; Xu review PENDING; Vinh acceptance NOT ACCEPTED; Runtime Auto E2E NOT VERIFIED; P1-118-01 OPEN / NEEDS CHANGES; P1-118-02 BLOCKED. W118 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+- **Next permitted action:** Preserve implementation freeze. Prepare a documentation-only review-bundle reconciliation plan that redirects all review/handoff/release references to PR #68, carries current evidence and P1 findings, and preserves PR #67 as superseded history. Do not alter architecture, implementation, workflow or release gates without the applicable review/approval.
