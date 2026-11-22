@@ -196,3 +196,21 @@ The one-command local launcher has been validated on hosted Windows Server 2022:
 - Evidence: `06_EVIDENCE/W10_LOCAL_LAUNCHER_CI_EVIDENCE_20261122_RUN157.md`.
 
 The CI smoke uses `-NoClipboard -NoOpenBrowser`; physical Windows 10 clipboard, default browser, ACL and Chrome profile behavior remain for Owner PC acceptance.
+
+
+## Recommended Windows operator commands
+
+Run from the Work 10 root in a normal, non-elevated PowerShell session:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
+.\05_TEST\START_WORK10_LOCAL.ps1 -PythonPath .\.venv\Scripts\python.exe
+```
+
+If dependencies are not installed yet, use `-InstallDependencies` once. Paste the copied token into the Dashboard password field. To stop safely:
+
+```powershell
+.\05_TEST\STOP_WORK10_LOCAL.ps1
+```
+
+The execution-policy change is process-scoped only and does not persist to the user's account or machine.
