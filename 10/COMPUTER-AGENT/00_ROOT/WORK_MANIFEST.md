@@ -373,3 +373,11 @@ Run #195 is the latest canonical branch HEAD verification and passed on both OSe
 
 Current inventory after adding Run #195 evidence: Sandbox 170 files; GitHub 78; shared 78; Sandbox-only 92; GitHub-only 0; one Sandbox-only `.github/` directory. All 92 Sandbox-only files have explicit KEEP dispositions.
 
+
+
+## W10-OWNER-PC-ACCEPTANCE-RUNNER-20261122-01 — 2026-11-22 06:53 (UTC+07:00)
+
+Co created and synced `05_TEST/RUN_WORK10_ACCEPTANCE.ps1`, a one-command physical Windows 10 acceptance runner. It requires Windows 10 client + Python 3.12, parses PowerShell launcher scripts, runs noninteractive launcher smoke, full test suite and real Chromium E2E, hashes source/tests/contracts/schemas, and writes a timestamped JSON report + logs. It records only a boolean for production HMAC key presence, never the secret value; it does not enable write/PowerShell roots and leaves release gate OPEN. It has not been run on Owner PC. CI AST validation is pending.
+
+Current inventory: Sandbox 171 files; GitHub 79; shared 79; Sandbox-only 92; GitHub-only 0.
+
