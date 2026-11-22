@@ -150,3 +150,8 @@ Main snapshot 0902cd26518673aa078bb4c7c7899e1e4a95656a: W70 DOC-071 (12f11320dc9
 - W118 aggregate branch push Run #912 / 45058483884, validate job 137318939451: 102 tests PASS / 0.296s; SOURCE_BINDING_STATUS=UNBOUND_LEGACY_BRANCH. This is correct fail-safe classification for the aggregate Work branch; no Task inference. Artifact 14768620908, SHA-256 6a60f955400535c541a823e945f2c7db9e8a6a1e2f38b9815777a4ff2f7baa95.
 - PR Run #913 / 45058486129, validate job 137318918721: 102 tests PASS / 0.305s; SOURCE_BINDING_STATUS=NOT_RUN because the source-binding step is push-only. Artifact 14767874393, SHA-256 ae5c049f00896c0ea36f2e6d8b72a6ee1536d64b467fcf5a24c629ac2bd685f9.
 - Both event jobs are not product runtime proof; Runtime Auto E2E NOT RUN. Task-scoped branch and commit trailers remain required for BOUND status.
+
+
+## CI artifact content verification — 2026-11-23
+
+CI #914 push artifact and #915 PR artifact were downloaded and parsed. #914 confirms source_commit=tested_commit ba37b6772a5d441a6efb152a452c57d472a24aa0 and source-binding UNBOUND_LEGACY_BRANCH / NOT_APPLICABLE. #915 confirms source_commit ba37..., tested_commit 0604d2a12ee4e50e615be98facce0dac9b6d252b (PR merge ref), source binding NOT_RUN. Both JSON payloads classify evidence as CI_CONTRACT / RECORDED and explicitly disclaim independent review/acceptance. Uploaded ZIP SHA-256 digests matched local downloaded ZIPs. See canonical journal Entry 055 addendum.

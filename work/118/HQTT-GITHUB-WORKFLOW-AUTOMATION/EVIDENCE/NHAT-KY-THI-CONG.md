@@ -2038,3 +2038,22 @@
 - **PR Run #913:** ID 45058486129; validate job 137318918721 COMPLETED / SUCCESS; 102 tests in 0.305s; SOURCE_BINDING_STATUS=NOT_RUN because source binding is deliberately push-only. Handoff/ACK/review-observation jobs SKIPPED. Artifact ID 14767874393, uploaded ZIP SHA-256 ae5c049f00896c0ea36f2e6d8b72a6ee1536d64b467fcf5a24c629ac2bd685f9; payload not independently parsed.
 - A future Task-level BOUND event requires a separately authorized task branch matching work/W118/task-W118-TASK-### and every pushed commit to carry exactly one Work-ID, Task-ID and Issue trailer. No task-specific branch or binding was fabricated in this Work-level branch.
 - Both runs are unit/contract + source-classification evidence, not Runtime Auto E2E. Event capture jobs remain SKIPPED.
+
+
+## Artifact payload readback correction — CI #914 / #915
+
+Artifacts #914 and #915 were downloaded and their ZIP contents independently parsed after the earlier metadata-only note. Push artifact #914 contains run-evidence.json and source-binding.json; run-evidence confirms event=push, source_commit=tested_commit=ba37b6772a5d441a6efb152a452c57d472a24aa0, evidence_type=CI_CONTRACT, state=RECORDED, test_outcome=success, source_binding_status=UNBOUND_LEGACY_BRANCH. source-binding.json confirms enforcement=NOT_APPLICABLE and reason=aggregate/legacy branch has no Task-level binding; no Task state may be inferred. ZIP SHA-256 matches GitHub upload digest 417f3aadeec8ec295cede5b09d5e78a991d4962151fa4a03d7f810e5d89dabc8.
+
+PR artifact #915 contains run-evidence.json; it confirms event=pull_request, source_commit=ba37b6772a5d441a6efb152a452c57d472a24aa0, tested_commit=0604d2a12ee4e50e615be98facce0dac9b6d252b, tested_ref=refs/pull/68/merge, evidence_type=CI_CONTRACT, state=RECORDED, test_outcome=success, source_binding_status=NOT_RUN, pull_request_number=68. ZIP SHA-256 matches upload digest 058824a7c579b3e900ca361a4c707866f664de22610f58d665626f623af61496. Both artifacts explicitly limit CI evidence: it does not constitute independent review or Work acceptance.
+
+
+### Entry 055 addendum — downloaded CI artifact payload verification
+
+- **Priority:** 01 — P0 — Evidence payload/provenance verification.
+- **Name / Title:** Ka — AI-02 / CSA.
+- **Date-Time:** 2026-11-23 02:06 +07:00.
+- **Method:** Downloaded GitHub Actions artifact ZIPs #914 and #915; inspected ZIP members, parsed JSON and independently calculated ZIP and member SHA-256. No artifact payload was edited.
+- **Push Run #914 / Artifact 14768268336:** ZIP SHA-256 locally calculated = 417f3aadeec8ec295cede5b09d5e78a991d4962151fa4a03d7f810e5d89dabc8, matching GitHub upload log. ZIP contains run-evidence.json (1023 bytes) and source-binding.json (258 bytes). run-evidence confirms event=push, source_commit=tested_commit=ba37b6772a5d441a6efb152a452c57d472a24aa0, test_outcome=success, evidence_type=CI_CONTRACT, state=RECORDED, source_binding_status=UNBOUND_LEGACY_BRANCH. source-binding.json confirms enforcement=NOT_APPLICABLE; aggregate/legacy branch has no Task-level binding and no Task state may be inferred. run-evidence member SHA-256 aadd47dab069a22982616b3038b8ee6d1907c459bbcd1efbd255241dda627c56; source-binding member SHA-256 cc76e584af1f78e74696cc7e0c51d4c22d784605ee48df36444e5980569df11f.
+- **PR Run #915 / Artifact 14768258375:** ZIP SHA-256 locally calculated = 058824a7c579b3e900ca361a4c707866f664de22610f58d665626f623af61496, matching GitHub upload log. ZIP contains run-evidence.json (1015 bytes). It confirms event=pull_request, source_commit=ba37b6772a5d441a6efb152a452c57d472a24aa0, tested_commit=0604d2a12ee4e50e615be98facce0dac9b6d252b, tested_ref=refs/pull/68/merge, pull_request_number=68, test_outcome=success, evidence_type=CI_CONTRACT, state=RECORDED, source_binding_status=NOT_RUN. Member SHA-256 5766002aa08f54fbadbcc6618420c7e88b54ac015e9f85c03119c7cac7c27232.
+- Both payloads explicitly state CI evidence does not constitute independent review or Work acceptance. Neither artifact is Runtime Auto E2E evidence.
+- **Correction:** Prior Entry 055 statements that these two payloads had not been independently parsed are superseded by this addendum. Upload digest and local ZIP digest match exactly.

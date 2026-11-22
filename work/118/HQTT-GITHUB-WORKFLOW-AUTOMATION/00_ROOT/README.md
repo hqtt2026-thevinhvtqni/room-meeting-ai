@@ -236,3 +236,8 @@ Main snapshot checked: 0902cd26518673aa078bb4c7c7899e1e4a95656a. W70 DOC-071 rec
 ## Exact source-binding observation — 2026-11-23
 
 The W118 aggregate branch is now included in the push trigger so its source-binding result is observable. Push Run #912 / 45058483884 on head e03fb2efd81b62823012b14b98b7e3784e1673eb passed 102 tests / 0.296s and returned SOURCE_BINDING_STATUS=UNBOUND_LEGACY_BRANCH — expected for an aggregate Work branch, with no Task inference. PR Run #913 / 45058486129 passed 102 tests / 0.305s; source-binding is push-only and therefore NOT_RUN on the PR event. Artifacts: #912 ID 14768620908 / SHA-256 6a60f955400535c541a823e945f2c7db9e8a6a1e2f38b9815777a4ff2f7baa95; #913 ID 14767874393 / SHA-256 ae5c049f00896c0ea36f2e6d8b72a6ee1536d64b467fcf5a24c629ac2bd685f9. Payloads not independently parsed. Task-scoped binding and Runtime Auto E2E remain NOT VERIFIED / NOT RUN.
+
+
+## Artifact provenance readback
+
+CI #914 push ZIP and #915 PR ZIP were downloaded and parsed. Push artifact confirms source_commit=tested_commit=ba37b6772a5d441a6efb152a452c57d472a24aa0 and UNBOUND_LEGACY_BRANCH / NOT_APPLICABLE. PR artifact confirms source_commit ba37... but tested_commit 0604d2a12ee4e50e615be98facce0dac9b6d252b (refs/pull/68/merge); source binding NOT_RUN. Both are CI_CONTRACT, RECORDED, and explicitly not independent review or Work acceptance. See Entry 055 addendum.

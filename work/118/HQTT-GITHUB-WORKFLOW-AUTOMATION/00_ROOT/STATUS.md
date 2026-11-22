@@ -332,3 +332,8 @@ Main source snapshot: 0902cd26518673aa078bb4c7c7899e1e4a95656a. W70 DOC-071/DOC-
 ## Push-source binding — 2026-11-23
 
 W118 aggregate branch is included in the push workflow. Exact source head e03fb2efd81b62823012b14b98b7e3784e1673eb: Run #912 push SUCCESS, 102 tests / 0.296s, SOURCE_BINDING_STATUS=UNBOUND_LEGACY_BRANCH (correct; no Task inferred); artifact 14768620908. Run #913 PR SUCCESS, 102 tests / 0.305s; source binding NOT_RUN by design on PR event; artifact 14767874393. Task-scoped branch binding remains unproven; Runtime Auto E2E NOT RUN.
+
+
+## Artifact payload readback — 2026-11-23
+
+Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact source/tested SHA ba37b6772a5d441a6efb152a452c57d472a24aa0 and UNBOUND_LEGACY_BRANCH / NOT_APPLICABLE. PR artifact confirms source SHA ba37..., tested merge SHA 0604d2a12ee4e50e615be98facce0dac9b6d252b, source binding NOT_RUN. Both are CI_CONTRACT / RECORDED and explicitly not review or acceptance evidence. ZIP digests match GitHub upload digests. Full readback details in Journal Entry 055 addendum.
