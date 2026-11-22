@@ -351,8 +351,11 @@ def _posix_group_members(pgid: int) -> int | None:
     if pgid <= 0:
         return None
     try:
+        # Do not pass -g here: procps may return exit code 1 when a group
+        # is empty, making a verified-empty group indistinguishable from probe
+        # failure. Take a successful process-table snapshot and filter PGID below.
         completed = subprocess.run(
-            ["ps", "-o", "pid=,pgid=,stat=", "-g", str(pgid)],
+            ["ps", "-o", "pid=,pgid=,stat="],
             capture_output=True, text=True, timeout=5, check=False,
         )
     except (OSError, subprocess.TimeoutExpired):
