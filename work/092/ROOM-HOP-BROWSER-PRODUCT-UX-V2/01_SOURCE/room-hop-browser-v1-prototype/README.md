@@ -34,9 +34,9 @@ python3 tests/browser_smoke.py
 
 Script mở `index.html` bằng `file://`, kiểm tra 27 tương tác/ARIA/focus/state/permission/reset/responsive cases và ghi nhận HTTP(S) requests. Nó không tạo ảnh, không kết nối network/runtime và không phải Browser Agent E2E. Trong Cloud Sandbox, Chromium được chạy headless với `--no-sandbox`; không suy rộng cấu hình này sang môi trường production.
 
-## Kết quả mới nhất (2026-11-22, Cloud Sandbox mirror)
+## Kết quả mới nhất (2026-11-22)
 
-Từ source được đọc lại qua MCP và dựng thành mirror tạm:
+**Cloud Sandbox mirror / same-hash local file UI checks:**
 
 - `node --check app.js && node --check workflow.js`: PASS (2 files).
 - Node built-in tests: **18/18 passed**.
@@ -44,6 +44,6 @@ Từ source được đọc lại qua MCP và dựng thành mirror tạm:
 - Playwright + system Chromium, `file://` UI smoke: **27/27 passed**; no HTTP(S) requests; không có screenshot file.
 - Environment: Python 3.12.3, pytest 8.4.2, Node 22.23.4, Playwright Python 1.64.1, Chromium 156.0.8078.73.
 
-Các kết quả này chỉ áp dụng cho Cloud Sandbox mirror và đúng bộ lệnh nêu trên. Work Sandbox direct runner **NOT RUN**. Không có GitHub Actions run mới cho UI source snapshot này. Actions cũ `44982525770`/SHA `dcd75f0a39ca6a1e1b447f92793121c1fb3e2759` là kết quả lịch sử của code snapshot trước; không xác nhận source/test hiện tại.
+**GitHub Actions CI for the same canonical source/test hashes:** branch `work092/one-shot-20261122`, commit `76549220114b4d20cff78e525343837b7e6c9f4c`, run [`44996828261`](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44996828261) **SUCCESS**. Actions ran static pytest **10/10** and Node **18/18** and uploaded JUnit artifact `work092-ui-only-pytest-report` (ID `14744740180`). CI did not run Playwright or Browser Runtime. The older run `44982525770` at SHA `dcd75f0...` applies to an earlier source snapshot only.
 
-Báo cáo cấu trúc và hash: `02_EVIDENCE/test-results/ui-only-verification-2026-11-22.json`. Trạng thái Work 092 vẫn **PARTIAL — NOT ACCEPTED**; T6/T8/T17, full accessibility audit, independent Xu review và mọi runtime integration còn mở/block.
+These results do not establish direct Work Sandbox execution: it remains **NOT RUN**. Structured verification report and source hashes: `02_EVIDENCE/test-results/ui-only-verification-2026-11-22.json`; current Actions details: `02_EVIDENCE/test-results/github-actions-status.json`. Work 092 remains **PARTIAL — NOT ACCEPTED**; T6/T8/T17, full accessibility/contrast audit, independent Xu review and runtime integration remain open/block.

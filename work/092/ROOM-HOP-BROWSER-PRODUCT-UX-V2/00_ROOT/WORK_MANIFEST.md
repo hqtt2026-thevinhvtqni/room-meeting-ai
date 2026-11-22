@@ -2,16 +2,17 @@
 
 - **Work ID:** 092
 - **Work name:** ROOM-HOP-BROWSER-PRODUCT-UX-V2
-- **Scope:** static prototype/mock UI; not a real browser/agent runtime.
+- **Scope hiện hành:** UI/client static TEST_ONLY; runtime/Browser Agent thật tiếp tục BLOCKED.
 - **Canonical source:** `01_SOURCE/room-hop-browser-v1-prototype/`
 - **Evidence:** `02_EVIDENCE/`
 - **Current state:** **PARTIAL — NOT ACCEPTED** (2026-11-22 Asia/Ho_Chi_Minh).
-- **Cloud mirror:** pytest 12/12, Node 14/14, Playwright+Chromium 11/11; JS syntax checks pass. Mirror was reconstructed from MCP read-back.
-- **GitHub sync:** branch `work092/one-shot-20261122`, code commit `dcd75f0a39ca6a1e1b447f92793121c1fb3e2759`; not merged to main.
-- **GitHub Actions:** SUCCESS on that code commit; run `44982525770`; pytest/JUnit 12 tests, 0 failures/errors; Node 14/14. Artifact `work092-pytest-report` ID `14738237995`.
-- **Direct Work Sandbox execution:** NOT RUN; MCP 8030 does not expose shell/browser runner in this session.
-- **Known gaps:** T6/T8/T17 partial, no full accessibility audit, and direct Work Sandbox runtime unverified.
-- **Known limits:** all app actions are simulated; no agent/browser/network integration; permissions are demo-only; evidence events have no real artifacts.
-- **Protected scope:** ROOM-HOP Core :8000, MCP :8020, Work 91, Opera, external APIs and real browser services. No protected service was contacted or changed.
-- **Decision:** Xu retains independent final acceptance. Do not mark DONE/PASS globally until remaining gaps are reviewed.
-- **Canonical report:** `02_EVIDENCE/NU_ACCEPTANCE_REPORT.md`.
+- **UI-only verification:** Cloud Sandbox mirror dựng từ MCP read-back và xác minh lại trên bản có cùng 7 SHA-256 canonical: `node --check` 2 files PASS; Node 18/18 PASS; static-only pytest 10/10 PASS; Playwright Chromium `file://` smoke 27/27 PASS; zero HTTP(S) requests.
+- **GitHub branch:** `work092/one-shot-20261122`; verified UI source/test commit `76549220114b4d20cff78e525343837b7e6c9f4c`; documentation/evidence follow-up remains on the same unmerged feature branch.
+- **GitHub Actions:** SUCCESS, run `44996828261`, head SHA matches current source commit. Static pytest/JUnit 10 tests, 0 failures/errors/skips; Node 18/18. Artifact `work092-ui-only-pytest-report`, ID `14744740180`.
+- **Workflow scope:** `.github/workflows/work092-pytest.yml` runs only `tests/test_static_contract.py` and `tests/workflow.test.js`; excludes `tests/test_server.py` because its fixture starts a loopback HTTP server. Actions did not run Playwright/browser E2E.
+- **Direct Work Sandbox execution:** NOT RUN — MCP provides file operations only.
+- **Current gaps:** T6/T8/T17 remain PARTIAL; full accessibility/contrast audit and independent Xu review remain outstanding; real Browser Runtime integration remains BLOCKED.
+- **Nu / reviewer provenance:** no evidence of independent Nu dispatch/ACK; Xu review not yet evidenced. Manus executor session does not claim Nu/Xu identity.
+- **Protected scope:** no API/runtime, website, server, host/port/endpoint/queue, or changes to W10 LOCKED or other Work contracts.
+- **Final decision:** Xu performs independent review; Vinh decides. CI SUCCESS is not product acceptance. Do not mark DONE/PASS/ACCEPTED globally until remaining gaps and review are resolved.
+- **Current Actions evidence:** `02_EVIDENCE/test-results/github-actions-status.json`; acceptance details: `02_EVIDENCE/NU_ACCEPTANCE_REPORT.md`; chronology: `02_EVIDENCE/NU_BUILD_JOURNAL.md`.

@@ -1,44 +1,61 @@
 {
   "work_id": "092",
-  "checked_at": "2026-11-22T10:53:20+07:00",
+  "checked_at": "2026-11-22T14:09:44+07:00",
   "repository": "hqtt2026-thevinhvtqni/room-meeting-ai",
   "branch": "work092/one-shot-20261122",
-  "ci_status": "SUCCESS",
-  "workflow_name": "Work 092 tests",
+  "current_source_commit": "76549220114b4d20cff78e525343837b7e6c9f4c",
+  "current_source_ci_status": "SUCCESS",
+  "workflow_name": "Work 092 UI-only tests",
   "workflow_path": ".github/workflows/work092-pytest.yml",
-  "workflow_run_id": 44982525770,
+  "workflow_run_id": 44996828261,
   "event": "push",
-  "head_sha": "dcd75f0a39ca6a1e1b447f92793121c1fb3e2759",
-  "run_url": "https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44982525770",
+  "head_sha": "76549220114b4d20cff78e525343837b7e6c9f4c",
+  "run_url": "https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44996828261",
   "run_status": "completed",
   "conclusion": "success",
-  "created_at_utc": "2026-11-22T03:51:55Z",
-  "updated_at_utc": "2026-11-22T03:52:14Z",
+  "created_at_utc": "2026-11-22T07:08:01Z",
+  "updated_at_utc": "2026-11-22T07:08:26Z",
   "jobs": {
+    "test": "success",
     "Locate canonical source": "success",
     "Install pytest dependency": "success",
-    "Run pytest and write JUnit report": "success",
+    "Run static contract pytest only (no server fixture)": "success",
     "Test task/evidence/permission contracts": "success",
     "Upload pytest report": "success"
   },
   "pytest_junit": {
-    "tests": 12,
+    "tests": 10,
     "failures": 0,
     "errors": 0,
     "skipped": 0,
-    "artifact_name": "work092-pytest-report",
-    "artifact_id": 14738237995,
-    "artifact_size_bytes": 637,
+    "artifact_name": "work092-ui-only-pytest-report",
+    "artifact_id": 14744740180,
+    "artifact_size_bytes": 663,
     "artifact_expired": false,
-    "artifact_api_url": "https://api.github.com/repos/hqtt2026-thevinhvtqni/room-meeting-ai/actions/artifacts/14738237995"
+    "verified_by": "Downloaded GitHub Actions artifact and parsed JUnit XML"
   },
   "node_tests": {
-    "tests": 14,
-    "passed": 14,
+    "tests": 18,
+    "passed": 18,
     "failed": 0,
     "verified_from": "GitHub Actions job log"
   },
-  "verification_method": "GitHub CLI run view/log + REST Actions artifact listing + downloaded JUnit XML parsed locally",
-  "scope_note": "CI covers mock prototype source at the stated SHA; it does not certify direct Work Sandbox runtime or a real browser agent.",
-  "run_log_excerpt": "02_EVIDENCE/test-results/github-actions-run-excerpt.txt"
+  "local_ui_only_checks_at_same_source_hash": {
+    "node_syntax_files": 2,
+    "node_tests": "18/18",
+    "static_pytest": "10/10",
+    "playwright_file_url_smoke": "27/27",
+    "external_http_https_requests": 0,
+    "runtime_integration": false,
+    "source_hashes_match_canonical_report": true
+  },
+  "nonblocking_warning": "GitHub runner warned that actions/checkout@v4, setup-node@v4, setup-python@v5 and upload-artifact@v4 target Node.js 20 and are being forced onto Node.js 24. Run still succeeded; warning is not a test failure.",
+  "previous_verified_run": {
+    "workflow_run_id": 44982525770,
+    "head_sha": "dcd75f0a39ca6a1e1b447f92793121c1fb3e2759",
+    "run_url": "https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44982525770",
+    "conclusion": "success",
+    "scope": "Historical source snapshot only; superseded as the current-source CI reference by run 44996828261."
+  },
+  "scope_note": "This run certifies only the static pytest contract and Node workflow tests at the stated source SHA. It did not start a server, run Playwright, access Browser Runtime, contact APIs/websites, or certify a real browser agent. Direct Work Sandbox execution remains NOT RUN; full accessibility/contrast audit and independent Xu review remain pending. Work 092 remains PARTIAL — NOT ACCEPTED."
 }
