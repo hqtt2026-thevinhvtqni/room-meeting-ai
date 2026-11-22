@@ -1489,3 +1489,42 @@ PR #61 remains OPEN / UNMERGED. No deployment, Core mutation, listener restart o
 **CANONICAL CI RUN #44978021033 PASS / PR #69 EXACT-HEAD CI RUN #44978067896 PASS / WP2 TECHNICAL CI VERIFIED / INDEPENDENT QA AND SECURITY APPROVAL PENDING / WP0–WP1–WP3–WP5–WP6–WP7 REMAIN NOT VERIFIED OR BLOCKED AS ABOVE / EXECUTION GATE CLOSED / NOT RELEASED.**
 
 **Signature:** [KÝ: XU | TEMPORARY WORK COORDINATOR]
+
+
+## 2026-11-22 14:42–14:47 UTC+07 — JRN-W28-041 — Xu tiếp tục takeover: đối soát đường chạy pytest Sandbox và cổng E2E
+
+**Người thực hiện:** Xu — temporary Work 28 coordinator / technical execution owner  
+**Repository:** `hqtt2026-thevinhvtqni/room-meeting-ai`  
+**Canonical branch:** `work/28-mcp-tooling-platform`  
+**Source baseline read:** `3530ff847fa51d6b00f374c6a106fe07750e6a6e` (đã đối chiếu các tài liệu canonical; không sửa code trong checkpoint này).
+
+### READ — tài liệu chuẩn đã mở lại trực tiếp
+1. `01_PLAN/WORK28_MASTER_EXECUTION_PLAN_V2.0.md` — xác nhận Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED; Core :8000 là authority duy nhất; Build MCP :8030 là kênh build/verification; Execution Host :8031 là ranh giới thực thi duy nhất; historical listener :8020 bị quarantine / DO NOT USE.
+2. `01_PLAN/WORK28_AUTO_E2E_RUNBOOK_V2.0.md` — pipeline chuẩn DISCOVER → AUTHORIZE → SNAPSHOT → HASH → DISPATCH → COLLECT → VERIFY → PERSIST → READBACK → REPORT; CI preconditions không được đánh đồng với deployed E2E.
+3. `01_PLAN/PLAN_WORK28_CONTINUATION_V1.0.md` — WP0 yêu cầu raw tools/list có timestamp, names, schemas và deployed process/build provenance; WP2 giữ BlockedExecutionClient cho tới khi route Core, identity và isolation được chứng minh.
+4. `05_TEST/WORK_28_TEST_PLAN.md` trên Sandbox Work 28 được đọc bằng diagnostic read probe. Nội dung xác nhận canonical command là `python -m unittest discover -s 05_TEST -t . -v`; tài liệu tự ghi rõ chưa có approved-runner execution. G3 approved-runner, G4 auth/path/isolation và G5 live E2E vẫn BLOCKED.
+
+### TRACE — thao tác và bằng chứng trong checkpoint
+- Method: mở lại trực tiếp GitHub canonical files qua GitHub connector; gọi MCP 8030 diagnostic `sandbox_read_probe(work_id="28", relative_path="MCP-8020-TOOLING-PLATFORM/05_TEST/WORK_28_TEST_PLAN.md")`.
+- Probe response: `status=ok`, đúng `work_id=28`, đúng path; trả về nguyên nội dung test plan và `size_bytes=5009`.
+- MCP tool surface được cung cấp trong phiên có Sandbox read/list/create/write/append/delete và các thao tác context/meeting; không thấy action Python/pytest execution hoặc command execution trong danh sách tool khả dụng. Không gửi lệnh thực thi thay thế, không chạy trên môi trường khác để giả danh Sandbox.
+- Issue #26 được đọc lại: còn OPEN; yêu cầu authenticated MCP 8030 → Core 8000 → Execution Host 8031, pytest fixture thật trong Sandbox, negative tests, exact source hash và protected evidence readback. Đây là yêu cầu nghiệm thu chưa được chứng minh, không phải giấy phép bypass.
+- PR #69 vẫn DRAFT / OPEN / UNMERGED; PR #61 vẫn OPEN và divergent. Không sửa/merge PR #61.
+
+### ANALYZE / DECIDE
+- **PASS:** đọc lại canonical plan/runbook và Sandbox test plan thành công; xác nhận đúng test command và tình trạng gate trong tài liệu.
+- **BLOCKED:** actual pytest execution inside Sandbox — thiếu authorized Python/pytest execution action trong MCP tool surface hiện khả dụng. Không có run_id/exit code/test output thật nên tuyệt đối không ghi pytest PASS.
+- **NOT VERIFIED:** live MCP process/build identity và raw deployed tools/list parity; probe file read không chứng minh service process identity hay registry parity.
+- Giữ Execution Gate CLOSED; không wire tool execution, không thay đổi Core, không deploy/restart listener, không gọi historical :8020.
+- Giữ WP2 PR #69 ở DRAFT cho tới khi independent An QA và Ka security review có evidence riêng. Không tự ký thay hai vai trò độc lập.
+
+### NEXT
+1. Tiếp tục rà source-side registry/provider và mapping catalog → registered handler → schema/test, ghi rõ design-only / registered / callable / blocked.
+2. Thu thập được raw deployed `tools/list` và process/build provenance chỉ khi có kênh quan sát đúng service; không suy từ tool catalog của connector.
+3. Khi authorized RUN_TESTS route được expose qua Core → canonical runtime → Execution Host, chạy đúng command trong Sandbox và lưu run_id, exit code, stdout/stderr, test counts, source SHA và cleanup evidence.
+4. Chỉ mở các gate tương ứng khi có evidence độc lập; không hạ tiêu chuẩn nghiệm thu để tăng tiến độ.
+
+### STATUS
+**CANONICAL PLAN/RUNBOOK READBACK PASS / SANDBOX TEST-PLAN PROBE PASS / SANDBOX PYTEST EXECUTION BLOCKED — NOT RUN / DEPLOYED TOOLS-LIST + BUILD PROVENANCE NOT VERIFIED / LIVE E2E BLOCKED / PR #69 DRAFT / EXECUTION GATE CLOSED / NOT RELEASED.**
+
+**Signature:** [KÝ: XU | TEMPORARY WORK COORDINATOR]
