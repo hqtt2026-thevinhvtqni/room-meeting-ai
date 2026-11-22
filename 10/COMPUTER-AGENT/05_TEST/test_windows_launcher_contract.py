@@ -27,6 +27,10 @@ def main() -> None:
           "requires the explicit -EnableWrite" in START
           and "requires the explicit -EnablePowerShell" in START
           and "Test-PathWithinRoots" in START)
+    check("default read access is restricted to the Work 10 root",
+          "if (-not $AllowedRoots -or $AllowedRoots.Count -eq 0) { $AllowedRoots = @($WorkRoot) }" in START)
+    check("launcher rejects drive-root and network-share-root grants",
+          "GetPathRoot($canonical)" in START and "cannot be a drive or network-share root" in START)
     check("session record captures root permissions without storing the bearer token",
           "allowed_roots = $resolvedAllowedRoots" in START
           and "writable_roots = $resolvedWritableRoots" in START
@@ -72,7 +76,7 @@ def main() -> None:
           "finally {" in ACCEPTANCE and "failure_reason" in ACCEPTANCE and "Set-Content -LiteralPath $reportPath" in ACCEPTANCE)
     check("launcher exposes no generic shell or inline PowerShell command",
           "Invoke-Expression" not in START and "powershell.exe -Command" not in START)
-    print("Windows launcher contract: 20 checks passed")
+    print("Windows launcher contract: 22 checks passed")
 
 
 if __name__ == "__main__":
