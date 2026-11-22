@@ -20,8 +20,19 @@ def main() -> None:
     check("standalone Dashboard never starts a listener on shared port 3000",
           not re.search(r"http\.server\s+3000|TcpListener[^\n]*3000", START, re.IGNORECASE))
     check("writes and PowerShell remain disabled by default",
-          'COMPUTER_AGENT_HOST_WRITABLE_ROOTS = ""' in START
-          and 'COMPUTER_AGENT_HOST_POWERSHELL_ROOTS = ""' in START)
+          "[string[]]$WritableRoots = @()" in START
+          and "[string[]]$PowerShellRoots = @()" in START
+          and "[switch]$EnableWrite" in START and "[switch]$EnablePowerShell" in START)
+    check("write and PowerShell roots require explicit enable switches and stay inside read roots",
+          "requires the explicit -EnableWrite" in START
+          and "requires the explicit -EnablePowerShell" in START
+          and "Test-PathWithinRoots" in START)
+    check("session record captures root permissions without storing the bearer token",
+          "allowed_roots = $resolvedAllowedRoots" in START
+          and "writable_roots = $resolvedWritableRoots" in START
+          and "powershell_roots = $resolvedPowerShellRoots" in START
+          and "write_enabled = [bool]$EnableWrite" in START
+          and "powershell_enabled = [bool]$EnablePowerShell" in START)
     check("launcher refuses unknown processes occupying either local port",
           "Test-LoopbackPortAvailable" in START and "will not terminate an unknown process" in START)
     check("bearer token is copied to clipboard and not added to session record",
@@ -61,7 +72,7 @@ def main() -> None:
           "finally {" in ACCEPTANCE and "failure_reason" in ACCEPTANCE and "Set-Content -LiteralPath $reportPath" in ACCEPTANCE)
     check("launcher exposes no generic shell or inline PowerShell command",
           "Invoke-Expression" not in START and "powershell.exe -Command" not in START)
-    print("Windows launcher contract: 18 checks passed")
+    print("Windows launcher contract: 20 checks passed")
 
 
 if __name__ == "__main__":
