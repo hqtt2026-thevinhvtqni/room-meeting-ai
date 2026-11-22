@@ -226,3 +226,12 @@ The execution-policy change is process-scoped only and does not persist to the u
 - V8 validator: 16 PASS per OS; real Chromium API/runtime E2E: PASS.
 - Evidence: `06_EVIDENCE/W10_LOCAL_LAUNCHER_HTTP_CI_EVIDENCE_20261122_RUN180.md`.
 - Physical Windows 10 acceptance, production V8 trust provisioning, Linux cgroup-v2 and ROOM-HOP integration remain open.
+
+
+## Owner PC acceptance sequence — avoid port conflicts
+
+- For interactive Dashboard inspection, start with `./05_TEST/START_WORK10_LOCAL.ps1` and stop with `./05_TEST/STOP_WORK10_LOCAL.ps1`.
+- Do not run `run_all_tests.py` while the interactive launcher is active: `dashboard_live_e2e` starts its own temporary API :8787 and Dashboard :3010.
+- Stop the interactive launcher first, then run `python 05_TEST/run_all_tests.py` and `python 05_TEST/e2e_real_browser.py`.
+- Keep file writes and PowerShell roots disabled for the initial acceptance. Any writable root/PowerShell enablement requires explicit Owner approval and an exact path/script allow-list.
+- Production V8 HMAC key and pin provisioning are separate owner-controlled steps; never store the secret in the repository or paste it into chat.
