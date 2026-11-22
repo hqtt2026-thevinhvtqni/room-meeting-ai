@@ -1,13 +1,7 @@
 {
   "work_id": "092",
-  "timestamp": "2026-11-22T10:46:14+07:00",
-  "status": "PASS_ON_CLOUD_MIRROR_ONLY",
   "command": "node --test tests/workflow.test.js",
-  "test_cases_authored": 14,
-  "test_cases_executed": 14,
-  "passed": 14,
-  "failed": 0,
-  "stdout": "02_EVIDENCE/test-results/node-mirror-output.txt",
-  "scope_note": "Cloud Sandbox mirror reconstructed from Work 092 MCP read-back; not Work Sandbox execution or GitHub Actions.",
-  "github_actions": "PENDING"
+  "mirror_results": {"tests":14,"passed":14,"failed":0},
+  "github_actions": {"status":"SUCCESS","tests":14,"passed":14,"failed":0,"run_id":44982525770,"head_sha":"dcd75f0a39ca6a1e1b447f92793121c1fb3e2759","run_url":"https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44982525770"},
+  "scope_note": "No direct Work Sandbox Node runner is available via MCP 8030."
 }

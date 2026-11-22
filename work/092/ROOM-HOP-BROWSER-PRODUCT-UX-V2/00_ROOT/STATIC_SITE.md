@@ -1,15 +1,13 @@
 # STATIC SITE DELIVERY — WORK 092
 
-Work 092 is a static HTML/CSS/JavaScript prototype with an optional small Python server for local assets and `GET /api/health`.
+Work 092 is static HTML/CSS/JavaScript with an optional local Python static server and health endpoint.
 
-- Canonical source: `01_SOURCE/room-hop-browser-v1-prototype/`.
-- Entry point: `./start.sh` (or `python3 server.py`), URL `http://127.0.0.1:8787/`.
-- `index.html` can be opened directly but then has no health endpoint.
-- CSS/JS are local assets; no real browser control, external API, agent runtime, or external network browsing.
-- UI actions, permissions, evidence and results are mock/simulated.
+- Source: `01_SOURCE/room-hop-browser-v1-prototype/`.
+- Run with `./start.sh` or `python3 server.py`; local URL `http://127.0.0.1:8787/`.
+- No real browser control, external API, agent runtime or external browsing. UI actions/evidence are simulated.
 
-## Current verification — 2026-11-22
+## Verification — 2026-11-22
 
-Cloud Sandbox mirror reconstructed from source read-back via MCP passed pytest 12/12, Node 14/14 and Playwright+system Chromium 11/11. Desktop viewport 1920×1080 and mobile 390×844 were captured; mobile scrollWidth equals clientWidth. E2E covers tabs, mock navigation, control handoff, empty task, all scripted scenarios, permission gate, evidence provenance, safe text rendering and no external page requests/page/console errors.
+Cloud Sandbox mirror reconstructed from MCP read-back: pytest 12/12, Node 14/14, Playwright+system Chromium 11/11. This is not direct Work Sandbox execution. GitHub Actions succeeded on branch code SHA `dcd75f0a39ca6a1e1b447f92793121c1fb3e2759` (run `44982525770`): JUnit 12 tests, 0 failures/errors; Node 14/14. [Run](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44982525770).
 
-These are mirror results, not direct Work Sandbox execution and not GitHub Actions. MCP 8030 in this execution exposes file tools but no shell/browser runner. GitHub CI must be verified separately by URL, commit SHA, conclusion and JUnit artifact. Evidence does not certify real agent behavior, accessibility compliance or backend isolation.
+No comprehensive accessibility audit, production agent/browser test or backend isolation test was performed. Xu retains final acceptance; work remains PARTIAL.

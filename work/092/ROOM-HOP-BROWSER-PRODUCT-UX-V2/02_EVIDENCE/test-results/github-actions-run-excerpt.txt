@@ -1,0 +1,65 @@
+GitHub Actions run 44982525770 — actual log excerpts
+Source: gh run view 44982525770 --log
+Head SHA: dcd75f0a39ca6a1e1b447f92793121c1fb3e2759
+
+test	Run pytest and write JUnit report	﻿2026-11-22T03:52:09.3461810Z ##[group]Run mkdir -p test-results
+test	Run pytest and write JUnit report	2026-11-22T03:52:09.3462102Z ^[[36;1mmkdir -p test-results^[[0m
+test	Run pytest and write JUnit report	2026-11-22T03:52:09.3462463Z ^[[36;1mcd "work/092/ROOM-HOP-BROWSER-PRODUCT-UX-V2/01_SOURCE/room-hop-browser-v1-prototype"^[[0m
+test	Run pytest and write JUnit report	2026-11-22T03:52:09.3462952Z ^[[36;1mpython -m pytest -q --junitxml="$GITHUB_WORKSPACE/test-results/work092-pytest.xml"^[[0m
+test	Run pytest and write JUnit report	2026-11-22T03:52:09.3493023Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+test	Run pytest and write JUnit report	2026-11-22T03:52:09.3493302Z env:
+test	Run pytest and write JUnit report	2026-11-22T03:52:09.3493519Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+test	Run pytest and write JUnit report	2026-11-22T03:52:09.3493853Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+test	Run pytest and write JUnit report	2026-11-22T03:52:09.3494186Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+test	Run pytest and write JUnit report	2026-11-22T03:52:09.3494482Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+test	Run pytest and write JUnit report	2026-11-22T03:52:09.3494937Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+test	Run pytest and write JUnit report	2026-11-22T03:52:09.3495230Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+test	Run pytest and write JUnit report	2026-11-22T03:52:09.3495525Z ##[endgroup]
+test	Run pytest and write JUnit report	2026-11-22T03:52:10.5417572Z ............                                                             [100%]
+test	Run pytest and write JUnit report	2026-11-22T03:52:10.5418575Z - generated xml file: /home/runner/work/room-meeting-ai/room-meeting-ai/test-results/work092-pytest.xml -
+test	Run pytest and write JUnit report	2026-11-22T03:52:10.5419319Z 12 passed in 0.59s
+
+test	Test task/evidence/permission contracts	2026-11-22T03:52:10.7086433Z   ---
+test	Test task/evidence/permission contracts	2026-11-22T03:52:10.7086664Z   duration_ms: 0.176201
+test	Test task/evidence/permission contracts	2026-11-22T03:52:10.7086930Z   type: 'test'
+test	Test task/evidence/permission contracts	2026-11-22T03:52:10.7087409Z   ...
+test	Test task/evidence/permission contracts	2026-11-22T03:52:10.7087931Z # Subtest: switching to a narrower scenario drops no-longer-required grants
+test	Test task/evidence/permission contracts	2026-11-22T03:52:10.7088643Z ok 12 - switching to a narrower scenario drops no-longer-required grants
+test	Test task/evidence/permission contracts	2026-11-22T03:52:10.7089088Z   ---
+test	Test task/evidence/permission contracts	2026-11-22T03:52:10.7089327Z   duration_ms: 0.155079
+test	Test task/evidence/permission contracts	2026-11-22T03:52:10.7089522Z   type: 'test'
+test	Test task/evidence/permission contracts	2026-11-22T03:52:10.7089690Z   ...
+test	Test task/evidence/permission contracts	2026-11-22T03:52:10.7090004Z # Subtest: mock evidence has source, type, timestamp, status, and no artifact
+test	Test task/evidence/permission contracts	2026-11-22T03:52:10.7090469Z ok 13 - mock evidence has source, type, timestamp, status, and no artifact
+test	Test task/evidence/permission contracts	2026-11-22T03:52:10.7090777Z   ---
+test	Test task/evidence/permission contracts	2026-11-22T03:52:10.7090948Z   duration_ms: 0.10809
+test	Test task/evidence/permission contracts	2026-11-22T03:52:10.7091143Z   type: 'test'
+test	Test task/evidence/permission contracts	2026-11-22T03:52:10.7091313Z   ...
+test	Test task/evidence/permission contracts	2026-11-22T03:52:10.7091623Z # Subtest: completion is true only when every expected demo step succeeded
+test	Test task/evidence/permission contracts	2026-11-22T03:52:10.7092076Z ok 14 - completion is true only when every expected demo step succeeded
+test	Test task/evidence/permission contracts	2026-11-22T03:52:10.7092387Z   ---
+test	Test task/evidence/permission contracts	2026-11-22T03:52:10.7092559Z   duration_ms: 0.106537
+test	Test task/evidence/permission contracts	2026-11-22T03:52:10.7092751Z   type: 'test'
+test	Test task/evidence/permission contracts	2026-11-22T03:52:10.7092920Z   ...
+test	Test task/evidence/permission contracts	2026-11-22T03:52:10.7247504Z 1..14
+test	Test task/evidence/permission contracts	2026-11-22T03:52:10.7247796Z # tests 14
+test	Test task/evidence/permission contracts	2026-11-22T03:52:10.7248038Z # suites 0
+test	Test task/evidence/permission contracts	2026-11-22T03:52:10.7248285Z # pass 14
+test	Test task/evidence/permission contracts	2026-11-22T03:52:10.7248516Z # fail 0
+test	Test task/evidence/permission contracts	2026-11-22T03:52:10.7248860Z # cancelled 0
+test	Test task/evidence/permission contracts	2026-11-22T03:52:10.7249298Z # skipped 0
+test	Test task/evidence/permission contracts	2026-11-22T03:52:10.7249596Z # todo 0
+test	Test task/evidence/permission contracts	2026-11-22T03:52:10.7249951Z # duration_ms 91.179044
+
+test	Upload pytest report	2026-11-22T03:52:10.8728160Z With the provided path, there will be 1 file uploaded
+test	Upload pytest report	2026-11-22T03:52:10.8736349Z Artifact name is valid!
+test	Upload pytest report	2026-11-22T03:52:10.8736729Z Root directory input is valid!
+test	Upload pytest report	2026-11-22T03:52:11.1086648Z Beginning upload of artifact content to blob storage
+test	Upload pytest report	2026-11-22T03:52:11.1229735Z (node:2364) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+test	Upload pytest report	2026-11-22T03:52:11.1796040Z Uploaded bytes 637
+test	Upload pytest report	2026-11-22T03:52:11.1990787Z Finished uploading artifact content to blob storage!
+test	Upload pytest report	2026-11-22T03:52:11.1991742Z SHA256 digest of uploaded artifact zip is 7c0b75e8099bb20acb30436a8233fdb756cae455487f03dac1340064719168ef
+test	Upload pytest report	2026-11-22T03:52:11.1993104Z Finalizing artifact upload
+test	Upload pytest report	2026-11-22T03:52:11.5629510Z Artifact work092-pytest-report.zip successfully finalized. Artifact ID 14738237995
+test	Upload pytest report	2026-11-22T03:52:11.5630722Z Artifact work092-pytest-report has been successfully uploaded! Final size is 637 bytes. Artifact ID is 14738237995
+test	Upload pytest report	2026-11-22T03:52:11.5635673Z Artifact download URL: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44982525770/artifacts/14738237995

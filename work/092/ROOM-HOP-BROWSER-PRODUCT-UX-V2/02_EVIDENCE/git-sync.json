@@ -1,43 +1,12 @@
 {
-  "work_id": "092",
-  "work_name": "ROOM-HOP-BROWSER-PRODUCT-UX-V2",
-  "operation": "Sandbox to GitHub synchronization",
-  "date": "2026-11-22",
-  "timezone": "Asia/Ho_Chi_Minh",
-  "source": "ROOM-HOP Build Sandbox work_id=092",
-  "destination": {
-    "repository": "hqtt2026-thevinhvtqni/room-meeting-ai",
-    "branch": "main",
-    "path": "work/092/ROOM-HOP-BROWSER-PRODUCT-UX-V2/"
-  },
-  "result": "PASS — GitHub ref updated and read-back verified",
-  "synced_text_files": 19,
-  "included": [
-    "00_ROOT/BIEN_BAN_W092.md",
-    "00_ROOT/ERROR_LOG.md",
-    "00_ROOT/STATIC_SITE.md",
-    "00_ROOT/WORK_MANIFEST.md",
-    "01_SOURCE/room-hop-browser-v1-prototype/",
-    "02_EVIDENCE/README.md",
-    "02_EVIDENCE/runtime/",
-    "02_EVIDENCE/test-results/"
-  ],
-  "excluded": [
-    "desktop.ini operating-system metadata",
-    "__pycache__ and .pyc generated Python cache",
-    "02_EVIDENCE/screenshots/ because no screenshot files were present in the Sandbox listing"
-  ],
-  "commit_before": "792bdd71e5345949e0c1f26ff9f95a8513dfa7d5",
-  "commit_after": "155dfa4ada77054d64b2181df015aaf13c9f9b97",
-  "verification": {
-    "main_ref_matches_commit": true,
-    "work_directory_visible": true,
-    "manifest_readback": true,
-    "index_html_readback": true
-  },
-  "limitations": [
-    "This confirms source and existing text evidence synchronization only; it is not an independent runtime E2E certification.",
-    "The canonical minutes and test JSON report T1-T17 PASS, but screenshot evidence is absent from the Sandbox listing and was not synced.",
-    "Sandbox metadata returned work_name=00_ROOT while WORK_MANIFEST.md declares ROOM-HOP-BROWSER-PRODUCT-UX-V2; the Git path and manifest use the declared Work name."
-  ]
+  "work_id":"092",
+  "repository":"hqtt2026-thevinhvtqni/room-meeting-ai",
+  "branch":"work092/one-shot-20261122",
+  "commit_sha":"dcd75f0a39ca6a1e1b447f92793121c1fb3e2759",
+  "commit_url":"https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/commit/dcd75f0a39ca6a1e1b447f92793121c1fb3e2759",
+  "commit_files_changed":34,
+  "result":"BRANCH_PUSHED; CI SUCCESS; not merged to main",
+  "workflow_run":{"id":44982525770,"url":"https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44982525770","head_sha":"dcd75f0a39ca6a1e1b447f92793121c1fb3e2759","conclusion":"success","pytest":"12 passed; 0 failures/errors; JUnit artifact 14738237995","node":"14 passed; 0 failed"},
+  "junit_artifact":{"name":"work092-pytest-report","id":14738237995,"size_bytes":637,"downloaded_and_parsed":true},
+  "limitations":["Mirror tests and screenshots are from Cloud Sandbox reconstructed from MCP read-back, not Work Sandbox direct.","Branch not merged; main remains unchanged until review.","No real browser-agent, external website, API or Internet browsing implemented."]
 }

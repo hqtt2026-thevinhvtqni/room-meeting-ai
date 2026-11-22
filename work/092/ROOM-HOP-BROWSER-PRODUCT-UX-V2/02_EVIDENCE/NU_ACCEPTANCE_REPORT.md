@@ -1,35 +1,28 @@
 # NU ACCEPTANCE REPORT — WORK 092
 
-**Ngày:** 2026-11-22 (Asia/Ho_Chi_Minh)
-**Executor:** Manus executor trong phiên hiện tại
-**Trạng thái:** **PARTIAL — NOT ACCEPTED** (Xu retains final independent acceptance)
+**Date:** 2026-11-22 Asia/Ho_Chi_Minh
+**Executor:** Manus executor in current session
+**Disposition:** **PARTIAL — NOT ACCEPTED**; Xu retains final acceptance.
 
-## Kết quả thực tế
+## Verified evidence
 
-Source được cập nhật trực tiếp trong Work Sandbox qua MCP, sau đó read-back vào Cloud Sandbox mirror để chạy kiểm thử. Final mirror results: pytest **12/12**, Node **14/14**, `node --check app.js` và `node --check workflow.js` pass, Playwright + system Chromium **11/11 checks**.
+- Cloud Sandbox mirror from Work Sandbox MCP read-back: pytest **12/12**, Node **14/14**, JS syntax checks pass, Playwright+system Chromium **11/11 checks**.
+- GitHub Actions: SUCCESS on branch code SHA `dcd75f0a39ca6a1e1b447f92793121c1fb3e2759`; run ID `44982525770`; [run URL](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44982525770).
+- Actions JUnit artifact `work092-pytest-report`, ID `14738237995`, parsed as 12 tests / 0 failures / 0 errors / 0 skipped; Actions log confirms Node 14 passed / 0 failed.
+- Direct Work Sandbox shell/browser tests: NOT RUN (MCP 8030 has no runner). Mirror and CI are separate evidence.
 
-**Provenance:** kết quả trên Cloud Sandbox mirror reconstructed from MCP read-back. Không phải Work Sandbox direct, không phải GitHub Actions và không phải production browser-agent runtime. MCP 8030 không cung cấp shell/browser runner trong phiên hiện tại.
+## Fixes and E2E
 
-## Sửa lỗi
+T5 task parsing/blank validation, T9 simulated provenance/artifact null, T12 demo-only permission gate. Fixed favicon 404 discovered in first Chromium run. Fixed inert × tab-close affordance as accessible button with final-tab protection. Mirror E2E covers desktop mock render, tabs, mock URL/Back/Forward/Reload, control gating, blank task, Search evidence provenance, XSS-safe text, Browse permission gate, 8-action Workflow, mobile no overflow and zero page/console/external-request errors. Screenshots are the mock UI, not a real external website.
 
-- T5: task parser, scripted Browse/Search/Workflow selection, Search query và blank-task rejection.
-- T9: provenance rõ ràng; SIMULATED, source/type/timestamp/status, artifact null; screenshot action không giả vờ lưu ảnh; hoàn tất là DEMO COMPLETE.
-- T12: quyền demo mặc định chưa cấp, grant/revoke, least-privilege gate.
-- Chromium ban đầu bắt favicon 404; sửa favicon local data URI, thêm static regression assertion; final E2E clean.
-- Phát hiện dấu đóng tab × không hoạt động; đổi thành button accessible, ngăn đóng tab cuối; có pytest và Playwright checks.
+## Matrix summary
 
-## E2E coverage
+PASS on mirror: T1–T5, T7, T9–T16 (T10 demo-only); T6/T8/T17 remain PARTIAL. Direct Work Sandbox test execution remains NOT RUN. See `00_ROOT/BIEN_BAN_W092.md` for details.
 
-11 checks: desktop MOCK ONLY render; tab New/Switch/Close; mock URL entry/Back/Forward/Reload; Human/Agent handoff gating; blank task; Search sau cấp quyền và 6 simulated evidence items artifact none; XSS-safe task rendering; Browse permission gate; Agent Workflow 8 bước đúng thứ tự; mobile no overflow; không external browser request/page/console errors.
+## GitHub sync
 
-## T1–T17 summary
+Pushed `work092/one-shot-20261122`; code SHA `dcd75f0a39ca6a1e1b447f92793121c1fb3e2759`; not merged to main. Root workflow `.github/workflows/work092-pytest.yml` ran successfully. Logs, JUnit and artifact metadata are under `02_EVIDENCE/test-results/`; screenshots under `02_EVIDENCE/screenshots/` with mirror provenance.
 
-PASS on mirror: T1, T2, T3, T4, T5, T7, T9, T10 (demo-only), T11, T12, T13, T14, T15, T16. PARTIAL on mirror: T6 (không audit mọi state frame/agent thật), T8 (chưa xong copy/accessibility audit), T17 (chỉ quan sát không có external browser request; không có backend integration). Direct Work Sandbox execution remains NOT RUN.
+## Final decision
 
-## CI and handoff gates
-
-- `.github/workflows/work092-pytest.yml` runs pytest, Node and uploads JUnit XML, with source/workflow-only path triggers.
-- GitHub Actions is **PENDING** until an actual run has verified URL, code SHA, SUCCESS conclusion and report artifact.
-- Xu retains final acceptance; current decision stays **PARTIAL — NOT ACCEPTED**.
-
-Evidence details live under `02_EVIDENCE/test-results/`; screenshots under `02_EVIDENCE/screenshots/` are captures of the local MOCK ONLY prototype, not an external website.
+**PARTIAL — NOT ACCEPTED.** CI passed for the pushed mock source, but direct Work Sandbox execution was not available, T6/T8/T17 remain partial, and a complete accessibility audit was not run. Xu decides final acceptance. No real browser-agent/website/API integration is claimed.

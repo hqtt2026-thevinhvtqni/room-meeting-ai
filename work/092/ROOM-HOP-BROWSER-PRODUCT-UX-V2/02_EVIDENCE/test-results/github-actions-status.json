@@ -1,15 +1,44 @@
 {
   "work_id": "092",
-  "checked_at": "2026-11-22T10:50:00+07:00",
+  "checked_at": "2026-11-22T10:53:20+07:00",
   "repository": "hqtt2026-thevinhvtqni/room-meeting-ai",
   "branch": "work092/one-shot-20261122",
-  "status": "PENDING_PUSH_AND_ACTIONS_RUN",
+  "ci_status": "SUCCESS",
+  "workflow_name": "Work 092 tests",
   "workflow_path": ".github/workflows/work092-pytest.yml",
-  "workflow_installed_in_branch_worktree": true,
-  "workflow_run_id": null,
-  "run_url": null,
-  "head_sha": null,
-  "conclusion": null,
-  "junit_artifact": "work092-pytest-report",
-  "note": "Do not claim GitHub CI PASS until the pushed branch has an observed Actions run with SUCCESS conclusion and downloadable JUnit report."
+  "workflow_run_id": 44982525770,
+  "event": "push",
+  "head_sha": "dcd75f0a39ca6a1e1b447f92793121c1fb3e2759",
+  "run_url": "https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44982525770",
+  "run_status": "completed",
+  "conclusion": "success",
+  "created_at_utc": "2026-11-22T03:51:55Z",
+  "updated_at_utc": "2026-11-22T03:52:14Z",
+  "jobs": {
+    "Locate canonical source": "success",
+    "Install pytest dependency": "success",
+    "Run pytest and write JUnit report": "success",
+    "Test task/evidence/permission contracts": "success",
+    "Upload pytest report": "success"
+  },
+  "pytest_junit": {
+    "tests": 12,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "artifact_name": "work092-pytest-report",
+    "artifact_id": 14738237995,
+    "artifact_size_bytes": 637,
+    "artifact_expired": false,
+    "artifact_api_url": "https://api.github.com/repos/hqtt2026-thevinhvtqni/room-meeting-ai/actions/artifacts/14738237995"
+  },
+  "node_tests": {
+    "tests": 14,
+    "passed": 14,
+    "failed": 0,
+    "verified_from": "GitHub Actions job log"
+  },
+  "verification_method": "GitHub CLI run view/log + REST Actions artifact listing + downloaded JUnit XML parsed locally",
+  "scope_note": "CI covers mock prototype source at the stated SHA; it does not certify direct Work Sandbox runtime or a real browser agent.",
+  "run_log_excerpt": "02_EVIDENCE/test-results/github-actions-run-excerpt.txt"
 }

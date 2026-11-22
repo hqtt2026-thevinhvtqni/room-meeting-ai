@@ -11,3 +11,7 @@
 - Screenshot dimensions: desktop viewport 1920×1080, full page 1920×1833; mobile viewport 390×844, full page 390×2857, scrollWidth=clientWidth=390.
 - Distinction: test/browser evidence is mirror-only, not direct Work Sandbox or GitHub Actions. GitHub Actions remains pending until verified run URL/SHA/conclusion/artifact.
 - Final disposition at this journal entry: PARTIAL — NOT ACCEPTED; Xu retains acceptance authority.
+
+## GitHub CI verification — 2026-11-22
+
+Branch `work092/one-shot-20261122`, code SHA `dcd75f0a39ca6a1e1b447f92793121c1fb3e2759`; Actions run `44982525770` succeeded. JUnit artifact `work092-pytest-report` ID `14738237995` was downloaded and parsed (12 tests, 0 failures/errors, 0 skipped); Actions log confirms Node 14/14. This does not establish direct Work Sandbox execution. No merge to main; Xu retains acceptance.
