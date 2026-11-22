@@ -182,7 +182,7 @@ See `06_EVIDENCE/W10_LIVE_DASHBOARD_API_EVIDENCE_20261122_RUN135.md`. Hosted CI 
 - `STOP_WORK10_LOCAL.ps1`: refuses to stop while an execution is active; validates process command line and start time against the session record before stopping only the two Work 10 processes.
 - Run `./05_TEST/START_WORK10_LOCAL.ps1` after dependencies are installed, or add `-InstallDependencies` to install requirements and Chromium. Stop with `./05_TEST/STOP_WORK10_LOCAL.ps1`.
 - The launcher does not configure production V8 HMAC trust, enable writes or enable PowerShell. Those remain explicit operator actions.
-- `test_windows_launcher_contract.py` has 11 static safety assertions; GitHub Windows CI also parses both PowerShell files with the PowerShell AST parser.
+- `test_windows_launcher_contract.py` has 13 static safety assertions; GitHub Windows CI also parses both PowerShell files with the PowerShell AST parser.
 
 
 ## Current launcher and regression baseline — Run #157
@@ -214,3 +214,15 @@ If dependencies are not installed yet, use `-InstallDependencies` once. Paste th
 ```
 
 The execution-policy change is process-scoped only and does not persist to the user's account or machine.
+
+
+## Latest baseline — Run #180
+
+- Windows Server 2022: 226 PASS / 0 FAIL / 0 SKIP.
+- Ubuntu 24.04: 220 PASS / 0 FAIL / 2 expected SKIP.
+- Windows launcher contract: 13 PASS on each OS.
+- PowerShell AST + local launcher smoke: PASS on Windows Server 2022.
+- Dashboard static: 17 PASS; Dashboard live health/consent: 7 PASS per OS.
+- V8 validator: 16 PASS per OS; real Chromium API/runtime E2E: PASS.
+- Evidence: `06_EVIDENCE/W10_LOCAL_LAUNCHER_HTTP_CI_EVIDENCE_20261122_RUN180.md`.
+- Physical Windows 10 acceptance, production V8 trust provisioning, Linux cgroup-v2 and ROOM-HOP integration remain open.
