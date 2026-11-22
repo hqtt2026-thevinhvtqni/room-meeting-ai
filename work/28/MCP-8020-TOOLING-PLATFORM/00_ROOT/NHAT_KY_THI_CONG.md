@@ -1965,3 +1965,44 @@ The push-triggered workflow runs were queried after the merge commits and are no
 **STATUS:** DEFAULT-BRANCH TREE RESTORED EXACTLY / WORK28 HANDOFF RECREATED ON CORRECT BRANCH / NO PRODUCT SOURCE CHANGE REMAINS ON MAIN / TRANSPARENT AUDIT ENTRY RECORDED.
 
 **Signature:** [KÝ: VI | CODER]
+
+
+## 2026-11-23 — JRN-W28-053 — Core execution authority source/approval reconciliation
+
+**Role:** Vi | CODER — implementation and integration owner  
+**Source branch HEAD at audit:** `6dc211c3a6f6ced933c36ab2c2d2787bf4d24d1d`  
+**Handoff update commit:** `defc9f3c2fa9120703abcc31979f239af837f051`  
+**Signature:** [KÝ: VI | CODER]
+
+### READ / TRACE
+- Re-read Work 28 architecture decision V2 (AD-W28-20261103-001): Build/Verification MCP :8030 is separate; Core :8000 is sole identity/Work/policy authority; Runtime MCP is a separate clean deployment; Execution Host :8031 remains the only execution site; historical :8020 is DO NOT USE.
+- Re-read Core authority V1.2 contract, Core source, W28 authorizer/session adapters, W13 client, live-authority CI tests and the November 15 Ka Q4 review.
+- Found a material documentation/provenance contradiction:
+  - The V1.2 contract document still labels itself DESIGN / PROPOSED / NOT APPROVED / NOT WIRED and says it awaits Vinh's final approval.
+  - The implementation package `core/execution_authority` exists in canonical source and exposes a separate HTTP server (default port 8001), Work-scoped grant issue/status and run-recording routes, and an fsync-backed append-only JSONL store.
+  - The package `__init__.py` and test docstrings call DR-1..DR-4 approved, which conflicts with the contract's explicit approval status. No approval record was found in the Work 28 decision/evidence paths inspected. Vi will not infer approval from implementation or tests.
+- Source blobs read:
+  - `core/execution_authority/authority.py`: `bfb052fed0fde69767dd219f17a0b14ae6383560`
+  - `core/execution_authority/http_server.py`: `6363c277ce410d3f5465f449b730199e06e5024c`
+  - `core/execution_authority/store.py`: `a628dc578c68c05bb875318d1b74528b26f0e4eb`
+  - `tests/test_core_execution_authority_v1.py`: component/store/HTTP boundary tests using temporary storage and an ephemeral local port.
+  - `test_core_execution_authority_boot_v1.py`: CI subprocess/socket boot test with temporary Work registry/credentials; its docstring explicitly says this is not trusted-Sandbox deployment evidence.
+  - `test_w13_client_live_authority_e2e_v1.py`: staged client-to-test-authority CI harness; explicitly not wired to the MCP gateway or real W13 host. The harness creates a synthetic PASS record and is not production execution evidence.
+- The Work 28 Core grant client already in Execution Host expects a different GET payload contract (a list of grants with Bearer token), while the new Core HTTP authority exposes a per-grant GET route and uses `X-Room-Hop-Service-Identity`. No compatible deployed adapter/configuration was verified.
+- Connected ROOM-HOP Build MCP read-only context still reports service `room-hop-build` v1.0 and only Sandbox/build helper capabilities. It is not raw protocol `tools/list`, not Core authority, and not the Work 28 Runtime MCP deployment.
+
+### ANALYSIS / DECISION
+- Core authority code + CI tests are now classified as **SOURCE IMPLEMENTED / CI-TESTED**, not as live deployed Core authorization.
+- Core V1.2 approval state remains **UNRESOLVED / NOT APPROVED per the contract document** until the product owner explicitly approves or supersedes that versioned contract. No service identity secret, Core Work registry, or W28-to-Sandbox mapping was invented or written.
+- Keep the staged W13 client and execution tools NOT_IMPLEMENTED / BLOCKED. Do not wire the CI harness, synthesize a trusted WorkContext, or claim runtime execution.
+- WP3-F01 Q4 remains NOT APPROVED under Ka's 2026-11-15 security review; Xu's 2026-11-22 revision is PROPOSED FOR REVIEW / NOT APPROVED. No upload side effects.
+- No deployment, listener restart, Core mutation, secret provisioning or live execution request was performed.
+
+### HANDOFF UPDATE
+- Updated `06_EVIDENCE/VI_OWNER_HANDOFF_AUTO_E2E_20261123.md` in commit `defc9f3c2fa9120703abcc31979f239af837f051` to distinguish existing Core source/CI tests from deployed authority and to expose the approval-status contradiction.
+- The remaining live gate now requires: explicit disposition of Core V1.2 contract; actual Core deployment identity/endpoint and enrolled service identity; trusted canonical W28/Sandbox mapping; compatible remote grant/WorkContext adapter; real W13 host provenance and execution evidence.
+- No routine An/Ka code review is being awaited. These are owner-authority and live-deployment proof requirements, not code-review queue items.
+
+**STATUS:** CORE AUTHORITY SOURCE EXISTS / CI COMPONENT AND BOOT TESTS EXIST / CONTRACT APPROVAL AND LIVE DEPLOYMENT NOT VERIFIED / EXECUTION GATE CLOSED / RELEASE NOT_RELEASED.
+
+**Signature:** [KÝ: VI | CODER]
