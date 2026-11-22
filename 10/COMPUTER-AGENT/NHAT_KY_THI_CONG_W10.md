@@ -1519,3 +1519,11 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - Inventory: Sandbox 167 files; GitHub 75; shared 75; Sandbox-only 92; GitHub-only 0; one Sandbox-only `.github/` directory.
 - 34 accepted source/test/architecture/config/launcher files independently exact-match.
 - **KÝ: Co | AI-07**
+
+
+## W10-HTTP-OVERSIZE-TEST-REMEDIATION-20261122-01 — 2026-11-22 06:48 (UTC+07:00)
+- Run #169 Windows failure: WinError 10053 during 1 MiB+10 byte upload; API's early 413 Content-Length rejection closed while urllib could still be sending.
+- Fixed test only: use http.client to send declared oversized Content-Length without transmitting body; API runtime/1 MiB cap unchanged.
+- Run #175: Windows 225 PASS / 0 FAIL / 0 SKIP; Ubuntu 219 PASS / 0 FAIL / 2 SKIP; HTTP API 52 PASS each OS.
+- Evidence: `06_EVIDENCE/W10_HTTP_OVERSIZE_TEST_REMEDIATION_RUN169_175.md`.
+- **KÝ: Co | AI-07**
