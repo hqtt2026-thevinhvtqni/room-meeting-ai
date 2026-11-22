@@ -325,3 +325,9 @@ Co | AI-07. GitHub Actions Run #135 (ID `44963956538`) tested commit `a3d935066f
 ## W10-INVENTORY-COUNT-CORRECTION-20261122-04 — 2026-11-22 06:42 (UTC+07:00)
 
 After adding `05_TEST/test_dashboard_live_e2e.py` and its Run #135 evidence to both Sandbox and GitHub, current inventory: Sandbox 163 files; GitHub 71 files; shared 71; Sandbox-only 92; GitHub-only 0; one Sandbox-only `.github/` directory.
+
+
+## W10-LOCAL-LAUNCHER-RUN157-20261122-01 — 2026-11-22 06:45 (UTC+07:00)
+
+Co | AI-07. GitHub Actions Run #157 (ID `44964503556`) completed SUCCESS on Windows Server 2022 and Ubuntu 24.04. Windows PowerShell AST parser passed both local launcher scripts; local launcher smoke started Agent API on loopback :8787 and Dashboard on :3010, verified Work ID 10 health + HTTP 200, then STOP verified process command lines/start times and stopped only its session processes. Windows: 224 PASS / 0 FAIL / 0 SKIP; Ubuntu: 218 PASS / 0 FAIL / 2 expected SKIP. Windows launcher contract: 11 PASS each OS; Dashboard static 17 PASS; Dashboard live E2E 7 PASS; V8 validator 16 PASS; real Chromium E2E PASS. Evidence: `06_EVIDENCE/W10_LOCAL_LAUNCHER_CI_EVIDENCE_20261122_RUN157.md`. CI uses `-NoClipboard -NoOpenBrowser`; physical Windows 10, clipboard/browser launch, ACL and local Chrome profile still require Owner PC acceptance.
+
