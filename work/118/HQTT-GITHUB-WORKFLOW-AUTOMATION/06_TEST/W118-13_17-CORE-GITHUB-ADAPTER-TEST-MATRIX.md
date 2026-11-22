@@ -121,3 +121,28 @@ R05/R06 runtime owner is W14. W12/W13 are absorbed internal components, not stan
 - Added regression guard: W14 is sole integrated execution owner; W12/W13 are absorbed internal foundations; W70 DOC-093 remains DRAFT_NOT_APPROVED.
 - **Runtime tests R01–R08:** NOT RUN / BLOCKED. W14 source/runtime parity, Core API/event port, W102 principal/Assignment and W70 approved schema/owner ACK are unavailable or unverified.
 - Contract CI PASS is not runtime E2E, independent review, product acceptance or release.
+
+
+## P1 remediation regression coverage — 2026-11-23
+
+| ID | Scenario | Expected | Evidence |
+|---|---|---|---|
+| I09 | No marker match and Core issue_id=null | Create one Issue and exact readback | CI #906 |
+| I10 | Exactly one marker match and Core issue_id=null | Update/unchanged same Issue | CI #906 |
+| I11 | Two or more Issues with same Task marker | Reject before POST/PATCH | CI #906 |
+| I12 | One marker Issue number differs from Core issue_id | Reject before POST/PATCH | CI #906 |
+| I13 | Core issue_id exists but marker Issue not found | Reject; never create replacement | CI #906 |
+| I14 | Matching marker found on later page; duplicate on another page | Scan complete pages and reject duplicate | CI #906 |
+| I15 | Marker-bearing Pull Request | Exclude PR from Issue matching | CI #906 |
+| I16 | Page ceiling reached with full final page | IssueLookupIncomplete; no mutation | CI #906 |
+
+### Lease validation contract boundary
+
+| ID | Scenario | Expected | Evidence |
+|---|---|---|---|
+| L01 | No Core lease validator configured | Reject before GitHub request | CI #906 |
+| L02 | Validator returns false | Reject before GitHub request | CI #906 |
+| L03 | Validator raises / Core unavailable | Reject before GitHub request | CI #906 |
+| L04 | Validator stub returns true in unit harness | Exercise Issue adapter only; no Core authority claim | CI #906 |
+
+Latest exact-head contract CI: PR #68 source head cb4bbc0662650051d538a4dcc6e7692176e5a865; Run #906 / ID 45057857222; validate job 137316985462; python -m unittest discover -s tests/w118 -v — 102 tests PASS / 0.218s. SOURCE_BINDING_STATUS=NOT_RUN; handoff/ACK/review-observation jobs SKIPPED. Artifact ID 14767952983, uploaded ZIP SHA-256 da8fc14e2d3cd8a3b8003967de88a5620645f6a97ade50bed4fc2d66987f5d8a; payload not independently downloaded/parsed. This is contract/unit CI only, not Runtime Auto E2E.
