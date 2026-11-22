@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - work/118-auto-e2e-v2
+      - work/118-auto-e2e-v2-clean
       - 'work/W*/task-W*-TASK-*'
     paths:
       - ".github/workflows/w118-workflow-automation.yml"
