@@ -185,7 +185,7 @@ Run from the Work 10 root:
 
 ```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
-./05_TEST/RUN_WORK10_ACCEPTANCE.ps1 -PythonPath ./.venv/Scripts/python.exe
+./05_TEST/RUN_WORK10_ACCEPTANCE.ps1
 ```
 
 Add `-InstallDependencies` if requirements/Chromium are not installed. The report stores only whether a production V8 HMAC key is configured, never the key value. It leaves `release_gate=OPEN`; passing local tests is not final Owner acceptance. It does not enable writes or PowerShell roots. Do not run it while the interactive START_WORK10_LOCAL session is active.
