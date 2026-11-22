@@ -40,7 +40,7 @@
 - Source artifact ID `14769366587`, digest `sha256:4fccc0f499608d977736903825ccd0ae651eee6463fd9dffbcd9731c316dbd0c`.
 - Auto E2E report artifact ID `14769321707`, digest `sha256:609a87773f9e95ab3af83e4e2e9acb35b6e479c3897056a6d03eaa5b9927a517`.
 - Scope: documentation/provenance only. Corrected Core package and test docstrings to stop implying owner approval; corrected V1.2 contract to acknowledge source implementation and CI tests while preserving NOT APPROVED / NOT DEPLOYED / NOT WIRED status.
-- No Core behavior, credentials, service registry, endpoint, MCP wiring, Runtime or deployment changed. Post-merge push workflow for merge commit is pending reconciliation.
+- No Core behavior, credentials, service registry, endpoint, MCP wiring, Runtime or deployment changed. Post-merge push run #396 / ID `45060288335` on merge commit `7666c0c7de60583c77b466c1e08ea10a0a7d0cd7`: **SUCCESS**, all five jobs. Source artifact ID `14769077832`, digest `sha256:086b2ca2ada57e0045b917861bed9d2b8b325f0a6944fefd46d0f095cca9b087`; Auto E2E report ID `14769580524`, digest `sha256:cbf0c1f8543fe259606428e7218759a48d965c97d43b72b519e653f3fa7ea104`.
 
 ### PR #72 — WP1 31-tool registry/schema/handler-binding hardening
 - Tested source SHA: `e310882ceafd2705b79efb4718af7e8f3a4ea5fc`.
