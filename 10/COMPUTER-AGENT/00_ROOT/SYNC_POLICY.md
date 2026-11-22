@@ -100,3 +100,8 @@ After adding Run #180 evidence to both Sandbox and GitHub, the current snapshot 
 ## Inventory count correction — 2026-11-22 06:52 (UTC+07:00)
 
 After adding Run #195 evidence to both sides, current snapshot: Sandbox 170 files; GitHub 78 files; shared 78; Sandbox-only 92; GitHub-only 0; one Sandbox-only `.github/` directory. The 92 Sandbox-only KEEP dispositions are listed in `06_EVIDENCE/W10_FULL_PATH_INVENTORY_DISPOSITION_20261122.md`.
+
+
+## Inventory count correction — 2026-11-22 06:53 (UTC+07:00)
+
+Added `05_TEST/RUN_WORK10_ACCEPTANCE.ps1` to Sandbox and canonical GitHub branch. Current snapshot: Sandbox 171 files; GitHub 79; shared 79; Sandbox-only 92; GitHub-only 0; one Sandbox-only `.github/` directory. The 92 Sandbox-only dispositions remain unchanged. The one-command Owner PC acceptance runner is part of the shared set; physical Windows 10 execution remains NOT RUN.
