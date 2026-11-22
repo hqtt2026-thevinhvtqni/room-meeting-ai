@@ -327,3 +327,8 @@ W118 ACTIVE — NOT ACCEPTED — NOT RELEASED. Runtime Auto E2E NOT VERIFIED; Xu
 ## Cross-Work dependency revalidation — 2026-11-23
 
 Main source snapshot: 0902cd26518673aa078bb4c7c7899e1e4a95656a. W70 DOC-071/DOC-072 and schema v1.1 were read; W112 DOC-001 and W17 GAP/technical-options records were read. Core Work persistence/lease authority and W70 Evidence Registry integration remain NOT VERIFIED; W112 is DRAFT/not runtime-approved; W14/W52 HostPort binding and W33 authenticated evidence ingress remain NOT PROVEN; W102 runtime identity/Assignment port NOT VERIFIED. W118 does not mutate or replace external Work components. Full cross-Work chain and Runtime Auto E2E remain BLOCKED / NOT RUN. Exact references and scope limits are recorded in Journal Entry 055 addendum.
+
+
+## Push-source binding — 2026-11-23
+
+W118 aggregate branch is included in the push workflow. Exact source head e03fb2efd81b62823012b14b98b7e3784e1673eb: Run #912 push SUCCESS, 102 tests / 0.296s, SOURCE_BINDING_STATUS=UNBOUND_LEGACY_BRANCH (correct; no Task inferred); artifact 14768620908. Run #913 PR SUCCESS, 102 tests / 0.305s; source binding NOT_RUN by design on PR event; artifact 14767874393. Task-scoped branch binding remains unproven; Runtime Auto E2E NOT RUN.

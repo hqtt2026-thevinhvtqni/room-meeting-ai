@@ -2017,3 +2017,24 @@
 - **W102:** Work 102 exists in Sandbox metadata. The inspected GitHub main tree has no work/102 path, and bounded default-branch code search did not locate an authoritative runtime identity/Assignment API. This is bounded NOT LOCATED / NOT VERIFIED only, not proof of global absence.
 - **Disposition:** Core lease/Task/Event authority, W102 principal/Assignment, W14 execution/transport, W33 authenticated evidence ingress and W70 schema/owner integration remain BLOCKED / NOT VERIFIED. No external Work file/service changed; no W118 replacement component created.
 - **Next action:** Obtain exact canonical owner-approved source/branch/API contract and authenticated runtime evidence from each owning Work; then integrate through those interfaces without changing their source. Runtime Auto E2E remains NOT RUN.
+
+
+## Exact push/PR source-binding validation — 2026-11-23
+
+- Workflow Run #912 / ID 45058483884, push event on source head e03fb2efd81b62823012b14b98b7e3784e1673eb; validate job 137318939451 SUCCESS; 102 tests in 0.296s; TEST_OUTCOME=success; SOURCE_BINDING_STATUS=UNBOUND_LEGACY_BRANCH. This is the expected safe result for the aggregate Work branch: no Task-level binding is inferred. Artifact ID 14768620908, size 685 bytes, uploaded ZIP SHA-256 6a60f955400535c541a823e945f2c7db9e8a6a1e2f38b9815777a4ff2f7baa95; payload not independently parsed.
+- Workflow Run #913 / ID 45058486129, PR event on the same source head; validate job 137318918721 SUCCESS; 102 tests in 0.305s; SOURCE_BINDING_STATUS=NOT_RUN because the source-binding step is push-only. Handoff/ACK/review-observation jobs SKIPPED. Artifact ID 14767874393, uploaded ZIP SHA-256 ae5c049f00896c0ea36f2e6d8b72a6ee1536d64b467fcf5a24c629ac2bd685f9; payload not independently parsed.
+- The clean W118 aggregate branch is explicitly included in the workflow push trigger. A real task-scoped branch must still follow work/W118/task-W118-TASK-### and every pushed commit must carry exactly one Work-ID, Task-ID and Issue trailer. No task-scoped branch or runtime Core binding was fabricated.
+- Both runs are contract/unit CI plus push-source classification; neither is Runtime Auto E2E. Event capture jobs remain skipped.
+
+
+### Entry 055 addendum — exact push and PR event evidence
+
+- **Priority:** 01 — P0 — Source provenance / exact event verification.
+- **Name / Title:** Ka — AI-02 / CSA.
+- **Date-Time:** 2026-11-23 02:03 +07:00.
+- **Branch:** work/118-auto-e2e-v2-clean; source head e03fb2efd81b62823012b14b98b7e3784e1673eb.
+- **Workflow source:** .github/workflows/w118-workflow-automation.yml now includes the designated aggregate branch in push branches; test_workflow_contract.py asserts this behavior.
+- **Push Run #912:** ID 45058483884; validate job 137318939451 COMPLETED / SUCCESS; python -m unittest discover -s tests/w118 -v — 102 tests in 0.296s; TEST_OUTCOME=success; SOURCE_BINDING_STATUS=UNBOUND_LEGACY_BRANCH. This is the expected result: aggregate Work branch has no Task-level identity, and no Task state may be inferred. Artifact w118-run-evidence-45058483884-1, ID 14768620908, size 685 bytes, uploaded ZIP SHA-256 6a60f955400535c541a823e945f2c7db9e8a6a1e2f38b9815777a4ff2f7baa95; payload not independently parsed.
+- **PR Run #913:** ID 45058486129; validate job 137318918721 COMPLETED / SUCCESS; 102 tests in 0.305s; SOURCE_BINDING_STATUS=NOT_RUN because source binding is deliberately push-only. Handoff/ACK/review-observation jobs SKIPPED. Artifact ID 14767874393, uploaded ZIP SHA-256 ae5c049f00896c0ea36f2e6d8b72a6ee1536d64b467fcf5a24c629ac2bd685f9; payload not independently parsed.
+- A future Task-level BOUND event requires a separately authorized task branch matching work/W118/task-W118-TASK-### and every pushed commit to carry exactly one Work-ID, Task-ID and Issue trailer. No task-specific branch or binding was fabricated in this Work-level branch.
+- Both runs are unit/contract + source-classification evidence, not Runtime Auto E2E. Event capture jobs remain SKIPPED.

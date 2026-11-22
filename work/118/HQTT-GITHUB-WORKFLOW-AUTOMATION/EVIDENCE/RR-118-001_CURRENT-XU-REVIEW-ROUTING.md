@@ -143,3 +143,10 @@ PR #68 source head `1199ffb3f179f69bc82170499b5011516e94a12f` passed Run #899 / 
 ## Cross-Work dependency refresh — 2026-11-23
 
 Main snapshot 0902cd26518673aa078bb4c7c7899e1e4a95656a: W70 DOC-071 (12f11320dc9da89b27de21313b698224d74519ce) marks Work persistence/Core owner NOT VERIFIED; DOC-072 (513d65d3d360dcb732607d07e2eee558cd02f005) is design-only/not approved; W70 Evidence Register schema v1.1 (897860fd7e6d91ec61eaeebce561d3fcfec7997c) has additionalProperties=false. W112 DOC-001 (6340a7b054a37540da8c16d0b9743266b0765c97) is DRAFT/not approved and leaves transport, assignment/ACK API, evidence store, lock/lease provider and cross-Work auth unverified. W17 GAP Register (6af209c3265a5daf63212535990068db086f5e2c) and technical options record W14 one-shot /execute versus W52 persistent HostPort/RpcPort incompatibility, and W33 CLI-only/no HTTP ingress; these are dated traces, not fresh runtime proof. W102 implementation/runtime API not located in bounded main-tree/search scope. No external Work source changed. Keep all runtime gates BLOCKED / NOT VERIFIED.
+
+
+## Push source-binding evidence — 2026-11-23
+
+- W118 aggregate branch push Run #912 / 45058483884, validate job 137318939451: 102 tests PASS / 0.296s; SOURCE_BINDING_STATUS=UNBOUND_LEGACY_BRANCH. This is correct fail-safe classification for the aggregate Work branch; no Task inference. Artifact 14768620908, SHA-256 6a60f955400535c541a823e945f2c7db9e8a6a1e2f38b9815777a4ff2f7baa95.
+- PR Run #913 / 45058486129, validate job 137318918721: 102 tests PASS / 0.305s; SOURCE_BINDING_STATUS=NOT_RUN because the source-binding step is push-only. Artifact 14767874393, SHA-256 ae5c049f00896c0ea36f2e6d8b72a6ee1536d64b467fcf5a24c629ac2bd685f9.
+- Both event jobs are not product runtime proof; Runtime Auto E2E NOT RUN. Task-scoped branch and commit trailers remain required for BOUND status.
