@@ -1777,3 +1777,39 @@ PR #61 remains OPEN / UNMERGED. No deployment, Core mutation, listener restart o
 **STATUS:** WP5 FAIL-CLOSED SOURCE REMEDIATION INTEGRATED / EXACT-SHA AUTO E2E PASS / LIVE CORE AND MCP PROVENANCE NOT VERIFIED / WP3 Q4 NOT APPROVED / NOT RELEASED.
 
 **Signature:** [KÝ: VI | CODER]
+
+
+## 2026-11-23 01:52 UTC+07:00 — JRN-W28-048 — Canonical GitHub → Work 28 Sandbox exact artifact synchronization
+
+**Role:** Vi | CODER — implementation and integration owner  
+**Canonical branch HEAD at synchronization:** `dca6fd27ea119b64cee550395e0613289057b0f8`  
+**Signature:** [KÝ: VI | CODER]
+
+### READ / TRACE
+- Reconciled canonical GitHub journal against the Work 28 Sandbox journal using `sandbox_read_probe`.
+- Sandbox journal was stale at JRN-W28-030 (102,326 characters); canonical GitHub journal contained newer entries through JRN-W28-047.
+- Regular `sandbox_read` continued to return an empty object for the journal/manifest, while `sandbox_read_probe` returned the actual file content. Used the diagnostic read path for verification; no inference was made from the empty regular-read result.
+
+### BUILD — EXACT ARTIFACT SYNC
+- Replaced the Sandbox canonical journal with the full canonical GitHub journal through JRN-W28-047.
+- Synchronized the 12 source/test/workflow files changed by PR #70 and PR #71 from the canonical branch into the matching Work 28 Sandbox paths:
+  - workflow: `.github/workflows/work28-mcp-tooling.yml`
+  - source: `execution_host/host.py`, `execution_host/host_run.py`, `execution_host/process_job.py`, `execution_host/server.py`, `execution_host/work28_core_grant_client.py`
+  - tests: `test_process_job.py`, `test_wp2_service_mapping_and_race.py`, `test_work28_core_grant_fail_closed.py`, `test_work28_evidence.py`, `test_w13_execute_handler_http_boundary.py`, `test_w13_execution_auth_config_bootstrap.py`
+- GitHub source blobs were read from canonical branch and written to the corresponding Sandbox paths. No unrelated historical files, cache files or bytecode were promoted.
+
+### VERIFY — READBACK
+- Full journal: Sandbox `sandbox_read_probe` content exactly equals canonical GitHub journal content before this synchronization entry; lengths both 169,265 characters, including JRN-W28-044 through JRN-W28-047.
+- 12/12 source/test/workflow files: each Sandbox `sandbox_read_probe` content compared byte-for-byte at text level against the corresponding canonical GitHub file; all 12 returned `exact_match=true`.
+- This proves exact selected-artifact text parity for the 12 listed files and journal version through JRN-W28-047. It does not claim whole-workspace synchronization or local PC checkout synchronization.
+
+### LIMITATIONS / NEXT
+- Append this JRN-W28-048 entry to canonical GitHub, then repeat full-journal Sandbox write/readback so the Sandbox journal includes this synchronization record.
+- Continue exact artifact synchronization only; GitHub remains canonical.
+- WP1 raw tools/list and deployed process/build provenance remain NOT VERIFIED.
+- WP3-F01 Q4 remains NOT APPROVED; no upload side effects.
+- Live MCP → Core → Runtime E2E remains BLOCKED; Execution Gate CLOSED; release NOT_RELEASED.
+
+**STATUS:** CANONICAL JOURNAL + 12 SELECTED SOURCE/TEST/WORKFLOW FILES SYNCED / EXACT TEXT READBACK PASS / WHOLE WORKSPACE SYNC NOT CLAIMED.
+
+**Signature:** [KÝ: VI | CODER]
