@@ -1,46 +1,53 @@
 {
   "work_id": "092",
-  "checked_at": "2026-11-22T14:09:44+07:00",
+  "checked_at": "2026-11-22T14:15:01+07:00",
   "repository": "hqtt2026-thevinhvtqni/room-meeting-ai",
   "branch": "work092/one-shot-20261122",
+  "latest_ci_verified_branch_head_sha": "12f74b03e8397c5e366f932d40280cfc28e1d168",
   "current_source_commit": "76549220114b4d20cff78e525343837b7e6c9f4c",
   "current_source_ci_status": "SUCCESS",
-  "workflow_name": "Work 092 UI-only tests",
+  "workflow_name": "Work 092 tests",
   "workflow_path": ".github/workflows/work092-pytest.yml",
-  "workflow_run_id": 44996828261,
-  "event": "push",
-  "head_sha": "76549220114b4d20cff78e525343837b7e6c9f4c",
-  "run_url": "https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44996828261",
-  "run_status": "completed",
-  "conclusion": "success",
-  "created_at_utc": "2026-11-22T07:08:01Z",
-  "updated_at_utc": "2026-11-22T07:08:26Z",
-  "jobs": {
-    "test": "success",
-    "Locate canonical source": "success",
-    "Install pytest dependency": "success",
-    "Run static contract pytest only (no server fixture)": "success",
-    "Test task/evidence/permission contracts": "success",
-    "Upload pytest report": "success"
+  "latest_branch_tip_ci": {
+    "workflow_run_id": 44997247247,
+    "event": "push",
+    "head_sha": "12f74b03e8397c5e366f932d40280cfc28e1d168",
+    "run_url": "https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44997247247",
+    "run_status": "completed",
+    "conclusion": "success",
+    "created_at_utc": "2026-11-22T07:13:28Z",
+    "updated_at_utc": "2026-11-22T07:13:51Z",
+    "pytest_junit": {
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "artifact_name": "work092-ui-only-pytest-report",
+      "artifact_id": 14743304960,
+      "artifact_size_bytes": 663,
+      "artifact_expired": false,
+      "verified_by": "Downloaded GitHub Actions artifact and parsed JUnit XML"
+    },
+    "node_tests": {
+      "tests": 18,
+      "passed": 18,
+      "failed": 0,
+      "verified_from": "GitHub Actions job log"
+    }
   },
-  "pytest_junit": {
-    "tests": 10,
-    "failures": 0,
-    "errors": 0,
-    "skipped": 0,
-    "artifact_name": "work092-ui-only-pytest-report",
-    "artifact_id": 14744740180,
-    "artifact_size_bytes": 663,
-    "artifact_expired": false,
-    "verified_by": "Downloaded GitHub Actions artifact and parsed JUnit XML"
+  "source_commit_ci": {
+    "workflow_run_id": 44996828261,
+    "head_sha": "76549220114b4d20cff78e525343837b7e6c9f4c",
+    "run_url": "https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44996828261",
+    "conclusion": "success",
+    "pytest_tests": 10,
+    "pytest_failures": 0,
+    "pytest_errors": 0,
+    "pytest_skipped": 0,
+    "pytest_artifact_id": 14744740180,
+    "node_tests": "18/18"
   },
-  "node_tests": {
-    "tests": 18,
-    "passed": 18,
-    "failed": 0,
-    "verified_from": "GitHub Actions job log"
-  },
-  "local_ui_only_checks_at_same_source_hash": {
+  "local_ui_only_checks_at_source_hash": {
     "node_syntax_files": 2,
     "node_tests": "18/18",
     "static_pytest": "10/10",
@@ -49,13 +56,13 @@
     "runtime_integration": false,
     "source_hashes_match_canonical_report": true
   },
-  "nonblocking_warning": "GitHub runner warned that actions/checkout@v4, setup-node@v4, setup-python@v5 and upload-artifact@v4 target Node.js 20 and are being forced onto Node.js 24. Run still succeeded; warning is not a test failure.",
+  "nonblocking_warning": "Both successful Actions runs emitted a non-blocking GitHub runner warning that actions/checkout@v4, setup-node@v4, setup-python@v5 and upload-artifact@v4 target Node.js 20 and are being forced onto Node.js 24.",
   "previous_verified_run": {
     "workflow_run_id": 44982525770,
     "head_sha": "dcd75f0a39ca6a1e1b447f92793121c1fb3e2759",
     "run_url": "https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44982525770",
     "conclusion": "success",
-    "scope": "Historical source snapshot only; superseded as the current-source CI reference by run 44996828261."
+    "scope": "Historical source snapshot only; superseded by the source CI and latest branch-tip CI records above."
   },
-  "scope_note": "This run certifies only the static pytest contract and Node workflow tests at the stated source SHA. It did not start a server, run Playwright, access Browser Runtime, contact APIs/websites, or certify a real browser agent. Direct Work Sandbox execution remains NOT RUN; full accessibility/contrast audit and independent Xu review remain pending. Work 092 remains PARTIAL — NOT ACCEPTED."
+  "scope_note": "Run 44996828261 certifies static pytest and Node tests at the verified UI source/test commit 7654922. Documentation/evidence follow-up commit 12f74b0 changed five documentation/evidence files, including README, and triggered run 44997247247 at the branch tip; the application logic and workflow were unchanged. Both runs certify only static pytest and Node checks. Neither started a server, ran Playwright in CI, accessed Browser Runtime, contacted APIs/websites, or certified a real browser agent. Direct Work Sandbox execution remains NOT RUN; full accessibility/contrast audit and independent Xu review remain pending. Work 092 remains PARTIAL — NOT ACCEPTED."
 }

@@ -29,3 +29,15 @@ Branch `work092/one-shot-20261122`, code SHA `dcd75f0a39ca6a1e1b447f92793121c1fb
 - **Giới hạn:** đây là static pytest/Node CI, không phải Browser Runtime/E2E; direct Work Sandbox execution vẫn NOT RUN. T6/T8/T17, full accessibility/contrast audit và independent Xu review còn thiếu; chưa có bằng chứng dispatch/ACK Nu độc lập.
 - **Evidence:** `02_EVIDENCE/test-results/github-actions-status.json`; report `NU_ACCEPTANCE_REPORT.md`; workflow `02_EVIDENCE/github-workflows/work092-pytest.yml`.
 - **Disposition:** Work 092 vẫn **PARTIAL — NOT ACCEPTED**. Xu kiểm tra độc lập, Vinh quyết định cuối. Next: read-after-write xác nhận các hồ sơ canonical đã cập nhật; tiếp tục giữ Runtime BLOCKED.
+
+
+## Entry 014 — Documentation follow-up and branch-tip CI
+- **Thời gian:** 2026-11-22 14:13–14:15 (+07:00).
+- **Executor:** Manus executor trong phiên hiện tại; không đại diện Nu độc lập, Xu hay Vinh.
+- **Commit/push:** commit `12f74b03e8397c5e366f932d40280cfc28e1d168` được push fast-forward trên cùng branch sau source/test commit `76549220114b4d20cff78e525343837b7e6c9f4c`; remote branch tip read-back khớp. Commit follow-up chỉ đổi 5 tệp manifest/README/acceptance report/build journal/status JSON; application logic và workflow không đổi. README nằm trong path filter nên kích hoạt Actions lần nữa.
+- **Actions:** run `44997247247`, URL https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44997247247, event `push`, head SHA trùng branch tip, completed SUCCESS. Các bước static pytest, Node contract tests và upload artifact thành công.
+- **Artifact:** `work092-ui-only-pytest-report`, ID `14743304960`, 663 bytes; tải về và phân tích JUnit: 10 tests, 0 failures/errors/skips. Actions log xác nhận Node 18/18.
+- **Warning:** GitHub runner lặp lại cảnh báo non-blocking về actions/checkout@v4, setup-node@v4, setup-python@v5 và upload-artifact@v4 bị chuyển từ Node.js 20 sang Node.js 24.
+- **Phân biệt bằng chứng:** run `44996828261` kiểm tra source/test commit `7654922…`; run `44997247247` kiểm tra docs-bearing branch tip `12f74b0…`. Không suy rộng thành Runtime/E2E. Không chạy service, API, Browser Runtime, host/port probe hay screenshot.
+- **Trạng thái/giới hạn:** branch chưa merge/release; T6/T8/T17, full accessibility/contrast audit, Xu independent review và direct Work Sandbox execution vẫn thiếu. Runtime vẫn BLOCKED; Nu independent dispatch/ACK chưa có bằng chứng.
+- **Disposition:** Work 092 tiếp tục **PARTIAL — NOT ACCEPTED**; Xu kiểm tra độc lập, Vinh quyết định cuối.

@@ -43,3 +43,13 @@ This addendum supersedes earlier statements that current-source GitHub Actions h
 - T6/T8/T17 remain PARTIAL; full accessibility/contrast audit and Xu's independent review are not evidenced. Runtime integration remains BLOCKED. Nu independent dispatch/ACK is not established.
 
 **Disposition remains PARTIAL — NOT ACCEPTED.** Xu retains independent review; Vinh retains the final decision. No merge or release was performed.
+
+
+## Branch-tip CI follow-up — 2026-11-22 14:15 (+07)
+
+- Documentation/evidence follow-up commit `12f74b03e8397c5e366f932d40280cfc28e1d168` was pushed to the same unmerged feature branch after source/test commit `76549220114b4d20cff78e525343837b7e6c9f4c`. The five-file diff contained the manifest, README, acceptance report, build journal and Actions status JSON; application logic and workflow were unchanged. README lies under the workflow path filter, so Actions ran again for the new branch tip.
+- Run `44997247247` completed **SUCCESS** at exact branch-tip SHA `12f74b03e8397c5e366f932d40280cfc28e1d168`: [Actions run 44997247247](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44997247247). Job steps, static pytest, Node contract tests and artifact upload succeeded.
+- Downloaded artifact `work092-ui-only-pytest-report` (ID `14743304960`, 663 bytes); parsed JUnit reports 10 tests, 0 failures, 0 errors, 0 skipped. Actions log confirms Node tests 18 passed / 0 failed. The earlier run `44996828261` remains the source/test commit CI evidence at SHA `7654922…`.
+- The runner again emitted a non-blocking warning that the configured GitHub Actions versions target Node.js 20 and were forced onto Node.js 24. No server, Browser Runtime, external API/site, host/port probe, screenshot capture or real-agent execution was used.
+
+**Disposition remains PARTIAL — NOT ACCEPTED.** This follow-up confirms the docs-bearing branch tip's static CI, not product/runtime acceptance. T6/T8/T17, full accessibility/contrast audit and Xu's independent review remain outstanding; runtime integration remains BLOCKED. No merge or release was performed; Xu reviews and Vinh decides.
