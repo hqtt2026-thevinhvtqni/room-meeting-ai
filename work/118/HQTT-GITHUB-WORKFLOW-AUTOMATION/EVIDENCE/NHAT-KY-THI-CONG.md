@@ -2164,3 +2164,13 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - **Task Register:** W118-TASK-015, 016 and 019 now reference RA-118-002 addendum v1.4; statuses were not promoted. No Work32/28/1111 files, branches, runtime, secrets or permissions changed.
 - **Disposition:** P1-118-02 BLOCKED; W32 execution authority candidate identified but unmerged/un-deployed; Runtime Auto E2E NOT RUN; Xu review PENDING; Vinh acceptance NOT ACCEPTED.
 - **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-23 02:44:59 +07:00; Result: Core candidates traced and action-scope mismatch recorded; no external Work mutation or false authority claim.
+### Entry 058 addendum — static Grant allow-list is not live Assignment lifecycle proof
+
+- **Priority:** 01 — P0 — Preserve Task/Assignment authority boundary.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-23 02:46:37 +07:00.
+- Source trace of Work32 PR #54 Core authority shows issue_grant checks Assignment ID and Task ID against configured Work policy arrays (allowed_assignments / allowed_tasks), then records them in the Grant. The inspected path does not query a canonical live Task/Assignment record, Assignment status/version/revocation, W102 policy decision or authenticated ACK event.
+- The server-derived principal comes from enrolled service identity mapping; no live W102 Agent Loop dispatch/ACK handshake was proven. The Grant still provides a useful pytest_run execution scope but is not sufficient proof of active Assignment lifecycle.
+- W118-TASK-014 therefore remains BLOCKED / NOT VERIFIED pending Core/W102 canonical Assignment/Task authority or explicit owner attestation that the policy list is authoritative and version/revocation semantics plus positive/negative runtime traces. W118-TASK-019 remains blocked. P1-118-02 remains separately blocked for Issue mirror lock lease.
+- RA-118-002 v1.4 clarification records this. No Work32 source/runtime/config/secret changed.
+- This documentation update requires exact-head W118 CI.
