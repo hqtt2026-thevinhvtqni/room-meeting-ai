@@ -61,9 +61,9 @@ class CoreGrantClientTests(unittest.TestCase):
         src = build_grant_source(env)
         self.assertIsInstance(src, HttpCoreGrantSource)
 
-    def test_build_defaults_file(self):
-        src = build_grant_source({})
-        self.assertIsInstance(src, FileGrantSource)
+    def test_build_requires_core_url_and_never_defaults_to_file(self):
+        with self.assertRaisesRegex(GrantError, "core_grant_url_required"):
+            build_grant_source({})
 
 
 class DispatchSealsEvidenceTests(unittest.TestCase):
