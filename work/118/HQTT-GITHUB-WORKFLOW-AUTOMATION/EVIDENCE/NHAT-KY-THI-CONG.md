@@ -2119,3 +2119,14 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - **Current W118 state unchanged:** P1-118-01 PASS at adapter-contract level only; P1-118-02 BLOCKED; runtime Core/W102/W14/W33/W70 integrations BLOCKED / NOT VERIFIED; Runtime Auto E2E NOT RUN; Xu review PENDING; Vinh acceptance NOT ACCEPTED.
 - **No implementation status promoted:** this matrix does not establish an owner API, source parity, authenticated runtime or product PASS. No tests were run by this documentation-only commit; exact-head CI is required after commit.
 - **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-23 02:39:57 +07:00; Result: contract intake and PR inventory controls documented; external Work untouched; W118 remains ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.
+### Entry 057 addendum — exact-head CI for owner contract intake matrix
+
+- **Priority:** 01 — P0 — Validate the owner contract intake and governance update.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-23 02:39:57 +07:00.
+- Tested source SHA: 36d8cfb73be0820b0dd33cda4b494f568152fd2d.
+- Push Run #943 / ID 45062107637; validate job 137330107557: SUCCESS; raw log confirms 102 tests in 0.176s; TEST_OUTCOME=success; SOURCE_BINDING_STATUS=UNBOUND_LEGACY_BRANCH. Artifact 14769915886; size 974 bytes; digest sha256:501dfe175947375ec394287457f8820041c03aa42f11cc9ae164da20effb3187.
+- PR Run #944 / ID 45062112159; validate job 137330124116: SUCCESS; raw log confirms 102 tests in 0.299s; TEST_OUTCOME=success; SOURCE_BINDING_STATUS=NOT_RUN (push-only). Handoff, ACK and review-observation jobs SKIPPED. Artifact 14769911506; size 686 bytes; digest sha256:9976484ca595a115fa68543df72eaee7c2bcae6a6840e7dd66ccc488924fc6f5.
+- Both are contract/unit CI only. Neither proves owner API authority, cross-Work runtime, or Runtime Auto E2E. Aggregate push remains UNBOUND_LEGACY_BRANCH; PR source binding is NOT_RUN.
+- This journal addendum changes source HEAD and therefore requires a new exact-head CI run. The PR body will retain the final exact-head run references.
+- **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-23 02:39:57 +07:00; Result: exact-head contract CI for the matrix/docs snapshot passed; no external Work mutation; runtime gates unchanged.
