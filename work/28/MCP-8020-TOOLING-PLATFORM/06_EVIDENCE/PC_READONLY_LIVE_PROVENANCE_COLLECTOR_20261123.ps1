@@ -11,7 +11,7 @@ $stamp = Get-Date -Format "yyyyMMdd_HHmmss"
 $outDir = Join-Path $env:TEMP ("W28_LIVE_PROVENANCE_" + $stamp)
 New-Item -ItemType Directory -Path $outDir -Force | Out-Null
 $summaryPath = Join-Path $outDir "summary.txt"
-$utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+$utf8NoBom = [System.Text.UTF8Encoding]::new($false)
 
 function Write-Section([string]$Name, $Value) {
     [Environment]::NewLine + "=== $Name ===" | Tee-Object -FilePath $summaryPath -Append
