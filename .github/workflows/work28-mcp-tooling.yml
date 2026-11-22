@@ -113,6 +113,7 @@ jobs:
           set -o pipefail
           python -m unittest discover -s tests -p 'test_process_job.py' -v 2>&1 | tee lifecycle-output.txt
           python -m pytest tests/test_process_job_suspended_spawn.py -q 2>&1 | tee -a lifecycle-output.txt
+          python -m pytest tests/test_wp2_service_mapping_and_race.py -q 2>&1 | tee -a lifecycle-output.txt
           python -m unittest discover -s tests -p 'test_work28_contract.py' -v 2>&1 | tee -a lifecycle-output.txt
           python -m unittest discover -s tests -p 'test_execution_host_auth.py' -v 2>&1 | tee -a lifecycle-output.txt
           python -m unittest discover -s tests -p 'test_work28_grant.py' -v 2>&1 | tee -a lifecycle-output.txt
@@ -161,6 +162,8 @@ jobs:
           python -m unittest discover -s tests -p 'test_process_job.py' -v 2>&1 | Tee-Object -FilePath lifecycle-output.txt
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -m pytest tests/test_process_job_suspended_spawn.py -q 2>&1 | Tee-Object -FilePath lifecycle-wp2-suspended-spawn.txt
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -m pytest tests/test_wp2_service_mapping_and_race.py -q 2>&1 | Tee-Object -FilePath lifecycle-wp2-service-registry.txt
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -m unittest discover -s tests -p 'test_work28_contract.py' -v 2>&1 | Tee-Object -FilePath lifecycle-output-wp14.txt
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
