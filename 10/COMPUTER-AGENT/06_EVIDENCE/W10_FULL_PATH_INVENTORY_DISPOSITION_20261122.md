@@ -11,9 +11,9 @@
 
 | Measure | Count |
 |---|---:|
-| Sandbox files under `COMPUTER-AGENT/` | 171 |
-| GitHub branch files under `10/COMPUTER-AGENT/` | 79 |
-| Shared paths | 79 |
+| Sandbox files under `COMPUTER-AGENT/` | 172 |
+| GitHub branch files under `10/COMPUTER-AGENT/` | 80 |
+| Shared paths | 80 |
 | Sandbox-only files | 92 |
 | GitHub-only files | 0 |
 | Sandbox-only `.github/` directory | 1 |
@@ -166,7 +166,7 @@ Historical transcript archive; not a runtime artifact or canonical source.
 
 ## 5. Synchronization disposition
 
-**Accepted source/test/architecture/config/launcher parity: PASS for the current shared set.** All 79 shared paths are present. The 92 Sandbox-only files and one parent directory are intentionally retained as historical/reference/generated Sandbox material, as itemized above.
+**Accepted source/test/architecture/config/launcher parity: PASS for the current shared set.** All 80 shared paths are present. The 92 Sandbox-only files and one parent directory are intentionally retained as historical/reference/generated Sandbox material, as itemized above.
 
 This is a reconciled working/canonical branch inventory, not a claim that the two directory trees have identical file counts. Work 10 remains ACTIVE — NOT RELEASED pending physical Windows 10 acceptance, production V8 key provisioning, Linux cgroup-v2 disposition, ROOM-HOP integration and Owner's final acceptance.
 
