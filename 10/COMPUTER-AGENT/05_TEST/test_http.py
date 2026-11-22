@@ -12,6 +12,7 @@ against the deterministic adapter double (no Chromium needed here), and proves:
   * a timed-out worker is terminated through OS containment before the lease is released.
 """
 import hashlib
+import http.client
 import json
 import os
 import platform
@@ -129,6 +130,20 @@ class Server:
                 return resp.status, json.loads(resp.read() or b"{}")
         except urllib.error.HTTPError as exc:
             return exc.code, json.loads(exc.read() or b"{}")
+
+    def oversized_request(self, path, content_length):
+        connection = http.client.HTTPConnection("127.0.0.1", self.port, timeout=15)
+        connection.putrequest("POST", path)
+        connection.putheader("Content-Type", "application/json")
+        connection.putheader("Origin", "http://127.0.0.1:3010")
+        connection.putheader("Authorization", "Bearer test-token-work10")
+        connection.putheader("Content-Length", str(content_length))
+        connection.endheaders()
+        try:
+            response = connection.getresponse()
+            return response.status, json.loads(response.read() or b"{}")
+        finally:
+            connection.close()
 
     def log(self):
         return self.log_path.read_text(encoding="utf-8").split("\n")
@@ -262,8 +277,8 @@ def main():
         status, body = server.request("POST", "/agent/execute", [1, 2, 3])
         check("non-object JSON body -> 400", lambda: status == 400 and body.get("error") == "request_body_must_be_object")
 
-        status, body = server.request("POST", "/agent/execute", {"padding": "x" * (1024 * 1024 + 10)})
-        check("request body over 1 MiB -> 413", lambda: status == 413 and body.get("error") == "request_body_too_large")
+        status, body = server.oversized_request("/agent/execute", 1024 * 1024 + 10)
+        check("Content-Length over 1 MiB -> 413 before body read", lambda: status == 413 and body.get("error") == "request_body_too_large")
 
         status, body = server.request("POST", "/agent/execute", {"task": "", "actions": []})
         check("empty task -> 400", lambda: status == 400)
