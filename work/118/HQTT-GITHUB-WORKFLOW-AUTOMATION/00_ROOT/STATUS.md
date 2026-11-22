@@ -363,3 +363,11 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - Work32 Grant is a candidate input for W118-TASK-015/TASK-019 only after owner approval, passing exact-head/security gates, deployed Core/Host and live proof. No binding performed.
 - Work28 PR #73 is documentation-only merge into Work28 branch; execution gate remains CLOSED and owner-approved deployment is not verified. Work1111 PR #48 remains draft, divergent and with known source-hash/Task-binding/atomicity findings.
 - RA-118-002 v1.4 and Entry 058 record exact refs. P1-118-02 BLOCKED; Runtime Auto E2E NOT RUN; no external Work mutation.
+
+## Main Core authority mount source audit — Entry 059 (2026-11-23)
+
+- Main source snapshot 0902cd26518673aa078bb4c7c7899e1e4a95656a: `core_http_main.py` docstring claims an execution-authority mount, but `build_app()` only returns `create_http_app(service)`; the HTTP adapter contains identity and Meeting routes only. No execution-grant router is mounted in the inspected Main composition.
+- Deployment guide `CORE_EXECUTION_AUTHORITY_V1_2_DEPLOYMENT.md` claims routes are mounted; Main test expectation for 503 is not route-registration proof and was not run. Work17 GAP-11 Entry 044 corroborates the source discrepancy. Live deployment remains NOT VERIFIED.
+- W118 P1-118-02 remains BLOCKED for a separate Core-owned Task-scoped Issue-mirror lease; Work32 `pytest_run` Grant cannot authorize Issue POST/PATCH. W118-TASK-014 and protected execution remain blocked pending canonical owner contracts/runtime proof.
+- Exact source refs, scope and limitations: RA-118-002 addendum v1.5; Journal Entry 059. No external Work/runtime/credential/config mutation.
+- Overall: ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED; Runtime Auto E2E NOT RUN.
