@@ -115,7 +115,7 @@ Still requires evidence from the same identified deployment:
 
 ## 6. Owner action needed to unlock final live acceptance
 
-1. Provide or authorize access to the actual PC/deployment environment running the approved MCP 8030 instance so its process command, module path, source commit/hash and raw protocol `tools/list` can be captured together.
+1. Run the read-only collector at `06_EVIDENCE/PC_READONLY_LIVE_PROVENANCE_COLLECTOR_20261123.ps1` on the ROOM-HOP PC. It captures listeners on 8000/8001/8030/8031, sanitized process/module metadata, local source hashes and a read-only initialize + `tools/list` probe against the recorded Build MCP endpoint. Return only `summary.txt`, `mcp_tools_list_raw.txt` (if created) and the timestamp. It never contacts historical :8020, never calls `tools/call`, and never prints secrets. If the endpoint is unreachable, return BLOCKED; do not restart anything.
 2. Reconcile and explicitly approve or supersede Core Execution Authority V1.2 (the HTTP implementation already exists in source, but the contract still says NOT APPROVED), then provision the enrolled Work 28 service identity and canonical W28→Sandbox mapping on the actual Core deployment. Confirm endpoint/process/build identity and implement a trusted remote WorkContext/grant client without local fallback.
 3. Obtain the explicit Q4 capability-grant decision for WP3-F01 before enabling upload side effects.
 4. Once those prerequisites exist, Vi can continue the live E2E sequence autonomously and deliver a final acceptance record. No routine code review is needed.
