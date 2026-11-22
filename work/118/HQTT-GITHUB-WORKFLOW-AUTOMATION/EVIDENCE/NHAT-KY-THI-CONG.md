@@ -1721,3 +1721,18 @@
 - **Exact branch commit created by journal update:** `f3e1c7c7663d947708e07d6d60833e68cfae3a98` (Entry 040); readback confirmed the journal blob contains Entry 040. Commit-associated PR workflow lookup returned no runs for this exact commit. The lookup is limited to PR-triggered runs/first page; therefore exact-head CI remains NOT VERIFIED, not FAIL.
 - **Disposition:** Integration risk is narrowed: Main's two commits are W092-only and no path overlap is evidenced. Branch remains formally DIVERGED 54/2 until a permitted synchronization decision is made. No rebase/merge is performed under current freeze. W118 remains ACTIVE — NOT ACCEPTED — NOT RELEASED; P1-118-01 OPEN / NEEDS CHANGES; P1-118-02 BLOCKED; Runtime Auto E2E NOT VERIFIED; Xu review PENDING; Vinh acceptance NOT ACCEPTED.
 - **Next permitted action:** Continue review preparation and exact-head evidence reconciliation. Keep branch unchanged; do not synchronize Main, apply B-118-010, merge or release without the required review/approval gates.
+
+
+## Entry 042 — Exact branch-tip CI #876 raw-log and artifact verification
+
+- **Priority:** 01 — P0 — Exact-revision CI evidence / test provenance.
+- **Name / Title:** Ka — CSA / Delegated Technical Lead, Work 118.
+- **Date-Time:** 2026-11-22 13:22 (UTC+07:00).
+- **Scope:** Verify GitHub Actions run #876 for the exact branch tip after Entry 041, including job states, decoded raw validate-job log, skipped event jobs and artifact metadata. No source/workflow change, no runtime execution, no Core/W14/W70 mutation, no merge or release.
+- **Revision binding:** Run ID `44993105592`, run number 876, event `pull_request`, branch `work/118-auto-e2e-v2-clean`, exact head SHA `a4b37212e6e7cc48e7f81be6bbf1a38e9ec51cf9` (Entry 041 commit). Validate job ID `137118274838` completed SUCCESS.
+- **Raw test evidence:** Decoded validate-job log confirms `python -m unittest discover -s tests/w118 -v` → **Ran 95 tests in 0.233s — OK**. Checkout, Python setup, pinned YAML parser, test step, evidence write and artifact upload succeeded.
+- **Artifact evidence:** `w118-run-evidence-44993105592-1`, artifact ID `14741924080`, final size 685 bytes, digest `sha256:74d4d4b7f6aecb42cce523815c960c685f2a5f20ad1274600b8cb439ad0216f0`; GitHub metadata reports not expired. Payload was not independently downloaded/parsed.
+- **Coverage limits:** Task-to-Issue push source-binding step SKIPPED for this pull_request event. `handoff-request-capture`, `ack-claim-capture` and `review-observation-capture` jobs SKIPPED. Therefore CI #876 proves exact-head W118 contract/unit suite only; it does not prove live push binding, handoff, authenticated ACK, review lifecycle, Core lease authenticity or Runtime Auto E2E.
+- **Non-blocking notices:** Raw log reports Node.js 20 deprecation for pinned GitHub Actions dependencies, plus `punycode` and legacy `url.parse()` deprecation notices. No test/job failure; no workflow change made under freeze.
+- **Disposition:** Exact branch-tip contract/unit CI **PASS — 95/95** at SHA `a4b37212...`. P1-118-01 OPEN / NEEDS CHANGES; P1-118-02 BLOCKED at owner-approved Core source/lease contract/runtime evidence boundary; Runtime Auto E2E NOT VERIFIED; Xu independent review PENDING; Vinh acceptance NOT ACCEPTED. PR #68 OPEN / UNMERGED; W118 ACTIVE — NOT ACCEPTED — NOT RELEASED. Branch remains DIVERGED 55/2; no B-118-010, Main merge or release.
+- **Next permitted action:** Preserve implementation freeze. Continue review and dependency-evidence work; do not treat contract CI PASS as runtime E2E or acceptance. This journal-only commit will require its own exact-head CI readback; avoid creating further journal commits solely to chase each journal-triggered CI run.
