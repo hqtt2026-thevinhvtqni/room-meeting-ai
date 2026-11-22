@@ -2,7 +2,7 @@
 
 - Document ID: W10-FULL-PATH-INVENTORY-20261122-01
 - Work: 10 — COMPUTER-AGENT
-- Date-Time: 2026-11-22 06:51 (UTC+07:00)
+- Date-Time: 2026-11-22 06:52 (UTC+07:00)
 - Canonical repository: `hqtt2026-thevinhvtqni/room-meeting-ai`
 - Branch: `work/10-computer-agent-mirror`
 - Sandbox Work ID: `10`
@@ -11,9 +11,9 @@
 
 | Measure | Count |
 |---|---:|
-| Sandbox files under `COMPUTER-AGENT/` | 169 |
-| GitHub branch files under `10/COMPUTER-AGENT/` | 77 |
-| Shared paths | 77 |
+| Sandbox files under `COMPUTER-AGENT/` | 170 |
+| GitHub branch files under `10/COMPUTER-AGENT/` | 78 |
+| Shared paths | 78 |
 | Sandbox-only files | 92 |
 | GitHub-only files | 0 |
 | Sandbox-only `.github/` directory | 1 |
@@ -25,7 +25,7 @@ No GitHub-only Work 10 file remains. The Sandbox-only files are explicitly retai
 - 34 accepted source/test/architecture/config/launcher files were independently fetched and compared as exact UTF-8 text; all 34 matched. Latest launcher and HTTP test changes are separately read-back checked and CI-verified.
 - Remaining shared governance/evidence/manifest/journal/dashboard/release files were compared in targeted batches; all compared content matched after each update/readback.
 - Three LOCKED contracts are exact-match: `ACTION_CONTRACT.md`, `WORKFLOW_CONTRACT.md`, `SAFETY_POLICY.md`.
-- Current accepted runtime source, tests, local PowerShell launcher, host contract, operational Dashboard, runbooks, owner authorization, CI evidence, Work Manifest, BIÊN BẢN and NHẬT KÝ are on the canonical branch.
+- Current accepted runtime source, tests, local PowerShell launcher, host contract, operational Dashboard, runbooks, owner authorization, current CI evidence, Work Manifest, BIÊN BẢN and NHẬT KÝ are on the canonical branch.
 - No accepted source/test/config/launcher file is intentionally left Sandbox-only.
 
 ## 3. Sandbox-only path dispositions
@@ -166,7 +166,7 @@ Historical transcript archive; not a runtime artifact or canonical source.
 
 ## 5. Synchronization disposition
 
-**Accepted source/test/architecture/config/launcher parity: PASS for the current shared set.** All 77 shared paths are present. The 92 Sandbox-only files and one parent directory are intentionally retained as historical/reference/generated Sandbox material, as itemized above.
+**Accepted source/test/architecture/config/launcher parity: PASS for the current shared set.** All 78 shared paths are present. The 92 Sandbox-only files and one parent directory are intentionally retained as historical/reference/generated Sandbox material, as itemized above.
 
 This is a reconciled working/canonical branch inventory, not a claim that the two directory trees have identical file counts. Work 10 remains ACTIVE — NOT RELEASED pending physical Windows 10 acceptance, production V8 key provisioning, Linux cgroup-v2 disposition, ROOM-HOP integration and Owner's final acceptance.
 
