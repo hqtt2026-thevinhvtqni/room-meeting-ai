@@ -396,3 +396,11 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - W118-TASK-014 remains BLOCKED; no guessed W70/W102 API binding, local registry, dispatcher or evidence store created. W70 is read-only projection only after approved schema/authenticated read contract.
 - Full bounded evidence and limitations: RA-118-002 addendum v1.7 and Journal Entry 061. No external Work/Sandbox/runtime/permission/secret changes; Runtime Auto E2E NOT RUN.
 - Overall: ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED. Exact-head CI required after this documentation update.
+
+
+## Exact-head CI — Entry 061 W70/W102 audit snapshot
+
+- Source SHA `8fdb0bd68d5ad10167fd83ff021fc912a9aa597d`: push Run #989 / `45065868398` SUCCESS, 102 tests / 0.306s, `UNBOUND_LEGACY_BRANCH`; artifact `14771820300`, SHA-256 `15f4ca5fe9d722c2cc1fc7a1fb04c621bcefdc976e39f42f5920f513b5ef3149`.
+- PR Run #990 / `45065875808` SUCCESS, 102 tests / 0.137s, `NOT_RUN` (push-only); artifact `14771655985`, 684 bytes, SHA-256 `5e75b2857dc0947e49883c588486afac4caa8881ad8928e4d2ca6a58b400c0e1`.
+- Handoff/ACK/review observation capture jobs SKIPPED. Contract/unit CI only; no W70/W102 runtime authority, Task-level source binding or Runtime Auto E2E proof.
+- Entry 061 exact-head CI details are in the journal. This status update requires a fresh exact-head validation. Overall remains ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.
