@@ -135,3 +135,8 @@ After adding the Dashboard live E2E test and Run #135 evidence to both Sandbox a
 ## Inventory count correction — 2026-11-22 06:46 (UTC+07:00)
 
 After adding the local launcher scripts, launcher contract test and Run #157 evidence to both Sandbox and GitHub, the current snapshot is Sandbox 167 files; GitHub 75 files; shared 75; Sandbox-only 92; GitHub-only 0; one Sandbox-only `.github/` directory. The 92 Sandbox-only dispositions are unchanged and itemized in `06_EVIDENCE/W10_FULL_PATH_INVENTORY_DISPOSITION_20261122.md`.
+
+
+## Inventory count correction — 2026-11-22 06:51 (UTC+07:00)
+
+After adding Run #180 evidence to both Sandbox and GitHub, the current snapshot is Sandbox 169 files; GitHub 77 files; shared 77; Sandbox-only 92; GitHub-only 0; one Sandbox-only `.github/` directory. The 92 Sandbox-only KEEP dispositions are itemized in `06_EVIDENCE/W10_FULL_PATH_INVENTORY_DISPOSITION_20261122.md`.
