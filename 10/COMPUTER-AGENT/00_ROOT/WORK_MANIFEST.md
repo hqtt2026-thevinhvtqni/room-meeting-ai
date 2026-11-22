@@ -331,3 +331,11 @@ After adding `05_TEST/test_dashboard_live_e2e.py` and its Run #135 evidence to b
 
 Co | AI-07. GitHub Actions Run #157 (ID `44964503556`) completed SUCCESS on Windows Server 2022 and Ubuntu 24.04. Windows PowerShell AST parser passed both local launcher scripts; local launcher smoke started Agent API on loopback :8787 and Dashboard on :3010, verified Work ID 10 health + HTTP 200, then STOP verified process command lines/start times and stopped only its session processes. Windows: 224 PASS / 0 FAIL / 0 SKIP; Ubuntu: 218 PASS / 0 FAIL / 2 expected SKIP. Windows launcher contract: 11 PASS each OS; Dashboard static 17 PASS; Dashboard live E2E 7 PASS; V8 validator 16 PASS; real Chromium E2E PASS. Evidence: `06_EVIDENCE/W10_LOCAL_LAUNCHER_CI_EVIDENCE_20261122_RUN157.md`. CI uses `-NoClipboard -NoOpenBrowser`; physical Windows 10, clipboard/browser launch, ACL and local Chrome profile still require Owner PC acceptance.
 
+
+
+## W10-LAUNCHER-INVENTORY-UPDATE-20261122-01 — 2026-11-22 06:46 (UTC+07:00)
+
+Run #157 confirms PowerShell syntax and Windows local launcher start/stop smoke on hosted Windows Server 2022. Current hosted regression: Windows 224 PASS / 0 FAIL / 0 SKIP; Ubuntu 218 PASS / 0 FAIL / 2 expected SKIP. Local Windows 10 acceptance remains NOT RUN.
+
+After adding START/STOP scripts, launcher contract test and Run #157 evidence to both sides, inventory: Sandbox 167 files; GitHub 75; shared 75; Sandbox-only 92; GitHub-only 0. All 34 accepted source/test/architecture/config/launcher files independently compared exact UTF-8. Updated inventory: `06_EVIDENCE/W10_FULL_PATH_INVENTORY_DISPOSITION_20261122.md`.
+
