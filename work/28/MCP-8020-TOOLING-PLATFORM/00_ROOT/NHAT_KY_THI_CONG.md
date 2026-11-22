@@ -1442,3 +1442,50 @@ PR #61 remains OPEN / UNMERGED. No deployment, Core mutation, listener restart o
 **PR #69 EXACT-HEAD CI RUN #44977854122 PASS / WORKFLOW PATH FILTER CORRECTED / WP1 REGISTRY PARITY NOT VERIFIED / WP4 RUNTIME NOT VERIFIED / WP5 CORE AUTHORITY NOT VERIFIED / WP3-F01 Q4 PROPOSED NOT APPROVED / LIVE E2E BLOCKED / PR DRAFT — DO NOT MERGE / NOT RELEASED.**
 
 **Signature:** [KÝ: XU | TEMPORARY WORK COORDINATOR]
+
+
+## 2026-11-22 — JRN-W28-040 — Xu xác nhận CI trên canonical và WP2 candidate cuối phiên
+
+**Người thực hiện:** Xu — temporary Work 28 coordinator / technical execution owner  
+**Canonical branch before append:** `work/28-mcp-tooling-platform` at `3530ff847fa51d6b00f374c6a106fe07750e6a6e`  
+**Integration branch:** `xu/work28-wp2-integration-20261122`  
+**PR:** #69 (DRAFT) — current tested head `3497957827f332774fc34d7dec45ab7cb4e5ccd7`
+
+### VERIFY — canonical branch CI
+- Push workflow run `44978021033` completed SUCCESS on canonical commit `3530ff847fa51d6b00f374c6a106fe07750e6a6e`.
+- All jobs SUCCESS: unit/regression, Linux lifecycle, Windows lifecycle, immutable exact-SHA source artifact and automatic E2E gate report job.
+- Source artifact: `work28-source-artifact-3530ff847fa51d6b00f374c6a106fe07750e6a6e` (ID `14736208154`); E2E report artifact `work28-auto-e2e-report-44978021033` (ID `14736033759`).
+- The report remains BLOCKED for deployed MCP/Core/Runtime E2E; no live product acceptance is inferred.
+
+### VERIFY — PR #69 latest candidate CI
+- PR workflow run `44978067896` completed SUCCESS on PR head `3497957827f332774fc34d7dec45ab7cb4e5ccd7`.
+- All jobs SUCCESS: `execution-host-lifecycle-linux`, `execution-host-lifecycle-windows`, `unit-regression-tests`, `Build and retest exact-SHA Work 28 source artifact`, `automatic-e2e-gate-report`.
+- Full Work 28 pytest evidence: 348 passed; 238 subtests passed. The Linux and Windows lifecycle jobs passed on the same PR head.
+- Source artifact: `work28-source-artifact-960fc8b8c402fd5532ddf9ea6f3bfe2b4feedc70` (ID `14736695764`); E2E report artifact `work28-auto-e2e-report-44978067896` (ID `14736935801`).
+- E2E report source snapshot is merge commit `960fc8b8c402fd5532ddf9ea6f3bfe2b4feedc70`; run head remains PR commit `349795...`.
+- The automatic report again says deployed MCP/Core/Runtime E2E BLOCKED, despite CI preconditions PASS.
+
+### PR / branch state
+- PR #69 is DRAFT / OPEN / UNMERGED. GitHub compare: 13 commits ahead / 0 behind; mergeable=true; six product/workflow paths changed.
+- PR #61 remains OPEN and divergent; it is retained as historical remediation source and is not merged or rewritten.
+- CI path filters now scope Work 28 local CI to executable code/test paths plus root execution/Core/runtime, requirements and the workflow. Append-only journal/evidence/plan changes do not trigger the full code CI.
+- The candidate workflow retains the WP2 service-registry regression suite and the corrected POSIX full-process-table probe.
+
+### ACCEPTANCE STATUS
+- WP2: candidate source has exact-head Linux/Windows lifecycle and full regression CI PASS. It is **not accepted** because An independent QA and Ka security approval are unavailable during Vinh's temporary absence; Xu self-review is not independent sign-off.
+- WP0: Sandbox manifest and master plan matched GitHub on diagnostic readback, but Sandbox journal is stale and live Build MCP process/build provenance + deployed tools/list parity remain NOT VERIFIED.
+- WP1: source catalogs/registries remain unreconciled to one proven live registry; G1 NOT VERIFIED.
+- WP3-F01: binary upload absent in current v1/v54 adapters; Q4 design revision is PROPOSED / NOT APPROVED; implementation remains BLOCKED.
+- WP4/WP5: W13 adapter, execution gateway and Core authorizer remain staged/unwired; trusted deployed Core WorkContext and clean Runtime MCP identity are not evidenced.
+- WP6/WP7: automatic CI report job passes as a report generator, but deployed request-to-protected-evidence E2E is BLOCKED; Execution Gate CLOSED; NOT RELEASED.
+
+### NEXT
+1. Keep PR #69 DRAFT and do not merge until An QA and Ka review can be independently obtained.
+2. Continue source/provenance work that does not require live deployment, Core mutation or production execution.
+3. Preserve the revised WP3 Q4 grant design as PROPOSED until independent Ka approval.
+4. When Vinh is available, request the independent An/Ka gates; no acknowledgement or assignment is fabricated during this temporary takeover.
+
+### STATUS
+**CANONICAL CI RUN #44978021033 PASS / PR #69 EXACT-HEAD CI RUN #44978067896 PASS / WP2 TECHNICAL CI VERIFIED / INDEPENDENT QA AND SECURITY APPROVAL PENDING / WP0–WP1–WP3–WP5–WP6–WP7 REMAIN NOT VERIFIED OR BLOCKED AS ABOVE / EXECUTION GATE CLOSED / NOT RELEASED.**
+
+**Signature:** [KÝ: XU | TEMPORARY WORK COORDINATOR]
