@@ -1,6 +1,6 @@
 # W118-13..17 — Core / GitHub adapter implementation
 
-- **Architecture:** TD-118-012 v1.2
+- **Architecture:** TD-118-012 v1.3
 - **Status:** CONTRACT BUILD — RUNTIME INTEGRATION BLOCKED BY EXISTING SERVICE PORTS
 - **Implementation branch:** `work/118-auto-e2e-v2`
 - **Date:** 2026-11-21

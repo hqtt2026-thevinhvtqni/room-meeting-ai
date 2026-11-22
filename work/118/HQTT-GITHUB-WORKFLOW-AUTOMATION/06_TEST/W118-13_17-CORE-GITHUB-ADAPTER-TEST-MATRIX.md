@@ -1,6 +1,6 @@
 # W118-13..17 — Core/GitHub Adapter Test Matrix
 
-- **Architecture:** TD-118-012 v1.2
+- **Architecture:** TD-118-012 v1.3
 - **Status:** CONTRACT TEST PLAN — exact-head CI evidence linked below
 - **Rule:** Tests prove adapter behavior only; they do not prove Core/W102/W14 runtime availability.
 
