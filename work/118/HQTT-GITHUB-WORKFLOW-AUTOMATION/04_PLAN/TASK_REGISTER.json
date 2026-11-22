@@ -68,13 +68,14 @@
       "progress_status": "NOT_CALCULATED",
       "evidence_refs": [
         "scripts/w118/core_task_adapter.py",
-        "tests/w118/test_core_task_adapter.py"
+        "tests/w118/test_core_task_adapter.py",
+        "work/118/HQTT-GITHUB-WORKFLOW-AUTOMATION/04_PLAN/RA-118-002_RÀ-SOÁT-TỒN-ĐỌNG-VÀ-ĐỐI-SOÁT-KIẾN-TRÚC.md#addendum-v1.3"
       ],
       "blockers": [
         "Core :8000 API schema/port and approved field map have not been exposed to W118."
       ],
       "next_action": "Complete stateless Core Task projection only after Core owner exposes the actual API schema, field map and approved read port.",
-      "status_note": "Separate Task/Assignment lifecycle code passes contract CI; runtime service integration remains pending.",
+      "status_note": "Separate Task/Assignment lifecycle code passes contract CI; runtime service integration remains pending. Owner contract intake matrix and required source/contract/runtime evidence: RA-118-002 addendum v1.3. This is planning evidence only; no external authority or runtime PASS is inferred.",
       "execution_steps": [
         "Finalize W118 Task Register schema",
         "Validate Task/Assignment transitions",
@@ -143,13 +144,14 @@
       "progress_status": "NOT_CALCULATED",
       "evidence_refs": [
         ".github/w118/role-map.json",
-        "W102 DOC-012"
+        "W102 DOC-012",
+        "work/118/HQTT-GITHUB-WORKFLOW-AUTOMATION/04_PLAN/RA-118-002_RÀ-SOÁT-TỒN-ĐỌNG-VÀ-ĐỐI-SOÁT-KIẾN-TRÚC.md#addendum-v1.3"
       ],
       "blockers": [
         "Core identity/Assignment API and verified runtime principal are not exposed to W118."
       ],
       "next_action": "Obtain the Core/W102 identity and Assignment contract plus a verified principal fixture; do not infer identity or build a local Agent Registry.",
-      "status_note": "Governance role labels do not prove runtime identity. No Agent can be marked eligible by inference.",
+      "status_note": "Governance role labels do not prove runtime identity. No Agent can be marked eligible by inference. Owner contract intake matrix and required source/contract/runtime evidence: RA-118-002 addendum v1.3. This is planning evidence only; no external authority or runtime PASS is inferred.",
       "execution_steps": [
         "Inspect canonical Agent Registry",
         "Verify runtime principal and owner",
@@ -224,13 +226,14 @@
         "W14 AUTONOMOUS-E2E-BUILDER/00_ROOT/WORK_MANIFEST.md",
         "W14 03_ARCHITECTURE/W12_W13_ABSORPTION_RECORD.md",
         "W14 03_ARCHITECTURE/W13_WEE_8031_BRIDGE_STATUS.md",
-        "W12/W13 historical absorbed contracts"
+        "W12/W13 historical absorbed contracts",
+        "work/118/HQTT-GITHUB-WORKFLOW-AUTOMATION/04_PLAN/RA-118-002_RÀ-SOÁT-TỒN-ĐỌNG-VÀ-ĐỐI-SOÁT-KIẾN-TRÚC.md#addendum-v1.3"
       ],
       "blockers": [
         "W14 canonical GitHub source/ref and Work Authority/ExecutionHostBridge API/runtime are not verified; W14 manifest states full product E2E is NOT VERIFIED."
       ],
       "next_action": "Obtain W14 canonical source and approved Work Authority/ExecutionHostBridge contract; verify runtime through W14's owner; do not modify W12/W13 historical source or create a parallel host.",
-      "status_note": "W12/W13 are absorbed internal foundations; W14 is the sole product owner. Current W14 source parity and live execution path remain unverified.",
+      "status_note": "W12/W13 are absorbed internal foundations; W14 is the sole product owner. Current W14 source parity and live execution path remain unverified. Owner contract intake matrix and required source/contract/runtime evidence: RA-118-002 addendum v1.3. This is planning evidence only; no external authority or runtime PASS is inferred.",
       "execution_steps": [
         "Read W14 current manifest and absorption record",
         "Verify W14 canonical source/ref and runtime contract",
@@ -306,7 +309,8 @@
         "tests/w118/test_github_issue_adapter.py",
         "tests/w118/test_source_binding.py",
         "CI #906 / 45057857222 — 102 tests PASS",
-        "Entry 055 — P1-118-01 and P1-118-02 audit"
+        "Entry 055 — P1-118-01 and P1-118-02 audit",
+        "work/118/HQTT-GITHUB-WORKFLOW-AUTOMATION/04_PLAN/RA-118-002_RÀ-SOÁT-TỒN-ĐỌNG-VÀ-ĐỐI-SOÁT-KIẾN-TRÚC.md#addendum-v1.3"
       ],
       "blockers": [
         "Core owner-approved lease validation contract and authenticated validation port are not exposed; production mirror writes remain fail-closed.",
@@ -314,7 +318,7 @@
         "No live task-scoped GitHub push / source-binding event has been executed."
       ],
       "next_action": "Obtain Core-owner lease issuer/Work-Task-scope/audience/expiry/revocation/authentication contract and validation endpoint; then run real Core-backed positive/negative lease tests and authorized GitHub mirror round-trip.",
-      "status_note": "P1-118-01 fail-closed marker uniqueness and persisted Core issue_id binding implemented; 102 exact-head adapter/unit tests pass. P1-118-02 remains blocked: no Core-owned lease validation contract/API or live Core authority is available. Runtime GitHub mirror and task-scoped push remain unverified.",
+      "status_note": "P1-118-01 fail-closed marker uniqueness and persisted Core issue_id binding implemented; 102 exact-head adapter/unit tests pass. P1-118-02 remains blocked: no Core-owned lease validation contract/API or live Core authority is available. Runtime GitHub mirror and task-scoped push remain unverified. Owner contract intake matrix and required source/contract/runtime evidence: RA-118-002 addendum v1.3. This is planning evidence only; no external authority or runtime PASS is inferred.",
       "execution_steps": [
         "Connect Sandbox Task Register",
         "Add per-Task mirror lock",
@@ -388,13 +392,14 @@
         "scripts/w118/github_webhook_verifier.py",
         "scripts/w118/github_event_adapter.py",
         "tests/w118/test_github_webhook_verifier.py",
-        "tests/w118/test_github_event_adapter.py"
+        "tests/w118/test_github_event_adapter.py",
+        "work/118/HQTT-GITHUB-WORKFLOW-AUTOMATION/04_PLAN/RA-118-002_RÀ-SOÁT-TỒN-ĐỌNG-VÀ-ĐỐI-SOÁT-KIẾN-TRÚC.md#addendum-v1.3"
       ],
       "blockers": [
         "Core event ingress is not exposed; production webhook endpoint/secret/TLS is not configured."
       ],
       "next_action": "Complete stateless webhook verification/event normalization; forward to Core event port when exposed; do not persist a local inbox or queue.",
-      "status_note": "Authenticated inbox/reconciler contracts pass in-memory tests; production event path is not deployed.",
+      "status_note": "Authenticated inbox/reconciler contracts pass in-memory tests; production event path is not deployed. Owner contract intake matrix and required source/contract/runtime evidence: RA-118-002 addendum v1.3. This is planning evidence only; no external authority or runtime PASS is inferred.",
       "execution_steps": [
         "Inspect Event Listener ownership/code",
         "Integrate signed webhook route",
@@ -466,13 +471,14 @@
       "progress_status": "NOT_CALCULATED",
       "evidence_refs": [
         "W70 DOC-056",
-        "W70 Evidence Register schema"
+        "W70 Evidence Register schema",
+        "work/118/HQTT-GITHUB-WORKFLOW-AUTOMATION/04_PLAN/RA-118-002_RÀ-SOÁT-TỒN-ĐỌNG-VÀ-ĐỐI-SOÁT-KIẾN-TRÚC.md#addendum-v1.3"
       ],
       "blockers": [
         "W70 schema/owner ACK is required; W118 has no authority to mutate W70 schema or canonical Evidence Register."
       ],
       "next_action": "Obtain W70 Evidence Register schema/owner ACK; build read-only projection mapping only after approval.",
-      "status_note": "No W70 schema or dashboard writes have been made.",
+      "status_note": "No W70 schema or dashboard writes have been made. Owner contract intake matrix and required source/contract/runtime evidence: RA-118-002 addendum v1.3. This is planning evidence only; no external authority or runtime PASS is inferred.",
       "execution_steps": [
         "Map W118 Task/evidence fields to W70 schema",
         "Validate provenance/freshness",
@@ -549,12 +555,14 @@
       "status": "PLANNED",
       "progress_percent": null,
       "progress_status": "NOT_CALCULATED",
-      "evidence_refs": [],
+      "evidence_refs": [
+        "work/118/HQTT-GITHUB-WORKFLOW-AUTOMATION/04_PLAN/RA-118-002_RÀ-SOÁT-TỒN-ĐỌNG-VÀ-ĐỐI-SOÁT-KIẾN-TRÚC.md#addendum-v1.3"
+      ],
       "blockers": [
         "Prerequisite Core/W102/W14/W70 runtime and approval gates must pass before full E2E."
       ],
       "next_action": "Run complete positive/negative lifecycle E2E through W14's canonical execution path after all external contracts and runtime integrations are available.",
-      "status_note": "No full runtime E2E has been executed; contract tests are not product acceptance.",
+      "status_note": "No full runtime E2E has been executed; contract tests are not product acceptance. Owner contract intake matrix and required source/contract/runtime evidence: RA-118-002 addendum v1.3. This is planning evidence only; no external authority or runtime PASS is inferred.",
       "execution_steps": [
         "Select a non-sensitive pilot Task",
         "Run full Plan-to-Task assignment",
@@ -587,5 +595,5 @@
   ],
   "task_count": 7,
   "created_at": "2026-11-21T13:36:00+07:00",
-  "updated_at": "2026-11-22T05:30:00+07:00"
+  "updated_at": "2026-11-23T02:39:57+07:00"
 }
