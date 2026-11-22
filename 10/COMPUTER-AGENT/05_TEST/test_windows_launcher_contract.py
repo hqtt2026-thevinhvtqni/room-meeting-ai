@@ -38,12 +38,17 @@ def main() -> None:
           and "refusing to stop it" in STOP)
     check("non-interactive mode suppresses clipboard and browser launch",
           "[switch]$NoClipboard" in START and "[switch]$NoOpenBrowser" in START)
+    api_start = START.find("$api = Start-Process")
+    dashboard_start = START.find("$dashboard = Start-Process")
+    token_clear = START.find("$env:COMPUTER_AGENT_API_TOKEN = $null", api_start)
+    check("static Dashboard server does not inherit the Agent API bearer token",
+          api_start >= 0 and token_clear > api_start and token_clear < dashboard_start)
     check("launcher failure cleans up the session record and secret variables",
           "Remove-Item -LiteralPath $sessionPath -Force" in START
           and "$token = $null" in START)
     check("launcher exposes no generic shell or inline PowerShell command",
           "Invoke-Expression" not in START and "powershell.exe -Command" not in START)
-    print("Windows launcher contract: 12 checks passed")
+    print("Windows launcher contract: 13 checks passed")
 
 
 if __name__ == "__main__":
