@@ -81,9 +81,14 @@ These are live integration/authority dependencies, not pending An/Ka review:
 
 ### B2 — Real provider composition and Core execution authority
 - Required provider groups: Core, Sandbox, Sandbox extensions, Proposal, GitHub and Runtime.
-- No approved concrete Core execution-grant route/WorkContext provider or complete production composition root was verified.
-- Local/in-memory reference providers and echo test doubles are not acceptable authorization sources.
-- **Disposition:** do not start/register execution tools against placeholder providers; live execution remains BLOCKED.
+- **Core-side authority code does exist in the canonical source tree:** `core/execution_authority/{authority.py,http_server.py,store.py}`, with HTTP routes for grant issue/status and run recording (default port 8001), plus append-only JSONL storage.
+- Exact source blobs read during this continuation: `authority.py` `bfb052fed0fde69767dd219f17a0b14ae6383560`; `http_server.py` `6363c277ce410d3f5465f449b730199e06e5024c`; `store.py` `a628dc578c68c05bb875318d1b74528b26f0e4eb`.
+- Core authority component and subprocess/socket boot tests exist (`test_core_execution_authority_v1.py`, `test_core_execution_authority_boot_v1.py`), and the CI design labels these as repo/CI evidence only. They do **not** prove a deployed Core authority process or an approved Work 28 runtime WorkContext provider.
+- The architecture contract `PROPOSED_CORE_EXECUTION_AUTHORITY_CONTRACT_V1.md` still explicitly says V1.2 is DESIGN / PROPOSED / NOT APPROVED / NOT WIRED and awaits Vinh's final approval. This conflicts with the implementation module's `__init__.py` wording that calls it approved; the conflict must not be resolved by assuming approval.
+- The staged `W13CoreExecutionClientV1` and its live-authority test harness are explicitly NOT WIRED; the harness records a synthetic PASS and does not execute the real W13 host. It is not production E2E evidence.
+- No live endpoint/process identity, service enrollment/secret provisioning, canonical W28-to-Sandbox mapping, or real trusted WorkContext provider was verified.
+- Local/in-memory reference providers and echo/test harnesses are not acceptable authorization sources.
+- **Disposition:** keep execution tools NOT_IMPLEMENTED / BLOCKED; do not wire the staged client or treat CI boot tests as deployment evidence.
 
 ### B3 — WP3-F01 binary upload grant
 - Ka's Q4 capability-grant security review did not approve the upload grant contract; Xu's later grant-design revision remains subject to the decision authority.
@@ -102,7 +107,7 @@ Still requires evidence from the same identified deployment:
 ## 6. Owner action needed to unlock final live acceptance
 
 1. Provide or authorize access to the actual PC/deployment environment running the approved MCP 8030 instance so its process command, module path, source commit/hash and raw protocol `tools/list` can be captured together.
-2. Have the Core authority owner approve and implement the versioned execution-grant/WorkContext contract and confirm the real endpoint/service identity. Do not invent the proposed route or use local fallback.
+2. Reconcile and explicitly approve or supersede Core Execution Authority V1.2 (the HTTP implementation already exists in source, but the contract still says NOT APPROVED), then provision the enrolled Work 28 service identity and canonical W28→Sandbox mapping on the actual Core deployment. Confirm endpoint/process/build identity and implement a trusted remote WorkContext/grant client without local fallback.
 3. Obtain the explicit Q4 capability-grant decision for WP3-F01 before enabling upload side effects.
 4. Once those prerequisites exist, Vi can continue the live E2E sequence autonomously and deliver a final acceptance record. No routine code review is needed.
 
