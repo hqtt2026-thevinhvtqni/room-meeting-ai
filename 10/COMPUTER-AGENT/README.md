@@ -125,3 +125,8 @@ If dependencies are not installed yet, use `-InstallDependencies` once. Paste th
 ```
 
 The execution-policy change is process-scoped only and does not persist to the user's account or machine.
+
+
+## Latest hosted regression — Run #180
+
+Run #180 (commit `1d64e841b10bf1a68bc3dba2484ff0bcfbd7d415`) passed: Windows Server 2022 **226 PASS / 0 FAIL / 0 SKIP**; Ubuntu 24.04 **220 PASS / 0 FAIL / 2 expected SKIP**. The 13-check launcher contract, PowerShell syntax, Windows start/stop smoke, Dashboard static/live checks, V8 validator and real Chromium API/runtime E2E all passed. Evidence: `06_EVIDENCE/W10_LOCAL_LAUNCHER_HTTP_CI_EVIDENCE_20261122_RUN180.md`.
