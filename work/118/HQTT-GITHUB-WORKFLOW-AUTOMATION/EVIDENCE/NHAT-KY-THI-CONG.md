@@ -2201,3 +2201,16 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - PR Run #972 / ID `45063628955`; validate job `137334883929`: COMPLETED / SUCCESS; raw log confirms **102 tests in 0.301s — OK**, `TEST_OUTCOME=success`, `SOURCE_BINDING_STATUS=NOT_RUN` (push-only). Artifact `14770312969`, size 685 bytes, not expired. Handoff-request, ACK-claim and review-observation jobs SKIPPED.
 - Both runs are W118 contract/unit CI only; they do not prove Core route mounting, Task source binding, cross-Work runtime or Runtime Auto E2E. This journal/status update creates a new HEAD and requires a new exact-head validation.
 - **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-23 13:00 +07:00; Result: exact-head 102-test push and PR CI passed for source-audit documentation snapshot; runtime blockers unchanged.
+
+
+### Entry 060 — W14 source parity and HostPort contract boundary
+
+- **Priority:** 02 — P0 — Establish exact owner-approved W14 source/hash and prevent false HostPort binding.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-23 13:00 +07:00 (audit session; minute-level timestamp not captured).
+- **Method:** Read-only GitHub Main path fetches for W14 portfolio-canonical `AUTONOMOUS-E2E-BUILDER/00_ROOT/DOC-001_W14_WORK_MANIFEST.md`, W14 journal, and candidate `execution_host/server.py` locations; exact paths returned NOT_FOUND. No Sandbox access or runtime probe.
+- **Main cross-reference:** Work17 portfolio reconciliation identifies the W14 canonical Sandbox Manifest path. Work17 GAP-01 Entry 039 records one-shot W14 POST `/execute` → W12ExecutionAdapter → RealExecutionHost.execute()/subprocess.run(), not W52 persistent bidirectional HostPort/RpcPort. Work17 GAP Register Entry 054 records W14 release branch snapshot `65992f04d6989e199d91355f0bd977cfc6258c4a` as DIVERGED 6/1,543; bridge blob `2f92e6ca3af7c897c4b5ff26a889e84e0844a823` sends caller `authorized:true` and lacks Assignment/Dispatch/Attempt/recipient-ACK binding; AUD-005 BLOCKED, candidate v5 NOT APPROVED, PC E2E NOT VERIFIED and release NOT AUTHORIZED at that audit snapshot.
+- **Limit:** These are bounded Main path results and historical Work17 records; they do not prove W14 Sandbox source absence or its current state. No Sandbox read was attempted.
+- **Decision:** W14 exact canonical source/hash parity NOT VERIFIED; do not bind W118 to a presumed W14 interface. One-shot process execution is not equivalent to persistent provider RPC. Caller-supplied `authorized:true` is not Core authorization. W118-TASK-015/TASK-019 remain BLOCKED for protected execution; no duplicate host/runner/session transport created.
+- **Disposition:** P1-118-02 BLOCKED; W118-TASK-014 BLOCKED; protected execution BLOCKED; Runtime Auto E2E NOT RUN; NOT ACCEPTED / NOT RELEASED.
+- **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-23 13:00 +07:00; Result: W14 path parity and HostPort distinction documented with bounded evidence; no external mutation.
