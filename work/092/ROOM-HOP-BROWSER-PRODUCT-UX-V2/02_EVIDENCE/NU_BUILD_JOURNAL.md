@@ -81,3 +81,15 @@ Branch `work092/one-shot-20261122`, code SHA `dcd75f0a39ca6a1e1b447f92793121c1fb
 - **Final branch-head observation before this journal/status sync:** `git ls-remote` returned `95e56a21f561df832f962c3262b4a96d610e7a2a` after a journal-only commit. That commit was outside the workflow path filter and did not trigger a run. The latest CI-verified SHA remains `f407c92…`, while the observed branch head at that point was `95e56a2…`.
 - **CI scope:** static pytest + Node only. This does not upgrade local `file://` Playwright evidence to Runtime/E2E and does not prove real agent or site isolation.
 - **Disposition:** branch remains unmerged; Work 092 remains **PARTIAL — NOT ACCEPTED**; Runtime BLOCKED; Xu independent review and Vinh's final decision remain outstanding.
+
+
+## Entry 018 — Xu independent review of Work 092 handoff
+- **Thời gian:** 2026-11-23 01:15 (+07:00).
+- **Actor:** Xu, read-only reviewer; không sửa source, không chạy service/test, không probe host/port, không gọi Runtime, không merge/release.
+- **Git:** branch `work092/one-shot-20261122` remote HEAD lúc review `ef81f139eaa7b4e6e892dab86e25a74282132361`; compare với main: ahead 9 / behind 0. Main vẫn `554f02e2e9ac9aedc43d875d7a212b35c94525e7`.
+- **Actions:** run `45001223713` SUCCESS, event push, exact CI head `f407c924a08c69074253ecde78f5199021542bd2`; job steps SUCCESS; artifact `14744994810` hiện diện, chưa expired. Workflow chỉ chạy static pytest + Node; không Playwright/server/Runtime.
+- **Lineage:** compare `f407c92…` → `ef81f13…` cho thấy hai commit sau CI chỉ sửa năm file hồ sơ/evidence, không sửa source/test/workflow. CI kết quả áp dụng cho cùng code snapshot ở branch HEAD; vẫn không tuyên bố có Actions run riêng tại HEAD `ef81f13…`.
+- **Review source:** `app.js`, `workflow.js`, `index.html`, `styles.css`, `server.py`, tests và workflow được đọc trực tiếp từ remote branch. Query dùng `escapeHtml`; client không khai báo fetch/XHR/WebSocket; điều hướng chỉ đổi local fixture; optional server loopback `127.0.0.1` + port `0`, không được start.
+- **Review evidence:** Git tree có PNG desktop/tablet/Android-like emulation. Các JSON/report ghi 33/33 file:// smoke, 70/70 automated accessibility/responsive, pytest 12/12, Node 18/18. Xu chưa tự chạy lại các test hoặc trực quan mở PNG trong lượt review này; không gọi đây là independent execution. Automated audit không phải WCAG certification.
+- **Acceptance:** T8 PASS chỉ trong phạm vi human-readable TEST_ONLY fixture actions. T6 PARTIAL; T17 PARTIAL. Direct Work Sandbox execution, server/backend isolation, physical Android, screen reader/assistive technology, Browser Runtime/real agent/site/API và Nu independent dispatch/ACK vẫn NOT RUN/BLOCKED.
+- **Kết luận:** **PARTIAL — NOT ACCEPTED; Runtime BLOCKED.** Tiến bộ UI-only được ghi nhận, nhưng chưa đủ căn cứ nghiệm thu toàn Work hoặc mở Runtime. Không merge main; Vinh giữ quyết định cuối.
