@@ -147,6 +147,9 @@ try {
 } catch {
     Stop-StartedProcess $dashboard
     Stop-StartedProcess $api
+    if (Test-Path -LiteralPath $sessionPath) { Remove-Item -LiteralPath $sessionPath -Force -ErrorAction SilentlyContinue }
+    $token = $null
+    [Array]::Clear($randomBytes, 0, $randomBytes.Length)
     $env:COMPUTER_AGENT_API_TOKEN = $null
     throw
 }
