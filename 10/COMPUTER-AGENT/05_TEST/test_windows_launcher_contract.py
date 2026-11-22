@@ -38,9 +38,12 @@ def main() -> None:
           and "refusing to stop it" in STOP)
     check("non-interactive mode suppresses clipboard and browser launch",
           "[switch]$NoClipboard" in START and "[switch]$NoOpenBrowser" in START)
+    check("launcher failure cleans up the session record and secret variables",
+          "Remove-Item -LiteralPath $sessionPath -Force" in START
+          and "$token = $null" in START)
     check("launcher exposes no generic shell or inline PowerShell command",
           "Invoke-Expression" not in START and "powershell.exe -Command" not in START)
-    print("Windows launcher contract: 11 checks passed")
+    print("Windows launcher contract: 12 checks passed")
 
 
 if __name__ == "__main__":
