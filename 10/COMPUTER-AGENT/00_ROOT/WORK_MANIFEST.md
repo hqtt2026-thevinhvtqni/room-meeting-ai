@@ -387,3 +387,11 @@ Current inventory: Sandbox 171 files; GitHub 79; shared 79; Sandbox-only 92; Git
 
 Co hardened the local launcher root configuration. Default read root is Work 10 only. Optional read roots must exist and cannot be a drive or network-share root. Writable and PowerShell roots must exist, be descendants of an allowed read root, and require separate explicit switches `-EnableWrite` / `-EnablePowerShell`. Session record stores configured roots and enabled booleans, never the bearer token. Test suite now 22 static launcher/acceptance checks. Latest change is synced to canonical branch; CI verification pending. Initial Owner acceptance remains read-only.
 
+
+
+## W10-ROOT-BOUNDARY-RUN230-20261122-01 — 2026-11-22 06:55 (UTC+07:00)
+
+Co | AI-07. Run #230 (ID `44967028038`) passed after root-scope hardening and addition of the one-command acceptance runner. Windows 235 PASS / 0 FAIL / 0 SKIP; Ubuntu 229 PASS / 0 FAIL / 2 expected SKIP. Launcher/acceptance contract 22 PASS per OS; PowerShell AST parses all three scripts; Windows local start/stop smoke PASS. Default read root Work10; drive/share roots rejected; write and PowerShell roots must be explicit descendants with separate switches. Evidence: `06_EVIDENCE/W10_ROOT_BOUNDARY_ACCEPTANCE_RUNNER_CI_20261122_RUN230.md`. The acceptance runner is not executed on hosted Windows Server because it requires Windows 10 client.
+
+Current inventory: Sandbox 172 files; GitHub 80; shared 80; Sandbox-only 92; GitHub-only 0.
+
