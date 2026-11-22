@@ -175,3 +175,15 @@ PR #68 is READY FOR REVIEW / OPEN / UNMERGED. Exact tested head `076a74d8f19e6ca
 - P1-118-01 OPEN / NEEDS CHANGES; P1-118-02 BLOCKED; W118-TASK-015 W14 dependency BLOCKED; Runtime Auto E2E NOT VERIFIED.
 - Entry 049 revalidated the duplicate Issue marker / Core `task.issue_id` binding gap and non-empty-string-only lease check at exact branch HEAD. No implementation change under freeze.
 - W118 ACTIVE — NOT ACCEPTED — NOT RELEASED. B-118-010 PREPARED / NOT APPLIED. No Main merge or release.
+
+
+## Authoritative readback — 2026-11-23 (Journal Entry 052)
+
+- Canonical candidate: PR #68, branch `work/118-auto-e2e-v2-clean`, source HEAD at audit start: `b2bf8f40999fc6342e3816d32cd3e58844b71591`; PR remains OPEN / UNMERGED.
+- Exact-head PR CI #892 (run ID `44995631702`) completed SUCCESS; validate job `137125955833`, raw log **95 tests — OK**. Artifact `14743329424`, SHA-256 `bd414206e88240fce8faa559540b0de7434b6c3bdc2724242ee60b45f5ce5d81`. Artifact payload was not independently downloaded/parsed.
+- CI classification: contract/unit validation only. Task-to-Issue push source-binding step was SKIPPED (`SOURCE_BINDING_STATUS=NOT_RUN`); `handoff-request-capture`, `ack-claim-capture`, and `review-observation-capture` jobs were SKIPPED. Runtime Auto E2E is NOT VERIFIED.
+- PR review readback: 0 formal reviews and 0 inline review threads. Xu independent review PENDING; Vinh product acceptance NOT ACCEPTED.
+- Main comparison: DIVERGED **76 ahead / 2 behind**, merge base `792bdd71e5345949e0c1f26ff9f95a8513dfa7d5`, Main `554f02e2e9ac9aedc43d875d7a212b35c94525e7`, 46 changed paths (all W118). No rebase, merge or force-push.
+- Technical gates unchanged: P1-118-01 OPEN / NEEDS CHANGES (duplicate Issue marker and persisted Core `task.issue_id` binding); P1-118-02 BLOCKED (Core-issued lease authenticity, Task binding, expiry/revocation); W14/W52 BLOCKED or NOT PROVEN (persistent bidirectional RPC, authenticated recipient ACK and ACK-before-side-effect); W70 Core authority/persistence NOT VERIFIED; W33 evidence ingress NOT VERIFIED; W102 fresh source baseline NOT VERIFIED.
+- Governance: implementation/workflow freeze remains. B-118-010 PREPARED / NOT APPLIED. No Core/W14 substitute, no branch-protection/secret mutation, no Main merge, no release, no self-acceptance.
+- **Disposition:** ACTIVE — NOT ACCEPTED — NOT RELEASED. This snapshot supersedes older CI #884/#888/#880 references for current status only; historical entries remain immutable evidence.
