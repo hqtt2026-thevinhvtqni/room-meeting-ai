@@ -57,6 +57,7 @@ The separate `PC_HOST_CAPABILITY_CONTRACT.md` adds host operations without chang
 | #105 | POSIX cleanup polling remediation | 206 PASS | 200 PASS + 2 SKIP | PASS |
 | #106 | POSIX cleanup three-cycle descendant stress | 206 PASS | 200 PASS + 2 SKIP | PASS; three-cycle test passed |
 | #135 | Live Dashboard/API health + consent smoke | 213 PASS | 207 PASS + 2 SKIP | PASS; 7 live UI assertions per OS |
+| #157 | Local launcher PowerShell syntax + start/stop smoke | 224 PASS | 218 PASS + 2 SKIP | PASS; Windows AST + API/Dashboard start/stop smoke |
 
 Evidence files:
 - `06_EVIDENCE/W10_API_PROCESS_E2E_EVIDENCE_20261122_RUN45.md`
@@ -67,6 +68,7 @@ Evidence files:
 - `06_EVIDENCE/W10_CROSS_PLATFORM_CI_EVIDENCE_20261122_RUN104.md`
 - `06_EVIDENCE/W10_POSIX_CLEANUP_REMEDIATION_CI_20261122_RUN99_105_106.md`
 - `06_EVIDENCE/W10_LIVE_DASHBOARD_API_EVIDENCE_20261122_RUN135.md`
+- `06_EVIDENCE/W10_LOCAL_LAUNCHER_CI_EVIDENCE_20261122_RUN157.md`
 
 Runs #52, #53, #69, #104, #105 and #106 each execute 16 V8 validator checks successfully on both OS runners. Run #53 tests the additional category catalog, policy ID/version/schema version and category outcome/lease/owner allow-list validation. Run #69 adds 17 Dashboard static assertions per OS. Run #104 verifies Work 10's standalone UI on port 3010. Runs #105/#106 remediate and stress-test the Linux limited process-group cleanup race first seen in Run #99.
 
@@ -126,7 +128,7 @@ This session has no direct local PowerShell/desktop executor, so these steps are
 
 - Canonical branch contains the current Work 10 source, test suite, core contracts, PC Host Capability Contract, operational Dashboard and current runbooks.
 - The 30 source/test/architecture/config files independently sampled in the current reconciliation pass were exact-match between Sandbox and GitHub after the updates; all three LOCKED contracts are exact-match.
-- Current inventory: Sandbox has 163 files under `COMPUTER-AGENT/`; GitHub branch has 71; 71 paths are shared and 92 are Sandbox-only; GitHub-only paths = 0. The 93 Sandbox-only files have explicit KEEP/SANDBOX-ONLY dispositions in `06_EVIDENCE/W10_FULL_PATH_INVENTORY_DISPOSITION_20261122.md`; they include historical/debug records, original/reference files, preview/sample data, generated evidence/lock files and Python caches. Do not bulk-copy caches, locks, preview samples or unreviewed debug packages into the canonical branch.
+- Current inventory: Sandbox has 167 files under `COMPUTER-AGENT/`; GitHub branch has 75; 75 paths are shared and 92 are Sandbox-only; GitHub-only paths = 0. The 93 Sandbox-only files have explicit KEEP/SANDBOX-ONLY dispositions in `06_EVIDENCE/W10_FULL_PATH_INVENTORY_DISPOSITION_20261122.md`; they include historical/debug records, original/reference files, preview/sample data, generated evidence/lock files and Python caches. Do not bulk-copy caches, locks, preview samples or unreviewed debug packages into the canonical branch.
 - No GitHub-only Work 10 file remains in the inventory snapshot.
 - Branch history is preserved; no force push, main merge, deployment or release was performed.
 
@@ -206,3 +208,16 @@ Run #135 (ID `44963956538`) adds a Playwright live smoke test that starts the Wo
 - Windows Server 2022: 213 PASS / 0 FAIL / 0 SKIP.
 - Evidence: `06_EVIDENCE/W10_LIVE_DASHBOARD_API_EVIDENCE_20261122_RUN135.md`.
 - Physical Windows 10 live Dashboard/API acceptance remains NOT RUN.
+
+
+## 15. Local Windows launcher verification — Run #157
+
+The Work 10 local operator launcher and shutdown scripts are now part of the canonical branch:
+- `05_TEST/START_WORK10_LOCAL.ps1` starts the API on loopback :8787 and standalone Dashboard on :3010, generates a per-session token, copies it to clipboard in interactive mode, leaves writes/PowerShell disabled, and writes a session record without the token.
+- `05_TEST/STOP_WORK10_LOCAL.ps1` refuses to stop during active execution and verifies process command line + start time before stopping only the recorded processes.
+- GitHub Windows Server 2022 CI parsed both PowerShell scripts and ran the noninteractive start/health/Dashboard HTTP/stop smoke successfully.
+- Windows launcher contract: 11 PASS on each OS runner.
+- Run #157 totals: Windows 224 PASS / 0 FAIL / 0 SKIP; Ubuntu 218 PASS / 0 FAIL / 2 expected SKIP.
+- Evidence: `06_EVIDENCE/W10_LOCAL_LAUNCHER_CI_EVIDENCE_20261122_RUN157.md`.
+
+The CI smoke intentionally used `-NoClipboard -NoOpenBrowser`; it does not replace Owner's physical Windows 10 user-session/clipboard/Chrome/ACL acceptance.
