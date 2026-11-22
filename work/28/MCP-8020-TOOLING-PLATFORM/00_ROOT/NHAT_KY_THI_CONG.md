@@ -2006,3 +2006,32 @@ The push-triggered workflow runs were queried after the merge commits and are no
 **STATUS:** CORE AUTHORITY SOURCE EXISTS / CI COMPONENT AND BOOT TESTS EXIST / CONTRACT APPROVAL AND LIVE DEPLOYMENT NOT VERIFIED / EXECUTION GATE CLOSED / RELEASE NOT_RELEASED.
 
 **Signature:** [KÝ: VI | CODER]
+
+
+## 2026-11-23 — JRN-W28-054 — Core authority contract/source consistency PR #73 integrated
+
+**Role:** Vi | CODER — implementation and integration owner  
+**PR:** #73 — https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/73  
+**Tested source SHA:** `f341a3f8bb67141b352d0c6647a214851483365d`  
+**Merge commit:** `7666c0c7de60583c77b466c1e08ea10a0a7d0cd7`  
+**Auto E2E run:** #395 / `45060135687` — SUCCESS  
+**Signature:** [KÝ: VI | CODER]
+
+### BUILD / VERIFY
+- Corrected the Core authority package docstring: source code is an implementation candidate, not self-approved.
+- Corrected the Core authority component test docstring: local component/HTTP tests prove only candidate behavior, not owner approval or production deployment.
+- Corrected the V1.2 architecture contract: the HTTP endpoint candidate exists in source, but no owner-approved/deployed endpoint has been verified. Updated Gate 2 and the explicit non-claims to reflect source reality without treating source presence as approval.
+- No grant behavior, endpoint semantics, credentials, Work registry, identity enrollment, MCP wiring, Runtime, or deployment changed.
+- PR #73 exact tested source SHA `f341a3f8bb67141b352d0c6647a214851483365d` passed all five Auto E2E jobs: unit/regression, Linux lifecycle, Windows lifecycle, immutable exact-SHA artifact retest and automatic gate report.
+- Exact artifacts: source `14769366587` / `sha256:4fccc0f499608d977736903825ccd0ae651eee6463fd9dffbcd9731c316dbd0c`; report `14769321707` / `sha256:609a87773f9e95ab3af83e4e2e9acb35b6e479c3897056a6d03eaa5b9927a517`.
+- PR #73 merged with expected head SHA; canonical branch advanced to `7666c0c7de60583c77b466c1e08ea10a0a7d0cd7`.
+
+### POST-MERGE / HANDOFF
+- PR #73 and its exact-head CI evidence were added to the owner handoff document.
+- Post-merge push workflow for `7666c0c...` had not yet appeared at the time of this entry; it must be checked before recording post-merge PASS.
+- Source/CI status is stronger and more accurate, but live Core authority deployment, trusted WorkContext, W28 identity enrollment, mapping and real MCP→W13 E2E remain unverified.
+- Execution Gate CLOSED; release NOT_RELEASED.
+
+**STATUS:** PR #73 MERGED / EXACT-HEAD AUTO E2E PASS / CORE CONTRACT PROVENANCE RECONCILED / LIVE DEPLOYMENT AND AUTHORITY STILL NOT VERIFIED.
+
+**Signature:** [KÝ: VI | CODER]
