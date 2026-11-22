@@ -140,3 +140,16 @@ Still requires evidence from the same identified deployment:
 **RELEASE: NOT_RELEASED**
 
 **[KÝ: VI | CODER]**
+
+## 9. Latest continuation checkpoint — read-only live evidence preparation
+
+- Latest canonical branch head at this checkpoint: `a97c73331fb118bc26d820529d99d2a29b86112e`.
+- Core authority consistency PR #73 is merged; its exact tested source SHA and merge commit passed both PR-head run #395 and post-merge push run #396, all five jobs.
+- Read-only PC collector:
+  - `06_EVIDENCE/PC_READONLY_LIVE_PROVENANCE_COLLECTOR_20261123.ps1` (latest commit `c5c223250c6fe8a9597af5d1fb9d3a367757ed6d`).
+  - Companion runbook: `06_EVIDENCE/PC_READONLY_LIVE_PROVENANCE_COLLECTOR_20261123.md`.
+  - It has been synchronized into Work 28 Sandbox and read back with exact text match. It has **not** been executed on the PC.
+- Latest journal entries JRN-W28-056 and JRN-W28-057 document the collector scope, safety boundary and portability correction.
+- No local PC command has been run by Vi. The user's dirty local checkout and active processes remain untouched.
+- **Next required live input:** the collector output only. Until it arrives, G0 deployed process/source identity and raw live tools/list remain NOT VERIFIED. No review queue is being awaited; this is missing deployment evidence and Core authority configuration/approval.
+
