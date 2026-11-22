@@ -1574,3 +1574,49 @@ PR #61 remains OPEN / UNMERGED. No deployment, Core mutation, listener restart o
 **SOURCE READBACK PASS / 54-vs-31-vs-13 REGISTRY SURFACES CONFIRMED / LOCAL 31-TOOL STDIO TEST SCOPE LIMITED TO LIST+SCHEMA / LIVE REGISTRY PARITY NOT VERIFIED / G1 NOT VERIFIED / NO CODE OR RUNTIME CHANGE.**
 
 **Signature:** [KÝ: XU | TEMPORARY WORK COORDINATOR]
+
+
+## 2026-11-22 14:55–15:05 UTC+07 — JRN-W28-043 — WP1 trace provider composition: hai server contract chưa có bằng chứng nối với nhau
+
+**Người thực hiện:** Xu — temporary Work 28 coordinator / technical execution owner  
+**Repository:** `hqtt2026-thevinhvtqni/room-meeting-ai`  
+**Canonical branch:** `work/28-mcp-tooling-platform`  
+**Phạm vi:** READ / TRACE / ANALYZE source-only; không sửa code, không khởi động listener, không gọi runtime.
+
+### READ — source và blob SHA
+| File | Blob SHA | Kết quả đọc |
+|---|---|---|
+| `04_CODE/mcp_tool_registration_v1.py` | `b9f306c9e4765117af517be578139faabe8bab01` | Đăng ký 13 required handlers từ RuntimeToolsV1, SandboxToolsV1, GitHubToolsV1; DiscoveryToolsV1 bổ sung tối đa 2 capability tools |
+| `04_CODE/mcp8020_unified_server_v1.py` | `65ab9cd41da231c97e5094cb6fab0a6b9c3c84cb` | Server factory độc lập đọc 31 ToolSpec từ unified registry và resolve handler qua sáu provider boundary |
+| `04_CODE/mcp8020_unified_registry_v1.py` | `b3b975c7ccc16d76595bdb6fa695a088639a4e2c` | 31 tool names, mỗi ToolSpec có boundary + handler + input schema |
+| `04_CODE/runtime_tools_v1.py` | `5bba7ffc83ad9f28a9a2e64566f713b56c09b0df` | RuntimeToolsV1 cung cấp execution_submit/status/output_read; Core call được inject |
+| `04_CODE/sandbox_tools_v1.py` | `6682a4812b199dc1d1384d5eee28866c9b7ba459` | SandboxToolsV1 cung cấp search/stat/read_range/write qua injected provider |
+| `04_CODE/github_tools_v1.py` | `c0a29e4a9f27144ed31e59bf4c535bad88506861` | GitHubToolsV1 cung cấp repository/read/search/create_branch/create_file/update_file |
+| `04_CODE/discovery_tools_v1.py` | `fc18ac1a3ef9d1b91024597423b7307f631fbcba` | DiscoveryToolsV1 cung cấp capability_discover và capability_check |
+
+### TRACE — phát hiện cụ thể
+1. Registration adapter v1 đăng ký trực tiếp 13 tên: `execution_submit`, `execution_status`, `execution_output_read`, `sandbox_search`, `sandbox_stat`, `sandbox_read_range`, `sandbox_write`, `github_repository`, `github_read_file`, `github_search_files`, `github_create_branch`, `github_create_file`, `github_update_file`. Discovery có thể thêm `capability_discover` và `capability_check`.
+2. Unified server factory không gọi `register_work28_tools()`; nó tạo server riêng, lấy 31 ToolSpec và resolve handler theo các provider boundary `core`, `sandbox`, `sandbox_extensions`, `proposals`, `github`, `runtime`. Thiếu bất kỳ handler nào thì fail-closed ngay khi tạo server.
+3. Hai cơ chế có interface provider khác nhau: adapter v1 dùng các class RuntimeToolsV1/SandboxToolsV1/GitHubToolsV1/DiscoveryToolsV1; factory 31-tool yêu cầu sáu provider object khác và method names được khai báo trong registry. Chưa tìm thấy trong các file đã đọc bằng chứng call-site khởi tạo hai cơ chế, adapter bridge, hoặc startup wiring nối chúng.
+4. Có khác biệt tên/schema có ý nghĩa, không chỉ khác số lượng: registration adapter gọi `sandbox_write` với signature provider của SandboxToolsV1; unified registry đồng thời có `sandbox_write` trong legacy set và `sandbox_write_verified` trong extension set; v54 catalog dùng các tên `room_*` và schema khác với legacy names như `get_room_context`/`list_meetings`. Không được suy ra chúng tương đương chỉ vì chức năng gần nhau.
+5. Các provider v1 hiện là lớp adapter nhận dependency qua constructor; sự tồn tại của class/method không chứng minh provider triển khai thật đã được inject hoặc server đang chạy. Factory 31-tool cũng chỉ là factory; docstring xác nhận nó không mở listener.
+6. PR #69 vừa được đọc lại: OPEN, DRAFT; GitHub hiện trả `mergeable=false`. Không merge. Trạng thái này không thay thế việc xác định nguyên nhân mergeable false; cần đọc metadata/checks/diff riêng trước khi kết luận conflict hay trạng thái khác.
+
+### ANALYZE / DECIDE
+- **PASS:** đã trace được hai composition pattern khác nhau và các provider class/method v1 trên source branch; blob SHA được ghi để tái lập.
+- **BLOCKED:** chưa xác định entrypoint/server factory nào được host/deployment sử dụng; chưa có call-site wiring, deployed process/build identity hoặc raw live tools/list. Do đó chưa thể xác nhận 13+2 hay 31 là registry runtime thực tế.
+- **NOT VERIFIED:** parity 54 ↔ 31 ↔ 13+2; handler/provider invocation thực tế; Core trusted context; deployed MCP identity.
+- Không chọn registry chuẩn, không đổi schema/tên tool, không gộp adapter, không kích hoạt factory/listener trong checkpoint này.
+- Giữ G1 NOT VERIFIED, Execution Gate CLOSED, PR #69 DRAFT/OPEN/UNMERGED, Work 28 NOT RELEASED.
+
+### NEXT — tháo gỡ có thứ tự
+1. Trace toàn repo các import/call-site của `register_work28_tools`, `create_work28_server`, `FastMCP`/MCP host startup; xác định entrypoint nào được workflow/deployment tham chiếu.
+2. Đối chiếu provider boundary và handler method của 31 ToolSpec với provider class thực tế; không dùng tên gần giống làm bằng chứng.
+3. Lập matrix theo từng tool: v54 name/schema/status ↔ v1 registry name/schema/boundary/handler ↔ adapter registration ↔ concrete provider method ↔ test assertion ↔ deployment call-site. Đánh dấu EXACT / RENAMED / SCHEMA_DRIFT / NO_HANDLER / DESIGN_ONLY / UNKNOWN.
+4. Chỉ sau matrix mới lập decision brief cho Ka; mọi đề xuất thay đổi registry phải có lựa chọn tương thích ngược và kế hoạch migration, không tự ý áp dụng.
+5. Đọc PR #69 metadata/checks/diff để xác định mergeable=false, nhưng giữ draft và không merge khi chưa có independent An QA + Ka security review.
+
+### STATUS
+**PROVIDER SOURCE TRACE PARTIAL PASS / TWO SERVER COMPOSITION PATTERNS IDENTIFIED / STARTUP CALL-SITE NOT FOUND IN FILES INSPECTED / REGISTRY PARITY NOT VERIFIED / G1 NOT VERIFIED / PR #69 DRAFT OPEN UNMERGED (mergeable=false) / EXECUTION GATE CLOSED / NOT RELEASED.**
+
+**Signature:** [KÝ: XU | TEMPORARY WORK COORDINATOR]
