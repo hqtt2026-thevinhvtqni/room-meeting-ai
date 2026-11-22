@@ -102,3 +102,8 @@ Run #135 passed a new Playwright live Dashboard/API smoke on hosted Ubuntu 24.04
 ## Local launcher verification — 2026-11-22
 
 Run #157 passed the Windows PowerShell AST syntax check and noninteractive local launcher smoke: API :8787 + Dashboard :3010 started, health reported Work ID 10, Dashboard returned HTTP 200, and STOP verified process identity before stopping the two session processes. Launcher safety contract: 11 PASS on both OSes. Full regression: Windows 224 PASS; Ubuntu 218 PASS + 2 expected SKIP. See `06_EVIDENCE/W10_LOCAL_LAUNCHER_CI_EVIDENCE_20261122_RUN157.md`. The CI smoke skips clipboard/default-browser opening; physical Windows 10 acceptance remains open.
+
+
+## Local start / stop
+
+On the Owner's Windows PC, after installing dependencies, run `./05_TEST/START_WORK10_LOCAL.ps1` to start the local Agent API and standalone Dashboard, then paste the per-session bearer token copied to clipboard into the Dashboard. Stop with `./05_TEST/STOP_WORK10_LOCAL.ps1`. The launcher leaves file writes and PowerShell disabled by default and does not bind shared port 3000.
