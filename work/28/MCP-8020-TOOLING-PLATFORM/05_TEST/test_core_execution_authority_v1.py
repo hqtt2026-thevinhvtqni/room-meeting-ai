@@ -1,16 +1,12 @@
-"""Tests for the Core execution authority (contract V1.2, Gate 2).
+"""Component and HTTP-boundary tests for the Core execution authority candidate.
 
-Locks the approved decision requests as testable proof obligations: DR-1
-service identity enrolled by Core, port-agnostic, wrong credential denied
-fail-closed; DR-2 grant token returned once, only its SHA-256 stored,
-server-side validation of rights/Work/expiry/token, secrets never in stored
-records or error paths; DR-3 append-only store persists across restart,
-refuses duplicate ids, exposes no mutation path, and run records verifiably
-link grant, source hash, exit status, output/evidence refs, handoff ids;
-DR-4 the HTTP mount answers with the stable error codes of the contract
-(401/403/404/409) and never echoes secrets. No test touches a real Core
-deployment; stores use temp directories and the HTTP boundary runs on an
-ephemeral local port with an in-test authority.
+These tests exercise proposed V1.2 proof obligations: DR-1 enrolled service
+identity and fail-closed authentication; DR-2 one-time grant token storage
+and server-side validation; DR-3 append-only persistence/restart recovery
+and run/evidence linkage; DR-4 HTTP boundary status codes and secret
+non-leakage. They use temporary stores and an in-test authority on an
+ephemeral local port. They do not establish owner approval, deployment,
+production identity enrollment, or live MCP/W13 integration.
 """
 from __future__ import annotations
 
