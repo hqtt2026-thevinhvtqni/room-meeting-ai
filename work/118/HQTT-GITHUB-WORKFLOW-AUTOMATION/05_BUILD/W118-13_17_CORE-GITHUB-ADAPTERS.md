@@ -91,3 +91,27 @@ Legacy duplicate tests/modules `task_lifecycle.py`, `webhook_inbox.py`, `event_r
 ## Ownership correction — 2026-11-22
 
 W14 is the sole product/delivery owner for the integrated execution, GitHub Gateway and CI path. W12/W13 are absorbed internal foundations only. W118 must consume W14's approved Work Authority/ExecutionHostBridge contract; W118-TASK-015 is BLOCKED until W14 source/runtime evidence is verified. No direct W12/W13 product integration or parallel host is allowed.
+
+
+## P1 remediation — Core Issue identity and lease validation boundary (2026-11-23)
+
+### P1-118-01 — implemented in the W118 adapter
+
+- The marker lookup scans every required Issue page (100/page) up to the configured bound, excludes Pull Requests, and collects all matching Task markers before any mutation.
+- Zero marker matches: create is allowed only when the Core projection has no persisted issue_id.
+- Exactly one marker match: if Core has issue_id, its integer must equal the matched GitHub Issue number before PATCH/readback; otherwise fail closed.
+- More than one marker match: raise IssueLookupDuplicate; no POST/PATCH.
+- A persisted Core issue_id with no matching marker Issue, or a different Issue number, is rejected; no replacement Issue is created.
+- Reaching the page ceiling while the final page is full raises IssueLookupIncomplete; no mutation is attempted because scan completeness is unproven.
+- Pull Requests carrying the marker are excluded from Issue identity matching.
+- Regression coverage includes zero/one/multiple matches, persisted-ID match/mismatch/not-found, cross-page scan and cross-page duplicate, PR exclusion, and incomplete pagination.
+
+### P1-118-02 — fail-closed integration port; authoritative validation remains BLOCKED
+
+GitHubIssueAdapter now accepts an optional lease_validator(lease_id, CoreTaskProjection) -> bool integration callback. No callback, false result, exception, or non-boolean success rejects the operation before any GitHub API request. W118 does not implement a local lease authority or infer validity from a non-empty string.
+
+This callback is only an adapter seam and unit-test injection point. It is not a Core API/schema, cryptographic verifier, or proof of authority. The test harness uses a deterministic stub solely to exercise adapter behavior. No production Core validator is supplied or enabled.
+
+Before production mirror writes can be enabled, the Core owner must publish and expose an authenticated validation contract that establishes: issuer/principal, Work and Task binding, permitted operation/resource scope, audience, expiry, revocation/current status, authentication/signature method, and concurrency/lease exclusivity semantics. W118 must then consume that owner-approved port and prove positive, negative, expired, revoked, wrong-Task, wrong-Work, wrong-audience and replay/concurrency cases against the real Core service. Until then P1-118-02 remains BLOCKED and live mirror writes are not authorized.
+
+No Core, W102, W14, W70 or W33 source/service was modified. No W118-local lock, database, queue, dispatcher or authority was introduced.
