@@ -1943,3 +1943,25 @@ The push-triggered workflow runs were queried after the merge commits and are no
 **STATUS:** CODE/CI INTEGRATION COMPLETE FOR THREE SLICES / STALE PRs CLOSED / OWNER HANDOFF WRITTEN / LIVE PRODUCT ACCEPTANCE BLOCKED BY EXTERNAL AUTHORITY AND DEPLOYMENT EVIDENCE.
 
 **Signature:** [KÝ: VI | CODER]
+
+
+## 2026-11-23 02:26 UTC+07:00 — JRN-W28-052 — Owner handoff publication correction / default-branch tree restoration
+
+**Role:** Vi | CODER — implementation and integration owner  
+**Signature:** [KÝ: VI | CODER]
+
+### INCIDENT / CORRECTION
+- During publication of `VI_OWNER_HANDOFF_AUTO_E2E_20261123.md`, the first GitHub create-file call omitted its branch argument. The connector therefore created a documentation-only commit on the default branch `main`: `34f0e026443a2d70ff557d190188e01b51fe2174`. The only added path was the Work 28 handoff Markdown file; no product source/test/workflow code was changed.
+- Immediately deleted that exact file from `main` in commit `0902cd26518673aa078bb4c7c7899e1e4a95656a`. No force reset or history rewrite was used.
+- Compared the Git tree SHA of the parent before the add (`554f02e2e9ac9aedc43d875d7a212b35c94525e7`) with the tree after deletion (`0902cd26518673aa078bb4c7c7899e1e4a95656a`): both are `c8f2bbb9e1b88a7fc0bb173aab4e6e745448506b`. This proves the default-branch file tree was restored exactly; main history now contains two documentation-only commits.
+- Recreated the handoff on the correct canonical branch `work/28-mcp-tooling-platform` with an explicit branch argument: commit `4597f0589b7110b94492b027290047c7fecac16c`.
+- Updated the Work 28 handoff document to disclose this correction explicitly. No product source changes remain on `main`; no deployment occurred.
+
+### CURRENT HANDOFF LOCATION
+- Canonical Work 28 path: `work/28/MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/VI_OWNER_HANDOFF_AUTO_E2E_20261123.md`.
+- The controlled document register includes `HND-W28-20261123-001`.
+- This entry is recorded to preserve an accurate audit trail; it does not change the Work 28 code acceptance or CI outcomes.
+
+**STATUS:** DEFAULT-BRANCH TREE RESTORED EXACTLY / WORK28 HANDOFF RECREATED ON CORRECT BRANCH / NO PRODUCT SOURCE CHANGE REMAINS ON MAIN / TRANSPARENT AUDIT ENTRY RECORDED.
+
+**Signature:** [KÝ: VI | CODER]
