@@ -2138,3 +2138,14 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - Updated TASK_REGISTER.json for W118-TASK-013 through W118-TASK-019: each task now references RA-118-002 addendum v1.3 and states that the matrix is planning evidence only, not owner authority or runtime PASS. Task statuses were not promoted; existing blockers and completion criteria remain.
 - Updated TASK_REGISTER updated_at to 2026-11-23T02:39:57+07:00. No external Work or runtime mutation.
 - This is a documentation/register-only change; exact-head PR CI required. The PR body will carry the final validation reference.
+### Entry 057 addendum — exact-head CI after Task Register traceability update
+
+- **Priority:** 01 — P0 — Exact-SHA validation of the Task Register and journal traceability update.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-23 02:39:57 +07:00.
+- Tested source SHA: fbfe021bccdbe3877bcc09cd5ae34b6da6e30aa8.
+- Push Run #949 / ID 45062241351; validate job 137330537196: SUCCESS; raw log confirms 102 tests in 0.148s; TEST_OUTCOME=success; SOURCE_BINDING_STATUS=UNBOUND_LEGACY_BRANCH. Artifact 14769875984, size 972 bytes, SHA-256 cdf9fda9f664e81761fba4bb90d6a2982c0a64d1ad846781987fdc5b0d19729d.
+- PR Run #950 / ID 45062244911; validate job 137330556969: SUCCESS; raw log confirms 102 tests in 0.171s; TEST_OUTCOME=success; SOURCE_BINDING_STATUS=NOT_RUN (push-only). Handoff, ACK and review-observation jobs SKIPPED. Artifact 14769449892, size 684 bytes, SHA-256 616850b93f03a0273907e60d1b18a2b78a2665779a787566dfd419beb6636daa.
+- Both runs are contract/unit CI only. No Core/W102/W14/W33/W70 runtime authority or Runtime Auto E2E is established. Push remains UNBOUND_LEGACY_BRANCH; PR source binding is NOT_RUN.
+- This addendum changes the branch HEAD; a fresh exact-head PR validation is required. The final run reference will be recorded in PR #68 without another source edit.
+- **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-23 02:39:57 +07:00; Result: 102-test exact-head contract CI passed on the preceding Task Register snapshot; runtime disposition unchanged.
