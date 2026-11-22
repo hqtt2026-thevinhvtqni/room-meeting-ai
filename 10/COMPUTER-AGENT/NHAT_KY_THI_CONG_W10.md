@@ -1570,3 +1570,12 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - Not yet executed on Owner PC; CI AST validation pending.
 - Inventory: Sandbox 171 files; GitHub 79; shared 79; Sandbox-only 92; GitHub-only 0.
 - **KÝ: Co | AI-07**
+
+
+## W10-LOCAL-HOST-ROOT-BOUNDARY-20261122-01 — 2026-11-22 06:54 (UTC+07:00)
+- Default read root restricted to Work 10 directory.
+- Optional read roots must exist; drive and network-share roots rejected.
+- Writable/PowerShell roots must be descendants of allowed read roots and require explicit separate switches.
+- Session record stores root configuration + enabled flags, never token.
+- Static launcher/acceptance contract suite now 22 checks; latest change pending CI.
+- **KÝ: Co | AI-07**
