@@ -43,8 +43,9 @@ Chạy trên branch checkout Work 092 trong Manus Sandbox bằng Chromium hệ t
 
 - Branch `work092/one-shot-20261122`, không merge.
 - Source/test commit `3de70ffb9d0883bb94d227428601dddcaf70d2e2`; remote ref was verified to match this SHA immediately after source push.
-- [Actions run 45000773196](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45000773196) — SUCCESS, `push`, exact head SHA above. Artifact `work092-ui-only-pytest-report`, ID `14745910744`, downloaded/parsed: pytest 12/12, 0 failure/error/skip; Actions log confirms Node 18/18. Workflow only runs static pytest + Node; no Playwright, `test_server.py` or Runtime.
-- A later evidence-only docs commit may advance branch head but does not inherit this run. No merge to `main`.
+- [Actions run 45000773196](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45000773196) — SUCCESS, `push`, exact source/test SHA above. Artifact ID `14745910744`: pytest 12/12, 0 failure/error/skip; job log Node 18/18.
+- Latest path-triggered run [45001223713](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45001223713) — SUCCESS at README/docs SHA `f407c924a08c69074253ecde78f5199021542bd2`; artifact ID `14744994810` (726 bytes): pytest 12/12, 0 failure/error/skip; Node 18/18.
+- Remote head observed before this final evidence-metadata sync was `95e56a21f561df832f962c3262b4a96d610e7a2a`, verified after a journal-only commit. This sync changes only canonical records/status JSON outside the workflow path filter; it has no new Actions run. Final post-sync branch head is reported in the handoff; latest CI-verified SHA remains `f407c92…`. Workflow only runs static pytest + Node, not Playwright, `test_server.py` or Runtime. No merge to `main`.
 
 Legacy `e2e-result.json`, `v2-e2e-result.json` and runtime log are archival; claims agent `Done`/`PASS` and fixed-port URL are not current evidence. T6/T8/T17 criteria deeper than the row-level minutes were not found in the Work tree; do not invent them.
 

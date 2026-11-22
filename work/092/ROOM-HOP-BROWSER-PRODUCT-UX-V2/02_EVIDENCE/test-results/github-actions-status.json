@@ -1,20 +1,15 @@
 {
   "work_id": "092",
-  "checked_at": "2026-11-22T15:02:04+07:00",
+  "checked_at": "2026-11-22T15:09:37+07:00",
   "repository": "hqtt2026-thevinhvtqni/room-meeting-ai",
   "branch": "work092/one-shot-20261122",
-  "remote_branch_head_after_source_push": "3de70ffb9d0883bb94d227428601dddcaf70d2e2",
-  "current_source_commit": "3de70ffb9d0883bb94d227428601dddcaf70d2e2",
-  "current_source_ci_status": "SUCCESS",
-  "workflow_name": "Work 092 tests",
-  "workflow_path": ".github/workflows/work092-pytest.yml",
-  "current_source_ci": {
+  "source_test_commit": "3de70ffb9d0883bb94d227428601dddcaf70d2e2",
+  "source_commit_ci": {
     "workflow_run_id": 45000773196,
     "event": "push",
-    "head_branch": "work092/one-shot-20261122",
     "head_sha": "3de70ffb9d0883bb94d227428601dddcaf70d2e2",
     "run_url": "https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45000773196",
-    "run_status": "completed",
+    "status": "completed",
     "conclusion": "success",
     "created_at_utc": "2026-11-22T08:00:32Z",
     "updated_at_utc": "2026-11-22T08:00:44Z",
@@ -27,16 +22,53 @@
       "artifact_id": 14745910744,
       "artifact_size_bytes": 731,
       "artifact_expired": false,
-      "verified_by": "Downloaded GitHub Actions artifact and parsed JUnit XML"
+      "verified_by": "Downloaded Actions artifact and parsed JUnit XML"
     },
     "node_tests": {
       "tests": 18,
       "passed": 18,
       "failed": 0,
       "skipped": 0,
-      "verified_by": "GitHub Actions job log"
+      "verified_by": "Actions job log"
+    }
+  },
+  "latest_path_triggered_ci": {
+    "workflow_run_id": 45001223713,
+    "event": "push",
+    "head_branch": "work092/one-shot-20261122",
+    "head_sha": "f407c924a08c69074253ecde78f5199021542bd2",
+    "run_url": "https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45001223713",
+    "workflow_name": "Work 092 tests",
+    "status": "completed",
+    "conclusion": "success",
+    "created_at_utc": "2026-11-22T08:06:09Z",
+    "updated_at_utc": "2026-11-22T08:06:20Z",
+    "pytest_junit": {
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "artifact_name": "work092-ui-only-pytest-report",
+      "artifact_id": 14744994810,
+      "artifact_size_bytes": 726,
+      "artifact_expired": false,
+      "verified_by": "Downloaded Actions artifact and parsed JUnit XML"
     },
-    "workflow_scope": "Static pytest and Node only; no Playwright, HTTP preview, server fixture or Browser Runtime."
+    "node_tests": {
+      "tests": 18,
+      "passed": 18,
+      "failed": 0,
+      "skipped": 0,
+      "verified_by": "Actions job log"
+    },
+    "scope": "Static pytest + Node only; README/docs-bearing SHA; no Playwright, server fixture, or Runtime."
+  },
+  "branch_head_observed_before_final_status_commit": {
+    "branch": "work092/one-shot-20261122",
+    "head_sha": "95e56a21f561df832f962c3262b4a96d610e7a2a",
+    "verified_by": "git ls-remote after journal-preservation push",
+    "commit_scope": "Journal-only evidence preservation commit; outside workflow path filter; no new run claimed at this SHA.",
+    "latest_ci_verified_sha": "f407c924a08c69074253ecde78f5199021542bd2"
   },
   "local_ui_only_checks_at_source_hash": {
     "source_sha": "3de70ffb9d0883bb94d227428601dddcaf70d2e2",
@@ -56,7 +88,7 @@
       "head_sha": "12f74b03e8397c5e366f932d40280cfc28e1d168",
       "conclusion": "success",
       "artifact_id": 14743304960,
-      "scope": "Historical; superseded for current source by run 45000773196."
+      "scope": "Historical; superseded for current source."
     },
     {
       "workflow_run_id": 44996828261,
@@ -72,6 +104,6 @@
       "scope": "Historical source snapshot only."
     }
   ],
-  "nonblocking_warning_history": "Prior runs reported runner action Node-version deprecation warnings; those were non-blocking. This record does not assert whether such a warning appeared in current run 45000773196.",
-  "scope_note": "Run 45000773196 certifies pytest and Node at source/test SHA 3de70ff. Local Playwright and accessibility checks are separate file:// UI evidence. No server, Browser Runtime, agent, API, website or Internet integration was used. T6 and T17 remain PARTIAL; Work 092 remains PARTIAL — NOT ACCEPTED. A later docs-only commit does not inherit this source CI result."
+  "workflow_scope": "Static pytest and Node only. Neither CI run executes Playwright, HTTP preview, tests/test_server.py, Browser Runtime, agent, API, website, or Internet integration.",
+  "scope_note": "Run 45000773196 verifies source/test SHA 3de70ff; run 45001223713 verifies path-triggered SHA f407c92. Local Playwright/a11y evidence is separate file:// UI evidence. The final status-only follow-up after the observed 95e56a2 head is outside the workflow filter and will be reported in the final task handoff. T6/T17 remain PARTIAL; Work 092 remains PARTIAL — NOT ACCEPTED."
 }

@@ -70,3 +70,14 @@ Branch `work092/one-shot-20261122`, code SHA `dcd75f0a39ca6a1e1b447f92793121c1fb
 - **Local source-matched checks:** Node syntax 2 files PASS; Node 18/18; pytest 12/12; file smoke 33/33; accessibility/responsive audit 70/70; 0 HTTP(S)/WebSocket requests, console errors or page errors; `git diff --check` PASS.
 - **Current evidence update:** Actions status JSON and manifest/minutes/acceptance/static-site/source README now record source SHA, run/artifact and limits. The following documentation update is a distinct commit and does not reuse this run's SHA.
 - **Disposition:** CI/source sync verified; **Work 092 remains PARTIAL — NOT ACCEPTED**, T6/T17 PARTIAL, Runtime BLOCKED. Xu independent review and Vinh final decision are outstanding.
+
+
+## Entry 017 — latest path-triggered Actions run and final branch-head chronology
+
+- **Thời gian:** 2026-11-22 15:06–15:08 (+07:00).
+- **README/docs commit:** `f407c924a08c69074253ecde78f5199021542bd2` updated the source README plus canonical records; because README is under the workflow's source path filter, it triggered a second run.
+- **Actions:** [run 45001223713](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45001223713), event `push`, exact head SHA `f407c924a08c69074253ecde78f5199021542bd2`, completed SUCCESS at 2026-11-22T08:06:20Z.
+- **Artifact:** `work092-ui-only-pytest-report`, ID `14744994810`, 726 bytes, not expired; downloaded JUnit parse: **12 tests, 0 failures/errors/skips**. Actions log: Node **18/18**, 0 failures/skips.
+- **Final branch-head observation before this journal/status sync:** `git ls-remote` returned `95e56a21f561df832f962c3262b4a96d610e7a2a` after a journal-only commit. That commit was outside the workflow path filter and did not trigger a run. The latest CI-verified SHA remains `f407c92…`, while the observed branch head at that point was `95e56a2…`.
+- **CI scope:** static pytest + Node only. This does not upgrade local `file://` Playwright evidence to Runtime/E2E and does not prove real agent or site isolation.
+- **Disposition:** branch remains unmerged; Work 092 remains **PARTIAL — NOT ACCEPTED**; Runtime BLOCKED; Xu independent review and Vinh's final decision remain outstanding.

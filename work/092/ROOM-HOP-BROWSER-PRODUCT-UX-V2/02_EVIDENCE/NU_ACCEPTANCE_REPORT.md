@@ -60,11 +60,11 @@ Android là Playwright emulation; **không phải thiết bị Android vật lý
 
 ## 8. GitHub commit / branch / CI
 
-Repository `hqtt2026-thevinhvtqni/room-meeting-ai`; feature branch `work092/one-shot-20261122`; no merge. Source/test commit: `3de70ffb9d0883bb94d227428601dddcaf70d2e2`. Remote ref was verified to match this SHA immediately after the source push.
+Repository `hqtt2026-thevinhvtqni/room-meeting-ai`; feature branch `work092/one-shot-20261122`; no merge. Source/test commit: `3de70ffb9d0883bb94d227428601dddcaf70d2e2`, remote-verified after push. [Actions run 45000773196](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45000773196) completed SUCCESS at this exact SHA; artifact ID `14745910744` (731 bytes), downloaded/parsed: pytest 12, 0 failures/errors/skips; Actions log Node 18/18.
 
-[Actions run 45000773196](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45000773196) completed **SUCCESS** on event `push`, exact matching head SHA. JUnit artifact name `work092-ui-only-pytest-report`, artifact ID `14745910744`, size 731 bytes, not expired; downloaded and parsed as 12 tests, 0 failures, 0 errors, 0 skipped. GitHub Actions log confirms Node **18/18**, 0 failed/skipped. Workflow only runs static pytest and Node tests; it does not run Playwright, `tests/test_server.py` or Runtime.
+The README/docs-bearing commit `f407c924a08c69074253ecde78f5199021542bd2` also matched a separate successful [Actions run 45001223713](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45001223713). Its JUnit artifact ID `14744994810` (726 bytes) was downloaded/parsed: pytest 12, 0 failures/errors/skips; Actions log confirms Node 18/18. This run covers the README path update; application source logic was unchanged from `3de70ff`.
 
-A subsequent evidence-only documentation commit may advance the remote branch head, but does not have this run attached to its SHA; the Actions evidence belongs specifically to source/test SHA `3de70ff…`.
+Remote head observed before this final evidence-metadata sync was `95e56a21f561df832f962c3262b4a96d610e7a2a`, independently verified after a journal-only evidence commit. This final sync changes only canonical records/status JSON, outside the workflow path filter, so no new Actions run is claimed for the resulting head; the final post-sync head is reported separately in the handoff. Latest CI-verified SHA is `f407c92…`. The workflow runs static pytest + Node only; no Playwright, `tests/test_server.py` or Runtime.
 
 ## 9. Evidence index
 
