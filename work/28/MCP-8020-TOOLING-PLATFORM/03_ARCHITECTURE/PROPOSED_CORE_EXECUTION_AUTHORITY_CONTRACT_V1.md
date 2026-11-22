@@ -1,7 +1,7 @@
 # PROPOSED Core Execution Authority Contract — V1.2 (DESIGN ONLY)
 
 * Work: W28 (MCP Tooling Platform)
-* Stage: **DESIGN / PROPOSED — NOT APPROVED, NOT IMPLEMENTED, NOT WIRED**
+* Stage: **DESIGN / PROPOSED — SOURCE IMPLEMENTATION CANDIDATE EXISTS; NOT APPROVED, NOT DEPLOYED, NOT WIRED**
 * History: V1 (241bdba) initial proposal; V1.1 (1936ad3) principles as
   invariants + decision requests; V1.2 (this revision) incorporates the
   architecture reviewer's (Xu) conditions on DR-2/DR-3/DR-4 and the amended
@@ -127,9 +127,9 @@ the Work rights. Both are required, in that order.
 ## 6. Gates before any wiring (in order; none may be skipped)
 
 1. This contract APPROVED (DR-1..DR-4 as revised in V1.2) by Vinh.
-2. Core-side implementation per the approved contract; no endpoint created
-   merely to make the staged adapter appear to work; DR-2/DR-3 proof
-   obligations hold in tests.
+2. Reconcile the existing Core-side implementation candidate against
+   the approved contract; confirm DR-2/DR-3 proof obligations in tests.
+   No endpoint may be treated as deployed merely because source exists.
 3. W13 Sandbox alignment verified at runtime (not by reading files):
    hardened source deployed and proven active.
 4. Security tests + E2E: live 401/403 probes, wrong-Work, expired-grant,
@@ -140,7 +140,10 @@ the Work rights. Both are required, in that order.
 
 ## 7. Explicitly NOT claimed
 
-* No endpoint exists. No code implements this. No test asserts it.
+* A candidate HTTP endpoint implementation exists in
+  `core/execution_authority/http_server.py`, with component and subprocess/
+  socket CI tests. No deployed/owner-approved endpoint has been verified;
+  these tests do not prove production Core or MCP/W13 integration.
 * Nothing here changes the v54 catalog: the seven execution tools remain
   NOT_IMPLEMENTED.
 * Xu's review comments are incorporated as proposed contract text; final
