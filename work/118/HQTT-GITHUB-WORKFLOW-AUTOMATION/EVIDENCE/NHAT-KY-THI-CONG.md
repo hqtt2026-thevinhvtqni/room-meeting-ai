@@ -2214,3 +2214,15 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - **Decision:** W14 exact canonical source/hash parity NOT VERIFIED; do not bind W118 to a presumed W14 interface. One-shot process execution is not equivalent to persistent provider RPC. Caller-supplied `authorized:true` is not Core authorization. W118-TASK-015/TASK-019 remain BLOCKED for protected execution; no duplicate host/runner/session transport created.
 - **Disposition:** P1-118-02 BLOCKED; W118-TASK-014 BLOCKED; protected execution BLOCKED; Runtime Auto E2E NOT RUN; NOT ACCEPTED / NOT RELEASED.
 - **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-23 13:00 +07:00; Result: W14 path parity and HostPort distinction documented with bounded evidence; no external mutation.
+
+
+### Entry 060 addendum — exact-head CI for W14 source parity audit
+
+- **Priority:** 02 — P0 — Verify W118 audit documentation at the exact tested revision.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-23 13:00 +07:00 (audit session; minute-level timestamp not captured).
+- Tested source SHA: `7e7741d7e13fe4704cbb3c3cee26b87eede5e492`.
+- Push Run #981 / ID `45064440917`; validate job PASS; raw log **102 tests in 0.210s — OK**, `TEST_OUTCOME=success`, `SOURCE_BINDING_STATUS=UNBOUND_LEGACY_BRANCH`. Artifact `14770807697`, size 973 bytes, SHA-256 `e5f80173b6374787546e5cdc49345eb3f156809074f8a1f1dc39acebc1d27f70`.
+- PR Run #982 / ID `45064445537`; validate job PASS; raw log **102 tests in 0.293s — OK**, `TEST_OUTCOME=success`, `SOURCE_BINDING_STATUS=NOT_RUN` (push-only). Artifact `14770707017`, size 685 bytes, SHA-256 `6607f34609c323fc3ca9474602341448ace2021ec38f95c183d7eac8cf4f5709`.
+- Handoff-request, ACK-claim and review-observation jobs SKIPPED on both runs. CI proves W118 contract/unit suite only, not W14 source parity, HostPort, Core authority, Task binding or Runtime Auto E2E.
+- **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-23 13:00 +07:00; Result: exact-head push/PR contract CI passed for W14 source audit snapshot; integration blockers unchanged.
