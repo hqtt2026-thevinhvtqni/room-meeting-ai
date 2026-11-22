@@ -1237,3 +1237,50 @@ PR #61 remains OPEN / UNMERGED. No deployment, Core mutation, listener restart o
 - **NO MERGE / NO RELEASE:** giữ nguyên.
 
 **Signature:** Ka / AI-02 — CSA / ROOM-WIDE GitHub + Sandbox Reconciliation Owner.
+
+
+## 2026-11-22 — JRN-W28-035 — Xu tiếp quản Work 28 và lập phương án tích hợp sạch WP2
+
+**Người thực hiện:** Xu — Coordinator / technical decision owner  
+**Authority:** Vinh (ủy quyền tạm thời tiếp quản, không yêu cầu Vinh thao tác PC hoặc giao việc AI trong giai đoạn này)  
+**Scope:** GitHub source-of-truth reconciliation, WP2 PR #61 recovery, CI evidence review and safe integration preparation.  
+**Repository:** `hqtt2026-thevinhvtqni/room-meeting-ai`  
+**Canonical branch:** `work/28-mcp-tooling-platform`  
+**Canonical journal source blob before append:** `f7a5d6b9ac76bdc6faa3573d92cd7471477e670a`
+
+### READ / TRACE — current verified state
+- Re-read WORK_MANIFEST, Master Execution Plan V2.0, Architecture Decision V2 and the canonical Work journal. Manifest confirms exactly four approved Work 28 AI roles (Xu, Vi, Ka, An); Co is excluded. Vinh has now temporarily delegated coordination and technical execution to Xu while unavailable.
+- Canonical branch HEAD at this checkpoint: `cc7dd01ec75e89bfec8c91010e0976589aef76dc`.
+- PR #61 current head: `46888f44b4913ed371c89cddd4ebce9a737a39e8`; code-bearing remediation source checkpoint: `1455283d99d647aae45462149bcf5f02372ee4ea`; PR base was originally `8301a7f8fb6a91689482710a9006e2cdbab709c4`.
+- GitHub compare against current canonical branch confirms PR #61 is DIVERGED: 24 commits ahead / 16 commits behind; mergeable=false; OPEN / UNMERGED. Do not merge or rewrite the shared feature branch.
+- PR #61 has 10 changed paths: workflow, execution_host/host.py, host_run.py, process_job.py, two test files, canonical journal and three evidence/handoff files. Source-level review confirms the patch adds service registry locking, fail-closed legacy Popen handling, structured spawn failure, POSIX UNKNOWN membership handling, abort evidence preservation and WP2 lifecycle regression tests.
+- Formal review state: An's CHANGES_REQUESTED review targets older head `d6cf0763870eb860fe630e890bc0190ef3de9335`; Ka's latest formal review is COMMENTED (not APPROVED) on current PR head `46888f44b4913ed371c89cddd4ebce9a737a39e8`. Ka observes source/test-level remediation of An's POSIX finding but explicitly keeps PR acceptance BLOCKED. No current An independent re-test approval was found.
+- GitHub Actions run `44892829201` on canonical source SHA `cc7dd01ec75e89bfec8c91010e0976589aef76dc`: jobs `execution-host-lifecycle-linux`, `execution-host-lifecycle-windows`, `unit-regression-tests`, `Build and retest exact-SHA Work 28 source artifact`, and `automatic-e2e-gate-report` all SUCCESS. This is evidence for canonical SHA `cc7dd01...`, not PR #61 remediation SHA `1455283...` or PR head `46888...`. The E2E report job's SUCCESS is not equivalent to live deployed MCP/Core E2E PASS; PR body still records live E2E BLOCKED.
+- PR #61 head `46888...` has no PR-triggered workflow run and zero commit statuses at this checkpoint. Do not transfer historical CI results to it.
+- Master Plan V2.0 still marks G1–G6 NOT VERIFIED and G7 CLOSED; Work remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+### ANALYZE
+- PR #61 contains valuable WP2 remediation, but merging it as-is would import a divergent history and outdated journal/evidence snapshots. Direct merge, rebase or force-push is not a safe autonomous action.
+- The canonical branch already has a verified CI baseline at `cc7dd...`; it is the correct base for an isolated integration candidate.
+- File-level transplant of only the six WP2 implementation/test/workflow files onto a fresh branch from the current canonical HEAD is safer and reviewable than merging the divergent PR history. Preserve the existing PR #61 and its branch as immutable historical evidence.
+- Xu cannot truthfully provide independent An QA or Ka approval while acting as sole active executor. Such gates must remain PENDING / NOT VERIFIED. Xu may perform additional source review and CI orchestration, clearly labeled as coordinator self-check, not independent approval.
+
+### DECIDE
+- Xu accepts temporary coordination and implementation control within the existing Work 28 scope.
+- Keep canonical branch protected from unreviewed product-source changes; prepare an isolated candidate branch from the latest canonical HEAD.
+- Do not merge/close PR #61, rebase or force-push its branch, alter main, deploy, mutate Core, restart listeners, or interact with the quarantined historical MCP :8020 listener.
+- Preserve Core :8000 as sole authorization authority, Build/Verification MCP :8030 as supported lane, and Execution Host :8031 as the only approved execution boundary.
+- No release or Execution Gate opening without required evidence and Vinh's authority where specified.
+
+### BUILD / NEXT ACTIONS
+1. Create isolated branch `xu/work28-wp2-integration-20261122` from the current canonical branch after this journal append.
+2. Transplant only these reviewed PR #61 paths: `execution_host/host.py`, `execution_host/host_run.py`, `execution_host/process_job.py`, `tests/test_process_job.py`, `tests/test_wp2_service_mapping_and_race.py`, `.github/workflows/work28-mcp-tooling.yml`. Do not copy the feature branch's stale journal or handoff files over canonical records.
+3. Read back every changed file and compare candidate to source. Inspect test assumptions and the Windows pre-execution Job Object containment path against the Master Plan before treating the candidate as ready.
+4. Open a new draft integration PR against `work/28-mcp-tooling-platform`; require exact-head Linux + Windows + full regression CI. Keep PR #61 open as historical remediation source until the candidate's results are understood.
+5. Continue source-level WP0–WP7 inventory after WP2 candidate CI; prioritize WP3 :8030 provenance and safe I/O, then clean Runtime MCP, Core authority and full E2E.
+6. Append a new journal checkpoint after each completed write/run/readback. Never mark PASS without exact run and evidence.
+
+### STATUS
+**XU TEMPORARY TAKEOVER ACKNOWLEDGED / CANONICAL BASELINE CI PASS ON SHA cc7dd01... / PR #61 SOURCE REMEDIATION OBSERVED BUT DIVERGED 24 AHEAD–16 BEHIND / PR #61 EXACT-HEAD CI NOT RUN / AN INDEPENDENT QA PENDING / KA APPROVAL NOT GRANTED / CLEAN WP2 INTEGRATION CANDIDATE TO BE PREPARED / EXECUTION GATE CLOSED / NOT RELEASED.**
+
+**Signature:** [KÝ: XU | TEMPORARY WORK COORDINATOR]
