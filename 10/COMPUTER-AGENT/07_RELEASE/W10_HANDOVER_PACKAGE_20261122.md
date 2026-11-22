@@ -252,3 +252,22 @@ The CI smoke intentionally used `-NoClipboard -NoOpenBrowser`; it does not repla
 ## 17. Latest canonical branch HEAD — Run #195
 
 Run #195 tested current branch HEAD `73b51f61b62d3b1664e8d9d0dd54e979eb5640b1` after the final Manifest/Journal/inventory sync. Both jobs succeeded: Windows 226 PASS / 0 FAIL / 0 SKIP; Ubuntu 220 PASS / 0 FAIL / 2 expected SKIP. Runtime source/tests were unchanged from Run #180; this confirms the latest documentation/evidence HEAD remains green. Evidence: `06_EVIDENCE/W10_GITHUB_ACTIONS_CI_EVIDENCE_20261122_RUN195.md`.
+
+
+## One-command physical Windows 10 acceptance runner — 2026-11-22
+
+`RUN_WORK10_ACCEPTANCE.ps1` is the single-command Owner PC acceptance runner. It requires Windows 10 client + Python 3.12, records OS/Python/Playwright/Chromium/Git identity, hashes accepted source/tests/contracts/schemas, parses the START/STOP scripts, performs the noninteractive launcher start/health/Dashboard/stop smoke, runs `run_all_tests.py` and `e2e_real_browser.py`, and writes a timestamped JSON report plus full logs under `06_EVIDENCE/`.
+
+Run from the Work 10 root:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
+./05_TEST/RUN_WORK10_ACCEPTANCE.ps1 -PythonPath ./.venv/Scripts/python.exe
+```
+
+Add `-InstallDependencies` if requirements/Chromium are not installed. The report stores only whether a production V8 HMAC key is configured, never the key value. It leaves `release_gate=OPEN`; passing local tests is not final Owner acceptance. It does not enable writes or PowerShell roots. Do not run it while the interactive START_WORK10_LOCAL session is active.
+
+
+## Acceptance runner contract extension — 2026-11-22
+
+The Windows launcher contract suite now contains 18 static assertions: 13 prior launcher/stop checks plus 5 checks for the one-command Owner acceptance runner. GitHub Windows CI PowerShell AST parsing now includes `RUN_WORK10_ACCEPTANCE.ps1`. The new runner is intended for the physical Windows 10 PC; hosted Windows Server 2022 CI parses its syntax but does not execute it because the runner enforces a Windows 10 client profile. Full CI verification of this latest change is pending.
