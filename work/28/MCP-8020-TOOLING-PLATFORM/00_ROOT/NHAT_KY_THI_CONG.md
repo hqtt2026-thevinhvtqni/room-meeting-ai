@@ -2067,3 +2067,36 @@ The push-triggered workflow runs were queried after the merge commits and are no
 **STATUS:** PR #73 POST-MERGE AUTO E2E PASS / 5 SANDBOX ARTIFACTS EXACTLY SYNCED / LIVE AUTHORITY AND RUNTIME ACCEPTANCE STILL BLOCKED.
 
 **Signature:** [KÝ: VI | CODER]
+
+
+## 2026-11-23 — JRN-W28-056 — Prepared read-only PC provenance collector for live acceptance
+
+**Role:** Vi | CODER — implementation and integration owner  
+**Collector:** `06_EVIDENCE/PC_READONLY_LIVE_PROVENANCE_COLLECTOR_20261123.ps1`  
+**Runbook:** `06_EVIDENCE/PC_READONLY_LIVE_PROVENANCE_COLLECTOR_20261123.md`  
+**Collector commit:** `5789bb6f545f45ae1392de2086a7520e5cd92833`  
+**Runbook commit:** `bdca4bcafbb010a7c39a036178e2be83237a9e7c`  
+**Handoff update:** `429a998ab91880d20dd2f5a910a32eec5ddda8c8`  
+**Signature:** [KÝ: VI | CODER]
+
+### PURPOSE
+The remaining acceptance gap requires evidence from the actual ROOM-HOP PC. ChatGPT's connected Build MCP tools expose Sandbox operations and context but do not provide the raw remote MCP wire-level tools/list or the PC process/module identity. No available connector action can safely substitute for those facts.
+
+### COLLECTOR SCOPE
+- Read-only Git branch/HEAD/dirty status.
+- Listener metadata only for ports 8000, 8001, 8030 and 8031; sanitized PID, executable, parent, creation time and parsed Python module name. Full command line and environment variables are never printed.
+- SHA-256 for the local source files that define the Core, MCP and Execution Host boundaries.
+- One MCP initialize handshake and one raw `tools/list` request to the historical candidate Build endpoint `https://admin-pc.tail7d6101.ts.net/build/mcp`, using the protocol version negotiation response.
+- No `tools/call`, no write operations, no listener restart, no environment change, no secret reads, and no contact with historical MCP :8020. No alternate endpoint fallback; endpoint failure remains BLOCKED.
+- Captured response digest is explicitly labelled UTF-8 body capture digest; it is not misrepresented as a packet-level wire hash or proof of loaded process memory.
+
+### HANDOFF
+- Added the PowerShell collector and companion runbook under Work 28 `06_EVIDENCE`.
+- Updated owner handoff with the exact run command and limited return artifacts.
+- The collector has **not been run on the PC**. No PC output, current listener, live endpoint or raw tools/list result is claimed.
+- Owner needs only to run the read-only script once and return `summary.txt`, `mcp_tools_list_raw.txt` if created, and the evidence timestamp. If the endpoint fails, return BLOCKED; do not start/restart a service.
+- Once returned, Vi can correlate PC process/module/source hashes with canonical GitHub, compare raw live tool names/schemas against the selected registry, and decide the next safe adapter/provider work.
+
+**STATUS:** READ-ONLY LIVE EVIDENCE COLLECTOR PREPARED / NOT YET EXECUTED ON PC / LIVE G0 AND DEPLOYMENT ACCEPTANCE REMAIN BLOCKED.
+
+**Signature:** [KÝ: VI | CODER]
