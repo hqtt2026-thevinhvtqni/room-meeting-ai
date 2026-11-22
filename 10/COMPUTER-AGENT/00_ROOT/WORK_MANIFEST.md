@@ -359,3 +359,17 @@ Latest hosted regression Run #180: Windows 226 PASS / 0 FAIL / 0 SKIP; Ubuntu 22
 
 After mirroring Run #180 evidence, current inventory: Sandbox 169 files; GitHub 77; shared 77; Sandbox-only 92; GitHub-only 0; one Sandbox-only `.github/` directory. All accepted source/test/architecture/config/launcher files are on the canonical branch.
 
+
+
+## W10-CANONICAL-HEAD-RUN195-20261122-01 — 2026-11-22 06:52 (UTC+07:00)
+
+Co | AI-07. Latest GitHub Actions Run #195 (ID `44965933111`) tested current branch HEAD `73b51f61b62d3b1664e8d9d0dd54e979eb5640b1` after final Manifest/Journal/inventory sync. Both matrix jobs SUCCESS: Windows 226 PASS / 0 FAIL / 0 SKIP; Ubuntu 220 PASS / 0 FAIL / 2 expected SKIP. Code unchanged from Run #180; this validates the latest docs/evidence HEAD. Evidence: `06_EVIDENCE/W10_GITHUB_ACTIONS_CI_EVIDENCE_20261122_RUN195.md`.
+
+
+
+## W10-RUN195-INVENTORY-UPDATE-20261122-01 — 2026-11-22 06:52 (UTC+07:00)
+
+Run #195 is the latest canonical branch HEAD verification and passed on both OSes: Windows 226 PASS / 0 FAIL / 0 SKIP; Ubuntu 220 PASS / 0 FAIL / 2 expected SKIP. Current branch HEAD at time of run: `73b51f61b62d3b1664e8d9d0dd54e979eb5640b1`. Evidence: `06_EVIDENCE/W10_GITHUB_ACTIONS_CI_EVIDENCE_20261122_RUN195.md`.
+
+Current inventory after adding Run #195 evidence: Sandbox 170 files; GitHub 78; shared 78; Sandbox-only 92; GitHub-only 0; one Sandbox-only `.github/` directory. All 92 Sandbox-only files have explicit KEEP dispositions.
+
