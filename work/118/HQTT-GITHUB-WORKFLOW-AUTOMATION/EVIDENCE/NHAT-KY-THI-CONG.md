@@ -1569,3 +1569,14 @@
 - **Independent review:** Formal PR reviews = 0; inline review threads = 0 at live readback. No Xu GitHub identity is verified or inferred. Xu independent review remains PENDING.
 - **Disposition:** PR merge-result contract/unit CI PASS (95/95); Task-to-Issue push source-binding NOT RUN; lifecycle capture jobs SKIPPED; runtime Auto E2E NOT VERIFIED; P1-118-01 OPEN / NEEDS CHANGES; P1-118-02 BLOCKED / OPEN; Xu review PENDING; Vinh acceptance NOT ACCEPTED. PR #68 OPEN / UNMERGED; W118 ACTIVE — NOT ACCEPTED — NOT RELEASED.
 - **Preservation / next step:** Maintain implementation freeze pending independent review and owner contracts. Continue read-only evidence reconciliation and status correction; request the authoritative Core/W37 owner to provide the approved lease contract, source pin, endpoint/schema and executable validity/expiry/revocation evidence before any adapter change. No Main merge, no B-118-010 application, no release. Vinh retains final product acceptance and release authority.
+
+
+## Entry 030 — CI lookup scope clarification for latest journal-only HEAD
+
+- **Priority:** 01 — P0 — Evidence precision / CI attribution.
+- **Name / Title:** Ka — CSA / Delegated Technical Lead, Work 118.
+- **Date-Time:** 2026-11-22 09:42 (UTC+07:00).
+- **Scope:** Clarify the evidentiary scope of the commit-to-workflow lookup referenced in Entry 029. Documentation-only; no implementation/workflow changes, no Main mutation, no merge, no B-118-010 application, no release.
+- **Finding:** The connected GitHub commit-workflow lookup explicitly returns only pull-request-triggered workflow runs and only its first page. Its empty result for journal-only commit `98068ca4ad2412517f107675f438c35da9e9417e` therefore means **no PR-triggered run was returned for that SHA by this lookup**. It is not an exhaustive assertion that no push, workflow_dispatch, or other event run exists.
+- **CI attribution retained:** Run #44961533097 remains verified as a PR-triggered run whose artifact metadata binds PR head SHA `872e0001ffed9a770b6fec9be62d39abf1f32f24`; runner checkout was synthetic merge commit `09a118ae927c2675323f83fa1964790c82fec6e1`; 95 contract/unit tests passed. It does not validate the later documentation-only commit `98068ca...` and does not prove runtime lifecycle E2E.
+- **Disposition:** All W118 acceptance blockers and freeze controls from Entry 029 remain unchanged. PR #68 OPEN / UNMERGED; ACTIVE — NOT ACCEPTED — NOT RELEASED.
