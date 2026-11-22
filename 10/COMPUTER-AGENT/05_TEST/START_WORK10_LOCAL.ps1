@@ -2,6 +2,11 @@
 param(
     [string]$WorkRoot = (Split-Path -Parent $PSScriptRoot),
     [string]$PythonPath = "",
+    [string[]]$AllowedRoots = @(),
+    [string[]]$WritableRoots = @(),
+    [string[]]$PowerShellRoots = @(),
+    [switch]$EnableWrite,
+    [switch]$EnablePowerShell,
     [switch]$InstallDependencies,
     [switch]$NoClipboard,
     [switch]$NoOpenBrowser
@@ -43,6 +48,43 @@ if (-not (Test-Path -LiteralPath $apiScript -PathType Leaf)) { throw "Missing Ag
 if (-not (Test-Path -LiteralPath $dashboardDir -PathType Container)) { throw "Missing Dashboard directory: $dashboardDir" }
 if (Test-Path -LiteralPath $sessionPath) { throw "A Work 10 local session record already exists. Run STOP_WORK10_LOCAL.ps1 first." }
 
+function Resolve-RootList([string[]]$Roots, [string]$Label) {
+    $resolved = @()
+    foreach ($root in $Roots) {
+        if ([string]::IsNullOrWhiteSpace($root) -or -not (Test-Path -LiteralPath $root -PathType Container)) {
+            throw "$Label root does not exist or is not a directory: $root"
+        }
+        $canonical = (Resolve-Path -LiteralPath $root).Path.TrimEnd([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar)
+        if ($resolved -notcontains $canonical) { $resolved += $canonical }
+    }
+    return ,$resolved
+}
+
+function Test-PathWithinRoots([string]$Candidate, [string[]]$Roots) {
+    foreach ($root in $Roots) {
+        if ($Candidate.Equals($root, [System.StringComparison]::OrdinalIgnoreCase)) { return $true }
+        $prefix = $root + [System.IO.Path]::DirectorySeparatorChar
+        if ($Candidate.StartsWith($prefix, [System.StringComparison]::OrdinalIgnoreCase)) { return $true }
+    }
+    return $false
+}
+
+if (-not $AllowedRoots -or $AllowedRoots.Count -eq 0) { $AllowedRoots = @($WorkRoot) }
+$resolvedAllowedRoots = Resolve-RootList -Roots $AllowedRoots -Label "Read"
+$resolvedWritableRoots = Resolve-RootList -Roots $WritableRoots -Label "Writable"
+$resolvedPowerShellRoots = Resolve-RootList -Roots $PowerShellRoots -Label "PowerShell"
+
+if ($resolvedWritableRoots.Count -gt 0 -and -not $EnableWrite) { throw "WritableRoots requires the explicit -EnableWrite switch." }
+if ($EnableWrite -and $resolvedWritableRoots.Count -eq 0) { throw "-EnableWrite requires at least one explicit WritableRoot." }
+if ($resolvedPowerShellRoots.Count -gt 0 -and -not $EnablePowerShell) { throw "PowerShellRoots requires the explicit -EnablePowerShell switch." }
+if ($EnablePowerShell -and $resolvedPowerShellRoots.Count -eq 0) { throw "-EnablePowerShell requires at least one explicit PowerShellRoot." }
+
+foreach ($root in $resolvedWritableRoots + $resolvedPowerShellRoots) {
+    if (-not (Test-PathWithinRoots -Candidate $root -Roots $resolvedAllowedRoots)) {
+        throw "Writable/PowerShell root must be inside one of the configured AllowedRoots: $root"
+    }
+}
+
 if ([string]::IsNullOrWhiteSpace($PythonPath)) {
     $pythonCommand = Get-Command python -ErrorAction Stop
     $PythonPath = $pythonCommand.Source
@@ -78,9 +120,9 @@ $env:COMPUTER_AGENT_API_TOKEN = $token
 $env:COMPUTER_AGENT_ALLOWED_ORIGINS = "http://127.0.0.1:3010"
 $env:COMPUTER_AGENT_WORK_ID = "10"
 $env:COMPUTER_AGENT_PORT = "8787"
-$env:COMPUTER_AGENT_HOST_ALLOWED_ROOTS = $WorkRoot
-$env:COMPUTER_AGENT_HOST_WRITABLE_ROOTS = ""
-$env:COMPUTER_AGENT_HOST_POWERSHELL_ROOTS = ""
+$env:COMPUTER_AGENT_HOST_ALLOWED_ROOTS = [string]::Join([System.IO.Path]::PathSeparator, $resolvedAllowedRoots)
+$env:COMPUTER_AGENT_HOST_WRITABLE_ROOTS = [string]::Join([System.IO.Path]::PathSeparator, $resolvedWritableRoots)
+$env:COMPUTER_AGENT_HOST_POWERSHELL_ROOTS = [string]::Join([System.IO.Path]::PathSeparator, $resolvedPowerShellRoots)
 
 $api = $null
 $dashboard = $null
@@ -125,6 +167,11 @@ try {
         dashboard_started_utc = $dashboardProcess.StartTime.ToUniversalTime().ToString("o")
         api_port = 8787
         dashboard_port = 3010
+        allowed_roots = $resolvedAllowedRoots
+        writable_roots = $resolvedWritableRoots
+        powershell_roots = $resolvedPowerShellRoots
+        write_enabled = [bool]$EnableWrite
+        powershell_enabled = [bool]$EnablePowerShell
         started_utc = [DateTime]::UtcNow.ToString("o")
     }
     $session | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath $sessionPath -Encoding UTF8
@@ -140,8 +187,11 @@ try {
     Write-Host "Work ID:   10"
     if (-not $NoClipboard) { Write-Host "Bearer token copied to clipboard; paste into the Dashboard password field." }
     else { Write-Host "Clipboard disabled for non-interactive smoke test." }
-    Write-Host "Writable roots: DISABLED"
-    Write-Host "PowerShell roots: DISABLED"
+    Write-Host "Allowed read roots: $($resolvedAllowedRoots -join '; ')"
+    Write-Host "Writable roots: $($resolvedWritableRoots -join '; ')"
+    Write-Host "PowerShell roots: $($resolvedPowerShellRoots -join '; ')"
+    if (-not $EnableWrite) { Write-Host "Write operation remains DISABLED." }
+    if (-not $EnablePowerShell) { Write-Host "PowerShell execution remains DISABLED." }
     Write-Host "Port 3000 is untouched and remains reserved for the shared ROOM-HOP Dashboard."
     Write-Host "Session record: $sessionPath"
     Write-Host "Stop with: .\STOP_WORK10_LOCAL.ps1"
