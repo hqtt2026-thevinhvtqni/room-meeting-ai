@@ -308,3 +308,46 @@ Work17 GAP-11 addendum Entry 044 independently records the same exact source dis
 - **Date-Time:** 2026-11-23 13:00 +07:00 (audit session; minute-level timestamp not captured)
 - **Result:** Exact W14 Main path checks returned NOT_FOUND; Work17 source trace distinguishes one-shot W14 process execution from persistent HostPort and records the release candidate's prior blocked state. No W14 or runtime mutation.
 - **Disposition:** W14 source parity NOT VERIFIED; protected execution BLOCKED; Runtime Auto E2E NOT RUN; W118 NOT ACCEPTED / NOT RELEASED.
+
+ 
+## Addendum v1.7 — W70 lifecycle/dispatch and W102 identity/Assignment readiness boundary
+
+- **Document ID:** RA-118-002 (controlled addendum v1.7)
+- **Priority:** 03 — P0 — Confirm W70/W102 authority contracts before any W118 integration claim.
+- **Read order:** 17
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-23 03:17 +07:00.
+
+### A. W70 source-backed governance and dispatch status
+
+Read-only GitHub Main indexed-source review identified:
+- W70 DOC-064 at `05_BUILD/03_ARCHITECT/DOC-064_KIEN-TRUC_DIEU-PHOI-GIAO-VIEC-AI_HYBRID-AI-DISPATCH-ARCHITECTURE.md` as **DRAFT — TARGET ARCHITECTURE / IMPLEMENTATION NOT AUTHORIZED**.
+- W70 DOC-065 at `05_BUILD/03_ARCHITECT/DOC-065_HOP-DONG_DIEU-PHOI-GIAO-VIEC-AI_HYBRID-DISPATCH-CONTRACT.md` as **DRAFT — CONTRACT PROPOSAL**.
+- W70 DOC-066 as **DRAFT / IMPLEMENTATION NOT AUTHORIZED / TESTS NOT RUN**.
+- W70 DOC-068 is referenced by W113 discovery evidence as recording that the design does not prove adapter/Core API/private-session dispatch and that MCP 8030 has no direct private-conversation dispatch tool.
+- W70 DOC-071 is registered as **SOURCE TRACE COMPLETE — READ-ONLY / CORE OWNER NOT IDENTIFIED / RUNTIME NOT VERIFIED**; DOC-072 is **DESIGN ONLY / NOT APPROVED / NOT IMPLEMENTED**.
+- W70 DOC-093 is a role-based Task Register marked DRAFT_NOT_APPROVED in W118's own Task Register model. Its structural similarity cannot be promoted into an approved W118 runtime contract.
+- W70 DOC-043 is the canonical controlled role/permission register per D70-024, but role mapping does not prove authenticated session principal, availability, capability, Assignment, or ACK.
+
+The exact DOC-064/065/068 files were not modified or treated as approved runtime contracts. The search excerpts and W70 document register provide governance status only; they do not prove a deployed API, persistence implementation or authenticated dispatch.
+
+### B. W102 identity/Assignment status
+
+W118's previous bounded inventory records W102 Sandbox artifacts (305 listed entries) and a GitHub candidate branch with substantial divergence; its README/DOC-066 state NOT PASS / Gate A BLOCKED / design-only-not-approved. The present read-only search did not establish an owner-approved canonical W102 source/ref, parity attestation, authenticated principal endpoint, live Assignment lifecycle API or recipient-bound ACK runtime. Artifact listing and role-map files are not identity proof.
+
+### C. W118 binding decision
+
+1. W70 may be consumed as a read-only lifecycle/evidence projection only after its exact approved source, schema and authenticated read contract are pinned. No W70 write or Evidence Register persistence contract is currently verified for W118.
+2. W70 Hybrid Dispatch DOC-064/065/066 remain proposals; no dispatch or ACK may be fabricated from those documents.
+3. W102 identity/Assignment/ACK integration remains **NOT VERIFIED**; W118-TASK-014 remains BLOCKED.
+4. W118-TASK-013 remains blocked on the Core Task read schema/port. W118-TASK-015/TASK-019 remain blocked on W14/Core execution authority. W118-TASK-016 and P1-118-02 remain blocked on the Core-owned Task-scoped Issue-mirror lease and authenticated validation endpoint.
+5. Do not bind to a guessed W70/W102 API, create local Task/Assignment/Agent registries, or write evidence directly around W33/W70 ownership.
+6. No external Work source, Sandbox, runtime, credential, permission, or branch protection was changed. No Runtime Auto E2E was run.
+
+### BIÊN BẢN — Addendum v1.7
+
+- **Name:** Ka / AI-02
+- **Title:** CSA / W118 Delegated Build Owner
+- **Date-Time:** 2026-11-23 03:17 +07:00
+- **Result:** W70 dispatch and W102 identity/Assignment readiness were bounded against indexed GitHub Main records; no approved live integration contract was established.
+- **Disposition:** W118 remains ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED; Runtime Auto E2E NOT RUN.
