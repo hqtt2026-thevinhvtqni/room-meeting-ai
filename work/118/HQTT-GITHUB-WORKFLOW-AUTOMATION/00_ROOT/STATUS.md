@@ -356,3 +356,10 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - PR #66 remains OPEN / UNMERGED as a historical pilot because an existing owner comment explicitly says to await Xu confirmation before closing. It is DIVERGED 8 ahead / 198 behind, mergeable=false. PR #67 CLOSED / UNMERGED; PR #68 is current implementation/review candidate.
 - P1-118-01 PASS at adapter-contract level only; P1-118-02 BLOCKED; cross-work runtime bindings BLOCKED / NOT VERIFIED; Runtime Auto E2E NOT RUN; Xu review PENDING; Vinh acceptance NOT ACCEPTED.
 - This is a documentation-only update. Exact-head CI must be re-run. No external Work mutation, PR #66 closure, Main merge, release or self-acceptance.
+## Core Execution Authority candidate cross-check — Entry 058 (2026-11-23)
+
+- Work32 DOC-118 records Xu-approved architecture for Core-owned execution authority. Its implementation candidate is in PR #52/#54, both OPEN / DRAFT / UNMERGED. Exact-head PR #52 Run #464 and PR #54 Run #570 failed the dedicated PC runner/release gate; #570 reached the correct ROOM-HOP-W32-PC runner but Core invalid-credential probe returned HTTP 404 instead of expected 401/403.
+- Work32 Grant binds Work/Task/Assignment/Agent/Host/source revision and pytest_run purpose. It is a protected execution Grant, NOT an Issue-mirror lock lease; it cannot clear W118 P1-118-02 or be wired into GitHub Issue POST/PATCH.
+- Work32 Grant is a candidate input for W118-TASK-015/TASK-019 only after owner approval, passing exact-head/security gates, deployed Core/Host and live proof. No binding performed.
+- Work28 PR #73 is documentation-only merge into Work28 branch; execution gate remains CLOSED and owner-approved deployment is not verified. Work1111 PR #48 remains draft, divergent and with known source-hash/Task-binding/atomicity findings.
+- RA-118-002 v1.4 and Entry 058 record exact refs. P1-118-02 BLOCKED; Runtime Auto E2E NOT RUN; no external Work mutation.
