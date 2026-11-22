@@ -5,6 +5,7 @@ from scripts.w118.core_task_adapter import normalize_core_task_snapshot, project
 from scripts.w118.github_issue_adapter import (
     GitHubIssueAdapter,
     GitHubIssueError,
+    IssueLookupDuplicate,
     IssueLookupIncomplete,
 )
 
@@ -29,7 +30,7 @@ FIELD_MAP = {
 }
 
 
-def core_task(title="Implement GitHub mirror", instruction="Mirror the canonical Core Task.", revision="core-rev-001"):
+def core_task(title="Implement GitHub mirror", instruction="Mirror the canonical Core Task.", revision="core-rev-001", issue_id=None):
     snapshot = {
         "identity": {
             "work_id": "W118",
@@ -48,7 +49,7 @@ def core_task(title="Implement GitHub mirror", instruction="Mirror the canonical
         "revision": revision,
         "acceptance": [{"id": "AC-1", "description": "Issue body reflects Core snapshot"}],
         "assignment": {"identity": "agent:verified-ka"},
-        "github": {"issue_id": None},
+        "github": {"issue_id": issue_id},
         "source": {"bindings": []},
     }
     return normalize_core_task_snapshot(snapshot, field_map=FIELD_MAP)
@@ -94,10 +95,13 @@ class FakeGitHub:
 class Work118GitHubIssueAdapterTests(unittest.TestCase):
     def setUp(self):
         self.fake = FakeGitHub()
-        self.adapter = GitHubIssueAdapter(self.fake, repository=REPOSITORY)
+        self.adapter = GitHubIssueAdapter(
+            self.fake, repository=REPOSITORY,
+            lease_validator=lambda lease_id, task: True,
+        )
 
-    def mirror(self, task=None):
-        return self.adapter.mirror_core_task(
+    def mirror(self, task=None, adapter=None):
+        return (adapter or self.adapter).mirror_core_task(
             task or core_task(), lock_lease_id="core-lock-lease-001"
         )
 
@@ -140,7 +144,10 @@ class Work118GitHubIssueAdapterTests(unittest.TestCase):
             "pull_request": {"url": "https://api.github.com/pulls/9"},
         }
         fake = FakeGitHub([pr])
-        adapter = GitHubIssueAdapter(fake, repository=REPOSITORY)
+        adapter = GitHubIssueAdapter(
+            fake, repository=REPOSITORY,
+            lease_validator=lambda lease_id, task: True,
+        )
         result = adapter.mirror_core_task(core_task(), lock_lease_id="core-lock-lease-002")
         self.assertEqual(result["action"], "CREATED")
         self.assertEqual(len(fake.issues), 2)
@@ -156,6 +163,78 @@ class Work118GitHubIssueAdapterTests(unittest.TestCase):
     def test_core_lock_lease_is_required_to_prevent_create_race(self):
         with self.assertRaises(GitHubIssueError):
             self.adapter.mirror_core_task(core_task(), lock_lease_id="")
+        self.assertEqual(self.fake.calls, [])
+
+    def test_duplicate_task_markers_fail_closed_without_post_or_patch(self):
+        marker = "<!-- room-hop-core-task:W118-TASK-016 -->"
+        issues = [
+            {"number": 11, "title": "First", "body": marker},
+            {"number": 12, "title": "Second", "body": marker},
+        ]
+        fake = FakeGitHub(issues)
+        adapter = GitHubIssueAdapter(
+            fake, repository=REPOSITORY,
+            lease_validator=lambda lease_id, task: True,
+        )
+        with self.assertRaises(IssueLookupDuplicate):
+            self.mirror(adapter=adapter)
+        self.assertFalse(any(method in ("POST", "PATCH") for method, _, _ in fake.calls))
+
+    def test_persisted_core_issue_id_must_match_unique_marker_issue(self):
+        marker = "<!-- room-hop-core-task:W118-TASK-016 -->"
+        issue = {"number": 17, "title": "Existing", "body": marker}
+        fake = FakeGitHub([issue])
+        adapter = GitHubIssueAdapter(
+            fake, repository=REPOSITORY,
+            lease_validator=lambda lease_id, task: True,
+        )
+        with self.assertRaisesRegex(GitHubIssueError, "does not match Core"):
+            self.mirror(task=core_task(issue_id=18), adapter=adapter)
+        self.assertFalse(any(method in ("POST", "PATCH") for method, _, _ in fake.calls))
+
+    def test_persisted_core_issue_id_with_no_marker_issue_never_creates(self):
+        fake = FakeGitHub([])
+        adapter = GitHubIssueAdapter(
+            fake, repository=REPOSITORY,
+            lease_validator=lambda lease_id, task: True,
+        )
+        with self.assertRaisesRegex(GitHubIssueError, "persisted issue_id"):
+            self.mirror(task=core_task(issue_id=19), adapter=adapter)
+        self.assertFalse(any(method in ("POST", "PATCH") for method, _, _ in fake.calls))
+
+    def test_matching_persisted_core_issue_id_is_the_only_accepted_issue(self):
+        marker = "<!-- room-hop-core-task:W118-TASK-016 -->"
+        issue = {"number": 23, "title": "Existing", "body": marker}
+        fake = FakeGitHub([issue])
+        adapter = GitHubIssueAdapter(
+            fake, repository=REPOSITORY,
+            lease_validator=lambda lease_id, task: True,
+        )
+        result = self.mirror(task=core_task(issue_id=23), adapter=adapter)
+        self.assertEqual(result["issue_id"], 23)
+        self.assertEqual(result["action"], "UPDATED")
+        self.assertFalse(any(method == "POST" for method, _, _ in fake.calls))
+
+    def test_lease_validation_is_mandatory_and_fail_closed(self):
+        no_validator = GitHubIssueAdapter(self.fake, repository=REPOSITORY)
+        with self.assertRaisesRegex(GitHubIssueError, "validator is not configured"):
+            self.mirror(adapter=no_validator)
+        rejecting = GitHubIssueAdapter(
+            self.fake, repository=REPOSITORY,
+            lease_validator=lambda lease_id, task: False,
+        )
+        with self.assertRaisesRegex(GitHubIssueError, "not authoritatively validated"):
+            self.mirror(adapter=rejecting)
+        self.assertEqual(self.fake.calls, [])
+
+    def test_lease_validator_exception_fails_closed_before_github_api(self):
+        def unavailable(lease_id, task):
+            raise RuntimeError("Core authority unavailable")
+        adapter = GitHubIssueAdapter(
+            self.fake, repository=REPOSITORY, lease_validator=unavailable,
+        )
+        with self.assertRaisesRegex(GitHubIssueError, "validation failed"):
+            self.mirror(adapter=adapter)
         self.assertEqual(self.fake.calls, [])
 
     def test_invalid_core_projection_is_rejected_before_api_call(self):
