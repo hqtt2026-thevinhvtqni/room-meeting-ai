@@ -226,3 +226,8 @@ P1-118-01 adapter remediation is implemented: complete bounded marker scan, dupl
 Exact code/test head cb4bbc0662650051d538a4dcc6e7692176e5a865 passed PR Run #906 / 45057857222: 102 tests / 0.218s. SOURCE_BINDING_STATUS=NOT_RUN; handoff/ACK/review-observation jobs SKIPPED; Runtime Auto E2E NOT RUN. Artifact 14767952983; uploaded ZIP SHA-256 da8fc14e2d3cd8a3b8003967de88a5620645f6a97ade50bed4fc2d66987f5d8a; payload not independently parsed.
 
 Core/W102/W14/W70/W33 runtime integration remains blocked or not verified. Architecture ownership remains TD-118-012 v1.3. W118 has not modified external Work sources, secrets, permissions or branch protection. B-118-010 NOT APPLIED. No Main merge or release; PR #68 remains OPEN / UNMERGED. See canonical Journal Entry 055 and the adapter implementation/test matrix for detailed evidence and limitations.
+
+
+## Cross-Work dependency audit — 2026-11-23
+
+Main snapshot checked: 0902cd26518673aa078bb4c7c7899e1e4a95656a. W70 DOC-071 records Core Work/WP/Assignment persistence and Work Evidence Registry as NOT VERIFIED in inspected scope; DOC-072 is design-only/not approved; W70 Evidence Register remains schema v1.1 with additionalProperties=false. W112 DOC-001 remains DRAFT/not approved and leaves transport, Assignment/ACK API, evidence store, lease provider and cross-Work auth unverified. W17's source-trace records describe W14 one-shot /execute versus W52 persistent HostPort/RpcPort incompatibility, W13 caller-supplied authorization, and W33 CLI-first/no HTTP ingress; these are dated records, not fresh runtime attestations. W102 runtime identity/Assignment API remains NOT VERIFIED. No external Work files/services were modified. See Journal Entry 055 addendum for exact source blob references and limits.

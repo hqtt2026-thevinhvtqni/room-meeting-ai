@@ -322,3 +322,8 @@ W118 ACTIVE — NOT ACCEPTED — NOT RELEASED. Runtime Auto E2E NOT VERIFIED; Xu
 - Core Task/Event ports, W102 identity/Assignment/ACK, W14 execution/GitHub/CI path, W70 evidence schema/owner approval, W33 ingress and full Runtime Auto E2E remain NOT VERIFIED/BLOCKED.
 - Architecture ownership preserved; no duplicate runtime services; no external Work mutation. B-118-010 NOT APPLIED. No Main merge, release or self-acceptance.
 - Current product disposition remains ACTIVE — NEEDS CHANGES / BLOCKED — NOT ACCEPTED — NOT RELEASED. Xu independent review and Vinh acceptance are outstanding.
+
+
+## Cross-Work dependency revalidation — 2026-11-23
+
+Main source snapshot: 0902cd26518673aa078bb4c7c7899e1e4a95656a. W70 DOC-071/DOC-072 and schema v1.1 were read; W112 DOC-001 and W17 GAP/technical-options records were read. Core Work persistence/lease authority and W70 Evidence Registry integration remain NOT VERIFIED; W112 is DRAFT/not runtime-approved; W14/W52 HostPort binding and W33 authenticated evidence ingress remain NOT PROVEN; W102 runtime identity/Assignment port NOT VERIFIED. W118 does not mutate or replace external Work components. Full cross-Work chain and Runtime Auto E2E remain BLOCKED / NOT RUN. Exact references and scope limits are recorded in Journal Entry 055 addendum.
