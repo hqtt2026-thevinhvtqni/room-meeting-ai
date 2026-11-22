@@ -1527,3 +1527,22 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - Run #175: Windows 225 PASS / 0 FAIL / 0 SKIP; Ubuntu 219 PASS / 0 FAIL / 2 SKIP; HTTP API 52 PASS each OS.
 - Evidence: `06_EVIDENCE/W10_HTTP_OVERSIZE_TEST_REMEDIATION_RUN169_175.md`.
 - **KÝ: Co | AI-07**
+
+
+## W10-FINAL-LAUNCHER-HTTP-RUN180-20261122-01 — 2026-11-22 06:50 (UTC+07:00)
+- Run #180 / ID `44965583364`, commit `1d64e841b10bf1a68bc3dba2484ff0bcfbd7d415`.
+- Windows 226 PASS / 0 FAIL / 0 SKIP; Ubuntu 220 PASS / 0 FAIL / 2 SKIP.
+- PowerShell AST + Windows local launcher smoke PASS; launcher contract 13 PASS per OS.
+- Dashboard static 17 PASS, Dashboard live 7 PASS, V8 validator 16 PASS, real Chromium API/runtime E2E PASS.
+- API token is cleared from parent environment before Dashboard server starts; startup failure cleanup removes session record.
+- HTTP oversized Content-Length test returns 413 on both OSes; API runtime limit unchanged.
+- Evidence: `06_EVIDENCE/W10_LOCAL_LAUNCHER_HTTP_CI_EVIDENCE_20261122_RUN180.md`.
+- Physical Windows 10 acceptance remains NOT RUN.
+- **KÝ: Co | AI-07**
+
+
+## W10-RUN180-INVENTORY-UPDATE-20261122-01 — 2026-11-22 06:51 (UTC+07:00)
+- Run #180: Windows 226 PASS / 0 FAIL / 0 SKIP; Ubuntu 220 PASS / 0 FAIL / 2 SKIP.
+- PowerShell AST + local launcher start/stop smoke PASS; launcher 13 PASS; Dashboard static/live, V8 validator and Chromium E2E PASS.
+- Inventory: Sandbox 169 files; GitHub 77; shared 77; Sandbox-only 92; GitHub-only 0; one Sandbox-only `.github/` directory.
+- **KÝ: Co | AI-07**
