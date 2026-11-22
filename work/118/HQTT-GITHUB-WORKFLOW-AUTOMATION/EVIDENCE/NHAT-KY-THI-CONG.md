@@ -2174,3 +2174,18 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - W118-TASK-014 therefore remains BLOCKED / NOT VERIFIED pending Core/W102 canonical Assignment/Task authority or explicit owner attestation that the policy list is authoritative and version/revocation semantics plus positive/negative runtime traces. W118-TASK-019 remains blocked. P1-118-02 remains separately blocked for Issue mirror lock lease.
 - RA-118-002 v1.4 clarification records this. No Work32 source/runtime/config/secret changed.
 - This documentation update requires exact-head W118 CI.
+
+### Entry 059 — Main Core authority mount contradiction (Work17 GAP-11 cross-check)
+
+- **Priority:** 01 — P0 — Verify that the Core execution-grant route documented for W118 is actually mounted in the canonical Main composition.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-23 13:00 +07:00 (audit session; minute-level timestamp not captured).
+- **Main snapshot:** 0902cd26518673aa078bb4c7c7899e1e4a95656a.
+- **Exact source:** `room_hop_mcp/core_http_main.py` blob 8dd6bb5ea500026d932ca52eb6079c980d722ab0 has a docstring claiming an authority mount, but `build_app()` returns only `create_http_app(service)` and imports no authority router.
+- **HTTP adapter:** `room_hop_mcp/adapter/http_server.py` blob 54cb3ecbce2e6b13083f31c14f0c1f0738f1457d exposes identity and Meeting routes only; no execution-grant route/mount was found in the complete fetched file.
+- **Contradictory deployment guide:** `CORE_EXECUTION_AUTHORITY_V1_2_DEPLOYMENT.md` blob ce130f1f9a95daeaafff75ef37eacd4dffc797e2 claims the same entrypoint mounts execution-grant routes. Main test search result expects POST /works/W28/execution-grants to return 503 when unconfigured, but this expectation is not proof of route registration. Test NOT RUN.
+- **Independent cross-check:** Work17 GAP-11 Entry 044 records the same source-level discrepancy. Work32 PR #54 exact-head Run #570 invalid-credential probe returned 404, not expected 401/403; PR remains draft/unmerged. These are not live proof of an approved deployed route.
+- **Decision:** Main authority route is NOT MOUNTED IN INSPECTED MAIN COMPOSITION; live status NOT VERIFIED. W118 P1-118-02 remains BLOCKED for a separate Task-scoped Issue-mirror lease; Work32 pytest_run Grant cannot authorize Issue POST/PATCH. W118-TASK-014 and protected execution tasks remain BLOCKED pending canonical owner contracts and live evidence.
+- **Scope:** Read-only GitHub source audit only. No test/runtime/API call, credential, config, branch or source change outside W118. No local authority/lease/host was created.
+- **Disposition:** ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED; Runtime Auto E2E NOT RUN.
+- **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-23 13:00 +07:00; Result: exact Main source/doc contradiction recorded with bounded claims; no external mutation.
