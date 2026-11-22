@@ -53,7 +53,7 @@ def main() -> None:
           "START_WORK10_LOCAL.ps1" in ACCEPTANCE and "STOP_WORK10_LOCAL.ps1" in ACCEPTANCE
           and "05_TEST/run_all_tests.py" in ACCEPTANCE and "05_TEST/e2e_real_browser.py" in ACCEPTANCE)
     check("acceptance report captures source hashes and never writes secret values",
-          "Get-FileHash" in ACCEPTANCE and "production_v8_key_configured" in ACCEPTANCE
+          "Get-FileHash" in ACCEPTANCE and "production_v8_hmac_env_present" in ACCEPTANCE and "production_v8_trust_validation = \"NOT_RUN\"" in ACCEPTANCE
           and "COMPUTER_AGENT_API_TOKEN =" not in ACCEPTANCE)
     check("acceptance report keeps release gate open after local test success",
           'release_gate = "OPEN"' in ACCEPTANCE and "HOST_TESTS_PASS" in ACCEPTANCE)
