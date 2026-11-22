@@ -108,3 +108,8 @@ Their acceptance criteria remain useful, but their candidate references and snap
 - Implementation/workflow freeze remains. B-118-010 PREPARED / NOT APPLIED. No local substitute authority, Main merge or release.
 
 This overlay updates current routing metadata only. It does not replace the XR checklist, release gate, handoff criteria or Xu's independent decision.
+
+
+## Exact-head CI confirmation — 2026-11-23 (Journal Entry 053)
+
+PR #68 final documentation-only HEAD `c58513a27984a2c908c3013462dbf47b96f862da` passed Run #894 (`45053982261`), validate job `137305087056`: **95 tests in 0.161s — OK**. Artifact `14766304891`, size 684 bytes, uploaded ZIP SHA-256 `758381c9e528cedfb9a336b0eef567849b9dde744c2ca6f8d1b028cff4997cdd`; payload not independently parsed. `SOURCE_BINDING_STATUS=NOT_RUN`; handoff/ACK/review-observation jobs SKIPPED. Contract/unit CI only; Runtime Auto E2E NOT VERIFIED. PR OPEN / UNMERGED; 0 formal reviews / 0 inline threads; Xu review PENDING; Vinh acceptance NOT ACCEPTED. See journal Entry 053. Existing freeze and all non-waivable gates remain.
