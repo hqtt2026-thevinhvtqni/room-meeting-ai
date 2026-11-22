@@ -1,6 +1,7 @@
 """WP18 — Core grant fetch boundary (fail-closed).
 
-When ROOM_HOP_CORE_GRANT_URL is unset, falls back to file registry.
+Core is the only runtime grant authority. FileGrantSource is an explicit
+offline/test adapter and is never selected automatically.
 Client body never supplies grants.
 """
 from __future__ import annotations
@@ -77,9 +78,9 @@ class HttpCoreGrantSource:
 def build_grant_source(environ=None) -> CoreGrantSource:
     env = os.environ if environ is None else environ
     url = env.get(CORE_GRANT_URL_ENV)
-    if url:
-        return HttpCoreGrantSource(url, token=env.get(CORE_GRANT_TOKEN_ENV))
-    return FileGrantSource()
+    if not isinstance(url, str) or not url.strip():
+        raise GrantError("core_grant_url_required")
+    return HttpCoreGrantSource(url.strip(), token=env.get(CORE_GRANT_TOKEN_ENV))
 
 
 __all__ = [
