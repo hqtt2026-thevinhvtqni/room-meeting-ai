@@ -142,7 +142,7 @@ This ChatGPT session has no direct local PowerShell/desktop executor; the physic
 
 - Canonical branch contains the current Work 10 source, test suite, core contracts, PC Host Capability Contract, operational Dashboard and current runbooks.
 - The 30 source/test/architecture/config files independently sampled in the current reconciliation pass were exact-match between Sandbox and GitHub after the updates; all three LOCKED contracts are exact-match.
-- Current inventory: Sandbox has 171 files under `COMPUTER-AGENT/`; GitHub branch has 79; 79 paths are shared and 92 are Sandbox-only; GitHub-only paths = 0. The 93 Sandbox-only files have explicit KEEP/SANDBOX-ONLY dispositions in `06_EVIDENCE/W10_FULL_PATH_INVENTORY_DISPOSITION_20261122.md`; they include historical/debug records, original/reference files, preview/sample data, generated evidence/lock files and Python caches. Do not bulk-copy caches, locks, preview samples or unreviewed debug packages into the canonical branch.
+- Current inventory: Sandbox has 172 files under `COMPUTER-AGENT/`; GitHub branch has 80; 80 paths are shared and 92 are Sandbox-only; GitHub-only paths = 0. The 93 Sandbox-only files have explicit KEEP/SANDBOX-ONLY dispositions in `06_EVIDENCE/W10_FULL_PATH_INVENTORY_DISPOSITION_20261122.md`; they include historical/debug records, original/reference files, preview/sample data, generated evidence/lock files and Python caches. Do not bulk-copy caches, locks, preview samples or unreviewed debug packages into the canonical branch.
 - No GitHub-only Work 10 file remains in the inventory snapshot.
 - Branch history is preserved; no force push, main merge, deployment or release was performed.
 
@@ -313,3 +313,10 @@ Each root must already exist; writable/PowerShell roots must be descendants of a
 ## Filesystem root boundary hardening — 2026-11-22
 
 The local launcher now defaults read access to the Work 10 directory. Any extra read roots must be existing directories; drive roots and network-share roots are rejected. Writable and PowerShell roots must be existing descendants of an allowed read root and require separate explicit `-EnableWrite` / `-EnablePowerShell` switches. The static launcher contract suite is now 22 checks (including default-root and drive/share-root rejection); this latest change is pending cross-platform CI.
+
+
+## 19. Root-boundary and one-command acceptance runner CI — Run #230
+
+Run #230 tested commit `eac6db5ed228cea64d030839f07232c7a492a995`. Windows Server 2022: 235 PASS / 0 FAIL / 0 SKIP; Ubuntu 24.04: 229 PASS / 0 FAIL / 2 expected SKIP. The 22-check launcher/acceptance contract passed on both OSes. Windows PowerShell AST parsed START/STOP/RUN_WORK10_ACCEPTANCE; local launcher start/health/Dashboard/stop smoke passed. Additional root restrictions reject drive/share roots and require write/PowerShell roots to be descendants of explicit read roots with separate switches. Evidence: `06_EVIDENCE/W10_ROOT_BOUNDARY_ACCEPTANCE_RUNNER_CI_20261122_RUN230.md`.
+
+The physical Windows 10 acceptance runner itself is not executed by hosted CI because it intentionally requires a Windows 10 client. It remains ready for Owner PC execution.
