@@ -245,7 +245,7 @@ Run from the Work 10 root:
 
 ```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
-./05_TEST/RUN_WORK10_ACCEPTANCE.ps1 -PythonPath ./.venv/Scripts/python.exe
+./05_TEST/RUN_WORK10_ACCEPTANCE.ps1
 ```
 
 Add `-InstallDependencies` if requirements/Chromium are not installed. The report stores only whether a production V8 HMAC key is configured, never the key value. It leaves `release_gate=OPEN`; passing local tests is not final Owner acceptance. It does not enable writes or PowerShell roots. Do not run it while the interactive START_WORK10_LOCAL session is active.
@@ -282,3 +282,6 @@ Each root must already exist; writable/PowerShell roots must be descendants of a
 ## Filesystem root boundary hardening — 2026-11-22
 
 The local launcher now defaults read access to the Work 10 directory. Any extra read roots must be existing directories; drive roots and network-share roots are rejected. Writable and PowerShell roots must be existing descendants of an allowed read root and require separate explicit `-EnableWrite` / `-EnablePowerShell` switches. The static launcher contract suite is now 22 checks (including default-root and drive/share-root rejection); this latest change is pending cross-platform CI.
+
+
+By default, the scripts select `python` from the current PowerShell PATH and require Python 3.12. If the correct interpreter is not first on PATH, pass `-PythonPath 'C:\path\to\python.exe'` explicitly. No fixed virtual-environment path is assumed.
