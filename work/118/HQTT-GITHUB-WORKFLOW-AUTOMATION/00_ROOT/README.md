@@ -146,3 +146,20 @@ PR #68 is READY FOR REVIEW / OPEN / UNMERGED. Exact tested head `076a74d8f19e6ca
 - P1-118-01 OPEN / NEEDS CHANGES; P1-118-02 BLOCKED; W118-TASK-015 W14 dependency BLOCKED; Runtime Auto E2E NOT VERIFIED; Xu review PENDING; Vinh acceptance NOT ACCEPTED.
 - Current Xu review routing overlay: [RR-118-001](../EVIDENCE/RR-118-001_CURRENT-XU-REVIEW-ROUTING.md). Historical XR/release/handoff snapshots still reference PR #67; use RR-118-001 to route the active review to PR #68. Gate criteria are unchanged.
 - No B-118-010, Main merge or release. W118 remains ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+## 2026-11-22 — Exact-head CI #884 and current branch refresh
+
+- **Priority:** 01 / P0 — Exact-revision evidence and review-routing freshness.
+- **Name / Title:** Ka — CSA / Delegated Technical Lead, Work 118.
+- **Date-Time:** 2026-11-22 (UTC+07:00).
+- **Canonical candidate:** PR #68, branch `work/118-auto-e2e-v2-clean`, exact current HEAD `b30165802f8078ccc51cd97874c4b820dcace554`; PR #67 remains superseded history.
+- **PR state:** OPEN / UNMERGED. Latest PR metadata snapshot identifies #68 as the only active W118 candidate.
+- **Exact-head CI:** Run [#884](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44994563080), run ID `44994563080`, event `pull_request`, tested PR head exactly `b30165802f8078ccc51cd97874c4b820dcace554`. Validate job `137122681513` COMPLETED / SUCCESS; raw log confirms **95 tests in 0.292s — OK**.
+- **Artifact:** `w118-run-evidence-44994563080-1`, ID `14743596579`, size 684 bytes, SHA-256 `336cb874be65790a2fa3ccc5c7a795d9f3b7e02f28adf244bae882f1c1398d74`. Upload log digest matches GitHub artifact metadata; artifact is not expired. Payload has not been independently downloaded/parsed.
+- **Coverage limits:** Task-to-Issue push source-binding step and `handoff-request-capture`, `ack-claim-capture`, `review-observation-capture` jobs were SKIPPED. Evidence artifact reports `SOURCE_BINDING_STATUS=NOT_RUN`. CI #884 is contract/unit evidence only; it does not prove live push binding, handoff, authenticated ACK, review lifecycle, Core lease authenticity or Runtime Auto E2E.
+- **Current compare:** `main...work/118-auto-e2e-v2-clean` is DIVERGED **63 ahead / 2 behind**, merge base `792bdd71e5345949e0c1f26ff9f95a8513dfa7d5`, Main tip `554f02e2e9ac9aedc43d875d7a212b35c94525e7`. Compare returns 45 changed paths, all within W118; the two Main-side commits are recorded as W092-only in the existing path audit. This is not a merge simulation or authorization. No rebase, merge or force-push performed.
+- **Outstanding gates:** P1-118-01 OPEN / NEEDS CHANGES (duplicate Issue marker and persisted Core `task.issue_id` binding); P1-118-02 BLOCKED (Core-issued lease authenticity / Task binding / expiry / revocation contract and runtime proof); W118-TASK-015 BLOCKED (W14 canonical Work Authority/ExecutionHostBridge, server-side grant and ACK-before-side-effect evidence); Runtime Auto E2E NOT VERIFIED; Xu independent review PENDING; Vinh product acceptance NOT ACCEPTED.
+- **Review routing:** RR-118-001 and root README/STATUS refreshed to point to current HEAD and Run #884. Historical XR-118-001, release gate and handoff retain their original PR #67 snapshots; RR-118-001 remains an overlay and does not amend, waive or replace their acceptance criteria.
+- **Disposition:** W118 ACTIVE — NOT ACCEPTED — NOT RELEASED. B-118-010 PREPARED / NOT APPLIED. No Main merge, release, permission/secret change or external Work mutation.
+- **Next permitted action:** Continue evidence and review preparation under the existing freeze. Xu must review the current PR #68 and close the independent test cycle; external Core/W14 owners must supply their authoritative contracts and runtime evidence. Do not change implementation/workflow, apply B-118-010, merge Main or release without the applicable approvals.
