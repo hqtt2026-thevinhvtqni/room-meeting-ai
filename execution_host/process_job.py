@@ -342,28 +342,40 @@ def _terminate_job(job, exit_code: int = 1) -> list:
     return notes
 
 
-def _posix_group_members(pgid: int) -> int:
+def _posix_group_members(pgid: int) -> int | None:
+    """Return a verified live-member count, or None when membership is unknown.
+
+    Zero is reserved for a successful ps query that positively reports no live
+    members. Probe failures, non-zero exit, and malformed output are UNKNOWN.
+    """
     if pgid <= 0:
-        return 0
+        return None
     try:
+        # Do not pass -g here: procps may return exit code 1 when a group
+        # is empty, making a verified-empty group indistinguishable from probe
+        # failure. Take a successful process-table snapshot and filter PGID below.
         completed = subprocess.run(
-            ["ps", "-o", "pid=,pgid=,stat=", "-g", str(pgid)],
+            ["ps", "-o", "pid=,pgid=,stat="],
             capture_output=True, text=True, timeout=5, check=False,
         )
     except (OSError, subprocess.TimeoutExpired):
-        return 0
-    n = 0
+        return None
+    if completed.returncode != 0:
+        return None
+
+    count = 0
     for line in (completed.stdout or "").splitlines():
-        tokens = line.split()
-        if not tokens or not tokens[0].isdigit():
+        if not line.strip():
             continue
-        if len(tokens) >= 3:
-            if tokens[1] != str(pgid):
-                continue  # `ps -g` also matches by effective group id: not membership
-            if tokens[2].startswith("Z"):
-                continue  # zombie = already dead (init-less containers never reap it)
-        n += 1
-    return n
+        tokens = line.split()
+        if len(tokens) < 3 or not tokens[0].isdigit() or not tokens[1].isdigit():
+            return None
+        if int(tokens[1]) != pgid:
+            continue
+        if tokens[2].startswith("Z"):
+            continue
+        count += 1
+    return count
 
 
 @dataclass
@@ -389,16 +401,14 @@ class ManagedProcess:
     def members_count(self) -> int | None:
         if self.platform.startswith("win"):
             if self._job is not None:
-                # Unknown Job membership is not equivalent to zero members.
-                # Preserve None so cleanup cannot report a false drained state.
                 return _job_active_processes(self._job)
-            return 1 if self.poll() is None else 0
+            return 1 if self.poll() is None else None
         if self._pgid is not None:
             return _posix_group_members(self._pgid)
         try:
             pgid = os.getpgid(self.process.pid)
         except (OSError, ProcessLookupError, AttributeError):
-            return 0 if self.poll() is not None else None
+            return None
         return _posix_group_members(pgid)
 
     def _drain_posix_group(self, terminate_first: bool, timeout: float, notes: list) -> tuple:
@@ -415,6 +425,9 @@ class ManagedProcess:
         escalated = False
         while True:
             remaining = _posix_group_members(pgid)
+            if remaining is None:
+                notes.append("group_membership_unknown_fail_closed")
+                return False, escalated
             if remaining == 0:
                 return True, escalated
             elapsed = time.monotonic() - start
@@ -435,9 +448,11 @@ class ManagedProcess:
 
     def cleanup(self, *, terminate_first: bool = True, wait_timeout: float = 5.0) -> CleanupResult:
         notes: list[str] = []
-        if not self.created_via_spawn:
+        unmanaged_tree = not self.created_via_spawn
+        if unmanaged_tree:
             notes.append("wrapped_existing_popen")
             notes.append("job_object_cannot_attach_retroactively")
+            notes.append("process_tree_membership_unknown_fail_closed")
         if self.job_object != "ATTACHED":
             notes.append("job_object_not_attached")
 
@@ -446,7 +461,7 @@ class ManagedProcess:
         terminate_sent = False
         kill_sent = False
         waited = False
-        drained = True
+        drained = not unmanaged_tree
         win_job = (
             self.platform.startswith("win")
             and self.job_object == "ATTACHED"
