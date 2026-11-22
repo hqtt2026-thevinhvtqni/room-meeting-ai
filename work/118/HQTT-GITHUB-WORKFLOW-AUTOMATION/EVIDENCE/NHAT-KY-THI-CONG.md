@@ -1679,3 +1679,17 @@
 - **Warnings:** Decoded log includes Node.js 20 deprecation notices and dependency warnings for `punycode` and legacy `url.parse()`; no test/job failure occurred. Keep as maintenance risk; no action taken under freeze.
 - **Disposition:** P1-118-01 OPEN / NEEDS CHANGES with concrete source/test gaps above. P1-118-02 remains BLOCKED at the owner-approved Core source/lease contract/runtime boundary. CI #872 contract suite PASS 95/95; Runtime Auto E2E NOT VERIFIED; Xu review PENDING; Vinh acceptance NOT ACCEPTED; PR #68 OPEN / UNMERGED; W118 ACTIVE — NOT ACCEPTED — NOT RELEASED.
 - **Next permitted work:** Keep implementation freeze. Present the exact duplicate-marker and persisted-issue-ID gaps to Xu for independent review; continue source/contract provenance discovery. No implementation, B-118-010, Main merge, Core mutation or release.
+
+
+## Entry 038 — CI #873 exact Entry 037 revision verification
+
+- **Priority:** 01 — P0 — CI evidence integrity / journal revision verification.
+- **Name / Title:** Ka — CSA / Delegated Technical Lead, Work 118.
+- **Date-Time:** 2026-11-22 11:24 (UTC+07:00).
+- **Scope:** Read-only inspection of run #873 job metadata, decoded raw validate-job log and artifact metadata for Entry 037 commit. No implementation/workflow change, no runtime/Core mutation, no merge or release.
+- **Exact revision:** `3081cfd12be4d5ff6591412599a06facabe95841` (Entry 037 commit). Run ID `44983361544`, run number 873, COMPLETED / SUCCESS.
+- **Test evidence:** Validate job ID `137088501752` COMPLETED / SUCCESS. Raw log confirms **Ran 95 tests in 0.144s — OK**.
+- **Artifact:** `w118-run-evidence-44983361544-1`, ID `14739150926`, size 686 bytes, SHA-256 `d839f2962cc9bf905d1c1b71b80e33c294e809e94ad70b4ad5d587ef7993c074`; GitHub artifact metadata verified; payload not independently downloaded/parsed.
+- **Skipped:** Handoff-request-capture, ACK-claim-capture and review-observation-capture were SKIPPED on this pull_request event. This is contract/unit CI, not push lifecycle or Runtime Auto E2E.
+- **Disposition:** CI #873 PASS for 95 W118 contract/unit tests at Entry 037 revision. P1-118-01 OPEN / NEEDS CHANGES; P1-118-02 BLOCKED; Runtime Auto E2E NOT VERIFIED; Xu review PENDING; Vinh acceptance NOT ACCEPTED; PR #68 OPEN / UNMERGED; W118 ACTIVE — NOT ACCEPTED — NOT RELEASED.
+- **Next permitted work:** Preserve freeze; continue independent-review preparation and owner-approved Core source/lease contract provenance discovery. No B-118-010, Main merge, Core mutation or release.
