@@ -1579,3 +1579,12 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - Session record stores root configuration + enabled flags, never token.
 - Static launcher/acceptance contract suite now 22 checks; latest change pending CI.
 - **KÝ: Co | AI-07**
+
+
+## W10-ROOT-BOUNDARY-RUN230-20261122-01 — 2026-11-22 06:55 (UTC+07:00)
+- Run #230: Windows 235 PASS / 0 FAIL / 0 SKIP; Ubuntu 229 PASS / 0 FAIL / 2 SKIP.
+- Launcher/acceptance contract 22 PASS per OS; PowerShell AST all three scripts PASS; Windows local start/stop smoke PASS.
+- Root policy: default Work10 read root; no drive/share root; writable/PowerShell roots require explicit descendant paths + separate switches.
+- Evidence: `06_EVIDENCE/W10_ROOT_BOUNDARY_ACCEPTANCE_RUNNER_CI_20261122_RUN230.md`.
+- Inventory: Sandbox 172; GitHub 80; shared 80; Sandbox-only 92; GitHub-only 0.
+- **KÝ: Co | AI-07**
