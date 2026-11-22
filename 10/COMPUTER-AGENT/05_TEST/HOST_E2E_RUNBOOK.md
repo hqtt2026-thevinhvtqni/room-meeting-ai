@@ -183,3 +183,16 @@ See `06_EVIDENCE/W10_LIVE_DASHBOARD_API_EVIDENCE_20261122_RUN135.md`. Hosted CI 
 - Run `./05_TEST/START_WORK10_LOCAL.ps1` after dependencies are installed, or add `-InstallDependencies` to install requirements and Chromium. Stop with `./05_TEST/STOP_WORK10_LOCAL.ps1`.
 - The launcher does not configure production V8 HMAC trust, enable writes or enable PowerShell. Those remain explicit operator actions.
 - `test_windows_launcher_contract.py` has 10 static safety assertions; GitHub Windows CI also parses both PowerShell files with the PowerShell AST parser.
+
+
+## Current launcher and regression baseline — Run #157
+
+The one-command local launcher has been validated on hosted Windows Server 2022:
+- PowerShell AST syntax: START/STOP scripts PASS.
+- Launcher smoke: API loopback :8787 + Dashboard :3010 start; Work ID 10 health and Dashboard HTTP 200; STOP validates process identity and shuts down only its session PIDs.
+- Windows launcher contract: 11 PASS on both OS runners.
+- Windows Server 2022: 224 PASS / 0 FAIL / 0 SKIP.
+- Ubuntu 24.04: 218 PASS / 0 FAIL / 2 expected SKIP.
+- Evidence: `06_EVIDENCE/W10_LOCAL_LAUNCHER_CI_EVIDENCE_20261122_RUN157.md`.
+
+The CI smoke uses `-NoClipboard -NoOpenBrowser`; physical Windows 10 clipboard, default browser, ACL and Chrome profile behavior remain for Owner PC acceptance.
