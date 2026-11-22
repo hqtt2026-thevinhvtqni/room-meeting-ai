@@ -73,3 +73,15 @@ Their acceptance criteria remain useful, but their candidate references and snap
 - **Review routing:** RR-118-001 and root README/STATUS refreshed to point to current HEAD and Run #884. Historical XR-118-001, release gate and handoff retain their original PR #67 snapshots; RR-118-001 remains an overlay and does not amend, waive or replace their acceptance criteria.
 - **Disposition:** W118 ACTIVE — NOT ACCEPTED — NOT RELEASED. B-118-010 PREPARED / NOT APPLIED. No Main merge, release, permission/secret change or external Work mutation.
 - **Next permitted action:** Continue evidence and review preparation under the existing freeze. Xu must review the current PR #68 and close the independent test cycle; external Core/W14 owners must supply their authoritative contracts and runtime evidence. Do not change implementation/workflow, apply B-118-010, merge Main or release without the applicable approvals.
+
+
+## Latest authoritative refresh — 2026-11-22 (after journal Entry 049)
+
+- Canonical candidate: PR #68 / `work/118-auto-e2e-v2-clean`, exact branch HEAD `7d7454b702efcf56030bf7a3b0788b0db03d122d`; PR #67 remains superseded.
+- Exact-head CI: Run [#888](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44995190536), exact head `7d7454b702efcf56030bf7a3b0788b0db03d122d`, validate SUCCESS; raw log **95 tests in 0.318s — OK**. Artifact ID `14743572748`, SHA-256 `3239cc165b7b35d31365d8c4bcb98480b91afe07f733e6d992485fcc1c00cbf9`; metadata/upload digest match, not expired, payload not independently parsed.
+- CI #888 skipped Task-to-Issue push source binding and handoff/ACK/review-observation jobs; `SOURCE_BINDING_STATUS=NOT_RUN`. Contract/unit evidence only; no Runtime Auto E2E claim.
+- Current compare: DIVERGED **69 ahead / 2 behind**, merge base `792bdd71e5345949e0c1f26ff9f95a8513dfa7d5`, Main `554f02e2e9ac9aedc43d875d7a212b35c94525e7`, 46 changed paths, all W118. No rebase/merge/force-push.
+- Latest review readback: 0 formal reviews / 0 inline threads. Xu review PENDING; Vinh acceptance NOT ACCEPTED.
+- P1-118-01 OPEN / NEEDS CHANGES; P1-118-02 BLOCKED; W118-TASK-015 W14 dependency BLOCKED; Runtime Auto E2E NOT VERIFIED.
+- Entry 049 revalidated the duplicate Issue marker / Core `task.issue_id` binding gap and non-empty-string-only lease check at exact branch HEAD. No implementation change under freeze.
+- W118 ACTIVE — NOT ACCEPTED — NOT RELEASED. B-118-010 PREPARED / NOT APPLIED. No Main merge or release.
