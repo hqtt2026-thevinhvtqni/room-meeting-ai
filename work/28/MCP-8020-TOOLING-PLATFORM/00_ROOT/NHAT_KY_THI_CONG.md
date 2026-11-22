@@ -1709,3 +1709,71 @@ PR #61 remains OPEN / UNMERGED. No deployment, Core mutation, listener restart o
 - Continue WP1 startup call-site/provider composition trace, registry matrix and evidence plan. Continue WP4/WP5/WP6 only after their exact current contracts and live dependencies are traced; do not bypass Core authorization.
 
 **Signature:** [KÝ: VI | CODER]
+
+
+## 2026-11-23 01:45 UTC+07:00 — JRN-W28-046 — WP0/WP1 live connector and source-to-entrypoint reconciliation
+
+**Role:** Vi | CODER — implementation and integration owner  
+**Signature:** [KÝ: VI | CODER]
+
+### LIVE BUILD MCP READ-ONLY OBSERVATION
+- ROOM-HOP Build MCP helper call `get_room_context` returned service `room-hop-build`, version `1.0`, status `ok`; boundary says Working Source read-only and Sandbox read/write.
+- `get_room_structure` returned Sandbox root `.ai-workspace\sessions\AI-BUILD-GATEWAY-V1\workspace` and helper capabilities: sandbox_list/read/create/write/append/delete/create_work/list_works.
+- `sandbox_list(work_id=28)` returned the Work 28 inventory, including canonical-looking Sandbox journal, source, test, evidence and dashboard paths.
+- These helper responses are NOT a raw MCP protocol `tools/list` response and do not contain the full deployed JSON schemas or process/build identity. They cannot close WP0 G0.
+- `sandbox_read` returned an empty object for the canonical Sandbox journal/manifest paths; `sandbox_read_probe` returned the actual journal content (102,326 characters) successfully. Treat this as a read-path discrepancy; use the diagnostic read only for readback until the regular read path is fixed.
+
+### SOURCE-TO-ENTRYPOINT TRACE
+- Canonical repository `room_hop_mcp/__main__.py` (blob `43adaa746f8e51a6ecce762a7b01694d0411d105`) is an stdio entrypoint. It wires `MeetingManager → MeetingService → room_hop_mcp.adapter.server.create_server`.
+- `room_hop_mcp/adapter/server.py` (blob `f34b4eebc847dac31feb7c9161c2d8bded812991`) registers exactly four ROOM HOP meeting tools: `list_meetings`, `get_meeting`, `get_transcript`, `add_paste_to_meeting`. It does not wire the Work 28 unified 31-tool registry or v54 catalog.
+- Work 28 `mcp8020_server_v54.py` (blob `80365761d75fe27a1e8c7677f79c14ae90819c97`) is a factory and explicitly does not own/open the listener.
+- Work 28 `mcp8020_unified_server_v1.py` (blob `65ab9cd41da231c97e5094cb6fab0a6b9c3c84cb`) is another factory, requires six injected provider groups, and explicitly does not open the listener.
+- `mcp_tool_registration_v1.py` (blob `b9f306c9e4765117af517be578139faabe8bab01`) documents that `register_work28_tools()` must be called by an existing FastMCP startup after provider injection. No such callsite was found in the inspected Work 28 adapter/entrypoint modules.
+- The previously reported PC startup module path `room_hop_mcp.mcp_build_http_main` is absent from the canonical branch tree at the inspected revision (repository file lookup returned 404). Therefore historical PC listener PID/command evidence cannot be bound to this canonical branch/source SHA.
+- Existing source inventory still contains distinct 18-tool legacy, 31-tool unified and 54-tool v54 catalogs. A helper capability list or a tool count is not live registry parity.
+
+### WP1 DISPOSITION
+- **G1 provider composition/startup callsite:** NOT VERIFIED.
+- **G2 exact raw MCP 8030 tools/list and schema digest:** NOT VERIFIED.
+- **G3 process/build/source identity bound to the same live listener:** NOT VERIFIED.
+- **G4 approved non-destructive live tool-call/readback evidence:** NOT VERIFIED.
+- No startup entrypoint or provider composition is invented; no listener is restarted and no runtime deployment is attempted. Historical MCP :8020 remains DO NOT USE.
+- Next: resolve the authoritative Build MCP deployment repository/module and obtain raw protocol-level tools/list plus process/build identity from the same approved live instance. Until then WP1 remains BLOCKED.
+
+## 2026-11-23 01:46 UTC+07:00 — JRN-W28-047 — WP5 Core grant authority fail-closed remediation
+
+**Role:** Vi | CODER — implementation and integration owner  
+**PR:** #71 — https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/71  
+**Tested source SHA:** `a9eafadfc797fef75bb14e397046ab5bc2a8a3be`  
+**Merge commit:** `dca6fd27ea119b64cee550395e0613289057b0f8`  
+**Signature:** [KÝ: VI | CODER]
+
+### FINDING / BUILD
+- Source trace confirmed `execution_host/work28_core_grant_client.build_grant_source()` automatically selected `FileGrantSource` when `ROOM_HOP_CORE_GRANT_URL` was missing.
+- `execution_host/server.py::main()` caught any Core grant-source exception and substituted `load_grant_registry()`, allowing startup with local grant state after Core failure.
+- `Handler.snapshot_only`, `serve()` and main's environment parsing defaulted command mode open when `ROOM_HOP_SNAPSHOT_ONLY` was unset.
+- Remediation:
+  1. Core grant URL is mandatory; missing/blank URL raises `GrantError(core_grant_url_required)`.
+  2. Execution Host startup no longer falls back to a local file registry on Core error; it aborts before serving.
+  3. `FileGrantSource` remains available only as an explicitly selected offline/test adapter.
+  4. Snapshot-only defaults TRUE at handler, serve and main layers. An explicit trusted deployment environment opt-out is required to enable legacy command mode.
+  5. Added fail-closed regression coverage and updated legacy tests to opt into their intended test mode explicitly.
+
+### VERIFY — EXACT-SHA AUTO E2E
+- Initial red runs exposed existing tests that encoded the old file-fallback/default-command behavior; those tests were corrected to assert the new secure contract or explicitly opt into legacy command mode where that was the subject under test.
+- Final GitHub Actions run #391 / ID `45055422844` on exact source SHA `a9eafadfc797fef75bb14e397046ab5bc2a8a3be`: **SUCCESS**.
+- All five jobs completed success: unit/regression, Linux lifecycle, Windows lifecycle, immutable source artifact retest, automatic E2E gate report.
+- Source artifact ID `14767765017`, digest `sha256:8f3aaee8df368e9534725b1368f651025f0768fe159e7c80ac71410517f1f8c5`.
+- Auto E2E report artifact ID `14767595848`, digest `sha256:3c938575af14460de76a22f450b733397c49e7dddc1d353a9b1317dca10c3757`.
+- PR #71 merged after exact-head CI success. Canonical branch now points to merge commit `dca6fd27ea119b64cee550395e0613289057b0f8`.
+
+### LIMITATIONS / GATES
+- This patch makes the Execution Host fail closed; it does not prove the deployed Core endpoint exists, is compatible with the client's list response contract, or is reachable from the runtime.
+- No listener restart, production deployment, Core mutation or live grant issuance was performed.
+- WP3-F01 Q4 remains NOT APPROVED under the exact Ka review and Xu revision record; upload capability implementation/registration/staging/promotion remains blocked pending the decision authority's approval of the versioned contract.
+- WP1 provider composition/raw tools/list/live build identity remains NOT VERIFIED.
+- Deployed MCP → Core → Runtime E2E remains BLOCKED. Execution Gate CLOSED. Release NOT_RELEASED.
+
+**STATUS:** WP5 FAIL-CLOSED SOURCE REMEDIATION INTEGRATED / EXACT-SHA AUTO E2E PASS / LIVE CORE AND MCP PROVENANCE NOT VERIFIED / WP3 Q4 NOT APPROVED / NOT RELEASED.
+
+**Signature:** [KÝ: VI | CODER]
