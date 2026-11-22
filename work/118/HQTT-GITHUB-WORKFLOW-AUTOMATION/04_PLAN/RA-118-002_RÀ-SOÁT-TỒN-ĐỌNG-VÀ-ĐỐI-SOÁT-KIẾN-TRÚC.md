@@ -229,3 +229,13 @@ Exact implementation refs inspected: Core authority blob dd9becadd56a1df4c3f306d
 - **Date-Time:** 2026-11-23 02:44:59 +07:00
 - **Result:** Located and traced the Work32 Core Grant candidate, distinguished its pytest execution scope from W118 Issue mirror lease scope, and preserved fail-closed integration boundaries. PR #52/#54 remain draft and runtime gate failed.
 - **Disposition:** P1-118-02 BLOCKED; W118-TASK-015/019 dependency candidate identified but not authorized/deployed; Runtime Auto E2E NOT RUN.
+### v1.4 clarification — Grant ID binding is not live Assignment authority
+
+- **Priority:** P0 — prevent static policy allow-lists from being mistaken for canonical lifecycle state.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-23 02:46:37 +07:00.
+- Source trace of Work32 PR #54 Core authority shows issue_grant reads the Work policy and checks that assignment_id is a member of policy.allowed_assignments and task_id is a member of policy.allowed_tasks. It records those IDs into the Grant, but the inspected issue_grant path does not query a canonical live Core Task/Assignment record, Assignment status/version/revocation, W102 policy decision, or authenticated ACK event.
+- Therefore the Grant's Assignment/Task binding is a configured Work-policy allow-list at this source snapshot, not proof of a current active Assignment lifecycle. The server-derived principal is sourced from the enrolled service identity mapping; no live W102 Agent Loop identity/dispatch/ACK handshake was demonstrated by the reviewed code or CI.
+- This does not invalidate the Grant's narrower pytest_run authorization contract, but it means Work32 Grant alone cannot clear W118-TASK-014 (W102 identity/Assignment/ACK) or prove live Task/Assignment authority for W118-TASK-019.
+- Required before W118 can rely on it: Core/W102 owner must expose a canonical Assignment/Task read/authorization port or attest that the configured allow-list is the authoritative policy source with version/revocation semantics; positive/negative runtime tests must cover unassigned, stale, revoked, wrong Agent, wrong Task and missing ACK. No such proof currently exists.
+- **Decision:** W118-TASK-014 remains BLOCKED / NOT VERIFIED. P1-118-02 remains separately BLOCKED for the Issue-mirror action-scoped lock lease.
