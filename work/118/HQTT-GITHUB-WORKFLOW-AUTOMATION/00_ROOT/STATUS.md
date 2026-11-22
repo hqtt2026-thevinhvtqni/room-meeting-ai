@@ -379,3 +379,10 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - PR Run #972 / `45063628955` SUCCESS, 102 tests / 0.301s, `NOT_RUN` (push-only); artifact `14770312969`, 685 bytes. Event-capture jobs skipped.
 - Contract/unit CI only; no Core authority mount, Task source binding or Runtime Auto E2E proof. Full evidence: Journal Entry 059.
 - This status/journal write creates a new source HEAD; exact-head CI must be rerun. Overall remains ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.
+
+
+## W14 source parity / HostPort boundary — Entry 060
+
+- Exact W14 Main canonical Manifest/journal/source path fetches returned NOT_FOUND. Work17 portfolio reconciliation identifies the W14 canonical Sandbox path; this does not prove Sandbox source absence and no Sandbox read was attempted.
+- Work17 GAP-01 Entry 039 distinguishes W14 one-shot POST `/execute` via W12ExecutionAdapter/RealExecutionHost from W52 persistent HostPort/RpcPort. Work17 GAP Register Entry 054 records the prior W14 release candidate as divergent, AUD-005 BLOCKED, candidate v5 NOT APPROVED and PC E2E NOT VERIFIED at that audit snapshot.
+- No W118 binding to an assumed W14 interface; no duplicate Host/session transport. W118-TASK-015/TASK-019 protected execution remains BLOCKED; Runtime Auto E2E NOT RUN. See RA-118-002 v1.6 and Journal Entry 060.
