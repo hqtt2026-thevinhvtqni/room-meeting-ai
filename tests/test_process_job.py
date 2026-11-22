@@ -31,10 +31,17 @@ _IS_WIN = sys.platform.startswith("win")
 
 
 class PosixCounterTests(unittest.TestCase):
-    def test_verified_empty_group_returns_zero(self):
-        fake = subprocess.CompletedProcess(args=[], returncode=0, stdout="", stderr="")
-        with patch("execution_host.process_job.subprocess.run", return_value=fake):
+    def test_verified_empty_group_returns_zero_even_when_other_groups_exist(self):
+        fake = subprocess.CompletedProcess(
+            args=["ps"], returncode=0,
+            stdout="123 1000 R\\n456 1001 S\\n", stderr=""
+        )
+        with patch("execution_host.process_job.subprocess.run", return_value=fake) as run:
             self.assertEqual(_posix_group_members(999), 0)
+        run.assert_called_once_with(
+            ["ps", "-o", "pid=,pgid=,stat="],
+            capture_output=True, text=True, timeout=5, check=False,
+        )
 
     def test_counts_only_valid_live_members_of_requested_group(self):
         fake = subprocess.CompletedProcess(
