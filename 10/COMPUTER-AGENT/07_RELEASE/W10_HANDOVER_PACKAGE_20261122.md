@@ -58,6 +58,7 @@ The separate `PC_HOST_CAPABILITY_CONTRACT.md` adds host operations without chang
 | #106 | POSIX cleanup three-cycle descendant stress | 206 PASS | 200 PASS + 2 SKIP | PASS; three-cycle test passed |
 | #135 | Live Dashboard/API health + consent smoke | 213 PASS | 207 PASS + 2 SKIP | PASS; 7 live UI assertions per OS |
 | #157 | Local launcher PowerShell syntax + start/stop smoke | 224 PASS | 218 PASS + 2 SKIP | PASS; Windows AST + API/Dashboard start/stop smoke |
+| #180 | Final launcher token-isolation + HTTP regression | 226 PASS | 220 PASS + 2 SKIP | PASS; 13 launcher checks, Windows AST and start/stop smoke |
 
 Evidence files:
 - `06_EVIDENCE/W10_API_PROCESS_E2E_EVIDENCE_20261122_RUN45.md`
@@ -69,6 +70,7 @@ Evidence files:
 - `06_EVIDENCE/W10_POSIX_CLEANUP_REMEDIATION_CI_20261122_RUN99_105_106.md`
 - `06_EVIDENCE/W10_LIVE_DASHBOARD_API_EVIDENCE_20261122_RUN135.md`
 - `06_EVIDENCE/W10_LOCAL_LAUNCHER_CI_EVIDENCE_20261122_RUN157.md`
+- `06_EVIDENCE/W10_LOCAL_LAUNCHER_HTTP_CI_EVIDENCE_20261122_RUN180.md`
 
 Runs #52, #53, #69, #104, #105 and #106 each execute 16 V8 validator checks successfully on both OS runners. Run #53 tests the additional category catalog, policy ID/version/schema version and category outcome/lease/owner allow-list validation. Run #69 adds 17 Dashboard static assertions per OS. Run #104 verifies Work 10's standalone UI on port 3010. Runs #105/#106 remediate and stress-test the Linux limited process-group cleanup race first seen in Run #99.
 
@@ -128,7 +130,7 @@ This session has no direct local PowerShell/desktop executor, so these steps are
 
 - Canonical branch contains the current Work 10 source, test suite, core contracts, PC Host Capability Contract, operational Dashboard and current runbooks.
 - The 30 source/test/architecture/config files independently sampled in the current reconciliation pass were exact-match between Sandbox and GitHub after the updates; all three LOCKED contracts are exact-match.
-- Current inventory: Sandbox has 167 files under `COMPUTER-AGENT/`; GitHub branch has 75; 75 paths are shared and 92 are Sandbox-only; GitHub-only paths = 0. The 93 Sandbox-only files have explicit KEEP/SANDBOX-ONLY dispositions in `06_EVIDENCE/W10_FULL_PATH_INVENTORY_DISPOSITION_20261122.md`; they include historical/debug records, original/reference files, preview/sample data, generated evidence/lock files and Python caches. Do not bulk-copy caches, locks, preview samples or unreviewed debug packages into the canonical branch.
+- Current inventory: Sandbox has 168 files under `COMPUTER-AGENT/`; GitHub branch has 76; 76 paths are shared and 92 are Sandbox-only; GitHub-only paths = 0. The 93 Sandbox-only files have explicit KEEP/SANDBOX-ONLY dispositions in `06_EVIDENCE/W10_FULL_PATH_INVENTORY_DISPOSITION_20261122.md`; they include historical/debug records, original/reference files, preview/sample data, generated evidence/lock files and Python caches. Do not bulk-copy caches, locks, preview samples or unreviewed debug packages into the canonical branch.
 - No GitHub-only Work 10 file remains in the inventory snapshot.
 - Branch history is preserved; no force push, main merge, deployment or release was performed.
 
@@ -221,3 +223,15 @@ The Work 10 local operator launcher and shutdown scripts are now part of the can
 - Evidence: `06_EVIDENCE/W10_LOCAL_LAUNCHER_CI_EVIDENCE_20261122_RUN157.md`.
 
 The CI smoke intentionally used `-NoClipboard -NoOpenBrowser`; it does not replace Owner's physical Windows 10 user-session/clipboard/Chrome/ACL acceptance.
+
+
+## 16. Latest final regression — Run #180
+
+- Windows Server 2022: 226 PASS / 0 FAIL / 0 SKIP.
+- Ubuntu 24.04: 220 PASS / 0 FAIL / 2 expected SKIP.
+- PowerShell AST, local start/stop smoke, Dashboard static 17 checks, Dashboard live 7 checks, V8 validator 16 checks and real Chromium API/runtime E2E all PASS.
+- Windows launcher contract: 13 PASS per OS.
+- The API token is now cleared from the parent environment before the static Dashboard process starts; the Dashboard server does not inherit the API bearer token.
+- Startup failure cleans up only its own processes and removes the session record.
+- The oversized HTTP request test now reliably verifies 413 on both OSes without platform-dependent client-side upload abort.
+- Evidence: `06_EVIDENCE/W10_LOCAL_LAUNCHER_HTTP_CI_EVIDENCE_20261122_RUN180.md`.
