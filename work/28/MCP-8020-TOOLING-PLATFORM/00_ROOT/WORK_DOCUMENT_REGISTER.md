@@ -10,6 +10,7 @@
 | `JRN-W28` — `00_ROOT/NHAT_KY_THI_CONG.md` | Journal | Chronological Work-wide execution record | Current |
 | `STD-W28` — `00_ROOT/WORK_STRUCTURE_STANDARD.md` | Standard | Work 70-aligned documentation/storage rules | Current |
 | `MAN-W28` — `00_ROOT/WORK_MANIFEST.md` | Manifest | Work identity, authority, status, roles and boundaries | Current |
+| `HND-W28-20261123-001` — `06_EVIDENCE/VI_OWNER_HANDOFF_AUTO_E2E_20261123.md` | Owner handoff | Integrated WP2/WP5/WP1 CI evidence, live acceptance blockers, required owner dependencies and rollback | Current / LIVE ACCEPTANCE BLOCKED |
 
 | `A2E-W28-20261104-001` — `01_PLAN/WORK28_AUTO_E2E_RUNBOOK_V2.0.md` | Auto E2E runbook | GitHub Actions pipeline, fail-closed stages, machine evidence gate and remaining live integration dependencies | Current |
 
