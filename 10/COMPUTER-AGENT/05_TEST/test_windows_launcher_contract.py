@@ -36,9 +36,11 @@ def main() -> None:
     check("stop script removes only its session record after verified shutdown",
           "Remove-Item -LiteralPath $sessionPath" in STOP
           and "refusing to stop it" in STOP)
+    check("non-interactive mode suppresses clipboard and browser launch",
+          "[switch]$NoClipboard" in START and "[switch]$NoOpenBrowser" in START)
     check("launcher exposes no generic shell or inline PowerShell command",
           "Invoke-Expression" not in START and "powershell.exe -Command" not in START)
-    print("Windows launcher contract: 10 checks passed")
+    print("Windows launcher contract: 11 checks passed")
 
 
 if __name__ == "__main__":
