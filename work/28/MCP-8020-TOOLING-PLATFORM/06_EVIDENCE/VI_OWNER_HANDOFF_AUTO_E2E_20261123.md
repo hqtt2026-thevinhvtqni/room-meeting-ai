@@ -56,7 +56,7 @@ Each run completed all five configured jobs: unit/regression, Linux lifecycle, W
 - PR #61 was closed as superseded by PR #70; closure comment ID `7083860364`.
 - PR #69 was closed as superseded by PR #70; closure comment ID `7083861213`.
 - PRs #70, #71 and #72 are merged.
-- No changes were made to `main`; no production deployment occurred.
+- Default branch `main` briefly received a documentation-only copy of this handoff because an earlier create-file call omitted the branch argument. The file was immediately deleted in commit `0902cd26518673aa078bb4c7c7899e1e4a95656a`; the main tree SHA before (`c8f2bbb9e1b88a7fc0bb173aab4e6e745448506b`) and after deletion is identical. No product/source changes remain on `main`, no force reset was used, and no deployment occurred. The handoff was then recreated on the canonical Work 28 branch with an explicit branch argument in commit `4597f0589b7110b94492b027290047c7fecac16c`.
 
 ## 4. Work Sandbox synchronization
 
