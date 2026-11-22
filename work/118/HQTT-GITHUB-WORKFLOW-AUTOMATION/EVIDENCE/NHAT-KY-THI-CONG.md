@@ -2130,3 +2130,11 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - Both are contract/unit CI only. Neither proves owner API authority, cross-Work runtime, or Runtime Auto E2E. Aggregate push remains UNBOUND_LEGACY_BRANCH; PR source binding is NOT_RUN.
 - This journal addendum changes source HEAD and therefore requires a new exact-head CI run. The PR body will retain the final exact-head run references.
 - **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-23 02:39:57 +07:00; Result: exact-head contract CI for the matrix/docs snapshot passed; no external Work mutation; runtime gates unchanged.
+### Entry 057 addendum — Task Register traceability
+
+- **Priority:** 01 — P0 — Link each W118 delivery task to its controlling dependency contract matrix.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-23 02:39:57 +07:00.
+- Updated TASK_REGISTER.json for W118-TASK-013 through W118-TASK-019: each task now references RA-118-002 addendum v1.3 and states that the matrix is planning evidence only, not owner authority or runtime PASS. Task statuses were not promoted; existing blockers and completion criteria remain.
+- Updated TASK_REGISTER updated_at to 2026-11-23T02:39:57+07:00. No external Work or runtime mutation.
+- This is a documentation/register-only change; exact-head PR CI required. The PR body will carry the final validation reference.
