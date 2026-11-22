@@ -2106,3 +2106,16 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - PR Run #932 / ID 45060721046, validate job 137325799959 COMPLETED / SUCCESS; raw log confirms 102 tests in 0.196s; TEST_OUTCOME=success; SOURCE_BINDING_STATUS=NOT_RUN (push-only). Handoff, ACK and review-observation jobs SKIPPED. Artifact 14769362454, size 683 bytes, metadata digest sha256:c626852eb11c0654b3a3c0aeaf52ca8709837d4a869e15755b6a971b97e8bec2; payload not independently parsed.
 - Both runs are contract/unit CI only. Neither proves live Core/W102/W14/W33/W70 authority or Runtime Auto E2E. No source or external Work was changed.
 - This journal addendum requires its own exact-head CI revalidation after commit.
+
+## Entry 057 — Owner contract intake matrix and PR inventory control
+
+- **Priority:** 01 — P0 — Cross-Work integration readiness and governance safety.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-23 02:39:57 +07:00.
+- **Scope:** W118 documentation-only update. No external Work source/runtime/permission/secret or GitHub branch protection changed.
+- **RA-118-002 addendum v1.3:** Added owner-specific intake matrix for Core Task read, Core lease validation, Core Event ingress, W102 principal/Assignment/ACK, W14 Work Authority/ExecutionHostBridge, W33 authenticated evidence ingress and W70 read-only Evidence Register projection. Each row defines minimum contract, security-negative behavior, evidence required before binding, and current BLOCKED state.
+- **Integration order:** canonical source/ref/hash and owner approval → versioned contract and auth semantics → authorized non-sensitive runtime proof → stateless W118 adapter binding → cross-work E2E → Xu independent review/QE → Vinh acceptance. No local authority, queue, registry, host, secret or policy substitute.
+- **PR inventory readback:** PR #66 is OPEN / UNMERGED, head 05b3fe37e09a3b796825e6f710843f5b442b6f61, DIVERGED 8 ahead / 198 behind Main, mergeable=false, no formal reviews/threads. Existing owner comment says retain as historical pilot until Xu confirms whether it should close. Ka therefore preserves #66 OPEN and does not close/merge it. PR #67 is CLOSED / UNMERGED and superseded. PR #68 remains current clean implementation/review candidate.
+- **Current W118 state unchanged:** P1-118-01 PASS at adapter-contract level only; P1-118-02 BLOCKED; runtime Core/W102/W14/W33/W70 integrations BLOCKED / NOT VERIFIED; Runtime Auto E2E NOT RUN; Xu review PENDING; Vinh acceptance NOT ACCEPTED.
+- **No implementation status promoted:** this matrix does not establish an owner API, source parity, authenticated runtime or product PASS. No tests were run by this documentation-only commit; exact-head CI is required after commit.
+- **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-23 02:39:57 +07:00; Result: contract intake and PR inventory controls documented; external Work untouched; W118 remains ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.
