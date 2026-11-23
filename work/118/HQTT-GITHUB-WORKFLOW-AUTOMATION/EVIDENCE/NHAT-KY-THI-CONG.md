@@ -2372,3 +2372,17 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - **Disposition:** NEEDS XU REVIEW — remediation deferred under implementation/workflow freeze. P1-118-02 remains BLOCKED; no production mirror write is authorized by these unit tests.
 - **Scope and controls:** No source/workflow mutation, no external Work/Sandbox/runtime/config/secret/permission/branch-protection change, no rebase, force-push, Main merge or release.
 - **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-24 04:54 +07:00; Result: one additional bounded Issue-marker binding risk recorded for Xu's independent review; no code changed.
+
+
+### Entry 068 — Event evidence schema input-validation review
+
+- **Priority:** 03 — P2 — Harden W118-owned non-authoritative event artifact construction against malformed source/run metadata.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-24 04:53 +07:00 (audit timestamp 2026-11-23T21:53:06Z).
+- **Method:** Read-only inspection of `scripts/w118/event_evidence.py`, `tests/w118/test_event_evidence.py`, `scripts/w118/github_event_adapter.py` and corresponding tests at branch HEAD `80ca3af345374e6e57419140f0b2c77e315b703d`. No implementation/workflow mutation and no runtime call.
+- **Finding W118-EVIDENCE-001 — run metadata type is not strict:** `build_event_evidence()` checks `run_id < 1` and `run_attempt < 1`, but does not require exact positive integer types. Python booleans are integer subclasses and positive floats pass the comparison, so values such as `True` or `1.5` can be serialized as run metadata. The function also does not validate `source_commit` as a full 40-character hexadecimal SHA; any non-empty string is accepted. This can produce malformed W118-local operation evidence. It does not prove forged GitHub events, Core state mutation, or Work70 Evidence Register acceptance.
+- **Positive boundary observed:** artifact is explicitly marked `RECORDED`, identifies itself as `OPERATION`, states it is not a Work70 Evidence Register row, and says RECORDED is not VERIFIED/ACCEPTED/RELEASED. Event adapter separately validates workflow_run ID with `type(run_id) is int` and requires a 40-character head SHA, but does not validate hexadecimal characters there; these are separate boundaries and do not repair the artifact builder's own input contract.
+- **Recommended bounded remediation after Xu disposition:** require `type(run_id) is int` and `type(run_attempt) is int`, both positive; validate source_commit against lowercase or explicitly case-normalized 40-character hexadecimal SHA policy; add tests for bool, float, negative/zero, non-hex and short/long SHA values. Keep the artifact RECORDED/non-authoritative and do not map it to W70.
+- **Disposition:** Static hardening finding recorded for Xu's independent review. Implementation/workflow freeze remains in force; no code change made. Runtime Auto E2E remains NOT VERIFIED and no Work task is promoted.
+- **Scope and controls:** No source/workflow/runtime/secret/permission/branch-protection or external Work/Sandbox change; no rebase, force-push, Main merge or release.
+- **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-24 04:53 +07:00; Result: one bounded artifact-validation gap recorded; implementation unchanged.
