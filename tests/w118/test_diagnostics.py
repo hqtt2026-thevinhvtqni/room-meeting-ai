@@ -48,7 +48,7 @@ class Work118DiagnosticsTests(unittest.TestCase):
     def test_closed_issue_is_reused_by_exact_key(self):
         key = diagnostic_key(19, "f" * 40)
         issues = [
-            {"number": 201, "state": "closed", "body": f"resolved\\n<!-- {key} -->"},
+            {"number": 201, "state": "closed", "body": f"resolved\n<!-- {key} -->"},
         ]
         self.assertEqual(find_existing_issue(issues, key), "201")
 
