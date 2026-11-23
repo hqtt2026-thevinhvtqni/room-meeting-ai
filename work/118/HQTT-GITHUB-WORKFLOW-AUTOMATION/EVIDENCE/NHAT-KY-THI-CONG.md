@@ -2443,3 +2443,17 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - **PR Run #1053** [ID `45282651496`](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45282651496): validate SUCCESS; raw log **102 tests in 0.302s — OK**; PR head exactly `76db923b4809ab2154ea3f35469d7f655163dbd8`. Artifact `14869337556`, size 686 bytes, SHA-256 `b14a20563ba564b6ec5ad68b363f9e8d44b8a4fffded5567cda6f251d68ec3f0`, present/unexpired at metadata readback.
 - Event capture jobs were SKIPPED in both runs. Contract/unit CI only; source binding on aggregate branch remains UNBOUND_LEGACY_BRANCH; Runtime Auto E2E NOT RUN.
 - Canonical review checklist and release gate now direct Xu to PR #68; PR #67 is historical only. Xu review PENDING; Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED.
+
+
+### Entry 071 — workflow_run metadata and source SHA validation review
+
+- **Priority:** 03 — P2 — Ensure normalized CI event metadata is structurally valid before it is emitted as Core evidence intent.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-24 06:10 +07:00.
+- **Method:** Read-only review at exact branch HEAD `b34183b7848cf90ece2a3fa1e834cda0f95da65e` of `scripts/w118/github_event_adapter.py`, `scripts/w118/event_evidence.py`, `scripts/w118/source_binding.py` and their corresponding tests. No runtime call, event dispatch, source/workflow mutation or Core write.
+- **Finding W118-EVENT-002 — workflow_run SHA and attempt metadata are not fully validated:** the event adapter checks `head_sha` is a string of length 40 but does not require 40 hexadecimal characters. It copies `run_attempt` into the Core event-intent payload without requiring an exact positive integer. Consequently malformed values can be normalized into a CI evidence intent even though the event-evidence builder has a separate strictness gap already recorded in Entry 068. The current event adapter does strictly validate `run_id` as a positive exact integer and matches branch/Work/Task/Issue/head SHA against Core source bindings; those controls remain intact. No malformed live GitHub event or Core persistence is claimed.
+- **Positive controls:** workflow name allowlist; positive exact-integer run ID; branch Task scope and Core Work/Task match; CI evidence deferred when the matching Core push binding is absent; event intent explicitly limits CI to evidence and forbids Task/Assignment transition; no local queue, event ID, sequence or persistence.
+- **Recommended bounded remediation after Xu disposition:** require `head_sha` to match the canonical 40-character hexadecimal SHA policy; require `type(run_attempt) is int` and `run_attempt >= 1`; add negative tests for non-hex, short/long SHA, boolean/float/string/zero/negative attempt values. Keep event evidence non-authoritative and preserve Core ownership of persistence/state.
+- **Disposition:** NEEDS XU REVIEW — implementation/workflow freeze remains. No source/test/workflow change made. Runtime Auto E2E remains NOT VERIFIED; no Task is promoted.
+- **Scope and controls:** No Core/W102/W14/W70/W33 change; no secrets, permissions, runtime, branch-protection or external Sandbox change; no rebase, force-push, Main merge, PR close or release.
+- **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-24 06:10 +07:00; Result: one additional bounded CI event metadata validation gap recorded for Xu; implementation unchanged.
