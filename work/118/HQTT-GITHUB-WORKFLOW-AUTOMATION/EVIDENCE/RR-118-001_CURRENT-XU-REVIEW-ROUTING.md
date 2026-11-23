@@ -175,3 +175,20 @@ Please review RA-118-002 addendum v1.4 and Entry 058. Key decision: Work32 DOC-1
 Crucial scope distinction: Work32 Grant purpose is pytest_run and its validator is for the Execution Host identity. It is not a Core Task-scoped GitHub Issue mirror lock lease; do not approve its use for W118 Issue POST/PATCH. P1-118-02 remains BLOCKED pending a separate Core action-scoped mirror lease or an owner-approved equivalent.
 
 Work32 Grant may be considered only for W118 protected execution integration after W14/Core approval, exact source/security review, deployment and live runtime proof. Work28 and Work1111 candidates remain unapproved/unverified as detailed in Entry 058. No external Work changes or binding were made.
+
+## Authoritative review routing refresh — 2026-11-24 (Journal Entry 065)
+
+**Priority:** 01 — P0 — Xu independent review must target the live candidate, not historical PR #67 snapshots.
+
+- **Active review target:** PR #68, branch `work/118-auto-e2e-v2-clean`, exact HEAD `77159adc4e649e691256150f0c8ffca81d080476`.
+- **Supersession:** Any PR #67, old branch, HEAD, CI count or gate state in XR-118-001, W118-RELEASE-GATE.md and BB-118-002 is historical criteria/context only. It is not the current candidate. Use PR #68 and this routing refresh for current routing. The historical acceptance criteria are not waived.
+- **Exact-head CI:** Push #1011 / run `45272207297` — validate SUCCESS, 102 tests in 0.300s, `SOURCE_BINDING_STATUS=UNBOUND_LEGACY_BRANCH`, artifact `14866121608`, SHA-256 `e3620b3458fd17b209e91d442f273289630e4049367bda780aa942ce2070203f`. PR #1012 / run `45272219367` — validate SUCCESS, 102 tests in 0.300s, `SOURCE_BINDING_STATUS=NOT_RUN` (push-only), artifact `14864872364`, SHA-256 `02ec1118fd03814cf54780e7842b15789cabaec97766d044405277478b547a40`.
+- **Coverage:** Handoff-request, ACK-claim and review-observation capture jobs were SKIPPED in both runs. These runs prove contract/unit tests only; Runtime Auto E2E is NOT RUN.
+- **Current task states:** 013 IN_PROGRESS; 014 BLOCKED; 015 BLOCKED; 016 IN_PROGRESS; 017 IN_PROGRESS; 018 BLOCKED; 019 PLANNED. Progress remains NOT_CALCULATED; no task DONE.
+- **New review findings (Entry 065):** (a) webhook delivery UUID accepts uppercase representation despite canonical-form contract; (b) repository allowlist configuration check permits empty owner/repository components. Static-review findings only; no live exploit or endpoint behavior is asserted. Source/workflow freeze remains in force; remediation deferred for Xu's independent disposition.
+- **Review state:** formal reviews 0; inline comments 0; Xu independent review PENDING; Vinh acceptance NOT ACCEPTED; integration/release NOT AUTHORIZED.
+- **Main comparison at last live read:** DIVERGED 148 ahead / 4 behind, 47 changed paths, all W118. PR #68 OPEN / UNMERGED; no rebase, merge, force-push or release.
+- **Required Xu action:** review the exact PR #68 HEAD above, inspect XR-118-001 criteria against current code and this addendum, record verified reviewer identity and PASS / BLOCKED / NEEDS CHANGES per gate. Do not use PR #67 as the review target.
+- **Governance:** This addendum is routing and evidence metadata only. It does not amend architecture, waive acceptance gates, authorize code changes, authorize main integration or constitute product acceptance.
+- **Prepared by:** Ka — CSA / Delegated Technical Lead.
+- **Date-Time:** 2026-11-24 04:47 +07:00.
