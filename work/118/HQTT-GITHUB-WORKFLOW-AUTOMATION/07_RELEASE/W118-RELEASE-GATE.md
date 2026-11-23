@@ -63,3 +63,11 @@ This staged gate avoids the circular dependency where the workflow_run listener 
 - Xu independent review remains PENDING; Vinh Stage B non-release integration authorization remains PENDING.
 - Runtime handoff, positive/negative ACK, review, controlled fault injection and workflow_run diagnostics have not been executed; all were SKIPPED on PR synchronize.
 - Therefore the product is **not READY FOR FINAL ACCEPTANCE**, **not ACCEPTED**, and **not RELEASED**.
+
+
+## Current active-candidate overlay — 2026-11-24 05:43 +07:00 (Entry 070)
+
+- Current active review candidate is **PR #68**: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/68.
+- Exact branch/PR HEAD at readback: `e5d7c989bf8fa73637283f2d75f8003861669ee7`; PR #68 OPEN / UNMERGED against `main`.
+- PR #67 in the earlier Stage A/B and historical snapshots is superseded/historical; do not treat it as the current integration candidate. Preserve the staged gates: Xu design/security review, explicit Vinh non-release integration authorization, runtime execution/review, Vinh final acceptance, separate release authorization.
+- Xu review PENDING; Vinh integration authorization NOT GRANTED; final acceptance NOT ACCEPTED; release NOT AUTHORIZED.
