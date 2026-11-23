@@ -2918,3 +2918,55 @@ Unit/regression and full pytest jobs also completed SUCCESS. The CI #425 and #42
 **STATUS:** PR #76 CANDIDATE CI #429 PASS / IMMUTABLE ARTIFACT PASS; WP5-03 HIGH / OPEN; CORE WIRE CONTRACT / LIVE AUTHORITY NOT VERIFIED; EXECUTION GATE CLOSED; ACTIVE — INTEGRATION BLOCKED — NOT RELEASED.
 
 **Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-075 — Disable unvalidated HTTP snapshot execution and correct readiness semantics
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 09:54 +07:00  
+**Branch:** ka/work28-security-hardening-20261123  
+**Prior exact merge-candidate CI:** run #429 / 45102189583 / PASS  
+**New candidate source head:** 7240a0d2d6fd115ddfb86ae7b7624837c76bd84d  
+**New CI:** run #435 / 45102801064 / PENDING at entry time
+
+### 1. Security boundary discovered
+
+The previous candidate disabled mode=command, but HTTP work28_snapshot still accepted caller-supplied work_context and a startup-loaded static grant registry. That registry is not online Core validation: it cannot prove current expiry/revocation, trusted caller identity, W70 policy snapshot or that caller-supplied workspace/evidence paths came from Core. A local cached grant must not be treated as authority.
+
+### 2. Containment implemented (candidate branch only)
+
+- execution_host/server.py: HTTP snapshot execution returns 503 core_online_grant_validation_not_configured unless an online Core validator is actually wired. This candidate intentionally wires none, so all protected HTTP snapshot execution is blocked; caller WorkContext is not allowed to reach dispatch.
+- main() no longer loads the static grant list as if it were an authority source. It starts in explicit BLOCKED execution mode and passes an empty registry.
+- serve() pins snapshot-only true and leaves the Core online validator unset; legacy opt-out cannot enable execution.
+- execution_host/work28_readiness.py: health readiness now reports caller WorkContext authority BLOCKED, online Core grant validation BLOCKED, and static grant cache IGNORED rather than PASS. The health response reflects INTEGRATION_BLOCKED, not a false PASS.
+- tests/test_work28_dispatch.py: the HTTP snapshot test now proves HTTP 503 and no snapshot directory/side effect without online Core validation.
+- tests/test_work28_core_grant_fail_closed.py: startup no longer treats static grants as authority; added readiness regression proving even 99 cached grants cannot satisfy online authority gate.
+
+### 3. Candidate commits
+
+- d6ddcdd47327cf5eb3df57531cb8e96b6f371696 — block HTTP snapshot without Core online validation.
+- d648fa8bd5ec71134bd8895108df8222143cd1a5 — correct readiness gate semantics.
+- 16d000c5a64ad7b363adc9bb2bfa23a2137d7659 — test startup does not trust static grant cache.
+- 1d25173989e1ffbff808ee17f415299346b6d49d — test HTTP snapshot is blocked without online Core.
+- bcc9d25636098f73a9f2f737c8236a67d2997303 — mark static grants non-authoritative in readiness.
+- 7240a0d2d6fd115ddfb86ae7b7624837c76bd84d — test readiness cannot be satisfied by cached grants.
+
+### 4. Core implementation boundary
+
+- This is fail-closed containment, not completion of online Core authority.
+- Work28's proposed Core V1.2 implementation exists under core/execution_authority/ but is not approved/deployed and its current separate HTTP handler does not yet expose the complete Work28 online validation contract.
+- Current-main Core :8000 app composition inspected in this pass mounts Meeting routes only; no Work execution-grant router is mounted there.
+- PR #48 is a separate open/draft W1111 candidate, not canonical main and not automatically reusable. PR #74 remains open/draft with five wire/ownership/policy/HostPort findings.
+- No endpoint, body schema, credential, W70 policy version or Core principal is guessed or wired in this entry.
+- To restore execution, next implementation slice must reconcile and version the Core wire contract, implement grant issuance/online validation/revocation/run-record with Work/operation/source/policy binding, derive WorkContext solely from the Core response, and test no-side-effect denial for every invalid grant branch.
+
+### 5. Validation status
+
+- Prior PR merge-candidate CI #429 passed all five jobs on SHA 661e3b7d4706026fa8f3b1da7d7ca28bd613d801; immutable archive and artifact checksums are recorded in JRN-W28-074.
+- New changes above are not yet validated by CI. Run #435 is pending; no PASS is claimed for these additional changes.
+- No local PC, live MCP 8030, Core 8000, Runtime MCP, W14 Host, deployment or protected evidence readback was executed.
+
+**STATUS:** FAIL-CLOSED HTTP CONTAINMENT IMPLEMENTED / CI #435 PENDING; WP5-03 FUNCTIONAL CORE AUTHORITY REMAINS HIGH / OPEN; WP5-06 TRANSPORT MITIGATION CI #429 PASS; WP5-07 COVERAGE CI #429 PASS; WP5-08 COMMAND MODE MITIGATION CI #429 PASS; EXECUTION GATE CLOSED; NOT RELEASED.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
