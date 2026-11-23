@@ -2684,3 +2684,52 @@ Compare exact against canonical pre-entry HEAD:
 5. Ka: review exact source/workflow SHA and logs after integration. PC live provenance remains pending until Vinh reports the PC is available and collector evidence is returned.
 
 **STATUS:** WP2/WP5/WP1/PR73 SOURCE INTEGRATION AND CONFIGURED CI: RECORDED; W28-KA-WP5-03 HIGH / OPEN; W28-KA-WP5-06 HIGH / OPEN; W28-KA-WP5-07 HIGH / OPEN; W28-KA-WP5-08 HIGH / OPEN; PR #74 CONTRACT: OPEN / DRAFT / UNMERGED; LIVE MCP → CORE → RUNTIME E2E: BLOCKED; EXECUTION GATE CLOSED; ACTIVE — INTEGRATION BLOCKED — NOT RELEASED.
+
+
+## 2026-11-23 — JRN-W28-070 — Canonical branch freshness correction and PR #74 re-review reconciliation
+
+**Name:** Ka  
+**Title:** CSA / Independent Architecture & Security Reviewer  
+**Date-Time:** 2026-11-23 07:46 +07:00  
+**Canonical branch:** `work/28-mcp-tooling-platform`  
+**Canonical HEAD before this entry:** `1545c4de4e558e467a76582e2d7196b853019cec`  
+**PR #74 head:** `a25c74c60a90f177825e5ec35c56f3a8ec7851f7`
+
+### 1. Current branch and PR freshness
+
+- Direct Git ref read confirms the canonical Work28 branch head before this entry is `1545c4de4e558e467a76582e2d7196b853019cec`; journal content read at this exact commit includes JRN-W28-068 and JRN-W28-069.
+- Exact compare canonical `1545c4de4e558e467a76582e2d7196b853019cec` → PR #74 head `a25c74c...`: **DIVERGED — 2 commits ahead / 12 behind**, merge base `29dfc5d6884835a8d3c46bf8509790ed2abe423b`, one modified contract file.
+- PR #74 remains OPEN / DRAFT / UNMERGED. PR API's displayed base_sha remains the older merge-base SHA and must not be mistaken for current branch HEAD.
+- Review 6015443161 had compared PR head against the older `29dfc5d...` base (2 ahead / 0 behind). That compare was valid for that SHA but stale for current canonical freshness.
+- Submitted supplemental COMMENT-only correction review ID `6015449638`, recording the current 2-ahead / 12-behind result. No approval or merge recommendation was issued.
+
+### 2. Exact-head contract findings retained
+
+PR #74 contract blob `85c88a5ac50a6d12e4edcd34879a9db79277466a` remains architecture-only and does not define:
+1. P1 — versioned wire schemas, grant claims/token representation, error taxonomy, ACK proof, event sequence/cursor and compatibility rules;
+2. P1 — exact W14 source/release ownership mapping for W28 `execution_host/` and :8031;
+3. P1 — three-way Core provenance, including distinct W28 `core/execution_authority/` candidate, current main and W1111 PR #48;
+4. P2 — W70 policy version/snapshot binding and fail-closed stale/unavailable/mismatch behavior;
+5. P2 — normative HostPort message envelope, correlation/sequence, idempotency, cancellation ACK, close and descendant-exit proof.
+
+Review 6015443161 records the detailed findings; review 6015449638 corrects current branch freshness. Both are COMMENT-only.
+
+### 3. Canonical source findings re-confirmed
+
+- `execution_host/server.py` blob `cfdecca58e6146d067ce0e0c0a0feebac0ebdc83`: caller-provided `work_context`, local Work allowlist, and server assignment of `authorized=True` remain.
+- `execution_host/work28_dispatch.py` blob `22d5dcd385e301a43fcd0e1c3e901ff2c90abac9`: `command` mode bypasses snapshot grant resolution when `snapshot_only=False`; this is a static source path, not proof of live deployment exposure.
+- `ROOM_HOP_SNAPSHOT_ONLY=false` remains a trusted configuration opt-out; live PC value is UNKNOWN.
+- `tests/test_work28_core_grant_fail_closed.py` blob `6fecca58c97ffe0f042ead8e6eaedf30e5552d78` is present but the current canonical workflow blob `8876f1a9096ec54e5a78a073820755087e67ecbf` does not invoke it in Linux or Windows lifecycle lanes.
+- W28-KA-WP5-03, WP5-06, WP5-07 and WP5-08 remain HIGH / OPEN. No source or workflow change was made by Ka; no tests or live services were executed.
+
+### 4. Validation boundary and next actions
+
+- This pass is GitHub ref, file and PR review evidence only.
+- No PC collector, live MCP 8030 tools/list, Core endpoint, Runtime or protected evidence readback was run.
+- Vi must reconcile PR #74 only after Xu resolves the contract findings; Vi must remediate caller-controlled authority, grantless command mode, redirect handling and CI test discovery on a fresh canonical base.
+- An must independently verify exact-head Linux/Windows raw logs and negative no-side-effect tests.
+- Ka will re-review exact source SHA and raw CI evidence after integration.
+
+**STATUS:** PR #74 OPEN / DRAFT / UNMERGED / 2 AHEAD / 12 BEHIND; WP5-03 / WP5-06 / WP5-07 / WP5-08 HIGH / OPEN; LIVE MCP → CORE → RUNTIME E2E BLOCKED; EXECUTION GATE CLOSED; ACTIVE — INTEGRATION BLOCKED — NOT RELEASED.
+
+**Signature:** [KÝ: KA | CSA / INDEPENDENT REVIEWER]
