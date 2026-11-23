@@ -36,6 +36,7 @@ def validate_core_grant_url(url: str) -> str:
         or not hostname
         or parsed.username is not None
         or parsed.password is not None
+        or parsed.query
         or parsed.fragment
     ):
         raise GrantError("core_grant_url_invalid")
