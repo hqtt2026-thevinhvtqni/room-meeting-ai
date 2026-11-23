@@ -74,3 +74,20 @@ TB-6: W10 ↔ other Works (W24, W112, W14, W113).
 
 ## 7. Review disposition
 DRAFT FOR REVIEW. Threat model does not authorize dependency installation, host access, runtime execution, code changes or release.
+
+## 8. Xu pre-review revision addendum — proposed controls (2026-11-23; NOT APPROVED)
+
+The following controls supplement T01–T15 and must be mapped to explicit test IDs before pilot:
+
+- T01 authorization integrity: Bind each grant to issuer, caller, audience, Work, task, session, app/window, exact operation/target class, data scope, policy version, expiry and one-time nonce/action ID. Validate revocation and replay status immediately before execution. Reject any mismatch before side effect. Reuse W24/Core and W112 canonical contracts; do not create a second authorization authority.
+- T08 semantic destructive action: Classify action intent and target context before injecting input. A generic click is not automatically reversible. Send/submit/publish/delete/purchase/payment/transfer/permission/security/account mutation, unknown or ambiguous semantics must be denied before click. Confirmation alone does not override the v0.1 deny list.
+- T07/T15 session safety: Pilot only in a dedicated non-personal, non-admin test account/session; no shared human-active desktop. Show a visible control lease and immediate cancel/revoke. Revalidate session identity and lease before each action.
+- T04/T09 data privacy: No raw tree/screenshot persistence by default. Ephemeral processing, allow-listed fields, redaction-before-model, fail-closed on uncertain redaction; raw diagnostics require separately authorized per-run capture, private storage, audit and short TTL.
+- T10 supply chain: Pin immutable commit/release and artifact digest; verify license, dependency inventory, provenance/signature, OS/provider support, maintenance and advisories before D2.
+- T11 process containment: Track parent and descendants, environment and session handles; bound resources; propagate cancellation; verify all owned descendants/handles are closed. Survivors or uncertain cleanup => BLOCKED.
+- T02/T07 platform and privileges: Windows-only first pilot, exact OS/provider matrix; least-privilege non-admin worker. macOS/Linux remain unsupported until separate review and tests.
+- T03 untrusted content: UI labels, notifications, documents, titles and accessibility metadata are untrusted data and never authorization/policy. Embedded instructions are prompt injection.
+- T13 evidence integrity: Append-only journal and digests; link every threat/control to test ID, fixture, expected outcome, evidence artifact, owner and status.
+
+### Mandatory negative-test traceability rows
+At minimum: grant missing/expired/revoked/wrong audience/wrong caller/wrong Work/wrong session/wrong app/wrong operation/replayed nonce; stale and cross-window refs; ambiguous/deceptive control; destructive semantic control; elevated worker; concurrent session lease; malicious UI instructions; cancellation leaving descendants; backend digest mismatch; unknown license/provenance; redaction failure; raw-data Dashboard/journal leakage; unexpected modal; post-condition false or unavailable. All must fail closed with evidence. This addendum is a proposal, not proof that tests have run or passed.
