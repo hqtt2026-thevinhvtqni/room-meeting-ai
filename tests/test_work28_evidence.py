@@ -57,7 +57,7 @@ class CoreGrantClientTests(unittest.TestCase):
         self.assertIn("unreachable", str(ctx.exception))
 
     def test_build_prefers_core_url(self):
-        env = {"ROOM_HOP_CORE_GRANT_URL": "http://example.invalid/g"}
+        env = {"ROOM_HOP_CORE_GRANT_URL": "https://example.invalid/g"}
         src = build_grant_source(env)
         self.assertIsInstance(src, HttpCoreGrantSource)
 
