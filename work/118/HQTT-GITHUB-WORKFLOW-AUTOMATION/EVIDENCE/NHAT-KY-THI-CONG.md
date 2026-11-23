@@ -2287,3 +2287,13 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - **Stale-record discrepancy:** PR description still contains an older snapshot (branch HEAD `b2bf8f...`, Run #892 and older counts). STATUS and Entry 062 also describe the earlier audit snapshot at HEAD `9dd489f...`. These are historical records, not the current state; this Entry 063 supersedes those snapshots for the current readback. No PR description rewrite was made in this verification.
 - **Scope/control:** Read-only source/CI/review verification plus W118 journal/STATUS documentation writes. No source code or workflow edits, no external Work/Sandbox/runtime/config/secret/permission/branch-protection changes, no rebase, force-push, Main merge, release or self-acceptance.
 - **Disposition:** Xu action/evidence verification RECORDED; PR #68 ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.
+
+
+### Entry 063 addendum — exact-head recheck after verification records were committed
+
+- **Date-Time:** 2026-11-23 18:06 +07:00 (GitHub Actions raw log timestamp 11:06:28Z).
+- **Correction to Entry 063 snapshot:** After the Entry 063 journal and STATUS commits, branch HEAD advanced to `76adbb5450f47fe058e8082321ff7c9d49de8d7c`; Main remained `0902cd26518673aa078bb4c7c7899e1e4a95656a`; compare became DIVERGED **142 ahead / 4 behind**, 47 changed paths. The earlier 140/4 count and `f6254a7e...` HEAD in Entry 063 describe the immediately preceding snapshot and are superseded here.
+- **Exact-head PR CI #1000:** Run ID `45162100031`; validate job `137649803171`; COMPLETED / SUCCESS. Raw log checks out synthetic merge `145b013...`, explicitly merging PR source `76adbb5450f47fe058e8082321ff7c9d49de8d7c` into Main `0902cd26518673aa078bb4c7c7899e1e4a95656a`; **102 tests in 0.385s — OK**; `TEST_OUTCOME=success`; `SOURCE_BINDING_STATUS=NOT_RUN`. Handoff-request, ACK-claim and review-observation jobs SKIPPED. Run URL: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45162100031.
+- This exact-head CI confirms the two Xu verification documentation commits are present in the tested PR merge candidate. It remains contract/unit CI only; it does not prove Task-level source binding, live Core lease validation, cross-Work runtime integration or Runtime Auto E2E.
+- PR #68 remains OPEN / UNMERGED; formal reviews 0; inline threads 0 at latest readback. No source/workflow code changes, Main merge, rebase, force-push or release.
+- **Disposition unchanged:** ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.
