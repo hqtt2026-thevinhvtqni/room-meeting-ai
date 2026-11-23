@@ -219,3 +219,11 @@ Work32 Grant may be considered only for W118 protected execution integration aft
 - **W118-DIAGNOSTICS-002:** workflow lists at most 1,000 labelled Issues, with no completeness signal passed to the planner. A matching Issue beyond the cap could be missed and a duplicate Issue created, weakening idempotency.
 - **Positive controls:** failure-only trigger, separate diagnostics workflow, concurrency key by workflow ID/head SHA, attempt-specific update marker, job-scoped issue write permission, no auto-retry or auto-assignment. Tests do not cover embedded/duplicate markers or incomplete pagination.
 - **Disposition:** both findings are recorded in Journal Entry 069. Bounded exact-marker, duplicate rejection and complete-pagination fail-closed remediation is deferred under the implementation/workflow freeze. Xu to review alongside Entries 065, 067 and 068. No source/workflow mutation; no Issue write.
+
+
+## Entry 070 — canonical review/release document routing corrected (2026-11-24)
+
+- **Finding:** XR-118-001 and W118-RELEASE-GATE retained PR #67 as the active target, while the live candidate and prior RR overlay designate PR #68. This stale canonical pointer could misdirect Xu or bind review evidence to the superseded PR.
+- **Correction:** Checklist active PR pointer now references PR #68; release gate and checklist include current overlays binding review to exact HEAD `e5d7c989bf8fa73637283f2d75f8003861669ee7`. PR #67 references remain historical only; staged review/integration/runtime/acceptance/release authority unchanged.
+- **Live state at readback:** PR #68 OPEN / UNMERGED, base `main`, branch head equals PR head. Xu review PENDING; Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED.
+- **Scope:** Documentation-only correction. No source/workflow/runtime/secret/permission/branch-protection or external Work/Sandbox changes; no merge/rebase/force-push/release.
