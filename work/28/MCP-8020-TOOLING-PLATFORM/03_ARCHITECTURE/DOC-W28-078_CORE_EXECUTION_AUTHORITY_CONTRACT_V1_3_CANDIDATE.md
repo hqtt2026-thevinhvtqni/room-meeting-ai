@@ -338,3 +338,16 @@ The grant-validation/run-report API described here does not itself implement W14
 - Required W52 handoff: exact canonical repository/branch/HEAD; interface schema/version; authenticated principal proof; assignment/task/correlation/idempotency binding; ACK/NACK event envelope; durable outbox/receipt and replay/cursor semantics; negative/recovery tests; and proof that ACK is committed before W14 Host side effects.
 
 **Disposition:** W52 ownership is architecturally decided; W52 GitHub implementation and live dispatch/ACK are NOT VERIFIED. Do not create a W28 substitute orchestration layer. Execution Gate remains CLOSED.
+
+
+## 17. PR #48 source-hash binding defect — direct exact-source reproduction (2026-11-23)
+
+Exact PR #48 head inspected: `c70eb2b82f54a000a81263dc519078ddf105f075`.
+
+- Core source `core/execution_authority.py`, blob `163b126178b67c6e0a3f68ba33eaf7b9e6d91503`, method `ExecutionAuthority.record_run()`: revalidates the grant and checks that the submitted `source_sha256` matches the SHA-256 syntax, but does not compare it to the source digest bound to the issued grant/work policy before appending `RUN_RECORDED`.
+- Test source `tests/test_execution_authority.py`, blob `4ea5158c07df1e66183a6fbe7a6f79042332605d`: fixture policy binds Work W28 to source digest `a` repeated 64 times. The HTTP run-record test submits `b` repeated 64 times and asserts HTTP 200 plus the mismatched digest in the response.
+- This is a direct source/test contradiction to PR #74 INV-4 (grant binds immutable source snapshot) and W28's exact-source requirement. It is not merely a historical report.
+- The defect is bounded to the inspected PR #48 candidate head. No test was executed in this pass; the test source itself demonstrates the expected acceptance of the mismatched digest.
+- Do not reuse this method unchanged. Any future implementation must compare the submitted digest to the exact grant-bound digest and the current approved source snapshot, reject mismatch before ledger append, and include a negative test asserting no run record is written.
+
+**Disposition:** PR #48 remains OPEN / DRAFT / UNMERGED and DIVERGED 157 ahead / 986 behind Main at the recorded comparison. Candidate source is NOT SAFE TO MERGE WHOLESALE; exact-source binding defect remains P0.
