@@ -985,3 +985,15 @@ Bàn giao An thực hiện static adversarial re-review theo Review Task v7. Ch�
 
 ### Ký ghi nhận
 Xu | AI-01
+
+## W10 D1 — BIÊN BẢN BỔ SUNG: XỬ LÝ FINDINGS F01–F10 (2026-11-23)
+
+- Owner: Vinh. Điều phối: Xu — AI-01.
+- Phạm vi: Chỉnh lý hồ sơ thiết kế Desktop Adapter theo đợt Xu independent pre-review; không triển khai.
+- Hồ sơ bổ sung: Capability Contract Draft §14; Threat Model Draft §8; D1 Review Brief phần “Xu pre-review findings to reviewers”.
+- Nội dung đề xuất: (1) authorization grant gắn caller/Work/task/audience/session/app-window/operation/expiry/nonce/revocation; (2) phân loại ngữ nghĩa trước click và chặn hành động destructive/không rõ; (3) pilot bằng dedicated non-personal non-admin test session; (4) không lưu raw accessibility tree mặc định, redaction fail-closed; (5) pin backend immutable + digest/provenance/license/dependency/security review; (6) ProcessSupervisor quản lý process tree, session handles và xác minh cleanup; (7) loại desktop.focus khỏi allow-list tạm thời, giới hạn close_session; chỉ Workflow Verification được gán task PASS; (8) traceability threat-control-test-evidence-owner; (9) UI content là untrusted data; (10) Windows-only pilot, nền tảng khác UNSUPPORTED.
+- Quyết định tạm: Chấp nhận các nội dung trên làm PROPOSED REVISION để lấy ý kiến; chưa phải quyết định kiến trúc cuối cùng. Không sửa ba hợp đồng browser LOCKED.
+- Ý kiến reviewer: Chưa nhận được phản hồi xác thực từ Ka/Cla/Qw/Nu. Không ghi nhận ACK/approval thay cho họ.
+- Trạng thái: D1 = REVISED DRAFT / NEEDS INDEPENDENT REVIEW; NOT PASS / NOT LOCKED. D2 = NOT AUTHORIZED / NOT STARTED.
+- Giới hạn: Đây là cập nhật tài liệu dựa trên pre-review của Xu; chưa có kiểm thử, security assessment độc lập, backend due diligence, host validation hoặc implementation review.
+- Bước tiếp: Kiểm tra read-back các tài liệu; đồng bộ Sandbox ↔ nhánh W10 hiện hữu; tiếp tục tìm kênh dispatch có xác thực. Chỉ trình Owner quyết định lock sau khi có phản biện và bằng chứng phù hợp.
