@@ -478,3 +478,13 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - This is a W118-local artifact validation gap only; it is not evidence of forged events, Core Task mutation, or Work70 Evidence Register acceptance.
 - No source/workflow change; no runtime or external Work/Sandbox mutation. Task Register statuses and all runtime blockers remain unchanged.
 - **Disposition:** ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.
+
+
+## Exact-head CI readback — Entry 068 (2026-11-24)
+
+- Final documentation/review-routing HEAD: `24dd3e4634973e9998126cd42359cf95927364c7`.
+- Push Run #1029: SUCCESS; 102 tests in 0.312s; `UNBOUND_LEGACY_BRANCH`; artifact `14866761026`, SHA-256 `b8c2a96377b18e589784edad1d80173b7ec57927cfd1211bb20856f42c22e972`.
+- PR Run #1030: SUCCESS; exact PR source HEAD above; 102 tests in 0.146s; `NOT_RUN` for push-only source binding; artifact `14866223240`, SHA-256 `3394617d834f51192ae3814c0d53812c440059722c76c45e1ccf4a6f70c304da`.
+- Handoff-request, ACK-claim and review-observation jobs were SKIPPED. These are contract/unit CI results, not Runtime Auto E2E or cross-Work runtime evidence.
+- Entries 065/067/068 findings remain routed to Xu; implementation/workflow freeze remains. No Task status promotion.
+- **Disposition:** ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.
