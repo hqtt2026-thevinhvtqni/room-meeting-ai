@@ -150,5 +150,42 @@ class CandidateSchemaTests(unittest.TestCase):
         self.assertEqual(list(self.validator("runCompleteRequest").iter_errors(request)), [])
 
 
+    def test_run_ack_requires_durable_ack_and_correlation(self) -> None:
+        response = {
+            "request_id": "f6b22c4d-11e8-4c10-99b1-4c8f50f8c7d1",
+            "contract_version": "1.3.0",
+            "server_time": "2026-11-23T08:00:00Z",
+            "status": "ACKNOWLEDGED",
+            "execution_request_id": "EXEC-001",
+            "event_id": "EVENT-001",
+            "sequence": 2,
+            "durable_ack": True,
+        }
+        self.assertEqual(list(self.validator("runAckResponse").iter_errors(response)), [])
+        response["durable_ack"] = False
+        self.assertTrue(list(self.validator("runAckResponse").iter_errors(response)))
+
+    def test_event_envelope_requires_correlated_ordered_identity(self) -> None:
+        event = {
+            "event_id": "EVENT-001",
+            "request_id": "f6b22c4d-11e8-4c10-99b1-4c8f50f8c7d1",
+            "execution_request_id": "EXEC-001",
+            "grant_id": "GRANT-001",
+            "work_id": "W28",
+            "task_id": "TASK-W28-001",
+            "assignment_id": "ASG-W28-001",
+            "host_instance_id": "W14-HOST-INSTANCE-1",
+            "correlation_id": "corr-001",
+            "sequence": 2,
+            "occurred_at": "2026-11-23T08:00:00Z",
+            "event_type": "RUN_STARTED",
+            "payload_sha256": "d" * 64,
+        }
+        self.assertEqual(list(self.validator("eventEnvelope").iter_errors(event)), [])
+        event.pop("correlation_id")
+        self.assertTrue(list(self.validator("eventEnvelope").iter_errors(event)))
+
+
+
 if __name__ == "__main__":
     unittest.main()
