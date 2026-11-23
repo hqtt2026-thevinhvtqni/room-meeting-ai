@@ -28,3 +28,15 @@ This is the single official minutes register for Work 28. Record decisions and i
 ## Minutes maintenance rule
 
 Append new numbered entries. Do not rewrite historical entries to make later outcomes appear earlier. Correct errors with a dated addendum that preserves the original record.
+
+
+## BB-W28-20261123-002 — Temporary implementation delegation to Ka
+
+- **Date:** 2026-11-23
+- **Source:** Vinh's direct instruction in the current conversation: “Ka chủ động xây đi, vì và an ko tham gia giai đoạn này.”
+- **Decision:** For the current Work 28 stabilization/build phase, Ka is directly authorized to perform implementation, source changes, workflow changes, test updates, GitHub integration preparation and automated CI verification. Vi and An do not participate in this phase.
+- **Scope of override:** This is a stage-specific override of the normal implementation/QA assignment. It does not change the four-participant Work 28 roster or permanently rewrite the overall roles in the Work Manifest.
+- **Verification limitation:** Because Ka is both implementer and verification operator in this phase, Ka's review is not independent QA. GitHub Actions Linux/Windows runs are automated evidence; they do not replace independent review or Vinh's product acceptance.
+- **Delivery method:** Changes are isolated on `ka/work28-autonomous-build-20261123` and proposed through PR #75. No direct update to the canonical branch, merge, deployment or release is authorized by this entry.
+- **Unchanged architecture and safety gates:** Core :8000 remains the sole authority; MCP Build/Verification :8030 remains the supported build lane; historical MCP :8020 remains quarantined / DO NOT USE; Runtime MCP remains a separate clean rebuild; Execution Host :8031 must not self-authorize. No invented endpoint, caller-controlled authority, fail-open behavior or placeholder PASS is permitted.
+- **Status:** ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED.
