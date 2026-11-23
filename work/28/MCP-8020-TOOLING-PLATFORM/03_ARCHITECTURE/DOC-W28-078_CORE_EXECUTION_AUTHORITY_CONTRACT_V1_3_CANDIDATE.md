@@ -255,3 +255,45 @@ This addendum narrows the source claims to exact fetched paths and blobs.
 ### Disposition
 
 Core :8000 route mount, W14 Host ownership, W70 policy snapshot and canonical source provenance remain BLOCKED / NOT VERIFIED. This addendum does not claim live endpoint behavior, runtime process identity, test PASS or approval. Execution Gate remains CLOSED.
+
+
+## 14. Alignment addendum — AD-W28-20261123-002 / PR #74 (2026-11-23)
+
+This document is a subordinate wire-level implementation proposal. It MUST be interpreted under the architecture baseline in PR #74, not as a competing authority or independent architecture decision.
+
+### 14.1 Normative ownership inherited from PR #74
+
+- W70 owns Work/WP/Gate lifecycle and eligibility.
+- Core :8000 remains the sole authority and durable system of record.
+- W52 owns Agent orchestration, assignment dispatch, recipient-authenticated ACK/NACK, event cursor, retry/cancel/recovery semantics.
+- W14 is the sole Execution Host product and side-effect boundary.
+- W10 remains LOCKED / NO CHANGE; no direct provider invocation.
+- W092/W113 are read-only projections.
+- W12/W13 are historical/internal foundations, not separate active Host products.
+- Historical MCP :8020 remains DO NOT USE.
+
+### 14.2 Grant prerequisites and full binding
+
+A Core grant MUST NOT be issued merely because a service identity requests one. It is issued only after Core verifies the W52 assignment and a recipient-authenticated ACK from the exact assigned Agent runtime, plus W70 Work/WP/Gate eligibility.
+
+The V1.3 architecture identifiers are mandatory bindings: `work_id`, `wp_id`, Gate/policy version, `task_id`, `assignment_id`, idempotency key, correlation ID, authenticated `agent_principal_id`, runtime instance/build identity, `grant_id`, `host_id`, `provider_id`, `run_id`, source repository/branch/commit/tree digest and immutable input snapshot, action/capability scope, environment, timestamps and event sequence.
+
+For clarity:
+- Principal identity, recipient ACK state, Work/WP/Gate policy, assignment state and authoritative roots are resolved by Core from trusted sources; they are not accepted as caller authority claims.
+- The service request may carry opaque task/assignment/correlation identifiers and the requested operation/snapshot; Core must resolve and verify every identifier.
+- Any omitted binding, stale source, unsupported capability, wrong recipient, wrong Host/provider, missing ACK, or inconsistent environment must deny.
+- This candidate's initial §4/§5 field lists are incomplete unless augmented by this §14.2. The full AD-W28-20261123-002 binding set takes precedence.
+
+### 14.3 Route/transport status
+
+PR #74 §6 deliberately leaves exact transport and route names as implementation decisions. Therefore the route paths shown in §4–§7 of this document are illustrative candidates only, not approved route names or a mandate to create a second HTTP interface. Final route/transport design must be reconciled with the existing Core :8000 composition, W52 delivery/ACK protocol and W14 HostPort contract before implementation.
+
+The grant-validation/run-report API described here does not itself implement W14 bidirectional HostPort request/notify/receive/respond/close semantics. A one-shot HTTP API cannot be presented as HostPort completion. The W14 capability profile and process-tree close/cancel semantics remain separate P0 proof obligations.
+
+### 14.4 PR #74 and PR #48 provenance snapshot
+
+- PR #74 title: `W28: Core Execution Authority & Agent-to-Computer Contract V1.3`; source contract blob `85c88a5ac50a6d12e4edcd34879a9db79277466a`; architecture baseline decided, implementation not approved by this document alone, not deployed, not wired, not released. Its §8 records the Main source mismatch and PR #48 candidate limitations.
+- PR #48 title: `feat(core): implement Work-scoped Execution Authority V1.2`; head `c70eb2b82f54a000a81263dc519078ddf105f075`; OPEN / unmerged; branch comparison to Main at this inspection: 157 ahead / 986 behind. It is not canonical Core or W14.
+- The PR #48 source-hash binding defect and W12/W13 ownership drift remain blockers to reuse. Any future reuse must be selective, aligned to W14 and the complete AD-W28 V1.3 bindings, fixed and re-tested on a fresh canonical Core baseline.
+
+**Precedence:** AD-W28-20261123-002 (PR #74) owns architecture and component boundaries. DOC-W28-078 proposes only a possible versioned wire-level realization. Where they differ, PR #74 controls and DOC-W28-078 must be revised.
