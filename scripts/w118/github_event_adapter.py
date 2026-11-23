@@ -6,6 +6,7 @@ No local event queue, inbox, retry store or Task database is created here.
 """
 from __future__ import annotations
 
+import re
 from typing import Any, Mapping
 
 from .core_task_adapter import CoreTaskProjection
@@ -123,10 +124,15 @@ def normalize_github_delivery(
         head_sha = run.get("head_sha")
         run_id = run.get("id")
         conclusion = run.get("conclusion")
-        if not isinstance(branch, str) or not isinstance(head_sha, str) or len(head_sha) != 40:
-            raise GitHubEventAdapterError("workflow_run requires head_branch and full head_sha")
+        if not isinstance(branch, str) or not branch.strip():
+            raise GitHubEventAdapterError("workflow_run requires a non-empty head_branch")
+        if not isinstance(head_sha, str) or re.fullmatch(r"[0-9a-fA-F]{40}", head_sha) is None:
+            raise GitHubEventAdapterError("workflow_run requires a full 40-character hexadecimal head_sha")
         if type(run_id) is not int or run_id < 1:
             raise GitHubEventAdapterError("workflow_run requires a positive run ID")
+        run_attempt = run.get("run_attempt")
+        if type(run_attempt) is not int or run_attempt < 1:
+            raise GitHubEventAdapterError("workflow_run requires a positive integer run_attempt")
         if conclusion not in {"success", "failure", "cancelled", "timed_out", "action_required"}:
             return {
                 "status": "DEFERRED",
@@ -166,7 +172,7 @@ def normalize_github_delivery(
                     "repository": expected_repository,
                     "workflow_name": run["name"],
                     "run_id": run_id,
-                    "run_attempt": run.get("run_attempt"),
+                    "run_attempt": run_attempt,
                     "branch": branch,
                     "head_sha": head_sha,
                     "conclusion": conclusion,
