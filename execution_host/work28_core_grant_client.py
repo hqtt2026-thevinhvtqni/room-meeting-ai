@@ -10,6 +10,7 @@ import json
 import os
 import urllib.error
 import urllib.request
+from urllib.parse import urlsplit
 from typing import Protocol
 
 from .work28_grant import ExecutionGrant, GrantError
@@ -32,11 +33,40 @@ class FileGrantSource:
         return load_grant_registry(path=self._path)
 
 
+_LOOPBACK_HOSTS = frozenset({"localhost", "127.0.0.1", "::1"})
+
+
+def _validate_core_grant_url(url: str) -> str:
+    """Require TLS for remote Core URLs; permit plaintext HTTP only on loopback."""
+    if not isinstance(url, str) or not url.strip():
+        raise GrantError("core_grant_url_required")
+    candidate = url.strip()
+    if any(ord(ch) < 0x20 or ord(ch) == 0x7F for ch in candidate):
+        raise GrantError("core_grant_url_invalid")
+    try:
+        parsed = urlsplit(candidate)
+        # Accessing .port forces validation of malformed/out-of-range ports.
+        _ = parsed.port
+    except ValueError as exc:
+        raise GrantError("core_grant_url_invalid") from exc
+    host = (parsed.hostname or "").lower()
+    if (
+        parsed.scheme.lower() not in {"https", "http"}
+        or not host
+        or parsed.username is not None
+        or parsed.password is not None
+        or parsed.query
+        or parsed.fragment
+    ):
+        raise GrantError("core_grant_url_invalid")
+    if parsed.scheme.lower() == "http" and host not in _LOOPBACK_HOSTS:
+        raise GrantError("core_grant_https_required")
+    return candidate
+
+
 class HttpCoreGrantSource:
     def __init__(self, url: str, token: str | None = None, timeout: float = 5.0) -> None:
-        if not url:
-            raise GrantError("core_grant_url_required")
-        self.url = url
+        self.url = _validate_core_grant_url(url)
         self.token = token
         self.timeout = timeout
 
