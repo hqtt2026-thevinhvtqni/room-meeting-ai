@@ -40,3 +40,19 @@ Review the draft Desktop Adapter Capability Contract and Threat Model before imp
 
 ## Participants requested
 Ka (architecture/security review), Cla (technical implementation feasibility), Qw (quality/negative-test review), Nu (independent end-to-end risk review). Xu consolidates feedback into one canonical Biên bản and one Nhật ký. No agent is authorized to install or implement.
+
+## Xu pre-review findings to reviewers — revision request (2026-11-23)
+
+Please review the original D1 package together with the proposed addenda in the capability contract and threat model. This remains a design-only consultation.
+
+### Required reviewer decisions
+1. Ka — architecture/security: Validate authorization binding/replay/revocation, destructive semantic classification, trust boundaries, privacy/retention, threat coverage and whether W24/W112 canonical contracts can carry the required grant context without duplication.
+2. Cla — implementation feasibility: Validate Windows accessibility provider support, immutable backend pin/provenance, ProcessSupervisor process-tree/session-handle containment, cancellation/cleanup, and precise operation/result semantics. Identify impossible or underspecified requirements.
+3. Qw — QE/negative testing: Produce a traceability matrix from each threat/control to test ID, fixture, expected result, evidence artifact and pass/fail/block rule. Include all mandatory negative cases listed in the threat-model addendum.
+4. Nu — independent end-to-end risk review: Challenge human-session safety, prompt injection, semantic misclassification, privacy leaks, uncertain side effects, recovery and operational failure modes across the full lifecycle.
+
+### Review response format
+For each finding: ACCEPT / REVISE / REJECT / BLOCKED; severity; exact document section; rationale/evidence; proposed replacement wording; test implication; unresolved dependency. Explicitly state what was actually inspected or tested. Do not claim runtime/security validation from document inspection.
+
+### Consultation state
+No reviewer has been dispatched or has responded through a verified channel as of this revision. This brief is prepared for forwarding only. It does not constitute ACK, approval, implementation authorization or D1 PASS.
