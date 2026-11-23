@@ -9,7 +9,6 @@ from .identity import RuntimeIdentity
 from .models import WorkContext, ExecutionRequest
 from .work28_dispatch import DispatchError, dispatch_execute
 from .work28_grant import ExecutionGrant, GrantError
-from .work28_core_grant_client import build_grant_source
 from .work28_readback import ReadbackError, load_sealed_result
 from .work28_evidence import EvidenceError
 from .work28_readiness import readiness_report
@@ -78,6 +77,7 @@ class Handler(BaseHTTPRequestHandler):
     grant_registry: dict | None = None
     evidence_root: str | None = None
     snapshot_only: bool = True
+    core_online_validator: object | None = None
     def _send(self,code,payload):
         data=json.dumps(payload,ensure_ascii=False).encode(); self.send_response(code); self.send_header('Content-Type','application/json'); self.send_header('Content-Length',str(len(data))); self.end_headers(); self.wfile.write(data)
     def do_GET(self):
@@ -88,10 +88,10 @@ class Handler(BaseHTTPRequestHandler):
                 grant_count=len(grants),
                 evidence_root_configured=bool(Handler.evidence_root),
                 snapshot_only=bool(Handler.snapshot_only),
-                core_grant_url_set=bool(os.environ.get('ROOM_HOP_CORE_GRANT_URL')),
+                core_online_validator_configured=Handler.core_online_validator is not None,
             )
             payload = {
-                'status': 'PASS',
+                'status': ready['status'],
                 'service': 'execution-host',
                 'provider': self.host.provider_type,
                 **self.host.identity(),
@@ -148,6 +148,8 @@ class Handler(BaseHTTPRequestHandler):
             work_context=dict(body['work_context'])
             if not authorize_work(work_context.get('work_id'), Handler.authorized_works):
                 self._send(403,{'status':'BLOCKED','reason':'caller_not_authorized_for_work'}); return
+            if body.get('mode', 'command') == 'work28_snapshot' and Handler.core_online_validator is None:
+                self._send(503, {'status': 'BLOCKED', 'reason': 'core_online_grant_validation_not_configured'}); return
             work_context['authorized']=True
             result = dispatch_execute(
                 self.host,
@@ -175,21 +177,22 @@ def serve(host='127.0.0.1',port=8031,auth_token: str | None = None, authorized_w
     Handler.authorized_works=frozenset(authorized_works) if authorized_works else None
     Handler.grant_registry=dict(grant_registry) if grant_registry else {}
     Handler.evidence_root=evidence_root
-    Handler.snapshot_only=bool(snapshot_only)
+    Handler.snapshot_only=True
+    # No online Core grant validator is wired on this candidate. Protected
+    # HTTP snapshot execution must remain unavailable rather than trusting
+    # the startup grant cache or caller-supplied WorkContext.
+    Handler.core_online_validator=None
     ThreadingHTTPServer((host,port),Handler).serve_forever()
 
 def main():
     config = load_execution_auth_config()
     announced = ', '.join(sorted(config['authorized_works']))
-    # Core is the sole grant authority. Any missing/unreachable/invalid Core
-    # grant source aborts startup; never fall back to a local file registry.
-    grants = build_grant_source().fetch_grants()
-    print('execution-host: armed; authorized works: ' + announced +
-          '; grants=' + str(len(grants)), flush=True)
+    print('execution-host: armed in BLOCKED execution mode; configured Work ids: ' +
+          announced + '; Core online grant validator: NOT_CONFIGURED', flush=True)
     evidence_root = os.environ.get('ROOM_HOP_EVIDENCE_ROOT')
-    # Command mode is unconditionally disabled until a versioned Core grant
-    # contract authorizes it. The legacy ROOM_HOP_SNAPSHOT_ONLY opt-out is
-    # intentionally ignored so deployment configuration cannot bypass grants.
-    serve('127.0.0.1', 8031, grant_registry=grants, evidence_root=evidence_root, snapshot_only=True, **config)
+    # Neither the legacy static grant list nor caller WorkContext is authority.
+    # Until the approved online Core validation contract is wired, snapshot
+    # HTTP execution remains blocked. The command-mode opt-out is ignored.
+    serve('127.0.0.1', 8031, grant_registry={}, evidence_root=evidence_root, snapshot_only=True, **config)
 
 if __name__=='__main__': main()
