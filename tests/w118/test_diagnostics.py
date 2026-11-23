@@ -40,7 +40,7 @@ class Work118DiagnosticsTests(unittest.TestCase):
 
     def test_plan_contains_issue_and_attempt_idempotency(self):
         key = diagnostic_key(9, "e" * 40)
-        plan = build_plan([{"number": 102, "body": f"<!-- {key} -->"}], 9, "e" * 40, 77, 2)
+        plan = build_plan([{"number": 102, "body": f"<!-- {key} -->"}], 9, "e" * 40, 77, 2, scan_complete=True)
         self.assertEqual(plan["existing_issue"], "102")
         self.assertEqual(plan["update_marker"], "<!-- w118-diagnostic-update:77:2 -->")
 
@@ -66,6 +66,10 @@ class Work118DiagnosticsTests(unittest.TestCase):
         issues = [{"number": 302, "body": marker}, {"number": 303, "body": marker}]
         with self.assertRaisesRegex(ValueError, "multiple Issues"):
             find_existing_issue(issues, key)
+
+    def test_scan_completeness_is_required_by_default(self):
+        with self.assertRaisesRegex(ValueError, "scan is incomplete"):
+            build_plan([], 34, "d" * 40, 89, 1)
 
     def test_incomplete_scan_blocks_diagnostic_plan(self):
         with self.assertRaisesRegex(ValueError, "scan is incomplete"):
