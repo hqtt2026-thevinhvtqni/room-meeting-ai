@@ -2970,3 +2970,44 @@ The previous candidate disabled mode=command, but HTTP work28_snapshot still acc
 **STATUS:** FAIL-CLOSED HTTP CONTAINMENT IMPLEMENTED / CI #435 PENDING; WP5-03 FUNCTIONAL CORE AUTHORITY REMAINS HIGH / OPEN; WP5-06 TRANSPORT MITIGATION CI #429 PASS; WP5-07 COVERAGE CI #429 PASS; WP5-08 COMMAND MODE MITIGATION CI #429 PASS; EXECUTION GATE CLOSED; NOT RELEASED.
 
 **Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-076 — CI #435 failure triage: readiness and legacy bootstrap tests
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 09:57 +07:00  
+**Workflow run:** 45102801064 / run #435  
+**Tested source head:** 7240a0d2d6fd115ddfb86ae7b7624837c76bd84d
+
+### 1. Exact CI result
+
+- Unit/regression: FAIL (one legacy bootstrap test error).
+- Linux lifecycle: FAIL (two stale readiness expectations).
+- Windows lifecycle: FAIL (same two stale readiness expectations).
+- The new HTTP containment test passed on both OS: snapshot request received 503 and no snapshot directory was created.
+- New Core readiness regression passed: 99 cached grants do not satisfy online Core authority.
+- New fail-closed module passed: 10 tests / OK on both OS.
+- WP16 dispatch, WP18 evidence and WP19 readback modules passed on both OS.
+
+### 2. Root causes
+
+1. Legacy Work13 bootstrap test still accessed removed server attribute build_grant_source and expected main() to load a static Core grant list. The candidate intentionally removed that authority shortcut.
+2. Legacy readiness test still passed obsolete keyword core_grant_url_set and expected /health to return PASS. The candidate intentionally reports INTEGRATION_BLOCKED until online Core validation is wired.
+
+### 3. Corrective test changes
+
+- Commit e0363a4671940783fd02c90ee70bb4f8007023b3: update readiness tests to assert INTEGRATION_BLOCKED, caller WorkContext authority BLOCKED, online Core grant validation BLOCKED and static grant cache IGNORED.
+- Commit 3a64249b00f3310e2ec461d984754eeff0aa5888: update legacy W13 bootstrap test to prove main() starts with empty static grant registry and remains BLOCKED even when ROOM_HOP_SNAPSHOT_ONLY=false.
+- No source security behavior was relaxed. A new exact-head CI run is pending.
+
+### 4. Disposition
+
+- CI #435 is FAIL; no overall PASS claimed.
+- HTTP snapshot containment is proven by the #435 raw logs, but full workflow remains failed on stale tests.
+- WP5-03 remains HIGH / OPEN as functional Core authority is not implemented or wired. HTTP execution is intentionally blocked in the candidate until it is.
+- WP5-06, WP5-07 and WP5-08 retain prior exact merge-candidate CI #429 PASS evidence; current follow-up candidate requires fresh exact-head CI.
+
+**STATUS:** CI #435 FAIL / TWO LEGACY TEST EXPECTATIONS IDENTIFIED; TEST FIXES COMMITTED; RERUN PENDING; EXECUTION GATE CLOSED; NOT RELEASED.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
