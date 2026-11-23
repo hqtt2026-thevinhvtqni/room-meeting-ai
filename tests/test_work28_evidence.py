@@ -12,7 +12,9 @@ from execution_host.work28_evidence import (
     verify_evidence_seal,
 )
 from execution_host.work28_core_grant_client import (
-    FileGrantSource,
+    CORE_AUTHORITY_URL_ENV,
+    CORE_SERVICE_IDENTITY_ENV,
+    CORE_SERVICE_CREDENTIAL_ENV,
     HttpCoreGrantSource,
     build_grant_source,
 )
@@ -46,24 +48,22 @@ class SealEvidenceTests(unittest.TestCase):
 
 
 class CoreGrantClientTests(unittest.TestCase):
-    def test_file_source_empty_without_path(self):
-        src = FileGrantSource()
-        self.assertEqual(src.fetch_grants(), {})
-
     def test_http_unreachable_fail_closed(self):
-        src = HttpCoreGrantSource("http://127.0.0.1:1/grants", timeout=0.2)
+        src = HttpCoreGrantSource("http://127.0.0.1:1/core", "mcp8020", "credential", timeout=0.2)
         with self.assertRaises(GrantError) as ctx:
-            src.fetch_grants()
+            src.fetch_grant("W28", "GRANT-12345678-1234-1234-1234-123456789abc", "grant-token")
         self.assertIn("unreachable", str(ctx.exception))
 
-    def test_build_prefers_core_url(self):
-        env = {"ROOM_HOP_CORE_GRANT_URL": "https://example.invalid/g"}
-        src = build_grant_source(env)
-        self.assertIsInstance(src, HttpCoreGrantSource)
-
-    def test_build_requires_core_url_and_never_defaults_to_file(self):
-        with self.assertRaisesRegex(GrantError, "core_grant_url_required"):
+    def test_build_requires_all_core_authority_configuration(self):
+        with self.assertRaisesRegex(GrantError, "core_authority_url_required"):
             build_grant_source({})
+        env = {
+            CORE_AUTHORITY_URL_ENV: "https://core.example/authority",
+            CORE_SERVICE_IDENTITY_ENV: "mcp8020",
+            CORE_SERVICE_CREDENTIAL_ENV: "service-credential",
+        }
+        self.assertIsInstance(build_grant_source(env), HttpCoreGrantSource)
+
 
 
 class DispatchSealsEvidenceTests(unittest.TestCase):
