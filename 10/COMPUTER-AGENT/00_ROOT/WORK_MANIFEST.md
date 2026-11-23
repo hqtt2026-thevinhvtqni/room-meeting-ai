@@ -395,3 +395,16 @@ Co | AI-07. Run #230 (ID `44967028038`) passed after root-scope hardening and ad
 
 Current inventory: Sandbox 172 files; GitHub 80; shared 80; Sandbox-only 92; GitHub-only 0.
 
+
+
+## Architecture decision addendum — agent-desktop evaluation (2026-11-23)
+
+W10 remains the unified Computer Agent / Computer Provider. The existing Playwright Browser Adapter remains the browser-page automation path. A native Desktop Adapter is documented as a future capability track; vercel-labs/agent-desktop is a candidate backend only, not selected or integrated.
+
+- Assessment: 06_EVIDENCE/W10_AGENT_DESKTOP_TECHNICAL_ASSESSMENT_20261123.md
+- Architecture: 03_ARCHITECTURE/COMPUTER_AGENT_ARCHITECTURE.md
+- Gated plan D0–D6: 03_ARCHITECTURE/P1_P5_IMPLEMENTATION.md
+- Formal decision: BIEN_BAN_W10.md, entry W10-BB-XU-AGENT-DESKTOP-20261123
+- Execution/read-back log: NHAT_KY_THI_CONG_W10.md, entries W10-XU-AGENT-DESKTOP-DESIGN-UPDATE-20261123-01 and its read-back verification entry.
+
+D0 DOCUMENTED; D1–D6 NOT STARTED. Dependency install, runtime, tests and benchmark NOT RUN. No source code or LOCKED contract changed. W10 API remains loopback-only; W24/W112/W14/W113 ownership and W10 port 3010 boundary remain unchanged. Work remains ACTIVE — NOT RELEASED.
