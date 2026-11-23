@@ -69,12 +69,16 @@ class ExecutionAuthorityHandler(BaseHTTPRequestHandler):
         work_id, grant_id = parts[1], parts[3]
         try:
             caller = self.authority.authenticate(self.headers.get(SERVICE_IDENTITY_HEADER))
-            status = self.authority.validate_grant_token(grant_id, self.headers.get(GRANT_TOKEN_HEADER) or "")
         except PermissionError as exc:
             self._error(401, str(exc))
             return
+        try:
+            status = self.authority.validate_grant_token(grant_id, self.headers.get(GRANT_TOKEN_HEADER) or "")
         except LookupError:
             self._error(404, "unknown_grant")
+            return
+        except PermissionError as exc:
+            self._error(403, str(exc))
             return
         # Grant metadata is scoped to the service identity that owns it.
         if status.get("work_id") != work_id or status.get("service_identity") != caller:
