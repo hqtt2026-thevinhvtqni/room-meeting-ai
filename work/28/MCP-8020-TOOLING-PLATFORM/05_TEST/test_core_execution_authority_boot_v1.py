@@ -29,6 +29,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[4]
 
 SERVICE_IDENTITY_HEADER = "X-Room-Hop-Service-Identity"
+CAPABILITY = {"entry_path":"src/main.py","operation":"RUN_SCRIPT","expected_source_sha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","timeout_seconds":30}
 
 
 def _free_port() -> int:
@@ -90,13 +91,15 @@ class BootProbeTests(unittest.TestCase):
             self._proc.kill()
             self._proc.wait(timeout=5)
 
-    def request(self, path, body=None, credential="boot-credential-alpha", method="POST"):
+    def request(self, path, body=None, credential="boot-credential-alpha", method="POST", grant_token=None):
         url = "http://127.0.0.1:" + str(self.port) + path
         data = json.dumps(body or {}).encode("utf-8")
         req = urllib.request.Request(url, data=data, method=method)
         req.add_header("Content-Type", "application/json")
         if credential is not None:
             req.add_header(SERVICE_IDENTITY_HEADER, credential)
+        if grant_token is not None:
+            req.add_header("X-Room-Hop-Execution-Grant", grant_token)
         try:
             with urllib.request.urlopen(req, timeout=10) as response:
                 return response.status, json.loads(response.read().decode("utf-8"))
@@ -125,38 +128,37 @@ class BootProbeTests(unittest.TestCase):
                 proc.wait(timeout=5)
 
     def test_live_probe_boundary(self):
-        code, _ = self.request("/works/W13/execution-grants", {"purpose": "gate3_probe"}, credential=None)
+        code, _ = self.request("/works/W13/execution-grants", {"purpose": "gate3_probe", "capability": CAPABILITY}, credential=None)
         self.assertEqual(code, 401)
-        code, _ = self.request("/works/W13/execution-grants", {"purpose": "gate3_probe"}, credential="wrong-credential")
+        code, _ = self.request("/works/W13/execution-grants", {"purpose": "gate3_probe", "capability": CAPABILITY}, credential="wrong-credential")
         self.assertEqual(code, 401)
-        code, payload = self.request("/works/W13/execution-grants", {"purpose": "gate3_probe"}, credential="boot-credential-beta")
+        code, payload = self.request("/works/W13/execution-grants", {"purpose": "gate3_probe", "capability": CAPABILITY}, credential="boot-credential-beta")
         self.assertEqual(code, 403)
         self.assertEqual(payload["error"], "caller_not_authorized_for_work")
-        code, payload = self.request("/works/W99/execution-grants", {"purpose": "gate3_probe"})
+        code, payload = self.request("/works/W99/execution-grants", {"purpose": "gate3_probe", "capability": CAPABILITY})
         self.assertEqual(code, 404)
         self.assertEqual(payload["error"], "unknown_work")
-        code, payload = self.request("/works/W13/execution-grants", {"purpose": "gate3_probe"})
+        code, payload = self.request("/works/W13/execution-grants", {"purpose": "gate3_probe", "capability": CAPABILITY})
         self.assertEqual(code, 200)
         grant = payload["grant"]
         self.assertTrue(grant["grant_token"])
         self.assertIn("grant_id", grant)
-        code, payload = self.request("/works/W13/execution-grants", {"purpose": "gate3_probe"})
+        code, payload = self.request("/works/W13/execution-grants", {"purpose": "gate3_probe", "capability": CAPABILITY})
         self.assertEqual(code, 409)
         self.assertEqual(payload["error"], "grant_already_active")
-        body = {"grant_id": grant["grant_id"], "grant_token": "forged",
-                "source_sha256": "b" * 64, "exit_status": "PASS",
+        body = {"grant_id": grant["grant_id"],
+                "source_sha256": "a" * 64, "exit_status": "PASS",
                 "output_refs": [], "evidence_refs": ["boot-ev-1"], "handoff_ids": []}
-        code, payload = self.request("/works/W13/execution-runs", body)
+        code, payload = self.request("/works/W13/execution-runs", body, grant_token="forged")
         self.assertEqual(code, 403)
         self.assertEqual(payload["error"], "grant_token_mismatch")
-        body["grant_token"] = grant["grant_token"]
-        code, payload = self.request("/works/W13/execution-runs", body)
+        code, payload = self.request("/works/W13/execution-runs", body, grant_token=grant["grant_token"])
         self.assertEqual(code, 200)
         self.assertEqual(payload["run"]["exit_status"], "PASS")
         self.assertEqual(payload["run"]["work_id"], "W13")
 
     def test_process_output_never_leaks_credentials(self):
-        code, _ = self.request("/works/W13/execution-grants", {"purpose": "gate3_probe"})
+        code, _ = self.request("/works/W13/execution-grants", {"purpose": "gate3_probe", "capability": CAPABILITY})
         self.assertEqual(code, 200)
         self._stop()
         out = self._proc.stdout.read() if self._proc.stdout else ""

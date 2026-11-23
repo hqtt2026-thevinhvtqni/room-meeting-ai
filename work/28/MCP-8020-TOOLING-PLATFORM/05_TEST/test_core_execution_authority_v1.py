@@ -33,6 +33,8 @@ from core.execution_authority.authority import (
 from core.execution_authority.http_server import SERVICE_IDENTITY_HEADER, ExecutionAuthorityHandler
 from core.execution_authority.store import AppendOnlyRecordStore
 
+CAPABILITY = {"entry_path":"src/main.py","operation":"RUN_SCRIPT","expected_source_sha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","timeout_seconds":30}
+
 
 def build_authority(tmpdir, seconds=300):
     identities = load_enrolled_identities("mcp8020=secret-a,mcp8030=secret-b")
@@ -107,7 +109,7 @@ class AuthorityTests(unittest.TestCase):
             self.authority.authenticate(None)
 
     def test_issue_grant_returns_token_once_and_stores_only_hash(self):
-        grant = self.authority.issue_grant("mcp8020", "W28", "pytest_run")
+        grant = self.authority.issue_grant("mcp8020", "W28", "pytest_run", capability=CAPABILITY)
         self.assertTrue(grant["grant_token"])
         stored = self.authority._store.get(grant["grant_id"])
         self.assertNotIn("grant_token", stored)
@@ -115,24 +117,24 @@ class AuthorityTests(unittest.TestCase):
         self.assertTrue(stored["token_sha256"])
 
     def test_grant_status_active_then_revoked(self):
-        grant = self.authority.issue_grant("mcp8020", "W28", "pytest_run")
+        grant = self.authority.issue_grant("mcp8020", "W28", "pytest_run", capability=CAPABILITY)
         self.assertEqual(self.authority.grant_status(grant["grant_id"])["status"], "active")
         revoked = self.authority.revoke_grant(grant["grant_id"])
         self.assertEqual(revoked["status"], "revoked")
 
     def test_expired_grant_detected(self):
-        grant = self.authority.issue_grant("mcp8020", "W28", "pytest_run")
+        grant = self.authority.issue_grant("mcp8020", "W28", "pytest_run", capability=CAPABILITY)
         stored = self.authority._store.get(grant["grant_id"])
         stored["expires_at_unix"] = 0
         self.assertEqual(self.authority.grant_status(grant["grant_id"])["status"], "expired")
 
     def test_second_active_grant_refused(self):
-        self.authority.issue_grant("mcp8020", "W28", "pytest_run")
+        self.authority.issue_grant("mcp8020", "W28", "pytest_run", capability=CAPABILITY)
         with self.assertRaises(FileExistsError):
-            self.authority.issue_grant("mcp8020", "W28", "pytest_run")
+            self.authority.issue_grant("mcp8020", "W28", "pytest_run", capability=CAPABILITY)
 
     def test_validate_grant_token_server_side(self):
-        grant = self.authority.issue_grant("mcp8020", "W28", "pytest_run")
+        grant = self.authority.issue_grant("mcp8020", "W28", "pytest_run", capability=CAPABILITY)
         ok = self.authority.validate_grant_token(grant["grant_id"], grant["grant_token"])
         self.assertEqual(ok["status"], "active")
         with self.assertRaises(PermissionError):
@@ -141,7 +143,7 @@ class AuthorityTests(unittest.TestCase):
             self.authority.validate_grant_token(grant["grant_id"], "")
 
     def test_record_run_full_linkage(self):
-        grant = self.authority.issue_grant("mcp8020", "W28", "pytest_run")
+        grant = self.authority.issue_grant("mcp8020", "W28", "pytest_run", capability=CAPABILITY)
         run = self.authority.record_run(
             grant["grant_id"], source_sha256="a" * 64, exit_status="PASS",
             output_refs=["stdout://1"], evidence_refs=["ev-1"], handoff_ids=["H-1"])
@@ -152,14 +154,20 @@ class AuthorityTests(unittest.TestCase):
         self.assertEqual(run["handoff_ids"], ["H-1"])
         self.assertEqual(run["work_id"], "W28")
 
+    def test_record_run_rejects_source_hash_not_bound_to_grant(self):
+        grant = self.authority.issue_grant("mcp8020", "W28", "pytest_run", capability=CAPABILITY)
+        with self.assertRaisesRegex(PermissionError, "source_sha256_grant_mismatch"):
+            self.authority.record_run(grant["grant_id"], source_sha256="b" * 64, exit_status="PASS",
+                                      output_refs=[], evidence_refs=["e"], handoff_ids=[])
+
     def test_record_run_requires_evidence_refs(self):
-        grant = self.authority.issue_grant("mcp8020", "W28", "pytest_run")
+        grant = self.authority.issue_grant("mcp8020", "W28", "pytest_run", capability=CAPABILITY)
         with self.assertRaises(ValueError):
-            self.authority.record_run(grant["grant_id"], source_sha256="a", exit_status="PASS",
+            self.authority.record_run(grant["grant_id"], source_sha256="a" * 64, exit_status="PASS",
                                       output_refs=[], evidence_refs=[], handoff_ids=[])
 
     def test_record_run_rejected_for_revoked_or_unknown_grant(self):
-        grant = self.authority.issue_grant("mcp8020", "W28", "pytest_run")
+        grant = self.authority.issue_grant("mcp8020", "W28", "pytest_run", capability=CAPABILITY)
         self.authority.revoke_grant(grant["grant_id"])
         with self.assertRaises(PermissionError):
             self.authority.record_run(grant["grant_id"], source_sha256="a", exit_status="PASS",
@@ -169,7 +177,7 @@ class AuthorityTests(unittest.TestCase):
                                       output_refs=[], evidence_refs=["e"], handoff_ids=[])
 
     def test_state_survives_authority_restart(self):
-        grant = self.authority.issue_grant("mcp8020", "W28", "pytest_run")
+        grant = self.authority.issue_grant("mcp8020", "W28", "pytest_run", capability=CAPABILITY)
         self.authority.record_run(grant["grant_id"], source_sha256="a", exit_status="PASS",
                                   output_refs=[], evidence_refs=["e"], handoff_ids=[])
         restarted = build_authority(self._tmp.name)
@@ -188,13 +196,15 @@ class HttpBoundaryTests(unittest.TestCase):
         Thread(target=self._server.serve_forever, daemon=True).start()
         self.addCleanup(self._server.shutdown)
 
-    def request(self, path, body=None, credential="secret-a", method="POST"):
+    def request(self, path, body=None, credential="secret-a", method="POST", grant_token=None):
         url = "http://127.0.0.1:" + str(self.port) + path
         data = json.dumps(body or {}).encode("utf-8")
         req = urllib.request.Request(url, data=data, method=method)
         req.add_header("Content-Type", "application/json")
         if credential is not None:
             req.add_header(SERVICE_IDENTITY_HEADER, credential)
+        if grant_token is not None:
+            req.add_header("X-Room-Hop-Execution-Grant", grant_token)
         try:
             with urllib.request.urlopen(req, timeout=10) as response:
                 return response.status, json.loads(response.read().decode("utf-8"))
@@ -202,78 +212,84 @@ class HttpBoundaryTests(unittest.TestCase):
             return exc.code, json.loads(exc.read().decode("utf-8"))
 
     def test_missing_or_wrong_identity_401(self):
-        code, payload = self.request("/works/W28/execution-grants", {"purpose": "pytest_run"}, credential=None)
+        code, payload = self.request("/works/W28/execution-grants", {"purpose": "pytest_run", "capability": CAPABILITY}, credential=None)
         self.assertEqual(code, 401)
         self.assertEqual(payload["error"], "caller_authentication_failed")
-        code, _ = self.request("/works/W28/execution-grants", {"purpose": "pytest_run"}, credential="wrong")
+        code, _ = self.request("/works/W28/execution-grants", {"purpose": "pytest_run", "capability": CAPABILITY}, credential="wrong")
         self.assertEqual(code, 401)
 
     def test_enrolled_but_unauthorized_identity_403(self):
-        code, payload = self.request("/works/W28/execution-grants", {"purpose": "pytest_run"}, credential="secret-b")
+        code, payload = self.request("/works/W28/execution-grants", {"purpose": "pytest_run", "capability": CAPABILITY}, credential="secret-b")
         self.assertEqual(code, 403)
         self.assertEqual(payload["error"], "caller_not_authorized_for_work")
 
     def test_grant_status_is_scoped_to_issuing_identity(self):
-        code, payload = self.request("/works/W28/execution-grants", {"purpose": "pytest_run"})
+        code, payload = self.request("/works/W28/execution-grants", {"purpose": "pytest_run", "capability": CAPABILITY})
         grant = payload["grant"]
         code, payload = self.request(
             "/works/W28/execution-grants/" + grant["grant_id"],
-            credential="secret-b", method="GET")
+            credential="secret-b", method="GET", grant_token=grant["grant_token"])
         self.assertEqual(code, 404)
         self.assertEqual(payload["error"], "unknown_grant")
 
     def test_run_requires_identity_bound_to_grant(self):
-        code, payload = self.request("/works/W28/execution-grants", {"purpose": "pytest_run"})
+        code, payload = self.request("/works/W28/execution-grants", {"purpose": "pytest_run", "capability": CAPABILITY})
         grant = payload["grant"]
-        body = {"grant_id": grant["grant_id"], "grant_token": grant["grant_token"],
+        body = {"grant_id": grant["grant_id"],
                 "source_sha256": "a" * 64, "exit_status": "PASS",
                 "output_refs": [], "evidence_refs": ["ev-1"], "handoff_ids": []}
-        code, payload = self.request("/works/W28/execution-runs", body, credential="secret-b")
+        code, payload = self.request("/works/W28/execution-runs", body, credential="secret-b", grant_token=grant["grant_token"])
         self.assertEqual(code, 403)
         self.assertEqual(payload["error"], "caller_not_authorized_for_grant")
 
     def test_unknown_work_404_and_duplicate_grant_409(self):
-        code, payload = self.request("/works/W99/execution-grants", {"purpose": "pytest_run"})
+        code, payload = self.request("/works/W99/execution-grants", {"purpose": "pytest_run", "capability": CAPABILITY})
         self.assertEqual(code, 404)
         self.assertEqual(payload["error"], "unknown_work")
-        code, payload = self.request("/works/W28/execution-grants", {"purpose": "pytest_run"})
+        code, payload = self.request("/works/W28/execution-grants", {"purpose": "pytest_run", "capability": CAPABILITY})
         self.assertEqual(code, 200)
-        code, payload = self.request("/works/W28/execution-grants", {"purpose": "pytest_run"})
+        code, payload = self.request("/works/W28/execution-grants", {"purpose": "pytest_run", "capability": CAPABILITY})
         self.assertEqual(code, 409)
         self.assertEqual(payload["error"], "grant_already_active")
 
+    def test_grant_status_requires_live_grant_token(self):
+        code, payload = self.request("/works/W28/execution-grants", {"purpose": "pytest_run", "capability": CAPABILITY})
+        grant = payload["grant"]
+        code, payload = self.request("/works/W28/execution-grants/" + grant["grant_id"], method="GET")
+        self.assertEqual(code, 403)
+        self.assertEqual(payload["error"], "grant_token_mismatch")
+
     def test_grant_issue_and_status_roundtrip(self):
-        code, payload = self.request("/works/W28/execution-grants", {"purpose": "pytest_run"})
+        code, payload = self.request("/works/W28/execution-grants", {"purpose": "pytest_run", "capability": CAPABILITY})
         self.assertEqual(code, 200)
         grant = payload["grant"]
         self.assertTrue(grant["grant_token"])
-        code, payload = self.request("/works/W28/execution-grants/" + grant["grant_id"], method="GET")
+        code, payload = self.request("/works/W28/execution-grants/" + grant["grant_id"], method="GET", grant_token=grant["grant_token"])
         self.assertEqual(code, 200)
         self.assertEqual(payload["grant"]["status"], "active")
         self.assertNotIn("token_sha256", payload["grant"])
         self.assertNotIn("grant_token", payload["grant"])
 
     def test_run_recording_via_http_with_server_side_token_check(self):
-        code, payload = self.request("/works/W28/execution-grants", {"purpose": "pytest_run"})
+        code, payload = self.request("/works/W28/execution-grants", {"purpose": "pytest_run", "capability": CAPABILITY})
         grant = payload["grant"]
-        body = {"grant_id": grant["grant_id"], "grant_token": "forged",
+        body = {"grant_id": grant["grant_id"],
                 "source_sha256": "a" * 64, "exit_status": "PASS",
                 "output_refs": [], "evidence_refs": ["ev-1"], "handoff_ids": []}
-        code, payload = self.request("/works/W28/execution-runs", body)
+        code, payload = self.request("/works/W28/execution-runs", body, grant_token="forged")
         self.assertEqual(code, 403)
         self.assertEqual(payload["error"], "grant_token_mismatch")
-        body["grant_token"] = grant["grant_token"]
-        code, payload = self.request("/works/W28/execution-runs", body)
+        code, payload = self.request("/works/W28/execution-runs", body, grant_token=grant["grant_token"])
         self.assertEqual(code, 200)
         self.assertEqual(payload["run"]["exit_status"], "PASS")
         self.assertEqual(payload["run"]["evidence_refs"], ["ev-1"])
 
     def test_credential_and_token_never_leak(self):
-        code, payload = self.request("/works/W28/execution-grants", {"purpose": "pytest_run"})
+        code, payload = self.request("/works/W28/execution-grants", {"purpose": "pytest_run", "capability": CAPABILITY})
         grant = payload["grant"]
-        code, payload = self.request("/works/W28/execution-runs", {"grant_id": grant["grant_id"], "grant_token": "x",
+        code, payload = self.request("/works/W28/execution-runs", {"grant_id": grant["grant_id"],
                                                                    "source_sha256": "a", "exit_status": "PASS",
-                                                                   "evidence_refs": ["e"]})
+                                                                   "evidence_refs": ["e"]}, grant_token="x")
         blob = json.dumps(payload) + json.dumps(self.authority._store.records())
         self.assertNotIn("secret-a", blob)
         self.assertNotIn("secret-b", blob)
