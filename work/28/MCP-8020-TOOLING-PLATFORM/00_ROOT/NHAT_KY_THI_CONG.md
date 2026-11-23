@@ -2122,7 +2122,7 @@ The remaining acceptance gap requires evidence from the actual ROOM-HOP PC. Chat
 
 **Role:** Ka | Independent Architecture & Security Reviewer (CSA)  
 **Title:** Chief Security Architect — Work 28 independent reviewer  
-**Date-time:** 2026-11-23 07:xx UTC+07:00 (Asia/Ho_Chi_Minh)  
+**Date-time:** 2026-11-23 07:03 UTC+07:00 (Asia/Ho_Chi_Minh)  
 **Source branch:** `work/28-mcp-tooling-platform`  
 **Authority:** Vinh — delegated continuation; no release or deployment authority inferred  
 **Signature:** [KÝ: KA | CSA]
@@ -2164,3 +2164,64 @@ The remaining acceptance gap requires evidence from the actual ROOM-HOP PC. Chat
 - Vinh: no routine technical action requested; product acceptance remains with Vinh.
 
 **STATUS:** WP2 / WP5 / WP1 STATIC CONTRACT INTEGRATED WITH REPORTED EXACT-HEAD AND POST-MERGE CI PASS; LIVE AUTHORITY / DEPLOYMENT / PROVIDER COMPOSITION / WP3-F01 / RUNTIME E2E BLOCKED; EXECUTION GATE CLOSED; NOT RELEASED.
+
+
+## 2026-11-23 — JRN-W28-059 — Ka WP5 trust-boundary review: Core grant transport and contract incompatibility
+
+**Role:** Ka | Independent Architecture & Security Reviewer (CSA)  
+**Title:** Chief Security Architect — Work 28 independent reviewer  
+**Date-time:** 2026-11-23 07:03 UTC+07:00  
+**Source branch:** `work/28-mcp-tooling-platform`  
+**Review type:** Read-only source/contract review; no live endpoint call  
+**Signature:** [KÝ: KA | CSA]
+
+### READ / TRACE — exact source blobs
+- `execution_host/work28_core_grant_client.py`: `e330d4f3681d3fb142e559f7ee35b21db128be7e`.
+- `execution_host/work28_grant.py`: `05c082b00a5c38fbdf45950d42211e644f57ed45`.
+- `execution_host/work28_dispatch.py`: `22d5dcd385e301a43fcd0e1c3e901ff2c90abac9`.
+- `execution_host/work28_execute.py`: `ecb4fc05332c77983cd244c66d1e838def6c30d2`.
+- `execution_host/server.py`: `cfdecca58e6146d067ce0e0c0a0feebac0ebdc83`.
+- `core/execution_authority/http_server.py`: `6363c277ce410d3f5465f449b730199e06e5024c`.
+- `core/execution_authority/authority.py`: `bfb052fed0fde69767dd219f17a0b14ae6383560`.
+- `PROPOSED_CORE_EXECUTION_AUTHORITY_CONTRACT_V1.md`: `83fb425364a893e602a122c42bc74f80cbd05166`.
+
+### FINDINGS
+**W28-KA-WP5-01 — HIGH: remote Core grant URL permits plaintext HTTP while sending a Bearer token.**
+- `HttpCoreGrantSource.__init__` accepts any non-empty URL without scheme/host/TLS validation.
+- `fetch_grants()` attaches `Authorization: Bearer <token>` when configured and passes the URL to `urllib.request.urlopen`.
+- A remote `http://` configuration can therefore transmit the Core grant credential without TLS. Redirect behavior is also not explicitly constrained.
+- Required remediation: require HTTPS for all non-loopback Core endpoints; allow HTTP only for explicit loopback development; reject URL userinfo/query/fragment and malformed ports; prevent credential-bearing cross-origin redirects; add negative and positive regression tests.
+- Severity: HIGH / security blocker before any remote grant client is enabled. No live call or credential was made/read.
+
+**W28-KA-WP5-02 — P0: Work 28 grant client is not compatible with the current Core authority HTTP contract.**
+- Work 28 client performs a GET against one configured URL and requires a top-level JSON list of grant records with `grant_id`, `work_id`, `entry_path`, `operation`, `expected_source_sha256` and optional `expires_at_unix`; it uses an optional Bearer token.
+- Core source instead exposes POST `/works/{work_id}/execution-grants` using `X-Room-Hop-Service-Identity`, returning a nested `{"status":"ok","grant":...}` object; GET is per-grant status at `/works/{work_id}/execution-grants/{grant_id}`. No list endpoint matching the Work 28 client was found in the inspected Core HTTP surface.
+- Core grant metadata includes service identity and a separate grant token/status model; the Work 28 client/ExecutionGrant does not map this contract or demonstrate online revocation/status validation.
+- Therefore the current client cannot consume the inspected Core API as written. Do not configure a guessed endpoint or translate fields heuristically.
+- Severity: P0 integration blocker. Requires an explicitly approved versioned Core↔W28 contract and an adapter implemented against the actual Core route/schema.
+
+**W28-KA-WP5-03 — P0: caller-supplied WorkContext is not proof of Core authority.**
+- Execution Host `POST /execute` accepts `work_context` from the request body; the handler applies a local `ROOM_HOP_AUTHORIZED_WORKS` allow-list and sets `authorized=True`.
+- Snapshot dispatch then compares the local grant's Work ID with this body-supplied context. This is not a trusted WorkContext returned by authenticated Core middleware/provider and does not prove the request principal, Assignment, purpose, audience or revocation state.
+- Local allow-list and shared execution-token checks are defense-in-depth/configuration, not substitutes for Core-owned authorization.
+- Keep MCP execution tools closed and do not expose this server as a production route until Core-derived principal/WorkContext and the approved grant validation flow replace the caller-controlled context path.
+
+**W28-KA-WP5-04 — P1: readiness/health must not be interpreted as deployment acceptance.**
+- `GET /health` returns HTTP 200 and top-level `status=PASS` when the host object exists, while the nested readiness report can still show `core_grant_live=BLOCKED`, `os_isolation=NOT_VERIFIED`, `mcp_execution_tools=CLOSED` and `release=NOT_RELEASED`.
+- Consumers must use the full readiness gates; a top-level health PASS only indicates the local handler object is initialized. Consider renaming the field to `health=OK` or ensuring dashboards never promote it to product readiness.
+
+### REVIEW-ONLY PATCH CANDIDATE — NOT PROMOTED
+- A non-canonical review branch was created: `ka/work28-core-grant-transport-tls-20261123`.
+- It contains a proposed URL validation guard in `execution_host/work28_core_grant_client.py` and four policy tests appended to `tests/test_work28_grant.py`.
+- Exact candidate blobs: client `93203c8b7937804efbfbefafd6cce823135610cb`; tests `38849aa4e3052165d2f71ab2ee5740d8c5ff76ca`.
+- This is an untested review aid only: no CI run, no PR, no merge, no canonical branch mutation. It is not accepted implementation and must be independently inspected/ported by Vi as the designated implementation lead. Ka does not self-approve this candidate.
+
+### DECISION / NEXT
+- Do not wire the current Work 28 grant client to the current Core candidate. Do not enable remote plaintext HTTP, local fallback, caller-supplied authority or production execution.
+- Vi: inspect the review candidate, implement the TLS/redirect guard on the designated implementation branch, add tests to the required CI lane, and separately propose a contract adapter only after the Core API contract is approved and proven.
+- Xu: coordinate the versioned Core authority decision and resolve the V1.2/V1.3 contract approval boundary.
+- An: independently reproduce the transport-policy and Core-denial tests after Vi's implementation; no QA PASS is inferred.
+- Ka: review the resulting exact diff and threat boundary independently.
+- Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+**STATUS:** HIGH/P0 WP5 TRUST-BOUNDARY FINDINGS RECORDED; REVIEW-ONLY TLS PATCH CANDIDATE NOT TESTED OR PROMOTED; CORE CONTRACT MISMATCH AND TRUSTED WORKCONTEXT BLOCKED.
