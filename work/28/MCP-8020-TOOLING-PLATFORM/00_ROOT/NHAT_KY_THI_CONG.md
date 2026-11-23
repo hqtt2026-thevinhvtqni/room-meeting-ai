@@ -2394,3 +2394,35 @@ The remaining acceptance gap requires evidence from the actual ROOM-HOP PC. Chat
 - Do not promote the review branch to canonical and do not infer that the TLS issue is closed.
 
 **STATUS:** TLS URL VALIDATION CANDIDATE PARTIAL / REDIRECT AND CREDENTIAL BOUNDARY OPEN / EXACT-HEAD CI NOT PROVEN / CANONICAL EXPOSURE NOT CLOSED / EXECUTION GATE CLOSED / NOT RELEASED.
+
+
+## 2026-11-23 — JRN-W28-065 — Fresh PR inventory, V1.3 contract drift and canonical grant-boundary recheck
+
+**Role:** Ka | Independent Architecture & Security Reviewer (CSA)  
+**Title:** Chief Security Architect — Work 28 independent reviewer  
+**Date-time:** 2026-11-23 (UTC+07:00)  
+**Canonical branch:** `work/28-mcp-tooling-platform`  
+**Signature:** [KÝ: KA | CSA]
+
+### READ / TRACE
+- Re-read canonical `execution_host/work28_core_grant_client.py`, blob `e330d4f3681d3fb142e559f7ee35b21db128be7e`. It remains the pre-TLS implementation: any non-empty URL is accepted, optional Bearer token is attached, and `urllib.request.urlopen()` is used without explicit HTTPS-only remote policy or redirect restriction.
+- Re-read canonical `execution_host/server.py`, blob `cfdecca58e6146d067ce0e0c0a0feebac0ebdc83`. `POST /execute` still accepts `work_context` from the caller body, validates Work only against local `ROOM_HOP_AUTHORIZED_WORKS`, then sets `authorized=True`. This is not authenticated Core-derived WorkContext or proof of principal/Assignment/Gate authority. The previously recorded W28-KA-WP5-03 trust-boundary finding remains open.
+- Re-read `.github/workflows/work28-mcp-tooling.yml`, blob `8876f1a9096ec54e5a78a073820755087e67ecbf`. Both Linux and Windows lifecycle jobs execute `tests/test_work28_grant.py`; transport-policy tests added to this file will therefore enter both existing lanes when integrated into the canonical branch and when the workflow triggers.
+- Refreshed PR #74 metadata and comparison. PR remains OPEN / DRAFT / UNMERGED, `mergeable=false`; head `a25c74c60a90f177825e5ec35c56f3a8ec7851f7`, canonical base `8b26c5ee8d823d1707af6b51bfe06e147065128a`; DIVERGED 2 ahead / 7 behind, one modified contract file. The earlier 2-ahead / 3-behind value in JRN-W28-062 is superseded.
+- Re-read PR #74 reviews/comments: only Ka's two COMMENT reviews exist; no inline review threads and no author response resolving the five findings. The current contract diff remains document-only.
+- Refreshed PR #33 comparison: DIVERGED 6 ahead / 250 behind canonical. Its six added files are historical capture/digest/provenance artifacts; no current runtime/build provenance or 31-tool parity is established. Do not merge this stale branch.
+- Reconfirmed the review-only TLS branch is DIVERGED 2 ahead / 6 behind after the latest canonical journal commit; it is not a clean integration branch.
+
+### ACTION
+- Submitted PR #74 supplemental COMMENT review, ID `6015359749`, correcting branch drift and PR metadata. Requested rebase/reconciliation to latest canonical, resolution of the five architecture/security findings and fresh exact-head review. No approval was submitted.
+- No source code, service, endpoint, credential, PC runtime, deployment, branch protection, merge or release state was changed.
+
+### REQUIRED NEXT
+1. Vi: implement the TLS/redirect protections on a clean branch from latest canonical, with deterministic credential-forwarding/downgrade/loop tests; run exact-head Linux and Windows CI.
+2. Vi: replace caller-controlled WorkContext/authorization with the approved Core-derived principal/Work/Gate/grant binding only after the concrete Core contract is approved; no compatibility shortcut or local allow-list promotion.
+3. Xu/Vi: reconcile PR #74 to canonical and address the five review findings before requesting a new review.
+4. An: independently reproduce transport and authority-denial regressions after canonical implementation exists.
+5. Ka: review exact source diff, CI evidence, Core adapter compatibility and fail-closed behavior.
+6. PC-dependent MCP 8030 provenance and live Auto E2E remain queued until Vinh reports PC availability.
+
+**STATUS:** CANONICAL TLS/REDIRECT EXPOSURE OPEN / CALLER-SUPPLIED WORKCONTEXT AUTHORITY GAP OPEN / PR #74 2 AHEAD 7 BEHIND AND DRAFT / PR #33 6 AHEAD 250 BEHIND / LIVE PROVENANCE PENDING / EXECUTION GATE CLOSED / NOT RELEASED.
