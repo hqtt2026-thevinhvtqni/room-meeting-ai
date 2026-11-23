@@ -210,3 +210,12 @@ Work32 Grant may be considered only for W118 protected execution integration aft
 - **W118-EVIDENCE-001:** `build_event_evidence()` accepts non-strict run metadata types because it only compares values numerically; Python `bool` and positive floats can pass. It also accepts any non-empty `source_commit` string rather than enforcing a full hexadecimal SHA-40. This may create malformed W118-local operation artifacts, but does not prove forged GitHub events, Core state mutation, or W70 Evidence Register acceptance.
 - **Positive boundary:** artifact state remains `RECORDED`, explicitly non-authoritative and not a W70 Evidence Register row. The workflow_run adapter has a stricter positive-int check for run ID but only checks head SHA length, not hexadecimal characters.
 - **Disposition:** Finding recorded in Journal Entry 068. Suggested bounded validation/tests are deferred under the implementation/workflow freeze. Xu to review alongside Entries 065 and 067. No source/workflow mutation; all runtime gates unchanged.
+
+
+## Entry 069 — failure diagnostics Issue-selection findings (2026-11-24)
+
+- **Review target:** PR #68 / `work/118-auto-e2e-v2-clean`; reviewed at source HEAD `10ab922b0309a743181f2b7a27c2979d00759d9c`.
+- **W118-DIAGNOSTICS-001:** planner returns the first substring marker match; it does not require a canonical standalone marker or reject embedded/quoted marker text and duplicate matching Issues. Since failure workflow may comment on/reopen the selected Issue, wrong-Issue mutation is a bounded source-level risk. No live mutation is claimed.
+- **W118-DIAGNOSTICS-002:** workflow lists at most 1,000 labelled Issues, with no completeness signal passed to the planner. A matching Issue beyond the cap could be missed and a duplicate Issue created, weakening idempotency.
+- **Positive controls:** failure-only trigger, separate diagnostics workflow, concurrency key by workflow ID/head SHA, attempt-specific update marker, job-scoped issue write permission, no auto-retry or auto-assignment. Tests do not cover embedded/duplicate markers or incomplete pagination.
+- **Disposition:** both findings are recorded in Journal Entry 069. Bounded exact-marker, duplicate rejection and complete-pagination fail-closed remediation is deferred under the implementation/workflow freeze. Xu to review alongside Entries 065, 067 and 068. No source/workflow mutation; no Issue write.
