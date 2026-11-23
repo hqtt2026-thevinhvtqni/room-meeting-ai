@@ -553,3 +553,12 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - HEAD `3345175799a984f9586b483896431069c0f1b043` / Run #1069 are pre-consolidation exact evidence only.
 - Final review packet consolidation is the documentation-only commit immediately following parent `1a27bcb67f7544bc8dc7296264126d9b6559eb14`. Read live PR #68 head and matching exact-head CI before Xu review; do not transfer old CI PASS to a new SHA.
 - Xu review PENDING; Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED. Runtime Auto E2E NOT RUN; external Core/W102/W14/W33/W70 gates remain BLOCKED / NOT VERIFIED.
+
+## Xu review remediation — Entry 074
+
+- **Active PR:** #68 remains OPEN / UNMERGED; no merge or release.
+- **Implementation/test revision:** `cf1513f623ea6e4fe4998765184ff4365a48cd69`.
+- **Exact implementation CI:** Run #1111 / `45289712158`; validate SUCCESS; 117 tests in 0.277s; artifact `14872808334`, SHA-256 `140390eb025449eae012e9a18e902eedca9b86dbd79edf342ff13164fe013973`.
+- **Xu findings:** 067, 069, 068, 071 and 065 remediated at source/contract-test level with negative tests; pending Xu independent re-review. No finding self-approved.
+- **Boundary:** aggregate branch source binding remains `UNBOUND_LEGACY_BRANCH`; handoff/ACK/review capture jobs SKIPPED. Runtime Auto E2E NOT RUN; Core/W102/W14/W33/W70 runtime/authority gates remain BLOCKED / NOT VERIFIED.
+- **Disposition:** ACTIVE — BLOCKED — PENDING XU RE-REVIEW — NOT ACCEPTED — NOT RELEASED. Vinh retains final product acceptance and release authority.
