@@ -243,9 +243,12 @@ class HttpE2EGrantSnapshotTests(unittest.TestCase):
                     },
                     method="POST",
                 )
-                with request.urlopen(req, timeout=15) as resp:
-                    self.assertEqual(resp.status, 200)
-                    data = json.loads(resp.read().decode())
+                try:
+                    with request.urlopen(req, timeout=15) as resp:
+                        self.assertEqual(resp.status, 200)
+                        data = json.loads(resp.read().decode())
+                except error.HTTPError as exc:
+                    self.fail("unexpected HTTP %s: %s" % (exc.code, exc.read().decode("utf-8", "replace")))
                 self.assertEqual(data.get("dispatch_mode"), "work28_snapshot")
                 self.assertEqual(data.get("grant_id"), grant_id)
                 self.assertTrue(data.get("core_authority_recorded"))
