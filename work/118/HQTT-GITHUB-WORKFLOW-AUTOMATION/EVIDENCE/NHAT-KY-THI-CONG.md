@@ -2386,3 +2386,13 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - **Disposition:** Static hardening finding recorded for Xu's independent review. Implementation/workflow freeze remains in force; no code change made. Runtime Auto E2E remains NOT VERIFIED and no Work task is promoted.
 - **Scope and controls:** No source/workflow/runtime/secret/permission/branch-protection or external Work/Sandbox change; no rebase, force-push, Main merge or release.
 - **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-24 04:53 +07:00; Result: one bounded artifact-validation gap recorded; implementation unchanged.
+
+
+### Entry 068 addendum — exact-head CI after review routing update
+
+- **Final source HEAD:** `24dd3e4634973e9998126cd42359cf95927364c7`; PR #68 remains OPEN / UNMERGED.
+- **Push Run #1029** [ID `45274266034`](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45274266034): validate job `138041837746`, COMPLETED / SUCCESS; raw log confirms **102 tests in 0.312s — OK**, `TEST_OUTCOME=success`, `SOURCE_BINDING_STATUS=UNBOUND_LEGACY_BRANCH`. Artifact ID `14866761026`, size 975 bytes, SHA-256 `b8c2a96377b18e589784edad1d80173b7ec57927cfd1211bb20856f42c22e972`; artifact present and not expired at metadata readback.
+- **PR Run #1030** [ID `45274275625`](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45274275625): validate job `138041873556`, COMPLETED / SUCCESS; raw log confirms **102 tests in 0.146s — OK**, `TEST_OUTCOME=success`, PR source HEAD exactly `24dd3e4634973e9998126cd42359cf95927364c7`, `SOURCE_BINDING_STATUS=NOT_RUN` (push-only check). Artifact ID `14866223240`, size 687 bytes, SHA-256 `3394617d834f51192ae3814c0d53812c440059722c76c45e1ccf4a6f70c304da`; artifact present and not expired at metadata readback.
+- Both runs skipped handoff-request, ACK-claim and review-observation capture jobs. These runs validate W118 contract/unit CI only; they do not prove Task-level source binding, Core/W102/W14/W33/W70 runtime integration or Runtime Auto E2E.
+- Intermediate docs-only HEADs `98c545786eb55da7d35a396a59fd22b55e9cd82a` (Runs #1025/#1026) and `1ae6d4f92fd545f7e80ee3d80ec1dc66eb36fd81` (Runs #1027/#1028) also passed 102 contract tests each; final exact-head evidence is #1029/#1030 above.
+- **Disposition:** CI_CONTRACT PASS at exact PR head; static findings 065/067/068 remain routed to Xu; runtime gates remain BLOCKED / NOT VERIFIED; Xu review PENDING; Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED.
