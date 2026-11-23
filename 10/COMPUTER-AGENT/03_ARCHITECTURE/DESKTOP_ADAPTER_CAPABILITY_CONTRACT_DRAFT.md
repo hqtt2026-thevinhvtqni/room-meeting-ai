@@ -146,3 +146,40 @@ This supplements the existing workflow verification principle; it does not modif
 
 ## 13. Current disposition
 DRAFT FOR REVIEW. No dependency selection, install, source code, runtime, MCP registration, host operation, test, benchmark or release is authorized by this document. Work 10 remains ACTIVE — NOT RELEASED.
+
+## 14. D1 revision addendum — Xu pre-review findings (PROPOSED, 2026-11-23)
+
+This addendum responds to F01–F10. It is a proposed revision for independent review, not a lock decision. If it conflicts with the main draft, this addendum governs the proposed v0.1 baseline pending Owner and reviewer disposition.
+
+### 14.1 Authorization binding — P0 / F01
+Every action MUST be authorized by a canonical grant issued and validated through the existing ROOM-HOP Core/W24 authorization path; W10 MUST NOT create a parallel authorization authority. Before execution, the grant must be verifiably bound to issuer; authenticated caller identity; Work ID; task ID; W10 service/audience; exact desktop session; approved app/window scope; exact operation and target class; permitted data scope; one-time nonce or unique action ID; issued-at and expiry; policy/contract version. The authorization service must support revocation and replay detection. Missing, expired, revoked, mismatched, unverifiable or replayed grants => BLOCKED before side effect. A grant for one operation/target/session cannot be reused for another. W112 defines cross-Work envelope semantics; W24/Core remains authority for PC identity/transport/authentication. D1 must reference their canonical contract identifiers and version, not duplicate them. Until those exact identifiers and fields are confirmed by the owning Works, authorization integration is an OPEN BLOCKER and D2 is prohibited.
+
+### 14.2 Pre-action semantic risk classification — P0 / F02
+A generic click is not inherently S1. Before any click/type/select/toggle, W10 must classify the resolved control and surrounding semantic context using an allow-listed action intent and target class. Controls or contexts associated with send, submit, publish, delete, purchase, payment, transfer, permission/security/account change, external communication, irreversible record mutation, or unknown/ambiguous consequence are denied before input is injected. Unknown semantics default to BLOCKED, not S1. Human confirmation does not automatically make a denied S2 operation permissible. v0.1 MUST use a narrowly curated non-sensitive fixture allow-list; it must not infer safety from labels alone. If semantic classification is incomplete or context cannot be inspected, block. Preserve S2/S3 deny rules.
+
+### 14.3 Interactive session policy — P1 / F03
+The first pilot MUST use a dedicated, non-personal, non-admin test account and dedicated interactive desktop session, isolated from the Owner's daily session and real user data. A visible control/lease indicator and immediate cancel/revoke mechanism are mandatory. Human-active shared-session control is out of v0.1. Session identity, integrity level, lease owner and lease expiry must be checked before every action. Session drift or competing input => BLOCKED.
+
+### 14.4 Data minimization and retention — P1 / F04
+Raw accessibility trees, text values and screenshots MUST NOT be persisted by default. Process observations ephemerally in memory; expose only allow-listed fields and redacted content; fail closed if redaction is uncertain. Persist only minimal metadata, digests, policy decisions, action IDs, verification status and protected evidence references. Any raw diagnostic capture requires a separate per-run authorization, explicit purpose, private storage, access audit and short documented TTL with verified deletion. Never forward raw content to Dashboard, analytics or unrelated Works.
+
+### 14.5 Backend supply-chain gate — P1 / F05
+Before D2, record exact upstream repository, immutable release/tag and commit, artifact/package version, SHA-256 digest, license, transitive dependency inventory, provenance/signature verification, supported OS/provider matrix, maintenance activity and known security advisories. No floating versions or install-from-latest. If provenance, license compatibility, digest or maintenance/security assessment cannot be verified, backend selection remains NOT DECIDED and D2 remains BLOCKED.
+
+### 14.6 ProcessSupervisor lifecycle — P1 / F06
+The worker contract must define parent PID and process-tree ownership, descendant discovery, restricted environment inheritance, desktop/session handle ownership, bounded CPU/memory/output/time, cancellation propagation, graceful then forced termination, and cleanup verification. A worker is not considered closed while any owned descendant or control handle remains. Orphaned descendants, uncertain ownership or failed cleanup => BLOCKED; record evidence and require safe reconciliation. No arbitrary child process launch.
+
+### 14.7 Operation scope and outcome semantics — P1 / F07
+For v0.1, remove desktop.focus from the callable allow-list unless a later explicit Owner decision approves a narrowly scoped focus operation. desktop.close_session may close only a W10-created adapter worker/session; it must never close an arbitrary app, window, user desktop or OS session. Adapter action status is not task status: operation success means only the input API returned success. Only the canonical Workflow Verification owner/state machine may assign task PASS after independent post-condition evidence. Timeout/cancel/uncertain side effect => BLOCKED pending reconciliation. The browser workflow state machine remains LOCKED and unchanged.
+
+### 14.8 Traceability — P1 / F08
+Before pilot, maintain a traceability matrix mapping each threat and safety invariant to control requirement ID; test ID; deterministic fixture; expected result; evidence artifact; responsible reviewer/owner; status. Mandatory negative cases include expired/revoked/mismatched/replayed grants; stale/replayed/cross-window refs; ambiguous/misleading controls; destructive semantic controls; privilege mismatch; competing-session race; malicious UI prompt injection; cancellation with surviving descendants; package digest/provenance mismatch; redaction failure; raw-data leakage to Dashboard/journal; unexpected modal; and post-condition mismatch. No control may be marked PASS without executable evidence.
+
+### 14.9 Untrusted UI content — P2 / F09
+All labels, accessibility names, help text, notifications, document contents, window titles and application-provided metadata are untrusted data. They may help identify a target only within a previously authorized scope; they cannot grant permission, modify policy, widen scope, authorize an operation or override system instructions. Treat embedded instructions as prompt injection.
+
+### 14.10 Platform scope — P2 / F10
+The initial pilot scope is Windows only, on one explicitly identified supported Windows version and accessibility provider, subject to Owner approval and test evidence. macOS and Linux are UNSUPPORTED for v0.1 until separate platform-specific threat review, capability contract and acceptance suite are approved. No cross-platform compatibility claim.
+
+### 14.11 Revised v0.1 disposition
+Proposed v0.1 callable allow-list: capabilities; scoped observe; resolve; tightly allow-listed click/type/select/toggle; bounded wait; close W10-owned worker/session. Focus is excluded pending Owner decision. All external/irreversible, privileged, unknown-semantic, credential, clipboard, file-transfer, arbitrary keyboard/coordinate and OS-management actions remain denied. Dedicated test session is mandatory. No implementation, dependency install, host operation, MCP registration, test execution or D2 is authorized by this addendum.
