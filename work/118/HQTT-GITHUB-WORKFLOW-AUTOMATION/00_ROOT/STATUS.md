@@ -427,3 +427,11 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - Entry 063 in the canonical journal contains method, blob SHAs, commit provenance, exact CI log evidence, code/test readback and scope limits. It supersedes the older HEAD/CI snapshot in this STATUS file.
 - No source/workflow changes, no Main merge, rebase, force-push, external Work mutation or release.
 - **Disposition: ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.** See [Journal Entry 063](../EVIDENCE/NHAT-KY-THI-CONG.md).
+
+
+## Entry 063 addendum — exact-head recheck after verification records (2026-11-23)
+
+- After Entry 063 commits, branch HEAD was `76adbb5450f47fe058e8082321ff7c9d49de8d7c`; Main `0902cd26518673aa078bb4c7c7899e1e4a95656a`; compare DIVERGED 142 ahead / 4 behind, 47 W118 paths.
+- Exact-head PR Run #1000 / ID `45162100031`, validate job `137649803171`: SUCCESS; tested synthetic merge `145b013...` of PR source `76adbb5450f47fe058e8082321ff7c9d49de8d7c` into Main; **102 tests in 0.385s — OK**; source binding NOT_RUN; handoff/ACK/review-observation jobs SKIPPED.
+- CI contract/unit only; Runtime Auto E2E NOT RUN; P1-118-02 and cross-Work runtime integration remain BLOCKED / NOT VERIFIED. PR #68 OPEN / UNMERGED; no acceptance or release.
+- See canonical Journal Entry 063 addendum. This addendum records the post-verification documentation snapshot; any subsequent documentation commit requires its own exact-head CI readback.
