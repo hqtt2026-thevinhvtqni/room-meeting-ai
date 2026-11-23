@@ -448,3 +448,15 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - **Review:** Formal PR reviews 0; inline review comments 0. Xu independent review PENDING; Vinh product acceptance NOT ACCEPTED; release NOT AUTHORIZED.
 - **Record freshness:** This section and Journal Entry 064 supersede older HEAD/CI/compare snapshots above. PR description and RR-118-001 remain stale until their routing metadata is reconciled.
 - **Disposition:** ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED. No external Work/Sandbox/runtime/secret/permission/branch-protection changes; no Main merge or release.
+
+
+## Review-routing refresh — 2026-11-24 (after Journal Entry 065)
+
+- Active Xu review target is PR #68 / `work/118-auto-e2e-v2-clean`, not historical PR #67. Routing overlay: `EVIDENCE/RR-118-001_CURRENT-XU-REVIEW-ROUTING.md`.
+- At routing refresh, reviewed source HEAD was `77159adc4e649e691256150f0c8ffca81d080476`. Subsequent documentation-only routing commits do not change the reviewed implementation. Re-fetch branch HEAD before review submission.
+- Exact-head Push #1011 and PR #1012 both passed 102 contract/unit tests. Push source binding is `UNBOUND_LEGACY_BRANCH`; PR source binding is `NOT_RUN`. Handoff, ACK and review-observation jobs were skipped. Runtime Auto E2E NOT RUN.
+- Task states unchanged: 013 IN_PROGRESS; 014 BLOCKED; 015 BLOCKED; 016 IN_PROGRESS; 017 IN_PROGRESS; 018 BLOCKED; 019 PLANNED. No task DONE; progress NOT_CALCULATED.
+- Entry 065 recorded two static webhook-verifier findings for Xu: uppercase UUID accepted despite canonical-form contract; repository allowlist validation does not reject empty owner/repository components. No source/workflow change under freeze.
+- Formal reviews 0; inline comments 0; Xu review PENDING; Vinh acceptance NOT ACCEPTED; PR #68 OPEN / UNMERGED; Main compare last read 148 ahead / 4 behind.
+- Older PR #67 references in XR-118-001, release gate and handoff are historical and do not route current review. Acceptance criteria remain intact.
+- **Disposition:** ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.
