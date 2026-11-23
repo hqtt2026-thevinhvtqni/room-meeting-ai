@@ -104,3 +104,12 @@ Entries 065, 067, 068, 069 and 071 remain open static review findings. Implement
 - HEAD `3345175799a984f9586b483896431069c0f1b043` / Run #1069 above are pre-consolidation evidence only.
 - The final packet is consolidated in the documentation-only commit immediately following parent `1a27bcb67f7544bc8dc7296264126d9b6559eb14`. Xu's review must bind to the live PR #68 head SHA and matching exact-head CI as read at review start. No earlier CI result is transferable to a later SHA.
 - Staged gates remain unchanged: Xu review → separate Vinh non-release integration authorization → runtime E2E → Xu runtime evidence review → Vinh final acceptance → separate Vinh release authorization.
+
+### Entry 074 — post-remediation release gate status
+
+- **Priority:** P0 — no acceptance or release before independent re-review and runtime evidence.
+- **Current PR HEAD:** `c9f453091e54b667dcbc1dad10e31208035c8b3b`; exact PR Run #1122 / `45290233314`: SUCCESS, 118 tests in 0.318s.
+- Findings 067, 069, 068, 071 and 065 are remediated at source/contract-test level, pending Xu independent re-review. Their remediation does not clear Core/W102/W14/W33/W70 gates.
+- Runtime Auto E2E remains NOT RUN; external authority/runtime evidence remains BLOCKED / NOT VERIFIED.
+- PR #68 remains OPEN / UNMERGED. Vinh product acceptance NOT ACCEPTED; release NOT AUTHORIZED.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner. **Date-Time:** 2026-11-24 06:35 +07:00.
