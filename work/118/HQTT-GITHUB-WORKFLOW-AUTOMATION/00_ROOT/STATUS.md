@@ -516,3 +516,12 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - All event capture jobs SKIPPED. Contract/unit CI only; Runtime Auto E2E remains NOT RUN.
 - Active review target corrected to PR #68 in checklist and release gate; PR #67 historical only. Xu review PENDING; Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED.
 - **Disposition:** ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.
+
+
+## Static review refresh — Entry 071 (2026-11-24 06:10 +07:00)
+
+- Read-only review of the GitHub workflow_run event adapter found that `head_sha` is checked for 40-character length but not hexadecimal form, and `run_attempt` is forwarded without exact positive-integer validation.
+- Finding W118-EVENT-002 is recorded in Journal Entry 071 and routed for Xu's independent disposition. The existing positive exact-integer `run_id`, workflow allowlist, Core source-binding match and evidence-only state-effect controls remain intact.
+- Implementation/workflow freeze remains; no code/test/workflow mutation. No event dispatch or Core write. Runtime Auto E2E and cross-Work runtime gates remain NOT VERIFIED / BLOCKED.
+- Existing Entry 065/067/068/069 findings remain pending Xu review. No Task status promotion.
+- **Disposition:** ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.
