@@ -326,3 +326,15 @@ The grant-validation/run-report API described here does not itself implement W14
 5. Live E2E must prove authenticated recipient ACK before any possible Host side effect, Core grant validation, W14 process containment, event ledger ACK and readback.
 
 **Disposition:** W14 sole ownership is architecturally decided; W14 canonical source and HostPort runtime are NOT VERIFIED. W70 policy snapshot contract/API is NOT APPROVED / NOT VERIFIED. No implementation or runtime claim is permitted from these documents alone.
+
+
+## 16. W52 orchestration source and HostPort dependency — 2026-11-23
+
+- W52 GitHub branch: `work/52-room-universal-ai-communication-orchestration`; HEAD `afd93ea8960d4cf9b27a57338b75f8d51624c170`; compare to Main `0902cd26518673aa078bb4c7c7899e1e4a95656a`: DIVERGED 4 ahead / 1,759 behind.
+- Recursive branch tree is complete (not truncated), 398 entries. W52-related repository content is limited to `docs/work52/{BIEN_BAN.md,KE_HOACH_THI_CONG_XU.md,NHAT_KY_HOP_THI_CONG.md,README.md}`; no W52 orchestration implementation, HostPort interface, RpcPort adapter or runtime binding appears in this branch tree.
+- Prior Work17 source trace reports W52 Sandbox candidates for Codex App Server/Qwen ACP, but those are not GitHub source in the inspected W52 branch and were described as read-only/no-tool, with CorePort/AuthorityPort/W14 HostPort injected but no production binding. This is secondary evidence of a candidate, not implementation/runtime proof.
+- PR #74 assigns W52 ownership of assignment/dispatch, recipient-authenticated ACK/NACK, durable outbox, event cursor, retry/cancel/recovery and orchestration semantics. Work28 must not implement a duplicate dispatcher, queue, task ledger or recipient ACK authority.
+- The Core grant prerequisite is therefore blocked until the W52 owner provides a versioned, source-pinned assignment/ACK event contract and verifiable runtime identity binding. A grant cannot be issued on the basis of a task-created response, session intake, MCP tool call or unverified "accepted" state.
+- Required W52 handoff: exact canonical repository/branch/HEAD; interface schema/version; authenticated principal proof; assignment/task/correlation/idempotency binding; ACK/NACK event envelope; durable outbox/receipt and replay/cursor semantics; negative/recovery tests; and proof that ACK is committed before W14 Host side effects.
+
+**Disposition:** W52 ownership is architecturally decided; W52 GitHub implementation and live dispatch/ACK are NOT VERIFIED. Do not create a W28 substitute orchestration layer. Execution Gate remains CLOSED.
