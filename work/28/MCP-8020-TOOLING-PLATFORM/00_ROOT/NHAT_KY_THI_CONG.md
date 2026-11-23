@@ -2116,3 +2116,51 @@ The remaining acceptance gap requires evidence from the actual ROOM-HOP PC. Chat
 **STATUS:** COLLECTOR PORTABILITY PATCHED / NOT EXECUTED / LIVE PROVENANCE STILL BLOCKED.
 
 **Signature:** [KÝ: VI | CODER]
+
+
+## 2026-11-23 — JRN-W28-058 — Ka independent continuation review: integrated WP2/WP5/WP1 slices and remaining live gates
+
+**Role:** Ka | Independent Architecture & Security Reviewer (CSA)  
+**Title:** Chief Security Architect — Work 28 independent reviewer  
+**Date-time:** 2026-11-23 07:xx UTC+07:00 (Asia/Ho_Chi_Minh)  
+**Source branch:** `work/28-mcp-tooling-platform`  
+**Authority:** Vinh — delegated continuation; no release or deployment authority inferred  
+**Signature:** [KÝ: KA | CSA]
+
+### READ / TRACE
+- Re-read the canonical Work Manifest, Work Structure Standard, original Work 28 requirement, Master Execution Plan V2.0, Auto E2E Runbook V2.0, Architecture Decision V2 and existing canonical journal.
+- Confirmed canonical governance: GitHub branch `work/28-mcp-tooling-platform`; Core :8000 remains sole authorization/application authority; Build/Verification MCP :8030 remains separate; historical MCP :8020 remains quarantined / DO NOT USE; Execution Host :8031 is the controlled execution boundary; Execution Gate CLOSED; release NOT_RELEASED.
+- Re-read current canonical WP2 source surfaces `execution_host/process_job.py`, `execution_host/host.py`, `execution_host/host_run.py`, lifecycle tests and `.github/workflows/work28-mcp-tooling.yml`. Source contains the suspended Windows spawn sequence (Job Object before suspended process, assignment before resume), explicit fail-closed handling, serialized service registry transitions and retry-preserving cleanup behavior. The workflow includes unit/regression, Linux lifecycle, Windows lifecycle, immutable exact-SHA artifact retest and gate-report jobs.
+- Re-read the Vi owner handoff and its exact-source/merge/CI references for PRs #70–#73. The handoff records:
+  - PR #70 WP2: tested SHA `42d9c43ec4dbd573b1dad5318cfa0bf10433eab0`; merge `2d006dcb5aaac5624d45cf88b173bf59d0dce55a`; PR run #387 / `45054861801` and post-merge run #388 / `45055014499`, all five configured jobs SUCCESS.
+  - PR #71 WP5: tested SHA `a9eafadfc797fef75bb14e397046ab5bc2a8a3be`; merge `dca6fd27ea119b64cee550395e0613289057b0f8`; PR run #391 / `45055422844` and post-merge run #392 / `45055750014`, all five configured jobs SUCCESS.
+  - PR #72 WP1 static registry/schema/handler-binding: tested SHA `e310882ceafd2705b79efb4718af7e8f3a4ea5fc`; merge `ab51accd1fb186c68beec8fcf08009c25c3dfa67`; PR run #393 / `45056547390` and post-merge run #394 / `45056717662`, all five configured jobs SUCCESS.
+  - PR #73 Core authority provenance wording: tested SHA `f341a3f8bb67141b352d0c6647a214851483365d`; merge `7666c0c7de60583c77b466c1e08ea10a0a7d0cd7`; PR run #395 / `45060135687` and post-merge run #396 / `45060288335`, all five configured jobs SUCCESS.
+- Exact live source identity is still not established by these CI runs. CI proves the configured repository test/build lanes only.
+- Inspected PR #74, “W28: Core Execution Authority & Agent-to-Computer Contract V1.3”. Its description declares architecture-contract-only scope; no implementation, endpoint, runtime, deployment or release. Independent review and QA are pending. It is not treated as an approved Work 28 implementation contract in this entry.
+
+### REVIEW / FINDINGS
+1. **WP2 — INTEGRATED / CI PASS (source + configured CI scope).** Current source and handoff evidence support the lifecycle remediation and Linux/Windows CI claims. OS isolation remains NOT_VERIFIED; CI does not attest the deployed Execution Host or production process identity.
+2. **WP5 — INTEGRATED / CI PASS (fail-closed source behavior).** The handoff records mandatory Core grant URL, startup abort on missing/unreachable Core and no automatic local file-grant fallback; snapshot-only is the default. This is not proof that a compatible, owner-approved Core grant endpoint is deployed and reachable.
+3. **WP1 — STATIC CONTRACT INTEGRATED / CI PASS.** The handoff records exact ordered 31-tool registry, Draft 2020-12 schema validation, complete argument validation before provider invocation and exact provider-handler key/signature checks. The production composition root and real provider groups remain NOT VERIFIED.
+4. **Core authority — SOURCE IMPLEMENTED / CI-TESTED; APPROVAL AND LIVE DEPLOYMENT NOT VERIFIED.** PR #73 corrected misleading approval wording. The V1.2 contract still says NOT APPROVED / NOT DEPLOYED / NOT WIRED; do not wire the staged client or synthesize WorkContext until the authority decision and real deployment evidence exist.
+5. **WP3-F01 — BLOCKED.** Q4 upload grant is not approved; no binary upload side effects may be enabled.
+6. **WP0 / live Build MCP :8030 — BLOCKED.** Raw protocol tools/list, process/build identity and deployed registry/schema parity are not established.
+7. **Runtime MCP / Execution Host :8031 — BLOCKED.** No complete live MCP → Core → Runtime → Host execution, protected evidence persistence and authorized checksum readback are verified.
+8. **PC provenance collector — PREPARED / NOT RUN.** The read-only collector and runbook are present, but no PC output was supplied or observed in this review. Do not claim a listener, process or deployment PASS.
+9. PR #61 and PR #69 are recorded in the owner handoff as superseded by PR #70; do not revive the historical branches as integration targets.
+
+### DECISION
+- Keep the canonical branch as the only source of truth. Treat WP2, WP5 and WP1 static contract as integrated source/CI slices, not as full product acceptance.
+- Continue only source/CI work that does not invent Core authority, deploy services, change credentials, or interact with the quarantined historical :8020 listener.
+- Do not merge PR #74 or treat its V1.3 architecture contract as approved solely because it exists. Require exact contract readback and the required authority/owner decision.
+- Execution Gate remains CLOSED; Work 28 remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+### NEXT
+- Vi: maintain the integrated source and CI evidence; prepare a clean, explicit dependency handoff for the remaining live provenance/authority inputs; do not create a local fallback or synthetic live PASS.
+- An: independent native Linux/Windows reproduction remains distinct from Vi's CI evidence; no QA PASS is inferred here.
+- Ka: continue static security review of exact canonical code and contract diffs; report only evidence-backed findings.
+- Xu: coordinate the external Core/W14/W52/W70/W33/W102 authority decisions and the PR #74 contract review under delegated governance.
+- Vinh: no routine technical action requested; product acceptance remains with Vinh.
+
+**STATUS:** WP2 / WP5 / WP1 STATIC CONTRACT INTEGRATED WITH REPORTED EXACT-HEAD AND POST-MERGE CI PASS; LIVE AUTHORITY / DEPLOYMENT / PROVIDER COMPOSITION / WP3-F01 / RUNTIME E2E BLOCKED; EXECUTION GATE CLOSED; NOT RELEASED.
