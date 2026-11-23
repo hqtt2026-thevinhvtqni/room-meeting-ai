@@ -3130,3 +3130,30 @@ Confirmed implementation/design gaps:
 **STATUS:** DOC-W28-078 PERSISTED / READBACK PENDING; CORE AUTHORITY INTEGRATION BLOCKED; EXECUTION GATE CLOSED; NOT RELEASED.
 
 **Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-079 — DOC-W28-078 and journal readback closure
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 14:43 +07:00  
+**Priority:** P0 — contract candidate traceability
+
+### READBACK
+
+- DOC-W28-078 fetched from branch `ka/work28-security-hardening-20261123`; blob SHA-256 Git blob ID: `2e4f3966f86634d165f9d70f87703db65199cbef`; 14,849 characters; final status string confirms CANDIDATE / NOT APPROVED / NOT WIRED.
+- Canonical journal fetched after append; blob ID `92f130bb42eb3ffc193dcd9f4482fec11831dce4`; JRN-W28-078 is present.
+- Candidate branch compare against `work/28-mcp-tooling-platform`: 26 ahead / 0 behind; merge base `14a535a6f7d10bb318734cc8df6c76090286ac08`.
+- PR #76 remains OPEN / DRAFT / UNMERGED. The candidate contract and journal are branch-scoped; canonical Work28 branch has not been modified.
+
+### CORRECTION
+
+JRN-W28-078's initial "readback pending" wording is superseded by this entry: both document and journal readback succeeded. The earlier statement that journal append/readback was pending was accurate only at the time of the initial entry.
+
+### CI / ACCEPTANCE
+
+No workflow was triggered or claimed for the new documentation-only commits. No test or live E2E result is inferred from readback. Work remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED.
+
+**STATUS:** DOC-W28-078 READBACK PASS; JOURNAL READBACK PASS; CI NOT RUN FOR DOC-ONLY CHANGE; EXECUTION GATE CLOSED; NOT RELEASED.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
