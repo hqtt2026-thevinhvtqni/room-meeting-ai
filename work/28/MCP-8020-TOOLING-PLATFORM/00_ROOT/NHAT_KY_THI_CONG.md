@@ -2356,3 +2356,41 @@ The remaining acceptance gap requires evidence from the actual ROOM-HOP PC. Chat
 - PC-dependent provenance remains queued until Vinh reports PC availability. No PC command is being requested now.
 
 **STATUS:** CANONICAL TLS EXPOSURE STILL OPEN / TRANSPORT TEST COVERAGE MISSING / TLS PATCH CANDIDATE UNTESTED / VI WORKING REFS STALE / W28 NOT IN MAIN / LIVE PC PROVENANCE PENDING / EXECUTION GATE CLOSED / NOT RELEASED.
+
+
+## 2026-11-23 — JRN-W28-064 — TLS candidate redirect/credential boundary re-review
+
+**Role:** Ka | Independent Architecture & Security Reviewer (CSA)  
+**Title:** Chief Security Architect — Work 28 independent reviewer  
+**Date-time:** 2026-11-23 (UTC+07:00; GitHub-only review checkpoint)  
+**Canonical branch:** `work/28-mcp-tooling-platform`  
+**Review branch:** `ka/work28-core-grant-transport-tls-20261123`  
+**Signature:** [KÝ: KA | CSA]
+
+### READ / TRACE
+- Re-fetched review-branch client `execution_host/work28_core_grant_client.py`, blob `93203c8b7937804efbfbefafd6cce823135610cb`, and tests `tests/test_work28_grant.py`, blob `38849aa4e3052165d2f71ab2ee5740d8c5ff76ca`.
+- Latest branch comparison supersedes JRN-W28-063: review branch is now DIVERGED, 2 commits ahead / 5 behind canonical, with the same two modified paths. It remains a review-only branch and must not be merged wholesale.
+- Candidate validates scheme/host, rejects URL userinfo/query/fragment and malformed ports, requires HTTPS for non-loopback remote hosts, and permits HTTP for localhost/127.0.0.1/::1.
+- Candidate still constructs a request containing optional `Authorization: Bearer <token>` and calls the default `urllib.request.urlopen()` redirect handler. No explicit redirect policy or redirect regression test is present in the fetched diff.
+- The four new policy tests cover remote HTTP rejection, remote HTTPS acceptance, loopback HTTP allowance and malformed URL rejection. They do not exercise same-origin redirects, cross-origin redirects, scheme downgrade, redirect loops, or whether Authorization is retained/forwarded after a redirect.
+- A redirect can change the request destination after the initial URL validation. Therefore validating only the configured URL does not establish the destination policy for every network hop. In particular, credential forwarding across an origin change or HTTPS→HTTP downgrade must be prevented by an explicit, tested policy.
+
+### FINDING
+**W28-KA-WP5-06 — HIGH: redirect destination and bearer-token forwarding are not constrained.**
+- The current candidate does not prove that redirects remain HTTPS and within the approved origin.
+- It does not prove that the Bearer token is stripped on cross-origin redirects or that the redirect is rejected before credentials can be sent to a different authority.
+- The current four tests are insufficient to close the transport credential-exposure finding. This is a review finding, not a claim that a credential leak has been observed in a live request.
+
+### REQUIRED REMEDIATION / RETEST
+1. Prefer disabling automatic redirects for the Core grant client and fail closed on any 3xx unless the approved Core contract explicitly requires redirects.
+2. If redirects are required, implement a bounded redirect handler that validates every Location target: HTTPS-only for remote destinations, no userinfo/query/fragment, bounded hop count, and strict same-origin policy; never forward Authorization across origin changes or to a downgraded scheme.
+3. Add deterministic local tests with a fake/local HTTP handler proving: redirect is rejected by default; cross-origin redirect cannot receive the Bearer token; HTTPS→HTTP downgrade is rejected; same-origin redirect behavior matches the approved policy; redirect loops/hop limit fail closed. Tests must assert that no second-hop request receives credentials when rejected.
+4. Integrate the code and tests on a fresh Vi implementation branch based on the latest canonical head. Run exact-head Linux and Windows CI; provide raw workflow/job evidence. An independently reproduces the security tests; Ka reviews the resulting exact diff and CI.
+5. Do not change Core endpoint wiring until Xu/Core owner approves the versioned wire contract.
+
+### DISPOSITION
+- No source implementation was changed by this review. No test was executed by Ka; the candidate remains UNTESTED.
+- No credential, endpoint, runtime, PC process, deployment or execution gate was touched.
+- Do not promote the review branch to canonical and do not infer that the TLS issue is closed.
+
+**STATUS:** TLS URL VALIDATION CANDIDATE PARTIAL / REDIRECT AND CREDENTIAL BOUNDARY OPEN / EXACT-HEAD CI NOT PROVEN / CANONICAL EXPOSURE NOT CLOSED / EXECUTION GATE CLOSED / NOT RELEASED.
