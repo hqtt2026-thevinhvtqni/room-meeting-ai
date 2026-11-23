@@ -3157,3 +3157,51 @@ No workflow was triggered or claimed for the new documentation-only commits. No 
 **STATUS:** DOC-W28-078 READBACK PASS; JOURNAL READBACK PASS; CI NOT RUN FOR DOC-ONLY CHANGE; EXECUTION GATE CLOSED; NOT RELEASED.
 
 **Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-080 — Core :8000 / Host / W1111 source-provenance audit
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 14:46 +07:00  
+**Priority:** P0 — Core authority provenance and Host trust boundary  
+**Scope:** Read-only source trace; no production wiring.
+
+### 1. Exact source evidence
+
+Main snapshot `0902cd26518673aa078bb4c7c7899e1e4a95656a`:
+- `room_hop_mcp/core_http_main.py`, blob `8dd6bb5ea500026d932ca52eb6079c980d722ab0`: `build_app()` composes MeetingManager → MeetingService → `create_http_app(service)`; no authority router mount appears in the inspected composition.
+- `room_hop_mcp/adapter/http_server.py`, blob `54cb3ecbce2e6b13083f31c14f0c1f0738f1457d`: inspected adapter exposes Identity/Meeting routes, not execution-grant routes.
+- `execution_host/server.py`, blob `45aec57525b5d55bb63544b7bd7fd23062e06151`: `POST /execute` reads caller `work_context`, constructs `WorkContext(**...)` and calls Host. No Core online grant call is present in this handler.
+- `CORE_EXECUTION_AUTHORITY_V1_2_DEPLOYMENT.md`, blob `ce130f1f9a95daeaafff75ef37eacd4dffc797e2`: claims routes are mounted in Core :8000. This conflicts with the inspected entrypoint/adapter. Record as bounded doc/source mismatch, not as proof that no other deployment exists.
+
+W1111 PR #48 candidate:
+- Branch `work/w1111-core-execution-authority-v1-2`.
+- `core/execution_authority.py`, blob `163b126178b67c6e0a3f68ba33eaf7b9e6d91503`: contains a hash-chained JSONL store with lock-file serialization and chain verification.
+- `room_hop_mcp/adapter/execution_authority_http.py`, blob `8cb21fadf6bf2318f4884d368b77f2abf796b807`: candidate route-mount implementation with online grant validation.
+- Work17 GAP-01 Entry 030 records a prior static defect: run recording accepted a source digest different from the policy-bound digest. This must be reproduced against exact PR #48 HEAD before any reuse. PR #48 remains unmerged and is not canonical Core.
+
+### 2. DECIDE
+
+- No blind copy/cherry-pick from PR #48.
+- No new authority route mounted into Main or any parallel Core service started.
+- No Host execution until caller WorkContext authority is removed and W14-owned Host validates Core grants online.
+- DOC-W28-078 source-provenance addendum A1 records the exact paths/blobs and bounded discrepancy.
+- Maintain Execution Gate CLOSED and PR #76 DRAFT.
+
+### 3. BUILD / JOURNAL
+
+- Updated DOC-W28-078 with section 13, source-provenance addendum A1.
+- Document update commit: `c3b4b55bb3acb29c9feff3ae099c1446e06cb1e8`.
+- Journal entry appended to this canonical journal on candidate branch.
+- No source code, Core runtime, Host process, endpoint, credential or W70 policy was changed.
+
+### 4. LIMITATIONS / NEXT
+
+- This is static GitHub source evidence only; no live Core endpoint, W14 process, W70 policy snapshot, runtime grant or protected evidence readback was tested.
+- Next: fetch exact PR #48 / PR #74 metadata and compare source provenance; inspect W14 ownership/HostPort contract and W70 policy snapshot source before implementing any executable contract.
+- No CI is claimed for documentation-only changes. No product acceptance or release.
+
+**STATUS:** SOURCE AUDIT RECORDED; CORE MOUNT / HOST ONLINE AUTHORITY NOT VERIFIED; EXECUTION GATE CLOSED; NOT RELEASED.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
