@@ -488,3 +488,12 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - Handoff-request, ACK-claim and review-observation jobs were SKIPPED. These are contract/unit CI results, not Runtime Auto E2E or cross-Work runtime evidence.
 - Entries 065/067/068 findings remain routed to Xu; implementation/workflow freeze remains. No Task status promotion.
 - **Disposition:** ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.
+
+
+## Failure diagnostics review — Entry 069 (2026-11-24)
+
+- Static review found that the diagnostics planner selects the first Issue containing an idempotency marker substring, without rejecting embedded/quoted markers or duplicate matching Issues. The workflow can comment on or reopen that selected Issue.
+- The workflow queries at most 1,000 labelled Issues, but the planner has no completeness signal and may create a duplicate if a matching record lies beyond the cap.
+- Findings W118-DIAGNOSTICS-001/002 are recorded in Journal Entry 069 and routed to Xu. Suggested remediation is deferred under the implementation/workflow freeze; no Issue mutation or code/workflow change was made.
+- Runtime Auto E2E and all cross-Work runtime gates remain NOT VERIFIED / BLOCKED. No Task promotion.
+- **Disposition:** ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.
