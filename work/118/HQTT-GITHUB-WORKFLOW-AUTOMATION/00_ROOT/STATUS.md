@@ -469,3 +469,12 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - Positive controls: duplicate and incomplete scans fail closed; persisted Core Issue ID mismatch/missing marker blocks mutation; PRs excluded; missing/false/exception lease callback blocks before API calls; readback verifies number/title/body.
 - Xu review routing includes the new finding and bounded remediation recommendation. Implementation/workflow freeze remains; no code change.
 - **Disposition:** ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.
+
+
+## Static review refresh — Entry 068 (2026-11-24 04:53 +07:00)
+
+- Read-only review of W118 event evidence builder found non-strict run metadata typing (`bool` / positive float can pass numeric comparison) and no full hexadecimal SHA-40 validation for `source_commit`.
+- Finding W118-EVIDENCE-001 is recorded in the canonical journal Entry 068 and routed for Xu review. Suggested remediation is deferred under the implementation/workflow freeze.
+- This is a W118-local artifact validation gap only; it is not evidence of forged events, Core Task mutation, or Work70 Evidence Register acceptance.
+- No source/workflow change; no runtime or external Work/Sandbox mutation. Task Register statuses and all runtime blockers remain unchanged.
+- **Disposition:** ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.
