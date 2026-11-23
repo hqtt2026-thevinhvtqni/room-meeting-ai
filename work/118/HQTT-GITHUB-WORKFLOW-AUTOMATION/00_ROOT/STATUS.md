@@ -497,3 +497,12 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - Findings W118-DIAGNOSTICS-001/002 are recorded in Journal Entry 069 and routed to Xu. Suggested remediation is deferred under the implementation/workflow freeze; no Issue mutation or code/workflow change was made.
 - Runtime Auto E2E and all cross-Work runtime gates remain NOT VERIFIED / BLOCKED. No Task promotion.
 - **Disposition:** ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.
+
+
+## Active review routing reconciliation — Entry 070 (2026-11-24 05:43 +07:00)
+
+- Canonical Xu review checklist and release gate now point to active PR #68 / exact candidate HEAD `e5d7c989bf8fa73637283f2d75f8003861669ee7`.
+- Historical PR #67 references remain for audit only and are explicitly superseded as the active target. Acceptance criteria and staged authority gates are unchanged.
+- Entry 070 records the stale routing defect and documentation-only correction. Implementation/workflow freeze remains.
+- Xu review PENDING; Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED. PR #68 remains OPEN / UNMERGED.
+- **Disposition:** ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.
