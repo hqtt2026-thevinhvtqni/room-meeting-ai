@@ -2539,3 +2539,73 @@ The canonical server blob `cfdecca58e6146d067ce0e0c0a0feebac0ebdc83` remains the
 5. Ka: review exact source/workflow diff and read raw exact-head logs; do not claim CI coverage from file existence.
 
 **STATUS:** W28-KA-WP5-07 HIGH / OPEN — GRANT FAIL-CLOSED TEST MODULE NOT WIRED INTO CANONICAL WORKFLOW / W28-KA-WP5-03 HIGH / OPEN — CORE AUTHORITY NOT PROVEN / W28-KA-WP5-06 HIGH / OPEN — REDIRECT BOUNDARY NOT PROVEN / EXECUTION GATE CLOSED / ACTIVE — INTEGRATION BLOCKED — NOT RELEASED.
+
+
+## 2026-11-23 — JRN-W28-068 — Command-mode grant bypass and CI test-discovery boundary
+
+**Role:** Ka | Independent Architecture & Security Reviewer (CSA)  
+**Title:** Chief Security Architect — Work 28 independent reviewer  
+**Date-time:** 2026-11-23 (UTC+07:00)  
+**Canonical branch:** `work/28-mcp-tooling-platform`  
+**Pre-entry canonical commit:** `4e2475551cd7e980f7136e8f811189dee80c0ffb`  
+**Signature:** [KÝ: KA | CSA]
+
+### NEW FINDING — W28-KA-WP5-08 — HIGH / OPEN: privileged command mode bypasses Core grant validation
+
+Exact canonical source inspected:
+
+- `execution_host/server.py`, blob `cfdecca58e6146d067ce0e0c0a0feebac0ebdc83`.
+- `execution_host/work28_dispatch.py`, blob `22d5dcd385e301a43fcd0e1c3e901ff2c90abac9`.
+- `execution_host/work28_grant.py`, blob `05c082b00a5c38fbdf45950d42211e644f57ed45`.
+- `tests/test_work28_dispatch.py`, blob `b40cac9c315e4eaa52802542759c26cfc6a4721e`.
+
+Observed control flow:
+
+1. HTTP `POST /execute` authenticates a shared `X-Room-Hop-Execution-Auth` token, accepts caller-provided `work_context`, checks its Work ID against local `ROOM_HOP_AUTHORIZED_WORKS`, and then sets `work_context['authorized'] = True`.
+2. `dispatch_execute()` branches on mode. `work28_snapshot` requires `execution_grant_id`, resolves a server-side registry grant and binds Work/entry/operation/source hash. The `command` branch does not resolve or validate any grant.
+3. Command mode is blocked by default because `snapshot_only=True`; however, `main()` explicitly permits trusted deployment environment configuration `ROOM_HOP_SNAPSHOT_ONLY=false` (also 0/no/off) to disable snapshot-only mode. Once disabled, a caller with the shared execution token and allow-listed WorkContext can enter command mode without a Core-issued execution grant.
+4. This is a source-level authority bypass path under the privileged opt-out configuration. No evidence was obtained that the opt-out is enabled in any deployed runtime; do not claim a live exploit or current deployment exposure.
+
+**Risk:** the product contract says Core is the sole authority and no MCP-to-arbitrary-shell path. A configuration toggle must not silently convert the Host into a grantless command executor. The secure default is useful defense-in-depth but does not satisfy the invariant if a production configuration can bypass Core grant authorization.
+
+**Required remediation / decision:**
+- Prefer removing production command mode entirely; retain it only behind a test-only adapter that cannot be enabled by runtime environment.
+- If command mode is a legitimate product requirement, it must use the same authenticated Core-issued grant, principal, Work/WP/Gate/Assignment/Task, purpose, operation, source snapshot, expiry/revocation and audit binding before any process spawn.
+- Reject any caller-supplied `authorized` flag and derive all authority fields server-side.
+- Add negative HTTP tests with `ROOM_HOP_SNAPSHOT_ONLY=false`: missing grant, forged WorkContext, mismatched Work, expired/revoked grant and unauthorized operation must all fail before process spawn. Add a positive case only after the approved Core contract is implemented.
+- Xu must decide the normative command-mode product policy; Ka does not unilaterally alter the architecture.
+
+### CI TEST DISCOVERY — CONFIRMATION / BOUNDARY
+
+Exact workflow `.github/workflows/work28-mcp-tooling.yml`, blob `8876f1a9096ec54e5a78a073820755087e67ecbf` confirms:
+- Unit-regression job discovers only `work/28/MCP-8020-TOOLING-PLATFORM/05_TEST` using unittest and pytest.
+- Linux and Windows lifecycle jobs invoke explicit `tests/test_work28_*.py` modules; neither invokes root-level `tests/test_work28_core_grant_fail_closed.py`, blob `6fecca58c97ffe0f042ead8e6eaedf30e5552d78`.
+- The artifact retest also discovers only Work28 `05_TEST`.
+- Thus W28-KA-WP5-07 remains HIGH / OPEN. The file exists and imports `HttpCoreGrantSource`, but the checked-in workflow does not execute it. Its tests also do not exercise TLS redirects or grantless command-mode denial.
+
+### CORRECTION / CURRENT BRANCH FRESHNESS
+
+All compares below use canonical base `4e2475551cd7e980f7136e8f811189dee80c0ffb` (the pre-entry head):
+- PR #74: DIVERGED 2 ahead / 10 behind; one contract file. OPEN / DRAFT / UNMERGED; mergeability metadata is not an approval.
+- PR #33: DIVERGED 6 ahead / 253 behind; historical evidence files only.
+- TLS candidate: DIVERGED 2 ahead / 9 behind; two files. Do not merge/cherry-pick wholesale.
+- Vi WP5 branch: 0 ahead / 45 behind; no unique commits.
+- Journal Entry 067's prior compare counts are superseded by this exact-base refresh.
+
+### VALIDATION / DISPOSITION
+
+- This is a static GitHub source and workflow review only. Ka did not execute tests, run a server, send HTTP requests, or inspect a live PC/runtime.
+- No source/workflow code changed. No branch rebase, merge, force-push, credential, service, endpoint, deployment, branch-protection or release mutation occurred.
+- No CI run is claimed for this journal-only update.
+- Existing findings remain: W28-KA-WP5-03 caller WorkContext / Core authority gap; W28-KA-WP5-06 TLS redirect boundary; W28-KA-WP5-07 grant fail-closed test omitted from CI; W28-KA-WP5-08 command-mode grant bypass under privileged opt-out.
+- PC-dependent MCP 8030 provenance and full live Auto E2E remain pending.
+
+### REQUIRED NEXT
+
+1. Xu: issue an explicit normative decision on whether production command mode is forbidden or must be grant-bound; preserve W14 as sole Host owner and Core as sole authority.
+2. Vi: implement fail-closed server-derived authority and remove caller-controlled WorkContext/authorized flag; eliminate the grantless production command-mode opt-out.
+3. Vi: add W28 fail-closed, redirect and command-mode negative tests to both Linux and Windows lanes; add workflow parity assertions.
+4. An: independently run and review negative authority/redirect/command-mode cases on the integrated exact head.
+5. Ka: re-review exact source diff, exact-head CI raw logs, and Core adapter compatibility. Do not infer deployment or PASS from source/CI alone.
+
+**STATUS:** W28-KA-WP5-08 HIGH / OPEN — GRANTLESS COMMAND MODE UNDER PRIVILEGED OPT-OUT / W28-KA-WP5-07 HIGH / OPEN — FAIL-CLOSED TEST MODULE OMITTED FROM WORKFLOW / W28-KA-WP5-03 HIGH / OPEN — CORE AUTHORITY NOT PROVEN / W28-KA-WP5-06 HIGH / OPEN — REDIRECT BOUNDARY NOT PROVEN / EXECUTION GATE CLOSED / ACTIVE — INTEGRATION BLOCKED — NOT RELEASED.
