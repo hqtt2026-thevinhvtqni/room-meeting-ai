@@ -230,3 +230,28 @@ This document is accepted as a design candidate only when:
 - Vinh's required approval is recorded.
 
 Until then: **CANDIDATE / NOT APPROVED / NOT WIRED / EXECUTION GATE CLOSED / WORK 28 NOT RELEASED.**
+
+
+## 13. Source-provenance addendum — 2026-11-23 (DOC-W28-078-A1)
+
+This addendum narrows the source claims to exact fetched paths and blobs.
+
+### Main source snapshot
+
+- Main HEAD inspected: `0902cd26518673aa078bb4c7c7899e1e4a95656a`.
+- `room_hop_mcp/core_http_main.py` blob `8dd6bb5ea500026d932ca52eb6079c980d722ab0`: `build_app()` creates MeetingManager/MeetingService and returns `create_http_app(service)`; no execution-authority router is imported or mounted in this function.
+- `room_hop_mcp/adapter/http_server.py` blob `54cb3ecbce2e6b13083f31c14f0c1f0738f1457d`: inspected adapter defines Identity and Meeting routes; no execution-grant route is present in this file.
+- `execution_host/server.py` blob `45aec57525b5d55bb63544b7bd7fd23062e06151`: `POST /execute` constructs `WorkContext(**body['work_context'])` from request JSON and calls `host.execute_work`; no Core grant validation occurs in this handler.
+- `CORE_EXECUTION_AUTHORITY_V1_2_DEPLOYMENT.md` blob `ce130f1f9a95daeaafff75ef37eacd4dffc797e2` claims the grant routes are mounted in Core :8000. The inspected entrypoint/adapter do not show that mount. This is a bounded documentation/source discrepancy; no live HTTP test was run.
+
+### W1111 PR #48 candidate comparison
+
+- Branch: `work/w1111-core-execution-authority-v1-2`; PR #48 remains an unmerged candidate.
+- `core/execution_authority.py` blob `163b126178b67c6e0a3f68ba33eaf7b9e6d91503` contains a hash-chained JSONL store with lock-file serialization and chain verification.
+- `room_hop_mcp/adapter/execution_authority_http.py` blob `8cb21fadf6bf2318f4884d368b77f2abf796b807` contains a candidate route mount, including online token validation.
+- Prior bounded source audit (Work17 GAP-01 Entry 030) records a static defect: run recording did not compare submitted `source_sha256` against the grant-bound Work policy, and its test accepted a different digest. This finding must be reproduced against the exact PR #48 HEAD before reuse; it is not silently treated as a current-main defect.
+- PR #48 is not canonical Core and cannot be copied wholesale into Work28. Its store design is a reference for further review only.
+
+### Disposition
+
+Core :8000 route mount, W14 Host ownership, W70 policy snapshot and canonical source provenance remain BLOCKED / NOT VERIFIED. This addendum does not claim live endpoint behavior, runtime process identity, test PASS or approval. Execution Gate remains CLOSED.
