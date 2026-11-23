@@ -1644,3 +1644,12 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - **No main merge, PR, release, source-code edit, dependency install, runtime execution or test execution.**
 - **Result:** Sandbox ↔ W10 branch documentation sync PASS for the seven listed files. Work 10 remains ACTIVE — NOT RELEASED.
 - **KÝ:** Xu | AI-01
+
+
+## W10-XU-SYNC-HEAD-CORRECTION-20261123-01 — 2026-11-23 20:18 (UTC+07:00)
+
+- **Correction to prior sync entry:** the final journal update containing the Sandbox↔GitHub sync record was itself synchronized afterward.
+- **Actual final branch HEAD:** 449da504192653d997a9cdf774e7b0fe407cd1b9.
+- The updated journal content was fetched back from GitHub and compared exactly with Sandbox: PASS.
+- This correction supersedes the earlier branch-tip value bbccec54aec8fe97cb1d7a984d401f772dc6e1c8 as the final HEAD; that SHA remains the immediately preceding journal commit.
+- **KÝ:** Xu | AI-01
