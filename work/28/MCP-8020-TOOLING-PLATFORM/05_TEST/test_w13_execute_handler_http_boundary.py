@@ -104,8 +104,7 @@ class ExecuteHttpBoundaryTests(unittest.TestCase):
         eh_server.Handler.host = self.host
         eh_server.Handler.auth_token = "secret-token"
         eh_server.Handler.authorized_works = frozenset({"W28"})
-        # This legacy HTTP-boundary test intentionally exercises command mode;
-        # opt out explicitly instead of relying on the secure runtime default.
+        # Explicitly set the historical opt-out value; command mode must still stay closed.
         eh_server.Handler.snapshot_only = False
         self.httpd = ThreadingHTTPServer(("127.0.0.1", 0), eh_server.Handler)
         self.base = "http://127.0.0.1:%d" % self.httpd.server_address[1]
@@ -152,7 +151,7 @@ class ExecuteHttpBoundaryTests(unittest.TestCase):
         self.assertEqual(body["reason"], "caller_not_authorized_for_work")
         self.assertEqual(self.host.calls, [])
 
-    def test_authenticated_and_authorized_call_reaches_host_with_server_side_authorization(self):
+    def test_authenticated_legacy_command_is_blocked_without_core_grant(self):
         # Authentication and a local allowlist are not a Core-issued grant.
         # The legacy command path must remain blocked without invoking the host.
         code, body = post(self.base, payload(work_id="W28", authorized=True), {AUTH_HEADER: "secret-token"})
