@@ -415,3 +415,15 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - Formal reviews 0; inline threads 0; Xu independent review remains separate from formal GitHub review; Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED.
 - See canonical Journal Entry 062 for method, source readback, exact CI evidence and scope controls. No external Work mutation, Main merge, rebase, force-push or release.
 - **Disposition: ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.**
+
+
+## Xu Action & Evidence Verification — Entry 063 (2026-11-23)
+
+- Current PR #68 HEAD: `f6254a7e696084ad1b55876a7fe4c5f9bd6e66d3`; PR OPEN / UNMERGED / non-draft / mergeable=true.
+- Current Main: `0902cd26518673aa078bb4c7c7899e1e4a95656a`; compare DIVERGED 140 ahead / 4 behind; 47 changed paths, all W118.
+- Exact-head PR Run #997 / ID `45160434062`, validate job `137644160781`: SUCCESS; raw log checks out synthetic merge `36dc5f33e7ad2bc0408161675bea19e0c1b32f95` (PR source `f6254a7e...` + Main `0902cd265...`); **102 tests in 0.307s**; `TEST_OUTCOME=success`; `SOURCE_BINDING_STATUS=NOT_RUN`. Handoff/ACK/review-observation jobs SKIPPED. CI contract/unit only; Runtime Auto E2E NOT RUN.
+- P1-118-01 PASS at adapter-contract/unit-test level only; P1-118-02 BLOCKED pending authoritative Core Task-scoped lease validator and live proof. Cross-Work runtime integrations remain NOT VERIFIED / BLOCKED.
+- Formal PR reviews 0; inline review threads 0; Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED.
+- Entry 063 in the canonical journal contains method, blob SHAs, commit provenance, exact CI log evidence, code/test readback and scope limits. It supersedes the older HEAD/CI snapshot in this STATUS file.
+- No source/workflow changes, no Main merge, rebase, force-push, external Work mutation or release.
+- **Disposition: ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.** See [Journal Entry 063](../EVIDENCE/NHAT-KY-THI-CONG.md).
