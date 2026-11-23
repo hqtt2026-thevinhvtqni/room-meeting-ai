@@ -99,3 +99,8 @@ Entries 065, 067, 068, 069 and 071 remain open static review findings. Implement
 - PR #68 remains OPEN / UNMERGED; no rebase, force-push, PR close, Main integration, release, external Work/Sandbox mutation or security/permission/secret change.
 - **Name:** Ka / AI-02. **Title:** CSA / W118 Delegated Build Owner. **Date-Time:** 2026-11-24 06:11 +07:00.
 - **Result:** Release gate reconciled to current PR #68 and exact-head CI. ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.
+### Final revision-binding addendum — handover packet consolidation
+
+- HEAD `3345175799a984f9586b483896431069c0f1b043` / Run #1069 above are pre-consolidation evidence only.
+- The final packet is consolidated in the documentation-only commit immediately following parent `1a27bcb67f7544bc8dc7296264126d9b6559eb14`. Xu's review must bind to the live PR #68 head SHA and matching exact-head CI as read at review start. No earlier CI result is transferable to a later SHA.
+- Staged gates remain unchanged: Xu review → separate Vinh non-release integration authorization → runtime E2E → Xu runtime evidence review → Vinh final acceptance → separate Vinh release authorization.

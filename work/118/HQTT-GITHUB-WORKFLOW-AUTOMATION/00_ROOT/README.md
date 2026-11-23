@@ -261,3 +261,6 @@ Journal Entry 056 records the latest read-only dependency inventory. W102, W14, 
 - **Open static findings for Xu:** Entries 065, 067, 068, 069 and 071. Implementation/workflow freeze remains until Xu's disposition.
 - **Runtime / external authority:** Core, W102, W14, W33 and W70 gates remain BLOCKED / NOT VERIFIED; Runtime Auto E2E NOT RUN. No Task DONE.
 - **Authority:** Xu independent review pending; Vinh final acceptance and release authority. No merge/release authorization.
+## Final handover revision boundary — Entry 073
+
+The exact CI Run #1069 applies to pre-consolidation HEAD `3345175799a984f9586b483896431069c0f1b043` only. The final packet is consolidated in the documentation-only commit immediately following parent `1a27bcb67f7544bc8dc7296264126d9b6559eb14`. Xu must review the live PR #68 head SHA and matching exact-head CI readback; no CI result transfers across revisions. The Work remains NOT ACCEPTED / NOT RELEASED and runtime integration remains BLOCKED.

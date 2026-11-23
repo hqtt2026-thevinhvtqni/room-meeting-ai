@@ -301,3 +301,8 @@ No Task is DONE; progress remains NOT_CALCULATED. Do not promote adapter unit te
 - No Main merge, rebase, force-push, PR close, release, external Work/Sandbox mutation, secret/permission/branch-protection change, or substitute Core/Host/authority implementation.
 - **Handover result:** READY FOR XU INDEPENDENT REVIEW — NOT READY FOR PRODUCT ACCEPTANCE — NOT ACCEPTED — NOT RELEASED.
 - **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-24 06:11 +07:00; Result: current review package and exact-head CI evidence handed over to Xu for independent disposition; final acceptance remains Vinh's authority.
+### Final revision-binding addendum — handover packet consolidation
+
+- HEAD `3345175799a984f9586b483896431069c0f1b043` / Run #1069 above are the exact pre-consolidation snapshot and CI. Later commits in this handover are documentation-only and must not inherit that CI claim.
+- The final handover packet is consolidated in the documentation-only commit immediately following parent `1a27bcb67f7544bc8dc7296264126d9b6559eb14`. At the start of Xu's review, read the live PR #68 head SHA and its matching CI run directly from GitHub, then bind the review record to those exact values. The PR body will carry the final readback after CI completes.
+- No source/workflow implementation, runtime, external Work, secret, permission or branch-protection change is included in this consolidation.

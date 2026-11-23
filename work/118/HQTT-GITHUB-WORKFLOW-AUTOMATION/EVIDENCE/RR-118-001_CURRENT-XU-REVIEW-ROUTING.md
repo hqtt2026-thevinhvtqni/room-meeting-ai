@@ -272,3 +272,8 @@ Work32 Grant may be considered only for W118 protected execution integration aft
 - **Review/governance:** PR #68 formal reviews 0 and inline threads 0 at prior latest readback; Xu review PENDING; Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED. No merge, rebase, force-push, PR close, external Work/Sandbox mutation, secret/permission/branch-protection change or substitute authority/Host.
 - **Handover decision:** READY FOR XU INDEPENDENT REVIEW — NOT READY FOR PRODUCT ACCEPTANCE — NOT ACCEPTED — NOT RELEASED. Xu must review the exact PR #68 HEAD and return PASS / BLOCKED / NEEDS CHANGES per gate. Vinh retains integration, final acceptance and release decisions.
 - **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-24 06:11 +07:00; Result: canonical review and handover packet assembled and routed to Xu.
+## Final revision binding — Entry 073 addendum
+
+- HEAD `3345175799a984f9586b483896431069c0f1b043` / PR Run #1069 are pre-consolidation exact evidence only.
+- The final handover packet is consolidated in the documentation-only commit immediately following parent `1a27bcb67f7544bc8dc7296264126d9b6559eb14`. The authoritative review target is the live PR #68 head SHA at the time Xu begins review; read that SHA and its matching exact-head CI directly from GitHub and record both. Never carry forward a CI PASS to a different SHA.
+- No source/workflow/runtime or external Work mutation was included. Implementation/workflow freeze and all acceptance gates remain unchanged.

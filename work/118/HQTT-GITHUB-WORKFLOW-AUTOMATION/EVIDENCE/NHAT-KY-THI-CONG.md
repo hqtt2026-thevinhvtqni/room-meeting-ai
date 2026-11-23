@@ -2497,3 +2497,11 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - **Disposition:** READY FOR XU INDEPENDENT REVIEW — NOT READY FOR PRODUCT ACCEPTANCE — NOT ACCEPTED — NOT RELEASED. Xu's GitHub login/principal mapping remains UNVERIFIED; no reviewer identity or permission inferred. Xu review PENDING; Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED.
 - **Governance:** PR #68 remains OPEN / UNMERGED. No merge, rebase, force-push, PR close, release, secret/permission/branch-protection change, runtime mutation or external Work change.
 - **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-24 06:11 +07:00; Result: review checklist, handover record, release gate and routing index refreshed for Xu's independent review.
+\n\n#### Entry 073 addendum — final packet revision boundary
+
+- **Priority:** P0 — preserve exact source/CI binding for independent review.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-24 06:11 +07:00.
+- HEAD `3345175799a984f9586b483896431069c0f1b043` and Run #1069 are the exact pre-consolidation snapshot and CI. The final review/handover packet is consolidated in the documentation-only commit immediately following parent `1a27bcb67f7544bc8dc7296264126d9b6559eb14`.
+- Xu must read the live PR #68 head SHA and matching exact-head CI from GitHub at review start and bind the review record to those exact values. Earlier CI is not transferable to a later revision.
+- **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-24 06:11 +07:00; Result: final revision binding and CI provenance boundary documented.\n
