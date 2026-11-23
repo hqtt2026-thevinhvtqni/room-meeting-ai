@@ -460,3 +460,12 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - Formal reviews 0; inline comments 0; Xu review PENDING; Vinh acceptance NOT ACCEPTED; PR #68 OPEN / UNMERGED; Main compare last read 148 ahead / 4 behind.
 - Older PR #67 references in XR-118-001, release gate and handoff are historical and do not route current review. Acceptance criteria remain intact.
 - **Disposition:** ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.
+
+
+## Additional review finding — 2026-11-24 (Journal Entry 067)
+
+- Static review of the GitHub Issue mirror found that Task marker discovery uses substring containment, not an exact standalone canonical marker. A quoted/embedded marker in an unrelated Issue could be treated as the Task Issue and potentially PATCHed if it is the sole match and Core has no persisted `issue_id`. No production write is claimed.
+- The Issue adapter also accepts empty owner/repository components in its shallow repository configuration check.
+- Positive controls: duplicate and incomplete scans fail closed; persisted Core Issue ID mismatch/missing marker blocks mutation; PRs excluded; missing/false/exception lease callback blocks before API calls; readback verifies number/title/body.
+- Xu review routing includes the new finding and bounded remediation recommendation. Implementation/workflow freeze remains; no code change.
+- **Disposition:** ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.
