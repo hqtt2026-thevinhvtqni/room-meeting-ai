@@ -8,8 +8,8 @@ ThreadingHTTPServer with a recording fake host, and prove that:
 * an unarmed server (no token configured) fails closed;
 * a valid token alone is not authorization: Work not in the trusted
   allow-list -> 403 and the host is NEVER invoked;
-* only authenticated + per-Work-authorized calls reach the host, with
-  authorization derived server-side (client-sent authorized flag ignored).
+* command mode remains denied even for authenticated allow-listed Work because
+  no normative Core grant contract authorizes the legacy command dispatch path.
 """
 from __future__ import annotations
 
@@ -104,8 +104,8 @@ class ExecuteHttpBoundaryTests(unittest.TestCase):
         eh_server.Handler.host = self.host
         eh_server.Handler.auth_token = "secret-token"
         eh_server.Handler.authorized_works = frozenset({"W28"})
-        # This legacy HTTP-boundary test intentionally exercises command mode;
-        # opt out explicitly instead of relying on the secure runtime default.
+        # Exercise the legacy opt-out value explicitly: command mode must stay
+        # blocked even when this old configuration flag is false.
         eh_server.Handler.snapshot_only = False
         self.httpd = ThreadingHTTPServer(("127.0.0.1", 0), eh_server.Handler)
         self.base = "http://127.0.0.1:%d" % self.httpd.server_address[1]
@@ -152,17 +152,17 @@ class ExecuteHttpBoundaryTests(unittest.TestCase):
         self.assertEqual(body["reason"], "caller_not_authorized_for_work")
         self.assertEqual(self.host.calls, [])
 
-    def test_authenticated_and_authorized_call_reaches_host_with_server_side_authorization(self):
-        # Client deliberately claims authorized=True while the server-side
-        # decision is the only one that matters; also verified in the
-        # disallowed-work case above. Here the allow-list grants W28.
-        code, body = post(self.base, payload(work_id="W28", authorized=True), {AUTH_HEADER: "secret-token"})
-        self.assertEqual(code, 200)
-        self.assertEqual(body["status"], "PASS")
-        self.assertEqual(len(self.host.calls), 1)
-        ctx, req = self.host.calls[0]
-        self.assertEqual(ctx.work_id, "W28")
-        self.assertTrue(ctx.authorized)
+    def test_authenticated_allowlisted_command_is_denied_and_host_never_invoked(self):
+        # The old caller-controlled command contract is intentionally retired.
+        # A valid token + local Work allowlist must not create a grantless path.
+        code, body = post(
+            self.base,
+            payload(work_id="W28", authorized=True),
+            {AUTH_HEADER: "secret-token"},
+        )
+        self.assertEqual(code, 400)
+        self.assertIn("command_mode_disabled_core_grant_contract_required", body["reason"])
+        self.assertEqual(self.host.calls, [])
 
 
 if __name__ == "__main__":
