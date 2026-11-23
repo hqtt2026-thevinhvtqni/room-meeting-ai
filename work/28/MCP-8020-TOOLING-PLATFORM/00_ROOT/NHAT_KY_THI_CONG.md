@@ -2291,3 +2291,21 @@ The remaining acceptance gap requires evidence from the actual ROOM-HOP PC. Chat
 5. Keep CI precondition PASS separate from deployed E2E. The live MCP 8030 → Core 8000 → approved Runtime → W14 Host chain, protected evidence persistence and authorized checksum readback remain unverified.
 
 **STATUS:** PR #33 HISTORICAL CAPTURE INTEGRITY ONLY / 17-TOOL CAPTURE NOT 31-TOOL PARITY / PR #33 BRANCH 6 AHEAD 246 BEHIND / PR #74 BRANCH 2 AHEAD 3 BEHIND / WP0 LIVE PROVENANCE BLOCKED / EXECUTION GATE CLOSED / NOT RELEASED.
+
+
+## 2026-11-23 — JRN-W28-062 — PR #74 branch freshness correction submitted
+
+**Role:** Ka | Independent Architecture & Security Reviewer (CSA)  
+**Title:** Chief Security Architect — Work 28 independent reviewer  
+**Date-time:** 2026-11-23 07:16 UTC+07:00  
+**PR:** #74 — Core Execution Authority & Agent-to-Computer Contract V1.3  
+**Review ID:** 6015332822 — COMMENT (not APPROVE)  
+**Signature:** [KÝ: KA | CSA]
+
+### ACTION
+- Submitted a supplemental GitHub COMMENT correcting the branch-freshness count from the initial review. Latest compare: `xu/w28-core-authority-v1-3-20261123` is DIVERGED, 2 commits ahead / 3 commits behind canonical `work/28-mcp-tooling-platform`, with one modified contract file.
+- Asked Xu/Vi to reconcile onto the latest canonical baseline, preserve intended V1.3 changes, re-read the exact resulting blob and request fresh review.
+- Reaffirmed that P1/P2 contract findings remain open; no merge, implementation, deployment, endpoint wiring or gate transition is approved.
+
+### STATUS
+**PR #74 COMMENT REVIEW UPDATED / BRANCH RECONCILIATION REQUIRED / NOT APPROVED / EXECUTION GATE CLOSED / NOT RELEASED.**
