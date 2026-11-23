@@ -2357,3 +2357,18 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - **Scope and controls:** No code/workflow mutation; no external Work/Sandbox/runtime/config/secret/permission/branch-protection change; no rebase, force-push, merge or release.
 - **Disposition:** ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.
 - **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-24 04:49 +07:00; Result: review routing and STATUS synchronized; historical criteria retained; Xu review still pending.
+
+
+### Entry 067 — GitHub Issue mirror marker-binding static review
+
+- **Priority:** 02 — P1 — Prevent a marker substring in an unrelated Issue body from being treated as authoritative Core Task identity.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-24 04:54 +07:00.
+- **Method:** Read-only inspection of `scripts/w118/github_issue_adapter.py`, `tests/w118/test_github_issue_adapter.py`, `scripts/w118/source_binding.py` and `tests/w118/test_source_binding.py` at source HEAD `bbc5b1adfd906e1d585358fd85b76f934329f767`. No code, workflow or runtime mutation.
+- **Finding W118-ISSUE-002 — Task marker is matched as an arbitrary substring:** `_find_task_issues()` uses `marker in str(issue.get("body") or "")`. It does not require the marker to occupy an exact standalone line or a canonical marker block. If an unrelated Issue quotes, embeds or documents that marker text, the adapter can treat it as the Task's existing Issue. When exactly one such false match exists and Core has no persisted `issue_id`, the adapter may PATCH that unrelated Issue after lease validation. The Core lease validator currently has no proven live scope contract; this combination is not safe to treat as a verified mirror path. This is a source-level risk, not a claim that a production write occurred.
+- **Positive controls:** duplicate matching markers fail closed; complete bounded pagination and page-ceiling fail-closed behavior exist; PRs are excluded; persisted Core `issue_id` must match the unique marker Issue; missing/mismatched persisted Issue ID blocks mutation; missing/false/exception lease validator blocks before GitHub API calls; readback checks Issue number, title, body and rejects PRs.
+- **Related configuration weakness:** Issue adapter constructor uses the same shallow owner/repository check (string and exactly one slash) and permits empty owner or repository components. This should be normalized consistently with the webhook verifier finding in Entry 065.
+- **Recommended bounded remediation after Xu review:** parse marker as an exact standalone line or canonical fenced metadata block; reject multiple/embedded/malformed marker occurrences; add regression cases where unrelated body text quotes or embeds the marker and prove zero POST/PATCH; validate owner and repository components as non-empty canonical GitHub slugs in one shared validator. Keep Core-issued lease scope/expiry/revocation as a separate mandatory authority gate.
+- **Disposition:** NEEDS XU REVIEW — remediation deferred under implementation/workflow freeze. P1-118-02 remains BLOCKED; no production mirror write is authorized by these unit tests.
+- **Scope and controls:** No source/workflow mutation, no external Work/Sandbox/runtime/config/secret/permission/branch-protection change, no rebase, force-push, Main merge or release.
+- **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-24 04:54 +07:00; Result: one additional bounded Issue-marker binding risk recorded for Xu's independent review; no code changed.
