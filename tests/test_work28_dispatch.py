@@ -14,7 +14,8 @@ from urllib import error, request
 from execution_host.host import ExecutionHost
 from execution_host.server import Handler
 from execution_host.work28_dispatch import DispatchError, dispatch_execute
-from execution_host.work28_grant import GrantError, issue_grant_for_tests
+from execution_host.work28_grant import ExecutionGrant, GrantError, issue_grant_for_tests
+from execution_host.work28_core_grant_client import GRANT_TOKEN_HEADER
 
 
 def _sha(data: bytes) -> str:
@@ -160,6 +161,29 @@ class WorkIdEquivTests(unittest.TestCase):
         self.assertFalse(work_ids_equivalent("28", "280"))
 
 
+class _FakeCoreGrantSource:
+    def __init__(self, grant):
+        self.grant = grant
+        self.recorded = []
+
+    def fetch_grant(self, work_id, grant_id, grant_token):
+        if work_id != self.grant.work_id or grant_id != self.grant.grant_id or grant_token != "core-grant-token":
+            raise GrantError("core_authority_denied:grant_binding_mismatch")
+        return self.grant
+
+    def record_run(self, **kwargs):
+        self.recorded.append(kwargs)
+        return {"record_id": "RUN-http-test"}
+
+
+class _DenyCoreGrantSource:
+    def fetch_grant(self, work_id, grant_id, grant_token):
+        raise GrantError("core_authority_denied:work_not_authorized")
+
+    def record_run(self, **kwargs):
+        raise AssertionError("record_run must not be called after a denied grant")
+
+
 class HttpE2EGrantSnapshotTests(unittest.TestCase):
     def test_http_200_work28_snapshot_with_token_and_grant(self):
         with tempfile.TemporaryDirectory() as td:
@@ -173,35 +197,34 @@ class HttpE2EGrantSnapshotTests(unittest.TestCase):
             ws.mkdir()
             ev.mkdir()
             digest = _sha(body_src)
-            grant = issue_grant_for_tests(
-                grant_id="g17",
-                work_id="28",
+            grant_id = "GRANT-12345678-1234-1234-1234-123456789abc"
+            grant = ExecutionGrant(
+                grant_id=grant_id,
+                work_id="W28",
                 entry_path="job.py",
                 operation="RUN_SCRIPT",
                 expected_source_sha256=digest,
+                expires_at_unix=__import__("time").time() + 300,
+                work_name="WORK28",
+                workspace_root=str(host_root),
+                execution_workspace=str(ws),
+                evidence_root=str(ev),
+                service_identity="mcp8020",
             )
             token = "wp17-secret-token"
             Handler.host = ExecutionHost()
             Handler.auth_token = token
-            Handler.authorized_works = frozenset({"W28"})
-            Handler.grant_registry = {"g17": grant}
+            Handler.core_grant_source = _FakeCoreGrantSource(grant)
+            Handler.authorized_works = None
+            Handler.grant_registry = {}
             httpd = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
             port = httpd.server_address[1]
             thread = threading.Thread(target=httpd.serve_forever, daemon=True)
             thread.start()
             try:
                 payload = {
-                    "mode": "work28_snapshot",
-                    "execution_grant_id": "g17",
-                    "work_context": {
-                        "work_id": "W28",
-                        "work_name": "WORK28",
-                        "workspace_root": str(host_root),
-                        "execution_workspace": str(ws),
-                        "evidence_root": str(ev),
-                        "authorized": False,
-                        "execution_id": "wp17-http",
-                    },
+                    "work_id": "W28",
+                    "grant_id": grant_id,
                     "work28_request": {
                         "work_id": "28",
                         "entry_path": "job.py",
@@ -216,6 +239,7 @@ class HttpE2EGrantSnapshotTests(unittest.TestCase):
                     headers={
                         "Content-Type": "application/json",
                         "X-Room-Hop-Execution-Auth": token,
+                        GRANT_TOKEN_HEADER: "core-grant-token",
                     },
                     method="POST",
                 )
@@ -223,7 +247,9 @@ class HttpE2EGrantSnapshotTests(unittest.TestCase):
                     self.assertEqual(resp.status, 200)
                     data = json.loads(resp.read().decode())
                 self.assertEqual(data.get("dispatch_mode"), "work28_snapshot")
-                self.assertEqual(data.get("grant_id"), "g17")
+                self.assertEqual(data.get("grant_id"), grant_id)
+                self.assertTrue(data.get("core_authority_recorded"))
+                self.assertEqual(data.get("core_run_record_id"), "RUN-http-test")
                 if data.get("status") == "PASS":
                     self.assertIn("wp17-http", data.get("stdout_summary") or "")
             finally:
@@ -241,16 +267,17 @@ class HttpE2EGrantSnapshotTests(unittest.TestCase):
         thread = threading.Thread(target=httpd.serve_forever, daemon=True)
         thread.start()
         try:
+            Handler.core_grant_source = _DenyCoreGrantSource()
             payload = {
-                "work_context": {
+                "work_id": "W99",
+                "grant_id": "GRANT-12345678-1234-1234-1234-123456789abc",
+                "work28_request": {
                     "work_id": "W99",
-                    "work_name": "X",
-                    "workspace_root": "/tmp",
-                    "execution_workspace": "/tmp",
-                    "evidence_root": "/tmp",
-                    "authorized": True,
+                    "entry_path": "job.py",
+                    "operation": "RUN_SCRIPT",
+                    "expected_source_sha256": "a" * 64,
+                    "timeout_seconds": 15,
                 },
-                "execution_request": {"command": ["python3", "-c", "print(1)"]},
             }
             req = request.Request(
                 f"http://127.0.0.1:{port}/execute",
@@ -258,12 +285,13 @@ class HttpE2EGrantSnapshotTests(unittest.TestCase):
                 headers={
                     "Content-Type": "application/json",
                     "X-Room-Hop-Execution-Auth": token,
+                    GRANT_TOKEN_HEADER: "core-grant-token",
                 },
                 method="POST",
             )
             with self.assertRaises(error.HTTPError) as ctx:
                 request.urlopen(req, timeout=5)
-            self.assertEqual(ctx.exception.code, 403)
+            self.assertEqual(ctx.exception.code, 403
         finally:
             httpd.shutdown()
             httpd.server_close()
