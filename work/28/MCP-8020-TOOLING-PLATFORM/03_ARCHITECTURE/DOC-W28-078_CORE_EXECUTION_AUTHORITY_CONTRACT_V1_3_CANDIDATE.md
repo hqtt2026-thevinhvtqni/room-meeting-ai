@@ -297,3 +297,32 @@ The grant-validation/run-report API described here does not itself implement W14
 - The PR #48 source-hash binding defect and W12/W13 ownership drift remain blockers to reuse. Any future reuse must be selective, aligned to W14 and the complete AD-W28 V1.3 bindings, fixed and re-tested on a fresh canonical Core baseline.
 
 **Precedence:** AD-W28-20261123-002 (PR #74) owns architecture and component boundaries. DOC-W28-078 proposes only a possible versioned wire-level realization. Where they differ, PR #74 controls and DOC-W28-078 must be revised.
+
+
+## 15. W14 HostPort and W70 policy-source reconciliation — 2026-11-23
+
+### 15.1 W14 source provenance
+
+- W14 release branch: `release/work14-w14-release-20261010t053516`.
+- Branch HEAD: `65992f04d6989e199d91355f0bd977cfc6258c4a`; compare to Main HEAD `0902cd26518673aa078bb4c7c7899e1e4a95656a`: DIVERGED, 6 ahead / 1,793 behind. This branch is a historical release snapshot, not established as the current W14 development target.
+- Recursive tree inspection found the root `execution_host/` sources (including `server.py`, `host.py`, `models.py`, `wee_bridge.py`) and only three Work14 evidence documents under `work/14/06_EVIDENCE/`. The expected W14 Work Manifest and Host Boundary paths were NOT_FOUND on this branch. Do not infer that this branch is the canonical W14 Work source.
+- The inspected Host source lineage uses one-shot `GET /health` and `POST /execute`; the POST accepts WorkContext/ExecutionRequest and returns a completed result. The W17 source trace records the bridge as one-shot request/response, not a persistent provider RPC session.
+- W52 HostPort requires a bidirectional `RpcPort` supporting request/notify/receive/respond/close, with confirmed descendant-process stop. The inspected W14 HTTP bridge does not implement that interface or equivalent stream/cancel/close proof.
+- W14 is the sole Host owner per PR #74, but canonical W14 branch/source/release identity and the HostPort adapter contract remain unresolved. Do not create a Work28 substitute Host or relabel one-shot POST /execute as HostPort.
+
+### 15.2 W70 policy-source boundary
+
+- Main DOC-061 blob `a54dc2202e56cfb9737395fd523a5488ab35b0f3` is marked DRAFT — source reconciliation complete / contract approval pending / implementation not verified.
+- DOC-061 explicitly says it does not approve API routes, database schema, permissions, gate namespace or implementation; DOC-060 gate namespace remains proposal only / not approved.
+- Therefore no authoritative live W70 policy snapshot API/version/freshness contract is established by this inspected source. Static Work28 configuration or a proposed DOC-061 field list cannot be treated as live W70 authorization.
+- Core grant issuance must remain BLOCKED when W70 authoritative Work/WP/Gate decision cannot be obtained and verified.
+
+### 15.3 Required owner evidence before Host implementation
+
+1. W14 owner pins canonical repository/path/branch/commit and deployed process/build identity.
+2. W14 publishes/approves HostPort capability profile, including persistent session identity, request/notify/receive/respond/close, cancellation ACK, descendant exit and cleanup semantics.
+3. W70 owner pins approved Work/WP/Gate source, versioned read contract, snapshot digest/freshness and fail-closed behavior.
+4. Core integrates only after W70/W52/W14 contracts are reconciled under AD-W28-20261123-002.
+5. Live E2E must prove authenticated recipient ACK before any possible Host side effect, Core grant validation, W14 process containment, event ledger ACK and readback.
+
+**Disposition:** W14 sole ownership is architecturally decided; W14 canonical source and HostPort runtime are NOT VERIFIED. W70 policy snapshot contract/API is NOT APPROVED / NOT VERIFIED. No implementation or runtime claim is permitted from these documents alone.
