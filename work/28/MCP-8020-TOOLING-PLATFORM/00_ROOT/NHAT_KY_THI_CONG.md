@@ -3011,3 +3011,59 @@ The previous candidate disabled mode=command, but HTTP work28_snapshot still acc
 **STATUS:** CI #435 FAIL / TWO LEGACY TEST EXPECTATIONS IDENTIFIED; TEST FIXES COMMITTED; RERUN PENDING; EXECUTION GATE CLOSED; NOT RELEASED.
 
 **Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-077 — Exact merge-candidate CI #438 PASS for Core authority containment
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 10:00 +07:00  
+**PR:** #76 — OPEN / DRAFT / UNMERGED  
+**PR source head tested:** 3a64249b00f3310e2ec461d984754eeff0aa5888  
+**Pull-request merge candidate:** 3d43ee511ad5ea69e4464079bfbf3c4e5ce3f074  
+**Workflow run:** 45102972232 / run #438
+
+### 1. Exact CI result
+
+All five jobs completed SUCCESS:
+- Unit/regression: SUCCESS (348 tests in the configured Work28 suite).
+- Execution Host Linux lifecycle: SUCCESS.
+- Execution Host Windows lifecycle: SUCCESS.
+- Build and retest exact-SHA source artifact: SUCCESS.
+- Automatic E2E gate report: SUCCESS.
+
+Merge candidate 3d43ee511ad5... has parents canonical base 14a535a6... and PR source head 3a64249b.... Exact compare base → merge candidate: 23 ahead / 0 behind. This is a synthetic PR merge candidate; canonical branch is not merged.
+
+### 2. Security containment raw evidence
+
+Both Linux and Windows logs confirm:
+- test_work28_core_grant_fail_closed.py: 10 tests / OK.
+- test_work28_dispatch.py: 9 tests / OK, including HTTP snapshot request blocked with 503 and no snapshot side effect when online Core validation is absent.
+- test_work28_evidence.py: 7 tests / OK.
+- test_work28_readback.py: 5 tests / OK.
+- test_work28_audit_readiness.py: readiness and health tests OK.
+- Legacy Work13 bootstrap test now confirms main() does not load static grants as authority and remains in BLOCKED execution mode despite ROOM_HOP_SNAPSHOT_ONLY=false.
+
+Unit/regression job also confirms test_main_passes_loaded_configuration_to_serve now passes with the updated fail-closed startup contract.
+
+### 3. Immutable artifact
+
+- Artifact ID: 14786335989
+- Name: work28-source-artifact-3d43ee511ad5ea69e4464079bfbf3c4e5ce3f074
+- Size: 2,309,796 bytes
+- SHA-256: d2a446535d239dfe43a5dfadfb1e254cd9bf8db7e2d9cf66e68389cb5adb1e26
+- Auto E2E report artifact ID: 14785424371
+- Report SHA-256: 7de3edcbb492fb894ac5f1b9d1f0e1d9562bcb88b8a20aa72dd70bfa252ca6d0
+
+### 4. Interpretation and remaining blockers
+
+- The exact PR merge candidate passes configured unit/regression, Linux, Windows, immutable artifact and auto-gate-report jobs.
+- HTTP protected execution is intentionally BLOCKED until an online Core validator exists. This is a security containment result, not proof that execution is functional.
+- WP5-08 grantless command path is denied; WP5-06 HTTPS/no-redirect checks pass; WP5-07 fail-closed module is run and passes in both OS lanes.
+- WP5-03 is not functionally resolved: the current Core :8000 composition still lacks the Work execution-authority routes, the Work28 authority candidate is not wired to an online Host validator, and caller WorkContext is not yet replaced with a Core-derived context. The candidate prevents execution rather than trusting that input.
+- PR #74 contract findings remain open; W70 policy snapshot, W14 ownership, Core provenance and HostPort contract are not complete.
+- No live PC/runtime, MCP 8030 → Core → Runtime, W14 process provenance or protected evidence readback was executed.
+
+**STATUS:** PR #76 CANDIDATE CI #438 PASS / IMMUTABLE ARTIFACT PASS; HTTP EXECUTION FAIL-CLOSED / BLOCKED BY DESIGN; WP5-03 HIGH / OPEN; EXECUTION GATE CLOSED; NOT RELEASED.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
