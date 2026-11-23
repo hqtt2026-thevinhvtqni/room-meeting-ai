@@ -51,9 +51,9 @@ class SnapshotOnlyTests(unittest.TestCase):
                 },
                 body={"mode": "command", "execution_request": {"command": ["true"]}},
                 grant_registry={},
-                snapshot_only=True,
+                snapshot_only=False,
             )
-        self.assertIn("snapshot_only", str(ctx.exception))
+        self.assertIn("command_mode_disabled_core_grant_contract_required", str(ctx.exception))
 
 
 class HttpReadbackTests(unittest.TestCase):
