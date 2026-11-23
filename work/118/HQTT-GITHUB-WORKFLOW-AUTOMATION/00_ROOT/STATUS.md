@@ -435,3 +435,16 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - Exact-head PR Run #1000 / ID `45162100031`, validate job `137649803171`: SUCCESS; tested synthetic merge `145b013...` of PR source `76adbb5450f47fe058e8082321ff7c9d49de8d7c` into Main; **102 tests in 0.385s — OK**; source binding NOT_RUN; handoff/ACK/review-observation jobs SKIPPED.
 - CI contract/unit only; Runtime Auto E2E NOT RUN; P1-118-02 and cross-Work runtime integration remain BLOCKED / NOT VERIFIED. PR #68 OPEN / UNMERGED; no acceptance or release.
 - See canonical Journal Entry 063 addendum. This addendum records the post-verification documentation snapshot; any subsequent documentation commit requires its own exact-head CI readback.
+
+
+## Current authoritative refresh — 2026-11-24 (Journal Entry 064)
+
+- **Canonical candidate:** PR #68 / `work/118-auto-e2e-v2-clean`; branch HEAD at audit `ad2f707b867d84167216239d2f7dbdb243975727`. PR OPEN / UNMERGED / non-draft / mergeable=true.
+- **Main comparison:** Main `0902cd26518673aa078bb4c7c7899e1e4a95656a`; DIVERGED **145 ahead / 4 behind**, merge base `792bdd71e5345949e0c1f26ff9f95a8513dfa7d5`; 47 changed paths, all W118. No rebase, force-push, merge or release.
+- **Exact-head push CI #1005:** Run `45162523402`, validate job `137651234877`, SUCCESS; raw log **102 tests in 0.310s — OK**, `TEST_OUTCOME=success`, `SOURCE_BINDING_STATUS=UNBOUND_LEGACY_BRANCH`. Artifact `14810559838`, 973 bytes, SHA-256 `6a466a1b64878d60cc33fa8ff1681f3a53e714b4ab0d874bfa0037aa6c5a3757`.
+- **Exact-head PR CI #1006:** Run `45162532129`, validate job `137651263838`, SUCCESS; raw log **102 tests in 0.211s — OK**, `SOURCE_BINDING_STATUS=NOT_RUN` (push-only). PR source HEAD exactly `ad2f707b867d84167216239d2f7dbdb243975727`. Artifact `14812850878`, 684 bytes, SHA-256 `ed9be5dd48b3dcbb7ca91e1babfd95573d9646485a9182ed809dd79a84fda23d`.
+- Both runs skipped handoff-request, ACK-claim and review-observation capture jobs. These are contract/unit CI only, not Task source-binding, cross-Work runtime integration or Runtime Auto E2E.
+- **Task Register:** TASK-013 IN_PROGRESS; TASK-014 BLOCKED; TASK-015 BLOCKED; TASK-016 IN_PROGRESS; TASK-017 IN_PROGRESS; TASK-018 BLOCKED; TASK-019 PLANNED. Progress NOT_CALCULATED; no DONE task. Preserve all existing owner/authority blockers.
+- **Review:** Formal PR reviews 0; inline review comments 0. Xu independent review PENDING; Vinh product acceptance NOT ACCEPTED; release NOT AUTHORIZED.
+- **Record freshness:** This section and Journal Entry 064 supersede older HEAD/CI/compare snapshots above. PR description and RR-118-001 remain stale until their routing metadata is reconciled.
+- **Disposition:** ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED. No external Work/Sandbox/runtime/secret/permission/branch-protection changes; no Main merge or release.
