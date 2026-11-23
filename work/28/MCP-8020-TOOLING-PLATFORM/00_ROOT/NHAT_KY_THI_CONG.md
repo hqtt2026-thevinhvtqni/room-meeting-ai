@@ -2828,3 +2828,39 @@ The failures do not justify restoring command mode or allowing HTTP Core grant t
 **STATUS:** CI #425 FAIL; root causes identified; corrective commits pushed; rerun PENDING; WP5-03 HIGH / OPEN; PR #76 DRAFT / UNMERGED; Execution Gate CLOSED; NOT RELEASED.
 
 **Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-073 — Exact-head CI #427 follow-up: command-denial assertion correction
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 09:46 +07:00  
+**Workflow run:** `45102006936` / run #427  
+**Run source SHA:** `97e255f12fc75af5171b6e682ee9a40850a052db`
+
+### 1. Exact CI result
+
+- Unit/regression job: **SUCCESS** (including Work28 unit/pytest suites).
+- Linux lifecycle: **FAIL**.
+- Windows lifecycle: **FAIL**.
+- Both OS raw logs confirm the newly wired `test_work28_core_grant_fail_closed.py` ran and all 9 tests passed.
+- WP18 `test_work28_evidence.py`: all 7 tests passed on both OS.
+- WP16 dispatch tests: all 9 tests passed on both OS.
+- Remaining failure on both OS: WP19 `tests/test_work28_readback.py::SnapshotOnlyTests.test_command_refused` expected the old error text `snapshot_only`; implementation now returns the more specific unconditional denial `command_mode_disabled_core_grant_contract_required`.
+
+### 2. Corrective change
+
+- Commit `600f291309d202ab906f46eb4bd45625e318bed9`.
+- Updated WP19 test to assert the new stable denial code and set `snapshot_only=False`, proving the legacy opt-out does not restore command mode.
+- No source behavior was weakened. New exact-head CI rerun is pending.
+
+### 3. Current disposition
+
+- HTTPS + redirect rejection tests: PASS in run #427 on both OS.
+- Core grant fail-closed tests: PASS in run #427 on both OS.
+- Command mode opt-out denial tests: PASS in run #427; WP19 assertion corrected for rerun.
+- Overall lifecycle: NOT PASS until exact-head rerun succeeds.
+
+**STATUS:** RUN #427 UNIT/REGRESSION SUCCESS; LINUX/WINDOWS LIFECYCLE FAIL ON ONE STALE ASSERTION; FIX COMMITTED; RERUN PENDING; EXECUTION GATE CLOSED; NOT RELEASED.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
