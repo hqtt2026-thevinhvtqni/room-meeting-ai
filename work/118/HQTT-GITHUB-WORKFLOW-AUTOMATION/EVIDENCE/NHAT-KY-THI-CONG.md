@@ -2325,3 +2325,19 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - **Scope and controls:** No source/workflow code edit; no external Work/Sandbox/runtime/config/secret/permission/branch-protection mutation; no rebase, force-push, Main merge, PR close, release or self-acceptance.
 - **Disposition:** ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.
 - **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-24 04:39 +07:00; Result: exact branch/PR CI and artifact evidence reconciled; all runtime gates remain blocked or unverified.
+
+
+### Entry 065 — Stateless webhook verifier security-boundary review
+
+- **Priority:** 02 — P1 — Review GitHub webhook envelope validation for canonical delivery identity and fail-closed input handling.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-24 04:45 +07:00.
+- **Method:** Read-only review of `scripts/w118/github_webhook_verifier.py`, `scripts/w118/github_event_adapter.py` and their W118 unit tests at branch HEAD `bbf58be40723859edac9d5ad0389d482e6c3accd`. No source/workflow edit and no runtime call.
+- **Finding W118-WEBHOOK-001 — UUID canonical form is not strict:** verifier parses `X-GitHub-Delivery` as UUID, then compares `str(parsed_delivery)` with `delivery_id.lower()`. This accepts uppercase UUID text although the error contract says canonical UUID format. If downstream Core deduplication keys on the raw delivery string rather than normalized UUID value, uppercase/lowercase spellings of the same UUID could be treated as different delivery identifiers. Core owns deduplication, so exploitability is not established; this is a validation-hardening gap, not proof of a live replay vulnerability.
+- **Finding W118-WEBHOOK-002 — expected repository syntax check is shallow:** verifier checks only that the configured value is a string containing exactly one slash; it does not reject empty owner or repository components. Payload equality still prevents a different repository name from passing, but malformed configuration is not rejected at the earliest boundary.
+- **Positive controls observed:** HMAC-SHA256 is computed over raw bytes and compared with `hmac.compare_digest`; body-size limit, UTF-8 JSON/object shape, repository equality, allowlisted event type, timezone-aware received_at, UUID parse and stateless/no-inbox contract are present. Event adapter checks the verifier flag, Core Task type, repository equality and event-specific Task/Issue/source-binding relationships.
+- **Decision:** Do not change implementation in this pass because current review-routing controls retain the implementation/workflow freeze pending Xu's independent review. Record both findings for Xu's disposition; do not claim a replay exploit or weaken the freeze. Recommended bounded remediation after Xu review: require exact lowercase canonical UUID text (`str(parsed_delivery) == delivery_id`) and validate non-empty owner/repository components; add uppercase UUID and malformed allowlist tests.
+- **Limit:** This is static source review only. No production webhook endpoint, secret, TLS, Core Event ingress, durable deduplication or runtime replay behavior was tested. W118-TASK-017 remains IN_PROGRESS with Core ingress and production endpoint blocked; Runtime Auto E2E remains NOT RUN.
+- **Scope and controls:** No code/workflow mutation, external Work/Sandbox/runtime/config/secret/permission/branch-protection change, rebase, force-push, Main merge or release.
+- **Disposition:** Finding recorded — remediation deferred under freeze — ACTIVE / BLOCKED / NOT ACCEPTED / NOT RELEASED.
+- **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-24 04:45 +07:00; Result: two bounded verifier hardening findings recorded; no code change.
