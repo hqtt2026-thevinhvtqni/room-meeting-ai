@@ -8,8 +8,8 @@ ThreadingHTTPServer with a recording fake host, and prove that:
 * an unarmed server (no token configured) fails closed;
 * a valid token alone is not authorization: Work not in the trusted
   allow-list -> 403 and the host is NEVER invoked;
-* only authenticated + per-Work-authorized calls reach the host, with
-  authorization derived server-side (client-sent authorized flag ignored).
+* legacy command-mode requests are blocked even with a valid token and allowlisted Work;
+* no command reaches the host until the approved Core-grant contract is integrated.
 """
 from __future__ import annotations
 
@@ -153,16 +153,13 @@ class ExecuteHttpBoundaryTests(unittest.TestCase):
         self.assertEqual(self.host.calls, [])
 
     def test_authenticated_and_authorized_call_reaches_host_with_server_side_authorization(self):
-        # Client deliberately claims authorized=True while the server-side
-        # decision is the only one that matters; also verified in the
-        # disallowed-work case above. Here the allow-list grants W28.
+        # Authentication and a local allowlist are not a Core-issued grant.
+        # The legacy command path must remain blocked without invoking the host.
         code, body = post(self.base, payload(work_id="W28", authorized=True), {AUTH_HEADER: "secret-token"})
-        self.assertEqual(code, 200)
-        self.assertEqual(body["status"], "PASS")
-        self.assertEqual(len(self.host.calls), 1)
-        ctx, req = self.host.calls[0]
-        self.assertEqual(ctx.work_id, "W28")
-        self.assertTrue(ctx.authorized)
+        self.assertEqual(code, 400)
+        self.assertEqual(body["status"], "BLOCKED")
+        self.assertIn("command_mode_disabled_core_grant_required", body["reason"])
+        self.assertEqual(self.host.calls, [])
 
 
 if __name__ == "__main__":
