@@ -71,3 +71,31 @@ This staged gate avoids the circular dependency where the workflow_run listener 
 - Exact branch/PR HEAD at readback: `e5d7c989bf8fa73637283f2d75f8003861669ee7`; PR #68 OPEN / UNMERGED against `main`.
 - PR #67 in the earlier Stage A/B and historical snapshots is superseded/historical; do not treat it as the current integration candidate. Preserve the staged gates: Xu design/security review, explicit Vinh non-release integration authorization, runtime execution/review, Vinh final acceptance, separate release authorization.
 - Xu review PENDING; Vinh integration authorization NOT GRANTED; final acceptance NOT ACCEPTED; release NOT AUTHORIZED.
+
+
+## Authoritative current release-gate overlay — Entry 073 (2026-11-24 06:11 +07:00)
+
+> This P0 overlay supersedes the historical PR #67 references and older snapshots above for current routing/status. It does not change the staged authority requirements.
+
+- **Active candidate:** [PR #68](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/68), branch `work/118-auto-e2e-v2-clean`, base `main`, exact HEAD `3345175799a984f9586b483896431069c0f1b043`, OPEN / not draft / UNMERGED.
+- **Exact-head CI:** [Run #1069 / ID `45285944558`](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45285944558), validate SUCCESS, **102 contract/unit tests in 0.296s**; artifact ID `14872425816`, SHA-256 `3bc79b82305ebe3f343693c4a2e5c2ae42023da9d86c2ca1452ec77139ca2a7b`, unexpired at metadata readback. Source-binding and handoff/ACK/review-observation capture jobs SKIPPED. This is not runtime E2E.
+- **Stage A — Xu design/security review:** PENDING; review packet in [XR-118-001](../08_REVIEW/XR-118-001_XU-INDEPENDENT-REVIEW-CHECKLIST.md). Xu GitHub login/principal mapping is not verified.
+- **Stage B — Vinh non-release integration authorization:** NOT GRANTED. No merge before explicit owner decision.
+- **Stage C — Ka runtime E2E:** NOT RUN; dependent on approved Core/W102/W14/W33/W70 contracts and Vinh Stage B authorization.
+- **Stage D — Xu runtime evidence review:** PENDING / cannot occur before real runtime evidence exists.
+- **Stage E — Vinh final product acceptance:** NOT ACCEPTED.
+- **Stage F — separate Vinh release authorization:** NOT AUTHORIZED / NOT RELEASED.
+
+### Mandatory external gates (not waivable by W118)
+
+Core Task/Event read/dispatch/persistence and authenticated Task-scoped Issue-mirror lease; W102 verified principal, Assignment and recipient-bound ACK; W14 canonical protected execution path and Work Authority/HostPort; W33 authenticated evidence ingress; W70 approved Evidence Register schema/owner ACK and read-only projection must be proven by their owning Work. No W118-local replacement authority or duplicate Host/queue/dispatcher is permitted.
+
+### Review findings routed to Xu
+
+Entries 065, 067, 068, 069 and 071 remain open static review findings. Implementation/workflow freeze remains until Xu records disposition. No remediation is inferred or silently accepted. Full details and requested review outputs are in XR-118-001 and journal Entries 065–073.
+
+### Governance / BIÊN BẢN
+
+- PR #68 remains OPEN / UNMERGED; no rebase, force-push, PR close, Main integration, release, external Work/Sandbox mutation or security/permission/secret change.
+- **Name:** Ka / AI-02. **Title:** CSA / W118 Delegated Build Owner. **Date-Time:** 2026-11-24 06:11 +07:00.
+- **Result:** Release gate reconciled to current PR #68 and exact-head CI. ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.
