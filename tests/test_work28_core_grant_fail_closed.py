@@ -57,41 +57,31 @@ class CoreGrantSourceFailClosedTests(unittest.TestCase):
             )
         )
 
-    def test_server_startup_fails_closed_when_core_grant_source_fails(self):
+    def test_server_starts_but_never_loads_static_grants_as_authority(self):
         with patch(
             "execution_host.server.load_execution_auth_config",
             return_value={"auth_token": "test", "authorized_works": frozenset({"W28"})},
-        ), patch(
-            "execution_host.server.build_grant_source",
-            side_effect=GrantError("core_grant_unreachable"),
         ), patch("execution_host.server.serve") as serve, patch.dict(os.environ, {}, clear=True):
-            with self.assertRaisesRegex(GrantError, "core_grant_unreachable"):
-                main()
-        serve.assert_not_called()
+            main()
+        serve.assert_called_once()
+        self.assertEqual(serve.call_args.kwargs["grant_registry"], {})
+        self.assertIs(serve.call_args.kwargs["snapshot_only"], True)
 
 
 class SnapshotOnlyDefaultTests(unittest.TestCase):
     def test_unset_snapshot_only_defaults_to_true(self):
-        source = Mock()
-        source.fetch_grants.return_value = {}
         with patch(
             "execution_host.server.load_execution_auth_config",
             return_value={"auth_token": "test", "authorized_works": frozenset({"W28"})},
-        ), patch("execution_host.server.build_grant_source", return_value=source), patch(
-            "execution_host.server.serve"
-        ) as serve, patch.dict(os.environ, {}, clear=True):
+        ), patch("execution_host.server.serve") as serve, patch.dict(os.environ, {}, clear=True):
             main()
         self.assertIs(serve.call_args.kwargs["snapshot_only"], True)
 
     def test_explicit_false_cannot_enable_command_mode(self):
-        source = Mock()
-        source.fetch_grants.return_value = {}
         with patch(
             "execution_host.server.load_execution_auth_config",
             return_value={"auth_token": "test", "authorized_works": frozenset({"W28"})},
-        ), patch("execution_host.server.build_grant_source", return_value=source), patch(
-            "execution_host.server.serve"
-        ) as serve, patch.dict(os.environ, {"ROOM_HOP_SNAPSHOT_ONLY": "false"}, clear=True):
+        ), patch("execution_host.server.serve") as serve, patch.dict(os.environ, {"ROOM_HOP_SNAPSHOT_ONLY": "false"}, clear=True):
             main()
         self.assertIs(serve.call_args.kwargs["snapshot_only"], True)
 
