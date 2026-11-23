@@ -2434,3 +2434,12 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - **PR Run #1048** [ID `45282527698`](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45282527698): validate SUCCESS; raw log confirms **102 tests in 0.161s — OK**; exact PR source HEAD `e0d3a128e9aa4672a2139eab67efae5a83dcdc5c`. Artifact ID `14871050565`, size 684 bytes, SHA-256 `dfd024ceb362f1db01fba0211f58094d5b8ccabe36957cceb2b52694a2624e0b`, present and unexpired at metadata readback.
 - Handoff-request, ACK-claim and review-observation capture jobs were SKIPPED in both runs. These are contract/unit CI only; no Task-level source binding or Runtime Auto E2E proof.
 - **Final routing:** XR-118-001 active PR pointer is #68; release gate overlay and RR-118-001 agree. PR #67 is historical only. Xu review PENDING; Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED.
+
+
+### Entry 070 final addendum — reconciled HEAD CI (2026-11-24)
+
+- **Current branch/PR HEAD before this journal append:** `76db923b4809ab2154ea3f35469d7f655163dbd8`; PR #68 OPEN / UNMERGED.
+- **Push Run #1052** [ID `45282642364`](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45282642364): validate SUCCESS; raw log **102 tests in 0.296s — OK**; `TEST_OUTCOME=success`; `SOURCE_BINDING_STATUS=UNBOUND_LEGACY_BRANCH`. Artifact `14870881689`, size 975 bytes, SHA-256 `a126d193e9ead485c3c5dc9ee4fac573a9eb23cd5d758c0d16e57878bf3212f4`, present/unexpired at metadata readback.
+- **PR Run #1053** [ID `45282651496`](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45282651496): validate SUCCESS; raw log **102 tests in 0.302s — OK**; PR head exactly `76db923b4809ab2154ea3f35469d7f655163dbd8`. Artifact `14869337556`, size 686 bytes, SHA-256 `b14a20563ba564b6ec5ad68b363f9e8d44b8a4fffded5567cda6f251d68ec3f0`, present/unexpired at metadata readback.
+- Event capture jobs were SKIPPED in both runs. Contract/unit CI only; source binding on aggregate branch remains UNBOUND_LEGACY_BRANCH; Runtime Auto E2E NOT RUN.
+- Canonical review checklist and release gate now direct Xu to PR #68; PR #67 is historical only. Xu review PENDING; Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED.
