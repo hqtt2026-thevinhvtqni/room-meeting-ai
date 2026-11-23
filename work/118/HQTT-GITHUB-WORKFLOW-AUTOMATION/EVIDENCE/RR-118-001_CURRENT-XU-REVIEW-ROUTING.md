@@ -235,3 +235,19 @@ Work32 Grant may be considered only for W118 protected execution integration aft
 - Push #1047 and PR #1048 both SUCCESS, 102 contract tests each. Push source binding `UNBOUND_LEGACY_BRANCH`; PR source binding is push-only / `NOT_RUN`. Artifact IDs/digests are recorded in Journal Entry 070.
 - Event capture jobs were SKIPPED. This is not runtime E2E evidence.
 - Canonical review checklist and release gate now route Xu to PR #68; PR #67 historical only. Xu review PENDING; Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED.
+
+
+## Authoritative routing overlay — 2026-11-24 (Entry 072)
+
+- **Priority / read order:** P0 — read this overlay before all historical snapshots in this file.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-24 07:05 +07:00.
+- **Canonical candidate:** [PR #68](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/68), branch `work/118-auto-e2e-v2-clean`, exact source HEAD `4466f5de6cdc5eaac207cb74171743021d907669`. PR remains OPEN / UNMERGED. PR #67 is historical/superseded; PR #66 remains a separate older OPEN / UNMERGED pilot and is not the W118 active review target.
+- **Exact-head CI:** PR Run [#1061 / ID `45284134206`](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45284134206), validate job `138075914400`, COMPLETED / SUCCESS; raw log confirms **102 tests in 0.210s** and `TEST_OUTCOME=success`. Artifact ID `14870863215`, size 686 bytes, SHA-256 `0c375c8707174d73ac24c4b4e7c37c5f62a8c8a57e5acff7735bd0ffbddb1cd7`, present/unexpired at metadata readback.
+- **CI limits:** Task-to-Issue source-binding step SKIPPED (`SOURCE_BINDING_STATUS=NOT_RUN`); handoff-request, ACK-claim and review-observation capture jobs SKIPPED. Run #1061 is contract/unit CI only. It is not live Task source binding, Core event dispatch, authenticated handoff/ACK, cross-Work runtime integration or Runtime Auto E2E.
+- **Open static review findings:** Entries 065, 067, 068, 069 and 071 are routed to Xu. Entry 071 specifically identifies workflow_run SHA hex-format and run_attempt exact-positive-integer validation gaps. No remediation was applied; implementation/workflow freeze remains until Xu's disposition.
+- **Task Register:** W118-TASK-013 IN_PROGRESS; 014 BLOCKED; 015 BLOCKED; 016 IN_PROGRESS at adapter level / Core lease BLOCKED; 017 IN_PROGRESS at contract level / Core-W33 ingress NOT VERIFIED; 018 BLOCKED; 019 PLANNED. No task DONE; progress NOT_CALCULATED.
+- **Non-waivable external gates:** Core Task/Event and Task-scoped Issue-mirror lease authority; W102 authenticated principal/Assignment/recipient-bound ACK; W14 canonical protected execution path; W33 authenticated evidence ingress; W70 approved Evidence Register schema/owner contract remain BLOCKED / NOT VERIFIED. Runtime Auto E2E NOT RUN.
+- **Review readback:** PR #68 formal reviews 0; inline review threads 0 at latest readback. Xu independent review PENDING; Vinh product acceptance NOT ACCEPTED; release NOT AUTHORIZED.
+- **Governance:** This overlay corrects only review routing and evidence freshness. It does not waive acceptance criteria or authorize source/workflow changes, external Work mutation, Main merge, rebase, force-push, PR close or release. Review must bind to the exact PR #68 HEAD above; if the branch advances, refresh this overlay and CI evidence before review.
+- **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-24 07:05 +07:00; Result: current review target, exact-head CI and all remaining authority/runtime blockers consolidated for Xu.
