@@ -2425,3 +2425,12 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - **Disposition:** Documentation routing corrected; Xu independent review remains PENDING; Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED. No implementation/workflow mutation.
 - **Scope and controls:** No source/workflow/runtime/secret/permission/branch-protection or external Work/Sandbox change; no merge, rebase, force-push, PR close or release.
 - **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-24 05:43 +07:00; Result: active review target reconciled to PR #68; historic PR #67 preserved.
+
+
+### Entry 070 addendum — exact-head CI and final routing readback
+
+- **Final docs-only HEAD:** `e0d3a128e9aa4672a2139eab67efae5a83dcdc5c`; PR #68 OPEN / UNMERGED.
+- **Push Run #1047** [ID `45282519155`](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45282519155): validate SUCCESS; raw log confirms **102 tests in 0.220s — OK**; source binding `UNBOUND_LEGACY_BRANCH`. Artifact ID `14870117323`, size 972 bytes, SHA-256 `f111a4ddad13fe0515469dd804a37e0e61e8606812f417be729d8172d1055b28`, present and unexpired at metadata readback.
+- **PR Run #1048** [ID `45282527698`](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45282527698): validate SUCCESS; raw log confirms **102 tests in 0.161s — OK**; exact PR source HEAD `e0d3a128e9aa4672a2139eab67efae5a83dcdc5c`. Artifact ID `14871050565`, size 684 bytes, SHA-256 `dfd024ceb362f1db01fba0211f58094d5b8ccabe36957cceb2b52694a2624e0b`, present and unexpired at metadata readback.
+- Handoff-request, ACK-claim and review-observation capture jobs were SKIPPED in both runs. These are contract/unit CI only; no Task-level source binding or Runtime Auto E2E proof.
+- **Final routing:** XR-118-001 active PR pointer is #68; release gate overlay and RR-118-001 agree. PR #67 is historical only. Xu review PENDING; Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED.
