@@ -15,6 +15,7 @@ from execution_host.work28_contract import create_source_snapshot
 from execution_host.work28_execute import run_verified_snapshot
 from execution_host.host import ExecutionHost
 from execution_host.models import WorkContext
+from execution_host.work28_core_grant_client import HttpCoreGrantSource
 
 
 def _sha(data: bytes) -> str:
@@ -154,6 +155,38 @@ class GrantBindTests(unittest.TestCase):
             if result.get("status") == "PASS":
                 out = result.get("stdout_summary") or ""
                 self.assertIn("granted", out)
+
+
+class CoreGrantTransportPolicyTests(unittest.TestCase):
+    def test_remote_plain_http_is_rejected_before_network_access(self):
+        with self.assertRaisesRegex(GrantError, "core_grant_https_required"):
+            HttpCoreGrantSource("http://core.example.test/works/W28/grants")
+
+    def test_remote_https_is_accepted(self):
+        source = HttpCoreGrantSource("https://core.example.test/works/W28/grants")
+        self.assertEqual(source.url, "https://core.example.test/works/W28/grants")
+
+    def test_loopback_http_is_accepted_for_local_development(self):
+        for url in (
+            "http://localhost:8001/works/W28/grants",
+            "http://127.0.0.1:8001/works/W28/grants",
+            "http://[::1]:8001/works/W28/grants",
+        ):
+            with self.subTest(url=url):
+                self.assertEqual(HttpCoreGrantSource(url).url, url)
+
+    def test_userinfo_query_fragment_and_invalid_ports_are_rejected(self):
+        invalid_urls = (
+            "https://user:secret@core.example.test/grants",
+            "https://core.example.test/grants?token=secret",
+            "https://core.example.test/grants#fragment",
+            "https://core.example.test:99999/grants",
+            "ftp://core.example.test/grants",
+        )
+        for url in invalid_urls:
+            with self.subTest(url=url):
+                with self.assertRaisesRegex(GrantError, "core_grant_url_invalid"):
+                    HttpCoreGrantSource(url)
 
 
 if __name__ == "__main__":
