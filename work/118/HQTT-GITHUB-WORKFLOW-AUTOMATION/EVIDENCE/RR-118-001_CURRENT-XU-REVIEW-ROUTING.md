@@ -227,3 +227,11 @@ Work32 Grant may be considered only for W118 protected execution integration aft
 - **Correction:** Checklist active PR pointer now references PR #68; release gate and checklist include current overlays binding review to exact HEAD `e5d7c989bf8fa73637283f2d75f8003861669ee7`. PR #67 references remain historical only; staged review/integration/runtime/acceptance/release authority unchanged.
 - **Live state at readback:** PR #68 OPEN / UNMERGED, base `main`, branch head equals PR head. Xu review PENDING; Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED.
 - **Scope:** Documentation-only correction. No source/workflow/runtime/secret/permission/branch-protection or external Work/Sandbox changes; no merge/rebase/force-push/release.
+
+
+## Exact-head CI for Entry 070 routing reconciliation
+
+- Final documentation candidate HEAD: `e0d3a128e9aa4672a2139eab67efae5a83dcdc5c`.
+- Push #1047 and PR #1048 both SUCCESS, 102 contract tests each. Push source binding `UNBOUND_LEGACY_BRANCH`; PR source binding is push-only / `NOT_RUN`. Artifact IDs/digests are recorded in Journal Entry 070.
+- Event capture jobs were SKIPPED. This is not runtime E2E evidence.
+- Canonical review checklist and release gate now route Xu to PR #68; PR #67 historical only. Xu review PENDING; Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED.
