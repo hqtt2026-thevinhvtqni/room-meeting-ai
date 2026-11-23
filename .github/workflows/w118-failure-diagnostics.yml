@@ -44,7 +44,6 @@ jobs:
           UPSTREAM_EVENT: ${{ github.event.workflow_run.event }}
         run: |
           set -euo pipefail
-          gh label create w118-blocked --repo "$GITHUB_REPOSITORY" --color D93F0B --description "W118 CI failure requires an assigned human/AI owner" 2>/dev/null || true
           echo '[]' > /tmp/all-diagnostics.json
           PAGE=1
           SCAN_COMPLETE=false
@@ -95,5 +94,6 @@ jobs:
             fi
           else
             printf '\n<!-- %s -->\n' "$KEY" >> /tmp/diagnostic.md
-            gh issue create --repo "$GITHUB_REPOSITORY" --title "[W118][CI-FAIL] ${WF_NAME} — ${SHA:0:7}" --label w118-blocked --body-file /tmp/diagnostic.md
+            gh label create w118-blocked --repo "$GITHUB_REPOSITORY" --color D93F0B --description "W118 CI failure requires an assigned human/AI owner" 2>/dev/null || true
+          gh issue create --repo "$GITHUB_REPOSITORY" --title "[W118][CI-FAIL] ${WF_NAME} — ${SHA:0:7}" --label w118-blocked --body-file /tmp/diagnostic.md
           fi
