@@ -562,3 +562,12 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - **Xu findings:** 067, 069, 068, 071 and 065 remediated at source/contract-test level with negative tests; pending Xu independent re-review. No finding self-approved.
 - **Boundary:** aggregate branch source binding remains `UNBOUND_LEGACY_BRANCH`; handoff/ACK/review capture jobs SKIPPED. Runtime Auto E2E NOT RUN; Core/W102/W14/W33/W70 runtime/authority gates remain BLOCKED / NOT VERIFIED.
 - **Disposition:** ACTIVE — BLOCKED — PENDING XU RE-REVIEW — NOT ACCEPTED — NOT RELEASED. Vinh retains final product acceptance and release authority.
+
+## Final Xu remediation verification — Entry 074 addendum
+
+- **Remediation source/test/workflow HEAD:** `9d38a3ee47bb79f83268403f4e2344710fa43450`.
+- **Exact-head PR Run #1118:** ID `45290104435`, SUCCESS; 118 tests in 0.211s; artifact `14873506858`, SHA-256 `ebfb267251fedc3f4329065d272f6f48c370e9b4c7782681388d695cbfb44415`.
+- **Additional fail-closed controls:** diagnostics completeness defaults false; workflow creates the diagnostics label only after full scan and successful planner validation. Negative tests and workflow contract assertions included.
+- **Finding disposition:** 067, 069, 068, 071 and 065 REMEDIATED AT SOURCE/CONTRACT-TEST LEVEL — PENDING XU INDEPENDENT RE-REVIEW.
+- **Boundary:** aggregate branch `UNBOUND_LEGACY_BRANCH`; PR source-binding skipped; handoff/ACK/review capture jobs skipped. Runtime Auto E2E NOT RUN; external Core/W102/W14/W33/W70 authority/runtime gates BLOCKED / NOT VERIFIED.
+- **Acceptance:** NOT ACCEPTED; release NOT AUTHORIZED; PR #68 OPEN / UNMERGED.
