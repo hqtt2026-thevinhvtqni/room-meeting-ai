@@ -2257,3 +2257,37 @@ The remaining acceptance gap requires evidence from the actual ROOM-HOP PC. Chat
 - PR #74 remains a proposed architecture contract; no endpoint, grant adapter, runtime wiring, Host migration or gate transition is authorized by this comment.
 
 **STATUS:** PR #74 REVIEW COMMENT SUBMITTED / ARCHITECTURE DIRECTION POSITIVE WITH P1/P2 CLARIFICATIONS REQUIRED / NOT APPROVED FOR IMPLEMENTATION OR MERGE / EXECUTION GATE CLOSED / NOT RELEASED.
+
+
+## 2026-11-23 — JRN-W28-061 — Supplemental WP0 capture provenance and PR drift review
+
+**Role:** Ka | Independent Architecture & Security Reviewer (CSA)  
+**Title:** Chief Security Architect — Work 28 independent reviewer  
+**Date-time:** 2026-11-23 07:16 UTC+07:00  
+**Canonical branch:** `work/28-mcp-tooling-platform`  
+**Review scope:** GitHub-only readback; no listener probes, no PC commands, no deployment changes  
+**Signature:** [KÝ: KA | CSA]
+
+### READ / TRACE
+- Re-read Work 28 Manifest, Auto E2E Runbook V2.0, Master Execution Plan V2.0, canonical journal, workflow `.github/workflows/work28-mcp-tooling.yml`, PR #33 evidence branch, and PR #74 V1.3 contract branch.
+- Runbook V2.0 records exact-SHA CI source `e835a13ae0cddd84a077e17055cd9354a874f212`, 348 unit/regression tests, immutable artifact-level retest 348 tests, Linux lifecycle 13 suspended-spawn tests (4 native-Windows-only cases skipped), Windows lifecycle 17 suspended-spawn tests, and five successful configured jobs in run `41743292650`. The runbook explicitly scopes this to CI preconditions, not deployed MCP/Core/Runtime E2E.
+- PR #33 branch `work/28/wp0-evidence-handoff-20261029` compares to canonical as DIVERGED: 6 commits ahead / 246 behind; it is not a current integration candidate.
+- Exact PR #33 raw capture `WP0_MCP8030_tools_list_capture_20261029.txt`: blob `7c16429d1732ffa75cdb520c94113d198cbfc602`, 5,022 characters. Parsed JSON-RPC `tools` array contains 17 names: `sandbox_read`, `list_meetings`, `get_meeting`, `get_transcript`, `join_meeting`, `start_meeting`, `add_paste_to_meeting`, `sandbox_create_work`, `sandbox_list_works`, `sandbox_read_probe`, `sandbox_list`, `sandbox_create`, `sandbox_write`, `sandbox_append`, `sandbox_delete`, `get_room_structure`, `get_room_context`.
+- Work 28's static registry/stdio contract is 31 tools. The 17-tool capture is therefore not parity evidence for the Work 28 31-tool registry; it may represent a distinct Build MCP composition. The artifact digest proves only the captured bytes, not current process identity, source provenance, handler execution or deployment.
+- PR #33 has one prior COMMENT review (no approval); no inline review threads were returned.
+- PR #74 branch `xu/w28-core-authority-v1-3-20261123` now compares to canonical as DIVERGED: 2 commits ahead / 3 behind, with one modified contract file. This supersedes the earlier 2-behind count in JRN-W28-060; reconciliation is still required before merge consideration.
+
+### ACTION
+- Submitted supplemental GitHub COMMENT review to PR #33, Review ID `6015330414`, recording the exact 17-vs-31 mismatch, stale branch divergence, and evidence limits. No approval or merge authorization was given.
+- No source code, runtime process, credentials, endpoint, deployment, or execution gate was changed.
+- Preserved the capture as historical integrity evidence only; do not merge PR #33 into the current canonical branch.
+- Historical MCP :8020 remains quarantined / DO NOT USE.
+
+### DECISION / NEXT
+1. Keep WP0 live provenance and deployed registry parity BLOCKED until the authorized PC collector output is available from the actual MCP 8030 process, capturing process/build identity and raw protocol `tools/list` in the same session.
+2. Do not infer that a 17-tool helper capture equals the Work 28 31-tool registry.
+3. Xu/Vi must reconcile PR #74 to the latest canonical branch and resolve the concrete wire-schema, W14 Host source mapping, Core candidate provenance, W70 policy-version and HostPort semantics identified in JRN-W28-060.
+4. Do not wire the current Work 28 grant client to an unapproved or incompatible Core endpoint. Do not enable WP3-F01 upload without the exact Q4 capability-grant decision.
+5. Keep CI precondition PASS separate from deployed E2E. The live MCP 8030 → Core 8000 → approved Runtime → W14 Host chain, protected evidence persistence and authorized checksum readback remain unverified.
+
+**STATUS:** PR #33 HISTORICAL CAPTURE INTEGRITY ONLY / 17-TOOL CAPTURE NOT 31-TOOL PARITY / PR #33 BRANCH 6 AHEAD 246 BEHIND / PR #74 BRANCH 2 AHEAD 3 BEHIND / WP0 LIVE PROVENANCE BLOCKED / EXECUTION GATE CLOSED / NOT RELEASED.
