@@ -3376,3 +3376,40 @@ W1111 PR #48 candidate:
 **STATUS:** G0–G7 DEPENDENCY MATRIX RECORDED; ALL LIVE INTEGRATION GATES REMAIN BLOCKED / NOT VERIFIED; WORK 28 NOT RELEASED.
 
 **Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-085 — Candidate V1.3 JSON Schema fixtures and fail-closed schema tests
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 15:10 +07:00  
+**Priority:** P0 — grant binding / caller-authority rejection
+
+### 1. BUILD
+
+- Added candidate JSON Schema Draft 2020-12 file: `03_ARCHITECTURE/schemas/DOC-W28-078_V1_3_CANDIDATE.schema.json`.
+- Schema ID: SCH-W28-20261123-001; Priority P0; status candidate only.
+- Initial schema JSON parse succeeded; schema includes grant issue/response, Host validation request/response, run start/completion, durable ACK, ordered event envelope and stable error response definitions.
+- Grant request requires W52 recipient ACK event reference/sequence and full Work/WP/task/assignment/source/environment/Host/provider/capability/correlation/idempotency bindings. Caller WorkContext, authorized flag, Agent principal, roots and gate decision are explicitly prohibited from grant request.
+- Added candidate schema regression suite: `05_TEST/test_core_authority_v1_3_candidate_schema.py`.
+- Test file commit: `0f3bdafbd2b64e6b0d22cea19429eb897d6f75f9`.
+- Schema update commit: `53ceef4458c5d3c1e2715d85eac43b1f12c35fff`.
+- Updated Document Register to list SCH-W28-20261123-001; commit `2316491d98fad4eb4d0d10c2832b47fe37cc7f9c`.
+
+### 2. TEST SCOPE / LIMITATION
+
+- Local orchestration confirmed the schema text parses as JSON and contains the declared $defs. The schema regression test source was committed but has not yet been observed executing in GitHub Actions.
+- The test suite uses the repository-declared jsonschema dependency and checks Draft 2020-12 metaschema validity, required bindings, forbidden caller authority fields, recipient ACK reference, malformed SHA rejection and completion containment/descendant-exit conditions.
+- This does not prove live Core routes, W52 ACK authenticity, W14 Host enforcement, W70 policy resolution or cross-Work E2E.
+- No schema is approved for production. Route names remain illustrative under PR #74 §6.
+
+### 3. NEXT
+
+1. Read back schema/test/register/journal exact content.
+2. Confirm whether the PR #76 workflow ran for the exact new test commit; if no run is returned, record CI as PENDING/NOT RUN and do not infer PASS.
+3. Reproduce the candidate schema tests in the configured CI lane when workflow evidence is available.
+4. Keep PR #76 DRAFT and Execution Gate CLOSED.
+
+**STATUS:** SCHEMA CANDIDATE PERSISTED; JSON SYNTAX PASS; SCHEMA TEST EXECUTION PENDING; NO INTEGRATION OR RELEASE CLAIM.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
