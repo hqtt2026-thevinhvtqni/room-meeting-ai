@@ -306,3 +306,20 @@ No Task is DONE; progress remains NOT_CALCULATED. Do not promote adapter unit te
 - HEAD `3345175799a984f9586b483896431069c0f1b043` / Run #1069 above are the exact pre-consolidation snapshot and CI. Later commits in this handover are documentation-only and must not inherit that CI claim.
 - The final handover packet is consolidated in the documentation-only commit immediately following parent `1a27bcb67f7544bc8dc7296264126d9b6559eb14`. At the start of Xu's review, read the live PR #68 head SHA and its matching CI run directly from GitHub, then bind the review record to those exact values. The PR body will carry the final readback after CI completes.
 - No source/workflow implementation, runtime, external Work, secret, permission or branch-protection change is included in this consolidation.
+
+### Entry 074 — remediation handback to Xu
+
+### Remediation handback — Xu independent re-review (Entry 074)
+
+- **Priority:** P0 — preserve independent re-review and acceptance separation.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-24 06:35 +07:00.
+- **Current PR #68 HEAD:** `c9f453091e54b667dcbc1dad10e31208035c8b3b`.
+- **Exact-head PR Run #1122 / ID `45290233314`:** SUCCESS; validate job `138096779932`; 118 tests in 0.318s. Artifact ID `14874096488`; SHA-256 `4ff1429472af64b5b5c2531ea5d1a35b992295c80447c37137d925021cb98137`.
+- **Review disposition:** Xu's five findings 067, 069, 068, 071 and 065 have source/contract-test remediations and adversarial negative tests. This is not an approval; Xu must independently re-review this exact revision.
+- **Runtime boundary:** PR source-binding step SKIPPED; aggregate push binding is `UNBOUND_LEGACY_BRANCH`; handoff/ACK/review capture jobs SKIPPED. Runtime Auto E2E NOT RUN. Core/W102/W14/W33/W70 runtime/authority gates remain BLOCKED / NOT VERIFIED.
+- **Governance:** PR #68 OPEN / UNMERGED; Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED. No merge, rebase, force-push, PR close, release, secret/permission/branch-protection change or external Work mutation.
+
+- **Xu review checklist action:** re-check all five findings against the exact PR HEAD and CI evidence; issue PASS / NEEDS CHANGES / BLOCKED per finding. Preserve the original findings and their severity; do not infer runtime acceptance from contract tests.
+- **Ka action:** remain available for bounded follow-up remediation after Xu's disposition; do not self-approve or change authority boundaries.
+- **Vinh action:** final product acceptance remains separate and is not requested by this handback.
