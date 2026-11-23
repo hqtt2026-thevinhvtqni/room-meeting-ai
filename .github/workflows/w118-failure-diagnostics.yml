@@ -45,8 +45,25 @@ jobs:
         run: |
           set -euo pipefail
           gh label create w118-blocked --repo "$GITHUB_REPOSITORY" --color D93F0B --description "W118 CI failure requires an assigned human/AI owner" 2>/dev/null || true
-          gh issue list --repo "$GITHUB_REPOSITORY" --state all --label w118-blocked --limit 1000 --json number,body,state > /tmp/all-diagnostics.json
-          python scripts/w118/diagnostics.py --issues-json /tmp/all-diagnostics.json --workflow-id "$WF_ID" --sha "$SHA" --run-id "$RUN_ID" --attempt "$RUN_ATTEMPT" > /tmp/diagnostic-plan.json
+          echo '[]' > /tmp/all-diagnostics.json
+          PAGE=1
+          SCAN_COMPLETE=false
+          while [ "$PAGE" -le 100 ]; do
+            gh api "repos/${GITHUB_REPOSITORY}/issues?state=all&labels=w118-blocked&per_page=100&page=${PAGE}" > "/tmp/diagnostics-page-${PAGE}.json"
+            COUNT=$(jq 'length' "/tmp/diagnostics-page-${PAGE}.json")
+            jq -s 'add | map(select(has("pull_request") | not))' /tmp/all-diagnostics.json "/tmp/diagnostics-page-${PAGE}.json" > /tmp/diagnostics-combined.json
+            mv /tmp/diagnostics-combined.json /tmp/all-diagnostics.json
+            if [ "$COUNT" -lt 100 ]; then
+              SCAN_COMPLETE=true
+              break
+            fi
+            PAGE=$((PAGE + 1))
+          done
+          if [ "$SCAN_COMPLETE" != true ]; then
+            echo "Issue scan reached the 100-page ceiling; completeness is unproven. No Issue mutation permitted." >&2
+            exit 1
+          fi
+          python scripts/w118/diagnostics.py --issues-json /tmp/all-diagnostics.json --workflow-id "$WF_ID" --sha "$SHA" --run-id "$RUN_ID" --attempt "$RUN_ATTEMPT" --scan-complete > /tmp/diagnostic-plan.json
           KEY=$(python -c 'import json; print(json.load(open("/tmp/diagnostic-plan.json"))["idempotency_key"])')
           UPDATE_MARKER=$(python -c 'import json; print(json.load(open("/tmp/diagnostic-plan.json"))["update_marker"])')
           EXISTING=$(python -c 'import json; print(json.load(open("/tmp/diagnostic-plan.json"))["existing_issue"])')
