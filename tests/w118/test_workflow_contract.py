@@ -175,7 +175,7 @@ class Work118WorkflowContractTests(unittest.TestCase):
         data = self.load_yaml(DIAGNOSTICS)
         steps = data["jobs"]["diagnostics"]["steps"]
         run_script = next(step["run"] for step in steps if step.get("name") == "Create or update one diagnostic issue per workflow and commit")
-        self.assertIn('--state all', run_script)
+        self.assertIn('state=all', run_script)
         self.assertIn('gh issue reopen', run_script)
         self.assertIn('--workflow-id "$WF_ID"', run_script)
         self.assertIn('--sha "$SHA"', run_script)
@@ -209,7 +209,7 @@ class Work118WorkflowContractTests(unittest.TestCase):
         run_script = data["jobs"]["diagnostics"]["steps"][-1]["run"]
         self.assertIn("--scan-complete", run_script)
         self.assertIn("per_page=100", run_script)
-        self.assertIn('PAGE -le 100', run_script)
+        self.assertIn('"$PAGE" -le 100', run_script)
         self.assertIn("completeness is unproven", run_script)
 
 if __name__ == "__main__":
