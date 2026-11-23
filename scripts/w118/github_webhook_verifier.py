@@ -10,11 +10,15 @@ import hmac
 import json
 import uuid
 from datetime import datetime
+import re
 from typing import Any
 
 
 class GitHubWebhookError(ValueError):
     """GitHub webhook failed authentication or envelope validation."""
+
+
+_REPOSITORY_RE = re.compile(r"^[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?/[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9_-])?$")
 
 
 ALLOWED_EVENTS = {
@@ -68,16 +72,18 @@ def verify_github_webhook(
     if not hmac.compare_digest(expected, supplied):
         raise GitHubWebhookError("webhook signature mismatch")
 
+    if not isinstance(delivery_id, str):
+        raise GitHubWebhookError("X-GitHub-Delivery must be a canonical UUID string")
     try:
         parsed_delivery = uuid.UUID(delivery_id)
     except (ValueError, TypeError, AttributeError) as exc:
         raise GitHubWebhookError("X-GitHub-Delivery must be a UUID") from exc
-    if str(parsed_delivery) != delivery_id.lower():
+    if str(parsed_delivery) != delivery_id:
         raise GitHubWebhookError("X-GitHub-Delivery must use canonical UUID format")
     if event_type not in ALLOWED_EVENTS:
         raise GitHubWebhookError("GitHub event type is not allowlisted")
-    if not isinstance(expected_repository, str) or expected_repository.count("/") != 1:
-        raise GitHubWebhookError("expected_repository must be owner/name")
+    if not isinstance(expected_repository, str) or _REPOSITORY_RE.fullmatch(expected_repository) is None:
+        raise GitHubWebhookError("expected_repository must contain valid non-empty owner/name components")
     received_at = _validate_received_at(received_at)
 
     try:
