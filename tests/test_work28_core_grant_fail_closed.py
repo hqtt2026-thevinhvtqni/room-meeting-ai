@@ -33,6 +33,10 @@ class CoreGrantSourceFailClosedTests(unittest.TestCase):
         with self.assertRaisesRegex(GrantError, "core_grant_url_invalid"):
             build_grant_source(environ={CORE_GRANT_URL_ENV: "https://user:secret@core.example/grants"})
 
+    def test_core_url_with_query_is_rejected(self):
+        with self.assertRaisesRegex(GrantError, "core_grant_url_invalid"):
+            build_grant_source(environ={CORE_GRANT_URL_ENV: "https://core.example/grants?access_token=secret"})
+
     def test_redirect_handler_refuses_all_redirect_destinations(self):
         handler = RejectRedirectHandler()
         self.assertIsNone(handler.redirect_request(
