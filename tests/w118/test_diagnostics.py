@@ -53,5 +53,23 @@ class Work118DiagnosticsTests(unittest.TestCase):
         self.assertEqual(find_existing_issue(issues, key), "201")
 
 
+    def test_embedded_quoted_and_fenced_markers_fail_closed(self):
+        key = diagnostic_key(31, "a" * 40)
+        marker = f"<!-- {key} -->"
+        for body in (f"quoted {marker}", f"> {marker}", f"```\n{marker}\n```", f"prefix {marker} suffix"):
+            with self.subTest(body=body), self.assertRaises(ValueError):
+                find_existing_issue([{"number": 301, "body": body}], key)
+
+    def test_duplicate_marker_across_issues_fails_closed(self):
+        key = diagnostic_key(32, "b" * 40)
+        marker = f"<!-- {key} -->"
+        issues = [{"number": 302, "body": marker}, {"number": 303, "body": marker}]
+        with self.assertRaisesRegex(ValueError, "multiple Issues"):
+            find_existing_issue(issues, key)
+
+    def test_incomplete_scan_blocks_diagnostic_plan(self):
+        with self.assertRaisesRegex(ValueError, "scan is incomplete"):
+            build_plan([], 33, "c" * 40, 88, 1, scan_complete=False)
+
 if __name__ == "__main__":
     unittest.main()
