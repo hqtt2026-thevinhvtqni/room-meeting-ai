@@ -178,7 +178,7 @@ class AuthorityTests(unittest.TestCase):
 
     def test_state_survives_authority_restart(self):
         grant = self.authority.issue_grant("mcp8020", "W28", "pytest_run", capability=CAPABILITY)
-        self.authority.record_run(grant["grant_id"], source_sha256="a", exit_status="PASS",
+        self.authority.record_run(grant["grant_id"], source_sha256="a" * 64, exit_status="PASS",
                                   output_refs=[], evidence_refs=["e"], handoff_ids=[])
         restarted = build_authority(self._tmp.name)
         self.assertEqual(restarted.grant_status(grant["grant_id"])["status"], "active")
