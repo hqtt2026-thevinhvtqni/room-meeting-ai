@@ -1682,6 +1682,19 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - Result: Sandbox ↔ branch documentation sync PASS for the 7 files. D1 itself is not PASS/LOCKED. Work 10 remains ACTIVE — NOT RELEASED.
 - Ký: Xu | AI-01
 
+
+## W10-XU-D1-DISPATCH-CAPABILITY-CHECK-20261123-01 — 2026-11-23
+
+- **Người thực hiện:** Xu — AI-01.
+- **Phạm vi:** Kiểm tra khả năng thực tế để chuyển D1 review brief tới Ka, Cla, Qw và Nu; không tự nhận đã gửi nếu không có bằng chứng.
+- **Phương pháp:** Liệt kê các công cụ ROOM-HOP 8030 khả dụng; kiểm tra mô tả/chữ ký của từng công cụ; đọc danh sách phiên họp hiện có và ROOM-HOP build context/structure.
+- **Kết quả quan sát:** ROOM-HOP 8030 hiện cung cấp Sandbox read/write/list và các thao tác list/get/start/join/append đối với meeting có sẵn. Không có công cụ tạo meeting mới, tạo/assign task cho agent, gửi tin nhắn trực tiếp tới AI identity hoặc theo dõi phản hồi reviewer. Các meeting hiện có không được dùng làm kênh thay thế vì không có bằng chứng chúng thuộc D1.
+- **Disposition:** BLOCKED — chưa thể dispatch D1 brief qua tích hợp ROOM-HOP đang khả dụng. Không tuyên bố Ka/Cla/Qw/Nu đã nhận nhiệm vụ; không có review/ACK/approval nào được ghi nhận.
+- **Không thực hiện:** Không start/join/append vào meeting không liên quan; không sửa code, cài dependency, chạy runtime/test, thay đổi quyền hoặc tạo PR/merge/release.
+- **Bước tiếp:** Cần có kênh gửi nhiệm vụ/agent inbox được kết nối hoặc người có quyền chuyển tiếp review brief tới đúng bốn reviewer. Khi nhận phản hồi có nguồn xác thực, Xu sẽ đối chiếu, cập nhật một Biên bản và Nhật ký chuẩn, rồi trình anh duyệt D1.
+- **Trạng thái:** D1 vẫn DRAFT / READY FOR TECHNICAL CONSULTATION; NOT PASS / NOT LOCKED. D2 NOT AUTHORIZED / NOT STARTED. Work 10 ACTIVE — NOT RELEASED.
+- **KÝ:** Xu | AI-01
+
 ## W10-XU-D1-INDEPENDENT-PRE-REVIEW-20261123-01 — 2026-11-23
 
 - **Người thực hiện:** Xu — AI-01.
@@ -1694,3 +1707,17 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - **Không thực hiện:** Không sửa source code, không cài dependency, không chạy host/runtime/test, không đăng ký MCP, không benchmark, không D2, không PR/merge/release.
 - **Bước tiếp:** Chỉnh D1 theo F01–F08, bổ sung F09–F10; đồng thời cần kênh agent dispatch có xác thực để nhận ý kiến thật từ bốn reviewer. Sau đó cập nhật Biên bản/Nhật ký chuẩn và trình Owner duyệt.
 - **KÝ:** Xu | AI-01
+
+## W10-XU-D1-REVISION-ADDENDUM-20261123-01 — 2026-11-23 21:32 (UTC+07:00)
+
+- Người thực hiện: Xu — AI-01.
+- Phạm vi: READ → TRACE → ANALYZE → REVISE → WRITE; cập nhật bốn hồ sơ D1 trong Sandbox, chỉ tài liệu.
+- Căn cứ: Xu independent pre-review report 2026-11-23, findings F01–F10; capability contract, threat model, review brief và ba browser contracts LOCKED.
+- Thay đổi: Bổ sung §14 capability contract (authorization binding P0; semantic destructive guard P0; dedicated test session; privacy/retention; backend supply-chain gate; ProcessSupervisor lifecycle; operation/status semantics; traceability; untrusted UI; Windows-only scope); bổ sung §8 threat model; cập nhật review brief với nhiệm vụ riêng cho Ka/Cla/Qw/Nu; bổ sung Biên bản D1.
+- Kết quả thiết kế đề xuất: desktop.focus tạm loại khỏi v0.1; close_session chỉ đóng worker/session do W10 sở hữu; generic click không mặc định S1; unknown/destructive semantics BLOCKED trước side effect; raw tree không lưu mặc định; pilot Windows-only trong dedicated non-personal non-admin session; grant phải gắn định danh và chống replay/revocation; chỉ Workflow Verification được gán task PASS.
+- Kiểm tra trước ghi: Nội dung được soạn từ findings F01–F10 và đối chiếu các ranh giới W24/W112/W14/W113; không thay đổi ba browser contracts LOCKED.
+- Đã thực hiện: Ghi bổ sung vào 4 file Sandbox nêu trên.
+- Chưa thực hiện: Read-back sau ghi; GitHub sync; agent dispatch; reviewer consultation; test/security validation; dependency install; source/runtime/MCP/host changes; D2; PR/merge/release.
+- Trạng thái: Tài liệu D1 revised draft, NEEDS REVIEW; chưa PASS/LOCKED. D2 NOT AUTHORIZED / NOT STARTED.
+- Bước tiếp: Read-probe cả bốn file và journal; nếu đọc lại xác nhận nội dung thì sync đúng branch work/10-computer-agent-mirror, sau đó kiểm tra lại GitHub. Tiếp tục tìm kênh gửi/nhận review xác thực.
+- KÝ: Xu | AI-01
