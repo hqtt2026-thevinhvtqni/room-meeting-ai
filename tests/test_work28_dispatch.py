@@ -291,7 +291,7 @@ class HttpE2EGrantSnapshotTests(unittest.TestCase):
             )
             with self.assertRaises(error.HTTPError) as ctx:
                 request.urlopen(req, timeout=5)
-            self.assertEqual(ctx.exception.code, 403
+            self.assertEqual(ctx.exception.code, 403)
         finally:
             httpd.shutdown()
             httpd.server_close()
