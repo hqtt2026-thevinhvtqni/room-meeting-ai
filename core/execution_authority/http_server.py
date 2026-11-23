@@ -125,7 +125,10 @@ class ExecutionAuthorityHandler(BaseHTTPRequestHandler):
             self._error(400, "purpose_required")
             return
         capability = body.get("capability")
-        if not isinstance(capability, dict):
+        if capability is not None and not isinstance(capability, dict):
+            self._error(400, "capability_invalid")
+            return
+        if work.get("capability_required", False) and capability is None:
             self._error(400, "capability_required")
             return
         try:

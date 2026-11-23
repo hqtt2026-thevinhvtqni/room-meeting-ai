@@ -34,6 +34,7 @@ from mcp8020_source_snapshot_provider_v1 import (
 CONTENT = "print('work28-snapshot-ok')" 
 HASH = hashlib.sha256(CONTENT.encode("utf-8")).hexdigest()
 OTHER_HASH = "b" * 64
+CAPABILITY = {"entry_path": "04_CODE/smoke.py", "operation": "RUN_SCRIPT", "expected_source_sha256": HASH, "timeout_seconds": 30}
 
 
 def build_authority(tmpdir):
@@ -43,6 +44,7 @@ def build_authority(tmpdir):
             "work_name": "TOOLING", "workspace_root": "/w/28",
             "execution_workspace": "/w/28/run", "evidence_root": "/w/28/evidence",
             "allowed_identities": ["mcp8020"],
+            "capability_required": True,
         }
     }
     store = AppendOnlyRecordStore(str(Path(tmpdir) / "records"))
@@ -164,7 +166,7 @@ class FullSliceWithRealSnapshotTests(unittest.TestCase):
 
     def test_full_slice_real_snapshot_real_core(self):
         session = CoreGrantExecutionSession(authority=self.authority, work_id="W28",
-                                            credential="secret-snap", purpose="snapshot-slice")
+                                            credential="secret-snap", purpose="snapshot-slice", capability=CAPABILITY)
         result = self._adapter().run(valid_request(), trusted_caller={"credential": "secret-snap"})
         self.assertEqual(result["status"], "PASS")
         self.assertEqual(len(self.runtime.calls), 1)

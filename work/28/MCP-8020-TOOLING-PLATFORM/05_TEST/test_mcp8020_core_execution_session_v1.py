@@ -35,6 +35,7 @@ from mcp8020_core_execution_session_v1 import CoreGrantExecutionSession
 
 HASH = "a" * 64
 OTHER_HASH = "b" * 64
+CAPABILITY = {"entry_path": "04_CODE/smoke.py", "operation": "RUN_SCRIPT", "expected_source_sha256": HASH, "timeout_seconds": 30}
 
 
 def build_authority(tmpdir):
@@ -44,6 +45,7 @@ def build_authority(tmpdir):
             "work_name": "TOOLING", "workspace_root": "/w/28",
             "execution_workspace": "/w/28/run", "evidence_root": "/w/28/evidence",
             "allowed_identities": ["mcp8020"],
+            "capability_required": True,
         }
     }
     store = AppendOnlyRecordStore(str(Path(tmpdir) / "records"))
@@ -129,15 +131,15 @@ class GrantSessionTests(unittest.TestCase):
                                       credential="secret-other", purpose="slice")
         with self.assertRaises(CoreWorkIdError):
             CoreGrantExecutionSession(authority=self.authority, work_id="work28",
-                                      credential="secret-slice", purpose="slice")
+                                      credential="secret-slice", purpose="slice", capability=CAPABILITY)
         with self.assertRaises(TypeError):
             CoreGrantExecutionSession(authority=object(), work_id="W28",
-                                      credential="secret-slice", purpose="slice")
+                                      credential="secret-slice", purpose="slice", capability=CAPABILITY)
         self.assertEqual(self._store().records(), [])
 
     def test_grant_lifecycle_closed_loop(self):
         session = CoreGrantExecutionSession(authority=self.authority, work_id="W28",
-                                            credential="secret-slice", purpose="slice")
+                                            credential="secret-slice", purpose="slice", capability=CAPABILITY)
         self.assertEqual(session.validate_for_run()["status"], "active")
         run = session.record_run(source_sha256=HASH, exit_status="PASS",
                                 output_refs=[], evidence_refs=["evidence://run-slice-1"],
@@ -172,7 +174,7 @@ class AdapterWithRealCoreTests(unittest.TestCase):
 
     def test_full_slice_run_recorded_against_live_grant(self):
         session = CoreGrantExecutionSession(authority=self.authority, work_id="W28",
-                                            credential="secret-slice", purpose="slice")
+                                            credential="secret-slice", purpose="slice", capability=CAPABILITY)
         result = self.adapter.run(valid_request(), trusted_caller={"credential": "secret-slice"})
         self.assertEqual(result["status"], "PASS")
         self.assertEqual(len(self.snapshots.calls), 1)

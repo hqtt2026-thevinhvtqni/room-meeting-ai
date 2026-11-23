@@ -48,12 +48,14 @@ class LiveAuthorityBridge:
         self._port = port
         self._credential = credential
 
-    def _call(self, path, body):
+    def _call(self, path, body, grant_token=None):
         url = "http://127.0.0.1:" + str(self._port) + path
         data = json.dumps(body or {}).encode("utf-8")
         req = urllib.request.Request(url, data=data, method="POST")
         req.add_header("Content-Type", "application/json")
         req.add_header(SERVICE_IDENTITY_HEADER, self._credential)
+        if grant_token is not None:
+            req.add_header("X-Room-Hop-Execution-Grant", grant_token)
         try:
             with urllib.request.urlopen(req, timeout=10) as response:
                 return response.status, json.loads(response.read().decode("utf-8"))
@@ -71,14 +73,13 @@ class LiveAuthorityBridge:
         grant = payload["grant"]
         run_body = {
             "grant_id": grant["grant_id"],
-            "grant_token": grant["grant_token"],
             "source_sha256": execution_request["source_sha256"],
             "exit_status": "PASS",
             "output_refs": ["stdout://" + grant["grant_id"]],
             "evidence_refs": [execution_request["evidence_ref"]],
             "handoff_ids": [],
         }
-        code, payload = self._call("/works/" + work_id + "/execution-runs", run_body)
+        code, payload = self._call("/works/" + work_id + "/execution-runs", run_body, grant_token=grant["grant_token"])
         if code != 200:
             raise ToolCallError("BLOCKED", "authority_denied_run: " + str(payload.get("error")))
         run = payload["run"]

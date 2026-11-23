@@ -26,7 +26,8 @@ class CoreGrantExecutionSession:
     """One Work-scoped grant lifecycle bound to the Core authority."""
 
     def __init__(self, *, authority: Any, work_id: Any, credential: Any,
-                 purpose: Any, grant_seconds: int | None = None) -> None:
+                 purpose: Any, grant_seconds: int | None = None,
+                 capability: dict[str, Any] | None = None) -> None:
         for method in ("issue_grant", "validate_grant_token", "record_run", "revoke_grant"):
             if not callable(getattr(authority, method, None)):
                 raise TypeError("authority must provide " + method)
@@ -36,10 +37,10 @@ class CoreGrantExecutionSession:
         identity = authority.authenticate(credential)
         if not authority.is_identity_allowed_for_work(identity, work_id):
             raise PermissionError("caller_not_authorized_for_work")
-        if grant_seconds is None:
-            grant = authority.issue_grant(identity, work_id, purpose)
-        else:
-            grant = authority.issue_grant(identity, work_id, purpose, grant_seconds)
+        grant = authority.issue_grant(
+            identity, work_id, purpose, capability=capability,
+            grant_seconds=grant_seconds,
+        )
         if not grant.get("grant_token") or not grant.get("grant_id"):
             raise CoreExecutionSessionError("authority returned an incomplete grant")
         self._authority = authority

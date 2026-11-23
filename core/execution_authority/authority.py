@@ -100,6 +100,8 @@ def load_works_registry(path: str | None) -> dict[str, dict[str, Any]]:
         allowed = entry.get("allowed_identities")
         if not isinstance(allowed, list) or not allowed or not all(isinstance(n, str) and n.strip() for n in allowed):
             raise ExecutionAuthorityConfigError("allowed_identities must be non-empty strings")
+        if "capability_required" in entry and not isinstance(entry["capability_required"], bool):
+            raise ExecutionAuthorityConfigError("capability_required must be boolean")
         works[work_id] = entry
     return works
 
@@ -153,12 +155,14 @@ class ExecutionAuthority:
             return GRANT_EXPIRED
         return GRANT_ACTIVE
 
-    def issue_grant(self, service_identity: str, work_id: str, purpose: str, *, capability: dict[str, Any], grant_seconds: int | None = None) -> dict[str, Any]:
+    def issue_grant(self, service_identity: str, work_id: str, purpose: str, *, capability: dict[str, Any] | None = None, grant_seconds: int | None = None) -> dict[str, Any]:
         if work_id not in self._works:
             raise LookupError("unknown_work")
         if not isinstance(purpose, str) or not purpose.strip():
             raise ValueError("purpose must be a non-empty string")
-        scope = validate_execution_capability(capability)
+        scope = validate_execution_capability(capability) if capability is not None else None
+        if scope is None and self._works[work_id].get("capability_required", False):
+            raise ValueError("capability_required")
         seconds = self._default_grant_seconds if grant_seconds is None else grant_seconds
         if isinstance(seconds, bool) or not isinstance(seconds, int) or seconds < 1:
             raise ValueError("grant_seconds must be a positive integer")
@@ -231,8 +235,10 @@ class ExecutionAuthority:
         if not isinstance(source_sha256, str) or not _SHA256_RE.fullmatch(source_sha256):
             raise ValueError("source_sha256_invalid")
         expected = (grant.get("capability") or {}).get("expected_source_sha256")
-        if not isinstance(expected, str) or not hmac.compare_digest(source_sha256, expected):
+        if expected is not None and (not isinstance(expected, str) or not hmac.compare_digest(source_sha256, expected)):
             raise PermissionError("source_sha256_grant_mismatch")
+        if expected is None and self._works[grant["work_id"]].get("capability_required", False):
+            raise PermissionError("grant_capability_missing")
         if exit_status not in EXIT_STATUSES:
             raise ValueError("exit_status must be one of " + ",".join(EXIT_STATUSES))
         if not isinstance(evidence_refs, list) or not evidence_refs:
