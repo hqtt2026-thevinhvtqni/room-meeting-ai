@@ -6,9 +6,11 @@ Client body never supplies grants.
 """
 from __future__ import annotations
 
+import ipaddress
 import json
 import os
 import urllib.error
+import urllib.parse
 import urllib.request
 from typing import Protocol
 
@@ -17,6 +19,44 @@ from .work28_grant_registry import load_grant_registry
 
 CORE_GRANT_URL_ENV = "ROOM_HOP_CORE_GRANT_URL"
 CORE_GRANT_TOKEN_ENV = "ROOM_HOP_CORE_GRANT_TOKEN"
+
+
+def validate_core_grant_url(url: str) -> str:
+    """Allow HTTPS remotely and HTTP only for loopback development endpoints."""
+    if not isinstance(url, str) or not url.strip():
+        raise GrantError("core_grant_url_required")
+    try:
+        parsed = urllib.parse.urlsplit(url.strip())
+        hostname = parsed.hostname
+        parsed.port  # Validate malformed and out-of-range ports.
+    except ValueError as exc:
+        raise GrantError("core_grant_url_invalid") from exc
+    if (
+        parsed.scheme not in ("https", "http")
+        or not hostname
+        or parsed.username is not None
+        or parsed.password is not None
+        or parsed.fragment
+    ):
+        raise GrantError("core_grant_url_invalid")
+    if parsed.scheme == "http":
+        host = hostname.rstrip(".").lower()
+        is_loopback = host == "localhost"
+        if not is_loopback:
+            try:
+                is_loopback = ipaddress.ip_address(host).is_loopback
+            except ValueError:
+                is_loopback = False
+        if not is_loopback:
+            raise GrantError("core_grant_https_required")
+    return url.strip()
+
+
+class RejectRedirectHandler(urllib.request.HTTPRedirectHandler):
+    """Never forward a Core bearer token to a redirect destination."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
 
 
 class CoreGrantSource(Protocol):
@@ -34,9 +74,7 @@ class FileGrantSource:
 
 class HttpCoreGrantSource:
     def __init__(self, url: str, token: str | None = None, timeout: float = 5.0) -> None:
-        if not url:
-            raise GrantError("core_grant_url_required")
-        self.url = url
+        self.url = validate_core_grant_url(url)
         self.token = token
         self.timeout = timeout
 
@@ -46,7 +84,8 @@ class HttpCoreGrantSource:
             headers["Authorization"] = "Bearer " + self.token
         req = urllib.request.Request(self.url, headers=headers, method="GET")
         try:
-            with urllib.request.urlopen(req, timeout=self.timeout) as resp:
+            opener = urllib.request.build_opener(RejectRedirectHandler())
+            with opener.open(req, timeout=self.timeout) as resp:
                 if resp.status != 200:
                     raise GrantError("core_grant_http_" + str(resp.status))
                 raw = resp.read().decode("utf-8")
@@ -89,5 +128,7 @@ __all__ = [
     "CoreGrantSource",
     "FileGrantSource",
     "HttpCoreGrantSource",
+    "RejectRedirectHandler",
+    "validate_core_grant_url",
     "build_grant_source",
 ]

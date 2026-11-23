@@ -6,6 +6,7 @@ import json
 import tempfile
 import threading
 import unittest
+from unittest.mock import Mock
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 from urllib import error, request
@@ -37,6 +38,18 @@ class DispatchUnitTests(unittest.TestCase):
                 body={"mode": "command", "execution_grant_id": "x"},
                 grant_registry={},
             )
+
+    def test_command_mode_always_rejected_even_when_snapshot_only_false(self):
+        host = Mock()
+        with self.assertRaisesRegex(DispatchError, "command_mode_disabled_core_grant_required"):
+            dispatch_execute(
+                host,
+                work_context={"work_id": "28"},
+                body={"mode": "command", "execution_request": {"command": ["python", "-c", "print(1)"]}},
+                grant_registry={},
+                snapshot_only=False,
+            )
+        host.execute_work.assert_not_called()
 
     def test_snapshot_requires_registry_grant(self):
         host = ExecutionHost()

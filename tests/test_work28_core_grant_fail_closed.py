@@ -10,6 +10,7 @@ from execution_host.server import main
 from execution_host.work28_core_grant_client import (
     CORE_GRANT_URL_ENV,
     HttpCoreGrantSource,
+    RejectRedirectHandler,
     build_grant_source,
 )
 from execution_host.work28_grant import GrantError
@@ -24,9 +25,23 @@ class CoreGrantSourceFailClosedTests(unittest.TestCase):
         source = build_grant_source(environ={CORE_GRANT_URL_ENV: "http://127.0.0.1:8000/grants"})
         self.assertIsInstance(source, HttpCoreGrantSource)
 
+    def test_remote_plain_http_core_url_is_rejected(self):
+        with self.assertRaisesRegex(GrantError, "core_grant_https_required"):
+            build_grant_source(environ={CORE_GRANT_URL_ENV: "http://core.example:8000/grants"})
+
+    def test_core_url_with_userinfo_is_rejected(self):
+        with self.assertRaisesRegex(GrantError, "core_grant_url_invalid"):
+            build_grant_source(environ={CORE_GRANT_URL_ENV: "https://user:secret@core.example/grants"})
+
+    def test_redirect_handler_refuses_all_redirect_destinations(self):
+        handler = RejectRedirectHandler()
+        self.assertIsNone(handler.redirect_request(
+            None, None, 302, "Found", {}, "https://attacker.example/steal"
+        ))
+
     def test_unreachable_core_does_not_return_local_grants(self):
         source = HttpCoreGrantSource("http://127.0.0.1:1/grants", timeout=0.01)
-        with patch("urllib.request.urlopen", side_effect=URLError("offline")):
+        with patch("urllib.request.OpenerDirector.open", side_effect=URLError("offline")):
             with self.assertRaisesRegex(GrantError, "core_grant_unreachable"):
                 source.fetch_grants()
 
@@ -56,7 +71,7 @@ class SnapshotOnlyDefaultTests(unittest.TestCase):
             main()
         self.assertIs(serve.call_args.kwargs["snapshot_only"], True)
 
-    def test_explicit_false_requires_trusted_environment_opt_out(self):
+    def test_explicit_false_cannot_reenable_command_mode(self):
         source = Mock()
         source.fetch_grants.return_value = {}
         with patch(
@@ -66,7 +81,7 @@ class SnapshotOnlyDefaultTests(unittest.TestCase):
             "execution_host.server.serve"
         ) as serve, patch.dict(os.environ, {"ROOM_HOP_SNAPSHOT_ONLY": "false"}, clear=True):
             main()
-        self.assertIs(serve.call_args.kwargs["snapshot_only"], False)
+        self.assertIs(serve.call_args.kwargs["snapshot_only"], True)
 
 
 if __name__ == "__main__":
