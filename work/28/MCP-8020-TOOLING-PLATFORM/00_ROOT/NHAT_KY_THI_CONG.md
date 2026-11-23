@@ -3291,3 +3291,44 @@ W1111 PR #48 candidate:
 **STATUS:** W14 HOSTPORT NOT VERIFIED; W70 POLICY SNAPSHOT NOT APPROVED / NOT VERIFIED; DOC-W28-078 CANDIDATE; EXECUTION GATE CLOSED; NOT RELEASED.
 
 **Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-083 — W52 orchestration / recipient ACK source trace
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 15:00 +07:00  
+**Priority:** P0 — authenticated assignment and ACK prerequisite
+
+### 1. READ / TRACE
+
+- W52 branch `work/52-room-universal-ai-communication-orchestration`; HEAD `afd93ea8960d4cf9b27a57338b75f8d51624c170`.
+- Compare to Main `0902cd26518673aa078bb4c7c7899e1e4a95656a`: DIVERGED 4 ahead / 1,759 behind; only four changed paths, all W52 documents under `docs/work52/`.
+- Recursive tree completed, not truncated, 398 entries. No W52 orchestration implementation, HostPort interface, RpcPort adapter or runtime binding appears in this GitHub branch.
+- Work17 source trace search reports Sandbox-only candidate Codex App Server/Qwen ACP adapters, described as read-only/no-tool with injected CorePort/AuthorityPort/W14 HostPort but no production binding. This does not establish a GitHub-canonical or live W52 runtime.
+- PR #74 assigns W52 the dispatch, authenticated recipient ACK/NACK, durable outbox, cursor, retry/cancel/recovery and orchestration ownership.
+
+### 2. DECIDE
+
+- W28 must not implement a second dispatcher, task ledger, queue, recipient identity registry or ACK authority.
+- Grant issuance remains blocked until W52 proves a versioned assignment/ACK contract and authenticated runtime identity binding.
+- Task-created, session-intake, tool-return or generic ACCEPTED state is not recipient ACK.
+- ACK must be authenticated and durable before W14 can perform any side effect.
+- No HostPort compatibility claim from one-shot HTTP.
+
+### 3. BUILD
+
+- Added DOC-W28-078 section 16, W52 orchestration source and HostPort dependency.
+- Document commit: `e85a646f717406aa603cef82d6667406acd5aab7`.
+- No W52/W14/Core source, runtime, process, endpoint or policy was modified.
+
+### 4. LIMITATIONS / NEXT
+
+- W52 live Sandbox source was not read in this pass; GitHub branch tree evidence is bounded to the inspected branch.
+- No dispatch, ACK, HostPort, grant or live E2E was invoked.
+- Next: consolidate the exact acceptance dependency matrix against PR #74 G0–G7; ensure all current Work28 code/tests map to the governing contract and identify only candidate-local work that can safely proceed without owner-owned W52/W14/W70 implementation.
+- Documentation-only update; CI not claimed. PR #76 remains DRAFT; Execution Gate CLOSED.
+
+**STATUS:** W52 GITHUB IMPLEMENTATION NOT VERIFIED; AUTHENTICATED ACK NOT VERIFIED; DOC-W28-078 CANDIDATE; EXECUTION GATE CLOSED; NOT RELEASED.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
