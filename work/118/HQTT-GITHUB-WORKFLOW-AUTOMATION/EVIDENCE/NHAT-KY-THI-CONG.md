@@ -2341,3 +2341,19 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - **Scope and controls:** No code/workflow mutation, external Work/Sandbox/runtime/config/secret/permission/branch-protection change, rebase, force-push, Main merge or release.
 - **Disposition:** Finding recorded — remediation deferred under freeze — ACTIVE / BLOCKED / NOT ACCEPTED / NOT RELEASED.
 - **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-24 04:45 +07:00; Result: two bounded verifier hardening findings recorded; no code change.
+
+
+### Entry 066 — Xu review routing and stale-document reconciliation
+
+- **Priority:** 01 — P0 — Ensure the independent reviewer is routed to the active PR #68 and exact current evidence, not superseded PR #67 snapshots.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-24 04:49 +07:00.
+- **Method:** Read-only fetch of XR-118-001, RR-118-001, TASK_REGISTER.json, release gate and handoff record; compared historical PR #67 references with live PR #68 and exact-head CI. Documentation-only updates to RR-118-001 and STATUS; no implementation/workflow changes.
+- **Finding:** XR-118-001, W118-RELEASE-GATE.md and BB-118-002 retain PR #67 / older branch and test snapshots. Their gate criteria remain useful, but current review target must be PR #68. This could misroute Xu or cause stale evidence to be mistaken for current evidence if no overlay is present.
+- **Remediation:** RR-118-001 now has an authoritative 2026-11-24 routing refresh naming PR #68, branch `work/118-auto-e2e-v2-clean`, source HEAD `77159adc4e649e691256150f0c8ffca81d080476`, latest verified CI #1011/#1012, current task states, Entry 065 webhook findings and explicit supersession of PR #67 routing references. STATUS has a corresponding refresh. Historical acceptance criteria are preserved and not waived.
+- **Task Register readback:** 013 IN_PROGRESS; 014 BLOCKED; 015 BLOCKED; 016 IN_PROGRESS; 017 IN_PROGRESS; 018 BLOCKED; 019 PLANNED. Progress NOT_CALCULATED; no task DONE.
+- **Review readback:** PR #68 OPEN / UNMERGED; formal reviews 0; inline comments 0; Xu independent review PENDING; Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED.
+- **Limit:** This is documentation/routing reconciliation only. No live Core/W102/W14/W70/W33 integration, no Runtime Auto E2E, no webhook runtime/replay test, no source remediation. PR #67 snapshots remain historical and must not be used as current evidence.
+- **Scope and controls:** No code/workflow mutation; no external Work/Sandbox/runtime/config/secret/permission/branch-protection change; no rebase, force-push, merge or release.
+- **Disposition:** ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.
+- **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-24 04:49 +07:00; Result: review routing and STATUS synchronized; historical criteria retained; Xu review still pending.
