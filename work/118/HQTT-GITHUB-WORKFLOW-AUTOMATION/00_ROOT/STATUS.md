@@ -506,3 +506,13 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - Entry 070 records the stale routing defect and documentation-only correction. Implementation/workflow freeze remains.
 - Xu review PENDING; Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED. PR #68 remains OPEN / UNMERGED.
 - **Disposition:** ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.
+
+
+## Final routing HEAD CI — Entry 070 (2026-11-24)
+
+- Exact final docs-only HEAD `e0d3a128e9aa4672a2139eab67efae5a83dcdc5c`.
+- Push Run #1047 SUCCESS: 102 tests / 0.220s; `UNBOUND_LEGACY_BRANCH`; artifact `14870117323`, SHA-256 `f111a4ddad13fe0515469dd804a37e0e61e8606812f417be729d8172d1055b28`.
+- PR Run #1048 SUCCESS: 102 tests / 0.161s; exact PR HEAD above; artifact `14871050565`, SHA-256 `dfd024ceb362f1db01fba0211f58094d5b8ccabe36957cceb2b52694a2624e0b`.
+- All event capture jobs SKIPPED. Contract/unit CI only; Runtime Auto E2E remains NOT RUN.
+- Active review target corrected to PR #68 in checklist and release gate; PR #67 historical only. Xu review PENDING; Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED.
+- **Disposition:** ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.
