@@ -908,3 +908,45 @@ Bàn giao An thực hiện static adversarial re-review theo Review Task v7. Ch�
 - **Disposition đúng:** F-15 tiếp tục OWNER DECISION REQUIRED đối với mapping TaskResult/Workflow chưa được quy định rõ. Co phải tuân thủ nguyên văn ba contract LOCKED và Safety Policy hiện hành, không tự suy diễn semantics, không thay đổi contract. Với tình huống cleanup/side effect uncertain, giữ trạng thái BLOCKED theo fail-closed behavior hiện có; không biến điều này thành một quyết định mapping tổng quát cho mọi timeout.
 - **Hiệu lực:** Đính chính này thay thế riêng câu F-15 trong mục ủy quyền 06:31; các phần ủy quyền triển khai, bỏ điều kiện chờ An và ranh giới không merge/release vẫn giữ nguyên.
 - **KÝ GHI NHẬN:** Co | AI-07
+
+
+## W10-BB-XU-AGENT-DESKTOP-20261123 — Quyết định chuẩn hóa kiến trúc Desktop Adapter
+
+- **Ngày giờ:** 2026-11-23 20:14 (UTC+07:00)
+- **Người lập:** Xu — AI-01 / Architecture Coordination
+- **Chủ quyết định:** Vinh — Project Owner / Final Acceptance Authority
+- **Phạm vi:** Rà soát và cập nhật hồ sơ Work 10; không triển khai runtime.
+
+### Căn cứ
+- Work 10 hiện có Browser Adapter dựa trên Playwright/Chromium, Agent Runtime, ProcessSupervisor, API loopback-only và các hợp đồng ACTION / WORKFLOW / SAFETY đang LOCKED.
+- Ranh giới tích hợp đã được ghi nhận ngày 2026-11-22: W24 sở hữu PC Source Bridge/Core authorization/authenticated transport; W112 sở hữu hợp đồng liên Work; W14 sở hữu autonomous E2E execution/delivery; W113 sở hữu Dashboard ingress :3000; W10 standalone UI :3010.
+- Đã rà soát tài liệu upstream chính thức của vercel-labs/agent-desktop ngày 2026-11-23.
+
+### Quyết định kiến trúc
+1. Giữ Work 10 là Computer Agent / Computer Provider thống nhất của HQTT AI; không tạo Work mới.
+2. Giữ Browser Adapter hiện tại cho browser-page automation.
+3. Bổ sung Desktop Adapter như một nhánh năng lực kiến trúc dự kiến cho native desktop application automation. agent-desktop được ghi nhận là ứng viên kỹ thuật, chưa được chọn làm dependency chính thức.
+4. Mọi desktop operation trong tương lai phải đi qua W10 Agent Runtime, policy và ProcessSupervisor; không cấp unrestricted shell hoặc unrestricted MCP trực tiếp cho AI từ xa.
+5. Mọi thao tác thay đổi trạng thái phải đọc lại giao diện và xác minh post-condition; action response thành công không tự động đồng nghĩa task PASS.
+6. Không ép desktop action vào ba hợp đồng LOCKED hiện tại. Nếu cần, phải lập Desktop capability/action contract và threat model riêng, review và được Owner phê duyệt trước khi code.
+7. Giữ nguyên ranh giới W24/W112/W14/W113 và cổng :3010 của W10; không expose API W10 ra mạng, không chiếm Dashboard :3000.
+8. Không chấp nhận các tuyên bố “zero token”, “100% accuracy”, “90% cost reduction” hoặc “không ảnh hưởng chuột” nếu chưa có benchmark và kiểm thử trên host thực tế.
+
+### Hồ sơ cập nhật
+- 03_ARCHITECTURE/COMPUTER_AGENT_ARCHITECTURE.md — bổ sung mô hình Browser + Desktop Adapter và ranh giới.
+- 03_ARCHITECTURE/P1_P5_IMPLEMENTATION.md — bổ sung track D0–D6, không thay đổi P1–P5 hiện hữu.
+- 03_ARCHITECTURE/README.md — cập nhật danh mục kiến trúc.
+- 06_EVIDENCE/W10_AGENT_DESKTOP_TECHNICAL_ASSESSMENT_20261123.md — đánh giá kỹ thuật, rủi ro, ma trận thử nghiệm và điều kiện vào/ra gate.
+
+### Giới hạn / trạng thái
+- D0: DOCUMENTED từ tài liệu upstream công khai.
+- D1–D6: NOT STARTED.
+- Cài đặt dependency: NOT AUTHORIZED / NOT PERFORMED.
+- Sửa source/test/runtime: NOT PERFORMED.
+- Runtime test / benchmark: NOT RUN.
+- Ba hợp đồng LOCKED: giữ nguyên, không sửa.
+- GitHub synchronization: NOT PERFORMED trong lượt này.
+- Work 10: ACTIVE — NOT RELEASED.
+
+**Kết luận:** Chấp thuận đưa agent-desktop vào danh mục ứng viên để đánh giá tiếp; chưa chấp thuận tích hợp hoặc triển khai. Biên bản này không thay thế nghiệm thu cuối của Owner.
+**KÝ GHI NHẬN:** Xu | AI-01
