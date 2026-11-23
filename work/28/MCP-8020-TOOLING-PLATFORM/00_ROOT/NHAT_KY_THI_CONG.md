@@ -2609,3 +2609,78 @@ All compares below use canonical base `4e2475551cd7e980f7136e8f811189dee80c0ffb`
 5. Ka: re-review exact source diff, exact-head CI raw logs, and Core adapter compatibility. Do not infer deployment or PASS from source/CI alone.
 
 **STATUS:** W28-KA-WP5-08 HIGH / OPEN — GRANTLESS COMMAND MODE UNDER PRIVILEGED OPT-OUT / W28-KA-WP5-07 HIGH / OPEN — FAIL-CLOSED TEST MODULE OMITTED FROM WORKFLOW / W28-KA-WP5-03 HIGH / OPEN — CORE AUTHORITY NOT PROVEN / W28-KA-WP5-06 HIGH / OPEN — REDIRECT BOUNDARY NOT PROVEN / EXECUTION GATE CLOSED / ACTIVE — INTEGRATION BLOCKED — NOT RELEASED.
+
+
+## 2026-11-23 — JRN-W28-069 — Integrated WP5 exact-CI coverage recheck and command-mode policy confirmation
+
+**Role:** Ka | Independent Architecture & Security Reviewer (CSA)  
+**Title:** Chief Security Architect — Work 28 independent reviewer  
+**Date-time:** 2026-11-23 (UTC+07:00)  
+**Canonical branch:** `work/28-mcp-tooling-platform`  
+**Pre-entry canonical HEAD:** `b1fa4050fbef75e75c93f0fb6f946047fcbbaa88`  
+**Pre-entry journal blob:** `ed3d68a542980ffac1223a048d79cfcdb5c2dea5`  
+**Signature:** [KÝ: KA | CSA]
+
+### 1. Canonical integration state correction
+
+A fresh exact branch-ref read confirms canonical HEAD `b1fa4050fbef75e75c93f0fb6f946047fcbbaa88`. The owner handoff artifact `06_EVIDENCE/VI_OWNER_HANDOFF_AUTO_E2E_20261123.md` (blob `26fe36c6594dee1a0fb60ac2bd98e48ed87c9497`) records PR #70 WP2, PR #71 WP5, PR #72 WP1 and PR #73 Core authority provenance consistency as merged, with exact PR-head and post-merge CI runs. PR #70–#73 are closed/merged. This supersedes any implication in earlier audit summaries that these three/four integration slices were still merely candidate branches.
+
+This integration status is source/CI only. The handoff explicitly retains product acceptance NOT ACCEPTED, live MCP 8030 → Core 8000 → Runtime → Host 8031 BLOCKED, Execution Gate CLOSED, and NOT_RELEASED.
+
+### 2. W28-KA-WP5-07 — HIGH / OPEN: root fail-closed tests still not executed by canonical workflow
+
+Exact canonical evidence:
+- Workflow `.github/workflows/work28-mcp-tooling.yml`, blob `8876f1a9096ec54e5a78a073820755087e67ecbf`.
+- Root test module `tests/test_work28_core_grant_fail_closed.py`, blob `6fecca58c97ffe0f042ead8e6eaedf30e5552d78`.
+- Workflow unit lane runs unittest/pytest discovery only under `work/28/MCP-8020-TOOLING-PLATFORM/05_TEST`.
+- Linux and Windows lifecycle lanes explicitly invoke named `tests/test_work28_*.py` modules; neither invokes `test_work28_core_grant_fail_closed.py`.
+- Run #392 / ID `45055750014` exact post-merge WP5 CI: all five jobs SUCCESS. Unit job `137310467705` log ends `348 passed, 238 subtests passed in 9.61s`; Linux lifecycle job `137310467722` completed the explicit named test list. Neither raw log contains the fail-closed module name.
+- Run #396 / ID `45060288335` exact post-merge provenance/documentation CI: all five jobs SUCCESS. Unit job `137324446780` log ends `357 passed, 238 subtests passed in 9.94s`; Linux lifecycle job `137324446419` completed the explicit named test list. Neither raw log contains the fail-closed module name.
+- Workflow run jobs confirm Windows and Linux lanes completed successfully; source workflow and raw logs confirm no explicit invocation of this root module.
+
+**Disposition:** green configured CI does not close this coverage gap. Finding remains HIGH / OPEN until the module is wired into both OS lanes (or moved into a discovered suite), exact-head CI reruns, and raw logs prove its execution. A workflow parity test should guard against regression.
+
+### 3. W28-KA-WP5-08 — HIGH / OPEN: trusted environment opt-out still permits grantless command mode
+
+PR #71 is merged, but its patch explicitly:
+- changes the default `Handler.snapshot_only` and `serve(... snapshot_only=...)` to TRUE;
+- requires Core grant URL and removes automatic local file-grant fallback;
+- parses `ROOM_HOP_SNAPSHOT_ONLY` so `0/false/no/off` explicitly sets `snapshot_only=False`;
+- adds root test `test_explicit_false_requires_trusted_environment_opt_out`, which asserts that `ROOM_HOP_SNAPSHOT_ONLY=false` is passed to `serve(snapshot_only=False)`.
+
+Canonical current source blobs remain:
+- `execution_host/server.py`: `cfdecca58e6146d067ce0e0c0a0feebac0ebdc83`.
+- `execution_host/work28_dispatch.py`: `22d5dcd385e301a43fcd0e1c3e901ff2c90abac9`.
+- `execution_host/work28_core_grant_client.py`: `e330d4f3681d3fb142e559f7ee35b21db128be7e`.
+- `tests/test_work28_core_grant_fail_closed.py`: `6fecca58c97ffe0f042ead8e6eaedf30e5552d78`.
+
+The server's `POST /execute` still accepts caller-supplied `work_context`, checks only the Work ID against local `ROOM_HOP_AUTHORIZED_WORKS`, then sets `authorized=True`. When trusted deployment config opts out of snapshot-only mode, dispatch `command` mode proceeds without resolving a Core grant. The current source has no Core-issued command grant validation on this branch.
+
+**Risk statement:** this is a grantless command-execution path if the privileged opt-out is configured; no evidence says that setting is enabled in any deployed environment. Do not describe this as a confirmed live exploit. The secure default is defense-in-depth, not proof that every permitted configuration obeys the Core-authority invariant.
+
+**Required disposition:** remove production opt-out / command mode, or require the same authenticated Core grant and server-derived principal/Work/task/assignment/Gate/purpose/action/snapshot/expiry/revocation binding before command-mode process spawn. Add negative HTTP tests proving no spawn for missing/forged/mismatched/expired/revoked grant with the opt-out path exercised.
+
+### 4. PR #74 contract branch freshness
+
+Compare exact against canonical pre-entry HEAD:
+- PR #74 remains OPEN / DRAFT / UNMERGED.
+- Branch compare: DIVERGED, 2 ahead / 11 behind, one modified contract file.
+- Five prior P1/P2 contract findings remain outstanding; no new author resolution was found in the latest fetched PR timeline.
+- Do not merge or treat the architecture direction as an interoperable wire contract until Xu reconciles the branch and the versioned schemas, W14 source ownership, three-way Core provenance, W70 policy snapshot/fail-closed semantics and HostPort envelope are addressed.
+
+### 5. Validation and limits
+
+- Static source review, GitHub workflow/job metadata and raw CI job logs only.
+- No tests were executed by Ka; no server or live endpoint was called; no PC collector was executed.
+- No source, workflow, PR, branch, runtime, credential, endpoint, deployment, or release mutation occurred.
+- CI PASS for configured lanes is retained as CI evidence only; it does not establish live Core authorization, deployed MCP provenance, real provider composition, protected evidence readback, or product acceptance.
+
+### 6. Required next
+
+1. Vi: remove grantless production command mode or bind it to the approved Core grant contract; reject caller WorkContext authority and derive identity/Work from trusted Core data.
+2. Vi: add `test_work28_core_grant_fail_closed.py` (and command-mode/redirect negative tests) to both Linux and Windows lanes; add workflow-parity assertion.
+3. An: independently verify exact-head logs and the negative no-process-spawn tests.
+4. Xu: resolve the V1.3 contract branch findings and issue the normative command-mode decision.
+5. Ka: review exact source/workflow SHA and logs after integration. PC live provenance remains pending until Vinh reports the PC is available and collector evidence is returned.
+
+**STATUS:** WP2/WP5/WP1/PR73 SOURCE INTEGRATION AND CONFIGURED CI: RECORDED; W28-KA-WP5-03 HIGH / OPEN; W28-KA-WP5-06 HIGH / OPEN; W28-KA-WP5-07 HIGH / OPEN; W28-KA-WP5-08 HIGH / OPEN; PR #74 CONTRACT: OPEN / DRAFT / UNMERGED; LIVE MCP → CORE → RUNTIME E2E: BLOCKED; EXECUTION GATE CLOSED; ACTIVE — INTEGRATION BLOCKED — NOT RELEASED.
