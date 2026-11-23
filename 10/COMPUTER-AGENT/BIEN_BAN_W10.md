@@ -950,3 +950,38 @@ Bàn giao An thực hiện static adversarial re-review theo Review Task v7. Ch�
 
 **Kết luận:** Chấp thuận đưa agent-desktop vào danh mục ứng viên để đánh giá tiếp; chưa chấp thuận tích hợp hoặc triển khai. Biên bản này không thay thế nghiệm thu cuối của Owner.
 **KÝ GHI NHẬN:** Xu | AI-01
+
+
+## W10-BB-XU-D1-DESKTOP-CONTRACT-20261123 — D1 draft package
+
+- **Ngày:** 2026-11-23 (UTC+07:00)
+- **Người lập:** Xu — AI-01
+- **Chủ sở hữu / thẩm quyền cuối:** Vinh
+- **Phạm vi:** Thiết kế hợp đồng năng lực Desktop Adapter và threat model; chưa triển khai.
+
+### Nội dung chuẩn bị
+1. Tạo DESKTOP_ADAPTER_CAPABILITY_CONTRACT_DRAFT.md — định nghĩa trust boundary, capability negotiation, logical desktop operations, observation-bound refs, action/result envelope, safety classes, privacy, fail-closed và task verification.
+2. Tạo DESKTOP_ADAPTER_THREAT_MODEL_DRAFT.md — xác định tài sản, trust boundaries, 15 nhóm đe dọa, abuse cases và tiêu chí an ninh tối thiểu.
+3. Tạo W10_D1_REVIEW_BRIEF_20261123.md — chuẩn bị câu hỏi tham vấn cho Ka, Cla, Qw và Nu.
+4. Cập nhật Architecture README và Work Manifest để định vị hồ sơ và trạng thái D1.
+
+### Nguyên tắc khóa
+- Đây là DRAFT 0.1.0, chưa phải hợp đồng LOCKED.
+- Ba hợp đồng Browser ACTION / WORKFLOW / SAFETY hiện hữu giữ nguyên.
+- agent-desktop chỉ là ứng viên backend, không được chọn dependency trong bước này.
+- W10 vẫn là Computer Agent boundary; Browser Adapter và Desktop Adapter tách biệt.
+- W24/W112/W14/W113 ownership và W10 loopback-only/API :3010 boundary không đổi.
+- Không expose raw CLI/MCP, shell hoặc OS API trực tiếp cho caller.
+- S2 external/irreversible và S3 privileged/system bị cấm trong v0.1.
+- Không fallback tọa độ/OCR khi accessibility semantic resolution lỗi.
+
+### Trạng thái
+- D1 draft package: PREPARED.
+- Independent technical review: PENDING.
+- Owner approval / lock: PENDING.
+- D2 Windows pilot: NOT AUTHORIZED / NOT STARTED.
+- Dependency install, source code, runtime, MCP registration, host access, tests, benchmark: NOT PERFORMED.
+- Work 10: ACTIVE — NOT RELEASED.
+
+### Ký ghi nhận
+Xu | AI-01
