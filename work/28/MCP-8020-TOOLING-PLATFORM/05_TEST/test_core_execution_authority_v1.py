@@ -45,6 +45,7 @@ def build_authority(tmpdir, seconds=300):
             "execution_workspace": "/w/28/run",
             "evidence_root": "/w/28/evidence",
             "allowed_identities": ["mcp8020"],
+            "capability_required": True,
         }
     }
     store = AppendOnlyRecordStore(str(Path(tmpdir) / "records"))
@@ -107,6 +108,10 @@ class AuthorityTests(unittest.TestCase):
             self.authority.authenticate("wrong")
         with self.assertRaises(PermissionError):
             self.authority.authenticate(None)
+
+    def test_work28_grant_requires_execution_capability(self):
+        with self.assertRaisesRegex(ValueError, "capability_required"):
+            self.authority.issue_grant("mcp8020", "W28", "pytest_run")
 
     def test_issue_grant_returns_token_once_and_stores_only_hash(self):
         grant = self.authority.issue_grant("mcp8020", "W28", "pytest_run", capability=CAPABILITY)
@@ -241,6 +246,11 @@ class HttpBoundaryTests(unittest.TestCase):
         code, payload = self.request("/works/W28/execution-runs", body, credential="secret-b", grant_token=grant["grant_token"])
         self.assertEqual(code, 403)
         self.assertEqual(payload["error"], "caller_not_authorized_for_grant")
+
+    def test_work28_http_grant_issue_requires_capability(self):
+        code, payload = self.request("/works/W28/execution-grants", {"purpose": "pytest_run"})
+        self.assertEqual(code, 400)
+        self.assertEqual(payload["error"], "capability_required")
 
     def test_unknown_work_404_and_duplicate_grant_409(self):
         code, payload = self.request("/works/W99/execution-grants", {"purpose": "pytest_run", "capability": CAPABILITY})
