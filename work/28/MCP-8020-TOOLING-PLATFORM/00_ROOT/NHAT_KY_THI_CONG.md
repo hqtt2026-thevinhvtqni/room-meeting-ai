@@ -3480,3 +3480,33 @@ W1111 PR #48 candidate:
 **STATUS:** CI #460 CANCELLED / NO JOBS / NO PASS; EXACT-HEAD SCHEMA TESTS NOT VERIFIED.
 
 **Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-088 — PR #76 description and evidence register reconciliation
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 15:16 +07:00  
+**Priority:** P0 — candidate status transparency
+
+### 1. BUILD
+
+- Updated PR #76 description to include DOC-W28-078, EV-W28-20261123-001, candidate schema/test work, exact CI #438 PASS scope, CI #457/#460 cancellations and all live integration blockers.
+- GitHub readback after update reports PR #76 OPEN / DRAFT / UNMERGED / mergeable=true; source head `03c7681db16184d4f7ec06a76637300accf2088e`; base SHA `14a535a6f7d10bb318734cc8df6c76090286ac08`.
+- Updated Work Document Register to list EV-W28-20261123-001 as evidence map; commit `cfe6b2921fb161965b5aac042d05be4adbac7b31`.
+
+### 2. VERIFY / LIMITATION
+
+- PR description explicitly states CI #457 and #460 were cancelled with no jobs; no schema test PASS is claimed.
+- PR description keeps execution gate CLOSED, not released, and states live Core/W52/W14/W70/PC E2E is not proven.
+- This is PR metadata/documentation maintenance only; no test or runtime execution occurred.
+
+### 3. NEXT
+
+- Read back final schema, test, evidence matrix, register, journal and PR metadata.
+- Keep candidate-local code and docs isolated. No merge, no deployment, no PC test until Vinh says PC is ready.
+- Continue to identify safe, bounded candidate improvements; owner-owned Core/W52/W14/W70 integration remains blocked pending canonical source and approval.
+
+**STATUS:** PR #76 METADATA UPDATED / OPEN DRAFT UNMERGED; REGISTER UPDATED; SCHEMA TEST CI STILL NOT VERIFIED; EXECUTION GATE CLOSED.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
