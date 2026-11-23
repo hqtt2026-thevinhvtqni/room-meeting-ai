@@ -2488,3 +2488,54 @@ The remaining acceptance gap requires evidence from the actual ROOM-HOP PC. Chat
 6. PC-dependent MCP 8030 process/build provenance and full live Auto E2E remain queued until Vinh reports PC availability.
 
 **STATUS:** TLS REDIRECT BOUNDARY OPEN / CORE AUTHORITY BOUNDARY OPEN / PR #74 2 AHEAD 8 BEHIND / PR #33 6 AHEAD 251 BEHIND / TLS CANDIDATE 2 AHEAD 7 BEHIND / LIVE PROVENANCE PENDING / EXECUTION GATE CLOSED / ACTIVE — INTEGRATION BLOCKED — NOT RELEASED.
+
+
+## 2026-11-23 — JRN-W28-067 — CI discovery coverage and local-grant test boundary correction
+
+**Role:** Ka | Independent Architecture & Security Reviewer (CSA)  
+**Title:** Chief Security Architect — Work 28 independent reviewer  
+**Date-time:** 2026-11-23 (UTC+07:00)  
+**Canonical branch:** `work/28-mcp-tooling-platform`  
+**Pre-entry canonical commit:** `13a83aa48146e0372b593d514d5bcfa264969dbf`  
+**Signature:** [KÝ: KA | CSA]
+
+### NEW EVIDENCE — CI workflow vs grant fail-closed tests
+
+Inspected exact canonical files:
+
+- `tests/test_work28_core_grant_fail_closed.py`, blob `6fecca58c97ffe0f042ead8e6eaedf30e5552d78`.
+- `tests/test_work28_dispatch.py`, blob `b40cac9c315e4eaa52802542759c26cfc6a4721e`.
+- `.github/workflows/work28-mcp-tooling.yml`, blob `8876f1a9096ec54e5a78a073820755087e67ecbf`.
+
+**Correction to earlier audit wording:** a canonical test module importing `HttpCoreGrantSource` does exist: `tests/test_work28_core_grant_fail_closed.py`. It tests missing Core URL rejection, configured URL selecting the HTTP source, unreachable Core rejection, and server startup failure. It does not test TLS/redirect security or a deployed Core grant exchange. This corrects any earlier statement that implied no canonical test imports the client at all.
+
+**New finding W28-KA-WP5-07 — HIGH / OPEN: fail-closed grant-client test module is not invoked by the checked-in Work28 workflow.**
+
+- The workflow's unit-regression job runs unittest/pytest discovery only under `work/28/MCP-8020-TOOLING-PLATFORM/05_TEST`.
+- Linux and Windows lifecycle jobs explicitly invoke `tests/test_work28_grant.py`, dispatch, contract, evidence and other named modules, but neither invokes `tests/test_work28_core_grant_fail_closed.py`.
+- No workflow command in the inspected workflow references `test_work28_core_grant_fail_closed.py`.
+- Therefore the existence of this test module is not evidence that it runs in the canonical Work28 CI lanes. It may be manually runnable, but exact-head CI coverage is not established.
+- Required remediation: add the module to both Linux and Windows lifecycle jobs (or deliberately relocate it into the suite already discovered by the workflow), then verify exact-head workflow run and raw logs show the module executed and passed. Add a workflow-parity assertion so the regression cannot silently fall out of either lane.
+
+### AUTHORITY TEST SEMANTICS — LIMIT
+
+The canonical dispatch tests construct a local in-memory grant with `issue_grant_for_tests`, pass a caller-built `work_context`, and supply a local `grant_registry` to `dispatch_execute`. The HTTP integration tests similarly configure `Handler.grant_registry` in-process. These are useful unit/contract tests for local dispatch and grant behavior, but they do not prove an authenticated Core-issued grant, W70 authoritative policy decision, server-derived principal, or removal of caller-controlled WorkContext from the production HTTP boundary.
+
+The canonical server blob `cfdecca58e6146d067ce0e0c0a0feebac0ebdc83` remains the source of the open W28-KA-WP5-03 authority-boundary finding. Do not elevate local grant-registry tests into Core authority PASS.
+
+### CI / SOURCE DISPOSITION
+
+- Workflow file and tests were inspected from GitHub canonical branch; Ka did not execute tests.
+- No workflow run was found associated with the journal-only commit JRN-W28-066; the workflow path filters exclude the journal path. No CI PASS is claimed for the journal update.
+- No source or workflow file was modified in this entry. No branch, service, endpoint, credential, deployment, merge or release state changed.
+- PR #74 remains OPEN / DRAFT / UNMERGED; five contract findings remain open. PR #33 remains historical evidence only. PC-dependent provenance and live Auto E2E remain pending.
+
+### REQUIRED NEXT
+
+1. Vi: wire `tests/test_work28_core_grant_fail_closed.py` into both Linux and Windows lifecycle jobs, and add a workflow-parity check proving required test modules execute in both lanes.
+2. Vi: add redirect-policy tests and implement explicit redirect rejection / constrained same-origin HTTPS redirect behavior before sending credentials.
+3. Vi/Xu: replace local registry and caller-supplied WorkContext authority with the approved authenticated Core grant and W70 policy snapshot contract.
+4. An: independently verify the test module runs in both lanes and test negative authority/redirect cases after source integration.
+5. Ka: review exact source/workflow diff and read raw exact-head logs; do not claim CI coverage from file existence.
+
+**STATUS:** W28-KA-WP5-07 HIGH / OPEN — GRANT FAIL-CLOSED TEST MODULE NOT WIRED INTO CANONICAL WORKFLOW / W28-KA-WP5-03 HIGH / OPEN — CORE AUTHORITY NOT PROVEN / W28-KA-WP5-06 HIGH / OPEN — REDIRECT BOUNDARY NOT PROVEN / EXECUTION GATE CLOSED / ACTIVE — INTEGRATION BLOCKED — NOT RELEASED.
