@@ -2791,3 +2791,40 @@ The existing static grant registry is fetched at startup; this candidate does no
 **STATUS:** BUILD CANDIDATE — CI PENDING — INTEGRATION NOT APPROVED — EXECUTION GATE CLOSED — NOT RELEASED.
 
 **Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-072 — CI #425 failure triage and regression alignment
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 09:43 +07:00  
+**Workflow run:** `45101824503` / run #425  
+**Initial tested SHA:** `121efd7dbc2ff05173d9253fab4fe7941804b5b7`
+
+### 1. Exact CI result
+
+- Unit/regression job: **FAIL**.
+- Linux lifecycle job: **FAIL**.
+- Windows lifecycle job: **FAIL**.
+- Automatic E2E gate report job: SUCCESS, but reports deployed E2E BLOCKED and is not a product PASS.
+- Compile step: SUCCESS.
+- Both Linux and Windows raw logs show `test_work28_core_grant_fail_closed.py` was actually executed; its 9 tests passed on both OS lanes.
+
+### 2. Root causes from raw logs
+
+1. Existing `tests/test_work28_evidence.py` still supplied `http://` Core URLs. The new HTTPS-only source correctly rejected those fixtures, producing two errors in the WP18 CoreGrantClientTests.
+2. Existing Work28 unit test `05_TEST/test_w13_execute_handler_http_boundary.py::test_authenticated_and_authorized_call_reaches_host_with_server_side_authorization` asserted that a caller-supplied WorkContext + local allowlist + `snapshot_only=False` could reach the Host. The new command-mode block correctly returned HTTP 400 instead of the old expected 200. This test encoded the grantless behavior now intentionally removed.
+
+### 3. Corrective changes committed on candidate branch
+
+- Commit `bf0ab07f4c371660d470121ebe2482e664a43a65`: changed WP18 Core URL fixtures to HTTPS.
+- Commit `daec39e85e580eb411eb66ded919fa731fde657c`: replaced the legacy HTTP happy-path expectation with an explicit denial + host-never-invoked assertion; updated test description to match the retired command contract.
+- These changes are candidate fixes only. They have not yet been re-run by CI at the time of this entry.
+
+### 4. Security disposition
+
+The failures do not justify restoring command mode or allowing HTTP Core grant transport. The test expectations were updated to assert the new fail-closed behavior. WP5-08 and WP5-06 remain PENDING a fresh exact-head CI run.
+
+**STATUS:** CI #425 FAIL; root causes identified; corrective commits pushed; rerun PENDING; WP5-03 HIGH / OPEN; PR #76 DRAFT / UNMERGED; Execution Gate CLOSED; NOT RELEASED.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
