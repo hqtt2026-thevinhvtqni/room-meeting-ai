@@ -202,3 +202,11 @@ Work32 Grant may be considered only for W118 protected execution integration aft
 - **Xu disposition requested:** decide whether to require an exact standalone marker line/canonical block and add quoted/embedded-marker negative tests; require canonical non-empty repository owner/name validation. Keep Core lease scope/expiry/revocation as a separate non-waivable authority gate.
 - Implementation/workflow freeze remains in force; no source change made. P1-118-02 BLOCKED; no production Issue mirror write is authorized by unit stubs.
 - Current implementation source reviewed: `bbc5b1adfd906e1d585358fd85b76f934329f767`; Entry 067 journal commit is documentation-only. Re-fetch PR #68 exact head before formal review.
+
+
+## Entry 068 — additional static review finding (2026-11-24)
+
+- **Review target:** PR #68 / `work/118-auto-e2e-v2-clean`; source reviewed at HEAD `80ca3af345374e6e57419140f0b2c77e315b703d`.
+- **W118-EVIDENCE-001:** `build_event_evidence()` accepts non-strict run metadata types because it only compares values numerically; Python `bool` and positive floats can pass. It also accepts any non-empty `source_commit` string rather than enforcing a full hexadecimal SHA-40. This may create malformed W118-local operation artifacts, but does not prove forged GitHub events, Core state mutation, or W70 Evidence Register acceptance.
+- **Positive boundary:** artifact state remains `RECORDED`, explicitly non-authoritative and not a W70 Evidence Register row. The workflow_run adapter has a stricter positive-int check for run ID but only checks head SHA length, not hexadecimal characters.
+- **Disposition:** Finding recorded in Journal Entry 068. Suggested bounded validation/tests are deferred under the implementation/workflow freeze. Xu to review alongside Entries 065 and 067. No source/workflow mutation; all runtime gates unchanged.
