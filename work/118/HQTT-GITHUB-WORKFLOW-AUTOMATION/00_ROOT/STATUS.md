@@ -525,3 +525,13 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - Implementation/workflow freeze remains; no code/test/workflow mutation. No event dispatch or Core write. Runtime Auto E2E and cross-Work runtime gates remain NOT VERIFIED / BLOCKED.
 - Existing Entry 065/067/068/069 findings remain pending Xu review. No Task status promotion.
 - **Disposition:** ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.
+
+
+## Current Xu review-routing freshness — Entry 072 (2026-11-24 07:05 +07:00)
+
+- RR-118-001 was stale relative to the latest PR #68 source HEAD and CI snapshot. Appended a P0 authoritative overlay binding Xu's review to exact HEAD `4466f5de6cdc5eaac207cb74171743021d907669` and PR Run #1061 (102 contract tests PASS; artifact digest and skipped-job limits recorded).
+- Entries 065/067/068/069/071 remain open static findings for Xu's disposition. Implementation/workflow freeze remains; no code/workflow remediation was applied.
+- PR #68 remains OPEN / UNMERGED; Xu review PENDING; Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED.
+- Core/W102/W14/W33/W70 authority/runtime gates remain BLOCKED / NOT VERIFIED; Runtime Auto E2E NOT RUN. No Task is DONE; progress NOT_CALCULATED.
+- The routing/journal commits advance HEAD beyond the tested revision; a new exact-head CI readback is mandatory before declaring the final documentation snapshot CI PASS.
+- **Disposition:** ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED.
