@@ -1,6 +1,7 @@
 """Build immutable, non-authoritative event evidence records for Work 118."""
 from __future__ import annotations
 
+import re
 from typing import Any
 
 
@@ -25,8 +26,12 @@ def build_event_evidence(
     for key, value in required.items():
         if not isinstance(value, str) or not value.strip():
             raise ValueError(f"{key} must be a non-empty string")
-    if run_id < 1 or run_attempt < 1:
-        raise ValueError("run_id and run_attempt must be positive integers")
+    if type(run_id) is not int or run_id < 1:
+        raise ValueError("run_id must be a positive integer")
+    if type(run_attempt) is not int or run_attempt < 1:
+        raise ValueError("run_attempt must be a positive integer")
+    if re.fullmatch(r"[0-9a-fA-F]{40}", source_commit) is None:
+        raise ValueError("source_commit must be a full 40-character hexadecimal SHA")
     if details is not None and not isinstance(details, dict):
         raise ValueError("details must be an object")
 
