@@ -26,6 +26,13 @@ class ExecutionGrant:
     operation: str
     expected_source_sha256: str
     expires_at_unix: float | None = None
+    work_name: str | None = None
+    workspace_root: str | None = None
+    execution_workspace: str | None = None
+    evidence_root: str | None = None
+    service_identity: str | None = None
+    purpose: str | None = None
+    status: str = "active"
 
 
 class GrantError(ValueError):
@@ -58,6 +65,8 @@ def assert_grant_active(grant: ExecutionGrant, *, now: float | None = None) -> N
         raise GrantError("grant_invalid_type")
     if not grant.grant_id or not isinstance(grant.grant_id, str):
         raise GrantError("grant_id_missing")
+    if grant.status != "active":
+        raise GrantError("grant_not_active")
     if grant.expires_at_unix is not None:
         ts = time.time() if now is None else now
         if ts > grant.expires_at_unix:
