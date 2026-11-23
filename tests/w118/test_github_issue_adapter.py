@@ -275,5 +275,27 @@ class Work118GitHubIssueAdapterTests(unittest.TestCase):
             GitHubIssueAdapter(self.fake, repository="not-a-repo")
 
 
+    def test_embedded_or_quoted_marker_fails_closed_without_write(self):
+        marker = "<!-- room-hop-core-task:W118-TASK-016 -->"
+        for body in (f"Quoted text: {marker}", f"> {marker}", f"```\n{marker}\n```", f"prefix {marker} suffix"):
+            fake = FakeGitHub([{"number": 31, "title": "Unrelated", "body": body}])
+            adapter = GitHubIssueAdapter(fake, repository=REPOSITORY, lease_validator=lambda lease_id, task: True)
+            with self.subTest(body=body), self.assertRaises(IssueLookupDuplicate):
+                self.mirror(adapter=adapter)
+            self.assertFalse(any(method in ("POST", "PATCH") for method, _, _ in fake.calls))
+
+    def test_repeated_marker_within_one_issue_fails_closed_without_write(self):
+        marker = "<!-- room-hop-core-task:W118-TASK-016 -->"
+        fake = FakeGitHub([{"number": 32, "title": "Ambiguous", "body": f"{marker}\n{marker}"}])
+        adapter = GitHubIssueAdapter(fake, repository=REPOSITORY, lease_validator=lambda lease_id, task: True)
+        with self.assertRaises(IssueLookupDuplicate):
+            self.mirror(adapter=adapter)
+        self.assertFalse(any(method in ("POST", "PATCH") for method, _, _ in fake.calls))
+
+    def test_repository_requires_nonempty_valid_components(self):
+        for repository in ("/room-meeting-ai", "owner/", " owner/repo", "owner/repo ", "owner//repo", "owner/repo/name"):
+            with self.subTest(repository=repository), self.assertRaises(ValueError):
+                GitHubIssueAdapter(self.fake, repository=repository)
+
 if __name__ == "__main__":
     unittest.main()
