@@ -154,10 +154,6 @@ class Handler(BaseHTTPRequestHandler):
             if self.host is None:
                 self._send(503, {"status": "BLOCKED", "reason": "runtime_not_initialized"})
                 return
-            source = Handler.core_grant_source
-            if source is None:
-                self._send(503, {"status": "BLOCKED", "reason": "core_grant_source_not_configured"})
-                return
             ctype = (self.headers.get("Content-Type") or "").split(";")[0].strip().lower()
             if ctype != "application/json":
                 self._send(415, {"status": "BLOCKED", "reason": "content_type_must_be_application_json"})
@@ -189,6 +185,10 @@ class Handler(BaseHTTPRequestHandler):
                 return
             if not isinstance(work_request, dict):
                 self._send(400, {"status": "BLOCKED", "reason": "work28_request_required"})
+                return
+            source = Handler.core_grant_source
+            if source is None:
+                self._send(503, {"status": "BLOCKED", "reason": "core_grant_source_not_configured"})
                 return
 
             # Core validates service identity + grant token and returns the
