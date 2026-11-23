@@ -192,3 +192,13 @@ Work32 Grant may be considered only for W118 protected execution integration aft
 - **Governance:** This addendum is routing and evidence metadata only. It does not amend architecture, waive acceptance gates, authorize code changes, authorize main integration or constitute product acceptance.
 - **Prepared by:** Ka — CSA / Delegated Technical Lead.
 - **Date-Time:** 2026-11-24 04:47 +07:00.
+
+
+## Additional static finding for Xu — Journal Entry 067 (2026-11-24)
+
+- **W118-ISSUE-002 / P1:** `github_issue_adapter._find_task_issues()` currently identifies Task Issues with substring containment (`marker in body`), not an exact standalone canonical marker. A quoted/embedded marker in an unrelated Issue could be mistaken for the Task Issue; if it is the sole match and Core has no persisted `issue_id`, the adapter could PATCH that unrelated Issue after the lease callback returns True. No production write is claimed.
+- The same shallow owner/repository configuration validation also exists in the Issue adapter: empty owner/repository components are not rejected.
+- Existing safeguards remain positive: duplicate markers, incomplete pagination, persisted Core `issue_id` mismatch/missing marker, and absent/false/exception lease callback fail closed; PRs are excluded; readback checks number/title/body.
+- **Xu disposition requested:** decide whether to require an exact standalone marker line/canonical block and add quoted/embedded-marker negative tests; require canonical non-empty repository owner/name validation. Keep Core lease scope/expiry/revocation as a separate non-waivable authority gate.
+- Implementation/workflow freeze remains in force; no source change made. P1-118-02 BLOCKED; no production Issue mirror write is authorized by unit stubs.
+- Current implementation source reviewed: `bbc5b1adfd906e1d585358fd85b76f934329f767`; Entry 067 journal commit is documentation-only. Re-fetch PR #68 exact head before formal review.
