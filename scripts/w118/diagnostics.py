@@ -71,7 +71,7 @@ def find_existing_issue(issues: list[dict[str, Any]], key: str) -> str:
 
 
 def build_plan(issues: list[dict[str, Any]], workflow_id: str | int, sha: str,
-               run_id: str | int, attempt: str | int, *, scan_complete: bool = True) -> dict[str, Any]:
+               run_id: str | int, attempt: str | int, *, scan_complete: bool = False) -> dict[str, Any]:
     if scan_complete is not True:
         raise ValueError("diagnostic Issue scan is incomplete; refusing create or update")
     key = diagnostic_key(workflow_id, sha)
