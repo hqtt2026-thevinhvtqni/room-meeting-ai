@@ -3510,3 +3510,44 @@ W1111 PR #48 candidate:
 **STATUS:** PR #76 METADATA UPDATED / OPEN DRAFT UNMERGED; REGISTER UPDATED; SCHEMA TEST CI STILL NOT VERIFIED; EXECUTION GATE CLOSED.
 
 **Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-089 — Direct exact-source confirmation of PR #48 source-hash binding defect
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 15:19 +07:00  
+**Priority:** P0 — immutable source binding
+
+### 1. READ / TRACE
+
+- Fetched PR #48 exact head `c70eb2b82f54a000a81263dc519078ddf105f075`.
+- Core source `core/execution_authority.py`, blob `163b126178b67c6e0a3f68ba33eaf7b9e6d91503`.
+- Test source `tests/test_execution_authority.py`, blob `4ea5158c07df1e66183a6fbe7a6f79042332605d`.
+- In `ExecutionAuthority.record_run()`, code revalidates the token and checks only SHA-256 syntax for submitted source digest; no comparison to grant-bound policy digest occurs before append.
+- Test fixture binds W28 policy to `a` × 64. The run-record HTTP test submits `b` × 64 and asserts HTTP 200 and the mismatched digest in the response.
+- This directly demonstrates the candidate test contract accepts a source mismatch. No test execution occurred; this is exact source/test inspection.
+
+### 2. DECIDE
+
+- PR #48 must not be merged wholesale or reused unchanged.
+- Any Core implementation must compare the submitted source digest with the immutable grant-bound digest and current approved source snapshot before any run append.
+- A negative test must assert mismatch denial and zero run-record mutation.
+- This defect conflicts with PR #74 INV-4 and Work28 exact-source binding; retain P0 blocker.
+
+### 3. BUILD
+
+- Added section 17 to DOC-W28-078 documenting the exact source/test blobs and defect.
+- Document commit: `0eaca316efe6380fcb80658db538ca80116e7ff0`.
+- No PR #48 source, Main source, Core runtime or external Work was modified.
+
+### 4. LIMITATIONS / NEXT
+
+- PR #48 remains OPEN / DRAFT / UNMERGED; branch comparison remains highly divergent.
+- No PR #48 tests were run; test source is evidence of the expected mismatched-digest acceptance.
+- Next: read back DOC-W28-078 and journal; keep PR #76 isolated; include this defect in the final Core authority acceptance matrix.
+- No CI/live E2E/PC test is claimed.
+
+**STATUS:** PR #48 SOURCE-HASH BINDING DEFECT DIRECTLY CONFIRMED BY SOURCE + TEST; P0 OPEN; NO REUSE/INTEGRATION.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
