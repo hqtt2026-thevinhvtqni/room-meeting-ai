@@ -3244,3 +3244,50 @@ W1111 PR #48 candidate:
 **STATUS:** DOC-W28-078 ALIGNED TO PR #74 BASELINE / READBACK PENDING; IMPLEMENTATION NOT APPROVED; EXECUTION GATE CLOSED; NOT RELEASED.
 
 **Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-082 — W14 HostPort and W70 policy-source reconciliation
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 14:56 +07:00  
+**Priority:** P0 — sole Host and Work policy authority
+
+### 1. READ / TRACE
+
+**W14 release branch**
+- Branch: `release/work14-w14-release-20261010t053516`.
+- HEAD: `65992f04d6989e199d91355f0bd977cfc6258c4a`; compare to Main `0902cd26518673aa078bb4c7c7899e1e4a95656a`: DIVERGED 6 ahead / 1,793 behind.
+- Recursive Git tree is complete (not truncated). It contains root `execution_host/server.py`, `host.py`, `models.py`, `wee_bridge.py`, and a release evidence bundle. Expected `work/14/00_ROOT/DOC-001_W14_WORK_MANIFEST.md` and `work/14/03_ARCHITECTURE/EXECUTION_HOST_BOUNDARY.md` are NOT_FOUND at those paths on this branch. Three Work14 docs are present under `work/14/06_EVIDENCE/`; no canonical current W14 Work source declaration was established.
+- W14 release mapping doc blobs: restoration addendum `2a7bfc96e44ae3cf14bc0808e23e423a3efc47fb`; W70 compliance mapping `b7ecfb0fcd10ef3b95c2a3cf359fc81be5f4ba16`. They identify source mapping and runtime/release acceptance gaps; they are not HostPort implementation proof.
+- Independent W17 source trace search confirms inspected W14 surface is one-shot HTTP `POST /execute` → W12ExecutionAdapter/RealExecutionHost/subprocess.run, while W52 HostPort expects persistent bidirectional RpcPort request/notify/receive/respond/close and confirmed descendant stop. Do not equate these interfaces.
+
+**W70**
+- Main `DOC-061` blob `a54dc2202e56cfb9737395fd523a5488ab35b0f3`: DRAFT — source reconciliation complete / contract approval pending / implementation not verified.
+- DOC-061 states it does not approve API routes, DB schema, permissions, gate namespace or implementation; DOC-060 gate namespace remains proposal only.
+- No authoritative live W70 Work/WP/Gate policy snapshot endpoint/version/freshness contract was established by this inspection.
+
+### 2. DECIDE
+
+- W14 remains sole Host owner per AD-W28-20261123-002; no Work28 substitute Host.
+- Current W14 canonical branch/source/release identity is not established by the old release snapshot.
+- W14 HostPort is not proven by one-shot HTTP POST /execute; require W14-owned persistent RPC/session/close capability contract and live proof.
+- W70 static configuration cannot substitute for authoritative versioned Work/WP/Gate policy.
+- Core grant remains BLOCKED unless the approved W70 policy source is reachable, current and verifiable; grant must follow W52 recipient-authenticated ACK.
+
+### 3. BUILD
+
+- Added section 15, W14 HostPort and W70 policy-source reconciliation, to DOC-W28-078.
+- Document update commit: `1bcebf986f5262019fff64b9b38a218fb0f452e5`.
+- No W14 source, W70 source, Core source, Host, process, endpoint or policy was changed.
+
+### 4. LIMITATIONS / NEXT
+
+- Evidence is GitHub source/tree and document inspection only; no live PC process, service, runtime HostPort, W70 API or grant was invoked.
+- DOC-W28-078 remains a subordinate wire-level candidate under PR #74, not an approved implementation contract.
+- Next: inspect W52 interface/source revision and W14 current source mapping/owner evidence; prepare a gap-to-test matrix that maps PR #74 G0–G7 and Work28 acceptance without adding a parallel Host or authority.
+- No CI is claimed for documentation-only changes. PR #76 remains DRAFT; Execution Gate CLOSED.
+
+**STATUS:** W14 HOSTPORT NOT VERIFIED; W70 POLICY SNAPSHOT NOT APPROVED / NOT VERIFIED; DOC-W28-078 CANDIDATE; EXECUTION GATE CLOSED; NOT RELEASED.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
