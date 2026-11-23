@@ -6,6 +6,7 @@ only runtime Task/Assignment/Event authority.
 """
 from __future__ import annotations
 
+import re
 from typing import Any, Callable, Mapping
 
 from .core_task_adapter import (
@@ -27,6 +28,30 @@ class IssueLookupDuplicate(GitHubIssueError):
     """More than one GitHub Issue carries the same Core Task marker."""
 
 
+_REPOSITORY_RE = re.compile(r"^[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?/[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9_-])?$")
+
+
+def _valid_repository(value: object) -> bool:
+    return isinstance(value, str) and _REPOSITORY_RE.fullmatch(value) is not None
+
+
+def _is_canonical_marker_line(body: str, marker: str) -> bool:
+    if body.count(marker) != 1:
+        return False
+    in_fence = False
+    found = 0
+    for line in body.splitlines():
+        stripped = line.lstrip()
+        if stripped.startswith("```") or stripped.startswith("~~~"):
+            in_fence = not in_fence
+            continue
+        if line == marker:
+            if in_fence:
+                return False
+            found += 1
+    return found == 1
+
+
 class GitHubIssueAdapter:
     def __init__(
         self,
@@ -36,8 +61,8 @@ class GitHubIssueAdapter:
         max_issue_pages: int = 20,
         lease_validator: Callable[[str, CoreTaskProjection], bool] | None = None,
     ) -> None:
-        if not isinstance(repository, str) or repository.count("/") != 1:
-            raise ValueError("repository must be owner/name")
+        if not _valid_repository(repository):
+            raise ValueError("repository must contain valid non-empty owner/name components")
         if type(max_issue_pages) is not int or max_issue_pages < 1:
             raise ValueError("max_issue_pages must be a positive integer")
         self.transport = transport
@@ -74,7 +99,12 @@ class GitHubIssueAdapter:
             for issue in issues:
                 if not isinstance(issue, Mapping) or "pull_request" in issue:
                     continue
-                if marker in str(issue.get("body") or ""):
+                body = issue.get("body") or ""
+                if not isinstance(body, str):
+                    raise IssueLookupDuplicate("Issue body is not text; refusing ambiguous Task marker lookup")
+                if marker in body:
+                    if not _is_canonical_marker_line(body, marker):
+                        raise IssueLookupDuplicate("embedded, quoted, fenced or repeated Task marker; refusing mutation")
                     matches.append(issue)
             if len(issues) < 100:
                 return matches
