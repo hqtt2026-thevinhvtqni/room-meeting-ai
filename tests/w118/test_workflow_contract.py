@@ -204,6 +204,12 @@ class Work118WorkflowContractTests(unittest.TestCase):
         self.assertIn(".w118-evidence/source-binding.json", upload["with"]["path"])
         self.assertEqual(upload["with"]["if-no-files-found"], "warn")
 
+    def test_diagnostics_label_creation_occurs_only_after_scan_and_plan(self):
+        data = self.load_yaml(DIAGNOSTICS)
+        run_script = data["jobs"]["diagnostics"]["steps"][-1]["run"]
+        self.assertLess(run_script.index("--scan-complete"), run_script.index("gh label create"))
+        self.assertLess(run_script.index("completeness is unproven"), run_script.index("gh label create"))
+
     def test_diagnostics_scan_is_paginated_and_fails_closed_at_ceiling(self):
         data = self.load_yaml(DIAGNOSTICS)
         run_script = data["jobs"]["diagnostics"]["steps"][-1]["run"]
