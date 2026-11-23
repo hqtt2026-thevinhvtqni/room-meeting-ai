@@ -99,5 +99,17 @@ class GitHubWebhookVerifierTests(unittest.TestCase):
         self.assertNotIn("seq", result)
 
 
+    def test_uppercase_uuid_is_rejected_as_noncanonical(self):
+        delivery_id = str(uuid.uuid4()).upper()
+        with self.assertRaisesRegex(GitHubWebhookError, "canonical UUID"):
+            verify_github_webhook(**signed_delivery(delivery_id=delivery_id))
+
+    def test_repository_requires_nonempty_valid_owner_and_name(self):
+        for repository in ("/room-meeting-ai", "owner/", " owner/repo", "owner/repo ", "owner//repo", "owner/repo/name"):
+            args = signed_delivery()
+            args["expected_repository"] = repository
+            with self.subTest(repository=repository), self.assertRaises(GitHubWebhookError):
+                verify_github_webhook(**args)
+
 if __name__ == "__main__":
     unittest.main()
