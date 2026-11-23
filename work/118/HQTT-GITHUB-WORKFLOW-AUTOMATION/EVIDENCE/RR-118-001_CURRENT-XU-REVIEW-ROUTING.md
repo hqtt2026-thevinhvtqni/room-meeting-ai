@@ -251,3 +251,10 @@ Work32 Grant may be considered only for W118 protected execution integration aft
 - **Review readback:** PR #68 formal reviews 0; inline review threads 0 at latest readback. Xu independent review PENDING; Vinh product acceptance NOT ACCEPTED; release NOT AUTHORIZED.
 - **Governance:** This overlay corrects only review routing and evidence freshness. It does not waive acceptance criteria or authorize source/workflow changes, external Work mutation, Main merge, rebase, force-push, PR close or release. Review must bind to the exact PR #68 HEAD above; if the branch advances, refresh this overlay and CI evidence before review.
 - **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-24 07:05 +07:00; Result: current review target, exact-head CI and all remaining authority/runtime blockers consolidated for Xu.
+
+
+### Entry 072 addendum — final documentation revision boundary
+
+- The Entry 072 routing/journal/status reconciliation advanced the branch after PR Run #1061. The latest docs-only branch revision at this addendum's preparation is `6d5e9fd927f9582063275f7d435556948c77c300` (the STATUS-only commit after the RR overlay and journal entry).
+- Run #1061 remains valid only for its exact tested source HEAD `4466f5de6cdc5eaac207cb74171743021d907669`. No exact-head CI result has been observed for `6d5e9fd927f9582063275f7d435556948c77c300`; do not label that revision CI PASS.
+- This addendum records revision freshness only. Xu must review the current PR #68 exact head, and all acceptance/authority/runtime gates remain unchanged.
