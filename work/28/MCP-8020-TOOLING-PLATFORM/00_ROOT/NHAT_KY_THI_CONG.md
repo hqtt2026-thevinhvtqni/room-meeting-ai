@@ -2309,3 +2309,50 @@ The remaining acceptance gap requires evidence from the actual ROOM-HOP PC. Chat
 
 ### STATUS
 **PR #74 COMMENT REVIEW UPDATED / BRANCH RECONCILIATION REQUIRED / NOT APPROVED / EXECUTION GATE CLOSED / NOT RELEASED.**
+
+
+## 2026-11-23 — JRN-W28-063 — Implementation-branch freshness, TLS candidate status and CI coverage audit
+
+**Role:** Ka | Independent Architecture & Security Reviewer (CSA)  
+**Title:** Chief Security Architect — Work 28 independent reviewer  
+**Date-time:** 2026-11-23 07:23:38 UTC+07:00  
+**Canonical branch:** `work/28-mcp-tooling-platform`  
+**Scope:** GitHub source/branch/workflow audit; no PC/runtime interaction  
+**Signature:** [KÝ: KA | CSA]
+
+### READ / TRACE
+- Re-read canonical journal (prior blob `a290d5213b9a0b372522632178daee20f22c6bc2`), Work 28 workflow `.github/workflows/work28-mcp-tooling.yml` (blob `8876f1a9096ec54e5a78a073820755087e67ecbf`), grant client, grant model, Execution Host server and grant regression test.
+- Exact canonical blobs:
+  - `execution_host/work28_core_grant_client.py`: `e330d4f3681d3fb142e559f7ee35b21db128be7e`.
+  - `execution_host/work28_grant.py`: `05c082b00a5c38fbdf45950d42211e644f57ed45`.
+  - `execution_host/server.py`: `cfdecca58e6146d067ce0e0c0a0feebac0ebdc83`.
+  - `tests/test_work28_grant.py`: `f30f2a148314b3c3526a62c4193c43219bd89571`.
+- Canonical grant test imports grant binding/model and does not import `HttpCoreGrantSource`; no `tests/test_work28_core_grant_client.py` exists at the tested canonical path. Repository code search returned no matches for `core_grant_https_required`, `core_grant_url_invalid`, or `CoreGrantTransportPolicyTests`. Therefore the TLS candidate tests have not been promoted into canonical CI.
+- The existing workflow explicitly runs `tests/test_work28_grant.py` in Linux and Windows lifecycle jobs, so a properly integrated client transport regression suite can be added to an existing required lane without inventing a new CI workflow.
+- Current canonical grant client still accepts any non-empty URL, attaches an optional Bearer token, and issues GET via `urllib.request.urlopen`; it has no HTTPS-only remote policy, explicit redirect policy, or URL authority validation.
+- The review-only TLS candidate branch `ka/work28-core-grant-transport-tls-20261123` compares to canonical as DIVERGED: 2 commits ahead / 4 behind, with only two modified files (`execution_host/work28_core_grant_client.py`, `tests/test_work28_grant.py`). It remains untested and unmerged. Do not treat its tests as canonical coverage.
+- Vi implementation branches were checked against the canonical branch:
+  - `vi/work28-auto-e2e-integration-20261123`: 0 ahead / 48 behind.
+  - `vi/work28-core-authority-doc-consistency-20261123`: 0 ahead / 19 behind.
+  - `vi/work28-wp1-schema-binding-hardening-20261123`: 0 ahead / 30 behind.
+  - `vi/work28-wp5-core-grant-fail-closed-20261123`: 0 ahead / 40 behind.
+  These refs contain no unique commits relative to the current canonical branch and are stale working refs, not pending code deliveries.
+- Historical recovery branch `auto/work28-vi-wp2-recovery-20261118` compares DIVERGED 24 ahead / 79 behind, with lifecycle/workflow/source/journal changes. It is not a safe merge candidate; do not merge or cherry-pick wholesale.
+- Current GitHub main HEAD observed in the cross-Work trace is `0902cd26518673aa078bb4c7c7899e1e4a95656a`. W17 Entry 053 and GAP Register record exact NOT_FOUND at main for `execution_host/work28_core_grant_client.py`, `execution_host/work28_dispatch.py`, `core/execution_authority/http_server.py`, and `core/execution_authority/authority.py`. Thus the Work 28 implementation is still branch-scoped and not integrated into main. This is not evidence of a deployed service.
+- The latest canonical journal-only commit `829b21e5784a3fec8b07c6fd0f64d56b47dbdf1d` has no associated workflow run. The journal-only change is outside the workflow's code/test path filters; no CI result is claimed for it.
+
+### FINDINGS / DISPOSITION
+1. **W28-KA-WP5-05 — HIGH: canonical transport regression coverage absent.** The known remote-HTTP/Bearer-token exposure remains in canonical source and is not covered by canonical tests.
+2. **W28-KA-GOV-06 — P1: stale Vi working refs.** Four named Vi refs are behind canonical and have no unique commits. Implementation ownership must continue from a fresh branch based on current canonical HEAD; do not assume old branch names represent active delivery.
+3. **W28-KA-GOV-07 — P1: Work 28 remains branch-only.** Main does not contain the inspected W28 grant/Core authority source paths. Branch CI is not main integration, and neither proves runtime deployment.
+4. The TLS review candidate is a reference for Vi to independently inspect, not an approved patch. Ka has not modified canonical source or promoted the candidate.
+
+### REQUIRED NEXT ACTIONS
+- Vi: create/refresh a clean implementation branch from current `work/28-mcp-tooling-platform`; port the reviewed URL policy only after independently inspecting the candidate; add tests for HTTPS remote acceptance, remote HTTP rejection before network I/O, loopback HTTP development allowance, invalid URL/userinfo/query/fragment/port rejection, and credential-safe redirect behavior; run exact-head Linux + Windows CI and provide raw evidence.
+- Vi: reconcile the WP1/WP5/Auto E2E work against current canonical before any implementation claim; close or clearly supersede stale refs with explicit evidence, without force-push or broad cherry-pick.
+- Xu/Core owner: approve a concrete Core↔W28 wire contract before any endpoint adapter or runtime wiring.
+- An: independently reproduce the transport policy tests after a canonical implementation is delivered.
+- Ka: re-review exact diff, redirect behavior, error handling, and the final exact-head CI evidence.
+- PC-dependent provenance remains queued until Vinh reports PC availability. No PC command is being requested now.
+
+**STATUS:** CANONICAL TLS EXPOSURE STILL OPEN / TRANSPORT TEST COVERAGE MISSING / TLS PATCH CANDIDATE UNTESTED / VI WORKING REFS STALE / W28 NOT IN MAIN / LIVE PC PROVENANCE PENDING / EXECUTION GATE CLOSED / NOT RELEASED.
