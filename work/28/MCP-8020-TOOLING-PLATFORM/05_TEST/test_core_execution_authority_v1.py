@@ -170,7 +170,7 @@ class AuthorityTests(unittest.TestCase):
         grant = self.authority.issue_grant("mcp8020", "W28", "pytest_run", capability=CAPABILITY)
         self.authority.revoke_grant(grant["grant_id"])
         with self.assertRaises(PermissionError):
-            self.authority.record_run(grant["grant_id"], source_sha256="a", exit_status="PASS",
+            self.authority.record_run(grant["grant_id"], source_sha256="a" * 64, exit_status="PASS",
                                       output_refs=[], evidence_refs=["e"], handoff_ids=[])
         with self.assertRaises(LookupError):
             self.authority.record_run("GRANT-nope", source_sha256="a", exit_status="PASS",
