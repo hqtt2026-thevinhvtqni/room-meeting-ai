@@ -408,3 +408,12 @@ W10 remains the unified Computer Agent / Computer Provider. The existing Playwri
 - Execution/read-back log: NHAT_KY_THI_CONG_W10.md, entries W10-XU-AGENT-DESKTOP-DESIGN-UPDATE-20261123-01 and its read-back verification entry.
 
 D0 DOCUMENTED; D1–D6 NOT STARTED. Dependency install, runtime, tests and benchmark NOT RUN. No source code or LOCKED contract changed. W10 API remains loopback-only; W24/W112/W14/W113 ownership and W10 port 3010 boundary remain unchanged. Work remains ACTIVE — NOT RELEASED.
+
+
+## D1 — Desktop Adapter contract and threat model (2026-11-23)
+
+- Capability contract: 03_ARCHITECTURE/DESKTOP_ADAPTER_CAPABILITY_CONTRACT_DRAFT.md — DRAFT 0.1.0, review required; not locked.
+- Threat model: 03_ARCHITECTURE/DESKTOP_ADAPTER_THREAT_MODEL_DRAFT.md — DRAFT 0.1.0, review required.
+- Consultation brief: 06_EVIDENCE/W10_D1_REVIEW_BRIEF_20261123.md — prepared for Ka, Cla, Qw and Nu.
+- D1 status: DRAFTED / READY FOR TECHNICAL CONSULTATION. Reviews not yet received; D1 is not PASS or LOCKED.
+- D2 Windows pilot remains NOT AUTHORIZED / NOT STARTED. No install, code, runtime, host access, permission changes or tests performed.
