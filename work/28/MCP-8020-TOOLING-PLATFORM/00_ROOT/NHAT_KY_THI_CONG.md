@@ -3332,3 +3332,47 @@ W1111 PR #48 candidate:
 **STATUS:** W52 GITHUB IMPLEMENTATION NOT VERIFIED; AUTHENTICATED ACK NOT VERIFIED; DOC-W28-078 CANDIDATE; EXECUTION GATE CLOSED; NOT RELEASED.
 
 **Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-084 — PR #74 G0–G7 acceptance dependency matrix
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 15:06 +07:00  
+**Priority:** P0 — release gate traceability
+
+### 1. BUILD
+
+- Created supporting evidence map: `06_EVIDENCE/EV-W28-20261123-001_ACCEPTANCE_DEPENDENCY_MATRIX_P0.md`.
+- Evidence ID: EV-W28-20261123-001; Priority P0; Read order 32.
+- Commit: `f1c6de47eec9ada9b93ea635484655cf6b5fc5e8`.
+- Matrix maps PR #74 gates G0–G7 to owner, required proof, current bounded evidence and disposition.
+- Updated `00_ROOT/WORK_DOCUMENT_REGISTER.md` to register DOC-W28-078 as a candidate architecture supplement; commit `44aa98a926a2317ee473c7cb4308fdb448bc62c8`.
+
+### 2. DECIDE / CURRENT GATE
+
+- G0 source provenance: BLOCKED.
+- G1 service/Agent identity and runtime attestation: BLOCKED.
+- G2 W52 dispatch and recipient-authenticated ACK: BLOCKED.
+- G3 Core :8000 grant authority and durable ledger: BLOCKED.
+- G4 W14 sole Host / HostPort / containment: BLOCKED.
+- G5 provider: NOT AUTHORIZED / BLOCKED (W10 locked).
+- G6 W092/W113 event projection: NOT VERIFIED.
+- G7 independent real E2E: BLOCKED.
+- PR #76 CI #438 remains a valid candidate-local CI PASS only; it does not close any of the live cross-Work gates.
+
+### 3. LIMITATIONS
+
+- Matrix is source/documentation synthesis, not a new test or owner approval.
+- No external Work source/runtime, credentials, endpoint, PC process or provider was changed or invoked.
+- No CI is claimed for documentation-only files. No merge, deployment, release or acceptance.
+
+### 4. NEXT
+
+1. Read back DOC-W28-078, EV-W28-20261123-001, document register and journal.
+2. Keep PR #76 DRAFT and Execution Gate CLOSED.
+3. Continue safe candidate-local schema/negative-test work only; no guessed routes or cross-Work source mutation.
+
+**STATUS:** G0–G7 DEPENDENCY MATRIX RECORDED; ALL LIVE INTEGRATION GATES REMAIN BLOCKED / NOT VERIFIED; WORK 28 NOT RELEASED.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
