@@ -3444,3 +3444,39 @@ W1111 PR #48 candidate:
 **STATUS:** CI #457 CANCELLED / NO JOB LOG; TESTS EXPANDED; EXACT-HEAD CI PENDING; NO ACCEPTANCE.
 
 **Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-087 — Exact-head PR CI #460 cancelled without jobs
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 15:14 +07:00  
+**Priority:** P0 — exact-head verification
+
+### 1. CI evidence
+
+- Test commit: `4435b7af9b01a699191374a8313f0bb608394523`.
+- PR workflow #460 / run ID `45133829941`.
+- GitHub run metadata: event `pull_request`; head branch `ka/work28-security-hardening-20261123`; exact head SHA matches test commit; status COMPLETED; conclusion CANCELLED.
+- Latest-attempt jobs endpoint returned an empty list. No job logs or test counts exist.
+- Prior run #457 / `45133711834` was also CANCELLED with an empty jobs list.
+- The available GitHub Actions connector exposes job/run readback and failed-job rerun, but no workflow-dispatch action; cancelled runs with no jobs cannot be rerun through the available rerun actions.
+- No cancellation cause is asserted because the run payload/jobs did not expose one.
+
+### 2. Disposition
+
+- CI #460 = CANCELLED / NOT RUN / NO TEST RESULT.
+- Schema source and test file are persisted and readback is pending at this entry.
+- Do not label schema suite PASS; no local test run is claimed.
+- This does not change previous CI #438 evidence for the earlier source candidate; it only means the new schema test suite lacks exact-head CI evidence.
+
+### 3. Next
+
+- Preserve the candidate test source and await an executable workflow run/approved local runner availability.
+- No direct PC request: Vinh will report when the PC is ready.
+- Continue source-level review and documentation only; no production wiring.
+- PR #76 remains OPEN / DRAFT / UNMERGED; Execution Gate CLOSED; Work 28 NOT RELEASED.
+
+**STATUS:** CI #460 CANCELLED / NO JOBS / NO PASS; EXACT-HEAD SCHEMA TESTS NOT VERIFIED.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
