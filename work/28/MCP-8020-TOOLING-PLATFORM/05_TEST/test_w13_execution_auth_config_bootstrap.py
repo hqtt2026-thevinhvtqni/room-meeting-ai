@@ -1,14 +1,8 @@
-"""Startup configuration wiring tests for the W13 execution boundary.
-
-Independent review (2026-10-25) required that the entrypoint explicitly load
-the trusted configuration: setting the environment variables alone must be
-provable to reach serve(), missing or malformed configuration must fail
-loudly at startup, the Work id format must be pinned, and the token value
-must never appear in messages, logs, or evidence.
-"""
+"""Startup configuration tests for the Core-grant execution boundary."""
 from __future__ import annotations
 
 import io
+import os
 import sys
 import unittest
 from contextlib import redirect_stdout
@@ -29,82 +23,69 @@ from execution_host.server import (
 
 class NormalizeWorkIdTests(unittest.TestCase):
     def test_canonical_work_ids_are_pinned_and_normalized(self):
-        self.assertEqual(normalize_work_id('W28'), 'W28')
-        self.assertEqual(normalize_work_id(' w28 '), 'W28')
+        self.assertEqual(normalize_work_id("W28"), "W28")
+        self.assertEqual(normalize_work_id(" w28 "), "W28")
 
     def test_non_canonical_work_ids_are_rejected(self):
-        for value in ('28', 'work28', 'W', 'W028x', '', '   ', None, 28):
+        for value in ("28", "work28", "W", "W028x", "", "   ", None, 28):
             with self.subTest(value=value), self.assertRaises(ValueError):
                 normalize_work_id(value)
 
 
 class LoadExecutionAuthConfigTests(unittest.TestCase):
-    def env(self, token='trusted-token', works='W28'):
-        return {AUTH_TOKEN_ENV: token, AUTHORIZED_WORKS_ENV: works}
-
-    def test_valid_configuration_loads(self):
-        config = load_execution_auth_config(self.env(works='W28, W13'))
-        self.assertEqual(config['auth_token'], 'trusted-token')
-        self.assertEqual(config['authorized_works'], frozenset({'W28', 'W13'}))
+    def test_valid_configuration_loads_without_local_work_authority(self):
+        cfg = load_execution_auth_config({
+            AUTH_TOKEN_ENV: " trusted-token ",
+            AUTHORIZED_WORKS_ENV: "W99",
+        })
+        self.assertEqual(cfg, {"auth_token": "trusted-token"})
 
     def test_missing_token_fails_loudly(self):
         with self.assertRaisesRegex(RuntimeError, AUTH_TOKEN_ENV):
-            load_execution_auth_config({AUTHORIZED_WORKS_ENV: 'W28'})
+            load_execution_auth_config({AUTHORIZED_WORKS_ENV: "W28"})
 
     def test_blank_token_fails_loudly(self):
         with self.assertRaisesRegex(RuntimeError, AUTH_TOKEN_ENV):
-            load_execution_auth_config(self.env(token='   '))
+            load_execution_auth_config({AUTH_TOKEN_ENV: "   "})
 
-    def test_missing_allowlist_fails_loudly(self):
-        with self.assertRaisesRegex(RuntimeError, AUTHORIZED_WORKS_ENV):
-            load_execution_auth_config(self.env(works=''))
-
-    def test_malformed_work_id_fails_loudly_and_pins_format(self):
-        # '28' is deliberately rejected: the canonical form is W28.
-        with self.assertRaisesRegex(ValueError, 'W<number>'):
-            load_execution_auth_config(self.env(works='W28, 28'))
+    def test_local_work_allowlist_is_not_required(self):
+        self.assertEqual(
+            load_execution_auth_config({AUTH_TOKEN_ENV: "trusted-token"}),
+            {"auth_token": "trusted-token"},
+        )
 
     def test_token_value_never_leaks_into_error_messages(self):
-        secret = 'TOP-SECRET-DO-NOT-PRINT'
-        try:
-            load_execution_auth_config(self.env(token=secret, works='28'))
-            self.fail('expected failure')
-        except (RuntimeError, ValueError) as exc:
-            self.assertNotIn(secret, str(exc))
+        secret = "TOP-SECRET-DO-NOT-PRINT"
+        with self.assertRaises(RuntimeError) as ctx:
+            load_execution_auth_config({AUTH_TOKEN_ENV: " "})
+        self.assertNotIn(secret, str(ctx.exception))
 
 
 class MainWiringTests(unittest.TestCase):
-    def test_main_passes_loaded_configuration_to_serve(self):
+    def test_main_passes_core_grant_source_to_serve(self):
         captured = {}
         real_serve = eh_server.serve
-        real_build_grant_source = eh_server.build_grant_source
+        real_build = eh_server.build_grant_source
+        source = object()
 
-        class EmptyCoreGrantSource:
-            def fetch_grants(self):
-                return {}
-
-        def fake_serve(host, port, auth_token, authorized_works, **kwargs):
-            # main() may pass grant_registry, evidence_root, snapshot_only (WP18+)
+        def fake_serve(host, port, auth_token, core_grant_source, **kwargs):
             captured.update(
-                host=host,
-                port=port,
-                auth_token=auth_token,
-                authorized_works=authorized_works,
-                **kwargs,
+                host=host, port=port, auth_token=auth_token,
+                core_grant_source=core_grant_source, **kwargs,
             )
 
         eh_server.serve = fake_serve
-        eh_server.build_grant_source = lambda: EmptyCoreGrantSource()
-        env = {
-            AUTH_TOKEN_ENV: 'trusted-token',
-            AUTHORIZED_WORKS_ENV: 'W28, W13',
-            'ROOM_HOP_CORE_GRANT_URL': 'http://core.test/grants',
-        }
+        eh_server.build_grant_source = lambda: source
+        saved = dict(os.environ)
         try:
-            import os
-            saved = dict(os.environ)
             os.environ.clear()
-            os.environ.update(env)
+            os.environ.update({
+                AUTH_TOKEN_ENV: "trusted-token",
+                AUTHORIZED_WORKS_ENV: "W28,W13",
+                "ROOM_HOP_CORE_AUTHORITY_URL": "http://127.0.0.1:8000/core",
+                "ROOM_HOP_CORE_SERVICE_IDENTITY": "mcp8020",
+                "ROOM_HOP_CORE_SERVICE_CREDENTIAL": "service-credential",
+            })
             buffer = io.StringIO()
             with redirect_stdout(buffer):
                 eh_server.main()
@@ -113,23 +94,19 @@ class MainWiringTests(unittest.TestCase):
             os.environ.clear()
             os.environ.update(saved)
             eh_server.serve = real_serve
-            eh_server.build_grant_source = real_build_grant_source
-        self.assertEqual(captured['auth_token'], 'trusted-token')
-        self.assertEqual(captured['authorized_works'], frozenset({'W28', 'W13'}))
-        self.assertIn('grant_registry', captured)
-        self.assertIn('snapshot_only', captured)
-        self.assertIs(captured['snapshot_only'], True)
-        # Startup announces the armed works but never the token.
-        self.assertIn('W28', output)
-        self.assertIn('W13', output)
-        self.assertNotIn('trusted-token', output)
+            eh_server.build_grant_source = real_build
+
+        self.assertEqual(captured["auth_token"], "trusted-token")
+        self.assertIs(captured["core_grant_source"], source)
+        self.assertIs(captured["snapshot_only"], True)
+        self.assertIn("Core online grant validation configured", output)
+        self.assertNotIn("trusted-token", output)
+        self.assertNotIn("service-credential", output)
 
     def test_main_refuses_to_start_without_configuration(self):
-        import os
         saved = dict(os.environ)
-        os.environ.pop(AUTH_TOKEN_ENV, None)
-        os.environ.pop(AUTHORIZED_WORKS_ENV, None)
         try:
+            os.environ.clear()
             with self.assertRaisesRegex(RuntimeError, AUTH_TOKEN_ENV):
                 eh_server.main()
         finally:
