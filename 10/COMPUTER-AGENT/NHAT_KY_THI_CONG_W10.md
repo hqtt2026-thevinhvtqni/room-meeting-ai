@@ -1668,3 +1668,16 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - **Not performed:** no agent dispatch/consultation execution; no dependency install; no code/source/test/runtime/MCP registration; no Windows host access or permission change; no benchmark; no GitHub sync yet.
 - **Next:** verify index read-back, synchronize Sandbox↔existing W10 GitHub branch, then obtain technical reviews before revising and submitting the canonical D1 package to Owner for lock decision.
 - **Ký:** Xu | AI-01
+
+
+## W10-XU-D1-SANDBOX-GITHUB-SYNC-20261123-01 — 2026-11-23 (UTC+07:00)
+
+- Target: hqtt2026-thevinhvtqni/room-meeting-ai, branch work/10-computer-agent-mirror. No main merge.
+- Files synchronized: capability contract draft, threat model draft, D1 review brief, architecture README, Work Manifest, canonical Biên bản and canonical Nhật ký (7 files).
+- Independent comparison: all 7 Sandbox read-probe contents exactly match the corresponding GitHub branch files.
+- GitHub commit sequence: 4a06e04 contract; 3cabe4e threat model; 6ae1d23 review brief; b59abd2 architecture README; af12610 manifest; b12bc2b Biên bản; ae5fb49 journal.
+- Review state remains DRAFT / READY FOR TECHNICAL CONSULTATION. No reviewer responses received.
+- No source code, dependency, runtime, MCP, Windows host, permission or test operation performed.
+- No PR, merge to main or release.
+- Result: Sandbox ↔ branch documentation sync PASS for the 7 files. D1 itself is not PASS/LOCKED. Work 10 remains ACTIVE — NOT RELEASED.
+- Ký: Xu | AI-01
