@@ -19,7 +19,7 @@ def readiness_report(
         "grant_binding": "PARTIAL",
         "evidence_seal": "PASS",
         "evidence_readback_config": "PASS" if evidence_root_configured else "PARTIAL",
-        "grants_loaded": "PASS" if grant_count > 0 else "PARTIAL",
+        "static_grant_cache": "IGNORED" if grant_count > 0 else "EMPTY",
         "snapshot_only_mode": "PASS" if snapshot_only else "INFO",
         "mcp_execution_tools": "CLOSED",
         "os_isolation": "NOT_VERIFIED",
