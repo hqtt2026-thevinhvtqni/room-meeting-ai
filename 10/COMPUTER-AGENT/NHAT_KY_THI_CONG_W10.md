@@ -1721,3 +1721,14 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - Trạng thái: Tài liệu D1 revised draft, NEEDS REVIEW; chưa PASS/LOCKED. D2 NOT AUTHORIZED / NOT STARTED.
 - Bước tiếp: Read-probe cả bốn file và journal; nếu đọc lại xác nhận nội dung thì sync đúng branch work/10-computer-agent-mirror, sau đó kiểm tra lại GitHub. Tiếp tục tìm kênh gửi/nhận review xác thực.
 - KÝ: Xu | AI-01
+
+## W10-XU-D1-REVISION-SANDBOX-GITHUB-SYNC-20261123-01 — 2026-11-23 21:36 (UTC+07:00)
+
+- Target: hqtt2026-thevinhvtqni/room-meeting-ai, existing branch work/10-computer-agent-mirror; no main merge.
+- Files synchronized from Sandbox to branch: capability contract, threat model, D1 review brief, canonical Biên bản, canonical Nhật ký (5 files).
+- Method: Sandbox read-probe with status=ok; fetch current GitHub blob SHA; update sequentially; then fetch back each file for exact text comparison.
+- Commits: capability contract a484fdd607c6482c558352166f86f95b3a1d88ba; threat model d0a9f3033f5b2fda01c95213da5be8582e344619; review brief 542455f5ad3fae749d52487a06e3e60cb94a87cb; Biên bản 9e8ac73160cd15a0cfdff08e7724f5ccdfaf3461; Nhật ký c6ce0c5b1d07edf80fc3c33423639ae962964b6f (journal update containing this final sync record is to be synchronized immediately after this entry).
+- Read-back markers confirmed in Sandbox for all five files. Exact GitHub parity check is pending this final journal update.
+- No reviewer dispatch/response, source code, dependency installation, runtime, MCP registration, host operation, test, benchmark, D2, PR, merge or release.
+- Disposition: documentation revision prepared; D1 remains REVISED DRAFT / NEEDS INDEPENDENT REVIEW, NOT PASS / NOT LOCKED. D2 NOT AUTHORIZED / NOT STARTED.
+- KÝ: Xu | AI-01
