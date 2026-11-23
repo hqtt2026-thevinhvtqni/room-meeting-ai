@@ -54,17 +54,18 @@ class LoadAuthConfigTests(unittest.TestCase):
     def test_loads(self):
         env = {
             AUTH_TOKEN_ENV: " deploy-token ",
-            AUTHORIZED_WORKS_ENV: "w28, W12",
+            AUTHORIZED_WORKS_ENV: "W99",
         }
         cfg = load_execution_auth_config(env)
-        self.assertEqual(cfg["auth_token"], "deploy-token")
-        self.assertEqual(cfg["authorized_works"], frozenset({"W28", "W12"}))
+        self.assertEqual(cfg, {"auth_token": "deploy-token"})
 
-    def test_missing_token_or_works(self):
+    def test_missing_token_is_blocked_but_local_work_allowlist_is_not_required(self):
         with self.assertRaises(RuntimeError):
             load_execution_auth_config({AUTHORIZED_WORKS_ENV: "W28"})
-        with self.assertRaises(RuntimeError):
-            load_execution_auth_config({AUTH_TOKEN_ENV: "t"})
+        self.assertEqual(
+            load_execution_auth_config({AUTH_TOKEN_ENV: "t"}),
+            {"auth_token": "t"},
+        )
 
 
 if __name__ == "__main__":
