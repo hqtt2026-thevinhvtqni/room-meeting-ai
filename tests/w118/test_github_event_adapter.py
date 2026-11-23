@@ -71,12 +71,12 @@ def push_payload(*, branch="work/W118/task-W118-TASK-016", task_id="W118-TASK-01
     }
 
 
-def workflow_payload(*, branch="work/W118/task-W118-TASK-016", head_sha="a" * 40, name=WORKFLOW, conclusion="success"):
+def workflow_payload(*, branch="work/W118/task-W118-TASK-016", head_sha="a" * 40, name=WORKFLOW, conclusion="success", run_attempt=1):
     return {
         "repository": {"full_name": REPOSITORY},
         "workflow_run": {
             "name": name, "head_branch": branch, "head_sha": head_sha,
-            "id": 1234, "run_attempt": 1, "conclusion": conclusion,
+            "id": 1234, "run_attempt": run_attempt, "conclusion": conclusion,
             "html_url": "https://github.com/example/repo/actions/runs/1234",
         },
     }
@@ -201,6 +201,18 @@ class GitHubEventAdapterTests(unittest.TestCase):
                 fake, core_task=core_task(), expected_repository=REPOSITORY, allowed_ci_workflow=WORKFLOW
             )
 
+
+    def test_workflow_run_rejects_non_hex_sha(self):
+        for sha in ("g" * 40, "a" * 39, "a" * 41):
+            verified = delivery("workflow_run", workflow_payload(head_sha=sha))
+            with self.subTest(sha=sha), self.assertRaises(GitHubEventAdapterError):
+                normalize_github_delivery(verified, core_task=core_task(source_bindings=[]), expected_repository=REPOSITORY, allowed_ci_workflow=WORKFLOW)
+
+    def test_workflow_run_rejects_non_integer_or_nonpositive_attempt(self):
+        for attempt in (True, 1.5, "1", 0, -1, None):
+            verified = delivery("workflow_run", workflow_payload(run_attempt=attempt))
+            with self.subTest(attempt=attempt), self.assertRaises(GitHubEventAdapterError):
+                normalize_github_delivery(verified, core_task=core_task(source_bindings=[]), expected_repository=REPOSITORY, allowed_ci_workflow=WORKFLOW)
 
 if __name__ == "__main__":
     unittest.main()
