@@ -1653,3 +1653,18 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - The updated journal content was fetched back from GitHub and compared exactly with Sandbox: PASS.
 - This correction supersedes the earlier branch-tip value bbccec54aec8fe97cb1d7a984d401f772dc6e1c8 as the final HEAD; that SHA remains the immediately preceding journal commit.
 - **KÝ:** Xu | AI-01
+
+
+## W10-XU-D1-DRAFT-20261123-01 — 2026-11-23 (UTC+07:00)
+
+- **Phase:** D1 — Desktop Adapter Capability Contract + Threat Model.
+- **Method:** READ existing LOCKED contracts and PC Host Capability Contract → TRACE existing W10/W24/W112/W14/W113 boundaries → DESIGN separate draft → WRITE → READ-BACK.
+- **Read sources:** ACTION_CONTRACT.md, WORKFLOW_CONTRACT.md, SAFETY_POLICY.md, PC_HOST_CAPABILITY_CONTRACT.md, current W10 Biên bản and Nhật ký.
+- **Created:** 03_ARCHITECTURE/DESKTOP_ADAPTER_CAPABILITY_CONTRACT_DRAFT.md; 03_ARCHITECTURE/DESKTOP_ADAPTER_THREAT_MODEL_DRAFT.md; 06_EVIDENCE/W10_D1_REVIEW_BRIEF_20261123.md.
+- **Updated:** 03_ARCHITECTURE/README.md and 00_ROOT/WORK_MANIFEST.md.
+- **Read-back:** all three created documents returned status=ok; contract 11,683 chars; threat model 5,726 chars; review brief 2,574 chars. Required draft contents and terminal disposition present. Read-back of the two updated index files pending.
+- **Review plan:** consultation brief prepared for Ka (architecture/security), Cla (implementation feasibility), Qw (QE/negative tests), Nu (independent end-to-end risk). No reviews have been received or represented as approvals.
+- **Gate:** D1 = DRAFTED / READY FOR CONSULTATION, NOT PASS, NOT LOCKED. D2 = NOT AUTHORIZED / NOT STARTED.
+- **Not performed:** no agent dispatch/consultation execution; no dependency install; no code/source/test/runtime/MCP registration; no Windows host access or permission change; no benchmark; no GitHub sync yet.
+- **Next:** verify index read-back, synchronize Sandbox↔existing W10 GitHub branch, then obtain technical reviews before revising and submitting the canonical D1 package to Owner for lock decision.
+- **Ký:** Xu | AI-01
