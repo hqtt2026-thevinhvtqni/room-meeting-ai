@@ -3067,3 +3067,66 @@ Unit/regression job also confirms test_main_passes_loaded_configuration_to_serve
 **STATUS:** PR #76 CANDIDATE CI #438 PASS / IMMUTABLE ARTIFACT PASS; HTTP EXECUTION FAIL-CLOSED / BLOCKED BY DESIGN; WP5-03 HIGH / OPEN; EXECUTION GATE CLOSED; NOT RELEASED.
 
 **Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-078 — Core Execution Authority V1.3 candidate contract and ownership boundary
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 14:40 +07:00  
+**Work:** Work 28 — MCP-8020-TOOLING-PLATFORM  
+**Priority:** P0 — authorization boundary / integration blocker  
+**Branch:** `ka/work28-security-hardening-20261123`  
+**PR:** #76 — OPEN / DRAFT / UNMERGED
+
+### 1. READ / TRACE
+
+Read back exact candidate-branch sources:
+- `WORK_MANIFEST.md` blob `3aa82147c525f6c8b3befd726fb91d3489fc578d`.
+- `core/execution_authority/authority.py` blob `bfb052fed0fde69767dd219f17a0b14ae6383560`.
+- `core/execution_authority/http_server.py` blob `6363c277ce410d3f5465f449b730199e06e5024c`.
+- `core/execution_authority/store.py` blob `a628dc578c68c05bb875318d1b74528b26f0e4eb`.
+- Architecture Decision V2 blob `3720ee455e5bb8e07de1bc4b4756615506ed5799`.
+
+Confirmed implementation/design gaps:
+1. V1.2 authority HTTP server is a separate process surface (default port 8001), not a route mounted into the existing Core :8000 composition. This conflicts with Core :8000 as sole authority unless ownership/composition is reconciled.
+2. Grant data currently binds Work roots and purpose but does not bind assignment, registered operation, entry path, exact source digest, W70 policy version/snapshot, gate version/snapshot or exact W14 Host audience.
+3. A token validation method exists in the candidate package, but no evidence shows it is integrated into the approved W14 Host online execution path.
+4. Current run record is not a complete event protocol: no request correlation/idempotency key, ordered event sequence, start ACK, cancellation/descendant-exit proof or terminal-event invariant.
+5. Current JSONL append/fsync store is append-only at the API surface, but does not implement a verified hash chain, process-safe concurrent append protocol, corruption/truncation detection or explicit read-after-write proof.
+6. The Work Manifest requires Core :8000 sole authority, W14 sole Host, W70 policy and owner approval before release/integration. These are binding boundaries, not optional implementation details.
+
+### 2. DECIDE
+
+- Create a versioned V1.3 contract candidate first; do not wire or deploy it.
+- All authority endpoints, if approved, must be mounted inside the existing Core :8000 application composition. A standalone :8001 authority service is not conforming.
+- W14 remains the sole execution Host. Work28 Host code cannot claim W14 ownership.
+- Core must derive identity, Work, assignment, operation, source binding and execution context; caller WorkContext is prohibited.
+- W70 freshness/gate snapshot, online grant validation, revocation, event ACK, idempotency and durable ledger readback are mandatory.
+- Preserve fail-closed behavior. No guessed Core/W70/W14 API, no static grant fallback, no PC test until Vinh reports PC ready.
+
+### 3. BUILD
+
+- Added `work/28/MCP-8020-TOOLING-PLATFORM/03_ARCHITECTURE/DOC-W28-078_CORE_EXECUTION_AUTHORITY_CONTRACT_V1_3_CANDIDATE.md`.
+- Document ID DOC-W28-078; Priority P0; status CANDIDATE — NOT APPROVED / NOT WIRED / NOT DEPLOYED.
+- Commit: `b73970b350a34a3c16f98090553c2aa0d152c462`.
+- Contract defines grant issue, Host online validation, Core-derived execution context, run lifecycle/events/ACK, idempotency, cancellation/close semantics, revocation, error taxonomy, evidence integrity and 13 verification cases.
+- Explicitly lists unresolved Core/W14/W70 ownership and provenance decisions; no implementation endpoints are invented.
+
+### 4. VERIFY / LIMITATION
+
+- GitHub create-file operation returned commit `b73970b350a34a3c16f98090553c2aa0d152c462`.
+- This is document persistence evidence only. File readback, journal append/readback and CI are still pending at this journal checkpoint.
+- No source code, Core :8000 route, W14 Host, runtime, or execution gate was modified.
+- No tests or live E2E were run. No acceptance is claimed.
+
+### 5. NEXT
+
+1. Read back DOC-W28-078 and append this entry to the same candidate-branch canonical journal.
+2. Trace Core main, W1111 PR #48 and PR #74 source provenance plus W14/W70 contracts before selecting any integration target.
+3. Convert the contract into executable schemas/fixtures and focused negative tests only after source ownership is established.
+4. Keep PR #76 DRAFT; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED.
+
+**STATUS:** DOC-W28-078 PERSISTED / READBACK PENDING; CORE AUTHORITY INTEGRATION BLOCKED; EXECUTION GATE CLOSED; NOT RELEASED.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
