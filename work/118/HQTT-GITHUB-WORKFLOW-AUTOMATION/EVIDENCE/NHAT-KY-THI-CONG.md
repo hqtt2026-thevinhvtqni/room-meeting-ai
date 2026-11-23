@@ -2466,3 +2466,17 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - Artifact ID `14869914062`, size 686 bytes, SHA-256 `d89c9c583ae2aea7c4eea71da1b5498300d5e9382212a5e26d64f3922f99b68b`, present and unexpired at metadata readback.
 - Handoff-request, ACK-claim and review-observation capture jobs were SKIPPED. Source-binding step was SKIPPED because this is PR-triggered/push-only validation. This is contract/unit CI only; no Runtime Auto E2E, Core event dispatch, Task-level live source binding or cross-Work runtime proof.
 - PR #68 remains OPEN / UNMERGED; formal reviews 0; inline review threads 0 at readback. Xu review PENDING; Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED.
+
+
+### Entry 072 — current Xu review-routing freshness reconciliation
+
+- **Priority:** 01 — P0 — Ensure the independent reviewer is given the exact current PR revision and corresponding CI evidence.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-24 07:05 +07:00.
+- **Method:** Read-only comparison of current branch HEAD, PR #68, CI Run #1061, Task Register, STATUS, RR-118-001 and canonical review checklist/release-gate routing. No source or workflow implementation change.
+- **Finding W118-ROUTING-002:** RR-118-001's previous tail still pointed to older HEAD/CI snapshots and its current overlay did not consolidate Entries 067–071 or the latest Task/runtime disposition. The PR description linked to RR-118-001 as current review routing, so Xu could receive stale revision evidence despite the PR body being fresher.
+- **Correction:** Appended a P0 authoritative routing overlay to RR-118-001 binding review to PR #68, exact source HEAD `4466f5de6cdc5eaac207cb74171743021d907669`, PR Run #1061, 102 contract tests, artifact digest, skipped event/source-binding jobs, Entries 065/067/068/069/071 and all remaining external authority/runtime blockers. Historical records remain intact.
+- **CI evidence referenced:** PR Run #1061 / `45284134206`, validate job `138075914400`, SUCCESS; raw log 102 tests in 0.210s. Artifact `14870863215`, size 686 bytes, SHA-256 `0c375c8707174d73ac24c4b4e7c37c5f62a8c8a57e5acff7735bd0ffbddb1cd7`, present/unexpired at readback. Source-binding, handoff, ACK and review-observation capture were SKIPPED. Contract/unit CI only.
+- **Disposition:** Routing overlay corrected; exact HEAD changed only by documentation commits, so a new exact-head PR CI run is required before claiming current-head CI PASS. Xu review PENDING; Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED.
+- **Scope and controls:** Implementation/workflow freeze remains. No Core/W102/W14/W70/W33 mutation, no runtime/secret/permission/branch-protection change, no Main merge, rebase, force-push, PR close or release.
+- **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-24 07:05 +07:00; Result: stale review-routing metadata corrected; reviewer now has an exact-head evidence overlay.
