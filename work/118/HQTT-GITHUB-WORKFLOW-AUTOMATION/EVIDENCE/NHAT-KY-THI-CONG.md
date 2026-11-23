@@ -2543,3 +2543,15 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - **Disposition:** Five findings are **REMEDIATED AT SOURCE/CONTRACT-TEST LEVEL — PENDING XU INDEPENDENT RE-REVIEW**. No finding is self-approved. Runtime readiness remains BLOCKED; Runtime Auto E2E NOT RUN; product acceptance NOT ACCEPTED; release NOT AUTHORIZED.
 - **Governance:** PR #68 remains OPEN / UNMERGED. No Main merge, rebase, force-push, PR close, release, branch-protection/permission/secret change, runtime mutation or external Work/Sandbox mutation.
 - **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-24 06:33 +07:00; Result: bounded remediation for Xu findings 067, 069, 068, 071 and 065 implemented with adversarial negative tests; exact implementation revision CI PASS 117 tests; handed back for Xu re-review.
+
+#### Entry 074 — final exact-head verification addendum
+
+- **Priority:** P0 — bind remediation acceptance evidence to the exact source/test/workflow revision.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-24 06:35 +07:00.
+- **Final remediation source/test/workflow HEAD:** `9d38a3ee47bb79f83268403f4e2344710fa43450`.
+- **Exact-head PR CI:** Run #1118 / ID `45290104435`, event `pull_request`, validate job `138096352785`, SUCCESS; raw log **118 tests in 0.211s**. Artifact ID `14873506858`, size 686 bytes, SHA-256 `ebfb267251fedc3f4329065d272f6f48c370e9b4c7782681388d695cbfb44415`, not expired at readback. Push Run #1119 also SUCCESS on the same HEAD.
+- **Final hardening after initial 117-test run:** diagnostics planner now defaults `scan_complete=False` so every caller must explicitly prove completeness; workflow label creation was moved after the complete scan and successful plan, so an incomplete/ambiguous scan exits before label or Issue mutation; workflow contract test verifies ordering. The final exact-head suite is 118 tests.
+- **Source binding boundary:** aggregate branch remains `UNBOUND_LEGACY_BRANCH`; PR event source-binding step is SKIPPED (push-only). Handoff-request, ACK-claim and review-observation capture jobs remain SKIPPED. No Task-level source binding or Runtime Auto E2E claim.
+- **Disposition:** Five Xu findings 067, 069, 068, 071 and 065 are REMEDIATED AT SOURCE/CONTRACT-TEST LEVEL — PENDING XU INDEPENDENT RE-REVIEW. Architecture/authority and runtime gates remain unchanged; no self-approval.
+- **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-24 06:35 +07:00; Result: final strictness hardening completed and 118/118 exact-head PR contract tests PASS; submitted for Xu independent re-review.
