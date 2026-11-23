@@ -1681,3 +1681,16 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - No PR, merge to main or release.
 - Result: Sandbox ↔ branch documentation sync PASS for the 7 files. D1 itself is not PASS/LOCKED. Work 10 remains ACTIVE — NOT RELEASED.
 - Ký: Xu | AI-01
+
+## W10-XU-D1-INDEPENDENT-PRE-REVIEW-20261123-01 — 2026-11-23
+
+- **Người thực hiện:** Xu — AI-01.
+- **Phạm vi:** Đọc lại D1 capability contract, threat model, review brief, PC Host Capability Contract và ba hợp đồng browser LOCKED; thực hiện document-level pre-review.
+- **Phương pháp:** READ → TRACE → ANALYZE → REVIEW; đối chiếu ranh giới W24/W112/W14/W113, ProcessSupervisor, authorization, safety classes, observation/ref lifecycle, verification và evidence.
+- **Kết quả:** D1 là nền tảng thiết kế thận trọng, giữ riêng Browser Adapter, observation-bound refs, fail-closed, deny S2/S3 và không expose raw CLI/shell. Tuy nhiên chưa đủ điều kiện khóa.
+- **Findings:** P0 F01 authorization grant binding end-to-end; P0 F02 ngăn click có ngữ nghĩa destructive trước side effect; P1 F03 chính sách dedicated interactive session; P1 F04 retention/redaction; P1 F05 backend pin/provenance trước D2; P1 F06 ProcessSupervisor lifecycle; P1 F07 operation/result semantics; P1 F08 threat-to-test traceability; P2 F09 UI content untrusted; P2 F10 platform scope.
+- **Evidence:** COMPUTER-AGENT/06_EVIDENCE/W10_D1_XU_INDEPENDENT_PRE_REVIEW_20261123.md.
+- **Disposition:** D1 NEEDS REVISION — NOT PASS / NOT LOCKED. Đây là review nội bộ của Xu, không thay thế phản biện Ka/Cla/Qw/Nu; không phải security test hay implementation test.
+- **Không thực hiện:** Không sửa source code, không cài dependency, không chạy host/runtime/test, không đăng ký MCP, không benchmark, không D2, không PR/merge/release.
+- **Bước tiếp:** Chỉnh D1 theo F01–F08, bổ sung F09–F10; đồng thời cần kênh agent dispatch có xác thực để nhận ý kiến thật từ bốn reviewer. Sau đó cập nhật Biên bản/Nhật ký chuẩn và trình Owner duyệt.
+- **KÝ:** Xu | AI-01
