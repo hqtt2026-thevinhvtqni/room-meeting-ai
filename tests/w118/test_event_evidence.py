@@ -61,5 +61,24 @@ class Work118EventEvidenceTests(unittest.TestCase):
             )
 
 
+    def test_rejects_boolean_and_float_run_metadata(self):
+        for field, value in (("run_id", True), ("run_id", 1.5), ("run_attempt", False), ("run_attempt", 2.5)):
+            kwargs = dict(event_type="issues", event_id="issue-1", source_commit="a" * 40, run_id=1, run_attempt=1, actor="actor", decision="OBSERVED")
+            kwargs[field] = value
+            with self.subTest(field=field, value=value), self.assertRaises(ValueError):
+                build_event_evidence(**kwargs)
+
+    def test_rejects_string_zero_and_negative_run_metadata(self):
+        for field, value in (("run_id", "1"), ("run_id", 0), ("run_attempt", "1"), ("run_attempt", -1)):
+            kwargs = dict(event_type="issues", event_id="issue-1", source_commit="a" * 40, run_id=1, run_attempt=1, actor="actor", decision="OBSERVED")
+            kwargs[field] = value
+            with self.subTest(field=field, value=value), self.assertRaises(ValueError):
+                build_event_evidence(**kwargs)
+
+    def test_rejects_non_hex_or_non_full_source_commit(self):
+        for sha in ("g" * 40, "a" * 39, "a" * 41, "not-a-sha"):
+            with self.subTest(sha=sha), self.assertRaises(ValueError):
+                build_event_evidence(event_type="issues", event_id="issue-1", source_commit=sha, run_id=1, run_attempt=1, actor="actor", decision="OBSERVED")
+
 if __name__ == "__main__":
     unittest.main()
