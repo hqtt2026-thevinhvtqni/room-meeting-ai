@@ -187,14 +187,9 @@ def main():
     print('execution-host: armed; authorized works: ' + announced +
           '; grants=' + str(len(grants)), flush=True)
     evidence_root = os.environ.get('ROOM_HOP_EVIDENCE_ROOT')
-    raw_snapshot_only = os.environ.get('ROOM_HOP_SNAPSHOT_ONLY')
-    # Secure default: command mode stays disabled unless trusted deployment
-    # configuration explicitly opts out with 0/false/no/off.
-    snapshot_only = (
-        True
-        if raw_snapshot_only is None
-        else raw_snapshot_only.strip().lower() not in ('0', 'false', 'no', 'off')
-    )
-    serve('127.0.0.1', 8031, grant_registry=grants, evidence_root=evidence_root, snapshot_only=snapshot_only, **config)
+    # Command mode is unconditionally disabled until a versioned Core grant
+    # contract authorizes it. The legacy ROOM_HOP_SNAPSHOT_ONLY opt-out is
+    # intentionally ignored so deployment configuration cannot bypass grants.
+    serve('127.0.0.1', 8031, grant_registry=grants, evidence_root=evidence_root, snapshot_only=True, **config)
 
 if __name__=='__main__': main()
