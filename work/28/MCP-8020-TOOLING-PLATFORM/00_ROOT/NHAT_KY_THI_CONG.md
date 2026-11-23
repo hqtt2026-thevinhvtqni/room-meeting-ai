@@ -3413,3 +3413,34 @@ W1111 PR #48 candidate:
 **STATUS:** SCHEMA CANDIDATE PERSISTED; JSON SYNTAX PASS; SCHEMA TEST EXECUTION PENDING; NO INTEGRATION OR RELEASE CLAIM.
 
 **Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-086 — CI #457 cancellation triage and schema regression expansion
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 15:13 +07:00  
+**Priority:** P0 — schema and ACK integrity verification
+
+### 1. CI observation
+
+- PR workflow run #457 / ID `45133711834` was associated with test source commit `0f3bdafbd2b64e6b0d22cea19429eb897d6f75f9`.
+- GitHub reports event `pull_request`, branch `ka/work28-security-hardening-20261123`, conclusion `cancelled`, run attempt 1.
+- The run jobs endpoint returned an empty jobs list. No raw job log or test result is available.
+- Disposition: CANCELLED / NOT A TEST RESULT. No PASS inferred.
+
+### 2. Corrective test expansion
+
+- Added explicit schema tests for durable run ACK (`durable_ack=true`) and ordered correlated event envelope (`correlation_id`, sequence, grant/task/assignment/host identity).
+- Updated test file commit: `4435b7af9b01a699191374a8313f0bb608394523`.
+- No production code, route, endpoint or external Work source changed.
+
+### 3. Next verification
+
+- Check for a new PR workflow run associated with commit `4435b7af9b01a699191374a8313f0bb608394523`.
+- If a run exists, inspect exact job status and raw logs. If it is cancelled or absent, record NOT RUN/CANCELLED and do not claim PASS.
+- Keep PR #76 DRAFT and Execution Gate CLOSED.
+
+**STATUS:** CI #457 CANCELLED / NO JOB LOG; TESTS EXPANDED; EXACT-HEAD CI PENDING; NO ACCEPTANCE.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
