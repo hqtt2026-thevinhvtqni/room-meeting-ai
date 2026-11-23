@@ -2426,3 +2426,65 @@ The remaining acceptance gap requires evidence from the actual ROOM-HOP PC. Chat
 6. PC-dependent MCP 8030 provenance and live Auto E2E remain queued until Vinh reports PC availability.
 
 **STATUS:** CANONICAL TLS/REDIRECT EXPOSURE OPEN / CALLER-SUPPLIED WORKCONTEXT AUTHORITY GAP OPEN / PR #74 2 AHEAD 7 BEHIND AND DRAFT / PR #33 6 AHEAD 250 BEHIND / LIVE PROVENANCE PENDING / EXECUTION GATE CLOSED / NOT RELEASED.
+
+
+## 2026-11-23 — JRN-W28-066 — Redirect boundary, caller-controlled authority and branch freshness re-audit
+
+**Role:** Ka | Independent Architecture & Security Reviewer (CSA)  
+**Title:** Chief Security Architect — Work 28 independent reviewer  
+**Date-time:** 2026-11-23 (UTC+07:00)  
+**Canonical branch:** `work/28-mcp-tooling-platform`  
+**Pre-entry canonical commit:** `b9010765abb0c224fe96331eb6f6ac725968df29`  
+**Signature:** [KÝ: KA | CSA]
+
+### READ / TRACE — exact source snapshots
+
+1. TLS candidate `execution_host/work28_core_grant_client.py`, blob `93203c8b7937804efbfbefafd6cce823135610cb`, branch `ka/work28-core-grant-transport-tls-20261123`:
+   - URL validation now rejects remote plaintext HTTP, userinfo, query, fragment, unsupported schemes and malformed ports; loopback HTTP is permitted.
+   - `fetch_grants()` still calls the default `urllib.request.urlopen(req, timeout=...)` with an Authorization Bearer header. No explicit redirect handler or redirect destination validation exists in this candidate.
+   - Therefore URL validation covers only the configured initial URL; it does not establish the policy for each redirect hop. Finding W28-KA-WP5-06 remains OPEN.
+
+2. TLS candidate `tests/test_work28_grant.py`, blob `38849aa4e3052165d2f71ab2ee5740d8c5ff76ca`:
+   - Four `CoreGrantTransportPolicyTests` validate initial URL scheme/host/userinfo/query/fragment/port.
+   - No test starts a local redirecting server or fake opener; no test asserts that a second hop cannot receive Authorization; no HTTPS downgrade, cross-origin, same-origin, or redirect-loop behavior is tested.
+   - These tests are source inspection only. Ka did not execute them; candidate remains UNTESTED.
+
+3. Canonical `execution_host/work28_core_grant_client.py`, blob `e330d4f3681d3fb142e559f7ee35b21db128be7e`:
+   - Still accepts any non-empty URL and uses default `urlopen`; no remote HTTPS enforcement or explicit redirect policy is present in canonical.
+   - Candidate hardening has not been integrated.
+
+4. Canonical `execution_host/server.py`, blob `cfdecca58e6146d067ce0e0c0a0feebac0ebdc83`:
+   - `POST /execute` allows `work_context` in the caller body, requires that object, checks `work_id` only against local `ROOM_HOP_AUTHORIZED_WORKS`, then assigns `work_context['authorized'] = True` before dispatch.
+   - This local allow-list plus caller-supplied context is not authenticated Core-derived principal/Work/WP/Gate/Assignment/Task/grant authority. W28-KA-WP5-03 remains OPEN; do not treat this as a verified Core grant boundary.
+
+5. Canonical workflow `.github/workflows/work28-mcp-tooling.yml`, blob `8876f1a9096ec54e5a78a073820755087e67ecbf`:
+   - Linux and Windows lifecycle jobs both execute `tests/test_work28_grant.py`; new transport regressions can be covered by both existing lanes after integration and an exact-head workflow run.
+   - The workflow's own Auto E2E report explicitly retains deployed MCP→Core→Runtime E2E as BLOCKED, Execution Gate CLOSED and release NOT_RELEASED. CI success alone cannot close the live gate.
+
+### BRANCH / PR FRESHNESS — live compare
+
+- Canonical Work28 base at this audit: `b9010765abb0c224fe96331eb6f6ac725968df29`.
+- PR #74 / `xu/w28-core-authority-v1-3-20261123`: DIVERGED **2 ahead / 8 behind**, merge base `29dfc5d6884835a8d3c46bf8509790ed2abe423b`, one contract file changed. PR remains OPEN / DRAFT / UNMERGED / `mergeable=false`. The prior 2/7 comparison in JRN-W28-065 is superseded. Five review findings remain unresolved; no author response or new contract revision was observed.
+- PR #33 / `work/28/wp0-evidence-handoff-20261029`: DIVERGED **6 ahead / 251 behind**, six historical evidence files only. The prior 6/250 figure is superseded. No current MCP process/build provenance or 31-tool parity is established; do not merge.
+- TLS candidate / `ka/work28-core-grant-transport-tls-20261123`: DIVERGED **2 ahead / 7 behind**, two modified source/test files. It is not a clean integration branch and must not be merged or cherry-picked wholesale.
+- Vi WP5 branch / `vi/work28-wp5-core-grant-fail-closed-20261123`: DIVERGED/BEHIND **0 ahead / 43 behind**, no unique commits. It contains no new integration work.
+- Recent repository commit inventory did not surface a new W28 source/contract implementation after the previously audited candidate set. This is not proof that no off-repository or local work exists; only GitHub-visible evidence was assessed.
+
+### FINDINGS / DISPOSITION
+
+- **W28-KA-WP5-06 — HIGH / OPEN:** initial TLS URL validation does not constrain redirect hops or credential forwarding; candidate tests omit redirect cases.
+- **W28-KA-WP5-03 — HIGH / OPEN:** canonical Host still trusts caller-supplied `work_context` plus a local Work allow-list and sets `authorized=True`; Core-derived authority is not proven.
+- **PR #74:** architecture direction may be retained as a proposal, but wire schemas, W14 source ownership, three-way Core provenance, W70 policy snapshot/fail-closed semantics and HostPort envelope still require resolution and exact-head review.
+- **PR #33:** historical byte integrity only; no runtime provenance or registry parity.
+- No tests were run by Ka; no source implementation was changed; no PC/runtime/endpoint/credential/deployment/branch protection/merge/release mutation occurred.
+
+### REQUIRED NEXT
+
+1. Vi: start from the latest canonical head; implement redirect rejection by default (or a bounded same-origin HTTPS-only policy if explicitly required), and add credential non-forwarding, downgrade, same-origin and loop/hop-limit regressions.
+2. Vi/Xu: resolve the approved Core wire contract and replace caller-controlled WorkContext/local allow-list authorization with server-authenticated Core-derived authority; no guessed endpoint translation.
+3. Xu/Vi: reconcile PR #74 to latest canonical and answer all five findings; request fresh exact-head review.
+4. An: independently reproduce the transport and authority-denial regressions once an integrated source candidate exists.
+5. Ka: inspect exact diff, exact-head Linux/Windows jobs, and Core adapter compatibility; do not infer PASS from candidate source alone.
+6. PC-dependent MCP 8030 process/build provenance and full live Auto E2E remain queued until Vinh reports PC availability.
+
+**STATUS:** TLS REDIRECT BOUNDARY OPEN / CORE AUTHORITY BOUNDARY OPEN / PR #74 2 AHEAD 8 BEHIND / PR #33 6 AHEAD 251 BEHIND / TLS CANDIDATE 2 AHEAD 7 BEHIND / LIVE PROVENANCE PENDING / EXECUTION GATE CLOSED / ACTIVE — INTEGRATION BLOCKED — NOT RELEASED.
