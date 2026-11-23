@@ -3205,3 +3205,42 @@ W1111 PR #48 candidate:
 **STATUS:** SOURCE AUDIT RECORDED; CORE MOUNT / HOST ONLINE AUTHORITY NOT VERIFIED; EXECUTION GATE CLOSED; NOT RELEASED.
 
 **Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-081 — Reconcile DOC-W28-078 with V1.3 architecture baseline PR #74
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 14:50 +07:00  
+**Priority:** P0 — authority/identity/Host ownership alignment
+
+### 1. READ / TRACE
+
+- Fetched PR #74 metadata and full V1.3 contract source blob `85c88a5ac50a6d12e4edcd34879a9db79277466a`.
+- PR #74 title: `W28: Core Execution Authority & Agent-to-Computer Contract V1.3`; contract status: architecture baseline decided; implementation not approved by this document alone; not deployed, not wired, not released.
+- PR #74 establishes normative ownership: W70 Work/WP/Gate; Core :8000 sole authority/system of record; W52 orchestration/assignment/recipient-authenticated ACK; W14 sole Host; W10 locked; W092/W113 read-only projections. It explicitly states route/transport names remain implementation decisions and one-shot POST /execute is not proof of bidirectional HostPort.
+- PR #48 metadata: OPEN / UNMERGED; head `c70eb2b82f54a000a81263dc519078ddf105f075`; compare to current Main snapshot `0902cd26518673aa078bb4c7c7899e1e4a95656a`: DIVERGED 157 ahead / 986 behind. The source and store are candidate evidence only, not canonical Core/W14.
+- PR #74 contract itself records the exact Main route-mount discrepancy and the PR #48 source-hash binding defect. DOC-W28-078 must not duplicate or weaken those architectural invariants.
+
+### 2. DECIDE
+
+- AD-W28-20261123-002 / PR #74 is the governing architecture baseline for DOC-W28-078.
+- DOC-W28-078 is subordinate and proposes only a possible wire-level realization; its route paths are illustrative, not approved endpoint names.
+- Grant issuance must follow W52 authenticated recipient ACK and W70 Work/WP/Gate eligibility, and must bind the complete PR #74 identifier set: Work/WP/Gate, task, assignment, idempotency/correlation, authenticated Agent principal/runtime, Host/provider, source snapshot, action/capability, environment, expiry and event sequence.
+- No implementation until W14 HostPort and canonical Core source provenance are resolved. No W10 direct call. No reuse of PR #48 wholesale.
+
+### 3. BUILD
+
+- Added section 14, Alignment Addendum, to DOC-W28-078.
+- Update commit: `d227a3e029a89b64f63efa814423fa964beb20c8`.
+- The addendum clarifies architecture precedence, ACK prerequisite, full grant binding, route/transport non-normativity, HostPort non-equivalence and PR #48/#74 provenance.
+
+### 4. LIMITATIONS / NEXT
+
+- No Core source, W52 transport, W14 Host, W70 policy, endpoint or deployment was changed.
+- No CI or live E2E is claimed. PR #74 is architecture baseline only; DOC-W28-078 remains candidate; PR #76 remains DRAFT.
+- Next: read back the amended contract and journal; inspect W14 canonical source/HostPort and W70 approved policy evidence; then prepare executable schemas as non-authoritative fixtures only if no conflicting source contract is found.
+
+**STATUS:** DOC-W28-078 ALIGNED TO PR #74 BASELINE / READBACK PENDING; IMPLEMENTATION NOT APPROVED; EXECUTION GATE CLOSED; NOT RELEASED.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
