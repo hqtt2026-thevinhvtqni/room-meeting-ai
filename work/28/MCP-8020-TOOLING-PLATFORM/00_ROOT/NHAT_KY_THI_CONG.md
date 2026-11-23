@@ -2733,3 +2733,61 @@ Review 6015443161 records the detailed findings; review 6015449638 corrects curr
 **STATUS:** PR #74 OPEN / DRAFT / UNMERGED / 2 AHEAD / 12 BEHIND; WP5-03 / WP5-06 / WP5-07 / WP5-08 HIGH / OPEN; LIVE MCP → CORE → RUNTIME E2E BLOCKED; EXECUTION GATE CLOSED; ACTIVE — INTEGRATION BLOCKED — NOT RELEASED.
 
 **Signature:** [KÝ: KA | CSA / INDEPENDENT REVIEWER]
+
+
+## 2026-11-23 — JRN-W28-071 — Owner-delegated Ka build: fail-closed command and Core transport hardening
+
+**Name:** Ka  
+**Title:** BUILD OWNER (owner-delegated) / CSA / Security Implementer  
+**Date-Time:** 2026-11-23 09:40 +07:00  
+**Repository:** `hqtt2026-thevinhvtqni/room-meeting-ai`  
+**Base canonical SHA:** `14a535a6f7d10bb318734cc8df6c76090286ac08`  
+**Build branch:** `ka/work28-security-hardening-20261123`
+
+### 1. Explicit owner delegation and scope
+
+Vinh explicitly delegated Ka to build Work 28 autonomously and stated Vi and An are not participating in this phase. This is a temporary owner override for the current build phase; it does not rewrite the historical four-role manifest or assign work to absent participants. Ka performs implementation and self-review; independent QA evidence remains a separate acceptance requirement and is not claimed by Ka.
+
+### 2. Implemented source changes (candidate branch only)
+
+1. `execution_host/work28_dispatch.py`: every `mode=command` request now fails closed with `command_mode_disabled_core_grant_contract_required`, regardless of the `snapshot_only` flag. This removes the grantless command dispatch path from the candidate.
+2. `execution_host/server.py`: startup always passes `snapshot_only=True`; legacy `ROOM_HOP_SNAPSHOT_ONLY=false/0/no/off` can no longer opt command mode back in through `main()`.
+3. `execution_host/work28_core_grant_client.py`: Core grant URL must be HTTPS, have a hostname, and contain no userinfo, query or fragment; malformed ports are rejected. A custom `HTTPRedirectHandler` refuses all redirects, so bearer authorization is not forwarded to a redirect destination.
+4. `tests/test_work28_core_grant_fail_closed.py`: added HTTPS URL validation, rejection of HTTP/userinfo/query/fragment, no-follow redirect handler, unreachable Core and explicit-false startup regressions.
+5. `tests/test_work28_dispatch.py`: added a direct dispatch regression proving command mode is rejected even when caller passes `snapshot_only=False`.
+6. `.github/workflows/work28-mcp-tooling.yml`: added explicit execution of `test_work28_core_grant_fail_closed.py` in both Linux and Windows lifecycle lanes, with a distinct Windows output log.
+
+### 3. Candidate commit chain
+
+- `205dd2f49c02fd1e7f8fb4cd9685c9b8170ba5c7` — disable ungranted command dispatch.
+- `8f36f96ae807973a7107d302fbde21604e5e192e` — remove startup snapshot-only opt-out.
+- `16f342c79328835fea7dae491d013f76273a0c07` — require HTTPS and reject redirects.
+- `0db032aa09f13c190d72be47f41222fd0b010f1a` — extend Core-grant fail-closed regressions.
+- `f3a99f96dee10d82b5eb07165cd11e12fdbdf69c` — run fail-closed tests on Linux and Windows.
+- `000dae4fb07f057db3fc42dc8757d248a1001ad2` — test command-mode denial with opt-out flag false.
+
+### 4. Known unresolved authority boundary
+
+This candidate does **not** claim to solve `W28-KA-WP5-03`: `POST /execute` still accepts caller-provided `work_context`, and snapshot dispatch still constructs `WorkContext` from that request after local allowlist checking. A safe replacement requires a normative, versioned Core wire contract and trusted server-side resolution of principal, Work, assignment, gate and grant. No endpoint, schema or claim is guessed here.
+
+The existing static grant registry is fetched at startup; this candidate does not yet prove online revocation/expiry refresh or durable W70 policy snapshot binding. PR #74 contract findings remain a separate prerequisite. No live PC configuration or deployment has been inspected.
+
+### 5. Validation status
+
+- GitHub source writes/readbacks: candidate files were fetched after writes; their blob SHAs are retained in the branch.
+- Ka did not execute local Python tests or the PC runner in this pass. GitHub Actions evidence is **PENDING** until a PR run exists and raw Linux/Windows logs show the new test module executing.
+- No live MCP 8030, Core 8000, Runtime MCP, W14 Host, protected evidence readback or deployment was exercised.
+- No canonical branch, historical PR, credential, endpoint or runtime was mutated. All source changes are isolated on the candidate branch.
+
+### 6. Disposition
+
+- W28-KA-WP5-08: candidate mitigation implemented; remains **PENDING CI/review**, not closed.
+- W28-KA-WP5-06: candidate HTTPS + no-redirect hardening implemented; remains **PENDING CI/security tests**, not closed.
+- W28-KA-WP5-07: workflow calls fail-closed module on Linux and Windows; remains **PENDING raw CI evidence**.
+- W28-KA-WP5-03: **HIGH / OPEN**, caller-controlled WorkContext / Core authority unresolved.
+- PR #74 five contract findings: **OPEN**.
+- Live MCP → Core → Runtime E2E: **BLOCKED**.
+
+**STATUS:** BUILD CANDIDATE — CI PENDING — INTEGRATION NOT APPROVED — EXECUTION GATE CLOSED — NOT RELEASED.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
