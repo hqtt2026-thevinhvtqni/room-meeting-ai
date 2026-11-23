@@ -238,3 +238,66 @@ Sau khi ghi BB-118-002, Ka đã exact-fetch lại hồ sơ, checklist, runbook, 
 - Runtime boundary: handoff, ACK, acceptance-review, controlled-failure and controlled-failure-dispatch all SKIPPED; runtime E2E remains NOT VERIFIED.
 - Git snapshot at tested source commit: Main `5f8390910178012feaf37510452bc39804b296db`; merge base `cf2537e07bfd71d5823bd98f8673b3ab5644fcdc`; 272 ahead / 82 behind — DIVERGED. PR #67 OPEN, unmerged; mergeability clean at readback. No rebase, merge or release.
 - Disposition: implementation and artifact integrity PASS; Xu independent review PENDING; Vinh acceptance PENDING; ACTIVE — NOT ACCEPTED — NOT RELEASED.
+
+
+## CURRENT HANDOVER ADDENDUM — ENTRY 073 (2026-11-24 06:11 +07:00)
+
+> **This addendum supersedes the historical handover snapshot above for current routing and status only.** Historical PR #67 / earlier HEAD / earlier test counts remain preserved as audit history.
+
+### A. Handover identity and exact revision
+
+- **Document:** BB-118-002 — Handover record; priority P0; read order 10.
+- **Prepared by:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Receiving independent reviewer:** Xu / AI-01 — reviewer identity mapping to GitHub login remains UNVERIFIED; no identity or permission is inferred.
+- **Final product owner:** Vinh — Project Owner.
+- **Date-Time:** 2026-11-24 06:11 +07:00.
+- **Repository:** `hqtt2026-thevinhvtqni/room-meeting-ai`.
+- **Active PR:** [#68](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/68), OPEN / not draft / UNMERGED, base `main`.
+- **Branch:** `work/118-auto-e2e-v2-clean`.
+- **Exact source HEAD at handover preparation:** `3345175799a984f9586b483896431069c0f1b043`.
+- **Latest exact-head PR CI:** [Run #1069](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45285944558), ID `45285944558`, validate job `138082168582`, SUCCESS; raw log **102 tests in 0.296s**; artifact ID `14872425816`, size 686 bytes, SHA-256 `3bc79b82305ebe3f343693c4a2e5c2ae42023da9d86c2ca1452ec77139ca2a7b`, unexpired at metadata readback.
+- **Coverage limitation:** source-binding step SKIPPED / `NOT_RUN`; handoff-request, ACK-claim and review-observation capture jobs SKIPPED. This is contract/unit CI only. It is not runtime Auto E2E, Core dispatch/persistence, authenticated Agent ACK or cross-Work integration evidence.
+
+### B. What is being handed over
+
+1. PR #68 code and workflows as an exact, reviewable candidate; all changed paths are listed by GitHub on the PR.
+2. Current review routing and priority worklist: [XR-118-001 — Xu Independent Review Checklist](../08_REVIEW/XR-118-001_XU-INDEPENDENT-REVIEW-CHECKLIST.md).
+3. Current dependency/architecture audit: [RA-118-002](../04_PLAN/RA-118-002_RÀ-SOÁT-TỒN-ĐỌNG-VÀ-ĐỐI-SOÁT-KIẾN-TRÚC.md).
+4. Adapter responsibilities and boundaries: [W118-13..17 Core/GitHub Adapters](../05_BUILD/W118-13_17_CORE-GITHUB-ADAPTERS.md).
+5. Contract test coverage and unrun runtime cases: [W118-13..17 Adapter Test Matrix](../06_TEST/W118-13_17-CORE-GITHUB-ADAPTER-TEST-MATRIX.md).
+6. Current Xu review routing: [RR-118-001](../EVIDENCE/RR-118-001_CURRENT-XU-REVIEW-ROUTING.md).
+7. Work journal and Entries 065–073: [NHAT-KY-THI-CONG](../EVIDENCE/NHAT-KY-THI-CONG.md).
+8. Release authority boundaries: [W118 Release Gate](../07_RELEASE/W118-RELEASE-GATE.md).
+9. Runtime plan only (not executed): [RT-118-001](../09_RUNTIME/RT-118-001_POST-MERGE-E2E-RUNBOOK.md).
+
+### C. Current task disposition — no completion inferred
+
+| Task | Current disposition | Reason / required owner evidence |
+|---|---|---|
+| W118-TASK-013 | IN_PROGRESS | Core Task read schema/port and authoritative snapshot not verified |
+| W118-TASK-014 | BLOCKED | W102 verified principal, Assignment lifecycle and recipient-bound ACK not verified |
+| W118-TASK-015 | BLOCKED | W14 canonical protected execution path / Work Authority / HostPort not verified |
+| W118-TASK-016 | IN_PROGRESS at adapter level; Core authority BLOCKED | Core-owned Task-scoped Issue-mirror lease/validator absent |
+| W118-TASK-017 | IN_PROGRESS at contract level; runtime ingress NOT VERIFIED | Core/W33 authenticated ingress and event persistence not proven |
+| W118-TASK-018 | BLOCKED | W70 approved Evidence Register schema, owner ACK and read-only projection contract absent |
+| W118-TASK-019 | PLANNED / NOT RUN | Full lifecycle depends on all preceding external gates and Vinh acceptance |
+
+No Task is DONE; progress remains NOT_CALCULATED. Do not promote adapter unit tests into cross-Work or runtime PASS.
+
+### D. Xu's requested independent actions
+
+1. Verify reviewer identity/login mapping or record it UNVERIFIED; do not infer or self-assign a principal.
+2. Review the exact PR #68 HEAD above and the priority-ordered gates in XR-118-001.
+3. Disposition each static finding: Entry 065 webhook UUID/repository validation; Entry 067 Issue marker/config validation; Entry 068 event-evidence strict metadata; Entry 069 diagnostics marker/pagination; Entry 071 workflow_run SHA/attempt metadata.
+4. Record design, security, evidence, runtime readiness and overall PASS / BLOCKED / NEEDS CHANGES with exact source/test evidence and numbered remediation requirements.
+5. State explicitly whether implementation/workflow freeze may be lifted for each bounded correction. No external Work or runtime change is implied.
+6. Return the review outcome to Vinh for product decision. A Xu design/security PASS is not final product acceptance and does not authorize merge/release.
+
+### E. Non-waivable blockers and governance
+
+- Core Task/Event authority and Task-scoped Issue-mirror lease; W102 identity/Assignment/ACK; W14 execution authority/Host; W33 authenticated evidence ingress; W70 approved Evidence Register schema/owner contract remain BLOCKED / NOT VERIFIED.
+- Runtime Auto E2E has NOT RUN. PR CI Run #1069 is contract/unit only.
+- PR #68 stays OPEN / UNMERGED. PR #67 is superseded; PR #66 remains a separate older OPEN / UNMERGED pilot.
+- No Main merge, rebase, force-push, PR close, release, external Work/Sandbox mutation, secret/permission/branch-protection change, or substitute Core/Host/authority implementation.
+- **Handover result:** READY FOR XU INDEPENDENT REVIEW — NOT READY FOR PRODUCT ACCEPTANCE — NOT ACCEPTED — NOT RELEASED.
+- **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-24 06:11 +07:00; Result: current review package and exact-head CI evidence handed over to Xu for independent disposition; final acceptance remains Vinh's authority.
