@@ -2733,3 +2733,821 @@ Review 6015443161 records the detailed findings; review 6015449638 corrects curr
 **STATUS:** PR #74 OPEN / DRAFT / UNMERGED / 2 AHEAD / 12 BEHIND; WP5-03 / WP5-06 / WP5-07 / WP5-08 HIGH / OPEN; LIVE MCP → CORE → RUNTIME E2E BLOCKED; EXECUTION GATE CLOSED; ACTIVE — INTEGRATION BLOCKED — NOT RELEASED.
 
 **Signature:** [KÝ: KA | CSA / INDEPENDENT REVIEWER]
+
+
+## 2026-11-23 — JRN-W28-071 — Owner-delegated Ka build: fail-closed command and Core transport hardening
+
+**Name:** Ka  
+**Title:** BUILD OWNER (owner-delegated) / CSA / Security Implementer  
+**Date-Time:** 2026-11-23 09:40 +07:00  
+**Repository:** `hqtt2026-thevinhvtqni/room-meeting-ai`  
+**Base canonical SHA:** `14a535a6f7d10bb318734cc8df6c76090286ac08`  
+**Build branch:** `ka/work28-security-hardening-20261123`
+
+### 1. Explicit owner delegation and scope
+
+Vinh explicitly delegated Ka to build Work 28 autonomously and stated Vi and An are not participating in this phase. This is a temporary owner override for the current build phase; it does not rewrite the historical four-role manifest or assign work to absent participants. Ka performs implementation and self-review; independent QA evidence remains a separate acceptance requirement and is not claimed by Ka.
+
+### 2. Implemented source changes (candidate branch only)
+
+1. `execution_host/work28_dispatch.py`: every `mode=command` request now fails closed with `command_mode_disabled_core_grant_contract_required`, regardless of the `snapshot_only` flag. This removes the grantless command dispatch path from the candidate.
+2. `execution_host/server.py`: startup always passes `snapshot_only=True`; legacy `ROOM_HOP_SNAPSHOT_ONLY=false/0/no/off` can no longer opt command mode back in through `main()`.
+3. `execution_host/work28_core_grant_client.py`: Core grant URL must be HTTPS, have a hostname, and contain no userinfo, query or fragment; malformed ports are rejected. A custom `HTTPRedirectHandler` refuses all redirects, so bearer authorization is not forwarded to a redirect destination.
+4. `tests/test_work28_core_grant_fail_closed.py`: added HTTPS URL validation, rejection of HTTP/userinfo/query/fragment, no-follow redirect handler, unreachable Core and explicit-false startup regressions.
+5. `tests/test_work28_dispatch.py`: added a direct dispatch regression proving command mode is rejected even when caller passes `snapshot_only=False`.
+6. `.github/workflows/work28-mcp-tooling.yml`: added explicit execution of `test_work28_core_grant_fail_closed.py` in both Linux and Windows lifecycle lanes, with a distinct Windows output log.
+
+### 3. Candidate commit chain
+
+- `205dd2f49c02fd1e7f8fb4cd9685c9b8170ba5c7` — disable ungranted command dispatch.
+- `8f36f96ae807973a7107d302fbde21604e5e192e` — remove startup snapshot-only opt-out.
+- `16f342c79328835fea7dae491d013f76273a0c07` — require HTTPS and reject redirects.
+- `0db032aa09f13c190d72be47f41222fd0b010f1a` — extend Core-grant fail-closed regressions.
+- `f3a99f96dee10d82b5eb07165cd11e12fdbdf69c` — run fail-closed tests on Linux and Windows.
+- `000dae4fb07f057db3fc42dc8757d248a1001ad2` — test command-mode denial with opt-out flag false.
+
+### 4. Known unresolved authority boundary
+
+This candidate does **not** claim to solve `W28-KA-WP5-03`: `POST /execute` still accepts caller-provided `work_context`, and snapshot dispatch still constructs `WorkContext` from that request after local allowlist checking. A safe replacement requires a normative, versioned Core wire contract and trusted server-side resolution of principal, Work, assignment, gate and grant. No endpoint, schema or claim is guessed here.
+
+The existing static grant registry is fetched at startup; this candidate does not yet prove online revocation/expiry refresh or durable W70 policy snapshot binding. PR #74 contract findings remain a separate prerequisite. No live PC configuration or deployment has been inspected.
+
+### 5. Validation status
+
+- GitHub source writes/readbacks: candidate files were fetched after writes; their blob SHAs are retained in the branch.
+- Ka did not execute local Python tests or the PC runner in this pass. GitHub Actions evidence is **PENDING** until a PR run exists and raw Linux/Windows logs show the new test module executing.
+- No live MCP 8030, Core 8000, Runtime MCP, W14 Host, protected evidence readback or deployment was exercised.
+- No canonical branch, historical PR, credential, endpoint or runtime was mutated. All source changes are isolated on the candidate branch.
+
+### 6. Disposition
+
+- W28-KA-WP5-08: candidate mitigation implemented; remains **PENDING CI/review**, not closed.
+- W28-KA-WP5-06: candidate HTTPS + no-redirect hardening implemented; remains **PENDING CI/security tests**, not closed.
+- W28-KA-WP5-07: workflow calls fail-closed module on Linux and Windows; remains **PENDING raw CI evidence**.
+- W28-KA-WP5-03: **HIGH / OPEN**, caller-controlled WorkContext / Core authority unresolved.
+- PR #74 five contract findings: **OPEN**.
+- Live MCP → Core → Runtime E2E: **BLOCKED**.
+
+**STATUS:** BUILD CANDIDATE — CI PENDING — INTEGRATION NOT APPROVED — EXECUTION GATE CLOSED — NOT RELEASED.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-072 — CI #425 failure triage and regression alignment
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 09:43 +07:00  
+**Workflow run:** `45101824503` / run #425  
+**Initial tested SHA:** `121efd7dbc2ff05173d9253fab4fe7941804b5b7`
+
+### 1. Exact CI result
+
+- Unit/regression job: **FAIL**.
+- Linux lifecycle job: **FAIL**.
+- Windows lifecycle job: **FAIL**.
+- Automatic E2E gate report job: SUCCESS, but reports deployed E2E BLOCKED and is not a product PASS.
+- Compile step: SUCCESS.
+- Both Linux and Windows raw logs show `test_work28_core_grant_fail_closed.py` was actually executed; its 9 tests passed on both OS lanes.
+
+### 2. Root causes from raw logs
+
+1. Existing `tests/test_work28_evidence.py` still supplied `http://` Core URLs. The new HTTPS-only source correctly rejected those fixtures, producing two errors in the WP18 CoreGrantClientTests.
+2. Existing Work28 unit test `05_TEST/test_w13_execute_handler_http_boundary.py::test_authenticated_and_authorized_call_reaches_host_with_server_side_authorization` asserted that a caller-supplied WorkContext + local allowlist + `snapshot_only=False` could reach the Host. The new command-mode block correctly returned HTTP 400 instead of the old expected 200. This test encoded the grantless behavior now intentionally removed.
+
+### 3. Corrective changes committed on candidate branch
+
+- Commit `bf0ab07f4c371660d470121ebe2482e664a43a65`: changed WP18 Core URL fixtures to HTTPS.
+- Commit `daec39e85e580eb411eb66ded919fa731fde657c`: replaced the legacy HTTP happy-path expectation with an explicit denial + host-never-invoked assertion; updated test description to match the retired command contract.
+- These changes are candidate fixes only. They have not yet been re-run by CI at the time of this entry.
+
+### 4. Security disposition
+
+The failures do not justify restoring command mode or allowing HTTP Core grant transport. The test expectations were updated to assert the new fail-closed behavior. WP5-08 and WP5-06 remain PENDING a fresh exact-head CI run.
+
+**STATUS:** CI #425 FAIL; root causes identified; corrective commits pushed; rerun PENDING; WP5-03 HIGH / OPEN; PR #76 DRAFT / UNMERGED; Execution Gate CLOSED; NOT RELEASED.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-073 — Exact-head CI #427 follow-up: command-denial assertion correction
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 09:46 +07:00  
+**Workflow run:** `45102006936` / run #427  
+**Run source SHA:** `97e255f12fc75af5171b6e682ee9a40850a052db`
+
+### 1. Exact CI result
+
+- Unit/regression job: **SUCCESS** (including Work28 unit/pytest suites).
+- Linux lifecycle: **FAIL**.
+- Windows lifecycle: **FAIL**.
+- Both OS raw logs confirm the newly wired `test_work28_core_grant_fail_closed.py` ran and all 9 tests passed.
+- WP18 `test_work28_evidence.py`: all 7 tests passed on both OS.
+- WP16 dispatch tests: all 9 tests passed on both OS.
+- Remaining failure on both OS: WP19 `tests/test_work28_readback.py::SnapshotOnlyTests.test_command_refused` expected the old error text `snapshot_only`; implementation now returns the more specific unconditional denial `command_mode_disabled_core_grant_contract_required`.
+
+### 2. Corrective change
+
+- Commit `600f291309d202ab906f46eb4bd45625e318bed9`.
+- Updated WP19 test to assert the new stable denial code and set `snapshot_only=False`, proving the legacy opt-out does not restore command mode.
+- No source behavior was weakened. New exact-head CI rerun is pending.
+
+### 3. Current disposition
+
+- HTTPS + redirect rejection tests: PASS in run #427 on both OS.
+- Core grant fail-closed tests: PASS in run #427 on both OS.
+- Command mode opt-out denial tests: PASS in run #427; WP19 assertion corrected for rerun.
+- Overall lifecycle: NOT PASS until exact-head rerun succeeds.
+
+**STATUS:** RUN #427 UNIT/REGRESSION SUCCESS; LINUX/WINDOWS LIFECYCLE FAIL ON ONE STALE ASSERTION; FIX COMMITTED; RERUN PENDING; EXECUTION GATE CLOSED; NOT RELEASED.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-074 — Exact merge-candidate CI #429 PASS and immutable artifact
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 09:49 +07:00  
+**PR:** #76 — OPEN / DRAFT / UNMERGED  
+**PR head SHA:** `75b275055488482b6a9e6c83912212d9b5c05f8a`  
+**CI run:** `45102189583` / run #429  
+**GitHub pull_request merge candidate SHA:** `661e3b7d4706026fa8f3b1da7d7ca28bd613d801`
+
+### 1. Exact workflow result
+
+All five jobs completed SUCCESS:
+- `unit-regression-tests`: SUCCESS, including full Work28 pytest suite.
+- `execution-host-lifecycle-linux`: SUCCESS.
+- `execution-host-lifecycle-windows`: SUCCESS.
+- `Build and retest exact-SHA Work 28 source artifact`: SUCCESS.
+- `automatic-e2e-gate-report`: SUCCESS.
+
+GitHub generated merge candidate `661e3b7d...` with parents canonical base `14a535a6...` and PR head `75b27505...`. Exact compare canonical base → merge candidate: 13 ahead / 0 behind. This is the tested pull-request merge candidate, not a canonical branch merge.
+
+### 2. Raw log coverage
+
+Both Linux and Windows lifecycle raw logs contain all nine named tests from `test_work28_core_grant_fail_closed.py` and show the module summary as 9 tests / OK. The same lanes also show:
+- `test_work28_dispatch.py`: 9 tests / OK;
+- `test_work28_evidence.py`: 7 tests / OK;
+- `test_work28_readback.py`: 5 tests / OK after the corrected command-denial assertion.
+
+Unit/regression and full pytest jobs also completed SUCCESS. The CI #425 and #427 failures remain preserved in prior entries; the #429 rerun is the successful exact merge-candidate evidence.
+
+### 3. Immutable source artifact
+
+- Artifact: `work28-source-artifact-661e3b7d4706026fa8f3b1da7d7ca28bd613d801`
+- Artifact ID: `14785762519`
+- Size: 2,306,523 bytes
+- SHA-256: `254d51c27df8d1f5c085ac7bb4ba68a1fa720f1008f8428661ee0d4f55c6fae8`
+- Artifact job extracted and retested the archive successfully.
+- Auto E2E report artifact ID: `14786156325`, SHA-256 `6f472312f527f0a525170104634727b689a4c91df5d4b11a0b7bc5a677959b94`.
+
+### 4. Interpretation and limits
+
+- **CI PASS is confirmed for the exact PR merge candidate.**
+- It proves candidate code compiles, configured unit/regression and Linux/Windows lifecycle lanes pass, and the immutable archive was built and retested.
+- It does not prove live Core grant issuance/online validation, caller WorkContext authority removal, W70 policy snapshot, live MCP 8030 provenance, Runtime MCP, W14 PC process identity, protected evidence persistence/readback or deployed E2E.
+- WP5-08 command-mode mitigation and WP5-06 transport hardening have CI evidence, but remain candidate mitigations pending merge/review and runtime confirmation.
+- WP5-07 CI omission is corrected on this candidate; raw logs now prove both OS lanes run the module.
+- WP5-03 remains HIGH / OPEN; static grant-registry authorization and caller-supplied WorkContext remain unresolved.
+- PR #76 stays DRAFT; no merge or release is performed.
+
+**STATUS:** PR #76 CANDIDATE CI #429 PASS / IMMUTABLE ARTIFACT PASS; WP5-03 HIGH / OPEN; CORE WIRE CONTRACT / LIVE AUTHORITY NOT VERIFIED; EXECUTION GATE CLOSED; ACTIVE — INTEGRATION BLOCKED — NOT RELEASED.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-075 — Disable unvalidated HTTP snapshot execution and correct readiness semantics
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 09:54 +07:00  
+**Branch:** ka/work28-security-hardening-20261123  
+**Prior exact merge-candidate CI:** run #429 / 45102189583 / PASS  
+**New candidate source head:** 7240a0d2d6fd115ddfb86ae7b7624837c76bd84d  
+**New CI:** run #435 / 45102801064 / PENDING at entry time
+
+### 1. Security boundary discovered
+
+The previous candidate disabled mode=command, but HTTP work28_snapshot still accepted caller-supplied work_context and a startup-loaded static grant registry. That registry is not online Core validation: it cannot prove current expiry/revocation, trusted caller identity, W70 policy snapshot or that caller-supplied workspace/evidence paths came from Core. A local cached grant must not be treated as authority.
+
+### 2. Containment implemented (candidate branch only)
+
+- execution_host/server.py: HTTP snapshot execution returns 503 core_online_grant_validation_not_configured unless an online Core validator is actually wired. This candidate intentionally wires none, so all protected HTTP snapshot execution is blocked; caller WorkContext is not allowed to reach dispatch.
+- main() no longer loads the static grant list as if it were an authority source. It starts in explicit BLOCKED execution mode and passes an empty registry.
+- serve() pins snapshot-only true and leaves the Core online validator unset; legacy opt-out cannot enable execution.
+- execution_host/work28_readiness.py: health readiness now reports caller WorkContext authority BLOCKED, online Core grant validation BLOCKED, and static grant cache IGNORED rather than PASS. The health response reflects INTEGRATION_BLOCKED, not a false PASS.
+- tests/test_work28_dispatch.py: the HTTP snapshot test now proves HTTP 503 and no snapshot directory/side effect without online Core validation.
+- tests/test_work28_core_grant_fail_closed.py: startup no longer treats static grants as authority; added readiness regression proving even 99 cached grants cannot satisfy online authority gate.
+
+### 3. Candidate commits
+
+- d6ddcdd47327cf5eb3df57531cb8e96b6f371696 — block HTTP snapshot without Core online validation.
+- d648fa8bd5ec71134bd8895108df8222143cd1a5 — correct readiness gate semantics.
+- 16d000c5a64ad7b363adc9bb2bfa23a2137d7659 — test startup does not trust static grant cache.
+- 1d25173989e1ffbff808ee17f415299346b6d49d — test HTTP snapshot is blocked without online Core.
+- bcc9d25636098f73a9f2f737c8236a67d2997303 — mark static grants non-authoritative in readiness.
+- 7240a0d2d6fd115ddfb86ae7b7624837c76bd84d — test readiness cannot be satisfied by cached grants.
+
+### 4. Core implementation boundary
+
+- This is fail-closed containment, not completion of online Core authority.
+- Work28's proposed Core V1.2 implementation exists under core/execution_authority/ but is not approved/deployed and its current separate HTTP handler does not yet expose the complete Work28 online validation contract.
+- Current-main Core :8000 app composition inspected in this pass mounts Meeting routes only; no Work execution-grant router is mounted there.
+- PR #48 is a separate open/draft W1111 candidate, not canonical main and not automatically reusable. PR #74 remains open/draft with five wire/ownership/policy/HostPort findings.
+- No endpoint, body schema, credential, W70 policy version or Core principal is guessed or wired in this entry.
+- To restore execution, next implementation slice must reconcile and version the Core wire contract, implement grant issuance/online validation/revocation/run-record with Work/operation/source/policy binding, derive WorkContext solely from the Core response, and test no-side-effect denial for every invalid grant branch.
+
+### 5. Validation status
+
+- Prior PR merge-candidate CI #429 passed all five jobs on SHA 661e3b7d4706026fa8f3b1da7d7ca28bd613d801; immutable archive and artifact checksums are recorded in JRN-W28-074.
+- New changes above are not yet validated by CI. Run #435 is pending; no PASS is claimed for these additional changes.
+- No local PC, live MCP 8030, Core 8000, Runtime MCP, W14 Host, deployment or protected evidence readback was executed.
+
+**STATUS:** FAIL-CLOSED HTTP CONTAINMENT IMPLEMENTED / CI #435 PENDING; WP5-03 FUNCTIONAL CORE AUTHORITY REMAINS HIGH / OPEN; WP5-06 TRANSPORT MITIGATION CI #429 PASS; WP5-07 COVERAGE CI #429 PASS; WP5-08 COMMAND MODE MITIGATION CI #429 PASS; EXECUTION GATE CLOSED; NOT RELEASED.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-076 — CI #435 failure triage: readiness and legacy bootstrap tests
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 09:57 +07:00  
+**Workflow run:** 45102801064 / run #435  
+**Tested source head:** 7240a0d2d6fd115ddfb86ae7b7624837c76bd84d
+
+### 1. Exact CI result
+
+- Unit/regression: FAIL (one legacy bootstrap test error).
+- Linux lifecycle: FAIL (two stale readiness expectations).
+- Windows lifecycle: FAIL (same two stale readiness expectations).
+- The new HTTP containment test passed on both OS: snapshot request received 503 and no snapshot directory was created.
+- New Core readiness regression passed: 99 cached grants do not satisfy online Core authority.
+- New fail-closed module passed: 10 tests / OK on both OS.
+- WP16 dispatch, WP18 evidence and WP19 readback modules passed on both OS.
+
+### 2. Root causes
+
+1. Legacy Work13 bootstrap test still accessed removed server attribute build_grant_source and expected main() to load a static Core grant list. The candidate intentionally removed that authority shortcut.
+2. Legacy readiness test still passed obsolete keyword core_grant_url_set and expected /health to return PASS. The candidate intentionally reports INTEGRATION_BLOCKED until online Core validation is wired.
+
+### 3. Corrective test changes
+
+- Commit e0363a4671940783fd02c90ee70bb4f8007023b3: update readiness tests to assert INTEGRATION_BLOCKED, caller WorkContext authority BLOCKED, online Core grant validation BLOCKED and static grant cache IGNORED.
+- Commit 3a64249b00f3310e2ec461d984754eeff0aa5888: update legacy W13 bootstrap test to prove main() starts with empty static grant registry and remains BLOCKED even when ROOM_HOP_SNAPSHOT_ONLY=false.
+- No source security behavior was relaxed. A new exact-head CI run is pending.
+
+### 4. Disposition
+
+- CI #435 is FAIL; no overall PASS claimed.
+- HTTP snapshot containment is proven by the #435 raw logs, but full workflow remains failed on stale tests.
+- WP5-03 remains HIGH / OPEN as functional Core authority is not implemented or wired. HTTP execution is intentionally blocked in the candidate until it is.
+- WP5-06, WP5-07 and WP5-08 retain prior exact merge-candidate CI #429 PASS evidence; current follow-up candidate requires fresh exact-head CI.
+
+**STATUS:** CI #435 FAIL / TWO LEGACY TEST EXPECTATIONS IDENTIFIED; TEST FIXES COMMITTED; RERUN PENDING; EXECUTION GATE CLOSED; NOT RELEASED.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-077 — Exact merge-candidate CI #438 PASS for Core authority containment
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 10:00 +07:00  
+**PR:** #76 — OPEN / DRAFT / UNMERGED  
+**PR source head tested:** 3a64249b00f3310e2ec461d984754eeff0aa5888  
+**Pull-request merge candidate:** 3d43ee511ad5ea69e4464079bfbf3c4e5ce3f074  
+**Workflow run:** 45102972232 / run #438
+
+### 1. Exact CI result
+
+All five jobs completed SUCCESS:
+- Unit/regression: SUCCESS (348 tests in the configured Work28 suite).
+- Execution Host Linux lifecycle: SUCCESS.
+- Execution Host Windows lifecycle: SUCCESS.
+- Build and retest exact-SHA source artifact: SUCCESS.
+- Automatic E2E gate report: SUCCESS.
+
+Merge candidate 3d43ee511ad5... has parents canonical base 14a535a6... and PR source head 3a64249b.... Exact compare base → merge candidate: 23 ahead / 0 behind. This is a synthetic PR merge candidate; canonical branch is not merged.
+
+### 2. Security containment raw evidence
+
+Both Linux and Windows logs confirm:
+- test_work28_core_grant_fail_closed.py: 10 tests / OK.
+- test_work28_dispatch.py: 9 tests / OK, including HTTP snapshot request blocked with 503 and no snapshot side effect when online Core validation is absent.
+- test_work28_evidence.py: 7 tests / OK.
+- test_work28_readback.py: 5 tests / OK.
+- test_work28_audit_readiness.py: readiness and health tests OK.
+- Legacy Work13 bootstrap test now confirms main() does not load static grants as authority and remains in BLOCKED execution mode despite ROOM_HOP_SNAPSHOT_ONLY=false.
+
+Unit/regression job also confirms test_main_passes_loaded_configuration_to_serve now passes with the updated fail-closed startup contract.
+
+### 3. Immutable artifact
+
+- Artifact ID: 14786335989
+- Name: work28-source-artifact-3d43ee511ad5ea69e4464079bfbf3c4e5ce3f074
+- Size: 2,309,796 bytes
+- SHA-256: d2a446535d239dfe43a5dfadfb1e254cd9bf8db7e2d9cf66e68389cb5adb1e26
+- Auto E2E report artifact ID: 14785424371
+- Report SHA-256: 7de3edcbb492fb894ac5f1b9d1f0e1d9562bcb88b8a20aa72dd70bfa252ca6d0
+
+### 4. Interpretation and remaining blockers
+
+- The exact PR merge candidate passes configured unit/regression, Linux, Windows, immutable artifact and auto-gate-report jobs.
+- HTTP protected execution is intentionally BLOCKED until an online Core validator exists. This is a security containment result, not proof that execution is functional.
+- WP5-08 grantless command path is denied; WP5-06 HTTPS/no-redirect checks pass; WP5-07 fail-closed module is run and passes in both OS lanes.
+- WP5-03 is not functionally resolved: the current Core :8000 composition still lacks the Work execution-authority routes, the Work28 authority candidate is not wired to an online Host validator, and caller WorkContext is not yet replaced with a Core-derived context. The candidate prevents execution rather than trusting that input.
+- PR #74 contract findings remain open; W70 policy snapshot, W14 ownership, Core provenance and HostPort contract are not complete.
+- No live PC/runtime, MCP 8030 → Core → Runtime, W14 process provenance or protected evidence readback was executed.
+
+**STATUS:** PR #76 CANDIDATE CI #438 PASS / IMMUTABLE ARTIFACT PASS; HTTP EXECUTION FAIL-CLOSED / BLOCKED BY DESIGN; WP5-03 HIGH / OPEN; EXECUTION GATE CLOSED; NOT RELEASED.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-078 — Core Execution Authority V1.3 candidate contract and ownership boundary
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 14:40 +07:00  
+**Work:** Work 28 — MCP-8020-TOOLING-PLATFORM  
+**Priority:** P0 — authorization boundary / integration blocker  
+**Branch:** `ka/work28-security-hardening-20261123`  
+**PR:** #76 — OPEN / DRAFT / UNMERGED
+
+### 1. READ / TRACE
+
+Read back exact candidate-branch sources:
+- `WORK_MANIFEST.md` blob `3aa82147c525f6c8b3befd726fb91d3489fc578d`.
+- `core/execution_authority/authority.py` blob `bfb052fed0fde69767dd219f17a0b14ae6383560`.
+- `core/execution_authority/http_server.py` blob `6363c277ce410d3f5465f449b730199e06e5024c`.
+- `core/execution_authority/store.py` blob `a628dc578c68c05bb875318d1b74528b26f0e4eb`.
+- Architecture Decision V2 blob `3720ee455e5bb8e07de1bc4b4756615506ed5799`.
+
+Confirmed implementation/design gaps:
+1. V1.2 authority HTTP server is a separate process surface (default port 8001), not a route mounted into the existing Core :8000 composition. This conflicts with Core :8000 as sole authority unless ownership/composition is reconciled.
+2. Grant data currently binds Work roots and purpose but does not bind assignment, registered operation, entry path, exact source digest, W70 policy version/snapshot, gate version/snapshot or exact W14 Host audience.
+3. A token validation method exists in the candidate package, but no evidence shows it is integrated into the approved W14 Host online execution path.
+4. Current run record is not a complete event protocol: no request correlation/idempotency key, ordered event sequence, start ACK, cancellation/descendant-exit proof or terminal-event invariant.
+5. Current JSONL append/fsync store is append-only at the API surface, but does not implement a verified hash chain, process-safe concurrent append protocol, corruption/truncation detection or explicit read-after-write proof.
+6. The Work Manifest requires Core :8000 sole authority, W14 sole Host, W70 policy and owner approval before release/integration. These are binding boundaries, not optional implementation details.
+
+### 2. DECIDE
+
+- Create a versioned V1.3 contract candidate first; do not wire or deploy it.
+- All authority endpoints, if approved, must be mounted inside the existing Core :8000 application composition. A standalone :8001 authority service is not conforming.
+- W14 remains the sole execution Host. Work28 Host code cannot claim W14 ownership.
+- Core must derive identity, Work, assignment, operation, source binding and execution context; caller WorkContext is prohibited.
+- W70 freshness/gate snapshot, online grant validation, revocation, event ACK, idempotency and durable ledger readback are mandatory.
+- Preserve fail-closed behavior. No guessed Core/W70/W14 API, no static grant fallback, no PC test until Vinh reports PC ready.
+
+### 3. BUILD
+
+- Added `work/28/MCP-8020-TOOLING-PLATFORM/03_ARCHITECTURE/DOC-W28-078_CORE_EXECUTION_AUTHORITY_CONTRACT_V1_3_CANDIDATE.md`.
+- Document ID DOC-W28-078; Priority P0; status CANDIDATE — NOT APPROVED / NOT WIRED / NOT DEPLOYED.
+- Commit: `b73970b350a34a3c16f98090553c2aa0d152c462`.
+- Contract defines grant issue, Host online validation, Core-derived execution context, run lifecycle/events/ACK, idempotency, cancellation/close semantics, revocation, error taxonomy, evidence integrity and 13 verification cases.
+- Explicitly lists unresolved Core/W14/W70 ownership and provenance decisions; no implementation endpoints are invented.
+
+### 4. VERIFY / LIMITATION
+
+- GitHub create-file operation returned commit `b73970b350a34a3c16f98090553c2aa0d152c462`.
+- This is document persistence evidence only. File readback, journal append/readback and CI are still pending at this journal checkpoint.
+- No source code, Core :8000 route, W14 Host, runtime, or execution gate was modified.
+- No tests or live E2E were run. No acceptance is claimed.
+
+### 5. NEXT
+
+1. Read back DOC-W28-078 and append this entry to the same candidate-branch canonical journal.
+2. Trace Core main, W1111 PR #48 and PR #74 source provenance plus W14/W70 contracts before selecting any integration target.
+3. Convert the contract into executable schemas/fixtures and focused negative tests only after source ownership is established.
+4. Keep PR #76 DRAFT; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED.
+
+**STATUS:** DOC-W28-078 PERSISTED / READBACK PENDING; CORE AUTHORITY INTEGRATION BLOCKED; EXECUTION GATE CLOSED; NOT RELEASED.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-079 — DOC-W28-078 and journal readback closure
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 14:43 +07:00  
+**Priority:** P0 — contract candidate traceability
+
+### READBACK
+
+- DOC-W28-078 fetched from branch `ka/work28-security-hardening-20261123`; blob SHA-256 Git blob ID: `2e4f3966f86634d165f9d70f87703db65199cbef`; 14,849 characters; final status string confirms CANDIDATE / NOT APPROVED / NOT WIRED.
+- Canonical journal fetched after append; blob ID `92f130bb42eb3ffc193dcd9f4482fec11831dce4`; JRN-W28-078 is present.
+- Candidate branch compare against `work/28-mcp-tooling-platform`: 26 ahead / 0 behind; merge base `14a535a6f7d10bb318734cc8df6c76090286ac08`.
+- PR #76 remains OPEN / DRAFT / UNMERGED. The candidate contract and journal are branch-scoped; canonical Work28 branch has not been modified.
+
+### CORRECTION
+
+JRN-W28-078's initial "readback pending" wording is superseded by this entry: both document and journal readback succeeded. The earlier statement that journal append/readback was pending was accurate only at the time of the initial entry.
+
+### CI / ACCEPTANCE
+
+No workflow was triggered or claimed for the new documentation-only commits. No test or live E2E result is inferred from readback. Work remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED.
+
+**STATUS:** DOC-W28-078 READBACK PASS; JOURNAL READBACK PASS; CI NOT RUN FOR DOC-ONLY CHANGE; EXECUTION GATE CLOSED; NOT RELEASED.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-080 — Core :8000 / Host / W1111 source-provenance audit
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 14:46 +07:00  
+**Priority:** P0 — Core authority provenance and Host trust boundary  
+**Scope:** Read-only source trace; no production wiring.
+
+### 1. Exact source evidence
+
+Main snapshot `0902cd26518673aa078bb4c7c7899e1e4a95656a`:
+- `room_hop_mcp/core_http_main.py`, blob `8dd6bb5ea500026d932ca52eb6079c980d722ab0`: `build_app()` composes MeetingManager → MeetingService → `create_http_app(service)`; no authority router mount appears in the inspected composition.
+- `room_hop_mcp/adapter/http_server.py`, blob `54cb3ecbce2e6b13083f31c14f0c1f0738f1457d`: inspected adapter exposes Identity/Meeting routes, not execution-grant routes.
+- `execution_host/server.py`, blob `45aec57525b5d55bb63544b7bd7fd23062e06151`: `POST /execute` reads caller `work_context`, constructs `WorkContext(**...)` and calls Host. No Core online grant call is present in this handler.
+- `CORE_EXECUTION_AUTHORITY_V1_2_DEPLOYMENT.md`, blob `ce130f1f9a95daeaafff75ef37eacd4dffc797e2`: claims routes are mounted in Core :8000. This conflicts with the inspected entrypoint/adapter. Record as bounded doc/source mismatch, not as proof that no other deployment exists.
+
+W1111 PR #48 candidate:
+- Branch `work/w1111-core-execution-authority-v1-2`.
+- `core/execution_authority.py`, blob `163b126178b67c6e0a3f68ba33eaf7b9e6d91503`: contains a hash-chained JSONL store with lock-file serialization and chain verification.
+- `room_hop_mcp/adapter/execution_authority_http.py`, blob `8cb21fadf6bf2318f4884d368b77f2abf796b807`: candidate route-mount implementation with online grant validation.
+- Work17 GAP-01 Entry 030 records a prior static defect: run recording accepted a source digest different from the policy-bound digest. This must be reproduced against exact PR #48 HEAD before any reuse. PR #48 remains unmerged and is not canonical Core.
+
+### 2. DECIDE
+
+- No blind copy/cherry-pick from PR #48.
+- No new authority route mounted into Main or any parallel Core service started.
+- No Host execution until caller WorkContext authority is removed and W14-owned Host validates Core grants online.
+- DOC-W28-078 source-provenance addendum A1 records the exact paths/blobs and bounded discrepancy.
+- Maintain Execution Gate CLOSED and PR #76 DRAFT.
+
+### 3. BUILD / JOURNAL
+
+- Updated DOC-W28-078 with section 13, source-provenance addendum A1.
+- Document update commit: `c3b4b55bb3acb29c9feff3ae099c1446e06cb1e8`.
+- Journal entry appended to this canonical journal on candidate branch.
+- No source code, Core runtime, Host process, endpoint, credential or W70 policy was changed.
+
+### 4. LIMITATIONS / NEXT
+
+- This is static GitHub source evidence only; no live Core endpoint, W14 process, W70 policy snapshot, runtime grant or protected evidence readback was tested.
+- Next: fetch exact PR #48 / PR #74 metadata and compare source provenance; inspect W14 ownership/HostPort contract and W70 policy snapshot source before implementing any executable contract.
+- No CI is claimed for documentation-only changes. No product acceptance or release.
+
+**STATUS:** SOURCE AUDIT RECORDED; CORE MOUNT / HOST ONLINE AUTHORITY NOT VERIFIED; EXECUTION GATE CLOSED; NOT RELEASED.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-081 — Reconcile DOC-W28-078 with V1.3 architecture baseline PR #74
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 14:50 +07:00  
+**Priority:** P0 — authority/identity/Host ownership alignment
+
+### 1. READ / TRACE
+
+- Fetched PR #74 metadata and full V1.3 contract source blob `85c88a5ac50a6d12e4edcd34879a9db79277466a`.
+- PR #74 title: `W28: Core Execution Authority & Agent-to-Computer Contract V1.3`; contract status: architecture baseline decided; implementation not approved by this document alone; not deployed, not wired, not released.
+- PR #74 establishes normative ownership: W70 Work/WP/Gate; Core :8000 sole authority/system of record; W52 orchestration/assignment/recipient-authenticated ACK; W14 sole Host; W10 locked; W092/W113 read-only projections. It explicitly states route/transport names remain implementation decisions and one-shot POST /execute is not proof of bidirectional HostPort.
+- PR #48 metadata: OPEN / UNMERGED; head `c70eb2b82f54a000a81263dc519078ddf105f075`; compare to current Main snapshot `0902cd26518673aa078bb4c7c7899e1e4a95656a`: DIVERGED 157 ahead / 986 behind. The source and store are candidate evidence only, not canonical Core/W14.
+- PR #74 contract itself records the exact Main route-mount discrepancy and the PR #48 source-hash binding defect. DOC-W28-078 must not duplicate or weaken those architectural invariants.
+
+### 2. DECIDE
+
+- AD-W28-20261123-002 / PR #74 is the governing architecture baseline for DOC-W28-078.
+- DOC-W28-078 is subordinate and proposes only a possible wire-level realization; its route paths are illustrative, not approved endpoint names.
+- Grant issuance must follow W52 authenticated recipient ACK and W70 Work/WP/Gate eligibility, and must bind the complete PR #74 identifier set: Work/WP/Gate, task, assignment, idempotency/correlation, authenticated Agent principal/runtime, Host/provider, source snapshot, action/capability, environment, expiry and event sequence.
+- No implementation until W14 HostPort and canonical Core source provenance are resolved. No W10 direct call. No reuse of PR #48 wholesale.
+
+### 3. BUILD
+
+- Added section 14, Alignment Addendum, to DOC-W28-078.
+- Update commit: `d227a3e029a89b64f63efa814423fa964beb20c8`.
+- The addendum clarifies architecture precedence, ACK prerequisite, full grant binding, route/transport non-normativity, HostPort non-equivalence and PR #48/#74 provenance.
+
+### 4. LIMITATIONS / NEXT
+
+- No Core source, W52 transport, W14 Host, W70 policy, endpoint or deployment was changed.
+- No CI or live E2E is claimed. PR #74 is architecture baseline only; DOC-W28-078 remains candidate; PR #76 remains DRAFT.
+- Next: read back the amended contract and journal; inspect W14 canonical source/HostPort and W70 approved policy evidence; then prepare executable schemas as non-authoritative fixtures only if no conflicting source contract is found.
+
+**STATUS:** DOC-W28-078 ALIGNED TO PR #74 BASELINE / READBACK PENDING; IMPLEMENTATION NOT APPROVED; EXECUTION GATE CLOSED; NOT RELEASED.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-082 — W14 HostPort and W70 policy-source reconciliation
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 14:56 +07:00  
+**Priority:** P0 — sole Host and Work policy authority
+
+### 1. READ / TRACE
+
+**W14 release branch**
+- Branch: `release/work14-w14-release-20261010t053516`.
+- HEAD: `65992f04d6989e199d91355f0bd977cfc6258c4a`; compare to Main `0902cd26518673aa078bb4c7c7899e1e4a95656a`: DIVERGED 6 ahead / 1,793 behind.
+- Recursive Git tree is complete (not truncated). It contains root `execution_host/server.py`, `host.py`, `models.py`, `wee_bridge.py`, and a release evidence bundle. Expected `work/14/00_ROOT/DOC-001_W14_WORK_MANIFEST.md` and `work/14/03_ARCHITECTURE/EXECUTION_HOST_BOUNDARY.md` are NOT_FOUND at those paths on this branch. Three Work14 docs are present under `work/14/06_EVIDENCE/`; no canonical current W14 Work source declaration was established.
+- W14 release mapping doc blobs: restoration addendum `2a7bfc96e44ae3cf14bc0808e23e423a3efc47fb`; W70 compliance mapping `b7ecfb0fcd10ef3b95c2a3cf359fc81be5f4ba16`. They identify source mapping and runtime/release acceptance gaps; they are not HostPort implementation proof.
+- Independent W17 source trace search confirms inspected W14 surface is one-shot HTTP `POST /execute` → W12ExecutionAdapter/RealExecutionHost/subprocess.run, while W52 HostPort expects persistent bidirectional RpcPort request/notify/receive/respond/close and confirmed descendant stop. Do not equate these interfaces.
+
+**W70**
+- Main `DOC-061` blob `a54dc2202e56cfb9737395fd523a5488ab35b0f3`: DRAFT — source reconciliation complete / contract approval pending / implementation not verified.
+- DOC-061 states it does not approve API routes, DB schema, permissions, gate namespace or implementation; DOC-060 gate namespace remains proposal only.
+- No authoritative live W70 Work/WP/Gate policy snapshot endpoint/version/freshness contract was established by this inspection.
+
+### 2. DECIDE
+
+- W14 remains sole Host owner per AD-W28-20261123-002; no Work28 substitute Host.
+- Current W14 canonical branch/source/release identity is not established by the old release snapshot.
+- W14 HostPort is not proven by one-shot HTTP POST /execute; require W14-owned persistent RPC/session/close capability contract and live proof.
+- W70 static configuration cannot substitute for authoritative versioned Work/WP/Gate policy.
+- Core grant remains BLOCKED unless the approved W70 policy source is reachable, current and verifiable; grant must follow W52 recipient-authenticated ACK.
+
+### 3. BUILD
+
+- Added section 15, W14 HostPort and W70 policy-source reconciliation, to DOC-W28-078.
+- Document update commit: `1bcebf986f5262019fff64b9b38a218fb0f452e5`.
+- No W14 source, W70 source, Core source, Host, process, endpoint or policy was changed.
+
+### 4. LIMITATIONS / NEXT
+
+- Evidence is GitHub source/tree and document inspection only; no live PC process, service, runtime HostPort, W70 API or grant was invoked.
+- DOC-W28-078 remains a subordinate wire-level candidate under PR #74, not an approved implementation contract.
+- Next: inspect W52 interface/source revision and W14 current source mapping/owner evidence; prepare a gap-to-test matrix that maps PR #74 G0–G7 and Work28 acceptance without adding a parallel Host or authority.
+- No CI is claimed for documentation-only changes. PR #76 remains DRAFT; Execution Gate CLOSED.
+
+**STATUS:** W14 HOSTPORT NOT VERIFIED; W70 POLICY SNAPSHOT NOT APPROVED / NOT VERIFIED; DOC-W28-078 CANDIDATE; EXECUTION GATE CLOSED; NOT RELEASED.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-083 — W52 orchestration / recipient ACK source trace
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 15:00 +07:00  
+**Priority:** P0 — authenticated assignment and ACK prerequisite
+
+### 1. READ / TRACE
+
+- W52 branch `work/52-room-universal-ai-communication-orchestration`; HEAD `afd93ea8960d4cf9b27a57338b75f8d51624c170`.
+- Compare to Main `0902cd26518673aa078bb4c7c7899e1e4a95656a`: DIVERGED 4 ahead / 1,759 behind; only four changed paths, all W52 documents under `docs/work52/`.
+- Recursive tree completed, not truncated, 398 entries. No W52 orchestration implementation, HostPort interface, RpcPort adapter or runtime binding appears in this GitHub branch.
+- Work17 source trace search reports Sandbox-only candidate Codex App Server/Qwen ACP adapters, described as read-only/no-tool with injected CorePort/AuthorityPort/W14 HostPort but no production binding. This does not establish a GitHub-canonical or live W52 runtime.
+- PR #74 assigns W52 the dispatch, authenticated recipient ACK/NACK, durable outbox, cursor, retry/cancel/recovery and orchestration ownership.
+
+### 2. DECIDE
+
+- W28 must not implement a second dispatcher, task ledger, queue, recipient identity registry or ACK authority.
+- Grant issuance remains blocked until W52 proves a versioned assignment/ACK contract and authenticated runtime identity binding.
+- Task-created, session-intake, tool-return or generic ACCEPTED state is not recipient ACK.
+- ACK must be authenticated and durable before W14 can perform any side effect.
+- No HostPort compatibility claim from one-shot HTTP.
+
+### 3. BUILD
+
+- Added DOC-W28-078 section 16, W52 orchestration source and HostPort dependency.
+- Document commit: `e85a646f717406aa603cef82d6667406acd5aab7`.
+- No W52/W14/Core source, runtime, process, endpoint or policy was modified.
+
+### 4. LIMITATIONS / NEXT
+
+- W52 live Sandbox source was not read in this pass; GitHub branch tree evidence is bounded to the inspected branch.
+- No dispatch, ACK, HostPort, grant or live E2E was invoked.
+- Next: consolidate the exact acceptance dependency matrix against PR #74 G0–G7; ensure all current Work28 code/tests map to the governing contract and identify only candidate-local work that can safely proceed without owner-owned W52/W14/W70 implementation.
+- Documentation-only update; CI not claimed. PR #76 remains DRAFT; Execution Gate CLOSED.
+
+**STATUS:** W52 GITHUB IMPLEMENTATION NOT VERIFIED; AUTHENTICATED ACK NOT VERIFIED; DOC-W28-078 CANDIDATE; EXECUTION GATE CLOSED; NOT RELEASED.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-084 — PR #74 G0–G7 acceptance dependency matrix
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 15:06 +07:00  
+**Priority:** P0 — release gate traceability
+
+### 1. BUILD
+
+- Created supporting evidence map: `06_EVIDENCE/EV-W28-20261123-001_ACCEPTANCE_DEPENDENCY_MATRIX_P0.md`.
+- Evidence ID: EV-W28-20261123-001; Priority P0; Read order 32.
+- Commit: `f1c6de47eec9ada9b93ea635484655cf6b5fc5e8`.
+- Matrix maps PR #74 gates G0–G7 to owner, required proof, current bounded evidence and disposition.
+- Updated `00_ROOT/WORK_DOCUMENT_REGISTER.md` to register DOC-W28-078 as a candidate architecture supplement; commit `44aa98a926a2317ee473c7cb4308fdb448bc62c8`.
+
+### 2. DECIDE / CURRENT GATE
+
+- G0 source provenance: BLOCKED.
+- G1 service/Agent identity and runtime attestation: BLOCKED.
+- G2 W52 dispatch and recipient-authenticated ACK: BLOCKED.
+- G3 Core :8000 grant authority and durable ledger: BLOCKED.
+- G4 W14 sole Host / HostPort / containment: BLOCKED.
+- G5 provider: NOT AUTHORIZED / BLOCKED (W10 locked).
+- G6 W092/W113 event projection: NOT VERIFIED.
+- G7 independent real E2E: BLOCKED.
+- PR #76 CI #438 remains a valid candidate-local CI PASS only; it does not close any of the live cross-Work gates.
+
+### 3. LIMITATIONS
+
+- Matrix is source/documentation synthesis, not a new test or owner approval.
+- No external Work source/runtime, credentials, endpoint, PC process or provider was changed or invoked.
+- No CI is claimed for documentation-only files. No merge, deployment, release or acceptance.
+
+### 4. NEXT
+
+1. Read back DOC-W28-078, EV-W28-20261123-001, document register and journal.
+2. Keep PR #76 DRAFT and Execution Gate CLOSED.
+3. Continue safe candidate-local schema/negative-test work only; no guessed routes or cross-Work source mutation.
+
+**STATUS:** G0–G7 DEPENDENCY MATRIX RECORDED; ALL LIVE INTEGRATION GATES REMAIN BLOCKED / NOT VERIFIED; WORK 28 NOT RELEASED.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-085 — Candidate V1.3 JSON Schema fixtures and fail-closed schema tests
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 15:10 +07:00  
+**Priority:** P0 — grant binding / caller-authority rejection
+
+### 1. BUILD
+
+- Added candidate JSON Schema Draft 2020-12 file: `03_ARCHITECTURE/schemas/DOC-W28-078_V1_3_CANDIDATE.schema.json`.
+- Schema ID: SCH-W28-20261123-001; Priority P0; status candidate only.
+- Initial schema JSON parse succeeded; schema includes grant issue/response, Host validation request/response, run start/completion, durable ACK, ordered event envelope and stable error response definitions.
+- Grant request requires W52 recipient ACK event reference/sequence and full Work/WP/task/assignment/source/environment/Host/provider/capability/correlation/idempotency bindings. Caller WorkContext, authorized flag, Agent principal, roots and gate decision are explicitly prohibited from grant request.
+- Added candidate schema regression suite: `05_TEST/test_core_authority_v1_3_candidate_schema.py`.
+- Test file commit: `0f3bdafbd2b64e6b0d22cea19429eb897d6f75f9`.
+- Schema update commit: `53ceef4458c5d3c1e2715d85eac43b1f12c35fff`.
+- Updated Document Register to list SCH-W28-20261123-001; commit `2316491d98fad4eb4d0d10c2832b47fe37cc7f9c`.
+
+### 2. TEST SCOPE / LIMITATION
+
+- Local orchestration confirmed the schema text parses as JSON and contains the declared $defs. The schema regression test source was committed but has not yet been observed executing in GitHub Actions.
+- The test suite uses the repository-declared jsonschema dependency and checks Draft 2020-12 metaschema validity, required bindings, forbidden caller authority fields, recipient ACK reference, malformed SHA rejection and completion containment/descendant-exit conditions.
+- This does not prove live Core routes, W52 ACK authenticity, W14 Host enforcement, W70 policy resolution or cross-Work E2E.
+- No schema is approved for production. Route names remain illustrative under PR #74 §6.
+
+### 3. NEXT
+
+1. Read back schema/test/register/journal exact content.
+2. Confirm whether the PR #76 workflow ran for the exact new test commit; if no run is returned, record CI as PENDING/NOT RUN and do not infer PASS.
+3. Reproduce the candidate schema tests in the configured CI lane when workflow evidence is available.
+4. Keep PR #76 DRAFT and Execution Gate CLOSED.
+
+**STATUS:** SCHEMA CANDIDATE PERSISTED; JSON SYNTAX PASS; SCHEMA TEST EXECUTION PENDING; NO INTEGRATION OR RELEASE CLAIM.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-086 — CI #457 cancellation triage and schema regression expansion
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 15:13 +07:00  
+**Priority:** P0 — schema and ACK integrity verification
+
+### 1. CI observation
+
+- PR workflow run #457 / ID `45133711834` was associated with test source commit `0f3bdafbd2b64e6b0d22cea19429eb897d6f75f9`.
+- GitHub reports event `pull_request`, branch `ka/work28-security-hardening-20261123`, conclusion `cancelled`, run attempt 1.
+- The run jobs endpoint returned an empty jobs list. No raw job log or test result is available.
+- Disposition: CANCELLED / NOT A TEST RESULT. No PASS inferred.
+
+### 2. Corrective test expansion
+
+- Added explicit schema tests for durable run ACK (`durable_ack=true`) and ordered correlated event envelope (`correlation_id`, sequence, grant/task/assignment/host identity).
+- Updated test file commit: `4435b7af9b01a699191374a8313f0bb608394523`.
+- No production code, route, endpoint or external Work source changed.
+
+### 3. Next verification
+
+- Check for a new PR workflow run associated with commit `4435b7af9b01a699191374a8313f0bb608394523`.
+- If a run exists, inspect exact job status and raw logs. If it is cancelled or absent, record NOT RUN/CANCELLED and do not claim PASS.
+- Keep PR #76 DRAFT and Execution Gate CLOSED.
+
+**STATUS:** CI #457 CANCELLED / NO JOB LOG; TESTS EXPANDED; EXACT-HEAD CI PENDING; NO ACCEPTANCE.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-087 — Exact-head PR CI #460 cancelled without jobs
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 15:14 +07:00  
+**Priority:** P0 — exact-head verification
+
+### 1. CI evidence
+
+- Test commit: `4435b7af9b01a699191374a8313f0bb608394523`.
+- PR workflow #460 / run ID `45133829941`.
+- GitHub run metadata: event `pull_request`; head branch `ka/work28-security-hardening-20261123`; exact head SHA matches test commit; status COMPLETED; conclusion CANCELLED.
+- Latest-attempt jobs endpoint returned an empty list. No job logs or test counts exist.
+- Prior run #457 / `45133711834` was also CANCELLED with an empty jobs list.
+- The available GitHub Actions connector exposes job/run readback and failed-job rerun, but no workflow-dispatch action; cancelled runs with no jobs cannot be rerun through the available rerun actions.
+- No cancellation cause is asserted because the run payload/jobs did not expose one.
+
+### 2. Disposition
+
+- CI #460 = CANCELLED / NOT RUN / NO TEST RESULT.
+- Schema source and test file are persisted and readback is pending at this entry.
+- Do not label schema suite PASS; no local test run is claimed.
+- This does not change previous CI #438 evidence for the earlier source candidate; it only means the new schema test suite lacks exact-head CI evidence.
+
+### 3. Next
+
+- Preserve the candidate test source and await an executable workflow run/approved local runner availability.
+- No direct PC request: Vinh will report when the PC is ready.
+- Continue source-level review and documentation only; no production wiring.
+- PR #76 remains OPEN / DRAFT / UNMERGED; Execution Gate CLOSED; Work 28 NOT RELEASED.
+
+**STATUS:** CI #460 CANCELLED / NO JOBS / NO PASS; EXACT-HEAD SCHEMA TESTS NOT VERIFIED.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-088 — PR #76 description and evidence register reconciliation
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 15:16 +07:00  
+**Priority:** P0 — candidate status transparency
+
+### 1. BUILD
+
+- Updated PR #76 description to include DOC-W28-078, EV-W28-20261123-001, candidate schema/test work, exact CI #438 PASS scope, CI #457/#460 cancellations and all live integration blockers.
+- GitHub readback after update reports PR #76 OPEN / DRAFT / UNMERGED / mergeable=true; source head `03c7681db16184d4f7ec06a76637300accf2088e`; base SHA `14a535a6f7d10bb318734cc8df6c76090286ac08`.
+- Updated Work Document Register to list EV-W28-20261123-001 as evidence map; commit `cfe6b2921fb161965b5aac042d05be4adbac7b31`.
+
+### 2. VERIFY / LIMITATION
+
+- PR description explicitly states CI #457 and #460 were cancelled with no jobs; no schema test PASS is claimed.
+- PR description keeps execution gate CLOSED, not released, and states live Core/W52/W14/W70/PC E2E is not proven.
+- This is PR metadata/documentation maintenance only; no test or runtime execution occurred.
+
+### 3. NEXT
+
+- Read back final schema, test, evidence matrix, register, journal and PR metadata.
+- Keep candidate-local code and docs isolated. No merge, no deployment, no PC test until Vinh says PC is ready.
+- Continue to identify safe, bounded candidate improvements; owner-owned Core/W52/W14/W70 integration remains blocked pending canonical source and approval.
+
+**STATUS:** PR #76 METADATA UPDATED / OPEN DRAFT UNMERGED; REGISTER UPDATED; SCHEMA TEST CI STILL NOT VERIFIED; EXECUTION GATE CLOSED.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-089 — Direct exact-source confirmation of PR #48 source-hash binding defect
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 15:19 +07:00  
+**Priority:** P0 — immutable source binding
+
+### 1. READ / TRACE
+
+- Fetched PR #48 exact head `c70eb2b82f54a000a81263dc519078ddf105f075`.
+- Core source `core/execution_authority.py`, blob `163b126178b67c6e0a3f68ba33eaf7b9e6d91503`.
+- Test source `tests/test_execution_authority.py`, blob `4ea5158c07df1e66183a6fbe7a6f79042332605d`.
+- In `ExecutionAuthority.record_run()`, code revalidates the token and checks only SHA-256 syntax for submitted source digest; no comparison to grant-bound policy digest occurs before append.
+- Test fixture binds W28 policy to `a` × 64. The run-record HTTP test submits `b` × 64 and asserts HTTP 200 and the mismatched digest in the response.
+- This directly demonstrates the candidate test contract accepts a source mismatch. No test execution occurred; this is exact source/test inspection.
+
+### 2. DECIDE
+
+- PR #48 must not be merged wholesale or reused unchanged.
+- Any Core implementation must compare the submitted source digest with the immutable grant-bound digest and current approved source snapshot before any run append.
+- A negative test must assert mismatch denial and zero run-record mutation.
+- This defect conflicts with PR #74 INV-4 and Work28 exact-source binding; retain P0 blocker.
+
+### 3. BUILD
+
+- Added section 17 to DOC-W28-078 documenting the exact source/test blobs and defect.
+- Document commit: `0eaca316efe6380fcb80658db538ca80116e7ff0`.
+- No PR #48 source, Main source, Core runtime or external Work was modified.
+
+### 4. LIMITATIONS / NEXT
+
+- PR #48 remains OPEN / DRAFT / UNMERGED; branch comparison remains highly divergent.
+- No PR #48 tests were run; test source is evidence of the expected mismatched-digest acceptance.
+- Next: read back DOC-W28-078 and journal; keep PR #76 isolated; include this defect in the final Core authority acceptance matrix.
+- No CI/live E2E/PC test is claimed.
+
+**STATUS:** PR #48 SOURCE-HASH BINDING DEFECT DIRECTLY CONFIRMED BY SOURCE + TEST; P0 OPEN; NO REUSE/INTEGRATION.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]

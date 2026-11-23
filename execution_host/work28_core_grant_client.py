@@ -10,6 +10,7 @@ import json
 import os
 import urllib.error
 import urllib.request
+from urllib.parse import urlsplit
 from typing import Protocol
 
 from .work28_grant import ExecutionGrant, GrantError
@@ -32,11 +33,33 @@ class FileGrantSource:
         return load_grant_registry(path=self._path)
 
 
+class _NoRedirectHandler(urllib.request.HTTPRedirectHandler):
+    """Reject redirects so Core bearer credentials never cross destinations."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
 class HttpCoreGrantSource:
     def __init__(self, url: str, token: str | None = None, timeout: float = 5.0) -> None:
-        if not url:
+        if not isinstance(url, str) or not url.strip():
             raise GrantError("core_grant_url_required")
-        self.url = url
+        try:
+            parsed = urlsplit(url.strip())
+            # Accessing .port validates malformed port syntax.
+            _ = parsed.port
+        except ValueError as exc:
+            raise GrantError("core_grant_url_invalid") from exc
+        if (
+            parsed.scheme.lower() != "https"
+            or not parsed.hostname
+            or parsed.username is not None
+            or parsed.password is not None
+            or parsed.query
+            or parsed.fragment
+        ):
+            raise GrantError("core_grant_url_must_be_https_without_userinfo_query_or_fragment")
+        self.url = url.strip()
         self.token = token
         self.timeout = timeout
 
@@ -46,7 +69,8 @@ class HttpCoreGrantSource:
             headers["Authorization"] = "Bearer " + self.token
         req = urllib.request.Request(self.url, headers=headers, method="GET")
         try:
-            with urllib.request.urlopen(req, timeout=self.timeout) as resp:
+            opener = urllib.request.build_opener(_NoRedirectHandler())
+            with opener.open(req, timeout=self.timeout) as resp:
                 if resp.status != 200:
                     raise GrantError("core_grant_http_" + str(resp.status))
                 raw = resp.read().decode("utf-8")

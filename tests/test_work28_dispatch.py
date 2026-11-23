@@ -38,6 +38,27 @@ class DispatchUnitTests(unittest.TestCase):
                 grant_registry={},
             )
 
+    def test_command_mode_is_disabled_even_when_snapshot_only_false(self):
+        host = ExecutionHost()
+        with self.assertRaisesRegex(DispatchError, "command_mode_disabled_core_grant_contract_required"):
+            dispatch_execute(
+                host,
+                work_context={
+                    "work_id": "28",
+                    "work_name": "W",
+                    "workspace_root": ".",
+                    "execution_workspace": ".",
+                    "evidence_root": ".",
+                    "authorized": True,
+                },
+                body={
+                    "mode": "command",
+                    "execution_request": {"command": ["python", "-c", "print('must-not-run')"]},
+                },
+                grant_registry={},
+                snapshot_only=False,
+            )
+
     def test_snapshot_requires_registry_grant(self):
         host = ExecutionHost()
         with self.assertRaises(GrantError):
@@ -148,7 +169,7 @@ class WorkIdEquivTests(unittest.TestCase):
 
 
 class HttpE2EGrantSnapshotTests(unittest.TestCase):
-    def test_http_200_work28_snapshot_with_token_and_grant(self):
+    def test_http_snapshot_blocked_without_online_core_authority(self):
         with tempfile.TemporaryDirectory() as td:
             base = Path(td)
             host_root = base / "root"
@@ -206,13 +227,15 @@ class HttpE2EGrantSnapshotTests(unittest.TestCase):
                     },
                     method="POST",
                 )
-                with request.urlopen(req, timeout=15) as resp:
-                    self.assertEqual(resp.status, 200)
-                    data = json.loads(resp.read().decode())
-                self.assertEqual(data.get("dispatch_mode"), "work28_snapshot")
-                self.assertEqual(data.get("grant_id"), "g17")
-                if data.get("status") == "PASS":
-                    self.assertIn("wp17-http", data.get("stdout_summary") or "")
+                with self.assertRaises(error.HTTPError) as ctx:
+                    request.urlopen(req, timeout=15)
+                self.assertEqual(ctx.exception.code, 503)
+                data = json.loads(ctx.exception.read().decode())
+                self.assertEqual(data["reason"], "core_online_grant_validation_not_configured")
+                self.assertFalse((ev / "snapshots").exists())
+                
+                
+
             finally:
                 httpd.shutdown()
                 httpd.server_close()

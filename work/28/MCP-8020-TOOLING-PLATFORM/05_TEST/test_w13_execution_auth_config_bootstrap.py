@@ -77,11 +77,6 @@ class MainWiringTests(unittest.TestCase):
     def test_main_passes_loaded_configuration_to_serve(self):
         captured = {}
         real_serve = eh_server.serve
-        real_build_grant_source = eh_server.build_grant_source
-
-        class EmptyCoreGrantSource:
-            def fetch_grants(self):
-                return {}
 
         def fake_serve(host, port, auth_token, authorized_works, **kwargs):
             # main() may pass grant_registry, evidence_root, snapshot_only (WP18+)
@@ -94,11 +89,10 @@ class MainWiringTests(unittest.TestCase):
             )
 
         eh_server.serve = fake_serve
-        eh_server.build_grant_source = lambda: EmptyCoreGrantSource()
         env = {
             AUTH_TOKEN_ENV: 'trusted-token',
             AUTHORIZED_WORKS_ENV: 'W28, W13',
-            'ROOM_HOP_CORE_GRANT_URL': 'http://core.test/grants',
+            'ROOM_HOP_SNAPSHOT_ONLY': 'false',
         }
         try:
             import os
@@ -113,13 +107,14 @@ class MainWiringTests(unittest.TestCase):
             os.environ.clear()
             os.environ.update(saved)
             eh_server.serve = real_serve
-            eh_server.build_grant_source = real_build_grant_source
         self.assertEqual(captured['auth_token'], 'trusted-token')
         self.assertEqual(captured['authorized_works'], frozenset({'W28', 'W13'}))
-        self.assertIn('grant_registry', captured)
+        self.assertEqual(captured['grant_registry'], {})
         self.assertIn('snapshot_only', captured)
         self.assertIs(captured['snapshot_only'], True)
-        # Startup announces the armed works but never the token.
+        # Startup announces BLOCKED execution until online Core validation is wired.
+        self.assertIn('BLOCKED execution mode', output)
+        self.assertIn('NOT_CONFIGURED', output)
         self.assertIn('W28', output)
         self.assertIn('W13', output)
         self.assertNotIn('trusted-token', output)

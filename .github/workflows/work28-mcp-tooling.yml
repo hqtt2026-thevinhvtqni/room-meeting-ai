@@ -118,6 +118,7 @@ jobs:
           python -m unittest discover -s tests -p 'test_execution_host_auth.py' -v 2>&1 | tee -a lifecycle-output.txt
           python -m unittest discover -s tests -p 'test_work28_grant.py' -v 2>&1 | tee -a lifecycle-output.txt
           python -m unittest discover -s tests -p 'test_work28_dispatch.py' -v 2>&1 | tee -a lifecycle-output.txt
+          python -m unittest discover -s tests -p 'test_work28_core_grant_fail_closed.py' -v 2>&1 | tee -a lifecycle-output.txt
           python -m unittest discover -s tests -p 'test_work28_evidence.py' -v 2>&1 | tee -a lifecycle-output.txt
           python -m unittest discover -s tests -p 'test_work28_readback.py' -v 2>&1 | tee -a lifecycle-output.txt
           python -m unittest discover -s tests -p 'test_work28_bounds.py' -v 2>&1 | tee -a lifecycle-output.txt
@@ -172,6 +173,8 @@ jobs:
           python -m unittest discover -s tests -p 'test_work28_grant.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp15-grant.txt
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -m unittest discover -s tests -p 'test_work28_dispatch.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp16-dispatch.txt
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -m unittest discover -s tests -p 'test_work28_core_grant_fail_closed.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp5-core-grant-fail-closed.txt
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -m unittest discover -s tests -p 'test_work28_evidence.py' -v 2>&1 | Tee-Object -FilePath lifecycle-wp18-evidence.txt
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

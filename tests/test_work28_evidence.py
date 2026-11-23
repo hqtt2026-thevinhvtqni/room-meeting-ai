@@ -50,14 +50,14 @@ class CoreGrantClientTests(unittest.TestCase):
         src = FileGrantSource()
         self.assertEqual(src.fetch_grants(), {})
 
-    def test_http_unreachable_fail_closed(self):
-        src = HttpCoreGrantSource("http://127.0.0.1:1/grants", timeout=0.2)
+    def test_https_unreachable_fail_closed(self):
+        src = HttpCoreGrantSource("https://127.0.0.1:1/grants", timeout=0.2)
         with self.assertRaises(GrantError) as ctx:
             src.fetch_grants()
         self.assertIn("unreachable", str(ctx.exception))
 
     def test_build_prefers_core_url(self):
-        env = {"ROOM_HOP_CORE_GRANT_URL": "http://example.invalid/g"}
+        env = {"ROOM_HOP_CORE_GRANT_URL": "https://example.invalid/g"}
         src = build_grant_source(env)
         self.assertIsInstance(src, HttpCoreGrantSource)
 

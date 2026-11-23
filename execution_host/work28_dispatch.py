@@ -44,22 +44,10 @@ def dispatch_execute(
     if mode != "command":
         raise DispatchError("unsupported_mode:" + str(mode))
 
-    if snapshot_only:
-        raise DispatchError("command_mode_disabled_snapshot_only")
-
-    if "work28_request" in body or "execution_grant_id" in body:
-        raise DispatchError("work28_fields_require_mode_work28_snapshot")
-
-    ctx = WorkContext(**work_context)
-    if not ctx.execution_id:
-        work_context = dict(work_context)
-        work_context["execution_id"] = new_execution_id()
-        ctx = WorkContext(**work_context)
-
-    req = ExecutionRequest(**(body.get("execution_request") or {}))
-    result = host.execute_work(ctx, req).as_dict()
-    result["dispatch_mode"] = "command"
-    return result
+    # There is no approved Core-authorized command-mode wire contract.
+    # Never let a configuration flag open an execution path that skips
+    # scoped grant binding, source snapshotting, and evidence sealing.
+    raise DispatchError("command_mode_disabled_core_grant_contract_required")
 
 
 def _dispatch_work28_snapshot(

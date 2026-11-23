@@ -92,12 +92,15 @@ class ReadinessTests(unittest.TestCase):
             grant_count=5,
             evidence_root_configured=True,
             snapshot_only=True,
-            core_grant_url_set=True,
+            core_online_validator_configured=False,
         )
         self.assertFalse(r["release_allowed"])
         self.assertEqual(r["gates"]["release"], "NOT_RELEASED")
         self.assertEqual(r["gates"]["mcp_execution_tools"], "CLOSED")
         self.assertEqual(r["gates"]["os_isolation"], "NOT_VERIFIED")
+        self.assertEqual(r["gates"]["core_online_grant_validation"], "BLOCKED")
+        self.assertEqual(r["gates"]["caller_work_context_authority"], "BLOCKED")
+        self.assertEqual(r["gates"]["static_grant_cache"], "IGNORED")
 
 
 class HealthTests(unittest.TestCase):
@@ -114,9 +117,10 @@ class HealthTests(unittest.TestCase):
         try:
             with request.urlopen(f"http://127.0.0.1:{port}/health", timeout=5) as resp:
                 data = json.loads(resp.read().decode())
-            self.assertEqual(data["status"], "PASS")
+            self.assertEqual(data["status"], "INTEGRATION_BLOCKED")
             self.assertTrue(data["snapshot_only"])
             self.assertIn("readiness", data)
+            self.assertEqual(data["readiness"]["gates"]["core_online_grant_validation"], "BLOCKED")
             self.assertFalse(data["readiness"]["release_allowed"])
             self.assertIn("bounds", data)
         finally:
