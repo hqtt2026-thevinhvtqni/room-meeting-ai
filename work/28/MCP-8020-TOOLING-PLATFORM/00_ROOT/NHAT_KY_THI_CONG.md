@@ -2225,3 +2225,35 @@ The remaining acceptance gap requires evidence from the actual ROOM-HOP PC. Chat
 - Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
 
 **STATUS:** HIGH/P0 WP5 TRUST-BOUNDARY FINDINGS RECORDED; REVIEW-ONLY TLS PATCH CANDIDATE NOT TESTED OR PROMOTED; CORE CONTRACT MISMATCH AND TRUSTED WORKCONTEXT BLOCKED.
+
+
+## 2026-11-23 — JRN-W28-060 — Independent review of Core Execution Authority & Agent-to-Computer Contract V1.3 (PR #74)
+
+**Role:** Ka | Independent Architecture & Security Reviewer (CSA)  
+**Title:** Chief Security Architect — Work 28 independent reviewer  
+**Date-time:** 2026-11-23 07:03 UTC+07:00  
+**PR:** #74 — W28 Core Execution Authority & Agent-to-Computer Contract V1.3  
+**Review ID:** 6015314554 — COMMENT (not APPROVE)  
+**Signature:** [KÝ: KA | CSA]
+
+### READ / TRACE
+- Read the complete V1.3 contract at branch `xu/w28-core-authority-v1-3-20261123`, blob `85c88a5ac50a6d12e4edcd34879a9db79277466a`.
+- Compared that branch against canonical `work/28-mcp-tooling-platform`: DIVERGED, 2 commits ahead / 2 behind; one modified contract file.
+- Verified that the PR declares architecture baseline only: implementation not approved by the document alone, not deployed, not wired and not released.
+- Confirmed the contract's intended ownership split: W70 Work/Gate lifecycle; Core authority and durable ledger; W52 Agent orchestration/ACK; W14 sole Execution Host product; W10 LOCKED / NO CHANGE; W092/W113 read-only projections.
+
+### REVIEW
+- Positive: the contract establishes a coherent single-authority boundary, authenticated recipient ACK, scoped grants, online validation before side effects, correlated events, fail-closed behavior and explicit G0–G7 acceptance gates.
+- P1: no concrete versioned wire schemas, grant token fields, error taxonomy, ACK proof format or event sequencing contract is provided yet. W28's current grant client and inspected Core HTTP candidate are not wire-compatible.
+- P1: W14 sole Host ownership is not mapped to the W28 canonical `execution_host/` source and :8031 server. The contract must identify whether this is W14 source, a W28 adapter, or a second Host implementation to be retired.
+- P1: Core candidate provenance is ambiguous across current main, W1111 PR #48, and the distinct W28 canonical `core/execution_authority/` source. Each candidate must be identified by repository, branch, path and exact SHA; no candidate is selected by inference.
+- P2: W70 policy version/snapshot consistency and fail-closed behavior for unavailable/stale policy need explicit invariants.
+- P2: HostPort needs a minimum normative bidirectional message envelope, cursor/sequence, idempotency, cancellation acknowledgement and close/descendant-exit semantics.
+
+### ACTION / DISPOSITION
+- Submitted a formal GitHub COMMENT review on PR #74 (Review ID `6015314554`). No approval or merge authorization was given.
+- Requested Xu/Vi to add the concrete contract addendum and source-mapping table, reconcile the PR branch onto the latest canonical Work 28 baseline, and request a fresh independent review.
+- No code, endpoint, service, deployment, Core configuration, credential, runtime or release state was changed by this review.
+- PR #74 remains a proposed architecture contract; no endpoint, grant adapter, runtime wiring, Host migration or gate transition is authorized by this comment.
+
+**STATUS:** PR #74 REVIEW COMMENT SUBMITTED / ARCHITECTURE DIRECTION POSITIVE WITH P1/P2 CLARIFICATIONS REQUIRED / NOT APPROVED FOR IMPLEMENTATION OR MERGE / EXECUTION GATE CLOSED / NOT RELEASED.
