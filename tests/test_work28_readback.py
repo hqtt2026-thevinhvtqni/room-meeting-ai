@@ -1,4 +1,4 @@
-"""WP19: evidence readback + snapshot_only mode."""
+"""WP19: evidence readback and grant-required execution mode."""
 from __future__ import annotations
 
 import json
@@ -53,7 +53,7 @@ class SnapshotOnlyTests(unittest.TestCase):
                 grant_registry={},
                 snapshot_only=True,
             )
-        self.assertIn("snapshot_only", str(ctx.exception))
+        self.assertIn("command_mode_disabled_core_grant_required", str(ctx.exception))
 
 
 class HttpReadbackTests(unittest.TestCase):

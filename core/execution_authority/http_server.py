@@ -27,6 +27,7 @@ from core.execution_authority.authority import (
 from core.execution_authority.store import AppendOnlyRecordStore
 
 SERVICE_IDENTITY_HEADER = "X-Room-Hop-Service-Identity"
+GRANT_TOKEN_HEADER = "X-Room-Hop-Execution-Grant"
 
 
 class ExecutionAuthorityHandler(BaseHTTPRequestHandler):
@@ -68,12 +69,16 @@ class ExecutionAuthorityHandler(BaseHTTPRequestHandler):
         work_id, grant_id = parts[1], parts[3]
         try:
             caller = self.authority.authenticate(self.headers.get(SERVICE_IDENTITY_HEADER))
-            status = self.authority.grant_status(grant_id)
         except PermissionError as exc:
             self._error(401, str(exc))
             return
+        try:
+            status = self.authority.validate_grant_token(grant_id, self.headers.get(GRANT_TOKEN_HEADER) or "")
         except LookupError:
             self._error(404, "unknown_grant")
+            return
+        except PermissionError as exc:
+            self._error(403, str(exc))
             return
         # Grant metadata is scoped to the service identity that owns it.
         if status.get("work_id") != work_id or status.get("service_identity") != caller:
@@ -112,12 +117,22 @@ class ExecutionAuthorityHandler(BaseHTTPRequestHandler):
         except ValueError as exc:
             self._error(400, str(exc))
             return
+        if set(body) - {"purpose", "capability", "grant_seconds"}:
+            self._error(400, "unsupported_grant_fields")
+            return
         purpose = body.get("purpose")
         if not isinstance(purpose, str) or not purpose.strip():
             self._error(400, "purpose_required")
             return
+        capability = body.get("capability")
+        if capability is not None and not isinstance(capability, dict):
+            self._error(400, "capability_invalid")
+            return
+        if work.get("capability_required", False) and capability is None:
+            self._error(400, "capability_required")
+            return
         try:
-            grant = self.authority.issue_grant(name, work_id, purpose)
+            grant = self.authority.issue_grant(name, work_id, purpose, capability=capability, grant_seconds=body.get("grant_seconds"))
         except FileExistsError:
             self._error(409, "grant_already_active")
             return
@@ -134,8 +149,11 @@ class ExecutionAuthorityHandler(BaseHTTPRequestHandler):
         except ValueError as exc:
             self._error(400, str(exc))
             return
+        if set(body) - {"grant_id", "source_sha256", "exit_status", "output_refs", "evidence_refs", "handoff_ids"}:
+            self._error(400, "unsupported_run_fields")
+            return
         grant_id = body.get("grant_id")
-        token = body.get("grant_token")
+        token = self.headers.get(GRANT_TOKEN_HEADER)
         if not isinstance(grant_id, str) or not grant_id.strip():
             self._error(400, "grant_id_required")
             return

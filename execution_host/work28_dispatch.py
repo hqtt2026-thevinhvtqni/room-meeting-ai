@@ -28,38 +28,29 @@ def dispatch_execute(
     work_context: dict[str, Any],
     body: dict[str, Any],
     grant_registry: dict[str, ExecutionGrant] | None,
-    snapshot_only: bool = False,
+    snapshot_only: bool = True,
 ) -> dict[str, Any]:
+    """Dispatch only the grant-bound snapshot contract.
+
+    The legacy command mode has no Core-issued grant binding and is therefore
+    disabled unconditionally. The snapshot_only argument is retained for
+    call-site compatibility; setting it False never re-enables command mode.
+    """
     if not isinstance(body, dict):
         raise DispatchError("body_must_be_object")
 
     mode = body.get("mode", "command")
-    if mode == "work28_snapshot":
-        return _dispatch_work28_snapshot(
-            host,
-            work_context=work_context,
-            body=body,
-            grant_registry=grant_registry or {},
-        )
-    if mode != "command":
+    if mode == "command":
+        raise DispatchError("command_mode_disabled_core_grant_required")
+    if mode != "work28_snapshot":
         raise DispatchError("unsupported_mode:" + str(mode))
 
-    if snapshot_only:
-        raise DispatchError("command_mode_disabled_snapshot_only")
-
-    if "work28_request" in body or "execution_grant_id" in body:
-        raise DispatchError("work28_fields_require_mode_work28_snapshot")
-
-    ctx = WorkContext(**work_context)
-    if not ctx.execution_id:
-        work_context = dict(work_context)
-        work_context["execution_id"] = new_execution_id()
-        ctx = WorkContext(**work_context)
-
-    req = ExecutionRequest(**(body.get("execution_request") or {}))
-    result = host.execute_work(ctx, req).as_dict()
-    result["dispatch_mode"] = "command"
-    return result
+    return _dispatch_work28_snapshot(
+        host,
+        work_context=work_context,
+        body=body,
+        grant_registry=grant_registry or {},
+    )
 
 
 def _dispatch_work28_snapshot(

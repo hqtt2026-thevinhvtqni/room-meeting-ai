@@ -98,6 +98,7 @@ class ReadinessTests(unittest.TestCase):
         self.assertEqual(r["gates"]["release"], "NOT_RELEASED")
         self.assertEqual(r["gates"]["mcp_execution_tools"], "CLOSED")
         self.assertEqual(r["gates"]["os_isolation"], "NOT_VERIFIED")
+        self.assertEqual(r["gates"]["core_grant_live"], "NOT_VERIFIED")
 
 
 class HealthTests(unittest.TestCase):

@@ -2733,3 +2733,95 @@ Review 6015443161 records the detailed findings; review 6015449638 corrects curr
 **STATUS:** PR #74 OPEN / DRAFT / UNMERGED / 2 AHEAD / 12 BEHIND; WP5-03 / WP5-06 / WP5-07 / WP5-08 HIGH / OPEN; LIVE MCP → CORE → RUNTIME E2E BLOCKED; EXECUTION GATE CLOSED; ACTIVE — INTEGRATION BLOCKED — NOT RELEASED.
 
 **Signature:** [KÝ: KA | CSA / INDEPENDENT REVIEWER]
+
+
+## 2026-11-23 — JRN-W28-071 — Ka autonomous build: command-mode closure, Core transport hardening and CI verification
+
+**Name:** Ka  
+**Title:** Temporary Work 28 Build Owner / CSA & Security Reviewer  
+**Date-Time:** 2026-11-23 08:02 +07:00  
+**Authority:** Vinh — direct stage-specific implementation delegation  
+**Canonical base:** `work/28-mcp-tooling-platform` at `14a535a6f7d10bb318734cc8df6c76090286ac08`  
+**Implementation branch:** `ka/work28-autonomous-build-20261123`  
+**Candidate HEAD tested:** `e0f079f78edf2dcaf0c097dedf8f63dacdc72f8c`  
+**PR:** #75 — OPEN / DRAFT / UNMERGED
+
+### 1. Governance and required reading
+
+- Read repository `AGENTS.md`, Work 28 `WORK_MANIFEST.md`, `BIEN_BAN.md`, Master Execution Plan V2.0 and Architecture Decision V2 before implementation.
+- Vinh's direct instruction temporarily authorizes Ka to implement and verify this phase; Vi and An do not participate in this phase.
+- Official minutes addendum BB-W28-20261123-002 records the temporary override.
+- Since Ka is both implementer and verification operator, no independent QA/An sign-off is claimed. Automated CI evidence remains distinct from independent review and product acceptance.
+
+### 2. READ / TRACE — exact source findings
+
+- Canonical dispatch source before change: `execution_host/work28_dispatch.py`, blob `22d5dcd385e301a43fcd0e1c3e901ff2c90abac9`. Legacy `command` mode could call `host.execute_work` when `snapshot_only=False`.
+- Canonical startup source before change: `execution_host/server.py`, blob `cfdecca58e6146d067ce0e0c0a0feebac0ebdc83`. `ROOM_HOP_SNAPSHOT_ONLY=false` could opt out of snapshot-only mode.
+- Canonical Core grant client before change: `execution_host/work28_core_grant_client.py`, blob `e330d4f3681d3fb142e559f7ee35b21db128be7e`. It used default `urllib.request.urlopen` redirect behavior and did not enforce remote HTTPS.
+- Canonical workflow before change: `.github/workflows/work28-mcp-tooling.yml`, blob `8876f1a9096ec54e5a78a073820755087e67ecbf`. It did not explicitly invoke `tests/test_work28_core_grant_fail_closed.py` in Linux or Windows lifecycle lanes.
+- Additional Core API trace: `core/execution_authority/http_server.py`, blob `6363c277ce410d3f5465f449b730199e06e5024c`, exposes POST grant issuance, GET status for one grant, and POST run recording under `/works/{work_id}/...`; service identity is supplied through `X-Room-Hop-Service-Identity`; standalone default bind is `127.0.0.1:8001`. It has no GET grant-collection route.
+- This differs materially from Work28 `HttpCoreGrantSource`, which currently GETs one configured URL, expects a JSON list of grants and uses Bearer authorization. The Core authority candidate also carries a different grant shape. Therefore the current client is **not proven interoperable** with this Core API. No assumption is made that port 8001 is Core :8000 or that the candidate is the deployed authority.
+
+### 3. BUILD — candidate changes
+
+Changes are isolated to PR #75; canonical branch was not modified.
+
+| Path | Candidate blob |
+|---|---|
+| `execution_host/work28_dispatch.py` | `dd0270487745887028ab14b0126a3158e6d615d8` |
+| `execution_host/work28_core_grant_client.py` | `52dd6f69749a710447bb24e43cf5465e6157d397` |
+| `execution_host/server.py` | `59e52a2f3a4ab32ceb952d7e8333b5d6234cdeaf` |
+| `tests/test_work28_dispatch.py` | `ada8504fa84c7ead2066ac97a407eddb68f15027` |
+| `tests/test_work28_core_grant_fail_closed.py` | `b7eeb015af5dcbac5ab00b45efa9379285d804ae` |
+| `tests/test_work28_evidence.py` | `7e4c8740f7402a80529b2df6640f4936a70ea8e3` |
+| `tests/test_work28_readback.py` | `40948f62e361a55f03e65571c3c0b4749a3a796b` |
+| `work/28/MCP-8020-TOOLING-PLATFORM/05_TEST/test_w13_execute_handler_http_boundary.py` | `2998573106e461d098277bfb7a3707d9853fe1ed` |
+| `.github/workflows/work28-mcp-tooling.yml` | `42e90321ade6db11f780676f702b80b1cb18d40e` |
+
+Implemented:
+1. Legacy `command` dispatch is rejected unconditionally with `command_mode_disabled_core_grant_required`; setting `ROOM_HOP_SNAPSHOT_ONLY=false` no longer re-enables it.
+2. Remote Core grant URLs require HTTPS. HTTP is accepted only for loopback development endpoints. URL userinfo, query and fragment are rejected.
+3. All HTTP redirects are refused; the client cannot forward the Core Bearer token to a redirect destination.
+4. Added negative regressions for command-mode no-dispatch, remote plaintext HTTP, URL userinfo/query, redirect refusal and startup fail-closed behavior.
+5. Added explicit execution of `test_work28_core_grant_fail_closed.py` to both Linux and Windows lifecycle workflow lanes.
+6. Updated legacy HTTP-boundary/readback assertions so authenticated caller-supplied command requests are expected to be BLOCKED, not treated as an authorized host execution.
+
+### 4. RUN / VERIFY — exact GitHub Actions evidence
+
+**Workflow run #404 — ID `45091974023` — exact source SHA `e0f079f78edf2dcaf0c097dedf8f63dacdc72f8c` — conclusion SUCCESS.**
+
+- Unit/regression job: SUCCESS.
+  - Unittest suite: 348 tests ran.
+  - Pytest suite: 357 passed, 238 subtests passed.
+- Execution Host lifecycle Linux: SUCCESS.
+  - Raw log confirms `test_work28_core_grant_fail_closed.py` ran 10 tests and completed OK.
+  - Raw log confirms grantless command negative test ran and passed.
+- Execution Host lifecycle Windows: SUCCESS.
+  - Raw log confirms `test_work28_core_grant_fail_closed.py` ran 10 tests and completed OK.
+  - Raw log confirms grantless command negative test ran and passed.
+- Immutable source artifact build, checksum and extracted artifact retest: SUCCESS.
+- Automatic E2E gate report job: SUCCESS as a report-generation job. Its report logic still records deployed MCP → Core → Runtime E2E as BLOCKED, Execution Gate CLOSED and Release NOT_RELEASED; job success is not product E2E acceptance.
+- Earlier runs #397–#403 exposed stale fixture/legacy-test expectations and were failed or cancelled. Those findings were corrected in the candidate branch. Only run #404 is used as the passing exact-head evidence above.
+- Ka did not execute local PC tests or claim a live runtime test. No test was labeled PASS without the raw CI evidence.
+
+### 5. OPEN architecture/security blockers
+
+1. **W28-KA-WP5-03 — HIGH / OPEN:** `execution_host/server.py` still receives caller-supplied `work_context`, checks a static local Work allowlist and sets `authorized=True`. The candidate has not yet replaced this with a trusted Core-derived principal/Work context. Snapshot mode still must not be treated as proof of live Core authorization.
+2. **Core wire compatibility — BLOCKED:** the inspected Core authority route shape and grant schema do not match the current Work28 list-fetch client. Do not invent a GET collection endpoint, translate fields by guess, or point to port 8001 as if it were Core :8000. A normative versioned contract and compatible adapter are still required.
+3. **Grant freshness/revocation — NOT VERIFIED:** current startup-loaded registry semantics do not prove online validation of active/revoked grants immediately before side effects.
+4. **W28-KA-WP5-06 — TLS/redirect:** candidate hardening is implemented and targeted Linux/Windows tests pass on this PR SHA; do not close the canonical finding until the candidate is integrated and the deployed endpoint contract is verified.
+5. **W28-KA-WP5-07 — CI coverage:** explicit Linux/Windows workflow invocation is implemented; run #404 raw logs prove the module executed in both lanes on the candidate SHA. Canonical branch remains unchanged until merge.
+6. **W28-KA-WP5-08 — grantless command mode:** disabled in the candidate and negative tests pass on both operating systems. Canonical branch remains unchanged until merge.
+7. PR #74 V1.3 retains five unresolved contract findings and is not a substitute for a wire-compatible implementation.
+8. No PC live MCP 8030 process/build provenance, Runtime deployment identity, Core-authorized end-to-end execution or protected evidence readback was tested.
+
+### 6. Disposition / next build stage
+
+- PR #75 remains OPEN / DRAFT / UNMERGED. No merge, deployment or release action was performed.
+- Next implementation priority is to close the caller-supplied WorkContext and Core wire mismatch without guessing endpoints: establish the normative Core contract, bind Work/identity/roots/capability to a Core-issued grant, and prove current grant status before side effects.
+- Only after that should the full MCP 8030 → Core :8000 → approved Runtime → W14 Host → sealed evidence/readback chain be enabled.
+- PC-dependent provenance and deployed E2E remain pending until Vinh reports the PC available.
+
+**STATUS:** CANDIDATE SOURCE + CI: PASS ON PR SHA; CORE AUTHORITY INTEGRATION: BLOCKED; W28-KA-WP5-03 HIGH / OPEN; PR #75 OPEN / DRAFT / UNMERGED; LIVE E2E BLOCKED; EXECUTION GATE CLOSED; ACTIVE — INTEGRATION BLOCKED — NOT RELEASED.
+
+**Signature:** [KÝ: KA | TEMPORARY BUILD OWNER / CSA]
