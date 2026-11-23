@@ -1588,3 +1588,46 @@ Co — AI-07 / End-to-End Architecture & Implementation Lead. Chốt snapshot đ
 - Evidence: `06_EVIDENCE/W10_ROOT_BOUNDARY_ACCEPTANCE_RUNNER_CI_20261122_RUN230.md`.
 - Inventory: Sandbox 172; GitHub 80; shared 80; Sandbox-only 92; GitHub-only 0.
 - **KÝ: Co | AI-07**
+
+
+## W10-XU-AGENT-DESKTOP-DESIGN-UPDATE-20261123-01 — 2026-11-23 20:14 (UTC+07:00)
+
+- **Work:** 10 — COMPUTER-AGENT
+- **Người thực hiện:** Xu — AI-01 / Architecture Coordination
+- **Phạm vi:** READ → TRACE → ANALYZE → DECIDE → DOCUMENT → VERIFY; cập nhật hồ sơ Sandbox, không triển khai code.
+- **Nguồn đã đọc:** Work 10 Sandbox inventory; BIEN_BAN_W10.md; COMPUTER_AGENT_ARCHITECTURE.md; PC_HOST_CAPABILITY_CONTRACT.md; P1_P5_IMPLEMENTATION.md; 03_ARCHITECTURE/README.md; WORK_MANIFEST.md; NHAT_KY_THI_CONG_W10.md; hồ sơ W10 ROOM-HOP integration boundary và handover.
+- **Upstream research:** Official vercel-labs/agent-desktop GitHub repository, README, FAQ, install documentation and agent-desktop skill, accessed 2026-11-23. Tool is a CLI/C library, not an LLM agent; uses native accessibility APIs and JSON refs; calling agent owns observe-act-verify loop; it is for desktop apps, not browser-page automation.
+- **Decision:** Retain W10 as unified Computer Agent. Preserve Playwright Browser Adapter. Record agent-desktop only as candidate backend for a future Desktop Adapter. Preserve W24/W112/W14/W113 boundaries, W10 loopback-only API and port 3010 standalone UI. No new Work.
+- **Writes completed (Sandbox):**
+  1. 06_EVIDENCE/W10_AGENT_DESKTOP_TECHNICAL_ASSESSMENT_20261123.md — created.
+  2. 03_ARCHITECTURE/COMPUTER_AGENT_ARCHITECTURE.md — appended architecture addendum.
+  3. 03_ARCHITECTURE/P1_P5_IMPLEMENTATION.md — appended gated D0–D6 proposal; existing P1–P5 unchanged.
+  4. 03_ARCHITECTURE/README.md — appended document index.
+  5. BIEN_BAN_W10.md — appended formal architecture decision.
+  6. NHAT_KY_THI_CONG_W10.md — this execution record.
+- **Verification:** sandbox_write/sandbox_append returned status=ok for each operation. Independent read-probe of every changed file is still required before declaring read-back verification PASS.
+- **Not performed:** no dependency installation; no source/test/runtime changes; no MCP registration; no host execution; no benchmark; no GitHub write/commit/push/PR/merge; no release.
+- **Gate status:** D0 DOCUMENTED; D1–D6 NOT STARTED. Dependency selection NOT DECIDED. Work 10 remains ACTIVE — NOT RELEASED.
+- **Next step:** independently read back the six changed files, verify the new section markers and document references, then record exact read-back result. Any Desktop Adapter contract/implementation remains subject to a separate Owner authorization.
+- **Evidence source:** 06_EVIDENCE/W10_AGENT_DESKTOP_TECHNICAL_ASSESSMENT_20261123.md.
+- **KÝ:** Xu | AI-01
+
+
+## W10-XU-READBACK-VERIFICATION-20261123-01 — 2026-11-23 20:15 (UTC+07:00)
+
+- Independent Sandbox read-probe completed after writes.
+- Verified status=ok and required section marker present in all six updated/created records: technical assessment, architecture, P1–P5 implementation plan, architecture README, official Biên bản and Nhật ký.
+- Verified bytes returned: assessment 9,208; architecture 3,341; P1–P5 1,588; architecture README 523; Biên bản 68,225; Nhật ký 154,385.
+- Manifest addendum has just been appended; its independent read-back is pending this entry.
+- Result: six-file read-back PASS. Overall Work 10 remains ACTIVE — NOT RELEASED; no runtime or test PASS is implied.
+- **KÝ:** Xu | AI-01
+
+
+## W10-XU-MANIFEST-READBACK-20261123-01 — 2026-11-23 20:16 (UTC+07:00)
+
+- Independent read-probe of 00_ROOT/WORK_MANIFEST.md returned status=ok.
+- Required architecture decision addendum marker is present; file content returned successfully (46,884 bytes).
+- The read-back verification entry in this journal is also present (155,097 bytes at verification time).
+- Result: Manifest addendum read-back PASS. Documentation update in Sandbox is complete and read-back verified.
+- GitHub branch synchronization remains NOT PERFORMED; no commit/push/PR/merge/release.
+- **KÝ:** Xu | AI-01
