@@ -204,5 +204,13 @@ class Work118WorkflowContractTests(unittest.TestCase):
         self.assertIn(".w118-evidence/source-binding.json", upload["with"]["path"])
         self.assertEqual(upload["with"]["if-no-files-found"], "warn")
 
+    def test_diagnostics_scan_is_paginated_and_fails_closed_at_ceiling(self):
+        data = self.load_yaml(DIAGNOSTICS)
+        run_script = data["jobs"]["diagnostics"]["steps"][-1]["run"]
+        self.assertIn("--scan-complete", run_script)
+        self.assertIn("per_page=100", run_script)
+        self.assertIn('PAGE -le 100', run_script)
+        self.assertIn("completeness is unproven", run_script)
+
 if __name__ == "__main__":
     unittest.main()
