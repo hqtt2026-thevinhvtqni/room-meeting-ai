@@ -13,7 +13,8 @@
 - **Reviewer:** Xu — Independent Reviewer / Architecture Acceptance
 - **Build owner:** Ka — Delegated Technical Lead
 - **Final product acceptance:** Vinh — Project Owner
-- **PR:** https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/67
+- **PR (current active candidate):** https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/68
+- **Historical:** PR #67 is superseded/historical only; retain its old review snapshots as audit history, not as the current review target.
 - **State:** REVIEW REQUESTED — NOT ACCEPTED
 
 ## 1. Review authority and limits
@@ -115,3 +116,12 @@ The post-merge execution sequence is defined in [RT-118-001 — Post-Merge Runti
 - CI: [Run #44851353422](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44851353422); exact tested source commit `acb7f510b5885d045b165f739540ee85e57d7439`; validate SUCCESS; 54 tests PASS / 0.223s.
 - Artifact ID `14685143198`, digest `a326f03eae720de5af6ff531e1105e2311c0738a4661f71f940d661eb9b3b6a1`; ZIP and JSON downloaded/read; actual JSON confirms `CI_CONTRACT`, `RECORDED`, `test_outcome=success` and tested SHA match.
 - Disposition: implementation/test PASS; gate 09 awaits Xu independent re-review. Runtime E2E NOT VERIFIED.
+
+
+## Current routing overlay — 2026-11-24 05:43 +07:00 (Entry 070)
+
+- **Active review target:** PR #68 — https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/68
+- **Exact current candidate HEAD:** `e5d7c989bf8fa73637283f2d75f8003861669ee7` (live branch and PR head matched at readback).
+- PR #67 references in the historical sections above are superseded and must not be used as the current review target. Historical gate criteria and review findings remain preserved.
+- Xu must bind any review disposition to the exact PR #68 HEAD reviewed, then Vinh retains final product acceptance. No merge/release authorization is implied.
+- Current state: Xu REVIEW PENDING; Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED.
