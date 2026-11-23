@@ -38,6 +38,27 @@ class DispatchUnitTests(unittest.TestCase):
                 grant_registry={},
             )
 
+    def test_command_mode_is_disabled_even_when_snapshot_only_false(self):
+        host = ExecutionHost()
+        with self.assertRaisesRegex(DispatchError, "command_mode_disabled_core_grant_contract_required"):
+            dispatch_execute(
+                host,
+                work_context={
+                    "work_id": "28",
+                    "work_name": "W",
+                    "workspace_root": ".",
+                    "execution_workspace": ".",
+                    "evidence_root": ".",
+                    "authorized": True,
+                },
+                body={
+                    "mode": "command",
+                    "execution_request": {"command": ["python", "-c", "print('must-not-run')"]},
+                },
+                grant_registry={},
+                snapshot_only=False,
+            )
+
     def test_snapshot_requires_registry_grant(self):
         host = ExecutionHost()
         with self.assertRaises(GrantError):
