@@ -125,3 +125,61 @@ The post-merge execution sequence is defined in [RT-118-001 — Post-Merge Runti
 - PR #67 references in the historical sections above are superseded and must not be used as the current review target. Historical gate criteria and review findings remain preserved.
 - Xu must bind any review disposition to the exact PR #68 HEAD reviewed, then Vinh retains final product acceptance. No merge/release authorization is implied.
 - Current state: Xu REVIEW PENDING; Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED.
+
+
+## AUTHORITATIVE CURRENT REVIEW OVERLAY — ENTRY 073 (2026-11-24 06:11 +07:00)
+
+> **Read this overlay first.** All earlier candidate SHAs, PR #67 active-review references, and old CI snapshots in this checklist are historical audit records. They are not the current review binding.
+
+- **Priority / read order:** P0 — first document to read for Xu's independent review.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Reviewer:** Xu / AI-01 — Independent Reviewer / Architecture Acceptance. The GitHub login/principal mapping remains UNVERIFIED; do not infer identity or grant reviewer permission.
+- **Project Owner:** Vinh — final product acceptance and release authority.
+- **Active review target:** [PR #68](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/68), branch `work/118-auto-e2e-v2-clean`, base `main`, exact PR/source HEAD `3345175799a984f9586b483896431069c0f1b043`. Live API readback: OPEN, not draft, UNMERGED. PR #67 is CLOSED / UNMERGED / superseded; PR #66 is a separate older OPEN / UNMERGED pilot and is not this review target.
+- **Latest exact-head CI:** [PR Run #1069 / ID `45285944558`](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45285944558), validate job `138082168582`, SUCCESS; raw log confirms **102 tests in 0.296s**, `TEST_OUTCOME=success`. Artifact ID `14872425816`, size 686 bytes, SHA-256 `3bc79b82305ebe3f343693c4a2e5c2ae42023da9d86c2ca1452ec77139ca2a7b`, unexpired at metadata readback.
+- **CI limitation:** source-binding step SKIPPED (`SOURCE_BINDING_STATUS=NOT_RUN`); handoff-request, ACK-claim and review-observation capture jobs SKIPPED. This is contract/unit CI only, not live source binding, authenticated handoff/ACK, Core dispatch/persistence, runtime E2E or product acceptance.
+
+### Priority-ordered Xu review worklist
+
+| Order | Priority | Review item | Required disposition |
+|---|---|---|---|
+| 01 | P0 | Design integrity / TD-118-012 v1.3 ownership boundaries | PASS / BLOCKED / NEEDS CHANGES with evidence |
+| 02 | P0 | Identity, role map, ACK and self-review separation | Verify trusted policy source, principal mapping, deny-by-default; no inferred Xu/executor identity |
+| 03 | P0 | Workflow supply-chain, permissions and untrusted PR code boundaries | Verify immutable action pins, permissions, pull_request_target safety and direct dispatch authorization |
+| 04 | P0 | Webhook verifier and event adapter | Review Entries 065 and 071 plus source/tests; distinguish static risks from live behavior |
+| 05 | P0 | Issue mirror identity and lease boundary | Review Entry 067 and P1-118-01/02 controls; do not waive Core-owned lease requirement |
+| 06 | P0 | Event-evidence type/schema integrity | Review Entry 068 and artifact classification; require strict metadata validation |
+| 07 | P0 | Failure diagnostics idempotency / completeness | Review Entry 069; ensure wrong-Issue selection and capped pagination cannot mutate/create incorrectly |
+| 08 | P0 | Cross-Work authority boundaries | Core/W102/W14/W33/W70 ownership and source/runtime proof; no local substitute |
+| 09 | P0 | Runtime readiness | All runtime event jobs currently SKIPPED; Runtime Auto E2E NOT RUN; explicitly BLOCKED |
+| 10 | P0 | Overall independent disposition | PASS / BLOCKED / NEEDS CHANGES, with numbered findings and exact evidence refs |
+
+### Open static findings — disposition requested
+
+1. **Entry 065 / webhook verifier:** UUID textual canonical form accepts uppercase representation despite canonical-form policy; repository allowlist syntax permits empty owner/repository components. Static finding; no live exploit established.
+2. **Entry 067 / GitHub Issue adapter:** substring marker matching can match quoted/embedded marker text; shallow owner/repository validation permits empty components. Static wrong-Issue mutation risk if sole match and lease callback returns true; no production write claimed. Core Task-scoped lease remains a separate mandatory gate.
+3. **Entry 068 / event evidence builder:** run metadata accepts non-strict types (including bool/float edge cases) and source commit is not enforced as full hexadecimal SHA-40. Local evidence artifact only; not proof of Core/W70 mutation.
+4. **Entry 069 / diagnostics:** first substring marker match can select an unrelated Issue; capped 1,000 Issue listing lacks completeness signal. Static risk; no live mutation or >1,000 Issue condition claimed.
+5. **Entry 071 / workflow_run adapter:** head_sha length is checked but hexadecimal form is not; run_attempt lacks exact positive-integer validation. No malformed live event or Core persistence claimed.
+
+**Implementation/workflow freeze:** all five findings await Xu's independent disposition. Ka has not changed source/tests/workflows to remediate them. Xu should specify which findings are confirmed, rejected, or require bounded remediation. No finding is silently waived.
+
+### Non-waivable external authority/runtime blockers
+
+- **Core / TASK-013 and TASK-016:** approved Task snapshot schema/read port, Core Event Intent ingress/persistence, and authenticated Task-scoped Issue-mirror lease/validator are not proven. Work32 pytest-run Grant is not this authority.
+- **W102 / TASK-014:** verified runtime principal, canonical Assignment lifecycle and recipient-bound ACK are not proven.
+- **W14 / TASK-015:** canonical protected execution path, approved Work Authority/ExecutionHostBridge contract and source/runtime parity are not proven. No duplicate Host or transport is permitted.
+- **W33 / TASK-017:** authenticated evidence ingress/owner contract is not verified; W118 adapter tests do not prove ingress.
+- **W70 / TASK-018:** approved Evidence Register schema/owner ACK and read-only projection contract are not available; no W70 writes are authorized.
+- **TASK-019:** full Runtime Auto E2E remains PLANNED and NOT RUN until all preceding gates pass.
+
+### Required Xu review response
+
+For each of the ten review items above, record PASS / BLOCKED / NEEDS CHANGES and cite exact paths, source SHA/blob, test or runtime evidence. Also record verified GitHub login + HQTT principal (or explicitly state identity not verified), ISO 8601 review time, overall disposition, numbered findings, and whether the implementation/workflow freeze may be lifted for each bounded remediation. A design/security PASS does **not** authorize merge or release; any non-release integration requires Vinh's separate explicit authorization. Vinh retains final product acceptance and separate release authorization.
+
+### Governance and BIÊN BẢN
+
+- PR #68 remains OPEN / UNMERGED. No merge, rebase, force-push, PR close or release.
+- No external Work/Sandbox, Core, runtime, secret, permission or branch-protection mutation.
+- **Name:** Ka / AI-02. **Title:** CSA / W118 Delegated Build Owner. **Date-Time:** 2026-11-24 06:11 +07:00.
+- **Result:** Review packet refreshed and bound to exact PR #68 HEAD and Run #1069. Xu independent review PENDING; Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED.
