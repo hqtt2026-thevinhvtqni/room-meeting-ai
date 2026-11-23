@@ -2411,3 +2411,17 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - **Disposition:** NEEDS XU REVIEW — implementation/workflow freeze remains; no remediation or Issue write made. Runtime Auto E2E and cross-Work runtime gates remain NOT VERIFIED / BLOCKED.
 - **Scope and controls:** No source/workflow/runtime/secret/permission/branch-protection or external Work/Sandbox change; no rebase, force-push, Main merge or release.
 - **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-24 04:54 +07:00; Result: two bounded diagnostics idempotency/scope findings recorded; implementation unchanged.
+
+
+### Entry 070 — Acceptance-document active PR routing reconciliation
+
+- **Priority:** 01 — P0 — Ensure independent reviewer is directed to the active candidate, not a superseded PR.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-24 05:43 +07:00.
+- **Method:** Read-only cross-check of `XR-118-001_XU-INDEPENDENT-REVIEW-CHECKLIST.md`, `W118-RELEASE-GATE.md`, current RR-118-001 overlay and live GitHub PR #68 metadata.
+- **Finding W118-ROUTING-001:** The checklist and release gate retain historical active-target references to PR #67, although the live candidate and RR-118-001 current routing overlay designate PR #68. This can direct Xu to the superseded PR or cause review evidence to bind the wrong revision. The prior overlay did warn that PR #67 references were historical, but the canonical checklist header and release-gate stage table remained misleading.
+- **Verified live state:** PR #68 OPEN / UNMERGED, base `main`, head `e5d7c989bf8fa73637283f2d75f8003861669ee7`; branch head equals PR head at readback.
+- **Action:** Documentation-only reconciliation: update the checklist active PR pointer to #68 and append an authoritative current-routing overlay to both review checklist and release gate. Preserve older PR #67 records as historical; do not change acceptance criteria or stage authority.
+- **Disposition:** Documentation routing corrected; Xu independent review remains PENDING; Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED. No implementation/workflow mutation.
+- **Scope and controls:** No source/workflow/runtime/secret/permission/branch-protection or external Work/Sandbox change; no merge, rebase, force-push, PR close or release.
+- **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-24 05:43 +07:00; Result: active review target reconciled to PR #68; historic PR #67 preserved.
