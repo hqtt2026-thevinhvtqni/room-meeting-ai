@@ -2864,3 +2864,57 @@ The failures do not justify restoring command mode or allowing HTTP Core grant t
 **STATUS:** RUN #427 UNIT/REGRESSION SUCCESS; LINUX/WINDOWS LIFECYCLE FAIL ON ONE STALE ASSERTION; FIX COMMITTED; RERUN PENDING; EXECUTION GATE CLOSED; NOT RELEASED.
 
 **Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
+
+
+## 2026-11-23 — JRN-W28-074 — Exact merge-candidate CI #429 PASS and immutable artifact
+
+**Name:** Ka  
+**Title:** Owner-delegated BUILD OWNER / CSA  
+**Date-Time:** 2026-11-23 09:49 +07:00  
+**PR:** #76 — OPEN / DRAFT / UNMERGED  
+**PR head SHA:** `75b275055488482b6a9e6c83912212d9b5c05f8a`  
+**CI run:** `45102189583` / run #429  
+**GitHub pull_request merge candidate SHA:** `661e3b7d4706026fa8f3b1da7d7ca28bd613d801`
+
+### 1. Exact workflow result
+
+All five jobs completed SUCCESS:
+- `unit-regression-tests`: SUCCESS, including full Work28 pytest suite.
+- `execution-host-lifecycle-linux`: SUCCESS.
+- `execution-host-lifecycle-windows`: SUCCESS.
+- `Build and retest exact-SHA Work 28 source artifact`: SUCCESS.
+- `automatic-e2e-gate-report`: SUCCESS.
+
+GitHub generated merge candidate `661e3b7d...` with parents canonical base `14a535a6...` and PR head `75b27505...`. Exact compare canonical base → merge candidate: 13 ahead / 0 behind. This is the tested pull-request merge candidate, not a canonical branch merge.
+
+### 2. Raw log coverage
+
+Both Linux and Windows lifecycle raw logs contain all nine named tests from `test_work28_core_grant_fail_closed.py` and show the module summary as 9 tests / OK. The same lanes also show:
+- `test_work28_dispatch.py`: 9 tests / OK;
+- `test_work28_evidence.py`: 7 tests / OK;
+- `test_work28_readback.py`: 5 tests / OK after the corrected command-denial assertion.
+
+Unit/regression and full pytest jobs also completed SUCCESS. The CI #425 and #427 failures remain preserved in prior entries; the #429 rerun is the successful exact merge-candidate evidence.
+
+### 3. Immutable source artifact
+
+- Artifact: `work28-source-artifact-661e3b7d4706026fa8f3b1da7d7ca28bd613d801`
+- Artifact ID: `14785762519`
+- Size: 2,306,523 bytes
+- SHA-256: `254d51c27df8d1f5c085ac7bb4ba68a1fa720f1008f8428661ee0d4f55c6fae8`
+- Artifact job extracted and retested the archive successfully.
+- Auto E2E report artifact ID: `14786156325`, SHA-256 `6f472312f527f0a525170104634727b689a4c91df5d4b11a0b7bc5a677959b94`.
+
+### 4. Interpretation and limits
+
+- **CI PASS is confirmed for the exact PR merge candidate.**
+- It proves candidate code compiles, configured unit/regression and Linux/Windows lifecycle lanes pass, and the immutable archive was built and retested.
+- It does not prove live Core grant issuance/online validation, caller WorkContext authority removal, W70 policy snapshot, live MCP 8030 provenance, Runtime MCP, W14 PC process identity, protected evidence persistence/readback or deployed E2E.
+- WP5-08 command-mode mitigation and WP5-06 transport hardening have CI evidence, but remain candidate mitigations pending merge/review and runtime confirmation.
+- WP5-07 CI omission is corrected on this candidate; raw logs now prove both OS lanes run the module.
+- WP5-03 remains HIGH / OPEN; static grant-registry authorization and caller-supplied WorkContext remain unresolved.
+- PR #76 stays DRAFT; no merge or release is performed.
+
+**STATUS:** PR #76 CANDIDATE CI #429 PASS / IMMUTABLE ARTIFACT PASS; WP5-03 HIGH / OPEN; CORE WIRE CONTRACT / LIVE AUTHORITY NOT VERIFIED; EXECUTION GATE CLOSED; ACTIVE — INTEGRATION BLOCKED — NOT RELEASED.
+
+**Signature:** [KÝ: KA | OWNER-DELEGATED BUILD OWNER / CSA]
