@@ -24,7 +24,7 @@ def _sha(data: bytes) -> str:
 class DispatchUnitTests(unittest.TestCase):
     def test_command_mode_rejects_work28_fields(self):
         host = ExecutionHost()
-        with self.assertRaises(DispatchError):
+        with self.assertRaisesRegex(DispatchError, "command_mode_disabled_core_grant_required"):
             dispatch_execute(
                 host,
                 work_context={
