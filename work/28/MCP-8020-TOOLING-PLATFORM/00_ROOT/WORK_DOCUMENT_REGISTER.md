@@ -36,3 +36,5 @@ Assign controlled codes only to official Work documents. Supporting evidence may
 
 
 | DOC-W28-078 — `03_ARCHITECTURE/DOC-W28-078_CORE_EXECUTION_AUTHORITY_CONTRACT_V1_3_CANDIDATE.md` | Candidate wire-level supplement under AD-W28-20261123-002; records source provenance and Core/W52/W14/W70 gaps | CANDIDATE — NOT APPROVED / NOT WIRED / NOT DEPLOYED |
+
+| SCH-W28-20261123-001 — `03_ARCHITECTURE/schemas/DOC-W28-078_V1_3_CANDIDATE.schema.json` | Draft 2020-12 candidate fixtures for grant issue/validation, run ACK/events and fail-closed error envelopes; subordinate to AD-W28-20261123-002 | CANDIDATE — SCHEMA STRUCTURE CHECKED; NOT APPROVED / NOT WIRED |
