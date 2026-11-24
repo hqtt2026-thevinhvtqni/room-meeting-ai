@@ -236,10 +236,55 @@ class SandboxBinaryUploadService:
                 f.seek(offset); f.write(data); f.flush(); os.fsync(f.fileno())
             self.ledger.accept_chunk(upload_id,index,offset,len(data),digest)
         return {"upload_id":upload_id,"index":index,"status":"ACCEPTED","bytes":len(data),"sha256":digest}
+    @staticmethod
+    def file_digest(path):
+        h=hashlib.sha256(); size=0
+        with open(path,"rb") as f:
+            for block in iter(lambda:f.read(1024*1024),b""):
+                size+=len(block); h.update(block)
+        return size,h.hexdigest()
+    def recover_finalizing(self,row):
+        """Resume a FINALIZING session only after a fresh Core grant and byte verification."""
+        root=self.work_root(row["sandbox_work_id"])
+        staging=Path(row["staging_path"]); final=Path(row["final_path"])
+        self.no_symlinks(root,final)
+        expected=row["completed_sha256"] or row["expected_sha256"]
+        if expected!=row["expected_sha256"]:
+            raise UploadError("RECOVERY_METADATA_MISMATCH","finalizing receipt digest differs from declared digest")
+        final.parent.mkdir(parents=True,exist_ok=True); self.no_symlinks(root,final)
+        if final.exists():
+            size,digest=self.file_digest(final)
+            if size!=row["expected_bytes"] or digest!=expected:
+                raise UploadError("RECOVERY_CONFLICT","destination exists but does not match the finalizing receipt")
+        else:
+            if not staging.exists():
+                raise UploadError("RECOVERY_SOURCE_MISSING","neither a promoted destination nor staging file is available")
+            size,digest=self.file_digest(staging)
+            if size!=row["expected_bytes"] or digest!=expected:
+                raise UploadError("RECOVERY_STAGING_MISMATCH","staging bytes do not match the finalizing receipt")
+            try:
+                os.link(staging,final)
+            except FileExistsError:
+                size,digest=self.file_digest(final)
+                if size!=row["expected_bytes"] or digest!=expected:
+                    raise UploadError("RECOVERY_CONFLICT","destination appeared with different bytes")
+            except OSError as e:
+                raise UploadError("PROMOTION_BLOCKED","recovery could not atomically promote staging file") from e
+            size,digest=self.file_digest(final)
+            if size!=row["expected_bytes"] or digest!=expected:
+                raise UploadError("READBACK_MISMATCH","recovered destination failed byte verification")
+        if staging.exists():
+            try: staging.unlink()
+            except OSError as e: raise UploadError("CLEANUP_BLOCKED","recovery could not remove staging file") from e
+        self.ledger.transition(row["upload_id"],"FINALIZING","COMPLETED","RECOVERED",expected)
+        return {"upload_id":row["upload_id"],"status":"COMPLETED","path":row["destination"],
+                "bytes":row["expected_bytes"],"sha256":expected,"readback_verified":True,"recovered":True}
     def finalize(self,*,trusted_context,upload_id):
         row=self.ledger.get(upload_id)
         if not row: raise UploadError("NOT_FOUND","upload session not found")
         g=self.grant(trusted_context,"finalize",upload_id,row["destination"],row["expected_bytes"]); self.match(g,row)
+        if row["state"]=="FINALIZING":
+            return self.recover_finalizing(row)
         if row["state"]=="COMPLETED":
             final=Path(row["final_path"]); h=hashlib.sha256(); size=0
             with open(final,"rb") as f:
