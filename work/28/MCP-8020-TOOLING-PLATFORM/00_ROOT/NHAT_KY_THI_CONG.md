@@ -3276,3 +3276,38 @@ Re-read the current PR-branch upload engine, including `work_root()`, `no_symlin
 - Continue safe source review and security design without merging, deploying, registering, or opening the Execution Gate.
 
 **STATUS:** abort/FINALIZING fix and regression test committed; exact-head CI #496 CANCELLED with zero jobs; test outcome NOT VERIFIED; filesystem TOCTOU OPEN; Core authorization integration NOT VERIFIED; Ka/An independent reviews NOT RECORDED; live PC image upload/readback NOT VERIFIED; PR #77 OPEN / DRAFT / UNMERGED; Execution Gate CLOSED; NOT RELEASED.
+
+
+## 2026-11-24 — JRN-W28-091 — Filesystem containment trace and review-gate recheck
+
+**Owner:** Xu  
+**PR:** #77 — binary Sandbox upload engine candidate  
+**Source branch:** `xu/work28-wp3-binary-upload-20261124`
+
+### READ / TRACE — CONCRETE CHECK/USE WINDOWS
+Re-read the upload engine methods `work_root()`, `no_symlinks()`, `begin()`, `chunk()`, and `recover_finalizing()`, plus the component test suite.
+
+- `work_root()` resolves a path and then creates/uses it by pathname. `no_symlinks()` walks components using `Path.is_symlink()`; this is a metadata check, not a pinned directory handle.
+- In `begin()`, destination components are checked, then later `final.exists()`, staging directory creation, and file creation use pathnames. An attacker able to replace a checked parent directory with a symlink/reparse point between those operations can redirect subsequent operations.
+- In `chunk()`, the staging pathname is opened with `open(path, "r+b")` after the session row and path were loaded. The per-upload lock serializes cooperating upload processes but does not pin or authenticate parent-directory identity against an external directory replacement.
+- In `recover_finalizing()`, destination parent creation, staging/final reads, hard-link promotion and unlink are pathname-based after separate checks. The same check/use class remains.
+- Existing `test_symlink_escape_denied` covers a static symlink present before validation; it does not exercise concurrent parent replacement. No adversarial race test or race-safe implementation was found in the inspected source.
+
+### SECURITY DESIGN DECISION
+- Do not add another pathname recheck and call it a fix: a check immediately followed by a pathname operation still leaves a race window.
+- POSIX candidate: anchor the Sandbox root with an open directory descriptor; traverse every component relative to the pinned parent using `openat`-style `dir_fd` operations and `O_NOFOLLOW`; retain directory/file descriptors for create, write, read, link/promotion and unlink; verify object type and identity with `fstat`; fsync affected files and directories where supported.
+- Windows candidate: require a native handle-based implementation that opens each component with reparse-point inspection and validates the final resolved path/volume/file identity while retaining handles. Python pathname checks alone are insufficient. Until this is implemented and tested on native Windows, the production filesystem backend must fail closed on Windows rather than claim equivalent protection.
+- Required adversarial tests: swap a checked parent to a symlink/reparse point between traversal and operation; replace the Sandbox Work directory; replace staging directory; race finalize/recovery with parent replacement; verify no outside file is created, read, linked, overwritten or deleted. Tests must assert both denial and preservation of legitimate in-Sandbox bytes.
+
+### VERIFY — GATE RECHECK
+- PR #77 formal review list returned zero reviews; review-thread list returned zero threads. Ka security review and An independent QA approval remain NOT RECORDED.
+- Exact-head CI #496 was recorded CANCELLED with no jobs in JRN-W28-090; no corrected-head test PASS is available.
+- This is a source/design trace only. No adversarial race was executed in a live runtime and no race-safe filesystem fix is claimed.
+
+### NEXT
+1. Implement the descriptor/handle-anchored filesystem backend behind a narrow interface; POSIX first, Windows fail-closed until native handle strategy is independently tested.
+2. Add deterministic adversarial replacement tests and platform-specific durability/recovery tests.
+3. Obtain Ka and An attributable reviews against the corrected exact head.
+4. Keep Core grant/finalize lease, live transport, PC upload/readback, merge and release gates CLOSED.
+
+**STATUS:** concrete pathname TOCTOU windows confirmed by source inspection; no race exploit execution claimed; secure backend NOT IMPLEMENTED; CI exact-head NOT VERIFIED (run #496 CANCELLED); Ka/An reviews NOT RECORDED; Core authority NOT VERIFIED; live PC upload/readback NOT VERIFIED; PR #77 OPEN / DRAFT / UNMERGED; Execution Gate CLOSED; NOT RELEASED.
