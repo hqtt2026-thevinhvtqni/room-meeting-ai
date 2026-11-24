@@ -235,4 +235,17 @@ class BinaryUploadTests(unittest.TestCase):
         self.assertEqual(self.ledger.get(uid)["state"],"FINALIZING")
         self.assertEqual(result["quota_rebuilt"]["W119"]["active_uploads"],1)
 
+    def test_startup_reconciliation_blocks_untracked_orphan_staging(self):
+        orphan_dir=self.root/"119"/".upload-staging"; orphan_dir.mkdir(parents=True,exist_ok=True)
+        orphan=orphan_dir/"UP-ORPHAN.part"; orphan.write_bytes(b"untracked")
+        result=self.service.reconcile_startup()
+        self.assertTrue(result["blocked"])
+        self.assertTrue(any(x["detail"]=="UNTRACKED_STAGING_REQUIRES_QUARANTINE" for x in result["sessions"]))
+        with self.assertRaises(UploadError) as e:
+            self.service.begin(trusted_context=self.ctx,canonical_work_id="W119",sandbox_work_id="119",
+              destination="images/photo.png",expected_bytes=1,expected_sha256=hashlib.sha256(b"x").hexdigest(),
+              chunk_size=1,idempotency_key="idempotency-key-0024")
+        self.assertEqual(e.exception.code,"STARTUP_RECONCILIATION_BLOCKED")
+        self.assertEqual(orphan.read_bytes(),b"untracked")
+
 if __name__=="__main__": unittest.main(verbosity=2)
