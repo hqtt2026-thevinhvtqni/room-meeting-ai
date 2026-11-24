@@ -3224,3 +3224,34 @@ Re-read the current PR-branch upload engine, including `work_root()`, `no_symlin
 5. Only after all gates pass, wire approved raw-byte transport and perform PC image → Sandbox persistence → authorized readback → SHA-256 equality.
 
 **STATUS:** exact-head configured CI #492 6/6 PASS; filesystem TOCTOU OPEN; durable namespace promotion NOT VERIFIED; crash reconciliation OPEN; Core grant/lease NOT VERIFIED; independent Ka/An reviews NOT RECORDED; live PC image upload NOT VERIFIED; PR #77 OPEN / DRAFT / UNMERGED; Execution Gate CLOSED; Work 28 NOT RELEASED.
+
+## 2026-11-24 — JRN-W28-089 — Fix abort during FINALIZING and add recovery regression test
+
+**Owner:** Xu  
+**PR:** #77 — binary Sandbox upload engine candidate  
+**Branch:** `xu/work28-wp3-binary-upload-20261124`
+
+### READ / TRACE — FINDING
+- Re-read `SandboxBinaryUploadService.abort()` and `recover_finalizing()` in `04_CODE/sandbox_binary_upload_v1.py`.
+- Found a destructive state-ordering defect: abort removed the staging file before asking the ledger to transition `UPLOADING → ABORTED`. A `FINALIZING` session therefore lost its recovery source and then failed the invalid state transition.
+- This was a source-level finding before the regression test; no runtime failure is claimed for the pre-fix revision.
+
+### BUILD
+- Updated `04_CODE/sandbox_binary_upload_v1.py`: abort now rejects every non-`UPLOADING` state (except idempotent `ABORTED`) before deleting staging bytes. `FINALIZING` remains available to the finalize recovery path.
+- Code commit: `acd358d0a32994f58b3ef41273d951676c06431a`.
+- Added `test_abort_refuses_finalizing_session_without_destroying_recovery_source`: verifies abort returns `INVALID_STATE`, keeps the staging file and `FINALIZING` ledger state intact, and allows subsequent finalize recovery to complete with exact bytes and SHA-256.
+- Test commit: `76531072b95eb1f1caa8c2881634e75382142a50`.
+
+### VERIFY
+- Previous exact branch HEAD `1fba2a80cecf4a39627ce7b8886252ca891754f6` had GitHub Actions run #494 / `45319359310` SUCCESS, six of six jobs: unit/regression, Linux lifecycle, Windows lifecycle, native Windows binary-upload tests, immutable artifact, and automatic gate report. Artifact metadata confirms run head SHA `1fba2a80cecf4a39627ce7b8886252ca891754f6`.
+- That run predates the two commits above and is not evidence for the fix.
+- At journal time, no workflow run was returned for exact new HEAD `76531072b95eb1f1caa8c2881634e75382142a50`; corrected-head CI is PENDING / NOT VERIFIED.
+- No live Core grant, deployed MCP transport, Sandbox upload/readback, or independent Ka/An review is claimed.
+
+### NEXT / STATUS
+1. Verify exact-head CI for `76531072b95eb1f1caa8c2881634e75382142a50`; if no PR run is created, investigate workflow trigger rather than treating prior CI as current.
+2. Continue filesystem TOCTOU (check/use race) hardening and adversarial directory-swap tests; current path-based symlink checks are not race-safe proof.
+3. Obtain actual Core-owned upload grant/finalize lease contract and independent Ka security + An QA reviews.
+4. Keep live upload, MCP registration/deployment, Execution Gate and release blocked until all required evidence is present.
+
+**STATUS:** abort/FINALIZING source fix committed; targeted regression test committed; exact-head CI PENDING; filesystem TOCTOU OPEN; Core authorization integration NOT VERIFIED; independent reviews NOT RECORDED; live PC image upload/readback NOT VERIFIED; PR #77 OPEN / DRAFT / UNMERGED; Execution Gate CLOSED; NOT RELEASED.
