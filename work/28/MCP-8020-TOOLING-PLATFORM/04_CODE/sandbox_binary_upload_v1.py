@@ -320,6 +320,14 @@ class SandboxBinaryUploadService:
         return {"upload_id":row["upload_id"],"status":"COMPLETED","path":row["destination"],
                 "bytes":row["expected_bytes"],"sha256":expected,"readback_verified":True,"recovered":True}
     def finalize(self,*,trusted_context,upload_id):
+        # Serialize finalize/recovery against chunk writes and aborts across
+        # cooperating service instances on this host. Re-read and reauthorize
+        # inside the lock in _finalize_locked before changing durable state.
+        row=self.ledger.get(upload_id)
+        if not row: raise UploadError("NOT_FOUND","upload session not found")
+        with upload_file_lock(Path(row["staging_path"])):
+            return self._finalize_locked(trusted_context=trusted_context,upload_id=upload_id)
+    def _finalize_locked(self,*,trusted_context,upload_id):
         row=self.ledger.get(upload_id)
         if not row: raise UploadError("NOT_FOUND","upload session not found")
         g=self.grant(trusted_context,"finalize",upload_id,row["destination"],row["expected_bytes"]); self.match(g,row)
@@ -364,6 +372,13 @@ class SandboxBinaryUploadService:
             raise UploadError("AUDIT_BLOCKED","completion audit could not be committed") from e
         return {"upload_id":upload_id,"status":"COMPLETED","path":row["destination"],"bytes":size,"sha256":digest,"readback_verified":True}
     def abort(self,*,trusted_context,upload_id):
+        # Use the same per-upload OS lock as chunk/finalize so cleanup cannot
+        # race a writer or a promotion from another service instance.
+        row=self.ledger.get(upload_id)
+        if not row: raise UploadError("NOT_FOUND","upload session not found")
+        with upload_file_lock(Path(row["staging_path"])):
+            return self._abort_locked(trusted_context=trusted_context,upload_id=upload_id)
+    def _abort_locked(self,*,trusted_context,upload_id):
         row=self.ledger.get(upload_id)
         if not row: raise UploadError("NOT_FOUND","upload session not found")
         g=self.grant(trusted_context,"abort",upload_id,row["destination"],row["expected_bytes"]); self.match(g,row)
