@@ -3843,3 +3843,65 @@ PR #78 remains OPEN / DRAFT / UNMERGED. Ka independent security disposition rema
 **STATUS:** PR #78 OPEN / DRAFT / UNMERGED; Ka review NOT ACCEPTED; Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
 
 **Signed:** Ka — CSA / Independent Architecture & Security Reviewer
+
+
+
+## 2026-11-25 — JRN-W28-123 — Controlled reconciliation of canonical ownership/journal commits
+
+**Document ID:** W28-KA-REC-123  
+**Priority:** P1 — documentation integrity; no source-code integration  
+**Owner:** Ka — CSA / Independent Reviewer  
+**Date-Time:** 2026-11-25 (Asia/Ho_Chi_Minh)  
+**Target:** PR #78 branch `xu/w28-f02-tests-20261124`  
+**Canonical branch:** `work/28-mcp-tooling-platform`  
+**Merge base:** `4b2a8663a0b9ff40aad8e6812efff197b5085de5`
+
+### READ / COMPARE — five commits behind
+Fresh compare reports PR branch DIVERGED, 60 ahead / 5 behind. The five canonical commits after the merge base were fetched individually and their changed-file patches inspected:
+
+1. `94d7413da0cc3b7c58b32483d35eb47a7d1e7d29` — append JRN-W28-111 to `00_ROOT/NHAT_KY_THI_CONG.md` (Xu implementation takeover).
+2. `73aad1fd0f149b615be5c2ad8948a882987bf055` — append BB-W28-20261124-003 to `00_ROOT/BIEN_BAN.md` (Xu becomes implementation owner; Ka and An remain independent).
+3. `43e303c33c3d5fc46ea6ab3f6d177624af3f27c7` — append JRN-W28-112 to `00_ROOT/NHAT_KY_THI_CONG.md` (F02 startup reconciliation history).
+4. `1d7c92294a0c68f109da9e07af9ad6d49566ea75` — append JRN-W28-113 to `00_ROOT/NHAT_KY_THI_CONG.md` (PR #78 supersedes PR #77).
+5. `0bb578b3b306ac74b792bc7c786895b6e8fcf4ac` — append JRN-W28-118 to `00_ROOT/NHAT_KY_THI_CONG.md` (point-in-time branch divergence audit).
+
+**Finding:** All five commits are documentation-only. No engine, test, Core, MCP adapter, workflow or runtime source file is changed by these five commits. This conclusion is limited to the five inspected commits, not the full branch diff.
+
+### RECONCILIATION MAP
+- Candidate journal already preserves the substance of JRN-W28-111 and JRN-W28-112 in its combined historical entry `JRN-W28-111/112`; do not duplicate those records.
+- Candidate `BIEN_BAN.md` did not contain canonical decision BB-W28-20261124-003. The ownership decision is appended there verbatim as a historical decision record.
+- Candidate journal did not contain the standalone canonical JRN-W28-113. It is appended below as an explicitly historical record; PR #77 remains CLOSED / UNMERGED and PR #78 remains the sole active candidate.
+- Canonical JRN-W28-118 is not copied as a current-state assertion: it records an earlier point-in-time comparison and is superseded by the candidate's JRN-W28-119 and the subsequent JRN-W28-120–123 audits.
+- No merge, rebase, cherry-pick, branch retarget, code sync or CI dispatch was performed. The five-commit divergence is documented, not eliminated.
+
+### IMPORTED HISTORICAL RECORD — JRN-W28-113
+## 2026-11-24 17:25 +07 — JRN-W28-113 — Mở PR #78 làm nhánh triển khai chính; đóng PR #77 đã bị supersede
+**Owner:** Xu | **Active PR:** https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/78  
+**Active branch:** `xu/w28-f02-tests-20261124` | **HEAD at that time:** `462ab081f358bf9254661ec4f35056b83e1ac097`.
+
+### DECIDE / BUILD
+- PR #78 được mở ở trạng thái DRAFT, base `work/28-mcp-tooling-platform`, chứa implementation tiếp nối từ exact PR #77 candidate và phần F02 startup reconciliation mới.
+- PR #77 được comment ghi rõ superseded bởi PR #78 và đóng ở trạng thái CLOSED / UNMERGED; không merge. Báo cáo nghiệm thu độc lập của An trên #77 vẫn được giữ nguyên làm evidence lịch sử.
+- Không xóa branch, không sửa report của An, không mở Execution Gate.
+
+### VERIFY
+- GitHub xác nhận PR #78 OPEN / DRAFT / UNMERGED; 51 commits, 5 files changed; HEAD đúng SHA nêu trên.
+- GitHub xác nhận PR #77 CLOSED / UNMERGED, không có merge commit.
+- Exact-head workflow lookup cho #78 tại SHA `462ab081f358bf9254661ec4f35056b83e1ac097` chưa trả về workflow run; không tuyên bố CI PASS.
+- PR #78 source/test changes có startup reconciliation, quota rebuild, orphan staging blocker, 4 test mới tính cả orphan test; chưa có execution evidence trong môi trường này.
+
+### STATUS AT THE TIME OF THE RECORD
+- F02: PARTIAL implementation, NOT ACCEPTED.
+- F01: BLOCKED; pathname operations vẫn còn.
+- F03: BLOCKED; Core upload capability chưa được wired.
+- F04: BLOCKED; Build MCP raw-byte transport/registration và live canary chưa có.
+- Work 28: ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED.
+
+[KÝ: XU | DELIVERY OWNER]
+
+### DISPOSITION
+- Controlled documentation reconciliation is recorded. It does not make the branches converge and does not alter the PR base.
+- PR #78 remains OPEN / DRAFT / UNMERGED. Exact-head CI and runtime evidence remain unobserved; F01/F03/F04 remain BLOCKED and F02 remains PARTIAL / NOT VERIFIED.
+- Ka review remains NOT ACCEPTED; An independent acceptance remains NOT ACCEPTED; Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+**Signed:** Ka — CSA / Independent Reviewer
