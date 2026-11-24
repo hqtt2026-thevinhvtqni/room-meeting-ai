@@ -3990,3 +3990,48 @@ Fresh compare reports PR branch DIVERGED, 60 ahead / 5 behind. The five canonica
 **STATUS:** PR #78 remains OPEN / DRAFT / UNMERGED; Ka review NOT ACCEPTED; An acceptance NOT ACCEPTED; Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
 
 **Signed:** Ka — CSA / Independent Security Reviewer
+
+
+## 2026-11-25 — JRN-W28-126 — F02 promotion rollback data-loss and directory durability audit
+
+**Document ID:** W28-KA-AUD-126  
+**Priority:** P0 — recovery integrity / potential data loss  
+**Owner:** Ka — CSA / Independent Security Reviewer  
+**Date-Time:** 2026-11-25 (Asia/Ho_Chi_Minh)  
+**Target:** PR #78 branch `xu/w28-f02-tests-20261124`  
+**Reviewed source:** engine blob `f13bd1ae09ba79ab2f19f538d752e863fffcb19c`; tests blob `0963baa3fd4c724973a08be331c4a9c8ddc4784b`  
+**Review type:** Static exact-source and test inspection only
+
+### READ / TRACE — concrete failure path
+- In `finalize()`, the engine creates the final hard link, reads it back, then unlinks the staging pathname.
+- Only after staging unlink does it call `ledger.transition(FINALIZING, COMPLETED)`.
+- If that SQLite transition/audit commit raises, the exception handler attempts to unlink the final pathname and raises `AUDIT_BLOCKED`.
+- At that point the staging name has already been removed. The ledger remains `FINALIZING`, but the error handler removes the only remaining final name. A later recovery sees neither final nor staging and raises `RECOVERY_SOURCE_MISSING`. This is a concrete data-loss path on a completion-ledger failure after promotion, not merely a missing test.
+- A process crash between staging unlink and the SQLite transition is a different outcome: the final name may survive and recovery can verify it. The explicit exception handler is more destructive because it deletes that surviving name.
+
+### DIRECTORY DURABILITY GAP
+- The engine fsyncs staging file contents after chunk writes, but does not fsync the containing directory after initial staging creation.
+- The promotion path uses `os.link(staging, final)` and then `staging.unlink()` without a parent-directory durability barrier.
+- Recovery promotion and cleanup also use `os.link()` / `unlink()` without a directory fsync or an explicitly documented platform-specific equivalent.
+- SQLite uses WAL and `synchronous=FULL`, but that does not make Sandbox directory-entry changes durable or atomic with the ledger transaction. Windows requires a separately specified and tested native durability strategy; POSIX directory fsync evidence alone would not establish Windows behavior.
+
+### TEST COVERAGE GAP
+- Existing crash tests simulate FINALIZING before promotion and after hard-link creation/before cleanup. They do not inject a SQLite transition/audit failure after staging unlink, assert preservation of at least one durable name, or restart/recover from that failure.
+- Existing tests do not inject failures around staging directory creation, final hard-link creation, staging unlink, final unlink rollback, or parent-directory flush.
+- No native Linux/Windows output was executed in this review; these are static source/test findings.
+
+### REQUIRED REMEDIATION / RETEST
+1. Never delete the final name as rollback after the staging name has already been removed unless another verified durable recovery copy exists. Prefer retaining at least one verified name until the durable completion receipt is committed; define a recoverable two-phase protocol for the remaining cleanup.
+2. Make rollback state-aware and idempotent. A failure to commit completion must preserve verified bytes and leave a recoverable FINALIZING record; cleanup must not turn a ledger error into loss of both names.
+3. Add failure-injection tests at every promotion/cleanup/ledger boundary, especially transition failure immediately after staging unlink; assert that restart can recover byte-for-byte and that no state reports COMPLETED without durable evidence.
+4. Specify and implement directory-entry durability for staging creation, final promotion, staging cleanup and rollback on POSIX and Windows separately. Record the exact guarantees and native platform test evidence.
+5. Preserve ambiguous bytes; never trade recoverability for a superficially clean filesystem.
+
+### DISPOSITION
+- **F02 remains PARTIAL / NOT VERIFIED and is a release blocker.** The post-unlink ledger-failure path can remove both staging and final names. Directory-entry durability and the crash/failure matrix remain unproven.
+- F01 remains BLOCKED / P0; F03 and F04 remain BLOCKED / P0 as previously recorded.
+- No source changes, test execution, CI dispatch, runtime operations, merge/rebase/cherry-pick or upload enablement occurred. Static review only.
+
+**STATUS:** PR #78 OPEN / DRAFT / UNMERGED; Ka review NOT ACCEPTED; An acceptance NOT ACCEPTED; Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+**Signed:** Ka — CSA / Independent Security Reviewer
