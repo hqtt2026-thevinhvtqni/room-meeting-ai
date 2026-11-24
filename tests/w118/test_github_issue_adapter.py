@@ -292,6 +292,29 @@ class Work118GitHubIssueAdapterTests(unittest.TestCase):
             self.mirror(adapter=adapter)
         self.assertFalse(any(method in ("POST", "PATCH") for method, _, _ in fake.calls))
 
+    def test_markers_inside_long_mixed_or_unclosed_fences_fail_closed(self):
+        marker = "<!-- room-hop-core-task:W118-TASK-016 -->"
+        fenced_bodies = (
+            f"````markdown\n```\n{marker}\n```\n````",
+            f"~~~~markdown\n~~~\n{marker}\n~~~\n~~~~",
+            f"````outer\n```inner\n{marker}\n```\n````",
+            f"````unclosed\n{marker}",
+        )
+        for body in fenced_bodies:
+            fake = FakeGitHub([{"number": 41, "title": "Fenced marker", "body": body}])
+            adapter = GitHubIssueAdapter(fake, repository=REPOSITORY, lease_validator=lambda lease_id, task: True)
+            with self.subTest(body=body), self.assertRaises(IssueLookupDuplicate):
+                self.mirror(adapter=adapter)
+            self.assertFalse(any(method in ("POST", "PATCH") for method, _, _ in fake.calls))
+
+    def test_marker_after_closed_long_fence_is_accepted(self):
+        marker = "<!-- room-hop-core-task:W118-TASK-016 -->"
+        body = f"````markdown\nexample\n````\n{marker}"
+        fake = FakeGitHub([{"number": 42, "title": "Existing", "body": body}])
+        adapter = GitHubIssueAdapter(fake, repository=REPOSITORY, lease_validator=lambda lease_id, task: True)
+        result = self.mirror(task=core_task(issue_id=42), adapter=adapter)
+        self.assertEqual(result["issue_id"], 42)
+
     def test_repository_requires_nonempty_valid_components(self):
         for repository in ("/room-meeting-ai", "owner/", " owner/repo", "owner/repo ", "owner//repo", "owner/repo/name"):
             with self.subTest(repository=repository), self.assertRaises(ValueError):
