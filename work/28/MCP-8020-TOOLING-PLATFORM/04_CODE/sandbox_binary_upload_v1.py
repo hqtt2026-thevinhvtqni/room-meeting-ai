@@ -301,13 +301,31 @@ class SandboxBinaryUploadService:
                 outcome="BLOCKED"; detail="RECOVERY_FILESYSTEM_ERROR"
             self.ledger.record_recovery(row,outcome,row.get("received_bytes",0))
             results.append({"upload_id":row["upload_id"],"state":row["state"],"status":outcome,"detail":detail})
+        known_staging={str(Path(r["staging_path"])) for r in self.ledger.sessions()}
+        for work_id in sorted({r["sandbox_work_id"] for r in self.ledger.sessions()}):
+            staging_dir=self.root/work_id/".upload-staging"
+            if staging_dir.exists():
+                if staging_dir.is_symlink():
+                    results.append({"upload_id":None,"state":"ORPHAN_STAGING","status":"BLOCKED",
+                                    "detail":"STAGING_DIRECTORY_IS_SYMLINK","path":str(staging_dir)})
+                else:
+                    try:
+                        for item in staging_dir.iterdir():
+                            if item.name.endswith(".part") and str(item) not in known_staging:
+                                results.append({"upload_id":None,"state":"ORPHAN_STAGING","status":"BLOCKED",
+                                                "detail":"UNTRACKED_STAGING_REQUIRES_QUARANTINE","path":str(item)})
+                    except OSError:
+                        results.append({"upload_id":None,"state":"ORPHAN_STAGING","status":"BLOCKED",
+                                        "detail":"STAGING_DIRECTORY_READ_FAILED","path":str(staging_dir)})
         quota=self.ledger.reconcile_quota()
         self._startup_blocked=any(x["status"]=="BLOCKED" for x in results)
         return {"sessions":results,"quota_rebuilt":quota,"blocked":self._startup_blocked,
                 "all_reconciled":all(x["status"]=="PASS" for x in results)}
-    def begin(self,*,trusted_context,canonical_work_id,sandbox_work_id,destination,expected_bytes,expected_sha256,chunk_size,idempotency_key):
+    def require_startup_clear(self):
         if self._startup_blocked:
             raise UploadError("STARTUP_RECONCILIATION_BLOCKED","startup found unresolved filesystem/ledger state")
+    def begin(self,*,trusted_context,canonical_work_id,sandbox_work_id,destination,expected_bytes,expected_sha256,chunk_size,idempotency_key):
+        self.require_startup_clear()
         path=self.path(destination)
         if isinstance(expected_bytes,bool) or not isinstance(expected_bytes,int) or not 0<=expected_bytes<=MAX_FILE_BYTES: raise UploadError("INVALID_SIZE","file size outside bound")
         if not isinstance(expected_sha256,str) or not _SHA.fullmatch(expected_sha256): raise UploadError("INVALID_DIGEST","expected SHA-256 must be lowercase hex")
@@ -348,6 +366,7 @@ class SandboxBinaryUploadService:
           (g.normalized_path,row["destination"]),(g.policy_version,row["policy_version"]),(g.revocation_epoch,row["revocation_epoch"]))
         if any(a!=b for a,b in pairs) or row["expires_at"]<=time.time(): raise UploadError("SESSION_BINDING_MISMATCH","Core grant no longer matches upload session")
     def chunk(self,*,trusted_context,upload_id,index,offset,data:bytes):
+        self.require_startup_clear()
         if not isinstance(data,bytes) or not data or len(data)>MAX_CHUNK_BYTES: raise UploadError("INVALID_CHUNK","chunk must be 1..1MiB raw bytes")
         if isinstance(index,bool) or not isinstance(index,int) or index<0 or isinstance(offset,bool) or not isinstance(offset,int) or offset<0: raise UploadError("INVALID_OFFSET","chunk index and offset must be non-negative integers")
         row=self.ledger.get(upload_id)
@@ -419,6 +438,7 @@ class SandboxBinaryUploadService:
         return {"upload_id":row["upload_id"],"status":"COMPLETED","path":row["destination"],
                 "bytes":row["expected_bytes"],"sha256":expected,"readback_verified":True,"recovered":True}
     def finalize(self,*,trusted_context,upload_id):
+        self.require_startup_clear()
         # Serialize finalize/recovery against chunk writes and aborts across
         # cooperating service instances on this host. Re-read and reauthorize
         # inside the lock in _finalize_locked before changing durable state.
@@ -471,6 +491,7 @@ class SandboxBinaryUploadService:
             raise UploadError("AUDIT_BLOCKED","completion audit could not be committed") from e
         return {"upload_id":upload_id,"status":"COMPLETED","path":row["destination"],"bytes":size,"sha256":digest,"readback_verified":True}
     def abort(self,*,trusted_context,upload_id):
+        self.require_startup_clear()
         # Use the same per-upload OS lock as chunk/finalize so cleanup cannot
         # race a writer or a promotion from another service instance.
         row=self.ledger.get(upload_id)
