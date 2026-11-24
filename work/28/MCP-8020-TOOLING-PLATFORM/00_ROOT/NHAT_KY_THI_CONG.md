@@ -2805,3 +2805,36 @@ Review 6015443161 records the detailed findings; review 6015449638 corrects curr
 - Work 28 remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED until the corresponding evidence is complete.
 
 **NEXT:** Xu proceeds autonomously on the canonical Work 28 branch, creates a reviewable isolated implementation candidate, and drives it to exact-SHA CI and independent review.
+
+
+## 2026-11-24 — JRN-W28-073 — WP3 binary upload engine candidate committed and exact-SHA CI requested
+
+**Owner:** Xu  
+**Branch:** `xu/work28-wp3-binary-upload-20261124`  
+**Base:** `work/28-mcp-tooling-platform`  
+**PR:** [#77 — Work 28: add fail-closed binary Sandbox upload engine candidate](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/77)  
+**Code commit:** `5bed17d206ee1d6c2c4857b20f3db3cddd4f475c`  
+**Latest code fix:** `a7511c3fe92361e4127f15d88813c291ae874371`  
+**Test file commit:** `293838741eb5116ba76482441fd7d87580c9e82d`
+
+### BUILD
+- Added `04_CODE/sandbox_binary_upload_v1.py`: bounded raw-byte chunk engine; mandatory injected Core authorizer; trusted principal/session, Work mapping, audience, capability, path, expiry and revocation-epoch binding; SQLite transaction-backed session/chunk/quota/audit ledger; private staging; no-overwrite hard-link promotion; whole-file SHA-256 and independent final-path readback; abort path.
+- Added `05_TEST/test_sandbox_binary_upload_v1.py`: PNG/arbitrary binary, invalid UTF-8, ZIP, zero-byte, missing Core authority, untrusted caller context, wrong Work mapping, traversal, symlink escape, chunk gaps, checksum mismatch, overwrite denial and Core recheck coverage.
+- Follow-up fix validates chunk sequence and byte bounds before modifying staged bytes, reducing the risk that an invalid offset overwrites an already accepted range.
+- Opened Draft PR #77 and posted a review handoff requesting Ka's independent security review and An's independent exact-head QA.
+
+### VERIFY
+- GitHub confirms PR #77 OPEN / DRAFT / UNMERGED; exact latest head at this entry is `a7511c3fe92361e4127f15d88813c291ae874371`.
+- Work 28 workflow run `45307355362` was observed in PENDING state for that exact head when checked. No CI PASS is claimed.
+- No live Sandbox binary upload, Core grant route integration, runtime registration, deployed transport or readback has been performed.
+
+### LIMITATIONS / BLOCKERS — DO NOT PROMOTE TO RELEASE
+1. The current code is an engine component; it is not yet bound to the MCP registry/server and has no raw-byte network transport adapter.
+2. The repository's Core execution-authority routes are execution-specific; no approved upload-capability route/schema, transactional revocation/finalize lease or dynamic Work→Sandbox mapping integration has been proven.
+3. The engine's component authorizer contract does not by itself prove atomic linearization of revocation against concurrent finalize. This needs an approved Core-side operation/lease contract and adversarial tests before enablement.
+4. Multi-process crash recovery, durable audit failure injection, filesystem TOCTOU/symlink swap hardening, idempotent finalize/abort recovery and Windows atomic-promotion behavior still require review and tests.
+5. Ka and An acknowledgements/reviews have been requested in PR #77 but are not yet evidenced.
+
+### NEXT
+- Resolve exact-head CI failures; extend race/crash/recovery tests; revise the Core grant adapter/transport contract against actual Core source ownership; obtain Ka/An review; then wire registry/runtime and perform disposable Work Sandbox canary plus independent byte-for-byte SHA-256 readback.
+- Keep upload tool unregistered and production side effects disabled until the above gates pass. W28 remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED.
