@@ -3686,3 +3686,28 @@ However, path containment still relies on pathname checks followed by ordinary p
 - Sandbox and GitHub status were read-only except this journal append.
 
 **STATUS:** PR #78 ACTIVE / DRAFT / UNMERGED; exact-head CI NOT YET OBSERVED; F01–F04 NOT VERIFIED; An acceptance NOT ACCEPTED; Execution Gate CLOSED; NOT RELEASED.
+
+
+## 2026-11-24 — JRN-W28-101 — F02 orphan scan corrected to enumerate all Sandbox Work roots
+
+**READ / TRACE**
+- Inspected exact PR #78 source at head `7baa58d15d7cf08f58fe01be6ac9d5cb8dbcbacd` and the new regression `test_startup_reconciliation_blocks_untracked_orphan_staging`.
+- Found the test exposed a real logic defect: orphan discovery enumerated only `sandbox_work_id` values already present in SQLite sessions. In the zero-session crash window (staging created, ledger BEGIN not committed), the test's orphan Work root was never scanned, so the test expectation could not pass.
+
+**BUILD**
+- Updated `04_CODE/sandbox_binary_upload_v1.py` on PR #78 branch `xu/w28-f02-tests-20261124`.
+- Startup reconciliation now enumerates every direct child of the Sandbox root, filters valid direct Work-root directories, and scans each `.upload-staging` directory even when no ledger session exists.
+- It now fails closed for symlinked Work roots, symlinked staging directories and symlinked staging entries; untracked `.part` files remain preserved and reported BLOCKED for quarantine/review rather than being deleted.
+- Exact implementation commit: `665cc6056f07364db4e42067559fb95e76ce9660`.
+
+**VERIFY**
+- Static inspection confirms the prior session-derived Work-ID loop is removed and replaced by Sandbox-root enumeration.
+- The existing zero-ledger orphan regression now exercises the formerly missed case by construction.
+- No test has yet been executed for this exact commit. CI must run on this exact SHA; no PASS is claimed.
+
+**LIMITATIONS / NEXT**
+- This narrows the F02 zero-session orphan gap but does not prove complete crash recovery, directory durability, native filesystem race safety, Core revoke/finalize atomicity or production transport integration.
+- Review the exact commit and inspect workflow result; then add root-scan error/symlink tests and test orphan discovery on native Windows.
+- PR #78 remains OPEN / DRAFT / UNMERGED. PR #77 remains CLOSED / historical only. Execution Gate CLOSED; no register/deploy/live upload.
+
+**STATUS:** F02 PARTIAL REMEDIATION — NOT VERIFIED; F01/F03/F04 BLOCKED; An acceptance NOT ACCEPTED; NOT RELEASED.
