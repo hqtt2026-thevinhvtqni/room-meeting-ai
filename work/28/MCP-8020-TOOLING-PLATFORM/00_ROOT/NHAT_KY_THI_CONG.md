@@ -2938,3 +2938,35 @@ Xu to remediate the blocking findings on the isolated PR branch; Ka to independe
 - Obtain independent Ka security review and An QA on the corrected exact code SHA before any integration canary.
 
 **STATUS:** configured CI PASS on `ead31cafe4b55ba7828fac31287d3eb7032d228f`; security acceptance BLOCKED; live upload NOT VERIFIED; Execution Gate CLOSED; Work 28 NOT RELEASED.
+
+
+## 2026-11-24 — JRN-W28-078 — Add native Windows upload-engine CI lane and trace Core grant dependency
+
+**Owner:** Xu  
+**PR:** #77  
+**Workflow change commit:** `524df9ac564deef32cd3841ce95b07ff420d7132`  
+**Exact-head CI:** run #476 / `45315731080` on the workflow-change commit.
+
+### READ / TRACE
+- Re-read the Work 28 workflow and binary upload component tests.
+- Confirmed the upload component tests were included in the Linux unit/regression suite, but no dedicated native Windows job executed `test_sandbox_binary_upload_v1.py`. The existing Windows lane only ran Execution Host lifecycle and related WP14–WP23 tests.
+- Searched the repository for an implemented Core upload-capability grant route, Sandbox upload authorization/revocation endpoint and finalize lease. The search did not identify an implemented route or contract that can be wired as a real Core upload authority. This is a repository search result, not proof that no external service exists; no such external service/route has been supplied or verified in this session.
+
+### BUILD
+- Added dedicated `binary-upload-engine-windows` job to `.github/workflows/work28-mcp-tooling.yml`.
+- Job fetches the exact triggering SHA and runs the actual `test_sandbox_binary_upload_v1.py` suite on `windows-2025`.
+- Made immutable artifact build and automatic E2E report depend on the new job; included its result in the machine-readable CI preconditions. A failure in this Windows lane therefore prevents CI preconditions from reporting PASS.
+- Commit: `524df9ac564deef32cd3841ce95b07ff420d7132`.
+
+### VERIFY
+- GitHub readback confirms the job, dependency edges and report field are present in the workflow at the exact commit.
+- GitHub created workflow run #476 / `45315731080` for this exact SHA. At the last check it was PENDING/QUEUED and had not exposed job results. No Windows upload test PASS/FAIL is claimed yet.
+- This workflow enhancement does not remediate the security findings in JRN-W28-076 and does not add Core authorization, raw-byte transport or MCP registration.
+
+### BLOCKERS / NEXT
+1. Await run #476; inspect the native Windows component test result and fix any platform-specific failure with new exact-SHA CI.
+2. Continue source-level remediation of FINALIZING recovery, cross-process chunk/ledger consistency and crash recovery.
+3. Core upload grant/finalize atomicity remains an external integration blocker until a real Core-owned route/transaction contract and trusted Work mapping are located and verified. Do not substitute a fake/local authorizer.
+4. Ka independent security review and An independent QA remain outstanding.
+
+**STATUS:** workflow enhancement COMMITTED; native Windows test PENDING; Core upload grant NOT FOUND IN REPOSITORY SEARCH / NOT VERIFIED; PR #77 OPEN / DRAFT / UNMERGED; Execution Gate CLOSED; Work 28 NOT RELEASED.
