@@ -3711,3 +3711,27 @@ However, path containment still relies on pathname checks followed by ordinary p
 - PR #78 remains OPEN / DRAFT / UNMERGED. PR #77 remains CLOSED / historical only. Execution Gate CLOSED; no register/deploy/live upload.
 
 **STATUS:** F02 PARTIAL REMEDIATION — NOT VERIFIED; F01/F03/F04 BLOCKED; An acceptance NOT ACCEPTED; NOT RELEASED.
+
+
+## 2026-11-24 — JRN-W28-117 — PR #78 workflow trigger and branch freshness recheck
+
+**Owner:** Ka — CSA / Technical Delivery  
+**Date-Time:** 2026-11-24 23:48 Asia/Ho_Chi_Minh  
+**PR:** #78 — `xu/w28-f02-tests-20261124`  
+**Observed PR HEAD before this journal entry:** `5ae4c87489f400b413dca753f29199c8114a68d7`
+
+### READ / VERIFY
+- Re-fetched PR #78 from GitHub: OPEN / DRAFT / UNMERGED; mergeable=false; base `work/28-mcp-tooling-platform` at `43e303c33c3d5fc46ea6ab3f6d177624af3f27c7`; head `5ae4c87489f400b413dca753f29199c8114a68d7`.
+- Recompared current branch refs: PR branch is DIVERGED, 55 commits ahead / 4 behind; merge base remains `4b2a8663a0b9ff40aad8e6812efff197b5085de5`; canonical base HEAD is `1d7c92294a0c68f109da9e07af9ad6d49566ea75`.
+- Enumerated the four commits on canonical base after merge base: `94d7413` (Xu takeover record), `73aad1f` (ownership record), `43e303c` (F02 reconciliation journal), `1d7c922` (active PR #78 / PR #77 supersession journal). These are journal/ownership commits; no automatic merge or cherry-pick performed.
+- Read exact PR workflow `.github/workflows/work28-mcp-tooling.yml` (blob `e71c0c2e33c9908cf005d446a5990c824e8722da`). Triggers include push (canonical branch path filters), pull_request (path filters), and workflow_dispatch. The branch does have a manual dispatch trigger.
+- Queried GitHub Actions runs endpoint for exact HEAD `5ae4c87489f400b413dca753f29199c8114a68d7`: total_count=0. This is a direct all-event query, stronger than the connector helper which only returns PR-triggered runs.
+
+### LIMITATION / DECISION
+- Available GitHub connector exposes GET/read and rerun-existing-run actions but no workflow_dispatch/create-run action. No run exists to rerun. Ka cannot start Actions from this session; no CI PASS is claimed.
+- Workflow trigger configuration is present, but no evidence proves that manual dispatch was actually invoked. Do not infer token suppression or a GitHub workflow defect.
+- No source code changed in this step. Do not merge/rebase/cherry-pick the four behind commits blindly; inspect and reconcile them with source ownership and journal history in a local Git-capable environment.
+
+**STATUS:** PR #78 OPEN / DRAFT / UNMERGED; F01–F04 remain unresolved; exact-head CI NOT OBSERVED; Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+**Signed:** Ka — CSA / Technical Delivery
