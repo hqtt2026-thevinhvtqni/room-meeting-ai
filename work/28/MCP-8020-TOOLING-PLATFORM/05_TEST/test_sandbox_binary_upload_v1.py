@@ -110,6 +110,42 @@ class BinaryUploadTests(unittest.TestCase):
         with self.assertRaises(UploadError) as e:
             self.service.begin(expected_bytes=1,expected_sha256=hashlib.sha256(b"b").hexdigest(),**args)
         self.assertEqual(e.exception.code,"IDEMPOTENCY_CONFLICT")
+    def _prepare_finalizing_crash(self,data,key):
+        digest=hashlib.sha256(data).hexdigest()
+        started=self.service.begin(trusted_context=self.ctx,canonical_work_id="W119",sandbox_work_id="119",
+          destination="images/photo.png",expected_bytes=len(data),expected_sha256=digest,chunk_size=4096,idempotency_key=key)
+        uid=started["upload_id"]
+        for i,off in enumerate(range(0,len(data),4096)):
+            self.service.chunk(trusted_context=self.ctx,upload_id=uid,index=i,offset=off,data=data[off:off+4096])
+        row=self.ledger.get(uid)
+        self.ledger.transition(uid,"UPLOADING","FINALIZING","SIMULATED_PROCESS_CRASH",digest)
+        return uid,Path(row["staging_path"]),Path(row["final_path"]),digest
+    def test_finalize_recovers_crash_before_promotion(self):
+        data=b"crash-before-promotion"
+        uid,staging,final,digest=self._prepare_finalizing_crash(data,"idempotency-key-0013")
+        self.assertTrue(staging.exists()); self.assertFalse(final.exists())
+        result=self.service.finalize(trusted_context=self.ctx,upload_id=uid)
+        self.assertEqual(result["status"],"COMPLETED"); self.assertTrue(result["recovered"])
+        self.assertEqual(final.read_bytes(),data); self.assertFalse(staging.exists())
+        self.assertEqual(result["sha256"],digest); self.assertEqual(self.ledger.get(uid)["state"],"COMPLETED")
+    def test_finalize_recovers_crash_after_promotion_before_cleanup(self):
+        data=b"crash-after-promotion"
+        uid,staging,final,digest=self._prepare_finalizing_crash(data,"idempotency-key-0014")
+        final.parent.mkdir(parents=True,exist_ok=True); __import__("os").link(staging,final)
+        self.assertTrue(staging.exists()); self.assertEqual(final.read_bytes(),data)
+        result=self.service.finalize(trusted_context=self.ctx,upload_id=uid)
+        self.assertEqual(result["status"],"COMPLETED"); self.assertTrue(result["recovered"])
+        self.assertFalse(staging.exists()); self.assertEqual(result["sha256"],digest)
+        self.assertEqual(self.ledger.get(uid)["state"],"COMPLETED")
+    def test_finalize_recovery_refuses_conflicting_destination(self):
+        data=b"expected-finalizing-content"
+        uid,staging,final,_=self._prepare_finalizing_crash(data,"idempotency-key-0015")
+        final.write_bytes(b"attacker-or-unrelated-file")
+        with self.assertRaises(UploadError) as e:
+            self.service.finalize(trusted_context=self.ctx,upload_id=uid)
+        self.assertEqual(e.exception.code,"RECOVERY_CONFLICT")
+        self.assertEqual(self.ledger.get(uid)["state"],"FINALIZING")
+        self.assertTrue(staging.exists())
     def test_core_checked_for_each_operation(self):
         self.roundtrip(b"binary-data")
         self.assertEqual(self.core.calls,["begin","chunk","finalize"])
