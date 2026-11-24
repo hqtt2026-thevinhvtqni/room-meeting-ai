@@ -4238,3 +4238,35 @@ The engine's injected-authorizer seam and grant binding are not equivalent to an
 - No source changes, tests, live MCP/Core calls, PC operations, upload/readback, merge or deployment were performed.
 
 **Signed:** Ka — CSA / Independent Security Reviewer
+
+
+## 2026-11-25 — JRN-W28-132 — Workflow trigger/base comparison and updated branch divergence
+
+**Document ID:** W28-KA-AUD-132  
+**Priority:** P0 — exact-SHA CI evidence and controlled branch synchronization  
+**Owner:** Ka — CSA / Independent Security Reviewer  
+**Date-Time:** 2026-11-25 (Asia/Ho_Chi_Minh)  
+**Target:** PR #78, branch `xu/w28-f02-tests-20261124`, current exact HEAD before this journal append `556b18359fd4ef4d48ce3aac2c4ae1d7ff0421da`  
+**Method:** Read-only comparison of canonical/base and candidate workflow files, PR metadata, branch graph and exact-commit workflow lookup.
+
+### READ / TRACE
+
+1. PR #78 remains OPEN / DRAFT / UNMERGED; mergeable=false. Before this entry the branch HEAD was `556b18359fd4ef4d48ce3aac2c4ae1d7ff0421da`.
+2. The canonical/base workflow exists at blob `8876f1a9096ec54e5a78a073820755087e67ecbf`; candidate workflow is blob `e71c0c2e33c9908cf005d446a5990c824e8722da`.
+3. Both workflow revisions declare `pull_request` triggers and path filters that include Work 28 `04_CODE/**` and `05_TEST/**`. PR #78 adds both directories, so the changed paths match the declared filters. The canonical/base workflow has no `binary-upload-engine-windows` job and no `BINARY_WINDOWS_RESULT` gate input; the candidate workflow adds that native-Windows component test job and includes it in the artifact/report dependency chain.
+4. Exact-commit workflow lookup for `556b18359fd4ef4d48ce3aac2c4ae1d7ff0421da` returned an empty workflow_runs list. Thus no PR-triggered CI result is currently evidenced. The read-only connector surface used in this audit exposes commit-associated PR workflow runs but no workflow-dispatch operation or all-events run-list operation; Ka did not claim to dispatch or inspect an unexposed event type.
+5. Recompare candidate against canonical branch `work/28-mcp-tooling-platform`: **DIVERGED, 70 commits ahead / 5 behind**, merge base `4b2a8663a0b9ff40aad8e6812efff197b5085de5`; canonical HEAD `0bb578b3b306ac74b792bc7c786895b6e8fcf4ac`.
+6. The changed workflow's candidate-only native Windows job is useful component coverage but cannot be treated as executed. Even if all local/CI component jobs pass, the candidate report explicitly leaves deployed MCP/Core/Runtime E2E BLOCKED pending trusted runtime identity, Core principal/WorkContext evidence and protected readback.
+7. This audit does not infer the cause of the missing workflow run. Possible repository Actions settings, event policy, workflow processing or run-list filtering require owner-side Actions UI/API evidence; no cause is asserted.
+
+### DISPOSITION
+
+- Trigger path configuration: **STATICALLY MATCHES** the changed Work 28 code/test paths in both base and candidate workflow definitions.
+- Exact-SHA CI: **NOT OBSERVED** for `556b183...`; no test PASS claimed.
+- Native Windows upload job: **DEFINED IN CANDIDATE ONLY; NOT EXECUTED / NOT ACCEPTED**.
+- Branch/journal synchronization: **BLOCKED**; current graph 70 ahead / 5 behind. Preserve both histories; no blind rebase, merge or overwrite.
+- F01–F04 remain **BLOCKED / P0**; Ka independent review and An independent QA remain **NOT ACCEPTED**.
+- Work 28 remains **ACTIVE / INTEGRATION BLOCKED / NOT RELEASED**; Execution Gate **CLOSED**.
+- No source code changes, test execution, workflow dispatch, PC operation, live MCP/Core call, upload/readback, merge or deployment occurred.
+
+**Signed:** Ka — CSA / Independent Security Reviewer
