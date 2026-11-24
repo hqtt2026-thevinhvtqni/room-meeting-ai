@@ -571,3 +571,17 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - **Finding disposition:** 067, 069, 068, 071 and 065 REMEDIATED AT SOURCE/CONTRACT-TEST LEVEL — PENDING XU INDEPENDENT RE-REVIEW.
 - **Boundary:** aggregate branch `UNBOUND_LEGACY_BRANCH`; PR source-binding skipped; handoff/ACK/review capture jobs skipped. Runtime Auto E2E NOT RUN; external Core/W102/W14/W33/W70 authority/runtime gates BLOCKED / NOT VERIFIED.
 - **Acceptance:** NOT ACCEPTED; release NOT AUTHORIZED; PR #68 OPEN / UNMERGED.
+
+## Entry 076 — residual remediation and exact-head verification
+
+- **Priority:** P0 — bind residual remediation to exact source and CI revision.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-24 09:36 +07:00.
+- **PR #68:** OPEN / UNMERGED; branch `work/118-auto-e2e-v2-clean`.
+- **Current implementation HEAD:** `e7d2f8207047e85f1e6d5349800e67dd638d75a3`.
+- **Exact-head PR Run #1143:** SUCCESS; 124 tests in 0.187s; validate job `138175467793`; artifact `14884681161`, SHA-256 `aba52ea640fc9fb799a38832127862c69f19b1eb3fb46151238588c89375065d`. Push Run #1142 also SUCCESS on same HEAD.
+- **067:** shared Markdown fence parser requires same fence character and closing length >= opener; shorter/mixed/nested-looking runs do not close; unclosed fence fails closed. Adversarial tests include 4+ backticks/tilde and valid marker after closed fence.
+- **069:** diagnostics query now enumerates all Issues without mutable label filter; PRs excluded; 100-page ceiling and fail-closed completeness retained. Regression verifies exact marker on Issue with no labels is reused.
+- **Disposition:** 067 and 069 REMEDIATED AT SOURCE/CONTRACT-TEST LEVEL — PENDING XU INDEPENDENT RE-REVIEW. Findings 065/068/071 remain PASS STATIC per Entry 075.
+- **Boundary:** PR-event source-binding skipped; aggregate branch remains `UNBOUND_LEGACY_BRANCH`; handoff/ACK/review capture skipped. Runtime Auto E2E NOT RUN; Core/W102/W14/W33/W70 gates BLOCKED / NOT VERIFIED.
+- **Acceptance:** NOT ACCEPTED; release NOT AUTHORIZED; Vinh retains final authority.
