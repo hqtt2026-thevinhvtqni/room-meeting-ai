@@ -2890,3 +2890,31 @@ Xu continues source inspection and implementation directly on an isolated branch
 - Work 28: ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED.
 
 [KÝ: XU | DELIVERY OWNER]
+
+
+## 2026-11-24 — JRN-W28-118 — Ka đối soát journal divergence và workflow giữa canonical / PR #78
+
+**Owner:** Ka — CSA / Independent Security Review  
+**Date-Time:** 2026-11-24 (Asia/Ho_Chi_Minh; GitHub API không cung cấp giờ thao tác của phiên)  
+**Canonical branch:** `work/28-mcp-tooling-platform`  
+**Candidate branch:** `xu/w28-f02-tests-20261124`  
+**PR:** #78 — OPEN / DRAFT / UNMERGED
+
+### READ / TRACE
+- Re-fetch canonical branch HEAD: `1d7c92294a0c68f109da9e07af9ad6d49566ea75`; PR #78 HEAD tại lần đối soát: `5ae4c87489f400b413dca753f29199c8114a68d7`.
+- Compare xác nhận candidate DIVERGED, 55 commits ahead / 4 commits behind; merge base `4b2a8663a0b9ff40aad8e6812efff197b5085de5`.
+- Đã đọc đủ bốn commit canonical sau merge base. Cả bốn đều là cập nhật ownership/journal; không có thay đổi engine/test trong bốn commit này. Không cherry-pick/merge tự động.
+- Journal canonical có JRN-W28-111, 112, 113; candidate có 111 và 114–117 nhưng thiếu 112–113. Ngược lại, canonical chưa có 114–117. Đây là journal divergence thực, không được xem hai file là đồng bộ.
+- Canonical JRN-W28-111/113 xác định Xu là implementation owner, Ka là independent security reviewer, An là independent tester. Entry này ghi nhận sự phân vai canonical; không tự ý thay đổi ownership hoặc sửa lịch sử.
+- Workflow candidate blob `e71c0c2e33c9908cf005d446a5990c824e8722da`; canonical blob `8876f1a9096ec54e5a78a073820755087e67ecbf`. Candidate đã thêm native Windows binary upload component job; cả hai workflow có push, pull_request và workflow_dispatch. Cả hai đều chưa gọi `work28_auto_e2e_gate_v1.py`.
+- Canonical branch chưa có binary upload engine/test files; candidate có engine blob `f13bd1ae09ba79ab2f19f538d752e863fffcb19c` và test blob `0963baa3fd4c724973a08be331c4a9c8ddc4784b`.
+
+### DECISION
+- Không đồng bộ toàn bộ journal bằng overwrite, không rebase/merge/cherry-pick bốn commit một cách mù quáng.
+- Giữ PR #78 làm candidate để review; giữ canonical branch làm nguồn journal/authority. Cần một bước reconcile có kiểm soát để bảo toàn các entry 112–117 và làm rõ ownership trước khi hợp nhất.
+- Ka tiếp tục vai trò independent review, audit evidence và điều phối blocker; không tự ghi nhận implementation PASS thay Xu/An.
+
+### STATUS
+PR #78 OPEN / DRAFT / UNMERGED; journal synchronization BLOCKED; F01–F04 chưa được chứng minh đóng; exact-head CI NOT OBSERVED; Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+**Signed:** Ka — CSA / Independent Security Review
