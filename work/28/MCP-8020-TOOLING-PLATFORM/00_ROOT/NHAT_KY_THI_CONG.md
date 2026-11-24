@@ -3145,3 +3145,36 @@ This proves the configured component/regression/lifecycle/artifact jobs on the t
 **Correction:** JRN-W28-085 line “PR head after journal sync” used the pre-sync head `89d7138c8c6363dc4767f733a1fd48321c705c33`. The GitHub journal append itself created commit `70679fc8c64f2fc0fb51f62ddd9451b16453e3a4`, which is the actual PR branch HEAD after that write. The tested code SHA remains `35e162753413bf21e81b92fe9755bd082f11e04a`; the journal commits are documentation-only and do not change the tested source files. Sandbox read probe returned `status=ok` and confirmed JRN-W28-085 and this correction are present in the canonical journal copy.
 
 **STATUS:** documentation reference corrected; no code/test status changed; PR #77 remains OPEN / DRAFT / UNMERGED; Execution Gate CLOSED.
+
+
+## 2026-11-24 — JRN-W28-087 — Serialize finalize/recovery and abort with chunk operations
+
+**Owner:** Xu  
+**PR:** [#77](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/77)  
+**Code commit:** `fa074b45420eec32ca6d5c2c899c0d299468175b`  
+**Test commit / exact tested SHA:** `e7e1bed4bea28f886e8f69f499b0b83592e25c63`  
+**Workflow:** [#492 / 45318018616](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45318018616)
+
+### READ / TRACE
+- Re-read the current engine after JRN-W28-085. Chunk writes used `upload_file_lock()`, but `finalize()` and `abort()` did not acquire the same per-upload OS lock.
+- This allowed a race between a chunk operation and finalization/abort, or between two independent service instances finalizing/cleaning the same staging file. A database state transition alone does not serialize the filesystem operation sequence.
+
+### BUILD
+- Wrapped `finalize()` and FINALIZING recovery in the same per-upload OS lock used by chunk writes; the locked worker re-reads session state and obtains fresh Core authorization before proceeding.
+- Wrapped `abort()` in the same per-upload OS lock so staging cleanup cannot race chunk writes or promotion from another cooperating service instance on the same host.
+- Added a concurrent two-caller finalize test requiring both calls to return the same COMPLETED result and the destination bytes to remain intact.
+- Engine commit: `fa074b45420eec32ca6d5c2c899c0d299468175b`; test commit: `e7e1bed4bea28f886e8f69f499b0b83592e25c63`.
+
+### VERIFY — PENDING
+- GitHub Actions created exact-SHA run #492 / `45318018616` for test commit `e7e1bed4bea28f886e8f69f499b0b83592e25c63`.
+- At journal time, all four initial jobs were IN_PROGRESS: Linux regression, Linux lifecycle, native Windows upload component and Windows lifecycle. No PASS/FAIL is claimed yet.
+- This lock remains host-local and assumes cooperating service processes share the same staging filesystem and lock semantics. It is not a distributed lock and does not fix hostile directory replacement, power-loss durability or Core revoke-vs-finalize atomicity.
+
+### LIMITATIONS / NEXT
+1. Inspect all four jobs and exact logs for run #492; fix any regression with a new exact-SHA run.
+2. Continue filesystem race hardening; path-component `is_symlink()` checks followed by path-based operations remain TOCTOU-vulnerable.
+3. Add directory-entry durability and crash reconciliation for staging, chunks, quota and ledger.
+4. Obtain real Core-owned upload grant/finalize lease with atomic revocation semantics; no fake authorizer or guessed route.
+5. Ka independent security review and An independent QA remain required and not recorded.
+
+**STATUS:** finalize/abort now share host-local per-upload lock with chunk operations; exact-head CI #492 IN_PROGRESS; filesystem TOCTOU OPEN; durable promotion NOT VERIFIED; crash reconciliation OPEN; Core grant/lease NOT VERIFIED; independent reviews NOT RECORDED; live PC image upload NOT VERIFIED; PR #77 OPEN / DRAFT / UNMERGED; Execution Gate CLOSED; NOT RELEASED.
