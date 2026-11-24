@@ -104,6 +104,10 @@ class SQLiteUploadLedger:
         with self.db() as c:
             r=c.execute("SELECT * FROM sessions WHERE upload_id=?",(uid,)).fetchone()
             return dict(r) if r else None
+    def get_chunk(self,uid,index):
+        with self.db() as c:
+            r=c.execute("SELECT byte_offset,byte_length,sha256 FROM chunks WHERE upload_id=? AND chunk_index=?",(uid,index)).fetchone()
+            return tuple(r) if r else None
     def accept_chunk(self,uid,index,offset,length,digest):
         with self.lock,self.db() as c:
             c.execute("BEGIN IMMEDIATE"); row=c.execute("SELECT * FROM sessions WHERE upload_id=?",(uid,)).fetchone()
@@ -216,25 +220,33 @@ class SandboxBinaryUploadService:
         if not row: raise UploadError("NOT_FOUND","upload session not found")
         g=self.grant(trusted_context,"chunk",upload_id,row["destination"],row["expected_bytes"]); self.match(g,row)
         if len(data)>g.max_chunk_bytes or index>=g.max_chunks: raise UploadError("CHUNK_LIMIT","chunk exceeds Core grant")
+        digest=hashlib.sha256(data).hexdigest()
+        if index<row["next_index"]:
+            old=self.ledger.get_chunk(upload_id,index)
+            if old==(offset,len(data),digest):
+                return {"upload_id":upload_id,"index":index,"status":"ALREADY_ACCEPTED","sha256":digest}
+            raise UploadError("REPLAY_MISMATCH","chunk retry does not match the accepted bytes")
         if row["state"]!="UPLOADING" or index!=row["next_index"] or offset!=row["received_bytes"]:
             raise UploadError("CHUNK_SEQUENCE","chunk must be the exact next contiguous range")
         if offset+len(data)>row["expected_bytes"]:
             raise UploadError("SIZE_EXCEEDED","chunk exceeds declared file size")
-        digest=hashlib.sha256(data).hexdigest(); path=Path(row["staging_path"])
+        path=Path(row["staging_path"])
         with self.lock:
             with open(path,"r+b",buffering=0) as f:
                 f.seek(offset); f.write(data); f.flush(); os.fsync(f.fileno())
-            try: self.ledger.accept_chunk(upload_id,index,offset,len(data),digest)
-            except Exception:
-                # If another process won the SQLite sequence race, do not truncate
-                # bytes accepted by that process. The session will fail closed on
-                # the next digest check if the staging bytes no longer match.
-                raise
+            self.ledger.accept_chunk(upload_id,index,offset,len(data),digest)
         return {"upload_id":upload_id,"index":index,"status":"ACCEPTED","bytes":len(data),"sha256":digest}
     def finalize(self,*,trusted_context,upload_id):
         row=self.ledger.get(upload_id)
         if not row: raise UploadError("NOT_FOUND","upload session not found")
         g=self.grant(trusted_context,"finalize",upload_id,row["destination"],row["expected_bytes"]); self.match(g,row)
+        if row["state"]=="COMPLETED":
+            final=Path(row["final_path"]); h=hashlib.sha256(); size=0
+            with open(final,"rb") as f:
+                for b in iter(lambda:f.read(1024*1024),b""): size+=len(b); h.update(b)
+            if size!=row["expected_bytes"] or h.hexdigest()!=row["completed_sha256"]:
+                raise UploadError("READBACK_MISMATCH","completed upload no longer matches its durable receipt")
+            return {"upload_id":upload_id,"status":"COMPLETED","path":row["destination"],"bytes":size,"sha256":h.hexdigest(),"readback_verified":True}
         if row["received_bytes"]!=row["expected_bytes"] or row["next_index"]!=row["chunk_count"]: raise UploadError("INCOMPLETE_UPLOAD","byte coverage is incomplete")
         root=self.work_root(row["sandbox_work_id"]); staging=Path(row["staging_path"]); final=Path(row["final_path"])
         self.no_symlinks(root,final); h=hashlib.sha256()
@@ -254,19 +266,23 @@ class SandboxBinaryUploadService:
             try: final.unlink()
             except OSError: pass
             raise UploadError("READBACK_MISMATCH","final file readback mismatch")
+        try: staging.unlink()
+        except OSError as e:
+            try: final.unlink()
+            except OSError: pass
+            raise UploadError("CLEANUP_BLOCKED","staging cleanup could not be verified") from e
         try:
             self.ledger.transition(upload_id,"FINALIZING","COMPLETED","PASS",digest)
         except Exception as e:
             try: final.unlink()
             except OSError: pass
             raise UploadError("AUDIT_BLOCKED","completion audit could not be committed") from e
-        try: staging.unlink()
-        except OSError: pass
         return {"upload_id":upload_id,"status":"COMPLETED","path":row["destination"],"bytes":size,"sha256":digest,"readback_verified":True}
     def abort(self,*,trusted_context,upload_id):
         row=self.ledger.get(upload_id)
         if not row: raise UploadError("NOT_FOUND","upload session not found")
         g=self.grant(trusted_context,"abort",upload_id,row["destination"],row["expected_bytes"]); self.match(g,row)
+        if row["state"]=="ABORTED": return {"upload_id":upload_id,"status":"ABORTED","cleanup_verified":True}
         try: Path(row["staging_path"]).unlink(missing_ok=True)
         except OSError as e: raise UploadError("CLEANUP_BLOCKED","staging cleanup not verified") from e
         self.ledger.transition(upload_id,"UPLOADING","ABORTED","PASS")
