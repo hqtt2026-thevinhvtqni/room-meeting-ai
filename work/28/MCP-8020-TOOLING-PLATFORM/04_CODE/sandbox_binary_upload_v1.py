@@ -131,6 +131,31 @@ class SQLiteUploadLedger:
             c.execute("INSERT INTO chunks VALUES(?,?,?,?,?)",(uid,index,offset,length,digest))
             c.execute("UPDATE sessions SET received_bytes=received_bytes+?,next_index=next_index+1 WHERE upload_id=?",(length,uid))
             self.audit(c,"CHUNK_ACCEPTED",dict(row),"PASS",length,digest); c.commit(); return "ACCEPTED"
+    def sessions(self):
+        with self.db() as c:
+            return [dict(r) for r in c.execute("SELECT * FROM sessions ORDER BY created_at,upload_id").fetchall()]
+    def chunks(self,uid):
+        with self.db() as c:
+            return [dict(r) for r in c.execute("SELECT * FROM chunks WHERE upload_id=? ORDER BY chunk_index",(uid,)).fetchall()]
+    def record_recovery(self,row,outcome,count=0,digest=None):
+        with self.lock,self.db() as c:
+            c.execute("BEGIN IMMEDIATE")
+            self.audit(c,"STARTUP_RECONCILIATION",row,outcome,count,digest or row.get("completed_sha256") or row.get("expected_sha256"))
+            c.commit()
+    def reconcile_quota(self):
+        """Rebuild reservations from durable session states; never infer completion."""
+        with self.lock,self.db() as c:
+            c.execute("BEGIN IMMEDIATE")
+            c.execute("DELETE FROM quota")
+            rows=c.execute(
+                "SELECT canonical_work_id,COALESCE(SUM(expected_bytes),0),COUNT(*) "
+                "FROM sessions WHERE state IN ('UPLOADING','FINALIZING') GROUP BY canonical_work_id"
+            ).fetchall()
+            for work,reserved,active in rows:
+                c.execute("INSERT INTO quota(canonical_work_id,reserved_bytes,active_uploads) VALUES(?,?,?)",
+                          (work,reserved,active))
+            c.commit()
+            return {r[0]:{"reserved_bytes":r[1],"active_uploads":r[2]} for r in rows}
     def transition(self,uid,old,new,outcome,digest=None):
         with self.lock,self.db() as c:
             c.execute("BEGIN IMMEDIATE"); r=c.execute("SELECT * FROM sessions WHERE upload_id=?",(uid,)).fetchone()
@@ -208,6 +233,74 @@ class SandboxBinaryUploadService:
         for part in target.relative_to(root).parts:
             root=root/part
             if root.is_symlink(): raise UploadError("SYMLINK_DENIED","symlink path component denied")
+    def reconcile_startup(self):
+        """Reconcile durable ledger against staging/final bytes after process restart.
+
+        UPLOADING sessions are repaired only to their committed chunk cursor.
+        FINALIZING sessions are deliberately left pending for a fresh Core
+        authorization through finalize(); startup never promotes bytes itself.
+        Ambiguous or conflicting states are reported BLOCKED, not guessed.
+        """
+        results=[]
+        for row in self.ledger.sessions():
+            outcome="BLOCKED"; detail="unclassified_state"
+            try:
+                work=self.root/row["sandbox_work_id"]
+                if not work.exists() or work.is_symlink() or work.parent!=self.root:
+                    raise UploadError("RECOVERY_WORK_ROOT_BLOCKED","Sandbox Work root is missing or unsafe")
+                staging=Path(row["staging_path"]); final=Path(row["final_path"])
+                self.no_symlinks(work,staging); self.no_symlinks(work,final)
+                state=row["state"]
+                if state=="UPLOADING":
+                    if not staging.exists():
+                        raise UploadError("RECOVERY_STAGING_MISSING","UPLOADING session has no staging file")
+                    chunks=self.ledger.chunks(row["upload_id"])
+                    cursor=0
+                    with open(staging,"rb") as f:
+                        for expected_index,chunk in enumerate(chunks):
+                            if (chunk["chunk_index"]!=expected_index or chunk["byte_offset"]!=cursor
+                                or chunk["byte_length"]<=0):
+                                raise UploadError("RECOVERY_LEDGER_GAP","durable chunk ledger is not contiguous")
+                            f.seek(cursor); payload=f.read(chunk["byte_length"])
+                            if len(payload)!=chunk["byte_length"] or hashlib.sha256(payload).hexdigest()!=chunk["sha256"]:
+                                raise UploadError("RECOVERY_CHUNK_MISMATCH","staging bytes disagree with durable chunk ledger")
+                            cursor+=chunk["byte_length"]
+                    if cursor!=row["received_bytes"] or len(chunks)!=row["next_index"] or cursor>row["expected_bytes"]:
+                        raise UploadError("RECOVERY_CURSOR_MISMATCH","session cursor disagrees with durable chunk rows")
+                    actual=staging.stat().st_size
+                    if actual<cursor:
+                        raise UploadError("RECOVERY_STAGING_TRUNCATED","staging file is shorter than committed bytes")
+                    if actual>cursor:
+                        with open(staging,"r+b",buffering=0) as f:
+                            f.truncate(cursor); f.flush(); os.fsync(f.fileno())
+                    if final.exists():
+                        raise UploadError("RECOVERY_UNEXPECTED_FINAL","UPLOADING session already has a final destination")
+                    outcome="PASS"; detail="UPLOADING_RECONCILED_TO_COMMITTED_CURSOR"
+                elif state=="FINALIZING":
+                    # Never promote at startup: a fresh trusted Core decision is required.
+                    outcome="PENDING"; detail="FINALIZING_REQUIRES_FRESH_CORE_FINALIZE_RETRY"
+                elif state=="COMPLETED":
+                    if not final.exists():
+                        raise UploadError("RECOVERY_COMPLETED_FILE_MISSING","COMPLETED receipt has no final file")
+                    size,digest=self.file_digest(final)
+                    if size!=row["expected_bytes"] or digest!=row["completed_sha256"] or digest!=row["expected_sha256"]:
+                        raise UploadError("RECOVERY_COMPLETED_MISMATCH","final bytes disagree with completed receipt")
+                    outcome="PASS"; detail="COMPLETED_RECEIPT_AND_FINAL_BYTES_VERIFIED"
+                elif state=="ABORTED":
+                    if staging.exists():
+                        outcome="PENDING"; detail="ABORTED_STAGING_CLEANUP_REQUIRES_REVIEW"
+                    else:
+                        outcome="PASS"; detail="ABORTED_STAGING_ABSENT"
+                else:
+                    raise UploadError("RECOVERY_UNKNOWN_STATE","unknown durable upload state")
+            except UploadError as exc:
+                outcome="BLOCKED"; detail=exc.code
+            except OSError:
+                outcome="BLOCKED"; detail="RECOVERY_FILESYSTEM_ERROR"
+            self.ledger.record_recovery(row,outcome,row.get("received_bytes",0))
+            results.append({"upload_id":row["upload_id"],"state":row["state"],"status":outcome,"detail":detail})
+        quota=self.ledger.reconcile_quota()
+        return {"sessions":results,"quota_rebuilt":quota,"all_reconciled":all(x["status"]=="PASS" for x in results)}
     def begin(self,*,trusted_context,canonical_work_id,sandbox_work_id,destination,expected_bytes,expected_sha256,chunk_size,idempotency_key):
         path=self.path(destination)
         if isinstance(expected_bytes,bool) or not isinstance(expected_bytes,int) or not 0<=expected_bytes<=MAX_FILE_BYTES: raise UploadError("INVALID_SIZE","file size outside bound")
