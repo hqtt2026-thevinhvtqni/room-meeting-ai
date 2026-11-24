@@ -3735,3 +3735,19 @@ However, path containment still relies on pathname checks followed by ordinary p
 **STATUS:** PR #78 OPEN / DRAFT / UNMERGED; F01–F04 remain unresolved; exact-head CI NOT OBSERVED; Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
 
 **Signed:** Ka — CSA / Technical Delivery
+
+
+## 2026-11-24 — JRN-W28-119 — Candidate journal branch reconciliation finding
+
+**Owner:** Ka — CSA / Independent Security Review  
+**Date-Time:** 2026-11-24 (Asia/Ho_Chi_Minh; GitHub API không cung cấp giờ thao tác của phiên)  
+**Branch:** `xu/w28-f02-tests-20261124` | **PR:** #78
+
+- Re-read candidate journal blob `175262033ce1201f42c5bbd57cfa11c80fc7a85a` and canonical journal blob `0907bc2538f7d8134b38cff5df0b4b214648d7eb`.
+- Candidate contains JRN-W28-111 and Ka entries 114–117, but omits canonical JRN-W28-112 and 113. Canonical contains 111–113 but not 114–117.
+- Candidate workflow includes a Windows component test job absent from canonical workflow; neither workflow calls the normative Auto E2E evaluator. Both have workflow_dispatch, but no exact-HEAD run is present.
+- No source changes, merge, rebase, cherry-pick or CI dispatch performed. Keep candidate and canonical histories separate until controlled reconciliation preserves append-only records.
+
+**STATUS:** Journal divergence identified; no PASS inferred. PR #78 remains DRAFT / UNMERGED; Work 28 remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+**Signed:** Ka — CSA / Independent Security Review
