@@ -1,151 +1,162 @@
-# PROPOSED Core Execution Authority Contract — V1.2 (DESIGN ONLY)
+# Core Execution Authority & Agent-to-Computer Integration Contract — V1.3
 
-* Work: W28 (MCP Tooling Platform)
-* Stage: **DESIGN / PROPOSED — SOURCE IMPLEMENTATION CANDIDATE EXISTS; NOT APPROVED, NOT DEPLOYED, NOT WIRED**
-* History: V1 (241bdba) initial proposal; V1.1 (1936ad3) principles as
-  invariants + decision requests; V1.2 (this revision) incorporates the
-  architecture reviewer's (Xu) conditions on DR-2/DR-3/DR-4 and the amended
-  DR-1. Awaiting final approval by Vinh.
-* Approver: Vinh (with Xu). This document requests decisions; it grants
-  nothing.
+- Work: W28 — MCP Tooling Platform
+- Contract ID: AD-W28-20261123-002 / Core Execution Authority Contract V1.3
+- Revision date: 2026-11-23
+- Decision authority: Vinh
+- Architecture decision owner: Xu (under Vinh's explicit delegation dated 2026-11-23)
+- Status: **ARCHITECTURE BASELINE DECIDED — IMPLEMENTATION NOT APPROVED BY THIS DOCUMENT ALONE; NOT DEPLOYED; NOT WIRED; NOT RELEASED**
+- Supersedes: proposed V1.2 only for the authority split and integration boundaries described here. V1.2 historical evidence remains preserved.
 
-## 1. Audit finding that motivates this document (unchanged)
+## 1. Purpose and scope
 
-Repository source audit on branch `work/28-mcp-tooling-platform` confirmed:
+This contract defines the single authorized Agent-to-Computer path for ROOM-HOP. It resolves the W28/W52/W14/W70 ownership overlap while preserving one Core authority and one canonical Execution Host product.
 
-* Core :8000 today is a **meeting lifecycle service only**
-  (`room_hop_mcp/adapter/http_server.py`, `core/meeting_service.py`,
-  `core/meeting_manager.py`; contract `API_CONTRACT.md` LOCKED v0.1).
-* No route, service method, or data model authenticates a caller for
-  **Work execution**, issues a **WorkContext**, or records execution
-  authority. `work_id` / `WorkContext` / `execute` appear nowhere in
-  the Core package.
+It is an architecture and interface contract. It does not assert that any endpoint, service, Agent identity, queue, HostPort transport, Computer provider, or deployment currently exists or is operational.
 
-## 2. Normative architectural invariants (INV-1..INV-5, unchanged in V1.2)
+## 2. Normative ownership and state boundaries
 
-* **INV-1 — Core decides, MCP never self-authorizes.** Core :8000 is the
-  sole authority that decides whether a caller may run executions for a
-  given Work. MCP services, the WEE bridge, and any client may not grant
-  rights or construct a trusted WorkContext themselves. Caller identity
-  comes from authenticated middleware, never from request body fields.
-* **INV-2 — Grants are bound and verifiable.** A grant binds ALL of:
-  the Work id, an authenticated caller identity, a scoped action purpose,
-  an expiry, and a checkable status (active/expired/revoked). A grant for
-  one Work conveys nothing about any other Work.
-* **INV-3 — Durable authoritative state.** Run status, results,
-  evidence, and handoffs must live in an authoritative store that
-  survives restarts and is queryable by id.
-* **INV-4 — One canonical runtime.** W13/W12 remains the only execution
-  site, under its OS isolation, snapshot, hash, and timeout gates. No
-  second execution host; MCP never bypasses Core.
-* **INV-5 — Fail closed on every failure branch.** Authentication
-  failure, expired grant, wrong Work, missing configuration, or missing
-  evidence must all deny with stable error codes. No partial arming.
+### 2.1 W70 — Work control plane
+W70 owns Work, Work Package (WP), Gate, and Work lifecycle state. It decides whether the Work/Gate permits a requested operation. Work lifecycle MUST NOT be collapsed into Agent task state or Host run state.
 
-## 3. Proposed surface (for review; unchanged from V1.1)
+### 2.2 Core :8000 — sole authority and durable system of record
+The existing Core :8000 remains the only ROOM-HOP authority boundary. Core is accountable for:
+- authenticating and enrolling service/Agent principals, including credential status, capability and revocation;
+- evaluating Work policy and Gate eligibility using authoritative W70 state or its verified policy interface;
+- issuing, validating, expiring and revoking narrowly scoped execution grants;
+- enforcing identity, Work, assignment, task, action, provider/Host, source snapshot, environment and expiry bindings;
+- maintaining the authoritative append-only task/authorization/run evidence ledger and invariant enforcement;
+- deduplicating idempotent commands and atomically appending ordered, correlated events.
 
-### 3.1 POST /works/{work_id}/execution-grants
+This contract does not create Core 2, an independent grant service, or a parallel authority. Any execution-authority capability must be implemented as an additive, governed extension of the existing Core authority. Existing meeting API compatibility must be preserved.
 
-Request: authenticated via deployment identity headers (no body authority
-fields). Optional body: `{"purpose": "pytest_run", "max_timeout_seconds": 60}`.
+### 2.3 W52 — Agent orchestration and delivery protocol
+W52 owns provider-neutral Agent-to-Agent orchestration:
+- task/assignment/event contracts and versioning;
+- capability negotiation and recipient selection;
+- dispatch, delivery receipts, authenticated recipient ACK/NACK;
+- Agent/task state-machine semantics and transition protocol;
+- transport adapters, retry/cancel/timeout/recovery semantics and event cursor delivery.
 
-Response 200:
+Core remains the authoritative durable ledger and policy/invariant enforcement point. W52 MUST NOT mint grants, self-authorize, claim ACK from task creation/session intake, or maintain a competing authoritative task ledger. W52 owns orchestration semantics, not execution authority.
 
-```json
-{
-  "grant_id": "GRANT-<uuid>",
-  "work_id": "W28",
-  "work_name": "MCP-TOOLING-PLATFORM",
-  "workspace_root": "...",
-  "execution_workspace": "...",
-  "evidence_root": "...",
-  "authorized": true,
-  "expires_at": "2026-10-25T12:00:00Z",
-  "execution_token_ref": "<opaque reference, never the token value>"
-}
-```
+### 2.4 W14 — sole Execution Host product and side-effect boundary
+W14 is the sole product/delivery/release owner for the consolidated Execution Host. W12 and W13 are absorbed internal foundations/historical provenance, not separate active Host products. W14 MUST:
+- authenticate the calling service and validate a live Core-issued grant server-side before any side effect;
+- bind every Host run to the exact Work, task, assignment, Agent principal, grant, provider, action, source snapshot, environment and correlation IDs;
+- enforce process-tree containment before untrusted code starts, OS isolation, quotas, timeout, cancellation and descendant cleanup;
+- persist correlated Host run observations and immutable evidence references;
+- expose the HostPort capabilities required by W52, or explicitly declare a capability unsupported. A one-shot HTTP endpoint is not proof of a bidirectional HostPort implementation.
 
-Errors: 401 `caller_authentication_failed`, 403 `caller_not_authorized_for_work`,
-404 `unknown_work`, 409 `grant_already_active` (policy decision),
-503 `execution_authority_not_configured`.
+No second Execution Host is permitted. The canonical W14 source branch, release SHA and deployment identity must be reconciled before source edits or runtime claims.
 
-### 3.2 GET /works/{work_id}/execution-grants/{grant_id}
+### 2.5 W10 — Computer provider candidate only
+W10 COMPUTER-AGENT is a provider candidate, not the task recipient Agent and not an authorization boundary. W10 remains **LOCKED / NO CHANGE**. Its API MUST NOT be called directly as a ROOM-HOP execution path. Any future provider invocation must be mediated by W14 after Core authorization and W52 recipient ACK requirements are satisfied.
 
-Authoritative grant status (active/expired/revoked). Required by INV-2/INV-3.
+### 2.6 W092 and W113 — read-only projections
+W092 and W113 consume authoritative, correlated events and project task/run status. They MUST NOT synthesize runtime transitions, infer ACK, infer Agent identity from an organization roster, or turn mock/UI states into runtime evidence.
 
-### 3.3 POST /works/{work_id}/execution-runs (record-only, phase 2)
+## 3. Canonical identities and correlated records
 
-Records run outcomes bound to a grant + source hash + exit status + output
-refs. The authoritative store that `generate_evidence` and
-`create_handoff` must write to.
+Every real execution attempt must carry stable identifiers:
+- `work_id`, `wp_id` and current Gate/policy version;
+- `task_id`, `assignment_id`, `idempotency_key`, `correlation_id`;
+- authenticated `agent_principal_id` and runtime instance/build identity;
+- `grant_id`, `host_id`, `provider_id`, `run_id`;
+- source repository, branch, commit/tree digest and immutable input snapshot;
+- action/capability scope, environment, created/expiry timestamps and event sequence.
 
-## 4. Integration seam (once approved AND implemented AND verified)
+A human-readable Agent name, model name, chat session, browser session, or roster entry is not an authenticated runtime identity.
 
-`W13CoreExecutionClientV1.work_context_provider(work_id)` becomes the
-caller of 3.1 on behalf of an ENROLLED service identity (see DR-1): it
-derives the WorkContext from a live grant, never from the public request.
-The bridge token authenticates the W13 boundary; the grant authenticates
-the Work rights. Both are required, in that order.
+## 4. Required lifecycle and authority flow
 
-## 5. Decision requests — reviewer conditions incorporated (V1.2)
+1. **Work eligibility:** W70 exposes the authoritative Work/WP/Gate decision. Core checks that the requested operation is eligible.
+2. **Assignment:** W52 creates an idempotent assignment for one enrolled Agent principal, with exact task, capability and source snapshot references.
+3. **Dispatch:** W52 delivers the assignment using an authenticated transport and records delivery attempt/receipt. Delivery is not ACK.
+4. **Recipient ACK:** the actual Agent runtime emits an authenticated ACK/NACK bound to assignment_id, task_id, agent_principal_id, runtime identity and correlation_id. Core verifies the principal and persists the event. Session intake or a task-created response is never ACK.
+5. **Grant:** after authenticated ACK and policy approval, Core issues a short-lived, least-privilege grant bound to the exact Work, WP/Gate, task, assignment, Agent principal, Host, provider, actions, source snapshot, environment and expiry. Revoke/expiry must be checked online by W14 before every side-effect boundary.
+6. **Host run:** W14 validates the grant and recipient binding server-side, establishes containment and records the run before invoking an allowed provider. No caller-supplied `authorized: true` Boolean is trusted.
+7. **Provider result:** provider observations/actions/results are returned through W14 and bound to the same run/task/correlation IDs. Unsupported capabilities fail closed.
+8. **Events and projection:** Core durably appends authoritative events; W52 transports/subscribes to them; W092/W113 render the source state and provenance.
+9. **Terminal state:** W52 defines task terminal semantics; Core persists and validates the transition. W14 run outcome remains a separate state correlated to the task. A provider-reported success is not automatically Work acceptance PASS.
 
-* **DR-1 — Caller identity: Core-enrolled service identity, port-agnostic.
-  STATUS: revised per Xu (2026-10-25).**
-  The grant call is made by a **service identity that Core itself has
-  enrolled and authorized**. Enrollment is by identity, not by port or
-  process: the identity registry lives in Core configuration, and any MCP
-  instance (8020, 8030, or a future adapter) presenting an enrolled
-  identity may request grants; any instance without one is denied
-  fail-closed. Migrating ports or replacing adapters therefore never
-  requires redesigning the authority mechanism. The identity credential
-  must be injectable per deployment (env/secret), never hardcoded.
-* **DR-2 — Grant token: separate, short-lived, server-validated.
-  STATUS: Xu condition added.**
-  The grant carries its own short-lived execution token, separate from any
-  transport credential. CONDITIONS: the W13 boundary validates rights,
-  Work, action scope, and expiry SERVER-SIDE on every call; the token
-  value is never written to logs, blockers, or evidence (non-leak property
-  is testable the same way as the existing bridge token tests).
-* **DR-3 — Durable store: Core-managed append-only, with proof obligations.
-  STATUS: Xu condition added.**
-  Grant state and run/evidence/handoff records are Core-managed
-  append-only records. The existence of the `meeting_log` pattern is a
-  PRECEDENT, not proof. PROOF OBLIGATIONS before any wiring: (a) records
-  persist across a service restart and remain queryable by id; (b) history
-  is append-only (no mutation or deletion of past records); (c) each run
-  record links grant id, source hash, exit status, output refs, evidence
-  refs, and handoff ids — linkage is verifiable by reading the store.
-* **DR-4 — Deployment separation: additive mount inside Core's authority.
-  STATUS: Xu condition added.**
-  The execution authority is a separate mount/process (fail-closed startup
-  cannot affect the LOCKED v0.1 meeting API), BUT it remains inside the
-  Core authority boundary: it is not a second Core, not an independent
-  execution route, and it holds no authority of its own beyond what this
-  contract grants. Its configuration, code ownership, and evidence live
-  under the Core package's governance.
+Minimum visible task lifecycle: `QUEUED → ASSIGNED → DISPATCHED → ACKNOWLEDGED → RUNNING → VERIFYING → SUCCEEDED | FAILED | BLOCKED | CANCELLED | TIMED_OUT`. Delivery-attempt and Host-run states remain separate dimensions. State names may be versioned by W52, but transitions must be explicit, validated and durably recorded.
 
-## 6. Gates before any wiring (in order; none may be skipped)
+## 5. Security invariants
 
-1. This contract APPROVED (DR-1..DR-4 as revised in V1.2) by Vinh.
-2. Reconcile the existing Core-side implementation candidate against
-   the approved contract; confirm DR-2/DR-3 proof obligations in tests.
-   No endpoint may be treated as deployed merely because source exists.
-3. W13 Sandbox alignment verified at runtime (not by reading files):
-   hardened source deployed and proven active.
-4. Security tests + E2E: live 401/403 probes, wrong-Work, expired-grant,
-   wrong-hash, timeout, then MCP -> Core -> W13/W12 with evidence bound to
-   the exact run.
-5. Only then: gateway/catalog wiring, publishing only tools that are
-   actually registered, executing, and verified.
+- **INV-1 — Single authority:** Core :8000 is the sole authority; no MCP, Agent, W52 adapter, W14 Host or UI self-authorizes.
+- **INV-2 — Authenticated identity:** service and Agent principals are enrolled, credential-backed, revocable and runtime-verifiable. No identity from request body or display name.
+- **INV-3 — Recipient-bound ACK:** only an authenticated event from the assigned runtime satisfies ACK; replay, wrong task, wrong assignment or wrong principal is rejected.
+- **INV-4 — Least-privilege grant:** grant binds all fields in §3 and is short-lived, online-checkable, revocable and non-transferable.
+- **INV-5 — Host enforcement:** W14 checks grant and ACK binding server-side before any side effect; no trusted caller Boolean or client-generated WorkContext.
+- **INV-6 — Durable authoritative records:** task, assignment, ACK, grant, run and evidence references survive restart; history is append-only and queryable by immutable ID.
+- **INV-7 — Idempotency and ordering:** duplicate dispatch/commands cannot create duplicate side effects; event sequence compare-and-append prevents stale or out-of-order transitions.
+- **INV-8 — Containment:** process-tree containment is established before untrusted execution; OS isolation, quotas, timeout, cancellation and cleanup are independently evidenced.
+- **INV-9 — Fail closed:** unknown identity, missing ACK, wrong scope, stale source, expired/revoked grant, unavailable Core, unavailable Host, unsupported capability, missing evidence or event-integrity failure blocks execution.
+- **INV-10 — No legacy bypass:** historical quarantined Runtime MCP :8020 is DO NOT USE. No probe, restart, activation, modification or traffic to that listener.
 
-## 7. Explicitly NOT claimed
+## 6. Required interface capabilities
 
-* A candidate HTTP endpoint implementation exists in
-  `core/execution_authority/http_server.py`, with component and subprocess/
-  socket CI tests. No deployed/owner-approved endpoint has been verified;
-  these tests do not prove production Core or MCP/W13 integration.
-* Nothing here changes the v54 catalog: the seven execution tools remain
-  NOT_IMPLEMENTED.
-* Xu's review comments are incorporated as proposed contract text; final
-  approval belongs to Vinh and has NOT been given yet.
-* Work 28 remains ACTIVE / BLOCKED / NOT RELEASED.
+### Core authority interface
+The exact transport and route names are implementation decisions. The interface must support:
+- authenticate/enroll/resolve/revoke Agent and service principals;
+- evaluate Work/Gate policy;
+- issue, inspect, validate and revoke scoped grants;
+- append assignment/ACK/task/run/evidence events atomically with sequence and idempotency checks;
+- query authoritative state by immutable IDs and event cursor.
+
+### W52 orchestration interface
+The contract must support:
+- create/assign/dispatch with idempotency and correlation;
+- receive and authenticate recipient ACK/NACK;
+- stream ordered events with cursor/resume;
+- retry, cancel, timeout, dead-letter/recovery and duplicate suppression;
+- negotiate capabilities and report unsupported actions without fallback to arbitrary execution.
+
+Durable outbox/queue ownership and retry boundaries must be explicitly implemented and tested; in-memory/session-only delivery is insufficient for production lifecycle claims.
+
+### W14 HostPort interface
+The W14 adapter must support the required bidirectional request/notify/receive/respond/close semantics, or a documented capability profile that accurately limits W52. It must include cancellation and prove that stop/close returns only after all descendant processes are confirmed exited. A one-shot POST /execute alone does not satisfy the full HostPort contract.
+
+## 7. Mandatory gates before real Agent-to-Computer E2E
+
+- **G0 — Source provenance:** exact canonical Core and W14 repositories, branches, HEAD SHAs, file hashes, release mapping and deployed build/process identities reconciled.
+- **G1 — Identity:** one non-production Agent principal enrolled with protected credential, attestation/runtime identity, capability declaration and revocation test.
+- **G2 — W52 dispatch/ACK:** authenticated dispatch and recipient ACK/NACK, durable outbox, idempotency, event cursor and recovery tests.
+- **G3 — Core authority:** scoped grant issue/validate/revoke, Gate check, append-only ledger and restart persistence tests.
+- **G4 — W14 Host:** grant validation before side effect, recipient/task binding, process containment-before-spawn, OS isolation, resource limits, timeout/cancel and correlated run record.
+- **G5 — Provider:** provider contract, capability negotiation and read-only harmless Computer test behind W14; W10 remains locked and unchanged.
+- **G6 — Projection:** W092 renders actual source events with timestamps, actor, IDs, reason, evidence references and stale/disconnected/unknown states.
+- **G7 — Independent E2E and negative/recovery:** QE independently observes a real non-production Agent lifecycle and verifies evidence from Core→W52→W14→provider→event ledger→W092.
+
+Required negative/recovery cases include unknown/revoked Agent, bad credential, missing or forged ACK, duplicate dispatch, replay, wrong Work/task/assignment/action/provider/source, expired/revoked grant, Core/Host unavailable, PC offline if PC transport is used, provider crash, descendant process, restart/recovery, event gap, cancellation, timeout and idempotent retry.
+
+A task reaching SUCCEEDED is not a Work acceptance PASS. Acceptance requires complete traceability, independent QE evidence and the applicable Work Gate.
+
+## 8. Explicit non-claims and release boundary
+
+### 8.1 Existing Core V1.2 candidate — reuse evidence, not canonical implementation
+A read-only GitHub source reconciliation on 2026-11-23 found:
+- Current `main` HEAD `0902cd26518673aa078bb4c7c7899e1e4a95656a` contains `CORE_EXECUTION_AUTHORITY_V1_2_DEPLOYMENT.md` (blob `ce130f1f9a95daeaafff75ef37eacd4dffc797e2`) describing five execution-grant routes.
+- The same `main` source has `room_hop_mcp/core_http_main.py` blob `8dd6bb5ea500026d932ca52eb6079c980d722ab0`, whose `build_app()` returns `create_http_app(service)`; its `room_hop_mcp/adapter/http_server.py` blob `54cb3ecbce2e6b13083f31c14f0c1f0738f1457d` does not mount the execution-authority router. Main does not contain `core/execution_authority.py` or `room_hop_mcp/adapter/execution_authority_http.py` at the inspected paths. This is a static source finding; no endpoint was called.
+- PR #48 / branch `work/w1111-core-execution-authority-v1-2` contains reusable candidate modules (Core authority blob `163b126178b67c6e0a3f68ba33eaf7b9e6d91503`, HTTP adapter blob `48e05c0f5d8121e35ba9bea01ebd8f338529073c`) and historical CI claims. PR remains OPEN/DRAFT/NOT MERGED, has no submitted reviews or inline review threads in the inspected GitHub response, and the branch comparison against current main is DIVERGED (157 ahead / 986 behind at this inspection).
+- A source-level defect is present in candidate `ExecutionAuthority.record_run()`: it validates that submitted `source_sha256` is well-formed but does not compare it with the immutable source SHA bound to the issued grant/work policy. The candidate test explicitly submits `b`×64 when the policy is `a`×64 and expects HTTP 200. This contradicts exact-source binding and is a release blocker.
+- PR #48 also bundles W12/W13 host code and historical deployment assumptions. Because W14 is now the sole consolidated Host owner, the PR must not be merged wholesale or treated as W14 canonical source. Any reusable Core module must be selectively reconciled, fixed, re-tested on a fresh current-main branch and reviewed; no parallel Core may be created.
+
+Disposition: Core V1.2 is a reusable but defective, unmerged candidate — NOT current-main implementation, NOT deployed proof, NOT release-approved. The current Core source and candidate are separate provenance objects.
+
+
+- This V1.3 contract is an architecture baseline only. It does not prove implementation, deployment, service health, Agent enrollment, ACK, HostPort compatibility, browser/Computer execution or E2E.
+- Existing Core identity/meeting components are not presumed to implement execution grants or an authoritative task ledger.
+- Existing W14/W13 endpoints or historical attestations are not presumed to be the current canonical deployed Host until source/release provenance is reconciled.
+- W52 A2A v0.1 remains a draft until upgraded, implemented, independently reviewed and tested against this contract.
+- W10 remains LOCKED / NO CHANGE. No direct W10 API invocation is authorized by this document.
+- No PR merge, main-branch change, endpoint activation, service deployment, production routing or release is authorized by this contract.
+- W28 remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED until its own release gates are independently satisfied.
+- W092 remains PARTIAL / NOT ACCEPTED until a real Agent identity, authenticated ACK, real runtime trace and independent verification are evidenced.
+
+## 9. Supersession and change control
+
+This V1.3 supersedes the V1.2 wording that identified W13/W12 as the sole active Execution Host and assigned an undifferentiated task-lifecycle authority to Core. W13/W12 are historical/internal foundations absorbed by W14. Core authority and durable state, W52 orchestration semantics, and W70 Work lifecycle are separate but correlated responsibilities.
+
+Any implementation must reconcile against this contract and the current canonical source SHAs. Changes to authority ownership, Host boundary, W10 lock, or security invariants require a new recorded architecture decision.
