@@ -184,4 +184,19 @@ class BinaryUploadTests(unittest.TestCase):
         self.roundtrip(b"binary-data")
         self.assertEqual(self.core.calls,["begin","chunk","chunk","finalize"])
 
+    def test_abort_refuses_finalizing_session_without_destroying_recovery_source(self):
+        data=b"finalizing-must-remain-recoverable"
+        uid,staging,final,digest=self._prepare_finalizing_crash(data,"idempotency-key-0018")
+        self.assertTrue(staging.exists())
+        with self.assertRaises(UploadError) as e:
+            self.service.abort(trusted_context=self.ctx,upload_id=uid)
+        self.assertEqual(e.exception.code,"INVALID_STATE")
+        self.assertEqual(self.ledger.get(uid)["state"],"FINALIZING")
+        self.assertTrue(staging.exists())
+        self.assertFalse(final.exists())
+        recovered=self.service.finalize(trusted_context=self.ctx,upload_id=uid)
+        self.assertEqual(recovered["status"],"COMPLETED")
+        self.assertEqual(recovered["sha256"],digest)
+        self.assertEqual(final.read_bytes(),data)
+
 if __name__=="__main__": unittest.main(verbosity=2)
