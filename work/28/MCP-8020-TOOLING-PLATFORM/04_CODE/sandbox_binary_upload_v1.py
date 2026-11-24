@@ -5,6 +5,7 @@ fallback exists. This is an engine component, not a deployed MCP registration.
 """
 from __future__ import annotations
 import hashlib, os, re, secrets, sqlite3, threading, time
+from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Protocol
@@ -136,6 +137,35 @@ class SQLiteUploadLedger:
                 c.execute("UPDATE quota SET reserved_bytes=MAX(0,reserved_bytes-?),active_uploads=MAX(0,active_uploads-1) WHERE canonical_work_id=?",(r["expected_bytes"],r["canonical_work_id"]))
             c.commit(); return self.get(uid)
 
+@contextmanager
+def upload_file_lock(staging_path):
+    """Cross-process exclusive lock shared by all service instances on this host."""
+    lock_path=Path(str(staging_path)+".lock")
+    flags=os.O_CREAT|os.O_RDWR
+    if hasattr(os,"O_NOFOLLOW"): flags|=os.O_NOFOLLOW
+    try: fd=os.open(lock_path,flags,0o600)
+    except OSError as e: raise UploadError("UPLOAD_LOCK_BLOCKED","could not open per-upload lock") from e
+    try:
+        if os.fstat(fd).st_size==0:
+            os.write(fd,b"0")
+            os.fsync(fd)
+        if os.name=="nt":
+            import msvcrt
+            os.lseek(fd,0,os.SEEK_SET)
+            try: msvcrt.locking(fd,msvcrt.LK_LOCK,1)
+            except OSError as e: raise UploadError("UPLOAD_LOCK_BLOCKED","could not acquire Windows upload lock") from e
+            try: yield
+            finally:
+                os.lseek(fd,0,os.SEEK_SET); msvcrt.locking(fd,msvcrt.LK_UNLCK,1)
+        else:
+            import fcntl
+            try: fcntl.flock(fd,fcntl.LOCK_EX)
+            except OSError as e: raise UploadError("UPLOAD_LOCK_BLOCKED","could not acquire upload lock") from e
+            try: yield
+            finally: fcntl.flock(fd,fcntl.LOCK_UN)
+    finally:
+        os.close(fd)
+
 class SandboxBinaryUploadService:
     """Upload raw bytes in bounded chunks; Core must authorize begin/chunk/finalize/abort."""
     def __init__(self, *, sandbox_root, ledger:SQLiteUploadLedger,
@@ -220,20 +250,25 @@ class SandboxBinaryUploadService:
         if not row: raise UploadError("NOT_FOUND","upload session not found")
         g=self.grant(trusted_context,"chunk",upload_id,row["destination"],row["expected_bytes"]); self.match(g,row)
         if len(data)>g.max_chunk_bytes or index>=g.max_chunks: raise UploadError("CHUNK_LIMIT","chunk exceeds Core grant")
-        digest=hashlib.sha256(data).hexdigest()
-        if index<row["next_index"]:
-            old=self.ledger.get_chunk(upload_id,index)
-            if old==(offset,len(data),digest):
-                return {"upload_id":upload_id,"index":index,"status":"ALREADY_ACCEPTED","sha256":digest}
-            raise UploadError("REPLAY_MISMATCH","chunk retry does not match the accepted bytes")
-        if row["state"]!="UPLOADING" or index!=row["next_index"] or offset!=row["received_bytes"]:
-            raise UploadError("CHUNK_SEQUENCE","chunk must be the exact next contiguous range")
-        if offset+len(data)>row["expected_bytes"]:
-            raise UploadError("SIZE_EXCEEDED","chunk exceeds declared file size")
-        path=Path(row["staging_path"])
-        with self.lock:
+        digest=hashlib.sha256(data).hexdigest(); path=Path(row["staging_path"])
+        # Re-read state and re-authorize while holding an OS lock, shared by
+        # independent service processes as well as threads.
+        with self.lock,upload_file_lock(path):
+            row=self.ledger.get(upload_id)
+            if not row: raise UploadError("NOT_FOUND","upload session not found")
+            g=self.grant(trusted_context,"chunk",upload_id,row["destination"],row["expected_bytes"]); self.match(g,row)
+            if len(data)>g.max_chunk_bytes or index>=g.max_chunks: raise UploadError("CHUNK_LIMIT","chunk exceeds Core grant")
+            if index<row["next_index"]:
+                old=self.ledger.get_chunk(upload_id,index)
+                if old==(offset,len(data),digest): return {"upload_id":upload_id,"index":index,"status":"ALREADY_ACCEPTED","sha256":digest}
+                raise UploadError("REPLAY_MISMATCH","chunk retry does not match the accepted bytes")
+            if row["state"]!="UPLOADING" or index!=row["next_index"] or offset!=row["received_bytes"]:
+                raise UploadError("CHUNK_SEQUENCE","chunk must be the exact next contiguous range")
+            if offset+len(data)>row["expected_bytes"]: raise UploadError("SIZE_EXCEEDED","chunk exceeds declared file size")
             with open(path,"r+b",buffering=0) as f:
                 f.seek(offset); f.write(data); f.flush(); os.fsync(f.fileno())
+            # If the process crashes before ledger acceptance, retry rewrites
+            # this same cursor range while holding the same cross-process lock.
             self.ledger.accept_chunk(upload_id,index,offset,len(data),digest)
         return {"upload_id":upload_id,"index":index,"status":"ACCEPTED","bytes":len(data),"sha256":digest}
     @staticmethod
