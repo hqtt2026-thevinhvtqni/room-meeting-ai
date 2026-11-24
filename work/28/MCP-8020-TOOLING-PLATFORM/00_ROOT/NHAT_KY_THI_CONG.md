@@ -4270,3 +4270,32 @@ The engine's injected-authorizer seam and grant binding are not equivalent to an
 - No source code changes, test execution, workflow dispatch, PC operation, live MCP/Core call, upload/readback, merge or deployment occurred.
 
 **Signed:** Ka — CSA / Independent Security Reviewer
+
+
+## 2026-11-25 — JRN-W28-133 — Controlled-document and journal inventory reconciliation
+
+**Document ID:** W28-KA-AUD-133  
+**Priority:** P0 — canonical record integrity / handoff traceability  
+**Owner:** Ka — CSA / Independent Security Reviewer  
+**Date-Time:** 2026-11-25 (Asia/Ho_Chi_Minh)  
+**Target:** PR #78 branch `xu/w28-f02-tests-20261124`; exact HEAD before this append `ad63be4a792de42c8f9540041fd9a4f5da9af439`  
+**Method:** Read-only fetch and comparison of canonical and candidate `BIEN_BAN.md` and `NHAT_KY_THI_CONG.md`.
+
+### READ / TRACE
+
+1. Canonical official minutes on `work/28-mcp-tooling-platform` are blob `4b3bb5acfe912604ba7b4c09b98e2cb5d6448661`, 55 lines. Candidate PR minutes are blob `78ecaca73cdd47949f279d0e7db737ebdce998b9`, 56 lines. The substantive entries BB-W28-20261103-001, BB-W28-20261124-002 and BB-W28-20261124-003 are identical; difference is one trailing blank line only. No conflicting decision text found in the compared minutes content.
+2. Canonical journal is blob `9b8eebceead814d783e7066c688df73a14f0c55d`, 2,920 lines, and ends with JRN-W28-118. Candidate PR journal is blob `9f1b8eea3e8b6fd3b10cfe1728363a4ee56ccf92`, 4,272 lines, and ends with candidate entries JRN-W28-124 through JRN-W28-132.
+3. Candidate journal retains JRN-W28-113, then appends candidate-only JRN-W28-124–132; canonical journal retains canonical JRN-W28-111, 112, 113 and 118. Candidate does not contain canonical JRN-W28-118; canonical does not contain candidate JRN-W28-124–132. Earlier candidate entries 114–117/127–130 have already been identified in prior audit as not present in the canonical sequence. This is not a mere one-line formatting difference: the controlled journal histories have diverged.
+4. The PR changed-file inventory includes both minutes and journal. The minutes content itself is substantively consistent in the fetched versions; the journal is the outstanding material conflict. The official minutes declare the canonical source branch and one Work-wide journal. A candidate-only append cannot silently redefine that canonical source of truth.
+5. Current PR #78 remains OPEN / DRAFT / UNMERGED at HEAD `ad63be4...`; compare against canonical remains DIVERGED, 71 ahead / 5 behind, merge base `4b2a8663a0b9ff40aad8e6812efff197b5085de5`. Exact-commit PR workflow lookup returns no workflow runs.
+
+### DISPOSITION
+
+- Minutes BB-W28-001/002/003: **SUBSTANTIVELY CONSISTENT** across canonical and candidate snapshots.
+- Journal: **BLOCKED — RECONCILIATION REQUIRED**. Xu must preserve authorship, original timestamps, entry IDs and evidence references while reconciling canonical JRN-111–118 with candidate JRN-114–117/124–132. Do not replace one journal wholesale, renumber entries, or infer missing entries from commit messages.
+- This is a documentation-governance blocker, distinct from technical F01–F04 blockers.
+- F01–F04 remain **BLOCKED / P0**; Ka review and An QA remain **NOT ACCEPTED**; Execution Gate **CLOSED**.
+- Work 28 remains **ACTIVE / INTEGRATION BLOCKED / NOT RELEASED**.
+- No source/test/runtime/PC operations, no merge/rebase/overwrite, and no release action performed.
+
+**Signed:** Ka — CSA / Independent Security Reviewer
