@@ -199,4 +199,40 @@ class BinaryUploadTests(unittest.TestCase):
         self.assertEqual(recovered["sha256"],digest)
         self.assertEqual(final.read_bytes(),data)
 
+    def test_startup_reconciliation_truncates_uncommitted_tail_and_repairs_quota(self):
+        data=b"abcdef"
+        r=self.service.begin(trusted_context=self.ctx,canonical_work_id="W119",sandbox_work_id="119",
+          destination="images/photo.png",expected_bytes=6,expected_sha256=hashlib.sha256(data).hexdigest(),
+          chunk_size=3,idempotency_key="idempotency-key-0021")
+        self.service.chunk(trusted_context=self.ctx,upload_id=r["upload_id"],index=0,offset=0,data=b"abc")
+        row=self.ledger.get(r["upload_id"]); staging=Path(row["staging_path"])
+        with open(staging,"ab") as f: f.write(b"uncommitted-tail")
+        with self.ledger.db() as c:
+            c.execute("UPDATE quota SET reserved_bytes=999,active_uploads=99 WHERE canonical_work_id='W119'")
+        result=self.service.reconcile_startup()
+        self.assertEqual(result["sessions"][0]["status"],"PASS")
+        self.assertEqual(staging.read_bytes(),b"abc")
+        self.assertEqual(result["quota_rebuilt"]["W119"],{"reserved_bytes":6,"active_uploads":1})
+
+    def test_startup_reconciliation_blocks_missing_staging(self):
+        data=b"missing-stage"
+        r=self.service.begin(trusted_context=self.ctx,canonical_work_id="W119",sandbox_work_id="119",
+          destination="images/photo.png",expected_bytes=len(data),expected_sha256=hashlib.sha256(data).hexdigest(),
+          chunk_size=64,idempotency_key="idempotency-key-0022")
+        row=self.ledger.get(r["upload_id"]); Path(row["staging_path"]).unlink()
+        result=self.service.reconcile_startup()
+        self.assertEqual(result["sessions"][0]["status"],"BLOCKED")
+        self.assertEqual(result["sessions"][0]["detail"],"RECOVERY_STAGING_MISSING")
+        self.assertEqual(self.ledger.get(r["upload_id"])["state"],"UPLOADING")
+
+    def test_startup_reconciliation_never_promotes_finalizing_without_fresh_core_call(self):
+        data=b"must-not-auto-promote"
+        uid,staging,final,digest=self._prepare_finalizing_crash(data,"idempotency-key-0023")
+        result=self.service.reconcile_startup()
+        self.assertEqual(result["sessions"][0]["status"],"PENDING")
+        self.assertEqual(result["sessions"][0]["detail"],"FINALIZING_REQUIRES_FRESH_CORE_FINALIZE_RETRY")
+        self.assertTrue(staging.exists()); self.assertFalse(final.exists())
+        self.assertEqual(self.ledger.get(uid)["state"],"FINALIZING")
+        self.assertEqual(result["quota_rebuilt"]["W119"]["active_uploads"],1)
+
 if __name__=="__main__": unittest.main(verbosity=2)
