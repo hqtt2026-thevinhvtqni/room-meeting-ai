@@ -2915,3 +2915,26 @@ PR #77 remains OPEN / DRAFT / UNMERGED. The tested code SHA is `82d89bd...`; a l
 
 ### NEXT
 Xu to remediate the blocking findings on the isolated PR branch; Ka to independently review the exact corrected diff; An to independently reproduce exact-head tests including native Windows and failure injection. Only after those gates may the team wire the approved Core upload authority and transport, then run a disposable Sandbox canary with independent byte-for-byte SHA-256 readback. Work 28 remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED.
+
+
+## 2026-11-24 — JRN-W28-077 — Exact-head CI after Xu review journal update
+
+**PR:** #77 | **Commit:** `ead31cafe4b55ba7828fac31287d3eb7032d228f`  
+**Workflow:** [#474 / 45315421560](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45315421560)
+
+### VERIFY — PASS
+- GitHub Actions completed all five jobs successfully on the exact commit above:
+  1. unit-regression-tests — SUCCESS;
+  2. execution-host-lifecycle-linux — SUCCESS;
+  3. execution-host-lifecycle-windows — SUCCESS;
+  4. immutable exact-SHA source artifact build, checksum, extraction and retest — SUCCESS;
+  5. automatic E2E gate report generation — SUCCESS.
+- This run verifies the repository's configured test/artifact lanes at this commit. It does not close any static security finding in JRN-W28-076 and does not prove live Core grant, raw-byte transport, deployed MCP registration, Sandbox upload or image readback.
+- PR #77 remains OPEN / DRAFT / UNMERGED. No formal Ka review or An independent QA sign-off is recorded.
+
+### DECIDE / NEXT
+- Keep disposition **NEEDS CHANGES** and do not merge, register or deploy.
+- Continue remediation of JRN-W28-076 P1/P2 findings. Require native Windows execution of the upload-engine tests, crash/restart recovery and multi-process adversarial tests.
+- Obtain independent Ka security review and An QA on the corrected exact code SHA before any integration canary.
+
+**STATUS:** configured CI PASS on `ead31cafe4b55ba7828fac31287d3eb7032d228f`; security acceptance BLOCKED; live upload NOT VERIFIED; Execution Gate CLOSED; Work 28 NOT RELEASED.
