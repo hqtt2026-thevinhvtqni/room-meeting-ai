@@ -3647,3 +3647,16 @@ However, path containment still relies on pathname checks followed by ordinary p
 - Execution Gate: **CLOSED**. No live upload or release approval claimed.
 
 [KÝ: XU | COORDINATOR]
+
+
+## 2026-11-24 17:20 +07 — JRN-W28-111/112 — Xu tiếp quản và triển khai F02 trên PR #77
+- Theo chỉ thị mới nhất của Vinh, Xu tiếp quản toàn bộ implementation W28; dừng giao Vi triển khai. Evidence lịch sử của Vi được giữ nguyên, không chờ bàn giao. An vẫn là Tester độc lập; Ka vẫn là Security Reviewer độc lập.
+- PR #77 base exact SHA `e1c0193147e4284aba121c4b1b6d73292a6fdf50`; branch takeover `xu/w28-takeover-20261124` đã fast-forward vào PR branch.
+- F02 implementation commits: `54ffd9197d043076ae44c5d780323b5abdea88ba`, `6b3bb4e65ab1760ac9642c1a73ea627bf6ddfb7d`, `7158da9630376eaf02126986cd890e6be8d7ddfb`.
+- Added durable session/chunk listing, startup reconciliation, chunk digest verification, truncation of uncommitted tail to committed cursor, quota rebuild, and fail-closed begin when startup reconciliation finds BLOCKED state. FINALIZING is never promoted during startup; it requires a fresh finalize request through trusted Core authorization.
+- Added three restart-reconciliation tests: uncommitted tail/quota repair, missing staging, and FINALIZING no-auto-promotion.
+- At this entry, exact-head workflow lookup returned no run for SHA `7158da9630376eaf02126986cd890e6be8d7ddfb`; no test PASS claimed. CI pending/not observed.
+- F01 remains BLOCKED because engine still uses pathname operations. F02 remains PARTIAL until orphan staging, platform directory durability, full crash matrix and native Windows/Linux evidence are closed.
+- Core upload route, MCP :8030 raw-byte transport, registration, live Sandbox readback and W119 canary remain NOT DONE.
+- PR remains OPEN / DRAFT / UNMERGED; Execution Gate CLOSED; Work ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+[KÝ: XU | DELIVERY OWNER]
