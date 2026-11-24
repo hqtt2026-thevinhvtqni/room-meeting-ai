@@ -190,3 +190,14 @@ Every checkpoint reports:
 - **BLOCKED:** problem, attempts/evidence, bottleneck, available options and missing condition.
 
 No silent status promotion. Work remains NOT RELEASED until G0–G7 are satisfied.
+
+
+## 2026-11-24 P0 priority addendum — W28-WP3-F01 for Work 119
+
+Vinh has directed Xu to urgently complete the shared binary Sandbox upload capability because Work 119 is waiting. This changes delivery priority, not the security or release gates.
+
+**P0 delivery sequence:** (1) Ka independently dispositions the exact Q4 grant design revision dated 2026-11-22; (2) prove the approved Core route/schema, server-derived principal/session, dynamic Work mapping, revocation and durable transactional quota/session/audit store; (3) Vi implements bounded raw-byte begin/chunk/finalize/abort, safe staging, atomic no-replace promotion, full-object SHA-256, independent readback and audit; (4) An reproduces exact-SHA tests independently; (5) register/deploy only on the approved new Runtime MCP/Build lane after tools/list and service identity parity; (6) execute a disposable Work canary and then verify Work 119's actual image bytes and digest.
+
+**Hard stop:** No staging directory, chunk acceptance, final promotion, public upload tool registration or success claim before Q4 approval and the real Core grant contract are verified. No guessed endpoint, static Work mapping, caller-supplied identity, local authorization fallback, unbounded Base64/JSON payload, implicit overwrite, or historical MCP :8020 use. Never delete or alter the source image until byte-for-byte Sandbox readback and SHA-256 equality are proven.
+
+**Acceptance for Work 119:** actual image uploaded to its authorized Work path; exact byte count and SHA-256 match source; independent readback succeeds; durable audit record exists; An's exact-head QA and Ka's security review are recorded. Until then, W28-WP3-F01 and Work 119 image ingestion remain BLOCKED / NOT VERIFIED.
