@@ -2778,3 +2778,30 @@ Review 6015443161 records the detailed findings; review 6015449638 corrects curr
 4. Runtime registration/deployment and binary-safe transport/readback parity are not available in the current connected 8030 tool surface.
 
 **NEXT:** Ka Q4 disposition → Xu records approved technical decision → Vi implementation and exact-SHA CI → Ka/An independent review → approved runtime registration and live Sandbox binary canary → Work 119 readback verification. Work 28 remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED.
+
+
+## 2026-11-24 — JRN-W28-072 — Xu full delegation to complete Work 28 without user checkpoints
+
+**Authority:** Vinh's direct instruction in ChatGPT on 2026-11-24: “Uỷ quyền Xử toàn quyền xây cho xong work này đi, ko kéo dài, ko cần báo mình đâu.”  
+**Coordinator / delivery owner:** Xu  
+**Canonical branch:** `work/28-mcp-tooling-platform`  
+**Priority:** P0 — W28-WP3-F01 binary Sandbox upload, first consumer W119.
+
+### DECISION
+- Xu accepts end-to-end delegated authority to plan, coordinate, make in-scope technical decisions, implement, test, repair, document and prepare the Work 28 delivery without asking Vinh for routine checkpoints or sending repetitive progress reports.
+- Xu may proceed with isolated source implementation and exact-SHA CI before Ka's independent review is complete, superseding the earlier sequencing restriction in JRN-W28-071 that limited work to design/test scaffolding pending Ka review. This is a direct, later instruction from the higher authority (Vinh).
+- This delegation does **not** waive security invariants, independent Ka review, independent An QA, evidence integrity, or the prohibition on unsupported PASS claims. Code must remain fail-closed and unexposed to live upload side effects until the real Core authorization contract, transport boundary, storage behavior and independent review are proven.
+- Xu may create branches/PRs, revise source/contracts/tests/workflow/docs and coordinate the approved four-AI team. Keep one canonical journal and one official minutes register.
+- No irreversible production deployment, credential rotation, external data migration, destructive change, release, or opening of Execution Gate without the applicable explicit authority and completed safety gates. The historical quarantined runtime remains prohibited.
+
+### EXECUTION COMMITMENT
+- Build the shared upload capability for all Works; W119 is the first consumer, not a special-case implementation.
+- Work continuously through implementation, automated tests, CI, review remediation, integration and handoff. Do not stop at another design-only proposal.
+- If a genuine external boundary prevents completion (for example, missing Core-owned grant endpoint, transport that cannot carry raw bytes, or unavailable deployment authority), isolate and finish all safe code/contract/tests, document the exact missing dependency and do not fabricate a live PASS. Escalate only that concrete boundary, not routine progress.
+- Do not send Vinh progress requests or routine status messages. Provide a concise final handoff only when the product is genuinely usable or a hard external dependency prevents further safe progress.
+
+### VERIFY
+- This entry records delegation and the revised execution authority only. It does not claim that upload code, CI, Core integration, deployment, binary readback, Ka approval or An QA is complete.
+- Work 28 remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED until the corresponding evidence is complete.
+
+**NEXT:** Xu proceeds autonomously on the canonical Work 28 branch, creates a reviewable isolated implementation candidate, and drives it to exact-SHA CI and independent review.
