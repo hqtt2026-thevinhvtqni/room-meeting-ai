@@ -3563,3 +3563,49 @@ However, path containment still relies on pathname checks followed by ordinary p
 - Core upload grant, Build MCP binary transport, live PC-to-Sandbox readback: BLOCKED as recorded in JRN-W28-101.
 - Execution Gate: CLOSED. Release: NOT_RELEASED.
 - Next action: implement and test platform-specific handle-anchored backends as a coherent change, with Windows native tests as a mandatory gate; do not weaken the gate to retain the existing Windows round-trip tests.
+
+
+## 2026-11-24 — JRN-W28-103 — Ka disposition, exact-head CI #506 and next integration gate
+
+**Owner:** Xu | **PR:** [#77 — Work 28 binary Sandbox upload engine](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/77)  
+**Reviewed branch HEAD:** `8c089997b1fe08cf1243356e87e94065b2a7f749`  
+**Workflow:** [#506 / 45336425956](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45336425956)
+
+### READ / RECONCILE
+- Re-read PR #77 metadata and canonical journal. PR remains OPEN / DRAFT / UNMERGED; no merge or deployment was performed.
+- Confirmed the canonical journal contains Ka's independent acceptance disposition: **ACCEPTANCE BLOCKED — DO NOT MERGE / REGISTER / DEPLOY / ENABLE**. The formal GitHub REQUEST_CHANGES action was rejected because the connected identity is the PR author; Ka's findings are therefore preserved in the journal, not misrepresented as a formal GitHub review object.
+- Ka identified five blocking areas: (1) filesystem TOCTOU/reparse-point containment; (2) Core revoke/finalize atomicity; (3) crash/restart reconciliation; (4) filesystem durability; (5) missing production integration.
+- The canonical journal currently contains two entries both labelled JRN-W28-102 (Ka disposition and backend feasibility trace). Existing append-only records are left intact; this entry uses the next unique identifier JRN-W28-103. Follow-up index cleanup, if required, must preserve both source entries and their evidence.
+
+### VERIFY — exact current PR-head CI
+- Queried workflow runs for exact HEAD `8c089997b1fe08cf1243356e87e94065b2a7f749`; GitHub returned run #506 / `45336425956`.
+- Retrieved latest-attempt jobs. All six jobs concluded SUCCESS:
+  1. Binary upload engine tests (native Windows)
+  2. Unit/regression tests
+  3. Execution Host lifecycle (Windows)
+  4. Execution Host lifecycle (Linux)
+  5. Build and retest exact-SHA Work 28 source artifact
+  6. Automatic E2E gate report
+- This is a configured source/component CI PASS for the exact journal head. It does not close the filesystem race, Core authority, raw-byte transport, live Sandbox, or independent acceptance gates. The workflow's own E2E report keeps deployed MCP-to-Core-to-Runtime E2E BLOCKED and Execution Gate CLOSED.
+
+### SOURCE TRACE — no unsafe quick patch
+- Re-read the current upload engine and tests. The current filesystem operations still use pathname-based checks and operations, including `Path.is_symlink()`, `mkdir()`, `open()`, `os.link()` and `unlink()`; recovery uses the same class of pathname operations.
+- Existing tests exercise ordinary binary round trips, static symlink denial, chunk sequencing/replay, checksum, concurrency and selected FINALIZING recovery states. They do not establish hostile parent-directory replacement/reparse-point resistance, stable handle identity, exhaustive restart reconciliation or platform-specific directory-entry durability.
+- No safe, already-reviewed platform backend was found in the branch or declared dependency set. No code patch was made: adding an incomplete Windows native wrapper or merely adding more pathname checks would risk creating a false security claim.
+
+### DECISION / NEXT EXECUTION
+1. Keep PR #77 candidate quarantined; do not register, expose, deploy, merge or advertise it as an available upload tool.
+2. Replace pathname-based filesystem access with a tested platform backend anchored to verified directory handles. Linux/POSIX must use directory-FD-relative no-follow operations; Windows must use handle-based traversal and reparse-point/identity validation. Unsupported guarantees must fail closed.
+3. Add adversarial parent-swap, reparse substitution, destination race, restart reconciliation and durability failure-injection tests on native Linux and Windows.
+4. Implement a Core-owned `sandbox.file.upload` grant/finalize contract with explicit revoke-vs-finalize linearization; do not reuse execution grants.
+5. Add genuine bounded raw-byte transport and binary-safe readback to Build MCP 8030; then run disposable PC → Sandbox → readback SHA-256 equality and W119 consumption tests.
+6. Obtain attributable Ka re-review of the corrected exact head and An's independent QA evidence before acceptance.
+
+### STATUS
+- **PASS:** exact-head configured CI #506, 6/6 jobs.
+- **BLOCKED:** filesystem containment, Core revoke/finalize authority, restart reconciliation/durability, Build MCP raw-byte transport.
+- **NOT RUN / NOT VERIFIED:** live PC → Sandbox binary upload, independent readback SHA-256 equality, W119 consumption, An independent QA.
+- **PR #77:** OPEN / DRAFT / UNMERGED.
+- **Execution Gate:** CLOSED. **Release:** NOT_RELEASED.
+
+[KÝ: XU | COORDINATOR]
