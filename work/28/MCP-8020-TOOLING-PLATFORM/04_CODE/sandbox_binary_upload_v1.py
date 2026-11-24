@@ -203,6 +203,8 @@ class SandboxBinaryUploadService:
         self.root=Path(sandbox_root).resolve(); self.root.mkdir(parents=True,exist_ok=True)
         self.ledger=ledger; self.authorizer=authorizer; self.audience=audience
         self.lock=threading.RLock()
+        self._startup_blocked=False
+        self.startup_reconciliation_result=self.reconcile_startup()
     def grant(self,ctx,op,uid,path,size):
         if self.authorizer is None: raise UploadError("AUTHORITY_UNAVAILABLE","Core upload authority is not configured")
         try: g=self.authorizer.authorize_upload_operation(trusted_context=ctx,operation=op,upload_id=uid,destination=path,requested_bytes=size)
@@ -300,8 +302,12 @@ class SandboxBinaryUploadService:
             self.ledger.record_recovery(row,outcome,row.get("received_bytes",0))
             results.append({"upload_id":row["upload_id"],"state":row["state"],"status":outcome,"detail":detail})
         quota=self.ledger.reconcile_quota()
-        return {"sessions":results,"quota_rebuilt":quota,"all_reconciled":all(x["status"]=="PASS" for x in results)}
+        self._startup_blocked=any(x["status"]=="BLOCKED" for x in results)
+        return {"sessions":results,"quota_rebuilt":quota,"blocked":self._startup_blocked,
+                "all_reconciled":all(x["status"]=="PASS" for x in results)}
     def begin(self,*,trusted_context,canonical_work_id,sandbox_work_id,destination,expected_bytes,expected_sha256,chunk_size,idempotency_key):
+        if self._startup_blocked:
+            raise UploadError("STARTUP_RECONCILIATION_BLOCKED","startup found unresolved filesystem/ledger state")
         path=self.path(destination)
         if isinstance(expected_bytes,bool) or not isinstance(expected_bytes,int) or not 0<=expected_bytes<=MAX_FILE_BYTES: raise UploadError("INVALID_SIZE","file size outside bound")
         if not isinstance(expected_sha256,str) or not _SHA.fullmatch(expected_sha256): raise UploadError("INVALID_DIGEST","expected SHA-256 must be lowercase hex")
