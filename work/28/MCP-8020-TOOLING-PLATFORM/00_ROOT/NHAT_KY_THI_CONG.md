@@ -3354,3 +3354,31 @@ Re-read the upload engine methods `work_root()`, `no_symlinks()`, `begin()`, `ch
 5. Run disposable Work canary from PC: upload original bytes → Sandbox readback → independent SHA-256 equality → W119 handoff.
 
 [KÝ: XU | COORDINATOR]
+
+
+
+## 2026-11-24 — JRN-W28-098 — Post-journal exact-head CI #500 and Core dependency trace
+
+**Owner:** Xu  
+**PR #77 head:** `8081bd7b5b077446690af314cc2a1b5cc952bbbb`  
+**Workflow:** [#500 / 45334158705](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45334158705)
+
+### VERIFY
+- The journal-only commit after JRN-W28-097 triggered workflow #500 on exact PR head `8081bd7b5b077446690af314cc2a1b5cc952bbbb`.
+- All six jobs completed SUCCESS: Linux Host lifecycle, Windows Host lifecycle, Work 28 unit/regression suite, native Windows binary upload component tests, exact-SHA artifact build/retest, automatic E2E gate report.
+- Therefore configured component CI is PASS on the current PR head, not merely the earlier source SHA. This does not promote the candidate to live Sandbox capability.
+- PR #77 remains OPEN / DRAFT / UNMERGED. Its changed files are workflow, canonical journal, upload engine and component tests. No tool registry/transport/Core integration files are included.
+- Inspected Core dependency PR #48: OPEN / DRAFT / UNMERGED, 88 changed files, 157 commits, mergeable=false at time of inspection; its own description says Core :8000 entrypoint wiring, production credential/config, live probes and PC deployment remain pending. It is not an available production dependency for W28 today.
+- W28 branch source confirms `room_hop_mcp/adapter/http_server.py` is the locked Meeting API and does not mount execution authority. Candidate `core/execution_authority/http_server.py` is a separate server surface; its shown routes concern execution grants/runs, not the distinct Sandbox upload capability. Existing Host grant client is for execution grants and cannot be reused as upload authority.
+- Current Build MCP 8030 connected tool surface still exposes text Sandbox operations only; no raw-byte upload transport is available.
+
+### STATUS
+- **PASS:** exact current PR-head CI #500, 6/6 jobs.
+- **BLOCKED:** live Core upload capability, raw-byte Build MCP transport/tool registration, safe filesystem backend/recovery hardening, PC-to-Sandbox canary and SHA-256 readback.
+- **NOT APPROVED / NOT RELEASED:** PR #77, Core dependency PR #48, W28 execution gate.
+- No code was merged, no production service restarted, no credentials provisioned, and no claim of working PC upload is made.
+
+### NEXT ACTION
+Proceed with a W28-specific upload capability contract and implementation adapter that is separate from execution grants; do not couple to PR #48's unmerged execution-grant candidate. In parallel, harden filesystem access and crash reconciliation in PR #77, then expose the upload operation only after Core authorization and raw-byte transport tests pass. Keep user PC steps deferred until a verified one-command uploader and live canary are ready.
+
+[KÝ: XU | COORDINATOR]
