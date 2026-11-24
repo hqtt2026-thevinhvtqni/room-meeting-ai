@@ -4076,3 +4076,63 @@ Fresh compare reports PR branch DIVERGED, 60 ahead / 5 behind. The five canonica
 - PR #78 remains OPEN / DRAFT / UNMERGED; Ka review NOT ACCEPTED; An independent acceptance NOT ACCEPTED; Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
 
 **Signed:** Ka — CSA / Independent Security Reviewer
+
+
+## 2026-11-25 — JRN-W28-128 — F01 pathname-race and F02 finalize durability re-review
+
+**Document ID:** W28-KA-AUD-128  
+**Priority:** P0 — filesystem containment and irreversible data-loss path  
+**Owner:** Ka — CSA / Independent Security Reviewer  
+**Date-Time:** 2026-11-25 (Asia/Ho_Chi_Minh)  
+**Target:** PR #78, branch xu/w28-f02-tests-20261124, HEAD at review start `b710c407fc98f371b8da0656c09c178f8c950bcd`  
+**Source blobs:** upload engine `f13bd1ae09ba79ab2f19f538d752e863fffcb19c`; component tests `0963baa3fd4c724973a08be331c4a9c8ddc4784b`.  
+**Method:** Exact-branch static source/test review; no code execution or filesystem mutation.
+
+### F01 — FILESYSTEM CONTAINMENT — BLOCKED / P0
+Observed source:
+- `work_root()` resolves `self.root/work`, compares its parent, then calls pathname-based `mkdir(parents=True, exist_ok=True)`.
+- `no_symlinks()` walks `Path` components and calls `is_symlink()`; checks are separate from later operations.
+- `begin()` calls `staging_dir.mkdir(...)` then `os.open(staging, O_CREAT|O_EXCL|O_WRONLY, ...)` by pathname. No descriptor-anchored parent identity is carried from validation through creation.
+- `chunk()` subsequently opens the staging pathname with `open(path, "r+b")`; finalize/recovery uses pathname `mkdir`, `open`, `os.link`, `unlink`; destination and staging paths can be re-resolved after validation.
+- `O_NOFOLLOW` appears in the per-upload lock-file open on platforms exposing it, but does not protect the staging/destination parent chain or all data operations. The code has no POSIX dirfd/openat-style traversal and no Windows handle/reparse-point-safe backend.
+
+Test inventory:
+- The test suite has a static symlink escape test, but no parent-directory swap race, staging-directory replacement race, destination-parent replacement race or Windows reparse-point test. No adversarial race test was found in the exact test file.
+- A pathname check followed by a later pathname operation remains TOCTOU; another process with write access to the Sandbox tree can replace a checked directory between those steps. The existing symlink test does not exercise this interleaving.
+
+Required closure:
+1. Implement a handle-anchored filesystem backend: POSIX descriptor-relative traversal with no-follow semantics and identity checks; Windows handle-based reparse-point-safe containment and no-replace promotion. Do not claim parity from generic pathlib checks.
+2. Ensure every create/open/link/unlink/read/stat operation is relative to validated directory handles or equivalent stable OS handles, not a fresh untrusted pathname resolution.
+3. Add deterministic adversarial parent-swap/staging-replacement/destination-race tests on Linux and native Windows. Where a platform cannot guarantee containment, fail closed and disable upload there.
+
+### F02 — RECOVERY / DURABILITY — PARTIAL / NOT VERIFIED; DATA-LOSS PATH CONFIRMED BY SOURCE
+Positive change: startup reconciliation now scans direct Work roots and records untracked .part files as BLOCKED; quota is rebuilt from UPLOADING and FINALIZING rows. FINALIZING startup state is deliberately left pending for fresh Core authorization. This improves detection/recovery but is not complete durability proof.
+
+Blocking source sequence in `_finalize_locked()`:
+1. It transitions the ledger UPLOADING → FINALIZING.
+2. It creates/promotes the final file with `os.link(staging, final)`, then verifies final size and SHA-256.
+3. It unlinks the staging file.
+4. Only after staging deletion does it call `ledger.transition(FINALIZING → COMPLETED)`, which also commits the completion audit.
+5. If that ledger/audit transition raises, the exception handler attempts to unlink the final file and raises AUDIT_BLOCKED.
+
+This error branch can leave the durable ledger in FINALIZING while both the staging source and promoted destination are absent. `recover_finalizing()` requires either a matching final file or a staging file; with neither, it raises RECOVERY_SOURCE_MISSING. The upload bytes have been discarded, so this is not recoverable by the current recovery routine. This directly confirms the F02 failure mode; it is not merely missing test coverage.
+
+Additional durability gap:
+- File data is fsynced after chunk writes, but the reviewed promotion/cleanup path does not fsync the containing directories after link/unlink. SQLite FULL synchronous does not by itself prove filesystem directory-entry durability across power loss.
+- Current tests cover selected simulated FINALIZING states before promotion and after promotion-before-cleanup, but do not inject failure in the completion ledger/audit commit after staging unlink. No test names or assertions for completion-audit failure injection were found. No parent-directory durability/power-loss test was found.
+
+Required closure:
+1. Never delete the only recoverable copy before the durable COMPLETED receipt/audit commit. Define a monotonic ordering and idempotent reconciliation so a failed DB commit preserves at least one verified copy; avoid deleting final as rollback after staging has already been removed.
+2. Add fault injection for failure at every transition: FINALIZING commit, promotion, final readback, staging unlink, COMPLETED+audit commit, cleanup retry, process restart. Assert at least one verified copy remains until durable completion.
+3. Add platform-appropriate directory-entry durability (or fail-closed platform contract) and restart tests. Document the guarantees and limitations for Linux and Windows.
+4. Test quota and audit consistency after each injected failure, including retries and process restart.
+
+### DISPOSITION
+- F01: **BLOCKED / P0** — path-based validation is not race-safe containment.
+- F02: **PARTIAL / NOT VERIFIED; confirmed blocking defect** — completion-audit transition failure can destroy both copies while leaving ledger FINALIZING.
+- F03 remains BLOCKED / P0; F04 remains BLOCKED / P0.
+- Exact-head workflow lookup for pre-journal HEAD `b710c407fc98f371b8da0656c09c178f8c950bcd` returned no associated PR workflow run.
+- PR #78 remains OPEN / DRAFT / UNMERGED. Ka NOT ACCEPTED; An independent acceptance NOT ACCEPTED; Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+- No source modification, tests, runtime calls, live upload/readback, merge or deployment were performed.
+
+**Signed:** Ka — CSA / Independent Security Reviewer
