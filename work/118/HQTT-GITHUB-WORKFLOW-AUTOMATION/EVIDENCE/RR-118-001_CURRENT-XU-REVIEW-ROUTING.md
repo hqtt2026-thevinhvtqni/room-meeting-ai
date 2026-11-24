@@ -305,3 +305,19 @@ Work32 Grant may be considered only for W118 protected execution integration aft
 - **069:** all-Issue pagination without mutable label filter; PRs excluded; completeness ceiling retained; no-label marker regression test.
 - **Status:** 067/069 remediated at source/contract-test level, pending Xu independent re-review. PR #68 OPEN / UNMERGED; Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED.
 - **Boundary:** 124 tests are contract/unit proof only. Source binding remains unbound on aggregate branch; handoff/ACK/review capture skipped; Runtime Auto E2E NOT RUN; Core/W102/W14/W33/W70 authority/runtime gates unchanged.
+
+
+## Entry 077 — authoritative review-routing freshness refresh
+
+- **Priority / read order:** 01 — P0 — this overlay supersedes all earlier routing snapshots in this file; read before historical checklist/handover metadata.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-24 12:32 +07:00.
+- **Live GitHub readback:** PR #68 remains OPEN / not draft / UNMERGED; branch `work/118-auto-e2e-v2-clean` → `main`; exact current HEAD `11942ea68a1484f46f6691644ce5eaf0853ea732`.
+- **Exact-head CI:** PR Run #1156 / ID `45313937828`, associated with this exact HEAD, completed SUCCESS; validate job `138176098437`; raw log confirms 124 tests in 0.321s. Artifact ID `14885090439`, name `w118-run-evidence-45313937828-1`, size 687 bytes, SHA-256 `f58735abd6a996e490b01bb66a7da52c9a7443a99c6793f5f1f7f906d69c7891`.
+- **Xu review state:** live GitHub readback at 12:32 +07:00 shows 0 formal review submissions and 0 inline review threads. Xu's independent Entry 075 disposition remains NEEDS CHANGES for 067/069; Ka's Entry 076 remediation is pending independent re-review. No approval is inferred.
+- **067/069:** remediated at source/contract-test level only. Findings 065/068/071 remain PASS STATIC per Xu Entry 075. This is not runtime proof.
+- **Task register:** 013 IN_PROGRESS; 014 BLOCKED; 015 BLOCKED; 016 adapter IN_PROGRESS / Core Task-scoped lease BLOCKED; 017 contract IN_PROGRESS / Core-W33 ingress NOT VERIFIED; 018 BLOCKED; 019 PLANNED / NOT RUN. No Task DONE; progress NOT_CALCULATED.
+- **Runtime boundary:** PR source-binding job is skipped on pull_request; aggregate branch binding remains UNBOUND_LEGACY_BRANCH. Handoff-request, ACK-claim and review-observation capture jobs remain SKIPPED. Runtime Auto E2E NOT RUN. Core Task/Event/lease, W102 identity/Assignment/recipient ACK, W14 protected execution, W33 ingress and W70 Evidence Register owner/schema remain BLOCKED / NOT VERIFIED.
+- **Governance:** PR #68 OPEN / UNMERGED; Vinh product acceptance NOT ACCEPTED; release NOT AUTHORIZED. No merge, rebase, force-push, PR close, release, secret/permission/branch-protection change, runtime mutation or external Work/Sandbox mutation.
+- **Next action:** Xu independently re-review exact HEAD `11942ea68a1484f46f6691644ce5eaf0853ea732` and Run #1156, explicitly disposition findings 067 and 069. Ka will address only any bounded findings returned. Vinh retains final product acceptance and release authority.
+- **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-24 12:32 +07:00; Result: live review state and exact-head evidence refreshed; independent review remains pending; no acceptance or release asserted.
