@@ -3382,3 +3382,43 @@ Re-read the upload engine methods `work_root()`, `no_symlinks()`, `begin()`, `ch
 Proceed with a W28-specific upload capability contract and implementation adapter that is separate from execution grants; do not couple to PR #48's unmerged execution-grant candidate. In parallel, harden filesystem access and crash reconciliation in PR #77, then expose the upload operation only after Core authorization and raw-byte transport tests pass. Keep user PC steps deferred until a verified one-command uploader and live canary are ready.
 
 [KÝ: XU | COORDINATOR]
+
+
+
+## 2026-11-24 — JRN-W28-099 — Live Sandbox/Tool surface and exact-head CI #501 reconciliation
+
+**Owner:** Xu  
+**PR:** [#77 — Work 28 binary Sandbox upload engine](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/77)  
+**PR head / journal commit:** `dc95205c81396401194d27851cde5322312ae658`  
+**Workflow:** [#501 / 45334889870](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45334889870)
+
+### READ / VERIFY — GitHub CI
+- Queried workflow runs for the exact PR head `dc95205c81396401194d27851cde5322312ae658`; run #501 was returned.
+- Retrieved latest-attempt jobs for run #501: all six jobs are SUCCESS — Windows Host lifecycle, Linux Host lifecycle, Work 28 unit/regression tests, native Windows binary upload component tests, exact-SHA source artifact build/retest, and automatic E2E gate report.
+- This is an exact-head configured CI PASS. It remains component/source validation; no live Build MCP upload/readback was performed.
+- PR #77 review API returned an empty review list (zero submitted reviews). No Ka security approval or An independent QA sign-off is recorded.
+
+### TRACE — live Build MCP 8030 and Sandbox
+- Enumerated the connected Build MCP tool catalog in this ChatGPT session. The 8030 connector exposes 17 operations; Sandbox file operations available here are text-oriented read, probe, list, create, write, append and delete. There is no raw-byte upload tool, binary file reference input, or binary readback operation in this connected surface.
+- Queried live Sandbox Work inventory: 74 Works are listed, including Work 28 and Work 119.
+- Listed Sandbox Work 28 contents. Its active tree contains the prior 04_CODE/05_TEST implementation and canonical Work documents, but does not contain the PR #77 candidate files `sandbox_binary_upload_v1.py` or `test_sandbox_binary_upload_v1.py`. Therefore the GitHub PR candidate has not been synchronized into the live Sandbox Work 28 tree.
+- The presence of Work 28 and Work 119 proves only that those Sandbox Work records exist; it does not prove a file transfer path or byte-level integrity.
+
+### DISPOSITION
+- **PASS:** exact PR-head CI #501, 6/6 jobs.
+- **PASS:** live inventory/read-only enumeration completed for 74 Works, including 28 and 119.
+- **BLOCKED:** connected 8030 tool surface has no raw-byte upload/readback operation; PR #77 candidate is not present in live Sandbox Work 28.
+- **NOT RECORDED:** formal PR reviews, Ka security approval, An QA approval.
+- **NOT VERIFIED:** PC-to-Sandbox binary transfer, original-byte readback, SHA-256 equality, W119 consumption.
+- PR #77 remains OPEN / DRAFT / UNMERGED. Execution Gate remains CLOSED. No deployment or release is authorized by these results.
+
+### NEXT
+1. Complete filesystem race-safe containment and crash/durability validation in the candidate; do not describe current pathname backend as secure against parent replacement.
+2. Implement and test a Core-owned upload grant/finalize authorization path distinct from execution grants.
+3. Add a genuine bounded raw-byte transport and registration to the Build MCP 8030 composition, with binary-safe readback.
+4. Synchronize the reviewed candidate to the actual Sandbox Work 28 only through an authorized path, then run a disposable PC → Sandbox → readback SHA-256 canary.
+5. Request attributable Ka and An reviews against the corrected exact head before acceptance.
+
+**STATUS:** CI PASS (6/6); live raw-byte upload BLOCKED; candidate-to-Sandbox sync NOT DONE; filesystem containment OPEN; Core upload authority NOT INTEGRATED; independent reviews NOT RECORDED; PC byte-for-byte canary NOT RUN; PR #77 OPEN / DRAFT / UNMERGED; Execution Gate CLOSED; NOT RELEASED.
+
+[KÝ: XU | COORDINATOR]
