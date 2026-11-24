@@ -3058,3 +3058,23 @@ Xu to remediate the blocking findings on the isolated PR branch; Ka to independe
 4. Keep Core-owned atomic authorization, live transport, independent review and PC image readback as release blockers.
 
 **STATUS:** CI #481 FAILED; root cause for observed teardown/assertion failures corrected in subsequent commits; fresh exact-head CI required; no PASS claimed; PR #77 OPEN / DRAFT / UNMERGED; PC image upload NOT VERIFIED; Execution Gate CLOSED; NOT RELEASED.
+
+
+## JRN-W28-083 — Native Windows concurrency test race corrected
+**Time:** 2026-11-24 (UTC)  
+**Scope:** Analyze latest native Windows test and make the concurrent chunk test scheduling-independent.
+
+### TRACE
+- CI #485 / run `45316962774` on the then-current exact SHA ran both lifecycle lanes successfully; the Linux unit-regression job remained in progress at inspection.
+- Native Windows upload-engine suite exposed one failure in `test_two_service_instances_serialize_conflicting_chunk_writes`: the test assumed the literal `good` payload must win. The OS lock correctly serialized access, but thread scheduling may let either contender acquire the lock first; the assertion was invalid, not evidence of a lock bypass.
+- The prior Windows SQLite file-handle cleanup issue did not recur in this run, confirming the connection-close fix removed that observed teardown failure.
+
+### BUILD
+- Updated the concurrency test to accept either serialized winner (`good` or `evil`), while still requiring exactly one ACCEPTED and one REPLAY_MISMATCH result, a four-byte accepted ledger record, and a staging-file digest equal to the durable accepted chunk digest.
+- Test commit: `35e162753413bf21e81b92fe9755bd082f11e04a`.
+
+### VERIFY / NEXT
+- The new test revision requires its own exact-head native Windows and Linux CI run. Do not carry forward any PASS from CI #485 to the updated test SHA.
+- Re-check Windows lock behavior, unit regression, and both lifecycle lanes on the fresh run; then proceed to path-race and durable directory promotion work.
+
+**STATUS:** SQLite connection-close issue corrected; Windows concurrency assertion made schedule-independent; fresh exact-head CI required; all runtime/Core/PC upload gates remain CLOSED; PR #77 OPEN / DRAFT / UNMERGED; NOT RELEASED.
