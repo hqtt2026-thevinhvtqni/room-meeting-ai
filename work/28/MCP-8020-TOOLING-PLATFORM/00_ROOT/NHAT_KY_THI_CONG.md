@@ -3078,3 +3078,24 @@ Xu to remediate the blocking findings on the isolated PR branch; Ka to independe
 - Re-check Windows lock behavior, unit regression, and both lifecycle lanes on the fresh run; then proceed to path-race and durable directory promotion work.
 
 **STATUS:** SQLite connection-close issue corrected; Windows concurrency assertion made schedule-independent; fresh exact-head CI required; all runtime/Core/PC upload gates remain CLOSED; PR #77 OPEN / DRAFT / UNMERGED; NOT RELEASED.
+
+
+## JRN-W28-084 — Exact-head CI #487 partial verification
+**Time:** 2026-11-24 (UTC)  
+**Scope:** Verify corrected Windows concurrency test and latest exact-head CI.
+
+### VERIFY
+- CI #487 / run `45317086729` targets test commit `35e162753413bf21e81b92fe9755bd082f11e04a` (workflow merge SHA is reported separately by GitHub).
+- `Binary upload engine tests (native Windows)`: SUCCESS.
+- `unit-regression-tests`: SUCCESS.
+- `execution-host-lifecycle-linux`: SUCCESS.
+- `execution-host-lifecycle-windows`: SUCCESS.
+- `Build and retest exact-SHA Work 28 source artifact`: IN_PROGRESS at the time of this entry. Final workflow conclusion and automatic E2E gate report are not yet confirmed.
+- The Windows upload-engine success now confirms the 20-test component suite passed on native Windows, including the cross-instance serialization regression test, for this candidate revision. It does not prove a live Core grant, MCP transport, Sandbox upload or PC image readback.
+
+### NEXT
+1. Wait for the exact-SHA source artifact and automatic E2E gate report jobs to complete; capture final workflow conclusion.
+2. Continue the remaining security work: race-resistant path containment, durable directory promotion, and Core-owned atomic authorization/revocation.
+3. Do not merge/register/deploy or claim PC upload readiness until live integration and byte-identical Sandbox readback are proven.
+
+**STATUS:** Native Windows binary upload component suite PASS; Linux unit-regression PASS; Linux/Windows lifecycle PASS; exact-SHA artifact build and overall gate PENDING; live upload/Core integration NOT VERIFIED; PR #77 OPEN / DRAFT / UNMERGED; Execution Gate CLOSED; NOT RELEASED.
