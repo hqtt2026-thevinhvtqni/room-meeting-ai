@@ -3814,3 +3814,32 @@ PR #78 remains OPEN / DRAFT / UNMERGED. Ka independent security disposition rema
 **STATUS:** Ka review NOT ACCEPTED; PR #78 OPEN / DRAFT / UNMERGED; Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
 
 **Signed:** Ka — CSA / Independent Security Reviewer
+
+
+
+## 2026-11-25 — JRN-W28-122 — Evaluator contract and exact-head workflow wiring re-audit
+
+**Document ID:** W28-KA-AUD-122  
+**Priority:** P0  
+**Owner:** Ka — CSA / Independent Architecture & Security Reviewer  
+**Date-Time:** 2026-11-25 00:48 Asia/Ho_Chi_Minh  
+**Target:** PR #78 — `xu/w28-f02-tests-20261124`  
+**Reviewed HEAD:** `6c2049ff1c99e0e6f76317f7000f3234d46fdb93`
+
+### READ / TRACE
+- Read the exact runbook `01_PLAN/WORK28_AUTO_E2E_RUNBOOK_V2.0.md` (blob `ee6504d6f7a72168608f3daba659f50600b6b768`), evaluator `04_CODE/work28_auto_e2e_gate_v1.py` (blob `e934a21e750a3b9cddb72f37c2b0ef6e7c9fb31d`), evaluator tests `05_TEST/test_work28_auto_e2e_gate_v1.py` (blob `4526ed0f85ba0ca105de8972c5c32f8707943aa1`) and workflow `.github/workflows/work28-mcp-tooling.yml` (blob `e71c0c2e33c9908cf005d446a5990c824e8722da`).
+- Evaluator contract is fail-closed: validates required identity/hash fields, Core authorization decision, snapshot/path/isolation/cleanup, operation result, protected evidence/readback and deployment-key HMAC. Its 19 unit tests use a synthetic `valid_record()` and a test-only HMAC key; these establish evaluator logic only, not trusted deployed evidence.
+- Workflow runs the Work 28 unittest discovery (therefore includes the evaluator unit tests), but does **not** create or obtain a deployed evidence record, set up a trusted deployment-held verifier key/key ID, or invoke `work28_auto_e2e_gate_v1.py`. The last job independently writes a CI report from upstream job outcomes and hardcodes deployed E2E BLOCKED. Thus evaluator unit-test coverage is not evaluator execution against live evidence; workflow remains a CI precondition report, not product Auto E2E.
+- Workflow has a native Windows component test job for the upload engine; no corresponding Linux upload-engine lane is defined. Neither lane supplies Core/MCP/Sandbox live transfer evidence.
+- Exact-head workflow lookup for `6c2049ff1c99e0e6f76317f7000f3234d46fdb93` returned no workflow runs. No CI result is claimed.
+- Fresh compare: canonical `work/28-mcp-tooling-platform` HEAD `0bb578b3b306ac74b792bc7c786895b6e8fcf4ac`; PR branch is DIVERGED, 59 ahead / 5 behind, merge base `4b2a8663a0b9ff40aad8e6812efff197b5085de5`. No merge, rebase, cherry-pick or blind journal synchronization performed.
+
+### FINDINGS / DISPOSITION
+- **Auto E2E wiring: BLOCKED / P0.** The evaluator is tested but not wired to a trusted evidence producer/verifier invocation in Actions. A green component suite cannot be reported as live Auto E2E.
+- **F01: BLOCKED / P0; F02: PARTIAL / NOT VERIFIED; F03: BLOCKED / P0; F04: BLOCKED / P0** remain unchanged per JRN-W28-120/121.
+- **CI exact HEAD:** NOT OBSERVED. **Runtime / live upload:** NOT EXECUTED. **An independent QA:** NOT ACCEPTED. This entry is static source/configuration review only.
+- No source/workflow code was modified. Only this audit journal entry is appended to the PR branch.
+
+**STATUS:** PR #78 OPEN / DRAFT / UNMERGED; Ka review NOT ACCEPTED; Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+**Signed:** Ka — CSA / Independent Architecture & Security Reviewer
