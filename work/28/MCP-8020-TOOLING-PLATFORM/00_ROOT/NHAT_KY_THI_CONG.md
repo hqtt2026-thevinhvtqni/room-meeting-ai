@@ -2805,3 +2805,34 @@ Review 6015443161 records the detailed findings; review 6015449638 corrects curr
 - Work 28 remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED until the corresponding evidence is complete.
 
 **NEXT:** Xu proceeds autonomously on the canonical Work 28 branch, creates a reviewable isolated implementation candidate, and drives it to exact-SHA CI and independent review.
+
+
+## 2026-11-24 17:01 +07 — JRN-W28-111 — Xu tiếp quản toàn bộ implementation Work 28
+**Authority:** Chỉ thị trực tiếp mới nhất của Vinh trong ChatGPT: Xu tiếp nhận xây toàn bộ Work 28; không giao Vi tiếp tục implementation.
+**Delivery owner:** Xu | **Priority:** P0 | **Canonical code branch:** `work/28-mcp-tooling-platform` | **Current upload candidate:** PR #77.
+
+### DECISION / CHANGE OF OWNERSHIP
+- Xu trực tiếp chịu trách nhiệm toàn bộ READ → TRACE → ANALYZE → DECIDE → BUILD → VERIFY → HANDOFF, bao gồm F01 filesystem containment, F02 crash recovery/durability, F03 Core upload authority/revoke-finalize, F04 raw-byte Build MCP transport/registration và live acceptance coordination.
+- Dừng mọi phân công implementation mới cho Vi; không chờ Vi hoàn tất và không phụ thuộc Vi bàn giao. Các kết quả Vi đã ghi trước thời điểm tiếp quản được giữ nguyên làm evidence lịch sử, không bị xóa/sửa.
+- Vi không còn là implementation owner của Work 28. Nếu Vi tự có thay đổi mới, không tích hợp vào candidate nếu Xu chưa đọc diff và xác minh exact commit.
+- An vẫn là independent tester; Ka vẫn là independent security reviewer. Không tự thay thế độc lập bằng kiểm thử/tự duyệt của Xu.
+- Chỉ thị này supersedes các assignment Vi implementation còn hiệu lực trong JRN-W28-004, JRN-W28-071 và các entry trước đó; không sửa lịch sử append-only.
+
+### BASELINE VERIFIED
+- PR #77: OPEN / DRAFT / UNMERGED; HEAD `e1c0193147e4284aba121c4b1b6d73292a6fdf50`; 45 commits, 5 files changed; exact-head workflow #509 / run `45338449933` SUCCESS 6/6 jobs.
+- An acceptance report: BLOCKED — NOT ACCEPTED; F01 FAIL, F02 FAIL/NOT PROVEN, F03 BLOCKED, F04 BLOCKED; live Sandbox SHA-256 NOT RUN.
+- Existing Build MCP :8030 tool surface in this session exposes text Sandbox operations only; no raw-byte upload/readback, execution runner or HTTP action is available through the connected tool set.
+- Xu's separate upload authority contract record exists in Sandbox: `06_EVIDENCE/XU_CORE_UPLOAD_AUTHORITY_CONTRACT_DECISION_20261124.md`; design only, not a deployed Core route.
+- Work 28 remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED.
+
+### DELIVERY MILESTONES / TIMEBOX
+- M0 (17:01–17:30): freeze exact source baseline; inventory every PR #77 module/test/CI dependency and identify smallest safe remediation slices.
+- M1 (17:30–19:00): F01/F02 remediation design converted into code and adversarial tests; if platform-safe handle semantics cannot be implemented/proven in this environment, isolate that blocker with exact API/platform evidence rather than pathname patch.
+- M2 (19:00–20:00): Core upload authority contract implementation boundary and provider/transport adapter; no public registration until authorization and binary transport are real.
+- M3 (20:00 onward): exact-head CI, repair failures, independent An/Ka review, runtime canary only if an authorized live execution/transport path is available.
+- Timeboxes are targets, not fabricated completion promises. Any missed milestone must be logged with the exact blocker, evidence and revised ETA. No PASS without output.
+
+### NEXT ACTION
+Xu continues source inspection and implementation directly on an isolated branch from the verified PR head. Keep PR #77 unmerged/unregistered/un deployed until F01–F04 and independent acceptance close. No PC action is required from Vinh at this stage.
+
+[KÝ: XU | DELIVERY OWNER]
