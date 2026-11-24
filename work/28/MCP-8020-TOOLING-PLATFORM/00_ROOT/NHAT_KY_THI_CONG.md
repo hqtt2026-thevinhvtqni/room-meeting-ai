@@ -3030,3 +3030,31 @@ Xu to remediate the blocking findings on the isolated PR branch; Ka to independe
 4. Build and verify the live transport/MCP tool and perform PC image upload → Sandbox readback → SHA-256 equality only after the security blockers are closed.
 
 **STATUS:** Per-upload cross-process lock and concurrency regression test COMMITTED; exact-head CI PENDING / not yet reported; path TOCTOU, durable promotion, Core atomic authorization, live transport and PC upload remain OPEN; PR #77 OPEN / DRAFT / UNMERGED; Execution Gate CLOSED; NOT RELEASED.
+
+
+## JRN-W28-082 — Windows CI failure analysis and SQLite handle closure
+**Time:** 2026-11-24 (UTC)  
+**Scope:** Diagnose and correct exact-head CI #481 failures introduced/exposed by the cross-process chunk change.
+
+### TRACE / ROOT CAUSE
+- CI #481 / run `45316723453` executed the engine revision `457d8599980bc5ae73c1ec06db5bbe2df02def72` and failed in both native Windows upload tests and the Linux unit-regression suite.
+- Windows logs showed teardown `WinError 32` when deleting `ledger.sqlite3`; `SQLiteUploadLedger.db()` returned a sqlite connection used with `with`, but Python's sqlite connection context manager commits/rolls back and does not close the connection. Windows therefore retained an open file handle and blocked temp-directory cleanup.
+- Linux regression logs showed `test_core_checked_for_each_operation` expected one Core call for a chunk, but the new safe implementation intentionally re-authorizes after acquiring the OS lock. Expected calls must include both pre-lock and in-lock authorization.
+- Linux and Windows execution-host lifecycle lanes passed. The automatic gate report job passed as a report-generation job; this does not override failing unit/Windows tests.
+
+### BUILD
+- Changed `SQLiteUploadLedger.db()` into a real `contextmanager` that always closes the SQLite connection in `finally` after the caller's transaction scope.
+- Updated the Core-call assertion to expect `begin`, pre-lock `chunk`, in-lock `chunk`, `finalize`.
+- Code commit: `0a05b31e4729f98bec92184beda9866823e569f2`; test commit: `fa94a0f75d1d10ce0614140f1929385666d73ce0`.
+
+### VERIFY
+- Exact-head CI run #482 / `45316757023` was created for the cross-process-lock revision and was IN_PROGRESS when first inspected; later commit updates may supersede/cancel that run. A fresh run for the latest PR head must be inspected before claiming any PASS.
+- Windows lock implementation and the new two-instance concurrency test remain unverified until a fresh native Windows run completes.
+
+### NEXT
+1. Poll the latest exact-head CI and inspect all jobs, particularly native Windows and unit-regression tests.
+2. Fix any remaining Windows lock/test issues based on logs, not assumptions.
+3. Continue path-race-safe filesystem access and durable directory metadata flush.
+4. Keep Core-owned atomic authorization, live transport, independent review and PC image readback as release blockers.
+
+**STATUS:** CI #481 FAILED; root cause for observed teardown/assertion failures corrected in subsequent commits; fresh exact-head CI required; no PASS claimed; PR #77 OPEN / DRAFT / UNMERGED; PC image upload NOT VERIFIED; Execution Gate CLOSED; NOT RELEASED.
