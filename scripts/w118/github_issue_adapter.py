@@ -9,6 +9,8 @@ from __future__ import annotations
 import re
 from typing import Any, Callable, Mapping
 
+from .marker_safety import has_exact_standalone_marker
+
 from .core_task_adapter import (
     CoreTaskProjection,
     core_task_issue_marker,
@@ -33,23 +35,6 @@ _REPOSITORY_RE = re.compile(r"^[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?/[A-Za-z0
 
 def _valid_repository(value: object) -> bool:
     return isinstance(value, str) and _REPOSITORY_RE.fullmatch(value) is not None
-
-
-def _is_canonical_marker_line(body: str, marker: str) -> bool:
-    if body.count(marker) != 1:
-        return False
-    in_fence = False
-    found = 0
-    for line in body.splitlines():
-        stripped = line.lstrip()
-        if stripped.startswith("```") or stripped.startswith("~~~"):
-            in_fence = not in_fence
-            continue
-        if line == marker:
-            if in_fence:
-                return False
-            found += 1
-    return found == 1
 
 
 class GitHubIssueAdapter:
@@ -103,7 +88,7 @@ class GitHubIssueAdapter:
                 if not isinstance(body, str):
                     raise IssueLookupDuplicate("Issue body is not text; refusing ambiguous Task marker lookup")
                 if marker in body:
-                    if not _is_canonical_marker_line(body, marker):
+                    if not has_exact_standalone_marker(body, marker):
                         raise IssueLookupDuplicate("embedded, quoted, fenced or repeated Task marker; refusing mutation")
                     matches.append(issue)
             if len(issues) < 100:
