@@ -3499,3 +3499,41 @@ However, path containment still relies on pathname checks followed by ordinary p
 - Live PC → Sandbox → SHA-256 equality canary and W119 consumption: NOT RUN.
 - Execution Gate: CLOSED. Release: NOT_RELEASED.
 - Next owner: Xu to continue only with a platform-safe containment backend and its adversarial native tests; then integrate Core authority and Build MCP transport. Ka/An review follows actual implementation evidence, not a design-only summary.
+
+
+## 2026-11-24 — JRN-W28-102 — Ka independent acceptance review of PR #77
+
+**Reviewer:** Ka | Independent Security Reviewer / Acceptance Reviewer  
+**Date-Time:** 2026-11-24 12:50 +07:00  
+**PR:** [#77 — Work 28 binary Sandbox upload engine candidate](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/77)  
+**Branch:** `xu/work28-wp3-binary-upload-20261124`  
+**Exact reviewed HEAD:** `245e2962429433ea2145032970db1b7637d624ae`  
+**GitHub formal review limitation:** REQUEST_CHANGES submission was rejected by GitHub (HTTP 422: cannot request changes on own pull request) because the connected GitHub identity is the PR author. This journal entry and PR discussion record Ka's findings; they are not represented as a formal independent GitHub review object.
+
+### READ / VERIFY
+- Read PR metadata, changed-file list, complete patch, engine source, component tests, workflow changes, PR discussion, formal review list and inline review threads.
+- Confirmed PR #77 is OPEN / DRAFT / UNMERGED. Before this review, formal review submissions and inline review threads were empty.
+- Confirmed exact-head workflow run 45336196761 / run #504 was IN_PROGRESS at inspection. No PASS is claimed for this run.
+- Existing component CI and the injected test authorizer do not prove deployed Core authority, raw-byte transport or live Sandbox capability.
+
+### POSITIVE FINDINGS — SOURCE / COMPONENT SCOPE ONLY
+- Raw bytes are accepted without UTF-8 payload conversion; file and chunk limits are bounded.
+- Missing authorizer fails closed; operations request authorization and bind grant/session/Work/path/policy attributes.
+- SQLite ledger, contiguous chunk sequencing, replay checks, SHA-256 validation and no-overwrite promotion are implemented.
+- PR description correctly distinguishes component CI from deployed integration and live readback.
+
+### BLOCKING FINDINGS
+1. **P1 — Filesystem TOCTOU / reparse-point containment:** `no_symlinks()` checks pathname components separately from later `mkdir/open/os.link/unlink` operations. No directory-handle-relative operation chain or stable parent identity verification is established. Concurrent parent replacement/symlink or Windows reparse-point swaps remain possible at the check/use boundary. Static symlink tests and native Windows CI do not prove hostile race safety. Require platform-specific handle-anchored/no-follow operations (or fail closed where unsupported), plus adversarial parent-swap tests on Linux and Windows.
+2. **P1 — Core revoke/finalize atomicity:** per-operation authorization and a copied revocation epoch do not establish atomic Core-owned finalize authorization/commit. A revoke may race after authorization and before filesystem promotion. Require a real Core-owned upload grant/finalize lease contract with explicit linearization semantics and revoke-vs-finalize adversarial tests.
+3. **P1 — Crash/restart reconciliation:** exhaustive consistency across session ledger, staging/final files, quota and audit is not established for every interruption point, including staging created before ledger begin and interrupted cleanup. Require deterministic startup reconciliation and failure-injection tests.
+4. **P1 — Filesystem durability:** file fsync alone does not prove durable directory-entry promotion/unlink. Require platform-appropriate directory/handle flush semantics and restart/crash evidence.
+5. **P0 — Product integration absent:** no approved Core upload-grant adapter/route, raw-byte Build MCP transport, canonical tool registration, deployed Runtime path or live Sandbox byte-for-byte readback is evidenced. No production capability may be inferred from component tests or a fake authorizer.
+
+### DISPOSITION
+**ACCEPTANCE BLOCKED — DO NOT MERGE / REGISTER / DEPLOY / ENABLE.** The candidate has useful source-level safeguards, but the findings above are release-blocking. An's independent QA remains a separate gate and has not been performed by Ka. GitHub formal independent review remains unrecorded due the self-review restriction above.
+
+**STATUS:** Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED. No live PC upload, Sandbox readback or W119 acceptance is claimed.
+
+**NEXT:** Xu to remediate the source/security findings and prove real Core + Build MCP integration. Ka to re-review the corrected exact head. An to independently reproduce and extend failure-injection QA. Only then run a disposable Sandbox canary and independent byte-for-byte SHA-256 readback.
+
+**KÝ:** KA | Independent Security Reviewer
