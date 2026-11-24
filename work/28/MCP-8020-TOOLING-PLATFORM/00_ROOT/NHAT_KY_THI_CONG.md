@@ -2970,3 +2970,34 @@ Xu to remediate the blocking findings on the isolated PR branch; Ka to independe
 4. Ka independent security review and An independent QA remain outstanding.
 
 **STATUS:** workflow enhancement COMMITTED; native Windows test PENDING; Core upload grant NOT FOUND IN REPOSITORY SEARCH / NOT VERIFIED; PR #77 OPEN / DRAFT / UNMERGED; Execution Gate CLOSED; Work 28 NOT RELEASED.
+
+
+## JRN-W28-080 — Recover interrupted FINALIZING uploads
+**Time:** 2026-11-24 (UTC)  
+**Scope:** Resume a binary upload safely when the process stops after the durable FINALIZING transition.
+
+### READ / TRACE
+- Re-read the exact upload engine and component tests on branch `xu/work28-wp3-binary-upload-20261124`.
+- Confirmed `finalize()` previously accepted only UPLOADING and COMPLETED. A crash after persisting FINALIZING could leave a session permanently stuck even when staging or the promoted final file still existed.
+
+### BUILD
+- Added `file_digest()` for bounded-memory size/SHA-256 verification.
+- Added `recover_finalizing()`; a retry still requires a fresh Core `finalize` authorization and session/grant binding check before recovery.
+- Recovery verifies the durable receipt digest, checks either the already-promoted destination or staging bytes, uses no-replace hard-link promotion when needed, verifies final readback, removes staging, then commits FINALIZING → COMPLETED with a RECOVERED audit outcome.
+- Recovery fails closed on conflicting destination bytes, missing staging/final source, digest mismatch, promotion failure or cleanup failure. It does not overwrite a conflicting destination.
+- Added tests for simulated crash before promotion, after promotion but before staging cleanup, and conflicting destination.
+- Engine commit: `98e756bbc34a488afffbc425137bf5ed83a44cbf`; test commit: `dbb601e0e3bd9998636df8e53489e2f243323ea5`.
+
+### VERIFY
+- GitHub readback confirmed the modified engine and test blobs.
+- Exact-head workflow run #479 / `45316351509` was created for `dbb601e0e3bd9998636df8e53489e2f243323ea5`; status PENDING at this journal entry. No test PASS is claimed.
+- This change addresses interrupted finalization recovery only. It does not resolve chunk-write/ledger crash atomicity, cross-process staging serialization, filesystem TOCTOU, directory-entry durability, Core-owned atomic authorization/revocation, live MCP integration or PC image upload acceptance.
+
+### DECIDE / NEXT
+1. Inspect exact-head CI #479, including the native Windows upload-engine job; repair any failures.
+2. Add crash consistency and cross-process serialization for chunk data plus ledger acceptance; current file write and SQLite ledger update are separate operations.
+3. Close filesystem path-race and durable promotion gaps with platform-specific tests.
+4. Obtain and verify the real Core-owned upload grant/finalize lease contract; do not use the test FakeCore as runtime authority.
+5. Only then perform real PC image → Sandbox → readback → SHA-256 acceptance and independent review.
+
+**STATUS:** FINALIZING recovery implementation COMMITTED; CI #479 PENDING; Core authorization and other P1 findings OPEN; PR #77 OPEN / DRAFT / UNMERGED; live PC image upload NOT VERIFIED; Execution Gate CLOSED; NOT RELEASED.
