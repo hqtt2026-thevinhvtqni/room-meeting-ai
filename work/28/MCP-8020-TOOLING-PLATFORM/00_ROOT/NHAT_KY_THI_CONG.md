@@ -2865,3 +2865,28 @@ Xu continues source inspection and implementation directly on an isolated branch
 - Work 28 vẫn ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; PR #77 không merge/register/deploy; Execution Gate CLOSED.
 
 [KÝ: XU | DELIVERY OWNER]
+
+
+## 2026-11-24 17:25 +07 — JRN-W28-113 — Mở PR #78 làm nhánh triển khai chính; đóng PR #77 đã bị supersede
+**Owner:** Xu | **Active PR:** https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/78  
+**Active branch:** `xu/w28-f02-tests-20261124` | **HEAD:** `462ab081f358bf9254661ec4f35056b83e1ac097`.
+
+### DECIDE / BUILD
+- PR #78 được mở ở trạng thái DRAFT, base `work/28-mcp-tooling-platform`, chứa implementation tiếp nối từ exact PR #77 candidate và phần F02 startup reconciliation mới.
+- PR #77 được comment ghi rõ superseded bởi PR #78 và đóng ở trạng thái CLOSED / UNMERGED; không merge. Báo cáo nghiệm thu độc lập của An trên #77 vẫn được giữ nguyên làm evidence lịch sử.
+- Không xóa branch, không sửa report của An, không mở Execution Gate.
+
+### VERIFY
+- GitHub xác nhận PR #78 OPEN / DRAFT / UNMERGED; 51 commits, 5 files changed; HEAD đúng SHA nêu trên.
+- GitHub xác nhận PR #77 CLOSED / UNMERGED, không có merge commit.
+- Exact-head workflow lookup cho #78 tại SHA `462ab081f358bf9254661ec4f35056b83e1ac097` chưa trả về workflow run; không tuyên bố CI PASS. Cần tiếp tục tìm nguyên nhân workflow không được kích hoạt hoặc lấy exact run evidence.
+- PR #78 source/test changes có startup reconciliation, quota rebuild, orphan staging blocker, 4 test mới tính cả orphan test; chưa có execution evidence trong môi trường này.
+
+### STATUS
+- F02: PARTIAL implementation, NOT ACCEPTED.
+- F01: BLOCKED; pathname operations vẫn còn.
+- F03: BLOCKED; Core upload capability chưa được wired.
+- F04: BLOCKED; Build MCP raw-byte transport/registration và live canary chưa có.
+- Work 28: ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED.
+
+[KÝ: XU | DELIVERY OWNER]
