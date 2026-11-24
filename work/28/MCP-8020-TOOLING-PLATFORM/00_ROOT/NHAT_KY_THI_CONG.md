@@ -3537,3 +3537,29 @@ However, path containment still relies on pathname checks followed by ordinary p
 **NEXT:** Xu to remediate the source/security findings and prove real Core + Build MCP integration. Ka to re-review the corrected exact head. An to independently reproduce and extend failure-injection QA. Only then run a disposable Sandbox canary and independent byte-for-byte SHA-256 readback.
 
 **KÝ:** KA | Independent Security Reviewer
+
+
+## 2026-11-24 — JRN-W28-102 — Backend feasibility trace (Windows and POSIX)
+
+**READ / TRACE**
+- Searched the repository default-branch code index for reusable implementations covering Windows `CreateFileW` / `FILE_FLAG_OPEN_REPARSE_POINT` / handle-relative operations, POSIX `openat` / `O_NOFOLLOW`, and reparse-point identity checks. No reusable implementation was returned by the repository search.
+- Read the Work 28 branch `requirements.txt` (blob `de769164132bef66adfe9c10ae86f2acb7d9bf42`). It declares PyYAML, python-dotenv, pytest, groq, MCP SDK v1 and jsonschema; it does not declare pywin32 or another Windows filesystem-handle abstraction.
+- Re-traced current upload engine and test suite. Existing tests cover a static symlink escape and ordinary round trips, but not parent replacement between validation/use, Windows reparse-point substitution races, or stable directory-handle identity during promotion/recovery.
+
+**DECIDE**
+- Do not introduce an undeclared third-party Windows dependency or use unreviewed ctypes/NT-native calls as a quick patch. A partial Win32 wrapper would create a false security boundary.
+- A viable implementation must explicitly split platform backends: POSIX directory-FD operations anchored at the Sandbox root with no-follow semantics; Windows handle-based traversal/open/rename/link operations with reparse-point rejection and identity checks. The service must refuse startup or upload on any platform whose backend cannot prove these properties.
+- Keep the current engine quarantined as a source candidate. No change to its filesystem operations is justified by the available evidence in this checkpoint.
+
+**VERIFY**
+- Repository code search returned no reusable backend for the queried APIs.
+- Dependency manifest contains no Windows filesystem helper dependency.
+- No code patch, native race test, or live Sandbox operation was performed in this checkpoint. This is a feasibility/source trace, not a security PASS.
+
+**STATUS / NEXT**
+- Secure POSIX backend: NOT IMPLEMENTED / NOT TESTED.
+- Secure Windows backend: NOT IMPLEMENTED / NOT TESTED.
+- Parent-swap and reparse-point adversarial tests: NOT IMPLEMENTED.
+- Core upload grant, Build MCP binary transport, live PC-to-Sandbox readback: BLOCKED as recorded in JRN-W28-101.
+- Execution Gate: CLOSED. Release: NOT_RELEASED.
+- Next action: implement and test platform-specific handle-anchored backends as a coherent change, with Windows native tests as a mandatory gate; do not weaken the gate to retain the existing Windows round-trip tests.
