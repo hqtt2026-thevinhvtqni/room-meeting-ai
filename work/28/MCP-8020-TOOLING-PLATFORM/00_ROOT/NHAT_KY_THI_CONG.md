@@ -3138,3 +3138,10 @@ This proves the configured component/regression/lifecycle/artifact jobs on the t
 5. Only after those gates, wire approved transport/registry and perform disposable PC image → Sandbox persistence → authorized readback → SHA-256 equality.
 
 **STATUS:** exact-head configured CI 6/6 PASS; security acceptance BLOCKED; Core grant/lease NOT VERIFIED; filesystem TOCTOU OPEN; durable namespace promotion NOT VERIFIED; crash reconciliation OPEN; independent Ka/An gates NOT RECORDED; live PC image upload NOT VERIFIED; Execution Gate CLOSED; Work 28 NOT RELEASED.
+
+
+## 2026-11-24 — JRN-W28-086 — Correction to JRN-W28-085 branch-head reference
+
+**Correction:** JRN-W28-085 line “PR head after journal sync” used the pre-sync head `89d7138c8c6363dc4767f733a1fd48321c705c33`. The GitHub journal append itself created commit `70679fc8c64f2fc0fb51f62ddd9451b16453e3a4`, which is the actual PR branch HEAD after that write. The tested code SHA remains `35e162753413bf21e81b92fe9755bd082f11e04a`; the journal commits are documentation-only and do not change the tested source files. Sandbox read probe returned `status=ok` and confirmed JRN-W28-085 and this correction are present in the canonical journal copy.
+
+**STATUS:** documentation reference corrected; no code/test status changed; PR #77 remains OPEN / DRAFT / UNMERGED; Execution Gate CLOSED.
