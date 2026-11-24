@@ -3178,3 +3178,49 @@ This proves the configured component/regression/lifecycle/artifact jobs on the t
 5. Ka independent security review and An independent QA remain required and not recorded.
 
 **STATUS:** finalize/abort now share host-local per-upload lock with chunk operations; exact-head CI #492 IN_PROGRESS; filesystem TOCTOU OPEN; durable promotion NOT VERIFIED; crash reconciliation OPEN; Core grant/lease NOT VERIFIED; independent reviews NOT RECORDED; live PC image upload NOT VERIFIED; PR #77 OPEN / DRAFT / UNMERGED; Execution Gate CLOSED; NOT RELEASED.
+
+
+
+## 2026-11-24 — JRN-W28-088 — Exact-head CI #492 PASS; TOCTOU and Core dependency re-trace
+
+**Owner:** Xu  
+**PR:** [#77](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/77)  
+**Exact tested source SHA:** `e7e1bed4bea28f886e8f69f499b0b83592e25c63`  
+**Workflow:** [#492 / 45318018616](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45318018616)
+
+### VERIFY — EXACT-HEAD CONFIGURED CI PASS
+All six jobs completed SUCCESS:
+1. `execution-host-lifecycle-linux` — SUCCESS;
+2. `unit-regression-tests` — SUCCESS, including full Work 28 pytest suite on the exact triggering SHA;
+3. `Binary upload engine tests (native Windows)` — SUCCESS;
+4. `execution-host-lifecycle-windows` — SUCCESS;
+5. `Build and retest exact-SHA Work 28 source artifact` — SUCCESS, including immutable archive/checksum and extracted artifact verification;
+6. `automatic-e2e-gate-report` — SUCCESS as report generation.
+
+This is configured CI evidence for the exact source SHA above. It does not prove live Core authorization, deployed transport, Sandbox persistence, PC image transfer or authorized byte-for-byte readback.
+
+### READ / TRACE — FILESYSTEM CONTAINMENT
+Re-read the current PR-branch upload engine, including `work_root()`, `no_symlinks()`, `begin()`, `chunk()`, `finalize()` and `recover_finalizing()`.
+
+- `no_symlinks()` walks path strings and calls `Path.is_symlink()`; later code performs separate path-based `mkdir/open/os.link/unlink` operations.
+- `work_root()` resolves the Work directory and later callers continue using reconstructed path strings.
+- Chunk write opens the staging pathname with `open(path, "r+b")`; finalize and recovery open/link/unlink final and staging pathnames after earlier checks.
+- Therefore a concurrent directory/reparse-point replacement can occur between validation and use. Rechecking immediately before an operation still leaves a check/use window. Current tests cover a static symlink escape, not an adversarial concurrent directory-swap race.
+- A portable, proven descriptor-relative POSIX implementation plus a separately proven native Windows reparse-point-safe implementation has not yet been delivered. Do not represent the existing path checks as race-safe.
+
+### READ / TRACE — CORE AUTHORITY AND REVIEW
+- Repository-scoped search for `CoreUploadAuthorizer` and `sandbox.file.upload` returned no matching Core implementation in the indexed default-branch source. Work 70 DOC-071 continues to record Core owner NOT IDENTIFIED, Work-scoped authorization NOT VERIFIED, Work Evidence upload/read/version NOT FOUND IN INSPECTED SCOPE, and authoritative Work persistence NOT VERIFIED.
+- No real Core upload grant endpoint/schema or atomic finalize/revocation lease has been identified. The injected FakeCore remains component-test-only; no endpoint or production authority is fabricated.
+- PR #77 is still OPEN / DRAFT / UNMERGED. Formal GitHub PR review list is empty; Ka independent security approval and An independent QA sign-off are not recorded.
+
+### DECIDE
+**Disposition remains NEEDS CHANGES — DO NOT MERGE / DO NOT REGISTER / DO NOT DEPLOY.** CI #492 is PASS, but security acceptance remains BLOCKED.
+
+### NEXT
+1. Continue design and tests for descriptor-relative, no-follow filesystem operations on supported POSIX platforms and a native Windows reparse-point-safe strategy. If the Windows guarantee cannot be established, fail closed rather than claim parity.
+2. Add adversarial concurrent directory-swap tests; add crash reconciliation for staging bytes/chunk ledger/quota and platform-specific directory-entry durability tests.
+3. Obtain the accountable Core owner and actual Core-owned grant/finalize lease contract with atomic revocation semantics; keep production authority blocked until then.
+4. Obtain attributable Ka security review and An independent QA evidence on the corrected exact head.
+5. Only after all gates pass, wire approved raw-byte transport and perform PC image → Sandbox persistence → authorized readback → SHA-256 equality.
+
+**STATUS:** exact-head configured CI #492 6/6 PASS; filesystem TOCTOU OPEN; durable namespace promotion NOT VERIFIED; crash reconciliation OPEN; Core grant/lease NOT VERIFIED; independent Ka/An reviews NOT RECORDED; live PC image upload NOT VERIFIED; PR #77 OPEN / DRAFT / UNMERGED; Execution Gate CLOSED; Work 28 NOT RELEASED.
