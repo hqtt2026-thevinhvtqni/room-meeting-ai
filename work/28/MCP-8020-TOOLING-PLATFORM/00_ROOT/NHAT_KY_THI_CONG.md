@@ -2838,3 +2838,24 @@ Review 6015443161 records the detailed findings; review 6015449638 corrects curr
 ### NEXT
 - Resolve exact-head CI failures; extend race/crash/recovery tests; revise the Core grant adapter/transport contract against actual Core source ownership; obtain Ka/An review; then wire registry/runtime and perform disposable Work Sandbox canary plus independent byte-for-byte SHA-256 readback.
 - Keep upload tool unregistered and production side effects disabled until the above gates pass. W28 remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED.
+
+
+## 2026-11-24 — JRN-W28-074 — Exact-head component CI passes; live upload gate remains closed
+
+**PR:** [#77](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/77)  
+**Exact tested source SHA:** `82d89bd0030b787cd47be759ca4e903e1fcbc8c4`  
+**Workflow run:** [45307588556 — Work 28 Automatic E2E Gate](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45307588556)
+
+### PASS — exact SHA component / regression CI
+- `unit-regression-tests`: SUCCESS; unittest **364 tests OK**; pytest **373 passed, 238 subtests passed**. The logs include the added idempotent chunk retry, idempotent finalize/readback and idempotency-key conflict tests.
+- `execution-host-lifecycle-linux`: SUCCESS.
+- `execution-host-lifecycle-windows`: SUCCESS.
+- Immutable source artifact build and extracted-source retest: still IN_PROGRESS at the time of this entry; no artifact PASS claimed yet.
+- The CI run is for exact SHA `82d89bd...`; subsequent documentation-only changes do not change the tested code blobs. If code changes, a new exact-SHA run is required.
+
+### LIMITS
+- These results prove repository component tests and the existing Work 28 regression/lifecycle lanes only. They do not prove the new engine is connected to the deployed Core, exposed as an MCP tool, backed by an approved Core upload grant, reachable through a raw-byte transport, or usable against a live Sandbox.
+- No live image upload or Sandbox byte-for-byte readback has occurred. No Ka approval or independent An sign-off is recorded yet.
+- The engine remains a review candidate. Do not merge, register or deploy it as a usable upload tool until Core-side grant/revocation linearization, multi-process chunk/session recovery, audit failure handling, transport, provider wiring and independent reviews are resolved.
+
+**STATUS:** component CI PRELIMINARY PASS; artifact job PENDING; PR #77 OPEN / DRAFT / UNMERGED; WP3-F01 LIVE ACCEPTANCE BLOCKED; Execution Gate CLOSED; Work 28 NOT RELEASED.
