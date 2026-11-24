@@ -3311,3 +3311,46 @@ Re-read the upload engine methods `work_root()`, `no_symlinks()`, `begin()`, `ch
 4. Keep Core grant/finalize lease, live transport, PC upload/readback, merge and release gates CLOSED.
 
 **STATUS:** concrete pathname TOCTOU windows confirmed by source inspection; no race exploit execution claimed; secure backend NOT IMPLEMENTED; CI exact-head NOT VERIFIED (run #496 CANCELLED); Ka/An reviews NOT RECORDED; Core authority NOT VERIFIED; live PC upload/readback NOT VERIFIED; PR #77 OPEN / DRAFT / UNMERGED; Execution Gate CLOSED; NOT RELEASED.
+
+
+
+## 2026-11-24 — JRN-W28-097 — Exact-head CI #499 PASS; binary upload integration remains blocked
+
+**Owner:** Xu  
+**PR:** [#77 — Work 28 binary Sandbox upload engine](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/77)  
+**Branch:** `xu/work28-wp3-binary-upload-20261124`  
+**PR head SHA:** `16273e522940b1950c6fc8ebe69628098eebcda6`  
+**Code blob SHA:** `e9f24f2516581ff7b4dd558cac92c0d73419541f`  
+**Workflow:** [#499 / 45329453214](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45329453214)
+
+### READ / VERIFY — exact current state
+- PR metadata: OPEN, DRAFT, UNMERGED; base `work/28-mcp-tooling-platform`; 4 changed files; mergeable reported true.
+- Formal PR reviews: 0. Inline review threads: 0. No attributable Ka security approval or An independent QA sign-off is present.
+- Workflow #499 exact trigger SHA is the current PR head `16273e522940b1950c6fc8ebe69628098eebcda6`; all six jobs are SUCCESS:
+  1. unit-regression-tests;
+  2. execution-host-lifecycle-linux;
+  3. execution-host-lifecycle-windows;
+  4. Binary upload engine tests (native Windows);
+  5. immutable exact-SHA source artifact build/retest;
+  6. automatic-e2e-gate-report.
+- Native Windows upload component test step itself completed SUCCESS. This establishes configured component test execution on Windows, not race-safe filesystem containment or deployed Windows upload support.
+- Current engine source was re-read from the PR branch. It still uses pathname-based `Path.is_symlink()`, `open(path)`, `mkdir()`, `os.link()`, and `unlink()`; no descriptor-relative `dir_fd` backend or Windows handle/reparse-point backend exists. Concurrent parent-directory replacement remains a TOCTOU risk.
+- Chunk data is fsynced before the SQLite chunk acceptance transaction. A per-upload OS lock serializes cooperating service processes, but a crash between file write and ledger commit still requires reconciliation of staging bytes against durable chunk rows. No startup reconciliation routine was found.
+- Finalize/recovery handles tested FINALIZING restart cases, but promotion/cleanup does not fsync the affected parent directories. Power-loss durability is not established.
+- The component still depends on an injected `CoreUploadAuthorizer`; no production Core upload-grant endpoint/adapter, atomic finalize/revocation lease, MCP raw-byte transport, tool registration, or live Sandbox upload/readback is present.
+- The existing 8030 Sandbox tools exposed in this session remain text-only; they do not accept raw binary upload.
+
+### DISPOSITION
+- **PASS:** exact-head configured CI #499, 6/6 jobs, including native Windows component tests and immutable artifact retest.
+- **OPEN / BLOCKING:** filesystem TOCTOU hardening; chunk-ledger crash reconciliation; directory durability; production Core upload authority and atomic finalize semantics; raw-byte transport/registry wiring; live Sandbox byte-for-byte readback.
+- **NOT RECORDED:** Ka independent security review and An independent QA sign-off.
+- PR #77 remains OPEN / DRAFT / UNMERGED. Execution Gate remains CLOSED. Work 28 remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED. No PC image upload capability is being advertised yet.
+
+### NEXT — concrete integration sequence
+1. Replace pathname-based filesystem operations with a pinned-directory-handle backend; fail closed on platforms where safe semantics cannot be demonstrated. Add adversarial parent-swap tests.
+2. Add restart reconciliation for staging file length/content vs committed chunk rows, orphan staging, quota and FINALIZING state; add directory durability tests.
+3. Implement the Core-owned upload capability and atomic finalize/revocation boundary on the existing Core authority surface; keep upload grant separate from command execution grant.
+4. Expose a bounded raw-byte transport and register the tool in Build MCP :8030 only after the authority and filesystem gates pass.
+5. Run disposable Work canary from PC: upload original bytes → Sandbox readback → independent SHA-256 equality → W119 handoff.
+
+[KÝ: XU | COORDINATOR]
