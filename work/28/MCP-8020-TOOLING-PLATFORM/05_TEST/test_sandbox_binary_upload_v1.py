@@ -1,5 +1,6 @@
 """Component tests for the Work 28 binary upload engine; Fake Core is not live evidence."""
-import hashlib, tempfile, unittest, zipfile
+import hashlib, tempfile, unittest, zipfile, threading
+from concurrent.futures import ThreadPoolExecutor
 from io import BytesIO
 from pathlib import Path
 from sandbox_binary_upload_v1 import UploadError, UploadGrant, SQLiteUploadLedger, SandboxBinaryUploadService
@@ -95,6 +96,23 @@ class BinaryUploadTests(unittest.TestCase):
         first=self.service.chunk(trusted_context=self.ctx,upload_id=r["upload_id"],index=0,offset=0,data=data)
         second=self.service.chunk(trusted_context=self.ctx,upload_id=r["upload_id"],index=0,offset=0,data=data)
         self.assertEqual(first["status"],"ACCEPTED"); self.assertEqual(second["status"],"ALREADY_ACCEPTED")
+    def test_two_service_instances_serialize_conflicting_chunk_writes(self):
+        expected=b"good"
+        r=self.service.begin(trusted_context=self.ctx,canonical_work_id="W119",sandbox_work_id="119",destination="images/photo.png",
+          expected_bytes=4,expected_sha256=hashlib.sha256(expected).hexdigest(),chunk_size=4,idempotency_key="idempotency-key-0016")
+        other=SandboxBinaryUploadService(sandbox_root=self.root,ledger=self.ledger,authorizer=self.core,audience="build-sandbox-test")
+        barrier=threading.Barrier(2)
+        def send(service,payload):
+            barrier.wait()
+            try: return service.chunk(trusted_context=self.ctx,upload_id=r["upload_id"],index=0,offset=0,data=payload)["status"]
+            except UploadError as e: return e.code
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            outcomes=list(pool.map(lambda args:send(*args),[(self.service,b"good"),(other,b"evil")]))
+        self.assertCountEqual(outcomes,["ACCEPTED","REPLAY_MISMATCH"])
+        row=self.ledger.get(r["upload_id"]); staging=Path(row["staging_path"])
+        accepted=self.ledger.get_chunk(r["upload_id"],0)
+        self.assertEqual(accepted[2],hashlib.sha256(staging.read_bytes()).hexdigest())
+        self.assertEqual(staging.read_bytes(),expected)
     def test_finalize_retry_is_idempotent_and_readback_checked(self):
         data=b"finalize-retry"
         r=self.service.begin(trusted_context=self.ctx,canonical_work_id="W119",sandbox_work_id="119",destination="images/photo.png",
