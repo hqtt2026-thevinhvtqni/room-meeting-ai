@@ -383,6 +383,10 @@ class SandboxBinaryUploadService:
         if not row: raise UploadError("NOT_FOUND","upload session not found")
         g=self.grant(trusted_context,"abort",upload_id,row["destination"],row["expected_bytes"]); self.match(g,row)
         if row["state"]=="ABORTED": return {"upload_id":upload_id,"status":"ABORTED","cleanup_verified":True}
+        # Only UPLOADING sessions may be aborted. FINALIZING owns recovery
+        # state; deleting its staging file would make crash recovery impossible.
+        if row["state"]!="UPLOADING":
+            raise UploadError("INVALID_STATE","only an UPLOADING session can be aborted")
         try: Path(row["staging_path"]).unlink(missing_ok=True)
         except OSError as e: raise UploadError("CLEANUP_BLOCKED","staging cleanup not verified") from e
         self.ledger.transition(upload_id,"UPLOADING","ABORTED","PASS")
