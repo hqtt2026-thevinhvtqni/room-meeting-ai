@@ -302,16 +302,32 @@ class SandboxBinaryUploadService:
             self.ledger.record_recovery(row,outcome,row.get("received_bytes",0))
             results.append({"upload_id":row["upload_id"],"state":row["state"],"status":outcome,"detail":detail})
         known_staging={str(Path(r["staging_path"])) for r in self.ledger.sessions()}
-        for work_id in sorted({r["sandbox_work_id"] for r in self.ledger.sessions()}):
-            staging_dir=self.root/work_id/".upload-staging"
-            if staging_dir.exists():
+        # Enumerate every direct Sandbox Work root, not only Work IDs that
+        # already have ledger rows. A crash between staging-file creation and
+        # the SQLite BEGIN transaction otherwise leaves an invisible orphan.
+        try:
+            work_roots=list(self.root.iterdir())
+        except OSError as exc:
+            raise UploadError("RECOVERY_ROOT_SCAN_BLOCKED","could not enumerate Sandbox root") from exc
+        for work_root in sorted(work_roots,key=lambda p:p.name):
+            if work_root.is_symlink():
+                results.append({"upload_id":None,"state":"ORPHAN_STAGING","status":"BLOCKED",
+                                "detail":"SANDBOX_WORK_ROOT_IS_SYMLINK","path":str(work_root)})
+                continue
+            if not work_root.is_dir() or not _WORK.fullmatch(work_root.name):
+                continue
+            staging_dir=work_root/".upload-staging"
+            if staging_dir.exists() or staging_dir.is_symlink():
                 if staging_dir.is_symlink():
                     results.append({"upload_id":None,"state":"ORPHAN_STAGING","status":"BLOCKED",
                                     "detail":"STAGING_DIRECTORY_IS_SYMLINK","path":str(staging_dir)})
                 else:
                     try:
                         for item in staging_dir.iterdir():
-                            if item.name.endswith(".part") and str(item) not in known_staging:
+                            if item.is_symlink():
+                                results.append({"upload_id":None,"state":"ORPHAN_STAGING","status":"BLOCKED",
+                                                "detail":"STAGING_ENTRY_IS_SYMLINK","path":str(item)})
+                            elif item.name.endswith(".part") and str(item) not in known_staging:
                                 results.append({"upload_id":None,"state":"ORPHAN_STAGING","status":"BLOCKED",
                                                 "detail":"UNTRACKED_STAGING_REQUIRES_QUARANTINE","path":str(item)})
                     except OSError:
