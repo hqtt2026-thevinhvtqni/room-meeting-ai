@@ -3469,3 +3469,33 @@ However, path containment still relies on pathname checks followed by ordinary p
 **STATUS:** CI PASS 6/6; filesystem containment BLOCKED; Core upload authority NOT INTEGRATED; Build MCP raw-byte transport NOT AVAILABLE; live canary NOT RUN; independent reviews NOT RECORDED; PR #77 OPEN / DRAFT / UNMERGED; Execution Gate CLOSED; NOT RELEASED.
 
 [KÝ: XU | COORDINATOR]
+
+
+## 2026-11-24 — JRN-W28-101 — Filesystem containment adversarial review and deployment disposition
+
+**READ / TRACE**
+- Re-read the PR #77 upload engine at source blob `e9f24f2516581ff7b4dd558cac92c0d73419541f` and native Windows CI workflow at blob `e71c0c2e33c9908cf005d446a5990c824e8722da`.
+- Confirmed containment currently depends on pathname-based `Path.resolve()`, `Path.is_symlink()`, `mkdir()`, `open()`, `os.link()`, and `unlink()`. The check at `no_symlinks()` is separate in time from later file operations in begin/chunk/finalize/recovery/abort.
+- Confirmed there is no directory-handle-relative operation chain or stable parent-directory identity verification. On Windows, the implementation also has no explicit reparse-point / handle identity validation.
+- Confirmed the native Windows job runs the component suite, but the suite does not include adversarial parent-directory replacement/reparse-point race tests. Green Windows CI therefore does not close this finding.
+- PR #77 remains OPEN / DRAFT / UNMERGED; review submissions and inline review threads are both empty at this inspection.
+
+**DECIDE**
+- Filesystem containment is a release-blocking security condition. Do not register, expose, deploy, or advertise this engine as an available Sandbox upload tool.
+- Do not attempt a narrow pathname-check patch: it would not remove the check/use race.
+- Required implementation direction: introduce a platform-specific filesystem backend that anchors operations to verified directory handles and uses no-follow / reparse-point-safe semantics, or fail closed on a platform where those semantics cannot be established. Validate parent identity across every write, promotion, readback, recovery and cleanup operation.
+- Required adversarial tests: swap a parent directory between validation and use; substitute symlink/reparse-point components; race destination creation; replace staging/parent handles during chunk and finalize; restart recovery with swapped directory identities. Run on native Windows and Linux.
+- Crash consistency remains a separate acceptance item: reconcile ledger state, staging/final files and quota after process restart; prove durable promotion and audit ordering with platform-appropriate directory flush semantics.
+
+**VERIFY**
+- This entry records a source-level security review only. No new code patch or adversarial exploit test was executed in this checkpoint.
+- Existing CI #502 evidence remains component/source CI only; it does not prove handle-safe containment, live Build MCP raw-byte transport, Core upload authorization, Sandbox readback, or PC-to-Sandbox transfer.
+- No Ka/An independent review evidence was present in PR #77 at inspection.
+
+**STATUS / NEXT**
+- Filesystem containment: BLOCKED.
+- Core-owned `sandbox.file.upload` grant route/client adapter and atomic revocation/finalize semantics: BLOCKED.
+- Build MCP raw-byte upload and binary readback transport: BLOCKED.
+- Live PC → Sandbox → SHA-256 equality canary and W119 consumption: NOT RUN.
+- Execution Gate: CLOSED. Release: NOT_RELEASED.
+- Next owner: Xu to continue only with a platform-safe containment backend and its adversarial native tests; then integrate Core authority and Build MCP transport. Ka/An review follows actual implementation evidence, not a design-only summary.
