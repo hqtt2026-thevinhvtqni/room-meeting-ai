@@ -3951,3 +3951,42 @@ Fresh compare reports PR branch DIVERGED, 60 ahead / 5 behind. The five canonica
 **STATUS:** PR #78 OPEN / DRAFT / UNMERGED; F03 BLOCKED; F01 BLOCKED; F02 PARTIAL / NOT VERIFIED; F04 BLOCKED; Ka review NOT ACCEPTED; An acceptance NOT ACCEPTED; Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
 
 **Signed:** Ka — CSA / Independent Security Reviewer
+
+
+## 2026-11-25 — JRN-W28-125 — Additional F01 path-substitution and staging-directory race audit
+
+**Document ID:** W28-KA-AUD-125  
+**Priority:** P0 — filesystem boundary / arbitrary-write risk  
+**Owner:** Ka — CSA / Independent Security Reviewer  
+**Date-Time:** 2026-11-25 (Asia/Ho_Chi_Minh)  
+**Target:** PR #78 branch `xu/w28-f02-tests-20261124`  
+**Reviewed HEAD before journal append:** `dc306cfeb350c2a46445e25e99bfa78f183839fc`  
+**Review type:** Static exact-source and test inspection only
+
+### EXACT SOURCES READ
+- `work/28/MCP-8020-TOOLING-PLATFORM/04_CODE/sandbox_binary_upload_v1.py` blob `f13bd1ae09ba79ab2f19f538d752e863fffcb19c` (530 lines).
+- `work/28/MCP-8020-TOOLING-PLATFORM/05_TEST/test_sandbox_binary_upload_v1.py` blob `0963baa3fd4c724973a08be331c4a9c8ddc4784b` (252 lines).
+
+### ADDITIONAL FINDINGS
+1. **Staging directory is not revalidated at the mutation boundary.** `begin()` calls `staging_dir.mkdir(..., exist_ok=True)` and then `os.open(staging, O_CREAT|O_EXCL|O_WRONLY, ...)`. The explicit `no_symlinks(root, final)` check is for the final destination; there is no equivalent descriptor-anchored validation/open of `.upload-staging` and its entry. Startup reconciliation checks whether the staging directory is a symlink, but that is a point-in-time scan and does not prevent replacement after the scan or between later pathname operations.
+2. **Pathname checks are separated from pathname use.** `no_symlinks()` performs `Path.is_symlink()` component checks, while subsequent `open()`, `mkdir()`, `os.link()`, `stat()`/exists checks and `unlink()` resolve the path again. An attacker able to mutate a parent directory can substitute a component between check and use. The current per-upload lock coordinates cooperating service processes; it does not prevent an untrusted filesystem actor from replacing directory entries.
+3. **Recovery consumes ledger-supplied absolute paths.** Startup obtains `staging_path` and `final_path` from SQLite, then applies path-based checks and opens them. A corrupted or tampered ledger path outside the expected Work root is not robustly rejected through a descriptor-relative containment check before filesystem access. `Path.relative_to()` may also raise `ValueError` for a non-descendant path; the recovery handler catches `UploadError` and `OSError`, not this exception, so malformed persisted paths can escape the intended per-session fail-closed result handling.
+4. **Static symlink test is not a race test.** The existing `test_symlink_escape_denied` creates a stable symlink in a destination component before begin. It does not exercise staging-directory replacement, Work-root aliasing, parent swap between validation and open, reparse-point substitution on Windows, or attacker-controlled concurrent mutation during recovery/finalize.
+5. **Startup scan remains point-in-time.** The scan for Work roots and `.upload-staging` entries is useful detection and should be retained, but it is not a substitute for secure handle-relative operations at every mutation/read boundary. A successful startup scan cannot authorize future path resolution.
+
+### REQUIRED REMEDIATION / RETEST
+- Anchor Sandbox root and Work root as trusted directory handles; verify the requested Work identity against the canonical mapping, not merely a resolved child path.
+- Perform all descendant traversal and mutation relative to held directory handles/descriptors. On POSIX, use directory FDs with `O_DIRECTORY` / `O_NOFOLLOW` and descriptor-relative open/mkdir/link/unlink/stat operations. On Windows, use native handle-based opens and explicitly reject reparse points at each component; do not assume `Path.is_symlink()` covers all reparse-point types.
+- Validate the persisted staging/final relative paths against the session's canonical Work and destination policy before opening anything. Do not trust absolute paths stored in SQLite as authority.
+- Add adversarial tests for staging-directory swap after startup scan, parent swap between check/use, Work-ID symlink alias to another Work, malformed/out-of-root ledger paths, symlink/reparse-point staging entry, and concurrent mutation during chunk/finalize/recovery. Assert no outside file is created, read, truncated, linked, or removed.
+- Preserve ambiguous bytes and fail closed; do not attempt cleanup outside a verified held directory handle.
+
+### DISPOSITION
+- **F01 remains BLOCKED / P0.** The additional staging and recovery findings reinforce that pathname-based checks cannot establish a secure filesystem boundary. The required remedy is handle/descriptor-anchored traversal and mutation plus adversarial race evidence, not more preflight pathname checks.
+- **F02 remains PARTIAL / NOT VERIFIED.** Recovery must also reject malformed persisted paths safely and prove crash/directory durability behavior.
+- F03 and F04 remain BLOCKED as recorded in JRN-W28-124 and JRN-W28-121.
+- No source changes, tests, CI dispatch, runtime operations, merge/rebase/cherry-pick, or upload enablement were performed. This is static review only.
+
+**STATUS:** PR #78 remains OPEN / DRAFT / UNMERGED; Ka review NOT ACCEPTED; An acceptance NOT ACCEPTED; Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+**Signed:** Ka — CSA / Independent Security Reviewer
