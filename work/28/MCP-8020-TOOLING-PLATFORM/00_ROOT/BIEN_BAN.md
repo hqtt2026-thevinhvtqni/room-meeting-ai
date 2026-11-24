@@ -28,3 +28,17 @@ This is the single official minutes register for Work 28. Record decisions and i
 ## Minutes maintenance rule
 
 Append new numbered entries. Do not rewrite historical entries to make later outcomes appear earlier. Correct errors with a dated addendum that preserves the original record.
+
+
+## BB-W28-20261124-002 — Khẩn cấp hoàn thiện Binary Upload phục vụ Work 119
+
+- **Date:** 2026-11-24
+- **Authority:** Vinh — trực tiếp chỉ đạo Xu hoàn thiện gấp công cụ upload file/ảnh nhị phân vào Work Sandbox vì Work 119 đang chờ sử dụng.
+- **Priority:** P0 / URGENT — W28-WP3-F01 `sandbox_upload_file`.
+- **Scope:** Một năng lực upload dùng chung cho ROOM-HOP; không tạo uploader riêng cho W119 hoặc từng Work.
+- **Team:** Xu điều phối/tích hợp; Vi triển khai; Ka phản biện độc lập bảo mật; An kiểm thử độc lập. Giữ nguyên giới hạn bốn AI, không thêm Co.
+- **Technical constraints retained:** Core :8000 là thẩm quyền duy nhất cấp/kiểm tra/revoke capability; caller identity và Work mapping phải lấy từ trusted server-side context/Core; không nhận identity/Work authority từ tool arguments; upload theo begin/chunk/finalize/abort; bounded streaming; path/symlink containment; quota/session persistence; no-overwrite mặc định; staging và atomic no-replace promotion; SHA-256 toàn file + readback; durable audit; fail-closed khi Core/store/audit/readback/cleanup không xác minh được.
+- **Existing security gate:** Q4 design revision ngày 2026-11-22 vẫn ở trạng thái PROPOSED / NOT APPROVED sau khi Ka từ chối bản trước ngày 2026-11-15. Chỉ đạo khẩn cấp của Vinh cho phép Xu ưu tiên và điều phối hoàn thiện; không được hiểu là miễn review bảo mật, tự tạo Core endpoint, bỏ trusted caller binding hoặc mở quyền upload khi grant chưa được Core xác nhận.
+- **Execution order:** Ka rà soát độc lập chính xác Q4 revision 2026-11-22 và chốt từng điều kiện còn thiếu; đồng thời Xu/Vi chỉ thực hiện source trace, contract/test scaffolding không tạo staging hoặc nhận bytes trước khi grant contract và Core route được phê duyệt. Sau phê duyệt, Vi triển khai tích hợp; An kiểm thử độc lập; Xu đối soát CI, readback và handoff W119.
+- **Acceptance boundary:** Chỉ tuyên bố W119 dùng được sau khi tool được đăng ký trên runtime MCP mới/đúng build, Core authorization thực, upload byte-for-byte, readback SHA-256 khớp và evidence được ghi. Sandbox 8030 hiện có chỉ có text read/write tools; chưa có bằng chứng live binary upload. Không dùng historical runtime :8020.
+- **Release:** Không merge/deploy, không mở Execution Gate, không đổi trạng thái Work 28 sang RELEASED bởi quyết định ưu tiên này.
