@@ -79,9 +79,14 @@ class SQLiteUploadLedger:
               work_id TEXT, principal_ref TEXT, destination TEXT, byte_count INTEGER,
               sha256 TEXT, outcome TEXT NOT NULL, at REAL NOT NULL);
             """)
+    @contextmanager
     def db(self):
         c=sqlite3.connect(self.path,timeout=15,isolation_level=None)
-        c.row_factory=sqlite3.Row; c.execute("PRAGMA foreign_keys=ON"); return c
+        c.row_factory=sqlite3.Row; c.execute("PRAGMA foreign_keys=ON")
+        try:
+            yield c
+        finally:
+            c.close()
     def by_key(self, principal: str, work: str, key: str):
         with self.db() as c:
             r=c.execute("SELECT * FROM sessions WHERE principal_id=? AND canonical_work_id=? AND idempotency_key=?",(principal,work,key)).fetchone()
