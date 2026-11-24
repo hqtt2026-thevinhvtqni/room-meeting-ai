@@ -3001,3 +3001,32 @@ Xu to remediate the blocking findings on the isolated PR branch; Ka to independe
 5. Only then perform real PC image → Sandbox → readback → SHA-256 acceptance and independent review.
 
 **STATUS:** FINALIZING recovery implementation COMMITTED; CI #479 PENDING; Core authorization and other P1 findings OPEN; PR #77 OPEN / DRAFT / UNMERGED; live PC image upload NOT VERIFIED; Execution Gate CLOSED; NOT RELEASED.
+
+
+## JRN-W28-081 — Cross-process chunk serialization
+**Time:** 2026-11-24 (UTC)  
+**Scope:** Close the known race where multiple service instances could write the same upload cursor concurrently.
+
+### READ / TRACE
+- Re-read the exact binary upload engine and its component tests after JRN-W28-080.
+- Confirmed the previous `self.lock` protected only threads using one service object. Separate service processes/instances could concurrently observe the same ledger cursor, write different bytes at the same offset, and race to accept the chunk ledger row.
+- The existing order (write+fsync, then SQLite accept transaction) is intentionally retained: a crash before ledger acceptance leaves the cursor unchanged, so a retry can rewrite that exact range. Cross-process serialization is required to make that retry safe.
+
+### BUILD
+- Added a per-upload OS-level lock file next to the staging file. POSIX uses `flock`; Windows uses `msvcrt.locking`.
+- Chunk handling now re-reads session state and obtains a fresh Core authorization while holding the lock, then validates cursor/replay, writes and fsyncs bytes, and commits the SQLite chunk ledger.
+- Added a two-service-instance concurrent conflicting-write test; exactly one payload should be accepted and the other rejected as a replay mismatch, with staging bytes matching the accepted ledger digest.
+- Engine commit: `457d8599980bc5ae73c1ec06db5bbe2df02def72`; test commit: `91eecafeaf40cc1283218776530883f891dbe964`.
+
+### VERIFY
+- GitHub readback confirmed engine blob `7b488810f5bcb191a90875c2a7882dff6a66f203` and test blob `d9dba2a51d336e6b21abca929cdfe9af4d1cdaff`.
+- PR #77 head points to `91eecafeaf40cc1283218776530883f891dbe964`. Commit status is PENDING with no checks reported yet; run #479 for the earlier head `dbb601e0e3bd9998636df8e53489e2f243323ea5` was CANCELLED when the PR advanced. No PASS is claimed for the new changes.
+- The OS lock is host-local coordination; it does not provide distributed locking across different machines sharing a network filesystem. Production must keep the staging/ledger service on one host or use a supported distributed lock/storage contract.
+
+### DECIDE / NEXT
+1. Obtain an exact-head CI run for `91eecafeaf40cc1283218776530883f891dbe964`; verify Linux and native Windows jobs, especially the concurrency test.
+2. Continue platform-safe filesystem containment and durable directory-entry promotion; the current path check remains vulnerable to a concurrent directory swap.
+3. Verify Core's real grant/revocation/finalization contract and atomically bind authorization to final promotion; current pre-operation checks are not an atomic revocation lease.
+4. Build and verify the live transport/MCP tool and perform PC image upload → Sandbox readback → SHA-256 equality only after the security blockers are closed.
+
+**STATUS:** Per-upload cross-process lock and concurrency regression test COMMITTED; exact-head CI PENDING / not yet reported; path TOCTOU, durable promotion, Core atomic authorization, live transport and PC upload remain OPEN; PR #77 OPEN / DRAFT / UNMERGED; Execution Gate CLOSED; NOT RELEASED.
