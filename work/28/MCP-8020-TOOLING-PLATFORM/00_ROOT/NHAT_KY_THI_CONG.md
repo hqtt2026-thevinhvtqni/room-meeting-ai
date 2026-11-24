@@ -3099,3 +3099,42 @@ Xu to remediate the blocking findings on the isolated PR branch; Ka to independe
 3. Do not merge/register/deploy or claim PC upload readiness until live integration and byte-identical Sandbox readback are proven.
 
 **STATUS:** Native Windows binary upload component suite PASS; Linux unit-regression PASS; Linux/Windows lifecycle PASS; exact-SHA artifact build and overall gate PENDING; live upload/Core integration NOT VERIFIED; PR #77 OPEN / DRAFT / UNMERGED; Execution Gate CLOSED; NOT RELEASED.
+
+
+## 2026-11-24 — JRN-W28-085 — Exact-head CI #487 completed; security dependency trace reconfirmed
+
+**Owner:** Xu  
+**PR:** [#77](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/77)  
+**Tested source SHA:** `35e162753413bf21e81b92fe9755bd082f11e04a`  
+**Workflow run:** [#487 / 45317086729](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45317086729)  
+**PR head after journal sync:** `89d7138c8c6363dc4767f733a1fd48321c705c33`
+
+### VERIFY — CONFIGURED CI PASS
+The exact-head workflow completed all six jobs successfully:
+1. `unit-regression-tests` — SUCCESS;
+2. `execution-host-lifecycle-linux` — SUCCESS;
+3. `execution-host-lifecycle-windows` — SUCCESS;
+4. `Binary upload engine tests (native Windows)` — SUCCESS;
+5. `Build and retest exact-SHA Work 28 source artifact` — SUCCESS;
+6. `automatic-e2e-gate-report` — SUCCESS.
+
+This proves the configured component/regression/lifecycle/artifact jobs on the tested source SHA. The automatic report job's success proves report generation, not deployed end-to-end upload. It does not prove a real Core grant, raw-byte network transport, MCP registration, PC image transfer or Sandbox byte-for-byte readback.
+
+### TRACE — SECURITY / CORE DEPENDENCIES
+- Re-read `sandbox_binary_upload_v1.py` and its tests at the current PR branch. The component still uses path-component `is_symlink()` checks followed by later path-based mkdir/open/link operations; the check/use gap remains a filesystem TOCTOU risk. Rechecking does not close the race.
+- Finalize/recovery still promotes and unlinks directory entries without a verified platform-specific durable directory flush. SQLite FULL synchronous does not make those filesystem namespace operations durable.
+- Chunk write/fsync and SQLite ledger acceptance remain two distinct durable operations. The per-upload OS lock serializes cooperating writers on the same host, but crash reconciliation of staging bytes versus committed chunk rows is not implemented.
+- Re-read Work 70 DOC-071 on main: it records Core owner NOT IDENTIFIED, Work-scoped authorization NOT VERIFIED, Work Evidence upload/read/version NOT FOUND IN INSPECTED SCOPE, and authoritative Work persistence NOT VERIFIED. This is bounded source evidence; it does not prove no external service exists. No real Core upload-grant/finalize-lease contract was located or supplied in this work session.
+- The injected FakeCore remains test-only. No local substitute, guessed endpoint or mock authority is accepted for production.
+
+### DECIDE — KEEP GATE CLOSED
+**Disposition remains NEEDS CHANGES — DO NOT MERGE / DO NOT REGISTER / DO NOT DEPLOY.** PR #77 remains OPEN / DRAFT / UNMERGED. The tested SHA is the source revision named above; this journal-only commit is not a new code test result.
+
+### NEXT
+1. Design and test race-resistant filesystem access with descriptor-relative/no-follow primitives on supported POSIX hosts; establish a genuine native Windows-safe containment strategy or fail closed on unsupported guarantees.
+2. Add explicit crash-reconciliation for staging/chunk ledger/quota and platform-specific durable promotion tests; do not claim power-loss durability without evidence.
+3. Obtain the accountable Core owner and the actual Core-owned grant + atomic finalize/revocation contract; until then Core integration remains BLOCKED.
+4. Keep Ka independent security review and An independent QA as separate required gates; no self-review may be relabeled as their approval.
+5. Only after those gates, wire approved transport/registry and perform disposable PC image → Sandbox persistence → authorized readback → SHA-256 equality.
+
+**STATUS:** exact-head configured CI 6/6 PASS; security acceptance BLOCKED; Core grant/lease NOT VERIFIED; filesystem TOCTOU OPEN; durable namespace promotion NOT VERIFIED; crash reconciliation OPEN; independent Ka/An gates NOT RECORDED; live PC image upload NOT VERIFIED; Execution Gate CLOSED; Work 28 NOT RELEASED.
