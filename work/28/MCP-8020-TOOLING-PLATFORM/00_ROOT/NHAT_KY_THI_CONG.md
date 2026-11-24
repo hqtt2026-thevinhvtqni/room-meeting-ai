@@ -4035,3 +4035,44 @@ Fresh compare reports PR branch DIVERGED, 60 ahead / 5 behind. The five canonica
 **STATUS:** PR #78 OPEN / DRAFT / UNMERGED; Ka review NOT ACCEPTED; An acceptance NOT ACCEPTED; Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
 
 **Signed:** Ka — CSA / Independent Security Reviewer
+
+
+## 2026-11-25 — JRN-W28-127 — F04 raw-byte MCP :8030 contract and registration audit
+
+**Document ID:** W28-KA-AUD-127  
+**Priority:** P0 — binary transport / deployed capability boundary  
+**Owner:** Ka — CSA / Independent Security Reviewer  
+**Date-Time:** 2026-11-25 (Asia/Ho_Chi_Minh)  
+**Target:** PR #78 branch xu/w28-f02-tests-20261124; reviewed HEAD before journal append: d835b88ea8d7d3df88fce74b1da4079167689afd  
+**Review type:** Static exact-branch source, registry and test inventory inspection; no live endpoint access
+
+### EXACT SOURCES READ
+- work/28/MCP-8020-TOOLING-PLATFORM/04_CODE/sandbox_binary_upload_v1.py — blob f13bd1ae09ba79ab2f19f538d752e863fffcb19c.
+- work/28/MCP-8020-TOOLING-PLATFORM/04_CODE/mcp8020_unified_registry_v1.py — blob 39cf675496568dbce42060ae0870a91da54f80da.
+- work/28/MCP-8020-TOOLING-PLATFORM/04_CODE/mcp8020_unified_server_v1.py — blob ae86809acfccf1aaa7f8f257bfb95eafa56959c8.
+- work/28/MCP-8020-TOOLING-PLATFORM/04_CODE/mcp8020_sandbox_tools_v54.py — blob 9108d6bd8739f6c74be3ca483aa9c02520a385c9.
+- work/28/MCP-8020-TOOLING-PLATFORM/01_PLAN/WORK28_AUTO_E2E_RUNBOOK_V2.0.md — blob ee6504d6f7a72168608f3daba659f50600b6b768.
+- PR #78 changed-file inventory: seven paths; it includes the upload engine and its unit tests but no MCP registry/server/provider composition or transport adapter file.
+
+### TRACE / FINDINGS
+1. **The engine is not an MCP tool.** The upload module's own module docstring explicitly describes it as an engine component, not a deployed MCP registration. It exposes Python methods accepting bytes internally, but no MCP tool schema or server dispatch binds those methods.
+2. **The published registry has no upload operation.** mcp8020_unified_registry_v1.py declares an exact ordered 31-tool registry. Its Sandbox operations include text sandbox_write, sandbox_read, sandbox_read_range and metadata operations; none of sandbox_upload_begin, sandbox_upload_chunk, sandbox_upload_finalize, sandbox_upload_abort, sandbox_upload_status or binary readback is registered. Registry validation pins the exact 31 names, so adding upload requires a deliberate versioned contract/registry change, not an implicit provider method.
+3. **Existing wire payload is text-oriented.** The registered sandbox_write schema takes a string content; the existing Sandbox provider encodes that string as UTF-8. sandbox_read decodes bytes as UTF-8 and raises DECODE_ERROR for non-text data. The unified MCP server returns JSON serialized inside MCP TextContent. This path does not prove arbitrary raw-byte fidelity. Any future binary envelope must specify a versioned encoding (for example bounded base64 chunks), strict encoded and decoded length limits, canonical offsets, digest validation and response semantics; no such upload wire schema is present in the reviewed registry.
+4. **Server composition does not include the upload service.** create_work28_server() binds only the existing core, sandbox, sandbox_extensions, proposals, GitHub and runtime providers, resolving handlers from the fixed registry. It has no upload provider dependency or upload-service binding. The separate v54 adapter likewise returns JSON in TextContent; it does not wire this upload engine.
+5. **The server factory is not deployed-process evidence.** The unified server module states that the existing HTTP host owns transport/lifecycle and that the factory does not open a listener. Static code cannot establish which build/process currently owns MCP :8030, what tools/list returns there, or whether a deployed connector preserves binary payloads.
+6. **Test scope is engine-local.** PR #78 changes the upload engine and its unit-test file, but the changed-file inventory contains no MCP registration/transport contract test. The reviewed runbook requires capture of deployed build/process identity and registered tool/schema inventory, trusted Core principal/WorkContext, and protected evidence/readback. No such exact-head live evidence was found in the PR changes or workflow lookup. The workflow lookup for pre-append HEAD d835b88ea8d7d3df88fce74b1da4079167689afd returned no associated PR workflow runs.
+
+### REQUIRED REMEDIATION / RETEST
+- Xu must add a versioned upload tool contract and bind the service through the actual approved MCP :8030 server/provider composition; include begin/chunk/finalize/abort/status and independently authorized readback or an explicitly justified equivalent.
+- Define binary wire representation and enforce encoded-body, decoded-chunk, total-file, chunk-count, request-time and response limits before allocation/write. Reject malformed encoding, offset gaps, duplicate mismatch, oversized frames and text/binary ambiguity.
+- Derive trusted principal and canonical WorkContext from server-side Core transport context. Do not accept caller-supplied identity or Work ID as authority. Bind every operation to the Core grant/session and revocation epoch.
+- Add real MCP protocol subprocess tests that execute tools/list and tools/call against the composed server, assert exact schema parity, prove byte-for-byte round-trip with NUL/non-UTF-8/all-byte-values/zero-byte/maximum-boundary payloads, and prove denial causes no filesystem side effects.
+- Obtain approved live read-only evidence for MCP :8030 build/process identity and tools/list parity. Only after the transport and authority contracts pass may a disposable-Work canary upload/readback run; record independent source and readback byte counts and SHA-256. Do not probe an unverified or historical listener.
+
+### DISPOSITION
+- **F04 remains BLOCKED / P0.** A Python bytes method is not proof of MCP raw-byte transport, tool registration, dispatch, deployed service identity or live Sandbox readback.
+- F03 remains BLOCKED / P0; F01 remains BLOCKED / P0; F02 remains PARTIAL / NOT VERIFIED. The four findings are independent gates and cannot be collapsed into an engine unit-test result.
+- No source changes, tests, live MCP calls, endpoint probes, runtime operations, CI dispatch, merge/rebase/cherry-pick or upload enablement were performed. This is static review only.
+- PR #78 remains OPEN / DRAFT / UNMERGED; Ka review NOT ACCEPTED; An independent acceptance NOT ACCEPTED; Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+**Signed:** Ka — CSA / Independent Security Reviewer
