@@ -3751,3 +3751,33 @@ However, path containment still relies on pathname checks followed by ordinary p
 **STATUS:** Journal divergence identified; no PASS inferred. PR #78 remains DRAFT / UNMERGED; Work 28 remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
 
 **Signed:** Ka — CSA / Independent Security Review
+
+
+## 2026-11-25 — JRN-W28-120 — Ka static security re-audit of binary upload engine and F02 tests
+
+**Document ID:** W28-KA-AUD-120  
+**Priority:** P0  
+**Owner:** Ka — CSA / Independent Security Reviewer  
+**Date:** 2026-11-25 (Asia/Ho_Chi_Minh)  
+**Target:** PR #78 — `xu/w28-f02-tests-20261124`  
+**Reviewed source:** engine blob `f13bd1ae09ba79ab2f19f538d752e863fffcb19c`; test blob `0963baa3fd4c724973a08be331c4a9c8ddc4784b`
+
+### READ / TRACE
+- Re-read the exact candidate engine and all 25 test methods from GitHub. This was a static source review; no test process or runtime was executed.
+- F01: `work_root()` uses `Path.resolve()` and compares only the resolved parent to Sandbox root. A Sandbox Work-ID symlink to another direct Work directory under the same root can resolve to a path whose parent is still the Sandbox root, so this check does not establish that the requested Work identity is the directory actually opened. Subsequent `no_symlinks()`, `open()`, `mkdir()`, `os.link()`, `stat()` and `unlink()` remain pathname-based and are vulnerable to parent substitution between check and use. Existing static symlink test does not exercise this alias or race.
+- F02: orphan scan now enumerates direct Sandbox children and checks symlinked Work roots, `.upload-staging` directories and entries. The test file still lacks explicit regressions for Sandbox-root enumeration failure, Work-root symlink, staging-directory symlink and staging-entry symlink. The existing orphan test covers an untracked `.part` entry and fail-closed preservation only.
+- Recovery still relies on path-based checks and opens; no directory-entry durability/failure-injection proof is present in the test file. The reviewed tests do not establish native Windows reparse-point resistance or POSIX descriptor-relative containment.
+- F03: tests instantiate `FakeCore`; they verify the component authorizer seam only. No deployed Core-owned principal/Work mapping, durable revocation epoch or atomic revoke-versus-finalize transaction evidence is present.
+- F04: this module remains a component engine. No live MCP 8030 raw-byte tool registration or binary-safe transport/readback is demonstrated by these files.
+
+### DISPOSITION
+- **F01: BLOCKED / P0.** Require handle/descriptor-anchored traversal and mutation, explicit Work identity verification, platform-specific Windows reparse-point handling, POSIX no-follow dirfd operations, and adversarial race tests.
+- **F02: PARTIAL / NOT VERIFIED.** Add the missing scan-error/symlink tests, full crash-point matrix, directory durability handling and native Linux/Windows evidence. Preserve ambiguous orphan bytes; do not silently delete.
+- **F03: BLOCKED / P0.** Requires real Core-owned authorization and atomic revocation/finalization semantics.
+- **F04: BLOCKED / P0.** Requires bounded raw-byte MCP transport, tools/list parity, disposable live Sandbox transfer and independent readback SHA-256.
+- No source modification, CI dispatch, test execution, merge, rebase, cherry-pick, deployment or upload enablement occurred in this review.
+
+### STATUS
+PR #78 remains OPEN / DRAFT / UNMERGED. Ka independent security disposition remains **NOT ACCEPTED**. Execution Gate **CLOSED**. Work 28 **ACTIVE / INTEGRATION BLOCKED / NOT RELEASED**.
+
+**Signed:** Ka — CSA / Independent Security Reviewer
