@@ -113,3 +113,12 @@ Entries 065, 067, 068, 069 and 071 remain open static review findings. Implement
 - Runtime Auto E2E remains NOT RUN; external authority/runtime evidence remains BLOCKED / NOT VERIFIED.
 - PR #68 remains OPEN / UNMERGED. Vinh product acceptance NOT ACCEPTED; release NOT AUTHORIZED.
 - **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner. **Date-Time:** 2026-11-24 06:35 +07:00.
+
+### Entry 076 — release gate remains blocked pending Xu re-review
+
+- **Priority:** P0 — no release until independent review and all runtime authority gates pass.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner. **Date-Time:** 2026-11-24 09:36 +07:00.
+- **Exact implementation revision:** `e7d2f8207047e85f1e6d5349800e67dd638d75a3`; PR Run #1143 / `45313744701` SUCCESS, 124 tests in 0.187s; artifact `14884681161`, SHA-256 `aba52ea640fc9fb799a38832127862c69f19b1eb3fb46151238588c89375065d`.
+- Xu Entry 075 residual findings 067 and 069 have source/contract-test remediations; Xu independent re-review is pending. No self-approval.
+- PR-event source-binding is skipped; aggregate branch remains `UNBOUND_LEGACY_BRANCH`; handoff/ACK/review capture skipped. Runtime Auto E2E NOT RUN; Core/W102/W14/W33/W70 authority/runtime gates BLOCKED / NOT VERIFIED.
+- PR #68 OPEN / UNMERGED. Vinh product acceptance NOT ACCEPTED. Release NOT AUTHORIZED.
