@@ -2836,3 +2836,32 @@ Review 6015443161 records the detailed findings; review 6015449638 corrects curr
 Xu continues source inspection and implementation directly on an isolated branch from the verified PR head. Keep PR #77 unmerged/unregistered/un deployed until F01–F04 and independent acceptance close. No PC action is required from Vinh at this stage.
 
 [KÝ: XU | DELIVERY OWNER]
+
+
+## 2026-11-24 17:18 +07 — JRN-W28-112 — Xu triển khai đợt F02 startup reconciliation trên PR #77
+**Owner:** Xu | **Branch:** `xu/work28-takeover-20261124` (fast-forward vào PR #77 branch)  
+**Base exact SHA:** `e1c0193147e4284aba121c4b1b6d73292a6fdf50`  
+**Implementation commits:** `54ffd9197d043076ae44c5d780323b5abdea88ba`, `6b3bb4e65ab1760ac9642c1a73ea627bf6ddfb7d`, `7158da9630376eaf02126986cd890e6be8d7ddfb`.
+
+### BUILD
+- Thêm SQLite ledger APIs liệt kê session/chunk bền vững và rebuild quota reservations từ trạng thái session thực tế.
+- Thêm `SandboxBinaryUploadService.reconcile_startup()`: đối chiếu chunk ledger liên tục với byte staging; xác minh SHA-256 từng chunk; cắt phần byte dư chưa commit về durable cursor; phát hiện staging thiếu/truncated, ledger gap, unexpected final destination và completed receipt/readback mismatch.
+- Session `FINALIZING` được giữ PENDING; startup tuyệt đối không tự promote. Chỉ finalize retry qua trusted context và Core authorization mới được tiếp tục.
+- Rebuild quota theo các trạng thái `UPLOADING` / `FINALIZING`; trạng thái filesystem/ledger BLOCKED sẽ khóa begin mới fail-closed.
+- Gắn reconciliation vào service initialization để chạy ở mỗi lần khởi động, không chỉ cung cấp helper gọi tay.
+- Bổ sung 3 test: cắt tail chưa commit + quota repair; staging bị mất; FINALIZING không được tự promote khi startup.
+
+### VERIFY
+- GitHub update_file thành công cho engine, test; branch takeover được fast-forward vào PR #77 bằng expected-head lease.
+- PR #77 hiện trỏ tới HEAD `7158da9630376eaf02126986cd890e6be8d7ddfb`; OPEN / DRAFT / UNMERGED.
+- Tại thời điểm ghi entry, chưa nhận được workflow run cho HEAD mới; chưa có test PASS nào được tuyên bố. Chờ exact-head CI.
+- Chưa sửa F01 handle-safe filesystem; code hiện còn pathname-based operations. Không tuyên bố F01 đã đóng.
+- Chưa có Core upload API thực, raw-byte MCP :8030 adapter, runtime registration hay live SHA-256 canary.
+
+### LIMITS / NEXT
+- F02 hiện mới có bước reconcile session/chunk/quota cơ bản; chưa hoàn tất orphan staging quarantine, platform directory durability, crash matrix và failure-injection trên native Windows/Linux.
+- F01 vẫn BLOCKED; cần handle-anchored POSIX + Windows-safe backend, không chỉ thêm pathname recheck.
+- Chờ exact-head CI #510 (nếu workflow tự sinh) hoặc run tương ứng; sửa mọi lỗi trước khi tiếp tục.
+- Work 28 vẫn ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; PR #77 không merge/register/deploy; Execution Gate CLOSED.
+
+[KÝ: XU | DELIVERY OWNER]
