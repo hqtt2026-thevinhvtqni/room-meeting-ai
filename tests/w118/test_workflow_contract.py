@@ -210,6 +210,12 @@ class Work118WorkflowContractTests(unittest.TestCase):
         self.assertLess(run_script.index("--scan-complete"), run_script.index("gh label create"))
         self.assertLess(run_script.index("completeness is unproven"), run_script.index("gh label create"))
 
+    def test_diagnostics_scan_does_not_depend_on_mutable_issue_labels(self):
+        data = self.load_yaml(DIAGNOSTICS)
+        run_script = data["jobs"]["diagnostics"]["steps"][-1]["run"]
+        self.assertIn('issues?state=all&per_page=100&page=${PAGE}', run_script)
+        self.assertNotIn("labels=w118-blocked", run_script)
+
     def test_diagnostics_scan_is_paginated_and_fails_closed_at_ceiling(self):
         data = self.load_yaml(DIAGNOSTICS)
         run_script = data["jobs"]["diagnostics"]["steps"][-1]["run"]
