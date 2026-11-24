@@ -3255,3 +3255,24 @@ Re-read the current PR-branch upload engine, including `work_root()`, `no_symlin
 4. Keep live upload, MCP registration/deployment, Execution Gate and release blocked until all required evidence is present.
 
 **STATUS:** abort/FINALIZING source fix committed; targeted regression test committed; exact-head CI PENDING; filesystem TOCTOU OPEN; Core authorization integration NOT VERIFIED; independent reviews NOT RECORDED; live PC image upload/readback NOT VERIFIED; PR #77 OPEN / DRAFT / UNMERGED; Execution Gate CLOSED; NOT RELEASED.
+
+
+## 2026-11-24 — JRN-W28-090 — Exact-head CI #496 cancelled; trigger investigation
+
+**Owner:** Xu  
+**PR:** #77 — binary Sandbox upload engine candidate  
+**Tested source SHA:** `76531072b95eb1f1caa8c2881634e75382142a50`  
+**Workflow:** [#496 / 45328501842](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45328501842)
+
+### VERIFY
+- Queried GitHub Actions for the exact source/test SHA. Run #496 exists for workflow `Work 28 Automatic E2E Gate`, event `pull_request`, and its recorded `head_sha` is exactly `76531072b95eb1f1caa8c2881634e75382142a50`.
+- Run conclusion is `cancelled`; GitHub returned an empty jobs collection. Therefore no test job result or exact-head CI PASS/FAIL evidence exists for this revision.
+- The PR branch later advanced to journal-only commit `eb783b985c615a9567454dc7d8f9f3725e963a4d`; the run metadata confirms the test trigger itself was the source/test commit above. The cancellation reason is not exposed by the available run/job response; do not infer who or what cancelled it.
+- Workflow source `.github/workflows/work28-mcp-tooling.yml` includes pull_request path filters for the Work 28 code and test paths, and its concurrency setting has `cancel-in-progress: false`. This inspection does not establish the cause of cancellation.
+
+### DISPOSITION / NEXT
+- Mark corrected-head CI **CANCELLED / NOT VERIFIED**, not PASS and not test failure.
+- A fresh exact-head run is required. The available connected GitHub actions expose run/job reads but no workflow-dispatch or rerun operation, so Xu cannot initiate a rerun through this connection in this turn.
+- Continue safe source review and security design without merging, deploying, registering, or opening the Execution Gate.
+
+**STATUS:** abort/FINALIZING fix and regression test committed; exact-head CI #496 CANCELLED with zero jobs; test outcome NOT VERIFIED; filesystem TOCTOU OPEN; Core authorization integration NOT VERIFIED; Ka/An independent reviews NOT RECORDED; live PC image upload/readback NOT VERIFIED; PR #77 OPEN / DRAFT / UNMERGED; Execution Gate CLOSED; NOT RELEASED.
