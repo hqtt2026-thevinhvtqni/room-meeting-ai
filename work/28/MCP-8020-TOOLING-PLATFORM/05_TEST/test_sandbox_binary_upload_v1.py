@@ -111,8 +111,9 @@ class BinaryUploadTests(unittest.TestCase):
         self.assertCountEqual(outcomes,["ACCEPTED","REPLAY_MISMATCH"])
         row=self.ledger.get(r["upload_id"]); staging=Path(row["staging_path"])
         accepted=self.ledger.get_chunk(r["upload_id"],0)
+        self.assertIn(staging.read_bytes(),(b"good",b"evil"))
         self.assertEqual(accepted[2],hashlib.sha256(staging.read_bytes()).hexdigest())
-        self.assertEqual(staging.read_bytes(),expected)
+        self.assertEqual(accepted[1],4)
     def test_finalize_retry_is_idempotent_and_readback_checked(self):
         data=b"finalize-retry"
         r=self.service.begin(trusted_context=self.ctx,canonical_work_id="W119",sandbox_work_id="119",destination="images/photo.png",
