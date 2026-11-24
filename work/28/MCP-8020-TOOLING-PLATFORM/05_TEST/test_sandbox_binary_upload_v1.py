@@ -114,6 +114,21 @@ class BinaryUploadTests(unittest.TestCase):
         self.assertIn(staging.read_bytes(),(b"good",b"evil"))
         self.assertEqual(accepted[2],hashlib.sha256(staging.read_bytes()).hexdigest())
         self.assertEqual(accepted[1],4)
+    def test_concurrent_finalize_calls_are_serialized_and_idempotent(self):
+        data=b"concurrent-finalize"
+        r=self.service.begin(trusted_context=self.ctx,canonical_work_id="W119",sandbox_work_id="119",destination="images/photo.png",
+          expected_bytes=len(data),expected_sha256=hashlib.sha256(data).hexdigest(),chunk_size=64,idempotency_key="idempotency-key-0017")
+        self.service.chunk(trusted_context=self.ctx,upload_id=r["upload_id"],index=0,offset=0,data=data)
+        barrier=threading.Barrier(2)
+        def finish():
+            barrier.wait()
+            return self.service.finalize(trusted_context=self.ctx,upload_id=r["upload_id"])
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            results=list(pool.map(lambda _:finish(),range(2)))
+        self.assertEqual(results[0],results[1])
+        self.assertEqual(results[0]["status"],"COMPLETED")
+        self.assertEqual((self.root/"119"/"images"/"photo.png").read_bytes(),data)
+        self.assertEqual(self.ledger.get(r["upload_id"])["state"],"COMPLETED")
     def test_finalize_retry_is_idempotent_and_readback_checked(self):
         data=b"finalize-retry"
         r=self.service.begin(trusted_context=self.ctx,canonical_work_id="W119",sandbox_work_id="119",destination="images/photo.png",
