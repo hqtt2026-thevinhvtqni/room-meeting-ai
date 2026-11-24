@@ -216,17 +216,19 @@ class SandboxBinaryUploadService:
         if not row: raise UploadError("NOT_FOUND","upload session not found")
         g=self.grant(trusted_context,"chunk",upload_id,row["destination"],row["expected_bytes"]); self.match(g,row)
         if len(data)>g.max_chunk_bytes or index>=g.max_chunks: raise UploadError("CHUNK_LIMIT","chunk exceeds Core grant")
+        if row["state"]!="UPLOADING" or index!=row["next_index"] or offset!=row["received_bytes"]:
+            raise UploadError("CHUNK_SEQUENCE","chunk must be the exact next contiguous range")
+        if offset+len(data)>row["expected_bytes"]:
+            raise UploadError("SIZE_EXCEEDED","chunk exceeds declared file size")
         digest=hashlib.sha256(data).hexdigest(); path=Path(row["staging_path"])
         with self.lock:
             with open(path,"r+b",buffering=0) as f:
-                f.seek(offset); existing=f.read(len(data))
-                if existing==data:
-                    status=self.ledger.accept_chunk(upload_id,index,offset,len(data),digest)
-                    if status=="REPLAY_IDENTICAL": return {"upload_id":upload_id,"index":index,"status":"ALREADY_ACCEPTED","sha256":digest}
                 f.seek(offset); f.write(data); f.flush(); os.fsync(f.fileno())
             try: self.ledger.accept_chunk(upload_id,index,offset,len(data),digest)
             except Exception:
-                with open(path,"r+b",buffering=0) as f: f.truncate(row["received_bytes"]); f.flush(); os.fsync(f.fileno())
+                # If another process won the SQLite sequence race, do not truncate
+                # bytes accepted by that process. The session will fail closed on
+                # the next digest check if the staging bytes no longer match.
                 raise
         return {"upload_id":upload_id,"index":index,"status":"ACCEPTED","bytes":len(data),"sha256":digest}
     def finalize(self,*,trusted_context,upload_id):
