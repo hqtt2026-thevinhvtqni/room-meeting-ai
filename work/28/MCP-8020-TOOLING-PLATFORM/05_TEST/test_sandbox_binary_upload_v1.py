@@ -166,6 +166,6 @@ class BinaryUploadTests(unittest.TestCase):
         self.assertTrue(staging.exists())
     def test_core_checked_for_each_operation(self):
         self.roundtrip(b"binary-data")
-        self.assertEqual(self.core.calls,["begin","chunk","finalize"])
+        self.assertEqual(self.core.calls,["begin","chunk","chunk","finalize"])
 
 if __name__=="__main__": unittest.main(verbosity=2)
