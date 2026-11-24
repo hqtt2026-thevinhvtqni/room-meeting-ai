@@ -4299,3 +4299,39 @@ The engine's injected-authorizer seam and grant binding are not equivalent to an
 - No source/test/runtime/PC operations, no merge/rebase/overwrite, and no release action performed.
 
 **Signed:** Ka — CSA / Independent Security Reviewer
+
+
+
+## 2026-11-25 — JRN-W28-134 — Binary chunk contract and upload-session liveness audit
+
+**Document ID:** W28-KA-AUD-134  
+**Priority:** P1 — bounded chunk contract / session liveness  
+**Owner:** Ka — CSA / Independent Security Reviewer  
+**Date-Time:** 2026-11-25 (Asia/Ho_Chi_Minh)  
+**Target:** PR #78, branch `xu/w28-f02-tests-20261124`, source blob `f13bd1ae09ba79ab2f19f538d752e863fffcb19c`, exact HEAD before this journal append `cc884a11e5d9347afbcd4db9cfcc7fc6f76e906e`  
+**Method:** Read-only source and test inspection of `begin()`, `chunk()`, `finalize()`, and the candidate unit-test inventory.
+
+### READ / TRACE
+
+1. `begin()` accepts a caller-selected `chunk_size`, derives and persists `chunk_count = ceil(expected_bytes / chunk_size)`, and returns both values to the caller.
+2. `chunk()` validates raw data against the global `MAX_CHUNK_BYTES` and the current Core grant's `max_chunk_bytes`, but does not compare the payload length to the persisted session `row["chunk_size"]`. It also bounds the index against `g.max_chunks`, not the session's persisted `row["chunk_count"]`.
+3. `finalize()` requires both `received_bytes == expected_bytes` and `next_index == chunk_count`. Therefore the acceptance rule in `chunk()` is not aligned with the session's declared chunk contract.
+4. Reproducible state example from the inspected logic: for an 8-byte upload with `chunk_size=4` (`chunk_count=2`), a caller can submit one 8-byte chunk if the Core/global chunk limit permits it. The chunk is accepted and advances `next_index` to 1 with all 8 bytes received; no further non-empty chunk can fit, while finalize rejects because `next_index != chunk_count`. Similarly, a caller can submit extra chunks beyond the declared session count because the chunk path does not enforce that session count; such a session cannot satisfy the finalize predicate once the count has diverged.
+5. The 26 candidate unit-test functions cover binary roundtrip, denial, retry, concurrency, recovery and reconciliation, but none explicitly tests negotiated chunk-size enforcement, final-chunk sizing, or rejection of an index at/above the session's declared `chunk_count`. These tests were inspected, not executed in this audit.
+6. This finding is separate from F01–F04: it concerns the session-level protocol contract and liveness, not filesystem race safety, finalize durability, Core authority provenance or MCP transport registration.
+
+### REQUIRED REMEDIATION
+
+- Enforce the persisted session chunk contract on every accepted chunk: index must be below `row["chunk_count"]`; payload length must not exceed `row["chunk_size"]`; non-final chunks must follow the agreed exact-size rule; final chunk must match the remaining byte count (including the zero-byte upload special case).
+- Reconcile chunk count, expected bytes, chunk size and Core grant limits once at begin and revalidate against the durable session row inside the cross-process lock before writing.
+- Add tests for oversized first chunk, undersized non-final chunks, extra chunk index, incorrect final-chunk length, zero-byte file, and retry after a rejected chunk. Verify rejected inputs do not write bytes, advance the cursor, or consume quota irrecoverably.
+- Run the focused suite and exact-SHA CI after Xu's remediation; An must independently reproduce.
+
+### DISPOSITION
+
+- F05 — **BLOCKED / P1** — negotiated chunk-size/count invariants are not enforced consistently; malformed chunk sequences can strand an upload session and retain reserved quota until expiry/cleanup.
+- No source change, test execution, live MCP/Core call, PC operation, upload/readback, merge or deployment performed.
+- F01–F04 remain **BLOCKED / P0**; canonical/candidate journal reconciliation remains **BLOCKED**.
+- Work 28 remains **ACTIVE / INTEGRATION BLOCKED / NOT RELEASED**; Execution Gate **CLOSED**.
+
+**Signed:** Ka — CSA / Independent Security Reviewer
