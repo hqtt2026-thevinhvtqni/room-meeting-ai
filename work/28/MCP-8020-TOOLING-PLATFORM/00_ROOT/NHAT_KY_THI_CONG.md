@@ -2733,3 +2733,48 @@ Review 6015443161 records the detailed findings; review 6015449638 corrects curr
 **STATUS:** PR #74 OPEN / DRAFT / UNMERGED / 2 AHEAD / 12 BEHIND; WP5-03 / WP5-06 / WP5-07 / WP5-08 HIGH / OPEN; LIVE MCP → CORE → RUNTIME E2E BLOCKED; EXECUTION GATE CLOSED; ACTIVE — INTEGRATION BLOCKED — NOT RELEASED.
 
 **Signature:** [KÝ: KA | CSA / INDEPENDENT REVIEWER]
+
+
+## 2026-11-24 — JRN-W28-071 — P0 urgent takeover: binary upload for Work 119
+
+**Authority:** Vinh's direct instruction to Xu: urgently complete the shared binary image/file upload capability because Work 119 is waiting.  
+**Coordinator:** Xu  
+**Canonical branch:** `work/28-mcp-tooling-platform`  
+**Observed canonical HEAD at source inspection:** `14a535a6f7d10bb318734cc8df6c76090286ac08`  
+**Feature:** W28-WP3-F01 — `sandbox_upload_file`  
+**Status at start:** DESIGN REVISION EXISTS / Q4 NOT APPROVED / IMPLEMENTATION NOT AUTHORIZED / LIVE UPLOAD NOT VERIFIED.
+
+### READ / TRACE
+- Re-read the canonical Work 28 journal, minutes, master execution plan, controlled document register, WP3 decision record, Q4 design revision dated 2026-11-22, Ka's independent Q4 review dated 2026-11-15, and current Sandbox/provider/registry source on the canonical branch.
+- Confirmed current Sandbox operations are text-oriented. `sandbox_write` accepts UTF-8 text bounded to 65,536 bytes; current registry exposes 31 tools and contains no `sandbox_upload_file` begin/chunk/finalize operations.
+- Confirmed Q1 trusted transport context, Q2 dynamic Core Work→Sandbox mapping and Q3 begin/chunk/finalize were selected in the 2026-11-13 decision. Q4 capability-grant semantics were not approved.
+- Ka's 2026-11-15 review explicitly rejected the earlier grant design and required revision before staging, chunk acceptance, promotion or public tool registration.
+- Xu's 2026-11-22 Q4 revision defines principal/session, Work mapping/version, audience, capability/operations, exact path scope, quota/limits, TTL/revocation, replay/idempotency, atomic finalize, readback and durable audit; it remains PROPOSED / NOT APPROVED and does not prove Core has a matching route or durable transactional store.
+- Current connected ROOM-HOP 8030 tool surface available in this session exposes text sandbox read/create/write/append/list/delete operations only; no binary upload action is available to test. No live binary write/readback was attempted.
+
+### DECIDE
+- Accept Vinh's instruction as P0 priority and authorization for Xu to coordinate completion of the shared W28 capability for all Works, with Work 119 as the first consumer.
+- Preserve the four-AI team Xu/Vi/Ka/An.
+- Do not waive Ka's mandatory Q4 security review or invent a Core endpoint, trusted identity source, Work mapping, quota ledger or revocation mechanism.
+- Until Q4 and the actual Core grant route/store contract are approved, permit source tracing, schema/test scaffolding and review only; do not create upload staging, accept bytes, promote files or expose a callable upload tool.
+- After approval, implement begin/chunk/finalize/abort with bounded raw-byte transport, durable session/quota/idempotency/audit state, path and symlink revalidation, no-replace atomic promotion, full SHA-256 and independent readback.
+- Keep original files untouched until Sandbox readback and digest parity are verified. Keep historical MCP :8020 prohibited.
+
+### ASSIGNMENTS — journal-based; acknowledgement pending
+- **Ka / P0:** independently review exact Q4 design revision `XU-W28-WP3-F01-Q4-DESIGN-20261122-001`; return APPROVE or BLOCKED with exact missing Core contract, revocation/finalize race, transactional quota/session store, crash recovery and audit conditions. Review the implementation diff again after Vi submits it.
+- **Vi / P0:** reconcile current canonical HEAD and Core source/route provenance; prepare the smallest reviewable upload contract, provider adapter, registration and adversarial test implementation plan. Do not implement staging/chunk acceptance or register the public tool before Ka's Q4 approval and a real approved Core grant contract are evidenced. Once authorized, implement continuously through exact-head CI and provide a single complete handoff.
+- **An / P0:** prepare independent byte-fidelity and negative test matrix; after exact implementation SHA is available, reproduce Linux/Windows tests, arbitrary binary/ZIP/image round-trip, zero-byte, chunk replay/order/gap, cancellation, quota races, traversal/symlink, overwrite, checksum/readback, audit failure and restart recovery. No self-test PASS substitution.
+- **Xu:** coordinate the gate, resolve only within Vinh's delegated authority, reconcile Core and Sandbox contracts, update the single canonical journal, and prepare Work 119 consumption instructions after evidence passes.
+
+### VERIFY
+- GitHub source readbacks confirm the above code/design facts at the inspected canonical branch state. This is source inspection only.
+- No code or runtime was changed in this entry. No upload was performed. No CI run, Core grant, binary readback, An QA PASS or new Ka approval is claimed.
+- No Work 119 original file was deleted or modified.
+
+### BLOCKERS
+1. Ka's approval of the 2026-11-22 Q4 design revision is not present in the canonical evidence inspected.
+2. An approved Core upload-capability grant route/schema and server-derived principal/Work mapping are not yet evidenced as implemented and deployed.
+3. Durable transactional quota/session/idempotency/revocation/audit store and crash recovery are not proven.
+4. Runtime registration/deployment and binary-safe transport/readback parity are not available in the current connected 8030 tool surface.
+
+**NEXT:** Ka Q4 disposition → Xu records approved technical decision → Vi implementation and exact-SHA CI → Ka/An independent review → approved runtime registration and live Sandbox binary canary → Work 119 readback verification. Work 28 remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED.
