@@ -294,3 +294,14 @@ Work32 Grant may be considered only for W118 protected execution integration aft
 - **Xu review checklist action:** re-check all five findings against the exact PR HEAD and CI evidence; issue PASS / NEEDS CHANGES / BLOCKED per finding. Preserve the original findings and their severity; do not infer runtime acceptance from contract tests.
 - **Ka action:** remain available for bounded follow-up remediation after Xu's disposition; do not self-approve or change authority boundaries.
 - **Vinh action:** final product acceptance remains separate and is not requested by this handback.
+
+### Entry 076 — current exact revision for Xu re-review
+
+- **Priority:** P0 — independent re-review routing after Xu Entry 075.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-24 09:36 +07:00.
+- **Exact implementation HEAD:** `e7d2f8207047e85f1e6d5349800e67dd638d75a3`; PR Run #1143 / `45313744701` SUCCESS, 124 tests in 0.187s; artifact `14884681161`, SHA-256 `aba52ea640fc9fb799a38832127862c69f19b1eb3fb46151238588c89375065d`.
+- **067:** shared strict Markdown fence parser; same character and length >= opener for closure; unclosed fence fail-closed; adversarial regression tests.
+- **069:** all-Issue pagination without mutable label filter; PRs excluded; completeness ceiling retained; no-label marker regression test.
+- **Status:** 067/069 remediated at source/contract-test level, pending Xu independent re-review. PR #68 OPEN / UNMERGED; Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED.
+- **Boundary:** 124 tests are contract/unit proof only. Source binding remains unbound on aggregate branch; handoff/ACK/review capture skipped; Runtime Auto E2E NOT RUN; Core/W102/W14/W33/W70 authority/runtime gates unchanged.
