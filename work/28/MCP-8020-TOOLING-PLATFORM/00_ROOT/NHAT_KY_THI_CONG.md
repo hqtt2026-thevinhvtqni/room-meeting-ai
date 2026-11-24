@@ -2859,3 +2859,25 @@ Review 6015443161 records the detailed findings; review 6015449638 corrects curr
 - The engine remains a review candidate. Do not merge, register or deploy it as a usable upload tool until Core-side grant/revocation linearization, multi-process chunk/session recovery, audit failure handling, transport, provider wiring and independent reviews are resolved.
 
 **STATUS:** component CI PRELIMINARY PASS; artifact job PENDING; PR #77 OPEN / DRAFT / UNMERGED; WP3-F01 LIVE ACCEPTANCE BLOCKED; Execution Gate CLOSED; Work 28 NOT RELEASED.
+
+
+## 2026-11-24 — JRN-W28-075 — Exact-SHA CI and immutable artifact gate completed
+
+**PR:** [#77](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/77)  
+**Tested code SHA:** `82d89bd0030b787cd47be759ca4e903e1fcbc8c4`  
+**Workflow:** [45307588556](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45307588556)
+
+### PASS — configured CI lanes
+- Unit/regression: SUCCESS — 364 unittest tests; pytest 373 passed and 238 subtests passed.
+- Linux Execution Host lifecycle: SUCCESS.
+- Windows Execution Host lifecycle: SUCCESS.
+- Immutable exact-SHA source artifact build, checksum verification, extracted compile and retest: SUCCESS.
+- Automatic E2E gate report job: SUCCESS as a report-generation job.
+
+### Important distinction
+The machine report's CI preconditions are PASS, but deployed MCP → Core → Runtime E2E remains BLOCKED; Execution Gate remains CLOSED and release remains NOT_RELEASED. Workflow success does not prove live upload capability, Core grant wiring, deployed runtime registration, or Sandbox image transfer.
+
+### Current PR disposition
+PR #77 remains OPEN / DRAFT / UNMERGED. The tested code SHA is `82d89bd...`; a later journal-only commit does not alter the tested code. No source change after that SHA is covered by this run.
+
+**NEXT:** continue transport and approved Core upload-grant integration, multi-process and crash/revocation race hardening, provider/registry wiring, Ka independent security review, An independent QA, then live disposable Sandbox upload/readback and W119 handoff. No live success claim until those steps pass.
