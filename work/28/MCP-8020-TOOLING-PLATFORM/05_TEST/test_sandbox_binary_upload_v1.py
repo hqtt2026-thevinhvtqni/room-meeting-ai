@@ -88,6 +88,28 @@ class BinaryUploadTests(unittest.TestCase):
             self.service.begin(trusted_context=self.ctx,canonical_work_id="W119",sandbox_work_id="119",destination="images/photo.png",
               expected_bytes=1,expected_sha256=hashlib.sha256(b"x").hexdigest(),chunk_size=1,idempotency_key="idempotency-key-0009")
         self.assertEqual(e.exception.code,"ALREADY_EXISTS"); self.assertEqual(p.read_bytes(),b"original")
+    def test_chunk_retry_is_idempotent(self):
+        data=b"retry-safe"
+        r=self.service.begin(trusted_context=self.ctx,canonical_work_id="W119",sandbox_work_id="119",destination="images/photo.png",
+          expected_bytes=len(data),expected_sha256=hashlib.sha256(data).hexdigest(),chunk_size=64,idempotency_key="idempotency-key-0010")
+        first=self.service.chunk(trusted_context=self.ctx,upload_id=r["upload_id"],index=0,offset=0,data=data)
+        second=self.service.chunk(trusted_context=self.ctx,upload_id=r["upload_id"],index=0,offset=0,data=data)
+        self.assertEqual(first["status"],"ACCEPTED"); self.assertEqual(second["status"],"ALREADY_ACCEPTED")
+    def test_finalize_retry_is_idempotent_and_readback_checked(self):
+        data=b"finalize-retry"
+        r=self.service.begin(trusted_context=self.ctx,canonical_work_id="W119",sandbox_work_id="119",destination="images/photo.png",
+          expected_bytes=len(data),expected_sha256=hashlib.sha256(data).hexdigest(),chunk_size=64,idempotency_key="idempotency-key-0011")
+        self.service.chunk(trusted_context=self.ctx,upload_id=r["upload_id"],index=0,offset=0,data=data)
+        one=self.service.finalize(trusted_context=self.ctx,upload_id=r["upload_id"])
+        two=self.service.finalize(trusted_context=self.ctx,upload_id=r["upload_id"])
+        self.assertEqual(one,two)
+    def test_idempotency_key_cannot_change_content(self):
+        args=dict(trusted_context=self.ctx,canonical_work_id="W119",sandbox_work_id="119",destination="images/photo.png",
+          chunk_size=64,idempotency_key="idempotency-key-0012")
+        self.service.begin(expected_bytes=1,expected_sha256=hashlib.sha256(b"a").hexdigest(),**args)
+        with self.assertRaises(UploadError) as e:
+            self.service.begin(expected_bytes=1,expected_sha256=hashlib.sha256(b"b").hexdigest(),**args)
+        self.assertEqual(e.exception.code,"IDEMPOTENCY_CONFLICT")
     def test_core_checked_for_each_operation(self):
         self.roundtrip(b"binary-data")
         self.assertEqual(self.core.calls,["begin","chunk","finalize"])
