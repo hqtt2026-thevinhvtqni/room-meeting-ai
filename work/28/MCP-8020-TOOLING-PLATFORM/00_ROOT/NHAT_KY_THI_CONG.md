@@ -2881,3 +2881,37 @@ The machine report's CI preconditions are PASS, but deployed MCP → Core → Ru
 PR #77 remains OPEN / DRAFT / UNMERGED. The tested code SHA is `82d89bd...`; a later journal-only commit does not alter the tested code. No source change after that SHA is covered by this run.
 
 **NEXT:** continue transport and approved Core upload-grant integration, multi-process and crash/revocation race hardening, provider/registry wiring, Ka independent security review, An independent QA, then live disposable Sandbox upload/readback and W119 handoff. No live success claim until those steps pass.
+
+
+## 2026-11-24 — JRN-W28-076 — Xu static security review of WP3 binary upload engine
+
+**Reviewer:** Xu | coordinator / delegated technical reviewer  
+**Target:** PR #77, branch `xu/work28-wp3-binary-upload-20261124`, current PR head `2824a6ba7dcebbc5983141cf416d1f1c592c525e`  
+**Code under review:** `04_CODE/sandbox_binary_upload_v1.py` (blob `ecb62eef40a2b715dd028424db52d74087813fa9`); `05_TEST/test_sandbox_binary_upload_v1.py` (blob `43ea6050f5a8f4fd51330cf5d60b0cf05b02ecd4`).
+
+### READ / VERIFY
+- Re-read the complete upload engine and component test source from the exact PR branch.
+- Re-read exact-head GitHub Actions run #473 / ID `45307935510` on PR head `2824a6ba7dcebbc5983141cf416d1f1c592c525e`: all five jobs SUCCESS — unit/regression, Linux lifecycle, Windows lifecycle, immutable exact-SHA artifact build/retest, automatic gate report.
+- PR #77 remains OPEN / DRAFT / UNMERGED. GitHub currently records zero formal PR reviews and zero inline review threads. No Ka approval or An independent QA sign-off is evidenced.
+
+### POSITIVE FINDINGS — SOURCE / CI SCOPE ONLY
+- Engine accepts raw `bytes`; no UTF-8 conversion is applied to payload data.
+- Bounded file/chunk limits, expected SHA-256, sequential chunk offsets, idempotent chunk replay, idempotency-key scope, mandatory injected Core authorizer and fail-closed absence behavior are implemented.
+- SQLite uses WAL, FULL synchronous mode and BEGIN IMMEDIATE for quota/session/chunk transitions.
+- Destination overwrite is denied; final promotion uses a no-replace hard link; final-path byte count and SHA-256 readback are checked.
+- Exact-head CI #473 passes all configured jobs. This is not live transport, Core grant, deployed Sandbox or product E2E evidence.
+
+### NEEDS CHANGES — BLOCKING FINDINGS
+1. **P1 — FINALIZING has no recovery/abort path.** `finalize()` commits UPLOADING→FINALIZING before promotion. A crash or promotion/audit failure can leave a session permanently FINALIZING; `abort()` only transitions from UPLOADING, and no reconciler resumes or safely rolls back FINALIZING. Add deterministic recovery states and crash-point tests around transition, link, readback, staging unlink and completion audit.
+2. **P1 — Core revocation is not atomic with promotion.** The authorizer check occurs before filesystem promotion; a revoke can race between successful authorization and `os.link()`. A locally copied revocation epoch does not linearize the operation. Require a Core-owned finalize lease/transaction or equivalent atomic authorization-and-commit protocol, then adversarial revoke-vs-finalize tests.
+3. **P1 — filesystem TOCTOU remains.** `no_symlinks()` checks path components before later mkdir/open/link operations; an attacker/process can swap a directory for a symlink between check and use. Revalidation alone does not close this race. Use descriptor-relative/no-follow operations where supported, validate opened directory identities, and provide native Windows-safe containment; add concurrent symlink-swap tests.
+4. **P1 — chunk write and ledger acceptance are not one durable transaction.** Bytes are written/fsynced before `accept_chunk()` commits metadata. A process crash or competing process can leave staging bytes ahead of the durable cursor; the in-memory lock only serializes one service instance. Add cross-process locking/claim semantics and recovery that reconciles staging length/content with committed chunk rows before accepting more bytes.
+5. **P1 — finalize durability is incomplete.** The staging file is fsynced per chunk, but promotion/unlink does not fsync the containing directory. SQLite FULL synchronous does not make filesystem directory entries durable. Add directory fsync (or a documented platform-specific durable promotion primitive) and power-loss/restart recovery tests.
+6. **P2 — orphan staging and quota recovery are incomplete.** A crash after staging creation but before ledger begin can leave an untracked file; crashes in FINALIZING can retain quota indefinitely. Add startup reconciliation for untracked staging files, expired sessions and quota counters, with append-only audit outcomes and safe retention rules.
+7. **P1 — platform parity is not established for the upload engine.** The passing Windows lifecycle lane is not proof that this component's hard-link promotion, file locking, directory durability and symlink protections work on Windows. Add the upload component suite to a native Windows job and implement platform-specific safe promotion or fail closed when guarantees are unavailable.
+
+### DISPOSITION
+**NEEDS CHANGES — DO NOT MERGE / DO NOT REGISTER / DO NOT DEPLOY.** The component is a promising source candidate and exact-head CI is green, but the listed recovery, authorization-race, filesystem-race and durability gaps prevent security acceptance. Independent Ka review and An QA remain outstanding. No live upload, Core route, raw-byte transport, MCP registry registration or Sandbox readback is claimed.
+
+### NEXT
+Xu to remediate the blocking findings on the isolated PR branch; Ka to independently review the exact corrected diff; An to independently reproduce exact-head tests including native Windows and failure injection. Only after those gates may the team wire the approved Core upload authority and transport, then run a disposable Sandbox canary with independent byte-for-byte SHA-256 readback. Work 28 remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED.
