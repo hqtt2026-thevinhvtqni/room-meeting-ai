@@ -4204,3 +4204,37 @@ The engine's injected-authorizer seam and grant binding are not equivalent to an
 - PR #78 remains DRAFT / UNMERGED; Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
 
 **Signed:** Ka — CSA / Independent Security Reviewer
+
+
+## 2026-11-25 — JRN-W28-131 — Revalidation exact HEAD, CI trigger and canonical journal divergence
+
+**Document ID:** W28-KA-AUD-131  
+**Priority:** P0 — release evidence / canonical journal integrity  
+**Owner:** Ka — CSA / Independent Security Reviewer  
+**Date-Time:** 2026-11-25 (Asia/Ho_Chi_Minh)  
+**Target:** PR #78, branch `xu/w28-f02-tests-20261124`, exact HEAD `752cb1773e687c9b89b59d21fba1533b504f5c49`  
+**Method:** Read-only GitHub PR/branch/commit/workflow/file revalidation; no source/test/runtime execution.
+
+### READ / TRACE
+
+1. GitHub confirms PR #78 remains OPEN / DRAFT / UNMERGED; mergeable=false; HEAD is exactly `752cb1773e687c9b89b59d21fba1533b504f5c49`; 7 changed files.
+2. Exact-HEAD workflow lookup for this SHA returns an empty workflow_runs list. Therefore exact-SHA CI is NOT OBSERVED; no test result is claimed.
+3. The current candidate workflow defines unit/regression, Linux lifecycle, Windows lifecycle, native-Windows upload component, immutable artifact and machine-readable Auto E2E report jobs. Its report explicitly hard-codes deployed MCP/Core/runtime E2E as BLOCKED because trusted deployment identity, Core principal/Work evidence and protected readback chain are not wired. This is a CI precondition report design, not live product E2E.
+4. Recompare against canonical branch `work/28-mcp-tooling-platform`: canonical HEAD is `0bb578b3b306ac74b792bc7c786895b6e8fcf4ac`; candidate is DIVERGED, 69 commits ahead / 5 behind, merge base `4b2a8663a0b9ff40aad8e6812efff197b5085de5`.
+5. The canonical branch advanced from `1d7c92294a0c68f109da9e07af9ad6d49566ea75` to `0bb578b3b306ac74b792bc7c786895b6e8fcf4ac` by one journal-only commit (28 added lines), adding canonical JRN-W28-118. Candidate branch's journal has JRN-W28-129/130 but does not contain canonical JRN-W28-118; canonical journal currently ends at JRN-W28-118 and does not contain candidate-only JRN-W28-114–117 or 127–130. The journal split remains material.
+6. Canonical minutes still name Xu as implementation owner, Ka as independent security reviewer and An as independent QA. This review does not alter those roles.
+7. Candidate PR changed-file inventory remains: workflow, minutes, journal, upload engine, upload tests, historical An PR #77 acceptance report and Ka gap audit. No new MCP registration/provider or Core upload authority integration appears in the changed-file inventory.
+
+### DISPOSITION
+
+- Exact-SHA CI: **NOT OBSERVED**; workflow result empty for HEAD `752cb177...`.
+- Canonical journal synchronization: **BLOCKED**. Do not overwrite either journal or merge/rebase blindly. Xu must reconcile entries 112–118 and candidate entries 114–117/127–131 with preserved authorship and chronology before merge.
+- F01: **BLOCKED / P0** — path-based operations remain.
+- F02: **BLOCKED / P0** — completion audit failure can remove both staging and final copies; directory durability/fault matrix absent.
+- F03: **BLOCKED / P0** — no authenticated Core upload grant provenance or atomic revoke/finalize boundary.
+- F04: **BLOCKED / P0** — no approved MCP :8030 binary registration/transport or live tools/list/readback evidence.
+- Ka independent review **NOT ACCEPTED**; An independent QA **NOT ACCEPTED**.
+- Work 28 remains **ACTIVE / INTEGRATION BLOCKED / NOT RELEASED**; Execution Gate **CLOSED**.
+- No source changes, tests, live MCP/Core calls, PC operations, upload/readback, merge or deployment were performed.
+
+**Signed:** Ka — CSA / Independent Security Reviewer
