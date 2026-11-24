@@ -42,3 +42,15 @@ Append new numbered entries. Do not rewrite historical entries to make later out
 - **Execution order:** Ka rà soát độc lập chính xác Q4 revision 2026-11-22 và chốt từng điều kiện còn thiếu; đồng thời Xu/Vi chỉ thực hiện source trace, contract/test scaffolding không tạo staging hoặc nhận bytes trước khi grant contract và Core route được phê duyệt. Sau phê duyệt, Vi triển khai tích hợp; An kiểm thử độc lập; Xu đối soát CI, readback và handoff W119.
 - **Acceptance boundary:** Chỉ tuyên bố W119 dùng được sau khi tool được đăng ký trên runtime MCP mới/đúng build, Core authorization thực, upload byte-for-byte, readback SHA-256 khớp và evidence được ghi. Sandbox 8030 hiện có chỉ có text read/write tools; chưa có bằng chứng live binary upload. Không dùng historical runtime :8020.
 - **Release:** Không merge/deploy, không mở Execution Gate, không đổi trạng thái Work 28 sang RELEASED bởi quyết định ưu tiên này.
+
+
+
+## BB-W28-20261124-003 — Thay đổi chủ sở hữu triển khai: Xu tiếp nhận toàn bộ Work 28
+- **Date/time:** 2026-11-24 17:01 +07
+- **Authority:** Chỉ thị trực tiếp mới nhất của Vinh.
+- **Decision:** Xu tiếp nhận trực tiếp toàn bộ việc xây dựng và hoàn thiện Work 28, gồm F01 filesystem safety, F02 crash recovery/durability, F03 Core upload authority/revoke-finalize, F04 raw-byte Build MCP transport/registration, kiểm thử tích hợp và bàn giao.
+- **Assignment change:** Dừng giao Vi implementation Work 28. Không chờ Vi hoàn thành; các evidence Vi đã ghi trước quyết định này được giữ nguyên lịch sử, chỉ dùng sau khi Xu xác minh lại. Mọi thay đổi mới từ Vi không tự động được tích hợp.
+- **Independent roles:** An tiếp tục nghiệm thu độc lập; Ka tiếp tục review bảo mật độc lập. Xu không tự cấp PASS thay An/Ka.
+- **Delivery approach:** Làm trực tiếp trên nhánh cô lập từ exact PR #77 head; chia mốc M0 baseline, M1 F01/F02, M2 Core authority + transport, M3 exact-SHA CI/review/canary/handoff. Báo cáo mốc dựa trên bằng chứng và ETA cập nhật khi có blocker.
+- **Safety:** Không merge, register, deploy, mở Execution Gate hoặc tuyên bố RELEASED trước khi F01–F04, independent review, exact-SHA CI và live byte-for-byte SHA-256 canary được chứng minh.
+- **Supersedes:** Các assignment implementation cho Vi trong các biên bản/nhật ký trước đây, kể từ thời điểm quyết định này. Lịch sử cũ không bị sửa.
