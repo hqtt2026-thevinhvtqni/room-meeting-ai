@@ -4136,3 +4136,44 @@ Required closure:
 - No source modification, tests, runtime calls, live upload/readback, merge or deployment were performed.
 
 **Signed:** Ka — CSA / Independent Security Reviewer
+
+
+
+## 2026-11-25 — JRN-W28-129 — F03 Core authority provenance and revocation-boundary audit
+
+**Document ID:** W28-KA-AUD-129  
+**Priority:** P0 — trusted principal / canonical Work authority / revoke-vs-finalize atomicity  
+**Owner:** Ka — CSA / Independent Security Reviewer  
+**Date-Time:** 2026-11-25 (Asia/Ho_Chi_Minh)  
+**Target:** PR #78, branch `xu/w28-f02-tests-20261124`, exact reviewed HEAD `3b1145040833accd832bf98e3b1714c8fef243a7`  
+**Source blobs:** upload engine `f13bd1ae09ba79ab2f19f538d752e863fffcb19c`; component tests `0963baa3fd4c724973a08be331c4a9c8ddc4784b`.  
+**Method:** Static exact-branch source and test review; no Core call, runtime execution or source modification.
+
+### EXACT SOURCE TRACE
+
+1. `SandboxBinaryUploadService.begin()` is a public engine method whose caller supplies `trusted_context`, `canonical_work_id` and `sandbox_work_id`. The engine passes that context to the injected authorizer; this module does not itself obtain or authenticate a principal/context from the server-side Core transport boundary.
+2. `grant()` validates the returned `UploadGrant` shape, audience, capability, operation, expiry and configured limits. `begin()` compares the caller-provided Work IDs/path against the returned grant. This is useful scope validation, but it does not prove the input context originated from an authenticated Core transport or that the authorizer is the approved live Core implementation.
+3. The grant/session persists `grant_id`, `principal_id`, `session_id`, mapping identity/version, policy version and `revocation_epoch`. `match()` compares the newly returned grant with the stored session fields. The code therefore has a revocation-epoch field and equality check, but no visible Core transaction/API that atomically validates the current epoch and serializes revocation against finalize/promotion/completion.
+4. `_finalize_locked()` obtains a fresh `finalize` grant and checks the stored binding, then independently performs ledger transition, filesystem promotion/readback/cleanup and completion transition. No Core-owned transaction, lease/commit token, compare-and-swap epoch operation or shared revocation lock spans the authorization decision and the durable finalize boundary. A revoke can therefore race after the authorization check unless the real Core integration supplies an atomic guarantee not present in this reviewed component contract.
+5. The component tests explicitly define `FakeCore`; it accepts only the literal `trusted-test-context` and returns a fabricated grant. Tests cover a spoofed string being denied by that fake, wrong Work mapping, missing authorizer and repeated Core checks. They do not prove authenticated transport context, real Core principal/Work resolution, durable revocation, stale-epoch rejection against live Core state, or a deterministic revoke-vs-finalize race.
+
+### FINDING — F03 BLOCKED / P0
+
+The engine's injected-authorizer seam and grant binding are not equivalent to an approved Core authority integration. Caller-supplied context and Work identifiers remain method inputs; the reviewed branch contains no evidence binding those values to an authenticated server-side Core principal and canonical WorkContext. The revocation epoch is stored and compared between grants, but atomic revoke-vs-finalize semantics at the Core transaction boundary are not implemented or evidenced.
+
+### REQUIRED REMEDIATION / RETEST
+
+1. Define and version the Core-owned upload grant contract, including trusted principal, canonical WorkContext/mapping, Sandbox audience, capability, operations, limits, expiry, policy version and revocation epoch.
+2. Construct trusted context only inside the authenticated server-side MCP/Core adapter. Do not expose a caller-controlled `trusted_context` field as an authority source; do not accept caller Work IDs as proof of authority.
+3. Implement a Core-owned atomic finalize authorization/commit boundary: revocation and finalize must serialize through a transaction, lease or compare-and-swap mechanism with a documented linearization point. A fresh grant check followed by independent filesystem operations is not sufficient proof.
+4. Add real Core integration tests for missing/forged principal, cross-Work and cross-audience requests, expired grant, stale/revoked epoch, policy/mapping change, replay and deterministic revoke-vs-finalize interleavings. Every denied path must assert zero filesystem side effects and consistent ledger/quota/audit state.
+5. Capture exact Core build/revision, transport identity, principal and canonical Work resolution, grant ID and revocation epoch in protected evidence. Do not use FakeCore tests as live authority evidence.
+
+### DISPOSITION
+
+- **F03 remains BLOCKED / P0.** Static engine code and FakeCore component tests do not establish Core authority provenance or atomic revocation semantics.
+- F01 remains BLOCKED / P0; F02 remains blocked by the confirmed completion-audit data-loss path and durability gaps; F04 remains BLOCKED / P0 because upload is not registered on the approved MCP :8030 transport.
+- No tests were executed; no live Core/MCP call, PC action, deployment, merge or source change was performed.
+- PR #78 remains OPEN / DRAFT / UNMERGED; Ka independent review NOT ACCEPTED; An independent acceptance NOT ACCEPTED; Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+**Signed:** Ka — CSA / Independent Security Reviewer
