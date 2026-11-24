@@ -3422,3 +3422,50 @@ Proceed with a W28-specific upload capability contract and implementation adapte
 **STATUS:** CI PASS (6/6); live raw-byte upload BLOCKED; candidate-to-Sandbox sync NOT DONE; filesystem containment OPEN; Core upload authority NOT INTEGRATED; independent reviews NOT RECORDED; PC byte-for-byte canary NOT RUN; PR #77 OPEN / DRAFT / UNMERGED; Execution Gate CLOSED; NOT RELEASED.
 
 [KÝ: XU | COORDINATOR]
+
+
+## 2026-11-24 — JRN-W28-100 — CI #502 exact-head result and filesystem gate disposition
+
+**Owner:** Xu  
+**PR:** [#77 — Work 28 binary Sandbox upload engine](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/77)  
+**Commit under test:** `9b2175749315274677fa9e99461900d9dff5d953`  
+**Workflow:** [#502 / 45335261035](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45335261035)
+
+### VERIFY — CI #502
+All six jobs completed SUCCESS:
+1. Binary upload engine tests (native Windows)
+2. Unit/regression tests
+3. Execution Host lifecycle (Windows)
+4. Execution Host lifecycle (Linux)
+5. Build and retest exact-SHA Work 28 source artifact
+6. Automatic E2E gate report
+
+This confirms configured CI for the exact PR head, including the existing component tests. It does not prove that the code is mounted in Build MCP, that raw bytes can traverse the live 8030 connector, or that a PC file can be read back byte-for-byte from Sandbox.
+
+### TRACE — source-level safety boundary
+Re-read the candidate upload service and its tests at PR head. The candidate does implement:
+- Bounded chunking, per-operation injected Core authorization, idempotent chunk replay, cross-process per-upload lock, checksum verification, no-overwrite hard-link promotion, readback verification and FINALIZING recovery paths.
+- Tests cover binary payloads, invalid UTF-8, ZIP, zero-byte, path traversal, symlink component denial, chunk ordering, replay, concurrent chunk/finalize, checksum mismatch and selected crash points.
+
+However, path containment still relies on pathname checks followed by ordinary path-based open/mkdir/link/unlink. A parent directory can potentially be replaced between check and use; Windows reparse-point and handle identity semantics are not established by the current tests. Recovery paths also use ordinary path-based filesystem calls. The native Windows CI job is useful regression evidence but is not a hostile concurrent parent-replacement proof.
+
+### DISPOSITION
+- **PASS:** CI #502, 6/6 jobs on exact PR head `9b2175749315274677fa9e99461900d9dff5d953`.
+- **PASS:** candidate component test suite as configured in CI.
+- **BLOCKED:** race-safe directory/handle containment not proven; do not register or expose upload tool.
+- **BLOCKED:** no raw-byte upload/readback operation in the connected Build MCP 8030 surface.
+- **NOT VERIFIED:** Core upload grant endpoint/adapter and atomic revocation/finalize semantics.
+- **NOT VERIFIED:** live Sandbox candidate sync, PC upload, SHA-256 equality and W119 consumption.
+- **NOT RECORDED:** formal PR reviews, Ka security approval and An independent QA sign-off.
+- PR #77 remains OPEN / DRAFT / UNMERGED; Execution Gate remains CLOSED.
+
+### NEXT
+1. Implement a platform-safe directory-handle/identity backend, or fail closed on platforms where containment cannot be guaranteed; add adversarial parent-swap/reparse-point tests.
+2. Add restart reconciliation for staging/ledger/quota states and durability checks at directory-entry boundaries.
+3. Implement the Core-owned `sandbox.file.upload` grant/finalize route independently of the unmerged execution-authority PR.
+4. Implement a genuine bounded raw-byte transport plus binary-safe readback in Build MCP 8030.
+5. Only then run a disposable PC → Sandbox → readback SHA-256 canary, followed by attributable Ka and An review.
+
+**STATUS:** CI PASS 6/6; filesystem containment BLOCKED; Core upload authority NOT INTEGRATED; Build MCP raw-byte transport NOT AVAILABLE; live canary NOT RUN; independent reviews NOT RECORDED; PR #77 OPEN / DRAFT / UNMERGED; Execution Gate CLOSED; NOT RELEASED.
+
+[KÝ: XU | COORDINATOR]
