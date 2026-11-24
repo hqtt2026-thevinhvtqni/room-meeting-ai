@@ -3781,3 +3781,36 @@ However, path containment still relies on pathname checks followed by ordinary p
 PR #78 remains OPEN / DRAFT / UNMERGED. Ka independent security disposition remains **NOT ACCEPTED**. Execution Gate **CLOSED**. Work 28 **ACTIVE / INTEGRATION BLOCKED / NOT RELEASED**.
 
 **Signed:** Ka — CSA / Independent Security Reviewer
+
+
+## 2026-11-25 — JRN-W28-121 — Ka Core/MCP authority and Auto E2E wiring trace
+
+**Document ID:** W28-KA-AUD-121  
+**Priority:** P0  
+**Owner:** Ka — CSA / Independent Security Reviewer  
+**Date-Time:** 2026-11-25 (Asia/Ho_Chi_Minh)  
+**Target:** PR #78 exact head before this journal append: `824e079695415b70c724be6451e604c6510b24e3`  
+**Base:** `work/28-mcp-tooling-platform` at `43e303c33c3d5fc46ea6ab3f6d177624af3f27c7`
+
+### READ / TRACE — exact PR branch
+- `room_hop_mcp/adapter/http_server.py` blob `54cb3ecbce2e6b13083f31c14f0c1f0738f1457d` was read in full. It defines identity and Meeting routes only; no Work-scoped upload grant, upload finalize, or Work evidence routes are present in this adapter.
+- `room_hop_mcp/adapter/server.py` blob `f34b4eebc847dac31feb7c9161c2d8bded812991` exposes exactly four MCP tools: list_meetings, get_meeting, get_transcript, add_paste_to_meeting. The latter accepts text, not binary bytes. No begin/chunk/finalize/abort binary upload tools are registered here.
+- Fetching `room_hop_mcp/core_http_main.py` and `tests/test_core_http_main.py` on this PR branch returned NOT_FOUND. This is a branch-content observation only; it is not proof about any other branch or deployment. No Core upload-grant mount is included in the PR's six-file diff.
+- Runbook `01_PLAN/WORK28_AUTO_E2E_RUNBOOK_V2.0.md` blob `ee6504d6f7a72168608f3daba659f50600b6b768` specifies the evidence evaluator `04_CODE/work28_auto_e2e_gate_v1.py` and a live E2E chain. Evaluator blob `e934a21e750a3b9cddb72f37c2b0ef6e7c9fb31d` is present and implements fail-closed evidence/HMAC checks.
+- Workflow `.github/workflows/work28-mcp-tooling.yml` blob `e71c0c2e33c9908cf005d446a5990c824e8722da` does not invoke that evaluator. Its final job creates a separate JSON report from upstream job result strings and explicitly hardcodes deployed E2E BLOCKED, Execution Gate CLOSED, release NOT_RELEASED. Therefore this job is a CI precondition report, not an evaluator-backed live E2E execution.
+- Workflow does include native Windows binary component tests, but no dedicated Linux binary upload-engine job. The Windows job runs unittest discovery and the later artifact job also retests; neither supplies live Core/MCP/Sandbox evidence.
+
+### COMPARE / STATUS
+- PR #78 remains OPEN / DRAFT / UNMERGED; latest head before this journal append is `824e079695415b70c724be6451e604c6510b24e3`.
+- Compare canonical `work/28-mcp-tooling-platform` to PR branch: DIVERGED, 58 ahead / 5 behind; merge base `4b2a8663a0b9ff40aad8e6812efff197b5085de5`. The five behind commits and journal divergence remain subject to controlled reconciliation; no merge/rebase/cherry-pick performed.
+
+### DISPOSITION
+- **F03 Core authority: BLOCKED / P0.** No real Core-owned Work upload grant/finalize route or atomic revocation boundary is present in this PR diff/adapter evidence.
+- **F04 MCP transport: BLOCKED / P0.** Current MCP adapter lists four text/Meeting tools; no binary-safe upload/readback transport is registered.
+- **Auto E2E wiring: BLOCKED.** Evaluator exists but workflow does not call it; generated report hardcodes live E2E BLOCKED. Exact-head workflow execution remains NOT OBSERVED at this commit; no CI PASS claimed.
+- F01 remains BLOCKED and F02 PARTIAL per JRN-W28-120.
+- No tests, CI, runtime, Core endpoint, MCP live call, or Sandbox binary transfer were executed in this static trace. No source files changed. No merge/deploy/registration/enablement.
+
+**STATUS:** Ka review NOT ACCEPTED; PR #78 OPEN / DRAFT / UNMERGED; Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+**Signed:** Ka — CSA / Independent Security Reviewer
