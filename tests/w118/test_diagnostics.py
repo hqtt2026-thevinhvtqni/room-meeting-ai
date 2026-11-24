@@ -60,6 +60,32 @@ class Work118DiagnosticsTests(unittest.TestCase):
             with self.subTest(body=body), self.assertRaises(ValueError):
                 find_existing_issue([{"number": 301, "body": body}], key)
 
+    def test_markers_inside_long_mixed_or_unclosed_fences_fail_closed(self):
+        key = diagnostic_key(33, "c" * 40)
+        marker = f"<!-- {key} -->"
+        fenced_bodies = (
+            f"````markdown\n```\n{marker}\n```\n````",
+            f"~~~~markdown\n~~~\n{marker}\n~~~\n~~~~",
+            f"````outer\n```inner\n{marker}\n```\n````",
+            f"````unclosed\n{marker}",
+        )
+        for body in fenced_bodies:
+            with self.subTest(body=body), self.assertRaises(ValueError):
+                find_existing_issue([{"number": 401, "body": body}], key)
+
+    def test_marker_after_closed_long_fence_is_reused(self):
+        key = diagnostic_key(34, "d" * 40)
+        marker = f"<!-- {key} -->"
+        body = f"````markdown\nexample\n````\n{marker}"
+        self.assertEqual(find_existing_issue([{"number": 402, "body": body}], key), "402")
+
+    def test_marker_issue_is_reused_even_when_mutable_blocked_label_is_missing(self):
+        key = diagnostic_key(35, "e" * 40)
+        marker = f"<!-- {key} -->"
+        issue_without_label = {"number": 403, "body": marker, "labels": []}
+        plan = build_plan([issue_without_label], 35, "e" * 40, 90, 1, scan_complete=True)
+        self.assertEqual(plan["existing_issue"], "403")
+
     def test_duplicate_marker_across_issues_fails_closed(self):
         key = diagnostic_key(32, "b" * 40)
         marker = f"<!-- {key} -->"
