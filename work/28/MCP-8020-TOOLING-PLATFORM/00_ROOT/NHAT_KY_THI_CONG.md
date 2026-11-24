@@ -3905,3 +3905,49 @@ Fresh compare reports PR branch DIVERGED, 60 ahead / 5 behind. The five canonica
 - Ka review remains NOT ACCEPTED; An independent acceptance remains NOT ACCEPTED; Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
 
 **Signed:** Ka — CSA / Independent Reviewer
+
+
+
+## 2026-11-25 — JRN-W28-124 — Core authority contract boundary audit for binary upload
+
+**Document ID:** W28-KA-AUD-124  
+**Priority:** P0  
+**Owner:** Ka — CSA / Independent Security Reviewer  
+**Date-Time:** 2026-11-25 (Asia/Ho_Chi_Minh)  
+**Target:** Canonical base `work/28-mcp-tooling-platform`; PR #78 integration boundary  
+**Review type:** Static source and test inspection only
+
+### EXACT SOURCES READ
+- `core/execution_authority/authority.py` blob `bfb052fed0fde69767dd219f17a0b14ae6383560`.
+- `core/execution_authority/http_server.py` blob `6363c277ce410d3f5465f449b730199e06e5024c`.
+- `core/execution_authority/store.py` blob `a628dc578c68c05bb875318d1b74528b26f0e4eb`.
+- `execution_host/work28_core_grant_client.py` blob `e330d4f3681d3fb142e559f7ee35b21db128be7e`.
+- `execution_host/work28_grant.py` blob `05c082b00a5c38fbdf45950d42211e644f57ed45`.
+- `tests/test_work28_core_grant_fail_closed.py` blob `6fecca58c97ffe0f042ead8e6eaedf30e5552d78`.
+- `tests/test_work28_grant.py` blob `f30f2a148314b3c3526a62c4193c43219bd89571`.
+- `work/28/.../04_CODE/mcp8020_core_authority_authorizer_v1.py` blob `1d8013eb2dfa281ac922638ac45d7d4fff00c005`.
+- `work/28/.../04_CODE/mcp8020_w13_core_client_v1.py` blob `731f2c2ec07b64ddebb80dc4f665bbc19049b8b4`.
+
+### TRACE / FINDINGS
+1. Core `ExecutionAuthority` is a real enrolled-service-identity and Work-scoped **execution** grant authority. It authenticates a service credential, checks `allowed_identities`, issues short-lived grants and stores only token hashes. This is useful reusable infrastructure, but its grant schema binds execution purpose/workspace/evidence roots; it does not define binary-upload session, byte quota, destination path, upload digest, staging or finalize semantics.
+2. The separate `core.execution_authority.http_server` exposes POST `/works/{work_id}/execution-grants`, GET grant status, and POST `/works/{work_id}/execution-runs`. It does not expose an upload-grant, revoke, upload-begin/chunk/finalize/abort, or upload-readback route. The service defaults to port 8001 and is described as a separate HTTP mount; this inspection does not establish whether a deployment has any additional unreviewed proxy or route.
+3. `ExecutionAuthority.revoke_grant()` appends a revoke record in the authority class, and `_grant_state()` scans those records. However, the inspected HTTP handler does not route a revoke operation. More importantly, no shared transaction/lock/CAS boundary couples grant revocation to a binary-upload final promotion. The append-only store fsyncs individual JSONL appends but provides no transaction spanning revoke and filesystem finalization.
+4. `execution_host.work28_core_grant_client.HttpCoreGrantSource` fetches a list of `ExecutionGrant` records from a configured URL and fails closed on missing/unreachable Core. Its `ExecutionGrant` model binds `work_id`, `entry_path`, `operation`, expected source SHA-256 and expiry for **execution snapshot/run**; it has no upload capability/session fields or revoke epoch.
+5. `tests/test_work28_core_grant_fail_closed.py` verifies missing URL, unreachable Core and startup fail-closed behavior. `tests/test_work28_grant.py` exercises offline/test-issued grants and execution snapshot binding. These are useful execution-grant tests; they are not upload-grant lifecycle or revoke-vs-finalize race tests.
+6. `CoreAuthorityAuthorizer` in the Work 28 package is explicitly staged/not wired. `W13CoreExecutionClientV1` is also explicitly staged/not wired. Their existence does not demonstrate a live upload authority path or MCP registration.
+
+### REQUIRED CONTRACT BEFORE F03 CAN PASS
+- Define a distinct Core-owned upload capability schema: authenticated principal/service identity, canonical Work ID, purpose, destination/path policy, byte and chunk limits, digest expectation, expiry, unique upload/session ID, revocation epoch/version and audit correlation.
+- Derive principal and Work mapping from trusted server-side Core context; reject client-supplied identity/Work authority.
+- Provide Core-owned issue/status/revoke routes with bounded request handling and durable audit; define whether these live in the existing authority service or another approved Core-owned mount without silently changing port architecture.
+- Make revoke-vs-finalize linearizable at the authoritative transaction boundary. A successful final promotion must prove the same grant epoch remains active at the commit point; revocation must prevent later promotion. Filesystem promotion and Core state need an explicit recoverable protocol, not a check-then-act race.
+- Add negative and concurrency tests for expired, revoked, wrong-Work, wrong-principal and stale-epoch grants; prove denied calls create no staging/final filesystem side effects. Add durable restart/readback tests.
+
+### DISPOSITION
+- **F03 remains BLOCKED / P0.** Existing Core execution grant infrastructure is not evidence of binary-upload authority.
+- No source changes, tests, live Core calls, HTTP probes, runtime changes or port changes were performed. This is static source/test trace only.
+- Xu remains implementation owner; this entry is an independent contract finding, not an implementation assignment or architecture approval.
+
+**STATUS:** PR #78 OPEN / DRAFT / UNMERGED; F03 BLOCKED; F01 BLOCKED; F02 PARTIAL / NOT VERIFIED; F04 BLOCKED; Ka review NOT ACCEPTED; An acceptance NOT ACCEPTED; Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+**Signed:** Ka — CSA / Independent Security Reviewer
