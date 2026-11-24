@@ -4177,3 +4177,30 @@ The engine's injected-authorizer seam and grant binding are not equivalent to an
 - PR #78 remains OPEN / DRAFT / UNMERGED; Ka independent review NOT ACCEPTED; An independent acceptance NOT ACCEPTED; Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
 
 **Signed:** Ka — CSA / Independent Security Reviewer
+
+
+## 2026-11-25 — JRN-W28-130 — Cross-Work Core authority contract compatibility check
+
+**Document ID:** W28-KA-AUD-130  
+**Priority:** P0 — authority contract reuse / operation-purpose separation  
+**Owner:** Ka — CSA / Independent Security Reviewer  
+**Date-Time:** 2026-11-25 (Asia/Ho_Chi_Minh)  
+**Target:** Work 28 PR #78 branch xu/w28-f02-tests-20261124; cross-reference snapshot 0902cd26518673aa078bb4c7c7899e1e4a95656a (repository main snapshot returned by GitHub search; NOT the PR head).  
+**Sources:** CORE_EXECUTION_AUTHORITY_V1_2_DEPLOYMENT.md blob ce130f1f9a95daeaafff75ef37eacd4dffc797e2; Work 17 Core authority source trace blob 21b59c6a3b3578d30e39c4c3690b08470e82aa0e; Work 28 Auto E2E Runbook V2.0 blob 405f9cb7d59fe162bae7de7f10696e62a6989778.  
+**Method:** Read-only cross-Work contract/document comparison; not an assertion that the referenced main snapshot is the PR branch or current deployed runtime.
+
+### OBSERVATIONS
+
+1. The documented Core Execution Authority V1.2 is purpose-scoped to pytest_run. It describes enrolled service credentials, short-lived execution grants, online Host validation, and grant status/validate/run/revoke routes. It is not a general-purpose Sandbox file-upload authorization contract.
+2. The Work 17 source trace at its recorded snapshot explicitly found that this documented execution-grant boundary was not mounted in the inspected Core HTTP entrypoint/adapter and was not validated by the inspected Execution Host path. The trace labels configured grant issuance/validation/revocation and runtime status NOT VERIFIED. This is historical source evidence at its stated snapshot, not a claim about current runtime.
+3. Work 28 Runbook V2.0 explicitly says WP3 requires Core trusted-context injection and explicit canonical Work ID W28 → Sandbox key 28 mapping, and says binary upload must not be exposed before authorization is real. It also distinguishes staged Core execution-session adapters/test doubles from deployed Core integration.
+4. Consequently, reusing the documented Execution Authority V1.2 by name, or pointing to its pytest_run grant routes, cannot close F03 for binary Sandbox upload. Work 28 needs its own approved Core operation contract or an explicitly generalized Core capability contract with upload-specific audience, operations, Work mapping, limits, expiry/policy binding and revocation semantics. It must be implemented and verified at the actual authenticated MCP/Core composition boundary.
+
+### DISPOSITION
+
+- This cross-Work check reinforces F03 BLOCKED / P0; it does not create proof of a deployed authority implementation.
+- Exact PR #78 source review remains as recorded in JRN-W28-129. The cross-reference snapshot is explicitly older/different and is used only to reject an invalid contract-reuse assumption.
+- No source/test/workflow changes, tests, endpoint calls, PC operations, merge or deployment occurred.
+- PR #78 remains DRAFT / UNMERGED; Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+**Signed:** Ka — CSA / Independent Security Reviewer
