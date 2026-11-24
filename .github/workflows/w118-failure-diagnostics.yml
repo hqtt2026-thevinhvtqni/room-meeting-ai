@@ -48,7 +48,7 @@ jobs:
           PAGE=1
           SCAN_COMPLETE=false
           while [ "$PAGE" -le 100 ]; do
-            gh api "repos/${GITHUB_REPOSITORY}/issues?state=all&labels=w118-blocked&per_page=100&page=${PAGE}" > "/tmp/diagnostics-page-${PAGE}.json"
+            gh api "repos/${GITHUB_REPOSITORY}/issues?state=all&per_page=100&page=${PAGE}" > "/tmp/diagnostics-page-${PAGE}.json"
             COUNT=$(jq 'length' "/tmp/diagnostics-page-${PAGE}.json")
             jq -s 'add | map(select(has("pull_request") | not))' /tmp/all-diagnostics.json "/tmp/diagnostics-page-${PAGE}.json" > /tmp/diagnostics-combined.json
             mv /tmp/diagnostics-combined.json /tmp/all-diagnostics.json
