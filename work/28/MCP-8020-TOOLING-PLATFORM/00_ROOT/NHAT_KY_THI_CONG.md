@@ -3660,3 +3660,29 @@ However, path containment still relies on pathname checks followed by ordinary p
 - Core upload route, MCP :8030 raw-byte transport, registration, live Sandbox readback and W119 canary remain NOT DONE.
 - PR remains OPEN / DRAFT / UNMERGED; Execution Gate CLOSED; Work ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
 [KÝ: XU | DELIVERY OWNER]
+
+
+## 2026-11-24 — JRN-W28-100 — Xu resumes from active takeover PR #78 and traces F02 startup reconciliation
+
+**READ / TRACE**
+- Queried GitHub PR #77 and #78 directly. PR #77 is CLOSED (not merged) and explicitly superseded; its final comment says all active remediation moves to PR #78. Corrected prior stale status assumptions: PR #77 must not be described as OPEN.
+- PR #78 is OPEN / DRAFT / UNMERGED, base `work/28-mcp-tooling-platform`, head `xu/w28-f02-tests-20261124`, exact head `462ab081f358bf9254661ec4f35056b83e1ac097`.
+- PR #78 contains the same upload-engine candidate plus an additional startup reconciliation regression test for untracked orphan staging. The test verifies the service blocks new uploads and preserves the orphan bytes rather than silently deleting them.
+- PR #78 workflow definition has five required CI lanes, including native Windows upload-engine component tests and immutable exact-SHA artifact build/retest. At inspection, the exact PR #78 head had no workflow run and no combined status contexts; no CI PASS is claimed.
+- PR #78 comparison against its intended base is diverged (51 ahead / 4 behind); changed paths are limited to the W28 workflow, canonical journal, upload engine, upload tests and An acceptance evidence. This is not a green-light to merge; base synchronization must be handled deliberately, not by blind merge.
+
+**DECIDE**
+- PR #77 remains historical evidence only; do not reopen or merge it.
+- PR #78 is the sole active implementation lane for Xu's takeover. Preserve its draft state and do not merge/register/deploy.
+- Keep Execution Gate CLOSED. Continue source and test remediation only until security/QA, Core contract, transport and live readback evidence are satisfied.
+
+**F02 STATIC REVIEW**
+- New orphan test covers an orphan under a Work root that is already known/represented in the test setup. The implementation's orphan scan still enumerates only Work IDs from existing ledger sessions; an orphan in a Work root with no session row can remain undiscovered unless an authoritative inventory of all Sandbox Work roots exists. This remains a gap, not a PASS.
+- The new test is source-level test code only. It has not yet been executed on PR #78 exact head; GitHub currently reports no workflow run/status for that SHA.
+- Startup reconciliation remains callable after service construction; runtime policy must ensure startup-blocked state cannot be bypassed by later manual reconciliation or by a second service instance without a shared global readiness lock. This requires further exact-source review and adversarial tests.
+
+**VERIFY**
+- No source change, GitHub write, merge, deployment, MCP registration, runtime action, PC operation or live upload occurred in this checkpoint.
+- Sandbox and GitHub status were read-only except this journal append.
+
+**STATUS:** PR #78 ACTIVE / DRAFT / UNMERGED; exact-head CI NOT YET OBSERVED; F01–F04 NOT VERIFIED; An acceptance NOT ACCEPTED; Execution Gate CLOSED; NOT RELEASED.
