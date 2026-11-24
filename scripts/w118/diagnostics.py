@@ -7,6 +7,11 @@ import re
 from pathlib import Path
 from typing import Any
 
+try:  # Support both package import in tests and direct script execution in Actions.
+    from .marker_safety import has_exact_standalone_marker
+except ImportError:  # pragma: no cover - exercised by the workflow CLI entrypoint
+    from marker_safety import has_exact_standalone_marker
+
 SHA_RE = re.compile(r"^[0-9a-f]{7,64}$")
 
 
@@ -32,23 +37,6 @@ def update_marker(run_id: str | int, attempt: str | int) -> str:
     return f"<!-- w118-diagnostic-update:{run_number}:{attempt_number} -->"
 
 
-def _has_exact_marker(body: str, marker: str) -> bool:
-    if body.count(marker) != 1:
-        return False
-    in_fence = False
-    found = 0
-    for line in body.splitlines():
-        stripped = line.lstrip()
-        if stripped.startswith("```") or stripped.startswith("~~~"):
-            in_fence = not in_fence
-            continue
-        if line == marker:
-            if in_fence:
-                return False
-            found += 1
-    return found == 1
-
-
 def find_existing_issue(issues: list[dict[str, Any]], key: str) -> str:
     marker = f"<!-- {key} -->"
     matches: list[str] = []
@@ -60,7 +48,7 @@ def find_existing_issue(issues: list[dict[str, Any]], key: str) -> str:
         if not isinstance(body, str):
             raise ValueError("diagnostic Issue body must be text")
         if marker in body:
-            if not _has_exact_marker(body, marker):
+            if not has_exact_standalone_marker(body, marker):
                 raise ValueError("embedded, quoted, fenced or repeated diagnostic marker; refusing Issue mutation")
             if type(number) is not int or number < 1:
                 raise ValueError("diagnostic Issue marker has invalid Issue number")
