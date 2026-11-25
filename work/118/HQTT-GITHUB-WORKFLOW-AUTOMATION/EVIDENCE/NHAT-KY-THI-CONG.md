@@ -2703,3 +2703,17 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - **Remaining blockers:** Core Task schema/read port and Task-scoped lease/Event ingress; W102 authenticated identity/Assignment/recipient ACK; W14 protected execution; W33 production ingress; W70 approved Evidence Register schema/owner; task-scoped branch/Issue binding; Runtime Auto E2E. Task 013 IN_PROGRESS; 014 BLOCKED; 015 BLOCKED; 016/017 contract-level IN_PROGRESS only; 018 BLOCKED; 019 NOT RUN.
 - **Disposition:** PR #68 OPEN / UNMERGED. No merge/rebase/force-push/base retarget/release/runtime mutation. Vinh product acceptance NOT ACCEPTED; release NOT AUTHORIZED.
 - **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-25 17:55 +07:00; Result: bounded static/contract self-check recorded without claiming independent review or runtime acceptance.
+
+
+## Entry 109 — đối soát CI exact-head và đồng bộ nhật ký trên nhánh W118
+
+- **Thời điểm:** 2026-11-25 20:17 +07:00.
+- **Actor:** Xu / AI-01 — điều phối W118 theo ủy quyền của Vinh.
+- **Nguồn đối soát:** GitHub PR #68 hiện được tìm thấy ở trạng thái OPEN / UNMERGED; branch `work/118-auto-e2e-v2-clean` → `main`; HEAD được PR body ghi nhận là `f7b187eb9b80e7d3c0b39caedc7b546aa66a4be4`.
+- **CI exact-head theo PR body:** PR Run #1263 / ID `45621498333`, SUCCESS; validate job `139230561766`; log được PR body ghi nhận 175 tests / 0.231s — OK trên đúng HEAD nêu trên. Artifact ID `15025176088`, size 684 bytes, SHA-256 `8906237d4dc53e5e22782c668d52904ed024241a08133c4bd01e6db30c63ea8c`.
+- **Giới hạn CI:** push-source binding không chạy trên pull_request event; handoff-request, ACK-claim và review-observation jobs SKIPPED. Không phải live Runtime Auto E2E.
+- **Đọc hồ sơ nhánh:** W118-20 mô tả validator static-only, không có HTTP client/network; W118-21 mô tả verifier chỉ kiểm tra envelope/chuỗi receipt và chữ ký qua verifier được inject, không tự chứng minh Core Authority. STATUS.md đang có các snapshot cũ hơn; không dùng snapshot cũ để khẳng định trạng thái mới.
+- **Trạng thái runtime:** Core Task, W102 Assignment/ACK, W14 protected execution, W33 authenticated ingestion, W70 authoritative read-back và full Runtime Auto E2E vẫn BLOCKED / NOT VERIFIED theo PR body hiện hành.
+- **Governance:** PR #68 vẫn OPEN / UNMERGED; không rebase, merge, force-push, runtime mutation hoặc release. Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED.
+- **Tính chất ghi nhận:** Đây là đối soát metadata PR và nội dung hồ sơ GitHub; chưa tải/đọc artifact bytes hoặc chạy lại workflow trong thao tác này. Không tuyên bố xác minh độc lập mới.
+- **Bước tiếp theo:** tiếp tục kiểm tra các lỗi còn lại ở tầng contract/schema và chuẩn bị intake/preflight không gọi endpoint. Chỉ chạy runtime sau khi có contract owner-approved và runtime principal/endpoint có thể xác minh.
