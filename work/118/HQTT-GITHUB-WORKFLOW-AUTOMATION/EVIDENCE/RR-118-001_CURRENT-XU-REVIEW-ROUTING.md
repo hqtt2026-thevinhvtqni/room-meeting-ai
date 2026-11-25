@@ -353,3 +353,19 @@ Work32 Grant may be considered only for W118 protected execution integration aft
 - **Acceptance:** Vinh NOT ACCEPTED; release NOT AUTHORIZED.
 - **Next:** Xu independently re-review exact HEAD `7a236ed7588e74cf94f8636405bb6d7319d6d12a` and Run #1180; Ka continues bounded audit without changing external authority/runtime.
 - **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-25 17:32 +07:00; Result: review routing updated to current HEAD and CI; no approval inferred.
+
+ 
+## Entry 080 — exact-head CI and current compare (2026-11-25 17:34 +07:00)
+
+- **Priority / read order:** 01 — P0 — supersedes Entry 079 CI/compare values.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-25 17:34 +07:00.
+- **PR #68:** OPEN / not draft / UNMERGED; HEAD `2b5e48dc05a8fb9d055a5831a8bf3a906d6a3486`; GitHub `mergeable=true`.
+- **Compare:** DIVERGED, 237 ahead / 17 behind; merge base `792bdd71e5345949e0c1f26ff9f95a8513dfa7d5`; 48 changed paths, all under W118.
+- **Exact-head CI:** Run #1184 / ID `45595923107`, validate job `139141826405`, SUCCESS; 124 tests in 0.154s; artifact ID `15013062231`, size 687 bytes, SHA-256 `fde213de453adab65d1c8e1f4d7ad6bcaf505930b3b72ca51e5545f354b5bf8c`.
+- **Review:** 0 formal reviews / 0 inline threads; Xu Entry 075 NEEDS CHANGES; Entry 076 awaits independent re-review.
+- **Runtime:** Runtime Auto E2E NOT RUN; source-binding and handoff/ACK/review capture skipped; Core/W102/W14/W33/W70 gates BLOCKED / NOT VERIFIED.
+- **Decision:** keep PR OPEN / UNMERGED. Do not integrate while divergence remains unresolved; mergeable=true is not an authorization.
+- **Acceptance:** Vinh NOT ACCEPTED; release NOT AUTHORIZED.
+- **Next:** Xu independently re-review exact HEAD `2b5e48dc05a8fb9d055a5831a8bf3a906d6a3486` and Run #1184; Ka continues bounded audit.
+- **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-25 17:34 +07:00; Result: exact-head evidence and handover routing synchronized.
