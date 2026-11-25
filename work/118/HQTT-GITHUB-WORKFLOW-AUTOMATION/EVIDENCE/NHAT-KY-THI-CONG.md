@@ -2767,3 +2767,18 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - **Result status:** DONE — exact-head CI log and artifact metadata verified.
 - **Runtime Auto E2E:** BLOCKED / NOT RUN; năm live gates remain BLOCKED/NOT VERIFIED.
 - **Next:** proceed only on owner-controlled technical inputs recorded in W118-22 v1.1; do not add validators to substitute for missing integration.
+
+
+## Entry 114 — source-level contract gap review of Core V1.2 candidate and exact-head CI #1278
+
+- **Thời điểm:** 2026-11-26 03:43 (+07).
+- **Phạm vi:** Inspect exact Core grant issuance/run-record DTO and authority implementation on PR #48 candidate; verify latest W118 exact-head CI after Entry 113.
+- **Method:** GitHub fetch_file with bounded line ranges on `work/w1111-core-execution-authority-v1-2`; fetch workflow jobs/logs/artifacts for W118 run #1278. No runtime calls, no code/test execution outside CI, no source mutation in Core/W1111/W14.
+- **Findings:** GrantRequest contains purpose + max_timeout_seconds only; no Task ID, Assignment ID, ACK ref or correlation ID. Grant issue/run journal likewise lacks those fields. RunRecordRequest lacks correlation ID and Assignment linkage. `record_run()` validates token and SHA format but does not compare submitted source SHA to the grant-bound Work policy SHA; Host separately checks workspace hash before record call. These are source-level findings on the unmerged PR #48 branch, not live exploit claims.
+- **Owner disposition:** Core/W1111 must align grant/run records with approved source-binding invariant; W102 supplies authenticated Assignment/ACK linkage; W14 confirms protected Host adoption. W118 must not patch other Work-owned code or invent replacement authority.
+- **W118 exact-head CI:** Run #1278 / ID `45697117293`; validate job `139497302209` SUCCESS; raw log `175 tests in 0.225s — OK`; exact `PR_HEAD_SHA=9d08291ca1b3f0aa4defc6d17b0ff6e8503defba`.
+- **Artifact:** ID `15061422356`; name `w118-run-evidence-45697117293-1`; 684 bytes; SHA-256 `e38fa07ba34f6643f9405bb799aa674f811dc42227fd52a16de0d627355c0f5d`; expires 2026-12-25T20:40:02Z.
+- **Skipped:** handoff-request, ACK-claim, review-observation; source binding NOT_RUN.
+- **Result:** DONE — source-level contract gap identified and latest exact-head CI evidence verified. No live integration PASS.
+- **Runtime Auto E2E:** BLOCKED / NOT RUN.
+- **Next:** present precise remediation items to canonical owners and continue safe W118-side adapter mapping only after approved inputs; no PR #48 import, merge, rebase, runtime mutation or release.
