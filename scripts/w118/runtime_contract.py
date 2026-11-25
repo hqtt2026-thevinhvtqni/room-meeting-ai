@@ -25,6 +25,16 @@ ALLOWED_AUTH_MODES = {
     "BEARER_REF", "MTLS", "SIGNED_REQUEST", "WORKLOAD_IDENTITY"
 }
 ALLOWED_METHODS = {"GET", "POST", "PUT", "PATCH", "DELETE"}
+ALLOWED_BUNDLE_FIELDS = {"schema_version", "work_id", "dependencies"}
+ALLOWED_COMPONENT_FIELDS = {
+    "owner", "contract_id", "contract_version", "source_revision", "contract_ref",
+    "approved", "base_url", "auth", "operations", "evidence",
+}
+ALLOWED_AUTH_FIELDS = {"mode", "credential_ref"}
+ALLOWED_OPERATION_FIELDS = {
+    "method", "path", "request_schema_ref", "response_schema_ref", "side_effect",
+}
+ALLOWED_EVIDENCE_FIELDS = {"correlation_id_field", "receipt_id_field"}
 SENSITIVE_KEYS = {
     "token", "access_token", "refresh_token", "password", "secret",
     "client_secret", "private_key", "api_key", "authorization",
@@ -53,7 +63,13 @@ def _validate_endpoint(value: Any, path: str, errors: list[str]) -> None:
     if not _non_empty_string(value):
         errors.append(f"{path} must be a non-empty URL")
         return
-    parsed = urlsplit(value.strip())
+    try:
+        parsed = urlsplit(value.strip())
+        # Accessing .port validates malformed/out-of-range port syntax.
+        _ = parsed.port
+    except ValueError:
+        errors.append(f"{path} must be a syntactically valid absolute HTTP(S) URL")
+        return
     if parsed.scheme not in {"https", "http"} or not parsed.hostname:
         errors.append(f"{path} must be an absolute HTTP(S) URL")
         return
@@ -74,6 +90,8 @@ def _validate_operation(
     if not isinstance(operation, Mapping):
         errors.append(f"{path} must be an object")
         return
+    for key in sorted(set(operation) - ALLOWED_OPERATION_FIELDS):
+        errors.append(f"{path}.{key} is not an allowed operation field")
     method = operation.get("method")
     if not isinstance(method, str) or method not in ALLOWED_METHODS:
         errors.append(f"{path}.method must be an allowed HTTP method")
@@ -100,6 +118,8 @@ def validate_runtime_contract(bundle: Any) -> dict[str, Any]:
         return _report(["bundle must be a JSON object"], [])
 
     errors.extend(_find_sensitive_values(bundle))
+    for key in sorted(set(bundle) - ALLOWED_BUNDLE_FIELDS):
+        errors.append(f"$.{key} is not an allowed top-level contract field")
     if bundle.get("schema_version") != "1.0":
         errors.append("schema_version must be '1.0'")
     if bundle.get("work_id") != "118":
@@ -126,6 +146,8 @@ def validate_runtime_contract(bundle: Any) -> dict[str, Any]:
             errors.append(f"{path} must be an object")
             continue
 
+        for key in sorted(set(spec) - ALLOWED_COMPONENT_FIELDS):
+            errors.append(f"{path}.{key} is not an allowed component field")
         for field in ("owner", "contract_id", "contract_version", "source_revision", "contract_ref"):
             if not _non_empty_string(spec.get(field)):
                 errors.append(f"{path}.{field} must be supplied by the accountable owner")
@@ -138,6 +160,8 @@ def validate_runtime_contract(bundle: Any) -> dict[str, Any]:
         if not isinstance(auth, Mapping):
             errors.append(f"{path}.auth must be an owner-defined authentication object")
         else:
+            for key in sorted(set(auth) - ALLOWED_AUTH_FIELDS):
+                errors.append(f"{path}.auth.{key} is not an allowed authentication field")
             if auth.get("mode") not in ALLOWED_AUTH_MODES:
                 errors.append(f"{path}.auth.mode is unsupported or missing")
             if not _non_empty_string(auth.get("credential_ref")):
@@ -162,6 +186,8 @@ def validate_runtime_contract(bundle: Any) -> dict[str, Any]:
         if not isinstance(evidence, Mapping):
             errors.append(f"{path}.evidence must define evidence binding")
         else:
+            for key in sorted(set(evidence) - ALLOWED_EVIDENCE_FIELDS):
+                errors.append(f"{path}.evidence.{key} is not an allowed evidence field")
             for field in ("correlation_id_field", "receipt_id_field"):
                 if not _non_empty_string(evidence.get(field)):
                     errors.append(f"{path}.evidence.{field} must be owner-defined")
