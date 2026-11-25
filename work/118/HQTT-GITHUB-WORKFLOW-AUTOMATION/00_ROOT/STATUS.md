@@ -714,3 +714,13 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - **Review and acceptance:** formal PR reviews 0; inline review threads 0. The owner-authorized Xu review waiver remains distinct from independent approval. Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED.
 - **Runtime:** Core Task, W102 Assignment/ACK, W14 protected execution, W33 authenticated ingestion, W70 authoritative read-back and full Runtime Auto E2E remain BLOCKED / NOT VERIFIED.
 - **Disposition:** validator correction DONE; exact-head CI PASS; runtime E2E NOT RUN. No merge, release, runtime mutation or authority substitution.
+
+
+## 12. Strict contract schema boundary — 2026-11-25 20:12 +07:00
+
+- **Source HEAD:** `971bd1783db4604bc4f11db2bde600f470c66ea8`.
+- **Validator hardening:** strict allow-lists now reject unknown top-level, component, auth, operation and evidence fields; malformed URL/port syntax fails closed without raising an exception. Seven focused negative cases cover validator/Schema parity and malformed input.
+- **Exact-head PR CI:** Run #1255 / ID `45621083784`, validate job `139229121704` SUCCESS; **172 tests in 0.334s — OK**. Push source-binding step SKIPPED on pull_request; handoff-request, ACK-claim and review-observation jobs SKIPPED. Contract/unit CI only.
+- **Artifact:** ID `15025085887`, SHA-256 `5f8b524244fd403bab13cd393b55b589016008f7eacc4a6a47c4ada4b8880c1e`, unexpired at readback.
+- **Runtime status:** Core Task, W102 Assignment/ACK, W14 protected execution, W33 authenticated ingestion, W70 authoritative read-back and Runtime Auto E2E remain BLOCKED / NOT VERIFIED. No approved external contract bundle is available.
+- **Governance:** PR #68 remains OPEN / UNMERGED. No rebase, merge, force-push, runtime mutation or release. Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED.
