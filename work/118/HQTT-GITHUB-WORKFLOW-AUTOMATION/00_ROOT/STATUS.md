@@ -689,3 +689,16 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - **Event jobs:** Handoff, ACK and Review observation remain SKIPPED; these CI runs do not prove event/runtime integration.
 - **Current PR:** #68 OPEN / UNMERGED / mergeable=true; head `324a7e9c97c4858a188fcc5572a0f14c4c853294`; 57 changed files; compare DIVERGED 267 ahead / 17 behind; merge base `792bdd71e5345949e0c1f26ff9f95a8513dfa7d5`.
 - **Runtime disposition:** All five external runtime gates remain BLOCKED / NOT VERIFIED. Structural evidence-chain validation does not promote them.
+
+
+## 14. Owner-trusted receipt signature verification — 2026-11-25
+
+- **Implementation:** `evidence_chain.py` now accepts an injected `signature_verifier(payload_bytes, signature_envelope)` backed by owner-approved, service-specific trusted keys. Canonical signed payload excludes only the signature field.
+- **Signature behavior:** all five receipts must be signed or all unsigned; partial signatures BLOCK. A signed bundle without a trusted verifier remains `STRUCTURALLY_COMPLETE_UNAUTHENTICATED`. A configured verifier with unsigned receipts BLOCKS. Invalid/tampered signatures BLOCK.
+- **Authenticated result ceiling:** valid signatures return `AUTHENTICATED_CHAIN_NOT_RUNTIME_PASS`; `issuer_signatures_verified=true`, but `authority_verified=false`, `runtime_e2e_pass=false`, `acceptance_granted=false`. Signature verification does not grant Core authority.
+- **Schema:** `evidence-chain.schema.json` now permits an optional signature envelope (`algorithm`, `key_id`, `value`); tests include valid signature, tamper, partial-signature, no-verifier and fail-closed cases.
+- **Exact-head CI:** push Run #1239 / ID `45619256402` and PR Run #1240 / ID `45619263036`, source SHA `411aad8a6922f5033700a284767b819c668119b2`; both validate jobs SUCCESS; **165 tests PASS** (0.334s push; 0.162s PR).
+- **Artifacts:** push ID `15023458195`, SHA-256 `39cfd26cc8ebd4f0f741bbfa8a9bbdfded9295d79985e0528019079499c14fae`; PR ID `15022729607`, SHA-256 `65f688ef3edbc8a9e30b35a4254063b64f7bbdf644efff3f70f0f79b6d0a88df`.
+- **Skipped jobs:** Handoff/ACK/Review remain SKIPPED. No live runtime service was contacted.
+- **Current PR:** #68 OPEN / UNMERGED / mergeable=true; head `411aad8a6922f5033700a284767b819c668119b2`; 57 files; compare DIVERGED 274 ahead / 17 behind; merge base `792bdd71e5345949e0c1f26ff9f95a8513dfa7d5`.
+- **Correction to Entry/Section 13:** signature verification is now pluggable. Section 13's statement that the tool can never authenticate receipts is superseded; authority and Runtime E2E remain unverified.
