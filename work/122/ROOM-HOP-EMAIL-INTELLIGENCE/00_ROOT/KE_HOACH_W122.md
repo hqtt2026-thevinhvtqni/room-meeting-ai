@@ -156,3 +156,14 @@ Prefer existing ROOM-HOP infrastructure and narrow provider scopes. No paid clou
 
 ## 11. Current status
 DISCOVER / ARCHITECTURE INTAKE. G0/G1 are not yet closed. G2 not approved. G3 BUILD NOT AUTHORIZED. REAL SEND NOT AUTHORIZED.
+
+
+## 12. Demo mailbox — owner-provided account
+- Initial demo mailbox requested by Vinh: `thevinhvtqni@gmail.com`.
+- Provider for first demo: Gmail / Google.
+- Intended use: controlled demonstration of inbox ingestion, classification, prioritization, thread summary, action extraction, draft suggestion and Dashboard workflow.
+- Initial permission level: READ-ONLY + DRAFT-ONLY. No send, reply, forward, delete, archive, label mutation, filter creation, or settings change during the first demo.
+- Data minimization: start with a small, explicitly selected sample or a narrow date/query window; avoid bulk export and avoid unrelated personal content. Redact sensitive data in reports and test fixtures.
+- Account identity verification: Gmail connector `get_profile` was invoked to confirm the authenticated account, but returned an empty result. Therefore the connected identity is NOT VERIFIED to match `thevinhvtqni@gmail.com`; do not read mailbox content until identity is confirmed.
+- OAuth/application connection for the W122 product itself remains NOT CONFIGURED. A ChatGPT Gmail connector session, if available, is not evidence that W122's own OAuth integration is implemented.
+- Demo success criteria: show real message metadata/content only after mailbox identity is verified; trace each AI classification and summary to source message; create draft suggestions only if explicitly requested; demonstrate that no send action is possible in read-only/demo mode.
