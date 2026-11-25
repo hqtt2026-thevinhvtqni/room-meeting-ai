@@ -321,3 +321,19 @@ Work32 Grant may be considered only for W118 protected execution integration aft
 - **Governance:** PR #68 OPEN / UNMERGED; Vinh product acceptance NOT ACCEPTED; release NOT AUTHORIZED. No merge, rebase, force-push, PR close, release, secret/permission/branch-protection change, runtime mutation or external Work/Sandbox mutation.
 - **Next action:** Xu independently re-review exact HEAD `11942ea68a1484f46f6691644ce5eaf0853ea732` and Run #1156, explicitly disposition findings 067 and 069. Ka will address only any bounded findings returned. Vinh retains final product acceptance and release authority.
 - **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-24 12:32 +07:00; Result: live review state and exact-head evidence refreshed; independent review remains pending; no acceptance or release asserted.
+
+ 
+## Entry 078 — current mergeability and integration safety (2026-11-25 17:29 +07:00)
+
+- **Priority / read order:** 01 — P0 — current integration gate supersedes Entry 077.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-25 17:29 +07:00.
+- **PR #68:** OPEN / not draft / UNMERGED; source HEAD `8fcf49e14658d9a36d469c5daac1d3dcd4c7a210`; GitHub reports `mergeable=false`.
+- **Compare:** base `main` HEAD `af885358114a277876b6233f08836e07a26bf658`; branch `work/118-auto-e2e-v2-clean`; DIVERGED, 231 ahead / 17 behind; merge base `792bdd71e5345949e0c1f26ff9f95a8513dfa7d5`; 48 changed paths all under W118.
+- **CI:** exact-head Run #1165 / ID `45334204684`, validate SUCCESS, 124 tests in 0.286s; artifact ID `14893950172`, SHA-256 `72f3e42c9f3ebdb5e21724273397a44913ac62504f34e5a1ca113316f47abc44`. Contract/unit CI only.
+- **Review:** 0 formal reviews / 0 inline threads. Xu Entry 075 NEEDS CHANGES for 067/069; Entry 076 awaits independent re-review. No reviewer identity or approval inferred.
+- **Runtime:** Runtime Auto E2E NOT RUN; source-binding and handoff/ACK/review capture jobs SKIPPED. Core/W102/W14/W33/W70 gates BLOCKED / NOT VERIFIED.
+- **Integration disposition:** BLOCKED pending controlled conflict/source review. No rebase, merge, force-push, reset, PR close, or release.
+- **Acceptance:** Vinh NOT ACCEPTED; release NOT AUTHORIZED.
+- **Next:** preserve read-only posture; continue source/authority audit and await Xu's independent disposition. Any integration plan must be reviewed before history-changing operations.
+- **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-25 17:29 +07:00; Result: integration warning and next gate recorded.
