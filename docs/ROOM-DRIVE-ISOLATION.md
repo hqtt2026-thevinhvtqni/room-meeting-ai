@@ -58,7 +58,7 @@ An absent process at one instant does not prove Drive is uninstalled or backup i
 
 tests/test_room_drive_guard.py covers root/nested case-insensitive detection, .git exclusion, symlink safety, and the no-mutation report contract. Run:
 
-    python -m unittest tests.test_room_drive_guard -v
+    python -m unittest discover -s tests -p test_room_drive_guard.py -v
 
 Until the tests run in an evidenced CI job on the exact branch commit, this is not a CI PASS. It is not a PC integration test. The PowerShell diagnostic has not been executed on the target PC in this task.
 
