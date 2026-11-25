@@ -138,3 +138,14 @@
   2. NHAT_KY_THI_CONG_W122.md fetched from main; blob SHA 7b83d8cc4056b71fd4939a382023ad68c48121cf; content includes J007.
 - Result: GitHub main post-update read-back PASS for both files. Sandbox remains canonical working source; GitHub main mirror is synchronized for these two updated documents.
 - Next: do not start BUILD from this plan alone. Continue discovery only on new authoritative evidence; obtain original source email if Vinh provides or identifies it, and obtain approved G2/G3 decisions before implementation.
+
+ 
+## 2026-11-25 — J009 — Demo mailbox nominated by Product Owner
+- Actor: Xu / ROOM-HOP identity xu.
+- User direction: Vinh nominated `thevinhvtqni@gmail.com` as the first mailbox to use for the W122 demo.
+- Decision for demo scope: Gmail is the first demo provider; initial mode is READ-ONLY + DRAFT-ONLY. No send/reply/forward/delete/archive/label/filter/settings mutation is permitted during initial demo.
+- Identity check: invoked Gmail connector get_profile to verify authenticated account; returned an empty result. Account identity is therefore NOT VERIFIED. No mailbox messages were read and no mailbox data was changed.
+- Important separation: a ChatGPT Gmail connector session is not proof that W122's own Gmail OAuth integration exists or is production-ready.
+- Evidence: canonical plan write response {"text":"{\n  \"status\": \"ok\",\n  \"work_id\": \"122\",\n  \"path\": \"ROOM-HOP EMAIL INTELLIGENCE/00_ROOT/KE_HOACH_W122.md\",\n  \"operation\": \"write\"\n}"}. Read-back and GitHub main synchronization pending.
+- Next: verify the connected account identity matches the nominated address before any message retrieval. If the connector cannot expose verified identity, request an approved OAuth connection path or a user-provided limited sample; do not guess.
+- Gate: G0/G1 remain open; G2 not approved; G3 BUILD not authorized; real send denied.
