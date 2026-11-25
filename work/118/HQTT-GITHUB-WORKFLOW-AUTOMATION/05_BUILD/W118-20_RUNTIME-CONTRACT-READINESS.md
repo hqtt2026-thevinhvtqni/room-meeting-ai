@@ -5,6 +5,8 @@
 - **Purpose:** Validate owner-supplied integration contracts before any live runtime preflight.
 - **Code:** `scripts/w118/runtime_contract.py`
 - **Tests:** `tests/w118/test_runtime_contract.py`
+- **JSON Schema:** `schemas/w118/runtime-contract.schema.json`
+- **Owner intake template:** `05_BUILD/runtime-contract-template.json` (intentionally `approved: false` and incomplete placeholders; it must fail validation until owners replace every placeholder and formally approve each contract).
 
 ## 1. Scope and authority
 
