@@ -149,3 +149,11 @@
 - Evidence: canonical plan write response {"text":"{\n  \"status\": \"ok\",\n  \"work_id\": \"122\",\n  \"path\": \"ROOM-HOP EMAIL INTELLIGENCE/00_ROOT/KE_HOACH_W122.md\",\n  \"operation\": \"write\"\n}"}. Read-back and GitHub main synchronization pending.
 - Next: verify the connected account identity matches the nominated address before any message retrieval. If the connector cannot expose verified identity, request an approved OAuth connection path or a user-provided limited sample; do not guess.
 - Gate: G0/G1 remain open; G2 not approved; G3 BUILD not authorized; real send denied.
+
+ 
+## 2026-11-25 — J010 — Demo mailbox plan synchronized and read back
+- Actor: Xu / ROOM-HOP identity xu.
+- Verification: Sandbox read-back of plan and journal returned content containing nominated mailbox and demo constraints.
+- GitHub main: plan update commit b3dcfb28df250e24cdd49f40791f9d1afd9a2376; post-update fetch blob SHA 63c9ae6e0fc7286914065e0b2b1786bb8b8e2116; nominated mailbox and demo section present.
+- GitHub main: journal update commit 8aafd5ac22c5b5f0c09946ec07f9a8272913a7ff; post-update fetch blob SHA b8b33e291ae5e269828a823723fe430340f47e91; J009 and mailbox address present.
+- Result: plan and journal synchronization/read-back PASS. Gmail account identity remains UNVERIFIED because get_profile returned empty; mailbox content has not been accessed.
