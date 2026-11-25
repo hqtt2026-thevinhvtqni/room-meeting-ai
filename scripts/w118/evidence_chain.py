@@ -131,9 +131,9 @@ def verify_evidence_chain(bundle: Any) -> dict[str, Any]:
     execution = stage_receipts.get("w14_execution")
     ingestion = stage_receipts.get("w33_ingestion")
     readback = stage_receipts.get("w70_readback")
-    if execution and ingestion and execution.get("artifact_sha256") != ingestion.get("artifact_sha256"):
+    if execution and ingestion and str(execution.get("artifact_sha256", "")).lower() != str(ingestion.get("artifact_sha256", "")).lower():
         errors.append("W33 ingestion artifact digest must match W14 execution artifact")
-    if ingestion and readback and ingestion.get("artifact_sha256") != readback.get("artifact_sha256"):
+    if ingestion and readback and str(ingestion.get("artifact_sha256", "")).lower() != str(readback.get("artifact_sha256", "")).lower():
         errors.append("W70 read-back artifact digest must match W33 ingested artifact")
 
     return _report(errors)
