@@ -216,3 +216,12 @@ For each of the ten review items above, record PASS / BLOCKED / NEEDS CHANGES an
 - **Requested Xu disposition:** re-review exact HEAD and exact-head CI; independently assign PASS / NEEDS CHANGES / BLOCKED to 067 and 069. Ka does not self-approve.
 - **Runtime boundary:** contract/unit CI only. Runtime Auto E2E NOT RUN; external authority/runtime gates unchanged and blocked.
 - **Vinh:** product acceptance NOT ACCEPTED; release NOT AUTHORIZED.
+
+
+### Owner disposition — independent Xu review waived (Entry 086; 2026-11-25)
+
+- **Name / Title:** Vinh / Project Owner; recorded by Ka / AI-02 — CSA. **Date-Time:** 2026-11-25 17:45 +07:00.
+- Vinh explicitly waives Xu independent review for this W118 completion path. Status of this gate is **WAIVED BY PROJECT OWNER**, not PASS, not Xu APPROVED, and not an independent review.
+- Xu Entry 075 NEEDS CHANGES remains historical. Findings 067 and 069 have implementation/test remediation recorded in Entry 076; Ka must perform and record a KA SELF-CHECK against the current HEAD, preserving the distinction from independent review.
+- All other gates remain mandatory: exact-head CI, source binding, Core/W102/W14/W33/W70 authority, runtime Auto E2E, evidence integrity, integration safety, Vinh product acceptance and separate release authorization.
+- **Updated actions:** Ka owns continued implementation and self-check; Xu action is not required for this path; Vinh retains final product acceptance and release authority.
