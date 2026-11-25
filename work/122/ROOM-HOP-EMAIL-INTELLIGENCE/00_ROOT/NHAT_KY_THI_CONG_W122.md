@@ -65,3 +65,66 @@
 - Result: W122 Sandbox registration and file read-back PASS; GitHub main file read-back PASS; W120/W121 non-interference PASS within the observed inventory/manifest boundary. This is not a byte-hash comparison against a pre-write snapshot; no files in either Work were written by this operation.
 - Not verified: W0000 DOC-018 remains a dated 2026-11-03 portfolio snapshot and has not been revised; live provider/API/runtime integration, OAuth, tests, build, real email sending and release are not performed.
 - Next: continue read-only discovery of W70 intake requirements, W52 reusable contracts, provider APIs and actual ROOM-HOP source/runtime boundaries. Obtain reviewer feedback and finalize one architecture decision record before any BUILD authorization.
+
+
+## 2026-11-25 — J003 — Consultation brief creation and read-back
+- Actor: Xu / ROOM-HOP identity `xu`.
+- Method: `sandbox_append`, `sandbox_create`, then `sandbox_read_probe` for all three changed paths.
+- Evidence:
+  1. Journal J002 append returned status=ok; read-back succeeded.
+  2. Created `03_ARCHITECTURE/W122_KHA_GMAIL_GOOGLE_DISCOVERY_BRIEF.md`; read-back succeeded (2,169 bytes).
+  3. Created `03_ARCHITECTURE/W122_KA_INDEPENDENT_SECURITY_REVIEW_BRIEF.md`; read-back succeeded (2,216 bytes).
+- Result: Artifact write/read-back PASS. The briefs are prepared and scoped to read-only discovery/review; no OAuth, code, mailbox operation or send permission.
+- Dispatch status: NOT DISPATCHED. Available ROOM-HOP tool inventory in this session did not expose a verified task-assignment/agent-dispatch operation. Do not claim Kha or Ka have received or accepted the requests.
+- Next: use the approved ROOM-HOP agent/task dispatch mechanism when available; meanwhile Xu continues read-only source and provider discovery.
+
+## 2026-11-25 — J004 — W05 reuse-boundary and official Gmail API discovery
+- Actor: Xu / ROOM-HOP identity `xu`.
+- Scope: read-only inspect W05 source/evidence and official Google Gmail API documentation; no W05 writes.
+- Method: W05 `sandbox_list` + `sandbox_read_probe`; official Google Developers web search.
+- W05 evidence inspected: manifest; Connection API; OAuth Security; Workspace Connection Architecture; Connection Lifecycle; Connection Final Report; Google adapter/provider source; adapter and REAL GOOGLE tests.
+- Findings:
+  1. W05 generic patterns available: room/user/connection ownership, single-use expiring OAuth state, sanitized metadata, credential-store boundary, lifecycle/re-auth/revoke patterns, backend-only credential resolution.
+  2. W05 is NOT a Gmail connector. Inspected provider code builds Google Docs v1 and Drive v3 using service-account credentials. No Gmail messages/threads/drafts/send/history/watch adapter appears in the inspected files.
+  3. W05 final report is PARTIAL: historical offline E2E claim 24 passed, 1 deselected; REAL GOOGLE E2E BLOCKED/NOT RUN; production secret manager pending; Room UI not implemented.
+  4. Official Gmail docs confirm scopes, message/thread/draft/send methods, Pub/Sub watch, history cursor, 7-day watch renewal, potential dropped/delayed notifications, stale history 404 -> full sync, and quota units.
+- Sources: Google Developers pages listed in `03_ARCHITECTURE/W122_W05_REUSE_BOUNDARY_AND_GMAIL_DISCOVERY.md`; accessed 2026-11-25.
+- Result: DISCOVERY REPORT prepared. No live provider call, no credentials, no OAuth consent, no mailbox access, no code execution, no send.
+- Boundary: W05 remains read-only and unchanged by this session. W122 remains DISCOVER; BUILD/REAL SEND NOT AUTHORIZED.
+- Next: inspect actual ROOM-HOP Core/Gateway/Event Listener contracts from read-only sources; identify exact integration capabilities. Await Kha/Ka dispatch mechanism and findings; do not mark consultations received until actual dispatch evidence exists.
+
+
+## 2026-11-25 — J005 — ROOM-HOP integration boundary trace
+- Actor: Xu / ROOM-HOP identity xu.
+- Method: read-only `sandbox_list` and `sandbox_read_probe` for W01, W02, W11, W12 and W16 artifacts; Build MCP 8030 `get_room_structure` and `get_room_context`.
+- Findings:
+  1. W01 auth/access docs are PROPOSED/SANDBOX PROTOTYPE; access matrix says not yet a runtime authorization registry.
+  2. W02 authorization gate artifact is a sandbox prototype.
+  3. W11 production boundary assigns identity, membership, message/event persistence and deduplication to Core; explicitly rejects guessed service calls where contracts are unreadable.
+  4. W12 inspected execution boundary says only Sandbox file API is exposed through its adapter; process/service, GitHub, CI and WorkContext-bound browser adapters are not configured/exposed there.
+  5. W16 architecture assigns agent-to-agent dispatch to W52 and leaves scheduler/retry ownership unresolved.
+  6. Current 8030 tool inventory has no verified agent-task dispatch/assignment operation. Kha/Ka briefs remain NOT DISPATCHED.
+  7. No approved production service contract for Core/Gateway/Event Listener/Agent Runtime was verified from these inspected artifacts. This does not prove no such service exists elsewhere.
+- Result: integration trace PARTIAL; approved runtime contract evidence BLOCKED. No guessed endpoint called, no production runtime probe, no code or provider operation.
+- Next: obtain approved source/API contracts and W52 dispatch mechanism through a verified route; continue read-only discovery only. G3 BUILD authorization remains absent.
+
+ 
+## 2026-11-25 — J006 — Product delivery plan revision for Anh Đức
+- Actor: Xu / ROOM-HOP identity xu.
+- User direction: Vinh instructed Xu to complete W122 carefully with a concrete plan; clarified the product is being built for Anh Đức.
+- Context retrieval: prior conversation records confirm multiple primary mailboxes; automatic receipt/classification; alerts for important/action-required mail; draft replies; Dashboard + email alerts; auto-send only to partners within approved authority; sensitive matters require approval.
+- Method: read-only inventory of Work 122, then read-back of canonical manifest, plan, minutes, journal and architecture intake using sandbox_read_probe; revised the existing canonical 00_ROOT/KE_HOACH_W122.md (no duplicate plan created).
+- Plan changes: explicit intended end user Anh Đức; product outcome and operating model; 12 work packages; G0–G6 gates; acceptance criteria; role separation; cost controls; blockers; immediate next actions.
+- Evidence: plan write tool response: {"text":"{\n  \"status\": \"ok\",\n  \"work_id\": \"122\",\n  \"path\": \"ROOM-HOP EMAIL INTELLIGENCE/00_ROOT/KE_HOACH_W122.md\",\n  \"operation\": \"write\"\n}"}. Read-back verification is pending and must be performed before marking the plan update PASS.
+- Constraints: no write to W120/W121; no provider connection, OAuth consent, credential change, code implementation, paid commitment or external send. G2 architecture and G3 BUILD remain NOT APPROVED / NOT AUTHORIZED.
+- Next: read back revised plan; inspect whether original source email exists under 01_ORIGINAL; record actual presence/absence. Continue only with new authoritative integration/dispatch evidence; do not repeat old traces without a new source.
+
+ 
+## 2026-11-25 — J007 — Plan read-back and GitHub main synchronization
+- Actor: Xu / ROOM-HOP identity xu.
+- Verification: sandbox_read_probe returned status=ok for the revised canonical plan; content includes beneficiary Anh Đức, all 12 work packages, G0–G6, acceptance criteria, cost controls and explicit blockers.
+- Original source inspection: sandbox_list for Work 122 returned only the 01_ORIGINAL directory and no files beneath it. The original source email is therefore NOT PRESENT in the inspected W122 Sandbox inventory; do not reconstruct or quote it. The requirements in the plan are explicitly based on prior conversation context.
+- GitHub synchronization: updated work/122/ROOM-HOP-EMAIL-INTELLIGENCE/00_ROOT/KE_HOACH_W122.md on main using the exact Sandbox file content. GitHub update returned commit SHA b56c02c804bd48b4ab5a1f850e40640107447c03.
+- Result: Sandbox plan read-back PASS; GitHub write operation returned success. GitHub post-update read-back still pending.
+- Current gate: G0/G1 NOT CLOSED; G2 NOT APPROVED; G3 BUILD NOT AUTHORIZED; REAL SEND NOT AUTHORIZED.
+- Next: verify GitHub main content matches the canonical Sandbox plan; inspect any newly available original email source or record the source as missing; continue discovery only where a new authoritative source exists.
