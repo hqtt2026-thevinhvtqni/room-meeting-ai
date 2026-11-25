@@ -677,3 +677,15 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - Push source-binding is `UNBOUND_LEGACY_BRANCH`; handoff/ACK/review jobs SKIPPED. No live runtime proof.
 - PR #68 remains OPEN / UNMERGED; current head `c10cbe369820bd0a71db777c2389e2eccf1cec4b`; 53 changed files; compare DIVERGED 259 ahead / 17 behind. No rebase/merge/release.
 - All five external runtime gates remain BLOCKED / NOT VERIFIED.
+
+
+## 13. Five-stage evidence-chain verifier — 2026-11-25
+
+- **Implementation:** `scripts/w118/evidence_chain.py`; tests: `tests/w118/test_evidence_chain.py`; internal envelope schema: `schemas/w118/evidence-chain.schema.json`; runbook: `05_BUILD/W118-21_RUNTIME-EVIDENCE-CHAIN-VERIFIER.md`.
+- **Coverage:** 5 ordered stages — Core Task snapshot, W102 Assignment/ACK, W14 execution, W33 ingestion, W70 read-back. Validates one correlation ID, Work/Task/source SHA binding, receipt IDs and previous-receipt chain, stage-specific outcomes, timezone-aware chronological timestamps, and W14→W33→W70 artifact SHA-256 continuity.
+- **Security boundary:** The tool returns at most `STRUCTURALLY_COMPLETE_UNAUTHENTICATED`; it always sets `runtime_e2e_pass=false`, `authenticity_verified=false`, `acceptance_granted=false`. It does not authenticate issuer signatures or call services.
+- **Exact-head CI:** Push Run #1229 / ID `45618473509` and PR Run #1230 / ID `45618481129`, both for source SHA `324a7e9c97c4858a188fcc5572a0f14c4c853294`; validate jobs SUCCESS; **159 tests PASS** (0.321s push; 0.320s PR).
+- **Artifacts:** Push ID `15023167274`, SHA-256 `0e2e1e907432749e56288d72de381d5526743d678d27e52eff3485697ec4ecbd`; PR ID `15022439775`, SHA-256 `06734fbadc788b53a2759a5c77d64f003874f757ae8c614d173b23b085df2185`.
+- **Event jobs:** Handoff, ACK and Review observation remain SKIPPED; these CI runs do not prove event/runtime integration.
+- **Current PR:** #68 OPEN / UNMERGED / mergeable=true; head `324a7e9c97c4858a188fcc5572a0f14c4c853294`; 57 changed files; compare DIVERGED 267 ahead / 17 behind; merge base `792bdd71e5345949e0c1f26ff9f95a8513dfa7d5`.
+- **Runtime disposition:** All five external runtime gates remain BLOCKED / NOT VERIFIED. Structural evidence-chain validation does not promote them.
