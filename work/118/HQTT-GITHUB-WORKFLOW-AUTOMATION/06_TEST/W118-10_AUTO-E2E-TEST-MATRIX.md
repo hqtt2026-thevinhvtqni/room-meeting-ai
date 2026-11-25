@@ -257,3 +257,14 @@ Post-merge event execution order and expected outcomes are specified in [RT-118-
 - **Artifact:** ID `15023041079`, `w118-run-evidence-45617128565-1`, SHA-256 `7631f8769ade94809b89b55d6d4cbc43a2c4a8c32fecb817034283b5f2a6f166`.
 - **Classification:** CI contract/unit evidence only. No endpoint was contacted; no credential was loaded; no Runtime E2E or Work 70 verification is claimed.
 - **Event jobs:** handoff-request, ACK-claim and review-observation SKIPPED on this PR synchronize event.
+
+
+## Runtime contract bundle schema/template — exact-head Run #1217 / #1218
+
+- Added JSON Schema `schemas/w118/runtime-contract.schema.json` for the five canonical dependencies and their owner-defined operation contracts.
+- Added `05_BUILD/runtime-contract-template.json`, deliberately unapproved with owner placeholders. The template is expected to fail readiness until owner data and formal approval are supplied.
+- Added test cases for schema dependency completeness and rejection of the unapproved template.
+- Dedicated readiness tests: 17. Total W118 tests: **141 PASS** on exact source SHA `c10cbe369820bd0a71db777c2389e2eccf1cec4b`.
+- Push Run #1217: job SUCCESS, 141 tests / 0.172s; artifact `15023191672`, digest `sha256:1e30f325fbcfab3d308d768d2ce7b465eca27d8b235bb2a3d69a88617aa21ec1`.
+- PR Run #1218: job SUCCESS, 141 tests / 0.182s; artifact `15023376494`, digest `sha256:3fb743b8ae3b17f78cd2902b0d0ea35c4a5bf673820f48a215254722a91773a1`.
+- Both are CI contract/unit evidence only. Source-binding remains `UNBOUND_LEGACY_BRANCH`; handoff/ACK/review jobs SKIPPED; no runtime E2E is claimed.
