@@ -2652,3 +2652,19 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - **Tasks:** 013 IN_PROGRESS; 014 BLOCKED; 015 BLOCKED; 016 adapter IN_PROGRESS / Core Task-scoped lease BLOCKED; 017 contract IN_PROGRESS / Core-W33 ingress NOT VERIFIED; 018 BLOCKED; 019 PLANNED / NOT RUN. No Task DONE; progress NOT_CALCULATED.
 - **Acceptance:** Vinh NOT ACCEPTED; release NOT AUTHORIZED.
 - **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-25 17:34 +07:00; Result: exact current-head CI and refreshed compare verified; no acceptance or integration asserted.
+
+
+## Entry 085 — current PR evidence, divergence scope and gate reconciliation
+
+- **Priority / read order:** 01 — P0 — current live GitHub readback; supersedes Entry 080's HEAD/CI/compare snapshot.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-25 17:39:02 +07:00.
+- **PR #68:** OPEN / not draft / UNMERGED; branch `work/118-auto-e2e-v2-clean` → `main`; current HEAD `e4af32b6c2929cf7a155e1874b16998ebd9813f1`; GitHub metadata `mergeable=true`.
+- **Fresh branch comparison:** `main...work/118-auto-e2e-v2-clean` = DIVERGED, 240 commits ahead / 17 behind; merge base `792bdd71e5345949e0c1f26ff9f95a8513dfa7d5`. A bounded compare of merge-base → `main` shows the 17 newer main commits add 25 paths only under Work 092 and Work 122; none overlaps the 48 changed paths in PR #68, all of which remain under W118. This reduces the observed path-conflict concern but does not authorize rebase, merge or other history/integration changes.
+- **Exact PR-head-associated CI:** Run #1189 / ID `45596160296`; workflow run head SHA `e4af32b6c2929cf7a155e1874b16998ebd9813f1`; validate job `139142717923` SUCCESS; raw log confirms 124 tests in 0.316s. Artifact ID `15013506041`, name `w118-run-evidence-45596160296-1`, size 685 bytes, SHA-256 `92f6476c82f65e12c50f492649b9bd10bd1e7115ff4936a4849d0042a9684d1b`, unexpired through 2026-12-25T10:34:01Z.
+- **CI evidence boundary:** workflow run is a `pull_request` event. The workflow records PR `head.sha` as `source_commit`, while `tested_commit` comes from Actions `GITHUB_SHA` / PR event ref (the PR merge ref). Therefore report this as successful PR contract CI associated with the exact PR head, not as a claim that the artifact's tested_commit equals the branch HEAD. Source-binding step is SKIPPED for this PR event; handoff-request, ACK-claim and review-observation capture jobs are SKIPPED. The run is CI_CONTRACT, not Runtime Auto E2E.
+- **Review:** live GitHub formal reviews 0; inline review threads 0; requested reviewers empty. Xu Entry 075 remains NEEDS CHANGES for 067/069; Ka's Entry 076 remediation remains pending Xu independent re-review. No approval inferred.
+- **Task Register readback:** 013 IN_PROGRESS; 014 BLOCKED; 015 BLOCKED; 016 IN_PROGRESS at adapter level but Core lease/live Task snapshot/source-binding blocked; 017 IN_PROGRESS at contract level but Core ingress/production webhook not configured; 018 BLOCKED; 019 PLANNED / NOT RUN. No Task DONE; progress NOT_CALCULATED.
+- **Runtime / authority:** Core Task/Event/lease, W102 identity/Assignment/recipient ACK, W14 protected execution, W33 ingress and W70 Evidence Register owner/schema remain BLOCKED / NOT VERIFIED. Runtime Auto E2E NOT RUN.
+- **Disposition:** keep PR #68 OPEN / UNMERGED; Vinh product acceptance NOT ACCEPTED; release NOT AUTHORIZED. No rebase, merge, force-push, PR close, release, permissions/secrets/branch-protection changes, runtime mutation or external Work/Sandbox mutation. Continue bounded read-only checks and await Xu's independent disposition.
+- **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-25 17:39:02 +07:00; Result: live PR/CI/review/task/compare evidence reconciled; no acceptance or integration asserted.
