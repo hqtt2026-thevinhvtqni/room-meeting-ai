@@ -4,6 +4,7 @@
 - **State:** IMPLEMENTED ON FEATURE BRANCH — CI PENDING
 - **Code:** `scripts/w118/evidence_chain.py`
 - **Tests:** `tests/w118/test_evidence_chain.py`
+- **JSON Schema:** `schemas/w118/evidence-chain.schema.json` (W118 normalized envelope only; not W70's schema).
 
 ## 1. Purpose
 
