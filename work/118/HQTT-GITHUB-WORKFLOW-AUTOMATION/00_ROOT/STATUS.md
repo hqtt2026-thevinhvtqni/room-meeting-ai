@@ -599,3 +599,17 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - **Task Register:** 013 IN_PROGRESS; 014 BLOCKED; 015 BLOCKED; 016 adapter IN_PROGRESS / Core lease BLOCKED; 017 contract IN_PROGRESS / Core-W33 ingress NOT VERIFIED; 018 BLOCKED; 019 PLANNED / NOT RUN. No Task DONE; progress NOT_CALCULATED.
 - **Governance:** No merge, rebase, force-push, PR close, release, secrets/permissions/branch-protection changes, runtime changes or external Work/Sandbox mutations.
 - **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-24 12:32 +07:00; Result: status synchronized to exact live PR/CI/review readback without changing acceptance gates.
+
+ 
+## Authoritative integration gate — Entry 078 (2026-11-25 17:29 +07:00)
+
+- **Priority:** P0 — this is the current integration safety state.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **PR #68:** OPEN / not draft / UNMERGED; source HEAD `8fcf49e14658d9a36d469c5daac1d3dcd4c7a210`; GitHub metadata `mergeable=false`.
+- **Compare:** `main...work/118-auto-e2e-v2-clean` = DIVERGED; 231 ahead / 17 behind; merge base `792bdd71e5345949e0c1f26ff9f95a8513dfa7d5`; 48 changed paths, all under W118.
+- **CI:** exact-head Run #1165 SUCCESS; 124 contract/unit tests PASS. Not Runtime Auto E2E.
+- **Xu review:** formal reviews 0; inline threads 0; Entry 075 NEEDS CHANGES for 067/069; Entry 076 remediation awaiting Xu independent re-review.
+- **Integration:** BLOCKED. Do not rebase, merge, force-push, reset, or resolve conflicts without a separately reviewed and authorized plan.
+- **Runtime:** Runtime Auto E2E NOT RUN; source-binding and handoff/ACK/review jobs SKIPPED. Core/W102/W14/W33/W70 authority/runtime gates BLOCKED / NOT VERIFIED.
+- **Acceptance:** Vinh NOT ACCEPTED; release NOT AUTHORIZED. PR stays OPEN / UNMERGED.
+- **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-25 17:29 +07:00; Result: current integration gate documented without modifying code or branch history.
