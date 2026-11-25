@@ -245,3 +245,15 @@ Post-merge event execution order and expected outcomes are specified in [RT-118-
 - [Run #44851353422](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/44851353422); tested commit `acb7f510b5885d045b165f739540ee85e57d7439`; 54 tests PASS / 0.223s.
 - Artifact ID `14685143198`, digest `a326f03eae720de5af6ff531e1105e2311c0738a4661f71f940d661eb9b3b6a1`; downloaded ZIP and JSON exact-readback confirms the expected field values and tested commit.
 - Event-specific jobs SKIPPED; runtime E2E remains NOT VERIFIED.
+
+
+## Runtime Contract Readiness — exact-head Run #1208
+
+- **Run:** [45617128565](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45617128565)
+- **Exact tested head:** `508945fc26a7a8405486efbea7588dee81bcd2db`
+- **Job:** `validate` SUCCESS.
+- **Result:** **139 tests PASS / 0.232s**.
+- **New cases:** 15 tests in `test_runtime_contract.py`: complete owner-approved bundle; missing dependency; unapproved proposal; missing required operation; external plaintext HTTP; loopback HTTP development; raw credential rejection; missing secret reference; path traversal; absolute operation URL; missing receipt binding; unknown component; non-object bundle; wrong Work ID; missing schema reference.
+- **Artifact:** ID `15023041079`, `w118-run-evidence-45617128565-1`, SHA-256 `7631f8769ade94809b89b55d6d4cbc43a2c4a8c32fecb817034283b5f2a6f166`.
+- **Classification:** CI contract/unit evidence only. No endpoint was contacted; no credential was loaded; no Runtime E2E or Work 70 verification is claimed.
+- **Event jobs:** handoff-request, ACK-claim and review-observation SKIPPED on this PR synchronize event.
