@@ -769,3 +769,12 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - **Artifact:** `15061422356`, SHA-256 `e38fa07ba34f6643f9405bb799aa674f811dc42227fd52a16de0d627355c0f5d`, not expired at readback.
 - **Skipped:** handoff-request, ACK-claim, review-observation; source binding `NOT_RUN`.
 - **Runtime Auto E2E:** BLOCKED / NOT RUN; no live gates passed.
+
+
+## 13. Latest CI for source-reconciliation revision — 2026-11-26 03:45 +07
+
+- Run #1282 / ID `45697286252`; validate job `139497880242` SUCCESS.
+- Exact `PR_HEAD_SHA=3397b265ad670b7e92ba96fe4ada3ef3390f5d12`; raw log `175 tests in 0.229s — OK`.
+- Artifact `15061547254`, SHA-256 `259f60de799be00d6cb4f75a95a6d58895f5ea01ad60d73cce7a1a1a52e7e39f`, not expired at readback.
+- Handoff-request, ACK-claim, review-observation capture skipped; source binding `NOT_RUN`.
+- CI claim scope remains contract/unit only; all live integration gates and Runtime Auto E2E remain BLOCKED / NOT RUN.
