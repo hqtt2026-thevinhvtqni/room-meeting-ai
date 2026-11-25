@@ -1,5 +1,7 @@
 import copy
+import json
 import unittest
+from pathlib import Path
 
 from scripts.w118.evidence_chain import STAGES, verify_evidence_chain
 
@@ -121,6 +123,26 @@ class EvidenceChainTests(unittest.TestCase):
         bundle = valid_bundle()
         bundle["receipts"].append(copy.deepcopy(bundle["receipts"][-1]))
         self.assertEqual(verify_evidence_chain(bundle)["status"], "BLOCKED")
+
+
+    def test_published_schema_declares_all_five_stages_in_order(self):
+        schema_path = Path(__file__).resolve().parents[2] / "schemas" / "w118" / "evidence-chain.schema.json"
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+        prefix = schema["properties"]["receipts"]["prefixItems"]
+        self.assertEqual(
+            [item["$ref"].rsplit("/", 1)[-1] for item in prefix],
+            [stage for stage, _ in STAGES],
+        )
+
+    def test_digest_comparison_is_hex_case_insensitive(self):
+        bundle = valid_bundle()
+        bundle["receipts"][2]["artifact_sha256"] = "B" * 64
+        bundle["receipts"][3]["artifact_sha256"] = "b" * 64
+        bundle["receipts"][4]["artifact_sha256"] = "B" * 64
+        self.assertEqual(
+            verify_evidence_chain(bundle)["status"],
+            "STRUCTURALLY_COMPLETE_UNAUTHENTICATED",
+        )
 
 
 if __name__ == "__main__":
