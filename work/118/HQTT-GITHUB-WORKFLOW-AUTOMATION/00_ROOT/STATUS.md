@@ -665,3 +665,15 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - **Interpretation:** This is static contract readiness validation only. The tool has no HTTP client and makes no network calls. Report can reach only `READY_FOR_RUNTIME_PREFLIGHT`; it always reports `runtime_execution_performed=false`, `runtime_pass=false`, `authority_granted=false`.
 - **Skipped jobs:** handoff-request, ACK-claim and review-observation remain SKIPPED on PR synchronize; live event E2E is not proven.
 - **Remaining state:** Core→W102 Assignment/ACK, W14 Core Authority, W33 authenticated ingestion, W70 authoritative read-back and Runtime Auto E2E remain BLOCKED / NOT VERIFIED. PR #68 remains OPEN / UNMERGED. No runtime mutation, merge or release.
+
+
+## 12. Contract schema and owner intake template — 2026-11-25
+
+- Published `schemas/w118/runtime-contract.schema.json` for the five canonical dependencies and their owner-defined operations.
+- Published `05_BUILD/runtime-contract-template.json`; all components are deliberately `approved:false` and contain placeholders. It is an intake aid, not a deployable configuration.
+- Added two tests: canonical dependency/schema completeness and fail-closed unapproved template. Runtime Contract Readiness now has 17 dedicated tests.
+- Exact-head push Run #1217 and PR Run #1218 both validate source SHA `c10cbe369820bd0a71db777c2389e2eccf1cec4b`; both validate jobs SUCCESS and **141 total W118 tests PASS** (0.172s push; 0.182s PR).
+- Artifacts: push ID `15023191672`, SHA-256 `1e30f325fbcfab3d308d768d2ce7b465eca27d8b235bb2a3d69a88617aa21ec1`; PR ID `15023376494`, SHA-256 `3fb743b8ae3b17f78cd2902b0d0ea35c4a5bf673820f48a215254722a91773a1`.
+- Push source-binding is `UNBOUND_LEGACY_BRANCH`; handoff/ACK/review jobs SKIPPED. No live runtime proof.
+- PR #68 remains OPEN / UNMERGED; current head `c10cbe369820bd0a71db777c2389e2eccf1cec4b`; 53 changed files; compare DIVERGED 259 ahead / 17 behind. No rebase/merge/release.
+- All five external runtime gates remain BLOCKED / NOT VERIFIED.
