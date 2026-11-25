@@ -337,3 +337,19 @@ Work32 Grant may be considered only for W118 protected execution integration aft
 - **Acceptance:** Vinh NOT ACCEPTED; release NOT AUTHORIZED.
 - **Next:** preserve read-only posture; continue source/authority audit and await Xu's independent disposition. Any integration plan must be reviewed before history-changing operations.
 - **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-25 17:29 +07:00; Result: integration warning and next gate recorded.
+
+ 
+## Entry 079 — current-head CI and refreshed PR mergeability (2026-11-25 17:32 +07:00)
+
+- **Priority / read order:** 01 — P0 — supersedes Entry 078's transient mergeable=false observation.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-25 17:32 +07:00.
+- **PR #68:** OPEN / not draft / UNMERGED; HEAD `7a236ed7588e74cf94f8636405bb6d7319d6d12a`; current GitHub metadata `mergeable=true`.
+- **Compare:** branch remains DIVERGED, 231 ahead / 17 behind; merge base `792bdd71e5345949e0c1f26ff9f95a8513dfa7d5`; 48 changed paths all under W118. Mergeability is not permission to integrate.
+- **Exact-head CI:** Run #1180 / ID `45595732796`, validate job `139141217445`, SUCCESS; 124 tests in 0.228s. Artifact ID `15013695587`, size 686 bytes, SHA-256 `b78d0fb2191826cf483fed73ca2699acb4668ae4a2c387c4440d4762a7441ed6`. Contract/unit only.
+- **Review:** 0 formal reviews / 0 inline threads. Xu Entry 075 NEEDS CHANGES; Entry 076 awaits Xu independent re-review.
+- **Runtime:** Runtime Auto E2E NOT RUN; source-binding and handoff/ACK/review capture skipped; Core/W102/W14/W33/W70 gates BLOCKED / NOT VERIFIED.
+- **Decision:** keep PR OPEN / UNMERGED; no rebase/merge/force-push/reset/close/release. Branch divergence remains unresolved.
+- **Acceptance:** Vinh NOT ACCEPTED; release NOT AUTHORIZED.
+- **Next:** Xu independently re-review exact HEAD `7a236ed7588e74cf94f8636405bb6d7319d6d12a` and Run #1180; Ka continues bounded audit without changing external authority/runtime.
+- **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-25 17:32 +07:00; Result: review routing updated to current HEAD and CI; no approval inferred.
