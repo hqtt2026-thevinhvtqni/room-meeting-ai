@@ -121,6 +121,27 @@ class EvidenceChainTests(unittest.TestCase):
     def test_non_object_bundle_fails_closed(self):
         self.assertEqual(verify_evidence_chain(None)["status"], "BLOCKED")
 
+    def test_unknown_top_level_bundle_field_is_rejected(self):
+        bundle = valid_bundle()
+        bundle["runtime_e2e_pass"] = True
+        self.assertEqual(verify_evidence_chain(bundle)["status"], "BLOCKED")
+
+    def test_unknown_receipt_field_is_rejected(self):
+        bundle = valid_bundle()
+        bundle["receipts"][2]["debug_override"] = True
+        self.assertEqual(verify_evidence_chain(bundle)["status"], "BLOCKED")
+
+    def test_unknown_signature_field_is_rejected(self):
+        bundle = valid_bundle()
+        for receipt in bundle["receipts"]:
+            receipt["signature"] = {
+                "algorithm": "HMAC-SHA256",
+                "key_id": "untrusted",
+                "value": "placeholder",
+                "trust_me": True,
+            }
+        self.assertEqual(verify_evidence_chain(bundle)["status"], "BLOCKED")
+
     def test_duplicate_receipt_order_and_extra_receipt_are_rejected(self):
         bundle = valid_bundle()
         bundle["receipts"].append(copy.deepcopy(bundle["receipts"][-1]))
