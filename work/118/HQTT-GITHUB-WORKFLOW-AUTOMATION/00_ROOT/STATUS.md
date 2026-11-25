@@ -641,3 +641,16 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - **Integration:** no merge/rebase/force-push/reset. 17-commit behind divergence remains.
 - **Acceptance:** NOT ACCEPTED; release NOT AUTHORIZED.
 - **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-25 17:34 +07:00; Result: exact-head evidence and integration boundary recorded.
+
+
+## Owner governance update — Xu independent review waived (Entry 086; 2026-11-25)
+
+- **Priority:** P0 — current owner instruction supersedes the prior pending-review routing, but does not erase historical findings.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner; instruction by Vinh / Project Owner.
+- **Owner decision:** Vinh explicitly waived the requirement for Xu independent review while Ka completes W118. This is WAIVED BY PROJECT OWNER, not Xu approval. Xu Entry 075 NEEDS CHANGES remains historical; Ka must record any self-audit as KA SELF-CHECK.
+- **Current branch baseline:** PR #68 OPEN / UNMERGED; HEAD 2e985807406981116a6715b0fbfb9356184430e0; Run #1190 exact push revision SUCCESS; 124 tests in 0.169s; artifact SHA-256 1213eb9f3b806cb7d3f6fc8efa25aa5e9234a6a4569b5aa5199fba64bf0a6c86.
+- **CI boundary:** source binding = UNBOUND_LEGACY_BRANCH; handoff/ACK/review capture jobs SKIPPED. Contract CI only; Runtime Auto E2E NOT RUN.
+- **Integration:** DIVERGED 241 ahead / 17 behind; latest mergeable=true. No rebase/merge/force-push/base retarget authorized.
+- **Remaining:** Core/W102/W14/W33/W70 authority and runtime gates remain BLOCKED / NOT VERIFIED; Task 013 IN_PROGRESS, 014 BLOCKED, 015 BLOCKED, 016/017 adapter-contract IN_PROGRESS only, 018 BLOCKED, 019 NOT RUN. No Task DONE.
+- **Acceptance / release:** Vinh product acceptance remains NOT ACCEPTED; release NOT AUTHORIZED. The review waiver does not waive runtime authority, evidence, acceptance or release gates.
+- **BIÊN BẢN:** Name: Vinh / Project Owner; Title: Owner decision recorded by Ka / CSA; Date-Time: 2026-11-25 17:45 +07:00; Result: independent Xu review waived only.
