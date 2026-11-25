@@ -2752,3 +2752,18 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - **Result:** DONE — exact source reconciliation and blocker/status refresh. This is not integration PASS.
 - **Runtime Auto E2E:** BLOCKED / NOT RUN. No live endpoint, execute operation, runtime deployment, credential/permission mutation, branch integration, merge or release.
 - **Next:** resolve W14 adoption and runtime attestation; confirm current Core V1.2 route/deployment lineage; obtain W102 Assignment/ACK, W33 authenticated ingestion and W70 Evidence Registry contracts. Implement only W118 adapters after owner-approved inputs exist.
+
+
+## Entry 113 — exact-head CI sau source reconciliation refresh
+
+- **Thời điểm:** 2026-11-26 03:39 (+07) (workflow completed 2026-11-25T20:38:56Z).
+- **Phạm vi:** Xác minh CI cho commit W118 mới nhất sau khi cập nhật W118-22, STATUS và Entry 112.
+- **Method:** GitHub fetch commit workflow runs → fetch run jobs → fetch validate job logs → fetch run artifacts; kiểm tra biến PR_HEAD_SHA trong raw log.
+- **Source binding:** PR #68; branch `work/118-auto-e2e-v2-clean`; exact `PR_HEAD_SHA=4299076dd502e438cfc97d2f41e42f85fb7d7e23`. Run #1275 / ID `45696941336`; validate job `139496689017`.
+- **Result:** validate job SUCCESS; raw log ghi `Ran 175 tests in 0.280s — OK`. Đây là exact-head W118 contract/unit CI evidence.
+- **Skipped:** `ack-claim-capture`, `review-observation-capture`, `handoff-request-capture` đều SKIPPED. Source binding status trong evidence job là `NOT_RUN`. Không có Task dispatch, authenticated ACK, review observation hoặc runtime E2E nào được chứng minh.
+- **Artifact:** ID `15060653534`; name `w118-run-evidence-45696941336-1`; size 686 bytes; digest `sha256:5ffd4649c09c8d205d1a864d62ebc28608829013b7d26985bda6a763599a9b59`; created 2026-11-25T20:38:56Z; expires 2026-12-25T20:38:55Z; not expired at readback.
+- **Limit:** Không coi CI contract/unit PASS là live integration, Runtime Auto E2E, independent review, Work acceptance hoặc release.
+- **Result status:** DONE — exact-head CI log and artifact metadata verified.
+- **Runtime Auto E2E:** BLOCKED / NOT RUN; năm live gates remain BLOCKED/NOT VERIFIED.
+- **Next:** proceed only on owner-controlled technical inputs recorded in W118-22 v1.1; do not add validators to substitute for missing integration.
