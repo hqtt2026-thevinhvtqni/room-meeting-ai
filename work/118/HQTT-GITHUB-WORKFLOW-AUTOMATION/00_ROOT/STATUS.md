@@ -654,3 +654,14 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - **Remaining:** Core/W102/W14/W33/W70 authority and runtime gates remain BLOCKED / NOT VERIFIED; Task 013 IN_PROGRESS, 014 BLOCKED, 015 BLOCKED, 016/017 adapter-contract IN_PROGRESS only, 018 BLOCKED, 019 NOT RUN. No Task DONE.
 - **Acceptance / release:** Vinh product acceptance remains NOT ACCEPTED; release NOT AUTHORIZED. The review waiver does not waive runtime authority, evidence, acceptance or release gates.
 - **BIÊN BẢN:** Name: Vinh / Project Owner; Title: Owner decision recorded by Ka / CSA; Date-Time: 2026-11-25 17:45 +07:00; Result: independent Xu review waived only.
+
+## 11. Runtime contract readiness build — 2026-11-25
+
+- **Implementation:** `scripts/w118/runtime_contract.py`; owner-facing design/runbook: `05_BUILD/W118-20_RUNTIME-CONTRACT-READINESS.md`.
+- **Exact PR head:** `508945fc26a7a8405486efbea7588dee81bcd2db`; PR #68 OPEN / UNMERGED; compare DIVERGED 251 ahead / 17 behind; merge base `792bdd71e5345949e0c1f26ff9f95a8513dfa7d5`.
+- **Exact-head CI:** Run #1208 / ID `45617128565`; validate job `139215307643` SUCCESS; **139 tests PASS / 0.232s**.
+- **Artifact:** `w118-run-evidence-45617128565-1`, ID `15023041079`, size 685 bytes, SHA-256 `7631f8769ade94809b89b55d6d4cbc43a2c4a8c32fecb817034283b5f2a6f166`, expires 2026-12-25.
+- **New test coverage:** 15 readiness tests cover all five required components, approval, missing operations/schema, HTTPS, credential references/leakage, path traversal, unknown components and fail-closed malformed input.
+- **Interpretation:** This is static contract readiness validation only. The tool has no HTTP client and makes no network calls. Report can reach only `READY_FOR_RUNTIME_PREFLIGHT`; it always reports `runtime_execution_performed=false`, `runtime_pass=false`, `authority_granted=false`.
+- **Skipped jobs:** handoff-request, ACK-claim and review-observation remain SKIPPED on PR synchronize; live event E2E is not proven.
+- **Remaining state:** Core→W102 Assignment/ACK, W14 Core Authority, W33 authenticated ingestion, W70 authoritative read-back and Runtime Auto E2E remain BLOCKED / NOT VERIFIED. PR #68 remains OPEN / UNMERGED. No runtime mutation, merge or release.
