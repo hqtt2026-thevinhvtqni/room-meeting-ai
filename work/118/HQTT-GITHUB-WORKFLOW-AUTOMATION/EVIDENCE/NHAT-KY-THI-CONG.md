@@ -2605,3 +2605,18 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - **Governance:** Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED; no merge/rebase/force-push/PR close or external authority/runtime mutation.
 - **Next action:** Xu re-review exact HEAD `11942ea68a1484f46f6691644ce5eaf0853ea732` and Run #1156. Ka remains responsible for bounded remediation; Xu retains independent review; Vinh retains acceptance/release authority.
 - **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-24 12:32 +07:00; Result: current state and handover evidence journaled.
+
+ 
+## Entry 078 — live PR divergence and mergeability gate
+
+- **Priority / read order:** 01 — P0 — current integration safety warning supersedes earlier routing/status snapshots.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-25 17:29 +07:00.
+- **Live PR state:** PR #68 OPEN, not draft, UNMERGED; current source HEAD `8fcf49e14658d9a36d469c5daac1d3dcd4c7a210`; base `main`. GitHub PR metadata currently reports `mergeable=false`.
+- **Branch comparison:** `main...work/118-auto-e2e-v2-clean` reports `diverged`, 231 commits ahead / 17 behind; merge base `792bdd71e5345949e0c1f26ff9f95a8513dfa7d5`; base HEAD observed `af885358114a277876b6233f08836e07a26bf658`. Compare response lists 48 changed paths, all under W118.
+- **Interpretation:** GitHub's `mergeable=false` is a mergeability warning; with 17 commits behind and diverged history, integration is BLOCKED pending controlled conflict/source review. This readback does not authorize a rebase, merge, force-push, branch reset, or conflict resolution.
+- **Exact current-head CI:** Run #1165 / ID `45334204684`, PR event on exact source HEAD `8fcf49e14658d9a36d469c5daac1d3dcd4c7a210`, validate job `138242340019` SUCCESS; raw log `Ran 124 tests in 0.286s`. Artifact ID `14893950172`, 684 bytes, SHA-256 `72f3e42c9f3ebdb5e21724273397a44913ac62504f34e5a1ca113316f47abc44`. This remains contract/unit CI, not Runtime Auto E2E.
+- **Review state:** 0 formal GitHub review submissions and 0 inline review threads at live readback. Xu Entry 075 remains NEEDS CHANGES for 067/069; Entry 076 remediation awaits Xu independent re-review. Requested reviewers list is empty; Xu GitHub identity mapping remains UNVERIFIED. Existing issue comments include historical owner-authored evidence and an unrelated off-topic invoice suggestion; neither is Xu approval or a valid W118 finding. No review status inferred from those comments.
+- **Runtime/task gates:** source-binding step SKIPPED for PR event; handoff-request, ACK-claim and review-observation jobs SKIPPED. Runtime Auto E2E NOT RUN. TASK-013 IN_PROGRESS; TASK-014 BLOCKED; TASK-015 BLOCKED; TASK-016 adapter IN_PROGRESS / Core lease BLOCKED; TASK-017 contract IN_PROGRESS / Core-W33 ingress NOT VERIFIED; TASK-018 BLOCKED; TASK-019 PLANNED / NOT RUN. No Task DONE; progress NOT_CALCULATED.
+- **Decision:** Freeze integration operations. Do not rebase, merge, force-push, reset, close PR, release, change branch protection/permissions/secrets, or mutate external Work/Sandbox/runtime. Continue bounded read-only source/authority audit and await Xu independent re-review. Any conflict-resolution plan requires Xu review and must preserve Vinh's acceptance/release authority.
+- **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-25 17:29 +07:00; Result: divergence and mergeability warning recorded; integration gate BLOCKED; PR remains open/unmerged.
