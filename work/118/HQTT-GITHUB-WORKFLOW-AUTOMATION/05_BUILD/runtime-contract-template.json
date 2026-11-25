@@ -16,11 +16,11 @@
       },
       "operations": {
         "read_task": {
-          "method": "GET",
-          "path": "/OWNER-DEFINED-PATH",
-          "request_schema_ref": "OWNER-SCHEMA-REF",
-          "response_schema_ref": "OWNER-SCHEMA-REF",
-          "side_effect": "READ_ONLY"
+          "method": "OWNER-MUST-SUPPLY",
+          "path": "/OWNER-MUST-SUPPLY",
+          "request_schema_ref": "OWNER-MUST-SUPPLY",
+          "response_schema_ref": "OWNER-MUST-SUPPLY",
+          "side_effect": "OWNER-MUST-SUPPLY"
         }
       },
       "evidence": {
@@ -42,18 +42,18 @@
       },
       "operations": {
         "authorize_assignment": {
-          "method": "GET",
-          "path": "/OWNER-DEFINED-PATH",
-          "request_schema_ref": "OWNER-SCHEMA-REF",
-          "response_schema_ref": "OWNER-SCHEMA-REF",
-          "side_effect": "READ_ONLY"
+          "method": "OWNER-MUST-SUPPLY",
+          "path": "/OWNER-MUST-SUPPLY",
+          "request_schema_ref": "OWNER-MUST-SUPPLY",
+          "response_schema_ref": "OWNER-MUST-SUPPLY",
+          "side_effect": "OWNER-MUST-SUPPLY"
         },
         "acknowledge_assignment": {
-          "method": "GET",
-          "path": "/OWNER-DEFINED-PATH",
-          "request_schema_ref": "OWNER-SCHEMA-REF",
-          "response_schema_ref": "OWNER-SCHEMA-REF",
-          "side_effect": "READ_ONLY"
+          "method": "OWNER-MUST-SUPPLY",
+          "path": "/OWNER-MUST-SUPPLY",
+          "request_schema_ref": "OWNER-MUST-SUPPLY",
+          "response_schema_ref": "OWNER-MUST-SUPPLY",
+          "side_effect": "OWNER-MUST-SUPPLY"
         }
       },
       "evidence": {
@@ -75,11 +75,11 @@
       },
       "operations": {
         "execute_work": {
-          "method": "GET",
-          "path": "/OWNER-DEFINED-PATH",
-          "request_schema_ref": "OWNER-SCHEMA-REF",
-          "response_schema_ref": "OWNER-SCHEMA-REF",
-          "side_effect": "READ_ONLY"
+          "method": "OWNER-MUST-SUPPLY",
+          "path": "/OWNER-MUST-SUPPLY",
+          "request_schema_ref": "OWNER-MUST-SUPPLY",
+          "response_schema_ref": "OWNER-MUST-SUPPLY",
+          "side_effect": "OWNER-MUST-SUPPLY"
         }
       },
       "evidence": {
@@ -101,11 +101,11 @@
       },
       "operations": {
         "ingest_evidence": {
-          "method": "GET",
-          "path": "/OWNER-DEFINED-PATH",
-          "request_schema_ref": "OWNER-SCHEMA-REF",
-          "response_schema_ref": "OWNER-SCHEMA-REF",
-          "side_effect": "READ_ONLY"
+          "method": "OWNER-MUST-SUPPLY",
+          "path": "/OWNER-MUST-SUPPLY",
+          "request_schema_ref": "OWNER-MUST-SUPPLY",
+          "response_schema_ref": "OWNER-MUST-SUPPLY",
+          "side_effect": "OWNER-MUST-SUPPLY"
         }
       },
       "evidence": {
@@ -127,18 +127,18 @@
       },
       "operations": {
         "register_evidence": {
-          "method": "GET",
-          "path": "/OWNER-DEFINED-PATH",
-          "request_schema_ref": "OWNER-SCHEMA-REF",
-          "response_schema_ref": "OWNER-SCHEMA-REF",
-          "side_effect": "READ_ONLY"
+          "method": "OWNER-MUST-SUPPLY",
+          "path": "/OWNER-MUST-SUPPLY",
+          "request_schema_ref": "OWNER-MUST-SUPPLY",
+          "response_schema_ref": "OWNER-MUST-SUPPLY",
+          "side_effect": "OWNER-MUST-SUPPLY"
         },
         "read_evidence": {
-          "method": "GET",
-          "path": "/OWNER-DEFINED-PATH",
-          "request_schema_ref": "OWNER-SCHEMA-REF",
-          "response_schema_ref": "OWNER-SCHEMA-REF",
-          "side_effect": "READ_ONLY"
+          "method": "OWNER-MUST-SUPPLY",
+          "path": "/OWNER-MUST-SUPPLY",
+          "request_schema_ref": "OWNER-MUST-SUPPLY",
+          "response_schema_ref": "OWNER-MUST-SUPPLY",
+          "side_effect": "OWNER-MUST-SUPPLY"
         }
       },
       "evidence": {
