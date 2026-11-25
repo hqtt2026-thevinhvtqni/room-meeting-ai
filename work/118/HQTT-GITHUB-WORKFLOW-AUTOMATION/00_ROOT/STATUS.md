@@ -702,3 +702,15 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - **Skipped jobs:** Handoff/ACK/Review remain SKIPPED. No live runtime service was contacted.
 - **Current PR:** #68 OPEN / UNMERGED / mergeable=true; head `411aad8a6922f5033700a284767b819c668119b2`; 57 files; compare DIVERGED 274 ahead / 17 behind; merge base `792bdd71e5345949e0c1f26ff9f95a8513dfa7d5`.
 - **Correction to Entry/Section 13:** signature verification is now pluggable. Section 13's statement that the tool can never authenticate receipts is superseded; authority and Runtime E2E remain unverified.
+
+
+## 11. Exact-head validator hardening — 2026-11-25 20:09 +07:00
+
+- **Current candidate:** PR #68, branch `work/118-auto-e2e-v2-clean`, exact source HEAD `bc99f3a049a08a07b15de76d4ed3bcba9e4ad9d1`; OPEN / UNMERGED.
+- **Contract validator correction:** aligned runtime-contract validation with the published JSON Schema by rejecting lowercase HTTP methods, unknown/non-canonical operation names and root-only operation paths. Three negative tests were added.
+- **Exact-head PR CI:** Run #1247 / ID `45620574896`, validate job `139227439749` SUCCESS; raw log confirms **168 tests in 0.336s — OK**. Push-source binding was SKIPPED for the PR event; handoff-request, ACK-claim and review-observation jobs were SKIPPED. Contract/unit CI only, not Runtime Auto E2E.
+- **Artifact:** ID `15023119398`, SHA-256 `f7f5b1c82dbf34eea86bb28bd0a22e71d7459a6c2e20557a9ee7cda9ed5ee669`, unexpired at readback.
+- **Compare:** `main...work/118-auto-e2e-v2-clean` DIVERGED 278 ahead / 17 behind; merge base `792bdd71e5345949e0c1f26ff9f95a8513dfa7d5`. No rebase/merge/force-push.
+- **Review and acceptance:** formal PR reviews 0; inline review threads 0. The owner-authorized Xu review waiver remains distinct from independent approval. Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED.
+- **Runtime:** Core Task, W102 Assignment/ACK, W14 protected execution, W33 authenticated ingestion, W70 authoritative read-back and full Runtime Auto E2E remain BLOCKED / NOT VERIFIED.
+- **Disposition:** validator correction DONE; exact-head CI PASS; runtime E2E NOT RUN. No merge, release, runtime mutation or authority substitution.
