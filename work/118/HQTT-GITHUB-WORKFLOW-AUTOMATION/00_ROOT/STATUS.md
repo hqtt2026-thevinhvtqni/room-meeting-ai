@@ -748,3 +748,13 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - **W70:** DOC-061 remains DRAFT / approval pending; DOC-071 records Core owner NOT IDENTIFIED and Work Evidence Registry NOT FOUND IN INSPECTED SCOPE / NOT VERIFIED. Approved append/read-back contract not available.
 - **Runtime Auto E2E:** BLOCKED / NOT RUN. No live endpoint called, no execute request sent, no runtime/secret/permission change, no PR #48 import, no merge/rebase/release.
 - **Next:** resolve W14 adoption/runtime evidence and Core current-main deployment path; intake authenticated W102 Assignment/ACK, W33 ingestion and W70 Registry contracts before writing runtime adapters. W118-local contract CI remains distinct from integration PASS.
+
+
+## 11. Exact-head CI refresh — 2026-11-26 03:39 +07
+
+- **Run:** #1275 / ID `45696941336`; validate job `139496689017` SUCCESS on PR #68.
+- **Exact source:** `PR_HEAD_SHA=4299076dd502e438cfc97d2f41e42f85fb7d7e23`.
+- **Raw log:** `Ran 175 tests in 0.280s — OK`.
+- **Artifact:** `15060653534`, `w118-run-evidence-45696941336-1`, 686 bytes, SHA-256 `5ffd4649c09c8d205d1a864d62ebc28608829013b7d26985bda6a763599a9b59`, expires 2026-12-25T20:38:55Z.
+- **Skipped:** handoff-request, ACK-claim and review-observation capture; source binding `NOT_RUN`.
+- **Interpretation:** exact-head contract/unit CI PASS only. Runtime Auto E2E remains BLOCKED / NOT RUN; no integration gate is closed by this run.
