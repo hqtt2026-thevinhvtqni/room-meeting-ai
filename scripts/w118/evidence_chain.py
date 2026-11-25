@@ -25,6 +25,13 @@ STAGES = (
 SHA40_RE = re.compile(r"^[0-9a-fA-F]{40}$")
 SHA256_RE = re.compile(r"^[0-9a-fA-F]{64}$")
 TASK_RE = re.compile(r"^W118-TASK-[0-9]{3,6}$")
+BUNDLE_FIELDS = {"schema_version", "work_id", "task_id", "correlation_id", "source_revision", "receipts"}
+RECEIPT_FIELDS = {
+    "stage", "receipt_id", "previous_receipt_id", "work_id", "task_id",
+    "correlation_id", "source_revision", "issuer_principal", "authority_ref",
+    "attestation_ref", "outcome", "artifact_sha256", "observed_at", "signature",
+}
+SIGNATURE_FIELDS = {"algorithm", "key_id", "value"}
 
 
 def _text(value: Any) -> bool:
@@ -58,6 +65,8 @@ def verify_evidence_chain(
     if not isinstance(bundle, Mapping):
         return _report(["bundle must be a JSON object"])
 
+    for key in sorted(set(bundle) - BUNDLE_FIELDS):
+        errors.append(f"$.{key} is not an allowed evidence-bundle field")
     if bundle.get("schema_version") != "1.0":
         errors.append("schema_version must be '1.0'")
     if bundle.get("work_id") != "118":
@@ -93,6 +102,8 @@ def verify_evidence_chain(
         if not isinstance(receipt, Mapping):
             errors.append(f"{path} must be an object")
             continue
+        for key in sorted(set(receipt) - RECEIPT_FIELDS):
+            errors.append(f"{path}.{key} is not an allowed receipt field")
 
         if receipt.get("stage") != stage_name:
             errors.append(f"{path}.stage must be {stage_name}")
@@ -164,6 +175,8 @@ def verify_evidence_chain(
         if not isinstance(signature, Mapping):
             errors.append(f"receipts[{index}].signature must be an object")
             continue
+        for key in sorted(set(signature) - SIGNATURE_FIELDS):
+            errors.append(f"receipts[{index}].signature.{key} is not an allowed signature field")
         for field in ("algorithm", "key_id", "value"):
             if not _text(signature.get(field)):
                 errors.append(f"receipts[{index}].signature.{field} must be non-empty")
