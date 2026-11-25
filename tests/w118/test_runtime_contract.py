@@ -67,6 +67,31 @@ class RuntimeContractReadinessTests(unittest.TestCase):
         report = validate_runtime_contract(bundle)
         self.assertEqual(report["status"], "BLOCKED")
 
+    def test_unknown_operation_is_rejected_to_match_published_schema(self):
+        bundle = valid_bundle()
+        bundle["dependencies"]["w14_execution_host"]["operations"]["debug_shell"] = {
+            "method": "POST",
+            "path": "/owner-defined/debug-shell",
+            "request_schema_ref": "schema://debug/request",
+            "response_schema_ref": "schema://debug/response",
+            "side_effect": "MUTATION",
+        }
+        report = validate_runtime_contract(bundle)
+        self.assertEqual(report["status"], "BLOCKED")
+        self.assertTrue(any("not part of the canonical W118 contract" in item for item in report["errors"]))
+
+    def test_lowercase_http_method_is_rejected_to_match_schema(self):
+        bundle = valid_bundle()
+        bundle["dependencies"]["core_task_authority"]["operations"]["read_task"]["method"] = "get"
+        report = validate_runtime_contract(bundle)
+        self.assertEqual(report["status"], "BLOCKED")
+
+    def test_root_only_operation_path_is_rejected(self):
+        bundle = valid_bundle()
+        bundle["dependencies"]["w70_evidence_register"]["operations"]["read_evidence"]["path"] = "/"
+        report = validate_runtime_contract(bundle)
+        self.assertEqual(report["status"], "BLOCKED")
+
     def test_external_plain_http_endpoint_is_blocked(self):
         bundle = valid_bundle()
         bundle["dependencies"]["core_task_authority"]["base_url"] = "http://core.example.test"
