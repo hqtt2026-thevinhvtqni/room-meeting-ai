@@ -172,3 +172,22 @@ W118 là bên điều phối và tích hợp. W118 **không sở hữu** API, sc
 **Updated gate matrix:** Core V1.2 design/DR-1..DR-4 APPROVED; branch implementation candidate PRESENT; main route mount NOT PRESENT IN INSPECTED SOURCE; live Core NOT VERIFIED. W102 Assignment/ACK BLOCKED. W14 adoption/runtime NOT VERIFIED. W33 authenticated ingestion BLOCKED. W70 Evidence Registry read-back BLOCKED. Full Runtime Auto E2E BLOCKED / NOT RUN.
 
 **No owner-level question to Vinh is raised at this point:** prior V1.2 approval is already recorded. The next dependencies are technical owner handoffs and exact runtime/source evidence, not a new DR-1..DR-4 decision.
+
+
+### 9.7 V1.2 candidate contract gaps against W118's Task/correlation requirements
+Exact read of the PR #48 candidate source reveals additional gaps that must be handled by the owning Core/W1111/W14 teams before W118 can rely on it for a complete E2E chain:
+
+- `GrantRequest` in `room_hop_mcp/adapter/execution_authority_http.py` accepts only `purpose` and `max_timeout_seconds`; it has no Task ID, Assignment ID, recipient ACK reference, or correlation ID.
+- `ExecutionAuthority.issue_grant()` records grant ID, Work ID, service identity, purpose, timeout, issue/expiry times and token digest; it does not bind the grant to a Core Task/Assignment or a W102 authenticated recipient ACK.
+- `RunRecordRequest` accepts source SHA, exit status, output refs, evidence refs and handoff IDs; it has no correlation ID or W102 Assignment/ACK reference. The grant/run journal therefore cannot by itself prove the single W118 correlation chain across all five stages.
+- `ExecutionAuthority.record_run()` revalidates the grant and validates the supplied SHA-256 syntax, but the inspected implementation does not compare the supplied `source_sha256` with the source SHA bound in the Work policy/grant before appending `RUN_RECORDED`. The Host path independently recomputes and checks its workspace hash before calling record_run, but the Core run-record operation itself does not enforce the owner-approved invariant that a run record cannot claim a different source hash from the grant-bound source.
+- **Disposition:** these are source-level contract/implementation findings on PR #48 candidate blobs, not live exploit findings. They are actionable owner remediation items, not permission for W118 to patch Core. Core/W1111 must reconcile the V1.2 implementation with the already-approved DR-1..DR-4 and the task/source-binding obligations; W14 must confirm the exact protected Host integration; W102 must supply the authenticated Assignment/ACK linkage. No duplicate authority service or W118-local Task registry is allowed.
+- **Required acceptance evidence:** grant and run records carry a stable correlation identifier; Task/Assignment/ACK binding is verified server-side where required; run source hash must equal the grant-bound hash; negative tests reject missing/mismatched Task, Assignment, ACK, correlation and source hash. Any schema change must be approved by the canonical owner and versioned before W118 adapter implementation.
+
+## 10. Exact-head CI after this source reconciliation
+- **Run #1278 / ID:** `45697117293`; validate job `139497302209` SUCCESS.
+- **Exact source:** raw job log confirms `PR_HEAD_SHA=9d08291ca1b3f0aa4defc6d17b0ff6e8503defba`.
+- **Raw log:** `Ran 175 tests in 0.225s — OK`.
+- **Artifact:** ID `15061422356`, name `w118-run-evidence-45697117293-1`, size 684 bytes, SHA-256 `e38fa07ba34f6643f9405bb799aa674f811dc42227fd52a16de0d627355c0f5d`, expires 2026-12-25T20:40:02Z.
+- **Skipped:** handoff-request, ACK-claim and review-observation capture; `SOURCE_BINDING_STATUS=NOT_RUN`.
+- **Interpretation:** exact-head W118 contract/unit CI PASS only; no runtime gate closed.
