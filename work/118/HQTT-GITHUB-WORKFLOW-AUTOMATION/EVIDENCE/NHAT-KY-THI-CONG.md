@@ -2782,3 +2782,16 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - **Result:** DONE — source-level contract gap identified and latest exact-head CI evidence verified. No live integration PASS.
 - **Runtime Auto E2E:** BLOCKED / NOT RUN.
 - **Next:** present precise remediation items to canonical owners and continue safe W118-side adapter mapping only after approved inputs; no PR #48 import, merge, rebase, runtime mutation or release.
+
+
+## Entry 115 — exact-head CI #1282 cho bản W118 source-reconciliation
+
+- **Thời điểm:** 2026-11-26 03:45 (+07) (workflow completed 2026-11-25T20:41:05Z).
+- **Source:** PR #68, branch `work/118-auto-e2e-v2-clean`, exact `PR_HEAD_SHA=3397b265ad670b7e92ba96fe4ada3ef3390f5d12`.
+- **Run:** #1282 / ID `45697286252`; validate job `139497880242` SUCCESS.
+- **Raw log:** `Ran 175 tests in 0.229s — OK`.
+- **Artifact:** ID `15061547254`; name `w118-run-evidence-45697286252-1`; size 685 bytes; SHA-256 `259f60de799be00d6cb4f75a95a6d58895f5ea01ad60d73cce7a1a1a52e7e39f`; created 2026-11-25T20:41:05Z; expires 2026-12-25T20:41:04Z; not expired at readback.
+- **Skipped:** `handoff-request-capture`, `ack-claim-capture`, `review-observation-capture`; `SOURCE_BINDING_STATUS=NOT_RUN`.
+- **Interpretation:** exact-head contract/unit CI PASS only. This run does not prove live Core grant, W102 Assignment/ACK, W14 runtime, W33 ingestion, W70 read-back or Runtime Auto E2E.
+- **Result:** DONE — latest code+documentation source reconciliation revision passed the existing 175-test contract suite.
+- **Next:** continue owner-side integration prerequisites in W118-22; do not grow validator count in place of runtime progress.
