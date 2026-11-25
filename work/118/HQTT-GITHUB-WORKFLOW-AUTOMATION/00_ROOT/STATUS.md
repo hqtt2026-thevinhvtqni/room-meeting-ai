@@ -758,3 +758,14 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - **Artifact:** `15060653534`, `w118-run-evidence-45696941336-1`, 686 bytes, SHA-256 `5ffd4649c09c8d205d1a864d62ebc28608829013b7d26985bda6a763599a9b59`, expires 2026-12-25T20:38:55Z.
 - **Skipped:** handoff-request, ACK-claim and review-observation capture; source binding `NOT_RUN`.
 - **Interpretation:** exact-head contract/unit CI PASS only. Runtime Auto E2E remains BLOCKED / NOT RUN; no integration gate is closed by this run.
+
+
+## 12. Core grant candidate contract gap + latest CI — 2026-11-26 03:43 +07
+
+- PR #48 candidate source review found `GrantRequest` and `RUN_RECORDED` lack Task ID, Assignment ID, recipient ACK reference and correlation ID; Core grant/run store therefore does not establish W118's full single-correlation chain.
+- Candidate `record_run()` validates the submitted source SHA format and grant token but does not compare the submitted SHA to the source hash bound to the grant. The Host separately checks its local workspace hash before recording, but Core's record operation does not enforce that invariant itself. Source-level finding only; no live test/exploit performed.
+- These are Core/W1111/W14 owner remediation/contract alignment items; W118 must not patch them or invent a parallel authority.
+- **Latest exact-head CI:** PR #68 Run #1278 / ID `45697117293`, validate job `139497302209` SUCCESS on `PR_HEAD_SHA=9d08291ca1b3f0aa4defc6d17b0ff6e8503defba`; raw log `175 tests in 0.225s — OK`.
+- **Artifact:** `15061422356`, SHA-256 `e38fa07ba34f6643f9405bb799aa674f811dc42227fd52a16de0d627355c0f5d`, not expired at readback.
+- **Skipped:** handoff-request, ACK-claim, review-observation; source binding `NOT_RUN`.
+- **Runtime Auto E2E:** BLOCKED / NOT RUN; no live gates passed.
