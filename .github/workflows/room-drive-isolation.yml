@@ -1,0 +1,53 @@
+name: ROOM Drive Isolation Guard
+
+on:
+  pull_request:
+    paths:
+      - "tools/room_drive_guard.py"
+      - "tools/room_drive_isolation_pc_diagnostic.ps1"
+      - "tests/test_room_drive_guard.py"
+      - ".github/workflows/room-drive-isolation.yml"
+  push:
+    branches:
+      - "work/1111-room-drive-isolation"
+    paths:
+      - "tools/room_drive_guard.py"
+      - "tools/room_drive_isolation_pc_diagnostic.ps1"
+      - "tests/test_room_drive_guard.py"
+      - ".github/workflows/room-drive-isolation.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  python-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile guard and tests
+        run: python -m py_compile tools/room_drive_guard.py tests/test_room_drive_guard.py
+      - name: Run guard unit tests
+        run: python -m unittest discover -s tests -p "test_room_drive_guard.py" -v
+
+  powershell-parse:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Parse diagnostic script without executing it
+        shell: pwsh
+        run: |
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            "$PWD/tools/room_drive_isolation_pc_diagnostic.ps1",
+            [ref]$tokens,
+            [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -gt 0) {
+            $errors | ForEach-Object { Write-Error $_.Message }
+            exit 1
+          }
+          Write-Output "PowerShell syntax parse: PASS"
