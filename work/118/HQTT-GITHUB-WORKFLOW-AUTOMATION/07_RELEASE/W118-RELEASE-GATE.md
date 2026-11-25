@@ -122,3 +122,12 @@ Entries 065, 067, 068, 069 and 071 remain open static review findings. Implement
 - Xu Entry 075 residual findings 067 and 069 have source/contract-test remediations; Xu independent re-review is pending. No self-approval.
 - PR-event source-binding is skipped; aggregate branch remains `UNBOUND_LEGACY_BRANCH`; handoff/ACK/review capture skipped. Runtime Auto E2E NOT RUN; Core/W102/W14/W33/W70 authority/runtime gates BLOCKED / NOT VERIFIED.
 - PR #68 OPEN / UNMERGED. Vinh product acceptance NOT ACCEPTED. Release NOT AUTHORIZED.
+
+
+### Owner waiver of independent Xu review — Entry 086 (2026-11-25)
+
+- **Name / Title:** Vinh / Project Owner; recorded by Ka / AI-02 — CSA. **Date-Time:** 2026-11-25 17:45 +07:00.
+- Xu independent review is **WAIVED BY PROJECT OWNER** for this completion path. This is not a Xu approval and does not change Xu Entry 075 historical NEEDS CHANGES disposition.
+- Ka must record a KA SELF-CHECK for source remediations; it must not be labelled independent approval.
+- The waiver does not waive Core/W102/W14/W33/W70 authority, authenticated source binding, runtime Auto E2E, immutable evidence verification, branch integration safety, Vinh product acceptance or explicit release authorization.
+- Current status: PR #68 OPEN / UNMERGED; exact push Run #1190 passed 124 contract tests, but source-binding is UNBOUND_LEGACY_BRANCH and Runtime Auto E2E is NOT RUN. Core/W102/W14/W33/W70 gates remain BLOCKED / NOT VERIFIED. Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED.
