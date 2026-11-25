@@ -613,3 +613,17 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - **Runtime:** Runtime Auto E2E NOT RUN; source-binding and handoff/ACK/review jobs SKIPPED. Core/W102/W14/W33/W70 authority/runtime gates BLOCKED / NOT VERIFIED.
 - **Acceptance:** Vinh NOT ACCEPTED; release NOT AUTHORIZED. PR stays OPEN / UNMERGED.
 - **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-25 17:29 +07:00; Result: current integration gate documented without modifying code or branch history.
+
+ 
+## Current-state correction — Entry 079 (2026-11-25 17:32 +07:00)
+
+- **Priority:** P0 — supersedes Entry 078's transient mergeable=false observation.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **PR #68:** OPEN / UNMERGED; HEAD `7a236ed7588e74cf94f8636405bb6d7319d6d12a`; GitHub now reports `mergeable=true`.
+- **Branch compare:** still DIVERGED, 231 ahead / 17 behind; merge base `792bdd71e5345949e0c1f26ff9f95a8513dfa7d5`; 48 changed paths all under W118.
+- **Exact-head CI:** Run #1180 / ID `45595732796`, SUCCESS; 124 tests in 0.228s; artifact ID `15013695587`, SHA-256 `b78d0fb2191826cf483fed73ca2699acb4668ae4a2c387c4440d4762a7441ed6`.
+- **Review:** Xu independent re-review pending; formal reviews 0; inline threads 0. Entry 075 NEEDS CHANGES remains prior disposition.
+- **Runtime:** Runtime Auto E2E NOT RUN; source-binding/handoff/ACK/review jobs SKIPPED; Core/W102/W14/W33/W70 gates BLOCKED / NOT VERIFIED.
+- **Integration:** no merge/rebase/force-push/reset; 17-behind divergence remains unresolved pending controlled review.
+- **Acceptance:** NOT ACCEPTED; release NOT AUTHORIZED.
+- **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-25 17:32 +07:00; Result: exact current head and updated mergeability state synchronized.
