@@ -369,3 +369,13 @@ Work32 Grant may be considered only for W118 protected execution integration aft
 - **Acceptance:** Vinh NOT ACCEPTED; release NOT AUTHORIZED.
 - **Next:** Xu independently re-review exact HEAD `2b5e48dc05a8fb9d055a5831a8bf3a906d6a3486` and Run #1184; Ka continues bounded audit.
 - **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-25 17:34 +07:00; Result: exact-head evidence and handover routing synchronized.
+
+
+## Owner disposition — Xu review routing waived (Entry 086; 2026-11-25)
+
+- **Priority:** P0 — supersedes requests to wait for Xu independent re-review for this completion path.
+- **Name / Title:** Vinh / Project Owner; recorded by Ka / AI-02 — CSA. **Date-Time:** 2026-11-25 17:45 +07:00.
+- **Decision:** Xu independent review is WAIVED BY PROJECT OWNER. This is not a Xu review/approval. Entry 075 NEEDS CHANGES remains historical; Entry 076 remediation remains subject to Ka SELF-CHECK, not independent clearance.
+- **Current baseline:** PR #68 HEAD 2e985807406981116a6715b0fbfb9356184430e0; push Run #1190 SUCCESS, 124 tests; source binding UNBOUND_LEGACY_BRANCH; runtime Auto E2E NOT RUN.
+- **Remaining gates:** Core/W102/W14/W33/W70 authority and runtime remain BLOCKED / NOT VERIFIED; Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED.
+- **Next:** Ka proceeds autonomously within W118 scope; request PC or external owner action only where technically indispensable and report precise commands/evidence needed.
