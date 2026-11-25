@@ -40,9 +40,10 @@ A structurally complete bundle returns `STRUCTURALLY_COMPLETE_UNAUTHENTICATED`. 
 
 ## 4. Non-claims and security boundary
 
-The verifier does not cryptographically authenticate issuers, authority references or attestation references. It does not contact endpoints, load secrets, execute Work, write W33, or read W70. It always returns:
+The verifier can delegate issuer signature verification to an injected, service-specific verifier backed by owner-approved trusted keys. The normalized schema supports an optional signature envelope. Without that verifier, the result remains structurally complete but unauthenticated. Signature verification still does not prove Core authority. It does not contact endpoints, load secrets, execute Work, write W33, or read W70. It always returns:
 - `runtime_e2e_pass: false`
-- `authenticity_verified: false`
+- `issuer_signatures_verified: false` unless every signature is checked by the injected trusted verifier
+- `authority_verified: false` always
 - `acceptance_granted: false`
 
 Therefore, structural completeness is not Runtime E2E PASS. A future cryptographic attestation verifier and authoritative service read-back remain required before the chain can be accepted.
