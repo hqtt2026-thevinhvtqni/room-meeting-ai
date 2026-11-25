@@ -1,7 +1,7 @@
 # W118-22 — HỒ SƠ ĐIỀU PHỐI TÍCH HỢP RUNTIME AUTO E2E
 **Mã tài liệu:** W118-22  
-**Phiên bản:** 1.0 — DRAFT / OWNER HANDOFF  
-**Ngày:** 2026-11-25  
+**Phiên bản:** 1.1 — DRAFT / OWNER HANDOFF + SOURCE RECONCILIATION  
+**Ngày:** 2026-11-26  
 **Phạm vi:** W118, nhánh `work/118-auto-e2e-v2-clean`  
 **Mục tiêu:** Chuyển W118 từ kiểm tra contract tĩnh sang tích hợp có thẩm quyền và kiểm chứng một luồng Runtime Auto E2E thực.
 
@@ -128,3 +128,47 @@ W118 là bên điều phối và tích hợp. W118 **không sở hữu** API, sc
 
 **Người điều phối:** Xu / AI-01 — theo ủy quyền của Vinh.  
 **Giới hạn:** không merge, không release, không thay đổi quyền/secrets, không mutation runtime trong bước lập hồ sơ này.
+
+
+## 9. Fresh source reconciliation — 2026-11-26 (UTC+07)
+
+### 9.1 Core Execution Authority V1.2 — approved scope, candidate implementation, not deployed
+- **Owner decision:** W1111 `APPROVAL_RECORD_CORE_EXEC_AUTHORITY_V1_2_DRAFT.md` on branch `work/w1111-core-execution-authority-v1-2`, blob `2ae990bfab4c1e2dcb2782cd79f332fdae655742`, reconciles Vinh's prior 2026-10-25 approval of DR-1..DR-4: enrolled service identity, short-lived grant, Core append-only durable store, and additive mount within Core. Gate 1 is recorded APPROVED; Gate 2 OPEN/AUTHORIZED. Gates 3–5 remain NOT OPEN. This is an existing owner decision; W118 must not ask Vinh to approve DR-1..DR-4 again.
+- **Candidate PR:** [PR #48](https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/48), `feat(core): implement Work-scoped Execution Authority V1.2`, remains OPEN / DRAFT / UNMERGED; GitHub metadata reports mergeable=false. Current compare at this audit: main...branch `work/w1111-core-execution-authority-v1-2` = DIVERGED, 157 ahead / 999 behind, merge base `82a490ad16c72e77ca3c9c8d9f83feabcb6f4e54`. Do not merge, rebase, cherry-pick or deploy from this branch under W118 authority.
+- **Branch source evidence:** `room_hop_mcp/adapter/http_server.py` blob `48e05c0f5d8121e35ba9bea01ebd8f338529073c` imports `ExecutionAuthority`, loads configuration fail-closed and mounts the five execution-grant routes through `mount_execution_authority_routes`. `room_hop_mcp/adapter/execution_authority_http.py` blob `8cb21fadf6bf2318f4884d368b77f2abf796b807` defines issue/status/validate/run/revoke routes. `core/execution_authority.py` blob `163b126178b67c6e0a3f68ba33eaf7b9e6d91503` contains credential digest registry, Work policy and append-only hash-chain store. `execution_host/server.py` blob `dd65fcfacfc171e673000ecbeba01d5842a42e8c` validates bearer grant online, checks purpose, timeout and source snapshot, and records run via Core. These are branch source observations only.
+- **Important composition correction:** the branch's `core_http_main.py` delegates to `create_http_app`; the actual additive route mount is in the branch's `http_server.py`. Main currently lacks the corresponding authority adapter/mount in the inspected entrypoint/router. Do not describe V1.2 as available on main or on the live Core :8000.
+- **CI claim scope:** PR description records 33 passing tests and exact branch CI run `42732254869` on branch revision `9bbeed63dfbdcc6a00b8bdb31c3db1b00b812197`. This is historical branch CI evidence as recorded in the PR description; this audit did not rerun it and it does not prove current main, PC deployment or live Core/Host runtime.
+- **W118 disposition:** REUSE CANDIDATE / NOT INTEGRATED. The candidate does not establish W102 Assignment/recipient-authenticated ACK binding, W33 ingestion, W70 Evidence Registry read-back or a deployed W14 runtime. Any reuse must follow W14 ownership and W1111's existing gate/branch controls.
+
+### 9.2 W14 — protected execution ownership and adoption
+- W118 current STATUS defines W14 as the sole product/delivery owner for integrated Work Authority, ExecutionHostBridge, GitHub Gateway and CI path; W12/W13 are absorbed internal foundations, not independent W118 owners.
+- PR #48 contains Core/Host/W12/W13 implementation candidates, but no evidence in this readback establishes that W14 has adopted the exact branch/source revision as its canonical current build, or that its runtime is deployed.
+- **Disposition:** W14 ADOPTION / SOURCE-LINEAGE / RUNTIME ATTESTATION REQUIRED. W118 will not fork or duplicate Execution Host.
+
+### 9.3 W102 — Assignment and authenticated ACK
+- W17 current source reconciliation records W70 Assignment templates and W112 cross-Work contract as draft references only; authoritative Assignment API/service, durable state, recipient-authenticated ACK ingestion/verifier, transaction/audit/read-back and runtime remain NOT VERIFIED.
+- W112 DOC-001 remains DRAFT / NOT APPROVED FOR RUNTIME ENFORCEMENT. W70 DOC-044 is an assignment template, not a runtime Assignment API.
+- **Disposition:** BLOCKED — no verified Core Task → W102 Assignment → recipient-bound ACK round-trip. No GitHub Issue or self-reported ACK may substitute.
+
+### 9.4 W33 — authenticated evidence ingestion
+- W17 current branch/source reconciliation records branch `work/33/ROOM-SHARED-FILE-EVIDENCE-HUB` as DIVERGED (16 ahead / 1503 behind at its recorded check), documentation-only delta; expected source paths `03_ARCHITECT/ARCHITECTURE.md` and `04_CODE/src/rsfeh/{store.py,cli.py}` were NOT_FOUND in that branch readback.
+- The available W117/W17 audit describes W33 as local SHA-256 blob + SQLite catalog and CLI-first, with caller-supplied agent attribution rather than authentication; no HTTP ingress or Core/MCP authenticated write path is verified. Historical W33 17/17 and A1–A9/A11 PASS claims remain NOT VERIFIED in the latest W17 reconciliation; A10 Core/MCP integration remains BLOCKED.
+- **Disposition:** BLOCKED — no canonical, current, authenticated ingestion interface and receipt contract available to W118. Do not reconstruct W33 source or invoke an assumed CLI/API under W118.
+
+### 9.5 W70 — authoritative Evidence Registry
+- W70 DOC-061 (main blob `a54dc2202e56cfb9737395fd523a5488ab35b0f3`) is DRAFT / contract approval pending / implementation not verified; it explicitly treats Core Work/Evidence APIs as proposals until an owner-approved runtime contract exists.
+- W70 DOC-071 (main blob `12f11320dc9da89b27de21313b698224d74519ce`) is source trace complete but states Core owner NOT IDENTIFIED, Work/WP/Assignment persistence and Work Evidence Registry NOT FOUND IN INSPECTED SCOPE / NOT VERIFIED.
+- W70 DOC-093/DOC-094 are draft/proposal task registers, not an approved Evidence Registry API/schema. Dashboard projection is read-only and cannot replace canonical persistence.
+- **Disposition:** BLOCKED — no owner-approved schema plus append/read-back route or service contract verified.
+
+### 9.6 Consolidated decision and next executable path
+1. Preserve PR #48 as an upstream candidate; do not import its large divergent history into W118.
+2. Obtain W14 owner confirmation of the canonical source/revision that adopts Core grant validation, and a deployment attestation for :8031. This is not a request to re-approve DR-1..DR-4.
+3. Resolve the current Core runtime integration path: the approved V1.2 implementation exists on PR #48, but main's inspected route mount is absent and live :8000 is not verified. W118 cannot bypass this by calling a speculative route.
+4. Obtain the W102 Assignment/ACK contract and W33 authenticated ingestion receipt interface from their canonical owners; W118 adapters remain read-only/contract-only until then.
+5. Obtain W70 approved Evidence Registry schema and read-after-write contract; do not use draft task registers or Dashboard projections as a substitute.
+6. Only after 2–5 are evidenced, run one non-sensitive, task-scoped E2E with one correlation ID and preserve all receipts.
+
+**Updated gate matrix:** Core V1.2 design/DR-1..DR-4 APPROVED; branch implementation candidate PRESENT; main route mount NOT PRESENT IN INSPECTED SOURCE; live Core NOT VERIFIED. W102 Assignment/ACK BLOCKED. W14 adoption/runtime NOT VERIFIED. W33 authenticated ingestion BLOCKED. W70 Evidence Registry read-back BLOCKED. Full Runtime Auto E2E BLOCKED / NOT RUN.
+
+**No owner-level question to Vinh is raised at this point:** prior V1.2 approval is already recorded. The next dependencies are technical owner handoffs and exact runtime/source evidence, not a new DR-1..DR-4 decision.
