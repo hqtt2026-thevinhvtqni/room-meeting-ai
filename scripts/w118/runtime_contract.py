@@ -75,12 +75,13 @@ def _validate_operation(
         errors.append(f"{path} must be an object")
         return
     method = operation.get("method")
-    if not isinstance(method, str) or method.upper() not in ALLOWED_METHODS:
+    if not isinstance(method, str) or method not in ALLOWED_METHODS:
         errors.append(f"{path}.method must be an allowed HTTP method")
     route = operation.get("path")
     if (
         not _non_empty_string(route)
         or not route.startswith("/")
+        or route == "/"
         or route.startswith("//")
         or ".." in route.split("/")
     ):
@@ -146,6 +147,11 @@ def validate_runtime_contract(bundle: Any) -> dict[str, Any]:
         if not isinstance(operations, Mapping):
             errors.append(f"{path}.operations must be an object")
             continue
+        unknown_operations = sorted(set(operations) - set(required_operations))
+        for operation_name in unknown_operations:
+            errors.append(
+                f"{path}.operations.{operation_name} is not part of the canonical W118 contract"
+            )
         for operation_name in required_operations:
             if operation_name not in operations:
                 errors.append(f"{path}.operations.{operation_name} is required")
