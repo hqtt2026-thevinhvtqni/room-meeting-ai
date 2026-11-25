@@ -2717,3 +2717,18 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - **Governance:** PR #68 vẫn OPEN / UNMERGED; không rebase, merge, force-push, runtime mutation hoặc release. Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED.
 - **Tính chất ghi nhận:** Đây là đối soát metadata PR và nội dung hồ sơ GitHub; chưa tải/đọc artifact bytes hoặc chạy lại workflow trong thao tác này. Không tuyên bố xác minh độc lập mới.
 - **Bước tiếp theo:** tiếp tục kiểm tra các lỗi còn lại ở tầng contract/schema và chuẩn bị intake/preflight không gọi endpoint. Chỉ chạy runtime sau khi có contract owner-approved và runtime principal/endpoint có thể xác minh.
+
+
+## Entry 111 — tạo W118-22 hồ sơ điều phối tích hợp Runtime Auto E2E
+
+- **Thời điểm:** 2026-11-25 (UTC+7).
+- **Actor:** Xu / AI-01 — điều phối theo ủy quyền của Vinh.
+- **Phạm vi:** Tạo hồ sơ tích hợp liên Work để chuyển trọng tâm W118 từ contract validator tĩnh sang chuỗi Runtime Auto E2E thực.
+- **Sản phẩm:** `05_BUILD/W118-22_RUNTIME-AUTO-E2E-INTEGRATION-HANDOFF.md` — phiên bản 1.0, trạng thái DRAFT / OWNER HANDOFF READY.
+- **Nội dung:** xác định năm chặng Core → W102 Assignment/ACK → W14 protected execution → W33 authenticated ingestion → W70 Evidence Registry read-back; lập ma trận blocker/owner; liệt kê đầu vào contract và receipt cần từng owner bàn giao; nêu điều kiện đóng blocker, thứ tự triển khai và ranh giới môi trường.
+- **Bằng chứng GitHub:** commit tạo hồ sơ `b79c976771ccb1f1cd8eb14015a40b34998bd743` trên nhánh `work/118-auto-e2e-v2-clean`.
+- **Bằng chứng Sandbox:** thao tác `sandbox_create` trả `status=ok`, path `HQTT-GITHUB-WORKFLOW-AUTOMATION/05_BUILD/W118-22_RUNTIME-AUTO-E2E-INTEGRATION-HANDOFF.md`.
+- **Giới hạn:** không tạo API/schema thay owner; không gửi lệnh execute; không thay đổi Core/W14/W33/W70; không đổi quyền/secrets; không merge/rebase/release.
+- **Kết quả:** DONE — hồ sơ điều phối đã được tạo ở GitHub branch và W118 Sandbox. Đây là DONE cho việc tạo tài liệu, KHÔNG phải DONE cho tích hợp.
+- **Runtime Auto E2E:** BLOCKED / NOT RUN. Các hợp đồng owner-approved và bằng chứng runtime vẫn chưa có.
+- **Bước tiếp theo:** dùng W118-22 làm phiếu intake cho các owner Core/W102/W14/W33/W70; khi nhận được contract/receipt chính thức, triển khai adapter theo thứ tự ở §6 và kiểm chứng negative path trước live execution.
