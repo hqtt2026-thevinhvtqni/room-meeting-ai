@@ -1,7 +1,7 @@
 # W118-20 — Runtime Contract Readiness
 
 - **Work:** W118 — HQTT GitHub Workflow Automation
-- **State:** IMPLEMENTED ON FEATURE BRANCH — CI PENDING
+- **State:** IMPLEMENTED ON FEATURE BRANCH — EXACT-HEAD CONTRACT CI PASS (Run #1247; 168 tests)
 - **Purpose:** Validate owner-supplied integration contracts before any live runtime preflight.
 - **Code:** `scripts/w118/runtime_contract.py`
 - **Tests:** `tests/w118/test_runtime_contract.py`
@@ -74,3 +74,8 @@ The test suite covers missing dependencies, unapproved contracts, missing operat
 6. A controlled end-to-end run uses one correlation ID and records positive and negative outcomes. Only then can Runtime Auto E2E be assessed.
 
 **Current limitation:** no owner-approved runtime bundle is present in this commit. The five dependent runtime gates remain BLOCKED / NOT VERIFIED.
+
+
+## 7. Exact-head CI and validator/Schema parity — 2026-11-25
+
+Run #1247 / ID `45620574896` validated source HEAD `bc99f3a049a08a07b15de76d4ed3bcba9e4ad9d1`; job `139227439749` completed SUCCESS, **168 tests in 0.336s**. Three negative tests now enforce parity with the published schema: lowercase HTTP method, non-canonical extra operation, and root-only operation path are rejected. The validator remains static-only: it contacts no endpoint, loads no credential, and grants no authority. This CI result does not establish service availability or Runtime Auto E2E.
