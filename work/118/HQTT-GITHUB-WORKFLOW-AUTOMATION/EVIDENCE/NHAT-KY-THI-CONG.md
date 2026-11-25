@@ -2808,3 +2808,18 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - **Result:** DONE — handoff request posted and comment readback verified. Owner response NOT YET RECEIVED / NOT VERIFIED.
 - **Runtime Auto E2E:** BLOCKED / NOT RUN.
 - **Next:** theo dõi phản hồi owner qua Issue #65; chỉ nối adapter khi có canonical approved contract/revision và evidence. Continue W118-owned safe work without duplicating component systems.
+
+
+## Entry 117 — đối soát owner response và exact-head CI sau handoff
+
+- **Thời điểm:** 2026-11-26 17:00 (+07).
+- **Phạm vi:** Kiểm tra phản hồi owner trên Issue #65; xác minh PR #68, compare với main, review state và CI tại đúng HEAD hiện hành.
+- **Method:** Fetch toàn bộ Issue #65 comments; fetch PR #68; compare `main...work/118-auto-e2e-v2-clean`; đọc workflow runs/jobs/logs; kiểm tra formal reviews và inline review threads.
+- **Owner handoff:** Issue #65 hiện có 21 comments. Comment handoff #7174069881 vẫn là comment mới nhất do owner dự án đăng; chưa thấy phản hồi kỹ thuật mới từ Core/W1111, W14, W102, W33 hoặc W70. Kết luận: OWNER RESPONSE NOT RECEIVED / NOT VERIFIED.
+- **PR state:** PR #68 OPEN / UNMERGED; head `e842374b6522bdfe21c60faf7d7240a0653e4cc6`; base `main`; GitHub metadata `mergeable=true` (chỉ là metadata, không phải quyền merge).
+- **Branch compare:** DIVERGED, 300 commits ahead / 17 behind; merge base `792bdd71e5345949e0c1f26ff9f95a8513dfa7d5`; compare base main SHA `af885358114a277876b6233f08836e07a26bf658`. Không rebase/merge/force-push.
+- **Review state:** 0 formal review submissions; 0 inline review threads. Owner discussion comments không được tính là independent review.
+- **Exact-head CI:** Pull-request workflow run #45697563956; validate job #139498840906 SUCCESS trên PR head `e842374b6522bdfe21c60faf7d7240a0653e4cc6`; log xác nhận `Ran 175 tests in 0.332s — OK`. Artifact ID `15061961647`, tên `w118-run-evidence-45697563956-1`, SHA-256 `16b2e6c6ad440b62a0c2e6c52fa70e52ca821d77ef750224133a82f4ba5c6b35`, hết hạn `2026-12-25T20:42:51Z`.
+- **Giới hạn CI:** `handoff-request-capture`, `ack-claim-capture`, `review-observation-capture` đều SKIPPED; `SOURCE_BINDING_STATUS=NOT_RUN` do pull_request event. Đây là contract/unit CI, không phải runtime E2E.
+- **Disposition:** DONE — owner response, PR state, branch divergence, formal review state và exact-head CI đã được đối soát. Runtime Auto E2E vẫn BLOCKED / NOT RUN; các gate Core, W102, W14, W33, W70 chưa có owner evidence mới.
+- **Next:** Chờ đúng owner contract/attestation trên Issue #65; khi có phản hồi thì kiểm chứng nguồn và phiên bản. Không tiếp tục tăng số validator thay cho tích hợp runtime.
