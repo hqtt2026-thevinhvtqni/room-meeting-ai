@@ -279,3 +279,14 @@ Post-merge event execution order and expected outcomes are specified in [RT-118-
 - Exact source SHA `324a7e9c97c4858a188fcc5572a0f14c4c853294`: push Run #1229 and PR Run #1230 both SUCCESS, **159 tests PASS** (0.321s and 0.320s).
 - Push artifact ID `15023167274`, digest `sha256:0e2e1e907432749e56288d72de381d5526743d678d27e52eff3485697ec4ecbd`; PR artifact ID `15022439775`, digest `sha256:06734fbadc788b53a2759a5c77d64f003874f757ae8c614d173b23b085df2185`.
 - Handoff/ACK/review event jobs SKIPPED; this remains contract/unit evidence only.
+
+
+## Receipt signature verification — exact-head Run #1239 / #1240
+
+- Added optional signature envelope to the normalized five-stage evidence-chain schema.
+- Added pluggable verifier injection. W118 canonicalizes the receipt payload and delegates signature checking to an owner-trusted verifier/key resolver; no key material is stored in W118.
+- Security tests: all-signed valid chain, tamper rejection, partial signature rejection, signed-without-verifier remains unauthenticated, missing/invalid trusted key rejection, and verifier configured with unsigned receipts is blocked.
+- A valid signature chain yields only `AUTHENTICATED_CHAIN_NOT_RUNTIME_PASS`; authority, runtime E2E and acceptance remain false.
+- Exact source SHA `411aad8a6922f5033700a284767b819c668119b2`: push Run #1239 and PR Run #1240 SUCCESS; **165 tests PASS** (0.334s and 0.162s).
+- Push artifact ID `15023458195`, digest `sha256:39cfd26cc8ebd4f0f741bbfa8a9bbdfded9295d79985e0528019079499c14fae`; PR artifact ID `15022729607`, digest `sha256:65f688ef3edbc8a9e30b35a4254063b64f7bbdf644efff3f70f0f79b6d0a88df`.
+- Handoff/ACK/Review jobs SKIPPED; no runtime E2E claimed.
