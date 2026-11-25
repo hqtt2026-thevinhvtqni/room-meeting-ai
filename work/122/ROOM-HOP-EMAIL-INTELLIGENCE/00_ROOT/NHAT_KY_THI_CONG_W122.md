@@ -128,3 +128,13 @@
 - Result: Sandbox plan read-back PASS; GitHub write operation returned success. GitHub post-update read-back still pending.
 - Current gate: G0/G1 NOT CLOSED; G2 NOT APPROVED; G3 BUILD NOT AUTHORIZED; REAL SEND NOT AUTHORIZED.
 - Next: verify GitHub main content matches the canonical Sandbox plan; inspect any newly available original email source or record the source as missing; continue discovery only where a new authoritative source exists.
+
+ 
+## 2026-11-25 — J008 — GitHub main read-back verification
+- Actor: Xu / ROOM-HOP identity xu.
+- Method: GitHub fetch_file on main for the canonical W122 plan and journal after update.
+- Evidence:
+  1. KE_HOACH_W122.md fetched from main; blob SHA 14bf1c473b56b561dc7cecffe1d91dd9116a04ae; content includes Anh Đức and revised delivery plan.
+  2. NHAT_KY_THI_CONG_W122.md fetched from main; blob SHA 7b83d8cc4056b71fd4939a382023ad68c48121cf; content includes J007.
+- Result: GitHub main post-update read-back PASS for both files. Sandbox remains canonical working source; GitHub main mirror is synchronized for these two updated documents.
+- Next: do not start BUILD from this plan alone. Continue discovery only on new authoritative evidence; obtain original source email if Vinh provides or identifies it, and obtain approved G2/G3 decisions before implementation.
