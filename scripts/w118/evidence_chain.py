@@ -10,6 +10,7 @@ import argparse
 import json
 import re
 from datetime import datetime
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -40,8 +41,19 @@ def _parse_time(value: Any) -> datetime | None:
     return parsed if parsed.tzinfo is not None else None
 
 
-def verify_evidence_chain(bundle: Any) -> dict[str, Any]:
-    """Return structural chain status; authenticity is deliberately unverified."""
+def canonical_receipt_payload(receipt: Mapping[str, Any]) -> bytes:
+    """Canonical bytes signed by a service-specific, owner-trusted verifier."""
+    payload = {key: value for key, value in receipt.items() if key != "signature"}
+    return json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+
+
+def verify_evidence_chain(
+    bundle: Any,
+    *,
+    signature_verifier: Callable[[bytes, Mapping[str, Any]], bool] | None = None,
+) -> dict[str, Any]:
+    """Validate structure and optionally delegate receipt signatures to a trusted verifier."""
+
     errors: list[str] = []
     if not isinstance(bundle, Mapping):
         return _report(["bundle must be a JSON object"])
@@ -136,24 +148,64 @@ def verify_evidence_chain(bundle: Any) -> dict[str, Any]:
     if ingestion and readback and str(ingestion.get("artifact_sha256", "")).lower() != str(readback.get("artifact_sha256", "")).lower():
         errors.append("W70 read-back artifact digest must match W33 ingested artifact")
 
-    return _report(errors)
+    if errors:
+        return _report(errors)
+
+    signed_flags = ["signature" in receipt for receipt in receipts if isinstance(receipt, Mapping)]
+    if any(signed_flags) and not all(signed_flags):
+        return _report(["all stage receipts must be signed or all must be unsigned; partial signatures are blocked"])
+    if not any(signed_flags):
+        if signature_verifier is not None:
+            return _report(["signature verifier was supplied but stage receipts contain no signatures"])
+        return _report([], status="STRUCTURALLY_COMPLETE_UNAUTHENTICATED")
+
+    for index, receipt in enumerate(receipts):
+        signature = receipt.get("signature")
+        if not isinstance(signature, Mapping):
+            errors.append(f"receipts[{index}].signature must be an object")
+            continue
+        for field in ("algorithm", "key_id", "value"):
+            if not _text(signature.get(field)):
+                errors.append(f"receipts[{index}].signature.{field} must be non-empty")
+    if errors:
+        return _report(errors)
+    if signature_verifier is None:
+        return _report([], status="STRUCTURALLY_COMPLETE_UNAUTHENTICATED")
+
+    for index, receipt in enumerate(receipts):
+        try:
+            verified = signature_verifier(canonical_receipt_payload(receipt), receipt["signature"])
+        except Exception:
+            verified = False
+        if verified is not True:
+            errors.append(f"receipts[{index}] issuer signature verification failed")
+    if errors:
+        return _report(errors)
+    return _report([], status="AUTHENTICATED_CHAIN_NOT_RUNTIME_PASS", issuer_signatures_verified=True)
 
 
-def _report(errors: list[str]) -> dict[str, Any]:
-    complete = not errors
+def _report(
+    errors: list[str],
+    *,
+    status: str = "BLOCKED",
+    issuer_signatures_verified: bool = False,
+) -> dict[str, Any]:
     return {
         "work_id": "118",
         "check": "RUNTIME_EVIDENCE_CHAIN_STRUCTURE",
-        "status": "STRUCTURALLY_COMPLETE_UNAUTHENTICATED" if complete else "BLOCKED",
+        "status": status,
         "runtime_e2e_pass": False,
-        "authenticity_verified": False,
+        "issuer_signatures_verified": issuer_signatures_verified,
+        "authenticity_verified": issuer_signatures_verified,
+        "authority_verified": False,
         "acceptance_granted": False,
         "errors": errors,
         "limitations": [
-            "This verifies normalized receipt structure, linkage, correlation continuity, chronology and digest equality only.",
-            "Issuer identity, authority references and attestation references are not cryptographically authenticated by this tool.",
+            "This verifies normalized receipt structure, linkage, correlation continuity, chronology and digest equality.",
+            "If enabled, issuer signature verification is delegated to an injected service-specific verifier backed by owner-approved trusted keys.",
+            "Signature verification does not itself prove that an issuer had Core authority for the referenced action.",
             "No runtime service was contacted and no execution was performed.",
-            "STRUCTURALLY_COMPLETE_UNAUTHENTICATED is not Runtime E2E PASS, Work acceptance or release.",
+            "Even AUTHENTICATED_CHAIN_NOT_RUNTIME_PASS is not Runtime E2E PASS, Work acceptance or release.",
         ],
     }
 
