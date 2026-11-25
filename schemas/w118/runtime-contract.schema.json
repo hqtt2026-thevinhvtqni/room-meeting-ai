@@ -175,6 +175,9 @@
         },
         "evidence": {
           "$ref": "#/$defs/evidence"
+        },
+        "operations": {
+          "type": "object"
         }
       }
     },
