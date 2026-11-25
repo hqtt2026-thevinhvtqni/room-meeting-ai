@@ -92,6 +92,28 @@ class RuntimeContractReadinessTests(unittest.TestCase):
         report = validate_runtime_contract(bundle)
         self.assertEqual(report["status"], "BLOCKED")
 
+    def test_unknown_top_level_field_is_rejected(self):
+        bundle = valid_bundle()
+        bundle["runtime_pass"] = True
+        self.assertEqual(validate_runtime_contract(bundle)["status"], "BLOCKED")
+
+    def test_unknown_component_field_is_rejected(self):
+        bundle = valid_bundle()
+        bundle["dependencies"]["w14_execution_host"]["debug_mode"] = True
+        self.assertEqual(validate_runtime_contract(bundle)["status"], "BLOCKED")
+
+    def test_unknown_operation_field_is_rejected(self):
+        bundle = valid_bundle()
+        bundle["dependencies"]["w14_execution_host"]["operations"]["execute_work"]["shell"] = True
+        self.assertEqual(validate_runtime_contract(bundle)["status"], "BLOCKED")
+
+    def test_malformed_url_fails_closed_without_exception(self):
+        bundle = valid_bundle()
+        bundle["dependencies"]["core_task_authority"]["base_url"] = "https://[invalid"
+        report = validate_runtime_contract(bundle)
+        self.assertEqual(report["status"], "BLOCKED")
+        self.assertTrue(any("syntactically valid" in item for item in report["errors"]))
+
     def test_external_plain_http_endpoint_is_blocked(self):
         bundle = valid_bundle()
         bundle["dependencies"]["core_task_authority"]["base_url"] = "http://core.example.test"
