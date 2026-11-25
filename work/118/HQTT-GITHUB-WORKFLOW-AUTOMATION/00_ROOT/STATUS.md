@@ -8,7 +8,7 @@
 - **PR:** #68 — OPEN / UNMERGED (PR #67 superseded)
 - **Owner:** Vinh
 - **Coordinator:** Xu / AI-01
-- **Last status refresh:** 2026-11-23 01:44 +07:00 (UTC+07:00)
+- **Last status refresh:** 2026-11-26 03:36 +07:00 (UTC+07:00)
 
 ## 1. Architecture ownership
 
@@ -735,3 +735,16 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - **Compare:** DIVERGED 285 ahead / 17 behind; 57 changed files; merge base `792bdd71e5345949e0c1f26ff9f95a8513dfa7d5`. PR #68 OPEN / UNMERGED.
 - **Runtime status:** all five live gates (Core Task, W102 Assignment/ACK, W14 execution, W33 ingestion, W70 read-back) and full Runtime Auto E2E remain BLOCKED / NOT VERIFIED. Structural/schema/signature checks do not establish Core authority or runtime success.
 - **Governance:** no rebase, merge, force-push, runtime mutation, permission/secret change or release. Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED.
+
+
+## 10. Source reconciliation refresh — 2026-11-26 03:36 +07
+
+- **Canonical integration handoff:** W118-22 v1.1, `05_BUILD/W118-22_RUNTIME-AUTO-E2E-INTEGRATION-HANDOFF.md`, now contains exact source/branch evidence and owner dispositions for Core V1.2, W14, W102, W33 and W70.
+- **Prior owner decision:** Core Execution Authority V1.2 DR-1..DR-4 are already APPROVED by Vinh (2026-10-25), reconciled in W1111 approval record; Gate 2 OPEN/AUTHORIZED. Do not ask for re-approval of those same decisions.
+- **Core candidate:** PR #48 remains OPEN / DRAFT / UNMERGED / mergeable=false. Current branch comparison main...candidate = DIVERGED, 157 ahead / 999 behind, merge base `82a490ad16c72e77ca3c9c8d9f83feabcb6f4e54`. Candidate branch source contains Core grant route mount and Host online grant validation, but this is not main/live Core evidence. PR description records 33 passing tests on historical branch run `42732254869`; not rerun in this refresh.
+- **W14:** sole integrated execution owner. Adoption of PR #48 source lineage and current :8031 runtime attestation NOT VERIFIED. W118 will not duplicate or fork Host.
+- **W102:** authoritative Assignment API, recipient-authenticated ACK and Core read-back NOT VERIFIED; W112 contract and W70 templates are draft references only.
+- **W33:** current branch/source sync is divergent and source paths were not found in W17's bounded branch readback; authenticated ingress/receipt contract NOT VERIFIED. Do not infer from historical local CLI/store claims.
+- **W70:** DOC-061 remains DRAFT / approval pending; DOC-071 records Core owner NOT IDENTIFIED and Work Evidence Registry NOT FOUND IN INSPECTED SCOPE / NOT VERIFIED. Approved append/read-back contract not available.
+- **Runtime Auto E2E:** BLOCKED / NOT RUN. No live endpoint called, no execute request sent, no runtime/secret/permission change, no PR #48 import, no merge/rebase/release.
+- **Next:** resolve W14 adoption/runtime evidence and Core current-main deployment path; intake authenticated W102 Assignment/ACK, W33 ingestion and W70 Registry contracts before writing runtime adapters. W118-local contract CI remains distinct from integration PASS.
