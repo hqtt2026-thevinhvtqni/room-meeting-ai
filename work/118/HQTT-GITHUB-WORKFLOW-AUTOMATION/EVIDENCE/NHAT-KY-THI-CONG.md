@@ -2636,3 +2636,19 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - **Integration decision:** keep PR OPEN / UNMERGED. Despite current `mergeable=true`, branch remains 17 commits behind main and diverged; no rebase, merge, force-push, reset, PR close or release without separately reviewed and authorized integration plan.
 - **Acceptance:** Vinh NOT ACCEPTED; release NOT AUTHORIZED.
 - **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-25 17:32 +07:00; Result: current head CI verified and transient mergeability state corrected; divergence gate retained.
+
+ 
+## Entry 080 — exact-head CI and live integration status
+
+- **Priority / read order:** 01 — P0 — this entry supersedes earlier CI/compare snapshots.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-25 17:34 +07:00.
+- **PR #68:** OPEN / not draft / UNMERGED; current source HEAD at audit `2b5e48dc05a8fb9d055a5831a8bf3a906d6a3486`; GitHub currently reports `mergeable=true`.
+- **Fresh compare:** `main...work/118-auto-e2e-v2-clean` remains DIVERGED; 237 ahead / 17 behind; merge base `792bdd71e5345949e0c1f26ff9f95a8513dfa7d5`; 48 changed paths, all under W118.
+- **Exact-head CI:** Run #1184 / ID `45595923107`, source HEAD `2b5e48dc05a8fb9d055a5831a8bf3a906d6a3486`; validate job `139141826405` SUCCESS; raw log confirms `Ran 124 tests in 0.154s`. Artifact ID `15013062231`, name `w118-run-evidence-45595923107-1`, size 687 bytes, SHA-256 `fde213de453adab65d1c8e1f4d7ad6bcaf505930b3b72ca51e5545f354b5bf8c`, unexpired. Contract/unit CI only.
+- **Skipped gates:** Task-to-Issue source-binding skipped on PR event; handoff-request, ACK-claim and review-observation capture jobs skipped. Runtime Auto E2E NOT RUN.
+- **Review:** formal GitHub reviews 0; inline threads 0; requested reviewers empty. Xu Entry 075 remains NEEDS CHANGES for 067/069; Entry 076 remediation awaits independent re-review. No approval inferred.
+- **Integration:** current mergeable flag true does not erase 17-commit divergence and does not authorize integration. PR remains OPEN / UNMERGED. No rebase, merge, force-push, reset, PR close or release.
+- **Tasks:** 013 IN_PROGRESS; 014 BLOCKED; 015 BLOCKED; 016 adapter IN_PROGRESS / Core Task-scoped lease BLOCKED; 017 contract IN_PROGRESS / Core-W33 ingress NOT VERIFIED; 018 BLOCKED; 019 PLANNED / NOT RUN. No Task DONE; progress NOT_CALCULATED.
+- **Acceptance:** Vinh NOT ACCEPTED; release NOT AUTHORIZED.
+- **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-25 17:34 +07:00; Result: exact current-head CI and refreshed compare verified; no acceptance or integration asserted.
