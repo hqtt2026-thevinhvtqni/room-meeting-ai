@@ -1,5 +1,7 @@
 import copy
+import json
 import unittest
+from pathlib import Path
 
 from scripts.w118.runtime_contract import (
     REQUIRED_COMPONENTS,
@@ -128,6 +130,26 @@ class RuntimeContractReadinessTests(unittest.TestCase):
         bundle["dependencies"]["w70_evidence_register"]["operations"]["register_evidence"].pop("response_schema_ref")
         report = validate_runtime_contract(bundle)
         self.assertTrue(any("response_schema_ref" in item for item in report["errors"]))
+
+
+    def test_published_json_schema_declares_all_canonical_dependencies(self):
+        schema_path = Path(__file__).resolve().parents[2] / "schemas" / "w118" / "runtime-contract.schema.json"
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+        required = schema["properties"]["dependencies"]["required"]
+        self.assertEqual(set(required), set(REQUIRED_COMPONENTS))
+        for component in REQUIRED_COMPONENTS:
+            self.assertIn(component, schema["properties"]["dependencies"]["properties"])
+
+    def test_owner_intake_template_is_explicitly_unapproved(self):
+        template_path = (
+            Path(__file__).resolve().parents[2]
+            / "work" / "118" / "HQTT-GITHUB-WORKFLOW-AUTOMATION"
+            / "05_BUILD" / "runtime-contract-template.json"
+        )
+        template = json.loads(template_path.read_text(encoding="utf-8"))
+        report = validate_runtime_contract(template)
+        self.assertEqual(report["status"], "BLOCKED")
+        self.assertTrue(all(spec["approved"] is False for spec in template["dependencies"].values()))
 
 
 if __name__ == "__main__":
