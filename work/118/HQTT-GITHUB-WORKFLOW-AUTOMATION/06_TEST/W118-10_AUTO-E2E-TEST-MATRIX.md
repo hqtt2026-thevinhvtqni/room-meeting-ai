@@ -268,3 +268,14 @@ Post-merge event execution order and expected outcomes are specified in [RT-118-
 - Push Run #1217: job SUCCESS, 141 tests / 0.172s; artifact `15023191672`, digest `sha256:1e30f325fbcfab3d308d768d2ce7b465eca27d8b235bb2a3d69a88617aa21ec1`.
 - PR Run #1218: job SUCCESS, 141 tests / 0.182s; artifact `15023376494`, digest `sha256:3fb743b8ae3b17f78cd2902b0d0ea35c4a5bf673820f48a215254722a91773a1`.
 - Both are CI contract/unit evidence only. Source-binding remains `UNBOUND_LEGACY_BRANCH`; handoff/ACK/review jobs SKIPPED; no runtime E2E is claimed.
+
+
+## Five-stage evidence-chain verifier — exact-head Run #1229 / #1230
+
+- Added `scripts/w118/evidence_chain.py`, normalized W118 envelope schema `schemas/w118/evidence-chain.schema.json`, and runbook `05_BUILD/W118-21_RUNTIME-EVIDENCE-CHAIN-VERIFIER.md`.
+- Required ordered receipts: Core Task snapshot → W102 Assignment/ACK → W14 execution → W33 ingestion → W70 read-back.
+- New test suite validates correlation continuity, Work/Task/source SHA, unique receipt IDs, receipt chain links, stage order/outcomes, timestamp ordering/timezone, W14/W33/W70 artifact digest continuity, and fail-closed malformed/incomplete bundles.
+- Output is only `STRUCTURALLY_COMPLETE_UNAUTHENTICATED`; it cannot declare runtime PASS, authenticity verified or acceptance granted.
+- Exact source SHA `324a7e9c97c4858a188fcc5572a0f14c4c853294`: push Run #1229 and PR Run #1230 both SUCCESS, **159 tests PASS** (0.321s and 0.320s).
+- Push artifact ID `15023167274`, digest `sha256:0e2e1e907432749e56288d72de381d5526743d678d27e52eff3485697ec4ecbd`; PR artifact ID `15022439775`, digest `sha256:06734fbadc788b53a2759a5c77d64f003874f757ae8c614d173b23b085df2185`.
+- Handoff/ACK/review event jobs SKIPPED; this remains contract/unit evidence only.
