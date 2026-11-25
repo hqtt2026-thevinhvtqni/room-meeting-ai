@@ -724,3 +724,14 @@ Downloaded and parsed CI #914/#915 artifacts. Push artifact confirms exact sourc
 - **Artifact:** ID `15025085887`, SHA-256 `5f8b524244fd403bab13cd393b55b589016008f7eacc4a6a47c4ada4b8880c1e`, unexpired at readback.
 - **Runtime status:** Core Task, W102 Assignment/ACK, W14 protected execution, W33 authenticated ingestion, W70 authoritative read-back and Runtime Auto E2E remain BLOCKED / NOT VERIFIED. No approved external contract bundle is available.
 - **Governance:** PR #68 remains OPEN / UNMERGED. No rebase, merge, force-push, runtime mutation or release. Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED.
+
+
+## 13. Strict evidence-envelope schema boundary — 2026-11-25 20:13 +07:00
+
+- **Source HEAD:** `a42432f0a79669489c4ca3a3a36941762da857bf`.
+- **Verifier hardening:** normalized evidence verifier now rejects unknown top-level bundle fields, unknown receipt fields and unknown signature-envelope fields, matching the published closed-object schema. Three negative tests were added.
+- **Exact-head PR CI:** Run #1261 / ID `45621342716`, validate job `139230010968` SUCCESS; **175 tests in 0.330s — OK**. Handoff-request, ACK-claim and review-observation jobs SKIPPED. This is contract/unit CI only.
+- **Artifact:** ID `15024776419`, SHA-256 `44ebc11731a904b8d0e6a879e88b60b7c60d0109f4dfe447f958d512fddab617`, unexpired at readback.
+- **Compare:** DIVERGED 285 ahead / 17 behind; 57 changed files; merge base `792bdd71e5345949e0c1f26ff9f95a8513dfa7d5`. PR #68 OPEN / UNMERGED.
+- **Runtime status:** all five live gates (Core Task, W102 Assignment/ACK, W14 execution, W33 ingestion, W70 read-back) and full Runtime Auto E2E remain BLOCKED / NOT VERIFIED. Structural/schema/signature checks do not establish Core authority or runtime success.
+- **Governance:** no rebase, merge, force-push, runtime mutation, permission/secret change or release. Vinh acceptance NOT ACCEPTED; release NOT AUTHORIZED.
