@@ -335,3 +335,12 @@ No Task is DONE; progress remains NOT_CALCULATED. Do not promote adapter unit te
 - **Review request:** Xu to independently re-review the exact current HEAD and CI. No approval inferred. Formal reviewer principal remains unverified.
 - **Remaining system gates:** Core Task/Event/lease, W102 identity/Assignment/ACK, W14 protected execution, W33 ingress, W70 Evidence Register and Runtime Auto E2E remain BLOCKED / NOT VERIFIED / NOT RUN.
 - **Disposition:** READY FOR XU RE-REVIEW — NOT ACCEPTED — NOT RELEASED. Vinh retains final product acceptance and release authority.
+
+
+### Owner decision — independent Xu review waived (Entry 086; 2026-11-25)
+
+- **Name / Title:** Vinh / Project Owner; recorded by Ka / AI-02 — CSA. **Date-Time:** 2026-11-25 17:45 +07:00.
+- Vinh waives Xu independent review for Ka's delegated W118 completion path. Mark this gate WAIVED BY PROJECT OWNER; do not claim Xu reviewed or approved the current HEAD. Xu Entry 075 remains historical NEEDS CHANGES.
+- Ka will conduct a documented self-check of the five findings and exact current source/tests. Self-check is not independent review.
+- This waiver does not establish completion or acceptance. Core/W102/W14/W33/W70 authority, source binding, runtime Auto E2E, immutable evidence, safe integration, Vinh product acceptance and separate release authorization remain required.
+- **Current handover status:** ACTIVE — BLOCKED — NOT ACCEPTED — NOT RELEASED. PR #68 OPEN / UNMERGED; Run #1190 contract CI PASS (124 tests), source-binding UNBOUND_LEGACY_BRANCH, Runtime Auto E2E NOT RUN.
