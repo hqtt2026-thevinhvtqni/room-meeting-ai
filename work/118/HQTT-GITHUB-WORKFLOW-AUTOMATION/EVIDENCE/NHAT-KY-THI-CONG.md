@@ -2620,3 +2620,19 @@ PR artifact #915 contains run-evidence.json; it confirms event=pull_request, sou
 - **Runtime/task gates:** source-binding step SKIPPED for PR event; handoff-request, ACK-claim and review-observation jobs SKIPPED. Runtime Auto E2E NOT RUN. TASK-013 IN_PROGRESS; TASK-014 BLOCKED; TASK-015 BLOCKED; TASK-016 adapter IN_PROGRESS / Core lease BLOCKED; TASK-017 contract IN_PROGRESS / Core-W33 ingress NOT VERIFIED; TASK-018 BLOCKED; TASK-019 PLANNED / NOT RUN. No Task DONE; progress NOT_CALCULATED.
 - **Decision:** Freeze integration operations. Do not rebase, merge, force-push, reset, close PR, release, change branch protection/permissions/secrets, or mutate external Work/Sandbox/runtime. Continue bounded read-only source/authority audit and await Xu independent re-review. Any conflict-resolution plan requires Xu review and must preserve Vinh's acceptance/release authority.
 - **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-25 17:29 +07:00; Result: divergence and mergeability warning recorded; integration gate BLOCKED; PR remains open/unmerged.
+
+ 
+## Entry 079 — post-journal exact-head CI and mergeability recheck
+
+- **Priority / read order:** 01 — P0 — this entry supersedes Entry 078's transient mergeable=false observation for current PR metadata.
+- **Name / Title:** Ka / AI-02 — CSA / W118 Delegated Build Owner.
+- **Date-Time:** 2026-11-25 17:32 +07:00.
+- **Current PR:** #68 OPEN / not draft / UNMERGED; source HEAD `7a236ed7588e74cf94f8636405bb6d7319d6d12a`; GitHub metadata now reports `mergeable=true`. Entry 078's earlier `mergeable=false` was a transient readback and is superseded by this later read.
+- **Branch comparison remains:** DIVERGED, 231 ahead / 17 behind; merge base `792bdd71e5345949e0c1f26ff9f95a8513dfa7d5`; base HEAD observed `af885358114a277876b6233f08836e07a26bf658`; 48 changed paths, all under W118. `mergeable=true` is not authorization to merge or rebase and does not erase the 17-commit divergence.
+- **Exact current-head CI:** PR Run #1180 / ID `45595732796`, validate job `139141217445`, SUCCESS; raw log confirms `Ran 124 tests in 0.228s`. Artifact ID `15013695587`, name `w118-run-evidence-45595732796-1`, size 686 bytes, SHA-256 `b78d0fb2191826cf483fed73ca2699acb4668ae4a2c387c4440d4762a7441ed6`, unexpired. This is contract/unit CI only.
+- **Skipped gates:** Task-to-Issue source-binding skipped for PR event; handoff-request, ACK-claim and review-observation capture jobs skipped. Runtime Auto E2E NOT RUN.
+- **Xu review:** formal GitHub reviews 0; inline threads 0. Entry 075 remains NEEDS CHANGES for 067/069; Entry 076 remediation awaits Xu independent re-review. No approval inferred.
+- **Task/authority state:** TASK-013 IN_PROGRESS; 014 BLOCKED; 015 BLOCKED; 016 adapter IN_PROGRESS / Core Task-scoped lease BLOCKED; 017 contract IN_PROGRESS / Core-W33 ingress NOT VERIFIED; 018 BLOCKED; 019 PLANNED / NOT RUN. No Task DONE; progress NOT_CALCULATED. Core/W102/W14/W33/W70 authority/runtime evidence remains BLOCKED / NOT VERIFIED.
+- **Integration decision:** keep PR OPEN / UNMERGED. Despite current `mergeable=true`, branch remains 17 commits behind main and diverged; no rebase, merge, force-push, reset, PR close or release without separately reviewed and authorized integration plan.
+- **Acceptance:** Vinh NOT ACCEPTED; release NOT AUTHORIZED.
+- **BIÊN BẢN:** Name: Ka / AI-02; Title: CSA / W118 Delegated Build Owner; Date-Time: 2026-11-25 17:32 +07:00; Result: current head CI verified and transient mergeability state corrected; divergence gate retained.
