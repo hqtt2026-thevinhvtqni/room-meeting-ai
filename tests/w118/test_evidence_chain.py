@@ -1,9 +1,11 @@
 import copy
+import hashlib
+import hmac
 import json
 import unittest
 from pathlib import Path
 
-from scripts.w118.evidence_chain import STAGES, verify_evidence_chain
+from scripts.w118.evidence_chain import STAGES, canonical_receipt_payload, verify_evidence_chain
 
 
 def valid_bundle():
@@ -143,6 +145,77 @@ class EvidenceChainTests(unittest.TestCase):
             verify_evidence_chain(bundle)["status"],
             "STRUCTURALLY_COMPLETE_UNAUTHENTICATED",
         )
+
+
+    def test_owner_trusted_signature_verifier_authenticates_all_receipts_but_not_authority(self):
+        bundle = valid_bundle()
+        keys = {f"key-{index}": (f"test-key-{index}-" + "x" * 40).encode() for index in range(5)}
+        for index, receipt in enumerate(bundle["receipts"]):
+            key_id = f"key-{index}"
+            receipt["signature"] = {
+                "algorithm": "HMAC-SHA256",
+                "key_id": key_id,
+                "value": hmac.new(keys[key_id], canonical_receipt_payload(receipt), hashlib.sha256).hexdigest(),
+            }
+
+        def verifier(payload, signature):
+            key = keys.get(signature["key_id"])
+            if key is None or signature["algorithm"] != "HMAC-SHA256":
+                return False
+            expected = hmac.new(key, payload, hashlib.sha256).hexdigest()
+            return hmac.compare_digest(expected, signature["value"])
+
+        report = verify_evidence_chain(bundle, signature_verifier=verifier)
+        self.assertEqual(report["status"], "AUTHENTICATED_CHAIN_NOT_RUNTIME_PASS")
+        self.assertTrue(report["issuer_signatures_verified"])
+        self.assertFalse(report["authority_verified"])
+        self.assertFalse(report["runtime_e2e_pass"])
+
+    def test_tampered_signed_receipt_is_blocked(self):
+        bundle = valid_bundle()
+        keys = {f"key-{i}": (f"secret-{i}-" + "z" * 40).encode() for i in range(5)}
+        for i, receipt in enumerate(bundle["receipts"]):
+            receipt["signature"] = {
+                "algorithm": "HMAC-SHA256",
+                "key_id": f"key-{i}",
+                "value": hmac.new(keys[f"key-{i}"], canonical_receipt_payload(receipt), hashlib.sha256).hexdigest(),
+            }
+        bundle["receipts"][2]["outcome"] = "EXECUTED-BUT-TAMPERED"
+
+        def verifier(payload, signature):
+            key = keys.get(signature["key_id"])
+            return bool(key) and hmac.compare_digest(
+                hmac.new(key, payload, hashlib.sha256).hexdigest(), signature["value"]
+            )
+
+        self.assertEqual(verify_evidence_chain(bundle, signature_verifier=verifier)["status"], "BLOCKED")
+
+    def test_partial_signatures_are_blocked(self):
+        bundle = valid_bundle()
+        bundle["receipts"][0]["signature"] = {"algorithm": "HMAC-SHA256", "key_id": "k", "value": "abc"}
+        self.assertEqual(verify_evidence_chain(bundle)["status"], "BLOCKED")
+
+    def test_signed_bundle_without_trusted_verifier_is_not_authenticated(self):
+        bundle = valid_bundle()
+        for receipt in bundle["receipts"]:
+            receipt["signature"] = {"algorithm": "HMAC-SHA256", "key_id": "unknown", "value": "abc"}
+        report = verify_evidence_chain(bundle)
+        self.assertEqual(report["status"], "STRUCTURALLY_COMPLETE_UNAUTHENTICATED")
+        self.assertFalse(report["issuer_signatures_verified"])
+
+    def test_missing_trusted_key_fails_closed(self):
+        bundle = valid_bundle()
+        for i, receipt in enumerate(bundle["receipts"]):
+            receipt["signature"] = {"algorithm": "HMAC-SHA256", "key_id": f"k{i}", "value": "bad"}
+
+        def verifier(payload, signature):
+            return False
+
+        self.assertEqual(verify_evidence_chain(bundle, signature_verifier=verifier)["status"], "BLOCKED")
+
+    def test_verifier_cannot_accept_unsigned_bundle(self):
+        report = verify_evidence_chain(valid_bundle(), signature_verifier=lambda payload, signature: True)
+        self.assertEqual(report["status"], "BLOCKED")
 
 
 if __name__ == "__main__":
