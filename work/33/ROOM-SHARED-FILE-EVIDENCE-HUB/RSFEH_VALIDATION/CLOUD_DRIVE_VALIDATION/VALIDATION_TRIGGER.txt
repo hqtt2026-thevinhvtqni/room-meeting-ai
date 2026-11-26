@@ -1,0 +1,1 @@
+2026-11-27 concurrency regression rerun after correcting expected failure-state assertion.
