@@ -3511,3 +3511,40 @@ Governance ownership handoff: CANONICALIZED / READBACK VERIFIED. PR #78: candida
 **Next action:** verify exact-SHA workflow for PR #83, then proceed with implementation only after a safe cross-platform handle backend is technically established. Keep draft and regression intact.
 
 **Signed:** Ka — Delegated Work 28 Operational Owner / Remediation Lead
+
+
+## 2026-11-27 03:xx +07 — JRN-W28-136 — PR #84 canonical rebuild và exact-SHA CI tái xác nhận F01 P0
+
+**Name:** Ka  
+**Title:** Delegated Work 28 Operational Owner / Remediation Lead  
+**Date-Time:** 2026-11-27 03:xx +07 (Asia/Ho_Chi_Minh)  
+**Priority:** P0 — F01 / CI integrity  
+**PR:** #84 — OPEN / DRAFT / UNMERGED  
+**Candidate branch:** `ka/w28-remediation-20261127-r4`  
+**Candidate commit:** `1ec93cd472bf4e94a5dff6740b6ab14eaa6326bf`  
+**Workflow:** #519 / run ID `45888624652`  
+**Workflow merge ref:** `5c80b9000788310463749359a0648696705d8ac0`
+
+### BRANCH / WORKFLOW AUDIT
+- Rebuilt PR #84 from canonical HEAD `b5dd6e0e461bc8b18ea786d1159e82f8214e20eb`; compare verified 5 ahead / 0 behind before journal append. No blind merge/rebase, force push or canonical history rewrite.
+- PR #83 closed as superseded / NOT MERGED.
+- Initial PR #84 workflow #518 did not contain the native binary-upload jobs because the workflow file had not been carried forward. This coverage omission was identified and corrected by restoring the workflow additions from the reviewed prior candidate.
+- The corrected workflow commit is `1ec93cd472bf4e94a5dff6740b6ab14eaa6326bf`; workflow #519 ran native Linux and native Windows binary-upload suites.
+- Native Linux job `140145478113`: FAILURE — 27 tests; `test_begin_rejects_parent_swap_after_validation` failed with `UploadError not raised`.
+- Native Windows job `140145478101`: FAILURE — same 27-test suite and same parent-swap assertion.
+- Unit/regression job `140145478066`: FAILURE; same parent-swap regression in the 375-test suite.
+- Execution Host lifecycle Linux `140145478344` and Windows `140145477719`: SUCCESS (separate scope; not upload filesystem acceptance).
+- Immutable source artifact job `140145734435`: SKIPPED because required tests failed.
+- Auto E2E report job `140145732685` was still running at this journal checkpoint; no result is claimed.
+
+### DECISION / LIMITS
+- The CI failure is a confirmed security regression on both native upload platforms, not a runner setup failure. Keep the test; do not weaken or skip it.
+- F01 remains BLOCKED; source remains pathname-based and no handle-anchored remediation is implemented.
+- F02 PARTIAL / NOT VERIFIED; F03 and F04 BLOCKED.
+- PR #84 remains DRAFT / UNMERGED. This rebuild and CI correction are not merge approval.
+- Independent An QA NOT ACCEPTED; independent security reviewer UNASSIGNED.
+- Execution Gate CLOSED; no MCP registration, deployment, live upload, merge or release.
+
+**Next action:** implement the full filesystem backend and refactor every upload lifecycle path. Do not call CI red a PASS or request acceptance until native Linux/Windows adversarial suites pass on the exact implementation SHA.
+
+**Signed:** Ka — Delegated Work 28 Operational Owner / Remediation Lead
