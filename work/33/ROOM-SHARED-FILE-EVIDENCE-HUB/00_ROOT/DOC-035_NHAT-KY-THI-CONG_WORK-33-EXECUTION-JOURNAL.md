@@ -318,3 +318,11 @@
 - SANDBOX: Synced audit.py, authorization.py, upload_service.py, session_manager.py and transactional audit tests. Read-back verification pending.
 - LIMITS: Audit event coverage currently applies to the upload lifecycle mutating paths; authorization denials and read/list events are not yet durably recorded. Hash chain still lacks independent remote/WORM anchoring. Tests do not cover every fault boundary (begin/part/finalize/abort), concurrency, crash/power-loss, or external database tampering. Core-backed Principal issuance remains unimplemented. No production readiness claim.
 - NEXT: Expand fault-injection to begin/part/finalize/abort and test actor identity propagation through UploadService; inspect event payloads for secret leakage; then request independent QE review. Main remains untouched.
+
+
+## 2026-11-27 — Audit fault-injection expanded across upload boundaries
+- Added four failure-injection tests on isolated branch: failure at session creation rolls back session row; failure at part acceptance rolls back part metadata (staged file may remain as an orphan for read-only inspection); failure at finalization preserves COMMITTING + durable commit digest + COMMIT_INTENT event for recovery; failure at abort rolls back state transition.
+- Latest GitHub Actions run 45895199002 SUCCESS, commit `378fa8c5769828453ff270896dedd1c7c4d5d0ca`, Python 3.12.16, pytest 9.0.3. Historical suite: 17 PASS + 2 XFAIL. Cloud Drive suite: 12/12 PASS (recovery, durable digest, successful transactional audit and four audit failure boundaries). URL: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45895199002
+- This confirms SQLite rollback boundaries in isolated tests, not power-loss durability, multi-process fencing or production deployment behavior.
+- Remaining audit gaps: authorization DENY events/read operations are not logged by service wrapper; audit hash chain has no independently protected remote anchor; actor subject_id is still only a parameter passed from Principal and Core token verification is not implemented. QE review remains outstanding.
+- Sandbox test copy updated; read-back verification pending. Main untouched; no merge or deployment.
