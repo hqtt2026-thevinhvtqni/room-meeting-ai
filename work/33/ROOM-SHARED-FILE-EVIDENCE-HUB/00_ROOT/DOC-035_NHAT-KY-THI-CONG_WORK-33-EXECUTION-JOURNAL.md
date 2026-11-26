@@ -105,3 +105,23 @@
 - **Evidence:** Official TeraBox documentation search result turn191914search0; official Terms of Service turn107986search5; official Vietnam product page turn107986search9. The official documentation page itself did not expose a readable full-page response on open, so details above are limited to the indexed official documentation text retrieved in search.
 - **Safety boundary:** Public documentation review only. No account login, OAuth, API calls, credential handling, upload, delete, billing, or provider configuration. No tests/runtime verification; no PASS claimed.
 - **Next:** Add a TeraBox-specific adapter conformance checklist to the provider test plan when source intake is restored; first obtain official app approval and run a read-only quota/tokeninfo probe under explicit authorization. Continue to keep source intake BLOCKED until the actual prototype source is accessible.
+
+
+## 2026-11-26 — Cross-Work source audit correlation from W117
+
+- **Activity:** READ → TRACE → ANALYZE → DECIDE → BUILD (evidence record) → VERIFY.
+- **Trigger:** GitHub code search found W117's `EXISTING_WORK_TECHNICAL_AUDIT.md` and W117 execution journal, dated 2026-11-16, which preserve a bounded source review of the W33 Sandbox implementation.
+- **Exact GitHub evidence:**
+  - `work/117/ROOM-MEDIA-HUB/03_ARCHITECT/EXISTING_WORK_TECHNICAL_AUDIT.md`, blob `c24208197e8d29bb30dea37c43b220e04b0a94b3`.
+  - `work/117/ROOM-MEDIA-HUB/00_ROOT/NHAT_KY_THI_CONG.md`, blob `d8dfbde6e5d855de127a27cecbeea1fc8e702171`.
+  - W117 consultation brief, blob `35da5df6336369b148478e9ef1d6e9916fe390ed`.
+- **Correlated source-level findings recorded by W117:**
+  1. `link_work()` updates the single `files.work_id` field, overwriting a prior Work association; no many-to-many asset/Work mapping.
+  2. `soft_delete()` has no corresponding restore method in the reviewed Store/CLI. Re-putting identical bytes after deletion is expected to encounter the globally unique SHA-256 constraint; this is control-flow inference, not an executed test.
+  3. Active duplicate-hash `put()` returns the existing metadata row, including Work association and original name. Potential metadata disclosure depends on exposure across principals; no deployed exploit is established.
+  4. Same-hash writes share a deterministic `.tmp` path, creating a plausible concurrent-write collision risk.
+  5. Blob write precedes SQLite transaction; reconciliation of orphan blobs and consistency/repair between SQLite and JSONL audit sinks were not established.
+  6. Existing tests reportedly cover basic dedup, single Work link, soft-delete, round-trip and integrity, but not multi-Work link, restore-after-delete, cross-principal dedup response or concurrent same-hash writes.
+- **Assessment boundary:** This is a second Work's preserved record of the earlier Sandbox source review, not a fresh read of the source bytes in this turn and not independent runtime validation. It corroborates the risk register but does not establish current GitHub source availability. No tests were run; no exploit or production exposure is claimed.
+- **Decision:** Add these items to the mandatory source-review checklist when canonical source bytes are recovered. Prioritize multi-Work association semantics, restore/purge lifecycle, dedup authorization boundary, unique temporary-file publication, crash reconciliation and dual-audit consistency. Do not patch or reconstruct from the audit prose.
+- **Current state:** GitHub main still lacks the previously expected Cloud Drive prototype source paths; Sandbox MCP was recently unavailable. Source intake remains BLOCKED; tests/runtime NOT RUN; no PASS. No merge, reconstruction, deployment, provider connection or PC action.
