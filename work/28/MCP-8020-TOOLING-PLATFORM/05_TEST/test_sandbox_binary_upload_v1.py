@@ -1,5 +1,5 @@
 """Component tests for the Work 28 binary upload engine; Fake Core is not live evidence."""
-import hashlib, tempfile, unittest, zipfile, threading
+import hashlib, tempfile, unittest, zipfile, threading, os
 from concurrent.futures import ThreadPoolExecutor
 from io import BytesIO
 from pathlib import Path
@@ -247,5 +247,31 @@ class BinaryUploadTests(unittest.TestCase):
               chunk_size=1,idempotency_key="idempotency-key-0024")
         self.assertEqual(e.exception.code,"STARTUP_RECONCILIATION_BLOCKED")
         self.assertEqual(orphan.read_bytes(),b"untracked")
+
+
+    def test_begin_rejects_parent_swap_after_validation(self):
+        outside=Path(self.tmp.name)/"outside"; outside.mkdir()
+        work=self.root/"119"
+        parked=self.root/"119-original"
+        original=self.service.no_symlinks
+        swapped={"done":False}
+        def swap_after_check(root,target):
+            original(root,target)
+            if root==work and not swapped["done"]:
+                os.replace(work,parked)
+                try:
+                    work.symlink_to(outside,target_is_directory=True)
+                except (OSError,NotImplementedError) as exc:
+                    os.replace(parked,work)
+                    self.skipTest(f"directory symlink privilege unavailable: {exc}")
+                swapped["done"]=True
+        self.service.no_symlinks=swap_after_check
+        with self.assertRaises(UploadError):
+            self.service.begin(trusted_context=self.ctx,canonical_work_id="W119",sandbox_work_id="119",
+                destination="images/photo.png",expected_bytes=1,
+                expected_sha256=hashlib.sha256(b"x").hexdigest(),chunk_size=1,
+                idempotency_key="idempotency-parent-swap-0001")
+        self.assertFalse((outside/".upload-staging").exists(),
+                         "upload staging escaped after validated Work parent was swapped")
 
 if __name__=="__main__": unittest.main(verbosity=2)
