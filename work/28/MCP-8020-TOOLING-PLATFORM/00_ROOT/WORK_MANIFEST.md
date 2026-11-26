@@ -8,23 +8,23 @@
 - **Status:** ACTIVE / INTEGRATION BLOCKED / NOT RELEASED
 - **Execution Gate:** CLOSED
 - **Authority:** Vinh
-- **Coordinator and technical decision owner:** Xu
-- **Last governance update:** 2026-11-03
+- **Delegated Work 28 operational owner / coordinator:** Ka (per Vinh's direct instruction, 2026-11-26)
+- **Last governance update:** 2026-11-26
 
 ## Mission
 
 Build and verify a secure, reusable MCP tooling platform for ROOM-HOP. The platform must support the complete controlled lifecycle from discovery and planning through implementation, tests, review, evidence, and release handoff. Core :8000 remains the sole authorization and application authority. The platform must not create a parallel authority or unrestricted execution path.
 
-## Approved team — exactly four AI participants
+## Active Work 28 execution roles — governance decision 2026-11-26
 
 | AI | Role | Accountability |
 |---|---|---|
-| Xu | Coordinator / architecture / technical decisions | Owns scope, architecture, prioritization, task coordination, decision log, integration and acceptance recommendation |
-| Vi | Implementation lead | Implements and fixes approved Work 28 scope end-to-end; maintains code, tests and implementation evidence |
-| Ka | Independent architecture and security reviewer | Reviews boundaries, contracts, threat model, implementation diffs and release risks independently |
-| An | Independent QA / verification | Designs and runs tests, reproduces results, checks CI and verifies acceptance evidence |
+| Ka | Delegated operational owner / delivery coordinator | Owns remediation F01–F04, implementation dispatch, integration, evidence control, acceptance coordination and handoff within Vinh's authority |
+| Vi | Implementation contributor | Implements scoped changes only when dispatched and bounded by Ka; provides exact commit, tests and handoff evidence |
+| An | Independent QA / verification | Independently reproduces tests and acceptance evidence; retains authority to report PASS/BLOCKED for QA scope |
+| Xu | No active Work 28 assignment | Stops Work 28 implementation/operational coordination and focuses on Work 118 per Vinh's 2026-11-26 instruction |
 
-**Co is excluded from Work 28**: no assignment, implementation, review, approval or coordination. No fifth AI may be added without Vinh's explicit decision. Historical documents authored by other agents remain evidence only and do not grant current participation.
+Co remains excluded from Work 28. This active role map supersedes conflicting historical role assignments without rewriting them. Ka's operational ownership does not waive independent security review: Ka must not self-certify an independent review of changes Ka implemented. A separate independent security disposition remains a release gate and is not assigned by this decision.
 
 ## Source-of-truth and execution rules
 
