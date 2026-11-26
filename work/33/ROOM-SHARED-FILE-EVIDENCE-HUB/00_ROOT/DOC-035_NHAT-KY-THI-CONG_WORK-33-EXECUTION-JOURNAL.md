@@ -219,3 +219,18 @@
 - Safe candidate for a future isolated validation workflow: one standard `ubuntu-latest` job only; no larger runner, no paid external service, no artifact upload/cache, no secrets, no production credentials, and no deployment. The job would checkout only an isolated validation branch and run the historical RSFEH test suite against the exact restored source bytes.
 - This confirms the runner class can fit the zero-budget constraint; it does NOT establish that repository Actions are enabled, nor authorize creating a branch/workflow or triggering execution. No workflow has been created or run.
 - Decision requested: Vinh's explicit approval is still required before creating an isolated validation branch/workflow and triggering the free standard runner. Main remains untouched.
+
+
+## 2026-11-27 — RSFEH historical suite executed on isolated GitHub Actions runner
+- User approved creating an isolated validation branch and using the standard free GitHub-hosted runner. No main-branch source/workflow change, production deployment, Core/provider connection, secrets, or paid runner was used.
+- Branch: `w33/rsfeh-validation-2026-11-27`.
+- Validation snapshot: `work/33/ROOM-SHARED-FILE-EVIDENCE-HUB/RSFEH_VALIDATION/`; copied 4 core source files and 2 historical test files from the currently verified Sandbox copy. The four core source SHA-256 checks passed before pytest:
+  - `store.py`: `4b9f7c678f176b5d540e25381c566e60c5d85a5313cd23fb0b1583e22329d8f7`
+  - `cli.py`: `fdbd101d6cd4d21ebc571a337967d260a4168f89ab6d4b4b9bdb8713d24a394b`
+  - `__init__.py`: `d31dd588536f2d49fddb2735fd09c297e27f710e6b592ad49c8752af96154268`
+  - `__main__.py`: `c6cd277050ead2d11c98b7cbab91ada7d19e495c95e4c86de1f9aaf2b2051d38`
+- Workflow: `.github/workflows/w33-rsfeh-validation.yml`; runner `ubuntu-latest`; runtime Python `3.12.16` (latest available 3.12 patch from setup-python), pytest `9.0.3`.
+- Final successful run: GitHub Actions run ID `45892111277`, job ID `140157027377`, commit `634318c80fd315206ffce7f9fe1b2d3c27c14def`, URL `https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45892111277`.
+- Result: SHA-256 verification PASS; environment setup PASS; all 11 unit tests and 6 E2E tests PASS; total `17 passed in 1.16s`; workflow conclusion SUCCESS. Exact test output is retained in the GitHub Actions job log (no separate artifact was uploaded).
+- Earlier attempts: first run failed because the printf manifest line separator was escaped incorrectly; second corrected run passed on runner-default Python 3.14.4; attempt to pin unavailable exact 3.12.3 failed at setup-python; final run pinned Python 3.12 series and passed on 3.12.16. These failed attempts are not counted as test failures of RSFEH.
+- Disposition: historical RSFEH core package and the exact 17 tests in this validation snapshot are now freshly verified under Python 3.12.16. This does NOT establish production readiness, multi-user authorization, Cloud Drive extension correctness, Core integration, provider connectivity, backup/restore, or the remaining uncovered security/concurrency scenarios. No merge to main and no release authorization.
