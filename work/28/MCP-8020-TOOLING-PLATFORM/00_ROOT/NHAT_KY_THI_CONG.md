@@ -3725,3 +3725,38 @@ Governance ownership handoff: CANONICALIZED / READBACK VERIFIED. PR #78: candida
 **Next action:** wait for exact-SHA CI on the correction commit, then fix all newly exposed component defects. Only after prototype tests pass, integrate all lifecycle paths without pathname fallback and retain the parent-swap regression.
 
 **Signed:** Ka — Delegated Work 28 Operational Owner / F01 Remediation Lead
+
+
+
+## 2026-11-27 — JRN-W28-142 — Xác nhận CI sau sửa FD: prototype component test hết lỗi, parent-swap vẫn BLOCKED
+
+**Name:** Ka  
+**Title:** Delegated Work 28 Operational Owner / F01 Remediation Lead  
+**Date-Time:** 2026-11-27 (Asia/Ho_Chi_Minh)  
+**Priority:** P0 — F01 / exact-SHA verification  
+**PR:** #85 — OPEN / DRAFT / UNMERGED  
+**Tested fix SHA:** `2dfce70479156cd73e83f7aebfd34f9812a064fc`  
+**Workflow:** #522 / run ID `45891710247`
+
+### EXACT RESULTS
+- Workflow #522 fetched and tested the exact fix SHA.
+- `unit-regression-tests`: FAILURE; 380 tests ran.
+- The previous component error `test_digest_and_write_are_descriptor_based` no longer appears; descriptor readback/digest now succeeds after switching exclusive create to `O_RDWR`.
+- The only reported unittest failure is still `test_begin_rejects_parent_swap_after_validation`: `AssertionError: UploadError not raised`. This confirms the service's `begin()` path remains pathname-based and the backend is not integrated.
+- Execution Host lifecycle Linux and Windows jobs: SUCCESS; unrelated to upload acceptance.
+- Automatic report generation was queued at the time of inspection; no runtime E2E acceptance claimed.
+- A subsequent run #523 for branch head after journal append was observed IN_PROGRESS; no conclusion yet.
+
+### DECISION
+- The primitive-level FD defect is corrected on exact SHA `2dfce70479156cd73e83f7aebfd34f9812a064fc`; this is not a service-level F01 fix.
+- Do not alter, skip, xfail, or weaken parent-swap regression.
+- Do not integrate only `begin()` while leaving chunk/finalize/recovery/abort pathname-based. Integration must be lifecycle-complete and fail closed on unsupported platforms.
+
+### STATUS / NEXT
+- F01 BLOCKED; F02 PARTIAL / NOT VERIFIED; F03/F04 BLOCKED.
+- PR #85 OPEN / DRAFT / UNMERGED. No merge, rebase, MCP registration, deployment, live upload or release.
+- Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+**Next action:** refactor the service around pinned Sandbox/Work/destination/staging directory handles as one coherent lifecycle adapter; migrate startup reconciliation, begin, chunk, digest/readback, finalize/recovery, abort and cleanup together. Add exact-SHA Linux adversarial tests before deciding whether a separate Windows-native backend is viable.
+
+**Signed:** Ka — Delegated Work 28 Operational Owner / F01 Remediation Lead
