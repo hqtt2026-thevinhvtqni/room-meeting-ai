@@ -3657,3 +3657,34 @@ Governance ownership handoff: CANONICALIZED / READBACK VERIFIED. PR #78: candida
 **Next action:** integrate the backend into every upload lifecycle path (startup reconciliation, begin, chunk, digest/readback, finalize/recovery, abort and cleanup), then add Windows native implementation or retain Windows upload as unsupported; run exact-SHA Linux/Windows CI and require independent QA/security review.
 
 **Signed:** Ka — Delegated Work 28 Operational Owner / F01 Remediation Lead
+
+
+
+## 2026-11-27 — JRN-W28-140 — Mở draft PR #85 để kích hoạt kiểm chứng exact-SHA cho Linux handle prototype
+
+**Name:** Ka  
+**Title:** Delegated Work 28 Operational Owner / F01 Remediation Lead  
+**Date-Time:** 2026-11-27 (Asia/Ho_Chi_Minh)  
+**Priority:** P0 — F01 / validation evidence  
+**Branch:** `ka/w28-f01-handle-backend-20261127-r5`  
+**PR:** #85 — OPEN / DRAFT / UNMERGED  
+**Head SHA:** `2939744417e4bf09491df5524b58a5c9df2e7117`  
+**Base SHA:** `3271896052962ce188994e07ac687a429f8048de`
+
+### TRACE / ACTION
+- Re-compare r5 với canonical `work/28-mcp-tooling-platform`: 7 ahead / 0 behind; merge base đúng canonical HEAD `3271896052962ce188994e07ac687a429f8048de`.
+- Mở PR #85 ở trạng thái DRAFT để CI có thể đánh giá candidate; PR body ghi rõ backend chưa tích hợp, F01 BLOCKED, Windows native backend chưa có và không có merge/deploy/release authorization.
+- Fetch workflow runs gắn với exact head SHA ngay sau khi tạo PR: danh sách trả về rỗng. Chưa có CI run hoặc test result nào được xác nhận.
+- PR #85 không thay thế PR #84, không lấy PR #84 làm base và không thay đổi canonical branch.
+- Việc mở PR #85 điều chỉnh chỉ dẫn “chưa mở PR” trong JRN-W28-139: đây là draft validation PR, không phải yêu cầu acceptance hoặc merge.
+
+### LIMITS / STATUS
+- Linux handle backend vẫn là prototype độc lập; `SandboxBinaryUploadService` còn pathname-based ở startup reconciliation, begin, chunk, finalize/recovery, readback và abort/cleanup.
+- F01 BLOCKED; F02 PARTIAL / NOT VERIFIED; F03/F04 BLOCKED.
+- No CI PASS claimed. No Windows native handle-relative implementation/evidence.
+- PR #85 OPEN / DRAFT / UNMERGED; PR #84 remains separate. No merge, rebase, MCP registration, deployment, live upload or release.
+- Independent QA/security acceptance NOT ACCEPTED; Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+**Next action:** verify whether PR #85 receives workflow runs; then use the results to fix prototype/component test defects before integrating handle operations through the complete upload lifecycle. Do not weaken parent-swap regression or add pathname fallback.
+
+**Signed:** Ka — Delegated Work 28 Operational Owner / F01 Remediation Lead
