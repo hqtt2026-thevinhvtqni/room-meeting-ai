@@ -7,7 +7,7 @@ import pytest
 from cloud_drive.service.audit import AuditWriter, AuditWriteError
 from cloud_drive.storage.protocol import ObjectRef, StoredObject
 from cloud_drive.uploads.recovery_inspector import RecoveryInspector
-from cloud_drive.uploads.session_manager import UploadSessionManager
+from cloud_drive.uploads.session_manager import UploadSessionManager, UploadConflict
 
 
 class FailOnActionAudit(AuditWriter):
@@ -66,6 +66,20 @@ def test_part_file_left_after_rename_before_metadata_commit_is_detected_read_onl
         ).fetchone()[0]
     assert state == "UPLOADING"
     assert part_count == 0
+
+    # A byte-identical retry must not silently promote the orphan into accepted
+    # metadata: the original request's authorization/audit provenance is unknown.
+    orphan_before_retry = part_file.read_bytes()
+    with pytest.raises(UploadConflict, match="authorized recovery required"):
+        manager.put_part(
+            session_id=session.session_id, scope_id="scope-crash", part_number=1,
+            source=io.BytesIO(b"orphan-payload"), actor_id="test-actor",
+        )
+    assert part_file.read_bytes() == orphan_before_retry
+    with sqlite3.connect(database) as conn:
+        assert conn.execute(
+            "SELECT COUNT(*) FROM upload_parts WHERE session_id=?", (session.session_id,)
+        ).fetchone()[0] == 0
 
     before_db = database.read_bytes()
     before_part = part_file.read_bytes()
