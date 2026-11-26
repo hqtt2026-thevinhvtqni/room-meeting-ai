@@ -3883,3 +3883,31 @@ Do not bolt the Linux primitive onto only `begin()`. The service needs one files
 4. Obtain exact-SHA CI, independent QA and independent security review before any acceptance decision.
 
 **STATUS:** ADAPTER CONTRACT RECORDED / IMPLEMENTATION NOT STARTED / F01 BLOCKED / PR #85 DRAFT — UNMERGED / EXECUTION GATE CLOSED / NOT RELEASED.
+
+
+## 2026-11-27 — JRN-W28-146 — Linux exact-handle publication feasibility review
+
+**Người thực hiện:** Ka  
+**Chức danh:** W28 delegated implementation / architecture owner  
+**Execution time:** 2026-11-27 UTC+07:00  
+**Branch:** `ka/w28-f01-handle-backend-20261127-r5`  
+**Design:** `work/28/MCP-8020-TOOLING-PLATFORM/03_ARCHITECTURE/W28_UPLOAD_HANDLE_ADAPTER_CONTRACT_AND_STATE_MACHINE_V1.md`
+
+### FINDINGS
+- Reviewed the actual Linux prototype: `promote_no_replace()` still calls `os.link(source_name, destination_name, src_dir_fd=..., dst_dir_fd=...)`; the source is resolved by mutable leaf name. It does not publish by the pinned `PinnedFile.fd`.
+- `linkat(AT_EMPTY_PATH)` is a viable Linux candidate for source selection by an open file descriptor and atomic destination no-replace, but it is conditional: Linux-specific, documented capability requirement `CAP_DAC_READ_SEARCH`, same-filesystem/hard-link requirement, and runtime/kernel/filesystem/policy dependencies.
+- The `/proc/self/fd/N` + `AT_SYMLINK_FOLLOW` approach is a separate candidate with procfs dependency; it is not approved as fallback.
+- Exact-handle publication does NOT solve safe staging-name deletion. Linux has no general unlink-by-open-fd operation; a compare-then-unlink sequence remains raceable if an attacker can replace the staging leaf.
+- Therefore staging directory ownership/permissions must be an explicit proven trust boundary, or cleanup must preserve/quarantine the extra link without unsafe unlink. This needs threat-model decision and adversarial tests.
+
+### DESIGN UPDATE
+- Expanded section 4.1 of `W28_UPLOAD_HANDLE_ADAPTER_CONTRACT_AND_STATE_MACHINE_V1.md` with these constraints and explicit fail-closed criteria.
+- No runtime capability test, syscall experiment, service implementation, or acceptance test was executed in this review. This is a source/manual feasibility review only.
+- Candidate compare refresh: canonical base `3271896052962ce188994e07ac687a429f8048de`; r5 now 18 ahead / 0 behind after the two design/journal commits; merge base remains canonical base.
+
+### STATUS / NEXT
+- F01 BLOCKED; F02 PARTIAL / NOT VERIFIED; F03/F04 BLOCKED.
+- PR #85 OPEN / DRAFT / UNMERGED. Execution Gate CLOSED. Work28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+- Next: define the explicit staging-directory threat boundary and test the actual process capability/filesystem matrix. Do not implement a pathname fallback or claim Linux upload support until both publication and cleanup proofs pass.
+
+**STATUS:** PUBLICATION CANDIDATE IDENTIFIED / CAPABILITY AND CLEANUP PROOFS PENDING / NO CODE REMEDIATION / NOT RELEASED.
