@@ -39,4 +39,4 @@ jobs:
           . .venv/bin/activate
           set -o pipefail
           python -m pytest -vv 05_TEST/unit/test_store.py 05_TEST/e2e/test_e2e_cli.py 05_TEST/security/test_known_gaps.py
-          python -m pytest -vv CLOUD_DRIVE_VALIDATION/05_TEST/test_recovery_inspector_digest.py CLOUD_DRIVE_VALIDATION/05_TEST/test_session_commit_digest.py CLOUD_DRIVE_VALIDATION/05_TEST/test_transactional_upload_audit.py CLOUD_DRIVE_VALIDATION/05_TEST/test_upload_concurrency.py
+          python -m pytest -vv CLOUD_DRIVE_VALIDATION/05_TEST/test_recovery_inspector_digest.py CLOUD_DRIVE_VALIDATION/05_TEST/test_session_commit_digest.py CLOUD_DRIVE_VALIDATION/05_TEST/test_transactional_upload_audit.py CLOUD_DRIVE_VALIDATION/05_TEST/test_upload_concurrency.py CLOUD_DRIVE_VALIDATION/05_TEST/test_upload_multiprocess.py
