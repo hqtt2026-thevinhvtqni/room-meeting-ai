@@ -69,3 +69,14 @@
 - **Artifact:** Created `06_EVIDENCE/DOC-004_CLOUD_DRIVE_PROTOTYPE_SOURCE_REVIEW_GATE.md` with source intake manifest requirements, static review checklist, dynamic test matrix and recovery gate. GitHub main commit `69d9267c1fb6275a6b14c5ef708e00a13cd1cd34`.
 - **Next:** Restore Sandbox MCP or publish the existing prototype to its canonical GitHub Work 33 path without duplicate copies; then capture revision/hash manifest and review implementation against matching tests.
 - **Safety boundary:** Read-only source fetches and documentation writes only. No PC action requested, no runtime changes, no deployment.
+
+## 2026-11-26 — Dedicated Work 33 branch lineage audit
+
+- **Activity:** READ → TRACE → ANALYZE → DECIDE → BUILD (evidence record) → VERIFY.
+- **Branch discovery:** Found dedicated branch `work/33/ROOM-SHARED-FILE-EVIDENCE-HUB`. GitHub compare against main returned DIVERGED, 16 commits ahead / 1,810 behind; branch delta reports 15 added documentation files only. No merge or branch promotion.
+- **Exact branch reads:** MANIFEST, ACCEPTANCE, WORK_LOG, RECOVERY_SEARCH_2026-10-26, RSFEH_RECONSTRUCTION_PROPOSAL_2026-11-05, PLAN and README were fetched successfully. MANIFEST says documentation initialized only. WORK_LOG says source/test sync BLOCKED and historical 17/17 PASS NOT VERIFIED. Reconstruction proposal explicitly requests Vinh decision for a new RSFEH v0.2 lineage; no approval is recorded in that proposal.
+- **Historical inventory:** SYNC_MANIFEST and BUILD_REPORT describe original RSFEH package and claimed tests, but the inventory is not source bytes or executable test evidence. No historical v0.1 PASS claim promoted.
+- **Decision:** Do not merge stale divergent branch; do not reconstruct RSFEH v0.2 without explicit Vinh decision. Keep historical RSFEH v0.1 distinct from the separately approved Cloud Drive extension. Current Cloud Drive source review remains BLOCKED until exact source bytes/revision can be accessed.
+- **Artifact:** Created `06_EVIDENCE/DOC-005_GITHUB_BRANCH_LINEAGE_AND_RECONSTRUCTION_DECISION_GATE.md`, GitHub main commit `b1719b8bf864d5cb94b985613fb0240bc0a7cb39`.
+- **Verification:** DOC-005 and this journal entry require exact GitHub read-back in this turn; no tests/runtime/CI were run.
+- **Safety boundary:** Read-only branch/source inspection and documentation writes only. No PC action, merge, reconstruction, provider connection, production integration or deployment.
