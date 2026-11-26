@@ -22,8 +22,16 @@ class PinnedDirectory:
 
     def close(self) -> None:
         if self.fd >= 0:
-            os.close(self.fd)
-            self.fd = -1
+            fd, self.fd = self.fd, -1
+            os.close(fd)
+
+    def __enter__(self):
+        if self.fd < 0:
+            raise HandleFilesystemError("DIRECTORY_HANDLE_CLOSED")
+        return self
+
+    def __exit__(self, *_):
+        self.close()
 
 
 @dataclass
@@ -119,12 +127,11 @@ class LinuxHandleFilesystem:
     def work(self, work_id: str, *, create: bool = False):
         if not isinstance(work_id, str) or not work_id or "/" in work_id or work_id in (".", ".."):
             raise HandleFilesystemError("INVALID_WORK_ID")
-        fd = self._open_child_dir(self._root_fd, work_id, create=create)
+        handle = PinnedDirectory(self._open_child_dir(self._root_fd, work_id, create=create))
         try:
-            yield PinnedDirectory(fd)
+            yield handle
         finally:
-            if fd >= 0:
-                os.close(fd)
+            handle.close()
 
     @contextmanager
     def directory(self, parent_fd: int, relative: str, *, create: bool = False):
@@ -135,7 +142,12 @@ class LinuxHandleFilesystem:
                 next_fd = self._open_child_dir(fd, part, create=create)
                 os.close(fd)
                 fd = next_fd
-            yield PinnedDirectory(fd)
+            handle = PinnedDirectory(fd)
+            fd = -1
+            try:
+                yield handle
+            finally:
+                handle.close()
         finally:
             if fd >= 0:
                 os.close(fd)
