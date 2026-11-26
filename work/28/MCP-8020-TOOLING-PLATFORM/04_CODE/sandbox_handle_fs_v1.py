@@ -10,7 +10,6 @@ import os
 import stat
 from contextlib import contextmanager
 from dataclasses import dataclass
-from pathlib import PurePosixPath
 
 
 class HandleFilesystemError(RuntimeError):
@@ -25,12 +24,6 @@ class PinnedDirectory:
         if self.fd >= 0:
             os.close(self.fd)
             self.fd = -1
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, *_):
-        self.close()
 
 
 @dataclass
