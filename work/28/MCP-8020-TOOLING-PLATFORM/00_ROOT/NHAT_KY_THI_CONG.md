@@ -3452,3 +3452,35 @@ Governance ownership handoff: CANONICALIZED / READBACK VERIFIED. PR #78: candida
 **Next action:** implement the complete filesystem backend per F01-W28-20261126-001; do not weaken the parent-swap test or label its expected failure as a product pass.
 
 **Signed:** Ka — Delegated Work 28 Operational Owner / Remediation Lead
+
+
+## 2026-11-26 20:xx +07 — JRN-W28-134 — Audit toàn bộ filesystem lifecycle của candidate PR #82
+
+**Name:** Ka  
+**Title:** Delegated Work 28 Operational Owner / Remediation Lead  
+**Date-Time:** 2026-11-26 20:xx +07 (Asia/Ho_Chi_Minh)  
+**Priority:** P0 / Read order 1 — F01  
+**Document:** `F01-W28-20261126-002`  
+**PR:** #82 — OPEN / DRAFT / UNMERGED  
+**Source SHA audited:** `f0c52ae0ceca3edc1708b20f8d67022f576d4774`
+
+### AUDIT / EVIDENCE
+- Re-read exact PR #82 source `04_CODE/sandbox_binary_upload_v1.py` and traced initialization, Work-root resolution, no-symlink checks, startup reconciliation, begin, chunk, digest/readback, finalize/recovery, promotion, cleanup and abort.
+- Confirmed the candidate remains path-based: `Path.resolve()`, `is_symlink()`, `exists()`, `mkdir()`, `iterdir()`, `open(path)`, `os.link(path,path)` and `unlink(path)` remain on security-sensitive lifecycle paths.
+- The current checks inspect pathnames at a point in time; they do not pin the checked directory objects. A Work-root or nested-parent replacement can redirect later operations.
+- Created `06_EVIDENCE/F01-W28-20261126-002_PATH_BASED_LIFECYCLE_AUDIT.md` on PR branch. Document commit: `d86ea3bcf063faa093e52d5241bb2221ad8491b7`.
+- Registered document as P0 / Read order 1 in `00_ROOT/WORK_DOCUMENT_REGISTER.md`. Register commit: `393c5c9d4240e647ff2291056d9972361833d481`.
+- Audit covers all lifecycle operations and specifies Linux dirfd/no-follow and Windows native handle/reparse-safe requirements plus 12 adversarial test groups.
+
+### DECISION / LIMITS
+- This is an audit record, not an implementation. F01 remains BLOCKED.
+- Do not patch only `begin()`; all operations must use one handle-anchored backend.
+- Retain parent-swap regression; no skip or weakening.
+- PR #82 remains DRAFT / UNMERGED. No merge, registration, deployment, live upload or release.
+- F02 PARTIAL / NOT VERIFIED; F03 BLOCKED; F04 BLOCKED.
+- Independent QA NOT ACCEPTED; independent security reviewer UNASSIGNED.
+- Execution Gate CLOSED — Work 28 ACTIVE / NOT RELEASED.
+
+**Next action:** implement the filesystem backend behind a narrow interface, refactor all lifecycle operations, then run exact-SHA native Linux/Windows adversarial tests. Only after implementation evidence is complete, request An QA and an independent security reviewer.
+
+**Signed:** Ka — Delegated Work 28 Operational Owner / Remediation Lead
