@@ -29,7 +29,7 @@ jobs:
 
       - name: Verify canonical source SHA-256
         run: |
-          printf '%s  %s\\n' \
+          printf '%s  %s\n' \
             '4b9f7c678f176b5d540e25381c566e60c5d85a5313cd23fb0b1583e22329d8f7' '04_CODE/src/rsfeh/store.py' \
             'fdbd101d6cd4d21ebc571a337967d260a4168f89ab6d4b4b9bdb8713d24a394b' '04_CODE/src/rsfeh/cli.py' \
             'd31dd588536f2d49fddb2735fd09c297e27f710e6b592ad49c8752af96154268' '04_CODE/src/rsfeh/__init__.py' \
