@@ -3911,3 +3911,39 @@ Do not bolt the Linux primitive onto only `begin()`. The service needs one files
 - Next: define the explicit staging-directory threat boundary and test the actual process capability/filesystem matrix. Do not implement a pathname fallback or claim Linux upload support until both publication and cleanup proofs pass.
 
 **STATUS:** PUBLICATION CANDIDATE IDENTIFIED / CAPABILITY AND CLEANUP PROOFS PENDING / NO CODE REMEDIATION / NOT RELEASED.
+
+
+## 2026-11-27 — JRN-W28-147 — Staging namespace threat model và Linux capability matrix
+
+**Người thực hiện:** Ka  
+**Chức danh:** W28 delegated implementation / architecture owner  
+**Execution time:** 2026-11-27 UTC+07:00  
+**Branch:** `ka/w28-f01-handle-backend-20261127-r5`  
+**Design:** `work/28/MCP-8020-TOOLING-PLATFORM/03_ARCHITECTURE/W28_STAGING_DIRECTORY_THREAT_MODEL_AND_LINUX_CAPABILITY_MATRIX_V1.md`
+
+### EVIDENCE / AUDIT
+- Refreshed canonical comparison: base `work/28-mcp-tooling-platform` at `3271896052962ce188994e07ac687a429f8048de`; candidate branch is **20 ahead / 0 behind**, merge base equals canonical base.
+- PR #85 remains OPEN / DRAFT / UNMERGED. PR description still contains stale compare count; no metadata mutation was made.
+- Re-read the current adapter contract and Linux prototype. The prototype still uses mutable staging source leaf in `os.link(..., src_dir_fd=...)`; no exact-handle publication implementation exists.
+- The latest recorded journal entry before this one is JRN-W28-146. This entry is appended; no prior journal content is overwritten.
+
+### THREAT MODEL DECISION
+- Defined the staging directory as a trusted namespace only if ownership, restrictive mode, effective ACLs, parent permissions, mount exposure, service UID separation and inherited-handle boundaries are all verified in the actual runtime.
+- Explicitly excluded malicious same-UID processes only as part of the declared OS trust boundary; deployment must ensure untrusted workloads do not share the service identity or its writable mounts/handles.
+- Mode 0700 alone is not sufficient proof. Sticky bit is not a substitute for a private service-owned directory.
+- If any namespace condition is absent or unverifiable, staging cleanup by leaf is prohibited; preserve/quarantine and remain BLOCKED. A pre-unlink inode comparison is still TOCTOU under a hostile writer.
+- Added Linux runtime matrix for kernel/runtime, UID/GID/capabilities, actual `AT_EMPTY_PATH` syscall, filesystem/mount identity, destination no-replace, source/destination handle identity, fsync durability, ACL/ownership and crash recovery.
+- Added adversarial tests for cross-UID and same-UID mutation, parent replacement, publication by opened FD, destination races, cleanup substitution, fsync failures and SQLite/crash boundaries.
+
+### LIMITATIONS
+- This was a source/design review only. No actual Sandbox runtime identity, capabilities, mount/filesystem or ACL experiment was executed.
+- No syscall experiment, adapter implementation, service integration or test PASS is claimed.
+- No change to upload service source or tests. F01 remains BLOCKED; F02 PARTIAL / NOT VERIFIED; F03/F04 BLOCKED.
+- PR #85 remains Draft/unmerged. No merge, rebase, MCP registration, deployment, live upload, Execution Gate opening or release.
+
+### NEXT
+1. Determine and record the actual Sandbox service runtime UID/GID/groups/capabilities, mount namespace, filesystem and staging ACL/ownership using an approved read-only diagnostic.
+2. Run the capability and namespace matrix only in an isolated disposable Sandbox under the exact service identity.
+3. If exact-handle publication or safe namespace cleanup cannot be proven, retain fail-closed behavior and do not integrate.
+
+**STATUS:** THREAT MODEL RECORDED / RUNTIME MATRIX NOT RUN / F01 BLOCKED / F02 PARTIAL / F03-F04 BLOCKED / PR #85 DRAFT-UNMERGED / EXECUTION GATE CLOSED / NOT RELEASED.
