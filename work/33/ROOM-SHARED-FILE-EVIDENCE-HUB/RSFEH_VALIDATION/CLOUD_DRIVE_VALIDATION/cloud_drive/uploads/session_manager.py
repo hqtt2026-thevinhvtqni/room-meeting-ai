@@ -20,6 +20,7 @@ from typing import BinaryIO
 from ..storage.protocol import ObjectRef, StorageAdapter, StoredObject
 from .lifecycle import migrate_upload_sessions, transition_session, finalize_completion
 from ..service.quota_manager import QuotaManager
+from ..service.audit import AuditWriter, AuditWriteError
 
 _SCOPE_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$")
 _SHA256_RE = re.compile(r"^[a-f0-9]{64}$")
@@ -72,6 +73,7 @@ class UploadSessionManager:
         max_part_bytes: int = 8 * 1024 * 1024,
         ttl_seconds: int = 24 * 60 * 60,
         quota_manager: QuotaManager | None = None,
+        audit_writer: AuditWriter | None = None,
     ):
         if min(max_object_bytes, max_part_bytes, ttl_seconds) <= 0:
             raise ValueError("limits and TTL must be positive")
@@ -86,6 +88,9 @@ class UploadSessionManager:
             raise UploadError("staging root must be a directory")
         self.storage = storage
         self.quota_manager = quota_manager
+        self.audit_writer = audit_writer
+        if audit_writer is not None and Path(audit_writer.database).resolve() != self.database.resolve():
+            raise UploadError("audit and upload metadata must share one SQLite database for atomic pilot audit")
         if quota_manager is not None and Path(quota_manager.database).resolve() != self.database.resolve():
             raise UploadError("quota and upload metadata must share one SQLite database for atomic pilot accounting")
         self.max_object_bytes = max_object_bytes
@@ -131,6 +136,19 @@ class UploadSessionManager:
             migrate_upload_sessions(conn)
             if self.quota_manager is not None:
                 self.quota_manager.ensure_schema(conn)
+            if self.audit_writer is not None:
+                self.audit_writer.ensure_schema(conn)
+
+    def _require_actor(self, actor_id: str | None) -> None:
+        if self.audit_writer is not None and (not isinstance(actor_id, str) or not actor_id.strip()):
+            raise AuditWriteError("verified actor subject_id is required when transactional audit is enabled")
+
+    def _append_audit(self, conn, actor_id, action, resource_type, resource_id, detail=None):
+        if self.audit_writer is not None:
+            self.audit_writer.append_in_transaction(
+                conn, actor_id=actor_id, action=action, resource_type=resource_type,
+                resource_id=resource_id, outcome="SUCCESS", detail=detail,
+            )
 
     @staticmethod
     def _validate_scope(scope_id: str) -> None:
@@ -152,8 +170,10 @@ class UploadSessionManager:
         scope_id: str,
         expected_size: int,
         expected_sha256: str | None = None,
+        actor_id: str | None = None,
     ) -> UploadSession:
         self._validate_scope(scope_id)
+        self._require_actor(actor_id)
         if expected_size < 0 or expected_size > self.max_object_bytes:
             raise UploadLimitExceeded("object size is outside configured limits")
         if expected_sha256 is not None and not _SHA256_RE.fullmatch(expected_sha256):
@@ -178,6 +198,8 @@ class UploadSessionManager:
                 (session_id, scope_id, object_key, expected_size, expected_sha256,
                  self.max_object_bytes, now, expires_at, reservation_id),
             )
+            self._append_audit(conn, actor_id, "UPLOAD_SESSION_CREATED", "upload", session_id,
+                               {"scope_id": scope_id, "expected_size": expected_size})
         try:
             session_dir = self._session_dir(session_id)
             session_dir.mkdir(mode=0o700)
@@ -235,7 +257,9 @@ class UploadSessionManager:
         scope_id: str,
         part_number: int,
         source: BinaryIO,
+        actor_id: str | None = None,
     ) -> dict[str, int | str]:
+        self._require_actor(actor_id)
         if not isinstance(part_number, int) or part_number < 1 or part_number > 10000:
             raise UploadError("part_number must be between 1 and 10000")
         with self._connect() as conn:
@@ -318,6 +342,9 @@ class UploadSessionManager:
                     "INSERT INTO upload_parts(session_id, part_number, size_bytes, sha256) VALUES (?, ?, ?, ?)",
                     (session_id, part_number, total, part_hash),
                 )
+                self._append_audit(conn, actor_id, "UPLOAD_PART_ACCEPTED", "upload", session_id,
+                                   {"scope_id": scope_id, "part_number": part_number,
+                                    "size_bytes": total, "sha256": part_hash})
             return {"part_number": part_number, "size_bytes": total, "sha256": part_hash}
         except Exception:
             try:
@@ -335,7 +362,8 @@ class UploadSessionManager:
             ).fetchall()
         return [dict(row) for row in rows]
 
-    def complete_upload(self, *, session_id: str, scope_id: str) -> StoredObject:
+    def complete_upload(self, *, session_id: str, scope_id: str, actor_id: str | None = None) -> StoredObject:
+        self._require_actor(actor_id)
         # Claim the session before reading parts so no new part can race with assembly.
         with self._connect() as conn:
             conn.execute("BEGIN IMMEDIATE")
@@ -406,6 +434,8 @@ class UploadSessionManager:
                     conn, session_id=session_id, expected_state="VERIFYING",
                     new_state="COMMITTING",
                 )
+                self._append_audit(conn, actor_id, "UPLOAD_COMMIT_INTENT", "upload", session_id,
+                                   {"scope_id": scope_id, "size_bytes": total, "sha256": actual_hash})
             state_for_error = "COMMITTING"
 
             with open(assembled_name, "rb") as source:
@@ -436,8 +466,14 @@ class UploadSessionManager:
                                                (session_id,)).fetchone()["quota_reservation_id"]
                 if self.quota_manager is not None and reservation_id is not None:
                     self.quota_manager.commit_in_transaction(conn, reservation_id, actual_bytes=total)
+                self._append_audit(conn, actor_id, "UPLOAD_COMPLETED", "upload", session_id,
+                                   {"scope_id": scope_id, "size_bytes": total, "sha256": actual_hash})
             return stored
         except Exception as exc:
+            # An audit failure rolls back its owning transaction. Preserve the
+            # pre-transaction state so no unaudited state transition is made.
+            if isinstance(exc, AuditWriteError):
+                raise
             # Preserve ambiguity for a reconciler. Never claim completion or
             # silently reopen a session after provider-side work may have begun.
             target_state = "RECOVERY_REQUIRED"
@@ -465,8 +501,9 @@ class UploadSessionManager:
                 except FileNotFoundError:
                     pass
 
-    def abort_upload(self, *, session_id: str, scope_id: str) -> None:
+    def abort_upload(self, *, session_id: str, scope_id: str, actor_id: str | None = None) -> None:
         self._validate_scope(scope_id)
+        self._require_actor(actor_id)
         with self._connect() as conn:
             conn.execute("BEGIN IMMEDIATE")
             row = conn.execute(
@@ -488,6 +525,8 @@ class UploadSessionManager:
                                            (session_id,)).fetchone()["quota_reservation_id"]
             if self.quota_manager is not None and reservation_id is not None:
                 self.quota_manager.release_in_transaction(conn, reservation_id)
+            self._append_audit(conn, actor_id, "UPLOAD_ABORTED", "upload", session_id,
+                               {"scope_id": scope_id})
         # Deliberately retain staging bytes. Immediate deletion can race with a
         # part writer that is still streaming to a temporary file. A separate,
         # age-gated cleanup worker must inspect and remove aborted data later.
