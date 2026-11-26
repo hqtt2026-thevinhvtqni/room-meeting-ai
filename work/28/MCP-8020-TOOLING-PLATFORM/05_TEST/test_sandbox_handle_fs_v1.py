@@ -35,6 +35,15 @@ class LinuxHandleFilesystemTests(unittest.TestCase):
             self.assertFalse((self.outside / ".upload-staging").exists())
             self.assertTrue((parked / ".upload-staging" / "UP-test.part").exists())
 
+    def test_pinned_directory_close_is_idempotent_inside_context(self):
+        (self.sandbox / "119").mkdir()
+        with self.fs.work("119") as work:
+            fd = work.fd
+            work.close()
+            self.assertEqual(work.fd, -1)
+            # The context manager's finalizer must not close the descriptor twice.
+            self.assertFalse(os.path.exists(f"/proc/self/fd/{fd}"))
+
     def test_nested_symlink_is_rejected_without_touching_outside(self):
         (self.sandbox / "119").mkdir()
         (self.sandbox / "119" / "images").symlink_to(self.outside, target_is_directory=True)
