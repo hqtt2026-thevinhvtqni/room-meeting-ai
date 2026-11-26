@@ -143,3 +143,19 @@
 - **Decision:** This cross-Work evidence strengthens the source-intake disposition: the blocker is not merely a temporary missing path on main; previous branch/recovery checks also failed to recover source bytes. Do not merge the stale branch, claim historical test PASS, reconstruct v0.2, or create a replacement Evidence Registry without Vinh's explicit decision and architecture approval.
 - **Verification boundary:** Read-only GitHub search/fetch of W17 records. No W33 source bytes recovered; no tests, runtime, Core API, provider or Sandbox access performed in this step. No PASS claimed.
 - **Current disposition:** W33 remains SOURCE INTAKE BLOCKED / READ-TRACE ONLY. Next viable path is a fresh authorized Sandbox recovery or a user-approved source reconstruction decision; no PC action is requested now.
+
+
+## 2026-11-26 — Historical Git object and connected-drive recovery sweep
+
+- **Activity:** READ → TRACE → ANALYZE → DECIDE → BUILD (evidence record) → VERIFY.
+- **Git branch inventory:** GitHub branch search returned exactly one branch matching `33`: `work/33/ROOM-SHARED-FILE-EVIDENCE-HUB`; search for branch name `rsfeh` returned none. The branch tree for its Work 33 subtree contains only seven root documentation files; no architecture, source, tests, evidence logs or release artifacts.
+- **Historical commits inspected:**
+  - `894531dc4fe622878d4dd0296c007d1e34fd5b65` — commit title says “sync original RSFEH package from Sandbox”, but its actual diff adds only `SYNC_MANIFEST.md` (30 lines). The manifest lists the expected source/test files and their SHA-256 hashes, but those bytes are not in this commit.
+  - `11506ea0daaec7aa487651c69368bb7eff15c91b` — same title; actual diff adds only `00_ROOT/WORK.md` (8 lines).
+  - `0c93ad252631bc838a70bee6f3420aea967a2fc1` — records the negative recovery search and v0.2 reconstruction proposal; no implementation bytes added.
+- **Important recovery lead, not a recovered artifact:** the historical manifest identifies the former local archive as `/tmp/WORK_33_ROOM_original.tar.gz`, expected SHA-256 `76237b52972b399bacf31643f5832560135c08e8e0a234f2821817007048bfff`. This is only a path/hash claim in a Git text manifest. The archive itself is not present in the inspected Git trees and has not been retrieved or hash-verified. The historical manifest lists `store.py` (12,368 bytes) and `cli.py` (6,317 bytes) with hashes, but neither source blob is present in the inspected commits.
+- **Connected storage recovery sweep:** Dropbox search for `ROOM-SHARED-FILE-EVIDENCE-HUB` and `RSFEH store.py` returned no results. Box authenticated successfully; keyword searches for `RSFEH`, `store.py`, `audit_tail`, `RSFEH CLI`, and `soft_delete` returned no matching source artifact. One unrelated W15 presentation matched a broad project-name query and was excluded. No file was downloaded or changed.
+- **Conclusion:** Git history does preserve the original file inventory and per-file hashes, but not the original source bytes. The archive path is a useful recovery clue only if the former build environment or backup is still available; current connected GitHub/Dropbox/Box evidence does not recover it. The previous “original v0.1.0 NOT RECOVERED” conclusion remains unchanged.
+- **Decision:** Do not fabricate files from manifest hashes or audit prose. Do not attempt to access the former `/tmp` path remotely; it is not a current accessible filesystem. Keep v0.2 reconstruction as a separately authorized new lineage. No user approval for that reconstruction is present in the reviewed record, so no implementation is started.
+- **Verification boundary:** GitHub branch/tree/commit diffs read-only; Dropbox and Box keyword searches only. No Sandbox retry, local PC access, source execution, pytest, runtime, provider API, migration, merge or deployment. No PASS claimed.
+- **Status:** SOURCE RECOVERY NOT FOUND IN CURRENT ACCESSIBLE CHANNELS / RECONSTRUCTION DECISION PENDING / TESTS NOT RUN.
