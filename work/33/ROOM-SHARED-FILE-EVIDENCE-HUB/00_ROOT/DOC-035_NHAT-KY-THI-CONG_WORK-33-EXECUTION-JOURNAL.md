@@ -80,3 +80,10 @@
 - **Artifact:** Created `06_EVIDENCE/DOC-005_GITHUB_BRANCH_LINEAGE_AND_RECONSTRUCTION_DECISION_GATE.md`, GitHub main commit `b1719b8bf864d5cb94b985613fb0240bc0a7cb39`.
 - **Verification:** DOC-005 and this journal entry require exact GitHub read-back in this turn; no tests/runtime/CI were run.
 - **Safety boundary:** Read-only branch/source inspection and documentation writes only. No PC action, merge, reconstruction, provider connection, production integration or deployment.
+
+## 2026-11-26 — Sandbox recovery retry
+
+- **Action:** One additional read-only `sandbox_list(work_id=33)` request through the Sandbox Build MCP.
+- **Result:** UNAVAILABLE / connection failed. No Sandbox file inventory or source bytes returned.
+- **Decision:** Stop retrying this unavailable endpoint in this work session; do not infer file loss or overwrite/reconstruct inaccessible files.
+- **Status:** Cloud Drive prototype source intake remains BLOCKED. No code/test/runtime changes.
