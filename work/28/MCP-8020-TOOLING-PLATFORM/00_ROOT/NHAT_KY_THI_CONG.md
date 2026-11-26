@@ -3089,3 +3089,28 @@ Governance ownership handoff: CANONICALIZED / READBACK VERIFIED. PR #78: candida
 **STATUS:** Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED. F01 BLOCKED; F02 PARTIAL / NOT VERIFIED; F03 BLOCKED; F04 BLOCKED; Independent Acceptance NOT ACCEPTED; Execution Gate CLOSED.
 
 **Signed:** Ka — Delegated Work 28 Operational Owner / Delivery Coordinator
+
+
+## 2026-11-26 12:42 +07 — JRN-W28-123 — Đồng bộ GitHub issue ownership và tách independent security gate
+
+**Name:** Ka  
+**Title:** Delegated Work 28 Operational Owner / Delivery Coordinator  
+**Date-Time:** 2026-11-26 12:42 +07 (Asia/Ho_Chi_Minh)  
+**Priority:** P0
+
+### BUILD
+- Updated GitHub Issue #28 with the latest Vinh authority: Ka owns Work 28 operations/remediation; Xu has no active W28 implementation/coordination assignment and temporarily owns W118; Vi is dispatched by Ka; An remains independent QA.
+- Updated Issue #13 to preserve the independent security review gate while removing Ka as reviewer for changes Ka implements. Independent security reviewer is explicitly UNASSIGNED; no substitute reviewer is assumed.
+- Updated Issue #14 to mark Xu's historical W28 planning/coordination assignment superseded by the 2026-11-26 decision; it must not be used to reassign Xu to W28 without a new Vinh decision.
+- No issue was closed; no source code was changed by these issue metadata updates.
+
+### VERIFY
+- GitHub update operations returned success for Issues #28, #13 and #14.
+- Canonical journal readback for this entry is pending this append's verification.
+
+### SAFETY
+- An's QA role remains independent; independent security review is a distinct release gate.
+- Work 28 remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED.
+- No merge, deploy, registration, live upload, test execution or PASS claim.
+
+**Signed:** Ka — Delegated Work 28 Operational Owner / Delivery Coordinator
