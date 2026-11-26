@@ -2971,3 +2971,61 @@ PR #78 OPEN / DRAFT / UNMERGED; journal synchronization BLOCKED; F01–F04 chưa
 **STATUS:** Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED. F01 BLOCKED; F02 PARTIAL / NOT VERIFIED; F03 BLOCKED; F04 BLOCKED; Independent Acceptance NOT ACCEPTED; Execution Gate CLOSED. No release.
 
 **Signed:** Ka — Delegated Work 28 Operational Owner / Delivery Coordinator
+
+
+### LATE CANONICAL SYNC — Sandbox JRN-W28-117 (original entry preserved verbatim)
+- **Sync Date-Time:** 2026-11-26 09:36 +07.
+- **Source:** Work 28 Sandbox, work_id 28, path MCP-8020-TOOLING-PLATFORM/00_ROOT/NHAT_KY_THI_CONG.md.
+- **Readback:** diagnostic read-probe returned status=ok; exact original JRN-W28-117 segment extracted from the returned file content.
+- **Disposition:** appended below without rewriting the original. Its statement that ownership confirmation was pending is a historical snapshot at the time An wrote it; the later Vinh decision is recorded in BB-W28-20261126-004 and JRN-W28-119.
+
+## 2026-11-26 — JRN-W28-117 — An ghi nhận Governance Baseline và xung đột phân công remediation
+
+**Role:** An | TESTER — independent verification / journal record  
+**Source:** Nội dung governance baseline mới do Vinh cung cấp trong cuộc hội thoại.  
+**Status:** GOVERNANCE BASELINE READ / REMEDIATION OWNER CONFIRMATION PENDING
+
+### READ / TRACE
+- Ghi nhận Work 28 hiện vẫn ở trạng thái `ACTIVE / INTEGRATION BLOCKED / NOT RELEASED`; acceptance `BLOCKED — NOT ACCEPTED`; Execution Gate giữ CLOSED.
+- Ghi nhận finding hiện tại: F01 BLOCKED; F02 PARTIAL / NOT VERIFIED; F03 BLOCKED; F04 BLOCKED.
+- Điều kiện nghiệm thu được nhắc lại: independent test trên exact source commit; CI không thay independent QA; live Sandbox byte-count + SHA-256 parity; raw output/exit code/provenance; không merge/register/deploy/mở gate khi thiếu evidence.
+- Ghi nhận xung đột lịch sử ownership giữa JRN-W28-111 (Xu takeover), JRN-W28-114 (Ka delegated delivery) và phân công remediation mới (Vi F01–F04, Xu Core upload authorization/GitHub sync authority, An independent acceptance, Ka CSA review).
+- Các hồ sơ mới nhất đọc qua Sandbox read-probe vẫn thể hiện PR #78 là candidate, PR #77 đã superseded/historical; Core upload authorization baseline là PROPOSED, không phải API đã được phê duyệt. Các finding và trạng thái lịch sử không được tự ý sửa/xóa.
+
+### ACTION / DISPOSITION
+- Lưu bản ghi governance baseline do Vinh gửi, không tự diễn giải thành quyền implementation mới đã được xác nhận.
+- Vì nội dung giao nhiệm vụ đặt câu hỏi xác nhận quyền sở hữu implementation, An không tự trả lời thay Vinh và không chuyển trạng thái assignment lịch sử.
+- Không sửa source/test; không commit/push/merge/register/deploy; không chạy test hoặc live upload; không thay đổi Execution Gate.
+
+### VERIFY / LIMITS
+- Đã xác minh bằng Sandbox diagnostic read-probe các hồ sơ: canonical journal; `XU_CORE_UPLOAD_AUTHORITY_CONTRACT_DECISION_20261124.md`; `VI_F01_F04_REMEDIATION_CHECKPOINT_20261124.md`; `XU_PR77_STATIC_REVIEW_ADDENDUM_20261124.md`.
+- Normal `sandbox_read` trả {} cho các file; diagnostic read-probe trả status ok và file content. Dùng probe làm readback trong phiên này.
+- Entry này được append vào Work 28 Sandbox journal; chưa đồng bộ/ghi vào canonical GitHub journal.
+
+
+**STATUS:** GOVERNANCE BASELINE RECORDED / OWNERSHIP DECISION NOT CONFIRMED / F01–F04 NOT ACCEPTED / EXECUTION GATE CLOSED / NOT RELEASED.
+
+**NEXT:** Chờ quyết định ownership rõ ràng từ Vinh; sau đó đối chiếu assignment với exact GitHub HEAD, tiếp tục QA độc lập khi có candidate và evidence thực thi hợp lệ.
+
+[KÝ: AN | TESTER]
+
+
+## 2026-11-26 09:36 +07 — JRN-W28-120 — Canonical sync of An's Sandbox record and PR #78 metadata correction
+
+**Name:** Ka  
+**Title:** Delegated Work 28 Operational Owner / Delivery Coordinator  
+**Date-Time:** 2026-11-26 09:36 +07 (Asia/Ho_Chi_Minh)  
+**Priority:** P0
+
+### BUILD
+- Appended An's original Sandbox JRN-W28-117 entry verbatim to the canonical GitHub Work 28 journal after JRN-W28-119. The delayed append order is intentional and documented; no historical entry was edited or removed.
+- Updated PR #78 title to "Work 28: Binary upload safety and recovery remediation — candidate".
+- Replaced PR #78 description so it reflects the 2026-11-26 ownership decision: Ka operational owner, Xu focused on W118, Vi dispatched by Ka, An independent QA. The description records the candidate SHA, divergence and open blockers without claiming acceptance.
+
+### VERIFY
+- GitHub confirmed PR #78 metadata update succeeded: OPEN / DRAFT / UNMERGED; head SHA remains 6e9eb0e935ee74237cc40287c903d72e6ae74473.
+- Candidate comparison at the time of metadata update: DIVERGED, 73 ahead / 10 behind; merge base 4b2a8663a0b9ff40aad8e6812efff197b5085de5.
+- No source file or PR branch commit was changed by the metadata update. No CI, tests, live upload, registration, deployment or merge was executed.
+- Canonical readback for this JRN-W28-120 entry is pending this append's verification.
+
+**STATUS:** GOVERNANCE CANONICAL SYNC RECORDED; PR #78 METADATA CORRECTED; F01–F04 OPEN; EXECUTION GATE CLOSED; NOT RELEASED.
