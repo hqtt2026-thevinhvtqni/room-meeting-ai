@@ -3484,3 +3484,30 @@ Governance ownership handoff: CANONICALIZED / READBACK VERIFIED. PR #78: candida
 **Next action:** implement the filesystem backend behind a narrow interface, refactor all lifecycle operations, then run exact-SHA native Linux/Windows adversarial tests. Only after implementation evidence is complete, request An QA and an independent security reviewer.
 
 **Signed:** Ka — Delegated Work 28 Operational Owner / Remediation Lead
+
+
+## 2026-11-27 03:xx +07 — JRN-W28-135 — Dựng lại candidate F01 từ canonical sau cập nhật nhật ký
+
+**Name:** Ka  
+**Title:** Delegated Work 28 Operational Owner / Remediation Lead  
+**Date-Time:** 2026-11-27 03:xx +07 (Asia/Ho_Chi_Minh)  
+**Priority:** P0 — branch integrity / F01  
+**PR candidate:** #83 — OPEN / DRAFT / UNMERGED  
+**Canonical starting SHA:** `6a9289aab3ba4741f08bf800779c8bef437427b2`
+
+### TRACE / BUILD
+- Prior PR #82 candidate became diverged after canonical append-only journal commit JRN-W28-134. Comparison showed 5 ahead / 3 behind; no blind merge/rebase was performed.
+- Created fresh branch `ka/w28-remediation-20261127-r3` from canonical SHA `6a9289aab3ba4741f08bf800779c8bef437427b2`.
+- Recreated the upload source baseline, native Linux/Windows tests (including parent-swap regression), F01 lifecycle audit and document-register entry on the new branch.
+- Opened replacement draft PR #83. It is OPEN / DRAFT / UNMERGED. No merge, force push or rebase was performed.
+- This rebuild is branch-continuity work only; it does not fix the path-based filesystem implementation.
+
+### SECURITY / GATES
+- F01 BLOCKED; parent-swap regression remains enabled and expected to fail against the current implementation.
+- F02 PARTIAL / NOT VERIFIED; F03/F04 BLOCKED.
+- Independent QA NOT ACCEPTED; independent security reviewer UNASSIGNED.
+- Execution Gate CLOSED. No registration, deployment, live upload or release.
+
+**Next action:** verify exact-SHA workflow for PR #83, then proceed with implementation only after a safe cross-platform handle backend is technically established. Keep draft and regression intact.
+
+**Signed:** Ka — Delegated Work 28 Operational Owner / Remediation Lead
