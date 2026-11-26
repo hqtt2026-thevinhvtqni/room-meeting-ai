@@ -125,3 +125,21 @@
 - **Assessment boundary:** This is a second Work's preserved record of the earlier Sandbox source review, not a fresh read of the source bytes in this turn and not independent runtime validation. It corroborates the risk register but does not establish current GitHub source availability. No tests were run; no exploit or production exposure is claimed.
 - **Decision:** Add these items to the mandatory source-review checklist when canonical source bytes are recovered. Prioritize multi-Work association semantics, restore/purge lifecycle, dedup authorization boundary, unique temporary-file publication, crash reconciliation and dual-audit consistency. Do not patch or reconstruct from the audit prose.
 - **Current state:** GitHub main still lacks the previously expected Cloud Drive prototype source paths; Sandbox MCP was recently unavailable. Source intake remains BLOCKED; tests/runtime NOT RUN; no PASS. No merge, reconstruction, deployment, provider connection or PC action.
+
+
+## 2026-11-26 — Work 17 independent lineage recheck correlation
+
+- **Activity:** READ → TRACE → ANALYZE → DECIDE → BUILD (evidence record) → VERIFY.
+- **Trigger:** GitHub code search located W17 records that independently revisited the W33 source lineage and evidence-hub boundary.
+- **Exact evidence fetched from main:**
+  - `work/17/ROOM-HOP-AI-AGENT-CAPABILITY-BASELINE-AND-FOCUSED-ENABLEMENT/00_ROOT/SYNC_RECORD.md`, blob `443425f50e5b897a9208018cb87bb4531dd25d19`.
+  - `work/17/ROOM-HOP-AI-AGENT-CAPABILITY-BASELINE-AND-FOCUSED-ENABLEMENT/04_PLAN/WORK_17_GAP01_TECHNICAL_OPTIONS_AND_HANDOFF_PROTOCOL.md`, blob `4d16bb5ec7387b7aea5aa2b9b99f13c2424ea16c`.
+  - W17 code-search result located `WORK_17_GAP01_TECHNICAL_OPTIONS_AND_HANDOFF_PROTOCOL.md` and the W33 source lineage references; search is default-branch scoped.
+- **Correlated findings:**
+  1. W17 records that the dedicated W33 branch was DIVERGED and its delta contained documentation only; expected branch paths `03_ARCHITECT/ARCHITECTURE.md` and `04_CODE/src/rsfeh/{store.py,cli.py}` returned NOT_FOUND in the inspected branch snapshot.
+  2. W17 records that historical RSFEH source findings came from bounded Sandbox inspection and must not be upgraded into current GitHub branch-source proof.
+  3. W17 explicitly says source/test/evidence/release paths were missing in the recovery channels checked at that time; historical 17/17 PASS and A1–A9/A11 remain NOT VERIFIED, A10 remains BLOCKED, and RSFEH v0.2 reconstruction requires Vinh's decision.
+  4. W17 maps W33 as Evidence Hub owner at the governance level, but its Work Evidence Registry API/persistence and Core linkage remain NOT VERIFIED. It also warns not to create a parallel Evidence Registry or infer runtime ownership from governance labels.
+- **Decision:** This cross-Work evidence strengthens the source-intake disposition: the blocker is not merely a temporary missing path on main; previous branch/recovery checks also failed to recover source bytes. Do not merge the stale branch, claim historical test PASS, reconstruct v0.2, or create a replacement Evidence Registry without Vinh's explicit decision and architecture approval.
+- **Verification boundary:** Read-only GitHub search/fetch of W17 records. No W33 source bytes recovered; no tests, runtime, Core API, provider or Sandbox access performed in this step. No PASS claimed.
+- **Current disposition:** W33 remains SOURCE INTAKE BLOCKED / READ-TRACE ONLY. Next viable path is a fresh authorized Sandbox recovery or a user-approved source reconstruction decision; no PC action is requested now.
