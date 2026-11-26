@@ -53,3 +53,18 @@ Append new numbered entries. Do not rewrite historical entries to make later out
 - **Delivery approach:** Làm trực tiếp trên nhánh cô lập từ exact PR #77 head; chia mốc M0 baseline, M1 F01/F02, M2 Core authority + transport, M3 exact-SHA CI/review/canary/handoff. Báo cáo mốc dựa trên bằng chứng và ETA cập nhật khi có blocker.
 - **Safety:** Không merge, register, deploy, mở Execution Gate hoặc tuyên bố RELEASED trước khi F01–F04, independent review, exact-SHA CI và live byte-for-byte SHA-256 canary được chứng minh.
 - **Supersedes:** Các assignment implementation cho Vi trong các biên bản/nhật ký trước đây, kể từ thời điểm quyết định này. Lịch sử cũ không bị sửa.
+
+
+## BB-W28-20261126-004 — Vinh xác nhận chuyển giao toàn quyền điều hành Work 28 cho Ka
+
+- **Date-Time:** 2026-11-26 09:32 +07 (Asia/Ho_Chi_Minh)
+- **Authority:** Chỉ thị trực tiếp của Vinh trong cuộc hội thoại ngày 2026-11-26; xác nhận sau khi An ghi JRN-W28-117 trong Sandbox.
+- **Priority:** P0 — tiếp quản remediation F01–F04 và đưa Work 28 tới nghiệm thu/bàn giao có bằng chứng.
+- **Decision:** Ka tiếp quản toàn bộ quyền điều hành vận hành Work 28 trong phạm vi ủy quyền của Vinh: điều phối remediation F01–F04, tích hợp, kiểm soát evidence, phối hợp nghiệm thu độc lập và bàn giao. Vinh vẫn là thẩm quyền cuối cùng của dự án.
+- **Ownership change:** Xu dừng can thiệp implementation/điều hành Work 28 và tập trung Work 118. Không tiếp tục hai đầu điều hành. Quyết định này supersede BB-W28-20261124-003 và mọi assignment lịch sử trái với phân công mới; không sửa hoặc xóa lịch sử cũ.
+- **Execution roles:** Ka — Work 28 operational/delivery owner; Vi — implementation contributor khi được Ka giao nhiệm vụ cụ thể; An — independent tester, giữ quyền kết luận QA; Xu — không có nhiệm vụ implementation/điều hành W28, ưu tiên W118.
+- **Independent review safeguard:** Việc Ka tiếp quản implementation/điều hành không miễn independent security review. Ka không được tự coi review source do chính mình triển khai là independent approval. Chưa có reviewer độc lập khác được chỉ định trong quyết định này; security approval vẫn là gate riêng và phải được xử lý trước release.
+- **An / Sandbox record:** An báo JRN-W28-117 đã append và readback OK trong Sandbox ngày 2026-11-26. Bản ghi đó chưa được đồng bộ vào GitHub canonical tại thời điểm quyết định; đây là lần ghi nhận governance chính thức trên canonical minutes, không sửa nội dung Sandbox history.
+- **Safety state:** Work 28 giữ ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; F01 BLOCKED; F02 PARTIAL / NOT VERIFIED; F03 BLOCKED; F04 BLOCKED; Independent Acceptance NOT ACCEPTED; Execution Gate CLOSED.
+- **PR #78:** vẫn là candidate OPEN / DRAFT / UNMERGED; metadata/mô tả hiện tại còn ghi Xu takeover. Phải reconcile metadata và branch divergence có kiểm soát; không merge hoặc force-sync chỉ để làm khớp hồ sơ.
+- **Non-authorization:** Không có nội dung nào trong quyết định này cho phép merge, register, deploy, live upload, mở Execution Gate hoặc tự chuyển finding sang PASS.
