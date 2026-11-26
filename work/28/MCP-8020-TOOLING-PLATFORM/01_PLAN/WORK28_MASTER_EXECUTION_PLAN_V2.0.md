@@ -1,5 +1,10 @@
 # WORK 28 — MASTER EXECUTION PLAN V2.0
 
+> **GOVERNANCE ADDENDUM — 2026-11-26 / P0**
+>
+> By Vinh's direct instruction, Ka is the delegated operational owner and delivery coordinator for all active Work 28 remediation, integration, evidence control, acceptance coordination and handoff. Vi may implement scoped tasks when dispatched by Ka. An remains the independent tester. Xu has no active Work 28 implementation/coordination assignment and focuses on Work 118. This addendum supersedes conflicting owner labels and sequencing assignments in the historical plan body; historical text is retained for traceability. Vinh remains final project authority. Ka may not self-certify independent security review of Ka's own changes; a separate independent security disposition remains mandatory and currently unassigned. Priority P0. Work 28 remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED.
+
+
 **Date:** 2026-11-03  
 **Status:** ACTIVE / INTEGRATION BLOCKED / NOT RELEASED  
 **Execution Gate:** CLOSED  
