@@ -87,3 +87,21 @@
 - **Result:** UNAVAILABLE / connection failed. No Sandbox file inventory or source bytes returned.
 - **Decision:** Stop retrying this unavailable endpoint in this work session; do not infer file loss or overwrite/reconstruct inaccessible files.
 - **Status:** Cloud Drive prototype source intake remains BLOCKED. No code/test/runtime changes.
+
+
+## 2026-11-26 — Official TeraBox Open Platform capability review
+
+- **Activity:** READ → TRACE → ANALYZE → DECIDE → VERIFY.
+- **Source:** Official TeraBox Open Platform Vietnamese integration documentation (https://www.terabox.com/integrations/docs/vietnamese) and official Terms of Service (https://www.terabox.com/terms/duty). Search-indexed official documentation sections reviewed for OAuth/tokeninfo, quota, multipart upload, file listing, metadata/download and file management.
+- **Verified documented capabilities:**
+  1. Application credentials are required and must be applied for in advance: client_id, client_secret, and private_secret. OAuth supports authorization-code/device-code; access token validity is documented as 2 days and refresh token validity as 30 days.
+  2. /oauth/tokeninfo returns account-specific api_domain and upload_domain; the docs recommend caching domain information no longer than one hour.
+  3. The platform documents quota query (total, used), file listing, file metadata, download-link generation, file management (copy/move/rename/delete), and a three-stage multipart upload (precreate → upload parts → create).
+  4. Multipart upload uses MD5 block hashes and ordered parts; when uploading multiple parts, each part should be larger than 4 MB. The documented file namespace is restricted to an application-specific folder under /From: Other Device/Application Name-; do not assume arbitrary account-root access.
+  5. Download links are returned as time-limited URLs; the example indicates a one-hour expiry. The Cloud Drive adapter must not persist these as permanent share links.
+- **Engineering implications:** TeraBox is technically plausible as a provider adapter, not yet an approved provider. Preserve the platform's MD5 requirements only for its API protocol; independently compute and verify SHA-256 in Work 33 before marking an object AVAILABLE. Treat provider quota as a live observed capacity, not a hardcoded 1 TB. Keep TeraBox app credentials and user tokens in a secrets manager, never in GitHub/Sandbox/journal. Map the application namespace to a dedicated Work 33 storage space and test isolation, deletion semantics, retries, rate/size limits, and restore/export.
+- **Unresolved gates:** No application credentials or app approval evidence; no authorized OAuth consent/account connection; no live API request; no tested free-account API entitlement or throughput/limit proof; no confirmation of contractual SLA, retention, independent backup, or 500 GB durable capacity. Official terms reserve the ability to change or limit free storage/service. No provider selection.
+- **Decision:** Record TeraBox as **CANDIDATE / DOCUMENTED API / NOT CONNECTED / NOT VERIFIED AT RUNTIME**. It may be used for a controlled synthetic-data adapter pilot only after Vinh authorizes account/app onboarding and credentials are issued. It cannot serve as the sole protected 500 GB store or backup. No paid upgrade or subscription.
+- **Evidence:** Official TeraBox documentation search result turn191914search0; official Terms of Service turn107986search5; official Vietnam product page turn107986search9. The official documentation page itself did not expose a readable full-page response on open, so details above are limited to the indexed official documentation text retrieved in search.
+- **Safety boundary:** Public documentation review only. No account login, OAuth, API calls, credential handling, upload, delete, billing, or provider configuration. No tests/runtime verification; no PASS claimed.
+- **Next:** Add a TeraBox-specific adapter conformance checklist to the provider test plan when source intake is restored; first obtain official app approval and run a read-only quota/tokeninfo probe under explicit authorization. Continue to keep source intake BLOCKED until the actual prototype source is accessible.
