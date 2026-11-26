@@ -279,3 +279,14 @@
 - WRITE: Sandbox `03_ARCHITECTURE/UPLOAD_INTEGRITY_AND_TRANSACTIONAL_AUDIT_DESIGN_V1.md`; Sandbox `04_WORK_LOG.md` appended. Both read-back verified.
 - STATUS: DESIGN RECORDED / IMPLEMENTATION NOT STARTED / TESTS NOT RUN in this step. Existing Cloud Drive extension remains prototype-only. Hash chain still requires independent protected checkpoint/backup to become resilient against full local DB rewrite/truncation.
 - NEXT: Inspect current isolated validation branch HEAD and workflow, then implement additive migration + recovery tests + transactional audit fault-injection tests on that branch only. Main remains untouched; no merge, deployment, Core/provider integration or paid infrastructure.
+
+
+## 2026-11-27 — Durable commit digest and audit atomicity design
+- Scope: READ → TRACE → ANALYZE → DESIGN. Static inspection of Work 33 Sandbox extension source; no source code changed.
+- Confirmed in `uploads/session_manager.py`: assembled SHA-256 and size are computed before provider promotion, but the current `VERIFYING -> COMMITTING` transition does not persist those values. `completed_sha256/completed_size` are written only after provider write and HEAD verification, in the final completion transaction.
+- Confirmed in `uploads/recovery_inspector.py`: when status is COMMITTING and `expected_sha256 IS NULL`, a matching provider size is enough to produce `COMMITTING_PROVIDER_OBJECT_MATCHES_EXPECTATION`. This is insufficient evidence; absent trusted digest must be UNCONFIRMED, never MATCH.
+- Confirmed in `service/audit.py` and inspected call paths: AuditWriter opens its own DB connection and is not invoked by the inspected UploadService/UploadSessionManager lifecycle. The hash chain is not atomic with upload state/quota changes.
+- Created Sandbox design contract: `03_ARCHITECTURE/UPLOAD_COMMIT_DIGEST_AND_AUDIT_ATOMICITY_DESIGN_V1.md`; read-back verified. It specifies separate commit-candidate digest/size/timestamp fields, persistence in the same BEGIN IMMEDIATE transaction as VERIFYING→COMMITTING and the audit event before provider promotion, strict recovery verification, connection-scoped audit append, same pilot SQLite DB for upload/quota/audit, fail-closed sensitive mutations, and independent remote/WORM anchoring for production.
+- Recorded a 6-boundary crash matrix and 12 required regression tests, including provider HEAD checksum trust, migration of legacy COMMITTING rows, transaction rollback, replay and concurrent settlement.
+- Sandbox `04_WORK_LOG.md` appended and read-back verified.
+- Status: DESIGN CONTRACT CREATED / NOT IMPLEMENTED / NOT RUNTIME-VERIFIED. No code changes, test claims, Core/provider integration, migration, main-branch implementation, merge, production action or release.
