@@ -159,3 +159,12 @@
 - **Decision:** Do not fabricate files from manifest hashes or audit prose. Do not attempt to access the former `/tmp` path remotely; it is not a current accessible filesystem. Keep v0.2 reconstruction as a separately authorized new lineage. No user approval for that reconstruction is present in the reviewed record, so no implementation is started.
 - **Verification boundary:** GitHub branch/tree/commit diffs read-only; Dropbox and Box keyword searches only. No Sandbox retry, local PC access, source execution, pytest, runtime, provider API, migration, merge or deployment. No PASS claimed.
 - **Status:** SOURCE RECOVERY NOT FOUND IN CURRENT ACCESSIBLE CHANNELS / RECONSTRUCTION DECISION PENDING / TESTS NOT RUN.
+
+
+## 2026-11-26 — Follow-up backup-location sweep
+
+- **Dropbox root inventory:** listed the connected account's immediate root only (6 entries: `thi sat hach`, one unrelated PDF, `Sent files`, `chung tu`, `Camera Uploads`, `Cong viec`). No obvious Work 33/engineering archive folder at root. Did not recursively inspect unrelated personal folders.
+- **Additional Dropbox searches:** `WORK_33_ROOM`, `pytest_rerun_2026-10-26`, `WORK_33_ROOM_original`, the recorded archive SHA-256 prefix, `ROOM-SHARED-FILE`, and `rsfeh.tar.gz` all returned zero results.
+- **Box folder search:** `Work 33`, `WORK_33_ROOM`, `ROOM-SHARED-FILE`, `Evidence Hub`, and `RSFEH` returned no matching Work 33 folder. Broad keyword matches from prior Box search were unrelated W15/W119/W500 items and were excluded.
+- **Dropbox activity history:** read-only restore-event query for the archive recovery window returned no event payload; this does not establish that no deleted archive exists and is not a complete deleted-file inventory.
+- **Conclusion unchanged:** no alternate archive location found in the connected account surfaces checked. Avoid recursive scanning of unrelated personal data absent a stronger location clue. Source reconstruction remains a separate decision and has not been started.
