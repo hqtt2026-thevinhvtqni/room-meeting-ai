@@ -5,15 +5,24 @@ from pathlib import Path
 
 from cloud_drive.service.audit import AuditWriter
 from cloud_drive.service.quota_manager import QuotaManager
-from cloud_drive.storage.local import LocalStorageAdapter
+from cloud_drive.storage.protocol import ObjectRef, StoredObject
 from cloud_drive.uploads.session_manager import UploadSessionManager
+
+
+class ProcessSafeTestStorage:
+    def put_stream(self, key, source, *, max_bytes):
+        data = source.read()
+        return StoredObject(ObjectRef(key), len(data), hashlib.sha256(data).hexdigest())
+
+    def head(self, ref):
+        raise NotImplementedError("storage read-back is not exercised in these process contention tests")
 
 
 def _build_manager(root):
     root = Path(root)
     db = root / "shared.sqlite3"
     audit = AuditWriter(str(db))
-    storage = LocalStorageAdapter(root / "objects")
+    storage = ProcessSafeTestStorage()
     manager = UploadSessionManager(
         database=db, staging_root=root / "staging", storage=storage,
         audit_writer=audit,
