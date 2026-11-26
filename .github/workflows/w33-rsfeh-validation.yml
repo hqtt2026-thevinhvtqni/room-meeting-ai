@@ -17,7 +17,7 @@ concurrency:
 
 jobs:
   rsfeh-tests:
-    name: RSFEH / Python 3.12.3 / pytest
+    name: RSFEH / Python 3.12.x / pytest
     runs-on: ubuntu-latest
     timeout-minutes: 10
     defaults:
@@ -36,10 +36,10 @@ jobs:
             'c6cd277050ead2d11c98b7cbab91ada7d19e495c95e4c86de1f9aaf2b2051d38' '04_CODE/src/rsfeh/__main__.py' \
             | sha256sum --check -
 
-      - name: Set up Python 3.12.3
+      - name: Set up Python 3.12.x
         uses: actions/setup-python@v6
         with:
-          python-version: "3.12.3"
+          python-version: "3.12"
 
       - name: Set up isolated Python environment
         run: |
