@@ -314,19 +314,13 @@ class UploadSessionManager:
                 if final_path.exists() or final_path.is_symlink():
                     if final_path.is_symlink() or not final_path.is_file():
                         raise UploadIntegrityError("orphan staged part path is not a regular file")
-                    # Recover a crash after atomic rename but before metadata commit.
-                    on_disk_hash = hashlib.sha256()
-                    on_disk_size = 0
-                    with final_path.open("rb") as saved:
-                        while True:
-                            chunk = saved.read(1024 * 1024)
-                            if not chunk:
-                                break
-                            on_disk_size += len(chunk)
-                            on_disk_hash.update(chunk)
-                    if on_disk_size != total or on_disk_hash.hexdigest() != part_hash:
-                        raise UploadConflict("orphan staged part exists with different content; manual recovery required")
-                    os.unlink(temp_name)
+                    # Never promote an orphan into accepted metadata on an ordinary
+                    # retry. Matching bytes prove content equality, not provenance,
+                    # prior authorization, or the missing audit event. Keep the file
+                    # for read-only inspection and a separately authorized recovery.
+                    raise UploadConflict(
+                        "orphan staged part exists; inspection and authorized recovery required"
+                    )
                 else:
                     os.replace(temp_name, final_path)
                     # Persist the directory entry when the platform supports it.
