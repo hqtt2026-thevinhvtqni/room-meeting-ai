@@ -3622,3 +3622,38 @@ Governance ownership handoff: CANONICALIZED / READBACK VERIFIED. PR #78: candida
 **Next action:** implement backend handle-anchored trên baseline r5 và refactor đầy đủ lifecycle; bắt buộc native Linux/Windows exact-SHA tests, không làm yếu regression. Nếu Windows safe handle-relative primitives chưa được chứng minh, fail closed và không tuyên bố Windows upload supported.
 
 **Signed:** Ka — Delegated Work 28 Operational Owner / Remediation Lead
+
+
+## 2026-11-27 — JRN-W28-139 — Tạo Linux handle-anchored filesystem primitive (chưa tích hợp)
+
+**Name:** Ka  
+**Title:** Delegated Work 28 Operational Owner / F01 Remediation Lead  
+**Date-Time:** 2026-11-27 (Asia/Ho_Chi_Minh)  
+**Priority:** P0 — F01
+
+### IMPLEMENTATION
+- Tạo module `04_CODE/sandbox_handle_fs_v1.py` trên nhánh `ka/w28-f01-handle-backend-20261127-r5`.
+- Linux backend mở Sandbox root bằng cách duyệt từng component từ `/` qua directory FD + `O_NOFOLLOW`; Work và nested directory được mở tương đối từ pinned parent FD.
+- Primitive hiện có: exclusive staging create, descriptor-based open/write/pread digest/truncate, directory-relative unlink, atomic no-replace hard-link promotion và fsync directory.
+- Windows hiện chưa được hỗ trợ bởi module này; backend khởi tạo fail-closed nếu không có POSIX no-follow primitives. Không có pathname fallback.
+- Thêm `05_TEST/test_sandbox_handle_fs_v1.py` với kiểm tra Work directory bị thay bằng symlink sau khi FD đã pin, nested symlink rejection, exclusive create, no-replace promotion và descriptor-based binary I/O.
+- Sửa double-close risk trong context manager directory sau review source tĩnh.
+
+### EXACT SOURCE
+- Backend initial commit: `ba0802627f5c581a2780707d4247ecfb2dd065cd`.
+- Backend test commit: `f75dfed0dee09fee09112dbe993daab87694f7e0`.
+- Backend correction commit: `074bb31df0e812b0fd7b544fcdc251ecaf8df7f7`.
+- Latest source blob after correction: `79c66518cf727340f77a828188c59bc2ed4aadb2`.
+- These commits are on r5 only. No canonical or PR #84 change.
+
+### LIMITS / STATUS
+- This is a primitive module and component test, NOT yet integrated into `SandboxBinaryUploadService`.
+- Existing upload engine still uses pathname-based lifecycle operations. F01 remains BLOCKED.
+- No test execution result is claimed yet; no exact-SHA CI run has been observed for these commits.
+- No Windows native handle-relative implementation or Windows acceptance evidence exists.
+- Do not open PR / merge / rebase / deploy / register MCP / perform live upload / release on this checkpoint.
+- F02 PARTIAL / NOT VERIFIED; F03/F04 BLOCKED. Execution Gate CLOSED. Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+**Next action:** integrate the backend into every upload lifecycle path (startup reconciliation, begin, chunk, digest/readback, finalize/recovery, abort and cleanup), then add Windows native implementation or retain Windows upload as unsupported; run exact-SHA Linux/Windows CI and require independent QA/security review.
+
+**Signed:** Ka — Delegated Work 28 Operational Owner / F01 Remediation Lead
