@@ -144,7 +144,7 @@ class LinuxHandleFilesystem:
     def create_exclusive(parent_fd: int, name: str, mode: int = 0o600) -> PinnedFile:
         if not name or name in (".", "..") or "/" in name or "\\" in name:
             raise HandleFilesystemError("INVALID_LEAF_NAME")
-        flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | getattr(os, "O_CLOEXEC", 0)
+        flags = os.O_RDWR | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | getattr(os, "O_CLOEXEC", 0)
         fd = os.open(name, flags, mode, dir_fd=parent_fd)
         return PinnedFile(fd)
 
