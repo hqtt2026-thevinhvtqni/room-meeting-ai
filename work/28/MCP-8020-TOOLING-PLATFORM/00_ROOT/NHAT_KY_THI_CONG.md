@@ -3548,3 +3548,44 @@ Governance ownership handoff: CANONICALIZED / READBACK VERIFIED. PR #78: candida
 **Next action:** implement the full filesystem backend and refactor every upload lifecycle path. Do not call CI red a PASS or request acceptance until native Linux/Windows adversarial suites pass on the exact implementation SHA.
 
 **Signed:** Ka — Delegated Work 28 Operational Owner / Remediation Lead
+
+
+
+## 2026-11-27 — JRN-W28-137 — Re-verify source, exact-SHA CI completion và branch divergence PR #84
+
+**Name:** Ka  
+**Title:** Delegated Work 28 Operational Owner / Remediation Lead  
+**Date-Time:** 2026-11-27 (Asia/Ho_Chi_Minh)  
+**Priority:** P0 — F01 / exact evidence verification  
+**PR:** #84 — OPEN / DRAFT / UNMERGED  
+**Candidate branch:** `ka/w28-remediation-20261127-r4`  
+**Candidate source commit (recorded in JRN-136):** `1ec93cd472bf4e94a5dff6740b6ab14eaa6326bf`  
+**Source blob SHA read back:** `f13bd1ae09ba79ab2f19f538d752e863fffcb19c`  
+**Workflow:** #519 / run ID `45888624652`
+
+### READ / TRACE / VERIFY
+- Re-fetched the complete candidate upload engine from PR branch r4. The 530-line source still uses pathname operations in security-sensitive paths, including `Path.resolve()`, `is_symlink()`, `exists()`, `mkdir()`, `iterdir()`, `open(path)`, `os.open(path)` and `unlink()`. No handle-anchored filesystem backend is present.
+- Re-read the parent-swap regression. It swaps the validated Work directory for a symlink immediately after `no_symlinks()`; the test requires `begin()` to raise and verifies no staging directory is created outside the Sandbox. The regression remains enabled.
+- Retrieved completed job conclusions for workflow #519:
+  - Unit/regression job `140145478066`: FAILURE.
+  - Native Windows upload job `140145478101`: FAILURE.
+  - Native Linux upload job `140145478113`: FAILURE.
+  - Execution Host lifecycle Windows `140145477719`: SUCCESS.
+  - Execution Host lifecycle Linux `140145478344`: SUCCESS.
+  - Automatic E2E report `140145732685`: SUCCESS (report generation only).
+  - Immutable source artifact `140145734435`: SKIPPED.
+- Read raw failure excerpts for all three failed upload/regression jobs. Each fails at `test_begin_rejects_parent_swap_after_validation` with `AssertionError: UploadError not raised`.
+- Confirmed the Auto E2E report artifact `work28-auto-e2e-report-45888624652` exists and is not expired. The workflow source explicitly sets deployed MCP→Core→Runtime E2E to BLOCKED and Execution Gate to CLOSED; report generation success is not acceptance.
+- Re-ran branch comparison against canonical `work/28-mcp-tooling-platform`: base HEAD `10512d6021684e41bd097edbb4e6bfe520506ed4`; PR branch is DIVERGED, 5 ahead / 1 behind; merge base `b5dd6e0e461bc8b18ea786d1159e82f8214e20eb`. The one-behind commit is the canonical journal advancement. Do not merge/rebase blindly.
+
+### DECISION / LIMITS
+- F01 remains BLOCKED. The source still has no handle-anchored/no-follow implementation; native Linux and Windows tests independently reproduce the same P0 parent-swap failure.
+- This verification did not modify candidate source or tests. No implementation fix or PASS is claimed.
+- PR #84 remains DRAFT / UNMERGED. No merge, rebase, force-push, MCP registration, deployment, live upload or release.
+- F02 PARTIAL / NOT VERIFIED; F03 and F04 BLOCKED.
+- Independent An QA NOT ACCEPTED; independent security reviewer UNASSIGNED.
+- Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+**Next action:** start the implementation candidate from the latest canonical HEAD, not the diverged PR branch. Implement and test a unified handle-anchored backend across the complete lifecycle; retain the parent-swap regression and require exact-SHA native Linux/Windows results before independent QA/security review.
+
+**Signed:** Ka — Delegated Work 28 Operational Owner / Remediation Lead
