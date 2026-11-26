@@ -3029,3 +3029,23 @@ PR #78 OPEN / DRAFT / UNMERGED; journal synchronization BLOCKED; F01–F04 chưa
 - Canonical readback for this JRN-W28-120 entry is pending this append's verification.
 
 **STATUS:** GOVERNANCE CANONICAL SYNC RECORDED; PR #78 METADATA CORRECTED; F01–F04 OPEN; EXECUTION GATE CLOSED; NOT RELEASED.
+
+
+## 2026-11-26 09:38 +07 — JRN-W28-121 — Readback xác nhận governance canonical và PR metadata
+
+**Name:** Ka  
+**Title:** Delegated Work 28 Operational Owner / Delivery Coordinator  
+**Date-Time:** 2026-11-26 09:38 +07 (Asia/Ho_Chi_Minh)  
+**Priority:** P0
+
+### VERIFY
+- GitHub fetch readback xác nhận canonical journal blob SHA 15b0fdd2bfb429d6eb3be5cafa67c286142ea3b7 có đủ JRN-W28-117 (late canonical sync), JRN-W28-119 và JRN-W28-120.
+- GitHub fetch readback xác nhận official minutes chứa BB-W28-20261126-004; Work Manifest xác định Ka là delegated operational owner và Xu không còn active W28 assignment; master plan có governance addendum 2026-11-26; Document Register đã đăng ký BB-W28-20261126-004 và revision plan.
+- PR #78 metadata readback xác nhận title mới, body phản ánh ownership 2026-11-26, state OPEN / DRAFT / UNMERGED; exact head SHA không thay đổi: 6e9eb0e935ee74237cc40287c903d72e6ae74473.
+- PR body được cập nhật lại số behind sau canonical journal commit mới. Compare hiện tại: DIVERGED, 73 ahead / 11 behind; merge base 4b2a8663a0b9ff40aad8e6812efff197b5085de5; canonical branch tip 427a5770a86ab1eab3d79413d0053b435ca92040.
+- Không có source edit, test run, CI run, live upload, merge, registration, deployment hoặc Execution Gate change trong checkpoint này.
+
+### STATUS
+Governance ownership handoff: CANONICALIZED / READBACK VERIFIED. PR #78: candidate only, DIVERGED, NOT MERGE-READY. F01 BLOCKED; F02 PARTIAL / NOT VERIFIED; F03 BLOCKED; F04 BLOCKED; Independent Acceptance NOT ACCEPTED; Execution Gate CLOSED; NOT RELEASED.
+
+**Signed:** Ka — Delegated Work 28 Operational Owner / Delivery Coordinator
