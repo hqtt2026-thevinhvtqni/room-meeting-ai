@@ -135,3 +135,21 @@ Each test records exact OS/kernel/filesystem, Python/runtime version, source SHA
 8. Only after all findings are closed may PR status/acceptance be reconsidered. This document itself is design evidence only.
 
 **Current disposition:** F01 BLOCKED; F02 PARTIAL / NOT VERIFIED; F03 BLOCKED; F04 BLOCKED; PR #85 DRAFT / UNMERGED; Execution Gate CLOSED; Work28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+
+### 4.1 Linux `linkat(AT_EMPTY_PATH)` feasibility — review result (not runtime-verified)
+
+Linux `linkat(oldfd, "", newdirfd, newleaf, AT_EMPTY_PATH)` is the candidate because the source is named by an already-open file descriptor rather than by a mutable staging leaf. When the kernel accepts this operation, the destination hard link refers to the object held by that descriptor; destination creation is no-replace because an existing destination entry causes the link operation to fail with `EEXIST`.
+
+This is a **conditional candidate, not an unconditional portable solution**:
+
+- `AT_EMPTY_PATH` is Linux-specific and requires the relevant GNU feature definitions at the C interface.
+- The documented `AT_EMPTY_PATH` route requires `CAP_DAC_READ_SEARCH`; ordinary service processes must not assume they possess this capability. Capability availability must be checked in the actual service execution context, not inferred from root in a developer shell.
+- The source and destination must be on the same filesystem for a hard link. Cross-device failure is a hard failure, not a reason to copy bytes or fall back to a pathname rename.
+- The target filesystem must support hard links and the required durability semantics. The exact kernel, mount, filesystem and security policy must be part of the acceptance record.
+- The operation must be exercised using the actual Python/runtime binding or a narrowly reviewed syscall wrapper. A feature flag or presence of a constant does not prove that the kernel call is available or authorized.
+- A `/proc/self/fd/N` + `AT_SYMLINK_FOLLOW` route is a separate candidate only; it depends on procfs and must receive its own threat analysis and adversarial tests. It is not an automatic fallback.
+
+**Important limitation:** exact-handle publication solves source-object selection, but does not by itself make deletion of the staging directory entry safe. Linux has no general unlink-by-open-file-descriptor primitive. If an attacker can replace the staging leaf, a later `unlinkat(staging_dir_fd, staging_leaf)` can delete the replacement. The design must therefore either (a) establish and test an explicit directory ownership/permission boundary that prevents untrusted replacement for the entire upload lifecycle, or (b) retain the extra staging link and quarantine/reconcile it without unsafe unlink. A pre-unlink `fstatat`/inode comparison followed by `unlinkat` is still TOCTOU and is not an acceptable proof.
+
+**Disposition:** do not implement publication or staging cleanup based only on the API name. First run a capability/filesystem matrix in the actual target service identity, prove exact source identity and destination no-replace, and separately prove staging-name cleanup safety. If any proof is unavailable, return `ATOMIC_HANDLE_PUBLICATION_UNAVAILABLE` / cleanup-blocked and retain FINALIZING; never silently downgrade to pathname operations.
