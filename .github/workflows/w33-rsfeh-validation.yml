@@ -6,6 +6,7 @@ on:
       - w33/rsfeh-validation-2026-11-27
     paths:
       - "work/33/ROOM-SHARED-FILE-EVIDENCE-HUB/RSFEH_VALIDATION/**"
+      - "work/33/ROOM-SHARED-FILE-EVIDENCE-HUB/RSFEH_VALIDATION/CLOUD_DRIVE_VALIDATION/**"
       - ".github/workflows/w33-rsfeh-validation.yml"
 
 permissions:
@@ -53,4 +54,5 @@ jobs:
           . .venv/bin/activate
           set -o pipefail
           python -m pytest -vv 05_TEST/unit/test_store.py 05_TEST/e2e/test_e2e_cli.py 05_TEST/security/test_known_gaps.py 2>&1 | tee pytest-validation.log
+          python -m pytest -vv CLOUD_DRIVE_VALIDATION/05_TEST/test_recovery_inspector_digest.py 2>&1 | tee cloud-drive-validation.log
 
