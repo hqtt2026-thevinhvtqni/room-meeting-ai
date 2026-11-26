@@ -49,3 +49,13 @@
 - **Decision:** Retain fail-closed Work 33 authorizer. Do not treat the canonical W13 bridge as absent; do not treat the PR implementation as approved/current-main/runtime-ready either. W1111 owner must fix source binding, address assignment and atomicity contracts, reconcile branch, and provide exact-HEAD CI plus approved runtime evidence before Work 33 adapter implementation.
 - **Evidence correction:** DOC-002 was replaced with the corrected canonical-path analysis. New commit `98a775b3f349814bd277e638cb9f7dc497e79531`.
 - **Safety boundary:** Read-only source and GitHub metadata inspection only. No tests run, no secrets, no code changes in W1111, no merge/deployment. No PASS claimed.
+
+## 2026-11-26 — Cloud Drive Core Authorizer boundary defined
+
+- **Activity:** READ → TRACE → ANALYZE → DECIDE → BUILD (design artifact) → VERIFY.
+- **Source detail:** W1111 `ExecutionAuthority.authenticate()` verifies a configured service credential against a digest registry; `issue_grant()` checks service identity against Work `allowed_identities` and purpose against `allowed_purposes`; W13 Host currently enforces `pytest_run`. This is a service-to-execution-host grant, not proof of the originating human or AI agent and not a Cloud Drive object permission.
+- **Decision:** Never reuse pytest execution grants for upload/download/share/delete/space membership/quota/audit/recovery. Work 33 keeps `UnconfiguredAuthorizer` default-deny. Require a separate Core principal assertion for HUMAN_USER/AI_AGENT/SERVICE, delegation semantics, tenant and action/resource-scoped authorization decisions before a production adapter exists.
+- **Design artifact:** Created `06_EVIDENCE/DOC-003_CLOUD_DRIVE_CORE_AUTHORIZER_INTEGRATION_BOUNDARY.md` on GitHub main; commit `b435ce1f8e2179e0ed740dc46d3469146087c38e`. It records the conceptual principal/decision contract, denied mappings, acceptance gates and future adapter seam. No CoreAuthorizer code was implemented.
+- **Review status:** PR #48 review submissions and inline review threads returned empty lists. This is not proof of approval or code correctness.
+- **Safety boundary:** Read-only source review plus Work 33 documentation write only. No W1111 code changes, tests, runtime requests, secret reads, merge or deployment. No PASS claimed.
+- **Next:** Continue independent Work 33 storage/upload prototype static review and identify issues that can be resolved without Core identity. Revisit Sandbox sync only when its MCP endpoint is available.
