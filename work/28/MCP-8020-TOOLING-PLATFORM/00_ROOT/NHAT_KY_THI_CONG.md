@@ -3179,3 +3179,33 @@ Governance ownership handoff: CANONICALIZED / READBACK VERIFIED. PR #78: candida
 **STATUS:** Exact-SHA CI IN PROGRESS; Work 28 remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
 
 **Signed:** Ka — Delegated Work 28 Operational Owner / Delivery Coordinator
+
+
+## 2026-11-26 12:51 +07 — JRN-W28-126 — Native Windows upload component CI PASS (exact SHA)
+
+**Name:** Ka  
+**Title:** Delegated Work 28 Operational Owner / Delivery Coordinator  
+**Date-Time:** 2026-11-26 12:51 +07 (Asia/Ho_Chi_Minh)  
+**Priority:** P0  
+**PR:** #81  
+**Exact SHA:** 25cc3afbab0fb07c1bd1dba70ce73411017b9a25  
+**Workflow:** #511 / 45763312189
+
+### VERIFIED CI RESULTS
+- `Binary upload engine tests (native Windows)`: **SUCCESS**, job ID `139718543925`, runner label `windows-2025`. The job executed unittest discovery for `test_sandbox_binary_upload_v1.py` on the exact triggering SHA.
+- `execution-host-lifecycle-windows`: SUCCESS, job ID `139718543487`.
+- `execution-host-lifecycle-linux`: SUCCESS, job ID `139718543851`.
+- `unit-regression-tests`: main Work 28 unit/regression step SUCCESS; full Work 28 pytest suite was still IN_PROGRESS at last poll, job ID `139718543860`.
+- PR #81 description updated to reflect the three completed successful jobs and the remaining in-progress suite.
+
+### INTERPRETATION / LIMITS
+- This is configured GitHub Actions CI evidence only. It proves the current baseline's native Windows component test job completed successfully, not that F01 is closed.
+- No native Linux binary-upload component job exists in this workflow yet.
+- No adversarial parent-swap/reparse-point tests have been added by this Ka baseline import; F01 remains BLOCKED.
+- F02 remains PARTIAL / NOT VERIFIED; F03 BLOCKED; F04 BLOCKED.
+- No An independent acceptance, separate security review, live Sandbox binary upload/readback or byte-for-byte SHA-256 parity.
+- No merge, registration, deployment, Execution Gate opening or release.
+
+**STATUS:** Windows upload component CI PASS for exact SHA only; overall PR CI still IN PROGRESS; Work 28 remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+**Signed:** Ka — Delegated Work 28 Operational Owner / Delivery Coordinator
