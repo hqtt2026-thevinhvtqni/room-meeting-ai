@@ -195,12 +195,39 @@ jobs:
           Get-Content lifecycle-wp23-schema.txt -Tail 80 -ErrorAction SilentlyContinue | Out-File -Append $env:GITHUB_STEP_SUMMARY
         shell: pwsh
 
+
+  binary-upload-engine-windows:
+    name: Binary upload engine tests (native Windows)
+    runs-on: windows-2025
+    timeout-minutes: 15
+    steps:
+      - name: Fetch exact triggering revision without submodule recursion
+        env:
+          REPOSITORY: ${{ github.repository }}
+          REVISION: ${{ github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${REPOSITORY}.git"
+          git fetch --no-tags --depth=1 origin "${REVISION}"
+          git checkout --detach FETCH_HEAD
+        shell: bash
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+      - name: Run binary upload engine component tests on native Windows
+        env:
+          PYTHONPATH: work/28/MCP-8020-TOOLING-PLATFORM/04_CODE
+        run: |
+          python -m unittest discover -s work/28/MCP-8020-TOOLING-PLATFORM/05_TEST -p 'test_sandbox_binary_upload_v1.py' -v
+        shell: pwsh
+
   immutable-source-artifact:
     name: Build and retest exact-SHA Work 28 source artifact
     needs:
       - unit-regression-tests
       - execution-host-lifecycle-linux
       - execution-host-lifecycle-windows
+      - binary-upload-engine-windows
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
@@ -254,6 +281,7 @@ jobs:
       - unit-regression-tests
       - execution-host-lifecycle-linux
       - execution-host-lifecycle-windows
+      - binary-upload-engine-windows
       - immutable-source-artifact
     runs-on: ubuntu-24.04
     steps:
@@ -262,6 +290,7 @@ jobs:
           UNIT_RESULT: ${{ needs.unit-regression-tests.result }}
           LINUX_RESULT: ${{ needs.execution-host-lifecycle-linux.result }}
           WINDOWS_RESULT: ${{ needs.execution-host-lifecycle-windows.result }}
+          BINARY_WINDOWS_RESULT: ${{ needs.binary-upload-engine-windows.result }}
           ARTIFACT_RESULT: ${{ needs.immutable-source-artifact.result }}
           SOURCE_COMMIT: ${{ github.sha }}
           WORKFLOW_RUN_ID: ${{ github.run_id }}
@@ -272,6 +301,7 @@ jobs:
               "unit_regression": os.environ["UNIT_RESULT"],
               "execution_host_linux": os.environ["LINUX_RESULT"],
               "execution_host_windows": os.environ["WINDOWS_RESULT"],
+              "binary_upload_engine_windows": os.environ["BINARY_WINDOWS_RESULT"],
               "immutable_source_artifact": os.environ["ARTIFACT_RESULT"],
           }
           ci_ok = all(value == "success" for value in jobs.values())
