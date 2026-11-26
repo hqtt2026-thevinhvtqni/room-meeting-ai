@@ -405,3 +405,12 @@
 - Negative test requirements: spoof another registered human/AI; missing/invalid/expired/revoked token; wrong issuer/audience; cross-tenant/Work; Core timeout => DENY.
 - DOC-007 created in Sandbox and GitHub main at 06_EVIDENCE/DOC-007_IDENTITY_REGISTRY_AUTHENTICATION_BOUNDARY.md; commit 09397dfbcf421931b486e734e930000229272cc8.
 - No test execution, runtime probe, secrets/config changes, Core code changes, merge or deployment. Authentication integration remains BLOCKED.
+
+
+## 2026-11-27 — Provider-neutral Cloud Drive Core adapter design gate (DOC-008)
+- READ: Sandbox cloud_drive/service/authorization.py confirms Principal(subject_id) is a caller-populated data object; Authorizer protocol only accepts principal/scope/action; UnconfiguredAuthorizer denies all. Existing CORE_IDENTITY_PERMISSION_CONTRACT_V1 remains proposed only; no verified Core API fields/routes.
+- DESIGN: Defined two distinct stages: CredentialVerifier creates immutable server-side VerifiedPrincipal from a verified credential; CorePolicyClient returns explicit resource/action AuthorizationDecision with policy version/freshness. Storage adapters receive neither credentials nor authority to decide permissions.
+- SCOPE: Human, AI Agent and Service principal type separation; tenant/Work/space/object scope; all read/write/upload/share/quota/audit/recovery operations require explicit authorization; sensitive transitions reauthorize; any timeout/invalid/stale response denies.
+- SAFETY: Internal ports only, not Core HTTP API. No JWT/OAuth/mTLS selection, route, claims, key URL or token schema invented. No implementation until actual issuer/verifier and policy contract are evidenced. Current UnconfiguredAuthorizer remains DENY ALL.
+- DOC-008 created in Sandbox and GitHub main: 03_ARCHITECTURE/CLOUD_DRIVE_CORE_ADAPTER_DESIGN_GATE_V1.md; GitHub commit 0d8a161b4711af9cb9f13931d81daac6bb5e6b93.
+- No code/runtime/test/secrets/Core changes, no merge or deployment. Gate A Core discovery remains BLOCKED.
