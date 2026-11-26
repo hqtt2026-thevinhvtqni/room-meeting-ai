@@ -193,3 +193,10 @@
 - **EXECUTION LIMIT:** Available Work Sandbox tools expose list/read/write/append, not Python/shell/pytest execution. No external billed sandbox was created. Fresh pytest remains NOT RUN.
 - **DISPOSITION:** Core source is byte-identical to canonical historical hashes (4/4). Full 19-file recovery is PARTIAL (3 hash mismatches). Preserve current bytes. No source mutation, production/Core/provider action, or PASS claim.
 - **NEXT:** Obtain an authorized execution environment/export for isolated pytest; investigate provenance of the three mismatched files before any canonicalization.
+
+
+### Follow-up — Static inspection of the three hash-mismatched files
+- Current `05_TEST/e2e/test_e2e_cli.py` contains six test functions (`test_a1_init`, `test_a2_a3_put_get_meta`, `test_a4_verify_tamper`, `test_a5_bad_id`, `test_a6_a7_audit_search_link`, `test_a8_consistent_after_error`); unit test file contains 11. Historical rerun log lists the same 17 test names, but the e2e source hash differs from the manifest. Matching names do not prove identical test bodies.
+- Current `00_ROOT/WORK.md` labels the independent package DONE and live Core integration BLOCKED, but its bytes differ from the manifest version. This is a historical document claim, not a current acceptance decision.
+- Current `07_RELEASE/HANDOFF.md` still points to the missing Grok local build path and quotes historical pytest logs; its hash differs from the manifest. It is not a byte-exact original handoff.
+- No attempt was made to repair/overwrite these files. Mismatch remains a lineage variance; current e2e source and historical logs were not executed in this environment.
