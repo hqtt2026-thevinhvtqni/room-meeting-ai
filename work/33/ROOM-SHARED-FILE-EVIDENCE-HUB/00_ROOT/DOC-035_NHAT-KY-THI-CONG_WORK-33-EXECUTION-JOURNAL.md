@@ -211,3 +211,11 @@
 - GitHub Actions inspection: main currently lists three workflows under `.github/workflows`: W118 automation, W300 dashboard CI, and Work 70 preview-host tests. W300/Work 70 use GitHub-hosted `ubuntu-latest` and/or `windows-latest`; none targets Work 33 or its Sandbox-only source. Repository API metadata reports the repository public. This does not itself establish an authorized W33 workflow or current account usage/billing entitlement.
 - Connector supports GET/read operations for workflow metadata and logs but no workflow-dispatch action was exposed in the available GitHub tool set. No branch, workflow, or source sync was created. No Actions run was triggered.
 - Disposition: historical 17/17 remains HISTORICAL / NOT FRESHLY VERIFIED; current source static coverage review complete for the inspected test files; fresh pytest NOT RUN; no PASS granted. Next executable path requires either a user-authorized local runner/export or an explicitly approved isolated GitHub Actions validation branch/workflow after confirming no cost/permission concern. Do not write to main or reconstruct v0.2.
+
+
+## 2026-11-27 — Zero-cost GitHub Actions runner policy check
+- Official GitHub documentation checked after confirming repository metadata reports `private=false`.
+- Standard GitHub-hosted runners are free for public repositories; larger runners are billed. Sources: GitHub Docs “Billing and usage” and “Workflow syntax / Choosing the runner”.
+- Safe candidate for a future isolated validation workflow: one standard `ubuntu-latest` job only; no larger runner, no paid external service, no artifact upload/cache, no secrets, no production credentials, and no deployment. The job would checkout only an isolated validation branch and run the historical RSFEH test suite against the exact restored source bytes.
+- This confirms the runner class can fit the zero-budget constraint; it does NOT establish that repository Actions are enabled, nor authorize creating a branch/workflow or triggering execution. No workflow has been created or run.
+- Decision requested: Vinh's explicit approval is still required before creating an isolated validation branch/workflow and triggering the free standard runner. Main remains untouched.
