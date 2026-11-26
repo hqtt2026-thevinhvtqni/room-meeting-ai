@@ -3688,3 +3688,40 @@ Governance ownership handoff: CANONICALIZED / READBACK VERIFIED. PR #78: candida
 **Next action:** verify whether PR #85 receives workflow runs; then use the results to fix prototype/component test defects before integrating handle operations through the complete upload lifecycle. Do not weaken parent-swap regression or add pathname fallback.
 
 **Signed:** Ka — Delegated Work 28 Operational Owner / F01 Remediation Lead
+
+
+
+## 2026-11-27 — JRN-W28-141 — Đọc CI #521, sửa lỗi file descriptor prototype và giữ nguyên blocker F01
+
+**Name:** Ka  
+**Title:** Delegated Work 28 Operational Owner / F01 Remediation Lead  
+**Date-Time:** 2026-11-27 (Asia/Ho_Chi_Minh)  
+**Priority:** P0 — F01 / exact-SHA CI triage  
+**PR:** #85 — OPEN / DRAFT / UNMERGED  
+**Failing CI:** Workflow #521 / run ID `45891422340`  
+**Initial head:** `f3c3a72184d282af7ea49efad4dd399e0fd5f8ed`  
+**Fix commit:** `2dfce70479156cd73e83f7aebfd34f9812a064fc`
+
+### EXACT CI EVIDENCE
+- Exact-SHA workflow #521 completed with conclusion FAILURE.
+- `unit-regression-tests` job `140154854273`: FAILURE at step “Run Work 28 unit and regression tests”; 380 tests ran.
+- Prototype component test `test_digest_and_write_are_descriptor_based`: ERROR `OSError: [Errno 9] Bad file descriptor`. Root cause: `create_exclusive()` opened staging descriptor with `O_WRONLY`, but the component test subsequently reads/digests that same descriptor using `pread()`.
+- Existing security regression `test_begin_rejects_parent_swap_after_validation`: FAILURE — expected `UploadError` was not raised. This is expected evidence that the upload service remains pathname-based and the prototype is not integrated; it is not waived.
+- `execution-host-lifecycle-linux` and `execution-host-lifecycle-windows`: SUCCESS, but these are not upload acceptance.
+- `automatic-e2e-gate-report`: SUCCESS means report generation only; not runtime E2E acceptance.
+- Exact CI did not reach full pytest step because unittest step failed. No upload suite PASS.
+
+### CORRECTION
+- Updated `sandbox_handle_fs_v1.py` so exclusive staging creation uses `O_RDWR | O_CREAT | O_EXCL | O_NOFOLLOW`, allowing descriptor-based readback/digest on the same pinned descriptor while preserving exclusive no-follow creation.
+- Fix commit: `2dfce70479156cd73e83f7aebfd34f9812a064fc`.
+- This is a targeted correction only. It does not integrate the backend or remediate the parent-swap defect.
+
+### STATUS / NEXT
+- F01 remains BLOCKED. Parent-swap regression remains mandatory and failing until the service lifecycle is converted to handle-relative operations.
+- F02 PARTIAL / NOT VERIFIED; F03/F04 BLOCKED.
+- PR #85 OPEN / DRAFT / UNMERGED. No merge, rebase, MCP registration, deployment, live upload or release.
+- Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+**Next action:** wait for exact-SHA CI on the correction commit, then fix all newly exposed component defects. Only after prototype tests pass, integrate all lifecycle paths without pathname fallback and retain the parent-swap regression.
+
+**Signed:** Ka — Delegated Work 28 Operational Owner / F01 Remediation Lead
