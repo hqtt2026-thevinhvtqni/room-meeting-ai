@@ -3980,3 +3980,35 @@ Do not bolt the Linux primitive onto only `begin()`. The service needs one files
 - If no approved host diagnostic path exists, retain fail-closed behavior. Do not invent or simulate runtime evidence.
 
 **STATUS:** MCP 8030 OBSERVABILITY LIMIT RECORDED / HOST RUNTIME NOT OBSERVED / F01 BLOCKED / F02 PARTIAL / F03-F04 BLOCKED / PR #85 DRAFT-UNMERGED / EXECUTION GATE CLOSED / NOT RELEASED.
+
+
+## 2026-11-27 — JRN-W28-149 — Existing PC provenance collector discovered; scope corrected
+
+**Người thực hiện:** Ka  
+**Chức danh:** W28 delegated implementation / architecture owner  
+**Execution time:** 2026-11-27 UTC+07:00  
+**Branch:** `ka/w28-f01-handle-backend-20261127-r5`  
+**Design note:** `work/28/MCP-8020-TOOLING-PLATFORM/03_ARCHITECTURE/W28_PC_PROVENANCE_COLLECTOR_SCOPE_AND_REMAINING_RUNTIME_GAP_V1.md`
+
+### EVIDENCE / DISCOVERY
+- Re-inspected Work 28 Sandbox inventory through MCP 8030 and found the existing PC-side read-only collector and its runbook:
+  - `06_EVIDENCE/PC_READONLY_LIVE_PROVENANCE_COLLECTOR_20261123.md`
+  - `06_EVIDENCE/PC_READONLY_LIVE_PROVENANCE_COLLECTOR_20261123.ps1`
+  - Historical analysis `06_EVIDENCE/VI_LIVE_PROVENANCE_ANALYSIS_20261123.md`.
+- Read the collector source through `sandbox_read_probe`. It reads local branch/HEAD/status, listener metadata for 8000/8001/8030/8031, selected source hashes and performs MCP initialize + tools/list only against the historically recorded endpoint. It does not call tools/call, probe 8020, restart services or print secrets/full process command lines.
+- Read historical VI analysis: PC evidence captured 2026-11-23 reported branch main, dirty HEAD `05db862cd2ff01cd288cf64cf0be5a9aa05ee816`, listeners 8000 PID 2884, 8030 PID 7160 and 8031 PID 18540, plus successful remote 17-tool tools/list. These are historical user-provided collector observations, not current state.
+- Current MCP 8030 tool inventory still has no host command/process inspection action. The existing collector requires a PC operator to run it; Ka cannot execute it via current MCP tools.
+
+### CORRECTION / LIMITATION
+- Corrected the previous statement: it was too broad to say there is no existing PC diagnostic path. A documented read-only PC provenance collector DOES exist.
+- The collector does NOT capture the actual upload-service staging ACL/ownership, Windows token privileges, file handle identity, Linux capabilities/mount data, or safe publication semantics. It cannot close F01.
+- No current collector run was performed. Historical evidence is not treated as current.
+- Added `W28_PC_PROVENANCE_COLLECTOR_SCOPE_AND_REMAINING_RUNTIME_GAP_V1.md` to define scope, limitations and minimum return artifacts.
+
+### NEXT
+- If the PC repository path and recorded endpoint remain the intended target, Vinh/authorized PC operator must run the existing collector and return only `summary.txt`, `mcp_tools_list_raw.txt` if created, and exact evidence folder timestamp.
+- No secrets, .env, auth headers, environment variables or full process command lines.
+- After current provenance is read back, determine whether upload service process and actual Sandbox path can be identified. Any filesystem security probe needs separate reviewed authorization and an isolated lab.
+- No source remediation, runtime PASS, upload E2E PASS or acceptance is claimed.
+
+**STATUS:** EXISTING PC COLLECTOR FOUND / CURRENT RUN NOT AVAILABLE / F01 BLOCKED / F02 PARTIAL / F03-F04 BLOCKED / PR #85 DRAFT-UNMERGED / EXECUTION GATE CLOSED / NOT RELEASED.
