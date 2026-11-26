@@ -7,6 +7,8 @@ import pytest
 from cloud_drive.service.audit import AuditWriter, AuditWriteError
 from cloud_drive.storage.protocol import ObjectRef, StoredObject
 from cloud_drive.uploads.session_manager import UploadSessionManager
+from cloud_drive.service.authorization import Principal, AuthorizationDenied
+from cloud_drive.service.upload_service import UploadService
 
 
 class MemoryStorage:
@@ -184,3 +186,64 @@ def test_abort_audit_failure_rolls_back_state_transition(tmp_path):
             "SELECT status FROM upload_sessions WHERE session_id=?", (session.session_id,)
         ).fetchone()[0]
     assert state == "UPLOADING"
+
+
+class AllowAuthorizer:
+    def authorize(self, *, principal, scope_id, action):
+        return None
+
+
+class DenyAuthorizer:
+    def authorize(self, *, principal, scope_id, action):
+        raise AuthorizationDenied("policy denied")
+
+
+def test_upload_service_audits_authorization_denial_without_creating_session(tmp_path):
+    db, audit, storage, manager = _manager(tmp_path)
+    service = UploadService(manager, DenyAuthorizer())
+    with pytest.raises(AuthorizationDenied):
+        service.begin(
+            principal=Principal("human:vinh"), scope_id="scope-a", expected_size=3
+        )
+    with sqlite3.connect(db) as conn:
+        events = conn.execute(
+            "SELECT action, outcome FROM audit_events ORDER BY sequence"
+        ).fetchall()
+        count = conn.execute("SELECT COUNT(*) FROM upload_sessions").fetchone()[0]
+    assert events == [("AUTHORIZATION_DENIED", "DENY")]
+    assert count == 0
+    assert audit.verify_chain()
+
+
+def test_upload_service_audits_allow_and_read_operations(tmp_path):
+    db, audit, storage, manager = _manager(tmp_path)
+    service = UploadService(manager, AllowAuthorizer())
+    principal = Principal("human:vinh")
+    session = service.begin(principal=principal, scope_id="scope-a", expected_size=4)
+    service.put_part(
+        principal=principal, scope_id="scope-a", session_id=session.session_id,
+        part_number=1, source=io.BytesIO(b"data"),
+    )
+    parts = service.list_parts(
+        principal=principal, scope_id="scope-a", session_id=session.session_id
+    )
+    assert len(parts) == 1
+    with sqlite3.connect(db) as conn:
+        actions = [row[0] for row in conn.execute(
+            "SELECT action FROM audit_events ORDER BY sequence"
+        )]
+    assert actions == [
+        "AUTHORIZATION_ALLOWED", "UPLOAD_SESSION_CREATED",
+        "AUTHORIZATION_ALLOWED", "UPLOAD_PART_ACCEPTED",
+        "AUTHORIZATION_ALLOWED", "UPLOAD_PARTS_LISTED",
+    ]
+    assert audit.verify_chain()
+
+
+def test_upload_service_requires_audit_configuration(tmp_path):
+    db = tmp_path / "no-audit.sqlite3"
+    manager = UploadSessionManager(
+        database=db, staging_root=tmp_path / "staging", storage=MemoryStorage()
+    )
+    with pytest.raises(ValueError, match="audit"):
+        UploadService(manager, AllowAuthorizer())
