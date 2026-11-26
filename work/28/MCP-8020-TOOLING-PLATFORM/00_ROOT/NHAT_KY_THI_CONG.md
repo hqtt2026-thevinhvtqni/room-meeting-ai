@@ -3049,3 +3049,43 @@ PR #78 OPEN / DRAFT / UNMERGED; journal synchronization BLOCKED; F01–F04 chưa
 Governance ownership handoff: CANONICALIZED / READBACK VERIFIED. PR #78: candidate only, DIVERGED, NOT MERGE-READY. F01 BLOCKED; F02 PARTIAL / NOT VERIFIED; F03 BLOCKED; F04 BLOCKED; Independent Acceptance NOT ACCEPTED; Execution Gate CLOSED; NOT RELEASED.
 
 **Signed:** Ka — Delegated Work 28 Operational Owner / Delivery Coordinator
+
+
+## 2026-11-26 12:37 +07 — JRN-W28-122 — Ka xác nhận ownership và khởi tạo remediation lane
+
+**Name:** Ka  
+**Title:** Delegated Work 28 Operational Owner / Delivery Coordinator  
+**Date-Time:** 2026-11-26 12:37 +07 (Asia/Ho_Chi_Minh)  
+**Priority:** P0  
+**Authority:** Vinh — explicit reaffirmation in current conversation  
+**Canonical branch:** work/28-mcp-tooling-platform  
+**Remediation branch:** ka/w28-remediation-20261126
+
+### AUTHORITY / OWNERSHIP
+- Vinh reaffirmed: Ka is authorized to handle Work 28 and execute/log the work. Xu temporarily takes over Work 118.
+- This confirms and continues BB-W28-20261126-004 / JRN-W28-119. No dual ownership: Ka owns W28 operations/remediation; Xu owns W118; An remains independent tester.
+- Ka may coordinate Vi for scoped implementation tasks. An's independent acceptance authority is unchanged. Ka cannot self-certify independent security approval for code Ka implements.
+
+### BRANCH / SOURCE BASELINE
+- Created isolated branch `ka/w28-remediation-20261126` from canonical commit `b88622cef3c6a31d631171cb268f5eacd71efc57`.
+- GitHub compare confirms remediation branch is identical to canonical at creation: 0 ahead / 0 behind. No force update or history rewrite.
+- PR #78 remains OPEN / DRAFT / UNMERGED; head `xu/w28-f02-tests-20261124` at `6e9eb0e935ee74237cc40287c903d72e6ae74473`. Its candidate is divergent from canonical and is not the base of the new Ka lane.
+- PR #78 candidate source and test blobs inspected read-only: engine `f13bd1ae09ba79ab2f19f538d752e863fffcb19c`; tests `0963baa3fd4c724973a08be331c4a9c8ddc4784b`. No test execution was performed in this inspection.
+
+### TECHNICAL FINDINGS — CURRENT EVIDENCE
+- F01 BLOCKED: source uses pathname-based resolve/symlink checks followed by ordinary path open/stat/mkdir/link/unlink. No end-to-end handle-anchored/no-follow traversal; no native Windows reparse-point and POSIX parent-swap race evidence.
+- F02 PARTIAL / NOT VERIFIED: candidate has startup session/chunk/quota reconciliation and orphan staging scan; directory-entry durability, full crash/failure-injection matrix, orphan quarantine/recovery and native-platform proof remain missing.
+- F03 BLOCKED: engine defines an injected CoreUploadAuthorizer Protocol; test fixture uses FakeCore. No verified deployed Core-owned `sandbox.file.upload` grant contract or durable atomic revoke-vs-finalize linearization is present in candidate evidence.
+- F04 BLOCKED: candidate PR changes do not provide a registered raw-byte MCP :8030 transport, tools/list parity, runtime integration or live Sandbox byte-for-byte readback.
+- Candidate source was read, not executed. No PASS is inferred from static inspection or historical CI.
+
+### EXECUTION CONTROL
+- Remediation lane is initialized only; no application source/test file has yet been changed on `ka/w28-remediation-20261126`.
+- Next implementation order: (1) define F01 platform-specific filesystem safety contract and adversarial tests; (2) finish F02 durability/recovery with failure injection; (3) obtain actual Core contract/transaction semantics before F03 adapter; (4) implement F04 only against the actual MCP 8030 registration/runtime interfaces.
+- Do not import PR #78 wholesale or merge its divergent history. Reuse candidate code only after review and controlled application to the isolated Ka branch.
+- Exact-head CI, native platform tests, independent An acceptance and live Sandbox SHA-256 remain mandatory.
+- No merge, deploy, register, live upload, Execution Gate opening or release occurred.
+
+**STATUS:** Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED. F01 BLOCKED; F02 PARTIAL / NOT VERIFIED; F03 BLOCKED; F04 BLOCKED; Independent Acceptance NOT ACCEPTED; Execution Gate CLOSED.
+
+**Signed:** Ka — Delegated Work 28 Operational Owner / Delivery Coordinator
