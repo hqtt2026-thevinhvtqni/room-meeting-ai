@@ -3278,3 +3278,43 @@ Governance ownership handoff: CANONICALIZED / READBACK VERIFIED. PR #78: candida
 **STATUS:** CI run #512 PASS 7/7; deployed E2E BLOCKED; F01–F04 remain open; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
 
 **Signed:** Ka — Delegated Work 28 Operational Owner / Delivery Coordinator
+
+
+## 2026-11-26 12:51 +07 — JRN-W28-129 — F01 source audit: xác nhận TOCTOU còn tồn tại trong upload baseline
+
+**Name:** Ka  
+**Title:** Delegated Work 28 Operational Owner / Remediation Lead  
+**Date-Time:** 2026-11-26 12:51 +07 (Asia/Ho_Chi_Minh)  
+**Priority:** P0 — F01
+
+### READ / TRACE
+- Re-read current canonical Work Manifest, Master Execution Plan V2.0, Architecture Decision V2, Auto E2E Runbook and current PR #81 source/test/workflow files before further changes.
+- Canonical security requirement: deny path/symlink escape; containment must remain valid at the actual filesystem operation, not only at a prior pathname check. Architecture Decision V2 §3.5 and §4 require Work-scoped containment, symlink/traversal defenses, bounded staging and atomic promotion.
+- PR #81 baseline source blob: `f13bd1ae09ba79ab2f19f538d752e863fffcb19c`; test blob: `0963baa3fd4c724973a08be331c4a9c8ddc4784b`.
+- Confirmed source-level sequence in `sandbox_binary_upload_v1.py`:
+  - `work_root()` resolves/checks the Work path and then creates it (lines 228–232).
+  - `no_symlinks()` checks pathname components by `is_symlink()` (lines 233–237).
+  - `begin()` performs pathname checks, then separately calls `staging_dir.mkdir()` and `os.open(staging, ...)` (lines 360–365).
+  - `chunk()`, `recover_finalizing()` and `finalize()` later reopen staging/final paths by pathname (lines 407–408, 420–453, 479–497).
+- These checks are separated from the filesystem operations by a race window. A parent directory can be replaced by a symlink/reparse point after validation and before mkdir/open/link/read/unlink. Existing static symlink test does not exercise this parent-swap race.
+- The current source therefore does not satisfy handle-anchored/no-follow containment. F01 remains BLOCKED.
+
+### DECISION / REMEDIATION DIRECTION
+- Do not claim F01 fixed by adding another pathname `resolve()` or `is_symlink()` check.
+- Required implementation direction: anchor operations to trusted directory handles; traverse each component without following symlinks/reparse points; perform create/open/read/write/link/unlink relative to the verified directory handle; fail closed where the platform cannot provide the required primitive.
+- Linux: use directory file descriptors with `openat`-style operations and `O_NOFOLLOW`/directory constraints, holding handles through the operation.
+- Windows: use native handle-relative/reparse-point-safe operations or an independently reviewed equivalent. A path-only fallback is not acceptable.
+- Add deterministic adversarial tests that swap a validated parent before the subsequent filesystem operation, plus symlink/reparse-point, concurrent replacement and cross-Work escape tests on native Windows and Linux.
+- Preserve F02–F04 scope; do not use F01 patch as authority to invent Core API or expose MCP tools.
+
+### VERIFY / CURRENT STATE
+- This is a read-only source audit and remediation decision; no application source or test file changed in this checkpoint.
+- PR #81 remains OPEN / DRAFT / UNMERGED at exact head `ddd5ff00c95ef966b2a143264dbdfdc7d2cc28ec`.
+- Exact-SHA run #512 (`45763680352`) remains SUCCESS 7/7 jobs, but its upload tests cover the existing baseline and do not exercise the identified parent-swap race.
+- PR branch currently diverges from canonical: 4 commits ahead / 5 behind; merge base `3db1cc68fa0bc521fe241211ef63105e4a9793c2`. No blind rebase/merge/force update performed.
+- F01 BLOCKED; F02 PARTIAL / NOT VERIFIED; F03 BLOCKED; F04 BLOCKED. Independent QA NOT ACCEPTED; independent security reviewer UNASSIGNED.
+- Execution Gate CLOSED; no merge, registration, deployment, live upload or release.
+
+**Next action:** implement and reproduce F01 with handle-anchored operations and native adversarial tests; only then proceed to exact-SHA CI and independent An/security review.
+
+**Signed:** Ka — Delegated Work 28 Operational Owner / Remediation Lead
