@@ -3318,3 +3318,38 @@ Governance ownership handoff: CANONICALIZED / READBACK VERIFIED. PR #78: candida
 **Next action:** implement and reproduce F01 with handle-anchored operations and native adversarial tests; only then proceed to exact-SHA CI and independent An/security review.
 
 **Signed:** Ka — Delegated Work 28 Operational Owner / Remediation Lead
+
+
+## 2026-11-26 12:51 +07 — JRN-W28-130 — F01 parent-swap exploit tái hiện trên Linux và Windows CI
+
+**Name:** Ka  
+**Title:** Delegated Work 28 Operational Owner / Remediation Lead  
+**Date-Time:** 2026-11-26 12:51 +07 (Asia/Ho_Chi_Minh)  
+**Priority:** P0 — F01  
+**PR:** #81  
+**Exact source SHA:** 305305bc7a9c84b144743890375ed971a618d11e  
+**Workflow:** #513 / run ID 45764367890
+
+### BUILD
+- Added deterministic test `test_begin_rejects_parent_swap_after_validation` to `05_TEST/test_sandbox_binary_upload_v1.py`.
+- Test calls the original pathname-based `no_symlinks()`, then replaces the validated Work root with a directory symlink before the subsequent staging-directory/file creation. Expected behavior is fail-closed `UploadError`; no staging object may be created outside the Work root.
+- Test commit: `305305bc7a9c84b144743890375ed971a618d11e`; test file blob `ff931ec949fb77a30bfe7dc8a5dd88fa5d532181`.
+
+### RUN / VERIFY
+- Run #513 completed FAILURE for exact SHA `305305bc7a9c84b144743890375ed971a618d11e`.
+- Native Linux binary upload job `139721601541`: FAILURE. Log: 27 tests, 1 failure; new parent-swap test failed because `UploadError not raised`.
+- Native Windows binary upload job `139721601602`: FAILURE. Log: 27 tests, 1 failure; same assertion `UploadError not raised`.
+- Unit/regression job `139721601414`: FAILURE. Log: 375 tests, 1 failure; same parent-swap assertion.
+- Execution Host lifecycle Linux and Windows jobs: SUCCESS.
+- Auto E2E gate report job: SUCCESS as a report-generation job; immutable artifact job was SKIPPED because required upstream test gates failed.
+- The failure is the intended security regression signal, not an infrastructure/setup error. It proves current upload implementation allows the tested Work-root replacement race on both runner platforms.
+
+### DECISION / LIMITS
+- F01 remains BLOCKED and PR #81 remains DRAFT / NOT MERGE-READY.
+- Do not weaken/skip the regression test to restore green CI.
+- Remediation must replace pathname check-then-use with handle-anchored traversal and operations. Linux must use directory-fd/no-follow primitives; Windows must use native directory/file handles with reparse-point-safe traversal and a design that prevents parent replacement while operations are in progress. A path-only fallback is unacceptable.
+- The current patch only adds a regression test; no application source fix has been made yet.
+- F02 PARTIAL / NOT VERIFIED; F03 BLOCKED; F04 BLOCKED. Independent QA NOT ACCEPTED; independent security reviewer UNASSIGNED.
+- No live Sandbox upload, no byte-for-byte readback, no merge/register/deploy, Execution Gate remains CLOSED and release NOT RELEASED.
+
+**Signed:** Ka — Delegated Work 28 Operational Owner / Remediation Lead
