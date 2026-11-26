@@ -3419,3 +3419,36 @@ Governance ownership handoff: CANONICALIZED / READBACK VERIFIED. PR #78: candida
 **Next action:** inspect PR #82 exact-SHA CI, then implement the full filesystem backend across all lifecycle operations; do not treat clean branch ancestry as product remediation.
 
 **Signed:** Ka — Delegated Work 28 Operational Owner / Remediation Lead
+
+
+## 2026-11-26 20:xx +07 — JRN-W28-133 — PR #82 exact-SHA CI xác nhận F01 regression tiếp tục tái hiện
+
+**Name:** Ka  
+**Title:** Delegated Work 28 Operational Owner / Remediation Lead  
+**Date-Time:** 2026-11-26 20:xx +07 (Asia/Ho_Chi_Minh)  
+**Priority:** P0 — F01  
+**PR:** #82  
+**Exact SHA:** `f0c52ae0ceca3edc1708b20f8d67022f576d4774`  
+**Workflow:** #514 / run ID `45764958955`
+
+### RUN / VERIFY
+- Run #514 completed FAILURE against the exact PR #82 head SHA.
+- Native Windows binary upload job `139723552234`: FAILURE; 27 tests, parent-swap test fails because `UploadError not raised`.
+- Native Linux binary upload job `139723552350`: FAILURE; 27 tests, same assertion.
+- Unit/regression job `139723552247`: FAILURE; 375 tests, one failure from the same regression.
+- Execution Host lifecycle Linux `139723551988` and Windows `139723552246`: SUCCESS.
+- Auto E2E report job `139723754681`: SUCCESS as report generation only.
+- Immutable source artifact job `139723755810`: SKIPPED because required test jobs failed.
+- This independently confirms the same security regression on the cleanly rebuilt branch; no infrastructure error is indicated by the logs.
+
+### CURRENT STATE
+- PR #82 remains OPEN / DRAFT / UNMERGED at exact SHA `f0c52ae0ceca3edc1708b20f8d67022f576d4774`.
+- Branch compare remains 3 ahead / 0 behind canonical; PR #81 is CLOSED / NOT MERGED / SUPERSEDED.
+- F01 remains BLOCKED. The candidate still has no application filesystem remediation; the test is intentionally retained.
+- F02 PARTIAL / NOT VERIFIED; F03 BLOCKED; F04 BLOCKED.
+- Independent QA NOT ACCEPTED; independent security reviewer UNASSIGNED.
+- Execution Gate CLOSED; no merge, registration, deployment, live upload or release.
+
+**Next action:** implement the complete filesystem backend per F01-W28-20261126-001; do not weaken the parent-swap test or label its expected failure as a product pass.
+
+**Signed:** Ka — Delegated Work 28 Operational Owner / Remediation Lead
