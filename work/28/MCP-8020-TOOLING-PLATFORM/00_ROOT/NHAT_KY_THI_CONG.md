@@ -3760,3 +3760,38 @@ Governance ownership handoff: CANONICALIZED / READBACK VERIFIED. PR #78: candida
 **Next action:** refactor the service around pinned Sandbox/Work/destination/staging directory handles as one coherent lifecycle adapter; migrate startup reconciliation, begin, chunk, digest/readback, finalize/recovery, abort and cleanup together. Add exact-SHA Linux adversarial tests before deciding whether a separate Windows-native backend is viable.
 
 **Signed:** Ka — Delegated Work 28 Operational Owner / F01 Remediation Lead
+
+
+
+## 2026-11-27 — JRN-W28-143 — CI #524 xác nhận parent-swap còn lỗi; sửa ownership/close của pinned directory handle
+
+**Name:** Ka  
+**Title:** Delegated Work 28 Operational Owner / F01 Remediation Lead  
+**Date-Time:** 2026-11-27 (Asia/Ho_Chi_Minh)  
+**Priority:** P0 — F01 / backend primitive correctness  
+**PR:** #85 — OPEN / DRAFT / UNMERGED  
+**CI:** Workflow #524 / run ID `45891857146`  
+**Tested SHA:** `b0cdc657321aecad5f2158dad88c1f94343cbecf`  
+**Correction commits:** `dc2c42183e7fb7d4e80f4639fca8018df27d7c11`, `e81cf96b95d4e74f10a2e3a1a6424eda88fd3cfe`, `550c4505bc66a382cc7352f237ce9c97513ec659`
+
+### EXACT CI EVIDENCE
+- Workflow #524 on exact tested SHA completed unit/regression job with FAILURE.
+- 380 tests ran; the sole reported failure remained `test_begin_rejects_parent_swap_after_validation` with `AssertionError: UploadError not raised`.
+- Linux and Windows Execution Host lifecycle jobs SUCCESS; these do not validate Sandbox upload.
+- Automatic E2E report generation was still in progress at inspection. No runtime upload E2E acceptance.
+- The descriptor readback/digest defect fixed in JRN-W28-141 did not recur.
+- Therefore the service remains pathname-based and F01 remains BLOCKED.
+
+### ADDITIONAL CODE REVIEW FINDING AND FIX
+- Review of `sandbox_handle_fs_v1.py` found that `PinnedDirectory.close()` was not idempotently coordinated with the `work()` / `directory()` context manager finalizers: an explicit close could leave the generator finalizer attempting to close the same raw descriptor again.
+- Updated `PinnedDirectory.close()` to atomically detach its descriptor value before calling `os.close`; added context-manager support; changed directory context managers to finalize through the handle object.
+- Added a portable POSIX test for explicit close inside the context, avoiding Linux-only `/proc` assumptions.
+- These are primitive ownership corrections only. No upload service lifecycle integration has been done.
+
+### LIMITS / NEXT
+- F01 BLOCKED; F02 PARTIAL / NOT VERIFIED; F03/F04 BLOCKED.
+- PR #85 OPEN / DRAFT / UNMERGED. No merge, rebase, MCP registration, deployment, live upload or release.
+- Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+- Next: wait for CI on the newest correction SHA; then complete a service-level adapter design that pins Sandbox root → Work root → staging/destination directories for the entire operation and removes every pathname-based lifecycle operation. Preserve the parent-swap regression and test all lifecycle races. Windows remains unsupported/fail-closed until native handle-relative semantics are implemented and tested.
+
+**Signed:** Ka — Delegated Work 28 Operational Owner / F01 Remediation Lead
