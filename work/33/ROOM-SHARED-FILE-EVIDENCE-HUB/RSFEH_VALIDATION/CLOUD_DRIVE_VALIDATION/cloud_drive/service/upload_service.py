@@ -6,7 +6,6 @@ from typing import BinaryIO
 from ..storage.protocol import StoredObject
 from ..uploads.session_manager import UploadSession, UploadSessionManager
 from .authorization import Authorizer, Principal, AuthorizationDenied
-from .audit import AuditWriteError
 
 
 class UploadService:
