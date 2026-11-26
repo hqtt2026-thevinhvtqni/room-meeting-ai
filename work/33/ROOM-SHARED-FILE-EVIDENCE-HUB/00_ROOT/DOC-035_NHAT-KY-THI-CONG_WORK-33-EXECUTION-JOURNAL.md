@@ -344,3 +344,14 @@
 - SANDBOX: concurrency test file synced to `02_EXTENSION/cloud_drive/uploads/test_upload_concurrency.py`; read-back verification pending.
 - SCOPE: tests use two threads sharing one SQLite DB and in-memory storage. They demonstrate SQLite BEGIN IMMEDIATE serialization for these tested races, not multi-process/host distributed locking, power-loss behavior, NFS/object-store consistency, or provider-side idempotency. No production concurrency claim.
 - NEXT: add true multi-process stress tests using independent manager instances and a shared SQLite file; inspect WAL/locking behavior and audit sequence under process contention. Then verify actor provenance/Core integration separately. Main untouched; no merge/deployment.
+
+
+## 2026-11-27 — Multi-process SQLite contention validation
+- Added independent-process tests using Python multiprocessing spawn and separate SQLite connections/managers against one shared local database/staging directory.
+- Upload contention: 8 independent processes concurrently wrote 8 distinct parts into one session. All part writes completed; metadata contains parts 1–8 exactly once; audit sequence is contiguous (1–9: session creation + 8 accepted parts); hash chain verifies.
+- Quota contention: 12 independent processes simultaneously attempted 10-byte reservations against a 100-byte quota. Exactly 10 reservations succeeded and 2 were rejected; 100 bytes held, 0 used; no overbooking.
+- GitHub Actions run 45896774131 SUCCESS, job 140172521349, commit `9e874e74c4f6c540175621962f7bf49e2391f6a8`, Python 3.12.16, pytest 9.0.3. Historical RSFEH 17 PASS + 2 XFAIL; Cloud Drive integrity suite 23/23 PASS (17 prior integrity tests + 4 thread races + 2 multi-process tests). Run URL: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45896774131
+- A first multi-process workflow attempt failed during collection because the test imported a local adapter file not included in the isolated validation snapshot. This was a test-fixture dependency error; replaced with an in-test StorageAdapter stub (the tests exercise metadata/staging/audit, not provider storage) and reran successfully. No production source was changed for this correction.
+- Sandbox sync: `02_EXTENSION/cloud_drive/uploads/test_upload_multiprocess.py` written; read-back verification pending.
+- LIMIT: processes ran on one GitHub-hosted Linux runner sharing its local filesystem and SQLite DB. This is evidence for same-host multi-process SQLite contention only; not proof for multiple hosts, network filesystems, provider consistency, power-loss durability, writer fencing, or production deployment.
+- NEXT: inspect and test crash windows (orphan part file after atomic rename before DB commit; provider put succeeds but completion metadata commit fails), then separately establish authenticated Core principal provenance. No merge, no production deployment, no provider integration.
