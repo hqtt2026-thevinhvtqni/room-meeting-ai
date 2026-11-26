@@ -2918,3 +2918,56 @@ Xu continues source inspection and implementation directly on an isolated branch
 PR #78 OPEN / DRAFT / UNMERGED; journal synchronization BLOCKED; F01–F04 chưa được chứng minh đóng; exact-head CI NOT OBSERVED; Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
 
 **Signed:** Ka — CSA / Independent Security Review
+
+
+## 2026-11-26 09:32 +07 — JRN-W28-119 — Ka tiếp nhận toàn quyền điều hành Work 28 theo chỉ thị Vinh
+
+**Name:** Ka  
+**Title:** Delegated Work 28 Operational Owner / Delivery Coordinator  
+**Date-Time:** 2026-11-26 09:32 +07 (Asia/Ho_Chi_Minh)  
+**Priority:** P0  
+**Canonical branch:** work/28-mcp-tooling-platform  
+**Authority:** Vinh — final project authority  
+**Related record:** Sandbox JRN-W28-117 (An, 2026-11-26; append + readback OK, not yet synchronized at time of initial report)
+
+### READ / TRACE
+- Đã đọc canonical Work Manifest, official minutes, master plan, document register, Work Structure Standard, Architecture Decision V2 và Work-wide journal trên GitHub canonical branch.
+- AGENTS.md xác định authority hierarchy; PROJECT_STATE.md, XU_CORE.md và XU_SESSION.md không tồn tại ở root của branch canonical tại thời điểm fetch (404), không giả định các file đó đã được đọc.
+- Canonical Manifest/Minutes/Plan còn ghi Xu là coordinator/implementation owner; official minutes BB-W28-20261124-003 ghi Xu takeover. Đây là governance state lịch sử cần được supersede bằng quyết định trực tiếp mới nhất của Vinh.
+- PR #78 hiện OPEN / DRAFT / UNMERGED; candidate branch xu/w28-f02-tests-20261124; exact HEAD 6e9eb0e935ee74237cc40287c903d72e6ae74473; title/body còn ghi Xu takeover.
+- GitHub compare canonical work/28-mcp-tooling-platform với candidate xác nhận DIVERGED: 73 commits ahead / 5 commits behind; merge base 4b2a8663a0b9ff40aad8e6812efff197b5085de5. Không merge, rebase hoặc force-sync tự động.
+- Exact-commit workflow lookup tại SHA 6e9eb0e935ee74237cc40287c903d72e6ae74473 trả về 0 workflow runs; combined status trả về 0 status checks. Không có exact-head CI PASS evidence.
+- Candidate source file 04_CODE/sandbox_binary_upload_v1.py blob f13bd1ae09ba79ab2f19f538d752e863fffcb19c; test file blob 0963baa3fd4c724973a08be331c4a9c8ddc4784b. Đây là code trên PR candidate, chưa phải canonical branch product.
+
+### DECIDE — OWNERSHIP
+- Ka nhận toàn quyền điều hành vận hành W28 trong phạm vi Vinh ủy quyền: điều phối remediation F01–F04, implementation dispatch, integration, evidence control, acceptance coordination và handoff.
+- Xu dừng implementation/điều hành W28 và tập trung W118. Không duy trì hai đầu điều hành.
+- Vi chỉ triển khai các đầu việc cụ thể khi Ka dispatch; An giữ vai trò Tester độc lập.
+- Vinh vẫn là final project authority. Ka không có quyền tự mở Execution Gate hoặc tự tuyên bố release.
+- Independent security review không được miễn. Ka không thể tự chứng nhận independent review cho thay đổi do Ka triển khai; reviewer độc lập riêng hiện chưa được chỉ định và vẫn là gate.
+
+### SOURCE REVIEW — CURRENT CANDIDATE ONLY
+- F01: candidate vẫn sử dụng pathname-based operations (Path.resolve, is_symlink, exists, open, os.link) thay vì handle-anchored/no-follow traversal xuyên suốt. Race/reparse-point adversarial proof trên native Windows/Linux chưa có. BLOCKED.
+- F02: candidate có startup reconciliation cho session/chunk/quota và phát hiện orphan staging; tuy nhiên chưa chứng minh đầy đủ directory durability/fsync, quarantine/recovery policy, crash/failure-injection matrix và native Windows/Linux. PARTIAL / NOT VERIFIED.
+- F03: candidate chỉ có Protocol CoreUploadAuthorizer được inject; test dùng FakeCore. Không có Core-owned deployed grant endpoint/schema hoặc durable atomic revoke-vs-finalize transaction được tích hợp; local ledger transition sau authorization không chứng minh Core linearization. BLOCKED.
+- F04: PR thay đổi chỉ gồm workflow, minutes, journal, engine, tests và evidence; không có raw-byte MCP :8030 transport/registered handler/tools-list parity/live Sandbox readback. BLOCKED.
+- Tests được kiểm tra bằng source read only; không chạy test trong lượt này. Không tuyên bố test PASS.
+
+### VERIFY
+- Ownership decision đã được ghi vào canonical official minutes BB-W28-20261126-004.
+- Manifest và master plan đã được cập nhật bằng governance addendum; document register đã được cập nhật.
+- Journal entry này ghi nhận source/PR evidence tại thời điểm kiểm tra; không sửa/xóa lịch sử JRN-W28-111–118.
+- Sandbox JRN-W28-117 được ghi nhận là append + readback OK theo xác nhận của An; chưa được coi là GitHub canonical readback trước khi bản ghi được sync và xác minh riêng.
+- Không source code sửa; không test execution; không upload; không merge; không register; không deploy; không mở Execution Gate.
+
+### BLOCKERS / NEXT
+1. Reconcile PR #78 branch divergence và stale Xu-ownership metadata có kiểm soát; candidate không được coi là canonical hoặc merge-ready.
+2. Remediate F01 handle-safe filesystem design and native Windows/Linux adversarial tests.
+3. Complete F02 crash consistency, directory durability, orphan quarantine and failure injection.
+4. Obtain/verify actual Core-owned sandbox.file.upload contract and atomic revoke-vs-finalize semantics for F03.
+5. Implement F04 bounded raw-byte :8030 transport, registration/catalog parity and live disposable Sandbox byte-for-byte SHA-256 readback.
+6. Secure a separate independent security disposition; Ka must not self-approve own implementation. An remains independent QA.
+
+**STATUS:** Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED. F01 BLOCKED; F02 PARTIAL / NOT VERIFIED; F03 BLOCKED; F04 BLOCKED; Independent Acceptance NOT ACCEPTED; Execution Gate CLOSED. No release.
+
+**Signed:** Ka — Delegated Work 28 Operational Owner / Delivery Coordinator
