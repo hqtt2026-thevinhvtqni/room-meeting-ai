@@ -34,3 +34,6 @@ Assign controlled codes only to official Work documents. Supporting evidence may
 | `RA-W28-20261121-001` — `06_EVIDENCE/RA-W28-20261121-001_REPO-ISSUE-PR-RECONCILIATION.md` | Repository-wide issue/PR reconciliation | P1 / Read order 31; stale Issue and PR triage, exact branch comparisons and disposition | RECORDED — PARTIAL CLEANUP |
 | `XU-W28-WP3-F01-Q4-DESIGN-20261122-001` — `06_EVIDENCE/XU_WP3_F01_Q4_GRANT_DESIGN_REVISION_20261122.md` | Proposed security design | Revised upload capability grant contract for independent Ka review; no implementation authorization | PROPOSED / NOT APPROVED |
 | `XU-W28-WP3-F01-Q4-DESIGN-20261122-001` — `06_EVIDENCE/XU_WP3_F01_Q4_GRANT_DESIGN_REVISION_20261122.md` | Proposed security design | Revised upload capability grant contract for independent Ka review | PROPOSED / NOT APPROVED — P0 review requested 2026-11-24 |
+
+| `BB-W28-20261126-004` — `00_ROOT/BIEN_BAN.md` | Governance handoff decision | Ka assumes delegated W28 operational ownership; Xu focuses W118; independent security review remains a separate gate | Current — P0 |
+| `PL-W28-20261103-001` — `01_PLAN/WORK28_MASTER_EXECUTION_PLAN_V2.0.md` | Master plan governance addendum | 2026-11-26 ownership and P0 execution authority addendum | Updated 2026-11-26 — v2.1 |
