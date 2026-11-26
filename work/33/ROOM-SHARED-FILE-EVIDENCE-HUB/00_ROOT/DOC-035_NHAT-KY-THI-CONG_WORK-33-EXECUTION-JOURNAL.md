@@ -355,3 +355,13 @@
 - Sandbox sync: `02_EXTENSION/cloud_drive/uploads/test_upload_multiprocess.py` written; read-back verification pending.
 - LIMIT: processes ran on one GitHub-hosted Linux runner sharing its local filesystem and SQLite DB. This is evidence for same-host multi-process SQLite contention only; not proof for multiple hosts, network filesystems, provider consistency, power-loss durability, writer fencing, or production deployment.
 - NEXT: inspect and test crash windows (orphan part file after atomic rename before DB commit; provider put succeeds but completion metadata commit fails), then separately establish authenticated Core principal provenance. No merge, no production deployment, no provider integration.
+
+
+## 2026-11-27 — Upload crash-window fault-injection validation
+- Added two fault-injection tests on isolated branch `w33/cloud-drive-integrity-v1-20261127`.
+- Window A — staged part file atomically renamed, then audit append fails before SQLite part metadata commit. Test confirms DB remains UPLOADING with zero part metadata, final part file remains as an orphan, and read-only RecoveryInspector reports `ORPHAN_PART_FILE` without modifying DB or file bytes.
+- Window B — provider put succeeds and stores bytes, then final `UPLOAD_COMPLETED` audit append fails. Transaction rolls back finalization; session remains COMMITTING with durable `commit_sha256`/size and `UPLOAD_COMMIT_INTENT`, no `UPLOAD_COMPLETED`. Read-only RecoveryInspector queries provider head and confirms exact size+SHA-256 commitment match, without modifying DB.
+- GitHub Actions run 45897145857 SUCCESS, job 140173765776, commit `24e0cb664b242f8ded169b237934cb2199af54ed`, Python 3.12.16, pytest 9.0.3. Historical RSFEH: 17 PASS + 2 XFAIL; Cloud Drive suite: 25/25 PASS (17 integrity/audit/recovery + 4 thread races + 2 multi-process + 2 crash-window tests). URL: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45897145857
+- Sandbox sync: `02_EXTENSION/cloud_drive/uploads/test_upload_crash_windows.py` written; read-back verification pending.
+- LIMIT: deterministic exception injection simulates the relevant transaction boundaries, but does not physically kill the OS process or cut power. Storage is in-memory test adapter; provider persistence, fsync guarantees, remote consistency, and automatic recovery executor are not proven. Inspector is read-only; operator recovery remains a separate gated contract.
+- NEXT: evaluate safe handling of orphan part files and COMMITTING matched objects as explicit proposals only; do not auto-adopt/finalize/release quota. Then continue authenticated Core identity provenance review. No merge, production deployment, or external provider integration.
