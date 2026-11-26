@@ -4012,3 +4012,35 @@ Do not bolt the Linux primitive onto only `begin()`. The service needs one files
 - No source remediation, runtime PASS, upload E2E PASS or acceptance is claimed.
 
 **STATUS:** EXISTING PC COLLECTOR FOUND / CURRENT RUN NOT AVAILABLE / F01 BLOCKED / F02 PARTIAL / F03-F04 BLOCKED / PR #85 DRAFT-UNMERGED / EXECUTION GATE CLOSED / NOT RELEASED.
+
+
+## 2026-11-27 — JRN-W28-150 — Current PC live provenance collector result
+
+**Người thực hiện:** Ka  
+**Chức danh:** W28 delegated implementation / architecture owner  
+**Execution time:** 2026-11-27 03:54:28 (PC evidence timestamp; UTC+07:00)  
+**Branch:** `ka/w28-f01-handle-backend-20261127-r5`  
+**Evidence:** `work/28/MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/W28_PC_LIVE_PROVENANCE_RESULT_20261127_035428.md`  
+**PC evidence folder:** `C:\Users\Admin\AppData\Local\Temp\W28_LIVE_PROVENANCE_20261127_035428`
+
+### RESULT
+- Existing read-only collector executed successfully on the PC.
+- Local checkout is branch `main`, HEAD `13c18dd9954f5c01d4c42990cd261fb6c68c5795`, and DIRTY with numerous modified/deleted/untracked paths. It is not the canonical W28 branch. No cleanup/reset/checkout/stash or local repo mutation is authorized or performed by Ka.
+- Listener observations: 8000 PID 8548 (`room_hop_mcp.http_main`); 8030 PID 7664 (`room_hop_mcp.mcp_build_http_main`); 8031 PID 14428 (`execution_host.server`). No 8001 listener was present in output.
+- Remote MCP endpoint `https://admin-pc.tail7d6101.ts.net/build/mcp` returned `PASS_READONLY_PROTOCOL_RESPONSE`, protocol `2025-03-26`, 17 tools. Tools list confirms Sandbox virtual-file operations and meeting/context tools; no shell, host process, ACL, mount or arbitrary runtime diagnostic tool.
+- Collector scope was respected: no tools/call and no 8020 probe.
+- Selected local module/source hashes and NOT_FOUND selected paths are preserved in the evidence note. They are local worktree observations only, not proof of deployed or in-memory source identity.
+
+### SECURITY INTERPRETATION
+- Current listener and MCP protocol provenance is captured.
+- The upload service process and actual upload Sandbox/staging security context were not identified.
+- No Windows token/ACL, file-handle identity, reparse-point, no-replace publication or actual filesystem capability evidence was collected.
+- No upload/readback/recovery/cleanup/runtime E2E test was performed.
+- This does not close F01 and does not establish acceptance of F02/F03/F04.
+
+### NEXT
+- Preserve the dirty PC worktree; do not clean/reset/checkout or overwrite it.
+- Next runtime diagnostic must be separately scoped and authorized against the exact upload service process and actual Sandbox path. Do not infer this from the 8030 listener.
+- If the upload service cannot be identified through approved read-only evidence, request the smallest operator-provided process identity and Sandbox path evidence; do not introduce arbitrary command execution through MCP 8030.
+
+**STATUS:** PC LISTENER/MCP PROVENANCE CAPTURED / UPLOAD FILESYSTEM SECURITY NOT OBSERVED / F01 BLOCKED / F02 PARTIAL-NOT VERIFIED / F03-F04 BLOCKED / PR #85 DRAFT-UNMERGED / EXECUTION GATE CLOSED / NOT RELEASED.
