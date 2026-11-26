@@ -154,7 +154,7 @@ def test_completion_claim_prevents_inflight_part_writer_from_committing(tmp_path
             "SELECT COUNT(*) FROM upload_parts WHERE session_id=?", (session.session_id,)
         ).fetchone()[0]
     assert result["writer"] == "REJECTED"
-    assert state == "VERIFYING"
+    assert state == "RECOVERY_REQUIRED"
     assert part_count == 0
     # Failed completion is left in VERIFYING for explicit recovery, not reopened.
 
