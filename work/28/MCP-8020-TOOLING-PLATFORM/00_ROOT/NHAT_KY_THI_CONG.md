@@ -3353,3 +3353,38 @@ Governance ownership handoff: CANONICALIZED / READBACK VERIFIED. PR #78: candida
 - No live Sandbox upload, no byte-for-byte readback, no merge/register/deploy, Execution Gate remains CLOSED and release NOT RELEASED.
 
 **Signed:** Ka — Delegated Work 28 Operational Owner / Remediation Lead
+
+
+## 2026-11-26 20:xx +07 — JRN-W28-131 — Chốt thiết kế F01 handle-anchored filesystem remediation
+
+**Name:** Ka  
+**Title:** Delegated Work 28 Operational Owner / Remediation Lead  
+**Date-Time:** 2026-11-26 20:xx +07 (Asia/Ho_Chi_Minh)  
+**Priority:** P0 / Read order 1 — F01  
+**Document:** `F01-W28-20261126-001`  
+**Document commit:** `c292956938c149f4c3f68c8c718c8caeb190f31f`
+
+### READ / TRACE
+- Re-read canonical Work Manifest, Document Register and Architecture Decision V2 before defining the implementation boundary.
+- Confirmed F01 affects the complete filesystem lifecycle, not only `begin()`: Work-root traversal, destination parent creation, staging create/open, chunk write, startup reconciliation, finalize/recovery, promotion, readback, cleanup and abort.
+- Run #513 on exact candidate `305305bc7a9c84b144743890375ed971a618d11e` reproduced parent replacement race on native Linux and Windows (jobs `139721601541`, `139721601602`); unit/regression job `139721601414` also failed on the same assertion.
+
+### DECIDE
+- Created controlled P0 design `F01-W28-20261126-001`.
+- Linux implementation must use retained directory file descriptors and descriptor-relative no-follow operations, exclusive staging creation, descriptor-relative no-replace promotion and handle-based read/write/unlink.
+- Windows implementation must use native directory/file handles, reject reparse points by handle metadata, hold handles to prevent rename/replacement while relied upon, and use a reviewed handle-relative create/promotion primitive. No path-only fallback.
+- If either platform cannot prove the required primitive, that platform must fail closed; a skipped functional test suite is not acceptance.
+- Refactor every upload lifecycle operation through one filesystem backend. A safe `begin()` with unsafe chunk/finalize/recovery paths is not F01 closure.
+
+### REGISTER / VERIFY
+- Added the design file under `06_EVIDENCE/` and registered it in `WORK_DOCUMENT_REGISTER.md`.
+- Design commit: `c292956938c149f4c3f68c8c718c8caeb190f31f`.
+- This checkpoint changes design/evidence only; no application source fix has been made.
+- PR #81 remains DRAFT / UNMERGED. The failing regression remains enabled; do not weaken it.
+- F01 BLOCKED; F02 PARTIAL / NOT VERIFIED; F03 BLOCKED; F04 BLOCKED.
+- Independent An QA NOT ACCEPTED; independent security reviewer UNASSIGNED.
+- Execution Gate CLOSED; no merge, registration, deployment, live upload or release.
+
+**Next action:** implement Linux dirfd backend and Windows native-handle backend behind one narrow interface, then refactor all lifecycle operations and execute the adversarial matrix on native runners.
+
+**Signed:** Ka — Delegated Work 28 Operational Owner / Remediation Lead
