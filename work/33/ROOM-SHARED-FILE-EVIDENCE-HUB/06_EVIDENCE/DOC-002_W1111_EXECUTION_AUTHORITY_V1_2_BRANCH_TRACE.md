@@ -2,72 +2,90 @@
 
 - Work: W33 — ROOM-SHARED-FILE-EVIDENCE-HUB
 - Date: 2026-11-26 (+07)
-- Status: FEATURE-BRANCH SOURCE TRACE / DEFECT CONFIRMED BY STATIC TEST ASSERTION / NOT RUNTIME VERIFIED
+- Status: FEATURE-BRANCH SOURCE TRACE / STATIC DEFECTS & INTEGRATION RISKS FOUND / NOT RUNTIME VERIFIED
 - Repository: hqtt2026-thevinhvtqni/room-meeting-ai
-- Branch inspected: work/w1111-core-execution-authority-v1-2
-- Mode: READ / TRACE ONLY. No test execution, runtime probe, secret access, code edit, merge, deployment, or configuration change.
+- Branch: work/w1111-core-execution-authority-v1-2
+- Observed branch HEAD: c70eb2b82f54a000a81263dc519078ddf105f075
+- PR: #48, OPEN / DRAFT / NOT MERGED
+- Compare main...branch: DIVERGED, ahead 157 / behind 1004, 88 changed files
+- Exact HEAD workflow runs and combined status exposed by the available GitHub reads: none returned. Historical CI claims in the PR body are not current-HEAD proof.
+- Mode: READ / TRACE ONLY. No tests, runtime probes, code edits, secret access, merge, deployment, or configuration change.
 
-## 1. Why this trace was required
+## 1. Purpose and branch resolution
 
-The prior main-branch trace found a mismatch: deployment documentation described Core execution-grant routes, but the inspected main source did not mount them. This follow-up checks the named W1111 feature branch to determine whether the implementation exists elsewhere.
+The prior Work 33 main-branch trace did not find execution-grant route mounting. This follow-up traced PR #48's changed-file list and its canonical Work 13 / Work 12 source paths. The implementation does exist on the W1111 feature branch; it must not be conflated with the older top-level legacy `execution_host/` files or assumed to exist on main.
 
-## 2. Branch source evidence
+## 2. Canonical branch source evidence
 
 | Path | Blob SHA | Finding |
 |---|---|---|
-| `core/execution_authority.py` | `163b126178b67c6e0a3f68ba33eaf7b9e6d91503` | Core service credential authentication, Work/purpose-scoped grant issuance, expiry/revocation, hash-chained append-only event store, online token validation. |
-| `room_hop_mcp/adapter/execution_authority_http.py` | `8cb21fadf6bf2318f4884d368b77f2abf796b807` | Implements POST grant issuance, GET status, GET validate, POST run record and POST revoke routes. Missing configuration returns 503. |
-| `room_hop_mcp/adapter/http_server.py` | `48e05c0f5d8121e35ba9bea01ebd8f338529073c` | Imports ExecutionAuthority and mounts the execution-grant routes in `create_http_app()`; unconfigured authority remains fail-closed. |
-| `room_hop_mcp/core_http_main.py` | `d990dd2e152e487c678f67e27add4c0ac94fef53` | Calls `create_http_app(service)`; on this feature branch, the HTTP adapter mount is therefore in the Core entrypoint path. |
-| `execution_host/server.py` | `dd65fcfacfc171e673000ecbeba01d5842a42e8c` | Requires grant ID, Work ID, purpose and bearer token; validates online with Core; restricts operation to pytest_run; checks timeout and workspace source snapshot; constructs trusted WorkContext only after grant validation. |
-| `execution_host/source_snapshot.py` | `b24675dc1fe17e285a083b582cd6b25400135101` | Computes deterministic SHA-256 over sorted workspace file paths and contents; rejects symlinks and special files. |
-| `execution_host/models.py` | `64e3de59375daf451d875eacf0df91ccb7e30dbe` | WorkContext still has an `authorized` field, but the HTTP handler constructs it internally after online Core validation rather than accepting it in request JSON. |
-| `execution_host/wee_bridge.py` | `eec29b8f43d907e06551329f4ed9e350f51352dc` | Still sends the legacy caller-supplied WorkContext + ExecutionRequest to `/execute`, requires `authorized is True`, and does not attach grant ID/purpose/bearer token. It is not adapted to the new Host request contract. |
-| `tests/test_execution_authority.py` | `4ea5158c07df1e66183a6fbe7a6f79042332605d` | Tests grant issuance, wrong credentials, Work/purpose restrictions, revocation, hash chain and HTTP routes. Contains a source-hash mismatch acceptance test described below. |
-| `tests/test_execution_host_authority.py` | `f83ec99e1f95e5bc1ee4203b1e0dd608ba4e9d37` | Tests source snapshot determinism/symlink rejection and Host execution behaviors; tests were read, not run. |
+| `core/execution_authority.py` | `163b126178b67c6e0a3f68ba33eaf7b9e6d91503` | Core service-credential authentication, Work/purpose-scoped grant, expiry/revocation, append-only hash-chained journal and validation. |
+| `room_hop_mcp/adapter/execution_authority_http.py` | `8cb21fadf6bf2318f4884d368b77f2abf796b807` | Grant issuance/status/validate/run-record/revoke routes. |
+| `room_hop_mcp/adapter/http_server.py` | `48e05c0f5d8121e35ba9bea01ebd8f338529073c` | Mounts the grant routes in `create_http_app()`. |
+| `room_hop_mcp/core_http_main.py` | `d990dd2e152e487c678f67e27add4c0ac94fef53` | Calls `create_http_app(service)`; feature-branch route mount is in this entrypoint path. |
+| `13/EXECUTION-HOST-INFRASTRUCTURE/04_CODE/execution_host/server.py` | `b0d8308121a63332e1f0dcbff15e6f0da9c273e0` | W13 Host requires grant fields + bearer token, validates online with Core, restricts purpose to pytest_run, verifies Work snapshot and delegates to W12 adapter. |
+| `13/EXECUTION-HOST-INFRASTRUCTURE/04_CODE/execution_host/wee_bridge.py` | `712170a82cdd8a3b910fe4cadca6f13b91f129a9` | Canonical W13 bridge obtains Core grant with service credential, then calls Host using short-lived bearer grant. Requires HTTPS for remote endpoints; loopback HTTP permitted for development. |
+| `13/EXECUTION-HOST-INFRASTRUCTURE/04_CODE/execution_host/w12_adapter.py` | present in PR changed-file list | W13 Host delegates to the canonical W12 execution adapter. |
+| `13/EXECUTION-HOST-INFRASTRUCTURE/05_TEST/test_core_wee_w13_w12_e2e.py` | present in PR changed-file list | In-process Core API + WEE bridge + W13 HTTP handler + W12 adapter E2E test. |
+| `13/EXECUTION-HOST-INFRASTRUCTURE/05_TEST/test_core_grant_host_integration.py` | present in PR changed-file list | Host/Core grant integration and negative legacy-WorkContext / wrong-token tests. |
+| `12/WORK-EXECUTION-ENVIRONMENT/04_CODE/wee/authority.py` | `31375a230005e224a22039d80bda0dda3433203c` | Canonical WorkBinding resolver; Work scope resolver, not principal authentication. |
 
-## 3. Confirmed source-hash binding defect
+## 3. Corrected bridge and E2E assessment
 
-The test fixture creates a Work policy with `source_sha256 = "a" * 64`. It then issues a grant for that Work. In the HTTP test, the POST run-record request supplies `source_sha256 = "b" * 64` and asserts that the endpoint returns HTTP 200 and records the supplied `"b" * 64`.
+An earlier preliminary note incorrectly treated the top-level legacy `execution_host/wee_bridge.py` as the canonical bridge. That conclusion is withdrawn.
 
-The implementation explains why this is accepted:
-- `ExecutionAuthority.record_run()` revalidates the bearer token, checks only that the supplied source hash is syntactically a 64-character lowercase SHA-256, then appends that supplied value.
-- It does not compare the supplied hash with the source hash bound to the grant/Work policy.
-- The issued event does not persist an immutable source snapshot digest for later comparison.
-- `validate_grant_token()` currently resolves source binding from the current Work policy, rather than an immutable source digest captured at issuance.
+The actual PR #48 W13 path is different:
+- The canonical W13 `wee_bridge.py` authenticates to Core using the enrolled service credential and obtains a short-lived Work-scoped grant.
+- It sends grant ID, purpose and bearer grant to W13 Host; it does not send caller WorkContext as authority.
+- W13 Host validates the grant online with Core, checks Work/purpose, verifies the source snapshot, then constructs its internal WorkContext and delegates to W12.
+- The E2E test calls the bridge with caller context containing `authorized: false` and forged workspace data, yet expects execution to pass using the Core-issued binding. This is intended evidence that caller-supplied WorkContext is ignored.
+- The negative integration test expects legacy caller-supplied WorkContext JSON to be rejected and a wrong bearer grant to be denied.
 
-This is a confirmed static implementation/test defect, not a runtime exploit demonstration. The required repair is to pin the canonical source snapshot digest into the immutable grant-issued event and reject run records unless the submitted digest exactly matches that grant-pinned digest. Add negative tests for mismatched source hash and policy drift after grant issuance.
+Thus the feature branch does contain the WEE → Core grant → W13 Host → W12 adapter integration path at source/test level. Tests were read, NOT run here. Do not infer runtime proof.
 
-## 4. Integration gap: legacy WEE bridge
+## 4. Confirmed source-hash binding defect
 
-Although the Core route mount and new Host request path exist on this feature branch, `execution_host/wee_bridge.py` remains on the legacy contract:
-- requires `work_context.authorized is True`;
-- posts `work_context` and `execution_request`;
-- does not send the grant ID, purpose or bearer token expected by the new Host handler.
+The branch's `tests/test_execution_authority.py` configures the Work policy with `source_sha256 = "a" * 64`, issues a grant, then submits `source_sha256 = "b" * 64` to the run-record endpoint and asserts HTTP 200 with the mismatched hash recorded.
 
-Therefore, the branch contains the new Core/Host authority path but the inspected WEE bridge is not wired to it. Do not infer end-to-end execution from the presence of the Core routes and Host handler alone.
+The implementation:
+- `record_run()` revalidates the bearer token;
+- checks that the submitted source hash is syntactically a SHA-256 string;
+- does not compare it with a source digest immutably pinned to the grant;
+- the `GRANT_ISSUED` event does not persist the source hash/policy snapshot;
+- `validate_grant_token()` reads source binding from the current mutable Work policy.
 
-## 5. Additional review notes
+This is a confirmed static implementation/test defect. Required remediation: persist immutable source hash and policy revision in the grant-issued event; validate and record against that grant-pinned hash; reject mismatch and policy drift; add negative unit and HTTP tests. No exploit was run.
 
-1. The Host's `/health` response reports status PASS when the Host object exists even if Core authority is not configured; it separately reports `core_authority_configured: false`. Consumers must not interpret this as protected execution readiness.
-2. The Core service credential is used to issue grants; the Host then validates bearer grants online. Private TLS/network isolation remains a deployment requirement.
-3. The append-only JSONL hash chain detects content modification when read, but does not by itself provide an independent remote/WORM anchor or verified backup/restore.
-4. No Core runtime, Host runtime, route probe, test suite, CI run, deployment, merge, or security review was performed in this trace.
+## 5. Additional authority gaps recorded by W1111 review
 
-## 6. Disposition for Work 33
+The W1111 review document `work/1111/ROOM-HOP-TECHNICAL-ENGINEERING-AND-DEBUG-LAB/06_EVIDENCE/CO_CORE_AUTHORITY_REVIEW_20261110.md` also records:
+1. **Task/assignment binding absent:** current grant binds service identity, Work, purpose, expiry and timeout, but not exact Task/Assignment ID, owner, ACK/claim state, assignment state/version/revocation, or task-level action/resource.
+2. **Revocation/run-record race:** final grant validation and run-record append are separate operations; revoke and record may race. Requires serialized atomic state transition and concurrency tests.
+3. **Runtime configuration and startup not verified:** production credentials, Work policy, durable store path, Core startup wiring and active runtime remain unproven.
+4. **Work-level-only scope:** no task-specific authorization contract.
+These are source-review risks/gaps, not runtime exploit findings.
 
-- Positive: the W1111 feature branch does contain a concrete Core grant service, HTTP route mount and Host-side online validation path.
-- Blocking defect: run-record source hash is not bound to the grant's canonical source snapshot.
-- Blocking integration gap: legacy WEE bridge does not speak the new grant-based Host contract.
-- Branch status/merge/deployment must be checked independently before any adoption; feature-branch source is not proof of current-main or runtime behavior.
-- Work 33 must continue to use `UnconfiguredAuthorizer` and deny access until an approved, corrected, integrated, source-matched and independently tested Core adapter exists.
+## 6. Branch and CI integration risk
+
+- Branch HEAD observed: `c70eb2b82f54a000a81263dc519078ddf105f075`.
+- PR #48 remains OPEN / DRAFT / not merged.
+- Branch comparison against main returned DIVERGED, ahead 157 / behind 1004, with 88 changed files.
+- Available exact-HEAD workflow-run lookup and combined-status lookup returned empty collections for c70eb2b. PR body contains older successful CI run claims on other SHAs; they are not exact-current-HEAD evidence.
+- The PR's large divergence means source correctness does not imply safe mergeability. Require controlled reconciliation, exact-head CI and owner approval.
+
+## 7. Work 33 disposition
+
+- Positive: W1111 feature branch has a concrete Core grant implementation, mounted routes, canonical W13 bridge, W13 Host → W12 adapter path, and integration/E2E tests.
+- Confirmed defect: Core run-record endpoint/test accepts a source hash different from the Work policy hash; immutable grant-source binding is missing.
+- Additional blockers: Task/Assignment authorization contract, atomic revoke/record semantics, production startup/configuration, exact-HEAD CI visibility and large branch divergence.
+- Main remains unproven to contain this implementation; PR is not merged.
+- Work 33 must keep `UnconfiguredAuthorizer` fail-closed. Do not implement the Cloud Drive adapter against an unapproved, unmerged, defective or runtime-unverified contract.
 - No PASS is claimed.
 
-## 7. Required next actions
+## 8. Required next actions
 
-1. Send the source-hash binding defect and bridge contract mismatch to the W1111 owner for correction; do not patch another Work's branch from W33.
-2. Require tests that reject mismatched source hash, grant-policy drift, expired/revoked/wrong-Work grants, missing Core, wrong purpose, timeout overflow and legacy WorkContext spoofing.
-3. Adapt the WEE bridge only under W1111 ownership and prove it supplies a short-lived grant without exposing the token in logs.
-4. Reconcile the exact branch head, PR status and merge approval before considering main integration.
-5. Run source-matched tests and isolated E2E only after authorized review; record exact commit, command, output and independent QE verdict.
-6. Only then design and test the Cloud Drive Core Authorizer adapter against the verified contract.
+1. W1111 owner corrects immutable grant-source binding and adds mismatch/policy-drift negative tests.
+2. W1111 owner resolves task/assignment scope and atomic revoke/record contract.
+3. W1111 owner reconciles branch against main under approved merge strategy; obtain exact-HEAD CI evidence.
+4. Independently verify Core startup, secret enrollment, durable journal and W13/W12 runtime source parity only through approved diagnostics.
+5. After correction, merge approval and runtime evidence, Work 33 can implement and test a Core-backed Authorizer adapter using the verified contract.
