@@ -3847,3 +3847,39 @@ Do not bolt the Linux primitive onto only `begin()`. The service needs one files
 **Next action:** design and implement the adapter boundary plus lifecycle state transitions as a coherent unit; add adversarial tests for root/Work/nested/staging/final path substitution, chunk/recovery/readback/abort, promotion races and Windows fail-closed. Re-run exact-SHA CI before claiming any progress.
 
 **Signed:** Ka — Delegated Work 28 Operational Owner / F01 Remediation Lead
+
+
+## 2026-11-27 — JRN-W28-145 — Handle adapter contract và upload state-machine design
+
+**Người thực hiện:** Ka  
+**Chức danh:** W28 delegated implementation / architecture owner  
+**Execution time:** 2026-11-27 UTC+07:00  
+**Branch:** `ka/w28-f01-handle-backend-20261127-r5`  
+**Design:** `work/28/MCP-8020-TOOLING-PLATFORM/03_ARCHITECTURE/W28_UPLOAD_HANDLE_ADAPTER_CONTRACT_AND_STATE_MACHINE_V1.md`
+
+### READ / TRACE
+- Refreshed compare against canonical `work/28-mcp-tooling-platform`: base `3271896052962ce188994e07ac687a429f8048de`; candidate remains 16 ahead / 0 behind; merge base equals canonical base.
+- PR #85 remains OPEN / DRAFT / UNMERGED. Its description still reports an earlier 7-ahead count and is stale; no PR metadata change was made in this entry.
+- Re-read Linux handle filesystem prototype and upload service lifecycle. The service remains pathname-based in initialization/reconciliation, begin, chunk, digest/readback, finalize/recovery, abort/cleanup and per-upload lock.
+- Confirmed the prototype's `promote_no_replace()` uses source leaf-name resolution relative to a pinned directory FD. This pins the parent but does not prove that the source leaf still names the exact already-open staging object at publication time.
+
+### DESIGN
+- Added `W28_UPLOAD_HANDLE_ADAPTER_CONTRACT_AND_STATE_MACHINE_V1.md`.
+- Defined one adapter boundary for the complete upload lifecycle; root/Work/child handles, descriptor-relative operations, handle-bound lock, exact-object cleanup, fsync and fail-closed errors.
+- Defined durable ordering for begin, chunk, FINALIZING, atomic publication, readback, cleanup, COMPLETED and recovery.
+- Explicitly rejected pathname-based hard-link plus post-hoc inode check as sufficient proof of exact-source publication. Linux must provide a proven exact-handle no-replace primitive or fail closed. Windows remains unsupported until native handle-relative/reparse-point implementation and tests exist.
+- Added crash/fault-injection and adversarial parent/leaf replacement test matrix.
+
+### LIMITATIONS / DECISION
+- This is a design/documentation commit only. No upload service code was integrated or remediated; no test or CI result is claimed.
+- F01 remains BLOCKED; F02 PARTIAL / NOT VERIFIED; F03/F04 BLOCKED.
+- PR #85 remains Draft and unmerged. No merge, rebase, MCP registration, deployment, live upload, Execution Gate opening or release was performed.
+- Work28 remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED.
+
+### NEXT
+1. Review the exact-handle atomic no-replace publication feasibility on Linux and document supported filesystem/runtime constraints before coding.
+2. Define typed adapter interfaces and ownership semantics, then implement/test the Linux backend in isolation.
+3. Refactor every upload lifecycle boundary to the adapter; remove pathname fallback.
+4. Obtain exact-SHA CI, independent QA and independent security review before any acceptance decision.
+
+**STATUS:** ADAPTER CONTRACT RECORDED / IMPLEMENTATION NOT STARTED / F01 BLOCKED / PR #85 DRAFT — UNMERGED / EXECUTION GATE CLOSED / NOT RELEASED.
