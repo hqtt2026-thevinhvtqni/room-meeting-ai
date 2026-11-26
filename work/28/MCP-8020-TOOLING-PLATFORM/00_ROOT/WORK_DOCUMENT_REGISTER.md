@@ -39,3 +39,5 @@ Assign controlled codes only to official Work documents. Supporting evidence may
 | `PL-W28-20261103-001` — `01_PLAN/WORK28_MASTER_EXECUTION_PLAN_V2.0.md` | Master plan governance addendum | 2026-11-26 ownership and P0 execution authority addendum | Updated 2026-11-26 — v2.1 |
 
 | `F01-W28-20261126-001` — `06_EVIDENCE/F01-W28-20261126-001_HANDLE_ANCHORED_FILESYSTEM_REMEDIATION_DESIGN.md` | P0 security remediation design | End-to-end handle-anchored filesystem requirements for Linux and Windows; includes lifecycle threat matrix and native adversarial tests | DESIGN BASELINE — NOT IMPLEMENTED / NOT RELEASE-APPROVED |
+
+| `F01-W28-20261126-002` — `06_EVIDENCE/F01-W28-20261126-002_PATH_BASED_LIFECYCLE_AUDIT.md` | P0 technical audit evidence | Exact-PR-#82 path-based filesystem lifecycle audit; enumerates vulnerable operations, native handle-anchored remediation and adversarial acceptance matrix | RECORDED — F01 BLOCKED / NOT IMPLEMENTED |
