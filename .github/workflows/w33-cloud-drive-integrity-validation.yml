@@ -1,0 +1,42 @@
+name: Work 33 Cloud Drive Integrity Validation
+
+on:
+  push:
+    branches:
+      - w33/cloud-drive-integrity-v1-20261127
+    paths:
+      - "work/33/ROOM-SHARED-FILE-EVIDENCE-HUB/RSFEH_VALIDATION/**"
+      - ".github/workflows/w33-cloud-drive-integrity-validation.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: w33-cloud-drive-integrity-validation
+  cancel-in-progress: true
+
+jobs:
+  integrity-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: work/33/ROOM-SHARED-FILE-EVIDENCE-HUB/RSFEH_VALIDATION
+    steps:
+      - name: Checkout isolated integrity branch
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Set up Python 3.12.x
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install pytest
+        run: |
+          python -m venv .venv
+          . .venv/bin/activate
+          python -m pip install --disable-pip-version-check pytest==9.0.3
+      - name: Run historical RSFEH and Cloud Drive integrity tests
+        run: |
+          . .venv/bin/activate
+          set -o pipefail
+          python -m pytest -vv 05_TEST/unit/test_store.py 05_TEST/e2e/test_e2e_cli.py 05_TEST/security/test_known_gaps.py
+          python -m pytest -vv CLOUD_DRIVE_VALIDATION/05_TEST/test_recovery_inspector_digest.py CLOUD_DRIVE_VALIDATION/05_TEST/test_session_commit_digest.py
