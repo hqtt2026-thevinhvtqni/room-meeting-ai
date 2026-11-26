@@ -3947,3 +3947,36 @@ Do not bolt the Linux primitive onto only `begin()`. The service needs one files
 3. If exact-handle publication or safe namespace cleanup cannot be proven, retain fail-closed behavior and do not integrate.
 
 **STATUS:** THREAT MODEL RECORDED / RUNTIME MATRIX NOT RUN / F01 BLOCKED / F02 PARTIAL / F03-F04 BLOCKED / PR #85 DRAFT-UNMERGED / EXECUTION GATE CLOSED / NOT RELEASED.
+
+
+## 2026-11-27 — JRN-W28-148 — MCP 8030 runtime observability boundary audit
+
+**Người thực hiện:** Ka  
+**Chức danh:** W28 delegated implementation / architecture owner  
+**Execution time:** 2026-11-27 UTC+07:00  
+**Branch:** `ka/w28-f01-handle-backend-20261127-r5`  
+**Evidence note:** `work/28/MCP-8020-TOOLING-PLATFORM/03_ARCHITECTURE/W28_SANDBOX_RUNTIME_OBSERVABILITY_BOUNDARY_V1.md`
+
+### TOOLS / READ-ONLY AUDIT
+- Re-discovered the available MCP 8030 Sandbox tool surface: Work discovery, list entries, read/write/append/create/delete text files. No shell/process inspection/stat/fstat/getfacl/findmnt/mountinfo/proc/capability/syscall/arbitrary Python execution action is exposed by the available tool surface.
+- Called Sandbox Work discovery: 77 Works returned.
+- Listed Work 28; the connector returned the virtual Work28 project tree and file entries.
+- Tried common Work 28 root manifest/readme paths; they returned FileNotFound. No host runtime metadata was returned.
+- No shell, execution, host mutation, file deletion, permission change or capability elevation was attempted.
+
+### FINDING / BOUNDARY
+- MCP 8030 Work Sandbox listing/read is a virtual file-content interface. It does not prove the host OS/kernel, service PID/UID/GID/groups/capabilities, mount namespace/filesystem, ACL/ownership, same-UID isolation or availability of `linkat(AT_EMPTY_PATH)`.
+- No host property was inferred from the connector's own runtime.
+- Therefore the requested runtime capability matrix cannot be completed using the currently exposed MCP 8030 actions. This is a genuine observability/access blocker, not a failed filesystem test.
+- MCP 8020 sandbox_read was not used; the W28 authorized operational path remains MCP 8030.
+
+### ARTIFACT / LIMITATION
+- Added `W28_SANDBOX_RUNTIME_OBSERVABILITY_BOUNDARY_V1.md` with exact observed tool boundary, unsupported inferences, safe conclusion and minimum read-only host diagnostic fields.
+- This is documentation evidence only. No actual runtime capability, filesystem, ACL or publication experiment was performed.
+- F01 BLOCKED; F02 PARTIAL / NOT VERIFIED; F03/F04 BLOCKED. No code remediation or test PASS is claimed.
+
+### NEXT
+- Require an authorized read-only diagnostic inside the exact upload-service process/container context. Capture only process identity, capability sets, kernel/runtime, mount/filesystem identity, staging ownership/mode/ACL and same-UID isolation; then separately authorize an isolated publication syscall probe.
+- If no approved host diagnostic path exists, retain fail-closed behavior. Do not invent or simulate runtime evidence.
+
+**STATUS:** MCP 8030 OBSERVABILITY LIMIT RECORDED / HOST RUNTIME NOT OBSERVED / F01 BLOCKED / F02 PARTIAL / F03-F04 BLOCKED / PR #85 DRAFT-UNMERGED / EXECUTION GATE CLOSED / NOT RELEASED.
