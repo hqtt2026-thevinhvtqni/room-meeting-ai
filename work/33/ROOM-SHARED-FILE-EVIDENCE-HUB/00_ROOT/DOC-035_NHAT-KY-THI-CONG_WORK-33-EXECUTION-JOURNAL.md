@@ -375,3 +375,13 @@
 - Synced updated `session_manager.py` and `test_upload_crash_windows.py` into Sandbox Work 33. Read-back verification follows.
 - LIMIT: this is a prototype policy change in isolated validation snapshot only; no merge to main, no recovery executor, no Core-backed identity verification. Existing audit `actor_id` remains caller-supplied until Core token verification is implemented. No provider/production tests.
 - NEXT: define and test explicit recovery proposal for orphan part: bind session/part, file hash/size, evidence digest, requesting principal, distinct approver, expiry, and single-use idempotency; keep execution disabled pending approved operator contract. For COMMITTING provider match, require immutable commitment plus independent provider read-back and quota/audit reconciliation before any completion action.
+
+
+## 2026-11-27 — RecoveryPlanner read-only gate validation
+- Added the existing Sandbox RecoveryPlanner source to the isolated GitHub validation snapshot without changing its read-only behavior.
+- Added tests for COMMITTING + HELD quota: planner recommends `VERIFY_PROVIDER_AND_REVIEW_FINALIZATION`, requires approval, marks `mutation_performed=false`, and leaves DB bytes unchanged.
+- Added tests for RECOVERY_REQUIRED + HELD quota: planner recommends `INSPECT_EVIDENCE_AND_RETAIN_RESERVATION`; it does not promote, delete, reopen, or release quota; DB remains byte-identical.
+- GitHub Actions run 45898337152 SUCCESS, job 140177722352, commit `f9d98b596a62dc1370aaa81b5c02a01a37aed298`, Python 3.12.16, pytest 9.0.3. Cloud Drive suite **27/27 PASS**; historical RSFEH 17 PASS + 2 XFAIL. URL: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45898337152
+- Planner source and two tests synced into Sandbox; read-back verification pending.
+- LIMIT: planner reads metadata DB only; it does not prove provider object contents, writer fencing, backups, authenticated principal, or safe execution. It remains advisory and has no executor. Matching provider commitment still requires separate provider/staging/backup/quota evidence and distinct authenticated approvals.
+- NEXT: complete Sandbox/GitHub journal read-back, then prioritize Core-backed principal verification and exact integration contract. No merge, deployment, or recovery execution.
