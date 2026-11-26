@@ -3795,3 +3795,55 @@ Governance ownership handoff: CANONICALIZED / READBACK VERIFIED. PR #78: candida
 - Next: wait for CI on the newest correction SHA; then complete a service-level adapter design that pins Sandbox root → Work root → staging/destination directories for the entire operation and removes every pathname-based lifecycle operation. Preserve the parent-swap regression and test all lifecycle races. Windows remains unsupported/fail-closed until native handle-relative semantics are implemented and tested.
 
 **Signed:** Ka — Delegated Work 28 Operational Owner / F01 Remediation Lead
+
+
+
+## 2026-11-27 — JRN-W28-144 — CI #528 và kiểm kê toàn bộ pathname boundary của Upload Service
+
+**Name:** Ka  
+**Title:** Delegated Work 28 Operational Owner / F01 Remediation Lead  
+**Date-Time:** 2026-11-27 (Asia/Ho_Chi_Minh)  
+**Priority:** P0 — F01 complete lifecycle  
+**PR:** #85 — OPEN / DRAFT / UNMERGED  
+**CI:** Workflow #528 / run ID `45892109109`  
+**Exact tested SHA:** `ff4da5a77996d55498b620f4e467af98a18455fc`
+
+### EXACT CI EVIDENCE
+- Unit/regression job FAILURE; 381 tests ran; sole reported failure: `test_begin_rejects_parent_swap_after_validation` — `UploadError not raised`.
+- Linux Execution Host lifecycle SUCCESS; Windows Execution Host lifecycle SUCCESS. These jobs are not Sandbox upload tests.
+- `automatic-e2e-gate-report` SUCCESS means evidence-backed report generation succeeded; it does not prove deployed MCP → Core → Runtime upload E2E.
+- Full Work 28 pytest step skipped because unit/regression failed.
+- New pinned-directory ownership test increased suite count from 380 to 381 and did not add a reported failure.
+
+### COMPLETE PATHNAME BOUNDARY INVENTORY
+Direct source review of `sandbox_binary_upload_v1.py` confirms pathname-based operations remain across all critical phases:
+1. Constructor: `Path(sandbox_root).resolve()` then `mkdir`; root trust is not pinned by retained handle.
+2. `work_root()` / `no_symlinks()`: resolve, path ancestry, and repeated symlink checks are raceable.
+3. Startup reconciliation: pathname existence/type checks, open/read/truncate/stat, root `iterdir()`, Work enumeration, staging enumeration.
+4. Begin: destination check, staging directory mkdir, `os.open(staging_path,...)`, error cleanup by `Path.unlink()`.
+5. Chunk: lock path open, staging path open/write/fsync.
+6. Digest/readback: `open(path)` and pathname traversal.
+7. Finalize/recovery: mkdir, exists, open, `os.link(path,path)`, unlink; rollback currently can unlink final path after later ledger failure.
+8. Abort: pathname unlink.
+9. Per-upload lock itself is opened by pathname and is not rooted in a pinned directory hierarchy.
+
+### IMPLEMENTATION DECISION
+Do not bolt the Linux primitive onto only `begin()`. The service needs one filesystem adapter with an explicit lifecycle contract:
+- Service initialization pins the configured Sandbox root once; fail closed if root traversal encounters symlink/reparse or unsupported platform.
+- Each operation opens Work and nested directories relative to pinned descriptors and retains them through the operation.
+- Staging create/open/write/truncate/digest/unlink all operate through directory/file handles.
+- Final destination parent is pinned independently; promotion must be atomic no-replace with source/destination identity verified and no pathname fallback.
+- Recovery and orphan scan must enumerate through directory descriptors, not Path.iterdir.
+- Windows implementation must use reviewed native handle/reparse-point semantics or reject upload operations; Execution Host Windows CI is not evidence of Windows Sandbox upload support.
+- Cross-process synchronization must itself be handle-anchored and covered by tests.
+- Resolve FINALIZING/ledger failure semantics without deleting a valid promoted destination after staging has been removed; preserve recoverability and immutable receipt semantics.
+
+### STATUS / GOVERNANCE
+- F01 BLOCKED — parent-swap regression remains red.
+- F02 PARTIAL / NOT VERIFIED; F03 BLOCKED; F04 BLOCKED.
+- PR #85 remains OPEN / DRAFT / UNMERGED; no merge, rebase, MCP registration, deployment, live upload or release.
+- Execution Gate CLOSED. Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+**Next action:** design and implement the adapter boundary plus lifecycle state transitions as a coherent unit; add adversarial tests for root/Work/nested/staging/final path substitution, chunk/recovery/readback/abort, promotion races and Windows fail-closed. Re-run exact-SHA CI before claiming any progress.
+
+**Signed:** Ka — Delegated Work 28 Operational Owner / F01 Remediation Lead
