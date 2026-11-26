@@ -3242,3 +3242,39 @@ Governance ownership handoff: CANONICALIZED / READBACK VERIFIED. PR #78: candida
 **STATUS:** CI run #511 SUCCESS; product E2E BLOCKED; run #512 QUEUED; Work 28 remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
 
 **Signed:** Ka — Delegated Work 28 Operational Owner / Delivery Coordinator
+
+
+## 2026-11-26 12:57 +07 — JRN-W28-128 — Run #512 PASS 7/7 jobs trên exact SHA; E2E vẫn BLOCKED
+
+**Name:** Ka  
+**Title:** Delegated Work 28 Operational Owner / Delivery Coordinator  
+**Date-Time:** 2026-11-26 12:57 +07 (Asia/Ho_Chi_Minh)  
+**Priority:** P0  
+**PR:** #81 — DRAFT / OPEN / UNMERGED  
+**Exact SHA:** ddd5ff00c95ef966b2a143264dbdfdc7d2cc28ec  
+**Workflow:** #512 / run ID 45763680352
+
+### VERIFIED
+- Workflow run #512: **SUCCESS**, 7/7 jobs successful.
+- Jobs: unit-regression-tests; execution-host-lifecycle-linux; execution-host-lifecycle-windows; Binary upload engine tests (native Linux); Binary upload engine tests (native Windows); immutable source artifact build/retest; automatic-e2e-gate-report.
+- Both native Linux and native Windows binary-upload component jobs completed SUCCESS on exact SHA `ddd5ff00c95ef966b2a143264dbdfdc7d2cc28ec`.
+- Immutable source artifact created: `work28-source-artifact-bbb981564c9ee4ab4681f4304cccea9685b152fd`, digest `sha256:abd411528084b26e6284d85e72553b74a73f57aeff3ac8496a450d9bad1ac5e6`.
+- Auto E2E report artifact created: `work28-auto-e2e-report-45763680352`, digest `sha256:ef48de42365415babbcd7d83142cc914fe52e1941af9ec9fbabef7a5057595d7`.
+- PR #81 description updated to record run #512 final results and distinguish CI PASS from deployed E2E.
+
+### GATE INTERPRETATION
+- Workflow code deliberately sets `deployed_mcp_core_runtime_e2e = BLOCKED` until verified live MCP 8030 process identity/tools-list parity, trusted Core principal/WorkContext, approved runtime deployment attestation and protected-evidence readback are wired.
+- Therefore run #512 SUCCESS proves CI preconditions and component suite execution, not production upload authorization, filesystem race safety, Core atomicity or live Sandbox transfer.
+- PR #81 compare with canonical at this point: DIVERGED, 4 commits ahead / 4 commits behind; merge base `3db1cc68fa0bc521fe241211ef63105e4a9793c2`. Behind commits are canonical journal-only appends made after PR base; no blind merge/rebase/force update.
+
+### FINDING STATUS — UNCHANGED
+- F01 BLOCKED — no handle-anchored/no-follow implementation or adversarial parent-swap/reparse-point tests yet.
+- F02 PARTIAL / NOT VERIFIED — recovery baseline tests run, but directory durability and complete crash/failure-injection evidence absent.
+- F03 BLOCKED — no real Core-owned upload grant/atomic revoke-vs-finalize integration.
+- F04 BLOCKED — no live raw-byte MCP :8030 tool registration/transport and Sandbox byte-for-byte readback.
+- Independent Acceptance NOT ACCEPTED; independent security reviewer UNASSIGNED.
+- No merge, registration, deployment, live upload, Execution Gate opening or release.
+
+**STATUS:** CI run #512 PASS 7/7; deployed E2E BLOCKED; F01–F04 remain open; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+**Signed:** Ka — Delegated Work 28 Operational Owner / Delivery Coordinator
