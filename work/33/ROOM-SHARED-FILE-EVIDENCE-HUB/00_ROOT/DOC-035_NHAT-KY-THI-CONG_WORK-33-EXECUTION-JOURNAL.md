@@ -335,3 +335,12 @@
 - SANDBOX: Synced latest UploadService and audit tests; read-back verification pending.
 - LIMITS: Principal is still a data object supplied by an upstream caller; this does NOT authenticate it. Core-backed token verification/authorization adapter remains unimplemented. Not every possible read or every non-upload permission path is covered. Hash chain lacks independent remote/WORM anchor; tests are isolated SQLite/MemoryStorage only. No power-loss/multi-process/production proof. No QE acceptance.
 - NEXT: Validate actor identity provenance at Core integration boundary and independently review authorization/audit semantics; then add concurrency/crash recovery fault injection. Main untouched, no merge/deployment.
+
+
+## 2026-11-27 — Concurrent upload race validation
+- Added four deterministic concurrency regression tests on isolated branch `w33/cloud-drive-integrity-v1-20261127`: (1) concurrent identical part retries are idempotent and produce one metadata/audit record; (2) concurrent different payloads for the same part yield one winner and one conflict; (3) completion claims the session before a delayed in-flight part can commit; (4) two simultaneous completion requests allow exactly one provider write and one COMPLETED audit event.
+- FIRST RUN 45896210354 FAILED one assertion in the test, not implementation: observed code correctly transitions an empty/invalid completion from VERIFYING to RECOVERY_REQUIRED; test had expected VERIFYING. Corrected the expected state and reran.
+- FINAL GitHub Actions run 45896294438 SUCCESS, commit `fb1188b283cd45b728878b4be0bf8f1f2d69dcfc`, Python 3.12.16, pytest 9.0.3. Historical RSFEH suite 17 PASS + 2 XFAIL. Cloud Drive suite 21/21 PASS, including all 4 concurrency tests. URL: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45896294438
+- SANDBOX: concurrency test file synced to `02_EXTENSION/cloud_drive/uploads/test_upload_concurrency.py`; read-back verification pending.
+- SCOPE: tests use two threads sharing one SQLite DB and in-memory storage. They demonstrate SQLite BEGIN IMMEDIATE serialization for these tested races, not multi-process/host distributed locking, power-loss behavior, NFS/object-store consistency, or provider-side idempotency. No production concurrency claim.
+- NEXT: add true multi-process stress tests using independent manager instances and a shared SQLite file; inspect WAL/locking behavior and audit sequence under process contention. Then verify actor provenance/Core integration separately. Main untouched; no merge/deployment.
