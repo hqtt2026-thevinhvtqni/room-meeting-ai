@@ -3114,3 +3114,38 @@ Governance ownership handoff: CANONICALIZED / READBACK VERIFIED. PR #78: candida
 - No merge, deploy, registration, live upload, test execution or PASS claim.
 
 **Signed:** Ka — Delegated Work 28 Operational Owner / Delivery Coordinator
+
+
+## 2026-11-26 12:45 +07 — JRN-W28-124 — Khởi tạo PR remediation riêng và đưa upload baseline vào exact-SHA CI
+
+**Name:** Ka  
+**Title:** Delegated Work 28 Operational Owner / Delivery Coordinator  
+**Date-Time:** 2026-11-26 12:45 +07 (Asia/Ho_Chi_Minh)  
+**Priority:** P0  
+**PR:** #81 — Work 28: binary upload safety remediation — Ka candidate  
+**Branch:** ka/w28-remediation-20261126
+
+### BUILD
+- Tạo PR #81 dạng DRAFT từ canonical branch; không dùng PR #78 divergent branch làm base.
+- Đưa engine candidate (529 lines, blob `f13bd1ae09ba79ab2f19f538d752e863fffcb19c`) và component tests (251 lines, blob `0963baa3fd4c724973a08be331c4a9c8ddc4784b`) vào Ka remediation lane dưới dạng baseline để sửa có kiểm soát. Việc copy không đồng nghĩa chấp nhận source hoặc đóng finding.
+- Audit phát hiện canonical workflow chưa có job chạy test module upload mới. Đã thêm job `binary-upload-engine-windows` trên native `windows-2025`, và nối job vào dependency của immutable artifact/final gate.
+- Cập nhật PR #81 body để phản ánh owner, exact SHA, CI gate và các finding chưa đóng.
+
+### VERIFY
+- PR #81 OPEN / DRAFT / UNMERGED; exact HEAD `25cc3afbab0fb07c1bd1dba70ce73411017b9a25`.
+- Compare với canonical: 3 commits ahead / 0 behind; merge base là canonical `3db1cc68fa0bc521fe241211ef63105e4a9793c2`.
+- GitHub Actions run #511, run ID `45763312189`, được tạo cho exact SHA trên; status `pending` tại lần kiểm tra cuối. Job list chưa xuất hiện; chưa có kết quả PASS/FAIL.
+- Readback workflow trên branch xác nhận có job `binary-upload-engine-windows` và lệnh unittest discovery cho `test_sandbox_binary_upload_v1.py`.
+- PR body update được GitHub xác nhận; chưa đọc lại lần cuối sau update.
+
+### LIMITS / FINDINGS
+- Đây là baseline import + CI wiring, chưa phải F01–F04 remediation. Không có application logic fix trong commit này.
+- F01 BLOCKED; F02 PARTIAL / NOT VERIFIED; F03 BLOCKED; F04 BLOCKED.
+- Không có local/native test execution trong lượt này; GitHub run pending chưa phải evidence.
+- Không live Sandbox binary upload/readback; không có byte-count/SHA-256 parity evidence.
+- Independent acceptance NOT ACCEPTED; independent security reviewer UNASSIGNED.
+- Không merge, register, deploy, open Execution Gate hoặc release.
+
+**STATUS:** ACTIVE / INTEGRATION BLOCKED / NOT RELEASED. Remediation lane and exact-SHA CI wiring initialized only.
+
+**Signed:** Ka — Delegated Work 28 Operational Owner / Delivery Coordinator
