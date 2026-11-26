@@ -3209,3 +3209,36 @@ Governance ownership handoff: CANONICALIZED / READBACK VERIFIED. PR #78: candida
 **STATUS:** Windows upload component CI PASS for exact SHA only; overall PR CI still IN PROGRESS; Work 28 remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
 
 **Signed:** Ka — Delegated Work 28 Operational Owner / Delivery Coordinator
+
+
+## 2026-11-26 12:53 +07 — JRN-W28-127 — Run #511 hoàn tất và mở rộng binary tests sang Linux
+
+**Name:** Ka  
+**Title:** Delegated Work 28 Operational Owner / Delivery Coordinator  
+**Date-Time:** 2026-11-26 12:53 +07 (Asia/Ho_Chi_Minh)  
+**Priority:** P0
+
+### RUN #511 — FINAL RESULT
+- Workflow run #511 / ID `45763312189`, exact SHA `25cc3afbab0fb07c1bd1dba70ce73411017b9a25`: **SUCCESS**, 6/6 jobs successful.
+- Jobs: unit-regression-tests; execution-host-lifecycle-linux; execution-host-lifecycle-windows; Binary upload engine tests (native Windows); immutable source artifact build/retest; automatic-e2e-gate-report.
+- Auto E2E report artifact `work28-auto-e2e-report-45763312189` was created; artifact digest `sha256:a8bbee0f98815b44152c9cc9aaf0ab1d0f3a434118aaf8ea500b1981453b02b2`.
+- Workflow source explicitly sets deployed MCP→Core→Runtime E2E to BLOCKED when live runtime identity/tools-list, trusted Core principal/WorkContext, deployment attestation and protected-evidence readback are not wired. Therefore run #511 CI preconditions can PASS while product E2E remains BLOCKED. This is expected and not acceptance.
+
+### BUILD — NATIVE LINUX BINARY COMPONENT JOB
+- Added `binary-upload-engine-linux` on `ubuntu-24.04`, running unittest discovery for `test_sandbox_binary_upload_v1.py`.
+- Added Linux binary job as a required dependency for immutable artifact and Auto E2E report; included its result in machine-readable report.
+- Workflow change committed on Ka branch as `ddd5ff00c95ef966b2a143264dbdfdc7d2cc28ec`.
+
+### RUN #512 — FOLLOW-UP
+- GitHub Actions run #512 / ID `45763680352` created for exact SHA `ddd5ff00c95ef966b2a143264dbdfdc7d2cc28ec`; status QUEUED at last check. This run is intended to exercise binary component tests on both native Windows and Linux.
+- PR #81 description updated with run #511 final status, E2E limitation and run #512.
+
+### LIMITS
+- F01 remains BLOCKED: baseline still lacks adversarial parent-swap/reparse-point tests and handle-anchored path operations.
+- F02 PARTIAL / NOT VERIFIED; F03 BLOCKED; F04 BLOCKED.
+- No deployed MCP/Core/runtime E2E, no live Sandbox binary upload/readback, no An independent acceptance, no separate security reviewer.
+- No merge, registration, deployment, Execution Gate opening or release.
+
+**STATUS:** CI run #511 SUCCESS; product E2E BLOCKED; run #512 QUEUED; Work 28 remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+**Signed:** Ka — Delegated Work 28 Operational Owner / Delivery Coordinator
