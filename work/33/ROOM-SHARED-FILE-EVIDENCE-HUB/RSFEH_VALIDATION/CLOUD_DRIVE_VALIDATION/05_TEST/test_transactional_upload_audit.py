@@ -247,3 +247,44 @@ def test_upload_service_requires_audit_configuration(tmp_path):
     )
     with pytest.raises(ValueError, match="audit"):
         UploadService(manager, AllowAuthorizer())
+
+
+class BrokenAuthorizer:
+    def authorize(self, *, principal, scope_id, action):
+        raise RuntimeError("policy backend unavailable")
+
+
+def test_authorizer_backend_error_is_audited_as_error_and_denied(tmp_path):
+    db, audit, storage, manager = _manager(tmp_path)
+    service = UploadService(manager, BrokenAuthorizer())
+    with pytest.raises(AuthorizationDenied):
+        service.begin(
+            principal=Principal("human:vinh"), scope_id="scope-a", expected_size=2
+        )
+    with sqlite3.connect(db) as conn:
+        row = conn.execute(
+            "SELECT action, outcome, detail_json FROM audit_events"
+        ).fetchone()
+        count = conn.execute("SELECT COUNT(*) FROM upload_sessions").fetchone()[0]
+    assert row[0:2] == ("AUTHORIZATION_ERROR", "ERROR")
+    assert "RuntimeError" in row[2]
+    assert count == 0
+    assert audit.verify_chain()
+
+
+def test_authorization_allow_audit_failure_blocks_operation(tmp_path):
+    db, audit, storage, manager = _manager(tmp_path)
+    service = UploadService(manager, AllowAuthorizer())
+    with sqlite3.connect(db) as conn:
+        conn.execute("""
+            CREATE TRIGGER fail_authorization_audit
+            BEFORE INSERT ON audit_events
+            WHEN NEW.action='AUTHORIZATION_ALLOWED'
+            BEGIN SELECT RAISE(ABORT, 'injected authorization audit failure'); END
+        """)
+    with pytest.raises(AuditWriteError):
+        service.begin(
+            principal=Principal("human:vinh"), scope_id="scope-a", expected_size=2
+        )
+    with sqlite3.connect(db) as conn:
+        assert conn.execute("SELECT COUNT(*) FROM upload_sessions").fetchone()[0] == 0
