@@ -3589,3 +3589,36 @@ Governance ownership handoff: CANONICALIZED / READBACK VERIFIED. PR #78: candida
 **Next action:** start the implementation candidate from the latest canonical HEAD, not the diverged PR branch. Implement and test a unified handle-anchored backend across the complete lifecycle; retain the parent-swap regression and require exact-SHA native Linux/Windows results before independent QA/security review.
 
 **Signed:** Ka — Delegated Work 28 Operational Owner / Remediation Lead
+
+
+## 2026-11-27 — JRN-W28-138 — Dựng baseline source/test trên nhánh r5 để bắt đầu remediation F01
+
+**Name:** Ka  
+**Title:** Delegated Work 28 Operational Owner / Remediation Lead  
+**Date-Time:** 2026-11-27 (Asia/Ho_Chi_Minh)  
+**Priority:** P0 — F01 / branch integrity  
+**Branch:** `ka/w28-f01-handle-backend-20261127-r5`  
+**Canonical base:** `3271896052962ce188994e07ac687a429f8048de`
+
+### TRACE / BUILD
+- Kiểm tra lại r5 bằng GitHub branch search và compare với canonical `work/28-mcp-tooling-platform`: nhánh được tạo từ đúng canonical HEAD, ban đầu identical (0 ahead / 0 behind).
+- Phát hiện canonical không chứa hai file upload engine/test; hai file này chỉ có trong candidate PR #84/r4. Không tự suy đoán source path hoặc sửa trực tiếp file không tồn tại.
+- Đọc lại source và test chính xác từ r4:
+  - `04_CODE/sandbox_binary_upload_v1.py` blob `f13bd1ae09ba79ab2f19f538d752e863fffcb19c` (529 dòng).
+  - `05_TEST/test_sandbox_binary_upload_v1.py` blob `ff931ec949fb77a30bfe7dc8a5dd88fa5d532181` (277 dòng).
+- Tạo hai file baseline trên r5 bằng hai commit tuần tự:
+  - Source baseline commit `355c25146fd00ca137f1adc5f352727884558828`.
+  - Test baseline commit `a02b5b4ca0f6d8b1c1c247203edff6bedcb44317`.
+- Đọc lại hai file trên r5; blob SHA khớp chính xác với source/test r4. Workflow `.github/workflows/work28-mcp-tooling.yml` đã có sẵn trên canonical/r5 nên không tạo hoặc thay thế.
+- Compare sau khi dựng baseline: r5 ahead 2 / behind 0; đúng hai file được thêm. Không sửa canonical, PR #84, workflow, hay test.
+
+### SECURITY / LIMITS
+- Đây chỉ là đưa baseline source/test sang nhánh triển khai sạch; KHÔNG phải remediation.
+- Source vẫn pathname-based; parent-swap regression vẫn giữ nguyên và chưa có kết quả test mới trên r5.
+- F01 vẫn BLOCKED; F02 PARTIAL / NOT VERIFIED; F03/F04 BLOCKED.
+- Chưa mở PR cho r5; không merge/rebase/push/deploy/register MCP/live upload/release.
+- Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+**Next action:** implement backend handle-anchored trên baseline r5 và refactor đầy đủ lifecycle; bắt buộc native Linux/Windows exact-SHA tests, không làm yếu regression. Nếu Windows safe handle-relative primitives chưa được chứng minh, fail closed và không tuyên bố Windows upload supported.
+
+**Signed:** Ka — Delegated Work 28 Operational Owner / Remediation Lead
