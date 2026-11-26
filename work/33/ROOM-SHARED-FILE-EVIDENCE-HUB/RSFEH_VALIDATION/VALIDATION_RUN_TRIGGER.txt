@@ -1,2 +1,3 @@
 Validation trigger only. No production data. This file exists to start the corrected isolated GitHub Actions run.
 Security regression probes added; trigger second validation run.
+Retry after concurrency cancellation; run full security probe suite.
