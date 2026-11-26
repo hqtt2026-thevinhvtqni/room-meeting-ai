@@ -3589,3 +3589,485 @@ Governance ownership handoff: CANONICALIZED / READBACK VERIFIED. PR #78: candida
 **Next action:** start the implementation candidate from the latest canonical HEAD, not the diverged PR branch. Implement and test a unified handle-anchored backend across the complete lifecycle; retain the parent-swap regression and require exact-SHA native Linux/Windows results before independent QA/security review.
 
 **Signed:** Ka — Delegated Work 28 Operational Owner / Remediation Lead
+
+
+## 2026-11-27 — JRN-W28-138 — Dựng baseline source/test trên nhánh r5 để bắt đầu remediation F01
+
+**Name:** Ka  
+**Title:** Delegated Work 28 Operational Owner / Remediation Lead  
+**Date-Time:** 2026-11-27 (Asia/Ho_Chi_Minh)  
+**Priority:** P0 — F01 / branch integrity  
+**Branch:** `ka/w28-f01-handle-backend-20261127-r5`  
+**Canonical base:** `3271896052962ce188994e07ac687a429f8048de`
+
+### TRACE / BUILD
+- Kiểm tra lại r5 bằng GitHub branch search và compare với canonical `work/28-mcp-tooling-platform`: nhánh được tạo từ đúng canonical HEAD, ban đầu identical (0 ahead / 0 behind).
+- Phát hiện canonical không chứa hai file upload engine/test; hai file này chỉ có trong candidate PR #84/r4. Không tự suy đoán source path hoặc sửa trực tiếp file không tồn tại.
+- Đọc lại source và test chính xác từ r4:
+  - `04_CODE/sandbox_binary_upload_v1.py` blob `f13bd1ae09ba79ab2f19f538d752e863fffcb19c` (529 dòng).
+  - `05_TEST/test_sandbox_binary_upload_v1.py` blob `ff931ec949fb77a30bfe7dc8a5dd88fa5d532181` (277 dòng).
+- Tạo hai file baseline trên r5 bằng hai commit tuần tự:
+  - Source baseline commit `355c25146fd00ca137f1adc5f352727884558828`.
+  - Test baseline commit `a02b5b4ca0f6d8b1c1c247203edff6bedcb44317`.
+- Đọc lại hai file trên r5; blob SHA khớp chính xác với source/test r4. Workflow `.github/workflows/work28-mcp-tooling.yml` đã có sẵn trên canonical/r5 nên không tạo hoặc thay thế.
+- Compare sau khi dựng baseline: r5 ahead 2 / behind 0; đúng hai file được thêm. Không sửa canonical, PR #84, workflow, hay test.
+
+### SECURITY / LIMITS
+- Đây chỉ là đưa baseline source/test sang nhánh triển khai sạch; KHÔNG phải remediation.
+- Source vẫn pathname-based; parent-swap regression vẫn giữ nguyên và chưa có kết quả test mới trên r5.
+- F01 vẫn BLOCKED; F02 PARTIAL / NOT VERIFIED; F03/F04 BLOCKED.
+- Chưa mở PR cho r5; không merge/rebase/push/deploy/register MCP/live upload/release.
+- Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+**Next action:** implement backend handle-anchored trên baseline r5 và refactor đầy đủ lifecycle; bắt buộc native Linux/Windows exact-SHA tests, không làm yếu regression. Nếu Windows safe handle-relative primitives chưa được chứng minh, fail closed và không tuyên bố Windows upload supported.
+
+**Signed:** Ka — Delegated Work 28 Operational Owner / Remediation Lead
+
+
+## 2026-11-27 — JRN-W28-139 — Tạo Linux handle-anchored filesystem primitive (chưa tích hợp)
+
+**Name:** Ka  
+**Title:** Delegated Work 28 Operational Owner / F01 Remediation Lead  
+**Date-Time:** 2026-11-27 (Asia/Ho_Chi_Minh)  
+**Priority:** P0 — F01
+
+### IMPLEMENTATION
+- Tạo module `04_CODE/sandbox_handle_fs_v1.py` trên nhánh `ka/w28-f01-handle-backend-20261127-r5`.
+- Linux backend mở Sandbox root bằng cách duyệt từng component từ `/` qua directory FD + `O_NOFOLLOW`; Work và nested directory được mở tương đối từ pinned parent FD.
+- Primitive hiện có: exclusive staging create, descriptor-based open/write/pread digest/truncate, directory-relative unlink, atomic no-replace hard-link promotion và fsync directory.
+- Windows hiện chưa được hỗ trợ bởi module này; backend khởi tạo fail-closed nếu không có POSIX no-follow primitives. Không có pathname fallback.
+- Thêm `05_TEST/test_sandbox_handle_fs_v1.py` với kiểm tra Work directory bị thay bằng symlink sau khi FD đã pin, nested symlink rejection, exclusive create, no-replace promotion và descriptor-based binary I/O.
+- Sửa double-close risk trong context manager directory sau review source tĩnh.
+
+### EXACT SOURCE
+- Backend initial commit: `ba0802627f5c581a2780707d4247ecfb2dd065cd`.
+- Backend test commit: `f75dfed0dee09fee09112dbe993daab87694f7e0`.
+- Backend correction commit: `074bb31df0e812b0fd7b544fcdc251ecaf8df7f7`.
+- Latest source blob after correction: `79c66518cf727340f77a828188c59bc2ed4aadb2`.
+- These commits are on r5 only. No canonical or PR #84 change.
+
+### LIMITS / STATUS
+- This is a primitive module and component test, NOT yet integrated into `SandboxBinaryUploadService`.
+- Existing upload engine still uses pathname-based lifecycle operations. F01 remains BLOCKED.
+- No test execution result is claimed yet; no exact-SHA CI run has been observed for these commits.
+- No Windows native handle-relative implementation or Windows acceptance evidence exists.
+- Do not open PR / merge / rebase / deploy / register MCP / perform live upload / release on this checkpoint.
+- F02 PARTIAL / NOT VERIFIED; F03/F04 BLOCKED. Execution Gate CLOSED. Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+**Next action:** integrate the backend into every upload lifecycle path (startup reconciliation, begin, chunk, digest/readback, finalize/recovery, abort and cleanup), then add Windows native implementation or retain Windows upload as unsupported; run exact-SHA Linux/Windows CI and require independent QA/security review.
+
+**Signed:** Ka — Delegated Work 28 Operational Owner / F01 Remediation Lead
+
+
+
+## 2026-11-27 — JRN-W28-140 — Mở draft PR #85 để kích hoạt kiểm chứng exact-SHA cho Linux handle prototype
+
+**Name:** Ka  
+**Title:** Delegated Work 28 Operational Owner / F01 Remediation Lead  
+**Date-Time:** 2026-11-27 (Asia/Ho_Chi_Minh)  
+**Priority:** P0 — F01 / validation evidence  
+**Branch:** `ka/w28-f01-handle-backend-20261127-r5`  
+**PR:** #85 — OPEN / DRAFT / UNMERGED  
+**Head SHA:** `2939744417e4bf09491df5524b58a5c9df2e7117`  
+**Base SHA:** `3271896052962ce188994e07ac687a429f8048de`
+
+### TRACE / ACTION
+- Re-compare r5 với canonical `work/28-mcp-tooling-platform`: 7 ahead / 0 behind; merge base đúng canonical HEAD `3271896052962ce188994e07ac687a429f8048de`.
+- Mở PR #85 ở trạng thái DRAFT để CI có thể đánh giá candidate; PR body ghi rõ backend chưa tích hợp, F01 BLOCKED, Windows native backend chưa có và không có merge/deploy/release authorization.
+- Fetch workflow runs gắn với exact head SHA ngay sau khi tạo PR: danh sách trả về rỗng. Chưa có CI run hoặc test result nào được xác nhận.
+- PR #85 không thay thế PR #84, không lấy PR #84 làm base và không thay đổi canonical branch.
+- Việc mở PR #85 điều chỉnh chỉ dẫn “chưa mở PR” trong JRN-W28-139: đây là draft validation PR, không phải yêu cầu acceptance hoặc merge.
+
+### LIMITS / STATUS
+- Linux handle backend vẫn là prototype độc lập; `SandboxBinaryUploadService` còn pathname-based ở startup reconciliation, begin, chunk, finalize/recovery, readback và abort/cleanup.
+- F01 BLOCKED; F02 PARTIAL / NOT VERIFIED; F03/F04 BLOCKED.
+- No CI PASS claimed. No Windows native handle-relative implementation/evidence.
+- PR #85 OPEN / DRAFT / UNMERGED; PR #84 remains separate. No merge, rebase, MCP registration, deployment, live upload or release.
+- Independent QA/security acceptance NOT ACCEPTED; Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+**Next action:** verify whether PR #85 receives workflow runs; then use the results to fix prototype/component test defects before integrating handle operations through the complete upload lifecycle. Do not weaken parent-swap regression or add pathname fallback.
+
+**Signed:** Ka — Delegated Work 28 Operational Owner / F01 Remediation Lead
+
+
+
+## 2026-11-27 — JRN-W28-141 — Đọc CI #521, sửa lỗi file descriptor prototype và giữ nguyên blocker F01
+
+**Name:** Ka  
+**Title:** Delegated Work 28 Operational Owner / F01 Remediation Lead  
+**Date-Time:** 2026-11-27 (Asia/Ho_Chi_Minh)  
+**Priority:** P0 — F01 / exact-SHA CI triage  
+**PR:** #85 — OPEN / DRAFT / UNMERGED  
+**Failing CI:** Workflow #521 / run ID `45891422340`  
+**Initial head:** `f3c3a72184d282af7ea49efad4dd399e0fd5f8ed`  
+**Fix commit:** `2dfce70479156cd73e83f7aebfd34f9812a064fc`
+
+### EXACT CI EVIDENCE
+- Exact-SHA workflow #521 completed with conclusion FAILURE.
+- `unit-regression-tests` job `140154854273`: FAILURE at step “Run Work 28 unit and regression tests”; 380 tests ran.
+- Prototype component test `test_digest_and_write_are_descriptor_based`: ERROR `OSError: [Errno 9] Bad file descriptor`. Root cause: `create_exclusive()` opened staging descriptor with `O_WRONLY`, but the component test subsequently reads/digests that same descriptor using `pread()`.
+- Existing security regression `test_begin_rejects_parent_swap_after_validation`: FAILURE — expected `UploadError` was not raised. This is expected evidence that the upload service remains pathname-based and the prototype is not integrated; it is not waived.
+- `execution-host-lifecycle-linux` and `execution-host-lifecycle-windows`: SUCCESS, but these are not upload acceptance.
+- `automatic-e2e-gate-report`: SUCCESS means report generation only; not runtime E2E acceptance.
+- Exact CI did not reach full pytest step because unittest step failed. No upload suite PASS.
+
+### CORRECTION
+- Updated `sandbox_handle_fs_v1.py` so exclusive staging creation uses `O_RDWR | O_CREAT | O_EXCL | O_NOFOLLOW`, allowing descriptor-based readback/digest on the same pinned descriptor while preserving exclusive no-follow creation.
+- Fix commit: `2dfce70479156cd73e83f7aebfd34f9812a064fc`.
+- This is a targeted correction only. It does not integrate the backend or remediate the parent-swap defect.
+
+### STATUS / NEXT
+- F01 remains BLOCKED. Parent-swap regression remains mandatory and failing until the service lifecycle is converted to handle-relative operations.
+- F02 PARTIAL / NOT VERIFIED; F03/F04 BLOCKED.
+- PR #85 OPEN / DRAFT / UNMERGED. No merge, rebase, MCP registration, deployment, live upload or release.
+- Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+**Next action:** wait for exact-SHA CI on the correction commit, then fix all newly exposed component defects. Only after prototype tests pass, integrate all lifecycle paths without pathname fallback and retain the parent-swap regression.
+
+**Signed:** Ka — Delegated Work 28 Operational Owner / F01 Remediation Lead
+
+
+
+## 2026-11-27 — JRN-W28-142 — Xác nhận CI sau sửa FD: prototype component test hết lỗi, parent-swap vẫn BLOCKED
+
+**Name:** Ka  
+**Title:** Delegated Work 28 Operational Owner / F01 Remediation Lead  
+**Date-Time:** 2026-11-27 (Asia/Ho_Chi_Minh)  
+**Priority:** P0 — F01 / exact-SHA verification  
+**PR:** #85 — OPEN / DRAFT / UNMERGED  
+**Tested fix SHA:** `2dfce70479156cd73e83f7aebfd34f9812a064fc`  
+**Workflow:** #522 / run ID `45891710247`
+
+### EXACT RESULTS
+- Workflow #522 fetched and tested the exact fix SHA.
+- `unit-regression-tests`: FAILURE; 380 tests ran.
+- The previous component error `test_digest_and_write_are_descriptor_based` no longer appears; descriptor readback/digest now succeeds after switching exclusive create to `O_RDWR`.
+- The only reported unittest failure is still `test_begin_rejects_parent_swap_after_validation`: `AssertionError: UploadError not raised`. This confirms the service's `begin()` path remains pathname-based and the backend is not integrated.
+- Execution Host lifecycle Linux and Windows jobs: SUCCESS; unrelated to upload acceptance.
+- Automatic report generation was queued at the time of inspection; no runtime E2E acceptance claimed.
+- A subsequent run #523 for branch head after journal append was observed IN_PROGRESS; no conclusion yet.
+
+### DECISION
+- The primitive-level FD defect is corrected on exact SHA `2dfce70479156cd73e83f7aebfd34f9812a064fc`; this is not a service-level F01 fix.
+- Do not alter, skip, xfail, or weaken parent-swap regression.
+- Do not integrate only `begin()` while leaving chunk/finalize/recovery/abort pathname-based. Integration must be lifecycle-complete and fail closed on unsupported platforms.
+
+### STATUS / NEXT
+- F01 BLOCKED; F02 PARTIAL / NOT VERIFIED; F03/F04 BLOCKED.
+- PR #85 OPEN / DRAFT / UNMERGED. No merge, rebase, MCP registration, deployment, live upload or release.
+- Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+**Next action:** refactor the service around pinned Sandbox/Work/destination/staging directory handles as one coherent lifecycle adapter; migrate startup reconciliation, begin, chunk, digest/readback, finalize/recovery, abort and cleanup together. Add exact-SHA Linux adversarial tests before deciding whether a separate Windows-native backend is viable.
+
+**Signed:** Ka — Delegated Work 28 Operational Owner / F01 Remediation Lead
+
+
+
+## 2026-11-27 — JRN-W28-143 — CI #524 xác nhận parent-swap còn lỗi; sửa ownership/close của pinned directory handle
+
+**Name:** Ka  
+**Title:** Delegated Work 28 Operational Owner / F01 Remediation Lead  
+**Date-Time:** 2026-11-27 (Asia/Ho_Chi_Minh)  
+**Priority:** P0 — F01 / backend primitive correctness  
+**PR:** #85 — OPEN / DRAFT / UNMERGED  
+**CI:** Workflow #524 / run ID `45891857146`  
+**Tested SHA:** `b0cdc657321aecad5f2158dad88c1f94343cbecf`  
+**Correction commits:** `dc2c42183e7fb7d4e80f4639fca8018df27d7c11`, `e81cf96b95d4e74f10a2e3a1a6424eda88fd3cfe`, `550c4505bc66a382cc7352f237ce9c97513ec659`
+
+### EXACT CI EVIDENCE
+- Workflow #524 on exact tested SHA completed unit/regression job with FAILURE.
+- 380 tests ran; the sole reported failure remained `test_begin_rejects_parent_swap_after_validation` with `AssertionError: UploadError not raised`.
+- Linux and Windows Execution Host lifecycle jobs SUCCESS; these do not validate Sandbox upload.
+- Automatic E2E report generation was still in progress at inspection. No runtime upload E2E acceptance.
+- The descriptor readback/digest defect fixed in JRN-W28-141 did not recur.
+- Therefore the service remains pathname-based and F01 remains BLOCKED.
+
+### ADDITIONAL CODE REVIEW FINDING AND FIX
+- Review of `sandbox_handle_fs_v1.py` found that `PinnedDirectory.close()` was not idempotently coordinated with the `work()` / `directory()` context manager finalizers: an explicit close could leave the generator finalizer attempting to close the same raw descriptor again.
+- Updated `PinnedDirectory.close()` to atomically detach its descriptor value before calling `os.close`; added context-manager support; changed directory context managers to finalize through the handle object.
+- Added a portable POSIX test for explicit close inside the context, avoiding Linux-only `/proc` assumptions.
+- These are primitive ownership corrections only. No upload service lifecycle integration has been done.
+
+### LIMITS / NEXT
+- F01 BLOCKED; F02 PARTIAL / NOT VERIFIED; F03/F04 BLOCKED.
+- PR #85 OPEN / DRAFT / UNMERGED. No merge, rebase, MCP registration, deployment, live upload or release.
+- Execution Gate CLOSED; Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+- Next: wait for CI on the newest correction SHA; then complete a service-level adapter design that pins Sandbox root → Work root → staging/destination directories for the entire operation and removes every pathname-based lifecycle operation. Preserve the parent-swap regression and test all lifecycle races. Windows remains unsupported/fail-closed until native handle-relative semantics are implemented and tested.
+
+**Signed:** Ka — Delegated Work 28 Operational Owner / F01 Remediation Lead
+
+
+
+## 2026-11-27 — JRN-W28-144 — CI #528 và kiểm kê toàn bộ pathname boundary của Upload Service
+
+**Name:** Ka  
+**Title:** Delegated Work 28 Operational Owner / F01 Remediation Lead  
+**Date-Time:** 2026-11-27 (Asia/Ho_Chi_Minh)  
+**Priority:** P0 — F01 complete lifecycle  
+**PR:** #85 — OPEN / DRAFT / UNMERGED  
+**CI:** Workflow #528 / run ID `45892109109`  
+**Exact tested SHA:** `ff4da5a77996d55498b620f4e467af98a18455fc`
+
+### EXACT CI EVIDENCE
+- Unit/regression job FAILURE; 381 tests ran; sole reported failure: `test_begin_rejects_parent_swap_after_validation` — `UploadError not raised`.
+- Linux Execution Host lifecycle SUCCESS; Windows Execution Host lifecycle SUCCESS. These jobs are not Sandbox upload tests.
+- `automatic-e2e-gate-report` SUCCESS means evidence-backed report generation succeeded; it does not prove deployed MCP → Core → Runtime upload E2E.
+- Full Work 28 pytest step skipped because unit/regression failed.
+- New pinned-directory ownership test increased suite count from 380 to 381 and did not add a reported failure.
+
+### COMPLETE PATHNAME BOUNDARY INVENTORY
+Direct source review of `sandbox_binary_upload_v1.py` confirms pathname-based operations remain across all critical phases:
+1. Constructor: `Path(sandbox_root).resolve()` then `mkdir`; root trust is not pinned by retained handle.
+2. `work_root()` / `no_symlinks()`: resolve, path ancestry, and repeated symlink checks are raceable.
+3. Startup reconciliation: pathname existence/type checks, open/read/truncate/stat, root `iterdir()`, Work enumeration, staging enumeration.
+4. Begin: destination check, staging directory mkdir, `os.open(staging_path,...)`, error cleanup by `Path.unlink()`.
+5. Chunk: lock path open, staging path open/write/fsync.
+6. Digest/readback: `open(path)` and pathname traversal.
+7. Finalize/recovery: mkdir, exists, open, `os.link(path,path)`, unlink; rollback currently can unlink final path after later ledger failure.
+8. Abort: pathname unlink.
+9. Per-upload lock itself is opened by pathname and is not rooted in a pinned directory hierarchy.
+
+### IMPLEMENTATION DECISION
+Do not bolt the Linux primitive onto only `begin()`. The service needs one filesystem adapter with an explicit lifecycle contract:
+- Service initialization pins the configured Sandbox root once; fail closed if root traversal encounters symlink/reparse or unsupported platform.
+- Each operation opens Work and nested directories relative to pinned descriptors and retains them through the operation.
+- Staging create/open/write/truncate/digest/unlink all operate through directory/file handles.
+- Final destination parent is pinned independently; promotion must be atomic no-replace with source/destination identity verified and no pathname fallback.
+- Recovery and orphan scan must enumerate through directory descriptors, not Path.iterdir.
+- Windows implementation must use reviewed native handle/reparse-point semantics or reject upload operations; Execution Host Windows CI is not evidence of Windows Sandbox upload support.
+- Cross-process synchronization must itself be handle-anchored and covered by tests.
+- Resolve FINALIZING/ledger failure semantics without deleting a valid promoted destination after staging has been removed; preserve recoverability and immutable receipt semantics.
+
+### STATUS / GOVERNANCE
+- F01 BLOCKED — parent-swap regression remains red.
+- F02 PARTIAL / NOT VERIFIED; F03 BLOCKED; F04 BLOCKED.
+- PR #85 remains OPEN / DRAFT / UNMERGED; no merge, rebase, MCP registration, deployment, live upload or release.
+- Execution Gate CLOSED. Work 28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+**Next action:** design and implement the adapter boundary plus lifecycle state transitions as a coherent unit; add adversarial tests for root/Work/nested/staging/final path substitution, chunk/recovery/readback/abort, promotion races and Windows fail-closed. Re-run exact-SHA CI before claiming any progress.
+
+**Signed:** Ka — Delegated Work 28 Operational Owner / F01 Remediation Lead
+
+
+## 2026-11-27 — JRN-W28-145 — Handle adapter contract và upload state-machine design
+
+**Người thực hiện:** Ka  
+**Chức danh:** W28 delegated implementation / architecture owner  
+**Execution time:** 2026-11-27 UTC+07:00  
+**Branch:** `ka/w28-f01-handle-backend-20261127-r5`  
+**Design:** `work/28/MCP-8020-TOOLING-PLATFORM/03_ARCHITECTURE/W28_UPLOAD_HANDLE_ADAPTER_CONTRACT_AND_STATE_MACHINE_V1.md`
+
+### READ / TRACE
+- Refreshed compare against canonical `work/28-mcp-tooling-platform`: base `3271896052962ce188994e07ac687a429f8048de`; candidate remains 16 ahead / 0 behind; merge base equals canonical base.
+- PR #85 remains OPEN / DRAFT / UNMERGED. Its description still reports an earlier 7-ahead count and is stale; no PR metadata change was made in this entry.
+- Re-read Linux handle filesystem prototype and upload service lifecycle. The service remains pathname-based in initialization/reconciliation, begin, chunk, digest/readback, finalize/recovery, abort/cleanup and per-upload lock.
+- Confirmed the prototype's `promote_no_replace()` uses source leaf-name resolution relative to a pinned directory FD. This pins the parent but does not prove that the source leaf still names the exact already-open staging object at publication time.
+
+### DESIGN
+- Added `W28_UPLOAD_HANDLE_ADAPTER_CONTRACT_AND_STATE_MACHINE_V1.md`.
+- Defined one adapter boundary for the complete upload lifecycle; root/Work/child handles, descriptor-relative operations, handle-bound lock, exact-object cleanup, fsync and fail-closed errors.
+- Defined durable ordering for begin, chunk, FINALIZING, atomic publication, readback, cleanup, COMPLETED and recovery.
+- Explicitly rejected pathname-based hard-link plus post-hoc inode check as sufficient proof of exact-source publication. Linux must provide a proven exact-handle no-replace primitive or fail closed. Windows remains unsupported until native handle-relative/reparse-point implementation and tests exist.
+- Added crash/fault-injection and adversarial parent/leaf replacement test matrix.
+
+### LIMITATIONS / DECISION
+- This is a design/documentation commit only. No upload service code was integrated or remediated; no test or CI result is claimed.
+- F01 remains BLOCKED; F02 PARTIAL / NOT VERIFIED; F03/F04 BLOCKED.
+- PR #85 remains Draft and unmerged. No merge, rebase, MCP registration, deployment, live upload, Execution Gate opening or release was performed.
+- Work28 remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED; Execution Gate CLOSED.
+
+### NEXT
+1. Review the exact-handle atomic no-replace publication feasibility on Linux and document supported filesystem/runtime constraints before coding.
+2. Define typed adapter interfaces and ownership semantics, then implement/test the Linux backend in isolation.
+3. Refactor every upload lifecycle boundary to the adapter; remove pathname fallback.
+4. Obtain exact-SHA CI, independent QA and independent security review before any acceptance decision.
+
+**STATUS:** ADAPTER CONTRACT RECORDED / IMPLEMENTATION NOT STARTED / F01 BLOCKED / PR #85 DRAFT — UNMERGED / EXECUTION GATE CLOSED / NOT RELEASED.
+
+
+## 2026-11-27 — JRN-W28-146 — Linux exact-handle publication feasibility review
+
+**Người thực hiện:** Ka  
+**Chức danh:** W28 delegated implementation / architecture owner  
+**Execution time:** 2026-11-27 UTC+07:00  
+**Branch:** `ka/w28-f01-handle-backend-20261127-r5`  
+**Design:** `work/28/MCP-8020-TOOLING-PLATFORM/03_ARCHITECTURE/W28_UPLOAD_HANDLE_ADAPTER_CONTRACT_AND_STATE_MACHINE_V1.md`
+
+### FINDINGS
+- Reviewed the actual Linux prototype: `promote_no_replace()` still calls `os.link(source_name, destination_name, src_dir_fd=..., dst_dir_fd=...)`; the source is resolved by mutable leaf name. It does not publish by the pinned `PinnedFile.fd`.
+- `linkat(AT_EMPTY_PATH)` is a viable Linux candidate for source selection by an open file descriptor and atomic destination no-replace, but it is conditional: Linux-specific, documented capability requirement `CAP_DAC_READ_SEARCH`, same-filesystem/hard-link requirement, and runtime/kernel/filesystem/policy dependencies.
+- The `/proc/self/fd/N` + `AT_SYMLINK_FOLLOW` approach is a separate candidate with procfs dependency; it is not approved as fallback.
+- Exact-handle publication does NOT solve safe staging-name deletion. Linux has no general unlink-by-open-fd operation; a compare-then-unlink sequence remains raceable if an attacker can replace the staging leaf.
+- Therefore staging directory ownership/permissions must be an explicit proven trust boundary, or cleanup must preserve/quarantine the extra link without unsafe unlink. This needs threat-model decision and adversarial tests.
+
+### DESIGN UPDATE
+- Expanded section 4.1 of `W28_UPLOAD_HANDLE_ADAPTER_CONTRACT_AND_STATE_MACHINE_V1.md` with these constraints and explicit fail-closed criteria.
+- No runtime capability test, syscall experiment, service implementation, or acceptance test was executed in this review. This is a source/manual feasibility review only.
+- Candidate compare refresh: canonical base `3271896052962ce188994e07ac687a429f8048de`; r5 now 18 ahead / 0 behind after the two design/journal commits; merge base remains canonical base.
+
+### STATUS / NEXT
+- F01 BLOCKED; F02 PARTIAL / NOT VERIFIED; F03/F04 BLOCKED.
+- PR #85 OPEN / DRAFT / UNMERGED. Execution Gate CLOSED. Work28 ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+- Next: define the explicit staging-directory threat boundary and test the actual process capability/filesystem matrix. Do not implement a pathname fallback or claim Linux upload support until both publication and cleanup proofs pass.
+
+**STATUS:** PUBLICATION CANDIDATE IDENTIFIED / CAPABILITY AND CLEANUP PROOFS PENDING / NO CODE REMEDIATION / NOT RELEASED.
+
+
+## 2026-11-27 — JRN-W28-147 — Staging namespace threat model và Linux capability matrix
+
+**Người thực hiện:** Ka  
+**Chức danh:** W28 delegated implementation / architecture owner  
+**Execution time:** 2026-11-27 UTC+07:00  
+**Branch:** `ka/w28-f01-handle-backend-20261127-r5`  
+**Design:** `work/28/MCP-8020-TOOLING-PLATFORM/03_ARCHITECTURE/W28_STAGING_DIRECTORY_THREAT_MODEL_AND_LINUX_CAPABILITY_MATRIX_V1.md`
+
+### EVIDENCE / AUDIT
+- Refreshed canonical comparison: base `work/28-mcp-tooling-platform` at `3271896052962ce188994e07ac687a429f8048de`; candidate branch is **20 ahead / 0 behind**, merge base equals canonical base.
+- PR #85 remains OPEN / DRAFT / UNMERGED. PR description still contains stale compare count; no metadata mutation was made.
+- Re-read the current adapter contract and Linux prototype. The prototype still uses mutable staging source leaf in `os.link(..., src_dir_fd=...)`; no exact-handle publication implementation exists.
+- The latest recorded journal entry before this one is JRN-W28-146. This entry is appended; no prior journal content is overwritten.
+
+### THREAT MODEL DECISION
+- Defined the staging directory as a trusted namespace only if ownership, restrictive mode, effective ACLs, parent permissions, mount exposure, service UID separation and inherited-handle boundaries are all verified in the actual runtime.
+- Explicitly excluded malicious same-UID processes only as part of the declared OS trust boundary; deployment must ensure untrusted workloads do not share the service identity or its writable mounts/handles.
+- Mode 0700 alone is not sufficient proof. Sticky bit is not a substitute for a private service-owned directory.
+- If any namespace condition is absent or unverifiable, staging cleanup by leaf is prohibited; preserve/quarantine and remain BLOCKED. A pre-unlink inode comparison is still TOCTOU under a hostile writer.
+- Added Linux runtime matrix for kernel/runtime, UID/GID/capabilities, actual `AT_EMPTY_PATH` syscall, filesystem/mount identity, destination no-replace, source/destination handle identity, fsync durability, ACL/ownership and crash recovery.
+- Added adversarial tests for cross-UID and same-UID mutation, parent replacement, publication by opened FD, destination races, cleanup substitution, fsync failures and SQLite/crash boundaries.
+
+### LIMITATIONS
+- This was a source/design review only. No actual Sandbox runtime identity, capabilities, mount/filesystem or ACL experiment was executed.
+- No syscall experiment, adapter implementation, service integration or test PASS is claimed.
+- No change to upload service source or tests. F01 remains BLOCKED; F02 PARTIAL / NOT VERIFIED; F03/F04 BLOCKED.
+- PR #85 remains Draft/unmerged. No merge, rebase, MCP registration, deployment, live upload, Execution Gate opening or release.
+
+### NEXT
+1. Determine and record the actual Sandbox service runtime UID/GID/groups/capabilities, mount namespace, filesystem and staging ACL/ownership using an approved read-only diagnostic.
+2. Run the capability and namespace matrix only in an isolated disposable Sandbox under the exact service identity.
+3. If exact-handle publication or safe namespace cleanup cannot be proven, retain fail-closed behavior and do not integrate.
+
+**STATUS:** THREAT MODEL RECORDED / RUNTIME MATRIX NOT RUN / F01 BLOCKED / F02 PARTIAL / F03-F04 BLOCKED / PR #85 DRAFT-UNMERGED / EXECUTION GATE CLOSED / NOT RELEASED.
+
+
+## 2026-11-27 — JRN-W28-148 — MCP 8030 runtime observability boundary audit
+
+**Người thực hiện:** Ka  
+**Chức danh:** W28 delegated implementation / architecture owner  
+**Execution time:** 2026-11-27 UTC+07:00  
+**Branch:** `ka/w28-f01-handle-backend-20261127-r5`  
+**Evidence note:** `work/28/MCP-8020-TOOLING-PLATFORM/03_ARCHITECTURE/W28_SANDBOX_RUNTIME_OBSERVABILITY_BOUNDARY_V1.md`
+
+### TOOLS / READ-ONLY AUDIT
+- Re-discovered the available MCP 8030 Sandbox tool surface: Work discovery, list entries, read/write/append/create/delete text files. No shell/process inspection/stat/fstat/getfacl/findmnt/mountinfo/proc/capability/syscall/arbitrary Python execution action is exposed by the available tool surface.
+- Called Sandbox Work discovery: 77 Works returned.
+- Listed Work 28; the connector returned the virtual Work28 project tree and file entries.
+- Tried common Work 28 root manifest/readme paths; they returned FileNotFound. No host runtime metadata was returned.
+- No shell, execution, host mutation, file deletion, permission change or capability elevation was attempted.
+
+### FINDING / BOUNDARY
+- MCP 8030 Work Sandbox listing/read is a virtual file-content interface. It does not prove the host OS/kernel, service PID/UID/GID/groups/capabilities, mount namespace/filesystem, ACL/ownership, same-UID isolation or availability of `linkat(AT_EMPTY_PATH)`.
+- No host property was inferred from the connector's own runtime.
+- Therefore the requested runtime capability matrix cannot be completed using the currently exposed MCP 8030 actions. This is a genuine observability/access blocker, not a failed filesystem test.
+- MCP 8020 sandbox_read was not used; the W28 authorized operational path remains MCP 8030.
+
+### ARTIFACT / LIMITATION
+- Added `W28_SANDBOX_RUNTIME_OBSERVABILITY_BOUNDARY_V1.md` with exact observed tool boundary, unsupported inferences, safe conclusion and minimum read-only host diagnostic fields.
+- This is documentation evidence only. No actual runtime capability, filesystem, ACL or publication experiment was performed.
+- F01 BLOCKED; F02 PARTIAL / NOT VERIFIED; F03/F04 BLOCKED. No code remediation or test PASS is claimed.
+
+### NEXT
+- Require an authorized read-only diagnostic inside the exact upload-service process/container context. Capture only process identity, capability sets, kernel/runtime, mount/filesystem identity, staging ownership/mode/ACL and same-UID isolation; then separately authorize an isolated publication syscall probe.
+- If no approved host diagnostic path exists, retain fail-closed behavior. Do not invent or simulate runtime evidence.
+
+**STATUS:** MCP 8030 OBSERVABILITY LIMIT RECORDED / HOST RUNTIME NOT OBSERVED / F01 BLOCKED / F02 PARTIAL / F03-F04 BLOCKED / PR #85 DRAFT-UNMERGED / EXECUTION GATE CLOSED / NOT RELEASED.
+
+
+## 2026-11-27 — JRN-W28-149 — Existing PC provenance collector discovered; scope corrected
+
+**Người thực hiện:** Ka  
+**Chức danh:** W28 delegated implementation / architecture owner  
+**Execution time:** 2026-11-27 UTC+07:00  
+**Branch:** `ka/w28-f01-handle-backend-20261127-r5`  
+**Design note:** `work/28/MCP-8020-TOOLING-PLATFORM/03_ARCHITECTURE/W28_PC_PROVENANCE_COLLECTOR_SCOPE_AND_REMAINING_RUNTIME_GAP_V1.md`
+
+### EVIDENCE / DISCOVERY
+- Re-inspected Work 28 Sandbox inventory through MCP 8030 and found the existing PC-side read-only collector and its runbook:
+  - `06_EVIDENCE/PC_READONLY_LIVE_PROVENANCE_COLLECTOR_20261123.md`
+  - `06_EVIDENCE/PC_READONLY_LIVE_PROVENANCE_COLLECTOR_20261123.ps1`
+  - Historical analysis `06_EVIDENCE/VI_LIVE_PROVENANCE_ANALYSIS_20261123.md`.
+- Read the collector source through `sandbox_read_probe`. It reads local branch/HEAD/status, listener metadata for 8000/8001/8030/8031, selected source hashes and performs MCP initialize + tools/list only against the historically recorded endpoint. It does not call tools/call, probe 8020, restart services or print secrets/full process command lines.
+- Read historical VI analysis: PC evidence captured 2026-11-23 reported branch main, dirty HEAD `05db862cd2ff01cd288cf64cf0be5a9aa05ee816`, listeners 8000 PID 2884, 8030 PID 7160 and 8031 PID 18540, plus successful remote 17-tool tools/list. These are historical user-provided collector observations, not current state.
+- Current MCP 8030 tool inventory still has no host command/process inspection action. The existing collector requires a PC operator to run it; Ka cannot execute it via current MCP tools.
+
+### CORRECTION / LIMITATION
+- Corrected the previous statement: it was too broad to say there is no existing PC diagnostic path. A documented read-only PC provenance collector DOES exist.
+- The collector does NOT capture the actual upload-service staging ACL/ownership, Windows token privileges, file handle identity, Linux capabilities/mount data, or safe publication semantics. It cannot close F01.
+- No current collector run was performed. Historical evidence is not treated as current.
+- Added `W28_PC_PROVENANCE_COLLECTOR_SCOPE_AND_REMAINING_RUNTIME_GAP_V1.md` to define scope, limitations and minimum return artifacts.
+
+### NEXT
+- If the PC repository path and recorded endpoint remain the intended target, Vinh/authorized PC operator must run the existing collector and return only `summary.txt`, `mcp_tools_list_raw.txt` if created, and exact evidence folder timestamp.
+- No secrets, .env, auth headers, environment variables or full process command lines.
+- After current provenance is read back, determine whether upload service process and actual Sandbox path can be identified. Any filesystem security probe needs separate reviewed authorization and an isolated lab.
+- No source remediation, runtime PASS, upload E2E PASS or acceptance is claimed.
+
+**STATUS:** EXISTING PC COLLECTOR FOUND / CURRENT RUN NOT AVAILABLE / F01 BLOCKED / F02 PARTIAL / F03-F04 BLOCKED / PR #85 DRAFT-UNMERGED / EXECUTION GATE CLOSED / NOT RELEASED.
+
+
+## 2026-11-27 — JRN-W28-150 — Current PC live provenance collector result
+
+**Người thực hiện:** Ka  
+**Chức danh:** W28 delegated implementation / architecture owner  
+**Execution time:** 2026-11-27 03:54:28 (PC evidence timestamp; UTC+07:00)  
+**Branch:** `ka/w28-f01-handle-backend-20261127-r5`  
+**Evidence:** `work/28/MCP-8020-TOOLING-PLATFORM/06_EVIDENCE/W28_PC_LIVE_PROVENANCE_RESULT_20261127_035428.md`  
+**PC evidence folder:** `C:\Users\Admin\AppData\Local\Temp\W28_LIVE_PROVENANCE_20261127_035428`
+
+### RESULT
+- Existing read-only collector executed successfully on the PC.
+- Local checkout is branch `main`, HEAD `13c18dd9954f5c01d4c42990cd261fb6c68c5795`, and DIRTY with numerous modified/deleted/untracked paths. It is not the canonical W28 branch. No cleanup/reset/checkout/stash or local repo mutation is authorized or performed by Ka.
+- Listener observations: 8000 PID 8548 (`room_hop_mcp.http_main`); 8030 PID 7664 (`room_hop_mcp.mcp_build_http_main`); 8031 PID 14428 (`execution_host.server`). No 8001 listener was present in output.
+- Remote MCP endpoint `https://admin-pc.tail7d6101.ts.net/build/mcp` returned `PASS_READONLY_PROTOCOL_RESPONSE`, protocol `2025-03-26`, 17 tools. Tools list confirms Sandbox virtual-file operations and meeting/context tools; no shell, host process, ACL, mount or arbitrary runtime diagnostic tool.
+- Collector scope was respected: no tools/call and no 8020 probe.
+- Selected local module/source hashes and NOT_FOUND selected paths are preserved in the evidence note. They are local worktree observations only, not proof of deployed or in-memory source identity.
+
+### SECURITY INTERPRETATION
+- Current listener and MCP protocol provenance is captured.
+- The upload service process and actual upload Sandbox/staging security context were not identified.
+- No Windows token/ACL, file-handle identity, reparse-point, no-replace publication or actual filesystem capability evidence was collected.
+- No upload/readback/recovery/cleanup/runtime E2E test was performed.
+- This does not close F01 and does not establish acceptance of F02/F03/F04.
+
+### NEXT
+- Preserve the dirty PC worktree; do not clean/reset/checkout or overwrite it.
+- Next runtime diagnostic must be separately scoped and authorized against the exact upload service process and actual Sandbox path. Do not infer this from the 8030 listener.
+- If the upload service cannot be identified through approved read-only evidence, request the smallest operator-provided process identity and Sandbox path evidence; do not introduce arbitrary command execution through MCP 8030.
+
+**STATUS:** PC LISTENER/MCP PROVENANCE CAPTURED / UPLOAD FILESYSTEM SECURITY NOT OBSERVED / F01 BLOCKED / F02 PARTIAL-NOT VERIFIED / F03-F04 BLOCKED / PR #85 DRAFT-UNMERGED / EXECUTION GATE CLOSED / NOT RELEASED.
+
+
+## 2026-11-27 — JRN-W28-151 — PC source-tree search for upload-service runtime integration
+
+**Người thực hiện:** Ka  
+**Chức danh:** W28 delegated implementation / architecture owner  
+**Evidence source:** Operator-provided PowerShell output in the W28 conversation  
+**PC repository:** `D:\ROOM-HOP-CLEAN\room-meeting-ai`  
+**Search roots:** `room_hop_mcp`, `core`, `execution_host`
+
+### RESULT
+- Operator confirmed all three search roots exist as directories (`Test-Path -PathType Container = True`).
+- Recursive search of Python files under those roots for `SandboxBinaryUploadService`, `sandbox_binary_upload_v1`, `sandbox.file.upload`, `binary_upload`, and `upload_service` returned no matching lines.
+- Search command used `Get-ChildItem -Recurse -File -Filter *.py -ErrorAction SilentlyContinue` piped to `Select-String`. Therefore the evidence is limited to discoverable `.py` files under these three roots and those exact search terms.
+- This is evidence that no matching import/registration reference was found in the searched source tree. It is not proof that no dynamic registration, alternate naming, packaged/compiled module, external plugin, or already-running in-memory service exists.
+- The prior live collector observed MCP Build listener PID 7664 and MCP initialize/tools/list success, but did not establish that PID 7664 loads or hosts the Work28 upload service.
+- The Work28 upload implementation file remains isolated in Work28 candidate source; it is not shown to be wired into the PC runtime by this search.
+
+### INTERPRETATION
+**Runtime integration is NOT EVIDENCED.** Do not describe the upload service as deployed, registered, reachable, or active. Do not infer that MCP Build PID 7664 is the upload service.
+
+### NEXT
+- Keep PC working tree untouched; no checkout, reset, cleanup, edit or service restart.
+- If further runtime attribution is needed, use a narrowly scoped read-only check of the actual listener process's loaded module provenance and startup configuration, without dumping command-line secrets or environment variables.
+- No host shell/ACL/handle inspection capability is inferred from MCP 8030 tools/list.
+
+**STATUS:** RUNTIME INTEGRATION NOT EVIDENCED / F01 BLOCKED / F02 PARTIAL-NOT VERIFIED / F03-F04 BLOCKED / PR #85 DRAFT-UNMERGED / EXECUTION GATE CLOSED / NOT RELEASED.
