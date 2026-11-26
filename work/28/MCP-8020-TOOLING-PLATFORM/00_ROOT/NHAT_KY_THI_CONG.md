@@ -3388,3 +3388,34 @@ Governance ownership handoff: CANONICALIZED / READBACK VERIFIED. PR #78: candida
 **Next action:** implement Linux dirfd backend and Windows native-handle backend behind one narrow interface, then refactor all lifecycle operations and execute the adversarial matrix on native runners.
 
 **Signed:** Ka — Delegated Work 28 Operational Owner / Remediation Lead
+
+
+## 2026-11-26 20:xx +07 — JRN-W28-132 — Rebuild remediation PR từ canonical HEAD, đóng PR phân kỳ
+
+**Name:** Ka  
+**Title:** Delegated Work 28 Operational Owner / Remediation Lead  
+**Date-Time:** 2026-11-26 20:xx +07 (Asia/Ho_Chi_Minh)  
+**Priority:** P0 — branch integrity / F01
+
+### TRACE / DECIDE
+- Rechecked canonical branch after JRN-W28-131. PR #81 head `305305bc7a9c84b144743890375ed971a618d11e` had diverged from the canonical branch (5 ahead / 9 behind; merge base `3db1cc68fa0bc521fe241211ef63105e4a9793c2`).
+- Do not merge/rebase a stale candidate with blind history resolution. Rebuild the candidate from current canonical HEAD `f6c1da25a30236bd3e1654e127ca2b3ed9e5a12c`.
+
+### BUILD / VERIFY
+- Created branch `ka/w28-remediation-20261126-r2` directly from canonical branch HEAD `f6c1da25a30236bd3e1654e127ca2b3ed9e5a12c`.
+- Re-applied the same three candidate files: baseline upload engine, native Linux/Windows upload test suite including the parent-swap regression, and workflow additions.
+- New branch compare verified: AHEAD 3 / BEHIND 0; merge base equals canonical HEAD. No force push, merge or rebase.
+- Opened replacement PR #82: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/pull/82
+- PR #82 is OPEN / DRAFT / UNMERGED; exact head `f0c52ae0ceca3edc1708b20f8d67022f576d4774`; base `f6c1da25a30236bd3e1654e127ca2b3ed9e5a12c`.
+- Closed PR #81 as superseded; it was not merged. Its historical run #513 failure evidence remains recorded in JRN-W28-130 and PR history.
+- New PR exact-SHA CI has not yet been evaluated in this journal entry; wait for run completion and inspect logs.
+
+### LIMITS / GATES
+- Rebuild changes branch ancestry only; it does not fix F01. Application engine remains path-based and the parent-swap regression remains enabled.
+- F01 BLOCKED; F02 PARTIAL / NOT VERIFIED; F03 BLOCKED; F04 BLOCKED.
+- Independent QA NOT ACCEPTED; independent security reviewer UNASSIGNED.
+- Execution Gate CLOSED. No merge, registration, deployment, live upload or release.
+
+**Next action:** inspect PR #82 exact-SHA CI, then implement the full filesystem backend across all lifecycle operations; do not treat clean branch ancestry as product remediation.
+
+**Signed:** Ka — Delegated Work 28 Operational Owner / Remediation Lead
