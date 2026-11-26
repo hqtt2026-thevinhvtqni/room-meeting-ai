@@ -4044,3 +4044,30 @@ Do not bolt the Linux primitive onto only `begin()`. The service needs one files
 - If the upload service cannot be identified through approved read-only evidence, request the smallest operator-provided process identity and Sandbox path evidence; do not introduce arbitrary command execution through MCP 8030.
 
 **STATUS:** PC LISTENER/MCP PROVENANCE CAPTURED / UPLOAD FILESYSTEM SECURITY NOT OBSERVED / F01 BLOCKED / F02 PARTIAL-NOT VERIFIED / F03-F04 BLOCKED / PR #85 DRAFT-UNMERGED / EXECUTION GATE CLOSED / NOT RELEASED.
+
+
+## 2026-11-27 — JRN-W28-151 — PC source-tree search for upload-service runtime integration
+
+**Người thực hiện:** Ka  
+**Chức danh:** W28 delegated implementation / architecture owner  
+**Evidence source:** Operator-provided PowerShell output in the W28 conversation  
+**PC repository:** `D:\ROOM-HOP-CLEAN\room-meeting-ai`  
+**Search roots:** `room_hop_mcp`, `core`, `execution_host`
+
+### RESULT
+- Operator confirmed all three search roots exist as directories (`Test-Path -PathType Container = True`).
+- Recursive search of Python files under those roots for `SandboxBinaryUploadService`, `sandbox_binary_upload_v1`, `sandbox.file.upload`, `binary_upload`, and `upload_service` returned no matching lines.
+- Search command used `Get-ChildItem -Recurse -File -Filter *.py -ErrorAction SilentlyContinue` piped to `Select-String`. Therefore the evidence is limited to discoverable `.py` files under these three roots and those exact search terms.
+- This is evidence that no matching import/registration reference was found in the searched source tree. It is not proof that no dynamic registration, alternate naming, packaged/compiled module, external plugin, or already-running in-memory service exists.
+- The prior live collector observed MCP Build listener PID 7664 and MCP initialize/tools/list success, but did not establish that PID 7664 loads or hosts the Work28 upload service.
+- The Work28 upload implementation file remains isolated in Work28 candidate source; it is not shown to be wired into the PC runtime by this search.
+
+### INTERPRETATION
+**Runtime integration is NOT EVIDENCED.** Do not describe the upload service as deployed, registered, reachable, or active. Do not infer that MCP Build PID 7664 is the upload service.
+
+### NEXT
+- Keep PC working tree untouched; no checkout, reset, cleanup, edit or service restart.
+- If further runtime attribution is needed, use a narrowly scoped read-only check of the actual listener process's loaded module provenance and startup configuration, without dumping command-line secrets or environment variables.
+- No host shell/ACL/handle inspection capability is inferred from MCP 8030 tools/list.
+
+**STATUS:** RUNTIME INTEGRATION NOT EVIDENCED / F01 BLOCKED / F02 PARTIAL-NOT VERIFIED / F03-F04 BLOCKED / PR #85 DRAFT-UNMERGED / EXECUTION GATE CLOSED / NOT RELEASED.
