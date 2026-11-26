@@ -1,0 +1,51 @@
+name: Work 33 RSFEH Historical Suite Validation
+
+on:
+  push:
+    branches:
+      - w33/rsfeh-validation-2026-11-27
+    paths:
+      - "work/33/ROOM-SHARED-FILE-EVIDENCE-HUB/RSFEH_VALIDATION/**"
+      - ".github/workflows/w33-rsfeh-validation.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: w33-rsfeh-validation
+  cancel-in-progress: true
+
+jobs:
+  rsfeh-tests:
+    name: RSFEH / Python 3.12 / pytest
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: work/33/ROOM-SHARED-FILE-EVIDENCE-HUB/RSFEH_VALIDATION
+    steps:
+      - name: Checkout isolated validation branch
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Verify canonical source SHA-256
+        run: |
+          printf '%s  %s\\n' \
+            '4b9f7c678f176b5d540e25381c566e60c5d85a5313cd23fb0b1583e22329d8f7' '04_CODE/src/rsfeh/store.py' \
+            'fdbd101d6cd4d21ebc571a337967d260a4168f89ab6d4b4b9bdb8713d24a394b' '04_CODE/src/rsfeh/cli.py' \
+            'd31dd588536f2d49fddb2735fd09c297e27f710e6b592ad49c8752af96154268' '04_CODE/src/rsfeh/__init__.py' \
+            'c6cd277050ead2d11c98b7cbab91ada7d19e495c95e4c86de1f9aaf2b2051d38' '04_CODE/src/rsfeh/__main__.py' \
+            | sha256sum --check -
+
+      - name: Set up isolated Python environment
+        run: |
+          python3 --version
+          python3 -m venv .venv
+          . .venv/bin/activate
+          python -m pip install --disable-pip-version-check pytest==9.0.3
+
+      - name: Run 17 historical unit and E2E tests
+        run: |
+          . .venv/bin/activate
+          set -o pipefail
+          python -m pytest -vv 05_TEST/unit/test_store.py 05_TEST/e2e/test_e2e_cli.py 2>&1 | tee pytest-validation.log
+
