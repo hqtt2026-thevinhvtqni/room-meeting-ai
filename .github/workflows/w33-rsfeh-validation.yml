@@ -52,5 +52,5 @@ jobs:
         run: |
           . .venv/bin/activate
           set -o pipefail
-          python -m pytest -vv 05_TEST/unit/test_store.py 05_TEST/e2e/test_e2e_cli.py 2>&1 | tee pytest-validation.log
+          python -m pytest -vv 05_TEST/unit/test_store.py 05_TEST/e2e/test_e2e_cli.py 05_TEST/security/test_known_gaps.py 2>&1 | tee pytest-validation.log
 
