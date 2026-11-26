@@ -3149,3 +3149,33 @@ Governance ownership handoff: CANONICALIZED / READBACK VERIFIED. PR #78: candida
 **STATUS:** ACTIVE / INTEGRATION BLOCKED / NOT RELEASED. Remediation lane and exact-SHA CI wiring initialized only.
 
 **Signed:** Ka — Delegated Work 28 Operational Owner / Delivery Coordinator
+
+
+## 2026-11-26 12:48 +07 — JRN-W28-125 — Exact-SHA CI bắt đầu chạy trên PR #81
+
+**Name:** Ka  
+**Title:** Delegated Work 28 Operational Owner / Delivery Coordinator  
+**Date-Time:** 2026-11-26 12:48 +07 (Asia/Ho_Chi_Minh)  
+**Priority:** P0  
+**PR:** #81  
+**Exact source SHA:** 25cc3afbab0fb07c1bd1dba70ce73411017b9a25  
+**Workflow run:** #511 / ID 45763312189
+
+### VERIFY
+- GitHub Actions run #511 được xác nhận qua API với event `pull_request`, branch `ka/w28-remediation-20261126`, exact SHA `25cc3afbab0fb07c1bd1dba70ce73411017b9a25`.
+- Job `Binary upload engine tests (native Windows)` đã được tạo và ở trạng thái IN_PROGRESS; job ID `139718543925`, runner Windows 2025.
+- Job `unit-regression-tests` đang IN_PROGRESS; job ID `139718543860`.
+- Job `execution-host-lifecycle-linux` đang IN_PROGRESS; job ID `139718543851`.
+- Job `execution-host-lifecycle-windows` đang QUEUED; job ID `139718543487`.
+- Chưa có job nào trả conclusion; do đó chưa có CI PASS/FAIL. Đây là CI evidence đang chạy, không phải independent acceptance.
+- PR #81 vẫn OPEN / DRAFT / UNMERGED. So với canonical branch sau journal commit mới nhất: 3 commits ahead / 1 commit behind; behind commit chỉ là canonical journal append sau khi PR head được tạo. Không có merge/rebase/force update thực hiện.
+
+### CURRENT LIMITS
+- PR #81 chứa baseline candidate, không chứa logic remediation F01–F04.
+- F01 BLOCKED; F02 PARTIAL / NOT VERIFIED; F03 BLOCKED; F04 BLOCKED.
+- Live Sandbox byte-for-byte SHA-256 NOT RUN; independent QA NOT ACCEPTED; independent security reviewer UNASSIGNED.
+- No merge, deploy, registration, live upload or Execution Gate change.
+
+**STATUS:** Exact-SHA CI IN PROGRESS; Work 28 remains ACTIVE / INTEGRATION BLOCKED / NOT RELEASED.
+
+**Signed:** Ka — Delegated Work 28 Operational Owner / Delivery Coordinator
