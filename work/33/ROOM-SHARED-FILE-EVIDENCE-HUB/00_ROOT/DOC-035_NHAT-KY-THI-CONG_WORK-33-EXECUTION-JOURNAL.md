@@ -326,3 +326,12 @@
 - This confirms SQLite rollback boundaries in isolated tests, not power-loss durability, multi-process fencing or production deployment behavior.
 - Remaining audit gaps: authorization DENY events/read operations are not logged by service wrapper; audit hash chain has no independently protected remote anchor; actor subject_id is still only a parameter passed from Principal and Core token verification is not implemented. QE review remains outstanding.
 - Sandbox test copy updated; read-back verification pending. Main untouched; no merge or deployment.
+
+
+## 2026-11-27 — Authorization decision and read-operation audit coverage
+- IMPLEMENTED on isolated branch `w33/cloud-drive-integrity-v1-20261127`: UploadService now requires AuditWriter configuration. Every authorization decision is audited as AUTHORIZATION_ALLOWED, AUTHORIZATION_DENIED or AUTHORIZATION_ERROR. Authorizer backend errors are converted to denial; audit write failure blocks the operation (fail closed). list_parts records UPLOAD_PARTS_LISTED only after successful retrieval and before returning data. Mutating upload audit events remain transactionally co-written by UploadSessionManager.
+- TESTS: Added authorization DENY with no session creation; ALLOW + read event sequence; service refuses startup without audit; authorizer backend error recorded as ERROR and denied; failed ALLOW audit blocks session creation.
+- GITHUB ACTIONS run 45895761801 SUCCESS, commit `6e1e699ce2d5f31c88dee1eb993da8279c2d893b`, Python 3.12.16, pytest 9.0.3. Historical RSFEH suite: 17 PASS + 2 XFAIL (known cross-scope dedupe and tampered get_bytes gaps). Cloud Drive integrity suite: 17/17 PASS. URL: https://github.com/hqtt2026-thevinhvtqni/room-meeting-ai/actions/runs/45895761801
+- SANDBOX: Synced latest UploadService and audit tests; read-back verification pending.
+- LIMITS: Principal is still a data object supplied by an upstream caller; this does NOT authenticate it. Core-backed token verification/authorization adapter remains unimplemented. Not every possible read or every non-upload permission path is covered. Hash chain lacks independent remote/WORM anchor; tests are isolated SQLite/MemoryStorage only. No power-loss/multi-process/production proof. No QE acceptance.
+- NEXT: Validate actor identity provenance at Core integration boundary and independently review authorization/audit semantics; then add concurrency/crash recovery fault injection. Main untouched, no merge/deployment.
