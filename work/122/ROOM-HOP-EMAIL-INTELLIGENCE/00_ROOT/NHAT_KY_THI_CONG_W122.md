@@ -208,3 +208,20 @@
 - Result: GitHub main synchronization and targeted post-write read-back PASS for the two specified files. This does not certify all W122 files are synchronized or that the architecture is approved.
 - W120/W121: no write attempted.
 - Next: continue read-only verification of source contracts and identify a legitimate review/dispatch path for Kha and Ka. G2 remains NOT APPROVED; G3 BUILD and real SEND remain NOT AUTHORIZED.
+
+
+## 2026-11-27 — J015 — Current W52/W11/W12 integration boundary recheck
+- Actor: Xu / ROOM-HOP identity xu.
+- Scope: read-only recheck current W52 A2A candidate, W11 production integration boundary and W12 execution-host boundary; no writes to those Works.
+- Method: sandbox_list for W52/W11/W12/01/16; sandbox_read_probe for W52 adapter-interface, permission-matrix, A2A contract, event model, Ka W52 review evidence, W11 production boundary and W12 execution-host boundary.
+- Findings:
+  1. W52 A2A contract and event model are DRAFT; described schema checks are not independent acceptance and do not prove runtime conformance.
+  2. W52 adapter is an injectable library, not an HTTP service/executor. CorePort/AuthorityPort need existing Core implementations; HostPort belongs to W14 owner. Inspected profile is no-tool/read-only and supports only task.stream_events; tool/write/approval/resume are unsupported pending W14 integration.
+  3. W52 permission matrix requires authenticated identity/role verification and independent tester/reviewer authorization; display names and task role assertions are not credentials.
+  4. W52 Ka evidence is explicitly for W52 and states Ka ACK is not verified. It is not proof Ka received or reviewed W122.
+  5. W11 boundary assigns identity, policy, membership, message/event identity, correlation, persistence and deduplication to Core; it rejects guessed calls when service contracts are unreadable.
+  6. W12 boundary says only Sandbox file API is exposed; process/service, GitHub gateway, CI and WorkContext-bound browser adapters are not configured/exposed through the inspected ROOM-HOP adapter.
+- Result: updated integration trace. W52 is a candidate contract reference only; no approved production task dispatch or email execution path has been evidenced. No guessed endpoint, runtime call, code or external email operation.
+- Artifact changes: appended section 19 to the existing W122 architecture proposal; no new architecture document created.
+- W120/W121: no write attempted.
+- Next: append and verify this evidence in the canonical journal; synchronize only the W122 architecture proposal and journal to GitHub main. Keep G2 NOT APPROVED and G3 BUILD NOT AUTHORIZED.
