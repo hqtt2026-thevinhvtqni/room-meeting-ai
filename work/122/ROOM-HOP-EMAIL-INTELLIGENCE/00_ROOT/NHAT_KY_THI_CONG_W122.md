@@ -377,3 +377,15 @@
 - GitHub evidence: create commit d3c21fd8382f8271e03319d0ed185801d1830b3f; post-write fetch verification follows.
 - Safety: no Core/Gateway/Host endpoint calls, no edits to dependent Works, no guessed route, no code/runtime/test/OAuth/mailbox/send. G2 NOT APPROVED; G3 NOT AUTHORIZED. W120/W121 untouched.
 - Next: verify artifact and journal on GitHub main; use this as the single W122 integration gap reference and avoid duplicating W112/W52 architecture.
+
+
+## 2026-11-27 — J030 — Minimum integration contract requirements draft
+- Actor: Xu / AI-01.
+- Scope: define logical minimum contract requirements for Core, W70, W52, W14 and W122; no guessed URLs, methods, runtime endpoints or implementation details.
+- Method: derived owner responsibilities and gap closure conditions from INT-GAP-W122-001, W122 Architecture Intake, W122 Auth-State/Threat Model, W112 DOC-001 and W17 GAP-01 evidence; separated identity/policy/audit, Assignment, dispatch/receipt/ACK, Host lifecycle and email-domain boundaries.
+- Artifact: `03_ARCHITECTURE/W122_MINIMUM_INTEGRATION_CONTRACT_REQUIREMENTS_DRAFT.md` (INT-CONTRACT-W122-001 v0.1-DRAFT).
+- Sandbox write: {"text":"{\n  \"status\": \"ok\",\n  \"work_id\": \"122\",\n  \"path\": \"03_ARCHITECTURE/W122_MINIMUM_INTEGRATION_CONTRACT_REQUIREMENTS_DRAFT.md\",\n  \"operation\": \"write\"\n}"}
+- GitHub create commit: 8e8b6f50797281d5a8413d4505c05d69628cb43a.
+- Status: design artifact created; not owner-approved; no endpoint calls, cross-Work edits, code, runtime tests, OAuth, mailbox read, Gmail draft/send or paid commitment.
+- Gate: G2 NOT READY / NOT APPROVED; G3 BUILD NOT AUTHORIZED. W120/W121 untouched.
+- Next: read back this artifact and journal entry on GitHub main; then map owner decisions to G2 without treating this draft as approval.
