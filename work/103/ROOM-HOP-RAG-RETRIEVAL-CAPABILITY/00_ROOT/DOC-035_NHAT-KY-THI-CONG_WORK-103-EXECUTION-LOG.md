@@ -270,3 +270,14 @@ Các commit d7f1963 và 4f83c5b được tạo trong một môi trường shell 
 - **Git verification:** DOC-063 exists on `work/103-rag-retrieval-capability` with blob SHA `c66bcfb7cee83a7819a9d399c4cb26dd26e847b6`; commit `fce400abd8687bb992638673c264ae65019a9709`. Branch comparison from that commit reports 3 commits ahead, 0 behind.
 - **Gate boundary:** DEBT-ES-01 FAIL; DEBT-ES-02 PARTIAL / FREEZE BLOCKED; DEBT-ES-07 FAIL. Independent retrieval gate FAIL 0.300 vs 0.800; Gate C BLOCKED; Release NOT PASS.
 - **Next:** Keep DOC-063 as report-only finding. Any contract/spec correction must use versioned artifacts and separate authorization; no gate promotion by this journal correction.
+
+
+## LOG-W103-20261127-004 — Dashboard synchronization after Ka adjudication
+- **Time:** 2026-11-27 12:xx UTC+07 (session-local; exact minute not asserted).
+- **Actor:** Ka — documentation synchronization.
+- **Scope:** DOC-058 read-only dashboard projection updated to reflect DOC-063/EVD-014 findings and current Gate/debt states. No source, tests, labels, fixtures, thresholds, CI workflows or gate logic changed.
+- **Changes:** DOC-058 version 1.1; Gate A remains OPEN/BLOCKED; DEBT-ES-01 FAIL, DEBT-ES-02 PARTIAL / B5 freeze BLOCKED, DEBT-ES-07 FAIL; EVD-014 added to evidence index; Gate C remains BLOCKED pending DEBT-ES-08; DOC-058 browser verification remains NOT VERIFIED.
+- **Git:** Dashboard update committed as 707bca66742e27b17ee11c6025f3d2465eaea829. Exact branch readback verified; DOC-058 blob SHA 3f4370b1093b8e425f824075736baf4614a41be3. Branch head at verification: 707bca66742e27b17ee11c6025f3d2465eaea829.
+- **CI:** No status checks or workflow runs were returned for this documentation-only commit; this is not a CI PASS.
+- **Branch relation:** work/103-rag-retrieval-capability is 128 commits ahead and 1828 behind main at this check. Branches are diverged; no merge, rebase, force-push or main synchronization was attempted.
+- **Result:** GitHub branch synchronized for DOC-058 and exact readback PASS. Independent retrieval gate remains FAIL 0.300 vs 0.800; Gate A/C blocked; Release NOT PASS.
