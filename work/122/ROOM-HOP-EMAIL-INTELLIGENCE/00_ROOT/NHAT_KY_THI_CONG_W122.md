@@ -345,3 +345,14 @@
 - Authority boundary: no decision is inferred from conversational continuation. All 12 items remain OPEN; no canonical Biên bản approval, G2 closure or G3 authorization.
 - No OAuth, mailbox access, code, test execution or external send. W120/W121 untouched.
 - Next: fetch and verify the decision register; append J026 to the canonical journal in Sandbox and GitHub main; prepare an evidence-based G2 review checklist.
+
+
+## 2026-11-27 — J027 — G2 gate readiness evidence checklist
+- Actor: Xu / AI-01.
+- Scope: assess documentary readiness against G2 requirements without changing gate status or implying approval.
+- Method: cross-checked G2 Decision Pack, Owner Decision Register, Threat Model, Authorization/State Machine, Synthetic Acceptance Plan and previously recorded W05/W52/W11/W12 integration findings; authored G2-CHECK-W122-001 with 15 criteria, evidence, status and closure conditions.
+- Sandbox evidence: sandbox_write returned status=ok for `03_ARCHITECTURE/W122_G2_GATE_READINESS_CHECKLIST_DRAFT.md`.
+- GitHub evidence: create commit a617330b0687177f9a1d56e6d773eaa91f598cb7; post-write read-back to follow.
+- Assessment: G2 NOT READY / NOT APPROVED. Owner decisions OPEN; Kha/Ka receipt/reviews NOT VERIFIED; Core identity/audit, W52 dispatch and W14 Host approved contracts NOT EVIDENCED; synthetic tests NOT RUN.
+- Safety: no OAuth, mailbox access, code, tests, paid service or external send. W120/W121 untouched.
+- Next: verify checklist and journal on GitHub main; continue evidence/decision closure without advancing G2 or G3.
