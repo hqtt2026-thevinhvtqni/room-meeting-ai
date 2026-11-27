@@ -157,3 +157,40 @@
 - GitHub main: plan update commit b3dcfb28df250e24cdd49f40791f9d1afd9a2376; post-update fetch blob SHA 63c9ae6e0fc7286914065e0b2b1786bb8b8e2116; nominated mailbox and demo section present.
 - GitHub main: journal update commit 8aafd5ac22c5b5f0c09946ec07f9a8272913a7ff; post-update fetch blob SHA b8b33e291ae5e269828a823723fe430340f47e91; J009 and mailbox address present.
 - Result: plan and journal synchronization/read-back PASS. Gmail account identity remains UNVERIFIED because get_profile returned empty; mailbox content has not been accessed.
+
+
+## 2026-11-27 — J011 — Architecture proposal deepening (mailbox-independent)
+- Actor: Xu / ROOM-HOP identity xu.
+- User direction: defer mailbox address/connection and continue completing W122 for Anh Đức.
+- Scope: deepen the existing architecture intake proposal only; preserve W120/W121 and do not start implementation.
+- Method: read-only inventory of W122; read-back of the existing architecture proposal, Kha/Ka briefs and canonical journal; append detailed logical data model, service boundaries, end-to-end flow, default automation matrix, privacy/retention, failure recovery, release slices, reserved Owner decisions and explicit blockers to the existing proposal.
+- Design boundary: all new API/service names are logical contracts, not verified deployed endpoints. All retention durations, provider choices beyond initial Gmail demo, costs, and autonomous-send categories remain unapproved Owner/ADR decisions.
+- Safety boundary: initial mode remains read-only + draft-only; autonomous send default DENY; no OAuth, mailbox access, credentials, provider calls, code, tests, or external send.
+- W120/W121: no write attempted.
+- Verification: pending read-back of updated proposal and journal.
+- Result: proposal update pending verification; G2 architecture NOT APPROVED; G3 BUILD NOT AUTHORIZED.
+- Next: verify both canonical Sandbox files; then sync exact verified contents to GitHub main only if the repository path/ref can be independently read and confirmed. Continue to seek real Kha/Ka findings and approved ROOM-HOP integration contracts; do not claim dispatch or review without receipt evidence.
+
+
+## 2026-11-27 — J012 — Architecture proposal and journal read-back verification
+- Actor: Xu / ROOM-HOP identity xu.
+- Method: sandbox_read_probe on the exact two canonical W122 paths after J011 writes.
+- Evidence:
+  1. Architecture proposal read-back returned content including sections 10–18: logical data model, service contracts, processing sequence, automation matrix, privacy/retention, failure recovery, release slices, Owner/ADR decisions and explicit blockers.
+  2. Journal read-back returned J011 with the recorded scope and constraints.
+  3. The read-back confirms the proposal still states G2 architecture NOT APPROVED and G3 BUILD NOT AUTHORIZED.
+- Result: Sandbox read-back PASS for the architecture proposal and journal after J011. J011's earlier "pending verification" is superseded by this J012 result.
+- GitHub: a read attempt against the previously recorded repository/path/ref returned HTTP 404 in this session. No GitHub write was attempted; do not claim main synchronization. Reconcile repository access/path before any mirror update.
+- W120/W121: no write attempted.
+- Next: obtain verifiable Kha/Ka review receipts and approved ROOM-HOP integration contracts; reconcile GitHub main read access; keep W122 in DISCOVER until Owner closes G0/G1 and approves G2. No BUILD or real send.
+
+
+## 2026-11-27 — J013 — GitHub main path reconciliation and sync preparation
+- Actor: Xu / ROOM-HOP identity xu.
+- Scope: reconcile the prior GitHub 404 and prepare exact Sandbox-to-main synchronization for the architecture proposal and canonical journal.
+- Method: GitHub get_repo confirmed repository `hqtt2026-thevinhvtqni/room-meeting-ai`, default branch `main`, repository ID 1336431953 and push permission. GitHub Contents API directory reads confirmed exact W122 paths and existing files under `work/122/ROOM-HOP-EMAIL-INTELLIGENCE`. GitHub fetch_file then successfully fetched the current architecture proposal and journal with their current blob SHAs.
+- Finding: the earlier 404 was transient/tool-path behavior, not evidence that the repository or W122 folder was missing. The existing GitHub architecture proposal is older (9-section baseline) than the verified Sandbox proposal (18 sections). The GitHub journal is also older and does not yet contain J011/J012.
+- Boundary: no GitHub write has been performed in this entry. The next sync must use exact full Sandbox contents, current fetched blob SHAs, sequential updates and post-write read-back.
+- W120/W121: no write attempted.
+- Result: GitHub repository/path access RECONCILED; synchronization pending.
+- Next: synchronize architecture proposal, then journal sequentially; fetch both from main and compare key sections/J011–J013. Do not change plan/minutes or any other Work.
