@@ -31,3 +31,11 @@ Do not infer PASS from a file existing or from a different commit's CI. Never ov
 | EVD-012 | Inbound-link audit + CI disposition + main-branch evidence drift | 04_PLAN/DOC-061_BAO-CAO-RA-SOAT-LIEN-KET_WORK-103-LINK-AUDIT-AND-CI-DISPOSITION.md; head 0c89b311 | 4/4 legacy pointers verified PASS; CI fail disposition = dataset/gate property (EVD-011), not migration; FINDING: main (head 83f39944) holds stray work/103/06_EVIDENCE/ with 4 blind-labeling gate files (Ka/Qw chain V1–V5, freeze BLOCKED) absent from the working branch; no silent copy per DOC-057 policy — Xu/Ka to decide. Producer: Vibe; details in LOG-W103-20261127-001. |
 | EVD-013 | Adjudication handover package + integrity anchors | 04_PLAN/DOC-062_GOI-BAN-GIAO_ADJUDICATION-HANDOVER-PACKAGE.md; head a310db46 | Blob SHAs recorded: contract V3 4c19b678e9ff37062081c0420c9de96f2852adfd; decision set V1 4f782f2d37620937f054de4a9c3a1a476b4ad7d9; fact specs V1 ed26f8f8ced43a4fcd631510f9882d2bd2d93301; fact specs V2 00bb8f89e7fe380ee5c8695a4d81002a62a688cb. SHA-256 per B5 to be computed by Ka at freeze time (build environment lacks SHA-256). Producer: Vibe; details in LOG-W103-20261127-002. |
 | EVD-014 | Ka independent adjudication evidence — DEBT-ES-01/02/07 | 04_PLAN/DOC-063_KA-ADJUDICATION_DEBT-ES-01-02-07.md; branch head before report fce400a | Report-only independent review; SHA-256 computed over GitHub UTF-8 text for Contract V3, Decision Set V1, Fact Specs V1/V2; DEBT-ES-01 FAIL, DEBT-ES-02 PARTIAL/FREEZE BLOCKED, DEBT-ES-07 FAIL. No code, label, fixture, threshold or gate changed. |
+
+
+### EVD-014 clarification — exact Git identity (2026-11-27)
+- EVD-014 canonical report: `04_PLAN/DOC-063_KA-ADJUDICATION_DEBT-ES-01-02-07.md`.
+- Report Git blob SHA: `c66bcfb7cee83a7819a9d399c4cb26dd26e847b6`.
+- Report commit: `fce400abd8687bb992638673c264ae65019a9709`.
+- The four SHA-256 values in DOC-063 are hashes of the exact UTF-8 text returned by GitHub's content API; they are not claimed as raw on-disk byte hashes. Git blob SHA anchors independently match DOC-062.
+- Disposition remains report-only: DEBT-ES-01 FAIL; DEBT-ES-02 PARTIAL / FREEZE BLOCKED; DEBT-ES-07 FAIL. No gate or release status is promoted.
