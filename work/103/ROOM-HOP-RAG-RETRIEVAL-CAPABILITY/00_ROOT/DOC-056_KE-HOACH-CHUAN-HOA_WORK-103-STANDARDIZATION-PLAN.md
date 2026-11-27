@@ -3,7 +3,7 @@
 - **Priority:** P0
 - **Read order:** 3
 - **Depends on:** DOC-001; DOC-055
-- **Status:** ACTIVE — BATCH 0 COMPLETE / BATCH 1 IN PROGRESS / BATCH 5 IN PROGRESS
+- **Status:** ACTIVE — BATCH 0 COMPLETE / BATCH 1 COMPLETE / BATCH 2 IN PROGRESS / BATCH 3 REGISTER+MAPPING COMPLETE / BATCH 5 IN PROGRESS
 - **Version / Updated:** 1.1 / 2026-11-09
 - **Owner:** Xu / AI-01
 - **Authority:** Vinh
@@ -20,9 +20,9 @@ Existing CI, imports and tests may depend on 04_CODE, 05_TEST and 06_EVIDENCE. F
 | Batch | Scope | Actions | Exit evidence | Status |
 |---|---|---|---|---|
 | 0 | Read/trace and governance baseline | Inventory current tree; establish DOC-001, sole DOC-055 register, this plan and canonical EVIDENCE index; preserve legacy paths | Exact GitHub readback and commit SHA | DONE |
-| 1 | 00_ROOT and official records | Promoted manifest, minutes, plan and execution journal to DOC-prefixed canonical paths; converted four old paths to compatibility pointers; registered records | Content/history preservation confirmed; inbound-link audit and CI regression still pending | IN_PROGRESS |
+| 1 | 00_ROOT and official records | Promoted manifest, minutes, plan and execution journal to DOC-prefixed canonical paths; converted four old paths to compatibility pointers; registered records | Xu closure 2026-11-27: DOC-061 confirms inbound-link audit 4/4 PASS and written CI regression disposition; independent gate FAIL remains unchanged | DONE — governance/build-level closure |
 | 2 | Lifecycle folders | Classify corpus originals, reference docs, architecture, requirements, plans, tests and acceptance evidence into 01_DISCOVER–07_ACCEPT; preserve code/test paths through mappings | Full old→new path map; no broken imports/CI | NOT_STARTED |
-| 3 | 05_BUILD engineering map | Create Work Package register and mapping records for source, tests, CI and evidence; define exact canonical source repo/path/branch/commit | WP completeness and source mapping validation | NOT_STARTED |
+| 3 | 05_BUILD engineering map | Create Work Package register and mapping records for source, tests, CI and evidence; define exact canonical source repo/path/branch/commit | Xu closure 2026-11-27: DOC-060 WP-103-01..08 register and DOC-059 CI/code dependency mapping verified; no physical migration or runtime validation claimed | DONE — register + mapping only |
 | 4 | EVIDENCE migration | Audit all links, workflow paths and consumers of 06_EVIDENCE; migrate canonical index to EVIDENCE/ without duplicate independent copies; retain compatibility pointers | Link checker, workflow pass, hash/readback | NOT_STARTED |
 | 5 | DASHBOARD | Build read-only Work Execution dashboard and Product dashboard where applicable; derive data from canonical Manifest/Register/WP/Gates/Evidence; no mock values | Schema validation, live source readback, browser verification | IN_PROGRESS — DOC-058 created 2026-11-09; exit evidence NOT yet complete |
 | 6 | VERIFY / ACCEPT / RELEASE readiness | Independent QE validates structure, registers, links, lifecycle gates, dashboard and CI | Signed verification evidence and gate decision | NOT_STARTED |
@@ -86,3 +86,12 @@ Inbound-link audit PASS 4/4 pointers (DOC-061 §1); CI regression disposition re
 
 ## Batch 4 prep note — 2026-11-27 (Vibe, LOG-W103-20261127-001)
 Audit tiêu dùng 06_EVIDENCE: 1 write target vật lý (CI tee C7), 26 file, không có tham chiếu vật lý từ code. Di chuyển khi thực hiện phải là một commit duy nhất đồng bộ C7 + hash/readback + link audit (DOC-059 §3). Chưa di chuyển.
+
+
+## Xu decision record — 2026-11-27 (LOG-W103-20261127-003)
+- Batch 1: CLOSED at governance/build-level; 4/4 legacy pointers PASS and CI regression disposition documented in DOC-061. Independent gate FAIL 0.300 vs 0.8 remains unchanged.
+- Batch 3: CLOSED for WP register + source/CI mapping only (DOC-060/DOC-059). No source, test or evidence moves are implied.
+- Main-only blind-labeling evidence drift: preserve four historical files on main; no copy/delete until Ka has verified provenance and the team records an explicit import decision.
+- Batch 4: preparation only; physical migration remains NOT STARTED. Any future migration must update CI C7 tee target in the same commit and verify all 26 files plus links.
+- Batch 5: remains IN_PROGRESS; browser verification of DOC-058 is outstanding (DEBT-ES-09).
+- Gate C remains BLOCKED pending Ka adjudication (DEBT-ES-01/02/07) and explicit citation alignment disposition (DEBT-ES-08).

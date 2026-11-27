@@ -49,9 +49,9 @@
 | Batch | Phạm vi | Trạng thái |
 |---|---|---|
 | 0 | Governance baseline (DOC-001/055/056/057/035) | DONE |
-| 1 | 00_ROOT + hồ sơ chính thức | IN_PROGRESS (link audit PASS 4/4 + CI disposition xong — DOC-061; closure chờ Xu) |
+| 1 | 00_ROOT + hồ sơ chính thức | DONE — Xu closed 2026-11-27; 4/4 pointer audit + CI disposition documented (DOC-061); independent gate unchanged |
 | 2 | Lifecycle folders | IN_PROGRESS (mapping/classification DONE — DOC-059 + README indexes; physical moves DEFERRED có lý do) |
-| 3 | 05_BUILD engineering map / WP register | DONE-register (DOC-060, WP-103-01..08; chờ Xu xác nhận) |
+| 3 | 05_BUILD engineering map / WP register | DONE — register + source/CI mapping only (DOC-060/DOC-059); no physical source move implied |
 | 4 | EVIDENCE migration | NOT_STARTED (prep audit xong — DOC-061 §2: 1 write target C7, 26 file) |
 | 5 | DASHBOARD | IN_PROGRESS (DOC-058 đã tạo; verification chưa xong) |
 | 6 | VERIFY / ACCEPT / RELEASE readiness | NOT_STARTED |
@@ -66,8 +66,8 @@
 | DEBT-ES-03 | Thiết kế/phê duyệt Gate C (chỉ sau adjudication) | Xu |
 | DEBT-ES-04 | Quyết định tích hợp riêng cho E2E MCP :8020 → Core :8000 | Xu |
 | DEBT-ES-08 | Citation-source alignment — metric Gate C ứng viên (fold vào Gate C design sau adjudication) | Xu |
-| DEBT-ES-05 | Đăng ký artifact mới trong DOC-055/DOC-057 | Xu — ĐÃ ĐÓNG bởi mapping 2026-11-09 (chờ Xu xác nhận) |
-| DEBT-ES-09 | Browser verification DOC-058 + xác nhận closure DEBT-ES-05 | Xu |
+| DEBT-ES-05 | Đăng ký artifact mới trong DOC-055/DOC-057 | CLOSED — Xu confirmed 2026-11-27; DOC-062/DOC-055 and EVD-013/DOC-057 exact-readback verified |
+| DEBT-ES-09 | Browser verification DOC-058 | OPEN — browser verification not performed; DOC-058 remains NOT VERIFIED |
 | DEBT-ES-10 | Closure Batch 1: inbound-link audit + CI regression disposition | Xu |
 
 ## 6. Chỉ mục bằng chứng (DOC-057)
@@ -83,3 +83,12 @@ WP index: WP-103-01 retrieval core · 02 eval baseline · 03 evidence-support st
 1. Ka: DEBT-ES-01/02/07 — adjudication độc lập là nút thắt cổ chai của mọi gate còn lại.
 2. Xu: DEBT-ES-03/08 (Gate C design sau adjudication), DEBT-ES-04, xác nhận DEBT-ES-05, verification Batch 5.
 3. Vibe: tiếp tục build theo ủy quyền thường trực; không tự phê duyệt.
+
+
+## Xu decisions — 2026-11-27 (LOG-W103-20261127-003)
+- Batch 1 CLOSED (governance/build-level only); independent gate FAIL 0.300 vs 0.8 preserved.
+- Batch 3 CLOSED for register and mapping only; no source/test/evidence migration implied.
+- Four historical blind-labeling files found only on main are preserved in place; no silent copy/delete. Ka may use them as read-only context pending provenance verification.
+- DEBT-ES-05 CLOSED after DOC-055/DOC-057 exact readback including DOC-062/EVD-013.
+- DEBT-ES-09 OPEN; browser verification of this dashboard has not been done. Dashboard status remains NOT VERIFIED.
+- Gate C remains BLOCKED pending Ka adjudication DEBT-ES-01/02/07 and explicit DEBT-ES-08 citation-alignment disposition.
