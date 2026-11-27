@@ -322,3 +322,15 @@
 - Result: GitHub main publication of the existing brief; no second Sandbox brief created.
 - Boundary: publication is not dispatch. Ka has NOT been verified as receiving or accepting the review. No security verdict or G2 approval implied.
 - Next: verify the GitHub brief, update the canonical journal with the current blob SHA, and read back both files.
+
+
+## 2026-11-27 — J025 — Email authorization matrix and state machine draft
+- Actor: Xu / AI-01.
+- Scope: define proposed actor authority, capability/release matrix, server-side authorization decision contract, message/draft/connection/send state machines, transition guards, human approval binding, audit/failure semantics and acceptance mapping.
+- Method: authored AUTH-STATE-W122-001 v0.1-DRAFT; cross-checked against the existing G2 Decision Pack, SEC-W122-001 threat model and synthetic tests T001–T024.
+- Sandbox evidence: sandbox_write returned status=ok for `03_ARCHITECTURE/W122_EMAIL_AUTHORIZATION_MATRIX_AND_STATE_MACHINE_DRAFT.md`; read-probe performed before publication.
+- Key constraints: R0–R3 send DENY; Gmail-native draft remains separate from W122-local draft; R4 send is future-only and disabled; UNKNOWN provider outcome requires reconciliation and must never be blindly retried; inbound email/model output never grants authority.
+- GitHub evidence: artifact create result 2b9b5dda3e8c9f064d9419cc7ffa9fcd86d1ec67; post-write fetch verification to follow.
+- Gate: document is a proposal only. Ka review NOT RECEIVED/VERIFIED; Owner decisions OPEN; G2 NOT APPROVED; G3 BUILD NOT AUTHORIZED; no OAuth, mailbox operation, code or test execution.
+- W120/W121: untouched.
+- Next: verify artifact on GitHub, append J025 to the canonical journal in Sandbox and GitHub main, then prepare an owner decision register without implying approval.
