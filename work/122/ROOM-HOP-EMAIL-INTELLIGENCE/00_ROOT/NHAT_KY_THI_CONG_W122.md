@@ -423,3 +423,16 @@
 - Result: J032 journal synchronization and post-write read-back PASS. Closure map remains at blob SHA `744baa6feca4ccaefe87e24dc7d3ccfeb697ffe9`; journal final verified blob SHA recorded above.
 - Gate: ODR-01..12 OPEN; G2 NOT READY / NOT APPROVED; G3 BUILD NOT AUTHORIZED. No mailbox operation, code, test execution, paid service or email side effect. W120/W121 untouched.
 - Next: continue mailbox-independent design preparation; obtain verified reviewer receipts and Owner decisions before any gate transition.
+
+
+## 2026-11-27 — J034 — Data inventory and privacy control pack drafted
+- Actor: Xu / AI-01.
+- Scope: create `DATA-PRIV-W122-001` covering data classes, purpose/minimization, processing-stage controls, trust boundaries, retention/deletion requirements, external model review, privacy acceptance evidence and demo data policy.
+- Method: cross-check current Owner Decision Register, authorization/state-machine proposal and established W122 integration/gate boundaries; write the pack as a design proposal with unresolved owner choices explicitly OPEN.
+- Artifact: `03_ARCHITECTURE/W122_DATA_INVENTORY_AND_PRIVACY_CONTROL_PACK_DRAFT.md`.
+- Key controls proposed: tenant/mailbox binding; secret-manager-only OAuth tokens; metadata minimization; no persistent raw body/attachment by default; external-model processing blocked until ODR-11; attachments excluded from initial release proposal; minimal notification payloads; immutable approval/audit metadata; deletion coverage for primary and derived data; separate Anh Đức tenant/onboarding.
+- Owner decisions still required: ODR-03, ODR-05, ODR-06, ODR-07, ODR-08, ODR-11 and ODR-12. No numeric retention period, residency, provider or model selected on Owner's behalf.
+- Sandbox write returned status=ok; read-back returned 15,138 bytes and expected Markdown heading. GitHub main artifact fetch/read-back PASS: blob SHA `12f56ec5d1f5faac858a2e5f2d228b7277950b3d`, 14,928 characters; confirms ODR-11, external-model DENY, G2 NOT READY and G3 NOT AUTHORIZED. GitHub create commit: `3df80567eb0c1a1f1b5e1cd09037f3d60b6dc5a0`.
+- Safety: no real mailbox access, OAuth, external model processing, attachment retrieval, code, tests, paid service or email side effect. W120/W121 untouched.
+- Gate: G2 NOT READY / NOT APPROVED; G3 BUILD NOT AUTHORIZED.
+- Next: synchronize this entry to GitHub main and verify the canonical journal read-back.
