@@ -365,3 +365,15 @@
 - Evidence: repair commit 05abf95f9e3ba1a781d99a2eb2f57b6aab57ce15; post-write fetch blob SHA 4d7e91e1a9dbec6725b42e02dc85a698e119fda7; read-back confirms Markdown title, no JSON wrapper, and R4 disabled.
 - Result: GitHub artifact format repair and read-back PASS. No new duplicate document created.
 - Safety/gates unchanged: G2 NOT APPROVED; G3 BUILD NOT AUTHORIZED; no OAuth, mailbox, code, tests or send. W120/W121 untouched.
+
+
+## 2026-11-27 — J029 — Core/W52/W14 integration contract gap trace
+- Actor: Xu / AI-01.
+- Scope: read-only source-level comparison of Core identity/authorization/audit ownership, W52 A2A lifecycle and ports, W14 HostPort/RpcPort compatibility, and current inspected 8030 capabilities.
+- Method: GitHub search across W17 GAP-01, W112 DOC-001 references, W113 Discover/Architecture and W122 Architecture Intake; mapped evidence, confidence, owner boundaries, critical gaps and required closure proof into INT-GAP-W122-001.
+- Findings: Core callable identity/policy/audit contract NOT EVIDENCED; W52 v0.1 remains DRAFT/NOT RELEASED with missing typed delivery/recipient ACK proof in cited trace; W52 HostPort persistent bidirectional RpcPort is not drop-in compatible with inspected W14 one-shot POST /execute; current inspected 8030 surface does not evidence Work Host/private dispatch/ACK.
+- Important qualification: W17 trace is dated 2026-11-19 and W113 describes scoped inspected environments/historical attestations; findings are not a universal claim that no such runtime exists elsewhere. Fresh exact-SHA/runtime proof requires an approved read-only path.
+- Sandbox evidence: sandbox_write status=ok for `03_ARCHITECTURE/W122_CORE_W52_W14_INTEGRATION_GAP_MATRIX_DRAFT.md`.
+- GitHub evidence: create commit d3c21fd8382f8271e03319d0ed185801d1830b3f; post-write fetch verification follows.
+- Safety: no Core/Gateway/Host endpoint calls, no edits to dependent Works, no guessed route, no code/runtime/test/OAuth/mailbox/send. G2 NOT APPROVED; G3 NOT AUTHORIZED. W120/W121 untouched.
+- Next: verify artifact and journal on GitHub main; use this as the single W122 integration gap reference and avoid duplicating W112/W52 architecture.
