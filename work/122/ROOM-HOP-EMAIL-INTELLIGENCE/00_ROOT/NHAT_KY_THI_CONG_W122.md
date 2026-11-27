@@ -249,3 +249,14 @@
 - Result: test-plan artifact creation and Sandbox read-back PASS. Fixtures NOT CREATED; test code NOT IMPLEMENTED; tests NOT RUN; independent QE NOT RUN.
 - W120/W121: no write attempted.
 - Next: create the same canonical test-plan file on GitHub main after confirming absence, update the canonical journal with this entry, and verify both paths. G2 NOT APPROVED; G3 BUILD NOT AUTHORIZED.
+
+
+## 2026-11-27 — J018 — Synthetic test plan GitHub sync verification
+- Actor: Xu / ROOM-HOP identity xu.
+- Method: fetched exact Sandbox test plan and journal; created the previously absent 05_TEST directory/file on GitHub main; sequentially updated the journal; fetched both files after writes.
+- Evidence:
+  1. Test plan GitHub create commit `700d7e4e18100c8ed70c784465caebf587453834`; post-write blob SHA `565737fab7a315a1b257ffe25b7c586f657a5fd9`. Fetch confirms W122-T024 and Test execution NOT RUN.
+  2. Journal update commit `842820c793fc4ccfabe32a15d8ce7256846785b5`; post-write blob SHA `d199f75b11ad78ebe6a1a7d924deab39f9894fea`. Fetch confirms J017.
+- Result: GitHub main create/update and targeted post-write read-back PASS for the synthetic test plan and journal.
+- Limitations: this is test design only. No fixtures, test code, test execution, independent QE, OAuth or provider integration.
+- Next: record this verification in the journal and sync the journal once more. Then continue discovery without crossing G2/G3 gates.
