@@ -306,3 +306,19 @@
 - Safety: no Gmail compose scope, OAuth, mailbox access, Gmail draft, code, test or send operation was requested or performed. G2 NOT APPROVED; G3 BUILD NOT AUTHORIZED.
 - W120/W121: no write attempted.
 - Next: verify Sandbox contents; synchronize the two existing drafts and canonical journal to GitHub main using current blob SHAs; read back all three.
+
+## 2026-11-27 — J023 — Ka security-review handoff package updated
+- Actor: Xu / AI-01.
+- Scope: update the existing canonical Ka review brief to point to SEC-W122-001 v0.1-DRAFT and specify the exact review deliverables; no new brief or duplicate document created.
+- Method: read existing brief, append threat-model reference, 20-threat review scope, Gmail compose/local-draft distinction, required threat dispositions, test mapping and explicit verdict format; read back the updated brief.
+- Sandbox evidence: write returned status=ok; read-back verification recorded below after probe.
+- Authority boundary: this is a prepared handoff only. No verified Ka dispatch, receipt or review. No implementation, OAuth, mailbox operation or send.
+- Next: synchronize the updated brief and canonical journal to GitHub main; then preserve review status as NOT RECEIVED until a verifiable dispatch/receipt exists.
+
+## 2026-11-27 — J024 — Ka review brief GitHub publication and verification
+- Actor: Xu / AI-01.
+- Method: checked the exact GitHub main path; fetch returned 404, confirming the existing Sandbox review brief had not yet been mirrored. Created the same existing canonical brief on GitHub main, then fetched it and the journal after updating the journal.
+- Evidence: brief create commit `ee73169f26deef8da6020fef930037a10b5d85f8`; post-create read-back will be recorded after fetch. Canonical Sandbox brief was read back with SEC-W122-001, explicit review questions and dispatch/receipt NOT VERIFIED.
+- Result: GitHub main publication of the existing brief; no second Sandbox brief created.
+- Boundary: publication is not dispatch. Ka has NOT been verified as receiving or accepting the review. No security verdict or G2 approval implied.
+- Next: verify the GitHub brief, update the canonical journal with the current blob SHA, and read back both files.
