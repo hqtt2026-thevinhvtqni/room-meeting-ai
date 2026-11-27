@@ -283,3 +283,15 @@
 - Result: GitHub main create/update and targeted read-back PASS for the decision pack and journal.
 - Limitations: the pack is a draft recommendation, not an Owner decision or canonical Biên bản amendment. Kha/Ka dispatch remains unverified; no runtime, OAuth, mailbox or send operation.
 - Next: append J020 and synchronize the journal; continue independent risk/acceptance design without claiming G2 closure.
+
+
+## 2026-11-27 — J021 — Threat model and security controls draft
+- Actor: Xu / AI-01.
+- Scope: create one security threat-model artifact under the existing W122 architecture folder; no code, provider connection or mailbox operation.
+- Method: authored SEC-W122-001 v0.1-DRAFT covering security objectives, assets, trust boundaries, threat actors, 20 STRIDE-oriented threats, risk levels, required controls, non-negotiable policy invariants, proposed control architecture, data classification, failure behavior, negative-test mapping to W122-T001–T024, release security gates and review questions for Ka.
+- Key design rule: inbound email and attachments are untrusted data; they cannot grant permissions, invoke tools, alter policy or approve external side effects. Initial pilot remains read-only + draft-only; send disabled.
+- Sandbox evidence: sandbox_write returned status=ok for `03_ARCHITECTURE/W122_THREAT_MODEL_AND_SECURITY_CONTROLS_DRAFT.md`; sandbox_read_probe returned status=ok and the full 21,920-byte content.
+- Review status: Ka independent review NOT RECEIVED; severity ratings are preliminary; no security test executed.
+- Safety/gates: no OAuth, mailbox access, code, tests, production configuration or external send. G2 NOT APPROVED; G3 BUILD NOT AUTHORIZED.
+- W120/W121: no write attempted.
+- Next: create the threat-model draft on GitHub main, append this journal entry, and fetch both files after writes. Then prepare a concise reviewer handoff; do not claim Ka receipt or approval without verifiable dispatch/receipt evidence.
