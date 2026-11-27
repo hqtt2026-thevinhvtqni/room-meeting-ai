@@ -250,3 +250,12 @@ Các commit d7f1963 và 4f83c5b được tạo trong một môi trường shell 
 - **Ka handover:** DOC-062 is READY as a versioned package, but no verified dispatch/recipient ACK is available in the current session. Ka adjudication is NOT STARTED/NOT ACKNOWLEDGED here. Ka must independently inspect the four artifacts, compute SHA-256 at freeze under B5, and record per-row decisions/rationales/resolutions. Xu does not substitute for Ka.
 - **Non-changes:** no labels, fixtures, thresholds, source code, rag_retrieval.py, rag_eval.py, tests, CI workflows, independent gate or release status changed. Unit suites previously reported PASS on Python 3.11/3.12 remain build-level evidence only. Release remains NOT PASS.
 - **Result:** Xu decisions 1–5 recorded; no technical gate was promoted. Next critical path is Ka's independent adjudication; after that Xu may resume Gate C design and resolve DEBT-ES-08. Batch 4 migration remains PREPARED only and requires a single coordinated commit including CI C7 tee path plus hash/readback/link checks.
+## LOG-W103-20261127-003 — Ka independent adjudication DEBT-ES-01/02/07
+- **Time:** 2026-11-27 (UTC+07).
+- **Actor:** Ka — independent adjudicator.
+- **Scope:** Read-only review of DOC-062 handover, Contract V3, Decision Set V1, Fact Specs V1/V2, Qw V5, Manifest V4, corpus fixtures, implementation and Gate B tests. No source/test/label/fixture/threshold/CI/gate changes.
+- **Integrity:** Git blob anchors matched DOC-062. SHA-256 computed over exact UTF-8 text returned by GitHub for all four artifacts; values recorded in DOC-063.
+- **Findings:** DEBT-ES-01 FAIL (absence source binding and scope-limited flag semantics defects; support-source scope needs explicit rule); DEBT-ES-02 PARTIAL (13 rows = 11 gate-counted + 2 pending; row semantics reviewed, but B5 record/freeze remains blocked); DEBT-ES-07 FAIL (Q009 mismatch with Qw V5; Q015/Q020/Q023 polarity mislabels; Q037 source alignment unresolved).
+- **Xu decisions respected:** Batch 1 / DEBT-ES-10 CLOSED; main-only blind-label history kept in place; DEBT-ES-05 CLOSED; DEBT-ES-09 OPEN and DOC-058 NOT VERIFIED; Gate C BLOCKED; Batch 3 register/mapping closure only.
+- **Status:** DOC-063 created and registered as EVD-014. Gate A remains OPEN/BLOCKED; Gate C BLOCKED; independent retrieval gate FAIL 0.300 vs 0.800; Release NOT PASS. No PASS or E2E claim.
+- **Next:** correct contract and fact specs in new versioned artifacts only after authorized review; obtain Xu freeze/blind-process attestation; resolve DEBT-ES-08 before Gate C.
