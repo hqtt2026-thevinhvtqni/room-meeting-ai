@@ -68,7 +68,7 @@
 | DEBT-ES-08 | Citation-source alignment — metric Gate C ứng viên (fold vào Gate C design sau adjudication) | Xu |
 | DEBT-ES-05 | Đăng ký artifact mới trong DOC-055/DOC-057 | CLOSED — Xu confirmed 2026-11-27; DOC-062/DOC-055 and EVD-013/DOC-057 exact-readback verified |
 | DEBT-ES-09 | Browser verification DOC-058 | OPEN — browser verification not performed; DOC-058 remains NOT VERIFIED |
-| DEBT-ES-10 | Closure Batch 1: inbound-link audit + CI regression disposition | Xu |
+| DEBT-ES-10 | Closure Batch 1: inbound-link audit + CI regression disposition | CLOSED — Xu approved 2026-11-27 per DOC-061; 4/4 pointer audit + CI disposition recorded; independent gate unchanged |
 
 ## 6. Chỉ mục bằng chứng (DOC-057)
 EVD-001 (CI 40668733280) · EVD-002 (blind pool V1, UNLABELED) · EVD-003 (thí nghiệm có kiểm soát lịch sử) · EVD-004 (replication addendum) · EVD-005 (Gate A/B report) · EVD-006 (evidence lịch sử) · EVD-007 (run #85 FAIL độc lập 0.300) · EVD-008 (Gate A/B CI runs) · EVD-009 (corpus diagnostic 50 query) · EVD-010 (v2 metrics run #96) · EVD-011 (root-cause diagnostic v3).
