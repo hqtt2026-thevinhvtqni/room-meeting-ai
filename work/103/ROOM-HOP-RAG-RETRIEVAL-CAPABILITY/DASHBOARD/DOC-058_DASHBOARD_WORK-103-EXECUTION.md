@@ -94,3 +94,12 @@ WP index: WP-103-01 retrieval core · 02 eval baseline · 03 evidence-support st
 - DEBT-ES-05 CLOSED after DOC-055/DOC-057 exact readback including DOC-062/EVD-013.
 - DEBT-ES-09 OPEN; browser verification of this dashboard has not been done. Dashboard status remains NOT VERIFIED.
 - Gate C remains BLOCKED pending adjudication findings and explicit DEBT-ES-08 citation-alignment disposition.
+
+
+## Adjudication update — DOC-063 / EVD-014 (2026-11-27)
+- Ka's independent read-only review is recorded in DOC-063 (blob `c66bcfb7cee83a7819a9d399c4cb26dd26e847b6`; commit `fce400abd8687bb992638673c264ae65019a9709`).
+- DEBT-ES-01: **FAIL** — Contract V3 requires source-binding for absence evidence, correct handling of the scope-limited flag, and explicit support-source scope semantics.
+- DEBT-ES-02: **PARTIAL / FREEZE BLOCKED** — Decision Set V1 semantic review recorded (13 rows: 11 gate-counted + 2 pending); B5 independent reviewer/resolution fields and valid freeze remain outstanding.
+- DEBT-ES-07: **FAIL** — Q009/Q015/Q020/Q023 findings and Q037 source alignment require versioned correction/resolution; original V2 remains unchanged.
+- No source, tests, labels, fixture, thresholds, CI workflows or gates were changed by this review. Gate A remains OPEN/BLOCKED; Gate C BLOCKED; independent retrieval gate remains FAIL 0.300 vs 0.800; Release NOT PASS.
+- DOC-058 remains **NOT VERIFIED** because browser verification has not been performed. This note is a source-backed status update, not a gate decision.
