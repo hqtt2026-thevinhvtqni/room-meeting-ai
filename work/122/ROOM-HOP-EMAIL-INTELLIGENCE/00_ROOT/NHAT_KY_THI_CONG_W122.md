@@ -436,3 +436,12 @@
 - Safety: no real mailbox access, OAuth, external model processing, attachment retrieval, code, tests, paid service or email side effect. W120/W121 untouched.
 - Gate: G2 NOT READY / NOT APPROVED; G3 BUILD NOT AUTHORIZED.
 - Next: synchronize this entry to GitHub main and verify the canonical journal read-back.
+
+
+## 2026-11-27 — J035 — Data privacy pack publication verified
+- Actor: Xu / AI-01.
+- Method: fetched the data privacy artifact and canonical journal from GitHub main after J034 synchronization; checked exact blob SHA, content length and required gate markers.
+- Evidence: `03_ARCHITECTURE/W122_DATA_INVENTORY_AND_PRIVACY_CONTROL_PACK_DRAFT.md` blob SHA `12f56ec5d1f5faac858a2e5f2d228b7277950b3d`, 14,928 characters; contains DATA-PRIV-W122-001, ODR-11 external-model DENY and the G2/G3 gate statements. Canonical journal prior blob SHA `95e3e60a3c652e1e13fd857bb343bc07687cf838`, 51,126 characters; confirms J034 and gate statements.
+- Result: artifact and J034 journal publication/read-back PASS. This is document integrity/publication evidence only, not independent privacy review, Owner approval, legal compliance certification or runtime control verification.
+- Gate: ODR decisions remain OPEN; G2 NOT READY / NOT APPROVED; G3 BUILD NOT AUTHORIZED. W120/W121 untouched.
+- Next: verify this J035 journal synchronization; prepare a cost model worksheet with explicit variables and no unapproved paid commitments.
