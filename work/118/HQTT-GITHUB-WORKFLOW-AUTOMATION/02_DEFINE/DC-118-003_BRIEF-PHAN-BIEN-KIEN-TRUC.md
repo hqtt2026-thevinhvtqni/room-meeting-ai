@@ -49,3 +49,17 @@
 4. AD-5: nhánh evidence có cần branch protection riêng (ai được push bot)?
 5. Conventions (QC-118-002) có cần thêm phần conflict-resolution khi nhánh
    package trùng Work đã tồn tại trên main không?
+
+
+## 6. Ka architecture disposition — Auto E2E v2 (2026-11-20)
+
+**Decision:** retain GitHub-native events for ingress and use a separate failure-diagnostics workflow; do not add a ROOM-HOP webhook listener until authentication, replay protection, permissions and runtime contract are independently verified.
+
+- Replace prefix-only ACK with exact syntax + role-map authorization. Unknown actors/roles fail closed.
+- Keep Vinh's two owner-confirmed GitHub logins separately auditable and acceptance-only. No executor mapping is inferred for Ka, Xu, Vi or An.
+- Keep the failure listener separate from the orchestrator. Its upstream list includes W118 Auto E2E, the legacy W118 pilot, W300 and Work 70; it does not listen to itself.
+- Diagnostics dedup key is workflow ID + commit SHA; each run attempt has a separate update marker. No automatic retry is performed.
+- CI produces an immutable run artifact with run ID, attempt, source SHA, event and test outcome. The artifact state is RECORDED only; it does not write into Work 70's register before Work 70 approves the schema.
+- Review events can be recorded only when reviewer is mapped and is not the PR author. The workflow never merges or releases.
+
+**Implementation evidence:** branch `work/118-auto-e2e-v2`; latest completed contract test Run `44746143577` SUCCESS (26 tests). Full runtime event verification and Xu/Vinh acceptance remain pending.

@@ -1,0 +1,150 @@
+{
+  "schema_version": "1.0",
+  "work_id": "118",
+  "dependencies": {
+    "core_task_authority": {
+      "owner": "OWNER-MUST-SUPPLY",
+      "contract_id": "OWNER-MUST-SUPPLY",
+      "contract_version": "OWNER-MUST-SUPPLY",
+      "source_revision": "OWNER-MUST-SUPPLY",
+      "contract_ref": "OWNER-MUST-SUPPLY",
+      "approved": false,
+      "base_url": "https://OWNER-MUST-SUPPLY",
+      "auth": {
+        "mode": "BEARER_REF",
+        "credential_ref": "secret-manager://OWNER-MUST-SUPPLY"
+      },
+      "operations": {
+        "read_task": {
+          "method": "OWNER-MUST-SUPPLY",
+          "path": "/OWNER-MUST-SUPPLY",
+          "request_schema_ref": "OWNER-MUST-SUPPLY",
+          "response_schema_ref": "OWNER-MUST-SUPPLY",
+          "side_effect": "OWNER-MUST-SUPPLY"
+        }
+      },
+      "evidence": {
+        "correlation_id_field": "OWNER-MUST-SUPPLY",
+        "receipt_id_field": "OWNER-MUST-SUPPLY"
+      }
+    },
+    "w102_assignment_ack": {
+      "owner": "OWNER-MUST-SUPPLY",
+      "contract_id": "OWNER-MUST-SUPPLY",
+      "contract_version": "OWNER-MUST-SUPPLY",
+      "source_revision": "OWNER-MUST-SUPPLY",
+      "contract_ref": "OWNER-MUST-SUPPLY",
+      "approved": false,
+      "base_url": "https://OWNER-MUST-SUPPLY",
+      "auth": {
+        "mode": "BEARER_REF",
+        "credential_ref": "secret-manager://OWNER-MUST-SUPPLY"
+      },
+      "operations": {
+        "authorize_assignment": {
+          "method": "OWNER-MUST-SUPPLY",
+          "path": "/OWNER-MUST-SUPPLY",
+          "request_schema_ref": "OWNER-MUST-SUPPLY",
+          "response_schema_ref": "OWNER-MUST-SUPPLY",
+          "side_effect": "OWNER-MUST-SUPPLY"
+        },
+        "acknowledge_assignment": {
+          "method": "OWNER-MUST-SUPPLY",
+          "path": "/OWNER-MUST-SUPPLY",
+          "request_schema_ref": "OWNER-MUST-SUPPLY",
+          "response_schema_ref": "OWNER-MUST-SUPPLY",
+          "side_effect": "OWNER-MUST-SUPPLY"
+        }
+      },
+      "evidence": {
+        "correlation_id_field": "OWNER-MUST-SUPPLY",
+        "receipt_id_field": "OWNER-MUST-SUPPLY"
+      }
+    },
+    "w14_execution_host": {
+      "owner": "OWNER-MUST-SUPPLY",
+      "contract_id": "OWNER-MUST-SUPPLY",
+      "contract_version": "OWNER-MUST-SUPPLY",
+      "source_revision": "OWNER-MUST-SUPPLY",
+      "contract_ref": "OWNER-MUST-SUPPLY",
+      "approved": false,
+      "base_url": "https://OWNER-MUST-SUPPLY",
+      "auth": {
+        "mode": "BEARER_REF",
+        "credential_ref": "secret-manager://OWNER-MUST-SUPPLY"
+      },
+      "operations": {
+        "execute_work": {
+          "method": "OWNER-MUST-SUPPLY",
+          "path": "/OWNER-MUST-SUPPLY",
+          "request_schema_ref": "OWNER-MUST-SUPPLY",
+          "response_schema_ref": "OWNER-MUST-SUPPLY",
+          "side_effect": "OWNER-MUST-SUPPLY"
+        }
+      },
+      "evidence": {
+        "correlation_id_field": "OWNER-MUST-SUPPLY",
+        "receipt_id_field": "OWNER-MUST-SUPPLY"
+      }
+    },
+    "w33_evidence_ingress": {
+      "owner": "OWNER-MUST-SUPPLY",
+      "contract_id": "OWNER-MUST-SUPPLY",
+      "contract_version": "OWNER-MUST-SUPPLY",
+      "source_revision": "OWNER-MUST-SUPPLY",
+      "contract_ref": "OWNER-MUST-SUPPLY",
+      "approved": false,
+      "base_url": "https://OWNER-MUST-SUPPLY",
+      "auth": {
+        "mode": "BEARER_REF",
+        "credential_ref": "secret-manager://OWNER-MUST-SUPPLY"
+      },
+      "operations": {
+        "ingest_evidence": {
+          "method": "OWNER-MUST-SUPPLY",
+          "path": "/OWNER-MUST-SUPPLY",
+          "request_schema_ref": "OWNER-MUST-SUPPLY",
+          "response_schema_ref": "OWNER-MUST-SUPPLY",
+          "side_effect": "OWNER-MUST-SUPPLY"
+        }
+      },
+      "evidence": {
+        "correlation_id_field": "OWNER-MUST-SUPPLY",
+        "receipt_id_field": "OWNER-MUST-SUPPLY"
+      }
+    },
+    "w70_evidence_register": {
+      "owner": "OWNER-MUST-SUPPLY",
+      "contract_id": "OWNER-MUST-SUPPLY",
+      "contract_version": "OWNER-MUST-SUPPLY",
+      "source_revision": "OWNER-MUST-SUPPLY",
+      "contract_ref": "OWNER-MUST-SUPPLY",
+      "approved": false,
+      "base_url": "https://OWNER-MUST-SUPPLY",
+      "auth": {
+        "mode": "BEARER_REF",
+        "credential_ref": "secret-manager://OWNER-MUST-SUPPLY"
+      },
+      "operations": {
+        "register_evidence": {
+          "method": "OWNER-MUST-SUPPLY",
+          "path": "/OWNER-MUST-SUPPLY",
+          "request_schema_ref": "OWNER-MUST-SUPPLY",
+          "response_schema_ref": "OWNER-MUST-SUPPLY",
+          "side_effect": "OWNER-MUST-SUPPLY"
+        },
+        "read_evidence": {
+          "method": "OWNER-MUST-SUPPLY",
+          "path": "/OWNER-MUST-SUPPLY",
+          "request_schema_ref": "OWNER-MUST-SUPPLY",
+          "response_schema_ref": "OWNER-MUST-SUPPLY",
+          "side_effect": "OWNER-MUST-SUPPLY"
+        }
+      },
+      "evidence": {
+        "correlation_id_field": "OWNER-MUST-SUPPLY",
+        "receipt_id_field": "OWNER-MUST-SUPPLY"
+      }
+    }
+  }
+}

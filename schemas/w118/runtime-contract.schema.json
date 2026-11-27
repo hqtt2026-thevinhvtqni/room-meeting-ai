@@ -1,0 +1,313 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://room-hop.invalid/schemas/w118/runtime-contract.schema.json",
+  "title": "W118 Owner-approved Runtime Contract Bundle",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "work_id",
+    "dependencies"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "work_id": {
+      "const": "118"
+    },
+    "dependencies": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "core_task_authority",
+        "w102_assignment_ack",
+        "w14_execution_host",
+        "w33_evidence_ingress",
+        "w70_evidence_register"
+      ],
+      "properties": {
+        "core_task_authority": {
+          "$ref": "#/$defs/core_task_authority"
+        },
+        "w102_assignment_ack": {
+          "$ref": "#/$defs/w102_assignment_ack"
+        },
+        "w14_execution_host": {
+          "$ref": "#/$defs/w14_execution_host"
+        },
+        "w33_evidence_ingress": {
+          "$ref": "#/$defs/w33_evidence_ingress"
+        },
+        "w70_evidence_register": {
+          "$ref": "#/$defs/w70_evidence_register"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "auth": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "credential_ref"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "BEARER_REF",
+            "MTLS",
+            "SIGNED_REQUEST",
+            "WORKLOAD_IDENTITY"
+          ]
+        },
+        "credential_ref": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Reference to a secret manager entry; never a credential value."
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "correlation_id_field",
+        "receipt_id_field"
+      ],
+      "properties": {
+        "correlation_id_field": {
+          "type": "string",
+          "minLength": 1
+        },
+        "receipt_id_field": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "path",
+        "request_schema_ref",
+        "response_schema_ref",
+        "side_effect"
+      ],
+      "properties": {
+        "method": {
+          "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "PATCH",
+            "DELETE"
+          ]
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^/(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+"
+        },
+        "request_schema_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "response_schema_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "side_effect": {
+          "enum": [
+            "READ_ONLY",
+            "MUTATION"
+          ]
+        }
+      }
+    },
+    "componentBase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "owner",
+        "contract_id",
+        "contract_version",
+        "source_revision",
+        "contract_ref",
+        "approved",
+        "base_url",
+        "auth",
+        "operations",
+        "evidence"
+      ],
+      "properties": {
+        "owner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "contract_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "contract_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_revision": {
+          "type": "string",
+          "minLength": 1
+        },
+        "contract_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "approved": {
+          "const": true
+        },
+        "base_url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "auth": {
+          "$ref": "#/$defs/auth"
+        },
+        "evidence": {
+          "$ref": "#/$defs/evidence"
+        },
+        "operations": {
+          "type": "object"
+        }
+      }
+    },
+    "core_task_authority": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/componentBase"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "operations": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "read_task"
+              ],
+              "properties": {
+                "read_task": {
+                  "$ref": "#/$defs/operation"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "w102_assignment_ack": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/componentBase"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "operations": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "authorize_assignment",
+                "acknowledge_assignment"
+              ],
+              "properties": {
+                "authorize_assignment": {
+                  "$ref": "#/$defs/operation"
+                },
+                "acknowledge_assignment": {
+                  "$ref": "#/$defs/operation"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "w14_execution_host": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/componentBase"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "operations": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "execute_work"
+              ],
+              "properties": {
+                "execute_work": {
+                  "$ref": "#/$defs/operation"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "w33_evidence_ingress": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/componentBase"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "operations": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "ingest_evidence"
+              ],
+              "properties": {
+                "ingest_evidence": {
+                  "$ref": "#/$defs/operation"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "w70_evidence_register": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/componentBase"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "operations": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "register_evidence",
+                "read_evidence"
+              ],
+              "properties": {
+                "register_evidence": {
+                  "$ref": "#/$defs/operation"
+                },
+                "read_evidence": {
+                  "$ref": "#/$defs/operation"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

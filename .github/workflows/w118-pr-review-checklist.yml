@@ -1,0 +1,47 @@
+name: W118 PR Review Checklist
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize, ready_for_review]
+    branches: [main]
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: w118-pr-checklist-${{ github.event.pull_request.number }}-${{ github.event.pull_request.head.sha }}
+  cancel-in-progress: false
+
+jobs:
+  checklist:
+    if: github.event.pull_request.head.repo.full_name == github.repository && (contains(github.event.pull_request.title, 'W118') || contains(github.event.pull_request.body, 'W118'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Post W118 review checklist without executing PR code
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          SENDER: ${{ github.event.sender.login }}
+        run: |
+          set -euo pipefail
+          MARKER="<!-- w118-pr-checklist:${PR_NUMBER}:${HEAD_SHA} -->"
+          if gh api --paginate "repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments?per_page=100" --jq '.[].body' | grep -Fq "$MARKER"; then
+            echo "W118 review checklist already recorded for this PR head." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          cat > /tmp/review-checklist.md <<EOF
+          W118 independent review checklist is required for this PR.
+
+          - PR author: @${PR_AUTHOR}
+          - Event actor: @${SENDER}
+          - Review checklist: https://github.com/${GITHUB_REPOSITORY}/blob/main/work/118/HQTT-GITHUB-WORKFLOW-AUTOMATION/08_REVIEW/XR-118-001_XU-INDEPENDENT-REVIEW-CHECKLIST.md
+          - Acceptance authority: Xu independent review, then Vinh final product acceptance.
+          - This comment does not assign a reviewer, approve the PR, merge or release.
+
+          ${MARKER}
+          EOF
+          gh issue comment "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file /tmp/review-checklist.md

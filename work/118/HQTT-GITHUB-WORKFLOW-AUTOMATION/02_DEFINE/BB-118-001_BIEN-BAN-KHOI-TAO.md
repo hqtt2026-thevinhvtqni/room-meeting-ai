@@ -31,3 +31,14 @@ Issue → Assignment → Branch → Commit/Push → CI → xử lý FAIL hoặc 
 
 ## 5. Trạng thái
 **DISCOVER / DEFINE — IN PROGRESS.** Chưa có kết luận về khả năng tích hợp end-to-end và chưa có kiểm thử vận hành.
+
+
+## 6. Owner decision — authorize Auto E2E BUILD (2026-11-20)
+
+- **Decision maker:** Vinh — Project Owner.
+- **Delegated decision/execution owner:** Ka.
+- **Scope:** Ka may decide the Auto E2E architecture, implementation sequence, Git branch/PR structure, CI/CD implementation, remediation and verification approach for Work 118, continuing until the acceptance handoff.
+- **Acceptance authority:** Xu performs independent technical review/acceptance; Vinh retains final product acceptance. Ka cannot self-accept, self-merge or self-release.
+- **Canonical base:** GitHub `main`; implementation starts from main SHA `41e8397600505d94434b5830e7aea1a012db77a2` on branch `work/118-auto-e2e-v2`. PR #66 is not the base and remains unmerged.
+- **Safety boundaries:** deny-by-default identity/role policy; least privilege; immutable evidence; bounded actor-approved retry; no auto-merge; no unapproved secrets, branch-protection or Work 70 schema changes.
+- **Status:** DECISION RECORDED — BUILD AUTHORIZED; product remains ACTIVE / NOT RELEASED until Xu and Vinh acceptance.

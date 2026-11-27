@@ -1,0 +1,259 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://room-hop.invalid/schemas/w118/evidence-chain.schema.json",
+  "title": "W118 Normalized Five-stage Runtime Evidence Chain",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "work_id",
+    "task_id",
+    "correlation_id",
+    "source_revision",
+    "receipts"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "work_id": {
+      "const": "118"
+    },
+    "task_id": {
+      "type": "string",
+      "pattern": "^W118-TASK-[0-9]{3,6}$"
+    },
+    "correlation_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_revision": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{40}$"
+    },
+    "receipts": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "prefixItems": [
+        {
+          "$ref": "#/$defs/core_task_snapshot"
+        },
+        {
+          "$ref": "#/$defs/w102_assignment_ack"
+        },
+        {
+          "$ref": "#/$defs/w14_execution"
+        },
+        {
+          "$ref": "#/$defs/w33_ingestion"
+        },
+        {
+          "$ref": "#/$defs/w70_readback"
+        }
+      ],
+      "items": false
+    }
+  },
+  "$defs": {
+    "receiptBase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stage",
+        "receipt_id",
+        "previous_receipt_id",
+        "work_id",
+        "task_id",
+        "correlation_id",
+        "source_revision",
+        "issuer_principal",
+        "authority_ref",
+        "attestation_ref",
+        "outcome",
+        "artifact_sha256",
+        "observed_at"
+      ],
+      "properties": {
+        "stage": {
+          "type": "string"
+        },
+        "receipt_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "previous_receipt_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "work_id": {
+          "const": "118"
+        },
+        "task_id": {
+          "type": "string",
+          "pattern": "^W118-TASK-[0-9]{3,6}$"
+        },
+        "correlation_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_revision": {
+          "type": "string",
+          "pattern": "^[0-9a-fA-F]{40}$"
+        },
+        "issuer_principal": {
+          "type": "string",
+          "minLength": 1
+        },
+        "authority_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "attestation_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "outcome": {
+          "type": "string"
+        },
+        "artifact_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-fA-F]{64}$"
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "signature": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "algorithm",
+            "key_id",
+            "value"
+          ],
+          "properties": {
+            "algorithm": {
+              "type": "string",
+              "minLength": 1
+            },
+            "key_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "value": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "core_task_snapshot": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/receiptBase"
+        },
+        {
+          "properties": {
+            "stage": {
+              "const": "core_task_snapshot"
+            },
+            "outcome": {
+              "const": "TASK_READ"
+            },
+            "previous_receipt_id": {
+              "type": "null"
+            }
+          }
+        }
+      ]
+    },
+    "w102_assignment_ack": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/receiptBase"
+        },
+        {
+          "properties": {
+            "stage": {
+              "const": "w102_assignment_ack"
+            },
+            "outcome": {
+              "const": "ACKNOWLEDGED"
+            },
+            "previous_receipt_id": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "w14_execution": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/receiptBase"
+        },
+        {
+          "properties": {
+            "stage": {
+              "const": "w14_execution"
+            },
+            "outcome": {
+              "const": "EXECUTED"
+            },
+            "previous_receipt_id": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "w33_ingestion": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/receiptBase"
+        },
+        {
+          "properties": {
+            "stage": {
+              "const": "w33_ingestion"
+            },
+            "outcome": {
+              "const": "INGESTED"
+            },
+            "previous_receipt_id": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "w70_readback": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/receiptBase"
+        },
+        {
+          "properties": {
+            "stage": {
+              "const": "w70_readback"
+            },
+            "outcome": {
+              "const": "READBACK_VERIFIED"
+            },
+            "previous_receipt_id": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    }
+  }
+}

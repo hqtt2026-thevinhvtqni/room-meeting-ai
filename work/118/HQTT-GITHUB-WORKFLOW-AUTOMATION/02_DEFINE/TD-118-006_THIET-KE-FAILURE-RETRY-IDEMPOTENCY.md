@@ -24,3 +24,19 @@ Mỗi chuyển trạng thái phải có comment/evidence row có timestamp làm 
 
 ## 5. Không merge tự động
 - Dù CI xanh, merge chỉ sau review của actor khác người push (trả lời câu hỏi 5-6 BB-118-001).
+
+
+## Amendment — Auto E2E v2 diagnostics idempotency (2026-11-20)
+
+- Failure diagnostics runs in a separate workflow, not in the orchestrator workflow. It listens to W118 Auto E2E Validation, the legacy W118 pilot during migration, W300 Dashboard CI and Work 70 Preview Host Tests. It does not listen to itself.
+- Diagnostic issue key: `workflow_id + head_sha`. Repeated runs for the same workflow and commit reuse one open `w118-blocked` issue.
+- Diagnostic update marker: `run_id + run_attempt`; repeated delivery of the same attempt is ignored, while a new attempt is recorded separately.
+- Handoff marker: issue number + GitHub label ID + issue.updated_at (distinguishes a later remove/re-apply cycle while deduplicating the same event delivery). ACK result marker: source comment ID. These markers prevent duplicate comments on event redelivery/re-run.
+- Concurrency groups serialize mutations for the same issue/event or workflow/commit key.
+- No automatic retry is implemented. Retry remains actor-approved, reasoned and bounded to two attempts under the existing policy.
+- Unit tests cover key stability, workflow/SHA separation, existing issue reuse, attempt-specific markers and invalid key rejection. Real workflow_run runtime remains pending deployment.
+
+
+### Diagnostics subscription refinement — 2026-11-20
+
+The separate failure listener now also monitors `W118 PR Review Checklist` in addition to W118 Auto E2E, the legacy W118 pilot, W300 Dashboard CI and Work 70 Preview Host Tests. The listener still does not listen to itself.

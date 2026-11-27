@@ -21,3 +21,13 @@ Mỗi run CI ghi 1 row với: evidence_id là "ci-<run_id>-<attempt>"; work_id s
 
 ## 5. Giới hạn
 - W118 không dựng dashboard riêng. Khi cần hiển thị trạng thái W118, dùng view đọc từ register; Work 70 chưa hỗ trợ thì liệt kê trong nhật ký W118 cho đến khi Work 70 mở rộng.
+
+
+## Amendment — Auto E2E v2 audit artifacts (2026-11-20)
+
+- Every validation run uploads a unique artifact named by run ID and attempt; the record binds the exact source SHA and event.
+- The artifact is immutable evidence for that run and has state RECORDED. It cannot be promoted automatically to VERIFIED.
+- Handoff, ACK and diagnostics comments carry stable markers that bind each mutation to its source GitHub event.
+- Diagnostic issues preserve workflow name/ID, run URL, run ID/attempt, commit SHA, branch and upstream event. Fix ownership remains UNASSIGNED until an authorized actor is explicitly assigned.
+- No direct Work 70 register or Dashboard mutation is made by W118 v2. Any future register write requires Work 70 schema/owner approval and its own contract test.
+- The canonical Work journal remains append-only; this amendment does not create a second operational journal.
