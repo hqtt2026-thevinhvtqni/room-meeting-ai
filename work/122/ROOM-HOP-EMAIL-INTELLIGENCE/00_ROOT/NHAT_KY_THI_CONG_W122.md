@@ -401,3 +401,16 @@
 - Sandbox evidence: write returned status=ok for the closure map and append returned status=ok for this journal entry; targeted read-back confirmed ODCM-W122-001, ODR-12, J031 and the explicit gate state. GitHub main create commit for closure map: `f041a9749b6abcb76b4a1f4b13924ab537a8fdce`.
 - Gate: G2 NOT READY / NOT APPROVED; G3 BUILD NOT AUTHORIZED. W120/W121 untouched.
 - Next: synchronize this journal entry to GitHub main and fetch both artifact and journal to verify publication.
+
+
+## 2026-11-27 — J032 — Closure map and J031 GitHub publication verified
+- Actor: Xu / AI-01.
+- Method: fetched both canonical W122 paths from GitHub default branch main after publication; checked content markers and gate statements.
+- Evidence:
+  1. Closure map `03_ARCHITECTURE/W122_OWNER_DECISION_CLOSURE_MAP_DRAFT.md` exists on main; blob SHA `744baa6feca4ccaefe87e24dc7d3ccfeb697ffe9`; read-back length 10,468 characters; confirms ODR-12, Anh Đức handover, all 12 decisions OPEN, G2 NOT READY / NOT APPROVED and G3 BUILD NOT AUTHORIZED.
+  2. Canonical journal `00_ROOT/NHAT_KY_THI_CONG_W122.md` exists on main; prior read-back blob SHA `31fbe7b784971b76c3d0b2f9ab8c1834e3c98026`; confirms J031 and gate boundary. This J032 append is being synchronized now; final blob SHA will be recorded after read-back.
+  3. Closure map create commit: `f041a9749b6abcb76b4a1f4b13924ab537a8fdce`. J031 journal update commit: `22991e51fb2821091aaff6ec50c26ed672abc7bd`.
+- Result: closure map and J031 journal publication/read-back PASS. This verifies document publication only, not Owner approval, reviewer receipt, G2 closure or runtime readiness.
+- Safety: no OAuth, mailbox operation, code, test execution, paid service or email side effect. W120/W121 untouched.
+- Current gate: ODR-01..12 OPEN; G2 NOT READY / NOT APPROVED; G3 BUILD NOT AUTHORIZED.
+- Next: verify this J032 journal update on GitHub main; continue safe preparatory work and obtain verifiable independent reviewer inputs. Do not start BUILD until G2 approval and separate G3 authorization.
