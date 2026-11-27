@@ -334,3 +334,14 @@
 - Gate: document is a proposal only. Ka review NOT RECEIVED/VERIFIED; Owner decisions OPEN; G2 NOT APPROVED; G3 BUILD NOT AUTHORIZED; no OAuth, mailbox operation, code or test execution.
 - W120/W121: untouched.
 - Next: verify artifact on GitHub, append J025 to the canonical journal in Sandbox and GitHub main, then prepare an owner decision register without implying approval.
+
+
+## 2026-11-27 — J026 — Owner decision register draft
+- Actor: Xu / AI-01.
+- Scope: prepare a single decision register for the unresolved Owner-level product, privacy, mailbox, draft, notification, approval, automation, cost and anh Đức handover decisions.
+- Method: authored ODR-W122-001 v0.1-DRAFT with 12 decision items, safe-default recommendations, options and explicit OPEN status; cross-checked against G2 pack, threat model and authorization/state-machine draft.
+- Sandbox evidence: sandbox_write returned status=ok for `03_ARCHITECTURE/W122_OWNER_DECISION_REGISTER_DRAFT.md`.
+- GitHub evidence: create commit c950a5f8db270fc13a816533d29da6d79185bd52; read-back verification follows.
+- Authority boundary: no decision is inferred from conversational continuation. All 12 items remain OPEN; no canonical Biên bản approval, G2 closure or G3 authorization.
+- No OAuth, mailbox access, code, test execution or external send. W120/W121 untouched.
+- Next: fetch and verify the decision register; append J026 to the canonical journal in Sandbox and GitHub main; prepare an evidence-based G2 review checklist.
