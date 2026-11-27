@@ -237,3 +237,15 @@
 - Result: Sandbox read-back PASS and GitHub main targeted sync/read-back PASS for the architecture proposal and journal.
 - Boundary: W52/W11/W12 were read-only. No W120/W121 write, no code, no live runtime/provider operation, no OAuth, no email read/send.
 - Next: update this verification record, then continue only with authorized evidence collection. Kha/Ka W122 receipt/review remains NOT VERIFIED; G2 NOT APPROVED; G3 BUILD NOT AUTHORIZED.
+
+
+## 2026-11-27 — J017 — Synthetic acceptance test plan authored
+- Actor: Xu / ROOM-HOP identity xu.
+- User direction: continue W122 while Gmail account connection is deferred.
+- Scope: create the first canonical test-plan artifact under the existing 05_TEST folder; design only, no code or execution.
+- Method: authored 24 mandatory synthetic acceptance scenarios covering tenant/mailbox isolation, least privilege, identity binding, prompt injection, sender trust, priority/security separation, evidence-backed extraction, draft provenance, default send-deny, immutable/expired approval, idempotency, ambiguous timeout, push/cursor recovery, revocation, attachment safety, notification privacy/loops, audit integrity, UI authority, provider errors and state semantics.
+- Safety: synthetic identities and fake provider only; no production mailbox, credentials, OAuth, real recipient or external send. Every NOT RUN/BLOCKED remains distinct from PASS.
+- Verification: Sandbox create returned status=ok; read-back returned status=ok, 8,453 characters, and confirmed W122-T001, W122-T024 and current execution status section.
+- Result: test-plan artifact creation and Sandbox read-back PASS. Fixtures NOT CREATED; test code NOT IMPLEMENTED; tests NOT RUN; independent QE NOT RUN.
+- W120/W121: no write attempted.
+- Next: create the same canonical test-plan file on GitHub main after confirming absence, update the canonical journal with this entry, and verify both paths. G2 NOT APPROVED; G3 BUILD NOT AUTHORIZED.
