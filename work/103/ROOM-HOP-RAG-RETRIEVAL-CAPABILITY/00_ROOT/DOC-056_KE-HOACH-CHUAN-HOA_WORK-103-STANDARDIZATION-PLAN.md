@@ -79,3 +79,10 @@ Lifecycle skeleton (01_DISCOVER, 02_DEFINE, 03_ARCHITECT, 06_VERIFY, 07_ACCEPT, 
 
 ## Batch 3 progress note — 2026-11-09 (Vibe, LOG-W103-20261109-008)
 05_BUILD/DOC-060 WP register tạo xong: WP-103-01..08 với owner/reviewer/dependencies/deliverables/acceptance criteria/status/evidence theo DOC-001 §6. 05_BUILD chỉ chứa mapping/coordination. Batch 3 exit evidence (WP completeness + source mapping validation): register complete; source mapping validation = DOC-059 §1/§2; chờ Xu xác nhận trước khi đóng batch.
+
+
+## Batch 1 progress note — 2026-11-27 (Vibe, LOG-W103-20261127-001)
+Inbound-link audit PASS 4/4 pointers (DOC-061 §1); CI regression disposition recorded (DOC-061 §4: fail duy nhất là independent gate đã biết, không do migration). Batch 1 exit criteria đã đủ build-level — closure chờ Xu xác nhận. Phát hiện kèm theo: evidence drift trên main (DOC-061 §3) — chuyển Xu/Ka.
+
+## Batch 4 prep note — 2026-11-27 (Vibe, LOG-W103-20261127-001)
+Audit tiêu dùng 06_EVIDENCE: 1 write target vật lý (CI tee C7), 26 file, không có tham chiếu vật lý từ code. Di chuyển khi thực hiện phải là một commit duy nhất đồng bộ C7 + hash/readback + link audit (DOC-059 §3). Chưa di chuyển.

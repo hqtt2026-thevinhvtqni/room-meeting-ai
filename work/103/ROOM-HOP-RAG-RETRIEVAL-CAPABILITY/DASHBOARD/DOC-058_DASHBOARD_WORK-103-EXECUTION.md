@@ -49,10 +49,10 @@
 | Batch | Phạm vi | Trạng thái |
 |---|---|---|
 | 0 | Governance baseline (DOC-001/055/056/057/035) | DONE |
-| 1 | 00_ROOT + hồ sơ chính thức | IN_PROGRESS (link audit + CI disposition còn treo) |
+| 1 | 00_ROOT + hồ sơ chính thức | IN_PROGRESS (link audit PASS 4/4 + CI disposition xong — DOC-061; closure chờ Xu) |
 | 2 | Lifecycle folders | IN_PROGRESS (mapping/classification DONE — DOC-059 + README indexes; physical moves DEFERRED có lý do) |
 | 3 | 05_BUILD engineering map / WP register | DONE-register (DOC-060, WP-103-01..08; chờ Xu xác nhận) |
-| 4 | EVIDENCE migration | NOT_STARTED |
+| 4 | EVIDENCE migration | NOT_STARTED (prep audit xong — DOC-061 §2: 1 write target C7, 26 file) |
 | 5 | DASHBOARD | IN_PROGRESS (DOC-058 đã tạo; verification chưa xong) |
 | 6 | VERIFY / ACCEPT / RELEASE readiness | NOT_STARTED |
 
@@ -74,6 +74,8 @@
 EVD-001 (CI 40668733280) · EVD-002 (blind pool V1, UNLABELED) · EVD-003 (thí nghiệm có kiểm soát lịch sử) · EVD-004 (replication addendum) · EVD-005 (Gate A/B report) · EVD-006 (evidence lịch sử) · EVD-007 (run #85 FAIL độc lập 0.300) · EVD-008 (Gate A/B CI runs) · EVD-009 (corpus diagnostic 50 query) · EVD-010 (v2 metrics run #96) · EVD-011 (root-cause diagnostic v3).
 
 ## 7. Bước tiếp theo (critical path)
+
+Phát hiện 2026-11-27 (DOC-061/EVD-012): main chứa thư mục lạc work/103/06_EVIDENCE/ với 4 file blind-labeling gate (chuỗi Ka/Qw V1–V5, freeze BLOCKED) không có trên nhánh làm việc — chờ Xu/Ka quyết định; không copy im lặng.
 
 WP index: WP-103-01 retrieval core · 02 eval baseline · 03 evidence-support stage · 04 corpus diagnostic · 05 standardization · 06 Gate C design (BLOCKED) · 07 E2E (CLOSED) · 08 retrieval remediation (OPEN) — chi tiết DOC-060.
 1. Ka: DEBT-ES-01/02/07 — adjudication độc lập là nút thắt cổ chai của mọi gate còn lại.

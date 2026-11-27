@@ -209,3 +209,16 @@ Các commit d7f1963 và 4f83c5b được tạo trong một môi trường shell 
   4. Đồng bộ: DOC-055 đăng ký DOC-060 + các README lifecycle; DOC-056 Batch 2/3 progress notes; DOC-058 batch table + WP index.
 - **Status:** Batch 2 mapping/classification DONE — physical moves DEFERRED with recorded rationale (batch IN_PROGRESS cho tới khi di chuyển hoặc có disposition văn bản); Batch 3 register DONE (build-level, chờ Xu xác nhận). Gate statuses unchanged: independent gate FAIL 0.300 bảo toàn; Gate A OPEN; Gate C BLOCKED; Release NOT PASS. No release claim.
 - **Next:** Xu review DOC-060 + xác nhận; Batch 4 (EVIDENCE migration + link audit) và các di chuyển vật lý theo DOC-059 §3; Ka adjudication vẫn là critical path. Vibe không tự phê chuẩn.
+
+## LOG-W103-20261127-001 — Inbound-link audit + CI disposition (Batch 1) + Batch 4 prep audit; phát hiện drift evidence trên main (Vibe)
+- **Time:** 2026-11-27 (session timestamp, UTC+07)
+- **Actor:** Vibe (GLM 5.3 via Vibe Work agent), under Vinh's standing full-build authorization + "xây tiếp, không chờ" (2026-11-09).
+- **Scope:** Audit report-only (DOC-061). No source, tests, thresholds, fixtures, labels, CI workflow or gates changed. No file moved or deleted.
+- **Actions:**
+  1. Batch 1 inbound-link audit: 4/4 legacy pointer xác thực đúng target (00_ROOT/WORK_MANIFEST.md → DOC-001; BIEN_BAN.md → DOC-034; KE_HOACH_THI_CONG_XU.md → DOC-045; NHAT_KY_HOP_THI_CONG.md → DOC-035). PASS.
+  2. CI regression disposition (Batch 1): fail duy nhất là independent gate 0.300 vs 0.8 — đặc tính dữ liệu/gate (EVD-011), không do di chuyển tài liệu. Disposition văn bản trong DOC-061 §4; gate giữ nguyên.
+  3. Batch 4 prep: 06_EVIDENCE có đúng 1 write target vật lý (CI tee grounded_abstention_diagnostic.json, C7) + 26 file cần hash/readback khi di chuyển. Chưa di chuyển.
+  4. PHÁT HIỆN: nhánh main (head 83f39944) có thư mục lạc work/103/06_EVIDENCE/ với 4 file lịch sử KHÔNG có trên nhánh làm việc — toàn bộ chuỗi blind-labeling gate Ka/Qw V1→V5 (BLIND_LABELING_GATE_STATUS_20261028.md + 3 review record V4), chốt ở "manifest hash/byte-size verification FAIL; freeze BLOCKED". Không copy im lặng (DOC-057 policy); đề xuất Xu/Ka xử lý. Đây là bối cảnh trực tiếp cho DEBT-ES-02/07.
+  5. Đăng ký: DOC-061 (DOC-055), EVD-012 (DOC-057), DOC-056 Batch 1 note, DOC-058 sync.
+- **Status:** DONE cho audit + disposition (build-level). Batch 1 sẵn sàng closure chờ Xu; Batch 4 prep xong. Gate statuses unchanged: independent gate FAIL 0.300 bảo toàn; Gate A OPEN (DEBT-ES-02/07, bổ sung bối cảnh chuỗi V1–V5); Gate C BLOCKED; Release NOT PASS. No release claim.
+- **Next:** Xu xác nhận Batch 1 closure + quyết định xử lý drift trên main; Ka dùng chuỗi V1–V5 (main) làm bối cảnh adjudication; Vibe sẵn sàng thực hiện Batch 4 di chuyển đồng bộ CI khi được duyệt. Vibe không tự phê chuẩn.
