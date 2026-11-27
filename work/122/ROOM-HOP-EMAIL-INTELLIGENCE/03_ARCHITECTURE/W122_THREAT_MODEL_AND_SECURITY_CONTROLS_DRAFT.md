@@ -97,7 +97,8 @@ Risk labels are preliminary qualitative ratings, not measured likelihoods. Ka mu
 ## 7. Non-negotiable policy invariants
 1. Initial demo: read-only + draft-only. No send/reply/forward/delete/archive/label/filter/settings mutation.
 2. No send permission or send scope is requested in the initial pilot.
-3. Email content cannot change policy, add trusted senders, approve a draft, change recipients or invoke tools.
+3. **Draft-scope distinction:** R2 is Gmail read-only and creates no Gmail drafts. A W122-local draft record can be considered at a later stage without granting Gmail compose permission. Creating or managing drafts inside Gmail requires a separate scope assessment; Gmail compose is a restricted scope and can enable draft sending, so it must not be described as inherently send-safe. Do not request it in R2. If R3 proposes Gmail-native drafts, require a separate Owner decision, independent security review, restricted-scope/verification assessment, and a server-side send-deny control with explicit residual-risk acceptance. Prefer local draft storage until that decision is made.
+4. Email content cannot change policy, add trusted senders, approve a draft, change recipients or invoke tools.
 4. Model-generated urgency/priority cannot authorize a side effect.
 5. A draft is not an approval. A displayed button is not an authorization.
 6. Any edit to approved content or recipients invalidates the approval and requires a new approval.
@@ -205,7 +206,14 @@ No release gate is passed by writing this document.
 - Real send: NOT AUTHORIZED.
 - W120/W121: no write attempted by this task.
 
-## 16. Decision requested from independent reviewer
+## 16. Gmail read-only versus draft-scope boundary
+- R2 Gmail pilot: read-only scope only; no Gmail draft creation, no send, and no mailbox mutation.
+- A W122-local draft is a product-side record and must remain separate from Gmail's Drafts resource. It does not require Gmail compose scope, but it does require approved W122 storage, access control, retention and audit.
+- Gmail-native draft creation/management requires separate scope review. Gmail compose is restricted and may include capability to send drafts; therefore "draft-only" must not be treated as a technical least-privilege guarantee merely because the UI hides a Send button.
+- If Gmail-native drafts are ever proposed, isolate the provider credential, enforce server-side DENY for send, verify all reachable API operations, assess Google restricted-scope obligations, and obtain explicit Owner/security approval before enabling it.
+- This clarification does not authorize Gmail compose, Gmail draft creation, or sending.
+
+## 17. Decision requested from independent reviewer
 Ka is requested to return a written review with:
 - review artifact/version and exact SHA-256 (if available);
 - threat IDs accepted/rejected/modified and reasons;
