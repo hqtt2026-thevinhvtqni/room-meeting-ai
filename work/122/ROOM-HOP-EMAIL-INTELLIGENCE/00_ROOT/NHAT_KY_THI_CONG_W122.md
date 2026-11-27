@@ -389,3 +389,15 @@
 - Status: design artifact created; not owner-approved; no endpoint calls, cross-Work edits, code, runtime tests, OAuth, mailbox read, Gmail draft/send or paid commitment.
 - Gate: G2 NOT READY / NOT APPROVED; G3 BUILD NOT AUTHORIZED. W120/W121 untouched.
 - Next: read back this artifact and journal entry on GitHub main; then map owner decisions to G2 without treating this draft as approval.
+
+
+## 2026-11-27 — J031 — Owner decision closure map prepared
+- Actor: Xu / AI-01.
+- Scope: continue W122 architecture intake by mapping the 12 existing OPEN Owner decisions to decision authority, safe-default recommendation, required evidence/reviewer input, G2 dependency and preparation allowed without approval.
+- Method: read ODR-W122-001 from the canonical Sandbox path; cross-check decision IDs/options against the G2 Decision Pack, G2 Gate Readiness Checklist, Threat Model, Authorization/State Machine and current integration boundary findings; author ODCM-W122-001 as a closure guide, not a second decision register.
+- Artifact: `03_ARCHITECTURE/W122_OWNER_DECISION_CLOSURE_MAP_DRAFT.md`.
+- Key safeguards: all 12 ODR decisions remain OPEN; Vinh remains final decision authority; Kha/Ka/Go review receipts are NOT VERIFIED; “Tiếp” or “OK” is not approval. Anh Đức handover requires a separate tenant/consent boundary; Vinh's mailbox data is not transferred.
+- Safe work identified: synthetic tests, logical contract refinement, data inventory, privacy template, cost worksheet and onboarding/runbook. No OAuth, mailbox read, Gmail-native draft, send, paid service, code or test execution.
+- Sandbox evidence: write returned status=ok for the closure map and append returned status=ok for this journal entry; targeted read-back confirmed ODCM-W122-001, ODR-12, J031 and the explicit gate state. GitHub main create commit for closure map: `f041a9749b6abcb76b4a1f4b13924ab537a8fdce`.
+- Gate: G2 NOT READY / NOT APPROVED; G3 BUILD NOT AUTHORIZED. W120/W121 untouched.
+- Next: synchronize this journal entry to GitHub main and fetch both artifact and journal to verify publication.
