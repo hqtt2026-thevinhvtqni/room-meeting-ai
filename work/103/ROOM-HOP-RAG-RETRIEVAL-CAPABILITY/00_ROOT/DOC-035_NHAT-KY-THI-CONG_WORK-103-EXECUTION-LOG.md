@@ -281,3 +281,9 @@ Các commit d7f1963 và 4f83c5b được tạo trong một môi trường shell 
 - **CI:** No status checks or workflow runs were returned for this documentation-only commit; this is not a CI PASS.
 - **Branch relation:** work/103-rag-retrieval-capability is 128 commits ahead and 1828 behind main at this check. Branches are diverged; no merge, rebase, force-push or main synchronization was attempted.
 - **Result:** GitHub branch synchronized for DOC-058 and exact readback PASS. Independent retrieval gate remains FAIL 0.300 vs 0.800; Gate A/C blocked; Release NOT PASS.
+
+
+## LOG-W103-20261127-005 — Timestamp clarification for LOG-004
+- **Time:** 2026-11-27 (UTC+07; minute not captured).
+- **Correction:** The `12:xx` text in LOG-W103-20261127-004 is a placeholder, not an asserted clock time. The verified event ordering and Git commit references remain unchanged.
+- **Reason:** Preserve the append-only journal while explicitly correcting an imprecise timestamp.
