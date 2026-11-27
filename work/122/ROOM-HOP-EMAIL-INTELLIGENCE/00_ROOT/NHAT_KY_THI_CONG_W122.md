@@ -295,3 +295,14 @@
 - Safety/gates: no OAuth, mailbox access, code, tests, production configuration or external send. G2 NOT APPROVED; G3 BUILD NOT AUTHORIZED.
 - W120/W121: no write attempted.
 - Next: create the threat-model draft on GitHub main, append this journal entry, and fetch both files after writes. Then prepare a concise reviewer handoff; do not claim Ka receipt or approval without verifiable dispatch/receipt evidence.
+
+
+## 2026-11-27 — J022 — Gmail draft scope security clarification
+- Actor: Xu / AI-01.
+- Scope: close a security ambiguity found during threat-model consistency review; update only the existing threat-model draft and G2 decision-pack draft.
+- Finding: Gmail-native draft creation/management is not equivalent to a harmless read-only operation. Gmail compose is a restricted scope and may include the ability to send drafts. Hiding a Send button in the UI does not remove the capability granted to the OAuth client.
+- Decision proposal clarified (not Owner-approved): R2 remains Gmail read-only with no Gmail drafts or send. Prefer a W122-local draft record in a later separately gated stage. Any Gmail-native draft feature requires separate scope assessment, Google restricted-scope/verification review, server-side send-deny enforcement, independent security review and explicit Owner approval.
+- Sandbox evidence: updated existing `03_ARCHITECTURE/W122_THREAT_MODEL_AND_SECURITY_CONTROLS_DRAFT.md` and `03_ARCHITECTURE/W122_G2_ARCHITECTURE_DECISION_PACK_DRAFT.md`; write results and read-back verification recorded below after probes.
+- Safety: no Gmail compose scope, OAuth, mailbox access, Gmail draft, code, test or send operation was requested or performed. G2 NOT APPROVED; G3 BUILD NOT AUTHORIZED.
+- W120/W121: no write attempted.
+- Next: verify Sandbox contents; synchronize the two existing drafts and canonical journal to GitHub main using current blob SHAs; read back all three.
