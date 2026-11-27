@@ -222,3 +222,16 @@ Các commit d7f1963 và 4f83c5b được tạo trong một môi trường shell 
   5. Đăng ký: DOC-061 (DOC-055), EVD-012 (DOC-057), DOC-056 Batch 1 note, DOC-058 sync.
 - **Status:** DONE cho audit + disposition (build-level). Batch 1 sẵn sàng closure chờ Xu; Batch 4 prep xong. Gate statuses unchanged: independent gate FAIL 0.300 bảo toàn; Gate A OPEN (DEBT-ES-02/07, bổ sung bối cảnh chuỗi V1–V5); Gate C BLOCKED; Release NOT PASS. No release claim.
 - **Next:** Xu xác nhận Batch 1 closure + quyết định xử lý drift trên main; Ka dùng chuỗi V1–V5 (main) làm bối cảnh adjudication; Vibe sẵn sàng thực hiện Batch 4 di chuyển đồng bộ CI khi được duyệt. Vibe không tự phê chuẩn.
+
+## LOG-W103-20261127-002 — Adjudication handover package DOC-062 (Ka) + decision pack (Xu) (Vibe)
+- **Time:** 2026-11-27 (session timestamp, UTC+07)
+- **Actor:** Vibe (GLM 5.3 via Vibe Work agent), under standing authorization.
+- **Scope:** Handover/administration only. No source, tests, thresholds, fixtures, labels, CI workflow or gates changed. No adjudication performed by Vibe.
+- **Actions:**
+  1. Created DOC-062: gói bàn giao adjudication — 4 artifact với git blob SHA làm neo toàn vẹn tạm (4c19b678 / 4f782f2d / ed26f8f8 / 00bb8f89 tại head a310db46); Ka tính SHA-256 lúc freeze theo B5 (sandbox không có crypto.subtle, ghi rõ trong DOC-062).
+  2. DOC-062 §2: 5 nhóm row cần chú ý (Q004/Q008 documented absence + kỷ luật T2; Q044 contract probe; Q037/Q045 duplicate-content citation; Q040 retrieval miss; Q015/Q023/Q050 negative-form) — quan điểm tác giả, quyết định cuối thuộc Ka.
+  3. DOC-062 §3: bối cảnh chuỗi blind-labeling V1–V5 trên main (freeze BLOCKED ở manifest hash verification) — Ka cần xác thực lại nguồn file trước khi freeze.
+  4. DOC-062 §4: pack 5 quyết định cho Xu (Batch 1 closure, main drift, DEBT-ES-09/05, Gate C inputs, Batch 3 register).
+  5. Đăng ký DOC-062 (DOC-055), EVD-013 (DOC-057), DOC-058 sync.
+- **Status:** DONE cho handover package. Gate A adjudication vẫn OPEN và là critical path; mọi gate status giữ nguyên (independent gate FAIL 0.300 bảo toàn; Gate C BLOCKED; Release NOT PASS). No release claim.
+- **Next:** Ka nhận DOC-062 và adjudicate; Xu xử lý 5 quyết định. Vibe không tự phê chuẩn.

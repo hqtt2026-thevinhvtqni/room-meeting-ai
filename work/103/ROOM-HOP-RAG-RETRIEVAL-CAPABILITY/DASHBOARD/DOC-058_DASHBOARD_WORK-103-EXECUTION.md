@@ -75,6 +75,8 @@ EVD-001 (CI 40668733280) · EVD-002 (blind pool V1, UNLABELED) · EVD-003 (thí 
 
 ## 7. Bước tiếp theo (critical path)
 
+**Handover 2026-11-27 (DOC-062/EVD-013):** gói adjudication cho Ka đã sẵn sàng — 4 artifact + blob SHA anchors + 5 nhóm row cần chú ý + bối cảnh chuỗi V1–V5 (main). Xu: 5 quyết định liệt kê trong DOC-062 §4.
+
 Phát hiện 2026-11-27 (DOC-061/EVD-012): main chứa thư mục lạc work/103/06_EVIDENCE/ với 4 file blind-labeling gate (chuỗi Ka/Qw V1–V5, freeze BLOCKED) không có trên nhánh làm việc — chờ Xu/Ka quyết định; không copy im lặng.
 
 WP index: WP-103-01 retrieval core · 02 eval baseline · 03 evidence-support stage · 04 corpus diagnostic · 05 standardization · 06 Gate C design (BLOCKED) · 07 E2E (CLOSED) · 08 retrieval remediation (OPEN) — chi tiết DOC-060.
