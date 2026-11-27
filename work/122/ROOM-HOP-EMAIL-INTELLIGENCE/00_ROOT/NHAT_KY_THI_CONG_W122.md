@@ -272,3 +272,14 @@
 - Kha/Ka: briefs remain pending; no dispatch/receipt/review claimed.
 - W120/W121: no write attempted.
 - Next: create the same draft on GitHub main, append and synchronize this journal entry, then verify both.
+
+
+## 2026-11-27 — J020 — G2 decision pack GitHub synchronization verification
+- Actor: Xu / AI-01.
+- Method: read exact decision pack and journal from Sandbox; created the previously absent decision-pack file on GitHub main; updated the canonical journal using the current blob SHA; fetched both files after writes.
+- Evidence:
+  1. Decision pack GitHub create commit `22cdb6c0a95aaf407fb876885677dc1e645f6934`; blob SHA `35a044d79e64b27542514fb5d4855e0fcaeef2f4`. Post-write fetch confirms 15 proposed decisions and explicit G2 NOT APPROVED.
+  2. Journal update commit `07069452b56ab8e7a24fc2ee193d7b6ebe80f53e`; blob SHA `7d7382c7cb227faae43210bfa32a5506202b8035`. Post-write fetch confirms J019.
+- Result: GitHub main create/update and targeted read-back PASS for the decision pack and journal.
+- Limitations: the pack is a draft recommendation, not an Owner decision or canonical Biên bản amendment. Kha/Ka dispatch remains unverified; no runtime, OAuth, mailbox or send operation.
+- Next: append J020 and synchronize the journal; continue independent risk/acceptance design without claiming G2 closure.
