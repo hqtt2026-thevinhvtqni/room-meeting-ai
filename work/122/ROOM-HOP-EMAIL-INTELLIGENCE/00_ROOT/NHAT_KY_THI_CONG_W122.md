@@ -194,3 +194,17 @@
 - W120/W121: no write attempted.
 - Result: GitHub repository/path access RECONCILED; synchronization pending.
 - Next: synchronize architecture proposal, then journal sequentially; fetch both from main and compare key sections/J011–J013. Do not change plan/minutes or any other Work.
+
+
+## 2026-11-27 — J014 — GitHub main synchronization and post-write verification
+- Actor: Xu / ROOM-HOP identity xu.
+- Scope: synchronize only the canonical architecture proposal and canonical journal from Sandbox to GitHub main.
+- Method: read exact full contents from Sandbox; fetch current GitHub blob SHAs; update each file sequentially on main; fetch both files again from main.
+- Evidence:
+  1. Architecture proposal update returned commit SHA `5b0eb745c62b00453e11c7f91738bbf752f736f0`, blob SHA `a496eeb661353fe230b7f00b48f4bb2ece00c2a5`.
+  2. Journal update returned commit SHA `033fdb0a3cf59c0eaa501c5d92612eaf875f3394`, blob SHA `c1a23742bcb0bc4654e362008bb0c406e063681c`.
+  3. Post-write GitHub fetch confirmed architecture sections 10 and 18, including explicit G3 BUILD NOT AUTHORIZED.
+  4. Post-write GitHub fetch confirmed journal entries J011, J012 and J013.
+- Result: GitHub main synchronization and targeted post-write read-back PASS for the two specified files. This does not certify all W122 files are synchronized or that the architecture is approved.
+- W120/W121: no write attempted.
+- Next: continue read-only verification of source contracts and identify a legitimate review/dispatch path for Kha and Ka. G2 remains NOT APPROVED; G3 BUILD and real SEND remain NOT AUTHORIZED.
