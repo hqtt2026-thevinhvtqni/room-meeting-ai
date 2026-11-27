@@ -259,3 +259,14 @@ Các commit d7f1963 và 4f83c5b được tạo trong một môi trường shell 
 - **Xu decisions respected:** Batch 1 / DEBT-ES-10 CLOSED; main-only blind-label history kept in place; DEBT-ES-05 CLOSED; DEBT-ES-09 OPEN and DOC-058 NOT VERIFIED; Gate C BLOCKED; Batch 3 register/mapping closure only.
 - **Status:** DOC-063 created and registered as EVD-014. Gate A remains OPEN/BLOCKED; Gate C BLOCKED; independent retrieval gate FAIL 0.300 vs 0.800; Release NOT PASS. No PASS or E2E claim.
 - **Next:** correct contract and fact specs in new versioned artifacts only after authorized review; obtain Xu freeze/blind-process attestation; resolve DEBT-ES-08 before Gate C.
+
+
+## LOG-W103-20261127-004 — Journal identifier correction and Git readback
+- **Time:** 2026-11-27 (UTC+07).
+- **Actor:** Ka — independent adjudicator / journal custodian for this review session.
+- **Scope:** Append-only metadata correction; no historical entry content rewritten.
+- **Finding:** DOC-035 contains two headings using identifier LOG-W103-20261127-003: the first records Xu's five decisions; the second records Ka's independent adjudication of DEBT-ES-01/02/07.
+- **Correction:** Preserve both historical blocks exactly as committed. For unambiguous future references, the second block (Ka independent adjudication) is designated LOG-W103-20261127-004 by this addendum. The first LOG-W103-20261127-003 remains Xu's decision record. DOC-063 remains the canonical adjudication artifact; EVD-014 remains its evidence registration.
+- **Git verification:** DOC-063 exists on `work/103-rag-retrieval-capability` with blob SHA `c66bcfb7cee83a7819a9d399c4cb26dd26e847b6`; commit `fce400abd8687bb992638673c264ae65019a9709`. Branch comparison from that commit reports 3 commits ahead, 0 behind.
+- **Gate boundary:** DEBT-ES-01 FAIL; DEBT-ES-02 PARTIAL / FREEZE BLOCKED; DEBT-ES-07 FAIL. Independent retrieval gate FAIL 0.300 vs 0.800; Gate C BLOCKED; Release NOT PASS.
+- **Next:** Keep DOC-063 as report-only finding. Any contract/spec correction must use versioned artifacts and separate authorization; no gate promotion by this journal correction.
