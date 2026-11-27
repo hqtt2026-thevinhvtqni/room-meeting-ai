@@ -225,3 +225,15 @@
 - Artifact changes: appended section 19 to the existing W122 architecture proposal; no new architecture document created.
 - W120/W121: no write attempted.
 - Next: append and verify this evidence in the canonical journal; synchronize only the W122 architecture proposal and journal to GitHub main. Keep G2 NOT APPROVED and G3 BUILD NOT AUTHORIZED.
+
+
+## 2026-11-27 — J016 — W52/W11/W12 evidence sync verification
+- Actor: Xu / ROOM-HOP identity xu.
+- Method: read-back of the updated Sandbox architecture proposal and journal; sequential GitHub main updates; post-write fetch of both files.
+- Evidence:
+  1. Sandbox read-back confirmed section 19 and J015 before GitHub writes.
+  2. Architecture proposal GitHub commit `a3a4636f3cafca895f22efb77bc36ab44b720607`, blob SHA `7c3e91293d14635873ae5f2c6ddbf6d77870c5ab`; post-write fetch confirms section 19 and G3 BUILD NOT AUTHORIZED.
+  3. Journal GitHub commit `c2c1328a120bc8aae83876d3fba15d8faee7fb6d`, blob SHA `97d656ab8af4c9745d037eb3d46edff32cef9f3b`; post-write fetch confirms J015.
+- Result: Sandbox read-back PASS and GitHub main targeted sync/read-back PASS for the architecture proposal and journal.
+- Boundary: W52/W11/W12 were read-only. No W120/W121 write, no code, no live runtime/provider operation, no OAuth, no email read/send.
+- Next: update this verification record, then continue only with authorized evidence collection. Kha/Ka W122 receipt/review remains NOT VERIFIED; G2 NOT APPROVED; G3 BUILD NOT AUTHORIZED.
