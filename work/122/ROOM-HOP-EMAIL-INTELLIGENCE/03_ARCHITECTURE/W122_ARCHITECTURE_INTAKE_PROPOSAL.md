@@ -189,3 +189,23 @@ Provider order beyond first Gmail demo; mailbox count and tenant ownership model
 - Kha and Ka briefs exist, but no verifiable dispatch/receipt or independent findings are present.
 - Original source email is absent from the inspected 01_ORIGINAL folder.
 - G0/G1 owner requirements/decision and G2 architecture approval remain open; G3 BUILD remains NOT AUTHORIZED.
+
+
+## 19. Updated ROOM-HOP integration evidence — 2026-11-27
+This section records read-only findings from current Sandbox artifacts. It does not approve or implement an integration.
+
+### 19.1 W52 A2A candidate boundary
+- W52 `a2a-contract-v0.1.md` is explicitly DRAFT; the schema checks described there are author-run and not independent PASS.
+- W52 `adapter-interface.md` defines an injectable library, not an HTTP service or executor. CorePort and AuthorityPort require existing authorized Core implementations; HostPort belongs to the W14 execution-host owner.
+- The inspected candidate profile is no-tool/read-only and advertises only `task.stream_events`. Tasks requiring tool access, writes, approvals or resume are explicitly unsupported pending verified W14 integration.
+- W52 permission matrix states task roles are assertions to verify, not credentials; PASS requires an independent tester/reviewer with separate Authority grant and evidence. A creator cannot independently accept their own candidate.
+- W52 event model is DRAFT; sequence continuity, state-transition validity and at-least-once conformance are explicitly not verified by the described schema checks.
+- A W52 evidence file records a Ka review task as ASSIGNED IN SANDBOX but says Ka ACK is not verified. This is W52-specific evidence only; it is not a receipt or review for W122.
+
+### 19.2 W11 and W12 production boundaries
+- W11 `PRODUCTION_INTEGRATION_BOUNDARY.md` requires an approved member identity to be resolved by Core, Core to validate identity and policy, and Core to own membership, message identity, correlation, persistence and deduplication. It explicitly declines to guess unreadable identity-registration or Room-join calls.
+- W12 `EXECUTION_HOST_BOUNDARY.md` confirms the current task exposes only Sandbox file APIs. Process/service, Git gateway, GitHub gateway, CI and WorkContext-bound browser adapters are NOT_CONFIGURED / not exposed through the inspected ROOM-HOP adapter.
+- Therefore W52 is a useful candidate contract reference, not a production dispatch mechanism or email executor. W122 must not call guessed Core/Gateway routes, instantiate its own parallel identity/event store, or treat a Sandbox task record as a verified agent execution.
+
+### 19.3 W122 integration decision pending
+Before implementation, obtain: (1) approved Core identity/tenant/mailbox authorization and audit contract; (2) approved W52 task submission/receipt/event contract and verified registry identity for each agent; (3) approved W14 Host interface and actual runtime deployment evidence; (4) approved provider-adapter ingress/egress and secret-vault contracts; and (5) independent security/QE acceptance. Until then, only design and synthetic specifications may proceed. G2 remains NOT APPROVED; G3 BUILD remains NOT AUTHORIZED.
