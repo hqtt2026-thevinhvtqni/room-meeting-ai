@@ -260,3 +260,15 @@
 - Result: GitHub main create/update and targeted post-write read-back PASS for the synthetic test plan and journal.
 - Limitations: this is test design only. No fixtures, test code, test execution, independent QE, OAuth or provider integration.
 - Next: record this verification in the journal and sync the journal once more. Then continue discovery without crossing G2/G3 gates.
+
+
+## 2026-11-27 — J019 — G2 architecture decision pack draft
+- Actor: Xu / AI-01.
+- Scope: translate current W122 architecture and verified integration constraints into an explicit Owner decision pack; proposal only.
+- Method: created `03_ARCHITECTURE/W122_G2_ARCHITECTURE_DECISION_PACK_DRAFT.md` with 15 proposed architecture decisions, staged release boundaries R0–R5, G2 acceptance conditions, review inputs and unresolved Owner decisions.
+- Key recommendations: Gmail first with provider-neutral adapter; one owner-designated mailbox for first pilot; least-privilege read-only stage; draft-only later; no send scope in initial pilot; mailbox-level tenant/identity binding; durable history cursor with push as wake-up; minimize raw-body/attachment retention; untrusted email content; default DENY for external side effects; immutable approval binding and outbox/reconciliation for any future send; integrate only through approved Core/W52/W14 contracts; UI remains non-authoritative.
+- Verification: Sandbox create returned status=ok; read-back returned status=ok and confirmed ADR-W122-15 plus explicit G2 NOT APPROVED.
+- Authority boundary: recommendations are not decisions. No canonical Biên bản approval, no G2 closure, no G3 authorization, no OAuth, mailbox operation, code or external send.
+- Kha/Ka: briefs remain pending; no dispatch/receipt/review claimed.
+- W120/W121: no write attempted.
+- Next: create the same draft on GitHub main, append and synchronize this journal entry, then verify both.
