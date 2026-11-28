@@ -25,7 +25,7 @@ class FakeManager:
         return self.credential
 
 
-def test_factory_builds_drive_v3_from_user_oauth_not_service_account():
+def test_factory_builds_drive_v3_without_sdk_managed_refresh_token():
     credential = {
         "access_token": "access-token",
         "refresh_token": "refresh-token",
@@ -53,8 +53,10 @@ def test_factory_builds_drive_v3_from_user_oauth_not_service_account():
 
     assert result == "adapter"
     assert seen["build"][0:2] == ("drive", "v3")
-    assert seen["build"][2]["credentials"].kwargs["refresh_token"] == "refresh-token"
-    assert seen["build"][2]["credentials"].kwargs["client_secret"] == "runtime-secret"
+    sdk_credentials = seen["build"][2]["credentials"]
+    assert sdk_credentials.kwargs["token"] == "access-token"
+    assert "refresh_token" not in sdk_credentials.kwargs
+    assert sdk_credentials.kwargs["client_secret"] == "runtime-secret"
     assert seen["adapter"][1] == "roomhop-folder"
 
 
