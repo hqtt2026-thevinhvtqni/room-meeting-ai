@@ -24,11 +24,18 @@ class RefreshOutcomeUnknownError(RuntimeError):
     """Refresh may have succeeded remotely; do not replay the refresh request."""
 
 def _provider_error_code(exc):
+    code = getattr(exc, 'error', None) or getattr(exc, 'code', None)
     response = getattr(exc, 'response', None)
-    return (getattr(exc, 'error', None) or getattr(exc, 'code', None)
-            or getattr(response, 'json', lambda: {})().get('error')
-            if callable(getattr(response, 'json', None)) else
-            getattr(exc, 'error', None) or getattr(exc, 'code', None))
+    if not code and response is not None:
+        payload = getattr(response, 'json', None)
+        if callable(payload):
+            try:
+                body = payload()
+                if isinstance(body, dict):
+                    code = body.get('error')
+            except Exception:
+                pass
+    return code
 
 def _provider_status(exc):
     response = getattr(exc, 'response', None)
@@ -88,8 +95,9 @@ class ConnectionManager:
         self.states=state_store or OAuthStateStore(); self.connections=metadata or {}; self.audit=[]
         self._lock=Lock(); self._refresh_locks={}; self._refresh_locks_guard=Lock()
     def _refresh_lock_for(self, connection_id):
-        # Keep one lock per live connection. disconnect() removes it only after
-        # ownership is checked; this avoids unsafe lock eviction races.
+        # Retain locks for the manager lifetime. Evicting a lock while another
+        # caller already holds its reference can split one connection into two
+        # independent critical sections.
         with self._refresh_locks_guard:
             return self._refresh_locks.setdefault(connection_id, Lock())
     def _get_owned(self, room_id, user_id, connection_id):
@@ -177,8 +185,8 @@ class ConnectionManager:
         c=self._get_owned(room_id,user_id,connection_id)
         self.store.delete(connection_id); c.status='DISCONNECTED'; c.updated_at=now()
         self.audit.append(('disconnected',connection_id,room_id,user_id))
-        with self._refresh_locks_guard:
-            self._refresh_locks.pop(connection_id, None)
+        # Do not evict the lock here: a concurrent waiter may already hold a
+        # reference to it. Connection IDs are unique and the map is manager-scoped.
         return c.safe()
     def credential_for_operation(self, room_id, user_id, connection_id):
         c=self._get_owned(room_id,user_id,connection_id)
