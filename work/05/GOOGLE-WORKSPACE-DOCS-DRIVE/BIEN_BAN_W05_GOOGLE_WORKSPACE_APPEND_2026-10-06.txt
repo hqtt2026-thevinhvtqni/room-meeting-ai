@@ -1,0 +1,60 @@
+BIÊN BẢN WORK 05 — PHỤ LỤC CẬP NHẬT
+
+Ngày cập nhật: 06/10/2026
+Trạng thái: PARTIAL / NEED DECISION
+Canonical Work: 05/GOOGLE-WORKSPACE-DOCS-DRIVE/
+Biên bản gốc liên quan: BIEN_BAN_W05_GOOGLE_WORKSPACE.md và BIEN_BAN_W05_GOOGLE_WORKSPACE.txt
+
+Đây là continuation/addendum append-only. Biên bản gốc được giữ nguyên vì ROOM-HOP sandbox_write là overwrite và không có file-append operation. Không tạo Work 05 song song.
+
+1. MỤC TIÊU VÀ NGUYÊN TẮC
+
+AI → MCP :8020 → Core :8000 → Google Adapter → Google Docs / Drive.
+AI không gọi Google API trực tiếp. Core :8000 là Source of Truth. MCP là interface. Google Adapter là lớp giao tiếp với Google. Có audit, idempotency, revision và reconciliation. Mock E2E và Real Google E2E được phân biệt tuyệt đối.
+
+2. ĐÃ HOÀN THÀNH
+
+Architecture: PASS.
+
+Mock/Internal E2E: PASS. Local continuation regression read-back ghi nhận 24 passed, 1 deselected; real_google được cô lập và không gọi Google bên ngoài.
+
+Readiness/Gate: PASS về mặt chuẩn bị. Canonical có VINH_GATE_REQUEST.md, REAL_GOOGLE_READINESS.md, source handoff report và evidence inventory.
+
+Source Handoff: PASS cho 6 implementation files, 7 test files, pytest.ini, Connection/OAuth docs, REAL GOOGLE/G09 docs, Room UI docs, WORK05_SOURCE_HANDOFF.md, EVIDENCE_INVENTORY.md và offline pytest evidence đã được canonical read-back. Full artifact chain vẫn PARTIAL vì một số Phase-2/3/4 continuation evidence và root completion artifacts local chưa được individually copied/read-back.
+
+3. CHƯA HOÀN THÀNH / BLOCKED
+
+Real Google Integration: BLOCKED / NOT RUN. Chưa có E2E mutation/read-back trên Google Docs/Drive thật. Blocker gồm authentication, credentials, approved scopes, runtime packages, safe target, Core/MCP deployment boundary và real adapter connection. Không claim REAL GOOGLE PASS.
+
+Room UI: BLOCKED / NOT RUN. Không có existing Room UI framework, Room route, browser router, authenticated session layer hoặc API routing layer; không tạo frontend song song.
+
+Production readiness: NOT READY. Còn thiếu production secret-manager adapter, approved OAuth/client configuration, redirect registration, browser UI integration và deployment security review.
+
+4. DECISIONS CÒN OPEN
+
+1) Google account / Shared Drive ownership.
+2) Credential model.
+3) Google API scopes.
+4) Human ↔ AI editing policy.
+5) Revision policy.
+6) Conflict policy.
+7) Sync / watch / reconciliation.
+8) Idempotency.
+9) Retention / backup.
+10) Deployment model.
+
+STATUS: OPEN. Chưa tự đóng các quyết định thuộc quyền Vinh/architecture governance.
+
+5. TRẠNG THÁI TỔNG HỢP
+
+Architecture PASS; Mock E2E PASS; Mock recovery PASS; local QE/evidence PASS cho scope offline/local; Source handoff PASS cho artifact đã canonical read-back nhưng PARTIAL cho full chain; decisions OPEN; Google authentication BLOCKED; Real Google E2E NOT RUN; Room UI browser E2E BLOCKED/NOT RUN; Production readiness NOT READY; OVERALL PARTIAL / NEED DECISION.
+
+6. KẾ HOẠCH TIẾP THEO
+
+Hoàn tất full source/evidence handoff nếu cần strict replication; tách riêng decision cần Vinh; chuẩn bị Real Google infrastructure qua secure configuration; chạy Create → Read → Update → Human Edit → Reconcile → Conflict → Replay → Recovery → Audit → Read-back Evidence; sau đó QE/final audit. Chỉ kết luận DONE/PASS khi có runtime evidence thực tế.
+
+7. NGUYÊN TẮC ĐIỀU HÀNH
+
+Không dùng report của AI thay cho runtime evidence. Không tạo Work 05 song song. Không paste secrets/tokens/private keys/credential file contents vào chat hoặc source. Ưu tiên evidence và bảo toàn lịch sử.
+
+Kết luận ngày 06/10/2026: Work 05 chưa DONE; local architecture/mock/integration-readiness đạt scope được chứng minh; REAL GOOGLE, production readiness và Room UI browser E2E vẫn blocked hoặc not run.
