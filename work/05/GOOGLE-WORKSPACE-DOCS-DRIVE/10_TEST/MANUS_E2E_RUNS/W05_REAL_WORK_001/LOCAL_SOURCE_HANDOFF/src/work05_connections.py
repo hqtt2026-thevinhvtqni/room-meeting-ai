@@ -16,6 +16,24 @@ from cryptography.fernet import Fernet, InvalidToken
 CONNECTION_STATES={'NOT_CONNECTED','CONNECTING','CONNECTED','REAUTH_REQUIRED','ERROR','DISCONNECTED'}
 def now(): return datetime.now(timezone.utc).isoformat()
 def safe_error(exc): return 'provider authentication or connection error'
+
+class ReauthRequiredError(ValueError):
+    """The Google refresh credential is no longer valid; user action is required."""
+
+class RefreshOutcomeUnknownError(RuntimeError):
+    """Refresh may have succeeded remotely; do not replay the refresh request."""
+
+def _provider_error_code(exc):
+    response = getattr(exc, 'response', None)
+    return (getattr(exc, 'error', None) or getattr(exc, 'code', None)
+            or getattr(response, 'json', lambda: {})().get('error')
+            if callable(getattr(response, 'json', None)) else
+            getattr(exc, 'error', None) or getattr(exc, 'code', None))
+
+def _provider_status(exc):
+    response = getattr(exc, 'response', None)
+    return (getattr(exc, 'status_code', None) or getattr(exc, 'status', None)
+            or getattr(response, 'status_code', None))
 @dataclass
 class Connection:
     connection_id: str; room_id: str; user_id: str; provider: str='google_workspace'; status: str='NOT_CONNECTED'
@@ -65,7 +83,15 @@ class OAuthStateStore:
 class OAuthConfig:
     client_id: str; redirect_uri: str; authorization_endpoint: str; scopes: tuple
 class ConnectionManager:
-    def __init__(self, credential_store, oauth_config, oauth_client, metadata=None, state_store=None): self.store=credential_store; self.oauth=oauth_config; self.client=oauth_client; self.states=state_store or OAuthStateStore(); self.connections=metadata or {}; self.audit=[]; self._lock=Lock()
+    def __init__(self, credential_store, oauth_config, oauth_client, metadata=None, state_store=None):
+        self.store=credential_store; self.oauth=oauth_config; self.client=oauth_client
+        self.states=state_store or OAuthStateStore(); self.connections=metadata or {}; self.audit=[]
+        self._lock=Lock(); self._refresh_locks={}; self._refresh_locks_guard=Lock()
+    def _refresh_lock_for(self, connection_id):
+        # Keep one lock per live connection. disconnect() removes it only after
+        # ownership is checked; this avoids unsafe lock eviction races.
+        with self._refresh_locks_guard:
+            return self._refresh_locks.setdefault(connection_id, Lock())
     def _get_owned(self, room_id, user_id, connection_id):
         c=self.connections.get(connection_id)
         if not c or c.room_id!=room_id or c.user_id!=user_id: raise PermissionError('connection not available')
@@ -96,12 +122,64 @@ class ConnectionManager:
             identity=client_factory(self.store.load(connection_id)).test_connection(); c.status='CONNECTED'; c.last_tested_at=now(); c.updated_at=c.last_tested_at; c.account_identity=identity.get('email',c.account_identity); self.audit.append(('tested',connection_id,room_id,user_id)); return c.safe()
         except Exception as exc:
             c.status='REAUTH_REQUIRED' if getattr(exc,'reauth_required',False) else 'ERROR'; c.updated_at=now(); self.audit.append(('test_error',connection_id,room_id,user_id,type(exc).__name__)); raise ValueError(safe_error(exc)) from None
-    def refresh(self, room_id, user_id, connection_id):
+    def refresh(self, room_id, user_id, connection_id, expected_access_token=None):
+        """Refresh once per connection; concurrent stale callers reuse the winner.
+
+        The caller may pass expected_access_token from the credential used by
+        its failed API request. If omitted, a pre-lock credential snapshot is
+        used as the stale-call marker. Refresh transport/5xx ambiguity is never
+        replayed and never deletes the stored credential.
+        """
         c=self._get_owned(room_id,user_id,connection_id)
-        try: self.store.save(connection_id,self.client.refresh(self.store.load(connection_id))); c.status='CONNECTED'; c.updated_at=now(); self.audit.append(('refreshed',connection_id,room_id,user_id)); return c.safe()
-        except Exception as exc: c.status='REAUTH_REQUIRED'; c.updated_at=now(); self.audit.append(('refresh_error',connection_id,room_id,user_id,type(exc).__name__)); raise ValueError('reauthentication required') from None
+        before=self.store.load(connection_id)
+        expected=(expected_access_token if expected_access_token is not None
+                  else before.get('access_token'))
+        lock=self._refresh_lock_for(connection_id)
+        with lock:
+            c=self._get_owned(room_id,user_id,connection_id)
+            current=self.store.load(connection_id)
+            if expected is not None and current.get('access_token') != expected:
+                # Another caller refreshed this same connection while we waited.
+                return c.safe()
+            try:
+                refreshed=self.client.refresh(current)
+                if not isinstance(refreshed, dict) or not refreshed.get('access_token'):
+                    raise RefreshOutcomeUnknownError('refresh response did not contain an access token')
+                self.store.save(connection_id,refreshed)
+                c.status='CONNECTED'; c.updated_at=now()
+                self.audit.append(('refreshed',connection_id,room_id,user_id))
+                return c.safe()
+            except Exception as exc:
+                code=_provider_error_code(exc)
+                status=_provider_status(exc)
+                with self._lock:
+                    c.updated_at=now()
+                    self.audit.append(('refresh_error',connection_id,room_id,user_id,
+                                       code or status or type(exc).__name__))
+                if code == 'invalid_grant':
+                    # The refresh credential is definitively invalid. Remove
+                    # only the unusable credential; keep sanitized audit history.
+                    self.store.delete(connection_id)
+                    c.status='REAUTH_REQUIRED'
+                    raise ReauthRequiredError('reauthentication required') from None
+                if (isinstance(exc, RefreshOutcomeUnknownError) or
+                    (isinstance(status, int) and status >= 500) or
+                    isinstance(exc, (TimeoutError, ConnectionError))):
+                    # Google may have rotated the refresh token despite a lost
+                    # response. Preserve the stored credential and stop here.
+                    c.status='ERROR'
+                    raise RefreshOutcomeUnknownError(
+                        'refresh outcome unknown; automatic replay is prohibited'
+                    ) from None
+                c.status='REAUTH_REQUIRED'
+                raise ReauthRequiredError('reauthentication required') from None
     def disconnect(self, room_id, user_id, connection_id):
-        c=self._get_owned(room_id,user_id,connection_id); self.store.delete(connection_id); c.status='DISCONNECTED'; c.updated_at=now(); self.audit.append(('disconnected',connection_id,room_id,user_id)); return c.safe()
+        c=self._get_owned(room_id,user_id,connection_id)
+        self.store.delete(connection_id); c.status='DISCONNECTED'; c.updated_at=now()
+        self.audit.append(('disconnected',connection_id,room_id,user_id))
+        with self._refresh_locks_guard:
+            self._refresh_locks.pop(connection_id, None)
+        return c.safe()
     def credential_for_operation(self, room_id, user_id, connection_id):
         c=self._get_owned(room_id,user_id,connection_id)
         if c.status!='CONNECTED': raise PermissionError('connection is not connected')
