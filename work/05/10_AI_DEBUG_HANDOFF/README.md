@@ -1,0 +1,2 @@
+# AI Debug Handoff
+Deposit complete report, patch/diff, reproduction tests, logs, screenshots, source baseline and hashes into 00_INBOX/<AI>/<run-id>/ without altering originals. Independent review in 01_REVIEW; candidate diffs in 02_PATCH_CANDIDATES; baseline/patched/regression evidence in 03_VALIDATION; ACCEPT/REJECT/DEFER in 04_DECISIONS. Inbox does not authorize applying a patch. No fake PASS, blind source overwrite, or changes to LOCKED contracts without reviewed versioned decision.
