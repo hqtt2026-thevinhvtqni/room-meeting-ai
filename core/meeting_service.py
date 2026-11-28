@@ -137,7 +137,7 @@ class MeetingService:
     def join_meeting(
         self,
         meeting_id: str,
-        identity_id: str,
+        identity_id: str | None = None,
     ) -> dict[str, Any]:
         meeting = self._manager.get_meeting(meeting_id)
         meeting.join_request(identity_id)
@@ -171,9 +171,8 @@ class MeetingService:
         raw_text: str,
         identity_id: str | None = None,
     ) -> dict[str, Any]:
-        # identity_id: OPTIONAL (Message v1.0 Architecture Gate DECISION).
-        # Giữ backward-compat cho mọi caller cũ gọi add_paste(meeting_id,
-        # raw_text) không kèm identity.
+        # Xu D-102-04: caller identity is required and Core verifies
+        # JOIN_ACCEPTED membership before transcript append.
         meeting = self._manager.get_meeting(meeting_id)
         return meeting.add_paste(raw_text, identity_id=identity_id)
 

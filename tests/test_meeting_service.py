@@ -123,6 +123,7 @@ def test_add_paste_through_service(service):
     result = service.add_paste(
         "SERVICE-005",
         "RAW TRANSCRIPT",
+        identity_id="xu",
     )
 
     assert isinstance(result, dict)

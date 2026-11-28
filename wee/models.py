@@ -24,6 +24,11 @@ class WorkContext:
     ci_target: dict[str, Any]
     evidence_root: str
     execution_id: str
+    assignment_id: str | None = None
+    task_id: str | None = None
+    environment_id: str | None = None
+    host_identity_id: str | None = None
+    requested_timeout_seconds: int | None = None
     @classmethod
     def from_binding(cls, binding: WorkBinding, execution_id: str | None = None) -> 'WorkContext':
         return cls(**binding.as_dict(), execution_id=execution_id or uuid.uuid4().hex)

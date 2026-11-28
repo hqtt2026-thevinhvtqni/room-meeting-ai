@@ -9,11 +9,16 @@ def main():
     ap=argparse.ArgumentParser(description='Generic ROOM-HOP work_e2e')
     ap.add_argument('authority'); ap.add_argument('--work-id', default=None)
     ap.add_argument('--evidence-root', default=None)
+    ap.add_argument('--protected-execution', action='store_true', help='Require Core-issued grant and Execution Host :8031')
     args=ap.parse_args()
     binding = CanonicalWorkAuthority(args.authority).resolve(args.work_id)
     context = WorkContext.from_binding(binding)
     root = Path(args.evidence_root or binding.evidence_root)
-    result = LifecycleController(context, EvidenceStore(root)).run()
+    host = None
+    if args.protected_execution:
+        from .bridge.core_grant_host import CoreGrantExecutionHost
+        host = CoreGrantExecutionHost()
+    result = LifecycleController(context, EvidenceStore(root), host=host).run()
     print(json.dumps(result, ensure_ascii=False, indent=2))
     raise SystemExit(0 if result['status'] == 'PASS' else 2)
 if __name__=='__main__': main()
