@@ -3,6 +3,12 @@
 Call only after ConnectionManager.credential_for_operation(room_id, user_id,
 connection_id) has authorized the caller. Client secret comes from secure
 runtime configuration, never from a browser request or the credential record.
+
+Refresh ownership stays in ConnectionManager. The Google SDK receives an
+access-token-only credential so its authorized transport cannot independently
+refresh using a stored refresh token and bypass Work 05 single-flight,
+invalid_grant handling, or ambiguous-outcome policy. A 401 recovery must be
+performed by the Work 33/Work 05 capability boundary, then rebuild the adapter.
 """
 from __future__ import annotations
 
@@ -27,11 +33,11 @@ def build_user_drive_adapter(
     google_build: Callable | None = None,
     scopes: tuple[str, ...] = (DRIVE_FILE_SCOPE,),
 ):
-    """Build an adapter bound to one user's OAuth token.
+    """Build an adapter bound to one user's OAuth access token.
 
     The caller MUST perform Work/user authorization before passing the
-    credential. This function does not accept arbitrary connection IDs and
-    does not perform authorization itself.
+    credential. Refresh tokens are deliberately not passed to Google SDK
+    Credentials; refresh must go through ConnectionManager.
     """
     if not isinstance(credential, Mapping):
         raise DriveFactoryError("OAuth credential unavailable")
@@ -55,7 +61,8 @@ def build_user_drive_adapter(
 
         credentials = credentials_factory(
             token=credential["access_token"],
-            refresh_token=credential.get("refresh_token"),
+            # Intentionally omit refresh_token: SDK-managed refresh would
+            # bypass ConnectionManager's per-connection single-flight lock.
             token_uri=GOOGLE_TOKEN_URI,
             client_id=client_id,
             client_secret=client_secret,
