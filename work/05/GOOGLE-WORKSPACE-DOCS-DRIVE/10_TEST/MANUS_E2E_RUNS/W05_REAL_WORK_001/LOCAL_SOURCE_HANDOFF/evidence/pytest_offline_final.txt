@@ -1,0 +1,7 @@
+============================= test session starts =============================
+command: python3 -m pytest -q --disable-warnings
+result: 24 passed, 1 deselected in 1.67s
+python compilation: PASS
+module imports: PASS
+real_google tests: isolated and deselected by default; no external Google call ran
+security preflight: no credential files, token caches, private keys, or real secret values found
