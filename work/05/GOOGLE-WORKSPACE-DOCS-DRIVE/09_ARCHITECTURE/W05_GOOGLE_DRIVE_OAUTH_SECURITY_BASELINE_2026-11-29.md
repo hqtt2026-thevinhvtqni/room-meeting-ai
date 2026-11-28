@@ -68,3 +68,12 @@ Business services must not receive refresh tokens or Google SDK credential objec
 
 ## 9. Merge/release gates
 Keep PR #86 Draft and unmerged until source-level review, Core authorization integration, Work33 contract integration, focused and combined tests, and independent security review all pass with inspectable evidence.
+
+
+## 10. Retry policy decision — 429 and 5xx
+- Retry only transient failures: HTTP 429, 500, 502, 503 and 504. Do not retry 400-class validation/authentication failures (including invalid_grant), 401 refresh loops, 403 permission/insufficient-scope failures, or malformed requests.
+- For Drive API operations, honor a valid Retry-After header (delta-seconds or HTTP-date) subject to a configured maximum wait. Otherwise use exponential backoff with full jitter; cap both the delay and total attempts (initial attempt plus at most 2 retries by default). Make limits configurable and test them with fake timers; never sleep indefinitely.
+- Retry only operations with safe replay semantics. Upload must use an idempotency strategy or detect/reconcile an ambiguous prior create before retrying, so a timeout/5xx after Google accepted the upload cannot create duplicate meeting artifacts. Do not silently overwrite an existing file.
+- For OAuth token refresh endpoint calls, do not blindly reuse a refresh token after an ambiguous network failure or 5xx: the provider may have processed a rotating refresh token even if the response was lost. Preserve the last known encrypted credential, surface a sanitized transient refresh error, and retry on a later authorized operation unless provider-specific behavior and atomic rotation handling prove immediate retry safe. A definitive 429 response may be retried only under an explicit provider-specific policy, with bounded Retry-After.
+- A 429 from Drive API must never delete or invalidate the user's token. An invalid_grant from the token endpoint transitions the connection to REAUTH_REQUIRED and prevents further refresh attempts until the user reconnects; preserve a non-secret audit record of the transition.
+- Tests must assert attempt count, Retry-After handling/cap, jitter bounds, no retry on permanent errors, no token deletion for 429/5xx, no infinite retry, and no duplicate upload after ambiguous outcomes.
