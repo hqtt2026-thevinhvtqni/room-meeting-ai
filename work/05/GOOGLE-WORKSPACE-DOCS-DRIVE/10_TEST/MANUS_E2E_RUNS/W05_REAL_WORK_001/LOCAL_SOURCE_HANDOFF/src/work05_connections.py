@@ -35,6 +35,8 @@ def _provider_error_code(exc):
                     code = body.get('error')
             except Exception:
                 pass
+    if not code and 'invalid_grant' in str(exc).lower():
+        code = 'invalid_grant'
     return code
 
 def _provider_status(exc):
