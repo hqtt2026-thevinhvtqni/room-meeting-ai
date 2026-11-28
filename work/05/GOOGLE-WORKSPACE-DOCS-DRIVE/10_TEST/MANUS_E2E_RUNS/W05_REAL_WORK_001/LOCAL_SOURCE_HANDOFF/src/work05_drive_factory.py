@@ -107,3 +107,53 @@ def build_connection_bound_drive_adapter(
         google_build=google_build,
         scopes=(DRIVE_FILE_SCOPE,),
     )
+
+
+def refresh_connection_bound_drive_adapter(
+    manager,
+    room_id: str,
+    user_id: str,
+    connection_id: str,
+    *,
+    failed_access_token: str,
+    client_id: str,
+    client_secret: str,
+    parent_id: str,
+    adapter_factory: Callable,
+    credentials_factory: Callable | None = None,
+    google_build: Callable | None = None,
+):
+    """Refresh through ConnectionManager, then rebuild the Drive adapter.
+
+    Call only in response to one 401 for the current upload/API operation.
+    The caller owns the one-replay budget: after this function returns a new
+    adapter, replay the original operation at most once. Never call this again
+    for a second 401. The failed token is passed as the stale-call marker so
+    concurrent requests can reuse a refresh winner under RT-06.
+    """
+    if not isinstance(failed_access_token, str) or not failed_access_token:
+        raise DriveFactoryError("failed access token marker is required")
+    try:
+        manager.refresh(
+            room_id,
+            user_id,
+            connection_id,
+            expected_access_token=failed_access_token,
+        )
+        credential = manager.credential_for_operation(
+            room_id, user_id, connection_id
+        )
+    except Exception:
+        # ConnectionManager owns the typed refresh/reauth error contract.
+        # Do not expose token-store/provider details through this factory.
+        raise
+    return build_user_drive_adapter(
+        credential,
+        client_id=client_id,
+        client_secret=client_secret,
+        parent_id=parent_id,
+        adapter_factory=adapter_factory,
+        credentials_factory=credentials_factory,
+        google_build=google_build,
+        scopes=(DRIVE_FILE_SCOPE,),
+    )
