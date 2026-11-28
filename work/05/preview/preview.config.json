@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "version": "1",
+  "title": "ROOM-HOP — Work 05 Preview",
+  "screens": [
+    {
+      "label": "Cấu trúc Work",
+      "renderer": "structure"
+    },
+    {
+      "label": "Metadata",
+      "renderer": "meta"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+Command: python3 -m pytest -q --disable-warnings
+Result:
+......                                                                   [100%]
+6 passed in 0.01s
+
+This is MOCK/PASS evidence only. No REAL GOOGLE PASS is claimed.

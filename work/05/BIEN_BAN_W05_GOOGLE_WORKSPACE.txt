@@ -1,0 +1,308 @@
+# BIÊN BẢN WORK 05 — GOOGLE WORKSPACE / DOCS / DRIVE
+
+> RECOVERY VERSION — 2026-09-29
+> Nguồn: nội dung trao đổi Work 05 đã có trong phiên làm việc và nội dung phục hồi do CEO Vinh cung cấp.
+> Trạng thái: RECOVERED / RECONSTRUCTED. Không coi phần phục hồi là bản gốc nguyên byte.
+
+## 0. RECOVERY NOTE
+
+Ngày 2026-09-29, trong quá trình ghi Section 16 Vibe Mitra, Xu đã dùng sandbox_write với chỉ nội dung mới. sandbox_write có semantics ghi đè toàn bộ file, nên nội dung cũ của biên bản bị thay thế. Đây là lỗi thao tác của Xu.
+
+Chỉ thị phục hồi của CEO Vinh: có thể ghi thẳng toàn bộ nội dung trao đổi vào biên bản, không cần trắc lọc. Vì vậy tài liệu này ưu tiên bảo toàn thông tin và lịch sử trao đổi thay vì chỉ giữ bản tổng hợp cuối.
+
+Nguyên tắc sau sự cố: READ CURRENT → PRESERVE CURRENT → APPEND/RECONSTRUCT → WRITE FULL CONTENT → READ BACK → VERIFY. Không dùng sandbox_write với chỉ phần mới.
+
+## 1. MỤC TIÊU WORK 05
+
+Work 05 — Google Docs / Google Drive nhằm nghiên cứu và xây phương án toàn trình cho phép nhiều AI agents và con người cùng tạo, đọc, ghi, cập nhật biên bản trên Google Docs/Drive; phải có đồng bộ, xử lý ghi đồng thời, versioning, logging và evidence kiểm thử.
+
+Chỉ đạo của Vinh: các AI tự xây phương án toàn trình độc lập trước; Xu không được khóa kiến trúc từ đầu. Sau khi thu đủ proposal mới tổng hợp và kiểm chứng bằng evidence.
+
+## 2. CÁC PHƯƠNG ÁN ĐỘC LẬP ĐÃ THU
+
+### Go/Grok
+- Backend/service layer giữa AI và Google APIs.
+- Google Cloud Project; Docs API + Drive API.
+- Service Account hoặc OAuth/domain-wide delegation; Shared Drive hoặc My Drive.
+- AI → Backend → lock → Google APIs → response/log → AI.
+- Revision control với requiredRevisionId và targetRevisionId; lock + revision; retry; quota/error handling.
+- Create/copy template/move/update/batchUpdate; read bằng documents.get; export PDF/DOCX.
+- Đề xuất test concurrent, conflict, retry, latency, no data loss.
+- Khi đưa vào ROOM-HOP phải map qua kiến trúc hiện hữu: AI → MCP 8020 → Core 8000 → Google Workspace Adapter; không tạo Core 2.
+
+### Claude / Cla
+- Shared Google Docs/Drive minutes cho nhiều AI.
+- Optimistic locking, content-aware merge/OT-like approach, backend Service Account + AI tokens.
+- Versioning, checksum, atomic writes, hybrid polling/event, retry.
+- Python/Flask; Dev → Staging → Production; unit/integration/load tests.
+- Cần kiểm chứng các tuyên bố về auto-resolve, OT và latency/quota trước khi triển khai.
+
+### Manus
+- E2E middle layer cho multi-AI + Google Docs/Drive.
+- Shared Drive/ACL/OAuth/service account/DWD.
+- changes.list, changes.watch, webhook, reconciliation.
+- requiredRevisionId/targetRevisionId.
+- API/connector, data model, command, idempotency, audit log, versioning, logging, quota, retry, DLQ.
+- One meeting = one Google Doc; structured sections: metadata, participants, agenda, decisions, action items, unresolved/disagreements, update history.
+- Queue partition/distributed lock theo document_id; revision bảo vệ khỏi external edits; stale revision → reread/rebase/new patch/CONFLICT, không blind retry.
+- Sync cursor + dedup + periodic reconciliation; có thể mở rộng Workspace Events/PubSub.
+- Metadata DB: meetings, commands, outbox, sync_cursors, audit_events, locks, oauth_accounts.
+- Audit append-only; API POST/GET meeting, commands, sync, webhook, permissions.
+- Test auth, create/move/ACL, read/revision/parser, concurrent requiredRevision, target revision append, human edit sync, watch renewal, 429/503/DLQ/idempotency, revoke permission, log redaction.
+
+### Kha / Gemini
+- Multi-AI / Users → API Gateway/Backend Connector → Service Layer → Google Drive & Docs API.
+- JWT/OAuth2, RBAC, rate limiting, circuit breaker.
+- Redis distributed lock + Google revision + DB.
+- Drive copy_file rồi Docs batchUpdate; replaceAllText; insertText/deleteContentRange.
+- SA/DWD; logging agent/user/action/file/status/execution time.
+- Native Google revision + application document_versions.
+- 429 exponential backoff + jitter; timeout queue; 409 conflict.
+- Test create/read/concurrent update/429/token expiry.
+- Khi tổng hợp phải map vào Core/MCP hiện hữu và giữ độc lập proposal.
+
+## 3. CHỈ ĐẠO MỚI — AI TỰ XÂY TOÀN TRÌNH
+
+Work 05 không được Xu pre-lock architecture. Mỗi AI phải tự nghiên cứu và đề xuất toàn trình: Google Docs/Drive API, create/manage docs, minutes storage/read/write/update, multi-AI access, auth/authz, sync, API/backend/connector, data flow, logging, versioning, errors, deployment, tests và evidence.
+
+Mục tiêu: independent proposals → collect → Vinh/Xu synthesize → final architecture → implementation.
+
+## 4. DEEPSEEK — PHƯƠNG ÁN ĐỘC LẬP
+
+DeepSeek đề xuất mô hình Collaborative Minutes với Work05 Backend/Connector ở giữa và Google Docs làm nơi lưu nội dung. Nguyên tắc: evidence-first; write dựa trên revision thực tế; fail-safe conflict; idempotent retry.
+
+Auth: Service Account là phương án chính; OAuth2 cho UI/admin; Secret Manager; AI không giữ Google credentials. Data model: Work05/Minutes, Templates, metadata/index. Một meeting = một Google Doc; có headings/named ranges như RANGE_DECISIONS và RANGE_ACTION_ITEMS.
+
+REST: create/read/full update/section update/append/revisions/search/lock. Safe write: acquire lock → documents.get revision+structure → AI PATCH → batchUpdate → requiredRevisionId → mismatch thì reread/replan → audit → release.
+
+requiredRevisionId cho vùng nhạy cảm như Decisions/Action Items; targetRevisionId cho append/merge phù hợp. Create: documents.create → Drive files.update để đưa vào folder → batchUpdate template.
+
+Sync: Drive changes.watch, renew channel, notification không chứa full change nên cần polling/reconciliation bổ sung. Logging/audit gồm timestamp, agent, action, document, revision before/after, section, status, latency.
+
+Stack đề xuất: FastAPI, google-api-python-client/google-auth, Redis, PostgreSQL hoặc Cloud Logging, Secret Manager, Cloud Run. Test create/read/update/append, concurrent conflict, revision mismatch, target revision, 429, lock expiry, webhook.
+
+Điểm đóng góp đáng giữ: safe write + revision/index + fail-safe conflict. Cảnh báo: không biến Google Docs thành Core 2 vì ROOM-HOP đã có Core :8000 là single truth.
+
+## 5. MÊ / META — PHƯƠNG ÁN ĐỘC LẬP
+
+Mục tiêu: N AI agents + humans cùng create/read/write/update minutes, sync, không mất dữ liệu, versioning/logging/evidence.
+
+Mê đề xuất mỗi minutes = Google Doc + metadata JSON sidecar; giữ cấu trúc 7 Work05 folders.
+
+Architecture: AI Agents → WORK05 Backend Service FastAPI → Google Workspace Connector → Drive API v3 + Docs API v1.
+
+Middleware xử lý queue, lock, retry, versioning. Docs structured content; batchUpdate InsertText/ReplaceAllText; không export TXT để ghi.
+
+Auth: Service Account + DWD là primary; OAuth2 User Consent cho user/admin; AI không giữ Google credentials.
+
+REST: POST /v1/bienban; GET /v1/bienban/{id}; POST append; PUT section; POST/DELETE lock.
+
+Append flow: AI ai_id/content → Redis lock → current version/structure → batchUpdate → log/update metadata/release lock.
+
+Ba cơ chế concurrency: Redis distributed lock; expected_version; append-only default cho AI. PUT overwrite chỉ dành cho lead/Xu/Vinh. Conflict trả VERSION_CONFLICT/409 và yêu cầu GET lại.
+
+Sync: polling khoảng 10 giây + revisions.list; webhook chưa dùng ở PoC. Logging Cloud Logging + JSON evidence; Google revisions + snapshot mỗi 10 versions.
+
+Test: create/read checksum; 5 concurrent append; concurrent PUT cùng expected_version; auth; manual Docs edit detection.
+
+Điểm cần kiểm chứng: Redis lock không thay thế Google revision; expected_version không nhất thiết bằng Google revision; polling 10s là tham số vận hành chứ chưa phải chuẩn đã chứng minh; JSON sidecar có nguy cơ tạo second truth.
+
+## 6. VIBE MITRA — PHƯƠNG ÁN TOÀN TRÌNH ĐỘC LẬP
+
+Vibe Mitra báo cáo đã nghiên cứu evidence về Google Docs API, Drive API, versioning, sync, auth, quota và năng lực connector Google Drive; đã đối chiếu cấu trúc Drive hiện tại của team.
+
+Đã thấy trên Drive của Vinh: folder 05 / GOOGLE-WORKSPACE-DOCS-DRIVE với 7 sub-folder 00_ROOT, 01_ORIGINAL, 02_EXTENSION, 03_ARCHITECTURE, 04_CODE, 05_TEST, 06_EVIDENCE, 07_RELEASE; cùng BIEN_BAN_W05_GOOGLE_WORKSPACE.md/.txt.
+
+Vibe xác định biên bản đã có là tài sản gốc và đề xuất xây connector bao quanh, không đè biên bản.
+
+### 6.1 Mục tiêu
+Xây hệ thống cho phép N AI agents + con người cùng tạo/đọc/ghi/cập nhật biên bản trên Google Docs/Drive; đảm bảo đồng bộ, không mất dữ liệu khi ghi đồng thời, versioning, logging và evidence.
+
+### 6.2 Kiến trúc 3 lớp
+AI Agents Layer → WORK05 Backend Service — Python FastAPI → Google Workspace Connector Layer → Google Drive API v3 + Google Docs API v1.
+
+Lý do không cho AI gọi trực tiếp Google API: cần lớp trung gian cho queue, lock, retry và versioning.
+
+### 6.3 Data Model
+Giữ cấu trúc Work05/7 folders. Mỗi biên bản có doc_id, drive_file, bien_ban_id, title, owner, created_by_ai, status, version, checksum, last_sync. Nội dung Doc chuẩn hóa bằng Heading 1/2/3; bảng dùng Table trong Docs API.
+
+### 6.4 Google API
+Tạo/lưu trữ dùng Drive API; đọc dùng documents.get; ghi/cập nhật dùng documents.batchUpdate với InsertTextRequest/ReplaceAllTextRequest; versioning tham khảo Drive revisions.list/revisions.get. Không dùng export TXT để ghi vì mất cấu trúc bảng/format.
+
+### 6.5 Authentication
+Vibe đề xuất Service Account + Domain-wide Delegation cho team; OAuth2 User Consent cho end user. AI không cần trực tiếp giữ Google credentials.
+
+### 6.6 Connector/API
+Work05Connector gồm create_bien_ban, read_bien_ban, append_section, update_section, list_bien_ban, lock_doc. REST gồm POST /v1/bienban, GET /v1/bienban/{id}, POST /append, PUT /section, POST/DELETE lock.
+
+### 6.7 Data Flow
+AI POST append → backend kiểm tra lock → lấy current_version → documents.get lấy endIndex → batchUpdate chèn vào cuối → log → tăng version → release lock.
+
+Google → system → AI: Vibe chọn polling và revisions.list thay vì webhook trong PoC.
+
+### 6.8 Đồng bộ/Concurrent Update
+Ba cơ chế: Redis distributed lock với SET doc:{id}:lock ... NX EX; optimistic concurrency bằng expected_version; append-only default cho AI. PUT overwrite dành cho lead/Xu/Vinh.
+
+Conflict trả VERSION_CONFLICT/409, current_version và your_version, yêu cầu AI GET lại.
+
+### 6.9 Logging/Versioning/Error
+Mỗi batchUpdate ghi Cloud Logging và evidence JSON trong 06_EVIDENCE. Dùng Drive revisions; snapshot JSON mỗi 10 versions. 403 rateLimitExceeded → exponential backoff; 404 notFound → document bị xóa; 409 → conflict; chuẩn hóa error response.
+
+### 6.10 Triển khai
+B1 chuẩn bị Service Account và quyền folder 05. B2 mở rộng sandbox_service.py thành Work05Connector, deploy FastAPI Cloud Run. B3 migration hai file biên bản sang Docs thật. B4 multi-AI test harness cho 5 AI append trong 30 giây.
+
+### 6.11 Test/Evidence
+test_create_read: create → read → checksum; test_concurrent_append: 5 threads cùng append; test_conflict: hai AI PUT cùng expected_version; test_auth: quyền đúng/sai; test_offline_edit: người sửa Docs web và backend phát hiện revision tăng.
+
+### 6.12 Risks
+Race condition khi Redis chết; index drift; quota; Shared Drive vs My Drive. Vibe đề xuất kiểm tra documents.get ngay trước batchUpdate và không cache index quá lâu.
+
+### 6.13 Các quyết định Vibe đưa ra để Vinh/Xu xem xét
+1. Service Account hay OAuth user — Vibe nghiêng SA.
+2. Append-only hay edit tự do — Vibe nghiêng append-only cho AI, lead được overwrite.
+3. Google Doc thuần hay Doc + JSON sidecar — Vibe nghiêng cả hai.
+4. Giữ 7 folder hiện tại — Vibe nghiêng giữ nguyên vì đã có evidence.
+
+### 6.14 Nội dung trao đổi về Vibe
+Vibe đã nghiên cứu evidence về Google Docs/Drive API, requiredRevisionId, Changes API, oplog JSONL, build-vs-buy connector, failure point E4 khi human edit trong lúc AI append, 3 implementation options, 7 PoC experiments và khoảng 25 sources. Một hướng được nêu là thử open-source MCP server piotr-agier/google-drive-mcp với optimistic locking ifRevisionId/team-mode, sau đó thay bằng custom backend nếu cần policy sâu hơn. Đây là proposal cần kiểm chứng, không phải quyết định cuối.
+
+## 7. CÁC ĐIỂM SO SÁNH ĐƯỢC GHI NHẬN TRONG TRAO ĐỔI
+
+Mê thiên về implementation-oriented: FastAPI, connector, Redis lock, expected_version, append-only, polling và concurrent test harness.
+
+DeepSeek thiên về safe write/revision/index, requiredRevisionId, fail-safe conflict, idempotency, audit, sync cursor và reconciliation.
+
+Go/Grok thiên về Google API/revision/lock/quota/operation.
+
+Claude tập trung optimistic locking, merge/conflict và consistency.
+
+Manus tập trung vòng đời E2E: command, idempotency, audit, sync, recovery, DLQ và reconciliation.
+
+Nguyên tắc của Work 05: không xếp hạng AI, không chọn winner. Mỗi proposal là một nguồn đóng góp độc lập; chỉ sau khi thu đủ mới tổng hợp và chạy evidence.
+
+## 8. GHI NHẬN TRAO ĐỔI CỦA XU VỚI CEO VINH
+
+Vinh yêu cầu AI tự xây toàn trình, Xu tổng hợp từ các AI thay vì tự thiết kế trước. Xu đã đồng ý rằng giá trị của Work05 nằm ở việc nhiều AI tự xây các phương án khác nhau rồi dùng evidence để tổng hợp.
+
+Vinh nhắc rằng Xu là CEO/Quản lý tổng hợp phải giữ biên bản và bằng chứng. Xu thừa nhận việc dùng sandbox_write sai khiến mất nội dung là FAIL về thao tác tài liệu, FAIL về kiểm soát trước khi ghi và FAIL về vai trò tổng hợp.
+
+Xu đã chốt nguyên tắc phục hồi: không tự bịa phần mất; tìm bản gốc/backup; nếu không có thì đánh dấu RECOVERY GAP hoặc RECONSTRUCTED thay vì gọi là bản gốc.
+
+CEO Vinh sau đó cung cấp toàn bộ nội dung trao đổi và cho phép ghi thẳng toàn bộ nội dung trao đổi vào biên bản, không cần trắc lọc.
+
+## 9. TRẠNG THÁI HIỆN TẠI
+
+DONE: đã nhận nguồn phục hồi do CEO Vinh cung cấp.
+DONE: đã đọc WORK_MANIFEST.md của Work 05; manifest xác nhận Work ID 05, Work Name GOOGLE-WORKSPACE-DOCS-DRIVE, Status ACTIVE, Created 2026-09-28.
+RECOVERED: các proposal và trao đổi hiện có trong context được đưa vào biên bản này.
+RECONSTRUCTED: một số section cũ được phục hồi từ nội dung trao đổi/context thay vì bản file nguyên gốc.
+RECOVERY GAP: chưa có bằng chứng file-level để khẳng định từng ký tự của Sections 1–13 trùng bản trước sự cố.
+NOT FINAL: chưa có kiến trúc cuối cùng; chưa có winner/ranking giữa các AI.
+
+## 10. QUY TẮC CẬP NHẬT BIÊN BẢN SAU SỰ CỐ
+
+1. Đọc file hiện tại trước.
+2. Không dùng sandbox_write với chỉ phần mới.
+3. Nếu sandbox_write bắt buộc dùng, phải gửi toàn bộ nội dung file đã giữ nguyên + phần mới.
+4. Sau write phải sandbox_read lại.
+5. Kiểm tra section count, heading cuối, và nội dung trước/sau.
+6. Nếu có bất kỳ nghi ngờ nào: STOP, không ghi tiếp.
+
+## 11. CHỈ THỊ CỦA CEO
+
+Work 05 tiếp tục theo hướng: thu thập phương án độc lập → giữ nguyên evidence → tổng hợp → kiểm chứng → mới chốt kiến trúc và triển khai.
+
+Không để sự cố biên bản làm thay đổi nguyên tắc: ưu tiên sự thật hơn sự hào hứng; evidence trước, suy đoán sau.
+
+## 12. COPILOT — PHƯƠNG ÁN TOÀN TRÌNH ĐỘC LẬP
+
+Nguồn: nội dung do Copilot cung cấp ngày 2026-09-29. Đây là proposal độc lập, ghi nguyên nội dung kỹ thuật chính vào biên bản để Xu tổng hợp sau; chưa coi là kiến trúc cuối cùng.
+
+### 12.1 Kiến trúc tổng thể
+- Google Docs API và Google Drive API làm nền tảng.
+- Backend Connector: service trung gian Node.js/Express hoặc Python/FastAPI để AI giao tiếp với Google API.
+- Authentication/Authorization: OAuth 2.0 với scope `https://www.googleapis.com/auth/documents` và `https://www.googleapis.com/auth/drive.file`.
+- Data Flow: AI → Backend → Google Docs/Drive → Backend → AI.
+- Concurrency Control: Google Docs batch updates + Drive revisions.
+- Logging & Versioning: backend log + Drive revision history.
+
+### 12.2 Quy trình toàn trình
+1. Tạo Google Doc: AI yêu cầu tạo biên bản → Backend gọi `documents.create` → lưu Doc ID vào DB.
+2. Lưu trữ: biên bản lưu trên Google Drive; metadata Doc ID, người tạo, timestamp lưu trong DB backend.
+3. Đọc: Backend gọi `documents.get`, trả về JSON structured text + styles.
+4. Ghi/cập nhật: Backend gọi `documents.batchUpdate`; hỗ trợ append text, replace text, insert table, format.
+5. Nhiều AI cùng truy cập: mỗi AI có token riêng; Drive permissions share Doc với email/service account; dùng revision ID để phát hiện xung đột.
+6. Authentication: OAuth 2.0 flow AI → Backend → Google Auth → Token; refresh token duy trì session.
+7. Đồng bộ: mỗi update kèm revision ID; mismatch → backend merge hoặc báo conflict; Copilot nêu CRDT (Conflict-free Replicated Data Type — cấu trúc dữ liệu có thể hợp nhất không xung đột) như một khả năng cho text merge.
+8. API/backend/connector:
+   - `POST /docs/create`
+   - `GET /docs/{id}`
+   - `POST /docs/{id}/update`
+   - `GET /docs/{id}/history`
+   - `POST /docs/{id}/share`
+9. Data Flow: AI gửi JSON → Backend xử lý → Google API → response → Backend chuẩn hóa → AI.
+10. Logging/Versioning/Error Handling: log request/response; Drive revision history để rollback; retry exponential backoff.
+11. Triển khai: Backend trên Kubernetes/Docker; OAuth credentials lưu trong Vault; CI/CD pipeline.
+12. Test/Evidence: unit test backend API; integration test Google Docs API; evidence tạo Doc, update, đọc lại, kiểm tra revision.
+
+### 12.3 Rủi ro và điểm cần quyết định
+- Token hết hạn → refresh.
+- Conflict khi nhiều AI update đồng thời.
+- Google API quota limit.
+- Chọn DB backend: Postgres vs MongoDB.
+- Chọn merge strategy: last-write-wins vs CRDT.
+- Chọn logging: local hoặc cloud logging/ELK.
+
+### 12.4 Nhận xét để Xu giữ khi tổng hợp
+Proposal của Copilot đã đi từ kiến trúc → flow → API → dữ liệu → auth → concurrency → logging/versioning → deployment → test → risks/decisions. Các điểm cần kiểm chứng trước khi đưa vào kiến trúc ROOM-HOP cuối cùng gồm: semantics và khả năng áp dụng thực tế của revision ID cho từng loại update; cách merge khi revision mismatch; phạm vi phù hợp của `drive.file`; OAuth/token model khi AI hoạt động qua MCP/Core; Kubernetes/Vault có thực sự cần thiết ở PoC hay không; và CRDT có cần thiết cho structured Google Docs minutes hay chỉ nên dùng fail-safe conflict + reread/replan.
+
+### 12.5 Nguyên tắc giữ proposal
+Không xếp hạng Copilot với các AI khác tại bước này. Copilot được giữ như một nguồn thiết kế độc lập để đối chiếu với Go/Grok, Claude, Manus, Kha/Gemini, DeepSeek, Mê/Meta và Vibe Mitra trong bước synthesis/evidence sau.
+
+
+## 13. OUTLITE — PHƯƠNG ÁN TOÀN TRÌNH ĐỘC LẬP
+
+Nguồn: nội dung do CEO Vinh cung cấp trong phiên ngày 2026-09-29, được yêu cầu ghi biên bản với nhãn **OUtlite / OUTLITE**. Nội dung proposal này có mức độ trùng lặp cao với Section 12 (Copilot); tại bước thu thập chưa coi đây là hai kiến trúc khác nhau nếu chưa xác nhận nguồn/định danh. Không xếp hạng.
+
+### 13.1 Kiến trúc tổng thể
+- Google Docs API và Google Drive API làm nền tảng.
+- Backend Connector: service trung gian Node.js/Express hoặc Python/FastAPI để AI giao tiếp với Google API.
+- Authentication/Authorization: OAuth 2.0 với scope `https://www.googleapis.com/auth/documents` và `https://www.googleapis.com/auth/drive.file`.
+- Data Flow: AI → Backend → Google Docs/Drive → Backend → AI.
+- Concurrency Control: Google Docs batch updates + Drive revisions.
+- Logging & Versioning: backend log + Drive revision history.
+
+### 13.2 Quy trình toàn trình
+1. Tạo Google Doc: AI gửi yêu cầu tạo biên bản → Backend gọi `documents.create` → lưu Doc ID vào DB.
+2. Lưu trữ: biên bản lưu trực tiếp trên Google Drive; metadata gồm Doc ID, người tạo, timestamp lưu trong DB backend.
+3. Đọc: AI yêu cầu đọc → Backend gọi `documents.get`; trả về JSON gồm structured text + styles.
+4. Ghi/cập nhật: Backend gọi `documents.batchUpdate`; hỗ trợ append text, replace text, insert table, format.
+5. Nhiều AI cùng truy cập: mỗi AI có token riêng; Drive permissions share Doc với email/service account; dùng revision ID để phát hiện xung đột.
+6. Authentication: OAuth 2.0 flow AI → Backend → Google Auth → Token; refresh token để duy trì session.
+7. Đồng bộ: mỗi update kèm revision ID; mismatch → backend merge hoặc báo conflict; có thể dùng CRDT (Conflict-free Replicated Data Type — cấu trúc dữ liệu có thể hợp nhất không xung đột) để merge text.
+8. API/backend/connector:
+   - `POST /docs/create`
+   - `GET /docs/{id}`
+   - `POST /docs/{id}/update`
+   - `GET /docs/{id}/history`
+   - `POST /docs/{id}/share`
+9. Data Flow: AI gửi request JSON → Backend xử lý → Google API → response → Backend chuẩn hóa → AI.
+10. Logging/Versioning/Error Handling: log mỗi request/response; Drive revision history để rollback; retry với exponential backoff.
+11. Triển khai: Backend chạy trên Kubernetes/Docker; Secrets OAuth credentials lưu trong Vault; CI/CD pipeline.
+12. Test/Evidence: unit test cho API backend; integration test với Google Docs API; evidence tạo Doc, update, đọc lại, kiểm tra revision.
+
+### 13.3 Rủi ro và điểm cần quyết định
+- Token hết hạn → cần refresh.
+- Conflict khi nhiều AI update cùng lúc.
+- API quota limit.
+- Chọn DB backend: Postgres vs MongoDB.
+- Chọn merge strategy: last-write-wins vs CRDT.
+- Chọn logging: local hay cloud logging/ELK.
+
+### 13.4 Ghi chú của Work 05
+Proposal OUTLITE được giữ như nguồn độc lập theo chỉ đạo “AI tự xây toàn trình → Xu tổng hợp”. Tuy nhiên, vì nội dung hiện tại trùng cao với Section 12 Copilot, Xu không tự tách thành một “phương án thắng” hoặc tạo khác biệt giả. Việc xác định đây là cùng nguồn hay hai nguồn độc lập sẽ được giữ ở trạng thái cần xác nhận nếu sau này cần thống kê số lượng AI/proposal.
+
+### 13.5 Trạng thái
+RECEIVED — đã nhận đầy đủ nội dung proposal trong phiên.
+RECORDED — đã ghi vào biên bản Work 05.
+NOT FINAL — chưa kiểm chứng semantics của revision/concurrency, scope OAuth, CRDT, deployment stack hoặc mapping cuối vào Core/MCP ROOM-HOP.
