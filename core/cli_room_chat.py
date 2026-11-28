@@ -57,7 +57,7 @@ while True:
                     break
                 lines.append(line)
             block = "\n".join(lines)
-            meeting.add_paste(block)
+            meeting.add_paste(block, identity_id="vinh")
             print("RECORDED [PASTE BLOCK]")
             continue
 
