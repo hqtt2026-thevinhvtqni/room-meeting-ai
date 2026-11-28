@@ -5,6 +5,7 @@ from work05_drive_factory import (
     DriveFactoryError,
     build_connection_bound_drive_adapter,
     build_user_drive_adapter,
+    refresh_connection_bound_drive_adapter,
 )
 
 
@@ -98,3 +99,41 @@ def test_factory_rejects_missing_drive_file_scope():
             credentials_factory=FakeCredentials,
             google_build=lambda *a, **k: None,
         )
+
+
+class RefreshingManager:
+    def __init__(self):
+        self.calls = []
+        self.credential = {
+            "access_token": "new-access",
+            "refresh_token": "server-only-refresh",
+            "scopes": [DRIVE_FILE_SCOPE],
+        }
+
+    def refresh(self, room_id, user_id, connection_id, *, expected_access_token):
+        self.calls.append(("refresh", room_id, user_id, connection_id, expected_access_token))
+        assert expected_access_token == "old-access"
+
+    def credential_for_operation(self, room_id, user_id, connection_id):
+        self.calls.append(("credential", room_id, user_id, connection_id))
+        return self.credential
+
+
+def test_401_refresh_rebuilds_adapter_through_connection_manager_once():
+    manager = RefreshingManager()
+    seen = {}
+
+    result = refresh_connection_bound_drive_adapter(
+        manager, "room-a", "user-a", "connection-a",
+        failed_access_token="old-access",
+        client_id="id", client_secret="secret", parent_id="folder",
+        adapter_factory=lambda service, *, parent_id: (service, parent_id),
+        credentials_factory=FakeCredentials,
+        google_build=lambda *args, **kwargs: "new-drive-service",
+    )
+
+    assert result == ("new-drive-service", "folder")
+    assert manager.calls == [
+        ("refresh", "room-a", "user-a", "connection-a", "old-access"),
+        ("credential", "room-a", "user-a", "connection-a"),
+    ]
